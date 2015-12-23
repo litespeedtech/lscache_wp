@@ -40,6 +40,8 @@ class LiteSpeed_Cache_Admin {
 	 */
 	private $version;
 
+	private $messages;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -82,19 +84,26 @@ class LiteSpeed_Cache_Admin {
 
 	public function register_admin_menu()
 	{
-		if (current_user_can('install_plugins')) {
-            //add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',  'litespeedcache', array($this, 'show_menu_options'), 'dashicons-performance');
-			$lscache_admin_page = add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',  'litespeedcache', array($this, 'show_menu_options'));
+		if (current_user_can('manage_options')) {
+
+			$lscache_admin_manage_page = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',  'lscachemgr', array($this, 'show_menu_manage'), 'dashicons-performance');
+			add_action('load-' . $lscache_admin_manage_page, array($this, 'add_help_tabs'));
+
+			$lscache_admin_settings_page = add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',  'litespeedcache', array($this, 'show_menu_settings'));
 			// adds help tab
-			add_action('load-' . $lscache_admin_page, array($this, 'add_help_tabs'));
+			add_action('load-' . $lscache_admin_settings_page, array($this, 'add_help_tabs'));
         }
 
 	}
 
 	public function admin_init()
 	{
-		//this will save the option in the wp_options table
-		//the third parameter is a function that will validate your input values
+		// check for upgrade
+		LiteSpeed_Cache::config()->plugin_upgrade();
+
+		// check management action
+		$this->check_cache_mangement_actions();
+
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME;
 		register_setting($option_name, $option_name, array($this, 'validate_plugin_settings'));
 	}
@@ -124,31 +133,60 @@ class LiteSpeed_Cache_Admin {
 
 	public function validate_plugin_settings($input)
 	{
-		error_log("validate settings args = " . print_r($input, true));
-
 		$config = LiteSpeed_Cache::config();
 		$options = $config->get_options();
+		$pattern = "/[\s,]+/" ;
+		$errors = array();
 
-		$enabled = isset($input[$config::OPID_ENABLED]) && ('1' === $input[$config::OPID_ENABLED]);
-		if ($enabled !== $options[$config::OPID_ENABLED]) {
-			$options[$config::OPID_ENABLED] = $enabled;
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
+		$enabled = isset($input[$id]) && ('1' === $input[$id]);
+		if ($enabled !== $options[$id]) {
+			$options[$id] = $enabled;
 		}
 
-		if (!isset($input[$config::OPID_PUBLIC_TTL])
-				|| !ctype_digit($input[$config::OPID_PUBLIC_TTL])
-				|| $input[$config::OPID_PUBLIC_TTL] < 30) {
-			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME, 'public_ttl_invalid', 'Require numeric number, minimum is 30', 'error');
+		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS;
+		if (isset($input[$id])) {
+			$admin_ips = trim($input[$id]);
+			$has_err = false;
+			if ($admin_ips) {
+				$ips = preg_split($pattern, $admin_ips, NULL, PREG_SPLIT_NO_EMPTY);
+				foreach ($ips as $ip) {
+					if (!WP_Http::is_ip_address($ip)) {
+						$has_err = true;
+						break;
+					}
+				}
+			}
+
+			if ($has_err) {
+				$errors[] = 'Invalid data in Admin IPs.';
+			}
+			else if ($admin_ips != $options[$id]) {
+				$options[$id] = $admin_ips;
+			}
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL;
+		if (!isset($input[$id])
+				|| !ctype_digit($input[$id])
+				|| $input[$id] < 30) {
+			$errors[] = 'Require numeric number, minimum is 30';
 		}
 		else {
-			$options[$config::OPID_PUBLIC_TTL] = $input[$config::OPID_PUBLIC_TTL];
+			$options[$id] = $input[$id];
 		}
 
 		// get purge options
-		$pvals = array( $config::PURGE_FRONT_PAGE, $config::PURGE_HOME_PAGE,
-			$config::PURGE_AUTHOR,
-			$config::PURGE_YEAR, $config::PURGE_MONTH, $config::PURGE_DATE,
-			$config::PURGE_TERM,
-			$config::PURGE_POST_TYPE
+		$pvals = array(
+			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
+			LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
+			LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
+			LiteSpeed_Cache_Config::PURGE_AUTHOR,
+			LiteSpeed_Cache_Config::PURGE_YEAR,
+			LiteSpeed_Cache_Config::PURGE_MONTH,
+			LiteSpeed_Cache_Config::PURGE_DATE,
+			LiteSpeed_Cache_Config::PURGE_TERM,
+			LiteSpeed_Cache_Config::PURGE_POST_TYPE
 		) ;
 		$input_purge_options = array();
 		foreach ($pvals as $pval) {
@@ -159,10 +197,38 @@ class LiteSpeed_Cache_Admin {
 		}
 		sort($input_purge_options);
 		$purge_by_post = implode('.', $input_purge_options);
-		if ($purge_by_post !== $options[$config::OPID_PURGE_BY_POST]) {
-			$options[$config::OPID_PURGE_BY_POST] = $purge_by_post;
+		if ($purge_by_post !== $options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST]) {
+			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS;
+		if (isset($input[$id])) {
+			// this feature has not implemented yet
+			$test_ips = trim($input[$id]);
+			$has_err = false;
+			if ($test_ips) {
+				$ips = preg_split($pattern, $test_ips, NULL, PREG_SPLIT_NO_EMPTY);
+				foreach ($ips as $ip) {
+					if (!WP_Http::is_ip_address($ip)) {
+						$has_err = true;
+						break;
+					}
+				}
+			}
+
+			if ($has_err) {
+				$errors[] = 'Invalid data in Test IPs.';
+			}
+			else if ($test_ips != $options[$id]) {
+				$options[$id] = $test_ips;
+			}
+		}
+
+		if (!empty($errors)) {
+			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
+					LiteSpeed_Cache_Config::OPTION_NAME,
+					implode('<br>', $$errors));
+		}
 
 		return $options;
 	}
@@ -174,111 +240,190 @@ class LiteSpeed_Cache_Admin {
 		return $links;
 	}
 
-	public function show_menu_options()
+	public function show_menu_manage()
 	{
 		$config = LiteSpeed_Cache::config();
 
-		$options = $config->get_options();
-		$enabled = $config->module_enabled();
-		$option_name = $config::OPTION_NAME;
+		if (!$this->check_license($config))
+			return;
 
-		if (0 == ($enabled & 1)) {
-			echo '<div class="error"><p>Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled. This plugin will NOT work properly. </p></div>' . "\n";
+		if ($this->messages) {
+			echo '<div class="success"><p>' . $this->messages . ' </p></div>' . "\n";
 		}
+
+		echo '<div class="wrap"><h2>LiteSpeed Cache Management</h2>'
+		. '<p>LiteSpeed Cache is maintained and managed by LiteSpeed Web Server. You can inform LiteSpeed Web Server to purge cached contents from this screen.</p>'
+				. '<p>More options will be added here in future releases. </p>';
+
+		echo '<form method="post">';
+		wp_nonce_field(LiteSpeed_Cache_Config::OPTION_NAME);
+
+		submit_button('Purge All LiteSpeed Cache', 'primary', 'purgeall');
+		echo "</form></div>\n";
+
+	}
+
+	private function check_cache_mangement_actions()
+	{
+		if (isset($_POST['purgeall'])) {
+			LiteSpeed_Cache::plugin()->purge_all();
+			$this->messages = 'Notified LiteSpeed Web Server to purge all the public cache.';
+		}
+	}
+
+	public function show_menu_settings()
+	{
+		$config = LiteSpeed_Cache::config();
+
+		if (!$this->check_license($config))
+			return;
+
+		$options = $config->get_options();
+		$purge_options = $config->get_purge_options();
 
 		echo '<div class="wrap">
   <h2>LiteSpeed Cache Settings <span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
 <form method="post" action="options.php">';
-		settings_fields($option_name);
+		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME);
 
-		$this->show_settings_general($config, $options);
-		$this->show_settings_purge($config, $options);
+		$this->show_settings_general($options);
+		$this->show_settings_purge($config->get_purge_options());
+		$this->show_settings_test($options);
 
 		submit_button();
 		echo "</form></div>\n";
 	}
 
-	private function show_settings_general($config, $options)
+	private function check_license($config)
 	{
-		$buf = $this->input_group_start();
+		$enabled = $config->module_enabled();
 
-		$input_enabled = $this->input_field_checkbox($config::OPTION_NAME, $config::OPID_ENABLED, '1', $options[$config::OPID_ENABLED]);
+		if (0 == ($enabled & 1)) {
+			echo '<div class="error"><p>Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled. This plugin will NOT work properly. </p></div>' . "\n";
+			return false;
+		}
+		return true;
+	}
+
+	private function show_settings_general($options)
+	{
+		$buf = $this->input_group_start('General');
+
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
+		$input_enabled = $this->input_field_checkbox($id, '1', $options[$id]);
 		$buf .= $this->display_config_row('Enable LiteSpeed Cache', $input_enabled);
 
-		$input_public_ttl = $this->input_field_text($config::OPTION_NAME, $config::OPID_PUBLIC_TTL, $options[$config::OPID_PUBLIC_TTL], 10, '', 'seconds');
+		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS;
+		$input_admin_ips  = $this->input_field_text($id, $options[$id], '', 'regular-text');
+		$buf .= $this->display_config_row('Admin IPs', $input_admin_ips,
+				'Allows listed IPs (space or comma separated) to perform certain actions from their browsers.');
+
+		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL;
+		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'Require number in seconds, minimum is 30', 'seconds');
 		$buf .= $this->display_config_row('Default Public Cache TTL', $input_public_ttl);
 
 		$buf .= $this->input_group_end();
 		echo $buf;
 	}
 
-	private function show_settings_purge($config, $options)
+	private function show_settings_purge($purge_options)
 	{
-		$buf = $this->input_group_start('Auto Purge Rules', 'Select below what archive pages will be automatically purged when posts are published/updated');
+		$buf = $this->input_group_start('Auto Purge Rules', 'Select below what archive pages will be automatically purged when posts are published/updated. If you have dynamic widgets linked to posts like "Most Recent Posts", you can select "All pages", then other checkboxes will be ignored.');
 
 		$tr = '<tr><th scope="row" colspan="2" class="th-full">';
 		$endtr = "</th></tr>\n";
 		$buf .= $tr;
 
-		$purge_options = $config->get_purge_options();
-		$name = $config::OPTION_NAME;
 		$spacer = '&nbsp;&nbsp;&nbsp;';
 
-		$pval = $config::PURGE_FRONT_PAGE;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_ALL_PAGES;
+		$buf .= $this->input_field_checkbox(
+				'purge_' . $pval, $pval, in_array($pval, $purge_options),
+				'All pages');
+
+		$buf .= $spacer;
+
+		$pval = LiteSpeed_Cache_Config::PURGE_FRONT_PAGE;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Front page');
 
 		$buf .= $spacer;
 
-		$pval = $config::PURGE_HOME_PAGE;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_HOME_PAGE;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Home page');
 
 		$buf .= $endtr . $tr;
 
-		$pval = $config::PURGE_AUTHOR;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_AUTHOR;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Author archive');
 
+		$buf .= $spacer;
+
+		$pval = LiteSpeed_Cache_Config::PURGE_POST_TYPE;
+		$buf .= $this->input_field_checkbox(
+				'purge_' . $pval, $pval, in_array($pval, $purge_options),
+				'Post type archive');
+
 		$buf .= $endtr . $tr;
 
-		$pval = $config::PURGE_YEAR;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_YEAR;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Yearly archive');
 
 		$buf .= $spacer;
 
-		$pval = $config::PURGE_MONTH;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_MONTH;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Monthly archive');
 
 		$buf .= $spacer;
 
-		$pval = $config::PURGE_DATE;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_DATE;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Daily archive');
 
 		$buf .= $endtr . $tr;
 
-		$pval = $config::PURGE_TERM;
-		$buf .= $this->input_field_checkbox($name,
+		$pval = LiteSpeed_Cache_Config::PURGE_TERM;
+		$buf .= $this->input_field_checkbox(
 				'purge_' . $pval, $pval, in_array($pval, $purge_options),
 				'Term archive (include category, tag and tax)');
 
-		$buf .= $endtr . $tr;
-
-		$pval = $config::PURGE_POST_TYPE;
-		$buf .= $this->input_field_checkbox($name,
-				'purge_' . $pval, $pval, in_array($pval, $purge_options),
-				'Post type archive');
-
 		$buf .= $endtr;
+		$buf .= $this->input_group_end();
+		echo $buf;
+	}
+
+	private function show_settings_test($options)
+	{
+		$buf = $this->input_group_start('Developer Testing');
+
+		$id = LiteSpeed_Cache_Config::OPID_DEBUG;
+		$debug_levels = array(
+			LiteSpeed_Cache_Config::LOG_LEVEL_NONE => 'None',
+			LiteSpeed_Cache_Config::LOG_LEVEL_ERROR => 'Error',
+			LiteSpeed_Cache_Config::LOG_LEVEL_WARN => 'Warning',
+			LiteSpeed_Cache_Config::LOG_LEVEL_INFO => 'Info',
+			LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG => 'Debug');
+		$input_debug = $this->input_field_select($id, $debug_levels, $options[$id]);
+		$buf .= $this->display_config_row('Debug Level', $input_debug);
+
+		/* Maybe add this feature later
+		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS;
+		$input_test_ips  = $this->input_field_text($id, $options[$id], '', 'regular-text');
+		$buf .= $this->display_config_row('Test IPs', $input_test_ips,
+				'Enable LiteSpeed Cache only for specified IPs. (Space or comma separated.) Allows testing on a live site. If empty, cache will be served to everyone.');
+		 *
+		 */
+
 		$buf .= $this->input_group_end();
 		echo $buf;
 	}
@@ -311,9 +456,9 @@ class LiteSpeed_Cache_Admin {
 		return $buf;
 	}
 
-	private function input_field_checkbox($option_name, $id, $value, $checked_value, $label='')
+	private function input_field_checkbox($id, $value, $checked_value, $label='')
 	{
-		$buf = '<input name="' . $option_name . '[' . $id . ']" type="checkbox" id="'
+		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="checkbox" id="'
 				. $id . '" value="' . $value . '"';
 		if (($checked_value === $value) || (true === $checked_value)) {
 			$buf .= ' checked="checked"';
@@ -325,9 +470,24 @@ class LiteSpeed_Cache_Admin {
 		return $buf;
 	}
 
-	private function input_field_text($option_name, $id, $value, $size='', $style='', $after='')
+	private function input_field_select($id, $seloptions, $selected_value)
 	{
-		$buf = '<input name="' . $option_name . '[' . $id . ']" type="text" id="'
+		$buf = '<select name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" id="'
+				. $id . '">';
+		foreach ($seloptions as $val => $label) {
+			$buf .= '<option value="' . $val . '"';
+			if ($selected_value == $val) {
+				$buf .= ' selected="selected"';
+			}
+			$buf .= '>' . $label . '</option>';
+		}
+		$buf .= '</select>';
+		return $buf;
+	}
+
+	private function input_field_text($id, $value, $size='', $style='', $after='')
+	{
+		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" id="'
 				. $id . '" value="' . $value . '"';
 		if ($size) {
 			$buf .= ' size="' . $size . '"';

@@ -1,19 +1,6 @@
 <?php
 
 /**
- * The file that defines the core plugin class
- *
- * A class definition that includes attributes and functions used across both the
- * public-facing side of the site and the admin area.
- *
- * @link       http://example.com
- * @since      1.0.0
- *
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/includes
- */
-
-/**
  * The core plugin class.
  *
  * This is used to define internationalization, admin-specific hooks, and
@@ -94,7 +81,7 @@ class LiteSpeed_Cache
 		return self::$instance->config;
 	}
 
-	public function debug_log($mesg, $log_level)
+	public function debug_log($mesg, $log_level=0)
 	{
 		if (true === WP_DEBUG) {
 			$this->config->debug_log($mesg, $log_level);
@@ -108,6 +95,7 @@ class LiteSpeed_Cache
 
 	public function register_deactivation()
 	{
+		$this->purge_all();
 		$this->config->plugin_deactivation();
 	}
 
@@ -123,10 +111,12 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		if (!is_user_logged_in()) {
+		if (is_user_logged_in()) {
+			$this->load_logged_in();
+		}
+		else {
 			$this->load_public();
 		}
-		$this->load_shared();
 
 	}
 
@@ -139,8 +129,7 @@ class LiteSpeed_Cache
 	/**
 	 * Adds a notice to the admin interface that the WordPress version is too old for the plugin
 	 *
-	 * @package sitemap
-	 * @since 4.0
+	 * @since 1.0.0
 	 */
 	public static function show_version_error_wp()
 	{
@@ -154,8 +143,7 @@ class LiteSpeed_Cache
 	/**
 	 * Adds a notice to the admin interface that the WordPress version is too old for the plugin
 	 *
-	 * @package sitemap
-	 * @since 4.0
+	 * @since 1.0.0
 	 */
 	public static function show_version_error_php()
 	{
@@ -228,15 +216,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Load the required dependencies for this plugin.
-	 *
-	 * Create an instance of the loader which will be used to register the hooks
-	 * with WordPress.
+	 * Register all the hooks for logged in users.
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_shared()
+	private function load_logged_in()
 	{
 
 		//register purge actions
@@ -262,15 +247,22 @@ class LiteSpeed_Cache
 	public function purge_post($post_id)
 	{
 		// ignore the status we don't care
-		if (!in_array(get_post_status($post_id), array('publish', 'trash'))) {
-				return;
+		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
+			return ;
 		}
 
-		$purge_tags = $this->get_purge_tags($post_id);
-
-		$cache_purge_header = self::LSHEADER_PURGE. ': tag=' . implode(',', $purge_tags);
-		@header($cache_purge_header);
-		$this->debug_log("purge post $post_id " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO);
+		$purge_tags = $this->get_purge_tags($post_id) ;
+		if ( ! empty($purge_tags) ) {
+			$cache_purge_header = self::LSHEADER_PURGE;
+			if ( in_array('*', $purge_tags) ) {
+				$cache_purge_header .= ': *' ;
+			}
+			else {
+				$cache_purge_header .= ': tag=' . implode(',', $purge_tags) ;
+			}
+			@header($cache_purge_header) ;
+			$this->debug_log("purge post $post_id " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
+		}
 	}
 
 	private function is_cacheable()
@@ -316,13 +308,15 @@ class LiteSpeed_Cache
 	public function check_cacheable()
 	{
 		if ($this->is_cacheable()) {
+			$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL);
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl ;
+			@header($cache_control_header);
+
 			$cache_tags = $this->get_cache_tags();
 
 			if (!empty($cache_tags)) {
-				$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=60';
 				$cache_tag_header = self::LSHEADER_CACHE_TAG . ': ' . implode(',', $cache_tags);
 				$this->debug_log('cache_control_header: ' . $cache_control_header . "\n tag_header: " . $cache_tag_header);
-				@header($cache_control_header);
 				@header($cache_tag_header);
 			}
 		}
@@ -330,10 +324,15 @@ class LiteSpeed_Cache
 
 	private function get_cache_tags()
 	{
+		$cache_tags = array();
+		if ($this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES)) {
+			// if purge all, do not set any tags
+			return $cache_tags;
+		}
+
 		global $post;
 		global $wp_query;
 
-		$cache_tags = array();
 		$queried_obj = get_queried_object();
 		$queried_obj_id = get_queried_object_id();
 
@@ -387,7 +386,12 @@ class LiteSpeed_Cache
 		// If not, purge everything on the site.
 
 		$purge_tags = array();
-		$purge_options = $this->config()->get_purge_options();
+		$config = $this->config();
+
+		if ($config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES)) {
+			// ignore the rest if purge all
+			return array('*');
+		}
 
 		// post
 		$purge_tags[] = self::CACHETAG_TYPE_POST . $post_id;
@@ -396,7 +400,7 @@ class LiteSpeed_Cache
 		$post = get_post($post_id);
 		$post_type = $post->post_type;
 
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_TERM, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
 			error_log('tax ' . print_r($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
@@ -410,23 +414,23 @@ class LiteSpeed_Cache
 		}
 
 		// author, for author posts and feed list
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_AUTHOR, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_AUTHOR) ) {
 			$purge_tags[] = self::CACHETAG_TYPE_AUTHOR . get_post_field( 'post_author', $post_id );
 		}
 
 		// archive and feed of post type
 		// todo: check if type contains space
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_POST_TYPE, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_POST_TYPE) ) {
 			if (get_post_type_archive_link($post_type)) {
 				$purge_tags[] = self::CACHETAG_TYPE_ARCHIVE_POSTTYPE . $post_type;
 			}
 		}
 
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_FRONT_PAGE, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_FRONT_PAGE) ) {
 			$purge_tags[] = self::CACHETAG_TYPE_FRONTPAGE;
 		}
 
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_HOME_PAGE, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_HOME_PAGE) ) {
 			$purge_tags[] = self::CACHETAG_TYPE_HOME;
 		}
 
@@ -434,15 +438,15 @@ class LiteSpeed_Cache
 		$date = $post->post_date;
 		$date = strtotime($date);
 
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_DATE, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_DATE) ) {
 			$purge_tags[] = self::CACHETAG_TYPE_ARCHIVE_DATE . date('Ymd', $date);
 		}
 
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_MONTH, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_MONTH) ) {
 			$purge_tags[] = self::CACHETAG_TYPE_ARCHIVE_DATE . date('Ym', $date);
 		}
 
-		if ( in_array(LiteSpeed_Cache_Config::PURGE_YEAR, $purge_options) ) {
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_YEAR) ) {
 			$purge_tags[] = self::CACHETAG_TYPE_ARCHIVE_DATE . date('Y', $date);
 		}
 
