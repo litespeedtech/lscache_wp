@@ -1,9 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * The core plugin config class.
+ *
+ * This maintains all the options and settings for this plugin.
+ *
+ * @since      1.0.0
+ * @package    LiteSpeed_Cache
+ * @subpackage LiteSpeed_Cache/includes
+ * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
 class LiteSpeed_Cache_Config
@@ -12,7 +17,7 @@ class LiteSpeed_Cache_Config
 
 	const LOG_LEVEL_NONE = 0;
 	const LOG_LEVEL_ERROR = 1;
-	const LOG_LEVEL_WARN = 2;
+	const LOG_LEVEL_NOTICE = 2;
 	const LOG_LEVEL_INFO = 3;
 	const LOG_LEVEL_DEBUG = 4;
 
@@ -143,19 +148,30 @@ class LiteSpeed_Cache_Config
 	public function plugin_activation()
 	{
 		$res = update_option(self::OPTION_NAME, $this->get_default_options());
-		$this->debug_log("plugin_activation update option = $res", ($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
+		$this->debug_log("plugin_activation update option = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR));
 	}
 
 	public function plugin_deactivation()
 	{
 		$res = delete_option(self::OPTION_NAME);
-		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
+		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR));
 	}
 
 	public function debug_log($mesg, $log_level=self::LOG_LEVEL_DEBUG)
 	{
-		if ((true === WP_DEBUG)/* && ($log_level <= $this->options[self::OPID_DEBUG])*/) {
-			error_log($this->debug_tag . $mesg);
+		if ((true === WP_DEBUG) && ($log_level <= $this->options[self::OPID_DEBUG])) {
+			$tag = '[';
+			if (self::LOG_LEVEL_ERROR == $log_level)
+				$tag .= 'ERROR';
+			elseif (self::LOG_LEVEL_NOTICE == $log_level)
+				$tag .= 'NOTICE';
+			elseif (self::LOG_LEVEL_INFO == $log_level)
+				$tag .= 'INFO';
+			else
+				$tag .= 'DEBUG';
+
+			$tag .= '] ' . $this->debug_tag;
+			error_log($tag . $mesg);
 		}
 	}
 

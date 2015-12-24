@@ -224,6 +224,14 @@ class LiteSpeed_Cache_Admin {
 			}
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_DEBUG;
+		$debug_level = isset($input[$id]) ? intval($input[$id]) : LiteSpeed_Cache_Config::LOG_LEVEL_NONE;
+		if (($debug_level != $options[$id])
+				&& ($debug_level >= LiteSpeed_Cache_Config::LOG_LEVEL_NONE)
+				&& ($debug_level <= LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG) ) {
+			$options[$id] = $debug_level;
+		}
+
 		if (!empty($errors)) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
 					LiteSpeed_Cache_Config::OPTION_NAME,
@@ -410,7 +418,7 @@ class LiteSpeed_Cache_Admin {
 		$debug_levels = array(
 			LiteSpeed_Cache_Config::LOG_LEVEL_NONE => 'None',
 			LiteSpeed_Cache_Config::LOG_LEVEL_ERROR => 'Error',
-			LiteSpeed_Cache_Config::LOG_LEVEL_WARN => 'Warning',
+			LiteSpeed_Cache_Config::LOG_LEVEL_NOTICE => 'Notice',
 			LiteSpeed_Cache_Config::LOG_LEVEL_INFO => 'Info',
 			LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG => 'Debug');
 		$input_debug = $this->input_field_select($id, $debug_levels, $options[$id]);

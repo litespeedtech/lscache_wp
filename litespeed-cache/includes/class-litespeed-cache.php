@@ -14,6 +14,7 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+
 class LiteSpeed_Cache
 {
 
@@ -81,7 +82,7 @@ class LiteSpeed_Cache
 		return self::$instance->config;
 	}
 
-	public function debug_log($mesg, $log_level=0)
+	public function debug_log($mesg, $log_level=  LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG)
 	{
 		if (true === WP_DEBUG) {
 			$this->config->debug_log($mesg, $log_level);
@@ -402,7 +403,7 @@ class LiteSpeed_Cache
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
-			error_log('tax ' . print_r($taxonomies, true)) ;
+			//$this->debug_log('purge by post, check tax = ' . print_r($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
 				$terms = get_the_terms($post_id, $tax) ;
 				if ( ! empty($terms) ) {
