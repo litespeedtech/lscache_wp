@@ -1,25 +1,15 @@
 <?php
 
 /**
- * The admin-specific functionality of the plugin.
+ * The admin-panel specific functionality of the plugin.
  *
- * @link       http://example.com
+ *
  * @since      1.0.0
- *
- * @package    LSCache_WPConnector
- * @subpackage LSCache_WPConnector/admin
+ * @package    LiteSpeed_Cache
+ * @subpackage LiteSpeed_Cache/admin
+ * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-/**
- * The admin-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
- * @package    LSCache_WPConnector
- * @subpackage LSCache_WPConnector/admin
- * @author     Your Name <email@example.com>
- */
 class LiteSpeed_Cache_Admin {
 
 	/**
@@ -84,12 +74,13 @@ class LiteSpeed_Cache_Admin {
 
 	public function register_admin_menu()
 	{
-		if (current_user_can('manage_options')) {
+		$capability = is_multisite() ? 'manage_network_options' : 'manage_options';
+		if (current_user_can($capability)) {
 
-			$lscache_admin_manage_page = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',  'lscachemgr', array($this, 'show_menu_manage'), 'dashicons-performance');
+			$lscache_admin_manage_page = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability,  'lscachemgr', array($this, 'show_menu_manage'), 'dashicons-performance');
 			add_action('load-' . $lscache_admin_manage_page, array($this, 'add_help_tabs'));
 
-			$lscache_admin_settings_page = add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',  'litespeedcache', array($this, 'show_menu_settings'));
+			$lscache_admin_settings_page = add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability,  'litespeedcache', array($this, 'show_menu_settings'));
 			// adds help tab
 			add_action('load-' . $lscache_admin_settings_page, array($this, 'add_help_tabs'));
         }
@@ -114,14 +105,14 @@ class LiteSpeed_Cache_Admin {
 		$screen->add_help_tab( array(
 			'id'      => 'lsc-overview',
 			'title'   => __('Overview'),
-			'content' => '<p>' . __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server. This plugin will communicate with LiteSpeed Web Server and inform what page can be cached and when to purge them.') . '</p>' .
-				'<p>' . __('You need to have LSCache module enabled in your LiteSpeed Web Server set up.') . '</p>',
+			'content' => '<p>' . __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server. This plugin communicates with LiteSpeed Web Server to let it know which pages are cache-able and when to purge them.') . '</p>' .
+				'<p>' . __('You must have the LSCache module installed and enabled in your LiteSpeed Web Server setup.') . '</p>',
 		) );
 
 		$screen->add_help_tab( array(
 			'id'      => 'lst-purgerules',
 			'title'   => __( 'Auto Purge Rules' ),
-			'content' => '<p>' . __( 'You can set what pages are purged when a post is published or updated. ' ) . '</p>',
+			'content' => '<p>' . __( 'You can set what pages will be purged when a post is published or updated. ' ) . '</p>',
 		) );
 
 		$screen->set_help_sidebar(
@@ -336,7 +327,7 @@ class LiteSpeed_Cache_Admin {
 
 	private function show_settings_purge($purge_options)
 	{
-		$buf = $this->input_group_start('Auto Purge Rules', 'Select below what archive pages will be automatically purged when posts are published/updated. If you have dynamic widgets linked to posts like "Most Recent Posts", you can select "All pages", then other checkboxes will be ignored.');
+		$buf = $this->input_group_start('Auto Purge Rules For Publish/Update', 'Select which pages will be automatically purged when posts are published/updated. <br>Note: Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages. (Other checkboxes will be ignored)');
 
 		$tr = '<tr><th scope="row" colspan="2" class="th-full">';
 		$endtr = "</th></tr>\n";

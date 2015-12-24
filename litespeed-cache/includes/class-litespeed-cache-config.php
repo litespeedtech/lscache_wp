@@ -48,9 +48,11 @@ class LiteSpeed_Cache_Config
 	public function __construct()
 	{
 		$options = get_option(self::OPTION_NAME, $this->get_default_options());
-		if ( is_multisite() && is_array($site_options = get_site_option(self::OPTION_NAME)) ) {
+
+		/* Later we'll see what needs to put in site_options, not used now
+		 * if ( is_multisite() && is_array($site_options = get_site_option(self::OPTION_NAME)) ) {
 			$options = array_merge($options, $site_options); // Multisite network options.
-		}
+		}*/
 		$this->options = $options;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]);
 
