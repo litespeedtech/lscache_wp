@@ -135,9 +135,9 @@ class LiteSpeed_Cache
 	public static function show_version_error_wp()
 	{
 		echo '<div class="error"><p><strong>'
-		. __('Your WordPress version is too old for LiteSpeed Cache WP Plugin.', 'litespeed-cache')
+		. __('Your WordPress version is too old for LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br />'
-		. sprintf(__('LiteSpeed Cache WP Plugin requires at least WordPress %2$s. Please upgrade or go to <a href="%1$s">active plugins</a> and deactivate the LSCache WPConnector plugin to hide this message.', 'litespeed-cache'), 'plugins.php?plugin_status=active', '3.3')
+		. sprintf(__('LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade or go to <a href="%1$s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), 'plugins.php?plugin_status=active', '3.3')
 		. '</p></div>' ;
 	}
 
@@ -149,9 +149,9 @@ class LiteSpeed_Cache
 	public static function show_version_error_php()
 	{
 		echo '<div class="error"><p><strong>'
-		. __('Your PHP version is too old for LiteSpeed Cache WP Plugin.', 'litespeed-cache')
+		. __('Your PHP version is too old for LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br /> '
-		. sprintf(__('LiteSpeed Cache WP Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate the Google XML Sitemaps plugin to hide this message. ', 'litespeed-cache'),
+		. sprintf(__('LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate LiteSpeed Cache plugin to hide this message. ', 'litespeed-cache'),
 				"plugins.php?plugin_status=active", PHP_VERSION, '5.3')
 		. '</p></div>' ;
 	}
