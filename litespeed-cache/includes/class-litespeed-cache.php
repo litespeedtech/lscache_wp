@@ -167,7 +167,7 @@ class LiteSpeed_Cache
 	 */
 	private function set_locale()
 	{
-		load_plugin_textdomain(self::PLUGIN_NAME);
+		load_plugin_textdomain(self::PLUGIN_NAME, false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/');
 	}
 
 	/**
@@ -198,6 +198,8 @@ class LiteSpeed_Cache
 				add_action( $event, array($this, 'purge_all'));
 			}
 		}
+		
+		$this->set_locale();
 	}
 
 	/**
@@ -209,9 +211,6 @@ class LiteSpeed_Cache
 	 */
 	private function load_public()
 	{
-		// no language translation for now
-		//$this->loader->add_action('plugins_loaded', $this, 'set_locale') ;
-
 		// user is not logged in
 		add_action('wp', array($this, 'check_cacheable'), 5);
 	}
