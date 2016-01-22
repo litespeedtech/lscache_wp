@@ -135,9 +135,9 @@ class LiteSpeed_Cache
 	public static function show_version_error_wp()
 	{
 		echo '<div class="error"><p><strong>'
-		. __('Your WordPress version is too old for LiteSpeed Cache Plugin.', 'litespeed-cache')
+		. __('Your WordPress version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br />'
-		. sprintf(__('LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade or go to <a href="%1$s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), 'plugins.php?plugin_status=active', '3.3')
+		. sprintf(wp_kses(__('The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade or go to <a href="%1$s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), array('a' => array('href' => array()))), 'plugins.php?plugin_status=active', '3.3')
 		. '</p></div>' ;
 	}
 
@@ -151,7 +151,7 @@ class LiteSpeed_Cache
 		echo '<div class="error"><p><strong>'
 		. __('Your PHP version is too old for LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br /> '
-		. sprintf(__('LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate LiteSpeed Cache plugin to hide this message. ', 'litespeed-cache'),
+		. sprintf(wp_kses(__('LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), array('a' => array('href' => array()))),
 				"plugins.php?plugin_status=active", PHP_VERSION, '5.3')
 		. '</p></div>' ;
 	}
@@ -165,12 +165,11 @@ class LiteSpeed_Cache
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function set_locale()
-	{
-		load_plugin_textdomain(self::PLUGIN_NAME, false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/');
-	}
+	private function set_locale() {
+        load_plugin_textdomain(self::PLUGIN_NAME, false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/');
+        }
 
-	/**
+    /**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
@@ -198,8 +197,7 @@ class LiteSpeed_Cache
 				add_action( $event, array($this, 'purge_all'));
 			}
 		}
-		
-		$this->set_locale();
+                $this->set_locale();
 	}
 
 	/**

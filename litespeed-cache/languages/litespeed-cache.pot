@@ -1,0 +1,243 @@
+# Translation template for the LiteSpeed Cache WordPress Plugin.
+# Copyright (C) 2015 LiteSpeed Technologies, Inc.
+# This file is distributed under the same license as the LiteSpeed_Cache package.
+# LiteSpeed Technologies <info@litespeedtech.com>, 2016.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0.0\n"
+"Report-Msgid-Bugs-To: info@litespeedtech.com\n"
+"POT-Creation-Date: 2016-01-19 14:52-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: admin/class-litespeed-cache-admin.php:108
+msgid "Overview"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:109
+msgid ""
+"LiteSpeed Cache is a page cache built into LiteSpeed Web Server. This plugin "
+"communicates with LiteSpeed Web Server to let it know which pages are cache-"
+"able and when to purge them."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:110
+msgid ""
+"You must have the LSCache module installed and enabled in your LiteSpeed Web "
+"Server setup."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:115
+msgid "Auto Purge Rules"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:116
+msgid ""
+"You can set what pages will be purged when a post is published or updated."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:120
+msgid "For more information:"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:121
+msgid "LSCache Documentation"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:122
+msgid "Support Forum"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:154
+msgid "Invalid data in Admin IPs."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:165
+msgid "Default Public Cache TTL must be set to 30 seconds or more"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:212
+msgid "Invalid data in Test IPs."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:239
+msgid "Settings"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:254
+msgid "LiteSpeed Cache Management"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:255
+msgid ""
+"LiteSpeed Cache is maintained and managed by LiteSpeed Web Server. You can "
+"inform LiteSpeed Web Server to purge cached contents from this screen."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:256
+msgid "More options will be added here in future releases."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:261
+msgid "Purge All"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:270
+msgid "Notified LiteSpeed Web Server to purge the public cache."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:285
+msgid "LiteSpeed Cache Settings"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:302
+msgid ""
+"Notice: Your installation of LiteSpeed Web Server does not have LSCache "
+"enabled. This plugin will NOT work properly."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:310
+msgid "General"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:314
+msgid "Enable LiteSpeed Cache"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:318
+msgid "Admin IPs"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:319
+msgid ""
+"Allows listed IPs (space or comma separated) to perform certain actions from "
+"their browsers."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:322
+msgid "seconds"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:323
+msgid "Default Public Cache TTL"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:323
+msgid "Required number in seconds, minimum is 30."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:331
+msgid "Auto Purge Rules For Publish/Update"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:331
+msgid ""
+"Select which pages will be automatically purged when posts are published/"
+"updated."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:331
+msgid ""
+"Note: Select \"All\" if you have dynamic widgets linked to posts on pages "
+"other than the front or home pages. (Other checkboxes will be ignored)"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:342
+msgid "All pages"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:349
+msgid "Front page"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:356
+msgid "Home page"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:363
+msgid "Author archive"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:370
+msgid "Post type archive"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:377
+msgid "Yearly archive"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:384
+msgid "Monthly archive"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:391
+msgid "Daily archive"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:398
+msgid "Term archive (include category, tag, and tax)"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:407
+msgid "Developer Testing"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:411
+msgid "None"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:412
+msgid "Error"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:413
+msgid "Notice"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:414
+msgid "Info"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:415
+msgid "Debug"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:417
+msgid "Debug Level"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:417
+msgid "Outputs to WordPress debug log."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:139
+msgid "Your WordPress version is too old for the LiteSpeed Cache Plugin."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:141
+#, php-format
+msgid ""
+"The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade "
+"or go to <a href=\"%1$s\">active plugins</a> and deactivate the LiteSpeed "
+"Cache plugin to hide this message."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:153
+msgid "Your PHP version is too old for LiteSpeed Cache Plugin."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:155
+#, php-format
+msgid ""
+"LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, "
+"which is out-dated and insecure. Please ask your web host to update your PHP "
+"installation or go to <a href=\"%1$s\">active plugins</a> and deactivate "
+"LiteSpeed Cache plugin to hide this message."
+msgstr ""

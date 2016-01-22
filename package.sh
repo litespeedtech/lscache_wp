@@ -4,7 +4,7 @@ SCRIPT_DIR=`dirname $0`
 
 cd $SCRIPT_DIR
 
-PACK_FILE=lswpcache
+PACK_FILE=litespeed-cache
 
 if [ -f "${PACK_FILE}.zip" ] ; then
 	/bin/rm -f "${PACK_FILE}.zip" 
