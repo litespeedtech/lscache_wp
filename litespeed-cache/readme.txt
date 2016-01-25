@@ -1,4 +1,4 @@
-=== LiteSpeed Cache Plugin for WordPress ===
+=== LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 3.3
