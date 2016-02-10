@@ -66,8 +66,8 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function enqueue_scripts()
 	{
-		// not used js css
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css', array(), $this->version, 'all') ;
+		wp_enqueue_script('jquery-ui-tabs') ;
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js', array( 'jquery' ), $this->version, false) ;
 	}
 
@@ -272,13 +272,27 @@ class LiteSpeed_Cache_Admin
 		$purge_options = $config->get_purge_options() ;
 
 		echo '<div class="wrap">
-  <h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
-<form method="post" action="options.php">' ;
+		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
+		<form method="post" action="options.php">' ;
+
 		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
 
-		$this->show_settings_general($options) ;
-		$this->show_settings_purge($config->get_purge_options()) ;
-		$this->show_settings_test($options) ;
+		echo '
+		 <div id="lsc-tabs">
+		 <ul>
+		 <li><a href="#basic-settings">' . __('Basic', 'litespeed-cache') . '</a></li>
+		 <li><a href="#advanced-settings">' . __('Advanced', 'litespeed-cache') . '</a></li>
+		<li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>
+		</ul>
+		 <div id="basic-settings">'
+		. $this->show_settings_general($options) .
+		'</div>
+		<div id="advanced-settings">'
+		. $this->show_settings_purge($config->get_purge_options()) .
+		'</div>
+		<div id ="debug-settings">'
+		. $this->show_settings_test($options) .
+		'</div></div>' ;
 
 		submit_button() ;
 		echo "</form></div>\n" ;
@@ -303,16 +317,12 @@ class LiteSpeed_Cache_Admin
 		$input_enabled = $this->input_field_checkbox($id, '1', $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enabled) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
-		$input_admin_ips = $this->input_field_text($id, $options[$id], '', 'regular-text') ;
-		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips, __('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')) ;
-
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
 		$buf .= $this->display_config_row(__('Default Public Cache TTL', 'litespeed-cache'), $input_public_ttl, __('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
 
 		$buf .= $this->input_group_end() ;
-		echo $buf ;
+		return $buf ;
 	}
 
 	private function show_settings_purge( $purge_options )
@@ -379,12 +389,16 @@ class LiteSpeed_Cache_Admin
 
 		$buf .= $endtr ;
 		$buf .= $this->input_group_end() ;
-		echo $buf ;
+		return $buf ;
 	}
 
 	private function show_settings_test( $options )
 	{
 		$buf = $this->input_group_start(__('Developer Testing', 'litespeed-cache')) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
+		$input_admin_ips = $this->input_field_text($id, $options[$id], '', 'regular-text') ;
+		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips, __('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_levels = array(
@@ -405,7 +419,7 @@ class LiteSpeed_Cache_Admin
 		 */
 
 		$buf .= $this->input_group_end() ;
-		echo $buf ;
+		return $buf ;
 	}
 
 	private function input_group_start( $title = '', $description = '' )

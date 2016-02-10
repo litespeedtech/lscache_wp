@@ -63,6 +63,7 @@ class LiteSpeed_Cache
         register_deactivation_hook($plugin_file, array($this, 'register_deactivation'));
 
 		add_action('after_setup_theme', array($this, 'init'));
+
 	}
 
 	public static function run()
@@ -181,8 +182,9 @@ class LiteSpeed_Cache
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
+                
 		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin.php' ;
-
+                
 		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION) ;
 
 		//register purge_all actions

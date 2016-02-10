@@ -2,3 +2,5 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+@import "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css";

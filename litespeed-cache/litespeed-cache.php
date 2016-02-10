@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * The plugin bootstrap file
  *
@@ -14,7 +15,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       LiteSpeed Cache
- * Plugin URI:        https://www.litespeedtech.com/products/litespeed-web-cache/lscwp
+ * Plugin URI:        http://www.litespeedtech.com/lscache-wp
  * Description:       WordPress plugin to connect to LSCache on LiteSpeed Web Server.
  * Version:           1.0.0
  * Author:            LiteSpeed Technologies
@@ -24,7 +25,7 @@
  * Text Domain:       litespeed-cache
  * Domain Path:       /languages
  *
- * Copyright (C) 2015-2016 LiteSpeed Technologies, Inc.
+ * Copyright (C) 2015 LiteSpeed Technologies, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +41,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
+
+
 // If this file is called directly, abort.
 if ( ! defined('WPINC') ) {
 	die ;
@@ -77,7 +80,7 @@ function run_litespeed_cache()
 	}
 
 	if ( $version_supported ) {
-		LiteSpeed_Cache::run() ;
+		LiteSpeed_Cache::run();
 	}
 	else {
 		return false ;
