@@ -96,7 +96,7 @@ class LiteSpeed_Cache_Config
 			self::PURGE_MONTH,
 			self::PURGE_TERM,
 			self::PURGE_POST_TYPE
-		) ;
+				) ;
 		sort($default_purge_options) ;
 
 		$default_options = array(
@@ -109,7 +109,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options)
-		) ;
+				) ;
 
 		return $default_options ;
 	}
@@ -140,6 +140,50 @@ class LiteSpeed_Cache_Config
 
 			$res = update_option(self::OPTION_NAME, $this->options) ;
 			$this->debug_log("plugin_upgrade option changed = $res $log\n", ($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR)) ;
+		}
+	}
+
+	private function wp_cache_var_setter( $setting )
+	{
+		$file = ABSPATH . 'wp-config.php' ;
+		if ( is_writeable($file) ) {
+			$file_content = file_get_contents($file) ;
+
+			if ( $setting == 'set' ) {
+				$count = 0 ;
+
+				$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m', "define('WP_CACHE', true);\n", $file_content, -1, $count) ;
+				if ( $count == 0 ) {
+					$new_file_content = preg_replace('/(\$table_prefix[^;]+;\n)/m', "$1\ndefine('WP_CACHE', true);\n", $file_content) ;
+				}
+			}
+			elseif ( $setting == 'unset' ) {
+				$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m', "define('WP_CACHE', false);\n", $file_content) ;
+			}
+
+			file_put_contents($file, $new_file_content) ;
+			return true ;
+		}
+		return false ;
+	}
+
+	public function set_wp_cache_var()
+	{
+		if ( defined('WP_CACHE') && constant('WP_CACHE') == true ) {
+			return true ;
+		}
+		else {
+			$this->wp_cache_var_setter('set') ;
+		}
+	}
+
+	public function unset_wp_cache_var()
+	{
+		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+			return true ;
+		}
+		else {
+			return $this->wp_cache_var_setter('unset') ;
 		}
 	}
 

@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * The plugin bootstrap file
  *
@@ -41,8 +40,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-
-
 // If this file is called directly, abort.
 if ( ! defined('WPINC') ) {
 	die ;
@@ -79,8 +76,13 @@ function run_litespeed_cache()
 		$version_supported = false ;
 	}
 
+	//Checks if WP_CACHE is defined and true in the wp-config.php file.
+	if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+		add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
+	}
+
 	if ( $version_supported ) {
-		LiteSpeed_Cache::run();
+		LiteSpeed_Cache::run() ;
 	}
 	else {
 		return false ;
