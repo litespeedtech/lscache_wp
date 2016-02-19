@@ -1,7 +1,24 @@
 
 
 
-if [ "$1" == "find" -a "$#" -eq 2 ]
+if [ "$1" == '--help' ]
+then
+    printf "\n*************************************\n"
+	printf "\nPossible Commands:\n\n\n"
+	printf "To enable/disable LSCWP:\n"
+	printf "===============================\n" 
+	printf "./install_lscwp.sh [enable/disable] LSPHP_PATH WP_DIR1_PATH WP_DIR2_PATH ...\n" 
+	printf "\nor\n\n" 
+	printf "./install_lscwp.sh [enable/disable] LSPHP_PATH -f < wpInstalls.txt_file\n\n\n" 
+	printf "To find all WP installs in a certain directory and create a wpInstalls.txt file:\n" 
+    printf "===============================\n" 
+	printf "./install_lscwp.sh find DIR_PATH\n\n\n" 
+	printf "To check a directory for known cache plugins and their statuses:\n"
+	printf "===============================\n"
+	printf "./install_lscwp.sh status LSPHP_PATH WP_DIR_PATH\n\n\n"
+	printf "*************************************\n\n"
+
+elif [ "$1" == "find" -a "$#" -eq 2 ]
 then
 	if [ "${2}" != "/" ]
 	then
@@ -178,19 +195,6 @@ then
 	done
 
 else
-	printf "\n*************************************\n"
-	printf "\nInvalid Input! Possible Commands:\n\n\n"
-	printf "To enable/disable LSCWP:\n"
-	printf "===============================\n" 
-	printf "./install_lscwp.sh [enable/disable] LSPHP_PATH WP_DIR1_PATH WP_DIR2_PATH ...\n" 
-	printf "\nor\n\n" 
-	printf "./install_lscwp.sh [enable/disable] LSPHP_PATH -f < wpInstalls.txt_file\n\n\n" 
-	printf "To find all WP installs in a certain directory and create a wpInstalls.txt file:\n" 
-    printf "===============================\n" 
-	printf "./install_lscwp.sh find DIR_PATH\n\n\n" 
-	printf "To check a directory for known cache plugins and their statuses:\n"
-	printf "===============================\n"
-	printf "./install_lscwp.sh status LSPHP_PATH WP_DIR_PATH\n\n\n"
-	printf "*************************************\n\n"
+	printf "Invalid Input! Try --help for a list of commands.\n\n"
 	exit 1
 fi
