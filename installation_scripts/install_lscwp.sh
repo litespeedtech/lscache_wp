@@ -21,6 +21,32 @@ printHelp() {
 	printf "./install.lscwp.sh status /path/to/specific/install\n\n"  
 	printf "*************************************\n\n"  
 }
+function htaccess_create (){
+    sudo -u ${1} touch "${2}/.htaccess2"
+    
+    printf "# BEGIN WordPress\n" > "${2}/.htaccess2"
+    printf "# END WordPress\n\n" >> "${2}/.htaccess2"
+    printf "<IfModule Litespeed>\n" >> "${2}/.htaccess2"
+    printf "CacheLookup public on\n" >> "${2}/.htaccess2"
+    printf "</IfModule>\n" >> "${2}/.htaccess2"
+}
+
+function htaccess_modify (){
+    
+    grep -q "<IfModule \+Litespeed *>" "${WP_DIR}/.htaccess2"
+    if [ $? -eq 0 ]
+    then
+        grep -q ' *CacheLookup \+public \+.\+' "${WP_DIR}/.htaccess2"
+        if [ $? -eq 0 ]
+        then
+            sed -i 's/ *CacheLookup \+public \+.\+/CacheLookup public on/' ${WP_DIR}/.htaccess2
+        else
+            sed -i '/<IfModule \+Litespeed *>/a CacheLookup public on' ${WP_DIR}/.htaccess2
+        fi
+    else
+        sed -i '/# END WordPress/a \\n<IfModule Litespeed>\nCacheLookup public on\n</IfModule>\n' ${WP_DIR}/.htaccess2
+    fi
+}
 
 if [ "$1" == '--help' ]
 then
@@ -51,10 +77,10 @@ then
 			done
 			
 			for CHILD_DIR in $(find "${SEARCH_DIR}" -name wp-content -print)
-                        do
-                                parent=$(dirname $CHILD_DIR)
-                                echo "${parent}" >> "wpInstalls${COUNT}.txt"
-                        done
+            do
+                parent=$(dirname $CHILD_DIR)
+                echo "${parent}" >> "wpInstalls${COUNT}.txt"
+            done
 		fi
 	fi
 
@@ -73,42 +99,57 @@ then
 	then
 		USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
 
-                sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
-                sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php status ${WP_DIR}
-                rm "${WP_DIR}/lscwp_enable_disable.php"
+        sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
+        sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php status ${WP_DIR}
+        rm "${WP_DIR}/lscwp_enable_disable.php"
 
 		exit 0
 	fi
 
 elif [ "${1}" == "enable" -a "${3}" == "-f" ]
 then
-        LSPHP_PATH=${2}
+    LSPHP_PATH=${2}
 
-        while IFS= read -r DIR || [[ -n "$DIR" ]];
-        do	
+    while IFS= read -r DIR || [[ -n "$DIR" ]];
+    do	
 		if [ "${DIR}" != "/" ]
 		then
-                	WP_DIR="${DIR%/}"
+            WP_DIR="${DIR%/}"
 		else
 			WP_DIR="${DIR}"
 		fi
 
-                if [ -d "${WP_DIR}" ]
-                then
+        if [ -d "${WP_DIR}" ]
+        then
 			if [ ! -d "${WP_DIR}/wp-content/plugins/woocommerce" ]
 			then
-                        	USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
+                USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
 
-                        	sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
-                        	sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
-                        	sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}
-                        	rm "${WP_DIR}/lscwp_enable_disable.php"
+                sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
+                sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
+                if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
+                then
+                    if [ -e "${WP_DIR}/.htaccess2" ]
+                    then
+                        if [ -w "${WP_DIR}/.htaccess2" ]
+                        then
+                            htaccess_modify ${WP_DIR}
+                            unset htaccess_modify
+                        else
+                            echo "${WP_DIR} - Unable to write to .htaccess file."
+                        fi
+                    else
+                        htaccess_create ${USER} ${WP_DIR}
+                        unset htaccess_create
+                    fi
+                fi       	
+                rm "${WP_DIR}/lscwp_enable_disable.php"
 			else
 				echo -e "\n${WP_DIR} - WooCommerce installation detected. LSCWP not installed.\n"
 				exit 1
 			fi
-                fi
-        done
+        fi
+    done
 
 
 elif [ "${1}" == "enable" -a "$#" -gt 2 ]
@@ -133,11 +174,27 @@ then
 
 				sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
 				sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
-				sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}
-				rm "${WP_DIR}/lscwp_enable_disable.php"
+				if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
+                then
+                    if [ -e "${WP_DIR}/.htaccess2" ]
+                    then
+                        if [ -w "${WP_DIR}/.htaccess2" ]
+                        then
+                           htaccess_modify ${WP_DIR}
+                           unset htaccess_modify
+                        else
+                            echo "${WP_DIR} - Unable to write to .htaccess file."
+                        fi
+                    else
+                        htaccess_create ${USER} ${WP_DIR}
+                        unset htaccess_create
+                    fi
+                fi
+				
+                rm "${WP_DIR}/lscwp_enable_disable.php"
 			else
 				echo -e "\n${WP_DIR} - WooCommerce installation detected. LSCWP not installed.\n"
-                                exit 1
+                exit 1
 			fi
 		fi
 		
@@ -146,30 +203,30 @@ then
 	
 elif [ "${1}" == "disable" -a "${3}" == "-f" ]
 then
-        LSPHP_PATH=${2}
+    LSPHP_PATH=${2}
 
-        while IFS= read -r DIR || [[ -n "$DIR" ]];
-        do
-		if [ "${DIR}" != "/" ]
-		then
-                	WP_DIR="${DIR%/}"
-		else 
-			WP_DIR="${DIR}"
-		fi
+    while IFS= read -r DIR || [[ -n "$DIR" ]];
+    do
+        if [ "${DIR}" != "/" ]
+        then
+            WP_DIR="${DIR%/}"
+        else 
+            WP_DIR="${DIR}"
+        fi
 
-                if [ -d "${WP_DIR}" ]
-                then
-                         if [ -d "${WP_DIR}/wp-content/plugins/litespeed-cache" ]
-                        then
-                                USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
+        if [ -d "${WP_DIR}" ]
+        then
+            if [ -d "${WP_DIR}/wp-content/plugins/litespeed-cache" ]
+            then
+                USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
 
-                                sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
-                                sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php disable ${WP_DIR}
-                                rm "${WP_DIR}/lscwp_enable_disable.php"
-                                rm -r "${WP_DIR}/wp-content/plugins/litespeed-cache/"
-                        fi
-                fi
-        done
+                sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
+                sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php disable ${WP_DIR}
+                rm "${WP_DIR}/lscwp_enable_disable.php"
+                rm -r "${WP_DIR}/wp-content/plugins/litespeed-cache/"
+            fi
+        fi
+    done
 
 elif [ "${1}" == "disable" -a "$#" -gt 2 ]
 then
@@ -193,7 +250,7 @@ then
 					
 				sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
 				sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php disable ${WP_DIR}
-                       		rm "${WP_DIR}/lscwp_enable_disable.php"
+                rm "${WP_DIR}/lscwp_enable_disable.php"
 				rm -r "${WP_DIR}/wp-content/plugins/litespeed-cache/"
 			fi
 		fi

@@ -9,7 +9,7 @@ $action = $argv[1] ;
 $WP_DIR = $argv[2] ;
 
 /*
-* If plugin is in cache list, echo its name and current status. 
+* If plugin is in cache list, echo its name and current status.
 */
 function cachedetect($plugin,$value){
 
@@ -43,7 +43,9 @@ if ( $action == "status"  ) {
 elseif ( $action == "enable" ) {
 	if ( ! activate_plugin(PLUGIN_NAME, '', false, false) == null ) {
 		printf("\nLSCWP not enabled for %s \n\n", $WP_DIR) ;
+		return false;
 	}
+	return true;
 }
 
 elseif ( $action == "disable" ) {
