@@ -1,23 +1,30 @@
 
-
+printHelp() {
+    printf "\n*************************************\n" 
+	printf "\nLSCWP Install Script Help Page\n" 
+	printf "\nUsage: ./install_lscwp.sh [command] [parameters]\n\n" 
+	printf "\nPossible Commands:\n\n" 
+	printf "  find [DIR_PATH]\n" 
+	printf "\tSearch a directory for all WordPress installations within its subdirectories. This command will create a wpInstalls.txt file.\n\n" | fold -sw 80 
+	printf "  enable/disable [LSPHP_PATH] [-f WP_INSTALLS_FILE | WP_PATH1 WP_PATH2...]\n" 
+	printf "\tEnable or disable LSWCP for specified WordPress installations. The list of WordPress installs may be passed in with the command or if the -f parameter is set, a file is expected to be redirected in.\n\n" | fold -sw 80
+	printf "  status [LSPHP_PATH] [WP_PATH]\n" 
+	printf "\tCheck the status of all known cache plugins for a WordPress installation. This command will output a list of cache plugins and their status (enabled/disabled). This may not list all cache plugins.\n\n\n" | fold -sw 80
+	printf "Example Usage:\n\n"  
+	printf "Find all installations:\n"  
+	printf "./install_lscwp.sh find /path/to/all/installs\n\n"  
+	printf "Enable LSCWP on all installations:\n"  
+	printf "./install_lscwp.sh enable -f < wpInstalls.txt\n\n"  
+	printf "Disable LSCWP on a specific install:\n"  
+	printf "./install_lscwp.sh disable /path/to/specific/install\n\n"  
+	printf "Check the status of a specific install:\n"  
+	printf "./install.lscwp.sh status /path/to/specific/install\n\n"  
+	printf "*************************************\n\n"  
+}
 
 if [ "$1" == '--help' ]
 then
-    printf "\n*************************************\n"
-	printf "\nPossible Commands:\n\n\n"
-	printf "To enable/disable LSCWP:\n"
-	printf "===============================\n" 
-	printf "./install_lscwp.sh [enable/disable] LSPHP_PATH WP_DIR1_PATH WP_DIR2_PATH ...\n" 
-	printf "\nor\n\n" 
-	printf "./install_lscwp.sh [enable/disable] LSPHP_PATH -f < wpInstalls.txt_file\n\n\n" 
-	printf "To find all WP installs in a certain directory and create a wpInstalls.txt file:\n" 
-    printf "===============================\n" 
-	printf "./install_lscwp.sh find DIR_PATH\n\n\n" 
-	printf "To check a directory for known cache plugins and their statuses:\n"
-	printf "===============================\n"
-	printf "./install_lscwp.sh status LSPHP_PATH WP_DIR_PATH\n\n\n"
-	printf "*************************************\n\n"
-
+    printHelp
 elif [ "$1" == "find" -a "$#" -eq 2 ]
 then
 	if [ "${2}" != "/" ]
