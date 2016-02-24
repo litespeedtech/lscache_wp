@@ -21,30 +21,31 @@ printHelp() {
 	printf "./install.lscwp.sh status /path/to/specific/install\n\n"  
 	printf "*************************************\n\n"  
 }
+
 function htaccess_create (){
-    sudo -u ${1} touch "${2}/.htaccess2"
+    sudo -u ${1} touch "${2}/.htaccess"
     
-    printf "# BEGIN WordPress\n" > "${2}/.htaccess2"
-    printf "# END WordPress\n\n" >> "${2}/.htaccess2"
-    printf "<IfModule Litespeed>\n" >> "${2}/.htaccess2"
-    printf "CacheLookup public on\n" >> "${2}/.htaccess2"
-    printf "</IfModule>\n" >> "${2}/.htaccess2"
+    printf "# BEGIN WordPress\n" > "${2}/.htaccess"
+    printf "# END WordPress\n\n" >> "${2}/.htaccess"
+    printf "<IfModule Litespeed>\n" >> "${2}/.htaccess"
+    printf "CacheLookup public on\n" >> "${2}/.htaccess"
+    printf "</IfModule>\n" >> "${2}/.htaccess"
 }
 
 function htaccess_modify (){
     
-    grep -q "<IfModule \+Litespeed *>" "${WP_DIR}/.htaccess2"
+    grep -q "<IfModule \+Litespeed *>" "${1}/.htaccess"
     if [ $? -eq 0 ]
     then
-        grep -q ' *CacheLookup \+public \+.\+' "${WP_DIR}/.htaccess2"
+        grep -q ' *CacheLookup \+public \+.\+' "${1}/.htaccess"
         if [ $? -eq 0 ]
         then
-            sed -i 's/ *CacheLookup \+public \+.\+/CacheLookup public on/' ${WP_DIR}/.htaccess2
+            sed -i 's/ *CacheLookup \+public \+.\+/CacheLookup public on/' ${1}/.htaccess
         else
-            sed -i '/<IfModule \+Litespeed *>/a CacheLookup public on' ${WP_DIR}/.htaccess2
+            sed -i '/<IfModule \+Litespeed *>/a CacheLookup public on' ${1}/.htaccess
         fi
     else
-        sed -i '/# END WordPress/a \\n<IfModule Litespeed>\nCacheLookup public on\n</IfModule>\n' ${WP_DIR}/.htaccess2
+        sed -i '/# END WordPress/a \\n<IfModule Litespeed>\nCacheLookup public on\n</IfModule>\n' ${1}/.htaccess
     fi
 }
 
@@ -129,9 +130,9 @@ then
                 sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
                 if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
                 then
-                    if [ -e "${WP_DIR}/.htaccess2" ]
+                    if [ -e "${WP_DIR}/.htaccess" ]
                     then
-                        if [ -w "${WP_DIR}/.htaccess2" ]
+                        if [ -w "${WP_DIR}/.htaccess" ]
                         then
                             htaccess_modify ${WP_DIR}
                             unset htaccess_modify
@@ -176,9 +177,9 @@ then
 				sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
 				if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
                 then
-                    if [ -e "${WP_DIR}/.htaccess2" ]
+                    if [ -e "${WP_DIR}/.htaccess" ]
                     then
-                        if [ -w "${WP_DIR}/.htaccess2" ]
+                        if [ -w "${WP_DIR}/.htaccess" ]
                         then
                            htaccess_modify ${WP_DIR}
                            unset htaccess_modify
