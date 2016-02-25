@@ -282,13 +282,29 @@ class LiteSpeed_Cache
 			$this->debug_log("purge post $post_id " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
 		}
 	}
+	
+	private function is_excluded($excludes_list)
+	{
+        $uri = $_SERVER["REQUEST_URI"] ;
+        $uri_len = strlen( $uri ) ;
+        foreach( $excludes_list as $excludes_rule )
+        {
+            $rule_len = strlen( $excludes_rule );
+            if (( $uri_len >= $rule_len )
+                && ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 )) 
+            {
+                return true ;
+            }
+        }
+        return false;
+	}
 
 	private function is_cacheable()
 	{
 		// logged_in users already excluded, no hook added
-		//$options = self::getOptions();
 		$method = $_SERVER["REQUEST_METHOD"] ;
-
+        $excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA);
+        
 		if ( 'GET' !== $method ) {
 			return $this->no_cache_for('not GET method') ;
 		}
@@ -313,7 +329,13 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('no theme used') ;
 		}
 
-		return true ;
+		if (( ! empty($excludes))
+            && ( $this->is_excluded(explode("\n", $excludes)))) 
+        {
+            return true;
+		}
+
+		return true;
 	}
 
 	private function no_cache_for( $reason )

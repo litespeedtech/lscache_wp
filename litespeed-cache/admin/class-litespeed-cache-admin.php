@@ -188,6 +188,11 @@ class LiteSpeed_Cache_Admin
 			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
 		}
 
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA ;
+        if ( isset($input[$id]) ) {
+            $options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
+        }
+
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
 		if ( isset($input[$id]) ) {
 			// this feature has not implemented yet
@@ -280,15 +285,19 @@ class LiteSpeed_Cache_Admin
 		echo '
 		 <div id="lsc-tabs">
 		 <ul>
-		 <li><a href="#basic-settings">' . __('Basic', 'litespeed-cache') . '</a></li>
-		 <li><a href="#advanced-settings">' . __('Advanced', 'litespeed-cache') . '</a></li>
+		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
+		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
+		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
 		<li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>
 		</ul>
-		 <div id="basic-settings">'
+		 <div id="general-settings">'
 		. $this->show_settings_general($options) .
 		'</div>
-		<div id="advanced-settings">'
+		<div id="purge-settings">'
 		. $this->show_settings_purge($config->get_purge_options()) .
+		'</div>
+		<div id="exclude-settings">'
+		. $this->show_settings_excludes($options) .
 		'</div>
 		<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
@@ -392,6 +401,40 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
+	private function show_settings_excludes( $options )
+	{
+        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA;
+        $excludes_buf = $options[$excludes_id];
+        $excludes_description = 
+            'Enter a list of urls that you do not want to have cached.
+            <br>
+            The urls will be compared to the REQUEST_URI server variable.
+            <br>
+            There should only be one url per line.
+            <br><br>
+            <b>NOTE:</b> URLs must start with a \'/\' to be correctly matched.
+            <br>
+            Any surrounding whitespaces will be trimmed.
+            <br><br>
+            e.g. to exclude http://www.example.com/excludethis.php, I would have:
+            <br>
+            <input type="text" name="example_exclude" value="/excludethis.php" readonly>
+            <br><br>';
+
+        $buf = $this->input_group_start(
+                                __('URI List', 'litespeed-cache'),
+                                __($excludes_description, 'litespeed-cache'));
+        $tr = '<tr><td>' ;
+        $endtr = "</td></tr>\n" ;
+        $buf .= $tr ;
+        $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
+                                                '20', '80', '');
+        $buf .= $endtr;
+
+		$buf .= $this->input_group_end();
+        return $buf;
+    }
+
 	private function show_settings_test( $options )
 	{
 		$buf = $this->input_group_start(__('Developer Testing', 'litespeed-cache')) ;
@@ -494,6 +537,24 @@ class LiteSpeed_Cache_Admin
 			$buf .= ' ' . $after ;
 		}
 		return $buf ;
+	}
+
+	private function input_field_textarea( $id, $value, $rows = '', $cols = '', $style = '')
+	{
+		$buf = '<textarea name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" 
+                id="' . $id . '"';
+		if ( $rows ) {
+			$buf .= ' rows="' . $rows . '"';
+		}
+		if ( $cols ) {
+			$buf .= ' cols="' . $cols . '"';
+		}
+		if ( $style ) {
+			$buf .= ' class="' . $style . '"';
+		}
+		$buf .= '>' . $value . '</textarea>';
+
+		return $buf;
 	}
 
 }

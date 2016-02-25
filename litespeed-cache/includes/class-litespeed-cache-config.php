@@ -37,6 +37,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_DATE = 'D' ;
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
+    const OPID_EXCLUDES_AREA = 'excludes_area' ;
 
 	protected $options ;
 	protected $purge_options ;
@@ -108,7 +109,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_PUBLIC_TTL => 28800,
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
-			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options)
+			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
+            self::OPID_EXCLUDES_AREA => ''
 				) ;
 
 		return $default_options ;
