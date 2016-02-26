@@ -1,5 +1,30 @@
 <?php
 
+function lscwp_check_storefront() {
+	if (has_action('storefront_header', 'storefront_header_cart')) {
+		remove_action('storefront_header', 'storefront_header_cart', 60);
+		echo '<!-- esistart --><esi:include src="/lscwp_cart.php" onerror=\"continue\"/><!-- esi end -->';
+	}
+}
+
+function lscwp_send_cart() {
+	status_header(200);
+	die();
+}
+
+function lscwp_check_cart() {
+	if ( strcmp($_SERVER['REQUEST_URI'], '/lscwp_cart.php') == 0) {
+		register_widget( 'WC_Widget_Cart' );
+		add_action( 'init', 'storefront_cart_link_fragment', 0);
+		add_action('init', 'storefront_header_cart', 0);
+		add_action('init', 'lscwp_send_cart', 0);
+	}
+}
+
+add_action('storefront_header', 'lscwp_check_storefront', 59);
+add_action('after_setup_theme', 'lscwp_check_cart', 0);
+
+
 /**
  * The core plugin class.
  *
@@ -110,6 +135,19 @@ class LiteSpeed_Cache
 		$this->config->plugin_deactivation() ;
 	}
 
+	private function is_esi_page()
+	{
+		$uri = $_SERVER['REQUEST_URI'];
+		$urilen = strlen($uri);
+
+		$cart = '/lscwp_cart.php';
+		$cartlen = strlen($cart);
+		if (($urilen == $cartlen) && (strncmp($uri, $cart, $cartlen) == 0)) {
+			return true;
+		}
+		return false;
+	}
+
 	public function init()
 	{
 		$module_enabled = $this->config->module_enabled() ; // force value later
@@ -120,6 +158,10 @@ class LiteSpeed_Cache
 
 		if ( ! $module_enabled ) {
 			return ;
+		}
+
+		if ( $this->is_esi_page()) {
+			return;
 		}
 
 		if ( is_user_logged_in() ) {
@@ -282,29 +324,47 @@ class LiteSpeed_Cache
 			$this->debug_log("purge post $post_id " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
 		}
 	}
-	
+
+	// Return true if non-cacheable.
+	private function is_woocommerce()
+	{
+		$woocom = WC();
+		if (!isset($woocom)) {
+			return false;
+		}
+		$url = wc_get_cart_url();
+		// Does cart exist and is it not empty?
+		if ((isset($woocom->cart)) && ( !$woocom->cart->is_empty())) {
+			return true;
+		}
+		if (isset($woocom->checkout)) {
+			return true;
+		}
+		return false;
+	}
+
 	private function is_excluded($excludes_list)
 	{
-        $uri = $_SERVER["REQUEST_URI"] ;
-        $uri_len = strlen( $uri ) ;
-        foreach( $excludes_list as $excludes_rule )
-        {
-            $rule_len = strlen( $excludes_rule );
-            if (( $uri_len >= $rule_len )
-                && ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 )) 
+            $uri = $_SERVER["REQUEST_URI"] ;
+            $uri_len = strlen( $uri ) ;
+            foreach( $excludes_list as $excludes_rule )
             {
-                return true ;
+                $rule_len = strlen( $excludes_rule );
+                if (( $uri_len >= $rule_len )
+                    && ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ))
+                {
+                    return true ;
+                }
             }
-        }
-        return false;
+            return false;
 	}
 
 	private function is_cacheable()
 	{
 		// logged_in users already excluded, no hook added
 		$method = $_SERVER["REQUEST_METHOD"] ;
-        $excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA);
-        
+                $excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA);
+
 		if ( 'GET' !== $method ) {
 			return $this->no_cache_for('not GET method') ;
 		}
@@ -329,10 +389,14 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('no theme used') ;
 		}
 
+		if ((defined('WOOCOMMERCE_VERSION')) && ($this->is_woocommerce())) {
+			return $this->no_cache_for('Cannot cache this woocommerce page') ;
+		}
+
 		if (( ! empty($excludes))
-            && ( $this->is_excluded(explode("\n", $excludes)))) 
-        {
-            return true;
+			&& ( $this->is_excluded(explode("\n", $excludes))))
+		{
+			return true;
 		}
 
 		return true;
@@ -348,7 +412,7 @@ class LiteSpeed_Cache
 	{
 		if ( $this->is_cacheable() ) {
 			$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
-			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl ;
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl . ',esi=on' ;
 			@header($cache_control_header) ;
 
 			$cache_tags = $this->get_cache_tags() ;
@@ -358,6 +422,10 @@ class LiteSpeed_Cache
 				$this->debug_log('cache_control_header: ' . $cache_control_header . "\n tag_header: " . $cache_tag_header) ;
 				@header($cache_tag_header) ;
 			}
+		}
+		else {
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': esi=on' ;
+			@header($cache_control_header) ;
 		}
 	}
 
