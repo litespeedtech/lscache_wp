@@ -165,8 +165,8 @@ class LiteSpeed_Cache
 			case 'a':
 				$admin = 'admin_bar.php';
 				$adminlen = strlen($admin);
-				if (($urilen == $adminlen)
-						&& (strncmp($uri, $admin, $adminlen) != 0)) {
+				if (($urilen != $adminlen)
+						|| (strncmp($uri, $admin, $adminlen) != 0)) {
 					return false;
 				}
 				add_action( 'init', '_wp_admin_bar_init', 0 );
@@ -175,8 +175,8 @@ class LiteSpeed_Cache
 			case 'c':
 				$cart = 'cart.php';
 				$cartlen = strlen($cart);
-				if (($urilen == $cartlen)
-						&& (strncmp($uri, $cart, $cartlen) != 0)) {
+				if (($urilen != $cartlen)
+						|| (strncmp($uri, $cart, $cartlen) != 0)) {
 					return false;
 				}
 				register_widget( 'WC_Widget_Cart' );
@@ -195,6 +195,7 @@ class LiteSpeed_Cache
 		$module_enabled = $this->config->module_enabled() ; // force value later
 
 		if ( is_admin() ) {
+			remove_action('init', 'lscwp_check_admin_bar', 0);
 			$this->load_admin($module_enabled) ;
 		}
 
