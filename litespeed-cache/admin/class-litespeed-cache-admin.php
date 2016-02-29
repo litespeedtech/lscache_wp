@@ -47,12 +47,12 @@ class LiteSpeed_Cache_Admin
 		add_action('admin_enqueue_scripts', array( $this, 'enqueue_scripts' )) ;
 
 		//Additional links on the plugin page
-		if ( is_multisite() ) {
-			add_action('network_admin_menu', array( $this, 'register_admin_menu' )) ;
-		}
-		else {
+	//	if ( is_multisite() ) {
+	//		add_action('network_admin_menu', array( $this, 'register_admin_menu' )) ;
+	//	}
+	//	else {
 			add_action('admin_menu', array( $this, 'register_admin_menu' )) ;
-		}
+	//	}
 
 		add_action('admin_init', array( $this, 'admin_init' )) ;
 		$plugin_dir = plugin_dir_path(dirname(__FILE__)) ;
@@ -405,7 +405,7 @@ class LiteSpeed_Cache_Admin
 	{
         $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA;
         $excludes_buf = $options[$excludes_id];
-        $excludes_description = 
+        $excludes_description =
             'Enter a list of urls that you do not want to have cached.
             <br>
             The urls will be compared to the REQUEST_URI server variable.
@@ -541,7 +541,7 @@ class LiteSpeed_Cache_Admin
 
 	private function input_field_textarea( $id, $value, $rows = '', $cols = '', $style = '')
 	{
-		$buf = '<textarea name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" 
+		$buf = '<textarea name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text"
                 id="' . $id . '"';
 		if ( $rows ) {
 			$buf .= ' rows="' . $rows . '"';
