@@ -3,26 +3,35 @@
 function lscwp_check_storefront() {
 	if (has_action('storefront_header', 'storefront_header_cart')) {
 		remove_action('storefront_header', 'storefront_header_cart', 60);
-		echo '<!-- esistart --><esi:include src="/lscwp_cart.php" onerror=\"continue\"/><!-- esi end -->';
+		echo '<!-- lscwp cart esi start -->'
+				. '<esi:include src="/lscwp_cart.php" onerror=\"continue\"/>'
+				. '<!-- lscwp cart esi end -->';
 	}
 }
 
-function lscwp_send_cart() {
+function lscwp_send_esi() {
 	status_header(200);
 	die();
 }
 
-function lscwp_check_cart() {
-	if ( strcmp($_SERVER['REQUEST_URI'], '/lscwp_cart.php') == 0) {
-		register_widget( 'WC_Widget_Cart' );
-		add_action( 'init', 'storefront_cart_link_fragment', 0);
-		add_action('init', 'storefront_header_cart', 0);
-		add_action('init', 'lscwp_send_cart', 0);
+add_action('storefront_header', 'lscwp_check_storefront', 59);
+
+
+function lscwp_add_esi_admin_bar() {
+	echo '<!-- lscwp admin esi start -->'
+			. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
+			. '<!-- lscwp admin esi end -->';
+}
+
+function lscwp_check_admin_bar() {
+	if (is_admin_bar_showing()) {
+		remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
+		remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
+		add_action('wp_footer', 'lscwp_add_esi_admin_bar', 1000);
 	}
 }
 
-add_action('storefront_header', 'lscwp_check_storefront', 59);
-add_action('after_setup_theme', 'lscwp_check_cart', 0);
+add_action('init', 'lscwp_check_admin_bar', 0);
 
 
 /**
@@ -135,17 +144,50 @@ class LiteSpeed_Cache
 		$this->config->plugin_deactivation() ;
 	}
 
-	private function is_esi_page()
+	private function check_esi_page()
 	{
+		$prefix = '/lscwp_';
+		$prefixlen = 7;
+
 		$uri = $_SERVER['REQUEST_URI'];
 		$urilen = strlen($uri);
 
-		$cart = '/lscwp_cart.php';
-		$cartlen = strlen($cart);
-		if (($urilen == $cartlen) && (strncmp($uri, $cart, $cartlen) == 0)) {
-			return true;
+		// Will have to change this check if we change the urls to check.
+		if (($urilen <= $prefixlen)
+				|| (strncmp($uri, $prefix, $prefixlen) != 0 )) {
+			return false;
 		}
-		return false;
+
+		$uri = substr($uri, $prefixlen);
+		$urilen -= $prefixlen;
+
+		switch ($uri[0]) {
+			case 'a':
+				$admin = 'admin_bar.php';
+				$adminlen = strlen($admin);
+				if (($urilen == $adminlen)
+						&& (strncmp($uri, $admin, $adminlen) != 0)) {
+					return false;
+				}
+				add_action( 'init', '_wp_admin_bar_init', 0 );
+				add_action( 'init', 'wp_admin_bar_render', 0 );
+				break;
+			case 'c':
+				$cart = 'cart.php';
+				$cartlen = strlen($cart);
+				if (($urilen == $cartlen)
+						&& (strncmp($uri, $cart, $cartlen) != 0)) {
+					return false;
+				}
+				register_widget( 'WC_Widget_Cart' );
+				add_action( 'init', 'storefront_cart_link_fragment', 0);
+				add_action('init', 'storefront_header_cart', 0);
+				break;
+			default:
+				return false;
+		}
+		add_action( 'init', 'lscwp_send_esi', 0 );
+		return true;
 	}
 
 	public function init()
@@ -160,7 +202,7 @@ class LiteSpeed_Cache
 			return ;
 		}
 
-		if ( $this->is_esi_page()) {
+		if ( $this->check_esi_page()) {
 			return;
 		}
 
