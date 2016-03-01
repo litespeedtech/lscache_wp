@@ -188,10 +188,44 @@ class LiteSpeed_Cache_Admin
 			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
 		}
 
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA ;
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
         if ( isset($input[$id]) ) {
             $options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
         }
+
+		$input_exclude_cat = array();
+		$cats = get_terms('category', 'hide_empty=0');
+		foreach ( $cats as $cat ) {
+			$cat_name = $cat->name;
+			$input_name = 'excat_' . $cat_name ;
+			if ( isset($input[$input_name]) && ($cat_name === $input[$input_name]) ) {
+				$input_exclude_cat[] = $cat_name ;
+			}
+		}
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+		if (count($input_exclude_cat) > 0) {
+			$options[$id] = implode("\n", $input_exclude_cat);
+		}
+		else {
+			$options[$id] = '';
+		}
+
+		$input_exclude_tag = array();
+		$tags = get_terms('post_tag', 'hide_empty=0');
+		foreach ( $tags as $tag ) {
+			$tag_name = $tag->name;
+			$input_name = 'extag_' . $tag_name ;
+			if ( isset($input[$input_name]) && ($tag_name === $input[$input_name]) ) {
+				$input_exclude_tag[] = $tag_name ;
+			}
+		}
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+		if (count($input_exclude_tag) > 0) {
+			$options[$id] = implode("\n", $input_exclude_tag);
+		}
+		else {
+			$options[$id] = '';
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
 		if ( isset($input[$id]) ) {
@@ -403,9 +437,16 @@ class LiteSpeed_Cache_Admin
 
 	private function show_settings_excludes( $options )
 	{
-        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA;
-        $excludes_buf = $options[$excludes_id];
-        $excludes_description =
+
+		$cat_description =
+            'Check the box next to the categories you do not want to have cached.
+            <br><br>';
+
+		$tag_description =
+            'Check the box next to the tags you do not want to have cached.
+            <br><br>';
+
+        $uri_description =
             'Enter a list of urls that you do not want to have cached.
             <br>
             The urls will be compared to the REQUEST_URI server variable.
@@ -421,11 +462,82 @@ class LiteSpeed_Cache_Admin
             <input type="text" name="example_exclude" value="/excludethis.php" readonly>
             <br><br>';
 
-        $buf = $this->input_group_start(
-                                __('URI List', 'litespeed-cache'),
-                                __($excludes_description, 'litespeed-cache'));
         $tr = '<tr><td>' ;
         $endtr = "</td></tr>\n" ;
+		$spacer = '&nbsp;&nbsp;&nbsp;' ;
+		$checkboxes_per_row = 4;
+
+        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+        $excludes_buf = $options[$excludes_id];
+        $buf = $this->input_group_start(
+                                __('Category List', 'litespeed-cache'),
+                                __($cat_description, 'litespeed-cache'));
+        $buf .= $tr ;
+
+		$cats = get_terms('category', 'hide_empty=0');
+		$my_cats = explode("\n", $excludes_buf);
+		$count = 0;
+		foreach ( $cats as $cat ) {
+			$cat_name = $cat->name;
+			$buf .= $this->input_field_checkbox( 'excat_' . $cat_name, $cat_name,
+								in_array($cat_name, $my_cats),
+								__($cat_name, 'litespeed-cache'));
+			++$count;
+			if (($count % $checkboxes_per_row) == 0) {
+				$buf .= $endtr;
+				if ($count < count($cats)) {
+					$buf .= $tr;
+				}
+			}
+			else {
+				$buf .= $spacer;
+			}
+		}
+
+		if (($count % $checkboxes_per_row) != 0) {
+			$buf .= $endtr;
+		}
+
+		$buf .= $this->input_group_end();
+
+        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+        $excludes_buf = $options[$excludes_id];
+        $buf .= $this->input_group_start(
+                                __('Tag List', 'litespeed-cache'),
+                                __($tag_description, 'litespeed-cache'));
+        $buf .= $tr ;
+
+		$tags = get_terms('post_tag', 'hide_empty=0');
+		$my_tags = explode("\n", $excludes_buf);
+		$count = 0;
+		foreach ( $tags as $tag ) {
+			$tag_name = $tag->name;
+			$buf .= $this->input_field_checkbox( 'extag_' . $tag_name, $tag_name,
+								in_array($tag_name, $my_tags),
+								__($tag_name, 'litespeed-cache'));
+			++$count;
+			if (($count % $checkboxes_per_row) == 0) {
+				$buf .= $endtr;
+				if ($count < count($tags)) {
+					$buf .= $tr;
+				}
+			}
+			else {
+				$buf .= $spacer;
+			}
+		}
+
+		if (($count % $checkboxes_per_row) != 0) {
+			$buf .= $endtr;
+		}
+
+		$buf .= $this->input_group_end();
+
+        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
+        $excludes_buf = $options[$excludes_id];
+        $buf .= $this->input_group_start(
+                                __('URI List', 'litespeed-cache'),
+                                __($uri_description, 'litespeed-cache'));
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '20', '80', '');

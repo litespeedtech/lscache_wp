@@ -440,7 +440,7 @@ class LiteSpeed_Cache
 		return false;
 	}
 
-	private function is_excluded($excludes_list)
+	private function is_uri_excluded($excludes_list)
 	{
             $uri = $_SERVER["REQUEST_URI"] ;
             $uri_len = strlen( $uri ) ;
@@ -460,7 +460,6 @@ class LiteSpeed_Cache
 	{
 		// logged_in users already excluded, no hook added
 		$method = $_SERVER["REQUEST_METHOD"] ;
-                $excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA);
 
 		if ( 'GET' !== $method ) {
 			return $this->no_cache_for('not GET method') ;
@@ -490,9 +489,22 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('Cannot cache this woocommerce page') ;
 		}
 
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
 		if (( ! empty($excludes))
-			&& ( $this->is_excluded(explode("\n", $excludes))))
+			&& ( $this->is_uri_excluded(explode("\n", $excludes))))
 		{
+			return false;
+		}
+
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
+		if (( ! empty($excludes))
+			&& (has_category(explode("\n", $excludes)))) {
+			return false;
+		}
+
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
+		if (( ! empty($excludes))
+			&& (has_tag(explode("\n", $excludes)))) {
 			return false;
 		}
 
