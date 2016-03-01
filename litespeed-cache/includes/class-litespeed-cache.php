@@ -493,7 +493,7 @@ class LiteSpeed_Cache
 		if (( ! empty($excludes))
 			&& ( $this->is_excluded(explode("\n", $excludes))))
 		{
-			return true;
+			return false;
 		}
 
 		return true;
