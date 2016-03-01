@@ -193,38 +193,32 @@ class LiteSpeed_Cache_Admin
             $options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
         }
 
-		$input_exclude_cat = array();
 		$cats = get_terms('category', 'hide_empty=0');
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+		$options[$id] = '';
 		foreach ( $cats as $cat ) {
 			$cat_name = $cat->name;
 			$input_name = 'excat_' . $cat_name ;
 			if ( isset($input[$input_name]) && ($cat_name === $input[$input_name]) ) {
-				$input_exclude_cat[] = $cat_name ;
+				if (!empty($options[$id])) {
+					$options[$id] .= '.' ;
+				}
+				$options[$id] .= $cat->term_id ;
 			}
 		}
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
-		if (count($input_exclude_cat) > 0) {
-			$options[$id] = implode("\n", $input_exclude_cat);
-		}
-		else {
-			$options[$id] = '';
-		}
 
-		$input_exclude_tag = array();
 		$tags = get_terms('post_tag', 'hide_empty=0');
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+		$options[$id] = '';
 		foreach ( $tags as $tag ) {
 			$tag_name = $tag->name;
 			$input_name = 'extag_' . $tag_name ;
 			if ( isset($input[$input_name]) && ($tag_name === $input[$input_name]) ) {
-				$input_exclude_tag[] = $tag_name ;
+				if (!empty($options[$id])) {
+					$options[$id] .= '.' ;
+				}
+				$options[$id] .= $tag->term_id ;
 			}
-		}
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
-		if (count($input_exclude_tag) > 0) {
-			$options[$id] = implode("\n", $input_exclude_tag);
-		}
-		else {
-			$options[$id] = '';
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
@@ -439,11 +433,15 @@ class LiteSpeed_Cache_Admin
 	{
 
 		$cat_description =
-            'Check the box next to the categories you do not want to have cached.
+            '<b>All categories are cached by default.</b>
+			<br>
+			To prevent a category from being cached, check the box next to that category.
             <br><br>';
 
 		$tag_description =
-            'Check the box next to the tags you do not want to have cached.
+            '<b>All tags are cached by default.</b>
+			<br>
+			To prevent a tags from being cached, check the box next to that tags.
             <br><br>';
 
         $uri_description =
@@ -475,12 +473,12 @@ class LiteSpeed_Cache_Admin
         $buf .= $tr ;
 
 		$cats = get_terms('category', 'hide_empty=0');
-		$my_cats = explode("\n", $excludes_buf);
+		$my_cats = explode('.', $excludes_buf);
 		$count = 0;
 		foreach ( $cats as $cat ) {
 			$cat_name = $cat->name;
 			$buf .= $this->input_field_checkbox( 'excat_' . $cat_name, $cat_name,
-								in_array($cat_name, $my_cats),
+								in_array($cat->term_id, $my_cats),
 								__($cat_name, 'litespeed-cache'));
 			++$count;
 			if (($count % $checkboxes_per_row) == 0) {
@@ -508,12 +506,12 @@ class LiteSpeed_Cache_Admin
         $buf .= $tr ;
 
 		$tags = get_terms('post_tag', 'hide_empty=0');
-		$my_tags = explode("\n", $excludes_buf);
+		$my_tags = explode('.', $excludes_buf);
 		$count = 0;
 		foreach ( $tags as $tag ) {
 			$tag_name = $tag->name;
 			$buf .= $this->input_field_checkbox( 'extag_' . $tag_name, $tag_name,
-								in_array($tag_name, $my_tags),
+								in_array($tag->term_id, $my_tags),
 								__($tag_name, 'litespeed-cache'));
 			++$count;
 			if (($count % $checkboxes_per_row) == 0) {

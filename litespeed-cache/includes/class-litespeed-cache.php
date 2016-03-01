@@ -498,13 +498,13 @@ class LiteSpeed_Cache
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
 		if (( ! empty($excludes))
-			&& (has_category(explode("\n", $excludes)))) {
+			&& (has_category(explode('.', $excludes)))) {
 			return false;
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
 		if (( ! empty($excludes))
-			&& (has_tag(explode("\n", $excludes)))) {
+			&& (has_tag(explode('.', $excludes)))) {
 			return false;
 		}
 
