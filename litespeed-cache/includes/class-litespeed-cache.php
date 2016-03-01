@@ -1,6 +1,12 @@
 <?php
 
-function lscwp_check_storefront() {
+function lscwp_send_esi() {
+	status_header(200);
+	die();
+}
+
+
+function lscwp_check_storefront_cart() {
 	if (has_action('storefront_header', 'storefront_header_cart')) {
 		remove_action('storefront_header', 'storefront_header_cart', 60);
 		echo '<!-- lscwp cart esi start -->'
@@ -9,15 +15,58 @@ function lscwp_check_storefront() {
 	}
 }
 
-function lscwp_send_esi() {
-	status_header(200);
-	die();
+function lscwp_is_esi_cart($uri, $urilen) {
+	$cart = 'cart.php';
+	$cartlen = strlen($cart);
+
+	if (($urilen != $cartlen)
+			|| (strncmp($uri, $cart, $cartlen) != 0)) {
+		return false;
+	}
+	register_widget( 'WC_Widget_Cart' );
+	add_action('init', 'storefront_cart_link_fragment', 0);
+	add_action('init', 'storefront_header_cart', 0);
+	add_action('init', 'lscwp_send_esi', 0);
+	return true;
 }
 
-add_action('storefront_header', 'lscwp_check_storefront', 59);
+add_action('storefront_header', 'lscwp_check_storefront_cart', 59);
 
 
-function lscwp_add_esi_admin_bar() {
+function lscwp_check_sidebar() {
+	if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
+		remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
+		echo '<!-- lscwp sidebar esi start -->'
+				. '<esi:include src="/lscwp_sidebar.php" onerror=\"continue\"/>'
+				. '<!-- lscwp sidebar esi end -->';
+	}
+}
+
+function lscwp_load_sidebar_widgets() {
+	do_action('widgets_init');
+	do_action('register_sidebar');
+	do_action('wp_register_sidebar_widget');
+}
+
+function lscwp_is_esi_sidebar($uri, $urilen) {
+	$sidebar = 'sidebar.php';
+	$sidebarlen = strlen($sidebar);
+
+	if (($urilen != $sidebarlen)
+			|| (strncmp($uri, $sidebar, $sidebarlen) != 0)) {
+		return false;
+	}
+	add_action('widgets_init', 'storefront_widgets_init', 10);
+	add_action('wp_loaded', 'lscwp_load_sidebar_widgets', 0);
+	add_action('wp_loaded', 'storefront_get_sidebar', 0);
+	add_action('wp_loaded', 'lscwp_send_esi', 0);
+	return true;
+}
+
+add_action('storefront_sidebar', 'lscwp_check_sidebar', 0);
+
+
+function lscwp_esi_admin_bar_render() {
 	echo '<!-- lscwp admin esi start -->'
 			. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
 			. '<!-- lscwp admin esi end -->';
@@ -27,8 +76,22 @@ function lscwp_check_admin_bar() {
 	if (is_admin_bar_showing()) {
 		remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
 		remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
-		add_action('wp_footer', 'lscwp_add_esi_admin_bar', 1000);
+		add_action('wp_footer', 'lscwp_esi_admin_bar_render', 1000);
 	}
+}
+
+function lscwp_is_esi_admin_bar($uri, $urilen) {
+	$admin = 'admin_bar.php';
+	$adminlen = strlen($admin);
+
+	if (($urilen != $adminlen)
+			|| (strncmp($uri, $admin, $adminlen) != 0)) {
+		return false;
+	}
+	add_action( 'init', '_wp_admin_bar_init', 0 );
+	add_action( 'init', 'wp_admin_bar_render', 0 );
+	add_action('init', 'lscwp_send_esi', 0);
+	return true;
 }
 
 add_action('init', 'lscwp_check_admin_bar', 0);
@@ -152,7 +215,6 @@ class LiteSpeed_Cache
 		$uri = $_SERVER['REQUEST_URI'];
 		$urilen = strlen($uri);
 
-		// Will have to change this check if we change the urls to check.
 		if (($urilen <= $prefixlen)
 				|| (strncmp($uri, $prefix, $prefixlen) != 0 )) {
 			return false;
@@ -163,31 +225,23 @@ class LiteSpeed_Cache
 
 		switch ($uri[0]) {
 			case 'a':
-				$admin = 'admin_bar.php';
-				$adminlen = strlen($admin);
-				if (($urilen != $adminlen)
-						|| (strncmp($uri, $admin, $adminlen) != 0)) {
-					return false;
-				}
-				add_action( 'init', '_wp_admin_bar_init', 0 );
-				add_action( 'init', 'wp_admin_bar_render', 0 );
+				$esi_fn = lscwp_is_esi_admin_bar;
 				break;
 			case 'c':
-				$cart = 'cart.php';
-				$cartlen = strlen($cart);
-				if (($urilen != $cartlen)
-						|| (strncmp($uri, $cart, $cartlen) != 0)) {
-					return false;
-				}
-				register_widget( 'WC_Widget_Cart' );
-				add_action( 'init', 'storefront_cart_link_fragment', 0);
-				add_action('init', 'storefront_header_cart', 0);
+				$esi_fn = lscwp_is_esi_cart;
+				break;
+			case 's':
+				$esi_fn = lscwp_is_esi_sidebar;
 				break;
 			default:
 				return false;
 		}
-		add_action( 'init', 'lscwp_send_esi', 0 );
-		return true;
+
+		if ( !isset($esi_fn)) {
+			return false;
+		}
+
+		return $esi_fn($uri, $urilen);
 	}
 
 	public function init()
