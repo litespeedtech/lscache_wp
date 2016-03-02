@@ -52,6 +52,8 @@ function htaccess_modify (){
 if [ "$1" == '--help' ]
 then
     printHelp
+    unset printHelp
+
 elif [ "$1" == "find" -a "$#" -eq 2 ]
 then
 	if [ "${2}" != "/" ]
