@@ -212,7 +212,7 @@ class LiteSpeed_Cache
 		$prefix = '/lscwp_';
 		$prefixlen = 7;
 
-		$uri = $_SERVER['REQUEST_URI'];
+		$uri = esc_url($_SERVER['REQUEST_URI']);
 		$urilen = strlen($uri);
 
 		if (($urilen <= $prefixlen)
@@ -442,7 +442,7 @@ class LiteSpeed_Cache
 
 	private function is_uri_excluded($excludes_list)
 	{
-            $uri = $_SERVER["REQUEST_URI"] ;
+            $uri = esc_url($_SERVER["REQUEST_URI"]);
             $uri_len = strlen( $uri ) ;
             foreach( $excludes_list as $excludes_rule )
             {
