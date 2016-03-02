@@ -50,41 +50,35 @@ elseif ( $action == "enable" ) {
 
 elseif ( $action == "disable" ) {
 
-	$dbh = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD) ;
-
-	if ( ! $dbh ) {
-		die( $WP_DIR . " - Could not connect to database: " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
-	}
-
-	if ( mysqli_select_db($dbh, DB_NAME) == FALSE ) {
-		die($WP_DIR . " - Could not select database '" . DB_NAME . "': " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
-	}
+	global $wpdb;
 
 	$sql = "SELECT option_value
 		FROM " . $table_prefix . "options
 		WHERE option_name = 'active_plugins'
 		" ;
 
-	$active = mysqli_query($dbh, $sql) ;
+	$active = $wpdb->get_row($sql,ARRAY_A);
 	if ( $active == false ) {
 		die($WP_DIR . " - Query failed: " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
 	}
 
-	$row = mysqli_fetch_assoc($active) ;
-
-	$plugins = unserialize($row["option_value"]) ;
+	$plugins = unserialize($active["option_value"]) ;
 
 	foreach ( $plugins as $pkey => $pval ) {
 		if ( $pval == PLUGIN_NAME ) {
 			unset($plugins[$pkey]) ;
 		}
 	}
+
 	$sql = "UPDATE " . $table_prefix . "options
 	SET option_value = '" . serialize($plugins) . "'
 	WHERE option_name = 'active_plugins'
 	" ;
-	$disable = mysqli_query($dbh, $sql) ;
+
+	$disable = $wpdb->query($sql);
+
 	if ( $disable == false ) {
-		printf($WP_DIR . " - Unable to disable LSCWP with query error: " . mysql_error() . "\nIf possible, LSWCP will still be removed\n\n") ;
+		die($WP_DIR . " - Unable to disable LSCWP with query error: " . mysql_error() . "\nIf possible, LSWCP will still be removed\n\n") ;
 	}
 }
+
