@@ -294,6 +294,13 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	private function show_compatibilities_tab() {
+		if (function_exists('the_views')) {
+			return true;
+		}
+		return false;
+	}
+
 	public function show_menu_settings()
 	{
 		$config = LiteSpeed_Cache::config() ;
@@ -310,13 +317,24 @@ class LiteSpeed_Cache_Admin
 
 		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
 
+		$compatibilities_tab = '';
+		$compatibilities_settings = '';
+		if ($this->show_compatibilities_tab()) {
+			$compatibilities_tab .= '<li><a href="#wp-compatibilities-settings">'
+					. __('Plugin Compatibilities', 'litespeed-cache') . '</a></li>';
+			$compatibilities_settings .= '<div id ="wp-compatibilities-settings">'
+							. $this->show_settings_compatibilities($options) .
+							'</div>';
+		}
+
 		echo '
 		 <div id="lsc-tabs">
 		 <ul>
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
-		<li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>
+		<li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
+		. $compatibilities_tab . '
 		</ul>
 		 <div id="general-settings">'
 		. $this->show_settings_general($options) .
@@ -329,7 +347,8 @@ class LiteSpeed_Cache_Admin
 		'</div>
 		<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
-		'</div></div>' ;
+		'</div>'
+		. $compatibilities_settings . '</div>' ;
 
 		submit_button() ;
 		echo "</form></div>\n" ;
@@ -575,6 +594,61 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
+	private function show_wp_postviews_help() {
+		$buf = '';
+		$example_src = '&lt;?php if(function_exists(&apos;the_views &apos;)) { the_views(); } ?&gt;';
+		$example_div = '&lt;div id=&quot;pageviews_lscwp&quot; &gt; &lt;/div&gt;';
+		$example_ajax_path = '/wp-content/plugins/wp-postviews/postviews-cache.js';
+		$example_ajax = 'jQuery.ajax({
+	type:"GET",
+	url:viewsCacheL10n.admin_ajax_url,
+	data:"postviews_id="+viewsCacheL10n.post_id+"&action=postviews",
+	cache:!1,
+	success:function(data) {
+		if(data) {
+			jQuery(\'#lscwp_pgc\').html(data+\' views\');
+		}
+	}
+});';
+		$wp_postviews_desc = 'To make LiteSpeed Cache compatible with WP-PostViews:<br>
+			<ol>
+				<li>Replace the following calls to your theme\'s template
+				with a div or span with a unique ID.<br>
+				e.g. Replace <br>'
+				. $this->input_field_text('EXAMPLE_SRC', $example_src,
+						strlen($example_src), '', '', true)
+				. '<br>with<br>'
+				. $this->input_field_text('EXAMPLE_DIV', $example_div,
+						strlen($example_div), '', '', true)
+				. '</li>
+				<li>Update the ajax request to output the results to that div.
+				<br><br>
+				Example:<br>
+				<textarea name="example_ajax" rows="12" cols="80" readonly>'
+				. $example_ajax . '"</textarea><br>
+				The ajax code can be found at <br>'
+				. $this->input_field_text('EXAMPLE_PATH', $example_ajax_path,
+						strlen($example_ajax_path), '', '', true)
+				. '</li>
+				<li>After purging the cache, the view count should be updating.</li>
+			</ol>';
+		$buf .= $this->input_group_start(
+									__('Compatibility with WP-PostViews', 'litespeed-cache'),
+									__($wp_postviews_desc, 'litespeed-cache'));
+		$buf .= $this->input_group_end();
+		return $buf;
+	}
+
+	private function show_settings_compatibilities( $options ) {
+
+		$buf = '';
+
+		if (function_exists('the_views')) {
+			$buf .= $this->show_wp_postviews_help();
+		}
+		return $buf;
+	}
+
 	private function input_group_start( $title = '', $description = '' )
 	{
 		$buf = '' ;
@@ -632,7 +706,7 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
-	private function input_field_text( $id, $value, $size = '', $style = '', $after = '' )
+	private function input_field_text( $id, $value, $size = '', $style = '', $after = '', $readonly = false )
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" id="'
 				. $id . '" value="' . $value . '"' ;
@@ -641,6 +715,9 @@ class LiteSpeed_Cache_Admin
 		}
 		if ( $style ) {
 			$buf .= ' class="' . $style . '"' ;
+		}
+		if ( $readonly ) {
+			$buf .= ' readonly';
 		}
 		$buf .= '/>' ;
 		if ( $after ) {
