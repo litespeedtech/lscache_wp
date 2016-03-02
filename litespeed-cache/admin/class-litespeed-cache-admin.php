@@ -597,7 +597,7 @@ class LiteSpeed_Cache_Admin
 	private function show_wp_postviews_help() {
 		$buf = '';
 		$example_src = '&lt;?php if(function_exists(&apos;the_views &apos;)) { the_views(); } ?&gt;';
-		$example_div = '&lt;div id=&quot;pageviews_lscwp&quot; &gt; &lt;/div&gt;';
+		$example_div = '&lt;div id=&quot;postviews_lscwp&quot; &gt; &lt;/div&gt;';
 		$example_ajax_path = '/wp-content/plugins/wp-postviews/postviews-cache.js';
 		$example_ajax = 'jQuery.ajax({
 	type:"GET",
@@ -606,13 +606,13 @@ class LiteSpeed_Cache_Admin
 	cache:!1,
 	success:function(data) {
 		if(data) {
-			jQuery(\'#lscwp_pgc\').html(data+\' views\');
+			jQuery(\'#postviews_lscwp\').html(data+\' views\');
 		}
 	}
 });';
 		$wp_postviews_desc = 'To make LiteSpeed Cache compatible with WP-PostViews:<br>
 			<ol>
-				<li>Replace the following calls to your theme\'s template
+				<li>Replace the following calls in your theme\'s template files
 				with a div or span with a unique ID.<br>
 				e.g. Replace <br>'
 				. $this->input_field_text('EXAMPLE_SRC', $example_src,
