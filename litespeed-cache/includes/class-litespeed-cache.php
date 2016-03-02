@@ -1,5 +1,102 @@
 <?php
 
+function lscwp_send_esi() {
+	status_header(200);
+	die();
+}
+
+
+function lscwp_check_storefront_cart() {
+	if (has_action('storefront_header', 'storefront_header_cart')) {
+		remove_action('storefront_header', 'storefront_header_cart', 60);
+		echo '<!-- lscwp cart esi start -->'
+				. '<esi:include src="/lscwp_cart.php" onerror=\"continue\"/>'
+				. '<!-- lscwp cart esi end -->';
+	}
+}
+
+function lscwp_is_esi_cart($uri, $urilen) {
+	$cart = 'cart.php';
+	$cartlen = strlen($cart);
+
+	if (($urilen != $cartlen)
+			|| (strncmp($uri, $cart, $cartlen) != 0)) {
+		return false;
+	}
+	register_widget( 'WC_Widget_Cart' );
+	add_action('init', 'storefront_cart_link_fragment', 0);
+	add_action('init', 'storefront_header_cart', 0);
+	add_action('init', 'lscwp_send_esi', 0);
+	return true;
+}
+
+add_action('storefront_header', 'lscwp_check_storefront_cart', 59);
+
+
+function lscwp_check_sidebar() {
+	if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
+		remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
+		echo '<!-- lscwp sidebar esi start -->'
+				. '<esi:include src="/lscwp_sidebar.php" onerror=\"continue\"/>'
+				. '<!-- lscwp sidebar esi end -->';
+	}
+}
+
+function lscwp_load_sidebar_widgets() {
+	do_action('widgets_init');
+	do_action('register_sidebar');
+	do_action('wp_register_sidebar_widget');
+}
+
+function lscwp_is_esi_sidebar($uri, $urilen) {
+	$sidebar = 'sidebar.php';
+	$sidebarlen = strlen($sidebar);
+
+	if (($urilen != $sidebarlen)
+			|| (strncmp($uri, $sidebar, $sidebarlen) != 0)) {
+		return false;
+	}
+	add_action('widgets_init', 'storefront_widgets_init', 10);
+	add_action('wp_loaded', 'lscwp_load_sidebar_widgets', 0);
+	add_action('wp_loaded', 'storefront_get_sidebar', 0);
+	add_action('wp_loaded', 'lscwp_send_esi', 0);
+	return true;
+}
+
+add_action('storefront_sidebar', 'lscwp_check_sidebar', 0);
+
+
+function lscwp_esi_admin_bar_render() {
+	echo '<!-- lscwp admin esi start -->'
+			. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
+			. '<!-- lscwp admin esi end -->';
+}
+
+function lscwp_check_admin_bar() {
+	if (is_admin_bar_showing()) {
+		remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
+		remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
+		add_action('wp_footer', 'lscwp_esi_admin_bar_render', 1000);
+	}
+}
+
+function lscwp_is_esi_admin_bar($uri, $urilen) {
+	$admin = 'admin_bar.php';
+	$adminlen = strlen($admin);
+
+	if (($urilen != $adminlen)
+			|| (strncmp($uri, $admin, $adminlen) != 0)) {
+		return false;
+	}
+	add_action( 'init', '_wp_admin_bar_init', 0 );
+	add_action( 'init', 'wp_admin_bar_render', 0 );
+	add_action('init', 'lscwp_send_esi', 0);
+	return true;
+}
+
+add_action('init', 'lscwp_check_admin_bar', 0);
+
+
 /**
  * The core plugin class.
  *
@@ -110,16 +207,58 @@ class LiteSpeed_Cache
 		$this->config->plugin_deactivation() ;
 	}
 
+	private function check_esi_page()
+	{
+		$prefix = '/lscwp_';
+		$prefixlen = 7;
+
+		$uri = $_SERVER['REQUEST_URI'];
+		$urilen = strlen($uri);
+
+		if (($urilen <= $prefixlen)
+				|| (strncmp($uri, $prefix, $prefixlen) != 0 )) {
+			return false;
+		}
+
+		$uri = substr($uri, $prefixlen);
+		$urilen -= $prefixlen;
+
+		switch ($uri[0]) {
+			case 'a':
+				$esi_fn = lscwp_is_esi_admin_bar;
+				break;
+			case 'c':
+				$esi_fn = lscwp_is_esi_cart;
+				break;
+			case 's':
+				$esi_fn = lscwp_is_esi_sidebar;
+				break;
+			default:
+				return false;
+		}
+
+		if ( !isset($esi_fn)) {
+			return false;
+		}
+
+		return $esi_fn($uri, $urilen);
+	}
+
 	public function init()
 	{
 		$module_enabled = $this->config->module_enabled() ; // force value later
 
 		if ( is_admin() ) {
+			remove_action('init', 'lscwp_check_admin_bar', 0);
 			$this->load_admin($module_enabled) ;
 		}
 
 		if ( ! $module_enabled ) {
 			return ;
+		}
+
+		if ( $this->check_esi_page()) {
+			return;
 		}
 
 		if ( is_user_logged_in() ) {
@@ -282,29 +421,46 @@ class LiteSpeed_Cache
 			$this->debug_log("purge post $post_id " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
 		}
 	}
-	
-	private function is_excluded($excludes_list)
+
+	// Return true if non-cacheable.
+	private function is_woocommerce()
 	{
-        $uri = $_SERVER["REQUEST_URI"] ;
-        $uri_len = strlen( $uri ) ;
-        foreach( $excludes_list as $excludes_rule )
-        {
-            $rule_len = strlen( $excludes_rule );
-            if (( $uri_len >= $rule_len )
-                && ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 )) 
+		$woocom = WC();
+		if (!isset($woocom)) {
+			return false;
+		}
+		$url = wc_get_cart_url();
+		// Does cart exist and is it not empty?
+		if ((isset($woocom->cart)) && ( !$woocom->cart->is_empty())) {
+			return true;
+		}
+		if (isset($woocom->checkout)) {
+			return true;
+		}
+		return false;
+	}
+
+	private function is_uri_excluded($excludes_list)
+	{
+            $uri = $_SERVER["REQUEST_URI"] ;
+            $uri_len = strlen( $uri ) ;
+            foreach( $excludes_list as $excludes_rule )
             {
-                return true ;
+                $rule_len = strlen( $excludes_rule );
+                if (( $uri_len >= $rule_len )
+                    && ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ))
+                {
+                    return true ;
+                }
             }
-        }
-        return false;
+            return false;
 	}
 
 	private function is_cacheable()
 	{
 		// logged_in users already excluded, no hook added
 		$method = $_SERVER["REQUEST_METHOD"] ;
-        $excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_AREA);
-        
+
 		if ( 'GET' !== $method ) {
 			return $this->no_cache_for('not GET method') ;
 		}
@@ -329,10 +485,27 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('no theme used') ;
 		}
 
+		if ((defined('WOOCOMMERCE_VERSION')) && ($this->is_woocommerce())) {
+			return $this->no_cache_for('Cannot cache this woocommerce page') ;
+		}
+
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
 		if (( ! empty($excludes))
-            && ( $this->is_excluded(explode("\n", $excludes)))) 
-        {
-            return true;
+			&& ( $this->is_uri_excluded(explode("\n", $excludes))))
+		{
+			return false;
+		}
+
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
+		if (( ! empty($excludes))
+			&& (has_category(explode('.', $excludes)))) {
+			return false;
+		}
+
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
+		if (( ! empty($excludes))
+			&& (has_tag(explode('.', $excludes)))) {
+			return false;
 		}
 
 		return true;
@@ -348,7 +521,7 @@ class LiteSpeed_Cache
 	{
 		if ( $this->is_cacheable() ) {
 			$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
-			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl ;
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl . ',esi=on' ;
 			@header($cache_control_header) ;
 
 			$cache_tags = $this->get_cache_tags() ;
@@ -358,6 +531,10 @@ class LiteSpeed_Cache
 				$this->debug_log('cache_control_header: ' . $cache_control_header . "\n tag_header: " . $cache_tag_header) ;
 				@header($cache_tag_header) ;
 			}
+		}
+		else {
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': esi=on' ;
+			@header($cache_control_header) ;
 		}
 	}
 
