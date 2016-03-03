@@ -134,6 +134,7 @@ class LiteSpeed_Cache
 
 	protected $plugin_dir ;
 	protected $config ;
+	protected $pub_purge_tags = array();
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -244,6 +245,23 @@ class LiteSpeed_Cache
 		return $esi_fn($uri, $urilen);
 	}
 
+	/* NOTICE: To other plugin developers:
+	 * If your plugin does something that may update pages (e.g. a like button),
+	 * do one of the actions below to purge the cache of the updated pages.
+	 * The example code block must be called prior to any response body output.
+	 * This includes any 'echo' outputs.
+	 *
+	 * Example:
+	 * if (defined('LITESPEED_CACHE_ENABLED')) {
+	 *		do_action('lscwp_purge_single_post', $post_id);
+	 * }
+	 */
+	public function add_purge_hooks() {
+		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
+		// TODO: private purge?
+		// TODO: purge by category, tag?
+	}
+
 	public function init()
 	{
 		$module_enabled = $this->config->module_enabled() ; // force value later
@@ -256,6 +274,9 @@ class LiteSpeed_Cache
 		if ( ! $module_enabled ) {
 			return ;
 		}
+
+		define('LITESPEED_CACHE_ENABLED', true);
+		$this->add_purge_hooks();
 
 		if ( $this->check_esi_page()) {
 			return;
@@ -394,32 +415,67 @@ class LiteSpeed_Cache
 		}
 	}
 
-	public function purge_all()
-	{
-		$cache_purge_header = self::LSHEADER_PURGE . ': *' ;
-		@header($cache_purge_header) ;
-		$this->debug_log("purge all " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
+	private function add_purge_tags($tags, $is_public = true) {
+		//TODO: implement private tag add
+		if (is_array($tags)) {
+			$this->pub_purge_tags = array_merge($this->pub_purge_tags, $tags);
+		}
+		else {
+			$this->pub_purge_tags[] = $tags;
+		}
+		$this->pub_purge_tags = array_unique($this->pub_purge_tags);
 	}
 
-	public function purge_post( $post_id )
+	private function send_purge_headers() {
+		$cache_purge_header = self::LSHEADER_PURGE;
+		if (in_array('*', $this->pub_purge_tags )) {
+			$cache_purge_header .= ': *';
+		}
+		else {
+			$cache_purge_header .= ': tag=' . implode(',', $this->pub_purge_tags);
+		}
+		@header($cache_purge_header);
+		$this->debug_log("send purge headers " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
+		// TODO: private cache headers
+//		$cache_purge_header = self::LSHEADER_PURGE
+//				. ': private,tag=' . implode(',', $this->ext_purge_private_tags);
+//		@header($cache_purge_header, false);
+	}
+
+	public function purge_all()
 	{
+		$this->add_purge_tags('*');
+		$this->send_purge_headers();
+	}
+
+	public function purge_post( $id )
+	{
+		$post_id = intval($id);
 		// ignore the status we don't care
 		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
 			return ;
 		}
 
 		$purge_tags = $this->get_purge_tags($post_id) ;
-		if ( ! empty($purge_tags) ) {
-			$cache_purge_header = self::LSHEADER_PURGE ;
-			if ( in_array('*', $purge_tags) ) {
-				$cache_purge_header .= ': *' ;
-			}
-			else {
-				$cache_purge_header .= ': tag=' . implode(',', $purge_tags) ;
-			}
-			@header($cache_purge_header) ;
-			$this->debug_log("purge post $post_id " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
+		if ( empty($purge_tags) ) {
+			return;
 		}
+		if ( in_array('*', $purge_tags) ) {
+			$this->add_purge_tags('*');
+		}
+		else {
+			$this->add_purge_tags($purge_tags);
+		}
+		$this->send_purge_headers();
+	}
+
+	public function purge_single_post($id) {
+		$post_id = intval($id);
+		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
+			return ;
+		}
+		$this->add_purge_tags(self::CACHETAG_TYPE_POST . $post_id);
+		$this->send_purge_headers();
 	}
 
 	// Return true if non-cacheable.
@@ -442,18 +498,18 @@ class LiteSpeed_Cache
 
 	private function is_uri_excluded($excludes_list)
 	{
-            $uri = esc_url($_SERVER["REQUEST_URI"]);
-            $uri_len = strlen( $uri ) ;
-            foreach( $excludes_list as $excludes_rule )
-            {
-                $rule_len = strlen( $excludes_rule );
-                if (( $uri_len >= $rule_len )
-                    && ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ))
-                {
-                    return true ;
-                }
-            }
-            return false;
+		$uri = esc_url($_SERVER["REQUEST_URI"]);
+		$uri_len = strlen( $uri ) ;
+		foreach( $excludes_list as $excludes_rule )
+		{
+			$rule_len = strlen( $excludes_rule );
+			if (( $uri_len >= $rule_len )
+				&& ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ))
+			{
+				return true ;
+			}
+		}
+		return false;
 	}
 
 	private function is_cacheable()
