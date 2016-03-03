@@ -35,6 +35,31 @@ Yes, the plugin itself will remain free and open source, but only works with Lit
 This plugin only instructs LiteSpeed Web Server on what pages to cache and when to purge. The actual cached pages are stored and managed by LiteSpeed Web Server. Nothing is stored on the PHP side.
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server enterprise edition, but there are plans to have OpenLiteSpeed support it later down the line.
+= How do I get WP-PostViews to display an updating view count? =
+1. Use: `<div id="postviews_lscwp"></div>`
+
+    to replace
+
+    `<?php if(function_exists('the_views')) { the_views(); } ?>`
+
+    * NOTE: The id can be changed, but the div id and the ajax function must match.
+2. Replace the ajax query in `wp-content/plugins/wp-postviews/postviews-cache.js` with
+
+    ```
+    jQuery.ajax({
+        type:"GET",
+        url:viewsCacheL10n.admin_ajax_url,
+        data:"postviews_id="+viewsCacheL10n.post_id+"&action=postviews",
+        cache:!1,
+        success:function(data) {
+            if(data) {
+                jQuery('#postviews_lscwp').html(data+' views');
+            }
+       }
+    });
+    ```
+
+3. Purge the cache to use the updated pages.
 
 == Changelog ==
 = 1.0.0 =
