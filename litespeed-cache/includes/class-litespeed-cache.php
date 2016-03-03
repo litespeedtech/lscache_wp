@@ -1,101 +1,5 @@
 <?php
 
-function lscwp_send_esi() {
-	status_header(200);
-	die();
-}
-
-
-function lscwp_check_storefront_cart() {
-	if (has_action('storefront_header', 'storefront_header_cart')) {
-		remove_action('storefront_header', 'storefront_header_cart', 60);
-		echo '<!-- lscwp cart esi start -->'
-				. '<esi:include src="/lscwp_cart.php" onerror=\"continue\"/>'
-				. '<!-- lscwp cart esi end -->';
-	}
-}
-
-function lscwp_is_esi_cart($uri, $urilen) {
-	$cart = 'cart.php';
-	$cartlen = strlen($cart);
-
-	if (($urilen != $cartlen)
-			|| (strncmp($uri, $cart, $cartlen) != 0)) {
-		return false;
-	}
-	register_widget( 'WC_Widget_Cart' );
-	add_action('init', 'storefront_cart_link_fragment', 0);
-	add_action('init', 'storefront_header_cart', 0);
-	add_action('init', 'lscwp_send_esi', 0);
-	return true;
-}
-
-add_action('storefront_header', 'lscwp_check_storefront_cart', 59);
-
-
-function lscwp_check_sidebar() {
-	if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
-		remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
-		echo '<!-- lscwp sidebar esi start -->'
-				. '<esi:include src="/lscwp_sidebar.php" onerror=\"continue\"/>'
-				. '<!-- lscwp sidebar esi end -->';
-	}
-}
-
-function lscwp_load_sidebar_widgets() {
-	do_action('widgets_init');
-	do_action('register_sidebar');
-	do_action('wp_register_sidebar_widget');
-}
-
-function lscwp_is_esi_sidebar($uri, $urilen) {
-	$sidebar = 'sidebar.php';
-	$sidebarlen = strlen($sidebar);
-
-	if (($urilen != $sidebarlen)
-			|| (strncmp($uri, $sidebar, $sidebarlen) != 0)) {
-		return false;
-	}
-	add_action('widgets_init', 'storefront_widgets_init', 10);
-	add_action('wp_loaded', 'lscwp_load_sidebar_widgets', 0);
-	add_action('wp_loaded', 'storefront_get_sidebar', 0);
-	add_action('wp_loaded', 'lscwp_send_esi', 0);
-	return true;
-}
-
-add_action('storefront_sidebar', 'lscwp_check_sidebar', 0);
-
-
-function lscwp_esi_admin_bar_render() {
-	echo '<!-- lscwp admin esi start -->'
-			. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
-			. '<!-- lscwp admin esi end -->';
-}
-
-function lscwp_check_admin_bar() {
-	if (is_admin_bar_showing()) {
-		remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
-		remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
-		add_action('wp_footer', 'lscwp_esi_admin_bar_render', 1000);
-	}
-}
-
-function lscwp_is_esi_admin_bar($uri, $urilen) {
-	$admin = 'admin_bar.php';
-	$adminlen = strlen($admin);
-
-	if (($urilen != $adminlen)
-			|| (strncmp($uri, $admin, $adminlen) != 0)) {
-		return false;
-	}
-	add_action( 'init', '_wp_admin_bar_init', 0 );
-	add_action( 'init', 'wp_admin_bar_render', 0 );
-	add_action('init', 'lscwp_send_esi', 0);
-	return true;
-}
-
-add_action('init', 'lscwp_check_admin_bar', 0);
-
 
 /**
  * The core plugin class.
@@ -158,6 +62,9 @@ class LiteSpeed_Cache
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
 
 		add_action('after_setup_theme', array( $this, 'init' )) ;
+
+		// TODO: uncomment this when esi is implemented.
+//		$this->add_actions_esi();
 	}
 
 	public static function run()
@@ -208,43 +115,6 @@ class LiteSpeed_Cache
 		$this->config->plugin_deactivation() ;
 	}
 
-	private function check_esi_page()
-	{
-		$prefix = '/lscwp_';
-		$prefixlen = 7;
-
-		$uri = esc_url($_SERVER['REQUEST_URI']);
-		$urilen = strlen($uri);
-
-		if (($urilen <= $prefixlen)
-				|| (strncmp($uri, $prefix, $prefixlen) != 0 )) {
-			return false;
-		}
-
-		$uri = substr($uri, $prefixlen);
-		$urilen -= $prefixlen;
-
-		switch ($uri[0]) {
-			case 'a':
-				$esi_fn = lscwp_is_esi_admin_bar;
-				break;
-			case 'c':
-				$esi_fn = lscwp_is_esi_cart;
-				break;
-			case 's':
-				$esi_fn = lscwp_is_esi_sidebar;
-				break;
-			default:
-				return false;
-		}
-
-		if ( !isset($esi_fn)) {
-			return false;
-		}
-
-		return $esi_fn($uri, $urilen);
-	}
-
 	/* NOTICE: To other plugin developers:
 	 * If your plugin does something that may update pages (e.g. a like button),
 	 * do one of the actions below to purge the cache of the updated pages.
@@ -267,7 +137,6 @@ class LiteSpeed_Cache
 		$module_enabled = $this->config->module_enabled() ; // force value later
 
 		if ( is_admin() ) {
-			remove_action('init', 'lscwp_check_admin_bar', 0);
 			$this->load_admin($module_enabled) ;
 		}
 
@@ -277,6 +146,8 @@ class LiteSpeed_Cache
 
 		define('LITESPEED_CACHE_ENABLED', true);
 		$this->add_purge_hooks();
+		//TODO: Uncomment this when esi is implemented.
+//		add_action('init', array($this, 'check_admin_bar'), 0);
 
 		if ( $this->check_esi_page()) {
 			return;
@@ -723,4 +594,126 @@ class LiteSpeed_Cache
 		return array_unique($purge_tags) ;
 	}
 
+
+/* BEGIN ESI CODE */
+	public function esi_admin_bar_render() {
+		echo '<!-- lscwp admin esi start -->'
+				. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
+				. '<!-- lscwp admin esi end -->';
+	}
+
+	public function check_admin_bar() {
+		if (is_admin_bar_showing()) {
+			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
+			remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
+			add_action('wp_footer', array($this, 'esi_admin_bar_render'), 1000);
+		}
+	}
+
+	public function check_storefront_cart() {
+		if (has_action('storefront_header', 'storefront_header_cart')) {
+			remove_action('storefront_header', 'storefront_header_cart', 60);
+			echo '<!-- lscwp cart esi start -->'
+					. '<esi:include src="/lscwp_cart.php" onerror=\"continue\"/>'
+					. '<!-- lscwp cart esi end -->';
+		}
+	}
+
+	public function check_sidebar() {
+		if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
+			remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
+			echo '<!-- lscwp sidebar esi start -->'
+					. '<esi:include src="/lscwp_sidebar.php" onerror=\"continue\"/>'
+					. '<!-- lscwp sidebar esi end -->';
+		}
+	}
+
+	private function add_actions_esi() {
+		add_action('storefront_header',
+					array($this, 'check_storefront_cart'), 59);
+		add_action('storefront_sidebar', array($this, 'check_sidebar'), 0);
+	}
+
+	public function send_esi() {
+		status_header(200);
+		die();
+	}
+
+	private function is_esi_admin_bar($uri, $urilen) {
+		$admin = 'admin_bar.php';
+		$adminlen = strlen($admin);
+
+		if (($urilen != $adminlen)
+				|| (strncmp($uri, $admin, $adminlen) != 0)) {
+			return false;
+		}
+		add_action( 'init', '_wp_admin_bar_init', 0 );
+		add_action( 'init', 'wp_admin_bar_render', 0 );
+		add_action('init', array($this, 'send_esi'), 0);
+		return true;
+	}
+
+	private function is_esi_cart($uri, $urilen) {
+		$cart = 'cart.php';
+		$cartlen = strlen($cart);
+
+		if (($urilen != $cartlen)
+				|| (strncmp($uri, $cart, $cartlen) != 0)) {
+			return false;
+		}
+		register_widget( 'WC_Widget_Cart' );
+		add_action('init', 'storefront_cart_link_fragment', 0);
+		add_action('init', 'storefront_header_cart', 0);
+		add_action('init', array($this, 'send_esi'), 0);
+		return true;
+	}
+
+	public function load_sidebar_widgets() {
+		do_action('widgets_init');
+		do_action('register_sidebar');
+		do_action('wp_register_sidebar_widget');
+	}
+
+	private function is_esi_sidebar($uri, $urilen) {
+		$sidebar = 'sidebar.php';
+		$sidebarlen = strlen($sidebar);
+
+		if (($urilen != $sidebarlen)
+				|| (strncmp($uri, $sidebar, $sidebarlen) != 0)) {
+			return false;
+		}
+		add_action('widgets_init', 'storefront_widgets_init', 10);
+		add_action('wp_loaded', array($this, 'load_sidebar_widgets'), 0);
+		add_action('wp_loaded', 'storefront_get_sidebar', 0);
+		add_action('wp_loaded', array($this, 'send_esi'), 0);
+		return true;
+	}
+
+	private function check_esi_page()
+	{
+		$prefix = '/lscwp_';
+		$prefixlen = 7;
+		$uri = esc_url($_SERVER['REQUEST_URI']);
+		$urilen = strlen($uri);
+
+		if (($urilen <= $prefixlen) || (strncmp($uri, $prefix, $prefixlen) != 0 )) {
+			return false;
+		}
+
+		$uri = substr($uri, $prefixlen);
+		$urilen -= $prefixlen;
+
+		switch ($uri[0]) {
+			case 'a':
+				return $this->is_esi_admin_bar($uri, $urilen);
+			case 'c':
+				return $this->is_esi_cart($uri, $urilen);
+			case 's':
+				return $this->is_esi_sidebar($uri, $urilen);
+			default:
+				return false;
+		}
+		return false;
+	}
+/*END ESI CODE*/
 }
