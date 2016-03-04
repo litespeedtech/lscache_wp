@@ -552,6 +552,18 @@ class LiteSpeed_Cache
 		// post
 		$purge_tags[] = self::CACHETAG_TYPE_POST . $post_id ;
 
+		$ancestors = get_post_ancestors($post_id);
+
+		// for bbpress forums, topics, replies.
+		// If one is updated, the ancestors should be as well.
+		if (is_bbpress()) {
+			if ( ! empty($ancestors)) {
+				foreach ($ancestors as $ancestor) {
+					$purge_tags[] = self::CACHETAG_TYPE_POST . $ancestor ;
+				}
+			}
+		}
+
 		// for archive of categories|tags|custom tax
 		$post = get_post($post_id) ;
 		$post_type = $post->post_type ;
