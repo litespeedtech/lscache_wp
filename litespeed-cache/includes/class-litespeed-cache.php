@@ -35,6 +35,7 @@ class LiteSpeed_Cache
 	const LSHEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const LSHEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
 	const LSHEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
+	const LSCOOKIE_USER_VARY = '_lscache_vary' ;
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -62,6 +63,8 @@ class LiteSpeed_Cache
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
 
 		add_action('after_setup_theme', array( $this, 'init' )) ;
+		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
+		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
 
 		// TODO: uncomment this when esi is implemented.
 //		$this->add_actions_esi();
@@ -286,6 +289,18 @@ class LiteSpeed_Cache
 		}
 	}
 
+	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
+					$expiration = 0, $user_id = 0, $action = 'logged_out') {
+		if ($action == 'logged_in') {
+            setcookie(self::LSCOOKIE_USER_VARY, '1', $expiration, COOKIEPATH,
+					COOKIE_DOMAIN, is_ssl(), true);
+		}
+		else {
+            setcookie(self::LSCOOKIE_USER_VARY, '0', $expiration, COOKIEPATH,
+					COOKIE_DOMAIN);
+		}
+	}
+
 	private function add_purge_tags($tags, $is_public = true) {
 		//TODO: implement private tag add
 		if (is_array($tags)) {
@@ -448,7 +463,7 @@ class LiteSpeed_Cache
 	{
 		if ( $this->is_cacheable() ) {
 			$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
-			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl . ',esi=on' ;
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
 			@header($cache_control_header) ;
 
 			$cache_tags = $this->get_cache_tags() ;
@@ -460,7 +475,7 @@ class LiteSpeed_Cache
 			}
 		}
 		else {
-			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': esi=on' ;
+			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
 			@header($cache_control_header) ;
 		}
 	}
