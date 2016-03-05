@@ -63,11 +63,6 @@ class LiteSpeed_Cache
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
 
 		add_action('after_setup_theme', array( $this, 'init' )) ;
-		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
-		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
-
-		// TODO: uncomment this when esi is implemented.
-//		$this->add_actions_esi();
 	}
 
 	public static function run()
@@ -140,7 +135,7 @@ class LiteSpeed_Cache
 		$module_enabled = $this->config->module_enabled() ; // force value later
 
 		if ( is_admin() ) {
-			$this->load_admin($module_enabled) ;
+			$this->load_admin_actions($module_enabled) ;
 		}
 
 		if ( ! $module_enabled ) {
@@ -152,16 +147,25 @@ class LiteSpeed_Cache
 		//TODO: Uncomment this when esi is implemented.
 //		add_action('init', array($this, 'check_admin_bar'), 0);
 
+		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
+		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
+
+		// TODO: uncomment this when esi is implemented.
+//		$this->add_actions_esi();
+
 		if ( $this->check_esi_page()) {
 			return;
 		}
 
 		if ( is_user_logged_in() ) {
-			$this->load_logged_in() ;
+			$this->load_logged_in_actions() ;
 		}
 		else {
-			$this->load_public() ;
+			$this->load_logged_out_actions();
 		}
+		
+		//$this->load_public_actions() ; currently empty
+
 	}
 
 	public function get_config()
@@ -230,7 +234,7 @@ class LiteSpeed_Cache
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_admin( $module_enabled )
+	private function load_admin_actions( $module_enabled )
 	{
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -255,25 +259,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function load_public()
-	{
-		// user is not logged in
-		add_action('wp', array( $this, 'check_cacheable' ), 5) ;
-	}
-
-	/**
 	 * Register all the hooks for logged in users.
 	 *
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_logged_in()
+	private function load_logged_in_actions()
 	{
 
 		//register purge actions
@@ -288,6 +279,30 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 	}
+
+	/**
+	 * Register all the hooks for non-logged in users.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_logged_out_actions()
+	{
+		// user is not logged in
+		add_action('wp', array( $this, 'check_cacheable' ), 5) ;
+	}
+
+	/**
+	 * Register all of the hooks related to the all users
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_public_actions()
+	{
+	}
+
 
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out') {
@@ -428,7 +443,7 @@ class LiteSpeed_Cache
 		}
 
 		if ((defined('WOOCOMMERCE_VERSION')) && ($this->is_woocommerce())) {
-			return $this->no_cache_for('Cannot cache this woocommerce page') ;
+			return $this->no_cache_for('Cannot cache this woocommerce page with cart') ;
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
@@ -622,7 +637,7 @@ class LiteSpeed_Cache
 	}
 
 
-/* BEGIN ESI CODE */
+/* BEGIN ESI CODE, not fully implemented for now */
 	public function esi_admin_bar_render() {
 		echo '<!-- lscwp admin esi start -->'
 				. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
