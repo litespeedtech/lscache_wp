@@ -149,7 +149,6 @@ class LiteSpeed_Cache
 
 		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
 		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
-		add_action('lscwp_wp_cron', array($this, 'purge_post'));
 
 		// TODO: uncomment this when esi is implemented.
 //		$this->add_actions_esi();
@@ -165,7 +164,7 @@ class LiteSpeed_Cache
 			$this->load_logged_out_actions();
 		}
 
-		//$this->load_public_actions() ; currently empty
+		$this->load_public_actions() ;
 
 	}
 
@@ -268,17 +267,6 @@ class LiteSpeed_Cache
 	private function load_logged_in_actions()
 	{
 
-		//register purge actions
-		$purge_post_events = array(
-			'edit_post',
-			'save_post',
-			'deleted_post',
-			'trashed_post',
-			'delete_attachment',
-		) ;
-		foreach ( $purge_post_events as $event ) {
-			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
-		}
 	}
 
 	/**
@@ -302,6 +290,17 @@ class LiteSpeed_Cache
 	 */
 	private function load_public_actions()
 	{
+		//register purge actions
+		$purge_post_events = array(
+			'edit_post',
+			'save_post',
+			'deleted_post',
+			'trashed_post',
+			'delete_attachment',
+		) ;
+		foreach ( $purge_post_events as $event ) {
+			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
+		}
 	}
 
 
@@ -354,14 +353,7 @@ class LiteSpeed_Cache
 	{
 		$post_id = intval($id);
 		// ignore the status we don't care
-		$post_status = get_post_status($post_id);
-		if ( ! in_array($post_status, array( 'publish', 'trash' )) ) {
-			if ($post_status == 'future') {
-				$curtime = current_time('U');
-				$posttime = get_the_date('U', $post_id);
-				wp_schedule_single_event(time() + ($posttime - intval($curtime)),
-										 'lscwp_wp_cron', array($post_id));
-			}
+		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
 			return ;
 		}
 
