@@ -311,7 +311,8 @@ class LiteSpeed_Cache
 					COOKIE_DOMAIN, is_ssl(), true);
 		}
 		else {
-            setcookie(self::LSCOOKIE_USER_VARY, '0', $expiration, COOKIEPATH,
+			// Use a year in case of bad local clock.
+            setcookie(self::LSCOOKIE_USER_VARY, '0', time() - 31536001, COOKIEPATH,
 					COOKIE_DOMAIN);
 		}
 	}
