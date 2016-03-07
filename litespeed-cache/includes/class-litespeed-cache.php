@@ -163,7 +163,7 @@ class LiteSpeed_Cache
 		else {
 			$this->load_logged_out_actions();
 		}
-		
+
 		//$this->load_public_actions() ; currently empty
 
 	}
@@ -571,7 +571,7 @@ class LiteSpeed_Cache
 
 		// for bbpress forums, topics, replies.
 		// If one is updated, the ancestors should be as well.
-		if (is_bbpress()) {
+		if (function_exists('is_bbpress') && is_bbpress()) {
 			if ( ! empty($ancestors)) {
 				foreach ($ancestors as $ancestor) {
 					$purge_tags[] = self::CACHETAG_TYPE_POST . $ancestor ;
