@@ -127,12 +127,6 @@ class LiteSpeed_Cache_Admin
 		$pattern = "/[\s,]+/" ;
 		$errors = array() ;
 
-		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
-		$enabled = isset($input[$id]) && ('1' === $input[$id]) ;
-		if ( $enabled !== $options[$id] ) {
-			$options[$id] = $enabled ;
-		}
-
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		if ( isset($input[$id]) ) {
 			$admin_ips = trim($input[$id]) ;
@@ -388,10 +382,6 @@ class LiteSpeed_Cache_Admin
 	private function show_settings_general( $options )
 	{
 		$buf = $this->input_group_start(__('General', 'litespeed-cache')) ;
-
-		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
-		$input_enabled = $this->input_field_checkbox($id, '1', $options[$id]) ;
-		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enabled) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;

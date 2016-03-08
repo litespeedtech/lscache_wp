@@ -20,7 +20,6 @@ class LiteSpeed_Cache_Config
 	const LOG_LEVEL_INFO = 3 ;
 	const LOG_LEVEL_DEBUG = 4 ;
 	const OPID_VERSION = 'version' ;
-	const OPID_ENABLED = 'enabled' ;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
@@ -56,7 +55,7 @@ class LiteSpeed_Cache_Config
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
 
-		if ( true === WP_DEBUG /* && $this->options[self::OPID_DEBUG] && $this->options[self::OPID_ENABLED] */ ) {
+		if ( true === WP_DEBUG /* && $this->options[self::OPID_DEBUG] */ ) {
 			$msec = microtime() ;
 			$msec1 = substr($msec, 2, strpos($msec, ' ') - 2) ;
 			if ( array_key_exists('REMOTE_ADDR', $_SERVER) && array_key_exists('REMOTE_PORT', $_SERVER) ) {
@@ -104,7 +103,6 @@ class LiteSpeed_Cache_Config
 
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::OPID_ENABLED => false,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
@@ -228,10 +226,6 @@ class LiteSpeed_Cache_Config
 		$enabled = 0 ;
 		if ( isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE'] ) {
 			$enabled = 1 ; // server module enabled
-
-			if ( $this->options[self::OPID_ENABLED] ) {
-				$enabled |= 2 ;
-			}
 		}
 		return $enabled ;
 	}
