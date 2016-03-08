@@ -452,30 +452,30 @@ class LiteSpeed_Cache_Admin
 	{
 
 		$cat_description =
-            '<b>All categories are cached by default.</b>
-			<br>
-			To prevent a category from being cached, check the box next to that category.
-            <br><br>';
+            '<b>' . __('All categories are cached by default.', 'litespeed-cache') . '</b>
+			<br>'
+			. __('To prevent a category from being cached, check the box next to that category.', 'litespeed-cache')
+            . '<br><br>';
 
 		$tag_description =
-            '<b>All tags are cached by default.</b>
-			<br>
-			To prevent a tags from being cached, check the box next to that tags.
-            <br><br>';
+            '<b>' . __('All tags are cached by default.', 'litespeed-cache') . '</b>
+			<br>'
+			. __('To prevent a tags from being cached, check the box next to that tags.', 'litespeed-cache')
+            . '<br><br>';
 
         $uri_description =
-            'Enter a list of urls that you do not want to have cached.
-            <br>
-            The urls will be compared to the REQUEST_URI server variable.
-            <br>
-            There should only be one url per line.
-            <br><br>
-            <b>NOTE:</b> URLs must start with a \'/\' to be correctly matched.
-            <br>
-            Any surrounding whitespaces will be trimmed.
-            <br><br>
-            e.g. to exclude http://www.example.com/excludethis.php, I would have:
-            <br>
+            __('Enter a list of urls that you do not want to have cached.', 'litespeed-cache')
+            . '<br>'
+            . __('The urls will be compared to the REQUEST_URI server variable.', 'litespeed-cache')
+            . '<br>'
+            . __('There should only be one url per line.', 'litespeed-cache')
+            . '<br><br>
+			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('URLs must start with a \'/\' to be correctly matched.', 'litespeed-cache')
+            . '<br>'
+            . __('Any surrounding whitespaces will be trimmed.', 'litespeed-cache')
+            . '<br><br>'
+            . sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
+            . '<br>
             <input type="text" name="example_exclude" value="/excludethis.php" readonly>
             <br><br>';
 
@@ -487,8 +487,7 @@ class LiteSpeed_Cache_Admin
         $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
         $excludes_buf = $options[$excludes_id];
         $buf = $this->input_group_start(
-                                __('Category List', 'litespeed-cache'),
-                                __($cat_description, 'litespeed-cache'));
+                                __('Category List', 'litespeed-cache'), $cat_description);
         $buf .= $tr ;
 
 		$cats = get_terms('category', 'hide_empty=0');
@@ -497,8 +496,7 @@ class LiteSpeed_Cache_Admin
 		foreach ( $cats as $cat ) {
 			$cat_name = $cat->name;
 			$buf .= $this->input_field_checkbox( 'excat_' . $cat_name, $cat_name,
-								in_array($cat->term_id, $my_cats),
-								__($cat_name, 'litespeed-cache'));
+								in_array($cat->term_id, $my_cats), $cat_name);
 			++$count;
 			if (($count % $checkboxes_per_row) == 0) {
 				$buf .= $endtr;
@@ -520,8 +518,7 @@ class LiteSpeed_Cache_Admin
         $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
         $excludes_buf = $options[$excludes_id];
         $buf .= $this->input_group_start(
-                                __('Tag List', 'litespeed-cache'),
-                                __($tag_description, 'litespeed-cache'));
+                                __('Tag List', 'litespeed-cache'), $tag_description);
         $buf .= $tr ;
 
 		$tags = get_terms('post_tag', 'hide_empty=0');
@@ -531,7 +528,7 @@ class LiteSpeed_Cache_Admin
 			$tag_name = $tag->name;
 			$buf .= $this->input_field_checkbox( 'extag_' . $tag_name, $tag_name,
 								in_array($tag->term_id, $my_tags),
-								__($tag_name, 'litespeed-cache'));
+								$tag_name);
 			++$count;
 			if (($count % $checkboxes_per_row) == 0) {
 				$buf .= $endtr;
@@ -553,8 +550,7 @@ class LiteSpeed_Cache_Admin
         $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
         $excludes_buf = $options[$excludes_id];
         $buf .= $this->input_group_start(
-                                __('URI List', 'litespeed-cache'),
-                                __($uri_description, 'litespeed-cache'));
+                                __('URI List', 'litespeed-cache'), $uri_description); // fix
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '20', '80', '');
@@ -610,31 +606,30 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 });';
-		$wp_postviews_desc = 'To make LiteSpeed Cache compatible with WP-PostViews:<br>
+		$wp_postviews_desc = __('To make LiteSpeed Cache compatible with WP-PostViews:', 'litespeed-cache') . '<br>
 			<ol>
-				<li>Replace the following calls in your theme\'s template files
-				with a div or span with a unique ID.<br>
-				e.g. Replace <br>'
-				. $this->input_field_text('EXAMPLE_SRC', $example_src,
-						strlen($example_src), '', '', true)
-				. '<br>with<br>'
-				. $this->input_field_text('EXAMPLE_DIV', $example_div,
-						strlen($example_div), '', '', true)
-				. '</li>
-				<li>Update the ajax request to output the results to that div.
-				<br><br>
-				Example:<br>
+				<li>' . __('Replace the following calls in your theme\'s template files
+				with a div or span with a unique ID.', 'litespeed-cache') . '<br>'
+				. printf(__('e.g. Replace <br> %1$s
+				<br>with<br> %2$s'),
+						$this->input_field_text('EXAMPLE_SRC', $example_src,
+						strlen($example_src), '', '', true),
+						$this->input_field_text('EXAMPLE_DIV', $example_div,
+						strlen($example_div), '', '', true)) .
+				'</li>
+				<li>' . __('Update the ajax request to output the results to that div.', 'litespeed-cache')
+				. '<br><br>'
+				. __('Example:', 'litespeed-cache') . '<br>
 				<textarea name="example_ajax" rows="12" cols="80" readonly>'
-				. $example_ajax . '"</textarea><br>
-				The ajax code can be found at <br>'
+				. $example_ajax . '"</textarea><br>'
+				. __('The ajax code can be found at', 'litespeed-cache') . '<br>'
 				. $this->input_field_text('EXAMPLE_PATH', $example_ajax_path,
 						strlen($example_ajax_path), '', '', true)
 				. '</li>
-				<li>After purging the cache, the view count should be updating.</li>
+				<li>' . __('After purging the cache, the view count should be updating.', 'litespeed-cache') .'</li>
 			</ol>';
 		$buf .= $this->input_group_start(
-									__('Compatibility with WP-PostViews', 'litespeed-cache'),
-									__($wp_postviews_desc, 'litespeed-cache'));
+									__('Compatibility with WP-PostViews', 'litespeed-cache'), $wp_postviews_desc);
 		$buf .= $this->input_group_end();
 		return $buf;
 	}

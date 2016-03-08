@@ -1,9 +1,9 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
-Requires at least: 3.3
+Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -21,12 +21,14 @@ Additional plugin features:
 For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/forum/ "forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com
 
 == Installation ==
-1. In LiteSpeed Web Server - Through the WebAdmin Console, navigate to Configuration > Server > cache and set 'Storage path' under Cache Storage Settings to something like '/tmp/wpcache/' for example. If the directory does not already exist, create it and make it server readable/writable.
-2. In LiteSpeed Web Server - Under "Cache Policy" set the following: 'Enable Public Cache' - No, 'Check Public Cache' - Yes, 'Ignore Request Cache-Control' - Yes.
-3. In LiteSpeed Web Server - Perform a Graceful Restart.
-4. Upload 'litespeed-cache.zip' to the '/wp-content/plugins/' directory
-5. Disable any other page caches as these will interfere with the LiteSpeed Cache Plugin.
-6. Activate the LiteSpeed Cache plugin through the 'Plugins' screen in WordPress
+1. Make sure that your license has the LSCache module enabled. You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") free for 15-days.
+2. In LiteSpeed Web Server - Through the WebAdmin Console, navigate to Configuration > Server > cache and set 'Storage path' under Cache Storage Settings to a fast disk, where the path can be something like '/tmp/wpcache/' for example. If the directory does not already exist, it will be created for you.
+3. In LiteSpeed Web Server - Under "Cache Policy" set the following: 'Enable Public Cache' - No, 'Check Public Cache' - Yes, 'Ignore Request Cache-Control' - Yes.
+4. In LiteSpeed Web Server - Perform a Graceful Restart.
+5. Upload 'litespeed-cache.zip' to the '/wp-content/plugins/' directory.
+6. Disable any other page caches as these will interfere with the LiteSpeed Cache Plugin.
+7. Activate the LiteSpeed Cache plugin through the 'Plugins' screen in WordPress.
+8. For more detailed information, visit our [LSCWP Wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "lscwp wiki").
 
 == Frequently Asked Questions ==
 = Is the LiteSpeed Cache Plugin for WordPress free? =
@@ -62,5 +64,15 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 3. Purge the cache to use the updated pages.
 
 == Changelog ==
+= 1.0.1 =
+* [NEW] Do Not Cache by uri, by category, and by tag.  URI is a prefix/string equals match.
+* [NEW] Added a help tab for plugin compatibilities.
+* [NEW] Create logic for other plugins to purge a single post if updated.
+* [BUGFIX] Do not cache for woocommerce pages that display the cart.
+* [BUGFIX] Correctly display admin menu in multi-site setup.
+* [BUGFIX] Do not serve public cached pages for logged in users.
+* [BUGFIX] Support for bbPress.  If there is a new forum/topic/reply, the parent pages will be purged as well.
+* [BUGFIX] Allow cron job to update scheduled posts.
+
 = 1.0.0 =
 * Initial Release.
