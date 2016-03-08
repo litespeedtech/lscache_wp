@@ -193,33 +193,53 @@ class LiteSpeed_Cache_Admin
             $options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
         }
 
-		$cats = get_terms('category', 'hide_empty=0');
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
 		$options[$id] = '';
-		foreach ( $cats as $cat ) {
-			$cat_name = $cat->name;
-			$input_name = 'excat_' . $cat_name ;
-			if ( isset($input[$input_name]) && ($cat_name === $input[$input_name]) ) {
-				if (!empty($options[$id])) {
-					$options[$id] .= '.' ;
+        if ( isset($input[$id]) ) {
+			$cat_ids = array();
+			$cats = explode("\n", $input[$id]);
+			foreach ( $cats as $cat ) {
+				$cat_name = trim($cat);
+				if ( $cat_name == '') {
+					continue;
 				}
-				$options[$id] .= $cat->term_id ;
+				$cat_id = get_cat_ID($cat_name);
+				if ($cat_id == 0) {
+					$errors[] = __('Removed category "' . $cat_name . '" from list, ID does not exist.',
+									'litespeed-cache') ;
+				}
+				else {
+					$cat_ids[] = $cat_id;
+				}
 			}
-		}
+			if ( !empty($cat_ids)) {
+				$options[$id] = implode(',', $cat_ids);
+			}
+        }
 
-		$tags = get_terms('post_tag', 'hide_empty=0');
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG ;
 		$options[$id] = '';
-		foreach ( $tags as $tag ) {
-			$tag_name = $tag->name;
-			$input_name = 'extag_' . $tag_name ;
-			if ( isset($input[$input_name]) && ($tag_name === $input[$input_name]) ) {
-				if (!empty($options[$id])) {
-					$options[$id] .= '.' ;
+        if ( isset($input[$id]) ) {
+			$tag_ids = array();
+			$tags = explode("\n", $input[$id]);
+			foreach ( $tags as $tag ) {
+				$tag_name = trim($tag);
+				if ( $tag_name == '') {
+					continue;
 				}
-				$options[$id] .= $tag->term_id ;
+				$term = get_term_by('name', $tag_name, 'post_tag');
+				if ($term == 0) {
+					$errors[] = __('Removed tag "' . $tag_name . '" from list, ID does not exist.',
+									'litespeed-cache') ;
+				}
+				else {
+					$tag_ids[] =  $term->term_id;
+				}
 			}
-		}
+			if ( !empty($tag_ids)) {
+				$options[$id] = implode(',', $tag_ids);
+			}
+        }
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
 		if ( isset($input[$id]) ) {
@@ -451,18 +471,6 @@ class LiteSpeed_Cache_Admin
 	private function show_settings_excludes( $options )
 	{
 
-		$cat_description =
-            '<b>All categories are cached by default.</b>
-			<br>
-			To prevent a category from being cached, check the box next to that category.
-            <br><br>';
-
-		$tag_description =
-            '<b>All tags are cached by default.</b>
-			<br>
-			To prevent a tags from being cached, check the box next to that tags.
-            <br><br>';
-
         $uri_description =
             'Enter a list of urls that you do not want to have cached.
             <br>
@@ -479,85 +487,76 @@ class LiteSpeed_Cache_Admin
             <input type="text" name="example_exclude" value="/excludethis.php" readonly>
             <br><br>';
 
+		$cat_description =
+            '<b>All categories are cached by default.</b>
+			<br>
+			To prevent a category from being cached, enter it in the text area below,
+			one per line.
+			<br>
+            <b>NOTE:</b> If the Category ID is not found, the name will be removed on save.
+            <br><br>';
+
+		$tag_description =
+            '<b>All tags are cached by default.</b>
+			<br>
+			To prevent tags from being cached, enter it in the text area below,
+			one per line.
+			<br>
+            <b>NOTE:</b> If the Tag ID is not found, the name will be removed on save.
+            <br><br>';
+
         $tr = '<tr><td>' ;
         $endtr = "</td></tr>\n" ;
-		$spacer = '&nbsp;&nbsp;&nbsp;' ;
-		$checkboxes_per_row = 4;
-
-        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
-        $excludes_buf = $options[$excludes_id];
-        $buf = $this->input_group_start(
-                                __('Category List', 'litespeed-cache'),
-                                __($cat_description, 'litespeed-cache'));
-        $buf .= $tr ;
-
-		$cats = get_terms('category', 'hide_empty=0');
-		$my_cats = explode('.', $excludes_buf);
-		$count = 0;
-		foreach ( $cats as $cat ) {
-			$cat_name = $cat->name;
-			$buf .= $this->input_field_checkbox( 'excat_' . $cat_name, $cat_name,
-								in_array($cat->term_id, $my_cats),
-								__($cat_name, 'litespeed-cache'));
-			++$count;
-			if (($count % $checkboxes_per_row) == 0) {
-				$buf .= $endtr;
-				if ($count < count($cats)) {
-					$buf .= $tr;
-				}
-			}
-			else {
-				$buf .= $spacer;
-			}
-		}
-
-		if (($count % $checkboxes_per_row) != 0) {
-			$buf .= $endtr;
-		}
-
-		$buf .= $this->input_group_end();
-
-        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
-        $excludes_buf = $options[$excludes_id];
-        $buf .= $this->input_group_start(
-                                __('Tag List', 'litespeed-cache'),
-                                __($tag_description, 'litespeed-cache'));
-        $buf .= $tr ;
-
-		$tags = get_terms('post_tag', 'hide_empty=0');
-		$my_tags = explode('.', $excludes_buf);
-		$count = 0;
-		foreach ( $tags as $tag ) {
-			$tag_name = $tag->name;
-			$buf .= $this->input_field_checkbox( 'extag_' . $tag_name, $tag_name,
-								in_array($tag->term_id, $my_tags),
-								__($tag_name, 'litespeed-cache'));
-			++$count;
-			if (($count % $checkboxes_per_row) == 0) {
-				$buf .= $endtr;
-				if ($count < count($tags)) {
-					$buf .= $tr;
-				}
-			}
-			else {
-				$buf .= $spacer;
-			}
-		}
-
-		if (($count % $checkboxes_per_row) != 0) {
-			$buf .= $endtr;
-		}
-
-		$buf .= $this->input_group_end();
 
         $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
         $excludes_buf = $options[$excludes_id];
-        $buf .= $this->input_group_start(
+        $buf = $this->input_group_start(
                                 __('URI List', 'litespeed-cache'),
                                 __($uri_description, 'litespeed-cache'));
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
-                                                '20', '80', '');
+                                                '10', '80', '');
+        $buf .= $endtr;
+
+		$buf .= $this->input_group_end();
+
+        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+		$excludes_buf = '';
+		$cat_ids = $options[$excludes_id];
+		if ($cat_ids != '') {
+			$id_list = explode( ',', $cat_ids);
+			$excludes_buf = implode("\n", array_map(get_cat_name, $id_list));
+		}
+        $buf .= $this->input_group_start(
+                                __('Category List', 'litespeed-cache'),
+                                __($cat_description, 'litespeed-cache'));
+        $buf .= $tr ;
+        $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
+                                                '5', '80', '');
+        $buf .= $endtr;
+
+		$buf .= $this->input_group_end();
+
+        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+		$excludes_buf = '';
+		$tag_ids = $options[$excludes_id];
+		if ($tag_ids != '') {
+			$id_list = explode( ',', $tag_ids);
+			$tags_list = array_map(get_tag, $id_list);
+			$tag_names = array();
+			foreach( $tags_list as $tag) {
+				$tag_names[] = $tag->name;
+			}
+			if (!empty($tag_names)) {
+				$excludes_buf = implode("\n", $tag_names);
+			}
+		}
+        $buf .= $this->input_group_start(
+                                __('Tag List', 'litespeed-cache'),
+                                __($tag_description, 'litespeed-cache'));
+        $buf .= $tr ;
+        $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
+                                                '5', '80', '');
         $buf .= $endtr;
 
 		$buf .= $this->input_group_end();
