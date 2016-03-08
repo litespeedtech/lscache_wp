@@ -205,8 +205,8 @@ class LiteSpeed_Cache_Admin
 				}
 				$cat_id = get_cat_ID($cat_name);
 				if ($cat_id == 0) {
-					$errors[] = __('Removed category "' . $cat_name . '" from list, ID does not exist.',
-									'litespeed-cache') ;
+					$errors[] = sprintf(__('Removed category "%s" from list, ID does not exist.',
+									'litespeed-cache'),$cat_name) ;
 				}
 				else {
 					$cat_ids[] = $cat_id;
@@ -229,8 +229,8 @@ class LiteSpeed_Cache_Admin
 				}
 				$term = get_term_by('name', $tag_name, 'post_tag');
 				if ($term == 0) {
-					$errors[] = __('Removed tag "' . $tag_name . '" from list, ID does not exist.',
-									'litespeed-cache') ;
+					$errors[] = sprintf(__('Removed tag "%s" from list, ID does not exist.',
+									'litespeed-cache'), $tag_name) ;
 				}
 				else {
 					$tag_ids[] =  $term->term_id;
@@ -403,7 +403,10 @@ class LiteSpeed_Cache_Admin
 
 	private function show_settings_purge( $purge_options )
 	{
-		$buf = $this->input_group_start(__('Auto Purge Rules For Publish/Update', 'litespeed-cache'), __('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache') . '<br>' . __('Note: Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages. (Other checkboxes will be ignored)', 'litespeed-cache')) ;
+		$buf = $this->input_group_start(__('Auto Purge Rules For Publish/Update', 'litespeed-cache'),
+				__('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache')
+				. '<br>'
+				. __('Note: Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages. (Other checkboxes will be ignored)', 'litespeed-cache')) ;
 
 		$tr = '<tr><th scope="row" colspan="2" class="th-full">' ;
 		$endtr = "</th></tr>\n" ;
@@ -488,22 +491,22 @@ class LiteSpeed_Cache_Admin
             <br><br>';
 
 		$cat_description =
-            '<b>All categories are cached by default.</b>
-			<br>
-			To prevent a category from being cached, enter it in the text area below,
-			one per line.
-			<br>
-            <b>NOTE:</b> If the Category ID is not found, the name will be removed on save.
-            <br><br>';
+            '<b>' . __('All categories are cached by default.', 'litespeed-cache') . '</b>
+			<br>'
+			. __('To prevent a category from being cached, enter it in the text area below,
+			one per line.', 'litespeed-cache')
+			. '<br>
+			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Category ID is not found, the name will be removed on save.', 'litespeed-cache')
+            . '<br><br>';
 
 		$tag_description =
-            '<b>All tags are cached by default.</b>
-			<br>
-			To prevent tags from being cached, enter it in the text area below,
-			one per line.
-			<br>
-            <b>NOTE:</b> If the Tag ID is not found, the name will be removed on save.
-            <br><br>';
+            '<b>' . __('All tags are cached by default.', 'litespeed-cache') . '</b>
+			<br>'
+			. __('To prevent tags from being cached, enter it in the text area below,
+			one per line.', 'litespeed-cache')
+			. '<br>
+			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache')
+            . '<br><br>';
 
         $tr = '<tr><td>' ;
         $endtr = "</td></tr>\n" ;
@@ -511,8 +514,7 @@ class LiteSpeed_Cache_Admin
         $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
         $excludes_buf = $options[$excludes_id];
         $buf = $this->input_group_start(
-                                __('URI List', 'litespeed-cache'),
-                                __($uri_description, 'litespeed-cache'));
+                                __('URI List', 'litespeed-cache'), $uri_description);
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '10', '80', '');
@@ -528,8 +530,7 @@ class LiteSpeed_Cache_Admin
 			$excludes_buf = implode("\n", array_map(get_cat_name, $id_list));
 		}
         $buf .= $this->input_group_start(
-                                __('Category List', 'litespeed-cache'),
-                                __($cat_description, 'litespeed-cache'));
+                                __('Category List', 'litespeed-cache'), $cat_description);
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '5', '80', '');
@@ -552,8 +553,7 @@ class LiteSpeed_Cache_Admin
 			}
 		}
         $buf .= $this->input_group_start(
-                                __('Tag List', 'litespeed-cache'),
-                                __($tag_description, 'litespeed-cache'));
+                                __('Tag List', 'litespeed-cache'), $tag_description);
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '5', '80', '');

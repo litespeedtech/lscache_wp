@@ -65,14 +65,14 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 
 == Changelog ==
 = 1.0.1 =
-* [NEW] Do Not Cache by uri, by category, and by tag.  URI is a prefix/string equals match.
-* [NEW] Added a help tab for plugin compatibilities.
-* [NEW] Create logic for other plugins to purge a single post if updated.
-* [BUGFIX] Do not cache for woocommerce pages that display the cart.
-* [BUGFIX] Correctly display admin menu in multi-site setup.
-* [BUGFIX] Do not serve public cached pages for logged in users.
-* [BUGFIX] Support for bbPress.  If there is a new forum/topic/reply, the parent pages will be purged as well.
-* [BUGFIX] Allow cron job to update scheduled posts.
+* New Feature: Do Not Cache by uri, by category, and by tag.  URI is a prefix/string equals match.
+* New Feature: Added a help tab for plugin compatibilities.
+* New Feature: Create logic for other plugins to purge a single post if updated.
+* Fixed a bug where woocommerce pages that display the cart were cached.
+* Fixed a bug where admin menus in multi-site setups were not correctly displayed.
+* Fixed a bug where logged in users were served public cached pages.
+* Fixed a compatibility bug with bbPress.  If there is a new forum/topic/reply, the parent pages will now be purged as well.
+* Fixed a bug that didn't allow cron job to update scheduled posts.
 
 = 1.0.0 =
 * Initial Release.
