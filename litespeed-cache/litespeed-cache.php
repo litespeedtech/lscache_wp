@@ -60,33 +60,35 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache.php' ;
  *
  * @since    1.0.0
  */
-function run_litespeed_cache()
-{
-	$version_supported = true ;
+if (!function_exists('run_litespeed_cache')) {
+	function run_litespeed_cache()
+	{
+		$version_supported = true ;
 
-	//Check minimum PHP requirements, which is 5.3 at the moment.
-	if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
-		add_action('admin_notices', 'LiteSpeed_Cache::show_version_error_php') ;
-		$version_supported = false ;
+		//Check minimum PHP requirements, which is 5.3 at the moment.
+		if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
+			add_action('admin_notices', 'LiteSpeed_Cache::show_version_error_php') ;
+			$version_supported = false ;
+		}
+
+		//Check minimum WP requirements, which is 4.0 at the moment.
+		if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
+			add_action('admin_notices', 'LiteSpeed_Cache::show_version_error_wp') ;
+			$version_supported = false ;
+		}
+
+		//Checks if WP_CACHE is defined and true in the wp-config.php file.
+		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+			add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
+		}
+
+		if ( $version_supported ) {
+			LiteSpeed_Cache::run() ;
+		}
+		else {
+			return false ;
+		}
 	}
 
-	//Check minimum WP requirements, which is 4.0 at the moment.
-	if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
-		add_action('admin_notices', 'LiteSpeed_Cache::show_version_error_wp') ;
-		$version_supported = false ;
-	}
-
-	//Checks if WP_CACHE is defined and true in the wp-config.php file.
-	if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
-		add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
-	}
-
-	if ( $version_supported ) {
-		LiteSpeed_Cache::run() ;
-	}
-	else {
-		return false ;
-	}
+	run_litespeed_cache() ;
 }
-
-run_litespeed_cache() ;
