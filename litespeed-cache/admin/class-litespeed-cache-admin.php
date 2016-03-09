@@ -127,6 +127,13 @@ class LiteSpeed_Cache_Admin
 		$pattern = "/[\s,]+/" ;
 		$errors = array() ;
 
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
+		$enabled = isset($input[$id]) && ('1' === $input[$id]) ;
+		if ( $enabled !== $options[$id] ) {
+			$options[$id] = $enabled ;
+			$config->wp_cache_var_setter($enabled);
+		}
+
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		if ( isset($input[$id]) ) {
 			$admin_ips = trim($input[$id]) ;
@@ -182,10 +189,10 @@ class LiteSpeed_Cache_Admin
 			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
 		}
 
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
-        if ( isset($input[$id]) ) {
-            $options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
-        }
+		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
+		if ( isset($input[$id]) ) {
+			$options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
+		}
 
         $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
 		$options[$id] = '';
@@ -282,7 +289,8 @@ class LiteSpeed_Cache_Admin
 	{
 		$config = LiteSpeed_Cache::config() ;
 
-		if ( ! $this->check_license($config) )
+		if ( ! $this->check_license($config, $error_msg) )
+			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
 			return ;
 
 		if ( $this->messages ) {
@@ -319,8 +327,10 @@ class LiteSpeed_Cache_Admin
 	{
 		$config = LiteSpeed_Cache::config() ;
 
-		if ( ! $this->check_license($config) )
-			return ;
+		if ( ! $this->check_license($config, $error_msg) ) {
+			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
+
+		}
 
 		$options = $config->get_options() ;
 		$purge_options = $config->get_purge_options() ;
@@ -368,12 +378,12 @@ class LiteSpeed_Cache_Admin
 		echo "</form></div>\n" ;
 	}
 
-	private function check_license( $config )
+	private function check_license( $config, &$error_msg )
 	{
-		$enabled = $config->module_enabled() ;
-
-		if ( 0 == ($enabled & 1) ) {
-			echo '<div class="error"><p>' . __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled. This plugin will NOT work properly.', 'litespeed-cache') . '</p></div>' . "\n" ;
+		if ($config->is_caching_allowed() == false) {
+			$error_msg = __('Notice: Your installation of LiteSpeed Web Server does not have '
+						 . 'LSCache enabled. This plugin will NOT work properly.',
+						'litespeed-cache');
 			return false ;
 		}
 		return true ;
@@ -382,6 +392,11 @@ class LiteSpeed_Cache_Admin
 	private function show_settings_general( $options )
 	{
 		$buf = $this->input_group_start(__('General', 'litespeed-cache')) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
+		$input_enabled = $this->input_field_checkbox($id, '1', $options[$id]) ;
+		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enabled) ;
+
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;

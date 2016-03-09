@@ -20,6 +20,7 @@ class LiteSpeed_Cache_Config
 	const LOG_LEVEL_INFO = 3 ;
 	const LOG_LEVEL_DEBUG = 4 ;
 	const OPID_VERSION = 'version' ;
+	const OPID_ENABLED = 'enabled' ;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
@@ -36,9 +37,9 @@ class LiteSpeed_Cache_Config
 	const PURGE_DATE = 'D' ;
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
-    const OPID_EXCLUDES_URI = 'excludes_uri' ;
-    const OPID_EXCLUDES_CAT = 'excludes_cat' ;
-    const OPID_EXCLUDES_TAG = 'excludes_tag' ;
+	const OPID_EXCLUDES_URI = 'excludes_uri' ;
+	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
+	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
 	protected $options ;
 	protected $purge_options ;
@@ -103,6 +104,7 @@ class LiteSpeed_Cache_Config
 
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
+			self::OPID_ENABLED => false,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
@@ -110,9 +112,9 @@ class LiteSpeed_Cache_Config
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
-            self::OPID_EXCLUDES_URI => '',
-            self::OPID_EXCLUDES_CAT => '',
-            self::OPID_EXCLUDES_TAG => ''
+			self::OPID_EXCLUDES_URI => '',
+			self::OPID_EXCLUDES_CAT => '',
+			self::OPID_EXCLUDES_TAG => '',
 				) ;
 
 		return $default_options ;
@@ -147,48 +149,40 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
-	private function wp_cache_var_setter( $setting )
+	public function wp_cache_var_setter( $enable )
 	{
+		if ( $enable ) {
+			if ( defined('WP_CACHE') && constant('WP_CACHE') == true ) {
+				return true ;
+			}
+		}
+		elseif ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+			return true;
+		}
 		$file = ABSPATH . 'wp-config.php' ;
-		if ( is_writeable($file) ) {
-			$file_content = file_get_contents($file) ;
-
-			if ( $setting == 'set' ) {
-				$count = 0 ;
-
-				$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m', "define('WP_CACHE', true);\n", $file_content, -1, $count) ;
-				if ( $count == 0 ) {
-					$new_file_content = preg_replace('/(\$table_prefix[^;]+;\n)/m', "$1\ndefine('WP_CACHE', true);\n", $file_content) ;
-				}
-			}
-			elseif ( $setting == 'unset' ) {
-				$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m', "define('WP_CACHE', false);\n", $file_content) ;
-			}
-
-			file_put_contents($file, $new_file_content) ;
-			return true ;
+		if ( !is_writeable($file) ) {
+			$this->debug_log('wp-config file not writeable for \'WP_CACHE\'');
+			return false;
 		}
-		return false ;
-	}
+		$file_content = file_get_contents($file) ;
 
-	public function set_wp_cache_var()
-	{
-		if ( defined('WP_CACHE') && constant('WP_CACHE') == true ) {
-			return true ;
+		if ( $enable ) {
+			$count = 0 ;
+
+			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m',
+								"define('WP_CACHE', true);\n", $file_content, -1, $count) ;
+			if ( $count == 0 ) {
+				$new_file_content = preg_replace('/(\$table_prefix[^;]+;\n)/m',
+								"$1\ndefine('WP_CACHE', true);\n", $file_content) ;
+			}
 		}
 		else {
-			$this->wp_cache_var_setter('set') ;
+			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m',
+								"define('WP_CACHE', false);\n", $file_content) ;
 		}
-	}
 
-	public function unset_wp_cache_var()
-	{
-		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
-			return true ;
-		}
-		else {
-			return $this->wp_cache_var_setter('unset') ;
-		}
+		file_put_contents($file, $new_file_content) ;
+		return true ;
 	}
 
 	public function plugin_activation()
@@ -221,13 +215,18 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
-	public function module_enabled()
-	{
-		$enabled = 0 ;
-		if ( isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE'] ) {
-			$enabled = 1 ; // server module enabled
+	public function is_caching_allowed() {
+		if ( isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) {
+			return true;
 		}
-		return $enabled ;
+		return false;
+	}
+
+	public function is_plugin_enabled() {
+		if ( $this->is_caching_allowed() && ($this->options[self::OPID_ENABLED])) {
+			return true;
+		}
+		return false;
 	}
 
 }

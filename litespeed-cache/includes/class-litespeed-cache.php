@@ -61,6 +61,8 @@ class LiteSpeed_Cache
 		$plugin_file = $this->plugin_dir . 'litespeed-cache.php' ;
 		register_activation_hook($plugin_file, array( $this, 'register_activation' )) ;
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
+		$blog_id = get_current_blog_id();
+		$is_network = is_network_admin();
 
 		add_action('after_setup_theme', array( $this, 'init' )) ;
 	}
@@ -93,7 +95,7 @@ class LiteSpeed_Cache
 	{
 		if ( ! (file_exists(ABSPATH . 'wp-content/advanced-cache.php')) ) {
 			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
-			$this->config->set_wp_cache_var() ;
+			$this->config->wp_cache_var_setter(true) ;
 			$this->config->plugin_activation() ;
 		}
 		else {
@@ -104,9 +106,12 @@ class LiteSpeed_Cache
 	public function register_deactivation()
 	{
 		$this->purge_all() ;
-		unlink(ABSPATH . 'wp-content/advanced-cache.php') ;
+		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
+		if (file_exists($adv_cache_path)) {
+			unlink($adv_cache_path) ;
+		}
 
-		if ( ! $this->config->unset_wp_cache_var() ) {
+		if ( ! $this->config->wp_cache_var_setter(false) ) {
 			$this->config->debug_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 		}
 
@@ -132,7 +137,7 @@ class LiteSpeed_Cache
 
 	public function init()
 	{
-		$module_enabled = $this->config->module_enabled() ; // force value later
+		$module_enabled = $this->config->is_plugin_enabled();
 
 		if ( is_admin() ) {
 			$this->load_admin_actions($module_enabled) ;
