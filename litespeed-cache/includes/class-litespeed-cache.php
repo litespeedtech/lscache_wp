@@ -175,6 +175,11 @@ class LiteSpeed_Cache
 			return ;
 		}
 
+		//Checks if WP_CACHE is defined and true in the wp-config.php file.
+		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+			add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
+		}
+
 		define('LITESPEED_CACHE_ENABLED', true);
 		$this->add_purge_hooks();
 		//TODO: Uncomment this when esi is implemented.

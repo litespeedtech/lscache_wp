@@ -21,6 +21,10 @@ class LiteSpeed_Cache_Config
 	const LOG_LEVEL_DEBUG = 4 ;
 	const OPID_VERSION = 'version' ;
 	const OPID_ENABLED = 'enabled' ;
+	const OPID_ENABLED_RADIO = 'radio_select';
+	const OPID_ENABLED_DISABLE = 0;
+	const OPID_ENABLED_ENABLE = 1;
+	const OPID_ENABLED_NOTSET = 2;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
@@ -105,6 +109,7 @@ class LiteSpeed_Cache_Config
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::OPID_ENABLED => false,
+			self::OPID_ENABLED_RADIO => 2,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
