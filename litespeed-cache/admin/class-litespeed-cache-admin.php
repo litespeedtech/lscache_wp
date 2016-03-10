@@ -131,8 +131,7 @@ class LiteSpeed_Cache_Admin
 			return $radio_enabled == LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE;
 		}
 		if (is_multisite()) {
-			//TODO
-			return false;
+			return $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
 		}
 		return true;
 	}
@@ -327,18 +326,31 @@ class LiteSpeed_Cache_Admin
 			echo "</form></div>\n" ;
 			return;
 		}
-		echo '<p>'
-		. __('The Enable All button will enable LiteSpeed Cache for WordPress. We ', 'litespeed-cache')
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
+
+		$site_options = $config->get_site_options();
+		if (!isset($site_options)) {
+			$config->debug_log('There was a problem creating site options.');
+			exit(__('There was a problem creating site options for LiteSpeed Cache.',
+					'litespeed-cache'));
+		}
+		if ($site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED]) {
+			$enabled = __('Enabled', 'litespeed-cache');
+		}
+		else {
+			$enabled = __('Disabled', 'litespeed-cache');
+		}
+
+		echo '<h2>' . __('Current Network Level Status: ', 'litespeed-cache')
+				. $enabled . '</h2>';
+		echo '<h3>'
+		. __('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache')
+				. '<br>' . __('We ', 'litespeed-cache')
 		. '<b>' . __('STRONGLY', 'litespeed-cache') . '</b>'
 		. __(' recommend that you test the compatibility with other plugins on a single/few', 'litespeed-cache')
 		. __(' sites to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache')
-		. '</p>';
-
+		. '</h3>';
 		submit_button(__('Enable All', 'litespeed-cache'), 'primary', 'enableall') ;
-
-		echo '<p>'
-		. __('The Disable All button will disable LiteSpeed Cache for WordPress on all sites.', 'litespeed-cache')
-		. '</p>';
 		submit_button(__('Disable All', 'litespeed-cache'), 'primary', 'disableall') ;
 		echo "</form></div>\n" ;
 	}
@@ -349,8 +361,18 @@ class LiteSpeed_Cache_Admin
 			LiteSpeed_Cache::plugin()->purge_all() ;
 			$this->messages = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache') ;
 		}
-		elseif ( isset($_POST['enableall']) ) {
-			$this->messages = __('Notified LiteSpeed Web Server to enable the public cache for all.', 'litespeed-cache') ;
+		elseif ( isset($_POST['enableall'])) {
+			$config = LiteSpeed_Cache::config();
+			$site_options = $config->get_site_options() ;
+			$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] = true;
+			update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
+			$config->wp_cache_var_setter(true);
+		}
+		elseif ( isset($_POST['disableall'])) {
+			$config = LiteSpeed_Cache::config();
+			$site_options = $config->get_site_options() ;
+			$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] = false;
+			update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
 		}
 	}
 

@@ -45,6 +45,9 @@ class LiteSpeed_Cache_Config
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
+	const NETWORK_OPID_ENABLED = 'network_enabled';
+	const NETWORK_OPID_CNT = 'network_enabled_count';
+
 	protected $options ;
 	protected $purge_options ;
 	protected $debug_tag = 'LiteSpeed_Cache' ;
@@ -53,10 +56,15 @@ class LiteSpeed_Cache_Config
 	{
 		$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
 
-		/* Later we'll see what needs to put in site_options, not used now
-		 * if ( is_multisite() && is_array($site_options = get_site_option(self::OPTION_NAME)) ) {
-		  $options = array_merge($options, $site_options); // Multisite network options.
-		  } */
+		if ( is_multisite()) {
+			$site_options = get_site_option(self::OPTION_NAME);
+			if ( $site_options && is_array($site_options)) {
+				$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED];
+				if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
+					$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
+				}
+			}
+		}
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
 
@@ -125,6 +133,23 @@ class LiteSpeed_Cache_Config
 		return $default_options ;
 	}
 
+	public function get_site_options()
+	{
+		if (!is_multisite()) {
+			return null;
+		}
+		$site_options = get_site_option(self::OPTION_NAME);
+		if ( isset($site_options) && is_array($site_options)) {
+			return $site_options;
+		}
+		$default_site_options = array(
+			self::NETWORK_OPID_ENABLED => false,
+			self::NETWORK_OPID_CNT => 0,
+				);
+		add_site_option(self::OPTION_NAME, $default_site_options);
+		return $default_site_options;
+	}
+
 	public function plugin_upgrade()
 	{
 		$default_options = $this->get_default_options() ;
@@ -188,6 +213,28 @@ class LiteSpeed_Cache_Config
 
 		file_put_contents($file, $new_file_content) ;
 		return true ;
+	}
+
+	public function incr_multi_enabled() {
+		$site_options = $this->get_site_options();
+		$count = $site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT];
+		++$count;
+		$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT] = $count;
+		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
+		return $count;
+	}
+
+	public function decr_multi_enabled() {
+		$site_options = $this->get_site_options();
+		if ( !site_options) {
+			$this->config->debug_log('LSCWP Enabled Count does not exist');
+			exit(__("LSCWP Enabled Count does not exist", 'litespeed-cache'));
+		}
+		$count = $site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT];
+		--$count;
+		$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT] = $count;
+		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
+		return $count;
 	}
 
 	public function plugin_activation()
