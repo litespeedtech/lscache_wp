@@ -37,6 +37,8 @@ class LiteSpeed_Cache
 	const LSHEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
 	const LSCOOKIE_USER_VARY = '_lscache_vary' ;
 
+	const MUOPID_ENABLED_CNT = 'lscwp_enabled_count';
+
 	protected $plugin_dir ;
 	protected $config ;
 	protected $pub_purge_tags = array();
@@ -61,8 +63,6 @@ class LiteSpeed_Cache
 		$plugin_file = $this->plugin_dir . 'litespeed-cache.php' ;
 		register_activation_hook($plugin_file, array( $this, 'register_activation' )) ;
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
-		$blog_id = get_current_blog_id();
-		$is_network = is_network_admin();
 
 		add_action('after_setup_theme', array( $this, 'init' )) ;
 	}
@@ -91,6 +91,24 @@ class LiteSpeed_Cache
 		}
 	}
 
+	public function incr_multi_enabled() {
+		$count = get_site_option(self::MUOPID_ENABLED_CNT, 0);
+		++$count;
+		update_site_option(self::MUOPID_ENABLED_CNT, $count);
+		return $count;
+	}
+
+	public function decr_multi_enabled() {
+		$count = get_site_option(self::MUOPID_ENABLED_CNT);
+		if ( !$count) {
+			$this->config->debug_log('LSCWP Enabled Count does not exist');
+			exit(__("LSCWP Enabled Count does not exist", 'litespeed-cache'));
+		}
+		--$count;
+		update_site_option(self::MUOPID_ENABLED_CNT, $count);
+		return $count;
+	}
+
 	public function register_activation()
 	{
 		if ( ! (file_exists(ABSPATH . 'wp-content/advanced-cache.php')) ) {
@@ -98,14 +116,24 @@ class LiteSpeed_Cache
 			$this->config->wp_cache_var_setter(true) ;
 			$this->config->plugin_activation() ;
 		}
-		else {
+		elseif ( !defined('LSCACHE_ADV_CACHE')) {
 			exit(__("advanced-cache.php detected in wp-content directory! Please disable or uninstall any other cache plugins before enabling LiteSpeed Cache.", 'litespeed-cache')) ;
+		}
+		if (is_multisite()) {
+			$this->incr_multi_enabled();
 		}
 	}
 
 	public function register_deactivation()
 	{
 		$this->purge_all() ;
+		if (is_multisite()) {
+			$count = $this->decr_multi_enabled();
+			if ($count) {
+				$this->config->plugin_deactivation() ;
+				return;
+			}
+		}
 		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
 		if (file_exists($adv_cache_path)) {
 			unlink($adv_cache_path) ;

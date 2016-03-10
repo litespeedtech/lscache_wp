@@ -7,6 +7,8 @@ if (!defined('ABSPATH')) {
     die();
 }
 
+define('LSCACHE_ADV_CACHE', true);
+
 /**
  * Because of the way it handles caching, the LiteSpeed Cache plugin for WordPress does not need an advanced-cache.php file.
  * For this reason, there is no real logic in this file. So why include it at all?

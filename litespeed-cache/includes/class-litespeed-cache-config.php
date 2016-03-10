@@ -156,8 +156,8 @@ class LiteSpeed_Cache_Config
 				return true ;
 			}
 		}
-		elseif ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
-			return true;
+		elseif (! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+				return true;
 		}
 		$file = ABSPATH . 'wp-config.php' ;
 		if ( !is_writeable($file) ) {
@@ -169,16 +169,16 @@ class LiteSpeed_Cache_Config
 		if ( $enable ) {
 			$count = 0 ;
 
-			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m',
-								"define('WP_CACHE', true);\n", $file_content, -1, $count) ;
+			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;/',
+								"define('WP_CACHE', true);", $file_content, -1, $count) ;
 			if ( $count == 0 ) {
-				$new_file_content = preg_replace('/(\$table_prefix[^;]+;\n)/m',
-								"$1\ndefine('WP_CACHE', true);\n", $file_content) ;
+				$new_file_content = preg_replace('/(\$table_prefix)/',
+								"define('WP_CACHE', true);\n$1", $file_content) ;
 			}
 		}
 		else {
-			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;\n/m',
-								"define('WP_CACHE', false);\n", $file_content) ;
+			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;/',
+								"define('WP_CACHE', false);", $file_content) ;
 		}
 
 		file_put_contents($file, $new_file_content) ;
