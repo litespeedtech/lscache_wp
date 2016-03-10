@@ -345,10 +345,7 @@ class LiteSpeed_Cache_Admin
 				. $enabled . '</h2>';
 		echo '<h3>'
 		. __('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache')
-				. '<br>' . __('We ', 'litespeed-cache')
-		. '<b>' . __('STRONGLY', 'litespeed-cache') . '</b>'
-		. __(' recommend that you test the compatibility with other plugins on a single/few', 'litespeed-cache')
-		. __(' sites to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache')
+				. '<br>' . wp_kses(__('We <b>STRONGLY</b> recommend that you test the compatibility with other plugins on a single/few sites to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'), array('b' => array()))
 		. '</h3>';
 		submit_button(__('Enable All', 'litespeed-cache'), 'primary', 'enableall') ;
 		submit_button(__('Disable All', 'litespeed-cache'), 'primary', 'disableall') ;
