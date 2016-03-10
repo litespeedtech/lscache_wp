@@ -381,9 +381,7 @@ class LiteSpeed_Cache_Admin
 	private function check_license( $config, &$error_msg )
 	{
 		if ($config->is_caching_allowed() == false) {
-			$error_msg = __('Notice: Your installation of LiteSpeed Web Server does not have '
-						 . 'LSCache enabled. This plugin will NOT work properly.',
-						'litespeed-cache');
+			$error_msg = __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled. This plugin will NOT work properly.', 'litespeed-cache');
 			return false ;
 		}
 		return true ;
