@@ -47,12 +47,12 @@ class LiteSpeed_Cache_Admin
 		add_action('admin_enqueue_scripts', array( $this, 'enqueue_scripts' )) ;
 
 		//Additional links on the plugin page
-	//	if ( is_multisite() ) {
-	//		add_action('network_admin_menu', array( $this, 'register_admin_menu' )) ;
-	//	}
-	//	else {
+		if ( is_network_admin() ) {
+			add_action('network_admin_menu', array( $this, 'register_admin_menu' )) ;
+		}
+		else {
 			add_action('admin_menu', array( $this, 'register_admin_menu' )) ;
-	//	}
+		}
 
 		add_action('admin_init', array( $this, 'admin_init' )) ;
 		$plugin_dir = plugin_dir_path(dirname(__FILE__)) ;
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_Admin
 
 	public function register_admin_menu()
 	{
-		$capability = is_multisite() ? 'manage_network_options' : 'manage_options' ;
+		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
 		if ( current_user_can($capability) ) {
 
 			$lscache_admin_manage_page = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'lscachemgr', array( $this, 'show_menu_manage' ), 'dashicons-performance') ;
@@ -120,6 +120,22 @@ class LiteSpeed_Cache_Admin
 		) ;
 	}
 
+	private function validate_enabled($input, &$options) {
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
+		if ( !isset($input[$id])) {
+			return false;
+		}
+		$radio_enabled = intval($input[$id]);
+		$options[$id] = $radio_enabled;
+		if ( $radio_enabled != LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET ) {
+			return $radio_enabled == LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE;
+		}
+		if (is_multisite()) {
+			return $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
+		}
+		return true;
+	}
+
 	public function validate_plugin_settings( $input )
 	{
 		$config = LiteSpeed_Cache::config() ;
@@ -128,9 +144,9 @@ class LiteSpeed_Cache_Admin
 		$errors = array() ;
 
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
-		$enabled = isset($input[$id]) && ('1' === $input[$id]) ;
+		$enabled = $this->validate_enabled($input, $options);
 		if ( $enabled !== $options[$id] ) {
-			$options[$id] = $enabled ;
+			$options[$id] = $enabled;
 			$config->wp_cache_var_setter($enabled);
 		}
 
@@ -289,9 +305,10 @@ class LiteSpeed_Cache_Admin
 	{
 		$config = LiteSpeed_Cache::config() ;
 
-		if ( ! $this->check_license($config, $error_msg) )
+		if ( ! $this->check_license($config, $error_msg) ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
 			return ;
+		}
 
 		if ( $this->messages ) {
 			echo '<div class="success"><p>' . $this->messages . ' </p></div>' . "\n" ;
@@ -305,6 +322,36 @@ class LiteSpeed_Cache_Admin
 		wp_nonce_field(LiteSpeed_Cache_Config::OPTION_NAME) ;
 
 		submit_button(__('Purge All', 'litespeed-cache'), 'primary', 'purgeall') ;
+		if ( !is_network_admin()) {
+			echo "</form></div>\n" ;
+			return;
+		}
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
+
+		$site_options = $config->get_site_options();
+		if (!isset($site_options)) {
+			$config->debug_log('There was a problem creating site options.');
+			exit(__('There was a problem creating site options for LiteSpeed Cache.',
+					'litespeed-cache'));
+		}
+		if ($site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED]) {
+			$enabled = __('Enabled', 'litespeed-cache');
+		}
+		else {
+			$enabled = __('Disabled', 'litespeed-cache');
+		}
+
+		echo '<h2>' . __('Current Network Level Status: ', 'litespeed-cache')
+				. $enabled . '</h2>';
+		echo '<h3>'
+		. __('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache')
+				. '<br>' . __('We ', 'litespeed-cache')
+		. '<b>' . __('STRONGLY', 'litespeed-cache') . '</b>'
+		. __(' recommend that you test the compatibility with other plugins on a single/few', 'litespeed-cache')
+		. __(' sites to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache')
+		. '</h3>';
+		submit_button(__('Enable All', 'litespeed-cache'), 'primary', 'enableall') ;
+		submit_button(__('Disable All', 'litespeed-cache'), 'primary', 'disableall') ;
 		echo "</form></div>\n" ;
 	}
 
@@ -313,6 +360,19 @@ class LiteSpeed_Cache_Admin
 		if ( isset($_POST['purgeall']) ) {
 			LiteSpeed_Cache::plugin()->purge_all() ;
 			$this->messages = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache') ;
+		}
+		elseif ( isset($_POST['enableall'])) {
+			$config = LiteSpeed_Cache::config();
+			$site_options = $config->get_site_options() ;
+			$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] = true;
+			update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
+			$config->wp_cache_var_setter(true);
+		}
+		elseif ( isset($_POST['disableall'])) {
+			$config = LiteSpeed_Cache::config();
+			$site_options = $config->get_site_options() ;
+			$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] = false;
+			update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
 		}
 	}
 
@@ -391,10 +451,14 @@ class LiteSpeed_Cache_Admin
 	{
 		$buf = $this->input_group_start(__('General', 'litespeed-cache')) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
-		$input_enabled = $this->input_field_checkbox($id, '1', $options[$id]) ;
-		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enabled) ;
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
 
+		$enable_levels = array(
+			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET => __('Not Set', 'litespeed-cache')) ;
+		$input_enable = $this->input_field_radio($id, $enable_levels, intval($options[$id])) ;
+		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
@@ -688,6 +752,21 @@ class LiteSpeed_Cache_Admin
 		$buf .= '/>' ;
 		if ( $label ) {
 			$buf .= '<label for="' . $id . '">' . $label . '</label>' ;
+		}
+		return $buf ;
+	}
+
+	private function input_field_radio( $id, $radiooptions, $checked_value)
+	{
+		$buf = '';
+		foreach ( $radiooptions as $val => $label ) {
+			$buf .= '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="radio" id="'
+				. $id . '" value="' . $val . '"' ;
+			if (($checked_value === $val)) {
+				$buf .= ' checked="checked"' ;
+			}
+			$buf .= '>' . $label . '</input>';
+			$buf .= '&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
 		return $buf ;
 	}

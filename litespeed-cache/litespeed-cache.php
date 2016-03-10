@@ -77,11 +77,6 @@ if (!function_exists('run_litespeed_cache')) {
 			$version_supported = false ;
 		}
 
-		//Checks if WP_CACHE is defined and true in the wp-config.php file.
-		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
-			add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
-		}
-
 		if ( $version_supported ) {
 			LiteSpeed_Cache::run() ;
 		}

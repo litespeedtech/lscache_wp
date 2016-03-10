@@ -37,8 +37,6 @@ class LiteSpeed_Cache
 	const LSHEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
 	const LSCOOKIE_USER_VARY = '_lscache_vary' ;
 
-	const MUOPID_ENABLED_CNT = 'lscwp_enabled_count';
-
 	protected $plugin_dir ;
 	protected $config ;
 	protected $pub_purge_tags = array();
@@ -91,24 +89,6 @@ class LiteSpeed_Cache
 		}
 	}
 
-	public function incr_multi_enabled() {
-		$count = get_site_option(self::MUOPID_ENABLED_CNT, 0);
-		++$count;
-		update_site_option(self::MUOPID_ENABLED_CNT, $count);
-		return $count;
-	}
-
-	public function decr_multi_enabled() {
-		$count = get_site_option(self::MUOPID_ENABLED_CNT);
-		if ( !$count) {
-			$this->config->debug_log('LSCWP Enabled Count does not exist');
-			exit(__("LSCWP Enabled Count does not exist", 'litespeed-cache'));
-		}
-		--$count;
-		update_site_option(self::MUOPID_ENABLED_CNT, $count);
-		return $count;
-	}
-
 	public function register_activation()
 	{
 		if ( ! (file_exists(ABSPATH . 'wp-content/advanced-cache.php')) ) {
@@ -120,7 +100,7 @@ class LiteSpeed_Cache
 			exit(__("advanced-cache.php detected in wp-content directory! Please disable or uninstall any other cache plugins before enabling LiteSpeed Cache.", 'litespeed-cache')) ;
 		}
 		if (is_multisite()) {
-			$this->incr_multi_enabled();
+			$this->config->incr_multi_enabled();
 		}
 	}
 
@@ -128,7 +108,7 @@ class LiteSpeed_Cache
 	{
 		$this->purge_all() ;
 		if (is_multisite()) {
-			$count = $this->decr_multi_enabled();
+			$count = $this->config->decr_multi_enabled();
 			if ($count) {
 				$this->config->plugin_deactivation() ;
 				return;
@@ -173,6 +153,11 @@ class LiteSpeed_Cache
 
 		if ( ! $module_enabled ) {
 			return ;
+		}
+
+		//Checks if WP_CACHE is defined and true in the wp-config.php file.
+		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+			add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
 		}
 
 		define('LITESPEED_CACHE_ENABLED', true);
