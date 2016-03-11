@@ -419,12 +419,17 @@ class LiteSpeed_Cache
 	private function is_uri_excluded($excludes_list)
 	{
 		$uri = esc_url($_SERVER["REQUEST_URI"]);
+		$uri_len = strlen( $uri ) ;
 		if (is_multisite()) {
 			$blog_details = get_blog_details(get_current_blog_id());
-			$blog_path_len = strlen($blog_details->path);
-			$uri = substr($uri, $blog_path_len - 1);
+			$blog_path = $blog_details->path;
+			$blog_path_len = strlen($blog_path);
+			if (($uri_len >= $blog_path_len)
+				&& (strncmp($uri, $blog_path, $blog_path_len) == 0)) {
+				$uri = substr($uri, $blog_path_len - 1);
+				$uri_len = strlen( $uri ) ;
+			}
 		}
-		$uri_len = strlen( $uri ) ;
 		foreach( $excludes_list as $excludes_rule )
 		{
 			$rule_len = strlen( $excludes_rule );
