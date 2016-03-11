@@ -419,6 +419,11 @@ class LiteSpeed_Cache
 	private function is_uri_excluded($excludes_list)
 	{
 		$uri = esc_url($_SERVER["REQUEST_URI"]);
+		if (is_multisite()) {
+			$blog_details = get_blog_details(get_current_blog_id());
+			$blog_path_len = strlen($blog_details->path);
+			$uri = substr($uri, $blog_path_len - 1);
+		}
 		$uri_len = strlen( $uri ) ;
 		foreach( $excludes_list as $excludes_rule )
 		{
@@ -431,7 +436,7 @@ class LiteSpeed_Cache
 			elseif ( $uri_len < $rule_len ) {
 				continue;
 			}
-			
+
 			if ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ){
 				return true ;
 			}
