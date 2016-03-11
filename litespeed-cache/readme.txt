@@ -64,7 +64,7 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 3. Purge the cache to use the updated pages.
 
 == Changelog ==
-==1.0.2==
+= 1.0.2 =
 * Added a "Use Network Admin Setting" option for "Enable LiteSpeed Cache". For single sites, this choice will default to enabled.
 * Added enable/disable all buttons for network admin. This controls the setting of all managed sites with "Use Network Admin Setting" selected for "Enable LiteSpeed Cache".
 * Exclude by Category/Tag are now text areas to avoid slow load times on the LiteSpeed Cache Settings page for sites with a large number of categories/tags.
