@@ -21,7 +21,7 @@ class LiteSpeed_Cache
 	private static $instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.0.1' ;
+	const PLUGIN_VERSION = '1.0.2' ;
 	//const CACHETAG_TYPE_FEED = 'FD';
 
 	const CACHETAG_TYPE_FRONTPAGE = 'F' ;
@@ -215,7 +215,7 @@ class LiteSpeed_Cache
 		echo '<div class="error"><p><strong>'
 		. __('Your PHP version is too old for LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br /> '
-		. sprintf(wp_kses(__('LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), array( 'a' => array( 'href' => array() ) )), "plugins.php?plugin_status=active", PHP_VERSION, '5.3')
+		. sprintf(wp_kses(__('LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), array( 'a' => array( 'href' => array() ) )), esc_url("plugins.php?plugin_status=active"), PHP_VERSION, '5.3')
 		. '</p></div>' ;
 	}
 

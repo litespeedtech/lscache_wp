@@ -453,9 +453,9 @@ class LiteSpeed_Cache_Admin
 		$enable_levels = array(
 			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'),
 			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET => __('Not Set', 'litespeed-cache')) ;
+			LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET => __('Use Network Admin Setting', 'litespeed-cache')) ;
 		$input_enable = $this->input_field_radio($id, $enable_levels, intval($options[$id])) ;
-		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable) ;
+		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable, __('You can override network admin settings here.', 'litespeed-cache')) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
@@ -470,7 +470,9 @@ class LiteSpeed_Cache_Admin
 		$buf = $this->input_group_start(__('Auto Purge Rules For Publish/Update', 'litespeed-cache'),
 				__('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache')
 				. '<br>'
-				. __('Note: Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages. (Other checkboxes will be ignored)', 'litespeed-cache')) ;
+				. '<b>' . __('Note: ', 'litespeed-cache') . '</b>' . __('Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages. (Other checkboxes will be ignored)', 'litespeed-cache')
+				. '<br>'
+				. '<b>' . __('Note: ', 'litespeed-cache') . '</b>' . __('Select only the archive types that you are currently using, the others can be left unchecked.', 'litespeed-cache')) ;
 
 		$tr = '<tr><th scope="row" colspan="2" class="th-full">' ;
 		$endtr = "</th></tr>\n" ;
@@ -545,14 +547,16 @@ class LiteSpeed_Cache_Admin
             . '<br>'
             . __('There should only be one url per line.', 'litespeed-cache')
             . '<br><br>
-			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('URLs must start with a \'/\' to be correctly matched.', 'litespeed-cache')
+			<b>' . __('NOTE: ', 'litespeed-cache') . '</b>' . __('URLs must start with a \'/\' to be correctly matched.', 'litespeed-cache')
             . '<br>'
-            . __('Any surrounding whitespaces will be trimmed.', 'litespeed-cache')
+            . __('To do an exact match, add \'$\' to the end of the URL.', 'litespeed-cache')
+			. '<br>'
+			. __('Any surrounding whitespaces will be trimmed.', 'litespeed-cache')
             . '<br><br>'
             . sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
             . '<br>
-            <input type="text" name="example_exclude" value="/excludethis.php" readonly>
-            <br><br>';
+			<pre>/excludethis.php</pre>
+            <br>';
 
 		$cat_description =
             '<b>' . __('All categories are cached by default.', 'litespeed-cache') . '</b>
@@ -657,10 +661,10 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
-	private function show_wp_postviews_help() {
+		private function show_wp_postviews_help() {
 		$buf = '';
-		$example_src = '&lt;?php if(function_exists(&apos;the_views &apos;)) { the_views(); } ?&gt;';
-		$example_div = '&lt;div id=&quot;postviews_lscwp&quot; &gt; &lt;/div&gt;';
+		$example_src = htmlspecialchars('<?php if(function_exists(\'the_views\' )) { the_views(); } ?>');
+		$example_div = htmlspecialchars('<div id="postviews_lscwp" > </div>');
 		$example_ajax_path = '/wp-content/plugins/wp-postviews/postviews-cache.js';
 		$example_ajax = 'jQuery.ajax({
 	type:"GET",
@@ -675,24 +679,20 @@ class LiteSpeed_Cache_Admin
 });';
 		$wp_postviews_desc = __('To make LiteSpeed Cache compatible with WP-PostViews:', 'litespeed-cache') . '<br>
 			<ol>
-				<li>' . __('Replace the following calls in your theme\'s template files
-				with a div or span with a unique ID.', 'litespeed-cache') . '<br>'
-				. printf(__('e.g. Replace <br> %1$s
-				<br>with<br> %2$s'),
-						$this->input_field_text('EXAMPLE_SRC', $example_src,
-						strlen($example_src), '', '', true),
-						$this->input_field_text('EXAMPLE_DIV', $example_div,
-						strlen($example_div), '', '', true)) .
-				'</li>
-				<li>' . __('Update the ajax request to output the results to that div.', 'litespeed-cache')
+				<li>'
+				. __('Replace the following calls in your theme\'s template files with a div or span with a unique ID.', 'litespeed-cache')
+				. '<br>'
+				. sprintf(wp_kses(__('e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>', 'litespeed-cache'), array( 'br' => array(), 'pre' => array() )),
+						$example_src,
+						$example_div)
+				. '</li><li>'
+				. __('Update the ajax request to output the results to that div.', 'litespeed-cache')
 				. '<br><br>'
-				. __('Example:', 'litespeed-cache') . '<br>
-				<textarea name="example_ajax" rows="12" cols="80" readonly>'
-				. $example_ajax . '"</textarea><br>'
+				. __('Example:', 'litespeed-cache')
+				. '<br>'
+				. '<pre>' .  $example_ajax . '</pre><br>'
 				. __('The ajax code can be found at', 'litespeed-cache') . '<br>'
-				. $this->input_field_text('EXAMPLE_PATH', $example_ajax_path,
-						strlen($example_ajax_path), '', '', true)
-				. '</li>
+				. '<pre>' . $example_ajax_path . '</pre></li>
 				<li>' . __('After purging the cache, the view count should be updating.', 'litespeed-cache') .'</li>
 			</ol>';
 		$buf .= $this->input_group_start(

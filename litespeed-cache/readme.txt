@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -64,6 +64,17 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 3. Purge the cache to use the updated pages.
 
 == Changelog ==
+==1.0.2==
+* Added a "Use Network Admin Setting" option for "Enable LiteSpeed Cache. For single sites, this choice will default to enabled.
+* Added enable/disable all buttons for network admin. This controls the setting of all managed sites with "Use Network Admin Setting" selected for "Enable LiteSpeed Cache".
+* Exclude by Category/Tag are now text areas to avoid slow load times on the LiteSpeed Cache Settings page for sites with a large number of categories/tags.
+* Added a new line to advanced-cache.php to allow identification as a LiteSpeed Cache file.
+* Activation/Deactivation are now better handled in mullti-site environments.
+* Enable LiteSpeed Cache setting is now a radio button selection instead of a single checkbox.
+* Can now add '$' to the end of a URL in Exclude URI to perform an exact match.
+* The _lscache_vary cookie will now be deleted upon logout.
+* Fixed a bug in multi-site setups that would cause a "function already defined" error.
+
 = 1.0.1 =
 * New Feature: Do Not Cache by uri, by category, and by tag.  URI is a prefix/string equals match.
 * New Feature: Added a help tab for plugin compatibilities.

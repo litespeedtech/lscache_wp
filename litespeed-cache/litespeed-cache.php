@@ -16,7 +16,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        http://www.litespeedtech.com/lscache-wp
  * Description:       WordPress plugin to connect to LSCache on LiteSpeed Web Server.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
