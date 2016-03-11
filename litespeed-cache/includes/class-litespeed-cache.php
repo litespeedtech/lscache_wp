@@ -423,9 +423,16 @@ class LiteSpeed_Cache
 		foreach( $excludes_list as $excludes_rule )
 		{
 			$rule_len = strlen( $excludes_rule );
-			if (( $uri_len >= $rule_len )
-				&& ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ))
-			{
+			if (($excludes_rule[$rule_len - 1] == '$')) {
+				if ($uri_len != (--$rule_len)) {
+					continue;
+				}
+			}
+			elseif ( $uri_len < $rule_len ) {
+				continue;
+			}
+			
+			if ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ){
 				return true ;
 			}
 		}
