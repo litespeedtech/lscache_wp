@@ -76,9 +76,9 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 * Fixed a bug in multi-site setups that would cause a "function already defined" error.
 
 = 1.0.1 =
-* New Feature: Do Not Cache by uri, by category, and by tag.  URI is a prefix/string equals match.
-* New Feature: Added a help tab for plugin compatibilities.
-* New Feature: Create logic for other plugins to purge a single post if updated.
+* Added Do Not Cache by URI, by Category, and by Tag.  URI is a prefix/string equals match.
+* Added a help tab for plugin compatibilities.
+* Created logic for other plugins to purge a single post if updated.
 * Fixed a bug where woocommerce pages that display the cart were cached.
 * Fixed a bug where admin menus in multi-site setups were not correctly displayed.
 * Fixed a bug where logged in users were served public cached pages.
