@@ -69,7 +69,7 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 * Added enable/disable all buttons for network admin. This controls the setting of all managed sites with "Use Network Admin Setting" selected for "Enable LiteSpeed Cache".
 * Exclude by Category/Tag are now text areas to avoid slow load times on the LiteSpeed Cache Settings page for sites with a large number of categories/tags.
 * Added a new line to advanced-cache.php to allow identification as a LiteSpeed Cache file.
-* Activation/Deactivation are now better handled in mullti-site environments.
+* Activation/Deactivation are now better handled in multi-site environments.
 * Enable LiteSpeed Cache setting is now a radio button selection instead of a single checkbox.
 * Can now add '$' to the end of a URL in Exclude URI to perform an exact match.
 * The _lscache_vary cookie will now be deleted upon logout.
