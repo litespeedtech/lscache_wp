@@ -368,6 +368,11 @@ class LiteSpeed_Cache
 		$this->send_purge_headers();
 	}
 
+	public function purge_front(){
+		$this->add_purge_tags(self::CACHETAG_TYPE_FRONTPAGE);
+		$this->send_purge_headers();
+	}
+
 	public function purge_post( $id )
 	{
 		$post_id = intval($id);

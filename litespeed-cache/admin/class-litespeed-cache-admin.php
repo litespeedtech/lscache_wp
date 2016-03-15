@@ -321,6 +321,7 @@ class LiteSpeed_Cache_Admin
 		echo '<form method="post">' ;
 		wp_nonce_field(LiteSpeed_Cache_Config::OPTION_NAME) ;
 
+		submit_button(__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront') ;
 		submit_button(__('Purge All', 'litespeed-cache'), 'primary', 'purgeall') ;
 		if ( !is_network_admin()) {
 			echo "</form></div>\n" ;
@@ -357,6 +358,10 @@ class LiteSpeed_Cache_Admin
 		if ( isset($_POST['purgeall']) ) {
 			LiteSpeed_Cache::plugin()->purge_all() ;
 			$this->messages = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache') ;
+		}
+		if ( isset($_POST['purgefront'])){
+			LiteSpeed_Cache::plugin()->purge_front();
+			$this->messages = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache') ;
 		}
 		elseif ( isset($_POST['enableall'])) {
 			$config = LiteSpeed_Cache::config();
