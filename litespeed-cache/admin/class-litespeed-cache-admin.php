@@ -180,6 +180,14 @@ class LiteSpeed_Cache_Admin
 			$options[$id] = $input[$id] ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ;
+		if ( ! isset($input[$id]) || ! ctype_digit($input[$id]) || $input[$id] < 30 ) {
+			$errors[] = __('Default Front Page TTL must be set to 30 seconds or more', 'litespeed-cache') ;
+		}
+		else {
+			$options[$id] = $input[$id] ;
+		}
+
 		// get purge options
 		$pvals = array(
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -465,6 +473,10 @@ class LiteSpeed_Cache_Admin
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
 		$buf .= $this->display_config_row(__('Default Public Cache TTL', 'litespeed-cache'), $input_public_ttl, __('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ;
+		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default Front Page TTL', 'litespeed-cache'), $input_public_ttl, __('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
 
 		$buf .= $this->input_group_end() ;
 		return $buf ;

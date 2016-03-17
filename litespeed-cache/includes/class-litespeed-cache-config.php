@@ -28,6 +28,7 @@ class LiteSpeed_Cache_Config
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
+	const OPID_FRONT_PAGE_TTL = 'front_page_ttl';
 	const OPID_NOCACHE_VARS = 'nocache_vars' ;
 	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
@@ -122,6 +123,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
 			self::OPID_PUBLIC_TTL => 28800,
+			self::OPID_FRONT_PAGE_TTL => 1800,
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),

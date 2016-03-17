@@ -368,6 +368,12 @@ class LiteSpeed_Cache
 		$this->send_purge_headers();
 	}
 
+	/**
+	 * Alerts LiteSpeed Web Server to purge the front page.
+	 *
+	 * @since    1.0.3
+	 * @access   public
+	 */
 	public function purge_front(){
 		$this->add_purge_tags(self::CACHETAG_TYPE_FRONTPAGE);
 		$this->send_purge_headers();
@@ -518,7 +524,12 @@ class LiteSpeed_Cache
 	public function check_cacheable()
 	{
 		if ( $this->is_cacheable() ) {
-			$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
+			if ( is_front_page() ){
+				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
+			}
+			else{
+				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
+			}
 			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
 			@header($cache_control_header) ;
 
