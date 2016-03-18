@@ -465,10 +465,28 @@ class LiteSpeed_Cache_Admin
 
 		$enable_levels = array(
 			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET => __('Use Network Admin Setting', 'litespeed-cache')) ;
+			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache')) ;
+
+		//IF multisite: Add 'Use Network Admin' option,
+		//ELSE: Change 'Enable LiteSpeed Cache' selection to 'Enabled' if the 'Use Network Admin' option was previously selected.
+		//		Selection will not actually be changed unless settings are saved.
+		if (  is_multisite() ){
+			$enable_levels[LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET] = __('Use Network Admin Setting', 'litespeed-cache');
+		}
+		else{
+			if(intval($options[$id]) === 2)
+				$options[$id] = 1;
+		}
+
 		$input_enable = $this->input_field_radio($id, $enable_levels, intval($options[$id])) ;
+
+		//Add a description to 'Enable LiteSpeed Cache' if multisite
+		if( is_multisite() ){
 		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable, __('You can override network admin settings here.', 'litespeed-cache')) ;
+		}
+		else{
+			$buf .= $this->display_config_row(_('Enablle LiteSpeed Cache', 'litespeed-cache'), $input_enable);
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;

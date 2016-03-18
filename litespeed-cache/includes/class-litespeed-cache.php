@@ -1,5 +1,16 @@
 <?php
 
+/* NOTICE: To other plugin developers:
+ * If your plugin does something that may update pages (e.g. a like button),
+ * add the actions below to purge the cache of the updated pages.
+ * The example code block must be called prior to any response body output.
+ * This includes any 'echo' outputs.
+ *
+ * Example:
+ * if (defined('LITESPEED_CACHE_ENABLED')) {
+ *		do_action('lscwp_purge_single_post', $post_id);
+ * }
+ */
 
 /**
  * The core plugin class.
@@ -126,22 +137,6 @@ class LiteSpeed_Cache
 		$this->config->plugin_deactivation() ;
 	}
 
-	/* NOTICE: To other plugin developers:
-	 * If your plugin does something that may update pages (e.g. a like button),
-	 * do one of the actions below to purge the cache of the updated pages.
-	 * The example code block must be called prior to any response body output.
-	 * This includes any 'echo' outputs.
-	 *
-	 * Example:
-	 * if (defined('LITESPEED_CACHE_ENABLED')) {
-	 *		do_action('lscwp_purge_single_post', $post_id);
-	 * }
-	 */
-	public function add_purge_hooks() {
-		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
-		// TODO: private purge?
-		// TODO: purge by category, tag?
-	}
 
 	public function init()
 	{
@@ -161,7 +156,6 @@ class LiteSpeed_Cache
 		}
 
 		define('LITESPEED_CACHE_ENABLED', true);
-		$this->add_purge_hooks();
 		//TODO: Uncomment this when esi is implemented.
 //		add_action('init', array($this, 'check_admin_bar'), 0);
 
@@ -317,10 +311,15 @@ class LiteSpeed_Cache
 			'delete_attachment',
 		) ;
 		foreach ( $purge_post_events as $event ) {
+			// this will purge all related tags
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
-	}
 
+		// purge_single_post will only purge that post by tag
+		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
+		// TODO: private purge?
+		// TODO: purge by category, tag?
+	}
 
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out') {

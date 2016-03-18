@@ -115,10 +115,13 @@ class LiteSpeed_Cache_Config
 				) ;
 		sort($default_purge_options) ;
 
+		//For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+		$default_enabled = is_multisite() ? 2 : 1;
+
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::OPID_ENABLED => false,
-			self::OPID_ENABLED_RADIO => 2,
+			self::OPID_ENABLED_RADIO => $default_enabled,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
