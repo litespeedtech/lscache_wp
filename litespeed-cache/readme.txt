@@ -23,7 +23,14 @@ For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/f
 == Installation ==
 1. Make sure that your license has the LSCache module enabled. You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") free for 15-days.
 2. In LiteSpeed Web Server - Through the WebAdmin Console, navigate to Configuration > Server > cache and set 'Storage path' under Cache Storage Settings to a fast disk, where the path can be something like '/tmp/wpcache/' for example. If the directory does not already exist, it will be created for you.
-3. In LiteSpeed Web Server - Under "Cache Policy" set the following: 'Enable Public Cache' - No, 'Check Public Cache' - Yes, 'Ignore Request Cache-Control' - Yes.
+3. In LiteSpeed Web Server - Under "Cache Policy" set the following: <br>
+Enable Public Cache - No<br> 
+Check Public Cache - Yes<br>
+Cache Request with Query String - Yes<br>
+Cache Request with Cookie - Yes<br>
+Cache Response with Cookie - Yes<br>
+Ignore Request Cache-Control - Yes<br>
+Ignore Response Cache-Control - Yes
 4. In LiteSpeed Web Server - Perform a Graceful Restart.
 5. Upload 'litespeed-cache.zip' to the '/wp-content/plugins/' directory.
 6. Disable any other page caches as these will interfere with the LiteSpeed Cache Plugin.

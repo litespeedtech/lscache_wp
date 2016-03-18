@@ -529,22 +529,22 @@ class LiteSpeed_Cache
 			else{
 				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 			}
-			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
-			@header($cache_control_header) ;
+			$cache_control_val = 'public,max-age=' . $ttl /*. ',esi=on'*/ ;
 
 			$cache_tags = $this->get_cache_tags() ;
 
 			if ( ! empty($cache_tags) ) {
 				$cache_tag_header = self::LSHEADER_CACHE_TAG . ': ' . implode(',', $cache_tags) ;
-				$this->debug_log('cache_control_header: ' . $cache_control_header . "\n tag_header: " . $cache_tag_header) ;
+				$this->debug_log('cache_control_header: ' . self::LSHEADER_CACHE_CONTROL . ': ' . $cache_control_val ."\n tag_header: " . $cache_tag_header) ;
 				@header($cache_tag_header) ;
 			}
 		}
 		else {
-			$cache_control_header = self::LSHEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
-			@header($cache_control_header) ;
+			$cache_control_val = 'no-cache' /*. ',esi=on'*/ ;
 		}
-	}
+		@header(self::LSHEADER_CACHE_CONTROL . ': ' . $cache_control_val);
+		}
+
 
 	private function get_cache_tags()
 	{
