@@ -85,8 +85,9 @@ class LiteSpeed_Cache_Config
 
 	public function get_option( $id )
 	{
-		if ( isset($this->options[$id]) )
+		if ( isset($this->options[$id]) ) {
 			return $this->options[$id] ;
+		}
 		else {
 			$this->debug_log('Invalid option ID ' . $id, self::LOG_LEVEL_ERROR) ;
 			return NULL ;
@@ -116,12 +117,19 @@ class LiteSpeed_Cache_Config
 		sort($default_purge_options) ;
 
 		//For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
-		$default_enabled = is_multisite() ? 2 : 1;
+		if ( is_multisite()) {
+			$default_enabled = false;
+			$default_radio = 2;
+		}
+		else {
+			$default_enabled = true;
+			$default_radio = 1;
+		}
 
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::OPID_ENABLED => false,
-			self::OPID_ENABLED_RADIO => $default_enabled,
+			self::OPID_ENABLED => $default_enabled,
+			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
