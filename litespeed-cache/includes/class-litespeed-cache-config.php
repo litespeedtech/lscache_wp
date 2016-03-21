@@ -119,11 +119,11 @@ class LiteSpeed_Cache_Config
 		//For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 		if ( is_multisite()) {
 			$default_enabled = false;
-			$default_radio = 2;
+			$default_radio = self::OPID_ENABLED_NOTSET;
 		}
 		else {
 			$default_enabled = true;
-			$default_radio = 1;
+			$default_radio = self::OPID_ENABLED_ENABLE;
 		}
 
 		$default_options = array(
