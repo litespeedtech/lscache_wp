@@ -46,10 +46,12 @@ class LiteSpeed_Cache
 	const LSHEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const LSHEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
 	const LSHEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
-	const LSCOOKIE_USER_VARY = '_lscache_vary' ;
+	const LSCOOKIE_DEFAULT_VARY = '_lscache_vary' ;
+	const LSCOOKIE_VARY_NAME = 'LSCACHE_VARY_COOKIE' ;
 
 	protected $plugin_dir ;
 	protected $config ;
+	protected $current_vary;
 	protected $pub_purge_tags = array();
 
 	/**
@@ -159,6 +161,8 @@ class LiteSpeed_Cache
 		//TODO: Uncomment this when esi is implemented.
 //		add_action('init', array($this, 'check_admin_bar'), 0);
 
+		$this->current_vary = isset($_SERVER[self::LSCOOKIE_VARY_NAME])
+				? $_SERVER[self::LSCOOKIE_VARY_NAME] : self::LSCOOKIE_DEFAULT_VARY;
 		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
 		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
 
@@ -324,12 +328,12 @@ class LiteSpeed_Cache
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out') {
 		if ($action == 'logged_in') {
-            setcookie(self::LSCOOKIE_USER_VARY, '1', $expiration, COOKIEPATH,
+            setcookie($this->current_vary, '1', $expiration, COOKIEPATH,
 					COOKIE_DOMAIN, is_ssl(), true);
 		}
 		else {
 			// Use a year in case of bad local clock.
-            setcookie(self::LSCOOKIE_USER_VARY, '0', time() - 31536001, COOKIEPATH,
+            setcookie($this->current_vary, '0', time() - 31536001, COOKIEPATH,
 					COOKIE_DOMAIN);
 		}
 	}
