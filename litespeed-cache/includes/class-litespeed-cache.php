@@ -415,14 +415,18 @@ class LiteSpeed_Cache
 		if (!isset($woocom)) {
 			return false;
 		}
-		$url = wc_get_cart_url();
-		// Does cart exist and is it not empty?
-		if ((isset($woocom->cart)) && ( !$woocom->cart->is_empty())) {
+
+		/* If/when esi support is done, these are the dynamic rules.
+		 * These will replace the DONOTCACHEPAGE section.
+		 *
+		 * ^/(cart|my-account/*|checkout|addons|logout|lost-password|product/*)
+		 * \?add-to-cart=
+		 */
+
+		if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
 			return true;
 		}
-		if (isset($woocom->checkout)) {
-			return true;
-		}
+
 		return false;
 	}
 
