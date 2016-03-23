@@ -328,12 +328,12 @@ class LiteSpeed_Cache
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out') {
 		if ($action == 'logged_in') {
-            setcookie($this->current_vary, '1', $expiration, COOKIEPATH,
+			setcookie($this->current_vary, '1', $expire, COOKIEPATH,
 					COOKIE_DOMAIN, is_ssl(), true);
 		}
 		else {
 			// Use a year in case of bad local clock.
-            setcookie($this->current_vary, '0', time() - 31536001, COOKIEPATH,
+			setcookie($this->current_vary, '0', time() - 31536001, COOKIEPATH,
 					COOKIE_DOMAIN);
 		}
 	}
