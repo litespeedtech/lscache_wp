@@ -413,17 +413,16 @@ class LiteSpeed_Cache
 	}
 
 	// Return true if non-cacheable.
-	private function is_woocommerce()
+	private function is_woocommerce_dynamic()
 	{
 		$woocom = WC();
 		if (!isset($woocom)) {
 			return false;
 		}
 
+		// For later versions, DONOTCACHEPAGE should be set.
+		// No need to check uri/qs.
 		if (version_compare($woocom->version, '1.4.2', '>=')) {
-			if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
-				return true;
-			}
 			return false;
 		}
 
@@ -537,8 +536,12 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('no theme used') ;
 		}
 
-		if ((defined('WOOCOMMERCE_VERSION')) && ($this->is_woocommerce())) {
-			return $this->no_cache_for('Cannot cache this woocommerce page with cart') ;
+		if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
+			return $this->no_cache_for('DONOTCACHEPAGE is set and true');
+		}
+
+		if ((defined('WOOCOMMERCE_VERSION')) && ($this->is_woocommerce_dynamic())) {
+			return $this->no_cache_for('Cannot cache this dynamic woocommerce page') ;
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
