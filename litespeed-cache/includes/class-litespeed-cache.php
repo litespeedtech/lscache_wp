@@ -420,14 +420,55 @@ class LiteSpeed_Cache
 			return false;
 		}
 
-		/* If/when esi support is done, these are the dynamic rules.
-		 * These will replace the DONOTCACHEPAGE section.
-		 *
-		 * ^/(cart|my-account/*|checkout|addons|logout|lost-password|product/*)
-		 * \?add-to-cart=
-		 */
+		if (version_compare($woocom->version, '1.4.2', '>=')) {
+			if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
+				return true;
+			}
+			return false;
+		}
 
-		if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
+		$uri = esc_url($_SERVER["REQUEST_URI"]);
+		$uri_len = strlen( $uri ) ;
+
+		if ($uri_len < 5) {
+			return false;
+		}
+		$sub = substr($uri, 2);
+		$sub_len = $uri_len - 2;
+		switch($uri[1]) {
+		case 'c':
+			if ((($sub_len == 4) && (strncmp($sub, 'art/', 4) == 0))
+				|| (($sub_len == 8) && (strncmp($sub, 'heckout/', 8) == 0))) {
+				return true;
+			}
+			break;
+		case 'm':
+			if (strncmp($sub, 'y-account/', 10) == 0) {
+				return true;
+			}
+			break;
+		case 'a':
+			if (($sub_len == 6) && (strncmp($sub, 'ddons/', 6) == 0)) {
+				return true;
+			}
+			break;
+		case 'l':
+			if ((($sub_len == 6) && (strncmp($sub, 'ogout/', 6) == 0))
+				|| (($sub_len == 13) && (strncmp($sub, 'ost-password/', 13) == 0))) {
+				return true;
+			}
+			break;
+		case 'p':
+			if (strncmp($sub, 'roduct/', 7) == 0) {
+				return true;
+			}
+			break;
+		}
+
+		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]);
+		$qs_len = strlen($qs);
+		if ( !empty($qs) && ($qs_len >= 12)
+				&& (strncmp($qs, 'add-to-cart=', 12) == 0)) {
 			return true;
 		}
 
