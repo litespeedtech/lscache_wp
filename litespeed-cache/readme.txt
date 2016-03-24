@@ -44,6 +44,9 @@ Yes, the plugin itself will remain free and open source, but only works with Lit
 This plugin only instructs LiteSpeed Web Server on what pages to cache and when to purge. The actual cached pages are stored and managed by LiteSpeed Web Server. Nothing is stored on the PHP side.
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server enterprise edition, but there are plans to have OpenLiteSpeed support it later down the line.
+= Is WooCommerce supported? =
+In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2, we do extra checks to make sure that 
+pages are cacheable. We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
 
