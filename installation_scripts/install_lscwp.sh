@@ -67,7 +67,7 @@ then
 	then
 		if [ ! -f "wpInstalls.txt" ]
 		then
-			for CHILD_DIR in $(find "${SEARCH_DIR}" -name wp-content -print)
+			for CHILD_DIR in $(find "${SEARCH_DIR}" -name wp-admin -print)
 			do
 				parent=$(dirname $CHILD_DIR)
 				echo "${parent}" >> wpInstalls.txt
@@ -79,7 +79,7 @@ then
 				(( COUNT++ ))
 			done
 			
-			for CHILD_DIR in $(find "${SEARCH_DIR}" -name wp-content -print)
+			for CHILD_DIR in $(find "${SEARCH_DIR}" -name wp-admin -print)
             do
                 parent=$(dirname $CHILD_DIR)
                 echo "${parent}" >> "wpInstalls${COUNT}.txt"

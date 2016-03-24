@@ -78,7 +78,7 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 * Improved WooCommerce handling.
 * Fixed a bug where activating lscwp sets the “enable cache” radio button to enabled, but the cache was not enabled by default.
 * Refactored code to make it cleaner.
-* Updated readme.txt
+* Updated readme.txt.
 
 = 1.0.2 =
 * Added a "Use Network Admin Setting" option for "Enable LiteSpeed Cache". For single sites, this choice will default to enabled.
