@@ -485,7 +485,7 @@ class LiteSpeed_Cache_Admin
 		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable, __('You can override network admin settings here.', 'litespeed-cache')) ;
 		}
 		else{
-			$buf .= $this->display_config_row(_('Enablle LiteSpeed Cache', 'litespeed-cache'), $input_enable);
+			$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable);
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
