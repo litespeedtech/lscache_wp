@@ -596,8 +596,7 @@ class LiteSpeed_Cache_Admin
 		$cat_description =
             '<b>' . __('All categories are cached by default.', 'litespeed-cache') . '</b>
 			<br>'
-			. __('To prevent a category from being cached, enter it in the text area below,
-			one per line.', 'litespeed-cache')
+			. __('To prevent a category from being cached, enter it in the text area below, one per line.', 'litespeed-cache')
 			. '<br>
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Category ID is not found, the name will be removed on save.', 'litespeed-cache')
             . '<br><br>';
@@ -605,8 +604,7 @@ class LiteSpeed_Cache_Admin
 		$tag_description =
             '<b>' . __('All tags are cached by default.', 'litespeed-cache') . '</b>
 			<br>'
-			. __('To prevent tags from being cached, enter it in the text area below,
-			one per line.', 'litespeed-cache')
+			. __('To prevent tags from being cached, enter it in the text area below, one per line.', 'litespeed-cache')
 			. '<br>
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache')
             . '<br><br>';

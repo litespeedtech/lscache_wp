@@ -6,7 +6,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0.2\n"
+"Project-Id-Version: 1.0.3\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
 "POT-Creation-Date: 2016-03-11 09:45-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -63,376 +63,395 @@ msgstr ""
 msgid "Default Public Cache TTL must be set to 30 seconds or more"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:225
+#: admin/class-litespeed-cache-admin.php:185
+msgid "Default Front Page TTL must be set to 30 seconds or more"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:233
 #, php-format
 msgid "Removed category \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:249
+#: admin/class-litespeed-cache-admin.php:257
 #, php-format
 msgid "Removed tag \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:277
+#: admin/class-litespeed-cache-admin.php:285
 msgid "Invalid data in Test IPs."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:300
+#: admin/class-litespeed-cache-admin.php:308
 msgid "Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:317
+#: admin/class-litespeed-cache-admin.php:325
 msgid "LiteSpeed Cache Management"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:318
+#: admin/class-litespeed-cache-admin.php:326
 msgid ""
 "LiteSpeed Cache is maintained and managed by LiteSpeed Web Server. You can "
 "inform LiteSpeed Web Server to purge cached contents from this screen."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:319
+#: admin/class-litespeed-cache-admin.php:327
 msgid "More options will be added here in future releases."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:324
+#: admin/class-litespeed-cache-admin.php:332
+msgid "Purge Front Page"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:333
 msgid "Purge All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:334
+#: admin/class-litespeed-cache-admin.php:343
 msgid "There was a problem creating site options for LiteSpeed Cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:338
+#: admin/class-litespeed-cache-admin.php:347
 msgid "Enabled"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:341
+#: admin/class-litespeed-cache-admin.php:350
 msgid "Disabled"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:344
+#: admin/class-litespeed-cache-admin.php:353
 msgid "Current Network Level Status: "
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:347
+#: admin/class-litespeed-cache-admin.php:356
 msgid ""
 "Enabling LiteSpeed Cache for WordPress here enables the cache for the "
 "network."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:348
+#: admin/class-litespeed-cache-admin.php:357
 msgid ""
 "We <b>STRONGLY</b> recommend that you test the compatibility with other "
 "plugins on a single/few sites to ensure compatibility prior to enabling the "
 "cache for all sites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:350
+#: admin/class-litespeed-cache-admin.php:359
 msgid "Enable All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:351
+#: admin/class-litespeed-cache-admin.php:360
 msgid "Disable All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:359
+#: admin/class-litespeed-cache-admin.php:368
 msgid "Notified LiteSpeed Web Server to purge the public cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:396
+#: admin/class-litespeed-cache-admin.php:372
+msgid "Notified LiteSpeed Web Server to purge the front page."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:409
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:405
+#: admin/class-litespeed-cache-admin.php:418
 msgid "Plugin Compatibilities"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:414
-#: admin/class-litespeed-cache-admin.php:449
+#: admin/class-litespeed-cache-admin.php:427
+#: admin/class-litespeed-cache-admin.php:462
 msgid "General"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:415
+#: admin/class-litespeed-cache-admin.php:428
 msgid "Purge Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:416
+#: admin/class-litespeed-cache-admin.php:429
 msgid "Do Not Cache Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:417
-#: admin/class-litespeed-cache-admin.php:648
+#: admin/class-litespeed-cache-admin.php:430
+#: admin/class-litespeed-cache-admin.php:681
 msgid "Debug"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:441
+#: admin/class-litespeed-cache-admin.php:454
 msgid ""
 "Notice: Your installation of LiteSpeed Web Server does not have LSCache "
 "enabled. This plugin will NOT work properly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:454
+#: admin/class-litespeed-cache-admin.php:467
 msgid "Enable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:455
+#: admin/class-litespeed-cache-admin.php:468
 msgid "Disable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:456
+#: admin/class-litespeed-cache-admin.php:474
 msgid "Use Network Admin Setting"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:458
+#: admin/class-litespeed-cache-admin.php:485
+#: admin/class-litespeed-cache-admin.php:488
 msgid "Enable LiteSpeed Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:458
+#: admin/class-litespeed-cache-admin.php:485
 msgid "You can override network admin settings here."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:461
+#: admin/class-litespeed-cache-admin.php:492
+#: admin/class-litespeed-cache-admin.php:496
 msgid "seconds"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:462
+#: admin/class-litespeed-cache-admin.php:493
 msgid "Default Public Cache TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:462
+#: admin/class-litespeed-cache-admin.php:493
+#: admin/class-litespeed-cache-admin.php:497
 msgid "Required number in seconds, minimum is 30."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:470
+#: admin/class-litespeed-cache-admin.php:497
+msgid "Default Front Page TTL"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:505
 msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:471
+#: admin/class-litespeed-cache-admin.php:506
 msgid ""
 "Select which pages will be automatically purged when posts are published/"
 "updated."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:473
-#: admin/class-litespeed-cache-admin.php:475
+#: admin/class-litespeed-cache-admin.php:508
+#: admin/class-litespeed-cache-admin.php:510
 msgid "Note: "
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:473
+#: admin/class-litespeed-cache-admin.php:508
 msgid ""
 "Select \"All\" if you have dynamic widgets linked to posts on pages other "
 "than the front or home pages. (Other checkboxes will be ignored)"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:475
+#: admin/class-litespeed-cache-admin.php:510
 msgid ""
 "Select only the archive types that you are currently using, the others can "
 "be left unchecked."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:485
+#: admin/class-litespeed-cache-admin.php:520
 msgid "All pages"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:491
+#: admin/class-litespeed-cache-admin.php:526
 msgid "Front page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:497
+#: admin/class-litespeed-cache-admin.php:532
 msgid "Home page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:503
+#: admin/class-litespeed-cache-admin.php:538
 msgid "Author archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:509
+#: admin/class-litespeed-cache-admin.php:544
 msgid "Post type archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:515
+#: admin/class-litespeed-cache-admin.php:550
 msgid "Yearly archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:521
+#: admin/class-litespeed-cache-admin.php:556
 msgid "Monthly archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:527
+#: admin/class-litespeed-cache-admin.php:562
 msgid "Daily archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:533
+#: admin/class-litespeed-cache-admin.php:568
 msgid "Term archive (include category, tag, and tax)"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:544
+#: admin/class-litespeed-cache-admin.php:579
 msgid "Enter a list of urls that you do not want to have cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:546
+#: admin/class-litespeed-cache-admin.php:581
 msgid "The urls will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:548
+#: admin/class-litespeed-cache-admin.php:583
 msgid "There should only be one url per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:550
+#: admin/class-litespeed-cache-admin.php:585
 msgid "NOTE: "
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:550
+#: admin/class-litespeed-cache-admin.php:585
 msgid "URLs must start with a '/' to be correctly matched."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:552
+#: admin/class-litespeed-cache-admin.php:587
 msgid "To do an exact match, add '$' to the end of the URL."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:554
+#: admin/class-litespeed-cache-admin.php:589
 msgid "Any surrounding whitespaces will be trimmed."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:556
+#: admin/class-litespeed-cache-admin.php:591
 #, php-format
 msgid "e.g. to exclude %s, I would have:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:562
+#: admin/class-litespeed-cache-admin.php:597
 msgid "All categories are cached by default."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:564
+#: admin/class-litespeed-cache-admin.php:599
 msgid ""
-"To prevent a category from being cached, enter it in the text area below,\n"
-"\t\t\tone per line."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:567
-#: admin/class-litespeed-cache-admin.php:576
-msgid "NOTE:"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:567
-msgid "If the Category ID is not found, the name will be removed on save."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:571
-msgid "All tags are cached by default."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:573
-msgid ""
-"To prevent tags from being cached, enter it in the text area below,\n"
-"\t\t\tone per line."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:576
-msgid "If the Tag ID is not found, the name will be removed on save."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:585
-msgid "URI List"
+"To prevent a category from being cached, enter it in the text area below, "
+"one per line."
 msgstr ""
 
 #: admin/class-litespeed-cache-admin.php:601
+#: admin/class-litespeed-cache-admin.php:609
+msgid "NOTE:"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:601
+msgid "If the Category ID is not found, the name will be removed on save."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:605
+msgid "All tags are cached by default."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:607
+msgid ""
+"To prevent tags from being cached, enter it in the text area below, one per "
+"line."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:609
+msgid "If the Tag ID is not found, the name will be removed on save."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:618
+msgid "URI List"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:634
 msgid "Category List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:624
+#: admin/class-litespeed-cache-admin.php:657
 msgid "Tag List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:636
+#: admin/class-litespeed-cache-admin.php:669
 msgid "Developer Testing"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:640
+#: admin/class-litespeed-cache-admin.php:673
 msgid "Admin IPs"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:640
+#: admin/class-litespeed-cache-admin.php:673
 msgid ""
 "Allows listed IPs (space or comma separated) to perform certain actions from "
 "their browsers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:644
+#: admin/class-litespeed-cache-admin.php:677
 msgid "None"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:645
+#: admin/class-litespeed-cache-admin.php:678
 msgid "Error"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:646
+#: admin/class-litespeed-cache-admin.php:679
 msgid "Notice"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:647
+#: admin/class-litespeed-cache-admin.php:680
 msgid "Info"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:650
+#: admin/class-litespeed-cache-admin.php:683
 msgid "Debug Level"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:650
+#: admin/class-litespeed-cache-admin.php:683
 msgid "Outputs to WordPress debug log."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:680
+#: admin/class-litespeed-cache-admin.php:713
 msgid "To make LiteSpeed Cache compatible with WP-PostViews:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:683
+#: admin/class-litespeed-cache-admin.php:716
 msgid ""
 "Replace the following calls in your theme's template files with a div or "
 "span with a unique ID."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:685
+#: admin/class-litespeed-cache-admin.php:718
 #, php-format
 msgid "e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:689
+#: admin/class-litespeed-cache-admin.php:722
 msgid "Update the ajax request to output the results to that div."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:691
+#: admin/class-litespeed-cache-admin.php:724
 msgid "Example:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:694
+#: admin/class-litespeed-cache-admin.php:727
 msgid "The ajax code can be found at"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:696
+#: admin/class-litespeed-cache-admin.php:729
 msgid "After purging the cache, the view count should be updating."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:699
+#: admin/class-litespeed-cache-admin.php:732
 msgid "Compatibility with WP-PostViews"
 msgstr ""
 
-#: includes/class-litespeed-cache-config.php:231
+#: includes/class-litespeed-cache-config.php:244
 msgid "LSCWP Enabled Count does not exist"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:100
+#: includes/class-litespeed-cache.php:113
 msgid ""
 "advanced-cache.php detected in wp-content directory! Please disable or "
 "uninstall any other cache plugins before enabling LiteSpeed Cache."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:202
+#: includes/class-litespeed-cache.php:200
 msgid "Your WordPress version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:204
+#: includes/class-litespeed-cache.php:202
 #, php-format
 msgid ""
 "The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade "
@@ -440,11 +459,11 @@ msgid ""
 "Cache plugin to hide this message."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:216
+#: includes/class-litespeed-cache.php:214
 msgid "Your PHP version is too old for LiteSpeed Cache Plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:218
+#: includes/class-litespeed-cache.php:216
 #, php-format
 msgid ""
 "LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, "
@@ -453,7 +472,7 @@ msgid ""
 "LiteSpeed Cache plugin to hide this message."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:230
+#: includes/class-litespeed-cache.php:228
 msgid ""
 "LiteSpeed Cache was unable to write to your wp-config.php file. Please add "
 "the following to your wp-config.php file located under your WordPress root "
