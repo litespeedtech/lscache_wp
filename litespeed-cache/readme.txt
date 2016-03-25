@@ -77,7 +77,7 @@ pages are cacheable. We are always looking for feedback, so if you encounter any
 = 1.0.3 =
 * Added a Purge Front Page button to the LiteSpeed Cache Management page.
 * Added a Default Front Page TTL option to the general settings.
-* Added support for multiple web application installations.
+* Added ability to define web application specific cookie names through rewrite rules to handle logged-in cookie conflicts when using multiple web applications. <strong>[Requires LSWS 5.0.15+]</strong>
 * Improved WooCommerce handling.
 * Fixed a bug where activating lscwp sets the “enable cache” radio button to enabled, but the cache was not enabled by default.
 * Refactored code to make it cleaner.
