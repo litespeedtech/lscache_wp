@@ -279,7 +279,8 @@ class LiteSpeed_Cache
 	 */
 	private function load_logged_in_actions()
 	{
-
+		add_action('load-litespeed-cache_page_lscache-settings',
+				'LiteSpeed_Cache_Admin::redir_settings');
 	}
 
 	/**

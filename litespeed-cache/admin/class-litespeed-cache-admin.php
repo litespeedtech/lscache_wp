@@ -76,13 +76,87 @@ class LiteSpeed_Cache_Admin
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
 		if ( current_user_can($capability) ) {
 
-			$lscache_admin_manage_page = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'lscachemgr', array( $this, 'show_menu_manage' ), 'dashicons-performance') ;
-			add_action('load-' . $lscache_admin_manage_page, array( $this, 'add_help_tabs' )) ;
+			$this->register_dash_menu();
 
 			$lscache_admin_settings_page = add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array( $this, 'show_menu_settings' )) ;
 			// adds help tab
 			add_action('load-' . $lscache_admin_settings_page, array( $this, 'add_help_tabs' )) ;
 		}
+	}
+
+	public function dash_select() {
+		$page = $_REQUEST['page'];
+		if (strncmp($page, 'lscache-', 8) != 0) {
+			// either I messed up writing the slug, or someone entered this function elsewhere.
+			die();
+		}
+		$selection = substr($page, 8);
+		$selection_len = strlen($selection);
+
+		//install, faqs
+		switch($selection[0]) {
+			case 'f':
+				if (($selection_len == 4)
+						&& (strncmp($selection, 'faqs', $selection_len) == 0)) {
+					$this->show_info_faqs();
+				}
+				break;
+			case 'i':
+				if (($selection_len == 7)
+						&& (strncmp($selection, 'install', $selection_len) == 0)) {
+					$this->show_info_install();
+				}
+				break;
+			default:
+				break;
+		}
+		// Selection did not match.
+		die();
+	}
+
+	public static function redir_settings() {
+		wp_redirect(admin_url('options-general.php?page=litespeedcache'), 301);
+		exit;
+	}
+
+	private function add_submenu($page_title, $menu_title, $menu_slug, $cb = '') {
+		if (!empty($cb)) {
+			$fn = array($this, $cb);
+		}
+		$submenu_page = add_submenu_page('lscache-dash', $page_title,
+				$menu_title, 'manage_options', $menu_slug, $fn);
+		add_action('load-' . $submenu_page, array( $this, 'add_help_tabs' ));
+	}
+
+	private function register_submenu_manage() {
+		$this::add_submenu(__('LiteSpeed Cache Manager', 'litespeed-cache'),
+				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
+	}
+
+	private function register_submenu_settings() {
+		$this::add_submenu(__('LiteSpeed Cache Settings', 'litespeed-cache'),
+				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
+	}
+
+	private function register_submenu_info() {
+		$this::add_submenu(__('LiteSpeed Cache Installation', 'litespeed-cache'),
+				__('Installation', 'litespeed-cache'), 'lscache-install', 'dash_select');
+		$this::add_submenu(__('LiteSpeed Cache FAQs', 'litespeed-cache'),
+				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
+
+	}
+
+	private function register_submenus() {
+		$this->register_submenu_manage();
+		$this->register_submenu_settings();
+		$this->register_submenu_info();
+
+	}
+
+	private function register_dash_menu() {
+		$check = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
+				'lscache-dash', '', 'dashicons-performance');
+		$this->register_submenus();
 	}
 
 	public function admin_init()
@@ -504,7 +578,7 @@ class LiteSpeed_Cache_Admin
 		$buf .= $this->display_config_row(__('Enable Cache for Commenters', 'litespeed-cache'), $cache_commenters,
 				__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 				. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
-		
+
 		$buf .= $this->input_group_end() ;
 		return $buf ;
 	}
@@ -751,6 +825,116 @@ class LiteSpeed_Cache_Admin
 			$buf .= $this->show_wp_postviews_help();
 		}
 		return $buf;
+	}
+
+	private function show_info_compatibility() {
+		$known_compat = array(
+			'bbPress',
+			'WooCommerce',
+			'Contact Form 7',
+			'Google XML Sitemaps',
+			'Yoast SEO'
+		);
+
+		$known_uncompat = array(
+
+		);
+
+
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Plugin Compatibility', 'litespeed-cache') . '</h2>'
+		. '<h3>' . __('This is a list of possibly problematic plugins that are confirmed to be compatible with LiteSpeed Cache Plugin:', 'litespeed-cache') . '</h3>'
+		. '<ul>';
+		foreach ($known_compat as $plugin_name) {
+			$buf .= '<li>' . $plugin_name . '</li>';
+		}
+		$buf .= '</ul><br><br>'
+		. '<h3>' . __('This is a list of known UNSUPPORTED plugins:', 'litespeed-cache') . '</h3>'
+		. '<ul>';
+		foreach ($known_uncompat as $plugin_name) {
+			$buf .= '<li>' . $plugin_name . '</li>';
+		}
+
+		$buf .= '</ul><br><br>';
+		return $buf;
+	}
+
+	private function show_info_install() {
+
+		// Configurations help.
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Install', 'litespeed-cache') . '</h2>'
+		. '<h3>' . __('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache') . '</h3>';
+
+		$buf .= '<ul><li>Enable Public Cache - No</li>'
+		. '<li>Check Public Cache - Yes</li></ul>';
+
+		$buf .= '<h3>' . __('The following are also recommended to be set:', 'litespeed-cache') . '</h3>';
+
+		$buf .= '<ul><li>Cache Request with Query String - Yes</li>'
+		. '<li>Cache Request with Cookie - Yes</li>'
+		. '<li>Cache Response with Cookie - Yes</li>'
+		. '<li>Ignore Request Cache-Control - Yes</li>'
+		. '<li>Ignore Response Cache-Control - Yes</li></ul>';
+
+		// Compatibility with other plugins.
+		$buf .= '<br><br>';
+		$buf .= $this->show_info_compatibility();
+
+		echo $buf;
+	}
+
+	private function show_info_faqs() {
+		$buf =  '<div class="wrap"><h2>' . __('LiteSpeed Cache FAQs', 'litespeed-cache') . '</h2>';
+
+		$buf .= '<h4>' . __('Is the LiteSpeed Cache Plugin for WordPress free?', 'litespeed-cache') . '</h4>'
+		. '<p>' . __('Yes, the plugin itself will remain free and open source, but only works with LiteSpeed Web Server 5.0.10+.', 'litespeed-cache')
+		. __('You are required to have a LiteSpeed Web Server license with the LSCache module enabled.', 'litespeed-cache') . '</p>';
+
+		$buf .= '<h4>' . __('Where are the cached files stored?', 'litespeed-cache') . '</h4>'
+		. '<p>' . __('This plugin only instructs LiteSpeed Web Server on what pages to cache and when to purge. ', 'litespeed-cache')
+		. __('The actual cached pages are stored and managed by LiteSpeed Web Server. Nothing is stored on the PHP side.', 'litespeed-cache') . '</p>';
+
+		$buf .= '<h4>' . __('Does LiteSpeed Cache for WordPress work with OpenLiteSpeed?', 'litespeed-cache') . '</h4>'
+		. '<p>' . __('LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server enterprise edition.', 'litespeed-cache')
+		. __(' There are plans to have OpenLiteSpeed support it later down the line.', 'litespeed-cache') . '</p>';
+
+		$buf .= '<h4>' . __('Is WooCommerce supported?', 'litespeed-cache') . '</h4>'
+		. '<p>' . __('In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable.', 'litespeed-cache')
+		. __(' For versions below 1.4.2, we do extra checks to make sure that pages are cacheable.', 'litespeed-cache')
+		. __(' We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.', 'litespeed-cache') . '</p>';
+
+		$buf .= '<h4>' . __('How do I get WP-PostViews to display an updating view count?', 'litespeed-cache') . '</h4>'
+		. '<ol><li>' . __('Use ', 'litespeed-cache')
+		. '<code>&lt;div id="postviews_lscwp"&gt;&lt;/div&gt;</code>'
+		. __(' to replace ', 'litespeed-cache')
+		. '<code>&lt;?php if(function_exists(&#39;the_views&#39;)) { the_views(); } ?&gt;</code>';
+
+		$buf .= '<ul><li>'
+		. __('NOTE: The id can be changed, but the div id and the ajax function must match.', 'litespeed-cache')
+		. '</li></ul>';
+
+		$buf .= '<li>' . __('Replace the ajax query in ', 'litespeed-cache')
+		. '<code>wp-content/plugins/wp-postviews/postviews-cache.js</code>'
+		. __(' with', 'litespeed-cache')
+		. '<pre>
+<code>jQuery.ajax({
+    type:"GET",
+    url:viewsCacheL10n.admin_ajax_url,
+    data:"postviews_id="+viewsCacheL10n.post_id+"&amp;action=postviews",
+    cache:!1,
+    success:function(data) {
+        if(data) {
+            jQuery(&#39;#postviews_lscwp&#39;).html(data+&#39; views&#39;);
+        }
+   }
+});</code></pre>'
+		. '</li>';
+
+
+		$buf .= '<li>'
+		. __('Purge the cache to use the updated pages.', 'litespeed-cache')
+		. '</li>';
+
+		echo $buf;
 	}
 
 	private function input_group_start( $title = '', $description = '' )
