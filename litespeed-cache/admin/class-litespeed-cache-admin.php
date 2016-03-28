@@ -188,6 +188,9 @@ class LiteSpeed_Cache_Admin
 			$options[$id] = $input[$id] ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
+		$options[$id] = ( $input['check_' . $id] === $id );
+
 		// get purge options
 		$pvals = array(
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -496,6 +499,12 @@ class LiteSpeed_Cache_Admin
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
 		$buf .= $this->display_config_row(__('Default Front Page TTL', 'litespeed-cache'), $input_public_ttl, __('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
 
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
+		$cache_commenters = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$buf .= $this->display_config_row(__('Enable Cache for Commenters', 'litespeed-cache'), $cache_commenters,
+				__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
+				. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
+		
 		$buf .= $this->input_group_end() ;
 		return $buf ;
 	}

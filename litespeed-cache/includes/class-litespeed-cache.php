@@ -48,6 +48,8 @@ class LiteSpeed_Cache
 	const LSHEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
 	const LSCOOKIE_DEFAULT_VARY = '_lscache_vary' ;
 	const LSCOOKIE_VARY_NAME = 'LSCACHE_VARY_COOKIE' ;
+	const LSCOOKIE_VARY_LOGGED_IN = 1;
+	const LSCOOKIE_VARY_COMMENTER = 2;
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -160,20 +162,15 @@ class LiteSpeed_Cache
 		define('LITESPEED_CACHE_ENABLED', true);
 		//TODO: Uncomment this when esi is implemented.
 //		add_action('init', array($this, 'check_admin_bar'), 0);
-
-		$this->current_vary = isset($_SERVER[self::LSCOOKIE_VARY_NAME])
-				? $_SERVER[self::LSCOOKIE_VARY_NAME] : self::LSCOOKIE_DEFAULT_VARY;
-		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
-		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
-
-		// TODO: uncomment this when esi is implemented.
 //		$this->add_actions_esi();
+
+		$this->setup_cookies();
 
 		if ( $this->check_esi_page()) {
 			return;
 		}
 
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() || $this->check_cookies() ) {
 			$this->load_logged_in_actions() ;
 		}
 		else {
@@ -325,17 +322,57 @@ class LiteSpeed_Cache
 		// TODO: purge by category, tag?
 	}
 
+	private function setup_cookies() {
+		$this->current_vary = isset($_SERVER[self::LSCOOKIE_VARY_NAME])
+				? $_SERVER[self::LSCOOKIE_VARY_NAME] : self::LSCOOKIE_DEFAULT_VARY;
+
+		// Set vary cookie for logging in user, unset for logging out.
+		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
+		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
+
+		if ( !$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS)) {
+			// Set vary cookie for commenter.
+			add_action('set_comment_cookies', array( $this, 'set_comment_cookie'), 10, 2);
+		}
+
+	}
+
+	private function do_set_cookie($update_val, $expire, $ssl = false, $httponly = false) {
+		$curval = intval($_COOKIE[$this->current_vary]);
+
+		// not, remove from curval.
+		if ($update_val < 0) {
+			// If cookie will no longer exist, delete the cookie.
+			if (($curval == 0) || ($curval == $update_val)) {
+				// Use a year in case of bad local clock.
+				$expire = time() - 31536001;
+			}
+			$curval &= $update_val;
+		}
+		else { // add to curval.
+			$curval |= $update_val;
+		}
+		setcookie($this->current_vary, $curval, $expire, COOKIEPATH,
+				COOKIE_DOMAIN, $ssl, $httponly);
+	}
+
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out') {
 		if ($action == 'logged_in') {
-			setcookie($this->current_vary, '1', $expire, COOKIEPATH,
-					COOKIE_DOMAIN, is_ssl(), true);
+			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN, $expire, is_ssl(), true);
 		}
 		else {
-			// Use a year in case of bad local clock.
-			setcookie($this->current_vary, '0', time() - 31536001, COOKIEPATH,
-					COOKIE_DOMAIN);
+			$this->do_set_cookie(~self::LSCOOKIE_VARY_LOGGED_IN,
+					time() + apply_filters( 'comment_cookie_lifetime', 30000000 ));
 		}
+	}
+
+	public function set_comment_cookie($comment, $user) {
+		if ( $user->exists() ) {
+			return;
+		}
+		$comment_cookie_lifetime = time() + apply_filters( 'comment_cookie_lifetime', 30000000 );
+		$this->do_set_cookie(self::LSCOOKIE_VARY_COMMENTER, $comment_cookie_lifetime);
 	}
 
 	private function add_purge_tags($tags, $is_public = true) {
@@ -410,6 +447,33 @@ class LiteSpeed_Cache
 		}
 		$this->add_purge_tags(self::CACHETAG_TYPE_POST . $post_id);
 		$this->send_purge_headers();
+	}
+
+	private function check_cookies() {
+		if ($_SERVER["REQUEST_METHOD"] !== 'GET') {
+			return false;
+		}
+		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
+		{
+			// If do not cache commenters, check cookie for commenter value.
+			return ((isset($_COOKIE[$this->current_vary]))
+					&& ($_COOKIE[$this->current_vary] & self::LSCOOKIE_VARY_COMMENTER));
+		}
+
+		// If vary cookie is set, need to change the value.
+		if (isset($_COOKIE[$this->current_vary])) {
+			$this->do_set_cookie(~self::LSCOOKIE_VARY_COMMENTER, 14 * DAY_IN_SECONDS);
+			unset($_COOKIE[$this->current_vary]);
+		}
+
+		// If cache commenters, unset comment cookies for caching.
+		foreach($_COOKIE as $cookie_name => $cookie_value) {
+			if ((strlen($cookie_name) >= 15)
+					&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
+				unset($_COOKIE[$cookie_name]);
+			}
+		}
+		return false;
 	}
 
 	// Return true if non-cacheable.
