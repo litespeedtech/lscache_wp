@@ -44,6 +44,9 @@ Yes, the plugin itself will remain free and open source, but only works with Lit
 This plugin only instructs LiteSpeed Web Server on what pages to cache and when to purge. The actual cached pages are stored and managed by LiteSpeed Web Server. Nothing is stored on the PHP side.
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server enterprise edition, but there are plans to have OpenLiteSpeed support it later down the line.
+= Is WooCommerce supported? =
+In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2, we do extra checks to make sure that 
+pages are cacheable. We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
 
@@ -74,11 +77,11 @@ LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server ente
 = 1.0.3 =
 * Added a Purge Front Page button to the LiteSpeed Cache Management page.
 * Added a Default Front Page TTL option to the general settings.
-* Added support for multiple web application installations.
+* Added ability to define web application specific cookie names through rewrite rules to handle logged-in cookie conflicts when using multiple web applications. <strong>[Requires LSWS 5.0.15+]</strong>
 * Improved WooCommerce handling.
 * Fixed a bug where activating lscwp sets the “enable cache” radio button to enabled, but the cache was not enabled by default.
 * Refactored code to make it cleaner.
-* Updated readme.txt
+* Updated readme.txt.
 
 = 1.0.2 =
 * Added a "Use Network Admin Setting" option for "Enable LiteSpeed Cache". For single sites, this choice will default to enabled.
