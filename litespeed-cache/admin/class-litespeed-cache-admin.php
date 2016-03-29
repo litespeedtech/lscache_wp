@@ -107,6 +107,24 @@ class LiteSpeed_Cache_Admin
 					$this->show_info_install();
 				}
 				break;
+			case 'c':
+				if (($selection_len == 9)
+						&& (strncmp($selection, 'common-rw', $selection_len) == 0)) {
+					$this->show_info_common_rewrite();
+				}
+				break;
+			case 's':
+				if (($selection_len == 8)
+						&& (strncmp($selection, 'settings', $selection_len) == 0)) {
+					$this->show_info_settings();
+				}
+				break;
+			case 'e':
+				if (($selection_len == 13)
+						&& (strncmp($selection, 'edit-htaccess', $selection_len) == 0)) {
+					$this->show_edit_htaccess();
+				}
+				break;
 			default:
 				break;
 		}
@@ -136,6 +154,10 @@ class LiteSpeed_Cache_Admin
 	private function register_submenu_settings() {
 		$this::add_submenu(__('LiteSpeed Cache Settings', 'litespeed-cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
+
+		$this::add_submenu(__('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'),
+				__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'dash_select');
+
 	}
 
 	private function register_submenu_info() {
@@ -143,6 +165,8 @@ class LiteSpeed_Cache_Admin
 				__('Installation', 'litespeed-cache'), 'lscache-install', 'dash_select');
 		$this::add_submenu(__('LiteSpeed Cache FAQs', 'litespeed-cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
+		$this::add_submenu(__('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache'),
+				__('Common Rewrite Rules', 'litespeed-cache'), 'lscache-common-rw', 'dash_select');
 
 	}
 
@@ -935,6 +959,44 @@ class LiteSpeed_Cache_Admin
 		. '</li>';
 
 		echo $buf;
+	}
+
+	private function show_info_common_rewrite() {
+
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache') . '</h2>';
+
+		$buf .= '<h4>'
+		. __('This page will contain commonly used rewrite rules. ', 'litespeed-cache')
+		. '</h4>';
+
+		echo $buf;
+	}
+
+	private function show_info_settings() {
+
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
+
+		$buf .= '<h4>'
+		. __('The settings page is specific to individual sites. ', 'litespeed-cache')
+		. __('Example settings are adjusting do-not-cache rules, purge rules, rewrite rules, etc. ', 'litespeed-cache')
+		. __('These settings are not configurable in the network admin panel. ', 'litespeed-cache')
+		. __('Instead, you can go to the site&#39;s admin panel to change the configurations. ', 'litespeed-cache')
+		. '</h4>';
+
+		echo $buf;
+	}
+
+	private function show_edit_htaccess() {
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
+		if (is_network_admin()) {
+
+			$buf .= '<h4>'
+			. __('This page allows site admins to edit their .htaccess files. ', 'litespeed-cache')
+			. __('Since the .htaccess files are site specific, this page is not available in the network admin. ', 'litespeed-cache')
+			. '</h4>';
+
+			echo $buf;
+		}
 	}
 
 	private function input_group_start( $title = '', $description = '' )
