@@ -986,6 +986,34 @@ class LiteSpeed_Cache_Admin
 		echo $buf;
 	}
 
+	// Currently returns false if fail, # bytes written if success.
+	private function do_edit_htaccess($content, $verify = false) {
+		$path = ABSPATH . '.htaccess';
+		if ($verify) {
+			// need to verify content. Used for auto update.
+		}
+
+		clearstatcache();
+		if (!is_writable($path) || !is_readable($path)) {
+			unnset($path);
+			return __('File not readable or not writable.', 'litespeed-cache'); // maybe return error string?
+		}
+		if (file_exists($path)) {
+			//failed to backup, not good.
+			if (!copy($path, $path . '_lscachebak')) {
+				return __('Failed to back up file, abort changes.', 'litespeed-cache');
+			}
+		}
+
+		// File put contents will truncate by default. Will create file if doesn't exist.
+		$ret = file_put_contents($path, $content, LOCK_EX);
+		unset($path);
+		if (!$ret) {
+			return __('Failed to overwrite ', 'litespeed-cache') . '.htaccess';
+		}
+		return true;
+	}
+
 	private function show_edit_htaccess() {
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 		if (is_network_admin()) {
@@ -996,7 +1024,65 @@ class LiteSpeed_Cache_Admin
 			. '</h4>';
 
 			echo $buf;
+			return;
 		}
+
+		if (($_POST) && ($_POST['submit'])) {
+			if (($_POST['lscwp_htaccess_save'])
+					&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
+					&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
+					&& ($_POST['lscwp_ht_editor'])) {
+				$err = $this->do_edit_htaccess($_POST['lscwp_ht_editor']);
+			}
+
+
+			$buf .= '<div class="';
+			if ($err === true) {
+				$buf .= 'updated';
+				$err = __('File saved.', 'litespeed-cache');
+			}
+			else {
+				$buf .= 'error';
+			}
+			$buf .= '"><p>' . $err . '</p></div>';
+		}
+
+		$path = ABSPATH . '.htaccess';
+		if (!file_exists($path)) {
+			$buf .= '<h3>' . __('Htaccess file does not exist.', 'litespeed-cache') . '</h3>';
+			echo $buf;
+			return;
+		}
+		else if (!is_readable($path)) {
+			$buf .= '<h3>' . __('Htaccess file is not readable.', 'litespeed-cache') . '</h3>';
+			echo $buf;
+			return;
+		}
+
+		$contents = file_get_contents($path);
+		if ($contents == false) {
+			// get contents failed.
+		}
+
+		$buf .= '<form method="post" action="admin.php?page=lscache-edit-htaccess">';
+		$buf .= '<input type="hidden" name="lscwp_htaccess_save" value="save_htaccess" />';
+		$buf .= wp_nonce_field('lscwp_edit_htaccess', 'save');
+
+		$buf .= '<h3>' . __('Current .htaccess contents:', 'litespeed-cache') . '</h3>';
+
+		$buf .= '<textarea name="lscwp_ht_editor" wrap="off" rows="20" class="lscwp_editor" ';
+		if (!is_writable($path)) {
+			$buf .= 'readonly';
+		}
+		$buf .= '>' . $contents . '</textarea>';
+		unset($contents);
+
+		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
+				. __('Save', 'litespeed-cache') . '" /></form>';
+
+		echo $buf;
+
+
 	}
 
 	private function input_group_start( $title = '', $description = '' )
