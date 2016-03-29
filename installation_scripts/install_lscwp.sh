@@ -33,7 +33,8 @@ function htaccess_create (){
 }
 
 function htaccess_modify (){
-    
+    suf=`date +"%Y%m%d"`
+    cp "${1}/.htaccess" "${1}/.htaccess_prelscache_$suf"
     grep -q "<IfModule \+Litespeed *>" "${1}/.htaccess"
     if [ $? -eq 0 ]
     then
