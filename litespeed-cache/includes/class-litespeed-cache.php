@@ -268,6 +268,9 @@ class LiteSpeed_Cache
 				add_action($event, array( $this, 'purge_all' )) ;
 			}
 		}
+
+		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
+				array($admin, 'parse_edit_htaccess'));
 		$this->set_locale() ;
 	}
 

@@ -107,12 +107,6 @@ class LiteSpeed_Cache_Admin
 					$this->show_info_install();
 				}
 				break;
-			case 'c':
-				if (($selection_len == 9)
-						&& (strncmp($selection, 'common-rw', $selection_len) == 0)) {
-					$this->show_info_common_rewrite();
-				}
-				break;
 			case 's':
 				if (($selection_len == 8)
 						&& (strncmp($selection, 'settings', $selection_len) == 0)) {
@@ -128,8 +122,6 @@ class LiteSpeed_Cache_Admin
 			default:
 				break;
 		}
-		// Selection did not match.
-		die();
 	}
 
 	public static function redir_settings() {
@@ -155,8 +147,10 @@ class LiteSpeed_Cache_Admin
 		$this::add_submenu(__('LiteSpeed Cache Settings', 'litespeed-cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
 
-		$this::add_submenu(__('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'),
-				__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'dash_select');
+		if ((!is_multisite()) || (is_network_admin())) {
+			$this::add_submenu(__('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'),
+					__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'dash_select');
+		}
 
 	}
 
@@ -165,8 +159,6 @@ class LiteSpeed_Cache_Admin
 				__('Installation', 'litespeed-cache'), 'lscache-install', 'dash_select');
 		$this::add_submenu(__('LiteSpeed Cache FAQs', 'litespeed-cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
-		$this::add_submenu(__('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache'),
-				__('Common Rewrite Rules', 'litespeed-cache'), 'lscache-common-rw', 'dash_select');
 
 	}
 
@@ -963,13 +955,64 @@ class LiteSpeed_Cache_Admin
 
 	private function show_info_common_rewrite() {
 
-		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache') . '</h2>';
+		$buf = '<h3>' . __('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache') . '</h2>';
 
+
+		if ((is_multisite()) && (!is_network_admin())) {
+
+			$buf .= '<p><span class="attention">' . __('NOTE: ', 'litespeed-cache')
+			. '</span>'
+			. __('The following configurations can only be changed by the network admin.', 'litespeed-cache')
+			. '<br>'
+			. __('If you need to make changes to them, please contact the network admin to make the changes.', 'litespeed-cache')
+			. '</p>';
+		}
+		else {
+			$buf .= '<p><span class="attention">' . __('NOTICE: ', 'litespeed-cache')
+			. '</span>'
+			. __('The following rewrite rules can be configured in the LiteSpeed Cache settings page.', 'litespeed-cache')
+			. '<br>'
+			. __('If you need to make changes to them, please do so on that page.', 'litespeed-cache')
+			. __(' It will automatically generate the correct rules in the htaccess file.', 'litespeed-cache')
+			. '</p>';
+
+		}
+
+		// Mobile View
 		$buf .= '<h4>'
-		. __('This page will contain commonly used rewrite rules. ', 'litespeed-cache')
+		. __('Mobile Views: ', 'litespeed-cache')
 		. '</h4>';
 
-		echo $buf;
+		$buf .= '<p>'
+		. __('Some sites have adaptive views, meaning the page sent will adapt to the browser type (desktop vs mobile).', 'litespeed-cache')
+		. __(' This rewrite rule is used for sites that load a different page for each type.', 'litespeed-cache')
+		. '<br>'
+		. __(' This configuration can be added on the settings page in the General tab.', 'litespeed-cache')
+		. '</p>';
+
+		// Cookies
+		$buf .= '<h4>'
+		. __('Do Not Cache Cookies: ', 'litespeed-cache')
+		. '</h4>';
+
+		$buf .= '<p>'
+		. __('Another common rewrite rule is to notify the cache not to cache when it sees a specified cookie name.', 'litespeed-cache')
+		. '<br>'
+		. __(' This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache')
+		. '</p>';
+
+		// User Agent
+		$buf .= '<h4>'
+		. __('Do Not Cache User Agent: ', 'litespeed-cache')
+		. '</h4>';
+
+		$buf .= '<p>'
+		. __('A not so commonly used rewrite rule is to notify the cache not to cache when it sees a specified User Agent.', 'litespeed-cache')
+		. '<br>'
+		. __(' This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache')
+		. '</p>';
+
+		return $buf;
 	}
 
 	private function show_info_settings() {
@@ -986,7 +1029,24 @@ class LiteSpeed_Cache_Admin
 		echo $buf;
 	}
 
-	// Currently returns false if fail, # bytes written if success.
+	public function edit_htaccess_res() {
+		if (!$this->messages) {
+			return;
+		}
+		$buf = '<div class="';
+		if ($this->messages === true) {
+			$buf .= 'updated';
+			$err = __('File saved.', 'litespeed-cache');
+		}
+		else {
+			$buf .= 'error';
+			$err = $this->messages;
+		}
+		$buf .= '"><p>' . $err . '</p></div>';
+		echo $buf;
+	}
+
+	// Currently returns true if success, error message if fail.
 	private function do_edit_htaccess($content, $verify = false) {
 		$path = ABSPATH . '.htaccess';
 		if ($verify) {
@@ -1005,6 +1065,9 @@ class LiteSpeed_Cache_Admin
 			}
 		}
 
+		$content = trim($content);
+		$content = stripslashes($content);
+
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		unset($path);
@@ -1014,38 +1077,25 @@ class LiteSpeed_Cache_Admin
 		return true;
 	}
 
-	private function show_edit_htaccess() {
-		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
+	public function parse_edit_htaccess() {
 		if (is_network_admin()) {
-
-			$buf .= '<h4>'
-			. __('This page allows site admins to edit their .htaccess files. ', 'litespeed-cache')
-			. __('Since the .htaccess files are site specific, this page is not available in the network admin. ', 'litespeed-cache')
-			. '</h4>';
-
-			echo $buf;
 			return;
 		}
-
-		if (($_POST) && ($_POST['submit'])) {
-			if (($_POST['lscwp_htaccess_save'])
-					&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
-					&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
-					&& ($_POST['lscwp_ht_editor'])) {
-				$err = $this->do_edit_htaccess($_POST['lscwp_ht_editor']);
-			}
-
-
-			$buf .= '<div class="';
-			if ($err === true) {
-				$buf .= 'updated';
-				$err = __('File saved.', 'litespeed-cache');
-			}
-			else {
-				$buf .= 'error';
-			}
-			$buf .= '"><p>' . $err . '</p></div>';
+		if (empty($_POST) || empty($_POST['submit'])) {
+			return;
 		}
+		if (($_POST['lscwp_htaccess_save'])
+				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
+				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
+				&& ($_POST['lscwp_ht_editor'])) {
+			$this->messages = $this->do_edit_htaccess($_POST['lscwp_ht_editor']);
+			add_action('admin_notices', array($this, 'edit_htaccess_res'));
+		}
+
+	}
+
+	private function show_edit_htaccess() {
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 
 		$path = ABSPATH . '.htaccess';
 		if (!file_exists($path)) {
@@ -1064,13 +1114,27 @@ class LiteSpeed_Cache_Admin
 			// get contents failed.
 		}
 
+		$buf .= '<p><span class="attention">' . __('WARNING: This page is meant for advanced users.', 'litespeed-cache')
+		. '</span><br>'
+		. __(' Any changes made to the .htaccess file may break your site.', 'litespeed-cache')
+		. __(' Please consult your host/server admin before making any changes you are unsure about.', 'litespeed-cache')
+		. '</p>';
+
+		$buf .= $this->show_info_common_rewrite();
+
 		$buf .= '<form method="post" action="admin.php?page=lscache-edit-htaccess">';
 		$buf .= '<input type="hidden" name="lscwp_htaccess_save" value="save_htaccess" />';
 		$buf .= wp_nonce_field('lscwp_edit_htaccess', 'save');
 
 		$buf .= '<h3>' . __('Current .htaccess contents:', 'litespeed-cache') . '</h3>';
 
-		$buf .= '<textarea name="lscwp_ht_editor" wrap="off" rows="20" class="lscwp_editor" ';
+		$buf .= '<p><span class="attention">'
+		. __('DO NOT EDIT ANYTHING WITHIN ', 'litespeed-cache') . '###LSCACHE START/END XXXXXX###'
+		. '</span><br>'
+		. __('These are added by the LS Cache plugin and may cause problems if they are changed.', 'litespeed-cache')
+		. '</p>';
+
+		$buf .= '<textarea id="wpwrap" name="lscwp_ht_editor" wrap="off" rows="20" class="code" ';
 		if (!is_writable($path)) {
 			$buf .= 'readonly';
 		}
