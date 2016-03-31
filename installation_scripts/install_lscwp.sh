@@ -125,33 +125,27 @@ then
 
         if [ -d "${WP_DIR}" ]
         then
-			if [ ! -d "${WP_DIR}/wp-content/plugins/woocommerce" ]
-			then
-                USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
+            USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
 
-                sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
-                sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
-                if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
+            sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
+            sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
+            if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
+            then
+                if [ -e "${WP_DIR}/.htaccess" ]
                 then
-                    if [ -e "${WP_DIR}/.htaccess" ]
+                    if [ -w "${WP_DIR}/.htaccess" ]
                     then
-                        if [ -w "${WP_DIR}/.htaccess" ]
-                        then
-                            htaccess_modify ${WP_DIR}
-                            unset htaccess_modify
-                        else
-                            echo "${WP_DIR} - Unable to write to .htaccess file."
-                        fi
+                        htaccess_modify ${WP_DIR}
+                        unset htaccess_modify
                     else
-                        htaccess_create ${USER} ${WP_DIR}
-                        unset htaccess_create
+                        echo "${WP_DIR} - Unable to write to .htaccess file."
                     fi
-                fi       	
-                rm "${WP_DIR}/lscwp_enable_disable.php"
-			else
-				echo -e "\n${WP_DIR} - WooCommerce installation detected. LSCWP not installed.\n"
-				exit 1
-			fi
+                else
+                    htaccess_create ${USER} ${WP_DIR}
+                    unset htaccess_create
+                fi
+            fi       	
+            rm "${WP_DIR}/lscwp_enable_disable.php"
         fi
     done
 
@@ -172,36 +166,28 @@ then
 
 		if [ -d "${WP_DIR}" ]
 		then
-			if [ ! -d "${WP_DIR}/wp-content/plugins/woocommerce" ]
-			then
-				USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
+            USER=`ls -ld ${WP_DIR} | awk '{print $3}'`
 
-				sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
-				sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
-				if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
+			sudo -u ${USER} cp "lscwp_enable_disable.php" "${WP_DIR}"
+			sudo -u ${USER} cp -r "litespeed-cache" "${WP_DIR}/wp-content/plugins/"
+			if [ ! $(sudo -u ${USER} ${LSPHP_PATH} ${WP_DIR}/lscwp_enable_disable.php enable ${WP_DIR}) ]
+            then
+                if [ -e "${WP_DIR}/.htaccess" ]
                 then
-                    if [ -e "${WP_DIR}/.htaccess" ]
+                    if [ -w "${WP_DIR}/.htaccess" ]
                     then
-                        if [ -w "${WP_DIR}/.htaccess" ]
-                        then
-                           htaccess_modify ${WP_DIR}
-                           unset htaccess_modify
-                        else
-                            echo "${WP_DIR} - Unable to write to .htaccess file."
-                        fi
+                        htaccess_modify ${WP_DIR}
+                        unset htaccess_modify
                     else
-                        htaccess_create ${USER} ${WP_DIR}
-                        unset htaccess_create
+                        echo "${WP_DIR} - Unable to write to .htaccess file."
                     fi
+                else
+                    htaccess_create ${USER} ${WP_DIR}
+                    unset htaccess_create
                 fi
-				
-                rm "${WP_DIR}/lscwp_enable_disable.php"
-			else
-				echo -e "\n${WP_DIR} - WooCommerce installation detected. LSCWP not installed.\n"
-                exit 1
-			fi
+            fi
+            rm "${WP_DIR}/lscwp_enable_disable.php"
 		fi
-		
 		shift
 	done
 	
