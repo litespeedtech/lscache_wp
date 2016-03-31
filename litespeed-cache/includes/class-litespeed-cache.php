@@ -155,7 +155,8 @@ class LiteSpeed_Cache
 		}
 
 		//Checks if WP_CACHE is defined and true in the wp-config.php file.
-		if ( ! defined('WP_CACHE') || (defined('WP_CACHE') && constant('WP_CACHE') == false) ) {
+		if ((current_user_can('manage_options'))
+			&& ((!defined('WP_CACHE')) || (defined('WP_CACHE') && constant('WP_CACHE') == false))) {
 			add_action('admin_notices', 'LiteSpeed_Cache::show_wp_cache_var_set_error') ;
 		}
 
