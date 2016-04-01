@@ -281,6 +281,19 @@ class LiteSpeed_Cache_Admin
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
 		$options[$id] = ( $input['check_' . $id] === $id );
 
+		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
+		if ($input['check_' . $id] === $id) {
+			$options[$id] = true;
+			$this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
+					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
+					'E=Cache-Control:vary=ismobile');
+		}
+		elseif ($options[$id] === true) {
+			$options[$id] = false;
+			$this->set_common_rule('MOBILE VIEW', '',
+					'', '');
+		}
+
 		// get purge options
 		$pvals = array(
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -594,6 +607,31 @@ class LiteSpeed_Cache_Admin
 		$buf .= $this->display_config_row(__('Enable Cache for Commenters', 'litespeed-cache'), $cache_commenters,
 				__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 				. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
+
+		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
+		$mv_enabled = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
+		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
+		. __('A site built with responsive design does not need to check this.', 'litespeed-cache')
+		. '<br>' . __('WARNING: If checked then unchecked, the list below will be cleared.', 'litespeed-cache'));
+
+		$mv_list_desc = __('SYNTAX: Each entry should be separated with a bar, &#39;|&#39;.', 'litespeed-cache')
+		. __(' Any spaces should be escaped with a backslash before it, &#39;\\ &#39;.')
+		. '<br>'
+		. __('The default list WordPress uses is Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi', 'litespeed-cache');
+
+		$mv_str = '';
+		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
+		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
+			// can also use class 'mejs-container' for 100% width.
+			$mv_list = $this->input_field_text($id, $mv_str, '', 'widget ui-draggable-dragging') ;
+		}
+		else {
+			$mv_list = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
+		}
+		$buf .= $this->display_config_row(__('List of Mobile View User Agents', 'litespeed-cache'),
+				$mv_list, $mv_list_desc);
 
 		$buf .= $this->input_group_end() ;
 		return $buf ;
@@ -1094,24 +1132,36 @@ class LiteSpeed_Cache_Admin
 
 	}
 
+	private function get_htaccess_contents(&$content) {
+		$path = ABSPATH . '.htaccess';
+		if (!file_exists($path)) {
+			$content = __('Htaccess file does not exist.', 'litespeed-cache');
+			return false;
+		}
+		else if (!is_readable($path)) {
+			$content = __('Htaccess file is not readable.', 'litespeed-cache');
+			return false;
+		}
+
+		$content = file_get_contents($path);
+		if ($content == false) {
+			$content = __('Failed to get .htaccess file contents.', 'litespeed-cache');
+			return false;
+		}
+		// Remove ^M characters.
+		$content = str_ireplace("\x0D", "", $content);
+		return true;
+	}
+
 	private function show_edit_htaccess() {
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 
 		$path = ABSPATH . '.htaccess';
-		if (!file_exists($path)) {
-			$buf .= '<h3>' . __('Htaccess file does not exist.', 'litespeed-cache') . '</h3>';
+		$contents = '';
+		if ($this->get_htaccess_contents($contents) === false) {
+			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
-		}
-		else if (!is_readable($path)) {
-			$buf .= '<h3>' . __('Htaccess file is not readable.', 'litespeed-cache') . '</h3>';
-			echo $buf;
-			return;
-		}
-
-		$contents = file_get_contents($path);
-		if ($contents == false) {
-			// get contents failed.
 		}
 
 		$buf .= '<p><span class="attention">' . __('WARNING: This page is meant for advanced users.', 'litespeed-cache')
@@ -1144,9 +1194,141 @@ class LiteSpeed_Cache_Admin
 		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
 				. __('Save', 'litespeed-cache') . '" /></form>';
 
+		$buf .= '</div>';
 		echo $buf;
+	}
 
+	private static function build_wrappers($wrapper, &$end) {
+		$end = '###LSCACHE END ' . $wrapper . '###';
+		return '###LSCACHE START ' . $wrapper . '###';
+	}
 
+	private function write_common_rule($path, $pre_arr, $prev_content) {
+		$input_str = implode("\n", $pre_arr);
+		$ret = file_put_contents($path, $input_str . $prev_content);
+		if ($ret === false) {
+			return __('Failed to put contents into .htaccess', 'litespeed-cache');
+		}
+		return true;
+	}
+
+	/*
+	 * <IfModule LiteSpeed>
+	 * RewriteEngine on
+	 * ###LSCACHE START $wrapper###
+	 * RewriteCond %{$cond} $match [$flag]
+	 * RewriteRule .* - [$env]
+	 * ###LSCACHE END $wrapper###
+	 * </IfModule>
+	*/
+	// If match is empty string, consider it a delete.
+	// return true if it worked, error string if it failed.
+	private function set_common_rule($wrapper, $cond, $match, $env, $flag = '') {
+		$err = '';
+		$prefix = '<IfModule LiteSpeed>';
+		$engine = 'RewriteEngine on';
+		$suffix = '</IfModule>';
+		$path = ABSPATH . '.htaccess';
+		clearstatcache();
+		if ($this->get_htaccess_contents($err) === false) {
+			if ($match === '') {
+				return true;
+			}
+			return $err;
+		}
+		elseif (!is_writable($path)) {
+			if ($match === '') {
+				return true;
+			}
+			return __('File is not writable.', 'litespeed-cache');
+		}
+		$wrapper_end = '';
+		$wrapper_begin = self::build_wrappers($wrapper, $wrapper_end);
+		$rw_cond = 'RewriteCond %{' . $cond . '} ' . $match;
+		if ($flag != '') {
+			$rw_cond .= ' [' . $flag . ']';
+		}
+
+		$off_begin = strpos($err, $prefix);
+		//if not found
+		if ($off_begin === false) {
+			if ($match === '') {
+				return true;
+			}
+			$input = array($prefix, $engine, $wrapper_begin,
+				$rw_cond, 'RewriteRule .* - [' . $env . ']', $wrapper_end, $suffix,
+				"\n");
+			return $this->write_common_rule($path, $input, $err);
+		}
+		$off_begin += strlen($prefix);
+		$wrap_begin = strpos($err, $wrapper_begin, $off_begin);
+		// This rule was not added yet.
+		if ($wrap_begin === false) {
+			if ($match === '') {
+				return true;
+			}
+			$off_end = strpos($err, $suffix, $off_begin);
+			if ($off_end === false) {
+				return __('Could not find IfModule close.', 'litespeed-cache');
+			}
+			--$off_end; // go to end of previous line.
+			$input = array(substr($err, 0, $off_end), $wrapper_begin,
+			$rw_cond, 'RewriteRule .* - [' . $env . ']', $wrapper_end);
+			$err = substr($err, $off_end);
+		}
+		else {
+			$wrap_begin += strlen($wrapper_begin);
+			$wrap_end = strpos($err, $wrapper_end, $wrap_begin);
+			if ($wrap_end === false) {
+				return __('Could not find wrapper end', 'litespeed-cache');
+			}
+			// Rule exists.
+			--$wrap_end; // go to end of previous line.
+			if ($match === '') {
+				$input = array(substr($err, 0, $wrap_begin));
+			}
+			else {
+				$input = array(substr($err, 0, $wrap_begin), $rw_cond,
+					'RewriteRule .* - [' . $env . ']');
+			}
+			$err = substr($err, $wrap_end);
+		}
+		return $this->write_common_rule($path, $input, $err);
+	}
+
+	private function get_common_rule($wrapper, $cond, &$match) {
+
+		if ($this->get_htaccess_contents($match) === false) {
+			return false;
+		}
+		$suffix = '';
+		$prefix = self::build_wrappers($wrapper, $suffix);
+		$off_begin = strpos($match, $prefix);
+		if ($off_begin === false) {
+			$match = '';
+			return true; // It does not exist yet, not an error.
+		}
+		$off_begin += strlen($prefix);
+		$off_end = strpos($match, $suffix, $off_begin);
+		if ($off_end === false) {
+			$match = __('Could not find suffix ', 'litespeed-cache') . $suffix;
+			return false;
+		}
+		elseif ($off_begin >= $off_end) {
+			$match = __('Prefix was found after suffix.', 'litespeed-cache');
+			return false;
+		}
+
+		$subject = substr($match, $off_begin, $off_end - $off_begin);
+		$pattern = '/RewriteCond\s%{' . $cond . '}\s+(.*)\s+[[]*/';
+		$matches = array();
+		$num_matches = preg_match($pattern, $subject, $matches);
+		if ($num_matches === false) {
+			$match = __('Did not find a match.', 'litespeed-cache');
+			return false;
+		}
+		$match = trim($matches[1]);
+		return true;
 	}
 
 	private function input_group_start( $title = '', $description = '' )
