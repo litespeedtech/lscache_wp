@@ -218,7 +218,7 @@ class LiteSpeed_Cache_Config
 		if ( $enable ) {
 			$count = 0 ;
 
-			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;/',
+			$new_file_content = preg_replace('/[\/]*define\(.*\'WP_CACHE\'.+;/',
 								"define('WP_CACHE', true);", $file_content, -1, $count) ;
 			if ( $count == 0 ) {
 				$new_file_content = preg_replace('/(\$table_prefix)/',
