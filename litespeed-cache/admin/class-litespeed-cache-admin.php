@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Admin
 		$options[$id] = ( $input['check_' . $id] === $id );
 
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
-		if ($input['check_' . $id] === $id) {
+		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
 			$this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
 					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
@@ -608,23 +608,34 @@ class LiteSpeed_Cache_Admin
 				__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 				. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
+		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
-		$mv_enabled = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
+		$default_id = 'lscwp_' . $id . '_default';
+		$warning_id = 'lscwp_' . $id . '_warning';
+		$buf .= $this->input_field_hidden($warning_id,
+		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
+		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
+				'lscwpCheckboxConfirm(this, &#39;' . $list_id . '&#39;)' ) ;
+
 		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
 		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
-		. __('A site built with responsive design does not need to check this.', 'litespeed-cache')
-		. '<br>' . __('WARNING: If checked then unchecked, the list below will be cleared.', 'litespeed-cache'));
+		. __('A site built with responsive design does not need to check this.', 'litespeed-cache'));
 
 		$mv_list_desc = __('SYNTAX: Each entry should be separated with a bar, &#39;|&#39;.', 'litespeed-cache')
 		. __(' Any spaces should be escaped with a backslash before it, &#39;\\ &#39;.')
 		. '<br>'
-		. __('The default list WordPress uses is Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi', 'litespeed-cache');
+		. __('The default list WordPress uses is ', 'litespeed-cache')
+		. $wp_default_mobile;
 
 		$mv_str = '';
-		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
 		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
 			// can also use class 'mejs-container' for 100% width.
-			$mv_list = $this->input_field_text($id, $mv_str, '', 'widget ui-draggable-dragging') ;
+			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging', '',
+					($options[$id] ? false : true)) ;
+
+			$default_fill = (($mv_str == '') ? $wp_default_mobile : $mv_str);
+			$buf .= $this->input_field_hidden($default_id, $default_fill);
 		}
 		else {
 			$mv_list = '<p class="attention">'
@@ -1359,12 +1370,16 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
-	private function input_field_checkbox( $id, $value, $checked_value, $label = '' )
+	private function input_field_checkbox( $id, $value, $checked_value, $label = '',
+											$on_click = '')
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="checkbox" id="'
 				. $id . '" value="' . $value . '"' ;
 		if ( ($checked_value === $value) || (true === $checked_value) ) {
-			$buf .= ' checked="checked"' ;
+			$buf .= ' checked="checked" ' ;
+		}
+		if ($on_click != '') {
+			$buf .= 'onclick="' . $on_click . '"';
 		}
 		$buf .= '/>' ;
 		if ( $label ) {
@@ -1439,6 +1454,14 @@ class LiteSpeed_Cache_Admin
 		$buf .= '>' . $value . '</textarea>';
 
 		return $buf;
+	}
+
+	private function input_field_hidden( $id, $value)
+	{
+		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="hidden" id="'
+				. $id . '" value="' . $value . '"' ;
+		$buf .= '/>' ;
+		return $buf ;
 	}
 
 }

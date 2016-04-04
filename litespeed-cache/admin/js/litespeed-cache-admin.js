@@ -35,5 +35,21 @@
 
 })(jQuery);
 
-
+function lscwpCheckboxConfirm(the_checkbox, list_id) {
+    var id = the_checkbox.id;
+    var default_id = id.concat("_default");
+    var warning_id = id.concat("_warning");
+    var the_list = document.getElementById(list_id);
+    if (the_checkbox.checked) {
+        the_list.value = document.getElementById(default_id).value;
+        the_list.readOnly = false;
+        return;
+    }
+    if (!confirm(document.getElementById(warning_id).value)) {
+        the_checkbox.checked = !the_checkbox.checked;
+        return;
+    }
+    the_list.value = '';
+    the_list.readOnly = true;
+}
 
