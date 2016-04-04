@@ -284,14 +284,24 @@ class LiteSpeed_Cache_Admin
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
-			$this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
+			$err = $this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
 					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
 					'E=Cache-Control:vary=ismobile');
+			if ($err !== true) {
+				$errors[] = $err;
+			}
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
 			$this->set_common_rule('MOBILE VIEW', '',
 					'', '');
+		}
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
+		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
+				$input[$id], 'E=Cache-Control:no-cache');
+		if ($err !== true) {
+			$errors[] = $err;
 		}
 
 		// get purge options
@@ -757,6 +767,10 @@ class LiteSpeed_Cache_Admin
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache')
             . '<br><br>';
 
+		$ua_description = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
+				. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+
         $tr = '<tr><td>' ;
         $endtr = "</td></tr>\n" ;
 
@@ -806,6 +820,26 @@ class LiteSpeed_Cache_Admin
         $buf .= $tr ;
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '5', '80', '');
+        $buf .= $endtr;
+
+		$buf .= $this->input_group_end();
+
+
+        $id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
+		$excludes_buf = '';
+		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $excludes_buf) === true) {
+			// can also use class 'mejs-container' for 100% width.
+			$ua_list = $this->input_field_text($id, $excludes_buf, '', 'widget ui-draggable-dragging') ;
+		}
+		else {
+			$ua_list = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $excludes_buf . '</p>';
+		}
+
+        $buf .= $this->input_group_start(
+                                __('User Agent List', 'litespeed-cache'), $ua_description);
+        $buf .= $tr ;
+        $buf .= $ua_list;
         $buf .= $endtr;
 
 		$buf .= $this->input_group_end();
