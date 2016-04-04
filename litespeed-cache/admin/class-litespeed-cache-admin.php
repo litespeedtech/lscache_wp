@@ -297,13 +297,6 @@ class LiteSpeed_Cache_Admin
 					'', '');
 		}
 
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
-				$input[$id], 'E=Cache-Control:no-cache');
-		if ($err !== true) {
-			$errors[] = $err;
-		}
-
 		// get purge options
 		$pvals = array(
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -381,6 +374,27 @@ class LiteSpeed_Cache_Admin
 				$options[$id] = implode(',', $tag_ids);
 			}
         }
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
+		if ($input[$id]) {
+			$cookie_list = str_replace("\n", '|', $input[$id]);
+		}
+		else {
+			$cookie_list = '';
+		}
+
+		$err = $this->set_common_rule('COOKIE', 'HTTP_COOKIE',
+				$cookie_list, 'E=Cache-Control:no-cache');
+		if ($err !== true) {
+			$errors[] = $err;
+		}
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
+		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
+				$input[$id], 'E=Cache-Control:no-cache');
+		if ($err !== true) {
+			$errors[] = $err;
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
 		if ( isset($input[$id]) ) {
@@ -767,6 +781,10 @@ class LiteSpeed_Cache_Admin
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache')
             . '<br><br>';
 
+		$cookie_description = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
+				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+
 		$ua_description = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
 				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
@@ -821,6 +839,25 @@ class LiteSpeed_Cache_Admin
         $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
                                                 '5', '80', '');
         $buf .= $endtr;
+
+		$buf .= $this->input_group_end();
+
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
+		$cookies_rule = '';
+		if ($this->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
+			// can also use class 'mejs-container' for 100% width.
+			$excludes_buf = str_replace('|', "\n", $cookies_rule);
+		}
+		else {
+			$excludes_buf = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
+		}
+		$buf .= $this->input_group_start(
+								__('Cookie List', 'litespeed-cache'), $cookie_description);
+		$buf .= $tr ;
+		$buf .= $this->input_field_textarea($id, $excludes_buf, '5', '80', '');
+		$buf .= $endtr;
 
 		$buf .= $this->input_group_end();
 
