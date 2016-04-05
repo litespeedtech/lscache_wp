@@ -270,8 +270,14 @@ class LiteSpeed_Cache
 			}
 		}
 
+		if (!is_network_admin()) {
+			add_action('load-litespeed-cache_page_lscache-settings',
+					'LiteSpeed_Cache_Admin::redir_settings');
+		}
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
 				array($admin, 'parse_edit_htaccess'));
+		add_action('load-litespeed-cache_page_lscache-settings',
+				array($admin, 'parse_settings'));
 		$this->set_locale() ;
 	}
 
@@ -283,10 +289,6 @@ class LiteSpeed_Cache
 	 */
 	private function load_logged_in_actions()
 	{
-		if (!is_network_admin()) {
-			add_action('load-litespeed-cache_page_lscache-settings',
-					'LiteSpeed_Cache_Admin::redir_settings');
-		}
 	}
 
 	/**

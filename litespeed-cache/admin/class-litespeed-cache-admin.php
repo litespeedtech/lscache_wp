@@ -184,7 +184,9 @@ class LiteSpeed_Cache_Admin
 		$this->check_cache_mangement_actions() ;
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
-		register_setting($option_name, $option_name, array( $this, 'validate_plugin_settings' )) ;
+		if (!is_network_admin()) {
+			register_setting($option_name, $option_name, array( $this, 'validate_plugin_settings' )) ;
+		}
 	}
 
 	public function add_help_tabs()
@@ -224,6 +226,52 @@ class LiteSpeed_Cache_Admin
 			return $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
 		}
 		return true;
+	}
+
+	private function validate_common_rewrites($input, &$options, &$errors) {
+
+		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
+		if ($input['lscwp_' . $id] === $id) {
+			$options[$id] = true;
+			$input_list = trim($input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]);
+			$input_list = stripslashes($input_list);
+			$err = $this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
+					$input_list, 'E=Cache-Control:vary=ismobile');
+			if ($err !== true) {
+				$errors[] = $err;
+			}
+		}
+		elseif ($options[$id] === true) {
+			$options[$id] = false;
+			$this->set_common_rule('MOBILE VIEW', '',
+					'', '');
+		}
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
+		if ($input[$id]) {
+			$input_list = trim($input[$id]);
+			$input_list = stripslashes($input_list);
+			$cookie_list = str_replace("\n", '|', $input_list);
+		}
+		else {
+			$cookie_list = '';
+		}
+
+		$err = $this->set_common_rule('COOKIE', 'HTTP_COOKIE',
+				$cookie_list, 'E=Cache-Control:no-cache');
+		if ($err !== true) {
+			$errors[] = $err;
+		}
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
+		$input_list = trim($input[$id]);
+		$input_list = stripslashes($input_list);
+		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
+				$input_list, 'E=Cache-Control:no-cache');
+		if ($err !== true) {
+			$errors[] = $err;
+		}
+
 	}
 
 	public function validate_plugin_settings( $input )
@@ -281,22 +329,6 @@ class LiteSpeed_Cache_Admin
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
 		$options[$id] = ( $input['check_' . $id] === $id );
 
-		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
-		if ($input['lscwp_' . $id] === $id) {
-			$options[$id] = true;
-			$err = $this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
-					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
-					'E=Cache-Control:vary=ismobile');
-			if ($err !== true) {
-				$errors[] = $err;
-			}
-		}
-		elseif ($options[$id] === true) {
-			$options[$id] = false;
-			$this->set_common_rule('MOBILE VIEW', '',
-					'', '');
-		}
-
 		// get purge options
 		$pvals = array(
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -321,6 +353,8 @@ class LiteSpeed_Cache_Admin
 		if ( $purge_by_post !== $options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] ) {
 			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
 		}
+
+		$this->validate_common_rewrites($input, $options, $errors);
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
 		if ( isset($input[$id]) ) {
@@ -374,27 +408,6 @@ class LiteSpeed_Cache_Admin
 				$options[$id] = implode(',', $tag_ids);
 			}
         }
-
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-		if ($input[$id]) {
-			$cookie_list = str_replace("\n", '|', $input[$id]);
-		}
-		else {
-			$cookie_list = '';
-		}
-
-		$err = $this->set_common_rule('COOKIE', 'HTTP_COOKIE',
-				$cookie_list, 'E=Cache-Control:no-cache');
-		if ($err !== true) {
-			$errors[] = $err;
-		}
-
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
-				$input[$id], 'E=Cache-Control:no-cache');
-		if ($err !== true) {
-			$errors[] = $err;
-		}
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
 		if ( isset($input[$id]) ) {
@@ -587,6 +600,83 @@ class LiteSpeed_Cache_Admin
 		return true ;
 	}
 
+	private function show_mobile_view($options) {
+
+		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
+		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
+		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
+		$default_id = 'lscwp_' . $id . '_default';
+		$warning_id = 'lscwp_' . $id . '_warning';
+		$buf = $this->input_field_hidden($warning_id,
+		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
+		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
+				'lscwpCheckboxConfirm(this, &#39;' . $list_id . '&#39;)' ) ;
+
+		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
+		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
+		. __('A site built with responsive design does not need to check this.', 'litespeed-cache'));
+
+		$mv_list_desc = __('SYNTAX: Each entry should be separated with a bar, &#39;|&#39;.', 'litespeed-cache')
+		. __(' Any spaces should be escaped with a backslash before it, &#39;\\ &#39;.')
+		. '<br>'
+		. __('The default list WordPress uses is ', 'litespeed-cache')
+		. $wp_default_mobile;
+
+		$mv_str = '';
+		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
+			// can also use class 'mejs-container' for 100% width.
+			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging', '',
+					($options[$id] ? false : true)) ;
+
+			$default_fill = (($mv_str == '') ? $wp_default_mobile : $mv_str);
+			$buf .= $this->input_field_hidden($default_id, $default_fill);
+		}
+		else {
+			$mv_list = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
+		}
+		$buf .= $this->display_config_row(__('List of Mobile View User Agents', 'litespeed-cache'),
+				$mv_list, $mv_list_desc);
+		return $buf;
+	}
+
+	private function show_cookies_exclude(&$cookie_title, &$cookie_desc) {
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
+		$cookies_rule = '';
+		$cookie_title = __('Cookie List', 'litespeed-cache');
+		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
+				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+
+		if ($this->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
+			// can also use class 'mejs-container' for 100% width.
+			$excludes_buf = str_replace('|', "\n", $cookies_rule);
+		}
+		else {
+			$excludes_buf = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
+		}
+		return $this->input_field_textarea($id, $excludes_buf, '5', '80', '');
+	}
+
+	private function show_useragent_exclude(&$ua_title, &$ua_desc) {
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
+		$ua_rule = '';
+		$ua_title = __('User Agent List', 'litespeed-cache');
+		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
+				. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
+			// can also use class 'mejs-container' for 100% width.
+			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging') ;
+		}
+		else {
+			$ua_list = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $ua_rule . '</p>';
+		}
+		return $ua_list;
+	}
+
 	private function show_settings_general( $options )
 	{
 		$buf = $this->input_group_start(__('General', 'litespeed-cache')) ;
@@ -632,41 +722,9 @@ class LiteSpeed_Cache_Admin
 				__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 				. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
-		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
-		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
-		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
-		$default_id = 'lscwp_' . $id . '_default';
-		$warning_id = 'lscwp_' . $id . '_warning';
-		$buf .= $this->input_field_hidden($warning_id,
-		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
-		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
-				'lscwpCheckboxConfirm(this, &#39;' . $list_id . '&#39;)' ) ;
-
-		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
-		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
-		. __('A site built with responsive design does not need to check this.', 'litespeed-cache'));
-
-		$mv_list_desc = __('SYNTAX: Each entry should be separated with a bar, &#39;|&#39;.', 'litespeed-cache')
-		. __(' Any spaces should be escaped with a backslash before it, &#39;\\ &#39;.')
-		. '<br>'
-		. __('The default list WordPress uses is ', 'litespeed-cache')
-		. $wp_default_mobile;
-
-		$mv_str = '';
-		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
-			// can also use class 'mejs-container' for 100% width.
-			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging', '',
-					($options[$id] ? false : true)) ;
-
-			$default_fill = (($mv_str == '') ? $wp_default_mobile : $mv_str);
-			$buf .= $this->input_field_hidden($default_id, $default_fill);
+		if (!is_multisite()) {
+			$buf .= $this->show_mobile_view($options);
 		}
-		else {
-			$mv_list = '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
-		}
-		$buf .= $this->display_config_row(__('List of Mobile View User Agents', 'litespeed-cache'),
-				$mv_list, $mv_list_desc);
 
 		$buf .= $this->input_group_end() ;
 		return $buf ;
@@ -781,14 +839,6 @@ class LiteSpeed_Cache_Admin
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache')
             . '<br><br>';
 
-		$cookie_description = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
-				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
-
-		$ua_description = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
-				. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
-
         $tr = '<tr><td>' ;
         $endtr = "</td></tr>\n" ;
 
@@ -842,44 +892,25 @@ class LiteSpeed_Cache_Admin
 
 		$buf .= $this->input_group_end();
 
-
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-		$cookies_rule = '';
-		if ($this->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
-			// can also use class 'mejs-container' for 100% width.
-			$excludes_buf = str_replace('|', "\n", $cookies_rule);
+		if (is_multisite()) {
+			return $buf;
 		}
-		else {
-			$excludes_buf = '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
-		}
-		$buf .= $this->input_group_start(
-								__('Cookie List', 'litespeed-cache'), $cookie_description);
-		$buf .= $tr ;
-		$buf .= $this->input_field_textarea($id, $excludes_buf, '5', '80', '');
-		$buf .= $endtr;
+		$cookie_title = '';
+		$cookie_desc = '';
+		$cookie_buf = $this->show_cookies_exclude($cookie_title, $cookie_desc);
 
+		$buf .= $this->input_group_start($cookie_title, $cookie_desc);
+		$buf .= $tr . $cookie_buf . $endtr;
 		$buf .= $this->input_group_end();
 
+		$ua_title = '';
+		$ua_desc = '';
+		$ua_buf = $this->show_useragent_exclude($ua_title, $ua_desc);
 
-        $id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$excludes_buf = '';
-		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $excludes_buf) === true) {
-			// can also use class 'mejs-container' for 100% width.
-			$ua_list = $this->input_field_text($id, $excludes_buf, '', 'widget ui-draggable-dragging') ;
-		}
-		else {
-			$ua_list = '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $excludes_buf . '</p>';
-		}
-
-        $buf .= $this->input_group_start(
-                                __('User Agent List', 'litespeed-cache'), $ua_description);
-        $buf .= $tr ;
-        $buf .= $ua_list;
-        $buf .= $endtr;
-
+        $buf .= $this->input_group_start($ua_title, $ua_desc);
+        $buf .= $tr . $ua_buf . $endtr;
 		$buf .= $this->input_group_end();
+
         return $buf;
     }
 
@@ -1135,17 +1166,74 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
+	public function parse_settings() {
+		if ((is_multisite()) && (!is_network_admin())) {
+			return;
+		}
+		if (empty($_POST) || empty($_POST['submit'])) {
+			return;
+		}
+		if ((!$_POST['lscwp_settings_save'])
+				|| ($_POST['lscwp_settings_save'] !== 'save_settings')
+				|| (!check_admin_referer('lscwp_settings', 'save'))) {
+			return;
+		}
+		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
+
+		if (!$input) {
+			return;
+		}
+		$config = LiteSpeed_Cache::config() ;
+		$options = $config->get_site_options();
+		$errors = array();
+		$this->validate_common_rewrites($input, $options, $errors);
+
+		add_action('network_admin_notices', array($this, 'edit_htaccess_res'));
+		if (!empty($errors)) {
+			$this->messages = implode('<br>', $errors);
+			return;
+		}
+		$this->messages = true;
+		$ret = update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
+		if ($ret) {
+
+		}
+	}
+
 	private function show_info_settings() {
 
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
 
-		$buf .= '<h4>'
-		. __('The settings page is specific to individual sites. ', 'litespeed-cache')
-		. __('Example settings are adjusting do-not-cache rules, purge rules, rewrite rules, etc. ', 'litespeed-cache')
-		. __('These settings are not configurable in the network admin panel. ', 'litespeed-cache')
-		. __('Instead, you can go to the site&#39;s admin panel to change the configurations. ', 'litespeed-cache')
-		. '</h4>';
+		$network_desc = __('These configurations are only available network wide.', 'litespeed-cache')
+		. '<br>'
+		. __('Separate Mobile Views should be enabled if any of the network enabled themes require a different view for mobile devices.', 'litespeed-cache')
+		. __(' Responsive themes can handle this part automatically.', 'litespeed-cache');
 
+		$config = LiteSpeed_Cache::config();
+		$buf .= $this->input_group_start(__('Network Wide Config', 'litespeed-cache')) ;
+		$buf .= $network_desc;
+		$buf .= '<form method="post" action="admin.php?page=lscache-settings">';
+		$buf .= '<input type="hidden" name="lscwp_settings_save" value="save_settings" />';
+		$buf .= wp_nonce_field('lscwp_settings', 'save');
+
+		$buf .= $this->show_mobile_view($config->get_site_options());
+
+		$ua_title = '';
+		$ua_desc = '';
+		$ua_buf = $this->show_useragent_exclude($ua_title, $ua_desc);
+		$buf .= $this->display_config_row($ua_title, $ua_buf, $ua_desc);
+
+		$cookie_title = '';
+		$cookie_desc = '';
+		$cookie_buf = $this->show_cookies_exclude($cookie_title, $cookie_desc);
+		$buf .= $this->display_config_row($cookie_title, $cookie_buf, $cookie_desc);
+
+		$buf .= '<tr><td>';
+		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
+				. __('Save', 'litespeed-cache') . '" /></td></tr>';
+		$buf .= '</form>';
+		$buf .= $this->input_group_end();
+		$buf .= '</div>';
 		echo $buf;
 	}
 
@@ -1198,7 +1286,7 @@ class LiteSpeed_Cache_Admin
 	}
 
 	public function parse_edit_htaccess() {
-		if (is_network_admin()) {
+		if ((is_multisite()) && (!is_network_admin())) {
 			return;
 		}
 		if (empty($_POST) || empty($_POST['submit'])) {
@@ -1209,7 +1297,12 @@ class LiteSpeed_Cache_Admin
 				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
 				&& ($_POST['lscwp_ht_editor'])) {
 			$this->messages = $this->do_edit_htaccess($_POST['lscwp_ht_editor']);
-			add_action('admin_notices', array($this, 'edit_htaccess_res'));
+			if (is_multisite()) {
+				add_action('network_admin_notices', array($this, 'edit_htaccess_res'));
+			}
+			else {
+				add_action('admin_notices', array($this, 'edit_htaccess_res'));
+			}
 		}
 
 	}

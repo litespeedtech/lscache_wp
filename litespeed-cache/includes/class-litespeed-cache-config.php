@@ -166,6 +166,7 @@ class LiteSpeed_Cache_Config
 		$default_site_options = array(
 			self::NETWORK_OPID_ENABLED => false,
 			self::NETWORK_OPID_CNT => 0,
+			self::OPID_MOBILEVIEW_ENABLED => 0,
 				);
 		add_site_option(self::OPTION_NAME, $default_site_options);
 		return $default_site_options;
