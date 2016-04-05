@@ -233,10 +233,9 @@ class LiteSpeed_Cache_Admin
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
-			$input_list = trim($input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]);
-			$input_list = stripslashes($input_list);
 			$err = $this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
-					$input_list, 'E=Cache-Control:vary=ismobile');
+					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
+					'E=Cache-Control:vary=ismobile', 'NC');
 			if ($err !== true) {
 				$errors[] = $err;
 			}
@@ -249,9 +248,7 @@ class LiteSpeed_Cache_Admin
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		if ($input[$id]) {
-			$input_list = trim($input[$id]);
-			$input_list = stripslashes($input_list);
-			$cookie_list = str_replace("\n", '|', $input_list);
+			$cookie_list = str_replace("\n", '|', $input[$id]);
 		}
 		else {
 			$cookie_list = '';
@@ -264,10 +261,8 @@ class LiteSpeed_Cache_Admin
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$input_list = trim($input[$id]);
-		$input_list = stripslashes($input_list);
 		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
-				$input_list, 'E=Cache-Control:no-cache');
+				$input[$id], 'E=Cache-Control:no-cache');
 		if ($err !== true) {
 			$errors[] = $err;
 		}
@@ -1166,6 +1161,10 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
+	private static function cleanup_input($input) {
+		return stripslashes(trim($input));
+	}
+
 	public function parse_settings() {
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
@@ -1183,6 +1182,7 @@ class LiteSpeed_Cache_Admin
 		if (!$input) {
 			return;
 		}
+		$input = array_map("self::cleanup_input", $input);
 		$config = LiteSpeed_Cache::config() ;
 		$options = $config->get_site_options();
 		$errors = array();
@@ -1273,8 +1273,7 @@ class LiteSpeed_Cache_Admin
 			}
 		}
 
-		$content = trim($content);
-		$content = stripslashes($content);
+		$content = self::cleanup_input($content);
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
@@ -1495,7 +1494,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		$subject = substr($match, $off_begin, $off_end - $off_begin);
-		$pattern = '/RewriteCond\s%{' . $cond . '}\s+(.*)\s+[[]*/';
+		$pattern = '/RewriteCond\s%{' . $cond . '}\s+([^[]*)\s+[[]*/';
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
