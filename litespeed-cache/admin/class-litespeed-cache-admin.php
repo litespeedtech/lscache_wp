@@ -259,12 +259,18 @@ class LiteSpeed_Cache_Admin
 		if ($err !== true) {
 			$errors[] = $err;
 		}
+		else {
+			$options[LiteSpeed_Cache_Config::OPID_EXCLUDES_COOKIE] = $cookie_list;
+		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
 				$input[$id], 'E=Cache-Control:no-cache');
 		if ($err !== true) {
 			$errors[] = $err;
+		}
+		else {
+			$options[LiteSpeed_Cache_Config::OPID_EXCLUDES_USERAGENT] = $input[$id];
 		}
 
 	}
@@ -1494,7 +1500,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		$subject = substr($match, $off_begin, $off_end - $off_begin);
-		$pattern = '/RewriteCond\s%{' . $cond . '}\s+([^[]*)\s+[[]*/';
+		$pattern = '/RewriteCond\s%{' . $cond . '}\s+([^[\n]*)\s+[[]*/';
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {

@@ -636,6 +636,26 @@ class LiteSpeed_Cache
 			return false;
 		}
 
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_COOKIE);
+		if ( ! empty($excludes) && $_COOKIE) {
+			$exclude_list = explode('|', $excludes);
+
+			foreach( $_COOKIE as $key=>$val) {
+				if (in_array($key, $exclude_list)) {
+					return false;
+				}
+			}
+		}
+
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_USERAGENT);
+		if ( ! empty($excludes) && $_SERVER['HTTP_USER_AGENT']) {
+			$pattern = '/' . $excludes . '/';
+			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
+			if ($nummatches) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
