@@ -656,6 +656,17 @@ class LiteSpeed_Cache
 			}
 		}
 
+		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED)) {
+			if ($_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile') {
+				if (!wp_is_mobile()) {
+					@header(self::LSHEADER_CACHE_VARY . ': value=');
+				}
+			}
+			elseif (wp_is_mobile()) {
+				@header(self::LSHEADER_CACHE_VARY . ': value=ismobile');
+			}
+		}
+
 		return true;
 	}
 
