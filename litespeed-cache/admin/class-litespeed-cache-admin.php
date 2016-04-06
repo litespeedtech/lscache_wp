@@ -228,51 +228,126 @@ class LiteSpeed_Cache_Admin
 		return true;
 	}
 
-	private function validate_common_rewrites($input, &$options, &$errors) {
+	private function validate_common_rewrites($input, $options, &$errors) {
+		$content = '';
+		$prefix = '<IfModule LiteSpeed>';
+		$engine = 'RewriteEngine on';
+		$suffix = '</IfModule>';
+		$path = ABSPATH . '.htaccess';
+		clearstatcache();
+		if ($this->get_htaccess_contents($content) === false) {
+			$errors[] = $content;
+			return false;
+		}
+		elseif (!is_writable($path)) {
+			$errors[] = __('File is not writable.', 'litespeed-cache');
+			return false;
+		}
+		$off_begin = strpos($content, $prefix);
+		//if not found
+		if ($off_begin === false) {
+			$output = $prefix . "\n" . $engine . "\n";
+			$start_search = NULL;
+		}
+		else {
+			$off_begin += strlen($prefix);
+			$off_end = strpos($content, $suffix, $off_begin);
+			if ($off_end === false) {
+				$errors[] = __('Could not find IfModule close.', 'litespeed-cache');
+				return false;
+			}
+			--$off_end; // go to end of previous line.
+			$output = substr($content, 0, $off_begin);
+			$off_engine = strpos($content, $engine, $off_begin);
+			$output .= "\n" . $engine . "\n";
+			if ($off_engine !== false) {
+				$off_begin = $off_engine + strlen($engine);
+			}
+			$start_search = substr($content, $off_begin, $off_end - $off_begin);
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
-			$err = $this->set_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT',
+			$ret = $this->set_common_rule($start_search, $output,
+					'MOBILE VIEW', 'HTTP_USER_AGENT',
 					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
 					'E=Cache-Control:vary=ismobile', 'NC');
-			if ($err !== true) {
-				$errors[] = $err;
+
+			if (is_array($ret)) {
+				if ($ret[0]) {
+					$start_search = $ret[1];
+				}
+				else {
+					// failed.
+					$errors[] = $ret[1];
+				}
 			}
+
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
-			$this->set_common_rule('MOBILE VIEW', '',
-					'', '');
+			$ret = $this->set_common_rule($start_search, $output,
+					'MOBILE VIEW', '', '', '');
+			if (is_array($ret)) {
+				if ($ret[0]) {
+					$start_search = $ret[1];
+				}
+				else {
+					// failed.
+					$errors[] = $ret[1];
+				}
+			}
+
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		if ($input[$id]) {
-			$cookie_list = str_replace("\n", '|', $input[$id]);
+			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
 		}
 		else {
 			$cookie_list = '';
 		}
 
-		$err = $this->set_common_rule('COOKIE', 'HTTP_COOKIE',
-				$cookie_list, 'E=Cache-Control:no-cache');
-		if ($err !== true) {
-			$errors[] = $err;
+		$ret = $this->set_common_rule($start_search, $output,
+				'COOKIE', 'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
+		if (is_array($ret)) {
+			if ($ret[0]) {
+				$start_search = $ret[1];
+			}
+			else {
+				// failed.
+				$errors[] = $ret[1];
+			}
 		}
-		else {
-			$options[LiteSpeed_Cache_Config::OPID_EXCLUDES_COOKIE] = $cookie_list;
-		}
+
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$err = $this->set_common_rule('USER AGENT', 'HTTP_USER_AGENT',
-				$input[$id], 'E=Cache-Control:no-cache');
-		if ($err !== true) {
-			$errors[] = $err;
-		}
-		else {
-			$options[LiteSpeed_Cache_Config::OPID_EXCLUDES_USERAGENT] = $input[$id];
+		$ret = $this->set_common_rule($start_search, $output,
+				'USER AGENT', 'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
+		if (is_array($ret)) {
+			if ($ret[0]) {
+				$start_search = $ret[1];
+			}
+			else {
+				// failed.
+				$errors[] = $ret[1];
+			}
 		}
 
+
+		if (!is_null($start_search)) {
+			$output .= $start_search . substr($content, $off_end);
+		}
+		else {
+			$output .= $suffix . "\n\n" . $content;
+		}
+		$ret = file_put_contents($path, $output);
+		if ($ret === false) {
+			$errors[] = __('Failed to put contents into .htaccess', 'litespeed-cache');
+			return false;
+		}
+		return $options;
 	}
 
 	public function validate_plugin_settings( $input )
@@ -355,7 +430,10 @@ class LiteSpeed_Cache_Admin
 			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
 		}
 
-		$this->validate_common_rewrites($input, $options, $errors);
+		$newopt = $this->validate_common_rewrites($input, $options, $errors);
+		if ($newopt) {
+			$options = $newopt;
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
 		if ( isset($input[$id]) ) {
@@ -1037,7 +1115,12 @@ class LiteSpeed_Cache_Admin
 	private function show_info_info() {
 
 		// Configurations help.
-		$buf = '<div class="wrap"><div id="lsc-tabs">'
+		$buf = '<div class="wrap"><h2>'
+		. __('LiteSpeed Cache Information', 'litespeed-cache') . '</h2>';
+
+
+
+		$buf .= '<div id="lsc-tabs">'
 		. '<ul>'
 		. '<li><a href="#config">' . __('Configurations', 'litespeed-cache') . '</a></li>'
 		. '<li><a href="#compat">' . __('Plugin Compatibilities', 'litespeed-cache') . '</a></li>'
@@ -1057,18 +1140,24 @@ class LiteSpeed_Cache_Admin
 		. '<li>Cache Request with Cookie - Yes</li>'
 		. '<li>Cache Response with Cookie - Yes</li>'
 		. '<li>Ignore Request Cache-Control - Yes</li>'
-		. '<li>Ignore Response Cache-Control - Yes</li></ul></div>';
+		. '<li>Ignore Response Cache-Control - Yes</li></ul>';
+
+		$buf .= '</div>'; // id=config
 
 		// Compatibility with other plugins.
 		$buf .= '<div id="compat">';
 		$buf .= $this->show_info_compatibility();
-		$buf .= '</div>';
+		$buf .= '</div>'; // id=compat
 
 		$buf .= '<div id="commonrw">';
 		$buf .= $this->show_info_common_rewrite();
-		$buf .= '</div>';
+		$buf .= '</div>'; // id=commonrw
 
-		$buf .= '</div></div>';
+		$buf .= '</div>'; // id=lsc_tabs
+		$buf .= '<h4>'
+		. __('If your questions are not answered, try the ', 'litespeed-cache')
+		. '<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ</a>';
+		$buf .= '</div>'; // class=wrap
 		echo $buf;
 	}
 
@@ -1214,7 +1303,11 @@ class LiteSpeed_Cache_Admin
 		$config = LiteSpeed_Cache::config() ;
 		$options = $config->get_site_options();
 		$errors = array();
-		$this->validate_common_rewrites($input, $options, $errors);
+
+		$newopt = $this->validate_common_rewrites($input, $options, $errors);
+		if ($newopt) {
+			$options = $newopt;
+		}
 
 		add_action('network_admin_notices', array($this, 'edit_htaccess_res'));
 		if (!empty($errors)) {
@@ -1405,15 +1498,6 @@ class LiteSpeed_Cache_Admin
 		return '###LSCACHE START ' . $wrapper . '###';
 	}
 
-	private function write_common_rule($path, $pre_arr, $prev_content) {
-		$input_str = implode("\n", $pre_arr);
-		$ret = file_put_contents($path, $input_str . $prev_content);
-		if ($ret === false) {
-			return __('Failed to put contents into .htaccess', 'litespeed-cache');
-		}
-		return true;
-	}
-
 	/*
 	 * <IfModule LiteSpeed>
 	 * RewriteEngine on
@@ -1422,80 +1506,47 @@ class LiteSpeed_Cache_Admin
 	 * RewriteRule .* - [$env]
 	 * ###LSCACHE END $wrapper###
 	 * </IfModule>
-	*/
-	// If match is empty string, consider it a delete.
-	// return true if it worked, error string if it failed.
-	private function set_common_rule($wrapper, $cond, $match, $env, $flag = '') {
-		$err = '';
-		$prefix = '<IfModule LiteSpeed>';
-		$engine = 'RewriteEngine on';
-		$suffix = '</IfModule>';
-		$path = ABSPATH . '.htaccess';
-		clearstatcache();
-		if ($this->get_htaccess_contents($err) === false) {
-			if ($match === '') {
-				return true;
-			}
-			return $err;
-		}
-		elseif (!is_writable($path)) {
-			if ($match === '') {
-				return true;
-			}
-			return __('File is not writable.', 'litespeed-cache');
-		}
+	 * Returns true for success or an array.
+	 * If it returns array, first index will be true/false for success/fail
+	 * Second index will be the returned string. This will be either the
+	 * new content string or an error message.
+	 */
+	private function set_common_rule($content, &$output, $wrapper, $cond,
+			$match, $env, $flag = '') {
+
 		$wrapper_end = '';
 		$wrapper_begin = self::build_wrappers($wrapper, $wrapper_end);
 		$rw_cond = 'RewriteCond %{' . $cond . '} ' . $match;
 		if ($flag != '') {
 			$rw_cond .= ' [' . $flag . ']';
 		}
+		$out = $wrapper_begin . "\n" . $rw_cond .  "\n"
+			. 'RewriteRule .* - [' . $env . ']' . "\n" . $wrapper_end . "\n";
 
-		$off_begin = strpos($err, $prefix);
-		//if not found
-		if ($off_begin === false) {
-			if ($match === '') {
-				return true;
+		// just create the whole buffer.
+		if (is_null($content)) {
+			if ($match != '') {
+				$output .= $out;
 			}
-			$input = array($prefix, $engine, $wrapper_begin,
-				$rw_cond, 'RewriteRule .* - [' . $env . ']', $wrapper_end, $suffix,
-				"\n");
-			return $this->write_common_rule($path, $input, $err);
+			return true;
 		}
-		$off_begin += strlen($prefix);
-		$wrap_begin = strpos($err, $wrapper_begin, $off_begin);
-		// This rule was not added yet.
+		$wrap_begin = strpos($content, $wrapper_begin);
 		if ($wrap_begin === false) {
-			if ($match === '') {
-				return true;
+			if ($match != '') {
+				$output .= $out;
 			}
-			$off_end = strpos($err, $suffix, $off_begin);
-			if ($off_end === false) {
-				return __('Could not find IfModule close.', 'litespeed-cache');
-			}
-			--$off_end; // go to end of previous line.
-			$input = array(substr($err, 0, $off_end), $wrapper_begin,
-			$rw_cond, 'RewriteRule .* - [' . $env . ']', $wrapper_end);
-			$err = substr($err, $off_end);
+			return true;
 		}
-		else {
-			$wrap_begin += strlen($wrapper_begin);
-			$wrap_end = strpos($err, $wrapper_end, $wrap_begin);
-			if ($wrap_end === false) {
-				return __('Could not find wrapper end', 'litespeed-cache');
-			}
-			// Rule exists.
-			--$wrap_end; // go to end of previous line.
-			if ($match === '') {
-				$input = array(substr($err, 0, $wrap_begin));
-			}
-			else {
-				$input = array(substr($err, 0, $wrap_begin), $rw_cond,
-					'RewriteRule .* - [' . $env . ']');
-			}
-			$err = substr($err, $wrap_end);
+		$wrap_end = strpos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
+		if ($wrap_end === false) {
+			return array(false, __('Could not find wrapper end', 'litespeed-cache'));
 		}
-		return $this->write_common_rule($path, $input, $err);
+		elseif ($match != '') {
+			$output .= $out;
+		}
+		$buf = substr($content, 0, $wrap_begin); // Remove everything between wrap_begin and wrap_end
+		$buf .= substr($content, $wrap_end + strlen($wrapper_end));
+		return array(true, trim($buf));
 	}
 
 	private function get_common_rule($wrapper, $cond, &$match) {
