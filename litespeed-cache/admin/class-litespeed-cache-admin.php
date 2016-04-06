@@ -233,7 +233,15 @@ class LiteSpeed_Cache_Admin
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
-		$path = ABSPATH . '.htaccess';
+		$path = self::get_htaccess_path();
+
+		if (($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
+			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
+			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES] === $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES])
+			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS] === $options[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS])) {
+			return $options;
+		}
+
 		clearstatcache();
 		if ($this->get_htaccess_contents($content) === false) {
 			$errors[] = $content;
@@ -1375,9 +1383,13 @@ class LiteSpeed_Cache_Admin
 		echo $buf;
 	}
 
+	private static function get_htaccess_path() {
+		return get_home_path() . '.htaccess';
+	}
+
 	// Currently returns true if success, error message if fail.
 	private function do_edit_htaccess($content, $verify = false) {
-		$path = ABSPATH . '.htaccess';
+		$path = self::get_htaccess_path();
 		if ($verify) {
 			// need to verify content. Used for auto update.
 		}
@@ -1428,7 +1440,7 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function get_htaccess_contents(&$content) {
-		$path = ABSPATH . '.htaccess';
+		$path = self::get_htaccess_path();
 		if (!file_exists($path)) {
 			$content = __('Htaccess file does not exist.', 'litespeed-cache');
 			return false;
@@ -1451,7 +1463,7 @@ class LiteSpeed_Cache_Admin
 	private function show_edit_htaccess() {
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 
-		$path = ABSPATH . '.htaccess';
+		$path = self::get_htaccess_path();
 		$contents = '';
 		if ($this->get_htaccess_contents($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
