@@ -102,9 +102,9 @@ class LiteSpeed_Cache_Admin
 				}
 				break;
 			case 'i':
-				if (($selection_len == 7)
-						&& (strncmp($selection, 'install', $selection_len) == 0)) {
-					$this->show_info_install();
+				if (($selection_len == 4)
+						&& (strncmp($selection, 'info', $selection_len) == 0)) {
+					$this->show_info_info();
 				}
 				break;
 			case 's':
@@ -155,8 +155,8 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function register_submenu_info() {
-		$this::add_submenu(__('LiteSpeed Cache Installation', 'litespeed-cache'),
-				__('Installation', 'litespeed-cache'), 'lscache-install', 'dash_select');
+		$this::add_submenu(__('LiteSpeed Cache Information', 'litespeed-cache'),
+				__('Information', 'litespeed-cache'), 'lscache-info', 'dash_select');
 		$this::add_submenu(__('LiteSpeed Cache FAQs', 'litespeed-cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
 
@@ -1009,14 +1009,22 @@ class LiteSpeed_Cache_Admin
 		);
 
 
-		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Plugin Compatibility', 'litespeed-cache') . '</h2>'
-		. '<h3>' . __('This is a list of possibly problematic plugins that are confirmed to be compatible with LiteSpeed Cache Plugin:', 'litespeed-cache') . '</h3>'
+		$buf = '<h3>' . __('LiteSpeed Cache Plugin Compatibility', 'litespeed-cache') . '</h3>'
+		. '<h4>'
+		. __('Please comment on the support thread listing the plugins that you are using and how they are functioning.', 'litespeed-cache')
+		. __(' With your help, we can provide the best WordPress caching solution.', 'litespeed-cache')
+		. '<br><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" target="_blank">'
+		. __('Link Here', 'litespeed-cache') . '</a>'
+		. '</h4>'
+		. '<h4>'
+		. __('This is a list of plugins that are confirmed to be compatible with LiteSpeed Cache Plugin:', 'litespeed-cache')
+		. '</h4>'
 		. '<ul>';
 		foreach ($known_compat as $plugin_name) {
 			$buf .= '<li>' . $plugin_name . '</li>';
 		}
 		$buf .= '</ul><br><br>'
-		. '<h3>' . __('This is a list of known UNSUPPORTED plugins:', 'litespeed-cache') . '</h3>'
+		. '<h4>' . __('This is a list of known UNSUPPORTED plugins:', 'litespeed-cache') . '</h4>'
 		. '<ul>';
 		foreach ($known_uncompat as $plugin_name) {
 			$buf .= '<li>' . $plugin_name . '</li>';
@@ -1026,27 +1034,41 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
-	private function show_info_install() {
+	private function show_info_info() {
 
 		// Configurations help.
-		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Install', 'litespeed-cache') . '</h2>'
-		. '<h3>' . __('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache') . '</h3>';
+		$buf = '<div class="wrap"><div id="lsc-tabs">'
+		. '<ul>'
+		. '<li><a href="#config">' . __('Configurations', 'litespeed-cache') . '</a></li>'
+		. '<li><a href="#compat">' . __('Plugin Compatibilities', 'litespeed-cache') . '</a></li>'
+		. '<li><a href="#commonrw">' . __('Common Rewrite Rules', 'litespeed-cache') . '</a></li>'
+		. '</ul>';
+
+		$buf .= '<div id="config"><h3>'
+		. __('LiteSpeed Cache Configurations', 'litespeed-cache') . '</h3>'
+		. '<h4>' . __('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache') . '</h4>';
 
 		$buf .= '<ul><li>Enable Public Cache - No</li>'
 		. '<li>Check Public Cache - Yes</li></ul>';
 
-		$buf .= '<h3>' . __('The following are also recommended to be set:', 'litespeed-cache') . '</h3>';
+		$buf .= '<h4>' . __('The following are also recommended to be set:', 'litespeed-cache') . '</h4>';
 
 		$buf .= '<ul><li>Cache Request with Query String - Yes</li>'
 		. '<li>Cache Request with Cookie - Yes</li>'
 		. '<li>Cache Response with Cookie - Yes</li>'
 		. '<li>Ignore Request Cache-Control - Yes</li>'
-		. '<li>Ignore Response Cache-Control - Yes</li></ul>';
+		. '<li>Ignore Response Cache-Control - Yes</li></ul></div>';
 
 		// Compatibility with other plugins.
-		$buf .= '<br><br>';
+		$buf .= '<div id="compat">';
 		$buf .= $this->show_info_compatibility();
+		$buf .= '</div>';
 
+		$buf .= '<div id="commonrw">';
+		$buf .= $this->show_info_common_rewrite();
+		$buf .= '</div>';
+
+		$buf .= '</div></div>';
 		echo $buf;
 	}
 
