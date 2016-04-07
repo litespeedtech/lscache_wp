@@ -350,7 +350,8 @@ class LiteSpeed_Cache_Admin
 		else {
 			$output .= $suffix . "\n\n" . $content;
 		}
-		$ret = file_put_contents($path, $output);
+		;
+		$ret = self::do_edit_htaccess($output);
 		if ($ret === false) {
 			$errors[] = __('Failed to put contents into .htaccess', 'litespeed-cache');
 			return false;
@@ -1333,12 +1334,12 @@ class LiteSpeed_Cache_Admin
 		$ua_title = '';
 		$ua_desc = '';
 		$ua_buf = $this->show_useragent_exclude($ua_title, $ua_desc);
-		$buf .= $this->display_config_row($ua_title, $ua_buf, $ua_desc);
+		$buf .= $this->display_config_row(__('Do Not Cache User Agents', 'litespeed-cache'), $ua_buf, $ua_desc);
 
 		$cookie_title = '';
 		$cookie_desc = '';
 		$cookie_buf = $this->show_cookies_exclude($cookie_title, $cookie_desc);
-		$buf .= $this->display_config_row($cookie_title, $cookie_buf, $cookie_desc);
+		$buf .= $this->display_config_row(__('Do Not Cache Cookies', 'litespeed-cache'), $cookie_buf, $cookie_desc);
 
 		$buf .= '<tr><td>';
 		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
@@ -1428,16 +1429,13 @@ class LiteSpeed_Cache_Admin
 		else {
 			$output .= $suffix . "\n\n" . $content;
 		}
-		file_put_contents($path, $output);
+		self::do_edit_htaccess($output);
 		return;
 	}
 
 	// Currently returns true if success, error message if fail.
-	private function do_edit_htaccess($content, $verify = false) {
+	private static function do_edit_htaccess($content) {
 		$path = self::get_htaccess_path();
-		if ($verify) {
-			// need to verify content. Used for auto update.
-		}
 
 		clearstatcache();
 		if (!is_writable($path) || !is_readable($path)) {
@@ -1473,7 +1471,7 @@ class LiteSpeed_Cache_Admin
 				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
 				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
 				&& ($_POST['lscwp_ht_editor'])) {
-			$this->messages = $this->do_edit_htaccess($_POST['lscwp_ht_editor']);
+			$this->messages = self::do_edit_htaccess($_POST['lscwp_ht_editor']);
 			if (is_multisite()) {
 				add_action('network_admin_notices', array($this, 'edit_htaccess_res'));
 			}
