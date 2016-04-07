@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		clearstatcache();
-		if ($this->get_htaccess_contents($content) === false) {
+		if (self::get_htaccess_contents($content) === false) {
 			$errors[] = $content;
 			return false;
 		}
@@ -277,7 +277,7 @@ class LiteSpeed_Cache_Admin
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
-			$ret = $this->set_common_rule($start_search, $output,
+			$ret = self::set_common_rule($start_search, $output,
 					'MOBILE VIEW', 'HTTP_USER_AGENT',
 					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
 					'E=Cache-Control:vary=ismobile', 'NC');
@@ -295,7 +295,7 @@ class LiteSpeed_Cache_Admin
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
-			$ret = $this->set_common_rule($start_search, $output,
+			$ret = self::set_common_rule($start_search, $output,
 					'MOBILE VIEW', '', '', '');
 			if (is_array($ret)) {
 				if ($ret[0]) {
@@ -317,7 +317,7 @@ class LiteSpeed_Cache_Admin
 			$cookie_list = '';
 		}
 
-		$ret = $this->set_common_rule($start_search, $output,
+		$ret = self::set_common_rule($start_search, $output,
 				'COOKIE', 'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
 		if (is_array($ret)) {
 			if ($ret[0]) {
@@ -331,7 +331,7 @@ class LiteSpeed_Cache_Admin
 
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$ret = $this->set_common_rule($start_search, $output,
+		$ret = self::set_common_rule($start_search, $output,
 				'USER AGENT', 'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
 		if (is_array($ret)) {
 			if ($ret[0]) {
@@ -1370,6 +1370,68 @@ class LiteSpeed_Cache_Admin
 		return get_home_path() . '.htaccess';
 	}
 
+	public static function clear_htaccess() {
+		$prefix = '<IfModule LiteSpeed>';
+		$engine = 'RewriteEngine on';
+		$suffix = '</IfModule>';
+		$path = self::get_htaccess_path();
+
+		clearstatcache();
+		if (self::get_htaccess_contents($content) === false) {
+			return;
+		}
+		elseif (!is_writable($path)) {
+			return;
+		}
+
+		$off_begin = strpos($content, $prefix);
+		//if not found
+		if ($off_begin === false) {
+			return;
+		}
+		$off_begin += strlen($prefix);
+		$off_end = strpos($content, $suffix, $off_begin);
+		if ($off_end === false) {
+			return;
+		}
+		--$off_end; // go to end of previous line.
+		$output = substr($content, 0, $off_begin);
+		$off_engine = strpos($content, $engine, $off_begin);
+		$output .= "\n" . $engine . "\n";
+		if ($off_engine !== false) {
+			$off_begin = $off_engine + strlen($engine);
+		}
+		$start_search = substr($content, $off_begin, $off_end - $off_begin);
+
+		$ret = self::set_common_rule($start_search, $output,
+				'MOBILE VIEW', '', '', '');
+
+		if ((is_array($ret)) && ($ret[0])) {
+			$start_search = $ret[1];
+		}
+		$ret = self::set_common_rule($start_search, $output,
+				'COOKIE', '', '', '');
+
+		if ((is_array($ret)) && ($ret[0])) {
+			$start_search = $ret[1];
+		}
+		$ret = self::set_common_rule($start_search, $output,
+				'USER AGENT', '', '', '');
+
+		if ((is_array($ret)) && ($ret[0])) {
+			$start_search = $ret[1];
+		}
+
+		if (!is_null($start_search)) {
+			$output .= $start_search . substr($content, $off_end);
+		}
+		else {
+			$output .= $suffix . "\n\n" . $content;
+		}
+		file_put_contents($path, $output);
+		return;
+	}
+
 	// Currently returns true if success, error message if fail.
 	private function do_edit_htaccess($content, $verify = false) {
 		$path = self::get_htaccess_path();
@@ -1422,7 +1484,7 @@ class LiteSpeed_Cache_Admin
 
 	}
 
-	private function get_htaccess_contents(&$content) {
+	private static function get_htaccess_contents(&$content) {
 		$path = self::get_htaccess_path();
 		if (!file_exists($path)) {
 			$content = __('Htaccess file does not exist.', 'litespeed-cache');
@@ -1448,7 +1510,7 @@ class LiteSpeed_Cache_Admin
 
 		$path = self::get_htaccess_path();
 		$contents = '';
-		if ($this->get_htaccess_contents($contents) === false) {
+		if (self::get_htaccess_contents($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
@@ -1506,7 +1568,7 @@ class LiteSpeed_Cache_Admin
 	 * Second index will be the returned string. This will be either the
 	 * new content string or an error message.
 	 */
-	private function set_common_rule($content, &$output, $wrapper, $cond,
+	private static function set_common_rule($content, &$output, $wrapper, $cond,
 			$match, $env, $flag = '') {
 
 		$wrapper_end = '';
@@ -1546,7 +1608,7 @@ class LiteSpeed_Cache_Admin
 
 	private function get_common_rule($wrapper, $cond, &$match) {
 
-		if ($this->get_htaccess_contents($match) === false) {
+		if (self::get_htaccess_contents($match) === false) {
 			return false;
 		}
 		$suffix = '';

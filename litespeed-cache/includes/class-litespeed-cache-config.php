@@ -274,6 +274,9 @@ class LiteSpeed_Cache_Config
 
 	public function plugin_deactivation()
 	{
+		if ((!is_multisite()) || (is_network_admin())) {
+			LiteSpeed_Cache_Admin::clear_htaccess();
+		}
 		$res = delete_option(self::OPTION_NAME) ;
 		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
 	}
