@@ -17,6 +17,10 @@ Additional plugin features:
 * Automatic page caching greatly improves site performance
 * Automatically purge related pages based on certain events
 * Support for HTTP/2 & HTTPS out-of-box
+* Single Site and Multi Site support
+* Supports WooCommerce and bbPress
+* Can cache desktop and mobile views separately
+* Allows configuration for do-not-cache by URI, Categories, Tags, Cookies, and User Agents
 
 For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/forum/ "forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com
 
