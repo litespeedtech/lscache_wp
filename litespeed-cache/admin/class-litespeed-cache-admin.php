@@ -139,25 +139,25 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function register_submenu_manage() {
-		$this::add_submenu(__('LiteSpeed Cache Manager', 'litespeed-cache'),
+		$this::add_submenu(sprintf(__('%s Manager', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
 	}
 
 	private function register_submenu_settings() {
-		$this::add_submenu(__('LiteSpeed Cache Settings', 'litespeed-cache'),
+		$this::add_submenu(sprintf(__('Settings', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
 
 		if ((!is_multisite()) || (is_network_admin())) {
-			$this::add_submenu(__('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'),
+			$this::add_submenu(sprintf(__('%s Edit .htaccess', 'litespeed-cache'),'LiteSpeed Cache'),
 					__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'dash_select');
 		}
 
 	}
 
 	private function register_submenu_info() {
-		$this::add_submenu(__('LiteSpeed Cache Information', 'litespeed-cache'),
+		$this::add_submenu(sprintf(__('%s Information', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Information', 'litespeed-cache'), 'lscache-info', 'dash_select');
-		$this::add_submenu(__('LiteSpeed Cache FAQs', 'litespeed-cache'),
+		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
 
 	}
@@ -261,7 +261,7 @@ class LiteSpeed_Cache_Admin
 			$off_begin += strlen($prefix);
 			$off_end = strpos($content, $suffix, $off_begin);
 			if ($off_end === false) {
-				$errors[] = __('Could not find IfModule close.', 'litespeed-cache');
+				$errors[] = sprintf(__('Could not find %s close.', 'litespeed-cache'),'IfModule');
 				return false;
 			}
 			--$off_end; // go to end of previous line.
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_Admin
 		;
 		$ret = self::do_edit_htaccess($output);
 		if ($ret === false) {
-			$errors[] = __('Failed to put contents into .htaccess', 'litespeed-cache');
+			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
 			return false;
 		}
 		return $options;
@@ -658,14 +658,14 @@ class LiteSpeed_Cache_Admin
 		$buf = $this->input_field_hidden($warning_id,
 		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
 		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
-				'lscwpCheckboxConfirm(this, &#39;' . $list_id . '&#39;)' ) ;
+				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')' ) ;
 
 		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
 		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
 		. __('A site built with responsive design does not need to check this.', 'litespeed-cache'));
 
-		$mv_list_desc = __('SYNTAX: Each entry should be separated with a bar, &#39;|&#39;.', 'litespeed-cache')
-		. __(' Any spaces should be escaped with a backslash before it, &#39;\\ &#39;.')
+		$mv_list_desc = __('SYNTAX: Each entry should be separated with a bar, \'|\'.', 'litespeed-cache')
+		. __(' Any spaces should be escaped with a backslash before it, \'\\ \'.')
 		. '<br>'
 		. __('The default list WordPress uses is ', 'litespeed-cache')
 		. $wp_default_mobile;
@@ -694,7 +694,7 @@ class LiteSpeed_Cache_Admin
 		$cookie_title = __('Cookie List', 'litespeed-cache');
 		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache');
 
 		if ($this->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
@@ -712,8 +712,8 @@ class LiteSpeed_Cache_Admin
 		$ua_rule = '';
 		$ua_title = __('User Agent List', 'litespeed-cache');
 		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
-				. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+				. '<br>' . __('SYNTAX: Separate each user agent with a bar, \'|\'.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache');
 		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
 			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging') ;
@@ -1060,7 +1060,7 @@ class LiteSpeed_Cache_Admin
 		. '<h4>'
 		. __('Please comment on the support thread listing the plugins that you are using and how they are functioning.', 'litespeed-cache')
 		. __(' With your help, we can provide the best WordPress caching solution.', 'litespeed-cache')
-		. '<br><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" target="_blank">'
+		. '<br /><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" target="_blank">'
 		. __('Link Here', 'litespeed-cache') . '</a>'
 		. '</h4>'
 		. '<h4>'
@@ -1098,7 +1098,7 @@ class LiteSpeed_Cache_Admin
 
 		$buf .= '<div id="config"><h3>'
 		. __('LiteSpeed Cache Configurations', 'litespeed-cache') . '</h3>'
-		. '<h4>' . __('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache') . '</h4>';
+		. '<h4>' . wp_kses(__('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache'), array('b'=>array())) . '</h4>';
 
 		$buf .= '<ul><li>Enable Public Cache - No</li>'
 		. '<li>Check Public Cache - Yes</li></ul>';
@@ -1131,7 +1131,7 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function show_info_faqs() {
-		$buf =  '<div class="wrap"><h2>' . __('LiteSpeed Cache FAQs', 'litespeed-cache') . '</h2>';
+		$buf =  '<div class="wrap"><h2>LiteSpeed Cache FAQs</h2>';
 
 		$buf .= '<h4>' . __('Is the LiteSpeed Cache Plugin for WordPress free?', 'litespeed-cache') . '</h4>'
 		. '<p>' . __('Yes, the plugin itself will remain free and open source, but only works with LiteSpeed Web Server 5.0.10+.', 'litespeed-cache')
@@ -1154,7 +1154,7 @@ class LiteSpeed_Cache_Admin
 		. '<ol><li>' . __('Use ', 'litespeed-cache')
 		. '<code>&lt;div id="postviews_lscwp"&gt;&lt;/div&gt;</code>'
 		. __(' to replace ', 'litespeed-cache')
-		. '<code>&lt;?php if(function_exists(&#39;the_views&#39;)) { the_views(); } ?&gt;</code>';
+		. '<code>&lt;?php if(function_exists(\'the_views\')) { the_views(); } ?&gt;</code>';
 
 		$buf .= '<ul><li>'
 		. __('NOTE: The id can be changed, but the div id and the ajax function must match.', 'litespeed-cache')
@@ -1171,7 +1171,7 @@ class LiteSpeed_Cache_Admin
     cache:!1,
     success:function(data) {
         if(data) {
-            jQuery(&#39;#postviews_lscwp&#39;).html(data+&#39; views&#39;);
+            jQuery(\'#postviews_lscwp\').html(data+\' views\');
         }
    }
 });</code></pre>'
@@ -1310,7 +1310,7 @@ class LiteSpeed_Cache_Admin
 		. __(' Responsive themes can handle this part automatically.', 'litespeed-cache');
 
 		$config = LiteSpeed_Cache::config();
-		$buf .= $this->input_group_start(__('Network Wide Config', 'litespeed-cache')) ;
+		$buf .= $this->input_group_start(__('Network-wide Config', 'litespeed-cache')) ;
 		$buf .= $network_desc;
 		$buf .= '<form method="post" action="admin.php?page=lscache-settings">';
 		$buf .= '<input type="hidden" name="lscwp_settings_save" value="save_settings" />';
@@ -1485,11 +1485,11 @@ class LiteSpeed_Cache_Admin
 	private static function get_htaccess_contents(&$content) {
 		$path = self::get_htaccess_path();
 		if (!file_exists($path)) {
-			$content = __('Htaccess file does not exist.', 'litespeed-cache');
+			$content = __('.htaccess file does not exist.', 'litespeed-cache');
 			return false;
 		}
 		else if (!is_readable($path)) {
-			$content = __('Htaccess file is not readable.', 'litespeed-cache');
+			$content = __('.htaccess file is not readable.', 'litespeed-cache');
 			return false;
 		}
 
