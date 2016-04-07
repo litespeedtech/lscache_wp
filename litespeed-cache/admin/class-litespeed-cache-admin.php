@@ -139,26 +139,26 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function register_submenu_manage() {
-		$this::add_submenu(__('LiteSpeed Cache Manager', 'litespeed-cache'),
+		$this::add_submenu('LiteSpeed Cache ' . __('Manager', 'litespeed-cache'),
 				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
 	}
 
 	private function register_submenu_settings() {
-		$this::add_submenu(__('LiteSpeed Cache Settings', 'litespeed-cache'),
+		$this::add_submenu('LiteSpeed Cache ' . __('Settings', 'litespeed-cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
 
 		if ((!is_multisite()) || (is_network_admin())) {
-			$this::add_submenu(__('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'),
+			$this::add_submenu('LiteSpeed Cache ' . __('Edit', 'litespeed-cache') . ' .htaccess',
 					__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'dash_select');
 		}
 
 	}
 
 	private function register_submenu_info() {
-		$this::add_submenu(__('LiteSpeed Cache Information', 'litespeed-cache'),
+		$this::add_submenu('LiteSpeed Cache ' . __('Information', 'litespeed-cache'),
 				__('Information', 'litespeed-cache'), 'lscache-info', 'dash_select');
-		$this::add_submenu(__('LiteSpeed Cache FAQs', 'litespeed-cache'),
-				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
+		$this::add_submenu('LiteSpeed Cache FAQs', 'FAQs', 'lscache-faqs',
+				'dash_select');
 
 	}
 
@@ -554,7 +554,10 @@ class LiteSpeed_Cache_Admin
 		}
 
 		echo '<div class="wrap"><h2>' . __('LiteSpeed Cache Management', 'litespeed-cache') . '</h2>'
-		. '<p>' . __('LiteSpeed Cache is maintained and managed by LiteSpeed Web Server. You can inform LiteSpeed Web Server to purge cached contents from this screen.', 'litespeed-cache') . '</p>'
+		. '<p>'
+		. __('LiteSpeed Cache is maintained and managed by LiteSpeed Web Server.', 'litespeed-cache')
+		. __(' You can inform LiteSpeed Web Server to purge cached contents from this screen.', 'litespeed-cache')
+		. '</p>'
 		. '<p>' . __('More options will be added here in future releases.', 'litespeed-cache') . '</p>' ;
 
 		echo '<form method="post">' ;
@@ -597,7 +600,8 @@ class LiteSpeed_Cache_Admin
 		$purge_options = $config->get_purge_options() ;
 
 		echo '<div class="wrap">
-		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
+		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
+		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
 		<form method="post" action="options.php">' ;
 
 		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
@@ -642,7 +646,8 @@ class LiteSpeed_Cache_Admin
 	private function check_license( $config, &$error_msg )
 	{
 		if ($config->is_caching_allowed() == false) {
-			$error_msg = __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled. This plugin will NOT work properly.', 'litespeed-cache');
+			$error_msg = __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled.', 'litespeed-cache')
+			. __(' This plugin will NOT work properly.', 'litespeed-cache');
 			return false ;
 		}
 		return true ;
@@ -693,8 +698,8 @@ class LiteSpeed_Cache_Admin
 		$cookies_rule = '';
 		$cookie_title = __('Cookie List', 'litespeed-cache');
 		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
-				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+		. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
+		. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
 
 		if ($this->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
@@ -712,8 +717,9 @@ class LiteSpeed_Cache_Admin
 		$ua_rule = '';
 		$ua_title = __('User Agent List', 'litespeed-cache');
 		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
-				. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+		. '<br>' . __('SYNTAX: Separate each user agent with a bar, &#39;|&#39;.', 'litespeed-cache')
+		. __(' Spaces should have a backslash in front of it, &#39;\ &#39;.', 'litespeed-cache');
+
 		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
 			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging') ;
@@ -750,25 +756,31 @@ class LiteSpeed_Cache_Admin
 
 		//Add a description to 'Enable LiteSpeed Cache' if multisite
 		if( is_multisite() ){
-		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable, __('You can override network admin settings here.', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'),
+				$input_enable, __('You can override network admin settings here.', 'litespeed-cache')) ;
 		}
 		else{
 			$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable);
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
-		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
-		$buf .= $this->display_config_row(__('Default Public Cache TTL', 'litespeed-cache'), $input_public_ttl, __('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
+		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+											__('seconds', 'litespeed-cache')) ;
+
+		$buf .= $this->display_config_row(__('Default Public Cache TTL', 'litespeed-cache'), $input_public_ttl,
+				__('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ;
-		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text', __('seconds', 'litespeed-cache')) ;
-		$buf .= $this->display_config_row(__('Default Front Page TTL', 'litespeed-cache'), $input_public_ttl, __('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
+		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+				__('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default Front Page TTL', 'litespeed-cache'), $input_public_ttl,
+				__('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
 		$cache_commenters = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable Cache for Commenters', 'litespeed-cache'), $cache_commenters,
-				__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
-				. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
+		__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
+		. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
 		if (!is_multisite()) {
 			$buf .= $this->show_mobile_view($options);
@@ -781,11 +793,14 @@ class LiteSpeed_Cache_Admin
 	private function show_settings_purge( $purge_options )
 	{
 		$buf = $this->input_group_start(__('Auto Purge Rules For Publish/Update', 'litespeed-cache'),
-				__('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache')
-				. '<br>'
-				. '<b>' . __('Note: ', 'litespeed-cache') . '</b>' . __('Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages. (Other checkboxes will be ignored)', 'litespeed-cache')
-				. '<br>'
-				. '<b>' . __('Note: ', 'litespeed-cache') . '</b>' . __('Select only the archive types that you are currently using, the others can be left unchecked.', 'litespeed-cache')) ;
+		__('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache')
+		. '<br>'
+		. '<b>' . __('Note: ', 'litespeed-cache') . '</b>'
+		. __('Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache')
+		. __(' (Other checkboxes will be ignored)', 'litespeed-cache')
+		. '<br>'
+		. '<b>' . __('Note: ', 'litespeed-cache') . '</b>'
+		. __('Select only the archive types that you are currently using, the others can be left unchecked.', 'litespeed-cache')) ;
 
 		$tr = '<tr><th scope="row" colspan="2" class="th-full">' ;
 		$endtr = "</th></tr>\n" ;
@@ -968,7 +983,8 @@ class LiteSpeed_Cache_Admin
 
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		$input_admin_ips = $this->input_field_text($id, $options[$id], '', 'regular-text') ;
-		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips, __('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips,
+				__('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_levels = array(
@@ -978,13 +994,15 @@ class LiteSpeed_Cache_Admin
 			LiteSpeed_Cache_Config::LOG_LEVEL_INFO => __('Info', 'litespeed-cache'),
 			LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG => __('Debug', 'litespeed-cache') ) ;
 		$input_debug = $this->input_field_select($id, $debug_levels, $options[$id]) ;
-		$buf .= $this->display_config_row(__('Debug Level', 'litespeed-cache'), $input_debug, __('Outputs to WordPress debug log.', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Debug Level', 'litespeed-cache'), $input_debug,
+				__('Outputs to WordPress debug log.', 'litespeed-cache')) ;
 
 		/* Maybe add this feature later
 		  $id = LiteSpeed_Cache_Config::OPID_TEST_IPS;
 		  $input_test_ips  = $this->input_field_text($id, $options[$id], '', 'regular-text');
 		  $buf .= $this->display_config_row('Test IPs', $input_test_ips,
-		  'Enable LiteSpeed Cache only for specified IPs. (Space or comma separated.) Allows testing on a live site. If empty, cache will be served to everyone.');
+		  'Enable LiteSpeed Cache only for specified IPs. (Space or comma separated.)
+		 * Allows testing on a live site. If empty, cache will be served to everyone.');
 		 *
 		 */
 
@@ -1013,7 +1031,8 @@ class LiteSpeed_Cache_Admin
 				<li>'
 				. __('Replace the following calls in your theme\'s template files with a div or span with a unique ID.', 'litespeed-cache')
 				. '<br>'
-				. sprintf(wp_kses(__('e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>', 'litespeed-cache'), array( 'br' => array(), 'pre' => array() )),
+				. sprintf(wp_kses(__('e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>', 'litespeed-cache'),
+						array( 'br' => array(), 'pre' => array() )),
 						$example_src,
 						$example_div)
 				. '</li><li>'
@@ -1098,7 +1117,9 @@ class LiteSpeed_Cache_Admin
 
 		$buf .= '<div id="config"><h3>'
 		. __('LiteSpeed Cache Configurations', 'litespeed-cache') . '</h3>'
-		. '<h4>' . __('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache') . '</h4>';
+		. '<h4>'
+		. __('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache')
+		. '</h4>';
 
 		$buf .= '<ul><li>Enable Public Cache - No</li>'
 		. '<li>Check Public Cache - Yes</li></ul>';
@@ -1146,7 +1167,8 @@ class LiteSpeed_Cache_Admin
 		. __(' There are plans to have OpenLiteSpeed support it later down the line.', 'litespeed-cache') . '</p>';
 
 		$buf .= '<h4>' . __('Is WooCommerce supported?', 'litespeed-cache') . '</h4>'
-		. '<p>' . __('In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable.', 'litespeed-cache')
+		. '<p>'
+		. __('In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable.', 'litespeed-cache')
 		. __(' For versions below 1.4.2, we do extra checks to make sure that pages are cacheable.', 'litespeed-cache')
 		. __(' We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.', 'litespeed-cache') . '</p>';
 
@@ -1326,8 +1348,9 @@ class LiteSpeed_Cache_Admin
 		__('Network Enable Cache', 'litespeed-cache'), $network_enable,
 		__('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache')
 		. '<br>'
-		. wp_kses(__('We <b>STRONGLY</b> recommend that you test the compatibility with other plugins on a single/few sites to ensure compatibility prior to enabling the cache for all sites.',
-				'litespeed-cache'), array('b' => array())));
+		. wp_kses(__('We <b>STRONGLY</b> recommend that you test the compatibility with other plugins on a single/few sites.', 'litespeed-cache'),
+				array('b' => array()))
+		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
 
 		$buf .= $this->show_mobile_view($config->get_site_options());
 
