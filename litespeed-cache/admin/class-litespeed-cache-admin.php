@@ -561,33 +561,6 @@ class LiteSpeed_Cache_Admin
 
 		submit_button(__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront') ;
 		submit_button(__('Purge All', 'litespeed-cache'), 'primary', 'purgeall') ;
-		if ( !is_network_admin()) {
-			echo "</form></div>\n" ;
-			return;
-		}
-		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
-
-		$site_options = $config->get_site_options();
-		if (!isset($site_options)) {
-			$config->debug_log('There was a problem creating site options.');
-			exit(__('There was a problem creating site options for LiteSpeed Cache.',
-					'litespeed-cache'));
-		}
-		if ($site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED]) {
-			$enabled = __('Enabled', 'litespeed-cache');
-		}
-		else {
-			$enabled = __('Disabled', 'litespeed-cache');
-		}
-
-		echo '<h2>' . __('Current Network Level Status: ', 'litespeed-cache')
-				. $enabled . '</h2>';
-		echo '<h3>'
-		. __('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache')
-				. '<br>' . wp_kses(__('We <b>STRONGLY</b> recommend that you test the compatibility with other plugins on a single/few sites to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'), array('b' => array()))
-		. '</h3>';
-		submit_button(__('Enable All', 'litespeed-cache'), 'primary', 'enableall') ;
-		submit_button(__('Disable All', 'litespeed-cache'), 'primary', 'disableall') ;
 		echo "</form></div>\n" ;
 	}
 
@@ -600,19 +573,6 @@ class LiteSpeed_Cache_Admin
 		if ( isset($_POST['purgefront'])){
 			LiteSpeed_Cache::plugin()->purge_front();
 			$this->messages = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache') ;
-		}
-		elseif ( isset($_POST['enableall'])) {
-			$config = LiteSpeed_Cache::config();
-			$site_options = $config->get_site_options() ;
-			$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] = true;
-			update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
-			$config->wp_cache_var_setter(true);
-		}
-		elseif ( isset($_POST['disableall'])) {
-			$config = LiteSpeed_Cache::config();
-			$site_options = $config->get_site_options() ;
-			$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] = false;
-			update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
 		}
 	}
 
@@ -1312,6 +1272,16 @@ class LiteSpeed_Cache_Admin
 		$options = $config->get_site_options();
 		$errors = array();
 
+		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED;
+		$network_enabled = (is_null($input['lscwp_' . $id])
+				? false : ($input['lscwp_' . $id] === $id));
+		if ($options[$id] !== $network_enabled) {
+			$options[$id] = $network_enabled;
+			if ($network_enabled) {
+				$config->wp_cache_var_setter(true);
+			}
+		}
+
 		$newopt = $this->validate_common_rewrites($input, $options, $errors);
 		if ($newopt) {
 			$options = $newopt;
@@ -1344,6 +1314,19 @@ class LiteSpeed_Cache_Admin
 		$buf .= '<form method="post" action="admin.php?page=lscache-settings">';
 		$buf .= '<input type="hidden" name="lscwp_settings_save" value="save_settings" />';
 		$buf .= wp_nonce_field('lscwp_settings', 'save');
+
+		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED;
+
+		$site_options = $config->get_site_options();
+
+		$network_enable = $this->input_field_checkbox('lscwp_' . $id, $id,
+				$site_options[$id]) ;
+		$buf .= $this->display_config_row(
+		__('Network Enable Cache', 'litespeed-cache'), $network_enable,
+		__('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache')
+		. '<br>'
+		. wp_kses(__('We <b>STRONGLY</b> recommend that you test the compatibility with other plugins on a single/few sites to ensure compatibility prior to enabling the cache for all sites.',
+				'litespeed-cache'), array('b' => array())));
 
 		$buf .= $this->show_mobile_view($config->get_site_options());
 
