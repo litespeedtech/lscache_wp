@@ -1561,7 +1561,7 @@ class LiteSpeed_Cache_Admin
 		if (!is_writable($path)) {
 			$buf .= 'readonly';
 		}
-		$buf .= '>' . $contents . '</textarea>';
+		$buf .= '>' . esc_textarea($contents) . '</textarea>';
 		unset($contents);
 
 		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
@@ -1741,7 +1741,7 @@ class LiteSpeed_Cache_Admin
 	private function input_field_text( $id, $value, $size = '', $style = '', $after = '', $readonly = false )
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" id="'
-				. $id . '" value="' . $value . '"' ;
+				. $id . '" value="' . esc_textarea($value) . '"' ;
 		if ( $size ) {
 			$buf .= ' size="' . $size . '"' ;
 		}
@@ -1771,7 +1771,7 @@ class LiteSpeed_Cache_Admin
 		if ( $style ) {
 			$buf .= ' class="' . $style . '"';
 		}
-		$buf .= '>' . $value . '</textarea>';
+		$buf .= '>' . esc_textarea($value) . '</textarea>';
 
 		return $buf;
 	}
@@ -1779,7 +1779,7 @@ class LiteSpeed_Cache_Admin
 	private function input_field_hidden( $id, $value)
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="hidden" id="'
-				. $id . '" value="' . $value . '"' ;
+				. $id . '" value="' . esc_html($value) . '"' ;
 		$buf .= '/>' ;
 		return $buf ;
 	}
