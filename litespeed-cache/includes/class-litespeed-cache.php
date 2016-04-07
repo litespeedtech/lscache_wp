@@ -106,7 +106,8 @@ class LiteSpeed_Cache
 
 	public function register_activation()
 	{
-		if ( ! (file_exists(ABSPATH . 'wp-content/advanced-cache.php')) ) {
+		if ( (!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
+			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0) ) {
 			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
 			$this->config->wp_cache_var_setter(true) ;
 			$this->config->plugin_activation() ;
