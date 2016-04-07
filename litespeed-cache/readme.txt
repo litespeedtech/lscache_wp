@@ -88,7 +88,6 @@ pages are cacheable. We are always looking for feedback, so if you encounter any
 * Implemented Separate Mobile View.
 * Modified WP_CACHE not defined message to only show up for users who can manage options.
 * Moved enabled all/disable all from network management to network settings.
-* Removed check from installation script that blocked install if WooCommerce was installed.
 * Fixed a bug where WP_CACHE was not defined on activation if it was commented out.
 
 = 1.0.3 =
