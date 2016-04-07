@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -74,6 +74,19 @@ pages are cacheable. We are always looking for feedback, so if you encounter any
 3. Purge the cache to use the updated pages.
 
 == Changelog ==
+= 1.0.4 =
+* Added logic to cache commenters.
+* Added htaccess backup to the install script.
+* Added an htaccess editor in the wp-admin dashboard.
+* Added do not cache user agents.
+* Added do not cache cookies.
+* Created new LiteSpeed Cache Settings submenu entries.
+* Implemented Separate Mobile View.
+* Modified WP_CACHE not defined message to only show up for users who can manage options.
+* Moved enabled all/disable all from network management to network settings.
+* Removed check from installation script that blocked install if WooCommerce was installed.
+* Fixed a bug where WP_CACHE was not defined on activation if it was commented out.
+
 = 1.0.3 =
 * Added a Purge Front Page button to the LiteSpeed Cache Management page.
 * Added a Default Front Page TTL option to the general settings.

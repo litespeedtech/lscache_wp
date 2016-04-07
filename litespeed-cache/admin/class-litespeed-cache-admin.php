@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function register_submenu_settings() {
-		$this::add_submenu(sprintf(__('Settings', 'litespeed-cache'),'LiteSpeed Cache'),
+		$this::add_submenu(sprintf(__('%s Settings', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
 
 		if ((!is_multisite()) || (is_network_admin())) {

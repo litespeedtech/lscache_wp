@@ -32,7 +32,7 @@ class LiteSpeed_Cache
 	private static $instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.0.3' ;
+	const PLUGIN_VERSION = '1.0.4' ;
 	//const CACHETAG_TYPE_FEED = 'FD';
 
 	const CACHETAG_TYPE_FRONTPAGE = 'F' ;
