@@ -42,6 +42,7 @@ class LiteSpeed_Cache
 	const CACHETAG_TYPE_ARCHIVE_TERM = 'T.' ; //for is_category|is_tag|is_tax
 	const CACHETAG_TYPE_AUTHOR = 'A.' ;
 	const CACHETAG_TYPE_ARCHIVE_DATE = 'D.' ;
+	const CACHETAG_TYPE_BLOG = 'B.' ;
 	const LSHEADER_PURGE = 'X-LiteSpeed-Purge' ;
 	const LSHEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const LSHEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
@@ -414,7 +415,12 @@ class LiteSpeed_Cache
 
 	public function purge_all()
 	{
-		$this->add_purge_tags('*');
+		if (is_multisite() && (!is_network_admin())) {
+			$this->add_purge_tags(self::CACHETAG_TYPE_BLOG . get_current_blog_id());
+		}
+		else {
+			$this->add_purge_tags('*');
+		}
 		$this->send_purge_headers();
 	}
 
@@ -716,6 +722,8 @@ class LiteSpeed_Cache
 
 		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
+
+		$cache_tags[] = self::CACHETAG_TYPE_BLOG . get_current_blog_id();
 
 		if ( is_front_page() ) {
 			$cache_tags[] = self::CACHETAG_TYPE_FRONTPAGE ;
