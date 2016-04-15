@@ -371,6 +371,9 @@ class LiteSpeed_Cache_Admin
 		if ( $enabled !== $options[$id] ) {
 			$options[$id] = $enabled;
 			$config->wp_cache_var_setter($enabled);
+			if (!$enabled) {
+				LiteSpeed_Cache::plugin()->purge_all() ;
+			}
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
@@ -753,14 +756,15 @@ class LiteSpeed_Cache_Admin
 
 		$input_enable = $this->input_field_radio($id, $enable_levels, intval($options[$id])) ;
 
-		//Add a description to 'Enable LiteSpeed Cache' if multisite
+		$enable_desc = '<strong>' . __('NOTICE', 'litespeed-cache') . ':</strong>'
+		. __(' When disabling the cache, any cached entries for this blog will be purged.', 'litespeed-cache');
 		if( is_multisite() ){
+			$enable_desc .= '<br>'
+			. __('You can override network admin settings here.', 'litespeed-cache');
+		}
+
 		$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'),
-				$input_enable, __('You can override network admin settings here.', 'litespeed-cache')) ;
-		}
-		else{
-			$buf .= $this->display_config_row(__('Enable LiteSpeed Cache', 'litespeed-cache'), $input_enable);
-		}
+				$input_enable, $enable_desc);
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
 		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
