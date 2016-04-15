@@ -265,11 +265,13 @@ class LiteSpeed_Cache_Admin
 				return false;
 			}
 			--$off_end; // go to end of previous line.
-			$output = substr($content, 0, $off_begin);
-			$off_engine = strpos($content, $engine, $off_begin);
-			$output .= "\n" . $engine . "\n";
+			$off_engine = stripos($content, $engine, $off_begin);
 			if ($off_engine !== false) {
-				$off_begin = $off_engine + strlen($engine);
+				$off_begin = $off_engine + strlen($engine) + 1;
+				$output = substr($content, 0, $off_begin);
+			}
+			else {
+				$output = substr($content, 0, $off_begin) . "\n" . $engine . "\n";
 			}
 			$start_search = substr($content, $off_begin, $off_end - $off_begin);
 		}
