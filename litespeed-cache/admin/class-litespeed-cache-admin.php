@@ -665,10 +665,12 @@ class LiteSpeed_Cache_Admin
 		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
 		$default_id = 'lscwp_' . $id . '_default';
 		$warning_id = 'lscwp_' . $id . '_warning';
+		clearstatcache();
 		$buf = $this->input_field_hidden($warning_id,
 		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
 		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
-				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')' ) ;
+				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')',
+				!is_writable(self::get_htaccess_path())) ;
 
 		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
 		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
@@ -678,7 +680,9 @@ class LiteSpeed_Cache_Admin
 		. __(' Any spaces should be escaped with a backslash before it, \'\\ \'.')
 		. '<br>'
 		. __('The default list WordPress uses is ', 'litespeed-cache')
-		. $wp_default_mobile;
+		. $wp_default_mobile
+		. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
+		. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$mv_str = '';
 		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
@@ -704,7 +708,9 @@ class LiteSpeed_Cache_Admin
 		$cookie_title = __('Cookie List', 'litespeed-cache');
 		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache');
+				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache')
+				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
+				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		if ($this->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
@@ -714,7 +720,8 @@ class LiteSpeed_Cache_Admin
 			$excludes_buf = '<p class="attention">'
 			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
 		}
-		return $this->input_field_textarea($id, $excludes_buf, '5', '80', '');
+		return $this->input_field_textarea($id, $excludes_buf, '5', '80', '',
+				!is_writable(self::get_htaccess_path()));
 	}
 
 	private function show_useragent_exclude(&$ua_title, &$ua_desc) {
@@ -723,10 +730,13 @@ class LiteSpeed_Cache_Admin
 		$ua_title = __('User Agent List', 'litespeed-cache');
 		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Separate each user agent with a bar, \'|\'.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache');
+				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache')
+				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
+				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
-			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging') ;
+			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging', '',
+				!is_writable(self::get_htaccess_path())) ;
 		}
 		else {
 			$ua_list = '<p class="attention">'
@@ -1694,7 +1704,7 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function input_field_checkbox( $id, $value, $checked_value, $label = '',
-											$on_click = '')
+											$on_click = '', $disabled = false)
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="checkbox" id="'
 				. $id . '" value="' . $value . '"' ;
@@ -1703,6 +1713,9 @@ class LiteSpeed_Cache_Admin
 		}
 		if ($on_click != '') {
 			$buf .= 'onclick="' . $on_click . '"';
+		}
+		if ($disabled) {
+			$buf .= ' disabled ';
 		}
 		$buf .= '/>' ;
 		if ( $label ) {
@@ -1761,7 +1774,7 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
-	private function input_field_textarea( $id, $value, $rows = '', $cols = '', $style = '')
+	private function input_field_textarea( $id, $value, $rows = '', $cols = '', $style = '', $readonly = false)
 	{
 		$buf = '<textarea name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text"
                 id="' . $id . '"';
@@ -1773,6 +1786,9 @@ class LiteSpeed_Cache_Admin
 		}
 		if ( $style ) {
 			$buf .= ' class="' . $style . '"';
+		}
+		if ( $readonly ) {
+			$buf .= ' readonly ';
 		}
 		$buf .= '>' . esc_textarea($value) . '</textarea>';
 
