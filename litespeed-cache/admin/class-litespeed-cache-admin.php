@@ -352,8 +352,7 @@ class LiteSpeed_Cache_Admin
 		else {
 			$output .= $suffix . "\n\n" . $content;
 		}
-		;
-		$ret = self::do_edit_htaccess($output);
+		$ret = self::do_edit_htaccess($output, false);
 		if ($ret === false) {
 			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
 			return false;
@@ -1487,7 +1486,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	// Currently returns true if success, error message if fail.
-	private static function do_edit_htaccess($content) {
+	private static function do_edit_htaccess($content, $cleanup = true) {
 		$path = self::get_htaccess_path();
 
 		clearstatcache();
@@ -1502,7 +1501,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 			}
 		}
 
-		$content = self::cleanup_input($content);
+		if ($cleanup) {
+			$content = self::cleanup_input($content);
+		}
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
