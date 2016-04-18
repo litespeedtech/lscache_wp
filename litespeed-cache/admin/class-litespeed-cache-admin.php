@@ -558,7 +558,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		echo '<div class="wrap"><h2>' . __('LiteSpeed Cache Management', 'litespeed-cache') . '</h2>'
-		. '<p>'
+		. '<div class="welcome-panel"><p>'
 		. __('LiteSpeed Cache is maintained and managed by LiteSpeed Web Server.', 'litespeed-cache')
 		. __(' You can inform LiteSpeed Web Server to purge cached contents from this screen.', 'litespeed-cache')
 		. '</p>'
@@ -569,7 +569,7 @@ class LiteSpeed_Cache_Admin
 
 		submit_button(__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront') ;
 		submit_button(__('Purge All', 'litespeed-cache'), 'primary', 'purgeall') ;
-		echo "</form></div>\n" ;
+		echo "</form></div></div>\n" ;
 	}
 
 	private function check_cache_mangement_actions()
@@ -1166,7 +1166,8 @@ class LiteSpeed_Cache_Admin
 	private function show_info_faqs() {
 		$buf =  '<div class="wrap"><h2>LiteSpeed Cache FAQs</h2>';
 
-		$buf .= '<h4>' . __('Is the LiteSpeed Cache Plugin for WordPress free?', 'litespeed-cache') . '</h4>'
+		$buf .= '<div class="welcome-panel"><h4>'
+		. __('Is the LiteSpeed Cache Plugin for WordPress free?', 'litespeed-cache') . '</h4>'
 		. '<p>' . __('Yes, the plugin itself will remain free and open source, but only works with LiteSpeed Web Server 5.0.10+.', 'litespeed-cache')
 		. __('You are required to have a LiteSpeed Web Server license with the LSCache module enabled.', 'litespeed-cache') . '</p>';
 
@@ -1197,8 +1198,7 @@ class LiteSpeed_Cache_Admin
 		$buf .= '<li>' . __('Replace the ajax query in ', 'litespeed-cache')
 		. '<code>wp-content/plugins/wp-postviews/postviews-cache.js</code>'
 		. __(' with', 'litespeed-cache')
-		. '<pre>
-<code>jQuery.ajax({
+		. '<textarea id="wpwrap" rows="11" readonly>jQuery.ajax({
     type:"GET",
     url:viewsCacheL10n.admin_ajax_url,
     data:"postviews_id="+viewsCacheL10n.post_id+"&amp;action=postviews",
@@ -1208,13 +1208,13 @@ class LiteSpeed_Cache_Admin
             jQuery(\'#postviews_lscwp\').html(data+\' views\');
         }
    }
-});</code></pre>'
+});</textarea>'
 		. '</li>';
 
 
 		$buf .= '<li>'
 		. __('Purge the cache to use the updated pages.', 'litespeed-cache')
-		. '</li>';
+		. '</li></ul></div></div>';
 
 		echo $buf;
 	}
