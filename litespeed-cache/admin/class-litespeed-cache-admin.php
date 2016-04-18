@@ -1221,13 +1221,40 @@ class LiteSpeed_Cache_Admin
 	}
 
 	private function show_info_common_rewrite() {
+		$mv_header = __('Mobile Views: ', 'litespeed-cache');
+		$mv_desc = __('Some sites have adaptive views, meaning the page sent will adapt to the browser type (desktop vs mobile).', 'litespeed-cache')
+		. __(' This rewrite rule is used for sites that load a different page for each type.', 'litespeed-cache')
+		. '<br>'
+		. __(' This configuration can be added on the settings page in the General tab.', 'litespeed-cache');
+		$mv_example = 'RewriteCond %{HTTP_USER_AGENT} Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi [NC]
+RewriteRule .* - [E=Cache-Control:vary=ismobile]';
+
+
+		$cookie_header = __('Do Not Cache Cookies: ', 'litespeed-cache');
+		$cookie_desc =
+		__('Another common rewrite rule is to notify the cache not to cache when it sees a specified cookie name.', 'litespeed-cache')
+		. '<br>'
+		. __(' This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache');
+		$cookie_example = 'RewriteCond %{HTTP_COOKIE} dontcachecookie
+RewriteRule .* - [E=Cache-Control:no-cache]';
+
+
+		$ua_header = __('Do Not Cache User Agent: ', 'litespeed-cache');
+		$ua_desc =
+		__('A not so commonly used rewrite rule is to notify the cache not to cache when it sees a specified User Agent.', 'litespeed-cache')
+		. '<br>'
+		. __(' This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache');
+		$ua_example = 'RewriteCond %{HTTP_USER_AGENT} dontcacheuseragent
+RewriteRule .* - [E=Cache-Control:no-cache]';
+
+
+		// begin buffer
 
 		$buf = '<h3>' . __('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache') . '</h2>';
 
-
 		if ((is_multisite()) && (!is_network_admin())) {
 
-			$buf .= '<p><span class="attention">' . __('NOTE: ', 'litespeed-cache')
+			$buf .= '<p><span style="color: black;font-weight: bold">' . __('NOTE: ', 'litespeed-cache')
 			. '</span>'
 			. __('The following configurations can only be changed by the network admin.', 'litespeed-cache')
 			. '<br>'
@@ -1235,7 +1262,7 @@ class LiteSpeed_Cache_Admin
 			. '</p>';
 		}
 		else {
-			$buf .= '<p><span class="attention">' . __('NOTICE: ', 'litespeed-cache')
+			$buf .= '<p><span style="color: black;font-weight: bold">' . __('NOTICE: ', 'litespeed-cache')
 			. '</span>'
 			. __('The following rewrite rules can be configured in the LiteSpeed Cache settings page.', 'litespeed-cache')
 			. '<br>'
@@ -1245,40 +1272,30 @@ class LiteSpeed_Cache_Admin
 
 		}
 
-		// Mobile View
-		$buf .= '<h4>'
-		. __('Mobile Views: ', 'litespeed-cache')
-		. '</h4>';
+		$buf .= '<div class="metabox-holder">';
+		$buf .= '<div class="meta-box-sortables ui-sortable">';
 
-		$buf .= '<p>'
-		. __('Some sites have adaptive views, meaning the page sent will adapt to the browser type (desktop vs mobile).', 'litespeed-cache')
-		. __(' This rewrite rule is used for sites that load a different page for each type.', 'litespeed-cache')
-		. '<br>'
-		. __(' This configuration can be added on the settings page in the General tab.', 'litespeed-cache')
-		. '</p>';
+		$buf .= $this->build_collapsible($mv_header, $mv_desc, $mv_example);
+		$buf .= $this->build_collapsible($cookie_header, $cookie_desc, $cookie_example);
+		$buf .= $this->build_collapsible($ua_header, $ua_desc, $ua_example);
 
-		// Cookies
-		$buf .= '<h4>'
-		. __('Do Not Cache Cookies: ', 'litespeed-cache')
-		. '</h4>';
+		$buf .= '</div></div>';
 
-		$buf .= '<p>'
-		. __('Another common rewrite rule is to notify the cache not to cache when it sees a specified cookie name.', 'litespeed-cache')
-		. '<br>'
-		. __(' This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache')
-		. '</p>';
+		return $buf;
+	}
 
-		// User Agent
-		$buf .= '<h4>'
-		. __('Do Not Cache User Agent: ', 'litespeed-cache')
-		. '</h4>';
+	private function build_collapsible($header, $desc, $example) {
+		$buf = '<div class="postbox closed">'
+		. '<button type="button" class="handlediv button-link" aria-expanded="false">'
+		. '<span class="toggle-indicator" aria-hidden="true"></span></button>'
+		. '<h2 class="hndle ui-sortable-handle"><span>' . $header . '</span></h2>';
 
-		$buf .= '<p>'
-		. __('A not so commonly used rewrite rule is to notify the cache not to cache when it sees a specified User Agent.', 'litespeed-cache')
-		. '<br>'
-		. __(' This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache')
-		. '</p>';
 
+		$buf .= '<div class="welcome-panel-content"><div class="inside"><p>'
+				. $desc . '</p>';
+
+		$buf .= '<textarea id="wpwrap" readonly>' . $example . '</textarea>';
+		$buf .= '</div></div></div>';
 		return $buf;
 	}
 
@@ -1541,6 +1558,7 @@ class LiteSpeed_Cache_Admin
 
 	private function show_edit_htaccess() {
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
+		$buf .= '<div class="welcome-panel">';
 
 		$path = self::get_htaccess_path();
 		$contents = '';
@@ -1578,9 +1596,9 @@ class LiteSpeed_Cache_Admin
 		unset($contents);
 
 		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
-				. __('Save', 'litespeed-cache') . '" /></form>';
+				. __('Save', 'litespeed-cache') . '" /></form><br><br>';
 
-		$buf .= '</div>';
+		$buf .= '</div></div>';
 		echo $buf;
 	}
 
