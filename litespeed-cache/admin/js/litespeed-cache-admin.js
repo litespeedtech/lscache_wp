@@ -31,6 +31,7 @@
 
     jQuery(document).ready(function () {
         jQuery("#lsc-tabs").tabs();
+        jQuery("#lsc-tabs").removeClass('ui-widget');
     });
     
     jQuery(document).ready( function() {

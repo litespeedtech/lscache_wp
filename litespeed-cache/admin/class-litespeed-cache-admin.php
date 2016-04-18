@@ -687,7 +687,7 @@ class LiteSpeed_Cache_Admin
 		$mv_str = '';
 		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
 			// can also use class 'mejs-container' for 100% width.
-			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging', '',
+			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging code', '',
 					($options[$id] ? false : true)) ;
 
 			$default_fill = (($mv_str == '') ? $wp_default_mobile : $mv_str);
