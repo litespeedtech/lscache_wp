@@ -20,6 +20,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 	public static function is_cacheable($cache_tags)
 	{
+		// Check if null. If it is null, means another plugin said not cacheable.
+		if (is_null($cache_tags)) {
+			return null;
+		}
 		$woocom = WC();
 		if (!isset($woocom)) {
 			return $cache_tags;
