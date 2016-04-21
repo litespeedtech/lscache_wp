@@ -7,16 +7,19 @@
  */
 
 
-class LiteSpeed_Cache_ThirdParty_WooCommerce {
+class LiteSpeed_Cache_ThirdParty_WooCommerce
+{
 
-	
-	public static function detect() {
+
+	public static function detect()
+	{
 		if (defined('WOOCOMMERCE_VERSION')) {
 			add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable');
 		}
 	}
 
-	public static function is_cacheable($cache_tags) {
+	public static function is_cacheable($cache_tags)
+	{
 		$woocom = WC();
 		if (!isset($woocom)) {
 			return $cache_tags;
