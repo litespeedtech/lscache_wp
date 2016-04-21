@@ -172,7 +172,12 @@ class LiteSpeed_Cache
 		}
 
 		$this->load_public_actions() ;
+		add_action('wp', array($this, 'detect'), 4);
+	}
+
+	public function detect() {
 		do_action('litespeed_cache_detect_thirdparty');
+
 	}
 
 	public function get_config()

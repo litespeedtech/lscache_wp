@@ -13,7 +13,7 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 
 	public static function detect()
 	{
-		if (function_exists('is_bbpress')) {
+		if ((function_exists('is_bbpress')) && (is_bbpress())){
 			add_filter('litespeed_cache_get_purge_tags', 'LiteSpeed_Cache_ThirdParty_BBPress::get_purge_tags', 10, 2);
 		}
 	}
@@ -23,11 +23,6 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 		// Check for null to prevent crash because of another plugin's mistake.
 		if (is_null($purge_tags)) {
 			return NULL;
-		}
-
-		// If it not a bbPress page, no need to continue.
-		if (!is_bbpress()) {
-			return $purge_tags;
 		}
 
 		// Need to purge base forums page, bbPress page was updated.
