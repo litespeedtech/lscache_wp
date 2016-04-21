@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-bbpress.php');
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-woocommerce.php');
 
 

@@ -707,20 +707,16 @@ class LiteSpeed_Cache
 			return array( '*' ) ;
 		}
 
+		$purge_tags = apply_filters('litespeed_cache_get_purge_tags', $purge_tags, $post_id);
+
+		if (is_null($purge_tags)) {
+			error_log('A third party plugin deleted all third party purge tags.'
+					. ' Only site wide purge tags will be used.');
+			$purge_tags = array();
+		}
+
 		// post
 		$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $post_id ;
-
-		$ancestors = get_post_ancestors($post_id);
-
-		// for bbpress forums, topics, replies.
-		// If one is updated, the ancestors should be as well.
-		if (function_exists('is_bbpress') && is_bbpress()) {
-			if ( ! empty($ancestors)) {
-				foreach ($ancestors as $ancestor) {
-					$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $ancestor ;
-				}
-			}
-		}
 
 		// for archive of categories|tags|custom tax
 		$post = get_post($post_id) ;
