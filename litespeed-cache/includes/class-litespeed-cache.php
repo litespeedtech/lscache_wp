@@ -56,6 +56,7 @@ class LiteSpeed_Cache
 	protected $config ;
 	protected $current_vary;
 	protected $pub_purge_tags = array();
+	protected $thirdparty_cache_tags = array();
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -70,6 +71,8 @@ class LiteSpeed_Cache
 	{
 		$cur_dir = dirname(__FILE__) ;
 		require_once $cur_dir . '/class-litespeed-cache-config.php' ;
+		// Load third party detection.
+		include_once $cur_dir . '/../thirdparty/litespeed-cache-thirdparty-registry.php';
 
 		$this->config = new LiteSpeed_Cache_Config() ;
 		$this->plugin_dir = plugin_dir_path($cur_dir) ;
@@ -181,7 +184,7 @@ class LiteSpeed_Cache
 		}
 
 		$this->load_public_actions() ;
-
+		do_action('litespeed_cache_detect_thirdparty');
 	}
 
 	public function get_config()
@@ -492,68 +495,6 @@ class LiteSpeed_Cache
 		return false;
 	}
 
-	// Return true if non-cacheable.
-	private function is_woocommerce_dynamic()
-	{
-		$woocom = WC();
-		if (!isset($woocom)) {
-			return false;
-		}
-
-		// For later versions, DONOTCACHEPAGE should be set.
-		// No need to check uri/qs.
-		if (version_compare($woocom->version, '1.4.2', '>=')) {
-			return false;
-		}
-
-		$uri = esc_url($_SERVER["REQUEST_URI"]);
-		$uri_len = strlen( $uri ) ;
-
-		if ($uri_len < 5) {
-			return false;
-		}
-		$sub = substr($uri, 2);
-		$sub_len = $uri_len - 2;
-		switch($uri[1]) {
-		case 'c':
-			if ((($sub_len == 4) && (strncmp($sub, 'art/', 4) == 0))
-				|| (($sub_len == 8) && (strncmp($sub, 'heckout/', 8) == 0))) {
-				return true;
-			}
-			break;
-		case 'm':
-			if (strncmp($sub, 'y-account/', 10) == 0) {
-				return true;
-			}
-			break;
-		case 'a':
-			if (($sub_len == 6) && (strncmp($sub, 'ddons/', 6) == 0)) {
-				return true;
-			}
-			break;
-		case 'l':
-			if ((($sub_len == 6) && (strncmp($sub, 'ogout/', 6) == 0))
-				|| (($sub_len == 13) && (strncmp($sub, 'ost-password/', 13) == 0))) {
-				return true;
-			}
-			break;
-		case 'p':
-			if (strncmp($sub, 'roduct/', 7) == 0) {
-				return true;
-			}
-			break;
-		}
-
-		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]);
-		$qs_len = strlen($qs);
-		if ( !empty($qs) && ($qs_len >= 12)
-				&& (strncmp($qs, 'add-to-cart=', 12) == 0)) {
-			return true;
-		}
-
-		return false;
-	}
-
 	private function is_uri_excluded($excludes_list)
 	{
 		$uri = esc_url($_SERVER["REQUEST_URI"]);
@@ -616,13 +557,11 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('no theme used') ;
 		}
 
-		if (defined('DONOTCACHEPAGE') && DONOTCACHEPAGE) {
-			return $this->no_cache_for('DONOTCACHEPAGE is set and true');
+		$thirdparty_tags = apply_filters('litespeed_cache_is_cacheable', $this->thirdparty_cache_tags);
+		if (is_null($thirdparty_tags)) {
+			return $this->no_cache_for('Third Party Plugin determined not cacheable.');
 		}
-
-		if ((defined('WOOCOMMERCE_VERSION')) && ($this->is_woocommerce_dynamic())) {
-			return $this->no_cache_for('Cannot cache this dynamic woocommerce page') ;
-		}
+		$this->thirdparty_cache_tags = $thirdparty_tags;
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
 		if (( ! empty($excludes))
@@ -711,10 +650,9 @@ class LiteSpeed_Cache
 
 	private function get_cache_tags()
 	{
-		$cache_tags = array() ;
 		if ( $this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES) ) {
 			// if purge all, do not set any tags
-			return $cache_tags ;
+			return array();
 		}
 
 		global $post ;
@@ -722,6 +660,7 @@ class LiteSpeed_Cache
 
 		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
+		$cache_tags = $this->thirdparty_cache_tags;
 
 		$cache_tags[] = self::CACHETAG_TYPE_BLOG . get_current_blog_id();
 
