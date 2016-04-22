@@ -42,6 +42,7 @@ class LiteSpeed_Cache
 	protected $plugin_dir ;
 	protected $config ;
 	protected $current_vary;
+	protected $cacheable = false;
 	protected $pub_purge_tags = array();
 	protected $thirdparty_cache_tags = array();
 
@@ -154,6 +155,7 @@ class LiteSpeed_Cache
 		}
 
 		define('LITESPEED_CACHE_ENABLED', true);
+		ob_start();
 		//TODO: Uncomment this when esi is implemented.
 //		add_action('init', array($this, 'check_admin_bar'), 0);
 //		$this->add_actions_esi();
@@ -323,6 +325,7 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 
+		add_action('shutdown', array($this, 'send_headers'), 0);
 		// purge_single_post will only purge that post by tag
 		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
 		// TODO: private purge?
@@ -395,14 +398,23 @@ class LiteSpeed_Cache
 
 	private function send_purge_headers() {
 		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
-		if (in_array('*', $this->pub_purge_tags )) {
+		$purge_tags = array_merge($this->pub_purge_tags,
+				LiteSpeed_Cache_Tags::get_purge_tags());
+		$purge_tags = array_unique($purge_tags);
+
+		if (empty($purge_tags)) {
+			return;
+		}
+
+		if (in_array('*', $purge_tags )) {
 			$cache_purge_header .= ': *';
 		}
 		else {
-			$cache_purge_header .= ': tag=' . implode(',', $this->pub_purge_tags);
+			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
 		}
 		@header($cache_purge_header);
-		$this->debug_log("send purge headers " . $cache_purge_header, LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
+		$this->debug_log("send purge headers " . $cache_purge_header,
+				LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
 		// TODO: private cache headers
 //		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
 //				. ': private,tag=' . implode(',', $this->ext_purge_private_tags);
@@ -417,7 +429,7 @@ class LiteSpeed_Cache
 		else {
 			$this->add_purge_tags('*');
 		}
-		$this->send_purge_headers();
+//		$this->send_purge_headers();
 	}
 
 	/**
@@ -428,7 +440,7 @@ class LiteSpeed_Cache
 	 */
 	public function purge_front(){
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
-		$this->send_purge_headers();
+//		$this->send_purge_headers();
 	}
 
 	public function purge_post( $id )
@@ -449,7 +461,7 @@ class LiteSpeed_Cache
 		else {
 			$this->add_purge_tags($purge_tags);
 		}
-		$this->send_purge_headers();
+//		$this->send_purge_headers();
 	}
 
 	public function purge_single_post($id) {
@@ -550,11 +562,10 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('no theme used') ;
 		}
 
-		$thirdparty_tags = apply_filters('litespeed_cache_is_cacheable', $this->thirdparty_cache_tags);
-		if (is_null($thirdparty_tags)) {
+		$cacheable = apply_filters('litespeed_cache_is_cacheable', true);
+		if (!$cacheable) {
 			return $this->no_cache_for('Third Party Plugin determined not cacheable.');
 		}
-		$this->thirdparty_cache_tags = $thirdparty_tags;
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
 		if (( ! empty($excludes))
@@ -618,6 +629,17 @@ class LiteSpeed_Cache
 	public function check_cacheable()
 	{
 		if ( $this->is_cacheable() ) {
+			$this->cacheable = true;
+		}
+	}
+
+	public function send_headers()
+	{
+		do_action('litespeed_cache_add_purge_tags');
+		$this->send_purge_headers();
+
+		if ($this->cacheable) {
+			do_action('litespeed_cache_add_cache_tags');
 			if ( is_front_page() ){
 				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
 			}
@@ -625,20 +647,20 @@ class LiteSpeed_Cache
 				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 			}
 			$cache_control_val = 'public,max-age=' . $ttl /*. ',esi=on'*/ ;
+			$cache_tags = $this->get_cache_tags();
+			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
 
-			$cache_tags = $this->get_cache_tags() ;
-
-			if ( ! empty($cache_tags) ) {
+			if (!empty($cache_tags)) {
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG . ': ' . implode(',', $cache_tags) ;
 				$this->debug_log('cache_control_header: ' . LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ' . $cache_control_val ."\n tag_header: " . $cache_tag_header) ;
-				@header($cache_tag_header) ;
+				@header($cache_tag_header);
 			}
 		}
 		else {
 			$cache_control_val = 'no-cache' /*. ',esi=on'*/ ;
 		}
 		@header(LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ' . $cache_control_val);
-		}
+	}
 
 
 	private function get_cache_tags()
@@ -653,9 +675,7 @@ class LiteSpeed_Cache
 
 		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
-		$cache_tags = $this->thirdparty_cache_tags;
-
-		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
+		$cache_tags = LiteSpeed_Cache_Tags::get_cache_tags();
 
 		if ( is_front_page() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE ;
@@ -712,13 +732,7 @@ class LiteSpeed_Cache
 			return array( '*' ) ;
 		}
 
-		$purge_tags = apply_filters('litespeed_cache_get_purge_tags', $purge_tags, $post_id);
-
-		if (is_null($purge_tags)) {
-			error_log('A third party plugin deleted all third party purge tags.'
-					. ' Only site wide purge tags will be used.');
-			$purge_tags = array();
-		}
+		do_action('litespeed_cache_on_purge_post', $post_id);
 
 		// post
 		$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $post_id ;

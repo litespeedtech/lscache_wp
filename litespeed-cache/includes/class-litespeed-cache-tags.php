@@ -32,7 +32,44 @@ class LiteSpeed_Cache_Tags
 	const HEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
 	const HEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
 
+	static $thirdparty_purge_tags = array();
+	static $thirdparty_cache_tags = array();
 
+	public static function get_cache_tags()
+	{
+		if (empty(self::$thirdparty_cache_tags)) {
+			return self::$thirdparty_cache_tags;
+		}
+		return array_unique(self::$thirdparty_cache_tags);
+	}
+
+	public static function add_cache_tag($tag)
+	{
+		if (is_array($tag)) {
+			self::$thirdparty_cache_tags = array_merge(self::$thirdparty_cache_tags, $tag);
+		}
+		else {
+			self::$thirdparty_cache_tags[] = $tag;
+		}
+	}
+
+	public static function get_purge_tags()
+	{
+		if (empty(self::$thirdparty_purge_tags)) {
+			return self::$thirdparty_purge_tags;
+		}
+		return array_unique(self::$thirdparty_purge_tags);
+	}
+
+	public static function add_purge_tag($tag)
+	{
+		if (is_array($tag)) {
+			self::$thirdparty_purge_tags = array_merge(self::$thirdparty_purge_tags, $tag);
+		}
+		else {
+			self::$thirdparty_purge_tags[] = $tag;
+		}
+	}
 
 }
 
