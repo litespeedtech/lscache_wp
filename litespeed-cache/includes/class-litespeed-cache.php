@@ -44,7 +44,6 @@ class LiteSpeed_Cache
 	protected $current_vary;
 	protected $cacheable = false;
 	protected $pub_purge_tags = array();
-	protected $thirdparty_cache_tags = array();
 
 	/**
 	 * Define the core functionality of the plugin.
