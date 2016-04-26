@@ -707,7 +707,7 @@ class LiteSpeed_Cache_Admin
 		$cookie_title = __('Cookie List', 'litespeed-cache');
 		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of them, \'\ \'.', 'litespeed-cache')
 				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
@@ -729,7 +729,7 @@ class LiteSpeed_Cache_Admin
 		$ua_title = __('User Agent List', 'litespeed-cache');
 		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Separate each user agent with a bar, \'|\'.', 'litespeed-cache')
-				. __(' Spaces should have a backslash in front of it, \'\ \'.', 'litespeed-cache')
+				. __(' Spaces should have a backslash in front of them, \'\ \'.', 'litespeed-cache')
 				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 		if ($this->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
@@ -768,7 +768,7 @@ class LiteSpeed_Cache_Admin
 		$input_enable = $this->input_field_radio($id, $enable_levels, intval($options[$id])) ;
 
 		$enable_desc = '<strong>' . __('NOTICE', 'litespeed-cache') . ':</strong>'
-		. __(' When disabling the cache, any cached entries for this blog will be purged.', 'litespeed-cache');
+		. __(' When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache');
 		if( is_multisite() ){
 			$enable_desc .= '<br>'
 			. __('You can override network admin settings here.', 'litespeed-cache');

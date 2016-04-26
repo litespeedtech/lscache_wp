@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.5
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -30,9 +30,6 @@ For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/f
 3. In LiteSpeed Web Server - Under "Cache Policy" set the following: <br>
 Enable Public Cache - No<br> 
 Check Public Cache - Yes<br>
-Cache Request with Query String - Yes<br>
-Cache Request with Cookie - Yes<br>
-Cache Response with Cookie - Yes<br>
 Ignore Request Cache-Control - Yes<br>
 Ignore Response Cache-Control - Yes
 4. In LiteSpeed Web Server - Perform a Graceful Restart.
@@ -78,6 +75,18 @@ pages are cacheable. We are always looking for feedback, so if you encounter any
 3. Purge the cache to use the updated pages.
 
 == Changelog ==
+= 1.0.5 =
+* [BETA] Added NextGen Gallery plugin support.
+* Added third party plugin integration.
+* Improved cache tag system.
+* Improved formatting for admin settings pages.
+* Converted bbPress to use the new third party integration system.
+* Converted WooCommerce to use the new third party integration system.
+* If .htaccess is not writable, disable separate mobile view and do not cache cookies/user agents.
+* Cache is now automatically purged when disabled.
+* Fixed a bug where .htaccess was not checked properly when adding common rules.
+* Fixed a bug where multisite setups would be completely purged when one site requested a purge all.
+
 = 1.0.4 =
 * Added logic to cache commenters.
 * Added htaccess backup to the install script.
