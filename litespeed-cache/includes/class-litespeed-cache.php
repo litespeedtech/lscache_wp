@@ -1,16 +1,5 @@
 <?php
 
-/* NOTICE: To other plugin developers:
- * If your plugin does something that may update pages (e.g. a like button),
- * add the actions below to purge the cache of the updated pages.
- * The example code block must be called prior to any response body output.
- * This includes any 'echo' outputs.
- *
- * Example:
- * if (defined('LITESPEED_CACHE_ENABLED')) {
- *		do_action('lscwp_purge_single_post', $post_id);
- * }
- */
 
 /**
  * The core plugin class.
