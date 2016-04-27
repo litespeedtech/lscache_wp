@@ -1,10 +1,12 @@
 <?php
 
-
 /**
+ * The Third Party integration with the NextGen Gallery plugin.
  *
- *
- * @since 1.0.5
+ * @since		1.0.5
+ * @package		LiteSpeed_Cache
+ * @subpackage	LiteSpeed_Cache/thirdparty
+ * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_ThirdParty_NextGenGallery
 {
@@ -14,9 +16,12 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	const CACHETAG_TAGS = 'NGG_T.';
 
 	/**
+	 * Detect is triggered at the load_nextgen_gallery_modules action.
 	 *
+	 * If this action is triggered, assume NextGen Gallery is used.
 	 *
-	 * @since 1.0.5
+	 * @since	1.0.5
+	 * @access	public
 	 */
 	public static function detect()
 	{
@@ -34,9 +39,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	}
 
 	/**
+	 * When an image is added, need to purge all pages that displays its gallery.
 	 *
-	 *
-	 * @since 1.0.5
+	 * @since	1.0.5
+	 * @access	public
+	 * @param	string	$image	The image object added.
 	 */
 	public static function add_image($image)
 	{
@@ -50,9 +57,10 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	}
 
 	/**
-	 *
+	 * When an image is updated, need to purge all pages that displays its gallery.
 	 *
 	 * @since 1.0.5
+	 * @access	public
 	 */
 	public static function update_image()
 	{
@@ -73,9 +81,10 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	}
 
 	/**
-	 *
+	 * When an image is deleted, need to purge all pages that displays its gallery.
 	 *
 	 * @since 1.0.5
+	 * @access	public
 	 */
 	public static function delete_image()
 	{
@@ -85,9 +94,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	}
 
 	/**
-	 *
+	 * When a gallery is updated, need to purge all pages that display the gallery.
 	 *
 	 * @since 1.0.5
+	 * @access  public
+	 * @param	integer		$gid	The gallery id of the gallery updated.
 	 */
 	public static function update_gallery($gid)
 	{
@@ -95,9 +106,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	}
 
 	/**
-	 *
+	 * When an album is updated, need to purge all pages that display the album.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @param	integer		$aid	The album id of the album updated.
 	 */
 	public static function update_album($aid)
 	{
@@ -105,9 +118,12 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	}
 
 	/**
-	 *
+	 * When rendering a page, if the page has a gallery, album or tag cloud,
+	 * it needs to be tagged appropriately.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @param object $render_parms Parameters used to render the associated part of the page.
 	 */
 	public static function add_container($render_parms)
 	{

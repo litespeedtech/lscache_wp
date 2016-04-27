@@ -1,15 +1,22 @@
 <?php
 
-
-
+/**
+ * The Third Party integration with the bbPress plugin.
+ *
+ * @since		1.0.5
+ * @package		LiteSpeed_Cache
+ * @subpackage	LiteSpeed_Cache/thirdparty
+ * @author		LiteSpeed Technologies <info@litespeedtech.com>
+ */
 class LiteSpeed_Cache_ThirdParty_BBPress
 {
 
 
 	/**
-	 *
+	 * Detect if bbPress is installed and if the page is a bbPress page.
 	 *
 	 * @since 1.0.5
+	 * @access public
 	 */
 	public static function detect()
 	{
@@ -19,9 +26,12 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	}
 
 	/**
-	 *
+	 * When a bbPress page is purged, need to purge the forums list and
+	 * any/all ancestor pages.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @param integer $post_id The post id of the page being purged.
 	 */
 	public static function on_purge($post_id)
 	{

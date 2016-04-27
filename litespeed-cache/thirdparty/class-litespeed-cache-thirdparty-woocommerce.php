@@ -1,18 +1,21 @@
 <?php
 
-
 /**
+ * The Third Party integration with the WooCommerce plugin.
  *
- *
- * @since 1.0.5
+ * @since		1.0.5
+ * @package		LiteSpeed_Cache
+ * @subpackage	LiteSpeed_Cache/thirdparty
+ * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_ThirdParty_WooCommerce
 {
 
 	/**
-	 *
+	 * Detects if WooCommerce is installed.
 	 *
 	 * @since 1.0.5
+	 * @access public
 	 */
 	public static function detect()
 	{
@@ -22,9 +25,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 *
+	 * Check if the page is cacheable according to WooCommerce.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @param boolean $cacheable True if previous filter determined the page is cacheable.
+	 * @return boolean True if cacheable, false if not.
 	 */
 	public static function is_cacheable($cacheable)
 	{
