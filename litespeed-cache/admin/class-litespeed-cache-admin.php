@@ -71,6 +71,11 @@ class LiteSpeed_Cache_Admin
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js', array( 'jquery' ), $this->version, false) ;
 	}
 
+	/**
+	 * Register the admin menu display.
+	 *
+	 * @since	1.0.0
+	 */
 	public function register_admin_menu()
 	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
@@ -84,6 +89,12 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 * add_submenu_page callback to determine which submenu page to display
+	 * if the admin selected a LiteSpeed Cache dashboard page.
+	 *
+	 * @since 1.0.4
+	 */
 	public function dash_select() {
 		$page = $_REQUEST['page'];
 		if (strncmp($page, 'lscache-', 8) != 0) {
@@ -124,11 +135,21 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	public static function redir_settings() {
 		wp_redirect(admin_url('options-general.php?page=litespeedcache'), 301);
 		exit;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function add_submenu($page_title, $menu_title, $menu_slug, $cb = '') {
 		if (!empty($cb)) {
 			$fn = array($this, $cb);
@@ -138,11 +159,21 @@ class LiteSpeed_Cache_Admin
 		add_action('load-' . $submenu_page, array( $this, 'add_help_tabs' ));
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function register_submenu_manage() {
 		$this::add_submenu(sprintf(__('%s Manager', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function register_submenu_settings() {
 		$this::add_submenu(sprintf(__('%s Settings', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
@@ -154,6 +185,11 @@ class LiteSpeed_Cache_Admin
 
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function register_submenu_info() {
 		$this::add_submenu(sprintf(__('%s Information', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Information', 'litespeed-cache'), 'lscache-info', 'dash_select');
@@ -162,6 +198,11 @@ class LiteSpeed_Cache_Admin
 
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function register_submenus() {
 		$this->register_submenu_manage();
 		$this->register_submenu_settings();
@@ -169,12 +210,22 @@ class LiteSpeed_Cache_Admin
 
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function register_dash_menu() {
 		$check = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
 				'lscache-dash', '', 'dashicons-performance');
 		$this->register_submenus();
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function admin_init()
 	{
 		// check for upgrade
@@ -189,6 +240,11 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function add_help_tabs()
 	{
 		$screen = get_current_screen() ;
@@ -212,6 +268,11 @@ class LiteSpeed_Cache_Admin
 		) ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.2
+	 */
 	private function validate_enabled($input, &$options) {
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
 		if ( !isset($input[$id])) {
@@ -228,6 +289,11 @@ class LiteSpeed_Cache_Admin
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function validate_common_rewrites($input, $options, &$errors) {
 		$content = '';
 		$prefix = '<IfModule LiteSpeed>';
@@ -360,6 +426,11 @@ class LiteSpeed_Cache_Admin
 		return $options;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function validate_plugin_settings( $input )
 	{
 		$config = LiteSpeed_Cache::config() ;
@@ -453,9 +524,9 @@ class LiteSpeed_Cache_Admin
 			$options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
 		}
 
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
+		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
 		$options[$id] = '';
-        if ( isset($input[$id]) ) {
+		if ( isset($input[$id]) ) {
 			$cat_ids = array();
 			$cats = explode("\n", $input[$id]);
 			foreach ( $cats as $cat ) {
@@ -475,11 +546,11 @@ class LiteSpeed_Cache_Admin
 			if ( !empty($cat_ids)) {
 				$options[$id] = implode(',', $cat_ids);
 			}
-        }
+		}
 
-        $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG ;
+		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG ;
 		$options[$id] = '';
-        if ( isset($input[$id]) ) {
+		if ( isset($input[$id]) ) {
 			$tag_ids = array();
 			$tags = explode("\n", $input[$id]);
 			foreach ( $tags as $tag ) {
@@ -499,7 +570,7 @@ class LiteSpeed_Cache_Admin
 			if ( !empty($tag_ids)) {
 				$options[$id] = implode(',', $tag_ids);
 			}
-        }
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
 		if ( isset($input[$id]) ) {
@@ -537,6 +608,11 @@ class LiteSpeed_Cache_Admin
 		return $options ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function add_plugin_links( $links )
 	{
 		//$links[] = '<a href="' . admin_url('admin.php?page=litespeedcache') .'">Settings</a>';
@@ -544,6 +620,11 @@ class LiteSpeed_Cache_Admin
 		return $links ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function show_menu_manage()
 	{
 		$config = LiteSpeed_Cache::config() ;
@@ -572,6 +653,11 @@ class LiteSpeed_Cache_Admin
 		echo "</form></div></div>\n" ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function check_cache_mangement_actions()
 	{
 		if ( isset($_POST['purgeall']) ) {
@@ -584,6 +670,11 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function show_compatibilities_tab() {
 		if (function_exists('the_views')) {
 			return true;
@@ -591,6 +682,11 @@ class LiteSpeed_Cache_Admin
 		return false;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function show_menu_settings()
 	{
 		$config = LiteSpeed_Cache::config() ;
@@ -647,6 +743,11 @@ class LiteSpeed_Cache_Admin
 		echo "</form></div>\n" ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function check_license( $config, &$error_msg )
 	{
 		if ($config->is_caching_allowed() == false) {
@@ -657,6 +758,11 @@ class LiteSpeed_Cache_Admin
 		return true ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_mobile_view($options) {
 
 		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
@@ -701,6 +807,11 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_cookies_exclude(&$cookie_title, &$cookie_desc) {
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		$cookies_rule = '';
@@ -723,6 +834,11 @@ class LiteSpeed_Cache_Admin
 				!is_writable(self::get_htaccess_path()));
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_useragent_exclude(&$ua_title, &$ua_desc) {
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		$ua_rule = '';
@@ -744,6 +860,11 @@ class LiteSpeed_Cache_Admin
 		return $ua_list;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function show_settings_general( $options )
 	{
 		$buf = $this->input_group_start(__('General', 'litespeed-cache')) ;
@@ -804,6 +925,11 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function show_settings_purge( $purge_options )
 	{
 		$buf = $this->input_group_start(__('Auto Purge Rules For Publish/Update', 'litespeed-cache'),
@@ -879,74 +1005,79 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function show_settings_excludes( $options )
 	{
 
-        $uri_description =
-            __('Enter a list of urls that you do not want to have cached.', 'litespeed-cache')
-            . '<br>'
-            . __('The urls will be compared to the REQUEST_URI server variable.', 'litespeed-cache')
-            . '<br>'
-            . __('There should only be one url per line.', 'litespeed-cache')
-            . '<br><br>
+		$uri_description =
+			__('Enter a list of urls that you do not want to have cached.', 'litespeed-cache')
+			. '<br>'
+			. __('The urls will be compared to the REQUEST_URI server variable.', 'litespeed-cache')
+			. '<br>'
+			. __('There should only be one url per line.', 'litespeed-cache')
+			. '<br><br>
 			<b>' . __('NOTE: ', 'litespeed-cache') . '</b>' . __('URLs must start with a \'/\' to be correctly matched.', 'litespeed-cache')
-            . '<br>'
-            . __('To do an exact match, add \'$\' to the end of the URL.', 'litespeed-cache')
+			. '<br>'
+			. __('To do an exact match, add \'$\' to the end of the URL.', 'litespeed-cache')
 			. '<br>'
 			. __('Any surrounding whitespaces will be trimmed.', 'litespeed-cache')
-            . '<br><br>'
-            . sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
-            . '<br>
+			. '<br><br>'
+			. sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
+			. '<br>
 			<pre>/excludethis.php</pre>
-            <br>';
+			<br>';
 
 		$cat_description =
-            '<b>' . __('All categories are cached by default.', 'litespeed-cache') . '</b>
+			'<b>' . __('All categories are cached by default.', 'litespeed-cache') . '</b>
 			<br>'
 			. __('To prevent a category from being cached, enter it in the text area below, one per line.', 'litespeed-cache')
 			. '<br>
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Category ID is not found, the name will be removed on save.', 'litespeed-cache')
-            . '<br><br>';
+			. '<br><br>';
 
 		$tag_description =
-            '<b>' . __('All tags are cached by default.', 'litespeed-cache') . '</b>
+			'<b>' . __('All tags are cached by default.', 'litespeed-cache') . '</b>
 			<br>'
 			. __('To prevent tags from being cached, enter it in the text area below, one per line.', 'litespeed-cache')
 			. '<br>
 			<b>' . __('NOTE:', 'litespeed-cache') . '</b>' . __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache')
-            . '<br><br>';
+			. '<br><br>';
 
-        $tr = '<tr><td>' ;
-        $endtr = "</td></tr>\n" ;
+		$tr = '<tr><td>' ;
+		$endtr = "</td></tr>\n" ;
 
-        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
-        $excludes_buf = $options[$excludes_id];
-        $buf = $this->input_group_start(
-                                __('URI List', 'litespeed-cache'), $uri_description);
-        $buf .= $tr ;
-        $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
-                                                '10', '80', '');
-        $buf .= $endtr;
+		$excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
+		$excludes_buf = $options[$excludes_id];
+		$buf = $this->input_group_start(__('URI List', 'litespeed-cache'),
+										$uri_description);
+		$buf .= $tr ;
+		$buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
+											'10', '80', '');
+		$buf .= $endtr;
 
 		$buf .= $this->input_group_end();
 
-        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+		$excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
 		$excludes_buf = '';
 		$cat_ids = $options[$excludes_id];
 		if ($cat_ids != '') {
 			$id_list = explode( ',', $cat_ids);
 			$excludes_buf = implode("\n", array_map(get_cat_name, $id_list));
 		}
-        $buf .= $this->input_group_start(
-                                __('Category List', 'litespeed-cache'), $cat_description);
-        $buf .= $tr ;
-        $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
-                                                '5', '80', '');
-        $buf .= $endtr;
+		$buf .= $this->input_group_start(__('Category List', 'litespeed-cache'),
+										$cat_description);
+		$buf .= $tr ;
+		$buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
+											'5', '80', '');
+		$buf .= $endtr;
 
 		$buf .= $this->input_group_end();
 
-        $excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+		$excludes_id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
 		$excludes_buf = '';
 		$tag_ids = $options[$excludes_id];
 		if ($tag_ids != '') {
@@ -960,12 +1091,12 @@ class LiteSpeed_Cache_Admin
 				$excludes_buf = implode("\n", $tag_names);
 			}
 		}
-        $buf .= $this->input_group_start(
-                                __('Tag List', 'litespeed-cache'), $tag_description);
-        $buf .= $tr ;
-        $buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
-                                                '5', '80', '');
-        $buf .= $endtr;
+		$buf .= $this->input_group_start(__('Tag List', 'litespeed-cache'),
+										$tag_description);
+		$buf .= $tr ;
+		$buf .= $this->input_field_textarea($excludes_id, $excludes_buf,
+											'5', '80', '');
+		$buf .= $endtr;
 
 		$buf .= $this->input_group_end();
 
@@ -984,13 +1115,18 @@ class LiteSpeed_Cache_Admin
 		$ua_desc = '';
 		$ua_buf = $this->show_useragent_exclude($ua_title, $ua_desc);
 
-        $buf .= $this->input_group_start($ua_title, $ua_desc);
-        $buf .= $tr . $ua_buf . $endtr;
+		$buf .= $this->input_group_start($ua_title, $ua_desc);
+		$buf .= $tr . $ua_buf . $endtr;
 		$buf .= $this->input_group_end();
 
-        return $buf;
-    }
+		return $buf;
+	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function show_settings_test( $options )
 	{
 		$buf = $this->input_group_start(__('Developer Testing', 'litespeed-cache')) ;
@@ -1024,7 +1160,12 @@ class LiteSpeed_Cache_Admin
 		return $buf ;
 	}
 
-		private function show_wp_postviews_help() {
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
+	private function show_wp_postviews_help() {
 		$buf = '';
 		$example_src = htmlspecialchars('<?php if(function_exists(\'the_views\' )) { the_views(); } ?>');
 		$example_div = htmlspecialchars('<div id="postviews_lscwp" > </div>');
@@ -1065,6 +1206,11 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_settings_compatibilities( $options ) {
 
 		$buf = '';
@@ -1075,6 +1221,11 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_info_compatibility() {
 		$known_compat = array(
 			'bbPress',
@@ -1114,6 +1265,11 @@ class LiteSpeed_Cache_Admin
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_info_info() {
 
 		// Configurations help.
@@ -1163,6 +1319,11 @@ class LiteSpeed_Cache_Admin
 		echo $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_info_faqs() {
 		$buf =  '<div class="wrap"><h2>LiteSpeed Cache FAQs</h2>';
 
@@ -1219,6 +1380,11 @@ class LiteSpeed_Cache_Admin
 		echo $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_info_common_rewrite() {
 		$mv_header = __('Mobile Views: ', 'litespeed-cache');
 		$mv_desc = __('Some sites have adaptive views, meaning the page sent will adapt to the browser type (desktop vs mobile).', 'litespeed-cache')
@@ -1283,6 +1449,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	private function build_collapsible($header, $desc, $example) {
 		$buf = '<div class="postbox closed">'
 		. '<button type="button" class="handlediv button-link" aria-expanded="false">'
@@ -1298,10 +1469,20 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private static function cleanup_input($input) {
 		return stripslashes(trim($input));
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	public function parse_settings() {
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
@@ -1351,6 +1532,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_info_settings() {
 
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
@@ -1402,6 +1588,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		echo $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	public function edit_htaccess_res() {
 		if (!$this->messages) {
 			return;
@@ -1419,10 +1610,20 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		echo $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private static function get_htaccess_path() {
 		return get_home_path() . '.htaccess';
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	public static function clear_htaccess() {
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
@@ -1486,6 +1687,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	// Currently returns true if success, error message if fail.
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private static function do_edit_htaccess($content, $cleanup = true) {
 		$path = self::get_htaccess_path();
 
@@ -1514,6 +1720,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	public function parse_edit_htaccess() {
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
@@ -1536,6 +1747,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private static function get_htaccess_contents(&$content) {
 		$path = self::get_htaccess_path();
 		if (!file_exists($path)) {
@@ -1557,6 +1773,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function show_edit_htaccess() {
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 		$buf .= '<div class="welcome-panel">';
@@ -1603,6 +1824,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		echo $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private static function build_wrappers($wrapper, &$end) {
 		$end = '###LSCACHE END ' . $wrapper . '###';
 		return '###LSCACHE START ' . $wrapper . '###';
@@ -1620,6 +1846,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 * If it returns array, first index will be true/false for success/fail
 	 * Second index will be the returned string. This will be either the
 	 * new content string or an error message.
+	 */
+	/**
+	 *
+	 *
+	 * @since 1.0.4
 	 */
 	private static function set_common_rule($content, &$output, $wrapper, $cond,
 			$match, $env, $flag = '') {
@@ -1659,6 +1890,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return array(true, trim($buf));
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function get_common_rule($wrapper, $cond, &$match) {
 
 		if (self::get_htaccess_contents($match) === false) {
@@ -1694,6 +1930,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function input_group_start( $title = '', $description = '' )
 	{
 		$buf = '' ;
@@ -1707,11 +1948,21 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function input_group_end()
 	{
 		return "</table>\n" ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function display_config_row( $label, $input_field, $notes = '' )
 	{
 		$buf = '<tr><th scope="row">' . $label . '</th><td>' . $input_field ;
@@ -1722,6 +1973,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function input_field_checkbox( $id, $value, $checked_value, $label = '',
 											$on_click = '', $disabled = false)
 	{
@@ -1743,6 +1999,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.3
+	 */
 	private function input_field_radio( $id, $radiooptions, $checked_value)
 	{
 		$buf = '';
@@ -1758,6 +2019,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function input_field_select( $id, $seloptions, $selected_value )
 	{
 		$buf = '<select name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" id="'
@@ -1773,6 +2039,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function input_field_text( $id, $value, $size = '', $style = '', $after = '', $readonly = false )
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" id="'
@@ -1793,10 +2064,15 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function input_field_textarea( $id, $value, $rows = '', $cols = '', $style = '', $readonly = false)
 	{
 		$buf = '<textarea name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text"
-                id="' . $id . '"';
+				id="' . $id . '"';
 		if ( $rows ) {
 			$buf .= ' rows="' . $rows . '"';
 		}
@@ -1814,6 +2090,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function input_field_hidden( $id, $value)
 	{
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="hidden" id="'

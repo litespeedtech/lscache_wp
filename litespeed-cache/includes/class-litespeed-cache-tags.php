@@ -35,6 +35,11 @@ class LiteSpeed_Cache_Tags
 	static $thirdparty_purge_tags = array();
 	static $thirdparty_cache_tags = array();
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function get_cache_tags()
 	{
 		if (empty(self::$thirdparty_cache_tags)) {
@@ -43,6 +48,11 @@ class LiteSpeed_Cache_Tags
 		return array_unique(self::$thirdparty_cache_tags);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function add_cache_tag($tag)
 	{
 		if (is_array($tag)) {
@@ -53,6 +63,11 @@ class LiteSpeed_Cache_Tags
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function get_purge_tags()
 	{
 		if (empty(self::$thirdparty_purge_tags)) {
@@ -61,6 +76,11 @@ class LiteSpeed_Cache_Tags
 		return array_unique(self::$thirdparty_purge_tags);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function add_purge_tag($tag)
 	{
 		if (is_array($tag)) {

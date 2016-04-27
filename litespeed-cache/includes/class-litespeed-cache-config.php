@@ -62,6 +62,11 @@ class LiteSpeed_Cache_Config
 	protected $purge_options ;
 	protected $debug_tag = 'LiteSpeed_Cache' ;
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct()
 	{
 		$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
@@ -87,11 +92,21 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_options()
 	{
 		return $this->options ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_option( $id )
 	{
 		if ( isset($this->options[$id]) ) {
@@ -103,16 +118,31 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_purge_options()
 	{
 		return $this->purge_options ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function purge_by_post( $flag )
 	{
 		return in_array($flag, $this->purge_options) ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	protected function get_default_options()
 	{
 		$default_purge_options = array(
@@ -159,6 +189,11 @@ class LiteSpeed_Cache_Config
 		return $default_options ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.2
+	 */
 	public function get_site_options()
 	{
 		if (!is_multisite()) {
@@ -179,6 +214,11 @@ class LiteSpeed_Cache_Config
 		return $default_site_options;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function plugin_upgrade()
 	{
 		$default_options = $this->get_default_options() ;
@@ -208,6 +248,11 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function wp_cache_var_setter( $enable )
 	{
 		if ( $enable ) {
@@ -244,6 +289,11 @@ class LiteSpeed_Cache_Config
 		return true ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.2
+	 */
 	public function incr_multi_enabled() {
 		$site_options = $this->get_site_options();
 		$count = $site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT];
@@ -253,6 +303,11 @@ class LiteSpeed_Cache_Config
 		return $count;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.2
+	 */
 	public function decr_multi_enabled() {
 		$site_options = $this->get_site_options();
 		if ( !site_options) {
@@ -266,12 +321,22 @@ class LiteSpeed_Cache_Config
 		return $count;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function plugin_activation()
 	{
 		$res = update_option(self::OPTION_NAME, $this->get_default_options()) ;
 		$this->debug_log("plugin_activation update option = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function plugin_deactivation()
 	{
 		if ((!is_multisite()) || (is_network_admin())) {
@@ -281,6 +346,11 @@ class LiteSpeed_Cache_Config
 		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function debug_log( $mesg, $log_level = self::LOG_LEVEL_DEBUG )
 	{
 		if ( (true === WP_DEBUG) && ($log_level <= $this->options[self::OPID_DEBUG]) ) {
@@ -299,6 +369,11 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function is_caching_allowed() {
 		if ( isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) {
 			return true;
@@ -306,6 +381,11 @@ class LiteSpeed_Cache_Config
 		return false;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function is_plugin_enabled() {
 		if ( $this->is_caching_allowed() && ($this->options[self::OPID_ENABLED])) {
 			return true;

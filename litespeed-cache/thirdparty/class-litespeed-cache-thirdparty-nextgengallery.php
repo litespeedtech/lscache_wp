@@ -1,6 +1,11 @@
 <?php
 
 
+/**
+ *
+ *
+ * @since 1.0.5
+ */
 class LiteSpeed_Cache_ThirdParty_NextGenGallery
 {
 
@@ -8,6 +13,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	const CACHETAG_GALLERIES = 'NGG_G.';
 	const CACHETAG_TAGS = 'NGG_T.';
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function detect()
 	{
 		add_action('ngg_added_new_image', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::add_image');
@@ -23,17 +33,27 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		add_filter('ngg_displayed_gallery_cache_params', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::add_container');
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function add_image($image)
 	{
-        if (!$image) {
-            return;
-        }
-        $gallery = $image->get_gallery();
-        if (($gallery) && ($gallery->pageid)) {
+		if (!$image) {
+			return;
+		}
+		$gallery = $image->get_gallery();
+		if (($gallery) && ($gallery->pageid)) {
 			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $gallery->pageid);
-        }
+		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function update_image()
 	{
 		if ($_POST['id']) {
@@ -52,6 +72,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function delete_image()
 	{
 		if ($_GET['gid']) {
@@ -59,16 +84,31 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function update_gallery($gid)
 	{
 		LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $gid);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function update_album($aid)
 	{
 		LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_ALBUMS . $aid);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function add_container($render_parms)
 	{
 		// Check if null. If it is null, can't continue.

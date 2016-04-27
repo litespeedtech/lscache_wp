@@ -1,10 +1,19 @@
 <?php
 
 
+/**
+ *
+ *
+ * @since 1.0.5
+ */
 class LiteSpeed_Cache_ThirdParty_WooCommerce
 {
 
-
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function detect()
 	{
 		if (defined('WOOCOMMERCE_VERSION')) {
@@ -12,6 +21,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function is_cacheable($cacheable)
 	{
 		if (!$cacheable) {

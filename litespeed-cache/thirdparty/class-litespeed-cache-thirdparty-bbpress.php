@@ -6,6 +6,11 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 {
 
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function detect()
 	{
 		if ((function_exists('is_bbpress')) && (is_bbpress())){
@@ -13,6 +18,11 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public static function on_purge($post_id)
 	{
 		// Need to purge base forums page, bbPress page was updated.

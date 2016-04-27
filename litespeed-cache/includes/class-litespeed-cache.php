@@ -61,6 +61,11 @@ class LiteSpeed_Cache
 		add_action('after_setup_theme', array( $this, 'init' )) ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public static function run()
 	{
 		if ( ! isset(self::$instance) ) {
@@ -68,16 +73,31 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public static function plugin()
 	{
 		return self::$instance ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public static function config()
 	{
 		return self::$instance->config ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function debug_log( $mesg, $log_level = LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG )
 	{
 		if ( true === WP_DEBUG ) {
@@ -85,6 +105,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function register_activation()
 	{
 		if ( (!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
@@ -101,6 +126,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function register_deactivation()
 	{
 		$this->purge_all() ;
@@ -124,6 +154,11 @@ class LiteSpeed_Cache
 	}
 
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function init()
 	{
 		$module_enabled = $this->config->is_plugin_enabled();
@@ -165,11 +200,21 @@ class LiteSpeed_Cache
 		add_action('wp', array($this, 'detect'), 4);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public function detect() {
 		do_action('litespeed_cache_detect_thirdparty');
 
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_config()
 	{
 		return $this->config ;
@@ -320,6 +365,11 @@ class LiteSpeed_Cache
 		// TODO: purge by category, tag?
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function setup_cookies() {
 		$this->current_vary = isset($_SERVER[self::LSCOOKIE_VARY_NAME])
 				? $_SERVER[self::LSCOOKIE_VARY_NAME] : self::LSCOOKIE_DEFAULT_VARY;
@@ -335,6 +385,11 @@ class LiteSpeed_Cache
 
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function do_set_cookie($update_val, $expire, $ssl = false, $httponly = false) {
 		$curval = intval($_COOKIE[$this->current_vary]);
 
@@ -354,6 +409,11 @@ class LiteSpeed_Cache
 				COOKIE_DOMAIN, $ssl, $httponly);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out') {
 		if ($action == 'logged_in') {
@@ -365,6 +425,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	public function set_comment_cookie($comment, $user) {
 		if ( $user->exists() ) {
 			return;
@@ -373,6 +438,11 @@ class LiteSpeed_Cache
 		$this->do_set_cookie(self::LSCOOKIE_VARY_COMMENTER, $comment_cookie_lifetime);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function add_purge_tags($tags, $is_public = true) {
 		//TODO: implement private tag add
 		if (is_array($tags)) {
@@ -384,6 +454,11 @@ class LiteSpeed_Cache
 		$this->pub_purge_tags = array_unique($this->pub_purge_tags);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function send_purge_headers() {
 		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
 		$purge_tags = array_merge($this->pub_purge_tags,
@@ -409,6 +484,11 @@ class LiteSpeed_Cache
 //		@header($cache_purge_header, false);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function purge_all()
 	{
 		if (is_multisite() && (!is_network_admin())) {
@@ -431,6 +511,11 @@ class LiteSpeed_Cache
 //		$this->send_purge_headers();
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function purge_post( $id )
 	{
 		$post_id = intval($id);
@@ -452,6 +537,11 @@ class LiteSpeed_Cache
 //		$this->send_purge_headers();
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function purge_single_post($id) {
 		$post_id = intval($id);
 		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
@@ -461,6 +551,11 @@ class LiteSpeed_Cache
 		$this->send_purge_headers();
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.4
+	 */
 	private function check_cookies() {
 		if ($_SERVER["REQUEST_METHOD"] !== 'GET') {
 			return false;
@@ -488,6 +583,11 @@ class LiteSpeed_Cache
 		return false;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function is_uri_excluded($excludes_list)
 	{
 		$uri = esc_url($_SERVER["REQUEST_URI"]);
@@ -521,6 +621,11 @@ class LiteSpeed_Cache
 		return false;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function is_cacheable()
 	{
 		// logged_in users already excluded, no hook added
@@ -608,12 +713,22 @@ class LiteSpeed_Cache
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function no_cache_for( $reason )
 	{
 		$this->debug_log('Do not cache - ' . $reason) ;
 		return false ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	public function check_cacheable()
 	{
 		if ( $this->is_cacheable() ) {
@@ -621,6 +736,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.5
+	 */
 	public function send_headers()
 	{
 		do_action('litespeed_cache_add_purge_tags');
@@ -651,6 +771,11 @@ class LiteSpeed_Cache
 	}
 
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function get_cache_tags()
 	{
 		if ( $this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES) ) {
@@ -707,6 +832,11 @@ class LiteSpeed_Cache
 		return $cache_tags ;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.0
+	 */
 	private function get_purge_tags( $post_id )
 	{
 		// If this is a valid post we want to purge the post, the home page and any associated tags & cats
@@ -784,12 +914,22 @@ class LiteSpeed_Cache
 
 
 /* BEGIN ESI CODE, not fully implemented for now */
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function esi_admin_bar_render() {
 		echo '<!-- lscwp admin esi start -->'
 				. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
 				. '<!-- lscwp admin esi end -->';
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function check_admin_bar() {
 		if (is_admin_bar_showing()) {
 			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
@@ -798,6 +938,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function check_storefront_cart() {
 		if (has_action('storefront_header', 'storefront_header_cart')) {
 			remove_action('storefront_header', 'storefront_header_cart', 60);
@@ -807,6 +952,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function check_sidebar() {
 		if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
 			remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
@@ -816,17 +966,32 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function add_actions_esi() {
 		add_action('storefront_header',
 					array($this, 'check_storefront_cart'), 59);
 		add_action('storefront_sidebar', array($this, 'check_sidebar'), 0);
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function send_esi() {
 		status_header(200);
 		die();
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function is_esi_admin_bar($uri, $urilen) {
 		$admin = 'admin_bar.php';
 		$adminlen = strlen($admin);
@@ -841,6 +1006,11 @@ class LiteSpeed_Cache
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function is_esi_cart($uri, $urilen) {
 		$cart = 'cart.php';
 		$cartlen = strlen($cart);
@@ -856,12 +1026,22 @@ class LiteSpeed_Cache
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	public function load_sidebar_widgets() {
 		do_action('widgets_init');
 		do_action('register_sidebar');
 		do_action('wp_register_sidebar_widget');
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function is_esi_sidebar($uri, $urilen) {
 		$sidebar = 'sidebar.php';
 		$sidebarlen = strlen($sidebar);
@@ -877,6 +1057,11 @@ class LiteSpeed_Cache
 		return true;
 	}
 
+	/**
+	 *
+	 *
+	 * @since 1.0.1
+	 */
 	private function check_esi_page()
 	{
 		$prefix = '/lscwp_';
