@@ -36,9 +36,11 @@ class LiteSpeed_Cache_Tags
 	static $thirdparty_cache_tags = array();
 
 	/**
-	 *
+	 * Gets cache tags that are already added for the current page.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @return array An array of all cache tags currently added.
 	 */
 	public static function get_cache_tags()
 	{
@@ -49,9 +51,11 @@ class LiteSpeed_Cache_Tags
 	}
 
 	/**
-	 *
+	 * Adds cache tags to the list of cache tags for the current page.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @param mixed $tag A string or array of cache tags to add to the current list.
 	 */
 	public static function add_cache_tag($tag)
 	{
@@ -64,9 +68,11 @@ class LiteSpeed_Cache_Tags
 	}
 
 	/**
-	 *
+	 * Gets purge tags that are already added for the current page.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @return array An array of all purge tags currently added.
 	 */
 	public static function get_purge_tags()
 	{
@@ -77,9 +83,11 @@ class LiteSpeed_Cache_Tags
 	}
 
 	/**
-	 *
+	 * Adds purge tags to the list of purge tags for the current page.
 	 *
 	 * @since 1.0.5
+	 * @access public
+	 * @param mixed $tag A string or array of purge tags to add to the current list.
 	 */
 	public static function add_purge_tag($tag)
 	{

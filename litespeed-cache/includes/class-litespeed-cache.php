@@ -62,9 +62,10 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * The entry point for LiteSpeed Cache.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public static function run()
 	{
@@ -74,9 +75,11 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Get the LiteSpeed_Cache object.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return LiteSpeed_Cache Static instance of the LiteSpeed_Cache class.
 	 */
 	public static function plugin()
 	{
@@ -84,9 +87,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Get the LiteSpeed_Cache_Config object. Can be called outside of a
+	 * LiteSpeed_Cache object.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return LiteSpeed_Cache_Config The configurations for the accessed page.
 	 */
 	public static function config()
 	{
@@ -94,9 +100,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Logs a debug message.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param string $mesg The debug message.
+	 * @param string $log_level Optional. The log level of the message.
 	 */
 	public function debug_log( $mesg, $log_level = LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG )
 	{
@@ -106,9 +115,13 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * The activation hook callback.
 	 *
+	 * Attempts to set up the advanced cache file. If it fails for any reason,
+	 * the plugin will not activate.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function register_activation()
 	{
@@ -127,9 +140,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * The deactivation hook callback.
 	 *
+	 * Initializes all clean up functionalities.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function register_deactivation()
 	{
@@ -155,9 +171,14 @@ class LiteSpeed_Cache
 
 
 	/**
+	 * The plugin initializer.
 	 *
+	 * This function checks if the cache is enabled and ready to use, then
+	 * determines what actions need to be set up based on the type of user
+	 * and page accessed. Output is buffered if the cache is enabled.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function init()
 	{
@@ -201,19 +222,26 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Callback used to call the detect third party action.
 	 *
+	 * The detect action is used by third party plugin integration classes
+	 * to determine if they should add the rest of their hooks.
 	 *
 	 * @since 1.0.5
+	 * @access public
 	 */
-	public function detect() {
+	public function detect()
+	{
 		do_action('litespeed_cache_detect_thirdparty');
 
 	}
 
 	/**
-	 *
+	 * Get the LiteSpeed_Cache_Config object.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return LiteSpeed_Cache_Config The configurations for the accessed page.
 	 */
 	public function get_config()
 	{
@@ -366,11 +394,13 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Adds the actions used for setting up cookies on log in/out.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function setup_cookies() {
+	private function setup_cookies()
+	{
 		$this->current_vary = isset($_SERVER[self::LSCOOKIE_VARY_NAME])
 				? $_SERVER[self::LSCOOKIE_VARY_NAME] : self::LSCOOKIE_DEFAULT_VARY;
 
@@ -386,11 +416,20 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Do the action of setting the vary cookie.
 	 *
+	 * Since we are using bitwise operations, if the resulting cookie has
+	 * value zero, we need to set the expire time appropriately.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param integer $update_val The value to update.
+	 * @param integer $expire Expire time.
+	 * @param boolean $ssl True if ssl connection, false otherwise.
+	 * @param boolean $httponly True if the cookie is for http requests only, false otherwise.
 	 */
-	private function do_set_cookie($update_val, $expire, $ssl = false, $httponly = false) {
+	private function do_set_cookie($update_val, $expire, $ssl = false, $httponly = false)
+	{
 		$curval = intval($_COOKIE[$this->current_vary]);
 
 		// not, remove from curval.
@@ -410,12 +449,21 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Sets cookie denoting logged in/logged out.
 	 *
+	 * This will notify the server on next page request not to serve from cache.
 	 *
 	 * @since 1.0.1
+	 * @access public
+	 * @param mixed $logged_in_cookie
+	 * @param string $expire Expire time.
+	 * @param integer $expiration Expire time.
+	 * @param integer $user_id The user's id.
+	 * @param string $action Whether the user is logging in or logging out.
 	 */
 	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
-					$expiration = 0, $user_id = 0, $action = 'logged_out') {
+					$expiration = 0, $user_id = 0, $action = 'logged_out')
+	{
 		if ($action == 'logged_in') {
 			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN, $expire, is_ssl(), true);
 		}
@@ -426,11 +474,18 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Sets a cookie that marks the user as a commenter.
 	 *
+	 * This will notify the server on next page request not to serve
+	 * from cache if that setting is enabled.
 	 *
 	 * @since 1.0.4
+	 * @access public
+	 * @param mixed $comment Comment object
+	 * @param mixed $user The visiting user object.
 	 */
-	public function set_comment_cookie($comment, $user) {
+	public function set_comment_cookie($comment, $user)
+	{
 		if ( $user->exists() ) {
 			return;
 		}
@@ -443,7 +498,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	private function add_purge_tags($tags, $is_public = true) {
+	private function add_purge_tags($tags, $is_public = true)
+	{
 		//TODO: implement private tag add
 		if (is_array($tags)) {
 			$this->pub_purge_tags = array_merge($this->pub_purge_tags, $tags);
@@ -455,11 +511,16 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Gathers all the purge headers and sends them out to the server.
 	 *
+	 * This will collect all site wide purge tags as well as
+	 * third party plugin defined purge tags.
 	 *
 	 * @since 1.0.1
+	 * @access private
 	 */
-	private function send_purge_headers() {
+	private function send_purge_headers()
+	{
 		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
 		$purge_tags = array_merge($this->pub_purge_tags,
 				LiteSpeed_Cache_Tags::get_purge_tags());
@@ -485,9 +546,13 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Alerts LiteSpeed Web Server to purge all pages.
 	 *
+	 * For multisite installs, if this is called by a site admin (not network admin),
+	 * it will only purge all posts associated with that site.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function purge_all()
 	{
@@ -506,15 +571,21 @@ class LiteSpeed_Cache
 	 * @since    1.0.3
 	 * @access   public
 	 */
-	public function purge_front(){
+	public function purge_front()
+	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
 //		$this->send_purge_headers();
 	}
 
 	/**
+	 * Purges a post on update.
 	 *
+	 * This function will get the relevant purge tags to add to the response
+	 * as well.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param integer $id The post id to purge.
 	 */
 	public function purge_post( $id )
 	{
@@ -538,25 +609,39 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Purge a single post.
 	 *
+	 * If a third party plugin needs to purge a single post, it can send
+	 * a purge tag using this function.
 	 *
 	 * @since 1.0.1
+	 * @access public
+	 * @param integer $id The post id to purge.
 	 */
-	public function purge_single_post($id) {
+	public function purge_single_post($id)
+	{
 		$post_id = intval($id);
 		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
 			return ;
 		}
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_POST . $post_id);
-		$this->send_purge_headers();
+//		$this->send_purge_headers();
 	}
 
 	/**
+	 * Check if the user accessing the page has the commenter cookie.
 	 *
+	 * If the user does not want to cache commenters, just check if user is commenter.
+	 * Otherwise if the vary cookie is set, unset it. This is so that when
+	 * the page is cached, the page will appear as if the user was a normal user.
+	 * Normal user is defined as not a logged in user and not a commenter.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @return boolean True if do not cache for commenters and user is a commenter. False otherwise.
 	 */
-	private function check_cookies() {
+	private function check_cookies()
+	{
 		if ($_SERVER["REQUEST_METHOD"] !== 'GET') {
 			return false;
 		}
@@ -584,9 +669,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Check admin configuration to see if the uri accessed is excluded from cache.
 	 *
 	 * @since 1.0.1
+	 * @access private
+	 * @param array $excludes_list List of excluded URIs
+	 * @return boolean True if excluded, false otherwise.
 	 */
 	private function is_uri_excluded($excludes_list)
 	{
@@ -622,9 +710,14 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Check if a page is cacheable.
 	 *
+	 * This will check what we consider not cacheable as well as what
+	 * third party plugins consider not cacheable.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @return boolean True if cacheable, false otherwise.
 	 */
 	private function is_cacheable()
 	{
@@ -714,9 +807,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param string $reason An explanation for why the page is not cacheable.
+	 * @return boolean Return false.
 	 */
 	private function no_cache_for( $reason )
 	{
@@ -725,9 +821,10 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 *
+	 * Check if the post is cacheable. If so, set the cacheable member variable.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function check_cacheable()
 	{
@@ -737,9 +834,13 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Sends the headers out at the end of processing the request.
 	 *
+	 * This will send out all LiteSpeed Cache related response headers
+	 * needed for the post.
 	 *
 	 * @since 1.0.5
+	 * @access public
 	 */
 	public function send_headers()
 	{
@@ -772,9 +873,14 @@ class LiteSpeed_Cache
 
 
 	/**
+	 * Gets the cache tags to set for the page.
 	 *
+	 * This includes site wide post types (e.g. front page) as well as
+	 * any third party plugin specific cache tags.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @return array The list of cache tags to set.
 	 */
 	private function get_cache_tags()
 	{
@@ -833,9 +939,17 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Gets all the purge tags correlated with the post about to be purged.
 	 *
+	 * If the purge all pages configuration is set, all pages will be purged.
+	 *
+	 * This includes site wide post types (e.g. front page) as well as
+	 * any third party plugin specific post tags.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param integer $post_id The id of the post about to be purged.
+	 * @return array The list of purge tags correlated with the post.
 	 */
 	private function get_purge_tags( $post_id )
 	{
@@ -919,7 +1033,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function esi_admin_bar_render() {
+	public function esi_admin_bar_render()
+	{
 		echo '<!-- lscwp admin esi start -->'
 				. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
 				. '<!-- lscwp admin esi end -->';
@@ -930,7 +1045,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function check_admin_bar() {
+	public function check_admin_bar()
+	{
 		if (is_admin_bar_showing()) {
 			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
 			remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
@@ -943,7 +1059,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function check_storefront_cart() {
+	public function check_storefront_cart()
+	{
 		if (has_action('storefront_header', 'storefront_header_cart')) {
 			remove_action('storefront_header', 'storefront_header_cart', 60);
 			echo '<!-- lscwp cart esi start -->'
@@ -957,7 +1074,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function check_sidebar() {
+	public function check_sidebar()
+	{
 		if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
 			remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
 			echo '<!-- lscwp sidebar esi start -->'
@@ -971,7 +1089,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	private function add_actions_esi() {
+	private function add_actions_esi()
+	{
 		add_action('storefront_header',
 					array($this, 'check_storefront_cart'), 59);
 		add_action('storefront_sidebar', array($this, 'check_sidebar'), 0);
@@ -982,7 +1101,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function send_esi() {
+	public function send_esi()
+	{
 		status_header(200);
 		die();
 	}
@@ -992,7 +1112,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	private function is_esi_admin_bar($uri, $urilen) {
+	private function is_esi_admin_bar($uri, $urilen)
+	{
 		$admin = 'admin_bar.php';
 		$adminlen = strlen($admin);
 
@@ -1011,7 +1132,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	private function is_esi_cart($uri, $urilen) {
+	private function is_esi_cart($uri, $urilen)
+	{
 		$cart = 'cart.php';
 		$cartlen = strlen($cart);
 
@@ -1031,7 +1153,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function load_sidebar_widgets() {
+	public function load_sidebar_widgets()
+	{
 		do_action('widgets_init');
 		do_action('register_sidebar');
 		do_action('wp_register_sidebar_widget');
@@ -1042,7 +1165,8 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	private function is_esi_sidebar($uri, $urilen) {
+	private function is_esi_sidebar($uri, $urilen)
+	{
 		$sidebar = 'sidebar.php';
 		$sidebarlen = strlen($sidebar);
 

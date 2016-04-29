@@ -63,7 +63,7 @@ class LiteSpeed_Cache_Config
 	protected $debug_tag = 'LiteSpeed_Cache' ;
 
 	/**
-	 *
+	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.0
 	 */
@@ -93,9 +93,11 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Get the list of configured options for the blog.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return array The list of configured options.
 	 */
 	public function get_options()
 	{
@@ -103,9 +105,12 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Get the selected configuration option.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param string $id Configuration ID.
+	 * @return mixed Selected option if set, NULL if not.
 	 */
 	public function get_option( $id )
 	{
@@ -119,9 +124,11 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Get the configured purge options.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return array The list of purge options.
 	 */
 	public function get_purge_options()
 	{
@@ -129,9 +136,12 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Check if the flag type of posts should be purged on updates.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
+	 * @return boolean True if the post type should be purged, false otherwise.
 	 */
 	public function purge_by_post( $flag )
 	{
@@ -139,9 +149,11 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Gets the default single site options
 	 *
 	 * @since 1.0.0
+	 * @access protected
+	 * @return array An array of the default options.
 	 */
 	protected function get_default_options()
 	{
@@ -190,9 +202,13 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Get the plugin's site wide options.
 	 *
+	 * If the site wide options are not set yet, set it to default.
 	 *
 	 * @since 1.0.2
+	 * @access public
+	 * @return array Returns the current site options.
 	 */
 	public function get_site_options()
 	{
@@ -215,9 +231,12 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Verify that the options are still valid.
 	 *
+	 * This is used only when upgrading the plugin versions.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function plugin_upgrade()
 	{
@@ -249,9 +268,15 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Update the WP_CACHE variable in the wp-config.php file.
 	 *
+	 * If enabling, check if the variable is defined, and if not, define it.
+	 * Vice versa for disabling.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param boolean $enable True if enabling, false if disabling.
+	 * @return boolean True if the variable is the correct value, false if something went wrong.
 	 */
 	public function wp_cache_var_setter( $enable )
 	{
@@ -290,11 +315,16 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Increment the activated plugin count in multi site setups.
 	 *
+	 * The count is used to determine if one-time-only configurations need
+	 * to be updated.
 	 *
 	 * @since 1.0.2
+	 * @access public
 	 */
-	public function incr_multi_enabled() {
+	public function incr_multi_enabled()
+	{
 		$site_options = $this->get_site_options();
 		$count = $site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT];
 		++$count;
@@ -304,11 +334,16 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Decrement the activated plugin count in multi site setups.
 	 *
+	 * The count is used to determine if one-time-only configurations need
+	 * to be updated.
 	 *
 	 * @since 1.0.2
+	 * @access public
 	 */
-	public function decr_multi_enabled() {
+	public function decr_multi_enabled()
+	{
 		$site_options = $this->get_site_options();
 		if ( !site_options) {
 			$this->config->debug_log('LSCWP Enabled Count does not exist');
@@ -322,20 +357,26 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * On plugin activation, load the default options.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function plugin_activation()
 	{
 		$res = update_option(self::OPTION_NAME, $this->get_default_options()) ;
-		$this->debug_log("plugin_activation update option = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
+		$this->debug_log("plugin_activation update option = $res",
+						($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
 	}
 
 	/**
+	 * Clean up configurations on plugin deactivation.
 	 *
+	 * If the admin page is not multisite or if it is the network admin,
+	 * this method will clear the htaccess file of any changes made.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function plugin_deactivation()
 	{
@@ -347,9 +388,12 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Logs a debug message.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param string $mesg The debug message.
+	 * @param string $log_level Optional. The log level of the message.
 	 */
 	public function debug_log( $mesg, $log_level = self::LOG_LEVEL_DEBUG )
 	{
@@ -370,11 +414,14 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Checks if caching is allowed via server variable.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return boolean True if allowed, false otherwise.
 	 */
-	public function is_caching_allowed() {
+	public function is_caching_allowed()
+	{
 		if ( isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) {
 			return true;
 		}
@@ -382,11 +429,14 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 *
+	 * Checks if caching is allowed, then if the plugin is enabled in configs.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @return boolean True if enabled, false otherwise.
 	 */
-	public function is_plugin_enabled() {
+	public function is_plugin_enabled()
+	{
 		if ( $this->is_caching_allowed() && ($this->options[self::OPID_ENABLED])) {
 			return true;
 		}
