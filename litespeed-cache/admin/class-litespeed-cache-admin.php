@@ -95,7 +95,8 @@ class LiteSpeed_Cache_Admin
 	 *
 	 * @since 1.0.4
 	 */
-	public function dash_select() {
+	public function dash_select()
+	{
 		$page = $_REQUEST['page'];
 		if (strncmp($page, 'lscache-', 8) != 0) {
 			// either I messed up writing the slug, or someone entered this function elsewhere.
@@ -136,21 +137,30 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Redirects the page access to the settings page when the settings
+	 * submenu page is selected.
 	 *
 	 * @since 1.0.4
+	 * @access public
 	 */
-	public static function redir_settings() {
+	public static function redir_settings()
+	{
 		wp_redirect(admin_url('options-general.php?page=litespeedcache'), 301);
 		exit;
 	}
 
 	/**
-	 *
+	 * Helper function to set up a submenu page.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $page_title The page title.
+	 * @param string $menu_title The title that appears on the menu.
+	 * @param string $menu_slug The slug of the page.
+	 * @param string $cb The callback to call if selected.
 	 */
-	private function add_submenu($page_title, $menu_title, $menu_slug, $cb = '') {
+	private function add_submenu($page_title, $menu_title, $menu_slug, $cb = '')
+	{
 		if (!empty($cb)) {
 			$fn = array($this, $cb);
 		}
@@ -160,21 +170,25 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Registers management submenu pages.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function register_submenu_manage() {
+	private function register_submenu_manage()
+	{
 		$this::add_submenu(sprintf(__('%s Manager', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
 	}
 
 	/**
-	 *
+	 * Registers settings submenu pages.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function register_submenu_settings() {
+	private function register_submenu_settings()
+	{
 		$this::add_submenu(sprintf(__('%s Settings', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
 
@@ -186,11 +200,13 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Registers informational submenu pages.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function register_submenu_info() {
+	private function register_submenu_info()
+	{
 		$this::add_submenu(sprintf(__('%s Information', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Information', 'litespeed-cache'), 'lscache-info', 'dash_select');
 		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'),'LiteSpeed Cache'),
@@ -199,11 +215,13 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Registers all the submenu page types.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function register_submenus() {
+	private function register_submenus()
+	{
 		$this->register_submenu_manage();
 		$this->register_submenu_settings();
 		$this->register_submenu_info();
@@ -211,20 +229,23 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Registers the submenu options for the LiteSpeed Cache menu option.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function register_dash_menu() {
+	private function register_dash_menu()
+	{
 		$check = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
 				'lscache-dash', '', 'dashicons-performance');
 		$this->register_submenus();
 	}
 
 	/**
-	 *
+	 * Callback that initializes the admin options for LiteSpeed Cache.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function admin_init()
 	{
@@ -241,9 +262,10 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Displays the help tab in the admin pages.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function add_help_tabs()
 	{
@@ -269,11 +291,21 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
+	 * Checks the admin selected option for enabling the cache.
 	 *
+	 * The actual value depends on the type of site.
+	 *
+	 * If not set is selected, the default action on multisite is to use
+	 * the network selection, on singlesite it is enabled.
 	 *
 	 * @since 1.0.2
+	 * @access private
+	 * @param array $input The input configurations.
+	 * @param array $options Returns the up to date options array.
+	 * @return boolean True if enabled, false otherwise.
 	 */
-	private function validate_enabled($input, &$options) {
+	private function validate_enabled($input, &$options)
+	{
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
 		if ( !isset($input[$id])) {
 			return false;
@@ -290,11 +322,17 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Validate common rewrite rules configured by the admin.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param array $input The configurations selected.
+	 * @param array $options The current configurations.
+	 * @param array $errors Returns error messages added if failed.
+	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
-	private function validate_common_rewrites($input, $options, &$errors) {
+	private function validate_common_rewrites($input, $options, &$errors)
+	{
 		$content = '';
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
@@ -427,9 +465,12 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Callback function that will validate any changes made in the settings page.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param array $input The configurations selected by the admin when clicking save.
+	 * @return array The updated configuration options.
 	 */
 	public function validate_plugin_settings( $input )
 	{
@@ -609,9 +650,12 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Callback that adds LiteSpeed Cache's action links.
 	 *
 	 * @since 1.0.0
+	 * @access public
+	 * @param array $links Previously added links from other plugins.
+	 * @return array Links array with the litespeed cache one appended.
 	 */
 	public function add_plugin_links( $links )
 	{
@@ -621,15 +665,16 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Displays the cache management page.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function show_menu_manage()
 	{
 		$config = LiteSpeed_Cache::config() ;
 
-		if ( ! $this->check_license($config, $error_msg) ) {
+		if ( ($error_msg = $this->check_license($config)) !== true ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
 			return ;
 		}
@@ -654,9 +699,10 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Check if the admin pressed a button in the management page.
 	 *
 	 * @since 1.0.0
+	 * @access private
 	 */
 	private function check_cache_mangement_actions()
 	{
@@ -671,27 +717,16 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function show_compatibilities_tab() {
-		if (function_exists('the_views')) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 *
+	 * Outputs the LiteSpeed Cache settings page.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 */
 	public function show_menu_settings()
 	{
 		$config = LiteSpeed_Cache::config() ;
 
-		if ( ! $this->check_license($config, $error_msg) ) {
+		if ( ($error_msg = $this->check_license($config)) !== true ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
 
 		}
@@ -708,11 +743,12 @@ class LiteSpeed_Cache_Admin
 
 		$compatibilities_tab = '';
 		$compatibilities_settings = '';
-		if ($this->show_compatibilities_tab()) {
+		$compatibilities_buf = $this->show_settings_compatibilities();
+		if (!empty($compatibilities_buf)) {
 			$compatibilities_tab .= '<li><a href="#wp-compatibilities-settings">'
 					. __('Plugin Compatibilities', 'litespeed-cache') . '</a></li>';
 			$compatibilities_settings .= '<div id ="wp-compatibilities-settings">'
-							. $this->show_settings_compatibilities($options) .
+							. $compatibilities_buf .
 							'</div>';
 		}
 
@@ -744,26 +780,32 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Check to make sure that caching is enabled.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param array $config The current configurations.
+	 * @return mixed True if enabled, error message otherwise.
 	 */
-	private function check_license( $config, &$error_msg )
+	private function check_license($config)
 	{
 		if ($config->is_caching_allowed() == false) {
-			$error_msg = __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled.', 'litespeed-cache')
+			return __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled.', 'litespeed-cache')
 			. __(' This plugin will NOT work properly.', 'litespeed-cache');
-			return false ;
 		}
 		return true ;
 	}
 
 	/**
-	 *
+	 * Builds the html for the mobile views configurations.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param array $options The currently configured options.
+	 * @return string The html for mobile views configurations.
 	 */
-	private function show_mobile_view($options) {
+	private function show_mobile_view($options)
+	{
 
 		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
@@ -808,11 +850,16 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the cookie excludes configuration.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $cookie_titlee Returns the cookie title string.
+	 * @param string $cookie_desc Returns the cookie description string.
+	 * @return string Returns the cookie text area on success, error message on failure.
 	 */
-	private function show_cookies_exclude(&$cookie_title, &$cookie_desc) {
+	private function show_cookies_exclude(&$cookie_title, &$cookie_desc)
+	{
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		$cookies_rule = '';
 		$cookie_title = __('Cookie List', 'litespeed-cache');
@@ -835,11 +882,16 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the user agent excludes configuration.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $ua_title Returns the user agent title string.
+	 * @param string $ua_desc Returns the user agent description string.
+	 * @return string Returns the user agent text field on success, error message on failure.
 	 */
-	private function show_useragent_exclude(&$ua_title, &$ua_desc) {
+	private function show_useragent_exclude(&$ua_title, &$ua_desc)
+	{
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		$ua_rule = '';
 		$ua_title = __('User Agent List', 'litespeed-cache');
@@ -861,9 +913,12 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the general settings tab.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the general tab.
 	 */
 	private function show_settings_general( $options )
 	{
@@ -926,9 +981,12 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the purge settings tab.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param array $purge_options The current configuration purge options.
+	 * @return string The html for the purge tab.
 	 */
 	private function show_settings_purge( $purge_options )
 	{
@@ -1006,9 +1064,12 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the do not cache settings tab.
 	 *
 	 * @since 1.0.1
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the do not cache tab.
 	 */
 	private function show_settings_excludes( $options )
 	{
@@ -1123,9 +1184,12 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the debug settings tab.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the debug settings tab.
 	 */
 	private function show_settings_test( $options )
 	{
@@ -1161,11 +1225,14 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the wp_postviews help page.
 	 *
 	 * @since 1.0.1
+	 * @access private
+	 * @return string The html for the wp_postviews help page.
 	 */
-	private function show_wp_postviews_help() {
+	private function show_wp_postviews_help()
+	{
 		$buf = '';
 		$example_src = htmlspecialchars('<?php if(function_exists(\'the_views\' )) { the_views(); } ?>');
 		$example_div = htmlspecialchars('<div id="postviews_lscwp" > </div>');
@@ -1207,11 +1274,14 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Checks if wp_postviews is installed. If so, show this tab.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @return string The html for the compatibility tab.
 	 */
-	private function show_settings_compatibilities( $options ) {
+	private function show_settings_compatibilities()
+	{
 
 		$buf = '';
 
@@ -1222,11 +1292,14 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the third party compatibilities tab.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @return string The html for the compatibilities tab.
 	 */
-	private function show_info_compatibility() {
+	private function show_info_compatibility()
+	{
 		$known_compat = array(
 			'bbPress',
 			'WooCommerce',
@@ -1266,11 +1339,18 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
+	 * Outputs the html for the info page.
 	 *
+	 * This page includes three tabs:
+	 * - configurations
+	 * - third party plugin compatibilities
+	 * - common rewrite rules.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function show_info_info() {
+	private function show_info_info()
+	{
 
 		// Configurations help.
 		$buf = '<div class="wrap"><h2>'
@@ -1320,11 +1400,13 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Outputs the html for the FAQs page.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function show_info_faqs() {
+	private function show_info_faqs()
+	{
 		$buf =  '<div class="wrap"><h2>LiteSpeed Cache FAQs</h2>';
 
 		$buf .= '<div class="welcome-panel"><h4>'
@@ -1381,11 +1463,14 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 *
+	 * Builds the html for the common rewrite rules tab.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @return string The html for the common rewrites tab.
 	 */
-	private function show_info_common_rewrite() {
+	private function show_info_common_rewrite()
+	{
 		$mv_header = __('Mobile Views: ', 'litespeed-cache');
 		$mv_desc = __('Some sites have adaptive views, meaning the page sent will adapt to the browser type (desktop vs mobile).', 'litespeed-cache')
 		. __(' This rewrite rule is used for sites that load a different page for each type.', 'litespeed-cache')
@@ -1450,11 +1535,17 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Helper function to build the html for collapsible content.
 	 *
 	 * @since 1.0.5
+	 * @access private
+	 * @param string $header The title of the collapsible content.
+	 * @param string $desc A description inside the collapsible content.
+	 * @param string $example An example to display after the description.
+	 * @return string The html of the collapsible content.
 	 */
-	private function build_collapsible($header, $desc, $example) {
+	private function build_collapsible($header, $desc, $example)
+	{
 		$buf = '<div class="postbox closed">'
 		. '<button type="button" class="handlediv button-link" aria-expanded="false">'
 		. '<span class="toggle-indicator" aria-hidden="true"></span></button>'
@@ -1470,20 +1561,26 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Clean up the input string of any extra slashes/spaces.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $input The input string to clean.
+	 * @return string The cleaned up input.
 	 */
-	private static function cleanup_input($input) {
+	private static function cleanup_input($input)
+	{
 		return stripslashes(trim($input));
 	}
 
 	/**
-	 *
+	 * Parses any changes made by the network admin on the network settings.
 	 *
 	 * @since 1.0.4
+	 * @access public
 	 */
-	public function parse_settings() {
+	public function parse_settings()
+	{
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
 		}
@@ -1533,11 +1630,16 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
+	 * Display the network admin settings page.
 	 *
+	 * Since multisite setups only have one .htaccess file, these settings
+	 * are only available for the network admin in multisite setups.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function show_info_settings() {
+	private function show_info_settings()
+	{
 
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
 
@@ -1589,11 +1691,14 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * This callback will display admin notices denoting if the .htaccess file
+	 * edit succeeded.
 	 *
 	 * @since 1.0.4
+	 * @access public
 	 */
-	public function edit_htaccess_res() {
+	public function edit_htaccess_res()
+	{
 		if (!$this->messages) {
 			return;
 		}
@@ -1611,20 +1716,25 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Gets the currently used .htaccess file path.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @return string The .htaccess file path.
 	 */
-	private static function get_htaccess_path() {
+	private static function get_htaccess_path()
+	{
 		return get_home_path() . '.htaccess';
 	}
 
 	/**
-	 *
+	 * Clear the .htaccess file of any changes added by the plugin specifically.
 	 *
 	 * @since 1.0.4
+	 * @access public
 	 */
-	public static function clear_htaccess() {
+	public static function clear_htaccess()
+	{
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
@@ -1686,13 +1796,25 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return;
 	}
 
-	// Currently returns true if success, error message if fail.
 	/**
+	 * Try to save the .htaccess file changes.
 	 *
+	 * This function is used by both the edit .htaccess admin page and
+	 * the common rewrite rule configuration options.
+	 *
+	 * This function will create a backup named .htaccess_lscachebak prior
+	 * to making any changese. If creating the backup fails, an error is returned.
+	 *
+	 * If $cleanup is true, this function strip extra slashes.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $content The new content to put into the .htaccess file.
+	 * @param boolean $cleanup True to strip exxtra slashes, false otherwise.
+	 * @return mixed true on success, else error message on failure.
 	 */
-	private static function do_edit_htaccess($content, $cleanup = true) {
+	private static function do_edit_htaccess($content, $cleanup = true)
+	{
 		$path = self::get_htaccess_path();
 
 		clearstatcache();
@@ -1721,11 +1843,13 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Parses the .htaccess buffer when the admin saves changes in the edit .htaccess page.
 	 *
 	 * @since 1.0.4
+	 * @access public
 	 */
-	public function parse_edit_htaccess() {
+	public function parse_edit_htaccess()
+	{
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
 		}
@@ -1748,11 +1872,15 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Gets the contents of the .htaccess file.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $content Returns the content of the file or an error description.
+	 * @return boolean True if succeeded, false otherwise.
 	 */
-	private static function get_htaccess_contents(&$content) {
+	private static function get_htaccess_contents(&$content)
+	{
 		$path = self::get_htaccess_path();
 		if (!file_exists($path)) {
 			$content = __('.htaccess file does not exist.', 'litespeed-cache');
@@ -1774,11 +1902,16 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
+	 * Displays the edit_htaccess admin page.
 	 *
+	 * This function will try to load the .htaccess file contents.
+	 * If it fails, it will echo the error message.
 	 *
 	 * @since 1.0.4
+	 * @access private
 	 */
-	private function show_edit_htaccess() {
+	private function show_edit_htaccess()
+	{
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 		$buf .= '<div class="welcome-panel">';
 
@@ -1825,35 +1958,48 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Build the wrapper string for common rewrite rules.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $wrapper The common rule wrapper.
+	 * @param string $end Returns the ending wrapper.
+	 * @return string Returns the opening wrapper.
 	 */
-	private static function build_wrappers($wrapper, &$end) {
+	private static function build_wrappers($wrapper, &$end)
+	{
 		$end = '###LSCACHE END ' . $wrapper . '###';
 		return '###LSCACHE START ' . $wrapper . '###';
 	}
 
-	/*
-	 * <IfModule LiteSpeed>
-	 * RewriteEngine on
-	 * ###LSCACHE START $wrapper###
-	 * RewriteCond %{$cond} $match [$flag]
-	 * RewriteRule .* - [$env]
-	 * ###LSCACHE END $wrapper###
-	 * </IfModule>
-	 * Returns true for success or an array.
-	 * If it returns array, first index will be true/false for success/fail
-	 * Second index will be the returned string. This will be either the
-	 * new content string or an error message.
-	 */
 	/**
+	 * Updates the specified common rewrite rule based on original content.
 	 *
+	 * If the specified rule is not found, just return the rule.
+	 * Else if it IS found, need to keep the content surrounding the rule.
+	 *
+	 * The return value is mixed.
+	 * Returns true if the rule is not found in the content.
+	 * Returns an array (false, error_msg) on error.
+	 * Returns an array (true, new_content) if the rule is found.
+	 *
+	 * new_content is the original content minus the matched rule. This is
+	 * to prevent losing any of the original content.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $content The original content in the .htaccess file.
+	 * @param string $output Returns the added rule if success.
+	 * @param string $wrapper The wrapper that surrounds the rule.
+	 * @param string $cond The rewrite condition to use with the rule.
+	 * @param string $match The rewrite rule to match against the condition.
+	 * @param string $env The environment change to do if the rule matches.
+	 * @param string $flag The flags to use with the rewrite condition.
+	 * @return mixed Explained above.
 	 */
 	private static function set_common_rule($content, &$output, $wrapper, $cond,
-			$match, $env, $flag = '') {
+			$match, $env, $flag = '')
+	{
 
 		$wrapper_end = '';
 		$wrapper_begin = self::build_wrappers($wrapper, $wrapper_end);
@@ -1891,11 +2037,17 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * FInds a specified common rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $wrapper The wrapper to look for.
+	 * @param string $cond The condition to look for.
+	 * @param string $match Returns the rewrite rule on success, error message on failure.
+	 * @return boolean True on success, false otherwise.
 	 */
-	private function get_common_rule($wrapper, $cond, &$match) {
+	private function get_common_rule($wrapper, $cond, &$match)
+	{
 
 		if (self::get_htaccess_contents($match) === false) {
 			return false;
@@ -1931,9 +2083,12 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTMl to start a configuration options table.
 	 *
 	 * @since 1.0.0
+	 * @param string $title The title of the configuration group.
+	 * @param string $description The description of the configuration group.
+	 * @return string The start configuration option table html.
 	 */
 	private function input_group_start( $title = '', $description = '' )
 	{
@@ -1949,9 +2104,10 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML to end the configuration options table.
 	 *
 	 * @since 1.0.0
+	 * @return string The end table html.
 	 */
 	private function input_group_end()
 	{
@@ -1959,9 +2115,14 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for an entry in the configuration options table.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param string $label The option name.
+	 * @param string $input_field The option html.
+	 * @param string $notes The description to display under the option html.
+	 * @return string The config row html.
 	 */
 	private function display_config_row( $label, $input_field, $notes = '' )
 	{
@@ -1974,9 +2135,17 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for a check box.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param string $id The option ID for the field.
+	 * @param string $value The value for the field.
+	 * @param mixed $checked_value The current value.
+	 * @param string $label The label to display.
+	 * @param string $on_click The action to do on click.
+	 * @param boolean $disabled True for disabled check box, false otherwise.
+	 * @return string The check box html.
 	 */
 	private function input_field_checkbox( $id, $value, $checked_value, $label = '',
 											$on_click = '', $disabled = false)
@@ -2000,9 +2169,14 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for a radio group.
 	 *
 	 * @since 1.0.3
+	 * @access private
+	 * @param string $id The option ID for the field.
+	 * @param array $radiooptions The options available for selection.
+	 * @param string checked_value The currently selected option.
+	 * @return string The select field html.
 	 */
 	private function input_field_radio( $id, $radiooptions, $checked_value)
 	{
@@ -2020,9 +2194,14 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for a drop down select.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param string $id The option ID for the field.
+	 * @param array $seloptions The options available for selection.
+	 * @param string $selected_value The currently selected option.
+	 * @return string The select field html.
 	 */
 	private function input_field_select( $id, $seloptions, $selected_value )
 	{
@@ -2040,9 +2219,17 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for a text input field.
 	 *
 	 * @since 1.0.0
+	 * @access private
+	 * @param string $id The option ID for the field.
+	 * @param string $value The value for the field.
+	 * @param string $size The length to display.
+	 * @param string $style The class to format the display.
+	 * @param string $after The units to display after the text field.
+	 * @param boolean $readonly True for read only text fields, false otherwise.
+	 * @return string The input text html.
 	 */
 	private function input_field_text( $id, $value, $size = '', $style = '', $after = '', $readonly = false )
 	{
@@ -2065,9 +2252,17 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for a textarea.
 	 *
 	 * @since 1.0.1
+	 * @access private
+	 * @param string $id The option ID for the field.
+	 * @param string $value The value for the field.
+	 * @param string $rows Number of rows to display.
+	 * @param string $cols Number of columns to display.
+	 * @param string $style The class to format the display.
+	 * @param boolean $readonly True for read only text areas, false otherwise.
+	 * @return string The textarea html.
 	 */
 	private function input_field_textarea( $id, $value, $rows = '', $cols = '', $style = '', $readonly = false)
 	{
@@ -2091,9 +2286,13 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	}
 
 	/**
-	 *
+	 * Generates the HTML for a hidden input field.
 	 *
 	 * @since 1.0.4
+	 * @access private
+	 * @param string $id The option ID for the field.
+	 * @param string $value The value for the field.
+	 * @return string The hidden field html.
 	 */
 	private function input_field_hidden( $id, $value)
 	{
