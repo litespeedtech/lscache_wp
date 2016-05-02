@@ -315,6 +315,8 @@ class LiteSpeed_Cache
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin.php' ;
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-display.php' ;
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php' ;
 
 		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION) ;
 
@@ -336,7 +338,7 @@ class LiteSpeed_Cache
 					'LiteSpeed_Cache_Admin::redir_settings');
 		}
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
-				array($admin, 'parse_edit_htaccess'));
+				array(LiteSpeed_Cache_Admin_Rules::get_instance(), 'parse_edit_htaccess'));
 		add_action('load-litespeed-cache_page_lscache-settings',
 				array($admin, 'parse_settings'));
 		$this->set_locale() ;
