@@ -51,6 +51,14 @@ if ( ! defined('WPINC') ) {
  */
 require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache.php' ;
 
+if (!function_exists('is_openlitespeed')) {
+	function is_openlitespeed()
+	{
+		return ((isset($_SERVER['LSWS_EDITION']))
+				&& (strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0));
+	}
+}
+
 /**
  * Begins execution of the plugin.
  *
