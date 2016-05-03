@@ -245,6 +245,9 @@ class LiteSpeed_Cache_Config
 		if ( ($this->options[self::OPID_VERSION] != $default_options[self::OPID_VERSION]) || (count($default_options) != count($this->options)) ) {
 			$old_options = $this->options ;
 			$dkeys = array_keys($default_options) ;
+			if (is_multisite()) {
+				$dkeys[] = self::NETWORK_OPID_ENABLED;
+			}
 			$keys = array_keys($this->options) ;
 			$newkeys = array_diff($dkeys, $keys) ;
 			$log = '' ;
@@ -381,7 +384,7 @@ class LiteSpeed_Cache_Config
 	public function plugin_deactivation()
 	{
 		if ((!is_multisite()) || (is_network_admin())) {
-			LiteSpeed_Cache_Admin::clear_htaccess();
+			LiteSpeed_Cache_Admin_Rules::clear_htaccess();
 		}
 		$res = delete_option(self::OPTION_NAME) ;
 		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;

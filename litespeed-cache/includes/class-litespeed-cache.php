@@ -43,7 +43,7 @@ class LiteSpeed_Cache
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct()
+	private function __construct()
 	{
 		$cur_dir = dirname(__FILE__) ;
 		require_once $cur_dir . '/class-litespeed-cache-config.php' ;
