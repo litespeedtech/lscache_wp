@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
-		$path = self::get_htaccess_path();
+		$path = self::get_rules_file_path();
 
 		if (($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
 			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
@@ -64,7 +64,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		clearstatcache();
-		if (self::get_htaccess_contents($content) === false) {
+		if (self::get_rules_file_contents($content) === false) {
 			$errors[] = $content;
 			return false;
 		}
@@ -173,7 +173,7 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			$output .= $suffix . "\n\n" . $content;
 		}
-		$ret = self::do_edit_htaccess($output, false);
+		$ret = self::do_edit_rules($output, false);
 		if ($ret === false) {
 			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
 			return false;
@@ -182,32 +182,32 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Gets the currently used .htaccess file path.
+	 * Gets the currently used rules file path.
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @return string The .htaccess file path.
+	 * @return string The rules file path.
 	 */
-	public static function get_htaccess_path()
+	public static function get_rules_file_path()
 	{
 		return get_home_path() . '.htaccess';
 	}
 
 	/**
-	 * Clear the .htaccess file of any changes added by the plugin specifically.
+	 * Clear the rules file of any changes added by the plugin specifically.
 	 *
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public static function clear_htaccess()
+	public static function clear_rules()
 	{
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
-		$path = self::get_htaccess_path();
+		$path = self::get_rules_file_path();
 
 		clearstatcache();
-		if (self::get_htaccess_contents($content) === false) {
+		if (self::get_rules_file_contents($content) === false) {
 			return;
 		}
 		elseif (!is_writable($path)) {
@@ -258,7 +258,7 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			$output .= $suffix . "\n\n" . $content;
 		}
-		self::do_edit_htaccess($output);
+		self::do_edit_rules($output);
 		return;
 	}
 
@@ -276,25 +276,25 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Try to save the .htaccess file changes.
+	 * Try to save the rules file changes.
 	 *
 	 * This function is used by both the edit .htaccess admin page and
 	 * the common rewrite rule configuration options.
 	 *
-	 * This function will create a backup named .htaccess_lscachebak prior
-	 * to making any changese. If creating the backup fails, an error is returned.
+	 * This function will create a backup with _lscachebak appended to the file name
+	 * prior to making any changese. If creating the backup fails, an error is returned.
 	 *
 	 * If $cleanup is true, this function strip extra slashes.
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @param string $content The new content to put into the .htaccess file.
-	 * @param boolean $cleanup True to strip exxtra slashes, false otherwise.
+	 * @param string $content The new content to put into the rules file.
+	 * @param boolean $cleanup True to strip extra slashes, false otherwise.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private static function do_edit_htaccess($content, $cleanup = true)
+	private static function do_edit_rules($content, $cleanup = true)
 	{
-		$path = self::get_htaccess_path();
+		$path = self::get_rules_file_path();
 
 		clearstatcache();
 		if (!is_writable($path) || !is_readable($path)) {
@@ -328,7 +328,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function edit_htaccess_res()
+	public function edit_rules_res()
 	{
 		if (!$this->messages) {
 			return;
@@ -364,28 +364,28 @@ class LiteSpeed_Cache_Admin_Rules
 				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
 				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
 				&& ($_POST['lscwp_ht_editor'])) {
-			$this->messages = self::do_edit_htaccess($_POST['lscwp_ht_editor']);
+			$this->messages = self::do_edit_rules($_POST['lscwp_ht_editor']);
 			if (is_multisite()) {
-				add_action('network_admin_notices', array($this, 'edit_htaccess_res'));
+				add_action('network_admin_notices', array($this, 'edit_rules_res'));
 			}
 			else {
-				add_action('admin_notices', array($this, 'edit_htaccess_res'));
+				add_action('admin_notices', array($this, 'edit_rules_res'));
 			}
 		}
 
 	}
 
 	/**
-	 * Gets the contents of the .htaccess file.
+	 * Gets the contents of the rules file.
 	 *
 	 * @since 1.0.4
 	 * @access private
 	 * @param string $content Returns the content of the file or an error description.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public static function get_htaccess_contents(&$content)
+	public static function get_rules_file_contents(&$content)
 	{
-		$path = self::get_htaccess_path();
+		$path = self::get_rules_file_path();
 		if (!file_exists($path)) {
 			$content = __('.htaccess file does not exist.', 'litespeed-cache');
 			return false;
@@ -497,7 +497,7 @@ class LiteSpeed_Cache_Admin_Rules
 	public function get_common_rule($wrapper, $cond, &$match)
 	{
 
-		if (self::get_htaccess_contents($match) === false) {
+		if (self::get_rules_file_contents($match) === false) {
 			return false;
 		}
 		$suffix = '';

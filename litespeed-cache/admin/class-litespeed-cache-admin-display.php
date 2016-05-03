@@ -249,7 +249,7 @@ class LiteSpeed_Cache_Admin_Display
 		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
 		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
 				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')',
-				!is_writable(LiteSpeed_Cache_Admin_Rules::get_htaccess_path())) ;
+				!is_writable(LiteSpeed_Cache_Admin_Rules::get_rules_file_path())) ;
 
 		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
 		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Admin_Display
 			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
 		}
 		return $this->input_field_textarea($id, $excludes_buf, '5', '80', '',
-				!is_writable(LiteSpeed_Cache_Admin_Rules::get_htaccess_path()));
+				!is_writable(LiteSpeed_Cache_Admin_Rules::get_rules_file_path()));
 	}
 
 	/**
@@ -336,7 +336,7 @@ class LiteSpeed_Cache_Admin_Display
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
 			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging', '',
-				!is_writable(LiteSpeed_Cache_Admin_Rules::get_htaccess_path())) ;
+				!is_writable(LiteSpeed_Cache_Admin_Rules::get_rules_file_path())) ;
 		}
 		else {
 			$ua_list = '<p class="attention">'
@@ -1068,9 +1068,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 		$buf .= '<div class="welcome-panel">';
 
-		$path = LiteSpeed_Cache_Admin_Rules::get_htaccess_path();
+		$path = LiteSpeed_Cache_Admin_Rules::get_rules_file_path();
 		$contents = '';
-		if (LiteSpeed_Cache_Admin_Rules::get_htaccess_contents($contents) === false) {
+		if (LiteSpeed_Cache_Admin_Rules::get_rules_file_contents($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
