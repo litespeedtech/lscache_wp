@@ -182,10 +182,6 @@ class LiteSpeed_Cache_Admin_Display
 			return ;
 		}
 
-		if ( $this->messages ) {
-			echo '<div class="success"><p>' . $this->messages . ' </p></div>' . "\n" ;
-		}
-
 		$purgeby_options = array(
 			__('Category', 'litespeed-cache'),
 			__('Post ID', 'litespeed-cache'),
