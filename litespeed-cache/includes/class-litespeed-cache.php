@@ -580,6 +580,151 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Callback to add purge tags if admin selects to purge selected category pages.
+	 *
+	 * @param string $value The category name.
+	 * @param string $key Unused.
+	 */
+	public function purgeby_cat_cb($value, $key)
+	{
+		$val = trim($value);
+		if (empty($val)) {
+			return;
+		}
+		$cat_id = get_cat_ID($val);
+		if ($cat_id == 0) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by category, does not exist: ', 'litespeed-cache') . $val);
+			return;
+		}
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
+				__('Purge category ', 'litespeed-cache') . $val);
+
+		LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $cat_id);
+	}
+
+	/**
+	 * Callback to add purge tags if admin selects to purge selected post IDs.
+	 *
+	 * @param string $value The post ID.
+	 * @param string $key Unused.
+	 */
+	public function purgeby_pid_cb($value, $key)
+	{
+		$val = trim($value);
+		if (empty($val)) {
+			return;
+		}
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
+				__('Purge Post ID ', 'litespeed-cache') . $val);
+
+		LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_POST . $val);
+	}
+
+	/**
+	 * Callback to add purge tags if admin selects to purge selected tag pages.
+	 *
+	 * @param string $value The tag name.
+	 * @param string $key Unused.
+	 */
+	public function purgeby_tag_cb($value, $key)
+	{
+		$val = trim($value);
+		if (empty($val)) {
+			return;
+		}
+		$term = get_term_by('name', $val, 'post_tag');
+		if ($term == 0) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by tag, does not exist: ', 'litespeed-cache') . $val);
+			return;
+		}
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
+				__('Purge tag ', 'litespeed-cache') . $val);
+
+		LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $term->term_id);
+	}
+
+	/**
+	 * Callback to add purge tags if admin selects to purge selected urls.
+	 *
+	 * @param string $value A url to purge.
+	 * @param string $key Unused.
+	 */
+	public function purgeby_url_cb($value, $key)
+	{
+		$val = trim($value);
+		if (empty($val)) {
+			return;
+		}
+		$id = url_to_postid($val);
+		if ($id == 0) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by url, does not exist: ', 'litespeed-cache') . $val);
+			return;
+		}
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
+				__('Purge url ', 'litespeed-cache') . $val);
+
+		LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_POST . $id);
+	}
+
+	/**
+	 * Purge a list of pages when selected by admin. This method will
+	 * look at the post arguments to determine how and what to purge.
+	 *
+	 * @since 1.0.6
+	 * @access public
+	 */
+	public function purge_list()
+	{
+		$conf = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
+		if (is_null($conf)) {
+
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+					__('ERROR: Something went wrong with the form! Please try again.', 'litespeed-cache'));
+			return;
+		}
+		$sel =  $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
+		$list = explode("\n", $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST]);
+		switch($sel) {
+			case LiteSpeed_Cache_Admin_Display::PURGEBY_CAT:
+				$cb = 'purgeby_cat_cb';
+				break;
+			case LiteSpeed_Cache_Admin_Display::PURGEBY_PID:
+				$cb = 'purgeby_pid_cb';
+				break;
+			case LiteSpeed_Cache_Admin_Display::PURGEBY_TAG:
+				$cb = 'purgeby_tag_cb';
+				break;
+			case LiteSpeed_Cache_Admin_Display::PURGEBY_URL:
+				$cb = 'purgeby_url_cb';
+				break;
+			default:
+				LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+						LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+						__('ERROR: Bad Purge By selected value.', 'litespeed-cache'));
+				return;
+		}
+		array_walk($list, Array($this, $cb));
+	}
+
+	/**
 	 * Purges a post on update.
 	 *
 	 * This function will get the relevant purge tags to add to the response

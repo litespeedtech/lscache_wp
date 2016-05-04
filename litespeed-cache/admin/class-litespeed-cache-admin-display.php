@@ -13,6 +13,21 @@ class LiteSpeed_Cache_Admin_Display
 {
 	private static $instance;
 
+	const NOTICE_BLUE = 'notice notice-info';
+	const NOTICE_GREEN = 'notice notice-success';
+	const NOTICE_RED = 'notice notice-error';
+	const NOTICE_YELLOW = 'notice notice-warning';
+
+	const PURGEBY_CAT = '0';
+	const PURGEBY_PID = '1';
+	const PURGEBY_TAG = '2';
+	const PURGEBY_URL = '3';
+
+	const PURGEBYOPT_SELECT = 'purgeby';
+	const PURGEBYOPT_LIST = 'purgebylist';
+
+	private $notices = array();
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -65,6 +80,44 @@ class LiteSpeed_Cache_Admin_Display
 				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
 				'<p><a href="https://www.litespeedtech.com/support/forum/" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
 		) ;
+	}
+
+	/**
+	 * Adds a notice to display on the admin page. Multiple messages of the same
+	 * color may be added in a single call. If the list is empty, this method
+	 * will add the action to display notices.
+	 *
+	 * @since 1.0.6
+	 * @access public
+	 * @param string $color One of the available constants provided by this class.
+	 * @param mixed $msg May be a string for a single message or an array for multiple.
+	 */
+	public function add_notice($color, $msg)
+	{
+		if (empty($this->notices)) {
+			add_action(
+				(is_network_admin() ? 'network_admin_notices' : 'admin_notices'),
+				array($this, 'display_notices'));
+		}
+		if (!is_array($msg)) {
+			$this->notices[] = '<div class="' . $color . '"><p>' . $msg . '</p></div>';
+			return;
+		}
+		foreach ($msg as $str) {
+			$this->notices[] = '<div class="' . $color . '"><p>' . $str . '</p></div>';
+		}
+	}
+
+	/**
+	 * Callback function to display any notices from editing cache settings.
+	 *
+	 * @since 1.0.6
+	 * @access public
+	 */
+	public function display_notices() {
+		foreach ($this->notices as $msg) {
+			echo $msg;
+		}
 	}
 
 	/**
@@ -133,19 +186,81 @@ class LiteSpeed_Cache_Admin_Display
 			echo '<div class="success"><p>' . $this->messages . ' </p></div>' . "\n" ;
 		}
 
-		echo '<div class="wrap"><h2>' . __('LiteSpeed Cache Management', 'litespeed-cache') . '</h2>'
+		$purgeby_options = array(
+			__('Category', 'litespeed-cache'),
+			__('Post ID', 'litespeed-cache'),
+			__('Tag', 'litespeed-cache'),
+			__('URL', 'litespeed-cache')
+		);
+
+		// Page intro
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Management', 'litespeed-cache') . '</h2>'
 		. '<div class="welcome-panel"><p>'
 		. __('LiteSpeed Cache is maintained and managed by LiteSpeed Web Server.', 'litespeed-cache')
 		. __(' You can inform LiteSpeed Web Server to purge cached contents from this screen.', 'litespeed-cache')
 		. '</p>'
 		. '<p>' . __('More options will be added here in future releases.', 'litespeed-cache') . '</p>' ;
 
-		echo '<form method="post">' ;
-		wp_nonce_field(LiteSpeed_Cache_Config::OPTION_NAME) ;
+		// Begin form
+		$buf .= '<form method="post">'
+		. '<input type="hidden" name="lscwp_management" value="manage_lscwp" />'
+		. wp_nonce_field('lscwp_manage', 'management_run') ;
 
-		submit_button(__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront') ;
-		submit_button(__('Purge All', 'litespeed-cache'), 'primary', 'purgeall') ;
-		echo "</form></div></div>\n" ;
+		// Form entries purge front, purge all
+		$buf .= '<input type="submit" class="button button-primary" '
+		. 'name="purgefront" value="' . __('Purge Front Page', 'litespeed-cache')
+		. '" /><br><br>'
+		. '<input type="submit" class="button button-primary" '
+		. 'name="purgeall" value="' . __('Purge All', 'litespeed-cache')
+		. '" /><br>';
+
+		if ((is_multisite()) && (is_network_admin())) {
+
+			// End form
+			$buf .= "<br><br></form></div></div>\n";
+
+			echo $buf;
+			return;
+		}
+
+		// Purge by description.
+		$buf .= '<h3>' . __('Purge By...', 'litespeed-cache') . '</h3>'
+		. '<p>' . __('You may purge selected pages here.', 'litespeed-cache')
+		. __(' Currently, the available options are:', 'litespeed-cache')
+		. '</p>'
+		. '<ul>'
+		. '<li><p>' . __('Category: Purge category pages by name.', 'litespeed-cache')
+		. '</p></li>'
+		. '<li><p>' . __('Post ID: Purge pages by post ID.', 'litespeed-cache')
+		. '</p></li>'
+		. '<li><p>' . __('Tag: Purge tag pages by name.', 'litespeed-cache')
+		. '</p></li>'
+		. '<li><p>' . __('URL: Purge pages by locator.', 'litespeed-cache')
+		. ' Ex: http://www.myexamplesite.com<b>/2016/02/24/hello-world/</b>'
+		. '</p></li>'
+		. '</ul>';
+
+		if (($_POST) && ($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
+			$selected = $_POST[LiteSpeed_Cache_Config::OPTION_NAME][self::PURGEBYOPT_SELECT];
+			if ((intval($selected) < 0) || (intval($selected) > 3)) {
+				$selected = 0;
+			}
+		}
+		else {
+			$selected = 0;
+		}
+		$buf .= $this->input_field_select(self::PURGEBYOPT_SELECT,
+				$purgeby_options, $selected)
+		. '<br><br>' . $this->input_field_textarea(self::PURGEBYOPT_LIST, '', '5', '80')
+		. '<br><br>'
+		. '<input type="submit" class="button button-primary" '
+		. 'name="purgelist" value="' . __('Purge List', 'litespeed-cache')
+		. '" />';
+
+		// End form
+		$buf .= "<br><br></form></div></div>";
+
+		echo $buf;
 	}
 
 	/**
@@ -977,7 +1092,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 * @param string $example An example to display after the description.
 	 * @return string The html of the collapsible content.
 	 */
-	private function build_collapsible($header, $desc, $example)
+	private function build_collapsible($header, $desc, $example = '')
 	{
 		$buf = '<div class="postbox closed">'
 		. '<button type="button" class="handlediv button-link" aria-expanded="false">'
@@ -988,7 +1103,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$buf .= '<div class="welcome-panel-content"><div class="inside"><p>'
 				. $desc . '</p>';
 
-		$buf .= '<textarea id="wpwrap" readonly>' . $example . '</textarea>';
+		if ($example !== '') {
+			$buf .= '<textarea id="wpwrap" readonly>' . $example . '</textarea>';
+		}
 		$buf .= '</div></div></div>';
 		return $buf;
 	}

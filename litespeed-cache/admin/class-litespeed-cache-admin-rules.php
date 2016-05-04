@@ -322,31 +322,6 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * This callback will display admin notices denoting if the .htaccess file
-	 * edit succeeded.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 */
-	public function edit_rules_res()
-	{
-		if (!$this->messages) {
-			return;
-		}
-		$buf = '<div class="';
-		if ($this->messages === true) {
-			$buf .= 'updated';
-			$err = __('File saved.', 'litespeed-cache');
-		}
-		else {
-			$buf .= 'error';
-			$err = $this->messages;
-		}
-		$buf .= '"><p>' . $err . '</p></div>';
-		echo $buf;
-	}
-
-	/**
 	 * Parses the .htaccess buffer when the admin saves changes in the edit .htaccess page.
 	 *
 	 * @since 1.0.4
@@ -364,13 +339,15 @@ class LiteSpeed_Cache_Admin_Rules
 				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
 				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
 				&& ($_POST['lscwp_ht_editor'])) {
-			$this->messages = self::do_edit_rules($_POST['lscwp_ht_editor']);
-			if (is_multisite()) {
-				add_action('network_admin_notices', array($this, 'edit_rules_res'));
+			$msg = self::do_edit_rules($_POST['lscwp_ht_editor']);
+			if ($msg === true) {
+				$msg = __('File Saved.', 'litespeed-cache');
+				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN;
 			}
 			else {
-				add_action('admin_notices', array($this, 'edit_rules_res'));
+				$color = LiteSpeed_Cache_Admin_Display::NOTICE_RED;
 			}
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice($color, $msg);
 		}
 
 	}

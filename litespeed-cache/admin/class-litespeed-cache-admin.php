@@ -29,7 +29,6 @@ class LiteSpeed_Cache_Admin
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version ;
-	private $messages ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -661,14 +660,29 @@ class LiteSpeed_Cache_Admin
 	 */
 	private function check_cache_mangement_actions()
 	{
+		if ((empty($_POST))
+				|| (!$_POST['lscwp_management'])
+				|| ($_POST['lscwp_management'] !== 'manage_lscwp')
+				|| (!check_admin_referer('lscwp_manage', 'management_run'))) {
+			return;
+		}
 		if ( isset($_POST['purgeall']) ) {
 			LiteSpeed_Cache::plugin()->purge_all() ;
-			$this->messages = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache') ;
+			$msg = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache');
 		}
-		if ( isset($_POST['purgefront'])){
+		elseif ( isset($_POST['purgefront'])){
 			LiteSpeed_Cache::plugin()->purge_front();
-			$this->messages = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache') ;
+			$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
 		}
+		elseif ( isset($_POST['purgelist'])) {
+			LiteSpeed_Cache::plugin()->purge_list();
+			return;
+		}
+		else {
+			return;
+		}
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+							LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
 	}
 
 	/**
@@ -1573,12 +1587,14 @@ class LiteSpeed_Cache_Admin
 			$options = $newopt;
 		}
 
-		add_action('network_admin_notices', array($rules, 'edit_htaccess_res'));
 		if (!empty($errors)) {
-			$this->messages = implode('<br>', $errors);
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+							LiteSpeed_Cache_Admin_Display::NOTICE_RED, $errors);
 			return;
 		}
-		$this->messages = true;
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
+				__('File saved.', 'litespeed-cache'));
 		$ret = update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
 		if ($ret) {
 
