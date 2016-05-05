@@ -36,7 +36,7 @@
     
     jQuery(document).ready( function() {
         
-        jQuery('.postbox button').click( function() {
+        jQuery(' #litespeedcache-postbox-button').click( function() {
             var pbDiv = jQuery(this).parent().get(0);
             var $pbButton = jQuery(pbDiv).children(":button");
             jQuery(pbDiv).toggleClass('closed');

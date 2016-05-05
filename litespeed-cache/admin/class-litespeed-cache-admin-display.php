@@ -1091,7 +1091,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	private function build_collapsible($header, $desc, $example = '')
 	{
 		$buf = '<div class="postbox closed">'
-		. '<button type="button" class="handlediv button-link" aria-expanded="false">'
+		. '<button type="button" id="litespeedcache-postbox-button" class="handlediv button-link" aria-expanded="false">'
 		. '<span class="toggle-indicator" aria-hidden="true"></span></button>'
 		. '<h2 class="hndle ui-sortable-handle"><span>' . $header . '</span></h2>';
 
