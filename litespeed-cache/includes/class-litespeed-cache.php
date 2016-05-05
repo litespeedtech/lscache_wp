@@ -28,10 +28,19 @@ class LiteSpeed_Cache
 	const LSCOOKIE_VARY_LOGGED_IN = 1;
 	const LSCOOKIE_VARY_COMMENTER = 2;
 
+	const ADMINQS_KEY = 'LSCWP_CTRL';
+	const ADMINQS_PURGE = 'PURGE';
+	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
+
+	const CACHECTRL_NOCACHE = 0;
+	const CACHECTRL_CACHE = 1;
+	const CACHECTRL_PURGE = 2;
+	const CACHECTRL_PURGESINGLE = 3;
+
 	protected $plugin_dir ;
 	protected $config ;
 	protected $current_vary;
-	protected $cacheable = false;
+	protected $cachectrl = self::CACHECTRL_NOCACHE;
 	protected $pub_purge_tags = array();
 
 	/**
@@ -187,6 +196,9 @@ class LiteSpeed_Cache
 		if ( is_admin() ) {
 			$this->load_admin_actions($module_enabled) ;
 		}
+		else {
+			$this->load_nonadmin_actions($module_enabled) ;
+		}
 
 		if ( ! $module_enabled ) {
 			return ;
@@ -233,7 +245,6 @@ class LiteSpeed_Cache
 	public function detect()
 	{
 		do_action('litespeed_cache_detect_thirdparty');
-
 	}
 
 	/**
@@ -342,6 +353,21 @@ class LiteSpeed_Cache
 		add_action('load-litespeed-cache_page_lscache-settings',
 				array($admin, 'parse_settings'));
 		$this->set_locale() ;
+	}
+
+	/**
+	 * Register all of the hooks for non admin pages.
+	 * of the plugin.
+	 *
+	 * @since    1.0.7
+	 * @access   private
+	 */
+	private function load_nonadmin_actions( $module_enabled )
+	{
+		if ($module_enabled) {
+			add_filter('query_vars', array($this, 'query_vars'));
+			add_action('wp', array($this, 'check_admin_ip'), 6);
+		}
 	}
 
 	/**
@@ -1022,7 +1048,51 @@ class LiteSpeed_Cache
 	public function check_cacheable()
 	{
 		if ( $this->is_cacheable() ) {
-			$this->cacheable = true;
+			$this->cachectrl = self::CACHECTRL_CACHE;
+		}
+	}
+
+	/**
+	 * Adds admin IP query string key to query vars list.
+	 *
+	 * @since 1.0.7
+	 * @access public
+	 * @param array $qvars Already added query vars.
+	 * @return array Newly appended query vars.
+	 */
+	public function query_vars($qvars)
+	{
+		$qvars[] = self::ADMINQS_KEY;
+		return $qvars;
+	}
+
+	/**
+	 * Check the query string to see if it contains a LSCWP_CTRL.
+	 * Also will compare IPs to see if it is a purge command.
+	 *
+	 * @since 1.0.7
+	 * @access public
+	 */
+	public function check_admin_ip()
+	{
+		$action = get_query_var(self::ADMINQS_KEY);
+		// Not set, ignore.
+		if (empty($action)) {
+			return;
+		}
+		// Beyond this point, the page is guaranteed not cacheable.
+		$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
+		$this->cachectrl = self::CACHECTRL_NOCACHE;
+
+		if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+			return;
+		}
+
+		if (strcmp($action, self::ADMINQS_PURGE) == 0) {
+			$this->cachectrl = self::CACHECTRL_PURGE;
+		}
+		elseif (strcmp($action, self::ADMINQS_PURGESINGLE) == 0) {
+			$this->cachectrl = self::CACHECTRL_PURGESINGLE;
 		}
 	}
 
@@ -1038,9 +1108,14 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		do_action('litespeed_cache_add_purge_tags');
-		$this->send_purge_headers();
+		$mode = $this->cachectrl;
 
-		if ($this->cacheable) {
+		if ($mode != self::CACHECTRL_NOCACHE) {
+			// Leave this up here. If CACHECTRL_CACHE, blog id should go at end.
+			$cache_tags = $this->get_cache_tags();
+		}
+
+		if ($mode == self::CACHECTRL_CACHE) {
 			do_action('litespeed_cache_add_cache_tags');
 			if ( is_front_page() ){
 				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
@@ -1049,19 +1124,36 @@ class LiteSpeed_Cache
 				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 			}
 			$cache_control_val = 'public,max-age=' . $ttl /*. ',esi=on'*/ ;
-			$cache_tags = $this->get_cache_tags();
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
-
-			if (!empty($cache_tags)) {
-				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG . ': ' . implode(',', $cache_tags) ;
-				$this->debug_log('cache_control_header: ' . LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ' . $cache_control_val ."\n tag_header: " . $cache_tag_header) ;
-				@header($cache_tag_header);
-			}
 		}
 		else {
 			$cache_control_val = 'no-cache' /*. ',esi=on'*/ ;
 		}
+
+		if ((!is_null($cache_tags)) && (!empty($cache_tags))) {
+			switch($mode) {
+				case self::CACHECTRL_CACHE:
+					$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
+						. ': ' . implode(',', $cache_tags) ;
+					$this->debug_log('cache_control_header: '
+							. LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': '
+							. $cache_control_val ."\n tag_header: " . $cache_tag_header) ;
+					@header($cache_tag_header);
+					break;
+				case self::CACHECTRL_PURGESINGLE:
+					$cache_tags = $cache_tags[0];
+					// fall through
+				case self::CACHECTRL_PURGE:
+					LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
+					break;
+				default:
+					error_log('ERROR should not be here. send_headers switch case not found');
+					return;
+			}
+		}
+
 		@header(LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ' . $cache_control_val);
+		$this->send_purge_headers();
 	}
 
 
@@ -1087,7 +1179,7 @@ class LiteSpeed_Cache
 
 		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
-		$cache_tags = LiteSpeed_Cache_Tags::get_cache_tags();
+		$cache_tags = array();
 
 		if ( is_front_page() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE ;
@@ -1128,7 +1220,7 @@ class LiteSpeed_Cache
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $queried_obj_id ;
 		}
 
-		return $cache_tags ;
+		return array_merge($cache_tags, LiteSpeed_Cache_Tags::get_cache_tags());
 	}
 
 	/**
