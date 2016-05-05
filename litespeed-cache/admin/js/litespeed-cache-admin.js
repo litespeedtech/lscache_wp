@@ -35,12 +35,22 @@
     });
     
     jQuery(document).ready( function() {
-        
-        jQuery(' #litespeedcache-postbox-button').click( function() {
+        jQuery('#litespeedcache-postbox-button').click( function() {
             var pbDiv = jQuery(this).parent().get(0);
             jQuery(pbDiv).toggleClass('closed');
             jQuery(this).attr('aria-expanded', 
                 jQuery(this).attr('aria-expanded') === 'true' ? 'false' : 'true');
+        });
+    });
+
+    jQuery(document).ready( function() {
+        jQuery('#litespeedcache-purgeall').click( function() {
+            if (confirm(jQuery('#litespeedcache-purgeall-confirm').val())) {
+                jQuery(this).submit();
+            }
+            else {
+                return false;
+            }
         });
     });
 })(jQuery);

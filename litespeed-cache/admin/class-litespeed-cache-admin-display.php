@@ -206,18 +206,22 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<input type="submit" class="button button-primary" '
 		. 'name="purgefront" value="' . __('Purge Front Page', 'litespeed-cache')
 		. '" /><br><br>'
-		. '<input type="submit" class="button button-primary" '
-		. 'name="purgeall" value="' . __('Purge All', 'litespeed-cache')
+		. '<input type="submit" class="button button-primary" name="purgeall"'
+		. 'id="litespeedcache-purgeall" value="' . __('Purge All', 'litespeed-cache')
 		. '" /><br>';
 
 		if ((is_multisite()) && (is_network_admin())) {
-
-			// End form
-			$buf .= "<br><br></form></div></div>\n";
-
-			echo $buf;
+			echo $buf
+			. $this->input_field_hidden('litespeedcache-purgeall-confirm',
+				__('This will purge everything for all blogs.', 'litespeed-cache')
+					. __(' Are you sure you want to purge all?', 'litespeed-cache'))
+			. "<br><br></form></div></div>\n";
 			return;
 		}
+
+		$buf .= $this->input_field_hidden('litespeedcache-purgeall-confirm',
+			__('Are you sure you want to purge all?', 'litespeed-cache'));
+
 
 		// Purge by description.
 		$buf .= '<h3>' . __('Purge By...', 'litespeed-cache') . '</h3>'
@@ -375,7 +379,6 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$mv_str = '';
-//		if ($this->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
 			// can also use class 'mejs-container' for 100% width.
 			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging code', '',
