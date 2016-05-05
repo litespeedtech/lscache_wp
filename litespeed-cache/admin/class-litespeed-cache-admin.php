@@ -533,9 +533,6 @@ class LiteSpeed_Cache_Admin
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				__('File saved.', 'litespeed-cache'));
 		$ret = update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
-		if ($ret) {
-
-		}
 	}
 
 }

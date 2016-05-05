@@ -582,6 +582,8 @@ class LiteSpeed_Cache
 	/**
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
+	 * @since 1.0.7
+	 * @access public
 	 * @param string $value The category slug.
 	 * @param string $key Unused.
 	 */
@@ -616,6 +618,8 @@ class LiteSpeed_Cache
 	/**
 	 * Callback to add purge tags if admin selects to purge selected post IDs.
 	 *
+	 * @since 1.0.7
+	 * @access public
 	 * @param string $value The post ID.
 	 * @param string $key Unused.
 	 */
@@ -649,6 +653,8 @@ class LiteSpeed_Cache
 	/**
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
 	 *
+	 * @since 1.0.7
+	 * @access public
 	 * @param string $value The tag slug.
 	 * @param string $key Unused.
 	 */
@@ -683,6 +689,8 @@ class LiteSpeed_Cache
 	/**
 	 * Callback to add purge tags if admin selects to purge selected urls.
 	 *
+	 * @since 1.0.7
+	 * @access public
 	 * @param string $value A url to purge.
 	 * @param string $key Unused.
 	 */
@@ -719,7 +727,7 @@ class LiteSpeed_Cache
 	 * Purge a list of pages when selected by admin. This method will
 	 * look at the post arguments to determine how and what to purge.
 	 *
-	 * @since 1.0.6
+	 * @since 1.0.7
 	 * @access public
 	 */
 	public function purge_list()

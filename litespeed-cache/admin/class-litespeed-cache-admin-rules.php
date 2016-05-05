@@ -16,7 +16,7 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.6
+	 * @since    1.0.7
 	 * @access   private
 	 */
 	private function __construct()
@@ -26,7 +26,7 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Get the LiteSpeed_Cache_Admin_Rules object.
 	 *
-	 * @since 1.0.6
+	 * @since 1.0.7
 	 * @access public
 	 * @return LiteSpeed_Cache_Admin_Rules Static instance of the LiteSpeed_Cache_Admin_Rules class.
 	 */

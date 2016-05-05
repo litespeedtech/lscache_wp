@@ -31,7 +31,7 @@ class LiteSpeed_Cache_Admin_Display
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.6
+	 * @since    1.0.7
 	 * @access   private
 	 */
 	private function __construct()
@@ -41,7 +41,7 @@ class LiteSpeed_Cache_Admin_Display
 	/**
 	 * Get the LiteSpeed_Cache_Admin_Display object.
 	 *
-	 * @since 1.0.6
+	 * @since 1.0.7
 	 * @access public
 	 * @return LiteSpeed_Cache_Admin_Display Static instance of the LiteSpeed_Cache_Admin_Display class.
 	 */
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Admin_Display
 		$screen->set_help_sidebar(
 				'<p><strong>' . __('For more information:', 'litespeed-cache') . '</strong></p>' .
 				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
-				'<p><a href="https://www.litespeedtech.com/support/forum/" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
+				'<p><a href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
 		) ;
 	}
 
@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * color may be added in a single call. If the list is empty, this method
 	 * will add the action to display notices.
 	 *
-	 * @since 1.0.6
+	 * @since 1.0.7
 	 * @access public
 	 * @param string $color One of the available constants provided by this class.
 	 * @param mixed $msg May be a string for a single message or an array for multiple.
@@ -111,7 +111,7 @@ class LiteSpeed_Cache_Admin_Display
 	/**
 	 * Callback function to display any notices from editing cache settings.
 	 *
-	 * @since 1.0.6
+	 * @since 1.0.7
 	 * @access public
 	 */
 	public function display_notices() {
@@ -938,8 +938,11 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '</div>'; // id=lsc_tabs
 		$buf .= '<h4>'
 		. __('If your questions are not answered, try the ', 'litespeed-cache')
-		. '<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ</a>';
-		$buf .= '</div>'; // class=wrap
+		. '<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>';
+		$buf .=
+		__(" If your questions are still not answered, don't hesitate to ask them on the ", 'litespeed-cache')
+		. '<a href=https://wordpress.org/support/plugin/litespeed-cache>support forum.</a>'
+		. '</h4></div>'; // class=wrap
 		echo $buf;
 	}
 
