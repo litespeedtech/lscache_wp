@@ -582,7 +582,7 @@ class LiteSpeed_Cache
 	/**
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
-	 * @param string $value The category name.
+	 * @param string $value The category slug.
 	 * @param string $key Unused.
 	 */
 	public function purgeby_cat_cb($value, $key)
@@ -591,8 +591,14 @@ class LiteSpeed_Cache
 		if (empty($val)) {
 			return;
 		}
-		$cat_id = get_cat_ID($val);
-		if ($cat_id == 0) {
+		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by category, invalid category slug.', 'litespeed-cache'));
+			return;
+		}
+		$cat = get_category_by_slug($val);
+		if ($cat == false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 				__('Failed to purge by category, does not exist: ', 'litespeed-cache') . $val);
@@ -604,7 +610,7 @@ class LiteSpeed_Cache
 				__('Purge category ', 'litespeed-cache') . $val);
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $cat_id);
+				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $cat->term_id);
 	}
 
 	/**
@@ -619,6 +625,19 @@ class LiteSpeed_Cache
 		if (empty($val)) {
 			return;
 		}
+		if (!is_numeric($val)) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by Post ID, given ID is not numeric: ', 'litespeed-cache') . $val);
+			return;
+		}
+		elseif (get_post_status($val) !== 'published') {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by Post ID, given ID does not exist or is not published: ',
+						'litespeed-cache') . $val);
+			return;
+		}
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				__('Purge Post ID ', 'litespeed-cache') . $val);
@@ -630,7 +649,7 @@ class LiteSpeed_Cache
 	/**
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
 	 *
-	 * @param string $value The tag name.
+	 * @param string $value The tag slug.
 	 * @param string $key Unused.
 	 */
 	public function purgeby_tag_cb($value, $key)
@@ -639,7 +658,13 @@ class LiteSpeed_Cache
 		if (empty($val)) {
 			return;
 		}
-		$term = get_term_by('name', $val, 'post_tag');
+		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by tag, invalid tag slug.', 'litespeed-cache'));
+			return;
+		}
+		$term = get_term_by('slug', $val, 'post_tag');
 		if ($term == 0) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
@@ -666,6 +691,13 @@ class LiteSpeed_Cache
 		$val = trim($value);
 		if (empty($val)) {
 			return;
+		}
+		if (strpos($val, '<') !== false) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				__('Failed to purge by url, contained "<".', 'litespeed-cache'));
+			return;
+
 		}
 		$id = url_to_postid($val);
 		if ($id == 0) {
@@ -694,14 +726,20 @@ class LiteSpeed_Cache
 	{
 		$conf = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
 		if (is_null($conf)) {
-
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 					__('ERROR: Something went wrong with the form! Please try again.', 'litespeed-cache'));
 			return;
 		}
 		$sel =  $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
-		$list = explode("\n", $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST]);
+		$list_buf = $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
+		if (empty($list_buf)) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+					__('ERROR: Tried to purge list with empty list.', 'litespeed-cache'));
+			return;
+		}
+		$list = explode("\n", $list_buf);
 		switch($sel) {
 			case LiteSpeed_Cache_Admin_Display::PURGEBY_CAT:
 				$cb = 'purgeby_cat_cb';
