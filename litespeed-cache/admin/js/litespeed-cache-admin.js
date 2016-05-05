@@ -38,10 +38,9 @@
         
         jQuery(' #litespeedcache-postbox-button').click( function() {
             var pbDiv = jQuery(this).parent().get(0);
-            var $pbButton = jQuery(pbDiv).children(":button");
             jQuery(pbDiv).toggleClass('closed');
-            $pbButton.attr('aria-expanded', 
-                $pbButton.attr('aria-expanded') === 'true' ? 'false' : 'true');
+            jQuery(this).attr('aria-expanded', 
+                jQuery(this).attr('aria-expanded') === 'true' ? 'false' : 'true');
         });
     });
 })(jQuery);
