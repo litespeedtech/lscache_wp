@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Tags
 	const HEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const HEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
 	const HEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
+	const HEADER_DEBUG = 'X-LiteSpeed-Debug' ;
 
 	static $thirdparty_purge_tags = array();
 	static $thirdparty_cache_tags = array();

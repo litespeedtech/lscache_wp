@@ -31,11 +31,14 @@ class LiteSpeed_Cache
 	const ADMINQS_KEY = 'LSCWP_CTRL';
 	const ADMINQS_PURGE = 'PURGE';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
+	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
 
 	const CACHECTRL_NOCACHE = 0;
 	const CACHECTRL_CACHE = 1;
 	const CACHECTRL_PURGE = 2;
 	const CACHECTRL_PURGESINGLE = 3;
+
+	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -539,41 +542,6 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Gathers all the purge headers and sends them out to the server.
-	 *
-	 * This will collect all site wide purge tags as well as
-	 * third party plugin defined purge tags.
-	 *
-	 * @since 1.0.1
-	 * @access private
-	 */
-	private function send_purge_headers()
-	{
-		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
-		$purge_tags = array_merge($this->pub_purge_tags,
-				LiteSpeed_Cache_Tags::get_purge_tags());
-		$purge_tags = array_unique($purge_tags);
-
-		if (empty($purge_tags)) {
-			return;
-		}
-
-		if (in_array('*', $purge_tags )) {
-			$cache_purge_header .= ': *';
-		}
-		else {
-			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
-		}
-		@header($cache_purge_header);
-		$this->debug_log("send purge headers " . $cache_purge_header,
-				LiteSpeed_Cache_Config::LOG_LEVEL_INFO) ;
-		// TODO: private cache headers
-//		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
-//				. ': private,tag=' . implode(',', $this->ext_purge_private_tags);
-//		@header($cache_purge_header, false);
-	}
-
-	/**
 	 * Alerts LiteSpeed Web Server to purge all pages.
 	 *
 	 * For multisite installs, if this is called by a site admin (not network admin),
@@ -1068,7 +1036,7 @@ class LiteSpeed_Cache
 
 	/**
 	 * Check the query string to see if it contains a LSCWP_CTRL.
-	 * Also will compare IPs to see if it is a purge command.
+	 * Also will compare IPs to see if it is a valid command.
 	 *
 	 * @since 1.0.7
 	 * @access public
@@ -1080,19 +1048,106 @@ class LiteSpeed_Cache
 		if (empty($action)) {
 			return;
 		}
-		// Beyond this point, the page is guaranteed not cacheable.
 		$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
-		$this->cachectrl = self::CACHECTRL_NOCACHE;
 
 		if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+			$this->cachectrl = self::CACHECTRL_NOCACHE;
 			return;
 		}
 
-		if (strcmp($action, self::ADMINQS_PURGE) == 0) {
-			$this->cachectrl = self::CACHECTRL_PURGE;
+		switch ($action[0]) {
+			case 'P':
+				if (strcmp($action, self::ADMINQS_PURGE) == 0) {
+					$this->cachectrl = self::CACHECTRL_PURGE;
+				}
+				elseif (strcmp($action, self::ADMINQS_PURGESINGLE) == 0) {
+					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
+				}
+				else {
+					break;
+				}
+				return;
+			case 'S':
+				if (strcmp($action, self::ADMINQS_SHOWHEADERS) == 0) {
+					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
+					return;
+				}
+				break;
+			default:
+				break;
 		}
-		elseif (strcmp($action, self::ADMINQS_PURGESINGLE) == 0) {
-			$this->cachectrl = self::CACHECTRL_PURGESINGLE;
+		$this->cachectrl = self::CACHECTRL_NOCACHE;
+	}
+
+	/**
+	 * Gathers all the purge headers.
+	 *
+	 * This will collect all site wide purge tags as well as
+	 * third party plugin defined purge tags.
+	 *
+	 * @since 1.0.1
+	 * @access private
+	 */
+	private function build_purge_headers()
+	{
+		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
+		$purge_tags = array_merge($this->pub_purge_tags,
+				LiteSpeed_Cache_Tags::get_purge_tags());
+		$purge_tags = array_unique($purge_tags);
+
+		if (empty($purge_tags)) {
+			return;
+		}
+
+		if (in_array('*', $purge_tags )) {
+			$cache_purge_header .= ': *';
+		}
+		else {
+			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
+		}
+		return $cache_purge_header;
+		// TODO: private cache headers
+//		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
+//				. ': private,tag=' . implode(',', $this->ext_purge_private_tags);
+//		@header($cache_purge_header, false);
+	}
+
+	/**
+	 * Send out the LiteSpeed Cache headers. If show headers is true,
+	 * will send out debug header.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param boolean $showhdr True to show debug header, false if real headers.
+	 * @param string $cache_ctrl The cache control header to send out.
+	 * @param string $purge_hdr The purge tag header to send out.
+	 * @param string $cache_hdr The cache tag header to send out.
+	 */
+	private function header_out($showhdr, $cache_ctrl, $purge_hdr, $cache_hdr = '')
+	{
+		$hdr_content = array();
+		if ((!is_null($cache_ctrl)) && (!empty($cache_ctrl))) {
+			$hdr_content[] = $cache_ctrl;
+		}
+		if ((!is_null($purge_hdr)) && (!empty($purge_hdr))) {
+			$hdr_content[] = $purge_hdr;
+		}
+		if ((!is_null($cache_hdr)) && (!empty($cache_hdr))) {
+			$hdr_content[] = $cache_hdr;
+		}
+
+		if (empty($hdr_content)) {
+			return;
+		}
+
+		if ($showhdr) {
+			@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': '
+					. implode('; ', $hdr_content));
+		}
+		else {
+			foreach($hdr_content as $hdr) {
+				@header($hdr);
+			}
 		}
 	}
 
@@ -1108,54 +1163,55 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		do_action('litespeed_cache_add_purge_tags');
-		$mode = $this->cachectrl;
+		if ($this->cachectrl & self::CACHECTRL_SHOWHEADERS) {
+			$showhdr = true;
+			$mode = $this->cachectrl & ~self::CACHECTRL_SHOWHEADERS;
+		}
+		else {
+			$mode = $this->cachectrl;
+		}
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
-			// Leave this up here. If CACHECTRL_CACHE, blog id should go at end.
+			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
 		}
 
-		if ($mode == self::CACHECTRL_CACHE) {
-			do_action('litespeed_cache_add_cache_tags');
-			if ( is_front_page() ){
-				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
-			}
-			else{
-				$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
-			}
-			$cache_control_val = 'public,max-age=' . $ttl /*. ',esi=on'*/ ;
-			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
-		}
-		else {
-			$cache_control_val = 'no-cache' /*. ',esi=on'*/ ;
+		if ((is_null($cache_tags)) || (empty($cache_tags))) {
+			$cache_control_header =
+					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
+			$purge_headers = $this->build_purge_headers();
+			$this->header_out($showhdr, $cache_control_header, $purge_headers);
+			return;
 		}
 
-		if ((!is_null($cache_tags)) && (!empty($cache_tags))) {
-			switch($mode) {
-				case self::CACHECTRL_CACHE:
-					$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
-						. ': ' . implode(',', $cache_tags) ;
-					$this->debug_log('cache_control_header: '
-							. LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': '
-							. $cache_control_val ."\n tag_header: " . $cache_tag_header) ;
-					@header($cache_tag_header);
-					break;
-				case self::CACHECTRL_PURGESINGLE:
-					$cache_tags = $cache_tags[0];
-					// fall through
-				case self::CACHECTRL_PURGE:
-					LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
-					break;
-				default:
-					error_log('ERROR should not be here. send_headers switch case not found');
-					return;
-			}
-		}
+		switch ($mode) {
+			case self::CACHECTRL_CACHE:
+				if ( is_front_page() ){
+					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
+				}
+				else{
+					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
+				}
+				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
+						. ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
+				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
+					. ': ' . implode(',', $cache_tags) ;
+				break;
+			case self::CACHECTRL_PURGESINGLE:
+				$cache_tags = $cache_tags[0];
+				// fall through
+			case self::CACHECTRL_PURGE:
+				$cache_control_header =
+					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
+				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
+				break;
 
-		@header(LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ' . $cache_control_val);
-		$this->send_purge_headers();
+		}
+		$purge_headers = $this->build_purge_headers();
+		$this->header_out($showhdr, $cache_control_header, $purge_headers,
+				$cache_tag_header);
 	}
-
 
 	/**
 	 * Gets the cache tags to set for the page.
