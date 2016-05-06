@@ -745,7 +745,10 @@ class LiteSpeed_Cache_Admin_Display
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		$input_admin_ips = $this->input_field_text($id, $options[$id], '', 'regular-text') ;
 		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips,
-				__('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')) ;
+		__('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')
+		. '<br>'
+		. __('More information about the available commands can be found here: ', 'litespeed-cache')
+		. '<a href=' . get_admin_url() . 'admin.php?page=lscache-info#adminip>link</a>'		) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_levels = array(
@@ -886,6 +889,49 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Builds the html for the admin ip tab.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @return string The html for the admin ip tab.
+	 */
+	private function show_info_admin_ip()
+	{
+		$buf = '<h3>'
+		. __('Admin IP Query String Actions', 'litespeed-cache') . '</h3>';
+
+		$buf .= '<h4>'
+		. __('The following commands are available for the admin to use to control specific pages.', 'litespeed-cache')
+		. __(' They may be used regardless of if the admin is logged in.', 'litespeed-cache')
+		. __(' This is to provide quick access to do an action on the various pages.', 'litespeed-cache')
+		. '</h4>';
+
+		$buf .= '<h5>' . __('To run the action, just access the page with the query string ', 'litespeed-cache')
+		. '<code>?LSCWP_CTRL=ACTION</code>'
+		. __(' and the action will trigger for the accessed page.', 'litespeed-cache'). '</h5>';
+
+
+		$buf .= '<h4>' . __('Action List:', 'litespeed-cache') . '</h4>';
+		$buf .= '<ul><li>NOCACHE - '
+		. __('This is used to display a page without caching it. ', 'litespeed-cache')
+		. __('An example use case is to compare a cached version with an uncached version.', 'litespeed-cache')
+		. '</li>'
+		. '<li>PURGE - '
+		. __('This is used to purge most cache tags associated with the page.', 'litespeed-cache')
+		. __(' The lone exception is the blog ID tag. ', 'litespeed-cache')
+		. __('Note that this means that pages with the same cache tag will be purged as well.', 'litespeed-cache')
+		. '</li>'
+		. '<li>PURGESINGLE - '
+		. __('This is used to purge the first cache tag associated with the page.', 'litespeed-cache')
+		. '</li>'
+		. '<li>SHOWHEADERS - '
+		. __('This is used to show all the cache headers associated with the page.', 'litespeed-cache')
+		. __(' This may be useful for debugging purposes.', 'litespeed-cache')
+		. '</li></ul>';
+		return $buf;
+	}
+
+	/**
 	 * Outputs the html for the info page.
 	 *
 	 * This page includes three tabs:
@@ -910,6 +956,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '<li><a href="#config">' . __('Configurations', 'litespeed-cache') . '</a></li>'
 		. '<li><a href="#compat">' . __('Plugin Compatibilities', 'litespeed-cache') . '</a></li>'
 		. '<li><a href="#commonrw">' . __('Common Rewrite Rules', 'litespeed-cache') . '</a></li>'
+		. '<li><a href="#adminip">' . __('Admin IP Commands', 'litespeed-cache') . '</a></li>'
 		. '</ul>';
 
 		$buf .= '<div id="config"><h3>'
@@ -937,6 +984,10 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<div id="commonrw">';
 		$buf .= $this->show_info_common_rewrite();
 		$buf .= '</div>'; // id=commonrw
+
+		$buf .= '<div id="adminip">';
+		$buf .= $this->show_info_admin_ip();
+		$buf .= '</div>'; // id=adminip
 
 		$buf .= '</div>'; // id=lsc_tabs
 		$buf .= '<h4>'
