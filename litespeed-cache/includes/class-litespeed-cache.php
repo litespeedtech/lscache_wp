@@ -233,7 +233,13 @@ class LiteSpeed_Cache
 		}
 
 		$this->load_public_actions() ;
-		add_action('wp', array($this, 'detect'), 4);
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			do_action('litespeed_cache_detect_thirdparty');
+		}
+		else {
+			add_action('wp', array($this, 'detect'), 4);
+		}
+
 	}
 
 	/**
