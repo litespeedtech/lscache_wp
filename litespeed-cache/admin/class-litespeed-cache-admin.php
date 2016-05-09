@@ -344,7 +344,8 @@ class LiteSpeed_Cache_Admin
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
 		if ( isset($input[$id]) ) {
-			$options[$id] = implode("\n", array_map('trim', explode("\n", $input[$id])));
+			$uri_arr = array_map('trim', explode("\n", $input[$id]));
+			$options[$id] = implode("\n", array_filter($uri_arr));
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
