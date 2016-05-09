@@ -1163,6 +1163,8 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers()
 	{
+		$cache_tags = null;
+		$showhdr = false;
 		do_action('litespeed_cache_add_purge_tags');
 		if ($this->cachectrl & self::CACHECTRL_SHOWHEADERS) {
 			$showhdr = true;
