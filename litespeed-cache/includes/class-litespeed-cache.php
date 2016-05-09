@@ -944,19 +944,20 @@ class LiteSpeed_Cache
 		if (( ! empty($excludes))
 			&& ( $this->is_uri_excluded(explode("\n", $excludes))))
 		{
-			return false;
+			return $this->no_cache_for('Admin configured URI Do not cache: '
+					. $_SERVER['REQUEST_URI']);
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
 		if (( ! empty($excludes))
 			&& (has_category(explode(',', $excludes)))) {
-			return false;
+			return $this->no_cache_for('Admin configured Category Do not cache.');
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
 		if (( ! empty($excludes))
 			&& (has_tag(explode(',', $excludes)))) {
-			return false;
+			return $this->no_cache_for('Admin configured Tag Do not cache.');
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_COOKIE);
@@ -965,7 +966,7 @@ class LiteSpeed_Cache
 
 			foreach( $_COOKIE as $key=>$val) {
 				if (in_array($key, $exclude_list)) {
-					return false;
+					return $this->no_cache_for('Admin configured Cookie Do not cache.');
 				}
 			}
 		}
@@ -975,7 +976,7 @@ class LiteSpeed_Cache
 			$pattern = '/' . $excludes . '/';
 			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
 			if ($nummatches) {
-				return false;
+					return $this->no_cache_for('Admin configured User Agent Do not cache.');
 			}
 		}
 
