@@ -16,5 +16,9 @@ include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-bbpress.php'
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-nextgengallery.php');
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-woocommerce.php');
 
+// This plugin's integration is sub optimal. Commented out until they use
+// DOING_AJAX or provide a better alternative.
+//include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-like-dislike-counter.php');
+
 
 
