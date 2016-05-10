@@ -74,6 +74,168 @@ pages are cacheable. We are always looking for feedback, so if you encounter any
 
 3. Purge the cache to use the updated pages.
 
+== Plugin Developers ==
+
+Any WP plugin that populates front end content that can be publicly cached
+should work with LSCache.
+
+However if the plugin needs to update some data and the cache does not
+automatically purge the cached page, it may be required to write an
+integration script. In addition to this wiki, there is a template file and a
+few examples of plugins that required integration scripts if additional
+resources are needed.
+
+= How It Works =
+
+LSCache works by tagging each cacheable page. In its most basic form,
+each page is tagged with its Post ID, then sent to the server to be cached.
+When someone makes a change to the page, that request will notify the server
+to purge the cached items associated with that page's post id.
+
+This integration framework enables any plugin developer to customize the
+notifications sent to the server. It is possible to tag the page with
+identifiers as the page is stored in the cache. Later, if needed, the tag
+system provides a simple way to purge the cache of a certain subset of pages.
+Multiple tags can be set on a single page, and a single tag may be used on
+multiple pages. This many to many mapping provides a flexible system enabling
+you to group pages in many ways.
+
+For example, a page may be tagged with `MTPP_F.1 (forum), MTPP_G.4 (group),
+MTPP_S.georgia (state)` because the page is in forum 1, group 4, and related to
+the state of Georgia. Then another page is tagged `MTPP_F.1, MTPP_G.2,
+MTPP_S.iowa`. If a change is made where all pages tagged `MTPP_F.1` need to be
+purged, the tag system makes it easy to purge the specific pages.
+
+A post will automatically be purged if the following events are triggered:
+
+ * edit_post
+ * save_post
+ * deleted_post
+ * trashed_post
+ * delete_attachment
+
+These cases cover most situations in which a cache purge is necessary.
+If all the correct pages are purged, there may be no need to add additional
+tags.
+
+Another application for creating a third party integration class is to notify
+LSCache if the plugin generates private/transient data that cannot be cached
+for certain responses. Below is a list of what is already considered
+non-cacheable.
+
+A post is considered non cacheable if…
+
+ * It is an admin page
+ * The user is logged in
+ * It is a post request
+ * is_feed() is true
+ * is_trackback() is true
+ * is_404() is true
+ * is_search() is true
+ * No theme is used
+ * The URI matches any of the do not cache URI config
+ * The post has a category matching the do not cache category config
+ * The post has a tag matching the do not cache tag config
+ * The request has a cookie matching the do not cache cookie config
+ * The request has a user agent matching the do not cache user agent config
+
+= Components =
+
+1. A class to handle the compatibility code. A template is available below.
+2. Initiator for the class. Can be in the plugin's own file space or appended
+to the registry.
+
+= API/Functions =
+
+The following functions may be used at any hook point prior to the 'shutdown'
+hook point.
+
+* **The $tag parameter**
+
+  This parameter is used to distinguish pages. Generally speaking, there are two
+components to the tag, the name and the ID. That said, any number of components
+are allowed. Each component should be separated via a period, '.'.
+
+  The name should be short, but unique. As an example, if the plugin
+MySlideShowPlugin has a class SlideShow, it might use `MSSP_SS.1`.
+
+
+* **LiteSpeed_Cache_Tags::add_cache_tag(_$tag_)**
+
+  Adds a single or group of cache tags to the list of cache tags associated with
+the current page. These will be appended to the LiteSpeed Cache Plugin
+generated list of cache tags. This may be useful to purge by a custom tag
+rather than resorting to the WordPress site wide tags.
+
+  * **Parameters**
+
+     *$tag* `String/Array` A (list of) cache tag(s) to associate with the page.
+
+* **LiteSpeed_Cache_Tags::add_purge_tag(_$tag_)**
+
+  Adds a single or group of purge tags to the list of tags to be purged with the
+request. This may be useful for situations where another plugin needs to purge
+custom cache tags or associated pages.
+
+  * **Parameters**
+
+     *$tag* `String/Array` A (list of) purge tag(s) to append to the list.
+
+= Hook Points =
+
+These hook points are provided for hooking into the cache's run time
+functionality. It is not required to hook into any of these hook points;
+these are provided more for convenience. It is possible that a plugin only
+needs to hook into its own hook points.
+
+* **Action - litespeed_cache_detect_thirdparty**
+
+  This action may be used to check if it is necessary to add any further
+functionality to the current request. For example, if a user visits a shopping
+page, there is no need for the forum plugin to do its extra checks/add its tags
+because the page is unrelated.
+
+  If, however, the callback determines that it is a forum page,
+it is recommended to add any needed actions/filters in the callback.
+
+* **Filter - litespeed_cache_is_cacheable($cacheable)**
+
+  Triggered when the cache plugin is checking if the current page is cacheable.
+This filter will not trigger on admin pages nor regular pages when visited by a
+logged in user.
+
+  * **Parameters**
+
+     *$cacheable* `boolean` Represents whether a previous filter determined the
+cache to be cacheable or not. If this is false, it is strongly recommended to
+return false immediately to optimize performance.
+
+  * **Returns**
+
+     `boolean` True if cacheable, false otherwise. If *$cacheable* was false and
+true is returned, the result is undefined behavior.
+
+* **Action - litespeed_cache_on_purge_post**
+
+  Triggered when a post is about to be purged. Use this hook point if purging a
+page should purge other pages related to your plugin.
+
+  An example use case: Suppose a user replies to a forum topic. This will cause
+the forum topic to be purged. When the plugin is about to notify the server,
+the forum plugin will see that the cache is about to purge the topic page.
+The plugin then adds purge tags, notifying the server to purge the forum and
+forum list as well. This ensures that all related pages are up to date.
+
+* **Action - litespeed_cache_add_purge_tags**
+
+  Called at the end of every request. This hook provides an access point to any
+plugin that needs to add purge tags to the current request.
+
+* **Action - litespeed_cache_add_cache_tags**
+
+  Called at the end of every cacheable request. This hook provides an access
+point to any plugin that needs to add cache tags to the current request.
+
 == Changelog ==
 = 1.0.5 =
 * [BETA] Added NextGen Gallery plugin support.
