@@ -35,6 +35,7 @@ class LiteSpeed_Cache_Tags
 
 	static $thirdparty_purge_tags = array();
 	static $thirdparty_cache_tags = array();
+	static $thirdparty_noncacheable = false;
 
 	/**
 	 * Gets cache tags that are already added for the current page.
@@ -98,6 +99,33 @@ class LiteSpeed_Cache_Tags
 		else {
 			self::$thirdparty_purge_tags[] = $tag;
 		}
+	}
+
+	/**
+	 * Gets whether any plugins determined that the current page is
+	 * non-cacheable.
+	 *
+	 * @return boolean True if the current page was deemed non-cacheable,
+	 * false otherwise.
+	 */
+	public static function is_noncacheable()
+	{
+		return self::$thirdparty_noncacheable;
+	}
+
+	/**
+	 * Mark the current page as non cacheable. This may be useful for
+	 * if the litespeed_cache_is_cacheable hook point triggers too soon
+	 * for the third party plugin to know if the page is cacheable.
+	 *
+	 * Must be called before the shutdown hook point.
+	 *
+	 * @since 1.0.7
+	 * @access public
+	 */
+	public static function set_noncacheable()
+	{
+		self::$thirdparty_noncacheable = true;
 	}
 
 }

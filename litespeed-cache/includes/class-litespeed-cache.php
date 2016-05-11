@@ -1022,7 +1022,8 @@ class LiteSpeed_Cache
 	 */
 	public function check_cacheable()
 	{
-		if ( $this->is_cacheable() ) {
+		if ((LiteSpeed_Cache_Tags::is_noncacheable() == false)
+			&& ($this->is_cacheable())) {
 			$this->cachectrl = self::CACHECTRL_CACHE;
 		}
 	}
@@ -1178,6 +1179,11 @@ class LiteSpeed_Cache
 		}
 		else {
 			$mode = $this->cachectrl;
+		}
+
+		if (($mode == self::CACHECTRL_CACHE)
+				&& (LiteSpeed_Cache_Tags::is_noncacheable())) {
+			$mode = self::CACHECTRL_NOCACHE;
 		}
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
