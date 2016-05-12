@@ -36,6 +36,7 @@ class LiteSpeed_Cache_Tags
 	static $thirdparty_purge_tags = array();
 	static $thirdparty_cache_tags = array();
 	static $thirdparty_noncacheable = false;
+	static $thirdparty_mobile = false;
 
 	/**
 	 * Gets cache tags that are already added for the current page.
@@ -126,6 +127,32 @@ class LiteSpeed_Cache_Tags
 	public static function set_noncacheable()
 	{
 		self::$thirdparty_noncacheable = true;
+	}
+
+	/**
+	 * Gets whether any plugins determined that the current page is
+	 * mobile.
+	 *
+	 * @return boolean True if the current page was deemed mobile,
+	 * false otherwise.
+	 */
+	public static function is_mobile()
+	{
+		return self::$thirdparty_mobile;
+	}
+
+	/**
+	 * Mark the current page as mobile. This may be useful for
+	 * if the plugin does not override wp_is_mobile.
+	 *
+	 * Must be called before the shutdown hook point.
+	 *
+	 * @since 1.0.7
+	 * @access public
+	 */
+	public static function set_mobile()
+	{
+		self::$thirdparty_mobile = true;
 	}
 
 }
