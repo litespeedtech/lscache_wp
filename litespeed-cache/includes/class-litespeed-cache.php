@@ -1109,7 +1109,7 @@ class LiteSpeed_Cache
 //		@header($cache_purge_header, false);
 	}
 
-	private function validate_mode($mobileview, &$showhdr)
+	private function validate_mode(&$showhdr)
 	{
 		if ($this->cachectrl & self::CACHECTRL_SHOWHEADERS) {
 			$showhdr = true;
@@ -1127,9 +1127,21 @@ class LiteSpeed_Cache
 			return self::CACHECTRL_NOCACHE;
 		}
 
-		if (($mobileview == false) && (LiteSpeed_Cache_Tags::is_mobile())) {
+		if ($this->config->get_option(
+				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED) == false) {
+			return (LiteSpeed_Cache_Tags::is_mobile() ? self::CACHECTRL_NOCACHE
+														: $mode);
+		}
+
+		if ($_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile') {
+			if ((!wp_is_mobile()) && (!LiteSpeed_Cache_Tags::is_mobile())) {
+				return self::CACHECTRL_NOCACHE;
+			}
+		}
+		elseif ((wp_is_mobile()) || (LiteSpeed_Cache_Tags::is_mobile())) {
 			return self::CACHECTRL_NOCACHE;
 		}
+
 		return $mode;
 	}
 
@@ -1185,10 +1197,9 @@ class LiteSpeed_Cache
 	{
 		$cache_tags = null;
 		$showhdr = false;
-		$mobileview = $this->config->get_option(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED);
 		do_action('litespeed_cache_add_purge_tags');
 
-		$mode = $this->validate_mode($mobileview, $showhdr);
+		$mode = $this->validate_mode($showhdr);
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
@@ -1216,17 +1227,6 @@ class LiteSpeed_Cache
 				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 					. ': ' . implode(',', $cache_tags) ;
-				if ($mobileview == false) {
-					break;
-				}
-				if ($_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile') {
-					if ((!wp_is_mobile()) && (!LiteSpeed_Cache_Tags::is_mobile())) {
-						@header(LiteSpeed_Cache_Tags::HEADER_CACHE_VARY . ': value=');
-					}
-				}
-				elseif ((wp_is_mobile()) || (LiteSpeed_Cache_Tags::is_mobile())) {
-					@header(LiteSpeed_Cache_Tags::HEADER_CACHE_VARY . ': value=ismobile');
-				}
 				break;
 			case self::CACHECTRL_PURGESINGLE:
 				$cache_tags = $cache_tags[0];
