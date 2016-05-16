@@ -353,7 +353,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function show_mobile_view($options)
 	{
-
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
 		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
@@ -363,8 +364,7 @@ class LiteSpeed_Cache_Admin_Display
 		$buf = $this->input_field_hidden($warning_id,
 		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
 		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
-				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')',
-				!is_writable(LiteSpeed_Cache_Admin_Rules::get_rules_file_path())) ;
+				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')', !$file_writable) ;
 
 		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
 		__('When checked, mobile views will be cached separately. ', 'litespeed-cache')
@@ -407,6 +407,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function show_cookies_exclude(&$cookie_title, &$cookie_desc)
 	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		$cookies_rule = '';
 		$cookie_title = __('Cookie List', 'litespeed-cache');
@@ -416,16 +418,14 @@ class LiteSpeed_Cache_Admin_Display
 				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
-		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('COOKIE', 'HTTP_COOKIE', $cookies_rule) === true) {
-			// can also use class 'mejs-container' for 100% width.
-			$excludes_buf = str_replace('|', "\n", $cookies_rule);
-		}
-		else {
-			$excludes_buf = '<p class="attention">'
+		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('COOKIE',
+				'HTTP_COOKIE', $cookies_rule) !== true) {
+			return '<p class="attention">'
 			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
 		}
+		$excludes_buf = str_replace('|', "\n", $cookies_rule);
 		return $this->input_field_textarea($id, $excludes_buf, '5', '80', '',
-				!is_writable(LiteSpeed_Cache_Admin_Rules::get_rules_file_path()));
+				!$file_writable);
 	}
 
 	/**
@@ -439,6 +439,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function show_useragent_exclude(&$ua_title, &$ua_desc)
 	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		$ua_rule = '';
 		$ua_title = __('User Agent List', 'litespeed-cache');
@@ -449,8 +451,8 @@ class LiteSpeed_Cache_Admin_Display
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
 			// can also use class 'mejs-container' for 100% width.
-			$ua_list = $this->input_field_text($id, $ua_rule, '', 'widget ui-draggable-dragging', '',
-				!is_writable(LiteSpeed_Cache_Admin_Rules::get_rules_file_path())) ;
+			$ua_list = $this->input_field_text($id, $ua_rule, '',
+					'widget ui-draggable-dragging', '', !$file_writable);
 		}
 		else {
 			$ua_list = '<p class="attention">'
@@ -1238,13 +1240,14 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 		$buf .= '<div class="welcome-panel">';
 
-		$path = LiteSpeed_Cache_Admin_Rules::get_rules_file_path();
 		$contents = '';
 		if (LiteSpeed_Cache_Admin_Rules::get_rules_file_contents($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
 		}
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 
 		$buf .= '<p><span class="attention">' . __('WARNING: This page is meant for advanced users.', 'litespeed-cache')
 		. '</span><br>'
@@ -1267,7 +1270,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		. '</p>';
 
 		$buf .= '<textarea id="wpwrap" name="lscwp_ht_editor" wrap="off" rows="20" class="code" ';
-		if (!is_writable($path)) {
+		if (!$file_writable) {
 			$buf .= 'readonly';
 		}
 		$buf .= '>' . esc_textarea($contents) . '</textarea>';

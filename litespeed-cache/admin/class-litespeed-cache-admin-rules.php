@@ -13,6 +13,12 @@ class LiteSpeed_Cache_Admin_Rules
 {
 	private static $instance;
 
+	const READABLE = 1;
+	const WRITABLE = 2;
+	const RW = 3; // Readable and writable.
+
+	private $filerw = null;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -38,6 +44,44 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::$instance;
 	}
 
+	public static function is_file_able($permissions)
+	{
+		$rules = self::get_instance();
+		if (isset($rules->filerw)) {
+			return $rules->filerw & $permissions;
+		}
+		$rules->filerw = 0;
+
+		$home_path = get_home_path() . '.htaccess';
+
+		clearstatcache();
+		if (!file_exists($home_path)) {
+			return false;
+		}
+		if (is_readable($home_path)) {
+			$rules->filerw |= self::READABLE;
+		}
+		if (is_writable($home_path)) {
+			$rules->filerw |= self::WRITABLE;
+		}
+
+		if ( get_option( 'siteurl' ) === get_option( 'home' ) ) {
+			return $rules->filerw & $permissions;
+		}
+		$site_path = ABSPATH . '.htaccess';
+		if (!file_exists($home_path)) {
+			$rules->filerw = 0;
+			return false;
+		}
+		if (!is_readable($home_path)) {
+			$rules->filerw &= ~self::READABLE;
+		}
+		if (!is_writable($home_path)) {
+			$rules->filerw &= ~self::WRITABLE;
+		}
+		return $rules->filerw & $permissions;
+	}
+
 	/**
 	 * Validate common rewrite rules configured by the admin.
 	 *
@@ -54,7 +98,6 @@ class LiteSpeed_Cache_Admin_Rules
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
-		$path = self::get_rules_file_path();
 
 		if (($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
 			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
@@ -68,7 +111,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] = $content;
 			return false;
 		}
-		elseif (!is_writable($path)) {
+		elseif (!self::is_file_able(self::WRITABLE)) {
 			$errors[] = __('File is not writable.', 'litespeed-cache');
 			return false;
 		}
@@ -204,13 +247,12 @@ class LiteSpeed_Cache_Admin_Rules
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
-		$path = self::get_rules_file_path();
 
 		clearstatcache();
 		if (self::get_rules_file_contents($content) === false) {
 			return;
 		}
-		elseif (!is_writable($path)) {
+		elseif (!self::is_file_able(self::WRITABLE)) {
 			return;
 		}
 
@@ -297,15 +339,12 @@ class LiteSpeed_Cache_Admin_Rules
 		$path = self::get_rules_file_path();
 
 		clearstatcache();
-		if (!is_writable($path) || !is_readable($path)) {
-			unnset($path);
+		if (self::is_file_able(self::RW) == 0) {
 			return __('File not readable or not writable.', 'litespeed-cache'); // maybe return error string?
 		}
-		if (file_exists($path)) {
-			//failed to backup, not good.
-			if (!copy($path, $path . '_lscachebak')) {
-				return __('Failed to back up file, abort changes.', 'litespeed-cache');
-			}
+		//failed to backup, not good.
+		if (!copy($path, $path . '_lscachebak')) {
+			return __('Failed to back up file, abort changes.', 'litespeed-cache');
 		}
 
 		if ($cleanup) {
@@ -314,10 +353,12 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
-		unset($path);
 		if (!$ret) {
 			return __('Failed to overwrite ', 'litespeed-cache') . '.htaccess';
 		}
+
+		// TODO: second file stuff.
+
 		return true;
 	}
 
@@ -363,12 +404,8 @@ class LiteSpeed_Cache_Admin_Rules
 	public static function get_rules_file_contents(&$content)
 	{
 		$path = self::get_rules_file_path();
-		if (!file_exists($path)) {
-			$content = __('.htaccess file does not exist.', 'litespeed-cache');
-			return false;
-		}
-		else if (!is_readable($path)) {
-			$content = __('.htaccess file is not readable.', 'litespeed-cache');
+		if (!self::is_file_able(self::READABLE)) {
+			$content = __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
 			return false;
 		}
 
