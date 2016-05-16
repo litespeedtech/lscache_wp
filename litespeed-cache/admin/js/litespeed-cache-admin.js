@@ -35,7 +35,7 @@
     });
     
     jQuery(document).ready( function() {
-        jQuery('#litespeedcache-postbox-button').click( function() {
+        jQuery(".litespeedcache-postbox-button").on('click', function() {
             var pbDiv = jQuery(this).parent().get(0);
             jQuery(pbDiv).toggleClass('closed');
             jQuery(this).attr('aria-expanded', 
