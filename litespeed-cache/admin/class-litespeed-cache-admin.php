@@ -65,9 +65,13 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css', array(), $this->version, 'all') ;
+		wp_enqueue_style($this->plugin_name,
+				plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css',
+				array(), $this->version, 'all') ;
 		wp_enqueue_script('jquery-ui-tabs') ;
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js', array( 'jquery' ), $this->version, false) ;
+		wp_enqueue_script($this->plugin_name,
+				plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
+				array( 'jquery' ), $this->version, false) ;
 	}
 
 	/**
@@ -83,9 +87,12 @@ class LiteSpeed_Cache_Admin
 
 			$this->register_dash_menu();
 
-			$lscache_admin_settings_page = add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array( $display, 'show_menu_settings' )) ;
+			$lscache_admin_settings_page = add_options_page('LiteSpeed Cache',
+					'LiteSpeed Cache', $capability, 'litespeedcache',
+					array( $display, 'show_menu_settings' )) ;
 			// adds help tab
-			add_action('load-' . $lscache_admin_settings_page, array( $display, 'add_help_tabs' )) ;
+			add_action('load-' . $lscache_admin_settings_page,
+					array( $display, 'add_help_tabs' )) ;
 		}
 	}
 

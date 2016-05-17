@@ -83,6 +83,21 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Builds the html for a single notice.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param string $color The color to use for the notice.
+	 * @param string $str The notice message.
+	 * @return string The built notice html.
+	 */
+	private static function build_notice($color, $str)
+	{
+		return '<div class="' . $color . ' is-dismissible"><p>'
+					. $str . '</p></div>';
+	}
+
+	/**
 	 * Adds a notice to display on the admin page. Multiple messages of the same
 	 * color may be added in a single call. If the list is empty, this method
 	 * will add the action to display notices.
@@ -100,11 +115,11 @@ class LiteSpeed_Cache_Admin_Display
 				array($this, 'display_notices'));
 		}
 		if (!is_array($msg)) {
-			$this->notices[] = '<div class="' . $color . '"><p>' . $msg . '</p></div>';
+			$this->notices[] = self::build_notice($color, $msg);
 			return;
 		}
 		foreach ($msg as $str) {
-			$this->notices[] = '<div class="' . $color . '"><p>' . $str . '</p></div>';
+			$this->notices[] = self::build_notice($color, $str);
 		}
 	}
 
@@ -305,6 +320,7 @@ class LiteSpeed_Cache_Admin_Display
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
+		 <li><a href="#advanced-settings">' . __('Advanced Settings', 'litespeed-cache') . '</a></li>
 		<li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
 		. $compatibilities_tab . '
 		</ul>
@@ -316,6 +332,9 @@ class LiteSpeed_Cache_Admin_Display
 		'</div>
 		<div id="exclude-settings">'
 		. $this->show_settings_excludes($options) .
+		'</div>
+		<div id="advanced-settings">'
+		. $this->show_settings_advanced($options) .
 		'</div>
 		<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
@@ -459,6 +478,63 @@ class LiteSpeed_Cache_Admin_Display
 			. __('Error getting current rules: ', 'litespeed-cache') . $ua_rule . '</p>';
 		}
 		return $ua_list;
+	}
+
+	/**
+	 * Builds the html for the user agent excludes configuration.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param array $options The currently configured options.
+	 * @param string $cookie_title Returns the cookie title string.
+	 * @param string $cookie_desc Returns the cookie description string.
+	 * @return string Returns the cookie text field on success, error message on failure.
+	 */
+	private function show_login_cookie($options, &$cookie_title, &$cookie_desc)
+	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+				LiteSpeed_Cache_Admin_Rules::WRITABLE);
+		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+		$cookie = '';
+
+		$cookie_title = __('Login Cookie', 'litespeed-cache');
+		$cookie_desc =
+			__('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
+			. __(' No spaces and case sensitive. ', 'litespeed-cache')
+			. __('MUST BE UNIQUE FROM OTHER WEB APPLICATIONS.', 'litespeed-cache')
+			. '<br>'
+			. __('The default login cookie is ', 'litespeed-cache')
+			. '_lscache_vary. '
+			. __('The server will determine if the user is logged in based on this cookie. ', 'litespeed-cache')
+			. __('This setting is useful for those that have multiple web applications for the same domain. ', 'litespeed-cache')
+			. __('If every web application uses the same cookie, the server may confuse whether a user is logged in or not.', 'litespeed-cache')
+			. __(' The cookie set here will be used for this WordPress installation.', 'litespeed-cache')
+			. '<br><br>'
+			. __('Example use case:', 'litespeed-cache') . '<br>'
+			. __('There is a WordPress install for ', 'litespeed-cache')
+			. '<u>www.example.com.</u><br>'
+			. __('Then there is another WordPress install (NOT MULTISITE) at ', 'litespeed-cache')
+			. '<u>www.example.com/blog/</u><br>'
+			. __('The cache needs to distinguish who is logged into which WordPress in order to cache correctly.', 'litespeed-cache');
+
+		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE',
+				$match, $sub, $cookie) === false) {
+			return '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $cookie . '</p>';
+		}
+		if (!empty($cookie)) {
+			if (strncmp($cookie, 'Cache-Vary:', 11)) {
+				return '<p class="attention">'
+					. __('Error: invalid login cookie. Please check the .htaccess file', 'litespeed-cache')
+					. '</p>';
+			}
+			$cookie = substr($cookie, 11);
+		}
+		if (strcmp($cookie, $options[$id])) {
+			echo $this->build_notice(self::NOTICE_YELLOW,
+					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
+		}
+		return $this->input_field_text($id, $cookie, '','', '', !$file_writable);
 	}
 
 	/**
@@ -730,6 +806,39 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->input_group_end();
 
 		return $buf;
+	}
+
+	/**
+	 * Builds the html for the advanced settings tab.
+	 *
+	 * @since 1.0.1
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the advanced settings tab.
+	 */
+	private function show_settings_advanced( $options )
+	{
+		$cookie_title = '';
+		$cookie_desc = '';
+		$advanced_desc = '<strong>' . __('NOTICE', 'litespeed-cache') . ':</strong>'
+			. __(' These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache')
+			. __(' Please take great care when changing any of these settings.', 'litespeed-cache')
+			. __(" If you have any questions, don't hesitate to submit a support thread.", 'litespeed-cache');
+
+		$buf = $this->input_group_start(__('Advanced Settings', 'litespeed-cache'),
+										$advanced_desc);
+		$buf .= $this->input_group_end();
+
+		if (!is_multisite()) {
+			$cookie_buf .= $this->show_login_cookie($options,
+					$cookie_title, $cookie_desc);
+			$buf .= $this->input_group_start($cookie_title, $cookie_desc);
+			$buf .= $cookie_buf;
+			$buf .= $this->input_group_end();
+		}
+
+		return $buf;
+
 	}
 
 	/**

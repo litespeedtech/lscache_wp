@@ -18,6 +18,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const RW = 3; // Readable and writable.
 
 	private $filerw = null;
+	private $is_subdir_install = null;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -44,6 +45,14 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::$instance;
 	}
 
+	private function is_subdir()
+	{
+		if (is_null($this->is_subdir_install)) {
+			$this->is_subdir_install = (get_option('siteurl') !== get_option('home'));
+		}
+		return $this->is_subdir_install;
+	}
+
 	public static function is_file_able($permissions)
 	{
 		$rules = self::get_instance();
@@ -65,18 +74,18 @@ class LiteSpeed_Cache_Admin_Rules
 			$rules->filerw |= self::WRITABLE;
 		}
 
-		if ( get_option( 'siteurl' ) === get_option( 'home' ) ) {
+		if (self::get_instance()->is_subdir()) {
 			return $rules->filerw & $permissions;
 		}
 		$site_path = ABSPATH . '.htaccess';
-		if (!file_exists($home_path)) {
+		if (!file_exists($site_path)) {
 			$rules->filerw = 0;
 			return false;
 		}
-		if (!is_readable($home_path)) {
+		if (!is_readable($site_path)) {
 			$rules->filerw &= ~self::READABLE;
 		}
-		if (!is_writable($home_path)) {
+		if (!is_writable($site_path)) {
 			$rules->filerw &= ~self::WRITABLE;
 		}
 		return $rules->filerw & $permissions;
@@ -92,7 +101,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
-	public function validate_common_rewrites($input, $options, &$errors)
+	public function validate_common_rewrites($input, &$options, &$errors)
 	{
 		$content = '';
 		$prefix = '<IfModule LiteSpeed>';
@@ -106,7 +115,6 @@ class LiteSpeed_Cache_Admin_Rules
 			return $options;
 		}
 
-		clearstatcache();
 		if (self::get_rules_file_contents($content) === false) {
 			$errors[] = $content;
 			return false;
@@ -207,6 +215,37 @@ class LiteSpeed_Cache_Admin_Rules
 				// failed.
 				$errors[] = $ret[1];
 			}
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+		$aExceptions = array('-', '_');
+
+		if ($input[$id] == '') {
+			$ret = 0;
+			if ($options[$id] != '') {
+				$ret = self::set_rewrite_rule($start_search, $output,
+					'LOGIN COOKIE', '', '', '');
+			}
+		}
+		elseif (!ctype_alnum(str_replace($aExceptions, '', $input[$id]))) {
+			$errors[] = __('Invalid login cookie. Invalid characters found.', 'litespeed-cache');
+		}
+		else {
+			$ret = self::set_rewrite_rule($start_search, $output,
+				'LOGIN COOKIE', '.*', '-', 'E=Cache-Vary:' . $input[$id]);
+		}
+		if (is_array($ret)) {
+			if ($ret[0]) {
+				$start_search = $ret[1];
+				$options[$id] = $input[$id];
+			}
+			else {
+				// failed.
+				$errors[] = $ret[1];
+			}
+		}
+		elseif ($ret) {
+			$options[$id] = $input[$id];
 		}
 
 
@@ -338,7 +377,6 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$path = self::get_rules_file_path();
 
-		clearstatcache();
 		if (self::is_file_able(self::RW) == 0) {
 			return __('File not readable or not writable.', 'litespeed-cache'); // maybe return error string?
 		}
@@ -356,8 +394,6 @@ class LiteSpeed_Cache_Admin_Rules
 		if (!$ret) {
 			return __('Failed to overwrite ', 'litespeed-cache') . '.htaccess';
 		}
-
-		// TODO: second file stuff.
 
 		return true;
 	}
@@ -544,4 +580,116 @@ class LiteSpeed_Cache_Admin_Rules
 		return true;
 	}
 
-};
+	/**
+	 * Updates the specified rewrite rule based on original content.
+	 *
+	 * If the specified rule is not found, just return the rule.
+	 * Else if it IS found, need to keep the content surrounding the rule.
+	 *
+	 * The return value is mixed.
+	 * Returns true if the rule is not found in the content.
+	 * Returns an array (false, error_msg) on error.
+	 * Returns an array (true, new_content) if the rule is found.
+	 *
+	 * new_content is the original content minus the matched rule. This is
+	 * to prevent losing any of the original content.
+	 *
+	 * @since 1.0.4
+	 * @access private
+	 * @param string $content The original content in the .htaccess file.
+	 * @param string $output Returns the added rule if success.
+	 * @param string $wrapper The wrapper that surrounds the rule.
+	 * @param string $match The rewrite rule to match against.
+	 * @param string $sub The substitute for the rule match.
+	 * @param string $env The environment change to do if the rule matches.
+	 * @return mixed Explained above.
+	 */
+	private static function set_rewrite_rule($content, &$output, $wrapper, $match,
+			$sub, $env)
+	{
+
+		$wrapper_end = '';
+		$wrapper_begin = self::build_wrappers($wrapper, $wrapper_end);
+		$out = $wrapper_begin . "\nRewriteRule " . $match . ' ' . $sub
+				. ' [' . $env . ']' . "\n" . $wrapper_end . "\n";
+
+		// just create the whole buffer.
+		if (is_null($content)) {
+			if ($match != '') {
+				$output .= $out;
+			}
+			return true;
+		}
+		$wrap_begin = strpos($content, $wrapper_begin);
+		if ($wrap_begin === false) {
+			if ($match != '') {
+				$output .= $out;
+			}
+			return true;
+		}
+		$wrap_end = strpos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
+		if ($wrap_end === false) {
+			return array(false, __('Could not find wrapper end', 'litespeed-cache'));
+		}
+		elseif ($match != '') {
+			$output .= $out;
+		}
+		$buf = substr($content, 0, $wrap_begin); // Remove everything between wrap_begin and wrap_end
+		$buf .= substr($content, $wrap_end + strlen($wrapper_end));
+		return array(true, trim($buf));
+	}
+
+	/**
+	 * FInds a specified rewrite rule from the .htaccess file.
+	 *
+	 * @since 1.0.4
+	 * @access private
+	 * @param string $wrapper The wrapper to look for.
+	 * @param string $match Returns the rewrite rule on success, error message on failure.
+	 * @param string $sub Returns the substitute on success, error message on failure.
+	 * @param string $env Returns the environment on success, error message on failure.
+	 * @return boolean True on success, false otherwise.
+	 */
+	public function get_rewrite_rule($wrapper, &$match, &$sub, &$env)
+	{
+
+		if (self::get_rules_file_contents($match) === false) {
+			return false;
+		}
+		$suffix = '';
+		$prefix = self::build_wrappers($wrapper, $suffix);
+		$off_begin = strpos($match, $prefix);
+		if ($off_begin === false) {
+			$match = '';
+			return true; // It does not exist yet, not an error.
+		}
+		$off_begin += strlen($prefix);
+		$off_end = strpos($match, $suffix, $off_begin);
+		if ($off_end === false) {
+			$match = __('Could not find suffix ', 'litespeed-cache') . $suffix;
+			return false;
+		}
+		elseif ($off_begin >= $off_end) {
+			$match = __('Prefix was found after suffix.', 'litespeed-cache');
+			return false;
+		}
+
+		$subject = substr($match, $off_begin, $off_end - $off_begin);
+		$pattern = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
+		$matches = array();
+		$num_matches = preg_match($pattern, $subject, $matches);
+		if ($num_matches === false) {
+			$match = __('Did not find a match.', 'litespeed-cache');
+			return false;
+		}
+		$match = trim($matches[1]);
+		$sub = trim($matches[2]);
+		if (isset($matches[3])) {
+			$env = trim($matches[3]);
+		}
+		else {
+			$env = '';
+		}
+		return true;
+	}
+}
