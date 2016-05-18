@@ -367,6 +367,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
 		$suffix = '</IfModule>';
+		$errors = array();
 
 		clearstatcache();
 		if (self::get_rules_file_contents($content) === false) {
@@ -376,46 +377,32 @@ class LiteSpeed_Cache_Admin_Rules
 			return;
 		}
 
-		$off_begin = strpos($content, $prefix);
-		//if not found
-		if ($off_begin === false) {
-			return;
-		}
-		$off_begin += strlen($prefix);
-		$off_end = strpos($content, $suffix, $off_begin);
-		if ($off_end === false) {
-			return;
-		}
-		--$off_end; // go to end of previous line.
-		$output = substr($content, 0, $off_begin);
-		$off_engine = strpos($content, $engine, $off_begin);
-		$output .= "\n" . $engine . "\n";
-		if ($off_engine !== false) {
-			$off_begin = $off_engine + strlen($engine);
-		}
-		$start_search = substr($content, $off_begin, $off_end - $off_begin);
-
-		$ret = self::set_common_rule($start_search, $output,
-				'MOBILE VIEW', '', '', '');
-
+		$haystack = self::get_instance()->find_haystack($content, $output, $off_end);
+		$ret = self::set_common_rule($haystack, $output, 'MOBILE VIEW',
+				'', '', '');
 		if ((is_array($ret)) && ($ret[0])) {
-			$start_search = $ret[1];
+			$haystack = $ret[1];
 		}
-		$ret = self::set_common_rule($start_search, $output,
-				'COOKIE', '', '', '');
 
+		$ret = self::set_common_rule($haystack, $output, 'COOKIE', '', '', '');
 		if ((is_array($ret)) && ($ret[0])) {
-			$start_search = $ret[1];
+			$haystack = $ret[1];
 		}
-		$ret = self::set_common_rule($start_search, $output,
-				'USER AGENT', '', '', '');
 
+		$ret = self::set_common_rule($haystack, $output, 'USER AGENT',
+				'', '', '');
 		if ((is_array($ret)) && ($ret[0])) {
-			$start_search = $ret[1];
+			$haystack = $ret[1];
 		}
 
-		if (!is_null($start_search)) {
-			$output .= $start_search . substr($content, $off_end);
+		$ret = self::get_instance()->write_login_cookie($haystack, '', 'not',
+				$output, $errors);
+		if ($ret !== false) {
+			$haystack = $ret;
+		}
+
+		if (!is_null($haystack)) {
+			$output .= $haystack . substr($content, $off_end);
 		}
 		else {
 			$output .= $suffix . "\n\n" . $content;
