@@ -511,7 +511,7 @@ class LiteSpeed_Cache_Admin
 		if (!$input) {
 			return;
 		}
-		$input = array_map("self::cleanup_input", $input);
+		$input = array_map("LiteSpeed_Cache_Admin_Rules::cleanup_input", $input);
 		$config = LiteSpeed_Cache::config() ;
 		$options = $config->get_site_options();
 		$errors = array();

@@ -1055,12 +1055,9 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function show_info_info()
 	{
-
 		// Configurations help.
 		$buf = '<div class="wrap"><h2>'
 		. __('LiteSpeed Cache Information', 'litespeed-cache') . '</h2>';
-
-
 
 		$buf .= '<div id="lsc-tabs">'
 		. '<ul>'
@@ -1285,21 +1282,29 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 */
 	private function show_info_settings()
 	{
-
-		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
-
 		$network_desc = __('These configurations are only available network wide.', 'litespeed-cache')
 		. '<br>'
 		. __('Separate Mobile Views should be enabled if any of the network enabled themes require a different view for mobile devices.', 'litespeed-cache')
 		. __(' Responsive themes can handle this part automatically.', 'litespeed-cache');
 
-		$config = LiteSpeed_Cache::config();
-		$buf .= $this->input_group_start(__('Network-wide Config', 'litespeed-cache')) ;
-		$buf .= $network_desc;
-		$buf .= '<form method="post" action="admin.php?page=lscache-settings">';
-		$buf .= '<input type="hidden" name="lscwp_settings_save" value="save_settings" />';
-		$buf .= wp_nonce_field('lscwp_settings', 'save');
+		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
 
+		$config = LiteSpeed_Cache::config();
+
+		$buf .= '<form method="post" action="admin.php?page=lscache-settings">'
+		. '<input type="hidden" name="lscwp_settings_save" value="save_settings" />'
+		. wp_nonce_field('lscwp_settings', 'save');
+
+		$buf .= '<div id="lsc-tabs">'
+		. '<ul>'
+		. '<li><a href="#general">' . __('General', 'litespeed-cache') . '</a></li>'
+		. '<li><a href="#exclude">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>'
+		. '<li><a href="#advanced">' . __('Advanced', 'litespeed-cache') . '</a></li>'
+		. '</ul>';
+
+		$buf .= '<div id="general">'
+		. $this->input_group_start(__('General Network Configurations',
+				'litespeed-cache'), $network_desc);
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED;
 
 		$site_options = $config->get_site_options();
@@ -1314,8 +1319,11 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 				array('b' => array()))
 		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
 
-		$buf .= $this->show_mobile_view($config->get_site_options());
+		$buf .= $this->show_mobile_view($site_options);
+		$buf .= $this->input_group_end() . '</div>';
 
+		$buf .= '<div id="exclude">'
+		. $this->input_group_start(__('Network Do Not Cache Rules', 'litespeed-cache'));
 		$ua_title = '';
 		$ua_desc = '';
 		$ua_buf = $this->show_useragent_exclude($ua_title, $ua_desc);
@@ -1326,12 +1334,23 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$cookie_buf = $this->show_cookies_exclude($cookie_title, $cookie_desc);
 		$buf .= $this->display_config_row(__('Do Not Cache Cookies', 'litespeed-cache'), $cookie_buf, $cookie_desc);
 
-		$buf .= '<tr><td>';
-		$buf .= '<input type="submit" class="button button-primary" name="submit" value="'
-				. __('Save', 'litespeed-cache') . '" /></td></tr>';
-		$buf .= '</form>';
-		$buf .= $this->input_group_end();
-		$buf .= '</div>';
+		$buf .= $this->input_group_end() . '</div>';
+
+		$buf .= '<div id="advanced">'
+		. $this->input_group_start(__('Advanced Network Settings', 'litespeed-cache'));
+
+		$login_cookie_title = '';
+		$login_cookie_desc = '';
+		$login_cookie_buf = $this->show_login_cookie($site_options,
+				$login_cookie_title, $login_cookie_desc);
+		$buf .= $this->display_config_row($login_cookie_title,
+				$login_cookie_buf, $login_cookie_desc);
+		$buf .= $this->input_group_end() . '</div></div>';
+
+		$buf .= '<br><br>'
+		. '<input type="submit" class="button button-primary" name="submit" value="'
+		. __('Save', 'litespeed-cache') . '" /></td></tr>';
+		$buf .= '</form><br><br></div>';
 		echo $buf;
 	}
 

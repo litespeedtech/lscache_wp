@@ -415,11 +415,11 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Clean up the input string of any extra slashes/spaces.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $input The input string to clean.
 	 * @return string The cleaned up input.
 	 */
-	private static function cleanup_input($input)
+	public static function cleanup_input($input)
 	{
 		return stripslashes(trim($input));
 	}
