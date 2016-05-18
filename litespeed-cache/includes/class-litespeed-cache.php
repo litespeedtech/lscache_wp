@@ -225,7 +225,7 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		if ( is_user_logged_in() || $this->check_cookies() ) {
+		if ( $this->check_user_logged_in() || $this->check_cookies() ) {
 			$this->load_logged_in_actions() ;
 		}
 		else {
@@ -819,6 +819,28 @@ class LiteSpeed_Cache
 		}
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_POST . $post_id);
 //		$this->send_purge_headers();
+	}
+
+	private function check_user_logged_in()
+	{
+		if (!is_user_logged_in()) {
+			return false;
+		}
+		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache')
+		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
+		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
+		$db_cookie = $this->get_config()->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+
+		if (empty($db_cookie)) {
+			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
+		}
+
+		if ((strcmp($db_cookie, $this->current_vary))
+			&& ((is_multisite() ? is_network_admin() : is_admin()))) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+		}
+		return true;
 	}
 
 	/**
