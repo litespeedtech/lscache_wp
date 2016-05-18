@@ -92,6 +92,154 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Searches for the LiteSpeed section in contents.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param string $content The content to search
+	 * @param string $output The portion before and including the beginning of
+	 * the section.
+	 * @param integer $off_end Offset denoting the beginning of the content
+	 * after the section.
+	 * @return mixed False on failure, the section on success.
+	 * The section may be a string or null if it did not exist.
+	 */
+	private function find_section($content, &$output, &$off_end)
+	{
+		$prefix = '<IfModule LiteSpeed>';
+		$engine = 'RewriteEngine on';
+		$suffix = '</IfModule>';
+
+		$off_begin = strpos($content, $prefix);
+		//if not found
+		if ($off_begin === false) {
+			$output = $prefix . "\n" . $engine . "\n";
+			return NULL;
+		}
+		$off_begin += strlen($prefix);
+		$off_end = strpos($content, $suffix, $off_begin);
+		if ($off_end === false) {
+			$output = sprintf(__('Could not find %s close.', 'litespeed-cache'), 'IfModule');
+			return false;
+		}
+		--$off_end; // go to end of previous line.
+		$off_engine = stripos($content, $engine, $off_begin);
+		if ($off_engine !== false) {
+			$off_begin = $off_engine + strlen($engine) + 1;
+			$output = substr($content, 0, $off_begin);
+		}
+		else {
+			$output = substr($content, 0, $off_begin) . "\n" . $engine . "\n";
+		}
+		return substr($content, $off_begin, $off_end - $off_begin);
+	}
+
+	/**
+	 * Do the setting login cookie logic. If it is a subdirectory install,
+	 * will write to both .htaccess files.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param string $start_search The original content in the .htaccess file.
+	 * @param string $input The input string from the Post request.
+	 * @param string $option The string currently used in the database.
+	 * @param string $buf The current output buffer for the HOME PATH file.
+	 * @param array $errors Errors array to add error messages to.
+	 * @return mixed False on failure/do not update,
+	 *	original content sans login cookie on success.
+	 */
+	private function write_login_cookie($start_search, $input, $option,
+			&$buf, &$errors)
+	{
+		$suffix = '</IfModule>';
+		$aExceptions = array('-', '_');
+		$match = '.*';
+		$sub = '-';
+		$env = 'E=Cache-Vary:' . $input;
+		$output = '';
+
+		if ($input == '') {
+			if ($option == '') {
+				return false;
+			}
+			$match = '';
+			$sub = '';
+			$env = '';
+		}
+		elseif (!ctype_alnum(str_replace($aExceptions, '', $input))) {
+			$errors[] = __('Invalid login cookie. Invalid characters found.',
+					'litespeed-cache');
+			return false;
+		}
+
+		$ret = self::set_rewrite_rule($start_search, $output, 'LOGIN COOKIE',
+				$match, $sub, $env);
+
+		if (is_array($ret)) {
+			if ($ret[0]) {
+				$start_search = $ret[1];
+			}
+			else {
+				// failed.
+				$errors[] = $ret[1];
+				return false;
+			}
+		}
+		if (!$this->is_subdir()) {
+			$buf .= $output;
+			return $start_search;
+		}
+
+		$path = ABSPATH . '.htaccess';
+		$content = file_get_contents($path);
+		if ($content == false) {
+			$errors[] = __('Failed to get .htaccess file contents.', 'litespeed-cache');
+			return false;
+		}
+		// Remove ^M characters.
+		$content = str_ireplace("\x0D", "", $content);
+
+		$start = $this->find_section($content, $section, $off_end);
+		if ($start === false) {
+			$errors[] = $section;
+			return false;
+		}
+		$ret = self::set_rewrite_rule($start, $section, 'LOGIN COOKIE',
+			$match, $sub, $env);
+
+		if (is_array($ret)) {
+			if ($ret[0]) {
+				$start = $ret[1];
+			}
+			else {
+				// failed.
+				$errors[] = $ret[1];
+				return false;
+			}
+		}
+		if (!is_null($start)) {
+			$section .= $start . substr($content, $off_end);
+		}
+		else {
+			$section .= $suffix . "\n\n" . $content;
+		}
+
+		if (!copy($path, $path . '_lscachebak')) {
+			$errors[] = __('Failed to back up file, abort changes.', 'litespeed-cache');
+			return false;
+		}
+
+		// File put contents will truncate by default. Will create file if doesn't exist.
+		$ret = file_put_contents($path, $section, LOCK_EX);
+		if (!$ret) {
+			$errors[] = __('Failed to overwrite ', 'litespeed-cache') . '.htaccess';
+			return false;
+		}
+		$buf .= $output;
+		return $start_search;
+	}
+
+	/**
 	 * Validate common rewrite rules configured by the admin.
 	 *
 	 * @since 1.0.4
@@ -123,29 +271,11 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] = __('File is not writable.', 'litespeed-cache');
 			return false;
 		}
-		$off_begin = strpos($content, $prefix);
-		//if not found
-		if ($off_begin === false) {
-			$output = $prefix . "\n" . $engine . "\n";
-			$start_search = NULL;
-		}
-		else {
-			$off_begin += strlen($prefix);
-			$off_end = strpos($content, $suffix, $off_begin);
-			if ($off_end === false) {
-				$errors[] = sprintf(__('Could not find %s close.', 'litespeed-cache'),'IfModule');
-				return false;
-			}
-			--$off_end; // go to end of previous line.
-			$off_engine = stripos($content, $engine, $off_begin);
-			if ($off_engine !== false) {
-				$off_begin = $off_engine + strlen($engine) + 1;
-				$output = substr($content, 0, $off_begin);
-			}
-			else {
-				$output = substr($content, 0, $off_begin) . "\n" . $engine . "\n";
-			}
-			$start_search = substr($content, $off_begin, $off_end - $off_begin);
+
+		$start_search = $this->find_section($content, $output, $off_end);
+		if ($start_search === false) {
+			$errors[] = $output;
+			return false;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
@@ -218,36 +348,12 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-		$aExceptions = array('-', '_');
-
-		if ($input[$id] == '') {
-			$ret = 0;
-			if ($options[$id] != '') {
-				$ret = self::set_rewrite_rule($start_search, $output,
-					'LOGIN COOKIE', '', '', '');
-			}
-		}
-		elseif (!ctype_alnum(str_replace($aExceptions, '', $input[$id]))) {
-			$errors[] = __('Invalid login cookie. Invalid characters found.', 'litespeed-cache');
-		}
-		else {
-			$ret = self::set_rewrite_rule($start_search, $output,
-				'LOGIN COOKIE', '.*', '-', 'E=Cache-Vary:' . $input[$id]);
-		}
-		if (is_array($ret)) {
-			if ($ret[0]) {
-				$start_search = $ret[1];
-				$options[$id] = $input[$id];
-			}
-			else {
-				// failed.
-				$errors[] = $ret[1];
-			}
-		}
-		elseif ($ret) {
+		$ret = $this->write_login_cookie($start_search, $input[$id], $options[$id],
+				$output, $errors);
+		if ($ret !== false) {
+			$start_search = $ret;
 			$options[$id] = $input[$id];
 		}
-
 
 		if (!is_null($start_search)) {
 			$output .= $start_search . substr($content, $off_end);
@@ -256,7 +362,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$output .= $suffix . "\n\n" . $content;
 		}
 		$ret = self::do_edit_rules($output, false);
-		if ($ret === false) {
+		if ($ret !== true) {
 			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
 			return false;
 		}
