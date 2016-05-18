@@ -101,10 +101,10 @@ class LiteSpeed_Cache_Admin_Rules
 	 * the section.
 	 * @param integer $off_end Offset denoting the beginning of the content
 	 * after the section.
-	 * @return mixed False on failure, the section on success.
-	 * The section may be a string or null if it did not exist.
+	 * @return mixed False on failure, the haystack on success.
+	 * The haystack may be a string or null if it did not exist.
 	 */
-	private function find_section($content, &$output, &$off_end)
+	private function find_haystack($content, &$output, &$off_end)
 	{
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
@@ -131,6 +131,9 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			$output = substr($content, 0, $off_begin) . "\n" . $engine . "\n";
 		}
+		if ($off_begin == $off_end + 1) {
+			++$off_end;
+		}
 		return substr($content, $off_begin, $off_end - $off_begin);
 	}
 
@@ -140,7 +143,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.7
 	 * @access private
-	 * @param string $start_search The original content in the .htaccess file.
+	 * @param string $haystack The original content in the .htaccess file.
 	 * @param string $input The input string from the Post request.
 	 * @param string $option The string currently used in the database.
 	 * @param string $buf The current output buffer for the HOME PATH file.
@@ -148,15 +151,16 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @return mixed False on failure/do not update,
 	 *	original content sans login cookie on success.
 	 */
-	private function write_login_cookie($start_search, $input, $option,
+	private function write_login_cookie($haystack, $input, $option,
 			&$buf, &$errors)
 	{
-		$suffix = '</IfModule>';
 		$aExceptions = array('-', '_');
 		$match = '.*';
 		$sub = '-';
 		$env = 'E=Cache-Vary:' . $input;
 		$output = '';
+		$output2 = '';
+		$off_end = 0;
 
 		if ($input == '') {
 			if ($option == '') {
@@ -172,9 +176,59 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$ret = self::set_rewrite_rule($start_search, $output, 'LOGIN COOKIE',
+		$ret = self::set_rewrite_rule($haystack, $output, 'LOGIN COOKIE',
 				$match, $sub, $env);
 
+		if (self::parse_ret($ret, $haystack, $errors) === false) {
+			return false;
+		}
+		if (!$this->is_subdir()) {
+			$buf .= $output;
+			return $haystack;
+		}
+
+		$path = ABSPATH . '.htaccess';
+		$content = '';
+		if (self::get_rules_file_contents($content, $path) === false) {
+			$errors[] = $content;
+			return false;
+		}
+
+		$haystack2 = $this->find_haystack($content, $output2, $off_end);
+		if ($haystack2 === false) {
+			$errors[] = $output2;
+			return false;
+		}
+		$ret = self::set_rewrite_rule($haystack2, $output2, 'LOGIN COOKIE',
+			$match, $sub, $env);
+
+		if (self::parse_ret($ret, $haystack2, $errors) === false) {
+			return false;
+		}
+
+		$ret = $this->save_validate_changes($output2, $haystack2, $content,
+				$off_end, $path);
+		if ($ret !== true) {
+			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
+			return false;
+		}
+
+		$buf .= $output;
+		return $haystack;
+	}
+
+	/**
+	 * Parse the return value from set_common_rule and set_rewrite_rule.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param mixed $ret The return value from the called function.
+	 * @param string $start_search Where to start the next search.
+	 * @param string $errors Errors array in case of error.
+	 * @return boolean False on function failure, true otherwise.
+	 */
+	private static function parse_ret($ret, &$start_search, &$errors)
+	{
 		if (is_array($ret)) {
 			if ($ret[0]) {
 				$start_search = $ret[1];
@@ -185,58 +239,20 @@ class LiteSpeed_Cache_Admin_Rules
 				return false;
 			}
 		}
-		if (!$this->is_subdir()) {
-			$buf .= $output;
-			return $start_search;
-		}
+		return true;
+	}
 
-		$path = ABSPATH . '.htaccess';
-		$content = file_get_contents($path);
-		if ($content == false) {
-			$errors[] = __('Failed to get .htaccess file contents.', 'litespeed-cache');
-			return false;
-		}
-		// Remove ^M characters.
-		$content = str_ireplace("\x0D", "", $content);
-
-		$start = $this->find_section($content, $section, $off_end);
-		if ($start === false) {
-			$errors[] = $section;
-			return false;
-		}
-		$ret = self::set_rewrite_rule($start, $section, 'LOGIN COOKIE',
-			$match, $sub, $env);
-
-		if (is_array($ret)) {
-			if ($ret[0]) {
-				$start = $ret[1];
-			}
-			else {
-				// failed.
-				$errors[] = $ret[1];
-				return false;
-			}
-		}
-		if (!is_null($start)) {
-			$section .= $start . substr($content, $off_end);
+	private function save_validate_changes($changes, $orig_section, $remaining,
+			$off_end, $path = '')
+	{
+		$suffix = '</IfModule>';
+		if (!is_null($orig_section)) {
+			$changes .= $orig_section . substr($remaining, $off_end);
 		}
 		else {
-			$section .= $suffix . "\n\n" . $content;
+			$changes .= $suffix . "\n\n" . $remaining;
 		}
-
-		if (!copy($path, $path . '_lscachebak')) {
-			$errors[] = __('Failed to back up file, abort changes.', 'litespeed-cache');
-			return false;
-		}
-
-		// File put contents will truncate by default. Will create file if doesn't exist.
-		$ret = file_put_contents($path, $section, LOCK_EX);
-		if (!$ret) {
-			$errors[] = __('Failed to overwrite ', 'litespeed-cache') . '.htaccess';
-			return false;
-		}
-		$buf .= $output;
-		return $start_search;
+		return self::do_edit_rules($changes, false, $path);
 	}
 
 	/**
@@ -252,9 +268,8 @@ class LiteSpeed_Cache_Admin_Rules
 	public function validate_common_rewrites($input, &$options, &$errors)
 	{
 		$content = '';
-		$prefix = '<IfModule LiteSpeed>';
-		$engine = 'RewriteEngine on';
-		$suffix = '</IfModule>';
+		$output = '';
+		$off_end = 0;
 
 		if (($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
 			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
@@ -272,8 +287,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$start_search = $this->find_section($content, $output, $off_end);
-		if ($start_search === false) {
+		$haystack = $this->find_haystack($content, $output, $off_end);
+		if ($haystack === false) {
 			$errors[] = $output;
 			return false;
 		}
@@ -281,36 +296,18 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
-			$ret = self::set_common_rule($start_search, $output,
+			$ret = self::set_common_rule($haystack, $output,
 					'MOBILE VIEW', 'HTTP_USER_AGENT',
 					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
 					'E=Cache-Control:vary=ismobile', 'NC');
 
-			if (is_array($ret)) {
-				if ($ret[0]) {
-					$start_search = $ret[1];
-				}
-				else {
-					// failed.
-					$errors[] = $ret[1];
-				}
-			}
-
+			self::parse_ret($ret, $haystack, $errors);
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
-			$ret = self::set_common_rule($start_search, $output,
+			$ret = self::set_common_rule($haystack, $output,
 					'MOBILE VIEW', '', '', '');
-			if (is_array($ret)) {
-				if ($ret[0]) {
-					$start_search = $ret[1];
-				}
-				else {
-					// failed.
-					$errors[] = $ret[1];
-				}
-			}
-
+			self::parse_ret($ret, $haystack, $errors);
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
@@ -321,47 +318,25 @@ class LiteSpeed_Cache_Admin_Rules
 			$cookie_list = '';
 		}
 
-		$ret = self::set_common_rule($start_search, $output,
-				'COOKIE', 'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
-		if (is_array($ret)) {
-			if ($ret[0]) {
-				$start_search = $ret[1];
-			}
-			else {
-				// failed.
-				$errors[] = $ret[1];
-			}
-		}
-
+		$ret = self::set_common_rule($haystack, $output, 'COOKIE',
+				'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
+		self::parse_ret($ret, $haystack, $errors);
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$ret = self::set_common_rule($start_search, $output,
-				'USER AGENT', 'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
-		if (is_array($ret)) {
-			if ($ret[0]) {
-				$start_search = $ret[1];
-			}
-			else {
-				// failed.
-				$errors[] = $ret[1];
-			}
-		}
+		$ret = self::set_common_rule($haystack, $output, 'USER AGENT',
+				'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
+		self::parse_ret($ret, $haystack, $errors);
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-		$ret = $this->write_login_cookie($start_search, $input[$id], $options[$id],
-				$output, $errors);
+		$ret = $this->write_login_cookie($haystack, $input[$id],
+				$options[$id], $output, $errors);
 		if ($ret !== false) {
-			$start_search = $ret;
+			$haystack = $ret;
 			$options[$id] = $input[$id];
 		}
 
-		if (!is_null($start_search)) {
-			$output .= $start_search . substr($content, $off_end);
-		}
-		else {
-			$output .= $suffix . "\n\n" . $content;
-		}
-		$ret = self::do_edit_rules($output, false);
+		$ret = $this->save_validate_changes($output, $haystack, $content,
+				$off_end);
 		if ($ret !== true) {
 			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
 			return false;
@@ -477,11 +452,15 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access private
 	 * @param string $content The new content to put into the rules file.
 	 * @param boolean $cleanup True to strip extra slashes, false otherwise.
+	 * @param string $path The file path to edit.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private static function do_edit_rules($content, $cleanup = true)
+	private static function do_edit_rules($content, $cleanup = true,
+			$path = '')
 	{
-		$path = self::get_rules_file_path();
+		if (empty($path)) {
+			$path = self::get_rules_file_path();
+		}
 
 		if (self::is_file_able(self::RW) == 0) {
 			return __('File not readable or not writable.', 'litespeed-cache'); // maybe return error string?
@@ -541,11 +520,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @access private
 	 * @param string $content Returns the content of the file or an error description.
+	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public static function get_rules_file_contents(&$content)
+	public static function get_rules_file_contents(&$content, $path = '')
 	{
-		$path = self::get_rules_file_path();
+		if (empty($path)) {
+			$path = self::get_rules_file_path();
+		}
 		if (!self::is_file_able(self::READABLE)) {
 			$content = __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
 			return false;
