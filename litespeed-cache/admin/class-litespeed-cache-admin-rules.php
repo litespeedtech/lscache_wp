@@ -45,6 +45,14 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::$instance;
 	}
 
+	/**
+	 * Checks if the WP install is a subdirectory install. If so, need to test
+	 * multiple .htaccess files.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @return boolean True if it is a subdirectory install, false otherwise.
+	 */
 	private static function is_subdir()
 	{
 		$rules = self::get_instance();
@@ -54,6 +62,16 @@ class LiteSpeed_Cache_Admin_Rules
 		return $rules->is_subdir_install;
 	}
 
+	/**
+	 * Checks the .htaccess file(s) permissions. If the file(s) has the given
+	 * permissions, it will return so.
+	 *
+	 * @since 1.0.7
+	 * @access public
+	 * @param type $permissions The requested permissions. Consts from this class.
+	 * @return mixed True/non-zero if the file(s) has the given permissions.
+	 * False/zero otherwise.
+	 */
 	public static function is_file_able($permissions)
 	{
 		$rules = self::get_instance();

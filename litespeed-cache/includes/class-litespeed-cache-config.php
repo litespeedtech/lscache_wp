@@ -248,7 +248,6 @@ class LiteSpeed_Cache_Config
 				&& (count($default_options) == count($this->options))) {
 			return;
 		}
-		$old_options = $this->options ;
 		$dkeys = array_keys($default_options) ;
 		if (is_multisite()) {
 			$dkeys[] = self::NETWORK_OPID_ENABLED;

@@ -821,6 +821,12 @@ class LiteSpeed_Cache
 //		$this->send_purge_headers();
 	}
 
+	/**
+	 * Checks if the user is logged in. If the user is logged in, does an
+	 * additional check to make sure it's using the correct login cookie.
+	 *
+	 * @return boolean True if logged in, false otherwise.
+	 */
 	private function check_user_logged_in()
 	{
 		if (!is_user_logged_in()) {
@@ -859,6 +865,19 @@ class LiteSpeed_Cache
 	{
 		if ($_SERVER["REQUEST_METHOD"] !== 'GET') {
 			return false;
+		}
+		$db_cookie = $this->get_config()->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+
+		if (empty($db_cookie)) {
+			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
+		}
+		if ((strcmp($db_cookie, $this->current_vary))
+				&& (isset($_COOKIE[$db_cookie]))) {
+			$this->debug_log(
+				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache')
+				. __(' Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache')
+				. __(' This error may appear if you are logged into another web application.', 'litespeed-cache'));
+			return true;
 		}
 		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
 		{
@@ -1131,6 +1150,16 @@ class LiteSpeed_Cache
 //		@header($cache_purge_header, false);
 	}
 
+	/**
+	 * The mode determines if the page is cacheable. This function filters
+	 * out the possible show header admin control.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param boolean $showhdr Whether the show header command was selected.
+	 * @return integer The integer corresponding to the selected
+	 * cache control value.
+	 */
 	private function validate_mode(&$showhdr)
 	{
 		if ($this->cachectrl & self::CACHECTRL_SHOWHEADERS) {
