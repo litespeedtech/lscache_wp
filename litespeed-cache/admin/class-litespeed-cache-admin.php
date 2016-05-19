@@ -151,11 +151,11 @@ class LiteSpeed_Cache_Admin
 	private function register_submenu_settings()
 	{
 		$this::add_submenu(sprintf(__('%s Settings', 'litespeed-cache'),'LiteSpeed Cache'),
-				__('Settings', 'litespeed-cache'), 'lscache-settings', 'dash_select');
+				__('Settings', 'litespeed-cache'), 'lscache-settings', 'show_menu_select');
 
 		if ((!is_multisite()) || (is_network_admin())) {
 			$this::add_submenu(sprintf(__('%s Edit .htaccess', 'litespeed-cache'),'LiteSpeed Cache'),
-					__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'dash_select');
+					__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'show_menu_select');
 		}
 
 	}
@@ -169,9 +169,9 @@ class LiteSpeed_Cache_Admin
 	private function register_submenu_info()
 	{
 		$this::add_submenu(sprintf(__('%s Information', 'litespeed-cache'),'LiteSpeed Cache'),
-				__('Information', 'litespeed-cache'), 'lscache-info', 'dash_select');
+				__('Information', 'litespeed-cache'), 'lscache-info', 'show_menu_select');
 		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'),'LiteSpeed Cache'),
-				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'dash_select');
+				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'show_menu_select');
 
 	}
 
