@@ -244,32 +244,41 @@ class LiteSpeed_Cache_Config
 	{
 		$default_options = $this->get_default_options() ;
 
-		if ( ($this->options[self::OPID_VERSION] != $default_options[self::OPID_VERSION]) || (count($default_options) != count($this->options)) ) {
-			$old_options = $this->options ;
-			$dkeys = array_keys($default_options) ;
-			if (is_multisite()) {
-				$dkeys[] = self::NETWORK_OPID_ENABLED;
-			}
-			$keys = array_keys($this->options) ;
-			$newkeys = array_diff($dkeys, $keys) ;
-			$log = '' ;
-			if ( ! empty($newkeys) ) {
-				foreach ( $newkeys as $newkey ) {
-					$this->options[$newkey] = $default_options[$newkey] ;
-					$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey] ;
-				}
-			}
-			$retiredkeys = array_diff($keys, $dkeys) ;
-			if ( ! empty($retiredkeys) ) {
-				foreach ( $retiredkeys as $retired ) {
-					unset($this->options[$retired]) ;
-					$log .= 'Removed ' . $retired ;
-				}
-			}
-
-			$res = update_option(self::OPTION_NAME, $this->options) ;
-			$this->debug_log("plugin_upgrade option changed = $res $log\n", ($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR)) ;
+		if (($this->options[self::OPID_VERSION] == $default_options[self::OPID_VERSION])
+				&& (count($default_options) == count($this->options))) {
+			return;
 		}
+		$old_options = $this->options ;
+		$dkeys = array_keys($default_options) ;
+		if (is_multisite()) {
+			$dkeys[] = self::NETWORK_OPID_ENABLED;
+		}
+		$keys = array_keys($this->options) ;
+		$newkeys = array_diff($dkeys, $keys) ;
+		$log = '' ;
+		if ( ! empty($newkeys) ) {
+			foreach ( $newkeys as $newkey ) {
+				$this->options[$newkey] = $default_options[$newkey] ;
+				$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey] ;
+			}
+		}
+		$retiredkeys = array_diff($keys, $dkeys) ;
+		if ( ! empty($retiredkeys) ) {
+			foreach ( $retiredkeys as $retired ) {
+				unset($this->options[$retired]) ;
+				$log .= 'Removed ' . $retired ;
+			}
+		}
+
+		if ($this->options[self::OPID_LOGIN_COOKIE]
+				== $default_options[self::OPID_LOGIN_COOKIE]) {
+			$this->options[self::OPID_LOGIN_COOKIE] =
+				LiteSpeed_Cache_Admin_Rules::scan_login_cookie();
+		}
+
+		$res = update_option(self::OPTION_NAME, $this->options) ;
+		$this->debug_log("plugin_upgrade option changed = $res $log\n",
+				($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
 	}
 
 	/**

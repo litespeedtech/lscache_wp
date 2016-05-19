@@ -45,12 +45,13 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::$instance;
 	}
 
-	private function is_subdir()
+	private static function is_subdir()
 	{
-		if (is_null($this->is_subdir_install)) {
-			$this->is_subdir_install = (get_option('siteurl') !== get_option('home'));
+		$rules = self::get_instance();
+		if (!isset($rules->is_subdir_install)) {
+			$rules->is_subdir_install = (get_option('siteurl') !== get_option('home'));
 		}
-		return $this->is_subdir_install;
+		return $rules->is_subdir_install;
 	}
 
 	public static function is_file_able($permissions)
@@ -74,7 +75,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$rules->filerw |= self::WRITABLE;
 		}
 
-		if (self::get_instance()->is_subdir()) {
+		if (!self::is_subdir()) {
 			return $rules->filerw & $permissions;
 		}
 		$site_path = ABSPATH . '.htaccess';
@@ -89,6 +90,112 @@ class LiteSpeed_Cache_Admin_Rules
 			$rules->filerw &= ~self::WRITABLE;
 		}
 		return $rules->filerw & $permissions;
+	}
+
+	/**
+	 * Given a file's contents, search for an existing login cookie.
+	 * If the login cookie exists, this function will modify the content to
+	 * correct the cookie's placement.
+	 *
+	 * @since 1.0.7
+	 * @access private
+	 * @param string $content The content to parse through.
+	 * @return string The login cookie if found, empty string otherwise.
+	 */
+	private static function fix_existing_login_cookie(&$content)
+	{
+		$rule_pattern = '/(RewriteRule\s+\.[\?\*]\s+-\s+\[E=Cache-Vary:([^\]\s]*)\])/';
+		$block_pattern = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
+		// If match found, split_rule will look like:
+		// $split_rule[0] = pre match content.
+		// $split_rule[1] = matching rule.
+		// $split_rule[2] = login cookie
+		// $split_rule[3] = post match content.
+		$split_rule = preg_split($rule_pattern, $content, -1,
+				PREG_SPLIT_DELIM_CAPTURE);
+		if (count($split_rule) == 1) {
+			return '';
+		}
+		$suffix = '';
+		$prefix = self::build_wrappers('LOGIN COOKIE', $suffix);
+		$replacement = $prefix . "\n" . $split_rule[1] . "\n" . $suffix . "\n";
+		$without_rule = $split_rule[0] . $split_rule[3];
+		$split_blocks = preg_split($block_pattern, $without_rule, -1,
+				PREG_SPLIT_DELIM_CAPTURE);
+		$index = array_search('LiteSpeed', $split_blocks);
+		if ($index === false) {
+			// IfModule LiteSpeed not found.
+			$content = "<IfModule LiteSpeed>\n" . $replacement . "</IfModule\n"
+					. $without_rule;
+			return $split_rule[2];
+		}
+		elseif ($index + 2 > count($split_blocks)) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
+				__('Tried to parse for existing login cookie.', 'litespeed-cache')
+				. __(' .htaccess file not valid. Please verify the contents.',
+						'litespeed-cache'));
+			return '';
+		}
+		$split_blocks[$index + 1] .= $replacement;
+		array_splice($split_blocks, $index, 1);
+		$content = implode('', $split_blocks);
+		return $split_rule[2];
+	}
+
+	/**
+	 * Scans the .htaccess file(s) for existing login cookie rewrite rule.
+	 *
+	 * @since 1.0.7
+	 * @access public
+	 * @return string The login cookie if found, empty string otherwise.
+	 */
+	public static function scan_login_cookie()
+	{
+		$content = '';
+		$site_content = '';
+		if (!self::is_file_able(self::RW)) {
+			return '';
+		}
+		if (self::get_rules_file_contents($content) === false) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
+			return '';
+		}
+
+		$home_cookie = self::fix_existing_login_cookie($content);
+		if (!self::is_subdir()) {
+			if (!empty($home_cookie)) {
+				self::do_edit_rules($content, false);
+			}
+			return $home_cookie;
+		}
+		$site_path = ABSPATH . '.htaccess';
+
+		if (self::get_rules_file_contents($site_content, $site_path) === false) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
+			return '';
+		}
+
+		$site_cookie = self::fix_existing_login_cookie($site_content);
+		if ((empty($home_cookie) && !empty($site_cookie))
+				|| (!empty($home_cookie) && empty($site_cookie))
+				|| (strcmp($home_cookie, $site_cookie))) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
+				__('This site is a subdirectory install.', 'litespeed-cache')
+				. __(' Login cookies do not match:', 'litespeed-cache')
+				. '<br>' . self::get_rules_file_path() . ': ' . $home_cookie
+				. '<br>' . $site_path . ': ' . $site_cookie . '<br>'
+				. __('Please remove both and set the login cookie in the LiteSpeed Cache advanced settings.', 'litespeed-cache'));
+			return 'err';
+		}
+		if (!empty($home_cookie)) {
+			self::do_edit_rules($content, false);
+			self::do_edit_rules($site_content, false, $site_path);
+		}
+		return $home_cookie;
 	}
 
 	/**
@@ -155,7 +262,7 @@ class LiteSpeed_Cache_Admin_Rules
 			&$buf, &$errors)
 	{
 		$aExceptions = array('-', '_');
-		$match = '.*';
+		$match = '.?';
 		$sub = '-';
 		$env = 'E=Cache-Vary:' . $input;
 		$output = '';
@@ -182,7 +289,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if (self::parse_ret($ret, $haystack, $errors) === false) {
 			return false;
 		}
-		if (!$this->is_subdir()) {
+		if (!self::is_subdir()) {
 			$buf .= $output;
 			return $haystack;
 		}
