@@ -272,7 +272,7 @@ class LiteSpeed_Cache_Config
 		if ($this->options[self::OPID_LOGIN_COOKIE]
 				== $default_options[self::OPID_LOGIN_COOKIE]) {
 			$this->options[self::OPID_LOGIN_COOKIE] =
-				LiteSpeed_Cache_Admin_Rules::scan_login_cookie();
+				LiteSpeed_Cache_Admin_Rules::get_instance()->scan_login_cookie();
 		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
@@ -394,7 +394,7 @@ class LiteSpeed_Cache_Config
 	public function plugin_deactivation()
 	{
 		if ((!is_multisite()) || (is_network_admin())) {
-			LiteSpeed_Cache_Admin_Rules::clear_rules();
+			LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules();
 		}
 		$res = delete_option(self::OPTION_NAME) ;
 		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;

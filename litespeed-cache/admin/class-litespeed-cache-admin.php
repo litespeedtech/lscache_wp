@@ -427,13 +427,17 @@ class LiteSpeed_Cache_Admin
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
-		$debug_level = isset($input[$id]) ? intval($input[$id]) : LiteSpeed_Cache_Config::LOG_LEVEL_NONE ;
-		if ( ($debug_level != $options[$id]) && ($debug_level >= LiteSpeed_Cache_Config::LOG_LEVEL_NONE) && ($debug_level <= LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG) ) {
+		$debug_level = isset($input[$id]) ? intval($input[$id])
+				: LiteSpeed_Cache_Config::LOG_LEVEL_NONE ;
+		if (($debug_level != $options[$id])
+				&& ($debug_level >= LiteSpeed_Cache_Config::LOG_LEVEL_NONE)
+				&& ($debug_level <= LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG)) {
 			$options[$id] = $debug_level ;
 		}
 
 		if ( ! empty($errors) ) {
-			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors)) ;
+			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
+					LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors)) ;
 		}
 
 		return $options ;
@@ -488,6 +492,19 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
+	 * Clean up the input string of any extra slashes/spaces.
+	 *
+	 * @since 1.0.4
+	 * @access public
+	 * @param string $input The input string to clean.
+	 * @return string The cleaned up input.
+	 */
+	public static function cleanup_text($input)
+	{
+		return stripslashes(trim($input));
+	}
+
+	/**
 	 * Parses any changes made by the network admin on the network settings.
 	 *
 	 * @since 1.0.4
@@ -511,7 +528,7 @@ class LiteSpeed_Cache_Admin
 		if (!$input) {
 			return;
 		}
-		$input = array_map("LiteSpeed_Cache_Admin_Rules::cleanup_input", $input);
+		$input = array_map("LiteSpeed_Cache_Admin::cleanup_input", $input);
 		$config = LiteSpeed_Cache::config() ;
 		$options = $config->get_site_options();
 		$errors = array();

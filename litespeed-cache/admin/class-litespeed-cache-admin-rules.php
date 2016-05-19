@@ -46,6 +46,18 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Gets the currently used rules file path.
+	 *
+	 * @since 1.0.4
+	 * @access private
+	 * @return string The rules file path.
+	 */
+	public static function get_rules_file_path()
+	{
+		return get_home_path() . '.htaccess';
+	}
+
+	/**
 	 * Checks if the WP install is a subdirectory install. If so, need to test
 	 * multiple .htaccess files.
 	 *
@@ -120,7 +132,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $content The content to parse through.
 	 * @return string The login cookie if found, empty string otherwise.
 	 */
-	private static function fix_existing_login_cookie(&$content)
+	private function fix_existing_login_cookie(&$content)
 	{
 		$rule_pattern = '/(RewriteRule\s+\.[\?\*]\s+-\s+\[E=Cache-Vary:([^\]\s]*)\])/';
 		$block_pattern = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
@@ -135,7 +147,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 		$suffix = '';
-		$prefix = self::build_wrappers('LOGIN COOKIE', $suffix);
+		$prefix = $this->build_wrappers('LOGIN COOKIE', $suffix);
 		$replacement = $prefix . "\n" . $split_rule[1] . "\n" . $suffix . "\n";
 		$without_rule = $split_rule[0] . $split_rule[3];
 		$split_blocks = preg_split($block_pattern, $without_rule, -1,
@@ -168,35 +180,35 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access public
 	 * @return string The login cookie if found, empty string otherwise.
 	 */
-	public static function scan_login_cookie()
+	public function scan_login_cookie()
 	{
 		$content = '';
 		$site_content = '';
 		if (!self::is_file_able(self::RW)) {
 			return '';
 		}
-		if (self::get_rules_file_contents($content) === false) {
+		if ($this->get_rules_file_contents($content) === false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
 		}
 
-		$home_cookie = self::fix_existing_login_cookie($content);
+		$home_cookie = $this->fix_existing_login_cookie($content);
 		if (!self::is_subdir()) {
 			if (!empty($home_cookie)) {
-				self::do_edit_rules($content, false);
+				$this->do_edit_rules($content, false);
 			}
 			return $home_cookie;
 		}
 		$site_path = ABSPATH . '.htaccess';
 
-		if (self::get_rules_file_contents($site_content, $site_path) === false) {
+		if ($this->get_rules_file_contents($site_content, $site_path) === false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
 		}
 
-		$site_cookie = self::fix_existing_login_cookie($site_content);
+		$site_cookie = $this->fix_existing_login_cookie($site_content);
 		if ((empty($home_cookie) && !empty($site_cookie))
 				|| (!empty($home_cookie) && empty($site_cookie))
 				|| (strcmp($home_cookie, $site_cookie))) {
@@ -210,8 +222,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return 'err';
 		}
 		if (!empty($home_cookie)) {
-			self::do_edit_rules($content, false);
-			self::do_edit_rules($site_content, false, $site_path);
+			$this->do_edit_rules($content, false);
+			$this->do_edit_rules($site_content, false, $site_path);
 		}
 		return $home_cookie;
 	}
@@ -301,10 +313,10 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$ret = self::set_rewrite_rule($haystack, $output, 'LOGIN COOKIE',
+		$ret = $this->set_rewrite_rule($haystack, $output, 'LOGIN COOKIE',
 				$match, $sub, $env);
 
-		if (self::parse_ret($ret, $haystack, $errors) === false) {
+		if ($this->parse_ret($ret, $haystack, $errors) === false) {
 			return false;
 		}
 		if (!self::is_subdir()) {
@@ -314,7 +326,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$path = ABSPATH . '.htaccess';
 		$content = '';
-		if (self::get_rules_file_contents($content, $path) === false) {
+		if ($this->get_rules_file_contents($content, $path) === false) {
 			$errors[] = $content;
 			return false;
 		}
@@ -324,10 +336,10 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] = $output2;
 			return false;
 		}
-		$ret = self::set_rewrite_rule($haystack2, $output2, 'LOGIN COOKIE',
+		$ret = $this->set_rewrite_rule($haystack2, $output2, 'LOGIN COOKIE',
 			$match, $sub, $env);
 
-		if (self::parse_ret($ret, $haystack2, $errors) === false) {
+		if ($this->parse_ret($ret, $haystack2, $errors) === false) {
 			return false;
 		}
 
@@ -352,7 +364,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $errors Errors array in case of error.
 	 * @return boolean False on function failure, true otherwise.
 	 */
-	private static function parse_ret($ret, &$start_search, &$errors)
+	private function parse_ret($ret, &$start_search, &$errors)
 	{
 		if (is_array($ret)) {
 			if ($ret[0]) {
@@ -377,7 +389,7 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			$changes .= $suffix . "\n\n" . $remaining;
 		}
-		return self::do_edit_rules($changes, false, $path);
+		return $this->do_edit_rules($changes, false, $path);
 	}
 
 	/**
@@ -403,7 +415,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return $options;
 		}
 
-		if (self::get_rules_file_contents($content) === false) {
+		if ($this->get_rules_file_contents($content) === false) {
 			$errors[] = $content;
 			return false;
 		}
@@ -421,18 +433,18 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
-			$ret = self::set_common_rule($haystack, $output,
+			$ret = $this->set_common_rule($haystack, $output,
 					'MOBILE VIEW', 'HTTP_USER_AGENT',
 					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
 					'E=Cache-Control:vary=ismobile', 'NC');
 
-			self::parse_ret($ret, $haystack, $errors);
+			$this->parse_ret($ret, $haystack, $errors);
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
-			$ret = self::set_common_rule($haystack, $output,
+			$ret = $this->set_common_rule($haystack, $output,
 					'MOBILE VIEW', '', '', '');
-			self::parse_ret($ret, $haystack, $errors);
+			$this->parse_ret($ret, $haystack, $errors);
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
@@ -443,14 +455,14 @@ class LiteSpeed_Cache_Admin_Rules
 			$cookie_list = '';
 		}
 
-		$ret = self::set_common_rule($haystack, $output, 'COOKIE',
+		$ret = $this->set_common_rule($haystack, $output, 'COOKIE',
 				'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
-		self::parse_ret($ret, $haystack, $errors);
+		$this->parse_ret($ret, $haystack, $errors);
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$ret = self::set_common_rule($haystack, $output, 'USER AGENT',
+		$ret = $this->set_common_rule($haystack, $output, 'USER AGENT',
 				'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
-		self::parse_ret($ret, $haystack, $errors);
+		$this->parse_ret($ret, $haystack, $errors);
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$ret = $this->write_login_cookie($haystack, $input[$id],
@@ -470,24 +482,12 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Gets the currently used rules file path.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @return string The rules file path.
-	 */
-	public static function get_rules_file_path()
-	{
-		return get_home_path() . '.htaccess';
-	}
-
-	/**
 	 * Clear the rules file of any changes added by the plugin specifically.
 	 *
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public static function clear_rules()
+	public function clear_rules()
 	{
 		$prefix = '<IfModule LiteSpeed>';
 		$engine = 'RewriteEngine on';
@@ -495,33 +495,32 @@ class LiteSpeed_Cache_Admin_Rules
 		$errors = array();
 
 		clearstatcache();
-		if (self::get_rules_file_contents($content) === false) {
+		if ($this->get_rules_file_contents($content) === false) {
 			return;
 		}
 		elseif (!self::is_file_able(self::WRITABLE)) {
 			return;
 		}
 
-		$haystack = self::get_instance()->find_haystack($content, $output, $off_end);
-		$ret = self::set_common_rule($haystack, $output, 'MOBILE VIEW',
+		$haystack = $this->find_haystack($content, $output, $off_end);
+		$ret = $this->set_common_rule($haystack, $output, 'MOBILE VIEW',
 				'', '', '');
 		if ((is_array($ret)) && ($ret[0])) {
 			$haystack = $ret[1];
 		}
 
-		$ret = self::set_common_rule($haystack, $output, 'COOKIE', '', '', '');
+		$ret = $this->set_common_rule($haystack, $output, 'COOKIE', '', '', '');
 		if ((is_array($ret)) && ($ret[0])) {
 			$haystack = $ret[1];
 		}
 
-		$ret = self::set_common_rule($haystack, $output, 'USER AGENT',
+		$ret = $this->set_common_rule($haystack, $output, 'USER AGENT',
 				'', '', '');
 		if ((is_array($ret)) && ($ret[0])) {
 			$haystack = $ret[1];
 		}
 
-		$ret = self::get_instance()->write_login_cookie($haystack, '', 'not',
-				$output, $errors);
+		$ret = $this->write_login_cookie($haystack, '', 'not', $output, $errors);
 		if ($ret !== false) {
 			$haystack = $ret;
 		}
@@ -532,21 +531,8 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			$output .= $suffix . "\n\n" . $content;
 		}
-		self::do_edit_rules($output);
+		$this->do_edit_rules($output);
 		return;
-	}
-
-	/**
-	 * Clean up the input string of any extra slashes/spaces.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @param string $input The input string to clean.
-	 * @return string The cleaned up input.
-	 */
-	public static function cleanup_input($input)
-	{
-		return stripslashes(trim($input));
 	}
 
 	/**
@@ -567,7 +553,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $path The file path to edit.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private static function do_edit_rules($content, $cleanup = true,
+	private function do_edit_rules($content, $cleanup = true,
 			$path = '')
 	{
 		if (empty($path)) {
@@ -583,7 +569,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if ($cleanup) {
-			$content = self::cleanup_input($content);
+			$content = LiteSpeed_Cache_Admin::cleanup_text($content);
 		}
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
@@ -613,7 +599,7 @@ class LiteSpeed_Cache_Admin_Rules
 				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
 				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
 				&& ($_POST['lscwp_ht_editor'])) {
-			$msg = self::do_edit_rules($_POST['lscwp_ht_editor']);
+			$msg = $this->do_edit_rules($_POST['lscwp_ht_editor']);
 			if ($msg === true) {
 				$msg = __('File Saved.', 'litespeed-cache');
 				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN;
@@ -635,7 +621,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public static function get_rules_file_contents(&$content, $path = '')
+	public function get_rules_file_contents(&$content, $path = '')
 	{
 		if (empty($path)) {
 			$path = self::get_rules_file_path();
@@ -664,7 +650,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $end Returns the ending wrapper.
 	 * @return string Returns the opening wrapper.
 	 */
-	private static function build_wrappers($wrapper, &$end)
+	private function build_wrappers($wrapper, &$end)
 	{
 		$end = '###LSCACHE END ' . $wrapper . '###';
 		return '###LSCACHE START ' . $wrapper . '###';
@@ -695,12 +681,12 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $flag The flags to use with the rewrite condition.
 	 * @return mixed Explained above.
 	 */
-	private static function set_common_rule($content, &$output, $wrapper, $cond,
+	private function set_common_rule($content, &$output, $wrapper, $cond,
 			$match, $env, $flag = '')
 	{
 
 		$wrapper_end = '';
-		$wrapper_begin = self::build_wrappers($wrapper, $wrapper_end);
+		$wrapper_begin = $this->build_wrappers($wrapper, $wrapper_end);
 		$rw_cond = 'RewriteCond %{' . $cond . '} ' . $match;
 		if ($flag != '') {
 			$rw_cond .= ' [' . $flag . ']';
@@ -747,11 +733,11 @@ class LiteSpeed_Cache_Admin_Rules
 	public function get_common_rule($wrapper, $cond, &$match)
 	{
 
-		if (self::get_rules_file_contents($match) === false) {
+		if ($this->get_rules_file_contents($match) === false) {
 			return false;
 		}
 		$suffix = '';
-		$prefix = self::build_wrappers($wrapper, $suffix);
+		$prefix = $this->build_wrappers($wrapper, $suffix);
 		$off_begin = strpos($match, $prefix);
 		if ($off_begin === false) {
 			$match = '';
@@ -804,12 +790,12 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $env The environment change to do if the rule matches.
 	 * @return mixed Explained above.
 	 */
-	private static function set_rewrite_rule($content, &$output, $wrapper, $match,
+	private function set_rewrite_rule($content, &$output, $wrapper, $match,
 			$sub, $env)
 	{
 
 		$wrapper_end = '';
-		$wrapper_begin = self::build_wrappers($wrapper, $wrapper_end);
+		$wrapper_begin = $this->build_wrappers($wrapper, $wrapper_end);
 		$out = $wrapper_begin . "\nRewriteRule " . $match . ' ' . $sub
 				. ' [' . $env . ']' . "\n" . $wrapper_end . "\n";
 
@@ -853,11 +839,11 @@ class LiteSpeed_Cache_Admin_Rules
 	public function get_rewrite_rule($wrapper, &$match, &$sub, &$env)
 	{
 
-		if (self::get_rules_file_contents($match) === false) {
+		if ($this->get_rules_file_contents($match) === false) {
 			return false;
 		}
 		$suffix = '';
-		$prefix = self::build_wrappers($wrapper, $suffix);
+		$prefix = $this->build_wrappers($wrapper, $suffix);
 		$off_begin = strpos($match, $prefix);
 		if ($off_begin === false) {
 			$match = '';

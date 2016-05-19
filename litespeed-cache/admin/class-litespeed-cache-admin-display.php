@@ -460,14 +460,14 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache') . '</h2>';
 		$buf .= '<div class="welcome-panel">';
-
 		$contents = '';
-		if (LiteSpeed_Cache_Admin_Rules::get_rules_file_contents($contents) === false) {
+		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
+		if ($rules->get_rules_file_contents($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
 		}
-		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+		$file_writable = $rules->is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 
 		$buf .= '<p><span class="attention">' . __('WARNING: This page is meant for advanced users.', 'litespeed-cache')
