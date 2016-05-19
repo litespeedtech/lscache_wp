@@ -462,7 +462,7 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<div class="welcome-panel">';
 		$contents = '';
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
-		if ($rules->get_rules_file_contents($contents) === false) {
+		if ($rules->file_get($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
