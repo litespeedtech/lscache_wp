@@ -3,7 +3,7 @@
 /**
  * The Third Party integration with the WPTouch Mobile plugin.
  *
- * @since		1.0.5
+ * @since		1.0.7
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
@@ -14,7 +14,7 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 	/**
 	 * Detects if WPTouch is installed.
 	 *
-	 * @since 1.0.5
+	 * @since 1.0.7
 	 * @access public
 	 */
 	public static function detect()
@@ -26,9 +26,9 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 	}
 
 	/**
-	 * Check if the page is cacheable according to WooCommerce.
+	 * Check if the device is mobile. If so, set mobile.
 	 *
-	 * @since 1.0.5
+	 * @since 1.0.7
 	 * @access public
 	 * @param boolean $cacheable True if previous filter determined the page is cacheable.
 	 * @return boolean True if cacheable, false if not.
