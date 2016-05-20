@@ -482,7 +482,7 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<input type="hidden" name="lscwp_htaccess_save" value="save_htaccess" />';
 		$buf .= wp_nonce_field('lscwp_edit_htaccess', 'save');
 
-		$buf .= '<h3>' . __('Current .htaccess contents:', 'litespeed-cache') . '</h3>';
+		$buf .= '<h3>' . sprintf(__('Current %s contents:', 'litespeed-cache'), '.htaccess') . '</h3>';
 
 		$buf .= '<p><span class="attention">'
 		. __('DO NOT EDIT ANYTHING WITHIN ', 'litespeed-cache') . '###LSCACHE START/END XXXXXX###'
@@ -561,11 +561,11 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '</div>'; // id=lsc_tabs
 		$buf .= '<h4>'
-		. __('If your questions are not answered, try the ', 'litespeed-cache')
-		. '<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>';
+		. sprintf(__('If your questions are not answered, try the %s', 'litespeed-cache'),
+				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>');
 		$buf .=
-		__(" If your questions are still not answered, don't hesitate to ask them on the ", 'litespeed-cache')
-		. '<a href=https://wordpress.org/support/plugin/litespeed-cache>support forum.</a>'
+		sprintf(__(" If your questions are still not answered, don't hesitate to ask them on the %s", 'litespeed-cache'),
+				'<a href=https://wordpress.org/support/plugin/litespeed-cache>support forum.</a>')
 		. '</h4></div>'; // class=wrap
 		echo $buf;
 	}
@@ -600,19 +600,17 @@ class LiteSpeed_Cache_Admin_Display
 		. __(' We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.', 'litespeed-cache') . '</p>';
 
 		$buf .= '<h4>' . __('How do I get WP-PostViews to display an updating view count?', 'litespeed-cache') . '</h4>'
-		. '<ol><li>' . __('Use ', 'litespeed-cache')
-		. '<code>&lt;div id="postviews_lscwp"&gt;&lt;/div&gt;</code>'
-		. __(' to replace ', 'litespeed-cache')
-		. '<code>&lt;?php if(function_exists(\'the_views\')) { the_views(); } ?&gt;</code>';
+		. '<ol><li>' . sprintf(__('Use %1$s to replace %2$s', 'litespeed-cache'),
+				'<code>&lt;div id="postviews_lscwp"&gt;&lt;/div&gt;</code>',
+				'<code>&lt;?php if(function_exists(\'the_views\')) { the_views(); } ?&gt;</code>');
 
 		$buf .= '<ul><li>'
 		. __('NOTE: The id can be changed, but the div id and the ajax function must match.', 'litespeed-cache')
 		. '</li></ul>';
 
-		$buf .= '<li>' . __('Replace the ajax query in ', 'litespeed-cache')
-		. '<code>wp-content/plugins/wp-postviews/postviews-cache.js</code>'
-		. __(' with', 'litespeed-cache')
-		. '<textarea id="wpwrap" rows="11" readonly>jQuery.ajax({
+		$buf .= '<li>' . sprintf(__('Replace the ajax query in %1$s with %2$s', 'litespeed-cache'),
+				'<code>wp-content/plugins/wp-postviews/postviews-cache.js</code>',
+		'<textarea id="wpwrap" rows="11" readonly>jQuery.ajax({
     type:"GET",
     url:viewsCacheL10n.admin_ajax_url,
     data:"postviews_id="+viewsCacheL10n.post_id+"&amp;action=postviews",
@@ -622,7 +620,7 @@ class LiteSpeed_Cache_Admin_Display
             jQuery(\'#postviews_lscwp\').html(data+\' views\');
         }
    }
-});</textarea>'
+});</textarea>')
 		. '</li>';
 
 
@@ -1144,18 +1142,17 @@ class LiteSpeed_Cache_Admin_Display
 			. __(' No spaces and case sensitive. ', 'litespeed-cache')
 			. __('MUST BE UNIQUE FROM OTHER WEB APPLICATIONS.', 'litespeed-cache')
 			. '<br>'
-			. __('The default login cookie is ', 'litespeed-cache')
-			. '_lscache_vary. '
+			. sprintf(__('The default login cookie is %s. ', 'litespeed-cache'),'_lscache_vary')
 			. __('The server will determine if the user is logged in based on this cookie. ', 'litespeed-cache')
 			. __('This setting is useful for those that have multiple web applications for the same domain. ', 'litespeed-cache')
 			. __('If every web application uses the same cookie, the server may confuse whether a user is logged in or not.', 'litespeed-cache')
 			. __(' The cookie set here will be used for this WordPress installation.', 'litespeed-cache')
 			. '<br><br>'
 			. __('Example use case:', 'litespeed-cache') . '<br>'
-			. __('There is a WordPress install for ', 'litespeed-cache')
-			. '<u>www.example.com.</u><br>'
-			. __('Then there is another WordPress install (NOT MULTISITE) at ', 'litespeed-cache')
-			. '<u>www.example.com/blog/</u><br>'
+			. sprintf(__('There is a WordPress install for %s.', 'litespeed-cache'), '<u>www.example.com</u>')
+			. '<br>'
+			. sprintf(__('Then there is another WordPress install (NOT MULTISITE) at %s', 'litespeed-cache'), '<u>www.example.com/blog/</u>')
+			.'<br>'
 			. __('The cache needs to distinguish who is logged into which WordPress in order to cache correctly.', 'litespeed-cache');
 
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE',
@@ -1166,7 +1163,7 @@ class LiteSpeed_Cache_Admin_Display
 		if (!empty($cookie)) {
 			if (strncmp($cookie, 'Cache-Vary:', 11)) {
 				return '<p class="attention">'
-					. __('Error: invalid login cookie. Please check the .htaccess file', 'litespeed-cache')
+					. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
 					. '</p>';
 			}
 			$cookie = substr($cookie, 11);
@@ -1292,9 +1289,10 @@ class LiteSpeed_Cache_Admin_Display
 		. __(' This is to provide quick access to do an action on the various pages.', 'litespeed-cache')
 		. '</h4>';
 
-		$buf .= '<h5>' . __('To run the action, just access the page with the query string ', 'litespeed-cache')
-		. '<code>?LSCWP_CTRL=ACTION</code>'
-		. __(' and the action will trigger for the accessed page.', 'litespeed-cache'). '</h5>';
+		$buf .= '<h5>' . sprintf(__('To run the action, just access the page with the query string %s and '
+				. 'the action will trigger for the accessed page.', 'litespeed-cache'),
+					'<code>?LSCWP_CTRL=ACTION</code>')
+		. '</h5>';
 
 
 		$buf .= '<h4>' . __('Action List:', 'litespeed-cache') . '</h4>';

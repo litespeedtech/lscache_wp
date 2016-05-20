@@ -155,7 +155,7 @@ class LiteSpeed_Cache_Admin
 
 		if ((!is_multisite()) || (is_network_admin())) {
 			$this::add_submenu(sprintf(__('%s Edit .htaccess', 'litespeed-cache'),'LiteSpeed Cache'),
-					__('Edit ', 'litespeed-cache') . '.htaccess', 'lscache-edit-htaccess', 'show_menu_select');
+					sprintf(__('Edit %s', 'litespeed-cache'), '.htaccess'), 'lscache-edit-htaccess', 'show_menu_select');
 		}
 
 	}
