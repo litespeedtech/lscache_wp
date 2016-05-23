@@ -1284,16 +1284,8 @@ class LiteSpeed_Cache_Admin_Display
 		. __('Admin IP Query String Actions', 'litespeed-cache') . '</h3>';
 
 		$buf .= '<h4>'
-		. __('The following commands are available for the admin to use to control specific pages.', 'litespeed-cache')
-		. __(' They may be used regardless of if the admin is logged in.', 'litespeed-cache')
-		. __(' This is to provide quick access to do an action on the various pages.', 'litespeed-cache')
+		. __('The following commands are available to the admin and do not require log-in, providing quick access to actions on the various pages.', 'litespeed-cache')
 		. '</h4>';
-
-		$buf .= '<h5>' . sprintf(__('To run the action, just access the page with the query string %s and '
-				. 'the action will trigger for the accessed page.', 'litespeed-cache'),
-					'<code>?LSCWP_CTRL=ACTION</code>')
-		. '</h5>';
-
 
 		$buf .= '<h4>' . __('Action List:', 'litespeed-cache') . '</h4>';
 		$buf .= '<ul><li>NOCACHE - '
@@ -1312,6 +1304,13 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This is used to show all the cache headers associated with the page.', 'litespeed-cache')
 		. __(' This may be useful for debugging purposes.', 'litespeed-cache')
 		. '</li></ul>';
+
+
+		$buf .= '<h5>' . sprintf(__('To run the action, just access the page with the query string %s and '
+				. 'the action will trigger for the accessed page.', 'litespeed-cache'),
+					'<code>?LSCWP_CTRL=ACTION</code>')
+		. '</h5>';
+
 		return $buf;
 	}
 
