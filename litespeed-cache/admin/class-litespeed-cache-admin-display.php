@@ -589,16 +589,22 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '<div class="welcome-panel"><h4>'
 		. __('Is the LiteSpeed Cache Plugin for WordPress free?', 'litespeed-cache') . '</h4>'
-		. '<p>' . __('Yes, the plugin itself will remain free and open source, but only works with LiteSpeed Web Server 5.0.10+.', 'litespeed-cache')
-		. __('You are required to have a LiteSpeed Web Server license with the LSCache module enabled.', 'litespeed-cache') . '</p>';
+		. '<p>'
+		. __('Yes, the plugin itself will remain free and open source.', 'litespeed-cache')
+		. __(' You are required to have a LiteSpeed Web Server Enterprise 5.0.10+ license with the LSCache module enabled.', 'litespeed-cache')
+		. __(' An alternative to Enterprise is OpenLiteSpeed v 1.4.17+, but the functionality is currently in beta.', 'litespeed-cache')
+		. '</p>';
 
 		$buf .= '<h4>' . __('Where are the cached files stored?', 'litespeed-cache') . '</h4>'
 		. '<p>' . __('This plugin only instructs LiteSpeed Web Server on what pages to cache and when to purge. ', 'litespeed-cache')
 		. __('The actual cached pages are stored and managed by LiteSpeed Web Server. Nothing is stored on the PHP side.', 'litespeed-cache') . '</p>';
 
-		$buf .= '<h4>' . __('Does LiteSpeed Cache for WordPress work with OpenLiteSpeed?', 'litespeed-cache') . '</h4>'
-		. '<p>' . __('LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server enterprise edition.', 'litespeed-cache')
-		. __(' There are plans to have OpenLiteSpeed support it later down the line.', 'litespeed-cache') . '</p>';
+		$buf .= '<h4>'
+		. __('Does LiteSpeed Cache for WordPress work with OpenLiteSpeed?', 'litespeed-cache')
+		. '</h4><p>'
+		. __('The support is currently in beta. It should work, but is not fully tested. ', 'litespeed-cache')
+		. __('As well, any settings changes that require modifying the .htaccess file requires a server restart.', 'litespeed-cache')
+		. '</p>';
 
 		$buf .= '<h4>' . __('Is WooCommerce supported?', 'litespeed-cache') . '</h4>'
 		. '<p>'

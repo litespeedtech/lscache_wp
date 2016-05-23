@@ -25,7 +25,10 @@ Additional plugin features:
 For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/forum/ "forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com
 
 == Installation ==
-1. Make sure that your license has the LSCache module enabled. You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") free for 15-days.
+= Instructions for LiteSpeed Web Server Enterprise =
+1. Make sure that your license has the LSCache module enabled. 
+You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") 
+free for 15-days.
 2. In LiteSpeed Web Server - Through the WebAdmin Console, navigate to Configuration > Server > cache and set 'Storage path' under Cache Storage Settings to a fast disk, where the path can be something like '/tmp/wpcache/' for example. If the directory does not already exist, it will be created for you.
 3. In LiteSpeed Web Server - Under "Cache Policy" set the following: <br>
 Enable Public Cache - No<br> 
@@ -38,16 +41,28 @@ Ignore Response Cache-Control - Yes
 7. Activate the LiteSpeed Cache plugin through the 'Plugins' screen in WordPress.
 8. For more detailed information, visit our [LSCWP Wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "lscwp wiki").
 
+= Instructions for OpenLiteSpeed =
+BETA. TO BE COMPLETED IN THE NEAR FUTURE.
+
 == Frequently Asked Questions ==
 = Is the LiteSpeed Cache Plugin for WordPress free? =
-Yes, the plugin itself will remain free and open source, but only works with LiteSpeed Web Server 5.0.10+. You are required to have a LiteSpeed Web Server license with the LSCache module enabled.
+Yes, the plugin itself will remain free and open source. You are required to 
+have a LiteSpeed Web Server Enterprise 5.0.10+ license with the LSCache module 
+enabled. An alternative to Enterprise is OpenLiteSpeed v 1.4.17+, 
+but the functionality is currently in beta.
 = Where are the cached files stored? =
-This plugin only instructs LiteSpeed Web Server on what pages to cache and when to purge. The actual cached pages are stored and managed by LiteSpeed Web Server. Nothing is stored on the PHP side.
+This plugin only instructs LiteSpeed Web Server on what pages to cache and 
+when to purge. The actual cached pages are stored and managed by 
+LiteSpeed Web Server. Nothing is stored on the PHP side.
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
-LiteSpeed Cache for WordPress currently only works for LiteSpeed Web Server enterprise edition, but there are plans to have OpenLiteSpeed support it later down the line.
+The support is currently in beta. It should work, but is not fully tested.
+As well, any settings changes that require modifying the .htaccess file requires a server restart.
 = Is WooCommerce supported? =
-In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2, we do extra checks to make sure that 
-pages are cacheable. We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.
+In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not 
+cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2, 
+we do extra checks to make sure that pages are cacheable. 
+We are always looking for feedback, so if you encounter any problems, 
+be sure to send us a support question.
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
 
