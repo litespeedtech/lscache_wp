@@ -333,14 +333,23 @@ class LiteSpeed_Cache_Admin_Display
 							'</div>';
 		}
 
+		$advanced_tab = '';
+		$advanced_settings = '';
+		if (!is_multisite()) {
+			$advanced_tab = '<li><a href="#advanced-settings">'
+					. __('Advanced Settings', 'litespeed-cache') . '</a></li>';
+			$advanced_settings = '<div id="advanced-settings">'
+					. $this->show_settings_advanced($options) . '</div>';
+		}
+
 		echo '
 		 <div id="lsc-tabs">
 		 <ul>
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
-		 <li><a href="#advanced-settings">' . __('Advanced Settings', 'litespeed-cache') . '</a></li>
-		<li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
+	 	 ' . $advanced_tab . '
+		 <li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
 		. $compatibilities_tab . '
 		</ul>
 		 <div id="general-settings">'
@@ -351,11 +360,9 @@ class LiteSpeed_Cache_Admin_Display
 		'</div>
 		<div id="exclude-settings">'
 		. $this->show_settings_excludes($options) .
-		'</div>
-		<div id="advanced-settings">'
-		. $this->show_settings_advanced($options) .
-		'</div>
-		<div id ="debug-settings">'
+		'</div>'
+		. $advanced_settings .
+		'<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
 		'</div>'
 		. $compatibilities_settings . '</div>' ;
