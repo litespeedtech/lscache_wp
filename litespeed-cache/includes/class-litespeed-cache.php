@@ -375,7 +375,6 @@ class LiteSpeed_Cache
 	private function load_nonadmin_actions( $module_enabled )
 	{
 		if ($module_enabled) {
-			add_filter('query_vars', array($this, 'query_vars'));
 			add_action('wp', array($this, 'check_admin_ip'), 6);
 		}
 	}
@@ -1060,20 +1059,6 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Adds admin IP query string key to query vars list.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 * @param array $qvars Already added query vars.
-	 * @return array Newly appended query vars.
-	 */
-	public function query_vars($qvars)
-	{
-		$qvars[] = self::ADMINQS_KEY;
-		return $qvars;
-	}
-
-	/**
 	 * Check the query string to see if it contains a LSCWP_CTRL.
 	 * Also will compare IPs to see if it is a valid command.
 	 *
@@ -1082,7 +1067,7 @@ class LiteSpeed_Cache
 	 */
 	public function check_admin_ip()
 	{
-		$action = get_query_var(self::ADMINQS_KEY);
+		$action = $_GET[self::ADMINQS_KEY];
 		// Not set, ignore.
 		if (empty($action)) {
 			return;
