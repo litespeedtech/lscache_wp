@@ -48,7 +48,8 @@ BETA. TO BE COMPLETED IN THE NEAR FUTURE.
 = Is the LiteSpeed Cache Plugin for WordPress free? =
 Yes, the plugin itself will remain free and open source. You are required to 
 have a LiteSpeed Web Server Enterprise 5.0.10+ license with the LSCache module 
-enabled. An alternative to Enterprise is OpenLiteSpeed v 1.4.17+, 
+(included with 2+ CPU license, an addon for 1 CPU and VPS licenses). 
+OpenLiteSpeed v 1.4.17+ also works with the plugin, 
 but the functionality is currently in beta.
 = Where are the cached files stored? =
 This plugin only instructs LiteSpeed Web Server on what pages to cache and 
