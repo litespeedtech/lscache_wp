@@ -252,6 +252,10 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.7.1 =
+* Fixed a bug where enabling purge all in the auto purge on update settings page did not purge the correct blogs. 
+* Fixed a bug reported by user wpc on our forums where enabling purge all in the auto purge on update settings page caused nothing to be cached.
+
 = 1.0.7 =
 * Added login cookie configuration to the Advanced Settings page.
 * Added support for WPTouch plugin.

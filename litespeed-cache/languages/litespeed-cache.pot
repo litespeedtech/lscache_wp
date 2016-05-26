@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0.7.1\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2016-05-24 11:33-0500\n"
+"POT-Creation-Date: 2016-05-26 11:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1248,90 +1248,90 @@ msgid ""
 "directory: define('WP_CACHE', true);"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:599
+#: includes/class-litespeed-cache.php:592
 msgid "Failed to purge by category, invalid category slug."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:606
+#: includes/class-litespeed-cache.php:599
 msgid "Failed to purge by category, does not exist: "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:612
+#: includes/class-litespeed-cache.php:605
 msgid "Purge category "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:635
+#: includes/class-litespeed-cache.php:628
 msgid "Failed to purge by Post ID, given ID is not numeric: "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:641
+#: includes/class-litespeed-cache.php:634
 msgid ""
 "Failed to purge by Post ID, given ID does not exist or is not published: "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:647
+#: includes/class-litespeed-cache.php:640
 msgid "Purge Post ID "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:670
+#: includes/class-litespeed-cache.php:663
 msgid "Failed to purge by tag, invalid tag slug."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:677
+#: includes/class-litespeed-cache.php:670
 msgid "Failed to purge by tag, does not exist: "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:683
+#: includes/class-litespeed-cache.php:676
 msgid "Purge tag "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:706
+#: includes/class-litespeed-cache.php:699
 msgid "Failed to purge by url, contained \"<\"."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:714
+#: includes/class-litespeed-cache.php:707
 msgid "Failed to purge by url, does not exist: "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:720
+#: includes/class-litespeed-cache.php:713
 msgid "Purge url "
 msgstr ""
 
-#: includes/class-litespeed-cache.php:739
+#: includes/class-litespeed-cache.php:732
 msgid "ERROR: Something went wrong with the form! Please try again."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:747
+#: includes/class-litespeed-cache.php:740
 msgid "ERROR: Tried to purge list with empty list."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:767
+#: includes/class-litespeed-cache.php:760
 msgid "ERROR: Bad Purge By selected value."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:835
+#: includes/class-litespeed-cache.php:828
 msgid "NOTICE: Database login cookie did not match your login cookie."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:836
+#: includes/class-litespeed-cache.php:829
 msgid ""
 " If you just changed the cookie in the settings, please log out and back in."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:837
+#: includes/class-litespeed-cache.php:830
 msgid " If not, please verify your LiteSpeed Cache setting's Advanced tab."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:877
+#: includes/class-litespeed-cache.php:870
 msgid ""
 "NOTICE: Database login cookie does not match the cookie used to access the "
 "page."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:878
+#: includes/class-litespeed-cache.php:871
 msgid " Please have the admin check the LiteSpeed Cache settings."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:879
+#: includes/class-litespeed-cache.php:872
 msgid " This error may appear if you are logged into another web application."
 msgstr ""
