@@ -558,13 +558,7 @@ class LiteSpeed_Cache
 	 */
 	public function purge_all()
 	{
-		if (is_multisite() && (!is_network_admin())) {
-			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id());
-		}
-		else {
-			$this->add_purge_tags('*');
-		}
-//		$this->send_purge_headers();
+		$this->add_purge_tags('*');
 	}
 
 	/**
@@ -576,7 +570,6 @@ class LiteSpeed_Cache
 	public function purge_front()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
-//		$this->send_purge_headers();
 	}
 
 	/**
@@ -1123,11 +1116,15 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		if (in_array('*', $purge_tags )) {
-			$cache_purge_header .= ': *';
+		if (!in_array('*', $purge_tags )) {
+			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
+		}
+		else if ((is_multisite()) && (!is_network_admin())) {
+			$cache_purge_header .= ': tag='
+					. LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
 		}
 		else {
-			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
+			$cache_purge_header .= ': *';
 		}
 		return $cache_purge_header;
 		// TODO: private cache headers
