@@ -1241,9 +1241,10 @@ class LiteSpeed_Cache
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
+			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
 		}
 
-		if ((is_null($cache_tags)) || (empty($cache_tags))) {
+		if (empty($cache_tags)) {
 			$cache_control_header =
 					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
 			$purge_headers = $this->build_purge_headers();
@@ -1261,7 +1262,6 @@ class LiteSpeed_Cache
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
 						. ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
-				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 					. ': ' . implode(',', $cache_tags) ;
 				break;
