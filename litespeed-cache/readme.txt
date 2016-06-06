@@ -160,7 +160,8 @@ A post is considered non cacheable if…
 1. A class to handle the compatibility code. A template is available below.
 2. Initiator for the class. Can be in the plugin's own file space or appended
 to the registry.
-[5/24/16, 9:58:36 AM] Rob Holda: = API/Functions =
+
+= API/Functions =
 
 The following functions may be used at any hook point prior to the 'shutdown'
 hook point.
