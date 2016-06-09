@@ -839,6 +839,10 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
 		}
+		elseif (!isset($_COOKIE[$this->current_vary])) {
+			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
+					time() + 2 * DAY_IN_SECONDS, is_ssl(), true);
+		}
 		return true;
 	}
 
