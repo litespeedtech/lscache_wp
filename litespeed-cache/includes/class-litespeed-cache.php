@@ -834,7 +834,7 @@ class LiteSpeed_Cache
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
 		}
 
-		if ((strcmp($db_cookie, $this->current_vary))
+		if (($db_cookie != $this->current_vary)
 			&& ((is_multisite() ? is_network_admin() : is_admin()))) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
@@ -868,7 +868,7 @@ class LiteSpeed_Cache
 		if (empty($db_cookie)) {
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
 		}
-		if ((strcmp($db_cookie, $this->current_vary))
+		if (($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
 			$this->debug_log(
 				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache')
@@ -1078,10 +1078,10 @@ class LiteSpeed_Cache
 
 		switch ($action[0]) {
 			case 'P':
-				if (strcmp($action, self::ADMINQS_PURGE) == 0) {
+				if ($action == self::ADMINQS_PURGE) {
 					$this->cachectrl = self::CACHECTRL_PURGE;
 				}
-				elseif (strcmp($action, self::ADMINQS_PURGESINGLE) == 0) {
+				elseif ($action == self::ADMINQS_PURGESINGLE) {
 					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
 				}
 				else {
@@ -1089,7 +1089,7 @@ class LiteSpeed_Cache
 				}
 				return;
 			case 'S':
-				if (strcmp($action, self::ADMINQS_SHOWHEADERS) == 0) {
+				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
 					return;
 				}

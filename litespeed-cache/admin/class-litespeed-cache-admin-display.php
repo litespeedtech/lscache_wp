@@ -1181,7 +1181,7 @@ class LiteSpeed_Cache_Admin_Display
 			}
 			$cookie = substr($cookie, 11);
 		}
-		if (strcmp($cookie, $options[$id])) {
+		if ($cookie != $options[$id]) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}

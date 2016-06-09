@@ -712,7 +712,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$site_cookie = $this->parse_existing_login_cookie($site_content);
 		if ((empty($home_cookie) && !empty($site_cookie))
 				|| (!empty($home_cookie) && empty($site_cookie))
-				|| (strcmp($home_cookie, $site_cookie))) {
+				|| ($home_cookie != $site_cookie)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
 				__('This site is a subdirectory install.', 'litespeed-cache')
