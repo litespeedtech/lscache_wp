@@ -28,6 +28,10 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		add_action('ngg_added_new_image', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::add_image');
 		add_action('ngg_ajax_image_save', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::update_image');
 		add_action('ngg_delete_picture', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::delete_image');
+		add_action('ngg_moved_images', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::move_image', 10, 3);
+		add_action('ngg_copied_images', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::copy_image', 10, 3);
+		add_action('ngg_generated_image', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::gen_image');
+		add_action('ngg_recovered_image', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::gen_image');
 
 		add_action('ngg_gallery_sort', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::update_gallery');
 		add_action('ngg_delete_gallery', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::update_gallery');
@@ -95,6 +99,46 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $_GET['gid']);
 		}
 	}
+
+	/**
+	 * When an image is moved, need to purge all old galleries and the new gallery.
+	 *
+	 * @since 1.0.8
+	 * @access	public
+	 * @param array $images unused
+	 * @param array $old_gallery_ids Source gallery ids for the images.
+	 * @param integer $new_gallery_id Destination gallery id.
+	 */
+    public static function move_image($images, $old_gallery_ids, $new_gallery_id)
+    {
+        foreach ($old_gallery_ids as $gid) {
+            LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $gid);
+        }
+        LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $new_gallery_id);
+    }
+
+	/**
+	 * When an image is copied, need to purge the destination gallery.
+	 *
+	 * @param type $image_pid_map unused
+	 * @param type $old_gallery_ids unused
+	 * @param integer $new_gallery_id Destination gallery id.
+	 */
+    public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
+    {
+        LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $new_gallery_id);
+    }
+
+	/**
+	 * When an image is re-generated, need to purge the gallery it belongs to.
+	 * Also applies to recovered images.
+	 *
+	 * @param Image class $image The re-generated image.
+	 */
+    public static function gen_image($image)
+    {
+        LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $image->galleryid);
+    }
 
 	/**
 	 * When a gallery is updated, need to purge all pages that display the gallery.
