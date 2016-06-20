@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Tags
 	const TYPE_AUTHOR = 'A.' ;
 	const TYPE_ARCHIVE_DATE = 'D.' ;
 	const TYPE_BLOG = 'B.' ;
+	const TYPE_WIDGET = 'W.';
 	const HEADER_PURGE = 'X-LiteSpeed-Purge' ;
 	const HEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const HEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;

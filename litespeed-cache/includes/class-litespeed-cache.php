@@ -40,6 +40,13 @@ class LiteSpeed_Cache
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
+	const ESI_PARAM_ACTION = 'action=lscache';
+	const ESI_PARAM_TYPE = 'type';
+	const ESI_PARAM_NAME = 'name';
+	const ESI_PARAM_ID = 'id';
+
+	const ESI_TYPE_WIDGET = 1;
+
 	protected $plugin_dir ;
 	protected $config ;
 	protected $current_vary;
@@ -194,9 +201,10 @@ class LiteSpeed_Cache
 	 */
 	public function init()
 	{
+		$is_ajax = (defined('DOING_AJAX') && DOING_AJAX);
 		$module_enabled = $this->config->is_plugin_enabled();
 
-		if ( is_admin() ) {
+		if ((is_admin()) && (!$is_ajax)) {
 			$this->load_admin_actions($module_enabled) ;
 		}
 		else {
@@ -232,13 +240,7 @@ class LiteSpeed_Cache
 			$this->load_logged_out_actions();
 		}
 
-		$this->load_public_actions() ;
-		if (defined('DOING_AJAX') && DOING_AJAX) {
-			do_action('litespeed_cache_detect_thirdparty');
-		}
-		else {
-			add_action('wp', array($this, 'detect'), 4);
-		}
+		$this->load_public_actions($is_ajax) ;
 
 	}
 
@@ -407,8 +409,9 @@ class LiteSpeed_Cache
 	 *
 	 * @since    1.0.0
 	 * @access   private
+	 * @param boolean $is_ajax Denotes if the request is an ajax request.
 	 */
-	private function load_public_actions()
+	private function load_public_actions($is_ajax)
 	{
 		//register purge actions
 		$purge_post_events = array(
@@ -421,6 +424,18 @@ class LiteSpeed_Cache
 		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
+		}
+		if ($is_ajax) {
+			do_action('litespeed_cache_detect_thirdparty');
+			add_action('wp_ajax_lscache', array($this, 'check_cacheable'), 0);
+			add_action('wp_ajax_nopriv_lscache', array($this, 'check_cacheable'), 0);
+			add_action('wp_ajax_lscache', 'LiteSpeed_Cache::esi_ajax');
+			add_action('wp_ajax_nopriv_lscache', 'LiteSpeed_Cache::esi_ajax');
+		}
+		else {
+			add_action('wp', array($this, 'detect'), 4);
+			add_filter('widget_display_callback',
+				'LiteSpeed_Cache::esi_replace_widget', 0, 3);
 		}
 
 		add_action('shutdown', array($this, 'send_headers'), 0);
@@ -1247,7 +1262,7 @@ class LiteSpeed_Cache
 
 		if (empty($cache_tags)) {
 			$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
+					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' . ',esi=on' ;
 			$purge_headers = $this->build_purge_headers();
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
@@ -1262,7 +1277,7 @@ class LiteSpeed_Cache
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
+						. ': public,max-age=' . $ttl . ',esi=on' ;
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 					. ': ' . implode(',', $cache_tags) ;
 				break;
@@ -1271,7 +1286,7 @@ class LiteSpeed_Cache
 				// fall through
 			case self::CACHECTRL_PURGE:
 				$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
+					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' . ',esi=on';
 				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
 				break;
 
@@ -1483,21 +1498,6 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function check_sidebar()
-	{
-		if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
-			remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
-			echo '<!-- lscwp sidebar esi start -->'
-					. '<esi:include src="/lscwp_sidebar.php" onerror=\"continue\"/>'
-					. '<!-- lscwp sidebar esi end -->';
-		}
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
 	private function add_actions_esi()
 	{
 		add_action('storefront_header',
@@ -1541,60 +1541,6 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	private function is_esi_cart($uri, $urilen)
-	{
-		$cart = 'cart.php';
-		$cartlen = strlen($cart);
-
-		if (($urilen != $cartlen)
-				|| (strncmp($uri, $cart, $cartlen) != 0)) {
-			return false;
-		}
-		register_widget( 'WC_Widget_Cart' );
-		add_action('init', 'storefront_cart_link_fragment', 0);
-		add_action('init', 'storefront_header_cart', 0);
-		add_action('init', array($this, 'send_esi'), 0);
-		return true;
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function load_sidebar_widgets()
-	{
-		do_action('widgets_init');
-		do_action('register_sidebar');
-		do_action('wp_register_sidebar_widget');
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function is_esi_sidebar($uri, $urilen)
-	{
-		$sidebar = 'sidebar.php';
-		$sidebarlen = strlen($sidebar);
-
-		if (($urilen != $sidebarlen)
-				|| (strncmp($uri, $sidebar, $sidebarlen) != 0)) {
-			return false;
-		}
-		add_action('widgets_init', 'storefront_widgets_init', 10);
-		add_action('wp_loaded', array($this, 'load_sidebar_widgets'), 0);
-		add_action('wp_loaded', 'storefront_get_sidebar', 0);
-		add_action('wp_loaded', array($this, 'send_esi'), 0);
-		return true;
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
 	private function check_esi_page()
 	{
 		$prefix = '/lscwp_';
@@ -1619,6 +1565,36 @@ class LiteSpeed_Cache
 			default:
 				return false;
 		}
+		return false;
+	}
+
+	public static function esi_ajax()
+	{
+		$type = esc_html($_REQUEST[self::ESI_PARAM_TYPE]);
+		$name = esc_html($_REQUEST[self::ESI_PARAM_NAME]);
+		$id = esc_html($_REQUEST[self::ESI_PARAM_ID]);
+
+		if ($type == self::ESI_TYPE_WIDGET) {
+			LiteSpeed_Cache_Tags::add_cache_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $id);
+			the_widget($name);
+		}
+		wp_die();
+	}
+
+	public static function esi_replace_widget(array $instance,
+		WP_Widget $widget, array $args)
+	{
+		$qs = array(
+			self::ESI_PARAM_ACTION,
+			self::ESI_PARAM_TYPE . '=' . self::ESI_TYPE_WIDGET,
+			self::ESI_PARAM_NAME . '=' . urlencode(get_class($widget)),
+			self::ESI_PARAM_ID . '='  . urlencode($widget->id_base)
+		);
+		$url = admin_url('admin-ajax.php?' . implode('&', $qs), 'https');
+		echo '<!-- lscwp sidebar ' . $widget->id_base . ' -->'
+			. '<esi:include src="' . $url . '" />'
+			. '<!-- lscwp sidebar esi end -->';
 		return false;
 	}
 /*END ESI CODE*/
