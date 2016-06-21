@@ -41,9 +41,12 @@ class LiteSpeed_Cache
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
 	const ESI_PARAM_ACTION = 'action=lscache';
+	const ESI_PARAM_PARAMS = 'lscache';
 	const ESI_PARAM_TYPE = 'type';
 	const ESI_PARAM_NAME = 'name';
 	const ESI_PARAM_ID = 'id';
+	const ESI_PARAM_INSTANCE = 'instance';
+	const ESI_PARAM_ARGS = 'args';
 
 	const ESI_TYPE_WIDGET = 1;
 
@@ -425,6 +428,11 @@ class LiteSpeed_Cache
 			// this will purge all related tags
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
+
+		add_action('load-widgets.php', array( $this, 'purge_widget'));
+		add_action('wp_update_comment_count',
+			array( $this, 'purge_comment_widget'));
+
 		if ($is_ajax) {
 			do_action('litespeed_cache_detect_thirdparty');
 			add_action('wp_ajax_lscache', array($this, 'check_cacheable'), 0);
@@ -827,6 +835,28 @@ class LiteSpeed_Cache
 		}
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_POST . $post_id);
 //		$this->send_purge_headers();
+	}
+
+	public function purge_widget($widget_id = null)
+	{
+		if (is_null($widget_id)) {
+			$widget_id = $_POST['widget-id'];
+			if (is_null($widget_id)) {
+				return;
+			}
+		}
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+			. $widget_id);
+	}
+
+	public function purge_comment_widget()
+	{
+		global $wp_widget_factory;
+		$recent_comments = $wp_widget_factory->widgets['WP_Widget_Recent_Comments'];
+		if (!is_null($recent_comments)) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $recent_comments->id);
+		}
 	}
 
 	/**
@@ -1397,6 +1427,13 @@ class LiteSpeed_Cache
 		$post = get_post($post_id) ;
 		$post_type = $post->post_type ;
 
+		global $wp_widget_factory;
+		$recent_posts = $wp_widget_factory->widgets['WP_Widget_Recent_Posts'];
+		if (!is_null($recent_posts)) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $recent_posts->id;
+		}
+
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
 			//$this->debug_log('purge by post, check tax = ' . print_r($taxonomies, true)) ;
@@ -1570,14 +1607,22 @@ class LiteSpeed_Cache
 
 	public static function esi_ajax()
 	{
-		$type = esc_html($_REQUEST[self::ESI_PARAM_TYPE]);
-		$name = esc_html($_REQUEST[self::ESI_PARAM_NAME]);
-		$id = esc_html($_REQUEST[self::ESI_PARAM_ID]);
+		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
+		$unencrypted = base64_decode($req_params);
+		if ($unencrypted === false) {
+			return;
+		}
+		$unencoded = urldecode($unencrypted);
+		$params = unserialize($unencoded);
+		if ($params === false) {
+			return;
+		}
 
-		if ($type == self::ESI_TYPE_WIDGET) {
+		if ($params[self::ESI_PARAM_TYPE] == self::ESI_TYPE_WIDGET) {
 			LiteSpeed_Cache_Tags::add_cache_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $id);
-			the_widget($name);
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::ESI_PARAM_ID]);
+			the_widget($params[self::ESI_PARAM_NAME],
+				$params[self::ESI_PARAM_INSTANCE], $params[self::ESI_PARAM_ARGS]);
 		}
 		wp_die();
 	}
@@ -1585,14 +1630,18 @@ class LiteSpeed_Cache
 	public static function esi_replace_widget(array $instance,
 		WP_Widget $widget, array $args)
 	{
-		$qs = array(
-			self::ESI_PARAM_ACTION,
-			self::ESI_PARAM_TYPE . '=' . self::ESI_TYPE_WIDGET,
-			self::ESI_PARAM_NAME . '=' . urlencode(get_class($widget)),
-			self::ESI_PARAM_ID . '='  . urlencode($widget->id_base)
+		$params = array(
+			self::ESI_PARAM_TYPE => self::ESI_TYPE_WIDGET,
+			self::ESI_PARAM_NAME => get_class($widget),
+			self::ESI_PARAM_ID => $widget->id,
+			self::ESI_PARAM_INSTANCE => $instance,
+			self::ESI_PARAM_ARGS => $args
 		);
-		$url = admin_url('admin-ajax.php?' . implode('&', $qs), 'https');
-		echo '<!-- lscwp sidebar ' . $widget->id_base . ' -->'
+
+		$qs = self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS . '='
+			. urlencode(base64_encode(serialize($params)));
+		$url = admin_url('admin-ajax.php?' . $qs, 'https');
+		echo '<!-- lscwp sidebar ' . $widget->id . ' -->'
 			. '<esi:include src="' . $url . '" />'
 			. '<!-- lscwp sidebar esi end -->';
 		return false;
