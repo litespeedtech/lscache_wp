@@ -429,21 +429,28 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 
-		add_action('load-widgets.php', array( $this, 'purge_widget'));
-		add_action('wp_update_comment_count',
-			array( $this, 'purge_comment_widget'));
+		// The ESI functionality is an enterprise feature.
+		// Removing the openlitespeed check will simply break the page.
+		if (!is_openlitespeed()) {
+			add_action('load-widgets.php', array( $this, 'purge_widget'));
+			add_action('wp_update_comment_count',
+				array( $this, 'purge_comment_widget'));
 
-		if ($is_ajax) {
-			do_action('litespeed_cache_detect_thirdparty');
-			add_action('wp_ajax_lscache', array($this, 'check_cacheable'), 0);
-			add_action('wp_ajax_nopriv_lscache', array($this, 'check_cacheable'), 0);
-			add_action('wp_ajax_lscache', 'LiteSpeed_Cache::esi_ajax');
-			add_action('wp_ajax_nopriv_lscache', 'LiteSpeed_Cache::esi_ajax');
-		}
-		else {
-			add_action('wp', array($this, 'detect'), 4);
-			add_filter('widget_display_callback',
-				'LiteSpeed_Cache::esi_replace_widget', 0, 3);
+			if ($is_ajax) {
+				do_action('litespeed_cache_detect_thirdparty');
+				add_action('wp_ajax_lscache', array($this, 'check_cacheable'),
+					0);
+				add_action('wp_ajax_nopriv_lscache',
+					array($this, 'check_cacheable'), 0);
+				add_action('wp_ajax_lscache', 'LiteSpeed_Cache::esi_ajax');
+				add_action('wp_ajax_nopriv_lscache',
+					'LiteSpeed_Cache::esi_ajax');
+			}
+			else {
+				add_action('wp', array($this, 'detect'), 4);
+				add_filter('widget_display_callback',
+					'LiteSpeed_Cache::esi_replace_widget', 0, 3);
+			}
 		}
 
 		add_action('shutdown', array($this, 'send_headers'), 0);
