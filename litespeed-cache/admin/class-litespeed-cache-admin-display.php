@@ -155,6 +155,60 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Hooked to the in_widget_form action.
+	 * Appends LiteSpeed Cache settings to the widget edit settings screen.
+	 * This will append the esi on/off selector and ttl text.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param type $widget
+	 * @param type $return
+	 * @param type $instance
+	 */
+	public function show_widget_edit($widget, $return, $instance)
+	{
+		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
+		$enable_levels = array(
+			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'));
+
+		if (empty($options)) {
+			$esi = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
+			$ttl = '300'; // 5 minutes default for widgets.
+		}
+		else {
+			$esi = $options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE];
+			$ttl = $options[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
+		}
+
+		$buf = '<h4>LiteSpeed Cache:</h4>';
+
+		$buf .= '<label for="' . LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE
+			. '">' . __('Enable ESI for this Widget:', 'litespeed-cache')
+			. '&nbsp;&nbsp;&nbsp;</label>';
+
+		$buf .= $this->input_field_radio(LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE,
+			$enable_levels, $esi);
+
+		$buf .= '<br><br>';
+
+		$buf .= '<label for="' . LiteSpeed_Cache_Config::WIDGET_OPID_TTL
+			. '">' . __('Widget Cache TTL:', 'litespeed-cache')
+			. '&nbsp;&nbsp;&nbsp;</label>';
+
+		$buf .= $this->input_field_text(LiteSpeed_Cache_Config::WIDGET_OPID_TTL,
+			$ttl, '7', '', __('seconds', 'litespeed-cache'));
+
+		$buf .= '<p class="install-help">'
+			. __('Default value 300 seconds (5 minutes).', 'litespeed-cache')
+			. __(' A TTL of 0 indicates do not cache.', 'litespeed-cache')
+			. '</p>';
+
+		$buf .= '<br><br>';
+		echo $buf;
+	}
+
+	/**
 	 * add_submenu_page callback to determine which submenu page to display
 	 * if the admin selected a LiteSpeed Cache dashboard page.
 	 *

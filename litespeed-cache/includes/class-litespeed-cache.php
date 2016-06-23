@@ -55,6 +55,8 @@ class LiteSpeed_Cache
 	protected $current_vary;
 	protected $cachectrl = self::CACHECTRL_NOCACHE;
 	protected $pub_purge_tags = array();
+	protected $has_esi = false;
+	protected $custom_ttl = 0;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -358,6 +360,14 @@ class LiteSpeed_Cache
 			}
 		}
 
+		if (isset($_GET['editwidget'])) {
+			add_action('in_widget_form',
+				array(LiteSpeed_Cache_Admin_Display::get_instance(),
+					'show_widget_edit'), 100, 3);
+		}
+		add_filter('widget_update_callback',
+			array($admin, 'validate_widget_save'), 10, 4);
+
 		if (!is_network_admin()) {
 			add_action('load-litespeed-cache_page_lscache-settings',
 					'LiteSpeed_Cache_Admin::redir_settings');
@@ -442,14 +452,13 @@ class LiteSpeed_Cache
 					0);
 				add_action('wp_ajax_nopriv_lscache',
 					array($this, 'check_cacheable'), 0);
-				add_action('wp_ajax_lscache', 'LiteSpeed_Cache::esi_ajax');
-				add_action('wp_ajax_nopriv_lscache',
-					'LiteSpeed_Cache::esi_ajax');
+				add_action('wp_ajax_lscache', array($this, 'esi_ajax'));
+				add_action('wp_ajax_nopriv_lscache', array($this, 'esi_ajax'));
 			}
 			else {
 				add_action('wp', array($this, 'detect'), 4);
 				add_filter('widget_display_callback',
-					'LiteSpeed_Cache::esi_replace_widget', 0, 3);
+					array($this, 'esi_widget_display'), 0, 3);
 			}
 		}
 
@@ -1298,8 +1307,8 @@ class LiteSpeed_Cache
 		}
 
 		if (empty($cache_tags)) {
-			$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' . ',esi=on' ;
+			$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
+					. ': no-cache' . $this->send_esi();
 			$purge_headers = $this->build_purge_headers();
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
@@ -1307,23 +1316,27 @@ class LiteSpeed_Cache
 
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
-				if ( is_front_page() ){
+				if ($this->custom_ttl != 0) {
+					$ttl = $this->custom_ttl;
+				}
+				elseif (is_front_page()) {
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
 				}
 				else{
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': public,max-age=' . $ttl . ',esi=on' ;
+						. ': public,max-age=' . $ttl . $this->send_esi();
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
-					. ': ' . implode(',', $cache_tags) ;
+						. ': ' . implode(',', $cache_tags) ;
 				break;
 			case self::CACHECTRL_PURGESINGLE:
 				$cache_tags = $cache_tags[0];
 				// fall through
 			case self::CACHECTRL_PURGE:
 				$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' . ',esi=on';
+					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache'
+					. $this->send_esi();
 				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
 				break;
 
@@ -1496,6 +1509,117 @@ class LiteSpeed_Cache
 
 
 /* BEGIN ESI CODE, not fully implemented for now */
+
+	/**
+	 * Check if the requested page has esi elements. If so, return esi on
+	 * header.
+	 *
+	 * @access private
+	 * @since 1.1.0
+	 * @return string Esi On header if request has esi, empty string otherwise.
+	 */
+	private function send_esi()
+	{
+		if ($this->has_esi) {
+			return ',esi=on';
+		}
+		return '';
+	}
+
+	/**
+	 * The ajax callback for esi requests. This will parse the input parameters
+	 * to determine which part of the page is to be displayed.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
+	public function esi_ajax()
+	{
+		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
+		$unencrypted = base64_decode($req_params);
+		if ($unencrypted === false) {
+			return;
+		}
+		$unencoded = urldecode($unencrypted);
+		$params = unserialize($unencoded);
+		if ($params === false) {
+			return;
+		}
+
+		if ($params[self::ESI_PARAM_TYPE] == self::ESI_TYPE_WIDGET) {
+			$this->esi_widget($params);
+		}
+		wp_die();
+	}
+
+	/**
+	 * Parses the esi input parameters and generates the widget for esi display.
+	 *
+	 * @access private
+	 * @since 1.1.0
+	 * @param array $params Input parameters needed to correctly display widget
+	 */
+	private function esi_widget($params)
+	{
+		global $wp_widget_factory;
+		$widget = $wp_widget_factory->widgets[$params[self::ESI_PARAM_NAME]];
+		$settings = $widget->get_settings();
+		// Since we only reach here via esi, safe to assume setting exists.
+		$ttl = $settings[LiteSpeed_Cache_Config::OPTION_NAME]
+			[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
+		if ($ttl == 0) {
+			$this->no_cache_for(__('Widget time to live set to 0.',
+				'litespeed-cache'));
+			LiteSpeed_Cache_Tags::set_noncacheable();
+		}
+		else {
+			$this->custom_ttl = $ttl;
+			LiteSpeed_Cache_Tags::add_cache_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::ESI_PARAM_ID]);
+		}
+		the_widget($params[self::ESI_PARAM_NAME],
+			$params[self::ESI_PARAM_INSTANCE], $params[self::ESI_PARAM_ARGS]);
+	}
+
+	/**
+	 * Hooked to the widget_display_callback filter.
+	 * If the admin configured the widget to display via esi, this function
+	 * will set up the esi request and cancel the widget display.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param array $instance Parameter used to build the widget.
+	 * @param WP_Widget $widget The widget to build.
+	 * @param array $args Parameter used to build the widget.
+	 * @return mixed Return false if display through esi, nothing otherwise.
+	 */
+	public function esi_widget_display(array $instance,
+		WP_Widget $widget, array $args)
+	{
+		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
+		if ((!isset($options)) ||
+			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
+				== LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)) {
+			return;
+		}
+		$params = array(
+			self::ESI_PARAM_TYPE => self::ESI_TYPE_WIDGET,
+			self::ESI_PARAM_NAME => get_class($widget),
+			self::ESI_PARAM_ID => $widget->id,
+			self::ESI_PARAM_INSTANCE => $instance,
+			self::ESI_PARAM_ARGS => $args
+		);
+
+		$qs = self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS . '='
+			. urlencode(base64_encode(serialize($params)));
+		$url = admin_url('admin-ajax.php?' . $qs, 'https');
+		echo '<!-- lscwp sidebar ' . $widget->id . ' -->'
+			. '<esi:include src="' . $url . '" />'
+			. '<!-- lscwp sidebar esi end -->';
+		$this->has_esi = true;
+		return false;
+	}
+
 	/**
 	 *
 	 *
@@ -1554,17 +1678,6 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 */
-	public function send_esi()
-	{
-		status_header(200);
-		die();
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
 	private function is_esi_admin_bar($uri, $urilen)
 	{
 		$admin = 'admin_bar.php';
@@ -1612,46 +1725,5 @@ class LiteSpeed_Cache
 		return false;
 	}
 
-	public static function esi_ajax()
-	{
-		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
-		$unencrypted = base64_decode($req_params);
-		if ($unencrypted === false) {
-			return;
-		}
-		$unencoded = urldecode($unencrypted);
-		$params = unserialize($unencoded);
-		if ($params === false) {
-			return;
-		}
-
-		if ($params[self::ESI_PARAM_TYPE] == self::ESI_TYPE_WIDGET) {
-			LiteSpeed_Cache_Tags::add_cache_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::ESI_PARAM_ID]);
-			the_widget($params[self::ESI_PARAM_NAME],
-				$params[self::ESI_PARAM_INSTANCE], $params[self::ESI_PARAM_ARGS]);
-		}
-		wp_die();
-	}
-
-	public static function esi_replace_widget(array $instance,
-		WP_Widget $widget, array $args)
-	{
-		$params = array(
-			self::ESI_PARAM_TYPE => self::ESI_TYPE_WIDGET,
-			self::ESI_PARAM_NAME => get_class($widget),
-			self::ESI_PARAM_ID => $widget->id,
-			self::ESI_PARAM_INSTANCE => $instance,
-			self::ESI_PARAM_ARGS => $args
-		);
-
-		$qs = self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS . '='
-			. urlencode(base64_encode(serialize($params)));
-		$url = admin_url('admin-ajax.php?' . $qs, 'https');
-		echo '<!-- lscwp sidebar ' . $widget->id . ' -->'
-			. '<esi:include src="' . $url . '" />'
-			. '<!-- lscwp sidebar esi end -->';
-		return false;
-	}
 /*END ESI CODE*/
 }
