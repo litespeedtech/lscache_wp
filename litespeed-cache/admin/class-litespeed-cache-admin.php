@@ -444,6 +444,18 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
+	 * Hooked to the wp_redirect filter.
+	 * This will only hook if there was a problem when saving the widget.
+	 *
+	 * @param string $location The location string.
+	 * @return string the updated location string.
+	 */
+	public function widget_save_err($location)
+	{
+		return str_replace('?message=0', '?error=0', $location);
+	}
+
+	/**
 	 * Hooked to the widget_update_callback filter.
 	 * Validate the LiteSpeed Cache settings on edit widget save.
 	 *
@@ -464,6 +476,7 @@ class LiteSpeed_Cache_Admin
 		$ttlstr = $input[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
 
 		if ((!is_numeric($ttlstr)) || (!is_numeric($esistr))) {
+			add_filter('wp_redirect', array($this, 'widget_save_err'));
 			return false;
 		}
 
@@ -471,6 +484,7 @@ class LiteSpeed_Cache_Admin
 		$ttl = intval($ttlstr);
 
 		if (($ttl != 0) && ($ttl < 30)) {
+			add_filter('wp_redirect', array($this, 'widget_save_err'));
 			return false; // invalid ttl.
 		}
 
