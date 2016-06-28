@@ -40,6 +40,9 @@ class LiteSpeed_Cache
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
+	const ESI_URL_ADMINBAR = '/lscacheesi/';
+	const ESI_POSTTYPE = 'lscacheesi';
+
 	const ESI_PARAM_ACTION = 'action=lscache';
 	const ESI_PARAM_PARAMS = 'lscache';
 	const ESI_PARAM_TYPE = 'type';
@@ -49,6 +52,7 @@ class LiteSpeed_Cache
 	const ESI_PARAM_ARGS = 'args';
 
 	const ESI_TYPE_WIDGET = 1;
+	const ESI_TYPE_ADMINBAR = 2;
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -233,10 +237,6 @@ class LiteSpeed_Cache
 //		$this->add_actions_esi();
 
 		$this->setup_cookies();
-
-		if ( $this->check_esi_page()) {
-			return;
-		}
 
 		if ( $this->check_user_logged_in() || $this->check_cookies() ) {
 			$this->load_logged_in_actions() ;
@@ -456,9 +456,14 @@ class LiteSpeed_Cache
 				add_action('wp_ajax_nopriv_lscache', array($this, 'esi_ajax'));
 			}
 			else {
+				add_action('init', array($this, 'register_post_type'));
+				add_action('template_include', array($this, 'esi_template'), 100);
 				add_action('wp', array($this, 'detect'), 4);
 				add_filter('widget_display_callback',
 					array($this, 'esi_widget_display'), 0, 3);
+
+				remove_action('wp_footer', 'wp_admin_bar_render', 1000);
+				add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
 			}
 		}
 
@@ -1546,9 +1551,45 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		if ($params[self::ESI_PARAM_TYPE] == self::ESI_TYPE_WIDGET) {
-			$this->esi_widget($params);
+		switch ($params[self::ESI_PARAM_TYPE]) {
+			case self::ESI_TYPE_WIDGET:
+				$this->esi_widget($params);
+				break;
+			case self::ESI_TYPE_ADMINBAR:
+				wp_admin_bar_render();
+				exit();
+			default:
+				break;
 		}
+
+		wp_die();
+	}
+
+	public static function get_esi()
+	{
+		$cache = self::plugin();
+		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
+		$unencrypted = base64_decode($req_params);
+		if ($unencrypted === false) {
+			return;
+		}
+		$unencoded = urldecode($unencrypted);
+		$params = unserialize($unencoded);
+		if ($params === false) {
+			return;
+		}
+
+		switch ($params[self::ESI_PARAM_TYPE]) {
+			case self::ESI_TYPE_WIDGET:
+				$cache->esi_widget($params);
+				break;
+			case self::ESI_TYPE_ADMINBAR:
+				wp_admin_bar_render();
+				return;
+			default:
+				break;
+		}
+
 		wp_die();
 	}
 
@@ -1559,7 +1600,7 @@ class LiteSpeed_Cache
 	 * @since 1.1.0
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
-	private function esi_widget($params)
+	public function esi_widget($params)
 	{
 		global $wp_widget_factory;
 		$widget = $wp_widget_factory->widgets[$params[self::ESI_PARAM_NAME]];
@@ -1620,109 +1661,51 @@ class LiteSpeed_Cache
 		return false;
 	}
 
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function esi_admin_bar_render()
+	public function esi_admin_bar()
 	{
-		echo '<!-- lscwp admin esi start -->'
-				. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
-				. '<!-- lscwp admin esi end -->';
-	}
+		global $wp_admin_bar;
 
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function check_admin_bar()
-	{
-		if (is_admin_bar_showing()) {
-			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
-			remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
-			add_action('wp_footer', array($this, 'esi_admin_bar_render'), 1000);
-		}
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function check_storefront_cart()
-	{
-		if (has_action('storefront_header', 'storefront_header_cart')) {
-			remove_action('storefront_header', 'storefront_header_cart', 60);
-			echo '<!-- lscwp cart esi start -->'
-					. '<esi:include src="/lscwp_cart.php" onerror=\"continue\"/>'
-					. '<!-- lscwp cart esi end -->';
-		}
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function add_actions_esi()
-	{
-		add_action('storefront_header',
-					array($this, 'check_storefront_cart'), 59);
-		add_action('storefront_sidebar', array($this, 'check_sidebar'), 0);
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function is_esi_admin_bar($uri, $urilen)
-	{
-		$admin = 'admin_bar.php';
-		$adminlen = strlen($admin);
-
-		if (($urilen != $adminlen)
-				|| (strncmp($uri, $admin, $adminlen) != 0)) {
-			return false;
-		}
-		add_action( 'init', '_wp_admin_bar_init', 0 );
-		add_action( 'init', 'wp_admin_bar_render', 0 );
-		add_action('init', array($this, 'send_esi'), 0);
-		return true;
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function check_esi_page()
-	{
-		$prefix = '/lscwp_';
-		$prefixlen = 7;
-		$uri = esc_url($_SERVER['REQUEST_URI']);
-		$urilen = strlen($uri);
-
-		if (($urilen <= $prefixlen) || (strncmp($uri, $prefix, $prefixlen) != 0 )) {
-			return false;
+		if ((!is_admin_bar_showing()) || (!is_object($wp_admin_bar))) {
+			return;
 		}
 
-		$uri = substr($uri, $prefixlen);
-		$urilen -= $prefixlen;
+		$params = array(self::ESI_PARAM_TYPE => self::ESI_TYPE_ADMINBAR);
 
-		switch ($uri[0]) {
-			case 'a':
-				return $this->is_esi_admin_bar($uri, $urilen);
-			case 'c':
-				return $this->is_esi_cart($uri, $urilen);
-			case 's':
-				return $this->is_esi_sidebar($uri, $urilen);
-			default:
-				return false;
+		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
+			. '=' . urlencode(base64_encode(serialize($params)));
+		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
+		echo '<!-- lscwp adminbar -->'
+			. '<esi:include src="' . $url . '" />'
+			. '<!-- lscwp adminbar esi end -->';
+		$this->has_esi = true;
+	}
+
+	public function esi_template($template)
+	{
+		global $post_type;
+		if ($post_type == self::ESI_POSTTYPE) {
+			return $this->plugin_dir . 'includes/litespeed-cache-esi.php';
 		}
-		return false;
+		return $template;
+	}
+
+	public function register_post_type()
+	{
+		register_post_type(
+			self::ESI_POSTTYPE,
+			array(
+				'labels' => array(
+					'name' => __('Lscacheesi', 'litespeed-cache')
+				),
+				'description' => __('Description of post type', 'litespeed-cache'),
+				'public' => true,
+				'supports' => false,
+				'rewrite' => array('slug' => 'lscacheesi'),
+				'query_var' => true
+			)
+		);
+		add_rewrite_rule('lscacheesi/?',
+			'index.php?post_type=lscacheesi', 'top');
 	}
 
 /*END ESI CODE*/
