@@ -167,11 +167,14 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
+		if (!is_numeric($widget->number) && (!isset($_REQUEST['editwidget']))) {
+			return;
+		}
 		$enable_levels = array(
 			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
 			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'));
 
+		$options = LiteSpeed_Cache::get_widget_option($widget);
 		if (empty($options)) {
 			$esi = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 			$ttl = '300'; // 5 minutes default for widgets.

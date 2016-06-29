@@ -213,7 +213,7 @@ class LiteSpeed_Cache
 		$is_ajax = (defined('DOING_AJAX') && DOING_AJAX);
 		$module_enabled = $this->config->is_plugin_enabled();
 
-		if ((is_admin()) && (!$is_ajax)) {
+		if ((is_admin()) && (current_user_can('administrator'))) {
 			$this->load_admin_actions($module_enabled) ;
 		}
 		else {
@@ -357,11 +357,9 @@ class LiteSpeed_Cache
 			}
 		}
 
-		if (isset($_GET['editwidget'])) {
-			add_action('in_widget_form',
-				array(LiteSpeed_Cache_Admin_Display::get_instance(),
-					'show_widget_edit'), 100, 3);
-		}
+		add_action('in_widget_form',
+			array(LiteSpeed_Cache_Admin_Display::get_instance(),
+				'show_widget_edit'), 100, 3);
 		add_filter('widget_update_callback',
 			array($admin, 'validate_widget_save'), 10, 4);
 
@@ -1561,6 +1559,28 @@ error_log('Admin Bar esi rendered');
 		}
 	}
 
+	public static function get_widget_option($widget)
+	{
+		if ($widget->updated) {
+			$settings = get_option($widget->option_name);
+		}
+		else {
+			$settings = $widget->get_settings();
+		}
+
+		if (!isset($settings)) {
+			return null;
+		}
+
+		$instance = $settings[$widget->number];
+
+		if (!isset($instance)) {
+			return null;
+		}
+
+		return $instance[LiteSpeed_Cache_Config::OPTION_NAME];
+	}
+
 	/**
 	 * Parses the esi input parameters and generates the widget for esi display.
 	 *
@@ -1572,9 +1592,7 @@ error_log('Admin Bar esi rendered');
 	{
 		global $wp_widget_factory;
 		$widget = $wp_widget_factory->widgets[$params[self::ESI_PARAM_NAME]];
-		$settings = $widget->get_settings();
-		$option = $settings[$widget->number]
-			[LiteSpeed_Cache_Config::OPTION_NAME];
+		$option = self::get_widget_option($widget);
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
 if (defined('lscache_debug')) {

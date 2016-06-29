@@ -472,6 +472,9 @@ class LiteSpeed_Cache_Admin
 	{
 		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
+		if (empty($input)) {
+			return $instance;
+		}
 		$esistr = $input[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE];
 		$ttlstr = $input[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
 
@@ -490,8 +493,8 @@ class LiteSpeed_Cache_Admin
 
 		if (is_null($instance[LiteSpeed_Cache_Config::OPTION_NAME])) {
 			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array(
-				[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE] => $esi,
-				[LiteSpeed_Cache_Config::WIDGET_OPID_TTL] => $ttl
+				LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE => $esi,
+				LiteSpeed_Cache_Config::WIDGET_OPID_TTL => $ttl
 			);
 		}
 		else {
