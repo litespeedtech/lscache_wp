@@ -272,7 +272,7 @@ class LiteSpeed_Cache_Admin
 		$enabled = $this->validate_enabled($input, $options);
 		if ( $enabled !== $options[$id] ) {
 			$options[$id] = $enabled;
-			$config->wp_cache_var_setter($enabled);
+			LiteSpeed_Cache_Config::wp_cache_var_setter($enabled);
 			if (!$enabled) {
 				LiteSpeed_Cache::plugin()->purge_all() ;
 			}
@@ -614,7 +614,7 @@ class LiteSpeed_Cache_Admin
 		if ($options[$id] !== $network_enabled) {
 			$options[$id] = $network_enabled;
 			if ($network_enabled) {
-				$config->wp_cache_var_setter(true);
+				LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 			}
 		}
 
