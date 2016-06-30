@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public function file_get(&$content, $path = '')
+	public static function file_get(&$content, $path = '')
 	{
 		if (empty($path)) {
 			$path = self::get_home_path();
@@ -246,7 +246,7 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			$beginning .= $suffix . "\n\n" . $orig_content;
 		}
-		return $this->file_save($beginning, false, $path);
+		return self::file_save($beginning, false, $path);
 	}
 
 	/**
@@ -267,7 +267,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $path The file path to edit.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private function file_save($content, $cleanup = true, $path = '')
+	private static function file_save($content, $cleanup = true, $path = '')
 	{
 		if (empty($path)) {
 			$path = self::get_home_path();
@@ -371,7 +371,7 @@ class LiteSpeed_Cache_Admin_Rules
 	public function get_common_rule($wrapper, $cond, &$match)
 	{
 
-		if ($this->file_get($match) === false) {
+		if (self::file_get($match) === false) {
 			return false;
 		}
 		$suffix = '';
@@ -477,7 +477,7 @@ class LiteSpeed_Cache_Admin_Rules
 	public function get_rewrite_rule($wrapper, &$match, &$sub, &$env)
 	{
 
-		if ($this->file_get($match) === false) {
+		if (self::file_get($match) === false) {
 			return false;
 		}
 		$suffix = '';
@@ -595,7 +595,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$path = self::get_site_path();
 		$content = '';
-		if ($this->file_get($content, $path) === false) {
+		if (self::file_get($content, $path) === false) {
 			$errors[] = $content;
 			return false;
 		}
@@ -688,7 +688,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if (!self::is_file_able(self::RW)) {
 			return '';
 		}
-		if ($this->file_get($content) === false) {
+		if (self::file_get($content) === false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
@@ -697,13 +697,13 @@ class LiteSpeed_Cache_Admin_Rules
 		$home_cookie = $this->parse_existing_login_cookie($content);
 		if (!self::is_subdir()) {
 			if (!empty($home_cookie)) {
-				$this->file_save($content, false);
+				self::file_save($content, false);
 			}
 			return $home_cookie;
 		}
 		$site_path = self::get_site_path();
 
-		if ($this->file_get($site_content, $site_path) === false) {
+		if (self::file_get($site_content, $site_path) === false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
@@ -723,8 +723,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return 'err';
 		}
 		if (!empty($home_cookie)) {
-			$this->file_save($content, false);
-			$this->file_save($site_content, false, $site_path);
+			self::file_save($content, false);
+			self::file_save($site_content, false, $site_path);
 		}
 		return $home_cookie;
 	}
@@ -752,7 +752,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return $options;
 		}
 
-		if ($this->file_get($content) === false) {
+		if (self::file_get($content) === false) {
 			$errors[] = $content;
 			return false;
 		}
@@ -823,52 +823,22 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function clear_rules()
+	public static function clear_rules()
 	{
 		$content = '';
-		$buf = '';
-		$suffix = '</IfModule>';
-		$off_end = 0;
-		$errors = array();
 
 		clearstatcache();
-		if ($this->file_get($content) === false) {
+		if (self::file_get($content) === false) {
 			return;
 		}
 		elseif (!self::is_file_able(self::WRITABLE)) {
 			return;
 		}
 
-		$haystack = $this->file_split($content, $buf, $off_end);
-		$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
-				'', '', '');
-		if ((is_array($ret)) && ($ret[0])) {
-			$haystack = $ret[1];
-		}
+		$pattern = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
+		$buf = preg_replace($pattern, '', $content);
 
-		$ret = $this->set_common_rule($haystack, $buf, 'COOKIE', '', '', '');
-		if ((is_array($ret)) && ($ret[0])) {
-			$haystack = $ret[1];
-		}
-
-		$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
-				'', '', '');
-		if ((is_array($ret)) && ($ret[0])) {
-			$haystack = $ret[1];
-		}
-
-		$ret = $this->set_login_cookie($haystack, '', 'not', $buf, $errors);
-		if ($ret !== false) {
-			$haystack = $ret;
-		}
-
-		if (!is_null($haystack)) {
-			$buf .= $haystack . substr($content, $off_end);
-		}
-		else {
-			$buf .= $suffix . "\n\n" . $content;
-		}
-		$this->file_save($buf);
+		self::file_save($buf);
 		return;
 	}
 
@@ -891,7 +861,7 @@ class LiteSpeed_Cache_Admin_Rules
 				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
 				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
 				&& ($_POST['lscwp_ht_editor'])) {
-			$msg = $this->file_save($_POST['lscwp_ht_editor']);
+			$msg = self::file_save($_POST['lscwp_ht_editor']);
 			if ($msg === true) {
 				$msg = __('File Saved.', 'litespeed-cache');
 				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN;

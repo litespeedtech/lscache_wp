@@ -57,7 +57,6 @@ class LiteSpeed_Cache_Config
 	const OPID_EXCLUDES_USERAGENT = 'excludes_useragent' ;
 
 	const NETWORK_OPID_ENABLED = 'network_enabled';
-	const NETWORK_OPID_CNT = 'network_enabled_count';
 
 	protected $options ;
 	protected $purge_options ;
@@ -223,7 +222,6 @@ class LiteSpeed_Cache_Config
 		}
 		$default_site_options = array(
 			self::NETWORK_OPID_ENABLED => false,
-			self::NETWORK_OPID_CNT => 0,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
 			self::OPID_EXCLUDES_COOKIE => '',
 			self::OPID_EXCLUDES_USERAGENT => '',
@@ -291,7 +289,7 @@ class LiteSpeed_Cache_Config
 	 * @param boolean $enable True if enabling, false if disabling.
 	 * @return boolean True if the variable is the correct value, false if something went wrong.
 	 */
-	public function wp_cache_var_setter( $enable )
+	public static function wp_cache_var_setter( $enable )
 	{
 		if ( $enable ) {
 			if ( defined('WP_CACHE') && constant('WP_CACHE') == true ) {
@@ -303,7 +301,7 @@ class LiteSpeed_Cache_Config
 		}
 		$file = ABSPATH . 'wp-config.php' ;
 		if ( !is_writeable($file) ) {
-			$this->debug_log('wp-config file not writeable for \'WP_CACHE\'');
+			error_log('wp-config file not writeable for \'WP_CACHE\'');
 			return false;
 		}
 		$file_content = file_get_contents($file) ;
@@ -328,48 +326,6 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 * Increment the activated plugin count in multi site setups.
-	 *
-	 * The count is used to determine if one-time-only configurations need
-	 * to be updated.
-	 *
-	 * @since 1.0.2
-	 * @access public
-	 */
-	public function incr_multi_enabled()
-	{
-		$site_options = $this->get_site_options();
-		$count = $site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT];
-		++$count;
-		$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT] = $count;
-		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
-		return $count;
-	}
-
-	/**
-	 * Decrement the activated plugin count in multi site setups.
-	 *
-	 * The count is used to determine if one-time-only configurations need
-	 * to be updated.
-	 *
-	 * @since 1.0.2
-	 * @access public
-	 */
-	public function decr_multi_enabled()
-	{
-		$site_options = $this->get_site_options();
-		if ( !site_options) {
-			$this->config->debug_log('LSCWP Enabled Count does not exist');
-			exit(__("LSCWP Enabled Count does not exist", 'litespeed-cache'));
-		}
-		$count = $site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT];
-		--$count;
-		$site_options[LiteSpeed_Cache_Config::NETWORK_OPID_CNT] = $count;
-		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $site_options);
-		return $count;
-	}
-
-	/**
 	 * On plugin activation, load the default options.
 	 *
 	 * @since 1.0.0
@@ -377,27 +333,9 @@ class LiteSpeed_Cache_Config
 	 */
 	public function plugin_activation()
 	{
-		$res = update_option(self::OPTION_NAME, $this->get_default_options()) ;
+		$res = add_option(self::OPTION_NAME, $this->get_default_options()) ;
 		$this->debug_log("plugin_activation update option = $res",
 						($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
-	}
-
-	/**
-	 * Clean up configurations on plugin deactivation.
-	 *
-	 * If the admin page is not multisite or if it is the network admin,
-	 * this method will clear the htaccess file of any changes made.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function plugin_deactivation()
-	{
-		if ((!is_multisite()) || (is_network_admin())) {
-			LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules();
-		}
-		$res = delete_option(self::OPTION_NAME) ;
-		$this->debug_log("plugin_deactivation option deleted = $res", ($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
 	}
 
 	/**
