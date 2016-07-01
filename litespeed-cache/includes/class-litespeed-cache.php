@@ -607,7 +607,7 @@ class LiteSpeed_Cache
 				__('Failed to purge by Post ID, given ID is not numeric: ', 'litespeed-cache') . $val);
 			return;
 		}
-		elseif (get_post_status($val) !== 'published') {
+		elseif (get_post_status($val) !== 'publish') {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 				__('Failed to purge by Post ID, given ID does not exist or is not published: ',
