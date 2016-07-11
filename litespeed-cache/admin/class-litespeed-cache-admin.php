@@ -344,9 +344,12 @@ class LiteSpeed_Cache_Admin
 			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
 		}
 
-		$newopt = LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites($input, $options, $errors);
-		if ($newopt) {
-			$options = $newopt;
+		if (!is_multisite()) {
+			$newopt = LiteSpeed_Cache_Admin_Rules::get_instance()
+				->validate_common_rewrites($input, $options, $errors);
+			if ($newopt) {
+				$options = $newopt;
+			}
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
@@ -467,7 +470,7 @@ class LiteSpeed_Cache_Admin
 	private function check_cache_mangement_actions()
 	{
 		if ((empty($_POST))
-				|| (!$_POST['lscwp_management'])
+				|| (!isset($_POST['lscwp_management']))
 				|| ($_POST['lscwp_management'] !== 'manage_lscwp')
 				|| (!check_admin_referer('lscwp_manage', 'management_run'))) {
 			return;
@@ -540,6 +543,9 @@ class LiteSpeed_Cache_Admin
 			$options[$id] = $network_enabled;
 			if ($network_enabled) {
 				LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+			}
+			else {
+				LiteSpeed_Cache::plugin()->purge_all();
 			}
 		}
 
