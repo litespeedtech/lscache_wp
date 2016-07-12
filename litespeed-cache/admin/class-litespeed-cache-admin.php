@@ -43,6 +43,10 @@ class LiteSpeed_Cache_Admin
 		$this->version = $version ;
 		$plugin_file = plugin_dir_path(dirname(__FILE__)) . '/' . $plugin_name . '.php';
 
+		if (!function_exists('is_plugin_active_for_network')) {
+			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+		}
+
 		add_action('admin_enqueue_scripts', array( $this, 'enqueue_scripts' )) ;
 
 		//Additional links on the plugin page
