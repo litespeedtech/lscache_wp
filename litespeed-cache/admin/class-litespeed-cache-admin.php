@@ -39,14 +39,14 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function __construct( $plugin_name, $version )
 	{
-
 		$this->plugin_name = $plugin_name ;
 		$this->version = $version ;
+		$plugin_file = plugin_dir_path(dirname(__FILE__)) . '/' . $plugin_name . '.php';
 
 		add_action('admin_enqueue_scripts', array( $this, 'enqueue_scripts' )) ;
 
 		//Additional links on the plugin page
-		if ( is_network_admin() ) {
+		if ((is_network_admin()) && (is_plugin_active_for_network($plugin_file))) {
 			add_action('network_admin_menu', array( $this, 'register_admin_menu' )) ;
 		}
 		else {
@@ -54,8 +54,8 @@ class LiteSpeed_Cache_Admin
 		}
 
 		add_action('admin_init', array( $this, 'admin_init' )) ;
-		$plugin_dir = plugin_dir_path(dirname(__FILE__)) ;
-		add_filter('plugin_action_links_' . plugin_basename($plugin_dir . '/' . $plugin_name . '.php'), array( $this, 'add_plugin_links' )) ;
+		add_filter('plugin_action_links_' . plugin_basename($plugin_file),
+			array( $this, 'add_plugin_links' )) ;
 	}
 
 	/**
