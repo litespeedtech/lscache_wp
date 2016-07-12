@@ -159,7 +159,8 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 			$this->config->plugin_activation() ;
 		}
-		elseif ( !defined('LSCACHE_ADV_CACHE')) {
+		include_once(ABSPATH . 'wp-content/advanced-cache.php');
+		if ( !defined('LSCACHE_ADV_CACHE')) {
 			exit(__("advanced-cache.php detected in wp-content directory! Please disable or uninstall any other cache plugins before enabling LiteSpeed Cache.", 'litespeed-cache')) ;
 		}
 	}
