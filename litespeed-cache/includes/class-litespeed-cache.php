@@ -615,6 +615,13 @@ class LiteSpeed_Cache
 						'litespeed-cache') . $val);
 			return;
 		}
+                elseif ($this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES))
+                {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				sprintf(__('Failed to purge by Post ID, Auto Purge All pages on update is enabled. Please use the Purge All button on the LiteSpeed Cache Management screen or navigate to the post you wish to purge and add %1$s to the url.', 'litespeed-cache'), '?LSCWP_CTRL=PURGESINGLE'));
+			return;                    
+                }
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				__('Purge Post ID ', 'litespeed-cache') . $val);
