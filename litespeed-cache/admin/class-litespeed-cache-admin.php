@@ -41,7 +41,13 @@ class LiteSpeed_Cache_Admin
 	{
 		$this->plugin_name = $plugin_name ;
 		$this->version = $version ;
-		$plugin_file = plugin_dir_path(dirname(__FILE__)) . '/' . $plugin_name . '.php';
+		$plugin_file = plugin_dir_path(dirname(__FILE__)) . $plugin_name . '.php';
+if (defined('lscache_debug')) {
+			require_once(ABSPATH . '/wp-admin/includes/file.php');
+	$plugin_file = ABSPATH . '/wp-content/plugins/litespeed-cache/' . $plugin_name . '.php';
+}
+
+		$plugin_base = plugin_basename($plugin_file);
 
 		if (!function_exists('is_plugin_active_for_network')) {
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
@@ -50,7 +56,7 @@ class LiteSpeed_Cache_Admin
 		add_action('admin_enqueue_scripts', array( $this, 'enqueue_scripts' )) ;
 
 		//Additional links on the plugin page
-		if ((is_network_admin()) && (is_plugin_active_for_network($plugin_file))) {
+		if ((is_network_admin()) && (is_plugin_active_for_network($plugin_base))) {
 			add_action('network_admin_menu', array( $this, 'register_admin_menu' )) ;
 		}
 		else {
@@ -58,7 +64,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		add_action('admin_init', array( $this, 'admin_init' )) ;
-		add_filter('plugin_action_links_' . plugin_basename($plugin_file),
+		add_filter('plugin_action_links_' . $plugin_base,
 			array( $this, 'add_plugin_links' )) ;
 	}
 
