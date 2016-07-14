@@ -518,6 +518,39 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Do the setting cache favicon logic.
+	 *
+	 * @since 1.0.8
+	 * @access private
+	 * @param string $haystack The original content in the .htaccess file.
+	 * @param boolean $action Whether to add or remove the rule.
+	 * @param string $output The current output buffer for the HOME PATH file.
+	 * @param array $errors Errors array to add error messages to.
+	 * @return mixed False on failure/do not update,
+	 *	original content sans favicon on success.
+	 */
+	private function set_favicon($haystack, $action, &$output, &$errors)
+	{
+		$match = '^favicon\.ico$';
+		$sub = '-';
+		$env = 'E=cache-control:max-age=86400';
+		$rule_buf = '';
+		if ($action == 0) {
+			$match = '';
+			$sub = '';
+			$env = '';
+		}
+		$ret = $this->set_rewrite_rule($haystack, $rule_buf, 'FAVICON',
+				$match, $sub, $env);
+
+		if ($this->parse_ret($ret, $haystack, $errors) === false) {
+			return false;
+		}
+		$output .= $rule_buf;
+		return $haystack;
+	}
+
+	/**
 	 * Parse the return value from set_common_rule and set_rewrite_rule.
 	 *
 	 * @since 1.0.7
@@ -681,7 +714,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access public
 	 * @return string The login cookie if found, empty string otherwise.
 	 */
-	public function scan_login_cookie()
+	public function scan_upgrade()
 	{
 		$content = '';
 		$site_content = '';
@@ -692,6 +725,27 @@ class LiteSpeed_Cache_Admin_Rules
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
+		}
+
+		$block_pattern = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
+		$split_rule = preg_split($block_pattern, $content, -1,
+				PREG_SPLIT_DELIM_CAPTURE);
+		$rule_buf = '';
+		$this->set_rewrite_rule(null, $rule_buf, 'FAVICON',
+				'^favicon\.ico$', '-', 'E=cache-control:max-age=86400');
+		if (count($split_rule) == 1) {
+			//not found
+			$content = "<IfModule LiteSpeed>\n" . $rule_buf
+				. "</IfModule>\n" . $content;
+		}
+		else {
+			//else found
+			// split_rule[0] = pre match
+			// split_rule[1] = contents of IfModule
+			// split_rule[2] = closing IfModule
+			// split_rule[3] = post match
+			$split_rule[2] = $rule_buf . "\n" . $split_rule[2];
+			$content = implode('', $split_rule);
 		}
 
 		$home_cookie = $this->parse_existing_login_cookie($content);
@@ -745,10 +799,17 @@ class LiteSpeed_Cache_Admin_Rules
 		$buf = '';
 		$off_end = 0;
 
+		$favicon = ($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]
+			=== LiteSpeed_Cache_Config::OPID_CACHE_FAVICON);
+
 		if (($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
 			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
-			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES] === $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES])
-			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS] === $options[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS])) {
+			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]
+				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES])
+			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]
+				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS])
+			&& ($favicon
+				=== $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
 			return $options;
 		}
 
@@ -807,6 +868,15 @@ class LiteSpeed_Cache_Admin_Rules
 		if ($ret !== false) {
 			$haystack = $ret;
 			$options[$id] = $input[$id];
+		}
+
+		if ($favicon !== $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
+			$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
+			$ret = $this->set_favicon($haystack, $favicon, $buf, $errors);
+			if ($ret !== false) {
+				$haystack = $ret;
+				$options[$id] = $favicon;
+			}
 		}
 
 		$ret = $this->file_combine($buf, $haystack, $content, $off_end);
