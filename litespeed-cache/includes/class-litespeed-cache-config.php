@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Config
 	const OPID_ENABLED_ENABLE = 1;
 	const OPID_ENABLED_NOTSET = 2;
 	const OPID_CACHE_COMMENTERS = 'cache_commenters';
+	const OPID_CACHE_FAVICON = 'cache_favicon';
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
 	const OPID_LOGIN_COOKIE = 'login_cookie';
 	// do NOT set default options for these three, it is used for admin.
@@ -185,6 +186,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_ENABLED => $default_enabled,
 			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPID_CACHE_COMMENTERS => true,
+			self::OPID_CACHE_FAVICON => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
@@ -225,6 +227,7 @@ class LiteSpeed_Cache_Config
 		}
 		$default_site_options = array(
 			self::NETWORK_OPID_ENABLED => false,
+			self::OPID_CACHE_FAVICON => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
 			self::OPID_EXCLUDES_COOKIE => '',
 			self::OPID_EXCLUDES_USERAGENT => '',
@@ -273,7 +276,7 @@ class LiteSpeed_Cache_Config
 		if ($this->options[self::OPID_LOGIN_COOKIE]
 				== $default_options[self::OPID_LOGIN_COOKIE]) {
 			$this->options[self::OPID_LOGIN_COOKIE] =
-				LiteSpeed_Cache_Admin_Rules::get_instance()->scan_login_cookie();
+				LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
 		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;

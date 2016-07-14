@@ -476,6 +476,7 @@ class LiteSpeed_Cache_Admin_Display
 				array('b' => array()))
 		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
 
+		$buf .= $this->build_setting_cache_favicon($site_options);
 		$buf .= $this->build_setting_mobile_view($site_options);
 		$buf .= $this->input_group_end() . '</div>';
 
@@ -762,6 +763,7 @@ class LiteSpeed_Cache_Admin_Display
 		. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
 		if (!is_multisite()) {
+			$buf .= $this->build_setting_cache_favicon($options);
 			$buf .= $this->build_setting_mobile_view($options);
 		}
 
@@ -1243,6 +1245,24 @@ class LiteSpeed_Cache_Admin_Display
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
 		return $this->input_field_text($id, $cookie, '','', '', !$file_writable);
+	}
+
+	/**
+	 * Builds the html for the cache favicon configurations.
+	 *
+	 * @since 1.0.8
+	 * @access private
+	 * @param array $options The currently configured options.
+	 * @return string The html for caching favicon configurations.
+	 */
+	private function build_setting_cache_favicon($options)
+	{
+		$title = __('Cache favicon.ico', 'litespeed-cache');
+		$desc = __('favicon.ico is requested on most pages. ', 'litespeed-cache')
+		. __('Caching this page may improve your server performance by avoiding the extra call to php.', 'litespeed-cache');
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
+		$cache_favicon = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		return $this->display_config_row($title, $cache_favicon, $desc);
 	}
 
 	/**
