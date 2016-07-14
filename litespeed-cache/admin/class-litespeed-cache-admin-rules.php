@@ -13,12 +13,44 @@ class LiteSpeed_Cache_Admin_Rules
 {
 	private static $instance;
 
+	const EDITOR_INPUT_NAME = 'lscwp_htaccess_save';
+	const EDITOR_INPUT_VAL = 'save_htaccess';
+	const EDITOR_NONCE_NAME = 'lscwp_edit_htaccess';
+	const EDITOR_NONCE_VAL = 'save';
+	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
+
 	const READABLE = 1;
 	const WRITABLE = 2;
 	const RW = 3; // Readable and writable.
 
 	private $filerw = null;
 	private $is_subdir_install = null;
+
+	private static $OUT_FILESAVE;
+
+	private static $ERR_BACKUP;
+	private static $ERR_DNE; // does not exist or is not readable
+	private static $ERR_FILESAVE;
+	private static $ERR_GET;
+	private static $ERR_INVALID_LOGIN;
+	private static $ERR_NOT_FOUND;
+	private static $ERR_OVERWRITE;
+	private static $ERR_PARSE_FILE;
+	private static $ERR_READWRITE;
+	private static $ERR_SUBDIR_MISMATCH_LOGIN;
+	private static $ERR_WRONG_ORDER;
+
+	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
+	private static $RW_BLOCK_END = '</IfModule>';
+	private static $RW_ENGINEON = 'RewriteEngine on';
+
+	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
+	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
+	private static $RW_PATTERN_RULE = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
+	private static $RW_PATTERN_LOGIN = '/(RewriteRule\s+\.[\?\*]\s+-\s+\[E=Cache-Vary:([^\]\s]*)\])/';
+	private static $RW_PATTERN_LOGIN_BLOCK = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
+	private static $RW_PATTERN_FAVICON_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
+	private static $RW_PATTERN_WRAPPERS = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
 
 	/**
 	 * Initialize the class and set its properties.
@@ -41,6 +73,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		if (!isset(self::$instance)) {
 			self::$instance = new LiteSpeed_Cache_Admin_Rules();
+			self::set_translations();
 		}
 		return self::$instance;
 	}
@@ -164,13 +197,13 @@ class LiteSpeed_Cache_Admin_Rules
 			$path = self::get_home_path();
 		}
 		if (!self::is_file_able(self::READABLE)) {
-			$content = __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
+			$content = self::$ERR_DNE;
 			return false;
 		}
 
 		$content = file_get_contents($path);
 		if ($content == false) {
-			$content = __('Failed to get .htaccess file contents.', 'litespeed-cache');
+			$content = self::$ERR_GET;
 			return false;
 		}
 		// Remove ^M characters.
@@ -193,30 +226,27 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function file_split($content, &$buf, &$off_end)
 	{
-		$prefix = '<IfModule LiteSpeed>';
-		$engine = 'RewriteEngine on';
-		$suffix = '</IfModule>';
-
-		$off_begin = strpos($content, $prefix);
+		$off_begin = strpos($content, self::$RW_BLOCK_START);
 		//if not found
 		if ($off_begin === false) {
-			$buf = $prefix . "\n" . $engine . "\n";
+			$buf = self::$RW_BLOCK_START . "\n" . self::$RW_ENGINEON . "\n";
 			return NULL;
 		}
-		$off_begin += strlen($prefix);
-		$off_end = strpos($content, $suffix, $off_begin);
+		$off_begin += strlen(self::$RW_BLOCK_START);
+		$off_end = strpos($content, self::$RW_BLOCK_END, $off_begin);
 		if ($off_end === false) {
-			$buf = sprintf(__('Could not find %s close.', 'litespeed-cache'), 'IfModule');
+			$buf = self::$ERR_NOT_FOUND . 'IfModule close';
 			return false;
 		}
 		--$off_end; // go to end of previous line.
-		$off_engine = stripos($content, $engine, $off_begin);
+		$off_engine = stripos($content, self::$RW_ENGINEON, $off_begin);
 		if ($off_engine !== false) {
-			$off_begin = $off_engine + strlen($engine) + 1;
+			$off_begin = $off_engine + strlen(self::$RW_ENGINEON) + 1;
 			$buf = substr($content, 0, $off_begin);
 		}
 		else {
-			$buf = substr($content, 0, $off_begin) . "\n" . $engine . "\n";
+			$buf = substr($content, 0, $off_begin) . "\n"
+				. self::$RW_ENGINEON . "\n";
 		}
 		if ($off_begin == $off_end + 1) {
 			++$off_end;
@@ -239,12 +269,11 @@ class LiteSpeed_Cache_Admin_Rules
 	private function file_combine($beginning, $haystack, $orig_content,
 			$off_end, $path = '')
 	{
-		$suffix = '</IfModule>';
 		if (!is_null($haystack)) {
 			$beginning .= $haystack . substr($orig_content, $off_end);
 		}
 		else {
-			$beginning .= $suffix . "\n\n" . $orig_content;
+			$beginning .= self::$RW_BLOCK_END . "\n\n" . $orig_content;
 		}
 		return self::file_save($beginning, false, $path);
 	}
@@ -274,11 +303,11 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if (self::is_file_able(self::RW) == 0) {
-			return __('File not readable or not writable.', 'litespeed-cache');
+			return self::$ERR_READWRITE;
 		}
 		//failed to backup, not good.
 		if (!copy($path, $path . '_lscachebak')) {
-			return __('Failed to back up file, abort changes.', 'litespeed-cache');
+			return self::$ERR_BACKUP;
 		}
 
 		if ($cleanup) {
@@ -288,7 +317,7 @@ class LiteSpeed_Cache_Admin_Rules
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
-			return __('Failed to overwrite ', 'litespeed-cache') . '.htaccess';
+			return self::$ERR_OVERWRITE . '.htaccess';
 		}
 
 		return true;
@@ -346,9 +375,11 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 			return true;
 		}
-		$wrap_end = strpos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
+		$wrap_end = strpos($content, $wrapper_end,
+			$wrap_begin + strlen($wrapper_begin));
+
 		if ($wrap_end === false) {
-			return array(false, __('Could not find wrapper end', 'litespeed-cache'));
+			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
 		}
 		elseif ($match != '') {
 			$output .= $out;
@@ -384,20 +415,21 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = strpos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = __('Could not find suffix ', 'litespeed-cache') . $suffix;
+			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
-			$match = __('Prefix was found after suffix.', 'litespeed-cache');
+			$match = self::$ERR_WRONG_ORDER;
 			return false;
 		}
 
 		$subject = substr($match, $off_begin, $off_end - $off_begin);
-		$pattern = '/RewriteCond\s%{' . $cond . '}\s+([^[\n]*)\s+[[]*/';
+		$pattern = self::$RW_PATTERN_COND_START . $cond
+			. self::$RW_PATTERN_COND_END;
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = __('Did not find a match.', 'litespeed-cache');
+			$match = self::$ERR_NOT_FOUND . 'a match.';
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -453,7 +485,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$wrap_end = strpos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
-			return array(false, __('Could not find wrapper end', 'litespeed-cache'));
+			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
 		}
 		elseif ($match != '') {
 			$output .= $out;
@@ -490,20 +522,20 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = strpos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = __('Could not find suffix ', 'litespeed-cache') . $suffix;
+			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
-			$match = __('Prefix was found after suffix.', 'litespeed-cache');
+			$match = self::$ERR_WRONG_ORDER;
 			return false;
 		}
 
 		$subject = substr($match, $off_begin, $off_end - $off_begin);
-		$pattern = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
+		$pattern = self::$RW_PATTERN_RULE;
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = __('Did not find a match.', 'litespeed-cache');
+			$match = self::$ERR_NOT_FOUND . 'a match.';
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -610,8 +642,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$env = '';
 		}
 		elseif (!ctype_alnum(str_replace($aExceptions, '', $input))) {
-			$errors[] = __('Invalid login cookie. Invalid characters found.',
-					'litespeed-cache');
+			$errors[] = self::$ERR_INVALID_LOGIN;
 			return false;
 		}
 
@@ -648,7 +679,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$ret = $this->file_combine($rule_buf2, $haystack2, $content,
 				$off_end, $path);
 		if ($ret !== true) {
-			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
+			$errors[] = self::$ERR_FILESAVE;
 			return false;
 		}
 
@@ -668,14 +699,12 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function parse_existing_login_cookie(&$content)
 	{
-		$rule_pattern = '/(RewriteRule\s+\.[\?\*]\s+-\s+\[E=Cache-Vary:([^\]\s]*)\])/';
-		$block_pattern = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
 		// If match found, split_rule will look like:
 		// $split_rule[0] = pre match content.
 		// $split_rule[1] = matching rule.
 		// $split_rule[2] = login cookie
 		// $split_rule[3] = post match content.
-		$split_rule = preg_split($rule_pattern, $content, -1,
+		$split_rule = preg_split(self::$RW_PATTERN_LOGIN, $content, -1,
 				PREG_SPLIT_DELIM_CAPTURE);
 		if (count($split_rule) == 1) {
 			return '';
@@ -684,21 +713,19 @@ class LiteSpeed_Cache_Admin_Rules
 		$prefix = $this->build_wrappers('LOGIN COOKIE', $suffix);
 		$replacement = $prefix . "\n" . $split_rule[1] . "\n" . $suffix . "\n";
 		$without_rule = $split_rule[0] . $split_rule[3];
-		$split_blocks = preg_split($block_pattern, $without_rule, -1,
-				PREG_SPLIT_DELIM_CAPTURE);
+		$split_blocks = preg_split(self::$RW_PATTERN_LOGIN_BLOCK,
+			$without_rule, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$index = array_search('LiteSpeed', $split_blocks);
 		if ($index === false) {
 			// IfModule LiteSpeed not found.
-			$content = "<IfModule LiteSpeed>\n" . $replacement . "</IfModule\n"
-					. $without_rule;
+			$content = self::$RW_BLOCK_START . "\n" . $replacement
+				. self::$RW_BLOCK_END . "\n" . $without_rule;
 			return $split_rule[2];
 		}
 		elseif ($index + 2 > count($split_blocks)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				__('Tried to parse for existing login cookie.', 'litespeed-cache')
-				. __(' .htaccess file not valid. Please verify the contents.',
-						'litespeed-cache'));
+				self::$ERR_PARSE_FILE);
 			return '';
 		}
 		$split_blocks[$index + 1] .= $replacement;
@@ -727,7 +754,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 
-		$block_pattern = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
+		$block_pattern = self::$RW_PATTERN_FAVICON_BLOCK;
 		$split_rule = preg_split($block_pattern, $content, -1,
 				PREG_SPLIT_DELIM_CAPTURE);
 		$rule_buf = '';
@@ -735,8 +762,8 @@ class LiteSpeed_Cache_Admin_Rules
 				'^favicon\.ico$', '-', 'E=cache-control:max-age=86400');
 		if (count($split_rule) == 1) {
 			//not found
-			$content = "<IfModule LiteSpeed>\n" . $rule_buf
-				. "</IfModule>\n" . $content;
+			$content = self::$RW_BLOCK_START . "\n" . $rule_buf
+				. self::$RW_BLOCK_END . "\n" . $content;
 		}
 		else {
 			//else found
@@ -769,11 +796,9 @@ class LiteSpeed_Cache_Admin_Rules
 				|| ($home_cookie != $site_cookie)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				__('This site is a subdirectory install.', 'litespeed-cache')
-				. __(' Login cookies do not match:', 'litespeed-cache')
+				self::$ERR_SUBDIR_MISMATCH_LOGIN
 				. '<br>' . self::get_home_path() . ': ' . $home_cookie
-				. '<br>' . $site_path . ': ' . $site_cookie . '<br>'
-				. __('Please remove both and set the login cookie in the LiteSpeed Cache advanced settings.', 'litespeed-cache'));
+				. '<br>' . $site_path . ': ' . $site_cookie);
 			return 'err';
 		}
 		if (!empty($home_cookie)) {
@@ -818,7 +843,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 		elseif (!self::is_file_able(self::WRITABLE)) {
-			$errors[] = __('File is not writable.', 'litespeed-cache');
+			$errors[] = self::$ERR_READWRITE;
 			return false;
 		}
 
@@ -881,7 +906,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$ret = $this->file_combine($buf, $haystack, $content, $off_end);
 		if ($ret !== true) {
-			$errors[] = sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
+			$errors[] = self::$ERR_FILESAVE;
 			return false;
 		}
 		return $options;
@@ -905,8 +930,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return;
 		}
 
-		$pattern = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
-		$buf = preg_replace($pattern, '', $content);
+		$buf = preg_replace(self::$RW_PATTERN_WRAPPERS, '', $content);
 
 		self::file_save($buf);
 		return;
@@ -927,13 +951,14 @@ class LiteSpeed_Cache_Admin_Rules
 		if (empty($_POST) || empty($_POST['submit'])) {
 			return;
 		}
-		if (($_POST['lscwp_htaccess_save'])
-				&& ($_POST['lscwp_htaccess_save'] === 'save_htaccess')
-				&& (check_admin_referer('lscwp_edit_htaccess', 'save'))
-				&& ($_POST['lscwp_ht_editor'])) {
-			$msg = self::file_save($_POST['lscwp_ht_editor']);
+		if (($_POST[self::EDITOR_INPUT_NAME])
+				&& ($_POST[self::EDITOR_INPUT_NAME] === self::EDITOR_INPUT_VAL)
+				&& (check_admin_referer(self::EDITOR_NONCE_NAME,
+					self::EDITOR_NONCE_VAL))
+				&& ($_POST[self::EDITOR_TEXTAREA_NAME])) {
+			$msg = self::file_save($_POST[self::EDITOR_TEXTAREA_NAME]);
 			if ($msg === true) {
-				$msg = __('File Saved.', 'litespeed-cache');
+				$msg = self::$OUT_FILESAVE;
 				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN;
 			}
 			else {
@@ -942,5 +967,36 @@ class LiteSpeed_Cache_Admin_Rules
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice($color, $msg);
 		}
 
+	}
+
+	/**
+	 * Set up the translations for the error messages and outputs.
+	 *
+	 * @access private
+	 * @since 1.0.8
+	 */
+	private static function set_translations()
+	{
+		self::$OUT_FILESAVE = __('File Saved.', 'litespeed-cache');
+
+		self::$ERR_BACKUP = __('Failed to back up file, abort changes.', 'litespeed-cache');
+		self::$ERR_DNE = __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
+		self::$ERR_FILESAVE = sprintf(__('Failed to put contents into %s', 'litespeed-cache'),
+			'.htaccess');
+		self::$ERR_GET = __('Failed to get .htaccess file contents.', 'litespeed-cache');
+		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found.',
+					'litespeed-cache');
+		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
+		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
+		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
+				. __(' .htaccess file not valid. Please verify the contents.',
+						'litespeed-cache');
+		self::$ERR_READWRITE = __('File not readable or not writable.', 'litespeed-cache');
+		self::$ERR_SUBDIR_MISMATCH_LOGIN =
+			__('This site is a subdirectory install.', 'litespeed-cache')
+			. __(' Login cookies do not match.', 'litespeed-cache')
+			. __(' Please remove both and set the login cookie in the LiteSpeed Cache advanced settings.',
+				'litespeed-cache');
+		self::$ERR_WRONG_ORDER = __('Prefix was found after suffix.', 'litespeed-cache');
 	}
 }

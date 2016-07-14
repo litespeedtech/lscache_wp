@@ -544,8 +544,11 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->show_info_common_rewrite();
 
 		$buf .= '<form method="post" action="admin.php?page=lscache-edit-htaccess">';
-		$buf .= '<input type="hidden" name="lscwp_htaccess_save" value="save_htaccess" />';
-		$buf .= wp_nonce_field('lscwp_edit_htaccess', 'save');
+		$buf .= '<input type="hidden" name="'
+			. LiteSpeed_Cache_Admin_Rules::EDITOR_INPUT_NAME . '" value="'
+			. LiteSpeed_Cache_Admin_Rules::EDITOR_INPUT_VAL . '" />';
+		$buf .= wp_nonce_field(LiteSpeed_Cache_Admin_Rules::EDITOR_NONCE_NAME,
+			LiteSpeed_Cache_Admin_Rules::EDITOR_NONCE_VAL);
 
 		$buf .= '<h3>' . sprintf(__('Current %s contents:', 'litespeed-cache'), '.htaccess') . '</h3>';
 
@@ -555,7 +558,9 @@ class LiteSpeed_Cache_Admin_Display
 		. __('These are added by the LS Cache plugin and may cause problems if they are changed.', 'litespeed-cache')
 		. '</p>';
 
-		$buf .= '<textarea id="wpwrap" name="lscwp_ht_editor" wrap="off" rows="20" class="code" ';
+		$buf .= '<textarea id="wpwrap" name="'
+			. LiteSpeed_Cache_Admin_Rules::EDITOR_TEXTAREA_NAME
+			. '" wrap="off" rows="20" class="code" ';
 		if (!$file_writable) {
 			$buf .= 'readonly';
 		}
