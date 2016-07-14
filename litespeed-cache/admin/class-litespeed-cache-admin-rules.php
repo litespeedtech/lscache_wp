@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function set_favicon($haystack, $action, &$output, &$errors)
 	{
-		$match = '^favicon\.ico$';
+		$match = 'favicon\.ico$';
 		$sub = '-';
 		$env = 'E=cache-control:max-age=86400';
 		$rule_buf = '';
