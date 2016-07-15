@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Config
 	const OPID_ENABLED_ENABLE = 1;
 	const OPID_ENABLED_NOTSET = 2;
 	const OPID_CACHE_COMMENTERS = 'cache_commenters';
+	const OPID_CACHE_LOGIN = 'cache_login';
 	const OPID_CACHE_FAVICON = 'cache_favicon';
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
 	const OPID_LOGIN_COOKIE = 'login_cookie';
@@ -183,6 +184,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_ENABLED => $default_enabled,
 			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPID_CACHE_COMMENTERS => true,
+			self::OPID_CACHE_LOGIN => true,
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
 			self::OPID_LOGIN_COOKIE => '',

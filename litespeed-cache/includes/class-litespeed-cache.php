@@ -1059,13 +1059,20 @@ class LiteSpeed_Cache
 	 */
 	public function check_login_cacheable()
 	{
+		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN)
+			=== false) {
+			return;
+		}
 		$this->check_cacheable();
 		if ($this->cachectrl !== self::CACHECTRL_CACHE) {
 			return;
 		}
 		if (!empty($_GET)) {
 			$this->cachectrl = self::CACHECTRL_NOCACHE;
+			return;
 		}
+
+		LiteSpeed_Cache_Tags::add_cache_tag(LiteSpeed_Cache_Tags::TYPE_LOGIN);
 
 		$list = headers_list();
 		if (empty($list)) {
@@ -1077,7 +1084,6 @@ class LiteSpeed_Cache
 				@header('lsc-cookie: ' . $cookie, false);
 			}
 		}
-		$list = headers_list();
 		return;
 	}
 
