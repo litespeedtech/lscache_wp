@@ -386,6 +386,7 @@ class LiteSpeed_Cache
 	{
 		// user is not logged in
 		add_action('wp', array( $this, 'check_cacheable' ), 5) ;
+		add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
 	}
 
 	/**
@@ -969,9 +970,9 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('search') ;
 		}
 
-		if ( ! WP_USE_THEMES ) {
-			return $this->no_cache_for('no theme used') ;
-		}
+//		if ( !defined('WP_USE_THEMES') || !WP_USE_THEMES ) {
+//			return $this->no_cache_for('no theme used') ;
+//		}
 
 		$cacheable = apply_filters('litespeed_cache_is_cacheable', true);
 		if (!$cacheable) {
@@ -1047,6 +1048,37 @@ class LiteSpeed_Cache
 			&& ($this->is_cacheable())) {
 			$this->cachectrl = self::CACHECTRL_CACHE;
 		}
+	}
+
+	/**
+	 * Check if the login page is cacheable.
+	 * If not, unset the cacheable member variable.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function check_login_cacheable()
+	{
+		$this->check_cacheable();
+		if ($this->cachectrl !== self::CACHECTRL_CACHE) {
+			return;
+		}
+		if (!empty($_GET)) {
+			$this->cachectrl = self::CACHECTRL_NOCACHE;
+		}
+
+		$list = headers_list();
+		if (empty($list)) {
+			return;
+		}
+		foreach ($list as $hdr) {
+			if (strncasecmp($hdr, 'set-cookie:', 11) == 0) {
+				$cookie = substr($hdr, 12);
+				@header('lsc-cookie: ' . $cookie, false);
+			}
+		}
+		$list = headers_list();
+		return;
 	}
 
 	/**
@@ -1165,7 +1197,8 @@ class LiteSpeed_Cache
 														: $mode);
 		}
 
-		if ($_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile') {
+		if ((isset($_SERVER['LSCACHE_VARY_VALUE']))
+			&& ($_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile')) {
 			if ((!wp_is_mobile()) && (!LiteSpeed_Cache_Tags::is_mobile())) {
 				return self::CACHECTRL_NOCACHE;
 			}
