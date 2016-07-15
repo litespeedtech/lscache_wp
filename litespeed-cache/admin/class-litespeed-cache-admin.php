@@ -329,6 +329,16 @@ if (defined('lscache_debug')) {
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
 		$options[$id] = ( $input['check_' . $id] === $id );
 
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
+		$login = ( $input['check_' . $id] === $id );
+		if ($options[$id] != $login) {
+			$options[$id] = $login;
+			if (!$login) {
+				LiteSpeed_Cache_Tags::add_purge_tag(
+					LiteSpeed_Cache_Tags::TYPE_LOGIN);
+			}
+		}
+
 		// get purge options
 		$pvals = array(
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,

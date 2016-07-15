@@ -767,6 +767,12 @@ class LiteSpeed_Cache_Admin_Display
 		__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 		. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
+		$cache_login = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$buf .= $this->display_config_row(__('Enable Cache for Login Page', 'litespeed-cache'), $cache_login,
+		__('When checked, the login page will be cached. ', 'litespeed-cache')
+		. __('Disabling this option will disable caching for the page, but the cache will not perform as well.', 'litespeed-cache'));
+
 		if (!is_multisite()) {
 			$buf .= $this->build_setting_cache_favicon($options);
 			$buf .= $this->build_setting_mobile_view($options);
