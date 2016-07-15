@@ -1113,11 +1113,11 @@ class LiteSpeed_Cache
 	 */
 	public function check_admin_ip()
 	{
-		$action = $_GET[self::ADMINQS_KEY];
 		// Not set, ignore.
-		if (empty($action)) {
+		if (!isset($_GET[self::ADMINQS_KEY])) {
 			return;
 		}
+		$action = $_GET[self::ADMINQS_KEY];
 		$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
 		if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {

@@ -1001,7 +1001,7 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->input_group_end();
 
 		if (!is_multisite()) {
-			$cookie_buf .= $this->build_setting_login_cookie($options,
+			$cookie_buf = $this->build_setting_login_cookie($options,
 					$cookie_title, $cookie_desc);
 			$buf .= $this->input_group_start($cookie_title, $cookie_desc);
 			$buf .= $cookie_buf;
