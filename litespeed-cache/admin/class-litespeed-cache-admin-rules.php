@@ -951,11 +951,11 @@ class LiteSpeed_Cache_Admin_Rules
 		if (empty($_POST) || empty($_POST['submit'])) {
 			return;
 		}
-		if (($_POST[self::EDITOR_INPUT_NAME])
+		if ((isset($_POST[self::EDITOR_INPUT_NAME]))
 				&& ($_POST[self::EDITOR_INPUT_NAME] === self::EDITOR_INPUT_VAL)
 				&& (check_admin_referer(self::EDITOR_NONCE_NAME,
 					self::EDITOR_NONCE_VAL))
-				&& ($_POST[self::EDITOR_TEXTAREA_NAME])) {
+				&& (isset($_POST[self::EDITOR_TEXTAREA_NAME]))) {
 			$msg = self::file_save($_POST[self::EDITOR_TEXTAREA_NAME]);
 			if ($msg === true) {
 				$msg = self::$OUT_FILESAVE;

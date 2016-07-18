@@ -541,17 +541,15 @@ if (defined('lscache_debug')) {
 		if (empty($_POST) || empty($_POST['submit'])) {
 			return;
 		}
-		if ((!$_POST['lscwp_settings_save'])
+		if ((!isset($_POST['lscwp_settings_save']))
+				|| (empty($_POST[LiteSpeed_Cache_Config::OPTION_NAME]))
 				|| ($_POST['lscwp_settings_save'] !== 'save_settings')
 				|| (!check_admin_referer('lscwp_settings', 'save'))) {
 			return;
 		}
-		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
 
-		if (!$input) {
-			return;
-		}
-		$input = array_map("LiteSpeed_Cache_Admin::cleanup_text", $input);
+		$input = array_map("LiteSpeed_Cache_Admin::cleanup_text",
+			$_POST[LiteSpeed_Cache_Config::OPTION_NAME]);
 		$config = LiteSpeed_Cache::config() ;
 		$options = $config->get_site_options();
 		$errors = array();

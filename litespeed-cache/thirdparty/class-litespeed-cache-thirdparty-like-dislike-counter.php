@@ -16,8 +16,10 @@ class LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter
      */
     public static function add_purge_tags()
     {
-		LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_POST . $_POST['post_id']);
+		if (isset($_POST['post_id'])) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+					LiteSpeed_Cache_Tags::TYPE_POST . $_POST['post_id']);
+		}
     }
 
 }
