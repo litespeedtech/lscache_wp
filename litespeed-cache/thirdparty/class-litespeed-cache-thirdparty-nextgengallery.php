@@ -68,13 +68,13 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function update_image()
 	{
-		if ($_POST['id']) {
+		if (isset($_POST['id'])) {
 			$id = $_POST['id'];
 		}
-		elseif ($_POST['image']) {
+		elseif (isset($_POST['image'])) {
 			$id = $_POST['image'];
 		}
-		elseif ($_GET['pid']) {
+		elseif (isset($_GET['pid'])) {
 			$id = $_GET['pid'];
 		}
 		else {
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function delete_image()
 	{
-		if ($_GET['gid']) {
+		if (isset($_GET['gid'])) {
 			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $_GET['gid']);
 		}
 	}

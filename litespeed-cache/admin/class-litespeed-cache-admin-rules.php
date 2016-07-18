@@ -824,15 +824,23 @@ class LiteSpeed_Cache_Admin_Rules
 		$buf = '';
 		$off_end = 0;
 
-		$favicon = ($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]
-			=== LiteSpeed_Cache_Config::OPID_CACHE_FAVICON);
+		if (isset($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
+			$favicon = ($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]
+				=== LiteSpeed_Cache_Config::OPID_CACHE_FAVICON);
+		}
+		else {
+			$favicon = $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON];
+		}
 
-		if (($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
+		if (((isset($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]))
+				&& ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false))
 			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
-			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]
-				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES])
-			&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]
-				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS])
+			&& ((isset($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]))
+				&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]
+				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]))
+			&& ((isset($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]))
+				&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]
+				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]))
 			&& ($favicon
 				=== $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
 			return $options;
@@ -951,11 +959,11 @@ class LiteSpeed_Cache_Admin_Rules
 		if (empty($_POST) || empty($_POST['submit'])) {
 			return;
 		}
-		if (($_POST[self::EDITOR_INPUT_NAME])
+		if ((isset($_POST[self::EDITOR_INPUT_NAME]))
 				&& ($_POST[self::EDITOR_INPUT_NAME] === self::EDITOR_INPUT_VAL)
 				&& (check_admin_referer(self::EDITOR_NONCE_NAME,
 					self::EDITOR_NONCE_VAL))
-				&& ($_POST[self::EDITOR_TEXTAREA_NAME])) {
+				&& (isset($_POST[self::EDITOR_TEXTAREA_NAME]))) {
 			$msg = self::file_save($_POST[self::EDITOR_TEXTAREA_NAME]);
 			if ($msg === true) {
 				$msg = self::$OUT_FILESAVE;

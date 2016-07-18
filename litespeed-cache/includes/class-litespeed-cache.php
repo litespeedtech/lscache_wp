@@ -488,7 +488,11 @@ class LiteSpeed_Cache
 	 */
 	private function do_set_cookie($update_val, $expire, $ssl = false, $httponly = false)
 	{
-		$curval = intval($_COOKIE[$this->current_vary]);
+		$curval = 0;
+		if (isset($_COOKIE[$this->current_vary]))
+		{
+			$curval = intval($_COOKIE[$this->current_vary]);
+		}
 
 		// not, remove from curval.
 		if ($update_val < 0) {
@@ -753,13 +757,13 @@ class LiteSpeed_Cache
 	 */
 	public function purge_list()
 	{
-		$conf = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
-		if (is_null($conf)) {
+		if (!isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 					__('ERROR: Something went wrong with the form! Please try again.', 'litespeed-cache'));
 			return;
 		}
+		$conf = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
 		$sel =  $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
 		$list_buf = $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
 		if (empty($list_buf)) {
@@ -1055,7 +1059,7 @@ class LiteSpeed_Cache
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_COOKIE);
-		if ( ! empty($excludes) && $_COOKIE) {
+		if ((!empty($excludes)) && (!empty($_COOKIE))) {
 			$exclude_list = explode('|', $excludes);
 
 			foreach( $_COOKIE as $key=>$val) {
@@ -1066,7 +1070,7 @@ class LiteSpeed_Cache
 		}
 
 		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_USERAGENT);
-		if ( ! empty($excludes) && $_SERVER['HTTP_USER_AGENT']) {
+		if ((!empty($excludes)) && (isset($_SERVER['HTTP_USER_AGENT']))) {
 			$pattern = '/' . $excludes . '/';
 			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
 			if ($nummatches) {

@@ -331,7 +331,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '</p></li>'
 		. '</ul>';
 
-		if (($_POST) && ($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
+		if (($_POST) && (isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME]))) {
 			$selected = $_POST[LiteSpeed_Cache_Config::OPTION_NAME][self::PURGEBYOPT_SELECT];
 			if ((intval($selected) < 0) || (intval($selected) > 3)) {
 				$selected = 0;

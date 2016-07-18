@@ -327,15 +327,19 @@ if (defined('lscache_debug')) {
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
-		$options[$id] = ( $input['check_' . $id] === $id );
+		if (isset($input['check_' . $id])) {
+			$options[$id] = ( $input['check_' . $id] === $id );
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		$login = ( $input['check_' . $id] === $id );
-		if ($options[$id] != $login) {
-			$options[$id] = $login;
-			if (!$login) {
-				LiteSpeed_Cache_Tags::add_purge_tag(
-					LiteSpeed_Cache_Tags::TYPE_LOGIN);
+		if (isset($input['check_' . $id])) {
+			$login = ( $input['check_' . $id] === $id );
+			if ($options[$id] != $login) {
+				$options[$id] = $login;
+				if (!$login) {
+					LiteSpeed_Cache_Tags::add_purge_tag(
+						LiteSpeed_Cache_Tags::TYPE_LOGIN);
+				}
 			}
 		}
 
@@ -616,17 +620,15 @@ if (defined('lscache_debug')) {
 		if (empty($_POST) || empty($_POST['submit'])) {
 			return;
 		}
-		if ((!$_POST['lscwp_settings_save'])
+		if ((!isset($_POST['lscwp_settings_save']))
+				|| (empty($_POST[LiteSpeed_Cache_Config::OPTION_NAME]))
 				|| ($_POST['lscwp_settings_save'] !== 'save_settings')
 				|| (!check_admin_referer('lscwp_settings', 'save'))) {
 			return;
 		}
-		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
 
-		if (!$input) {
-			return;
-		}
-		$input = array_map("LiteSpeed_Cache_Admin::cleanup_text", $input);
+		$input = array_map("LiteSpeed_Cache_Admin::cleanup_text",
+			$_POST[LiteSpeed_Cache_Config::OPTION_NAME]);
 		$config = LiteSpeed_Cache::config() ;
 		$options = $config->get_site_options();
 		$errors = array();
