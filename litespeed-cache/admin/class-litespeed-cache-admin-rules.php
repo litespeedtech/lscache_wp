@@ -823,18 +823,19 @@ class LiteSpeed_Cache_Admin_Rules
 		$content = '';
 		$buf = '';
 		$off_end = 0;
+		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 
 		if (isset($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
 			$favicon = ($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]
 				=== LiteSpeed_Cache_Config::OPID_CACHE_FAVICON);
 		}
 		else {
-			$favicon = $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON];
+			$favicon = false;
 		}
 
-		if (((isset($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]))
-				&& ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false))
-			&& ($options[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] === false)
+		if (((isset($input['lscwp_' . $id]))
+				&& ($input['lscwp_' . $id] === false))
+			&& ($options[$id] === false)
 			&& ((isset($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]))
 				&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]
 				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]))
@@ -861,7 +862,6 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 		if ($input['lscwp_' . $id] === $id) {
 			$options[$id] = true;
 			$ret = $this->set_common_rule($haystack, $buf,
