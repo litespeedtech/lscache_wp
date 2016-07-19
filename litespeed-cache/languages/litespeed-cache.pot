@@ -6,7 +6,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0.7.1\n"
+"Project-Id-Version: 1.0.8\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
 "POT-Creation-Date: 2016-05-26 11:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
