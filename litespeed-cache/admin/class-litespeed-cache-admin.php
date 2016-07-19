@@ -330,6 +330,9 @@ if (defined('lscache_debug')) {
 		if (isset($input['check_' . $id])) {
 			$options[$id] = ( $input['check_' . $id] === $id );
 		}
+		else {
+			$options[$id] = false;
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
 		if (isset($input['check_' . $id])) {
@@ -341,6 +344,9 @@ if (defined('lscache_debug')) {
 						LiteSpeed_Cache_Tags::TYPE_LOGIN);
 				}
 			}
+		}
+		else {
+			$options[$id] = false;
 		}
 
 		// get purge options

@@ -674,8 +674,7 @@ class LiteSpeed_Cache_Admin_Display
 		if (is_multisite()){
 			$enable_levels[LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET] = __('Use Network Admin Setting', 'litespeed-cache');
 		}
-		else{
-			if(intval($options[$id]) === 2)
+		elseif(intval($options[$id]) === 2) {
 				$options[$id] = 1;
 		}
 
