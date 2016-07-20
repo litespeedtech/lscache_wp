@@ -878,8 +878,20 @@ class LiteSpeed_Cache
 		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
 		{
 			// If do not cache commenters, check cookie for commenter value.
-			return ((isset($_COOKIE[$this->current_vary]))
-					&& ($_COOKIE[$this->current_vary] & self::LSCOOKIE_VARY_COMMENTER));
+			if ((isset($_COOKIE[$this->current_vary]))
+					&& ($_COOKIE[$this->current_vary] & self::LSCOOKIE_VARY_COMMENTER)) {
+				return true;
+			}
+			// If wp commenter cookie exists, need to set vary and do not cache.
+			foreach($_COOKIE as $cookie_name => $cookie_value) {
+				if ((strlen($cookie_name) >= 15)
+						&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
+					$user = wp_get_current_user();
+					$this->set_comment_cookie(NULL, $user);
+					return true;
+				}
+			}
+			return false;
 		}
 
 		// If vary cookie is set, need to change the value.
