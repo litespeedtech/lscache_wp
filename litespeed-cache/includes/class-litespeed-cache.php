@@ -882,6 +882,9 @@ class LiteSpeed_Cache
 		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache')
 		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
 		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
+		if (is_openlitespeed()) {
+			$err .= __(' If you are using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
+		}
 		$db_cookie = $this->get_config()->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
 
 		if (empty($db_cookie)) {
