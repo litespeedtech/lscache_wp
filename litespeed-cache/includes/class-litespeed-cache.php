@@ -1003,7 +1003,7 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('Admin configured Tag Do not cache.');
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_COOKIE);
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES);
 		if ((!empty($excludes)) && (!empty($_COOKIE))) {
 			$exclude_list = explode('|', $excludes);
 
@@ -1014,7 +1014,7 @@ class LiteSpeed_Cache
 			}
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_USERAGENT);
+		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS);
 		if ((!empty($excludes)) && (isset($_SERVER['HTTP_USER_AGENT']))) {
 			$pattern = '/' . $excludes . '/';
 			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);

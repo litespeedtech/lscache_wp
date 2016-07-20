@@ -888,12 +888,16 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
 				'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
-		$this->parse_ret($ret, $haystack, $errors);
+		if ($this->parse_ret($ret, $haystack, $errors)) {
+			$options[$id] = $cookie_list;
+		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
 				'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
-		$this->parse_ret($ret, $haystack, $errors);
+		if ($this->parse_ret($ret, $haystack, $errors)) {
+			$options[$id] = $input[$id];
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$ret = $this->set_login_cookie($haystack, $input[$id],

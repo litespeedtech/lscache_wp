@@ -55,9 +55,6 @@ class LiteSpeed_Cache_Config
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
-	const OPID_EXCLUDES_COOKIE = 'excludes_cookie' ;
-	const OPID_EXCLUDES_USERAGENT = 'excludes_useragent' ;
-
 	const NETWORK_OPID_ENABLED = 'network_enabled';
 
 	protected $options ;
@@ -199,8 +196,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_EXCLUDES_URI => '',
 			self::OPID_EXCLUDES_CAT => '',
 			self::OPID_EXCLUDES_TAG => '',
-			self::OPID_EXCLUDES_COOKIE => '',
-			self::OPID_EXCLUDES_USERAGENT => '',
+			self::ID_NOCACHE_COOKIES => '',
+			self::ID_NOCACHE_USERAGENTS => '',
 				) ;
 
 		return $default_options ;
@@ -228,8 +225,8 @@ class LiteSpeed_Cache_Config
 			self::NETWORK_OPID_ENABLED => false,
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
-			self::OPID_EXCLUDES_COOKIE => '',
-			self::OPID_EXCLUDES_USERAGENT => '',
+			self::ID_NOCACHE_COOKIES => '',
+			self::ID_NOCACHE_USERAGENTS => '',
 				);
 		add_site_option(self::OPTION_NAME, $default_site_options);
 		return $default_site_options;

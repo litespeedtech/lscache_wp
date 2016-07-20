@@ -427,12 +427,12 @@ class LiteSpeed_Cache_Admin_Display
 		. $this->input_group_start(__('Network Do Not Cache Rules', 'litespeed-cache'));
 		$ua_title = '';
 		$ua_desc = '';
-		$ua_buf = $this->build_setting_exclude_useragent($ua_title, $ua_desc);
+		$ua_buf = $this->build_setting_exclude_useragent($site_options, $ua_title, $ua_desc);
 		$buf .= $this->display_config_row(__('Do Not Cache User Agents', 'litespeed-cache'), $ua_buf, $ua_desc);
 
 		$cookie_title = '';
 		$cookie_desc = '';
-		$cookie_buf = $this->build_setting_exclude_cookies($cookie_title, $cookie_desc);
+		$cookie_buf = $this->build_setting_exclude_cookies($site_options, $cookie_title, $cookie_desc);
 		$buf .= $this->display_config_row(__('Do Not Cache Cookies', 'litespeed-cache'), $cookie_buf, $cookie_desc);
 
 		$buf .= $this->input_group_end() . '</div>';
@@ -871,7 +871,7 @@ class LiteSpeed_Cache_Admin_Display
 		$cat_ids = $options[$excludes_id];
 		if ($cat_ids != '') {
 			$id_list = explode( ',', $cat_ids);
-			$excludes_buf = implode("\n", array_map(get_cat_name, $id_list));
+			$excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
 		}
 		$buf .= $this->input_group_start(__('Category List', 'litespeed-cache'),
 										$cat_description);
@@ -887,7 +887,7 @@ class LiteSpeed_Cache_Admin_Display
 		$tag_ids = $options[$excludes_id];
 		if ($tag_ids != '') {
 			$id_list = explode( ',', $tag_ids);
-			$tags_list = array_map(get_tag, $id_list);
+			$tags_list = array_map('get_tag', $id_list);
 			$tag_names = array();
 			foreach( $tags_list as $tag) {
 				$tag_names[] = $tag->name;
@@ -910,7 +910,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 		$cookie_title = '';
 		$cookie_desc = '';
-		$cookie_buf = $this->build_setting_exclude_cookies($cookie_title, $cookie_desc);
+		$cookie_buf = $this->build_setting_exclude_cookies($options, $cookie_title, $cookie_desc);
 
 		$buf .= $this->input_group_start($cookie_title, $cookie_desc);
 		$buf .= $tr . $cookie_buf . $endtr;
@@ -918,7 +918,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$ua_title = '';
 		$ua_desc = '';
-		$ua_buf = $this->build_setting_exclude_useragent($ua_title, $ua_desc);
+		$ua_buf = $this->build_setting_exclude_useragent($options, $ua_title, $ua_desc);
 
 		$buf .= $this->input_group_start($ua_title, $ua_desc);
 		$buf .= $tr . $ua_buf . $endtr;
@@ -1080,17 +1080,17 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @param string $cookie_titlee Returns the cookie title string.
+	 * @param array $options The currently configured options.
+	 * @param string $cookie_title Returns the cookie title string.
 	 * @param string $cookie_desc Returns the cookie description string.
 	 * @return string Returns the cookie text area on success, error message on failure.
 	 */
-	private function build_setting_exclude_cookies(&$cookie_title,
+	private function build_setting_exclude_cookies($options, &$cookie_title,
 			&$cookie_desc)
 	{
 		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-		$cookies_rule = '';
 		$cookie_title = __('Cookie List', 'litespeed-cache');
 		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Cookies should be listed one per line.', 'litespeed-cache')
@@ -1098,12 +1098,7 @@ class LiteSpeed_Cache_Admin_Display
 				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
-		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('COOKIE',
-				'HTTP_COOKIE', $cookies_rule) !== true) {
-			return '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $cookies_rule . '</p>';
-		}
-		$excludes_buf = str_replace('|', "\n", $cookies_rule);
+		$excludes_buf = str_replace('|', "\n", $options[$id]);
 		return $this->input_field_textarea($id, $excludes_buf, '5', '80', '',
 				!$file_writable);
 	}
@@ -1113,32 +1108,26 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.4
 	 * @access private
+	 * @param array $options The currently configured options.
 	 * @param string $ua_title Returns the user agent title string.
 	 * @param string $ua_desc Returns the user agent description string.
 	 * @return string Returns the user agent text field on success,
 	 * error message on failure.
 	 */
-	private function build_setting_exclude_useragent(&$ua_title, &$ua_desc)
+	private function build_setting_exclude_useragent($options, &$ua_title,
+		&$ua_desc)
 	{
 		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$ua_rule = '';
 		$ua_title = __('User Agent List', 'litespeed-cache');
 		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
 				. '<br>' . __('SYNTAX: Separate each user agent with a bar, \'|\'.', 'litespeed-cache')
 				. __(' Spaces should have a backslash in front of them, \'\ \'.', 'litespeed-cache')
 				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
-		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('USER AGENT', 'HTTP_USER_AGENT', $ua_rule) === true) {
-			// can also use class 'mejs-container' for 100% width.
-			$ua_list = $this->input_field_text($id, $ua_rule, '',
+		$ua_list = $this->input_field_text($id, $options[$id], '',
 					'widget ui-draggable-dragging', '', !$file_writable);
-		}
-		else {
-			$ua_list = '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $ua_rule . '</p>';
-		}
 		return $ua_list;
 	}
 
