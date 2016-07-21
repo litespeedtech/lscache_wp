@@ -342,7 +342,18 @@ class LiteSpeed_Cache_Config
 		$res = add_option(self::OPTION_NAME, $default);
 		$this->debug_log("plugin_activation update option = $res",
 						($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
-		if (($res == false)
+		if (is_multisite()) {
+			if (!is_network_admin()) {
+				return;
+			}
+			$site_opts = $this->get_site_options();
+			if (($res == false)
+				&& (($site_opts[self::NETWORK_OPID_ENABLED] == false)
+					|| ($site_opts[self::OPID_CACHE_FAVICON] == false))) {
+				return;
+			}
+		}
+		elseif (($res == false)
 			&& (($this->get_option(self::OPID_ENABLED) == false)
 				|| ($this->get_option(self::OPID_CACHE_FAVICON) == false))) {
 			return;
