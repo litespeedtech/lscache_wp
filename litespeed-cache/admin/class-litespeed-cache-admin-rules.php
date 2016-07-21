@@ -915,19 +915,12 @@ class LiteSpeed_Cache_Admin_Rules
 		$enable_key = ((is_multisite())
 			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
 			: LiteSpeed_Cache_Config::OPID_ENABLED);
-		if ($favicon !== $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
-			$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
-			$ret = $this->set_favicon($haystack, $favicon, $buf, $errors);
-			if ($ret !== false) {
-				$haystack = $ret;
-				$options[$id] = $favicon;
-			}
-		}
-		elseif (!$options[$enable_key]) {
-			$ret = $this->set_favicon($haystack, false, $buf, $errors);
-			if ($ret !== false) {
-				$haystack = $ret;
-			}
+
+		$ret = $this->set_favicon($haystack,
+			($favicon && $options[$enable_key]), $buf, $errors);
+		if ($ret !== false) {
+			$haystack = $ret;
+			$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = $favicon;
 		}
 
 		$ret = $this->file_combine($buf, $haystack, $content, $off_end);
