@@ -671,7 +671,7 @@ class LiteSpeed_Cache
                 {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by Post ID, Auto Purge All pages on update is enabled. Please use the Purge All button on the LiteSpeed Cache Management screen or navigate to the post you wish to purge and add %1$s to the url.', 'litespeed-cache'), '?LSCWP_CTRL=PURGESINGLE'));
+				sprintf(__('Failed to purge by Post ID, Auto Purge All pages on update is enabled. Please use the Purge All button on the LiteSpeed Cache Management screen or navigate to the post you wish to purge and add %s to the url.', 'litespeed-cache'), '?LSCWP_CTRL=PURGESINGLE'));
 			return;
                 }
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
@@ -890,7 +890,7 @@ class LiteSpeed_Cache
 		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
 		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
 		if (is_openlitespeed()) {
-			$err .= __(' If you are using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
+			$err .= __(' If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
 		}
 
 		if (is_multisite()) {
