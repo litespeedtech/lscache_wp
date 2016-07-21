@@ -286,6 +286,9 @@ if (defined('lscache_debug')) {
 			if (!$enabled) {
 				LiteSpeed_Cache::plugin()->purge_all() ;
 			}
+			elseif ($options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
+				$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = false;
+			}
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;

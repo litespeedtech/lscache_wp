@@ -335,9 +335,22 @@ class LiteSpeed_Cache_Config
 	 */
 	public function plugin_activation()
 	{
-		$res = add_option(self::OPTION_NAME, $this->get_default_options()) ;
+		$default = $this->get_default_options();
+		$res = add_option(self::OPTION_NAME, $default);
 		$this->debug_log("plugin_activation update option = $res",
 						($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
+		if (($res == false)
+			&& (($this->get_option(self::OPID_ENABLED) == false)
+				|| ($this->get_option(self::OPID_CACHE_FAVICON) == false))) {
+			return;
+		}
+		$errors = array();
+		$input = array(
+			'check_' . self::OPID_CACHE_FAVICON => self::OPID_CACHE_FAVICON
+		);
+		$default[self::OPID_CACHE_FAVICON] = false;
+		LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
+			$input, $default, $errors);
 	}
 
 	/**
