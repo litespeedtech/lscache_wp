@@ -862,7 +862,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		if ($input['lscwp_' . $id] === $id) {
+		if ((isset($input['lscwp_' . $id]))
+			&& ($input['lscwp_' . $id] === $id)) {
 			$options[$id] = true;
 			$ret = $this->set_common_rule($haystack, $buf,
 					'MOBILE VIEW', 'HTTP_USER_AGENT',
@@ -879,7 +880,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-		if ($input[$id]) {
+		if ((isset($input[$id])) && ($input[$id])) {
 			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
 		}
 		else {
@@ -893,18 +894,22 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
-				'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
-		if ($this->parse_ret($ret, $haystack, $errors)) {
-			$options[$id] = $input[$id];
+		if (isset($input[$id])) {
+			$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
+					'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
+			if ($this->parse_ret($ret, $haystack, $errors)) {
+				$options[$id] = $input[$id];
+			}
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-		$ret = $this->set_login_cookie($haystack, $input[$id],
-				$options[$id], $buf, $errors);
-		if ($ret !== false) {
-			$haystack = $ret;
-			$options[$id] = $input[$id];
+		if (isset($input[$id])) {
+			$ret = $this->set_login_cookie($haystack, $input[$id],
+					$options[$id], $buf, $errors);
+			if ($ret !== false) {
+				$haystack = $ret;
+				$options[$id] = $input[$id];
+			}
 		}
 
 		if ($favicon !== $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
@@ -913,6 +918,12 @@ class LiteSpeed_Cache_Admin_Rules
 			if ($ret !== false) {
 				$haystack = $ret;
 				$options[$id] = $favicon;
+			}
+		}
+		elseif (!$options[LiteSpeed_Cache_Config::OPID_ENABLED]) {
+			$ret = $this->set_favicon($haystack, false, $buf, $errors);
+			if ($ret !== false) {
+				$haystack = $ret;
 			}
 		}
 
@@ -929,10 +940,12 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @access public
+	 * @param string $wrapper A wrapper to a specific rule to match.
 	 */
-	public static function clear_rules()
+	public static function clear_rules($wrapper = '')
 	{
 		$content = '';
+		$pattern = self::$RW_PATTERN_WRAPPERS;
 
 		clearstatcache();
 		if (self::file_get($content) === false) {
@@ -942,7 +955,11 @@ class LiteSpeed_Cache_Admin_Rules
 			return;
 		}
 
-		$buf = preg_replace(self::$RW_PATTERN_WRAPPERS, '', $content);
+		if (!empty($wrapper)) {
+			$pattern = '/###LSCACHE START ' . $wrapper
+				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
+		}
+		$buf = preg_replace($pattern, '', $content);
 
 		self::file_save($buf);
 		return;
