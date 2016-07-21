@@ -162,6 +162,9 @@ class LiteSpeed_Cache
 	public function register_deactivation()
 	{
 		$this->purge_all() ;
+		if ((is_multisite()) && (!is_network_admin())) {
+			return;
+		}
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules('FAVICON');
 	}
@@ -834,7 +837,15 @@ class LiteSpeed_Cache
 		if (is_openlitespeed()) {
 			$err .= __(' If you are using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
 		}
-		$db_cookie = $this->get_config()->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+
+		if (is_multisite()) {
+			$db_cookie = $this->get_config()
+				->get_site_options()[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+		}
+		else {
+			$db_cookie = $this->get_config()
+				->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+		}
 
 		if (empty($db_cookie)) {
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
