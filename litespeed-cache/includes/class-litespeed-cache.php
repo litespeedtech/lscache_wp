@@ -880,7 +880,15 @@ class LiteSpeed_Cache
 		if ($_SERVER["REQUEST_METHOD"] !== 'GET') {
 			return false;
 		}
-		$db_cookie = $this->get_config()->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+
+		if (is_multisite()) {
+			$db_cookie = $this->get_config()
+				->get_site_options()[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+		}
+		else {
+			$db_cookie = $this->get_config()
+				->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+		}
 
 		if (empty($db_cookie)) {
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
