@@ -3,13 +3,13 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.5
-Stable tag: 1.0.7.1
+Stable tag: 1.0.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
 
 == Description ==
-The LiteSpeed Cache Plugin for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server (LSWS) and its built-in page cache, LSCache. 
+The LiteSpeed Cache Plugin for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server (LSWS) and its built-in page cache, LSCache.
 Because LSCache is built directly into LSWS, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches.
 
 Additional plugin features:
@@ -26,12 +26,12 @@ For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/f
 
 == Installation ==
 = Instructions for LiteSpeed Web Server Enterprise =
-1. Make sure that your license has the LSCache module enabled. 
-You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") 
+1. Make sure that your license has the LSCache module enabled.
+You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license")
 free for 15-days.
 2. In LiteSpeed Web Server - Through the WebAdmin Console, navigate to Configuration > Server > cache and set 'Storage path' under Cache Storage Settings to a fast disk, where the path can be something like '/tmp/wpcache/' for example. If the directory does not already exist, it will be created for you.
 3. In LiteSpeed Web Server - Under "Cache Policy" set the following: <br>
-Enable Public Cache - No<br> 
+Enable Public Cache - No<br>
 Check Public Cache - Yes<br>
 Ignore Request Cache-Control - Yes<br>
 Ignore Response Cache-Control - Yes
@@ -46,23 +46,23 @@ BETA. TO BE COMPLETED IN THE NEAR FUTURE.
 
 == Frequently Asked Questions ==
 = Is the LiteSpeed Cache Plugin for WordPress free? =
-Yes, the plugin itself will remain free and open source. You are required to 
-have a LiteSpeed Web Server Enterprise 5.0.10+ license with the LSCache module 
-(included with 2+ CPU license, an addon for 1 CPU and VPS licenses). 
-OpenLiteSpeed v 1.4.17+ also works with the plugin, 
+Yes, the plugin itself will remain free and open source. You are required to
+have a LiteSpeed Web Server Enterprise 5.0.10+ license with the LSCache module
+(included with 2+ CPU license, an addon for 1 CPU and VPS licenses).
+OpenLiteSpeed v 1.4.17+ also works with the plugin,
 but the functionality is currently in beta.
 = Where are the cached files stored? =
-This plugin only instructs LiteSpeed Web Server on what pages to cache and 
-when to purge. The actual cached pages are stored and managed by 
+This plugin only instructs LiteSpeed Web Server on what pages to cache and
+when to purge. The actual cached pages are stored and managed by
 LiteSpeed Web Server. Nothing is stored on the PHP side.
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 The support is currently in beta. It should work, but is not fully tested.
 As well, any settings changes that require modifying the .htaccess file requires a server restart.
 = Is WooCommerce supported? =
-In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not 
-cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2, 
-we do extra checks to make sure that pages are cacheable. 
-We are always looking for feedback, so if you encounter any problems, 
+In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not
+cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2,
+we do extra checks to make sure that pages are cacheable.
+We are always looking for feedback, so if you encounter any problems,
 be sure to send us a support question.
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
@@ -254,7 +254,7 @@ point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
 = 1.0.7.1 =
-* Fixed a bug where enabling purge all in the auto purge on update settings page did not purge the correct blogs. 
+* Fixed a bug where enabling purge all in the auto purge on update settings page did not purge the correct blogs.
 * Fixed a bug reported by user wpc on our forums where enabling purge all in the auto purge on update settings page caused nothing to be cached.
 
 = 1.0.7 =
