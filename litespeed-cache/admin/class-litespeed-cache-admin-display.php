@@ -712,8 +712,7 @@ class LiteSpeed_Cache_Admin_Display
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
 		$cache_login = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable Cache for Login Page', 'litespeed-cache'), $cache_login,
-		__('When checked, the login page will be cached. ', 'litespeed-cache')
-		. __('Disabling this option will disable caching for the page, but the cache will not perform as well.', 'litespeed-cache'));
+			__('Unchecking this option may negatively affect performance.', 'litespeed-cache'));
 
 		if (!is_multisite()) {
 			$buf .= $this->build_setting_cache_favicon($options);
@@ -1201,7 +1200,7 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$title = __('Cache favicon.ico', 'litespeed-cache');
 		$desc = __('favicon.ico is requested on most pages. ', 'litespeed-cache')
-		. __('Caching this page may improve your server performance by avoiding the extra call to php.', 'litespeed-cache');
+		. __('Caching this recource may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache');
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
 		$cache_favicon = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
 		return $this->display_config_row($title, $cache_favicon, $desc);
