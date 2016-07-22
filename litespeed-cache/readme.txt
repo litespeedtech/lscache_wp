@@ -253,11 +253,11 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
-= 1.0.7.1 =
+= 1.0.7.1 - May 26 2016 =
 * Fixed a bug where enabling purge all in the auto purge on update settings page did not purge the correct blogs.
 * Fixed a bug reported by user wpc on our forums where enabling purge all in the auto purge on update settings page caused nothing to be cached.
 
-= 1.0.7 =
+= 1.0.7 - May 24 2016 =
 * Added login cookie configuration to the Advanced Settings page.
 * Added support for WPTouch plugin.
 * Added support for WP-Polls plugin.
@@ -268,11 +268,11 @@ point to any plugin that needs to add cache tags to the current request.
 * Refactor: Rename functions to accurately represent their functionality
 * Fixed a bug that sometimes caused a “no valid header” error message.
 
-= 1.0.6 =
+= 1.0.6 - May 5 2016 =
 * Fixed a bug reported by Knut Sparhell that prevented dashboard widgets from being opened or closed.
 * Fixed a bug reported by Knut Sparhell that caused problems with https support for admin pages.
 
-= 1.0.5 =
+= 1.0.5 - April 26 2016 =
 * [BETA] Added NextGen Gallery plugin support.
 * Added third party plugin integration.
 * Improved cache tag system.
@@ -284,7 +284,7 @@ point to any plugin that needs to add cache tags to the current request.
 * Fixed a bug where .htaccess was not checked properly when adding common rules.
 * Fixed a bug where multisite setups would be completely purged when one site requested a purge all.
 
-= 1.0.4 =
+= 1.0.4 - April 7 2016 =
 * Added logic to cache commenters.
 * Added htaccess backup to the install script.
 * Added an htaccess editor in the wp-admin dashboard.
@@ -296,7 +296,7 @@ point to any plugin that needs to add cache tags to the current request.
 * Moved enabled all/disable all from network management to network settings.
 * Fixed a bug where WP_CACHE was not defined on activation if it was commented out.
 
-= 1.0.3 =
+= 1.0.3 - March 23 2016 =
 * Added a Purge Front Page button to the LiteSpeed Cache Management page.
 * Added a Default Front Page TTL option to the general settings.
 * Added ability to define web application specific cookie names through rewrite rules to handle logged-in cookie conflicts when using multiple web applications. <strong>[Requires LSWS 5.0.15+]</strong>
@@ -305,7 +305,7 @@ point to any plugin that needs to add cache tags to the current request.
 * Refactored code to make it cleaner.
 * Updated readme.txt.
 
-= 1.0.2 =
+= 1.0.2 - March 11 2016 =
 * Added a "Use Network Admin Setting" option for "Enable LiteSpeed Cache". For single sites, this choice will default to enabled.
 * Added enable/disable all buttons for network admin. This controls the setting of all managed sites with "Use Network Admin Setting" selected for "Enable LiteSpeed Cache".
 * Exclude by Category/Tag are now text areas to avoid slow load times on the LiteSpeed Cache Settings page for sites with a large number of categories/tags.
@@ -316,7 +316,7 @@ point to any plugin that needs to add cache tags to the current request.
 * The _lscache_vary cookie will now be deleted upon logout.
 * Fixed a bug in multi-site setups that would cause a "function already defined" error.
 
-= 1.0.1 =
+= 1.0.1 - March 8 2016 =
 * Added Do Not Cache by URI, by Category, and by Tag.  URI is a prefix/string equals match.
 * Added a help tab for plugin compatibilities.
 * Created logic for other plugins to purge a single post if updated.
@@ -326,5 +326,5 @@ point to any plugin that needs to add cache tags to the current request.
 * Fixed a compatibility bug with bbPress.  If there is a new forum/topic/reply, the parent pages will now be purged as well.
 * Fixed a bug that didn't allow cron job to update scheduled posts.
 
-= 1.0.0 =
+= 1.0.0 - January 20 2016 =
 * Initial Release.
