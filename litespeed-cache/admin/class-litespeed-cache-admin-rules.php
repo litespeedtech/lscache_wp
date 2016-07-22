@@ -1105,23 +1105,24 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		self::$OUT_FILESAVE = __('File Saved.', 'litespeed-cache');
 
-		self::$ERR_BACKUP = __('Failed to back up file, abort changes.', 'litespeed-cache');
+		self::$ERR_BACKUP = __('Failed to back up file, aborted changes.', 'litespeed-cache');
 		self::$ERR_DNE = __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
 		self::$ERR_FILESAVE = sprintf(__('Failed to put contents into %s', 'litespeed-cache'),
 			'.htaccess');
-		self::$ERR_GET = __('Failed to get .htaccess file contents.', 'litespeed-cache');
+		self::$ERR_GET = sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
+			'.htaccess');
 		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found.',
 					'litespeed-cache');
 		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
 		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
 		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
-				. __(' .htaccess file not valid. Please verify the contents.',
-						'litespeed-cache');
+				. sprintf(__(' %s file not valid. Please verify the contents.',
+						'litespeed-cache'), '.htaccess');
 		self::$ERR_READWRITE = __('File not readable or not writable.', 'litespeed-cache');
 		self::$ERR_SUBDIR_MISMATCH_LOGIN =
 			__('This site is a subdirectory install.', 'litespeed-cache')
 			. __(' Login cookies do not match.', 'litespeed-cache')
-			. __(' Please remove both and set the login cookie in the LiteSpeed Cache advanced settings.',
+			. __(' Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
 				'litespeed-cache');
 		self::$ERR_WRONG_ORDER = __('Prefix was found after suffix.', 'litespeed-cache');
 	}
