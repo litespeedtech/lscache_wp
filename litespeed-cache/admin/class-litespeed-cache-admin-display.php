@@ -420,6 +420,7 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
 
 		$buf .= $this->build_setting_cache_favicon($site_options);
+		$buf .= $this->build_setting_cache_resources($site_options);
 		$buf .= $this->build_setting_mobile_view($site_options);
 		$buf .= $this->input_group_end() . '</div>';
 
@@ -704,19 +705,20 @@ class LiteSpeed_Cache_Admin_Display
 				__('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
-		$cache_commenters = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$cache_commenters = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable Cache for Commenters', 'litespeed-cache'), $cache_commenters,
 		__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 		. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		$cache_login = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$cache_login = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable Cache for Login Page', 'litespeed-cache'), $cache_login,
 		__('When checked, the login page will be cached. ', 'litespeed-cache')
 		. __('Disabling this option will disable caching for the page, but the cache will not perform as well.', 'litespeed-cache'));
 
 		if (!is_multisite()) {
 			$buf .= $this->build_setting_cache_favicon($options);
+			$buf .= $this->build_setting_cache_resources($options);
 			$buf .= $this->build_setting_mobile_view($options);
 		}
 
@@ -1203,8 +1205,26 @@ class LiteSpeed_Cache_Admin_Display
 		$desc = __('favicon.ico is requested on most pages. ', 'litespeed-cache')
 		. __('Caching this page may improve your server performance by avoiding the extra call to php.', 'litespeed-cache');
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
-		$cache_favicon = $this->input_field_checkbox('check_' . $id, $id, $options[$id]) ;
+		$cache_favicon = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
 		return $this->display_config_row($title, $cache_favicon, $desc);
+	}
+
+	/**
+	 * Builds the html for the cache PHP resources configurations.
+	 *
+	 * @since 1.0.8
+	 * @access private
+	 * @param array $options The currently configured options.
+	 * @return string The html for caching favicon configurations.
+	 */
+	private function build_setting_cache_resources($options)
+	{
+		$title = __('Enable Cache for PHP Resources', 'litespeed-cache');
+		$desc = __('Some themes and plugins add resources via a PHP request. ', 'litespeed-cache')
+		. __('Caching these pages may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache');
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
+		$cache_res = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]);
+		return $this->display_config_row($title, $cache_res, $desc);
 	}
 
 	/**

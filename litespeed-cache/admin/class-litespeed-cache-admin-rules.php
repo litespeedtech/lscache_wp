@@ -49,7 +49,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_PATTERN_RULE = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
 	private static $RW_PATTERN_LOGIN = '/(RewriteRule\s+\.[\?\*]\s+-\s+\[E=Cache-Vary:([^\]\s]*)\])/';
 	private static $RW_PATTERN_LOGIN_BLOCK = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
-	private static $RW_PATTERN_FAVICON_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
+	private static $RW_PATTERN_UPGRADE_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
 	private static $RW_PATTERN_WRAPPERS = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
 
 	/**
@@ -583,6 +583,89 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Do the setting cache resource logic.
+	 *
+	 * @since 1.0.8
+	 * @access private
+	 * @param string $haystack The original content in the .htaccess file.
+	 * @param boolean $set Whether to add or remove the rule.
+	 * @param string $output The current output buffer for the HOME PATH file.
+	 * @param array $errors Errors array to add error messages to.
+	 * @return mixed False on failure/do not update,
+	 *	original content sans favicon on success.
+	 */
+	private function set_cache_resource($haystack, $set, &$output, &$errors)
+	{
+		$match = 'wp-content/.*/(loader|fonts)\.php';
+		$sub = '-';
+		$env = 'E=cache-control:max-age=3600';
+		$rule_buf = '';
+		if ($set == 0) {
+			$match = '';
+			$sub = '';
+			$env = '';
+		}
+		$ret = $this->set_rewrite_rule($haystack, $rule_buf, 'RESOURCE',
+				$match, $sub, $env);
+
+		if ($this->parse_ret($ret, $haystack, $errors) === false) {
+			return false;
+		}
+		$output .= $rule_buf;
+		return $haystack;
+	}
+
+	/**
+	 * Parses the input to see if there is a need to edit the .htaccess file.
+	 *
+	 * @since 1.0.8
+	 * @access private
+	 * @param array $options The current options
+	 * @param array $input The input
+	 * @return boolean True if no need to edit, false otherwise.
+	 */
+	private function check_input($options, &$input)
+	{
+		$enable_key = ((is_multisite())
+			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
+			: LiteSpeed_Cache_Config::OPID_ENABLED);
+		$val_check = array(
+			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
+			LiteSpeed_Cache_Config::OPID_CACHE_RES
+		);
+
+		$ids = array(
+			$enable_key,
+			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES,
+			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS,
+			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE,
+			LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
+			LiteSpeed_Cache_Config::OPID_CACHE_RES
+		);
+
+		foreach ($val_check as $opt) {
+			if (isset($input['lscwp_' . $opt])) {
+				$input[$opt] = ($input['lscwp_' . $opt] === $opt);
+			}
+			else {
+				$input[$opt] = false;
+			}
+		}
+
+		foreach ($ids as $id) {
+			if ((isset($input[$id]))
+					&& ($input[$id]
+					!== $options[$id])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Parse the return value from set_common_rule and set_rewrite_rule.
 	 *
 	 * @since 1.0.7
@@ -609,39 +692,60 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Do the setting login cookie logic. If it is a subdirectory install,
+	 * Do the setting subdir cookies logic. If it is a subdirectory install,
 	 * will write to both .htaccess files.
 	 *
 	 * @since 1.0.7
 	 * @access private
 	 * @param string $haystack The original content in the .htaccess file.
-	 * @param string $input The input string from the Post request.
-	 * @param string $option The string currently used in the database.
+	 * @param array $input The input array from the Post request.
+	 * @param array $options The array currently used in the database.
 	 * @param string $output The current output buffer for the HOME PATH file.
 	 * @param array $errors Errors array to add error messages to.
 	 * @return mixed False on failure/do not update,
 	 *	original content sans login cookie on success.
 	 */
-	private function set_login_cookie($haystack, $input, $option, &$output,
+	private function set_subdir_cookie($haystack, $input, $options, &$output,
 			&$errors)
 	{
+		$enable_key = ((is_multisite())
+			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
+			: LiteSpeed_Cache_Config::OPID_ENABLED);
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
+		$res = (isset($input[$id]) ? ($input[$id] && $options[$enable_key])
+			: false);
+		$login = (isset($input[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE])
+			? $input[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE] : '');
+
 		$aExceptions = array('-', '_');
 		$match = '.?';
 		$sub = '-';
-		$env = 'E=Cache-Vary:' . $input;
+		$env = 'E=Cache-Vary:' . $login;
 		$rule_buf = '';
 		$rule_buf2 = '';
 		$off_end = 0;
+		$ret = false;
 
-		if ($input == '') {
-			if ($option == '') {
+		if (!self::is_subdir()) {
+			$ret = $this->set_cache_resource($haystack, $res, $rule_buf,
+				$errors);
+			if ($ret === false) {
 				return false;
+			}
+			$haystack = $ret;
+			$output .= $rule_buf;
+			$rule_buf = '';
+		}
+
+		if ($login == '') {
+			if ($options == '') {
+				return $ret;
 			}
 			$match = '';
 			$sub = '';
 			$env = '';
 		}
-		elseif (!ctype_alnum(str_replace($aExceptions, '', $input))) {
+		elseif (!ctype_alnum(str_replace($aExceptions, '', $login))) {
 			$errors[] = self::$ERR_INVALID_LOGIN;
 			return false;
 		}
@@ -676,6 +780,12 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
+		$ret = $this->set_cache_resource($haystack2, $res, $rule_buf2, $errors);
+		if ($ret === false) {
+			return false;
+		}
+
+		$haystack2 = $ret;
 		$ret = $this->file_combine($rule_buf2, $haystack2, $content,
 				$off_end, $path);
 		if ($ret !== true) {
@@ -685,6 +795,29 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$output .= $rule_buf;
 		return $haystack;
+	}
+
+	private function set_on_upgrade($wrapper, $match, $sub, $flag, &$content)
+	{
+		$split_rule = preg_split(self::$RW_PATTERN_UPGRADE_BLOCK, $content, -1,
+				PREG_SPLIT_DELIM_CAPTURE);
+		$rule_buf = '';
+		$this->set_rewrite_rule(null, $rule_buf, $wrapper, $match, $sub,
+			$flag);
+		if (count($split_rule) == 1) {
+			//not found
+			$content = self::$RW_BLOCK_START . "\n" . $rule_buf
+				. self::$RW_BLOCK_END . "\n" . $content;
+		}
+		else {
+			//else found
+			// split_rule[0] = pre match
+			// split_rule[1] = contents of IfModule
+			// split_rule[2] = closing IfModule
+			// split_rule[3] = post match
+			$split_rule[2] = $rule_buf . "\n" . $split_rule[2];
+			$content = implode('', $split_rule);
+		}
 	}
 
 	/**
@@ -754,26 +887,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 
-		$block_pattern = self::$RW_PATTERN_FAVICON_BLOCK;
-		$split_rule = preg_split($block_pattern, $content, -1,
-				PREG_SPLIT_DELIM_CAPTURE);
-		$rule_buf = '';
-		$this->set_rewrite_rule(null, $rule_buf, 'FAVICON',
-				'^favicon\.ico$', '-', 'E=cache-control:max-age=86400');
-		if (count($split_rule) == 1) {
-			//not found
-			$content = self::$RW_BLOCK_START . "\n" . $rule_buf
-				. self::$RW_BLOCK_END . "\n" . $content;
-		}
-		else {
-			//else found
-			// split_rule[0] = pre match
-			// split_rule[1] = contents of IfModule
-			// split_rule[2] = closing IfModule
-			// split_rule[3] = post match
-			$split_rule[2] = $rule_buf . "\n" . $split_rule[2];
-			$content = implode('', $split_rule);
-		}
+		$this->set_on_upgrade('FAVICON', '^favicon\.ico$', '-',
+			'E=cache-control:max-age=86400', $content);
 
 		$home_cookie = $this->parse_existing_login_cookie($content);
 		if (!self::is_subdir()) {
@@ -789,6 +904,9 @@ class LiteSpeed_Cache_Admin_Rules
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
 		}
+
+		$this->set_on_upgrade('RESOURCE', 'wp-content/.*/(loader|fonts)\.php',
+			'-', 'E=cache-control:max-age=3600', $site_content);
 
 		$site_cookie = $this->parse_existing_login_cookie($site_content);
 		if ((empty($home_cookie) && !empty($site_cookie))
@@ -823,27 +941,8 @@ class LiteSpeed_Cache_Admin_Rules
 		$content = '';
 		$buf = '';
 		$off_end = 0;
-		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 
-		if (isset($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
-			$favicon = ($input['check_' . LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]
-				=== LiteSpeed_Cache_Config::OPID_CACHE_FAVICON);
-		}
-		else {
-			$favicon = false;
-		}
-
-		if (((isset($input['lscwp_' . $id]))
-				&& ($input['lscwp_' . $id] === false))
-			&& ($options[$id] === false)
-			&& ((isset($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]))
-				&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]
-				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES]))
-			&& ((isset($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]))
-				&& ($input[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]
-				=== $options[LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS]))
-			&& ($favicon
-				=== $options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
+		if ($this->check_input($options, $input)) {
 			return $options;
 		}
 
@@ -862,8 +961,9 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		if ((isset($input['lscwp_' . $id]))
-			&& ($input['lscwp_' . $id] === $id)) {
+		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
+
+		if ((isset($input[$id])) && ($input[$id])) {
 			$options[$id] = true;
 			$ret = $this->set_common_rule($haystack, $buf,
 					'MOBILE VIEW', 'HTTP_USER_AGENT',
@@ -902,25 +1002,26 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-		if (isset($input[$id])) {
-			$ret = $this->set_login_cookie($haystack, $input[$id],
-					$options[$id], $buf, $errors);
-			if ($ret !== false) {
-				$haystack = $ret;
-				$options[$id] = $input[$id];
-			}
+		$ret = $this->set_subdir_cookie($haystack, $input,
+				$options, $buf, $errors);
+		if ($ret !== false) {
+			$haystack = $ret;
+			$options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE] =
+				$input[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			$options[LiteSpeed_Cache_Config::OPID_CACHE_RES] =
+				$input[LiteSpeed_Cache_Config::OPID_CACHE_RES];
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
 		$enable_key = ((is_multisite())
 			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
 			: LiteSpeed_Cache_Config::OPID_ENABLED);
 
 		$ret = $this->set_favicon($haystack,
-			($favicon && $options[$enable_key]), $buf, $errors);
+			($input[$id] && $options[$enable_key]), $buf, $errors);
 		if ($ret !== false) {
 			$haystack = $ret;
-			$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = $favicon;
+			$options[$id] = $input[$id];
 		}
 
 		$ret = $this->file_combine($buf, $haystack, $content, $off_end);

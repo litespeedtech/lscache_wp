@@ -28,6 +28,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_COMMENTERS = 'cache_commenters';
 	const OPID_CACHE_LOGIN = 'cache_login';
 	const OPID_CACHE_FAVICON = 'cache_favicon';
+	const OPID_CACHE_RES = 'cache_resources';
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
 	const OPID_LOGIN_COOKIE = 'login_cookie';
 	// do NOT set default options for these three, it is used for admin.
@@ -183,6 +184,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_COMMENTERS => true,
 			self::OPID_CACHE_LOGIN => true,
 			self::OPID_CACHE_FAVICON => true,
+			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
@@ -224,6 +226,7 @@ class LiteSpeed_Cache_Config
 		$default_site_options = array(
 			self::NETWORK_OPID_ENABLED => false,
 			self::OPID_CACHE_FAVICON => true,
+			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
@@ -357,7 +360,7 @@ class LiteSpeed_Cache_Config
 		}
 		$errors = array();
 		$input = array(
-			'check_' . self::OPID_CACHE_FAVICON => self::OPID_CACHE_FAVICON
+			'lscwp_' . self::OPID_CACHE_FAVICON => self::OPID_CACHE_FAVICON
 		);
 		$default[self::OPID_CACHE_FAVICON] = false;
 		LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
