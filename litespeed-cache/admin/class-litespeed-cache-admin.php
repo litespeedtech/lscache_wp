@@ -289,6 +289,7 @@ if (defined('lscache_debug')) {
 			elseif ($options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
 				$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = false;
 			}
+			$input[$id] = 'changed';
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
@@ -330,16 +331,16 @@ if (defined('lscache_debug')) {
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
-		if (isset($input['check_' . $id])) {
-			$options[$id] = ( $input['check_' . $id] === $id );
+		if (isset($input['lscwp_' . $id])) {
+			$options[$id] = ( $input['lscwp_' . $id] === $id );
 		}
 		else {
 			$options[$id] = false;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		if (isset($input['check_' . $id])) {
-			$login = ( $input['check_' . $id] === $id );
+		if (isset($input['lscwp_' . $id])) {
+			$login = ( $input['lscwp_' . $id] === $id );
 			if ($options[$id] != $login) {
 				$options[$id] = $login;
 				if (!$login) {
@@ -653,6 +654,7 @@ if (defined('lscache_debug')) {
 			else {
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
+			$input[$id] = 'changed';
 		}
 
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
