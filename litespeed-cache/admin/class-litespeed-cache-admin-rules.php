@@ -797,6 +797,17 @@ class LiteSpeed_Cache_Admin_Rules
 		return $haystack;
 	}
 
+	/**
+	 * Helper function to set rewrite rules on upgrade.
+	 *
+	 * @since 1.0.8
+	 * @access private
+	 * @param string $wrapper A wrapper to a specific rule
+	 * @param string $match The match to set the rewrite rule to search for.
+	 * @param string $sub The substitution to set the rewrite rule to replace with.
+	 * @param string $flag The flag the rewrite rule should set.
+	 * @param string $content The original content/new content after replacement.
+	 */
 	private function set_on_upgrade($wrapper, $match, $sub, $flag, &$content)
 	{
 		$split_rule = preg_split(self::$RW_PATTERN_UPGRADE_BLOCK, $content, -1,
