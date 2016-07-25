@@ -253,6 +253,20 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.8 - July 25 2016 =
+* Added purge all on update check to purge by post id logic.
+* Added uninstall logic.
+* Added configuration for caching favicons.
+* Added configuration for caching the login page.
+* Added configuration for caching php resources (scripts/stylesheets accessed as .php).
+* Set login cookie if user is logged in and it isn’t set.
+* Improved NextGenGallery support to include new actions.
+* Now displays a notice on the network admin if WP_CACHE is not set.
+* Fixed a few php syntax issues.
+* Fixed a bug where purge by pid didn’t work.
+* Fixed a bug where the Network Admin settings were shown when the plugin was active in a subsite, but not network active.
+* Fixed a bug where the Advanced Cache check would sometimes not work.
+
 = 1.0.7.1 - May 26 2016 =
 * Fixed a bug where enabling purge all in the auto purge on update settings page did not purge the correct blogs.
 * Fixed a bug reported by user wpc on our forums where enabling purge all in the auto purge on update settings page caused nothing to be cached.
