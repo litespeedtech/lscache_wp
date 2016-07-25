@@ -876,6 +876,15 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function scan_upgrade()
 	{
+		$config = LiteSpeed_Cache::plugin()->get_config();
+		if (is_multisite()) {
+			$options = $config->get_site_options();
+			$enabled = $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
+		}
+		else {
+			$options = $config->get_options();
+			$enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+		}
 		$content = '';
 		$site_content = '';
 		if (!self::is_file_able(self::RW)) {
@@ -887,14 +896,18 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 
-		$this->set_on_upgrade('FAVICON', '^favicon\.ico$', '-',
-			'E=cache-control:max-age=86400', $content);
+		if ($enabled) {
+			$this->set_on_upgrade('FAVICON', '^favicon\.ico$', '-',
+				'E=cache-control:max-age=86400', $content);
+		}
 
 		$home_cookie = $this->parse_existing_login_cookie($content);
 		if (!self::is_subdir()) {
-			if (!empty($home_cookie)) {
-				self::file_save($content, false);
+			if ($enabled) {
+				$this->set_on_upgrade('RESOURCE', 'wp-content/.*/(loader|fonts)\.php',
+					'-', 'E=cache-control:max-age=3600', $content);
 			}
+			self::file_save($content, false);
 			return $home_cookie;
 		}
 		$site_path = self::get_site_path();
@@ -905,8 +918,10 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 
-		$this->set_on_upgrade('RESOURCE', 'wp-content/.*/(loader|fonts)\.php',
-			'-', 'E=cache-control:max-age=3600', $site_content);
+		if ($enabled) {
+			$this->set_on_upgrade('RESOURCE', 'wp-content/.*/(loader|fonts)\.php',
+				'-', 'E=cache-control:max-age=3600', $site_content);
+		}
 
 		$site_cookie = $this->parse_existing_login_cookie($site_content);
 		if ((empty($home_cookie) && !empty($site_cookie))
@@ -919,10 +934,8 @@ class LiteSpeed_Cache_Admin_Rules
 				. '<br>' . $site_path . ': ' . $site_cookie);
 			return 'err';
 		}
-		if (!empty($home_cookie)) {
-			self::file_save($content, false);
-			self::file_save($site_content, false, $site_path);
-		}
+		self::file_save($content, false);
+		self::file_save($site_content, false, $site_path);
 		return $home_cookie;
 	}
 
