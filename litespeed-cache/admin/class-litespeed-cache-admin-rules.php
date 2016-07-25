@@ -1055,6 +1055,7 @@ class LiteSpeed_Cache_Admin_Rules
 	public static function clear_rules($wrapper = '')
 	{
 		$content = '';
+		$site_content = '';
 		$pattern = self::$RW_PATTERN_WRAPPERS;
 
 		clearstatcache();
@@ -1072,6 +1073,24 @@ class LiteSpeed_Cache_Admin_Rules
 		$buf = preg_replace($pattern, '', $content);
 
 		self::file_save($buf);
+
+		if (!self::is_subdir()) {
+			return;
+		}
+		$site_path = self::get_site_path();
+		if (self::file_get($site_content, $site_path) === false) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
+			return '';
+		}
+
+		if (!empty($wrapper)) {
+			$pattern = '/###LSCACHE START ' . $wrapper
+				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
+		}
+		$site_buf = preg_replace($pattern, '', $site_content);
+		self::file_save($site_buf, true, $site_path);
+
 		return;
 	}
 

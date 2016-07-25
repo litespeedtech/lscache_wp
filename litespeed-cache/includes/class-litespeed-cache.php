@@ -183,6 +183,7 @@ class LiteSpeed_Cache
 		}
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules('FAVICON');
+		LiteSpeed_Cache_Admin_Rules::clear_rules('RESOURCE');
 	}
 
 	/**
