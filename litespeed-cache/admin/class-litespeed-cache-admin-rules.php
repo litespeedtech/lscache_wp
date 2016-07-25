@@ -813,9 +813,12 @@ class LiteSpeed_Cache_Admin_Rules
 		$split_rule = preg_split(self::$RW_PATTERN_UPGRADE_BLOCK, $content, -1,
 				PREG_SPLIT_DELIM_CAPTURE);
 		$rule_buf = '';
-		$this->set_rewrite_rule(null, $rule_buf, $wrapper, $match, $sub,
+		$ret = $this->set_rewrite_rule($content, $rule_buf, $wrapper, $match, $sub,
 			$flag);
-		if (count($split_rule) == 1) {
+		if ($ret !== true) {
+			return;
+		}
+		elseif (count($split_rule) == 1) {
 			//not found
 			$content = self::$RW_BLOCK_START . "\n" . $rule_buf
 				. self::$RW_BLOCK_END . "\n" . $content;
@@ -855,6 +858,9 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$suffix = '';
 		$prefix = $this->build_wrappers('LOGIN COOKIE', $suffix);
+		if (strpos($split_rule[0], $prefix) !== false) {
+			return $split_rule[2];
+		}
 		$replacement = $prefix . "\n" . $split_rule[1] . "\n" . $suffix . "\n";
 		$without_rule = $split_rule[0] . $split_rule[3];
 		$split_blocks = preg_split(self::$RW_PATTERN_LOGIN_BLOCK,
