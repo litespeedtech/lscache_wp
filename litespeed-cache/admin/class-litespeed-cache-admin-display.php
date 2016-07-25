@@ -563,19 +563,22 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '<h4>' . __('To verify that the cache is working, please do the following:', 'litespeed-cache') . '</h4>';
 		$buf .= '<ol><li>' . __('Open a non logged in browser.', 'litespeed-cache') . '</li>'
-		. '<li>' . __('Open the inspector and select the Network tab.', 'litespeed-cache') . '</li>'
+		. '<li>' . __('Right-click the page and open the inspector.','litespeed-cahe')
+				.__('Select the Network tab.', 'litespeed-cache') . '</li>'
 		. '<li>' . __('Visit a page. ', 'litespeed-cache')
-			. __('If the page is not cached yet, there should be a response header ', 'litespeed-cache')
+			. __('If the page is not yet cached, You should see response header ', 'litespeed-cache')
 			. ' "X-LiteSpeed-Cache: miss".' . '<br>'
-			. __('If the page is already cached, there may be a "hit" header instead.', 'litespeed-cache')
-			. __(' This may occur if someone else visited the page first.', 'litespeed-cache')
+			. __('If the page is already cached, the header may say "hit" instead of "miss".', 'litespeed-cache')
+			. __(' This can occur if someone else visited the page before you.', 'litespeed-cache')
 			. '</li>'
 		. '<li>' . __('Refresh the page. ', 'litespeed-cache')
-			. __('The page should now be cached. There should now be a response header ', 'litespeed-cache')
+			. __('The page should now be cached. You should now see response header ', 'litespeed-cache')
 			. ' "X-LiteSpeed-Cache: hit".' . '</li>'
-		. '<li>' . __('For more information, please visit our wiki entry ', 'litespeed-cache')
-			. '<a href=https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing target="_blank">'
-			. 'here</a>'. '</li>'
+		. '<li>' . sprintf(wp_kses(__('For more information, please visit our wiki page'
+				. '<a href="%s" target="%s">here</a>', 'litespeed-cache'),
+				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
+				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing',
+				'_blank') . '</li>'
 		. '</ol>';
 
 		$buf .= '</div>'; // id=config
@@ -598,8 +601,10 @@ class LiteSpeed_Cache_Admin_Display
 		. sprintf(__('If your questions are not answered, try the %s', 'litespeed-cache'),
 				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>');
 		$buf .=
-		sprintf(__(" If your questions are still not answered, don't hesitate to ask them on the %s", 'litespeed-cache'),
-				'<a href=https://wordpress.org/support/plugin/litespeed-cache target="_blank">support forum.</a>')
+		sprintf(wp_kses(__('If your questions are still not answered, do not hesitate to ask them on the '
+				. '<a href="%s" target="%s">support forum</a>.', 'litespeed-cache'),
+				array( 'a' =>array( 'href' => array(), 'target' => array() ) )),
+				'https://wordpress.org/support/plugin/litespeed-cache', '_blank')
 		. '</h4></div>'; // class=wrap
 		echo $buf;
 	}
@@ -704,8 +709,10 @@ class LiteSpeed_Cache_Admin_Display
 		$enable_desc = '<strong>' . __('NOTICE', 'litespeed-cache') . ':</strong>'
 		. __(' When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache')
 		. '<br>'
-		. sprintf(__('Please visit the %s page on how to test the cache.', 'litespeed-cache'),
-				'<a href=' . get_admin_url() . 'admin.php?page=lscache-info>information</a>');
+		. sprintf(wp_kses(__('Please visit the '
+				. '<a href="%sadmin.php?page=lscache-info">information</a> page on how to test the cache.', 'litespeed-cache'),
+				array( 'a' => array( 'href' => array() ) )), get_admin_url());
+
 		if( is_multisite() ){
 			$enable_desc .= '<br>'
 			. __('You can override network admin settings here.', 'litespeed-cache');
