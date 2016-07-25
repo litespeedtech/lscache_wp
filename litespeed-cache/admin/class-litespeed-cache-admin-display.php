@@ -615,6 +615,26 @@ class LiteSpeed_Cache_Admin_Display
 		. '<li>Ignore Request Cache-Control - Yes</li>'
 		. '<li>Ignore Response Cache-Control - Yes</li></ul>';
 
+		$buf .= '<h3>'
+		. __('Verify Cache', 'litespeed-cache') . '</h3>';
+
+		$buf .= '<h4>' . __('To verify that the cache is working, please do the following:', 'litespeed-cache') . '</h4>';
+		$buf .= '<ol><li>' . __('Open a non logged in browser.', 'litespeed-cache') . '</li>'
+		. '<li>' . __('Open the inspector and select the Network tab.', 'litespeed-cache') . '</li>'
+		. '<li>' . __('Visit a page. ', 'litespeed-cache')
+			. __('If the page is not cached yet, there should be a response header ', 'litespeed-cache')
+			. ' "X-LiteSpeed-Cache: miss".' . '<br>'
+			. __('If the page is already cached, there may be a "hit" header instead.', 'litespeed-cache')
+			. __(' This may occur if someone else visited the page first.', 'litespeed-cache')
+			. '</li>'
+		. '<li>' . __('Refresh the page. ', 'litespeed-cache')
+			. __('The page should now be cached. There should now be a response header ', 'litespeed-cache')
+			. ' "X-LiteSpeed-Cache: hit".' . '</li>'
+		. '<li>' . __('For more information, please visit our wiki entry ', 'litespeed-cache')
+			. '<a href=https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing target="_blank">'
+			. 'here</a>'. '</li>'
+		. '</ol>';
+
 		$buf .= '</div>'; // id=config
 
 		// Compatibility with other plugins.
@@ -636,7 +656,7 @@ class LiteSpeed_Cache_Admin_Display
 				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>');
 		$buf .=
 		sprintf(__(" If your questions are still not answered, don't hesitate to ask them on the %s", 'litespeed-cache'),
-				'<a href=https://wordpress.org/support/plugin/litespeed-cache>support forum.</a>')
+				'<a href=https://wordpress.org/support/plugin/litespeed-cache target="_blank">support forum.</a>')
 		. '</h4></div>'; // class=wrap
 		echo $buf;
 	}
@@ -733,13 +753,16 @@ class LiteSpeed_Cache_Admin_Display
 			$enable_levels[LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET] = __('Use Network Admin Setting', 'litespeed-cache');
 		}
 		elseif(intval($options[$id]) === 2) {
-				$options[$id] = 1;
+			$options[$id] = 1;
 		}
 
 		$input_enable = $this->input_field_radio($id, $enable_levels, intval($options[$id])) ;
 
 		$enable_desc = '<strong>' . __('NOTICE', 'litespeed-cache') . ':</strong>'
-		. __(' When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache');
+		. __(' When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache')
+		. '<br>'
+		. sprintf(__('Please visit the %s page on how to test the cache.', 'litespeed-cache'),
+				'<a href=' . get_admin_url() . 'admin.php?page=lscache-info>information</a>');
 		if( is_multisite() ){
 			$enable_desc .= '<br>'
 			. __('You can override network admin settings here.', 'litespeed-cache');
