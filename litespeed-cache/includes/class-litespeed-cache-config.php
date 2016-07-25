@@ -272,11 +272,7 @@ class LiteSpeed_Cache_Config
 			}
 		}
 
-		if ($this->options[self::OPID_LOGIN_COOKIE]
-				== $default_options[self::OPID_LOGIN_COOKIE]) {
-			$this->options[self::OPID_LOGIN_COOKIE] =
-				LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
-		}
+		LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
 		$this->debug_log("plugin_upgrade option changed = $res $log\n",
