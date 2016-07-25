@@ -274,6 +274,7 @@ class LiteSpeed_Cache_Config
 				$log .= 'Removed ' . $retired ;
 			}
 		}
+		$this->options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION;
 
 		LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
 
