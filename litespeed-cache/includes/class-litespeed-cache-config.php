@@ -202,6 +202,10 @@ class LiteSpeed_Cache_Config
 			self::ID_NOCACHE_USERAGENTS => '',
 				) ;
 
+		if (is_multisite()) {
+			$default_options[self::NETWORK_OPID_ENABLED] = false;
+		}
+
 		return $default_options ;
 	}
 
@@ -343,23 +347,42 @@ class LiteSpeed_Cache_Config
 			if (!is_network_admin()) {
 				return;
 			}
-			$site_opts = $this->get_site_options();
+			$options = $this->get_site_options();
 			if (($res == false)
-				&& (($site_opts[self::NETWORK_OPID_ENABLED] == false)
-					|| ($site_opts[self::OPID_CACHE_FAVICON] == false))) {
+				&& (($options[self::NETWORK_OPID_ENABLED] == false))) {
 				return;
 			}
+			$default[self::NETWORK_OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 		}
 		elseif (($res == false)
-			&& (($this->get_option(self::OPID_ENABLED) == false)
-				|| ($this->get_option(self::OPID_CACHE_FAVICON) == false))) {
+			&& (($this->get_option(self::OPID_ENABLED) == false))) {
+			return;
+		}
+		else {
+			$options = $this->get_options();
+		}
+
+		if (($options[self::OPID_CACHE_FAVICON] == false)
+			&& ($options[self::OPID_CACHE_RES] == false)) {
 			return;
 		}
 		$errors = array();
 		$input = array(
-			'lscwp_' . self::OPID_CACHE_FAVICON => self::OPID_CACHE_FAVICON
+			self::OPID_MOBILEVIEW_ENABLED => $options[self::OPID_MOBILEVIEW_ENABLED],
+			self::ID_NOCACHE_COOKIES => $options[self::ID_NOCACHE_COOKIES],
+			self::ID_NOCACHE_USERAGENTS => $options[self::ID_NOCACHE_USERAGENTS],
+			self::OPID_LOGIN_COOKIE => $options[self::OPID_LOGIN_COOKIE],
+			self::OPID_CACHE_LOGIN => $options[self::OPID_CACHE_LOGIN]
 		);
+		if ($options[self::OPID_CACHE_FAVICON]) {
+			$input['lscwp_' . self::OPID_CACHE_FAVICON]
+				= self::OPID_CACHE_FAVICON;
+		}
+		if ($options[self::OPID_CACHE_RES]) {
+			$input['lscwp_' . self::OPID_CACHE_RES] = self::OPID_CACHE_RES;
+		}
 		$default[self::OPID_CACHE_FAVICON] = false;
+		$default[self::OPID_CACHE_RES] = false;
 		LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
 			$input, $default, $errors);
 	}
