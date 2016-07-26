@@ -1089,7 +1089,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$buf = preg_replace($pattern, '', $content);
 
-		self::file_save($buf);
+		self::file_save($buf, false);
 
 		if (!self::is_subdir()) {
 			return;
@@ -1106,7 +1106,7 @@ class LiteSpeed_Cache_Admin_Rules
 				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
 		}
 		$site_buf = preg_replace($pattern, '', $site_content);
-		self::file_save($site_buf, true, $site_path);
+		self::file_save($site_buf, false, $site_path);
 
 		return;
 	}
