@@ -895,8 +895,8 @@ class LiteSpeed_Cache
 		}
 
 		if (is_multisite()) {
-			$db_cookie = $this->get_config()
-				->get_site_options()[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			$options = $this->get_config()->get_site_options();
+			$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
 		}
 		else {
 			$db_cookie = $this->get_config()
@@ -938,8 +938,8 @@ class LiteSpeed_Cache
 		}
 
 		if (is_multisite()) {
-			$db_cookie = $this->get_config()
-				->get_site_options()[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			$options = $this->get_config()->get_site_options();
+			$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
 		}
 		else {
 			$db_cookie = $this->get_config()
