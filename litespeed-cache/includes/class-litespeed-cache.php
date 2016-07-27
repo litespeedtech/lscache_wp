@@ -395,6 +395,17 @@ class LiteSpeed_Cache
 		// user is not logged in
 		add_action('wp', array( $this, 'check_cacheable' ), 5) ;
 		add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
+
+		$cache_res = $this->config->get_option(
+			LiteSpeed_Cache_Config::OPID_CACHE_RES);
+		if ($cache_res) {
+			require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php';
+			$uri = esc_url($_SERVER["REQUEST_URI"]);
+			$pattern = '!' . LiteSpeed_Cache_Admin_Rules::$RW_PATTERN_RES . '!';
+			if (preg_match($pattern, $uri)) {
+				add_action('wp_loaded', array( $this, 'check_cacheable' ), 5) ;
+			}
+		}
 	}
 
 	/**
@@ -840,8 +851,8 @@ class LiteSpeed_Cache
 		}
 
 		if (is_multisite()) {
-			$db_cookie = $this->get_config()
-				->get_site_options()[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			$options = $this->get_config()->get_site_options();
+			$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
 		}
 		else {
 			$db_cookie = $this->get_config()
@@ -883,8 +894,8 @@ class LiteSpeed_Cache
 		}
 
 		if (is_multisite()) {
-			$db_cookie = $this->get_config()
-				->get_site_options()[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			$options = $this->get_config()->get_site_options();
+			$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
 		}
 		else {
 			$db_cookie = $this->get_config()
