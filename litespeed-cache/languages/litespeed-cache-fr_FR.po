@@ -1,0 +1,1634 @@
+# Translation template for the LiteSpeed Cache WordPress Plugin.
+# Copyright (C) 2015-2016 LiteSpeed Technologies, Inc.
+# This file is distributed under the same license as the LiteSpeed_Cache package.
+# LiteSpeed Technologies <info@litespeedtech.com>, 2016.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0.8\n"
+"Report-Msgid-Bugs-To: info@litespeedtech.com\n"
+"POT-Creation-Date: 2016-07-27 14:47+0200\n"
+"PO-Revision-Date: 2016-07-27 22:38+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.8\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_FR\n"
+
+#: admin/class-litespeed-cache-admin-display.php:68
+msgid "Overview"
+msgstr "Vue d’ensemble"
+
+#: admin/class-litespeed-cache-admin-display.php:69
+msgid ""
+"LiteSpeed Cache is a page cache built into LiteSpeed Web Server. This plugin "
+"communicates with LiteSpeed Web Server to let it know which pages are cache-"
+"able and when to purge them."
+msgstr ""
+"LiteSpeed Cache est un système de cache de page intégré dans le serveur web "
+"LiteSpeed. Ce plugin communique avec le serveur web ListeSpeed pour lui "
+"permettre de savoir quelles pages peuvent être mises en cache et à quel "
+"moment les supprimer du cache."
+
+#: admin/class-litespeed-cache-admin-display.php:70
+msgid ""
+"You must have the LSCache module installed and enabled in your LiteSpeed Web "
+"Server setup."
+msgstr ""
+"Le module LSCache doit être installé dans la configuration de votre serveur "
+"web LiteSpeed."
+
+#: admin/class-litespeed-cache-admin-display.php:75
+msgid "Auto Purge Rules"
+msgstr "Règles de nettoyage du cache"
+
+#: admin/class-litespeed-cache-admin-display.php:76
+msgid ""
+"You can set what pages will be purged when a post is published or updated."
+msgstr ""
+"Vous pouvez paramétrer les pages qui seront vidés du cache lorsqu’un article "
+"est publié ou mis à jour."
+
+#: admin/class-litespeed-cache-admin-display.php:80
+msgid "For more information:"
+msgstr "Pour plus d’informations :"
+
+#: admin/class-litespeed-cache-admin-display.php:81
+msgid "LSCache Documentation"
+msgstr "Documentation LSCache"
+
+#: admin/class-litespeed-cache-admin-display.php:82
+msgid "Support Forum"
+msgstr "Forum de support"
+
+#: admin/class-litespeed-cache-admin-display.php:97
+msgid ""
+"Notice: Your installation of LiteSpeed Web Server does not have LSCache "
+"enabled."
+msgstr ""
+"Information : LSCache n’est pas activé sur votre installation de LiteSpeed "
+"Web Server."
+
+#: admin/class-litespeed-cache-admin-display.php:98
+msgid " This plugin will NOT work properly."
+msgstr "Ce plugin NE fonctionnera PAS correctement."
+
+#: admin/class-litespeed-cache-admin-display.php:220
+msgid "Category"
+msgstr "Catégorie "
+
+#: admin/class-litespeed-cache-admin-display.php:221
+msgid "Post ID"
+msgstr "ID de l’article "
+
+#: admin/class-litespeed-cache-admin-display.php:222
+msgid "Tag"
+msgstr "Étiquette "
+
+#: admin/class-litespeed-cache-admin-display.php:223
+msgid "URL"
+msgstr "URL"
+
+#: admin/class-litespeed-cache-admin-display.php:227
+msgid "LiteSpeed Cache Management"
+msgstr "Gestion de LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:229
+msgid "LiteSpeed Cache is maintained and managed by LiteSpeed Web Server."
+msgstr "LiteSpeed Cache est maintenu et géré par LiteSpeed Web Server."
+
+#: admin/class-litespeed-cache-admin-display.php:230
+msgid ""
+" You can inform LiteSpeed Web Server to purge cached contents from this "
+"screen."
+msgstr ""
+"Cette page vous permet de demander à LiteSpeed Web Server de nettoyer le "
+"contenu du cache."
+
+#: admin/class-litespeed-cache-admin-display.php:232
+msgid "More options will be added here in future releases."
+msgstr "Davantage d’options seront ajoutées ici dans les prochaines versions."
+
+#: admin/class-litespeed-cache-admin-display.php:241
+msgid "Purge Front Page"
+msgstr "Vider le cache de la page d’accueil"
+
+#: admin/class-litespeed-cache-admin-display.php:244
+msgid "Purge All"
+msgstr "Vider tout le cache"
+
+#: admin/class-litespeed-cache-admin-display.php:250
+msgid "This will purge everything for all blogs."
+msgstr "Ceci videra tout le cache pour tous les blogs."
+
+#: admin/class-litespeed-cache-admin-display.php:251
+msgid " Are you sure you want to purge all?"
+msgstr "Êtes-vous sûr de vouloir vider tout le cache ?"
+
+#: admin/class-litespeed-cache-admin-display.php:257
+msgid "Are you sure you want to purge all?"
+msgstr "Êtes-vous sûr de vouloir vider tout le cache ?"
+
+#: admin/class-litespeed-cache-admin-display.php:261
+msgid "Purge By..."
+msgstr "Vider cache par…"
+
+#: admin/class-litespeed-cache-admin-display.php:262
+msgid "You may purge selected pages here."
+msgstr "Vous pouvez vider les pages sélectionnées ici."
+
+#: admin/class-litespeed-cache-admin-display.php:263
+msgid " Currently, the available options are:"
+msgstr " Actuellement , les options disponibles sont :"
+
+#: admin/class-litespeed-cache-admin-display.php:266
+msgid "Category: Purge category pages by name."
+msgstr "Catégorie: Vider les pages de catégorie par nom."
+
+#: admin/class-litespeed-cache-admin-display.php:268
+msgid "Post ID: Purge pages by post ID."
+msgstr "ID d’article: Vider le cache par ID d’article"
+
+#: admin/class-litespeed-cache-admin-display.php:270
+msgid "Tag: Purge tag pages by name."
+msgstr "Étiquette: Vider les pages par nom d’étiquette"
+
+#: admin/class-litespeed-cache-admin-display.php:272
+msgid "URL: Purge pages by locator."
+msgstr "URL : Vider les pages par localisation."
+
+#: admin/class-litespeed-cache-admin-display.php:291
+msgid "Purge List"
+msgstr "Liste de nettoyage de cache"
+
+#: admin/class-litespeed-cache-admin-display.php:319
+#: admin/class-litespeed-cache-admin-display.php:390
+msgid "LiteSpeed Cache Settings"
+msgstr "Réglages LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:330
+#: admin/class-litespeed-cache-admin-display.php:541
+msgid "Plugin Compatibilities"
+msgstr "Compatibilité de plugin"
+
+#: admin/class-litespeed-cache-admin-display.php:340
+#: admin/class-litespeed-cache-admin-display.php:978
+msgid "Advanced Settings"
+msgstr "Paramètres avancés"
+
+#: admin/class-litespeed-cache-admin-display.php:348
+#: admin/class-litespeed-cache-admin-display.php:400
+#: admin/class-litespeed-cache-admin-display.php:689
+msgid "General"
+msgstr "Général"
+
+#: admin/class-litespeed-cache-admin-display.php:349
+msgid "Purge Rules"
+msgstr "Règles de nettoyage"
+
+#: admin/class-litespeed-cache-admin-display.php:350
+#: admin/class-litespeed-cache-admin-display.php:401
+msgid "Do Not Cache Rules"
+msgstr "Règles de non mise en cache"
+
+#: admin/class-litespeed-cache-admin-display.php:352
+#: admin/class-litespeed-cache-admin-display.php:1020
+msgid "Debug"
+msgstr "Debug"
+
+#: admin/class-litespeed-cache-admin-display.php:385
+msgid "These configurations are only available network wide."
+msgstr "Ces configurations ne seulement disponibles pour le réseau."
+
+#: admin/class-litespeed-cache-admin-display.php:387
+msgid ""
+"Separate Mobile Views should be enabled if any of the network enabled themes "
+"require a different view for mobile devices."
+msgstr ""
+"Affichages mobiles distincts doit être activé si un thème activé sur votre "
+"réseau requiert un affichage différent pour les appareils mobiles."
+
+#: admin/class-litespeed-cache-admin-display.php:388
+msgid " Responsive themes can handle this part automatically."
+msgstr " Les thèmes responsive peuvent gérer cette partie automatiquement."
+
+#: admin/class-litespeed-cache-admin-display.php:402
+msgid "Advanced"
+msgstr "Avancé."
+
+#: admin/class-litespeed-cache-admin-display.php:406
+msgid "General Network Configurations"
+msgstr "Configurations réseau générales"
+
+#: admin/class-litespeed-cache-admin-display.php:415
+msgid "Network Enable Cache"
+msgstr "Activer le cache sur le réseau"
+
+#: admin/class-litespeed-cache-admin-display.php:416
+msgid ""
+"Enabling LiteSpeed Cache for WordPress here enables the cache for the "
+"network."
+msgstr ""
+"Activer ici LiteSpeed Cache pour WordPress active le cache pour le réseau."
+
+#: admin/class-litespeed-cache-admin-display.php:418
+msgid ""
+"We <b>STRONGLY</b> recommend that you test the compatibility with other "
+"plugins on a single/few sites."
+msgstr ""
+"Nous vous recommandons <b>VIVEMENT</b> de tester la compatibilité avec "
+"d'autres plugins sur un seul/ou quelques sites."
+
+#: admin/class-litespeed-cache-admin-display.php:420
+msgid ""
+"This is to ensure compatibility prior to enabling the cache for all sites."
+msgstr ""
+"Ceci est pour tester la compatibilité avant d’activer le cache pour tous les "
+"sites."
+
+#: admin/class-litespeed-cache-admin-display.php:428
+msgid "Network Do Not Cache Rules"
+msgstr "Règles de non mise cache du réseau"
+
+#: admin/class-litespeed-cache-admin-display.php:432
+msgid "Do Not Cache User Agents"
+msgstr "Agents utilisateur à ne pas mettre en cache"
+
+#: admin/class-litespeed-cache-admin-display.php:437
+msgid "Do Not Cache Cookies"
+msgstr "Cookies à ne pas mettre en cache"
+
+#: admin/class-litespeed-cache-admin-display.php:442
+msgid "Advanced Network Settings"
+msgstr "Réglages avancés du réseau"
+
+#: admin/class-litespeed-cache-admin-display.php:454
+#: admin/class-litespeed-cache-admin-display.php:515
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: admin/class-litespeed-cache-admin-display.php:470
+msgid "LiteSpeed Cache Edit .htaccess"
+msgstr "LiteSpeed Cache Éditeur de fichier .htaccess"
+
+#: admin/class-litespeed-cache-admin-display.php:482
+msgid "WARNING: This page is meant for advanced users."
+msgstr "AVERTISSEMENT : Cette page est destinée aux utilisateurs avancés."
+
+#: admin/class-litespeed-cache-admin-display.php:484
+msgid " Any changes made to the .htaccess file may break your site."
+msgstr ""
+" Tout changement fait dans le fichier .htaccess peut empêcher le bon "
+"fonctionnement de votre site."
+
+#: admin/class-litespeed-cache-admin-display.php:485
+msgid ""
+" Please consult your host/server admin before making any changes you are "
+"unsure about."
+msgstr ""
+" Veuillez consulter votre hébergeur/administrateur de serveur avant "
+"d’appliquer des changements si vous n’êtes pas sûr."
+
+#: admin/class-litespeed-cache-admin-display.php:497
+#, php-format
+msgid "Current %s contents:"
+msgstr "Contenu actuel de %s :"
+
+#: admin/class-litespeed-cache-admin-display.php:500
+msgid "DO NOT EDIT ANYTHING WITHIN "
+msgstr "NE RIEN ÉDITER À L’INTÉRIEUR DE "
+
+#: admin/class-litespeed-cache-admin-display.php:502
+msgid ""
+"These are added by the LS Cache plugin and may cause problems if they are "
+"changed."
+msgstr ""
+"Ils sont ajoutés par le plugin LS Cache et peuvent causer des problèmes "
+"s’ils sont modifiés."
+
+#: admin/class-litespeed-cache-admin-display.php:536
+msgid "LiteSpeed Cache Information"
+msgstr "Information de LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:540
+msgid "Configurations"
+msgstr "Configurations"
+
+#: admin/class-litespeed-cache-admin-display.php:542
+msgid "Common Rewrite Rules"
+msgstr "Régales de réécriture générales"
+
+#: admin/class-litespeed-cache-admin-display.php:543
+msgid "Admin IP Commands"
+msgstr "Commandes d’administration par IP"
+
+#: admin/class-litespeed-cache-admin-display.php:547
+msgid "LiteSpeed Cache Configurations"
+msgstr "Configurations de LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:548
+msgid ""
+"Please check to make sure that your <b>web server cache configurations</b> "
+"are set to the following:"
+msgstr ""
+"Merci de vérifier que vos <b>réglages de serveur web</b> sont paramétrés de "
+"la manière suivante :"
+
+#: admin/class-litespeed-cache-admin-display.php:553
+msgid "The following are also recommended to be set:"
+msgstr "Il est aussi conseillé d’effectuer les réglages suivants :"
+
+#: admin/class-litespeed-cache-admin-display.php:562
+msgid "Verify Cache"
+msgstr "Vérifier le cache"
+
+#: admin/class-litespeed-cache-admin-display.php:564
+msgid "To verify that the cache is working, please do the following:"
+msgstr ""
+"Pour vérifier si le cache fonctionne, veuillez suivre les instructions "
+"suivantes :"
+
+#: admin/class-litespeed-cache-admin-display.php:565
+msgid "Open a non logged in browser."
+msgstr "Lancer un navigateur qui n’est pas connecté"
+
+#: admin/class-litespeed-cache-admin-display.php:566
+msgid "Right-click the page and open the inspector."
+msgstr "Clic droit sur la page puis ouvrez l’inspecteur."
+
+#: admin/class-litespeed-cache-admin-display.php:567
+msgid " Select the Network tab."
+msgstr " Sélectionnez l’onglet Réseau."
+
+#: admin/class-litespeed-cache-admin-display.php:568
+msgid "Visit a page. "
+msgstr "Visitez une page. "
+
+#: admin/class-litespeed-cache-admin-display.php:569
+msgid "If the page is not cached yet, there should be a response header "
+msgstr ""
+"Si la page n’est pas encore en cache, il doit y avoir une entête de réponse "
+
+#: admin/class-litespeed-cache-admin-display.php:571
+msgid "If the page is already cached, there may be a \"hit\" header instead."
+msgstr ""
+"Si la page est déjà en cache, il doit avoir une entête contenant \"hit\" à "
+"la place."
+
+#: admin/class-litespeed-cache-admin-display.php:572
+msgid " This may occur if someone else visited the page first."
+msgstr " Ceci peut arriver si quelqu’un visite la page avant vous."
+
+#: admin/class-litespeed-cache-admin-display.php:574
+msgid "Refresh the page. "
+msgstr "Actualisez la page. "
+
+#: admin/class-litespeed-cache-admin-display.php:575
+msgid "The page should now be cached. There should now be a response header "
+msgstr ""
+"La page doit maintenant être en cache. Il doit maintenant y avoir l’entête "
+"de réponse "
+
+#: admin/class-litespeed-cache-admin-display.php:577
+#, php-format
+msgid ""
+"For more information, please visit our wiki page<a href=\"%s\" target=\"%s"
+"\">here</a>"
+msgstr ""
+"Pour plus d’informations, veuillez visiter notre page de wiki <a href=\"%s\" "
+"target=\"%s\">ici</a>"
+
+#: admin/class-litespeed-cache-admin-display.php:601
+#, php-format
+msgid "If your questions are not answered, try the %s"
+msgstr "Si vous ne trouvez pas la réponse à vos questions, essayez le %s"
+
+#: admin/class-litespeed-cache-admin-display.php:604
+#, php-format
+msgid ""
+"If your questions are still not answered, do not hesitate to ask them on the "
+"<a href=\"%s\" target=\"%s\">support forum</a>."
+msgstr ""
+" Si vous n’avez toujours pas de réponse à vos questions, n’hésitez pas à les "
+"poser sur le <a href=\"%s\" target=\"%s\">forum de support</a>."
+
+#: admin/class-litespeed-cache-admin-display.php:623
+msgid "Is the LiteSpeed Cache Plugin for WordPress free?"
+msgstr "Est ce que le plugin LiteSpeed Cache pour WordPress est gratuit ?"
+
+#: admin/class-litespeed-cache-admin-display.php:625
+msgid "Yes, the plugin itself will remain free and open source."
+msgstr "Oui, le plugin lui-même restera gratuit et open source."
+
+#: admin/class-litespeed-cache-admin-display.php:626
+msgid ""
+" You are required to have a LiteSpeed Web Server Enterprise 5.0.10+ license "
+"with the LSCache module enabled."
+msgstr ""
+" Vous avez besoin d’une licence LiteSpeed Web Server Enterprise 5.0.10+ avec "
+"le module LSCache activé."
+
+#: admin/class-litespeed-cache-admin-display.php:627
+msgid ""
+" An alternative to Enterprise is OpenLiteSpeed v 1.4.17+, but the "
+"functionality is currently in beta."
+msgstr ""
+" Une alternative à la version Enterprise est OpenLiteSpeed v 1.4.17+, mais "
+"cette fonctionnalité est actuellement en beta."
+
+#: admin/class-litespeed-cache-admin-display.php:630
+msgid "Where are the cached files stored?"
+msgstr "Où sont stockés les fichiers de cache ?"
+
+#: admin/class-litespeed-cache-admin-display.php:631
+msgid ""
+"This plugin only instructs LiteSpeed Web Server on what pages to cache and "
+"when to purge. "
+msgstr ""
+"Ce plugin n’indique seulement au LiteSpeed Web Server quelles pages mettre "
+"en cache et quand il doit les vider."
+
+#: admin/class-litespeed-cache-admin-display.php:632
+msgid ""
+"The actual cached pages are stored and managed by LiteSpeed Web Server. "
+"Nothing is stored on the PHP side."
+msgstr ""
+"Les pages mises en cache sont stockées et gérées par LiteSpeed Web Server. "
+"Aucun fichier n’est stocké par PHP."
+
+#: admin/class-litespeed-cache-admin-display.php:635
+msgid "Does LiteSpeed Cache for WordPress work with OpenLiteSpeed?"
+msgstr ""
+"Est ce que LiteSpeed Cache for WordPress fonctionne avec OpenLiteSpeed ?"
+
+#: admin/class-litespeed-cache-admin-display.php:637
+msgid ""
+"The support is currently in beta. It should work, but is not fully tested. "
+msgstr ""
+"Le support est actuellement en bêta. Il devrait fonctionner, mais n’a pas "
+"été entièrement testé."
+
+#: admin/class-litespeed-cache-admin-display.php:638
+msgid ""
+"As well, any settings changes that require modifying the .htaccess file "
+"requires a server restart."
+msgstr ""
+"Aussi, tout réglage qui requiert la modification d’un fichier .htaccess "
+"nécessitent un redémarrage du serveur."
+
+#: admin/class-litespeed-cache-admin-display.php:641
+msgid "Is WooCommerce supported?"
+msgstr "Est-ce que WooCommerce est pris en charge ?"
+
+#: admin/class-litespeed-cache-admin-display.php:643
+msgid ""
+"In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will "
+"not cache the pages that WooCommerce deems non-cacheable."
+msgstr ""
+"En bref, oui. Pour les versions 1.4.2 et WooCommerce et au-dessus, ce plugin "
+"ne mettra pas en cache les pages que WooCommerce juge ne peuvent être mises "
+"en cache ."
+
+#: admin/class-litespeed-cache-admin-display.php:644
+msgid ""
+" For versions below 1.4.2, we do extra checks to make sure that pages are "
+"cacheable."
+msgstr ""
+" Pour les versions en dessous de 1.4.2, nous faisons des contrôles "
+"supplémentaires pour nous assurer que les pages peuvent être mises en cache."
+
+#: admin/class-litespeed-cache-admin-display.php:645
+msgid ""
+" We are always looking for feedback, so if you encounter any problems, be "
+"sure to send us a support question."
+msgstr ""
+" Nous sommes toujours à la recherche de retours utilisateur, donc si vous "
+"rencontrez des problèmes, veuillez nous faire parvenir votre demande de "
+"support ."
+
+#: admin/class-litespeed-cache-admin-display.php:647
+msgid "How do I get WP-PostViews to display an updating view count?"
+msgstr ""
+"Comment puis-je permettre à WP-PostViews d’afficher et mettre à jour le "
+"compteur de pages vues ?"
+
+#: admin/class-litespeed-cache-admin-display.php:648
+#, php-format
+msgid "Use %1$s to replace %2$s"
+msgstr "Utilisez %1$s pour remplacer %2$s"
+
+#: admin/class-litespeed-cache-admin-display.php:653
+msgid ""
+"NOTE: The id can be changed, but the div id and the ajax function must match."
+msgstr ""
+"REMARQUE : L’id peut être modifié, mais l’id du div et la fonction ajax "
+"doivent correspondre."
+
+#: admin/class-litespeed-cache-admin-display.php:656
+#, php-format
+msgid "Replace the ajax query in %1$s with %2$s"
+msgstr "Remplacer la requête ajax dans %1$s par %2$s"
+
+#: admin/class-litespeed-cache-admin-display.php:673
+msgid "Purge the cache to use the updated pages."
+msgstr "Vider le cache pour utiliser les pages mises à jour."
+
+#: admin/class-litespeed-cache-admin-display.php:694
+msgid "Enable"
+msgstr "Activer"
+
+#: admin/class-litespeed-cache-admin-display.php:695
+msgid "Disable"
+msgstr "Désactiver"
+
+#: admin/class-litespeed-cache-admin-display.php:701
+msgid "Use Network Admin Setting"
+msgstr "Utiliser le paramètre admin du réseau."
+
+#: admin/class-litespeed-cache-admin-display.php:709
+#: admin/class-litespeed-cache-admin-display.php:973
+msgid "NOTICE"
+msgstr "INFORMATION "
+
+#: admin/class-litespeed-cache-admin-display.php:710
+msgid ""
+" When disabling the cache, all cached entries for this blog will be purged."
+msgstr ""
+" Lorsque vous désactivez le cache, toutes les entrées mises en cache pour ce "
+"blog seront vidées."
+
+#: admin/class-litespeed-cache-admin-display.php:712
+#, php-format
+msgid ""
+"Please visit the <a href=\"%sadmin.php?page=lscache-info\">information</a> "
+"page on how to test the cache."
+msgstr ""
+"Veuillez visiter la <a href=\"%sadmin.php?page=lscache-info\">page "
+"d’information</a> pour savoir comment tester le cache."
+
+#: admin/class-litespeed-cache-admin-display.php:718
+msgid "You can override network admin settings here."
+msgstr "Vous pouvez remplacer les paramètres d'administration de réseau ici."
+
+#: admin/class-litespeed-cache-admin-display.php:721
+msgid "Enable LiteSpeed Cache"
+msgstr "Activer LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:726
+#: admin/class-litespeed-cache-admin-display.php:733
+msgid "seconds"
+msgstr "secondes"
+
+#: admin/class-litespeed-cache-admin-display.php:728
+msgid "Default Public Cache TTL"
+msgstr "Durée de vie par défaut de cache public"
+
+#: admin/class-litespeed-cache-admin-display.php:729
+#: admin/class-litespeed-cache-admin-display.php:735
+msgid "Required number in seconds, minimum is 30."
+msgstr "Requis nombre en secondes, minimum 30."
+
+#: admin/class-litespeed-cache-admin-display.php:734
+msgid "Default Front Page TTL"
+msgstr "Durée de vie du cache de la page d’accueil"
+
+#: admin/class-litespeed-cache-admin-display.php:739
+msgid "Enable Cache for Commenters"
+msgstr "Activer le cache pour les visiteurs qui ont posté un commentaire"
+
+#: admin/class-litespeed-cache-admin-display.php:740
+msgid ""
+"When checked, commenters will not be able to see their comment awaiting "
+"moderation. "
+msgstr ""
+"Lorsque ceci est coché, les personnes ayant posté un commentaire pourront "
+"voir leurs commentaires en attente de modération. "
+
+#: admin/class-litespeed-cache-admin-display.php:741
+msgid ""
+"Disabling this option will display those types of comments, but the cache "
+"will not perform as well."
+msgstr ""
+"Désactiver cette option affichera ce type de commentaire, mais votre cache "
+"sera moins performant."
+
+#: admin/class-litespeed-cache-admin-display.php:745
+msgid "Enable Cache for Login Page"
+msgstr "Activer le cache pour la page de login"
+
+#: admin/class-litespeed-cache-admin-display.php:746
+msgid "Unchecking this option may negatively affect performance."
+msgstr "Désactiver cette option aura un effet négatif sur la performance."
+
+#: admin/class-litespeed-cache-admin-display.php:768
+msgid "Auto Purge Rules For Publish/Update"
+msgstr ""
+"Règles de nettoyage automatique pour la publication/mise à jour d’un article"
+
+#: admin/class-litespeed-cache-admin-display.php:769
+msgid ""
+"Select which pages will be automatically purged when posts are published/"
+"updated."
+msgstr ""
+"Sélectionnez les pages qui doivent être vidés automatiquement du cache "
+"lorsqu’un article est publié/mis à jour."
+
+#: admin/class-litespeed-cache-admin-display.php:771
+#: admin/class-litespeed-cache-admin-display.php:775
+msgid "Note: "
+msgstr "Remarque : "
+
+#: admin/class-litespeed-cache-admin-display.php:772
+msgid ""
+"Select \"All\" if you have dynamic widgets linked to posts on pages other "
+"than the front or home pages."
+msgstr ""
+"Sélectionnez \"Toutes\" si vous avez des widget dynamiques liées à des "
+"articles sur des pages autres que la page d’articles ou d’accueil."
+
+#: admin/class-litespeed-cache-admin-display.php:773
+msgid " (Other checkboxes will be ignored)"
+msgstr " (Les autres cases à cocher seront ignorées)"
+
+#: admin/class-litespeed-cache-admin-display.php:776
+msgid ""
+"Select only the archive types that you are currently using, the others can "
+"be left unchecked."
+msgstr ""
+"Sélectionnez seulement les types d’archives que vous utilisez actuellement, "
+"les autres peuvent être laissés déselectionnés."
+
+#: admin/class-litespeed-cache-admin-display.php:786
+msgid "All pages"
+msgstr "Toutes les pages"
+
+#: admin/class-litespeed-cache-admin-display.php:792
+msgid "Front page"
+msgstr "Page d’accueil"
+
+#: admin/class-litespeed-cache-admin-display.php:798
+msgid "Home page"
+msgstr "Page d’articles"
+
+#: admin/class-litespeed-cache-admin-display.php:804
+msgid "Author archive"
+msgstr "Archive d’auteur"
+
+#: admin/class-litespeed-cache-admin-display.php:810
+msgid "Post type archive"
+msgstr "Archive de type d’article"
+
+#: admin/class-litespeed-cache-admin-display.php:816
+msgid "Yearly archive"
+msgstr "Archive annuelle"
+
+#: admin/class-litespeed-cache-admin-display.php:822
+msgid "Monthly archive"
+msgstr "Active mensuelle"
+
+#: admin/class-litespeed-cache-admin-display.php:828
+msgid "Daily archive"
+msgstr "Archive journalière"
+
+#: admin/class-litespeed-cache-admin-display.php:834
+msgid "Term archive (include category, tag, and tax)"
+msgstr "Terme archive (inclure catégorie, étiquette et taxonomie)"
+
+#: admin/class-litespeed-cache-admin-display.php:853
+msgid "Enter a list of urls that you do not want to have cached."
+msgstr "Saisissez la liste d’URL que vous ne souhaitez pas mettre en cache."
+
+#: admin/class-litespeed-cache-admin-display.php:855
+msgid "The urls will be compared to the REQUEST_URI server variable."
+msgstr "Ces URL seront comparés au REQUEST_URI du variable SERVER."
+
+#: admin/class-litespeed-cache-admin-display.php:857
+msgid "There should only be one url per line."
+msgstr "Il ne doit y avoir qu’une URL par ligne."
+
+#: admin/class-litespeed-cache-admin-display.php:859
+#: admin/class-litespeed-cache-admin-display.php:1440
+msgid "NOTE: "
+msgstr "Remarque : "
+
+#: admin/class-litespeed-cache-admin-display.php:859
+msgid "URLs must start with a '/' to be correctly matched."
+msgstr ""
+"Les URL doivent commencer avec un '/'  pour être associées correctement."
+
+#: admin/class-litespeed-cache-admin-display.php:861
+msgid "To do an exact match, add '$' to the end of the URL."
+msgstr ""
+"Pour demander une correspondance exacte, ajoutez '$'  à la fin de l’URL."
+
+#: admin/class-litespeed-cache-admin-display.php:863
+msgid "Any surrounding whitespaces will be trimmed."
+msgstr "Tout caractère d’espace autour seront supprimés."
+
+#: admin/class-litespeed-cache-admin-display.php:865
+#, php-format
+msgid "e.g. to exclude %s, I would have:"
+msgstr "par exemple, pour exclure %s, nous aurions :"
+
+#: admin/class-litespeed-cache-admin-display.php:871
+msgid "All categories are cached by default."
+msgstr "Toutes les catégories sont mises en cache par défaut."
+
+#: admin/class-litespeed-cache-admin-display.php:873
+msgid ""
+"To prevent a category from being cached, enter it in the text area below, "
+"one per line."
+msgstr ""
+"Pour éviter qu’une catégorie ne soit mise en cache, saisissez la dans le "
+"champ texte ci-dessous, une par ligne;"
+
+#: admin/class-litespeed-cache-admin-display.php:875
+#: admin/class-litespeed-cache-admin-display.php:883
+msgid "NOTE:"
+msgstr "REMARQUE : "
+
+#: admin/class-litespeed-cache-admin-display.php:875
+msgid "If the Category ID is not found, the name will be removed on save."
+msgstr ""
+"Si l’ID de catégorie n’est pas trouvé, le nom sera enlevé lors de "
+"l’enregistrement."
+
+#: admin/class-litespeed-cache-admin-display.php:879
+msgid "All tags are cached by default."
+msgstr "Toutes les étiquettes sont mises en cache par défaut."
+
+#: admin/class-litespeed-cache-admin-display.php:881
+msgid ""
+"To prevent tags from being cached, enter it in the text area below, one per "
+"line."
+msgstr ""
+"Pour éviter qu’un étiquette ne soit mise en cache, saisissez la dans le "
+"champ de texte ci-dessous, une par ligne."
+
+#: admin/class-litespeed-cache-admin-display.php:883
+msgid "If the Tag ID is not found, the name will be removed on save."
+msgstr ""
+"Si l’ID de l’étiquette est pas trouvé, le nom sera enlevé lors de "
+"l’enregistrement."
+
+#: admin/class-litespeed-cache-admin-display.php:891
+msgid "URI List"
+msgstr "Liste d’URI"
+
+#: admin/class-litespeed-cache-admin-display.php:907
+msgid "Category List"
+msgstr "Liste de catégrories"
+
+#: admin/class-litespeed-cache-admin-display.php:930
+msgid "Tag List"
+msgstr "Liste d’étiquettes"
+
+#: admin/class-litespeed-cache-admin-display.php:974
+msgid " These settings are meant for ADVANCED USERS ONLY."
+msgstr " Ces réglages sont SEULEMENT destinés à des UTILISATEURS AVANCÉS."
+
+#: admin/class-litespeed-cache-admin-display.php:975
+msgid " Please take great care when changing any of these settings."
+msgstr ""
+" Veuillez faire très attention lors de la modification de ces réglages."
+
+#: admin/class-litespeed-cache-admin-display.php:976
+msgid " If you have any questions, don't hesitate to submit a support thread."
+msgstr " Si vous avez des questions, n’hésitez pas à créer un fil de support."
+
+#: admin/class-litespeed-cache-admin-display.php:1004
+msgid "Developer Testing"
+msgstr "Tests pour développeurs"
+
+#: admin/class-litespeed-cache-admin-display.php:1008
+msgid "Admin IPs"
+msgstr "IP d’utilisateur admin"
+
+#: admin/class-litespeed-cache-admin-display.php:1009
+msgid ""
+"Allows listed IPs (space or comma separated) to perform certain actions from "
+"their browsers."
+msgstr ""
+"Autorise une liste d’adresse IP (séparées par des espaces ou virgules) "
+"d’effectuer certaines opérations dans leur navigateurs."
+
+#: admin/class-litespeed-cache-admin-display.php:1011
+msgid "More information about the available commands can be found here: "
+msgstr ""
+"Plus d’information sur les commandes disponibles peuvent être trouvées ici : "
+
+#: admin/class-litespeed-cache-admin-display.php:1016
+msgid "None"
+msgstr "Aucun"
+
+#: admin/class-litespeed-cache-admin-display.php:1017
+msgid "Error"
+msgstr "Erreur"
+
+#: admin/class-litespeed-cache-admin-display.php:1018
+msgid "Notice"
+msgstr "Notification"
+
+#: admin/class-litespeed-cache-admin-display.php:1019
+msgid "Info"
+msgstr "Info"
+
+#: admin/class-litespeed-cache-admin-display.php:1022
+msgid "Debug Level"
+msgstr "Niveau de débogage"
+
+#: admin/class-litespeed-cache-admin-display.php:1023
+msgid "Outputs to WordPress debug log."
+msgstr "Écrit dans les logs de debogage de WordPress."
+
+#: admin/class-litespeed-cache-admin-display.php:1075
+msgid ""
+"WARNING: Unchecking this option will clear the Mobile View List. Press OK to "
+"confirm this action."
+msgstr ""
+"AVERTISSEMENT : Désactiver cette option effacera la liste de Affichages "
+"Mobiles, cliquez sur OK pour confirmer cette action."
+
+#: admin/class-litespeed-cache-admin-display.php:1079
+msgid "Enable Separate Mobile View"
+msgstr "Activer l’affichage mobile distinct"
+
+#: admin/class-litespeed-cache-admin-display.php:1080
+msgid "When checked, mobile views will be cached separately. "
+msgstr ""
+"Lorsque cette option est sélectionnée, les affichages mobiles seront mis en "
+"cache séparément "
+
+#: admin/class-litespeed-cache-admin-display.php:1081
+msgid "A site built with responsive design does not need to check this."
+msgstr ""
+"Un site construit en responsive design, ne nécessite pas de cocher cette "
+"option."
+
+#: admin/class-litespeed-cache-admin-display.php:1083
+msgid "SYNTAX: Each entry should be separated with a bar, '|'."
+msgstr ""
+"SYNTAXE : Chaque entrée doit être séparé par une barre verticale,  '|'."
+
+#: admin/class-litespeed-cache-admin-display.php:1084
+msgid " Any spaces should be escaped with a backslash before it, '\\ '."
+msgstr ""
+" Tout espace doit avoir été échappé avec une barre oblique, '\\ ' devant "
+"celle-ci."
+
+#: admin/class-litespeed-cache-admin-display.php:1086
+msgid "The default list WordPress uses is "
+msgstr "La liste par défaut utilisée par WordPress est "
+
+#: admin/class-litespeed-cache-admin-display.php:1088
+#: admin/class-litespeed-cache-admin-display.php:1129
+#: admin/class-litespeed-cache-admin-display.php:1158
+#: admin/class-litespeed-cache-admin-display.php:1448
+msgid "NOTICE: "
+msgstr "REMARQUE : "
+
+#: admin/class-litespeed-cache-admin-display.php:1089
+#: admin/class-litespeed-cache-admin-display.php:1130
+#: admin/class-litespeed-cache-admin-display.php:1159
+msgid "This setting will edit the .htaccess file."
+msgstr "Ce réglage éditera le fichier .htaccess"
+
+#: admin/class-litespeed-cache-admin-display.php:1102
+#: admin/class-litespeed-cache-admin-display.php:1206
+msgid "Error getting current rules: "
+msgstr "Erreur d’obtention des règles actuelles : "
+
+#: admin/class-litespeed-cache-admin-display.php:1104
+msgid "List of Mobile View User Agents"
+msgstr "Liste d’agent utilisateur mobiles"
+
+#: admin/class-litespeed-cache-admin-display.php:1125
+msgid "Cookie List"
+msgstr "Liste de cookies"
+
+#: admin/class-litespeed-cache-admin-display.php:1126
+msgid "To prevent cookies from being cached, enter it in the text area below."
+msgstr ""
+"Pour éviter la mise en cache d’un cookie, saisissez le dans le champ de "
+"texte ci-dessous."
+
+#: admin/class-litespeed-cache-admin-display.php:1127
+msgid "SYNTAX: Cookies should be listed one per line."
+msgstr "SYNTAXE: Il ne faut seulement avoir un cookie par ligne"
+
+#: admin/class-litespeed-cache-admin-display.php:1128
+#: admin/class-litespeed-cache-admin-display.php:1157
+msgid " Spaces should have a backslash in front of them, '\\ '."
+msgstr " Vous devez ajouter une barre oblique , '\\ ' devant les espaces."
+
+#: admin/class-litespeed-cache-admin-display.php:1154
+msgid "User Agent List"
+msgstr "Liste d’agent utilisateur"
+
+#: admin/class-litespeed-cache-admin-display.php:1155
+msgid ""
+"To prevent user agents from being cached, enter it in the text field below."
+msgstr ""
+"Pour empêcher la mise en cache d’un agent utilisateur, saisissez le dans le "
+"champ texte ci-dessous. "
+
+#: admin/class-litespeed-cache-admin-display.php:1156
+msgid "SYNTAX: Separate each user agent with a bar, '|'."
+msgstr ""
+"SYNTAXE : Séparez chaque agent utilisateur avec une barre verticale, '|'."
+
+#: admin/class-litespeed-cache-admin-display.php:1184
+msgid "Login Cookie"
+msgstr "Cookie de login"
+
+#: admin/class-litespeed-cache-admin-display.php:1186
+msgid "SYNTAX: alphanumeric and \"_\"."
+msgstr "SYNTAXE:  alphanumérique et \"_\"."
+
+#: admin/class-litespeed-cache-admin-display.php:1187
+msgid " No spaces and case sensitive. "
+msgstr " Aucun espace et sensible à la casse. "
+
+#: admin/class-litespeed-cache-admin-display.php:1188
+msgid "MUST BE UNIQUE FROM OTHER WEB APPLICATIONS."
+msgstr "DOIT ÊTRE UNIQUE D’AUTRES APPLICATIONS WEB."
+
+#: admin/class-litespeed-cache-admin-display.php:1190
+#, php-format
+msgid "The default login cookie is %s. "
+msgstr "Le cookie de login par défaut est %s. "
+
+#: admin/class-litespeed-cache-admin-display.php:1191
+msgid ""
+"The server will determine if the user is logged in based on this cookie. "
+msgstr "Le serveur déterminera si l’utiliser est connecté grâce à ce cookie. "
+
+#: admin/class-litespeed-cache-admin-display.php:1192
+msgid ""
+"This setting is useful for those that have multiple web applications for the "
+"same domain. "
+msgstr ""
+"Ce réglage est utile pour les personnes qui ont plusieurs applications web "
+"avec le même nom de domaine. "
+
+#: admin/class-litespeed-cache-admin-display.php:1193
+msgid ""
+"If every web application uses the same cookie, the server may confuse "
+"whether a user is logged in or not."
+msgstr ""
+"Si chaque application utilise le même cookie, le serveur pourrait ne pas "
+"savoir si l’utilisateur est connecté."
+
+#: admin/class-litespeed-cache-admin-display.php:1194
+msgid " The cookie set here will be used for this WordPress installation."
+msgstr ""
+" Le cookie paramétré ici sera utilisé pour cette installation de WordPress"
+
+#: admin/class-litespeed-cache-admin-display.php:1196
+msgid "Example use case:"
+msgstr "Exemple d’utilisation :"
+
+#: admin/class-litespeed-cache-admin-display.php:1197
+#, php-format
+msgid "There is a WordPress install for %s."
+msgstr "Il y a une installation de WordPress pour %s."
+
+#: admin/class-litespeed-cache-admin-display.php:1199
+#, php-format
+msgid "Then there is another WordPress install (NOT MULTISITE) at %s"
+msgstr ""
+"Alors il y a une autre installation de WordPress (NON MULTISITE) à l’adresse "
+"%s"
+
+#: admin/class-litespeed-cache-admin-display.php:1201
+msgid ""
+"The cache needs to distinguish who is logged into which WordPress in order "
+"to cache correctly."
+msgstr ""
+"Le cache doit pouvoir différencier qui est connecté à WordPress afin de "
+"gérer le cache correctement."
+
+#: admin/class-litespeed-cache-admin-display.php:1211
+#, php-format
+msgid "Error: invalid login cookie. Please check the %s file"
+msgstr "Erreur : cookie de login invalide. Veuillez vérifier le fichier %s"
+
+#: admin/class-litespeed-cache-admin-display.php:1218
+msgid ""
+"WARNING: The .htaccess login cookie and Database login cookie do not match."
+msgstr ""
+"AVERTISSEMENT : Le cookie de login du fichier .htaccess et de la base de "
+"données ne correspondent pas."
+
+#: admin/class-litespeed-cache-admin-display.php:1233
+msgid "Cache favicon.ico"
+msgstr "Mise en cache de favicon.ico"
+
+#: admin/class-litespeed-cache-admin-display.php:1234
+msgid "favicon.ico is requested on most pages. "
+msgstr "favicon.ico est appelé sur la majorité des pages. "
+
+#: admin/class-litespeed-cache-admin-display.php:1235
+msgid ""
+"Caching this recource may improve server performance by avoiding unnecessary "
+"php calls."
+msgstr ""
+"Mettre en cache cette ressources peut améliorer la performance du serveur, "
+"évitant des appels inutiles à PHP."
+
+#: admin/class-litespeed-cache-admin-display.php:1251
+msgid "Enable Cache for PHP Resources"
+msgstr "Activer le cache pour les ressources PHP"
+
+#: admin/class-litespeed-cache-admin-display.php:1252
+msgid "Some themes and plugins add resources via a PHP request. "
+msgstr "Certains thèmes et plugins ajoutent des ressources par requête PHP. "
+
+#: admin/class-litespeed-cache-admin-display.php:1253
+msgid ""
+"Caching these pages may improve server performance by avoiding unnecessary "
+"php calls."
+msgstr ""
+"Mettre en cache ces pages peut améliorer les performances du serveur évitant "
+"des appels inutiles à PHP."
+
+#: admin/class-litespeed-cache-admin-display.php:1283
+msgid "To make LiteSpeed Cache compatible with WP-PostViews:"
+msgstr "Pour rendre LiteSpeed Cache compatible avec WP-PostViews :"
+
+#: admin/class-litespeed-cache-admin-display.php:1286
+msgid ""
+"Replace the following calls in your theme's template files with a div or "
+"span with a unique ID."
+msgstr ""
+"Remplacer les appels suivants dans les fichiers du template avec un div ou "
+"un spam et une ID unique."
+
+#: admin/class-litespeed-cache-admin-display.php:1288
+#, php-format
+msgid "e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>"
+msgstr "par exemple Remplacer <br> <pre>%1$s</pre> par<br> <pre>%2$s</pre>"
+
+#: admin/class-litespeed-cache-admin-display.php:1293
+msgid "Update the ajax request to output the results to that div."
+msgstr "Mettre à jour la requête ajax pour afficher les résultats dans ce div."
+
+#: admin/class-litespeed-cache-admin-display.php:1295
+msgid "Example:"
+msgstr "Exemple :"
+
+#: admin/class-litespeed-cache-admin-display.php:1298
+msgid "The ajax code can be found at"
+msgstr "Le code ajax peut être trouvé à l’adresse "
+
+#: admin/class-litespeed-cache-admin-display.php:1300
+msgid "After purging the cache, the view count should be updating."
+msgstr ""
+"Après avoir vidé le cache, le compteur de visites doit se mettre à jour."
+
+#: admin/class-litespeed-cache-admin-display.php:1303
+msgid "Compatibility with WP-PostViews"
+msgstr "Compatibilité avec WP-PostViews"
+
+#: admin/class-litespeed-cache-admin-display.php:1330
+msgid "LiteSpeed Cache Plugin Compatibility"
+msgstr "Compatibilité plugin de LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:1332
+msgid ""
+"Please comment on the support thread listing the plugins that you are using "
+"and how they are functioning."
+msgstr ""
+"Veuillez ajouter écrire sur le fil de support la liste des plugins que vous "
+"utilisez et s’ils fonctionnent correctement."
+
+#: admin/class-litespeed-cache-admin-display.php:1333
+msgid " With your help, we can provide the best WordPress caching solution."
+msgstr ""
+" Avez votre aide, nous pouvons fournir la meilleure solution de cache pour "
+"WordPress."
+
+#: admin/class-litespeed-cache-admin-display.php:1335
+msgid "Link Here"
+msgstr "Lien ici"
+
+#: admin/class-litespeed-cache-admin-display.php:1338
+msgid ""
+"This is a list of plugins that are confirmed to be compatible with LiteSpeed "
+"Cache Plugin:"
+msgstr ""
+"Ceci est la liste de plugins qui sont confirmés être compatibles avec le "
+"plugin LiteSpeed Cache : "
+
+#: admin/class-litespeed-cache-admin-display.php:1345
+msgid "This is a list of known UNSUPPORTED plugins:"
+msgstr "Ceci est la liste de plugins NON SUPPORTÉS :"
+
+#: admin/class-litespeed-cache-admin-display.php:1365
+msgid "Admin IP Query String Actions"
+msgstr "Actions de chaîne de requête pour IP administrateur"
+
+#: admin/class-litespeed-cache-admin-display.php:1368
+msgid ""
+"The following commands are available to the admin and do not require log-in, "
+"providing quick access to actions on the various pages."
+msgstr ""
+"Les commandes suivantes sont disponibles pour les utilisateurs admin et ne "
+"nécessitent pas de log-in, permettant un accès rapide à des actions sur les "
+"différentes pages."
+
+#: admin/class-litespeed-cache-admin-display.php:1371
+msgid "Action List:"
+msgstr "Liste d’actions :"
+
+#: admin/class-litespeed-cache-admin-display.php:1373
+msgid "This is used to display a page without caching it. "
+msgstr "Ceci est utilisé pour afficher une page sans mise en cache. "
+
+#: admin/class-litespeed-cache-admin-display.php:1374
+msgid ""
+"An example use case is to compare a cached version with an uncached version."
+msgstr ""
+"Un exemple d’utilisation est de comparer la version en cache avec la version "
+"qui n’est pas en cache."
+
+#: admin/class-litespeed-cache-admin-display.php:1377
+msgid "This is used to purge most cache tags associated with the page."
+msgstr ""
+"Ceci est utiliser pour vider le cache de la plupart des étiquettes associés "
+"à une page."
+
+#: admin/class-litespeed-cache-admin-display.php:1378
+msgid " The lone exception is the blog ID tag. "
+msgstr "La seule exception est l’étiquette de l’ID du blog. "
+
+#: admin/class-litespeed-cache-admin-display.php:1379
+msgid ""
+"Note that this means that pages with the same cache tag will be purged as "
+"well."
+msgstr ""
+"Remarquez que cela signifie que les pages avec la même étiquette de cache "
+"seront aussi supprimées du cache."
+
+#: admin/class-litespeed-cache-admin-display.php:1382
+msgid "This is used to purge the first cache tag associated with the page."
+msgstr ""
+"Ceci est utiliser pour vider le cache de la première étiquette associé avec "
+"la page."
+
+#: admin/class-litespeed-cache-admin-display.php:1385
+msgid "This is used to show all the cache headers associated with the page."
+msgstr ""
+"Ceci est utilisé pour afficher toutes les entêtes de cache associés avec "
+"cette page."
+
+#: admin/class-litespeed-cache-admin-display.php:1386
+msgid " This may be useful for debugging purposes."
+msgstr " Ceci peut être utile pour des fins de débogage."
+
+#: admin/class-litespeed-cache-admin-display.php:1390
+#, php-format
+msgid ""
+"To run the action, just access the page with the query string %s and the "
+"action will trigger for the accessed page."
+msgstr ""
+"Pour exécuter une action, appelez simplement la page avec la chaîne de "
+"requête %s et cette action sera déclenchée pour la page appelée."
+
+#: admin/class-litespeed-cache-admin-display.php:1407
+msgid "Mobile Views: "
+msgstr "Affichages Mobiles : "
+
+#: admin/class-litespeed-cache-admin-display.php:1408
+msgid ""
+"Some sites have adaptive views, meaning the page sent will adapt to the "
+"browser type (desktop vs mobile)."
+msgstr ""
+"Certains sites ont des affichages adaptatives, signifiant que la page "
+"s’adaptera au type de navigateur (desktop ou mobile)."
+
+#: admin/class-litespeed-cache-admin-display.php:1409
+msgid ""
+" This rewrite rule is used for sites that load a different page for each "
+"type."
+msgstr ""
+" Cette règle de réécriture est utilisé pour les sites qui changent une page "
+"différente pour chaque type."
+
+#: admin/class-litespeed-cache-admin-display.php:1411
+msgid ""
+" This configuration can be added on the settings page in the General tab."
+msgstr ""
+" Cette configuration peut être ajouté dans les réglages de la page de "
+"l’onglet Général."
+
+#: admin/class-litespeed-cache-admin-display.php:1416
+msgid "Do Not Cache Cookies: "
+msgstr "Cookies à ne pas mettre en cache : "
+
+#: admin/class-litespeed-cache-admin-display.php:1418
+msgid ""
+"Another common rewrite rule is to notify the cache not to cache when it sees "
+"a specified cookie name."
+msgstr ""
+"Autre règle de réécriture souvent utilisé est de notifier le moteur de cache "
+"de ne pas mettre en cache pour un nom de cookie spécifique."
+
+#: admin/class-litespeed-cache-admin-display.php:1420
+#: admin/class-litespeed-cache-admin-display.php:1429
+msgid ""
+" This configuration can be added on the settings page in the Do Not Cache "
+"tab."
+msgstr ""
+" La configuration peut être ajouté dans la page de Réglages, dans l’onglet "
+"Ne pas mettre en cache."
+
+#: admin/class-litespeed-cache-admin-display.php:1425
+msgid "Do Not Cache User Agent: "
+msgstr "Ne pas mettre en cache un agent utilisateur : "
+
+#: admin/class-litespeed-cache-admin-display.php:1427
+msgid ""
+"A not so commonly used rewrite rule is to notify the cache not to cache when "
+"it sees a specified User Agent."
+msgstr ""
+"Une règle moins souvent utilisée est de notifier le moteur de cache de ne "
+"pas mettre en cache pour un Agent utilisateur spécifique."
+
+#: admin/class-litespeed-cache-admin-display.php:1436
+msgid "LiteSpeed Cache Common Rewrite Rules"
+msgstr "Règles de réécritures souvent utilisés dans LiteSpeed Cache"
+
+#: admin/class-litespeed-cache-admin-display.php:1442
+msgid "The following configurations can only be changed by the network admin."
+msgstr ""
+"Les configurations suivantes ne peuvent seulement être modifiés par un admin "
+"réseau."
+
+#: admin/class-litespeed-cache-admin-display.php:1444
+msgid ""
+"If you need to make changes to them, please contact the network admin to "
+"make the changes."
+msgstr ""
+"Si vous avez besoin de modifier ces réglages, veuillez connecter l’admin du "
+"réseau pour effectuer ces changements."
+
+#: admin/class-litespeed-cache-admin-display.php:1450
+msgid ""
+"The following rewrite rules can be configured in the LiteSpeed Cache "
+"settings page."
+msgstr ""
+"Les règles de réécriture suivantes peuvent être configurés dans la page de "
+"Réglages de LiteSpeed Cache."
+
+#: admin/class-litespeed-cache-admin-display.php:1452
+msgid "If you need to make changes to them, please do so on that page."
+msgstr ""
+"Si vous avez besoin d’apporter de changements à ces réglages, veuillez le "
+"faire sur cette page."
+
+#: admin/class-litespeed-cache-admin-display.php:1453
+msgid " It will automatically generate the correct rules in the htaccess file."
+msgstr ""
+" Cela ajoutera automatiquement les bonnes règles dans le fichier .htaccess"
+
+#: admin/class-litespeed-cache-admin-rules.php:1155
+msgid "File Saved."
+msgstr "Fichier sauvegardé"
+
+#: admin/class-litespeed-cache-admin-rules.php:1157
+msgid "Failed to back up file, aborted changes."
+msgstr "Échec de sauvegarde du fichier, changements annulés."
+
+#: admin/class-litespeed-cache-admin-rules.php:1158
+msgid ".htaccess file does not exist or is not readable."
+msgstr "Le fichier .htaccess n’existe pas ou n’est pas lisible."
+
+#: admin/class-litespeed-cache-admin-rules.php:1159
+#, php-format
+msgid "Failed to put contents into %s"
+msgstr "Échec d’ajout de contenu dans %s"
+
+#: admin/class-litespeed-cache-admin-rules.php:1161
+#, php-format
+msgid "Failed to get %s file contents."
+msgstr "Échec de récupération du contenu du fichier %s."
+
+#: admin/class-litespeed-cache-admin-rules.php:1163
+msgid "Invalid login cookie. Invalid characters found."
+msgstr "Cookie de login invalide. Des caractères invalides ont été trouvés."
+
+#: admin/class-litespeed-cache-admin-rules.php:1165
+msgid "Could not find "
+msgstr "Impossible de trouver "
+
+#: admin/class-litespeed-cache-admin-rules.php:1166
+msgid "Failed to overwrite "
+msgstr "Échec de réécriture "
+
+#: admin/class-litespeed-cache-admin-rules.php:1167
+msgid "Tried to parse for existing login cookie."
+msgstr "Tentative de recherche de cookie de login existant. "
+
+#: admin/class-litespeed-cache-admin-rules.php:1168
+#, php-format
+msgid " %s file not valid. Please verify the contents."
+msgstr " Le fichier %s n’est pas valide. Veuillez vérifier son contenu."
+
+#: admin/class-litespeed-cache-admin-rules.php:1170
+msgid "File not readable or not writable."
+msgstr "Le fichier ne peut être lu ou écrit."
+
+#: admin/class-litespeed-cache-admin-rules.php:1172
+msgid "This site is a subdirectory install."
+msgstr "Le site est installé dans un sous-dossier."
+
+#: admin/class-litespeed-cache-admin-rules.php:1173
+msgid " Login cookies do not match."
+msgstr " Les cookies de login ne correspondent pas."
+
+#: admin/class-litespeed-cache-admin-rules.php:1174
+msgid ""
+" Please remove both and set the login cookie in LiteSpeed Cache advanced "
+"settings."
+msgstr ""
+" Veuillez enlever les deux et paramétrer le cookie dans login dans les "
+"réglages avancés de LiteSpeed Cache."
+
+#: admin/class-litespeed-cache-admin-rules.php:1176
+msgid "Prefix was found after suffix."
+msgstr "Le préfixe a été trouvé après le suffixe"
+
+#: admin/class-litespeed-cache-admin.php:151
+#, php-format
+msgid "%s Manager"
+msgstr "%s Gestionnaire"
+
+#: admin/class-litespeed-cache-admin.php:152
+msgid "Manage"
+msgstr "Gérer"
+
+#: admin/class-litespeed-cache-admin.php:163
+#, php-format
+msgid "%s Settings"
+msgstr "%s Réglages"
+
+#: admin/class-litespeed-cache-admin.php:164
+#: admin/class-litespeed-cache-admin.php:494
+msgid "Settings"
+msgstr "Réglages"
+
+#: admin/class-litespeed-cache-admin.php:167
+#, php-format
+msgid "%s Edit .htaccess"
+msgstr "%s Éditer .htaccess"
+
+#: admin/class-litespeed-cache-admin.php:168
+#, php-format
+msgid "Edit %s"
+msgstr "Éditer %s"
+
+#: admin/class-litespeed-cache-admin.php:181
+#, php-format
+msgid "%s Information"
+msgstr "%s Information"
+
+#: admin/class-litespeed-cache-admin.php:182
+msgid "Information"
+msgstr "Information"
+
+#: admin/class-litespeed-cache-admin.php:183
+#, php-format
+msgid "%s FAQs"
+msgstr "%s FAQs"
+
+#: admin/class-litespeed-cache-admin.php:184
+msgid "FAQs"
+msgstr "FAQs"
+
+#: admin/class-litespeed-cache-admin.php:310
+msgid "Invalid data in Admin IPs."
+msgstr "Données invalides dans les IP d’admin."
+
+#: admin/class-litespeed-cache-admin.php:319
+msgid "Default Public Cache TTL must be set to 30 seconds or more"
+msgstr ""
+"Durée de vie par défaut du cache public, doit être d’au moins 30 secondes"
+
+#: admin/class-litespeed-cache-admin.php:327
+msgid "Default Front Page TTL must be set to 30 seconds or more"
+msgstr ""
+"Durée de vie par défaut du de la page d’accueil, doit être d’au moins 30 "
+"secondes"
+
+#: admin/class-litespeed-cache-admin.php:407
+#, php-format
+msgid "Removed category \"%s\" from list, ID does not exist."
+msgstr "Catégorie \"%s\" retiré de la liste, cet ID n’existe pas."
+
+#: admin/class-litespeed-cache-admin.php:431
+#, php-format
+msgid "Removed tag \"%s\" from list, ID does not exist."
+msgstr "Étiquette \"%s\" supprimée de la liste, cet ID n’existe pas."
+
+#: admin/class-litespeed-cache-admin.php:459
+msgid "Invalid data in Test IPs."
+msgstr "Données invalides dans les IP de Test"
+
+#: admin/class-litespeed-cache-admin.php:514
+msgid "Notified LiteSpeed Web Server to purge the public cache."
+msgstr ""
+"LiteSpeed Web Server a été notifié de la demande de suppression du cache "
+"public."
+
+#: admin/class-litespeed-cache-admin.php:518
+msgid "Notified LiteSpeed Web Server to purge the front page."
+msgstr ""
+"LiteSpeed Web Server a été notifié de la demande de suppression du cache de "
+"la page d’accueil."
+
+#: admin/class-litespeed-cache-admin.php:598
+msgid "File saved."
+msgstr "Fichier sauvegardé."
+
+#: includes/class-litespeed-cache.php:147
+msgid ""
+"advanced-cache.php detected in wp-content directory! Please disable or "
+"uninstall any other cache plugins before enabling LiteSpeed Cache."
+msgstr ""
+"Nous avons détecté un fichier advanced-cache.php  dans le dossier wp-"
+"content ! Veuillez désactiver ou désinstaller tout autre plugin de cache "
+"avant d’activer LiteSpeed Cache."
+
+#: includes/class-litespeed-cache.php:274
+msgid "Your WordPress version is too old for the LiteSpeed Cache Plugin."
+msgstr ""
+"Votre version de WordPress est trop ancien pour le plugin LiteSpeed Cache."
+
+#: includes/class-litespeed-cache.php:276
+#, php-format
+msgid ""
+"The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade "
+"or go to <a href=\"%1$s\">active plugins</a> and deactivate the LiteSpeed "
+"Cache plugin to hide this message."
+msgstr ""
+"Le plugin LiteSpeed Cache requiert au moins WordPress version %2$s. Veuillez "
+"faire la mise à jour ou aller à votre <a href=\"%1$s\">liste de plugins "
+"actifs</a> et désactivez le plugin LiteSpeed Cache pour enlever ce message."
+
+#: includes/class-litespeed-cache.php:288
+msgid "Your PHP version is too old for LiteSpeed Cache Plugin."
+msgstr "Votre version de PHP est trop ancien pour le plugin LiteSpeed Cache."
+
+#: includes/class-litespeed-cache.php:290
+#, php-format
+msgid ""
+"LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, "
+"which is out-dated and insecure. Please ask your web host to update your PHP "
+"installation or go to <a href=\"%1$s\">active plugins</a> and deactivate "
+"LiteSpeed Cache plugin to hide this message."
+msgstr ""
+"Le plugin LiteSpeed Cache requiert au moins PHP PHP %3$s. Vous utilisez PHP "
+"%2$s, qui est une ancienne version de PHP qui n’est pas sécurisé. Veuillez "
+"demander à votre hébergeur de mettre à jour votre installation de PHP, ou "
+"allez à votre <a href=\"%1$s\">liste de plugins actifs</a> et désactivez le "
+"plugin LiteSpeed Cache pour désactiver ce message. "
+
+#: includes/class-litespeed-cache.php:302
+msgid ""
+"LiteSpeed Cache was unable to write to your wp-config.php file. Please add "
+"the following to your wp-config.php file located under your WordPress root "
+"directory: define('WP_CACHE', true);"
+msgstr ""
+"LiteSpeed Cache n’ai pas été en mesure de modifier votre fichier wp-config."
+"php. Veuillez ajouter la ligne suivante à votre fichier wp-config.php qui se "
+"trouve à la racine de votre site WordPress : define('WP_CACHE', true);"
+
+#: includes/class-litespeed-cache.php:592
+msgid "Failed to purge by category, invalid category slug."
+msgstr "Échec de nettoyage du cache par catégorie, slug de catégorie invalide."
+
+#: includes/class-litespeed-cache.php:599
+msgid "Failed to purge by category, does not exist: "
+msgstr "Échec de nettoyage du cache par catégorie, n’existe pas : "
+
+#: includes/class-litespeed-cache.php:605
+msgid "Purge category "
+msgstr "Vider le cache de catégories "
+
+#: includes/class-litespeed-cache.php:628
+msgid "Failed to purge by Post ID, given ID is not numeric: "
+msgstr ""
+"Échec de nettoyage du cache par ID d’article, ID renseignée n’est pas "
+"numérique : "
+
+#: includes/class-litespeed-cache.php:634
+msgid ""
+"Failed to purge by Post ID, given ID does not exist or is not published: "
+msgstr ""
+"Échec de nettoyage du cache par ID d’article, ID renseignée n’existe pas "
+"nous n’a pas été publié : "
+
+#: includes/class-litespeed-cache.php:642
+#, php-format
+msgid ""
+"Failed to purge by Post ID, Auto Purge All pages on update is enabled. "
+"Please use the Purge All button on the LiteSpeed Cache Management screen or "
+"navigate to the post you wish to purge and add %s to the url."
+msgstr ""
+"Échec de nettoyage du cache par ID d’article, l’option Vider le cache de "
+"toutes les pages lors d’une mise à jour est activé. Veuillez utiliser le "
+"bouton Vider tout le cache de la page Gestion de LiteSpeed Cache ou visitez "
+"la page que vous souhaitez vider et ajoutez %s à l’URL."
+
+#: includes/class-litespeed-cache.php:647
+msgid "Purge Post ID "
+msgstr "Vider le cache de l’article ID "
+
+#: includes/class-litespeed-cache.php:670
+msgid "Failed to purge by tag, invalid tag slug."
+msgstr "Échec de nettoyage du cache par étiquette, invalide slug d’étiquette."
+
+#: includes/class-litespeed-cache.php:677
+msgid "Failed to purge by tag, does not exist: "
+msgstr "Échec de nettoyage du cache par étiquette, n’existe pas : "
+
+#: includes/class-litespeed-cache.php:683
+msgid "Purge tag "
+msgstr "Vider le cache d’étiquette "
+
+#: includes/class-litespeed-cache.php:706
+msgid "Failed to purge by url, contained \"<\"."
+msgstr "Échec de nettoyage du cache par URL, contient \"<\"."
+
+#: includes/class-litespeed-cache.php:714
+msgid "Failed to purge by url, does not exist: "
+msgstr "Échec de nettoyage du cache par URL, n’existe pas : "
+
+#: includes/class-litespeed-cache.php:720
+msgid "Purge url "
+msgstr "Vider le cache d’URL "
+
+#: includes/class-litespeed-cache.php:738
+msgid "ERROR: Something went wrong with the form! Please try again."
+msgstr ""
+"ERREUR : Quelque chose ne s’est pas bien passé lors de la soumission de ce "
+"formulaire ! Veuillez réessayer."
+
+#: includes/class-litespeed-cache.php:747
+msgid "ERROR: Tried to purge list with empty list."
+msgstr "ERREUR : Tentative de vider une liste déjà vide."
+
+#: includes/class-litespeed-cache.php:767
+msgid "ERROR: Bad Purge By selected value."
+msgstr "Erreur : Mauvaise valeur sélectionnée pour vider le cache par."
+
+#: includes/class-litespeed-cache.php:835
+msgid "NOTICE: Database login cookie did not match your login cookie."
+msgstr ""
+"REMARQUE : Cookie de login en base de données ne correspond pas à votre "
+"cookie de login."
+
+#: includes/class-litespeed-cache.php:836
+msgid ""
+" If you just changed the cookie in the settings, please log out and back in."
+msgstr ""
+" Si vous venez de changer les réglages de cookie, veuillez vous déconnecter "
+"et vous reconnecter à nouveau."
+
+#: includes/class-litespeed-cache.php:837
+msgid " If not, please verify your LiteSpeed Cache setting's Advanced tab."
+msgstr ""
+" Si non, veuillez vérifier vos réglages de LiteSpeed Cache dans l’onglet "
+"Avancé"
+
+#: includes/class-litespeed-cache.php:839
+msgid ""
+" If using OpenLiteSpeed, you may need to restart the server for the changes "
+"to take effect."
+msgstr ""
+" Si vous utilisez OpenLiteSpeed, vous devez redémarrer votre serveur pour "
+"que les changements soient prises en compte."
+
+#: includes/class-litespeed-cache.php:900
+msgid ""
+"NOTICE: Database login cookie does not match the cookie used to access the "
+"page."
+msgstr ""
+"REMARQUE : Le cookie de login en base de données ne correspond pas au cookie "
+"utilisé pour accéder à cette page."
+
+#: includes/class-litespeed-cache.php:901
+msgid " Please have the admin check the LiteSpeed Cache settings."
+msgstr ""
+" Veuillez demander à un admin de vérifier les réglages de LiteSpeed Cache."
+
+#: includes/class-litespeed-cache.php:902
+msgid " This error may appear if you are logged into another web application."
+msgstr ""
+" Cette erreur peut être affichée si vous êtes connecté à une autre "
+"application."
