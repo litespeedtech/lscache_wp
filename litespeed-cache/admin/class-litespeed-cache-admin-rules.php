@@ -51,6 +51,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_PATTERN_LOGIN_BLOCK = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
 	private static $RW_PATTERN_UPGRADE_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
 	private static $RW_PATTERN_WRAPPERS = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
+	static $RW_PATTERN_RES = 'wp-content/.*/(loader|fonts)\.php';
 
 	/**
 	 * Initialize the class and set its properties.
@@ -596,7 +597,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function set_cache_resource($haystack, $set, &$output, &$errors)
 	{
-		$match = 'wp-content/.*/(loader|fonts)\.php';
+		$match = self::$RW_PATTERN_RES;
 		$sub = '-';
 		$env = 'E=cache-control:max-age=3600';
 		$rule_buf = '';
