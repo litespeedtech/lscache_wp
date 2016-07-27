@@ -346,6 +346,14 @@ class LiteSpeed_Cache
 			foreach ( $purge_all_events as $event ) {
 				add_action($event, array( $this, 'purge_all' )) ;
 			}
+			global $pagenow;
+			if ($pagenow === 'plugins.php') {
+				add_action('wp_default_scripts',
+					array($admin, 'set_update_text'), 0);
+				add_action('wp_default_scripts',
+					array($admin, 'unset_update_text'), 20);
+
+			}
 		}
 
 		if (!is_network_admin()) {

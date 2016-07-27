@@ -599,4 +599,45 @@ if (defined('lscache_debug')) {
 		$ret = update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
 	}
 
+	/**
+	 * Add text to recommend updating upon update success.
+	 *
+	 * @since 1.0.8.1
+	 * @access public
+	 * @param string $translations
+	 * @param string $text
+	 * @return string
+	 */
+	public function add_update_text($translations, $text)
+	{
+		if ($text !== 'Updated!') {
+			return $translations;
+		}
+		return $translations .
+			__(' Purging LiteSpeed Cache is recommended after updating a plugin.',
+				'litespeed-cache');
+	}
+
+	/**
+	 * Add the filter to update plugin update text.
+	 *
+	 * @since 1.0.8.1
+	 * @access public
+	 */
+	public function set_update_text()
+	{
+		add_filter('gettext', array($this, 'add_update_text'), 10, 2);
+	}
+
+	/**
+	 * Remove the filter to update plugin update text.
+	 *
+	 * @since 1.0.8.1
+	 * @access public
+	 */
+	public function unset_update_text()
+	{
+		remove_filter('gettext', array($this, 'add_update_text'));
+	}
+
 }
