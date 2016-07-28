@@ -693,7 +693,7 @@ if (defined('lscache_debug')) {
 			return $translations;
 		}
 		return $translations .
-			__(' Purging LiteSpeed Cache is recommended after updating a plugin.',
+			__(' It is recommended that LiteSpeed Cache be purged after updating a plugin.',
 				'litespeed-cache');
 	}
 

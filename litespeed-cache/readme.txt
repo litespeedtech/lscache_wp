@@ -253,6 +253,10 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.8.1 - July 28 2016 =
+* Fixed a bug where check cacheable was sometimes not hit.
+* Fixed a bug where extra slashes in clear rules were stripped.
+
 = 1.0.8 - July 25 2016 =
 * Added purge all on update check to purge by post id logic.
 * Added uninstall logic.

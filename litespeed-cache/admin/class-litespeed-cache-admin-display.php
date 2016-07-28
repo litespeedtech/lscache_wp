@@ -622,13 +622,13 @@ class LiteSpeed_Cache_Admin_Display
 		. '<li>' . __('Right-click the page and open the inspector.','litespeed-cahe')
 				.__(' Select the Network tab.', 'litespeed-cache') . '</li>'
 		. '<li>' . __('Visit a page. ', 'litespeed-cache')
-			. __('If the page is not cached yet, there should be a response header ', 'litespeed-cache')
+			. __('If the page has not yet been cached , the following response header should be set ', 'litespeed-cache')
 			. ' "X-LiteSpeed-Cache: miss".' . '<br>'
-			. __('If the page is already cached, there may be a "hit" header instead.', 'litespeed-cache')
+			. __('If the page has already been cached, the header value will be "hit" instead of "miss".', 'litespeed-cache')
 			. __(' This may occur if someone else visited the page first.', 'litespeed-cache')
 			. '</li>'
 		. '<li>' . __('Refresh the page. ', 'litespeed-cache')
-			. __('The page should now be cached. There should now be a response header ', 'litespeed-cache')
+			. __('The page should now be cached. The following response header should now be set ', 'litespeed-cache')
 			. ' "X-LiteSpeed-Cache: hit".' . '</li>'
 		. '<li>' . sprintf(wp_kses(__('For more information, please visit our wiki page'
 				. '<a href="%s" target="%s">here</a>', 'litespeed-cache'),
