@@ -619,12 +619,12 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '<h4>' . __('To verify that the cache is working, please do the following:', 'litespeed-cache') . '</h4>';
 		$buf .= '<ol><li>' . __('Open a non logged in browser.', 'litespeed-cache') . '</li>'
-		. '<li>' . __('Right-click the page and open the inspector.','litespeed-cahe')
+		. '<li>' . __('Right-click the page and open the inspector.','litespeed-cache')
 				.__(' Select the Network tab.', 'litespeed-cache') . '</li>'
 		. '<li>' . __('Visit a page. ', 'litespeed-cache')
-			. __('If the page has not yet been cached , the following response header should be set ', 'litespeed-cache')
+			. __('If the page is not cached , the following response header should be set ', 'litespeed-cache')
 			. ' "X-LiteSpeed-Cache: miss".' . '<br>'
-			. __('If the page has already been cached, the header value will be "hit" instead of "miss".', 'litespeed-cache')
+			. __('If the page is cached, the header value will be "hit" instead of "miss".', 'litespeed-cache')
 			. __(' This may occur if someone else visited the page first.', 'litespeed-cache')
 			. '</li>'
 		. '<li>' . __('Refresh the page. ', 'litespeed-cache')
