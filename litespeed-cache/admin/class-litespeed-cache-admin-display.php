@@ -87,11 +87,11 @@ class LiteSpeed_Cache_Admin_Display
 	 * Check to make sure that caching is enabled.
 	 *
 	 * @since 1.0.0
-	 * @access private
-	 * @param array $config The current configurations.
+	 * @access public
+	 * @param LiteSpeed_Cache_Config $config The current configurations object.
 	 * @return mixed True if enabled, error message otherwise.
 	 */
-	private function check_license($config)
+	public function check_license($config)
 	{
 		if ($config->is_caching_allowed() == false) {
 			return __('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled.', 'litespeed-cache')
@@ -213,7 +213,6 @@ class LiteSpeed_Cache_Admin_Display
 
 		if ( ($error_msg = $this->check_license($config)) !== true ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
-			return ;
 		}
 
 		$purgeby_options = array(

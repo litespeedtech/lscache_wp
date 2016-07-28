@@ -220,11 +220,15 @@ if (defined('lscache_debug')) {
 	 */
 	public function admin_init()
 	{
+		$config = LiteSpeed_Cache::config();
 		// check for upgrade
-		LiteSpeed_Cache::config()->plugin_upgrade() ;
+		$config->plugin_upgrade();
 
 		// check management action
-		$this->check_cache_mangement_actions() ;
+		if (LiteSpeed_Cache_Admin_Display::get_instance()->
+			check_license($config) === true) {
+			$this->check_cache_mangement_actions();
+		}
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
 		if (!is_network_admin()) {
