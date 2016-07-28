@@ -622,7 +622,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '<li>' . __('Right-click the page and open the inspector.','litespeed-cache')
 				.__(' Select the Network tab.', 'litespeed-cache') . '</li>'
 		. '<li>' . __('Visit a page. ', 'litespeed-cache')
-			. __('If the page is not cached , the following response header should be set ', 'litespeed-cache')
+			. __('If the page is not cached, the following response header should be set ', 'litespeed-cache')
 			. ' "X-LiteSpeed-Cache: miss".' . '<br>'
 			. __('If the page is cached, the header value will be "hit" instead of "miss".', 'litespeed-cache')
 			. __(' This may occur if someone else visited the page first.', 'litespeed-cache')
