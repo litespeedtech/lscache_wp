@@ -339,7 +339,7 @@ msgstr ""
 
 #: admin/class-litespeed-cache-admin-display.php:568
 msgid ""
-"If the page is not cached , the following response header should be set "
+"If the page is not cached, the following response header should be set "
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-display.php:570
