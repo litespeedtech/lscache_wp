@@ -1718,7 +1718,7 @@ error_log('Esi widget render: name ' . $params[self::ESI_PARAM_NAME]
 	 * @param array $instance Parameter used to build the widget.
 	 * @param WP_Widget $widget The widget to build.
 	 * @param array $args Parameter used to build the widget.
-	 * @return mixed Return false if display through esi, nothing otherwise.
+	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
 	public function esi_widget_display(array $instance,
 		WP_Widget $widget, array $args)
@@ -1731,7 +1731,7 @@ if (defined('lscache_debug')) {
 error_log('Do not esi widget ' . get_class($widget) . ' because '
 	. ((!isset($options)) ? 'options not set' : 'esi disabled for widget'));
 }
-			return;
+			return $instance;
 		}
 		$params = array(
 			self::ESI_PARAM_TYPE => self::ESI_TYPE_WIDGET,
