@@ -53,6 +53,7 @@ class LiteSpeed_Cache
 
 	const ESI_TYPE_WIDGET = 1;
 	const ESI_TYPE_ADMINBAR = 2;
+	const ESI_TYPE_COMMENTFORM = 3;
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -468,6 +469,9 @@ class LiteSpeed_Cache
 
 				remove_action('wp_footer', 'wp_admin_bar_render', 1000);
 				add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
+
+				add_action('comment_form_before',
+					array($this, 'esi_comment_form_check'));
 			}
 		}
 
@@ -1400,7 +1404,7 @@ if (defined('lscache_debug')) {
 error_log('do not cache page.');
 }
 			$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-					. ': no-cache' . $this->send_esi();
+					. ': no-cache' . $this->esi_send();
 			$purge_headers = $this->build_purge_headers();
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
@@ -1421,7 +1425,7 @@ error_log('page is cacheable');
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': public,max-age=' . $ttl . $this->send_esi();
+						. ': public,max-age=' . $ttl . $this->esi_send();
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 						. ': ' . implode(',', $cache_tags) ;
 				break;
@@ -1431,7 +1435,7 @@ error_log('page is cacheable');
 			case self::CACHECTRL_PURGE:
 				$cache_control_header =
 					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache'
-					. $this->send_esi();
+					. $this->esi_send();
 				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
 				break;
 
@@ -1613,7 +1617,7 @@ error_log('page is cacheable');
 	 * @since 1.1.0
 	 * @return string Esi On header if request has esi, empty string otherwise.
 	 */
-	private function send_esi()
+	private function esi_send()
 	{
 		if ($this->has_esi) {
 			return ',esi=on';
@@ -1621,7 +1625,7 @@ error_log('page is cacheable');
 		return '';
 	}
 
-	public static function get_esi()
+	public static function esi_get()
 	{
 		$cache = self::plugin();
 		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
@@ -1648,6 +1652,11 @@ error_log('Got an esi request. Type: ' . $params[self::ESI_PARAM_TYPE]);
 if (defined('lscache_debug')) {
 error_log('Admin Bar esi rendered');
 }
+				break;
+			case self::ESI_TYPE_COMMENTFORM:
+				remove_action('comment_form_before',
+					array($cache, 'esi_comment_form_check'));
+				comment_form(array(), $params[self::ESI_PARAM_ID]);
 				break;
 			default:
 				break;
@@ -1805,6 +1814,45 @@ error_log('admin bar esi url ' . $url);
 		);
 		add_rewrite_rule('lscacheesi/?',
 			'index.php?post_type=lscacheesi', 'top');
+	}
+
+	public function esi_comment_form_check()
+	{
+		ob_start();
+		add_action('comment_form_must_log_in_after',
+			array($this, 'esi_comment_form_cancel'));
+		add_filter('comment_form_submit_button',
+			array($this, 'esi_comment_form'), 1000, 2);
+	}
+
+	public function esi_comment_form_cancel()
+	{
+		ob_flush();
+	}
+
+	public function esi_comment_form($unused, $args)
+	{
+		ob_clean();
+		global $post;
+		$params = array(
+			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
+			self::ESI_PARAM_ID => $post->ID
+			);
+
+		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
+			. '=' . urlencode(base64_encode(serialize($params)));
+		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
+		echo '<!-- lscwp comment form -->'
+			. '<esi:include src="' . $url . '" />'
+			. '<!-- lscwp comment form esi end -->';
+		ob_start();
+		$this->has_esi = true;
+		add_action('comment_form_after', array($this, 'esi_comment_form_clean'));
+	}
+
+	public function esi_comment_form_clean()
+	{
+		ob_clean();
 	}
 
 /*END ESI CODE*/

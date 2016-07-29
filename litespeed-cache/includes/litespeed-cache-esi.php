@@ -1,5 +1,5 @@
 <?php
 
-LiteSpeed_Cache::get_esi();
+LiteSpeed_Cache::esi_get();
 
 
