@@ -54,6 +54,7 @@ class LiteSpeed_Cache
 	const ESI_TYPE_WIDGET = 1;
 	const ESI_TYPE_ADMINBAR = 2;
 	const ESI_TYPE_COMMENTFORM = 3;
+	const ESI_TYPE_COMMENT = 4;
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -450,29 +451,14 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 
+		if ($is_ajax) {
+			do_action('litespeed_cache_detect_thirdparty');
+		}
+
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
 		if (!is_openlitespeed()) {
-			add_action('load-widgets.php', array( $this, 'purge_widget'));
-			add_action('wp_update_comment_count',
-				array( $this, 'purge_comment_widget'));
-
-			if ($is_ajax) {
-				do_action('litespeed_cache_detect_thirdparty');
-			}
-			else {
-				add_action('init', array($this, 'register_post_type'));
-				add_action('template_include', array($this, 'esi_template'), 100);
-				add_action('wp', array($this, 'detect'), 4);
-				add_filter('widget_display_callback',
-					array($this, 'esi_widget_display'), 0, 3);
-
-				remove_action('wp_footer', 'wp_admin_bar_render', 1000);
-				add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
-
-				add_action('comment_form_before',
-					array($this, 'esi_comment_form_check'));
-			}
+			$this->load_esi_actions($is_ajax);
 		}
 
 		add_action('shutdown', array($this, 'send_headers'), 0);
@@ -480,6 +466,29 @@ class LiteSpeed_Cache
 		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
 		// TODO: private purge?
 		// TODO: purge by category, tag?
+	}
+
+	private function load_esi_actions($is_ajax)
+	{
+		add_action('load-widgets.php', array( $this, 'purge_widget'));
+		add_action('wp_update_comment_count',
+			array($this, 'purge_comment_widget'));
+
+		if (!$is_ajax) {
+			add_action('init', array($this, 'register_post_type'));
+			add_action('template_include', array($this, 'esi_template'), 100);
+			add_action('wp', array($this, 'detect'), 4);
+			add_filter('widget_display_callback',
+				array($this, 'esi_widget_display'), 0, 3);
+
+			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
+			add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
+
+			add_action('comment_form_before',
+				array($this, 'esi_comment_form_check'));
+
+			add_filter('comments_array', array($this, 'esi_comments'));
+		}
 	}
 
 	/**
@@ -1658,6 +1667,9 @@ error_log('Admin Bar esi rendered');
 					array($cache, 'esi_comment_form_check'));
 				comment_form(array(), $params[self::ESI_PARAM_ID]);
 				break;
+			case self::ESI_TYPE_COMMENT:
+				$cache->esi_comments_get($params);
+				break;
 			default:
 				break;
 		}
@@ -1853,6 +1865,51 @@ error_log('admin bar esi url ' . $url);
 	public function esi_comment_form_clean()
 	{
 		ob_clean();
+	}
+
+	public function esi_comments($r)
+	{
+		global $post;
+		$params = array(
+			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENT,
+			self::ESI_PARAM_ID => $post->ID,
+			self::ESI_PARAM_ARGS => get_query_var( 'cpage' ),
+		);
+		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
+			. '=' . urlencode(base64_encode(serialize($params)));
+		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
+		echo '<!-- lscwp comment -->'
+			. '<esi:include src="' . $url . '" />'
+			. '<!-- lscwp comment esi end -->';
+		return array();
+	}
+
+	private function esi_comments_get($params)
+	{
+		global $post, $wp_query;
+		$wp_query->is_singular = true;
+		$wp_query->is_single = true;
+		if (!empty($params[self::ESI_PARAM_ARGS])) {
+			$wp_query->set('cpage', $params[self::ESI_PARAM_ARGS]);
+		}
+		$post = get_post($params[self::ESI_PARAM_ID]);
+		remove_filter('comments_array', array($this, 'esi_comments'));
+		remove_all_actions('comment_form_comments_closed');
+		add_filter('comment_form_defaults', array($this, 'esi_comments_skip_open'));
+		comments_template();
+	}
+
+	public function esi_comments_skip_open()
+	{
+		add_filter('comments_open', '__return_false');
+		add_action('comment_form_comments_closed', array($this,
+			'esi_comments_remove_skip'));
+	}
+
+	public function esi_comments_remove_skip()
+	{
+		remove_filter('comments_open', '__return_false');
+
 	}
 
 /*END ESI CODE*/
