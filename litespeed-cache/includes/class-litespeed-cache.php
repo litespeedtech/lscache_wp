@@ -34,9 +34,10 @@ class LiteSpeed_Cache
 	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
 
 	const CACHECTRL_NOCACHE = 0;
-	const CACHECTRL_CACHE = 1;
+	const CACHECTRL_PUBLIC = 1;
 	const CACHECTRL_PURGE = 2;
 	const CACHECTRL_PURGESINGLE = 3;
+	const CACHECTRL_PRIVATE = 4;
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
@@ -1178,8 +1179,13 @@ class LiteSpeed_Cache
 	{
 		if ((LiteSpeed_Cache_Tags::is_noncacheable() == false)
 			&& ($this->is_cacheable())) {
-			$this->cachectrl = self::CACHECTRL_CACHE;
+			$this->set_cachectrl(self::CACHECTRL_PUBLIC);
 		}
+	}
+
+	public function set_cachectrl($val)
+	{
+		$this->cachectrl = $val;
 	}
 
 	/**
@@ -1196,11 +1202,11 @@ class LiteSpeed_Cache
 			return;
 		}
 		$this->check_cacheable();
-		if ($this->cachectrl !== self::CACHECTRL_CACHE) {
+		if ($this->cachectrl !== self::CACHECTRL_PUBLIC) {
 			return;
 		}
 		if (!empty($_GET)) {
-			$this->cachectrl = self::CACHECTRL_NOCACHE;
+			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 			return;
 		}
 
@@ -1236,17 +1242,17 @@ class LiteSpeed_Cache
 		$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
 		if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
-			$this->cachectrl = self::CACHECTRL_NOCACHE;
+			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 			return;
 		}
 
 		switch ($action[0]) {
 			case 'P':
 				if ($action == self::ADMINQS_PURGE) {
-					$this->cachectrl = self::CACHECTRL_PURGE;
+					$this->set_cachectrl(self::CACHECTRL_PURGE);
 				}
 				elseif ($action == self::ADMINQS_PURGESINGLE) {
-					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
+					$this->set_cachectrl(self::CACHECTRL_PURGESINGLE);
 				}
 				else {
 					break;
@@ -1254,14 +1260,15 @@ class LiteSpeed_Cache
 				return;
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
-					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
+					$this->set_cachectrl($this->cachectrl
+						| self::CACHECTRL_SHOWHEADERS);
 					return;
 				}
 				break;
 			default:
 				break;
 		}
-		$this->cachectrl = self::CACHECTRL_NOCACHE;
+		$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 	}
 
 	/**
@@ -1321,7 +1328,8 @@ class LiteSpeed_Cache
 			$mode = $this->cachectrl;
 		}
 
-		if ($mode != self::CACHECTRL_CACHE) {
+		if (($mode != self::CACHECTRL_PUBLIC)
+			&& ($mode != self::CACHECTRL_PRIVATE)) {
 			return $mode;
 		}
 
@@ -1399,6 +1407,7 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		$cache_tags = null;
+		$cachectrl_val = ': public';
 		$showhdr = false;
 		do_action('litespeed_cache_add_purge_tags');
 
@@ -1425,7 +1434,10 @@ if (defined('lscache_debug')) {
 error_log('page is cacheable');
 }
 		switch ($mode) {
-			case self::CACHECTRL_CACHE:
+			case self::CACHECTRL_PRIVATE:
+				$cachectrl_val = ': private';
+				// fall through
+			case self::CACHECTRL_PUBLIC:
 				if ($this->custom_ttl != 0) {
 					$ttl = $this->custom_ttl;
 				}
@@ -1436,7 +1448,7 @@ error_log('page is cacheable');
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': public,max-age=' . $ttl . $this->esi_send();
+						. $cachectrl_val . ',max-age=' . $ttl . $this->esi_send();
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 						. ': ' . implode(',', $cache_tags) ;
 				break;
