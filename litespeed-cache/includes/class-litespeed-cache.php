@@ -64,6 +64,8 @@ class LiteSpeed_Cache
 	protected $has_esi = false;
 	protected $custom_ttl = 0;
 
+	private $esi_args = null;
+
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -486,8 +488,8 @@ class LiteSpeed_Cache
 
 			add_action('comment_form_before',
 				array($this, 'esi_comment_form_check'));
-
-			add_filter('comments_array', array($this, 'esi_comments'));
+			add_filter('comment_form_defaults',
+				array($this, 'esi_comment_form_defaults'));
 		}
 	}
 
@@ -1665,7 +1667,11 @@ error_log('Admin Bar esi rendered');
 			case self::ESI_TYPE_COMMENTFORM:
 				remove_action('comment_form_before',
 					array($cache, 'esi_comment_form_check'));
-				comment_form(array(), $params[self::ESI_PARAM_ID]);
+				remove_filter('comment_form_defaults',
+					array($this, 'esi_comment_form_defaults'));
+				ob_start();
+				comment_form($params[self::ESI_PARAM_ARGS],
+					$params[self::ESI_PARAM_ID]);
 				break;
 			case self::ESI_TYPE_COMMENT:
 				$cache->esi_comments_get($params);
@@ -1805,6 +1811,9 @@ error_log('admin bar esi url ' . $url);
 		if ($post_type == self::ESI_POSTTYPE) {
 			return $this->plugin_dir . 'includes/litespeed-cache-esi.php';
 		}
+		else {
+			add_filter('comments_array', array($this, 'esi_comments'));
+		}
 		return $template;
 	}
 
@@ -1842,13 +1851,25 @@ error_log('admin bar esi url ' . $url);
 		ob_flush();
 	}
 
+	public function esi_comment_form_defaults($defaults)
+	{
+		$this->esi_args = $defaults;
+		return $defaults;
+	}
+
 	public function esi_comment_form($unused, $args)
 	{
+		if (empty($args) || empty($this->esi_args)) {
+			error_log('comment form args empty?');
+			return;
+		}
+		$esi_args = array_diff_assoc($args, $this->esi_args);
 		ob_clean();
 		global $post;
 		$params = array(
 			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
-			self::ESI_PARAM_ID => $post->ID
+			self::ESI_PARAM_ID => $post->ID,
+			self::ESI_PARAM_ARGS => $esi_args,
 			);
 
 		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
@@ -1857,8 +1878,8 @@ error_log('admin bar esi url ' . $url);
 		echo '<!-- lscwp comment form -->'
 			. '<esi:include src="' . $url . '" />'
 			. '<!-- lscwp comment form esi end -->';
-		ob_start();
 		$this->has_esi = true;
+		ob_start();
 		add_action('comment_form_after', array($this, 'esi_comment_form_clean'));
 	}
 
@@ -1867,9 +1888,23 @@ error_log('admin bar esi url ' . $url);
 		ob_clean();
 	}
 
-	public function esi_comments($r)
+	public function esi_comments($comments)
 	{
 		global $post;
+		$args = array(
+			'status' => 'hold',
+			'number' => '1',
+			'post_id' => $post->ID,
+		);
+
+		$on_hold = get_comments($args);
+
+		if (empty($on_hold)) {
+			// No comments on hold, comments section can be skipped
+			return $comments;
+		}
+		// Else need to ESI comments.
+
 		$params = array(
 			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENT,
 			self::ESI_PARAM_ID => $post->ID,
@@ -1881,7 +1916,15 @@ error_log('admin bar esi url ' . $url);
 		echo '<!-- lscwp comment -->'
 			. '<esi:include src="' . $url . '" />'
 			. '<!-- lscwp comment esi end -->';
+		add_filter('comments_template',
+			array($this, 'esi_comments_dummy_template'), 1000);
 		return array();
+	}
+
+	public function esi_comments_dummy_template()
+	{
+		return $this->plugin_dir .
+			'includes/litespeed-cache-esi-dummy-template.php';
 	}
 
 	private function esi_comments_get($params)
@@ -1893,23 +1936,7 @@ error_log('admin bar esi url ' . $url);
 			$wp_query->set('cpage', $params[self::ESI_PARAM_ARGS]);
 		}
 		$post = get_post($params[self::ESI_PARAM_ID]);
-		remove_filter('comments_array', array($this, 'esi_comments'));
-		remove_all_actions('comment_form_comments_closed');
-		add_filter('comment_form_defaults', array($this, 'esi_comments_skip_open'));
 		comments_template();
-	}
-
-	public function esi_comments_skip_open()
-	{
-		add_filter('comments_open', '__return_false');
-		add_action('comment_form_comments_closed', array($this,
-			'esi_comments_remove_skip'));
-	}
-
-	public function esi_comments_remove_skip()
-	{
-		remove_filter('comments_open', '__return_false');
-
 	}
 
 /*END ESI CODE*/
