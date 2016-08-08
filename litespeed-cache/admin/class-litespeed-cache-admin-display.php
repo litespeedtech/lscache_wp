@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Admin_Display
 			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
 			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'));
 
-		$options = LiteSpeed_Cache::get_widget_option($widget);
+		$options = LiteSpeed_Cache::esi_widget_get_option($widget);
 		if (empty($options)) {
 			$esi = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 			$ttl = '300'; // 5 minutes default for widgets.
