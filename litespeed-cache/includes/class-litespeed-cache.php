@@ -1937,7 +1937,7 @@ error_log('Do not esi widget ' . $name . ' because '
 	/**
 	 * Hooked to the comment_form_defaults filter.
 	 * Stores the default comment form settings.
-	 * This method initializes an output buffer and adds two hook functions
+	 * This method initializes an output buffer and adds three hook functions
 	 * to the WP process.
 	 * If esi_comment_form_cancel is triggered, the output buffer is flushed
 	 * because there is no need to make the comment form ESI.
@@ -1955,9 +1955,11 @@ error_log('Do not esi widget ' . $name . ' because '
 		$this->esi_args = $defaults;
 		ob_start();
 		add_action('comment_form_must_log_in_after',
-			array($this, 'esi_comment_form_cancel'));
+			array($this, 'esi_comment_form'), 10, 0);
 		add_filter('comment_form_submit_button',
-			array($this, 'esi_comment_form'), 1000, 2);
+			array($this, 'esi_comment_form_build_args'), 1000, 2);
+		add_action('comment_form_after',
+			array($this, 'esi_comment_form_clean'));
 		return $defaults;
 	}
 
@@ -1967,10 +1969,20 @@ error_log('Do not esi widget ' . $name . ' because '
 	 *
 	 * @access public
 	 * @since 1.1.0
+	 * @param array $args Arguments to pass to the esi request.
 	 */
-	public function esi_comment_form_cancel()
+	public function esi_comment_form($args = array())
 	{
-		ob_flush();
+		ob_clean();
+		global $post;
+		$params = array(
+			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
+			self::ESI_PARAM_ID => $post->ID,
+			self::ESI_PARAM_ARGS => $args,
+			);
+
+		$this->esi_build_url($params, 'comment form');
+		ob_start();
 	}
 
 	/**
@@ -1986,24 +1998,14 @@ error_log('Do not esi widget ' . $name . ' because '
 	 * @param array $args The used comment form args.
 	 * @return unused.
 	 */
-	public function esi_comment_form($unused, $args)
+	public function esi_comment_form_build_args($unused, $args)
 	{
 		if (empty($args) || empty($this->esi_args)) {
 			error_log('comment form args empty?');
 			return $unused;
 		}
 		$esi_args = array_diff_assoc($args, $this->esi_args);
-		ob_clean();
-		global $post;
-		$params = array(
-			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
-			self::ESI_PARAM_ID => $post->ID,
-			self::ESI_PARAM_ARGS => $esi_args,
-			);
-
-		$this->esi_build_url($params, 'comment form');
-		ob_start();
-		add_action('comment_form_after', array($this, 'esi_comment_form_clean'));
+		$this->esi_comment_form($esi_args);
 		return $unused;
 	}
 
