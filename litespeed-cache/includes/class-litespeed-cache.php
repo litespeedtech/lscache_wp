@@ -38,10 +38,11 @@ class LiteSpeed_Cache
 	const CACHECTRL_PURGE = 2;
 	const CACHECTRL_PURGESINGLE = 3;
 	const CACHECTRL_PRIVATE = 4;
+	const CACHECTRL_SHARED = 5;
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
-	const ESI_URL_ADMINBAR = '/lscacheesi/';
+	const ESI_URL = '/lscacheesi/';
 	const ESI_POSTTYPE = 'lscacheesi';
 
 	const ESI_PARAM_ACTION = 'action=lscache';
@@ -1433,7 +1434,7 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		$cache_tags = null;
-		$cachectrl_val = ': public';
+		$cachectrl_val = 'public';
 		$showhdr = false;
 		do_action('litespeed_cache_add_purge_tags');
 
@@ -1460,8 +1461,15 @@ if (defined('lscache_debug')) {
 error_log('page is cacheable');
 }
 		switch ($mode) {
+			case self::CACHECTRL_SHARED:
 			case self::CACHECTRL_PRIVATE:
-				$cachectrl_val = ': private';
+				if ($mode === self::CACHECTRL_SHARED) {
+					$cachectrl_val = 'shared,';
+				}
+				else {
+					$cachectrl_val = '';
+				}
+				$cachectrl_val .= 'private';
 				// fall through
 			case self::CACHECTRL_PUBLIC:
 				if ($this->custom_ttl != 0) {
@@ -1474,7 +1482,7 @@ error_log('page is cacheable');
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. $cachectrl_val . ',max-age=' . $ttl . $this->esi_send();
+						. ': ' . $cachectrl_val . ',max-age=' . $ttl . $this->esi_send();
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 						. ': ' . implode(',', $cache_tags) ;
 				break;
@@ -1675,6 +1683,37 @@ error_log('page is cacheable');
 	}
 
 	/**
+	 * Build the esi url. This method will build the html comment wrapper
+	 * as well as serialize and encode the parameter array.
+	 *
+	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
+	 *
+	 * @access private
+	 * @since 1.1.0
+	 * @param array $params The esi parameters.
+	 * @param string $wrapper The wrapper for the esi comments.
+	 * @param boolean $echo Whether to echo the output or return it.
+	 * @return mixed Nothing if echo is true, the output otherwise.
+	 */
+	private function esi_build_url($params, $wrapper, $echo = true)
+	{
+		$qs = '';
+		if (!empty($params)) {
+			$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
+				. '=' . urlencode(base64_encode(serialize($params)));
+		}
+		$url = self::ESI_URL . $qs;
+		$output = '<!-- lscwp ' . $wrapper . ' -->'
+			. '<esi:include src="' . $url . '" />'
+			. '<!-- lscwp ' . $wrapper . ' esi end -->';
+		if ($echo == false) {
+			return $output;
+		}
+		echo $output;
+		$this->has_esi = true;
+	}
+
+	/**
 	 * Parses the request parameters on an ESI request and selects the correct
 	 * esi output based on the parameters.
 	 *
@@ -1683,6 +1722,9 @@ error_log('page is cacheable');
 	 */
 	public static function esi_get()
 	{
+		if (!isset($_REQUEST[self::ESI_PARAM_PARAMS])) {
+			return;
+		}
 		$cache = self::plugin();
 		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
 		$unencrypted = base64_decode($req_params);
@@ -1799,34 +1841,26 @@ error_log('Esi widget render: name ' . $params[self::ESI_PARAM_NAME]
 	 */
 	public function esi_widget(array $instance, WP_Widget $widget, array $args)
 	{
+		$name = get_class($widget);
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		if ((!isset($options)) ||
 			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
 				== LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)) {
 if (defined('lscache_debug')) {
-error_log('Do not esi widget ' . get_class($widget) . ' because '
+error_log('Do not esi widget ' . $name . ' because '
 	. ((!isset($options)) ? 'options not set' : 'esi disabled for widget'));
 }
 			return $instance;
 		}
 		$params = array(
 			self::ESI_PARAM_TYPE => self::ESI_TYPE_WIDGET,
-			self::ESI_PARAM_NAME => get_class($widget),
+			self::ESI_PARAM_NAME => $name,
 			self::ESI_PARAM_ID => $widget->id,
 			self::ESI_PARAM_INSTANCE => $instance,
 			self::ESI_PARAM_ARGS => $args
 		);
 
-		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS . '='
-			. urlencode(base64_encode(serialize($params)));
-		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
-		echo '<!-- lscwp sidebar ' . $widget->id . ' -->'
-			. '<esi:include src="' . $url . '" />'
-			. '<!-- lscwp sidebar esi end -->';
-if (defined('lscache_debug')) {
-error_log('widget esi url ' . $url);
-}
-		$this->has_esi = true;
+		$this->esi_build_url($params, 'widget ' . $name);
 		return false;
 	}
 
@@ -1848,18 +1882,7 @@ error_log('widget esi url ' . $url);
 
 		$params = array(self::ESI_PARAM_TYPE => self::ESI_TYPE_ADMINBAR);
 
-		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
-			. '=' . urlencode(base64_encode(serialize($params)));
-		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
-		echo '<!-- lscwp adminbar -->'
-			. '<esi:include src="' . $url . '" />'
-			. '<!-- lscwp adminbar esi end -->';
-
-if (defined('lscache_debug')) {
-error_log('admin bar esi url ' . $url);
-}
-
-		$this->has_esi = true;
+		$this->esi_build_url($params, 'adminbar');
 	}
 
 	/**
@@ -1912,18 +1935,6 @@ error_log('admin bar esi url ' . $url);
 	}
 
 	/**
-	 * Hooked to the comment_form_must_log_in_after action.
-	 * @see esi_comment_form_check
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public function esi_comment_form_cancel()
-	{
-		ob_flush();
-	}
-
-	/**
 	 * Hooked to the comment_form_defaults filter.
 	 * Stores the default comment form settings.
 	 * This method initializes an output buffer and adds two hook functions
@@ -1948,6 +1959,18 @@ error_log('admin bar esi url ' . $url);
 		add_filter('comment_form_submit_button',
 			array($this, 'esi_comment_form'), 1000, 2);
 		return $defaults;
+	}
+
+	/**
+	 * Hooked to the comment_form_must_log_in_after action.
+	 * @see esi_comment_form_check
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
+	public function esi_comment_form_cancel()
+	{
+		ob_flush();
 	}
 
 	/**
@@ -1978,13 +2001,7 @@ error_log('admin bar esi url ' . $url);
 			self::ESI_PARAM_ARGS => $esi_args,
 			);
 
-		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
-			. '=' . urlencode(base64_encode(serialize($params)));
-		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
-		echo '<!-- lscwp comment form -->'
-			. '<esi:include src="' . $url . '" />'
-			. '<!-- lscwp comment form esi end -->';
-		$this->has_esi = true;
+		$this->esi_build_url($params, 'comment form');
 		ob_start();
 		add_action('comment_form_after', array($this, 'esi_comment_form_clean'));
 		return $unused;
@@ -2036,12 +2053,7 @@ error_log('admin bar esi url ' . $url);
 			self::ESI_PARAM_ID => $post->ID,
 			self::ESI_PARAM_ARGS => get_query_var( 'cpage' ),
 		);
-		$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
-			. '=' . urlencode(base64_encode(serialize($params)));
-		$url = home_url(self::ESI_URL_ADMINBAR . $qs);
-		echo '<!-- lscwp comment -->'
-			. '<esi:include src="' . $url . '" />'
-			. '<!-- lscwp comment esi end -->';
+		$this->esi_build_url($params, 'comments');
 		add_filter('comments_template',
 			array($this, 'esi_comments_dummy_template'), 1000);
 		return array();
