@@ -494,10 +494,8 @@ class LiteSpeed_Cache
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
 			add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
 
-			add_action('comment_form_before',
-				array($this, 'esi_comment_form_check'));
 			add_filter('comment_form_defaults',
-				array($this, 'esi_comment_form_defaults'));
+				array($this, 'esi_comment_form_check'));
 		}
 	}
 
@@ -1712,11 +1710,8 @@ error_log('Admin Bar esi rendered');
 }
 				break;
 			case self::ESI_TYPE_COMMENTFORM:
-				remove_action('comment_form_before',
-					array($cache, 'esi_comment_form_check'));
 				remove_filter('comment_form_defaults',
-					array($this, 'esi_comment_form_defaults'));
-				ob_start();
+					array($cache, 'esi_comment_form_check'));
 				comment_form($params[self::ESI_PARAM_ARGS],
 					$params[self::ESI_PARAM_ID]);
 				break;
@@ -1917,28 +1912,6 @@ error_log('admin bar esi url ' . $url);
 	}
 
 	/**
-	 * Hooked to the comment_form_before action.
-	 * This method initializes an output buffer and adds two hook functions
-	 * to the WP process.
-	 * If esi_comment_form_cancel is triggered, the output buffer is flushed
-	 * because there is no need to make the comment form ESI.
-	 * Else if esi_comment_form is triggered, the output buffer is cleared
-	 * and an esi block is added. The remaining comment form is also buffered
-	 * and cleared.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public function esi_comment_form_check()
-	{
-		ob_start();
-		add_action('comment_form_must_log_in_after',
-			array($this, 'esi_comment_form_cancel'));
-		add_filter('comment_form_submit_button',
-			array($this, 'esi_comment_form'), 1000, 2);
-	}
-
-	/**
 	 * Hooked to the comment_form_must_log_in_after action.
 	 * @see esi_comment_form_check
 	 *
@@ -1953,15 +1926,27 @@ error_log('admin bar esi url ' . $url);
 	/**
 	 * Hooked to the comment_form_defaults filter.
 	 * Stores the default comment form settings.
+	 * This method initializes an output buffer and adds two hook functions
+	 * to the WP process.
+	 * If esi_comment_form_cancel is triggered, the output buffer is flushed
+	 * because there is no need to make the comment form ESI.
+	 * Else if esi_comment_form is triggered, the output buffer is cleared
+	 * and an esi block is added. The remaining comment form is also buffered
+	 * and cleared.
 	 *
 	 * @access public
 	 * @since 1.1.0
 	 * @param array $defaults The default comment form settings.
 	 * @return array The default comment form settings.
 	 */
-	public function esi_comment_form_defaults($defaults)
+	public function esi_comment_form_check($defaults)
 	{
 		$this->esi_args = $defaults;
+		ob_start();
+		add_action('comment_form_must_log_in_after',
+			array($this, 'esi_comment_form_cancel'));
+		add_filter('comment_form_submit_button',
+			array($this, 'esi_comment_form'), 1000, 2);
 		return $defaults;
 	}
 
