@@ -58,6 +58,8 @@ class LiteSpeed_Cache
 	const ESI_TYPE_COMMENTFORM = 3;
 	const ESI_TYPE_COMMENT = 4;
 
+	const ESI_CACHECTRL_PRIV = 'no-vary,private';
+
 	protected $plugin_dir ;
 	protected $config ;
 	protected $current_vary;
@@ -65,6 +67,7 @@ class LiteSpeed_Cache
 	protected $pub_purge_tags = array();
 	protected $has_esi = false;
 	protected $custom_ttl = 0;
+	protected $user_status = 0;
 
 	private $esi_args = null;
 
@@ -485,16 +488,21 @@ class LiteSpeed_Cache
 		add_action('wp_update_comment_count',
 			array($this, 'purge_comment_widget'));
 
-		if (!$is_ajax) {
-			add_action('init', array($this, 'register_post_type'));
-			add_action('template_include', array($this, 'esi_template'), 100);
-			add_action('wp', array($this, 'detect'), 4);
-			add_filter('widget_display_callback',
-				array($this, 'esi_widget'), 0, 3);
+		if ($is_ajax) {
+			return;
+		}
+		add_action('init', array($this, 'register_post_type'));
+		add_action('template_include', array($this, 'esi_template'), 100);
+		add_action('wp', array($this, 'detect'), 4);
+		add_filter('widget_display_callback',
+			array($this, 'esi_widget'), 0, 3);
 
+		if ($this->user_status & self::LSCOOKIE_VARY_LOGGED_IN) {
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
 			add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
+		}
 
+		if ($this->user_status) {
 			add_filter('comment_form_defaults',
 				array($this, 'esi_comment_form_check'));
 		}
@@ -978,6 +986,7 @@ class LiteSpeed_Cache
 			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
 					time() + 2 * DAY_IN_SECONDS, is_ssl(), true);
 		}
+		$this->user_status |= self::LSCOOKIE_VARY_LOGGED_IN;
 		return true;
 	}
 
@@ -1024,6 +1033,7 @@ class LiteSpeed_Cache
 			// If do not cache commenters, check cookie for commenter value.
 			if ((isset($_COOKIE[$this->current_vary]))
 					&& ($_COOKIE[$this->current_vary] & self::LSCOOKIE_VARY_COMMENTER)) {
+				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
 				return true;
 			}
 			// If wp commenter cookie exists, need to set vary and do not cache.
@@ -1032,6 +1042,7 @@ class LiteSpeed_Cache
 						&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
 					$user = wp_get_current_user();
 					$this->set_comment_cookie(NULL, $user);
+					$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
 					return true;
 				}
 			}
@@ -1048,6 +1059,7 @@ class LiteSpeed_Cache
 		foreach($_COOKIE as $cookie_name => $cookie_value) {
 			if ((strlen($cookie_name) >= 15)
 					&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
+				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
 				unset($_COOKIE[$cookie_name]);
 			}
 		}
@@ -1204,6 +1216,7 @@ class LiteSpeed_Cache
 	 */
 	public function check_cacheable()
 	{
+		error_log('checking cacheable');
 		if ((LiteSpeed_Cache_Tags::is_noncacheable() == false)
 			&& ($this->is_cacheable())) {
 			$this->set_cachectrl(self::CACHECTRL_PUBLIC);
@@ -1692,10 +1705,11 @@ error_log('page is cacheable');
 	 * @since 1.1.0
 	 * @param array $params The esi parameters.
 	 * @param string $wrapper The wrapper for the esi comments.
+	 * @param string $cachectrl The cache control attribute if any.
 	 * @param boolean $echo Whether to echo the output or return it.
 	 * @return mixed Nothing if echo is true, the output otherwise.
 	 */
-	private function esi_build_url($params, $wrapper, $echo = true)
+	private function esi_build_url($params, $wrapper, $cachectrl = '', $echo = true)
 	{
 		$qs = '';
 		if (!empty($params)) {
@@ -1704,7 +1718,11 @@ error_log('page is cacheable');
 		}
 		$url = self::ESI_URL . $qs;
 		$output = '<!-- lscwp ' . $wrapper . ' -->'
-			. '<esi:include src="' . $url . '" />'
+			. '<esi:include src="' . $url . '"';
+		if (!empty($cachectrl)) {
+			$output .= ' cache-control="' . $cachectrl . '"';
+		}
+		$output .= ' />'
 			. '<!-- lscwp ' . $wrapper . ' esi end -->';
 		if ($echo == false) {
 			return $output;
@@ -1747,15 +1765,14 @@ error_log('Got an esi request. Type: ' . $params[self::ESI_PARAM_TYPE]);
 				break;
 			case self::ESI_TYPE_ADMINBAR:
 				wp_admin_bar_render();
-if (defined('lscache_debug')) {
-error_log('Admin Bar esi rendered');
-}
+				$cache->set_cachectrl(self::CACHECTRL_PRIVATE);
 				break;
 			case self::ESI_TYPE_COMMENTFORM:
 				remove_filter('comment_form_defaults',
 					array($cache, 'esi_comment_form_check'));
 				comment_form($params[self::ESI_PARAM_ARGS],
 					$params[self::ESI_PARAM_ID]);
+				$cache->set_cachectrl(self::CACHECTRL_PRIVATE);
 				break;
 			case self::ESI_TYPE_COMMENT:
 				$cache->esi_comments_get($params);
@@ -1882,7 +1899,7 @@ error_log('Do not esi widget ' . $name . ' because '
 
 		$params = array(self::ESI_PARAM_TYPE => self::ESI_TYPE_ADMINBAR);
 
-		$this->esi_build_url($params, 'adminbar');
+		$this->esi_build_url($params, 'adminbar', self::ESI_CACHECTRL_PRIV);
 	}
 
 	/**
@@ -1937,7 +1954,7 @@ error_log('Do not esi widget ' . $name . ' because '
 	/**
 	 * Hooked to the comment_form_defaults filter.
 	 * Stores the default comment form settings.
-	 * This method initializes an output buffer and adds three hook functions
+	 * This method initializes an output buffer and adds two hook functions
 	 * to the WP process.
 	 * If esi_comment_form_cancel is triggered, the output buffer is flushed
 	 * because there is no need to make the comment form ESI.
@@ -1955,34 +1972,25 @@ error_log('Do not esi widget ' . $name . ' because '
 		$this->esi_args = $defaults;
 		ob_start();
 		add_action('comment_form_must_log_in_after',
-			array($this, 'esi_comment_form'), 10, 0);
+			array($this, 'esi_comment_form_cancel'));
+		add_action('comment_form_comments_closed',
+			array($this, 'esi_comment_form_cancel'));
 		add_filter('comment_form_submit_button',
-			array($this, 'esi_comment_form_build_args'), 1000, 2);
-		add_action('comment_form_after',
-			array($this, 'esi_comment_form_clean'));
+			array($this, 'esi_comment_form'), 1000, 2);
 		return $defaults;
 	}
 
 	/**
-	 * Hooked to the comment_form_must_log_in_after action.
+	 * Hooked to the comment_form_must_log_in_after and
+	 * comment_form_comments_closed actions.
 	 * @see esi_comment_form_check
 	 *
 	 * @access public
 	 * @since 1.1.0
-	 * @param array $args Arguments to pass to the esi request.
 	 */
-	public function esi_comment_form($args = array())
+	public function esi_comment_form_cancel()
 	{
-		ob_clean();
-		global $post;
-		$params = array(
-			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
-			self::ESI_PARAM_ID => $post->ID,
-			self::ESI_PARAM_ARGS => $args,
-			);
-
-		$this->esi_build_url($params, 'comment form');
-		ob_start();
+		ob_flush();
 	}
 
 	/**
@@ -1998,14 +2006,25 @@ error_log('Do not esi widget ' . $name . ' because '
 	 * @param array $args The used comment form args.
 	 * @return unused.
 	 */
-	public function esi_comment_form_build_args($unused, $args)
+	public function esi_comment_form($unused, $args)
 	{
 		if (empty($args) || empty($this->esi_args)) {
 			error_log('comment form args empty?');
 			return $unused;
 		}
 		$esi_args = array_diff_assoc($args, $this->esi_args);
-		$this->esi_comment_form($esi_args);
+		ob_clean();
+		global $post;
+		$params = array(
+			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
+			self::ESI_PARAM_ID => $post->ID,
+			self::ESI_PARAM_ARGS => $esi_args,
+			);
+
+		$this->esi_build_url($params, 'comment form', self::ESI_CACHECTRL_PRIV);
+		ob_start();
+		add_action('comment_form_after',
+			array($this, 'esi_comment_form_clean'));
 		return $unused;
 	}
 
@@ -2055,7 +2074,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::ESI_PARAM_ID => $post->ID,
 			self::ESI_PARAM_ARGS => get_query_var( 'cpage' ),
 		);
-		$this->esi_build_url($params, 'comments');
+		$this->esi_build_url($params, 'comments', self::ESI_CACHECTRL_PRIV);
 		add_filter('comments_template',
 			array($this, 'esi_comments_dummy_template'), 1000);
 		return array();
@@ -2077,6 +2096,23 @@ error_log('Do not esi widget ' . $name . ' because '
 			'includes/litespeed-cache-esi-dummy-template.php';
 	}
 
+	public function esi_comments_cache_type($comments)
+	{
+		if (empty($comments)) {
+			$this->set_cachectrl(self::CACHECTRL_SHARED);
+			return $comments;
+		}
+
+		foreach ($comments as $comment) {
+			if (!$comment->comment_approved) {
+				$this->set_cachectrl(self::CACHECTRL_PRIVATE);
+				return $comments;
+			}
+		}
+		$this->set_cachectrl(self::CACHECTRL_SHARED);
+		return $comments;
+	}
+
 	/**
 	 * Outputs the ESI comments block.
 	 *
@@ -2095,6 +2131,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			$wp_query->set('cpage', $params[self::ESI_PARAM_ARGS]);
 		}
 		$post = get_post($params[self::ESI_PARAM_ID]);
+		add_filter('comments_array', array($this, 'esi_comments_cache_type'));
 		comments_template();
 	}
 
