@@ -231,6 +231,9 @@ class LiteSpeed_Cache
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			do_action('litespeed_cache_detect_thirdparty');
 		}
+		elseif ((is_admin()) || (is_network_admin())) {
+			add_action('admin_init', array($this, 'detect'));
+		}
 		else {
 			add_action('wp', array($this, 'detect'), 4);
 		}
