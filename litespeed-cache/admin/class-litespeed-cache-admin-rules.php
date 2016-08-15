@@ -299,6 +299,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function file_save($content, $cleanup = true, $path = '')
 	{
+		$bak = '_lscachebak_orig';
+
 		if (empty($path)) {
 			$path = self::get_home_path();
 		}
@@ -306,8 +308,13 @@ class LiteSpeed_Cache_Admin_Rules
 		if (self::is_file_able(self::RW) == 0) {
 			return self::$ERR_READWRITE;
 		}
+
+		if ( file_exists($path . $bak) ) {
+				$bak = '_lscachebak_' . date('ymd') . '_' . date('His');
+		}
+
 		//failed to backup, not good.
-		if (!copy($path, $path . '_lscachebak')) {
+		if (!copy($path, $path . $bak)) {
 			return self::$ERR_BACKUP;
 		}
 
