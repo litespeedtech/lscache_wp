@@ -1363,7 +1363,8 @@ class LiteSpeed_Cache
 
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
-				if ( is_front_page() ){
+				if ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
+					|| (is_front_page())){
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
 				}
 				else{

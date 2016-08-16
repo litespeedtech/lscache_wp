@@ -14,6 +14,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	const CACHETAG_SHOP = 'WC_S';
 	const CACHETAG_TERM = 'WC_T.';
 	const OPTION_UPDATE_INTERVAL = 'wc_update_interval';
+	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl';
 	const OPT_PQS_CS = 0; // flush product on quantity + stock change, categories on stock change
 	CONST OPT_PS_CS = 1; // flush product and categories on stock change
 	CONST OPT_PS_CN = 2; // flush product on stock change, categories no flush
@@ -62,6 +63,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		if (is_shop()) {
 			LiteSpeed_Cache_Tags::add_cache_tag(self::CACHETAG_SHOP);
+			if (LiteSpeed_Cache::config(self::OPTION_SHOP_FRONT_TTL) !== false) {
+				LiteSpeed_Cache_Tags::set_use_frontpage_ttl();
+			}
 		}
 		if (!is_product_taxonomy()) {
 			return;
@@ -269,6 +273,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return $configs;
 		}
 		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS;
+		$configs[self::OPTION_SHOP_FRONT_TTL] = self::OPTION_SHOP_FRONT_TTL;
 		return $configs;
 	}
 
@@ -295,15 +300,22 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			. __(' Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache'),
 			__('Always purge both product and categories on changes to the quantity or stock status.', 'litespeed-cache'),
 		);
-		$desc =
+		$update_desc =
 			__('Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache');
+		$ttl_desc = __('Checking this option will force the shop page to use the front page TTL setting. ', 'litespeed-cache')
+		. __('For example, if the homepage for your site is located at https://www.example.com, your shop page may be located at https://www.example.com/shop.', 'litespeed-cache');
 
 		if ($tabs === false) {
 			return $tabs;
 		}
 
-		if (isset($options) && isset($options[self::OPTION_UPDATE_INTERVAL])) {
-			$selected_value = $options[self::OPTION_UPDATE_INTERVAL];
+		if (isset($options)) {
+			if (isset($options[self::OPTION_UPDATE_INTERVAL])) {
+				$selected_value = $options[self::OPTION_UPDATE_INTERVAL];
+			}
+			if (isset($options[self::OPTION_SHOP_FRONT_TTL])) {
+				$checked_value = $options[self::OPTION_SHOP_FRONT_TTL];
+			}
 		}
 
 		$content = '<hr/><h3 class="title">'
@@ -322,8 +334,20 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 			$content .= '>' . $label . '</option>' ;
 		}
-		$content .= '</select><p class="description">' . $desc
-			. "</p></td></tr>\n</table>\n";
+		$content .= '</select><p class="description">' . $update_desc
+			. "</p></td></tr>\n";
+		$content .= '<tr><th scope="row">'
+			. __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . '</th><td>';
+		$content .= '<input name="' . $option_group . '['
+			. self::OPTION_SHOP_FRONT_TTL . ']" type="checkbox" id="'
+			. self::OPTION_SHOP_FRONT_TTL . '" value="'
+			. self::OPTION_SHOP_FRONT_TTL . '"' ;
+		if ( ($checked_value === self::OPTION_SHOP_FRONT_TTL)) {
+			$content .= ' checked="checked" ' ;
+		}
+		$content .= '/><p class="description">' . $ttl_desc;
+		$content .= "</p></td></tr>\n";
+		$content .= "</table>\n";
 
 		$tab = array(
 			'title' => $title,
@@ -350,18 +374,31 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if (!isset($options)) {
 			return $options;
 		}
-		$update_val_in = $input[self::OPTION_UPDATE_INTERVAL];
-		switch ($update_val_in) {
-			case self::OPT_PQS_CS:
-			case self::OPT_PS_CS:
-			case self::OPT_PS_CN:
-			case self::OPT_PQS_CQS:
-				$options[self::OPTION_UPDATE_INTERVAL] = intval($update_val_in);
-				break;
-			default:
-				// add error message?
-				break;
+		if (isset($input[self::OPTION_UPDATE_INTERVAL])) {
+			$update_val_in = $input[self::OPTION_UPDATE_INTERVAL];
+			switch ($update_val_in) {
+				case self::OPT_PQS_CS:
+				case self::OPT_PS_CS:
+				case self::OPT_PS_CN:
+				case self::OPT_PQS_CQS:
+					$options[self::OPTION_UPDATE_INTERVAL] = intval($update_val_in);
+					break;
+				default:
+					// add error message?
+					break;
+			}
 		}
+
+		if ((isset($input[self::OPTION_SHOP_FRONT_TTL]))
+			&& ($input[self::OPTION_SHOP_FRONT_TTL]
+				=== self::OPTION_SHOP_FRONT_TTL)) {
+			$options[self::OPTION_SHOP_FRONT_TTL] =
+				self::OPTION_SHOP_FRONT_TTL;
+		}
+		else {
+			$options[self::OPTION_SHOP_FRONT_TTL] = false;
+		}
+
 		return $options;
 	}
 
