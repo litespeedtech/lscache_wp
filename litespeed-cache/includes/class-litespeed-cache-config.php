@@ -153,9 +153,10 @@ class LiteSpeed_Cache_Config
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 * @param bool $include_thirdparty Whether to include the thirdparty options.
 	 * @return array An array of the default options.
 	 */
-	protected function get_default_options()
+	protected function get_default_options($include_thirdparty = true)
 	{
 		$default_purge_options = array(
 			self::PURGE_FRONT_PAGE,
@@ -206,6 +207,18 @@ class LiteSpeed_Cache_Config
 			$default_options[self::NETWORK_OPID_ENABLED] = false;
 		}
 
+		if (!$include_thirdparty) {
+			return $default_options;
+		}
+
+		// Add empty third party options to prevent deleting them.
+		$tp_options = apply_filters('litespeed_cache_get_options', array());
+		if (!empty($tp_options)) {
+			foreach($tp_options as $tp_option) {
+				$default_options[$tp_option] = '';
+			}
+		}
+
 		return $default_options ;
 	}
 
@@ -237,6 +250,24 @@ class LiteSpeed_Cache_Config
 				);
 		add_site_option(self::OPTION_NAME, $default_site_options);
 		return $default_site_options;
+	}
+
+	/**
+	 * Gets the third party options. Will convert the keys to the actual keys.
+	 * Will also strip the options that are actually normal options.
+	 *
+	 * @access public
+	 * @since 1.0.9
+	 * @return mixed boolean on failure, array of keys on success.
+	 */
+	public function get_thirdparty_option_keys()
+	{
+		$option_keys = apply_filters('litespeed_cache_get_options', array());
+		if (empty($option_keys)) {
+			return false;
+		}
+		return array_diff_key(array_flip($option_keys),
+			$this->get_default_options(false));
 	}
 
 	/**

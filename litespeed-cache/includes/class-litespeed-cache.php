@@ -104,11 +104,21 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @param string $opt_id An option ID if getting an option.
 	 * @return LiteSpeed_Cache_Config The configurations for the accessed page.
 	 */
-	public static function config()
+	public static function config($opt_id = '')
 	{
-		return self::$instance->config ;
+		$conf = self::$instance->config;
+		if ((empty($opt_id)) || (!is_string($opt_id))) {
+			return $conf;
+		}
+		$tp_keys = $conf->get_thirdparty_option_keys();
+		if ((isset($tp_keys[$opt_id]))
+			|| (array_key_exists($opt_id, $tp_keys))) {
+			return $conf->get_option($opt_id);
+		}
+		return NULL;
 	}
 
 	/**
@@ -232,7 +242,7 @@ class LiteSpeed_Cache
 			do_action('litespeed_cache_detect_thirdparty');
 		}
 		elseif ((is_admin()) || (is_network_admin())) {
-			add_action('admin_init', array($this, 'detect'));
+			add_action('admin_init', array($this, 'detect'), 0);
 		}
 		else {
 			add_action('wp', array($this, 'detect'), 4);

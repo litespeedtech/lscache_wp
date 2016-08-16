@@ -314,6 +314,29 @@ class LiteSpeed_Cache_Admin_Display
 		$options = $config->get_options() ;
 		$purge_options = $config->get_purge_options() ;
 
+		/**
+		 * This hook allows third party plugins to create litespeed cache
+		 * specific configurations.
+		 *
+		 * Each config should append an array containing the following:
+		 * 'title' (required) - The tab's title.
+		 * 'slug' (required) - The slug used for the tab. [a-z][A-Z], [0-9], -, _ permitted.
+		 * 'content' (required) - The tab's content.
+		 *
+		 * Upon saving, only the options with the option group in the input's
+		 * name will be retrieved.
+		 * For example, name="litespeed-cache-conf[my-opt]".
+		 *
+		 * @see TODO: add option save filter.
+		 * @since 1.0.9
+		 * @param array $tabs An array of third party configurations.
+		 * @param array $options The current configuration options.
+		 * @param string $option_group The option group to use for options.
+		 * @return mixed An array of third party configs else false on failure.
+		 */
+		$tp_tabs = apply_filters('litespeed_cache_add_config_tab', array(),
+			$options, LiteSpeed_Cache_Config::OPTION_NAME);
+
 		echo '<div class="wrap">
 		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
 		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
@@ -349,7 +372,35 @@ class LiteSpeed_Cache_Admin_Display
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
 	 	 ' . $advanced_tab . '
 		 <li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
-		. $compatibilities_tab . '
+		. $compatibilities_tab;
+
+		if ((!empty($tp_tabs)) && (is_array($tp_tabs))) {
+			foreach ($tp_tabs as $key=>$tab) {
+				if ((!is_array($tab))
+					|| (!isset($tab['title']))
+					|| (!isset($tab['slug']))
+					|| (!isset($tab['content']))) {
+					$config->debug_log(
+						__('WARNING: Third party tab input invalid.', 'litespeed-cache'));
+					unset($tp_tabs[$key]);
+					continue;
+				}
+				elseif (preg_match('/[^-\w]/', $tab['slug'])) {
+					$config->debug_log(
+						__('WARNING: Third party config slug contains invalid characters.', 'litespeed-cache'));
+					unset($tp_tabs[$key]);
+					continue;
+				}
+				echo '
+					<li><a href="#' . $tab['slug'] . '-settings">'
+					. $tab['title'] . '</a></li>';
+			}
+		}
+		else {
+			$tp_tabs = false;
+		}
+
+		echo '
 		</ul>
 		 <div id="general-settings">'
 		. $this->show_settings_general($options) .
@@ -364,7 +415,18 @@ class LiteSpeed_Cache_Admin_Display
 		'<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
 		'</div>'
-		. $compatibilities_settings . '</div>' ;
+		. $compatibilities_settings;
+
+		if (!empty($tp_tabs)) {
+			foreach ($tp_tabs as $tab) {
+				echo '
+				<div id ="' . $tab['slug'] . '-settings">'
+				. $tab['content'] .
+				'</div>';
+			}
+		}
+
+		echo '</div>';
 
 		submit_button() ;
 		echo "</form></div>\n" ;
