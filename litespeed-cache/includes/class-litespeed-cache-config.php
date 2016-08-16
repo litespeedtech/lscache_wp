@@ -211,15 +211,11 @@ class LiteSpeed_Cache_Config
 			return $default_options;
 		}
 
-		// Add empty third party options to prevent deleting them.
-		$tp_options = apply_filters('litespeed_cache_get_options', array());
-		if (!empty($tp_options)) {
-			foreach($tp_options as $tp_option) {
-				$default_options[$tp_option] = '';
-			}
+		$tp_options = $this->get_thirdparty_options($default_options);
+		if ((!isset($tp_options)) || (!is_array($tp_options))) {
+			return $default_options;
 		}
-
-		return $default_options ;
+		return array_merge($default_options, $tp_options);
 	}
 
 	/**
@@ -253,21 +249,24 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 * Gets the third party options. Will convert the keys to the actual keys.
+	 * Gets the third party options.
 	 * Will also strip the options that are actually normal options.
 	 *
 	 * @access public
 	 * @since 1.0.9
+	 * @param array $options Optional. The default options to compare against.
 	 * @return mixed boolean on failure, array of keys on success.
 	 */
-	public function get_thirdparty_option_keys()
+	public function get_thirdparty_options($options = null)
 	{
-		$option_keys = apply_filters('litespeed_cache_get_options', array());
-		if (empty($option_keys)) {
+		$tp_options = apply_filters('litespeed_cache_get_options', array());
+		if (empty($tp_options)) {
 			return false;
 		}
-		return array_diff_key(array_flip($option_keys),
-			$this->get_default_options(false));
+		if (!isset($options)) {
+			$options = $this->get_default_options(false);
+		}
+		return array_diff_key($tp_options, $options);
 	}
 
 	/**

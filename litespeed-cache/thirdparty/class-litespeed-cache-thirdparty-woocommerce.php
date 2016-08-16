@@ -190,6 +190,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	public static function purge_product($product)
 	{
 		$config = LiteSpeed_Cache::config(self::OPTION_UPDATE_INTERVAL);
+		if (is_null($config)) {
+			$config = self::OPT_PQS_CS;
+		}
 
 		if ($config === self::OPT_PQS_CQS) {
 			self::backend_purge($product->get_id());
@@ -265,7 +268,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if (!is_array($configs)) {
 			return $configs;
 		}
-		$configs[] = self::OPTION_UPDATE_INTERVAL;
+		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS;
 		return $configs;
 	}
 
@@ -283,7 +286,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	{
 		$title = __('WooCommerce Configurations', 'litespeed-cache');
 		$slug = 'woocom';
-		$selected_value = 0;
+		$selected_value = self::OPT_PQS_CS;
 		$seloptions = array(
 			__('Purge product on changes to the quantity or stock status.', 'litespeed-cache')
 			. __(' Purge categories only when stock status changes.', 'litespeed-cache'),

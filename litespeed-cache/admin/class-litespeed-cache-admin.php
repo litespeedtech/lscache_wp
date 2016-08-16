@@ -481,17 +481,16 @@ if (defined('lscache_debug')) {
 					LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors)) ;
 		}
 
-		$tp_option_keys = $config->get_thirdparty_option_keys();
-		if (empty($tp_option_keys)) {
+		$tp_default_options = $config->get_thirdparty_options();
+		if (empty($tp_default_options)) {
 			return $options;
 		}
-		$tp_input = array_intersect_key($input, $tp_option_keys);
+		$tp_input = array_intersect_key($input, $tp_default_options);
 		if (empty($tp_input)) {
 			return $options;
 		}
-		$tp_options = array_intersect_key($options, $tp_option_keys);
 		$tp_options = apply_filters('litespeed_cache_save_options',
-			$tp_options, $tp_input);
+			array_intersect_key($options, $tp_default_options), $tp_input);
 		if ((!empty($tp_options)) && is_array($tp_options)) {
 			$options = array_merge($options, $tp_options);
 		}
