@@ -120,8 +120,16 @@ class LiteSpeed_Cache_Admin_Rules
 	private static function is_subdir()
 	{
 		$rules = self::get_instance();
-		if (!isset($rules->is_subdir_install)) {
-			$rules->is_subdir_install = (get_option('siteurl') !== get_option('home'));
+		if (isset($rules->is_subdir_install)) {
+			return $rules->is_subdir_install;
+		}
+		$home = self::get_home_path();
+		$site = self::get_site_path();
+		if (($home === $site) || (!file_exists($site))) {
+			$rules->is_subdir_install = false;
+		}
+		else {
+			$rules->is_subdir_install = true;
 		}
 		return $rules->is_subdir_install;
 	}
