@@ -88,7 +88,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_home_path()
 	{
-		return get_home_path() . '.htaccess';
+		$path = get_home_path();
+		if ($path === '/') {
+			// get home path failed. Trac ticket #37668
+			// Try using ABSPATH instead.
+			$path = ABSPATH;
+		}
+		return $path . '.htaccess';
 	}
 
 	/**
