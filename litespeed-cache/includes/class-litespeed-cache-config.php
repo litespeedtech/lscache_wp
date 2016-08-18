@@ -340,8 +340,11 @@ class LiteSpeed_Cache_Config
 		}
 		$file = ABSPATH . 'wp-config.php' ;
 		if ( !is_writeable($file) ) {
-			error_log('wp-config file not writeable for \'WP_CACHE\'');
-			return false;
+			$file = dirname(ABSPATH) . '/wp-config.php';
+			if ( !is_writeable($file) ) {
+				error_log('wp-config file not writeable for \'WP_CACHE\'');
+				return false;
+			}
 		}
 		$file_content = file_get_contents($file) ;
 

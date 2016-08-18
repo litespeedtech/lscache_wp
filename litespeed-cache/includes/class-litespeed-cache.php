@@ -150,12 +150,12 @@ class LiteSpeed_Cache
 		if ( (!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
 			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0) ) {
 			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
-			LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 		}
 		include_once(ABSPATH . 'wp-content/advanced-cache.php');
 		if ( !defined('LSCACHE_ADV_CACHE')) {
 			exit(__("advanced-cache.php detected in wp-content directory! Please disable or uninstall any other cache plugins before enabling LiteSpeed Cache.", 'litespeed-cache')) ;
 		}
+		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		$this->config->plugin_activation();
