@@ -1228,6 +1228,7 @@ class LiteSpeed_Cache
 		}
 
 		if (!in_array('*', $purge_tags )) {
+			$purge_tags = array_map(array($this,'prefix_apply'), $purge_tags);
 			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
 		}
 		else if ((is_multisite()) && (!is_network_admin())) {
@@ -1350,6 +1351,10 @@ class LiteSpeed_Cache
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
+			if (!empty($cache_tags)) {
+				$cache_tags = array_map(array($this,'prefix_apply'),
+					$cache_tags);
+			}
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
 		}
 
@@ -1388,6 +1393,35 @@ class LiteSpeed_Cache
 		$purge_headers = $this->build_purge_headers();
 		$this->header_out($showhdr, $cache_control_header, $purge_headers,
 				$cache_tag_header);
+	}
+
+	/**
+	  * Callback function that applies a prefix to cache/purge tags.
+	  *
+	  * The first call to this method will build the prefix. Subsequent calls
+	  * will use the already set prefix.
+	  *
+	  * @since 1.0.9
+	  * @access private
+	  * @staticvar string $prefix The prefix to use for each tag.
+	  * @param string $tag The tag to prefix.
+	  * @return string The amended tag.
+	  */
+	private function prefix_apply($tag)
+	{
+		static $prefix = null;
+		if (is_null($prefix)) {
+			$prefix = '';
+			$conf_prefix = $this->config->get_option(
+				LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
+			if (isset($conf_prefix)) {
+				$prefix .= $conf_prefix . '_';
+			}
+			if (is_multisite()) {
+				$prefix .= 'B' . get_current_blog_id() . '_';
+			}
+		}
+		return $prefix . $tag;
 	}
 
 	/**

@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_RES = 'cache_resources';
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
 	const OPID_LOGIN_COOKIE = 'login_cookie';
+	const OPID_TAG_PREFIX = 'tag_prefix';
 	// do NOT set default options for these three, it is used for admin.
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules';
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
@@ -188,6 +189,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
 			self::OPID_LOGIN_COOKIE => '',
+			self::OPID_TAG_PREFIX => '',
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
@@ -241,6 +243,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
+			self::OPID_LOGIN_COOKIE => '',
+			self::OPID_TAG_PREFIX => '',
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
 				);

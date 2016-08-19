@@ -267,6 +267,20 @@ if (defined('lscache_debug')) {
 		return true;
 	}
 
+	private function validate_tag_prefix($input, &$options) {
+		$id = LiteSpeed_Cache_Config::OPID_TAG_PREFIX;
+		if (!isset($input[$id])) {
+			return true;
+		}
+		$prefix = $input[$id];
+		if (($prefix === '') || (ctype_alnum($prefix))) {
+			$options[$id] = $prefix;
+			return true;
+		}
+		return __('Invalid Tag Prefix input.', 'litespeed-cache')
+			. __(' Input should only contain letters and numbers.', 'litespeed-cache');
+	}
+
 	/**
 	 * Callback function that will validate any changes made in the settings page.
 	 *
@@ -387,6 +401,11 @@ if (defined('lscache_debug')) {
 				->validate_common_rewrites($input, $options, $errors);
 			if ($newopt) {
 				$options = $newopt;
+			}
+
+			$out = $this->validate_tag_prefix($input, $options);
+			if (is_string($out)) {
+				$errors[] = $out;
 			}
 		}
 
@@ -597,6 +616,11 @@ if (defined('lscache_debug')) {
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
 			$input[$id] = 'changed';
+		}
+
+		$out = $this->validate_tag_prefix($input, $options);
+		if (is_string($out)) {
+			$errors[] = $out;
 		}
 
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();

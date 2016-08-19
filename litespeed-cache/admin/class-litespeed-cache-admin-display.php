@@ -500,15 +500,7 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->input_group_end() . '</div>';
 
 		$buf .= '<div id="advanced">'
-		. $this->input_group_start(__('Advanced Network Settings', 'litespeed-cache'));
-
-		$login_cookie_title = '';
-		$login_cookie_desc = '';
-		$login_cookie_buf = $this->build_setting_login_cookie($site_options,
-				$login_cookie_title, $login_cookie_desc);
-		$buf .= $this->display_config_row($login_cookie_title,
-				$login_cookie_buf, $login_cookie_desc);
-		$buf .= $this->input_group_end() . '</div></div>';
+			. $this->show_settings_advanced($site_options) . '</div></div>';
 
 		$buf .= '<br><br>'
 		. '<input type="submit" class="button button-primary" name="submit" value="'
@@ -1040,13 +1032,19 @@ class LiteSpeed_Cache_Admin_Display
 										$advanced_desc);
 		$buf .= $this->input_group_end();
 
-		if (!is_multisite()) {
-			$cookie_buf = $this->build_setting_login_cookie($options,
-					$cookie_title, $cookie_desc);
-			$buf .= $this->input_group_start($cookie_title, $cookie_desc);
-			$buf .= $cookie_buf;
-			$buf .= $this->input_group_end();
-		}
+		$cookie_buf = $this->build_setting_login_cookie($options,
+				$cookie_title, $cookie_desc);
+		$buf .= $this->input_group_start($cookie_title, $cookie_desc);
+		$buf .= $cookie_buf;
+		$buf .= $this->input_group_end();
+
+		$id = LiteSpeed_Cache_Config::OPID_TAG_PREFIX;
+		$buf .= $this->input_group_start(
+			__('Cache Tag Prefix', 'litespeed-cache'),
+			__('Add an alpha-numeric prefix to cache and purge tags.', 'litespeed-cache')
+			. __('This can be used to prevent issues when using multiple LiteSpeed caching extensions on the same server.', 'litespeed-cache'));
+		$buf .= $this->input_field_text($id, $options[$id]);
+		$buf .= $this->input_group_end();
 
 		return $buf;
 
