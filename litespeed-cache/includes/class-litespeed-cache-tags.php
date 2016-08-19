@@ -20,7 +20,7 @@ class LiteSpeed_Cache_Tags
 {
 	// G P C E tags reserved for litemage.
 
-	//const TYPE_FEED = 'FD';
+	const TYPE_FEED = 'FD';
 	const TYPE_FRONTPAGE = 'F' ;
 	const TYPE_HOME = 'H' ;
 	const TYPE_POST = 'Po.' ; // Post. Cannot use P, reserved for litemage.

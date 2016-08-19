@@ -779,13 +779,20 @@ class LiteSpeed_Cache_Admin_Display
 											__('seconds', 'litespeed-cache')) ;
 
 		$buf .= $this->display_config_row(__('Default Public Cache TTL', 'litespeed-cache'), $input_public_ttl,
-				__('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
+				__('Specify how long, in seconds, public pages are cached. Minimum is 30 seconds.', 'litespeed-cache'));
 
 		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ;
-		$input_public_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+		$input_front_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
 				__('seconds', 'litespeed-cache')) ;
-		$buf .= $this->display_config_row(__('Default Front Page TTL', 'litespeed-cache'), $input_public_ttl,
-				__('Required number in seconds, minimum is 30.', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default Front Page TTL', 'litespeed-cache'), $input_front_ttl,
+				__('Specify how long, in seconds, the front page is cached. Minimum is 30 seconds.', 'litespeed-cache'));
+
+		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL ;
+		$input_feed_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+				__('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default Feed TTL', 'litespeed-cache'), $input_feed_ttl,
+				__('Specify how long, in seconds, feeds are cached. ', 'litespeed-cache')
+			. __(' If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache'));
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
 		$cache_commenters = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;

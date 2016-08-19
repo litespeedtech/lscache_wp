@@ -1024,12 +1024,14 @@ class LiteSpeed_Cache
 	{
 		// logged_in users already excluded, no hook added
 		$method = $_SERVER["REQUEST_METHOD"] ;
+		$conf = $this->config;
 
 		if ( 'GET' !== $method ) {
 			return $this->no_cache_for('not GET method') ;
 		}
 
-		if ( is_feed() ) {
+		if (($conf->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) === 0)
+			&& (is_feed())) {
 			return $this->no_cache_for('feed') ;
 		}
 
@@ -1054,7 +1056,7 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('Third Party Plugin determined not cacheable.');
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
 		if (( ! empty($excludes))
 			&& ( $this->is_uri_excluded(explode("\n", $excludes))))
 		{
@@ -1062,19 +1064,19 @@ class LiteSpeed_Cache
 					. $_SERVER['REQUEST_URI']);
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
 		if (( ! empty($excludes))
 			&& (has_category(explode(',', $excludes)))) {
 			return $this->no_cache_for('Admin configured Category Do not cache.');
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
 		if (( ! empty($excludes))
 			&& (has_tag(explode(',', $excludes)))) {
 			return $this->no_cache_for('Admin configured Tag Do not cache.');
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES);
 		if ((!empty($excludes)) && (!empty($_COOKIE))) {
 			$exclude_list = explode('|', $excludes);
 
@@ -1085,7 +1087,7 @@ class LiteSpeed_Cache
 			}
 		}
 
-		$excludes = $this->config->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS);
 		if ((!empty($excludes)) && (isset($_SERVER['HTTP_USER_AGENT']))) {
 			$pattern = '/' . $excludes . '/';
 			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
@@ -1368,11 +1370,15 @@ class LiteSpeed_Cache
 
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
+				$feed_ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL);
 				if ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
 					|| (is_front_page())){
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
 				}
-				else{
+				elseif ((is_feed()) && ($feed_ttl > 0)) {
+					$ttl = $feed_ttl;
+				}
+				else {
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
@@ -1414,7 +1420,7 @@ class LiteSpeed_Cache
 			$prefix = '';
 			$conf_prefix = $this->config->get_option(
 				LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
-			if (isset($conf_prefix)) {
+			if (!empty($conf_prefix)) {
 				$prefix .= $conf_prefix . '_';
 			}
 			if (is_multisite()) {
@@ -1485,6 +1491,9 @@ class LiteSpeed_Cache
 		elseif ( is_singular() ) {
 			//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $queried_obj_id ;
+		}
+		elseif ( is_feed() ) {
+			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FEED;
 		}
 
 		return array_merge($cache_tags, LiteSpeed_Cache_Tags::get_cache_tags());

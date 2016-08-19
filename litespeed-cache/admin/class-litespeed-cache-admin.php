@@ -348,6 +348,17 @@ if (defined('lscache_debug')) {
 			$options[$id] = $input[$id] ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL ;
+		if (!isset($input[$id]) || !ctype_digit($input[$id])) {
+			$errors[] = __('Feed TTL input is invalid. Input must be numeric.', 'litespeed-cache') ;
+		}
+		elseif ($input[$id] < 30) {
+			$options[$id] = 0;
+		}
+		else {
+			$options[$id] = intval($input[$id]);
+		}
+
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
 		if (isset($input['lscwp_' . $id])) {
 			$options[$id] = ( $input['lscwp_' . $id] === $id );
