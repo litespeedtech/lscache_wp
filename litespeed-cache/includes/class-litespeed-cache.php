@@ -451,6 +451,9 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 
+		add_action('wp_update_comment_count',
+			array($this, 'purge_feeds'));
+
 		add_action('shutdown', array($this, 'send_headers'), 0);
 		// purge_single_post will only purge that post by tag
 		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
@@ -851,6 +854,13 @@ class LiteSpeed_Cache
 		}
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_POST . $post_id);
 //		$this->send_purge_headers();
+	}
+
+	public function purge_feeds()
+	{
+		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) > 0) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FEED);
+		}
 	}
 
 	/**
@@ -1545,6 +1555,10 @@ class LiteSpeed_Cache
 					}
 				}
 			}
+		}
+
+		if ($config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) > 0) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_FEED;
 		}
 
 		// author, for author posts and feed list
