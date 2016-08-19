@@ -267,6 +267,18 @@ if (defined('lscache_debug')) {
 		return true;
 	}
 
+	/**
+	 * Checks the admin selected option for cache tag prefixes.
+	 *
+	 * Prefixes are only allowed to be alphanumeric. On failure, will
+	 * return error message.
+	 *
+	 * @since 1.0.9
+	 * @access private
+	 * @param array $input The configurations selected by the admin when clicking save.
+	 * @param array $options The current configuration options.
+	 * @return mixed True on success, error message otherwise.
+	 */
 	private function validate_tag_prefix($input, &$options) {
 		$id = LiteSpeed_Cache_Config::OPID_TAG_PREFIX;
 		if (!isset($input[$id])) {

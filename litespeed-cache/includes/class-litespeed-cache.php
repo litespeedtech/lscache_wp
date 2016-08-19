@@ -856,6 +856,12 @@ class LiteSpeed_Cache
 //		$this->send_purge_headers();
 	}
 
+	/**
+	 * Purges feeds on comment count update.
+	 *
+	 * @since 1.0.9
+	 * @access public
+	 */
 	public function purge_feeds()
 	{
 		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) > 0) {
