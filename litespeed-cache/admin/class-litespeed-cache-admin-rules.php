@@ -241,14 +241,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function file_split($content, &$buf, &$off_end)
 	{
-		$off_begin = strpos($content, self::$RW_BLOCK_START);
+		$off_begin = stripos($content, self::$RW_BLOCK_START);
 		//if not found
 		if ($off_begin === false) {
 			$buf = self::$RW_BLOCK_START . "\n" . self::$RW_ENGINEON . "\n";
 			return NULL;
 		}
 		$off_begin += strlen(self::$RW_BLOCK_START);
-		$off_end = strpos($content, self::$RW_BLOCK_END, $off_begin);
+		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
 		if ($off_end === false) {
 			$buf = self::$ERR_NOT_FOUND . 'IfModule close';
 			return false;
@@ -390,14 +390,14 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 			return true;
 		}
-		$wrap_begin = strpos($content, $wrapper_begin);
+		$wrap_begin = stripos($content, $wrapper_begin);
 		if ($wrap_begin === false) {
 			if ($match != '') {
 				$output .= $out;
 			}
 			return true;
 		}
-		$wrap_end = strpos($content, $wrapper_end,
+		$wrap_end = stripos($content, $wrapper_end,
 			$wrap_begin + strlen($wrapper_begin));
 
 		if ($wrap_end === false) {
@@ -429,13 +429,13 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$suffix = '';
 		$prefix = $this->build_wrappers($wrapper, $suffix);
-		$off_begin = strpos($match, $prefix);
+		$off_begin = stripos($match, $prefix);
 		if ($off_begin === false) {
 			$match = '';
 			return true; // It does not exist yet, not an error.
 		}
 		$off_begin += strlen($prefix);
-		$off_end = strpos($match, $suffix, $off_begin);
+		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
 			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
 			return false;
@@ -498,14 +498,14 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 			return true;
 		}
-		$wrap_begin = strpos($content, $wrapper_begin);
+		$wrap_begin = stripos($content, $wrapper_begin);
 		if ($wrap_begin === false) {
 			if ($match != '') {
 				$output .= $out;
 			}
 			return true;
 		}
-		$wrap_end = strpos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
+		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
 			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
 		}
@@ -536,13 +536,13 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$suffix = '';
 		$prefix = $this->build_wrappers($wrapper, $suffix);
-		$off_begin = strpos($match, $prefix);
+		$off_begin = stripos($match, $prefix);
 		if ($off_begin === false) {
 			$match = '';
 			return true; // It does not exist yet, not an error.
 		}
 		$off_begin += strlen($prefix);
-		$off_end = strpos($match, $suffix, $off_begin);
+		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
 			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
 			return false;
