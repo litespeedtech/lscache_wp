@@ -1245,17 +1245,37 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		if (!in_array('*', $purge_tags )) {
-			$purge_tags = array_map(array($this,'prefix_apply'), $purge_tags);
-			$cache_purge_header .= ': tag=' . implode(',', $purge_tags);
+		$prefix = $this->config->get_option(
+			LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
+		if (empty($prefix)) {
+			$prefix = '';
 		}
-		else if ((is_multisite()) && (!is_network_admin())) {
-			$cache_purge_header .= ': tag='
-					. LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
+
+		if (!in_array('*', $purge_tags )) {
+			$tags = array_map(array($this,'prefix_apply'), $purge_tags);
+		}
+		elseif ((!is_multisite()) || (!is_network_admin())) {
+			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
 		}
 		else {
-			$cache_purge_header .= ': *';
+			global $wp_version;
+			if (version_compare($wp_version, '4.6', '<')) {
+				$blogs = wp_get_sites();
+			}
+			else {
+				$blogs = get_sites();
+			}
+			if (empty($blogs)) {
+				error_log('blog list is empty');
+				return '';
+			}
+			$tags = array();
+			foreach ($blogs as $blog) {
+				$tags[] = sprintf('%sB%s_', $prefix, $blog['blog_id']);
+			}
 		}
+
+		$cache_purge_header .= ': tag=' . implode(',', $tags);
 		return $cache_purge_header;
 		// TODO: private cache headers
 //		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
@@ -1369,11 +1389,7 @@ class LiteSpeed_Cache
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
-			if (!empty($cache_tags)) {
-				$cache_tags = array_map(array($this,'prefix_apply'),
-					$cache_tags);
-			}
-			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_BLOG . get_current_blog_id();
+			$cache_tags[] = ''; //add blank entry to add blog tag.
 		}
 
 		if (empty($cache_tags)) {
@@ -1383,6 +1399,7 @@ class LiteSpeed_Cache
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
 		}
+		$cache_tags = array_map(array($this,'prefix_apply'), $cache_tags);
 
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
@@ -1433,15 +1450,12 @@ class LiteSpeed_Cache
 	{
 		static $prefix = null;
 		if (is_null($prefix)) {
-			$prefix = '';
-			$conf_prefix = $this->config->get_option(
+			$prefix = $this->config->get_option(
 				LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
-			if (!empty($conf_prefix)) {
-				$prefix .= $conf_prefix . '_';
+			if (empty($prefix)) {
+				$prefix = '';
 			}
-			if (is_multisite()) {
-				$prefix .= 'B' . get_current_blog_id() . '_';
-			}
+			$prefix .= 'B' . get_current_blog_id() . '_';
 		}
 		return $prefix . $tag;
 	}
