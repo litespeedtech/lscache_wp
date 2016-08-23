@@ -1261,17 +1261,22 @@ class LiteSpeed_Cache
 			global $wp_version;
 			if (version_compare($wp_version, '4.6', '<')) {
 				$blogs = wp_get_sites();
+				if (!empty($blogs)) {
+					foreach ($blogs as $key => $blog) {
+						$blogs[$key] = $blog['blog_id'];
+					}
+				}
 			}
 			else {
-				$blogs = get_sites();
+				$blogs = get_sites(array('fields' => 'ids'));
 			}
 			if (empty($blogs)) {
 				error_log('blog list is empty');
 				return '';
 			}
 			$tags = array();
-			foreach ($blogs as $blog) {
-				$tags[] = sprintf('%sB%s_', $prefix, $blog['blog_id']);
+			foreach ($blogs as $blog_id) {
+				$tags[] = sprintf('%sB%s_', $prefix, $blog_id);
 			}
 		}
 
