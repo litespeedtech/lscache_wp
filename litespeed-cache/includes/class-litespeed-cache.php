@@ -1394,7 +1394,9 @@ class LiteSpeed_Cache
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
-			$cache_tags[] = ''; //add blank entry to add blog tag.
+			if ($mode === self::CACHECTRL_CACHE) {
+				$cache_tags[] = ''; //add blank entry to add blog tag.
+			}
 		}
 
 		if (empty($cache_tags)) {
@@ -1477,11 +1479,6 @@ class LiteSpeed_Cache
 	 */
 	private function get_cache_tags()
 	{
-		if ( $this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES) ) {
-			// if purge all, do not set any tags
-			return array();
-		}
-
 		global $post ;
 		global $wp_query ;
 
