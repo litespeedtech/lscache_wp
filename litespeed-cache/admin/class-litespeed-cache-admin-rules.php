@@ -33,6 +33,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $ERR_FILESAVE;
 	private static $ERR_GET;
 	private static $ERR_INVALID_LOGIN;
+	private static $ERR_NO_LIST;
 	private static $ERR_NOT_FOUND;
 	private static $ERR_OVERWRITE;
 	private static $ERR_PARSE_FILE;
@@ -660,7 +661,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$ids = array(
 			$enable_key,
-			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST,
 			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES,
 			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS,
 			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE,
@@ -686,6 +687,11 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		return true;
+	}
+
+	private static function check_rewrite($rule)
+	{
+		return (preg_match('/[^\\\\]\s/', $rule) === 0);
 	}
 
 	/**
@@ -768,8 +774,9 @@ class LiteSpeed_Cache_Admin_Rules
 			$sub = '';
 			$env = '';
 		}
-		elseif (!ctype_alnum(str_replace($aExceptions, '', $login))) {
-			$errors[] = self::$ERR_INVALID_LOGIN;
+		elseif ((!ctype_alnum(str_replace($aExceptions, '', $login)))
+			|| (!self::check_rewrite($login))){
+			$errors[] = self::$ERR_INVALID_LOGIN . $login;
 			return false;
 		}
 
@@ -1017,13 +1024,17 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 
 		if ((isset($input[$id])) && ($input[$id])) {
-			$options[$id] = true;
-			$ret = $this->set_common_rule($haystack, $buf,
-					'MOBILE VIEW', 'HTTP_USER_AGENT',
-					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
-					'E=Cache-Control:vary=ismobile', 'NC');
+			$list = $input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
+			if ((empty($list)) || (self::check_rewrite($list) === false)) {
+				$errors[] = self::$ERR_NO_LIST . $list;
+			}
+			else {
+				$options[$id] = true;
+				$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
+					'HTTP_USER_AGENT', $list, 'E=Cache-Control:vary=ismobile', 'NC');
 
-			$this->parse_ret($ret, $haystack, $errors);
+				$this->parse_ret($ret, $haystack, $errors);
+			}
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
@@ -1040,19 +1051,27 @@ class LiteSpeed_Cache_Admin_Rules
 			$cookie_list = '';
 		}
 
-		$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
-				'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
-		if ($this->parse_ret($ret, $haystack, $errors)) {
-			$options[$id] = $cookie_list;
+		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
+			$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
+					'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
+			if ($this->parse_ret($ret, $haystack, $errors)) {
+				$options[$id] = $cookie_list;
+			}
+		}
+		else {
+			$errors[] = self::$ERR_NO_LIST . $cookie_list;
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		if (isset($input[$id])) {
+		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
 			$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
 					'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
 			if ($this->parse_ret($ret, $haystack, $errors)) {
 				$options[$id] = $input[$id];
 			}
+		}
+		else {
+			$errors[] = self::$ERR_NO_LIST . $input[$id];
 		}
 
 		$ret = $this->set_subdir_cookie($haystack, $input,
@@ -1183,8 +1202,9 @@ class LiteSpeed_Cache_Admin_Rules
 			'.htaccess');
 		self::$ERR_GET = sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
 			'.htaccess');
-		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found.',
+		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: ',
 					'litespeed-cache');
+		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or unescaped space. Rule: ', 'litespeed-cache');
 		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
 		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
 		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
