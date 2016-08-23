@@ -1404,7 +1404,7 @@ class LiteSpeed_Cache
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
 		}
-		$cache_tags = array_map(array($this,'prefix_apply'), $cache_tags);
+		$prefix_tags = array_map(array($this,'prefix_apply'), $cache_tags);
 
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
@@ -1422,7 +1422,7 @@ class LiteSpeed_Cache
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
 						. ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
-					. ': ' . implode(',', $cache_tags) ;
+					. ': ' . implode(',', $prefix_tags) ;
 				break;
 			case self::CACHECTRL_PURGESINGLE:
 				$cache_tags = $cache_tags[0];
