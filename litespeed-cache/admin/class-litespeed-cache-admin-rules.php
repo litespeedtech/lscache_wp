@@ -254,7 +254,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 		--$off_end; // go to end of previous line.
-		$off_engine = stripos($content, self::$RW_ENGINEON, $off_begin);
+		$block = substr($content, 0, $off_end);
+		$off_engine = stripos($block, self::$RW_ENGINEON, $off_begin);
 		if ($off_engine !== false) {
 			$off_begin = $off_engine + strlen(self::$RW_ENGINEON) + 1;
 			$buf = substr($content, 0, $off_begin);
