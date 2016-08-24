@@ -361,7 +361,7 @@ if (defined('lscache_debug')) {
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL ;
-		if (!isset($input[$id]) || !ctype_digit($input[$id])) {
+		if (!isset($input[$id]) || !is_numeric($input[$id])) {
 			$errors[] = __('Feed TTL input is invalid. Input must be numeric.', 'litespeed-cache') ;
 		}
 		elseif ($input[$id] < 30) {
