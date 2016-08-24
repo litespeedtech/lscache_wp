@@ -1155,7 +1155,13 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$mv_str = '';
-		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule('MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str) === true) {
+		$ret = LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule(
+			'MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str);
+		if ($ret !== true) {
+			$mv_list = '<p class="attention">'
+			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
+		}
+		elseif ($mv_str === $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]) {
 			// can also use class 'mejs-container' for 100% width.
 			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging code', '',
 					($options[$id] ? false : true)) ;
@@ -1164,8 +1170,11 @@ class LiteSpeed_Cache_Admin_Display
 			$buf .= $this->input_field_hidden($default_id, $default_fill);
 		}
 		else {
-			$mv_list = '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
+			$mv_list = $this->input_field_text($list_id, '', '', 'widget ui-draggable-dragging code', '',
+					($options[$id] ? false : true)) ;
+
+			$default_fill = (($mv_str == '') ? $wp_default_mobile : $mv_str);
+			$buf .= $this->input_field_hidden($default_id, $default_fill);
 		}
 		$buf .= $this->display_config_row(__('List of Mobile View User Agents', 'litespeed-cache'),
 				$mv_list, $mv_list_desc);

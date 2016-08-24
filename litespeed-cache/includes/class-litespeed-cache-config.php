@@ -189,6 +189,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
+			self::ID_MOBILEVIEW_LIST => '',
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_TAG_PREFIX => '',
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
@@ -245,6 +246,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
+			self::ID_MOBILEVIEW_LIST => '',
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_TAG_PREFIX => '',
 			self::ID_NOCACHE_COOKIES => '',
@@ -404,13 +406,10 @@ class LiteSpeed_Cache_Config
 			$options = $this->get_options();
 		}
 
-		if (($options[self::OPID_CACHE_FAVICON] == false)
-			&& ($options[self::OPID_CACHE_RES] == false)) {
-			return;
-		}
 		$errors = array();
 		$input = array(
 			self::OPID_MOBILEVIEW_ENABLED => $options[self::OPID_MOBILEVIEW_ENABLED],
+			self::ID_MOBILEVIEW_LIST => $options[self::ID_MOBILEVIEW_LIST],
 			self::ID_NOCACHE_COOKIES => $options[self::ID_NOCACHE_COOKIES],
 			self::ID_NOCACHE_USERAGENTS => $options[self::ID_NOCACHE_USERAGENTS],
 			self::OPID_LOGIN_COOKIE => $options[self::OPID_LOGIN_COOKIE],
@@ -422,6 +421,10 @@ class LiteSpeed_Cache_Config
 		}
 		if ($options[self::OPID_CACHE_RES]) {
 			$input['lscwp_' . self::OPID_CACHE_RES] = self::OPID_CACHE_RES;
+		}
+		if ($options[self::OPID_MOBILEVIEW_ENABLED]) {
+			$input['lscwp_' . self::OPID_MOBILEVIEW_ENABLED]
+				= self::OPID_MOBILEVIEW_ENABLED;
 		}
 		$default[self::OPID_CACHE_FAVICON] = false;
 		$default[self::OPID_CACHE_RES] = false;

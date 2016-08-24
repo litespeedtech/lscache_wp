@@ -1033,16 +1033,19 @@ class LiteSpeed_Cache_Admin_Rules
 				$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
 					'HTTP_USER_AGENT', $list, 'E=Cache-Control:vary=ismobile', 'NC');
 
-				$this->parse_ret($ret, $haystack, $errors);
+				if ($this->parse_ret($ret, $haystack, $errors)) {
+					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = $list;
+				}
 			}
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
 			$ret = $this->set_common_rule($haystack, $buf,
 					'MOBILE VIEW', '', '', '');
-			$this->parse_ret($ret, $haystack, $errors);
+			if ($this->parse_ret($ret, $haystack, $errors)) {
+				$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = '';
+			}
 		}
-
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		if ((isset($input[$id])) && ($input[$id])) {
 			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
