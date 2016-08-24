@@ -1412,7 +1412,9 @@ class LiteSpeed_Cache_Admin_Display
 			'WooCommerce',
 			'Contact Form 7',
 			'Google XML Sitemaps',
-			'Yoast SEO'
+			'Yoast SEO',
+			'Wordfence Security',
+			'NextGen Gallery'
 		);
 
 		$known_uncompat = array(
