@@ -598,41 +598,59 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '<div id="config"><h3>'
 		. __('LiteSpeed Cache Configurations', 'litespeed-cache') . '</h3>'
-		. '<h4>' . wp_kses(__('Please check to make sure that your <b>web server cache configurations</b> are set to the following:', 'litespeed-cache'), array('b'=>array())) . '</h4>';
+		. '<h4>' . __('Instructions for LiteSpeed Web Server Enterprise', 'litespeed-cache') . '</h4>';
 
-		$buf .= '<ul><li>Enable Public Cache - No</li>'
-		. '<li>Check Public Cache - Yes</li></ul>';
+		$buf .= '<ol><li>'
+			. __('Make sure that your license includes the LSCache module enabled.', 'litespeed-cache')
+			. sprintf(wp_kses(__(' You can '
+				. '<a href="%s" target="%s">try our 2-CPU trial license with LSCache module</a>', 'litespeed-cache')
+				. ' free for 15-days.',
+				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
+				'https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license',
+				'_blank')
+			. '</li><li>'
+			. __(' Your server must be configured to have caching enabled.', 'litespeed-cache')
+			. sprintf(wp_kses(__(' If you are the server admin, '
+				. '<a href="%s" target="%s">click here.</a>', 'litespeed-cache'),
+				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
+				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration',
+				'_blank')
+			. __(' Otherwise request that your server admin configure the cache root for your server.', 'litespeed-cache')
+			. '</li><li>'
+			. __('In the .htaccess file for your WordPress installation, add the following:')
+			. '<textarea id="wpwrap" rows="3" readonly>&lt;IfModule LiteSpeed&gt;
+   CacheLookup public on
+&lt;/IfModule&gt;</textarea></ol>';
 
-		$buf .= '<h4>' . __('The following are also recommended to be set:', 'litespeed-cache') . '</h4>';
+		$buf .= '<h4>' . __('Instructions for OpenLiteSpeed', 'litespeed-cache') . '</h4>';
+		$buf .= '<p>' . __('Our OLS integration is currently in beta.', 'litespeed-cache')
+			. __(' The integration utilizes the cache module.', 'litespeed-cache')
+			. sprintf(wp_kses(__(' Please follow the instructions '
+				. '<a href="%s" target="%s">here.</a>', 'litespeed-cache'),
+				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
+				'http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress',
+				'_blank')
+			. '</p>';
 
-		$buf .= '<ul><li>Cache Request with Query String - Yes</li>'
-		. '<li>Cache Request with Cookie - Yes</li>'
-		. '<li>Cache Response with Cookie - Yes</li>'
-		. '<li>Ignore Request Cache-Control - Yes</li>'
-		. '<li>Ignore Response Cache-Control - Yes</li></ul>';
-
-		$buf .= '<h3>'
-		. __('Verify Cache', 'litespeed-cache') . '</h3>';
-
-		$buf .= '<h4>' . __('To verify that the cache is working, please do the following:', 'litespeed-cache') . '</h4>';
-		$buf .= '<ol><li>' . __('Open a non logged in browser.', 'litespeed-cache') . '</li>'
-		. '<li>' . __('Right-click the page and open the inspector.','litespeed-cache')
-				.__(' Select the Network tab.', 'litespeed-cache') . '</li>'
-		. '<li>' . __('Visit a page. ', 'litespeed-cache')
-			. __('If the page is not cached, the following response header should be set ', 'litespeed-cache')
-			. ' "X-LiteSpeed-Cache: miss".' . '<br>'
-			. __('If the page is cached, the header value will be "hit" instead of "miss".', 'litespeed-cache')
-			. __(' This may occur if someone else visited the page first.', 'litespeed-cache')
-			. '</li>'
-		. '<li>' . __('Refresh the page. ', 'litespeed-cache')
-			. __('The page should now be cached. The following response header should now be set ', 'litespeed-cache')
-			. ' "X-LiteSpeed-Cache: hit".' . '</li>'
-		. '<li>' . sprintf(wp_kses(__('For more information, please visit our wiki page'
-				. '<a href="%s" target="%s">here</a>', 'litespeed-cache'),
+		$buf .= '<h3>' . __('How to test the plugin', 'litespeed-cache') . '</h3>';
+		$buf .= '<p>' . __('The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers.', 'litespeed-cache')
+			. '<br>'
+			. __('Visiting a page for the first time should result in a', 'litespeed-cache')
+			. '<br><code>X-LiteSpeed-Cache-Control:miss</code><br>'
+			. __('or', 'litespeed-cache')
+			. '<br><code>X-LiteSpeed-Cache-Control:no-cache</code><br>'
+			. __('response header for the page.', 'litespeed-cache')
+			. '<br>'
+			. __('Subsequent requests should have the ', 'litespeed-cache')
+			. '<code>X-LiteSpeed-Cache-Control:hit</code><br>'
+			. __('response header until the page is updated, expired, or purged.', 'litespeed-cache')
+			. sprintf(wp_kses(__(' Please visit '
+				. '<a href="%s" target="%s">this page</a>'
+				. ' for more information.', 'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
 				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing',
-				'_blank') . '</li>'
-		. '</ol>';
+				'_blank')
+			. '</p>';
 
 		$buf .= '</div>'; // id=config
 
