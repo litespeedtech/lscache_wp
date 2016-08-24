@@ -19,6 +19,7 @@ Additional plugin features:
 * Support for HTTP/2 & HTTPS out-of-box
 * Single Site and Multi Site support
 * Supports WooCommerce and bbPress
+* Has an API system that enables other plugins to easily integrate with the cache plugin.
 * Can cache desktop and mobile views separately
 * Allows configuration for do-not-cache by URI, Categories, Tags, Cookies, and User Agents
 
@@ -26,23 +27,33 @@ For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/f
 
 == Installation ==
 = Instructions for LiteSpeed Web Server Enterprise =
-1. Make sure that your license has the LSCache module enabled.
+1. Make sure that your license includes the LSCache module enabled.
 You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license")
 free for 15-days.
-2. In LiteSpeed Web Server - Through the WebAdmin Console, navigate to Configuration > Server > cache and set 'Storage path' under Cache Storage Settings to a fast disk, where the path can be something like '/tmp/wpcache/' for example. If the directory does not already exist, it will be created for you.
-3. In LiteSpeed Web Server - Under "Cache Policy" set the following: <br>
-Enable Public Cache - No<br>
-Check Public Cache - Yes<br>
-Ignore Request Cache-Control - Yes<br>
-Ignore Response Cache-Control - Yes
-4. In LiteSpeed Web Server - Perform a Graceful Restart.
-5. Upload 'litespeed-cache.zip' to the '/wp-content/plugins/' directory.
-6. Disable any other page caches as these will interfere with the LiteSpeed Cache Plugin.
-7. Activate the LiteSpeed Cache plugin through the 'Plugins' screen in WordPress.
-8. For more detailed information, visit our [LSCWP Wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "lscwp wiki").
+2. Your server must be configured to have caching enabled. If you are the server admin,
+[click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration).
+Otherwise request that your server admin configure the cache root for your server.
+3. In the .htaccess file for your WordPress installation, add the following:<br>
+`<IfModule LiteSpeed>
+   CacheLookup public on
+</IfModule>`
 
 = Instructions for OpenLiteSpeed =
-BETA. TO BE COMPLETED IN THE NEAR FUTURE.
+Our OLS integration is currently in beta. The integration utilizes the cache module.<br>
+Please follow the instructions [here](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
+
+= How to test the plugin =
+The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers.<br>
+Visiting a page for the first time should result in a
+`X-LiteSpeed-Cache-Control:miss`
+or
+`X-LiteSpeed-Cache-Control:no-cache`
+response header for the page.<br>
+Subsequent requests should have the
+`X-LiteSpeed-Cache-Control:hit`
+response header until the page is updated, expired, or purged. Please visit
+[this page](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing)
+for more information.
 
 == Frequently Asked Questions ==
 = Is the LiteSpeed Cache Plugin for WordPress free? =
@@ -253,6 +264,17 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.9 - August 25 2016 =
+* [NEW] Added functionality to cache and purge feeds.
+* [NEW] Added cache tag prefix setting to avoid conflicts when using LiteSpeed Cache for WordPress with LiteSpeed Cache for XenForo and LiteMage.
+* [NEW] Added hooks to allow third party plugins to create config options.
+* [NEW] Added WooCommerce config options.
+* The plugin now also checks for wp-config in the parent directory.
+* Improved WooCommerce support.
+* Changed .htaccess backup process. Will create a .htaccess_lscachebak_orig file if one does not exist. If it does already exist, creates a backup using the date and timestamp.
+* Fixed a bug where get_home_path() sometimes returned an invalid path.
+* Fixed a bug where if the .htaccess was removed from a WordPress subdirectory, it was not handled properly.
+
 = 1.0.8.1 - July 28 2016 =
 * Fixed a bug where check cacheable was sometimes not hit.
 * Fixed a bug where extra slashes in clear rules were stripped.
