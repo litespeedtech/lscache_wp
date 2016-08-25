@@ -80,6 +80,14 @@ class LiteSpeed_Cache_Config
 				if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
 					$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 				}
+				$options[self::OPID_MOBILEVIEW_ENABLED]
+					= $site_options[self::OPID_MOBILEVIEW_ENABLED];
+				$options[self::ID_MOBILEVIEW_LIST]
+					= $site_options[self::ID_MOBILEVIEW_LIST];
+				$options[self::OPID_LOGIN_COOKIE]
+					= $site_options[self::OPID_LOGIN_COOKIE];
+				$options[self::OPID_TAG_PREFIX]
+					= $site_options[self::OPID_TAG_PREFIX];
 			}
 		}
 		$this->options = $options ;
