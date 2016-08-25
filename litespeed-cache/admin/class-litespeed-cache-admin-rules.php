@@ -691,7 +691,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/[^\\\\]\s/', $rule) === 0);
+		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s]/', $rule) === 0);
 	}
 
 	/**
@@ -1026,7 +1026,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ((isset($input[$id])) && ($input[$id])) {
 			$list = $input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
 			if ((empty($list)) || (self::check_rewrite($list) === false)) {
-				$errors[] = self::$ERR_NO_LIST . $list;
+				$errors[] = self::$ERR_NO_LIST . esc_html($list);
 			}
 			else {
 				$options[$id] = true;
@@ -1043,7 +1043,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$ret = $this->set_common_rule($haystack, $buf,
 					'MOBILE VIEW', '', '', '');
 			if ($this->parse_ret($ret, $haystack, $errors)) {
-				$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = '';
+				$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = false;
 			}
 		}
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
@@ -1062,7 +1062,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		else {
-			$errors[] = self::$ERR_NO_LIST . $cookie_list;
+			$errors[] = self::$ERR_NO_LIST . esc_html($cookie_list);
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
@@ -1074,7 +1074,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		else {
-			$errors[] = self::$ERR_NO_LIST . $input[$id];
+			$errors[] = self::$ERR_NO_LIST . esc_html($input[$id]);
 		}
 
 		$ret = $this->set_subdir_cookie($haystack, $input,
@@ -1207,7 +1207,7 @@ class LiteSpeed_Cache_Admin_Rules
 			'.htaccess');
 		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: ',
 					'litespeed-cache');
-		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or unescaped space. Rule: ', 'litespeed-cache');
+		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: ', 'litespeed-cache');
 		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
 		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
 		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
