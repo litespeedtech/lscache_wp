@@ -691,7 +691,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s]/', $rule) === 0);
+		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s\/]/', $rule) === 0);
 	}
 
 	/**
