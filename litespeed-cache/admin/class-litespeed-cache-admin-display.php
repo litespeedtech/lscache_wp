@@ -1186,7 +1186,12 @@ class LiteSpeed_Cache_Admin_Display
 		}
 		else {
 			$mv_list = $this->input_field_text($list_id, '', '', 'widget ui-draggable-dragging code', '',
-					($options[$id] ? false : true)) ;
+					($options[$id] ? false : true))
+				. '<p class="attention">'
+			. __('Htaccess did not match configuration option.', 'litespeed-cache')
+			. __(' Please re-enter the mobile view setting.')
+			. __(' Last used configured option: ', 'litespeed-cache')
+			. $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] . '</p>';
 
 			$default_fill = (($mv_str == '') ? $wp_default_mobile : $mv_str);
 			$buf .= $this->input_field_hidden($default_id, $default_fill);

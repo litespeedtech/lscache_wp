@@ -80,6 +80,14 @@ class LiteSpeed_Cache_Config
 				if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
 					$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 				}
+				$options[self::OPID_MOBILEVIEW_ENABLED]
+					= $site_options[self::OPID_MOBILEVIEW_ENABLED];
+				$options[self::ID_MOBILEVIEW_LIST]
+					= $site_options[self::ID_MOBILEVIEW_LIST];
+				$options[self::OPID_LOGIN_COOKIE]
+					= $site_options[self::OPID_LOGIN_COOKIE];
+				$options[self::OPID_TAG_PREFIX]
+					= $site_options[self::OPID_TAG_PREFIX];
 			}
 		}
 		$this->options = $options ;
@@ -189,7 +197,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
-			self::ID_MOBILEVIEW_LIST => '',
+			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_TAG_PREFIX => '',
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
@@ -246,7 +254,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
-			self::ID_MOBILEVIEW_LIST => '',
+			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_TAG_PREFIX => '',
 			self::ID_NOCACHE_COOKIES => '',
