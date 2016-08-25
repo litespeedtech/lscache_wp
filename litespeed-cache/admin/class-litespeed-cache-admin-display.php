@@ -1189,7 +1189,7 @@ class LiteSpeed_Cache_Admin_Display
 					($options[$id] ? false : true))
 				. '<p class="attention">'
 			. __('Htaccess did not match configuration option.', 'litespeed-cache')
-			. __(' Please re-enter the mobile view setting.')
+			. __(' Please re-enter the mobile view setting.', 'litespeed-cache')
 			. __(' Last used configured option: ', 'litespeed-cache')
 			. $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] . '</p>';
 
