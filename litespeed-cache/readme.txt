@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.6
-Stable tag: 1.0.9
+Stable tag: 1.0.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -264,6 +264,9 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.9.1 - August 26 2016 =
+* Fixed a bug where an error displayed on the configuration screen despite not being an error.
+* Change logic to check .htaccess file less often.
 = 1.0.9 - August 25 2016 =
 * [NEW] Added functionality to cache and purge feeds.
 * [NEW] Added cache tag prefix setting to avoid conflicts when using LiteSpeed Cache for WordPress with LiteSpeed Cache for XenForo and LiteMage.
