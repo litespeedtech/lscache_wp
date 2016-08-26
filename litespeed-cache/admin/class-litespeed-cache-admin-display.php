@@ -78,8 +78,8 @@ class LiteSpeed_Cache_Admin_Display
 
 		$screen->set_help_sidebar(
 				'<p><strong>' . __('For more information:', 'litespeed-cache') . '</strong></p>' .
-				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
-				'<p><a href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
+				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" rel="noopener noreferrer" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
+				'<p><a href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
 		) ;
 	}
 
@@ -603,18 +603,18 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<ol><li>'
 			. __('Make sure that your license includes the LSCache module enabled.', 'litespeed-cache')
 			. sprintf(wp_kses(__(' You can '
-				. '<a href="%1$s" target="%2$s">try our 2-CPU trial license with LSCache module</a> free for %3$d days.',
+				. '<a href="%1$s"  rel="%2$s" target="%3$s">try our 2-CPU trial license with LSCache module</a> free for %4$d days.',
 					'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
 				'https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license',
-				'_blank', 15)
+				'noopener noreferrer', '_blank', 15)
 			. '</li><li>'
 			. __(' Your server must be configured to have caching enabled.', 'litespeed-cache')
 			. sprintf(wp_kses(__(' If you are the server admin, '
-				. '<a href="%s" target="%s">click here.</a>', 'litespeed-cache'),
+				. '<a href="%s" rel="%s" target="%s">click here.</a>', 'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
 				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration',
-				'_blank')
+				'noopener noreferrer', '_blank')
 			. __(' Otherwise request that your server admin configure the cache root for your server.', 'litespeed-cache')
 			. '</li><li>'
 			. __('In the .htaccess file for your WordPress installation, add the following:', 'litespeed-cache')
@@ -626,10 +626,10 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<p>' . __('Our OLS integration is currently in beta.', 'litespeed-cache')
 			. __(' The integration utilizes the cache module.', 'litespeed-cache')
 			. sprintf(wp_kses(__(' Please follow the instructions '
-				. '<a href="%s" target="%s">here.</a>', 'litespeed-cache'),
+				. '<a href="%s" rel="%s" target="%s">here.</a>', 'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
 				'http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress',
-				'_blank')
+				'noopener noreferrer', '_blank')
 			. '</p>';
 
 		$buf .= '<h3>' . __('How to test the plugin', 'litespeed-cache') . '</h3>';
@@ -642,11 +642,11 @@ class LiteSpeed_Cache_Admin_Display
 			. sprintf(__('Subsequent requests should have the %s response header until the page is updated, expired, or purged.',
 					'litespeed-cache'), '<code>X-LiteSpeed-Cache-Control:hit</code><br>')
 			. sprintf(wp_kses(__(' Please visit '
-				. '<a href="%s" target="%s">this page</a>'
+				. '<a href="%s" rel="%s" target="%s">this page</a>'
 				. ' for more information.', 'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'target' => array() ) )),
 				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing',
-				'_blank')
+				'noopener noreferrer', '_blank')
 			. '</p>';
 
 		$buf .= '</div>'; // id=config
@@ -670,9 +670,10 @@ class LiteSpeed_Cache_Admin_Display
 				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>');
 		$buf .=
 		sprintf(wp_kses(__('If your questions are still not answered, do not hesitate to ask them on the '
-				. '<a href="%s" target="%s">support forum</a>.', 'litespeed-cache'),
+				. '<a href="%s" rel="%s" target="%s">support forum</a>.', 'litespeed-cache'),
 				array( 'a' =>array( 'href' => array(), 'target' => array() ) )),
-				'https://wordpress.org/support/plugin/litespeed-cache', '_blank')
+				'https://wordpress.org/support/plugin/litespeed-cache',
+				'noopener noreferrer', '_blank')
 		. '</h4></div>'; // class=wrap
 		echo $buf;
 	}
@@ -1428,7 +1429,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '<h4>'
 		. __('Please comment on the support thread listing the plugins that you are using and how they are functioning.', 'litespeed-cache')
 		. __(' With your help, we can provide the best WordPress caching solution.', 'litespeed-cache')
-		. '<br /><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" target="_blank">'
+		. '<br /><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" rel="noopener noreferrer" target="_blank">'
 		. __('Link Here', 'litespeed-cache') . '</a>'
 		. '</h4>'
 		. '<h4>'
