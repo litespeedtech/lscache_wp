@@ -323,10 +323,14 @@ class LiteSpeed_Cache_Config
 		}
 		$this->options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION;
 
-		if ((!is_multisite()) || (is_network_admin())) {
-			$this->options[self::OPID_LOGIN_COOKIE]
-				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
+		if ($this->options[self::OPID_MOBILEVIEW_ENABLED] === false) {
+			$this->options[self::ID_MOBILEVIEW_LIST] = false;
 		}
+
+//		if ((!is_multisite()) || (is_network_admin())) {
+//			$this->options[self::OPID_LOGIN_COOKIE]
+//				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
+//		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
 		$this->debug_log("plugin_upgrade option changed = $res $log\n",
