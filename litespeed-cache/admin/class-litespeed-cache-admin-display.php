@@ -1157,10 +1157,11 @@ class LiteSpeed_Cache_Admin_Display
 		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
 		$default_id = 'lscwp_' . $id . '_default';
 		$warning_id = 'lscwp_' . $id . '_warning';
+		$enabled = $options[$id];
 		clearstatcache();
 		$buf = $this->input_field_hidden($warning_id,
 		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
-		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id], '',
+		$mv_enabled = $this->input_field_checkbox('lscwp_' . $id, $id, $enabled, '',
 				'lscwpCheckboxConfirm(this, \'' . $list_id . '\')', !$file_writable) ;
 
 		$buf .= $this->display_config_row(__('Enable Separate Mobile View', 'litespeed-cache'), $mv_enabled,
@@ -1182,7 +1183,9 @@ class LiteSpeed_Cache_Admin_Display
 			$mv_list = '<p class="attention">'
 			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
 		}
-		elseif ($mv_str === $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]) {
+		elseif ((($enabled) && ($mv_str === $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]))
+			|| ((!$enabled) && ($mv_str === '')
+			&& ($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] === false))) {
 			// can also use class 'mejs-container' for 100% width.
 			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging code', '',
 					($options[$id] ? false : true)) ;
