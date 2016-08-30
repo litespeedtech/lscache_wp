@@ -16,7 +16,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	const OPTION_UPDATE_INTERVAL = 'wc_update_interval';
 	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl';
 	const OPT_PQS_CS = 0; // flush product on quantity + stock change, categories on stock change
-	CONST OPT_PS_CS = 1; // flush product and categories on stock change
+	CONST OPT_PS_CS = 1; // flush product and categories on stock change?
 	CONST OPT_PS_CN = 2; // flush product on stock change, categories no flush
 	CONST OPT_PQS_CQS = 3; // flush product and categories on quantity + stock change
 
@@ -120,6 +120,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			self::set_cache_tags();
 			return true;
 		}
+
+		if ( isset($_COOKIE['woocommerce_items_in_cart']) ) {
+			return false;
+		}
+
 		$uri = esc_url($_SERVER["REQUEST_URI"]);
 		$uri_len = strlen( $uri ) ;
 
