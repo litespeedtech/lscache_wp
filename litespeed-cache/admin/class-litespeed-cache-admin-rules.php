@@ -414,7 +414,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * FInds a specified common rewrite rule from the .htaccess file.
+	 * Finds a specified common rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
 	 * @access private
