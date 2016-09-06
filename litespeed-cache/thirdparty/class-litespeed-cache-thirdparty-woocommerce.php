@@ -244,7 +244,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ((!isset($post_id)) || (wc_get_product($post_id) === false)) {
 			return;
 		}
-		$cats = wc_get_product_cat_ids($post_id);
+
+		$cats = self::get_cats($post_id);
 		if (!empty($cats)) {
 			foreach ($cats as $cat) {
 				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $cat);
@@ -400,6 +401,31 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Helper function to select the function(s) to use to get the product
+	 * category ids.
+	 *
+	 * @since 1.0.9.2
+	 * @access private
+	 * @param int $product_id The product id
+	 * @return array An array of category ids.
+	 */
+	private static function get_cats($product_id)
+	{
+		$woocom = WC();
+		if ((isset($woocom)) &&
+			(version_compare($woocom->version, '2.5.0', '>='))) {
+			return wc_get_product_cat_ids($product_id);
+		}
+		$product_cats = wp_get_post_terms( $product_id, 'product_cat',
+			array( "fields" => "ids" ) );
+		foreach ( $product_cats as $product_cat ) {
+			$product_cats = array_merge( $product_cats, get_ancestors( $product_cat, 'product_cat' ) );
+		}
+
+		return $product_cats;
 	}
 
 }
