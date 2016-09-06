@@ -524,7 +524,14 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<div class="welcome-panel">';
 		$contents = '';
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
-		if (LiteSpeed_Cache_Admin_Rules::file_get($contents) === false) {
+		if (defined('DISALLOW_FILE_EDIT') && (constant('DISALLOW_FILE_EDIT'))) {
+			$buf .= '<h3>'
+				. __('File editing is disabled in configuration.', 'litespeed-cache')
+				. '</h3></div>';
+			echo $buf;
+			return;
+		}
+		elseif (LiteSpeed_Cache_Admin_Rules::file_get($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
