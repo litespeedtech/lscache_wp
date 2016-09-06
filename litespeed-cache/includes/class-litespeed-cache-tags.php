@@ -18,10 +18,12 @@
  */
 class LiteSpeed_Cache_Tags
 {
-	//const TYPE_FEED = 'FD';
+	// G P C E tags reserved for litemage.
+
+	const TYPE_FEED = 'FD';
 	const TYPE_FRONTPAGE = 'F' ;
 	const TYPE_HOME = 'H' ;
-	const TYPE_POST = 'P.' ;
+	const TYPE_POST = 'Po.' ; // Post. Cannot use P, reserved for litemage.
 	const TYPE_ARCHIVE_POSTTYPE = 'PT.' ;
 	const TYPE_ARCHIVE_TERM = 'T.' ; //for is_category|is_tag|is_tax
 	const TYPE_AUTHOR = 'A.' ;
@@ -39,6 +41,7 @@ class LiteSpeed_Cache_Tags
 	static $thirdparty_cache_tags = array();
 	static $thirdparty_noncacheable = false;
 	static $thirdparty_mobile = false;
+	static $thirdparty_use_front_ttl = false;
 
 	/**
 	 * Gets cache tags that are already added for the current page.
@@ -157,6 +160,28 @@ class LiteSpeed_Cache_Tags
 		self::$thirdparty_mobile = true;
 	}
 
+	/**
+	 * Gets whether any plugins determined that the current page should use
+	 * the front page TTL setting.
+	 *
+	 * @since 1.0.9
+	 * @access public
+	 * @return boolean True if use front page TTL, false otherwise.
+	 */
+	public static function get_use_frontpage_ttl()
+	{
+		return self::$thirdparty_use_front_ttl;
+	}
+
+	/**
+	 * Mark the current page to use the front page ttl.
+	 *
+	 * @since 1.0.9
+	 * @access public
+	 */
+	public static function set_use_frontpage_ttl()
+	{
+		self::$thirdparty_use_front_ttl = true;
+	}
+
 }
-
-

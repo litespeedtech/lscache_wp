@@ -268,6 +268,32 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Checks the admin selected option for cache tag prefixes.
+	 *
+	 * Prefixes are only allowed to be alphanumeric. On failure, will
+	 * return error message.
+	 *
+	 * @since 1.0.9
+	 * @access private
+	 * @param array $input The configurations selected by the admin when clicking save.
+	 * @param array $options The current configuration options.
+	 * @return mixed True on success, error message otherwise.
+	 */
+	private function validate_tag_prefix($input, &$options) {
+		$id = LiteSpeed_Cache_Config::OPID_TAG_PREFIX;
+		if (!isset($input[$id])) {
+			return true;
+		}
+		$prefix = $input[$id];
+		if (($prefix === '') || (ctype_alnum($prefix))) {
+			$options[$id] = $prefix;
+			return true;
+		}
+		return __('Invalid Tag Prefix input.', 'litespeed-cache')
+			. __(' Input should only contain letters and numbers.', 'litespeed-cache');
+	}
+
+	/**
 	 * Callback function that will validate any changes made in the settings page.
 	 *
 	 * @since 1.0.0
@@ -334,6 +360,17 @@ if (defined('lscache_debug')) {
 			$options[$id] = $input[$id] ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL ;
+		if (!isset($input[$id]) || !is_numeric($input[$id])) {
+			$errors[] = __('Feed TTL input is invalid. Input must be numeric.', 'litespeed-cache') ;
+		}
+		elseif ($input[$id] < 30) {
+			$options[$id] = 0;
+		}
+		else {
+			$options[$id] = intval($input[$id]);
+		}
+
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
 		if (isset($input['lscwp_' . $id])) {
 			$options[$id] = ( $input['lscwp_' . $id] === $id );
@@ -387,6 +424,11 @@ if (defined('lscache_debug')) {
 				->validate_common_rewrites($input, $options, $errors);
 			if ($newopt) {
 				$options = $newopt;
+			}
+
+			$out = $this->validate_tag_prefix($input, $options);
+			if (is_string($out)) {
+				$errors[] = $out;
 			}
 		}
 
@@ -481,7 +523,20 @@ if (defined('lscache_debug')) {
 					LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors)) ;
 		}
 
-		return $options ;
+		$tp_default_options = $config->get_thirdparty_options();
+		if (empty($tp_default_options)) {
+			return $options;
+		}
+		$tp_input = array_intersect_key($input, $tp_default_options);
+		if (empty($tp_input)) {
+			return $options;
+		}
+		$tp_options = apply_filters('litespeed_cache_save_options',
+			array_intersect_key($options, $tp_default_options), $tp_input);
+		if ((!empty($tp_options)) && is_array($tp_options)) {
+			$options = array_merge($options, $tp_options);
+		}
+		return $options;
 	}
 
 	/**
@@ -659,6 +714,11 @@ if (defined('lscache_debug')) {
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
 			$input[$id] = 'changed';
+		}
+
+		$out = $this->validate_tag_prefix($input, $options);
+		if (is_string($out)) {
+			$errors[] = $out;
 		}
 
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();

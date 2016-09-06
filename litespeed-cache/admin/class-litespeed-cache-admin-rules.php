@@ -33,6 +33,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $ERR_FILESAVE;
 	private static $ERR_GET;
 	private static $ERR_INVALID_LOGIN;
+	private static $ERR_NO_LIST;
 	private static $ERR_NOT_FOUND;
 	private static $ERR_OVERWRITE;
 	private static $ERR_PARSE_FILE;
@@ -88,7 +89,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_home_path()
 	{
-		return get_home_path() . '.htaccess';
+		$path = get_home_path();
+		if ($path === '/') {
+			// get home path failed. Trac ticket #37668
+			// Try using ABSPATH instead.
+			$path = ABSPATH;
+		}
+		return $path . '.htaccess';
 	}
 
 	/**
@@ -114,8 +121,16 @@ class LiteSpeed_Cache_Admin_Rules
 	private static function is_subdir()
 	{
 		$rules = self::get_instance();
-		if (!isset($rules->is_subdir_install)) {
-			$rules->is_subdir_install = (get_option('siteurl') !== get_option('home'));
+		if (isset($rules->is_subdir_install)) {
+			return $rules->is_subdir_install;
+		}
+		$home = self::get_home_path();
+		$site = self::get_site_path();
+		if (($home === $site) || (!file_exists($site))) {
+			$rules->is_subdir_install = false;
+		}
+		else {
+			$rules->is_subdir_install = true;
 		}
 		return $rules->is_subdir_install;
 	}
@@ -227,20 +242,21 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function file_split($content, &$buf, &$off_end)
 	{
-		$off_begin = strpos($content, self::$RW_BLOCK_START);
+		$off_begin = stripos($content, self::$RW_BLOCK_START);
 		//if not found
 		if ($off_begin === false) {
 			$buf = self::$RW_BLOCK_START . "\n" . self::$RW_ENGINEON . "\n";
 			return NULL;
 		}
 		$off_begin += strlen(self::$RW_BLOCK_START);
-		$off_end = strpos($content, self::$RW_BLOCK_END, $off_begin);
+		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
 		if ($off_end === false) {
 			$buf = self::$ERR_NOT_FOUND . 'IfModule close';
 			return false;
 		}
 		--$off_end; // go to end of previous line.
-		$off_engine = stripos($content, self::$RW_ENGINEON, $off_begin);
+		$block = substr($content, 0, $off_end);
+		$off_engine = stripos($block, self::$RW_ENGINEON, $off_begin);
 		if ($off_engine !== false) {
 			$off_begin = $off_engine + strlen(self::$RW_ENGINEON) + 1;
 			$buf = substr($content, 0, $off_begin);
@@ -299,6 +315,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function file_save($content, $cleanup = true, $path = '')
 	{
+		$bak = '_lscachebak_orig';
+
 		if (empty($path)) {
 			$path = self::get_home_path();
 		}
@@ -306,8 +324,13 @@ class LiteSpeed_Cache_Admin_Rules
 		if (self::is_file_able(self::RW) == 0) {
 			return self::$ERR_READWRITE;
 		}
+
+		if ( file_exists($path . $bak) ) {
+				$bak = '_lscachebak_' . date('ymd') . '_' . date('His');
+		}
+
 		//failed to backup, not good.
-		if (!copy($path, $path . '_lscachebak')) {
+		if (!copy($path, $path . $bak)) {
 			return self::$ERR_BACKUP;
 		}
 
@@ -369,14 +392,14 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 			return true;
 		}
-		$wrap_begin = strpos($content, $wrapper_begin);
+		$wrap_begin = stripos($content, $wrapper_begin);
 		if ($wrap_begin === false) {
 			if ($match != '') {
 				$output .= $out;
 			}
 			return true;
 		}
-		$wrap_end = strpos($content, $wrapper_end,
+		$wrap_end = stripos($content, $wrapper_end,
 			$wrap_begin + strlen($wrapper_begin));
 
 		if ($wrap_end === false) {
@@ -408,13 +431,13 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$suffix = '';
 		$prefix = $this->build_wrappers($wrapper, $suffix);
-		$off_begin = strpos($match, $prefix);
+		$off_begin = stripos($match, $prefix);
 		if ($off_begin === false) {
 			$match = '';
 			return true; // It does not exist yet, not an error.
 		}
 		$off_begin += strlen($prefix);
-		$off_end = strpos($match, $suffix, $off_begin);
+		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
 			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
 			return false;
@@ -477,14 +500,14 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 			return true;
 		}
-		$wrap_begin = strpos($content, $wrapper_begin);
+		$wrap_begin = stripos($content, $wrapper_begin);
 		if ($wrap_begin === false) {
 			if ($match != '') {
 				$output .= $out;
 			}
 			return true;
 		}
-		$wrap_end = strpos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
+		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
 			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
 		}
@@ -515,13 +538,13 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$suffix = '';
 		$prefix = $this->build_wrappers($wrapper, $suffix);
-		$off_begin = strpos($match, $prefix);
+		$off_begin = stripos($match, $prefix);
 		if ($off_begin === false) {
 			$match = '';
 			return true; // It does not exist yet, not an error.
 		}
 		$off_begin += strlen($prefix);
-		$off_end = strpos($match, $suffix, $off_begin);
+		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
 			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
 			return false;
@@ -638,7 +661,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$ids = array(
 			$enable_key,
-			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST,
 			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES,
 			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS,
 			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE,
@@ -664,6 +687,11 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		return true;
+	}
+
+	private static function check_rewrite($rule)
+	{
+		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s\/]/', $rule) === 0);
 	}
 
 	/**
@@ -746,8 +774,9 @@ class LiteSpeed_Cache_Admin_Rules
 			$sub = '';
 			$env = '';
 		}
-		elseif (!ctype_alnum(str_replace($aExceptions, '', $login))) {
-			$errors[] = self::$ERR_INVALID_LOGIN;
+		elseif ((!ctype_alnum(str_replace($aExceptions, '', $login)))
+			|| (!self::check_rewrite($login))){
+			$errors[] = self::$ERR_INVALID_LOGIN . $login;
 			return false;
 		}
 
@@ -995,21 +1024,28 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
 
 		if ((isset($input[$id])) && ($input[$id])) {
-			$options[$id] = true;
-			$ret = $this->set_common_rule($haystack, $buf,
-					'MOBILE VIEW', 'HTTP_USER_AGENT',
-					$input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST],
-					'E=Cache-Control:vary=ismobile', 'NC');
+			$list = $input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
+			if ((empty($list)) || (self::check_rewrite($list) === false)) {
+				$errors[] = self::$ERR_NO_LIST . esc_html($list);
+			}
+			else {
+				$options[$id] = true;
+				$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
+					'HTTP_USER_AGENT', $list, 'E=Cache-Control:vary=ismobile', 'NC');
 
-			$this->parse_ret($ret, $haystack, $errors);
+				if ($this->parse_ret($ret, $haystack, $errors)) {
+					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = $list;
+				}
+			}
 		}
 		elseif ($options[$id] === true) {
 			$options[$id] = false;
 			$ret = $this->set_common_rule($haystack, $buf,
 					'MOBILE VIEW', '', '', '');
-			$this->parse_ret($ret, $haystack, $errors);
+			if ($this->parse_ret($ret, $haystack, $errors)) {
+				$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = false;
+			}
 		}
-
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 		if ((isset($input[$id])) && ($input[$id])) {
 			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
@@ -1018,19 +1054,27 @@ class LiteSpeed_Cache_Admin_Rules
 			$cookie_list = '';
 		}
 
-		$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
-				'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
-		if ($this->parse_ret($ret, $haystack, $errors)) {
-			$options[$id] = $cookie_list;
+		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
+			$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
+					'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
+			if ($this->parse_ret($ret, $haystack, $errors)) {
+				$options[$id] = $cookie_list;
+			}
+		}
+		else {
+			$errors[] = self::$ERR_NO_LIST . esc_html($cookie_list);
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		if (isset($input[$id])) {
+		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
 			$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
 					'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
 			if ($this->parse_ret($ret, $haystack, $errors)) {
 				$options[$id] = $input[$id];
 			}
+		}
+		else {
+			$errors[] = self::$ERR_NO_LIST . esc_html($input[$id]);
 		}
 
 		$ret = $this->set_subdir_cookie($haystack, $input,
@@ -1161,8 +1205,9 @@ class LiteSpeed_Cache_Admin_Rules
 			'.htaccess');
 		self::$ERR_GET = sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
 			'.htaccess');
-		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found.',
+		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: ',
 					'litespeed-cache');
+		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: ', 'litespeed-cache');
 		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
 		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
 		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')

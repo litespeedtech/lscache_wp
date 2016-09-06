@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_RES = 'cache_resources';
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
 	const OPID_LOGIN_COOKIE = 'login_cookie';
+	const OPID_TAG_PREFIX = 'tag_prefix';
 	// do NOT set default options for these three, it is used for admin.
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules';
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
@@ -39,6 +40,7 @@ class LiteSpeed_Cache_Config
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
 	const OPID_FRONT_PAGE_TTL = 'front_page_ttl';
+	const OPID_FEED_TTL = 'feed_ttl';
 	const OPID_NOCACHE_VARS = 'nocache_vars' ;
 	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
@@ -81,6 +83,14 @@ class LiteSpeed_Cache_Config
 				if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
 					$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 				}
+				$options[self::OPID_MOBILEVIEW_ENABLED]
+					= $site_options[self::OPID_MOBILEVIEW_ENABLED];
+				$options[self::ID_MOBILEVIEW_LIST]
+					= $site_options[self::ID_MOBILEVIEW_LIST];
+				$options[self::OPID_LOGIN_COOKIE]
+					= $site_options[self::OPID_LOGIN_COOKIE];
+				$options[self::OPID_TAG_PREFIX]
+					= $site_options[self::OPID_TAG_PREFIX];
 			}
 		}
 		$this->options = $options ;
@@ -156,9 +166,10 @@ class LiteSpeed_Cache_Config
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 * @param bool $include_thirdparty Whether to include the thirdparty options.
 	 * @return array An array of the default options.
 	 */
-	protected function get_default_options()
+	protected function get_default_options($include_thirdparty = true)
 	{
 		$default_purge_options = array(
 			self::PURGE_FRONT_PAGE,
@@ -189,12 +200,15 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,
+			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
+			self::OPID_TAG_PREFIX => '',
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
 			self::OPID_PUBLIC_TTL => 28800,
 			self::OPID_FRONT_PAGE_TTL => 1800,
+			self::OPID_FEED_TTL => 0,
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
@@ -209,7 +223,15 @@ class LiteSpeed_Cache_Config
 			$default_options[self::NETWORK_OPID_ENABLED] = false;
 		}
 
-		return $default_options ;
+		if (!$include_thirdparty) {
+			return $default_options;
+		}
+
+		$tp_options = $this->get_thirdparty_options($default_options);
+		if ((!isset($tp_options)) || (!is_array($tp_options))) {
+			return $default_options;
+		}
+		return array_merge($default_options, $tp_options);
 	}
 
 	/**
@@ -235,11 +257,35 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
+			self::ID_MOBILEVIEW_LIST => false,
+			self::OPID_LOGIN_COOKIE => '',
+			self::OPID_TAG_PREFIX => '',
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
 				);
 		add_site_option(self::OPTION_NAME, $default_site_options);
 		return $default_site_options;
+	}
+
+	/**
+	 * Gets the third party options.
+	 * Will also strip the options that are actually normal options.
+	 *
+	 * @access public
+	 * @since 1.0.9
+	 * @param array $options Optional. The default options to compare against.
+	 * @return mixed boolean on failure, array of keys on success.
+	 */
+	public function get_thirdparty_options($options = null)
+	{
+		$tp_options = apply_filters('litespeed_cache_get_options', array());
+		if (empty($tp_options)) {
+			return false;
+		}
+		if (!isset($options)) {
+			$options = $this->get_default_options(false);
+		}
+		return array_diff_key($tp_options, $options);
 	}
 
 	/**
@@ -280,10 +326,14 @@ class LiteSpeed_Cache_Config
 		}
 		$this->options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION;
 
-		if ((!is_multisite()) || (is_network_admin())) {
-			$this->options[self::OPID_LOGIN_COOKIE]
-				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
+		if ($this->options[self::OPID_MOBILEVIEW_ENABLED] === false) {
+			$this->options[self::ID_MOBILEVIEW_LIST] = false;
 		}
+
+//		if ((!is_multisite()) || (is_network_admin())) {
+//			$this->options[self::OPID_LOGIN_COOKIE]
+//				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
+//		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
 		$this->debug_log("plugin_upgrade option changed = $res $log\n",
@@ -368,13 +418,10 @@ class LiteSpeed_Cache_Config
 			$options = $this->get_options();
 		}
 
-		if (($options[self::OPID_CACHE_FAVICON] == false)
-			&& ($options[self::OPID_CACHE_RES] == false)) {
-			return;
-		}
 		$errors = array();
 		$input = array(
 			self::OPID_MOBILEVIEW_ENABLED => $options[self::OPID_MOBILEVIEW_ENABLED],
+			self::ID_MOBILEVIEW_LIST => $options[self::ID_MOBILEVIEW_LIST],
 			self::ID_NOCACHE_COOKIES => $options[self::ID_NOCACHE_COOKIES],
 			self::ID_NOCACHE_USERAGENTS => $options[self::ID_NOCACHE_USERAGENTS],
 			self::OPID_LOGIN_COOKIE => $options[self::OPID_LOGIN_COOKIE],
@@ -386,6 +433,10 @@ class LiteSpeed_Cache_Config
 		}
 		if ($options[self::OPID_CACHE_RES]) {
 			$input['lscwp_' . self::OPID_CACHE_RES] = self::OPID_CACHE_RES;
+		}
+		if ($options[self::OPID_MOBILEVIEW_ENABLED]) {
+			$input['lscwp_' . self::OPID_MOBILEVIEW_ENABLED]
+				= self::OPID_MOBILEVIEW_ENABLED;
 		}
 		$default[self::OPID_CACHE_FAVICON] = false;
 		$default[self::OPID_CACHE_RES] = false;

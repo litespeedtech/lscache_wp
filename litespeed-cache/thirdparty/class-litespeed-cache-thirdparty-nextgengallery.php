@@ -109,13 +109,13 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * @param array $old_gallery_ids Source gallery ids for the images.
 	 * @param integer $new_gallery_id Destination gallery id.
 	 */
-    public static function move_image($images, $old_gallery_ids, $new_gallery_id)
-    {
-        foreach ($old_gallery_ids as $gid) {
-            LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $gid);
-        }
-        LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $new_gallery_id);
-    }
+	public static function move_image($images, $old_gallery_ids, $new_gallery_id)
+	{
+		foreach ($old_gallery_ids as $gid) {
+			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $gid);
+		}
+		LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $new_gallery_id);
+	}
 
 	/**
 	 * When an image is copied, need to purge the destination gallery.
@@ -124,10 +124,10 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * @param type $old_gallery_ids unused
 	 * @param integer $new_gallery_id Destination gallery id.
 	 */
-    public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
-    {
-        LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $new_gallery_id);
-    }
+	public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
+	{
+		LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $new_gallery_id);
+	}
 
 	/**
 	 * When an image is re-generated, need to purge the gallery it belongs to.
@@ -135,10 +135,10 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 *
 	 * @param Image class $image The re-generated image.
 	 */
-    public static function gen_image($image)
-    {
-        LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $image->galleryid);
-    }
+	public static function gen_image($image)
+	{
+		LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_GALLERIES . $image->galleryid);
+	}
 
 	/**
 	 * When a gallery is updated, need to purge all pages that display the gallery.
