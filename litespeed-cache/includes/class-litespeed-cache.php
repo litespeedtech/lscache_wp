@@ -147,8 +147,9 @@ class LiteSpeed_Cache
 	 */
 	public function register_activation()
 	{
-		if ( (!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
-			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0) ) {
+		if ((!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
+			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0)
+				&& (is_writable(ABSPATH . 'wp-content/advanced-cache.php'))) {
 			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
 		}
 		include_once(ABSPATH . 'wp-content/advanced-cache.php');
@@ -176,8 +177,11 @@ class LiteSpeed_Cache
 			return;
 		}
 		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
-		if (file_exists($adv_cache_path)) {
+		if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
 			unlink($adv_cache_path) ;
+		}
+		else {
+			error_log('Failed to remove advanced-cache.php, file does not exist or is not writable!') ;
 		}
 
 		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
