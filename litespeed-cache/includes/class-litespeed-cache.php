@@ -175,6 +175,14 @@ class LiteSpeed_Cache
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
 		}
+		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
+		if (file_exists($adv_cache_path)) {
+			unlink($adv_cache_path) ;
+		}
+
+		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
+			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
+		}
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
 	}
