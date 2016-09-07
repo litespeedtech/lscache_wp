@@ -721,9 +721,26 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '<h4>' . __('Is WooCommerce supported?', 'litespeed-cache') . '</h4>'
 		. '<p>'
-		. __('In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable.', 'litespeed-cache')
-		. __(' For versions below 1.4.2, we do extra checks to make sure that pages are cacheable.', 'litespeed-cache')
-		. __(' We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.', 'litespeed-cache') . '</p>';
+		. __('In short, yes.', 'litespeed-cache')
+		. __(' However, for some woocommerce themes, the cart may not be updated correctly.', 'litespeed-cache')
+		. '<br><b>'
+		. __('To test the cart: ', 'litespeed-cache')
+		. '</b></p><ol><li>'
+		. __('On a non-logged-in browser, visit and cache a page, then visit and cache a product page.', 'litespeed-cache')
+		. '</li><li>'
+		. __('The first page should be accessible from the product page (e.g. the shop).', 'litespeed-cache')
+		. '</li><li>'
+		. __('Once both pages are confirmed cached, add the product to your cart.', 'litespeed-cache')
+		. '</li><li>'
+		. __('After adding to the cart, visit the first page.', 'litespeed-cache')
+		. '</li><li>'
+		. __('The page should still be cached, and the cart should be up to date.', 'litespeed-cache')
+		. '</li><li>'
+		. __('If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.', 'litespeed-cache')
+		. '</li></ol><p>'
+		. __('We tested a couple themes like Storefront and Shop Isle and found that the cart works without the rule.', 'litespeed-cache')
+		. __(' That said, we found that some may not, like the E-Commerce theme, so please verify your theme.', 'litespeed-cache')
+		. '</p>';
 
 		$buf .= '<h4>' . __('How do I get WP-PostViews to display an updating view count?', 'litespeed-cache') . '</h4>'
 		. '<ol><li>' . sprintf(__('Use %1$s to replace %2$s', 'litespeed-cache'),

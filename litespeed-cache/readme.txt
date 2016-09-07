@@ -70,11 +70,19 @@ LiteSpeed Web Server. Nothing is stored on the PHP side.
 The support is currently in beta. It should work, but is not fully tested.
 As well, any settings changes that require modifying the .htaccess file requires a server restart.
 = Is WooCommerce supported? =
-In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not
-cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2,
-we do extra checks to make sure that pages are cacheable.
-We are always looking for feedback, so if you encounter any problems,
-be sure to send us a support question.
+In short, yes. However, for some woocommerce themes, the cart may not be updated correctly.
+
+To test the cart:
+
+1. On a non-logged-in browser, visit and cache a page, then visit and cache a product page.
+2. The first page should be accessible from the product page (e.g. the shop).
+3. Once both pages are confirmed cached, add the product to your cart.
+4. After adding to the cart, visit the first page.
+5. The page should still be cached, and the cart should be up to date.
+6. If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.
+
+We tested a couple themes like Storefront and Shop Isle and found that the cart works without the rule.
+That said, we found that some may not, like the E-Commerce theme, so please verify your theme.
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
 
