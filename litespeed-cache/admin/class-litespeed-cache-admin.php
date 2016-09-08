@@ -120,6 +120,43 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Hooked to wp_before_admin_bar_render.
+	 * Adds a link to the admin bar so users can quickly purge all.
+	 *
+	 * @global type $wp_admin_bar
+	 * @global type $pagenow
+	 */
+	public function add_quick_purge()
+	{
+		global $wp_admin_bar;
+		global $pagenow;
+		$prefix = '?';
+
+		if (!empty($_GET)) {
+			if (isset($_GET['LSCWP_CTRL'])) {
+				unset($_GET['LSCWP_CTRL']);
+			}
+			if (isset($_GET['_wpnonce'])) {
+				unset($_GET['_wpnonce']);
+			}
+			if (!empty($_GET)) {
+				$prefix .= http_build_query($_GET) . '&';
+			}
+		}
+
+		$prenonce = admin_url($pagenow . $prefix
+			. 'LSCWP_CTRL=' . LiteSpeed_Cache::ADMINQS_PURGEALL);
+		$url = wp_nonce_url($prenonce, 'litespeed-purgeall');
+
+		$wp_admin_bar->add_node(array(
+			'id'    => 'lscache-quick-purge',
+			'title' => 'LiteSpeed Cache Purge All',
+			'href'  => $url
+		));
+
+	}
+
+	/**
 	 * Helper function to set up a submenu page.
 	 *
 	 * @since 1.0.4

@@ -30,6 +30,7 @@ class LiteSpeed_Cache
 
 	const ADMINQS_KEY = 'LSCWP_CTRL';
 	const ADMINQS_PURGE = 'PURGE';
+	const ADMINQS_PURGEALL = 'PURGEALL';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
 	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
 
@@ -378,6 +379,10 @@ class LiteSpeed_Cache
 					array($admin, 'unset_update_text'), 20);
 
 			}
+			add_action('admin_init', array($this, 'check_admin_ip'), 6);
+
+			add_action('wp_before_admin_bar_render',
+				array($admin, 'add_quick_purge'));
 		}
 
 		if (!is_network_admin()) {
@@ -1205,11 +1210,19 @@ class LiteSpeed_Cache
 			return;
 		}
 		$action = $_GET[self::ADMINQS_KEY];
-		$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
+		if ((is_admin()) || (is_network_admin())) {
+			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
+				|| (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)) {
+				return;
+			}
+		}
+		else {
+			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
-		if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
-			$this->cachectrl = self::CACHECTRL_NOCACHE;
-			return;
+			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+				$this->cachectrl = self::CACHECTRL_NOCACHE;
+				return;
+			}
 		}
 
 		switch ($action[0]) {
@@ -1220,8 +1233,16 @@ class LiteSpeed_Cache
 				elseif ($action == self::ADMINQS_PURGESINGLE) {
 					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
 				}
+				elseif ($action == self::ADMINQS_PURGEALL) {
+					$this->purge_all();
+				}
 				else {
 					break;
+				}
+				if (is_admin() || is_network_admin()) {
+					LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+						LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
+						__('Purged the cache!', 'litespeed-cache'));
 				}
 				return;
 			case 'S':
