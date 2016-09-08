@@ -1234,6 +1234,7 @@ class LiteSpeed_Cache
 					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
 				}
 				elseif ($action == self::ADMINQS_PURGEALL) {
+					$this->cachectrl = self::CACHECTRL_NOCACHE;
 					$this->purge_all();
 				}
 				else {

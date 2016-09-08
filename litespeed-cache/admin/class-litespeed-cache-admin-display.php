@@ -1508,6 +1508,9 @@ class LiteSpeed_Cache_Admin_Display
 		. __(' The lone exception is the blog ID tag. ', 'litespeed-cache')
 		. __('Note that this means that pages with the same cache tag will be purged as well.', 'litespeed-cache')
 		. '</li>'
+		. '<li>PURGEALL - '
+		. __('This is used to purge all entries in the cache.', 'litespeed-cache')
+		. '</li>'
 		. '<li>PURGESINGLE - '
 		. __('This is used to purge the first cache tag associated with the page.', 'litespeed-cache')
 		. '</li>'
