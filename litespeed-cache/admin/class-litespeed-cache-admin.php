@@ -322,12 +322,15 @@ if (defined('lscache_debug')) {
 			return true;
 		}
 		$prefix = $input[$id];
-		if (($prefix === '') || (ctype_alnum($prefix))) {
-			$options[$id] = $prefix;
-			return true;
+		if (($prefix !== '') && (!ctype_alnum($prefix))) {
+			return __('Invalid Tag Prefix input.', 'litespeed-cache')
+				. __(' Input should only contain letters and numbers.', 'litespeed-cache');
 		}
-		return __('Invalid Tag Prefix input.', 'litespeed-cache')
-			. __(' Input should only contain letters and numbers.', 'litespeed-cache');
+		if ($options[$id] !== $prefix) {
+			$options[$id] = $prefix;
+			LiteSpeed_Cache::plugin()->purge_all();
+		}
+		return true;
 	}
 
 	/**
