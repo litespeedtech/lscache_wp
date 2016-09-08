@@ -480,6 +480,7 @@ class LiteSpeed_Cache_Admin_Display
 				array('b' => array()))
 		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
 
+		$buf .= $this->build_setting_purge_on_upgrade($site_options);
 		$buf .= $this->build_setting_cache_favicon($site_options);
 		$buf .= $this->build_setting_cache_resources($site_options);
 		$buf .= $this->build_setting_mobile_view($site_options);
@@ -851,6 +852,7 @@ class LiteSpeed_Cache_Admin_Display
 			__('Unchecking this option may negatively affect performance.', 'litespeed-cache'));
 
 		if (!is_multisite()) {
+			$buf .= $this->build_setting_purge_on_upgrade($options);
 			$buf .= $this->build_setting_cache_favicon($options);
 			$buf .= $this->build_setting_cache_resources($options);
 			$buf .= $this->build_setting_mobile_view($options);
@@ -1346,6 +1348,22 @@ class LiteSpeed_Cache_Admin_Display
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
 		return $this->input_field_text($id, $cookie, '','', '', !$file_writable);
+	}
+
+	/**
+	 * Builds the html for the purge on upgrade configurations.
+	 *
+	 * @since 1.0.9.2
+	 * @access private
+	 * @param array $options The currently configured options.
+	 * @return string The html for purging on upgrade configurations.
+	 */
+	private function build_setting_purge_on_upgrade($options)
+	{
+		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
+		$purge_upgrade = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]);
+		return $this->display_config_row(__('Purge All on upgrade', 'litespeed-cache'), $purge_upgrade,
+		__('When checked, the cache will automatically purge when any plugins, themes, or WordPress core is upgraded.', 'litespeed-cache'));
 	}
 
 	/**

@@ -380,6 +380,9 @@ class LiteSpeed_Cache
 
 			}
 			add_action('admin_init', array($this, 'check_admin_ip'), 6);
+			if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
+				add_action('upgrader_process_complete', array($this, 'purge_all'));
+			}
 
 			add_action('wp_before_admin_bar_render',
 				array($admin, 'add_quick_purge'));
@@ -1287,10 +1290,10 @@ class LiteSpeed_Cache
 		if (!in_array('*', $purge_tags )) {
 			$tags = array_map(array($this,'prefix_apply'), $purge_tags);
 		}
-		elseif ((!is_multisite()) || (!is_network_admin())) {
-			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
-		}
-		else {
+		// Would only use multisite and network admin except is_network_admin
+		// is false for ajax calls, which is used by wordpress updates v4.6+
+		elseif ((is_multisite()) && ((is_network_admin())
+			|| ((defined('DOING_AJAX')) && (check_ajax_referer('updates'))))) {
 			global $wp_version;
 			if (version_compare($wp_version, '4.6', '<')) {
 				$blogs = wp_get_sites();
@@ -1311,6 +1314,9 @@ class LiteSpeed_Cache
 			foreach ($blogs as $blog_id) {
 				$tags[] = sprintf('%sB%s_', $prefix, $blog_id);
 			}
+		}
+		else {
+			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
 		}
 
 		$cache_purge_header .= ': tag=' . implode(',', $tags);

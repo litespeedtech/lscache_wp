@@ -25,6 +25,7 @@ class LiteSpeed_Cache_Config
 	const OPID_ENABLED_DISABLE = 0;
 	const OPID_ENABLED_ENABLE = 1;
 	const OPID_ENABLED_NOTSET = 2;
+	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade';
 	const OPID_CACHE_COMMENTERS = 'cache_commenters';
 	const OPID_CACHE_LOGIN = 'cache_login';
 	const OPID_CACHE_FAVICON = 'cache_favicon';
@@ -80,6 +81,8 @@ class LiteSpeed_Cache_Config
 				if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
 					$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 				}
+				$options[self::OPID_PURGE_ON_UPGRADE]
+					= $site_options[self::OPID_PURGE_ON_UPGRADE];
 				$options[self::OPID_MOBILEVIEW_ENABLED]
 					= $site_options[self::OPID_MOBILEVIEW_ENABLED];
 				$options[self::ID_MOBILEVIEW_LIST]
@@ -192,6 +195,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::OPID_ENABLED => $default_enabled,
 			self::OPID_ENABLED_RADIO => $default_radio,
+			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_COMMENTERS => true,
 			self::OPID_CACHE_LOGIN => true,
 			self::OPID_CACHE_FAVICON => true,
@@ -251,6 +255,7 @@ class LiteSpeed_Cache_Config
 		}
 		$default_site_options = array(
 			self::NETWORK_OPID_ENABLED => false,
+			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => 0,
