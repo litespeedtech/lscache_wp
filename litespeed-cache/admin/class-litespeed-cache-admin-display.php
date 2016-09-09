@@ -972,6 +972,11 @@ class LiteSpeed_Cache_Admin_Display
 			. sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
 			. '<br>
 			<pre>/excludethis.php</pre>
+			<br>'
+			. sprintf(__('and to exclude %s(accessed with the /blog), I would have:', 'litespeed-cache'),
+				'http://www.example.com/blog/excludethis.php')
+			. '<br>
+			<pre>/blog/excludethis.php</pre>
 			<br>';
 
 		$cat_description =
@@ -1333,7 +1338,7 @@ class LiteSpeed_Cache_Admin_Display
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE',
 				$match, $sub, $cookie) === false) {
 			return '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $cookie . '</p>';
+			. __('Error getting current rules: ', 'litespeed-cache') . $match . '</p>';
 		}
 		if (!empty($cookie)) {
 			if (strncmp($cookie, 'Cache-Vary:', 11)) {
