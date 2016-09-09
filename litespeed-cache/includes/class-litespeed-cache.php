@@ -1243,12 +1243,25 @@ class LiteSpeed_Cache
 				else {
 					break;
 				}
-				if (is_admin() || is_network_admin()) {
-					LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-						LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-						__('Purged the cache!', 'litespeed-cache'));
+				if ((!is_admin()) && (!is_network_admin())) {
+					return;
 				}
-				return;
+				global $pagenow;
+				$qs = '';
+
+				if (!empty($_GET)) {
+					if (isset($_GET['LSCWP_CTRL'])) {
+						unset($_GET['LSCWP_CTRL']);
+					}
+					if (isset($_GET['_wpnonce'])) {
+						unset($_GET['_wpnonce']);
+					}
+					if (!empty($_GET)) {
+						$qs = '?' . http_build_query($_GET);
+					}
+				}
+				wp_redirect(admin_url($pagenow . $qs));
+				exit();
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
