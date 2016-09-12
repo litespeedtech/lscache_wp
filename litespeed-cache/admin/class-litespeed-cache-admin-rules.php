@@ -295,6 +295,25 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::file_save($beginning, false, $path);
 	}
 
+	private static function file_backup($path)
+	{
+		$bak = '_lscachebak_orig';
+		$i = 1;
+
+		if ( file_exists($path . $bak) ) {
+			while (file_exists($path . '_lscachebak_' . $i)) {
+				$i++;
+			}
+			$bak = '_lscachebak_' . $i;
+		}
+
+		//failed to backup, not good.
+		if (!copy($path, $path . $bak)) {
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Try to save the rules file changes.
 	 *
@@ -315,8 +334,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function file_save($content, $cleanup = true, $path = '')
 	{
-		$bak = '_lscachebak_orig';
-
 		if (empty($path)) {
 			$path = self::get_home_path();
 		}
@@ -325,12 +342,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return self::$ERR_READWRITE;
 		}
 
-		if ( file_exists($path . $bak) ) {
-				$bak = '_lscachebak_' . date('ymd') . '_' . date('His');
-		}
-
 		//failed to backup, not good.
-		if (!copy($path, $path . $bak)) {
+		if (self::file_backup($path) === false) {
 			return self::$ERR_BACKUP;
 		}
 
