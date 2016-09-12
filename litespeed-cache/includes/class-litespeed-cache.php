@@ -1364,7 +1364,8 @@ class LiteSpeed_Cache
 			return $mode;
 		}
 
-		if (LiteSpeed_Cache_Tags::is_noncacheable()) {
+		if (((defined('LSCACHE_NO_CACHE')) && (constant('LSCACHE_NO_CACHE')))
+			|| (LiteSpeed_Cache_Tags::is_noncacheable())) {
 			return self::CACHECTRL_NOCACHE;
 		}
 
