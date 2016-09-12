@@ -301,17 +301,39 @@ class LiteSpeed_Cache_Admin_Rules
 		$i = 1;
 
 		if ( file_exists($path . $bak) ) {
-			while (file_exists($path . '_lscachebak_' . $i)) {
+			$bak = sprintf("_lscachebak_%02d", $i);
+			while (file_exists($path . $bak)) {
 				$i++;
+				$bak = sprintf("_lscachebak_%02d", $i);
 			}
-			$bak = '_lscachebak_' . $i;
 		}
 
-		//failed to backup, not good.
-		if (!copy($path, $path . $bak)) {
-			return false;
+		if (($i <= 10) || (!class_exists('ZipArchive'))) {
+			$ret = copy($path, $path . $bak);
+			return $ret;
 		}
-		return true;
+
+		$zip = new ZipArchive;
+		$dir = dirname($path);
+		$res = $zip->open($dir . '/lscache_htaccess_bak.zip',
+			ZipArchive::CREATE | ZipArchive::OVERWRITE);
+		if ($res === false) {
+			error_log('Warning: Failed to archive wordpress backups in ' . $dir);
+			$ret = copy($path, $path . $bak);
+			return $ret;
+		}
+		$archived = $zip->addPattern('/\.htaccess_lscachebak_[0-9]+/', $dir);
+		$zip->close();
+		$bak = '_lscachebak_01';
+
+		if (!empty($archived)) {
+			foreach ($archived as $delFile) {
+				unlink($delFile);
+			}
+		}
+
+		$ret = copy($path, $path . $bak);
+		return $ret;
 	}
 
 	/**
