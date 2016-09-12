@@ -368,6 +368,7 @@ class LiteSpeed_Cache_Admin_Display
 		 <div id="lsc-tabs">
 		 <ul>
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
+		 <li><a href="#specific-settings">' . __('Specific Pages', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
 	 	 ' . $advanced_tab . '
@@ -404,6 +405,9 @@ class LiteSpeed_Cache_Admin_Display
 		</ul>
 		 <div id="general-settings">'
 		. $this->show_settings_general($options) .
+		'</div>
+		 <div id="specific-settings">'
+		. $this->show_settings_specific($options) .
 		'</div>
 		<div id="purge-settings">'
 		. $this->show_settings_purge($config->get_purge_options()) .
@@ -846,16 +850,27 @@ class LiteSpeed_Cache_Admin_Display
 		__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 		. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
+		if (!is_multisite()) {
+			$buf .= $this->build_setting_purge_on_upgrade($options);
+			$buf .= $this->build_setting_mobile_view($options);
+		}
+
+		$buf .= $this->input_group_end() ;
+		return $buf ;
+	}
+
+	private function show_settings_specific($options)
+	{
+		$buf = $this->input_group_start(__('Specific Pages', 'litespeed-cache')) ;
+
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
 		$cache_login = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable Cache for Login Page', 'litespeed-cache'), $cache_login,
 			__('Unchecking this option may negatively affect performance.', 'litespeed-cache'));
 
 		if (!is_multisite()) {
-			$buf .= $this->build_setting_purge_on_upgrade($options);
 			$buf .= $this->build_setting_cache_favicon($options);
 			$buf .= $this->build_setting_cache_resources($options);
-			$buf .= $this->build_setting_mobile_view($options);
 		}
 
 		$buf .= $this->input_group_end() ;
