@@ -526,7 +526,7 @@ class LiteSpeed_Cache
 		// not, remove from curval.
 		if ($update_val < 0) {
 			// If cookie will no longer exist, delete the cookie.
-			if (($curval == 0) || ($curval == $update_val)) {
+			if (($curval == 0) || ($curval == (~$update_val))) {
 				// Use a year in case of bad local clock.
 				$expire = time() - 31536001;
 			}
@@ -896,9 +896,6 @@ class LiteSpeed_Cache
 	 */
 	private function check_user_logged_in()
 	{
-		if (!is_user_logged_in()) {
-			return false;
-		}
 		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache')
 		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
 		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
@@ -923,6 +920,17 @@ class LiteSpeed_Cache
 			&& ((is_multisite() ? is_network_admin() : is_admin()))) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+		}
+		elseif (!is_user_logged_in()) {
+			// If the cookie is set, unset it.
+			if ((isset($_COOKIE)) && (isset($_COOKIE[$this->current_vary]))
+				&& (intval($_COOKIE[$this->current_vary])
+					& self::LSCOOKIE_VARY_LOGGED_IN)) {
+				$this->do_set_cookie(~self::LSCOOKIE_VARY_LOGGED_IN,
+					time() + apply_filters( 'comment_cookie_lifetime', 30000000 ));
+				$_COOKIE[$this->current_vary] &= ~self::LSCOOKIE_VARY_LOGGED_IN;
+			}
+			return false;
 		}
 		elseif (!isset($_COOKIE[$this->current_vary])) {
 			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
