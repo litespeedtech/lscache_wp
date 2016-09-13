@@ -11,6 +11,9 @@
  * a common place for plugin authors to append their file to.
  *
  */
+if (!defined('ABSPATH')) {
+    die();
+}
 
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-bbpress.php');
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-nextgengallery.php');
