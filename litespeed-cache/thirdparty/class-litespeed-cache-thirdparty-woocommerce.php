@@ -418,7 +418,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Helper function to select the function(s) to use to get the product
 	 * category ids.
 	 *
-	 * @since 1.0.9.2
+	 * @since 1.0.10
 	 * @access private
 	 * @param int $product_id The product id
 	 * @return array An array of category ids.

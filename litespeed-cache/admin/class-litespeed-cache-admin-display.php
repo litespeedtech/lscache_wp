@@ -859,6 +859,14 @@ class LiteSpeed_Cache_Admin_Display
 		return $buf ;
 	}
 
+	/**
+	 * Builds the html for the specific pages settings tab.
+	 *
+	 * @since 1.0.10
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the specific pages tab.
+	 */
 	private function show_settings_specific($options)
 	{
 		$buf = $this->input_group_start(__('Specific Pages', 'litespeed-cache')) ;
@@ -1373,7 +1381,7 @@ class LiteSpeed_Cache_Admin_Display
 	/**
 	 * Builds the html for the purge on upgrade configurations.
 	 *
-	 * @since 1.0.9.2
+	 * @since 1.0.10
 	 * @access private
 	 * @param array $options The currently configured options.
 	 * @return string The html for purging on upgrade configurations.

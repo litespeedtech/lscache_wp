@@ -295,6 +295,18 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::file_save($beginning, false, $path);
 	}
 
+	/**
+	 * Try to backup the .htaccess file.
+	 * This function will attempt to create a .htaccess_lscachebak_orig first.
+	 * If that is already created, it will attempt to create .htaccess_lscachebak_[1-10]
+	 * If 10 are already created, zip the current set of backups (sans _orig).
+	 * If a zip already exists, overwrite it.
+	 *
+	 * @since 1.0.10
+	 * @access private
+	 * @param String $path The .htaccess file path.
+	 * @return boolean True on success, else false on failure.
+	 */
 	private static function file_backup($path)
 	{
 		$bak = '_lscachebak_orig';
@@ -724,6 +736,14 @@ class LiteSpeed_Cache_Admin_Rules
 		return true;
 	}
 
+	/**
+	 * Parse rewrite input to check for possible issues (e.g. unescaped spaces).
+	 *
+	 * @since 1.0.9
+	 * @access private
+	 * @param String $rule Input rewrite rule.
+	 * @return boolean True for valid rules, false otherwise.
+	 */
 	private static function check_rewrite($rule)
 	{
 		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s\/]/', $rule) === 0);
