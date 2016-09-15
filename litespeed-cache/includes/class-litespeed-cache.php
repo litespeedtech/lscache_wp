@@ -2281,6 +2281,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			$wp_query->set('cpage', $params[self::ESI_PARAM_ARGS]);
 		}
 		$post = get_post($params[self::ESI_PARAM_ID]);
+		$wp_query->setup_postdata($post);
 		add_filter('comments_array', array($this, 'esi_comments_cache_type'));
 		comments_template();
 	}
