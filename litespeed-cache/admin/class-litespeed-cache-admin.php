@@ -120,6 +120,43 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Hooked to wp_before_admin_bar_render.
+	 * Adds a link to the admin bar so users can quickly purge all.
+	 *
+	 * @global type $wp_admin_bar
+	 * @global type $pagenow
+	 */
+	public function add_quick_purge()
+	{
+		global $wp_admin_bar;
+		global $pagenow;
+		$prefix = '?';
+
+		if (!empty($_GET)) {
+			if (isset($_GET['LSCWP_CTRL'])) {
+				unset($_GET['LSCWP_CTRL']);
+			}
+			if (isset($_GET['_wpnonce'])) {
+				unset($_GET['_wpnonce']);
+			}
+			if (!empty($_GET)) {
+				$prefix .= http_build_query($_GET) . '&';
+			}
+		}
+
+		$prenonce = admin_url($pagenow . $prefix
+			. 'LSCWP_CTRL=' . LiteSpeed_Cache::ADMINQS_PURGEALL);
+		$url = wp_nonce_url($prenonce, 'litespeed-purgeall');
+
+		$wp_admin_bar->add_node(array(
+			'id'    => 'lscache-quick-purge',
+			'title' => 'LiteSpeed Cache Purge All',
+			'href'  => $url
+		));
+
+	}
+
+	/**
 	 * Helper function to set up a submenu page.
 	 *
 	 * @since 1.0.4
@@ -285,12 +322,15 @@ if (defined('lscache_debug')) {
 			return true;
 		}
 		$prefix = $input[$id];
-		if (($prefix === '') || (ctype_alnum($prefix))) {
-			$options[$id] = $prefix;
-			return true;
+		if (($prefix !== '') && (!ctype_alnum($prefix))) {
+			return __('Invalid Tag Prefix input.', 'litespeed-cache')
+				. __(' Input should only contain letters and numbers.', 'litespeed-cache');
 		}
-		return __('Invalid Tag Prefix input.', 'litespeed-cache')
-			. __(' Input should only contain letters and numbers.', 'litespeed-cache');
+		if ($options[$id] !== $prefix) {
+			$options[$id] = $prefix;
+			LiteSpeed_Cache::plugin()->purge_all();
+		}
+		return true;
 	}
 
 	/**
@@ -369,6 +409,14 @@ if (defined('lscache_debug')) {
 		}
 		else {
 			$options[$id] = intval($input[$id]);
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
+		if (isset($input['lscwp_' . $id])) {
+			$options[$id] = ( $input['lscwp_' . $id] === $id );
+		}
+		else {
+			$options[$id] = false;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
@@ -714,6 +762,13 @@ if (defined('lscache_debug')) {
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
 			$input[$id] = 'changed';
+		}
+		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
+		if (isset($input['lscwp_' . $id])) {
+			$options[$id] = ( $input['lscwp_' . $id] === $id );
+		}
+		else {
+			$options[$id] = false;
 		}
 
 		$out = $this->validate_tag_prefix($input, $options);

@@ -30,6 +30,7 @@ class LiteSpeed_Cache
 
 	const ADMINQS_KEY = 'LSCWP_CTRL';
 	const ADMINQS_PURGE = 'PURGE';
+	const ADMINQS_PURGEALL = 'PURGEALL';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
 	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
 
@@ -172,8 +173,9 @@ class LiteSpeed_Cache
 	 */
 	public function register_activation()
 	{
-		if ( (!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
-			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0) ) {
+		if ((!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
+			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0)
+				&& (is_writable(ABSPATH . 'wp-content/advanced-cache.php'))) {
 			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
 		}
 		include_once(ABSPATH . 'wp-content/advanced-cache.php');
@@ -199,6 +201,17 @@ class LiteSpeed_Cache
 		$this->purge_all() ;
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
+		}
+		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
+		if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
+			unlink($adv_cache_path) ;
+		}
+		else {
+			error_log('Failed to remove advanced-cache.php, file does not exist or is not writable!') ;
+		}
+
+		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
+			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 		}
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
@@ -376,6 +389,13 @@ class LiteSpeed_Cache
 					array($admin, 'unset_update_text'), 20);
 
 			}
+			add_action('admin_init', array($this, 'check_admin_ip'), 6);
+			if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
+				add_action('upgrader_process_complete', array($this, 'purge_all'));
+			}
+
+			add_action('wp_before_admin_bar_render',
+				array($admin, 'add_quick_purge'));
 		}
 
 		add_action('in_widget_form',
@@ -565,7 +585,7 @@ class LiteSpeed_Cache
 		// not, remove from curval.
 		if ($update_val < 0) {
 			// If cookie will no longer exist, delete the cookie.
-			if (($curval == 0) || ($curval == $update_val)) {
+			if (($curval == 0) || ($curval == (~$update_val))) {
 				// Use a year in case of bad local clock.
 				$expire = time() - 31536001;
 			}
@@ -978,9 +998,6 @@ class LiteSpeed_Cache
 	 */
 	private function check_user_logged_in()
 	{
-		if (!is_user_logged_in()) {
-			return false;
-		}
 		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache')
 		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
 		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
@@ -1005,6 +1022,17 @@ class LiteSpeed_Cache
 			&& ((is_multisite() ? is_network_admin() : is_admin()))) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+		}
+		elseif (!is_user_logged_in()) {
+			// If the cookie is set, unset it.
+			if ((isset($_COOKIE)) && (isset($_COOKIE[$this->current_vary]))
+				&& (intval($_COOKIE[$this->current_vary])
+					& self::LSCOOKIE_VARY_LOGGED_IN)) {
+				$this->do_set_cookie(~self::LSCOOKIE_VARY_LOGGED_IN,
+					time() + apply_filters( 'comment_cookie_lifetime', 30000000 ));
+				$_COOKIE[$this->current_vary] &= ~self::LSCOOKIE_VARY_LOGGED_IN;
+			}
+			return false;
 		}
 		elseif (!isset($_COOKIE[$this->current_vary])) {
 			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
@@ -1305,11 +1333,19 @@ class LiteSpeed_Cache
 			return;
 		}
 		$action = $_GET[self::ADMINQS_KEY];
-		$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
+		if ((is_admin()) || (is_network_admin())) {
+			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
+				|| (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)) {
+				return;
+			}
+		}
+		else {
+			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
-		if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
-			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
-			return;
+			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+				$this->cachectrl = self::CACHECTRL_NOCACHE;
+				return;
+			}
 		}
 
 		switch ($action[0]) {
@@ -1320,10 +1356,32 @@ class LiteSpeed_Cache
 				elseif ($action == self::ADMINQS_PURGESINGLE) {
 					$this->set_cachectrl(self::CACHECTRL_PURGESINGLE);
 				}
+				elseif ($action == self::ADMINQS_PURGEALL) {
+					$this->cachectrl = self::CACHECTRL_NOCACHE;
+					$this->purge_all();
+				}
 				else {
 					break;
 				}
-				return;
+				if ((!is_admin()) && (!is_network_admin())) {
+					return;
+				}
+				global $pagenow;
+				$qs = '';
+
+				if (!empty($_GET)) {
+					if (isset($_GET['LSCWP_CTRL'])) {
+						unset($_GET['LSCWP_CTRL']);
+					}
+					if (isset($_GET['_wpnonce'])) {
+						unset($_GET['_wpnonce']);
+					}
+					if (!empty($_GET)) {
+						$qs = '?' . http_build_query($_GET);
+					}
+				}
+				wp_redirect(admin_url($pagenow . $qs));
+				exit();
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->set_cachectrl($this->cachectrl
@@ -1366,10 +1424,10 @@ class LiteSpeed_Cache
 		if (!in_array('*', $purge_tags )) {
 			$tags = array_map(array($this,'prefix_apply'), $purge_tags);
 		}
-		elseif ((!is_multisite()) || (!is_network_admin())) {
-			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
-		}
-		else {
+		// Would only use multisite and network admin except is_network_admin
+		// is false for ajax calls, which is used by wordpress updates v4.6+
+		elseif ((is_multisite()) && ((is_network_admin())
+			|| ((defined('DOING_AJAX')) && (check_ajax_referer('updates'))))) {
 			global $wp_version;
 			if (version_compare($wp_version, '4.6', '<')) {
 				$blogs = wp_get_sites();
@@ -1390,6 +1448,9 @@ class LiteSpeed_Cache
 			foreach ($blogs as $blog_id) {
 				$tags[] = sprintf('%sB%s_', $prefix, $blog_id);
 			}
+		}
+		else {
+			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
 		}
 
 		$cache_purge_header .= ': tag=' . implode(',', $tags);
@@ -1425,7 +1486,8 @@ class LiteSpeed_Cache
 			return $mode;
 		}
 
-		if (LiteSpeed_Cache_Tags::is_noncacheable()) {
+		if (((defined('LSCACHE_NO_CACHE')) && (constant('LSCACHE_NO_CACHE')))
+			|| (LiteSpeed_Cache_Tags::is_noncacheable())) {
 			return self::CACHECTRL_NOCACHE;
 		}
 

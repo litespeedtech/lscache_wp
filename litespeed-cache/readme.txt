@@ -70,11 +70,25 @@ LiteSpeed Web Server. Nothing is stored on the PHP side.
 The support is currently in beta. It should work, but is not fully tested.
 As well, any settings changes that require modifying the .htaccess file requires a server restart.
 = Is WooCommerce supported? =
-In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not
-cache the pages that WooCommerce deems non-cacheable. For versions below 1.4.2,
-we do extra checks to make sure that pages are cacheable.
-We are always looking for feedback, so if you encounter any problems,
-be sure to send us a support question.
+In short, yes. However, for some woocommerce themes, the cart may not be updated correctly.
+
+To test the cart:
+
+1. On a non-logged-in browser, visit and cache a page, then visit and cache a product page.
+2. The first page should be accessible from the product page (e.g. the shop).
+3. Once both pages are confirmed cached, add the product to your cart.
+4. After adding to the cart, visit the first page.
+5. The page should still be cached, and the cart should be up to date.
+6. If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.
+
+We tested a couple themes like Storefront and Shop Isle and found that the cart works without the rule.
+That said, we found that some may not, like the E-Commerce theme, so please verify your theme.
+= My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
+As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);`
+sometime before the shutdown hook, and it should be recognized by the cache.
+Alternatively, you may use the function `LiteSpeed_Cache_Tags::set_noncacheable();` for earlier versions (1.0.7+).
+If using the function, make sure to check that the class exists prior to using the function.
+Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache/other_notes/) for more information.
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
 
@@ -111,6 +125,12 @@ automatically purge the cached page, you may be required to write an
 integration script to remedy this. In addition to this section, there is a template file and a
 few examples of plugins that required integration scripts if additional
 resources are needed.
+
+= Version 1.0.10+ =
+If your plugin needs to set the current page as non cacheable, the simplest
+way to instruct the cache plugin to not cache the page is `define('LSCACHE_NO_CACHE', true);`
+
+This must be defined prior to the shutdown hook to ensure that it is recognized.
 
 = How It Works =
 

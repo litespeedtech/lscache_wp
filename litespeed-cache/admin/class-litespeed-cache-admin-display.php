@@ -425,6 +425,7 @@ class LiteSpeed_Cache_Admin_Display
 		 <div id="lsc-tabs">
 		 <ul>
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
+		 <li><a href="#specific-settings">' . __('Specific Pages', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
 	 	 ' . $advanced_tab . '
@@ -461,6 +462,9 @@ class LiteSpeed_Cache_Admin_Display
 		</ul>
 		 <div id="general-settings">'
 		. $this->show_settings_general($options) .
+		'</div>
+		 <div id="specific-settings">'
+		. $this->show_settings_specific($options) .
 		'</div>
 		<div id="purge-settings">'
 		. $this->show_settings_purge($config->get_purge_options()) .
@@ -537,6 +541,7 @@ class LiteSpeed_Cache_Admin_Display
 				array('b' => array()))
 		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
 
+		$buf .= $this->build_setting_purge_on_upgrade($site_options);
 		$buf .= $this->build_setting_cache_favicon($site_options);
 		$buf .= $this->build_setting_cache_resources($site_options);
 		$buf .= $this->build_setting_mobile_view($site_options);
@@ -581,7 +586,14 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<div class="welcome-panel">';
 		$contents = '';
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
-		if (LiteSpeed_Cache_Admin_Rules::file_get($contents) === false) {
+		if (defined('DISALLOW_FILE_EDIT') && (constant('DISALLOW_FILE_EDIT'))) {
+			$buf .= '<h3>'
+				. __('File editing is disabled in configuration.', 'litespeed-cache')
+				. '</h3></div>';
+			echo $buf;
+			return;
+		}
+		elseif (LiteSpeed_Cache_Admin_Rules::file_get($contents) === false) {
 			$buf .= '<h3>' . $contents . '</h3></div>';
 			echo $buf;
 			return;
@@ -794,9 +806,26 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= '<h4>' . __('Is WooCommerce supported?', 'litespeed-cache') . '</h4>'
 		. '<p>'
-		. __('In short, yes. For WooCommerce versions 1.4.2 and above, this plugin will not cache the pages that WooCommerce deems non-cacheable.', 'litespeed-cache')
-		. __(' For versions below 1.4.2, we do extra checks to make sure that pages are cacheable.', 'litespeed-cache')
-		. __(' We are always looking for feedback, so if you encounter any problems, be sure to send us a support question.', 'litespeed-cache') . '</p>';
+		. __('In short, yes.', 'litespeed-cache')
+		. __(' However, for some woocommerce themes, the cart may not be updated correctly.', 'litespeed-cache')
+		. '<br><b>'
+		. __('To test the cart: ', 'litespeed-cache')
+		. '</b></p><ol><li>'
+		. __('On a non-logged-in browser, visit and cache a page, then visit and cache a product page.', 'litespeed-cache')
+		. '</li><li>'
+		. __('The first page should be accessible from the product page (e.g. the shop).', 'litespeed-cache')
+		. '</li><li>'
+		. __('Once both pages are confirmed cached, add the product to your cart.', 'litespeed-cache')
+		. '</li><li>'
+		. __('After adding to the cart, visit the first page.', 'litespeed-cache')
+		. '</li><li>'
+		. __('The page should still be cached, and the cart should be up to date.', 'litespeed-cache')
+		. '</li><li>'
+		. __('If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.', 'litespeed-cache')
+		. '</li></ol><p>'
+		. __('We tested a couple themes like Storefront and Shop Isle and found that the cart works without the rule.', 'litespeed-cache')
+		. __(' That said, we found that some may not, like the E-Commerce theme, so please verify your theme.', 'litespeed-cache')
+		. '</p>';
 
 		$buf .= '<h4>' . __('How do I get WP-PostViews to display an updating view count?', 'litespeed-cache') . '</h4>'
 		. '<ol><li>' . sprintf(__('Use %1$s to replace %2$s', 'litespeed-cache'),
@@ -901,6 +930,27 @@ class LiteSpeed_Cache_Admin_Display
 		__('When checked, commenters will not be able to see their comment awaiting moderation. ', 'litespeed-cache')
 		. __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'));
 
+		if (!is_multisite()) {
+			$buf .= $this->build_setting_purge_on_upgrade($options);
+			$buf .= $this->build_setting_mobile_view($options);
+		}
+
+		$buf .= $this->input_group_end() ;
+		return $buf ;
+	}
+
+	/**
+	 * Builds the html for the specific pages settings tab.
+	 *
+	 * @since 1.0.10
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the specific pages tab.
+	 */
+	private function show_settings_specific($options)
+	{
+		$buf = $this->input_group_start(__('Specific Pages', 'litespeed-cache')) ;
+
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
 		$cache_login = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
 		$buf .= $this->display_config_row(__('Enable Cache for Login Page', 'litespeed-cache'), $cache_login,
@@ -909,7 +959,6 @@ class LiteSpeed_Cache_Admin_Display
 		if (!is_multisite()) {
 			$buf .= $this->build_setting_cache_favicon($options);
 			$buf .= $this->build_setting_cache_resources($options);
-			$buf .= $this->build_setting_mobile_view($options);
 		}
 
 		$buf .= $this->input_group_end() ;
@@ -1026,6 +1075,11 @@ class LiteSpeed_Cache_Admin_Display
 			. sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
 			. '<br>
 			<pre>/excludethis.php</pre>
+			<br>'
+			. sprintf(__('and to exclude %s(accessed with the /blog), I would have:', 'litespeed-cache'),
+				'http://www.example.com/blog/excludethis.php')
+			. '<br>
+			<pre>/blog/excludethis.php</pre>
 			<br>';
 
 		$cat_description =
@@ -1387,7 +1441,7 @@ class LiteSpeed_Cache_Admin_Display
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE',
 				$match, $sub, $cookie) === false) {
 			return '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $cookie . '</p>';
+			. __('Error getting current rules: ', 'litespeed-cache') . $match . '</p>';
 		}
 		if (!empty($cookie)) {
 			if (strncmp($cookie, 'Cache-Vary:', 11)) {
@@ -1402,6 +1456,22 @@ class LiteSpeed_Cache_Admin_Display
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
 		return $this->input_field_text($id, $cookie, '','', '', !$file_writable);
+	}
+
+	/**
+	 * Builds the html for the purge on upgrade configurations.
+	 *
+	 * @since 1.0.10
+	 * @access private
+	 * @param array $options The currently configured options.
+	 * @return string The html for purging on upgrade configurations.
+	 */
+	private function build_setting_purge_on_upgrade($options)
+	{
+		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
+		$purge_upgrade = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]);
+		return $this->display_config_row(__('Purge All on upgrade', 'litespeed-cache'), $purge_upgrade,
+		__('When checked, the cache will automatically purge when any plugins, themes, or WordPress core is upgraded.', 'litespeed-cache'));
 	}
 
 	/**
@@ -1563,6 +1633,9 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This is used to purge most cache tags associated with the page.', 'litespeed-cache')
 		. __(' The lone exception is the blog ID tag. ', 'litespeed-cache')
 		. __('Note that this means that pages with the same cache tag will be purged as well.', 'litespeed-cache')
+		. '</li>'
+		. '<li>PURGEALL - '
+		. __('This is used to purge all entries in the cache.', 'litespeed-cache')
 		. '</li>'
 		. '<li>PURGESINGLE - '
 		. __('This is used to purge the first cache tag associated with the page.', 'litespeed-cache')

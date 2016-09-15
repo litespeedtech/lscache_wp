@@ -296,6 +296,59 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Try to backup the .htaccess file.
+	 * This function will attempt to create a .htaccess_lscachebak_orig first.
+	 * If that is already created, it will attempt to create .htaccess_lscachebak_[1-10]
+	 * If 10 are already created, zip the current set of backups (sans _orig).
+	 * If a zip already exists, overwrite it.
+	 *
+	 * @since 1.0.10
+	 * @access private
+	 * @param String $path The .htaccess file path.
+	 * @return boolean True on success, else false on failure.
+	 */
+	private static function file_backup($path)
+	{
+		$bak = '_lscachebak_orig';
+		$i = 1;
+
+		if ( file_exists($path . $bak) ) {
+			$bak = sprintf("_lscachebak_%02d", $i);
+			while (file_exists($path . $bak)) {
+				$i++;
+				$bak = sprintf("_lscachebak_%02d", $i);
+			}
+		}
+
+		if (($i <= 10) || (!class_exists('ZipArchive'))) {
+			$ret = copy($path, $path . $bak);
+			return $ret;
+		}
+
+		$zip = new ZipArchive;
+		$dir = dirname($path);
+		$res = $zip->open($dir . '/lscache_htaccess_bak.zip',
+			ZipArchive::CREATE | ZipArchive::OVERWRITE);
+		if ($res === false) {
+			error_log('Warning: Failed to archive wordpress backups in ' . $dir);
+			$ret = copy($path, $path . $bak);
+			return $ret;
+		}
+		$archived = $zip->addPattern('/\.htaccess_lscachebak_[0-9]+/', $dir);
+		$zip->close();
+		$bak = '_lscachebak_01';
+
+		if (!empty($archived)) {
+			foreach ($archived as $delFile) {
+				unlink($delFile);
+			}
+		}
+
+		$ret = copy($path, $path . $bak);
+		return $ret;
+	}
+
+	/**
 	 * Try to save the rules file changes.
 	 *
 	 * This function is used by both the edit .htaccess admin page and
@@ -315,8 +368,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function file_save($content, $cleanup = true, $path = '')
 	{
-		$bak = '_lscachebak_orig';
-
 		if (empty($path)) {
 			$path = self::get_home_path();
 		}
@@ -325,12 +376,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return self::$ERR_READWRITE;
 		}
 
-		if ( file_exists($path . $bak) ) {
-				$bak = '_lscachebak_' . date('ymd') . '_' . date('His');
-		}
-
 		//failed to backup, not good.
-		if (!copy($path, $path . $bak)) {
+		if (self::file_backup($path) === false) {
 			return self::$ERR_BACKUP;
 		}
 
@@ -414,7 +461,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * FInds a specified common rewrite rule from the .htaccess file.
+	 * Finds a specified common rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
 	 * @access private
@@ -689,6 +736,14 @@ class LiteSpeed_Cache_Admin_Rules
 		return true;
 	}
 
+	/**
+	 * Parse rewrite input to check for possible issues (e.g. unescaped spaces).
+	 *
+	 * @since 1.0.9
+	 * @access private
+	 * @param String $rule Input rewrite rule.
+	 * @return boolean True for valid rules, false otherwise.
+	 */
 	private static function check_rewrite($rule)
 	{
 		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s\/]/', $rule) === 0);
