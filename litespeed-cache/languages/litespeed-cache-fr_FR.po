@@ -6,17 +6,10 @@
 #
 msgid ""
 msgstr ""
-<<<<<<< HEAD
-"Project-Id-Version: 1.0.8\n"
+"Project-Id-Version: 1.0.10\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2016-07-27 14:47+0200\n"
-"PO-Revision-Date: 2016-07-27 22:38+0200\n"
-"Language-Team: \n"
-=======
-"Project-Id-Version: 1.0.9.1\n"
-"Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2016-08-26 13:51+0200\n"
-"PO-Revision-Date: 2016-08-26 13:51+0200\n"
+"POT-Creation-Date: 2016-09-16 20:20+0200\n"
+"PO-Revision-Date: 2016-09-16 14:33-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -24,18 +17,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
-<<<<<<< HEAD
-"Last-Translator: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: fr_FR\n"
-
-#: admin/class-litespeed-cache-admin-display.php:68
-msgid "Overview"
-msgstr "Vue d’ensemble"
-
-#: admin/class-litespeed-cache-admin-display.php:69
-=======
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:68
@@ -703,21 +684,20 @@ msgid ""
 " You can <a href=\"%1$s\"  rel=\"%2$s\" target=\"%3$s\">try our 2-CPU trial "
 "license with LSCache module</a> free for %4$d days."
 msgstr ""
+" Vous pouvez <a href=\"%1$s\"  rel=\"%2$s\" target=\"%3$s\">essayer notre "
+"licence 2-CPU avec le module LSCache</a> gratuitement pour %4$d jours."
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:613
 msgid " Your server must be configured to have caching enabled."
 msgstr " Votre serveur doit être configuré avec le cache activé."
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:614
-#, fuzzy
-#, php-format
-#| msgid ""
 msgid ""
 " If you are the server admin, <a href=\"%s\" rel=\"%s\" target=\"%s\">click "
 "here.</a>"
 msgstr ""
-" Si vous êtes un administrateur de serveur, <a href=\"%s\" target=\"%s"
-"\">cliquez-ici.</a>"
+" Si vous êtes un administrateur de serveur, <a href=\"%s\" rel=\"%s\" target="
+"\"%s\">cliquez-ici.</a>"
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:620
 msgid ""
@@ -747,14 +727,12 @@ msgid " The integration utilizes the cache module."
 msgstr " L'intégration utilise le module de cache."
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:630
-#, fuzzy
-#, php-format
-#| msgid " Please follow the instructions <a href=\"%s\" target=\"%s\">here.</a>"
 msgid ""
 " Please follow the instructions <a href=\"%s\" rel=\"%s\" target=\"%s\">here."
 "</a>"
 msgstr ""
-" Veuillez suivre les instructions <a href=\"%s\" target=\"%s\">ici.</a>"
+" Veuillez suivre les instructions <a href=\"%s\" rel=\"%s\" target=\"%s"
+"\">ici.</a>"
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:638
 msgid "How to test the plugin"
@@ -786,15 +764,12 @@ msgstr ""
 "la page est mise à jour, ce qu’elle ait expiré, ou qu’elle ait été vidée."
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:647
-#, fuzzy
-#, php-format
-#| msgid ""
 msgid ""
 " Please visit <a href=\"%s\" rel=\"%s\" target=\"%s\">this page</a> for more "
 "information."
 msgstr ""
-" Veuillez visiter <a href=\"%s\" target=\"%s\">cette page</a> pour avoir "
-"plus d'informations."
+" Veuillez visiter <a href=\"%s\" rel=\"%s\" target=\"%s\">cette page</a> "
+"pour avoir plus d'informations."
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:673
 >>>>>>> v1_0_x
@@ -810,16 +785,13 @@ msgid ""
 "<a href=\"%s\" target=\"%s\">support forum</a>."
 =======
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:676
-#, fuzzy
-#, php-format
-#| msgid ""
 msgid ""
 "If your questions are still not answered, do not hesitate to ask them on the "
 "<a href=\"%s\" rel=\"%s\" target=\"%s\">support forum</a>."
 >>>>>>> v1_0_x
 msgstr ""
 " Si vous n’avez toujours pas de réponse à vos questions, n’hésitez pas à les "
-"poser sur le <a href=\"%s\" target=\"%s\">forum de support</a>."
+"poser sur le <a href=\"%s\" rel=\"%s\" target=\"%s\">forum de support</a>."
 
 <<<<<<< HEAD
 #: admin/class-litespeed-cache-admin-display.php:623
@@ -1376,8 +1348,7 @@ msgstr "Remarque : "
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:940
 >>>>>>> v1_0_x
 msgid "URLs must start with a '/' to be correctly matched."
-msgstr ""
-"Les URL doivent commencer avec un '/'  pour être associées correctement."
+msgstr "Les URL doivent commencer avec un '/' pour être associées correctement."
 
 <<<<<<< HEAD
 #: admin/class-litespeed-cache-admin-display.php:861
@@ -1385,8 +1356,7 @@ msgstr ""
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:942
 >>>>>>> v1_0_x
 msgid "To do an exact match, add '$' to the end of the URL."
-msgstr ""
-"Pour demander une correspondance exacte, ajoutez '$'  à la fin de l’URL."
+msgstr "Pour demander une correspondance exacte, ajoutez '$' à la fin de l’URL."
 
 <<<<<<< HEAD
 #: admin/class-litespeed-cache-admin-display.php:863
@@ -1673,8 +1643,7 @@ msgstr ""
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:1171
 >>>>>>> v1_0_x
 msgid "SYNTAX: Each entry should be separated with a bar, '|'."
-msgstr ""
-"SYNTAXE : Chaque entrée doit être séparé par une barre verticale,  '|'."
+msgstr "SYNTAXE : Chaque entrée doit être séparé par une barre verticale, '|'."
 
 <<<<<<< HEAD
 #: admin/class-litespeed-cache-admin-display.php:1084
@@ -1839,7 +1808,7 @@ msgstr "Cookie de login"
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:1290
 msgid "SYNTAX: alphanumeric and \"_\"."
-msgstr "SYNTAXE:  alphanumérique et \"_\"."
+msgstr "SYNTAXE: alphanumérique et \\\"_\\\"."
 
 #: litespeed-cache/admin/class-litespeed-cache-admin-display.php:1291
 msgid " No spaces and case sensitive. "
@@ -2752,9 +2721,9 @@ msgid ""
 "advanced-cache.php detected in wp-content directory! Please disable or "
 "uninstall any other cache plugins before enabling LiteSpeed Cache."
 msgstr ""
-"Nous avons détecté un fichier advanced-cache.php  dans le dossier wp-"
-"content ! Veuillez désactiver ou désinstaller tout autre plugin de cache "
-"avant d’activer LiteSpeed Cache."
+"Nous avons détecté un fichier advanced-cache.php dans le dossier wp-content !"
+" Veuillez désactiver ou désinstaller tout autre plugin de cache avant "
+"d’activer LiteSpeed Cache."
 
 <<<<<<< HEAD
 #: includes/class-litespeed-cache.php:274
@@ -3111,4 +3080,106 @@ msgstr "Intervalle de rafraichissement de produit"
 #: litespeed-cache/thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:340
 msgid "Use Front Page TTL for the Shop Page"
 msgstr "Durée TTL pour la page d’accueil ou la page de boutique"
->>>>>>> v1_0_x
+
+msgid "Specific Pages"
+msgstr "Pages spécifiques"
+
+msgid "File editing is disabled in configuration."
+msgstr "L’édition de fichiers est désactivée dans votre configuration."
+
+msgid "In short, yes."
+msgstr "Pour résumer, oui."
+
+msgid "To test the cart: "
+msgstr "Pour tester le panier : "
+
+msgid "Once both pages are confirmed cached, add the product to your cart."
+msgstr ""
+"Une fois que vous avez confirmé que les deux pages sont en cache, ajoutez le "
+"produit à votre panier."
+
+msgid "After adding to the cart, visit the first page."
+msgstr "Après l’ajout au panier, visitez la première page."
+
+#, php-format
+msgid "Similarly, to exclude %s(accessed with the /blog), you would have:"
+msgstr "De la même manière, pour exclure %s(affichée avec /blog), vous aurez :"
+
+#, php-format
+msgid " To test the cart, visit the %s."
+msgstr " Pour tester le panier, visitez le %s."
+
+#, fuzzy
+#~ msgid "The page should still be cached, and the cart should be up to date."
+#~ msgstr ""
+#~ "La page doit maintenant être en cache. Il doit maintenant y avoir "
+#~ "l’entête de réponse "
+
+#, fuzzy
+#~ msgid "e.g. to exclude %s, you would have:"
+#~ msgstr "par exemple, pour exclure %s, nous aurions :"
+
+#, fuzzy
+#~ msgid "Purge All on upgrade"
+#~ msgstr "Vider tout le cache"
+
+#, fuzzy
+#~ msgid "This is used to purge all entries in the cache."
+#~ msgstr ""
+#~ "Ceci est utiliser pour vider le cache de la plupart des étiquettes "
+#~ "associés à une page."
+
+#, fuzzy
+#~ msgid ""
+#~ "After verifying that the cache works in general, please test the cart."
+#~ msgstr ""
+#~ "Pour vérifier si le cache fonctionne, veuillez suivre les instructions "
+#~ "suivantes :"
+
+#~ msgid "Advanced Network Settings"
+#~ msgstr "Réglages avancés du réseau"
+
+#~ msgid ""
+#~ "Please check to make sure that your <b>web server cache configurations</"
+#~ "b> are set to the following:"
+#~ msgstr ""
+#~ "Merci de vérifier que vos <b>réglages de serveur web</b> sont paramétrés "
+#~ "de la manière suivante :"
+
+#~ msgid "The following are also recommended to be set:"
+#~ msgstr "Il est aussi conseillé d’effectuer les réglages suivants :"
+
+#~ msgid "Verify Cache"
+#~ msgstr "Vérifier le cache"
+
+#~ msgid "Open a non logged in browser."
+#~ msgstr "Lancer un navigateur qui n’est pas connecté"
+
+#~ msgid "Right-click the page and open the inspector."
+#~ msgstr "Clic droit sur la page puis ouvrez l’inspecteur."
+
+#~ msgid " Select the Network tab."
+#~ msgstr " Sélectionnez l’onglet Réseau."
+
+#~ msgid "Visit a page. "
+#~ msgstr "Visitez une page. "
+
+#~ msgid "If the page is not cached yet, there should be a response header "
+#~ msgstr ""
+#~ "Si la page n’est pas encore en cache, il doit y avoir une entête de "
+#~ "réponse "
+
+#~ msgid ""
+#~ "If the page is already cached, there may be a \"hit\" header instead."
+#~ msgstr ""
+#~ "Si la page est déjà en cache, il doit avoir une entête contenant \"hit\" "
+#~ "à la place."
+
+#~ msgid " This may occur if someone else visited the page first."
+#~ msgstr " Ceci peut arriver si quelqu’un visite la page avant vous."
+
+#~ msgid "Refresh the page. "
+#~ msgstr "Actualisez la page. "
+
+#~ msgid "Required number in seconds, minimum is 30."
+#~ msgstr "Requis nombre en secondes, minimum 30."
