@@ -1072,11 +1072,11 @@ class LiteSpeed_Cache_Admin_Display
 			. '<br>'
 			. __('Any surrounding whitespaces will be trimmed.', 'litespeed-cache')
 			. '<br><br>'
-			. sprintf(__('e.g. to exclude %s, I would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
+			. sprintf(__('e.g. to exclude %s, you would have:', 'litespeed-cache'),'http://www.example.com/excludethis.php')
 			. '<br>
 			<pre>/excludethis.php</pre>
 			<br>'
-			. sprintf(__('and to exclude %s(accessed with the /blog), I would have:', 'litespeed-cache'),
+			. sprintf(__('Similarly, to exclude %s(accessed with the /blog), you would have:', 'litespeed-cache'),
 				'http://www.example.com/blog/excludethis.php')
 			. '<br>
 			<pre>/blog/excludethis.php</pre>

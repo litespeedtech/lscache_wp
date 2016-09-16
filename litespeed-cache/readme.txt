@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.6
-Stable tag: 1.0.9.1
+Stable tag: 1.0.10
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
