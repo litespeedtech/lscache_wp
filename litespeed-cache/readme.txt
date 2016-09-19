@@ -284,16 +284,6 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
-= 1.0.10 - September 16 2016 =
-* Added a check for LSCACHE_NO_CACHE definition.
-* Added a Purge All button to the admin bar.
-* Added logic to purge the cache when upgrading a plugin or theme. By default this is enabled on single site installations and disabled on multisite installations.
-* Added support for WooCommerce Versions < 2.5.0.
-* Added .htaccess backup rotation. Every 10 backups, an .htaccess archive will be created. If one already exists, it will be overwritten.
-* Moved some settings to the new Specific Pages tab to reduce clutter in the General tab.
-* The .htaccess editor is now disabled if DISALLOW_FILE_EDIT is set.
-* After saving the Cache Tag Prefix setting, all cache will be purged.
-
 = 1.0.9.1 - August 26 2016 =
 * Fixed a bug where an error displayed on the configuration screen despite not being an error.
 * Change logic to check .htaccess file less often.
