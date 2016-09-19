@@ -46,32 +46,14 @@ class LiteSpeed_Cache
 	const ESI_URL = '/lscacheesi/';
 	const ESI_POSTTYPE = 'lscacheesi';
 
-	const ESI_PARAM_ACTION = 'action=lscache';
-	const ESI_PARAM_PARAMS = 'lscache';
-	const ESI_PARAM_TYPE = 'type';
-	const ESI_PARAM_NAME = 'name';
-	const ESI_PARAM_ID = 'id';
-	const ESI_PARAM_INSTANCE = 'instance';
-	const ESI_PARAM_ARGS = 'args';
-
-	const ESI_TYPE_WIDGET = 1;
-	const ESI_TYPE_ADMINBAR = 2;
-	const ESI_TYPE_COMMENTFORM = 3;
-	const ESI_TYPE_COMMENT = 4;
-	const ESI_TYPE_WC_CART_FORM = 5;
-
-	const ESI_CACHECTRL_PRIV = 'no-vary,private';
-
 	protected $plugin_dir ;
 	protected $config ;
 	protected $current_vary;
 	protected $cachectrl = self::CACHECTRL_NOCACHE;
 	protected $pub_purge_tags = array();
-	protected $has_esi = false;
 	protected $custom_ttl = 0;
 	protected $user_status = 0;
 
-	private $esi_args = null;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -86,6 +68,7 @@ class LiteSpeed_Cache
 	{
 		$cur_dir = dirname(__FILE__) ;
 		require_once $cur_dir . '/class-litespeed-cache-config.php' ;
+		include_once $cur_dir . '/class-litespeed-cache-esi.php' ;
 		include_once $cur_dir . '/class-litespeed-cache-tags.php';
 		// Load third party detection.
 		include_once $cur_dir . '/../thirdparty/litespeed-cache-thirdparty-registry.php';
@@ -269,7 +252,7 @@ class LiteSpeed_Cache
 			$this->load_logged_out_actions();
 		}
 
-		$this->load_public_actions($is_ajax) ;
+		$this->load_public_actions($is_ajax);
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			do_action('litespeed_cache_detect_thirdparty');
 		}
@@ -498,8 +481,10 @@ class LiteSpeed_Cache
 
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
-		if (!is_openlitespeed()) {
-			$this->load_esi_actions($is_ajax);
+		if ((!is_openlitespeed()) && (!$is_ajax)) {
+			$esi = LiteSpeed_Cache_Esi::get_instance();
+			add_action('init', array($esi, 'register_post_type'));
+			add_action('template_include', array($esi, 'esi_template'), 100);
 		}
 		add_action('wp_update_comment_count',
 			array($this, 'purge_feeds'));
@@ -1256,11 +1241,11 @@ class LiteSpeed_Cache
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
-	 * @access private
+	 * @access public
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
-	private function no_cache_for( $reason )
+	public function no_cache_for( $reason )
 	{
 		$this->debug_log('Do not cache - ' . $reason) ;
 		return false ;
@@ -1284,6 +1269,13 @@ class LiteSpeed_Cache
 	public function set_cachectrl($val)
 	{
 		$this->cachectrl = $val;
+	}
+
+	public function set_custom_ttl($ttl)
+	{
+		if (is_numeric($ttl)) {
+			$this->custom_ttl = $ttl;
+		}
 	}
 
 	/**
@@ -1567,6 +1559,8 @@ class LiteSpeed_Cache
 		$cache_tags = null;
 		$cachectrl_val = 'public';
 		$showhdr = false;
+		$esi_hdr = LiteSpeed_Cache_Esi::get_instance()->has_esi()
+			? ',esi=on' : '';
 		do_action('litespeed_cache_add_purge_tags');
 
 		$mode = $this->validate_mode($showhdr);
@@ -1584,7 +1578,7 @@ if (defined('lscache_debug')) {
 error_log('do not cache page.');
 }
 			$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-					. ': no-cache' . $this->esi_send();
+					. ': no-cache' . $esi_hdr;
 			$purge_headers = $this->build_purge_headers();
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
@@ -1621,7 +1615,7 @@ error_log('page is cacheable');
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
 				}
 				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': ' . $cachectrl_val . ',max-age=' . $ttl . $this->esi_send();
+						. ': ' . $cachectrl_val . ',max-age=' . $ttl . $esi_hdr;
 				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
 					. ': ' . implode(',', $prefix_tags) ;
 				break;
@@ -1631,7 +1625,7 @@ error_log('page is cacheable');
 			case self::CACHECTRL_PURGE:
 				$cache_control_header =
 					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache'
-					. $this->esi_send();
+					. $esi_hdr;
 				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
 				break;
 
@@ -1847,455 +1841,6 @@ error_log('page is cacheable');
 			return ',esi=on';
 		}
 		return '';
-	}
-
-	/**
-	 * Build the esi url. This method will build the html comment wrapper
-	 * as well as serialize and encode the parameter array.
-	 *
-	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
-	 *
-	 * @access private
-	 * @since 1.1.0
-	 * @param array $params The esi parameters.
-	 * @param string $wrapper The wrapper for the esi comments.
-	 * @param string $cachectrl The cache control attribute if any.
-	 * @param boolean $echo Whether to echo the output or return it.
-	 * @return mixed Nothing if echo is true, the output otherwise.
-	 */
-	public function esi_build_url($params, $wrapper, $cachectrl = '', $echo = true)
-	{
-		$qs = '';
-		if (!empty($params)) {
-			$qs = '?' . self::ESI_PARAM_ACTION . '&' . self::ESI_PARAM_PARAMS
-				. '=' . urlencode(base64_encode(serialize($params)));
-		}
-		$url = self::ESI_URL . $qs;
-		$output = '<!-- lscwp ' . $wrapper . ' -->'
-			. '<esi:include src="' . $url . '"';
-		if (!empty($cachectrl)) {
-			$output .= ' cache-control="' . $cachectrl . '"';
-		}
-		$output .= ' />'
-			. '<!-- lscwp ' . $wrapper . ' esi end -->';
-		if ($echo == false) {
-			return $output;
-		}
-		echo $output;
-		$this->has_esi = true;
-	}
-
-	/**
-	 * Parses the request parameters on an ESI request and selects the correct
-	 * esi output based on the parameters.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public static function esi_get()
-	{
-		if (!isset($_REQUEST[self::ESI_PARAM_PARAMS])) {
-			return;
-		}
-		$cache = self::plugin();
-		$req_params = $_REQUEST[self::ESI_PARAM_PARAMS];
-		$unencrypted = base64_decode($req_params);
-		if ($unencrypted === false) {
-			return;
-		}
-		$unencoded = urldecode($unencrypted);
-		$params = unserialize($unencoded);
-		if ($params === false) {
-			return;
-		}
-
-if (defined('lscache_debug')) {
-error_log('Got an esi request. Type: ' . $params[self::ESI_PARAM_TYPE]);
-}
-
-		switch ($params[self::ESI_PARAM_TYPE]) {
-			case self::ESI_TYPE_WIDGET:
-				$cache->esi_widget_get($params);
-				break;
-			case self::ESI_TYPE_ADMINBAR:
-				wp_admin_bar_render();
-				$cache->set_cachectrl(self::CACHECTRL_PRIVATE);
-				break;
-			case self::ESI_TYPE_COMMENTFORM:
-				remove_filter('comment_form_defaults',
-					array($cache, 'esi_comment_form_check'));
-				comment_form($params[self::ESI_PARAM_ARGS],
-					$params[self::ESI_PARAM_ID]);
-				$cache->set_cachectrl(self::CACHECTRL_PRIVATE);
-				break;
-			case self::ESI_TYPE_COMMENT:
-				$cache->esi_comments_get($params);
-				break;
-			case self::ESI_TYPE_WC_CART_FORM:
-				global $post, $wp_query;
-				$post = get_post($params[self::ESI_PARAM_ID]);
-				$wp_query->setup_postdata($post);
-				wc_get_template(
-					$params[self::ESI_PARAM_NAME], $params['path'],
-					$params[self::ESI_PARAM_INSTANCE], $params[self::ESI_PARAM_ARGS]);
-				break;
-			default:
-				break;
-		}
-	}
-
-	/**
-	 * Get the configuration option for the current widget.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param WP_Widget $widget The widget to get the options for.
-	 * @return mixed null if not found, an array of the options otherwise.
-	 */
-	public static function esi_widget_get_option($widget)
-	{
-		if ($widget->updated) {
-			$settings = get_option($widget->option_name);
-		}
-		else {
-			$settings = $widget->get_settings();
-		}
-
-		if (!isset($settings)) {
-			return null;
-		}
-
-		$instance = $settings[$widget->number];
-
-		if (!isset($instance)) {
-			return null;
-		}
-
-		return $instance[LiteSpeed_Cache_Config::OPTION_NAME];
-	}
-
-	/**
-	 * Parses the esi input parameters and generates the widget for esi display.
-	 *
-	 * @access private
-	 * @since 1.1.0
-	 * @param array $params Input parameters needed to correctly display widget
-	 */
-	public function esi_widget_get($params)
-	{
-		global $wp_widget_factory;
-		$widget = $wp_widget_factory->widgets[$params[self::ESI_PARAM_NAME]];
-		$option = self::esi_widget_get_option($widget);
-		// Since we only reach here via esi, safe to assume setting exists.
-		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
-if (defined('lscache_debug')) {
-error_log('Esi widget render: name ' . $params[self::ESI_PARAM_NAME]
-	. ', id ' . $params[self::ESI_PARAM_ID] . ', ttl ' . $ttl);
-}
-		if ($ttl == 0) {
-			$this->no_cache_for(__('Widget time to live set to 0.',
-				'litespeed-cache'));
-			LiteSpeed_Cache_Tags::set_noncacheable();
-		}
-		else {
-			$this->custom_ttl = $ttl;
-			LiteSpeed_Cache_Tags::add_cache_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::ESI_PARAM_ID]);
-		}
-		the_widget($params[self::ESI_PARAM_NAME],
-			$params[self::ESI_PARAM_INSTANCE], $params[self::ESI_PARAM_ARGS]);
-	}
-
-	/**
-	 * Hooked to the widget_display_callback filter.
-	 * If the admin configured the widget to display via esi, this function
-	 * will set up the esi request and cancel the widget display.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param array $instance Parameter used to build the widget.
-	 * @param WP_Widget $widget The widget to build.
-	 * @param array $args Parameter used to build the widget.
-	 * @return mixed Return false if display through esi, instance otherwise.
-	 */
-	public function esi_widget(array $instance, WP_Widget $widget, array $args)
-	{
-		$name = get_class($widget);
-		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
-		if ((!isset($options)) ||
-			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
-				== LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)) {
-if (defined('lscache_debug')) {
-error_log('Do not esi widget ' . $name . ' because '
-	. ((!isset($options)) ? 'options not set' : 'esi disabled for widget'));
-}
-			return $instance;
-		}
-		$params = array(
-			self::ESI_PARAM_TYPE => self::ESI_TYPE_WIDGET,
-			self::ESI_PARAM_NAME => $name,
-			self::ESI_PARAM_ID => $widget->id,
-			self::ESI_PARAM_INSTANCE => $instance,
-			self::ESI_PARAM_ARGS => $args
-		);
-
-		$this->esi_build_url($params, 'widget ' . $name);
-		return false;
-	}
-
-	/**
-	 * Hooked to the wp_footer action.
-	 * Sets up the ESI request for the admin bar.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $wp_admin_bar
-	 */
-	public function esi_admin_bar()
-	{
-		global $wp_admin_bar;
-
-		if ((!is_admin_bar_showing()) || (!is_object($wp_admin_bar))) {
-			return;
-		}
-
-		$params = array(self::ESI_PARAM_TYPE => self::ESI_TYPE_ADMINBAR);
-
-		$this->esi_build_url($params, 'adminbar', self::ESI_CACHECTRL_PRIV);
-	}
-
-	/**
-	 * Hooked to the template_include action.
-	 * Selects the esi template file when the post type is a LiteSpeed ESI page.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $post_type
-	 * @param string $template The template path filtered.
-	 * @return string The new template path.
-	 */
-	public function esi_template($template)
-	{
-		global $post_type;
-		if ($post_type == self::ESI_POSTTYPE) {
-			return $this->plugin_dir . 'includes/litespeed-cache-esi.php';
-		}
-		else {
-			add_filter('comments_array', array($this, 'esi_comments'));
-		}
-		return $template;
-	}
-
-	/**
-	 * Hooked to the init action.
-	 * Registers the LiteSpeed ESI post type.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public function register_post_type()
-	{
-		register_post_type(
-			self::ESI_POSTTYPE,
-			array(
-				'labels' => array(
-					'name' => __('Lscacheesi', 'litespeed-cache')
-				),
-				'description' => __('Description of post type', 'litespeed-cache'),
-				'public' => false,
-				'publicly_queryable' => true,
-				'supports' => false,
-				'rewrite' => array('slug' => 'lscacheesi'),
-				'query_var' => true
-			)
-		);
-		add_rewrite_rule('lscacheesi/?',
-			'index.php?post_type=lscacheesi', 'top');
-	}
-
-	/**
-	 * Hooked to the comment_form_defaults filter.
-	 * Stores the default comment form settings.
-	 * This method initializes an output buffer and adds two hook functions
-	 * to the WP process.
-	 * If esi_comment_form_cancel is triggered, the output buffer is flushed
-	 * because there is no need to make the comment form ESI.
-	 * Else if esi_comment_form is triggered, the output buffer is cleared
-	 * and an esi block is added. The remaining comment form is also buffered
-	 * and cleared.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param array $defaults The default comment form settings.
-	 * @return array The default comment form settings.
-	 */
-	public function esi_comment_form_check($defaults)
-	{
-		$this->esi_args = $defaults;
-		ob_start();
-		add_action('comment_form_must_log_in_after',
-			array($this, 'esi_comment_form_cancel'));
-		add_action('comment_form_comments_closed',
-			array($this, 'esi_comment_form_cancel'));
-		add_filter('comment_form_submit_button',
-			array($this, 'esi_comment_form'), 1000, 2);
-		return $defaults;
-	}
-
-	/**
-	 * Hooked to the comment_form_must_log_in_after and
-	 * comment_form_comments_closed actions.
-	 * @see esi_comment_form_check
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public function esi_comment_form_cancel()
-	{
-		ob_flush();
-	}
-
-	/**
-	 * Hooked to the comment_form_submit_button filter.
-	 * @see esi_comment_form_check
-	 * This method will compare the used comment form args against the default
-	 * args. The difference will be passed to the esi request.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $post
-	 * @param $unused
-	 * @param array $args The used comment form args.
-	 * @return unused.
-	 */
-	public function esi_comment_form($unused, $args)
-	{
-		if (empty($args) || empty($this->esi_args)) {
-			error_log('comment form args empty?');
-			return $unused;
-		}
-		$esi_args = array_diff_assoc($args, $this->esi_args);
-		ob_clean();
-		global $post;
-		$params = array(
-			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENTFORM,
-			self::ESI_PARAM_ID => $post->ID,
-			self::ESI_PARAM_ARGS => $esi_args,
-			);
-
-		$this->esi_build_url($params, 'comment form', self::ESI_CACHECTRL_PRIV);
-		ob_start();
-		add_action('comment_form_after',
-			array($this, 'esi_comment_form_clean'));
-		return $unused;
-	}
-
-	/**
-	 * Hooked to the comment_form_after action.
-	 * Cleans up the remaining comment form output.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public function esi_comment_form_clean()
-	{
-		ob_clean();
-	}
-
-	/**
-	 * Hooked to the comments_array filter.
-	 * If there are pending comments, the whole comments section should be an
-	 * ESI block.
-	 * Else the comments do not need to be ESI.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $post
-	 * @param type $comments The current comments to output
-	 * @return array The comments to output.
-	 */
-	public function esi_comments($comments)
-	{
-		global $post;
-		$args = array(
-			'status' => 'hold',
-			'number' => '1',
-			'post_id' => $post->ID,
-		);
-
-		$on_hold = get_comments($args);
-
-		if (empty($on_hold)) {
-			// No comments on hold, comments section can be skipped
-			return $comments;
-		}
-		// Else need to ESI comments.
-
-		$params = array(
-			self::ESI_PARAM_TYPE => self::ESI_TYPE_COMMENT,
-			self::ESI_PARAM_ID => $post->ID,
-			self::ESI_PARAM_ARGS => get_query_var( 'cpage' ),
-		);
-		$this->esi_build_url($params, 'comments', self::ESI_CACHECTRL_PRIV);
-		add_filter('comments_template',
-			array($this, 'esi_comments_dummy_template'), 1000);
-		return array();
-	}
-
-	/**
-	 * Hooked to the comments_template filter.
-	 * Loads a dummy comments template file so that no extra processing is done.
-	 * This will only be used if the comments section are to be displayed
-	 * via ESI.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @return string Dummy template file.
-	 */
-	public function esi_comments_dummy_template()
-	{
-		return $this->plugin_dir .
-			'includes/litespeed-cache-esi-dummy-template.php';
-	}
-
-	public function esi_comments_cache_type($comments)
-	{
-		if (empty($comments)) {
-			$this->set_cachectrl(self::CACHECTRL_SHARED);
-			return $comments;
-		}
-
-		foreach ($comments as $comment) {
-			if (!$comment->comment_approved) {
-				$this->set_cachectrl(self::CACHECTRL_PRIVATE);
-				return $comments;
-			}
-		}
-		$this->set_cachectrl(self::CACHECTRL_SHARED);
-		return $comments;
-	}
-
-	/**
-	 * Outputs the ESI comments block.
-	 *
-	 * @access private
-	 * @since 1.1.0
-	 * @global type $post
-	 * @global type $wp_query
-	 * @param array $params The parameters used to help display the comments.
-	 */
-	private function esi_comments_get($params)
-	{
-		global $post, $wp_query;
-		$wp_query->is_singular = true;
-		$wp_query->is_single = true;
-		if (!empty($params[self::ESI_PARAM_ARGS])) {
-			$wp_query->set('cpage', $params[self::ESI_PARAM_ARGS]);
-		}
-		$post = get_post($params[self::ESI_PARAM_ID]);
-		$wp_query->setup_postdata($post);
-		add_filter('comments_array', array($this, 'esi_comments_cache_type'));
-		comments_template();
 	}
 
 /*END ESI CODE*/

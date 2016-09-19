@@ -61,16 +61,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ((!defined('LSCACHE_IS_ESI')) && (strpos($template_name, 'add-to-cart') !== false)) {
 			global $post;
 			$params = array(
-				LiteSpeed_Cache::ESI_PARAM_TYPE => LiteSpeed_Cache::ESI_TYPE_WC_CART_FORM,
-				LiteSpeed_Cache::ESI_PARAM_ARGS => $args,
-				LiteSpeed_Cache::ESI_PARAM_NAME => $template_name,
-				LiteSpeed_Cache::ESI_PARAM_ID => $post->ID,
+				LiteSpeed_Cache_Esi::PARAM_TYPE => LiteSpeed_Cache_Esi::TYPE_THIRDPARTY,
+				LiteSpeed_Cache_Esi::PARAM_ARGS => $args,
+				LiteSpeed_Cache_Esi::PARAM_NAME => $template_name,
+				LiteSpeed_Cache_Esi::PARAM_ID => $post->ID,
 				'path' => $template_path,
-				LiteSpeed_Cache::ESI_PARAM_INSTANCE => $located
+				LiteSpeed_Cache_Esi::PARAM_INSTANCE => $located
 			);
 			add_action('woocommerce_after_add_to_cart_form',
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template');
-			LiteSpeed_Cache::plugin()->esi_build_url($params, 'WC_CART_FORM');
+			LiteSpeed_Cache_Esi::get_instance()->esi_build_url($params, 'WC_CART_FORM');
 			ob_start();
 		}
 	}
