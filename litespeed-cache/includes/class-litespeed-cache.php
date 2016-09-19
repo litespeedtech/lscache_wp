@@ -58,6 +58,7 @@ class LiteSpeed_Cache
 	const ESI_TYPE_ADMINBAR = 2;
 	const ESI_TYPE_COMMENTFORM = 3;
 	const ESI_TYPE_COMMENT = 4;
+	const ESI_TYPE_WC_CART_FORM = 5;
 
 	const ESI_CACHECTRL_PRIV = 'no-vary,private';
 
@@ -1859,7 +1860,7 @@ error_log('page is cacheable');
 	 * @param boolean $echo Whether to echo the output or return it.
 	 * @return mixed Nothing if echo is true, the output otherwise.
 	 */
-	private function esi_build_url($params, $wrapper, $cachectrl = '', $echo = true)
+	public function esi_build_url($params, $wrapper, $cachectrl = '', $echo = true)
 	{
 		$qs = '';
 		if (!empty($params)) {
@@ -1926,6 +1927,14 @@ error_log('Got an esi request. Type: ' . $params[self::ESI_PARAM_TYPE]);
 				break;
 			case self::ESI_TYPE_COMMENT:
 				$cache->esi_comments_get($params);
+				break;
+			case self::ESI_TYPE_WC_CART_FORM:
+				global $post, $wp_query;
+				$post = get_post($params[self::ESI_PARAM_ID]);
+				$wp_query->setup_postdata($post);
+				wc_get_template(
+					$params[self::ESI_PARAM_NAME], $params['path'],
+					$params[self::ESI_PARAM_INSTANCE], $params[self::ESI_PARAM_ARGS]);
 				break;
 			default:
 				break;
