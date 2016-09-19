@@ -6,16 +6,12 @@
  * What new things do I need to add?
  *
  * - Add third party integration API
- * - Set up some has_esi/set_has_esi functions
- *		Perhaps create a define? LSCACHE_HAS_ESI
  * - Create an is_esi hook. In here, I will add the hooks I need.
  *		Perhaps create a define? LSCACHE_IS_ESI
- * - I needed build_esi_url, this can probably become public static.
  * - Add a nonce to ensure validity.
  * - Maybe figure out a way to streamline how everything is added?
  *		Right now, my functions are all kind of all over the place.
  *		Separate load_esi_actions to load_is_esi, load_build_esi?
- * - need to check out the detect stuff, why is this in esi_actions?
  *
  */
 
@@ -119,7 +115,8 @@ class LiteSpeed_Cache_Esi
 	 * @param boolean $echo Whether to echo the output or return it.
 	 * @return mixed Nothing if echo is true, the output otherwise.
 	 */
-	public function esi_build_url($params, $wrapper, $cachectrl = '', $echo = true)
+	public static function build_url($params, $wrapper, $cachectrl = '',
+		$echo = true)
 	{
 		$qs = '';
 		if (!empty($params)) {
@@ -138,7 +135,7 @@ class LiteSpeed_Cache_Esi
 			return $output;
 		}
 		echo $output;
-		$this->has_esi = true;
+		self::get_instance()->has_esi = true;
 	}
 
 	/**
@@ -377,7 +374,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $args
 		);
 
-		$this->esi_build_url($params, 'widget ' . $name);
+		self::build_url($params, 'widget ' . $name);
 		return false;
 	}
 
@@ -399,7 +396,7 @@ error_log('Do not esi widget ' . $name . ' because '
 
 		$params = array(self::PARAM_TYPE => self::TYPE_ADMINBAR);
 
-		$this->esi_build_url($params, 'adminbar', self::CACHECTRL_PRIV);
+		self::build_url($params, 'adminbar', self::CACHECTRL_PRIV);
 	}
 
 	/**
@@ -472,7 +469,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $esi_args,
 			);
 
-		$this->esi_build_url($params, 'comment form', self::CACHECTRL_PRIV);
+		self::build_url($params, 'comment form', self::CACHECTRL_PRIV);
 		ob_start();
 		add_action('comment_form_after',
 			array($this, 'esi_comment_form_clean'));
@@ -525,7 +522,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ID => $post->ID,
 			self::PARAM_ARGS => get_query_var( 'cpage' ),
 		);
-		$this->esi_build_url($params, 'comments', self::CACHECTRL_PRIV);
+		self::build_url($params, 'comments', self::CACHECTRL_PRIV);
 		add_filter('comments_template',
 			array($this, 'esi_comments_dummy_template'), 1000);
 		return array();
