@@ -270,7 +270,15 @@ class LiteSpeed_Cache
 		}
 
 		$this->load_public_actions($is_ajax) ;
-
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			do_action('litespeed_cache_detect_thirdparty');
+		}
+		elseif ((is_admin()) || (is_network_admin())) {
+			add_action('admin_init', array($this, 'detect'), 0);
+		}
+		else {
+			add_action('wp', array($this, 'detect'), 4);
+		}
 	}
 
 	/**
@@ -488,10 +496,6 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 
-		if ($is_ajax) {
-			do_action('litespeed_cache_detect_thirdparty');
-		}
-
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
 		if (!is_openlitespeed()) {
@@ -525,7 +529,6 @@ class LiteSpeed_Cache
 		}
 		add_action('init', array($this, 'register_post_type'));
 		add_action('template_include', array($this, 'esi_template'), 100);
-		add_action('wp', array($this, 'detect'), 4);
 		add_filter('widget_display_callback',
 			array($this, 'esi_widget'), 0, 3);
 

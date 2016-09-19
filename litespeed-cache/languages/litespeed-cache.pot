@@ -390,7 +390,6 @@ msgstr ""
 
 #: admin/class-litespeed-cache-admin-display.php:657
 #, php-format
->>>>>>> v1_0_x
 msgid ""
 "Subsequent requests should have the %s response header until the page is "
 "updated, expired, or purged."
