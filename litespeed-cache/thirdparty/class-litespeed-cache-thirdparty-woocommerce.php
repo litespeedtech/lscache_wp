@@ -20,9 +20,15 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	const OPTION_UPDATE_INTERVAL = 'wc_update_interval';
 	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl';
 	const OPT_PQS_CS = 0; // flush product on quantity + stock change, categories on stock change
-	CONST OPT_PS_CS = 1; // flush product and categories on stock change
-	CONST OPT_PS_CN = 2; // flush product on stock change, categories no flush
-	CONST OPT_PQS_CQS = 3; // flush product and categories on quantity + stock change
+	const OPT_PS_CS = 1; // flush product and categories on stock change
+	const OPT_PS_CN = 2; // flush product on stock change, categories no flush
+	const OPT_PQS_CQS = 3; // flush product and categories on quantity + stock change
+
+	const ESI_PARAM_ARGS = 'wc_args';
+	const ESI_PARAM_POSTID = 'wc_post_id';
+	const ESI_PARAM_NAME = 'wc_name';
+	const ESI_PARAM_PATH = 'wc_path';
+	const ESI_PARAM_LOCATED = 'wc_located';
 
 	/**
 	 * Detects if WooCommerce is installed.
@@ -72,16 +78,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		global $post;
 		$params = array(
-			LiteSpeed_Cache_Esi::PARAM_BLOCK_ID => 'wc-add-to-cart-form',
-			LiteSpeed_Cache_Esi::PARAM_ARGS => $args,
-			LiteSpeed_Cache_Esi::PARAM_NAME => $template_name,
-			LiteSpeed_Cache_Esi::PARAM_ID => $post->ID,
-			'path' => $template_path,
-			LiteSpeed_Cache_Esi::PARAM_INSTANCE => $located
+			self::ESI_PARAM_ARGS => $args,
+			self::ESI_PARAM_NAME => $template_name,
+			self::ESI_PARAM_POSTID => $post->ID,
+			self::ESI_PARAM_PATH => $template_path,
+			self::ESI_PARAM_LOCATED => $located
 		);
 		add_action('woocommerce_after_add_to_cart_form',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template');
-		LiteSpeed_Cache_Esi::build_url($params, 'WC_CART_FORM');
+		LiteSpeed_Cache_Esi::build_url('wc-add-to-cart-form', 'WC_CART_FORM',
+			$params);
 		ob_start();
 	}
 
@@ -95,11 +101,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	public static function load_add_to_cart_form_block($params)
 	{
 		global $post, $wp_query;
-		$post = get_post($params[LiteSpeed_Cache_Esi::PARAM_ID]);
+		$post = get_post($params[self::ESI_PARAM_POSTID]);
 		$wp_query->setup_postdata($post);
-		wc_get_template($params[LiteSpeed_Cache_Esi::PARAM_NAME], $params['path'],
-			$params[LiteSpeed_Cache_Esi::PARAM_INSTANCE],
-			$params[LiteSpeed_Cache_Esi::PARAM_ARGS]);
+		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_PATH],
+			$params[self::ESI_PARAM_LOCATED], $params[self::ESI_PARAM_ARGS]);
 	}
 
 	/**

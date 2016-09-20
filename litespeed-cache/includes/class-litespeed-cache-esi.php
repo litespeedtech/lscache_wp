@@ -75,24 +75,29 @@ class LiteSpeed_Cache_Esi
 	 * Build the esi url. This method will build the html comment wrapper
 	 * as well as serialize and encode the parameter array.
 	 *
+	 * The block_id parameter should contain alphanumeric and '-_' only.
+	 *
 	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
 	 *
 	 * @access private
 	 * @since 1.1.0
-	 * @param array $params The esi parameters.
+	 * @param string $block_id The id to use to display the correct esi block.
 	 * @param string $wrapper The wrapper for the esi comments.
+	 * @param array $params The esi parameters.
 	 * @param string $cachectrl The cache control attribute if any.
 	 * @param boolean $echo Whether to echo the output or return it.
-	 * @return mixed Nothing if echo is true, the output otherwise.
+	 * @return mixed False on error, nothing if echo is true, the output otherwise.
 	 */
-	public static function build_url($params, $wrapper, $cachectrl = '',
+	public static function build_url($block_id, $wrapper, $params = array(), $cachectrl = '',
 		$echo = true)
 	{
-		$qs = '';
-		if (!empty($params)) {
-			$qs = '?' . self::QS_ACTION . '&' . self::QS_PARAMS
-				. '=' . urlencode(base64_encode(serialize($params)));
+		if ((empty($block_id)) || (!is_array($params))
+			|| (preg_match('/[^\w-]/', $block_id))) {
+			return false;
 		}
+		$params[self::PARAM_BLOCK_ID] = $block_id;
+		$qs = '?' . self::QS_ACTION . '&' . self::QS_PARAMS
+			. '=' . urlencode(base64_encode(serialize($params)));
 		$url = self::URL . $qs;
 		$output = '<!-- lscwp ' . $wrapper . ' -->'
 			. '<esi:include src="' . $url . '"';
@@ -183,7 +188,7 @@ class LiteSpeed_Cache_Esi
 
 		if ($this->user_status) {
 			add_filter('comment_form_defaults',
-				array($this, 'esi_comment_form_check'));
+				array($this, 'register_comment_form_actions'));
 		}
 	}
 
@@ -200,23 +205,53 @@ class LiteSpeed_Cache_Esi
 		add_action('load-widgets.php', array($lscache, 'purge_widget'));
 		add_action('wp_update_comment_count',
 			array($lscache, 'purge_comment_widget'));
-		add_filter('comments_array', array($this, 'esi_comments'));
+		add_filter('comments_array', array($this, 'sub_comments_block'));
 
 		if ((defined('DOING_AJAX') && DOING_AJAX)) {
 			return;
 		}
 
-		add_filter('widget_display_callback', array($this, 'esi_widget'), 0, 3);
+		add_filter('widget_display_callback',
+			array($this, 'sub_widget_block'), 0, 3);
 
 		if ($this->user_status & LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
-			add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
+			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000);
 		}
 
 		if ($this->user_status) {
 			add_filter('comment_form_defaults',
-				array($this, 'esi_comment_form_check'));
+				array($this, 'register_comment_form_actions'));
 		}
+	}
+
+	/**
+	 * Hooked to the comment_form_defaults filter.
+	 * Stores the default comment form settings.
+	 * This method initializes an output buffer and adds two hook functions
+	 * to the WP process.
+	 * If comment_form_sub_cancel is triggered, the output buffer is flushed
+	 * because there is no need to make the comment form ESI.
+	 * Else if sub_comment_form_block is triggered, the output buffer is cleared
+	 * and an esi block is added. The remaining comment form is also buffered
+	 * and cleared.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param array $defaults The default comment form settings.
+	 * @return array The default comment form settings.
+	 */
+	public function register_comment_form_actions($defaults)
+	{
+		$this->esi_args = $defaults;
+		ob_start();
+		add_action('comment_form_must_log_in_after',
+			array($this, 'comment_form_sub_cancel'));
+		add_action('comment_form_comments_closed',
+			array($this, 'comment_form_sub_cancel'));
+		add_filter('comment_form_submit_button',
+			array($this, 'sub_comment_form_block'), 1000, 2);
+		return $defaults;
 	}
 
 	/**
@@ -226,7 +261,7 @@ class LiteSpeed_Cache_Esi
 	 * @access public
 	 * @since 1.1.0
 	 */
-	public static function esi_get()
+	public static function load_esi_block()
 	{
 		if (!isset($_REQUEST[self::QS_PARAMS])) {
 			return;
@@ -252,6 +287,10 @@ error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
 		}
 	}
 
+// BEGIN helper functions
+// The *_sub_* functions are helpers for the sub_* functions.
+// The *_load_* functions are helpers for the load_* functions.
+
 	/**
 	 * Get the configuration option for the current widget.
 	 *
@@ -260,7 +299,7 @@ error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
 	 * @param WP_Widget $widget The widget to get the options for.
 	 * @return mixed null if not found, an array of the options otherwise.
 	 */
-	public static function esi_widget_get_option($widget)
+	public static function widget_load_get_options($widget)
 	{
 		if ($widget->updated) {
 			$settings = get_option($widget->option_name);
@@ -283,138 +322,16 @@ error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
 	}
 
 	/**
-	 * Hooked to the widget_display_callback filter.
-	 * If the admin configured the widget to display via esi, this function
-	 * will set up the esi request and cancel the widget display.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param array $instance Parameter used to build the widget.
-	 * @param WP_Widget $widget The widget to build.
-	 * @param array $args Parameter used to build the widget.
-	 * @return mixed Return false if display through esi, instance otherwise.
-	 */
-	public function esi_widget(array $instance, WP_Widget $widget, array $args)
-	{
-		$name = get_class($widget);
-		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
-		if ((!isset($options)) ||
-			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
-				== LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)) {
-if (defined('lscache_debug')) {
-error_log('Do not esi widget ' . $name . ' because '
-	. ((!isset($options)) ? 'options not set' : 'esi disabled for widget'));
-}
-			return $instance;
-		}
-		$params = array(
-			self::PARAM_BLOCK_ID => 'widget',
-			self::PARAM_NAME => $name,
-			self::PARAM_ID => $widget->id,
-			self::PARAM_INSTANCE => $instance,
-			self::PARAM_ARGS => $args
-		);
-
-		self::build_url($params, 'widget ' . $name);
-		return false;
-	}
-
-	/**
-	 * Hooked to the wp_footer action.
-	 * Sets up the ESI request for the admin bar.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $wp_admin_bar
-	 */
-	public function esi_admin_bar()
-	{
-		global $wp_admin_bar;
-
-		if ((!is_admin_bar_showing()) || (!is_object($wp_admin_bar))) {
-			return;
-		}
-
-		$params = array(self::PARAM_BLOCK_ID => 'admin-bar');
-
-		self::build_url($params, 'adminbar', self::CACHECTRL_PRIV);
-	}
-
-	/**
-	 * Hooked to the comment_form_defaults filter.
-	 * Stores the default comment form settings.
-	 * This method initializes an output buffer and adds two hook functions
-	 * to the WP process.
-	 * If esi_comment_form_cancel is triggered, the output buffer is flushed
-	 * because there is no need to make the comment form ESI.
-	 * Else if esi_comment_form is triggered, the output buffer is cleared
-	 * and an esi block is added. The remaining comment form is also buffered
-	 * and cleared.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param array $defaults The default comment form settings.
-	 * @return array The default comment form settings.
-	 */
-	public function esi_comment_form_check($defaults)
-	{
-		$this->esi_args = $defaults;
-		ob_start();
-		add_action('comment_form_must_log_in_after',
-			array($this, 'esi_comment_form_cancel'));
-		add_action('comment_form_comments_closed',
-			array($this, 'esi_comment_form_cancel'));
-		add_filter('comment_form_submit_button',
-			array($this, 'esi_comment_form'), 1000, 2);
-		return $defaults;
-	}
-
-	/**
 	 * Hooked to the comment_form_must_log_in_after and
 	 * comment_form_comments_closed actions.
-	 * @see esi_comment_form_check
+	 * @see register_comment_form_actions
 	 *
 	 * @access public
 	 * @since 1.1.0
 	 */
-	public function esi_comment_form_cancel()
+	public function comment_form_sub_cancel()
 	{
 		ob_flush();
-	}
-
-	/**
-	 * Hooked to the comment_form_submit_button filter.
-	 * @see esi_comment_form_check
-	 * This method will compare the used comment form args against the default
-	 * args. The difference will be passed to the esi request.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $post
-	 * @param $unused
-	 * @param array $args The used comment form args.
-	 * @return unused.
-	 */
-	public function esi_comment_form($unused, $args)
-	{
-		if (empty($args) || empty($this->esi_args)) {
-			error_log('comment form args empty?');
-			return $unused;
-		}
-		$esi_args = array_diff_assoc($args, $this->esi_args);
-		ob_clean();
-		global $post;
-		$params = array(
-			self::PARAM_BLOCK_ID => 'comment-form',
-			self::PARAM_ID => $post->ID,
-			self::PARAM_ARGS => $esi_args,
-			);
-
-		self::build_url($params, 'comment form', self::CACHECTRL_PRIV);
-		ob_start();
-		add_action('comment_form_after',
-			array($this, 'esi_comment_form_clean'));
-		return $unused;
 	}
 
 	/**
@@ -424,49 +341,9 @@ error_log('Do not esi widget ' . $name . ' because '
 	 * @access public
 	 * @since 1.1.0
 	 */
-	public function esi_comment_form_clean()
+	public function comment_form_sub_clean()
 	{
 		ob_clean();
-	}
-
-	/**
-	 * Hooked to the comments_array filter.
-	 * If there are pending comments, the whole comments section should be an
-	 * ESI block.
-	 * Else the comments do not need to be ESI.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @global type $post
-	 * @param type $comments The current comments to output
-	 * @return array The comments to output.
-	 */
-	public function esi_comments($comments)
-	{
-		global $post;
-		$args = array(
-			'status' => 'hold',
-			'number' => '1',
-			'post_id' => $post->ID,
-		);
-
-		$on_hold = get_comments($args);
-
-		if (empty($on_hold)) {
-			// No comments on hold, comments section can be skipped
-			return $comments;
-		}
-		// Else need to ESI comments.
-
-		$params = array(
-			self::PARAM_BLOCK_ID => 'comments',
-			self::PARAM_ID => $post->ID,
-			self::PARAM_ARGS => get_query_var( 'cpage' ),
-		);
-		self::build_url($params, 'comments', self::CACHECTRL_PRIV);
-		add_filter('comments_template',
-			array($this, 'esi_comments_dummy_template'), 1000);
-		return array();
 	}
 
 	/**
@@ -479,13 +356,22 @@ error_log('Do not esi widget ' . $name . ' because '
 	 * @since 1.1.0
 	 * @return string Dummy template file.
 	 */
-	public function esi_comments_dummy_template()
+	public function comments_sub_dummy_template()
 	{
 		return plugin_dir_path(dirname(__FILE__)) .
 			'includes/litespeed-cache-esi-dummy-template.php';
 	}
 
-	public function esi_comments_cache_type($comments)
+	/**
+	 * Hooked to the comments_array filter.
+	 * Parses the comments array to determine the types of comments associated
+	 * with the post. If there are any unapproved comments, the comments block
+	 * should be a private cache. Else use shared.
+	 *
+	 * @param array $comments The comments to be displayed.
+	 * @return array Returns input array
+	 */
+	public function comments_load_cache_type($comments)
 	{
 		$cache = LiteSpeed_Cache::plugin();
 		if (empty($comments)) {
@@ -503,6 +389,137 @@ error_log('Do not esi widget ' . $name . ' because '
 		return $comments;
 	}
 
+// END helper functions.
+
+	/**
+	 * Hooked to the widget_display_callback filter.
+	 * If the admin configured the widget to display via esi, this function
+	 * will set up the esi request and cancel the widget display.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param array $instance Parameter used to build the widget.
+	 * @param WP_Widget $widget The widget to build.
+	 * @param array $args Parameter used to build the widget.
+	 * @return mixed Return false if display through esi, instance otherwise.
+	 */
+	public function sub_widget_block(array $instance, WP_Widget $widget,
+		array $args)
+	{
+		$name = get_class($widget);
+		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
+		if ((!isset($options)) ||
+			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
+				== LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)) {
+if (defined('lscache_debug')) {
+error_log('Do not esi widget ' . $name . ' because '
+	. ((!isset($options)) ? 'options not set' : 'esi disabled for widget'));
+}
+			return $instance;
+		}
+		$params = array(
+			self::PARAM_NAME => $name,
+			self::PARAM_ID => $widget->id,
+			self::PARAM_INSTANCE => $instance,
+			self::PARAM_ARGS => $args
+		);
+
+		self::build_url('widget', 'widget ' . $name, $params);
+		return false;
+	}
+
+	/**
+	 * Hooked to the wp_footer action.
+	 * Sets up the ESI request for the admin bar.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @global type $wp_admin_bar
+	 */
+	public function sub_admin_bar_block()
+	{
+		global $wp_admin_bar;
+
+		if ((!is_admin_bar_showing()) || (!is_object($wp_admin_bar))) {
+			return;
+		}
+
+		self::build_url('admin-bar', 'adminbar', array(), self::CACHECTRL_PRIV);
+	}
+
+	/**
+	 * Hooked to the comment_form_submit_button filter.
+	 * @see register_comment_form_actions
+	 * This method will compare the used comment form args against the default
+	 * args. The difference will be passed to the esi request.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @global type $post
+	 * @param $unused
+	 * @param array $args The used comment form args.
+	 * @return unused.
+	 */
+	public function sub_comment_form_block($unused, $args)
+	{
+		if (empty($args) || empty($this->esi_args)) {
+			error_log('comment form args empty?');
+			return $unused;
+		}
+		$esi_args = array_diff_assoc($args, $this->esi_args);
+		ob_clean();
+		global $post;
+		$params = array(
+			self::PARAM_ID => $post->ID,
+			self::PARAM_ARGS => $esi_args,
+			);
+
+		self::build_url('comment-form', 'comment form', $params, self::CACHECTRL_PRIV);
+		ob_start();
+		add_action('comment_form_after',
+			array($this, 'comment_form_sub_clean'));
+		return $unused;
+	}
+
+	/**
+	 * Hooked to the comments_array filter.
+	 * If there are pending comments, the whole comments section should be an
+	 * ESI block.
+	 * Else the comments do not need to be ESI.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @global type $post
+	 * @param type $comments The current comments to output
+	 * @return array The comments to output.
+	 */
+	public function sub_comments_block($comments)
+	{
+		global $post;
+		$args = array(
+			'status' => 'hold',
+			'number' => '1',
+			'post_id' => $post->ID,
+		);
+
+		$on_hold = get_comments($args);
+
+		if (empty($on_hold)) {
+			// No comments on hold, comments section can be skipped
+			return $comments;
+		}
+		// Else need to ESI comments.
+
+		$params = array(
+			self::PARAM_ID => $post->ID,
+			self::PARAM_ARGS => get_query_var( 'cpage' ),
+		);
+		self::build_url('comments', 'comments', $params, self::CACHECTRL_PRIV);
+		add_filter('comments_template',
+			array($this, 'comments_sub_dummy_template'), 1000);
+		return array();
+	}
+
 	/**
 	 * Parses the esi input parameters and generates the widget for esi display.
 	 *
@@ -514,7 +531,7 @@ error_log('Do not esi widget ' . $name . ' because '
 	{
 		global $wp_widget_factory;
 		$widget = $wp_widget_factory->widgets[$params[self::PARAM_NAME]];
-		$option = self::esi_widget_get_option($widget);
+		$option = self::widget_load_get_options($widget);
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
 if (defined('lscache_debug')) {
@@ -543,9 +560,8 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 
 	public function load_comment_form_block($params)
 	{
-		//TODO: is this needed anymore?
 		remove_filter('comment_form_defaults',
-			array(self::get_instance(), 'esi_comment_form_check'));
+			array(self::get_instance(), 'register_comment_form_actions'));
 		comment_form($params[self::PARAM_ARGS],
 			$params[self::PARAM_ID]);
 		LiteSpeed_Cache::plugin()->set_cachectrl(
@@ -572,12 +588,9 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 		}
 		$post = get_post($params[self::PARAM_ID]);
 		$wp_query->setup_postdata($post);
-		add_filter('comments_array', array($this, 'esi_comments_cache_type'));
+		add_filter('comments_array', array($this, 'comments_load_cache_type'));
 		comments_template();
 	}
-
-
-
 }
 
 

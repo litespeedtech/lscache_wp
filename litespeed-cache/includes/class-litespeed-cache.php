@@ -43,9 +43,6 @@ class LiteSpeed_Cache
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 
-	const ESI_URL = '/lscacheesi/';
-	const ESI_POSTTYPE = 'lscacheesi';
-
 	protected $plugin_dir ;
 	protected $config ;
 	protected $current_vary;
