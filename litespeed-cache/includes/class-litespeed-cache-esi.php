@@ -71,7 +71,8 @@ class LiteSpeed_Cache_Esi
 	 */
 	private function __construct()
 	{
-
+		add_action('litespeed_cache_is_not_esi_template',
+			array($this, 'load_esi_actions'));
 	}
 
 
@@ -180,12 +181,12 @@ class LiteSpeed_Cache_Esi
 		global $post_type;
 
 		if ($post_type == self::POSTTYPE) {
+			define('LSCACHE_IS_ESI', true);
+			do_action('litespeed_cache_is_esi_template');
 			return plugin_dir_path(dirname(__FILE__))
 				. 'includes/litespeed-cache-esi.php';
 		}
-		else {
-			$this->load_esi_actions();
-		}
+		do_action('litespeed_cache_is_not_esi_template');
 		return $template;
 	}
 
@@ -195,7 +196,7 @@ class LiteSpeed_Cache_Esi
 	 * @since    1.1.0
 	 * @access   private
 	 */
-	private function load_esi_actions()
+	public function load_esi_actions()
 	{
 		$lscache = LiteSpeed_Cache::plugin();
 		add_action('load-widgets.php', array($lscache, 'purge_widget'));

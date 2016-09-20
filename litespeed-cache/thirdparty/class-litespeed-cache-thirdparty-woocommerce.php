@@ -32,34 +32,40 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function detect()
 	{
-		if (defined('WOOCOMMERCE_VERSION')) {
-			add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable');
-
-			add_action('woocommerce_after_checkout_validation',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
-			add_filter('litespeed_cache_get_options',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
-
-			if (is_admin()) {
-				add_action('litespeed_cache_on_purge_post',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge');
-				add_action('delete_term_relationships',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2);
-				add_filter('litespeed_cache_add_config_tab',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3);
-				add_filter('litespeed_cache_save_options',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2);
-			}
-
-			add_action('woocommerce_before_template_part',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4);
+		if (!defined('WOOCOMMERCE_VERSION')) {
+			return;
 		}
+		add_filter('litespeed_cache_is_cacheable',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable');
+
+		add_action('woocommerce_after_checkout_validation',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
+		add_filter('litespeed_cache_get_options',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
+		add_action('litespeed_cache_is_not_esi_template',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
+
+		if (is_admin()) {
+			add_action('litespeed_cache_on_purge_post',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge');
+			add_action('delete_term_relationships',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2);
+			add_filter('litespeed_cache_add_config_tab',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3);
+			add_filter('litespeed_cache_save_options',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2);
+		}
+	}
+
+	public static function set_block_template()
+	{
+		add_action('woocommerce_before_template_part',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4);
 	}
 
 	public static function block_template($template_name, $template_path, $located, $args)
 	{
-		if ((defined('LSCACHE_IS_ESI'))
-			|| (strpos($template_name, 'add-to-cart') === false)) {
+		if (strpos($template_name, 'add-to-cart') === false) {
 			return;
 		}
 		global $post;
