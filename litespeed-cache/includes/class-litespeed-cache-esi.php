@@ -1,30 +1,5 @@
 <?php
 
-
-
-/**
- * What new things do I need to add?
- *
- * - Add third party integration API
- * - Create an is_esi hook. In here, I will add the hooks I need.
- *		Perhaps create a define? LSCACHE_IS_ESI
- * - Add a nonce to ensure validity.
- * - Maybe figure out a way to streamline how everything is added?
- *		Right now, my functions are all kind of all over the place.
- *		Separate load_esi_actions to load_is_esi, load_build_esi?
- *
- */
-
-
-
-
-
-
-
-
-
-
-
 /**
  * The esi class.
  *
@@ -49,18 +24,10 @@ class LiteSpeed_Cache_Esi
 	const QS_PARAMS = 'lscache';
 
 	const PARAM_ARGS = 'args';
+	const PARAM_BLOCK_ID = 'block_id';
 	const PARAM_ID = 'id';
 	const PARAM_INSTANCE = 'instance';
 	const PARAM_NAME = 'name';
-	const PARAM_THIRDPARTY_ID = 'tp_id';
-	const PARAM_TYPE = 'type';
-
-	const TYPE_WIDGET = 1;
-	const TYPE_ADMINBAR = 2;
-	const TYPE_COMMENTFORM = 3;
-	const TYPE_COMMENT = 4;
-
-	const TYPE_THIRDPARTY = 16;
 
 	const CACHECTRL_PRIV = 'no-vary,private';
 
@@ -71,8 +38,10 @@ class LiteSpeed_Cache_Esi
 	 */
 	private function __construct()
 	{
+		add_action('litespeed_cache_is_esi_template',
+			array($this, 'register_esi_actions'));
 		add_action('litespeed_cache_is_not_esi_template',
-			array($this, 'load_esi_actions'));
+			array($this, 'register_not_esi_actions'));
 	}
 
 
@@ -192,11 +161,40 @@ class LiteSpeed_Cache_Esi
 
 	/**
 	 * Register all of the hooks related to the esi logic of the plugin.
+	 * Specifically when the page IS an esi page.
 	 *
 	 * @since    1.1.0
-	 * @access   private
+	 * @access   public
 	 */
-	public function load_esi_actions()
+	public function register_esi_actions()
+	{
+		add_action('litespeed_cache_load_esi_block-widget',
+			array($this, 'load_widget_block'));
+		add_action('litespeed_cache_load_esi_block-admin-bar',
+			array($this, 'load_admin_bar_block'));
+		add_action('litespeed_cache_load_esi_block-comment-form',
+			array($this, 'load_comment_form_block'));
+		add_action('litespeed_cache_load_esi_block-comments',
+			array($this, 'load_comments_block'));
+
+		if ((defined('DOING_AJAX') && DOING_AJAX)) {
+			return;
+		}
+
+		if ($this->user_status) {
+			add_filter('comment_form_defaults',
+				array($this, 'esi_comment_form_check'));
+		}
+	}
+
+	/**
+	 * Register all of the hooks related to the esi logic of the plugin.
+	 * Specifically when the page is NOT an esi page.
+	 *
+	 * @since    1.1.0
+	 * @access   public
+	 */
+	public function register_not_esi_actions()
 	{
 		$lscache = LiteSpeed_Cache::plugin();
 		add_action('load-widgets.php', array($lscache, 'purge_widget'));
@@ -233,7 +231,6 @@ class LiteSpeed_Cache_Esi
 		if (!isset($_REQUEST[self::QS_PARAMS])) {
 			return;
 		}
-		$esi = self::get_instance();
 		$req_params = $_REQUEST[self::QS_PARAMS];
 		$unencrypted = base64_decode($req_params);
 		if ($unencrypted === false) {
@@ -249,34 +246,9 @@ if (defined('lscache_debug')) {
 error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
 }
 
-		switch ($params[self::PARAM_TYPE]) {
-			case self::TYPE_WIDGET:
-				$esi->esi_widget_get($params);
-				break;
-			case self::TYPE_ADMINBAR:
-				wp_admin_bar_render();
-				$esi->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
-				break;
-			case self::TYPE_COMMENTFORM:
-				remove_filter('comment_form_defaults',
-					array($esi, 'esi_comment_form_check'));
-				comment_form($params[self::PARAM_ARGS],
-					$params[self::PARAM_ID]);
-				$esi->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
-				break;
-			case self::TYPE_COMMENT:
-				$esi->esi_comments_get($params);
-				break;
-			case self::TYPE_THIRDPARTY:
-				global $post, $wp_query;
-				$post = get_post($params[self::PARAM_ID]);
-				$wp_query->setup_postdata($post);
-				wc_get_template(
-					$params[self::PARAM_NAME], $params['path'],
-					$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
-				break;
-			default:
-				break;
+		if (isset($params[self::PARAM_BLOCK_ID])) {
+			do_action('litespeed_cache_load_esi_block-'
+				. $params[self::PARAM_BLOCK_ID], $params);
 		}
 	}
 
@@ -311,38 +283,6 @@ error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
 	}
 
 	/**
-	 * Parses the esi input parameters and generates the widget for esi display.
-	 *
-	 * @access private
-	 * @since 1.1.0
-	 * @param array $params Input parameters needed to correctly display widget
-	 */
-	public function esi_widget_get($params)
-	{
-		global $wp_widget_factory;
-		$widget = $wp_widget_factory->widgets[$params[self::PARAM_NAME]];
-		$option = self::esi_widget_get_option($widget);
-		// Since we only reach here via esi, safe to assume setting exists.
-		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
-if (defined('lscache_debug')) {
-error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
-	. ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl);
-}
-		if ($ttl == 0) {
-			LiteSpeed_Cache::plugin()->no_cache_for(
-				__('Widget time to live set to 0.', 'litespeed-cache'));
-			LiteSpeed_Cache_Tags::set_noncacheable();
-		}
-		else {
-			LiteSpeed_Cache::plugin()->set_custom_ttl($ttl);
-			LiteSpeed_Cache_Tags::add_cache_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::PARAM_ID]);
-		}
-		the_widget($params[self::PARAM_NAME],
-			$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
-	}
-
-	/**
 	 * Hooked to the widget_display_callback filter.
 	 * If the admin configured the widget to display via esi, this function
 	 * will set up the esi request and cancel the widget display.
@@ -368,7 +308,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			return $instance;
 		}
 		$params = array(
-			self::PARAM_TYPE => self::TYPE_WIDGET,
+			self::PARAM_BLOCK_ID => 'widget',
 			self::PARAM_NAME => $name,
 			self::PARAM_ID => $widget->id,
 			self::PARAM_INSTANCE => $instance,
@@ -395,7 +335,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			return;
 		}
 
-		$params = array(self::PARAM_TYPE => self::TYPE_ADMINBAR);
+		$params = array(self::PARAM_BLOCK_ID => 'admin-bar');
 
 		self::build_url($params, 'adminbar', self::CACHECTRL_PRIV);
 	}
@@ -465,7 +405,7 @@ error_log('Do not esi widget ' . $name . ' because '
 		ob_clean();
 		global $post;
 		$params = array(
-			self::PARAM_TYPE => self::TYPE_COMMENTFORM,
+			self::PARAM_BLOCK_ID => 'comment-form',
 			self::PARAM_ID => $post->ID,
 			self::PARAM_ARGS => $esi_args,
 			);
@@ -519,7 +459,7 @@ error_log('Do not esi widget ' . $name . ' because '
 		// Else need to ESI comments.
 
 		$params = array(
-			self::PARAM_TYPE => self::TYPE_COMMENT,
+			self::PARAM_BLOCK_ID => 'comments',
 			self::PARAM_ID => $post->ID,
 			self::PARAM_ARGS => get_query_var( 'cpage' ),
 		);
@@ -564,6 +504,56 @@ error_log('Do not esi widget ' . $name . ' because '
 	}
 
 	/**
+	 * Parses the esi input parameters and generates the widget for esi display.
+	 *
+	 * @access private
+	 * @since 1.1.0
+	 * @param array $params Input parameters needed to correctly display widget
+	 */
+	public function load_widget_block($params)
+	{
+		global $wp_widget_factory;
+		$widget = $wp_widget_factory->widgets[$params[self::PARAM_NAME]];
+		$option = self::esi_widget_get_option($widget);
+		// Since we only reach here via esi, safe to assume setting exists.
+		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
+if (defined('lscache_debug')) {
+error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
+	. ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl);
+}
+		if ($ttl == 0) {
+			LiteSpeed_Cache::plugin()->no_cache_for(
+				__('Widget time to live set to 0.', 'litespeed-cache'));
+			LiteSpeed_Cache_Tags::set_noncacheable();
+		}
+		else {
+			LiteSpeed_Cache::plugin()->set_custom_ttl($ttl);
+			LiteSpeed_Cache_Tags::add_cache_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::PARAM_ID]);
+		}
+		the_widget($params[self::PARAM_NAME],
+			$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
+	}
+
+	public function load_admin_bar_block()
+	{
+		wp_admin_bar_render();
+		LiteSpeed_Cache::plugin()->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
+	}
+
+	public function load_comment_form_block($params)
+	{
+		//TODO: is this needed anymore?
+		remove_filter('comment_form_defaults',
+			array(self::get_instance(), 'esi_comment_form_check'));
+		comment_form($params[self::PARAM_ARGS],
+			$params[self::PARAM_ID]);
+		LiteSpeed_Cache::plugin()->set_cachectrl(
+			LiteSpeed_Cache::CACHECTRL_PRIVATE);
+
+	}
+
+	/**
 	 * Outputs the ESI comments block.
 	 *
 	 * @access private
@@ -572,7 +562,7 @@ error_log('Do not esi widget ' . $name . ' because '
 	 * @global type $wp_query
 	 * @param array $params The parameters used to help display the comments.
 	 */
-	private function esi_comments_get($params)
+	public function load_comments_block($params)
 	{
 		global $post, $wp_query;
 		$wp_query->is_singular = true;

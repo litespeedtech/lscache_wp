@@ -44,6 +44,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
 		add_action('litespeed_cache_is_not_esi_template',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
+		add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
 
 		if (is_admin()) {
 			add_action('litespeed_cache_on_purge_post',
@@ -70,7 +72,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		global $post;
 		$params = array(
-			LiteSpeed_Cache_Esi::PARAM_TYPE => LiteSpeed_Cache_Esi::TYPE_THIRDPARTY,
+			LiteSpeed_Cache_Esi::PARAM_BLOCK_ID => 'wc-add-to-cart-form',
 			LiteSpeed_Cache_Esi::PARAM_ARGS => $args,
 			LiteSpeed_Cache_Esi::PARAM_NAME => $template_name,
 			LiteSpeed_Cache_Esi::PARAM_ID => $post->ID,
@@ -88,6 +90,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		ob_clean();
 		remove_action('woocommerce_after_add_to_cart_form',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template');
+	}
+
+	public static function load_add_to_cart_form_block($params)
+	{
+		global $post, $wp_query;
+		$post = get_post($params[LiteSpeed_Cache_Esi::PARAM_ID]);
+		$wp_query->setup_postdata($post);
+		wc_get_template($params[LiteSpeed_Cache_Esi::PARAM_NAME], $params['path'],
+			$params[LiteSpeed_Cache_Esi::PARAM_INSTANCE],
+			$params[LiteSpeed_Cache_Esi::PARAM_ARGS]);
 	}
 
 	/**
