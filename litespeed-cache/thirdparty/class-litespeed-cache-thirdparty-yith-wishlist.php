@@ -49,7 +49,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 			self::ESI_PARAM_POSTID => $post->ID
 		);
 		LiteSpeed_Cache_Esi::build_url('yith-wcwl-add', 'YITH ADD TO WISHLIST',
-			$params);
+			$params, LiteSpeed_Cache_Esi::CACHECTRL_PRIV);
 		return '';
 	}
 
@@ -58,7 +58,8 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		global $post, $wp_query;
 		$post = get_post($params[self::ESI_PARAM_POSTID]);
 		$wp_query->setup_postdata($post);
-		echo YITH_WCWL_Shortcode::add_to_wishlist(/*$params[self::ESI_PARAM_ATTS]*/);
+		echo YITH_WCWL_Shortcode::add_to_wishlist(/*$params[self::ESI_PARAM_ATTS]*/array());
+		LiteSpeed_Cache::plugin()->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
 	}
 
 }
