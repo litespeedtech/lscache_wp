@@ -445,8 +445,10 @@ class LiteSpeed_Cache_Config
 		}
 		$default[self::OPID_CACHE_FAVICON] = false;
 		$default[self::OPID_CACHE_RES] = false;
-		LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
-			$input, $default, $errors);
+		if (LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
+			$input, $default, $errors) === false) {
+			exit(implode("\n", $errors));
+		}
 	}
 
 	/**

@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if (!self::is_subdir()) {
-			return $rules->filerw & $permissions;
+			return ($rules->filerw === $permissions);
 		}
 		$site_path = self::get_site_path();
 		if (!file_exists($site_path)) {
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if (!is_writable($site_path)) {
 			$rules->filerw &= ~self::WRITABLE;
 		}
-		return $rules->filerw & $permissions;
+		return ($rules->filerw === $permissions);
 	}
 
 	/**
@@ -211,9 +211,13 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		if (empty($path)) {
 			$path = self::get_home_path();
+			if (!file_exists($path)) {
+				$content = "\n";
+				return true;
+			}
 		}
-		if (!self::is_file_able(self::READABLE)) {
-			$content = self::$ERR_DNE;
+		if (!self::is_file_able(self::RW)) {
+			$content = self::$ERR_READWRITE;
 			return false;
 		}
 
@@ -368,17 +372,24 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function file_save($content, $cleanup = true, $path = '')
 	{
-		if (empty($path)) {
-			$path = self::get_home_path();
-		}
+		while (true) {
+			if (empty($path)) {
+				$path = self::get_home_path();
+				if (!file_exists($path)) {
+					break;
+				}
+			}
 
-		if (self::is_file_able(self::RW) == 0) {
-			return self::$ERR_READWRITE;
-		}
+			if (self::is_file_able(self::RW) == 0) {
+				return self::$ERR_READWRITE;
+			}
 
-		//failed to backup, not good.
-		if (self::file_backup($path) === false) {
-			return self::$ERR_BACKUP;
+			//failed to backup, not good.
+			if (self::file_backup($path) === false) {
+				return self::$ERR_BACKUP;
+			}
+
+			break;
 		}
 
 		if ($cleanup) {
@@ -1065,10 +1076,6 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] = $content;
 			return false;
 		}
-		elseif (!self::is_file_able(self::WRITABLE)) {
-			$errors[] = self::$ERR_READWRITE;
-			return false;
-		}
 
 		$haystack = $this->file_split($content, $buf, $off_end);
 		if ($haystack === false) {
@@ -1268,7 +1275,8 @@ class LiteSpeed_Cache_Admin_Rules
 		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
 				. sprintf(__(' %s file not valid. Please verify the contents.',
 						'litespeed-cache'), '.htaccess');
-		self::$ERR_READWRITE = __('File not readable or not writable.', 'litespeed-cache');
+		self::$ERR_READWRITE = sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),
+			'.htaccess');
 		self::$ERR_SUBDIR_MISMATCH_LOGIN =
 			__('This site is a subdirectory install.', 'litespeed-cache')
 			. __(' Login cookies do not match.', 'litespeed-cache')
