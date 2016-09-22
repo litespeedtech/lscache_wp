@@ -1565,7 +1565,8 @@ class LiteSpeed_Cache
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
-			if ($mode === self::CACHECTRL_PUBLIC) {
+			if (($mode !== self::CACHECTRL_PURGE)
+				&& ($mode !== self::CACHECTRL_PURGESINGLE)) {
 				$cache_tags[] = ''; //add blank entry to add blog tag.
 			}
 		}
