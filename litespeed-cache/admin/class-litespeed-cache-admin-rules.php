@@ -43,8 +43,10 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
 	private static $RW_BLOCK_END = '</IfModule>';
-	private static $RW_ENGINEON = 'RewriteEngine on';
+	private static $RW_CACHE =  "\nRewriteEngine on\nCacheLookup Public on\n";
 
+	private static $RW_PATTERN_CACHEANDREWRITE = '/(rewriteengine|cachelookup\s+public)\s+(on|off)\s*\R*/i';
+	private static $RW_PATTERN_CACHELOOKUP = '/cachelookup\s+public\s+(on|off)\s*\R*/i';
 	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
 	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
 	private static $RW_PATTERN_RULE = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
@@ -239,17 +241,16 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $content The content to search
 	 * @param string $buf The portion before and including the beginning of
 	 * the section.
-	 * @param integer $off_end Offset denoting the beginning of the content
-	 * after the section.
+	 * @param string $after The content after the relevant section.
 	 * @return mixed False on failure, the haystack on success.
 	 * The haystack may be a string or null if it did not exist.
 	 */
-	private function file_split($content, &$buf, &$off_end)
+	private function file_split($content, &$buf, &$after)
 	{
 		$off_begin = stripos($content, self::$RW_BLOCK_START);
 		//if not found
 		if ($off_begin === false) {
-			$buf = self::$RW_BLOCK_START . "\n" . self::$RW_ENGINEON . "\n";
+			$buf = self::$RW_BLOCK_START . self::$RW_CACHE;
 			return NULL;
 		}
 		$off_begin += strlen(self::$RW_BLOCK_START);
@@ -259,20 +260,14 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 		--$off_end; // go to end of previous line.
-		$block = substr($content, 0, $off_end);
-		$off_engine = stripos($block, self::$RW_ENGINEON, $off_begin);
-		if ($off_engine !== false) {
-			$off_begin = $off_engine + strlen(self::$RW_ENGINEON) + 1;
-			$buf = substr($content, 0, $off_begin);
-		}
-		else {
-			$buf = substr($content, 0, $off_begin) . "\n"
-				. self::$RW_ENGINEON . "\n";
-		}
-		if ($off_begin == $off_end + 1) {
-			++$off_end;
-		}
-		return substr($content, $off_begin, $off_end - $off_begin);
+
+		$block = substr($content, $off_begin, $off_end - $off_begin);
+
+		$haystack = preg_replace(self::$RW_PATTERN_CACHEANDREWRITE, '', $block);
+		$buf = substr($content, 0, $off_begin) . self::$RW_CACHE;
+		$after = substr($content, $off_end);
+
+		return $haystack;
 	}
 
 	/**
@@ -283,15 +278,15 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $beginning The portion that includes the edits.
 	 * @param string $haystack The source section from the original file.
 	 * @param string $orig_content The part of the source file that remains.
-	 * @param integer $off_end The offset to the end of the LiteSpeed section.
+	 * @param string $after The content after the relevant section.
 	 * @param string $path If path is set, use path, else use home path.
 	 * @return mixed true on success, else error message on failure.
 	 */
 	private function file_combine($beginning, $haystack, $orig_content,
-			$off_end, $path = '')
+			$after, $path = '')
 	{
 		if (!is_null($haystack)) {
-			$beginning .= $haystack . substr($orig_content, $off_end);
+			$beginning .= $haystack . $after;
 		}
 		else {
 			$beginning .= self::$RW_BLOCK_END . "\n\n" . $orig_content;
@@ -1195,6 +1190,7 @@ class LiteSpeed_Cache_Admin_Rules
 				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
 		}
 		$buf = preg_replace($pattern, '', $content);
+		$buf = preg_replace(self::$RW_PATTERN_CACHELOOKUP, '', $buf);
 
 		self::file_save($buf, false);
 
@@ -1213,6 +1209,7 @@ class LiteSpeed_Cache_Admin_Rules
 				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
 		}
 		$site_buf = preg_replace($pattern, '', $site_content);
+		$site_buf = preg_replace(self::$RW_PATTERN_CACHELOOKUP, '', $site_buf);
 		self::file_save($site_buf, false, $site_path);
 
 		return;
