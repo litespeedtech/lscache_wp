@@ -43,10 +43,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
 	private static $RW_BLOCK_END = '</IfModule>';
-	private static $RW_CACHE =  "\nRewriteEngine on\nCacheLookup Public on\n";
+	private static $RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
+	private static $RW_PLUGIN =  "\nRewriteEngine on\nCacheLookup Public on\n";
 
-	private static $RW_PATTERN_CACHEANDREWRITE = '/(rewriteengine|cachelookup\s+public)\s+(on|off)\s*\R*/i';
-	private static $RW_PATTERN_CACHELOOKUP = '/cachelookup\s+public\s+(on|off)\s*\R*/i';
 	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
 	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
 	private static $RW_PATTERN_RULE = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
@@ -247,27 +246,65 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function file_split($content, &$buf, &$after)
 	{
+		$wrapper_end = '';
+		$wrapper_begin = $this->build_wrappers(self::$RW_WRAPPER, $wrapper_end);
+
 		$off_begin = stripos($content, self::$RW_BLOCK_START);
 		//if not found
 		if ($off_begin === false) {
-			$buf = self::$RW_BLOCK_START . self::$RW_CACHE;
+			$buf = self::$RW_BLOCK_START . "\n" . $wrapper_begin
+				. self::$RW_PLUGIN;
+			$after = $wrapper_end . "\n" . self::$RW_BLOCK_END . "\n" . $content;
 			return NULL;
 		}
 		$off_begin += strlen(self::$RW_BLOCK_START);
 		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
+		$off_next = stripos($content, '<IfModule', $off_begin);
 		if ($off_end === false) {
 			$buf = self::$ERR_NOT_FOUND . 'IfModule close';
 			return false;
 		}
+		elseif (($off_next !== false) && ($off_next < $off_end)) {
+			$buf = self::$ERR_WRONG_ORDER
+				. __(' Your .htaccess file is missing a &lt;/IfModule&gt;.', 'litespeed-cache');
+			return false;
+		}
 		--$off_end; // go to end of previous line.
 
-		$block = substr($content, $off_begin, $off_end - $off_begin);
+		$off_wrapper = stripos($content, $wrapper_begin, $off_begin);
+		// If the wrapper exists
+		if ($off_wrapper !== false) {
+			$off_wrapper += strlen($wrapper_begin);
+			$off_wrapper_end = stripos($content, $wrapper_end, $off_wrapper);
+			if ($off_wrapper_end === false) {
+				$buf = self::$ERR_NOT_FOUND . 'Plugin wrapper close';
+				return false;
+			}
+			--$off_wrapper_end;
 
-		$haystack = preg_replace(self::$RW_PATTERN_CACHEANDREWRITE, '', $block);
-		$buf = substr($content, 0, $off_begin) . self::$RW_CACHE;
-		$after = substr($content, $off_end);
-
-		return $haystack;
+			$buf = substr($content, 0, $off_wrapper + 1);
+			$after = substr($content, $off_wrapper_end);
+			$block = substr($content, $off_wrapper,
+				$off_wrapper_end - $off_wrapper);
+			return $block;
+		}
+		$buf = substr($content, 0, $off_end) . "\n" . $wrapper_begin
+			. self::$RW_PLUGIN;
+		$after = $wrapper_end . substr($content, $off_end);
+		$rules = array();
+		$matched = preg_replace_callback(self::$RW_PATTERN_WRAPPERS,
+			function ($matches) use (&$rules)
+			{
+				$rules[] = $matches[0];
+				return '';
+			},
+			$buf);
+		if (empty($rules)) {
+			return NULL;
+		}
+		$buf = $matched;
+		$block = implode('', $rules);
+		return $block;
 	}
 
 	/**
@@ -277,20 +314,16 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access private
 	 * @param string $beginning The portion that includes the edits.
 	 * @param string $haystack The source section from the original file.
-	 * @param string $orig_content The part of the source file that remains.
 	 * @param string $after The content after the relevant section.
 	 * @param string $path If path is set, use path, else use home path.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private function file_combine($beginning, $haystack, $orig_content,
-			$after, $path = '')
+	private function file_combine($beginning, $haystack, $after, $path = '')
 	{
 		if (!is_null($haystack)) {
-			$beginning .= $haystack . $after;
+			$beginning .= $haystack;
 		}
-		else {
-			$beginning .= self::$RW_BLOCK_END . "\n\n" . $orig_content;
-		}
+		$beginning .= $after;
 		return self::file_save($beginning, false, $path);
 	}
 
@@ -813,7 +846,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$env = 'E=Cache-Vary:' . $login;
 		$rule_buf = '';
 		$rule_buf2 = '';
-		$off_end = 0;
+		$after = '';
 		$ret = false;
 
 		if (!self::is_subdir()) {
@@ -859,7 +892,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$haystack2 = $this->file_split($content, $rule_buf2, $off_end);
+		$haystack2 = $this->file_split($content, $rule_buf2, $after);
 		if ($haystack2 === false) {
 			$errors[] = $rule_buf2;
 			return false;
@@ -877,8 +910,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$haystack2 = $ret;
-		$ret = $this->file_combine($rule_buf2, $haystack2, $content,
-				$off_end, $path);
+		$ret = $this->file_combine($rule_buf2, $haystack2, $after, $path);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
@@ -1061,7 +1093,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$content = '';
 		$buf = '';
-		$off_end = 0;
+		$after = '';
 
 		if ($this->check_input($options, $input)) {
 			return $options;
@@ -1072,7 +1104,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$haystack = $this->file_split($content, $buf, $off_end);
+		$haystack = $this->file_split($content, $buf, $after);
 		if ($haystack === false) {
 			$errors[] = $buf;
 			return false;
@@ -1156,7 +1188,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$options[$id] = $input[$id];
 		}
 
-		$ret = $this->file_combine($buf, $haystack, $content, $off_end);
+		$ret = $this->file_combine($buf, $haystack, $after);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
@@ -1175,7 +1207,6 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$content = '';
 		$site_content = '';
-		$pattern = self::$RW_PATTERN_WRAPPERS;
 
 		clearstatcache();
 		if (self::file_get($content) === false) {
@@ -1185,12 +1216,12 @@ class LiteSpeed_Cache_Admin_Rules
 			return;
 		}
 
-		if (!empty($wrapper)) {
-			$pattern = '/###LSCACHE START ' . $wrapper
-				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
+		if (empty($wrapper)) {
+			$wrapper = self::$RW_WRAPPER;
 		}
+		$pattern = '/###LSCACHE START ' . $wrapper
+			. '###.*###LSCACHE END ' . $wrapper . '###\n?/s';
 		$buf = preg_replace($pattern, '', $content);
-		$buf = preg_replace(self::$RW_PATTERN_CACHELOOKUP, '', $buf);
 
 		self::file_save($buf, false);
 
@@ -1204,12 +1235,12 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 
-		if (!empty($wrapper)) {
-			$pattern = '/###LSCACHE START ' . $wrapper
-				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
+		if (empty($wrapper)) {
+			$wrapper = self::$RW_WRAPPER;
 		}
+		$pattern = '/###LSCACHE START ' . $wrapper
+			. '###.*###LSCACHE END ' . $wrapper . '###\n?/s';
 		$site_buf = preg_replace($pattern, '', $site_content);
-		$site_buf = preg_replace(self::$RW_PATTERN_CACHELOOKUP, '', $site_buf);
 		self::file_save($site_buf, false, $site_path);
 
 		return;
