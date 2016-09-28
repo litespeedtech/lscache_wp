@@ -121,6 +121,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			if ((defined('DONOTCACHEPAGE')) && (DONOTCACHEPAGE)) {
 				return false;
 			}
+			elseif ((version_compare($woocom->version, '2.1.0', '>='))
+				&& ($woocom->cart->get_cart_contents_count() !== 0)) {
+				return false;
+			}
 			self::set_cache_tags();
 			return true;
 		}
