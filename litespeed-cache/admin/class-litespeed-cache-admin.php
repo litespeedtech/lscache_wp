@@ -131,6 +131,9 @@ if (defined('lscache_debug')) {
 		global $wp_admin_bar;
 		global $pagenow;
 		$prefix = '?';
+		if (!current_user_can('manage_options')) {
+			return;
+		}
 
 		if (!empty($_GET)) {
 			if (isset($_GET['LSCWP_CTRL'])) {
@@ -265,6 +268,7 @@ if (defined('lscache_debug')) {
 		if (LiteSpeed_Cache_Admin_Display::get_instance()->
 			check_license($config) === true) {
 			$this->check_cache_mangement_actions();
+			$this->check_advanced_cache();
 		}
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
@@ -478,6 +482,17 @@ if (defined('lscache_debug')) {
 			if (is_string($out)) {
 				$errors[] = $out;
 			}
+
+			$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
+			if (isset($input['lscwp_' . $id])) {
+				$check_adv = ( $input['lscwp_' . $id] === $id );
+				if ($options[$id] != $check_adv) {
+					$options[$id] = $check_adv;
+				}
+			}
+			else {
+				$options[$id] = false;
+			}
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
@@ -633,6 +648,31 @@ if (defined('lscache_debug')) {
 		}
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 							LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
+	}
+
+	private function check_advanced_cache()
+	{
+		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
+		if (((defined('LSCACHE_ADV_CACHE'))
+			&& (constant('LSCACHE_ADV_CACHE') === true))
+			|| (!current_user_can($capability))) {
+			if (LiteSpeed_Cache::config(
+				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) === false) {
+				// If it exists because I added it at runtime, try to create the file anyway.
+				// Result does not matter.
+				LiteSpeed_Cache::plugin()->try_copy_advanced_cache();
+			}
+			return;
+		}
+
+		if (LiteSpeed_Cache::plugin()->try_copy_advanced_cache()) {
+			return;
+		}
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+			LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
+			__('Please disable/deactivate your other cache plugin.', 'litespeed-cache')
+			. __(' Alternatively, if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache'));
 	}
 
 	/**

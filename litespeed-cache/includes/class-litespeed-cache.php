@@ -148,15 +148,7 @@ class LiteSpeed_Cache
 	 */
 	public function register_activation()
 	{
-		if ((!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
-			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0)
-				&& (is_writable(ABSPATH . 'wp-content/advanced-cache.php'))) {
-			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
-		}
-		include_once(ABSPATH . 'wp-content/advanced-cache.php');
-		if ( !defined('LSCACHE_ADV_CACHE')) {
-			exit(__("advanced-cache.php detected in wp-content directory! Please disable or uninstall any other cache plugins before enabling LiteSpeed Cache.", 'litespeed-cache')) ;
-		}
+		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
@@ -213,8 +205,9 @@ class LiteSpeed_Cache
 			$this->load_nonadmin_actions($module_enabled) ;
 		}
 
-		if ( ! $module_enabled ) {
-			return ;
+		if ((!$module_enabled) || (!defined('LSCACHE_ADV_CACHE'))
+			|| (constant('LSCACHE_ADV_CACHE') === false)) {
+			return;
 		}
 
 		//Checks if WP_CACHE is defined and true in the wp-config.php file.
@@ -286,6 +279,20 @@ class LiteSpeed_Cache
 	public function get_config()
 	{
 		return $this->config ;
+	}
+
+	public function try_copy_advanced_cache()
+	{
+		if ((file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
+			&& ((filesize(ABSPATH . 'wp-content/advanced-cache.php') !== 0)
+				|| (!is_writable(ABSPATH . 'wp-content/advanced-cache.php')))) {
+			return false;
+		}
+		copy($this->plugin_dir . '/includes/advanced-cache.php',
+			ABSPATH . 'wp-content/advanced-cache.php');
+		include_once(ABSPATH . 'wp-content/advanced-cache.php');
+		$ret = defined('LSCACHE_ADV_CACHE');
+		return $ret;
 	}
 
 	/**

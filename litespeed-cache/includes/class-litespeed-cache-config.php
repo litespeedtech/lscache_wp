@@ -33,6 +33,7 @@ class LiteSpeed_Cache_Config
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
 	const OPID_LOGIN_COOKIE = 'login_cookie';
 	const OPID_TAG_PREFIX = 'tag_prefix';
+	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache';
 	// do NOT set default options for these three, it is used for admin.
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules';
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
@@ -95,6 +96,12 @@ class LiteSpeed_Cache_Config
 		}
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
+
+		if ((isset($options[self::OPID_CHECK_ADVANCEDCACHE]))
+			&& ($options[self::OPID_CHECK_ADVANCEDCACHE] === false)
+			&& (!defined('LSCACHE_ADV_CACHE'))) {
+			define('LSCACHE_ADV_CACHE', true);
+		}
 
 		if ( true === WP_DEBUG /* && $this->options[self::OPID_DEBUG] */ ) {
 			$msec = microtime() ;
@@ -204,6 +211,7 @@ class LiteSpeed_Cache_Config
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_TAG_PREFIX => '',
+			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_TEST_IPS => '',
@@ -262,6 +270,7 @@ class LiteSpeed_Cache_Config
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_TAG_PREFIX => '',
+			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
 				);

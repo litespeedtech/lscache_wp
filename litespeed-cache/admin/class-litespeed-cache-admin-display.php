@@ -1114,6 +1114,17 @@ class LiteSpeed_Cache_Admin_Display
 										$advanced_desc);
 		$buf .= $this->input_group_end();
 
+		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
+		$check_adv = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]);
+		$buf .= $this->input_group_start(
+			__('Check advanced-cache.php', 'litespeed-cache')
+			. '&nbsp;' . $check_adv,
+			__('The advanced-cache.php file is used by many cachign plugins to signal that a cache is active.', 'litespeed-cache')
+			. __(' When this option is checked, LiteSpeed Cache will not cache if this file is detected and belongs to another plugin.', 'litespeed-cache')
+			. '<br><br>'
+			. __('Uncheck this option only if hte other plugin is used for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'));
+		$buf .= $this->input_group_end();
+
 		$cookie_buf = $this->build_setting_login_cookie($options,
 				$cookie_title, $cookie_desc);
 		$buf .= $this->input_group_start($cookie_title, $cookie_desc);
@@ -1418,7 +1429,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.0.8
 	 * @access private
 	 * @param array $options The currently configured options.
-	 * @return string The html for caching favicon configurations.
+	 * @return string The html for caching resource configurations.
 	 */
 	private function build_setting_cache_resources($options)
 	{
