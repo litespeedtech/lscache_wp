@@ -114,12 +114,7 @@ class LiteSpeed_Cache
 		if ((empty($opt_id)) || (!is_string($opt_id))) {
 			return $conf;
 		}
-		$tp_keys = $conf->get_thirdparty_options();
-		if ((isset($tp_keys[$opt_id]))
-			|| (array_key_exists($opt_id, $tp_keys))) {
-			return $conf->get_option($opt_id);
-		}
-		return NULL;
+		return $conf->get_option($opt_id);
 	}
 
 	/**
