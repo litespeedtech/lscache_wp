@@ -757,18 +757,11 @@ class LiteSpeed_Cache_Admin_Rules
 		);
 
 		foreach ($val_check as $opt) {
-			if (isset($input['lscwp_' . $opt])) {
-				$input[$opt] = ($input['lscwp_' . $opt] === $opt);
-			}
-			else {
-				$input[$opt] = false;
-			}
+			LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
 		}
 
 		foreach ($ids as $id) {
-			if ((isset($input[$id]))
-					&& ($input[$id]
-					!== $options[$id])) {
+			if ((isset($input[$id])) && ($input[$id] !== $options[$id])) {
 				return false;
 			}
 		}

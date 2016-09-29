@@ -418,35 +418,16 @@ if (defined('lscache_debug')) {
 			$options[$id] = intval($input[$id]);
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		if (isset($input['lscwp_' . $id])) {
-			$options[$id] = ( $input['lscwp_' . $id] === $id );
-		}
-		else {
-			$options[$id] = false;
-		}
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+			$input, $options);
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
-		if (isset($input['lscwp_' . $id])) {
-			$options[$id] = ( $input['lscwp_' . $id] === $id );
-		}
-		else {
-			$options[$id] = false;
-		}
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
+			$input, $options);
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		if (isset($input['lscwp_' . $id])) {
-			$login = ( $input['lscwp_' . $id] === $id );
-			if ($options[$id] != $login) {
-				$options[$id] = $login;
-				if (!$login) {
-					LiteSpeed_Cache_Tags::add_purge_tag(
-						LiteSpeed_Cache_Tags::TYPE_LOGIN);
-				}
-			}
-		}
-		else {
-			$options[$id] = false;
+		if (self::parse_checkbox(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+				$input, $options) === false) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_LOGIN);
 		}
 
 		// get purge options
@@ -486,16 +467,9 @@ if (defined('lscache_debug')) {
 				$errors[] = $out;
 			}
 
-			$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
-			if (isset($input['lscwp_' . $id])) {
-				$check_adv = ( $input['lscwp_' . $id] === $id );
-				if ($options[$id] != $check_adv) {
-					$options[$id] = $check_adv;
-				}
-			}
-			else {
-				$options[$id] = false;
-			}
+			self::parse_checkbox(
+				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+				$input, $options);
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
@@ -691,6 +665,17 @@ if (defined('lscache_debug')) {
 		return stripslashes(trim($input));
 	}
 
+	public static function parse_checkbox($id, $input, &$options)
+	{
+		if (isset($input['lscwp_' . $id])) {
+			$options[$id] = ( $input['lscwp_' . $id] === $id );
+		}
+		else {
+			$options[$id] = false;
+		}
+		return $options[$id];
+	}
+
 	/**
 	 * Parses any changes made by the network admin on the network settings.
 	 *
@@ -731,13 +716,9 @@ if (defined('lscache_debug')) {
 			}
 			$input[$id] = 'changed';
 		}
-		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		if (isset($input['lscwp_' . $id])) {
-			$options[$id] = ( $input['lscwp_' . $id] === $id );
-		}
-		else {
-			$options[$id] = false;
-		}
+
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+			$input, $options);
 
 		$out = $this->validate_tag_prefix($input, $options);
 		if (is_string($out)) {
