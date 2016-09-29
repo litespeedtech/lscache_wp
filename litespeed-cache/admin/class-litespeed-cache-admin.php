@@ -720,6 +720,9 @@ if (defined('lscache_debug')) {
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
 			$input, $options);
 
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+			$input, $options);
+
 		$out = $this->validate_tag_prefix($input, $options);
 		if (is_string($out)) {
 			$errors[] = $out;
