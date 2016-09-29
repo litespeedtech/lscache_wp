@@ -168,20 +168,21 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if (!self::is_subdir()) {
-			return ($rules->filerw === $permissions);
+			return (($rules->filerw & $permissions) === $permissions);
 		}
 		$site_path = self::get_site_path();
 		if (!file_exists($site_path)) {
 			$rules->filerw = 0;
 			return false;
 		}
+		// If site file is not readable/writable, remove the flag.
 		if (!is_readable($site_path)) {
 			$rules->filerw &= ~self::READABLE;
 		}
 		if (!is_writable($site_path)) {
 			$rules->filerw &= ~self::WRITABLE;
 		}
-		return ($rules->filerw === $permissions);
+		return (($rules->filerw & $permissions) === $permissions);
 	}
 
 	/**
