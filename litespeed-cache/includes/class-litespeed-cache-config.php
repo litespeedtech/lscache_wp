@@ -243,6 +243,25 @@ class LiteSpeed_Cache_Config
 		return array_merge($default_options, $tp_options);
 	}
 
+	public function get_default_site_options()
+	{
+		$default_site_options = array(
+			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
+			self::NETWORK_OPID_ENABLED => false,
+			self::OPID_PURGE_ON_UPGRADE => true,
+			self::OPID_CACHE_FAVICON => true,
+			self::OPID_CACHE_RES => true,
+			self::OPID_MOBILEVIEW_ENABLED => 0,
+			self::ID_MOBILEVIEW_LIST => false,
+			self::OPID_LOGIN_COOKIE => '',
+			self::OPID_TAG_PREFIX => '',
+			self::OPID_CHECK_ADVANCEDCACHE => true,
+			self::ID_NOCACHE_COOKIES => '',
+			self::ID_NOCACHE_USERAGENTS => '',
+				);
+		return $default_site_options;
+	}
+
 	/**
 	 * Get the plugin's site wide options.
 	 *
@@ -261,19 +280,7 @@ class LiteSpeed_Cache_Config
 		if ( isset($site_options) && is_array($site_options)) {
 			return $site_options;
 		}
-		$default_site_options = array(
-			self::NETWORK_OPID_ENABLED => false,
-			self::OPID_PURGE_ON_UPGRADE => true,
-			self::OPID_CACHE_FAVICON => true,
-			self::OPID_CACHE_RES => true,
-			self::OPID_MOBILEVIEW_ENABLED => 0,
-			self::ID_MOBILEVIEW_LIST => false,
-			self::OPID_LOGIN_COOKIE => '',
-			self::OPID_TAG_PREFIX => '',
-			self::OPID_CHECK_ADVANCEDCACHE => true,
-			self::ID_NOCACHE_COOKIES => '',
-			self::ID_NOCACHE_USERAGENTS => '',
-				);
+		$default_site_options = $this->get_default_site_options();
 		add_site_option(self::OPTION_NAME, $default_site_options);
 		return $default_site_options;
 	}
@@ -299,6 +306,32 @@ class LiteSpeed_Cache_Config
 		return array_diff_key($tp_options, $options);
 	}
 
+	private static function option_diff($default_options, &$options)
+	{
+		$dkeys = array_keys($default_options);
+		$keys = array_keys($options);
+		$newkeys = array_diff($dkeys, $keys);
+		$log = '' ;
+		if ( ! empty($newkeys) ) {
+			foreach ( $newkeys as $newkey ) {
+				$options[$newkey] = $default_options[$newkey] ;
+				$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey] ;
+			}
+		}
+		$retiredkeys = array_diff($keys, $dkeys) ;
+		if ( ! empty($retiredkeys) ) {
+			foreach ( $retiredkeys as $retired ) {
+				unset($options[$retired]) ;
+				$log .= 'Removed ' . $retired ;
+			}
+		}
+		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION;
+
+		if ($options[self::OPID_MOBILEVIEW_ENABLED] === false) {
+			$options[self::ID_MOBILEVIEW_LIST] = false;
+		}
+	}
+
 	/**
 	 * Verify that the options are still valid.
 	 *
@@ -315,31 +348,8 @@ class LiteSpeed_Cache_Config
 				&& (count($default_options) == count($this->options))) {
 			return;
 		}
-		$dkeys = array_keys($default_options) ;
-		if (is_multisite()) {
-			$dkeys[] = self::NETWORK_OPID_ENABLED;
-		}
-		$keys = array_keys($this->options) ;
-		$newkeys = array_diff($dkeys, $keys) ;
-		$log = '' ;
-		if ( ! empty($newkeys) ) {
-			foreach ( $newkeys as $newkey ) {
-				$this->options[$newkey] = $default_options[$newkey] ;
-				$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey] ;
-			}
-		}
-		$retiredkeys = array_diff($keys, $dkeys) ;
-		if ( ! empty($retiredkeys) ) {
-			foreach ( $retiredkeys as $retired ) {
-				unset($this->options[$retired]) ;
-				$log .= 'Removed ' . $retired ;
-			}
-		}
-		$this->options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION;
 
-		if ($this->options[self::OPID_MOBILEVIEW_ENABLED] === false) {
-			$this->options[self::ID_MOBILEVIEW_LIST] = false;
-		}
+		self::option_diff($default_options, $this->options);
 
 //		if ((!is_multisite()) || (is_network_admin())) {
 //			$this->options[self::OPID_LOGIN_COOKIE]
@@ -349,6 +359,24 @@ class LiteSpeed_Cache_Config
 		$res = update_option(self::OPTION_NAME, $this->options) ;
 		$this->debug_log("plugin_upgrade option changed = $res $log\n",
 				($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
+	}
+
+	public function plugin_site_upgrade()
+	{
+		$default_options = $this->get_default_site_options();
+		$options = $this->get_site_options();
+
+		if (($options[self::OPID_VERSION] == $default_options[self::OPID_VERSION])
+				&& (count($default_options) == count($options))) {
+			return;
+		}
+
+		self::option_diff($default_options, $options);
+
+		$res = update_site_option(self::OPTION_NAME, $options);
+		$this->debug_log("plugin_upgrade option changed = $res $log\n",
+				($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
+
 	}
 
 	/**

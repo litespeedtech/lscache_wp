@@ -263,6 +263,9 @@ if (defined('lscache_debug')) {
 		$config = LiteSpeed_Cache::config();
 		// check for upgrade
 		$config->plugin_upgrade();
+		if ((is_network_admin()) && (current_user_can('manage_network_options'))) {
+			$config->plugin_site_upgrade();
+		}
 
 		// check management action
 		if (LiteSpeed_Cache_Admin_Display::get_instance()->
