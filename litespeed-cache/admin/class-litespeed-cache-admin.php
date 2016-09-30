@@ -329,8 +329,11 @@ if (defined('lscache_debug')) {
 		}
 		$prefix = $input[$id];
 		if (($prefix !== '') && (!ctype_alnum($prefix))) {
-			return __('Invalid Tag Prefix input.', 'litespeed-cache')
-				. __(' Input should only contain letters and numbers.', 'litespeed-cache');
+			$prefix_err = LiteSpeed_Cache::build_paragraph(
+				__('Invalid Tag Prefix input.', 'litespeed-cache'),
+				__('Input should only contain letters and numbers.', 'litespeed-cache')
+			);
+			return $prefix_err;
 		}
 		if ($options[$id] !== $prefix) {
 			$options[$id] = $prefix;
@@ -646,16 +649,17 @@ if (defined('lscache_debug')) {
 			return;
 		}
 
-		$msg = __('Please disable/deactivate your other cache plugin.', 'litespeed-cache');
-
 		if ((is_multisite()) && (!is_network_admin())
 			&& (!current_user_can('manage_network_options'))) {
-			$msg .= __(' Alternatively, your network admin may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache network settings.', 'litespeed-cache');
+			$second = __('Alternatively, your network admin may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache network settings.', 'litespeed-cache');
 		}
 		else {
-			$msg .= __(' Alternatively, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
+			$second = __('Alternatively, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
 		}
-		$msg .= __(' This should only be done if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files.', 'litespeed-cache');
+		$msg = LiteSpeed_Cache::build_paragraph(
+			__('Please disable/deactivate your other cache plugin.', 'litespeed-cache'),
+			$second,
+			__('This should only be done if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'));
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 			LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $msg);
@@ -768,8 +772,8 @@ if (defined('lscache_debug')) {
 		if ($text !== 'Updated!') {
 			return $translations;
 		}
-		return $translations .
-			__(' It is recommended that LiteSpeed Cache be purged after updating a plugin.',
+		return $translations . ' ' .
+			__('It is recommended that LiteSpeed Cache be purged after updating a plugin.',
 				'litespeed-cache');
 	}
 

@@ -132,6 +132,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	public static function build_paragraph()
+	{
+		return implode(' ', func_get_args());
+	}
+
 	/**
 	 * The activation hook callback.
 	 *
@@ -653,7 +658,7 @@ class LiteSpeed_Cache
 		if ($cat == false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by category, does not exist: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by category, does not exist: %s', 'litespeed-cache'), $val));
 			return;
 		}
 
@@ -682,23 +687,27 @@ class LiteSpeed_Cache
 		if (!is_numeric($val)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by Post ID, given ID is not numeric: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by Post ID, given ID is not numeric: ', 'litespeed-cache'), $val));
 			return;
 		}
 		elseif (get_post_status($val) !== 'publish') {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by Post ID, given ID does not exist or is not published: ',
-						'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by Post ID, given ID does not exist or is not published: %s',
+						'litespeed-cache'), $val));
 			return;
 		}
-                elseif ($this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES))
-                {
+		elseif ($this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES))
+		{
+			$err = self::build_paragraph(
+				__('Failed to purge by Post ID, Auto Purge All pages on update is enabled.', 'litespeed-cache'),
+				sprintf(__('Please use the Purge All button on the LiteSpeed Cache Management screen or navigate to the post you wish to purge and add %s to the url.', 'litespeed-cache'),
+					'?LSCWP_CTRL=PURGESINGLE')
+			);
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by Post ID, Auto Purge All pages on update is enabled. Please use the Purge All button on the LiteSpeed Cache Management screen or navigate to the post you wish to purge and add %s to the url.', 'litespeed-cache'), '?LSCWP_CTRL=PURGESINGLE'));
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $err);
 			return;
-                }
+		}
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				__('Purge Post ID ', 'litespeed-cache') . $val);
@@ -731,13 +740,13 @@ class LiteSpeed_Cache
 		if ($term == 0) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by tag, does not exist: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by tag, does not exist: %s', 'litespeed-cache'), $val));
 			return;
 		}
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge tag ', 'litespeed-cache') . $val);
+				sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $term->term_id);
@@ -768,13 +777,13 @@ class LiteSpeed_Cache
 		if ($id == 0) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by url, does not exist: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by url, does not exist: %d', 'litespeed-cache'), $val));
 			return;
 		}
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge url ', 'litespeed-cache') . $val);
+				sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_POST . $id);
@@ -899,11 +908,13 @@ class LiteSpeed_Cache
 	 */
 	private function check_user_logged_in()
 	{
-		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache')
-		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
-		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
+		$err = self::build_paragraph(
+			__('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache'),
+			__('If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache'),
+			__("If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache'));
 		if (is_openlitespeed()) {
-			$err .= __(' If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
+			$err .= ' '
+				. __('If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
 		}
 
 		if (is_multisite()) {
@@ -974,10 +985,11 @@ class LiteSpeed_Cache
 		}
 		if (($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
-			$this->debug_log(
-				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache')
-				. __(' Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache')
-				. __(' This error may appear if you are logged into another web application.', 'litespeed-cache'));
+			$this->debug_log(self::build_paragraphs(
+				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
+				__('Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache'),
+				__('This error may appear if you are logged into another web application.', 'litespeed-cache')
+			));
 			return true;
 		}
 		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))

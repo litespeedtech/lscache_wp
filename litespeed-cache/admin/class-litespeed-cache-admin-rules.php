@@ -1294,16 +1294,19 @@ class LiteSpeed_Cache_Admin_Rules
 		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: ', 'litespeed-cache');
 		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
 		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
-		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
-				. sprintf(__(' %s file not valid. Please verify the contents.',
-						'litespeed-cache'), '.htaccess');
+		self::$ERR_PARSE_FILE = LiteSpeed_Cache::build_paragraph(
+			__('Tried to parse for existing login cookie.', 'litespeed-cache'),
+			sprintf(__('%s file not valid. Please verify the contents.',
+						'litespeed-cache'), '.htaccess')
+			);
 		self::$ERR_READWRITE = sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),
 			'.htaccess');
 		self::$ERR_SUBDIR_MISMATCH_LOGIN =
-			__('This site is a subdirectory install.', 'litespeed-cache')
-			. __(' Login cookies do not match.', 'litespeed-cache')
-			. __(' Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
-				'litespeed-cache');
+			LiteSpeed_Cache::build_paragraph(
+			__('This site is a subdirectory install.', 'litespeed-cache'),
+			__('Login cookies do not match.', 'litespeed-cache'),
+			__('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
+				'litespeed-cache'));
 		self::$ERR_WRONG_ORDER = __('Prefix was found after suffix.', 'litespeed-cache');
 	}
 }
