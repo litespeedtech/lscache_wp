@@ -538,10 +538,14 @@ class LiteSpeed_Cache_Config
 	 */
 	public function is_plugin_enabled()
 	{
-		if ( $this->is_caching_allowed() && ($this->options[self::OPID_ENABLED])) {
-			return true;
+		if (!$this->is_caching_allowed()) {
+			return false;
 		}
-		return false;
+		elseif ((is_multisite()) && (is_network_admin())
+			&& (current_user_can('manage_network_options'))) {
+			return $this->options[self::NETWORK_OPID_ENABLED];
+		}
+		return $this->options[self::OPID_ENABLED];
 	}
 
 }

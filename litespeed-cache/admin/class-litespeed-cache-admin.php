@@ -268,8 +268,7 @@ if (defined('lscache_debug')) {
 		}
 
 		// check management action
-		if (LiteSpeed_Cache_Admin_Display::get_instance()->
-			check_license($config) === true) {
+		if ($config->is_plugin_enabled()) {
 			$this->check_cache_mangement_actions();
 			$this->check_advanced_cache();
 		}
@@ -629,6 +628,7 @@ if (defined('lscache_debug')) {
 
 	private function check_advanced_cache()
 	{
+
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
 		if (((defined('LSCACHE_ADV_CACHE'))
 			&& (constant('LSCACHE_ADV_CACHE') === true))
@@ -646,10 +646,19 @@ if (defined('lscache_debug')) {
 			return;
 		}
 
+		$msg = __('Please disable/deactivate your other cache plugin.', 'litespeed-cache');
+
+		if ((is_multisite()) && (!is_network_admin())
+			&& (!current_user_can('manage_network_options'))) {
+			$msg .= __(' Alternatively, your network admin may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache network settings.', 'litespeed-cache');
+		}
+		else {
+			$msg .= __(' Alternatively, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
+		}
+		$msg .= __(' This should only be done if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files.', 'litespeed-cache');
+
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-			LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-			__('Please disable/deactivate your other cache plugin.', 'litespeed-cache')
-			. __(' Alternatively, if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache'));
+			LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $msg);
 	}
 
 	/**
@@ -684,7 +693,7 @@ if (defined('lscache_debug')) {
 	 */
 	public function parse_settings()
 	{
-		if ((is_multisite()) && (!is_network_admin())) {
+		if ((!is_multisite()) || (!is_network_admin())) {
 			return;
 		}
 		if (empty($_POST) || empty($_POST['submit'])) {
