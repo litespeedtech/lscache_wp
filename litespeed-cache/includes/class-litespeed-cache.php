@@ -401,8 +401,7 @@ class LiteSpeed_Cache
 					'LiteSpeed_Cache_Admin::redir_settings');
 		}
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
-				array(LiteSpeed_Cache_Admin_Rules::get_instance(),
-					'htaccess_editor_save'));
+				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',
 				array($admin, 'parse_settings'));
 		$this->set_locale() ;

@@ -1466,7 +1466,7 @@ class LiteSpeed_Cache_Admin_Display
 			. __('Error getting current rules: ', 'litespeed-cache') . $match . '</p>';
 		}
 		if (!empty($cookie)) {
-			if (strncmp($cookie, 'Cache-Vary:', 11)) {
+			if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
 				return '<p class="attention">'
 					. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
 					. '</p>';

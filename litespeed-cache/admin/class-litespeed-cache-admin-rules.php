@@ -25,6 +25,8 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private $filerw = null;
 	private $is_subdir_install = null;
+	private $home_path = null;
+	private $site_path = null;
 
 	private static $OUT_FILESAVE;
 
@@ -63,6 +65,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function __construct()
 	{
+		$this->file_setup();
 	}
 
 	/**
@@ -90,13 +93,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_home_path()
 	{
-		$path = get_home_path();
-		if ($path === '/') {
-			// get home path failed. Trac ticket #37668
-			// Try using ABSPATH instead.
-			$path = ABSPATH;
-		}
-		return $path . '.htaccess';
+		$rules = self::get_instance();
+		return $rules->home_path;
 	}
 
 	/**
@@ -108,7 +106,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_site_path()
 	{
-		return ABSPATH . '.htaccess';
+		$rules = self::get_instance();
+		return $rules->site_path;
 	}
 
 	/**
@@ -122,17 +121,6 @@ class LiteSpeed_Cache_Admin_Rules
 	private static function is_subdir()
 	{
 		$rules = self::get_instance();
-		if (isset($rules->is_subdir_install)) {
-			return $rules->is_subdir_install;
-		}
-		$home = self::get_home_path();
-		$site = self::get_site_path();
-		if (($home === $site) || (!file_exists($site))) {
-			$rules->is_subdir_install = false;
-		}
-		else {
-			$rules->is_subdir_install = true;
-		}
 		return $rules->is_subdir_install;
 	}
 
@@ -149,39 +137,6 @@ class LiteSpeed_Cache_Admin_Rules
 	public static function is_file_able($permissions)
 	{
 		$rules = self::get_instance();
-		if (isset($rules->filerw)) {
-			return $rules->filerw & $permissions;
-		}
-		$rules->filerw = 0;
-
-		$home_path = self::get_home_path();
-
-		clearstatcache();
-		if (!file_exists($home_path)) {
-			return false;
-		}
-		if (is_readable($home_path)) {
-			$rules->filerw |= self::READABLE;
-		}
-		if (is_writable($home_path)) {
-			$rules->filerw |= self::WRITABLE;
-		}
-
-		if (!self::is_subdir()) {
-			return (($rules->filerw & $permissions) === $permissions);
-		}
-		$site_path = self::get_site_path();
-		if (!file_exists($site_path)) {
-			$rules->filerw = 0;
-			return false;
-		}
-		// If site file is not readable/writable, remove the flag.
-		if (!is_readable($site_path)) {
-			$rules->filerw &= ~self::READABLE;
-		}
-		if (!is_writable($site_path)) {
-			$rules->filerw &= ~self::WRITABLE;
-		}
 		return (($rules->filerw & $permissions) === $permissions);
 	}
 
@@ -198,6 +153,78 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$end = '###LSCACHE END ' . $wrapper . '###';
 		return '###LSCACHE START ' . $wrapper . '###';
+	}
+
+	private function setup_paths()
+	{
+		$this->site_path = ABSPATH . '.htaccess';
+		$path = get_home_path();
+		if ($path !== '/') {
+			$this->home_path = $path . '.htaccess';
+			return;
+		}
+		// get home path failed. Trac ticket #37668
+		$home    = set_url_scheme( get_option( 'home' ), 'http' );
+		$siteurl = set_url_scheme( get_option( 'siteurl' ), 'http' );
+		$common = implode( array_intersect_assoc( str_split( $home ) , str_split( $siteurl ) ) );
+		$common_count = strlen($common);
+		$home_sub = substr($home, $common_count);
+		$site_sub = substr($siteurl, $common_count);
+		$replaced = preg_replace('!' . $site_sub . '/?$!', $home_sub, ABSPATH);
+		if (!file_exists($replaced . '/.htaccess')) {
+			$replaced = dirname($replaced);
+		}
+		$this->home_path = $replaced . '/.htaccess';
+	}
+
+	private function file_setup()
+	{
+		$this->setup_paths();
+		clearstatcache();
+
+		if ($this->home_path === $this->site_path) {
+			$this->is_subdir_install = false;
+		}
+		elseif (strncmp($this->home_path, $this->site_path,
+			strlen($this->home_path)) !== 0) {
+			$this->is_subdir_install = true;
+			if (!file_exists($this->site_path)) {
+				$this->site_path = dirname(ABSPATH) . '/.htaccess';
+			}
+		}
+		elseif (!file_exists($this->site_path)) {
+			$this->is_subdir_install = false;
+		}
+		else {
+			$this->is_subdir_install = true;
+		}
+
+		if (file_exists($this->home_path)) {
+			if (is_readable($this->home_path)) {
+				$this->filerw |= self::READABLE;
+			}
+			if (is_writable($this->home_path)) {
+				$this->filerw |= self::WRITABLE;
+			}
+		}
+		if (!$this->is_subdir_install) {
+			return;
+		}
+		elseif (!file_exists($this->site_path)) {
+			$ret = file_put_contents($this->site_path, "\n", LOCK_EX);
+			if (!$ret) {
+				$this->filerw = 0;
+				return;
+			}
+		}
+
+		// If site file is not readable/writable, remove the flag.
+		if (!is_readable($this->site_path)) {
+			$this->filerw &= ~self::READABLE;
+		}
+		if (!is_writable($this->site_path)) {
+			$this->filerw &= ~self::WRITABLE;
+		}
 	}
 
 	/**
@@ -1247,7 +1274,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function htaccess_editor_save()
+	public static function htaccess_editor_save()
 	{
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
