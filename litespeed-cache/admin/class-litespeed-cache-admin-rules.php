@@ -201,13 +201,15 @@ class LiteSpeed_Cache_Admin_Rules
 			$this->is_subdir_install = true;
 		}
 
-		if (file_exists($this->home_path)) {
-			if (is_readable($this->home_path)) {
-				$this->filerw |= self::READABLE;
-			}
-			if (is_writable($this->home_path)) {
-				$this->filerw |= self::WRITABLE;
-			}
+		$this->filerw = 0;
+		$test_permissions = file_exists($this->home_path) ? $this->home_path
+			: dirname($this->home_path);
+
+		if (is_readable($test_permissions)) {
+			$this->filerw |= self::READABLE;
+		}
+		if (is_writable($test_permissions)) {
+			$this->filerw |= self::WRITABLE;
 		}
 		if (!$this->is_subdir_install) {
 			return;
