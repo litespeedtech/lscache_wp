@@ -182,11 +182,13 @@ class LiteSpeed_Cache_Admin_Rules
 		$this->setup_paths();
 		clearstatcache();
 
+		$home_dir = dirname($this->home_path);
+		$site_dir = dirname($this->site_path);
+
 		if ($this->home_path === $this->site_path) {
 			$this->is_subdir_install = false;
 		}
-		elseif (strncmp($this->home_path, $this->site_path,
-			strlen($this->home_path)) !== 0) {
+		elseif (strncmp($home_dir, $site_dir, strlen($home_dir)) !== 0) {
 			$this->is_subdir_install = true;
 			if (!file_exists($this->site_path)) {
 				$this->site_path = dirname(ABSPATH) . '/.htaccess';
