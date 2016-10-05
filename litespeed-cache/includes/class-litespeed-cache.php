@@ -396,10 +396,6 @@ class LiteSpeed_Cache
 				array($admin, 'add_quick_purge'));
 		}
 
-		if (!is_network_admin()) {
-			add_action('load-litespeed-cache_page_lscache-settings',
-					'LiteSpeed_Cache_Admin::redir_settings');
-		}
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
 				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',

@@ -195,7 +195,13 @@ class LiteSpeed_Cache_Admin_Display
 			case 's':
 				if (($selection_len == 8)
 						&& (strncmp($selection, 'settings', $selection_len) == 0)) {
-					$this->show_menu_network_settings();
+					if (is_network_admin()) {
+						$this->show_menu_network_settings();
+					}
+					else {
+						settings_errors();
+						$this->show_menu_settings();
+					}
 				}
 				break;
 			case 'e':

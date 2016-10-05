@@ -107,19 +107,6 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
-	 * Redirects the page access to the settings page when the settings
-	 * submenu page is selected.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 */
-	public static function redir_settings()
-	{
-		wp_redirect(admin_url('options-general.php?page=litespeedcache'), 301);
-		exit;
-	}
-
-	/**
 	 * Hooked to wp_before_admin_bar_render.
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
