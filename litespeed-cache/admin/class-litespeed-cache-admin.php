@@ -636,8 +636,8 @@ if (defined('lscache_debug')) {
 			return;
 		}
 
-		if ((is_multisite()) && (!is_network_admin())
-			&& (!current_user_can('manage_network_options'))) {
+		if ((is_multisite()) && ((!is_network_admin())
+			|| (!current_user_can('manage_network_options')))) {
 			$second = __('Alternatively, your network admin may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache network settings.', 'litespeed-cache');
 		}
 		else {
