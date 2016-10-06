@@ -6,6 +6,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 $cur_dir = dirname(__FILE__) ;
+require_once $cur_dir . '/includes/class-litespeed-cache.php';
 require_once $cur_dir . '/includes/class-litespeed-cache-config.php';
 require_once $cur_dir . '/admin/class-litespeed-cache-admin.php';
 require_once $cur_dir . '/admin/class-litespeed-cache-admin-rules.php';
