@@ -65,7 +65,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function __construct()
 	{
-		$this->file_setup();
+		$this->setup();
 	}
 
 	/**
@@ -155,7 +155,47 @@ class LiteSpeed_Cache_Admin_Rules
 		return '###LSCACHE START ' . $wrapper . '###';
 	}
 
-	private static function check_exists($stop_path, $start_path, $file)
+	/**
+	 * Set up the paths used for searching.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 * @param string $common The common part of the paths.
+	 * @param string $install The install path portion. Will contain full path on return.
+	 * @param string $access The access path portion. Will contain full path on return.
+	 */
+	private static function path_search_setup(&$common, &$install, &$access)
+	{
+		$common = rtrim($common, '/');
+		$install_part = trim($install, '/');
+		if ($install_part !== '') {
+			$install_part = '/' . $install_part;
+		}
+		$install = $common . $install_part;
+
+		$access_part = trim($access, '/');
+		if ($access_part !== '') {
+			$access_part = '/' . $access_part;
+		}
+		$access = $common . $access_part;
+	}
+
+	/**
+	 * Check to see if a file exists starting at $start_path and going up
+	 * directories until it hits stop_path.
+	 *
+	 * As dirname() strips the ending '/', paths passed in must exclude the
+	 * final '/', and the file must start with a '/'.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 * @param string $stop_path The last directory level to search.
+	 * @param string $start_path The first directory level to search.
+	 * @param string $file The file to search for.
+	 * @return string The deepest path where the file exists,
+	 * or the last path used if it does not exist.
+	 */
+	private static function path_search($stop_path, $start_path, $file)
 	{
 		while ((!file_exists($start_path . $file))) {
 			if ($start_path === $stop_path) {
@@ -166,34 +206,13 @@ class LiteSpeed_Cache_Admin_Rules
 		return $start_path . $file;
 	}
 
-	private static function find_paths($input_common, $input_file, $input_install,
-		$input_access = null)
-	{
-		$common_path = rtrim($input_common, '/');
-		$file = '/' . ltrim($input_file, '/');
-		$install_part = trim($input_install, '/');
-
-		if (is_null($input_access)) {
-			return $common_path . $install_part . $file;
-		}
-
-		$access_part = trim($input_access, '/');
-		if ($install_part !== '') {
-			$install_part = '/' . $install_part;
-		}
-		if ($access_part !== '') {
-			$access_part = '/' . $access_part;
-		}
-
-		$paths = array(
-			self::check_exists($common_path, $common_path . $install_part, $file),
-			self::check_exists($common_path, $common_path . $access_part, $file)
-		);
-
-		return $paths;
-	}
-
-	private function setup_paths()
+	/**
+	 * Set the path class variables.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 */
+	private function path_set()
 	{
 		$install = ABSPATH;
 		$access = get_home_path();
@@ -227,17 +246,24 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$common_path = substr(ABSPATH, 0, -(strlen($install_part) + 1));
 
-		$paths = self::find_paths($common_path, '.htaccess', $install_part,
-			$access_part);
+		self::path_search_setup($common_path, $install_part, $access_part);
 
-		$this->site_path = $paths[0];
-		$this->home_path = $paths[1];
+		$this->site_path = self::path_search($common_path, $install_part,
+			'/.htaccess');
+		$this->home_path = self::path_search($common_path, $access_part,
+			'/.htaccess');
 		return;
 	}
 
-	private function file_setup()
+	/**
+	 * Sets up the class variables.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 */
+	private function setup()
 	{
-		$this->setup_paths();
+		$this->path_set();
 		clearstatcache();
 
 		if ($this->home_path === $this->site_path) {
