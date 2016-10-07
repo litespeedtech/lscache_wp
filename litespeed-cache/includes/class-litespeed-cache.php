@@ -132,9 +132,20 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 * Helper function to build paragraphs out of all the string sentences
+	 * passed in.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 * @param string $args,... Variable number of strings to combine to a paragraph.
+	 * @return string The built paragraph.
+	 */
 	public static function build_paragraph()
 	{
-		return implode(' ', func_get_args());
+		$args = func_get_args();
+		$para = implode(' ', $args);
+		return $para;
 	}
 
 	/**
@@ -269,6 +280,13 @@ class LiteSpeed_Cache
 		return $this->config ;
 	}
 
+	/**
+	 * Try to copy our advanced-cache.php file to the wordpress directory.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 * @return boolean True on success, false on failure.
+	 */
 	public function try_copy_advanced_cache()
 	{
 		if ((file_exists(ABSPATH . 'wp-content/advanced-cache.php'))

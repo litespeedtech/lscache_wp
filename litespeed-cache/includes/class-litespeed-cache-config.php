@@ -243,7 +243,14 @@ class LiteSpeed_Cache_Config
 		return array_merge($default_options, $tp_options);
 	}
 
-	public function get_default_site_options()
+	/**
+	 * Gets the default network options
+	 *
+	 * @since 1.0.11
+	 * @access protected
+	 * @return array An array of the default options.
+	 */
+	protected function get_default_site_options()
 	{
 		$default_site_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
@@ -306,6 +313,14 @@ class LiteSpeed_Cache_Config
 		return array_diff_key($tp_options, $options);
 	}
 
+	/**
+	 * Get the difference between the current options and the default options.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 * @param array $default_options The default options.
+	 * @param array $options The current options.
+	 */
 	private static function option_diff($default_options, &$options)
 	{
 		$dkeys = array_keys($default_options);
@@ -361,6 +376,12 @@ class LiteSpeed_Cache_Config
 				($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
 	}
 
+	/**
+	 * Upgrade network options when the plugin is upgraded.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 */
 	public function plugin_site_upgrade()
 	{
 		$default_options = $this->get_default_site_options();

@@ -618,6 +618,15 @@ if (defined('lscache_debug')) {
 							LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
 	}
 
+	/**
+	 * Check to make sure that the advanced-cache.php file is ours.
+	 * If it doesn't exist, try to make it ours.
+	 *
+	 * If it is not ours and the config is set to check, output an error.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 */
 	private function check_advanced_cache()
 	{
 
@@ -667,6 +676,16 @@ if (defined('lscache_debug')) {
 		return stripslashes(trim($input));
 	}
 
+	/**
+	 * Helper function to parse checkbox input.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 * @param string $id The id of the checkbox value.
+	 * @param array $input The input array.
+	 * @param array $options The config options array.
+	 * @return boolean True if checked, false otherwise.
+	 */
 	public static function parse_checkbox($id, $input, &$options)
 	{
 		if (isset($input['lscwp_' . $id])) {
