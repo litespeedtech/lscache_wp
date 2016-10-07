@@ -155,26 +155,84 @@ class LiteSpeed_Cache_Admin_Rules
 		return '###LSCACHE START ' . $wrapper . '###';
 	}
 
+	private static function check_exists($stop_path, $start_path, $file)
+	{
+		while ((!file_exists($start_path . $file))) {
+			if ($start_path === $stop_path) {
+				break;
+			}
+			$start_path = dirname($start_path);
+		}
+		return $start_path . $file;
+	}
+
+	private static function find_paths($input_common, $input_file, $input_install,
+		$input_access = null)
+	{
+		$common_path = rtrim($input_common, '/');
+		$file = '/' . ltrim($input_file, '/');
+		$install_part = trim($input_install, '/');
+
+		if (is_null($input_access)) {
+			return $common_path . $install_part . $file;
+		}
+
+		$access_part = trim($input_access, '/');
+		if ($install_part !== '') {
+			$install_part = '/' . $install_part;
+		}
+		if ($access_part !== '') {
+			$access_part = '/' . $access_part;
+		}
+
+		$paths = array(
+			self::check_exists($common_path, $common_path . $install_part, $file),
+			self::check_exists($common_path, $common_path . $access_part, $file)
+		);
+
+		return $paths;
+	}
+
 	private function setup_paths()
 	{
-		$this->site_path = ABSPATH . '.htaccess';
-		$path = get_home_path();
-		if ($path !== '/') {
-			$this->home_path = $path . '.htaccess';
+		$install = ABSPATH;
+		$access = get_home_path();
+
+		if ($access === '/') {
+			// get home path failed. Trac ticket #37668
+			$install = set_url_scheme( get_option( 'siteurl' ), 'http' );
+			$access = set_url_scheme( get_option( 'home' ), 'http' );
+		}
+		$common = implode(array_intersect_assoc(str_split($access),
+			str_split($install)));
+		$common_count = strlen($common);
+
+		$install_part = substr($install, $common_count);
+		$access_part = substr($access, $common_count);
+		if ($access_part !== false) {
+			// access is longer than install or they are in different dirs.
+			if ($install_part === false) {
+				$install_part = '';
+			}
+		}
+		elseif ($install_part !== false) {
+			// Install is longer than access
+			$access_part = '';
+		}
+		else {
+			// they are equal - no need to find paths.
+			$this->home_path = ABSPATH . '.htaccess';
+			$this->site_path = ABSPATH . '.htaccess';
 			return;
 		}
-		// get home path failed. Trac ticket #37668
-		$home    = set_url_scheme( get_option( 'home' ), 'http' );
-		$siteurl = set_url_scheme( get_option( 'siteurl' ), 'http' );
-		$common = implode( array_intersect_assoc( str_split( $home ) , str_split( $siteurl ) ) );
-		$common_count = strlen($common);
-		$home_sub = substr($home, $common_count);
-		$site_sub = substr($siteurl, $common_count);
-		$replaced = preg_replace('!' . $site_sub . '/?$!', $home_sub, ABSPATH);
-		if (!file_exists($replaced . '/.htaccess')) {
-			$replaced = dirname($replaced);
-		}
-		$this->home_path = $replaced . '/.htaccess';
+		$common_path = substr(ABSPATH, 0, -(strlen($install_part) + 1));
+
+		$paths = self::find_paths($common_path, '.htaccess', $install_part,
+			$access_part);
+
+		$this->site_path = $paths[0];
+		$this->home_path = $paths[1];
+		return;
 	}
 
 	private function file_setup()
@@ -182,19 +240,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$this->setup_paths();
 		clearstatcache();
 
-		$home_dir = dirname($this->home_path);
-		$site_dir = dirname($this->site_path);
-
 		if ($this->home_path === $this->site_path) {
-			$this->is_subdir_install = false;
-		}
-		elseif (strncmp($home_dir, $site_dir, strlen($home_dir)) !== 0) {
-			$this->is_subdir_install = true;
-			if (!file_exists($this->site_path)) {
-				$this->site_path = dirname(ABSPATH) . '/.htaccess';
-			}
-		}
-		elseif (!file_exists($this->site_path)) {
 			$this->is_subdir_install = false;
 		}
 		else {
