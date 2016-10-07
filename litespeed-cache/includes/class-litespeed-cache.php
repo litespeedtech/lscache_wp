@@ -211,19 +211,6 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		//Checks if WP_CACHE is defined and true in the wp-config.php file.
-		if ((current_user_can('manage_options'))
-			&& ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))) {
-
-			if ((is_multisite()) && (is_network_admin())) {
-				$action = 'network_admin_notices';
-			}
-			else {
-				$action = 'admin_notices';
-			}
-			add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
-		}
-
 		define('LITESPEED_CACHE_ENABLED', true);
 		ob_start();
 		//TODO: Uncomment this when esi is implemented.
@@ -390,6 +377,19 @@ class LiteSpeed_Cache
 			add_action('admin_init', array($this, 'check_admin_ip'), 6);
 			if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
 				add_action('upgrader_process_complete', array($this, 'purge_all'));
+			}
+
+			//Checks if WP_CACHE is defined and true in the wp-config.php file.
+			if ((current_user_can('manage_options'))
+				&& ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))) {
+
+				if ((is_multisite()) && (is_network_admin())) {
+					$action = 'network_admin_notices';
+				}
+				else {
+					$action = 'admin_notices';
+				}
+				add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
 			}
 
 			add_action('wp_before_admin_bar_render',

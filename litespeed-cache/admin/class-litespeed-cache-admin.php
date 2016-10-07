@@ -257,7 +257,9 @@ if (defined('lscache_debug')) {
 		// check management action
 		if ($config->is_plugin_enabled()) {
 			$this->check_cache_mangement_actions();
-			$this->check_advanced_cache();
+			if ((defined('WP_CACHE')) && (constant('WP_CACHE') === true)) {
+				$this->check_advanced_cache();
+			}
 		}
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
