@@ -1388,6 +1388,9 @@ class LiteSpeed_Cache
 		if ($mode != self::CACHECTRL_CACHE) {
 			return $mode;
 		}
+		elseif ((is_admin()) || (is_network_admin())) {
+			return self::CACHECTRL_NOCACHE;
+		}
 
 		if (((defined('LSCACHE_NO_CACHE')) && (constant('LSCACHE_NO_CACHE')))
 			|| (LiteSpeed_Cache_Tags::is_noncacheable())) {
