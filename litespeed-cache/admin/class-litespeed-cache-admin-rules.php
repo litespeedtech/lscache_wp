@@ -209,6 +209,8 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Set the path class variables.
 	 *
+	 * Credit to Nerdwerx for the inspiration for this function
+	 *
 	 * @since 1.0.11
 	 * @access private
 	 */
