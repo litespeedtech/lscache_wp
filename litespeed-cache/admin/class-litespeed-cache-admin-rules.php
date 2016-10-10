@@ -372,7 +372,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
 			$buf = self::$ERR_WRONG_ORDER
-				. __(' Your .htaccess file is missing a &lt;/IfModule&gt;.', 'litespeed-cache');
+				. sprintf(__(' Your .htaccess file is missing a %s.', 'litespeed-cache'),'&lt;/IfModule&gt;');
 			return false;
 		}
 		--$off_end; // go to end of previous line.
@@ -1401,7 +1401,7 @@ class LiteSpeed_Cache_Admin_Rules
 		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
 		self::$ERR_PARSE_FILE = LiteSpeed_Cache::build_paragraph(
 			__('Tried to parse for existing login cookie.', 'litespeed-cache'),
-			sprintf(__('%s file not valid. Please verify the contents.',
+			sprintf(__('%s file not valid. Please verify contents.',
 						'litespeed-cache'), '.htaccess')
 			);
 		self::$ERR_READWRITE = sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),

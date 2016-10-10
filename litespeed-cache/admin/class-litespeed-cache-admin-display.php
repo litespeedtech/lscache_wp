@@ -620,7 +620,7 @@ class LiteSpeed_Cache_Admin_Display
 	private function show_menu_info()
 	{
 		$trial_para = LiteSpeed_Cache::build_paragraph(
-			__('Make sure that your license includes the LSCache module enabled.', 'litespeed-cache'),
+			__('Make sure that your license has the LSCache module enabled.', 'litespeed-cache'),
 			sprintf(wp_kses(__('You can '
 				. '<a href="%1$s"  rel="%2$s" target="%3$s">try our 2-CPU trial license with LSCache module</a> free for %4$d days.',
 					'litespeed-cache'),
@@ -643,7 +643,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$ols_para = LiteSpeed_Cache::build_paragraph(
 			__('Our OLS integration is currently in beta.', 'litespeed-cache'),
-			__('The integration utilizes the cache module.', 'litespeed-cache'),
+			__('This integration utilizes OLS\'s cache module.', 'litespeed-cache'),
 			sprintf(wp_kses(__('Please follow the instructions '
 				. '<a href="%s" rel="%s" target="%s">here.</a>', 'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'rel' => array(),
@@ -665,7 +665,7 @@ class LiteSpeed_Cache_Admin_Display
 		);
 
 		$footer_para = LiteSpeed_Cache::build_paragraph(
-			sprintf(__('If your questions are not answered, try the %s', 'litespeed-cache'),
+			sprintf(__('If your questions are not answered here, try the %s', 'litespeed-cache'),
 				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>'),
 			sprintf(wp_kses(__('If your questions are still not answered, do not hesitate to ask them on the '
 				. '<a href="%s" rel="%s" target="%s">support forum</a>.', 'litespeed-cache'),
@@ -756,8 +756,8 @@ class LiteSpeed_Cache_Admin_Display
 
 		$ols = LiteSpeed_Cache::build_paragraph(
 			__('The support is currently in beta.', 'litespeed-cache'),
-			__(' It should work, but is not fully tested. ', 'litespeed-cache'),
-			__('As well, any settings changes that require modifying the .htaccess file requires a server restart.', 'litespeed-cache')
+			__(' It should work, but has not been fully tested. ', 'litespeed-cache'),
+			__('As well, any settings changes that require modifying the .htaccess file will require a server restart.', 'litespeed-cache')
 		);
 
 		$wc_support = LiteSpeed_Cache::build_paragraph(
@@ -766,7 +766,7 @@ class LiteSpeed_Cache_Admin_Display
 		);
 
 		$wc_themes = LiteSpeed_Cache::build_paragraph(
-			__('We tested a couple themes like Storefront and Shop Isle and found that the cart works without the rule.', 'litespeed-cache'),
+			__('We tested a couple of themes like Storefront and Shop Isle and found that the cart works without the rule.', 'litespeed-cache'),
 			__(' That said, we found that some may not, like the E-Commerce theme, so please verify your theme.', 'litespeed-cache')
 		);
 
@@ -848,7 +848,7 @@ class LiteSpeed_Cache_Admin_Display
 			__('If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache')
 		);
 		$cache_commenters_desc = LiteSpeed_Cache::build_paragraph(
-			__('When checked, commenters will not be able to see their comment awaiting moderation.', 'litespeed-cache'),
+			__('When checked, commenters will not be able to see their comments awaiting moderation.', 'litespeed-cache'),
 			__('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache')
 		);
 		$buf = $this->input_group_start(__('General', 'litespeed-cache')) ;
@@ -1182,11 +1182,11 @@ class LiteSpeed_Cache_Admin_Display
 			'<strong>' . __('NOTICE', 'litespeed-cache') . ':</strong>',
 			__('These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache'),
 			__('Please take great care when changing any of these settings.', 'litespeed-cache'),
-			__("If you have any questions, don't hesitate to submit a support thread.", 'litespeed-cache')
+			__("If you have any questions, do not hesitate to submit a support thread.", 'litespeed-cache')
 		);
 		$adv_cache_desc = LiteSpeed_Cache::build_paragraph(
 			__('The advanced-cache.php file is used by many caching plugins to signal that a cache is active.', 'litespeed-cache'),
-			__('When this option is checked, LiteSpeed Cache will not cache if this file is detected and belongs to another plugin.', 'litespeed-cache')
+			__('When this option is checked and this file is detected as belonging to another plugin, LiteSpeed Cache will not cache.', 'litespeed-cache')
 		);
 
 		$tag_prefix_desc = LiteSpeed_Cache::build_paragraph(
@@ -1205,7 +1205,7 @@ class LiteSpeed_Cache_Admin_Display
 			. '&nbsp;' . $check_adv,
 			$adv_cache_desc
 			. '<br><br>'
-			. __('Uncheck this option only if hte other plugin is used for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'));
+			. __('Uncheck this option only if the other plugin is used for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'));
 		$buf .= $this->input_group_end();
 
 		$cookie_buf = $this->build_setting_login_cookie($options,
@@ -1302,7 +1302,7 @@ class LiteSpeed_Cache_Admin_Display
 		);
 		$list_para = LiteSpeed_Cache::build_paragraph(
 			sprintf(__('SYNTAX: Each entry should be separated with a bar, %s', 'litespeed-cache'), "'|'."),
-			sprintf(__('Any spaces should be escaped with a backslash before it, %s', 'litespeed-cache'), "'\\ '.")
+			sprintf(__('Any spaces should be escaped with a backslash before the space, %s', 'litespeed-cache'), "'\\ '.")
 		);
 		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
@@ -1348,7 +1348,7 @@ class LiteSpeed_Cache_Admin_Display
 			$list_error = LiteSpeed_Cache::build_paragraph(
 				__('Htaccess did not match configuration option.', 'litespeed-cache'),
 				__('Please re-enter the mobile view setting.', 'litespeed-cache'),
-				sprintf(__('Last used configured option: %s', 'litespeed-cache'),
+				sprintf(__('List in WordPress database: %s', 'litespeed-cache'),
 					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST])
 			);
 			$mv_list = $this->input_field_text($list_id, '', '',
@@ -1452,7 +1452,7 @@ class LiteSpeed_Cache_Admin_Display
 			'<br>'
 			. sprintf(__('The default login cookie is %s.', 'litespeed-cache'),
 				'_lscache_vary'),
-			__('The server will determine if the user is logged in based on this cookie.', 'litespeed-cache'),
+			__('The server will determine if the user is logged in based on the existance of this cookie.', 'litespeed-cache'),
 			__('This setting is useful for those that have multiple web applications for the same domain.', 'litespeed-cache'),
 			__('If every web application uses the same cookie, the server may confuse whether a user is logged in or not.', 'litespeed-cache'),
 			__('The cookie set here will be used for this WordPress installation.', 'litespeed-cache'),
@@ -1463,7 +1463,7 @@ class LiteSpeed_Cache_Admin_Display
 			. sprintf(__('Then there is another WordPress install (NOT MULTISITE) at %s', 'litespeed-cache'),
 				'<u>www.example.com/blog/</u>'),
 			'<br>'
-			. __('The cache needs to distinguish who is logged into which WordPress in order to cache correctly.', 'litespeed-cache')
+			. __('The cache needs to distinguish who is logged into which WordPress site in order to cache correctly.', 'litespeed-cache')
 		);
 
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE',
@@ -1614,7 +1614,7 @@ class LiteSpeed_Cache_Admin_Display
 		);
 
 		$compat_desc = LiteSpeed_Cache::build_paragraph(
-			__('Please comment on the support thread listing the plugins that you are using and how they are functioning.', 'litespeed-cache'),
+			__('Please comment listing the plugins that you are using and how they are functioning on the support thread.', 'litespeed-cache'),
 			__('With your help, we can provide the best WordPress caching solution.', 'litespeed-cache')
 		);
 
@@ -1654,7 +1654,7 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$nocache_desc = LiteSpeed_Cache::build_paragraph(
 			__('This is used to display a page without caching it.', 'litespeed-cache'),
-			__('An example use case is to compare a cached version with an uncached version.', 'litespeed-cache')
+			__('An example use case is to compare a cached version of a page with an uncached version.', 'litespeed-cache')
 		);
 		$purge_desc = LiteSpeed_Cache::build_paragraph(
 			__('This is used to purge most cache tags associated with the page.', 'litespeed-cache'),
@@ -1662,7 +1662,7 @@ class LiteSpeed_Cache_Admin_Display
 			__('Note that this means that pages with the same cache tag will be purged as well.', 'litespeed-cache')
 		);
 		$showheaders_desc = LiteSpeed_Cache::build_paragraph(
-			__('This is used to show all the cache headers associated with the page.', 'litespeed-cache'),
+			__('This is used to show all the cache headers associated with a page.', 'litespeed-cache'),
 			__('This may be useful for debugging purposes.', 'litespeed-cache')
 		);
 		$buf = '<h3>'
@@ -1688,7 +1688,7 @@ class LiteSpeed_Cache_Admin_Display
 
 
 		$buf .= '<h5>'
-		. sprintf(__('To run the action, just access the page with the query string %s and the action will trigger for the accessed page.', 'litespeed-cache'),
+		. sprintf(__('To trigger the action for a page,  access the page with the query string %s', 'litespeed-cache'),
 			'<code>?LSCWP_CTRL=ACTION</code>')
 		. '</h5>';
 
