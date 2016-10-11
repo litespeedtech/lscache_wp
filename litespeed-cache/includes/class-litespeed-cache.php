@@ -419,10 +419,6 @@ class LiteSpeed_Cache
 		add_filter('widget_update_callback',
 			array($admin, 'validate_widget_save'), 10, 4);
 
-		if (!is_network_admin()) {
-			add_action('load-litespeed-cache_page_lscache-settings',
-					'LiteSpeed_Cache_Admin::redir_settings');
-		}
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
 				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',
