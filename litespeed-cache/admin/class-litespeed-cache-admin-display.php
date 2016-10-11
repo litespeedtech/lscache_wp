@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '<br>'
 		. LiteSpeed_Cache::build_paragraph(
 			__('Separate Mobile Views should be enabled if any of the network enabled themes require a different view for mobile devices.', 'litespeed-cache'),
-			__(' Responsive themes can handle this part automatically.', 'litespeed-cache'));
+			__('Responsive themes can handle this part automatically.', 'litespeed-cache'));
 
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
 
@@ -756,7 +756,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$ols = LiteSpeed_Cache::build_paragraph(
 			__('The support is currently in beta.', 'litespeed-cache'),
-			__(' It should work, but has not been fully tested. ', 'litespeed-cache'),
+			__('It should work, but has not been fully tested.', 'litespeed-cache'),
 			__('As well, any settings changes that require modifying the .htaccess file will require a server restart.', 'litespeed-cache')
 		);
 
@@ -767,7 +767,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$wc_themes = LiteSpeed_Cache::build_paragraph(
 			__('We tested a couple of themes like Storefront and Shop Isle and found that the cart works without the rule.', 'litespeed-cache'),
-			__(' That said, we found that some may not, like the E-Commerce theme, so please verify your theme.', 'litespeed-cache')
+			__('That said, we found that some may not, like the E-Commerce theme, so please verify your theme.', 'litespeed-cache')
 		);
 
 		$buf =  '<div class="wrap"><h2>LiteSpeed Cache FAQs</h2>';
@@ -786,7 +786,7 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<h4>' . __('Is WooCommerce supported?', 'litespeed-cache') . '</h4>'
 		. '<p>' . $wc_support
 		. '<br><b>'
-		. __('To test the cart: ', 'litespeed-cache')
+		. __('To test the cart:', 'litespeed-cache')
 		. '</b></p><ol><li>'
 		. __('On a non-logged-in browser, visit and cache a page, then visit and cache a product page.', 'litespeed-cache')
 		. '</li><li>'
@@ -844,7 +844,7 @@ class LiteSpeed_Cache_Admin_Display
 	private function show_settings_general( $options )
 	{
 		$feed_ttl_desc = LiteSpeed_Cache::build_paragraph(
-			__('Specify how long, in seconds, feeds are cached. ', 'litespeed-cache'),
+			__('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'),
 			__('If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache')
 		);
 		$cache_commenters_desc = LiteSpeed_Cache::build_paragraph(
@@ -1058,7 +1058,7 @@ class LiteSpeed_Cache_Admin_Display
 			. '<br>'
 			. __('There should only be one url per line.', 'litespeed-cache')
 			. '<br><br>
-			<b>' . __('NOTE: ', 'litespeed-cache') . '</b>'
+			<b>' . __('NOTE:', 'litespeed-cache') . ' </b>'
 			. __('URLs must start with a \'/\' to be correctly matched.', 'litespeed-cache')
 			. '<br>'
 			. __('To do an exact match, add \'$\' to the end of the URL.', 'litespeed-cache')
@@ -1241,8 +1241,9 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips,
 		__('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache')
 		. '<br>'
-		. __('More information about the available commands can be found here: ', 'litespeed-cache')
-		. '<a href=' . get_admin_url() . 'admin.php?page=lscache-info#adminip>link</a>'		) ;
+		. sprintf(wp_kses(__('More information about the available commands can be found <a href="%s">here</a>.', 'litespeed-cache'),
+				array( 'a' => array( 'href' => array() ))),
+				get_admin_url() . 'admin.php?page=lscache-info#adminip'));
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_levels = array(
@@ -1386,7 +1387,7 @@ class LiteSpeed_Cache_Admin_Display
 		$cookie_title = __('Cookie List', 'litespeed-cache');
 		$cookie_desc = __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache')
 				. '<br>' . $desc_para
-				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
+				. '<br><strong>' . __('NOTICE:', 'litespeed-cache') . ' </strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$excludes_buf = str_replace('|', "\n", $options[$id]);
@@ -1418,7 +1419,7 @@ class LiteSpeed_Cache_Admin_Display
 		$ua_title = __('User Agent List', 'litespeed-cache');
 		$ua_desc = __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache')
 				. '<br>' . $desc_para
-				. '<br><strong>' . __('NOTICE: ', 'litespeed-cache') . '</strong>'
+				. '<br><strong>' . __('NOTICE:', 'litespeed-cache') . ' </strong>'
 				. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 		$ua_list = $this->input_field_text($id, $options[$id], '',
 					'widget ui-draggable-dragging', '', !$file_writable);
@@ -1469,7 +1470,7 @@ class LiteSpeed_Cache_Admin_Display
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE',
 				$match, $sub, $cookie) === false) {
 			return '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $match . '</p>';
+			. sprintf(__('Error getting current rules: %s', 'litespeed-cache'), $match) . '</p>';
 		}
 		if (!empty($cookie)) {
 			if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
@@ -1688,7 +1689,7 @@ class LiteSpeed_Cache_Admin_Display
 
 
 		$buf .= '<h5>'
-		. sprintf(__('To trigger the action for a page,  access the page with the query string %s', 'litespeed-cache'),
+		. sprintf(__('To trigger the action for a page, access the page with the query string %s', 'litespeed-cache'),
 			'<code>?LSCWP_CTRL=ACTION</code>')
 		. '</h5>';
 
@@ -1704,7 +1705,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function show_info_common_rewrite()
 	{
-		$mv_header = __('Mobile Views: ', 'litespeed-cache');
+		$mv_header = __('Mobile Views:', 'litespeed-cache');
 		$mv_desc = LiteSpeed_Cache::build_paragraph(
 			__('Some sites have adaptive views, meaning the page sent will adapt to the browser type (desktop vs mobile).', 'litespeed-cache'),
 			__('This rewrite rule is used for sites that load a different page for each type.', 'litespeed-cache'))
@@ -1714,7 +1715,7 @@ class LiteSpeed_Cache_Admin_Display
 RewriteRule .* - [E=Cache-Control:vary=ismobile]';
 
 
-		$cookie_header = __('Do Not Cache Cookies: ', 'litespeed-cache');
+		$cookie_header = __('Do Not Cache Cookies:', 'litespeed-cache');
 		$cookie_desc =
 		__('Another common rewrite rule is to notify the cache not to cache when it sees a specified cookie name.', 'litespeed-cache')
 		. '<br>'
@@ -1723,7 +1724,7 @@ RewriteRule .* - [E=Cache-Control:vary=ismobile]';
 RewriteRule .* - [E=Cache-Control:no-cache]';
 
 
-		$ua_header = __('Do Not Cache User Agent: ', 'litespeed-cache');
+		$ua_header = __('Do Not Cache User Agent:', 'litespeed-cache');
 		$ua_desc =
 		__('A not so commonly used rewrite rule is to notify the cache not to cache when it sees a specified User Agent.', 'litespeed-cache')
 		. '<br>'
@@ -1738,16 +1739,16 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 
 		if ((is_multisite()) && (!is_network_admin())) {
 
-			$buf .= '<p><span style="color: black;font-weight: bold">' . __('NOTE: ', 'litespeed-cache')
-			. '</span>'
+			$buf .= '<p><span style="color: black;font-weight: bold">' . __('NOTE:', 'litespeed-cache')
+			. ' </span>'
 			. __('The following configurations can only be changed by the network admin.', 'litespeed-cache')
 			. '<br>'
 			. __('If you need to make changes to them, please contact the network admin to make the changes.', 'litespeed-cache')
 			. '</p>';
 		}
 		else {
-			$buf .= '<p><span style="color: black;font-weight: bold">' . __('NOTICE: ', 'litespeed-cache')
-			. '</span>'
+			$buf .= '<p><span style="color: black;font-weight: bold">' . __('NOTICE:', 'litespeed-cache')
+			. ' </span>'
 			. __('The following rewrite rules can be configured in the LiteSpeed Cache settings page.', 'litespeed-cache')
 			. '<br>'
 			. LiteSpeed_Cache::build_paragraph(

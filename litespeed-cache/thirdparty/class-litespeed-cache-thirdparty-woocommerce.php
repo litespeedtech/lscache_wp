@@ -304,15 +304,15 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$selected_value = self::OPT_PQS_CS;
 		$seloptions = array(
 			__('Purge product on changes to the quantity or stock status.', 'litespeed-cache')
-			. __(' Purge categories only when stock status changes.', 'litespeed-cache'),
+			. __('Purge categories only when stock status changes.', 'litespeed-cache'),
 			__('Purge product and categories only when the stock status changes.', 'litespeed-cache'),
 			__('Purge product only when the stock status changes.', 'litespeed-cache')
-			. __(' Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache'),
+			. __('Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache'),
 			__('Always purge both product and categories on changes to the quantity or stock status.', 'litespeed-cache'),
 		);
 		$update_desc =
 			__('Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache');
-		$ttl_desc = __('Checking this option will force the shop page to use the front page TTL setting. ', 'litespeed-cache')
+		$ttl_desc = __('Checking this option will force the shop page to use the front page TTL setting.', 'litespeed-cache')
 		. __('For example, if the homepage for your site is located at https://www.example.com, your shop page may be located at https://www.example.com/shop.', 'litespeed-cache');
 
 		if ($tabs === false) {
@@ -361,7 +361,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		$content .= '<h3>' . __('NOTE:', 'litespeed-cache') . '</h3><p>'
 			. __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache')
-			. sprintf(__(' To test the cart, visit the %s.', 'litespeed-cache'),
+			. sprintf(__('To test the cart, visit the %s.', 'litespeed-cache'),
 				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ</a>')
 			. '</p>';
 		$content .= "\n";

@@ -677,7 +677,7 @@ class LiteSpeed_Cache
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge category ', 'litespeed-cache') . $val);
+				sprintf(__('Purge category %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $cat->term_id);
@@ -700,7 +700,7 @@ class LiteSpeed_Cache
 		if (!is_numeric($val)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by Post ID, given ID is not numeric: ', 'litespeed-cache'), $val));
+				sprintf(__('Failed to purge by Post ID, given ID is not numeric: %s', 'litespeed-cache'), $val));
 			return;
 		}
 		elseif (get_post_status($val) !== 'publish') {
@@ -712,7 +712,7 @@ class LiteSpeed_Cache
 		}
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge Post ID ', 'litespeed-cache') . $val);
+				sprintf(__('Purge Post ID %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_POST . $val);
