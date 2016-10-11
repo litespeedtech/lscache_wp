@@ -368,6 +368,7 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $this->options);
+		flush_rewrite_rules();
 
 //		if ((!is_multisite()) || (is_network_admin())) {
 //			$this->options[self::OPID_LOGIN_COOKIE]
@@ -396,6 +397,7 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $options);
+		flush_rewrite_rules();
 
 		$res = update_site_option(self::OPTION_NAME, $options);
 		$this->debug_log("plugin_upgrade option changed = $res $log\n",

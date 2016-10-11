@@ -358,6 +358,7 @@ if (defined('lscache_debug')) {
 				$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = false;
 			}
 			$input[$id] = 'changed';
+			flush_rewrite_rules();
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;

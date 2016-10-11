@@ -167,6 +167,7 @@ class LiteSpeed_Cache
 	{
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+		flush_rewrite_rules();
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
@@ -198,6 +199,7 @@ class LiteSpeed_Cache
 		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 		}
+		flush_rewrite_rules();
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
 	}
