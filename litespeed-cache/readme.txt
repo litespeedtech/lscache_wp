@@ -286,11 +286,11 @@ point to any plugin that needs to add cache tags to the current request.
 == Changelog ==
 = 1.0.11 - October 11 2016 =
 * [NEW] The plugin will now set cachelookup public on.
-* [NEW] New option - check advanced-cache.php. This enables users to have two caching plugins enabled at the same time, as long as the other plugin is not used for caching purposes. For example, using another cache plugin for css/js minification.
-* [UPDATE] Rules added by the plugin will now be inserted into a LSCACHE START/END PLUGIN comment block.
+* [NEW] New option - check advanced-cache.php. This enables users to have two caching plugins enabled at the same time as long as the other plugin is not used for caching purposes. For example, using another cache plugin for css/js minification.
+* [UPDATE] Rules added by the plugin will now be inserted into an LSCACHE START/END PLUGIN comment block.
 * [UPDATE] For woocommerce pages, if a user visits a non-cached page with a non-empty cart, do not cache the page.
 * [UPDATE] If woocommerce needs to display any notice, do not cache the page.
-* [UPDATE] Single site settings are now in both litespeed cache submenu and settings submenu.
+* [UPDATE] Single site settings are now in both the litespeed cache submenu and the settings submenu.
 * [BUGFIX] Multisite network options were not updated on upgrade. This is now corrected.
 
 = 1.0.10 - September 16 2016 =
