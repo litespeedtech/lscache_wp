@@ -1333,7 +1333,8 @@ class LiteSpeed_Cache_Admin_Display
 			'MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str);
 		if ($ret !== true) {
 			$mv_list = '<p class="attention">'
-			. __('Error getting current rules: ', 'litespeed-cache') . $mv_str . '</p>';
+			. sprintf(__('Error getting current rules: %s', 'litespeed-cache'),
+				$mv_str) . '</p>';
 		}
 		elseif ((($enabled) && ($mv_str === $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]))
 			|| ((!$enabled) && ($mv_str === '')
