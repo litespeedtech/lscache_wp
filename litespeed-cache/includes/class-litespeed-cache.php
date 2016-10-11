@@ -120,12 +120,7 @@ class LiteSpeed_Cache
 		if ((empty($opt_id)) || (!is_string($opt_id))) {
 			return $conf;
 		}
-		$tp_keys = $conf->get_thirdparty_options();
-		if ((isset($tp_keys[$opt_id]))
-			|| (array_key_exists($opt_id, $tp_keys))) {
-			return $conf->get_option($opt_id);
-		}
-		return NULL;
+		return $conf->get_option($opt_id);
 	}
 
 	/**
@@ -144,6 +139,22 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Helper function to build paragraphs out of all the string sentences
+	 * passed in.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 * @param string $args,... Variable number of strings to combine to a paragraph.
+	 * @return string The built paragraph.
+	 */
+	public static function build_paragraph()
+	{
+		$args = func_get_args();
+		$para = implode(' ', $args);
+		return $para;
+	}
+
+	/**
 	 * The activation hook callback.
 	 *
 	 * Attempts to set up the advanced cache file. If it fails for any reason,
@@ -154,17 +165,10 @@ class LiteSpeed_Cache
 	 */
 	public function register_activation()
 	{
-		if ((!file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
-			|| (filesize(ABSPATH . 'wp-content/advanced-cache.php') === 0)
-				&& (is_writable(ABSPATH . 'wp-content/advanced-cache.php'))) {
-			copy($this->plugin_dir . '/includes/advanced-cache.php', ABSPATH . 'wp-content/advanced-cache.php') ;
-		}
-		include_once(ABSPATH . 'wp-content/advanced-cache.php');
-		if ( !defined('LSCACHE_ADV_CACHE')) {
-			exit(__("advanced-cache.php detected in wp-content directory! Please disable or uninstall any other cache plugins before enabling LiteSpeed Cache.", 'litespeed-cache')) ;
-		}
+		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 
+		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		$this->config->plugin_activation();
 	}
@@ -220,21 +224,9 @@ class LiteSpeed_Cache
 			$this->load_nonadmin_actions($module_enabled) ;
 		}
 
-		if ( ! $module_enabled ) {
-			return ;
-		}
-
-		//Checks if WP_CACHE is defined and true in the wp-config.php file.
-		if ((current_user_can('manage_options'))
-			&& ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))) {
-
-			if ((is_multisite()) && (is_network_admin())) {
-				$action = 'network_admin_notices';
-			}
-			else {
-				$action = 'admin_notices';
-			}
-			add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
+		if ((!$module_enabled) || (!defined('LSCACHE_ADV_CACHE'))
+			|| (constant('LSCACHE_ADV_CACHE') === false)) {
+			return;
 		}
 
 		define('LITESPEED_CACHE_ENABLED', true);
@@ -285,6 +277,27 @@ class LiteSpeed_Cache
 	public function get_config()
 	{
 		return $this->config ;
+	}
+
+	/**
+	 * Try to copy our advanced-cache.php file to the wordpress directory.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 * @return boolean True on success, false on failure.
+	 */
+	public function try_copy_advanced_cache()
+	{
+		if ((file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
+			&& ((filesize(ABSPATH . 'wp-content/advanced-cache.php') !== 0)
+				|| (!is_writable(ABSPATH . 'wp-content/advanced-cache.php')))) {
+			return false;
+		}
+		copy($this->plugin_dir . '/includes/advanced-cache.php',
+			ABSPATH . 'wp-content/advanced-cache.php');
+		include_once(ABSPATH . 'wp-content/advanced-cache.php');
+		$ret = defined('LSCACHE_ADV_CACHE');
+		return $ret;
 	}
 
 	/**
@@ -383,6 +396,19 @@ class LiteSpeed_Cache
 				add_action('upgrader_process_complete', array($this, 'purge_all'));
 			}
 
+			//Checks if WP_CACHE is defined and true in the wp-config.php file.
+			if ((current_user_can('manage_options'))
+				&& ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))) {
+
+				if ((is_multisite()) && (is_network_admin())) {
+					$action = 'network_admin_notices';
+				}
+				else {
+					$action = 'admin_notices';
+				}
+				add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
+			}
+
 			add_action('wp_before_admin_bar_render',
 				array($admin, 'add_quick_purge'));
 		}
@@ -398,8 +424,7 @@ class LiteSpeed_Cache
 					'LiteSpeed_Cache_Admin::redir_settings');
 		}
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
-				array(LiteSpeed_Cache_Admin_Rules::get_instance(),
-					'htaccess_editor_save'));
+				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',
 				array($admin, 'parse_settings'));
 		$this->set_locale() ;
@@ -698,13 +723,13 @@ class LiteSpeed_Cache
 		if ($cat == false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by category, does not exist: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by category, does not exist: %s', 'litespeed-cache'), $val));
 			return;
 		}
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge category ', 'litespeed-cache') . $val);
+				sprintf(__('Purge category %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $cat->term_id);
@@ -727,26 +752,19 @@ class LiteSpeed_Cache
 		if (!is_numeric($val)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by Post ID, given ID is not numeric: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by Post ID, given ID is not numeric: %s', 'litespeed-cache'), $val));
 			return;
 		}
 		elseif (get_post_status($val) !== 'publish') {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by Post ID, given ID does not exist or is not published: ',
-						'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by Post ID, given ID does not exist or is not published: %s',
+						'litespeed-cache'), $val));
 			return;
 		}
-                elseif ($this->config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES))
-                {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by Post ID, Auto Purge All pages on update is enabled. Please use the Purge All button on the LiteSpeed Cache Management screen or navigate to the post you wish to purge and add %s to the url.', 'litespeed-cache'), '?LSCWP_CTRL=PURGESINGLE'));
-			return;
-                }
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge Post ID ', 'litespeed-cache') . $val);
+				sprintf(__('Purge Post ID %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_POST . $val);
@@ -776,13 +794,13 @@ class LiteSpeed_Cache
 		if ($term == 0) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by tag, does not exist: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by tag, does not exist: %s', 'litespeed-cache'), $val));
 			return;
 		}
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge tag ', 'litespeed-cache') . $val);
+				sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $term->term_id);
@@ -813,13 +831,13 @@ class LiteSpeed_Cache
 		if ($id == 0) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by url, does not exist: ', 'litespeed-cache') . $val);
+				sprintf(__('Failed to purge by url, does not exist: %d', 'litespeed-cache'), $val));
 			return;
 		}
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
-				__('Purge url ', 'litespeed-cache') . $val);
+				sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_POST . $id);
@@ -984,11 +1002,13 @@ class LiteSpeed_Cache
 	 */
 	private function check_user_logged_in()
 	{
-		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache')
-		. __(' If you just changed the cookie in the settings, please log out and back in.', 'litespeed-cache')
-		. __(" If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache');
+		$err = self::build_paragraph(
+			__('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache'),
+			__('If you recently changed the cookie in the settings, please log out and back in again.', 'litespeed-cache'),
+			__("If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache'));
 		if (is_openlitespeed()) {
-			$err .= __(' If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
+			$err .= ' '
+				. __('If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
 		}
 
 		if (is_multisite()) {
@@ -1060,10 +1080,11 @@ class LiteSpeed_Cache
 		}
 		if (($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
-			$this->debug_log(
-				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache')
-				. __(' Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache')
-				. __(' This error may appear if you are logged into another web application.', 'litespeed-cache'));
+			$this->debug_log(self::build_paragraphs(
+				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
+				__('Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache'),
+				__('This error may appear if you are logged into another web application.', 'litespeed-cache')
+			));
 			return true;
 		}
 		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
@@ -1477,6 +1498,9 @@ class LiteSpeed_Cache
 		if (($mode != self::CACHECTRL_PUBLIC)
 			&& ($mode != self::CACHECTRL_PRIVATE)) {
 			return $mode;
+		}
+		elseif ((is_admin()) || (is_network_admin())) {
+			return self::CACHECTRL_NOCACHE;
 		}
 
 		if (((defined('LSCACHE_NO_CACHE')) && (constant('LSCACHE_NO_CACHE')))

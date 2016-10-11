@@ -107,19 +107,6 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
-	 * Redirects the page access to the settings page when the settings
-	 * submenu page is selected.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 */
-	public static function redir_settings()
-	{
-		wp_redirect(admin_url('options-general.php?page=litespeedcache'), 301);
-		exit;
-	}
-
-	/**
 	 * Hooked to wp_before_admin_bar_render.
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
@@ -131,6 +118,9 @@ if (defined('lscache_debug')) {
 		global $wp_admin_bar;
 		global $pagenow;
 		$prefix = '?';
+		if (!current_user_can('manage_options')) {
+			return;
+		}
 
 		if (!empty($_GET)) {
 			if (isset($_GET['LSCWP_CTRL'])) {
@@ -260,11 +250,16 @@ if (defined('lscache_debug')) {
 		$config = LiteSpeed_Cache::config();
 		// check for upgrade
 		$config->plugin_upgrade();
+		if ((is_network_admin()) && (current_user_can('manage_network_options'))) {
+			$config->plugin_site_upgrade();
+		}
 
 		// check management action
-		if (LiteSpeed_Cache_Admin_Display::get_instance()->
-			check_license($config) === true) {
+		if ($config->is_plugin_enabled()) {
 			$this->check_cache_mangement_actions();
+			if ((defined('WP_CACHE')) && (constant('WP_CACHE') === true)) {
+				$this->check_advanced_cache();
+			}
 		}
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
@@ -323,8 +318,11 @@ if (defined('lscache_debug')) {
 		}
 		$prefix = $input[$id];
 		if (($prefix !== '') && (!ctype_alnum($prefix))) {
-			return __('Invalid Tag Prefix input.', 'litespeed-cache')
-				. __(' Input should only contain letters and numbers.', 'litespeed-cache');
+			$prefix_err = LiteSpeed_Cache::build_paragraph(
+				__('Invalid Tag Prefix input.', 'litespeed-cache'),
+				__('Input should only contain letters and numbers.', 'litespeed-cache')
+			);
+			return $prefix_err;
 		}
 		if ($options[$id] !== $prefix) {
 			$options[$id] = $prefix;
@@ -411,35 +409,16 @@ if (defined('lscache_debug')) {
 			$options[$id] = intval($input[$id]);
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		if (isset($input['lscwp_' . $id])) {
-			$options[$id] = ( $input['lscwp_' . $id] === $id );
-		}
-		else {
-			$options[$id] = false;
-		}
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+			$input, $options);
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
-		if (isset($input['lscwp_' . $id])) {
-			$options[$id] = ( $input['lscwp_' . $id] === $id );
-		}
-		else {
-			$options[$id] = false;
-		}
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
+			$input, $options);
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		if (isset($input['lscwp_' . $id])) {
-			$login = ( $input['lscwp_' . $id] === $id );
-			if ($options[$id] != $login) {
-				$options[$id] = $login;
-				if (!$login) {
-					LiteSpeed_Cache_Tags::add_purge_tag(
-						LiteSpeed_Cache_Tags::TYPE_LOGIN);
-				}
-			}
-		}
-		else {
-			$options[$id] = false;
+		if (self::parse_checkbox(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+				$input, $options) === false) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_LOGIN);
 		}
 
 		// get purge options
@@ -478,6 +457,10 @@ if (defined('lscache_debug')) {
 			if (is_string($out)) {
 				$errors[] = $out;
 			}
+
+			self::parse_checkbox(
+				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+				$input, $options);
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
@@ -711,6 +694,51 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Check to make sure that the advanced-cache.php file is ours.
+	 * If it doesn't exist, try to make it ours.
+	 *
+	 * If it is not ours and the config is set to check, output an error.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 */
+	private function check_advanced_cache()
+	{
+
+		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
+		if (((defined('LSCACHE_ADV_CACHE'))
+			&& (constant('LSCACHE_ADV_CACHE') === true))
+			|| (!current_user_can($capability))) {
+			if (LiteSpeed_Cache::config(
+				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) === false) {
+				// If it exists because I added it at runtime, try to create the file anyway.
+				// Result does not matter.
+				LiteSpeed_Cache::plugin()->try_copy_advanced_cache();
+			}
+			return;
+		}
+
+		if (LiteSpeed_Cache::plugin()->try_copy_advanced_cache()) {
+			return;
+		}
+
+		if ((is_multisite()) && ((!is_network_admin())
+			|| (!current_user_can('manage_network_options')))) {
+			$second = __('Alternatively, your network admin may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache network settings.', 'litespeed-cache');
+		}
+		else {
+			$second = __('Alternatively, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
+		}
+		$msg = LiteSpeed_Cache::build_paragraph(
+			__('Please disable/deactivate your other cache plugin.', 'litespeed-cache'),
+			$second,
+			__('This should only be done if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'));
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+			LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $msg);
+	}
+
+	/**
 	 * Clean up the input string of any extra slashes/spaces.
 	 *
 	 * @since 1.0.4
@@ -724,6 +752,27 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Helper function to parse checkbox input.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 * @param string $id The id of the checkbox value.
+	 * @param array $input The input array.
+	 * @param array $options The config options array.
+	 * @return boolean True if checked, false otherwise.
+	 */
+	public static function parse_checkbox($id, $input, &$options)
+	{
+		if (isset($input['lscwp_' . $id])) {
+			$options[$id] = ( $input['lscwp_' . $id] === $id );
+		}
+		else {
+			$options[$id] = false;
+		}
+		return $options[$id];
+	}
+
+	/**
 	 * Parses any changes made by the network admin on the network settings.
 	 *
 	 * @since 1.0.4
@@ -731,7 +780,7 @@ if (defined('lscache_debug')) {
 	 */
 	public function parse_settings()
 	{
-		if ((is_multisite()) && (!is_network_admin())) {
+		if ((!is_multisite()) || (!is_network_admin())) {
 			return;
 		}
 		if (empty($_POST) || empty($_POST['submit'])) {
@@ -763,13 +812,12 @@ if (defined('lscache_debug')) {
 			}
 			$input[$id] = 'changed';
 		}
-		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		if (isset($input['lscwp_' . $id])) {
-			$options[$id] = ( $input['lscwp_' . $id] === $id );
-		}
-		else {
-			$options[$id] = false;
-		}
+
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+			$input, $options);
+
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+			$input, $options);
 
 		$out = $this->validate_tag_prefix($input, $options);
 		if (is_string($out)) {
@@ -807,8 +855,8 @@ if (defined('lscache_debug')) {
 		if ($text !== 'Updated!') {
 			return $translations;
 		}
-		return $translations .
-			__(' It is recommended that LiteSpeed Cache be purged after updating a plugin.',
+		return $translations . ' ' .
+			__('It is recommended that LiteSpeed Cache be purged after updating a plugin.',
 				'litespeed-cache');
 	}
 

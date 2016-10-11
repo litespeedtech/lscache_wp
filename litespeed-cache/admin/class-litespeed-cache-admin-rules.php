@@ -25,6 +25,8 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private $filerw = null;
 	private $is_subdir_install = null;
+	private $home_path = null;
+	private $site_path = null;
 
 	private static $OUT_FILESAVE;
 
@@ -43,7 +45,8 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
 	private static $RW_BLOCK_END = '</IfModule>';
-	private static $RW_ENGINEON = 'RewriteEngine on';
+	private static $RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
+	private static $RW_PLUGIN =  "\nRewriteEngine on\nCacheLookup Public on\n";
 
 	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
 	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
@@ -62,6 +65,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function __construct()
 	{
+		$this->setup();
 	}
 
 	/**
@@ -89,13 +93,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_home_path()
 	{
-		$path = get_home_path();
-		if ($path === '/') {
-			// get home path failed. Trac ticket #37668
-			// Try using ABSPATH instead.
-			$path = ABSPATH;
-		}
-		return $path . '.htaccess';
+		$rules = self::get_instance();
+		return $rules->home_path;
 	}
 
 	/**
@@ -107,7 +106,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_site_path()
 	{
-		return ABSPATH . '.htaccess';
+		$rules = self::get_instance();
+		return $rules->site_path;
 	}
 
 	/**
@@ -121,17 +121,6 @@ class LiteSpeed_Cache_Admin_Rules
 	private static function is_subdir()
 	{
 		$rules = self::get_instance();
-		if (isset($rules->is_subdir_install)) {
-			return $rules->is_subdir_install;
-		}
-		$home = self::get_home_path();
-		$site = self::get_site_path();
-		if (($home === $site) || (!file_exists($site))) {
-			$rules->is_subdir_install = false;
-		}
-		else {
-			$rules->is_subdir_install = true;
-		}
 		return $rules->is_subdir_install;
 	}
 
@@ -148,39 +137,7 @@ class LiteSpeed_Cache_Admin_Rules
 	public static function is_file_able($permissions)
 	{
 		$rules = self::get_instance();
-		if (isset($rules->filerw)) {
-			return $rules->filerw & $permissions;
-		}
-		$rules->filerw = 0;
-
-		$home_path = self::get_home_path();
-
-		clearstatcache();
-		if (!file_exists($home_path)) {
-			return false;
-		}
-		if (is_readable($home_path)) {
-			$rules->filerw |= self::READABLE;
-		}
-		if (is_writable($home_path)) {
-			$rules->filerw |= self::WRITABLE;
-		}
-
-		if (!self::is_subdir()) {
-			return $rules->filerw & $permissions;
-		}
-		$site_path = self::get_site_path();
-		if (!file_exists($site_path)) {
-			$rules->filerw = 0;
-			return false;
-		}
-		if (!is_readable($site_path)) {
-			$rules->filerw &= ~self::READABLE;
-		}
-		if (!is_writable($site_path)) {
-			$rules->filerw &= ~self::WRITABLE;
-		}
-		return $rules->filerw & $permissions;
+		return (($rules->filerw & $permissions) === $permissions);
 	}
 
 	/**
@@ -199,6 +156,156 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Set up the paths used for searching.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 * @param string $common The common part of the paths.
+	 * @param string $install The install path portion. Will contain full path on return.
+	 * @param string $access The access path portion. Will contain full path on return.
+	 */
+	private static function path_search_setup(&$common, &$install, &$access)
+	{
+		$common = rtrim($common, '/');
+		$install_part = trim($install, '/');
+		if ($install_part !== '') {
+			$install_part = '/' . $install_part;
+		}
+		$install = $common . $install_part;
+
+		$access_part = trim($access, '/');
+		if ($access_part !== '') {
+			$access_part = '/' . $access_part;
+		}
+		$access = $common . $access_part;
+	}
+
+	/**
+	 * Check to see if a file exists starting at $start_path and going up
+	 * directories until it hits stop_path.
+	 *
+	 * As dirname() strips the ending '/', paths passed in must exclude the
+	 * final '/', and the file must start with a '/'.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 * @param string $stop_path The last directory level to search.
+	 * @param string $start_path The first directory level to search.
+	 * @param string $file The file to search for.
+	 * @return string The deepest path where the file exists,
+	 * or the last path used if it does not exist.
+	 */
+	private static function path_search($stop_path, $start_path, $file)
+	{
+		while ((!file_exists($start_path . $file))) {
+			if ($start_path === $stop_path) {
+				break;
+			}
+			$start_path = dirname($start_path);
+		}
+		return $start_path . $file;
+	}
+
+	/**
+	 * Set the path class variables.
+	 *
+	 * Credit to Nerdwerx for the inspiration for this function
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 */
+	private function path_set()
+	{
+		$install = ABSPATH;
+		$access = get_home_path();
+
+		if ($access === '/') {
+			// get home path failed. Trac ticket #37668
+			$install = set_url_scheme( get_option( 'siteurl' ), 'http' );
+			$access = set_url_scheme( get_option( 'home' ), 'http' );
+		}
+		$common = implode(array_intersect_assoc(str_split($access),
+			str_split($install)));
+		$common_count = strlen($common);
+
+		$install_part = substr($install, $common_count);
+		$access_part = substr($access, $common_count);
+		if ($access_part !== false) {
+			// access is longer than install or they are in different dirs.
+			if ($install_part === false) {
+				$install_part = '';
+			}
+		}
+		elseif ($install_part !== false) {
+			// Install is longer than access
+			$access_part = '';
+		}
+		else {
+			// they are equal - no need to find paths.
+			$this->home_path = ABSPATH . '.htaccess';
+			$this->site_path = ABSPATH . '.htaccess';
+			return;
+		}
+		$common_path = substr(ABSPATH, 0, -(strlen($install_part) + 1));
+
+		self::path_search_setup($common_path, $install_part, $access_part);
+
+		$this->site_path = self::path_search($common_path, $install_part,
+			'/.htaccess');
+		$this->home_path = self::path_search($common_path, $access_part,
+			'/.htaccess');
+		return;
+	}
+
+	/**
+	 * Sets up the class variables.
+	 *
+	 * @since 1.0.11
+	 * @access private
+	 */
+	private function setup()
+	{
+		$this->path_set();
+		clearstatcache();
+
+		if ($this->home_path === $this->site_path) {
+			$this->is_subdir_install = false;
+		}
+		else {
+			$this->is_subdir_install = true;
+		}
+
+		$this->filerw = 0;
+		$test_permissions = file_exists($this->home_path) ? $this->home_path
+			: dirname($this->home_path);
+
+		if (is_readable($test_permissions)) {
+			$this->filerw |= self::READABLE;
+		}
+		if (is_writable($test_permissions)) {
+			$this->filerw |= self::WRITABLE;
+		}
+		if (!$this->is_subdir_install) {
+			return;
+		}
+		elseif (!file_exists($this->site_path)) {
+			$ret = file_put_contents($this->site_path, "\n", LOCK_EX);
+			if (!$ret) {
+				$this->filerw = 0;
+				return;
+			}
+		}
+
+		// If site file is not readable/writable, remove the flag.
+		if (!is_readable($this->site_path)) {
+			$this->filerw &= ~self::READABLE;
+		}
+		if (!is_writable($this->site_path)) {
+			$this->filerw &= ~self::WRITABLE;
+		}
+	}
+
+	/**
 	 * Gets the contents of the rules file.
 	 *
 	 * @since 1.0.4
@@ -211,9 +318,13 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		if (empty($path)) {
 			$path = self::get_home_path();
+			if (!file_exists($path)) {
+				$content = "\n";
+				return true;
+			}
 		}
-		if (!self::is_file_able(self::READABLE)) {
-			$content = self::$ERR_DNE;
+		if (!self::is_file_able(self::RW)) {
+			$content = self::$ERR_READWRITE;
 			return false;
 		}
 
@@ -235,40 +346,73 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $content The content to search
 	 * @param string $buf The portion before and including the beginning of
 	 * the section.
-	 * @param integer $off_end Offset denoting the beginning of the content
-	 * after the section.
+	 * @param string $after The content after the relevant section.
 	 * @return mixed False on failure, the haystack on success.
 	 * The haystack may be a string or null if it did not exist.
 	 */
-	private function file_split($content, &$buf, &$off_end)
+	private function file_split($content, &$buf, &$after)
 	{
+		$wrapper_end = '';
+		$wrapper_begin = $this->build_wrappers(self::$RW_WRAPPER, $wrapper_end);
+
 		$off_begin = stripos($content, self::$RW_BLOCK_START);
 		//if not found
 		if ($off_begin === false) {
-			$buf = self::$RW_BLOCK_START . "\n" . self::$RW_ENGINEON . "\n";
+			$buf = self::$RW_BLOCK_START . "\n" . $wrapper_begin
+				. self::$RW_PLUGIN;
+			$after = $wrapper_end . "\n" . self::$RW_BLOCK_END . "\n" . $content;
 			return NULL;
 		}
 		$off_begin += strlen(self::$RW_BLOCK_START);
 		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
+		$off_next = stripos($content, '<IfModule', $off_begin);
 		if ($off_end === false) {
-			$buf = self::$ERR_NOT_FOUND . 'IfModule close';
+			$buf = sprintf(self::$ERR_NOT_FOUND, 'IfModule close');
+			return false;
+		}
+		elseif (($off_next !== false) && ($off_next < $off_end)) {
+			$buf = LiteSpeed_Cache::build_paragraph(
+				self::$ERR_WRONG_ORDER,
+				sprintf(__('Your .htaccess file is missing a %s.', 'litespeed-cache'),
+					'&lt;/IfModule&gt;'));
 			return false;
 		}
 		--$off_end; // go to end of previous line.
-		$block = substr($content, 0, $off_end);
-		$off_engine = stripos($block, self::$RW_ENGINEON, $off_begin);
-		if ($off_engine !== false) {
-			$off_begin = $off_engine + strlen(self::$RW_ENGINEON) + 1;
-			$buf = substr($content, 0, $off_begin);
+
+		$off_wrapper = stripos($content, $wrapper_begin, $off_begin);
+		// If the wrapper exists
+		if ($off_wrapper !== false) {
+			$off_wrapper += strlen($wrapper_begin);
+			$off_wrapper_end = stripos($content, $wrapper_end, $off_wrapper);
+			if ($off_wrapper_end === false) {
+				$buf = sprintf(self::$ERR_NOT_FOUND, 'Plugin wrapper close');
+				return false;
+			}
+			--$off_wrapper_end;
+
+			$buf = substr($content, 0, $off_wrapper + 1);
+			$after = substr($content, $off_wrapper_end);
+			$block = substr($content, $off_wrapper,
+				$off_wrapper_end - $off_wrapper);
+			return $block;
 		}
-		else {
-			$buf = substr($content, 0, $off_begin) . "\n"
-				. self::$RW_ENGINEON . "\n";
+		$buf = substr($content, 0, $off_end) . "\n" . $wrapper_begin
+			. self::$RW_PLUGIN;
+		$after = $wrapper_end . substr($content, $off_end);
+		$rules = array();
+		$matched = preg_replace_callback(self::$RW_PATTERN_WRAPPERS,
+			function ($matches) use (&$rules)
+			{
+				$rules[] = $matches[0];
+				return '';
+			},
+			$buf);
+		if (empty($rules)) {
+			return NULL;
 		}
-		if ($off_begin == $off_end + 1) {
-			++$off_end;
-		}
-		return substr($content, $off_begin, $off_end - $off_begin);
+		$buf = $matched;
+		$block = implode('', $rules);
+		return $block;
 	}
 
 	/**
@@ -278,20 +422,16 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access private
 	 * @param string $beginning The portion that includes the edits.
 	 * @param string $haystack The source section from the original file.
-	 * @param string $orig_content The part of the source file that remains.
-	 * @param integer $off_end The offset to the end of the LiteSpeed section.
+	 * @param string $after The content after the relevant section.
 	 * @param string $path If path is set, use path, else use home path.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private function file_combine($beginning, $haystack, $orig_content,
-			$off_end, $path = '')
+	private function file_combine($beginning, $haystack, $after, $path = '')
 	{
 		if (!is_null($haystack)) {
-			$beginning .= $haystack . substr($orig_content, $off_end);
+			$beginning .= $haystack;
 		}
-		else {
-			$beginning .= self::$RW_BLOCK_END . "\n\n" . $orig_content;
-		}
+		$beginning .= $after;
 		return self::file_save($beginning, false, $path);
 	}
 
@@ -368,17 +508,24 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function file_save($content, $cleanup = true, $path = '')
 	{
-		if (empty($path)) {
-			$path = self::get_home_path();
-		}
+		while (true) {
+			if (empty($path)) {
+				$path = self::get_home_path();
+				if (!file_exists($path)) {
+					break;
+				}
+			}
 
-		if (self::is_file_able(self::RW) == 0) {
-			return self::$ERR_READWRITE;
-		}
+			if (self::is_file_able(self::RW) == 0) {
+				return self::$ERR_READWRITE;
+			}
 
-		//failed to backup, not good.
-		if (self::file_backup($path) === false) {
-			return self::$ERR_BACKUP;
+			//failed to backup, not good.
+			if (self::file_backup($path) === false) {
+				return self::$ERR_BACKUP;
+			}
+
+			break;
 		}
 
 		if ($cleanup) {
@@ -388,7 +535,8 @@ class LiteSpeed_Cache_Admin_Rules
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
-			return self::$ERR_OVERWRITE . '.htaccess';
+			$err = sprintf(self::$ERR_OVERWRITE, '.htaccess');
+			return $err;
 		}
 
 		return true;
@@ -450,7 +598,8 @@ class LiteSpeed_Cache_Admin_Rules
 			$wrap_begin + strlen($wrapper_begin));
 
 		if ($wrap_end === false) {
-			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
+			$err = sprintf(self::$ERR_NOT_FOUND, 'wrapper end');
+			return array(false, $err);
 		}
 		elseif ($match != '') {
 			$output .= $out;
@@ -486,7 +635,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
+			$match = sprintf(self::$ERR_NOT_FOUND, 'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
@@ -500,7 +649,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = self::$ERR_NOT_FOUND . 'a match.';
+			$match = sprintf(self::$ERR_NOT_FOUND, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -556,7 +705,8 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
-			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
+			$err = sprintf(self::$ERR_NOT_FOUND, 'wrapper end');
+			return array(false, $err);
 		}
 		elseif ($match != '') {
 			$output .= $out;
@@ -593,7 +743,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
+			$match = sprintf(self::$ERR_NOT_FOUND, 'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
@@ -606,7 +756,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = self::$ERR_NOT_FOUND . 'a match.';
+			$match = sprintf(self::$ERR_NOT_FOUND, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -718,18 +868,11 @@ class LiteSpeed_Cache_Admin_Rules
 		);
 
 		foreach ($val_check as $opt) {
-			if (isset($input['lscwp_' . $opt])) {
-				$input[$opt] = ($input['lscwp_' . $opt] === $opt);
-			}
-			else {
-				$input[$opt] = false;
-			}
+			LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
 		}
 
 		foreach ($ids as $id) {
-			if ((isset($input[$id]))
-					&& ($input[$id]
-					!== $options[$id])) {
+			if ((isset($input[$id])) && ($input[$id] !== $options[$id])) {
 				return false;
 			}
 		}
@@ -807,7 +950,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$env = 'E=Cache-Vary:' . $login;
 		$rule_buf = '';
 		$rule_buf2 = '';
-		$off_end = 0;
+		$after = '';
 		$ret = false;
 
 		if (!self::is_subdir()) {
@@ -831,7 +974,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		elseif ((!ctype_alnum(str_replace($aExceptions, '', $login)))
 			|| (!self::check_rewrite($login))){
-			$errors[] = self::$ERR_INVALID_LOGIN . $login;
+			$errors[] = sprintf(self::$ERR_INVALID_LOGIN, $login);
 			return false;
 		}
 
@@ -853,7 +996,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$haystack2 = $this->file_split($content, $rule_buf2, $off_end);
+		$haystack2 = $this->file_split($content, $rule_buf2, $after);
 		if ($haystack2 === false) {
 			$errors[] = $rule_buf2;
 			return false;
@@ -871,8 +1014,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$haystack2 = $ret;
-		$ret = $this->file_combine($rule_buf2, $haystack2, $content,
-				$off_end, $path);
+		$ret = $this->file_combine($rule_buf2, $haystack2, $after, $path);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
@@ -1055,7 +1197,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$content = '';
 		$buf = '';
-		$off_end = 0;
+		$after = '';
 
 		if ($this->check_input($options, $input)) {
 			return $options;
@@ -1065,12 +1207,8 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] = $content;
 			return false;
 		}
-		elseif (!self::is_file_able(self::WRITABLE)) {
-			$errors[] = self::$ERR_READWRITE;
-			return false;
-		}
 
-		$haystack = $this->file_split($content, $buf, $off_end);
+		$haystack = $this->file_split($content, $buf, $after);
 		if ($haystack === false) {
 			$errors[] = $buf;
 			return false;
@@ -1081,7 +1219,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ((isset($input[$id])) && ($input[$id])) {
 			$list = $input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
 			if ((empty($list)) || (self::check_rewrite($list) === false)) {
-				$errors[] = self::$ERR_NO_LIST . esc_html($list);
+				$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($list));
 			}
 			else {
 				$options[$id] = true;
@@ -1117,7 +1255,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		else {
-			$errors[] = self::$ERR_NO_LIST . esc_html($cookie_list);
+			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($cookie_list));
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
@@ -1129,7 +1267,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		else {
-			$errors[] = self::$ERR_NO_LIST . esc_html($input[$id]);
+			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($input[$id]));
 		}
 
 		$ret = $this->set_subdir_cookie($haystack, $input,
@@ -1154,7 +1292,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$options[$id] = $input[$id];
 		}
 
-		$ret = $this->file_combine($buf, $haystack, $content, $off_end);
+		$ret = $this->file_combine($buf, $haystack, $after);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
@@ -1173,7 +1311,6 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$content = '';
 		$site_content = '';
-		$pattern = self::$RW_PATTERN_WRAPPERS;
 
 		clearstatcache();
 		if (self::file_get($content) === false) {
@@ -1183,10 +1320,11 @@ class LiteSpeed_Cache_Admin_Rules
 			return;
 		}
 
-		if (!empty($wrapper)) {
-			$pattern = '/###LSCACHE START ' . $wrapper
-				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
+		if (empty($wrapper)) {
+			$wrapper = self::$RW_WRAPPER;
 		}
+		$pattern = '/###LSCACHE START ' . $wrapper
+			. '###.*###LSCACHE END ' . $wrapper . '###\n?/s';
 		$buf = preg_replace($pattern, '', $content);
 
 		self::file_save($buf, false);
@@ -1201,10 +1339,11 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 
-		if (!empty($wrapper)) {
-			$pattern = '/###LSCACHE START ' . $wrapper
-				. '###[^#]*###LSCACHE END ' . $wrapper . '###\n?/';
+		if (empty($wrapper)) {
+			$wrapper = self::$RW_WRAPPER;
 		}
+		$pattern = '/###LSCACHE START ' . $wrapper
+			. '###.*###LSCACHE END ' . $wrapper . '###\n?/s';
 		$site_buf = preg_replace($pattern, '', $site_content);
 		self::file_save($site_buf, false, $site_path);
 
@@ -1218,7 +1357,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function htaccess_editor_save()
+	public static function htaccess_editor_save()
 	{
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
@@ -1260,20 +1399,24 @@ class LiteSpeed_Cache_Admin_Rules
 			'.htaccess');
 		self::$ERR_GET = sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
 			'.htaccess');
-		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: ',
+		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: %s',
 					'litespeed-cache');
-		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: ', 'litespeed-cache');
-		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
-		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
-		self::$ERR_PARSE_FILE = __('Tried to parse for existing login cookie.', 'litespeed-cache')
-				. sprintf(__(' %s file not valid. Please verify the contents.',
-						'litespeed-cache'), '.htaccess');
-		self::$ERR_READWRITE = __('File not readable or not writable.', 'litespeed-cache');
+		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: %s', 'litespeed-cache');
+		self::$ERR_NOT_FOUND = __('Could not find %s.', 'litespeed-cache');
+		self::$ERR_OVERWRITE = __('Failed to overwrite %s.', 'litespeed-cache');
+		self::$ERR_PARSE_FILE = LiteSpeed_Cache::build_paragraph(
+			__('Tried to parse for existing login cookie.', 'litespeed-cache'),
+			sprintf(__('%s file not valid. Please verify contents.',
+						'litespeed-cache'), '.htaccess')
+			);
+		self::$ERR_READWRITE = sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),
+			'.htaccess');
 		self::$ERR_SUBDIR_MISMATCH_LOGIN =
-			__('This site is a subdirectory install.', 'litespeed-cache')
-			. __(' Login cookies do not match.', 'litespeed-cache')
-			. __(' Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
-				'litespeed-cache');
+			LiteSpeed_Cache::build_paragraph(
+			__('This site is a subdirectory install.', 'litespeed-cache'),
+			__('Login cookies do not match.', 'litespeed-cache'),
+			__('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
+				'litespeed-cache'));
 		self::$ERR_WRONG_ORDER = __('Prefix was found after suffix.', 'litespeed-cache');
 	}
 }
