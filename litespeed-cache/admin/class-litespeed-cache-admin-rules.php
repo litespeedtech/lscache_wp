@@ -367,12 +367,14 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
 		$off_next = stripos($content, '<IfModule', $off_begin);
 		if ($off_end === false) {
-			$buf = self::$ERR_NOT_FOUND . 'IfModule close';
+			$buf = sprintf(self::$ERR_NOT_FOUND, 'IfModule close');
 			return false;
 		}
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
-			$buf = self::$ERR_WRONG_ORDER
-				. sprintf(__(' Your .htaccess file is missing a %s.', 'litespeed-cache'),'&lt;/IfModule&gt;');
+			$buf = LiteSpeed_Cache::build_paragraph(
+				self::$ERR_WRONG_ORDER,
+				sprintf(__('Your .htaccess file is missing a %s.', 'litespeed-cache'),
+					'&lt;/IfModule&gt;'));
 			return false;
 		}
 		--$off_end; // go to end of previous line.
@@ -383,7 +385,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$off_wrapper += strlen($wrapper_begin);
 			$off_wrapper_end = stripos($content, $wrapper_end, $off_wrapper);
 			if ($off_wrapper_end === false) {
-				$buf = self::$ERR_NOT_FOUND . 'Plugin wrapper close';
+				$buf = sprintf(self::$ERR_NOT_FOUND, 'Plugin wrapper close');
 				return false;
 			}
 			--$off_wrapper_end;
@@ -533,7 +535,8 @@ class LiteSpeed_Cache_Admin_Rules
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
-			return self::$ERR_OVERWRITE . '.htaccess';
+			$err = sprintf(self::$ERR_OVERWRITE, '.htaccess');
+			return $err;
 		}
 
 		return true;
@@ -595,7 +598,8 @@ class LiteSpeed_Cache_Admin_Rules
 			$wrap_begin + strlen($wrapper_begin));
 
 		if ($wrap_end === false) {
-			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
+			$err = sprintf(self::$ERR_NOT_FOUND, 'wrapper end');
+			return array(false, $err);
 		}
 		elseif ($match != '') {
 			$output .= $out;
@@ -631,7 +635,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
+			$match = sprintf(self::$ERR_NOT_FOUND, 'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
@@ -645,7 +649,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = self::$ERR_NOT_FOUND . 'a match.';
+			$match = sprintf(self::$ERR_NOT_FOUND, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -701,7 +705,8 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
-			return array(false, self::$ERR_NOT_FOUND . 'wrapper end');
+			$err = sprintf(self::$ERR_NOT_FOUND, 'wrapper end');
+			return array(false, $err);
 		}
 		elseif ($match != '') {
 			$output .= $out;
@@ -738,7 +743,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = self::$ERR_NOT_FOUND . 'suffix ' . $suffix;
+			$match = sprintf(self::$ERR_NOT_FOUND, 'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
@@ -751,7 +756,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = self::$ERR_NOT_FOUND . 'a match.';
+			$match = sprintf(self::$ERR_NOT_FOUND, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -969,7 +974,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		elseif ((!ctype_alnum(str_replace($aExceptions, '', $login)))
 			|| (!self::check_rewrite($login))){
-			$errors[] = self::$ERR_INVALID_LOGIN . $login;
+			$errors[] = sprintf(self::$ERR_INVALID_LOGIN, $login);
 			return false;
 		}
 
@@ -1214,7 +1219,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ((isset($input[$id])) && ($input[$id])) {
 			$list = $input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
 			if ((empty($list)) || (self::check_rewrite($list) === false)) {
-				$errors[] = self::$ERR_NO_LIST . esc_html($list);
+				$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($list));
 			}
 			else {
 				$options[$id] = true;
@@ -1250,7 +1255,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		else {
-			$errors[] = self::$ERR_NO_LIST . esc_html($cookie_list);
+			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($cookie_list));
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
@@ -1262,7 +1267,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		else {
-			$errors[] = self::$ERR_NO_LIST . esc_html($input[$id]);
+			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($input[$id]));
 		}
 
 		$ret = $this->set_subdir_cookie($haystack, $input,
@@ -1394,11 +1399,11 @@ class LiteSpeed_Cache_Admin_Rules
 			'.htaccess');
 		self::$ERR_GET = sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
 			'.htaccess');
-		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: ',
+		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: %s',
 					'litespeed-cache');
-		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: ', 'litespeed-cache');
-		self::$ERR_NOT_FOUND = __('Could not find ', 'litespeed-cache');
-		self::$ERR_OVERWRITE = __('Failed to overwrite ', 'litespeed-cache');
+		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: %s', 'litespeed-cache');
+		self::$ERR_NOT_FOUND = __('Could not find %s.', 'litespeed-cache');
+		self::$ERR_OVERWRITE = __('Failed to overwrite %s.', 'litespeed-cache');
 		self::$ERR_PARSE_FILE = LiteSpeed_Cache::build_paragraph(
 			__('Tried to parse for existing login cookie.', 'litespeed-cache'),
 			sprintf(__('%s file not valid. Please verify contents.',
