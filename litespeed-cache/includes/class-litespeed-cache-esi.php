@@ -280,11 +280,14 @@ class LiteSpeed_Cache_Esi
 if (defined('lscache_debug')) {
 error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
 }
-
+		global $_SERVER;
+		$orig = $_SERVER['REQUEST_URI'];
+		$_SERVER['REQUEST_URI'] = $_SERVER['ESI_REFERER'];
 		if (isset($params[self::PARAM_BLOCK_ID])) {
 			do_action('litespeed_cache_load_esi_block-'
 				. $params[self::PARAM_BLOCK_ID], $params);
 		}
+		$_SERVER['REQUEST_URI'] = $orig;
 	}
 
 // BEGIN helper functions

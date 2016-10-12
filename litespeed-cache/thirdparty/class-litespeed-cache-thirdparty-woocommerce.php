@@ -48,10 +48,13 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
 		add_filter('litespeed_cache_get_options',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
-		add_action('litespeed_cache_is_not_esi_template',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
-		add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
+
+		if (!is_shop()) {
+			add_action('litespeed_cache_is_not_esi_template',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
+			add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
+		}
 
 		if (is_admin()) {
 			add_action('litespeed_cache_on_purge_post',
@@ -85,17 +88,29 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			self::ESI_PARAM_LOCATED => $located
 		);
 		add_action('woocommerce_after_add_to_cart_form',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template');
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
+		add_action('woocommerce_after_template_part',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
 		LiteSpeed_Cache_Esi::build_url('wc-add-to-cart-form', 'WC_CART_FORM',
 			$params);
 		ob_start();
 	}
 
-	public static function end_template()
+	public static function end_form()
 	{
 		ob_clean();
 		remove_action('woocommerce_after_add_to_cart_form',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template');
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
+		remove_action('woocommerce_after_template_part',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+	}
+
+	public static function end_template($template_name)
+	{
+		if (strpos($template_name, 'add-to-cart') === false) {
+			return;
+		}
+		self::end_form();
 	}
 
 	public static function load_add_to_cart_form_block($params)
@@ -103,8 +118,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		global $post, $wp_query;
 		$post = get_post($params[self::ESI_PARAM_POSTID]);
 		$wp_query->setup_postdata($post);
-		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_PATH],
-			$params[self::ESI_PARAM_LOCATED], $params[self::ESI_PARAM_ARGS]);
+		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS],
+			$params[self::ESI_PARAM_PATH]);
 	}
 
 	/**
