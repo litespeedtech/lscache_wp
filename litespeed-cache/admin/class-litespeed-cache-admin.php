@@ -81,7 +81,7 @@ if (defined('lscache_debug')) {
 		wp_enqueue_script('jquery-ui-tabs') ;
 		wp_enqueue_script($this->plugin_name,
 				plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
-				array( 'jquery' ), $this->version, false) ;
+				array( 'jquery-ui-tabs' ), $this->version, false) ;
 	}
 
 	/**
