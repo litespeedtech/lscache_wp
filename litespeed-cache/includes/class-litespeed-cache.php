@@ -517,38 +517,6 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Register all of the hooks related to the esi logic of the plugin.
-	 *
-	 * @since    1.1.0
-	 * @access   private
-	 * @param boolean $is_ajax Denotes if the request is an ajax request.
-	 */
-	private function load_esi_actions($is_ajax)
-	{
-		add_action('load-widgets.php', array( $this, 'purge_widget'));
-		add_action('wp_update_comment_count',
-			array($this, 'purge_comment_widget'));
-
-		if ($is_ajax) {
-			return;
-		}
-		add_action('init', array($this, 'register_post_type'));
-		add_action('template_include', array($this, 'esi_template'), 100);
-		add_filter('widget_display_callback',
-			array($this, 'esi_widget'), 0, 3);
-
-		if ($this->user_status & self::LSCOOKIE_VARY_LOGGED_IN) {
-			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
-			add_action( 'wp_footer', array($this, 'esi_admin_bar'), 1000 );
-		}
-
-		if ($this->user_status) {
-			add_filter('comment_form_defaults',
-				array($this, 'esi_comment_form_check'));
-		}
-	}
-
-	/**
 	 * Adds the actions used for setting up cookies on log in/out.
 	 *
 	 * @since 1.0.4
