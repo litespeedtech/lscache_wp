@@ -54,7 +54,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
 			add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form',
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
+			add_action('litespeed_cache_load_esi_block-storefront-cart-header',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header');
 		}
+		add_action('litespeed_cache_is_not_esi_template',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart');
 
 		if (is_admin()) {
 			add_action('litespeed_cache_on_purge_post',
@@ -72,6 +76,17 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	{
 		add_action('woocommerce_before_template_part',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4);
+	}
+
+	public static function set_swap_header_cart()
+	{
+		$priority = has_action('storefront_header', 'storefront_header_cart');
+		if ($priority !== false) {
+			remove_action('storefront_header', 'storefront_header_cart', $priority);
+			add_action('storefront_header',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::esi_cart_header',
+				$priority);
+		}
 	}
 
 	public static function block_template($template_name, $template_path, $located, $args)
@@ -111,6 +126,17 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return;
 		}
 		self::end_form();
+	}
+
+	public static function esi_cart_header()
+	{
+		LiteSpeed_Cache_Esi::build_url('storefront-cart-header',
+			'STOREFRONT_CART_HEADER');
+	}
+
+	public static function load_cart_header()
+	{
+		storefront_header_cart();
 	}
 
 	public static function load_add_to_cart_form_block($params)
