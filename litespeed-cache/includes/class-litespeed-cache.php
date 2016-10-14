@@ -1704,6 +1704,135 @@ class LiteSpeed_Cache
 		return array_unique($purge_tags) ;
 	}
 
+	private static function format_report_section($section_header, $section)
+	{
+		$tab = '    '; // four spaces
+		$nl = "\n";
+
+		if (empty($section)) {
+			return 'No matching ' . $section_header . $nl . $nl;
+		}
+		$buf = $section_header;
+		foreach ($section as $key=>$val) {
+			$buf .= $nl . $tab;
+			if (!is_numeric($key)) {
+				$buf .= $key . ' = ';
+			}
+			if (!is_string($val)) {
+				$buf .= print_r($val, true);
+			}
+			else {
+				$buf .= $val;
+			}
+		}
+		return $buf . $nl . $nl;
+	}
+
+	/**
+	 *
+	 * @param boolean $html - Whether to use html separators or regular string separators
+	 * @param array $server - server variables
+	 * @param array $options - cms options
+	 * @param array $extras - cms specific attributes
+	 * @param array $htaccess_paths - htaccess paths to check.
+	 */
+	public static function build_environment_report($server, $options,
+		$extras = array(), $htaccess_paths = array())
+	{
+		$server_keys = array(
+			'DOCUMENT_ROOT'=>'',
+			'SERVER_SOFTWARE'=>'',
+			'X-LSCACHE'=>''
+		);
+		$server_vars = array_intersect_key($server, $server_keys);
+		$buf = self::format_report_section('Server Variables', $server_vars);
+
+		$buf .= self::format_report_section('LSCache Plugin Options',
+			$options);
+
+		$buf .= self::format_report_section('Wordpress Specific Extras',
+			$extras);
+
+		if (empty($htaccess_paths)) {
+			return $buf;
+		}
+
+		foreach ($htaccess_paths as $path) {
+			if ((!file_exists($path)) || (!is_readable($path))) {
+				$buf .= $path . " does not exist or is not readable.\n";
+				continue;
+			}
+			$content = file_get_contents($path);
+			if ($content === false) {
+				$buf .= $path . " returned false for file_get_contents.\n";
+				continue;
+			}
+
+			$off_begin = 0;
+			$off_end = 0;
+
+			$ret = LiteSpeed_Cache_Admin_Rules::file_get_ifmodule_block($content,
+				$off_begin, $off_end);
+
+			if ($ret === false) {
+				$buf .= $path . " Does not have an IfModule LiteSpeed block.\n";
+			}
+			elseif ($ret !== true) {
+				$buf .= $path . ' ' . $ret . "\n";
+			}
+			else {
+				$buf .= $path . " contents:\n" . substr($content, $off_begin,
+					$off_end - $off_begin);
+			}
+			$buf .= "\n\n";
+		}
+		return $buf;
+	}
+
+	public function write_environment_report($content)
+	{
+		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false,
+			$this->plugin_dir . '../environment_report.txt', false);
+		if ($ret !== true) {
+			error_log('[WARNING] LSCache wordpress plugin attempted to write '
+				. 'env report but did not have permissions.');
+		}
+	}
+
+	public static function generate_environment_report()
+	{
+		global $wp_version, $_SERVER;
+		$home = LiteSpeed_Cache_Admin_Rules::get_home_path();
+		$site = LiteSpeed_Cache_Admin_Rules::get_site_path();
+		$paths = array($home);
+		if ($home != $site) {
+			$paths[] = $site;
+		}
+
+		$active_plugins = get_option('active_plugins');
+		if (function_exists('wp_get_theme')) {
+			$theme_obj = wp_get_theme();
+			$active_theme = $theme_obj->get('Name');
+		}
+		else {
+			$active_theme = get_current_theme();
+		}
+
+		$extras = array(
+			'wordpress version' => $wp_version,
+			'locale' => get_locale(),
+			'active theme' => $active_theme,
+			'active plugins' => $active_plugins,
+
+		);
+
+		$report = self::build_environment_report($_SERVER,
+			self::config()->get_options(), $extras, $paths);
+		self::plugin()->write_environment_report($report);
+		return $report;
+	}
+
+
 
 /* BEGIN ESI CODE, not fully implemented for now */
 	/**
