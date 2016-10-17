@@ -844,10 +844,10 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$report = LiteSpeed_Cache::generate_environment_report();
 		$desc = LiteSpeed_Cache::build_paragraph(
-			__('The environment report details information about your configuration.', 'litespeed-cache'),
-			__('If you run into any issues, please include the contents of this text area in your message.', 'litespeed-cache'),
-			__('To easily grab the content, just click into the text area and enter ctrl + a to select all and ctrl + c to copy to your clipboard.', 'litespeed-cache'),
-			sprintf(__('Alternatively, the file is saved in %s.', 'litespeed-cache'),
+			__('The environment report contains detailed information about your configuration.', 'litespeed-cache'),
+			__('If you run into any issues, please include the contents of this text area in your support message.', 'litespeed-cache'),
+			__('To easily grab the content, click into the text area and enter ctrl + a to select all and ctrl + c to copy to your clipboard.', 'litespeed-cache'),
+			sprintf(__('Alternatively, this information is also saved in %s.', 'litespeed-cache'),
 				'wp-content/plugins/litespeed-cache/environment_report.txt')
 			)
 			. '<br><br>'
