@@ -1767,24 +1767,7 @@ class LiteSpeed_Cache
 				$buf .= $path . " returned false for file_get_contents.\n";
 				continue;
 			}
-
-			$off_begin = 0;
-			$off_end = 0;
-
-			$ret = LiteSpeed_Cache_Admin_Rules::file_get_ifmodule_block($content,
-				$off_begin, $off_end);
-
-			if ($ret === false) {
-				$buf .= $path . " Does not have an IfModule LiteSpeed block.\n";
-			}
-			elseif ($ret !== true) {
-				$buf .= $path . ' ' . $ret . "\n";
-			}
-			else {
-				$buf .= $path . " contents:\n" . substr($content, $off_begin,
-					$off_end - $off_begin);
-			}
-			$buf .= "\n\n";
+			$buf .= $path . " contents:\n" . $content . "\n\n";
 		}
 		return $buf;
 	}
