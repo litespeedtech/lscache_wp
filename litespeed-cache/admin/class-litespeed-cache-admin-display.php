@@ -210,6 +210,12 @@ class LiteSpeed_Cache_Admin_Display
 					$this->show_menu_edit_htaccess();
 				}
 				break;
+			case 'r':
+				if (($selection_len == 6)
+						&& (strncmp($selection, 'report', $selection_len) == 0)) {
+					$this->show_menu_report();
+				}
+
 			default:
 				break;
 		}
@@ -829,6 +835,33 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<li>'
 		. __('Purge the cache to use the updated pages.', 'litespeed-cache')
 		. '</li></ul></div></div>';
+
+		echo $buf;
+	}
+
+
+	private function show_menu_report()
+	{
+		$report = LiteSpeed_Cache::generate_environment_report();
+		$desc = LiteSpeed_Cache::build_paragraph(
+			__('The environment report details information about your configuration.', 'litespeed-cache'),
+			__('If you run into any issues, please include the contents of this text area in your message.', 'litespeed-cache'),
+			__('To easily grab the content, just click into the text area and enter ctrl + a to select all and ctrl + c to copy to your clipboard.', 'litespeed-cache'),
+			sprintf(__('Alternatively, the file is saved in %s.', 'litespeed-cache'),
+				'wp-content/plugins/litespeed-cache/environment_report.txt')
+			)
+			. '<br><br>'
+			. __('This text area contains the following content:', 'litespeed-cache')
+			. '<br>'
+			. __('Server Variables, Plugin Options, WordPress information (version, locale, active plugins, etc.), and .htaccess file content.', 'litespeed-cache');
+
+
+		$buf = '<div class="wrap"><h2>LiteSpeed Cache Report</h2>';
+		$buf .= '<div class="welcome-panel"><h4>' . $desc . '</h4>';
+		$buf .= $this->input_field_textarea('litespeed-report', $report, '20',
+			'80', '', true);
+
+		$buf .= '</div></div>';
 
 		echo $buf;
 	}

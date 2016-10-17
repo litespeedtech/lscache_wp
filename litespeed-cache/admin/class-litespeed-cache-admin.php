@@ -209,6 +209,8 @@ if (defined('lscache_debug')) {
 				__('Information', 'litespeed-cache'), 'lscache-info', 'show_menu_select');
 		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'show_menu_select');
+		$this::add_submenu(sprintf(__('%s Environment Report', 'litespeed-cache'),'LiteSpeed Cache'),
+				__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_menu_select');
 
 	}
 
