@@ -269,7 +269,8 @@ if (defined('lscache_debug')) {
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
 		if (!is_network_admin()) {
-			register_setting($option_name, $option_name, array( $this, 'validate_plugin_settings' )) ;
+			register_setting($option_name, $option_name,
+				array( $this, 'validate_plugin_settings' )) ;
 		}
 	}
 
@@ -557,6 +558,7 @@ if (defined('lscache_debug')) {
 		if ( ! empty($errors) ) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
 					LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors)) ;
+			return $options;
 		}
 
 		$tp_default_options = $config->get_thirdparty_options();

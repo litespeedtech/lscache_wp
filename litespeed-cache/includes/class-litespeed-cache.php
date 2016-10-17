@@ -165,6 +165,7 @@ class LiteSpeed_Cache
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		$this->config->plugin_activation();
+		self::generate_environment_report();
 	}
 
 	/**
@@ -418,6 +419,14 @@ class LiteSpeed_Cache
 				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',
 				array($admin, 'parse_settings'));
+		if (is_multisite()) {
+			add_action('update_site_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
+					'LiteSpeed_Cache::update_environment_report', 10, 2);
+		}
+		else {
+			add_action('update_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
+					'LiteSpeed_Cache::update_environment_report', 10, 2);
+		}
 		$this->set_locale() ;
 	}
 
@@ -1782,7 +1791,7 @@ class LiteSpeed_Cache
 		}
 	}
 
-	public static function generate_environment_report()
+	public static function generate_environment_report($options = null)
 	{
 		global $wp_version, $_SERVER;
 		$home = LiteSpeed_Cache_Admin_Rules::get_home_path();
@@ -1808,11 +1817,19 @@ class LiteSpeed_Cache
 			'active plugins' => $active_plugins,
 
 		);
+		if (is_null($options)) {
+			$options = self::config()->get_options();
+		}
 
-		$report = self::build_environment_report($_SERVER,
-			self::config()->get_options(), $extras, $paths);
+		$report = self::build_environment_report($_SERVER, $options, $extras,
+			$paths);
 		self::plugin()->write_environment_report($report);
 		return $report;
+	}
+
+	public static function update_environment_report($unused, $options)
+	{
+		self::generate_environment_report($options);
 	}
 
 
