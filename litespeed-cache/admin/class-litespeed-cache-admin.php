@@ -207,10 +207,13 @@ if (defined('lscache_debug')) {
 	{
 		$this::add_submenu(sprintf(__('%s Information', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Information', 'litespeed-cache'), 'lscache-info', 'show_menu_select');
-		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'),'LiteSpeed Cache'),
+		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'), 'LiteSpeed Cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'show_menu_select');
-		$this::add_submenu(sprintf(__('%s Environment Report', 'litespeed-cache'),'LiteSpeed Cache'),
-				__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_menu_select');
+		if ((!is_multisite()) ||
+			((is_network_admin()) && (current_user_can('manage_network_options')))) {
+			$this::add_submenu(sprintf(__('%s Environment Report', 'litespeed-cache'), 'LiteSpeed Cache'),
+					__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_menu_select');
+		}
 
 	}
 
