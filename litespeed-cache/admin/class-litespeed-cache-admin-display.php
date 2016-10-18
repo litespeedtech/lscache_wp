@@ -1804,6 +1804,47 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf;
 	}
 
+
+	public function show_display_installed()
+	{
+		$url = LiteSpeed_Cache_Admin::build_lscwpctrl_url(
+			LiteSpeed_Cache::ADMINQS_DISMISS, 'litespeed-dismiss');
+		$buf = LiteSpeed_Cache::build_paragraph(
+			'<h3>'
+			. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache')
+			. '</h3>',
+			__('This message indicates that the plugin was installed by your server admin.', 'litespeed-cache'),
+			__('Our plugin is used to cache pages - a simple way to improve the performance of your site.', 'litespeed-cache'),
+			__('However, we have no way of knowing all the possible customizations that you may have done.', 'litespeed-cache'),
+			__('For that reason, we ask that you test your site to make sure everything still functions properly.', 'litespeed-cache')
+		);
+		$buf .= '<br><br>'
+			. __('Examples of test cases include:', 'litespeed-cache')
+			. '<ul><li>'
+			. __('Visit your site while logged out', 'litespeed-cache')
+			. '</li><li>'
+			. __('Create a post, make sure the front page is accurate', 'litespeed-cache')
+			. '</li></ul>';
+
+		$buf .=
+			sprintf(wp_kses(__('If you have any questions, we are always happy to answer any questions on our '
+				. '<a href="%s" rel="%s" target="%s">support forum</a>.', 'litespeed-cache'),
+				array('a' =>array('href' => array(), 'rel' => array(),
+					'target' => array()))),
+				'https://wordpress.org/support/plugin/litespeed-cache',
+				'noopener noreferrer', '_blank');
+		$buf .= '<br>'
+			. __('If you would rather not move at litespeed, you can deactivate this plugin.',
+				'litespeed-cache')
+			. '<br><br>'
+			. sprintf(wp_kses(__(
+				'<a href="%s">OK, got it (dismiss)</a>', 'litespeed-cache'),
+				array('a' =>array('href' => array()))), $url);
+
+
+		$this->add_notice(self::NOTICE_BLUE, $buf);
+	}
+
 	/**
 	 * Generates the HTMl to start a configuration options table.
 	 *

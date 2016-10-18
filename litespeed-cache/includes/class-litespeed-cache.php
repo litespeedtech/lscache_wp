@@ -29,6 +29,7 @@ class LiteSpeed_Cache
 	const LSCOOKIE_VARY_COMMENTER = 2;
 
 	const ADMINQS_KEY = 'LSCWP_CTRL';
+	const ADMINQS_DISMISS = 'DISMISS';
 	const ADMINQS_PURGE = 'PURGE';
 	const ADMINQS_PURGEALL = 'PURGEALL';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
@@ -40,6 +41,9 @@ class LiteSpeed_Cache
 	const CACHECTRL_PURGESINGLE = 3;
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
+
+	const WHM_TRANSIENT = 'lscwp_whm_install';
+	const WHM_TRANSIENT_VAL = 'whm_install';
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -166,6 +170,10 @@ class LiteSpeed_Cache
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		$this->config->plugin_activation();
 		self::generate_environment_report();
+
+		if (defined('LSCWP_PLUGIN_NAME')) {
+			set_transient(self::WHM_TRANSIENT, self::WHM_TRANSIENT_VAL);
+		}
 	}
 
 	/**
@@ -195,6 +203,8 @@ class LiteSpeed_Cache
 		}
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
+		// delete in case it's not deleted prior to deactivation.
+		delete_transient(self::WHM_TRANSIENT);
 	}
 
 	/**
@@ -1233,6 +1243,32 @@ class LiteSpeed_Cache
 		return;
 	}
 
+	private function admin_ctrl_redirect()
+	{
+		global $pagenow;
+		$qs = '';
+
+		if (!empty($_GET)) {
+			if (isset($_GET['LSCWP_CTRL'])) {
+				unset($_GET['LSCWP_CTRL']);
+			}
+			if (isset($_GET['_wpnonce'])) {
+				unset($_GET['_wpnonce']);
+			}
+			if (!empty($_GET)) {
+				$qs = '?' . http_build_query($_GET);
+			}
+		}
+		if (is_network_admin()) {
+			$url = network_admin_url($pagenow . $qs);
+		}
+		else {
+			$url = admin_url($pagenow . $qs);
+		}
+		wp_redirect($url);
+		exit();
+	}
+
 	/**
 	 * Check the query string to see if it contains a LSCWP_CTRL.
 	 * Also will compare IPs to see if it is a valid command.
@@ -1249,7 +1285,8 @@ class LiteSpeed_Cache
 		$action = $_GET[self::ADMINQS_KEY];
 		if ((is_admin()) || (is_network_admin())) {
 			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
-				|| (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)) {
+				|| ((wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)
+					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-dismiss') === false))) {
 				return;
 			}
 		}
@@ -1280,26 +1317,17 @@ class LiteSpeed_Cache
 				if ((!is_admin()) && (!is_network_admin())) {
 					return;
 				}
-				global $pagenow;
-				$qs = '';
-
-				if (!empty($_GET)) {
-					if (isset($_GET['LSCWP_CTRL'])) {
-						unset($_GET['LSCWP_CTRL']);
-					}
-					if (isset($_GET['_wpnonce'])) {
-						unset($_GET['_wpnonce']);
-					}
-					if (!empty($_GET)) {
-						$qs = '?' . http_build_query($_GET);
-					}
-				}
-				wp_redirect(admin_url($pagenow . $qs));
-				exit();
+				$this->admin_ctrl_redirect();
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
 					return;
+				}
+				break;
+			case 'D':
+				if ($action == self::ADMINQS_DISMISS) {
+					delete_transient(self::WHM_TRANSIENT);
+					$this->admin_ctrl_redirect();
 				}
 				break;
 			default:

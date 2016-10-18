@@ -106,16 +106,8 @@ if (defined('lscache_debug')) {
 		}
 	}
 
-	/**
-	 * Hooked to wp_before_admin_bar_render.
-	 * Adds a link to the admin bar so users can quickly purge all.
-	 *
-	 * @global type $wp_admin_bar
-	 * @global type $pagenow
-	 */
-	public function add_quick_purge()
+	public static function build_lscwpctrl_url($val, $nonce)
 	{
-		global $wp_admin_bar;
 		global $pagenow;
 		$prefix = '?';
 		if (!current_user_can('manage_options')) {
@@ -134,16 +126,37 @@ if (defined('lscache_debug')) {
 			}
 		}
 
-		$prenonce = admin_url($pagenow . $prefix
-			. 'LSCWP_CTRL=' . LiteSpeed_Cache::ADMINQS_PURGEALL);
-		$url = wp_nonce_url($prenonce, 'litespeed-purgeall');
+		$combined = $pagenow . $prefix . LiteSpeed_Cache::ADMINQS_KEY
+			. '=' . $val;
+
+		if (is_network_admin()) {
+			$prenonce = network_admin_url($combined);
+		}
+		else {
+			$prenonce = admin_url($combined);
+		}
+		$url = wp_nonce_url($prenonce, $nonce);
+		return $url;
+	}
+
+	/**
+	 * Hooked to wp_before_admin_bar_render.
+	 * Adds a link to the admin bar so users can quickly purge all.
+	 *
+	 * @global type $wp_admin_bar
+	 * @global type $pagenow
+	 */
+	public function add_quick_purge()
+	{
+		global $wp_admin_bar;
+		$url = self::build_lscwpctrl_url(LiteSpeed_Cache::ADMINQS_PURGEALL,
+			'litespeed-purgeall');
 
 		$wp_admin_bar->add_node(array(
 			'id'    => 'lscache-quick-purge',
 			'title' => 'LiteSpeed Cache Purge All',
 			'href'  => $url
 		));
-
 	}
 
 	/**
@@ -272,6 +285,23 @@ if (defined('lscache_debug')) {
 			register_setting($option_name, $option_name,
 				array( $this, 'validate_plugin_settings' )) ;
 		}
+
+		if (!is_multisite()) {
+			if (!current_user_can('manage_options')) {
+				return;
+			}
+		}
+		elseif ((!is_network_admin())
+			|| (!current_user_can('manage_network_options'))) {
+			return;
+		}
+
+		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT)
+			!== LiteSpeed_Cache::WHM_TRANSIENT_VAL) {
+			return;
+		}
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->show_display_installed();
 	}
 
 	/**
