@@ -139,7 +139,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$home = self::get_home_path();
 		$site = self::get_site_path();
 
-		if (($path !== null) && (($path === $home) || ($path === $site))) {
+		if (($path === null) || ($path === $home) || ($path === $site)) {
 			$rules = self::get_instance();
 			return (($rules->filerw & $permissions) === $permissions);
 		}
