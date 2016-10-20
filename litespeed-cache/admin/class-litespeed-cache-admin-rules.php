@@ -344,7 +344,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$content = file_get_contents($path);
-		if ($content == false) {
+		if ($content === false) {
 			$content = self::$ERR_GET;
 			return false;
 		}
