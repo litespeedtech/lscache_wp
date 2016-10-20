@@ -16,9 +16,10 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 {
 	public static function detect()
 	{
-
-		add_action('toplevel_page_bwp_minify_general',
-			'LiteSpeed_Cache_ThirdParty_Better_WP_Minify::maybe_flush', 9);
+		if (class_exists('BWP_MINIFY')) {
+			add_action('toplevel_page_bwp_minify_general',
+				'LiteSpeed_Cache_ThirdParty_Better_WP_Minify::maybe_flush', 9);
+		}
 	}
 
 	public static function maybe_flush()
