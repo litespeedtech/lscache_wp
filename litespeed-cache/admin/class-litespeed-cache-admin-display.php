@@ -1285,6 +1285,13 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$buf = $this->input_group_start(__('Developer Testing', 'litespeed-cache')) ;
 
+		$debug_desc = LiteSpeed_Cache::build_paragraph(
+			__('Outputs to WordPress debug log.', 'litespeed-cache'),
+			__('This should be set to off once everything is working to prevent filling the disk.', 'litespeed-cache'),
+			__('The Admin IP option will only output log messages on requests from admin IPs.', 'litespeed-cache'),
+			__('The logs will be outputted to the debug.log in your wp-content directory.', 'litespeed-cache')
+		);
+
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		$input_admin_ips = $this->input_field_text($id, $options[$id], '', 'regular-text') ;
 		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips,
@@ -1296,14 +1303,13 @@ class LiteSpeed_Cache_Admin_Display
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_levels = array(
-			LiteSpeed_Cache_Config::LOG_LEVEL_NONE => __('None', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_ERROR => __('Error', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_NOTICE => __('Notice', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_INFO => __('Info', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG => __('Debug', 'litespeed-cache') ) ;
+			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Off', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('On', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET => __('Admin IP only', 'litespeed-cache'),
+		);
 		$input_debug = $this->input_field_select($id, $debug_levels, $options[$id]) ;
-		$buf .= $this->display_config_row(__('Debug Level', 'litespeed-cache'), $input_debug,
-				__('Outputs to WordPress debug log.', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Debug Log', 'litespeed-cache'),
+			$input_debug, $debug_desc) ;
 
 		/* Maybe add this feature later
 		  $id = LiteSpeed_Cache_Config::OPID_TEST_IPS;

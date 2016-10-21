@@ -78,8 +78,12 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Config::OPID_DEBUG));
 
 		switch ($should_debug) {
-			// Not set is used as check admin IP here.
+			// NOTSET is used as check admin IP here.
 		case LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET:
+			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
+			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+				break;
+			}
 			// fall through
 		case LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE:
 			define ('LSCWP_LOG', true);
@@ -143,8 +147,8 @@ class LiteSpeed_Cache
 
 	private static function format_message($mesg)
 	{
-		$formatted = sprintf("%s [%s] [LSCACHE_WP] %s\n", date('r'),
-			$_SERVER['REMOTE_ADDR'], $mesg);
+		$formatted = sprintf("%s [%s] [LSCACHE_WP] [%s] %s\n", date('r'),
+			$_SERVER['REMOTE_ADDR'], $_SERVER['REQUEST_URI'], $mesg);
 		return $formatted;
 	}
 

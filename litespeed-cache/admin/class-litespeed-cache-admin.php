@@ -589,11 +589,14 @@ if (defined('lscache_debug')) {
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_level = isset($input[$id]) ? intval($input[$id])
-				: LiteSpeed_Cache_Config::LOG_LEVEL_NONE ;
+				: LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 		if (($debug_level != $options[$id])
-				&& ($debug_level >= LiteSpeed_Cache_Config::LOG_LEVEL_NONE)
-				&& ($debug_level <= LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG)) {
+				&& ($debug_level >= LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)
+				&& ($debug_level <= LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET)) {
 			$options[$id] = $debug_level ;
+		}
+		elseif ($debug_level > LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET) {
+			$options[$id] = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 		}
 
 		if ( ! empty($errors) ) {
