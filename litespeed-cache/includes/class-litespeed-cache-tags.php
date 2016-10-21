@@ -30,6 +30,7 @@ class LiteSpeed_Cache_Tags
 	const TYPE_ARCHIVE_DATE = 'D.' ;
 	const TYPE_BLOG = 'B.' ;
 	const TYPE_LOGIN = 'L';
+	const TYPE_URL = 'URL.';
 	const HEADER_PURGE = 'X-LiteSpeed-Purge' ;
 	const HEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const HEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;

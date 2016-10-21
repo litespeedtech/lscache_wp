@@ -787,27 +787,23 @@ class LiteSpeed_Cache
 		if (empty($val)) {
 			return;
 		}
+
 		if (strpos($val, '<') !== false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 				__('Failed to purge by url, contained "<".', 'litespeed-cache'));
 			return;
+		}
 
-		}
-		$id = url_to_postid($val);
-		if ($id == 0) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by url, does not exist: %d', 'litespeed-cache'), $val));
-			return;
-		}
+		$hash = md5($val);
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_POST . $id);
+				LiteSpeed_Cache_Tags::TYPE_URL . $hash);
+		return;
 	}
 
 	/**
@@ -1608,6 +1604,10 @@ class LiteSpeed_Cache
 		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
 		$cache_tags = array();
+
+		$hash = md5($_SERVER['REQUEST_URI']);
+
+		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 
 		if ( is_front_page() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE ;

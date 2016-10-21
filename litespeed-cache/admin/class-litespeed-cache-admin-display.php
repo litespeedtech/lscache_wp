@@ -293,7 +293,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '</p></li>'
 		. '<li><p>' . __('Tag: Purge tag pages by name.', 'litespeed-cache')
 		. '</p></li>'
-		. '<li><p>' . __('URL: Purge pages by locator.', 'litespeed-cache')
+		. '<li><p>' . __('URL: Purge pages by locator. Must be exact match.', 'litespeed-cache')
 		. ' Ex: http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>'
 		. '</p></li>'
 		. '</ul>';
