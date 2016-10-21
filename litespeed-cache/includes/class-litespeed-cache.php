@@ -1118,7 +1118,8 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('trackback') ;
 		}
 
-		if ( is_404() ) {
+		if (($conf->get_option(LiteSpeed_Cache_Config::OPID_404_TTL) === 0)
+			&& (is_404())) {
 			return $this->no_cache_for('404 pages') ;
 		}
 
@@ -1529,12 +1530,16 @@ class LiteSpeed_Cache
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
 				$feed_ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL);
+				$ttl_404 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_404_TTL);
 				if ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
 					|| (is_front_page())){
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
 				}
 				elseif ((is_feed()) && ($feed_ttl > 0)) {
 					$ttl = $feed_ttl;
+				}
+				elseif ((is_404()) && ($ttl_404 > 0)) {
+					$ttl = $ttl_404;
 				}
 				else {
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;

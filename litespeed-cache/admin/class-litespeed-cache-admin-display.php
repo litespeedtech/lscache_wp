@@ -880,6 +880,10 @@ class LiteSpeed_Cache_Admin_Display
 			__('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'),
 			__('If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache')
 		);
+		$notfound_ttl_desc = LiteSpeed_Cache::build_paragraph(
+			__('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'),
+			__('If this is set to a number less than 30, 404 pages will not be cached.', 'litespeed-cache')
+		);
 		$cache_commenters_desc = LiteSpeed_Cache::build_paragraph(
 			__('When checked, commenters will not be able to see their comments awaiting moderation.', 'litespeed-cache'),
 			__('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache')
@@ -937,6 +941,12 @@ class LiteSpeed_Cache_Admin_Display
 				__('seconds', 'litespeed-cache')) ;
 		$buf .= $this->display_config_row(__('Default Feed TTL', 'litespeed-cache'), $input_feed_ttl,
 				$feed_ttl_desc);
+
+		$id = LiteSpeed_Cache_Config::OPID_404_TTL ;
+		$input_404_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+				__('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default 404 Page TTL', 'litespeed-cache'),
+				$input_404_ttl, $notfound_ttl_desc);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
 		$cache_commenters = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;

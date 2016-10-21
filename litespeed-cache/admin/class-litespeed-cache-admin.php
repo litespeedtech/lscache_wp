@@ -445,6 +445,17 @@ if (defined('lscache_debug')) {
 			$options[$id] = intval($input[$id]);
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_404_TTL ;
+		if (!isset($input[$id]) || !is_numeric($input[$id])) {
+			$errors[] = __('404 TTL input is invalid. Input must be numeric.', 'litespeed-cache') ;
+		}
+		elseif ($input[$id] < 30) {
+			$options[$id] = 0;
+		}
+		else {
+			$options[$id] = intval($input[$id]);
+		}
+
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
 			$input, $options);
 
