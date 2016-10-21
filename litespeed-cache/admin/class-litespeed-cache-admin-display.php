@@ -406,14 +406,20 @@ class LiteSpeed_Cache_Admin_Display
 					|| (!isset($tab['title']))
 					|| (!isset($tab['slug']))
 					|| (!isset($tab['content']))) {
-					$config->debug_log(
-						__('WARNING: Third party tab input invalid.', 'litespeed-cache'));
+					if (defined('LSCWP_LOG')) {
+						LiteSpeed_Cache::debug_log(
+							__('WARNING: Third party tab input invalid.',
+								'litespeed-cache'));
+					}
 					unset($tp_tabs[$key]);
 					continue;
 				}
 				elseif (preg_match('/[^-\w]/', $tab['slug'])) {
-					$config->debug_log(
-						__('WARNING: Third party config slug contains invalid characters.', 'litespeed-cache'));
+					if (defined('LSCWP_LOG')) {
+						LiteSpeed_Cache::debug_log(
+							__('WARNING: Third party config slug contains invalid characters.',
+								'litespeed-cache'));
+					}
 					unset($tp_tabs[$key]);
 					continue;
 				}

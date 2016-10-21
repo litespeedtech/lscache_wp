@@ -19,6 +19,7 @@ class LiteSpeed_Cache
 {
 
 	private static $instance ;
+	private static $log_path = '';
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_VERSION = '1.0.11' ;
@@ -68,9 +69,28 @@ class LiteSpeed_Cache
 		// Load third party detection.
 		include_once $cur_dir . '/../thirdparty/litespeed-cache-thirdparty-registry.php';
 
-		$this->config = new LiteSpeed_Cache_Config() ;
-		$this->plugin_dir = plugin_dir_path($cur_dir) ;
+		$theme_root = get_theme_root();
+		$content_dir = dirname($theme_root);
 
+		self::$log_path = $content_dir . '/debug.log';
+		$this->config = new LiteSpeed_Cache_Config() ;
+		$should_debug = intval($this->config->get_option(
+			LiteSpeed_Cache_Config::OPID_DEBUG));
+
+		switch ($should_debug) {
+			// Not set is used as check admin IP here.
+		case LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET:
+			// fall through
+		case LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE:
+			define ('LSCWP_LOG', true);
+			break;
+		case LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE:
+			break;
+		default:
+			break;
+		}
+
+		$this->plugin_dir = plugin_dir_path($cur_dir) ;
 		$plugin_file = $this->plugin_dir . 'litespeed-cache.php' ;
 		register_activation_hook($plugin_file, array( $this, 'register_activation' )) ;
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
@@ -121,19 +141,24 @@ class LiteSpeed_Cache
 		return $conf->get_option($opt_id);
 	}
 
+	private static function format_message($mesg)
+	{
+		$formatted = sprintf("%s [%s] [LSCACHE_WP] %s\n", date('r'),
+			$_SERVER['REMOTE_ADDR'], $mesg);
+		return $formatted;
+	}
+
 	/**
 	 * Logs a debug message.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 * @param string $mesg The debug message.
-	 * @param string $log_level Optional. The log level of the message.
 	 */
-	public function debug_log( $mesg, $log_level = LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG )
+	public static function debug_log($mesg)
 	{
-		if ( true === WP_DEBUG ) {
-			$this->config->debug_log($mesg, $log_level) ;
-		}
+		$formatted = self::format_message($mesg);
+		file_put_contents(self::$log_path, $formatted, FILE_APPEND);
 	}
 
 	/**
@@ -1000,7 +1025,7 @@ class LiteSpeed_Cache
 		if (empty($db_cookie)) {
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
 		}
-		if (($db_cookie != $this->current_vary)
+		if ((defined('LSCWP_LOG')) && ($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
 			$this->debug_log(self::build_paragraphs(
 				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
@@ -1185,7 +1210,9 @@ class LiteSpeed_Cache
 	 */
 	private function no_cache_for( $reason )
 	{
-		$this->debug_log('Do not cache - ' . $reason) ;
+		if (defined('LSCWP_LOG')) {
+			$this->debug_log('Do not cache - ' . $reason);
+		}
 		return false ;
 	}
 
@@ -1379,7 +1406,9 @@ class LiteSpeed_Cache
 				$blogs = get_sites(array('fields' => 'ids'));
 			}
 			if (empty($blogs)) {
-				error_log('blog list is empty');
+				if (defined('LSCWP_LOG')) {
+					self::debug_log('blog list is empty');
+				}
 				return '';
 			}
 			$tags = array();
@@ -1818,8 +1847,8 @@ class LiteSpeed_Cache
 	{
 		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false,
 			$this->plugin_dir . '../environment_report.txt', false);
-		if ($ret !== true) {
-			error_log('[WARNING] LSCache wordpress plugin attempted to write '
+		if (($ret !== true) && (defined('LSCWP_LOG'))) {
+			self::debug_log('LSCache wordpress plugin attempted to write '
 				. 'env report but did not have permissions.');
 		}
 	}
