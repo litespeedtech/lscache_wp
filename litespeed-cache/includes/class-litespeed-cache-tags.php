@@ -131,6 +131,9 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function set_noncacheable()
 	{
+		if (defined('LSCWP_LOG')) {
+			LiteSpeed_Cache::debug_log('Thirdparty called set_noncacheable()');
+		}
 		self::$thirdparty_noncacheable = true;
 	}
 

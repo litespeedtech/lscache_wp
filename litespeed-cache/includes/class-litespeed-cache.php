@@ -1252,6 +1252,10 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (!empty($_GET)) {
+
+			if (defined('LSCWP_LOG')) {
+				$this->no_cache_for('Not a get request');
+			}
 			$this->cachectrl = self::CACHECTRL_NOCACHE;
 			return;
 		}
@@ -1322,11 +1326,17 @@ class LiteSpeed_Cache
 			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
 			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+				if (defined('LSCWP_LOG')) {
+					$this->no_cache_for('LSCWP_CTRL query string - did not match admin IP');
+				}
 				$this->cachectrl = self::CACHECTRL_NOCACHE;
 				return;
 			}
 		}
 
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('LSCWP_CTRL query string action is ' . $action);
+		}
 		switch ($action[0]) {
 			case 'P':
 				if ($action == self::ADMINQS_PURGE) {
@@ -1360,6 +1370,10 @@ class LiteSpeed_Cache
 				break;
 			default:
 				break;
+		}
+
+		if (defined('LSCWP_LOG')) {
+			$this->no_cache_for('LSCWP_CTRL query string should not cache.');
 		}
 		$this->cachectrl = self::CACHECTRL_NOCACHE;
 	}
@@ -1422,6 +1436,9 @@ class LiteSpeed_Cache
 		}
 		else {
 			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
+		}
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Purge tags are ' . implode(',', $tags));
 		}
 
 		$cache_purge_header .= ': tag=' . implode(',', $tags);
@@ -1555,6 +1572,9 @@ class LiteSpeed_Cache
 			return;
 		}
 		$prefix_tags = array_map(array($this,'prefix_apply'), $cache_tags);
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
+		}
 
 		switch ($mode) {
 			case self::CACHECTRL_CACHE:
