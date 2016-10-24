@@ -237,6 +237,8 @@ class LiteSpeed_Cache
 		}
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+		include_once $this->plugin_dir . '/includes/class-litespeed-cache-esi.php';
+		LiteSpeed_Cache_Esi::get_instance()->register_post_type();
 		flush_rewrite_rules();
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';

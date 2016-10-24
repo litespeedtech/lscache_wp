@@ -394,6 +394,9 @@ if (defined('lscache_debug')) {
 				$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = false;
 			}
 			$input[$id] = 'changed';
+			if ($enabled) {
+				LiteSpeed_Cache_Esi::get_instance()->register_post_type();
+			}
 			flush_rewrite_rules();
 		}
 
