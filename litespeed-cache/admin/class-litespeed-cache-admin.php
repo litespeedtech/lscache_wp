@@ -106,16 +106,8 @@ if (defined('lscache_debug')) {
 		}
 	}
 
-	/**
-	 * Hooked to wp_before_admin_bar_render.
-	 * Adds a link to the admin bar so users can quickly purge all.
-	 *
-	 * @global type $wp_admin_bar
-	 * @global type $pagenow
-	 */
-	public function add_quick_purge()
+	public static function build_lscwpctrl_url($val, $nonce)
 	{
-		global $wp_admin_bar;
 		global $pagenow;
 		$prefix = '?';
 		if (!current_user_can('manage_options')) {
@@ -134,16 +126,37 @@ if (defined('lscache_debug')) {
 			}
 		}
 
-		$prenonce = admin_url($pagenow . $prefix
-			. 'LSCWP_CTRL=' . LiteSpeed_Cache::ADMINQS_PURGEALL);
-		$url = wp_nonce_url($prenonce, 'litespeed-purgeall');
+		$combined = $pagenow . $prefix . LiteSpeed_Cache::ADMINQS_KEY
+			. '=' . $val;
+
+		if (is_network_admin()) {
+			$prenonce = network_admin_url($combined);
+		}
+		else {
+			$prenonce = admin_url($combined);
+		}
+		$url = wp_nonce_url($prenonce, $nonce);
+		return $url;
+	}
+
+	/**
+	 * Hooked to wp_before_admin_bar_render.
+	 * Adds a link to the admin bar so users can quickly purge all.
+	 *
+	 * @global type $wp_admin_bar
+	 * @global type $pagenow
+	 */
+	public function add_quick_purge()
+	{
+		global $wp_admin_bar;
+		$url = self::build_lscwpctrl_url(LiteSpeed_Cache::ADMINQS_PURGEALL,
+			'litespeed-purgeall');
 
 		$wp_admin_bar->add_node(array(
 			'id'    => 'lscache-quick-purge',
 			'title' => 'LiteSpeed Cache Purge All',
 			'href'  => $url
 		));
-
 	}
 
 	/**
@@ -207,8 +220,13 @@ if (defined('lscache_debug')) {
 	{
 		$this::add_submenu(sprintf(__('%s Information', 'litespeed-cache'),'LiteSpeed Cache'),
 				__('Information', 'litespeed-cache'), 'lscache-info', 'show_menu_select');
-		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'),'LiteSpeed Cache'),
+		$this::add_submenu(sprintf(__('%s FAQs', 'litespeed-cache'), 'LiteSpeed Cache'),
 				__('FAQs', 'litespeed-cache'), 'lscache-faqs', 'show_menu_select');
+		if ((!is_multisite()) ||
+			((is_network_admin()) && (current_user_can('manage_network_options')))) {
+			$this::add_submenu(sprintf(__('%s Environment Report', 'litespeed-cache'), 'LiteSpeed Cache'),
+					__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_menu_select');
+		}
 
 	}
 
@@ -264,8 +282,26 @@ if (defined('lscache_debug')) {
 
 		$option_name = LiteSpeed_Cache_Config::OPTION_NAME ;
 		if (!is_network_admin()) {
-			register_setting($option_name, $option_name, array( $this, 'validate_plugin_settings' )) ;
+			register_setting($option_name, $option_name,
+				array( $this, 'validate_plugin_settings' )) ;
 		}
+
+		if (!is_multisite()) {
+			if (!current_user_can('manage_options')) {
+				return;
+			}
+		}
+		elseif ((!is_network_admin())
+			|| (!current_user_can('manage_network_options'))) {
+			return;
+		}
+
+		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT)
+			!== LiteSpeed_Cache::WHM_TRANSIENT_VAL) {
+			return;
+		}
+
+		LiteSpeed_Cache_Admin_Display::get_instance()->show_display_installed();
 	}
 
 	/**
@@ -410,6 +446,17 @@ if (defined('lscache_debug')) {
 			$options[$id] = intval($input[$id]);
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_404_TTL ;
+		if (!isset($input[$id]) || !is_numeric($input[$id])) {
+			$errors[] = __('404 TTL input is invalid. Input must be numeric.', 'litespeed-cache') ;
+		}
+		elseif ($input[$id] < 30) {
+			$options[$id] = 0;
+		}
+		else {
+			$options[$id] = intval($input[$id]);
+		}
+
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
 			$input, $options);
 
@@ -543,16 +590,20 @@ if (defined('lscache_debug')) {
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_level = isset($input[$id]) ? intval($input[$id])
-				: LiteSpeed_Cache_Config::LOG_LEVEL_NONE ;
+				: LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 		if (($debug_level != $options[$id])
-				&& ($debug_level >= LiteSpeed_Cache_Config::LOG_LEVEL_NONE)
-				&& ($debug_level <= LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG)) {
+				&& ($debug_level >= LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)
+				&& ($debug_level <= LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET)) {
 			$options[$id] = $debug_level ;
+		}
+		elseif ($debug_level > LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET) {
+			$options[$id] = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 		}
 
 		if ( ! empty($errors) ) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
 					LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors)) ;
+			return $options;
 		}
 
 		$tp_default_options = $config->get_thirdparty_options();

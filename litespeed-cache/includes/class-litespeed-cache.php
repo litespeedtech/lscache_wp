@@ -19,6 +19,7 @@ class LiteSpeed_Cache
 {
 
 	private static $instance ;
+	private static $log_path = '';
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_VERSION = '1.0.11' ;
@@ -29,6 +30,7 @@ class LiteSpeed_Cache
 	const LSCOOKIE_VARY_COMMENTER = 2;
 
 	const ADMINQS_KEY = 'LSCWP_CTRL';
+	const ADMINQS_DISMISS = 'DISMISS';
 	const ADMINQS_PURGE = 'PURGE';
 	const ADMINQS_PURGEALL = 'PURGEALL';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
@@ -42,6 +44,9 @@ class LiteSpeed_Cache
 	const CACHECTRL_SHARED = 5;
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
+
+	const WHM_TRANSIENT = 'lscwp_whm_install';
+	const WHM_TRANSIENT_VAL = 'whm_install';
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -70,9 +75,35 @@ class LiteSpeed_Cache
 		// Load third party detection.
 		include_once $cur_dir . '/../thirdparty/litespeed-cache-thirdparty-registry.php';
 
-		$this->config = new LiteSpeed_Cache_Config() ;
-		$this->plugin_dir = plugin_dir_path($cur_dir) ;
+		$theme_root = get_theme_root();
+		$content_dir = dirname($theme_root);
 
+		$should_debug = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
+		self::$log_path = $content_dir . '/debug.log';
+		$this->config = new LiteSpeed_Cache_Config() ;
+		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_ENABLED)) {
+			$should_debug = intval($this->config->get_option(
+				LiteSpeed_Cache_Config::OPID_DEBUG));
+		}
+
+		switch ($should_debug) {
+			// NOTSET is used as check admin IP here.
+		case LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET:
+			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
+			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+				break;
+			}
+			// fall through
+		case LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE:
+			define ('LSCWP_LOG', true);
+			break;
+		case LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE:
+			break;
+		default:
+			break;
+		}
+
+		$this->plugin_dir = plugin_dir_path($cur_dir) ;
 		$plugin_file = $this->plugin_dir . 'litespeed-cache.php' ;
 		register_activation_hook($plugin_file, array( $this, 'register_activation' )) ;
 		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
@@ -123,19 +154,53 @@ class LiteSpeed_Cache
 		return $conf->get_option($opt_id);
 	}
 
+	private static function setup_debug_log()
+	{
+		if (!defined('LSCWP_LOG_TAG')) {
+			define('LSCWP_LOG_TAG',
+				'LSCACHE_WP_blogid_' . get_current_blog_id());
+		}
+		self::log_request();
+
+	}
+
+	private static function format_message($mesg)
+	{
+		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'),
+			$_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
+			constant('LSCWP_LOG_TAG'), $mesg);
+		return $formatted;
+	}
+
 	/**
 	 * Logs a debug message.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 * @param string $mesg The debug message.
-	 * @param string $log_level Optional. The log level of the message.
 	 */
-	public function debug_log( $mesg, $log_level = LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG )
+	public static function debug_log($mesg)
 	{
-		if ( true === WP_DEBUG ) {
-			$this->config->debug_log($mesg, $log_level) ;
-		}
+		$formatted = self::format_message($mesg);
+		file_put_contents(self::$log_path, $formatted, FILE_APPEND);
+	}
+
+	private static function log_request()
+	{
+		$params = array(
+			sprintf('%s %s %s', $_SERVER['REQUEST_METHOD'],
+				$_SERVER['SERVER_PROTOCOL'], strtok($_SERVER['REQUEST_URI'], '?')),
+			'Query String: '		. $_SERVER['QUERY_STRING'],
+			'User Agent: '			. $_SERVER['HTTP_USER_AGENT'],
+			'Accept Encoding: '		. $_SERVER['HTTP_ACCEPT_ENCODING'],
+			'Cookie: '				. $_SERVER['HTTP_COOKIE'],
+			'X-LSCACHE: '			. ($_SERVER['X-LSCACHE'] ? 'true' : 'false'),
+			'LSCACHE_VARY_COOKIE: ' . $_SERVER['LSCACHE_VARY_COOKIE'],
+			'LSCACHE_VARY_VALUE: '	. $_SERVER['LSCACHE_VARY_VALUE'],
+		);
+
+		$request = array_map('self::format_message', $params);
+		file_put_contents(self::$log_path, $request, FILE_APPEND);
 	}
 
 	/**
@@ -172,6 +237,11 @@ class LiteSpeed_Cache
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		$this->config->plugin_activation();
+		self::generate_environment_report();
+
+		if (defined('LSCWP_PLUGIN_NAME')) {
+			set_transient(self::WHM_TRANSIENT, self::WHM_TRANSIENT_VAL);
+		}
 	}
 
 	/**
@@ -202,6 +272,8 @@ class LiteSpeed_Cache
 		flush_rewrite_rules();
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
+		// delete in case it's not deleted prior to deactivation.
+		delete_transient(self::WHM_TRANSIENT);
 	}
 
 	/**
@@ -218,6 +290,10 @@ class LiteSpeed_Cache
 	{
 		$is_ajax = (defined('DOING_AJAX') && DOING_AJAX);
 		$module_enabled = $this->config->is_plugin_enabled();
+
+		if (defined('LSCWP_LOG')) {
+			self::setup_debug_log();
+		}
 
 		if ((is_admin()) && (current_user_can('administrator'))) {
 			$this->load_admin_actions($module_enabled) ;
@@ -425,6 +501,14 @@ class LiteSpeed_Cache
 				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',
 				array($admin, 'parse_settings'));
+		if (is_multisite()) {
+			add_action('update_site_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
+					'LiteSpeed_Cache::update_environment_report', 10, 2);
+		}
+		else {
+			add_action('update_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
+					'LiteSpeed_Cache::update_environment_report', 10, 2);
+		}
 		$this->set_locale() ;
 	}
 
@@ -786,27 +870,23 @@ class LiteSpeed_Cache
 		if (empty($val)) {
 			return;
 		}
+
 		if (strpos($val, '<') !== false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 				__('Failed to purge by url, contained "<".', 'litespeed-cache'));
 			return;
+		}
 
-		}
-		$id = url_to_postid($val);
-		if ($id == 0) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by url, does not exist: %d', 'litespeed-cache'), $val));
-			return;
-		}
+		$hash = md5($val);
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_POST . $id);
+				LiteSpeed_Cache_Tags::TYPE_URL . $hash);
+		return;
 	}
 
 	/**
@@ -1044,7 +1124,7 @@ class LiteSpeed_Cache
 		if (empty($db_cookie)) {
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
 		}
-		if (($db_cookie != $this->current_vary)
+		if ((defined('LSCWP_LOG')) && ($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
 			$this->debug_log(self::build_paragraphs(
 				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
@@ -1161,7 +1241,8 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('trackback') ;
 		}
 
-		if ( is_404() ) {
+		if (($conf->get_option(LiteSpeed_Cache_Config::OPID_404_TTL) === 0)
+			&& (is_404())) {
 			return $this->no_cache_for('404 pages') ;
 		}
 
@@ -1175,7 +1256,22 @@ class LiteSpeed_Cache
 
 		$cacheable = apply_filters('litespeed_cache_is_cacheable', true);
 		if (!$cacheable) {
-			return $this->no_cache_for('Third Party Plugin determined not cacheable.');
+			global $wp_filter;
+			if ((!defined('LSCWP_LOG'))
+				|| (empty($wp_filter['litespeed_cache_is_cacheable']))) {
+				return $this->no_cache_for(
+					'Third Party Plugin determined not cacheable.');
+			}
+			$funcs = array();
+			foreach ($wp_filter['litespeed_cache_is_cacheable'] as $hook_level) {
+				foreach ($hook_level as $func=>$params) {
+					$funcs[] = $func;
+				}
+			}
+			$this->no_cache_for('One of the following functions '
+				. "determined that this page is not cacheable:\n\t\t"
+				. implode("\n\t\t", $funcs));
+			return false;
 		}
 
 		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
@@ -1231,7 +1327,9 @@ class LiteSpeed_Cache
 	 */
 	public function no_cache_for( $reason )
 	{
-		$this->debug_log('Do not cache - ' . $reason) ;
+		if (defined('LSCWP_LOG')) {
+			$this->debug_log('Do not cache - ' . $reason);
+		}
 		return false ;
 	}
 
@@ -1280,6 +1378,9 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (!empty($_GET)) {
+			if (defined('LSCWP_LOG')) {
+				$this->no_cache_for('Not a get request');
+			}
 			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 			return;
 		}
@@ -1299,6 +1400,32 @@ class LiteSpeed_Cache
 		return;
 	}
 
+	private function admin_ctrl_redirect()
+	{
+		global $pagenow;
+		$qs = '';
+
+		if (!empty($_GET)) {
+			if (isset($_GET['LSCWP_CTRL'])) {
+				unset($_GET['LSCWP_CTRL']);
+			}
+			if (isset($_GET['_wpnonce'])) {
+				unset($_GET['_wpnonce']);
+			}
+			if (!empty($_GET)) {
+				$qs = '?' . http_build_query($_GET);
+			}
+		}
+		if (is_network_admin()) {
+			$url = network_admin_url($pagenow . $qs);
+		}
+		else {
+			$url = admin_url($pagenow . $qs);
+		}
+		wp_redirect($url);
+		exit();
+	}
+
 	/**
 	 * Check the query string to see if it contains a LSCWP_CTRL.
 	 * Also will compare IPs to see if it is a valid command.
@@ -1315,7 +1442,8 @@ class LiteSpeed_Cache
 		$action = $_GET[self::ADMINQS_KEY];
 		if ((is_admin()) || (is_network_admin())) {
 			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
-				|| (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)) {
+				|| ((wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)
+					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-dismiss') === false))) {
 				return;
 			}
 		}
@@ -1323,11 +1451,17 @@ class LiteSpeed_Cache
 			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
 			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+				if (defined('LSCWP_LOG')) {
+					$this->no_cache_for('LSCWP_CTRL query string - did not match admin IP');
+				}
 				$this->cachectrl = self::CACHECTRL_NOCACHE;
 				return;
 			}
 		}
 
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('LSCWP_CTRL query string action is ' . $action);
+		}
 		switch ($action[0]) {
 			case 'P':
 				if ($action == self::ADMINQS_PURGE) {
@@ -1346,22 +1480,7 @@ class LiteSpeed_Cache
 				if ((!is_admin()) && (!is_network_admin())) {
 					return;
 				}
-				global $pagenow;
-				$qs = '';
-
-				if (!empty($_GET)) {
-					if (isset($_GET['LSCWP_CTRL'])) {
-						unset($_GET['LSCWP_CTRL']);
-					}
-					if (isset($_GET['_wpnonce'])) {
-						unset($_GET['_wpnonce']);
-					}
-					if (!empty($_GET)) {
-						$qs = '?' . http_build_query($_GET);
-					}
-				}
-				wp_redirect(admin_url($pagenow . $qs));
-				exit();
+				$this->admin_ctrl_redirect();
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->set_cachectrl($this->cachectrl
@@ -1369,8 +1488,18 @@ class LiteSpeed_Cache
 					return;
 				}
 				break;
+			case 'D':
+				if ($action == self::ADMINQS_DISMISS) {
+					delete_transient(self::WHM_TRANSIENT);
+					$this->admin_ctrl_redirect();
+				}
+				break;
 			default:
 				break;
+		}
+
+		if (defined('LSCWP_LOG')) {
+			$this->no_cache_for('LSCWP_CTRL query string should not cache.');
 		}
 		$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 	}
@@ -1421,7 +1550,9 @@ class LiteSpeed_Cache
 				$blogs = get_sites(array('fields' => 'ids'));
 			}
 			if (empty($blogs)) {
-				error_log('blog list is empty');
+				if (defined('LSCWP_LOG')) {
+					self::debug_log('blog list is empty');
+				}
 				return '';
 			}
 			$tags = array();
@@ -1431,6 +1562,9 @@ class LiteSpeed_Cache
 		}
 		else {
 			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
+		}
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Purge tags are ' . implode(',', $tags));
 		}
 
 		$cache_purge_header .= ': tag=' . implode(',', $tags);
@@ -1517,18 +1651,20 @@ class LiteSpeed_Cache
 			$hdr_content[] = $cache_hdr;
 		}
 
-		if (empty($hdr_content)) {
-			return;
+		if (!empty($hdr_content)) {
+			if ($showhdr) {
+				@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': '
+						. implode('; ', $hdr_content));
+			}
+			else {
+				foreach($hdr_content as $hdr) {
+					@header($hdr);
+				}
+			}
 		}
 
-		if ($showhdr) {
-			@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': '
-					. implode('; ', $hdr_content));
-		}
-		else {
-			foreach($hdr_content as $hdr) {
-				@header($hdr);
-			}
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('End response.');
 		}
 	}
 
@@ -1572,6 +1708,9 @@ error_log('do not cache page.');
 			return;
 		}
 		$prefix_tags = array_map(array($this,'prefix_apply'), $cache_tags);
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
+		}
 
 if (defined('lscache_debug')) {
 error_log('page is cacheable');
@@ -1589,6 +1728,8 @@ error_log('page is cacheable');
 				// fall through
 			case self::CACHECTRL_PUBLIC:
 				$feed_ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL);
+				$ttl_404 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_404_TTL);
+
 				if ($this->custom_ttl != 0) {
 					$ttl = $this->custom_ttl;
 				}
@@ -1598,6 +1739,9 @@ error_log('page is cacheable');
 				}
 				elseif ((is_feed()) && ($feed_ttl > 0)) {
 					$ttl = $feed_ttl;
+				}
+				elseif ((is_404()) && ($ttl_404 > 0)) {
+					$ttl = $ttl_404;
 				}
 				else {
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
@@ -1667,6 +1811,10 @@ error_log('page is cacheable');
 		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
 		$cache_tags = array();
+
+		$hash = md5($_SERVER['REQUEST_URI']);
+
+		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 
 		if ( is_front_page() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE ;
@@ -1811,6 +1959,126 @@ error_log('page is cacheable');
 
 		return array_unique($purge_tags) ;
 	}
+
+	private static function format_report_section($section_header, $section)
+	{
+		$tab = '    '; // four spaces
+		$nl = "\n";
+
+		if (empty($section)) {
+			return 'No matching ' . $section_header . $nl . $nl;
+		}
+		$buf = $section_header;
+		foreach ($section as $key=>$val) {
+			$buf .= $nl . $tab;
+			if (!is_numeric($key)) {
+				$buf .= $key . ' = ';
+			}
+			if (!is_string($val)) {
+				$buf .= print_r($val, true);
+			}
+			else {
+				$buf .= $val;
+			}
+		}
+		return $buf . $nl . $nl;
+	}
+
+	/**
+	 *
+	 * @param boolean $html - Whether to use html separators or regular string separators
+	 * @param array $server - server variables
+	 * @param array $options - cms options
+	 * @param array $extras - cms specific attributes
+	 * @param array $htaccess_paths - htaccess paths to check.
+	 */
+	public static function build_environment_report($server, $options,
+		$extras = array(), $htaccess_paths = array())
+	{
+		$server_keys = array(
+			'DOCUMENT_ROOT'=>'',
+			'SERVER_SOFTWARE'=>'',
+			'X-LSCACHE'=>''
+		);
+		$server_vars = array_intersect_key($server, $server_keys);
+		$buf = self::format_report_section('Server Variables', $server_vars);
+
+		$buf .= self::format_report_section('LSCache Plugin Options',
+			$options);
+
+		$buf .= self::format_report_section('Wordpress Specific Extras',
+			$extras);
+
+		if (empty($htaccess_paths)) {
+			return $buf;
+		}
+
+		foreach ($htaccess_paths as $path) {
+			if ((!file_exists($path)) || (!is_readable($path))) {
+				$buf .= $path . " does not exist or is not readable.\n";
+				continue;
+			}
+			$content = file_get_contents($path);
+			if ($content === false) {
+				$buf .= $path . " returned false for file_get_contents.\n";
+				continue;
+			}
+			$buf .= $path . " contents:\n" . $content . "\n\n";
+		}
+		return $buf;
+	}
+
+	public function write_environment_report($content)
+	{
+		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false,
+			$this->plugin_dir . '../environment_report.txt', false);
+		if (($ret !== true) && (defined('LSCWP_LOG'))) {
+			self::debug_log('LSCache wordpress plugin attempted to write '
+				. 'env report but did not have permissions.');
+		}
+	}
+
+	public static function generate_environment_report($options = null)
+	{
+		global $wp_version, $_SERVER;
+		$home = LiteSpeed_Cache_Admin_Rules::get_home_path();
+		$site = LiteSpeed_Cache_Admin_Rules::get_site_path();
+		$paths = array($home);
+		if ($home != $site) {
+			$paths[] = $site;
+		}
+
+		$active_plugins = get_option('active_plugins');
+		if (function_exists('wp_get_theme')) {
+			$theme_obj = wp_get_theme();
+			$active_theme = $theme_obj->get('Name');
+		}
+		else {
+			$active_theme = get_current_theme();
+		}
+
+		$extras = array(
+			'wordpress version' => $wp_version,
+			'locale' => get_locale(),
+			'active theme' => $active_theme,
+			'active plugins' => $active_plugins,
+
+		);
+		if (is_null($options)) {
+			$options = self::config()->get_options();
+		}
+
+		$report = self::build_environment_report($_SERVER, $options, $extras,
+			$paths);
+		self::plugin()->write_environment_report($report);
+		return $report;
+	}
+
+	public static function update_environment_report($unused, $options)
+	{
+		self::generate_environment_report($options);
+	}
+
 
 
 /* BEGIN ESI CODE, not fully implemented for now */

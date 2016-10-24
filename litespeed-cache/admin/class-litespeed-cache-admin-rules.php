@@ -134,10 +134,25 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @return mixed True/non-zero if the file(s) has the given permissions.
 	 * False/zero otherwise.
 	 */
-	public static function is_file_able($permissions)
+	public static function is_file_able($permissions, $path = null)
 	{
-		$rules = self::get_instance();
-		return (($rules->filerw & $permissions) === $permissions);
+		$home = self::get_home_path();
+		$site = self::get_site_path();
+
+		if (($path === null) || ($path === $home) || ($path === $site)) {
+			$rules = self::get_instance();
+			return (($rules->filerw & $permissions) === $permissions);
+		}
+		$perms = 0;
+		$test_permissions = file_exists($path) ? $path : dirname($path);
+
+		if (is_readable($test_permissions)) {
+			$perms |= self::READABLE;
+		}
+		if (is_writable($test_permissions)) {
+			$perms |= self::WRITABLE;
+		}
+		return (($perms & $permissions) === $permissions);
 	}
 
 	/**
@@ -329,12 +344,38 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$content = file_get_contents($path);
-		if ($content == false) {
+		if ($content === false) {
 			$content = self::$ERR_GET;
 			return false;
 		}
 		// Remove ^M characters.
 		$content = str_ireplace("\x0D", "", $content);
+		return true;
+	}
+
+	public static function file_get_ifmodule_block($content, &$off_begin,
+		&$off_end)
+	{
+		$off_begin = stripos($content, self::$RW_BLOCK_START);
+		//if not found
+		if ($off_begin === false) {
+			return false;
+		}
+		$off_begin += strlen(self::$RW_BLOCK_START);
+		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
+		$off_next = stripos($content, '<IfModule', $off_begin);
+		if ($off_end === false) {
+			$buf = sprintf(self::$ERR_NOT_FOUND, 'IfModule close');
+			return $buf;
+		}
+		elseif (($off_next !== false) && ($off_next < $off_end)) {
+			$buf = LiteSpeed_Cache::build_paragraph(
+				self::$ERR_WRONG_ORDER,
+				sprintf(__('Your .htaccess file is missing a %s.', 'litespeed-cache'),
+					'&lt;/IfModule&gt;'));
+			return $buf;
+		}
+		--$off_end; // go to end of previous line.
 		return true;
 	}
 
@@ -354,30 +395,21 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$wrapper_end = '';
 		$wrapper_begin = $this->build_wrappers(self::$RW_WRAPPER, $wrapper_end);
+		$off_begin = 0;
+		$off_end = 0;
 
-		$off_begin = stripos($content, self::$RW_BLOCK_START);
-		//if not found
-		if ($off_begin === false) {
+		$ret = self::file_get_ifmodule_block($content, $off_begin, $off_end);
+
+		if ($ret === false) {
 			$buf = self::$RW_BLOCK_START . "\n" . $wrapper_begin
 				. self::$RW_PLUGIN;
 			$after = $wrapper_end . "\n" . self::$RW_BLOCK_END . "\n" . $content;
 			return NULL;
 		}
-		$off_begin += strlen(self::$RW_BLOCK_START);
-		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
-		$off_next = stripos($content, '<IfModule', $off_begin);
-		if ($off_end === false) {
-			$buf = sprintf(self::$ERR_NOT_FOUND, 'IfModule close');
+		elseif ($ret !== true) {
+			$buf = $ret;
 			return false;
 		}
-		elseif (($off_next !== false) && ($off_next < $off_end)) {
-			$buf = LiteSpeed_Cache::build_paragraph(
-				self::$ERR_WRONG_ORDER,
-				sprintf(__('Your .htaccess file is missing a %s.', 'litespeed-cache'),
-					'&lt;/IfModule&gt;'));
-			return false;
-		}
-		--$off_end; // go to end of previous line.
 
 		$off_wrapper = stripos($content, $wrapper_begin, $off_begin);
 		// If the wrapper exists
@@ -500,13 +532,16 @@ class LiteSpeed_Cache_Admin_Rules
 	 * If $cleanup is true, this function strip extra slashes.
 	 *
 	 * @since 1.0.4
+	 * @since 1.0.12 - Introduce $backup parameter and make function public
 	 * @access private
 	 * @param string $content The new content to put into the rules file.
 	 * @param boolean $cleanup True to strip extra slashes, false otherwise.
 	 * @param string $path The file path to edit.
+	 * @param boolean $backup Whether to create backups or not.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	private static function file_save($content, $cleanup = true, $path = '')
+	public static function file_save($content, $cleanup = true, $path = '',
+		$backup = true)
 	{
 		while (true) {
 			if (empty($path)) {
@@ -516,12 +551,12 @@ class LiteSpeed_Cache_Admin_Rules
 				}
 			}
 
-			if (self::is_file_able(self::RW) == 0) {
+			if (self::is_file_able(self::RW, $path) == 0) {
 				return self::$ERR_READWRITE;
 			}
 
 			//failed to backup, not good.
-			if (self::file_backup($path) === false) {
+			if (($backup) && (self::file_backup($path) === false)) {
 				return self::$ERR_BACKUP;
 			}
 

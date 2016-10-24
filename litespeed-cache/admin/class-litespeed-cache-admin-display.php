@@ -267,6 +267,12 @@ class LiteSpeed_Cache_Admin_Display
 					$this->show_menu_edit_htaccess();
 				}
 				break;
+			case 'r':
+				if (($selection_len == 6)
+						&& (strncmp($selection, 'report', $selection_len) == 0)) {
+					$this->show_menu_report();
+				}
+
 			default:
 				break;
 		}
@@ -344,7 +350,7 @@ class LiteSpeed_Cache_Admin_Display
 		. '</p></li>'
 		. '<li><p>' . __('Tag: Purge tag pages by name.', 'litespeed-cache')
 		. '</p></li>'
-		. '<li><p>' . __('URL: Purge pages by locator.', 'litespeed-cache')
+		. '<li><p>' . __('URL: Purge pages by locator. Must be exact match.', 'litespeed-cache')
 		. ' Ex: http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>'
 		. '</p></li>'
 		. '</ul>';
@@ -457,14 +463,20 @@ class LiteSpeed_Cache_Admin_Display
 					|| (!isset($tab['title']))
 					|| (!isset($tab['slug']))
 					|| (!isset($tab['content']))) {
-					$config->debug_log(
-						__('WARNING: Third party tab input invalid.', 'litespeed-cache'));
+					if (defined('LSCWP_LOG')) {
+						LiteSpeed_Cache::debug_log(
+							__('WARNING: Third party tab input invalid.',
+								'litespeed-cache'));
+					}
 					unset($tp_tabs[$key]);
 					continue;
 				}
 				elseif (preg_match('/[^-\w]/', $tab['slug'])) {
-					$config->debug_log(
-						__('WARNING: Third party config slug contains invalid characters.', 'litespeed-cache'));
+					if (defined('LSCWP_LOG')) {
+						LiteSpeed_Cache::debug_log(
+							__('WARNING: Third party config slug contains invalid characters.',
+								'litespeed-cache'));
+					}
 					unset($tp_tabs[$key]);
 					continue;
 				}
@@ -890,6 +902,33 @@ class LiteSpeed_Cache_Admin_Display
 		echo $buf;
 	}
 
+
+	private function show_menu_report()
+	{
+		$report = LiteSpeed_Cache::generate_environment_report();
+		$desc = LiteSpeed_Cache::build_paragraph(
+			__('The environment report contains detailed information about your configuration.', 'litespeed-cache'),
+			__('If you run into any issues, please include the contents of this text area in your support message.', 'litespeed-cache'),
+			__('To easily grab the content, click into the text area and enter ctrl + a to select all and ctrl + c to copy to your clipboard.', 'litespeed-cache'),
+			sprintf(__('Alternatively, this information is also saved in %s.', 'litespeed-cache'),
+				'wp-content/plugins/litespeed-cache/environment_report.txt')
+			)
+			. '<br><br>'
+			. __('This text area contains the following content:', 'litespeed-cache')
+			. '<br>'
+			. __('Server Variables, Plugin Options, WordPress information (version, locale, active plugins, etc.), and .htaccess file content.', 'litespeed-cache');
+
+
+		$buf = '<div class="wrap"><h2>LiteSpeed Cache Report</h2>';
+		$buf .= '<div class="welcome-panel"><h4>' . $desc . '</h4>';
+		$buf .= $this->input_field_textarea('litespeed-report', $report, '20',
+			'80', '', true);
+
+		$buf .= '</div></div>';
+
+		echo $buf;
+	}
+
 	/**
 	 * Builds the html for the general settings tab.
 	 *
@@ -903,6 +942,10 @@ class LiteSpeed_Cache_Admin_Display
 		$feed_ttl_desc = LiteSpeed_Cache::build_paragraph(
 			__('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'),
 			__('If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache')
+		);
+		$notfound_ttl_desc = LiteSpeed_Cache::build_paragraph(
+			__('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'),
+			__('If this is set to a number less than 30, 404 pages will not be cached.', 'litespeed-cache')
 		);
 		$cache_commenters_desc = LiteSpeed_Cache::build_paragraph(
 			__('When checked, commenters will not be able to see their comments awaiting moderation.', 'litespeed-cache'),
@@ -961,6 +1004,12 @@ class LiteSpeed_Cache_Admin_Display
 				__('seconds', 'litespeed-cache')) ;
 		$buf .= $this->display_config_row(__('Default Feed TTL', 'litespeed-cache'), $input_feed_ttl,
 				$feed_ttl_desc);
+
+		$id = LiteSpeed_Cache_Config::OPID_404_TTL ;
+		$input_404_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+				__('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default 404 Page TTL', 'litespeed-cache'),
+				$input_404_ttl, $notfound_ttl_desc);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
 		$cache_commenters = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
@@ -1293,6 +1342,13 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$buf = $this->input_group_start(__('Developer Testing', 'litespeed-cache')) ;
 
+		$debug_desc = LiteSpeed_Cache::build_paragraph(
+			__('Outputs to WordPress debug log.', 'litespeed-cache'),
+			__('This should be set to off once everything is working to prevent filling the disk.', 'litespeed-cache'),
+			__('The Admin IP option will only output log messages on requests from admin IPs.', 'litespeed-cache'),
+			__('The logs will be outputted to the debug.log in your wp-content directory.', 'litespeed-cache')
+		);
+
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		$input_admin_ips = $this->input_field_text($id, $options[$id], '', 'regular-text') ;
 		$buf .= $this->display_config_row(__('Admin IPs', 'litespeed-cache'), $input_admin_ips,
@@ -1304,14 +1360,13 @@ class LiteSpeed_Cache_Admin_Display
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
 		$debug_levels = array(
-			LiteSpeed_Cache_Config::LOG_LEVEL_NONE => __('None', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_ERROR => __('Error', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_NOTICE => __('Notice', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_INFO => __('Info', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::LOG_LEVEL_DEBUG => __('Debug', 'litespeed-cache') ) ;
+			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Off', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('On', 'litespeed-cache'),
+			LiteSpeed_Cache_Config::OPID_ENABLED_NOTSET => __('Admin IP only', 'litespeed-cache'),
+		);
 		$input_debug = $this->input_field_select($id, $debug_levels, $options[$id]) ;
-		$buf .= $this->display_config_row(__('Debug Level', 'litespeed-cache'), $input_debug,
-				__('Outputs to WordPress debug log.', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Debug Log', 'litespeed-cache'),
+			$input_debug, $debug_desc) ;
 
 		/* Maybe add this feature later
 		  $id = LiteSpeed_Cache_Config::OPID_TEST_IPS;
@@ -1826,6 +1881,47 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$buf .= $this->input_collapsible_end();
 
 		return $buf;
+	}
+
+
+	public function show_display_installed()
+	{
+		$url = LiteSpeed_Cache_Admin::build_lscwpctrl_url(
+			LiteSpeed_Cache::ADMINQS_DISMISS, 'litespeed-dismiss');
+		$buf = LiteSpeed_Cache::build_paragraph(
+			'<h3>'
+			. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache')
+			. '</h3>',
+			__('This message indicates that the plugin was installed by your server admin.', 'litespeed-cache'),
+			__('Our plugin is used to cache pages - a simple way to improve the performance of your site.', 'litespeed-cache'),
+			__('However, we have no way of knowing all the possible customizations that you may have done.', 'litespeed-cache'),
+			__('For that reason, we ask that you test your site to make sure everything still functions properly.', 'litespeed-cache')
+		);
+		$buf .= '<br><br>'
+			. __('Examples of test cases include:', 'litespeed-cache')
+			. '<ul><li>'
+			. __('Visit your site while logged out', 'litespeed-cache')
+			. '</li><li>'
+			. __('Create a post, make sure the front page is accurate', 'litespeed-cache')
+			. '</li></ul>';
+
+		$buf .=
+			sprintf(wp_kses(__('If you have any questions, we are always happy to answer any questions on our '
+				. '<a href="%s" rel="%s" target="%s">support forum</a>.', 'litespeed-cache'),
+				array('a' =>array('href' => array(), 'rel' => array(),
+					'target' => array()))),
+				'https://wordpress.org/support/plugin/litespeed-cache',
+				'noopener noreferrer', '_blank');
+		$buf .= '<br>'
+			. __('If you would rather not move at litespeed, you can deactivate this plugin.',
+				'litespeed-cache')
+			. '<br><br>'
+			. sprintf(wp_kses(__(
+				'<a href="%s">OK, got it (dismiss)</a>', 'litespeed-cache'),
+				array('a' =>array('href' => array()))), $url);
+
+
+		$this->add_notice(self::NOTICE_BLUE, $buf);
 	}
 
 	/**

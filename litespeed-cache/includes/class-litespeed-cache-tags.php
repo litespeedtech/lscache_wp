@@ -30,6 +30,7 @@ class LiteSpeed_Cache_Tags
 	const TYPE_ARCHIVE_DATE = 'D.' ;
 	const TYPE_BLOG = 'B.' ;
 	const TYPE_LOGIN = 'L';
+	const TYPE_URL = 'URL.';
 	const TYPE_WIDGET = 'W.';
 	const HEADER_PURGE = 'X-LiteSpeed-Purge' ;
 	const HEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
@@ -131,6 +132,11 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function set_noncacheable()
 	{
+		if (defined('LSCWP_LOG')) {
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+			LiteSpeed_Cache::debug_log('Thirdparty called set_noncacheable(): '
+				. $trace[1]['class']);
+		}
 		self::$thirdparty_noncacheable = true;
 	}
 

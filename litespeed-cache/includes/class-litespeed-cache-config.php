@@ -43,6 +43,7 @@ class LiteSpeed_Cache_Config
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
 	const OPID_FRONT_PAGE_TTL = 'front_page_ttl';
 	const OPID_FEED_TTL = 'feed_ttl';
+	const OPID_404_TTL = '404_ttl';
 	const OPID_NOCACHE_VARS = 'nocache_vars' ;
 	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
@@ -135,15 +136,15 @@ class LiteSpeed_Cache_Config
 	 * @param string $id Configuration ID.
 	 * @return mixed Selected option if set, NULL if not.
 	 */
-	public function get_option( $id )
+	public function get_option($id)
 	{
-		if ( isset($this->options[$id]) ) {
-			return $this->options[$id] ;
+		if (isset($this->options[$id])) {
+			return $this->options[$id];
 		}
-		else {
-			$this->debug_log('Invalid option ID ' . $id, self::LOG_LEVEL_ERROR) ;
-			return NULL ;
+		if (defined('LSCWP_LOG')) {
+			LiteSpeed_Cache::debug_log('Invalid option ID ' . $id);
 		}
+		return NULL;
 	}
 
 	/**
@@ -221,6 +222,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_PUBLIC_TTL => 28800,
 			self::OPID_FRONT_PAGE_TTL => 1800,
 			self::OPID_FEED_TTL => 0,
+			self::OPID_404_TTL => 3600,
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
@@ -376,8 +378,10 @@ class LiteSpeed_Cache_Config
 //		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
-		$this->debug_log("plugin_upgrade option changed = $res $log\n",
-				($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
+		if (defined('LSCWP_LOG')) {
+			LiteSpeed_Cache::debug_log(
+				"plugin_upgrade option changed = $res\n");
+		}
 	}
 
 	/**
@@ -400,8 +404,10 @@ class LiteSpeed_Cache_Config
 		flush_rewrite_rules();
 
 		$res = update_site_option(self::OPTION_NAME, $options);
-		$this->debug_log("plugin_upgrade option changed = $res $log\n",
-				($res ? self::LOG_LEVEL_INFO : self::LOG_LEVEL_ERROR));
+
+		if (defined('LSCWP_LOG')) {
+			LiteSpeed_Cache::debug_log("plugin_upgrade option changed = $res\n");
+		}
 
 	}
 
@@ -465,8 +471,9 @@ class LiteSpeed_Cache_Config
 	{
 		$default = $this->get_default_options();
 		$res = add_option(self::OPTION_NAME, $default);
-		$this->debug_log("plugin_activation update option = $res",
-						($res ? self::LOG_LEVEL_NOTICE : self::LOG_LEVEL_ERROR)) ;
+		if (defined('LSCWP_LOG')) {
+			LiteSpeed_Cache::debug_log("plugin_activation update option = $res");
+		}
 		if (is_multisite()) {
 			if (!is_network_admin()) {
 				return;
@@ -511,32 +518,6 @@ class LiteSpeed_Cache_Config
 		if (LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
 			$input, $default, $errors) === false) {
 			exit(implode("\n", $errors));
-		}
-	}
-
-	/**
-	 * Logs a debug message.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param string $mesg The debug message.
-	 * @param string $log_level Optional. The log level of the message.
-	 */
-	public function debug_log( $mesg, $log_level = self::LOG_LEVEL_DEBUG )
-	{
-		if ( (true === WP_DEBUG) && ($log_level <= $this->options[self::OPID_DEBUG]) ) {
-			$tag = '[' ;
-			if ( self::LOG_LEVEL_ERROR == $log_level )
-				$tag .= 'ERROR' ;
-			elseif ( self::LOG_LEVEL_NOTICE == $log_level )
-				$tag .= 'NOTICE' ;
-			elseif ( self::LOG_LEVEL_INFO == $log_level )
-				$tag .= 'INFO' ;
-			else
-				$tag .= 'DEBUG' ;
-
-			$tag .= '] ' . $this->debug_tag ;
-			error_log($tag . $mesg) ;
 		}
 	}
 
