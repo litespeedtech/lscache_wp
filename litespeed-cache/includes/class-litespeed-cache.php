@@ -1074,13 +1074,15 @@ class LiteSpeed_Cache
 		if (empty($db_cookie)) {
 			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
 		}
-		if ((defined('LSCWP_LOG')) && ($db_cookie != $this->current_vary)
+		if (($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
-			$this->debug_log(self::build_paragraphs(
-				__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
-				__('Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache'),
-				__('This error may appear if you are logged into another web application.', 'litespeed-cache')
-			));
+			if (defined('LSCWP_LOG')) {
+				$this->debug_log(self::build_paragraphs(
+					__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
+					__('Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache'),
+					__('This error may appear if you are logged into another web application.', 'litespeed-cache')
+				));
+			}
 			return true;
 		}
 		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
