@@ -74,8 +74,7 @@ class LiteSpeed_Cache
 
 		self::$log_path = $content_dir . '/debug.log';
 		$this->config = new LiteSpeed_Cache_Config() ;
-		$should_debug = intval($this->config->get_option(
-			LiteSpeed_Cache_Config::OPID_DEBUG));
+		$should_debug = intval($this->config->get_option(LiteSpeed_Cache_Config::OPID_DEBUG));
 
 		switch ($should_debug) {
 			// NOTSET is used as check admin IP here.
@@ -87,6 +86,7 @@ class LiteSpeed_Cache
 			// fall through
 		case LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE:
 			define ('LSCWP_LOG', true);
+			self::log_request();
 			break;
 		case LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE:
 			break;
@@ -147,8 +147,8 @@ class LiteSpeed_Cache
 
 	private static function format_message($mesg)
 	{
-		$formatted = sprintf("%s [%s] [LSCACHE_WP] [%s] %s\n", date('r'),
-			$_SERVER['REMOTE_ADDR'], $_SERVER['REQUEST_URI'], $mesg);
+		$formatted = sprintf("%s [%s:%s] [LSCACHE_WP] %s\n", date('r'),
+			$_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], $mesg);
 		return $formatted;
 	}
 
@@ -163,6 +163,24 @@ class LiteSpeed_Cache
 	{
 		$formatted = self::format_message($mesg);
 		file_put_contents(self::$log_path, $formatted, FILE_APPEND);
+	}
+
+	private static function log_request()
+	{
+		$params = array(
+			sprintf('%s %s %s', $_SERVER['REQUEST_METHOD'],
+				$_SERVER['SERVER_PROTOCOL'], strtok($_SERVER['REQUEST_URI'], '?')),
+			'Query String: '		. $_SERVER['QUERY_STRING'],
+			'User Agent: '			. $_SERVER['HTTP_USER_AGENT'],
+			'Accept Encoding: '		. $_SERVER['HTTP_ACCEPT_ENCODING'],
+			'Cookie: '				. $_SERVER['HTTP_COOKIE'],
+			'X-LSCACHE: '			. ($_SERVER['X-LSCACHE'] ? 'true' : 'false'),
+			'LSCACHE_VARY_COOKIE: ' . $_SERVER['LSCACHE_VARY_COOKIE'],
+			'LSCACHE_VARY_VALUE: '	. $_SERVER['LSCACHE_VARY_VALUE'],
+		);
+
+		$request = array_map('self::format_message', $params);
+		file_put_contents(self::$log_path, $request, FILE_APPEND);
 	}
 
 	/**
