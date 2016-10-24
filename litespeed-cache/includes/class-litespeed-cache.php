@@ -72,9 +72,13 @@ class LiteSpeed_Cache
 		$theme_root = get_theme_root();
 		$content_dir = dirname($theme_root);
 
+		$should_debug = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
 		self::$log_path = $content_dir . '/debug.log';
 		$this->config = new LiteSpeed_Cache_Config() ;
-		$should_debug = intval($this->config->get_option(LiteSpeed_Cache_Config::OPID_DEBUG));
+		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_ENABLED)) {
+			$should_debug = intval($this->config->get_option(
+				LiteSpeed_Cache_Config::OPID_DEBUG));
+		}
 
 		switch ($should_debug) {
 			// NOTSET is used as check admin IP here.
@@ -86,7 +90,6 @@ class LiteSpeed_Cache
 			// fall through
 		case LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE:
 			define ('LSCWP_LOG', true);
-			self::log_request();
 			break;
 		case LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE:
 			break;
@@ -267,6 +270,10 @@ class LiteSpeed_Cache
 	public function init()
 	{
 		$module_enabled = $this->config->is_plugin_enabled();
+
+		if (defined('LSCWP_LOG')) {
+			self::log_request();
+		}
 
 		if ( is_admin() ) {
 			$this->load_admin_actions($module_enabled) ;
