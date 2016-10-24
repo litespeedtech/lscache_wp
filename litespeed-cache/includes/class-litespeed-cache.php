@@ -166,9 +166,10 @@ class LiteSpeed_Cache
 
 	private static function format_message($mesg)
 	{
+		$tag = defined('LSCWP_LOG_TAG') ? constant('LSCWP_LOG_TAG') : 'LSCACHE_WP';
 		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'),
 			$_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
-			constant('LSCWP_LOG_TAG'), $mesg);
+			$tag, $mesg);
 		return $formatted;
 	}
 
@@ -230,6 +231,10 @@ class LiteSpeed_Cache
 	 */
 	public function register_activation()
 	{
+		if (!defined('LSCWP_LOG_TAG')) {
+			define('LSCWP_LOG_TAG',
+				'LSCACHE_WP_activate_' . get_current_blog_id());
+		}
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 		flush_rewrite_rules();
@@ -254,6 +259,10 @@ class LiteSpeed_Cache
 	 */
 	public function register_deactivation()
 	{
+		if (!defined('LSCWP_LOG_TAG')) {
+			define('LSCWP_LOG_TAG',
+				'LSCACHE_WP_deactivate_' . get_current_blog_id());
+		}
 		$this->purge_all() ;
 		if ((is_multisite()) && (!is_network_admin())) {
 			return;
