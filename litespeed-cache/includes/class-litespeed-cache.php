@@ -1183,7 +1183,22 @@ class LiteSpeed_Cache
 
 		$cacheable = apply_filters('litespeed_cache_is_cacheable', true);
 		if (!$cacheable) {
-			return $this->no_cache_for('Third Party Plugin determined not cacheable.');
+			global $wp_filter;
+			if ((!defined('LSCWP_LOG'))
+				|| (empty($wp_filter['litespeed_cache_is_cacheable']))) {
+				return $this->no_cache_for(
+					'Third Party Plugin determined not cacheable.');
+			}
+			$funcs = array();
+			foreach ($wp_filter['litespeed_cache_is_cacheable'] as $hook_level) {
+				foreach ($hook_level as $func=>$params) {
+					$funcs[] = $func;
+				}
+			}
+			$this->no_cache_for('One of the following functions '
+				. "determined that this page is not cacheable:\n\t\t"
+				. implode("\n\t\t", $funcs));
+			return false;
 		}
 
 		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
