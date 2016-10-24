@@ -148,10 +148,21 @@ class LiteSpeed_Cache
 		return $conf->get_option($opt_id);
 	}
 
+	private static function setup_debug_log()
+	{
+		if (!defined('LSCWP_LOG_TAG')) {
+			define('LSCWP_LOG_TAG',
+				'LSCACHE_WP_blogid_' . get_current_blog_id());
+		}
+		self::log_request();
+
+	}
+
 	private static function format_message($mesg)
 	{
-		$formatted = sprintf("%s [%s:%s] [LSCACHE_WP] %s\n", date('r'),
-			$_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], $mesg);
+		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'),
+			$_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'],
+			constant('LSCWP_LOG_TAG'), $mesg);
 		return $formatted;
 	}
 
@@ -272,7 +283,7 @@ class LiteSpeed_Cache
 		$module_enabled = $this->config->is_plugin_enabled();
 
 		if (defined('LSCWP_LOG')) {
-			self::log_request();
+			self::setup_debug_log();
 		}
 
 		if ( is_admin() ) {
@@ -1564,18 +1575,20 @@ class LiteSpeed_Cache
 			$hdr_content[] = $cache_hdr;
 		}
 
-		if (empty($hdr_content)) {
-			return;
+		if (!empty($hdr_content)) {
+			if ($showhdr) {
+				@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': '
+						. implode('; ', $hdr_content));
+			}
+			else {
+				foreach($hdr_content as $hdr) {
+					@header($hdr);
+				}
+			}
 		}
 
-		if ($showhdr) {
-			@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': '
-					. implode('; ', $hdr_content));
-		}
-		else {
-			foreach($hdr_content as $hdr) {
-				@header($hdr);
-			}
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('End response.');
 		}
 	}
 
