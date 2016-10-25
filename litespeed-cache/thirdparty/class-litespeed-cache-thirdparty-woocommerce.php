@@ -72,12 +72,30 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * If the request is not an esi request, I want to set my own hook
+	 * in woocommerce_before_template_part to see if it's something I can ESI.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
 	public static function set_block_template()
 	{
 		add_action('woocommerce_before_template_part',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4);
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * If the request is not an esi request, I want to set my own hook
+	 * in storefront_header to see if it's something I can ESI.
+	 *
+	 * Will remove storefront_header_cart in storefront_header.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
 	public static function set_swap_header_cart()
 	{
 		$priority = has_action('storefront_header', 'storefront_header_cart');
@@ -89,7 +107,23 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 	}
 
-	public static function block_template($template_name, $template_path, $located, $args)
+	/**
+	 * Hooked to the woocommerce_before_template_part action.
+	 * Checks if the template contains 'add-to-cart'. If so, and if I
+	 * want to ESI the request, block it and build my esi code block.
+	 *
+	 * The function parameters will be passed to the esi request.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @global type $post Needed for post id
+	 * @param type $template_name
+	 * @param type $template_path
+	 * @param type $located
+	 * @param type $args
+	 */
+	public static function block_template($template_name, $template_path,
+		$located, $args)
 	{
 		if (strpos($template_name, 'add-to-cart') === false) {
 			return;
@@ -111,6 +145,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		ob_start();
 	}
 
+	/**
+	 * Hooked to the woocommerce_after_add_to_cart_form action.
+	 * If this is hit first, clean the buffer and remove this function and
+	 * end_template.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
 	public static function end_form()
 	{
 		ob_clean();
@@ -120,6 +162,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
 	}
 
+	/**
+	 * Hooked to the woocommerce_after_template_part action.
+	 * If the template contains 'add-to-cart', clean the buffer.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param type $template_name
+	 */
 	public static function end_template($template_name)
 	{
 		if (strpos($template_name, 'add-to-cart') === false) {
@@ -128,17 +178,42 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		self::end_form();
 	}
 
+	/**
+	 * Hooked to the storefront_header header.
+	 * If I want to ESI the request, block it and build my esi code block.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
 	public static function esi_cart_header()
 	{
 		LiteSpeed_Cache_Esi::build_url('storefront-cart-header',
 			'STOREFRONT_CART_HEADER');
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_load_esi_block-storefront-cart-header action.
+	 * Generates the cart header for esi display.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
 	public static function load_cart_header()
 	{
 		storefront_header_cart();
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_load_esi_block-wc-add-to-cart-form action.
+	 * Parses the esi input parameters and generates the add to cart form
+	 * for esi display.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @global type $post
+	 * @global type $wp_query
+	 * @param type $params
+	 */
 	public static function load_add_to_cart_form_block($params)
 	{
 		global $post, $wp_query;
