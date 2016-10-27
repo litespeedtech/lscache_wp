@@ -45,6 +45,7 @@ class LiteSpeed_Cache
 
 	const WHM_TRANSIENT = 'lscwp_whm_install';
 	const WHM_TRANSIENT_VAL = 'whm_install';
+	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
 	protected $plugin_dir ;
 	protected $config ;
@@ -240,6 +241,61 @@ class LiteSpeed_Cache
 		if (defined('LSCWP_PLUGIN_NAME')) {
 			set_transient(self::WHM_TRANSIENT, self::WHM_TRANSIENT_VAL);
 		}
+		if (is_multisite()) {
+			$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT);
+			if ($count !== false) {
+				$count = intval($count) + 1;
+				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count,
+					DAY_IN_SECONDS);
+			}
+		}
+	}
+
+	private function get_network_count()
+	{
+		$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT);
+		if ($count !== false) {
+			return intval($count);
+		}
+		// need to update
+		$basename = plugin_basename($this->plugin_dir . 'litespeed-cache.php');
+		$default = array();
+		$count = 0;
+
+		$sites = get_sites(array('deleted' => 0));
+		if (empty($sites)) {
+			return false;
+		}
+
+		foreach ($sites as $site) {
+			$plugins = get_blog_option($site->blog_id, 'active_plugins',
+				$default);
+			if (in_array($basename, $plugins, true)) {
+				$count++;
+			}
+		}
+		if (is_plugin_active_for_network($basename)) {
+			$count++;
+		}
+		return $count;
+	}
+
+	private function is_deactivate_last()
+	{
+		$count = $this->get_network_count();
+		if ($count === false) {
+			return false;
+		}
+		if ($count !== 1) {
+			// Not deactivating the last one.
+			$count--;
+			set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count,
+				DAY_IN_SECONDS);
+			return false;
+		}
+
+		delete_site_transient(self::NETWORK_TRANSIENT_COUNT);
+		return true;
 	}
 
 	/**
@@ -256,10 +312,12 @@ class LiteSpeed_Cache
 			define('LSCWP_LOG_TAG',
 				'LSCACHE_WP_deactivate_' . get_current_blog_id());
 		}
-		$this->purge_all() ;
-		if ((is_multisite()) && (!is_network_admin())) {
+		$this->purge_all();
+
+		if ((is_multisite()) && (!$this->is_deactivate_last())) {
 			return;
 		}
+
 		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
 		if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
 			unlink($adv_cache_path) ;
