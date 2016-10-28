@@ -181,18 +181,26 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function path_search_setup(&$common, &$install, &$access)
 	{
-		$common = rtrim($common, '/');
-		$install_part = trim($install, '/');
-		if ($install_part !== '') {
-			$install_part = '/' . $install_part;
-		}
-		$install = $common . $install_part;
+		$partial_dir = false;
 
-		$access_part = trim($access, '/');
-		if ($access_part !== '') {
-			$access_part = '/' . $access_part;
+		if ( substr($common, -1) != '/' ) {
+
+			if ( $install !== '' && $install[0] != '/' ) {
+				$partial_dir = true;
+			}
+			elseif ( $access !== '' && $access[0] != '/' ) {
+				$partial_dir = true;
+			}
 		}
-		$access = $common . $access_part;
+		$install = rtrim($common . $install, '/');
+		$access = rtrim($common . $access, '/');
+
+		if ($partial_dir) {
+			$common = dirname($common);
+		}
+		else {
+			$common = rtrim($common, '/');
+		}
 	}
 
 	/**
@@ -224,8 +232,6 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Set the path class variables.
 	 *
-	 * Credit to Nerdwerx for the inspiration for this function
-	 *
 	 * @since 1.0.11
 	 * @access private
 	 */
@@ -239,9 +245,12 @@ class LiteSpeed_Cache_Admin_Rules
 			$install = set_url_scheme( get_option( 'siteurl' ), 'http' );
 			$access = set_url_scheme( get_option( 'home' ), 'http' );
 		}
-		$common = implode(array_intersect_assoc(str_split($access),
-			str_split($install)));
-		$common_count = strlen($common);
+
+		/**
+		 * Converts the intersection of $access and $install to \0
+		 * then counts the number of \0 characters before the first non-\0.
+		 */
+		$common_count = strspn($access ^ $install, "\0");
 
 		$install_part = substr($install, $common_count);
 		$access_part = substr($access, $common_count);
