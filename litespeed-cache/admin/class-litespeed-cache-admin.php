@@ -498,10 +498,23 @@ if (defined('lscache_debug')) {
 		}
 
 		if (!is_multisite()) {
-			$newopt = LiteSpeed_Cache_Admin_Rules::get_instance()
-				->validate_common_rewrites($input, $options, $errors);
-			if ($newopt) {
-				$options = $newopt;
+			$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
+
+			if ($input[LiteSpeed_Cache_Config::OPID_ENABLED] !== 'changed') {
+				$diff = $rules->check_input($options, $input, $errors);
+			}
+			elseif ($enabled) {
+				$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
+				$diff = $rules->check_input($reset, $input, $errors);
+			}
+			else {
+				LiteSpeed_Cache_Admin_Rules::clear_rules();
+				$diff = $rules->check_input($options, $input, $errors);
+			}
+
+			if ((!empty($diff)) && (($enabled === false)
+				|| ($rules->validate_common_rewrites($diff, $errors) !== false))) {
+				$options = array_merge($options, $diff);
 			}
 
 			$out = $this->validate_tag_prefix($input, $options);
@@ -866,6 +879,7 @@ if (defined('lscache_debug')) {
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
 			$input[$id] = 'changed';
+			$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
 		}
 
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
@@ -880,9 +894,22 @@ if (defined('lscache_debug')) {
 		}
 
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
-		$newopt = $rules->validate_common_rewrites($input, $options, $errors);
-		if ($newopt) {
-			$options = $newopt;
+
+		if ($input[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED]
+			!== 'changed') {
+			$diff = $rules->check_input($options, $input, $errors);
+		}
+		elseif ($network_enabled) {
+			$diff = $rules->check_input($reset, $input, $errors);
+		}
+		else {
+			$rules->validate_common_rewrites($reset, $errors);
+			$diff = $rules->check_input($options, $input, $errors);
+		}
+
+		if ((!empty($diff)) && (($network_enabled === false)
+			|| ($rules->validate_common_rewrites($diff, $errors) !== false))) {
+			$options = array_merge($options, $diff);
 		}
 
 		if (!empty($errors)) {

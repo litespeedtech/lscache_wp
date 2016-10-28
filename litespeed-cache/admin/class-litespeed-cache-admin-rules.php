@@ -181,18 +181,26 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function path_search_setup(&$common, &$install, &$access)
 	{
-		$common = rtrim($common, '/');
-		$install_part = trim($install, '/');
-		if ($install_part !== '') {
-			$install_part = '/' . $install_part;
-		}
-		$install = $common . $install_part;
+		$partial_dir = false;
 
-		$access_part = trim($access, '/');
-		if ($access_part !== '') {
-			$access_part = '/' . $access_part;
+		if ( substr($common, -1) != '/' ) {
+
+			if ( $install !== '' && $install[0] != '/' ) {
+				$partial_dir = true;
+			}
+			elseif ( $access !== '' && $access[0] != '/' ) {
+				$partial_dir = true;
+			}
 		}
-		$access = $common . $access_part;
+		$install = rtrim($common . $install, '/');
+		$access = rtrim($common . $access, '/');
+
+		if ($partial_dir) {
+			$common = dirname($common);
+		}
+		else {
+			$common = rtrim($common, '/');
+		}
 	}
 
 	/**
@@ -224,8 +232,6 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Set the path class variables.
 	 *
-	 * Credit to Nerdwerx for the inspiration for this function
-	 *
 	 * @since 1.0.11
 	 * @access private
 	 */
@@ -239,9 +245,12 @@ class LiteSpeed_Cache_Admin_Rules
 			$install = set_url_scheme( get_option( 'siteurl' ), 'http' );
 			$access = set_url_scheme( get_option( 'home' ), 'http' );
 		}
-		$common = implode(array_intersect_assoc(str_split($access),
-			str_split($install)));
-		$common_count = strlen($common);
+
+		/**
+		 * Converts the intersection of $access and $install to \0
+		 * then counts the number of \0 characters before the first non-\0.
+		 */
+		$common_count = strspn($access ^ $install, "\0");
 
 		$install_part = substr($install, $common_count);
 		$access_part = substr($access, $common_count);
@@ -878,40 +887,89 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access private
 	 * @param array $options The current options
 	 * @param array $input The input
+	 * @param array $errors Errors array to add error messages to.
 	 * @return boolean True if no need to edit, false otherwise.
 	 */
-	private function check_input($options, &$input)
+	public function check_input($options, $input, &$errors)
 	{
-		$enable_key = ((is_multisite())
-			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
-			: LiteSpeed_Cache_Config::OPID_ENABLED);
+		$diff = array();
 		$val_check = array(
 			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES
 		);
-
-		$ids = array(
-			$enable_key,
-			LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST,
-			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES,
-			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS,
-			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE,
-			LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
-			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-			LiteSpeed_Cache_Config::OPID_CACHE_RES
-		);
+		$has_error = false;
 
 		foreach ($val_check as $opt) {
-			LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
-		}
-
-		foreach ($ids as $id) {
-			if ((isset($input[$id])) && ($input[$id] !== $options[$id])) {
-				return false;
+			$ret = LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
+			if ($options[$opt] !== $ret) {
+				$diff[$opt] = $ret;
 			}
 		}
-		return true;
+
+		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
+		if ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]) {
+			$list = $input[$id];
+			if ((empty($list)) || (self::check_rewrite($list) === false)) {
+				$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($list));
+				$has_error = true;
+			}
+			elseif ($input[$id] !== $options[$id]) {
+				$diff[$id] = $list;
+			}
+		}
+		elseif (isset($diff[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED])) {
+			$diff[$id] = false;
+		}
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
+		if ((isset($input[$id])) && ($input[$id])) {
+			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
+		}
+		else {
+			$cookie_list = '';
+		}
+
+		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
+			if ($options[$id] !== $cookie_list) {
+				$diff[$id] = $cookie_list;
+			}
+		}
+		else {
+			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($cookie_list));
+			$has_error = true;
+		}
+
+		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
+		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
+			if ($options[$id] !== $input[$id]) {
+				$diff[$id] = $input[$id];
+			}
+		}
+		else {
+			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($input[$id]));
+			$has_error = true;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+		$aExceptions = array('-', '_');
+		if ((isset($input[$id])) && ($input[$id] !== $options[$id])) {
+			if (($input[$id] === '')
+				|| ((ctype_alnum(str_replace($aExceptions, '', $input[$id])))
+					&& (self::check_rewrite($input[$id])))) {
+				$diff[$id] = $input[$id];
+			}
+			else {
+				$errors[] = sprintf(self::$ERR_INVALID_LOGIN,
+					esc_html($input[$id]));
+				$has_error = true;
+			}
+		}
+
+		if ($has_error) {
+			return false;
+		}
+		return $diff;
 	}
 
 	/**
@@ -959,104 +1017,76 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.7
 	 * @access private
+	 * @param array $diff The rules that need to be set
 	 * @param string $haystack The original content in the .htaccess file.
-	 * @param array $input The input array from the Post request.
-	 * @param array $options The array currently used in the database.
-	 * @param string $output The current output buffer for the HOME PATH file.
+	 * @param string $buf The current output buffer for the HOME PATH file.
 	 * @param array $errors Errors array to add error messages to.
 	 * @return mixed False on failure/do not update,
 	 *	original content sans login cookie on success.
 	 */
-	private function set_subdir_cookie($haystack, $input, $options, &$output,
-			&$errors)
+	private function set_subdir_cookie($diff, &$haystack, &$buf, &$errors)
 	{
-		$enable_key = ((is_multisite())
-			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
-			: LiteSpeed_Cache_Config::OPID_ENABLED);
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
-		$res = (isset($input[$id]) ? ($input[$id] && $options[$enable_key])
-			: false);
-		$login = (isset($input[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE])
-			? $input[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE] : '');
-
-		$aExceptions = array('-', '_');
-		$match = '.?';
-		$sub = '-';
-		$env = 'E=Cache-Vary:' . $login;
-		$rule_buf = '';
-		$rule_buf2 = '';
-		$after = '';
-		$ret = false;
-
-		if (!self::is_subdir()) {
-			$ret = $this->set_cache_resource($haystack, $res, $rule_buf,
-				$errors);
-			if ($ret === false) {
-				return false;
+		$login_id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+		$res_id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
+		if (isset($diff[$login_id])) {
+			if ($diff[$login_id] !== '') {
+				$match = '.?';
+				$sub = '-';
+				$env = 'E=Cache-Vary:' . $diff[$login_id];
 			}
-			$haystack = $ret;
-			$output .= $rule_buf;
-			$rule_buf = '';
-		}
-
-		if ($login == '') {
-			if ($options == '') {
-				return $ret;
+			else {
+				$match = '';
+				$sub = '';
+				$env = '';
 			}
-			$match = '';
-			$sub = '';
-			$env = '';
-		}
-		elseif ((!ctype_alnum(str_replace($aExceptions, '', $login)))
-			|| (!self::check_rewrite($login))){
-			$errors[] = sprintf(self::$ERR_INVALID_LOGIN, $login);
-			return false;
-		}
 
-		$ret = $this->set_rewrite_rule($haystack, $rule_buf, 'LOGIN COOKIE',
+			$ret = $this->set_rewrite_rule($haystack, $buf, 'LOGIN COOKIE',
 				$match, $sub, $env);
-
-		if ($this->parse_ret($ret, $haystack, $errors) === false) {
-			return false;
+			$this->parse_ret($ret, $haystack, $errors);
 		}
+
 		if (!self::is_subdir()) {
-			$output .= $rule_buf;
-			return $haystack;
+			if (isset($diff[$res_id])) {
+				$ret = $this->set_cache_resource($haystack, $diff[$res_id],
+					$buf, $errors);
+				if ($ret !== false) {
+					$haystack = $ret;
+				}
+			}
+			return true;
 		}
 
 		$path = self::get_site_path();
-		$content = '';
-		if (self::file_get($content, $path) === false) {
-			$errors[] = $content;
+		$content2 = '';
+		if (self::file_get($content2, $path) === false) {
+			$errors[] = $content2;
 			return false;
 		}
 
-		$haystack2 = $this->file_split($content, $rule_buf2, $after);
+		$haystack2 = $this->file_split($content2, $rule_buf2, $after2);
 		if ($haystack2 === false) {
 			$errors[] = $rule_buf2;
 			return false;
 		}
-		$ret = $this->set_rewrite_rule($haystack2, $rule_buf2, 'LOGIN COOKIE',
-			$match, $sub, $env);
-
-		if ($this->parse_ret($ret, $haystack2, $errors) === false) {
-			return false;
+		if (isset($diff[$login_id])) {
+			$ret = $this->set_rewrite_rule($haystack2, $rule_buf2,
+				'LOGIN COOKIE', $match, $sub, $env);
+			$this->parse_ret($ret, $haystack2, $errors);
+		}
+		if (isset($diff[$res_id])) {
+			$ret = $this->set_cache_resource($haystack2, $diff[$res_id],
+				$rule_buf2, $errors);
+			if ($ret !== false) {
+				$haystack2 = $ret;
+			}
 		}
 
-		$ret = $this->set_cache_resource($haystack2, $res, $rule_buf2, $errors);
-		if ($ret === false) {
-			return false;
-		}
-
-		$haystack2 = $ret;
-		$ret = $this->file_combine($rule_buf2, $haystack2, $after, $path);
+		$ret = $this->file_combine($rule_buf2, $haystack2, $after2, $path);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
 		}
-
-		$output .= $rule_buf;
-		return $haystack;
+		return true;
 	}
 
 	/**
@@ -1223,20 +1253,15 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @param array $input The configurations selected.
-	 * @param array $options The current configurations.
+	 * @param array $diff The rules that need to be set.
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
-	public function validate_common_rewrites($input, &$options, &$errors)
+	public function validate_common_rewrites($diff, &$errors)
 	{
 		$content = '';
 		$buf = '';
 		$after = '';
-
-		if ($this->check_input($options, $input)) {
-			return $options;
-		}
 
 		if (self::file_get($content) === false) {
 			$errors[] = $content;
@@ -1249,82 +1274,51 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
+		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
 
-		if ((isset($input[$id])) && ($input[$id])) {
-			$list = $input[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
-			if ((empty($list)) || (self::check_rewrite($list) === false)) {
-				$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($list));
+		if (isset($diff[$id])) {
+			if ($diff[$id]) {
+				$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
+					'HTTP_USER_AGENT', $diff[$id],
+					'E=Cache-Control:vary=ismobile', 'NC');
 			}
 			else {
-				$options[$id] = true;
-				$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
-					'HTTP_USER_AGENT', $list, 'E=Cache-Control:vary=ismobile', 'NC');
+				$ret = $this->set_common_rule($haystack, $buf,
+						'MOBILE VIEW', '', '', '');
+			}
+			$this->parse_ret($ret, $haystack, $errors);
+		}
 
-				if ($this->parse_ret($ret, $haystack, $errors)) {
-					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = $list;
-				}
-			}
-		}
-		elseif ($options[$id] === true) {
-			$options[$id] = false;
-			$ret = $this->set_common_rule($haystack, $buf,
-					'MOBILE VIEW', '', '', '');
-			if ($this->parse_ret($ret, $haystack, $errors)) {
-				$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = false;
-			}
-		}
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-		if ((isset($input[$id])) && ($input[$id])) {
-			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
-		}
-		else {
-			$cookie_list = '';
-		}
 
-		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
+		if (isset($diff[$id])) {
 			$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
-					'HTTP_COOKIE', $cookie_list, 'E=Cache-Control:no-cache');
-			if ($this->parse_ret($ret, $haystack, $errors)) {
-				$options[$id] = $cookie_list;
-			}
-		}
-		else {
-			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($cookie_list));
+					'HTTP_COOKIE', $diff[$id], 'E=Cache-Control:no-cache');
+			$this->parse_ret($ret, $haystack, $errors);
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
+		if (isset($diff[$id])) {
 			$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
-					'HTTP_USER_AGENT', $input[$id], 'E=Cache-Control:no-cache');
-			if ($this->parse_ret($ret, $haystack, $errors)) {
-				$options[$id] = $input[$id];
-			}
-		}
-		else {
-			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($input[$id]));
+					'HTTP_USER_AGENT', $diff[$id], 'E=Cache-Control:no-cache');
+			$this->parse_ret($ret, $haystack, $errors);
 		}
 
-		$ret = $this->set_subdir_cookie($haystack, $input,
-				$options, $buf, $errors);
-		if ($ret !== false) {
-			$haystack = $ret;
-			$options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE] =
-				$input[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
-			$options[LiteSpeed_Cache_Config::OPID_CACHE_RES] =
-				$input[LiteSpeed_Cache_Config::OPID_CACHE_RES];
+		if (((isset($diff[LiteSpeed_Cache_Config::OPID_CACHE_RES]))
+				|| (isset($diff[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE])))
+			&& ($this->set_subdir_cookie($diff, $haystack, $buf, $errors)
+				=== false)) {
+			return false;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
-		$enable_key = ((is_multisite())
-			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
-			: LiteSpeed_Cache_Config::OPID_ENABLED);
 
-		$ret = $this->set_favicon($haystack,
-			($input[$id] && $options[$enable_key]), $buf, $errors);
-		if ($ret !== false) {
-			$haystack = $ret;
-			$options[$id] = $input[$id];
+		if (isset($diff[$id])) {
+			$ret = $this->set_favicon($haystack, $diff[$id], $buf, $errors);
+			if ($ret !== false) {
+				$haystack = $ret;
+			}
+
 		}
 
 		$ret = $this->file_combine($buf, $haystack, $after);
@@ -1332,7 +1326,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
 		}
-		return $options;
+		return $diff;
 	}
 
 	/**

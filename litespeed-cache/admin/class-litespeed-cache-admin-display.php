@@ -1420,11 +1420,16 @@ class LiteSpeed_Cache_Admin_Display
 		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
+
 		$id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
 		$list_id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
 		$default_id = 'lscwp_' . $id . '_default';
 		$warning_id = 'lscwp_' . $id . '_warning';
+		$cache_enable_id = is_network_admin()
+			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
+			: LiteSpeed_Cache_Config::OPID_ENABLED;
 		$enabled = $options[$id];
+
 		clearstatcache();
 		$buf = $this->input_field_hidden($warning_id,
 		__('WARNING: Unchecking this option will clear the Mobile View List. Press OK to confirm this action.', 'litespeed-cache'));
@@ -1441,8 +1446,14 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$mv_str = '';
-		$ret = LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule(
-			'MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str);
+		if ($options[$cache_enable_id]) {
+			$ret = LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule(
+				'MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str);
+		}
+		else {
+			$ret = true;
+			$mv_str = $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
+		}
 		if ($ret !== true) {
 			$mv_list = '<p class="attention">'
 			. sprintf(__('Error getting current rules: %s', 'litespeed-cache'),
@@ -1557,6 +1568,8 @@ class LiteSpeed_Cache_Admin_Display
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$cookie = '';
+		$match = '';
+		$sub = '';
 
 		$cookie_title = __('Login Cookie', 'litespeed-cache');
 		$cookie_desc = LiteSpeed_Cache::build_paragraph(
@@ -1593,11 +1606,13 @@ class LiteSpeed_Cache_Admin_Display
 			}
 			$cookie = substr($cookie, 11);
 		}
-		if ($cookie != $options[$id]) {
+		if (($options[LiteSpeed_Cache_Config::OPID_ENABLED])
+			&& ($cookie != $options[$id])) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
-		return $this->input_field_text($id, $cookie, '','', '', !$file_writable);
+		return $this->input_field_text($id, $options[$id], '', '', '',
+			!$file_writable);
 	}
 
 	/**
