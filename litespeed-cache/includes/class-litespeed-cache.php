@@ -235,19 +235,19 @@ class LiteSpeed_Cache
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
-		$this->config->plugin_activation();
-		self::generate_environment_report();
-
-		if (defined('LSCWP_PLUGIN_NAME')) {
-			set_transient(self::WHM_TRANSIENT, self::WHM_TRANSIENT_VAL);
-		}
 		if (is_multisite()) {
-			$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT);
+			$count = $this->get_network_count();
 			if ($count !== false) {
 				$count = intval($count) + 1;
 				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count,
 					DAY_IN_SECONDS);
 			}
+		}
+		$this->config->plugin_activation($count);
+		self::generate_environment_report();
+
+		if (defined('LSCWP_PLUGIN_NAME')) {
+			set_transient(self::WHM_TRANSIENT, self::WHM_TRANSIENT_VAL);
 		}
 	}
 
@@ -308,14 +308,34 @@ class LiteSpeed_Cache
 	 */
 	public function register_deactivation()
 	{
+		require_once $this->plugin_dir
+			. '/admin/class-litespeed-cache-admin-rules.php';
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG',
 				'LSCACHE_WP_deactivate_' . get_current_blog_id());
 		}
 		$this->purge_all();
 
-		if ((is_multisite()) && (!$this->is_deactivate_last())) {
-			return;
+		if (is_multisite()) {
+			if (is_network_admin()) {
+				$options = get_site_option(
+					LiteSpeed_Cache_Config::OPTION_NAME);
+				if ((isset($options)) && (is_array($options))) {
+					$opt_str = serialize($options);
+					update_site_option(LiteSpeed_Cache_Config::OPTION_NAME,
+						$opt_str);
+				}
+			}
+			if (!$this->is_deactivate_last()) {
+				if ((is_network_admin()) && (isset($opt_str))
+				&& ($options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED])) {
+					$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
+					$errors = array();
+					LiteSpeed_Cache_Admin_Rules::get_instance()
+						->validate_common_rewrites($reset, $errors);
+				}
+				return;
+			}
 		}
 
 		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
@@ -329,7 +349,6 @@ class LiteSpeed_Cache
 		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 		}
-		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
 		// delete in case it's not deleted prior to deactivation.
 		delete_transient(self::WHM_TRANSIENT);
@@ -1068,7 +1087,10 @@ class LiteSpeed_Cache
 
 		if (is_multisite()) {
 			$options = $this->get_config()->get_site_options();
-			$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			if (is_array($options)) {
+				$db_cookie = $options[
+					LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			}
 		}
 		else {
 			$db_cookie = $this->get_config()
@@ -1122,7 +1144,10 @@ class LiteSpeed_Cache
 
 		if (is_multisite()) {
 			$options = $this->get_config()->get_site_options();
-			$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			if (is_array($options)) {
+				$db_cookie = $options[
+					LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			}
 		}
 		else {
 			$db_cookie = $this->get_config()
@@ -2037,7 +2062,9 @@ class LiteSpeed_Cache
 
 	public static function update_environment_report($unused, $options)
 	{
-		self::generate_environment_report($options);
+		if (is_array($options)) {
+			self::generate_environment_report($options);
+		}
 	}
 
 

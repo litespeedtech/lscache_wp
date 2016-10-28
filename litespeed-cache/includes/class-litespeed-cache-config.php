@@ -271,6 +271,20 @@ class LiteSpeed_Cache_Config
 		return $default_site_options;
 	}
 
+	public static function get_rule_reset_options()
+	{
+		$reset = array(
+			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED => false,
+			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON => false,
+			LiteSpeed_Cache_Config::OPID_CACHE_RES => false,
+			LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST => false,
+			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES => '',
+			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS => '',
+			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE => ''
+		);
+		return $reset;
+	}
+
 	/**
 	 * Get the plugin's site wide options.
 	 *
@@ -286,7 +300,10 @@ class LiteSpeed_Cache_Config
 			return null;
 		}
 		$site_options = get_site_option(self::OPTION_NAME);
-		if ( isset($site_options) && is_array($site_options)) {
+		if (isset($site_options) && is_array($site_options)) {
+			return $site_options;
+		}
+		elseif (isset($site_options) && is_string($site_options)) {
 			return $site_options;
 		}
 		$default_site_options = $this->get_default_site_options();
@@ -391,6 +408,8 @@ class LiteSpeed_Cache_Config
 		$default_options = $this->get_default_site_options();
 		$options = $this->get_site_options();
 
+		error_log('wot');
+
 		if (($options[self::OPID_VERSION] == $default_options[self::OPID_VERSION])
 				&& (count($default_options) == count($options))) {
 			return;
@@ -462,8 +481,10 @@ class LiteSpeed_Cache_Config
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function plugin_activation()
+	public function plugin_activation($count)
 	{
+		$errors = array();
+		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
 		$default = $this->get_default_options();
 		$res = add_option(self::OPTION_NAME, $default);
 		if (defined('LSCWP_LOG')) {
@@ -471,14 +492,20 @@ class LiteSpeed_Cache_Config
 		}
 		if (is_multisite()) {
 			if (!is_network_admin()) {
+				if ($count === 1) {
+					$rules->validate_common_rewrites(array(), $errors);
+				}
 				return;
 			}
 			$options = $this->get_site_options();
-			if (($res == false)
-				&& (($options[self::NETWORK_OPID_ENABLED] == false))) {
+			if (isset($options) && (is_string($options))) {
+				$options = unserialize($options);
+				update_site_option(self::OPTION_NAME, $options);
+			}
+			if (($res == true)
+				|| (($options[self::NETWORK_OPID_ENABLED] == false))) {
 				return;
 			}
-			$default[self::NETWORK_OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 		}
 		elseif (($res == false)
 			&& (($this->get_option(self::OPID_ENABLED) == false))) {
@@ -488,32 +515,30 @@ class LiteSpeed_Cache_Config
 			$options = $this->get_options();
 		}
 
-		$errors = array();
-		$input = array(
-			self::OPID_MOBILEVIEW_ENABLED => $options[self::OPID_MOBILEVIEW_ENABLED],
-			self::ID_MOBILEVIEW_LIST => $options[self::ID_MOBILEVIEW_LIST],
-			self::ID_NOCACHE_COOKIES => $options[self::ID_NOCACHE_COOKIES],
-			self::ID_NOCACHE_USERAGENTS => $options[self::ID_NOCACHE_USERAGENTS],
-			self::OPID_LOGIN_COOKIE => $options[self::OPID_LOGIN_COOKIE],
-			self::OPID_CACHE_LOGIN => $options[self::OPID_CACHE_LOGIN]
-		);
+		$default = self::get_rule_reset_options();
+
 		if ($options[self::OPID_CACHE_FAVICON]) {
-			$input['lscwp_' . self::OPID_CACHE_FAVICON]
+			$options['lscwp_' . self::OPID_CACHE_FAVICON]
 				= self::OPID_CACHE_FAVICON;
 		}
 		if ($options[self::OPID_CACHE_RES]) {
-			$input['lscwp_' . self::OPID_CACHE_RES] = self::OPID_CACHE_RES;
+			$options['lscwp_' . self::OPID_CACHE_RES] = self::OPID_CACHE_RES;
 		}
 		if ($options[self::OPID_MOBILEVIEW_ENABLED]) {
-			$input['lscwp_' . self::OPID_MOBILEVIEW_ENABLED]
+			$options['lscwp_' . self::OPID_MOBILEVIEW_ENABLED]
 				= self::OPID_MOBILEVIEW_ENABLED;
 		}
-		$default[self::OPID_CACHE_FAVICON] = false;
-		$default[self::OPID_CACHE_RES] = false;
-		if (LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites(
-			$input, $default, $errors) === false) {
+
+		$diff = $rules->check_input($default, $options, $errors);
+
+        if (!empty($diff)) {
+            $rules->validate_common_rewrites($diff, $errors);
+        }
+
+        if (!empty($errors)) {
 			exit(implode("\n", $errors));
-		}
+        }
+
 	}
 
 	/**
