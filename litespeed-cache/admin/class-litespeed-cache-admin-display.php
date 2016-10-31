@@ -437,6 +437,15 @@ class LiteSpeed_Cache_Admin_Display
 							'</div>';
 		}
 
+		$esi_tab = '';
+		$esi_settings = '';
+		if (!is_openlitespeed()) {
+			$esi_tab = '<li><a href="#esi-settings">'
+				. __('ESI Settings', 'litespeed-cache') . '</a></li>';
+			$esi_settings = '<div id="esi-settings">'
+				. $this->show_settings_esi($options) . '</div>';
+		}
+
 		$advanced_tab = '';
 		$advanced_settings = '';
 		if (!is_multisite()) {
@@ -453,6 +462,7 @@ class LiteSpeed_Cache_Admin_Display
 		 <li><a href="#specific-settings">' . __('Specific Pages', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
+		 ' . $esi_tab . '
 	 	 ' . $advanced_tab . '
 		 <li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
 		. $compatibilities_tab;
@@ -503,6 +513,7 @@ class LiteSpeed_Cache_Admin_Display
 		<div id="exclude-settings">'
 		. $this->show_settings_excludes($options) .
 		'</div>'
+		. $esi_settings
 		. $advanced_settings .
 		'<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
@@ -1269,6 +1280,62 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $tr . $ua_buf . $endtr;
 		$buf .= $this->input_group_end();
 
+		return $buf;
+	}
+
+	/**
+	 * Builds the html for the esi settings tab.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param array $options The current configuration options.
+	 * @return string The html for the esi settings tab.
+	 */
+	private function show_settings_esi($options)
+	{
+		// comments
+		// comment form
+		// admin bar
+
+
+		$esi_desc = LiteSpeed_Cache::build_paragraph(
+			__('ESI enables the capability to cache pages for logged in users/commenters.', 'litespeed-cache'),
+			__('ESI functions by replacing the private information blocks with an ESI include.', 'litespeed-cache'),
+			__('When the server sees an ESI include, a sub request is created, containing the private information.', 'litespeed-cache')
+		);
+
+		$enable_esi_desc = LiteSpeed_Cache::build_paragraph(
+			__('Enabling ESI will cache the public page for logged in users.', 'litespeed-cache'),
+			__('The Admin Bar, comments, and comment form will be served via ESI blocks.', 'litespeed-cache'),
+			__('The ESI blocks will not be cached until Cache ESI is checked.', 'litespeed-cache')
+		);
+
+		$cache_esi_desc = LiteSpeed_Cache::build_paragraph(
+			__('Cache the ESI blocks.', 'litespeed-cache')
+		);
+
+		$buf = $this->input_group_start(__('ESI Settings', 'litespeed-cache'),
+			$esi_desc);
+
+		$esi_ids = array(
+			'lscwp_' . LiteSpeed_Cache_Config::OPID_ESI_CACHE
+		);
+
+		$id = LiteSpeed_Cache_Config::OPID_ESI_ENABLE;
+		$enable_esi = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$options[$id], '', 'lscwpEsiEnabled(this, [' . implode(',', $esi_ids) . '])');
+		$buf .= $this->display_config_row(__('Enable ESI', 'litespeed-cache'),
+			$enable_esi, $enable_esi_desc);
+
+		$readonly = ($options[$id] === false);
+
+		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE;
+		$cache_esi = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$options[$id], '', '', $readonly);
+		$buf .= $this->display_config_row(__('Cache ESI', 'litespeed-cache'),
+			$cache_esi, $cache_esi_desc);
+
+		$buf .= $this->input_group_end();
 		return $buf;
 	}
 

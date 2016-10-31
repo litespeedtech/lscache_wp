@@ -557,6 +557,15 @@ if (defined('lscache_debug')) {
 
 	}
 
+	private function validate_esi($input, &$options, &$errors)
+	{
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_ENABLE,
+			$input, $options);
+
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_CACHE,
+			$input, $options);
+	}
+
 	private function validate_debug($input, &$options, &$errors)
 	{
 		$pattern = "/[\s,]+/" ;
@@ -654,6 +663,8 @@ if (defined('lscache_debug')) {
 		$this->validate_purge($input, $options, $errors);
 
 		$this->validate_exclude($input, $options, $errors);
+
+		$this->validate_esi($input, $options, $errors);
 
 		$this->validate_debug($input, $options, $errors);
 

@@ -48,6 +48,8 @@ class LiteSpeed_Cache_Config
 	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
+	const OPID_ESI_ENABLE = 'esi_enabled';
+	const OPID_ESI_CACHE = 'esi_cached';
 	const PURGE_ALL_PAGES = '-' ;
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
@@ -231,6 +233,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_EXCLUDES_TAG => '',
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
+			self::OPID_ESI_ENABLE => true,
+			self::OPID_ESI_CACHE => false,
 				) ;
 
 		if (is_multisite()) {

@@ -73,3 +73,39 @@ function lscwpCheckboxConfirm(the_checkbox, list_id) {
     the_list.readOnly = true;
 }
 
+function lscwpEsiEnabled(the_checkbox, esi_ids) {
+    var rdonly = the_checkbox.checked ? false : true;
+    var len = esi_ids.length;
+    for (var i = 0; i < len; i++) {
+        var node_id = 'saved_' + esi_ids[i].getAttribute('id');
+        var node_val = esi_ids[i].getAttribute('value');
+        var prev = document.getElementById(node_id);
+        if (rdonly === false) {
+            esi_ids[i].removeAttribute('disabled');
+            if (prev) {
+                esi_ids[i].removeChild(prev);
+            }
+            continue;
+        }
+        esi_ids[i].setAttribute('disabled', true);
+        if (prev !== null) {
+            if (esi_ids[i].checked) {
+                prev.setAttribute("value", node_val);
+            }
+            else {
+                esi_ids[i].removeChild(prev);
+            }
+            continue;
+        }
+        else if (esi_ids[i].checked === false) {
+            continue;
+        }
+        var hid = document.createElement("INPUT");
+        hid.setAttribute("type", "hidden");
+        hid.setAttribute("name", esi_ids[i].getAttribute('name'));
+        hid.setAttribute("value", node_val);
+        hid.setAttribute("id", node_id);
+        esi_ids[i].appendChild(hid);
+    }
+}
+
