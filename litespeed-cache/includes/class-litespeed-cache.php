@@ -673,7 +673,8 @@ class LiteSpeed_Cache
 
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
-		if ((!is_openlitespeed()) && (!$is_ajax)) {
+		if ((!is_openlitespeed()) && (!$is_ajax)
+			&& ($this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE))) {
 			$esi = LiteSpeed_Cache_Esi::get_instance();
 			add_action('init', array($esi, 'register_post_type'));
 			add_action('template_include', array($esi, 'esi_template'), 100);
@@ -1794,9 +1795,9 @@ class LiteSpeed_Cache
 		}
 
 		if (empty($cache_tags)) {
-if (defined('lscache_debug')) {
-error_log('do not cache page.');
-}
+			if (defined('LSCWP_LOG')) {
+				self::debug_log('do not cache page.');
+			}
 			$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
 					. ': no-cache' . $esi_hdr;
 			$purge_headers = $this->build_purge_headers();
@@ -1808,9 +1809,6 @@ error_log('do not cache page.');
 			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
 		}
 
-if (defined('lscache_debug')) {
-error_log('page is cacheable');
-}
 		switch ($mode) {
 			case self::CACHECTRL_SHARED:
 			case self::CACHECTRL_PRIVATE:

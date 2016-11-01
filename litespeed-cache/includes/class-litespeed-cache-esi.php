@@ -157,6 +157,10 @@ class LiteSpeed_Cache_Esi
 		if ($post_type == self::POSTTYPE) {
 			define('LSCACHE_IS_ESI', true);
 			do_action('litespeed_cache_is_esi_template');
+			$cache = LiteSpeed_Cache::plugin();
+			if (!$cache->config(LiteSpeed_Cache_Config::OPID_ESI_CACHE)) {
+				LiteSpeed_Cache_Tags::set_noncacheable();
+			}
 			return plugin_dir_path(dirname(__FILE__))
 				. 'includes/litespeed-cache-esi.php';
 		}
@@ -277,9 +281,11 @@ class LiteSpeed_Cache_Esi
 			return;
 		}
 
-if (defined('lscache_debug')) {
-error_log('Got an esi request. Type: ' . $params[self::PARAM_TYPE]);
-}
+		if (defined('LSCWP_LOG')) {
+			LiteSpeed_Cache::debug_log('Got an esi request. Name: '
+				. $params[self::PARAM_NAME]
+				. ', ID: ' . $params[self::PARAM_BLOCK_ID]);
+		}
 		global $_SERVER;
 		$orig = $_SERVER['REQUEST_URI'];
 		$_SERVER['REQUEST_URI'] = $_SERVER['ESI_REFERER'];

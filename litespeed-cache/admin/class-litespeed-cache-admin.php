@@ -374,17 +374,11 @@ if (defined('lscache_debug')) {
 		if ( $enabled !== $options[$id] ) {
 			$options[$id] = $enabled;
 			LiteSpeed_Cache_Config::wp_cache_var_setter($enabled);
-			if (!$enabled) {
-				LiteSpeed_Cache::plugin()->purge_all();
-			}
-			elseif ($options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
+			if (($enabled)
+				&& ($options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
 				$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = false;
 			}
 			$input[$id] = 'changed';
-			if ($enabled) {
-				LiteSpeed_Cache_Esi::get_instance()->register_post_type();
-			}
-			flush_rewrite_rules();
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL;
@@ -654,9 +648,12 @@ if (defined('lscache_debug')) {
 	 */
 	public function validate_plugin_settings( $input )
 	{
-		$config = LiteSpeed_Cache::config() ;
-		$options = $config->get_options() ;
-		$errors = array() ;
+		$config = LiteSpeed_Cache::config();
+		$options = $config->get_options();
+		$errors = array();
+
+		$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+		$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
 
 		$this->validate_general($input, $options, $errors);
 
@@ -670,6 +667,18 @@ if (defined('lscache_debug')) {
 
 		if (!is_multisite()) {
 			$this->validate_singlesite($input, $options, $errors);
+		}
+
+		$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+		$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+
+		if (($orig_enabled !== $new_enabled)
+			|| ($orig_esi_enabled !== $new_esi_enabled)) {
+			if (($new_enabled) && ($new_esi_enabled)) {
+				LiteSpeed_Cache_Esi::get_instance()->register_post_type();
+			}
+			flush_rewrite_rules();
+			LiteSpeed_Cache::plugin()->purge_all();
 		}
 
 		if ( ! empty($errors) ) {
