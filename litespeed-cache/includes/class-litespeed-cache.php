@@ -54,6 +54,7 @@ class LiteSpeed_Cache
 	protected $current_vary;
 	protected $cachectrl = self::CACHECTRL_NOCACHE;
 	protected $pub_purge_tags = array();
+	protected $priv_purge_tags = array();
 	protected $custom_ttl = 0;
 	protected $user_status = 0;
 
@@ -809,14 +810,19 @@ class LiteSpeed_Cache
 	 */
 	private function add_purge_tags($tags, $is_public = true)
 	{
-		//TODO: implement private tag add
-		if (is_array($tags)) {
-			$this->pub_purge_tags = array_merge($this->pub_purge_tags, $tags);
+		if ($is_public) {
+			$merge = &$this->pub_purge_tags;
 		}
 		else {
-			$this->pub_purge_tags[] = $tags;
+			$merge = &$this->priv_purge_tags;
 		}
-		$this->pub_purge_tags = array_unique($this->pub_purge_tags);
+		if (is_array($tags)) {
+			$merge = array_merge($merge, $tags);
+		}
+		else {
+			$merge[] = $tags;
+		}
+		$merge = array_unique($merge);
 	}
 
 	/**
@@ -831,6 +837,7 @@ class LiteSpeed_Cache
 	public function purge_all()
 	{
 		$this->add_purge_tags('*');
+		$this->add_purge_tags('*', false);
 	}
 
 	/**
@@ -842,6 +849,7 @@ class LiteSpeed_Cache
 	public function purge_front()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE, false);
 	}
 
 	/**
@@ -1055,6 +1063,7 @@ class LiteSpeed_Cache
 		}
 		if ( in_array('*', $purge_tags) ) {
 			$this->add_purge_tags('*');
+			$this->add_purge_tags('*', false);
 		}
 		else {
 			$this->add_purge_tags($purge_tags);
@@ -1102,6 +1111,8 @@ class LiteSpeed_Cache
 		}
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
 			. $widget_id);
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+			. $widget_id, false);
 	}
 
 	/**
@@ -1119,6 +1130,8 @@ class LiteSpeed_Cache
 		if (!is_null($recent_comments)) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
 				. $recent_comments->id);
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $recent_comments->id, false);
 		}
 	}
 
@@ -1608,6 +1621,54 @@ class LiteSpeed_Cache
 		$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 	}
 
+	private function get_purge_header()
+	{
+		$public_tags = '';
+		$private_tags = '';
+		$cache_purge_header = '';
+		$purge_tags = array_merge($this->pub_purge_tags,
+			LiteSpeed_Cache_Tags::get_purge_tags());
+		$purge_tags = array_unique($purge_tags);
+
+		$priv_purge_tags = array_unique($this->priv_purge_tags);
+
+		if (empty($purge_tags) && (empty($priv_purge_tags))) {
+			return '';
+		}
+
+		$prefix = $this->config->get_option(
+			LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
+		if (empty($prefix)) {
+			$prefix = '';
+		}
+
+		if (!empty($purge_tags)) {
+			$public_tags = $this->build_purge_headers($prefix, $purge_tags);
+		}
+		if (!empty($priv_purge_tags)) {
+			$private_tags = $this->build_purge_headers($prefix,
+				$priv_purge_tags);
+		}
+
+		if (!empty($public_tags)) {
+			$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
+				. 'public, tag=' . implode(',', $public_tags);
+		}
+
+		if (!empty($private_tags)) {
+			// If $cache_purge_header is empty, need to prefix the header,
+			// else just prefix a semicolon.
+			$cache_purge_header .= ((empty($cache_purge_header)
+				? LiteSpeed_Cache_Tags::HEADER_PURGE : '; '))
+				. 'private, tag=' . implode(',', $private_tags);
+		}
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Purge header is ' . $cache_purge_header);
+		}
+
+		return $cache_purge_header;
+	}
+
 	/**
 	 * Gathers all the purge headers.
 	 *
@@ -1617,25 +1678,14 @@ class LiteSpeed_Cache
 	 * @since 1.0.1
 	 * @access private
 	 */
-	private function build_purge_headers()
+	private function build_purge_headers($prefix, $purge_tags)
 	{
-		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
-		$purge_tags = array_merge($this->pub_purge_tags,
-				LiteSpeed_Cache_Tags::get_purge_tags());
-		$purge_tags = array_unique($purge_tags);
-
-		if (empty($purge_tags)) {
-			return null;
-		}
-
-		$prefix = $this->config->get_option(
-			LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
-		if (empty($prefix)) {
-			$prefix = '';
-		}
-
+		$tags = array();
 		if (!in_array('*', $purge_tags )) {
-			$tags = array_map(array($this,'prefix_apply'), $purge_tags);
+			$prefix .= 'B' . get_current_blog_id() . '_';
+			foreach ($purge_tags as $val) {
+				$tags[] = $prefix . $val;
+			}
 		}
 		// Would only use multisite and network admin except is_network_admin
 		// is false for ajax calls, which is used by wordpress updates v4.6+
@@ -1659,24 +1709,15 @@ class LiteSpeed_Cache
 				}
 				return '';
 			}
-			$tags = array();
 			foreach ($blogs as $blog_id) {
 				$tags[] = sprintf('%sB%s_', $prefix, $blog_id);
 			}
 		}
 		else {
-			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
-		}
-		if (defined('LSCWP_LOG')) {
-			self::debug_log('Purge tags are ' . implode(',', $tags));
+			$tags[] = $prefix . 'B' . get_current_blog_id() . '_';
 		}
 
-		$cache_purge_header .= ': tag=' . implode(',', $tags);
-		return $cache_purge_header;
-		// TODO: private cache headers
-//		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
-//				. ': private,tag=' . implode(',', $this->ext_purge_private_tags);
-//		@header($cache_purge_header, false);
+		return $tags;
 	}
 
 	/**
@@ -1814,7 +1855,7 @@ class LiteSpeed_Cache
 			}
 			$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
 					. ': no-cache' . $esi_hdr;
-			$purge_headers = $this->build_purge_headers();
+			$purge_headers = $this->get_purge_header();
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
 		}
@@ -1870,7 +1911,7 @@ class LiteSpeed_Cache
 				break;
 
 		}
-		$purge_headers = $this->build_purge_headers();
+		$purge_headers = $this->get_purge_header();
 		$this->header_out($showhdr, $cache_control_header, $purge_headers,
 				$cache_tag_header);
 	}

@@ -541,6 +541,7 @@ error_log('Do not esi widget ' . $name . ' because '
 		global $wp_widget_factory;
 		$widget = $wp_widget_factory->widgets[$params[self::PARAM_NAME]];
 		$option = self::widget_load_get_options($widget);
+		$plugin = LiteSpeed_Cache::plugin();
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
 if (defined('lscache_debug')) {
@@ -548,14 +549,23 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 	. ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl);
 }
 		if ($ttl == 0) {
-			LiteSpeed_Cache::plugin()->no_cache_for(
+			$plugin->no_cache_for(
 				__('Widget time to live set to 0.', 'litespeed-cache'));
 			LiteSpeed_Cache_Tags::set_noncacheable();
 		}
 		else {
-			LiteSpeed_Cache::plugin()->set_custom_ttl($ttl);
+			$plugin->set_custom_ttl($ttl);
 			LiteSpeed_Cache_Tags::add_cache_tag(
 				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::PARAM_ID]);
+			if ($plugin->get_user_status()
+				& LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
+				LiteSpeed_Cache::plugin()->set_cachectrl(
+					LiteSpeed_Cache::CACHECTRL_PRIVATE);
+			}
+			else {
+				LiteSpeed_Cache::plugin()->set_cachectrl(
+					LiteSpeed_Cache::CACHECTRL_SHARED);
+			}
 		}
 		the_widget($params[self::PARAM_NAME],
 			$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
