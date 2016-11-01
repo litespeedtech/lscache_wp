@@ -1403,8 +1403,7 @@ class LiteSpeed_Cache_Admin_Display
 				$mv_str) . '</p>';
 		}
 		elseif ((($enabled) && ($mv_str === $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]))
-			|| ((!$enabled) && ($mv_str === '')
-			&& ($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] === false))) {
+			|| ((!$enabled) && ($mv_str === ''))) {
 			// can also use class 'mejs-container' for 100% width.
 			$mv_list = $this->input_field_text($list_id, $mv_str, '', 'widget ui-draggable-dragging code', '',
 					($options[$id] ? false : true)) ;
