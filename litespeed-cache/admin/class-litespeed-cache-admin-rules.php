@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param type $permissions The requested permissions. Consts from this class.
+	 * @param int $permissions The requested permissions. Consts from this class.
 	 * @return mixed True/non-zero if the file(s) has the given permissions.
 	 * False/zero otherwise.
 	 */
@@ -888,7 +888,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param array $options The current options
 	 * @param array $input The input
 	 * @param array $errors Errors array to add error messages to.
-	 * @return boolean True if no need to edit, false otherwise.
+	 * @return mixed False on failure, diff array otherwise.
 	 */
 	public function check_input($options, $input, &$errors)
 	{

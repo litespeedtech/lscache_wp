@@ -232,6 +232,7 @@ class LiteSpeed_Cache
 	 */
 	public function register_activation()
 	{
+		$count = 0;
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG',
 				'LSCACHE_WP_activate_' . get_current_blog_id());
@@ -443,6 +444,11 @@ class LiteSpeed_Cache
 	public function get_config()
 	{
 		return $this->config ;
+	}
+
+	public function get_user_status()
+	{
+		return $this->user_status;
 	}
 
 	/**
@@ -1222,7 +1228,7 @@ class LiteSpeed_Cache
 		if (($db_cookie != $this->current_vary)
 				&& (isset($_COOKIE[$db_cookie]))) {
 			if (defined('LSCWP_LOG')) {
-				$this->debug_log(self::build_paragraphs(
+				$this->debug_log(self::build_paragraph(
 					__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
 					__('Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache'),
 					__('This error may appear if you are logged into another web application.', 'litespeed-cache')
@@ -1578,6 +1584,7 @@ class LiteSpeed_Cache
 					return;
 				}
 				$this->admin_ctrl_redirect();
+				return;
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->set_cachectrl($this->cachectrl
@@ -1618,7 +1625,7 @@ class LiteSpeed_Cache
 		$purge_tags = array_unique($purge_tags);
 
 		if (empty($purge_tags)) {
-			return;
+			return null;
 		}
 
 		$prefix = $this->config->get_option(
@@ -1747,6 +1754,11 @@ class LiteSpeed_Cache
 		if ((!is_null($cache_hdr)) && (!empty($cache_hdr))) {
 			$hdr_content[] = $cache_hdr;
 		}
+		if (defined('LSCWP_LOG')) {
+			foreach($hdr_content as $hdr) {
+				self::debug_log('Response header: ' . $hdr);
+			}
+		}
 
 		if (!empty($hdr_content)) {
 			if ($showhdr) {
@@ -1777,6 +1789,8 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		$cache_tags = null;
+		$cache_control_header = null;
+		$cache_tag_header = null;
 		$cachectrl_val = 'public';
 		$showhdr = false;
 		$esi_hdr = LiteSpeed_Cache_Esi::get_instance()->has_esi()
@@ -1902,7 +1916,6 @@ class LiteSpeed_Cache
 		global $post ;
 		global $wp_query ;
 
-		$queried_obj = get_queried_object() ;
 		$queried_obj_id = get_queried_object_id() ;
 		$cache_tags = array();
 

@@ -489,6 +489,7 @@ class LiteSpeed_Cache_Config
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @param int $count The count of blogs active in multisite.
 	 */
 	public function plugin_activation($count)
 	{

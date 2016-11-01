@@ -190,7 +190,7 @@ class LiteSpeed_Cache_Esi
 			return;
 		}
 
-		if ($this->user_status) {
+		if (LiteSpeed_Cache::plugin()->get_user_status()) {
 			add_filter('comment_form_defaults',
 				array($this, 'register_comment_form_actions'));
 		}
@@ -211,19 +211,19 @@ class LiteSpeed_Cache_Esi
 			array($lscache, 'purge_comment_widget'));
 		add_filter('comments_array', array($this, 'sub_comments_block'));
 
-		if ((defined('DOING_AJAX') && DOING_AJAX)) {
+		if ((defined('DOING_AJAX') && constant(DOING_AJAX))) {
 			return;
 		}
 
 		add_filter('widget_display_callback',
 			array($this, 'sub_widget_block'), 0, 3);
 
-		if ($this->user_status & LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
+		if ($lscache->get_user_status() & LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000);
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000);
 		}
 
-		if ($this->user_status) {
+		if ($lscache->get_user_status()) {
 			add_filter('comment_form_defaults',
 				array($this, 'register_comment_form_actions'));
 		}
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_Esi
 		if (defined('LSCWP_LOG')) {
 			LiteSpeed_Cache::debug_log('Got an esi request. Name: '
 				. $params[self::PARAM_NAME]
-				. ', ID: ' . $params[self::PARAM_BLOCK_ID]);
+				. ', Block ID: ' . $params[self::PARAM_BLOCK_ID]);
 		}
 		global $_SERVER;
 		$orig = $_SERVER['REQUEST_URI'];

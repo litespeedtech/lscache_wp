@@ -272,7 +272,7 @@ class LiteSpeed_Cache_Admin_Display
 						&& (strncmp($selection, 'report', $selection_len) == 0)) {
 					$this->show_menu_report();
 				}
-
+				break;
 			default:
 				break;
 		}
@@ -393,8 +393,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		}
 
-		$options = $config->get_options() ;
-		$purge_options = $config->get_purge_options() ;
+		$options = $config->get_options();
 
 		/**
 		 * This hook allows third party plugins to create litespeed cache
@@ -2100,7 +2099,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 * @access private
 	 * @param string $id The option ID for the field.
 	 * @param array $radiooptions The options available for selection.
-	 * @param string checked_value The currently selected option.
+	 * @param string $checked_value The currently selected option.
 	 * @return string The select field html.
 	 */
 	private function input_field_radio( $id, $radiooptions, $checked_value)

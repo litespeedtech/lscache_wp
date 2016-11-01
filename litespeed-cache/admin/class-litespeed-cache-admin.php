@@ -42,11 +42,6 @@ class LiteSpeed_Cache_Admin
 		$this->plugin_name = $plugin_name ;
 		$this->version = $version ;
 		$plugin_file = plugin_dir_path(dirname(__FILE__)) . $plugin_name . '.php';
-if (defined('lscache_debug')) {
-			require_once(ABSPATH . '/wp-admin/includes/file.php');
-	$plugin_file = ABSPATH . '/wp-content/plugins/litespeed-cache/' . $plugin_name . '.php';
-}
-
 		$plugin_base = plugin_basename($plugin_file);
 
 		if (!function_exists('is_plugin_active_for_network')) {
@@ -111,7 +106,7 @@ if (defined('lscache_debug')) {
 		global $pagenow;
 		$prefix = '?';
 		if (!current_user_can('manage_options')) {
-			return;
+			return '';
 		}
 
 		if (!empty($_GET)) {
@@ -171,6 +166,7 @@ if (defined('lscache_debug')) {
 	 */
 	private function add_submenu($page_title, $menu_title, $menu_slug, $cb = '')
 	{
+		$fn = '';
 		$display = LiteSpeed_Cache_Admin_Display::get_instance();
 		if (!empty($cb)) {
 			$fn = array($display, $cb);
@@ -252,7 +248,7 @@ if (defined('lscache_debug')) {
 	 */
 	private function register_dash_menu()
 	{
-		$check = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
+		add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
 				'lscache-dash', '', 'dashicons-performance');
 		$this->register_submenus();
 	}
@@ -974,7 +970,7 @@ if (defined('lscache_debug')) {
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				__('File saved.', 'litespeed-cache'));
-		$ret = update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
+		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
 	}
 
 	/**
