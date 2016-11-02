@@ -30,15 +30,16 @@
      */
 
     jQuery(document).ready(function () {
-        jQuery("#lsc-tabs").tabs();
-        jQuery("#lsc-tabs").removeClass('ui-widget');
+        var tabs = jQuery("#lsc-tabs");
+        tabs.tabs();
+        tabs.removeClass('ui-widget');
     });
-    
+
     jQuery(document).ready( function() {
         jQuery(".litespeedcache-postbox-button").on('click', function() {
             var pbDiv = jQuery(this).parent().get(0);
             jQuery(pbDiv).toggleClass('closed');
-            jQuery(this).attr('aria-expanded', 
+            jQuery(this).attr('aria-expanded',
                 jQuery(this).attr('aria-expanded') === 'true' ? 'false' : 'true');
         });
     });

@@ -215,7 +215,7 @@ class LiteSpeed_Cache_Admin_Display
 						&& (strncmp($selection, 'report', $selection_len) == 0)) {
 					$this->show_menu_report();
 				}
-
+				break;
 			default:
 				break;
 		}
@@ -336,8 +336,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		}
 
-		$options = $config->get_options() ;
-		$purge_options = $config->get_purge_options() ;
+		$options = $config->get_options();
 
 		/**
 		 * This hook allows third party plugins to create litespeed cache
@@ -845,7 +844,12 @@ class LiteSpeed_Cache_Admin_Display
 		echo $buf;
 	}
 
-
+	/**
+	 * Outputs the html for the Environment Report page.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 */
 	private function show_menu_report()
 	{
 		$report = LiteSpeed_Cache::generate_environment_report();
@@ -1840,7 +1844,13 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		return $buf;
 	}
 
-
+	/**
+	 * Outputs a notice to the admin panel when the plugin is installed
+	 * via the WHM plugin.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 */
 	public function show_display_installed()
 	{
 		$url = LiteSpeed_Cache_Admin::build_lscwpctrl_url(
@@ -1976,7 +1986,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 * @access private
 	 * @param string $id The option ID for the field.
 	 * @param array $radiooptions The options available for selection.
-	 * @param string checked_value The currently selected option.
+	 * @param string $checked_value The currently selected option.
 	 * @return string The select field html.
 	 */
 	private function input_field_radio( $id, $radiooptions, $checked_value)

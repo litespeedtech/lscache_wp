@@ -124,8 +124,8 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	/**
 	 * When an image is copied, need to purge the destination gallery.
 	 *
-	 * @param type $image_pid_map unused
-	 * @param type $old_gallery_ids unused
+	 * @param array $image_pid_map unused
+	 * @param array $old_gallery_ids unused
 	 * @param integer $new_gallery_id Destination gallery id.
 	 */
 	public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
@@ -137,7 +137,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an image is re-generated, need to purge the gallery it belongs to.
 	 * Also applies to recovered images.
 	 *
-	 * @param Image class $image The re-generated image.
+	 * @param Image $image The re-generated image.
 	 */
 	public static function gen_image($image)
 	{
@@ -175,6 +175,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * @since 1.0.5
 	 * @access public
 	 * @param object $render_parms Parameters used to render the associated part of the page.
+	 * @return mixed Null if passed in null, $render_parms otherwise.
 	 */
 	public static function add_container($render_parms)
 	{

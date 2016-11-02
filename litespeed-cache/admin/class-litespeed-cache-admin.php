@@ -106,12 +106,19 @@ if (defined('lscache_debug')) {
 		}
 	}
 
+	/**
+	 * Builds an admin url with an action and a nonce.
+	 *
+	 * @param string $val The LSCWP_CTRL action to do in the url.
+	 * @param string $nonce The nonce to use.
+	 * @return string The built url.
+	 */
 	public static function build_lscwpctrl_url($val, $nonce)
 	{
 		global $pagenow;
 		$prefix = '?';
 		if (!current_user_can('manage_options')) {
-			return;
+			return '';
 		}
 
 		$params = $_GET;
@@ -145,8 +152,8 @@ if (defined('lscache_debug')) {
 	 * Hooked to wp_before_admin_bar_render.
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
-	 * @global type $wp_admin_bar
-	 * @global type $pagenow
+	 * @global WP_Admin_Bar $wp_admin_bar
+	 * @global string $pagenow
 	 */
 	public function add_quick_purge()
 	{
@@ -173,6 +180,7 @@ if (defined('lscache_debug')) {
 	 */
 	private function add_submenu($page_title, $menu_title, $menu_slug, $cb = '')
 	{
+		$fn = '';
 		$display = LiteSpeed_Cache_Admin_Display::get_instance();
 		if (!empty($cb)) {
 			$fn = array($display, $cb);
@@ -254,7 +262,7 @@ if (defined('lscache_debug')) {
 	 */
 	private function register_dash_menu()
 	{
-		$check = add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
+		add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options',
 				'lscache-dash', '', 'dashicons-performance');
 		$this->register_submenus();
 	}
@@ -369,6 +377,15 @@ if (defined('lscache_debug')) {
 		return true;
 	}
 
+	/**
+	 * Validates the general settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_general($input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
@@ -436,6 +453,15 @@ if (defined('lscache_debug')) {
 		}
 	}
 
+	/**
+	 * Validates the purge rules settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_purge($input, &$options, &$errors)
 	{
 
@@ -523,6 +549,15 @@ if (defined('lscache_debug')) {
 		}
 	}
 
+	/**
+	 * Validates the single site specific settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_singlesite($input, &$options, &$errors)
 	{
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
@@ -555,6 +590,15 @@ if (defined('lscache_debug')) {
 
 	}
 
+	/**
+	 * Validates the debug settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_debug($input, &$options, &$errors)
 	{
 		$pattern = "/[\s,]+/" ;
@@ -616,6 +660,15 @@ if (defined('lscache_debug')) {
 		}
 	}
 
+	/**
+	 * Validates the third party settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param LiteSpeed_Cache_Config $config The config class.
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 */
 	private function validate_thirdparty($config, $input, &$options)
 	{
 		$tp_default_options = $config->get_thirdparty_options();
@@ -877,7 +930,7 @@ if (defined('lscache_debug')) {
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
 				__('File saved.', 'litespeed-cache'));
-		$ret = update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
+		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
 	}
 
 	/**

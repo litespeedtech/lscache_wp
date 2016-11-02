@@ -271,6 +271,14 @@ class LiteSpeed_Cache_Config
 		return $default_site_options;
 	}
 
+	/**
+	 * When the .htaccess files need to be reset, use this array to denote
+	 * everything off.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @return array The list of options to reset.
+	 */
 	public static function get_rule_reset_options()
 	{
 		$reset = array(
@@ -480,6 +488,7 @@ class LiteSpeed_Cache_Config
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @param int $count In multisite, the number of blogs active.
 	 */
 	public function plugin_activation($count)
 	{
