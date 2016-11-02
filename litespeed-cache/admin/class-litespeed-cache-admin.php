@@ -114,15 +114,17 @@ if (defined('lscache_debug')) {
 			return;
 		}
 
-		if (!empty($_GET)) {
-			if (isset($_GET['LSCWP_CTRL'])) {
-				unset($_GET['LSCWP_CTRL']);
+		$params = $_GET;
+
+		if (!empty($params)) {
+			if (isset($params['LSCWP_CTRL'])) {
+				unset($params['LSCWP_CTRL']);
 			}
-			if (isset($_GET['_wpnonce'])) {
-				unset($_GET['_wpnonce']);
+			if (isset($params['_wpnonce'])) {
+				unset($params['_wpnonce']);
 			}
-			if (!empty($_GET)) {
-				$prefix .= http_build_query($_GET) . '&';
+			if (!empty($params)) {
+				$prefix .= http_build_query($params) . '&';
 			}
 		}
 
