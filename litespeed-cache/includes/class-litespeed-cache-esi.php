@@ -415,6 +415,7 @@ class LiteSpeed_Cache_Esi
 	public function sub_widget_block(array $instance, WP_Widget $widget,
 		array $args)
 	{
+		$cachectrl = '';
 		$name = get_class($widget);
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		if ((!isset($options)) ||
@@ -433,7 +434,12 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $args
 		);
 
-		self::build_url('widget', 'widget ' . $name, $params);
+		if (LiteSpeed_Cache::plugin()->get_user_status()
+			& LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
+			$cachectrl = self::CACHECTRL_PRIV;
+		}
+
+		self::build_url('widget', 'widget ' . $name, $params, $cachectrl);
 		return false;
 	}
 
@@ -475,6 +481,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			error_log('comment form args empty?');
 			return $unused;
 		}
+		$cachectrl = '';
 		$esi_args = array_diff_assoc($args, $this->esi_args);
 		ob_clean();
 		global $post;
@@ -483,7 +490,10 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $esi_args,
 			);
 
-		self::build_url('comment-form', 'comment form', $params, self::CACHECTRL_PRIV);
+		if (LiteSpeed_Cache::plugin()->get_user_status()) {
+			$cachectrl = self::CACHECTRL_PRIV;
+		}
+		self::build_url('comment-form', 'comment form', $params, $cachectrl);
 		ob_start();
 		add_action('comment_form_after',
 			array($this, 'comment_form_sub_clean'));
@@ -564,7 +574,7 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 			}
 			else {
 				LiteSpeed_Cache::plugin()->set_cachectrl(
-					LiteSpeed_Cache::CACHECTRL_SHARED);
+					LiteSpeed_Cache::CACHECTRL_PUBLIC);
 			}
 		}
 		the_widget($params[self::PARAM_NAME],
@@ -583,8 +593,15 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 			array(self::get_instance(), 'register_comment_form_actions'));
 		comment_form($params[self::PARAM_ARGS],
 			$params[self::PARAM_ID]);
-		LiteSpeed_Cache::plugin()->set_cachectrl(
-			LiteSpeed_Cache::CACHECTRL_PRIVATE);
+		$plugin = LiteSpeed_Cache::plugin();
+		if ($plugin->get_user_status()) {
+			LiteSpeed_Cache::plugin()->set_cachectrl(
+				LiteSpeed_Cache::CACHECTRL_PRIVATE);
+		}
+		else {
+			LiteSpeed_Cache::plugin()->set_cachectrl(
+				LiteSpeed_Cache::CACHECTRL_PUBLIC);
+		}
 
 	}
 
@@ -609,6 +626,8 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 		$wp_query->setup_postdata($post);
 		add_filter('comments_array', array($this, 'comments_load_cache_type'));
 		comments_template();
+		LiteSpeed_Cache::plugin()->set_cachectrl(
+			LiteSpeed_Cache::CACHECTRL_PRIVATE);
 	}
 }
 
