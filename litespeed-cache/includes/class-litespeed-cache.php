@@ -1501,6 +1501,7 @@ class LiteSpeed_Cache
 					return;
 				}
 				$this->admin_ctrl_redirect();
+				return;
 			case 'S':
 				if ($action == self::ADMINQS_SHOWHEADERS) {
 					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
