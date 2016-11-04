@@ -131,6 +131,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.7
 	 * @access public
 	 * @param int $permissions The requested permissions. Consts from this class.
+	 * @param string $path Optional path to check permissions of. If not given,
+	 * will assume it is a .htaccess file.
 	 * @return mixed True/non-zero if the file(s) has the given permissions.
 	 * False/zero otherwise.
 	 */
@@ -263,6 +265,7 @@ class LiteSpeed_Cache_Admin_Rules
 		elseif ($install_part !== false) {
 			// Install is longer than access
 			$access_part = '';
+			$install_part = rtrim($install_part, '/');
 		}
 		else {
 			// they are equal - no need to find paths.
@@ -362,6 +365,19 @@ class LiteSpeed_Cache_Admin_Rules
 		return true;
 	}
 
+	/**
+	 * Get the ifmodule block if it exists in the content.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @param string $content The content to search.
+	 * @param int $off_begin Will be set to the beginning offset. Starts
+	 * just after the opening <IfModule>.
+	 * @param int $off_end Will be set to the ending offset. Starts just
+	 * before the closing </IfModule>.
+	 * @return bool|string False if not found, True if found. Error message if
+	 * it failed.
+	 */
 	public static function file_get_ifmodule_block($content, &$off_begin,
 		&$off_end)
 	{
@@ -888,7 +904,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param array $options The current options
 	 * @param array $input The input
 	 * @param array $errors Errors array to add error messages to.
-	 * @return mixed False on failure, diff array otherwise.
+	 * @return mixed False if there is an error, diff array otherwise.
 	 */
 	public function check_input($options, $input, &$errors)
 	{
@@ -1365,7 +1381,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if (self::file_get($site_content, $site_path) === false) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
-			return '';
+			return;
 		}
 
 		if (empty($wrapper)) {

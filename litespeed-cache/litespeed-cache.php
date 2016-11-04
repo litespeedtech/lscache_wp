@@ -90,6 +90,7 @@ if (!function_exists('run_litespeed_cache')) {
 		else {
 			return false ;
 		}
+		return true;
 	}
 
 	run_litespeed_cache() ;

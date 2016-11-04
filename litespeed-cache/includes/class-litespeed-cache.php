@@ -156,6 +156,12 @@ class LiteSpeed_Cache
 		return $conf->get_option($opt_id);
 	}
 
+	/**
+	 * Sets up the log tag and creates initial log messages.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 */
 	private static function setup_debug_log()
 	{
 		if (!defined('LSCWP_LOG_TAG')) {
@@ -166,6 +172,14 @@ class LiteSpeed_Cache
 
 	}
 
+	/**
+	 * Formats the log message with a consistent prefix.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param string $mesg The log message to write.
+	 * @return string The formatted log message.
+	 */
 	private static function format_message($mesg)
 	{
 		$tag = defined('LSCWP_LOG_TAG') ? constant('LSCWP_LOG_TAG') : 'LSCACHE_WP';
@@ -188,6 +202,12 @@ class LiteSpeed_Cache
 		file_put_contents(self::$log_path, $formatted, FILE_APPEND);
 	}
 
+	/**
+	 * Create the initial log messages with the request parameters.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 */
 	private static function log_request()
 	{
 		$params = array(
@@ -262,6 +282,13 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 * Gets the count of active litespeed cache plugins on multisite.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @return mixed The count on success, false on failure.
+	 */
 	private function get_network_count()
 	{
 		$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT);
@@ -291,6 +318,14 @@ class LiteSpeed_Cache
 		return $count;
 	}
 
+	/**
+	 * Is this deactivate call the last active installation on the multisite
+	 * network?
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @return bool True if yes, false otherwise.
+	 */
 	private function is_deactivate_last()
 	{
 		$count = $this->get_network_count();
@@ -533,6 +568,7 @@ class LiteSpeed_Cache
 	 *
 	 * @since    1.0.0
 	 * @access   private
+	 * @param boolean $module_enabled Whether the module is enabled or not.
 	 */
 	private function load_admin_actions( $module_enabled )
 	{
@@ -613,6 +649,7 @@ class LiteSpeed_Cache
 	 *
 	 * @since    1.0.7
 	 * @access   private
+	 * @param boolean $module_enabled Whether the module is enabled or not.
 	 */
 	private function load_nonadmin_actions( $module_enabled )
 	{
@@ -801,12 +838,12 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Add purge tags to the current list.
+	 * Adds new purge tags to the array of purge tags for the request.
 	 *
 	 * @since 1.0.1
 	 * @access private
-	 * @param mixed $tags A string or an array of tags to add to the purge list.
-	 * @param boolean $is_public Denotes if the tag is a public purge tag.
+	 * @param mixed $tags Tags to add to the list.
+	 * @param boolean $is_public Whether to add public or private purge tags.
 	 */
 	private function add_purge_tags($tags, $is_public = true)
 	{
@@ -1516,6 +1553,14 @@ class LiteSpeed_Cache
 		return;
 	}
 
+	/**
+	 * After a LSCWP_CTRL action, need to redirect back to the same page
+	 * without the nonce and action in the query string.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @global string $pagenow
+	 */
 	private function admin_ctrl_redirect()
 	{
 		global $pagenow;
@@ -1829,6 +1874,8 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers()
 	{
+		$cache_control_header = '';
+		$cache_tag_header = '';
 		$cache_tags = null;
 		$cache_control_header = null;
 		$cache_tag_header = null;
@@ -2108,6 +2155,16 @@ class LiteSpeed_Cache
 		return array_unique($purge_tags) ;
 	}
 
+	/**
+	 * Creates a part of the environment report based on a section header
+	 * and an array for the section parameters.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param string $section_header The section heading
+	 * @param array $section An array of information to output
+	 * @return string The created report block.
+	 */
 	private static function format_report_section($section_header, $section)
 	{
 		$tab = '    '; // four spaces
@@ -2133,12 +2190,13 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Builds the environment report buffer with the given parameters
 	 *
-	 * @param boolean $html - Whether to use html separators or regular string separators
 	 * @param array $server - server variables
 	 * @param array $options - cms options
 	 * @param array $extras - cms specific attributes
 	 * @param array $htaccess_paths - htaccess paths to check.
+	 * @return string The Environment Report buffer.
 	 */
 	public static function build_environment_report($server, $options,
 		$extras = array(), $htaccess_paths = array())
@@ -2176,16 +2234,33 @@ class LiteSpeed_Cache
 		return $buf;
 	}
 
+	/**
+	 * Write the environment report to the report location.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @param string $content What to write to the environment report.
+	 */
 	public function write_environment_report($content)
 	{
 		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false,
-			$this->plugin_dir . '../environment_report.txt', false);
+			dirname($this->plugin_dir) . '/environment_report.txt', false);
 		if (($ret !== true) && (defined('LSCWP_LOG'))) {
 			self::debug_log('LSCache wordpress plugin attempted to write '
 				. 'env report but did not have permissions.');
 		}
 	}
 
+	/**
+	 * Gathers the environment details and creates the report.
+	 * Will write to the environment report file.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @param mixed $options Array of options to output. If null, will skip
+	 * the options section.
+	 * @return string The built report.
+	 */
 	public static function generate_environment_report($options = null)
 	{
 		global $wp_version, $_SERVER;
@@ -2222,6 +2297,15 @@ class LiteSpeed_Cache
 		return $report;
 	}
 
+	/**
+	 * Hooked to the update options/site options actions. Whenever our options
+	 * are updated, update the environment report with the new options.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @param $unused
+	 * @param mixed $options The updated options. May be array or string.
+	 */
 	public static function update_environment_report($unused, $options)
 	{
 		if (is_array($options)) {

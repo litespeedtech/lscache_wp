@@ -101,6 +101,13 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 * Builds an admin url with an action and a nonce.
+	 *
+	 * @param string $val The LSCWP_CTRL action to do in the url.
+	 * @param string $nonce The nonce to use.
+	 * @return string The built url.
+	 */
 	public static function build_lscwpctrl_url($val, $nonce)
 	{
 		global $pagenow;
@@ -109,15 +116,17 @@ class LiteSpeed_Cache_Admin
 			return '';
 		}
 
-		if (!empty($_GET)) {
-			if (isset($_GET['LSCWP_CTRL'])) {
-				unset($_GET['LSCWP_CTRL']);
+		$params = $_GET;
+
+		if (!empty($params)) {
+			if (isset($params['LSCWP_CTRL'])) {
+				unset($params['LSCWP_CTRL']);
 			}
-			if (isset($_GET['_wpnonce'])) {
-				unset($_GET['_wpnonce']);
+			if (isset($params['_wpnonce'])) {
+				unset($params['_wpnonce']);
 			}
-			if (!empty($_GET)) {
-				$prefix .= http_build_query($_GET) . '&';
+			if (!empty($params)) {
+				$prefix .= http_build_query($params) . '&';
 			}
 		}
 
@@ -138,8 +147,8 @@ class LiteSpeed_Cache_Admin
 	 * Hooked to wp_before_admin_bar_render.
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
-	 * @global type $wp_admin_bar
-	 * @global type $pagenow
+	 * @global WP_Admin_Bar $wp_admin_bar
+	 * @global string $pagenow
 	 */
 	public function add_quick_purge()
 	{
@@ -363,6 +372,15 @@ class LiteSpeed_Cache_Admin
 		return true;
 	}
 
+	/**
+	 * Validates the general settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_general($input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
@@ -370,8 +388,10 @@ class LiteSpeed_Cache_Admin
 		if ( $enabled !== $options[$id] ) {
 			$options[$id] = $enabled;
 			LiteSpeed_Cache_Config::wp_cache_var_setter($enabled);
-			if (($enabled)
-				&& ($options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON])) {
+			if (!$enabled) {
+				LiteSpeed_Cache::plugin()->purge_all();
+			}
+			elseif ($options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON]) {
 				$options[LiteSpeed_Cache_Config::OPID_CACHE_FAVICON] = false;
 			}
 			$input[$id] = 'changed';
@@ -428,6 +448,15 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 * Validates the purge rules settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_purge($input, &$options, &$errors)
 	{
 
@@ -515,6 +544,15 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 * Validates the single site specific settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_singlesite($input, &$options, &$errors)
 	{
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
@@ -556,6 +594,15 @@ class LiteSpeed_Cache_Admin
 			$input, $options);
 	}
 
+	/**
+	 * Validates the debug settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_debug($input, &$options, &$errors)
 	{
 		$pattern = "/[\s,]+/" ;
@@ -617,6 +664,15 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 * Validates the third party settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param LiteSpeed_Cache_Config $config The config class.
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 */
 	private function validate_thirdparty($config, $input, &$options)
 	{
 		$tp_default_options = $config->get_thirdparty_options();

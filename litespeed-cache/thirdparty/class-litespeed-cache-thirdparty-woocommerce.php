@@ -445,7 +445,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * This will return the option names needed as well as the default options.
 	 *
 	 * @param array $configs
-	 * @return type
+	 * @return array
 	 */
 	public static function get_config($configs)
 	{

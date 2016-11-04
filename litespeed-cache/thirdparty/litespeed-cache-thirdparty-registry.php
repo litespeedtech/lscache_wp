@@ -15,6 +15,7 @@ if (!defined('ABSPATH')) {
     die();
 }
 
+include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-autoptimize.php');
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-bbpress.php');
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-betterwp-minify.php');
 include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-nextgengallery.php');
