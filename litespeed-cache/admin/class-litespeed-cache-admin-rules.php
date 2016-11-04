@@ -265,6 +265,7 @@ class LiteSpeed_Cache_Admin_Rules
 		elseif ($install_part !== false) {
 			// Install is longer than access
 			$access_part = '';
+			$install_part = rtrim($install_part, '/');
 		}
 		else {
 			// they are equal - no need to find paths.
