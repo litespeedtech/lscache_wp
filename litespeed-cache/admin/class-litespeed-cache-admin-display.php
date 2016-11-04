@@ -1991,17 +1991,19 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 */
 	private function input_field_radio( $id, $radiooptions, $checked_value)
 	{
-		$buf = '';
+		$buf = '<fieldset>';
 		foreach ( $radiooptions as $val => $label ) {
-			$buf .= '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="radio" id="'
-				. $id . '" value="' . $val . '"' ;
+			$buf .= '<label>';
+			$buf .= '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME
+				. '[' . $id . ']" type="radio" id="'
+				. LiteSpeed_Cache_Config::OPTION_NAME . '[' . $label . ']" value="' . $val . '"' ;
 			if (($checked_value === $val)) {
 				$buf .= ' checked="checked"' ;
 			}
-			$buf .= '>' . $label . '</input>';
+			$buf .= '><span>' . $label . '&nbsp;&nbsp;</span></label>';
 			$buf .= '&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
-		return $buf ;
+		return $buf . '</fieldset>';
 	}
 
 	/**
