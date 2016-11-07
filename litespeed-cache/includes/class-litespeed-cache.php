@@ -1915,11 +1915,13 @@ class LiteSpeed_Cache
 			return '';
 		}
 
+		$prefix_tags = array();
 		$prefix = $this->config->get_option(
 			LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
 		if (empty($prefix)) {
 			$prefix = '';
 		}
+		$prefix .= 'B' . get_current_blog_id() . '_';
 
 		switch ($mode) {
 		case self::CACHECTRL_PURGESINGLE:
@@ -1930,6 +1932,10 @@ class LiteSpeed_Cache
 			return ''; // If purge/purgesingle, cache tags header is empty.
 		case self::CACHECTRL_SHARED:
 		case self::CACHECTRL_PRIVATE:
+			$priv_cache_tags = LiteSpeed_Cache_Tags::get_private_cache_tags();
+			foreach ($priv_cache_tags as $priv_tag) {
+				$prefix_tags[] = $prefix . $priv_tag;
+			}
 			$prefix = 'public: ' . $prefix;
 				break;
 		case self::CACHECTRL_PUBLIC:
@@ -1937,8 +1943,6 @@ class LiteSpeed_Cache
 		default:
 			return '';
 		}
-		$prefix .= 'B' . get_current_blog_id() . '_';
-		$prefix_tags = array();
 		foreach ($cache_tags as $tag) {
 			$prefix_tags[] = $prefix . $tag;
 		}
