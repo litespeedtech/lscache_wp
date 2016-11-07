@@ -1675,7 +1675,9 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Tags::get_purge_tags());
 		$purge_tags = array_unique($purge_tags);
 
-		$priv_purge_tags = array_unique($this->priv_purge_tags);
+		$priv_purge_tags = array_merge($this->priv_purge_tags,
+			LiteSpeed_Cache_Tags::get_private_purge_tags());
+		$priv_purge_tags = array_unique($priv_purge_tags);
 
 		if (empty($purge_tags) && (empty($priv_purge_tags))) {
 			return '';
@@ -1874,93 +1876,125 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers()
 	{
-		$cache_control_header = '';
-		$cache_tag_header = '';
-		$cache_tags = null;
-		$cache_control_header = null;
-		$cache_tag_header = null;
-		$cachectrl_val = 'public';
+		$tags_header = '';
 		$showhdr = false;
-		$esi_hdr = LiteSpeed_Cache_Esi::get_instance()->has_esi()
-			? ',esi=on' : '';
 		do_action('litespeed_cache_add_purge_tags');
 
 		$mode = $this->validate_mode($showhdr);
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
-			do_action('litespeed_cache_add_cache_tags');
-			$cache_tags = $this->get_cache_tags();
-			if (($mode !== self::CACHECTRL_PURGE)
-				&& ($mode !== self::CACHECTRL_PURGESINGLE)) {
-				$cache_tags[] = ''; //add blank entry to add blog tag.
+			$tags_header = $this->setup_tags_hdr($mode);
+			if (empty($tags_header)) {
+				$mode = self::CACHECTRL_NOCACHE;
 			}
 		}
 
-		if (empty($cache_tags)) {
-			if (defined('LSCWP_LOG')) {
-				self::debug_log('do not cache page.');
-			}
-			$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-					. ': no-cache' . $esi_hdr;
-			$purge_headers = $this->get_purge_header();
-			$this->header_out($showhdr, $cache_control_header, $purge_headers);
-			return;
+		$ctrl_header = $this->setup_ctrl_hdr($mode);
+
+		$purge_header = $this->get_purge_header();
+		$this->header_out($showhdr, $ctrl_header, $purge_header, $tags_header);
+	}
+
+	/**
+	 * Sets up the Cache Tags header depending on the mode.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param int $mode The type of response to return.
+	 * @return string empty string if empty, otherwise the cache tags header.
+	 */
+	private function setup_tags_hdr($mode)
+	{
+		do_action('litespeed_cache_add_cache_tags');
+		$cache_tags = $this->get_cache_tags();
+		if (($mode !== self::CACHECTRL_PURGE)
+			&& ($mode !== self::CACHECTRL_PURGESINGLE)) {
+			$cache_tags[] = ''; //add blank entry to add blog tag.
 		}
-		$prefix_tags = array_map(array($this,'prefix_apply'), $cache_tags);
-		if (defined('LSCWP_LOG')) {
-			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
+		if (empty($cache_tags)) {
+			return '';
+		}
+
+		$prefix = $this->config->get_option(
+			LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
+		if (empty($prefix)) {
+			$prefix = '';
 		}
 
 		switch ($mode) {
-			case self::CACHECTRL_SHARED:
-			case self::CACHECTRL_PRIVATE:
-				if ($mode === self::CACHECTRL_SHARED) {
-					$cachectrl_val = 'shared,';
-				}
-				else {
-					$cachectrl_val = '';
-				}
-				$cachectrl_val .= 'private';
-				// fall through
-			case self::CACHECTRL_PUBLIC:
-				$feed_ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL);
-				$ttl_404 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_404_TTL);
-
-				if ($this->custom_ttl != 0) {
-					$ttl = $this->custom_ttl;
-				}
-				elseif ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
-					|| (is_front_page())){
-					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
-				}
-				elseif ((is_feed()) && ($feed_ttl > 0)) {
-					$ttl = $feed_ttl;
-				}
-				elseif ((is_404()) && ($ttl_404 > 0)) {
-					$ttl = $ttl_404;
-				}
-				else {
-					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
-				}
-				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': ' . $cachectrl_val . ',max-age=' . $ttl . $esi_hdr;
-				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
-					. ': ' . implode(',', $prefix_tags) ;
+		case self::CACHECTRL_PURGESINGLE:
+			$cache_tags = $cache_tags[0];
+		// fall through
+		case self::CACHECTRL_PURGE:
+			LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
+			return ''; // If purge/purgesingle, cache tags header is empty.
+		case self::CACHECTRL_SHARED:
+		case self::CACHECTRL_PRIVATE:
+			$prefix = 'public: ' . $prefix;
 				break;
-			case self::CACHECTRL_PURGESINGLE:
-				$cache_tags = $cache_tags[0];
-				// fall through
-			case self::CACHECTRL_PURGE:
-				$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache'
-					. $esi_hdr;
-				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
-				break;
-
+		case self::CACHECTRL_PUBLIC:
+			break;
+		default:
+			return '';
 		}
-		$purge_headers = $this->get_purge_header();
-		$this->header_out($showhdr, $cache_control_header, $purge_headers,
-				$cache_tag_header);
+		$prefix .= 'B' . get_current_blog_id() . '_';
+		$prefix_tags = array();
+		foreach ($cache_tags as $tag) {
+			$prefix_tags[] = $prefix . $tag;
+		}
+		$hdr = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG . ': '
+			. implode(',', $prefix_tags);
+
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
+		}
+		return $hdr;
+	}
+
+	private function setup_ctrl_hdr($mode)
+	{
+		$esi_hdr = LiteSpeed_Cache_Esi::get_instance()->has_esi()
+			? ',esi=on' : '';
+		$hdr = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ';
+		switch ($mode)
+		{
+		case self::CACHECTRL_NOCACHE:
+		case self::CACHECTRL_PURGE:
+		case self::CACHECTRL_PURGESINGLE:
+			$hdr .= 'no-cache' . $esi_hdr;
+			return $hdr;
+		case self::CACHECTRL_SHARED:
+			$cachectrl_val = 'shared,private';
+			break;
+		case self::CACHECTRL_PRIVATE:
+			$cachectrl_val = 'private';
+			break;
+		case self::CACHECTRL_PUBLIC:
+			$cachectrl_val = 'public';
+			break;
+		}
+		$options = $this->config->get_options();
+		$feed_ttl = $options[LiteSpeed_Cache_Config::OPID_FEED_TTL];
+		$ttl_404 = $options[LiteSpeed_Cache_Config::OPID_404_TTL];
+
+		if ($this->custom_ttl != 0) {
+			$ttl = $this->custom_ttl;
+		}
+		elseif ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
+			|| (is_front_page())){
+			$ttl = $options[LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL];
+		}
+		elseif ((is_feed()) && ($feed_ttl > 0)) {
+			$ttl = $feed_ttl;
+		}
+		elseif ((is_404()) && ($ttl_404 > 0)) {
+			$ttl = $ttl_404;
+		}
+		else {
+			$ttl = $options[LiteSpeed_Cache_Config::OPID_PUBLIC_TTL];
+		}
+		$hdr .= $cachectrl_val . ',max-age=' . $ttl . $esi_hdr;
+		return $hdr;
 	}
 
 	/**
@@ -2007,7 +2041,7 @@ class LiteSpeed_Cache
 		$queried_obj_id = get_queried_object_id() ;
 		$cache_tags = array();
 
-		$hash = md5($_SERVER['REQUEST_URI']);
+		$hash = md5(strtok($_SERVER['REQUEST_URI'], '?'));
 
 		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 

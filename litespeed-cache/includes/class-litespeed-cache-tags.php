@@ -39,7 +39,9 @@ class LiteSpeed_Cache_Tags
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug' ;
 
 	static $thirdparty_purge_tags = array();
+	static $thirdparty_priv_purge_tags = array();
 	static $thirdparty_cache_tags = array();
+	static $thirdparty_priv_cache_tags = array();
 	static $thirdparty_noncacheable = false;
 	static $thirdparty_mobile = false;
 	static $thirdparty_use_front_ttl = false;
@@ -105,6 +107,76 @@ class LiteSpeed_Cache_Tags
 		}
 		else {
 			self::$thirdparty_purge_tags[] = $tag;
+		}
+	}
+
+	/**
+	 * Gets private cache tags that are already added for the current page.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @return array An array of all private cache tags currently added.
+	 */
+	public static function get_private_cache_tags()
+	{
+		if (empty(self::$thirdparty_priv_cache_tags)) {
+			return self::$thirdparty_priv_cache_tags;
+		}
+		return array_unique(self::$thirdparty_priv_cache_tags);
+	}
+
+	/**
+	 * Adds private cache tags to the list of private cache tags for the
+	 * current page.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @param mixed $tag A string or array of private cache tags to add to the
+	 * current list.
+	 */
+	public static function add_private_cache_tag($tag)
+	{
+		if (is_array($tag)) {
+			self::$thirdparty_priv_cache_tags = array_merge(
+				self::$thirdparty_priv_cache_tags, $tag);
+		}
+		else {
+			self::$thirdparty_priv_cache_tags[] = $tag;
+		}
+	}
+
+	/**
+	 * Gets private purge tags that are already added for the current page.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @return array An array of all private purge tags currently added.
+	 */
+	public static function get_private_purge_tags()
+	{
+		if (empty(self::$thirdparty_priv_purge_tags)) {
+			return self::$thirdparty_priv_purge_tags;
+		}
+		return array_unique(self::$thirdparty_priv_purge_tags);
+	}
+
+	/**
+	 * Adds private purge tags to the list of private purge tags for the
+	 * current page.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 * @param mixed $tag A string or array of private purge tags to add to the
+	 * current list.
+	 */
+	public static function add_private_purge_tag($tag)
+	{
+		if (is_array($tag)) {
+			self::$thirdparty_priv_purge_tags = array_merge(
+				self::$thirdparty_priv_purge_tags, $tag);
+		}
+		else {
+			self::$thirdparty_priv_purge_tags[] = $tag;
 		}
 	}
 
