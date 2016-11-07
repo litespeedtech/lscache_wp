@@ -386,7 +386,7 @@ if (defined('lscache_debug')) {
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_general($input, &$options, &$errors)
+	private function validate_general(&$input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
 		$enabled = $this->validate_enabled($input, $options);

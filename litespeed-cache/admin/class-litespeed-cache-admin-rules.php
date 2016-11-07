@@ -935,7 +935,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		elseif (isset($diff[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED])) {
-			$diff[$id] = '';
+			$diff[$id] = false;
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;

@@ -1393,13 +1393,22 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$mv_str = '';
-		if ($options[$cache_enable_id]) {
+		if (($options[$cache_enable_id]) && ($enabled)) {
 			$ret = LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule(
 				'MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str);
 		}
-		else {
+		elseif ($enabled) {
 			$ret = true;
 			$mv_str = $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
+		}
+		elseif ($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] === false) {
+			$ret = true;
+			$mv_str = '';
+		}
+		else {
+			$ret = false;
+			$mv_str = sprintf(__('Expected false, got %s', 'litespeed-cache'),
+				$mv_str);
 		}
 		if ($ret !== true) {
 			$mv_list = '<p class="attention">'
