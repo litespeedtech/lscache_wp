@@ -205,7 +205,8 @@ class LiteSpeed_Cache
 	{
 		$params = array(
 			sprintf('%s %s %s', $_SERVER['REQUEST_METHOD'],
-				$_SERVER['SERVER_PROTOCOL'], strtok($_SERVER['REQUEST_URI'], '?')),
+				$_SERVER['SERVER_PROTOCOL'],
+				self::get_uri_hash($_SERVER['REQUEST_URI'])),
 			'Query String: '		. $_SERVER['QUERY_STRING'],
 			'User Agent: '			. $_SERVER['HTTP_USER_AGENT'],
 			'Accept Encoding: '		. $_SERVER['HTTP_ACCEPT_ENCODING'],
@@ -987,7 +988,15 @@ class LiteSpeed_Cache
 			return;
 		}
 
-		$hash = md5($val);
+		$hash = self::get_uri_hash($val);
+
+		if ($hash === false) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				sprintf(__('Failed to purge by url, invalid input: %s.',
+					'litespeed-cache'), $val));
+			return;
+		}
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN,
@@ -1856,7 +1865,7 @@ class LiteSpeed_Cache
 		$queried_obj_id = get_queried_object_id() ;
 		$cache_tags = array();
 
-		$hash = md5($_SERVER['REQUEST_URI']);
+		$hash = self::get_uri_hash($_SERVER['REQUEST_URI']);
 
 		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 
@@ -1995,6 +2004,25 @@ class LiteSpeed_Cache
 		}
 
 		return array_unique($purge_tags) ;
+	}
+
+	/**
+	 * Will get a hash of the URI. Removes query string and appends a '/' if
+	 * it is missing.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param string $uri The uri to get the hash of.
+	 * @return bool|string False on input error, hash otherwise.
+	 */
+	private static function get_uri_hash($uri)
+	{
+		$no_qs = strtok($uri, '?');
+		if (empty($no_qs)) {
+			return false;
+		}
+		$slashed = trailingslashit($no_qs);
+		return md5($slashed);
 	}
 
 	/**
