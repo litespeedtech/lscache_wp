@@ -206,7 +206,7 @@ class LiteSpeed_Cache
 		$params = array(
 			sprintf('%s %s %s', $_SERVER['REQUEST_METHOD'],
 				$_SERVER['SERVER_PROTOCOL'],
-				self::get_uri_hash($_SERVER['REQUEST_URI'])),
+				strtok($_SERVER['REQUEST_URI'], '?')),
 			'Query String: '		. $_SERVER['QUERY_STRING'],
 			'User Agent: '			. $_SERVER['HTTP_USER_AGENT'],
 			'Accept Encoding: '		. $_SERVER['HTTP_ACCEPT_ENCODING'],
@@ -1865,7 +1865,7 @@ class LiteSpeed_Cache
 		$queried_obj_id = get_queried_object_id() ;
 		$cache_tags = array();
 
-		$hash = self::get_uri_hash($_SERVER['REQUEST_URI']);
+		$hash = self::get_uri_hash(urldecode($_SERVER['REQUEST_URI']));
 
 		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 
@@ -2141,7 +2141,16 @@ class LiteSpeed_Cache
 			$paths[] = $site;
 		}
 
-		$active_plugins = get_option('active_plugins');
+		if (is_multisite()) {
+			$active_plugins = get_site_option('active_sitewide_plugins');
+			if (!empty($active_plugins)) {
+				$active_plugins = array_keys($active_plugins);
+			}
+		}
+		else {
+			$active_plugins = get_option('active_plugins');
+		}
+
 		if (function_exists('wp_get_theme')) {
 			$theme_obj = wp_get_theme();
 			$active_theme = $theme_obj->get('Name');
