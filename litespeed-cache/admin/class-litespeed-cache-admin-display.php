@@ -1401,7 +1401,7 @@ class LiteSpeed_Cache_Admin_Display
 			$ret = true;
 			$mv_str = $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
 		}
-		elseif ($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] === false) {
+		elseif ($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] == false) {
 			$ret = true;
 			$mv_str = '';
 		}

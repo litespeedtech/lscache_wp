@@ -910,7 +910,9 @@ if (defined('lscache_debug')) {
 			$diff = $rules->check_input($options, $input, $errors);
 		}
 		elseif ($network_enabled) {
-			$diff = $rules->check_input($reset, $input, $errors);
+			$added_and_changed = $rules->check_input($reset, $input, $errors);
+			// Merge to include the newly disabled options
+			$diff = array_merge($reset, $added_and_changed);
 		}
 		else {
 			$rules->validate_common_rewrites($reset, $errors);
