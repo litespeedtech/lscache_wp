@@ -274,6 +274,34 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Get the blog ids for the network. Accepts function arguments.
+	 *
+	 * Will use wp_get_sites for WP versions less than 4.6
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $args Arguments to pass into get_sites/wp_get_sites.
+	 * @return array The array of blog ids.
+	 */
+	private static function get_network_ids($args = array())
+	{
+		global $wp_version;
+		if (version_compare($wp_version, '4.6', '<')) {
+			$blogs = wp_get_sites($args);
+			if (!empty($blogs)) {
+				foreach ($blogs as $key => $blog) {
+					$blogs[$key] = $blog['blog_id'];
+				}
+			}
+		}
+		else {
+			$args['fields'] = 'ids';
+			$blogs = get_sites($args);
+		}
+		return $blogs;
+	}
+
+	/**
 	 * Gets the count of active litespeed cache plugins on multisite.
 	 *
 	 * @since 1.0.12
@@ -291,7 +319,7 @@ class LiteSpeed_Cache
 		$default = array();
 		$count = 0;
 
-		$sites = get_sites(array('deleted' => 0));
+		$sites = self::get_network_ids(array('deleted' => 0));
 		if (empty($sites)) {
 			return false;
 		}
@@ -1615,18 +1643,7 @@ class LiteSpeed_Cache
 		// is false for ajax calls, which is used by wordpress updates v4.6+
 		elseif ((is_multisite()) && ((is_network_admin())
 			|| ((defined('DOING_AJAX')) && (check_ajax_referer('updates'))))) {
-			global $wp_version;
-			if (version_compare($wp_version, '4.6', '<')) {
-				$blogs = wp_get_sites();
-				if (!empty($blogs)) {
-					foreach ($blogs as $key => $blog) {
-						$blogs[$key] = $blog['blog_id'];
-					}
-				}
-			}
-			else {
-				$blogs = get_sites(array('fields' => 'ids'));
-			}
+			$blogs = self::get_network_ids();
 			if (empty($blogs)) {
 				if (defined('LSCWP_LOG')) {
 					self::debug_log('blog list is empty');
@@ -2168,6 +2185,18 @@ class LiteSpeed_Cache
 		);
 		if (is_null($options)) {
 			$options = self::config()->get_options();
+		}
+
+		if ((!is_null($options)) && (is_multisite())) {
+			$blogs = self::get_network_ids();
+			if (!empty($blogs)) {
+				foreach ($blogs as $blog_id) {
+					$opts = get_blog_option($blog_id,
+						LiteSpeed_Cache_Config::OPTION_NAME, array());
+					$options['blog ' . $blog_id . ' radio select']
+						= $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO];
+				}
+			}
 		}
 
 		$report = self::build_environment_report($_SERVER, $options, $extras,
