@@ -1605,7 +1605,7 @@ class LiteSpeed_Cache_Admin_Display
 		);
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
 		$cache_favicon = $this->input_field_checkbox('lscwp_' . $id, $id,
-			$options[$id], '', '', $file_writable);
+			$options[$id], '', '', !$file_writable);
 		return $this->display_config_row($title, $cache_favicon, $desc);
 	}
 
@@ -1627,7 +1627,7 @@ class LiteSpeed_Cache_Admin_Display
 			__('Caching these pages may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache'));
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
 		$cache_res = $this->input_field_checkbox('lscwp_' . $id, $id,
-			$options[$id], '', '', $file_writable);
+			$options[$id], '', '', !$file_writable);
 		return $this->display_config_row($title, $cache_res, $desc);
 	}
 
