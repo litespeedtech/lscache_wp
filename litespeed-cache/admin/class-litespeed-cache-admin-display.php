@@ -1596,13 +1596,16 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function build_setting_cache_favicon($options)
 	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+			LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$title = __('Cache favicon.ico', 'litespeed-cache');
 		$desc = LiteSpeed_Cache::build_paragraph(
 			__('favicon.ico is requested on most pages.', 'litespeed-cache'),
 			__('Caching this recource may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache')
 		);
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
-		$cache_favicon = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
+		$cache_favicon = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$options[$id], '', '', $file_writable);
 		return $this->display_config_row($title, $cache_favicon, $desc);
 	}
 
@@ -1616,12 +1619,15 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function build_setting_cache_resources($options)
 	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+			LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$title = __('Enable Cache for PHP Resources', 'litespeed-cache');
 		$desc = LiteSpeed_Cache::build_paragraph(
 			__('Some themes and plugins add resources via a PHP request.', 'litespeed-cache'),
 			__('Caching these pages may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache'));
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
-		$cache_res = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]);
+		$cache_res = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$options[$id], '', '', $file_writable);
 		return $this->display_config_row($title, $cache_res, $desc);
 	}
 

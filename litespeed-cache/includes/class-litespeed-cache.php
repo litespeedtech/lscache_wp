@@ -523,7 +523,7 @@ class LiteSpeed_Cache
 		}
 		copy($this->plugin_dir . '/includes/advanced-cache.php',
 			ABSPATH . 'wp-content/advanced-cache.php');
-		include_once(ABSPATH . 'wp-content/advanced-cache.php');
+		include(ABSPATH . 'wp-content/advanced-cache.php');
 		$ret = defined('LSCACHE_ADV_CACHE');
 		return $ret;
 	}
