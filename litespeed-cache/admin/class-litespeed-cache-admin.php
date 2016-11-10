@@ -378,6 +378,26 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Helper function to validate TTL settings. Will check if it's set,
+	 * is an integer, and is greater than 0 and less than INT_MAX.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input Input array
+	 * @param string $id Option ID
+	 * @return bool True if valid, false otherwise.
+	 */
+	private function validate_ttl($input, $id)
+	{
+		if (!isset($input[$id])) {
+			return false;
+		}
+
+		$val = $input[$id];
+		return ((ctype_digit($val)) && ($val >= 0) && ($val < 2147483647));
+	}
+
+	/**
 	 * Validates the general settings.
 	 *
 	 * @since 1.0.12
@@ -388,6 +408,8 @@ if (defined('lscache_debug')) {
 	 */
 	private function validate_general(&$input, &$options, &$errors)
 	{
+		$err = __('%s TTL must be an integer between %d and 2147483647',
+			'litespeed-cache');
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
 		$enabled = $this->validate_enabled($input, $options);
 		if ( $enabled !== $options[$id] ) {
@@ -403,24 +425,26 @@ if (defined('lscache_debug')) {
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL;
-		if ( ! isset($input[$id]) || ! ctype_digit($input[$id]) || $input[$id] < 30 ) {
-			$errors[] = __('Default Public Cache TTL must be set to 30 seconds or more', 'litespeed-cache');
+		if ((!$this->validate_ttl($input, $id)) || ($input[$id] < 30)) {
+			$errors[] = sprintf($err,
+				__('Default Public Cache', 'litespeed-cache'), 30);
 		}
 		else {
 			$options[$id] = $input[$id];
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL;
-		if ( ! isset($input[$id]) || ! ctype_digit($input[$id]) || $input[$id] < 30 ) {
-			$errors[] = __('Default Front Page TTL must be set to 30 seconds or more', 'litespeed-cache');
+		if ((!$this->validate_ttl($input, $id)) || ($input[$id] < 30)) {
+			$errors[] = sprintf($err,
+				__('Default Front Page', 'litespeed-cache'), 30);
 		}
 		else {
 			$options[$id] = $input[$id];
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL;
-		if (!isset($input[$id]) || !is_numeric($input[$id])) {
-			$errors[] = __('Feed TTL input is invalid. Input must be numeric.', 'litespeed-cache');
+		if (!$this->validate_ttl($input, $id)) {
+			$errors[] = sprintf($err, __('Feed', 'litespeed-cache'), 0);
 		}
 		elseif ($input[$id] < 30) {
 			$options[$id] = 0;
@@ -430,8 +454,8 @@ if (defined('lscache_debug')) {
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_404_TTL;
-		if (!isset($input[$id]) || !is_numeric($input[$id])) {
-			$errors[] = __('404 TTL input is invalid. Input must be numeric.', 'litespeed-cache');
+		if (!$this->validate_ttl($input, $id)) {
+			$errors[] = sprintf($err, __('404', 'litespeed-cache'), 0);
 		}
 		elseif ($input[$id] < 30) {
 			$options[$id] = 0;
