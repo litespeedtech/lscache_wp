@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_PATTERN_LOGIN_BLOCK = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
 	private static $RW_PATTERN_UPGRADE_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
 	private static $RW_PATTERN_WRAPPERS = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
-	static $RW_PATTERN_RES = 'wp-content/.*/(loader|fonts)\.php';
+	static $RW_PATTERN_RES = 'wp-content/.*/[^/]*(loader|fonts|\.css|\.js)\.php';
 
 	/**
 	 * Initialize the class and set its properties.
