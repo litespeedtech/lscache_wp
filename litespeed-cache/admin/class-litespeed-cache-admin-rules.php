@@ -991,6 +991,13 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Parse rewrite input to check for possible issues (e.g. unescaped spaces).
 	 *
+	 * Issues tracked:
+	 * Starts with |
+	 * Ends with |
+	 * Double |
+	 * Unescaped space
+	 * Invalid character (NOT \w, -, \, |, \s, /)
+	 *
 	 * @since 1.0.9
 	 * @access private
 	 * @param String $rule Input rewrite rule.
@@ -998,7 +1005,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s\/]/', $rule) === 0);
+		return (preg_match('/(^\|)|(\|$)|([^\\\\]\s|[^\w-\\\|\s\/]|\|\|)/',
+				$rule) === 0);
 	}
 
 	/**
