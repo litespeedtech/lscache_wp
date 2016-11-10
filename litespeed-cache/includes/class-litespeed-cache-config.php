@@ -416,8 +416,6 @@ class LiteSpeed_Cache_Config
 		$default_options = $this->get_default_site_options();
 		$options = $this->get_site_options();
 
-		error_log('wot');
-
 		if (($options[self::OPID_VERSION] == $default_options[self::OPID_VERSION])
 				&& (count($default_options) == count($options))) {
 			return;
