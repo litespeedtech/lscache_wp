@@ -2131,7 +2131,7 @@ class LiteSpeed_Cache
 	public function write_environment_report($content)
 	{
 		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false,
-			dirname($this->plugin_dir) . '/environment_report.txt', false);
+			untrailingslashit($this->plugin_dir) . '/environment_report.txt', false);
 		if (($ret !== true) && (defined('LSCWP_LOG'))) {
 			self::debug_log('LSCache wordpress plugin attempted to write '
 				. 'env report but did not have permissions.');
