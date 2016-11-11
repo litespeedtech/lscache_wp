@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0.11\n"
+"Project-Id-Version: 1.0.12\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2016-10-11 10:55-0500\n"
+"POT-Creation-Date: 2016-11-11 16:03-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 
 #: admin/class-litespeed-cache-admin-display.php:66
 msgid "LiteSpeed Cache is a page cache built into LiteSpeed Web Server."
@@ -69,1447 +68,1587 @@ msgstr ""
 msgid "This plugin will NOT work properly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:228
+#: admin/class-litespeed-cache-admin-display.php:234
 msgid "LiteSpeed Cache is maintained and managed by LiteSpeed Web Server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:229
+#: admin/class-litespeed-cache-admin-display.php:235
 msgid ""
 "You can inform LiteSpeed Web Server to purge cached contents from this "
 "screen."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:232
+#: admin/class-litespeed-cache-admin-display.php:238
 msgid "This will purge everything for all blogs."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:233
-#: admin/class-litespeed-cache-admin-display.php:277
+#: admin/class-litespeed-cache-admin-display.php:239
+#: admin/class-litespeed-cache-admin-display.php:283
 msgid "Are you sure you want to purge all?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:236
+#: admin/class-litespeed-cache-admin-display.php:242
 msgid "You may purge selected pages here."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:237
+#: admin/class-litespeed-cache-admin-display.php:243
 msgid "Currently, the available options are:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:245
+#: admin/class-litespeed-cache-admin-display.php:251
 msgid "Category"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:246
+#: admin/class-litespeed-cache-admin-display.php:252
 msgid "Post ID"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:247
+#: admin/class-litespeed-cache-admin-display.php:253
 msgid "Tag"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:248
+#: admin/class-litespeed-cache-admin-display.php:254
 msgid "URL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:252
+#: admin/class-litespeed-cache-admin-display.php:258
 msgid "LiteSpeed Cache Management"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:262
+#: admin/class-litespeed-cache-admin-display.php:268
 msgid "Purge Front Page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:265
+#: admin/class-litespeed-cache-admin-display.php:271
 msgid "Purge All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:281
+#: admin/class-litespeed-cache-admin-display.php:287
 msgid "Purge By..."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:284
+#: admin/class-litespeed-cache-admin-display.php:290
 msgid "Category: Purge category pages by name."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:286
+#: admin/class-litespeed-cache-admin-display.php:292
 msgid "Post ID: Purge pages by post ID."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:288
+#: admin/class-litespeed-cache-admin-display.php:294
 msgid "Tag: Purge tag pages by name."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:290
-msgid "URL: Purge pages by locator."
+#: admin/class-litespeed-cache-admin-display.php:296
+msgid "URL: Purge pages by locator. Must be exact match."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:309
+#: admin/class-litespeed-cache-admin-display.php:315
 msgid "Purge List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:360
-#: admin/class-litespeed-cache-admin-display.php:475
+#: admin/class-litespeed-cache-admin-display.php:365
+#: admin/class-litespeed-cache-admin-display.php:486
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:371
-#: admin/class-litespeed-cache-admin-display.php:685
+#: admin/class-litespeed-cache-admin-display.php:376
+#: admin/class-litespeed-cache-admin-display.php:699
 msgid "Plugin Compatibilities"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:381
-#: admin/class-litespeed-cache-admin-display.php:1197
+#: admin/class-litespeed-cache-admin-display.php:386
+#: admin/class-litespeed-cache-admin-display.php:1255
 msgid "Advanced Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:389
-#: admin/class-litespeed-cache-admin-display.php:485
-#: admin/class-litespeed-cache-admin-display.php:854
+#: admin/class-litespeed-cache-admin-display.php:394
+#: admin/class-litespeed-cache-admin-display.php:496
+#: admin/class-litespeed-cache-admin-display.php:905
 msgid "General"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:390
-#: admin/class-litespeed-cache-admin-display.php:933
+#: admin/class-litespeed-cache-admin-display.php:395
+#: admin/class-litespeed-cache-admin-display.php:991
 msgid "Specific Pages"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:391
+#: admin/class-litespeed-cache-admin-display.php:396
 msgid "Purge Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:392
-#: admin/class-litespeed-cache-admin-display.php:486
+#: admin/class-litespeed-cache-admin-display.php:397
+#: admin/class-litespeed-cache-admin-display.php:497
 msgid "Do Not Cache Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:394
-#: admin/class-litespeed-cache-admin-display.php:1254
+#: admin/class-litespeed-cache-admin-display.php:399
 msgid "Debug"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:404
+#: admin/class-litespeed-cache-admin-display.php:410
 msgid "WARNING: Third party tab input invalid."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:410
+#: admin/class-litespeed-cache-admin-display.php:419
 msgid "WARNING: Third party config slug contains invalid characters."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:469
+#: admin/class-litespeed-cache-admin-display.php:480
 msgid "These configurations are only available network wide."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:472
+#: admin/class-litespeed-cache-admin-display.php:483
 msgid ""
 "Separate Mobile Views should be enabled if any of the network enabled themes "
 "require a different view for mobile devices."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:473
+#: admin/class-litespeed-cache-admin-display.php:484
 msgid "Responsive themes can handle this part automatically."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:487
+#: admin/class-litespeed-cache-admin-display.php:498
 msgid "Advanced"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:491
+#: admin/class-litespeed-cache-admin-display.php:502
 msgid "General Network Configurations"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:500
+#: admin/class-litespeed-cache-admin-display.php:511
 msgid "Network Enable Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:501
+#: admin/class-litespeed-cache-admin-display.php:512
 msgid ""
 "Enabling LiteSpeed Cache for WordPress here enables the cache for the "
 "network."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:503
+#: admin/class-litespeed-cache-admin-display.php:514
 msgid ""
 "We <b>STRONGLY</b> recommend that you test the compatibility with other "
 "plugins on a single/few sites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:505
+#: admin/class-litespeed-cache-admin-display.php:516
 msgid ""
 "This is to ensure compatibility prior to enabling the cache for all sites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:514
+#: admin/class-litespeed-cache-admin-display.php:525
 msgid "Network Do Not Cache Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:518
+#: admin/class-litespeed-cache-admin-display.php:529
 msgid "Do Not Cache User Agents"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:523
+#: admin/class-litespeed-cache-admin-display.php:534
 msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:532
-#: admin/class-litespeed-cache-admin-display.php:603
+#: admin/class-litespeed-cache-admin-display.php:543
+#: admin/class-litespeed-cache-admin-display.php:614
 msgid "Save"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:549
+#: admin/class-litespeed-cache-admin-display.php:560
 msgid "Any changes made to the .htaccess file may break your site."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:550
+#: admin/class-litespeed-cache-admin-display.php:561
 msgid ""
 "Please consult your host/server admin before making any changes you are "
 "unsure about."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:552
+#: admin/class-litespeed-cache-admin-display.php:563
 msgid "LiteSpeed Cache Edit .htaccess"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:558
+#: admin/class-litespeed-cache-admin-display.php:569
 msgid "File editing is disabled in configuration."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:572
+#: admin/class-litespeed-cache-admin-display.php:583
 msgid "WARNING: This page is meant for advanced users."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:584
+#: admin/class-litespeed-cache-admin-display.php:595
 #, php-format
 msgid "Current %s contents:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:587
+#: admin/class-litespeed-cache-admin-display.php:598
 #, php-format
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:590
+#: admin/class-litespeed-cache-admin-display.php:601
 msgid ""
 "These are added by the LS Cache plugin and may cause problems if they are "
 "changed."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:623
+#: admin/class-litespeed-cache-admin-display.php:634
 msgid "Make sure that your license has the LSCache module enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:624
+#: admin/class-litespeed-cache-admin-display.php:636
 #, php-format
 msgid ""
 "You can <a href=\"%1$s\"  rel=\"%2$s\" target=\"%3$s\">try our 2-CPU trial "
 "license with LSCache module</a> free for %4$d days."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:634
+#: admin/class-litespeed-cache-admin-display.php:645
 msgid "Your server must be configured to have caching enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:635
+#: admin/class-litespeed-cache-admin-display.php:647
 #, php-format
 msgid ""
 "If you are the server admin, <a href=\"%s\" rel=\"%s\" target=\"%s\">click "
 "here.</a>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:641
+#: admin/class-litespeed-cache-admin-display.php:653
 msgid ""
 "Otherwise request that your server admin configure the cache root for your "
 "server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:645
+#: admin/class-litespeed-cache-admin-display.php:657
 msgid "Our OLS integration is currently in beta."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:646
+#: admin/class-litespeed-cache-admin-display.php:658
 msgid "This integration utilizes OLS's cache module."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:647
+#: admin/class-litespeed-cache-admin-display.php:660
 #, php-format
 msgid ""
 "Please follow the instructions <a href=\"%s\" rel=\"%s\" target=\"%s\">here."
 "</a>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:656
+#: admin/class-litespeed-cache-admin-display.php:669
 #, php-format
 msgid ""
 "Subsequent requests should have the %s response header until the page is "
 "updated, expired, or purged."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:658
+#: admin/class-litespeed-cache-admin-display.php:672
 #, php-format
 msgid ""
 "Please visit <a href=\"%s\" rel=\"%s\" target=\"%s\">this page</a> for more "
 "information."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:668
+#: admin/class-litespeed-cache-admin-display.php:681
 #, php-format
 msgid "If your questions are not answered here, try the %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:670
+#: admin/class-litespeed-cache-admin-display.php:684
 #, php-format
 msgid ""
 "If your questions are still not answered, do not hesitate to ask them on the "
 "<a href=\"%s\" rel=\"%s\" target=\"%s\">support forum</a>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:680
+#: admin/class-litespeed-cache-admin-display.php:694
 msgid "LiteSpeed Cache Information"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:684
+#: admin/class-litespeed-cache-admin-display.php:698
 msgid "Configurations"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:686
+#: admin/class-litespeed-cache-admin-display.php:700
 msgid "Common Rewrite Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:687
+#: admin/class-litespeed-cache-admin-display.php:701
 msgid "Admin IP Commands"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:691
+#: admin/class-litespeed-cache-admin-display.php:705
 msgid "LiteSpeed Cache Configurations"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:692
+#: admin/class-litespeed-cache-admin-display.php:706
 msgid "Instructions for LiteSpeed Web Server Enterprise"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:699
+#: admin/class-litespeed-cache-admin-display.php:713
 msgid ""
 "In the .htaccess file for your WordPress installation, add the following:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:704
+#: admin/class-litespeed-cache-admin-display.php:719
 msgid "Instructions for OpenLiteSpeed"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:707
+#: admin/class-litespeed-cache-admin-display.php:722
 msgid "How to test the plugin"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:708
+#: admin/class-litespeed-cache-admin-display.php:723
 msgid ""
 "The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:710
+#: admin/class-litespeed-cache-admin-display.php:725
 #, php-format
 msgid ""
 "Visiting a page for the first time should result in a %s or %s response "
 "header for the page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:746
+#: admin/class-litespeed-cache-admin-display.php:761
 msgid "Yes, the plugin itself will remain free and open source."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:747
+#: admin/class-litespeed-cache-admin-display.php:762
 msgid ""
 "You are required to have a LiteSpeed Web Server Enterprise 5.0.10+ license "
 "with the LSCache module enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:748
+#: admin/class-litespeed-cache-admin-display.php:763
 msgid ""
 "An alternative to Enterprise is OpenLiteSpeed v 1.4.17+, but the "
 "functionality is currently in beta."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:752
+#: admin/class-litespeed-cache-admin-display.php:767
 msgid ""
 "This plugin only instructs LiteSpeed Web Server on what pages to cache and "
 "when to purge."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:753
+#: admin/class-litespeed-cache-admin-display.php:768
 msgid "The actual cached pages are stored and managed by LiteSpeed Web Server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:754
+#: admin/class-litespeed-cache-admin-display.php:769
 msgid "Nothing is stored on the PHP side."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:758
+#: admin/class-litespeed-cache-admin-display.php:773
 msgid "The support is currently in beta."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:759
+#: admin/class-litespeed-cache-admin-display.php:774
 msgid "It should work, but has not been fully tested."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:760
+#: admin/class-litespeed-cache-admin-display.php:775
 msgid ""
 "As well, any settings changes that require modifying the .htaccess file will "
 "require a server restart."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:764
+#: admin/class-litespeed-cache-admin-display.php:779
 msgid "In short, yes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:765
+#: admin/class-litespeed-cache-admin-display.php:780
 msgid ""
 "However, for some woocommerce themes, the cart may not be updated correctly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:769
+#: admin/class-litespeed-cache-admin-display.php:784
 msgid ""
 "We tested a couple of themes like Storefront and Shop Isle and found that "
 "the cart works without the rule."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:770
+#: admin/class-litespeed-cache-admin-display.php:785
 msgid ""
 "That said, we found that some may not, like the E-Commerce theme, so please "
 "verify your theme."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:776
+#: admin/class-litespeed-cache-admin-display.php:791
 msgid "Is the LiteSpeed Cache Plugin for WordPress free?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:779
+#: admin/class-litespeed-cache-admin-display.php:794
 msgid "Where are the cached files stored?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:783
+#: admin/class-litespeed-cache-admin-display.php:798
 msgid "Does LiteSpeed Cache for WordPress work with OpenLiteSpeed?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:786
+#: admin/class-litespeed-cache-admin-display.php:801
 msgid "Is WooCommerce supported?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:789
+#: admin/class-litespeed-cache-admin-display.php:804
 msgid "To test the cart:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:791
+#: admin/class-litespeed-cache-admin-display.php:806
 msgid ""
 "On a non-logged-in browser, visit and cache a page, then visit and cache a "
 "product page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:793
+#: admin/class-litespeed-cache-admin-display.php:808
 msgid ""
 "The first page should be accessible from the product page (e.g. the shop)."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:795
+#: admin/class-litespeed-cache-admin-display.php:810
 msgid "Once both pages are confirmed cached, add the product to your cart."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:797
+#: admin/class-litespeed-cache-admin-display.php:812
 msgid "After adding to the cart, visit the first page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:799
+#: admin/class-litespeed-cache-admin-display.php:814
 msgid "The page should still be cached, and the cart should be up to date."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:801
+#: admin/class-litespeed-cache-admin-display.php:816
 msgid ""
 "If that is not the case, please add woocommerce_items_in_cart to the do not "
 "cache cookie list."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:804
+#: admin/class-litespeed-cache-admin-display.php:819
 msgid "How do I get WP-PostViews to display an updating view count?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:805
+#: admin/class-litespeed-cache-admin-display.php:820
 #, php-format
 msgid "Use %1$s to replace %2$s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:810
+#: admin/class-litespeed-cache-admin-display.php:825
 msgid ""
 "NOTE: The id can be changed, but the div id and the ajax function must match."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:813
+#: admin/class-litespeed-cache-admin-display.php:828
 #, php-format
 msgid "Replace the ajax query in %1$s with %2$s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:830
+#: admin/class-litespeed-cache-admin-display.php:845
 msgid "Purge the cache to use the updated pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:847
+#: admin/class-litespeed-cache-admin-display.php:861
+msgid ""
+"The environment report contains detailed information about your "
+"configuration."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:862
+msgid ""
+"If you run into any issues, please include the contents of this text area in "
+"your support message."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:863
+msgid ""
+"To easily grab the content, click into the text area and enter ctrl + a to "
+"select all and ctrl + c to copy to your clipboard."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:864
+#, php-format
+msgid "Alternatively, this information is also saved in %s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:868
+msgid "This text area contains the following content:"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:870
+msgid ""
+"Server Variables, Plugin Options, WordPress information (version, locale, "
+"active plugins, etc.), and .htaccess file content."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:894
 msgid "Specify how long, in seconds, feeds are cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:848
+#: admin/class-litespeed-cache-admin-display.php:895
 msgid "If this is set to a number less than 30, feeds will not be cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:851
+#: admin/class-litespeed-cache-admin-display.php:898
+msgid "Specify how long, in seconds, 404 pages are cached."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:899
+msgid "If this is set to a number less than 30, 404 pages will not be cached."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:902
 msgid ""
 "When checked, commenters will not be able to see their comments awaiting "
 "moderation."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:852
+#: admin/class-litespeed-cache-admin-display.php:903
 msgid ""
 "Disabling this option will display those types of comments, but the cache "
 "will not perform as well."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:859
+#: admin/class-litespeed-cache-admin-display.php:910
 msgid "Enable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:860
+#: admin/class-litespeed-cache-admin-display.php:911
 msgid "Disable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:866
+#: admin/class-litespeed-cache-admin-display.php:917
 msgid "Use Network Admin Setting"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:874
-#: admin/class-litespeed-cache-admin-display.php:1182
+#: admin/class-litespeed-cache-admin-display.php:925
+#: admin/class-litespeed-cache-admin-display.php:1240
 msgid "NOTICE"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:875
+#: admin/class-litespeed-cache-admin-display.php:926
 msgid ""
 "When disabling the cache, all cached entries for this blog will be purged."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:877
+#: admin/class-litespeed-cache-admin-display.php:929
 #, php-format
 msgid ""
 "Please visit the <a href=\"%sadmin.php?page=lscache-info\">information</a> "
 "page on how to test the cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:883
+#: admin/class-litespeed-cache-admin-display.php:935
 msgid "You can override network admin settings here."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:886
+#: admin/class-litespeed-cache-admin-display.php:938
 msgid "Enable LiteSpeed Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:891
-#: admin/class-litespeed-cache-admin-display.php:898
-#: admin/class-litespeed-cache-admin-display.php:904
+#: admin/class-litespeed-cache-admin-display.php:943
+#: admin/class-litespeed-cache-admin-display.php:950
+#: admin/class-litespeed-cache-admin-display.php:956
+#: admin/class-litespeed-cache-admin-display.php:962
 msgid "seconds"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:893
+#: admin/class-litespeed-cache-admin-display.php:945
 msgid "Default Public Cache TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:894
+#: admin/class-litespeed-cache-admin-display.php:946
 msgid ""
 "Specify how long, in seconds, public pages are cached. Minimum is 30 seconds."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:899
+#: admin/class-litespeed-cache-admin-display.php:951
 msgid "Default Front Page TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:900
+#: admin/class-litespeed-cache-admin-display.php:952
 msgid ""
 "Specify how long, in seconds, the front page is cached. Minimum is 30 "
 "seconds."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:905
+#: admin/class-litespeed-cache-admin-display.php:957
 msgid "Default Feed TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:911
+#: admin/class-litespeed-cache-admin-display.php:963
+msgid "Default 404 Page TTL"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:969
 msgid "Enable Cache for Commenters"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:937
+#: admin/class-litespeed-cache-admin-display.php:995
 msgid "Enable Cache for Login Page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:938
+#: admin/class-litespeed-cache-admin-display.php:996
 msgid "Unchecking this option may negatively affect performance."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:960
+#: admin/class-litespeed-cache-admin-display.php:1018
 msgid ""
 "Select \"All\" if you have dynamic widgets linked to posts on pages other "
 "than the front or home pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:961
+#: admin/class-litespeed-cache-admin-display.php:1019
 msgid "Other checkboxes will be ignored."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:963
+#: admin/class-litespeed-cache-admin-display.php:1021
 msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:964
+#: admin/class-litespeed-cache-admin-display.php:1022
 msgid ""
 "Select which pages will be automatically purged when posts are published/"
 "updated."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:966
-#: admin/class-litespeed-cache-admin-display.php:968
+#: admin/class-litespeed-cache-admin-display.php:1024
+#: admin/class-litespeed-cache-admin-display.php:1026
 msgid "Note"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:969
+#: admin/class-litespeed-cache-admin-display.php:1027
 msgid ""
 "Select only the archive types that you are currently using, the others can "
 "be left unchecked."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:980
+#: admin/class-litespeed-cache-admin-display.php:1038
 msgid "All pages"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:987
+#: admin/class-litespeed-cache-admin-display.php:1045
 msgid "Front page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:994
+#: admin/class-litespeed-cache-admin-display.php:1052
 msgid "Home page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1001
+#: admin/class-litespeed-cache-admin-display.php:1059
 msgid "Author archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1008
+#: admin/class-litespeed-cache-admin-display.php:1066
 msgid "Post type archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1015
+#: admin/class-litespeed-cache-admin-display.php:1073
 msgid "Yearly archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1022
+#: admin/class-litespeed-cache-admin-display.php:1080
 msgid "Monthly archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1029
+#: admin/class-litespeed-cache-admin-display.php:1087
 msgid "Daily archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1036
+#: admin/class-litespeed-cache-admin-display.php:1094
 msgid "Term archive (include category, tag, and tax)"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1055
+#: admin/class-litespeed-cache-admin-display.php:1113
 msgid "Enter a list of urls that you do not want to have cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1057
+#: admin/class-litespeed-cache-admin-display.php:1115
 msgid "The urls will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1059
+#: admin/class-litespeed-cache-admin-display.php:1117
 msgid "There should only be one url per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1061
-#: admin/class-litespeed-cache-admin-display.php:1083
-#: admin/class-litespeed-cache-admin-display.php:1091
-#: admin/class-litespeed-cache-admin-display.php:1743
+#: admin/class-litespeed-cache-admin-display.php:1119
+#: admin/class-litespeed-cache-admin-display.php:1141
+#: admin/class-litespeed-cache-admin-display.php:1149
+#: admin/class-litespeed-cache-admin-display.php:1836
 #: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:362
 msgid "NOTE:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1062
+#: admin/class-litespeed-cache-admin-display.php:1120
 msgid "URLs must start with a '/' to be correctly matched."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1064
+#: admin/class-litespeed-cache-admin-display.php:1122
 msgid "To do an exact match, add '$' to the end of the URL."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1066
+#: admin/class-litespeed-cache-admin-display.php:1124
 msgid "Any surrounding whitespaces will be trimmed."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1068
+#: admin/class-litespeed-cache-admin-display.php:1126
 #, php-format
 msgid "e.g. to exclude %s, you would have:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1072
+#: admin/class-litespeed-cache-admin-display.php:1130
 #, php-format
 msgid "Similarly, to exclude %s(accessed with the /blog), you would have:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1079
+#: admin/class-litespeed-cache-admin-display.php:1137
 msgid "All categories are cached by default."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1081
+#: admin/class-litespeed-cache-admin-display.php:1139
 msgid ""
 "To prevent a category from being cached, enter it in the text area below, "
 "one per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1083
+#: admin/class-litespeed-cache-admin-display.php:1141
 msgid "If the Category ID is not found, the name will be removed on save."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1087
+#: admin/class-litespeed-cache-admin-display.php:1145
 msgid "All tags are cached by default."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1089
+#: admin/class-litespeed-cache-admin-display.php:1147
 msgid ""
 "To prevent tags from being cached, enter it in the text area below, one per "
 "line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1091
+#: admin/class-litespeed-cache-admin-display.php:1149
 msgid "If the Tag ID is not found, the name will be removed on save."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1099
+#: admin/class-litespeed-cache-admin-display.php:1157
 msgid "URI List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1115
+#: admin/class-litespeed-cache-admin-display.php:1173
 msgid "Category List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1138
+#: admin/class-litespeed-cache-admin-display.php:1196
 msgid "Tag List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1183
+#: admin/class-litespeed-cache-admin-display.php:1241
 msgid "These settings are meant for ADVANCED USERS ONLY."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1184
+#: admin/class-litespeed-cache-admin-display.php:1242
 msgid "Please take great care when changing any of these settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1185
+#: admin/class-litespeed-cache-admin-display.php:1243
 msgid "If you have any questions, do not hesitate to submit a support thread."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1188
+#: admin/class-litespeed-cache-admin-display.php:1246
 msgid ""
 "The advanced-cache.php file is used by many caching plugins to signal that a "
 "cache is active."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1189
+#: admin/class-litespeed-cache-admin-display.php:1247
 msgid ""
 "When this option is checked and this file is detected as belonging to "
 "another plugin, LiteSpeed Cache will not cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1193
+#: admin/class-litespeed-cache-admin-display.php:1251
 msgid "Add an alpha-numeric prefix to cache and purge tags."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1194
+#: admin/class-litespeed-cache-admin-display.php:1252
 msgid ""
 "This can be used to prevent issues when using multiple LiteSpeed caching "
 "extensions on the same server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1204
+#: admin/class-litespeed-cache-admin-display.php:1262
 msgid "Check advanced-cache.php"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1208
+#: admin/class-litespeed-cache-admin-display.php:1266
 msgid ""
 "Uncheck this option only if the other plugin is used for non-caching "
 "purposes, such as minifying css/js files."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1219
+#: admin/class-litespeed-cache-admin-display.php:1277
 msgid "Cache Tag Prefix"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1237
+#: admin/class-litespeed-cache-admin-display.php:1295
 msgid "Developer Testing"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1241
+#: admin/class-litespeed-cache-admin-display.php:1298
+msgid "Outputs to WordPress debug log."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1299
+msgid ""
+"This should be set to off once everything is working to prevent filling the "
+"disk."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1300
+msgid ""
+"The Admin IP option will only output log messages on requests from admin IPs."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1301
+msgid ""
+"The logs will be outputted to the debug.log in your wp-content directory."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1306
 msgid "Admin IPs"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1242
+#: admin/class-litespeed-cache-admin-display.php:1307
 msgid ""
 "Allows listed IPs (space or comma separated) to perform certain actions from "
 "their browsers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1244
+#: admin/class-litespeed-cache-admin-display.php:1309
 #, php-format
 msgid ""
 "More information about the available commands can be found <a href=\"%s"
 "\">here</a>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1250
-msgid "None"
+#: admin/class-litespeed-cache-admin-display.php:1315
+msgid "Off"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1251
-msgid "Error"
+#: admin/class-litespeed-cache-admin-display.php:1316
+msgid "On"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1252
-msgid "Notice"
+#: admin/class-litespeed-cache-admin-display.php:1317
+msgid "Admin IP only"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1253
-msgid "Info"
+#: admin/class-litespeed-cache-admin-display.php:1320
+msgid "Debug Log"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1256
-msgid "Debug Level"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1257
-msgid "Outputs to WordPress debug log."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1301
+#: admin/class-litespeed-cache-admin-display.php:1365
 msgid "When checked, mobile views will be cached separately."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1302
+#: admin/class-litespeed-cache-admin-display.php:1366
 msgid "A site built with responsive design does not need to check this."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1305
+#: admin/class-litespeed-cache-admin-display.php:1369
 #, php-format
 msgid "SYNTAX: Each entry should be separated with a bar, %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1306
+#: admin/class-litespeed-cache-admin-display.php:1370
 #, php-format
 msgid "Any spaces should be escaped with a backslash before the space, %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1318
+#: admin/class-litespeed-cache-admin-display.php:1387
 msgid ""
 "WARNING: Unchecking this option will clear the Mobile View List. Press OK to "
 "confirm this action."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1323
+#: admin/class-litespeed-cache-admin-display.php:1392
 msgid "Enable Separate Mobile View"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1327
+#: admin/class-litespeed-cache-admin-display.php:1396
 #, php-format
 msgid "The default list WordPress uses is %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1328
-#: admin/class-litespeed-cache-admin-display.php:1391
-#: admin/class-litespeed-cache-admin-display.php:1423
-#: admin/class-litespeed-cache-admin-display.php:1751
+#: admin/class-litespeed-cache-admin-display.php:1397
+#: admin/class-litespeed-cache-admin-display.php:1474
+#: admin/class-litespeed-cache-admin-display.php:1506
+#: admin/class-litespeed-cache-admin-display.php:1844
 msgid "NOTICE:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1329
-#: admin/class-litespeed-cache-admin-display.php:1392
-#: admin/class-litespeed-cache-admin-display.php:1424
+#: admin/class-litespeed-cache-admin-display.php:1398
+#: admin/class-litespeed-cache-admin-display.php:1475
+#: admin/class-litespeed-cache-admin-display.php:1507
 msgid "This setting will edit the .htaccess file."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1336
-#: admin/class-litespeed-cache-admin-display.php:1474
-#, php-format
-msgid "Error getting current rules: %s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1351
-msgid "Htaccess did not match configuration option."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1352
-msgid "Please re-enter the mobile view setting."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1353
-#, php-format
-msgid "List in WordPress database: %s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1363
-msgid "List of Mobile View User Agents"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1382
-msgid "SYNTAX: Cookies should be listed one per line."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1383
-#, php-format
-msgid "Spaces should have a backslash in front of them, %s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1388
-msgid "Cookie List"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1389
-msgid "To prevent cookies from being cached, enter it in the text area below."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1414
-#, php-format
-msgid "SYNTAX: Separate each user agent with a bar, %s."
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-display.php:1415
 #, php-format
-msgid "Spaces should have a backslash in front of them, %s."
+msgid "Expected false, got %s"
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-display.php:1420
+#: admin/class-litespeed-cache-admin-display.php:1559
+#, php-format
+msgid "Error getting current rules: %s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1434
+msgid "Htaccess did not match configuration option."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1435
+msgid "Please re-enter the mobile view setting."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1436
+#, php-format
+msgid "List in WordPress database: %s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1446
+msgid "List of Mobile View User Agents"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1465
+msgid "SYNTAX: Cookies should be listed one per line."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1466
+#, php-format
+msgid "Spaces should have a backslash in front of them, %s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1471
+msgid "Cookie List"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1472
+msgid "To prevent cookies from being cached, enter it in the text area below."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1497
+#, php-format
+msgid "SYNTAX: Separate each user agent with a bar, %s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1498
+#, php-format
+msgid "Spaces should have a backslash in front of them, %s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1503
 msgid "User Agent List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1421
+#: admin/class-litespeed-cache-admin-display.php:1504
 msgid ""
 "To prevent user agents from being cached, enter it in the text field below."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1449
+#: admin/class-litespeed-cache-admin-display.php:1534
 msgid "Login Cookie"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1451
+#: admin/class-litespeed-cache-admin-display.php:1536
 msgid "SYNTAX: alphanumeric and \"_\"."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1452
+#: admin/class-litespeed-cache-admin-display.php:1537
 msgid "No spaces and case sensitive."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1453
+#: admin/class-litespeed-cache-admin-display.php:1538
 msgid "MUST BE UNIQUE FROM OTHER WEB APPLICATIONS."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1455
+#: admin/class-litespeed-cache-admin-display.php:1540
 #, php-format
 msgid "The default login cookie is %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1457
+#: admin/class-litespeed-cache-admin-display.php:1542
 msgid ""
 "The server will determine if the user is logged in based on the existance of "
 "this cookie."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1458
+#: admin/class-litespeed-cache-admin-display.php:1543
 msgid ""
 "This setting is useful for those that have multiple web applications for the "
 "same domain."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1459
+#: admin/class-litespeed-cache-admin-display.php:1544
 msgid ""
 "If every web application uses the same cookie, the server may confuse "
 "whether a user is logged in or not."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1460
+#: admin/class-litespeed-cache-admin-display.php:1545
 msgid "The cookie set here will be used for this WordPress installation."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1461
+#: admin/class-litespeed-cache-admin-display.php:1546
 msgid "Example use case:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1462
+#: admin/class-litespeed-cache-admin-display.php:1547
 #, php-format
 msgid "There is a WordPress install for %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1465
+#: admin/class-litespeed-cache-admin-display.php:1550
 #, php-format
 msgid "Then there is another WordPress install (NOT MULTISITE) at %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1468
+#: admin/class-litespeed-cache-admin-display.php:1553
 msgid ""
 "The cache needs to distinguish who is logged into which WordPress site in "
 "order to cache correctly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1479
+#: admin/class-litespeed-cache-admin-display.php:1564
 #, php-format
 msgid "Error: invalid login cookie. Please check the %s file"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1486
+#: admin/class-litespeed-cache-admin-display.php:1572
 msgid ""
 "WARNING: The .htaccess login cookie and Database login cookie do not match."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1503
+#: admin/class-litespeed-cache-admin-display.php:1590
 msgid "Purge All on upgrade"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1504
+#: admin/class-litespeed-cache-admin-display.php:1591
 msgid ""
 "When checked, the cache will automatically purge when any plugins, themes, "
 "or WordPress core is upgraded."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1517
+#: admin/class-litespeed-cache-admin-display.php:1606
 msgid "Cache favicon.ico"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1519
+#: admin/class-litespeed-cache-admin-display.php:1608
 msgid "favicon.ico is requested on most pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1520
+#: admin/class-litespeed-cache-admin-display.php:1609
 msgid ""
 "Caching this recource may improve server performance by avoiding unnecessary "
 "php calls."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1537
+#: admin/class-litespeed-cache-admin-display.php:1629
 msgid "Enable Cache for PHP Resources"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1539
+#: admin/class-litespeed-cache-admin-display.php:1631
 msgid "Some themes and plugins add resources via a PHP request."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1540
+#: admin/class-litespeed-cache-admin-display.php:1632
 msgid ""
 "Caching these pages may improve server performance by avoiding unnecessary "
 "php calls."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1570
+#: admin/class-litespeed-cache-admin-display.php:1663
 msgid "To make LiteSpeed Cache compatible with WP-PostViews:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1573
+#: admin/class-litespeed-cache-admin-display.php:1666
 msgid ""
 "Replace the following calls in your theme's template files with a div or "
 "span with a unique ID."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1575
+#: admin/class-litespeed-cache-admin-display.php:1668
 #, php-format
 msgid "e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1580
+#: admin/class-litespeed-cache-admin-display.php:1673
 msgid "Update the ajax request to output the results to that div."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1582
+#: admin/class-litespeed-cache-admin-display.php:1675
 msgid "Example:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1585
+#: admin/class-litespeed-cache-admin-display.php:1678
 msgid "The ajax code can be found at"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1587
+#: admin/class-litespeed-cache-admin-display.php:1680
 msgid "After purging the cache, the view count should be updating."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1590
+#: admin/class-litespeed-cache-admin-display.php:1683
 msgid "Compatibility with WP-PostViews"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1619
+#: admin/class-litespeed-cache-admin-display.php:1712
 msgid ""
 "Please comment listing the plugins that you are using and how they are "
 "functioning on the support thread."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1620
+#: admin/class-litespeed-cache-admin-display.php:1713
 msgid "With your help, we can provide the best WordPress caching solution."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1624
+#: admin/class-litespeed-cache-admin-display.php:1717
 msgid "LiteSpeed Cache Plugin Compatibility"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1628
+#: admin/class-litespeed-cache-admin-display.php:1721
 msgid "Link Here"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1631
+#: admin/class-litespeed-cache-admin-display.php:1724
 msgid ""
 "This is a list of plugins that are confirmed to be compatible with LiteSpeed "
 "Cache Plugin:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1638
+#: admin/class-litespeed-cache-admin-display.php:1731
 msgid "This is a list of known UNSUPPORTED plugins:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1658
+#: admin/class-litespeed-cache-admin-display.php:1751
 msgid "This is used to display a page without caching it."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1659
+#: admin/class-litespeed-cache-admin-display.php:1752
 msgid ""
 "An example use case is to compare a cached version of a page with an "
 "uncached version."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1662
+#: admin/class-litespeed-cache-admin-display.php:1755
 msgid "This is used to purge most cache tags associated with the page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1663
+#: admin/class-litespeed-cache-admin-display.php:1756
 msgid "The lone exception is the blog ID tag."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1664
+#: admin/class-litespeed-cache-admin-display.php:1757
 msgid ""
 "Note that this means that pages with the same cache tag will be purged as "
 "well."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1667
+#: admin/class-litespeed-cache-admin-display.php:1760
 msgid "This is used to show all the cache headers associated with a page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1668
+#: admin/class-litespeed-cache-admin-display.php:1761
 msgid "This may be useful for debugging purposes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1671
+#: admin/class-litespeed-cache-admin-display.php:1764
 msgid "Admin IP Query String Actions"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1674
+#: admin/class-litespeed-cache-admin-display.php:1767
 msgid ""
 "The following commands are available to the admin and do not require log-in, "
 "providing quick access to actions on the various pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1677
+#: admin/class-litespeed-cache-admin-display.php:1770
 msgid "Action List:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1683
+#: admin/class-litespeed-cache-admin-display.php:1776
 msgid "This is used to purge all entries in the cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1686
+#: admin/class-litespeed-cache-admin-display.php:1779
 msgid "This is used to purge the first cache tag associated with the page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1693
+#: admin/class-litespeed-cache-admin-display.php:1786
 #, php-format
 msgid ""
 "To trigger the action for a page, access the page with the query string %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1709
+#: admin/class-litespeed-cache-admin-display.php:1802
 msgid "Mobile Views:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1711
+#: admin/class-litespeed-cache-admin-display.php:1804
 msgid ""
 "Some sites have adaptive views, meaning the page sent will adapt to the "
 "browser type (desktop vs mobile)."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1712
+#: admin/class-litespeed-cache-admin-display.php:1805
 msgid ""
 "This rewrite rule is used for sites that load a different page for each type."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1714
+#: admin/class-litespeed-cache-admin-display.php:1807
 msgid ""
 "This configuration can be added on the settings page in the General tab."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1719
+#: admin/class-litespeed-cache-admin-display.php:1812
 msgid "Do Not Cache Cookies:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1721
+#: admin/class-litespeed-cache-admin-display.php:1814
 msgid ""
 "Another common rewrite rule is to notify the cache not to cache when it sees "
 "a specified cookie name."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1723
-#: admin/class-litespeed-cache-admin-display.php:1732
+#: admin/class-litespeed-cache-admin-display.php:1816
+#: admin/class-litespeed-cache-admin-display.php:1825
 msgid ""
 "This configuration can be added on the settings page in the Do Not Cache tab."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1728
+#: admin/class-litespeed-cache-admin-display.php:1821
 msgid "Do Not Cache User Agent:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1730
+#: admin/class-litespeed-cache-admin-display.php:1823
 msgid ""
 "A not so commonly used rewrite rule is to notify the cache not to cache when "
 "it sees a specified User Agent."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1739
+#: admin/class-litespeed-cache-admin-display.php:1832
 msgid "LiteSpeed Cache Common Rewrite Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1745
+#: admin/class-litespeed-cache-admin-display.php:1838
 msgid "The following configurations can only be changed by the network admin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1747
+#: admin/class-litespeed-cache-admin-display.php:1840
 msgid ""
 "If you need to make changes to them, please contact the network admin to "
 "make the changes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1753
+#: admin/class-litespeed-cache-admin-display.php:1846
 msgid ""
 "The following rewrite rules can be configured in the LiteSpeed Cache "
 "settings page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1756
+#: admin/class-litespeed-cache-admin-display.php:1849
 msgid "If you need to make changes to them, please do so on that page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1757
+#: admin/class-litespeed-cache-admin-display.php:1850
 msgid "It will automatically generate the correct rules in the htaccess file."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:376
+#: admin/class-litespeed-cache-admin-display.php:1880
+msgid "LiteSpeed Cache plugin is installed!"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1882
+msgid ""
+"This message indicates that the plugin was installed by your server admin."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1883
+msgid ""
+"Our plugin is used to cache pages - a simple way to improve the performance "
+"of your site."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1884
+msgid ""
+"However, we have no way of knowing all the possible customizations that you "
+"may have done."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1885
+msgid ""
+"For that reason, we ask that you test your site to make sure everything "
+"still functions properly."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1888
+msgid "Examples of test cases include:"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1890
+msgid "Visit your site while logged out"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1892
+msgid "Create a post, make sure the front page is accurate"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1897
+#, php-format
+msgid ""
+"If you have any questions, we are always happy to answer any questions on "
+"our <a href=\"%s\" rel=\"%s\" target=\"%s\">support forum</a>."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1904
+msgid ""
+"If you would rather not move at litespeed, you can deactivate this plugin."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1908
+#, php-format
+msgid "<a href=\"%s\">OK, got it (dismiss)</a>"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-rules.php:399
 #, php-format
 msgid "Your .htaccess file is missing a %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1394
+#: admin/class-litespeed-cache-admin-rules.php:1447
 msgid "File Saved."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1396
+#: admin/class-litespeed-cache-admin-rules.php:1449
 msgid "Failed to back up file, aborted changes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1397
+#: admin/class-litespeed-cache-admin-rules.php:1450
 msgid ".htaccess file does not exist or is not readable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1398
+#: admin/class-litespeed-cache-admin-rules.php:1451
 #, php-format
 msgid "Failed to put contents into %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1400
+#: admin/class-litespeed-cache-admin-rules.php:1453
 #, php-format
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1402
+#: admin/class-litespeed-cache-admin-rules.php:1455
 #, php-format
 msgid "Invalid login cookie. Invalid characters found: %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1404
+#: admin/class-litespeed-cache-admin-rules.php:1457
 #, php-format
 msgid "Invalid Rewrite List. Empty or invalid rule. Rule: %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1405
+#: admin/class-litespeed-cache-admin-rules.php:1458
 #, php-format
 msgid "Could not find %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1406
+#: admin/class-litespeed-cache-admin-rules.php:1459
 #, php-format
 msgid "Failed to overwrite %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1408
+#: admin/class-litespeed-cache-admin-rules.php:1461
 msgid "Tried to parse for existing login cookie."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1409
+#: admin/class-litespeed-cache-admin-rules.php:1462
 #, php-format
 msgid "%s file not valid. Please verify contents."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1412
+#: admin/class-litespeed-cache-admin-rules.php:1465
 #, php-format
 msgid "%s file not readable or not writable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1416
+#: admin/class-litespeed-cache-admin-rules.php:1469
 msgid "This site is a subdirectory install."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1417
+#: admin/class-litespeed-cache-admin-rules.php:1470
 msgid "Login cookies do not match."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1418
+#: admin/class-litespeed-cache-admin-rules.php:1471
 msgid ""
 "Please remove both and set the login cookie in LiteSpeed Cache advanced "
 "settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1420
+#: admin/class-litespeed-cache-admin-rules.php:1473
 msgid "Prefix was found after suffix."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:178
+#: admin/class-litespeed-cache-admin.php:166
+msgid "LiteSpeed Cache Purge All"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:201
 #, php-format
 msgid "%s Manager"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:179
+#: admin/class-litespeed-cache-admin.php:202
 msgid "Manage"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:190
+#: admin/class-litespeed-cache-admin.php:213
 #, php-format
 msgid "%s Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:191
-#: admin/class-litespeed-cache-admin.php:584
+#: admin/class-litespeed-cache-admin.php:214
+#: admin/class-litespeed-cache-admin.php:761
 msgid "Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:194
+#: admin/class-litespeed-cache-admin.php:217
 #, php-format
 msgid "%s Edit .htaccess"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:195
+#: admin/class-litespeed-cache-admin.php:218
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:208
+#: admin/class-litespeed-cache-admin.php:231
 #, php-format
 msgid "%s Information"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:209
+#: admin/class-litespeed-cache-admin.php:232
 msgid "Information"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:210
+#: admin/class-litespeed-cache-admin.php:233
 #, php-format
 msgid "%s FAQs"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:211
+#: admin/class-litespeed-cache-admin.php:234
 msgid "FAQs"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:322
+#: admin/class-litespeed-cache-admin.php:237
+#, php-format
+msgid "%s Environment Report"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:238
+msgid "Environment Report"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:368
 msgid "Invalid Tag Prefix input."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:323
+#: admin/class-litespeed-cache-admin.php:369
 msgid "Input should only contain letters and numbers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:378
-msgid "Invalid data in Admin IPs."
+#: admin/class-litespeed-cache-admin.php:411
+#, php-format
+msgid "%s TTL must be an integer between %d and 2147483647"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:387
-msgid "Default Public Cache TTL must be set to 30 seconds or more"
+#: admin/class-litespeed-cache-admin.php:430
+msgid "Default Public Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:395
-msgid "Default Front Page TTL must be set to 30 seconds or more"
+#: admin/class-litespeed-cache-admin.php:439
+msgid "Default Front Page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:403
-msgid "Feed TTL input is invalid. Input must be numeric."
+#: admin/class-litespeed-cache-admin.php:447
+msgid "Feed"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:484
+#: admin/class-litespeed-cache-admin.php:458
+msgid "404"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:538
 #, php-format
 msgid "Removed category \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:508
+#: admin/class-litespeed-cache-admin.php:564
 #, php-format
 msgid "Removed tag \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:536
+#: admin/class-litespeed-cache-admin.php:644
+msgid "Invalid data in Admin IPs."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:667
 msgid "Invalid data in Test IPs."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:604
+#: admin/class-litespeed-cache-admin.php:781
 msgid "Notified LiteSpeed Web Server to purge the public cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:608
+#: admin/class-litespeed-cache-admin.php:785
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:652
+#: admin/class-litespeed-cache-admin.php:829
 msgid ""
 "Alternatively, your network admin may bypass this warning by unchecking "
 "\"Check Advanced Cache\" in LiteSpeed Cache network settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:655
+#: admin/class-litespeed-cache-admin.php:832
 msgid ""
 "Alternatively, you may bypass this warning by unchecking \"Check Advanced "
 "Cache\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:658
+#: admin/class-litespeed-cache-admin.php:835
 msgid "Please disable/deactivate your other cache plugin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:660
+#: admin/class-litespeed-cache-admin.php:837
 msgid ""
 "This should only be done if you intend to use the other cache plugin for non-"
 "caching purposes, such as minifying css/js files."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:765
+#: admin/class-litespeed-cache-admin.php:958
 msgid "File saved."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:784
+#: admin/class-litespeed-cache-admin.php:977
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:312
+#: includes/class-litespeed-cache.php:539
 msgid "Your WordPress version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:314
+#: includes/class-litespeed-cache.php:541
 #, php-format
 msgid ""
 "The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade "
@@ -1517,11 +1656,11 @@ msgid ""
 "Cache plugin to hide this message."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:326
+#: includes/class-litespeed-cache.php:553
 msgid "Your PHP version is too old for LiteSpeed Cache Plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:328
+#: includes/class-litespeed-cache.php:555
 #, php-format
 msgid ""
 "LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, "
@@ -1530,114 +1669,114 @@ msgid ""
 "LiteSpeed Cache plugin to hide this message."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:340
+#: includes/class-litespeed-cache.php:567
 msgid ""
 "LiteSpeed Cache was unable to write to your wp-config.php file. Please add "
 "the following to your wp-config.php file located under your WordPress root "
 "directory: define('WP_CACHE', true);"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:667
+#: includes/class-litespeed-cache.php:907
 msgid "Failed to purge by category, invalid category slug."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:674
+#: includes/class-litespeed-cache.php:914
 #, php-format
 msgid "Failed to purge by category, does not exist: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:680
+#: includes/class-litespeed-cache.php:920
 #, php-format
 msgid "Purge category %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:703
+#: includes/class-litespeed-cache.php:943
 #, php-format
 msgid "Failed to purge by Post ID, given ID is not numeric: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:709
+#: includes/class-litespeed-cache.php:949
 #, php-format
 msgid ""
 "Failed to purge by Post ID, given ID does not exist or is not published: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:715
+#: includes/class-litespeed-cache.php:955
 #, php-format
 msgid "Purge Post ID %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:738
+#: includes/class-litespeed-cache.php:978
 msgid "Failed to purge by tag, invalid tag slug."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:745
+#: includes/class-litespeed-cache.php:985
 #, php-format
 msgid "Failed to purge by tag, does not exist: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:751
+#: includes/class-litespeed-cache.php:991
 #, php-format
 msgid "Purge tag %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:774
+#: includes/class-litespeed-cache.php:1015
 msgid "Failed to purge by url, contained \"<\"."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:782
+#: includes/class-litespeed-cache.php:1024
 #, php-format
-msgid "Failed to purge by url, does not exist: %d"
+msgid "Failed to purge by url, invalid input: %s."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:788
+#: includes/class-litespeed-cache.php:1031
 #, php-format
 msgid "Purge url %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:806
+#: includes/class-litespeed-cache.php:1050
 msgid "ERROR: Something went wrong with the form! Please try again."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:815
+#: includes/class-litespeed-cache.php:1059
 msgid "ERROR: Tried to purge list with empty list."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:835
+#: includes/class-litespeed-cache.php:1079
 msgid "ERROR: Bad Purge By selected value."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:914
+#: includes/class-litespeed-cache.php:1158
 msgid "NOTICE: Database login cookie did not match your login cookie."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:915
+#: includes/class-litespeed-cache.php:1159
 msgid ""
 "If you recently changed the cookie in the settings, please log out and back "
 "in again."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:916
+#: includes/class-litespeed-cache.php:1160
 msgid "If not, please verify your LiteSpeed Cache setting's Advanced tab."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:919
+#: includes/class-litespeed-cache.php:1163
 msgid ""
 "If using OpenLiteSpeed, you may need to restart the server for the changes "
 "to take effect."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:991
+#: includes/class-litespeed-cache.php:1242
 msgid ""
 "NOTICE: Database login cookie does not match the cookie used to access the "
 "page."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:992
+#: includes/class-litespeed-cache.php:1243
 msgid "Please have the admin check the LiteSpeed Cache settings."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:993
+#: includes/class-litespeed-cache.php:1244
 msgid "This error may appear if you are logged into another web application."
 msgstr ""
 
