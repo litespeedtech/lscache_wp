@@ -163,7 +163,7 @@ if (defined('lscache_debug')) {
 
 		$wp_admin_bar->add_node(array(
 			'id'    => 'lscache-quick-purge',
-			'title' => 'LiteSpeed Cache Purge All',
+			'title' => __('LiteSpeed Cache Purge All', 'litespeed-cache'),
 			'href'  => $url
 		));
 	}
