@@ -592,7 +592,9 @@ if (defined('lscache_debug')) {
 		}
 		elseif ($options[$id]) {
 			$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
-			$diff = $rules->check_input($reset, $input, $errors);
+			$added_and_changed = $rules->check_input($reset, $input, $errors);
+			// Merge to include the newly disabled options
+			$diff = array_merge($reset, $added_and_changed);
 		}
 		else {
 			LiteSpeed_Cache_Admin_Rules::clear_rules();
