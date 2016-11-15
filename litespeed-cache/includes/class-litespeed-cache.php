@@ -403,7 +403,7 @@ class LiteSpeed_Cache
 			}
 		}
 
-		$adv_cache_path = ABSPATH . 'wp-content/advanced-cache.php';
+		$adv_cache_path = dirname(self::$log_path) . 'advanced-cache.php';
 		if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
 			unlink($adv_cache_path) ;
 		}
@@ -516,14 +516,15 @@ class LiteSpeed_Cache
 	 */
 	public function try_copy_advanced_cache()
 	{
-		if ((file_exists(ABSPATH . 'wp-content/advanced-cache.php'))
-			&& ((filesize(ABSPATH . 'wp-content/advanced-cache.php') !== 0)
-				|| (!is_writable(ABSPATH . 'wp-content/advanced-cache.php')))) {
+		$adv_cache_path = dirname(self::$log_path) . 'advanced-cache.php';
+		if ((file_exists($adv_cache_path))
+			&& ((filesize($adv_cache_path) !== 0)
+				|| (!is_writable($adv_cache_path)))) {
 			return false;
 		}
 		copy($this->plugin_dir . '/includes/advanced-cache.php',
-			ABSPATH . 'wp-content/advanced-cache.php');
-		include(ABSPATH . 'wp-content/advanced-cache.php');
+			$adv_cache_path);
+		include($adv_cache_path);
 		$ret = defined('LSCACHE_ADV_CACHE');
 		return $ret;
 	}
