@@ -403,7 +403,7 @@ class LiteSpeed_Cache
 			}
 		}
 
-		$adv_cache_path = dirname(self::$log_path) . 'advanced-cache.php';
+		$adv_cache_path = dirname(self::$log_path) . '/advanced-cache.php';
 		if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
 			unlink($adv_cache_path) ;
 		}
@@ -516,7 +516,7 @@ class LiteSpeed_Cache
 	 */
 	public function try_copy_advanced_cache()
 	{
-		$adv_cache_path = dirname(self::$log_path) . 'advanced-cache.php';
+		$adv_cache_path = dirname(self::$log_path) . '/advanced-cache.php';
 		if ((file_exists($adv_cache_path))
 			&& ((filesize($adv_cache_path) !== 0)
 				|| (!is_writable($adv_cache_path)))) {
