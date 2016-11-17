@@ -1672,6 +1672,34 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Builds the vary header.
+	 *
+	 * Currently, this only checks post passwords.
+	 *
+	 * @since 1.0.12.1
+	 * @access private
+	 * @return mixed false if the user has the postpass cookie. Empty string
+	 * if the post is not password protected. Vary header otherwise.
+	 */
+	private function build_vary_headers()
+	{
+		global $post;
+		if (empty($post->post_password)) {
+			return '';
+		}
+		// post has a password
+
+		// If user has password cookie, do not cache
+		if (isset($_COOKIE['wp-postpass_' . COOKIEHASH])) {
+			return false;
+		}
+
+		// Else add a vary.
+		return LiteSpeed_Cache_Tags::HEADER_CACHE_VARY
+		. ': cookie=wp-postpass_' . COOKIEHASH;
+	}
+
+	/**
 	 * The mode determines if the page is cacheable. This function filters
 	 * out the possible show header admin control.
 	 *
@@ -1732,8 +1760,10 @@ class LiteSpeed_Cache
 	 * @param string $cache_ctrl The cache control header to send out.
 	 * @param string $purge_hdr The purge tag header to send out.
 	 * @param string $cache_hdr The cache tag header to send out.
+	 * @param string $vary_hdr The cache vary header to send out.
 	 */
-	private function header_out($showhdr, $cache_ctrl, $purge_hdr, $cache_hdr = '')
+	private function header_out($showhdr, $cache_ctrl, $purge_hdr,
+	                            $cache_hdr = '', $vary_hdr = '')
 	{
 		$hdr_content = array();
 		if ((!is_null($cache_ctrl)) && (!empty($cache_ctrl))) {
@@ -1744,6 +1774,9 @@ class LiteSpeed_Cache
 		}
 		if ((!is_null($cache_hdr)) && (!empty($cache_hdr))) {
 			$hdr_content[] = $cache_hdr;
+		}
+		if ((!is_null($vary_hdr)) && (!empty($vary_hdr))) {
+			$hdr_content[] = $vary_hdr;
 		}
 
 		if (!empty($hdr_content)) {
@@ -1776,6 +1809,7 @@ class LiteSpeed_Cache
 	{
 		$cache_control_header = '';
 		$cache_tag_header = '';
+		$vary_headers = '';
 		$cache_tags = null;
 		$showhdr = false;
 		do_action('litespeed_cache_add_purge_tags');
@@ -1783,6 +1817,7 @@ class LiteSpeed_Cache
 		$mode = $this->validate_mode($showhdr);
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
+			$vary_headers = $this->build_vary_headers();
 			do_action('litespeed_cache_add_cache_tags');
 			$cache_tags = $this->get_cache_tags();
 			if ($mode === self::CACHECTRL_CACHE) {
@@ -1790,7 +1825,7 @@ class LiteSpeed_Cache
 			}
 		}
 
-		if (empty($cache_tags)) {
+		if (empty($cache_tags) || ($vary_headers === false)) {
 			$cache_control_header =
 					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
 			$purge_headers = $this->build_purge_headers();
@@ -1836,7 +1871,7 @@ class LiteSpeed_Cache
 		}
 		$purge_headers = $this->build_purge_headers();
 		$this->header_out($showhdr, $cache_control_header, $purge_headers,
-				$cache_tag_header);
+				$cache_tag_header, $vary_headers);
 	}
 
 	/**
