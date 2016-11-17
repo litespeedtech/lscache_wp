@@ -1678,25 +1678,29 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.12.1
 	 * @access private
+	 * @global $post
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 * if the post is not password protected. Vary header otherwise.
 	 */
 	private function build_vary_headers()
 	{
 		global $post;
-		if (empty($post->post_password)) {
+		$tp_cookies = LiteSpeed_Cache_Tags::get_vary_cookies();
+		if (!empty($post->post_password)) {
+			if (isset($_COOKIE['wp-postpass_' . COOKIEHASH])) {
+				// If user has password cookie, do not cache
+				return false;
+			}
+			else {
+				$tp_cookies[] = 'cookie=wp-postpass_' . COOKIEHASH;
+			}
+		}
+
+		if (empty($tp_cookies)) {
 			return '';
 		}
-		// post has a password
-
-		// If user has password cookie, do not cache
-		if (isset($_COOKIE['wp-postpass_' . COOKIEHASH])) {
-			return false;
-		}
-
-		// Else add a vary.
 		return LiteSpeed_Cache_Tags::HEADER_CACHE_VARY
-		. ': cookie=wp-postpass_' . COOKIEHASH;
+		. ': ' . implode(',', $tp_cookies);
 	}
 
 	/**
@@ -1817,8 +1821,8 @@ class LiteSpeed_Cache
 		$mode = $this->validate_mode($showhdr);
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
-			$vary_headers = $this->build_vary_headers();
 			do_action('litespeed_cache_add_cache_tags');
+			$vary_headers = $this->build_vary_headers();
 			$cache_tags = $this->get_cache_tags();
 			if ($mode === self::CACHECTRL_CACHE) {
 				$cache_tags[] = ''; //add blank entry to add blog tag.
