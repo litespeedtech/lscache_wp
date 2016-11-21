@@ -62,6 +62,7 @@ class LiteSpeed_Cache_Config
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
 	const NETWORK_OPID_ENABLED = 'network_enabled';
+	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings';
 
 	protected $options ;
 	protected $purge_options ;
@@ -74,26 +75,12 @@ class LiteSpeed_Cache_Config
 	 */
 	public function __construct()
 	{
-		$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
-
 		if ( is_multisite()) {
-			$site_options = get_site_option(self::OPTION_NAME);
-			if ( $site_options && is_array($site_options)) {
-				$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED];
-				if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
-					$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
-				}
-				$options[self::OPID_PURGE_ON_UPGRADE]
-					= $site_options[self::OPID_PURGE_ON_UPGRADE];
-				$options[self::OPID_MOBILEVIEW_ENABLED]
-					= $site_options[self::OPID_MOBILEVIEW_ENABLED];
-				$options[self::ID_MOBILEVIEW_LIST]
-					= $site_options[self::ID_MOBILEVIEW_LIST];
-				$options[self::OPID_LOGIN_COOKIE]
-					= $site_options[self::OPID_LOGIN_COOKIE];
-				$options[self::OPID_TAG_PREFIX]
-					= $site_options[self::OPID_TAG_PREFIX];
-			}
+			$options = $this->construct_multisite_options();
+		}
+		else {
+			$options = get_option(self::OPTION_NAME,
+				$this->get_default_options());
 		}
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
@@ -111,6 +98,41 @@ class LiteSpeed_Cache_Config
 				$this->debug_tag .= ' [' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'] . ':' . $msec1 . '] ' ;
 			}
 		}
+	}
+
+	private function construct_multisite_options()
+	{
+		$site_options = get_site_option(self::OPTION_NAME);
+		if ((!$site_options) || (!is_array($site_options))) {
+			$options = get_option(self::OPTION_NAME,
+				$this->get_default_options());
+			return $options;
+		}
+		if ((isset($site_options[self::NETWORK_OPID_USE_PRIMARY]))
+			&& ($site_options[self::NETWORK_OPID_USE_PRIMARY])) {
+			$main_id = BLOG_ID_CURRENT_SITE;
+			$options = get_blog_option($main_id,
+				LiteSpeed_Cache_Config::OPTION_NAME, array());
+		}
+		else {
+			$options = get_option(self::OPTION_NAME,
+				$this->get_default_options());
+		}
+		$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED];
+		if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
+			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
+		}
+		$options[self::OPID_PURGE_ON_UPGRADE]
+			= $site_options[self::OPID_PURGE_ON_UPGRADE];
+		$options[self::OPID_MOBILEVIEW_ENABLED]
+			= $site_options[self::OPID_MOBILEVIEW_ENABLED];
+		$options[self::ID_MOBILEVIEW_LIST]
+			= $site_options[self::ID_MOBILEVIEW_LIST];
+		$options[self::OPID_LOGIN_COOKIE]
+			= $site_options[self::OPID_LOGIN_COOKIE];
+		$options[self::OPID_TAG_PREFIX]
+			= $site_options[self::OPID_TAG_PREFIX];
+		return $options;
 	}
 
 	/**
@@ -257,6 +279,7 @@ class LiteSpeed_Cache_Config
 		$default_site_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::NETWORK_OPID_ENABLED => false,
+			self::NETWORK_OPID_USE_PRIMARY => false,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,

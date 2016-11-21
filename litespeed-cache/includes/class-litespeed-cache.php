@@ -646,7 +646,7 @@ class LiteSpeed_Cache
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
 				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
 		add_action('load-litespeed-cache_page_lscache-settings',
-				array($admin, 'parse_settings'));
+				array($admin, 'validate_network_settings'));
 		if (is_multisite()) {
 			add_action('update_site_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
 					'LiteSpeed_Cache::update_environment_report', 10, 2);

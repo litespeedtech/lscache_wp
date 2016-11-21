@@ -301,8 +301,21 @@ if (defined('lscache_debug')) {
 				return;
 			}
 		}
-		elseif ((!is_network_admin())
-			|| (!current_user_can('manage_network_options'))) {
+		elseif (!is_network_admin()) {
+			if (!current_user_can('manage_options')) {
+				return;
+			}
+			if ((get_current_blog_id() !== BLOG_ID_CURRENT_SITE)) {
+				$use_primary = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY;
+				$site_options = $config->get_site_options();
+				if (isset($site_options[$use_primary])
+					&& ($site_options[$use_primary])) {
+					LiteSpeed_Cache_Admin_Display::get_instance()->set_disable_all();
+				}
+			}
+			return;
+		}
+		elseif (!current_user_can('manage_network_options')) {
 			return;
 		}
 
@@ -882,7 +895,7 @@ if (defined('lscache_debug')) {
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function parse_settings()
+	public function validate_network_settings()
 	{
 		if ((!is_multisite()) || (!is_network_admin())) {
 			return;
@@ -917,6 +930,9 @@ if (defined('lscache_debug')) {
 			$input[$id] = 'changed';
 			$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
 		}
+
+		self::parse_checkbox(LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY,
+			$input, $options);
 
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
 			$input, $options);
