@@ -739,6 +739,13 @@ if (defined('lscache_debug')) {
 		$options = $config->get_options() ;
 		$errors = array() ;
 
+		if (LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all()) {
+			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
+				LiteSpeed_Cache_Config::OPTION_NAME,
+				__('Use primary site settings set.', 'litespeed-cache'));
+			return $options;
+		}
+
 		$this->validate_general($input, $options, $errors);
 
 		$this->validate_purge($input, $options, $errors);
