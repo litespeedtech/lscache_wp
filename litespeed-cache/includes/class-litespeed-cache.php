@@ -42,6 +42,7 @@ class LiteSpeed_Cache
 	const CACHECTRL_PURGESINGLE = 3;
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
+	const CACHECTRL_STALE = 64; // (1<<6)
 
 	const WHM_TRANSIENT = 'lscwp_whm_install';
 	const WHM_TRANSIENT_VAL = 'whm_install';
@@ -1111,6 +1112,7 @@ class LiteSpeed_Cache
 		else {
 			$this->add_purge_tags($purge_tags);
 		}
+		$this->cachectrl |= self::CACHECTRL_STALE;
 //		$this->send_purge_headers();
 	}
 
@@ -1619,10 +1621,12 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.1
 	 * @access private
+	 * @param boolean $stale Whether to add header as a stale header or not.
+	 * @return string The purge header
 	 */
-	private function build_purge_headers()
+	private function build_purge_headers($stale)
 	{
-		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE;
+		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE . ': ';
 		$purge_tags = array_merge($this->pub_purge_tags,
 				LiteSpeed_Cache_Tags::get_purge_tags());
 		$purge_tags = array_unique($purge_tags);
@@ -1663,7 +1667,11 @@ class LiteSpeed_Cache
 			self::debug_log('Purge tags are ' . implode(',', $tags));
 		}
 
-		$cache_purge_header .= ': tag=' . implode(',', $tags);
+		if ($stale) {
+			$cache_purge_header .= 'stale,';
+		}
+
+		$cache_purge_header .= 'tag=' . implode(',', $tags);
 		return $cache_purge_header;
 		// TODO: private cache headers
 //		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
@@ -1710,17 +1718,21 @@ class LiteSpeed_Cache
 	 * @since 1.0.7
 	 * @access private
 	 * @param boolean $showhdr Whether the show header command was selected.
+	 * @param boolean $stale Whether to make the purge headers stale.
 	 * @return integer The integer corresponding to the selected
 	 * cache control value.
 	 */
-	private function validate_mode(&$showhdr)
+	private function validate_mode(&$showhdr, &$stale)
 	{
-		if ($this->cachectrl & self::CACHECTRL_SHOWHEADERS) {
+		$mode = $this->cachectrl;
+		if ($mode & self::CACHECTRL_SHOWHEADERS) {
 			$showhdr = true;
-			$mode = $this->cachectrl & ~self::CACHECTRL_SHOWHEADERS;
+			$mode &= ~self::CACHECTRL_SHOWHEADERS;
 		}
-		else {
-			$mode = $this->cachectrl;
+
+		if ($mode & self::CACHECTRL_STALE) {
+			$stale = true;
+			$mode &= ~self::CACHECTRL_STALE;
 		}
 
 		if ($mode != self::CACHECTRL_CACHE) {
@@ -1816,9 +1828,10 @@ class LiteSpeed_Cache
 		$vary_headers = '';
 		$cache_tags = null;
 		$showhdr = false;
+		$stale = false;
 		do_action('litespeed_cache_add_purge_tags');
 
-		$mode = $this->validate_mode($showhdr);
+		$mode = $this->validate_mode($showhdr, $stale);
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
 			do_action('litespeed_cache_add_cache_tags');
@@ -1832,7 +1845,7 @@ class LiteSpeed_Cache
 		if (empty($cache_tags) || ($vary_headers === false)) {
 			$cache_control_header =
 					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
-			$purge_headers = $this->build_purge_headers();
+			$purge_headers = $this->build_purge_headers($stale);
 			$this->header_out($showhdr, $cache_control_header, $purge_headers);
 			return;
 		}
@@ -1873,7 +1886,7 @@ class LiteSpeed_Cache
 				break;
 
 		}
-		$purge_headers = $this->build_purge_headers();
+		$purge_headers = $this->build_purge_headers($stale);
 		$this->header_out($showhdr, $cache_control_header, $purge_headers,
 				$cache_tag_header, $vary_headers);
 	}
