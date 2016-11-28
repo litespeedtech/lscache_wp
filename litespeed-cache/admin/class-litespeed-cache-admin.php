@@ -938,8 +938,12 @@ if (defined('lscache_debug')) {
 			$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
 		}
 
-		self::parse_checkbox(LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY,
-			$input, $options);
+		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY;
+		$orig_primary = $options[$id];
+		$ret = self::parse_checkbox($id, $input, $options);
+		if ($orig_primary !== $ret) {
+			LiteSpeed_Cache::plugin()->purge_all();
+		}
 
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
 			$input, $options);
