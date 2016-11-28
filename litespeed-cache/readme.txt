@@ -284,6 +284,16 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.13 - November 28 2016 =
+* [NEW] Add an Empty Entire Cache button.
+* [NEW] Add stale logic to certain purge actions.
+* [NEW] Add option to use primary site settings for all subsites in a multisite environment.
+* [NEW] Add support for Aelia CurrencySwitcher
+* [UPDATE] Add logic to allow third party vary headers
+* [UPDATE] Handle password protected pages differently.
+* [BUGFIX] Fixed bug caused by saving settings.
+* [BUGFIX] FIxed bug when searching for advanced-cache.php
+
 = 1.0.12 - November 14 2016 =
 * [NEW] Added logic to generate environment reports.
 * [NEW] Created a notice that will be triggered when the WHM Plugin installs this plugin. This will notify users when the plugin is installed by their server admin.
