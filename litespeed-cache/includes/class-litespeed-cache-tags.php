@@ -111,7 +111,7 @@ class LiteSpeed_Cache_Tags
 	/**
 	 * Gets vary cookies that are already added for the current page.
 	 *
-	 * @since 1.0.12.1
+	 * @since 1.0.13
 	 * @access public
 	 * @return array An array of all vary cookies currently added.
 	 */
@@ -133,7 +133,7 @@ class LiteSpeed_Cache_Tags
 	/**
 	 * Adds vary cookie(s) to the list of vary cookies for the current page.
 	 *
-	 * @since 1.0.12.1
+	 * @since 1.0.13
 	 * @access public
 	 * @param mixed $cookie A string or array of vary cookies to add to the
 	 * current list.

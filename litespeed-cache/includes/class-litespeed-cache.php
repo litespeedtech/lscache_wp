@@ -1687,7 +1687,7 @@ class LiteSpeed_Cache
 	 *
 	 * Currently, this only checks post passwords.
 	 *
-	 * @since 1.0.12.1
+	 * @since 1.0.13
 	 * @access private
 	 * @global $post
 	 * @return mixed false if the user has the postpass cookie. Empty string
