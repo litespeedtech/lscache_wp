@@ -273,6 +273,10 @@ class LiteSpeed_Cache_Admin_Display
 			__('This may cause heavy load on your server.', 'litespeed-cache'),
 			__('If you only want to purge the wordpress site, use purge all.', 'litespeed-cache')
 		);
+		$clearcache_desc_para = LiteSpeed_Cache::build_paragraph(
+			__('Clears all cache entries related to this site, including other web applications.', 'litespeed-cache'),
+			__('This action should only be used if things are cached incorrectly.', 'litespeed-cache')
+		);
 
 		if ( ($error_msg = $this->check_license($config)) !== true ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
@@ -297,17 +301,23 @@ class LiteSpeed_Cache_Admin_Display
 		// Form entries purge front, purge all
 		$buf .= '<input type="submit" class="button button-primary" '
 		. 'name="purgefront" value="' . __('Purge Front Page', 'litespeed-cache')
-		. '" /><br><br>'
+		. '" /><span>&nbsp;'
+		. __('Purges the front page only.', 'litespeed-cache')
+		. '</span><br><br>'
 		. '<input type="submit" class="button button-primary" name="purgeall"'
 		. 'id="litespeedcache-purgeall" value="' . __('Purge All', 'litespeed-cache')
-		. '" /><br>';
+		. '" /><span>&nbsp;'
+		. __('Purges the cache entries created by this plugin.', 'litespeed-cache')
+		. '<br>';
 
 		if ((!is_multisite()) || (is_network_admin())) {
 			$buf .=
 				'<br><input type="submit" class="wp-ui-notification" name="clearcache"'
 				. 'id="litespeedcache-clearcache" value="'
-				. __('Clear EVERYTHING', 'litespeed-cache')
-				. '" /><br>'
+				. __('Empty Entire Cache', 'litespeed-cache')
+				. '" /><span>&nbsp;'
+				. $clearcache_desc_para
+				. '</span><br>'
 				. $this->input_field_hidden('litespeedcache-clearcache-confirm',
 					$clearcache_confirm_para);
 		}
