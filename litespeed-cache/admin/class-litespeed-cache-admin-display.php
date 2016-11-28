@@ -274,8 +274,10 @@ class LiteSpeed_Cache_Admin_Display
 			__('If you only want to purge the wordpress site, use purge all.', 'litespeed-cache')
 		);
 		$clearcache_desc_para = LiteSpeed_Cache::build_paragraph(
-			__('Clears all cache entries related to this site, including other web applications.', 'litespeed-cache'),
-			__('This action should only be used if things are cached incorrectly.', 'litespeed-cache')
+			wp_kses(__('Clears all cache entries related to this site, <i>including other web applications</i>.', 'litespeed-cache'),
+					array('i' => array())),
+			wp_kses(__('<b>This action should only be used if things are cached incorrectly.</b>', 'litespeed-cache'),
+					array('b' => array()))
 		);
 
 		if ( ($error_msg = $this->check_license($config)) !== true ) {
