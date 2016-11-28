@@ -1572,39 +1572,39 @@ class LiteSpeed_Cache
 			self::debug_log('LSCWP_CTRL query string action is ' . $action);
 		}
 		switch ($action[0]) {
-			case 'P':
-				if ($action == self::ADMINQS_PURGE) {
-					$this->cachectrl = self::CACHECTRL_PURGE;
-				}
-				elseif ($action == self::ADMINQS_PURGESINGLE) {
-					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
-				}
-				elseif ($action == self::ADMINQS_PURGEALL) {
-					$this->cachectrl = self::CACHECTRL_NOCACHE;
-					$this->purge_all();
-				}
-				else {
-					break;
-				}
-				if ((!is_admin()) && (!is_network_admin())) {
-					return;
-				}
-				$this->admin_ctrl_redirect();
+		case 'P':
+			if ($action == self::ADMINQS_PURGE) {
+				$this->cachectrl = self::CACHECTRL_PURGE;
+			}
+			elseif ($action == self::ADMINQS_PURGESINGLE) {
+				$this->cachectrl = self::CACHECTRL_PURGESINGLE;
+			}
+			elseif ($action == self::ADMINQS_PURGEALL) {
+				$this->cachectrl = self::CACHECTRL_NOCACHE;
+				$this->purge_all();
+			}
+			else {
+				break;
+			}
+			if ((!is_admin()) && (!is_network_admin())) {
 				return;
-			case 'S':
-				if ($action == self::ADMINQS_SHOWHEADERS) {
-					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
-					return;
-				}
-				break;
-			case 'D':
-				if ($action == self::ADMINQS_DISMISS) {
-					delete_transient(self::WHM_TRANSIENT);
-					$this->admin_ctrl_redirect();
-				}
-				break;
-			default:
-				break;
+			}
+			$this->admin_ctrl_redirect();
+			return;
+		case 'S':
+			if ($action == self::ADMINQS_SHOWHEADERS) {
+				$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
+				return;
+			}
+			break;
+		case 'D':
+			if ($action == self::ADMINQS_DISMISS) {
+				delete_transient(self::WHM_TRANSIENT);
+				$this->admin_ctrl_redirect();
+			}
+			break;
+		default:
+			break;
 		}
 
 		if (defined('LSCWP_LOG')) {
@@ -1643,6 +1643,9 @@ class LiteSpeed_Cache
 
 		if (!in_array('*', $purge_tags )) {
 			$tags = array_map(array($this,'prefix_apply'), $purge_tags);
+		}
+		elseif (isset($_POST['clearcache'])) {
+			$tags = array('*');
 		}
 		// Would only use multisite and network admin except is_network_admin
 		// is false for ajax calls, which is used by wordpress updates v4.6+

@@ -54,6 +54,17 @@
             }
         });
     });
+
+    jQuery(document).ready( function() {
+        jQuery('#litespeedcache-clearcache').click( function() {
+            if (confirm(jQuery('#litespeedcache-clearcache-confirm').val())) {
+                jQuery(this).submit();
+            }
+            else {
+                return false;
+            }
+        });
+    });
 })(jQuery);
 
 function lscwpCheckboxConfirm(the_checkbox, list_id) {

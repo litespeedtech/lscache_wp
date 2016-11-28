@@ -799,7 +799,7 @@ if (defined('lscache_debug')) {
 			return;
 		}
 		if ( isset($_POST['purgeall']) ) {
-			LiteSpeed_Cache::plugin()->purge_all() ;
+			LiteSpeed_Cache::plugin()->purge_all();
 			$msg = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache');
 		}
 		elseif ( isset($_POST['purgefront'])){
@@ -809,6 +809,10 @@ if (defined('lscache_debug')) {
 		elseif ( isset($_POST['purgelist'])) {
 			LiteSpeed_Cache::plugin()->purge_list();
 			return;
+		}
+		elseif ( isset($_POST['clearcache']) ) {
+			LiteSpeed_Cache::plugin()->purge_all();
+			$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache');
 		}
 		else {
 			return;

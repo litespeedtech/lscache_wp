@@ -268,6 +268,11 @@ class LiteSpeed_Cache_Admin_Display
 			__('You may purge selected pages here.', 'litespeed-cache'),
 			__('Currently, the available options are:', 'litespeed-cache')
 		);
+		$clearcache_confirm_para = LiteSpeed_Cache::build_paragraph(
+			__('This will clear EVERYTHING inside the cache.', 'litespeed-cache'),
+			__('This may cause heavy load on your server.', 'litespeed-cache'),
+			__('If you only want to purge the wordpress site, use purge all.', 'litespeed-cache')
+		);
 
 		if ( ($error_msg = $this->check_license($config)) !== true ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
@@ -296,6 +301,16 @@ class LiteSpeed_Cache_Admin_Display
 		. '<input type="submit" class="button button-primary" name="purgeall"'
 		. 'id="litespeedcache-purgeall" value="' . __('Purge All', 'litespeed-cache')
 		. '" /><br>';
+
+		if ((!is_multisite()) || (is_network_admin())) {
+			$buf .=
+				'<br><input type="submit" class="wp-ui-notification" name="clearcache"'
+				. 'id="litespeedcache-clearcache" value="'
+				. __('Clear EVERYTHING', 'litespeed-cache')
+				. '" /><br>'
+				. $this->input_field_hidden('litespeedcache-clearcache-confirm',
+					$clearcache_confirm_para);
+		}
 
 		if ((is_multisite()) && (is_network_admin())) {
 			echo $buf
