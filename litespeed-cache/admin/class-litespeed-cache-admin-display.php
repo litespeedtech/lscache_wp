@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Admin_Display
 	const PURGEBYOPT_LIST = 'purgebylist';
 
 	private $notices = array();
+	private $disable_all = false;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -52,6 +53,31 @@ class LiteSpeed_Cache_Admin_Display
 			self::$instance = new LiteSpeed_Cache_Admin_Display();
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * Whether to disable all settings or not.
+	 *
+	 * Currently used for 'use primary subsite settings'
+	 *
+	 * @since 1.0.13
+	 * @access public
+	 * @return bool True to disable all settings, false otherwise.
+	 */
+	public function get_disable_all()
+	{
+		return $this->disable_all;
+	}
+
+	/**
+	 * Set to disable all settings.
+	 *
+	 * @since 1.0.13
+	 * @access public
+	 */
+	public function set_disable_all()
+	{
+		$this->disable_all = true;
 	}
 
 	/**
@@ -299,6 +325,17 @@ class LiteSpeed_Cache_Admin_Display
 			__('You may purge selected pages here.', 'litespeed-cache'),
 			__('Currently, the available options are:', 'litespeed-cache')
 		);
+		$clearcache_confirm_para = LiteSpeed_Cache::build_paragraph(
+			__('This will clear EVERYTHING inside the cache.', 'litespeed-cache'),
+			__('This may cause heavy load on your server.', 'litespeed-cache'),
+			__('If you only want to purge the wordpress site, use purge all.', 'litespeed-cache')
+		);
+		$clearcache_desc_para = LiteSpeed_Cache::build_paragraph(
+			wp_kses(__('Clears all cache entries related to this site, <i>including other web applications</i>.', 'litespeed-cache'),
+					array('i' => array())),
+			wp_kses(__('<b>This action should only be used if things are cached incorrectly.</b>', 'litespeed-cache'),
+					array('b' => array()))
+		);
 
 		if ( ($error_msg = $this->check_license($config)) !== true ) {
 			echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n" ;
@@ -323,10 +360,26 @@ class LiteSpeed_Cache_Admin_Display
 		// Form entries purge front, purge all
 		$buf .= '<input type="submit" class="button button-primary" '
 		. 'name="purgefront" value="' . __('Purge Front Page', 'litespeed-cache')
-		. '" /><br><br>'
+		. '" /><span>&nbsp;'
+		. __('Purges the front page only.', 'litespeed-cache')
+		. '</span><br><br>'
 		. '<input type="submit" class="button button-primary" name="purgeall"'
 		. 'id="litespeedcache-purgeall" value="' . __('Purge All', 'litespeed-cache')
-		. '" /><br>';
+		. '" /><span>&nbsp;'
+		. __('Purges the cache entries created by this plugin.', 'litespeed-cache')
+		. '<br>';
+
+		if ((!is_multisite()) || (is_network_admin())) {
+			$buf .=
+				'<br><input type="submit" class="wp-ui-notification" name="clearcache"'
+				. 'id="litespeedcache-clearcache" value="'
+				. __('Empty Entire Cache', 'litespeed-cache')
+				. '" /><span>&nbsp;'
+				. $clearcache_desc_para
+				. '</span><br>'
+				. $this->input_field_hidden('litespeedcache-clearcache-confirm',
+					$clearcache_confirm_para);
+		}
 
 		if ((is_multisite()) && (is_network_admin())) {
 			echo $buf
@@ -413,15 +466,25 @@ class LiteSpeed_Cache_Admin_Display
 		 * @param array $tabs An array of third party configurations.
 		 * @param array $options The current configuration options.
 		 * @param string $option_group The option group to use for options.
+		 * @param boolean $disableall Whether to disable the settings or not.
 		 * @return mixed An array of third party configs else false on failure.
 		 */
 		$tp_tabs = apply_filters('litespeed_cache_add_config_tab', array(),
-			$options, LiteSpeed_Cache_Config::OPTION_NAME);
+			$options, LiteSpeed_Cache_Config::OPTION_NAME,
+			$this->get_disable_all());
 
 		echo '<div class="wrap">
 		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
 		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
 		<form method="post" action="options.php">' ;
+
+		if ($this->get_disable_all()) {
+			$desc = LiteSpeed_Cache::build_paragraph(
+				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
+				__('The following options are selected, but are not editable in this settings page.', 'litespeed-cache')
+			);
+			echo '<p>' . $desc . '</p>';
+		}
 
 		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
 
@@ -530,7 +593,13 @@ class LiteSpeed_Cache_Admin_Display
 
 		echo '</div>';
 
-		submit_button() ;
+		if ($this->get_disable_all()) {
+			submit_button(__('Save Changes', 'litespeed-cache'),
+				'primary', 'submit', true, array('disabled' => true));
+		}
+		else {
+			submit_button();
+		}
 		echo "</form></div>\n" ;
 	}
 
@@ -582,6 +651,23 @@ class LiteSpeed_Cache_Admin_Display
 		. wp_kses(__('We <b>STRONGLY</b> recommend that you test the compatibility with other plugins on a single/few sites.', 'litespeed-cache'),
 				array('b' => array()))
 		. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache'));
+
+
+		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY;
+		$use_primary = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$site_options[$id]);
+
+		$use_primary_desc = LiteSpeed_Cache::build_paragraph(
+			__("Check this option to use the primary site's configurations for all subsites.",
+				'litespeed-cache'),
+			__('This will disable the settings page on all subsites.', 'litespeed-cache')
+		);
+
+		$buf .= $this->display_config_row(
+			__('Use Primary Site Configurations', 'litespeed-cache'),
+			$use_primary,
+			$use_primary_desc
+		);
 
 		$buf .= $this->build_setting_purge_on_upgrade($site_options);
 		$buf .= $this->build_setting_cache_favicon($site_options);
@@ -700,8 +786,8 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$trial_para = LiteSpeed_Cache::build_paragraph(
 			__('Make sure that your license has the LSCache module enabled.', 'litespeed-cache'),
-			sprintf(wp_kses(__('You can '
-				. '<a href="%1$s"  rel="%2$s" target="%3$s">try our 2-CPU trial license with LSCache module</a> free for %4$d days.',
+			sprintf(wp_kses(
+				__('You can <a href="%1$s"  rel="%2$s" target="%3$s">try our 2-CPU trial license with LSCache module</a> free for %4$d days.',
 					'litespeed-cache'),
 				array('a' => array('href' => array(), 'rel' => array(),
 					'target' => array()))),
@@ -711,8 +797,9 @@ class LiteSpeed_Cache_Admin_Display
 
 		$caching_para = LiteSpeed_Cache::build_paragraph(
 			__('Your server must be configured to have caching enabled.', 'litespeed-cache'),
-			sprintf(wp_kses(__('If you are the server admin, '
-				. '<a href="%s" rel="%s" target="%s">click here.</a>', 'litespeed-cache'),
+			sprintf(wp_kses(
+				__('If you are the server admin, <a href="%s" rel="%s" target="%s">click here.</a>',
+					'litespeed-cache'),
 				array('a' => array('href' => array(), 'rel' => array(),
 					'target' => array()))),
 				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration',
@@ -723,8 +810,9 @@ class LiteSpeed_Cache_Admin_Display
 		$ols_para = LiteSpeed_Cache::build_paragraph(
 			__('Our OLS integration is currently in beta.', 'litespeed-cache'),
 			__('This integration utilizes OLS\'s cache module.', 'litespeed-cache'),
-			sprintf(wp_kses(__('Please follow the instructions '
-				. '<a href="%s" rel="%s" target="%s">here.</a>', 'litespeed-cache'),
+			sprintf(wp_kses(
+				__('Please follow the instructions <a href="%s" rel="%s" target="%s">here.</a>',
+					'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'rel' => array(),
 					'target' => array() ) )),
 				'http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress',
@@ -734,9 +822,9 @@ class LiteSpeed_Cache_Admin_Display
 		$test_para = LiteSpeed_Cache::build_paragraph(
 			sprintf(__('Subsequent requests should have the %s response header until the page is updated, expired, or purged.',
 					'litespeed-cache'), '<code>X-LiteSpeed-Cache-Control:hit</code><br>'),
-			sprintf(wp_kses(__('Please visit '
-				. '<a href="%s" rel="%s" target="%s">this page</a>'
-				. ' for more information.', 'litespeed-cache'),
+			sprintf(wp_kses(
+				__('Please visit <a href="%s" rel="%s" target="%s">this page</a> for more information.',
+					'litespeed-cache'),
 				array( 'a' => array( 'href' => array(), 'rel' => array(),
 					'target' => array() ) )),
 				'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing',
@@ -746,8 +834,9 @@ class LiteSpeed_Cache_Admin_Display
 		$footer_para = LiteSpeed_Cache::build_paragraph(
 			sprintf(__('If your questions are not answered here, try the %s', 'litespeed-cache'),
 				'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>'),
-			sprintf(wp_kses(__('If your questions are still not answered, do not hesitate to ask them on the '
-				. '<a href="%s" rel="%s" target="%s">support forum</a>.', 'litespeed-cache'),
+			sprintf(wp_kses(
+				__('If your questions are still not answered, do not hesitate to ask them on the <a href="%s" rel="%s" target="%s">support forum</a>.',
+					'litespeed-cache'),
 				array( 'a' =>array( 'href' => array(), 'rel' => array(),
 					'target' => array() ) )),
 				'https://wordpress.org/support/plugin/litespeed-cache',
@@ -775,7 +864,8 @@ class LiteSpeed_Cache_Admin_Display
 			. '</li><li>'
 			. $caching_para
 			. '</li><li>'
-			. __('In the .htaccess file for your WordPress installation, add the following:', 'litespeed-cache')
+			. __('In the .htaccess file for your WordPress installation, add the following:',
+				'litespeed-cache')
 			. '<textarea id="wpwrap" rows="3" readonly>&lt;IfModule LiteSpeed&gt;
    CacheLookup public on
 &lt;/IfModule&gt;</textarea></ol>';
@@ -952,7 +1042,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param array $options The current configuration options.
 	 * @return string The html for the general tab.
 	 */
-	private function show_settings_general( $options )
+	private function show_settings_general($options)
 	{
 		$feed_ttl_desc = LiteSpeed_Cache::build_paragraph(
 			__('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'),
@@ -989,8 +1079,9 @@ class LiteSpeed_Cache_Admin_Display
 		$enable_desc = '<strong>' . __('NOTICE', 'litespeed-cache') . ': </strong>'
 		. __('When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache')
 		. '<br>'
-		. sprintf(wp_kses(__('Please visit the '
-				. '<a href="%sadmin.php?page=lscache-info">information</a> page on how to test the cache.', 'litespeed-cache'),
+		. sprintf(wp_kses(
+			__('Please visit the <a href="%sadmin.php?page=lscache-info">information</a> page on how to test the cache.',
+				'litespeed-cache'),
 				array( 'a' => array( 'href' => array() ) )), get_admin_url());
 
 		if( is_multisite() ){
@@ -1075,7 +1166,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param array $purge_options The current configuration purge options.
 	 * @return string The html for the purge tab.
 	 */
-	private function show_settings_purge( $purge_options )
+	private function show_settings_purge($purge_options)
 	{
 		$select_all_desc = LiteSpeed_Cache::build_paragraph(
 			__('Select "All" if you have dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'),
@@ -1169,7 +1260,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param array $options The current configuration options.
 	 * @return string The html for the do not cache tab.
 	 */
-	private function show_settings_excludes( $options )
+	private function show_settings_excludes($options)
 	{
 
 		$uri_description =
@@ -1351,7 +1442,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param array $options The current configuration options.
 	 * @return string The html for the advanced settings tab.
 	 */
-	private function show_settings_advanced( $options )
+	private function show_settings_advanced($options)
 	{
 		$cookie_title = '';
 		$cookie_desc = '';
@@ -1409,7 +1500,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param array $options The current configuration options.
 	 * @return string The html for the debug settings tab.
 	 */
-	private function show_settings_test( $options )
+	private function show_settings_test($options)
 	{
 		$buf = $this->input_group_start(__('Developer Testing', 'litespeed-cache')) ;
 
@@ -1517,13 +1608,22 @@ class LiteSpeed_Cache_Admin_Display
 		. __('This setting will edit the .htaccess file.', 'litespeed-cache');
 
 		$mv_str = '';
-		if ($options[$cache_enable_id]) {
+		if (($options[$cache_enable_id]) && ($enabled)) {
 			$ret = LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule(
 				'MOBILE VIEW', 'HTTP_USER_AGENT', $mv_str);
 		}
-		else {
+		elseif ($enabled) {
 			$ret = true;
 			$mv_str = $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST];
+		}
+		elseif ($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] == false) {
+			$ret = true;
+			$mv_str = '';
+		}
+		else {
+			$ret = false;
+			$mv_str = sprintf(__('Expected false, got %s', 'litespeed-cache'),
+				$mv_str);
 		}
 		if ($ret !== true) {
 			$mv_list = '<p class="attention">'
@@ -1711,13 +1811,16 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function build_setting_cache_favicon($options)
 	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+			LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$title = __('Cache favicon.ico', 'litespeed-cache');
 		$desc = LiteSpeed_Cache::build_paragraph(
 			__('favicon.ico is requested on most pages.', 'litespeed-cache'),
 			__('Caching this recource may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache')
 		);
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
-		$cache_favicon = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
+		$cache_favicon = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$options[$id], '', '', !$file_writable);
 		return $this->display_config_row($title, $cache_favicon, $desc);
 	}
 
@@ -1731,12 +1834,15 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function build_setting_cache_resources($options)
 	{
+		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
+			LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$title = __('Enable Cache for PHP Resources', 'litespeed-cache');
 		$desc = LiteSpeed_Cache::build_paragraph(
 			__('Some themes and plugins add resources via a PHP request.', 'litespeed-cache'),
 			__('Caching these pages may improve server performance by avoiding unnecessary php calls.', 'litespeed-cache'));
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
-		$cache_res = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]);
+		$cache_res = $this->input_field_checkbox('lscwp_' . $id, $id,
+			$options[$id], '', '', !$file_writable);
 		return $this->display_config_row($title, $cache_res, $desc);
 	}
 
@@ -1997,8 +2103,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 			. '</li></ul>';
 
 		$buf .=
-			sprintf(wp_kses(__('If you have any questions, we are always happy to answer any questions on our '
-				. '<a href="%s" rel="%s" target="%s">support forum</a>.', 'litespeed-cache'),
+			sprintf(wp_kses(
+				__('If you have any questions, we are always happy to answer any questions on our <a href="%s" rel="%s" target="%s">support forum</a>.',
+					'litespeed-cache'),
 				array('a' =>array('href' => array(), 'rel' => array(),
 					'target' => array()))),
 				'https://wordpress.org/support/plugin/litespeed-cache',
@@ -2085,6 +2192,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	private function input_field_checkbox( $id, $value, $checked_value,
 			$label = '', $on_click = '', $disabled = false)
 	{
+		if ($this->get_disable_all()) {
+			$disabled = true;
+		}
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="checkbox" id="'
 				. $id . '" value="' . $value . '"' ;
 		if ( ($checked_value === $value) || (true === $checked_value) ) {
@@ -2124,6 +2234,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 			if (($checked_value === $val)) {
 				$buf .= ' checked="checked"' ;
 			}
+			if ($this->get_disable_all()) {
+				$buf .= ' disabled="true"' ;
+			}
 			$buf .= '><span>' . $label . '&nbsp;&nbsp;</span></label>';
 			$buf .= '&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
@@ -2143,7 +2256,13 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	private function input_field_select( $id, $seloptions, $selected_value )
 	{
 		$buf = '<select name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" id="'
-				. $id . '">' ;
+				. $id . '" ';
+
+		if ($this->get_disable_all()) {
+			$buf .= 'disabled="true" ';
+		}
+
+		$buf .= '>' ;
 		foreach ( $seloptions as $val => $label ) {
 			$buf .= '<option value="' . $val . '"' ;
 			if ( $selected_value == $val ) {
@@ -2171,6 +2290,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	private function input_field_text( $id, $value, $size = '', $style = '',
 			$after = '', $readonly = false )
 	{
+		if ($this->get_disable_all()) {
+			$readonly = true;
+		}
 		$buf = '<input name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text" id="'
 				. $id . '" value="' . esc_textarea($value) . '"' ;
 		if ( $size ) {
@@ -2205,6 +2327,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	private function input_field_textarea( $id, $value, $rows = '', $cols = '',
 			$style = '', $readonly = false)
 	{
+		if ($this->get_disable_all()) {
+			$readonly = true;
+		}
 		$buf = '<textarea name="' . LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']" type="text"
 				id="' . $id . '"';
 		if ( $rows ) {

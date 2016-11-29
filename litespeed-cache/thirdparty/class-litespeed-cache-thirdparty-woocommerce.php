@@ -506,7 +506,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		$content .= '<select name="' . $option_group . '['
 			. self::OPTION_UPDATE_INTERVAL . ']" id="'
-			. self::OPTION_UPDATE_INTERVAL . '">';
+			. self::OPTION_UPDATE_INTERVAL . '" style="width:100%;max-width:90%;">';
 		foreach ( $seloptions as $val => $label ) {
 			$content .= '<option value="' . $val . '"' ;
 			if ( $selected_value == $val ) {

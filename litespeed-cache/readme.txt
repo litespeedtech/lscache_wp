@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
 Tested up to: 4.6
-Stable tag: 1.0.11
+Stable tag: 1.0.13
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -284,6 +284,33 @@ plugin that needs to add purge tags to the current request.
 point to any plugin that needs to add cache tags to the current request.
 
 == Changelog ==
+= 1.0.13 - November 28 2016 =
+* [NEW] Add an Empty Entire Cache button.
+* [NEW] Add stale logic to certain purge actions.
+* [NEW] Add option to use primary site settings for all subsites in a multisite environment.
+* [NEW] Add support for Aelia CurrencySwitcher
+* [UPDATE] Add logic to allow third party vary headers
+* [UPDATE] Handle password protected pages differently.
+* [BUGFIX] Fixed bug caused by saving settings.
+* [BUGFIX] FIxed bug when searching for advanced-cache.php
+
+= 1.0.12 - November 14 2016 =
+* [NEW] Added logic to generate environment reports.
+* [NEW] Created a notice that will be triggered when the WHM Plugin installs this plugin. This will notify users when the plugin is installed by their server admin.
+* [NEW] Added the option to cache 404 pages via 404 Page TTL setting.
+* [NEW] Reworked log system to be based on selection of yes or no instead of log level.
+* [NEW] Added support for Autoptimize.
+* [NEW] Added Better WP Minify integration.
+* [UPDATE] On plugin disable, clear .htaccess.
+* [UPDATE] Introduced URL tag. Changed Purge by URL to use this new tag.
+* [BUGFIX] Fixed a bug triggered when .htaccess files were empty.
+* [BUGFIX] Correctly determine when to clear files in multisite environments (wp-config, advanced-cache, etc.).
+* [BUGFIX] When disabling the cache, settings changed in the same save will now be saved.
+* [BUGFIX] Various bugs from setting changes and multisite fixed.
+* [BUGFIX] Fixed two bugs with the .htaccess path search.
+* [BUGFIX] Do not alter $_GET in add_quick_purge. This may cause issues for functionality occurring later in the same request.
+* [BUGFIX] Right to left radio settings were incorrectly displayed. The radio buttons themselves were the opposite direction of the associated text.
+
 = 1.0.11 - October 11 2016 =
 * [NEW] The plugin will now set cachelookup public on.
 * [NEW] New option - check advanced-cache.php. This enables users to have two caching plugins enabled at the same time as long as the other plugin is not used for caching purposes. For example, using another cache plugin for css/js minification.

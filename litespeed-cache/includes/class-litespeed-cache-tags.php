@@ -42,6 +42,7 @@ class LiteSpeed_Cache_Tags
 	static $thirdparty_priv_purge_tags = array();
 	static $thirdparty_cache_tags = array();
 	static $thirdparty_priv_cache_tags = array();
+	static $thirdparty_vary_cookies = array(); // vary header only!
 	static $thirdparty_noncacheable = false;
 	static $thirdparty_mobile = false;
 	static $thirdparty_use_front_ttl = false;
@@ -177,6 +178,47 @@ class LiteSpeed_Cache_Tags
 		}
 		else {
 			self::$thirdparty_priv_purge_tags[] = $tag;
+		}
+	}
+
+	/**
+	 * Gets vary cookies that are already added for the current page.
+	 *
+	 * @since 1.0.13
+	 * @access public
+	 * @return array An array of all vary cookies currently added.
+	 */
+	public static function get_vary_cookies()
+	{
+		if (empty(self::$thirdparty_vary_cookies)) {
+			return self::$thirdparty_vary_cookies;
+		}
+		$cookies = array_unique(self::$thirdparty_vary_cookies);
+		if (empty($cookies)) {
+			return $cookies;
+		}
+		foreach ($cookies as $key => $val) {
+			$cookies[$key] = 'cookie=' . $val;
+		}
+		return $cookies;
+	}
+
+	/**
+	 * Adds vary cookie(s) to the list of vary cookies for the current page.
+	 *
+	 * @since 1.0.13
+	 * @access public
+	 * @param mixed $cookie A string or array of vary cookies to add to the
+	 * current list.
+	 */
+	public static function add_vary_cookie($cookie)
+	{
+		if (is_array($cookie)) {
+			self::$thirdparty_vary_cookies =
+				array_merge(self::$thirdparty_vary_cookies, $cookie);
+		}
+		else {
+			self::$thirdparty_vary_cookies[] = $cookie;
 		}
 	}
 

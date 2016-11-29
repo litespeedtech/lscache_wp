@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_PATTERN_LOGIN_BLOCK = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
 	private static $RW_PATTERN_UPGRADE_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
 	private static $RW_PATTERN_WRAPPERS = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
-	static $RW_PATTERN_RES = 'wp-content/.*/(loader|fonts)\.php';
+	static $RW_PATTERN_RES = 'wp-content/.*/[^/]*(loader|fonts|\.css|\.js)\.php';
 
 	/**
 	 * Initialize the class and set its properties.
@@ -935,7 +935,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		elseif (isset($diff[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED])) {
-			$diff[$id] = '';
+			$diff[$id] = false;
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
@@ -991,6 +991,13 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Parse rewrite input to check for possible issues (e.g. unescaped spaces).
 	 *
+	 * Issues tracked:
+	 * Starts with |
+	 * Ends with |
+	 * Double |
+	 * Unescaped space
+	 * Invalid character (NOT \w, -, \, |, \s, /)
+	 *
 	 * @since 1.0.9
 	 * @access private
 	 * @param String $rule Input rewrite rule.
@@ -998,7 +1005,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/[^\\\\]\s|[^\w-\\\|\s\/]/', $rule) === 0);
+		return (preg_match('/(^\|)|(\|$)|([^\\\\]\s|[^\w-\\\|\s\/]|\|\|)/',
+				$rule) === 0);
 	}
 
 	/**
