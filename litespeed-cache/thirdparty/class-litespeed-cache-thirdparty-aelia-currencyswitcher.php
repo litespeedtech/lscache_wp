@@ -25,6 +25,7 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 	{
 		global $GLOBALS;
 		if ((defined('WOOCOMMERCE_VERSION'))
+			&& (isset($GLOBALS['woocommerce-aelia-currencyswitcher']))
 			&& (is_object($GLOBALS['woocommerce-aelia-currencyswitcher']))) {
 			add_filter('litespeed_cache_is_cacheable',
 				'LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies');
