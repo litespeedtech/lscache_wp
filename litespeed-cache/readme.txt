@@ -283,6 +283,15 @@ plugin that needs to add purge tags to the current request.
   Called at the end of every cacheable request. This hook provides an access
 point to any plugin that needs to add cache tags to the current request.
 
+== Screenshots ==
+
+1. Admin Settings - General Settings
+2. Admin Settings - Auto Purge Rules
+3. Admin Management Page
+4. Admin Information Page
+5. Cache Miss Example
+6. Cache Hit Example
+
 == Changelog ==
 = 1.0.13.1 - November 30 2016 =
 * [BUGFIX] Fixed a bug where a global was being used without checking existence first, causing unnecessary log entries.
