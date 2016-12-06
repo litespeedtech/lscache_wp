@@ -1646,15 +1646,18 @@ class LiteSpeed_Cache_Admin_Display
 			. sprintf(__('Error getting current rules: %s', 'litespeed-cache'), $match) . '</p>';
 		}
 		if (!empty($cookie)) {
+			$cookie = trim($cookie, '"');
 			if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
 				return '<p class="attention">'
 					. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
 					. '</p>';
 			}
 			$cookie = substr($cookie, 11);
+			$cookie_arr = explode(',', $cookie);
 		}
 		if (($options[LiteSpeed_Cache_Config::OPID_ENABLED])
-			&& ($cookie != $options[$id])) {
+			&& (isset($options[$id]))
+			&& (!in_array($options[$id], $cookie_arr))) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
