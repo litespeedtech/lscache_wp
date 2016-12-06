@@ -22,7 +22,7 @@ class LiteSpeed_Cache
 	private static $log_path = '';
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.0.13' ;
+	const PLUGIN_VERSION = '1.0.13.1' ;
 
 	const LSCOOKIE_VARY_NAME = 'LSCACHE_VARY_COOKIE' ;
 	const LSCOOKIE_DEFAULT_VARY = '_lscache_vary' ;
@@ -276,6 +276,7 @@ class LiteSpeed_Cache
 					DAY_IN_SECONDS);
 			}
 		}
+		do_action('litespeed_cache_detect_thirdparty');
 		$this->config->plugin_activation($count);
 		self::generate_environment_report();
 
@@ -465,9 +466,10 @@ class LiteSpeed_Cache
 		define('LITESPEED_CACHE_ENABLED', true);
 		ob_start();
 
-		$this->setup_cookies();
+		$bad_cookies = $this->setup_cookies();
 
-		if ( $this->check_user_logged_in() || $this->check_cookies() ) {
+		if (($bad_cookies) || ($this->check_user_logged_in())
+			|| ($this->check_cookies())) {
 			$this->load_logged_in_actions() ;
 		}
 		else {
@@ -767,23 +769,72 @@ class LiteSpeed_Cache
 	/**
 	 * Adds the actions used for setting up cookies on log in/out.
 	 *
+	 * Also checks if the database matches the rewrite rule.
+	 *
 	 * @since 1.0.4
 	 * @access private
+	 * @return boolean True if cookies are bad, false otherwise.
 	 */
 	private function setup_cookies()
 	{
-		$this->current_vary = isset($_SERVER[self::LSCOOKIE_VARY_NAME])
-				? $_SERVER[self::LSCOOKIE_VARY_NAME] : self::LSCOOKIE_DEFAULT_VARY;
-
+		$ret = false;
+		$err = self::build_paragraph(
+			__('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache'),
+			__('If you recently changed the cookie in the settings, please log out and back in again.', 'litespeed-cache'),
+			__("If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache'));
+		if (is_openlitespeed()) {
+			$err .= ' '
+				. __('If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
+		}
 		// Set vary cookie for logging in user, unset for logging out.
 		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
 		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
 
-		if ( !$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS)) {
+		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS)) {
 			// Set vary cookie for commenter.
 			add_action('set_comment_cookies', array( $this, 'set_comment_cookie'), 10, 2);
 		}
+		if (is_multisite()) {
+			$options = $this->get_config()->get_site_options();
+			if (is_array($options)) {
+				$db_cookie = $options[
+				LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
+			}
+		}
+		else {
+			$db_cookie = $this->get_config()
+				->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+		}
 
+		if (!isset($_SERVER[self::LSCOOKIE_VARY_NAME])) {
+			if (!empty($db_cookie)) {
+				$ret = true;
+				if (is_multisite() ? is_network_admin() : is_admin()) {
+					LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+						LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+				}
+			}
+			$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
+			return $ret;
+		}
+		elseif (empty($db_cookie)) {
+			$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
+			return $ret;
+		}
+		// beyond this point, need to do more processing.
+		$vary_arr = explode(',', $_SERVER[self::LSCOOKIE_VARY_NAME]);
+
+		if (in_array($db_cookie, $vary_arr)) {
+			$this->current_vary = $db_cookie;
+			return $ret;
+		}
+		elseif ((is_multisite() ? is_network_admin() : is_admin())) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+		}
+		$ret = true;
+		$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
+		return $ret;
 	}
 
 	/**
@@ -1233,37 +1284,7 @@ class LiteSpeed_Cache
 	 */
 	private function check_user_logged_in()
 	{
-		$err = self::build_paragraph(
-			__('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache'),
-			__('If you recently changed the cookie in the settings, please log out and back in again.', 'litespeed-cache'),
-			__("If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache'));
-		if (is_openlitespeed()) {
-			$err .= ' '
-				. __('If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
-		}
-
-		if (is_multisite()) {
-			$options = $this->get_config()->get_site_options();
-			if (is_array($options)) {
-				$db_cookie = $options[
-					LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
-			}
-		}
-		else {
-			$db_cookie = $this->get_config()
-				->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
-		}
-
-		if (empty($db_cookie)) {
-			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
-		}
-
-		if (($db_cookie != $this->current_vary)
-			&& ((is_multisite() ? is_network_admin() : is_admin()))) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
-		}
-		elseif (!is_user_logged_in()) {
+		if (!is_user_logged_in()) {
 			// If the cookie is set, unset it.
 			if ((isset($_COOKIE)) && (isset($_COOKIE[$this->current_vary]))
 				&& (intval($_COOKIE[$this->current_vary])
@@ -1296,36 +1317,6 @@ class LiteSpeed_Cache
 	 */
 	private function check_cookies()
 	{
-		if ($_SERVER["REQUEST_METHOD"] !== 'GET') {
-			return false;
-		}
-
-		if (is_multisite()) {
-			$options = $this->get_config()->get_site_options();
-			if (is_array($options)) {
-				$db_cookie = $options[
-					LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
-			}
-		}
-		else {
-			$db_cookie = $this->get_config()
-				->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
-		}
-
-		if (empty($db_cookie)) {
-			$db_cookie = self::LSCOOKIE_DEFAULT_VARY;
-		}
-		if (($db_cookie != $this->current_vary)
-				&& (isset($_COOKIE[$db_cookie]))) {
-			if (defined('LSCWP_LOG')) {
-				$this->debug_log(self::build_paragraph(
-					__('NOTICE: Database login cookie does not match the cookie used to access the page.', 'litespeed-cache'),
-					__('Please have the admin check the LiteSpeed Cache settings.', 'litespeed-cache'),
-					__('This error may appear if you are logged into another web application.', 'litespeed-cache')
-				));
-			}
-			return true;
-		}
 		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
 		{
 			// If do not cache commenters, check cookie for commenter value.

@@ -1056,7 +1056,12 @@ class LiteSpeed_Cache_Admin_Rules
 			if ($diff[$login_id] !== '') {
 				$match = '.?';
 				$sub = '-';
-				$env = 'E=Cache-Vary:' . $diff[$login_id];
+				if (is_openlitespeed()) {
+					$env = 'E="Cache-Vary:' . $diff[$login_id] . '"';
+				}
+				else {
+					$env = 'E=Cache-Vary:' . $diff[$login_id];
+				}
 			}
 			else {
 				$match = '';
@@ -1296,6 +1301,21 @@ class LiteSpeed_Cache_Admin_Rules
 		if ($haystack === false) {
 			$errors[] = $buf;
 			return false;
+		}
+
+		if (is_openlitespeed()) {
+			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+			if ($diff[$id]) {
+				$diff[$id] .= ',wp-postpass_' . COOKIEHASH;
+			}
+			else {
+				$diff[$id] = 'wp-postpass_' . COOKIEHASH;
+			}
+
+			$tp_cookies = apply_filters('litespeed_cache_get_vary', array());
+			if ((!empty($tp_cookies)) && (is_array($tp_cookies))) {
+				$diff[$id] .= ',' . implode(',', $tp_cookies);
+			}
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
