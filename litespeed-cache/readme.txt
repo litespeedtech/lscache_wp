@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: cache,performance,admin,widget,http2,litespeed
 Requires at least: 4.0
-Tested up to: 4.6
+Tested up to: 4.7
 Stable tag: 1.0.13.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
