@@ -604,6 +604,14 @@ class LiteSpeed_Cache
 		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php' ;
 
 		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION) ;
+		if ((is_multisite()) && (is_network_admin())) {
+			$action = 'network_admin_notices';
+			$manage = 'manage_network_options';
+		}
+		else {
+			$action = 'admin_notices';
+			$manage = 'manage_options';
+		}
 
 		//register purge_all actions
 		if ( $module_enabled ) {
@@ -630,20 +638,14 @@ class LiteSpeed_Cache
 			}
 
 			//Checks if WP_CACHE is defined and true in the wp-config.php file.
-			if ((current_user_can('manage_options'))
-				&& ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))) {
+			if (current_user_can($manage)) {
+				add_action('wp_before_admin_bar_render',
+					array($admin, 'add_quick_purge'));
 
-				if ((is_multisite()) && (is_network_admin())) {
-					$action = 'network_admin_notices';
+				if ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false)) {
+					add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
 				}
-				else {
-					$action = 'admin_notices';
-				}
-				add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
 			}
-
-			add_action('wp_before_admin_bar_render',
-				array($admin, 'add_quick_purge'));
 		}
 
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
