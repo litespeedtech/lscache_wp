@@ -1815,9 +1815,14 @@ class LiteSpeed_Cache
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 * if the post is not password protected. Vary header otherwise.
 	 */
-	private function build_vary_headers()
+	private function build_vary_headers($mode)
 	{
 		global $post;
+		if (($mode != self::CACHECTRL_PUBLIC)
+			&& ($mode != self::CACHECTRL_PRIVATE)
+			&& ($mode != self::CACHECTRL_SHARED)) {
+			return '';
+		}
 		$tp_cookies = LiteSpeed_Cache_Tags::get_vary_cookies();
 		if (!empty($post->post_password)) {
 			if (isset($_COOKIE['wp-postpass_' . COOKIEHASH])) {
@@ -1962,11 +1967,9 @@ class LiteSpeed_Cache
 
 		$mode = $this->validate_mode($showhdr, $stale);
 
-		if ($mode === self::CACHECTRL_PUBLIC) {
-			$vary_headers = $this->build_vary_headers();
-			if ($vary_headers === false) {
-				$mode = self::CACHECTRL_NOCACHE;
-			}
+		$vary_headers = $this->build_vary_headers($mode);
+		if ($vary_headers === false) {
+			$mode = self::CACHECTRL_NOCACHE;
 		}
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
