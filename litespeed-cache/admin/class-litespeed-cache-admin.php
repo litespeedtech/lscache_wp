@@ -402,7 +402,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		$val = $input[$id];
-		return ((ctype_digit($val)) && ($val >= 0) && ($val < 2147483647));
+		return ((is_numeric($val)) && ($val >= 0) && ($val < 2147483647));
 	}
 
 	/**
