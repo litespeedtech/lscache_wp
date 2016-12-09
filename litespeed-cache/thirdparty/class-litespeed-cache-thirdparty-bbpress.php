@@ -57,15 +57,17 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 		}
 
 		global $wp_widget_factory;
-		$recent_replies = $wp_widget_factory->widgets['BBP_Replies_Widget'];
-		if (!is_null($recent_replies)) {
+		if ((bbp_is_reply($post_id))
+			&& (!is_null($wp_widget_factory->widgets['BBP_Replies_Widget']))) {
 			LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $recent_replies->id);
+				LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $wp_widget_factory->widgets['BBP_Replies_Widget']->id);
 		}
-		$recent_topics = $wp_widget_factory->widgets['BBP_Topics_Widget'];
-		if (!is_null($recent_topics)) {
+		if ((bbp_is_topic($post_id))
+			&& (!is_null($wp_widget_factory->widgets['BBP_Topics_Widget']))) {
 			LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $recent_topics->id);
+				LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $wp_widget_factory->widgets['BBP_Topics_Widget']->id);
 		}
 	}
 }
