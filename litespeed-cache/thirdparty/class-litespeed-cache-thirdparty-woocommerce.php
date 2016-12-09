@@ -48,6 +48,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
 		add_filter('litespeed_cache_get_options',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
+		add_action('comment_post',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3);
 
 		if (!is_shop()) {
 			add_action('litespeed_cache_is_not_esi_template',
@@ -437,6 +439,23 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			foreach ($tags as $tag) {
 				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $tag);
 			}
+		}
+	}
+
+	public static function add_review($unused, $comment_approved,
+	                                  $commentdata)
+	{
+		$post_id = $commentdata['comment_post_ID'];
+		if (($comment_approved !== 1) || (!isset($post_id))
+			|| (wc_get_product($post_id) === false)) {
+			return;
+		}
+		global $wp_widget_factory;
+		$recent_reviews =
+			$wp_widget_factory->widgets['WC_Widget_Recent_Reviews'];
+		if (!is_null($recent_reviews)) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $recent_reviews->id);
 		}
 	}
 
