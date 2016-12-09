@@ -431,6 +431,9 @@ class LiteSpeed_Cache_Admin
 			}
 			$input[$id] = 'changed';
 		}
+		else {
+			$input[$id] = $enabled;
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL;
 		if ((!$this->validate_ttl($input, $id)) || ($input[$id] < 30)) {
