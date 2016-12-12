@@ -211,17 +211,27 @@ class LiteSpeed_Cache
 	 */
 	private static function log_request()
 	{
+		$SERVERVARS = array(
+			'Query String' => '',
+			'HTTP_USER_AGENT' => '',
+			'HTTP_ACCEPT_ENCODING' => '',
+			'HTTP_COOKIE' => '',
+			'X-LSCACHE' => '',
+			'LSCACHE_VARY_COOKIE' => '',
+			'LSCACHE_VARY_VALUE' => ''
+		);
+		$SERVER = array_merge($SERVERVARS, $_SERVER);
 		$params = array(
-			sprintf('%s %s %s', $_SERVER['REQUEST_METHOD'],
-				$_SERVER['SERVER_PROTOCOL'],
-				strtok($_SERVER['REQUEST_URI'], '?')),
-			'Query String: '		. $_SERVER['QUERY_STRING'],
-			'User Agent: '			. $_SERVER['HTTP_USER_AGENT'],
-			'Accept Encoding: '		. $_SERVER['HTTP_ACCEPT_ENCODING'],
-			'Cookie: '				. $_SERVER['HTTP_COOKIE'],
-			'X-LSCACHE: '			. ($_SERVER['X-LSCACHE'] ? 'true' : 'false'),
-			'LSCACHE_VARY_COOKIE: ' . $_SERVER['LSCACHE_VARY_COOKIE'],
-			'LSCACHE_VARY_VALUE: '	. $_SERVER['LSCACHE_VARY_VALUE'],
+			sprintf('%s %s %s', $SERVER['REQUEST_METHOD'],
+				$SERVER['SERVER_PROTOCOL'],
+				strtok($SERVER['REQUEST_URI'], '?')),
+			'Query String: '		. $SERVER['QUERY_STRING'],
+			'User Agent: '			. $SERVER['HTTP_USER_AGENT'],
+			'Accept Encoding: '		. $SERVER['HTTP_ACCEPT_ENCODING'],
+			'Cookie: '				. $SERVER['HTTP_COOKIE'],
+			'X-LSCACHE: '			. ($SERVER['X-LSCACHE'] ? 'true' : 'false'),
+			'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'],
+			'LSCACHE_VARY_VALUE: '	. $SERVER['LSCACHE_VARY_VALUE'],
 		);
 
 		$request = array_map('self::format_message', $params);
