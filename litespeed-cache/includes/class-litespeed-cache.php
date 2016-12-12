@@ -702,6 +702,11 @@ class LiteSpeed_Cache
 	private function load_logged_in_actions()
 	{
 		add_action('wp_logout', array($this, 'purge_on_logout'));
+
+		if (!is_openlitespeed()) {
+			$this->load_logged_out_actions();
+			define('LSCACHE_ESI_LOGGEDIN', true);
+		}
 	}
 
 	/**
@@ -1535,7 +1540,12 @@ class LiteSpeed_Cache
 	{
 		if ((LiteSpeed_Cache_Tags::is_noncacheable() == false)
 			&& ($this->is_cacheable())) {
-			$this->set_cachectrl(self::CACHECTRL_PUBLIC);
+			if (defined('LSCACHE_ESI_LOGGEDIN')) {
+				$this->set_cachectrl(self::CACHECTRL_SHARED);
+			}
+			else {
+				$this->set_cachectrl(self::CACHECTRL_PUBLIC);
+			}
 		}
 	}
 

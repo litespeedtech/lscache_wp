@@ -415,7 +415,6 @@ class LiteSpeed_Cache_Esi
 	public function sub_widget_block(array $instance, WP_Widget $widget,
 		array $args)
 	{
-		$cachectrl = '';
 		$name = get_class($widget);
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		if ((!isset($options)) ||
@@ -434,12 +433,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $args
 		);
 
-		if (LiteSpeed_Cache::plugin()->get_user_status()
-			& LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
-			$cachectrl = self::CACHECTRL_PRIV;
-		}
-
-		self::build_url('widget', 'widget ' . $name, $params, $cachectrl);
+		self::build_url('widget', 'widget ' . $name, $params);
 		return false;
 	}
 
@@ -567,15 +561,8 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 			$plugin->set_custom_ttl($ttl);
 			LiteSpeed_Cache_Tags::add_cache_tag(
 				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::PARAM_ID]);
-			if ($plugin->get_user_status()
-				& LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN) {
-				LiteSpeed_Cache::plugin()->set_cachectrl(
-					LiteSpeed_Cache::CACHECTRL_PRIVATE);
-			}
-			else {
-				LiteSpeed_Cache::plugin()->set_cachectrl(
-					LiteSpeed_Cache::CACHECTRL_PUBLIC);
-			}
+			LiteSpeed_Cache::plugin()->set_cachectrl(
+				LiteSpeed_Cache::CACHECTRL_PUBLIC);
 		}
 		the_widget($params[self::PARAM_NAME],
 			$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
