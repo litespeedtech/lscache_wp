@@ -2174,11 +2174,12 @@ class LiteSpeed_Cache
 
 		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 
-		if ( is_front_page() ) {
-			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE ;
-		}
-		elseif ( is_home() ) {
-			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME ;
+		if (!defined('LSCACHE_IS_ESI')) {
+			if (is_front_page()) {
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE;
+			} elseif (is_home()) {
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME;
+			}
 		}
 
 		if ( is_archive() ) {
