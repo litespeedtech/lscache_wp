@@ -701,6 +701,7 @@ class LiteSpeed_Cache
 	 */
 	private function load_logged_in_actions()
 	{
+		add_action('wp_logout', array($this, 'purge_on_logout'));
 	}
 
 	/**
@@ -1278,6 +1279,11 @@ class LiteSpeed_Cache
 		}
 	}
 
+	public function purge_on_logout()
+	{
+		$this->add_purge_tags('*', false);
+	}
+
 	/**
 	 * Checks if the user is logged in. If the user is logged in, does an
 	 * additional check to make sure it's using the correct login cookie.
@@ -1711,8 +1717,6 @@ class LiteSpeed_Cache
 	 */
 	private function get_purge_header($stale)
 	{
-		$public_tags = '';
-		$private_tags = '';
 		$cache_purge_header = '';
 		$purge_tags = array_merge($this->pub_purge_tags,
 			LiteSpeed_Cache_Tags::get_purge_tags());
@@ -1721,6 +1725,7 @@ class LiteSpeed_Cache
 		$priv_purge_tags = array_merge($this->priv_purge_tags,
 			LiteSpeed_Cache_Tags::get_private_purge_tags());
 		$priv_purge_tags = array_unique($priv_purge_tags);
+		$private_prefix = LiteSpeed_Cache_Tags::HEADER_PURGE . 'private,';
 
 		if (empty($purge_tags) && (empty($priv_purge_tags))) {
 			return '';
@@ -1734,30 +1739,31 @@ class LiteSpeed_Cache
 
 		if (!empty($purge_tags)) {
 			$public_tags = $this->build_purge_headers($prefix, $purge_tags);
-		}
-		if (!empty($priv_purge_tags)) {
-			$private_tags = $this->build_purge_headers($prefix,
-				$priv_purge_tags);
-		}
-
-		if (!empty($public_tags)) {
+			if (empty($public_tags)) {
+				// If this ends up empty, private will also end up empty
+				return '';
+			}
 			$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
 				. 'public,';
 			if ($stale) {
 				$cache_purge_header .= 'stale,';
 			}
 			$cache_purge_header .= 'tag=' . implode(',', $public_tags);
+			$private_prefix = ';private,';
 		}
-
-		if (!empty($private_tags)) {
-			// If $cache_purge_header is empty, need to prefix the header,
-			// else just prefix a semicolon.
-			$cache_purge_header .= ((empty($cache_purge_header)
-				? LiteSpeed_Cache_Tags::HEADER_PURGE : '; '))
-				. 'private, tag=' . implode(',', $private_tags);
+		if (empty($priv_purge_tags)) {
+			return $cache_purge_header;
 		}
-		if (defined('LSCWP_LOG')) {
-			self::debug_log('Purge header is ' . $cache_purge_header);
+		elseif (in_array('*', $priv_purge_tags)) {
+			$cache_purge_header .= $private_prefix . '*';
+		}
+		else {
+			$private_tags = $this->build_purge_headers($prefix,
+				$priv_purge_tags);
+			if (!empty($private_tags)) {
+				$cache_purge_header .= $private_prefix . 'tag='
+					. implode(',', $private_tags);
+			}
 		}
 
 		return $cache_purge_header;
@@ -1946,7 +1952,7 @@ class LiteSpeed_Cache
 		}
 
 		if (defined('LSCWP_LOG')) {
-			self::debug_log('End response.');
+			self::debug_log("End response.\n\n");
 		}
 	}
 
@@ -1962,7 +1968,6 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		$tags_header = '';
-		$vary_headers = '';
 		$showhdr = false;
 		$stale = false;
 		do_action('litespeed_cache_add_purge_tags');
@@ -1984,6 +1989,10 @@ class LiteSpeed_Cache
 		$ctrl_header = $this->setup_ctrl_hdr($mode);
 
 		$purge_header = $this->get_purge_header($stale);
+
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Purge header is ' . $purge_header);
+		}
 		$this->header_out($showhdr, $ctrl_header, $purge_header, $tags_header,
 			$vary_headers);
 	}

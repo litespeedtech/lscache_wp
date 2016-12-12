@@ -865,6 +865,7 @@ class LiteSpeed_Cache_Admin
 				LiteSpeed_Cache_Tags::TYPE_WIDGET . $widget->id);
 		}
 
+		LiteSpeed_Cache::plugin()->purge_all();
 		return $instance;
 	}
 
