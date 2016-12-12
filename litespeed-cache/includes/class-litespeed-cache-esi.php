@@ -206,9 +206,6 @@ class LiteSpeed_Cache_Esi
 	public function register_not_esi_actions()
 	{
 		$lscache = LiteSpeed_Cache::plugin();
-		add_action('load-widgets.php', array($lscache, 'purge_widget'));
-		add_action('wp_update_comment_count',
-			array($lscache, 'purge_comment_widget'));
 		add_filter('comments_array', array($this, 'sub_comments_block'));
 
 		if ((defined('DOING_AJAX') && constant(DOING_AJAX))) {

@@ -773,6 +773,9 @@ class LiteSpeed_Cache
 			$esi = LiteSpeed_Cache_Esi::get_instance();
 			add_action('init', array($esi, 'register_post_type'));
 			add_action('template_include', array($esi, 'esi_template'), 100);
+			add_action('load-widgets.php', array($this, 'purge_widget'));
+			add_action('wp_update_comment_count',
+				array($this, 'purge_comment_widget'));
 		}
 		add_action('wp_update_comment_count',
 			array($this, 'purge_feeds'));
