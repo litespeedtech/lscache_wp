@@ -45,6 +45,7 @@ class LiteSpeed_Cache
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 	const CACHECTRL_STALE = 64; // (1<<6)
+	const CACHECTRL_NO_VARY = 32; // (1<<5)
 
 	const WHM_TRANSIENT = 'lscwp_whm_install';
 	const WHM_TRANSIENT_VAL = 'whm_install';
@@ -1572,9 +1573,12 @@ class LiteSpeed_Cache
 		}
 	}
 
-	public function set_cachectrl($val)
+	public function set_cachectrl($val, $novary = false)
 	{
 		$this->cachectrl = $val;
+		if ($novary) {
+			$this->cachectrl |= self::CACHECTRL_NO_VARY;
+		}
 	}
 
 	public function set_custom_ttl($ttl)
@@ -1893,7 +1897,7 @@ class LiteSpeed_Cache
 	 * @return integer The integer corresponding to the selected
 	 * cache control value.
 	 */
-	private function validate_mode(&$showhdr, &$stale)
+	private function validate_mode(&$showhdr, &$stale, &$novary)
 	{
 		$mode = $this->cachectrl;
 		if ($mode & self::CACHECTRL_SHOWHEADERS) {
@@ -1904,6 +1908,11 @@ class LiteSpeed_Cache
 		if ($mode & self::CACHECTRL_STALE) {
 			$stale = true;
 			$mode &= ~self::CACHECTRL_STALE;
+		}
+
+		if ($mode & self::CACHECTRL_NO_VARY) {
+			$novary = true;
+			$mode &= ~self::CACHECTRL_NO_VARY;
 		}
 
 		if (($mode != self::CACHECTRL_PUBLIC)
@@ -2003,9 +2012,10 @@ class LiteSpeed_Cache
 		$tags_header = '';
 		$showhdr = false;
 		$stale = false;
+		$novary = false;
 		do_action('litespeed_cache_add_purge_tags');
 
-		$mode = $this->validate_mode($showhdr, $stale);
+		$mode = $this->validate_mode($showhdr, $stale, $novary);
 
 		$vary_headers = $this->build_vary_headers($mode);
 		if ($vary_headers === false) {
@@ -2019,7 +2029,7 @@ class LiteSpeed_Cache
 			}
 		}
 
-		$ctrl_header = $this->setup_ctrl_hdr($mode);
+		$ctrl_header = $this->setup_ctrl_hdr($mode, $novary);
 
 		$purge_header = $this->get_purge_header($stale);
 
@@ -2090,7 +2100,7 @@ class LiteSpeed_Cache
 		return $hdr;
 	}
 
-	private function setup_ctrl_hdr($mode)
+	private function setup_ctrl_hdr($mode, $novary)
 	{
 		$esi_hdr = LiteSpeed_Cache_Esi::get_instance()->has_esi()
 			? ',esi=on' : '';
@@ -2111,6 +2121,9 @@ class LiteSpeed_Cache
 		case self::CACHECTRL_PUBLIC:
 			$cachectrl_val = 'public';
 			break;
+		}
+		if ($novary) {
+			$cachectrl_val .= ',no-vary';
 		}
 		$options = $this->config->get_options();
 		$feed_ttl = $options[LiteSpeed_Cache_Config::OPID_FEED_TTL];

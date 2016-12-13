@@ -430,7 +430,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $args
 		);
 
-		self::build_url('widget', 'widget ' . $name, $params);
+		self::build_url('widget', 'widget ' . $name, $params, 'no-vary');
 		return false;
 	}
 
@@ -559,7 +559,7 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 			LiteSpeed_Cache_Tags::add_cache_tag(
 				LiteSpeed_Cache_Tags::TYPE_WIDGET . $params[self::PARAM_ID]);
 			LiteSpeed_Cache::plugin()->set_cachectrl(
-				LiteSpeed_Cache::CACHECTRL_PUBLIC);
+				LiteSpeed_Cache::CACHECTRL_PUBLIC, true);
 		}
 		the_widget($params[self::PARAM_NAME],
 			$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
@@ -568,7 +568,8 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 	public function load_admin_bar_block()
 	{
 		wp_admin_bar_render();
-		LiteSpeed_Cache::plugin()->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
+		LiteSpeed_Cache::plugin()->set_cachectrl(
+			LiteSpeed_Cache::CACHECTRL_PRIVATE, true);
 	}
 
 	public function load_comment_form_block($params)
@@ -580,7 +581,7 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 		$plugin = LiteSpeed_Cache::plugin();
 		if ($plugin->get_user_status()) {
 			LiteSpeed_Cache::plugin()->set_cachectrl(
-				LiteSpeed_Cache::CACHECTRL_PRIVATE);
+				LiteSpeed_Cache::CACHECTRL_PRIVATE, true);
 		}
 		else {
 			LiteSpeed_Cache::plugin()->set_cachectrl(
@@ -611,7 +612,7 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 		add_filter('comments_array', array($this, 'comments_load_cache_type'));
 		comments_template();
 		LiteSpeed_Cache::plugin()->set_cachectrl(
-			LiteSpeed_Cache::CACHECTRL_PRIVATE);
+			LiteSpeed_Cache::CACHECTRL_PRIVATE, true);
 	}
 }
 
