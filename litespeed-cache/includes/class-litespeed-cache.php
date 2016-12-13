@@ -272,9 +272,7 @@ class LiteSpeed_Cache
 		}
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
-		include_once $this->plugin_dir . '/includes/class-litespeed-cache-esi.php';
-		LiteSpeed_Cache_Esi::get_instance()->register_post_type();
-		flush_rewrite_rules();
+		$this->set_esi_post_type();
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
@@ -603,6 +601,18 @@ class LiteSpeed_Cache
 	private function set_locale()
 	{
 		load_plugin_textdomain(self::PLUGIN_NAME, false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/') ;
+	}
+
+	public function set_esi_post_type()
+	{
+		if (!class_exists('LiteSpeed_Cache_Esi')) {
+			include_once $this->plugin_dir
+				. '/includes/class-litespeed-cache-esi.php';
+		}
+		if (!post_type_exists(LiteSpeed_Cache_Esi::POSTTYPE)) {
+			LiteSpeed_Cache_Esi::get_instance()->register_post_type();
+		}
+		flush_rewrite_rules();
 	}
 
 	/**

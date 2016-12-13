@@ -422,7 +422,10 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $this->options);
-		flush_rewrite_rules();
+		if (($this->options[self::OPID_ENABLED])
+			&& ($this->options[self::OPID_ESI_ENABLE])) {
+			LiteSpeed_Cache::plugin()->set_esi_post_type();
+		}
 
 //		if ((!is_multisite()) || (is_network_admin())) {
 //			$this->options[self::OPID_LOGIN_COOKIE]
@@ -453,7 +456,6 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $options);
-		flush_rewrite_rules();
 
 		$res = update_site_option(self::OPTION_NAME, $options);
 

@@ -776,9 +776,11 @@ class LiteSpeed_Cache_Admin
 		if (($orig_enabled !== $new_enabled)
 			|| ($orig_esi_enabled !== $new_esi_enabled)) {
 			if (($new_enabled) && ($new_esi_enabled)) {
-				LiteSpeed_Cache_Esi::get_instance()->register_post_type();
+				LiteSpeed_Cache::plugin()->set_esi_post_type();
 			}
-			flush_rewrite_rules();
+			else {
+				flush_rewrite_rules();
+			}
 			LiteSpeed_Cache::plugin()->purge_all();
 		}
 
