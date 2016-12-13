@@ -1737,6 +1737,9 @@ class LiteSpeed_Cache_Admin_Display
 		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+		$enabled_id = (is_network_admin()
+			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
+			: LiteSpeed_Cache_Config::OPID_ENABLED);
 		$cookie = '';
 		$match = '';
 		$sub = '';
@@ -1778,7 +1781,8 @@ class LiteSpeed_Cache_Admin_Display
 			$cookie = substr($cookie, 11);
 			$cookie_arr = explode(',', $cookie);
 		}
-		if (($options[LiteSpeed_Cache_Config::OPID_ENABLED])
+		if ((isset($options[$enabled_id]))
+			&& ($options[$enabled_id])
 			&& (isset($options[$id]))
 			&& (!in_array($options[$id], $cookie_arr))) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
