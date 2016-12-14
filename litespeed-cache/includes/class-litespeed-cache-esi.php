@@ -320,7 +320,8 @@ class LiteSpeed_Cache_Esi
 
 		$instance = $settings[$widget->number];
 
-		if (!isset($instance)) {
+		if ((!isset($instance))
+			|| (!isset($instance[LiteSpeed_Cache_Config::OPTION_NAME]))) {
 			return null;
 		}
 

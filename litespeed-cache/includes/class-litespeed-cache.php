@@ -1830,7 +1830,8 @@ class LiteSpeed_Cache
 		// Would only use multisite and network admin except is_network_admin
 		// is false for ajax calls, which is used by wordpress updates v4.6+
 		elseif ((is_multisite()) && ((is_network_admin())
-			|| ((defined('DOING_AJAX')) && (check_ajax_referer('updates'))))) {
+			|| ((defined('DOING_AJAX'))
+					&& (check_ajax_referer('updates', false, false))))) {
 			$blogs = self::get_network_ids();
 			if (empty($blogs)) {
 				if (defined('LSCWP_LOG')) {
