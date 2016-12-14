@@ -414,6 +414,9 @@ class LiteSpeed_Cache_Esi
 		array $args)
 	{
 		$name = get_class($widget);
+		if (!isset($instance[LiteSpeed_Cache_Config::OPTION_NAME])) {
+			return $instance;
+		}
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		if ((!isset($options)) ||
 			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
@@ -474,7 +477,23 @@ error_log('Do not esi widget ' . $name . ' because '
 			return $unused;
 		}
 		$cachectrl = '';
-		$esi_args = array_diff_assoc($args, $this->esi_args);
+		$esi_args = array();
+
+		foreach ($args as $key => $val) {
+			if (!isset($this->esi_args[$key])) {
+				$esi_args[$key] = $val;
+			}
+			elseif (is_array($val)) {
+				$diff = array_diff_assoc($val, $this->esi_args[$key]);
+				if (!empty($diff)) {
+					$esi_args[$key] = $diff;
+				}
+			}
+			elseif ($val !== $this->esi_args[$key]) {
+				$esi_args[$key] = $val;
+			}
+		}
+
 		ob_clean();
 		global $post;
 		$params = array(
