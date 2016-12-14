@@ -1771,22 +1771,24 @@ class LiteSpeed_Cache_Admin_Display
 			return '<p class="attention">'
 			. sprintf(__('Error getting current rules: %s', 'litespeed-cache'), $match) . '</p>';
 		}
-		if (!empty($cookie)) {
-			$cookie = trim($cookie, '"');
-			if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
-				return '<p class="attention">'
-					. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
-					. '</p>';
-			}
-			$cookie = substr($cookie, 11);
-			$cookie_arr = explode(',', $cookie);
+		if (empty($cookie)) {
+			return $this->input_field_text($id, $options[$id], '', '', '',
+				!$file_writable);
 		}
+		$cookie = trim($cookie, '"');
+		if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
+			return '<p class="attention">'
+				. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
+				. '</p>';
+		}
+		$cookie = substr($cookie, 11);
+		$cookie_arr = explode(',', $cookie);
 		if ((isset($options[$enabled_id]))
 			&& ($options[$enabled_id])
 			&& (isset($options[$id]))
 			&& (!in_array($options[$id], $cookie_arr))) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
-					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
+				__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
 		return $this->input_field_text($id, $options[$id], '', '', '',
 			!$file_writable);
