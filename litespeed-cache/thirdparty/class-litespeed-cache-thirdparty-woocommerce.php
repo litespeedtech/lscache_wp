@@ -58,6 +58,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
 			add_action('litespeed_cache_load_esi_block-storefront-cart-header',
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header');
+			add_action('litespeed_cache_load_esi_block-widget',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view');
 		}
 		add_action('litespeed_cache_is_not_esi_template',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart');
@@ -223,6 +225,35 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$wp_query->setup_postdata($post);
 		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS],
 			$params[self::ESI_PARAM_PATH]);
+	}
+
+	/**
+	 * Update woocommerce when someone visits a product and has the
+	 * recently viewed products widget.
+	 *
+	 * Currently, this widget should not be cached.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $params Widget parameter array
+	 */
+	public static function register_post_view($params)
+	{
+		if ($params[LiteSpeed_Cache_Esi::PARAM_NAME]
+			!== 'WC_Widget_Recently_Viewed') {
+			return;
+		}
+		$id = url_to_postid($_SERVER['ESI_REFERER']);
+		$esi_post = get_post($id);
+		$product = wc_get_product($esi_post);
+
+		if (empty($product)) {
+			return;
+		}
+
+		global $post;
+		$post = $esi_post;
+		wc_track_product_view();
 	}
 
 	/**
