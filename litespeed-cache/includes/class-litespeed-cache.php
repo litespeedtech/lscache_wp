@@ -672,7 +672,8 @@ class LiteSpeed_Cache
 				add_action('wp_before_admin_bar_render',
 					array($admin, 'add_quick_purge'));
 
-				if ((!defined('WP_CACHE')) || (constant('WP_CACHE') == false)) {
+				if (((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))
+				&& (!LiteSpeed_Cache_Config::wp_cache_var_setter(true))) {
 					add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
 				}
 			}
