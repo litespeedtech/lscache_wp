@@ -211,38 +211,40 @@ class LiteSpeed_Cache_Admin_Display
 		$options = LiteSpeed_Cache_Esi::widget_load_get_options($widget);
 		if (empty($options)) {
 			$options = array(
-				LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE
-					=> LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE,
-				LiteSpeed_Cache_Config::WIDGET_OPID_TTL => '300'
+				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE
+					=> false,
+				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => '300'
 			);
 			$options = apply_filters('litespeed_cache_widget_default_options',
 				$options, $widget);
 		}
 		if (empty($options)) {
-			$esi = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
+			$esi = false;
 			$ttl = '300';
 		}
 		else {
-			$esi = $options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE];
-			$ttl = $options[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
+			$esi = $options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE]
+				? LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE
+				: LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
+			$ttl = $options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL];
 		}
 
 		$buf = '<h4>LiteSpeed Cache:</h4>';
 
-		$buf .= '<label for="' . LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE
+		$buf .= '<label for="' . LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE
 			. '">' . __('Enable ESI for this Widget:', 'litespeed-cache')
 			. '&nbsp;&nbsp;&nbsp;</label>';
 
-		$buf .= $this->input_field_radio(LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE,
+		$buf .= $this->input_field_radio(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE,
 			$enable_levels, $esi);
 
 		$buf .= '<br><br>';
 
-		$buf .= '<label for="' . LiteSpeed_Cache_Config::WIDGET_OPID_TTL
+		$buf .= '<label for="' . LiteSpeed_Cache_Esi::WIDGET_OPID_TTL
 			. '">' . __('Widget Cache TTL:', 'litespeed-cache')
 			. '&nbsp;&nbsp;&nbsp;</label>';
 
-		$buf .= $this->input_field_text(LiteSpeed_Cache_Config::WIDGET_OPID_TTL,
+		$buf .= $this->input_field_text(LiteSpeed_Cache_Esi::WIDGET_OPID_TTL,
 			$ttl, '7', '', __('seconds', 'litespeed-cache'));
 
 		$buf .= '<p class="install-help">'

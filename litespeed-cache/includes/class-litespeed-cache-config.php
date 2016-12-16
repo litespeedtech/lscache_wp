@@ -66,9 +66,6 @@ class LiteSpeed_Cache_Config
 	const NETWORK_OPID_ENABLED = 'network_enabled';
 	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings';
 
-	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable';
-	const WIDGET_OPID_TTL = 'widget_ttl';
-
 	protected $options ;
 	protected $purge_options ;
 	protected $debug_tag = 'LiteSpeed_Cache' ;

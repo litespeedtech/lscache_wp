@@ -31,6 +31,9 @@ class LiteSpeed_Cache_Esi
 
 	const CACHECTRL_PRIV = 'no-vary,private';
 
+	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable';
+	const WIDGET_OPID_TTL = 'widget_ttl';
+
 	/**
 	 *
 	 *
@@ -432,7 +435,7 @@ class LiteSpeed_Cache_Esi
 		}
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		if ((!isset($options)) ||
-			($options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE]
+			($options[self::WIDGET_OPID_ESIENABLE]
 				== LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE)) {
 if (defined('lscache_debug')) {
 error_log('Do not esi widget ' . $name . ' because '
@@ -577,7 +580,7 @@ error_log('Do not esi widget ' . $name . ' because '
 		$option = self::widget_load_get_options($widget);
 		$plugin = LiteSpeed_Cache::plugin();
 		// Since we only reach here via esi, safe to assume setting exists.
-		$ttl = $option[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
+		$ttl = $option[self::WIDGET_OPID_TTL];
 if (defined('lscache_debug')) {
 error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 	. ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl);

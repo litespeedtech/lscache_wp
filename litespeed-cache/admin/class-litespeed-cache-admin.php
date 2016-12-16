@@ -827,8 +827,8 @@ class LiteSpeed_Cache_Admin
 		if (empty($input)) {
 			return $instance;
 		}
-		$esistr = $input[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE];
-		$ttlstr = $input[LiteSpeed_Cache_Config::WIDGET_OPID_TTL];
+		$esistr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE];
+		$ttlstr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL];
 
 		if ((!is_numeric($ttlstr)) || (!is_numeric($esistr))) {
 			add_filter('wp_redirect', array($this, 'widget_save_err'));
@@ -845,24 +845,24 @@ class LiteSpeed_Cache_Admin
 
 		if (is_null($instance[LiteSpeed_Cache_Config::OPTION_NAME])) {
 			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array(
-				LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE => $esi,
-				LiteSpeed_Cache_Config::WIDGET_OPID_TTL => $ttl
+				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE => $esi,
+				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => $ttl
 			);
 		}
 		else {
 			$instance[LiteSpeed_Cache_Config::OPTION_NAME]
-				[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE] = $esi;
+				[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = $esi;
 			$instance[LiteSpeed_Cache_Config::OPTION_NAME]
-				[LiteSpeed_Cache_Config::WIDGET_OPID_TTL] = $ttl;
+				[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = $ttl;
 		}
 
 		if ((!isset($current))
 			|| ($esi
-				!= $current[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE])) {
+				!= $current[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE])) {
 			LiteSpeed_Cache_Tags::add_purge_tag('*');
 		}
 		elseif (($ttl != 0)
-			&& ($ttl != $current[LiteSpeed_Cache_Config::WIDGET_OPID_TTL])) {
+			&& ($ttl != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL])) {
 			LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_WIDGET . $widget->id);
 		}
