@@ -144,7 +144,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
 		add_action('woocommerce_after_template_part',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
-		LiteSpeed_Cache_Esi::build_url('wc-add-to-cart-form', 'WC_CART_FORM',
+		LiteSpeed_Cache_Esi::sub_esi_block('wc-add-to-cart-form', 'WC_CART_FORM',
 			$params);
 		ob_start();
 	}
@@ -191,7 +191,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function esi_cart_header()
 	{
-		LiteSpeed_Cache_Esi::build_url('storefront-cart-header',
+		LiteSpeed_Cache_Esi::sub_esi_block('storefront-cart-header',
 			'STOREFRONT_CART_HEADER');
 	}
 

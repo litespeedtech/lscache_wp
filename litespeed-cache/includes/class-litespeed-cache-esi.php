@@ -72,48 +72,6 @@ class LiteSpeed_Cache_Esi
 	}
 
 	/**
-	 * Build the esi url. This method will build the html comment wrapper
-	 * as well as serialize and encode the parameter array.
-	 *
-	 * The block_id parameter should contain alphanumeric and '-_' only.
-	 *
-	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
-	 *
-	 * @access private
-	 * @since 1.1.0
-	 * @param string $block_id The id to use to display the correct esi block.
-	 * @param string $wrapper The wrapper for the esi comments.
-	 * @param array $params The esi parameters.
-	 * @param string $cachectrl The cache control attribute if any.
-	 * @param boolean $echo Whether to echo the output or return it.
-	 * @return mixed False on error, nothing if echo is true, the output otherwise.
-	 */
-	public static function build_url($block_id, $wrapper, $params = array(), $cachectrl = '',
-		$echo = true)
-	{
-		if ((empty($block_id)) || (!is_array($params))
-			|| (preg_match('/[^\w-]/', $block_id))) {
-			return false;
-		}
-		$params[self::PARAM_BLOCK_ID] = $block_id;
-		$qs = '?' . self::QS_ACTION . '&' . self::QS_PARAMS
-			. '=' . urlencode(base64_encode(serialize($params)));
-		$url = self::URL . $qs;
-		$output = '<!-- lscwp ' . $wrapper . ' -->'
-			. '<esi:include src="' . $url . '"';
-		if (!empty($cachectrl)) {
-			$output .= ' cache-control="' . $cachectrl . '"';
-		}
-		$output .= ' />'
-			. '<!-- lscwp ' . $wrapper . ' esi end -->';
-		if ($echo == false) {
-			return $output;
-		}
-		echo $output;
-		self::get_instance()->has_esi = true;
-	}
-
-	/**
 	 * Hooked to the init action.
 	 * Registers the LiteSpeed ESI post type.
 	 *
@@ -253,6 +211,61 @@ class LiteSpeed_Cache_Esi
 		add_filter('comment_form_submit_button',
 			array($this, 'sub_comment_form_block'), 1000, 2);
 		return $defaults;
+	}
+
+	/**
+	 * Build the esi url. This method will build the html comment wrapper
+	 * as well as serialize and encode the parameter array.
+	 *
+	 * The block_id parameter should contain alphanumeric and '-_' only.
+	 *
+	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
+	 *
+	 * @access private
+	 * @since 1.1.0
+	 * @param string $block_id The id to use to display the correct esi block.
+	 * @param string $wrapper The wrapper for the esi comments.
+	 * @param array $params The esi parameters.
+	 * @param string $cachectrl The cache control attribute if any.
+	 * @param boolean $echo Whether to echo the output or return it.
+	 * @return mixed False on error, nothing if echo is true, the output otherwise.
+	 */
+	public static function sub_esi_block($block_id, $wrapper,
+                             $params = array(), $cachectrl = '', $echo = true)
+	{
+		if ((empty($block_id)) || (!is_array($params))
+			|| (preg_match('/[^\w-]/', $block_id))) {
+			return false;
+		}
+		$params[self::PARAM_BLOCK_ID] = $block_id;
+		$params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id,
+			$params);
+		$cachectrl = apply_filters(
+			'litespeed_cache_sub_esi_cachectrl-' . $block_id, $cachectrl);
+		if ((!is_array($params)) || (!is_string($cachectrl))) {
+			if (defined('LSCWP_LOG')) {
+				LiteSpeed_Cache::debug_log("Sub esi hooks returned Params: \n"
+					. print_r($params, true) . "\ncache control: \n"
+					. print_r($cachectrl, true));
+			}
+			return false;
+		}
+
+		$qs = '?' . self::QS_ACTION . '&' . self::QS_PARAMS
+			. '=' . urlencode(base64_encode(serialize($params)));
+		$url = self::URL . $qs;
+		$output = '<!-- lscwp ' . $wrapper . ' -->'
+			. '<esi:include src="' . $url . '"';
+		if (!empty($cachectrl)) {
+			$output .= ' cache-control="' . $cachectrl . '"';
+		}
+		$output .= ' />'
+			. '<!-- lscwp ' . $wrapper . ' esi end -->';
+		if ($echo == false) {
+			return $output;
+		}
+		echo $output;
+		self::get_instance()->has_esi = true;
 	}
 
 	/**
@@ -434,7 +447,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ARGS => $args
 		);
 
-		self::build_url('widget', 'widget ' . $name, $params, 'no-vary');
+		self::sub_esi_block('widget', 'widget ' . $name, $params, 'no-vary');
 		return false;
 	}
 
@@ -454,7 +467,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			return;
 		}
 
-		self::build_url('admin-bar', 'adminbar', array(), self::CACHECTRL_PRIV);
+		self::sub_esi_block('admin-bar', 'adminbar', array(), self::CACHECTRL_PRIV);
 	}
 
 	/**
@@ -504,7 +517,7 @@ error_log('Do not esi widget ' . $name . ' because '
 		if (LiteSpeed_Cache::plugin()->get_user_status()) {
 			$cachectrl = self::CACHECTRL_PRIV;
 		}
-		self::build_url('comment-form', 'comment form', $params, $cachectrl);
+		self::sub_esi_block('comment-form', 'comment form', $params, $cachectrl);
 		ob_start();
 		add_action('comment_form_after',
 			array($this, 'comment_form_sub_clean'));
@@ -544,7 +557,7 @@ error_log('Do not esi widget ' . $name . ' because '
 			self::PARAM_ID => $post->ID,
 			self::PARAM_ARGS => get_query_var( 'cpage' ),
 		);
-		self::build_url('comments', 'comments', $params, self::CACHECTRL_PRIV);
+		self::sub_esi_block('comments', 'comments', $params, self::CACHECTRL_PRIV);
 		add_filter('comments_template',
 			array($this, 'comments_sub_dummy_template'), 1000);
 		return array();
