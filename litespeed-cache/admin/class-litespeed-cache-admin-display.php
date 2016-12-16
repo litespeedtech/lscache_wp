@@ -210,8 +210,17 @@ class LiteSpeed_Cache_Admin_Display
 
 		$options = LiteSpeed_Cache_Esi::widget_load_get_options($widget);
 		if (empty($options)) {
+			$options = array(
+				LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE
+					=> LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE,
+				LiteSpeed_Cache_Config::WIDGET_OPID_TTL => '300'
+			);
+			$options = apply_filters('litespeed_cache_widget_default_options',
+				$options, $widget);
+		}
+		if (empty($options)) {
 			$esi = LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
-			$ttl = '300'; // 5 minutes default for widgets.
+			$ttl = '300';
 		}
 		else {
 			$esi = $options[LiteSpeed_Cache_Config::WIDGET_OPID_ESIENABLE];
