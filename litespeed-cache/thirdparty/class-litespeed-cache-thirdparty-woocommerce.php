@@ -61,6 +61,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			add_action('litespeed_cache_load_esi_block-widget',
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view');
 		}
+
+		if (is_product()) {
+			add_filter('litespeed_cache_sub_esi_params-widget',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id');
+		}
+
 		add_action('litespeed_cache_is_not_esi_template',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart');
 
@@ -73,6 +79,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3);
 			add_filter('litespeed_cache_save_options',
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2);
+			add_filter('litespeed_cache_widget_default_options',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::wc_widget_default',
+				10, 2);
 		}
 	}
 
@@ -243,7 +252,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			!== 'WC_Widget_Recently_Viewed') {
 			return;
 		}
-		$id = url_to_postid($_SERVER['ESI_REFERER']);
+		if (!isset($params[self::ESI_PARAM_POSTID])) {
+			return;
+		}
+		$id = $params[self::ESI_PARAM_POSTID];
 		$esi_post = get_post($id);
 		$product = wc_get_product($esi_post);
 
@@ -254,6 +266,28 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		global $post;
 		$post = $esi_post;
 		wc_track_product_view();
+	}
+
+	public static function add_post_id($params)
+	{
+		if ((!isset($params))
+			|| (!isset($params[LiteSpeed_Cache_Esi::PARAM_NAME]))
+			|| ($params[LiteSpeed_Cache_Esi::PARAM_NAME]
+				!== 'WC_Widget_Recently_Viewed')) {
+			return $params;
+		}
+		$params[self::ESI_PARAM_POSTID] = get_the_ID();
+		return $params;
+	}
+
+	public static function wc_widget_default($options, $widget)
+	{
+		if (get_class($widget) !== 'WC_Widget_Recently_Viewed') {
+			return $options;
+		}
+		$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
+		$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 0;
+		return $options;
 	}
 
 	/**
