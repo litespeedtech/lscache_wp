@@ -139,6 +139,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$located, $args)
 	{
 		if (strpos($template_name, 'add-to-cart') === false) {
+			if (strpos($template_name, 'related.php') !== false) {
+				remove_action('woocommerce_before_template_part',
+					'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999);
+				add_filter('woocommerce_related_products_args',
+					'LiteSpeed_Cache_ThirdParty_WooCommerce::add_related_tags');
+				add_action('woocommerce_after_template_part',
+					'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+			}
 			return;
 		}
 		global $post;
@@ -175,6 +183,19 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
 	}
 
+	public static function add_related_tags($args)
+	{
+		if ((empty($args)) || (!isset($args['post__in']))) {
+			return $args;
+		}
+		$related_posts = $args['post__in'];
+		foreach ($related_posts as $related) {
+			LiteSpeed_Cache_Tags::add_cache_tag(
+				LiteSpeed_Cache_Tags::TYPE_POST . $related);
+		}
+		return $args;
+	}
+
 	/**
 	 * Hooked to the woocommerce_after_template_part action.
 	 * If the template contains 'add-to-cart', clean the buffer.
@@ -185,10 +206,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function end_template($template_name)
 	{
-		if (strpos($template_name, 'add-to-cart') === false) {
-			return;
+		if (strpos($template_name, 'add-to-cart') !== false) {
+			self::end_form();
 		}
-		self::end_form();
+		elseif (strpos($template_name, 'related.php') !== false) {
+			remove_action('woocommerce_after_template_part',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+			self::set_block_template();
+		}
 	}
 
 	/**
