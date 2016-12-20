@@ -46,7 +46,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
 	private static $RW_BLOCK_END = '</IfModule>';
 	private static $RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
-	private static $RW_PLUGIN =  "\nRewriteEngine on\nCacheLookup Public on\n";
+	private static $RW_PREREQ = "\nRewriteEngine on\nCacheLookup Public on\n";
 
 	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
 	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
@@ -427,7 +427,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		if ($ret === false) {
 			$buf = self::$RW_BLOCK_START . "\n" . $wrapper_begin
-				. self::$RW_PLUGIN;
+				. self::$RW_PREREQ;
 			$after = $wrapper_end . "\n" . self::$RW_BLOCK_END . "\n" . $content;
 			return NULL;
 		}
@@ -454,7 +454,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return $block;
 		}
 		$buf = substr($content, 0, $off_end) . "\n" . $wrapper_begin
-			. self::$RW_PLUGIN;
+			. self::$RW_PREREQ;
 		$after = $wrapper_end . substr($content, $off_end);
 		$rules = array();
 		$matched = preg_replace_callback(self::$RW_PATTERN_WRAPPERS,
@@ -1087,12 +1087,14 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$path = self::get_site_path();
 		$content2 = '';
+		$before2 = '';
+		$rule_buf2 = "\n";
 		if (self::file_get($content2, $path) === false) {
 			$errors[] = $content2;
 			return false;
 		}
 
-		$haystack2 = $this->file_split($content2, $rule_buf2, $after2);
+		$haystack2 = $this->file_split($content2, $before2, $after2);
 		if ($haystack2 === false) {
 			$errors[] = $rule_buf2;
 			return false;
@@ -1110,7 +1112,8 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 
-		$ret = $this->file_combine($rule_buf2, $haystack2, $after2, $path);
+		$ret = $this->file_combine($before2, $haystack2 . $rule_buf2,
+			$after2, $path);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
@@ -1289,7 +1292,8 @@ class LiteSpeed_Cache_Admin_Rules
 	public function validate_common_rewrites($diff, &$errors)
 	{
 		$content = '';
-		$buf = '';
+		$buf = "\n";
+		$before = '';
 		$after = '';
 
 		if (self::file_get($content) === false) {
@@ -1297,7 +1301,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false;
 		}
 
-		$haystack = $this->file_split($content, $buf, $after);
+		$haystack = $this->file_split($content, $before, $after);
 		if ($haystack === false) {
 			$errors[] = $buf;
 			return false;
@@ -1365,7 +1369,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		}
 
-		$ret = $this->file_combine($buf, $haystack, $after);
+		$ret = $this->file_combine($before, $haystack . $buf, $after);
 		if ($ret !== true) {
 			$errors[] = self::$ERR_FILESAVE;
 			return false;
