@@ -746,8 +746,10 @@ class LiteSpeed_Cache_Admin
 		$options = $config->get_options();
 		$errors = array();
 
-		$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
-		$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+		if (!is_openlitespeed()) {
+			$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+			$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+		}
 
 		if (LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all()) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
@@ -762,26 +764,28 @@ class LiteSpeed_Cache_Admin
 
 		$this->validate_exclude($input, $options, $errors);
 
-		$this->validate_esi($input, $options, $errors);
-
 		$this->validate_debug($input, $options, $errors);
 
 		if (!is_multisite()) {
 			$this->validate_singlesite($input, $options, $errors);
 		}
 
-		$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
-		$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+		if (!is_openlitespeed()) {
+			$this->validate_esi($input, $options, $errors);
 
-		if (($orig_enabled !== $new_enabled)
-			|| ($orig_esi_enabled !== $new_esi_enabled)) {
-			if (($new_enabled) && ($new_esi_enabled)) {
-				LiteSpeed_Cache::plugin()->set_esi_post_type();
+			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+			$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+
+			if (($orig_enabled !== $new_enabled)
+				|| ($orig_esi_enabled !== $new_esi_enabled)
+			) {
+				if (($new_enabled) && ($new_esi_enabled)) {
+					LiteSpeed_Cache::plugin()->set_esi_post_type();
+				} else {
+					flush_rewrite_rules();
+				}
+				LiteSpeed_Cache::plugin()->purge_all();
 			}
-			else {
-				flush_rewrite_rules();
-			}
-			LiteSpeed_Cache::plugin()->purge_all();
 		}
 
 		if ( ! empty($errors) ) {

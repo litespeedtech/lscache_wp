@@ -273,7 +273,9 @@ class LiteSpeed_Cache
 		}
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
-		$this->set_esi_post_type();
+		if (!is_openlitespeed()) {
+			$this->set_esi_post_type();
+		}
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
@@ -629,11 +631,11 @@ class LiteSpeed_Cache
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin.php' ;
-		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-display.php' ;
-		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php' ;
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin.php';
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-display.php';
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php';
 
-		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION) ;
+		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION);
 		if ((is_multisite()) && (is_network_admin())) {
 			$action = 'network_admin_notices';
 			$manage = 'manage_network_options';
@@ -644,15 +646,15 @@ class LiteSpeed_Cache
 		}
 
 		//register purge_all actions
-		if ( $module_enabled ) {
+		if ($module_enabled) {
 			$purge_all_events = array(
 				'switch_theme',
 				'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
 				'create_term', 'edit_terms', 'delete_term',
 				'add_link', 'edit_link', 'delete_link'
-			) ;
-			foreach ( $purge_all_events as $event ) {
-				add_action($event, array( $this, 'purge_all' )) ;
+			);
+			foreach ($purge_all_events as $event) {
+				add_action($event, array($this, 'purge_all'));
 			}
 			global $pagenow;
 			if ($pagenow === 'plugins.php') {
@@ -673,17 +675,20 @@ class LiteSpeed_Cache
 					array($admin, 'add_quick_purge'));
 
 				if (((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))
-				&& (!LiteSpeed_Cache_Config::wp_cache_var_setter(true))) {
+					&& (!LiteSpeed_Cache_Config::wp_cache_var_setter(true))
+				) {
 					add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
 				}
 			}
 		}
 
-		add_action('in_widget_form',
-			array(LiteSpeed_Cache_Admin_Display::get_instance(),
-				'show_widget_edit'), 100, 3);
-		add_filter('widget_update_callback',
-			array($admin, 'validate_widget_save'), 10, 4);
+		if (!is_openlitespeed()) {
+			add_action('in_widget_form',
+				array(LiteSpeed_Cache_Admin_Display::get_instance(),
+					'show_widget_edit'), 100, 3);
+			add_filter('widget_update_callback',
+				array($admin, 'validate_widget_save'), 10, 4);
+		}
 
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
 				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
@@ -2104,8 +2109,13 @@ class LiteSpeed_Cache
 
 	private function setup_ctrl_hdr($mode, $novary)
 	{
-		$esi_hdr = LiteSpeed_Cache_Esi::get_instance()->has_esi()
-			? ',esi=on' : '';
+		if ((!is_openlitespeed())
+			&& (LiteSpeed_Cache_Esi::get_instance()->has_esi())) {
+			$esi_hdr = ',esi=on';
+		}
+		else {
+			$esi_hdr = '';
+		}
 		$hdr = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ';
 		switch ($mode)
 		{

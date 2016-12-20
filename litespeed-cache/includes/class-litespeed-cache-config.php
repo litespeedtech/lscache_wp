@@ -252,9 +252,12 @@ class LiteSpeed_Cache_Config
 			self::OPID_EXCLUDES_TAG => '',
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
-			self::OPID_ESI_ENABLE => true,
-			self::OPID_ESI_CACHE => false,
 				) ;
+
+		if (!is_openlitespeed()) {
+			$default_options[self::OPID_ESI_ENABLE] = true;
+			$default_options[self::OPID_ESI_CACHE] = false;
+		}
 
 		if (is_multisite()) {
 			$default_options[self::NETWORK_OPID_ENABLED] = false;
@@ -419,7 +422,8 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $this->options);
-		if (($this->options[self::OPID_ENABLED])
+		if ((!is_openlitespeed())
+			&& ($this->options[self::OPID_ENABLED])
 			&& ($this->options[self::OPID_ESI_ENABLE])) {
 			LiteSpeed_Cache::plugin()->set_esi_post_type();
 		}
