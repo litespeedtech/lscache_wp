@@ -525,6 +525,15 @@ class LiteSpeed_Cache
 		return $this->config ;
 	}
 
+	/**
+	 * Gets the current request's user status.
+	 *
+	 * Helper function for other class' usage.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @return int The user status.
+	 */
 	public function get_user_status()
 	{
 		return $this->user_status;
@@ -606,6 +615,17 @@ class LiteSpeed_Cache
 		load_plugin_textdomain(self::PLUGIN_NAME, false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/') ;
 	}
 
+	/**
+	 * Registers the ESI post type.
+	 *
+	 * The registration function is in the LiteSpeed_Cache_Esi class,
+	 * which may not be initialized, so this method will include the
+	 * file if necessary. This method will also flush the rewrite rules
+	 * so that the new post type will be included.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
 	public function set_esi_post_type()
 	{
 		if (!class_exists('LiteSpeed_Cache_Esi')) {
@@ -1317,6 +1337,12 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 * Purges all private cache entries when the user logs out.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
 	public function purge_on_logout()
 	{
 		$this->add_purge_tags('*', false);
@@ -1582,6 +1608,15 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 * Sets the request's cache control. If the request should not parse the
+	 * vary, the optional $novary parameter should be used to set the flag.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param int $val The value to set the cache control to.
+	 * @param bool $novary Optional. Whether to allow varies or not.
+	 */
 	public function set_cachectrl($val, $novary = false)
 	{
 		$this->cachectrl = $val;
@@ -1590,6 +1625,13 @@ class LiteSpeed_Cache
 		}
 	}
 
+	/**
+	 * Sets a custom TTL to use with the request if needed.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
+	 */
 	public function set_custom_ttl($ttl)
 	{
 		if (is_numeric($ttl)) {
@@ -2110,6 +2152,15 @@ class LiteSpeed_Cache
 		return $hdr;
 	}
 
+	/**
+	 * Sets up the Cache Control header depending on the mode and novary.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param int $mode The type of response to return.
+	 * @param boolean $novary Whether to add the no-vary part or not.
+	 * @return string empty string if empty, otherwise the cache control header.
+	 */
 	private function setup_ctrl_hdr($mode, $novary)
 	{
 		if ((!is_openlitespeed())

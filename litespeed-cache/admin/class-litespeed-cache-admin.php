@@ -627,6 +627,15 @@ class LiteSpeed_Cache_Admin
 
 	}
 
+	/**
+	 * Validates the esi settings.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_esi($input, &$options, &$errors)
 	{
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_ENABLE,

@@ -35,6 +35,15 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 			'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::load_add_to_wishlist');
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 *
+	 * If the request is not an ESI request, hook to the add to wishlist button
+	 * filter to replace it as an esi block.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
 	public static function is_not_esi()
 	{
 		add_filter('yith_wcwl_add_to_wishlisth_button_html',
@@ -42,6 +51,19 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 
 	}
 
+	/**
+	 * Hooked to the yith_wcwl_add_to_wishlisth_button_html filter.
+	 *
+	 * The add to wishlist button displays a different output when the item
+	 * is already in the wishlist/cart. For this reason, the button must be
+	 * an ESI block. This function replaces the normal html with the ESI
+	 * block.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param $template unused
+	 * @return string The html for future callbacks to filter.
+	 */
 	public static function sub_add_to_wishlist($template)
 	{
 		global $post;
@@ -53,6 +75,16 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		return '';
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_load_esi_block-yith-wcwl-add action.
+	 *
+	 * This will load the add to wishlist button html for output.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @global $post, $wp_query
+	 * @param array $params The input ESI parameters.
+	 */
 	public static function load_add_to_wishlist($params)
 	{
 		global $post, $wp_query;

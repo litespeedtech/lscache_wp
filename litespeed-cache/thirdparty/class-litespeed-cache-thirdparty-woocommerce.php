@@ -183,6 +183,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
 	}
 
+	/**
+	 * If related products are loaded, need to add the extra product ids.
+	 *
+	 * The page will be purged if any of the products are changed.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $args The arguments used to build the related products section.
+	 * @return array The unchanged arguments.
+	 */
 	public static function add_related_tags($args)
 	{
 		if ((empty($args)) || (!isset($args['post__in']))) {
@@ -293,6 +303,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		wc_track_product_view();
 	}
 
+	/**
+	 * Adds the post id to the widget ESI parameters for the Recently Viewed widget.
+	 *
+	 * This is needed in the esi request to update the cookie properly.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $params The current ESI parameters.
+	 * @return array The updated esi parameters.
+	 */
 	public static function add_post_id($params)
 	{
 		if ((!isset($params))
@@ -305,6 +325,18 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		return $params;
 	}
 
+	/**
+	 * Hooked to the litespeed_cache_widget_default_options filter.
+	 *
+	 * The recently viewed widget must be esi to function properly.
+	 * This function will set it to enable and no cache by default.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $options The current default widget options.
+	 * @param type $widget The current widget to configure.
+	 * @return array The updated default widget options.
+	 */
 	public static function wc_widget_default($options, $widget)
 	{
 		if (get_class($widget) !== 'WC_Widget_Recently_Viewed') {
@@ -532,6 +564,15 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 	}
 
+	/**
+	 * When a product has a new review added, purge the recent reviews widget.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param $unused
+	 * @param integer $comment_approved Whether the comment is approved or not.
+	 * @param array $commentdata Information about the comment.
+	 */
 	public static function add_review($unused, $comment_approved,
 	                                  $commentdata)
 	{

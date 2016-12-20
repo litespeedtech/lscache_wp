@@ -69,6 +69,12 @@ class LiteSpeed_Cache_Esi
 		return $this->has_esi;
 	}
 
+	/**
+	 * Sets that the requested page has esi elements.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
 	public function set_has_esi()
 	{
 		$this->has_esi = true;
@@ -536,7 +542,7 @@ error_log('Do not esi widget ' . $name . ' because '
 	 * @access public
 	 * @since 1.1.0
 	 * @global type $post
-	 * @param type $comments The current comments to output
+	 * @param array $comments The current comments to output
 	 * @return array The comments to output.
 	 */
 	public function sub_comments_block($comments)
@@ -569,8 +575,9 @@ error_log('Do not esi widget ' . $name . ' because '
 	/**
 	 * Parses the esi input parameters and generates the widget for esi display.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.1.0
+	 * @global $wp_widget_factory
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
 	public function load_widget_block($params)
@@ -601,6 +608,12 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 			$params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]);
 	}
 
+	/**
+	 * Generates the admin bar for esi display.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
 	public function load_admin_bar_block()
 	{
 		wp_admin_bar_render();
@@ -608,6 +621,15 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 			LiteSpeed_Cache::CACHECTRL_PRIVATE, true);
 	}
 
+
+	/**
+	 * Parses the esi input parameters and generates the comment form for
+	 * esi display.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param array $params Input parameters needed to correctly display comment form
+	 */
 	public function load_comment_form_block($params)
 	{
 		remove_filter('comment_form_defaults',
@@ -629,7 +651,7 @@ error_log('Esi widget render: name ' . $params[self::PARAM_NAME]
 	/**
 	 * Outputs the ESI comments block.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.1.0
 	 * @global type $post
 	 * @global type $wp_query
