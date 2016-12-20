@@ -728,9 +728,8 @@ class LiteSpeed_Cache
 	 */
 	private function load_logged_in_actions()
 	{
-		add_action('wp_logout', array($this, 'purge_on_logout'));
-
 		if (!is_openlitespeed()) {
+			add_action('wp_logout', array($this, 'purge_on_logout'));
 			$this->load_logged_out_actions();
 			define('LSCACHE_ESI_LOGGEDIN', true);
 		}
@@ -994,7 +993,9 @@ class LiteSpeed_Cache
 	public function purge_all()
 	{
 		$this->add_purge_tags('*');
-		$this->add_purge_tags('*', false);
+		if (!is_openlitespeed()) {
+			$this->add_purge_tags('*', false);
+		}
 	}
 
 	/**
@@ -1006,7 +1007,9 @@ class LiteSpeed_Cache
 	public function purge_front()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
-		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE, false);
+		if (!is_openlitespeed()) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE, false);
+		}
 	}
 
 	/**
