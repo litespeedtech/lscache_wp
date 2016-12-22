@@ -160,7 +160,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		add_action('woocommerce_after_add_to_cart_form',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
 		add_action('woocommerce_after_template_part',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999);
 		LiteSpeed_Cache_Esi::sub_esi_block('wc-add-to-cart-form', 'WC_CART_FORM',
 			$params);
 		ob_start();
@@ -174,13 +174,17 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function end_form()
+	public static function end_form($template_name = '')
 	{
+		if ((!empty($template_name))
+			&& (strpos($template_name, 'add-to-cart') === false)) {
+				return;
+		}
 		ob_clean();
 		remove_action('woocommerce_after_add_to_cart_form',
 			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
 		remove_action('woocommerce_after_template_part',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999);
 	}
 
 	/**
@@ -216,10 +220,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function end_template($template_name)
 	{
-		if (strpos($template_name, 'add-to-cart') !== false) {
-			self::end_form();
-		}
-		elseif (strpos($template_name, 'related.php') !== false) {
+		if (strpos($template_name, 'related.php') !== false) {
 			remove_action('woocommerce_after_template_part',
 				'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
 			self::set_block_template();
