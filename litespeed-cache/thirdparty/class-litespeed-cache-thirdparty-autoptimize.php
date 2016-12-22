@@ -14,7 +14,12 @@ if (!defined('ABSPATH')) {
 
 class LiteSpeed_Cache_ThirdParty_Autoptimize
 {
-
+	/**
+	 * Detects if Autoptimize is active.
+	 *
+	 *@since 1.0.12
+	 *@access public
+	 */
 	public static function detect()
 	{
 		if (defined('AUTOPTIMIZE_PLUGIN_DIR')) {
@@ -23,6 +28,12 @@ class LiteSpeed_Cache_ThirdParty_Autoptimize
 		}
 	}
 
+	/**
+	 * Purges the cache when Autoptimize's cache is purged.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 */
 	public static function add_purge_tags()
 	{
 		if ((defined('AUTOPTIMIZE_PURGE'))

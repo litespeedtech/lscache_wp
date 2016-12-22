@@ -526,6 +526,15 @@ class LiteSpeed_Cache_Admin
 		}
 	}
 
+	/**
+	 * Validates the exclude settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
 	private function validate_exclude($input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;

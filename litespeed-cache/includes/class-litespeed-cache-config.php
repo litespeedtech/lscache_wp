@@ -102,6 +102,14 @@ class LiteSpeed_Cache_Config
 		}
 	}
 
+	/**
+	 * For multisite installations, the single site options need to be updated
+	 * with the network wide options.
+	 *
+	 * @since 1.0.13
+	 * @access private
+	 * @return array The updated options.
+	 */
 	private function construct_multisite_options()
 	{
 		$site_options = get_site_option(self::OPTION_NAME);
