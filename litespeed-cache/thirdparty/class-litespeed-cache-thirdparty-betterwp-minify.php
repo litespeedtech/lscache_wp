@@ -14,6 +14,13 @@ if (!defined('ABSPATH')) {
 
 class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 {
+	/**
+	 * Detects if Better WP Minify is active.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 *
+	 */
 	public static function detect()
 	{
 		if (class_exists('BWP_MINIFY')) {
@@ -22,6 +29,15 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 		}
 	}
 
+	/**
+	 * Hooked to the toplevel_page_bwp_minify_general action.
+	 *
+	 * Will check parts of the request to see if the cache should be flushed.
+	 * Will register functions to purge the cache if needed.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 */
 	public static function maybe_flush()
 	{
 		if ((!empty($_POST))
@@ -34,12 +50,24 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 		}
 	}
 
+	/**
+	 * Purges the cache when Better WP Minify needs to purge.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 */
 	public static function flush()
 	{
 		LiteSpeed_Cache_Tags::add_purge_tag('*');
 		self::clear_flush();
 	}
 
+	/**
+	 * Clears the flush cache callbacks.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 */
 	public static function clear_flush()
 	{
 		remove_action('check_admin_referer',
