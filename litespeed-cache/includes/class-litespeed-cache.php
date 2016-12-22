@@ -750,8 +750,11 @@ class LiteSpeed_Cache
 	{
 		if (!is_openlitespeed()) {
 			add_action('wp_logout', array($this, 'purge_on_logout'));
-			$this->load_logged_out_actions();
-			define('LSCACHE_ESI_LOGGEDIN', true);
+			if ($this->config->get_option(
+				LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
+				$this->load_logged_out_actions();
+				define('LSCACHE_ESI_LOGGEDIN', true);
+			}
 		}
 	}
 
