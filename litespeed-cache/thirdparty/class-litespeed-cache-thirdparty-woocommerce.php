@@ -340,11 +340,18 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function wc_widget_default($options, $widget)
 	{
-		if (get_class($widget) !== 'WC_Widget_Recently_Viewed') {
+		if (!is_array($options)) {
 			return $options;
 		}
-		$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
-		$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 0;
+		$widget_name = get_class($widget);
+		if ($widget_name === 'WC_Widget_Recently_Viewed') {
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 0;
+		}
+		elseif ($widget_name === 'WC_Widget_Recent_Reviews') {
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 86400;
+		}
 		return $options;
 	}
 

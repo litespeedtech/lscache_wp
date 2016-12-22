@@ -336,6 +336,9 @@ class LiteSpeed_Cache_Esi
 			$settings = $widget->get_settings();
 		}
 
+		add_filter('litespeed_cache_widget_default_options',
+			'LiteSpeed_Cache_Esi::widget_default_options', 10, 2);
+
 		if (!isset($settings)) {
 			return null;
 		}
@@ -348,6 +351,25 @@ class LiteSpeed_Cache_Esi
 		}
 
 		return $instance[LiteSpeed_Cache_Config::OPTION_NAME];
+	}
+
+	public static function widget_default_options($options, $widget)
+	{
+		if (!is_array($options)) {
+			return $options;
+		}
+
+		$widget_name = get_class($widget);
+		switch ($widget_name) {
+		case 'WP_Widget_Recent_Posts':
+		case 'WP_Widget_Recent_Comments':
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 86400;
+			break;
+		default:
+			break;
+		}
+		return $options;
 	}
 
 	/**
