@@ -353,6 +353,15 @@ class LiteSpeed_Cache_Esi
 		return $instance[LiteSpeed_Cache_Config::OPTION_NAME];
 	}
 
+	/**
+	 * Loads the default options for default WordPress widgets.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $options The current options selected.
+	 * @param WP_Widget $widget The widget to be configured.
+	 * @return array The updated options.
+	 */
 	public static function widget_default_options($options, $widget)
 	{
 		if (!is_array($options)) {
