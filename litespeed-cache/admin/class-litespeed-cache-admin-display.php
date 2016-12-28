@@ -189,74 +189,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Hooked to the in_widget_form action.
-	 * Appends LiteSpeed Cache settings to the widget edit settings screen.
-	 * This will append the esi on/off selector and ttl text.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param type $widget
-	 * @param type $return
-	 * @param type $instance
-	 */
-	public function show_widget_edit($widget, $return, $instance)
-	{
-		if (!is_numeric($widget->number) && (!isset($_REQUEST['editwidget']))) {
-			return;
-		}
-		$enable_levels = array(
-			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'));
-
-		$options = LiteSpeed_Cache_Esi::widget_load_get_options($widget);
-		if (empty($options)) {
-			$options = array(
-				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE
-					=> false,
-				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => '300'
-			);
-			$options = apply_filters('litespeed_cache_widget_default_options',
-				$options, $widget);
-		}
-		if (empty($options)) {
-			$esi = false;
-			$ttl = '300';
-		}
-		else {
-			$esi = $options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE]
-				? LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE
-				: LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
-			$ttl = $options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL];
-		}
-
-		$buf = '<h4>LiteSpeed Cache:</h4>';
-
-		$buf .= '<label for="' . LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE
-			. '">' . __('Enable ESI for this Widget:', 'litespeed-cache')
-			. '&nbsp;&nbsp;&nbsp;</label>';
-
-		$buf .= $this->input_field_radio(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE,
-			$enable_levels, $esi);
-
-		$buf .= '<br><br>';
-
-		$buf .= '<label for="' . LiteSpeed_Cache_Esi::WIDGET_OPID_TTL
-			. '">' . __('Widget Cache TTL:', 'litespeed-cache')
-			. '&nbsp;&nbsp;&nbsp;</label>';
-
-		$buf .= $this->input_field_text(LiteSpeed_Cache_Esi::WIDGET_OPID_TTL,
-			$ttl, '7', '', __('seconds', 'litespeed-cache'));
-
-		$buf .= '<p class="install-help">'
-			. __('Default value 300 seconds (5 minutes).', 'litespeed-cache')
-			. __(' A TTL of 0 indicates do not cache.', 'litespeed-cache')
-			. '</p>';
-
-		$buf .= '<br><br>';
-		echo $buf;
-	}
-
-	/**
 	 * add_submenu_page callback to determine which submenu page to display
 	 * if the admin selected a LiteSpeed Cache dashboard page.
 	 *
@@ -484,11 +416,20 @@ class LiteSpeed_Cache_Admin_Display
 			$options, LiteSpeed_Cache_Config::OPTION_NAME,
 			$this->get_disable_all());
 
+		$lscwp_active_tab = 0; //default
+
+		if (isset($_REQUEST['tab'])) {
+		$lscwp_active_tab = intval($_REQUEST['tab']);
+			if ($lscwp_active_tab < 0 || $lscwp_active_tab > 6) {
+				$lscwp_active_tab = 0;
+			}
+		}
+
 		echo '<div class="wrap">
 		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
-		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
-		<form method="post" action="options.php">' ;
-
+		. '<span style="font-size:0.5em"> v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
+		<form method="post" action="options.php" id="settings">' ;
+		echo '<input type="hidden" name="active_tab" id="active_tab" value="'.$lscwp_active_tab.'" />';
 		if ($this->get_disable_all()) {
 			$desc = LiteSpeed_Cache::build_paragraph(
 				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
@@ -510,22 +451,14 @@ class LiteSpeed_Cache_Admin_Display
 							'</div>';
 		}
 
-		$esi_tab = '';
-		$esi_settings = '';
-		if (!is_openlitespeed()) {
-			$esi_tab = '<li><a href="#esi-settings">'
-				. __('ESI Settings', 'litespeed-cache') . '</a></li>';
-			$esi_settings = '<div id="esi-settings">'
-				. $this->show_settings_esi($options) . '</div>';
-		}
-
 		$advanced_tab = '';
 		$advanced_settings = '';
 		if (!is_multisite()) {
 			$advanced_tab = '<li><a href="#advanced-settings">'
 					. __('Advanced Settings', 'litespeed-cache') . '</a></li>';
 			$advanced_settings = '<div id="advanced-settings">'
-					. $this->show_settings_advanced($options) . '</div>';
+					. $this->show_settings_advanced($options)
+					. '</div>';
 		}
 
 		echo '
@@ -535,7 +468,6 @@ class LiteSpeed_Cache_Admin_Display
 		 <li><a href="#specific-settings">' . __('Specific Pages', 'litespeed-cache') . '</a></li>
 		 <li><a href="#purge-settings">' . __('Purge Rules', 'litespeed-cache') . '</a></li>
 		 <li><a href="#exclude-settings">' . __('Do Not Cache Rules', 'litespeed-cache') . '</a></li>
-		 ' . $esi_tab . '
 	 	 ' . $advanced_tab . '
 		 <li><a href="#debug-settings">' . __('Debug', 'litespeed-cache') . '</a></li>'
 		. $compatibilities_tab;
@@ -586,7 +518,6 @@ class LiteSpeed_Cache_Admin_Display
 		<div id="exclude-settings">'
 		. $this->show_settings_excludes($options) .
 		'</div>'
-		. $esi_settings
 		. $advanced_settings .
 		'<div id ="debug-settings">'
 		. $this->show_settings_test($options) .
@@ -1390,62 +1321,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Builds the html for the esi settings tab.
-	 *
-	 * @since 1.1.0
-	 * @access private
-	 * @param array $options The current configuration options.
-	 * @return string The html for the esi settings tab.
-	 */
-	private function show_settings_esi($options)
-	{
-		// comments
-		// comment form
-		// admin bar
-
-
-		$esi_desc = LiteSpeed_Cache::build_paragraph(
-			__('ESI enables the capability to cache pages for logged in users/commenters.', 'litespeed-cache'),
-			__('ESI functions by replacing the private information blocks with an ESI include.', 'litespeed-cache'),
-			__('When the server sees an ESI include, a sub request is created, containing the private information.', 'litespeed-cache')
-		);
-
-		$enable_esi_desc = LiteSpeed_Cache::build_paragraph(
-			__('Enabling ESI will cache the public page for logged in users.', 'litespeed-cache'),
-			__('The Admin Bar, comments, and comment form will be served via ESI blocks.', 'litespeed-cache'),
-			__('The ESI blocks will not be cached until Cache ESI is checked.', 'litespeed-cache')
-		);
-
-		$cache_esi_desc = LiteSpeed_Cache::build_paragraph(
-			__('Cache the ESI blocks.', 'litespeed-cache')
-		);
-
-		$buf = $this->input_group_start(__('ESI Settings', 'litespeed-cache'),
-			$esi_desc);
-
-		$esi_ids = array(
-			'lscwp_' . LiteSpeed_Cache_Config::OPID_ESI_CACHE
-		);
-
-		$id = LiteSpeed_Cache_Config::OPID_ESI_ENABLE;
-		$enable_esi = $this->input_field_checkbox('lscwp_' . $id, $id,
-			$options[$id], '', 'lscwpEsiEnabled(this, [' . implode(',', $esi_ids) . '])');
-		$buf .= $this->display_config_row(__('Enable ESI', 'litespeed-cache'),
-			$enable_esi, $enable_esi_desc);
-
-		$readonly = ($options[$id] === false);
-
-		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE;
-		$cache_esi = $this->input_field_checkbox('lscwp_' . $id, $id,
-			$options[$id], '', '', $readonly);
-		$buf .= $this->display_config_row(__('Cache ESI', 'litespeed-cache'),
-			$cache_esi, $cache_esi_desc);
-
-		$buf .= $this->input_group_end();
-		return $buf;
-	}
-
-	/**
 	 * Builds the html for the advanced settings tab.
 	 *
 	 * @since 1.0.1
@@ -1748,9 +1623,6 @@ class LiteSpeed_Cache_Admin_Display
 		$file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(
 				LiteSpeed_Cache_Admin_Rules::WRITABLE);
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-		$enabled_id = (is_network_admin()
-			? LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED
-			: LiteSpeed_Cache_Config::OPID_ENABLED);
 		$cookie = '';
 		$match = '';
 		$sub = '';
@@ -1782,24 +1654,18 @@ class LiteSpeed_Cache_Admin_Display
 			return '<p class="attention">'
 			. sprintf(__('Error getting current rules: %s', 'litespeed-cache'), $match) . '</p>';
 		}
-		if (empty($cookie)) {
-			return $this->input_field_text($id, $options[$id], '', '', '',
-				!$file_writable);
+		if (!empty($cookie)) {
+			if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
+				return '<p class="attention">'
+					. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
+					. '</p>';
+			}
+			$cookie = substr($cookie, 11);
 		}
-		$cookie = trim($cookie, '"');
-		if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
-			return '<p class="attention">'
-				. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
-				. '</p>';
-		}
-		$cookie = substr($cookie, 11);
-		$cookie_arr = explode(',', $cookie);
-		if ((isset($options[$enabled_id]))
-			&& ($options[$enabled_id])
-			&& (isset($options[$id]))
-			&& (!in_array($options[$id], $cookie_arr))) {
+		if (($options[LiteSpeed_Cache_Config::OPID_ENABLED])
+			&& ($cookie != $options[$id])) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
-				__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
+					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
 		}
 		return $this->input_field_text($id, $options[$id], '', '', '',
 			!$file_writable);
