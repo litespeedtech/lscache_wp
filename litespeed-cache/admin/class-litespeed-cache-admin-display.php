@@ -523,6 +523,7 @@ class LiteSpeed_Cache_Admin_Display
 				. __('ESI Settings', 'litespeed-cache') . '</a></li>';
 			$esi_settings = '<div id="esi-settings">'
 				. $this->show_settings_esi($options) . '</div>';
+			++$tab_count;
 		}
 
 		$advanced_tab = '';
