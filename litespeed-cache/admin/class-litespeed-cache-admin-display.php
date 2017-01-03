@@ -420,7 +420,7 @@ class LiteSpeed_Cache_Admin_Display
 		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
 		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
 		<form method="post" action="options.php">' ;
-
+		echo '<input type="hidden" name="active_tab" id="active_tab" value="'.$lscwp_active_tab.'" />';
 		if ($this->get_disable_all()) {
 			$desc = LiteSpeed_Cache::build_paragraph(
 				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
