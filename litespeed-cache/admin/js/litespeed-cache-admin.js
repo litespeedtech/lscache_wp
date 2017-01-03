@@ -30,8 +30,30 @@
      */
 
     jQuery(document).ready(function () {
-        var tabs = jQuery("#lsc-tabs");
-        tabs.tabs();
+
+        var tabs = $("#lsc-tabs").tabs({
+        activate: function(event, ui){
+            event.preventDefault();
+
+            //get the active tab index
+            var active = $("#lsc-tabs").tabs("option", "active");
+
+            //save it to hidden field
+            $("input[name=active_tab]").val(active);
+            var referer = $("input[name=_wp_http_referer]").val();
+            var new_url = referer + '&tab='+ active;
+            $("input[name=_wp_http_referer]").val(new_url);
+        }
+        });
+
+        //read the hidden field
+        var activeTabIndex = $("input[name=active_tab]").val();
+
+        //make active needed tab
+        if( activeTabIndex !== undefined ) {
+            tabs.tabs("option", "active", activeTabIndex);
+        }
+
         tabs.removeClass('ui-widget');
     });
 
