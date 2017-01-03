@@ -420,13 +420,18 @@ class LiteSpeed_Cache_Admin_Display
 		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
 		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
 		<form method="post" action="options.php">' ;
-		echo '<input type="hidden" name="active_tab" id="active_tab" value="" />';
 		if ($this->get_disable_all()) {
 			$desc = LiteSpeed_Cache::build_paragraph(
 				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
 				__('The following options are selected, but are not editable in this settings page.', 'litespeed-cache')
 			);
 			echo '<p>' . $desc . '</p>';
+		}
+
+		$lscwp_active_tab = 0;
+		$tab_count = 5;
+		if (!empty($tp_tabs)) {
+			$tab_count += count($tp_tabs);
 		}
 
 		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
@@ -440,6 +445,7 @@ class LiteSpeed_Cache_Admin_Display
 			$compatibilities_settings .= '<div id ="wp-compatibilities-settings">'
 							. $compatibilities_buf .
 							'</div>';
+			++$tab_count;
 		}
 
 		$advanced_tab = '';
@@ -450,9 +456,18 @@ class LiteSpeed_Cache_Admin_Display
 			$advanced_settings = '<div id="advanced-settings">'
 					. $this->show_settings_advanced($options)
 					. '</div>';
+			++$tab_count;
 		}
 
-		echo '
+		if (isset($_REQUEST['tab'])) {
+			$lscwp_active_tab = intval($_REQUEST['tab']);
+			if (($lscwp_active_tab < 0) || ($lscwp_active_tab >= $tab_count)) {
+				$lscwp_active_tab = 0;
+			}
+		}
+
+		echo '<input type="hidden" name="active_tab" id="active_tab" value="'
+			. $lscwp_active_tab . '" />
 		 <div id="lsc-tabs">
 		 <ul>
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
