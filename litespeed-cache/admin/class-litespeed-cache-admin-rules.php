@@ -1011,7 +1011,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Ends with |
 	 * Double |
 	 * Unescaped space
-	 * Invalid character (NOT \w, -, \, |, \s, /)
+	 * Invalid character (NOT \w, -, \, |, \s, /, ., +, *, (, ))
 	 *
 	 * @since 1.0.9
 	 * @access private
@@ -1020,7 +1020,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/(^\|)|(\|$)|([^\\\\]\s|[^\w-\\\|\s\/]|\|\|)/',
+		return (preg_match('/(^\|)|(\|$)|([^\\\\]\s|[^\w-\\\|\s\/.+*?\(\)]|\|\|)/',
 				$rule) === 0);
 	}
 
