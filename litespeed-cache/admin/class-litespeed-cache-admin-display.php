@@ -201,9 +201,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		if (!is_numeric($widget->number) && (!isset($_REQUEST['editwidget']))) {
-			return;
-		}
+		$options = null;
 		$enable_levels = array(
 			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
 			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'));

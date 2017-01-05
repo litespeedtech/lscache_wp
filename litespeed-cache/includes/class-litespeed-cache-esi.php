@@ -329,15 +329,19 @@ class LiteSpeed_Cache_Esi
 	 */
 	public static function widget_load_get_options($widget)
 	{
+		add_filter('litespeed_cache_widget_default_options',
+			'LiteSpeed_Cache_Esi::widget_default_options', 10, 2);
+
+		if (!is_numeric($widget->number)) {
+			return null;
+		}
+
 		if ($widget->updated) {
 			$settings = get_option($widget->option_name);
 		}
 		else {
 			$settings = $widget->get_settings();
 		}
-
-		add_filter('litespeed_cache_widget_default_options',
-			'LiteSpeed_Cache_Esi::widget_default_options', 10, 2);
 
 		if (!isset($settings)) {
 			return null;
