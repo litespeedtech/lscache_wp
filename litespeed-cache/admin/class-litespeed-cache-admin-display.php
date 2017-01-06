@@ -1672,6 +1672,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 		if (($options[LiteSpeed_Cache_Config::OPID_ENABLED])
 			&& (isset($options[$id]))
+			&& (isset($cookie_arr))
 			&& (!in_array($options[$id], $cookie_arr))) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
