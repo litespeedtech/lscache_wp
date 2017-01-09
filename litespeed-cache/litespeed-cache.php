@@ -23,7 +23,7 @@
  * Text Domain:       litespeed-cache
  * Domain Path:       /languages
  *
- * Copyright (C) 2015 LiteSpeed Technologies, Inc.
+ * Copyright (C) 2015-2017 LiteSpeed Technologies, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
