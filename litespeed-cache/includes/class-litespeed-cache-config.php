@@ -114,6 +114,9 @@ class LiteSpeed_Cache_Config
 		if ((!$site_options) || (!is_array($site_options))) {
 			$options = get_option(self::OPTION_NAME,
 				$this->get_default_options());
+			if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
+				$options[self::OPID_ENABLED] = true;
+			}
 			return $options;
 		}
 		if ((isset($site_options[self::NETWORK_OPID_USE_PRIMARY]))
