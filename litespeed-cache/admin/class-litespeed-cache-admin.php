@@ -818,6 +818,10 @@ if (defined('lscache_debug')) {
 			LiteSpeed_Cache::plugin()->purge_front();
 			$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
 		}
+		elseif ( isset($_POST['purgeerrors'])){
+			LiteSpeed_Cache::plugin()->purge_errors();
+			$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
+		}
 		elseif ( isset($_POST['purgelist'])) {
 			LiteSpeed_Cache::plugin()->purge_list();
 			return;

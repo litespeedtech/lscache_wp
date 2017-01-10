@@ -954,6 +954,25 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Alerts LiteSpeed Web Server to purge error pages.
+	 *
+	 * @since    1.0.14
+	 * @access   public
+	 */
+	public function purge_errors()
+	{
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR);
+		if (!isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
+			return;
+		}
+		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
+		if (!isset($input['include_404'])) {
+			return;
+		}
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '.404');
+	}
+
+	/**
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
 	 * @since 1.0.7
