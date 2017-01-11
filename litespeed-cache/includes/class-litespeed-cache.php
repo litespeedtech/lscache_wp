@@ -1188,7 +1188,7 @@ class LiteSpeed_Cache
 	{
 		$post_id = intval($id);
 		// ignore the status we don't care
-		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
+		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private' )) ) {
 			return ;
 		}
 
@@ -2089,6 +2089,8 @@ class LiteSpeed_Cache
 
 		// post
 		$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $post_id ;
+		$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_URL
+			. self::get_uri_hash(wp_make_link_relative(get_post_permalink($post_id)));
 
 		// for archive of categories|tags|custom tax
 		$post = get_post($post_id) ;
