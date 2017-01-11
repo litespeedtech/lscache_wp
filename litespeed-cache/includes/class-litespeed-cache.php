@@ -968,10 +968,15 @@ class LiteSpeed_Cache
 			return;
 		}
 		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
-		if (!isset($input['include_404'])) {
-			return;
+		if (isset($input['include_403'])) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '403');
 		}
-		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '.404');
+		if (isset($input['include_404'])) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '404');
+		}
+		if (isset($input['include_500'])) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '500');
+		}
 	}
 
 	/**
@@ -2010,6 +2015,10 @@ class LiteSpeed_Cache
 		}
 		elseif ( is_home() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME ;
+		}
+
+		if ($this->error_status !== false) {
+			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_ERROR . $this->error_status;
 		}
 
 		if ( is_archive() ) {
