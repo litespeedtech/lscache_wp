@@ -300,37 +300,84 @@ class LiteSpeed_Cache_Admin_Display
 		. '<input type="hidden" name="lscwp_management" value="manage_lscwp" />'
 		. wp_nonce_field('lscwp_manage', 'management_run') ;
 
+		$purge_front = get_submit_button(
+			__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront', false);
+
+		$atts = array();
+		$atts['id'] = 'litespeedcache-purgeall';
+
+		$purge_all = get_submit_button(
+			__('Purge All', 'litespeed-cache'), 'primary', 'purgeall', false,
+			$atts);
+
+		$atts['id'] = 'litespeedcache-purgeerrors';
+
+		$purge_errors = get_submit_button(
+			__('Purge Error Pages', 'litespeed-cache'), 'primary',
+			'purgeerrors', false, $atts);
+
+		$incl_403 = $this->input_field_checkbox('include_403', true, true,
+			__('Include 403', 'litespeed-cache'));
+
+		$incl_404 = $this->input_field_checkbox('include_404', true, false,
+			__('Include 404', 'litespeed-cache'));
+
+		$incl_500 = $this->input_field_checkbox('include_500', true, true,
+			__('Include 500s', 'litespeed-cache'));
+
 		// Form entries purge front, purge all
-		$buf .= '<input type="submit" class="button button-primary" '
-		. 'name="purgefront" value="' . __('Purge Front Page', 'litespeed-cache')
-		. '" /><span>&nbsp;'
-		. __('Purges the front page only.', 'litespeed-cache')
-		. '</span><br><br>'
-		. '<input type="submit" class="button button-primary" name="purgeall"'
-		. 'id="litespeedcache-purgeall" value="' . __('Purge All', 'litespeed-cache')
-		. '" /><span>&nbsp;'
-		. __('Purges the cache entries created by this plugin.', 'litespeed-cache')
-		. '<br>';
+		$buf .= '<table class="form-table"><tbody>'
+		. '<tr><th>'
+		. __('Purge the front page.', 'litespeed-cache')
+		. '</th><td>'
+		. '<span class="field-tip">'
+    	. '<span class="tip-content">'.__('This will Purge Front Page only','litespeed-cache').'</span>'
+		. '</span>'
+		. $purge_front
+		. '</td></tr>'
+		. '<tr><th>'
+		. __('Purge all cache entries.', 'litespeed-cache')
+		. '</th><td>'
+		. '<span class="field-tip">'
+    	. '<span class="tip-content">'.__('Purge the cache entries created by this plugin.','litespeed-cache').'</span>'
+		. '</span>'
+		. $purge_all
+		. '</td></tr>'
+		. '<tr><th>'
+		. __('Purge the error page cache', 'litespeed-cache')
+		. '</th><td>'
+		. '<span class="field-tip">'
+    	. '<span class="tip-content">'.__('Purges the error page cache entries created by this plugin.','litespeed-cache').'</span>'
+		. '</span>'
+		. $incl_403 . '&nbsp;&nbsp;' . $incl_404 . '&nbsp;&nbsp;' . $incl_500 . '<br>'
+		. $purge_errors . '&nbsp;'
+		. '</td></tr>';
 
 		if ((!is_multisite()) || (is_network_admin())) {
 			$buf .=
-				'<br><input type="submit" class="wp-ui-notification" name="clearcache"'
+				'<tr><th>'
+				. __('Clear all cache entries.', 'litespeed-cache')
+				. '</th><td>'
+				. '<span class="field-tip">'
+    			. '<span class="tip-content">'.__($clearcache_desc_para,'litespeed-cache').'</span>'
+				. '</span>'
+				. '<input type="submit" class="wp-ui-notification" name="clearcache"'
 				. 'id="litespeedcache-clearcache" value="'
 				. __('Empty Entire Cache', 'litespeed-cache')
-				. '" /><span>&nbsp;'
-				. $clearcache_desc_para
-				. '</span><br>'
+				. '" />'
 				. $this->input_field_hidden('litespeedcache-clearcache-confirm',
-					$clearcache_confirm_para);
+					$clearcache_confirm_para)
+				. '</td></tr>';
 		}
 
 		if ((is_multisite()) && (is_network_admin())) {
 			echo $buf
 			. $this->input_field_hidden('litespeedcache-purgeall-confirm',
 				$purgeall_confirm_para)
-			. "<br><br></form></div></div>\n";
+			. "<br><br></tbody></table></form></div></div>\n";
 			return;
 		}
+		$buf .= '</tbody></table>';
 
 		$buf .= $this->input_field_hidden('litespeedcache-purgeall-confirm',
 			__('Are you sure you want to purge all?', 'litespeed-cache'));
@@ -360,6 +407,7 @@ class LiteSpeed_Cache_Admin_Display
 		else {
 			$selected = 0;
 		}
+
 		$buf .= $this->input_field_select(self::PURGEBYOPT_SELECT,
 				$purgeby_options, $selected)
 		. '<br><br>' . $this->input_field_textarea(self::PURGEBYOPT_LIST, '', '5', '80')
@@ -420,13 +468,18 @@ class LiteSpeed_Cache_Admin_Display
 		<h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache')
 		. '<span style="font-size:0.5em">v' . LiteSpeed_Cache::PLUGIN_VERSION . '</span></h2>
 		<form method="post" action="options.php">' ;
-		echo '<input type="hidden" name="active_tab" id="active_tab" value="'.$lscwp_active_tab.'" />';
 		if ($this->get_disable_all()) {
 			$desc = LiteSpeed_Cache::build_paragraph(
 				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
 				__('The following options are selected, but are not editable in this settings page.', 'litespeed-cache')
 			);
 			echo '<p>' . $desc . '</p>';
+		}
+
+		$lscwp_active_tab = 0;
+		$tab_count = 5;
+		if (!empty($tp_tabs)) {
+			$tab_count += count($tp_tabs);
 		}
 
 		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
@@ -440,6 +493,7 @@ class LiteSpeed_Cache_Admin_Display
 			$compatibilities_settings .= '<div id ="wp-compatibilities-settings">'
 							. $compatibilities_buf .
 							'</div>';
+			++$tab_count;
 		}
 
 		$advanced_tab = '';
@@ -450,9 +504,18 @@ class LiteSpeed_Cache_Admin_Display
 			$advanced_settings = '<div id="advanced-settings">'
 					. $this->show_settings_advanced($options)
 					. '</div>';
+			++$tab_count;
 		}
 
-		echo '
+		if (isset($_REQUEST['tab'])) {
+			$lscwp_active_tab = intval($_REQUEST['tab']);
+			if (($lscwp_active_tab < 0) || ($lscwp_active_tab >= $tab_count)) {
+				$lscwp_active_tab = 0;
+			}
+		}
+
+		echo '<input type="hidden" name="active_tab" id="active_tab" value="'
+			. $lscwp_active_tab . '" />
 		 <div id="lsc-tabs">
 		 <ul>
 		 <li><a href="#general-settings">' . __('General', 'litespeed-cache') . '</a></li>
@@ -985,6 +1048,14 @@ class LiteSpeed_Cache_Admin_Display
 			__('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'),
 			__('If this is set to a number less than 30, 404 pages will not be cached.', 'litespeed-cache')
 		);
+		$forbidden_ttl_desc = LiteSpeed_Cache::build_paragraph(
+			__('Specify how long, in seconds, 403 pages are cached.', 'litespeed-cache'),
+			__('If this is set to a number less than 30, 403 pages will not be cached.', 'litespeed-cache')
+		);
+		$ise_ttl_desc = LiteSpeed_Cache::build_paragraph(
+			__('Specify how long, in seconds, 500 pages are cached.', 'litespeed-cache'),
+			__('If this is set to a number less than 30, 500 pages will not be cached.', 'litespeed-cache')
+		);
 		$cache_commenters_desc = LiteSpeed_Cache::build_paragraph(
 			__('When checked, commenters will not be able to see their comments awaiting moderation.', 'litespeed-cache'),
 			__('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache')
@@ -1049,6 +1120,18 @@ class LiteSpeed_Cache_Admin_Display
 				__('seconds', 'litespeed-cache')) ;
 		$buf .= $this->display_config_row(__('Default 404 Page TTL', 'litespeed-cache'),
 				$input_404_ttl, $notfound_ttl_desc);
+
+		$id = LiteSpeed_Cache_Config::OPID_403_TTL ;
+		$input_403_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+				__('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default 403 Page TTL', 'litespeed-cache'),
+				$input_403_ttl, $forbidden_ttl_desc);
+
+		$id = LiteSpeed_Cache_Config::OPID_500_TTL ;
+		$input_500_ttl = $this->input_field_text($id, $options[$id], 10, 'regular-text',
+				__('seconds', 'litespeed-cache')) ;
+		$buf .= $this->display_config_row(__('Default 500 Page TTL', 'litespeed-cache'),
+				$input_500_ttl, $ise_ttl_desc);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
 		$cache_commenters = $this->input_field_checkbox('lscwp_' . $id, $id, $options[$id]) ;
@@ -1657,6 +1740,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 		if (($options[LiteSpeed_Cache_Config::OPID_ENABLED])
 			&& (isset($options[$id]))
+			&& (isset($cookie_arr))
 			&& (!in_array($options[$id], $cookie_arr))) {
 			echo $this->build_notice(self::NOTICE_YELLOW,
 					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache'));
