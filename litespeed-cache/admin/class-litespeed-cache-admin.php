@@ -480,6 +480,28 @@ if (defined('lscache_debug')) {
 			$options[$id] = intval($input[$id]);
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_403_TTL;
+		if (!$this->validate_ttl($input, $id)) {
+			$errors[] = sprintf($err, __('403', 'litespeed-cache'), 0);
+		}
+		elseif ($input[$id] < 30) {
+			$options[$id] = 0;
+		}
+		else {
+			$options[$id] = intval($input[$id]);
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_500_TTL;
+		if (!$this->validate_ttl($input, $id)) {
+			$errors[] = sprintf($err, __('500', 'litespeed-cache'), 0);
+		}
+		elseif ($input[$id] < 30) {
+			$options[$id] = 0;
+		}
+		else {
+			$options[$id] = intval($input[$id]);
+		}
+
 		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
 			$input, $options);
 
@@ -817,6 +839,10 @@ if (defined('lscache_debug')) {
 		elseif ( isset($_POST['purgefront'])){
 			LiteSpeed_Cache::plugin()->purge_front();
 			$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
+		}
+		elseif ( isset($_POST['purgeerrors'])){
+			LiteSpeed_Cache::plugin()->purge_errors();
+			$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
 		}
 		elseif ( isset($_POST['purgelist'])) {
 			LiteSpeed_Cache::plugin()->purge_list();
