@@ -5,25 +5,108 @@
 
 @import "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css";
 
-.wp-ui-notification {
-    background: #d54e21;
-    border-color: #d54e21 #d54e21 #d54e21;
-    -webkit-box-shadow: 0 1px 0 #d54e21;
-    box-shadow: 0 1px 0 #d54e21;
+#litespeedcache-clearcache {
+    background: #ff0000 !important;
+    border-color: #ff0000 #ff0000 #ff0000 !important;
+    -webkit-box-shadow: 0 1px 0 #ff0000 !important;
+    box-shadow: 0 1px 0 #ff0000 !important;
     color: #fff;
     text-decoration: none;
     display: inline-block;
     font-size: 13px;
-	  line-height: 26px;
-	  height: 28px;
-	  margin: 0;
-	  padding: 0 10px 1px;
-	  cursor: pointer;
-	  border-width: 1px;
-	  border-style: solid;
+	line-height: 26px;
+	height: 28px;
+	margin: 0;
+	padding: 0 10px 1px;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
     border-radius: 3px;
     white-space: nowrap;
     box-sizing: border-box;
 }
 
+/* Hover tooltips */
+.field-tip {
+    position:relative;
+    cursor:help;
+}
 
+.field-tip:before{
+	content:"?";
+    color:#5c5a5a;
+    margin-left:40px;
+    margin-right:10px;
+    vertical-align: middle;
+    padding-top: 5px;
+}
+
+.field-tip .tip-content {
+    position:absolute;
+    top:-10px; /* - top padding */
+    right:9999px;
+    width:200px;
+    margin-right:-220px; /* width + left/right padding */
+    padding:10px;
+    color:#fff;
+    background:#333;
+    -webkit-box-shadow:2px 2px 5px #aaa;
+    -moz-box-shadow:2px 2px 5px #aaa;
+                box-shadow:2px 2px 5px #aaa;
+    opacity:0;
+    -webkit-transition:opacity 250ms ease-out;
+    -moz-transition:opacity 250ms ease-out;
+    -ms-transition:opacity 250ms ease-out;
+    -o-transition:opacity 250ms ease-out;
+    transition:opacity 250ms ease-out;
+    font:normal 10px/1.5 Verdana,Arial,sans-serif;
+}
+
+/* <http://css-tricks.com/snippets/css/css-triangle/> */
+.field-tip .tip-content:before {
+	content:'';
+	position:absolute;
+	top:50%;
+	left:-16px; /* 2 x border width */
+	width:0;
+	height:0;
+	margin-top:-8px; /* - border width */
+	border:8px solid transparent;   
+    border-right-color:#333;
+    color:#ccc;
+ }
+ 
+ .field-tip:hover .tip-content {
+    right:-20px;
+    opacity:1;
+ }
+
+ #litespeedcache-purgeerrors{
+ 	margin-left:56px;
+ 	margin-top:5px;
+ }
+
+select#purgeby {
+   background: transparent;
+   width: 150px;
+   padding: 2px;
+   line-height: 2.85em;
+   font-size: 12px;
+   cursor: pointer;
+   border-width: 1px;
+   border-style: solid;
+   border-radius: 3px;
+   white-space: nowrap;
+   box-sizing: border-box;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   background: url(https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-08-128.png) 96% / 15% no-repeat #fff;
+}
+/*target Internet Explorer 9 and Internet Explorer 10:*/
+@media screen and (min-width:0\0) { 
+    select#purgeby {
+        background:none;
+        padding: 5px;
+    }
+}
