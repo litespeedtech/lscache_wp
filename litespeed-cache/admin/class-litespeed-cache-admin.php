@@ -42,11 +42,6 @@ class LiteSpeed_Cache_Admin
 		$this->plugin_name = $plugin_name ;
 		$this->version = $version ;
 		$plugin_file = plugin_dir_path(dirname(__FILE__)) . $plugin_name . '.php';
-if (defined('lscache_debug')) {
-			require_once(ABSPATH . '/wp-admin/includes/file.php');
-	$plugin_file = ABSPATH . '/wp-content/plugins/litespeed-cache/' . $plugin_name . '.php';
-}
-
 		$plugin_base = plugin_basename($plugin_file);
 
 		if (!function_exists('is_plugin_active_for_network')) {
@@ -407,7 +402,7 @@ if (defined('lscache_debug')) {
 		}
 
 		$val = $input[$id];
-		return ((ctype_digit($val)) && ($val >= 0) && ($val < 2147483647));
+		return ((is_numeric($val)) && ($val >= 0) && ($val < 2147483647));
 	}
 
 	/**
@@ -642,6 +637,24 @@ if (defined('lscache_debug')) {
 	}
 
 	/**
+	 * Validates the esi settings.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
+	private function validate_esi($input, &$options, &$errors)
+	{
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_ENABLE,
+			$input, $options);
+
+		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_CACHE,
+			$input, $options);
+	}
+
+	/**
 	 * Validates the debug settings.
 	 *
 	 * @since 1.0.12
@@ -747,9 +760,14 @@ if (defined('lscache_debug')) {
 	 */
 	public function validate_plugin_settings( $input )
 	{
-		$config = LiteSpeed_Cache::config() ;
-		$options = $config->get_options() ;
-		$errors = array() ;
+		$config = LiteSpeed_Cache::config();
+		$options = $config->get_options();
+		$errors = array();
+
+		if (!is_openlitespeed()) {
+			$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+			$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+		}
 
 		if (LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all()) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
@@ -770,6 +788,24 @@ if (defined('lscache_debug')) {
 			$this->validate_singlesite($input, $options, $errors);
 		}
 
+		if (!is_openlitespeed()) {
+			$this->validate_esi($input, $options, $errors);
+
+			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
+			$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+
+			if (($orig_enabled !== $new_enabled)
+				|| ($orig_esi_enabled !== $new_esi_enabled)
+			) {
+				if (($new_enabled) && ($new_esi_enabled)) {
+					LiteSpeed_Cache::plugin()->set_esi_post_type();
+				} else {
+					flush_rewrite_rules();
+				}
+				LiteSpeed_Cache::plugin()->purge_all();
+			}
+		}
+
 		if ( ! empty($errors) ) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME,
 					LiteSpeed_Cache_Config::OPTION_NAME, implode('<br>', $errors));
@@ -779,6 +815,82 @@ if (defined('lscache_debug')) {
 		$this->validate_thirdparty($config, $input, $options);
 
 		return $options;
+	}
+
+	/**
+	 * Hooked to the wp_redirect filter.
+	 * This will only hook if there was a problem when saving the widget.
+	 *
+	 * @param string $location The location string.
+	 * @return string the updated location string.
+	 */
+	public function widget_save_err($location)
+	{
+		return str_replace('?message=0', '?error=0', $location);
+	}
+
+	/**
+	 * Hooked to the widget_update_callback filter.
+	 * Validate the LiteSpeed Cache settings on edit widget save.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param array $instance The new settings.
+	 * @param array $new_instance
+	 * @param array $old_instance The original settings.
+	 * @param WP_Widget $widget The widget
+	 * @return mixed Updated settings on success, false on error.
+	 */
+	public function validate_widget_save($instance, $new_instance,
+		$old_instance, $widget)
+	{
+		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME];
+		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
+		if (empty($input)) {
+			return $instance;
+		}
+		$esistr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE];
+		$ttlstr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL];
+
+		if ((!is_numeric($ttlstr)) || (!is_numeric($esistr))) {
+			add_filter('wp_redirect', array($this, 'widget_save_err'));
+			return false;
+		}
+
+		$esi = intval($esistr);
+		$ttl = intval($ttlstr);
+
+		if (($ttl != 0) && ($ttl < 30)) {
+			add_filter('wp_redirect', array($this, 'widget_save_err'));
+			return false; // invalid ttl.
+		}
+
+		if (is_null($instance[LiteSpeed_Cache_Config::OPTION_NAME])) {
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array(
+				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE => $esi,
+				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => $ttl
+			);
+		}
+		else {
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME]
+				[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = $esi;
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME]
+				[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = $ttl;
+		}
+
+		if ((!isset($current))
+			|| ($esi
+				!= $current[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE])) {
+			LiteSpeed_Cache_Tags::add_purge_tag('*');
+		}
+		elseif (($ttl != 0)
+			&& ($ttl != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL])) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $widget->id);
+		}
+
+		LiteSpeed_Cache::plugin()->purge_all();
+		return $instance;
 	}
 
 	/**

@@ -30,14 +30,14 @@
      */
 
     jQuery(document).ready(function () {
-        
+
         var tabs = $("#lsc-tabs").tabs({
         activate: function(event, ui){
             event.preventDefault();
 
             //get the active tab index
             var active = $("#lsc-tabs").tabs("option", "active");
-            
+
             //save it to hidden field
             $("input[name=active_tab]").val(active);
             var referer = $("input[name=_wp_http_referer]").val();
@@ -48,7 +48,7 @@
 
         //read the hidden field
         var activeTabIndex = $("input[name=active_tab]").val();
-        
+
         //make active needed tab
         if( activeTabIndex !== undefined ) {
             tabs.tabs("option", "active", activeTabIndex);
@@ -106,3 +106,40 @@ function lscwpCheckboxConfirm(the_checkbox, list_id) {
     the_list.value = '';
     the_list.readOnly = true;
 }
+
+function lscwpEsiEnabled(the_checkbox, esi_ids) {
+    var rdonly = the_checkbox.checked ? false : true;
+    var len = esi_ids.length;
+    for (var i = 0; i < len; i++) {
+        var node_id = 'saved_' + esi_ids[i].getAttribute('id');
+        var node_val = esi_ids[i].getAttribute('value');
+        var prev = document.getElementById(node_id);
+        if (rdonly === false) {
+            esi_ids[i].removeAttribute('disabled');
+            if (prev) {
+                esi_ids[i].removeChild(prev);
+            }
+            continue;
+        }
+        esi_ids[i].setAttribute('disabled', true);
+        if (prev !== null) {
+            if (esi_ids[i].checked) {
+                prev.setAttribute("value", node_val);
+            }
+            else {
+                esi_ids[i].removeChild(prev);
+            }
+            continue;
+        }
+        else if (esi_ids[i].checked === false) {
+            continue;
+        }
+        var hid = document.createElement("INPUT");
+        hid.setAttribute("type", "hidden");
+        hid.setAttribute("name", esi_ids[i].getAttribute('name'));
+        hid.setAttribute("value", node_val);
+        hid.setAttribute("id", node_id);
+        esi_ids[i].appendChild(hid);
+    }
+}
+

@@ -48,6 +48,8 @@ class LiteSpeed_Cache_Config
 	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
+	const OPID_ESI_ENABLE = 'esi_enabled';
+	const OPID_ESI_CACHE = 'esi_cached';
 	const PURGE_ALL_PAGES = '-' ;
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
@@ -263,6 +265,11 @@ class LiteSpeed_Cache_Config
 			self::ID_NOCACHE_USERAGENTS => '',
 				) ;
 
+		if (!is_openlitespeed()) {
+			$default_options[self::OPID_ESI_ENABLE] = true;
+			$default_options[self::OPID_ESI_CACHE] = false;
+		}
+
 		if (is_multisite()) {
 			$default_options[self::NETWORK_OPID_ENABLED] = false;
 		}
@@ -426,6 +433,11 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $this->options);
+		if ((!is_openlitespeed())
+			&& ($this->options[self::OPID_ENABLED])
+			&& ($this->options[self::OPID_ESI_ENABLE])) {
+			LiteSpeed_Cache::plugin()->set_esi_post_type();
+		}
 
 //		if ((!is_multisite()) || (is_network_admin())) {
 //			$this->options[self::OPID_LOGIN_COOKIE]
@@ -520,7 +532,7 @@ class LiteSpeed_Cache_Config
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param int $count In multisite, the number of blogs active.
+	 * @param int $count The count of blogs active in multisite.
 	 */
 	public function plugin_activation($count)
 	{

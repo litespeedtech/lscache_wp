@@ -24,7 +24,7 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 */
 	public static function detect()
 	{
-		if ((function_exists('is_bbpress')) && (is_bbpress())){
+		if (function_exists('is_bbpress')){
 			add_action('litespeed_cache_on_purge_post', 'LiteSpeed_Cache_ThirdParty_BBPress::on_purge');
 		}
 	}
@@ -39,6 +39,11 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 */
 	public static function on_purge($post_id)
 	{
+		if ((!is_bbpress()) && (!bbp_is_forum($post_id))
+			&& (!bbp_is_topic($post_id)) && (!bbp_is_reply($post_id))) {
+			return;
+		}
+
 		// Need to purge base forums page, bbPress page was updated.
 		LiteSpeed_Cache_Tags::add_purge_tag(
 				LiteSpeed_Cache_Tags::TYPE_ARCHIVE_POSTTYPE . bbp_get_forum_post_type());
@@ -49,6 +54,20 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 			foreach ($ancestors as $ancestor) {
 				LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_POST . $ancestor);
 			}
+		}
+
+		global $wp_widget_factory;
+		if ((bbp_is_reply($post_id))
+			&& (!is_null($wp_widget_factory->widgets['BBP_Replies_Widget']))) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $wp_widget_factory->widgets['BBP_Replies_Widget']->id);
+		}
+		if ((bbp_is_topic($post_id))
+			&& (!is_null($wp_widget_factory->widgets['BBP_Topics_Widget']))) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $wp_widget_factory->widgets['BBP_Topics_Widget']->id);
 		}
 	}
 }

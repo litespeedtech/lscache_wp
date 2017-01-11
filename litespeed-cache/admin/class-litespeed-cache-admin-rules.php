@@ -46,7 +46,10 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
 	private static $RW_BLOCK_END = '</IfModule>';
 	private static $RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
-	private static $RW_PREREQ = "\nRewriteEngine on\nCacheLookup Public on\n";
+	private static $RW_PREREQ;
+	private static $RW_LOOKUP;
+	private static $RW_LOOKUP_PUBLIC = "CacheLookup Public on";
+	private static $RW_LOOKUP_BOTH = "CacheLookup on";
 
 	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
 	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
@@ -78,6 +81,14 @@ class LiteSpeed_Cache_Admin_Rules
 	public static function get_instance()
 	{
 		if (!isset(self::$instance)) {
+			if (is_openlitespeed()) {
+				self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
+			}
+			else {
+				self::$RW_LOOKUP = self::$RW_LOOKUP_BOTH;
+			}
+			self::$RW_PREREQ = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
+
 			self::$instance = new LiteSpeed_Cache_Admin_Rules();
 			self::set_translations();
 		}
@@ -486,6 +497,10 @@ class LiteSpeed_Cache_Admin_Rules
 	private function file_combine($beginning, $haystack, $after, $path = '')
 	{
 		if (!is_null($haystack)) {
+			if (!is_openlitespeed()) {
+				$haystack = str_replace(self::$RW_LOOKUP_PUBLIC,
+					self::$RW_LOOKUP_BOTH, $haystack);
+			}
 			$beginning .= $haystack;
 		}
 		$beginning .= $after;

@@ -20,9 +20,15 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	const OPTION_UPDATE_INTERVAL = 'wc_update_interval';
 	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl';
 	const OPT_PQS_CS = 0; // flush product on quantity + stock change, categories on stock change
-	CONST OPT_PS_CS = 1; // flush product and categories on stock change
-	CONST OPT_PS_CN = 2; // flush product on stock change, categories no flush
-	CONST OPT_PQS_CQS = 3; // flush product and categories on quantity + stock change
+	const OPT_PS_CS = 1; // flush product and categories on stock change
+	const OPT_PS_CN = 2; // flush product on stock change, categories no flush
+	const OPT_PQS_CQS = 3; // flush product and categories on quantity + stock change
+
+	const ESI_PARAM_ARGS = 'wc_args';
+	const ESI_PARAM_POSTID = 'wc_post_id';
+	const ESI_PARAM_NAME = 'wc_name';
+	const ESI_PARAM_PATH = 'wc_path';
+	const ESI_PARAM_LOCATED = 'wc_located';
 
 	/**
 	 * Detects if WooCommerce is installed.
@@ -32,25 +38,321 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function detect()
 	{
-		if (defined('WOOCOMMERCE_VERSION')) {
-			add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable');
-
-			add_action('woocommerce_after_checkout_validation',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
-			add_filter('litespeed_cache_get_options',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
-
-			if (is_admin()) {
-				add_action('litespeed_cache_on_purge_post',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge');
-				add_action('delete_term_relationships',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2);
-				add_filter('litespeed_cache_add_config_tab',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3);
-				add_filter('litespeed_cache_save_options',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2);
-			}
+		if (!defined('WOOCOMMERCE_VERSION')) {
+			return;
 		}
+		add_filter('litespeed_cache_is_cacheable',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable');
+
+		add_action('woocommerce_after_checkout_validation',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
+		add_filter('litespeed_cache_get_options',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
+		add_action('comment_post',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3);
+
+		if (!is_shop()) {
+			add_action('litespeed_cache_is_not_esi_template',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
+			add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
+			add_action('litespeed_cache_load_esi_block-storefront-cart-header',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header');
+			add_action('litespeed_cache_load_esi_block-widget',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view');
+		}
+
+		if (is_product()) {
+			add_filter('litespeed_cache_sub_esi_params-widget',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id');
+		}
+
+		add_action('litespeed_cache_is_not_esi_template',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart');
+
+		if (is_admin()) {
+			add_action('litespeed_cache_on_purge_post',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge');
+			add_action('delete_term_relationships',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2);
+			add_filter('litespeed_cache_add_config_tab',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3);
+			add_filter('litespeed_cache_save_options',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2);
+			add_filter('litespeed_cache_widget_default_options',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::wc_widget_default',
+				10, 2);
+		}
+	}
+
+	/**
+	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * If the request is not an esi request, I want to set my own hook
+	 * in woocommerce_before_template_part to see if it's something I can ESI.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public static function set_block_template()
+	{
+		add_action('woocommerce_before_template_part',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4);
+	}
+
+	/**
+	 * Hooked to the litespeed_cache_is_not_esi_template action.
+	 * If the request is not an esi request, I want to set my own hook
+	 * in storefront_header to see if it's something I can ESI.
+	 *
+	 * Will remove storefront_header_cart in storefront_header.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public static function set_swap_header_cart()
+	{
+		$priority = has_action('storefront_header', 'storefront_header_cart');
+		if ($priority !== false) {
+			remove_action('storefront_header', 'storefront_header_cart', $priority);
+			add_action('storefront_header',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::esi_cart_header',
+				$priority);
+		}
+	}
+
+	/**
+	 * Hooked to the woocommerce_before_template_part action.
+	 * Checks if the template contains 'add-to-cart'. If so, and if I
+	 * want to ESI the request, block it and build my esi code block.
+	 *
+	 * The function parameters will be passed to the esi request.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @global type $post Needed for post id
+	 * @param type $template_name
+	 * @param type $template_path
+	 * @param type $located
+	 * @param type $args
+	 */
+	public static function block_template($template_name, $template_path,
+		$located, $args)
+	{
+		if (strpos($template_name, 'add-to-cart') === false) {
+			if (strpos($template_name, 'related.php') !== false) {
+				remove_action('woocommerce_before_template_part',
+					'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999);
+				add_filter('woocommerce_related_products_args',
+					'LiteSpeed_Cache_ThirdParty_WooCommerce::add_related_tags');
+				add_action('woocommerce_after_template_part',
+					'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+			}
+			return;
+		}
+		global $post;
+		$params = array(
+			self::ESI_PARAM_ARGS => $args,
+			self::ESI_PARAM_NAME => $template_name,
+			self::ESI_PARAM_POSTID => $post->ID,
+			self::ESI_PARAM_PATH => $template_path,
+			self::ESI_PARAM_LOCATED => $located
+		);
+		add_action('woocommerce_after_add_to_cart_form',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
+		add_action('woocommerce_after_template_part',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999);
+		LiteSpeed_Cache_Esi::sub_esi_block('wc-add-to-cart-form', 'WC_CART_FORM',
+			$params);
+		ob_start();
+	}
+
+	/**
+	 * Hooked to the woocommerce_after_add_to_cart_form action.
+	 * If this is hit first, clean the buffer and remove this function and
+	 * end_template.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public static function end_form($template_name = '')
+	{
+		if ((!empty($template_name))
+			&& (strpos($template_name, 'add-to-cart') === false)) {
+				return;
+		}
+		ob_clean();
+		remove_action('woocommerce_after_add_to_cart_form',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
+		remove_action('woocommerce_after_template_part',
+			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999);
+	}
+
+	/**
+	 * If related products are loaded, need to add the extra product ids.
+	 *
+	 * The page will be purged if any of the products are changed.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $args The arguments used to build the related products section.
+	 * @return array The unchanged arguments.
+	 */
+	public static function add_related_tags($args)
+	{
+		if ((empty($args)) || (!isset($args['post__in']))) {
+			return $args;
+		}
+		$related_posts = $args['post__in'];
+		foreach ($related_posts as $related) {
+			LiteSpeed_Cache_Tags::add_cache_tag(
+				LiteSpeed_Cache_Tags::TYPE_POST . $related);
+		}
+		return $args;
+	}
+
+	/**
+	 * Hooked to the woocommerce_after_template_part action.
+	 * If the template contains 'add-to-cart', clean the buffer.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param type $template_name
+	 */
+	public static function end_template($template_name)
+	{
+		if (strpos($template_name, 'related.php') !== false) {
+			remove_action('woocommerce_after_template_part',
+				'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+			self::set_block_template();
+		}
+	}
+
+	/**
+	 * Hooked to the storefront_header header.
+	 * If I want to ESI the request, block it and build my esi code block.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public static function esi_cart_header()
+	{
+		LiteSpeed_Cache_Esi::sub_esi_block('storefront-cart-header',
+			'STOREFRONT_CART_HEADER');
+	}
+
+	/**
+	 * Hooked to the litespeed_cache_load_esi_block-storefront-cart-header action.
+	 * Generates the cart header for esi display.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public static function load_cart_header()
+	{
+		storefront_header_cart();
+	}
+
+	/**
+	 * Hooked to the litespeed_cache_load_esi_block-wc-add-to-cart-form action.
+	 * Parses the esi input parameters and generates the add to cart form
+	 * for esi display.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @global type $post
+	 * @global type $wp_query
+	 * @param type $params
+	 */
+	public static function load_add_to_cart_form_block($params)
+	{
+		global $post, $wp_query;
+		$post = get_post($params[self::ESI_PARAM_POSTID]);
+		$wp_query->setup_postdata($post);
+		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS],
+			$params[self::ESI_PARAM_PATH]);
+	}
+
+	/**
+	 * Update woocommerce when someone visits a product and has the
+	 * recently viewed products widget.
+	 *
+	 * Currently, this widget should not be cached.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $params Widget parameter array
+	 */
+	public static function register_post_view($params)
+	{
+		if ($params[LiteSpeed_Cache_Esi::PARAM_NAME]
+			!== 'WC_Widget_Recently_Viewed') {
+			return;
+		}
+		if (!isset($params[self::ESI_PARAM_POSTID])) {
+			return;
+		}
+		$id = $params[self::ESI_PARAM_POSTID];
+		$esi_post = get_post($id);
+		$product = wc_get_product($esi_post);
+
+		if (empty($product)) {
+			return;
+		}
+
+		global $post;
+		$post = $esi_post;
+		wc_track_product_view();
+	}
+
+	/**
+	 * Adds the post id to the widget ESI parameters for the Recently Viewed widget.
+	 *
+	 * This is needed in the esi request to update the cookie properly.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $params The current ESI parameters.
+	 * @return array The updated esi parameters.
+	 */
+	public static function add_post_id($params)
+	{
+		if ((!isset($params))
+			|| (!isset($params[LiteSpeed_Cache_Esi::PARAM_NAME]))
+			|| ($params[LiteSpeed_Cache_Esi::PARAM_NAME]
+				!== 'WC_Widget_Recently_Viewed')) {
+			return $params;
+		}
+		$params[self::ESI_PARAM_POSTID] = get_the_ID();
+		return $params;
+	}
+
+	/**
+	 * Hooked to the litespeed_cache_widget_default_options filter.
+	 *
+	 * The recently viewed widget must be esi to function properly.
+	 * This function will set it to enable and no cache by default.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $options The current default widget options.
+	 * @param type $widget The current widget to configure.
+	 * @return array The updated default widget options.
+	 */
+	public static function wc_widget_default($options, $widget)
+	{
+		if (!is_array($options)) {
+			return $options;
+		}
+		$widget_name = get_class($widget);
+		if ($widget_name === 'WC_Widget_Recently_Viewed') {
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 0;
+		}
+		elseif ($widget_name === 'WC_Widget_Recent_Reviews') {
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 86400;
+		}
+		return $options;
 	}
 
 	/**
@@ -267,6 +569,32 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			foreach ($tags as $tag) {
 				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $tag);
 			}
+		}
+	}
+
+	/**
+	 * When a product has a new review added, purge the recent reviews widget.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param $unused
+	 * @param integer $comment_approved Whether the comment is approved or not.
+	 * @param array $commentdata Information about the comment.
+	 */
+	public static function add_review($unused, $comment_approved,
+	                                  $commentdata)
+	{
+		$post_id = $commentdata['comment_post_ID'];
+		if (($comment_approved !== 1) || (!isset($post_id))
+			|| (wc_get_product($post_id) === false)) {
+			return;
+		}
+		global $wp_widget_factory;
+		$recent_reviews =
+			$wp_widget_factory->widgets['WC_Widget_Recent_Reviews'];
+		if (!is_null($recent_reviews)) {
+			LiteSpeed_Cache_Tags::add_purge_tag(
+				LiteSpeed_Cache_Tags::TYPE_WIDGET . $recent_reviews->id);
 		}
 	}
 

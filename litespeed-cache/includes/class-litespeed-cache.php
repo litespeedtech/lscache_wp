@@ -37,12 +37,15 @@ class LiteSpeed_Cache
 	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
 
 	const CACHECTRL_NOCACHE = 0;
-	const CACHECTRL_CACHE = 1;
+	const CACHECTRL_PUBLIC = 1;
 	const CACHECTRL_PURGE = 2;
 	const CACHECTRL_PURGESINGLE = 3;
+	const CACHECTRL_PRIVATE = 4;
+	const CACHECTRL_SHARED = 5;
 
 	const CACHECTRL_SHOWHEADERS = 128; // (1<<7)
 	const CACHECTRL_STALE = 64; // (1<<6)
+	const CACHECTRL_NO_VARY = 32; // (1<<5)
 
 	const WHM_TRANSIENT = 'lscwp_whm_install';
 	const WHM_TRANSIENT_VAL = 'whm_install';
@@ -53,6 +56,10 @@ class LiteSpeed_Cache
 	protected $current_vary;
 	protected $cachectrl = self::CACHECTRL_NOCACHE;
 	protected $pub_purge_tags = array();
+	protected $priv_purge_tags = array();
+	protected $custom_ttl = 0;
+	protected $user_status = 0;
+
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -67,6 +74,7 @@ class LiteSpeed_Cache
 	{
 		$cur_dir = dirname(__FILE__) ;
 		require_once $cur_dir . '/class-litespeed-cache-config.php' ;
+		include_once $cur_dir . '/class-litespeed-cache-esi.php' ;
 		include_once $cur_dir . '/class-litespeed-cache-tags.php';
 		// Load third party detection.
 		include_once $cur_dir . '/../thirdparty/litespeed-cache-thirdparty-registry.php';
@@ -265,6 +273,9 @@ class LiteSpeed_Cache
 		}
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+		if (!is_openlitespeed()) {
+			$this->set_esi_post_type();
+		}
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
@@ -426,6 +437,7 @@ class LiteSpeed_Cache
 		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 		}
+		flush_rewrite_rules();
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
 		// delete in case it's not deleted prior to deactivation.
 		delete_transient(self::WHM_TRANSIENT);
@@ -443,13 +455,14 @@ class LiteSpeed_Cache
 	 */
 	public function init()
 	{
+		$is_ajax = (defined('DOING_AJAX') && DOING_AJAX);
 		$module_enabled = $this->config->is_plugin_enabled();
 
 		if (defined('LSCWP_LOG')) {
 			self::setup_debug_log();
 		}
 
-		if ( is_admin() ) {
+		if ((is_admin()) && (current_user_can('administrator'))) {
 			$this->load_admin_actions($module_enabled) ;
 		}
 		else {
@@ -463,15 +476,8 @@ class LiteSpeed_Cache
 
 		define('LITESPEED_CACHE_ENABLED', true);
 		ob_start();
-		//TODO: Uncomment this when esi is implemented.
-//		add_action('init', array($this, 'check_admin_bar'), 0);
-//		$this->add_actions_esi();
 
 		$bad_cookies = $this->setup_cookies();
-
-		if ( $this->check_esi_page()) {
-			return;
-		}
 
 		if (($bad_cookies) || ($this->check_user_logged_in())
 			|| ($this->check_cookies())) {
@@ -481,7 +487,7 @@ class LiteSpeed_Cache
 			$this->load_logged_out_actions();
 		}
 
-		$this->load_public_actions() ;
+		$this->load_public_actions($is_ajax);
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			do_action('litespeed_cache_detect_thirdparty');
 		}
@@ -491,7 +497,6 @@ class LiteSpeed_Cache
 		else {
 			add_action('wp', array($this, 'detect'), 4);
 		}
-
 	}
 
 	/**
@@ -518,6 +523,20 @@ class LiteSpeed_Cache
 	public function get_config()
 	{
 		return $this->config ;
+	}
+
+	/**
+	 * Gets the current request's user status.
+	 *
+	 * Helper function for other class' usage.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @return int The user status.
+	 */
+	public function get_user_status()
+	{
+		return $this->user_status;
 	}
 
 	/**
@@ -597,6 +616,29 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Registers the ESI post type.
+	 *
+	 * The registration function is in the LiteSpeed_Cache_Esi class,
+	 * which may not be initialized, so this method will include the
+	 * file if necessary. This method will also flush the rewrite rules
+	 * so that the new post type will be included.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
+	public function set_esi_post_type()
+	{
+		if (!class_exists('LiteSpeed_Cache_Esi')) {
+			include_once $this->plugin_dir
+				. '/includes/class-litespeed-cache-esi.php';
+		}
+		if (!post_type_exists(LiteSpeed_Cache_Esi::POSTTYPE)) {
+			LiteSpeed_Cache_Esi::get_instance()->register_post_type();
+		}
+		flush_rewrite_rules();
+	}
+
+	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
@@ -609,11 +651,11 @@ class LiteSpeed_Cache
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin.php' ;
-		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-display.php' ;
-		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php' ;
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin.php';
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-display.php';
+		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php';
 
-		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION) ;
+		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION);
 		if ((is_multisite()) && (is_network_admin())) {
 			$action = 'network_admin_notices';
 			$manage = 'manage_network_options';
@@ -624,15 +666,15 @@ class LiteSpeed_Cache
 		}
 
 		//register purge_all actions
-		if ( $module_enabled ) {
+		if ($module_enabled) {
 			$purge_all_events = array(
 				'switch_theme',
 				'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
 				'create_term', 'edit_terms', 'delete_term',
 				'add_link', 'edit_link', 'delete_link'
-			) ;
-			foreach ( $purge_all_events as $event ) {
-				add_action($event, array( $this, 'purge_all' )) ;
+			);
+			foreach ($purge_all_events as $event) {
+				add_action($event, array($this, 'purge_all'));
 			}
 			global $pagenow;
 			if ($pagenow === 'plugins.php') {
@@ -653,10 +695,19 @@ class LiteSpeed_Cache
 					array($admin, 'add_quick_purge'));
 
 				if (((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))
-				&& (!LiteSpeed_Cache_Config::wp_cache_var_setter(true))) {
+					&& (!LiteSpeed_Cache_Config::wp_cache_var_setter(true))
+				) {
 					add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
 				}
 			}
+		}
+
+		if (!is_openlitespeed()) {
+			add_action('in_widget_form',
+				array(LiteSpeed_Cache_Admin_Display::get_instance(),
+					'show_widget_edit'), 100, 3);
+			add_filter('widget_update_callback',
+				array($admin, 'validate_widget_save'), 10, 4);
 		}
 
 		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
@@ -697,6 +748,14 @@ class LiteSpeed_Cache
 	 */
 	private function load_logged_in_actions()
 	{
+		if (!is_openlitespeed()) {
+			add_action('wp_logout', array($this, 'purge_on_logout'));
+			if ($this->config->get_option(
+				LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
+				$this->load_logged_out_actions();
+				define('LSCACHE_ESI_LOGGEDIN', true);
+			}
+		}
 	}
 
 	/**
@@ -729,8 +788,9 @@ class LiteSpeed_Cache
 	 *
 	 * @since    1.0.0
 	 * @access   private
+	 * @param boolean $is_ajax Denotes if the request is an ajax request.
 	 */
-	private function load_public_actions()
+	private function load_public_actions($is_ajax)
 	{
 		//register purge actions
 		$purge_post_events = array(
@@ -745,6 +805,17 @@ class LiteSpeed_Cache
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
 
+		// The ESI functionality is an enterprise feature.
+		// Removing the openlitespeed check will simply break the page.
+		if ((!is_openlitespeed()) && (!$is_ajax)
+			&& ($this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE))) {
+			$esi = LiteSpeed_Cache_Esi::get_instance();
+			add_action('init', array($esi, 'register_post_type'));
+			add_action('template_include', array($esi, 'esi_template'), 100);
+			add_action('load-widgets.php', array($this, 'purge_widget'));
+			add_action('wp_update_comment_count',
+				array($this, 'purge_comment_widget'));
+		}
 		add_action('wp_update_comment_count',
 			array($this, 'purge_feeds'));
 
@@ -918,14 +989,19 @@ class LiteSpeed_Cache
 	 */
 	private function add_purge_tags($tags, $is_public = true)
 	{
-		//TODO: implement private tag add
-		if (is_array($tags)) {
-			$this->pub_purge_tags = array_merge($this->pub_purge_tags, $tags);
+		if ($is_public) {
+			$merge = &$this->pub_purge_tags;
 		}
 		else {
-			$this->pub_purge_tags[] = $tags;
+			$merge = &$this->priv_purge_tags;
 		}
-		$this->pub_purge_tags = array_unique($this->pub_purge_tags);
+		if (is_array($tags)) {
+			$merge = array_merge($merge, $tags);
+		}
+		else {
+			$merge[] = $tags;
+		}
+		$merge = array_unique($merge);
 	}
 
 	/**
@@ -940,6 +1016,9 @@ class LiteSpeed_Cache
 	public function purge_all()
 	{
 		$this->add_purge_tags('*');
+		if (!is_openlitespeed()) {
+			$this->add_purge_tags('*', false);
+		}
 	}
 
 	/**
@@ -951,6 +1030,9 @@ class LiteSpeed_Cache
 	public function purge_front()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
+		if (!is_openlitespeed()) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE, false);
+		}
 	}
 
 	/**
@@ -1191,6 +1273,7 @@ class LiteSpeed_Cache
 		}
 		if ( in_array('*', $purge_tags) ) {
 			$this->add_purge_tags('*');
+			$this->add_purge_tags('*', false);
 		}
 		else {
 			$this->add_purge_tags($purge_tags);
@@ -1220,6 +1303,50 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Hooked to the load-widgets.php action.
+	 * Attempts to purge a single widget from cache.
+	 * If no widget id is passed in, the method will attempt to find the
+	 * widget id.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param type $widget_id The id of the widget to purge.
+	 */
+	public function purge_widget($widget_id = null)
+	{
+		if (is_null($widget_id)) {
+			$widget_id = $_POST['widget-id'];
+			if (is_null($widget_id)) {
+				return;
+			}
+		}
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+			. $widget_id);
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+			. $widget_id, false);
+	}
+
+	/**
+	 * Hooked to the wp_update_comment_count action.
+	 * Purges the comment widget when the count is updated.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @global type $wp_widget_factory
+	 */
+	public function purge_comment_widget()
+	{
+		global $wp_widget_factory;
+		$recent_comments = $wp_widget_factory->widgets['WP_Widget_Recent_Comments'];
+		if (!is_null($recent_comments)) {
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $recent_comments->id);
+			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $recent_comments->id, false);
+		}
+	}
+
+	/**
 	 * Purges feeds on comment count update.
 	 *
 	 * @since 1.0.9
@@ -1230,6 +1357,17 @@ class LiteSpeed_Cache
 		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) > 0) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FEED);
 		}
+	}
+
+	/**
+	 * Purges all private cache entries when the user logs out.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
+	public function purge_on_logout()
+	{
+		$this->add_purge_tags('*', false);
 	}
 
 	/**
@@ -1255,6 +1393,7 @@ class LiteSpeed_Cache
 			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
 					time() + 2 * DAY_IN_SECONDS, is_ssl(), true);
 		}
+		$this->user_status |= self::LSCOOKIE_VARY_LOGGED_IN;
 		return true;
 	}
 
@@ -1277,6 +1416,7 @@ class LiteSpeed_Cache
 			// If do not cache commenters, check cookie for commenter value.
 			if ((isset($_COOKIE[$this->current_vary]))
 					&& ($_COOKIE[$this->current_vary] & self::LSCOOKIE_VARY_COMMENTER)) {
+				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
 				return true;
 			}
 			// If wp commenter cookie exists, need to set vary and do not cache.
@@ -1285,6 +1425,7 @@ class LiteSpeed_Cache
 						&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
 					$user = wp_get_current_user();
 					$this->set_comment_cookie(NULL, $user);
+					$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
 					return true;
 				}
 			}
@@ -1301,6 +1442,7 @@ class LiteSpeed_Cache
 		foreach($_COOKIE as $cookie_name => $cookie_value) {
 			if ((strlen($cookie_name) >= 15)
 					&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
+				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
 				unset($_COOKIE[$cookie_name]);
 			}
 		}
@@ -1457,11 +1599,11 @@ class LiteSpeed_Cache
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
-	 * @access private
+	 * @access public
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
-	private function no_cache_for( $reason )
+	public function no_cache_for( $reason )
 	{
 		if (defined('LSCWP_LOG')) {
 			$this->debug_log('Do not cache - ' . $reason);
@@ -1479,7 +1621,43 @@ class LiteSpeed_Cache
 	{
 		if ((LiteSpeed_Cache_Tags::is_noncacheable() == false)
 			&& ($this->is_cacheable())) {
-			$this->cachectrl = self::CACHECTRL_CACHE;
+			if (defined('LSCACHE_ESI_LOGGEDIN')) {
+				$this->set_cachectrl(self::CACHECTRL_SHARED);
+			}
+			else {
+				$this->set_cachectrl(self::CACHECTRL_PUBLIC);
+			}
+		}
+	}
+
+	/**
+	 * Sets the request's cache control. If the request should not parse the
+	 * vary, the optional $novary parameter should be used to set the flag.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param int $val The value to set the cache control to.
+	 * @param bool $novary Optional. Whether to allow varies or not.
+	 */
+	public function set_cachectrl($val, $novary = false)
+	{
+		$this->cachectrl = $val;
+		if ($novary) {
+			$this->cachectrl |= self::CACHECTRL_NO_VARY;
+		}
+	}
+
+	/**
+	 * Sets a custom TTL to use with the request if needed.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
+	 */
+	public function set_custom_ttl($ttl)
+	{
+		if (is_numeric($ttl)) {
+			$this->custom_ttl = $ttl;
 		}
 	}
 
@@ -1497,15 +1675,14 @@ class LiteSpeed_Cache
 			return;
 		}
 		$this->check_cacheable();
-		if ($this->cachectrl !== self::CACHECTRL_CACHE) {
+		if ($this->cachectrl !== self::CACHECTRL_PUBLIC) {
 			return;
 		}
 		if (!empty($_GET)) {
-
 			if (defined('LSCWP_LOG')) {
 				$this->no_cache_for('Not a get request');
 			}
-			$this->cachectrl = self::CACHECTRL_NOCACHE;
+			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 			return;
 		}
 
@@ -1597,10 +1774,10 @@ class LiteSpeed_Cache
 		switch ($action[0]) {
 		case 'P':
 			if ($action == self::ADMINQS_PURGE) {
-				$this->cachectrl = self::CACHECTRL_PURGE;
+				$this->set_cachectrl(self::CACHECTRL_PURGE);
 			}
 			elseif ($action == self::ADMINQS_PURGESINGLE) {
-				$this->cachectrl = self::CACHECTRL_PURGESINGLE;
+				$this->set_cachectrl(self::CACHECTRL_PURGESINGLE);
 			}
 			elseif ($action == self::ADMINQS_PURGEALL) {
 				$this->cachectrl = self::CACHECTRL_NOCACHE;
@@ -1616,7 +1793,8 @@ class LiteSpeed_Cache
 			return;
 		case 'S':
 			if ($action == self::ADMINQS_SHOWHEADERS) {
-				$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
+				$this->set_cachectrl($this->cachectrl
+					| self::CACHECTRL_SHOWHEADERS);
 				return;
 			}
 			break;
@@ -1633,7 +1811,7 @@ class LiteSpeed_Cache
 		if (defined('LSCWP_LOG')) {
 			$this->no_cache_for('LSCWP_CTRL query string should not cache.');
 		}
-		$this->cachectrl = self::CACHECTRL_NOCACHE;
+		$this->set_cachectrl(self::CACHECTRL_NOCACHE);
 	}
 
 	/**
@@ -1642,19 +1820,24 @@ class LiteSpeed_Cache
 	 * This will collect all site wide purge tags as well as
 	 * third party plugin defined purge tags.
 	 *
-	 * @since 1.0.1
+	 * @since 1.1.0
 	 * @access private
-	 * @param boolean $stale Whether to add header as a stale header or not.
-	 * @return string The purge header
+	 * @param boolean $stale Whether the public tags should stale the entries.
+	 * @return string the built purge header
 	 */
-	private function build_purge_headers($stale)
+	private function get_purge_header($stale)
 	{
-		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE . ': ';
+		$cache_purge_header = '';
 		$purge_tags = array_merge($this->pub_purge_tags,
-				LiteSpeed_Cache_Tags::get_purge_tags());
+			LiteSpeed_Cache_Tags::get_purge_tags());
 		$purge_tags = array_unique($purge_tags);
 
-		if (empty($purge_tags)) {
+		$priv_purge_tags = array_merge($this->priv_purge_tags,
+			LiteSpeed_Cache_Tags::get_private_purge_tags());
+		$priv_purge_tags = array_unique($priv_purge_tags);
+		$private_prefix = LiteSpeed_Cache_Tags::HEADER_PURGE . 'private,';
+
+		if (empty($purge_tags) && (empty($priv_purge_tags))) {
 			return '';
 		}
 
@@ -1664,8 +1847,55 @@ class LiteSpeed_Cache
 			$prefix = '';
 		}
 
+		if (!empty($purge_tags)) {
+			$public_tags = $this->build_purge_headers($prefix, $purge_tags);
+			if (empty($public_tags)) {
+				// If this ends up empty, private will also end up empty
+				return '';
+			}
+			$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
+				. 'public,';
+			if ($stale) {
+				$cache_purge_header .= 'stale,';
+			}
+			$cache_purge_header .= 'tag=' . implode(',', $public_tags);
+			$private_prefix = ';private,';
+		}
+		if (empty($priv_purge_tags)) {
+			return $cache_purge_header;
+		}
+		elseif (in_array('*', $priv_purge_tags)) {
+			$cache_purge_header .= $private_prefix . '*';
+		}
+		else {
+			$private_tags = $this->build_purge_headers($prefix,
+				$priv_purge_tags);
+			if (!empty($private_tags)) {
+				$cache_purge_header .= $private_prefix . 'tag='
+					. implode(',', $private_tags);
+			}
+		}
+
+		return $cache_purge_header;
+	}
+
+	/**
+	 * Builds an array of purge headers with the given prefix.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param string $prefix The prefix to apply to each tag
+	 * @param array @purge_tags The purge tags to apply the prefix to.
+	 * @return array The array of built purge tags.
+	 */
+	private function build_purge_headers($prefix, $purge_tags)
+	{
+		$tags = array();
 		if (!in_array('*', $purge_tags )) {
-			$tags = array_map(array($this,'prefix_apply'), $purge_tags);
+			$prefix .= 'B' . get_current_blog_id() . '_';
+			foreach ($purge_tags as $val) {
+				$tags[] = $prefix . $val;
+			}
 		}
 		elseif (isset($_POST['clearcache'])) {
 			$tags = array('*');
@@ -1673,7 +1903,8 @@ class LiteSpeed_Cache
 		// Would only use multisite and network admin except is_network_admin
 		// is false for ajax calls, which is used by wordpress updates v4.6+
 		elseif ((is_multisite()) && ((is_network_admin())
-			|| ((defined('DOING_AJAX')) && (check_ajax_referer('updates'))))) {
+			|| ((defined('DOING_AJAX'))
+					&& (check_ajax_referer('updates', false, false))))) {
 			$blogs = self::get_network_ids();
 			if (empty($blogs)) {
 				if (defined('LSCWP_LOG')) {
@@ -1681,28 +1912,15 @@ class LiteSpeed_Cache
 				}
 				return '';
 			}
-			$tags = array();
 			foreach ($blogs as $blog_id) {
 				$tags[] = sprintf('%sB%s_', $prefix, $blog_id);
 			}
 		}
 		else {
-			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
-		}
-		if (defined('LSCWP_LOG')) {
-			self::debug_log('Purge tags are ' . implode(',', $tags));
+			$tags[] = $prefix . 'B' . get_current_blog_id() . '_';
 		}
 
-		if ($stale) {
-			$cache_purge_header .= 'stale,';
-		}
-
-		$cache_purge_header .= 'tag=' . implode(',', $tags);
-		return $cache_purge_header;
-		// TODO: private cache headers
-//		$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE
-//				. ': private,tag=' . implode(',', $this->ext_purge_private_tags);
-//		@header($cache_purge_header, false);
+		return $tags;
 	}
 
 	/**
@@ -1716,9 +1934,14 @@ class LiteSpeed_Cache
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 * if the post is not password protected. Vary header otherwise.
 	 */
-	private function build_vary_headers()
+	private function build_vary_headers($mode)
 	{
 		global $post;
+		if (($mode != self::CACHECTRL_PUBLIC)
+			&& ($mode != self::CACHECTRL_PRIVATE)
+			&& ($mode != self::CACHECTRL_SHARED)) {
+			return '';
+		}
 		$tp_cookies = LiteSpeed_Cache_Tags::get_vary_cookies();
 		if (!empty($post->post_password)) {
 			if (isset($_COOKIE['wp-postpass_' . COOKIEHASH])) {
@@ -1748,7 +1971,7 @@ class LiteSpeed_Cache
 	 * @return integer The integer corresponding to the selected
 	 * cache control value.
 	 */
-	private function validate_mode(&$showhdr, &$stale)
+	private function validate_mode(&$showhdr, &$stale, &$novary)
 	{
 		$mode = $this->cachectrl;
 		if ($mode & self::CACHECTRL_SHOWHEADERS) {
@@ -1761,7 +1984,13 @@ class LiteSpeed_Cache
 			$mode &= ~self::CACHECTRL_STALE;
 		}
 
-		if ($mode != self::CACHECTRL_CACHE) {
+		if ($mode & self::CACHECTRL_NO_VARY) {
+			$novary = true;
+			$mode &= ~self::CACHECTRL_NO_VARY;
+		}
+
+		if (($mode != self::CACHECTRL_PUBLIC)
+			&& ($mode != self::CACHECTRL_PRIVATE)) {
 			return $mode;
 		}
 		elseif ((is_admin()) || (is_network_admin())) {
@@ -1820,6 +2049,11 @@ class LiteSpeed_Cache
 		if ((!is_null($vary_hdr)) && (!empty($vary_hdr))) {
 			$hdr_content[] = $vary_hdr;
 		}
+		if (defined('LSCWP_LOG')) {
+			foreach ($hdr_content as $hdr) {
+				self::debug_log('Response header: ' . $hdr);
+			}
+		}
 
 		if (!empty($hdr_content)) {
 			if ($showhdr) {
@@ -1834,7 +2068,7 @@ class LiteSpeed_Cache
 		}
 
 		if (defined('LSCWP_LOG')) {
-			self::debug_log('End response.');
+			self::debug_log("End response.\n\n");
 		}
 	}
 
@@ -1849,72 +2083,158 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers()
 	{
-		$cache_control_header = '';
-		$cache_tag_header = '';
-		$vary_headers = '';
-		$cache_tags = null;
+		$tags_header = '';
 		$showhdr = false;
 		$stale = false;
+		$novary = false;
 		do_action('litespeed_cache_add_purge_tags');
 
-		$mode = $this->validate_mode($showhdr, $stale);
+		$mode = $this->validate_mode($showhdr, $stale, $novary);
+
+		$vary_headers = $this->build_vary_headers($mode);
+		if ($vary_headers === false) {
+			$mode = self::CACHECTRL_NOCACHE;
+		}
 
 		if ($mode != self::CACHECTRL_NOCACHE) {
-			do_action('litespeed_cache_add_cache_tags');
-			$vary_headers = $this->build_vary_headers();
-			$cache_tags = $this->get_cache_tags();
-			if ($mode === self::CACHECTRL_CACHE) {
-				$cache_tags[] = ''; //add blank entry to add blog tag.
+			$tags_header = $this->setup_tags_hdr($mode);
+			if (empty($tags_header)) {
+				$mode = self::CACHECTRL_NOCACHE;
 			}
 		}
 
-		if (empty($cache_tags) || ($vary_headers === false)) {
-			$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
-			$purge_headers = $this->build_purge_headers($stale);
-			$this->header_out($showhdr, $cache_control_header, $purge_headers);
-			return;
+		$ctrl_header = $this->setup_ctrl_hdr($mode, $novary);
+
+		$purge_header = $this->get_purge_header($stale);
+
+		if (defined('LSCWP_LOG')) {
+			self::debug_log('Purge header is ' . $purge_header);
 		}
-		$prefix_tags = array_map(array($this,'prefix_apply'), $cache_tags);
+		$this->header_out($showhdr, $ctrl_header, $purge_header, $tags_header,
+			$vary_headers);
+	}
+
+	/**
+	 * Sets up the Cache Tags header depending on the mode.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param int $mode The type of response to return.
+	 * @return string empty string if empty, otherwise the cache tags header.
+	 */
+	private function setup_tags_hdr($mode)
+	{
+		do_action('litespeed_cache_add_cache_tags');
+		$cache_tags = $this->get_cache_tags();
+		if (($mode !== self::CACHECTRL_PURGE)
+			&& ($mode !== self::CACHECTRL_PURGESINGLE)) {
+			$cache_tags[] = ''; //add blank entry to add blog tag.
+		}
+		if (empty($cache_tags)) {
+			return '';
+		}
+
+		$prefix_tags = array();
+		$prefix = $this->config->get_option(
+			LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
+		if (empty($prefix)) {
+			$prefix = '';
+		}
+		$prefix .= 'B' . get_current_blog_id() . '_';
+
+		switch ($mode) {
+		case self::CACHECTRL_PURGESINGLE:
+			$cache_tags = $cache_tags[0];
+		// fall through
+		case self::CACHECTRL_PURGE:
+			LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
+			return ''; // If purge/purgesingle, cache tags header is empty.
+		case self::CACHECTRL_SHARED:
+		case self::CACHECTRL_PRIVATE:
+			$priv_cache_tags = LiteSpeed_Cache_Tags::get_private_cache_tags();
+			foreach ($priv_cache_tags as $priv_tag) {
+				$prefix_tags[] = $prefix . $priv_tag;
+			}
+			$prefix = 'public: ' . $prefix;
+				break;
+		case self::CACHECTRL_PUBLIC:
+			break;
+		default:
+			return '';
+		}
+		foreach ($cache_tags as $tag) {
+			$prefix_tags[] = $prefix . $tag;
+		}
+		$hdr = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG . ': '
+			. implode(',', $prefix_tags);
+
 		if (defined('LSCWP_LOG')) {
 			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
 		}
+		return $hdr;
+	}
 
-		switch ($mode) {
-			case self::CACHECTRL_CACHE:
-				$feed_ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL);
-				$ttl_404 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_404_TTL);
-				if ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
-					|| (is_front_page())){
-					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
-				}
-				elseif ((is_feed()) && ($feed_ttl > 0)) {
-					$ttl = $feed_ttl;
-				}
-				elseif ((is_404()) && ($ttl_404 > 0)) {
-					$ttl = $ttl_404;
-				}
-				else {
-					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
-				}
-				$cache_control_header = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL
-						. ': public,max-age=' . $ttl /*. ',esi=on'*/ ;
-				$cache_tag_header = LiteSpeed_Cache_Tags::HEADER_CACHE_TAG
-					. ': ' . implode(',', $prefix_tags) ;
-				break;
-			case self::CACHECTRL_PURGESINGLE:
-				$cache_tags = $cache_tags[0];
-				// fall through
-			case self::CACHECTRL_PURGE:
-				$cache_control_header =
-					LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': no-cache' /*. ',esi=on'*/ ;
-				LiteSpeed_Cache_Tags::add_purge_tag($cache_tags);
-				break;
-
+	/**
+	 * Sets up the Cache Control header depending on the mode and novary.
+	 *
+	 * @since 1.1.0
+	 * @access private
+	 * @param int $mode The type of response to return.
+	 * @param boolean $novary Whether to add the no-vary part or not.
+	 * @return string empty string if empty, otherwise the cache control header.
+	 */
+	private function setup_ctrl_hdr($mode, $novary)
+	{
+		if ((!is_openlitespeed())
+			&& (LiteSpeed_Cache_Esi::get_instance()->has_esi())) {
+			$esi_hdr = ',esi=on';
 		}
-		$purge_headers = $this->build_purge_headers($stale);
-		$this->header_out($showhdr, $cache_control_header, $purge_headers,
-				$cache_tag_header, $vary_headers);
+		else {
+			$esi_hdr = '';
+		}
+		$hdr = LiteSpeed_Cache_Tags::HEADER_CACHE_CONTROL . ': ';
+		switch ($mode)
+		{
+		case self::CACHECTRL_NOCACHE:
+		case self::CACHECTRL_PURGE:
+		case self::CACHECTRL_PURGESINGLE:
+			$hdr .= 'no-cache' . $esi_hdr;
+			return $hdr;
+		case self::CACHECTRL_SHARED:
+			$cachectrl_val = 'shared,private';
+			break;
+		case self::CACHECTRL_PRIVATE:
+			$cachectrl_val = 'private';
+			break;
+		case self::CACHECTRL_PUBLIC:
+			$cachectrl_val = 'public';
+			break;
+		}
+		if ($novary) {
+			$cachectrl_val .= ',no-vary';
+		}
+		$options = $this->config->get_options();
+		$feed_ttl = $options[LiteSpeed_Cache_Config::OPID_FEED_TTL];
+		$ttl_404 = $options[LiteSpeed_Cache_Config::OPID_404_TTL];
+
+		if ($this->custom_ttl != 0) {
+			$ttl = $this->custom_ttl;
+		}
+		elseif ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
+			|| (is_front_page())){
+			$ttl = $options[LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL];
+		}
+		elseif ((is_feed()) && ($feed_ttl > 0)) {
+			$ttl = $feed_ttl;
+		}
+		elseif ((is_404()) && ($ttl_404 > 0)) {
+			$ttl = $ttl_404;
+		}
+		else {
+			$ttl = $options[LiteSpeed_Cache_Config::OPID_PUBLIC_TTL];
+		}
+		$hdr .= $cachectrl_val . ',max-age=' . $ttl . $esi_hdr;
+		return $hdr;
 	}
 
 	/**
@@ -1965,11 +2285,12 @@ class LiteSpeed_Cache
 
 		$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_URL . $hash;
 
-		if ( is_front_page() ) {
-			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE ;
-		}
-		elseif ( is_home() ) {
-			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME ;
+		if (!defined('LSCACHE_IS_ESI')) {
+			if (is_front_page()) {
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FRONTPAGE;
+			} elseif (is_home()) {
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME;
+			}
 		}
 
 		if ( is_archive() ) {
@@ -2044,6 +2365,13 @@ class LiteSpeed_Cache
 		// for archive of categories|tags|custom tax
 		$post = get_post($post_id) ;
 		$post_type = $post->post_type ;
+
+		global $wp_widget_factory;
+		$recent_posts = $wp_widget_factory->widgets['WP_Widget_Recent_Posts'];
+		if (!is_null($recent_posts)) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_WIDGET
+				. $recent_posts->id;
+		}
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
@@ -2303,189 +2631,22 @@ class LiteSpeed_Cache
 
 
 /* BEGIN ESI CODE, not fully implemented for now */
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function esi_admin_bar_render()
-	{
-		echo '<!-- lscwp admin esi start -->'
-				. '<esi:include src="/lscwp_admin_bar.php" onerror=\"continue\"/>'
-				. '<!-- lscwp admin esi end -->';
-	}
 
 	/**
+	 * Check if the requested page has esi elements. If so, return esi on
+	 * header.
 	 *
-	 *
-	 * @since 1.0.1
+	 * @access private
+	 * @since 1.1.0
+	 * @return string Esi On header if request has esi, empty string otherwise.
 	 */
-	public function check_admin_bar()
+	private function esi_send()
 	{
-		if (is_admin_bar_showing()) {
-			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
-			remove_action( 'in_admin_header', 'wp_admin_bar_render', 0 );
-			add_action('wp_footer', array($this, 'esi_admin_bar_render'), 1000);
+		if ($this->has_esi) {
+			return ',esi=on';
 		}
+		return '';
 	}
 
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function check_storefront_cart()
-	{
-		if (has_action('storefront_header', 'storefront_header_cart')) {
-			remove_action('storefront_header', 'storefront_header_cart', 60);
-			echo '<!-- lscwp cart esi start -->'
-					. '<esi:include src="/lscwp_cart.php" onerror=\"continue\"/>'
-					. '<!-- lscwp cart esi end -->';
-		}
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function check_sidebar()
-	{
-		if (has_action('storefront_sidebar', 'storefront_get_sidebar')) {
-			remove_action('storefront_sidebar', 'storefront_get_sidebar', 10);
-			echo '<!-- lscwp sidebar esi start -->'
-					. '<esi:include src="/lscwp_sidebar.php" onerror=\"continue\"/>'
-					. '<!-- lscwp sidebar esi end -->';
-		}
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function add_actions_esi()
-	{
-		add_action('storefront_header',
-					array($this, 'check_storefront_cart'), 59);
-		add_action('storefront_sidebar', array($this, 'check_sidebar'), 0);
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function send_esi()
-	{
-		status_header(200);
-		die();
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function is_esi_admin_bar($uri, $urilen)
-	{
-		$admin = 'admin_bar.php';
-		$adminlen = strlen($admin);
-
-		if (($urilen != $adminlen)
-				|| (strncmp($uri, $admin, $adminlen) != 0)) {
-			return false;
-		}
-		add_action( 'init', '_wp_admin_bar_init', 0 );
-		add_action( 'init', 'wp_admin_bar_render', 0 );
-		add_action('init', array($this, 'send_esi'), 0);
-		return true;
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function is_esi_cart($uri, $urilen)
-	{
-		$cart = 'cart.php';
-		$cartlen = strlen($cart);
-
-		if (($urilen != $cartlen)
-				|| (strncmp($uri, $cart, $cartlen) != 0)) {
-			return false;
-		}
-		register_widget( 'WC_Widget_Cart' );
-		add_action('init', 'storefront_cart_link_fragment', 0);
-		add_action('init', 'storefront_header_cart', 0);
-		add_action('init', array($this, 'send_esi'), 0);
-		return true;
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	public function load_sidebar_widgets()
-	{
-		do_action('widgets_init');
-		do_action('register_sidebar');
-		do_action('wp_register_sidebar_widget');
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function is_esi_sidebar($uri, $urilen)
-	{
-		$sidebar = 'sidebar.php';
-		$sidebarlen = strlen($sidebar);
-
-		if (($urilen != $sidebarlen)
-				|| (strncmp($uri, $sidebar, $sidebarlen) != 0)) {
-			return false;
-		}
-		add_action('widgets_init', 'storefront_widgets_init', 10);
-		add_action('wp_loaded', array($this, 'load_sidebar_widgets'), 0);
-		add_action('wp_loaded', 'storefront_get_sidebar', 0);
-		add_action('wp_loaded', array($this, 'send_esi'), 0);
-		return true;
-	}
-
-	/**
-	 *
-	 *
-	 * @since 1.0.1
-	 */
-	private function check_esi_page()
-	{
-		$prefix = '/lscwp_';
-		$prefixlen = 7;
-		$uri = esc_url($_SERVER['REQUEST_URI']);
-		$urilen = strlen($uri);
-
-		if (($urilen <= $prefixlen) || (strncmp($uri, $prefix, $prefixlen) != 0 )) {
-			return false;
-		}
-
-		$uri = substr($uri, $prefixlen);
-		$urilen -= $prefixlen;
-
-		switch ($uri[0]) {
-			case 'a':
-				return $this->is_esi_admin_bar($uri, $urilen);
-			case 'c':
-				return $this->is_esi_cart($uri, $urilen);
-			case 's':
-				return $this->is_esi_sidebar($uri, $urilen);
-			default:
-				break;
-		}
-		return false;
-	}
 /*END ESI CODE*/
 }
