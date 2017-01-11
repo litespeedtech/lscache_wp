@@ -53,6 +53,7 @@ class LiteSpeed_Cache
 	protected $current_vary;
 	protected $cachectrl = self::CACHECTRL_NOCACHE;
 	protected $pub_purge_tags = array();
+	protected $error_status = false;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -710,6 +711,7 @@ class LiteSpeed_Cache
 		// user is not logged in
 		add_action('wp', array( $this, 'check_cacheable' ), 5) ;
 		add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
+		add_filter('status_header', array($this, 'check_error_codes'), 10, 2);
 
 		$cache_res = $this->config->get_option(
 			LiteSpeed_Cache_Config::OPID_CACHE_RES);
@@ -951,6 +953,25 @@ class LiteSpeed_Cache
 	public function purge_front()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
+	}
+
+	/**
+	 * Alerts LiteSpeed Web Server to purge error pages.
+	 *
+	 * @since    1.0.14
+	 * @access   public
+	 */
+	public function purge_errors()
+	{
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR);
+		if (!isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
+			return;
+		}
+		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
+		if (!isset($input['include_404'])) {
+			return;
+		}
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '.404');
 	}
 
 	/**
@@ -1435,6 +1456,42 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Check if the page returns 403 and 500 errors.
+	 *
+	 * @since 1.0.13.1
+	 * @access public
+	 * @param $header, $code.
+	 * @return $eeror_status.
+	 */
+
+	public function check_error_codes($header, $code){
+		$ttl_403 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_403_TTL);
+		$ttl_500 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_500_TTL);
+    	if($code == 403){	
+    	if($ttl_403 <= 30){
+    		LiteSpeed_Cache_Tags::set_noncacheable();
+    	}
+    	else{
+    		$this->error_status = $code;
+    	}
+    	self::debug_log('status is ' . $code);
+    	}
+    	elseif($code >= 500 && $code < 600 ){
+    	if($ttl_500 <= 30){
+    		LiteSpeed_Cache_Tags::set_noncacheable();
+    	}
+    	else{
+    		$this->error_status = $code;
+    	}
+    	self::debug_log('status is ' . $code);
+    	}
+    	elseif($code > 400 ){
+    		$this->error_status = $code;
+    	}
+    	return $this->error_status;
+	}
+
+	/**
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
@@ -1865,6 +1922,8 @@ class LiteSpeed_Cache
 			case self::CACHECTRL_CACHE:
 				$feed_ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL);
 				$ttl_404 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_404_TTL);
+				$ttl_403 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_403_TTL);
+				$ttl_500 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_500_TTL);
 				if ((LiteSpeed_Cache_Tags::get_use_frontpage_ttl())
 					|| (is_front_page())){
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
@@ -1874,6 +1933,12 @@ class LiteSpeed_Cache
 				}
 				elseif ((is_404()) && ($ttl_404 > 0)) {
 					$ttl = $ttl_404;
+				}
+				elseif ( $this->error_status === 403 ) {
+					$ttl = $ttl_403;
+				}
+				elseif ( $this->error_status >= 500 ) {
+					$ttl = $ttl_500;
 				}
 				else {
 					$ttl = $this->config->get_option(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
