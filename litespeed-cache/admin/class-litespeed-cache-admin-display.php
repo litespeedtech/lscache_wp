@@ -109,7 +109,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$screen->set_help_sidebar(
 				'<p><strong>' . __('For more information:', 'litespeed-cache') . '</strong></p>' .
-				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" rel="noopener noreferrer" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
+//				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" rel="noopener noreferrer" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
 				'<p><a href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
 		) ;
 	}
@@ -346,8 +346,9 @@ class LiteSpeed_Cache_Admin_Display
 		. '</p></li>'
 		. '<li><p>' . __('Tag: Purge tag pages by name.', 'litespeed-cache')
 		. '</p></li>'
-		. '<li><p>' . __('URL: Purge pages by locator. Must be exact match.', 'litespeed-cache')
-		. ' Ex: http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>'
+		. '<li><p>' . __('URL: Purge pages by relative URL. Must be exact match.', 'litespeed-cache')
+		. ' Ex: Use <b><u>/2016/02/24/hello-world/</u></b> for '
+		. 'http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>'
 		. '</p></li>'
 		. '</ul>';
 
