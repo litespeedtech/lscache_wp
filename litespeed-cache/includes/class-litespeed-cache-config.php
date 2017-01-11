@@ -43,7 +43,9 @@ class LiteSpeed_Cache_Config
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
 	const OPID_FRONT_PAGE_TTL = 'front_page_ttl';
 	const OPID_FEED_TTL = 'feed_ttl';
+	const OPID_403_TTL = '403_ttl';
 	const OPID_404_TTL = '404_ttl';
+	const OPID_500_TTL = '500_ttl';
 	const OPID_NOCACHE_VARS = 'nocache_vars' ;
 	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
@@ -252,7 +254,9 @@ class LiteSpeed_Cache_Config
 			self::OPID_PUBLIC_TTL => 28800,
 			self::OPID_FRONT_PAGE_TTL => 1800,
 			self::OPID_FEED_TTL => 0,
+			self::OPID_403_TTL => 3600,
 			self::OPID_404_TTL => 3600,
+			self::OPID_500_TTL => 3600,
 			self::OPID_NOCACHE_VARS => '',
 			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
