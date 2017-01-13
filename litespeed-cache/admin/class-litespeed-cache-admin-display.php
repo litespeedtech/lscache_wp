@@ -126,7 +126,8 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		if ($config->is_caching_allowed() == false) {
 			$sentences = LiteSpeed_Cache::build_paragraph(
-				__('Notice: Your installation of LiteSpeed Web Server does not have LSCache enabled.', 'litespeed-cache'),
+				__('Notice: This plugin requires a LiteSpeed Server with the LSCache Module enabled.', 'litespeed-cache'),
+				__('If you are unable to change your server stack, please contact your hosting provider to request the required changes.', 'litespeed-cache'),
 				__('This plugin will NOT work properly.', 'litespeed-cache')
 			);
 			return $sentences;

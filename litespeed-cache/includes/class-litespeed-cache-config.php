@@ -595,7 +595,9 @@ class LiteSpeed_Cache_Config
 	 */
 	public function is_caching_allowed()
 	{
-		if ( isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) {
+		if (((isset($_SERVER['X-LSCACHE'])) && ($_SERVER['X-LSCACHE'])) //lsws
+			|| ((isset($_SERVER['HTTP_X_LSCACHE'])) //webadc
+				&& ($_SERVER['HTTP_X_LSCACHE']))) {
 			return true;
 		}
 		return false;
