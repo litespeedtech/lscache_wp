@@ -1005,8 +1005,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/(^\|)|(\|$)|([^\\\\]\s|[^\w-\\\|\s\/.+*?\(\)]|\|\|)/',
-				$rule) === 0);
+		$escaped = str_replace('@', '\@', $rule);
+		return (@preg_match('@' . $escaped . '@', null) !== false);
 	}
 
 	/**
