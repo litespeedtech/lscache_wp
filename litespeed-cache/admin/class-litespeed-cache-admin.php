@@ -199,7 +199,7 @@ if (defined('lscache_debug')) {
 	private function register_submenu_manage()
 	{
 		$this::add_submenu(sprintf(__('%s Manager', 'litespeed-cache'),'LiteSpeed Cache'),
-				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
+				__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_select');
 	}
 
 	/**

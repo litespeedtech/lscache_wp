@@ -207,6 +207,12 @@ class LiteSpeed_Cache_Admin_Display
 
 		//install, faqs
 		switch($selection[0]) {
+			case 'd':
+				if (($selection_len == 4)
+					&& (strncmp($selection, 'dash', $selection_len) == 0)) {
+					$this->show_menu_manage();
+				}
+				break;
 			case 'f':
 				if (($selection_len == 4)
 						&& (strncmp($selection, 'faqs', $selection_len) == 0)) {
