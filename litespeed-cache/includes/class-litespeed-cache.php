@@ -445,16 +445,17 @@ class LiteSpeed_Cache
 	public function init()
 	{
 		$module_enabled = $this->config->is_plugin_enabled();
+		$is_ajax = (defined('DOING_AJAX') && DOING_AJAX);
 
 		if (defined('LSCWP_LOG')) {
 			self::setup_debug_log();
 		}
 
 		if ( is_admin() ) {
-			$this->load_admin_actions($module_enabled) ;
+			$this->load_admin_actions($module_enabled, $is_ajax);
 		}
 		else {
-			$this->load_nonadmin_actions($module_enabled) ;
+			$this->load_nonadmin_actions($module_enabled);
 		}
 
 		if ((!$module_enabled) || (!defined('LSCACHE_ADV_CACHE'))
@@ -483,7 +484,7 @@ class LiteSpeed_Cache
 		}
 
 		$this->load_public_actions() ;
-		if (defined('DOING_AJAX') && DOING_AJAX) {
+		if ($is_ajax) {
 			do_action('litespeed_cache_detect_thirdparty');
 		}
 		elseif ((is_admin()) || (is_network_admin())) {
@@ -604,8 +605,9 @@ class LiteSpeed_Cache
 	 * @since    1.0.0
 	 * @access   private
 	 * @param boolean $module_enabled Whether the module is enabled or not.
+	 * @param boolean $is_ajax Whether the request is an ajax request or not.
 	 */
-	private function load_admin_actions( $module_enabled )
+	private function load_admin_actions( $module_enabled, $is_ajax )
 	{
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -643,7 +645,14 @@ class LiteSpeed_Cache
 					array($admin, 'unset_update_text'), 20);
 
 			}
-			add_action('admin_init', array($this, 'check_admin_ip'), 6);
+			if ($is_ajax) {
+				add_action('wp_ajax_lscache_cli', array($this, 'check_admin_ip'));
+				add_action('wp_ajax_nopriv_lscache_cli',
+					array($this, 'check_admin_ip'));
+			}
+			else {
+				add_action('admin_init', array($this, 'check_admin_ip'), 6);
+			}
 			if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
 				add_action('upgrader_process_complete', array($this, 'purge_all'));
 			}
@@ -1612,11 +1621,12 @@ class LiteSpeed_Cache
 		if ((is_admin()) || (is_network_admin())) {
 			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
 				|| ((wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)
+					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall-network') === false)
 					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-dismiss') === false))) {
 				return;
 			}
 		}
-		else {
+		elseif (!defined('DOING_AJAX')) {
 			$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
 
 			if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
@@ -1631,40 +1641,42 @@ class LiteSpeed_Cache
 		if (defined('LSCWP_LOG')) {
 			self::debug_log('LSCWP_CTRL query string action is ' . $action);
 		}
+
 		switch ($action[0]) {
-		case 'P':
-			if ($action == self::ADMINQS_PURGE) {
-				$this->cachectrl = self::CACHECTRL_PURGE;
-			}
-			elseif ($action == self::ADMINQS_PURGESINGLE) {
-				$this->cachectrl = self::CACHECTRL_PURGESINGLE;
-			}
-			elseif ($action == self::ADMINQS_PURGEALL) {
-				$this->cachectrl = self::CACHECTRL_NOCACHE;
-				$this->purge_all();
-			}
-			else {
-				break;
-			}
-			if ((!is_admin()) && (!is_network_admin())) {
-				return;
-			}
-			$this->admin_ctrl_redirect();
-			return;
-		case 'S':
-			if ($action == self::ADMINQS_SHOWHEADERS) {
-				$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
-				return;
-			}
-			break;
-		case 'D':
-			if ($action == self::ADMINQS_DISMISS) {
-				delete_transient(self::WHM_TRANSIENT);
+			case 'P':
+				if ($action == self::ADMINQS_PURGE) {
+					$this->cachectrl = self::CACHECTRL_PURGE;
+				}
+				elseif ($action == self::ADMINQS_PURGESINGLE) {
+					$this->cachectrl = self::CACHECTRL_PURGESINGLE;
+				}
+				elseif ($action == self::ADMINQS_PURGEALL) {
+					$this->cachectrl = self::CACHECTRL_NOCACHE;
+					$this->purge_all();
+				}
+				else {
+					break;
+				}
+				if (((!is_admin()) && (!is_network_admin()))
+					|| ((defined('DOING_AJAX') && DOING_AJAX))) {
+					return;
+				}
 				$this->admin_ctrl_redirect();
-			}
-			break;
-		default:
-			break;
+				return;
+			case 'S':
+				if ($action == self::ADMINQS_SHOWHEADERS) {
+					$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
+					return;
+				}
+				break;
+			case 'D':
+				if ($action == self::ADMINQS_DISMISS) {
+					delete_transient(self::WHM_TRANSIENT);
+					$this->admin_ctrl_redirect();
+				}
+				break;
+			default:
+				break;
 		}
 
 		if (defined('LSCWP_LOG')) {
@@ -1710,7 +1722,10 @@ class LiteSpeed_Cache
 		// Would only use multisite and network admin except is_network_admin
 		// is false for ajax calls, which is used by wordpress updates v4.6+
 		elseif ((is_multisite()) && ((is_network_admin())
-			|| ((defined('DOING_AJAX')) && (check_ajax_referer('updates'))))) {
+			|| ((defined('DOING_AJAX'))
+					&& ((check_ajax_referer('updates', false, false))
+						|| (check_ajax_referer('litespeed-purgeall-network',
+							false, false)))))) {
 			$blogs = self::get_network_ids();
 			if (empty($blogs)) {
 				if (defined('LSCWP_LOG')) {

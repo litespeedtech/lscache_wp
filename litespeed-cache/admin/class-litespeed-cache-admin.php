@@ -109,6 +109,8 @@ if (defined('lscache_debug')) {
 	/**
 	 * Builds an admin url with an action and a nonce.
 	 *
+	 * Assumes user capabilities are already checked.
+	 *
 	 * @param string $val The LSCWP_CTRL action to do in the url.
 	 * @param string $nonce The nonce to use.
 	 * @return string The built url.
@@ -117,9 +119,6 @@ if (defined('lscache_debug')) {
 	{
 		global $pagenow;
 		$prefix = '?';
-		if (!current_user_can('manage_options')) {
-			return '';
-		}
 
 		$params = $_GET;
 
