@@ -46,6 +46,12 @@
         }
         });
 
+        $(".litespeed-cache-select-all-button").click(function() {
+            $('#litespeed-report').select();
+            document.execCommand('copy');
+            $('div.notice').css('display','block');
+        });
+
         //read the hidden field
         var activeTabIndex = $("input[name=active_tab]").val();
         
@@ -55,6 +61,29 @@
         }
 
         tabs.removeClass('ui-widget');
+
+        $(".postbox .hndle").click(function() {
+            $(this).parent().toggleClass("closed");
+        }); 
+
+        $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-expand-val").val());
+        $(".litespeed-cache-jquery-button").click(function(){
+            if ( $('.litespeed-cache-jquery-button').html() == $("#litespeed-cache-jquery-button-expand-val").val() ){
+                $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-collapse-val").val());
+                $('div.postbox').removeClass('closed');
+            }else{
+                $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-expand-val").val());
+                $('div.postbox').addClass('closed');
+            } 
+        });
+
+        var purgebyValue = purgebySelect($('#purgeby').val());
+        $('.litespeed-cache-purgeby-text').html(purgebyValue);
+
+        $('#purgeby').change(function(){            
+            purgebyValue = purgebySelect($(this).val());
+            $('.litespeed-cache-purgeby-text').html(purgebyValue);
+        });
     });
 
     jQuery(document).ready( function() {
@@ -105,4 +134,28 @@ function lscwpCheckboxConfirm(the_checkbox, list_id) {
     }
     the_list.value = '';
     the_list.readOnly = true;
+}
+
+function purgebySelect(value){
+    var category = jQuery('#purgeby-category').val();
+    var postid = jQuery('#purgeby-postid').val();
+    var tag = jQuery('#purgeby-tag').val();
+    var url = jQuery('#purgeby-url').val();
+
+    if( value == 0 ){
+        var purgebyValue = category;
+    }
+    else if( value == 1 )
+    {
+        var purgebyValue = postid;
+    }
+    else if ( value == 2 )
+    {
+        var purgebyValue = tag;
+    }
+    else if( value == 3 )
+    {
+        var purgebyValue = url;
+    }
+    return purgebyValue;
 }

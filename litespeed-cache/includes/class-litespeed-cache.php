@@ -1469,13 +1469,14 @@ class LiteSpeed_Cache
 		return true;
 	}
 
-	/*** Check if the page returns 403 and 500 errors.
+	/**
+	 * Check if the page returns 403 and 500 errors.
 	 *
 	 * @since 1.0.13.1
 	 * @access public
 	 * @param $header, $code.
 	 * @return $eeror_status.
-	*/
+	 */
 	public function check_error_codes($header, $code)
 	{
 		$ttl_403 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_403_TTL);
