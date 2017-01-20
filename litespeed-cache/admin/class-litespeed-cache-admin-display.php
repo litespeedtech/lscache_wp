@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Admin_Display
 		);
 		$faqs = sprintf(
 			__('If your questions are not answered here, try the %s', 'litespeed-cache'),
-			'<a href=' . get_admin_url() . 'admin.php?page=lscache-faqs>FAQ.</a>'
+			'<a href=' . get_admin_url() . 'admin.php?page=lscache-info>FAQ.</a>'
 		);
 		$questions = sprintf(wp_kses(
 			__('If your questions are still not answered, do not hesitate to ask them on the <a href="%s" rel="%s" target="%s">support forum</a>.',
@@ -194,6 +194,17 @@ class LiteSpeed_Cache_Admin_Display
 			. $str . '</p></div>';
 	}
 
+	/**
+	 * Builds the html for a tool tip.
+	 *
+	 * @since 1.0.14
+	 * @access private
+	 * @param string $msg The message to put in the tooltip.
+	 * @param string $class_suffix A class suffix, if necessary.
+	 * @param string $field_style Any styling changes to the field portion.
+	 * @param string $tip_style Any styling changes to the tip portion.
+	 * @return string The built tooltip html.
+	 */
 	private static function build_tip($msg, $class_suffix = '',
 		$field_style = '', $tip_style = '')
 	{
@@ -217,6 +228,14 @@ class LiteSpeed_Cache_Admin_Display
 		return $buf;
 	}
 
+	/**
+	 * Builds the html for the expand/collapse all button.
+	 *
+	 * @since 1.0.14
+	 * @access private
+	 * @param boolean $br Whether to include an extra br tag at the end or not.
+	 * @return string The built button html.
+	 */
 	private static function build_expand_collapse($extra_br = true)
 	{
 		$buf = '<span class="litespeed-cache-jquery-button"';
@@ -503,15 +522,14 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->input_field_select(self::PURGEBYOPT_SELECT,
 				$purgeby_options, $selected)
 			. '&nbsp;&nbsp;<span class="litespeed-cache-purgeby-text" style="font-size: 11px;font-style: italic; "></span>'
-			. self::input_field_hidden('purgeby-category',
+			. $this->input_field_hidden('purgeby-category',
 				__("Purge pages by category name - e.g. In URL http://yoursite/category/category-name/ Here category-name will be purged.", "litespeed-cache"))
-			. self::input_field_hidden('purgeby-postid',
+			. $this->input_field_hidden('purgeby-postid',
 				__("Purge pages by post ID.", "litespeed-cache"))
-			. self::input_field_hidden('purgeby-tag',
+			. $this->input_field_hidden('purgeby-tag',
 				__("Purge pages by tag name - e.g. In URL http://yoursite/tag/tag-name/ Here tag-name will be purged.", "litespeed-cache"))
-			. self::input_field_hidden('purgeby-url', $purgeby_url_desc);
-
-		$buf .= '<br>'
+			. $this->input_field_hidden('purgeby-url', $purgeby_url_desc)
+			. '<br>'
 			. $this->input_field_textarea(self::PURGEBYOPT_LIST, '', '5', '', 'code')
 			. '<input type="submit" class="button button-primary" '
 			. 'name="purgelist" value="' . __('Purge List', 'litespeed-cache')
@@ -927,11 +945,27 @@ class LiteSpeed_Cache_Admin_Display
 			__('Otherwise request that your server admin configure the cache root for your server.', 'litespeed-cache')
 		);
 
-		$ols_para = LiteSpeed_Cache::build_paragraph(
-			__('Our OLS integration is currently in beta.', 'litespeed-cache'),
-			__('This integration utilizes OLS\'s cache module.', 'litespeed-cache'),
-			sprintf(wp_kses(
-				__('Please follow the instructions <a href="%s" rel="%s" target="%s">here.</a>',
+		$ols_para = '<ul><li>'
+			. __('This integration utilizes OLS\'s cache module.', 'litespeed-cache')
+			. '</li><li>'
+			. LiteSpeed_Cache::build_paragraph(
+				sprintf(wp_kses(
+					__('If it is a fresh OLS installation, the easiest way to integrate is to use <a href="%s" rel="%s" target="%s">ols1clk.</a>',
+						'litespeed-cache'),
+					array(
+						'a' => array(
+							'href'   => array(), 'rel' => array(),
+							'target' => array(),
+						),
+					)),
+					'http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install',
+					'noopener noreferrer', '_blank'),
+				sprintf(__('If you want to use an existing WordPress installation, use the %s parameter.', 'litespeed-cache'),
+					'--wordpresspath')
+			)
+			. '</li><li>'
+			. sprintf(wp_kses(
+				__('Else if OLS and WordPress are already installed, please follow the instructions <a href="%s" rel="%s" target="%s">here.</a>',
 					'litespeed-cache'),
 				array(
 					'a' => array(
@@ -940,8 +974,7 @@ class LiteSpeed_Cache_Admin_Display
 					),
 				)),
 				'http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress',
-				'noopener noreferrer', '_blank')
-		);
+				'noopener noreferrer', '_blank');
 
 		$test_para = LiteSpeed_Cache::build_paragraph(
 			sprintf(__('Subsequent requests should have the %s response header until the page is updated, expired, or purged.',

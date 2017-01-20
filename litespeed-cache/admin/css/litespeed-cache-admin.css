@@ -59,6 +59,7 @@
   -o-transition:opacity 250ms ease-out;
   transition:opacity 250ms ease-out;
   font:normal 10px/1.5 Verdana,Arial,sans-serif;
+  font-size:12px;
 }
 
 /* <http://css-tricks.com/snippets/css/css-triangle/> */
@@ -113,6 +114,7 @@
   -o-transition:opacity 250ms ease-out;
   transition:opacity 250ms ease-out;
   font:normal 10px/1.5 Verdana,Arial,sans-serif;
+  font-size: 12px;
 }
 
 /* <http://css-tricks.com/snippets/css/css-triangle/> */
@@ -167,6 +169,7 @@
   -o-transition:opacity 250ms ease-out;
   transition:opacity 250ms ease-out;
   font:normal 10px/1.5 Verdana,Arial,sans-serif;
+  font-size:12px;
 }
 
 /* <http://css-tricks.com/snippets/css/css-triangle/> */
@@ -383,4 +386,9 @@ textarea#purgebylist{
   width: 100%;
   position: relative;
   -webkit-font-smoothing: subpixel-antialiased;
+}
+.litespeed-cache-welcome-panel ul {
+    list-style: disc outside;
+    margin-left: 20px;
+    padding-left: 0;
 }
