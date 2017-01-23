@@ -72,12 +72,8 @@ class LiteSpeed_Cache_Admin_Display
 			'<a href="https://wordpress.org/support/view/plugin-reviews/litespeed-cache?filter=5#postform" '
 			. 'rel="noopener noreferer" target="_blank">&#10030;&#10030;&#10030;&#10030;&#10030;</a>'
 		);
-		$faqs = sprintf(
-			__('If your questions are not answered here, try the %s', 'litespeed-cache'),
-			'<a href=' . get_admin_url() . 'admin.php?page=lscache-info>FAQ.</a>'
-		);
 		$questions = sprintf(wp_kses(
-			__('If your questions are still not answered, do not hesitate to ask them on the <a href="%s" rel="%s" target="%s">support forum</a>.',
+			__('If you have any questions that are not answered in the <a href="%s">FAQs</a>, do not hesitate to ask them on the <a href="%s" rel="%s" target="%s">support forum</a>.',
 				'litespeed-cache'),
 			array(
 				'a' => array(
@@ -86,12 +82,12 @@ class LiteSpeed_Cache_Admin_Display
 					'target' => array(),
 				),
 			)),
+			get_admin_url() . 'admin.php?page=lscache-info',
 			'https://wordpress.org/support/plugin/litespeed-cache',
 			'noopener noreferrer', '_blank'
 		);
 		// Change the footer text
-		$footer_text = LiteSpeed_Cache::build_paragraph($rate_us, $faqs,
-			$questions);
+		$footer_text = LiteSpeed_Cache::build_paragraph($rate_us, $questions);
 
 		return $footer_text;
 	}
@@ -195,15 +191,15 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Builds the html for a tool tip.
+	 * Builds the html for a tooltip text.
 	 *
 	 * @since 1.0.14
 	 * @access private
-	 * @param string $msg The message to put in the tooltip.
-	 * @param string $class_suffix A class suffix, if necessary.
-	 * @param string $field_style Any styling changes to the field portion.
-	 * @param string $tip_style Any styling changes to the tip portion.
-	 * @return string The built tooltip html.
+	 * @param string $msg Text that needs to be displayed in tooltip
+	 * @param string $class_suffix Class name for the tooltip
+	 * @param string $field_style Extra styles if required for outer span
+	 * @param string $tip_style Extra styles if required for inner span
+	 * @return string tooltip message.
 	 */
 	private static function build_tip($msg, $class_suffix = '',
 		$field_style = '', $tip_style = '')
@@ -229,6 +225,44 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Builds the html for buttons that depend on rtl/ltr orientation.
+	 *
+	 * @since 1.0.14
+	 * @access private
+	 * @param string $class_suffix The class name used for the button
+	 * @param string $button_text The text used for the button
+	 * @param string $notice The notice message to be display after button
+	 *     click
+	 * @param boolean $extra_br Optional if extra br is required to adjust the
+	 *     layout.
+	 * @return string button text.
+	 */
+	private static function build_button($class_suffix, $button_text = '',
+		$notice = '', $extra_br = true)
+	{
+		$buf = '<span class="' . $class_suffix . '"';
+
+		if (!is_rtl()) {
+			$buf .= ' style="float:left;"';
+		}
+
+		$buf .= '>' . $button_text . '</span>';
+
+		if (!empty($notice)) {
+			$buf .= '<span class="copy-select-all-span" style="display:none; font-size:11px; font-style:italic;margin-left:10px; position:relative; top:3px; color: green;">'
+				. $notice . '</span>';
+		}
+
+		$buf .= '<br>';
+
+		if ($extra_br) {
+			$buf .= '<br>';
+		}
+
+		return $buf;
+	}
+
+	/**
 	 * Builds the html for the expand/collapse all button.
 	 *
 	 * @since 1.0.14
@@ -238,14 +272,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private static function build_expand_collapse($extra_br = true)
 	{
-		$buf = '<span class="litespeed-cache-jquery-button"';
-		if (!is_rtl()) {
-			$buf .= 'style="float:left;"';
-		}
-		$buf .= '></span><br>';
-		if ($extra_br) {
-			$buf .= '<br>';
-		}
+		$buf = self::build_button('litespeed-cache-jquery-button', '', '', $extra_br);
 
 		$buf .= self::input_field_hidden('litespeed-cache-jquery-button-expand-val', __("Expand All", "litespeed-cache"))
 			. self::input_field_hidden('litespeed-cache-jquery-button-collapse-val', __("Collapse All", "litespeed-cache"));
@@ -1085,15 +1112,9 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf = '<div class="wrap"><h2>LiteSpeed Cache Report</h2>';
 		$buf .= '<div class="litespeed-cache-welcome-panel">' . $desc;
-		$buf .= '<span class="litespeed-cache-select-all-button"';
-		if (!is_rtl()) {
-			$buf .= ' style="float:left;"';
-		}
-		$buf .= '>'
-			. __('Select All and Copy to Clipboard', 'litespeed-cache')
-			. '</span><div class="notice notice-success is-dismissible" style="display:none;"><p>'
-			. __('Environment Report copied to Clipboard!', 'litespeed-cache')
-			. '</p><button type="button" class="notice-dismiss"></button></div><br><br>';
+		$buf .= $this->build_button('litespeed-cache-select-all-button',
+			__("Select All and Copy to Clipboard", "litespeed-cache"),
+			__("Environment Report copied to Clipboard!", "litespeed-cache"));
 		$buf .= $this->input_field_textarea('litespeed-report', $report, '20',
 			'80', '', true);
 
@@ -2466,7 +2487,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		}
 		if (!empty($exclamation)) {
 			$buf .= self::build_tip($description, '-clear-all',
-				'position: relative; cursor: help; margin-right: 10px; top: 2px; font-size: 25px;');
+				'position: relative; cursor: help; margin-right: 10px; top: 2px; font-size: 25px; z-index:9999 !important;');
 		}
 		if (!empty($title)) {
 			$buf .= '<h3 class="title">' . $title . "</h3>"

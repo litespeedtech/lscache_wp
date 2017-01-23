@@ -49,7 +49,8 @@
         $(".litespeed-cache-select-all-button").click(function() {
             $('#litespeed-report').select();
             document.execCommand('copy');
-            $('div.notice').css('display','block');
+            $('span.copy-select-all-span').css('display','inline-block');
+            $('span.copy-select-all-span').fadeIn('slow').delay(1000).fadeOut('slow');
         });
 
         //read the hidden field
