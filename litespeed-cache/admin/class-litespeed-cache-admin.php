@@ -54,6 +54,9 @@ class LiteSpeed_Cache_Admin
 		}
 
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+		add_action('admin_print_styles-settings_page_litespeedcache',
+			array($this, 'enqueue_style'));
+
 
 		//Additional links on the plugin page
 		if ((is_network_admin()) && (is_plugin_active_for_network($plugin_base))) {
@@ -69,15 +72,24 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 * Register the stylesheets and JavaScript for the admin area.
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since    1.0.14
+	 */
+	public function enqueue_style()
+	{
+		wp_enqueue_style($this->plugin_name,
+			plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css',
+			array(), $this->version, 'all');
+	}
+
+	/**
+	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_style($this->plugin_name,
-			plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css',
-			array(), $this->version, 'all');
 		wp_enqueue_script('jquery-ui-tabs');
 		wp_enqueue_script($this->plugin_name,
 			plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
@@ -188,6 +200,7 @@ class LiteSpeed_Cache_Admin
 		$submenu_page = add_submenu_page('lscache-dash', $page_title,
 			$menu_title, 'manage_options', $menu_slug, $fn);
 		add_action('load-' . $submenu_page, array($display, 'add_help_tabs'));
+		add_action("admin_print_styles-{$submenu_page}", array($this, 'enqueue_style'));
 	}
 
 	/**
