@@ -274,8 +274,8 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$buf = self::build_button('litespeed-cache-jquery-button', '', '', $extra_br);
 
-		$buf .= self::input_field_hidden('litespeed-cache-jquery-button-expand-val', __("Expand All", "litespeed-cache"))
-			. self::input_field_hidden('litespeed-cache-jquery-button-collapse-val', __("Collapse All", "litespeed-cache"));
+		$buf .= self::get_instance()->input_field_hidden('litespeed-cache-jquery-button-expand-val', __("Expand All", "litespeed-cache"))
+			. self::get_instance()->input_field_hidden('litespeed-cache-jquery-button-collapse-val', __("Collapse All", "litespeed-cache"));
 
 
 		return $buf;
@@ -2486,7 +2486,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 			$buf .= self::build_tip($tooltip);
 		}
 		if (!empty($exclamation)) {
-			$buf .= self::build_tip($description, '-clear-all',
+			$buf .= self::build_tip($exclamation, '-clear-all',
 				'position: relative; cursor: help; margin-right: 10px; top: 2px; font-size: 25px; z-index:9999 !important;');
 		}
 		if (!empty($title)) {
