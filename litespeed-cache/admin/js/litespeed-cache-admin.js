@@ -30,14 +30,14 @@
      */
 
     jQuery(document).ready(function () {
-        
+
         var tabs = $("#lsc-tabs").tabs({
         activate: function(event, ui){
             event.preventDefault();
 
             //get the active tab index
             var active = $("#lsc-tabs").tabs("option", "active");
-            
+
             //save it to hidden field
             $("input[name=active_tab]").val(active);
             var referer = $("input[name=_wp_http_referer]").val();
@@ -55,7 +55,7 @@
 
         //read the hidden field
         var activeTabIndex = $("input[name=active_tab]").val();
-        
+
         //make active needed tab
         if( activeTabIndex !== undefined ) {
             tabs.tabs("option", "active", activeTabIndex);
@@ -65,7 +65,7 @@
 
         $(".postbox .hndle").click(function() {
             $(this).parent().toggleClass("closed");
-        }); 
+        });
 
         $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-expand-val").val());
         $(".litespeed-cache-jquery-button").click(function(){
@@ -75,16 +75,17 @@
             }else{
                 $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-expand-val").val());
                 $('div.postbox').addClass('closed');
-            } 
+            }
         });
 
         var purgebyValue = purgebySelect($('#purgeby').val());
         $('.litespeed-cache-purgeby-text').html(purgebyValue);
 
-        $('#purgeby').change(function(){            
+        $('#purgeby').change(function(){
             purgebyValue = purgebySelect($(this).val());
             $('.litespeed-cache-purgeby-text').html(purgebyValue);
         });
+
     });
 
     jQuery(document).ready( function() {
