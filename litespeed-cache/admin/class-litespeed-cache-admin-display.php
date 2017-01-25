@@ -1309,15 +1309,17 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function show_settings_purge($purge_options)
 	{
-		$select_all_desc = LiteSpeed_Cache::build_paragraph(
-			'<ul style="top: -12px;position: relative;font-style:italic; font-size:11px;"><li>'
-			. __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache')
-			. '</li><li>'
-			. __('Other checkboxes will be ignored.', 'litespeed-cache')
-			. '</li><li>',
-			__('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache')
-			. '</li></ul>'
-		);
+		$select_all_desc =
+			LiteSpeed_Cache::build_list(
+				array(
+					__('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'),
+					__('Other checkboxes will be ignored.', 'litespeed-cache'),
+					__('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache')
+				),
+				false,
+				'top: -12px;position: relative;font-style:italic; font-size:11px;'
+			);
+
 		$buf = $this->input_group_start(__('Auto Purge Rules For Publish/Update', 'litespeed-cache'),
 			__('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache')
 			. '<br>'

@@ -249,6 +249,35 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Helper function to build a list out of an array of strings.
+	 *
+	 * @since 1.0.14
+	 * @access public
+	 * @param array $items The list of strings to build into a list.
+	 * @param bool $ordered Whether to make it an ordered or unordered list.
+	 * @param string $style Any styling to apply to the list.
+	 * @return string The built list.
+	 */
+	public static function build_list($items, $ordered = false, $style = '')
+	{
+		$buf = '<';
+		if ($ordered) {
+			$type = 'ol';
+		}
+		else {
+			$type = 'ul';
+		}
+		$buf .= $type;
+		if ($style) {
+			$buf .= ' style="' . $style . '"';
+		}
+		$buf .= '><li>';
+		$buf .= implode('</li><li>', $items);
+		$buf .= '</li></' . $type . '>';
+		return $buf;
+	}
+
+	/**
 	 * The activation hook callback.
 	 *
 	 * Attempts to set up the advanced cache file. If it fails for any reason,
