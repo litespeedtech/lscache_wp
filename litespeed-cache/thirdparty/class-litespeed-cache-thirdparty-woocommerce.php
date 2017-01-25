@@ -322,7 +322,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$update_desc =
 			__('Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache');
 		$ttl_desc = __('Checking this option will force the shop page to use the front page TTL setting.', 'litespeed-cache')
-			. __('For example, if the homepage for your site is located at https://www.example.com, your shop page may be located at https://www.example.com/shop.', 'litespeed-cache');
+			. sprintf(__('For example, if the homepage for the site is located at %1$s, the shop page may be located at %2$s.', 'litespeed-cache'),
+				'https://www.example.com', 'https://www.example.com/shop');
 
 		if ($tabs === false) {
 			return $tabs;

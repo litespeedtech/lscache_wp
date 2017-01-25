@@ -86,6 +86,18 @@
             $('.litespeed-cache-purgeby-text').html(purgebyValue);
         });
 
+        jQuery(document).on( 'click', '.lscwp-whm-notice .notice-dismiss', function() {
+
+            jQuery.ajax({
+                url: ajaxurl,
+                data: {
+                    action: 'lscache_dismiss_whm',
+                    LSCWP_CTRL: lscwp_data.lscwpctrl,
+                    _wpnonce: lscwp_data.nonce
+                }
+            })
+
+        })
     });
 
     jQuery(document).ready( function() {

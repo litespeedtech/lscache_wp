@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Admin_Rules
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
 			$buf = LiteSpeed_Cache::build_paragraph(
 				self::$ERR_WRONG_ORDER,
-				sprintf(__('Your .htaccess file is missing a %s.', 'litespeed-cache'),
+				sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'),
 					'&lt;/IfModule&gt;'));
 			return $buf;
 		}

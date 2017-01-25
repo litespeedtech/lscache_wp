@@ -90,10 +90,21 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_script('jquery-ui-tabs');
-		wp_enqueue_script($this->plugin_name,
+		wp_register_script($this->plugin_name,
 			plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
 			array('jquery-ui-tabs'), $this->version, false);
+		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT)
+			=== LiteSpeed_Cache::WHM_TRANSIENT_VAL
+		) {
+			$data = array(
+				'lscwpctrl' => LiteSpeed_Cache::ADMINQS_DISMISS,
+				'nonce' => wp_create_nonce('litespeed-dismiss')
+			);
+			wp_localize_script($this->plugin_name, 'lscwp_data', $data);
+
+		}
+		wp_enqueue_script('jquery-ui-tabs');
+		wp_enqueue_script($this->plugin_name);
 	}
 
 	/**
@@ -399,6 +410,7 @@ class LiteSpeed_Cache_Admin
 		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT)
 			!== LiteSpeed_Cache::WHM_TRANSIENT_VAL
 		) {
+			LiteSpeed_Cache_Admin_Display::get_instance()->show_display_installed();
 			return;
 		}
 
@@ -988,15 +1000,16 @@ class LiteSpeed_Cache_Admin
 		if ((is_multisite()) && ((!is_network_admin())
 				|| (!current_user_can('manage_network_options')))
 		) {
-			$second = __('Alternatively, your network admin may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache network settings.', 'litespeed-cache');
+			$third = __('For this scenario only, the network admin may uncheck "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
 		}
 		else {
-			$second = __('Alternatively, you may bypass this warning by unchecking "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
+			$third = __('For this scenario only, please uncheck "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
 		}
 		$msg = LiteSpeed_Cache::build_paragraph(
-			__('Please disable/deactivate your other cache plugin.', 'litespeed-cache'),
-			$second,
-			__('This should only be done if you intend to use the other cache plugin for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'));
+			__('Please disable/deactivate any other Full Page Cache solutions that are currently being used.', 'litespeed-cache'),
+			__('LiteSpeed Cache does work with other cache solutions, but only their non-page caching offerings—such as minifying css/js files.', 'litespeed-cache'),
+			$third
+		);
 
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 			LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $msg);

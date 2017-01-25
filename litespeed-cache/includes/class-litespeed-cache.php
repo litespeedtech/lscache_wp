@@ -552,10 +552,14 @@ class LiteSpeed_Cache
 	public static function show_version_error_wp()
 	{
 		echo '<div class="error"><p><strong>'
-		. __('Your WordPress version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
+		. __('The installed WordPress version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br />'
-		. sprintf(wp_kses(__('The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade or go to <a href="%1$s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), array( 'a' => array( 'href' => array() ) )), 'plugins.php?plugin_status=active', '3.3')
-		. '</p></div>' ;
+		. self::build_paragraph(
+			sprintf(__('The LiteSpeed Cache Plugin requires at least WordPress %s.', 'litespeed-cache'), '3.3'),
+			sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
+				array( 'a' => array( 'href' => array() ) )), 'plugins.php?plugin_status=active')
+		)
+		. '</p></div>';
 	}
 
 	/**
@@ -566,10 +570,15 @@ class LiteSpeed_Cache
 	public static function show_version_error_php()
 	{
 		echo '<div class="error"><p><strong>'
-		. __('Your PHP version is too old for LiteSpeed Cache Plugin.', 'litespeed-cache')
-		. '</strong><br /> '
-		. sprintf(wp_kses(__('LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, which is out-dated and insecure. Please ask your web host to update your PHP installation or go to <a href="%1$s">active plugins</a> and deactivate LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'), array( 'a' => array( 'href' => array() ) )), esc_url("plugins.php?plugin_status=active"), PHP_VERSION, '5.3')
-		. '</p></div>' ;
+			. self::build_paragraph(
+				__('The installed PHP version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
+				. '</strong><br />',
+				sprintf(__('The LiteSpeed Cache Plugin requires at least PHP %s.', 'litespeed-cache'), '5.3'),
+				sprintf(__('The currently installed version is PHP %s, which is out-dated and insecure.', 'litespeed-cache'), PHP_VERSION),
+				sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
+					array('a' => array('href' => array()))), 'plugins.php?plugin_status=active')
+			)
+			. '</p></div>';
 	}
 
 	/**
@@ -580,8 +589,12 @@ class LiteSpeed_Cache
 	public static function show_wp_cache_var_set_error()
 	{
 		echo '<div class="error"><p><strong>'
-		. sprintf(__('LiteSpeed Cache was unable to write to your wp-config.php file. Please add the following to your wp-config.php file located under your WordPress root directory: define(\'WP_CACHE\', true);', 'litespeed-cache'))
-		. '</p></div>' ;
+		. self::build_paragraph(
+			__('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache'),
+			sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'),
+				'<br><pre>define(\'WP_CACHE\', true);</pre>')
+		)
+		. '</p></div>';
 	}
 
 	/**
@@ -648,6 +661,9 @@ class LiteSpeed_Cache
 			if ($is_ajax) {
 				add_action('wp_ajax_lscache_cli', array($this, 'check_admin_ip'));
 				add_action('wp_ajax_nopriv_lscache_cli',
+					array($this, 'check_admin_ip'));
+				add_action('wp_ajax_lscache_dismiss_whm', array($this, 'check_admin_ip'));
+				add_action('wp_ajax_nopriv_lscache_dismiss_whm',
 					array($this, 'check_admin_ip'));
 			}
 			else {
@@ -780,11 +796,19 @@ class LiteSpeed_Cache
 		$ret = false;
 		$err = self::build_paragraph(
 			__('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache'),
-			__('If you recently changed the cookie in the settings, please log out and back in again.', 'litespeed-cache'),
-			__("If not, please verify your LiteSpeed Cache setting's Advanced tab.", 'litespeed-cache'));
+			__('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache'),
+			sprintf(wp_kses(__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'),
+				array(
+					'a' => array(
+						'href' => array()
+					)
+				)),
+				admin_url('admin.php?page=lscache-settings&tab=4')
+			)
+		);
 		if (is_openlitespeed()) {
 			$err .= ' '
-				. __('If using OpenLiteSpeed, you may need to restart the server for the changes to take effect.', 'litespeed-cache');
+				. __('If using OpenLiteSpeed, the server must be restarted once for the changes to take effect.', 'litespeed-cache');
 		}
 		// Set vary cookie for logging in user, unset for logging out.
 		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
