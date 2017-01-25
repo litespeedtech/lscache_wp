@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Admin
 		}
 		$prefix = $input[$id];
 		if (($prefix !== '') && (!ctype_alnum($prefix))) {
-			$prefix_err = LiteSpeed_Cache::build_paragraph(
+			$prefix_err = LiteSpeed_Cache_Admin_Display::build_paragraph(
 				__('Invalid Tag Prefix input.', 'litespeed-cache'),
 				__('Input should only contain letters and numbers.', 'litespeed-cache')
 			);
@@ -1005,7 +1005,7 @@ class LiteSpeed_Cache_Admin
 		else {
 			$third = __('For this scenario only, please uncheck "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache');
 		}
-		$msg = LiteSpeed_Cache::build_paragraph(
+		$msg = LiteSpeed_Cache_Admin_Display::build_paragraph(
 			__('Please disable/deactivate any other Full Page Cache solutions that are currently being used.', 'litespeed-cache'),
 			__('LiteSpeed Cache does work with other cache solutions, but only their non-page caching offerings—such as minifying css/js files.', 'litespeed-cache'),
 			$third

@@ -233,51 +233,6 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Helper function to build paragraphs out of all the string sentences
-	 * passed in.
-	 *
-	 * @since 1.0.11
-	 * @access public
-	 * @param string $args,... Variable number of strings to combine to a paragraph.
-	 * @return string The built paragraph.
-	 */
-	public static function build_paragraph()
-	{
-		$args = func_get_args();
-		$para = implode(' ', $args);
-		return $para;
-	}
-
-	/**
-	 * Helper function to build a list out of an array of strings.
-	 *
-	 * @since 1.0.14
-	 * @access public
-	 * @param array $items The list of strings to build into a list.
-	 * @param bool $ordered Whether to make it an ordered or unordered list.
-	 * @param string $style Any styling to apply to the list.
-	 * @return string The built list.
-	 */
-	public static function build_list($items, $ordered = false, $style = '')
-	{
-		$buf = '<';
-		if ($ordered) {
-			$type = 'ol';
-		}
-		else {
-			$type = 'ul';
-		}
-		$buf .= $type;
-		if ($style) {
-			$buf .= ' style="' . $style . '"';
-		}
-		$buf .= '><li>';
-		$buf .= implode('</li><li>', $items);
-		$buf .= '</li></' . $type . '>';
-		return $buf;
-	}
-
-	/**
 	 * The activation hook callback.
 	 *
 	 * Attempts to set up the advanced cache file. If it fails for any reason,
@@ -583,11 +538,10 @@ class LiteSpeed_Cache
 		echo '<div class="error"><p><strong>'
 		. __('The installed WordPress version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
 		. '</strong><br />'
-		. self::build_paragraph(
-			sprintf(__('The LiteSpeed Cache Plugin requires at least WordPress %s.', 'litespeed-cache'), '3.3'),
-			sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
+		. sprintf(__('The LiteSpeed Cache Plugin requires at least WordPress %s.', 'litespeed-cache'), '3.3')
+		. ' '
+		. sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
 				array( 'a' => array( 'href' => array() ) )), 'plugins.php?plugin_status=active')
-		)
 		. '</p></div>';
 	}
 
@@ -599,14 +553,14 @@ class LiteSpeed_Cache
 	public static function show_version_error_php()
 	{
 		echo '<div class="error"><p><strong>'
-			. self::build_paragraph(
-				__('The installed PHP version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
-				. '</strong><br />',
-				sprintf(__('The LiteSpeed Cache Plugin requires at least PHP %s.', 'litespeed-cache'), '5.3'),
-				sprintf(__('The currently installed version is PHP %s, which is out-dated and insecure.', 'litespeed-cache'), PHP_VERSION),
-				sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
+			. __('The installed PHP version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
+			. '</strong><br /> '
+			. sprintf(__('The LiteSpeed Cache Plugin requires at least PHP %s.', 'litespeed-cache'), '5.3')
+			. ' '
+			. sprintf(__('The currently installed version is PHP %s, which is out-dated and insecure.', 'litespeed-cache'), PHP_VERSION)
+			. ' '
+			. sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
 					array('a' => array('href' => array()))), 'plugins.php?plugin_status=active')
-			)
 			. '</p></div>';
 	}
 
@@ -618,7 +572,7 @@ class LiteSpeed_Cache
 	public static function show_wp_cache_var_set_error()
 	{
 		echo '<div class="error"><p><strong>'
-		. self::build_paragraph(
+		. LiteSpeed_Cache_Admin_Display::build_paragraph(
 			__('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache'),
 			sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'),
 				'<br><pre>define(\'WP_CACHE\', true);</pre>')
@@ -823,22 +777,6 @@ class LiteSpeed_Cache
 	private function setup_cookies()
 	{
 		$ret = false;
-		$err = self::build_paragraph(
-			__('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache'),
-			__('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache'),
-			sprintf(wp_kses(__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'),
-				array(
-					'a' => array(
-						'href' => array()
-					)
-				)),
-				admin_url('admin.php?page=lscache-settings&tab=4')
-			)
-		);
-		if (is_openlitespeed()) {
-			$err .= ' '
-				. __('If using OpenLiteSpeed, the server must be restarted once for the changes to take effect.', 'litespeed-cache');
-		}
 		// Set vary cookie for logging in user, unset for logging out.
 		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
 		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
@@ -863,8 +801,7 @@ class LiteSpeed_Cache
 			if (!empty($db_cookie)) {
 				$ret = true;
 				if (is_multisite() ? is_network_admin() : is_admin()) {
-					LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-						LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+					LiteSpeed_Cache_Admin_Display::show_error_cookie();
 				}
 			}
 			$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
@@ -882,8 +819,7 @@ class LiteSpeed_Cache
 			return $ret;
 		}
 		elseif ((is_multisite() ? is_network_admin() : is_admin())) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $err);
+			LiteSpeed_Cache_Admin_Display::show_error_cookie();
 		}
 		$ret = true;
 		$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
