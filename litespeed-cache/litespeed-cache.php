@@ -43,6 +43,36 @@
 if ( ! defined('WPINC') ) {
 	die ;
 }
+// Create a helper function for easy SDK access.
+function lc_fs() {
+	global $lc_fs;
+
+	if ( ! isset( $lc_fs ) ) {
+		// Include Freemius SDK.
+		require_once dirname(__FILE__) . '/freemius/start.php';
+
+		$lc_fs = fs_dynamic_init( array(
+			'id'                  => '720',
+			'slug'                => 'litespeed-cache',
+			'type'                => 'plugin',
+			'public_key'          => 'pk_85a0a6c62e41d180211109ea64712',
+			'is_premium'          => false,
+			'has_premium_version' => false,
+			'has_addons'          => false,
+			'has_paid_plans'      => false,
+			'menu'                => array(
+				'slug'       => 'lscache-settings',
+				'account'    => false,
+				'support'    => false,
+			),
+		) );
+	}
+
+	return $lc_fs;
+}
+
+// Init Freemius.
+lc_fs();
 
 /**
  * The core plugin class that is used to define internationalization,
