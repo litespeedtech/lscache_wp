@@ -252,6 +252,7 @@ class LiteSpeed_Cache
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
+		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-display.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-rules.php';
 		if (is_multisite()) {
 			$count = $this->get_network_count();
