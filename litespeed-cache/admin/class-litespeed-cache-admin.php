@@ -410,7 +410,6 @@ class LiteSpeed_Cache_Admin
 		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT)
 			!== LiteSpeed_Cache::WHM_TRANSIENT_VAL
 		) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->show_display_installed();
 			return;
 		}
 
