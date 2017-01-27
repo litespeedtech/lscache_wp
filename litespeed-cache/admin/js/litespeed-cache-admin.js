@@ -32,33 +32,76 @@
     jQuery(document).ready(function () {
 
         var tabs = $("#lsc-tabs").tabs({
-        activate: function(event, ui){
-            event.preventDefault();
+            activate: function (event, ui) {
+                event.preventDefault();
 
-            //get the active tab index
-            var active = $("#lsc-tabs").tabs("option", "active");
+                //get the active tab index
+                var active = $("#lsc-tabs").tabs("option", "active");
 
-            //save it to hidden field
-            $("input[name=active_tab]").val(active);
-            var referer = $("input[name=_wp_http_referer]").val();
-            var new_url = referer + '&tab='+ active;
-            $("input[name=_wp_http_referer]").val(new_url);
-        }
+                //save it to hidden field
+                $("input[name=active_tab]").val(active);
+                var action = $("form").attr("action");
+                if (action == 'options.php') {
+                    var referer = $("input[name=_wp_http_referer]").val();
+                    var new_url = referer + '&tab=' + active;
+                    $("input[name=_wp_http_referer]").val(new_url);
+                }
+                else {
+                    var new_url = action + '&tab=' + active;
+                    $("form").attr("action", new_url);
+                }
+            }
         });
 
         //read the hidden field
         var activeTabIndex = $("input[name=active_tab]").val();
 
         //make active needed tab
-        if( activeTabIndex !== undefined ) {
+        if (activeTabIndex !== undefined) {
             tabs.tabs("option", "active", activeTabIndex);
         }
 
         tabs.removeClass('ui-widget');
+
+        $(".postbox .hndle").click(function () {
+            $(this).parent().toggleClass("closed");
+        });
+
+        $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-expand-val").val());
+        $(".litespeed-cache-jquery-button").click(function () {
+            if ($('.litespeed-cache-jquery-button').html() == $("#litespeed-cache-jquery-button-expand-val").val()) {
+                $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-collapse-val").val());
+                $('div.postbox').removeClass('closed');
+            } else {
+                $('.litespeed-cache-jquery-button').html($("#litespeed-cache-jquery-button-expand-val").val());
+                $('div.postbox').addClass('closed');
+            }
+        });
+
+        var purgebyValue = purgebySelect($('#purgeby').val());
+        $('.litespeed-cache-purgeby-text').html(purgebyValue);
+
+        $('#purgeby').change(function () {
+            purgebyValue = purgebySelect($(this).val());
+            $('.litespeed-cache-purgeby-text').html(purgebyValue);
+        });
+
+        jQuery(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
+
+            jQuery.ajax({
+                url: ajaxurl,
+                data: {
+                    action: 'lscache_dismiss_whm',
+                    LSCWP_CTRL: lscwp_data.lscwpctrl,
+                    _wpnonce: lscwp_data.nonce
+                }
+            })
+
+        })
     });
 
-    jQuery(document).ready( function() {
-        jQuery(".litespeedcache-postbox-button").on('click', function() {
+    jQuery(document).ready(function () {
+        jQuery(".litespeedcache-postbox-button").on('click', function () {
             var pbDiv = jQuery(this).parent().get(0);
             jQuery(pbDiv).toggleClass('closed');
             jQuery(this).attr('aria-expanded',
@@ -66,8 +109,8 @@
         });
     });
 
-    jQuery(document).ready( function() {
-        jQuery('#litespeedcache-purgeall').click( function() {
+    jQuery(document).ready(function () {
+        jQuery('#litespeedcache-purgeall').click(function () {
             if (confirm(jQuery('#litespeedcache-purgeall-confirm').val())) {
                 jQuery(this).submit();
             }
@@ -77,8 +120,8 @@
         });
     });
 
-    jQuery(document).ready( function() {
-        jQuery('#litespeedcache-clearcache').click( function() {
+    jQuery(document).ready(function () {
+        jQuery('#litespeedcache-clearcache').click(function () {
             if (confirm(jQuery('#litespeedcache-clearcache-confirm').val())) {
                 jQuery(this).submit();
             }
@@ -105,6 +148,27 @@ function lscwpCheckboxConfirm(the_checkbox, list_id) {
     }
     the_list.value = '';
     the_list.readOnly = true;
+}
+
+function purgebySelect(value) {
+    var category = jQuery('#purgeby-category').val();
+    var postid = jQuery('#purgeby-postid').val();
+    var tag = jQuery('#purgeby-tag').val();
+    var url = jQuery('#purgeby-url').val();
+
+    if (value == 0) {
+        var purgebyValue = category;
+    }
+    else if (value == 1) {
+        var purgebyValue = postid;
+    }
+    else if (value == 2) {
+        var purgebyValue = tag;
+    }
+    else if (value == 3) {
+        var purgebyValue = url;
+    }
+    return purgebyValue;
 }
 
 function lscwpEsiEnabled(the_checkbox, esi_ids) {
@@ -142,4 +206,3 @@ function lscwpEsiEnabled(the_checkbox, esi_ids) {
         esi_ids[i].appendChild(hid);
     }
 }
-

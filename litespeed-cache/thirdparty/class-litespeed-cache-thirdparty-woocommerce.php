@@ -3,13 +3,13 @@
 /**
  * The Third Party integration with the WooCommerce plugin.
  *
- * @since		1.0.5
- * @package		LiteSpeed_Cache
- * @subpackage	LiteSpeed_Cache/thirdparty
- * @author		LiteSpeed Technologies <info@litespeedtech.com>
+ * @since        1.0.5
+ * @package        LiteSpeed_Cache
+ * @subpackage    LiteSpeed_Cache/thirdparty
+ * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
 if (!defined('ABSPATH')) {
-    die();
+	die();
 }
 
 class LiteSpeed_Cache_ThirdParty_WooCommerce
@@ -389,7 +389,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ($term === false) {
 			return;
 		}
-		while(isset($term)) {
+		while (isset($term)) {
 			LiteSpeed_Cache_Tags::add_cache_tag(
 				self::CACHETAG_TERM . $term->term_id);
 			if ($term->parent == 0) {
@@ -404,7 +404,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.5
 	 * @access public
-	 * @param boolean $cacheable True if previous filter determined the page is cacheable.
+	 * @param boolean $cacheable True if previous filter determined the page is
+	 *     cacheable.
 	 * @return boolean True if cacheable, false if not.
 	 */
 	public static function is_cacheable($cacheable)
@@ -425,59 +426,66 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 			elseif ((version_compare($woocom->version, '2.1.0', '>='))
 				&& (($woocom->cart->get_cart_contents_count() !== 0)
-				|| (wc_notice_count() > 0))) {
+					|| (wc_notice_count() > 0))
+			) {
 				return false;
 			}
 			self::set_cache_tags();
+
 			return true;
 		}
 		$uri = esc_url($_SERVER["REQUEST_URI"]);
-		$uri_len = strlen( $uri ) ;
+		$uri_len = strlen($uri);
 
 		if ($uri_len < 5) {
 			self::set_cache_tags();
+
 			return true;
 		}
 		$sub = substr($uri, 2);
 		$sub_len = $uri_len - 2;
-		switch($uri[1]) {
-		case 'c':
-			if ((($sub_len == 4) && (strncmp($sub, 'art/', 4) == 0))
-				|| (($sub_len == 8) && (strncmp($sub, 'heckout/', 8) == 0))) {
-				return false;
-			}
-			break;
-		case 'm':
-			if (strncmp($sub, 'y-account/', 10) == 0) {
-				return false;
-			}
-			break;
-		case 'a':
-			if (($sub_len == 6) && (strncmp($sub, 'ddons/', 6) == 0)) {
-				return false;
-			}
-			break;
-		case 'l':
-			if ((($sub_len == 6) && (strncmp($sub, 'ogout/', 6) == 0))
-				|| (($sub_len == 13) && (strncmp($sub, 'ost-password/', 13) == 0))) {
-				return false;
-			}
-			break;
-		case 'p':
-			if (strncmp($sub, 'roduct/', 7) == 0) {
-				return false;
-			}
-			break;
+		switch ($uri[1]) {
+			case 'c':
+				if ((($sub_len == 4) && (strncmp($sub, 'art/', 4) == 0))
+					|| (($sub_len == 8) && (strncmp($sub, 'heckout/', 8) == 0))
+				) {
+					return false;
+				}
+				break;
+			case 'm':
+				if (strncmp($sub, 'y-account/', 10) == 0) {
+					return false;
+				}
+				break;
+			case 'a':
+				if (($sub_len == 6) && (strncmp($sub, 'ddons/', 6) == 0)) {
+					return false;
+				}
+				break;
+			case 'l':
+				if ((($sub_len == 6) && (strncmp($sub, 'ogout/', 6) == 0))
+					|| (($sub_len == 13) && (strncmp($sub, 'ost-password/', 13) == 0))
+				) {
+					return false;
+				}
+				break;
+			case 'p':
+				if (strncmp($sub, 'roduct/', 7) == 0) {
+					return false;
+				}
+				break;
 		}
 
 		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]);
 		$qs_len = strlen($qs);
-		if ( !empty($qs) && ($qs_len >= 12)
-				&& (strncmp($qs, 'add-to-cart=', 12) == 0)) {
+		if (!empty($qs) && ($qs_len >= 12)
+			&& (strncmp($qs, 'add-to-cart=', 12) == 0)
+		) {
 			return false;
 		}
 
 		self::set_cache_tags();
+
 		return true;
 	}
 
@@ -538,7 +546,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ((empty($term_ids)) || (wc_get_product($post_id) === false)) {
 			return;
 		}
-		foreach($term_ids as $term_id) {
+		foreach ($term_ids as $term_id) {
 			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $term_id);
 		}
 	}
@@ -564,7 +572,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		$tags = wc_get_product_terms($post_id, 'product_tag',
-			array('fields'=>'ids'));
+			array('fields' => 'ids'));
 		if (!empty($tags)) {
 			foreach ($tags as $tag) {
 				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $tag);
@@ -612,6 +620,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS;
 		$configs[self::OPTION_SHOP_FRONT_TTL] = self::OPTION_SHOP_FRONT_TTL;
+
 		return $configs;
 	}
 
@@ -641,7 +650,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$update_desc =
 			__('Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache');
 		$ttl_desc = __('Checking this option will force the shop page to use the front page TTL setting.', 'litespeed-cache')
-		. __('For example, if the homepage for your site is located at https://www.example.com, your shop page may be located at https://www.example.com/shop.', 'litespeed-cache');
+			. sprintf(__('For example, if the homepage for the site is located at %1$s, the shop page may be located at %2$s.', 'litespeed-cache'),
+				'https://www.example.com', 'https://www.example.com/shop');
 
 		if ($tabs === false) {
 			return $tabs;
@@ -656,36 +666,44 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 		}
 
-		$content = '<hr/><h3 class="title">'
-			. $title . "</h3>\n"
-			. '<table class="form-table">' . "\n"
+		$content = '<h3 class="title">'
+			. $title . "</h3><hr/>"
+			. '<div class="litespeed-cache-div-table>">'
+			. '<table class="form-table">'
 			. '<tr><th scope="row">'
 			. __('Product Update Interval', 'litespeed-cache') . '</th><td>';
 
-		$content .= '<select name="' . $option_group . '['
+		$content .= '<span class="litespeed-cache-field-tip"><span class="litespeed-cache-tip-content">'
+			. $update_desc
+			. '</span></span><select name="'
+			. $option_group . '['
 			. self::OPTION_UPDATE_INTERVAL . ']" id="'
-			. self::OPTION_UPDATE_INTERVAL . '" style="width:100%;max-width:90%;">';
-		foreach ( $seloptions as $val => $label ) {
-			$content .= '<option value="' . $val . '"' ;
-			if ( $selected_value == $val ) {
-				$content .= ' selected="selected"' ;
+			. self::OPTION_UPDATE_INTERVAL . '" style="">';
+		foreach ($seloptions as $val => $label) {
+			$content .= '<option value="' . $val . '"';
+			if ($selected_value == $val) {
+				$content .= ' selected="selected"';
 			}
-			$content .= '>' . $label . '</option>' ;
+			$content .= '>' . $label . '</option>';
 		}
-		$content .= '</select><p class="description">' . $update_desc
-			. "</p></td></tr>\n";
+		$content .= '</select>';
+		$content .= "</td></tr>\n";
 		$content .= '<tr><th scope="row">'
 			. __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . '</th><td>';
-		$content .= '<input name="' . $option_group . '['
+		$content .=
+			'<span class="litespeed-cache-field-tip"><span class="litespeed-cache-tip-content">'
+			. $ttl_desc
+			. '</span></span><input name="'
+			. $option_group . '['
 			. self::OPTION_SHOP_FRONT_TTL . ']" type="checkbox" id="'
 			. self::OPTION_SHOP_FRONT_TTL . '" value="'
-			. self::OPTION_SHOP_FRONT_TTL . '"' ;
-		if ( ($checked_value === self::OPTION_SHOP_FRONT_TTL)) {
-			$content .= ' checked="checked" ' ;
+			. self::OPTION_SHOP_FRONT_TTL . '"';
+		if (($checked_value === self::OPTION_SHOP_FRONT_TTL)) {
+			$content .= ' checked="checked" ';
 		}
-		$content .= '/><p class="description">' . $ttl_desc;
+		$content .= '/>';
 		$content .= "</p></td></tr>\n";
-		$content .= "</table>\n";
+		$content .= "</table></div>\n";
 
 		$content .= '<h3>' . __('NOTE:', 'litespeed-cache') . '</h3><p>'
 			. __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache')
@@ -695,9 +713,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$content .= "\n";
 
 		$tab = array(
-			'title' => $title,
-			'slug' => $slug,
-			'content' => $content
+			'title'   => $title,
+			'slug'    => $slug,
+			'content' => $content,
 		);
 
 		$tabs[] = $tab;
@@ -736,7 +754,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		if ((isset($input[self::OPTION_SHOP_FRONT_TTL]))
 			&& ($input[self::OPTION_SHOP_FRONT_TTL]
-				=== self::OPTION_SHOP_FRONT_TTL)) {
+				=== self::OPTION_SHOP_FRONT_TTL)
+		) {
 			$options[self::OPTION_SHOP_FRONT_TTL] =
 				self::OPTION_SHOP_FRONT_TTL;
 		}
@@ -760,13 +779,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	{
 		$woocom = WC();
 		if ((isset($woocom)) &&
-			(version_compare($woocom->version, '2.5.0', '>='))) {
+			(version_compare($woocom->version, '2.5.0', '>='))
+		) {
 			return wc_get_product_cat_ids($product_id);
 		}
-		$product_cats = wp_get_post_terms( $product_id, 'product_cat',
-			array( "fields" => "ids" ) );
-		foreach ( $product_cats as $product_cat ) {
-			$product_cats = array_merge( $product_cats, get_ancestors( $product_cat, 'product_cat' ) );
+		$product_cats = wp_get_post_terms($product_id, 'product_cat',
+			array("fields" => "ids"));
+		foreach ($product_cats as $product_cat) {
+			$product_cats = array_merge($product_cats, get_ancestors($product_cat, 'product_cat'));
 		}
 
 		return $product_cats;

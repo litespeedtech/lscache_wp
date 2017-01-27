@@ -405,9 +405,9 @@ class LiteSpeed_Cache_Admin_Rules
 			return $buf;
 		}
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
-			$buf = LiteSpeed_Cache::build_paragraph(
+			$buf = LiteSpeed_Cache_Admin_Display::build_paragraph(
 				self::$ERR_WRONG_ORDER,
-				sprintf(__('Your .htaccess file is missing a %s.', 'litespeed-cache'),
+				sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'),
 					'&lt;/IfModule&gt;'));
 			return $buf;
 		}
@@ -1020,8 +1020,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private static function check_rewrite($rule)
 	{
-		return (preg_match('/(^\|)|(\|$)|([^\\\\]\s|[^\w-\\\|\s\/.+*?\(\)]|\|\|)/',
-				$rule) === 0);
+		$escaped = str_replace('@', '\@', $rule);
+		return (@preg_match('@' . $escaped . '@', null) !== false);
 	}
 
 	/**
@@ -1496,7 +1496,8 @@ class LiteSpeed_Cache_Admin_Rules
 		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: %s', 'litespeed-cache');
 		self::$ERR_NOT_FOUND = __('Could not find %s.', 'litespeed-cache');
 		self::$ERR_OVERWRITE = __('Failed to overwrite %s.', 'litespeed-cache');
-		self::$ERR_PARSE_FILE = LiteSpeed_Cache::build_paragraph(
+		self::$ERR_PARSE_FILE =
+			LiteSpeed_Cache_Admin_Display::build_paragraph(
 			__('Tried to parse for existing login cookie.', 'litespeed-cache'),
 			sprintf(__('%s file not valid. Please verify contents.',
 						'litespeed-cache'), '.htaccess')
@@ -1504,7 +1505,7 @@ class LiteSpeed_Cache_Admin_Rules
 		self::$ERR_READWRITE = sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),
 			'.htaccess');
 		self::$ERR_SUBDIR_MISMATCH_LOGIN =
-			LiteSpeed_Cache::build_paragraph(
+			LiteSpeed_Cache_Admin_Display::build_paragraph(
 			__('This site is a subdirectory install.', 'litespeed-cache'),
 			__('Login cookies do not match.', 'litespeed-cache'),
 			__('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',

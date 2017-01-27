@@ -23,6 +23,7 @@ class LiteSpeed_Cache_Tags
 	const TYPE_FEED = 'FD';
 	const TYPE_FRONTPAGE = 'F' ;
 	const TYPE_HOME = 'H' ;
+	const TYPE_ERROR = 'ERR.';
 	const TYPE_POST = 'Po.' ; // Post. Cannot use P, reserved for litemage.
 	const TYPE_ARCHIVE_POSTTYPE = 'PT.' ;
 	const TYPE_ARCHIVE_TERM = 'T.' ; //for is_category|is_tag|is_tax

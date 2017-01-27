@@ -15,7 +15,7 @@
  * Plugin Name:       LiteSpeed Cache
  * Plugin URI:        https://www.litespeedtech.com/products/litespeed-web-cache/lscwp
  * Description:       WordPress plugin to connect to LSCache on LiteSpeed Web Server.
- * Version:           1.0.13.1
+ * Version:           1.0.14
  * Author:            LiteSpeed Technologies
  * Author URI:        https://www.litespeedtech.com
  * License:           GPLv3
@@ -43,6 +43,36 @@
 if ( ! defined('WPINC') ) {
 	die ;
 }
+// Create a helper function for easy SDK access.
+function lc_fs() {
+	global $lc_fs;
+
+	if ( ! isset( $lc_fs ) ) {
+		// Include Freemius SDK.
+		require_once dirname(__FILE__) . '/freemius/start.php';
+
+		$lc_fs = fs_dynamic_init( array(
+			'id'                  => '720',
+			'slug'                => 'litespeed-cache',
+			'type'                => 'plugin',
+			'public_key'          => 'pk_85a0a6c62e41d180211109ea64712',
+			'is_premium'          => false,
+			'has_premium_version' => false,
+			'has_addons'          => false,
+			'has_paid_plans'      => false,
+			'menu'                => array(
+				'slug'       => 'lscache-settings',
+				'account'    => false,
+				'support'    => false,
+			),
+		) );
+	}
+
+	return $lc_fs;
+}
+
+// Init Freemius.
+lc_fs();
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -50,11 +80,26 @@ if ( ! defined('WPINC') ) {
  */
 require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache.php' ;
 
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache-config.php';
+	require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache-tags.php';
+	require_once plugin_dir_path(__FILE__) . 'admin/class-litespeed-cache-admin.php';
+	require_once plugin_dir_path(__FILE__) . 'cli/class-litespeed-cache-cli-purge.php';
+}
+
 if (!function_exists('is_openlitespeed')) {
 	function is_openlitespeed()
 	{
 		return ((isset($_SERVER['LSWS_EDITION']))
 				&& (strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0));
+	}
+}
+
+if (!function_exists('is_webadc')) {
+	function is_webadc()
+	{
+		return ((isset($_SERVER['HTTP_X_LSCACHE']))
+			&& ($_SERVER['HTTP_X_LSCACHE']));
 	}
 }
 
