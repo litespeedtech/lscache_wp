@@ -2227,7 +2227,8 @@ class LiteSpeed_Cache
 		$server_keys = array(
 			'DOCUMENT_ROOT'=>'',
 			'SERVER_SOFTWARE'=>'',
-			'X-LSCACHE'=>''
+			'X-LSCACHE'=>'',
+			'HTTP_X_LSCACHE'=>''
 		);
 		$server_vars = array_intersect_key($server, $server_keys);
 		$buf = self::format_report_section('Server Variables', $server_vars);

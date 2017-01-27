@@ -95,6 +95,14 @@ if (!function_exists('is_openlitespeed')) {
 	}
 }
 
+if (!function_exists('is_webadc')) {
+	function is_webadc()
+	{
+		return ((isset($_SERVER['HTTP_X_LSCACHE']))
+			&& ($_SERVER['HTTP_X_LSCACHE']));
+	}
+}
+
 /**
  * Begins execution of the plugin.
  *

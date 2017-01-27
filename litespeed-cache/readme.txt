@@ -1,6 +1,9 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: cache,performance,admin,widget,http2,litespeed
+Tags: admin, cache, http2, litespeed, performance, widget, optimization,
+ varnish, litespeed web server, lsws, availability, pagespeed, woocommerce,
+ bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite,
+ scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize
 Requires at least: 4.0
 Tested up to: 4.7
 Stable tag: 1.0.13.1
@@ -22,6 +25,7 @@ Additional plugin features:
 * Has an API system that enables other plugins to easily integrate with the cache plugin.
 * Can cache desktop and mobile views separately
 * Allows configuration for do-not-cache by URI, Categories, Tags, Cookies, and User Agents
+* Works with LiteSpeed Web ADC in clustered environments.
 
 = Known Compatible Plugins =
 
