@@ -819,6 +819,14 @@ class LiteSpeed_Cache_Admin_Display
 				array('b' => array()))
 			. __('This is to ensure compatibility prior to enabling the cache for all sites.', 'litespeed-cache');
 
+
+		if (isset($_REQUEST['tab'])) {
+			$lscwp_active_tab = intval($_REQUEST['tab']);
+			if (($lscwp_active_tab < 0) || ($lscwp_active_tab >= 3)) {
+				$lscwp_active_tab = 0;
+			}
+		}
+
 		$buf = '<div class="wrap"><h2>' . __('LiteSpeed Cache Settings', 'litespeed-cache') . '</h2>';
 
 		$config = LiteSpeed_Cache::config();
@@ -826,6 +834,9 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= '<form method="post" action="admin.php?page=lscache-settings">'
 			. '<input type="hidden" name="lscwp_settings_save" value="save_settings" />'
 			. wp_nonce_field('lscwp_settings', 'save');
+
+		$buf .= '<input type="hidden" name="active_tab" id="active_tab" value="'
+			. $lscwp_active_tab . '" />';
 
 		$buf .= '<div id="lsc-tabs">'
 			. '<ul>'
