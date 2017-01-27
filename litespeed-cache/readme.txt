@@ -23,24 +23,42 @@ Additional plugin features:
 * Can cache desktop and mobile views separately
 * Allows configuration for do-not-cache by URI, Categories, Tags, Cookies, and User Agents
 
+= Known Compatible Plugins =
+
+* bbPress
+* WooCommerce
+* Contact Form 7
+* Google XML Sitemaps
+* Yoast SEO
+* Wordfence Security
+* NextGen Gallery
+* Aelia CurrencySwitcher
+* Autoptimize
+* Better WP Minify
+* WP Touch
+
+= Known Uncompatible Plugins =
+
 For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/forum/ "forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com
 
 == Installation ==
 = Instructions for LiteSpeed Web Server Enterprise =
 1. Make sure that your license includes the LSCache module enabled.
-You can [try our 2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license")
-free for 15-days.
-2. Your server must be configured to have caching enabled. If you are the server admin,
+A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license")
+is available for free for 15 days.
+2. The server must be configured to have caching enabled. If you are the server admin,
 [click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration).
-Otherwise request that your server admin configure the cache root for your server.
-3. In the .htaccess file for your WordPress installation, add the following:<br>
+Otherwise request that the server admin configure the cache root for the server.
+3. In the .htaccess file for the WordPress installation, add the following:<br>
 `<IfModule LiteSpeed>
    CacheLookup public on
 </IfModule>`
 
 = Instructions for OpenLiteSpeed =
-Our OLS integration is currently in beta. The integration utilizes the cache module.<br>
-Please follow the instructions [here](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
+* This integration utilizes OLS's cache module.
+* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install).
+ If using an existing WordPress installation, use the --wordpresspath parameter.
+* Else if OLS and WordPress are already installed, please follow the instructions [here](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
 
 = How to test the plugin =
 The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers.<br>
@@ -57,15 +75,25 @@ for more information.
 
 == Frequently Asked Questions ==
 = Is the LiteSpeed Cache Plugin for WordPress free? =
-Yes, the plugin itself will remain free and open source. You are required to
-have a LiteSpeed Web Server Enterprise 5.0.10+ license with the LSCache module
-(included with 2+ CPU license, an addon for 1 CPU and VPS licenses).
-OpenLiteSpeed v 1.4.17+ also works with the plugin,
-but the functionality is currently in beta.
+Yes, the plugin itself will remain free and open source.
+That said, a LiteSpeed server is required (see question 2).
+= What server software is required for this plugin? =
+A LiteSpeed server is required in order to use this plugin.
+1. LiteSPeed Web Server Enterprise with LSCache Module (v5.0.10+)
+2. OpenLiteSpeed (v1.4.17+)
+3. LiteSpeed WebADC (v2.0+)
+Any single server or cluster including a LiteSpeed server will work.
+= Does this plugin work in a clustered environment? =
+The cache entries are stored at the litespeed server level. The simplest solution is to use LiteSpeed WebADC, as the cache entries will be cached at that level.
+If using another load balancer, the cache entries will only be stored at the backend nodes, not at the load balancer.
+The purges will also not be synchronized across the nodes, so this is not recommended.
+
+If a customized solution is required, please contact LiteSpeed Technologies at info@litespeedtech.com
+
+NOTICE: The rewrite rules created by this plugin must be copied to the Load Balancer.
 = Where are the cached files stored? =
-This plugin only instructs LiteSpeed Web Server on what pages to cache and
-when to purge. The actual cached pages are stored and managed by
-LiteSpeed Web Server. Nothing is stored on the PHP side.
+The actual cached pages are stored and managed by LiteSpeed Servers.
+Nothing is stored on the PHP side.
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 The support is currently in beta. It should work, but is not fully tested.
 As well, any settings changes that require modifying the .htaccess file requires a server restart.
@@ -81,8 +109,8 @@ To test the cart:
 5. The page should still be cached, and the cart should be up to date.
 6. If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.
 
-We tested a couple themes like Storefront and Shop Isle and found that the cart works without the rule.
-That said, we found that some may not, like the E-Commerce theme, so please verify your theme.
+Some themes like Storefront and Shop Isle are built such that the cart works without the rule.
+However, other themes like the E-Commerce theme, do not, so please verify the theme used.
 = My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
 As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);`
 sometime before the shutdown hook, and it should be recognized by the cache.

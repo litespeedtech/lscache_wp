@@ -2433,7 +2433,9 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 			)
 			. '<br>'
 			. sprintf(__('If a customized solution is required, please contact %s at %s', 'litespeed-cache'),
-				'LiteSpeed Technologies', 'info@litespeedtech.com');
+				'LiteSpeed Technologies', 'info@litespeedtech.com')
+			. '<br>'
+			. __('NOTICE: The rewrite rules created by this plugin must be copied to the Load Balancer.', 'litespeed-cache');
 
 
 		$cluster_question = __('Does this plugin work in a clustered environment?', 'litespeed-cache');
