@@ -6,7 +6,7 @@ Tags: admin, cache, http2, litespeed, performance, widget, optimization,
  scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 1.0.13.1
+Stable tag: 1.0.14
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -325,6 +325,20 @@ point to any plugin that needs to add cache tags to the current request.
 6. Cache Hit Example
 
 == Changelog ==
+= 1.0.14 - January 30 2017 =
+* [NEW] Added error page caching. Currently supports 403, 404, 500s.
+* [NEW] Added a purge errors action.
+* [NEW] Added wp-cli integration.
+* [UPDATE] Added support for multiple varies.
+* [UPDATE] Reorganize the admin interface to be less cluttered.
+* [UPDATE] Add support for LiteSpeed Web ADC.
+* [UPDATE] Add Freemius integration.
+* [REFACTOR] Made some changes so that the rewrite rules are a little more consistent.
+* [BUGFIX] Check member type before adding purge all button.
+* [BUGFIX] Fixed a bug where activating/deactivating the plugin quickly caused the WP_CACHE error to show up.
+* [BUGFIX] Handle more characters in the rewrite parser.
+* [BUGFIX] Correctly purge posts when they are made public/private.
+
 = 1.0.13.1 - November 30 2016 =
 * [BUGFIX] Fixed a bug where a global was being used without checking existence first, causing unnecessary log entries.
 
