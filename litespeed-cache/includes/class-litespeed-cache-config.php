@@ -113,7 +113,13 @@ class LiteSpeed_Cache_Config
 	private function construct_multisite_options()
 	{
 		$site_options = get_site_option(self::OPTION_NAME);
-		if ((!$site_options) || (!is_array($site_options))) {
+
+		if (!function_exists('is_plugin_active_for_network') ) {
+			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+		}
+
+		if ((!$site_options) || (!is_array($site_options))
+			|| (!is_plugin_active_for_network('litespeed-cache/litespeed-cache.php'))) {
 			$options = get_option(self::OPTION_NAME,
 				$this->get_default_options());
 			if ($options[self::OPID_ENABLED_RADIO] == self::OPID_ENABLED_NOTSET) {
