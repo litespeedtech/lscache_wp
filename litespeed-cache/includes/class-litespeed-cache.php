@@ -372,6 +372,8 @@ class LiteSpeed_Cache
 	public function register_deactivation()
 	{
 		require_once $this->plugin_dir
+			. '/admin/class-litespeed-cache-admin-display.php';
+		require_once $this->plugin_dir
 			. '/admin/class-litespeed-cache-admin-rules.php';
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG',
