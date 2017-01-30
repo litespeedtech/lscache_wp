@@ -98,6 +98,14 @@
             })
 
         })
+
+        // Select All and Copy to Clipboard
+        $(".litespeed-cache-select-all-button").click(function() {
+            $('#litespeed-report').select();
+            document.execCommand('copy');
+            $('span.copy-select-all-span').css('display','inline-block');
+            $('span.copy-select-all-span').fadeIn('slow').delay(1000).fadeOut('slow');
+        });
     });
 
     jQuery(document).ready(function () {
