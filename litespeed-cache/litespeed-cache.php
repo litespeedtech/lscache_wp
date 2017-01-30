@@ -43,36 +43,40 @@
 if ( ! defined('WPINC') ) {
 	die ;
 }
+
+if (!function_exists('lc_fs')) {
 // Create a helper function for easy SDK access.
-function lc_fs() {
-	global $lc_fs;
+	function lc_fs()
+	{
+		global $lc_fs;
 
-	if ( ! isset( $lc_fs ) ) {
-		// Include Freemius SDK.
-		require_once dirname(__FILE__) . '/freemius/start.php';
+		if (!isset($lc_fs)) {
+			// Include Freemius SDK.
+			require_once dirname(__FILE__) . '/freemius/start.php';
 
-		$lc_fs = fs_dynamic_init( array(
-			'id'                  => '720',
-			'slug'                => 'litespeed-cache',
-			'type'                => 'plugin',
-			'public_key'          => 'pk_85a0a6c62e41d180211109ea64712',
-			'is_premium'          => false,
-			'has_premium_version' => false,
-			'has_addons'          => false,
-			'has_paid_plans'      => false,
-			'menu'                => array(
-				'slug'       => 'lscache-settings',
-				'account'    => false,
-				'support'    => false,
-			),
-		) );
+			$lc_fs = fs_dynamic_init(array(
+				'id'                  => '720',
+				'slug'                => 'litespeed-cache',
+				'type'                => 'plugin',
+				'public_key'          => 'pk_85a0a6c62e41d180211109ea64712',
+				'is_premium'          => false,
+				'has_premium_version' => false,
+				'has_addons'          => false,
+				'has_paid_plans'      => false,
+				'menu'                => array(
+					'slug'    => 'lscache-settings',
+					'account' => false,
+					'support' => false,
+				),
+			));
+		}
+
+		return $lc_fs;
 	}
 
-	return $lc_fs;
-}
-
 // Init Freemius.
-lc_fs();
+	lc_fs();
+}
 
 /**
  * The core plugin class that is used to define internationalization,
@@ -145,10 +149,6 @@ if (!function_exists('uninstall_litespeed_cache')) {
 	function uninstall_litespeed_cache()
 	{
 
-		if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-			exit;
-		}
-
 		$cur_dir = dirname(__FILE__) ;
 		require_once $cur_dir . '/includes/class-litespeed-cache.php';
 		require_once $cur_dir . '/includes/class-litespeed-cache-config.php';
@@ -163,5 +163,11 @@ if (!function_exists('uninstall_litespeed_cache')) {
 		}
 
 	}
-	add_action('after_uninstall', 'uninstall_litespeed_cache');
+	if (defined('LSCWP_PLUGIN_NAME')) {
+		register_uninstall_hook(plugin_basename(__FILE__),
+			'uninstall_litespeed_cache');
+	}
+	else {
+		add_action('after_uninstall', 'uninstall_litespeed_cache');
+	}
 }
