@@ -1773,19 +1773,19 @@ class LiteSpeed_Cache_Admin_Display
 		// admin bar
 
 
-		$esi_desc = LiteSpeed_Cache::build_paragraph(
+		$esi_desc = self::build_paragraph(
 			__('ESI enables the capability to cache pages for logged in users/commenters.', 'litespeed-cache'),
 			__('ESI functions by replacing the private information blocks with an ESI include.', 'litespeed-cache'),
 			__('When the server sees an ESI include, a sub request is created, containing the private information.', 'litespeed-cache')
 		);
 
-		$enable_esi_desc = LiteSpeed_Cache::build_paragraph(
+		$enable_esi_desc = self::build_paragraph(
 			__('Enabling ESI will cache the public page for logged in users.', 'litespeed-cache'),
 			__('The Admin Bar, comments, and comment form will be served via ESI blocks.', 'litespeed-cache'),
 			__('The ESI blocks will not be cached until Cache ESI is checked.', 'litespeed-cache')
 		);
 
-		$cache_esi_desc = LiteSpeed_Cache::build_paragraph(
+		$cache_esi_desc = self::build_paragraph(
 			__('Cache the ESI blocks.', 'litespeed-cache')
 		);
 
