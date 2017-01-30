@@ -2332,8 +2332,10 @@ class LiteSpeed_Cache
 				foreach ($blogs as $blog_id) {
 					$opts = get_blog_option($blog_id,
 						LiteSpeed_Cache_Config::OPTION_NAME, array());
-					$options['blog ' . $blog_id . ' radio select']
-						= $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO];
+					if (isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO])) {
+						$options['blog ' . $blog_id . ' radio select']
+							= $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO];
+					}
 				}
 			}
 		}
