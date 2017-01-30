@@ -153,6 +153,7 @@ if (!function_exists('uninstall_litespeed_cache')) {
 		require_once $cur_dir . '/includes/class-litespeed-cache.php';
 		require_once $cur_dir . '/includes/class-litespeed-cache-config.php';
 		require_once $cur_dir . '/admin/class-litespeed-cache-admin.php';
+		require_once $cur_dir . '/admin/class-litespeed-cache-admin-display.php';
 		require_once $cur_dir . '/admin/class-litespeed-cache-admin-rules.php';
 
 		LiteSpeed_Cache_Admin_Rules::clear_rules();

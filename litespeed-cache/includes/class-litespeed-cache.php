@@ -382,6 +382,8 @@ class LiteSpeed_Cache
 	public function register_deactivation()
 	{
 		require_once $this->plugin_dir
+			. '/admin/class-litespeed-cache-admin-display.php';
+		require_once $this->plugin_dir
 			. '/admin/class-litespeed-cache-admin-rules.php';
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG',
@@ -2655,8 +2657,10 @@ class LiteSpeed_Cache
 				foreach ($blogs as $blog_id) {
 					$opts = get_blog_option($blog_id,
 						LiteSpeed_Cache_Config::OPTION_NAME, array());
-					$options['blog ' . $blog_id . ' radio select']
-						= $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO];
+					if (isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO])) {
+						$options['blog ' . $blog_id . ' radio select']
+							= $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO];
+					}
 				}
 			}
 		}

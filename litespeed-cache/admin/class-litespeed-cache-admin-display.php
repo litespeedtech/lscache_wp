@@ -2718,7 +2718,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 				'litespeed-cache');
 
 
-		$this->add_notice(self::NOTICE_BLUE . 'lscwp-whm-notice', $buf);
+		$this->add_notice(self::NOTICE_BLUE . ' lscwp-whm-notice', $buf);
 	}
 
 	public static function show_error_cookie()
