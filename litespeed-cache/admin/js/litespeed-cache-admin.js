@@ -86,9 +86,9 @@
             $('.litespeed-cache-purgeby-text').html(purgebyValue);
         });
 
-        jQuery(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
-
-            jQuery.ajax({
+        //WHM Notice
+        $(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
+            $.ajax({
                 url: ajaxurl,
                 data: {
                     action: 'lscache_dismiss_whm',
@@ -96,7 +96,6 @@
                     _wpnonce: lscwp_data.nonce
                 }
             })
-
         })
 
         // Select All and Copy to Clipboard
@@ -106,32 +105,30 @@
             $('span.copy-select-all-span').css('display','inline-block');
             $('span.copy-select-all-span').fadeIn('slow').delay(1000).fadeOut('slow');
         });
-    });
 
-    jQuery(document).ready(function () {
-        jQuery(".litespeedcache-postbox-button").on('click', function () {
-            var pbDiv = jQuery(this).parent().get(0);
-            jQuery(pbDiv).toggleClass('closed');
-            jQuery(this).attr('aria-expanded',
-                jQuery(this).attr('aria-expanded') === 'true' ? 'false' : 'true');
+        //Toggle postbox class Buttons
+        $(".litespeedcache-postbox-button").on('click', function () {
+            var pbDiv = $(this).parent().get(0);
+            $(pbDiv).toggleClass('closed');
+            $(this).attr('aria-expanded',
+                $(this).attr('aria-expanded') === 'true' ? 'false' : 'true');
         });
-    });
 
-    jQuery(document).ready(function () {
-        jQuery('#litespeedcache-purgeall').click(function () {
-            if (confirm(jQuery('#litespeedcache-purgeall-confirm').val())) {
-                jQuery(this).submit();
+
+        //Purge All Button
+        $('#litespeedcache-purgeall').click(function () {
+            if (confirm($('#litespeedcache-purgeall-confirm').val())) {
+                $(this).submit();
             }
             else {
                 return false;
             }
         });
-    });
 
-    jQuery(document).ready(function () {
-        jQuery('#litespeedcache-clearcache').click(function () {
+        //Confirm Clear Cache
+        $('#litespeedcache-clearcache').click(function () {
             if (confirm(jQuery('#litespeedcache-clearcache-confirm').val())) {
-                jQuery(this).submit();
+                $(this).submit();
             }
             else {
                 return false;
