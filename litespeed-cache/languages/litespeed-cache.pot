@@ -1,14 +1,14 @@
 # Translation template for the LiteSpeed Cache WordPress Plugin.
-# Copyright (C) 2015-2016 LiteSpeed Technologies, Inc.
+# Copyright (C) 2015-2017 LiteSpeed Technologies, Inc.
 # This file is distributed under the same license as the LiteSpeed_Cache package.
-# LiteSpeed Technologies <info@litespeedtech.com>, 2016.
+# LiteSpeed Technologies <info@litespeedtech.com>, 2017.
 #
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0.14\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2016-11-28 16:49-0500\n"
+"POT-Creation-Date: 2017-01-30 14:27-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,1900 +17,3918 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin/class-litespeed-cache-admin-display.php:92
+#: admin/class-litespeed-cache-admin-display.php:69
+#, php-format
+msgid ""
+"Rate <strong>LiteSpeed Cache</strong> with %s on WordPress.org if you like "
+"us!"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:76
+#, php-format
+msgid ""
+"If there are any questions that are not answered in the <a href=\"%s\">FAQs</"
+"a>, do not hesitate to ask them on the <a href=\"%s\" rel=\"%s\" target=\"%s"
+"\">support forum</a>."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:129
 msgid "LiteSpeed Cache is a page cache built into LiteSpeed Web Server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:93
+#: admin/class-litespeed-cache-admin-display.php:130
 msgid ""
 "This plugin communicates with LiteSpeed Web Server to let it know which "
 "pages are cache-able and when to purge them."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:99
+#: admin/class-litespeed-cache-admin-display.php:136
 msgid "Overview"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:101
+#: admin/class-litespeed-cache-admin-display.php:138
 msgid ""
-"You must have the LSCache module installed and enabled in your LiteSpeed Web "
-"Server setup."
+"A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be "
+"installed and enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:106
-msgid "Auto Purge Rules"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:107
-msgid ""
-"You can set what pages will be purged when a post is published or updated."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:111
+#: admin/class-litespeed-cache-admin-display.php:149
 msgid "For more information:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:112
-msgid "LSCache Documentation"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:113
+#: admin/class-litespeed-cache-admin-display.php:151
+#: freemius/includes/i18n.php:41
 msgid "Support Forum"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:129
+#: admin/class-litespeed-cache-admin-display.php:167
 msgid ""
-"Notice: Your installation of LiteSpeed Web Server does not have LSCache "
+"Notice: This plugin requires a LiteSpeed Server with the LSCache Module "
 "enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:130
+#: admin/class-litespeed-cache-admin-display.php:168
+msgid ""
+"If you are unable to change your server stack, please contact your hosting "
+"provider to request the required changes."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:169
 msgid "This plugin will NOT work properly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:260
-msgid "LiteSpeed Cache is maintained and managed by LiteSpeed Web Server."
+#: admin/class-litespeed-cache-admin-display.php:322
+msgid "Expand All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:261
+#: admin/class-litespeed-cache-admin-display.php:323
+msgid "Collapse All"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:446
 msgid ""
-"You can inform LiteSpeed Web Server to purge cached contents from this "
-"screen."
+"From this screen, one can inform the server to purge the selected cached "
+"pages or empty the entire cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:264
+#: admin/class-litespeed-cache-admin-display.php:448
 msgid "This will purge everything for all blogs."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:265
-#: admin/class-litespeed-cache-admin-display.php:336
+#: admin/class-litespeed-cache-admin-display.php:449
+#: admin/class-litespeed-cache-admin-display.php:582
 msgid "Are you sure you want to purge all?"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:268
-msgid "You may purge selected pages here."
+#: admin/class-litespeed-cache-admin-display.php:452
+msgid "Select dropdown below for \"Purge by\" options."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:269
-msgid "Currently, the available options are:"
+#: admin/class-litespeed-cache-admin-display.php:453
+msgid "Please enter one per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:272
+#: admin/class-litespeed-cache-admin-display.php:456
 msgid "This will clear EVERYTHING inside the cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:273
-msgid "This may cause heavy load on your server."
+#: admin/class-litespeed-cache-admin-display.php:457
+msgid "This may cause heavy load on the server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:274
-msgid "If you only want to purge the wordpress site, use purge all."
+#: admin/class-litespeed-cache-admin-display.php:458
+msgid "If only the WordPress site should be purged, use purge all."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:277
+#: admin/class-litespeed-cache-admin-display.php:461
 msgid ""
 "Clears all cache entries related to this site, <i>including other web "
 "applications</i>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:279
+#: admin/class-litespeed-cache-admin-display.php:463
 msgid ""
 "<b>This action should only be used if things are cached incorrectly.</b>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:288
+#: admin/class-litespeed-cache-admin-display.php:468
+#, php-format
+msgid ""
+"Purge pages by category name - e.g. %2$s should be used for the URL %1$s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:472
+msgid "Purge pages by relative URL."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:473
+msgid "Must be exact match."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:474
+#, php-format
+msgid "e.g. Use %s for %s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:480
+#, php-format
+msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:488
 msgid "Category"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:289
+#: admin/class-litespeed-cache-admin-display.php:489
 msgid "Post ID"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:290
+#: admin/class-litespeed-cache-admin-display.php:490
 msgid "Tag"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:291
+#: admin/class-litespeed-cache-admin-display.php:491
 msgid "URL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:295
+#: admin/class-litespeed-cache-admin-display.php:496
 msgid "LiteSpeed Cache Management"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:305
+#: admin/class-litespeed-cache-admin-display.php:506
 msgid "Purge Front Page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:307
-msgid "Purges the front page only."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:310
+#: admin/class-litespeed-cache-admin-display.php:512
 msgid "Purge All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:312
-msgid "Purges the cache entries created by this plugin."
+#: admin/class-litespeed-cache-admin-display.php:518
+msgid "Purge Error Pages"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:319
+#: admin/class-litespeed-cache-admin-display.php:522
+msgid "Include 403"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:525
+msgid "Include 404"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:528
+msgid "Include 500s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:534
+msgid "Purge the Front Page."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:537
+msgid "This will Purge Front Page only"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:541
+msgid "Purge all WordPress pages."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:544
+msgid "Purge the cache entries created by this plugin."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:548
+msgid "Purge the error pages."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:551
+msgid "Purges the error page cache entries created by this plugin."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:559
+msgid "Clear all cache entries."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:564
 msgid "Empty Entire Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:340
+#: admin/class-litespeed-cache-admin-display.php:586
 msgid "Purge By..."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:343
-msgid "Category: Purge category pages by name."
+#: admin/class-litespeed-cache-admin-display.php:605
+msgid "Purge pages by post ID."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:345
-msgid "Post ID: Purge pages by post ID."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:347
-msgid "Tag: Purge tag pages by name."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:349
-msgid "URL: Purge pages by locator. Must be exact match."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:368
+#: admin/class-litespeed-cache-admin-display.php:611
 msgid "Purge List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:420
-#: admin/class-litespeed-cache-admin-display.php:556
+#: admin/class-litespeed-cache-admin-display.php:663
+#: admin/class-litespeed-cache-admin-display.php:830
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:426
+#: admin/class-litespeed-cache-admin-display.php:669
 msgid "The network admin selected use primary site configs for all subsites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:427
+#: admin/class-litespeed-cache-admin-display.php:670
 msgid ""
 "The following options are selected, but are not editable in this settings "
 "page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:439
-#: admin/class-litespeed-cache-admin-display.php:786
+#: admin/class-litespeed-cache-admin-display.php:688
+#: admin/class-litespeed-cache-admin-display.php:1093
 msgid "Plugin Compatibilities"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:449
-#: admin/class-litespeed-cache-admin-display.php:1342
+#: admin/class-litespeed-cache-admin-display.php:699
+#: admin/class-litespeed-cache-admin-display.php:1713
 msgid "Advanced Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:458
-#: admin/class-litespeed-cache-admin-display.php:566
-#: admin/class-litespeed-cache-admin-display.php:992
+#: admin/class-litespeed-cache-admin-display.php:717
+#: admin/class-litespeed-cache-admin-display.php:843
+#: admin/class-litespeed-cache-admin-display.php:1222
 msgid "General"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:459
-#: admin/class-litespeed-cache-admin-display.php:1078
+#: admin/class-litespeed-cache-admin-display.php:718
+#: admin/class-litespeed-cache-admin-display.php:1344
 msgid "Specific Pages"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:460
+#: admin/class-litespeed-cache-admin-display.php:719
 msgid "Purge Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:461
-#: admin/class-litespeed-cache-admin-display.php:567
+#: admin/class-litespeed-cache-admin-display.php:720
+#: admin/class-litespeed-cache-admin-display.php:844
 msgid "Do Not Cache Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:463
+#: admin/class-litespeed-cache-admin-display.php:722
 msgid "Debug"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:474
+#: admin/class-litespeed-cache-admin-display.php:734
 msgid "WARNING: Third party tab input invalid."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:483
+#: admin/class-litespeed-cache-admin-display.php:743
 msgid "WARNING: Third party config slug contains invalid characters."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:530
+#: admin/class-litespeed-cache-admin-display.php:789
 msgid "Save Changes"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:550
+#: admin/class-litespeed-cache-admin-display.php:810
 msgid "These configurations are only available network wide."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:553
+#: admin/class-litespeed-cache-admin-display.php:813
 msgid ""
 "Separate Mobile Views should be enabled if any of the network enabled themes "
 "require a different view for mobile devices."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:554
+#: admin/class-litespeed-cache-admin-display.php:814
 msgid "Responsive themes can handle this part automatically."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:568
-msgid "Advanced"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:572
-msgid "General Network Configurations"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:581
-msgid "Network Enable Cache"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:582
+#: admin/class-litespeed-cache-admin-display.php:816
 msgid ""
 "Enabling LiteSpeed Cache for WordPress here enables the cache for the "
 "network."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:584
+#: admin/class-litespeed-cache-admin-display.php:818
 msgid ""
-"We <b>STRONGLY</b> recommend that you test the compatibility with other "
-"plugins on a single/few sites."
+"It is <b>STRONGLY</b> recommend that the compatibility with other plugins on "
+"a single/few sites is tested first."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:586
+#: admin/class-litespeed-cache-admin-display.php:820
 msgid ""
 "This is to ensure compatibility prior to enabling the cache for all sites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:594
+#: admin/class-litespeed-cache-admin-display.php:845
+msgid "Advanced"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:849
+msgid "General Network Configurations"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:858
+msgid "Network Enable Cache"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:866
 msgid ""
 "Check this option to use the primary site's configurations for all subsites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:596
+#: admin/class-litespeed-cache-admin-display.php:868
 msgid "This will disable the settings page on all subsites."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:600
+#: admin/class-litespeed-cache-admin-display.php:872
 msgid "Use Primary Site Configurations"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:612
+#: admin/class-litespeed-cache-admin-display.php:886
 msgid "Network Do Not Cache Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:616
+#: admin/class-litespeed-cache-admin-display.php:891
 msgid "Do Not Cache User Agents"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:621
+#: admin/class-litespeed-cache-admin-display.php:900
 msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:630
-#: admin/class-litespeed-cache-admin-display.php:701
+#: admin/class-litespeed-cache-admin-display.php:912
+#: admin/class-litespeed-cache-admin-display.php:985
 msgid "Save"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:647
-msgid "Any changes made to the .htaccess file may break your site."
+#: admin/class-litespeed-cache-admin-display.php:929
+msgid "Any changes made to the .htaccess file may break the site."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:648
-msgid ""
-"Please consult your host/server admin before making any changes you are "
-"unsure about."
+#: admin/class-litespeed-cache-admin-display.php:930
+msgid "Please consult the host/server admin before making any changes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:650
+#: admin/class-litespeed-cache-admin-display.php:932
 msgid "LiteSpeed Cache Edit .htaccess"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:656
+#: admin/class-litespeed-cache-admin-display.php:938
 msgid "File editing is disabled in configuration."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:670
+#: admin/class-litespeed-cache-admin-display.php:954
 msgid "WARNING: This page is meant for advanced users."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:682
+#: admin/class-litespeed-cache-admin-display.php:966
 #, php-format
 msgid "Current %s contents:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:685
+#: admin/class-litespeed-cache-admin-display.php:969
 #, php-format
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:688
+#: admin/class-litespeed-cache-admin-display.php:972
 msgid ""
 "These are added by the LS Cache plugin and may cause problems if they are "
 "changed."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:721
-msgid "Make sure that your license has the LSCache module enabled."
+#: admin/class-litespeed-cache-admin-display.php:1005
+msgid "Make sure that the server license has the LSCache module enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:723
+#: admin/class-litespeed-cache-admin-display.php:1007
 #, php-format
 msgid ""
-"You can <a href=\"%1$s\"  rel=\"%2$s\" target=\"%3$s\">try our 2-CPU trial "
-"license with LSCache module</a> free for %4$d days."
+"A <a href=\"%1$s\"  rel=\"%2$s\" target=\"%3$s\">2-CPU trial license with "
+"LSCache module</a> is available for free for %4$d days."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:732
-msgid "Your server must be configured to have caching enabled."
+#: admin/class-litespeed-cache-admin-display.php:1020
+msgid "The server must be configured to have caching enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:734
+#: admin/class-litespeed-cache-admin-display.php:1022
 #, php-format
 msgid ""
 "If you are the server admin, <a href=\"%s\" rel=\"%s\" target=\"%s\">click "
 "here.</a>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:740
+#: admin/class-litespeed-cache-admin-display.php:1032
 msgid ""
-"Otherwise request that your server admin configure the cache root for your "
+"Otherwise request that the server admin configure the cache root for the "
 "server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:744
-msgid "Our OLS integration is currently in beta."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:745
+#: admin/class-litespeed-cache-admin-display.php:1038
 msgid "This integration utilizes OLS's cache module."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:747
+#: admin/class-litespeed-cache-admin-display.php:1041
 #, php-format
 msgid ""
-"Please follow the instructions <a href=\"%s\" rel=\"%s\" target=\"%s\">here."
-"</a>"
+"If it is a fresh OLS installation, the easiest way to integrate is to use <a "
+"href=\"%s\" rel=\"%s\" target=\"%s\">ols1clk.</a>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:756
+#: admin/class-litespeed-cache-admin-display.php:1051
+#, php-format
+msgid "If using an existing WordPress installation, use the %s parameter."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1055
+#, php-format
+msgid ""
+"Else if OLS and WordPress are already installed, please follow the "
+"instructions <a href=\"%s\" rel=\"%s\" target=\"%s\">here.</a>"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1070
 #, php-format
 msgid ""
 "Subsequent requests should have the %s response header until the page is "
 "updated, expired, or purged."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:759
+#: admin/class-litespeed-cache-admin-display.php:1073
 #, php-format
 msgid ""
 "Please visit <a href=\"%s\" rel=\"%s\" target=\"%s\">this page</a> for more "
 "information."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:768
-#, php-format
-msgid "If your questions are not answered here, try the %s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:771
-#, php-format
-msgid ""
-"If your questions are still not answered, do not hesitate to ask them on the "
-"<a href=\"%s\" rel=\"%s\" target=\"%s\">support forum</a>."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:781
+#: admin/class-litespeed-cache-admin-display.php:1087
 msgid "LiteSpeed Cache Information"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:785
+#: admin/class-litespeed-cache-admin-display.php:1091
+msgid "FAQs"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1092
 msgid "Configurations"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:787
+#: admin/class-litespeed-cache-admin-display.php:1094
 msgid "Common Rewrite Rules"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:788
+#: admin/class-litespeed-cache-admin-display.php:1095
 msgid "Admin IP Commands"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:792
+#: admin/class-litespeed-cache-admin-display.php:1104
 msgid "LiteSpeed Cache Configurations"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:793
+#: admin/class-litespeed-cache-admin-display.php:1105
 msgid "Instructions for LiteSpeed Web Server Enterprise"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:800
+#: admin/class-litespeed-cache-admin-display.php:1112
 msgid ""
-"In the .htaccess file for your WordPress installation, add the following:"
+"In the .htaccess file for the WordPress installation, add the following:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:806
+#: admin/class-litespeed-cache-admin-display.php:1120
 msgid "Instructions for OpenLiteSpeed"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:809
+#: admin/class-litespeed-cache-admin-display.php:1123
 msgid "How to test the plugin"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:810
+#: admin/class-litespeed-cache-admin-display.php:1124
 msgid ""
 "The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:812
+#: admin/class-litespeed-cache-admin-display.php:1126
 #, php-format
 msgid ""
 "Visiting a page for the first time should result in a %s or %s response "
 "header for the page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:848
-msgid "Yes, the plugin itself will remain free and open source."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:849
+#: admin/class-litespeed-cache-admin-display.php:1164
 msgid ""
-"You are required to have a LiteSpeed Web Server Enterprise 5.0.10+ license "
-"with the LSCache module enabled."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:850
-msgid ""
-"An alternative to Enterprise is OpenLiteSpeed v 1.4.17+, but the "
-"functionality is currently in beta."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:854
-msgid ""
-"This plugin only instructs LiteSpeed Web Server on what pages to cache and "
-"when to purge."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:855
-msgid "The actual cached pages are stored and managed by LiteSpeed Web Server."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:856
-msgid "Nothing is stored on the PHP side."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:860
-msgid "The support is currently in beta."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:861
-msgid "It should work, but has not been fully tested."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:862
-msgid ""
-"As well, any settings changes that require modifying the .htaccess file will "
-"require a server restart."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:866
-msgid "In short, yes."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:867
-msgid ""
-"However, for some woocommerce themes, the cart may not be updated correctly."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:871
-msgid ""
-"We tested a couple of themes like Storefront and Shop Isle and found that "
-"the cart works without the rule."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:872
-msgid ""
-"That said, we found that some may not, like the E-Commerce theme, so please "
-"verify your theme."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:878
-msgid "Is the LiteSpeed Cache Plugin for WordPress free?"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:881
-msgid "Where are the cached files stored?"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:885
-msgid "Does LiteSpeed Cache for WordPress work with OpenLiteSpeed?"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:888
-msgid "Is WooCommerce supported?"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:891
-msgid "To test the cart:"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:893
-msgid ""
-"On a non-logged-in browser, visit and cache a page, then visit and cache a "
-"product page."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:895
-msgid ""
-"The first page should be accessible from the product page (e.g. the shop)."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:897
-msgid "Once both pages are confirmed cached, add the product to your cart."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:899
-msgid "After adding to the cart, visit the first page."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:901
-msgid "The page should still be cached, and the cart should be up to date."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:903
-msgid ""
-"If that is not the case, please add woocommerce_items_in_cart to the do not "
-"cache cookie list."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:906
-msgid "How do I get WP-PostViews to display an updating view count?"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:907
-#, php-format
-msgid "Use %1$s to replace %2$s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:912
-msgid ""
-"NOTE: The id can be changed, but the div id and the ajax function must match."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:915
-#, php-format
-msgid "Replace the ajax query in %1$s with %2$s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:932
-msgid "Purge the cache to use the updated pages."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:948
-msgid ""
-"The environment report contains detailed information about your "
+"The environment report contains detailed information about the WordPress "
 "configuration."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:949
+#: admin/class-litespeed-cache-admin-display.php:1165
 msgid ""
 "If you run into any issues, please include the contents of this text area in "
 "your support message."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:950
+#: admin/class-litespeed-cache-admin-display.php:1167
 msgid ""
-"To easily grab the content, click into the text area and enter ctrl + a to "
-"select all and ctrl + c to copy to your clipboard."
+"To easily grab the content, click the <b>Select All and Copy to Clipboard</"
+"b> button, to select and copy to clipboard."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:951
+#: admin/class-litespeed-cache-admin-display.php:1169
 #, php-format
 msgid "Alternatively, this information is also saved in %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:955
-msgid "This text area contains the following content:"
+#: admin/class-litespeed-cache-admin-display.php:1174
+msgid "The text area below contains the following content:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:957
+#: admin/class-litespeed-cache-admin-display.php:1176
 msgid ""
 "Server Variables, Plugin Options, WordPress information (version, locale, "
 "active plugins, etc.), and .htaccess file content."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:981
+#: admin/class-litespeed-cache-admin-display.php:1182
+msgid "Select All and Copy to Clipboard"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1183
+msgid "Environment Report copied to Clipboard!"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1203
 msgid "Specify how long, in seconds, feeds are cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:982
+#: admin/class-litespeed-cache-admin-display.php:1204
 msgid "If this is set to a number less than 30, feeds will not be cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:985
+#: admin/class-litespeed-cache-admin-display.php:1207
 msgid "Specify how long, in seconds, 404 pages are cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:986
+#: admin/class-litespeed-cache-admin-display.php:1208
 msgid "If this is set to a number less than 30, 404 pages will not be cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:989
+#: admin/class-litespeed-cache-admin-display.php:1211
+msgid "Specify how long, in seconds, 403 pages are cached."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1212
+msgid "If this is set to a number less than 30, 403 pages will not be cached."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1215
+msgid "Specify how long, in seconds, 500 pages are cached."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1216
+msgid "If this is set to a number less than 30, 500 pages will not be cached."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1219
 msgid ""
 "When checked, commenters will not be able to see their comments awaiting "
 "moderation."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:990
+#: admin/class-litespeed-cache-admin-display.php:1220
 msgid ""
 "Disabling this option will display those types of comments, but the cache "
 "will not perform as well."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:997
+#: admin/class-litespeed-cache-admin-display.php:1227
 msgid "Enable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:998
+#: admin/class-litespeed-cache-admin-display.php:1228
 msgid "Disable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1004
+#: admin/class-litespeed-cache-admin-display.php:1235
 msgid "Use Network Admin Setting"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1012
-#: admin/class-litespeed-cache-admin-display.php:1327
-msgid "NOTICE"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1013
-msgid ""
-"When disabling the cache, all cached entries for this blog will be purged."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1016
+#: admin/class-litespeed-cache-admin-display.php:1242
 #, php-format
 msgid ""
 "Please visit the <a href=\"%sadmin.php?page=lscache-info\">information</a> "
 "page on how to test the cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1022
-msgid "You can override network admin settings here."
+#: admin/class-litespeed-cache-admin-display.php:1249
+#: admin/class-litespeed-cache-admin-display.php:1697
+msgid "NOTICE"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1025
+#: admin/class-litespeed-cache-admin-display.php:1250
+msgid ""
+"When disabling the cache, all cached entries for this blog will be purged."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1254
+msgid "The network admin setting can be overridden here."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1258
 msgid "Enable LiteSpeed Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1030
-#: admin/class-litespeed-cache-admin-display.php:1037
-#: admin/class-litespeed-cache-admin-display.php:1043
-#: admin/class-litespeed-cache-admin-display.php:1049
+#: admin/class-litespeed-cache-admin-display.php:1263
+#: admin/class-litespeed-cache-admin-display.php:1273
+#: admin/class-litespeed-cache-admin-display.php:1282
+#: admin/class-litespeed-cache-admin-display.php:1291
+#: admin/class-litespeed-cache-admin-display.php:1300
+#: admin/class-litespeed-cache-admin-display.php:1309
 msgid "seconds"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1032
+#: admin/class-litespeed-cache-admin-display.php:1266
 msgid "Default Public Cache TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1033
+#: admin/class-litespeed-cache-admin-display.php:1268
 msgid ""
 "Specify how long, in seconds, public pages are cached. Minimum is 30 seconds."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1038
+#: admin/class-litespeed-cache-admin-display.php:1275
 msgid "Default Front Page TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1039
+#: admin/class-litespeed-cache-admin-display.php:1277
 msgid ""
 "Specify how long, in seconds, the front page is cached. Minimum is 30 "
 "seconds."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1044
+#: admin/class-litespeed-cache-admin-display.php:1284
 msgid "Default Feed TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1050
+#: admin/class-litespeed-cache-admin-display.php:1293
 msgid "Default 404 Page TTL"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1056
+#: admin/class-litespeed-cache-admin-display.php:1302
+msgid "Default 403 Page TTL"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1311
+msgid "Default 500 Page TTL"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1319
 msgid "Enable Cache for Commenters"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1082
+#: admin/class-litespeed-cache-admin-display.php:1349
 msgid "Enable Cache for Login Page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1083
+#: admin/class-litespeed-cache-admin-display.php:1351
 msgid "Unchecking this option may negatively affect performance."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1105
+#: admin/class-litespeed-cache-admin-display.php:1377
 msgid ""
-"Select \"All\" if you have dynamic widgets linked to posts on pages other "
+"Select \"All\" if there are dynamic widgets linked to posts on pages other "
 "than the front or home pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1106
+#: admin/class-litespeed-cache-admin-display.php:1378
 msgid "Other checkboxes will be ignored."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1108
+#: admin/class-litespeed-cache-admin-display.php:1379
+msgid ""
+"Select only the archive types that are currently used, the others can be "
+"left unchecked."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1385
 msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1109
+#: admin/class-litespeed-cache-admin-display.php:1386
 msgid ""
 "Select which pages will be automatically purged when posts are published/"
 "updated."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1111
-#: admin/class-litespeed-cache-admin-display.php:1113
-msgid "Note"
+#: admin/class-litespeed-cache-admin-display.php:1388
+msgid "Note:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1114
-msgid ""
-"Select only the archive types that you are currently using, the others can "
-"be left unchecked."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1125
+#: admin/class-litespeed-cache-admin-display.php:1400
 msgid "All pages"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1132
+#: admin/class-litespeed-cache-admin-display.php:1407
 msgid "Front page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1139
+#: admin/class-litespeed-cache-admin-display.php:1414
 msgid "Home page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1146
+#: admin/class-litespeed-cache-admin-display.php:1421
 msgid "Author archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1153
+#: admin/class-litespeed-cache-admin-display.php:1428
 msgid "Post type archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1160
+#: admin/class-litespeed-cache-admin-display.php:1435
 msgid "Yearly archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1167
+#: admin/class-litespeed-cache-admin-display.php:1442
 msgid "Monthly archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1174
+#: admin/class-litespeed-cache-admin-display.php:1449
 msgid "Daily archive"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1181
+#: admin/class-litespeed-cache-admin-display.php:1456
 msgid "Term archive (include category, tag, and tax)"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1200
-msgid "Enter a list of urls that you do not want to have cached."
+#: admin/class-litespeed-cache-admin-display.php:1478
+msgid "Enter a list of urls that should not be cached."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1202
+#: admin/class-litespeed-cache-admin-display.php:1479
 msgid "The urls will be compared to the REQUEST_URI server variable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1204
+#: admin/class-litespeed-cache-admin-display.php:1480
 msgid "There should only be one url per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1206
-#: admin/class-litespeed-cache-admin-display.php:1228
-#: admin/class-litespeed-cache-admin-display.php:1236
-#: admin/class-litespeed-cache-admin-display.php:1923
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:362
+#: admin/class-litespeed-cache-admin-display.php:1485
+#: admin/class-litespeed-cache-admin-display.php:1512
+#: admin/class-litespeed-cache-admin-display.php:1535
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:380
 msgid "NOTE:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1207
+#: admin/class-litespeed-cache-admin-display.php:1488
 msgid "URLs must start with a '/' to be correctly matched."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1209
+#: admin/class-litespeed-cache-admin-display.php:1489
 msgid "To do an exact match, add '$' to the end of the URL."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1211
+#: admin/class-litespeed-cache-admin-display.php:1490
 msgid "Any surrounding whitespaces will be trimmed."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1213
+#: admin/class-litespeed-cache-admin-display.php:1491
+#: admin/class-litespeed-cache-admin-display.php:1516
+#: admin/class-litespeed-cache-admin-display.php:1540
 #, php-format
-msgid "e.g. to exclude %s, you would have:"
+msgid "e.g. to exclude %1$s, insert %2$s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1217
+#: admin/class-litespeed-cache-admin-display.php:1494
 #, php-format
-msgid "Similarly, to exclude %s(accessed with the /blog), you would have:"
+msgid "Similarly, to exclude %1$s(accessed with the /blog), insert %2$s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1224
+#: admin/class-litespeed-cache-admin-display.php:1505
 msgid "All categories are cached by default."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1226
+#: admin/class-litespeed-cache-admin-display.php:1507
 msgid ""
 "To prevent a category from being cached, enter it in the text area below, "
 "one per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1228
+#: admin/class-litespeed-cache-admin-display.php:1515
 msgid "If the Category ID is not found, the name will be removed on save."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1232
+#: admin/class-litespeed-cache-admin-display.php:1528
 msgid "All tags are cached by default."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1234
+#: admin/class-litespeed-cache-admin-display.php:1530
 msgid ""
-"To prevent tags from being cached, enter it in the text area below, one per "
-"line."
+"To prevent tags from being cached, enter the tag in the text area below, one "
+"per line."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1236
+#: admin/class-litespeed-cache-admin-display.php:1539
 msgid "If the Tag ID is not found, the name will be removed on save."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1244
+#: admin/class-litespeed-cache-admin-display.php:1552
 msgid "URI List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1260
+#: admin/class-litespeed-cache-admin-display.php:1561
+msgid "SYNTAX: URLs must start with a '/' to be correctly matched."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1563
+msgid "To do an exact match, add '$' to the end of the URL. One URL per line."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1579
 msgid "Category List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1283
+#: admin/class-litespeed-cache-admin-display.php:1588
+msgid "SYNTAX: One category id per line."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1611
 msgid "Tag List"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1328
+#: admin/class-litespeed-cache-admin-display.php:1620
+msgid "SYNTAX: One tag id per line."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1637
+#: admin/class-litespeed-cache-admin-display.php:1956
+msgid "SYNTAX: Cookies should be listed one per line."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1638
+#: admin/class-litespeed-cache-admin-display.php:1957
+#, php-format
+msgid "Spaces should have a backslash in front of them, %s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1641
+#: admin/class-litespeed-cache-admin-display.php:1962
+msgid "Cookie List"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1642
+#: admin/class-litespeed-cache-admin-display.php:1963
+msgid "To prevent cookies from being cached, enter it in the text area below."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1643
+#: admin/class-litespeed-cache-admin-display.php:1883
+#: admin/class-litespeed-cache-admin-display.php:1965
+#: admin/class-litespeed-cache-admin-display.php:2006
+msgid "NOTICE:"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1644
+#: admin/class-litespeed-cache-admin-display.php:1884
+#: admin/class-litespeed-cache-admin-display.php:1966
+#: admin/class-litespeed-cache-admin-display.php:2007
+msgid "This setting will edit the .htaccess file."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1662
+#, php-format
+msgid ""
+"SYNTAX: Separate each user agent with a bar, <style=\"font-style:normal\">"
+"%s</style>."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1663
+#: admin/class-litespeed-cache-admin-display.php:1998
+#, php-format
+msgid "Spaces should have a backslash in front of them, %s."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1666
+#: admin/class-litespeed-cache-admin-display.php:2003
+msgid "User Agent List"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1667
+#: admin/class-litespeed-cache-admin-display.php:2004
+msgid ""
+"To prevent user agents from being cached, enter it in the text field below."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1698
 msgid "These settings are meant for ADVANCED USERS ONLY."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1329
+#: admin/class-litespeed-cache-admin-display.php:1699
 msgid "Please take great care when changing any of these settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1330
-msgid "If you have any questions, do not hesitate to submit a support thread."
+#: admin/class-litespeed-cache-admin-display.php:1700
+msgid "If there are any questions, do not hesitate to submit a support thread."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1333
+#: admin/class-litespeed-cache-admin-display.php:1704
 msgid ""
 "The advanced-cache.php file is used by many caching plugins to signal that a "
 "cache is active."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1334
+#: admin/class-litespeed-cache-admin-display.php:1705
 msgid ""
 "When this option is checked and this file is detected as belonging to "
 "another plugin, LiteSpeed Cache will not cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1338
+#: admin/class-litespeed-cache-admin-display.php:1709
 msgid "Add an alpha-numeric prefix to cache and purge tags."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1339
+#: admin/class-litespeed-cache-admin-display.php:1710
 msgid ""
 "This can be used to prevent issues when using multiple LiteSpeed caching "
 "extensions on the same server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1349
+#: admin/class-litespeed-cache-admin-display.php:1721
 msgid "Check advanced-cache.php"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1353
-msgid ""
-"Uncheck this option only if the other plugin is used for non-caching "
-"purposes, such as minifying css/js files."
+#: admin/class-litespeed-cache-admin-display.php:1722
+msgid "Check this option to include advanced-cache.php"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1364
+#: admin/class-litespeed-cache-admin-display.php:1726
+msgid ""
+"<i>Uncheck this option only if the other plugin is used for non-caching "
+"purposes, such as minifying css/js files.</i>"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1736
 msgid "Cache Tag Prefix"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1382
+#: admin/class-litespeed-cache-admin-display.php:1763
 msgid "Developer Testing"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1385
-msgid "Outputs to WordPress debug log."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1386
-msgid ""
-"This should be set to off once everything is working to prevent filling the "
-"disk."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1387
-msgid ""
-"The Admin IP option will only output log messages on requests from admin IPs."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1388
-msgid ""
-"The logs will be outputted to the debug.log in your wp-content directory."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1393
-msgid "Admin IPs"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1394
+#: admin/class-litespeed-cache-admin-display.php:1766
 msgid ""
 "Allows listed IPs (space or comma separated) to perform certain actions from "
 "their browsers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1396
+#: admin/class-litespeed-cache-admin-display.php:1769
 #, php-format
 msgid ""
 "More information about the available commands can be found <a href=\"%s"
 "\">here</a>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1402
+#: admin/class-litespeed-cache-admin-display.php:1775
+msgid "Outputs to WordPress debug log."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1776
+msgid ""
+"This should be set to off once everything is working to prevent filling the "
+"disk."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1777
+msgid ""
+"The Admin IP option will only output log messages on requests from admin IPs."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1778
+msgid ""
+"The logs will be outputted to the debug.log in the wp-content directory."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1785
+msgid "Admin IPs"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1792
 msgid "Off"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1403
+#: admin/class-litespeed-cache-admin-display.php:1793
 msgid "On"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1404
+#: admin/class-litespeed-cache-admin-display.php:1794
 msgid "Admin IP only"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1407
+#: admin/class-litespeed-cache-admin-display.php:1798
 msgid "Debug Log"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1452
+#: admin/class-litespeed-cache-admin-display.php:1847
 msgid "When checked, mobile views will be cached separately."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1453
+#: admin/class-litespeed-cache-admin-display.php:1848
 msgid "A site built with responsive design does not need to check this."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1456
+#: admin/class-litespeed-cache-admin-display.php:1851
 #, php-format
 msgid "SYNTAX: Each entry should be separated with a bar, %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1457
+#: admin/class-litespeed-cache-admin-display.php:1852
 #, php-format
 msgid "Any spaces should be escaped with a backslash before the space, %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1474
-msgid ""
-"WARNING: Unchecking this option will clear the Mobile View List. Press OK to "
-"confirm this action."
+#: admin/class-litespeed-cache-admin-display.php:1870
+msgid "WARNING: Unchecking this option will clear the Mobile View List."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1479
+#: admin/class-litespeed-cache-admin-display.php:1871
+msgid "Press OK to confirm this action."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:1877
 msgid "Enable Separate Mobile View"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1483
+#: admin/class-litespeed-cache-admin-display.php:1881
 #, php-format
 msgid "The default list WordPress uses is %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1484
-#: admin/class-litespeed-cache-admin-display.php:1561
-#: admin/class-litespeed-cache-admin-display.php:1593
-#: admin/class-litespeed-cache-admin-display.php:1931
-msgid "NOTICE:"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1485
-#: admin/class-litespeed-cache-admin-display.php:1562
-#: admin/class-litespeed-cache-admin-display.php:1594
-msgid "This setting will edit the .htaccess file."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1502
+#: admin/class-litespeed-cache-admin-display.php:1901
 #, php-format
 msgid "Expected false, got %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1507
-#: admin/class-litespeed-cache-admin-display.php:1646
+#: admin/class-litespeed-cache-admin-display.php:1906
+#: admin/class-litespeed-cache-admin-display.php:2074
 #, php-format
 msgid "Error getting current rules: %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1521
+#: admin/class-litespeed-cache-admin-display.php:1921
 msgid "Htaccess did not match configuration option."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1522
+#: admin/class-litespeed-cache-admin-display.php:1922
 msgid "Please re-enter the mobile view setting."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1523
+#: admin/class-litespeed-cache-admin-display.php:1923
 #, php-format
 msgid "List in WordPress database: %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1533
+#: admin/class-litespeed-cache-admin-display.php:1933
 msgid "List of Mobile View User Agents"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1552
-msgid "SYNTAX: Cookies should be listed one per line."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1553
-#, php-format
-msgid "Spaces should have a backslash in front of them, %s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1558
-msgid "Cookie List"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1559
-msgid "To prevent cookies from being cached, enter it in the text area below."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1584
+#: admin/class-litespeed-cache-admin-display.php:1997
 #, php-format
 msgid "SYNTAX: Separate each user agent with a bar, %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1585
-#, php-format
-msgid "Spaces should have a backslash in front of them, %s."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1590
-msgid "User Agent List"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1591
-msgid ""
-"To prevent user agents from being cached, enter it in the text field below."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin-display.php:1621
+#: admin/class-litespeed-cache-admin-display.php:2043
 msgid "Login Cookie"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1623
+#: admin/class-litespeed-cache-admin-display.php:2046
 msgid "SYNTAX: alphanumeric and \"_\"."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1624
+#: admin/class-litespeed-cache-admin-display.php:2047
 msgid "No spaces and case sensitive."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1625
+#: admin/class-litespeed-cache-admin-display.php:2048
 msgid "MUST BE UNIQUE FROM OTHER WEB APPLICATIONS."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1627
+#: admin/class-litespeed-cache-admin-display.php:2051
 #, php-format
 msgid "The default login cookie is %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1629
+#: admin/class-litespeed-cache-admin-display.php:2053
 msgid ""
 "The server will determine if the user is logged in based on the existance of "
 "this cookie."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1630
+#: admin/class-litespeed-cache-admin-display.php:2054
 msgid ""
 "This setting is useful for those that have multiple web applications for the "
 "same domain."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1631
+#: admin/class-litespeed-cache-admin-display.php:2055
 msgid ""
 "If every web application uses the same cookie, the server may confuse "
 "whether a user is logged in or not."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1632
+#: admin/class-litespeed-cache-admin-display.php:2056
 msgid "The cookie set here will be used for this WordPress installation."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1633
+#: admin/class-litespeed-cache-admin-display.php:2059
 msgid "Example use case:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1634
+#: admin/class-litespeed-cache-admin-display.php:2061
 #, php-format
 msgid "There is a WordPress install for %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1637
+#: admin/class-litespeed-cache-admin-display.php:2064
 #, php-format
 msgid "Then there is another WordPress install (NOT MULTISITE) at %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1640
+#: admin/class-litespeed-cache-admin-display.php:2067
 msgid ""
 "The cache needs to distinguish who is logged into which WordPress site in "
 "order to cache correctly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1651
+#: admin/class-litespeed-cache-admin-display.php:2080
 #, php-format
 msgid "Error: invalid login cookie. Please check the %s file"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1659
+#: admin/class-litespeed-cache-admin-display.php:2092
 msgid ""
 "WARNING: The .htaccess login cookie and Database login cookie do not match."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1677
+#: admin/class-litespeed-cache-admin-display.php:2112
 msgid "Purge All on upgrade"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1678
+#: admin/class-litespeed-cache-admin-display.php:2113
 msgid ""
 "When checked, the cache will automatically purge when any plugins, themes, "
 "or WordPress core is upgraded."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1693
+#: admin/class-litespeed-cache-admin-display.php:2128
 msgid "Cache favicon.ico"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1695
+#: admin/class-litespeed-cache-admin-display.php:2130
 msgid "favicon.ico is requested on most pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1696
+#: admin/class-litespeed-cache-admin-display.php:2131
 msgid ""
 "Caching this recource may improve server performance by avoiding unnecessary "
-"php calls."
+"PHP calls."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1716
+#: admin/class-litespeed-cache-admin-display.php:2152
 msgid "Enable Cache for PHP Resources"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1718
+#: admin/class-litespeed-cache-admin-display.php:2154
 msgid "Some themes and plugins add resources via a PHP request."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1719
+#: admin/class-litespeed-cache-admin-display.php:2155
 msgid ""
 "Caching these pages may improve server performance by avoiding unnecessary "
-"php calls."
+"PHP calls."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1750
+#: admin/class-litespeed-cache-admin-display.php:2187
 msgid "To make LiteSpeed Cache compatible with WP-PostViews:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1753
+#: admin/class-litespeed-cache-admin-display.php:2191
 msgid ""
-"Replace the following calls in your theme's template files with a div or "
-"span with a unique ID."
+"Replace the following calls in the active theme's template files with a div "
+"or span with a unique ID."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1755
+#: admin/class-litespeed-cache-admin-display.php:2193
 #, php-format
 msgid "e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1760
+#: admin/class-litespeed-cache-admin-display.php:2197
 msgid "Update the ajax request to output the results to that div."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1762
+#: admin/class-litespeed-cache-admin-display.php:2199
 msgid "Example:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1765
+#: admin/class-litespeed-cache-admin-display.php:2202
 msgid "The ajax code can be found at"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1767
+#: admin/class-litespeed-cache-admin-display.php:2204
 msgid "After purging the cache, the view count should be updating."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1770
+#: admin/class-litespeed-cache-admin-display.php:2209
 msgid "Compatibility with WP-PostViews"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1799
+#: admin/class-litespeed-cache-admin-display.php:2237
 msgid ""
-"Please comment listing the plugins that you are using and how they are "
+"Please add a comment listing the plugins that you are using and how they are "
 "functioning on the support thread."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1800
+#: admin/class-litespeed-cache-admin-display.php:2238
 msgid "With your help, we can provide the best WordPress caching solution."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1804
+#: admin/class-litespeed-cache-admin-display.php:2242
 msgid "LiteSpeed Cache Plugin Compatibility"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1808
+#: admin/class-litespeed-cache-admin-display.php:2246
 msgid "Link Here"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1811
+#: admin/class-litespeed-cache-admin-display.php:2249
 msgid ""
 "This is a list of plugins that are confirmed to be compatible with LiteSpeed "
 "Cache Plugin:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1818
+#: admin/class-litespeed-cache-admin-display.php:2256
 msgid "This is a list of known UNSUPPORTED plugins:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1838
+#: admin/class-litespeed-cache-admin-display.php:2277
 msgid "This is used to display a page without caching it."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1839
+#: admin/class-litespeed-cache-admin-display.php:2278
 msgid ""
 "An example use case is to compare a cached version of a page with an "
 "uncached version."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1842
+#: admin/class-litespeed-cache-admin-display.php:2281
 msgid "This is used to purge most cache tags associated with the page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1843
+#: admin/class-litespeed-cache-admin-display.php:2282
 msgid "The lone exception is the blog ID tag."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1844
+#: admin/class-litespeed-cache-admin-display.php:2283
 msgid ""
 "Note that this means that pages with the same cache tag will be purged as "
 "well."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1847
+#: admin/class-litespeed-cache-admin-display.php:2286
 msgid "This is used to show all the cache headers associated with a page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1848
+#: admin/class-litespeed-cache-admin-display.php:2287
 msgid "This may be useful for debugging purposes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1851
+#: admin/class-litespeed-cache-admin-display.php:2290
 msgid "Admin IP Query String Actions"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1854
+#: admin/class-litespeed-cache-admin-display.php:2293
 msgid ""
 "The following commands are available to the admin and do not require log-in, "
 "providing quick access to actions on the various pages."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1857
+#: admin/class-litespeed-cache-admin-display.php:2296
 msgid "Action List:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1863
+#: admin/class-litespeed-cache-admin-display.php:2303
 msgid "This is used to purge all entries in the cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1866
+#: admin/class-litespeed-cache-admin-display.php:2305
 msgid "This is used to purge the first cache tag associated with the page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1873
+#: admin/class-litespeed-cache-admin-display.php:2311
 #, php-format
 msgid ""
 "To trigger the action for a page, access the page with the query string %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1889
+#: admin/class-litespeed-cache-admin-display.php:2327
 msgid "Mobile Views:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1891
+#: admin/class-litespeed-cache-admin-display.php:2330
 msgid ""
 "Some sites have adaptive views, meaning the page sent will adapt to the "
 "browser type (desktop vs mobile)."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1892
+#: admin/class-litespeed-cache-admin-display.php:2331
 msgid ""
 "This rewrite rule is used for sites that load a different page for each type."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1894
+#: admin/class-litespeed-cache-admin-display.php:2334
 msgid ""
 "This configuration can be added on the settings page in the General tab."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1899
+#: admin/class-litespeed-cache-admin-display.php:2339
 msgid "Do Not Cache Cookies:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1901
+#: admin/class-litespeed-cache-admin-display.php:2341
 msgid ""
 "Another common rewrite rule is to notify the cache not to cache when it sees "
 "a specified cookie name."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1903
-#: admin/class-litespeed-cache-admin-display.php:1912
+#: admin/class-litespeed-cache-admin-display.php:2343
+#: admin/class-litespeed-cache-admin-display.php:2352
 msgid ""
 "This configuration can be added on the settings page in the Do Not Cache tab."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1908
+#: admin/class-litespeed-cache-admin-display.php:2348
 msgid "Do Not Cache User Agent:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1910
+#: admin/class-litespeed-cache-admin-display.php:2350
 msgid ""
 "A not so commonly used rewrite rule is to notify the cache not to cache when "
 "it sees a specified User Agent."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1919
-msgid "LiteSpeed Cache Common Rewrite Rules"
+#: admin/class-litespeed-cache-admin-display.php:2361
+msgid "<b>NOTE:</b>"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1925
+#: admin/class-litespeed-cache-admin-display.php:2362
 msgid "The following configurations can only be changed by the network admin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1927
-msgid ""
-"If you need to make changes to them, please contact the network admin to "
-"make the changes."
+#: admin/class-litespeed-cache-admin-display.php:2364
+msgid "Please contact the network admin to make any changes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1933
+#: admin/class-litespeed-cache-admin-display.php:2367
+msgid "<b>NOTICE:</b>"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2368
 msgid ""
 "The following rewrite rules can be configured in the LiteSpeed Cache "
 "settings page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1936
-msgid "If you need to make changes to them, please do so on that page."
+#: admin/class-litespeed-cache-admin-display.php:2370
+msgid "Please make any needed changes on that page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1937
+#: admin/class-litespeed-cache-admin-display.php:2371
 msgid "It will automatically generate the correct rules in the htaccess file."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1967
+#: admin/class-litespeed-cache-admin-display.php:2390
+msgid "LiteSpeed Cache Common Rewrite Rules"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2421
+msgid "Yes, the plugin itself will remain free and open source."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2422
+msgid "That said, a LiteSpeed server is required (see question 2)"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2425
+msgid "Is the LiteSpeed Cache Plugin for WordPress free?"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2428
+msgid "A LiteSpeed server is required in order to use this plugin."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2432
+msgid "Any single server or cluster including a LiteSpeed server will work."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2434
+msgid "What server software is required for this plugin?"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2437
+msgid "The cache entries are stored at the litespeed server level."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2438
+msgid ""
+"The simplest solution is to use LiteSpeed WebADC, as the cache entries will "
+"be cached at that level."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2442
+msgid ""
+"If using another load balancer, the cache entries will only be stored at the "
+"backend nodes, not at the load balancer."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2443
+msgid ""
+"The purges will also not be synchronized across the nodes, so this is not "
+"recommended."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2446
+#, php-format
+msgid "If a customized solution is required, please contact %s at %s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2449
+msgid ""
+"NOTICE: The rewrite rules created by this plugin must be copied to the WebADC"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2452
+msgid "Does this plugin work in a clustered environment?"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2456
+msgid ""
+"The actual cached pages are stored and managed by LiteSpeed Servers. Nothing "
+"is stored on the PHP side."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2459
+msgid "Where are the cache entries stored?"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2463
+msgid ""
+"Some themes like Storefront and Shop Isle are built such that the cart works "
+"without the rule."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2464
+msgid ""
+"However, other themes like the E-Commerce theme, do not, so please verify "
+"the theme used."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2468
+msgid "In short, yes."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2469
+msgid ""
+"However, for some woocommerce themes, the cart may not be updated correctly."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2472
+msgid "To test the cart:"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2476
+msgid ""
+"On a non-logged-in browser, visit and cache a page, then visit and cache a "
+"product page."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2477
+msgid ""
+"The first page should be accessible from the product page (e.g. the shop)."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2478
+msgid "Once both pages are confirmed cached, add the product to the cart."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2479
+msgid "After adding to the cart, visit the first page."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2480
+msgid "The page should still be cached, and the cart should be up to date."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2481
+msgid ""
+"If that is not the case, please add woocommerce_items_in_cart to the do not "
+"cache cookie list."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2486
+msgid "Is WooCommerce supported?"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2491
+#, php-format
+msgid "Use %1$s to replace %2$s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2495
+msgid ""
+"NOTE: The id can be changed, but the div id and the ajax function must match."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2497
+#, php-format
+msgid "Replace the ajax query in %1$s with %2$s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2510
+msgid "Purge the cache to use the updated pages."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2516
+msgid "How do I get WP-PostViews to display an updating view count?"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2550
 msgid "LiteSpeed Cache plugin is installed!"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1969
+#: admin/class-litespeed-cache-admin-display.php:2552
 msgid ""
-"This message indicates that the plugin was installed by your server admin."
+"This message indicates that the plugin was installed by the server admin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1970
+#: admin/class-litespeed-cache-admin-display.php:2553
 msgid ""
-"Our plugin is used to cache pages - a simple way to improve the performance "
-"of your site."
+"The LiteSpeed Cache plugin is used to cache pages - a simple way to improve "
+"the performance of the site."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1971
+#: admin/class-litespeed-cache-admin-display.php:2554
 msgid ""
-"However, we have no way of knowing all the possible customizations that you "
-"may have done."
+"However, there is no way of knowing all the possible customizations that "
+"were implemented."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1972
+#: admin/class-litespeed-cache-admin-display.php:2555
 msgid ""
-"For that reason, we ask that you test your site to make sure everything "
-"still functions properly."
+"For that reason, please test the site to make sure everything still "
+"functions properly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1975
+#: admin/class-litespeed-cache-admin-display.php:2558
 msgid "Examples of test cases include:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1977
-msgid "Visit your site while logged out"
+#: admin/class-litespeed-cache-admin-display.php:2560
+msgid "Visit the site while logged out."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1979
-msgid "Create a post, make sure the front page is accurate"
+#: admin/class-litespeed-cache-admin-display.php:2561
+msgid "Create a post, make sure the front page is accurate."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1984
+#: admin/class-litespeed-cache-admin-display.php:2566
 #, php-format
 msgid ""
-"If you have any questions, we are always happy to answer any questions on "
-"our <a href=\"%s\" rel=\"%s\" target=\"%s\">support forum</a>."
+"If there are any questions, the team is always happy to answer any questions "
+"on the <a href=\"%s\" rel=\"%s\" target=\"%s\">support forum</a>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1991
+#: admin/class-litespeed-cache-admin-display.php:2577
 msgid ""
 "If you would rather not move at litespeed, you can deactivate this plugin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:1995
+#: admin/class-litespeed-cache-admin-display.php:2587
+msgid "NOTICE: Database login cookie did not match your login cookie."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2588
+msgid ""
+"If the login cookie was recently changed in the settings, please log out and "
+"back in."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2589
 #, php-format
-msgid "<a href=\"%s\">OK, got it (dismiss)</a>"
+msgid ""
+"If not, please verify the setting in the <a href=\"%1$s\">Advanced tab</a>."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:2600
+msgid ""
+"If using OpenLiteSpeed, the server must be restarted once for the changes to "
+"take effect."
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-rules.php:399
 #, php-format
-msgid "Your .htaccess file is missing a %s."
+msgid "The .htaccess file is missing a %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1447
+#: admin/class-litespeed-cache-admin-rules.php:1471
 msgid "File Saved."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1449
+#: admin/class-litespeed-cache-admin-rules.php:1473
 msgid "Failed to back up file, aborted changes."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1450
+#: admin/class-litespeed-cache-admin-rules.php:1474
 msgid ".htaccess file does not exist or is not readable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1451
+#: admin/class-litespeed-cache-admin-rules.php:1475
 #, php-format
 msgid "Failed to put contents into %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1453
+#: admin/class-litespeed-cache-admin-rules.php:1477
 #, php-format
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1455
+#: admin/class-litespeed-cache-admin-rules.php:1479
 #, php-format
 msgid "Invalid login cookie. Invalid characters found: %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1457
+#: admin/class-litespeed-cache-admin-rules.php:1481
 #, php-format
 msgid "Invalid Rewrite List. Empty or invalid rule. Rule: %s"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1458
+#: admin/class-litespeed-cache-admin-rules.php:1482
 #, php-format
 msgid "Could not find %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1459
+#: admin/class-litespeed-cache-admin-rules.php:1483
 #, php-format
 msgid "Failed to overwrite %s."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1461
+#: admin/class-litespeed-cache-admin-rules.php:1486
 msgid "Tried to parse for existing login cookie."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1462
+#: admin/class-litespeed-cache-admin-rules.php:1487
 #, php-format
 msgid "%s file not valid. Please verify contents."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1465
+#: admin/class-litespeed-cache-admin-rules.php:1490
 #, php-format
 msgid "%s file not readable or not writable."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1469
+#: admin/class-litespeed-cache-admin-rules.php:1494
 msgid "This site is a subdirectory install."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1470
+#: admin/class-litespeed-cache-admin-rules.php:1495
 msgid "Login cookies do not match."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1471
+#: admin/class-litespeed-cache-admin-rules.php:1496
 msgid ""
 "Please remove both and set the login cookie in LiteSpeed Cache advanced "
 "settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-rules.php:1473
+#: admin/class-litespeed-cache-admin-rules.php:1498
 msgid "Prefix was found after suffix."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:166
+#: admin/class-litespeed-cache-admin.php:189
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:201
+#: admin/class-litespeed-cache-admin.php:225
 #, php-format
 msgid "%s Manager"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:202
+#: admin/class-litespeed-cache-admin.php:226
 msgid "Manage"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:213
-#, php-format
-msgid "%s Settings"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:214
-#: admin/class-litespeed-cache-admin.php:783
-msgid "Settings"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:217
-#, php-format
-msgid "%s Edit .htaccess"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:218
-#, php-format
-msgid "Edit %s"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:231
-#, php-format
-msgid "%s Information"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:232
-msgid "Information"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:233
-#, php-format
-msgid "%s FAQs"
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:234
-msgid "FAQs"
 msgstr ""
 
 #: admin/class-litespeed-cache-admin.php:237
 #, php-format
-msgid "%s Environment Report"
+msgid "%s Settings"
 msgstr ""
 
 #: admin/class-litespeed-cache-admin.php:238
+#: admin/class-litespeed-cache-admin.php:919
+msgid "Settings"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:241
+#, php-format
+msgid "%s Edit .htaccess"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:242
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:255
+#, php-format
+msgid "%s Information"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:256
+msgid "Information"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:260
+#, php-format
+msgid "%s Environment Report"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:261
 msgid "Environment Report"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:381
+#: admin/class-litespeed-cache-admin.php:473
 msgid "Invalid Tag Prefix input."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:382
+#: admin/class-litespeed-cache-admin.php:474
 msgid "Input should only contain letters and numbers."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:424
+#: admin/class-litespeed-cache-admin.php:519
 #, php-format
 msgid "%s TTL must be an integer between %d and 2147483647"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:443
+#: admin/class-litespeed-cache-admin.php:541
 msgid "Default Public Cache"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:452
+#: admin/class-litespeed-cache-admin.php:550
 msgid "Default Front Page"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:460
+#: admin/class-litespeed-cache-admin.php:558
 msgid "Feed"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:471
+#: admin/class-litespeed-cache-admin.php:569
 msgid "404"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:551
+#: admin/class-litespeed-cache-admin.php:580
+msgid "403"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:591
+msgid "500"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:681
 #, php-format
 msgid "Removed category \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:577
+#: admin/class-litespeed-cache-admin.php:707
 #, php-format
 msgid "Removed tag \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:659
+#: admin/class-litespeed-cache-admin.php:790
 msgid "Invalid data in Admin IPs."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:682
+#: admin/class-litespeed-cache-admin.php:813
 msgid "Invalid data in Test IPs."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:745
+#: admin/class-litespeed-cache-admin.php:879
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:803
+#: admin/class-litespeed-cache-admin.php:941
 msgid "Notified LiteSpeed Web Server to purge the public cache."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:807
+#: admin/class-litespeed-cache-admin.php:945
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:815
+#: admin/class-litespeed-cache-admin.php:949
+msgid "Notified LiteSpeed Web Server to purge error pages."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:958
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:855
+#: admin/class-litespeed-cache-admin.php:1002
 msgid ""
-"Alternatively, your network admin may bypass this warning by unchecking "
-"\"Check Advanced Cache\" in LiteSpeed Cache network settings."
+"For this scenario only, the network admin may uncheck \"Check Advanced Cache"
+"\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:858
+#: admin/class-litespeed-cache-admin.php:1005
 msgid ""
-"Alternatively, you may bypass this warning by unchecking \"Check Advanced "
-"Cache\" in LiteSpeed Cache settings."
+"For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
+"Cache settings."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:861
-msgid "Please disable/deactivate your other cache plugin."
-msgstr ""
-
-#: admin/class-litespeed-cache-admin.php:863
+#: admin/class-litespeed-cache-admin.php:1008
 msgid ""
-"This should only be done if you intend to use the other cache plugin for non-"
-"caching purposes, such as minifying css/js files."
+"Please disable/deactivate any other Full Page Cache solutions that are "
+"currently being used."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:991
+#: admin/class-litespeed-cache-admin.php:1009
+msgid ""
+"LiteSpeed Cache does work with other cache solutions, but only their non-"
+"page caching offerings—such as minifying css/js files."
+msgstr ""
+
+#: admin/class-litespeed-cache-admin.php:1144
 msgid "File saved."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin.php:1010
+#: admin/class-litespeed-cache-admin.php:1164
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:541
-msgid "Your WordPress version is too old for the LiteSpeed Cache Plugin."
+#: cli/class-litespeed-cache-cli-purge.php:54
+msgid "Purged All!"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:543
+#: cli/class-litespeed-cache-cli-purge.php:129
+msgid "Purged the blog!"
+msgstr ""
+
+#: cli/class-litespeed-cache-cli-purge.php:182
+msgid "Purged the url!"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:352
+#: freemius/includes/i18n.php:153
+msgid "Install Now"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:358
+#: freemius/includes/i18n.php:154
+msgid "Install Update Now"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:362
+#, php-format
+msgid "Newer Version (%s) Installed"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:365
+msgid "Latest Version Installed"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:478
+msgctxt "Plugin installer section title"
+msgid "Description"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:479
+msgctxt "Plugin installer section title"
+msgid "Installation"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:480
+msgctxt "Plugin installer section title"
+msgid "FAQ"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:481
+msgctxt "Plugin installer section title"
+msgid "Screenshots"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:482
+msgctxt "Plugin installer section title"
+msgid "Changelog"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:483
+msgctxt "Plugin installer section title"
+msgid "Reviews"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:484
+msgctxt "Plugin installer section title"
+msgid "Other Notes"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:509
+msgid "Plugin Install"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:771
+msgid "Version:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:777
+msgid "Author:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:783
+msgid "Last Updated:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:785
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:792
+msgid "Requires WordPress Version:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:792
+#, php-format
+msgid "%s or higher"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:798
+msgid "Compatible up to:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:805
+msgid "Downloaded:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:805
+#, php-format
+msgid "%s time"
+msgid_plural "%s times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:812
+msgid "WordPress.org Plugin Page &#187;"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:819
+msgid "Plugin Homepage &#187;"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:826
+#: freemius/includes/fs-plugin-info-dialog.php:883
+msgid "Donate to this plugin &#187;"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:832
+msgid "Average Rating"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:838
+#, php-format
+msgid "(based on %s rating)"
+msgid_plural "(based on %s ratings)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:851
+#, php-format
+msgid "Click to see reviews that provided a rating of %d star"
+msgid_plural "Click to see reviews that provided a rating of %d stars"
+msgstr[0] ""
+msgstr[1] ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:851
+#, php-format
+msgid "%d star"
+msgid_plural "%d stars"
+msgstr[0] ""
+msgstr[1] ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:862
+msgid "Contributors"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:890
+#: freemius/includes/fs-plugin-info-dialog.php:892
+msgid "Warning:"
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:890
+msgid "This plugin has not been tested with your current version of WordPress."
+msgstr ""
+
+#: freemius/includes/fs-plugin-info-dialog.php:892
+msgid ""
+"This plugin has not been marked as compatible with your version of WordPress."
+msgstr ""
+
+#: freemius/includes/i18n.php:35
+msgid "Account"
+msgstr ""
+
+#: freemius/includes/i18n.php:36
+msgid "Add On"
+msgstr ""
+
+#: freemius/includes/i18n.php:37
+msgid "Contact Us"
+msgstr ""
+
+#: freemius/includes/i18n.php:38
+msgid "Contact Support"
+msgstr ""
+
+#: freemius/includes/i18n.php:39
+msgid "Change Ownership"
+msgstr ""
+
+#: freemius/includes/i18n.php:40
+msgid "Support"
+msgstr ""
+
+#: freemius/includes/i18n.php:42
+msgid "Add Ons"
+msgstr ""
+
+#: freemius/includes/i18n.php:43
+msgctxt "verb"
+msgid "Upgrade"
+msgstr ""
+
+#: freemius/includes/i18n.php:44
+msgid "Awesome"
+msgstr ""
+
+#: freemius/includes/i18n.php:45
+msgctxt "noun"
+msgid "Pricing"
+msgstr ""
+
+#: freemius/includes/i18n.php:46
+msgctxt "noun"
+msgid "Price"
+msgstr ""
+
+#: freemius/includes/i18n.php:47
+msgid "Unlimited Updates"
+msgstr ""
+
+#: freemius/includes/i18n.php:48
+msgctxt "verb"
+msgid "Downgrade"
+msgstr ""
+
+#: freemius/includes/i18n.php:49
+msgid "Cancel Trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:50
+msgid "Free Trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:51
+#, php-format
+msgid "Start my free %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:52
+#, php-format
+msgid "No commitment for %s - cancel anytime"
+msgstr ""
+
+#: freemius/includes/i18n.php:53
+#, php-format
+msgid "After your free %s, pay as little as %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:54
+msgid "Details"
+msgstr ""
+
+#: freemius/includes/i18n.php:55
+msgid "Account Details"
+msgstr ""
+
+#: freemius/includes/i18n.php:56
+msgctxt "verb"
+msgid "Delete"
+msgstr ""
+
+#: freemius/includes/i18n.php:57
+msgctxt "verb"
+msgid "Show"
+msgstr ""
+
+#: freemius/includes/i18n.php:58
+msgctxt "verb"
+msgid "Hide"
+msgstr ""
+
+#: freemius/includes/i18n.php:59
+msgctxt "verb"
+msgid "Edit"
+msgstr ""
+
+#: freemius/includes/i18n.php:60
+msgctxt "verb"
+msgid "Update"
+msgstr ""
+
+#: freemius/includes/i18n.php:61
+msgid "Date"
+msgstr ""
+
+#: freemius/includes/i18n.php:62
+msgid "Amount"
+msgstr ""
+
+#: freemius/includes/i18n.php:63
+msgid "Invoice"
+msgstr ""
+
+#: freemius/includes/i18n.php:64
+msgid "Billing"
+msgstr ""
+
+#: freemius/includes/i18n.php:65
+msgid "Payments"
+msgstr ""
+
+#: freemius/includes/i18n.php:66
+msgid "Delete Account"
+msgstr ""
+
+#: freemius/includes/i18n.php:67
+msgctxt "as close a window"
+msgid "Dismiss"
+msgstr ""
+
+#: freemius/includes/i18n.php:68
+msgctxt "as product pricing plan"
+msgid "Plan"
+msgstr ""
+
+#: freemius/includes/i18n.php:69
+msgid "Change Plan"
+msgstr ""
+
+#: freemius/includes/i18n.php:70
+#, php-format
+msgctxt "as download professional version"
+msgid "Download %s Version"
+msgstr ""
+
+#: freemius/includes/i18n.php:71
+#, php-format
+msgctxt "as download professional version now"
+msgid "Download %s version now"
+msgstr ""
+
+#: freemius/includes/i18n.php:73
+msgctxt "as download latest version"
+msgid "Download Latest"
+msgstr ""
+
+#: freemius/includes/i18n.php:74
+#, php-format
+msgctxt "E.g. you have a professional license."
+msgid "You have a %s license."
+msgstr ""
+
+#: freemius/includes/i18n.php:76
+msgid "New"
+msgstr ""
+
+#: freemius/includes/i18n.php:77
+msgid "Free"
+msgstr ""
+
+#: freemius/includes/i18n.php:78
+msgctxt "as trial plan"
+msgid "Trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:79
+msgctxt "as starting a trial plan"
+msgid "Start Trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:80
+msgctxt "verb"
+msgid "Purchase"
+msgstr ""
+
+#: freemius/includes/i18n.php:81
+msgid "Purchase License"
+msgstr ""
+
+#: freemius/includes/i18n.php:82
+msgctxt "verb"
+msgid "Buy"
+msgstr ""
+
+#: freemius/includes/i18n.php:83
+msgid "Buy License"
+msgstr ""
+
+#: freemius/includes/i18n.php:84
+msgid "Single Site License"
+msgstr ""
+
+#: freemius/includes/i18n.php:85
+msgid "Unlimited Licenses"
+msgstr ""
+
+#: freemius/includes/i18n.php:86
+#, php-format
+msgid "Up to %s Sites"
+msgstr ""
+
+#: freemius/includes/i18n.php:87
+#, php-format
+msgid "%sRenew your license now%s to access version %s features and support."
+msgstr ""
+
+#: freemius/includes/i18n.php:89
+msgid ""
+"Enter the email address you've used for the upgrade below and we will resend "
+"you the license key."
+msgstr ""
+
+#: freemius/includes/i18n.php:91
+#, php-format
+msgctxt "e.g. Professional Plan"
+msgid "%s Plan"
+msgstr ""
+
+#: freemius/includes/i18n.php:92
+#, php-format
+msgid "You are just one step away - %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:93
+#, php-format
+msgctxt "%s - plugin name. As complete \"Jetpack\" activation now"
+msgid "Complete \"%s\" Activation Now"
+msgstr ""
+
+#: freemius/includes/i18n.php:95
+#, php-format
+msgid "We made a few tweaks to the plugin, %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:96
+#, php-format
+msgid "Opt-in to make \"%s\" Better!"
+msgstr ""
+
+#: freemius/includes/i18n.php:97
+msgid "Error"
+msgstr ""
+
+#: freemius/includes/i18n.php:98
+msgid ""
+"Freemius SDK couldn't find the plugin's main file. Please contact "
+"sdk@freemius.com with the current error."
+msgstr ""
+
+#: freemius/includes/i18n.php:102
+msgctxt "as expiration date"
+msgid "Expiration"
+msgstr ""
+
+#: freemius/includes/i18n.php:103
+msgctxt "as software license"
+msgid "License"
+msgstr ""
+
+#: freemius/includes/i18n.php:104
+msgid "not verified"
+msgstr ""
+
+#: freemius/includes/i18n.php:105
+msgid "Verify Email"
+msgstr ""
+
+#: freemius/includes/i18n.php:106
+#, php-format
+msgctxt "e.g. expires in 2 months"
+msgid "Expires in %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:107
+#, php-format
+msgctxt "e.g. auto renews in 2 months"
+msgid "Auto renews in %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:108
+msgid "No expiration"
+msgstr ""
+
+#: freemius/includes/i18n.php:109
+msgid "Expired"
+msgstr ""
+
+#: freemius/includes/i18n.php:110
+msgid "Cancelled"
+msgstr ""
+
+#: freemius/includes/i18n.php:111
+#, php-format
+msgctxt "e.g. In 2 hours"
+msgid "In %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:112
+#, php-format
+msgctxt "e.g. 2 min ago"
+msgid "%s ago"
+msgstr ""
+
+#: freemius/includes/i18n.php:113
+msgctxt "as plugin version"
+msgid "Version"
+msgstr ""
+
+#: freemius/includes/i18n.php:114
+msgid "Name"
+msgstr ""
+
+#: freemius/includes/i18n.php:115
+msgid "Email"
+msgstr ""
+
+#: freemius/includes/i18n.php:116
+msgid "Email address"
+msgstr ""
+
+#: freemius/includes/i18n.php:117
+msgid "Verified"
+msgstr ""
+
+#: freemius/includes/i18n.php:118
+msgid "Plugin"
+msgstr ""
+
+#: freemius/includes/i18n.php:119
+msgid "Plugins"
+msgstr ""
+
+#: freemius/includes/i18n.php:120
+msgid "Themes"
+msgstr ""
+
+#: freemius/includes/i18n.php:121
+msgctxt "as file/folder path"
+msgid "Path"
+msgstr ""
+
+#: freemius/includes/i18n.php:122
+msgid "Title"
+msgstr ""
+
+#: freemius/includes/i18n.php:123
+msgid "Free version"
+msgstr ""
+
+#: freemius/includes/i18n.php:124
+msgid "Premium version"
+msgstr ""
+
+#: freemius/includes/i18n.php:125
+msgctxt "as WP plugin slug"
+msgid "Slug"
+msgstr ""
+
+#: freemius/includes/i18n.php:126
+msgid "ID"
+msgstr ""
+
+#: freemius/includes/i18n.php:127
+msgid "Users"
+msgstr ""
+
+#: freemius/includes/i18n.php:128
+msgid "Plugin Installs"
+msgstr ""
+
+#: freemius/includes/i18n.php:129
+msgctxt "like websites"
+msgid "Sites"
+msgstr ""
+
+#: freemius/includes/i18n.php:130
+msgid "User ID"
+msgstr ""
+
+#: freemius/includes/i18n.php:131
+msgid "Site ID"
+msgstr ""
+
+#: freemius/includes/i18n.php:132
+msgid "Public Key"
+msgstr ""
+
+#: freemius/includes/i18n.php:133
+msgid "Secret Key"
+msgstr ""
+
+#: freemius/includes/i18n.php:134
+msgctxt "as secret encryption key missing"
+msgid "No Secret"
+msgstr ""
+
+#: freemius/includes/i18n.php:135
+msgid "No ID"
+msgstr ""
+
+#: freemius/includes/i18n.php:136
+msgctxt "as synchronize license"
+msgid "Sync License"
+msgstr ""
+
+#: freemius/includes/i18n.php:137
+msgctxt "as synchronize"
+msgid "Sync"
+msgstr ""
+
+#: freemius/includes/i18n.php:138
+msgid "Activate License"
+msgstr ""
+
+#: freemius/includes/i18n.php:139
+msgid "Activate Free Version"
+msgstr ""
+
+#: freemius/includes/i18n.php:140
+msgid ""
+"Please enter the license key that you received in the email right after the "
+"purchase:"
+msgstr ""
+
+#: freemius/includes/i18n.php:142
+msgid "Activating license..."
+msgstr ""
+
+#: freemius/includes/i18n.php:143
+msgid "Change License"
+msgstr ""
+
+#: freemius/includes/i18n.php:144
+msgid "Update License"
+msgstr ""
+
+#: freemius/includes/i18n.php:145
+msgid "Deactivate License"
+msgstr ""
+
+#: freemius/includes/i18n.php:146
+msgid "Activate"
+msgstr ""
+
+#: freemius/includes/i18n.php:147
+msgid "Deactivate"
+msgstr ""
+
+#: freemius/includes/i18n.php:148
+msgid "Skip & Deactivate"
+msgstr ""
+
+#: freemius/includes/i18n.php:149
+msgid "No - just deactivate"
+msgstr ""
+
+#: freemius/includes/i18n.php:150
+msgid "Yes - do your thing"
+msgstr ""
+
+#: freemius/includes/i18n.php:151
+msgctxt "active mode"
+msgid "Active"
+msgstr ""
+
+#: freemius/includes/i18n.php:152
+msgctxt "is active mode?"
+msgid "Is Active"
+msgstr ""
+
+#: freemius/includes/i18n.php:155
+#, php-format
+msgid "More information about %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:156
+msgid "Localhost"
+msgstr ""
+
+#: freemius/includes/i18n.php:157
+#, php-format
+msgctxt "as activate Professional plan"
+msgid "Activate %s Plan"
+msgstr ""
+
+#: freemius/includes/i18n.php:158
+#, php-format
+msgctxt "as 5 licenses left"
+msgid "%s left"
+msgstr ""
+
+#: freemius/includes/i18n.php:159
+msgid "Last license"
+msgstr ""
+
+#: freemius/includes/i18n.php:160
+#, php-format
+msgid "What is your %s?"
+msgstr ""
+
+#: freemius/includes/i18n.php:161
+msgid "Activate this add-on"
+msgstr ""
+
+#: freemius/includes/i18n.php:162
+msgid ""
+"Deactivating your license will block all premium features, but will enable "
+"you to activate the license on another site. Are you sure you want to "
+"proceed?"
+msgstr ""
+
+#: freemius/includes/i18n.php:164
 #, php-format
 msgid ""
-"The LiteSpeed Cache Plugin requires at least WordPress %2$s. Please upgrade "
-"or go to <a href=\"%1$s\">active plugins</a> and deactivate the LiteSpeed "
-"Cache plugin to hide this message."
+"Deleting the account will automatically deactivate your %s plan license so "
+"you can use it on other sites. If you want to terminate the recurring "
+"payments as well, click the \"Cancel\" button, and first \"Downgrade\" your "
+"account. Are you sure you would like to continue with the deletion?"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:555
-msgid "Your PHP version is too old for LiteSpeed Cache Plugin."
+#: freemius/includes/i18n.php:166
+msgid ""
+"Deletion is not temporary. Only delete if you no longer want to use this "
+"plugin anymore. Are you sure you would like to continue with the deletion?"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:557
+#: freemius/includes/i18n.php:168
 #, php-format
 msgid ""
-"LiteSpeed Cache Plugin requires at least PHP %3$s. You are using PHP %2$s, "
-"which is out-dated and insecure. Please ask your web host to update your PHP "
-"installation or go to <a href=\"%1$s\">active plugins</a> and deactivate "
+"Downgrading your plan will immediately stop all future recurring payments "
+"and your %s plan license will expire in %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:170
+msgid ""
+"Cancelling the trial will immediately block access to all premium features. "
+"Are you sure?"
+msgstr ""
+
+#: freemius/includes/i18n.php:172
+#, php-format
+msgid ""
+"You can still enjoy all %s features but you will not have access to plugin "
+"updates and support."
+msgstr ""
+
+#: freemius/includes/i18n.php:174
+#, php-format
+msgid ""
+"Once your license expire you can still use the Free version but you will NOT "
+"have access to the %s features."
+msgstr ""
+
+#: freemius/includes/i18n.php:176
+msgid "Are you sure you want to proceed?"
+msgstr ""
+
+#: freemius/includes/i18n.php:179
+#, php-format
+msgid "Add Ons for %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:180
+msgid ""
+"We could'nt load the add-ons list. It's probably an issue on our side, "
+"please try to come back in few minutes."
+msgstr ""
+
+#: freemius/includes/i18n.php:183
+msgid "Anonymous feedback"
+msgstr ""
+
+#: freemius/includes/i18n.php:184
+msgid "Quick feedback"
+msgstr ""
+
+#: freemius/includes/i18n.php:185
+msgid "If you have a moment, please let us know why you are deactivating"
+msgstr ""
+
+#: freemius/includes/i18n.php:187
+msgid "Yes - Deactivate"
+msgstr ""
+
+#: freemius/includes/i18n.php:188
+msgid "Submit & Deactivate"
+msgstr ""
+
+#: freemius/includes/i18n.php:189
+msgid "Cancel"
+msgstr ""
+
+#: freemius/includes/i18n.php:190
+msgid "I no longer need the plugin"
+msgstr ""
+
+#: freemius/includes/i18n.php:191
+msgid "I found a better plugin"
+msgstr ""
+
+#: freemius/includes/i18n.php:192
+msgid "I only needed the plugin for a short period"
+msgstr ""
+
+#: freemius/includes/i18n.php:193
+msgid "The plugin broke my site"
+msgstr ""
+
+#: freemius/includes/i18n.php:194
+msgid "The plugin suddenly stopped working"
+msgstr ""
+
+#: freemius/includes/i18n.php:195
+msgid "I can't pay for it anymore"
+msgstr ""
+
+#: freemius/includes/i18n.php:196
+msgid "It's a temporary deactivation. I'm just debugging an issue."
+msgstr ""
+
+#: freemius/includes/i18n.php:198
+msgctxt ""
+"the text of the \"other\" reason for deactivating the plugin that is shown "
+"in the modal box."
+msgid "Other"
+msgstr ""
+
+#: freemius/includes/i18n.php:200
+msgid "Kindly tell us the reason so we can improve."
+msgstr ""
+
+#: freemius/includes/i18n.php:201
+msgid "What's the plugin's name?"
+msgstr ""
+
+#: freemius/includes/i18n.php:202
+msgid "What price would you feel comfortable paying?"
+msgstr ""
+
+#: freemius/includes/i18n.php:203
+msgid "I couldn't understand how to make it work"
+msgstr ""
+
+#: freemius/includes/i18n.php:204
+msgid "The plugin is great, but I need specific feature that you don't support"
+msgstr ""
+
+#: freemius/includes/i18n.php:206
+msgid "The plugin is not working"
+msgstr ""
+
+#: freemius/includes/i18n.php:207
+msgid "It's not what I was looking for"
+msgstr ""
+
+#: freemius/includes/i18n.php:208
+msgid "The plugin didn't work as expected"
+msgstr ""
+
+#: freemius/includes/i18n.php:209
+msgid "What feature?"
+msgstr ""
+
+#: freemius/includes/i18n.php:210
+msgid "Kindly share what didn't work so we can fix it for future users..."
+msgstr ""
+
+#: freemius/includes/i18n.php:212
+msgid "What you've been looking for?"
+msgstr ""
+
+#: freemius/includes/i18n.php:213
+msgid "What did you expect?"
+msgstr ""
+
+#: freemius/includes/i18n.php:214
+msgid "The plugin didn't work"
+msgstr ""
+
+#: freemius/includes/i18n.php:215
+msgid "I don't like to share my information with you"
+msgstr ""
+
+#: freemius/includes/i18n.php:216
+#, php-format
+msgid ""
+"You might have missed it, but you don't have to share any data and can just "
+"%s the opt-in."
+msgstr ""
+
+#: freemius/includes/i18n.php:221
+#, php-format
+msgctxt "greeting"
+msgid "Hey %s,"
+msgstr ""
+
+#: freemius/includes/i18n.php:222
+#, php-format
+msgctxt "a greeting. E.g. Thanks John!"
+msgid "Thanks %s!"
+msgstr ""
+
+#: freemius/includes/i18n.php:223
+#, php-format
+msgid ""
+"Never miss an important update - opt-in to our security and feature updates "
+"notifications, and non-sensitive diagnostic tracking with %4$s."
+msgstr ""
+
+#: freemius/includes/i18n.php:225
+#, php-format
+msgid ""
+"Please help us improve %1$s! If you opt-in, some data about your usage of "
+"%1$s will be sent to %4$s. If you skip this, that's okay! %1$s will still "
+"work just fine."
+msgstr ""
+
+#: freemius/includes/i18n.php:227
+#, php-format
+msgid ""
+"You should receive an activation email for %s to your mailbox at %s. Please "
+"make sure you click the activation button in that email to %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:228
+msgid "complete the install"
+msgstr ""
+
+#: freemius/includes/i18n.php:229
+msgid "start the trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:230
+#, php-format
+msgid ""
+"Thanks for purchasing %s! To get started, please enter your license key:"
+msgstr ""
+
+#: freemius/includes/i18n.php:232
+#, php-format
+msgid ""
+"The plugin will be periodically sending data to %s to check for plugin "
+"updates and verify the validity of your license."
+msgstr ""
+
+#: freemius/includes/i18n.php:234
+msgid "What permissions are being granted?"
+msgstr ""
+
+#: freemius/includes/i18n.php:235
+msgid "Your Profile Overview"
+msgstr ""
+
+#: freemius/includes/i18n.php:236
+msgid "Name and email address"
+msgstr ""
+
+#: freemius/includes/i18n.php:237
+msgid "Your Site Overview"
+msgstr ""
+
+#: freemius/includes/i18n.php:238
+msgid "Site URL, WP version, PHP info, plugins & themes"
+msgstr ""
+
+#: freemius/includes/i18n.php:240
+msgid "Current Plugin Events"
+msgstr ""
+
+#: freemius/includes/i18n.php:241
+msgid "Activation, deactivation and uninstall"
+msgstr ""
+
+#: freemius/includes/i18n.php:242
+msgid "Plugins & Themes"
+msgstr ""
+
+#: freemius/includes/i18n.php:243
+msgid "Titles, versions and state."
+msgstr ""
+
+#: freemius/includes/i18n.php:244
+msgid "Admin Notices"
+msgstr ""
+
+#: freemius/includes/i18n.php:245
+msgid "Newsletter"
+msgstr ""
+
+#: freemius/includes/i18n.php:246
+msgid "Updates, announcements, marketing, no spam"
+msgstr ""
+
+#: freemius/includes/i18n.php:247
+msgid "Privacy Policy"
+msgstr ""
+
+#: freemius/includes/i18n.php:248
+msgid "Terms of Service"
+msgstr ""
+
+#: freemius/includes/i18n.php:249
+msgctxt "as activating plugin"
+msgid "Activating"
+msgstr ""
+
+#: freemius/includes/i18n.php:250
+msgctxt "as in the process of sending an email"
+msgid "Sending email"
+msgstr ""
+
+#: freemius/includes/i18n.php:252
+msgctxt "button label"
+msgid "Allow & Continue"
+msgstr ""
+
+#: freemius/includes/i18n.php:253
+msgctxt "button label"
+msgid "Agree & Activate License"
+msgstr ""
+
+#: freemius/includes/i18n.php:254
+msgctxt "verb"
+msgid "Skip"
+msgstr ""
+
+#: freemius/includes/i18n.php:255
+msgid "Click here to use the plugin anonymously"
+msgstr ""
+
+#: freemius/includes/i18n.php:256
+msgid "Re-send activation email"
+msgstr ""
+
+#: freemius/includes/i18n.php:257
+msgid "License key"
+msgstr ""
+
+#: freemius/includes/i18n.php:258
+msgid "Send License Key"
+msgstr ""
+
+#: freemius/includes/i18n.php:259
+msgid "Sending license key"
+msgstr ""
+
+#: freemius/includes/i18n.php:260
+msgid "Have a license key?"
+msgstr ""
+
+#: freemius/includes/i18n.php:261
+msgid "Don't have a license key?"
+msgstr ""
+
+#: freemius/includes/i18n.php:262
+msgid "Can't find your license key?"
+msgstr ""
+
+#: freemius/includes/i18n.php:263
+msgid ""
+"We couldn't find your email address in the system, are you sure it's the "
+"right address?"
+msgstr ""
+
+#: freemius/includes/i18n.php:265
+msgid ""
+"We can't see any active licenses associated with that email address, are you "
+"sure it's the right address?"
+msgstr ""
+
+#: freemius/includes/i18n.php:267
+msgid "Opt In"
+msgstr ""
+
+#: freemius/includes/i18n.php:268
+msgid "Opt Out"
+msgstr ""
+
+#: freemius/includes/i18n.php:269
+msgid "On second thought - I want to continue helping"
+msgstr ""
+
+#: freemius/includes/i18n.php:271
+msgid "Opting out..."
+msgstr ""
+
+#: freemius/includes/i18n.php:272
+msgid "Opting in..."
+msgstr ""
+
+#: freemius/includes/i18n.php:273
+#, php-format
+msgid ""
+"We appreciate your help in making the %s better by letting us track some "
+"usage data."
+msgstr ""
+
+#: freemius/includes/i18n.php:275
+#, php-format
+msgid ""
+"Usage tracking is done in the name of making %s better. Making a better user "
+"experience, prioritizing new features, and more good things. We'd really "
+"appreciate if you'll reconsider letting us continue with the tracking."
+msgstr ""
+
+#: freemius/includes/i18n.php:277
+#, php-format
+msgid ""
+"By clicking \"Opt Out\", we will no longer be sending any data from %s to %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:282
+msgid "Screenshots"
+msgstr ""
+
+#: freemius/includes/i18n.php:283
+#, php-format
+msgid "Click to view full-size screenshot %d"
+msgstr ""
+
+#: freemius/includes/i18n.php:287
+msgid "Freemius Debug"
+msgstr ""
+
+#: freemius/includes/i18n.php:288
+msgctxt "as turned on"
+msgid "On"
+msgstr ""
+
+#: freemius/includes/i18n.php:289
+msgctxt "as turned off"
+msgid "Off"
+msgstr ""
+
+#: freemius/includes/i18n.php:290
+msgctxt "as code debugging"
+msgid "Debugging"
+msgstr ""
+
+#: freemius/includes/i18n.php:291
+msgid "Freemius State"
+msgstr ""
+
+#: freemius/includes/i18n.php:292
+msgctxt "as connection was successful"
+msgid "Connected"
+msgstr ""
+
+#: freemius/includes/i18n.php:293
+msgctxt "as connection blocked"
+msgid "Blocked"
+msgstr ""
+
+#: freemius/includes/i18n.php:294
+msgctxt "as application program interface"
+msgid "API"
+msgstr ""
+
+#: freemius/includes/i18n.php:295
+msgctxt "as software development kit versions"
+msgid "SDK"
+msgstr ""
+
+#: freemius/includes/i18n.php:296
+msgctxt "as software development kit versions"
+msgid "SDK Versions"
+msgstr ""
+
+#: freemius/includes/i18n.php:298
+msgctxt "as plugin folder path"
+msgid "Plugin Path"
+msgstr ""
+
+#: freemius/includes/i18n.php:299
+msgctxt "as sdk path"
+msgid "SDK Path"
+msgstr ""
+
+#: freemius/includes/i18n.php:300
+#, php-format
+msgid "Add Ons of Plugin %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:301
+msgid "Are you sure you want to delete all Freemius data?"
+msgstr ""
+
+#: freemius/includes/i18n.php:303
+msgid "Actions"
+msgstr ""
+
+#: freemius/includes/i18n.php:304
+msgid "Delete All Accounts"
+msgstr ""
+
+#: freemius/includes/i18n.php:305
+msgid "Start Fresh"
+msgstr ""
+
+#: freemius/includes/i18n.php:306
+msgid "Clear API Cache"
+msgstr ""
+
+#: freemius/includes/i18n.php:307
+msgid "Sync Data From Server"
+msgstr ""
+
+#: freemius/includes/i18n.php:308
+msgid "Scheduled Crons"
+msgstr ""
+
+#: freemius/includes/i18n.php:309
+msgid "Plugins & Themes Sync"
+msgstr ""
+
+#: freemius/includes/i18n.php:313
+msgctxt "as congratulations"
+msgid "Congrats"
+msgstr ""
+
+#: freemius/includes/i18n.php:314
+msgctxt "exclamation"
+msgid "Oops"
+msgstr ""
+
+#: freemius/includes/i18n.php:315
+msgctxt "interjection expressing joy or exuberance"
+msgid "Yee-haw"
+msgstr ""
+
+#: freemius/includes/i18n.php:317
+msgctxt ""
+"(especially in electronic communication) used to express elation, "
+"enthusiasm, or triumph."
+msgid "W00t"
+msgstr ""
+
+#: freemius/includes/i18n.php:319
+msgctxt "a positive response"
+msgid "Right on"
+msgstr ""
+
+#: freemius/includes/i18n.php:320
+msgctxt ""
+"something somebody says when they are thinking about what you have just "
+"said. "
+msgid "Hmm"
+msgstr ""
+
+#: freemius/includes/i18n.php:322
+msgid "O.K"
+msgstr ""
+
+#: freemius/includes/i18n.php:323
+msgctxt "exclamation"
+msgid "Hey"
+msgstr ""
+
+#: freemius/includes/i18n.php:324
+msgctxt "advance notice of something that will need attention."
+msgid "Heads up"
+msgstr ""
+
+#: freemius/includes/i18n.php:329
+msgid "Seems like you got the latest release."
+msgstr ""
+
+#: freemius/includes/i18n.php:330
+msgid "You are all good!"
+msgstr ""
+
+#: freemius/includes/i18n.php:331
+msgid ""
+"Sorry, we could not complete the email update. Another user with the same "
+"email is already registered."
+msgstr ""
+
+#: freemius/includes/i18n.php:333
+#, php-format
+msgid ""
+"If you would like to give up the ownership of the plugin's account to %s "
+"click the Change Ownership button."
+msgstr ""
+
+#: freemius/includes/i18n.php:335
+msgid ""
+"Your email was successfully updated. You should receive an email with "
+"confirmation instructions in few moments."
+msgstr ""
+
+#: freemius/includes/i18n.php:337
+msgid "Your name was successfully updated."
+msgstr ""
+
+#: freemius/includes/i18n.php:338
+#, php-format
+msgid "You have successfully updated your %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:339
+msgid "Please provide your full name."
+msgstr ""
+
+#: freemius/includes/i18n.php:340
+#, php-format
+msgid ""
+"Verification mail was just sent to %s. If you can't find it after 5 min, "
+"please check your spam box."
+msgstr ""
+
+#: freemius/includes/i18n.php:342
+#, php-format
+msgid ""
+"Just letting you know that the add-ons information of %s is being pulled "
+"from an external server."
+msgstr ""
+
+#: freemius/includes/i18n.php:344
+msgid "No credit card required"
+msgstr ""
+
+#: freemius/includes/i18n.php:345
+msgid "Premium plugin version was successfully activated."
+msgstr ""
+
+#: freemius/includes/i18n.php:347
+#, php-format
+msgid "The upgrade of %s was successfully completed."
+msgstr ""
+
+#: freemius/includes/i18n.php:348
+#, php-format
+msgid "Your account was successfully activated with the %s plan."
+msgstr ""
+
+#: freemius/includes/i18n.php:350
+#, php-format
+msgid "Download the latest %s version now"
+msgstr ""
+
+#: freemius/includes/i18n.php:351
+msgid "Please follow these steps to complete the upgrade"
+msgstr ""
+
+#: freemius/includes/i18n.php:353
+#, php-format
+msgid "Download the latest %s version"
+msgstr ""
+
+#: freemius/includes/i18n.php:354
+msgid "Download the latest version"
+msgstr ""
+
+#: freemius/includes/i18n.php:355
+msgid "Deactivate the free version"
+msgstr ""
+
+#: freemius/includes/i18n.php:356
+msgid "Upload and activate the downloaded version"
+msgstr ""
+
+#: freemius/includes/i18n.php:357
+msgid "How to upload and activate?"
+msgstr ""
+
+#: freemius/includes/i18n.php:358
+#, php-format
+msgctxt "%s - product name, e.g. Facebook add-on was successfully..."
+msgid "%s Add-on was successfully purchased."
+msgstr ""
+
+#: freemius/includes/i18n.php:360
+#, php-format
+msgid "Your %s Add-on plan was successfully upgraded."
+msgstr ""
+
+#: freemius/includes/i18n.php:362
+msgid "Your email has been successfully verified - you are AWESOME!"
+msgstr ""
+
+#: freemius/includes/i18n.php:364
+msgid "Your plan was successfully upgraded."
+msgstr ""
+
+#: freemius/includes/i18n.php:365
+#, php-format
+msgid "Your plan was successfully changed to %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:366
+msgid ""
+"Your license has expired. You can still continue using the free plugin "
+"forever."
+msgstr ""
+
+#: freemius/includes/i18n.php:368
+msgid ""
+"Your license has been cancelled. If you think it's a mistake, please contact "
+"support."
+msgstr ""
+
+#: freemius/includes/i18n.php:370
+msgid "Your trial has been successfully started."
+msgstr ""
+
+#: freemius/includes/i18n.php:371
+msgid "Your license was successfully activated."
+msgstr ""
+
+#: freemius/includes/i18n.php:372
+msgid "It looks like your site currently doesn't have an active license."
+msgstr ""
+
+#: freemius/includes/i18n.php:374
+#, php-format
+msgid "Your license was successfully deactivated, you are back to the %s plan."
+msgstr ""
+
+#: freemius/includes/i18n.php:376
+msgid "It looks like the license deactivation failed."
+msgstr ""
+
+#: freemius/includes/i18n.php:378
+msgid "It looks like the license could not be activated."
+msgstr ""
+
+#: freemius/includes/i18n.php:380
+msgid "Error received from the server:"
+msgstr ""
+
+#: freemius/includes/i18n.php:381
+msgid ""
+"Your trial has expired. You can still continue using all our free features."
+msgstr ""
+
+#: freemius/includes/i18n.php:383
+#, php-format
+msgid ""
+"Your plan was successfully downgraded. Your %s plan license will expire in "
+"%s."
+msgstr ""
+
+#: freemius/includes/i18n.php:385
+msgid ""
+"Seems like we are having some temporary issue with your plan downgrade. "
+"Please try again in few minutes."
+msgstr ""
+
+#: freemius/includes/i18n.php:387
+msgid ""
+"It looks like you are not in trial mode anymore so there's nothing to "
+"cancel :)"
+msgstr ""
+
+#: freemius/includes/i18n.php:389
+#, php-format
+msgid "Your %s free trial was successfully cancelled."
+msgstr ""
+
+#: freemius/includes/i18n.php:391
+#, php-format
+msgctxt "%s - numeric version number"
+msgid "Version %s was released."
+msgstr ""
+
+#: freemius/includes/i18n.php:393
+#, php-format
+msgid "Please download %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:394
+#, php-format
+msgctxt "%s - plan name, as the latest professional version here"
+msgid "the latest %s version here"
+msgstr ""
+
+#: freemius/includes/i18n.php:396
+#, php-format
+msgid ""
+"How do you like %s so far? Test all our %s premium features with a %d-day "
+"free trial."
+msgstr ""
+
+#: freemius/includes/i18n.php:398
+msgctxt "call to action"
+msgid "Start free trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:399
+msgid "Starting trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:400
+msgid "Please wait"
+msgstr ""
+
+#: freemius/includes/i18n.php:401
+msgid ""
+"Seems like we are having some temporary issue with your trial cancellation. "
+"Please try again in few minutes."
+msgstr ""
+
+#: freemius/includes/i18n.php:403
+msgid "You already utilized a trial before."
+msgstr ""
+
+#: freemius/includes/i18n.php:404
+msgid "You are already running the plugin in a trial mode."
+msgstr ""
+
+#: freemius/includes/i18n.php:406
+#, php-format
+msgid "Plan %s do not exist, therefore, can't start a trial."
+msgstr ""
+
+#: freemius/includes/i18n.php:408
+#, php-format
+msgid "Plan %s does not support a trial period."
+msgstr ""
+
+#: freemius/includes/i18n.php:409
+msgid "None of the plugin's plans supports a trial period."
+msgstr ""
+
+#: freemius/includes/i18n.php:411
+msgid ""
+"Unexpected API error. Please contact the plugin's author with the following "
+"error."
+msgstr ""
+
+#: freemius/includes/i18n.php:413
+#, php-format
+msgid "No commitment for %s days - cancel anytime!"
+msgstr ""
+
+#: freemius/includes/i18n.php:414
+#, php-format
+msgid ""
+"Your license has expired. You can still continue using all the %s features, "
+"but you'll need to renew your license to continue getting updates and "
+"support."
+msgstr ""
+
+#: freemius/includes/i18n.php:416
+#, php-format
+msgid "Couldn't activate %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:417
+msgid "Please contact us with the following message:"
+msgstr ""
+
+#: freemius/includes/i18n.php:418
+#, php-format
+msgid ""
+"It looks like you are still on the %s plan. If you did upgrade or change "
+"your plan, it's probably an issue on our side - sorry."
+msgstr ""
+
+#: freemius/includes/i18n.php:420
+msgid "Please contact us here"
+msgstr ""
+
+#: freemius/includes/i18n.php:421
+#, php-format
+msgid ""
+"I have upgraded my account but when I try to Sync the License, the plan "
+"remains %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:425
+msgid "From unknown reason, the API connectivity test failed."
+msgstr ""
+
+#: freemius/includes/i18n.php:427
+msgid ""
+"It's probably a temporary issue on our end. Just to be sure, with your "
+"permission, would it be o.k to run another connectivity test?"
+msgstr ""
+
+#: freemius/includes/i18n.php:429
+msgid ""
+"We use PHP cURL library for the API calls, which is a very common library "
+"and usually installed out of the box. Unfortunately, cURL is not installed "
+"on your server."
+msgstr ""
+
+#: freemius/includes/i18n.php:431
+msgid ""
+"From unknown reason, CloudFlare, the firewall we use, blocks the connection."
+msgstr ""
+
+#: freemius/includes/i18n.php:433
+#, php-format
+msgctxt "as pluginX requires an access to our API"
+msgid "%s requires an access to our API."
+msgstr ""
+
+#: freemius/includes/i18n.php:435
+msgid ""
+"It looks like your server is using Squid ACL (access control lists), which "
+"blocks the connection."
+msgstr ""
+
+#: freemius/includes/i18n.php:437
+msgid "I don't know what is Squid or ACL, help me!"
+msgstr ""
+
+#: freemius/includes/i18n.php:438 freemius/includes/i18n.php:445
+#, php-format
+msgid ""
+"We'll make sure to contact your hosting company and resolve the issue. You "
+"will get a follow-up email to %s once we have an update."
+msgstr ""
+
+#: freemius/includes/i18n.php:440
+msgid "I'm a system administrator"
+msgstr ""
+
+#: freemius/includes/i18n.php:441
+#, php-format
+msgid ""
+"Great, please whitelist the following domains: %s. Once you done, deactivate "
+"the plugin and activate it again."
+msgstr ""
+
+#: freemius/includes/i18n.php:443
+msgid "I don't know what is cURL or how to install it, help me!"
+msgstr ""
+
+#: freemius/includes/i18n.php:447
+msgid ""
+"Great, please install cURL and enable it in your php.ini file. To make sure "
+"it was successfully activated, use 'phpinfo()'. Once activated, deactivate "
+"the plugin and reactivate it back again."
+msgstr ""
+
+#: freemius/includes/i18n.php:449
+msgid ""
+"We are sure it's an issue on our side and more than happy to resolve it for "
+"you ASAP if you give us a chance."
+msgstr ""
+
+#: freemius/includes/i18n.php:451
+msgid ""
+"Sorry for the inconvenience and we are here to help if you give us a chance."
+msgstr ""
+
+#: freemius/includes/i18n.php:453
+msgid "Yes - I'm giving you a chance to fix it"
+msgstr ""
+
+#: freemius/includes/i18n.php:454
+#, php-format
+msgid ""
+"We will do our best to whitelist your server and resolve this issue ASAP. "
+"You will get a follow-up email to %s once we have an update."
+msgstr ""
+
+#: freemius/includes/i18n.php:456
+msgid "Let's try your previous version"
+msgstr ""
+
+#: freemius/includes/i18n.php:457
+msgid "Uninstall this version and install the previous one."
+msgstr ""
+
+#: freemius/includes/i18n.php:459
+msgid "That's exhausting, please deactivate"
+msgstr ""
+
+#: freemius/includes/i18n.php:460
+msgid ""
+"We feel your frustration and sincerely apologize for the inconvenience. Hope "
+"to see you again in the future."
+msgstr ""
+
+#: freemius/includes/i18n.php:462
+#, php-format
+msgid ""
+"Thank for giving us the chance to fix it! A message was just sent to our "
+"technical staff. We will get back to you as soon as we have an update to %s. "
+"Appreciate your patience."
+msgstr ""
+
+#: freemius/includes/i18n.php:464
+#, php-format
+msgctxt "%1s - plugin title, %2s - API domain"
+msgid ""
+"Your server is blocking the access to Freemius' API, which is crucial for "
+"%1s synchronization. Please contact your host to whitelist %2s"
+msgstr ""
+
+#: freemius/includes/i18n.php:466
+msgid ""
+"It seems like one of the authentication parameters is wrong. Update your "
+"Public Key, Secret Key & User ID, and try again."
+msgstr ""
+
+#: freemius/includes/i18n.php:470
+#, php-format
+msgid ""
+"Please check your mailbox, you should receive an email via %s to confirm the "
+"ownership change. From security reasons, you must confirm the change within "
+"the next 15 min. If you cannot find the email, please check your spam folder."
+msgstr ""
+
+#: freemius/includes/i18n.php:472
+#, php-format
+msgid ""
+"Thanks for confirming the ownership change. An email was just sent to %s for "
+"final approval."
+msgstr ""
+
+#: freemius/includes/i18n.php:474
+#, php-format
+msgid "%s is the new owner of the account."
+msgstr ""
+
+#: freemius/includes/i18n.php:476
+#, php-format
+msgctxt "addonX cannot run without pluginY"
+msgid "%s cannot run without %s."
+msgstr ""
+
+#: freemius/includes/i18n.php:478
+#, php-format
+msgctxt "addonX cannot run..."
+msgid "%s cannot run without the plugin."
+msgstr ""
+
+#: freemius/includes/i18n.php:480
+#, php-format
+msgctxt "pluginX activation was successfully..."
+msgid "%s activation was successfully completed."
+msgstr ""
+
+#: freemius/includes/i18n.php:482
+msgctxt "Plugin installer section title"
+msgid "Features & Pricing"
+msgstr ""
+
+#: freemius/includes/i18n.php:484
+msgid "Add-on must be deployed to WordPress.org or Freemius."
+msgstr ""
+
+#: freemius/includes/i18n.php:486
+msgid "Paid add-on must be deployed to Freemius."
+msgstr ""
+
+#: freemius/includes/i18n.php:490
+#, php-format
+msgid ""
+"%s is a premium only add-on. You have to purchase a license first before "
+"activating the plugin."
+msgstr ""
+
+#: freemius/includes/i18n.php:492
+#, php-format
+msgid ""
+"%s free trial was successfully cancelled. Since the add-on is premium only "
+"it was automatically deactivated. If you like to use it in the future, "
+"you'll have to purchase a license."
+msgstr ""
+
+#: freemius/includes/i18n.php:498
+msgctxt "as every month"
+msgid "Monthly"
+msgstr ""
+
+#: freemius/includes/i18n.php:499
+msgctxt "as monthly period"
+msgid "mo"
+msgstr ""
+
+#: freemius/includes/i18n.php:500
+msgctxt "as once a year"
+msgid "Annual"
+msgstr ""
+
+#: freemius/includes/i18n.php:501
+msgctxt "as once a year"
+msgid "Annually"
+msgstr ""
+
+#: freemius/includes/i18n.php:502
+msgctxt "as once a year"
+msgid "Once"
+msgstr ""
+
+#: freemius/includes/i18n.php:503
+msgctxt "as annual period"
+msgid "year"
+msgstr ""
+
+#: freemius/includes/i18n.php:504
+msgid "Lifetime"
+msgstr ""
+
+#: freemius/includes/i18n.php:505
+msgctxt "e.g. the best product"
+msgid "Best"
+msgstr ""
+
+#: freemius/includes/i18n.php:506
+#, php-format
+msgctxt "e.g. billed monthly"
+msgid "Billed %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:507
+#, php-format
+msgctxt "as a discount of $5 or 10%"
+msgid "Save %s"
+msgstr ""
+
+#: freemius/includes/i18n.php:509
+msgid "View details"
+msgstr ""
+
+#: freemius/includes/i18n.php:513
+msgctxt "button label"
+msgid "Approve & Start Trial"
+msgstr ""
+
+#: freemius/includes/i18n.php:515
+#, php-format
+msgid ""
+"You are 1-click away from starting your %1$s-day free trial of the %2$s plan."
+msgstr ""
+
+#: freemius/includes/i18n.php:517
+#, php-format
+msgid ""
+"For compliance with the WordPress.org guidelines, before we start the trial "
+"we ask that you opt-in with your user and non-sensitive site information, "
+"allowing the plugin to periodically send data to %s to check for version "
+"updates and to validate your trial."
+msgstr ""
+
+#: freemius/includes/i18n.php:523
+msgid "Business name"
+msgstr ""
+
+#: freemius/includes/i18n.php:524
+msgid "Tax / VAT ID"
+msgstr ""
+
+#: freemius/includes/i18n.php:525
+#, php-format
+msgid "Address Line %d"
+msgstr ""
+
+#: freemius/includes/i18n.php:526
+msgid "Country"
+msgstr ""
+
+#: freemius/includes/i18n.php:527
+msgid "Select Country"
+msgstr ""
+
+#: freemius/includes/i18n.php:528
+msgid "City"
+msgstr ""
+
+#: freemius/includes/i18n.php:529
+msgid "Town"
+msgstr ""
+
+#: freemius/includes/i18n.php:530
+msgid "State"
+msgstr ""
+
+#: freemius/includes/i18n.php:531
+msgid "Province"
+msgstr ""
+
+#: freemius/includes/i18n.php:532
+msgid "ZIP / Postal Code"
+msgstr ""
+
+#: includes/class-litespeed-cache.php:542
+msgid ""
+"The installed WordPress version is too old for the LiteSpeed Cache Plugin."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:544
+#, php-format
+msgid "The LiteSpeed Cache Plugin requires at least WordPress %s."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:546
+#: includes/class-litespeed-cache.php:565
+#, php-format
+msgid ""
+"Please upgrade or go to <a href=\"%s\">active plugins</a> and deactivate the "
 "LiteSpeed Cache plugin to hide this message."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:569
-msgid ""
-"LiteSpeed Cache was unable to write to your wp-config.php file. Please add "
-"the following to your wp-config.php file located under your WordPress root "
-"directory: define('WP_CACHE', true);"
+#: includes/class-litespeed-cache.php:559
+msgid "The installed PHP version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:909
+#: includes/class-litespeed-cache.php:561
+#, php-format
+msgid "The LiteSpeed Cache Plugin requires at least PHP %s."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:563
+#, php-format
+msgid ""
+"The currently installed version is PHP %s, which is out-dated and insecure."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:579
+msgid "LiteSpeed Cache was unable to write to the wp-config.php file."
+msgstr ""
+
+#: includes/class-litespeed-cache.php:580
+#, php-format
+msgid "Please add the following to the wp-config.php file: %s"
+msgstr ""
+
+#: includes/class-litespeed-cache.php:1000
 msgid "Failed to purge by category, invalid category slug."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:916
+#: includes/class-litespeed-cache.php:1007
 #, php-format
 msgid "Failed to purge by category, does not exist: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:922
+#: includes/class-litespeed-cache.php:1013
 #, php-format
 msgid "Purge category %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:945
+#: includes/class-litespeed-cache.php:1036
 #, php-format
 msgid "Failed to purge by Post ID, given ID is not numeric: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:951
+#: includes/class-litespeed-cache.php:1042
 #, php-format
 msgid ""
 "Failed to purge by Post ID, given ID does not exist or is not published: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:957
+#: includes/class-litespeed-cache.php:1048
 #, php-format
 msgid "Purge Post ID %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:980
+#: includes/class-litespeed-cache.php:1071
 msgid "Failed to purge by tag, invalid tag slug."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:987
+#: includes/class-litespeed-cache.php:1078
 #, php-format
 msgid "Failed to purge by tag, does not exist: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:993
+#: includes/class-litespeed-cache.php:1084
 #, php-format
 msgid "Purge tag %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1017
+#: includes/class-litespeed-cache.php:1108
 msgid "Failed to purge by url, contained \"<\"."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1026
+#: includes/class-litespeed-cache.php:1117
 #, php-format
 msgid "Failed to purge by url, invalid input: %s."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1033
+#: includes/class-litespeed-cache.php:1124
 #, php-format
 msgid "Purge url %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1052
+#: includes/class-litespeed-cache.php:1143
 msgid "ERROR: Something went wrong with the form! Please try again."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1061
+#: includes/class-litespeed-cache.php:1152
 msgid "ERROR: Tried to purge list with empty list."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1081
+#: includes/class-litespeed-cache.php:1172
 msgid "ERROR: Bad Purge By selected value."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:1161
-msgid "NOTICE: Database login cookie did not match your login cookie."
-msgstr ""
-
-#: includes/class-litespeed-cache.php:1162
-msgid ""
-"If you recently changed the cookie in the settings, please log out and back "
-"in again."
-msgstr ""
-
-#: includes/class-litespeed-cache.php:1163
-msgid "If not, please verify your LiteSpeed Cache setting's Advanced tab."
-msgstr ""
-
-#: includes/class-litespeed-cache.php:1166
-msgid ""
-"If using OpenLiteSpeed, you may need to restart the server for the changes "
-"to take effect."
-msgstr ""
-
-#: includes/class-litespeed-cache.php:1245
-msgid ""
-"NOTICE: Database login cookie does not match the cookie used to access the "
-"page."
-msgstr ""
-
-#: includes/class-litespeed-cache.php:1246
-msgid "Please have the admin check the LiteSpeed Cache settings."
-msgstr ""
-
-#: includes/class-litespeed-cache.php:1247
-msgid "This error may appear if you are logged into another web application."
-msgstr ""
-
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:302
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:311
 msgid "WooCommerce Configurations"
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:306
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:315
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:307
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:316
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:308
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:317
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:309
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:318
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:310
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:319
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:311
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:320
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:314
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:323
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:315
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:324
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:316
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:325
+#, php-format
 msgid ""
-"For example, if the homepage for your site is located at https://www.example."
-"com, your shop page may be located at https://www.example.com/shop."
+"For example, if the homepage for the site is located at %1$s, the shop page "
+"may be located at %2$s."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:335
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:346
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:350
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:364
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:363
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:381
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:364
+#: thirdparty/class-litespeed-cache-thirdparty-woocommerce.php:382
 #, php-format
 msgid "To test the cart, visit the %s."
 msgstr ""
