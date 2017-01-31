@@ -36,12 +36,15 @@ Additional plugin features:
 * Yoast SEO
 * Wordfence Security
 * NextGen Gallery
+* ShortPixel
 * Aelia CurrencySwitcher
 * Autoptimize
 * Better WP Minify
 * WP Touch
 
 = Known Uncompatible Plugins =
+
+* No known uncompatible plugins at this time.
 
 For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/forum/ "forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com
 
