@@ -6,7 +6,7 @@ Tags: admin, cache, http2, litespeed, performance, widget, optimization,
  scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 1.0.14
+Stable tag: 1.0.14.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
@@ -325,6 +325,9 @@ point to any plugin that needs to add cache tags to the current request.
 6. Cache Hit Example
 
 == Changelog ==
+= 1.0.14.1 - January 31 2017 =
+* [UPDATE] Removed Freemius integration due to feedback.
+
 = 1.0.14 - January 30 2017 =
 * [NEW] Added error page caching. Currently supports 403, 404, 500s.
 * [NEW] Added a purge errors action.
