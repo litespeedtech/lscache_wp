@@ -46,8 +46,6 @@ class LiteSpeed_Cache_Config
 	const OPID_403_TTL = '403_ttl';
 	const OPID_404_TTL = '404_ttl';
 	const OPID_500_TTL = '500_ttl';
-	const OPID_NOCACHE_VARS = 'nocache_vars' ;
-	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
 	const PURGE_ALL_PAGES = '-' ;
@@ -263,8 +261,6 @@ class LiteSpeed_Cache_Config
 			self::OPID_403_TTL => 3600,
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
-			self::OPID_NOCACHE_VARS => '',
-			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
 			self::OPID_EXCLUDES_URI => '',
 			self::OPID_EXCLUDES_CAT => '',
@@ -514,6 +510,15 @@ class LiteSpeed_Cache_Config
 			if ( $count == 0 ) {
 				$new_file_content = preg_replace('/(\$table_prefix)/',
 								"define('WP_CACHE', true);\n$1", $file_content) ;
+				if ( $count == 0 ) {
+					$new_file_content = preg_replace('/(\<\?php)/',
+						"$1\ndefine('WP_CACHE', true);", $file_content, -1, $count) ;
+				}
+
+				if ($count == 0) {
+					error_log('wp-config file did not find a place to insert define.');
+					return false;
+				}
 			}
 		}
 		else {
