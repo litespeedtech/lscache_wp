@@ -524,21 +524,40 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$zip = new ZipArchive;
 		$dir = dirname($path);
+		$arr = scandir($dir);
+		$parsed = preg_grep('/\.htaccess_lscachebak_[0-9]+/', $arr);
+
+		if (empty($parsed)) {
+			return false;
+		}
+
 		$res = $zip->open($dir . '/lscache_htaccess_bak.zip',
 			ZipArchive::CREATE | ZipArchive::OVERWRITE);
-		if ($res === false) {
+		if ($res !== true) {
 			error_log('Warning: Failed to archive wordpress backups in ' . $dir);
 			$ret = copy($path, $path . $bak);
 			return $ret;
 		}
-		$archived = $zip->addPattern('/\.htaccess_lscachebak_[0-9]+/', $dir);
-		$zip->close();
+
+		foreach ($parsed as $key => $val) {
+			$parsed[$key] = $dir . '/' . $val;
+			if (!$zip->addFile($parsed[$key], $val)) {
+				error_log('Warning: Failed to archive backup file ' . $val);
+				$zip->close();
+				$ret = copy($path, $path . $bak);
+				return $ret;
+			}
+		}
+
+		$ret = $zip->close();
+		if (!$ret) {
+			error_log('Warning: Failed to close archive.');
+			return $ret;
+		}
 		$bak = '_lscachebak_01';
 
-		if (!empty($archived)) {
-			foreach ($archived as $delFile) {
-				unlink($delFile);
-			}
+		foreach ($parsed as $delFile) {
+			unlink($delFile);
 		}
 
 		$ret = copy($path, $path . $bak);
