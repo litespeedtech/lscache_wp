@@ -32,9 +32,15 @@ class LiteSpeed_Cache
 	const ADMINQS_KEY = 'LSCWP_CTRL';
 	const ADMINQS_DISMISS = 'DISMISS';
 	const ADMINQS_PURGE = 'PURGE';
+	const ADMINQS_PURGEBY = 'PURGEBY';
 	const ADMINQS_PURGEALL = 'PURGEALL';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
 	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
+
+	const ADMINNONCE_PURGEALL = 'litespeed-purgeall';
+	const ADMINNONCE_PURGENETWORKALL = 'litespeed-purgeall-network';
+	const ADMINNONCE_PURGEBY = 'litespeed-purgeby';
+	const ADMINNONCE_DISMISS = 'litespeed-dismiss';
 
 	const CACHECTRL_NOCACHE = 0;
 	const CACHECTRL_CACHE = 1;
@@ -981,6 +987,19 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * The purge by callback used to purge a list of tags.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param string $tags A comma delimited list of tags.
+	 */
+	public function purgeby_cb($tags)
+	{
+		$tag_arr = explode(',', $tags);
+		self::add_purge_tags($tag_arr);
+	}
+
+	/**
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
 	 * @since 1.0.7
@@ -1598,6 +1617,31 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * On admin cache actions, verify the nonce to make sure the request is valid.
+	 *
+	 * @access private
+	 * @since 1.0.15
+	 * @param string $nonce The nonce used by the request.
+	 * @return bool True if the nonce is valid, false otherwise.
+	 */
+	private static function verify_admin_nonce($nonce)
+	{
+		$valid_nonces = array(
+			self::ADMINNONCE_PURGEALL,
+			self::ADMINNONCE_PURGENETWORKALL,
+			self::ADMINNONCE_PURGEBY,
+			self::ADMINNONCE_DISMISS
+		);
+
+		foreach ($valid_nonces as $valid_nonce) {
+			if (wp_verify_nonce($nonce, $valid_nonce)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Check the query string to see if it contains a LSCWP_CTRL.
 	 * Also will compare IPs to see if it is a valid command.
 	 *
@@ -1613,9 +1657,7 @@ class LiteSpeed_Cache
 		$action = $_GET[self::ADMINQS_KEY];
 		if ((is_admin()) || (is_network_admin())) {
 			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
-				|| ((wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)
-					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall-network') === false)
-					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-dismiss') === false))) {
+				|| (self::verify_admin_nonce($_GET['_wpnonce']) === false)) {
 				return;
 			}
 		}
@@ -1646,6 +1688,11 @@ class LiteSpeed_Cache
 				elseif ($action == self::ADMINQS_PURGEALL) {
 					$this->cachectrl = self::CACHECTRL_NOCACHE;
 					$this->purge_all();
+				}
+				elseif (($action == self::ADMINQS_PURGEBY)
+					&& (isset($_GET['purge_tags']))) {
+					$this->cachectrl = self::CACHECTRL_NOCACHE;
+					$this->purgeby_cb($_GET['purge_tags']);
 				}
 				else {
 					break;

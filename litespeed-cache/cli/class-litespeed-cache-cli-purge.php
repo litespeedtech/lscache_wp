@@ -13,9 +13,10 @@ class LiteSpeed_Cache_Cli_Purge
 	 * @since 1.0.14
 	 * @param string $action The action to perform
 	 * @param string $nonce_val The value to use for the nonce.
+	 * @param array $extra Any extra parameters needed to be sent.
 	 * @return mixed The http request return.
 	 */
-	private function send_request($action, $nonce_val)
+	private function send_request($action, $nonce_val, $extra = array())
 	{
 		$nonce = wp_create_nonce($nonce_val);
 
@@ -24,6 +25,9 @@ class LiteSpeed_Cache_Cli_Purge
 			LiteSpeed_Cache::ADMINQS_KEY => $action,
 			'_wpnonce' => $nonce
 		);
+		if (!empty($extra)) {
+			$data = array_merge($data, $extra);
+		}
 
 		$url = admin_url('admin-ajax.php');
 		WP_CLI::debug('url is ' . $url);
@@ -43,9 +47,11 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	function all($args, $assoc_args)
 	{
-		$nonce_val = 'litespeed-purgeall';
 		if (is_multisite()) {
-			$nonce_val .= '-network';
+			$nonce_val = LiteSpeed_Cache::ADMINNONCE_PURGENETWORKALL;
+		}
+		else {
+			$nonce_val = LiteSpeed_Cache::ADMINNONCE_PURGEALL;
 		}
 
 		$purge_ret = $this->send_request(LiteSpeed_Cache::ADMINQS_PURGEALL,
@@ -59,6 +65,16 @@ class LiteSpeed_Cache_Cli_Purge
 		}
 	}
 
+	/**
+	 * List all site domains and ids on the network.
+	 *
+	 * For use with the blog subcommand.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # List all the site domains and ids in a table.
+	 *     $ wp lscache-purge network_list
+	 */
 	function network_list($args, $assoc_args)
 	{
 		if (!is_multisite()) {
@@ -102,7 +118,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	function blog($args, $assoc_args)
 	{
-		$nonce_val = 'litespeed-purgeall';
 		if (!is_multisite()) {
 			WP_CLI::error('Not a multisite installation.');
 			return;
@@ -124,7 +139,7 @@ class LiteSpeed_Cache_Cli_Purge
 		switch_to_blog($blogid);
 
 		$purge_ret = $this->send_request(LiteSpeed_Cache::ADMINQS_PURGEALL,
-			$nonce_val);
+			LiteSpeed_Cache::ADMINNONCE_PURGEALL);
 		if ($purge_ret->success) {
 			WP_CLI::success(__('Purged the blog!', 'litespeed-cache'));
 		}
@@ -186,6 +201,116 @@ class LiteSpeed_Cache_Cli_Purge
 				. $purge_ret->status_code);
 		}
 	}
+
+	/**
+	 * Helper function for purging by ids.
+	 *
+	 * @access private
+	 * @since 1.0.15
+	 * @param array $args The id list to parse.
+	 * @param string $prefix
+	 * @param function(int $id) $callback The callback function to check the id.
+	 */
+	private function purgeby_helper($args, $prefix, $callback)
+	{
+		$filtered = array();
+		foreach ($args as $val) {
+			if (!ctype_digit($val)) {
+				WP_CLI::debug('[LSCACHE] Skip val, not a number. ' . $val);
+				continue;
+			}
+			$term = $callback($val);
+			if (!empty($term)) {
+				$filtered[] = $prefix . $val;
+			}
+			else {
+				WP_CLI::debug('[LSCACHE] Skip val, not a valid term. ' . $val);
+			}
+		}
+
+		if (empty($filtered)) {
+			WP_CLI::error('Arguments must be integer ids.');
+			return;
+		}
+
+		$str = implode(',', $filtered);
+
+		WP_CLI::line('Will purge the following cache tags: ' . $str);
+
+		$purge_ret = $this->send_request(LiteSpeed_Cache::ADMINQS_PURGEBY,
+			LiteSpeed_Cache::ADMINNONCE_PURGEBY, array('purge_tags' => $str));
+		if ($purge_ret->success) {
+			WP_CLI::success(__('Purged the tags!', 'litespeed-cache'));
+		}
+		else {
+			WP_CLI::error('Something went wrong! Got '
+				. $purge_ret->status_code);
+		}
+
+	}
+
+	/**
+	 * Purges all cache tags for a WordPress tag
+	 *
+	 * ## OPTIONS
+	 *
+	 * <ids>...
+	 * : the Term IDs to purge.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Purge the tag ids 1, 3, and 5
+	 *     $ wp lscache-purge tag 1 3 5
+	 *
+	 */
+	function tag($args, $assoc_args)
+	{
+		$this->purgeby_helper($args,
+			LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM, 'get_tag');
+	}
+
+	/**
+	 * Purges all cache tags for a WordPress category
+	 *
+	 * ## OPTIONS
+	 *
+	 * <ids>...
+	 * : the Term IDs to purge.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Purge the category ids 1, 3, and 5
+	 *     $ wp lscache-purge category 1 3 5
+	 *
+	 */
+	function category($args, $assoc_args)
+	{
+		$this->purgeby_helper($args,
+			LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM, 'get_category');
+	}
+
+	/**
+	 * Purges all cache tags for a WordPress Post/Product
+	 *
+	 * @alias product
+	 *
+	 * ## OPTIONS
+	 *
+	 * <ids>...
+	 * : the Post IDs to purge.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Purge the post ids 1, 3, and 5
+	 *     $ wp lscache-purge post_id 1 3 5
+	 *
+	 */
+	function post_id($args, $assoc_args)
+	{
+		$this->purgeby_helper($args,
+			LiteSpeed_Cache_Tags::TYPE_POST, 'get_post');
+	}
+
 }
 
 WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );
