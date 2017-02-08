@@ -88,7 +88,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Gets the currently used rules file path.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @return string The rules file path.
 	 */
 	public static function get_home_path()
@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Gets the site .htaccess path. Useful if subdirectory install.
 	 *
 	 * @since 1.0.7
-	 * @access private
+	 * @access public
 	 * @return string The site path.
 	 */
 	public static function get_site_path()
@@ -336,7 +336,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Gets the contents of the rules file.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $content Returns the content of the file or an error description.
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
@@ -577,7 +577,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @since 1.0.12 - Introduce $backup parameter and make function public
-	 * @access private
+	 * @access public
 	 * @param string $content The new content to put into the rules file.
 	 * @param boolean $cleanup True to strip extra slashes, false otherwise.
 	 * @param string $path The file path to edit.
@@ -692,7 +692,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Finds a specified common rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $wrapper The wrapper to look for.
 	 * @param string $cond The condition to look for.
 	 * @param string $match Returns the rewrite rule on success, error message on failure.
@@ -799,7 +799,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * FInds a specified rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $wrapper The wrapper to look for.
 	 * @param string $match Returns the rewrite rule on success, error message on failure.
 	 * @param string $sub Returns the substitute on success, error message on failure.
@@ -919,7 +919,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Parses the input to see if there is a need to edit the .htaccess file.
 	 *
 	 * @since 1.0.8
-	 * @access private
+	 * @access public
 	 * @param array $options The current options
 	 * @param array $input The input
 	 * @param array $errors Errors array to add error messages to.
@@ -1303,7 +1303,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Validate common rewrite rules configured by the admin.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param array $diff The rules that need to be set.
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
