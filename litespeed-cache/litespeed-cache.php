@@ -54,6 +54,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache-config.php';
 	require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache-tags.php';
 	require_once plugin_dir_path(__FILE__) . 'admin/class-litespeed-cache-admin.php';
+	require_once plugin_dir_path(__FILE__) . 'admin/class-litespeed-cache-admin-display.php';
+	require_once plugin_dir_path(__FILE__) . 'admin/class-litespeed-cache-admin-rules.php';
 	require_once plugin_dir_path(__FILE__) . 'cli/class-litespeed-cache-cli-admin.php';
 	require_once plugin_dir_path(__FILE__) . 'cli/class-litespeed-cache-cli-purge.php';
 }

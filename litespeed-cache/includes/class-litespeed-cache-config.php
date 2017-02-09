@@ -212,11 +212,11 @@ class LiteSpeed_Cache_Config
 	 * Gets the default single site options
 	 *
 	 * @since 1.0.0
-	 * @access protected
+	 * @access public
 	 * @param bool $include_thirdparty Whether to include the thirdparty options.
 	 * @return array An array of the default options.
 	 */
-	protected function get_default_options($include_thirdparty = true)
+	public function get_default_options($include_thirdparty = true)
 	{
 		$default_purge_options = array(
 			self::PURGE_FRONT_PAGE,
@@ -381,14 +381,52 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Helper function to convert the options to replicate the input format.
+	 *
+	 * The only difference is the checkboxes.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param array $options The options array to port to input format.
+	 */
+	public static function convert_options_to_input(&$options)
+	{
+		$checkboxes =
+			array(
+				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+				LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+				LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
+				LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+				LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
+				LiteSpeed_Cache_Config::OPID_CACHE_RES,
+				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+			);
+
+		if (isset($options[self::OPID_PURGE_BY_POST])) {
+			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]);
+
+			foreach ($purge_opts as $purge_opt) {
+				$options['purge_' . $purge_opt] = $purge_opt;
+			}
+		}
+
+		foreach ($checkboxes as $checkbox) {
+			if ((isset($options[$checkbox])) && ($options[$checkbox])) {
+				$options['lscwp_' . $checkbox] = $checkbox;
+			}
+		}
+
+	}
+
+	/**
 	 * Get the difference between the current options and the default options.
 	 *
 	 * @since 1.0.11
-	 * @access private
+	 * @access public
 	 * @param array $default_options The default options.
 	 * @param array $options The current options.
 	 */
-	private static function option_diff($default_options, &$options)
+	public static function option_diff($default_options, &$options)
 	{
 		$dkeys = array_keys($default_options);
 		$keys = array_keys($options);

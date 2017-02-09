@@ -73,7 +73,6 @@ class LiteSpeed_Cache_Cli_Admin
 
 		$config = LiteSpeed_Cache::plugin()->get_config();
 		$options = $config->get_options();
-		$purge_options = $config->get_purge_options();
 
 		if (!isset($options) || ((!isset($options[$key]))
 				&& (!isset(self::$purges[$key])))) {
@@ -81,15 +80,7 @@ class LiteSpeed_Cache_Cli_Admin
 			return;
 		}
 
-		foreach ($purge_options as $purge_opt) {
-			$options['purge_' . $purge_opt] = $purge_opt;
-		}
-
-		foreach (self::$checkboxes as $checkbox) {
-			if ((isset($options[$checkbox])) && ($options[$checkbox])) {
-				$options['lscwp_' . $checkbox] = $checkbox;
-			}
-		}
+		LiteSpeed_Cache_Config::convert_options_to_input($options);
 
 		switch ($key) {
 		case LiteSpeed_Cache_Config::OPID_VERSION:
@@ -227,6 +218,110 @@ class LiteSpeed_Cache_Cli_Admin
 		$buf = WP_CLI::colorize("%CThe list of PURGE ON POST UPDATE options:%n\n");
 		WP_CLI::line($buf);
 		WP_CLI\Utils\format_items('table', $purge_out, array('key', 'value'));
+	}
+
+	/**
+	 * Export plugin options to a file.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--filename=<path>]
+	 * : The default path used is CURRENTDIR/lscache_wp_options_DATE-TIME.txt.
+	 * To select a different file, use this option.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Export options to a file.
+	 *     $ wp lscache-admin export_options
+	 *
+	 */
+	function export_options($args, $assoc_args)
+	{
+		$options = LiteSpeed_Cache::plugin()->get_config()->get_options();
+		$output = '';
+		if (isset($assoc_args['filename'])) {
+			$file = $assoc_args['filename'];
+		}
+		else {
+			$file = getcwd() . '/lscache_wp_options_' . date('d_m_Y-His')
+				. '.txt';
+		}
+
+		if (!is_writable(dirname($file))) {
+			WP_CLI::error('Directory not writable.');
+			return;
+		}
+
+		foreach ($options as $key => $val)
+		{
+			$output .= sprintf("%s=%s\n", $key, $val);
+		}
+		$output .= "\n";
+
+		if (file_put_contents($file, $output) === false) {
+			WP_CLI::error('Failed to create file.');
+		}
+		else {
+			WP_CLI::success('Created file ' . $file);
+		}
+	}
+
+	/**
+	 * Import plugin options from a file.
+	 *
+	 * The file must be formatted as such:
+	 * option_key=option_value
+	 * One per line.
+	 * A Semicolon at the beginning of the line indicates a comment and will be skipped.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <file>
+	 * : The file to import options from.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Import options from CURRENTDIR/options.txt
+	 *     $ wp lscache-admin import_options options.txt
+	 *
+	 */
+	function import_options($args, $assoc_args)
+	{
+		$file = $args[0];
+		if (!file_exists($file) || !is_readable($file)) {
+			WP_CLI::error('File does not exist or is not readable.');
+		}
+		$config = LiteSpeed_Cache::plugin()->get_config();
+		$content = file_get_contents($file);
+		preg_match_all("/^[^;][^=]+=[^=\n\r]*$/m", $content, $input);
+		$options = array();
+		$default = $config->get_options();
+
+		foreach ($input as $opt) {
+			$kv = explode('=', $opt);
+			$options[$kv[0]] = $kv[1];
+		}
+
+		LiteSpeed_Cache_Config::option_diff($default, $options);
+
+		LiteSpeed_Cache_Config::convert_options_to_input($options);
+
+		$admin = new LiteSpeed_Cache_Admin(LiteSpeed_Cache::PLUGIN_NAME,
+			LiteSpeed_Cache::PLUGIN_VERSION);
+
+		$output = $admin->validate_plugin_settings($options);
+
+		global $wp_settings_errors;
+
+		if (!empty($wp_settings_errors)) {
+			foreach ($wp_settings_errors as $err) {
+				WP_CLI::error($err['message']);
+			}
+			return;
+		}
+		WP_CLI::success('Options updated. Please purge the cache. New options: '
+			. print_r($output, true));
+
 	}
 }
 
