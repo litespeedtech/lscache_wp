@@ -68,7 +68,7 @@ class LiteSpeed_Cache_Admin_Error
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.7
+	 * @since    1.0.15
 	 * @access   private
 	 */
 	private function __construct()
@@ -78,10 +78,10 @@ class LiteSpeed_Cache_Admin_Error
 	/**
 	 * Get the LiteSpeed_Cache_Admin_Error object.
 	 *
-	 * @since 1.0.7
+	 * @since 1.0.15
 	 * @access public
 	 * @return LiteSpeed_Cache_Admin_Error Static instance of the
-	 *  LiteSpeed_Cache_Admin_Display class.
+	 *  LiteSpeed_Cache_Admin_Error class.
 	 */
 	public static function get_instance()
 	{
@@ -92,6 +92,14 @@ class LiteSpeed_Cache_Admin_Error
 		return self::$instance;
 	}
 
+	/**
+	 * Get the error message by code.
+	 *
+	 * @access private
+	 * @since 1.0.15
+	 * @param int $err_code The error code to retrieve.
+	 * @return string The error message if matching, else an empty string.
+	 */
 	private function _get($err_code)
 	{
 
@@ -243,6 +251,16 @@ class LiteSpeed_Cache_Admin_Error
 			);
 	}
 
+	/**
+	 * Gets an error message by error code.
+	 *
+	 * This function will validate if the error code passed in is numeric.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param int $err_code The error code to retrieve.
+	 * @return string The error message if valid, else empty string.
+	 */
 	public static function get_error($err_code)
 	{
 		if (!is_numeric($err_code)) {
@@ -251,6 +269,18 @@ class LiteSpeed_Cache_Admin_Error
 		return self::get_instance()->_get($err_code);
 	}
 
+	/**
+	 * Builds an error message by error code.
+	 *
+	 * This function assumes that the error message retrieved expects
+	 * arguments.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param int $err_code The error code to retrieve.
+	 * @param mixed $args An array if multiple arguments, else a single arg.
+	 * @return string The built string on success, else empty string.
+	 */
 	public static function build_error($err_code, $args)
 	{
 		if (!is_numeric($err_code)) {
@@ -266,7 +296,18 @@ class LiteSpeed_Cache_Admin_Error
 		return sprintf($error, $args);
 	}
 
-	// assume red for now.
+	/**
+	 * Adds an error to the admin notice system.
+	 *
+	 * This function will get the error message by error code and arguments
+	 * and append it to the list of outgoing errors.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param int $err_code The error code to retrieve.
+	 * @param mixed $args Null if no arguments, an array if multiple arguments,
+	 * else a single argument.
+	 */
 	public static function add_error($err_code, $args = null)
 	{
 		if (!is_null($args)) {
@@ -293,6 +334,12 @@ class LiteSpeed_Cache_Admin_Error
 			. $error . '</p></div>';
 	}
 
+	/**
+	 * Hooked to the applicable notice display hook. Displays all error messages.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 */
 	public function display_errors()
 	{
 		foreach ($this->notices as $msg) {
