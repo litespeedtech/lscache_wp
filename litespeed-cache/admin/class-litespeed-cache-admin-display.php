@@ -163,10 +163,8 @@ class LiteSpeed_Cache_Admin_Display
 	public function check_license($config)
 	{
 		if ($config->is_caching_allowed() == false) {
-			$sentences = self::build_paragraph(
-				__('Notice: This plugin requires a LiteSpeed Server with the LSCache Module enabled.', 'litespeed-cache'),
-				__('If you are unable to change your server stack, please contact your hosting provider to request the required changes.', 'litespeed-cache'),
-				__('This plugin will NOT work properly.', 'litespeed-cache')
+			$sentences = LiteSpeed_Cache_Admin_Error::get_instance()->get_error(
+				LiteSpeed_Cache_Admin_Error::E_SERVER
 			);
 
 			return $sentences;
@@ -2543,8 +2541,6 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 */
 	public function show_display_installed()
 	{
-		$url = LiteSpeed_Cache_Admin::build_lscwpctrl_url(
-			LiteSpeed_Cache::ADMINQS_DISMISS, 'litespeed-dismiss');
 		$buf = self::build_paragraph(
 			'<h3>'
 			. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache')

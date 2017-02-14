@@ -535,7 +535,7 @@ class LiteSpeed_Cache_Config
 			$file = dirname(ABSPATH) . '/wp-config.php';
 			if ( !is_writeable($file) ) {
 				error_log('wp-config file not writeable for \'WP_CACHE\'');
-				return false;
+				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE;
 			}
 		}
 		$file_content = file_get_contents($file) ;
@@ -555,7 +555,7 @@ class LiteSpeed_Cache_Config
 
 				if ($count == 0) {
 					error_log('wp-config file did not find a place to insert define.');
-					return false;
+					return LiteSpeed_Cache_Admin_Error::E_CONF_FIND;
 				}
 			}
 		}
