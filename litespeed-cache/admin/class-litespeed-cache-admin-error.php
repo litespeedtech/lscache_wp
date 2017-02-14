@@ -92,12 +92,8 @@ class LiteSpeed_Cache_Admin_Error
 		return self::$instance;
 	}
 
-	public function get_error($err_code)
+	private function _get($err_code)
 	{
-
-		if (!is_numeric($err_code)) {
-			return '';
-		}
 
 		switch ($err_code)
 		{
@@ -247,35 +243,51 @@ class LiteSpeed_Cache_Admin_Error
 			);
 	}
 
-	public function build_error($err_code, $args)
+	public static function get_error($err_code)
 	{
-		$error = $this->get_error($err_code);
+		if (!is_numeric($err_code)) {
+			return '';
+		}
+		return self::get_instance()->_get($err_code);
+	}
+
+	public static function build_error($err_code, $args)
+	{
+		if (!is_numeric($err_code)) {
+			return '';
+		}
+		$error = self::get_instance()->_get($err_code);
 		if (empty($error)) {
 			return '';
 		}
-		return vsprintf($error, $args);
+		elseif (is_array($args)) {
+			return vsprintf($error, $args);
+		}
+		return sprintf($error, $args);
 	}
 
 	// assume red for now.
-	public function add_error($err_code, $args = null)
+	public static function add_error($err_code, $args = null)
 	{
 		if (!is_null($args)) {
-			$error = $this->build_error($err_code, $args);
+			$error = self::build_error($err_code, $args);
 		}
 		else {
-			$error = $this->get_error($err_code);
+			$error = self::get_error($err_code);
 		}
 		if (empty($error)) {
 			return;
 		}
 
-		if (empty($this->notices)) {
+		$errors = self::get_instance();
+
+		if (empty($errors->notices)) {
 			add_action(
 				(is_network_admin() ? 'network_admin_notices' : 'admin_notices'),
-				array($this, 'display_errors'));
+				array($errors, 'display_errors'));
 		}
 
-		$this->notices[] =
+		$errors->notices[] =
 			'<div class="notice notice-error is-dismissible"><p>ERROR '
 			. $err_code . ': '
 			. $error . '</p></div>';

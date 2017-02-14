@@ -163,7 +163,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function check_license($config)
 	{
 		if ($config->is_caching_allowed() == false) {
-			$sentences = LiteSpeed_Cache_Admin_Error::get_instance()->get_error(
+			$sentences = LiteSpeed_Cache_Admin_Error::get_error(
 				LiteSpeed_Cache_Admin_Error::E_SERVER
 			);
 

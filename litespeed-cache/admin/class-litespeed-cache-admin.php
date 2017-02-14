@@ -519,7 +519,7 @@ class LiteSpeed_Cache_Admin
 	 */
 	private function validate_general(&$input, &$options, &$errors)
 	{
-		$err = LiteSpeed_Cache_Admin_Error::get_instance()->get_error(
+		$err = LiteSpeed_Cache_Admin_Error::get_error(
 			LiteSpeed_Cache_Admin_Error::E_SETTING_TTL
 		);
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
@@ -686,9 +686,9 @@ class LiteSpeed_Cache_Admin
 				$cat_id = get_cat_ID($cat_name);
 				if ($cat_id == 0) {
 					$errors[] =
-						LiteSpeed_Cache_Admin_Error::get_instance()->build_error(
+						LiteSpeed_Cache_Admin_Error::build_error(
 							LiteSpeed_Cache_Admin_Error::E_SETTING_CAT,
-							array($cat_name));
+							$cat_name);
 				}
 				else {
 					$cat_ids[] = $cat_id;
@@ -714,9 +714,9 @@ class LiteSpeed_Cache_Admin
 			$term = get_term_by('name', $tag_name, 'post_tag');
 			if ($term == 0) {
 				$errors[] =
-					LiteSpeed_Cache_Admin_Error::get_instance()->build_error(
+					LiteSpeed_Cache_Admin_Error::build_error(
 						LiteSpeed_Cache_Admin_Error::E_SETTING_TAG,
-						array($tag_name));
+						$tag_name);
 			}
 			else {
 				$tag_ids[] = $term->term_id;
@@ -799,7 +799,7 @@ class LiteSpeed_Cache_Admin
 
 			if ($has_err) {
 				$errors[] =
-					LiteSpeed_Cache_Admin_Error::get_instance()->get_error(
+					LiteSpeed_Cache_Admin_Error::get_error(
 						LiteSpeed_Cache_Admin_Error::E_SETTING_ADMIN_IP_INV
 					);
 			}
@@ -825,7 +825,7 @@ class LiteSpeed_Cache_Admin
 
 			if ($has_err) {
 				$errors[] =
-					LiteSpeed_Cache_Admin_Error::get_instance()->get_error(
+					LiteSpeed_Cache_Admin_Error::get_error(
 						LiteSpeed_Cache_Admin_Error::E_SETTING_TEST_IP_INV
 					);
 			}

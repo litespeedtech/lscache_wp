@@ -640,7 +640,7 @@ class LiteSpeed_Cache
 		}
 		$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true);
 		if ($add_var !== true) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error($add_var);
+			LiteSpeed_Cache_Admin_Error::add_error($add_var);
 		}
 	}
 
@@ -966,15 +966,15 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_INV
 			);
 			return;
 		}
 		$cat = get_category_by_slug($val);
 		if ($cat == false) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
-				LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, array($val));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, $val);
 			return;
 		}
 
@@ -1001,14 +1001,14 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (!is_numeric($val)) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
-				LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, array($val)
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, $val
 			);
 			return;
 		}
 		elseif (get_post_status($val) !== 'publish') {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
-				LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, array($val)
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val
 			);
 			return;
 		}
@@ -1035,15 +1035,15 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_INV
 			);
 			return;
 		}
 		$term = get_term_by('slug', $val, 'post_tag');
 		if ($term == 0) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
-				LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_DNE, array($val)
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_DNE, $val
 			);
 			return;
 		}
@@ -1072,7 +1072,7 @@ class LiteSpeed_Cache
 		}
 
 		if (strpos($val, '<') !== false) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_BAD
 			);
 			return;
@@ -1081,9 +1081,9 @@ class LiteSpeed_Cache
 		$hash = self::get_uri_hash($val);
 
 		if ($hash === false) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_INV,
-				array($val)
+				$val
 			);
 			return;
 		}
@@ -1107,7 +1107,7 @@ class LiteSpeed_Cache
 	public function purge_list()
 	{
 		if (!isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PURGE_FORM
 			);
 			return;
@@ -1116,7 +1116,7 @@ class LiteSpeed_Cache
 		$sel =  $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
 		$list_buf = $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
 		if (empty($list_buf)) {
-			LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY
 			);
 			return;
@@ -1136,7 +1136,7 @@ class LiteSpeed_Cache
 				$cb = 'purgeby_url_cb';
 				break;
 			default:
-				LiteSpeed_Cache_Admin_Error::get_instance()->add_error(
+				LiteSpeed_Cache_Admin_Error::add_error(
 					LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD
 				);
 				return;
