@@ -252,6 +252,20 @@ class LiteSpeed_Cache_Admin_Error
 	}
 
 	/**
+	 * Prefix the error message with the error code.
+	 *
+	 * @access private
+	 * @since 1.0.15
+	 * @param string $error The error message.
+	 * @param int $err_code The error code.
+	 * @return string The prefixed error message.
+	 */
+	private static function prefix_message($error, $err_code)
+	{
+		return 'ERROR ' . $err_code . ': ' . $error;
+	}
+
+	/**
 	 * Gets an error message by error code.
 	 *
 	 * This function will validate if the error code passed in is numeric.
@@ -266,7 +280,11 @@ class LiteSpeed_Cache_Admin_Error
 		if (!is_numeric($err_code)) {
 			return '';
 		}
-		return self::get_instance()->_get($err_code);
+		$error = self::get_instance()->_get($err_code);
+		if (empty($error)) {
+			return '';
+		}
+		return self::prefix_message($error, $err_code);
 	}
 
 	/**
@@ -290,7 +308,8 @@ class LiteSpeed_Cache_Admin_Error
 		if (empty($error)) {
 			return '';
 		}
-		elseif (is_array($args)) {
+		$error = self::prefix_message($error, $err_code);
+		if (is_array($args)) {
 			return vsprintf($error, $args);
 		}
 		return sprintf($error, $args);
@@ -329,9 +348,8 @@ class LiteSpeed_Cache_Admin_Error
 		}
 
 		$errors->notices[] =
-			'<div class="notice notice-error is-dismissible"><p>ERROR '
-			. $err_code . ': '
-			. $error . '</p></div>';
+			'<div class="notice notice-error is-dismissible"><p>' . $error
+			. '</p></div>';
 	}
 
 	/**

@@ -972,7 +972,7 @@ class LiteSpeed_Cache_Admin_Rules
 				$errors[] =
 					LiteSpeed_Cache_Admin_Error::build_error(
 						LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-						esc_html($list));
+						(empty($list) ? 'EMPTY' : esc_html($list)));
 				$has_error = true;
 			}
 			$diff[$id] = $list;
@@ -996,7 +996,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] =
 				LiteSpeed_Cache_Admin_Error::build_error(
 					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-					esc_html($cookie_list));
+					(empty($cookie_list) ? 'EMPTY' : esc_html($cookie_list)));
 			$has_error = true;
 		}
 
@@ -1005,10 +1005,16 @@ class LiteSpeed_Cache_Admin_Rules
 			$diff[$id] = $input[$id];
 		}
 		else {
+			if ((!isset($input[$id])) || (empty($input[$id]))) {
+				$err = 'EMPTY';
+			}
+			else {
+				$err = esc_html($input[$id]);
+			}
+
 			$errors[] =
 				LiteSpeed_Cache_Admin_Error::build_error(
-					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-					esc_html($input[$id]));
+					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err);
 			$has_error = true;
 		}
 
