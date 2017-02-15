@@ -150,6 +150,12 @@ Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache
 
 3. Purge the cache to use the updated pages.
 
+= Are my images optimized? =
+The cache plugin does not do anything with the images themselves.
+We recommend you trying an image optimization plugin like
+<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
+to optimize your images. It can reduce your site's images up to 90%.
+
 == Plugin Developers ==
 
 Any WP plugin that populates front end content that can be publicly cached
