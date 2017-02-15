@@ -960,7 +960,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		foreach ($val_check as $opt) {
 			$ret = LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
-			if ($options[$opt] !== $ret) {
+			if (($ret) || ($options[$opt] !== $ret)) {
 				$diff[$opt] = $ret;
 			}
 		}
@@ -975,9 +975,7 @@ class LiteSpeed_Cache_Admin_Rules
 						esc_html($list));
 				$has_error = true;
 			}
-			elseif ($input[$id] !== $options[$id]) {
-				$diff[$id] = $list;
-			}
+			$diff[$id] = $list;
 		}
 		elseif (isset($diff[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED])) {
 			$diff[$id] = false;
@@ -992,9 +990,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
-			if ($options[$id] !== $cookie_list) {
-				$diff[$id] = $cookie_list;
-			}
+			$diff[$id] = $cookie_list;
 		}
 		else {
 			$errors[] =
@@ -1006,9 +1002,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
-			if ($options[$id] !== $input[$id]) {
-				$diff[$id] = $input[$id];
-			}
+			$diff[$id] = $input[$id];
 		}
 		else {
 			$errors[] =
@@ -1020,7 +1014,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$aExceptions = array('-', '_');
-		if ((isset($input[$id])) && ($input[$id] !== $options[$id])) {
+		if (isset($input[$id])) {
 			if (($input[$id] === '')
 				|| ((ctype_alnum(str_replace($aExceptions, '', $input[$id])))
 					&& (self::check_rewrite($input[$id])))) {
