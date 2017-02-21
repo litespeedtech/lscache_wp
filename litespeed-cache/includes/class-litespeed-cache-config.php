@@ -46,8 +46,6 @@ class LiteSpeed_Cache_Config
 	const OPID_403_TTL = '403_ttl';
 	const OPID_404_TTL = '404_ttl';
 	const OPID_500_TTL = '500_ttl';
-	const OPID_NOCACHE_VARS = 'nocache_vars' ;
-	const OPID_NOCACHE_PATH = 'nocache_path' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
 	const OPID_ESI_ENABLE = 'esi_enabled';
@@ -216,11 +214,11 @@ class LiteSpeed_Cache_Config
 	 * Gets the default single site options
 	 *
 	 * @since 1.0.0
-	 * @access protected
+	 * @access public
 	 * @param bool $include_thirdparty Whether to include the thirdparty options.
 	 * @return array An array of the default options.
 	 */
-	protected function get_default_options($include_thirdparty = true)
+	public function get_default_options($include_thirdparty = true)
 	{
 		$default_purge_options = array(
 			self::PURGE_FRONT_PAGE,
@@ -265,8 +263,6 @@ class LiteSpeed_Cache_Config
 			self::OPID_403_TTL => 3600,
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
-			self::OPID_NOCACHE_VARS => '',
-			self::OPID_NOCACHE_PATH => '',
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
 			self::OPID_EXCLUDES_URI => '',
 			self::OPID_EXCLUDES_CAT => '',
@@ -392,14 +388,52 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Helper function to convert the options to replicate the input format.
+	 *
+	 * The only difference is the checkboxes.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param array $options The options array to port to input format.
+	 */
+	public static function convert_options_to_input(&$options)
+	{
+		$checkboxes =
+			array(
+				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+				LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+				LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
+				LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+				LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
+				LiteSpeed_Cache_Config::OPID_CACHE_RES,
+				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+			);
+
+		if (isset($options[self::OPID_PURGE_BY_POST])) {
+			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]);
+
+			foreach ($purge_opts as $purge_opt) {
+				$options['purge_' . $purge_opt] = $purge_opt;
+			}
+		}
+
+		foreach ($checkboxes as $checkbox) {
+			if ((isset($options[$checkbox])) && ($options[$checkbox])) {
+				$options['lscwp_' . $checkbox] = $checkbox;
+			}
+		}
+
+	}
+
+	/**
 	 * Get the difference between the current options and the default options.
 	 *
 	 * @since 1.0.11
-	 * @access private
+	 * @access public
 	 * @param array $default_options The default options.
 	 * @param array $options The current options.
 	 */
-	private static function option_diff($default_options, &$options)
+	public static function option_diff($default_options, &$options)
 	{
 		$dkeys = array_keys($default_options);
 		$keys = array_keys($options);
@@ -513,7 +547,7 @@ class LiteSpeed_Cache_Config
 			$file = dirname(ABSPATH) . '/wp-config.php';
 			if ( !is_writeable($file) ) {
 				error_log('wp-config file not writeable for \'WP_CACHE\'');
-				return false;
+				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE;
 			}
 		}
 		$file_content = file_get_contents($file) ;
@@ -526,6 +560,15 @@ class LiteSpeed_Cache_Config
 			if ( $count == 0 ) {
 				$new_file_content = preg_replace('/(\$table_prefix)/',
 								"define('WP_CACHE', true);\n$1", $file_content) ;
+				if ( $count == 0 ) {
+					$new_file_content = preg_replace('/(\<\?php)/',
+						"$1\ndefine('WP_CACHE', true);", $file_content, -1, $count) ;
+				}
+
+				if ($count == 0) {
+					error_log('wp-config file did not find a place to insert define.');
+					return LiteSpeed_Cache_Admin_Error::E_CONF_FIND;
+				}
 			}
 		}
 		else {

@@ -29,18 +29,18 @@ Additional plugin features:
 
 = Known Compatible Plugins =
 
-* bbPress
-* WooCommerce
-* Contact Form 7
-* Google XML Sitemaps
-* Yoast SEO
-* Wordfence Security
-* NextGen Gallery
-* ShortPixel
+* [bbPress](https://wordpress.org/plugins/bbpress/)
+* [WooCommerce](https://wordpress.org/plugins/woocommerce/)
+* [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
+* [Google XML Sitemaps](https://wordpress.org/plugins/google-sitemap-generator/)
+* [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
+* [Wordfence Security](https://wordpress.org/plugins/wordfence/)
+* [NextGen Gallery](https://wordpress.org/plugins/nextgen-gallery/)
+* <a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
 * Aelia CurrencySwitcher
-* Autoptimize
-* Better WP Minify
-* WP Touch
+* [Autoptimize](https://wordpress.org/plugins/autoptimize/)
+* [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
+* [WP Touch](https://wordpress.org/plugins/wptouch/)
 
 = Known Uncompatible Plugins =
 
@@ -149,6 +149,12 @@ Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache
     ```
 
 3. Purge the cache to use the updated pages.
+
+= Are my images optimized? =
+The cache plugin does not do anything with the images themselves.
+We recommend you trying an image optimization plugin like
+<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
+to optimize your images. It can reduce your site's images up to 90%.
 
 == Plugin Developers ==
 
@@ -502,3 +508,7 @@ point to any plugin that needs to add cache tags to the current request.
 
 = 1.0.0 - January 20 2016 =
 * Initial Release.
+
+== Upgrade Notice ==
+
+

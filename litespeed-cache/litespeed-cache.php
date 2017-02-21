@@ -48,13 +48,18 @@ if ( ! defined('WPINC') ) {
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache.php' ;
+
+$lscache_plugin_path = plugin_dir_path(__FILE__);
+require_once $lscache_plugin_path . 'includes/class-litespeed-cache.php' ;
+require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin-error.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache-config.php';
-	require_once plugin_dir_path(__FILE__) . 'includes/class-litespeed-cache-tags.php';
-	require_once plugin_dir_path(__FILE__) . 'admin/class-litespeed-cache-admin.php';
-	require_once plugin_dir_path(__FILE__) . 'cli/class-litespeed-cache-cli-purge.php';
+	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-config.php';
+	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-tags.php';
+	require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin.php';
+	require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin-rules.php';
+	require_once $lscache_plugin_path . 'cli/class-litespeed-cache-cli-admin.php';
+	require_once $lscache_plugin_path . 'cli/class-litespeed-cache-cli-purge.php';
 }
 
 if (!function_exists('is_openlitespeed')) {
@@ -89,13 +94,17 @@ if (!function_exists('run_litespeed_cache')) {
 
 		//Check minimum PHP requirements, which is 5.3 at the moment.
 		if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
-			add_action('admin_notices', 'LiteSpeed_Cache::show_version_error_php') ;
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PHP_VER
+			);
 			$version_supported = false ;
 		}
 
 		//Check minimum WP requirements, which is 4.0 at the moment.
 		if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
-			add_action('admin_notices', 'LiteSpeed_Cache::show_version_error_wp') ;
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_WP_VER
+			);
 			$version_supported = false ;
 		}
 

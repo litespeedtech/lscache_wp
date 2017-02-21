@@ -163,10 +163,8 @@ class LiteSpeed_Cache_Admin_Display
 	public function check_license($config)
 	{
 		if ($config->is_caching_allowed() == false) {
-			$sentences = self::build_paragraph(
-				__('Notice: This plugin requires a LiteSpeed Server with the LSCache Module enabled.', 'litespeed-cache'),
-				__('If you are unable to change your server stack, please contact your hosting provider to request the required changes.', 'litespeed-cache'),
-				__('This plugin will NOT work properly.', 'litespeed-cache')
+			$sentences = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_SERVER
 			);
 
 			return $sentences;
@@ -2655,6 +2653,15 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$postviews_question =
 			__('How do I get WP-PostViews to display an updating view count?', 'litespeed-cache');
 
+		$img_answer = self::build_paragraph(
+			__('The cache plugin does not do anything with the images themselves.', 'litespeed-cache'),
+			sprintf(__('We recommend you trying an image optimization plugin like %s to optimize your images.', 'litespeed-cache'),
+			'<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>'),
+			__("It can reduce your site's images up to 90%.", 'litespeed-cache')
+		);
+
+		$img_question = __('Are my images optimized?', 'litespeed-cache');
+
 		$style = 'style="border:none; box-shadow:none;"';
 		$buf = '<div class="wrap"><h3>LiteSpeed Cache FAQs</h3>';
 		$buf .= '<div class="litespeed-cache-welcome-panel" ' . $style . '>';
@@ -2666,6 +2673,7 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$buf .= $this->input_field_collapsible($files_question, $files_answer);
 		$buf .= $this->input_field_collapsible($wc_question, $wc_answer);
 		$buf .= $this->input_field_collapsible($postviews_question, $postviews_answer);
+		$buf .= $this->input_field_collapsible($img_question, $img_answer);
 		$buf .= '</ul>';
 		$buf .= $this->input_collapsible_end();
 		$buf .= '</div>';
@@ -2683,8 +2691,6 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 	 */
 	public function show_display_installed()
 	{
-		$url = LiteSpeed_Cache_Admin::build_lscwpctrl_url(
-			LiteSpeed_Cache::ADMINQS_DISMISS, 'litespeed-dismiss');
 		$buf = self::build_paragraph(
 			'<h3>'
 			. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache')

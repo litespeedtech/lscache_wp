@@ -502,7 +502,10 @@ class LiteSpeed_Cache_Admin
 
 		$val = $input[$id];
 
-		return ((ctype_digit($val)) && ($val >= 0) && ($val < 2147483647));
+		$ival = intval($val);
+		$sval = strval($val);
+
+		return ((ctype_digit($sval)) && ($ival >= 0) && ($ival < 2147483647));
 	}
 
 	/**
@@ -516,13 +519,17 @@ class LiteSpeed_Cache_Admin
 	 */
 	private function validate_general(&$input, &$options, &$errors)
 	{
-		$err = __('%s TTL must be an integer between %d and 2147483647',
-			'litespeed-cache');
+		$err = LiteSpeed_Cache_Admin_Error::get_error(
+			LiteSpeed_Cache_Admin_Error::E_SETTING_TTL
+		);
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
 		$enabled = $this->validate_enabled($input, $options);
 		if ($enabled !== $options[$id]) {
 			$options[$id] = $enabled;
-			LiteSpeed_Cache_Config::wp_cache_var_setter($enabled);
+			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter($enabled);
+			if ($ret !== true) {
+				$errors[] = $ret;
+			}
 			if (!$enabled) {
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
@@ -678,8 +685,10 @@ class LiteSpeed_Cache_Admin
 				}
 				$cat_id = get_cat_ID($cat_name);
 				if ($cat_id == 0) {
-					$errors[] = sprintf(__('Removed category "%s" from list, ID does not exist.',
-						'litespeed-cache'), $cat_name);
+					$errors[] =
+						LiteSpeed_Cache_Admin_Error::build_error(
+							LiteSpeed_Cache_Admin_Error::E_SETTING_CAT,
+							$cat_name);
 				}
 				else {
 					$cat_ids[] = $cat_id;
@@ -704,8 +713,10 @@ class LiteSpeed_Cache_Admin
 			}
 			$term = get_term_by('name', $tag_name, 'post_tag');
 			if ($term == 0) {
-				$errors[] = sprintf(__('Removed tag "%s" from list, ID does not exist.',
-					'litespeed-cache'), $tag_name);
+				$errors[] =
+					LiteSpeed_Cache_Admin_Error::build_error(
+						LiteSpeed_Cache_Admin_Error::E_SETTING_TAG,
+						$tag_name);
 			}
 			else {
 				$tag_ids[] = $term->term_id;
@@ -805,7 +816,10 @@ class LiteSpeed_Cache_Admin
 			}
 
 			if ($has_err) {
-				$errors[] = __('Invalid data in Admin IPs.', 'litespeed-cache');
+				$errors[] =
+					LiteSpeed_Cache_Admin_Error::get_error(
+						LiteSpeed_Cache_Admin_Error::E_SETTING_ADMIN_IP_INV
+					);
 			}
 			else if ($admin_ips != $options[$id]) {
 				$options[$id] = $admin_ips;
@@ -828,7 +842,10 @@ class LiteSpeed_Cache_Admin
 			}
 
 			if ($has_err) {
-				$errors[] = __('Invalid data in Test IPs.', 'litespeed-cache');
+				$errors[] =
+					LiteSpeed_Cache_Admin_Error::get_error(
+						LiteSpeed_Cache_Admin_Error::E_SETTING_TEST_IP_INV
+					);
 			}
 			else if ($test_ips != $options[$id]) {
 				$options[$id] = $test_ips;
@@ -1200,7 +1217,10 @@ class LiteSpeed_Cache_Admin
 		if ($options[$id] !== $network_enabled) {
 			$options[$id] = $network_enabled;
 			if ($network_enabled) {
-				LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+				$ret = LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+				if ($ret !== true) {
+					$errors[] = $ret;
+				}
 			}
 			else {
 				LiteSpeed_Cache::plugin()->purge_all();

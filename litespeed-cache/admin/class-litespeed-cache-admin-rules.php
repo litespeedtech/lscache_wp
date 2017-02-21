@@ -28,21 +28,6 @@ class LiteSpeed_Cache_Admin_Rules
 	private $home_path = null;
 	private $site_path = null;
 
-	private static $OUT_FILESAVE;
-
-	private static $ERR_BACKUP;
-	private static $ERR_DNE; // does not exist or is not readable
-	private static $ERR_FILESAVE;
-	private static $ERR_GET;
-	private static $ERR_INVALID_LOGIN;
-	private static $ERR_NO_LIST;
-	private static $ERR_NOT_FOUND;
-	private static $ERR_OVERWRITE;
-	private static $ERR_PARSE_FILE;
-	private static $ERR_READWRITE;
-	private static $ERR_SUBDIR_MISMATCH_LOGIN;
-	private static $ERR_WRONG_ORDER;
-
 	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
 	private static $RW_BLOCK_END = '</IfModule>';
 	private static $RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
@@ -90,7 +75,6 @@ class LiteSpeed_Cache_Admin_Rules
 			self::$RW_PREREQ = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
 
 			self::$instance = new LiteSpeed_Cache_Admin_Rules();
-			self::set_translations();
 		}
 		return self::$instance;
 	}
@@ -99,7 +83,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Gets the currently used rules file path.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @return string The rules file path.
 	 */
 	public static function get_home_path()
@@ -112,7 +96,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Gets the site .htaccess path. Useful if subdirectory install.
 	 *
 	 * @since 1.0.7
-	 * @access private
+	 * @access public
 	 * @return string The site path.
 	 */
 	public static function get_site_path()
@@ -347,7 +331,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Gets the contents of the rules file.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $content Returns the content of the file or an error description.
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
@@ -362,13 +346,25 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 		if (!self::is_file_able(self::RW)) {
-			$content = self::$ERR_READWRITE;
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_RW
+			);
+
+			$content = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_RW
+			);
 			return false;
 		}
 
 		$content = file_get_contents($path);
 		if ($content === false) {
-			$content = self::$ERR_GET;
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_GET
+			);
+
+			$content = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_GET
+			);
 			return false;
 		}
 		// Remove ^M characters.
@@ -401,12 +397,15 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
 		$off_next = stripos($content, '<IfModule', $off_begin);
 		if ($off_end === false) {
-			$buf = sprintf(self::$ERR_NOT_FOUND, 'IfModule close');
+			$buf = LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'IfModule close'
+			);
 			return $buf;
 		}
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
 			$buf = LiteSpeed_Cache_Admin_Display::build_paragraph(
-				self::$ERR_WRONG_ORDER,
+				LiteSpeed_Cache_Admin_Error::get_error(
+					LiteSpeed_Cache_Admin_Error::E_HTA_ORDER),
 				sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'),
 					'&lt;/IfModule&gt;'));
 			return $buf;
@@ -453,7 +452,10 @@ class LiteSpeed_Cache_Admin_Rules
 			$off_wrapper += strlen($wrapper_begin);
 			$off_wrapper_end = stripos($content, $wrapper_end, $off_wrapper);
 			if ($off_wrapper_end === false) {
-				$buf = sprintf(self::$ERR_NOT_FOUND, 'Plugin wrapper close');
+				$buf = LiteSpeed_Cache_Admin_Error::build_error(
+					LiteSpeed_Cache_Admin_Error::E_HTA_DNF,
+					'Plugin wrapper close'
+				);
 				return false;
 			}
 			--$off_wrapper_end;
@@ -539,21 +541,40 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$zip = new ZipArchive;
 		$dir = dirname($path);
+		$arr = scandir($dir);
+		$parsed = preg_grep('/\.htaccess_lscachebak_[0-9]+/', $arr);
+
+		if (empty($parsed)) {
+			return false;
+		}
+
 		$res = $zip->open($dir . '/lscache_htaccess_bak.zip',
 			ZipArchive::CREATE | ZipArchive::OVERWRITE);
-		if ($res === false) {
+		if ($res !== true) {
 			error_log('Warning: Failed to archive wordpress backups in ' . $dir);
 			$ret = copy($path, $path . $bak);
 			return $ret;
 		}
-		$archived = $zip->addPattern('/\.htaccess_lscachebak_[0-9]+/', $dir);
-		$zip->close();
+
+		foreach ($parsed as $key => $val) {
+			$parsed[$key] = $dir . '/' . $val;
+			if (!$zip->addFile($parsed[$key], $val)) {
+				error_log('Warning: Failed to archive backup file ' . $val);
+				$zip->close();
+				$ret = copy($path, $path . $bak);
+				return $ret;
+			}
+		}
+
+		$ret = $zip->close();
+		if (!$ret) {
+			error_log('Warning: Failed to close archive.');
+			return $ret;
+		}
 		$bak = '_lscachebak_01';
 
-		if (!empty($archived)) {
-			foreach ($archived as $delFile) {
-				unlink($delFile);
-			}
+		foreach ($parsed as $delFile) {
+			unlink($delFile);
 		}
 
 		$ret = copy($path, $path . $bak);
@@ -573,12 +594,12 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @since 1.0.12 - Introduce $backup parameter and make function public
-	 * @access private
+	 * @access public
 	 * @param string $content The new content to put into the rules file.
 	 * @param boolean $cleanup True to strip extra slashes, false otherwise.
 	 * @param string $path The file path to edit.
 	 * @param boolean $backup Whether to create backups or not.
-	 * @return mixed true on success, else error message on failure.
+	 * @return boolean true on success, else false.
 	 */
 	public static function file_save($content, $cleanup = true, $path = '',
 		$backup = true)
@@ -592,12 +613,16 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 
 			if (self::is_file_able(self::RW, $path) == 0) {
-				return self::$ERR_READWRITE;
+				LiteSpeed_Cache_Admin_Error::add_error(
+					LiteSpeed_Cache_Admin_Error::E_HTA_RW);
+				return false;
 			}
 
 			//failed to backup, not good.
 			if (($backup) && (self::file_backup($path) === false)) {
-				return self::$ERR_BACKUP;
+				 LiteSpeed_Cache_Admin_Error::add_error(
+					LiteSpeed_Cache_Admin_Error::E_HTA_BU);
+				 return false;
 			}
 
 			break;
@@ -610,8 +635,10 @@ class LiteSpeed_Cache_Admin_Rules
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
-			$err = sprintf(self::$ERR_OVERWRITE, '.htaccess');
-			return $err;
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_SAVE
+			);
+			return false;
 		}
 
 		return true;
@@ -673,7 +700,8 @@ class LiteSpeed_Cache_Admin_Rules
 			$wrap_begin + strlen($wrapper_begin));
 
 		if ($wrap_end === false) {
-			$err = sprintf(self::$ERR_NOT_FOUND, 'wrapper end');
+			$err = LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end');
 			return array(false, $err);
 		}
 		elseif ($match != '') {
@@ -688,7 +716,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Finds a specified common rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $wrapper The wrapper to look for.
 	 * @param string $cond The condition to look for.
 	 * @param string $match Returns the rewrite rule on success, error message on failure.
@@ -710,11 +738,15 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = sprintf(self::$ERR_NOT_FOUND, 'suffix ' . $suffix);
+			$match = LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF,
+				'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
-			$match = self::$ERR_WRONG_ORDER;
+			$match = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_ORDER
+			);
 			return false;
 		}
 
@@ -724,7 +756,9 @@ class LiteSpeed_Cache_Admin_Rules
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = sprintf(self::$ERR_NOT_FOUND, 'a match');
+			$match = LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match'
+			);
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -780,7 +814,9 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
-			$err = sprintf(self::$ERR_NOT_FOUND, 'wrapper end');
+			$err =LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end'
+			);
 			return array(false, $err);
 		}
 		elseif ($match != '') {
@@ -795,7 +831,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * FInds a specified rewrite rule from the .htaccess file.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param string $wrapper The wrapper to look for.
 	 * @param string $match Returns the rewrite rule on success, error message on failure.
 	 * @param string $sub Returns the substitute on success, error message on failure.
@@ -818,11 +854,16 @@ class LiteSpeed_Cache_Admin_Rules
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = sprintf(self::$ERR_NOT_FOUND, 'suffix ' . $suffix);
+			$match = LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF,
+				'suffix ' . $suffix
+			);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
-			$match = self::$ERR_WRONG_ORDER;
+			$match = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_ORDER
+			);
 			return false;
 		}
 
@@ -831,7 +872,8 @@ class LiteSpeed_Cache_Admin_Rules
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = sprintf(self::$ERR_NOT_FOUND, 'a match');
+			$match = LiteSpeed_Cache_Admin_Error::build_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -915,7 +957,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Parses the input to see if there is a need to edit the .htaccess file.
 	 *
 	 * @since 1.0.8
-	 * @access private
+	 * @access public
 	 * @param array $options The current options
 	 * @param array $input The input
 	 * @param array $errors Errors array to add error messages to.
@@ -933,7 +975,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		foreach ($val_check as $opt) {
 			$ret = LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
-			if ($options[$opt] !== $ret) {
+			if (($ret) || ($options[$opt] !== $ret)) {
 				$diff[$opt] = $ret;
 			}
 		}
@@ -942,12 +984,18 @@ class LiteSpeed_Cache_Admin_Rules
 		if ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]) {
 			$list = $input[$id];
 			if ((empty($list)) || (self::check_rewrite($list) === false)) {
-				$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($list));
+				$err_args = array(
+					$id,
+					(empty($list) ? 'EMPTY' : esc_html($list))
+				);
+				$errors[] =
+					LiteSpeed_Cache_Admin_Error::build_error(
+						LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
+						$err_args
+						);
 				$has_error = true;
 			}
-			elseif ($input[$id] !== $options[$id]) {
-				$diff[$id] = $list;
-			}
+			$diff[$id] = $list;
 		}
 		elseif (isset($diff[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED])) {
 			$diff[$id] = false;
@@ -962,37 +1010,48 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
-			if ($options[$id] !== $cookie_list) {
-				$diff[$id] = $cookie_list;
-			}
+			$diff[$id] = $cookie_list;
 		}
 		else {
-			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($cookie_list));
+			$errors[] =
+				LiteSpeed_Cache_Admin_Error::build_error(
+					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
+					array($id, esc_html($cookie_list)));
 			$has_error = true;
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
 		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
-			if ($options[$id] !== $input[$id]) {
-				$diff[$id] = $input[$id];
-			}
+			$diff[$id] = $input[$id];
 		}
 		else {
-			$errors[] = sprintf(self::$ERR_NO_LIST, esc_html($input[$id]));
+			$err_args = array($id);
+			if ((!isset($input[$id])) || (empty($input[$id]))) {
+				$err_args[] = 'EMPTY';
+			}
+			else {
+				$err_args[] = esc_html($input[$id]);
+			}
+
+			$errors[] =
+				LiteSpeed_Cache_Admin_Error::build_error(
+					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 			$has_error = true;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$aExceptions = array('-', '_');
-		if ((isset($input[$id])) && ($input[$id] !== $options[$id])) {
+		if (isset($input[$id])) {
 			if (($input[$id] === '')
 				|| ((ctype_alnum(str_replace($aExceptions, '', $input[$id])))
 					&& (self::check_rewrite($input[$id])))) {
 				$diff[$id] = $input[$id];
 			}
 			else {
-				$errors[] = sprintf(self::$ERR_INVALID_LOGIN,
-					esc_html($input[$id]));
+				$errors[] =
+					LiteSpeed_Cache_Admin_Error::build_error(
+						LiteSpeed_Cache_Admin_Error::E_SETTING_LC,
+						esc_html($input[$id]));
 				$has_error = true;
 			}
 		}
@@ -1130,7 +1189,8 @@ class LiteSpeed_Cache_Admin_Rules
 		$ret = $this->file_combine($before2, $haystack2 . $rule_buf2,
 			$after2, $path);
 		if ($ret !== true) {
-			$errors[] = self::$ERR_FILESAVE;
+			$errors[] = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_PUT);
 			return false;
 		}
 		return true;
@@ -1214,7 +1274,8 @@ class LiteSpeed_Cache_Admin_Rules
 		elseif ($index + 2 > count($split_blocks)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				self::$ERR_PARSE_FILE);
+				LiteSpeed_Cache_Admin_Error::get_error(
+					LiteSpeed_Cache_Admin_Error::E_LC_HTA));
 			return '';
 		}
 		$split_blocks[$index + 1] .= $replacement;
@@ -1247,8 +1308,6 @@ class LiteSpeed_Cache_Admin_Rules
 			return '';
 		}
 		if (self::file_get($content) === false) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
 		}
 
@@ -1269,8 +1328,6 @@ class LiteSpeed_Cache_Admin_Rules
 		$site_path = self::get_site_path();
 
 		if (self::file_get($site_content, $site_path) === false) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return '';
 		}
 
@@ -1285,7 +1342,8 @@ class LiteSpeed_Cache_Admin_Rules
 				|| ($home_cookie != $site_cookie)) {
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				self::$ERR_SUBDIR_MISMATCH_LOGIN
+				LiteSpeed_Cache_Admin_Error::get_error(
+					LiteSpeed_Cache_Admin_Error::E_LC_MISMATCH)
 				. '<br>' . self::get_home_path() . ': ' . $home_cookie
 				. '<br>' . $site_path . ': ' . $site_cookie);
 			return 'err';
@@ -1299,7 +1357,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Validate common rewrite rules configured by the admin.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param array $diff The rules that need to be set.
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
@@ -1386,7 +1444,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$ret = $this->file_combine($before, $haystack . $buf, $after);
 		if ($ret !== true) {
-			$errors[] = self::$ERR_FILESAVE;
+			$errors[] = LiteSpeed_Cache_Admin_Error::get_error(
+				LiteSpeed_Cache_Admin_Error::E_HTA_PUT
+			);
 			return false;
 		}
 		return $diff;
@@ -1426,8 +1486,6 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$site_path = self::get_site_path();
 		if (self::file_get($site_content, $site_path) === false) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED, $content);
 			return;
 		}
 
@@ -1464,7 +1522,7 @@ class LiteSpeed_Cache_Admin_Rules
 				&& (isset($_POST[self::EDITOR_TEXTAREA_NAME]))) {
 			$msg = self::file_save($_POST[self::EDITOR_TEXTAREA_NAME]);
 			if ($msg === true) {
-				$msg = self::$OUT_FILESAVE;
+				$msg = __('File Saved.', 'litespeed-cache');
 				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN;
 			}
 			else {
@@ -1473,43 +1531,5 @@ class LiteSpeed_Cache_Admin_Rules
 			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice($color, $msg);
 		}
 
-	}
-
-	/**
-	 * Set up the translations for the error messages and outputs.
-	 *
-	 * @access private
-	 * @since 1.0.8
-	 */
-	private static function set_translations()
-	{
-		self::$OUT_FILESAVE = __('File Saved.', 'litespeed-cache');
-
-		self::$ERR_BACKUP = __('Failed to back up file, aborted changes.', 'litespeed-cache');
-		self::$ERR_DNE = __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
-		self::$ERR_FILESAVE = sprintf(__('Failed to put contents into %s', 'litespeed-cache'),
-			'.htaccess');
-		self::$ERR_GET = sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
-			'.htaccess');
-		self::$ERR_INVALID_LOGIN = __('Invalid login cookie. Invalid characters found: %s',
-					'litespeed-cache');
-		self::$ERR_NO_LIST = __('Invalid Rewrite List. Empty or invalid rule. Rule: %s', 'litespeed-cache');
-		self::$ERR_NOT_FOUND = __('Could not find %s.', 'litespeed-cache');
-		self::$ERR_OVERWRITE = __('Failed to overwrite %s.', 'litespeed-cache');
-		self::$ERR_PARSE_FILE =
-			LiteSpeed_Cache_Admin_Display::build_paragraph(
-			__('Tried to parse for existing login cookie.', 'litespeed-cache'),
-			sprintf(__('%s file not valid. Please verify contents.',
-						'litespeed-cache'), '.htaccess')
-			);
-		self::$ERR_READWRITE = sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),
-			'.htaccess');
-		self::$ERR_SUBDIR_MISMATCH_LOGIN =
-			LiteSpeed_Cache_Admin_Display::build_paragraph(
-			__('This site is a subdirectory install.', 'litespeed-cache'),
-			__('Login cookies do not match.', 'litespeed-cache'),
-			__('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
-				'litespeed-cache'));
-		self::$ERR_WRONG_ORDER = __('Prefix was found after suffix.', 'litespeed-cache');
 	}
 }

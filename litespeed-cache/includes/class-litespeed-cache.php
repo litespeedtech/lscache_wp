@@ -32,9 +32,15 @@ class LiteSpeed_Cache
 	const ADMINQS_KEY = 'LSCWP_CTRL';
 	const ADMINQS_DISMISS = 'DISMISS';
 	const ADMINQS_PURGE = 'PURGE';
+	const ADMINQS_PURGEBY = 'PURGEBY';
 	const ADMINQS_PURGEALL = 'PURGEALL';
 	const ADMINQS_PURGESINGLE = 'PURGESINGLE';
 	const ADMINQS_SHOWHEADERS = 'SHOWHEADERS';
+
+	const ADMINNONCE_PURGEALL = 'litespeed-purgeall';
+	const ADMINNONCE_PURGENETWORKALL = 'litespeed-purgeall-network';
+	const ADMINNONCE_PURGEBY = 'litespeed-purgeby';
+	const ADMINNONCE_DISMISS = 'litespeed-dismiss';
 
 	const CACHECTRL_NOCACHE = 0;
 	const CACHECTRL_PUBLIC = 1;
@@ -548,59 +554,6 @@ class LiteSpeed_Cache
 		$ret = defined('LSCACHE_ADV_CACHE');
 		return $ret;
 	}
-
-	/**
-	 * Adds a notice to the admin interface that the WordPress version is too old for the plugin
-	 *
-	 * @since 1.0.0
-	 */
-	public static function show_version_error_wp()
-	{
-		echo '<div class="error"><p><strong>'
-		. __('The installed WordPress version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
-		. '</strong><br />'
-		. sprintf(__('The LiteSpeed Cache Plugin requires at least WordPress %s.', 'litespeed-cache'), '3.3')
-		. ' '
-		. sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
-				array( 'a' => array( 'href' => array() ) )), 'plugins.php?plugin_status=active')
-		. '</p></div>';
-	}
-
-	/**
-	 * Adds a notice to the admin interface that the WordPress version is too old for the plugin
-	 *
-	 * @since 1.0.0
-	 */
-	public static function show_version_error_php()
-	{
-		echo '<div class="error"><p><strong>'
-			. __('The installed PHP version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')
-			. '</strong><br /> '
-			. sprintf(__('The LiteSpeed Cache Plugin requires at least PHP %s.', 'litespeed-cache'), '5.3')
-			. ' '
-			. sprintf(__('The currently installed version is PHP %s, which is out-dated and insecure.', 'litespeed-cache'), PHP_VERSION)
-			. ' '
-			. sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
-					array('a' => array('href' => array()))), 'plugins.php?plugin_status=active')
-			. '</p></div>';
-	}
-
-	/**
-	 * Adds a notice to the admin interface that WP_CACHE was not set
-	 *
-	 * @since 1.0.1
-	 */
-	public static function show_wp_cache_var_set_error()
-	{
-		echo '<div class="error"><p><strong>'
-		. LiteSpeed_Cache_Admin_Display::build_paragraph(
-			__('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache'),
-			sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'),
-				'<br><pre>define(\'WP_CACHE\', true);</pre>')
-		)
-		. '</p></div>';
-	}
-
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
@@ -612,7 +565,8 @@ class LiteSpeed_Cache
 	 */
 	private function set_locale()
 	{
-		load_plugin_textdomain(self::PLUGIN_NAME, false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/') ;
+		load_plugin_textdomain(self::PLUGIN_NAME, false,
+			dirname(dirname(plugin_basename(__FILE__))) . '/languages/') ;
 	}
 
 	/**
@@ -657,61 +611,70 @@ class LiteSpeed_Cache
 		require_once $this->plugin_dir . 'admin/class-litespeed-cache-admin-rules.php';
 
 		$admin = new LiteSpeed_Cache_Admin(self::PLUGIN_NAME, self::PLUGIN_VERSION);
+
+		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
+			'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
+		add_action('load-litespeed-cache_page_lscache-settings',
+			array($admin, 'validate_network_settings'));
+		if (is_multisite()) {
+			add_action('update_site_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
+				'LiteSpeed_Cache::update_environment_report', 10, 2);
+		}
+		else {
+			add_action('update_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
+				'LiteSpeed_Cache::update_environment_report', 10, 2);
+		}
+		$this->set_locale() ;
+		if (!$module_enabled) {
+			return;
+		}
 		if ((is_multisite()) && (is_network_admin())) {
-			$action = 'network_admin_notices';
 			$manage = 'manage_network_options';
 		}
 		else {
-			$action = 'admin_notices';
 			$manage = 'manage_options';
 		}
 
 		//register purge_all actions
-		if ($module_enabled) {
-			$purge_all_events = array(
-				'switch_theme',
-				'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
-				'create_term', 'edit_terms', 'delete_term',
-				'add_link', 'edit_link', 'delete_link'
-			);
-			foreach ($purge_all_events as $event) {
-				add_action($event, array($this, 'purge_all'));
-			}
-			global $pagenow;
-			if ($pagenow === 'plugins.php') {
-				add_action('wp_default_scripts',
-					array($admin, 'set_update_text'), 0);
-				add_action('wp_default_scripts',
-					array($admin, 'unset_update_text'), 20);
 
-			}
-			if ($is_ajax) {
-				add_action('wp_ajax_lscache_cli', array($this, 'check_admin_ip'));
-				add_action('wp_ajax_nopriv_lscache_cli',
-					array($this, 'check_admin_ip'));
-				add_action('wp_ajax_lscache_dismiss_whm', array($this, 'check_admin_ip'));
-				add_action('wp_ajax_nopriv_lscache_dismiss_whm',
-					array($this, 'check_admin_ip'));
-			}
-			else {
-				add_action('admin_init', array($this, 'check_admin_ip'), 6);
-			}
-			if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
-				add_action('upgrader_process_complete', array($this, 'purge_all'));
-			}
-
-			//Checks if WP_CACHE is defined and true in the wp-config.php file.
-			if (current_user_can($manage)) {
-				add_action('wp_before_admin_bar_render',
-					array($admin, 'add_quick_purge'));
-
-				if (((!defined('WP_CACHE')) || (constant('WP_CACHE') == false))
-					&& (!LiteSpeed_Cache_Config::wp_cache_var_setter(true))
-				) {
-					add_action($action, 'LiteSpeed_Cache::show_wp_cache_var_set_error');
-				}
-			}
+		$purge_all_events = array(
+			'switch_theme',
+			'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
+			'create_term', 'edit_terms', 'delete_term',
+			'add_link', 'edit_link', 'delete_link'
+		);
+		foreach ( $purge_all_events as $event ) {
+			add_action($event, array( $this, 'purge_all' ));
 		}
+		global $pagenow;
+		if ($pagenow === 'plugins.php') {
+			add_action('wp_default_scripts',
+				array($admin, 'set_update_text'), 0);
+			add_action('wp_default_scripts',
+				array($admin, 'unset_update_text'), 20);
+
+		}
+		if ($is_ajax) {
+			add_action('wp_ajax_lscache_cli', array($this, 'check_admin_ip'));
+			add_action('wp_ajax_nopriv_lscache_cli',
+				array($this, 'check_admin_ip'));
+			add_action('wp_ajax_lscache_dismiss_whm', array($this, 'check_admin_ip'));
+			add_action('wp_ajax_nopriv_lscache_dismiss_whm',
+				array($this, 'check_admin_ip'));
+		}
+		else {
+			add_action('admin_init', array($this, 'check_admin_ip'), 6);
+		}
+		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
+			add_action('upgrader_process_complete', array($this, 'purge_all'));
+		}
+
+		//Checks if WP_CACHE is defined and true in the wp-config.php file.
+		if (!current_user_can($manage)) {
+			return;
+		}
+		add_action('wp_before_admin_bar_render',
+			array($admin, 'add_quick_purge'));
 
 		if (!is_openlitespeed()) {
 			add_action('in_widget_form',
@@ -721,19 +684,13 @@ class LiteSpeed_Cache
 				array($admin, 'validate_widget_save'), 10, 4);
 		}
 
-		add_action('load-litespeed-cache_page_lscache-edit-htaccess',
-				'LiteSpeed_Cache_Admin_Rules::htaccess_editor_save');
-		add_action('load-litespeed-cache_page_lscache-settings',
-				array($admin, 'validate_network_settings'));
-		if (is_multisite()) {
-			add_action('update_site_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
-					'LiteSpeed_Cache::update_environment_report', 10, 2);
+		if ((defined('WP_CACHE')) && (constant('WP_CACHE') == true)) {
+			return;
 		}
-		else {
-			add_action('update_option_' . LiteSpeed_Cache_Config::OPTION_NAME,
-					'LiteSpeed_Cache::update_environment_report', 10, 2);
+		$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true);
+		if ($add_var !== true) {
+			LiteSpeed_Cache_Admin_Error::add_error($add_var);
 		}
-		$this->set_locale() ;
 	}
 
 	/**
@@ -1062,6 +1019,19 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * The purge by callback used to purge a list of tags.
+	 *
+	 * @access public
+	 * @since 1.0.15
+	 * @param string $tags A comma delimited list of tags.
+	 */
+	public function purgeby_cb($tags)
+	{
+		$tag_arr = explode(',', $tags);
+		self::add_purge_tags($tag_arr);
+	}
+
+	/**
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
 	 * @since 1.0.7
@@ -1076,16 +1046,15 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by category, invalid category slug.', 'litespeed-cache'));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_INV
+			);
 			return;
 		}
 		$cat = get_category_by_slug($val);
 		if ($cat == false) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by category, does not exist: %s', 'litespeed-cache'), $val));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, $val);
 			return;
 		}
 
@@ -1112,16 +1081,15 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (!is_numeric($val)) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by Post ID, given ID is not numeric: %s', 'litespeed-cache'), $val));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, $val
+			);
 			return;
 		}
 		elseif (get_post_status($val) !== 'publish') {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by Post ID, given ID does not exist or is not published: %s',
-						'litespeed-cache'), $val));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val
+			);
 			return;
 		}
 		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
@@ -1147,16 +1115,16 @@ class LiteSpeed_Cache
 			return;
 		}
 		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by tag, invalid tag slug.', 'litespeed-cache'));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_INV
+			);
 			return;
 		}
 		$term = get_term_by('slug', $val, 'post_tag');
 		if ($term == 0) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by tag, does not exist: %s', 'litespeed-cache'), $val));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_DNE, $val
+			);
 			return;
 		}
 
@@ -1184,19 +1152,19 @@ class LiteSpeed_Cache
 		}
 
 		if (strpos($val, '<') !== false) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				__('Failed to purge by url, contained "<".', 'litespeed-cache'));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_BAD
+			);
 			return;
 		}
 
 		$hash = self::get_uri_hash($val);
 
 		if ($hash === false) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				sprintf(__('Failed to purge by url, invalid input: %s.',
-					'litespeed-cache'), $val));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_INV,
+				$val
+			);
 			return;
 		}
 
@@ -1219,18 +1187,18 @@ class LiteSpeed_Cache
 	public function purge_list()
 	{
 		if (!isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-					__('ERROR: Something went wrong with the form! Please try again.', 'litespeed-cache'));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGE_FORM
+			);
 			return;
 		}
 		$conf = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
 		$sel =  $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
 		$list_buf = $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
 		if (empty($list_buf)) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-					__('ERROR: Tried to purge list with empty list.', 'litespeed-cache'));
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY
+			);
 			return;
 		}
 		$list = explode("\n", $list_buf);
@@ -1248,9 +1216,9 @@ class LiteSpeed_Cache
 				$cb = 'purgeby_url_cb';
 				break;
 			default:
-				LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
-						LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-						__('ERROR: Bad Purge By selected value.', 'litespeed-cache'));
+				LiteSpeed_Cache_Admin_Error::add_error(
+					LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD
+				);
 				return;
 		}
 		array_walk($list, Array($this, $cb));
@@ -1774,6 +1742,31 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * On admin cache actions, verify the nonce to make sure the request is valid.
+	 *
+	 * @access private
+	 * @since 1.0.15
+	 * @param string $nonce The nonce used by the request.
+	 * @return bool True if the nonce is valid, false otherwise.
+	 */
+	private static function verify_admin_nonce($nonce)
+	{
+		$valid_nonces = array(
+			self::ADMINNONCE_PURGEALL,
+			self::ADMINNONCE_PURGENETWORKALL,
+			self::ADMINNONCE_PURGEBY,
+			self::ADMINNONCE_DISMISS
+		);
+
+		foreach ($valid_nonces as $valid_nonce) {
+			if (wp_verify_nonce($nonce, $valid_nonce)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Check the query string to see if it contains a LSCWP_CTRL.
 	 * Also will compare IPs to see if it is a valid command.
 	 *
@@ -1789,9 +1782,7 @@ class LiteSpeed_Cache
 		$action = $_GET[self::ADMINQS_KEY];
 		if ((is_admin()) || (is_network_admin())) {
 			if ((empty($_GET)) || (empty($_GET['_wpnonce']))
-				|| ((wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall') === false)
-					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-purgeall-network') === false)
-					&& (wp_verify_nonce($_GET[ '_wpnonce' ], 'litespeed-dismiss') === false))) {
+				|| (self::verify_admin_nonce($_GET['_wpnonce']) === false)) {
 				return;
 			}
 		}
@@ -1822,6 +1813,11 @@ class LiteSpeed_Cache
 				elseif ($action == self::ADMINQS_PURGEALL) {
 					$this->cachectrl = self::CACHECTRL_NOCACHE;
 					$this->purge_all();
+				}
+				elseif (($action == self::ADMINQS_PURGEBY)
+					&& (isset($_GET['purge_tags']))) {
+					$this->cachectrl = self::CACHECTRL_NOCACHE;
+					$this->purgeby_cb($_GET['purge_tags']);
 				}
 				else {
 					break;
