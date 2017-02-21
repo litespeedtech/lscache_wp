@@ -621,7 +621,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
 			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_SETTING_OVERWRITE
+				LiteSpeed_Cache_Admin_Error::E_HTA_SAVE
 			);
 			return false;
 		}
@@ -969,10 +969,15 @@ class LiteSpeed_Cache_Admin_Rules
 		if ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]) {
 			$list = $input[$id];
 			if ((empty($list)) || (self::check_rewrite($list) === false)) {
+				$err_args = array(
+					$id,
+					(empty($list) ? 'EMPTY' : esc_html($list))
+				);
 				$errors[] =
 					LiteSpeed_Cache_Admin_Error::build_error(
 						LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-						(empty($list) ? 'EMPTY' : esc_html($list)));
+						$err_args
+						);
 				$has_error = true;
 			}
 			$diff[$id] = $list;
@@ -996,7 +1001,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$errors[] =
 				LiteSpeed_Cache_Admin_Error::build_error(
 					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-					(empty($cookie_list) ? 'EMPTY' : esc_html($cookie_list)));
+					array($id, esc_html($cookie_list)));
 			$has_error = true;
 		}
 
@@ -1005,16 +1010,17 @@ class LiteSpeed_Cache_Admin_Rules
 			$diff[$id] = $input[$id];
 		}
 		else {
+			$err_args = array($id);
 			if ((!isset($input[$id])) || (empty($input[$id]))) {
-				$err = 'EMPTY';
+				$err_args[] = 'EMPTY';
 			}
 			else {
-				$err = esc_html($input[$id]);
+				$err_args[] = esc_html($input[$id]);
 			}
 
 			$errors[] =
 				LiteSpeed_Cache_Admin_Error::build_error(
-					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err);
+					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 			$has_error = true;
 		}
 

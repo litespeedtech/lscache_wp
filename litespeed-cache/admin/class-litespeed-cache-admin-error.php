@@ -43,7 +43,6 @@ class LiteSpeed_Cache_Admin_Error
 	const E_SETTING_TAG = 3520;
 	const E_SETTING_LC = 3530; // login cookie setting
 	const E_SETTING_REWRITE = 3540;
-	const E_SETTING_OVERWRITE = 3550;
 
 	const E_LC_HTA = 4000; // login cookie .htaccess not correct
 
@@ -55,11 +54,11 @@ class LiteSpeed_Cache_Admin_Error
 
 	const E_CONF = 9000; // general config failed to write.
 	const E_HTA_BU = 9010; // backup
-	const E_HTA_DNE = 9020; // does not exist
-	const E_HTA_PUT = 9030; // failed to put
-	const E_HTA_GET = 9040; // failed to get
-	const E_HTA_RW = 9050; // read write
-	const E_HTA_ORDER = 9060; // prefix found after suffix
+	const E_HTA_PUT = 9020; // failed to put
+	const E_HTA_GET = 9030; // failed to get
+	const E_HTA_RW = 9040; // read write
+	const E_HTA_ORDER = 9050; // prefix found after suffix
+	const E_HTA_SAVE = 9060;
 	const E_CONF_WRITE = 9070;
 	const E_CONF_FIND = 9080;
 
@@ -173,11 +172,11 @@ class LiteSpeed_Cache_Admin_Error
 			return __('Invalid login cookie. Invalid characters found: %s',
 				'litespeed-cache');
 		case self::E_SETTING_REWRITE:
-			return __('Invalid Rewrite List. Empty or invalid rule. Rule: %s', 'litespeed-cache');
-		case self::E_SETTING_OVERWRITE:
-			return sprintf(__('Failed to overwrite %s.', 'litespeed-cache'),
-				'.htaccess');
-
+			return LiteSpeed_Cache_Admin_Display::build_paragraph(
+					__('Invalid Rewrite List.', 'litespeed-cache'),
+					__('Empty or invalid rule.', 'litespeed-cache'),
+					__('Rule: %1$s, list: %2$s', 'litespeed-cache')
+				);
 		// Login cookie in settings did not match .htaccess.
 		case self::E_LC_HTA:
 			return LiteSpeed_Cache_Admin_Display::build_paragraph(
@@ -215,8 +214,6 @@ class LiteSpeed_Cache_Admin_Error
 		// .htaccess problem.
 		case self::E_HTA_BU:
 			return __('Failed to back up file, aborted changes.', 'litespeed-cache');
-		case self::E_HTA_DNE:
-			return __('.htaccess file does not exist or is not readable.', 'litespeed-cache');
 		case self::E_HTA_PUT:
 			return sprintf(__('Failed to put contents into %s', 'litespeed-cache'),
 				'.htaccess');
@@ -228,6 +225,9 @@ class LiteSpeed_Cache_Admin_Error
 				'.htaccess');
 		case self::E_HTA_ORDER:
 			return __('Prefix was found after suffix.', 'litespeed-cache');
+		case self::E_HTA_SAVE:
+			return sprintf(__('Failed to overwrite %s.', 'litespeed-cache'),
+				'.htaccess');
 
 
 		// wp-config problem.
