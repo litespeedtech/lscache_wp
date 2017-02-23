@@ -98,12 +98,15 @@ The purges will also not be synchronized across the nodes, so this is not recomm
 If a customized solution is required, please contact LiteSpeed Technologies at info@litespeedtech.com
 
 NOTICE: The rewrite rules created by this plugin must be copied to the Load Balancer.
+
 = Where are the cached files stored? =
 The actual cached pages are stored and managed by LiteSpeed Servers.
 Nothing is stored on the PHP side.
+
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 The support is currently in beta. It should work, but is not fully tested.
 As well, any settings changes that require modifying the .htaccess file requires a server restart.
+
 = Is WooCommerce supported? =
 In short, yes. However, for some woocommerce themes, the cart may not be updated correctly.
 
@@ -118,12 +121,20 @@ To test the cart:
 
 Some themes like Storefront and Shop Isle are built such that the cart works without the rule.
 However, other themes like the E-Commerce theme, do not, so please verify the theme used.
+
 = My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
 As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);`
 sometime before the shutdown hook, and it should be recognized by the cache.
 Alternatively, you may use the function `LiteSpeed_Cache_Tags::set_noncacheable();` for earlier versions (1.0.7+).
 If using the function, make sure to check that the class exists prior to using the function.
 Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache/other_notes/) for more information.
+
+= Are my images optimized? =
+The cache plugin does not do anything with the images themselves.
+We recommend you trying an image optimization plugin like
+<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
+to optimize your images. It can reduce your site's images up to 90%.
+
 = How do I get WP-PostViews to display an updating view count? =
 1. Use: `<div id="postviews_lscwp"></div>`
 
@@ -149,12 +160,6 @@ Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache
     ```
 
 3. Purge the cache to use the updated pages.
-
-= Are my images optimized? =
-The cache plugin does not do anything with the images themselves.
-We recommend you trying an image optimization plugin like
-<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
-to optimize your images. It can reduce your site's images up to 90%.
 
 == Plugin Developers ==
 
