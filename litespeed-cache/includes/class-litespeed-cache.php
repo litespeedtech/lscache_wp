@@ -22,7 +22,7 @@ class LiteSpeed_Cache
 	private static $log_path = '';
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.0.14.1' ;
+	const PLUGIN_VERSION = '1.1.0' ;
 
 	const LSCOOKIE_VARY_NAME = 'LSCACHE_VARY_COOKIE' ;
 	const LSCOOKIE_DEFAULT_VARY = '_lscache_vary' ;
