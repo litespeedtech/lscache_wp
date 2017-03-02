@@ -661,7 +661,7 @@ class LiteSpeed_Cache_Admin_Display
 			. __('LiteSpeed Cache Settings', 'litespeed-cache')
 			. '<span style="font-size:0.5em"> v'
 			. LiteSpeed_Cache::PLUGIN_VERSION
-			. '</span></h2><form method="post" action="options.php">';
+			. '</span></h2><form method="post" action="options.php" id="ls_form_options">';
 		if ($this->get_disable_all()) {
 			$desc = self::build_paragraph(
 				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
