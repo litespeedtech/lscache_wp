@@ -87,7 +87,11 @@ class LiteSpeed_Cache_Admin_Display
 			'noopener noreferrer', '_blank'
 		);
 		// Change the footer text
-		$footer_text = self::build_paragraph($rate_us, $questions);
+		if (!is_multisite() || is_network_admin()){
+			$footer_text = self::build_paragraph($rate_us, $questions);
+		}else{
+			$footer_text = self::build_paragraph($questions);
+		}
 
 		return $footer_text;
 	}
