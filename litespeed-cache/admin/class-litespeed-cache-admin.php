@@ -635,6 +635,7 @@ class LiteSpeed_Cache_Admin
 			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
 			LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
 			LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
+			LiteSpeed_Cache_Config::PURGE_PAGES,
 			LiteSpeed_Cache_Config::PURGE_AUTHOR,
 			LiteSpeed_Cache_Config::PURGE_YEAR,
 			LiteSpeed_Cache_Config::PURGE_MONTH,
@@ -960,6 +961,10 @@ class LiteSpeed_Cache_Admin
 		elseif (isset($_POST['purgefront'])) {
 			LiteSpeed_Cache::plugin()->purge_front();
 			$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
+		}
+		elseif (isset($_POST['purgepages'])) {
+			LiteSpeed_Cache::plugin()->purge_pages();
+			$msg = __('Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache');
 		}
 		elseif (isset($_POST['purgeerrors'])) {
 			LiteSpeed_Cache::plugin()->purge_errors();

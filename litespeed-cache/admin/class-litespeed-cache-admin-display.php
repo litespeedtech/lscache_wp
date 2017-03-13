@@ -507,6 +507,9 @@ class LiteSpeed_Cache_Admin_Display
 		$purge_front = get_submit_button(
 			__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront', false);
 
+		$purge_pages = get_submit_button(
+			__('Purge Pages', 'litespeed-cache'), 'primary', 'purgepages', false);
+
 		$atts = array();
 		$atts['id'] = 'litespeedcache-purgeall';
 
@@ -538,6 +541,13 @@ class LiteSpeed_Cache_Admin_Display
 			. self::build_tip(
 				__('This will Purge Front Page only', 'litespeed-cache'))
 			. $purge_front
+			. '</td></tr>'
+			. '<tr><th>'
+			. __('Purge Pages.', 'litespeed-cache')
+			. '</th><td>'
+			. self::build_tip(
+				__('This will Purge Pages only', 'litespeed-cache'))
+			. $purge_pages
 			. '</td></tr>'
 			. '<tr><th>'
 			. __('Purge all WordPress pages.', 'litespeed-cache')
@@ -1414,6 +1424,12 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->input_field_checkbox(
 			'purge_' . $pval, $pval, in_array($pval, $purge_options),
 			__('Home page', 'litespeed-cache'));
+
+		$buf .= $spacer;
+		$pval = LiteSpeed_Cache_Config::PURGE_PAGES;
+		$buf .= $this->input_field_checkbox(
+			'purge_' . $pval, $pval, in_array($pval, $purge_options),
+			__('Pages', 'litespeed-cache'));
 
 		$buf .= $endtr . $tr;
 

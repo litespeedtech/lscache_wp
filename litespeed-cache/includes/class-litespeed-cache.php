@@ -915,6 +915,17 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Alerts LiteSpeed Web Server to purge pages.
+	 *
+	 * @since    1.0.15
+	 * @access   public
+	 */
+	public function purge_pages()
+	{
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_PAGES);
+	}
+
+	/**
 	 * Alerts LiteSpeed Web Server to purge error pages.
 	 *
 	 * @since    1.0.14
@@ -1731,9 +1742,6 @@ class LiteSpeed_Cache
 		else {
 			$tags = array($prefix . 'B' . get_current_blog_id() . '_');
 		}
-		if (defined('LSCWP_LOG')) {
-			self::debug_log('Purge tags are ' . implode(',', $tags));
-		}
 
 		if ($stale) {
 			$cache_purge_header .= 'stale,';
@@ -1876,7 +1884,11 @@ class LiteSpeed_Cache
 		}
 
 		if (defined('LSCWP_LOG')) {
-			self::debug_log('End response.');
+			self::debug_log($cache_ctrl);
+			if($purge_hdr) {
+				self::debug_log($purge_hdr);
+			}
+			self::debug_log("End response.\n");
 		}
 	}
 
@@ -1919,7 +1931,7 @@ class LiteSpeed_Cache
 		}
 		$prefix_tags = array_map(array($this,'prefix_apply'), $cache_tags);
 		if (defined('LSCWP_LOG')) {
-			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
+			self::debug_log(LiteSpeed_Cache_Tags::HEADER_CACHE_TAG .': ' . implode(',', $prefix_tags));
 		}
 
 		switch ($mode) {
@@ -2056,6 +2068,10 @@ class LiteSpeed_Cache
 		elseif ( is_singular() ) {
 			//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $queried_obj_id ;
+
+			if ( is_page() ) {
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES;
+			}
 		}
 		elseif ( is_feed() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FEED;
@@ -2098,8 +2114,27 @@ class LiteSpeed_Cache
 			. self::get_uri_hash(wp_make_link_relative(get_post_permalink($post_id)));
 
 		// for archive of categories|tags|custom tax
+		global $post;
 		$post = get_post($post_id) ;
 		$post_type = $post->post_type ;
+
+		// get adjacent posts id as related post tag
+		if($post_type == 'post'){
+			$prev_post = get_previous_post();
+			$next_post = get_next_post();
+			if(!empty($prev_post->ID)) {
+				$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $prev_post->ID;
+				if(defined('LSCWP_LOG')){
+					self::debug_log('--------purge_tags prev is: '.$prev_post->ID);
+				}
+			}
+			if(!empty($next_post->ID)) {
+				$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $next_post->ID;
+				if(defined('LSCWP_LOG')){
+					self::debug_log('--------purge_tags next is: '.$next_post->ID);
+				}
+			}
+		}
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
@@ -2137,6 +2172,10 @@ class LiteSpeed_Cache
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_HOME_PAGE) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME ;
+		}
+
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES) ) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES ;
 		}
 
 		// if configured to have archived by date

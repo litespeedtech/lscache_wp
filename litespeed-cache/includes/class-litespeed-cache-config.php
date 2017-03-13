@@ -51,6 +51,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_ALL_PAGES = '-' ;
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
+	const PURGE_PAGES = 'PGS' ;
 	const PURGE_AUTHOR = 'A' ;
 	const PURGE_YEAR = 'Y' ;
 	const PURGE_MONTH = 'M' ;
@@ -221,6 +222,7 @@ class LiteSpeed_Cache_Config
 		$default_purge_options = array(
 			self::PURGE_FRONT_PAGE,
 			self::PURGE_HOME_PAGE,
+			self::PURGE_PAGES,
 			self::PURGE_AUTHOR,
 			self::PURGE_MONTH,
 			self::PURGE_TERM,
