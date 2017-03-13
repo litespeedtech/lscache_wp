@@ -636,6 +636,7 @@ class LiteSpeed_Cache_Admin
 			LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
 			LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
 			LiteSpeed_Cache_Config::PURGE_PAGES,
+			LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS,
 			LiteSpeed_Cache_Config::PURGE_AUTHOR,
 			LiteSpeed_Cache_Config::PURGE_YEAR,
 			LiteSpeed_Cache_Config::PURGE_MONTH,

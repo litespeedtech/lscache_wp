@@ -1433,6 +1433,13 @@ class LiteSpeed_Cache_Admin_Display
 
 		$buf .= $endtr . $tr;
 
+		$pval = LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS;
+		$buf .= $this->input_field_checkbox(
+			'purge_' . $pval, $pval, in_array($pval, $purge_options),
+			__('All pages with Recent Posts Widget', 'litespeed-cache'));
+
+		$buf .= $endtr . $tr;
+
 		$pval = LiteSpeed_Cache_Config::PURGE_AUTHOR;
 		$buf .= $this->input_field_checkbox(
 			'purge_' . $pval, $pval, in_array($pval, $purge_options),

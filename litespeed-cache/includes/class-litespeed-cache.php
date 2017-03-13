@@ -722,8 +722,25 @@ class LiteSpeed_Cache
 		add_action('shutdown', array($this, 'send_headers'), 0);
 		// purge_single_post will only purge that post by tag
 		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
+
+		// register recent posts widget tag before theme renders it to make it work
+		add_filter('widget_posts_args', array($this, 'register_tag_widget_recent_posts'));
+
 		// TODO: private purge?
 		// TODO: purge by category, tag?
+	}
+
+	/**
+	 * Register purge tag for pages with recent posts widget
+	 * of the plugin.
+	 *
+	 * @since    1.0.15
+	 * @access   public
+	 * @param array $params [wordpress params for widget_posts_args]
+	 */
+	public function register_tag_widget_recent_posts($params){
+		LiteSpeed_Cache_Tags::add_cache_tag(LiteSpeed_Cache_Tags::TYPE_PAGES_WITH_RECENT_POSTS);
+		return $params;
 	}
 
 	/**
@@ -2176,6 +2193,10 @@ class LiteSpeed_Cache
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES ;
+		}
+
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS) ) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES_WITH_RECENT_POSTS ;
 		}
 
 		// if configured to have archived by date

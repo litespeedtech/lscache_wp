@@ -52,6 +52,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
 	const PURGE_PAGES = 'PGS' ;
+	const PURGE_PAGES_WITH_RECENT_POSTS = 'PGSRP' ;
 	const PURGE_AUTHOR = 'A' ;
 	const PURGE_YEAR = 'Y' ;
 	const PURGE_MONTH = 'M' ;
@@ -223,6 +224,7 @@ class LiteSpeed_Cache_Config
 			self::PURGE_FRONT_PAGE,
 			self::PURGE_HOME_PAGE,
 			self::PURGE_PAGES,
+			self::PURGE_PAGES_WITH_RECENT_POSTS,
 			self::PURGE_AUTHOR,
 			self::PURGE_MONTH,
 			self::PURGE_TERM,

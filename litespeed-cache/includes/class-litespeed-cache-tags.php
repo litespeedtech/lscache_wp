@@ -24,6 +24,7 @@ class LiteSpeed_Cache_Tags
 	const TYPE_FRONTPAGE = 'F' ;
 	const TYPE_HOME = 'H' ;
 	const TYPE_PAGES = 'PGS';
+	const TYPE_PAGES_WITH_RECENT_POSTS = 'PGSRP';
 	const TYPE_ERROR = 'ERR.';
 	const TYPE_POST = 'Po.' ; // Post. Cannot use P, reserved for litemage.
 	const TYPE_ARCHIVE_POSTTYPE = 'PT.' ;
