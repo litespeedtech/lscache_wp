@@ -791,8 +791,25 @@ class LiteSpeed_Cache
 		add_action('shutdown', array($this, 'send_headers'), 0);
 		// purge_single_post will only purge that post by tag
 		add_action('lscwp_purge_single_post', array($this, 'purge_single_post'));
+
+		// register recent posts widget tag before theme renders it to make it work
+		add_filter('widget_posts_args', array($this, 'register_tag_widget_recent_posts'));
+
 		// TODO: private purge?
 		// TODO: purge by category, tag?
+	}
+
+	/**
+	 * Register purge tag for pages with recent posts widget
+	 * of the plugin.
+	 *
+	 * @since    1.0.15
+	 * @access   public
+	 * @param array $params [wordpress params for widget_posts_args]
+	 */
+	public function register_tag_widget_recent_posts($params){
+		LiteSpeed_Cache_Tags::add_cache_tag(LiteSpeed_Cache_Tags::TYPE_PAGES_WITH_RECENT_POSTS);
+		return $params;
 	}
 
 	/**
@@ -992,6 +1009,17 @@ class LiteSpeed_Cache
 		if (!is_openlitespeed()) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE, false);
 		}
+	}
+
+	/**
+	 * Alerts LiteSpeed Web Server to purge pages.
+	 *
+	 * @since    1.0.15
+	 * @access   public
+	 */
+	public function purge_pages()
+	{
+		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_PAGES);
 	}
 
 	/**
@@ -2106,6 +2134,10 @@ class LiteSpeed_Cache
 		}
 
 		if (defined('LSCWP_LOG')) {
+			self::debug_log($cache_ctrl);
+			if($purge_hdr) {
+				self::debug_log($purge_hdr);
+			}
 			self::debug_log("End response.\n\n");
 		}
 	}
@@ -2207,7 +2239,7 @@ class LiteSpeed_Cache
 			. implode(',', $prefix_tags);
 
 		if (defined('LSCWP_LOG')) {
-			self::debug_log('Cache tags are ' . implode(',', $prefix_tags));
+			self::debug_log(LiteSpeed_Cache_Tags::HEADER_CACHE_TAG .': ' . implode(',', $prefix_tags));
 		}
 		return $hdr;
 	}
@@ -2373,6 +2405,10 @@ class LiteSpeed_Cache
 		elseif ( is_singular() ) {
 			//$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $queried_obj_id ;
+
+			if ( is_page() ) {
+				$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES;
+			}
 		}
 		elseif ( is_feed() ) {
 			$cache_tags[] = LiteSpeed_Cache_Tags::TYPE_FEED;
@@ -2415,6 +2451,7 @@ class LiteSpeed_Cache
 			. self::get_uri_hash(wp_make_link_relative(get_post_permalink($post_id)));
 
 		// for archive of categories|tags|custom tax
+		global $post;
 		$post = get_post($post_id) ;
 		$post_type = $post->post_type ;
 
@@ -2423,6 +2460,24 @@ class LiteSpeed_Cache
 		if (!is_null($recent_posts)) {
 			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_WIDGET
 				. $recent_posts->id;
+		}
+
+		// get adjacent posts id as related post tag
+		if($post_type == 'post'){
+			$prev_post = get_previous_post();
+			$next_post = get_next_post();
+			if(!empty($prev_post->ID)) {
+				$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $prev_post->ID;
+				if(defined('LSCWP_LOG')){
+					self::debug_log('--------purge_tags prev is: '.$prev_post->ID);
+				}
+			}
+			if(!empty($next_post->ID)) {
+				$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $next_post->ID;
+				if(defined('LSCWP_LOG')){
+					self::debug_log('--------purge_tags next is: '.$next_post->ID);
+				}
+			}
 		}
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
@@ -2461,6 +2516,14 @@ class LiteSpeed_Cache
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_HOME_PAGE) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_HOME ;
+		}
+
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES) ) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES ;
+		}
+
+		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS) ) {
+			$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_PAGES_WITH_RECENT_POSTS ;
 		}
 
 		// if configured to have archived by date

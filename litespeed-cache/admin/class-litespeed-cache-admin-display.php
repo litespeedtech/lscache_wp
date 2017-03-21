@@ -87,7 +87,11 @@ class LiteSpeed_Cache_Admin_Display
 			'noopener noreferrer', '_blank'
 		);
 		// Change the footer text
-		$footer_text = self::build_paragraph($rate_us, $questions);
+		if (!is_multisite() || is_network_admin()){
+			$footer_text = self::build_paragraph($rate_us, $questions);
+		}else{
+			$footer_text = self::build_paragraph($questions);
+		}
 
 		return $footer_text;
 	}
@@ -569,6 +573,9 @@ class LiteSpeed_Cache_Admin_Display
 		$purge_front = get_submit_button(
 			__('Purge Front Page', 'litespeed-cache'), 'primary', 'purgefront', false);
 
+		$purge_pages = get_submit_button(
+			__('Purge Pages', 'litespeed-cache'), 'primary', 'purgepages', false);
+
 		$atts = array();
 		$atts['id'] = 'litespeedcache-purgeall';
 
@@ -600,6 +607,13 @@ class LiteSpeed_Cache_Admin_Display
 			. self::build_tip(
 				__('This will Purge Front Page only', 'litespeed-cache'))
 			. $purge_front
+			. '</td></tr>'
+			. '<tr><th>'
+			. __('Purge Pages.', 'litespeed-cache')
+			. '</th><td>'
+			. self::build_tip(
+				__('This will Purge Pages only', 'litespeed-cache'))
+			. $purge_pages
 			. '</td></tr>'
 			. '<tr><th>'
 			. __('Purge all WordPress pages.', 'litespeed-cache')
@@ -727,7 +741,7 @@ class LiteSpeed_Cache_Admin_Display
 			. __('LiteSpeed Cache Settings', 'litespeed-cache')
 			. '<span style="font-size:0.5em"> v'
 			. LiteSpeed_Cache::PLUGIN_VERSION
-			. '</span></h2><form method="post" action="options.php">';
+			. '</span></h2><form method="post" action="options.php" id="ls_form_options">';
 		if ($this->get_disable_all()) {
 			$desc = self::build_paragraph(
 				__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'),
@@ -1488,6 +1502,19 @@ class LiteSpeed_Cache_Admin_Display
 		$buf .= $this->input_field_checkbox(
 			'purge_' . $pval, $pval, in_array($pval, $purge_options),
 			__('Home page', 'litespeed-cache'));
+
+		$buf .= $spacer;
+		$pval = LiteSpeed_Cache_Config::PURGE_PAGES;
+		$buf .= $this->input_field_checkbox(
+			'purge_' . $pval, $pval, in_array($pval, $purge_options),
+			__('Pages', 'litespeed-cache'));
+
+		$buf .= $endtr . $tr;
+
+		$pval = LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS;
+		$buf .= $this->input_field_checkbox(
+			'purge_' . $pval, $pval, in_array($pval, $purge_options),
+			__('All pages with Recent Posts Widget', 'litespeed-cache'));
 
 		$buf .= $endtr . $tr;
 
@@ -2672,8 +2699,8 @@ RewriteRule .* - [E=Cache-Control:no-cache]';
 		$buf .= $this->input_field_collapsible($cluster_question, $cluster_answer);
 		$buf .= $this->input_field_collapsible($files_question, $files_answer);
 		$buf .= $this->input_field_collapsible($wc_question, $wc_answer);
-		$buf .= $this->input_field_collapsible($postviews_question, $postviews_answer);
 		$buf .= $this->input_field_collapsible($img_question, $img_answer);
+		$buf .= $this->input_field_collapsible($postviews_question, $postviews_answer);
 		$buf .= '</ul>';
 		$buf .= $this->input_collapsible_end();
 		$buf .= '</div>';

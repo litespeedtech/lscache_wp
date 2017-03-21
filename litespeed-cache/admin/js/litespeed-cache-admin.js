@@ -40,15 +40,15 @@
 
                 //save it to hidden field
                 $("input[name=active_tab]").val(active);
-                var action = $("form").attr("action");
+                var action = $("form#ls_form_options").attr("action");
                 if (action == 'options.php') {
                     var referer = $("input[name=_wp_http_referer]").val();
-                    var new_url = referer + '&tab=' + active;
+                    var new_url = lscwpInsertParam(referer, 'tab', active);
                     $("input[name=_wp_http_referer]").val(new_url);
                 }
                 else {
-                    var new_url = action + '&tab=' + active;
-                    $("form").attr("action", new_url);
+                    var new_url = lscwpInsertParam(action, 'tab', active);
+                    $("form#ls_form_options").attr("action", new_url);
                 }
             }
         });
@@ -209,5 +209,17 @@ function lscwpEsiEnabled(the_checkbox, esi_ids) {
         hid.setAttribute("value", node_val);
         hid.setAttribute("id", node_id);
         esi_ids[i].appendChild(hid);
+    }
+}
+
+// Append params to uri
+function lscwpInsertParam(uri, key, val){
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+        return uri.replace(re, '$1' + key + "=" + val + '$2');
+    }
+    else {
+        return uri + separator + key + "=" + val;
     }
 }
