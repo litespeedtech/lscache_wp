@@ -1179,7 +1179,7 @@ class LiteSpeed_Cache_Admin_Display
 						__('To easily grab the content, click the <b>Select All and Copy to Clipboard</b> button, to select and copy to clipboard.', 'litespeed-cache'),
 						array('b' => array())),
 					sprintf(__('Alternatively, this information is also saved in %s.', 'litespeed-cache'),
-						'wp-content/plugins/litespeed-cache/environment_report.txt')
+						'wp-content/plugins/litespeed-cache/environment_report.php')
 				)
 			)
 			. '<p><b>'
