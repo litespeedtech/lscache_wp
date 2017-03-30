@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Admin_Display
 			__('Rate <strong>LiteSpeed Cache</strong> with %s on WordPress.org if you like us!', 'litespeed-cache'),
 			array('strong' => array())
 		),
-			'<a href="https://wordpress.org/support/view/plugin-reviews/litespeed-cache?filter=5#postform" '
+			'<a href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" '
 			. 'rel="noopener noreferer" target="_blank">&#10030;&#10030;&#10030;&#10030;&#10030;</a>'
 		);
 		$questions = sprintf(wp_kses(
