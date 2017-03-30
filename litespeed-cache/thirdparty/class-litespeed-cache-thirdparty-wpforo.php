@@ -39,12 +39,12 @@ class LiteSpeed_Cache_ThirdParty_WpForo
 	public static function purge_tag(){
 		if(!empty($_POST)){
 			add_action('wpforo_after_add_topic', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_add');
-			add_action('wpforo_start_edit_topic', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_edit');
-			add_action('wpforo_after_delete_topic', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_delete');
+			add_action('wpforo_start_edit_topic', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_update');
+			add_action('wpforo_after_delete_topic', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_update');
 
 			add_action('wpforo_after_add_post', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_post_add', 10, 2);
-			add_action('wpforo_after_edit_post', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_post_edit');
-			add_action('wpforo_after_delete_post', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_post_delete');
+			add_action('wpforo_after_edit_post', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_update');
+			add_action('wpforo_after_delete_post', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag_topic_update');
 		}
 		// for those which doesn't have hooks
 		add_action('shutdown', 'LiteSpeed_Cache_ThirdParty_WpForo::wpforo_hook_when_shutdown', -1);// use -1 to make evoked before send tag header
@@ -107,18 +107,9 @@ class LiteSpeed_Cache_ThirdParty_WpForo
 	/**
 	 * Purge topic when a topic is modified
 	 */
-	public static function purge_tag_topic_edit($args){
+	public static function purge_tag_topic_update($args){
 		if(!empty($args['topicid'])){
 			self::purge_tag_topic($args['topicid']);
-		}
-	}
-
-	/**
-	 * Purge topic when a topic is deleted
-	 */
-	public static function purge_tag_topic_delete($topic){
-		if(!empty($topic['topicid'])){
-			self::purge_tag_topic($topic['topicid']);
 		}
 	}
 
@@ -128,24 +119,6 @@ class LiteSpeed_Cache_ThirdParty_WpForo
 	public static function purge_tag_post_add($post, $topic){
 		if(!empty($topic['topicid'])){
 			self::purge_tag_topic($topic['topicid']);
-		}
-	}
-
-	/**
-	 * Purge topic when a post is modified
-	 */
-	public static function purge_tag_post_edit($args){
-		if(!empty($args['topicid'])){
-			self::purge_tag_topic($args['topicid']);
-		}
-	}
-
-	/**
-	 * Purge topic when a post is deleted
-	 */
-	public static function purge_tag_post_delete($post){
-		if(!empty($post['topicid'])){
-			self::purge_tag_topic($post['topicid']);
 		}
 	}
 
