@@ -276,7 +276,7 @@ class LiteSpeed_Cache_Config
 				) ;
 
 		if (!is_openlitespeed()) {
-			$default_options[self::OPID_ESI_ENABLE] = true;
+			$default_options[self::OPID_ESI_ENABLE] = false;
 			$default_options[self::OPID_ESI_CACHE] = false;
 		}
 
