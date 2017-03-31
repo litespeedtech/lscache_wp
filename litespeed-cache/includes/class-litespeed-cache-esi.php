@@ -260,9 +260,10 @@ class LiteSpeed_Cache_Esi
 			return false;
 		}
 
+		$relative_site_url = wp_make_link_relative(site_url());
 		$qs = '?' . self::QS_ACTION . '&' . self::QS_PARAMS
 			. '=' . urlencode(base64_encode(serialize($params)));
-		$url = self::URL . $qs;
+		$url = $relative_site_url . self::URL . $qs;
 		$output = '<!-- lscwp ' . $wrapper . ' -->'
 			. '<esi:include src="' . $url . '"';
 		if (!empty($cachectrl)) {
