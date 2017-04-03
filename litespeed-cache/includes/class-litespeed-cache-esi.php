@@ -260,10 +260,10 @@ class LiteSpeed_Cache_Esi
 			return false;
 		}
 
-		$relative_site_url = wp_make_link_relative(site_url());
+		$relative_base_url = wp_make_link_relative(home_url());
 		$qs = '?' . self::QS_ACTION . '&' . self::QS_PARAMS
 			. '=' . urlencode(base64_encode(serialize($params)));
-		$url = $relative_site_url . self::URL . $qs;
+		$url = $relative_base_url . self::URL . $qs;
 		$output = '<!-- lscwp ' . $wrapper . ' -->'
 			. '<esi:include src="' . $url . '"';
 		if (!empty($cachectrl)) {
@@ -302,9 +302,12 @@ class LiteSpeed_Cache_Esi
 		}
 
 		if (defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log('Got an esi request. Name: '
-				. $params[self::PARAM_NAME]
-				. ', Block ID: ' . $params[self::PARAM_BLOCK_ID]);
+			$logInfo = 'Got an esi request.';
+			if(!empty($params[self::PARAM_NAME])) {
+				$logInfo .= ' Name: ' . $params[self::PARAM_NAME] . ', ';
+			}
+			$logInfo .= ' Block ID: ' . $params[self::PARAM_BLOCK_ID];
+			LiteSpeed_Cache::debug_log($logInfo);
 		}
 		global $_SERVER;
 		$orig = $_SERVER['REQUEST_URI'];
