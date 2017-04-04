@@ -110,15 +110,14 @@ If a customized solution is required, please contact LiteSpeed Technologies at i
 NOTICE: The rewrite rules created by this plugin must be copied to the Load Balancer.
 
 = Where are the cached files stored? =
+
 The actual cached pages are stored and managed by LiteSpeed Servers.
 
 Nothing is stored on the PHP side.
 
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 
-The support is currently in beta. It should work, but is not fully tested.
-
-As well, any settings changes that require modifying the .htaccess file requires a server restart.
+Yes it can work well with OpenLiteSpeed. As well, any settings changes that require modifying the .htaccess file requires a server restart.
 
 = Is WooCommerce supported? =
 
