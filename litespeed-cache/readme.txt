@@ -6,10 +6,13 @@ Tested up to: 4.7
 Stable tag: 1.0.14.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
+
 Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
 
 == Description ==
+
 The LiteSpeed Cache Plugin for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server (LSWS) and its built-in page cache, LSCache.
+
 Because LSCache is built directly into LSWS, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches.
 
 Additional plugin features:
@@ -46,50 +49,60 @@ Additional plugin features:
 For support visit our [LiteSpeed Forums](https://www.litespeedtech.com/support/forum/ "forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com
 
 == Installation ==
+
+1. Install `LiteSpeed Web Server Enterprise` or `OpenLiteSeed`[Free].
+
+2. Install `LiteSpeed Cache` and activate.
+
+3. Goto `LiteSpeed Cache` -> `Settings`, set option `Enable LiteSpeed Cache` to `Enable`.
+
 = Instructions for LiteSpeed Web Server Enterprise =
-1. Make sure that your license includes the LSCache module enabled.
-A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license")
-is available for free for 15 days.
-2. The server must be configured to have caching enabled. If you are the server admin,
-[click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration).
-Otherwise request that the server admin configure the cache root for the server.
-3. In the .htaccess file for the WordPress installation, add the following:<br>
+
+1. Make sure that your license includes the LSCache module enabled. A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") is available for free for 15 days.
+
+2. The server must be configured to have caching enabled. If you are the server admin, [click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration). Otherwise request that the server admin configure the cache root for the server.
+
+3. In the .htaccess file for the WordPress installation, add the following:
 `<IfModule LiteSpeed>
    CacheLookup public on
 </IfModule>`
 
 = Instructions for OpenLiteSpeed =
+
 * This integration utilizes OLS's cache module.
-* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install).
- If using an existing WordPress installation, use the --wordpresspath parameter.
-* Else if OLS and WordPress are already installed, please follow the instructions [here](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
+
+* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the --wordpresspath parameter.
+
+* Else if OLS and WordPress are already installed, please follow the instructions [here](http://open.litespeedtech.com/mediawiki/index.php Help:How_To_Set_Up_LSCache_For_WordPress).
 
 = How to test the plugin =
-The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers.<br>
-Visiting a page for the first time should result in a
-`X-LiteSpeed-Cache-Control:miss`
-or
-`X-LiteSpeed-Cache-Control:no-cache`
-response header for the page.<br>
-Subsequent requests should have the
-`X-LiteSpeed-Cache-Control:hit`
-response header until the page is updated, expired, or purged. Please visit
-[this page](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing)
-for more information.
+
+The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers. Visiting a page for the first time should result in a `X-LiteSpeed-Cache-Control:miss` or `X-LiteSpeed-Cache-Control:no-cache` response header for the page. Subsequent requests should have the `X-LiteSpeed-Cache-Control:hit` response header until the page is updated, expired, or purged. Please visit [this page](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing) for more information.
 
 == Frequently Asked Questions ==
+
 = Is the LiteSpeed Cache Plugin for WordPress free? =
-Yes, the plugin itself will remain free and open source.
-That said, a LiteSpeed server is required (see question 2).
+
+Yes, the plugin itself will remain free and open source. That said, a LiteSpeed server is required (see question 2).
+
 = What server software is required for this plugin? =
+
 A LiteSpeed server is required in order to use this plugin.
+
 1. LiteSPeed Web Server Enterprise with LSCache Module (v5.0.10+)
+
 2. OpenLiteSpeed (v1.4.17+)
+
 3. LiteSpeed WebADC (v2.0+)
+
 Any single server or cluster including a LiteSpeed server will work.
+
 = Does this plugin work in a clustered environment? =
+
 The cache entries are stored at the litespeed server level. The simplest solution is to use LiteSpeed WebADC, as the cache entries will be cached at that level.
+
 If using another load balancer, the cache entries will only be stored at the backend nodes, not at the load balancer.
+
 The purges will also not be synchronized across the nodes, so this is not recommended.
 
 If a customized solution is required, please contact LiteSpeed Technologies at info@litespeedtech.com
@@ -98,41 +111,55 @@ NOTICE: The rewrite rules created by this plugin must be copied to the Load Bala
 
 = Where are the cached files stored? =
 The actual cached pages are stored and managed by LiteSpeed Servers.
+
 Nothing is stored on the PHP side.
 
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
+
 The support is currently in beta. It should work, but is not fully tested.
+
 As well, any settings changes that require modifying the .htaccess file requires a server restart.
 
 = Is WooCommerce supported? =
+
 In short, yes. However, for some woocommerce themes, the cart may not be updated correctly.
 
 To test the cart:
 
 1. On a non-logged-in browser, visit and cache a page, then visit and cache a product page.
+
 2. The first page should be accessible from the product page (e.g. the shop).
+
 3. Once both pages are confirmed cached, add the product to your cart.
+
 4. After adding to the cart, visit the first page.
+
 5. The page should still be cached, and the cart should be up to date.
+
 6. If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.
 
 Some themes like Storefront and Shop Isle are built such that the cart works without the rule.
+
 However, other themes like the E-Commerce theme, do not, so please verify the theme used.
 
 = My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
-As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);`
-sometime before the shutdown hook, and it should be recognized by the cache.
+
+As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);` sometime before the shutdown hook, and it should be recognized by the cache.
+
 Alternatively, you may use the function `LiteSpeed_Cache_Tags::set_noncacheable();` for earlier versions (1.0.7+).
+
 If using the function, make sure to check that the class exists prior to using the function.
+
 Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache/other_notes/) for more information.
 
 = Are my images optimized? =
+
 The cache plugin does not do anything with the images themselves.
-We recommend you trying an image optimization plugin like
-<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
-to optimize your images. It can reduce your site's images up to 90%.
+
+We recommend you trying an image optimization plugin like <a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a> to optimize your images. It can reduce your site's images up to 90%.
 
 = How do I get WP-PostViews to display an updating view count? =
+
 1. Use: `<div id="postviews_lscwp"></div>`
 
     to replace
@@ -140,6 +167,7 @@ to optimize your images. It can reduce your site's images up to 90%.
     `<?php if(function_exists('the_views')) { the_views(); } ?>`
 
     * NOTE: The id can be changed, but the div id and the ajax function must match.
+
 2. Replace the ajax query in `wp-content/plugins/wp-postviews/postviews-cache.js` with
 
     ```
@@ -160,41 +188,23 @@ to optimize your images. It can reduce your site's images up to 90%.
 
 == Plugin Developers ==
 
-Any WP plugin that populates front end content that can be publicly cached
-should work with LSCache.
+Any WP plugin that populates front end content that can be publicly cached should work with LSCache.
 
-However if the plugin needs to update some data and the cache does not
-automatically purge the cached page, you may be required to write an
-integration script to remedy this. In addition to this section, there is a template file and a
-few examples of plugins that required integration scripts if additional
-resources are needed.
+However if the plugin needs to update some data and the cache does not automatically purge the cached page, you may be required to write an integration script to remedy this. In addition to this section, there is a template file and a few examples of plugins that required integration scripts if additional resources are needed.
 
 = Version 1.0.10+ =
-If your plugin needs to set the current page as non cacheable, the simplest
-way to instruct the cache plugin to not cache the page is `define('LSCACHE_NO_CACHE', true);`
+
+If your plugin needs to set the current page as non cacheable, the simplest way to instruct the cache plugin to not cache the page is `define('LSCACHE_NO_CACHE', true);`
 
 This must be defined prior to the shutdown hook to ensure that it is recognized.
 
 = How It Works =
 
-LSCache works by tagging each cacheable page. In its most basic form,
-each page is tagged with its Post ID, then sent to the server to be cached.
-When someone makes a change to the page, that request will notify the server
-to purge the cached items associated with that page's post id.
+LSCache works by tagging each cacheable page. In its most basic form, each page is tagged with its Post ID, then sent to the server to be cached. When someone makes a change to the page, that request will notify the server to purge the cached items associated with that page's post id.
 
-This integration framework enables any plugin developer to customize the
-notifications sent to the server. It is possible to tag the page with
-identifiers as the page is stored in the cache. Later, if needed, the tag
-system provides a simple way to purge the cache of a certain subset of pages.
-Multiple tags can be set on a single page, and a single tag may be used on
-multiple pages. This many to many mapping provides a flexible system enabling
-you to group pages in many ways.
+This integration framework enables any plugin developer to customize the notifications sent to the server. It is possible to tag the page with identifiers as the page is stored in the cache. Later, if needed, the tag system provides a simple way to purge the cache of a certain subset of pages. Multiple tags can be set on a single page, and a single tag may be used on multiple pages. This many to many mapping provides a flexible system enabling you to group pages in many ways.
 
-For example, a page may be tagged with `MTPP_F.1 (forum), MTPP_G.4 (group),
-MTPP_S.georgia (state)` because the page is in forum 1, group 4, and related to
-the state of Georgia. Then another page is tagged `MTPP_F.1, MTPP_G.2,
-MTPP_S.iowa`. If a change is made where all pages tagged `MTPP_F.1` need to be
-purged, the tag system makes it easy to purge the specific pages.
+For example, a page may be tagged with `MTPP_F.1 (forum), MTPP_G.4 (group), MTPP_S.georgia (state)` because the page is in forum 1, group 4, and related to the state of Georgia. Then another page is tagged `MTPP_F.1, MTPP_G.2, MTPP_S.iowa`. If a change is made where all pages tagged `MTPP_F.1` need to be purged, the tag system makes it easy to purge the specific pages.
 
 A post will automatically be purged if the following events are triggered:
 
@@ -204,14 +214,9 @@ A post will automatically be purged if the following events are triggered:
  * trashed_post
  * delete_attachment
 
-These cases cover most situations in which a cache purge is necessary.
-If all the correct pages are purged, there may be no need to add additional
-tags.
+These cases cover most situations in which a cache purge is necessary. If all the correct pages are purged, there may be no need to add additional tags.
 
-Another application for creating a third party integration class is to notify
-LSCache if the plugin generates private/transient data that cannot be cached
-for certain responses. Below is a list of what is already considered
-non-cacheable.
+Another application for creating a third party integration class is to notify LSCache if the plugin generates private/transient data that cannot be cached for certain responses. Below is a list of what is already considered non-cacheable.
 
 A post is considered non cacheable if…
 
@@ -232,30 +237,22 @@ A post is considered non cacheable if…
 = Components =
 
 1. A class to handle the compatibility code. A template is available below.
-2. Initiator for the class. Can be in the plugin's own file space or appended
-to the registry.
+
+2. Initiator for the class. Can be in the plugin's own file space or appended to the registry.
 
 = API/Functions =
 
-The following functions may be used at any hook point prior to the 'shutdown'
-hook point.
+The following functions may be used at any hook point prior to the 'shutdown' hook point.
 
 * **The $tag parameter**
 
-  This parameter is used to distinguish pages. Generally speaking, there are two
-components to the tag, the name and the ID. That said, any number of components
-are allowed. Each component should be separated via a period, '.'.
+  This parameter is used to distinguish pages. Generally speaking, there are two components to the tag, the name and the ID. That said, any number of components are allowed. Each component should be separated via a period, '.'.
 
-  The name should be short, but unique. As an example, if the plugin
-MySlideShowPlugin has a class SlideShow, it might use `MSSP_SS.1`.
-
+  The name should be short, but unique. As an example, if the plugin MySlideShowPlugin has a class SlideShow, it might use `MSSP_SS.1`.
 
 * **LiteSpeed_Cache_Tags::add_cache_tag(_$tag_)**
 
-  Adds a single or group of cache tags to the list of cache tags associated with
-the current page. These will be appended to the LiteSpeed Cache Plugin
-generated list of cache tags. This may be useful to purge by a custom tag
-rather than resorting to the WordPress site wide tags.
+  Adds a single or group of cache tags to the list of cache tags associated with the current page. These will be appended to the LiteSpeed Cache Plugin generated list of cache tags. This may be useful to purge by a custom tag rather than resorting to the WordPress site wide tags.
 
   * **Parameters**
 
@@ -263,9 +260,7 @@ rather than resorting to the WordPress site wide tags.
 
 * **LiteSpeed_Cache_Tags::add_purge_tag(_$tag_)**
 
-  Adds a single or group of purge tags to the list of tags to be purged with the
-request. This may be useful for situations where another plugin needs to purge
-custom cache tags or associated pages.
+  Adds a single or group of purge tags to the list of tags to be purged with the request. This may be useful for situations where another plugin needs to purge custom cache tags or associated pages.
 
   * **Parameters**
 
@@ -273,58 +268,39 @@ custom cache tags or associated pages.
 
 = Hook Points =
 
-These hook points are provided for hooking into the cache's run time
-functionality. It is not required to hook into any of these hook points;
-these are provided more for convenience. It is possible that a plugin only
-needs to hook into its own hook points.
+These hook points are provided for hooking into the cache's run time functionality. It is not required to hook into any of these hook points; these are provided more for convenience. It is possible that a plugin only needs to hook into its own hook points.
 
 * **Action - litespeed_cache_detect_thirdparty**
 
-  This action may be used to check if it is necessary to add any further
-functionality to the current request. For example, if a user visits a shopping
-page, there is no need for the forum plugin to do its extra checks/add its tags
-because the page is unrelated.
+  This action may be used to check if it is necessary to add any further functionality to the current request. For example, if a user visits a shopping page, there is no need for the forum plugin to do its extra checks/add its tags because the page is unrelated.
 
-  If, however, the callback determines that it is a forum page,
-it is recommended to add any needed actions/filters in the callback.
+  If, however, the callback determines that it is a forum page, it is recommended to add any needed actions/filters in the callback.
 
 * **Filter - litespeed_cache_is_cacheable($cacheable)**
 
-  Triggered when the cache plugin is checking if the current page is cacheable.
-This filter will not trigger on admin pages nor regular pages when visited by a
-logged in user.
+  Triggered when the cache plugin is checking if the current page is cacheable. This filter will not trigger on admin pages nor regular pages when visited by a logged in user.
 
   * **Parameters**
 
-     *$cacheable* `boolean` Represents whether a previous filter determined the
-cache to be cacheable or not. If this is false, it is strongly recommended to
-return false immediately to optimize performance.
+     *$cacheable* `boolean` Represents whether a previous filter determined the cache to be cacheable or not. If this is false, it is strongly recommended to return false immediately to optimize performance.
 
   * **Returns**
 
-     `boolean` True if cacheable, false otherwise. If *$cacheable* was false and
-true is returned, the result is undefined behavior.
+     `boolean` True if cacheable, false otherwise. If *$cacheable* was false and true is returned, the result is undefined behavior.
 
 * **Action - litespeed_cache_on_purge_post**
 
-  Triggered when a post is about to be purged. Use this hook point if purging a
-page should purge other pages related to your plugin.
+  Triggered when a post is about to be purged. Use this hook point if purging a page should purge other pages related to your plugin.
 
-  An example use case: Suppose a user replies to a forum topic. This will cause
-the forum topic to be purged. When the plugin is about to notify the server,
-the forum plugin will see that the cache is about to purge the topic page.
-The plugin then adds purge tags, notifying the server to purge the forum and
-forum list as well. This ensures that all related pages are up to date.
+  An example use case: Suppose a user replies to a forum topic. This will cause the forum topic to be purged. When the plugin is about to notify the server, the forum plugin will see that the cache is about to purge the topic page. The plugin then adds purge tags, notifying the server to purge the forum and forum list as well. This ensures that all related pages are up to date.
 
 * **Action - litespeed_cache_add_purge_tags**
 
-  Called at the end of every request. This hook provides an access point to any
-plugin that needs to add purge tags to the current request.
+  Called at the end of every request. This hook provides an access point to any plugin that needs to add purge tags to the current request.
 
 * **Action - litespeed_cache_add_cache_tags**
 
-  Called at the end of every cacheable request. This hook provides an access
-point to any plugin that needs to add cache tags to the current request.
+  Called at the end of every cacheable request. This hook provides an access point to any plugin that needs to add cache tags to the current request.
 
 == Screenshots ==
 
@@ -336,6 +312,7 @@ point to any plugin that needs to add cache tags to the current request.
 6. Cache Hit Example
 
 == Changelog ==
+
 = 1.0.14.1 - January 31 2017 =
 * [UPDATE] Removed Freemius integration due to feedback.
 
@@ -510,7 +487,4 @@ point to any plugin that needs to add cache tags to the current request.
 
 = 1.0.0 - January 20 2016 =
 * Initial Release.
-
-== Upgrade Notice ==
-
 
