@@ -263,9 +263,13 @@ class LiteSpeed_Cache
 		}
 		$this->try_copy_advanced_cache();
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true);
-		if (!is_openlitespeed()) {
-			$this->set_esi_post_type();
+		//todo: Check if needed to load rewrite rules before flush
+		//todo: Check if rewrite rule is added before this line or not
+		//todo: Check if esi is enabled is run twice
+		if (!is_openlitespeed() && $this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
+			LiteSpeed_Cache_Esi::add_rewrite_rule_esi();
 		}
+		flush_rewrite_rules();
 
 		include_once $this->plugin_dir . '/admin/class-litespeed-cache-admin.php';
 		require_once $this->plugin_dir . '/admin/class-litespeed-cache-admin-display.php';
@@ -430,6 +434,7 @@ class LiteSpeed_Cache
 		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
 		}
+		//todo: remove rewrite rule from load_public_action before flush
 		flush_rewrite_rules();
 		LiteSpeed_Cache_Admin_Rules::clear_rules();
 		// delete in case it's not deleted prior to deactivation.
@@ -570,29 +575,6 @@ class LiteSpeed_Cache
 	{
 		load_plugin_textdomain(self::PLUGIN_NAME, false,
 			dirname(dirname(plugin_basename(__FILE__))) . '/languages/') ;
-	}
-
-	/**
-	 * Registers the ESI post type.
-	 *
-	 * The registration function is in the LiteSpeed_Cache_Esi class,
-	 * which may not be initialized, so this method will include the
-	 * file if necessary. This method will also flush the rewrite rules
-	 * so that the new post type will be included.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 */
-	public function set_esi_post_type()
-	{
-		if (!class_exists('LiteSpeed_Cache_Esi')) {
-			include_once $this->plugin_dir
-				. '/includes/class-litespeed-cache-esi.php';
-		}
-		if (!post_type_exists(LiteSpeed_Cache_Esi::POSTTYPE)) {
-			LiteSpeed_Cache_Esi::get_instance()->register_post_type();
-		}
-		flush_rewrite_rules();
 	}
 
 	/**
@@ -779,14 +761,20 @@ class LiteSpeed_Cache
 
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
+		//todo: make a constant for esiEnable included is_openlitespeed&cfg esi eanbled
 		if ((!is_openlitespeed()) && (!$is_ajax)
-			&& ($this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE))) {
+			&& $this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
 			$esi = LiteSpeed_Cache_Esi::get_instance();
 			add_action('init', array($esi, 'register_post_type'));
 			add_action('template_include', array($esi, 'esi_template'), 100);
 			add_action('load-widgets.php', array($this, 'purge_widget'));
 			add_action('wp_update_comment_count',
 				array($this, 'purge_comment_widget'));
+
+			// backend add rewrite rule
+			if(is_admin() || is_network_admin()){// always add rewrite rule to backend in case any other plugin flush rules
+				add_action('init', array($esi, 'add_rewrite_rule_esi'));
+			}
 		}
 		add_action('wp_update_comment_count',
 			array($this, 'purge_feeds'));

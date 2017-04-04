@@ -481,11 +481,11 @@ class LiteSpeed_Cache_Config
 		}
 
 		self::option_diff($default_options, $this->options);
-		if ((!is_openlitespeed())
-			&& ($this->options[self::OPID_ENABLED])
-			&& ($this->options[self::OPID_ESI_ENABLE])) {
-			LiteSpeed_Cache::plugin()->set_esi_post_type();
-		}
+		// if ((!is_openlitespeed())
+		// 	&& ($this->options[self::OPID_ENABLED])
+		// 	&& ($this->options[self::OPID_ESI_ENABLE])) {
+		// 	LiteSpeed_Cache::plugin()->set_esi_post_type();
+		// }
 
 //		if ((!is_multisite()) || (is_network_admin())) {
 //			$this->options[self::OPID_LOGIN_COOKIE]

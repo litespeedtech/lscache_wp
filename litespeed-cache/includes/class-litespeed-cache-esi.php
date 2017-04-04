@@ -81,14 +81,16 @@ class LiteSpeed_Cache_Esi
 	}
 
 	/**
-	 * Hooked to the init action.
 	 * Registers the LiteSpeed ESI post type.
+	 * ONLY for frontend
 	 *
 	 * @access public
 	 * @since 1.1.0
 	 */
-	public function register_post_type()
+	public static function register_post_type()
 	{
+		if (post_type_exists(self::POSTTYPE)) return;
+
 		register_post_type(
 			self::POSTTYPE,
 			array(
@@ -103,6 +105,16 @@ class LiteSpeed_Cache_Esi
 				'query_var' => true
 			)
 		);
+	}
+
+	/**
+	 * Convert esi requests to esi post type
+	 * ONLY for backend
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
+	public function add_rewrite_rule_esi(){
 		add_rewrite_rule('lscacheesi/?',
 			'index.php?post_type=lscacheesi', 'top');
 	}

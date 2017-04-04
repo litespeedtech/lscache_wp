@@ -945,10 +945,10 @@ class LiteSpeed_Cache_Admin
 				|| ($orig_esi_enabled !== $new_esi_enabled)
 			) {
 				if (($new_enabled) && ($new_esi_enabled)) {
-					LiteSpeed_Cache::plugin()->set_esi_post_type();
-				} else {
-					flush_rewrite_rules();
+					//todo: check if rewrite rule is alread added before this line, otherwise clear that rule
+					LiteSpeed_Cache::plugin()->add_rewrite_rule_esi();
 				}
+				flush_rewrite_rules();
 				LiteSpeed_Cache::plugin()->purge_all();
 			}
 		}

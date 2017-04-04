@@ -56,6 +56,7 @@ require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin-error.php
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-config.php';
+	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-esi.php';
 	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-tags.php';
 	require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin.php';
 	require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin-rules.php';
