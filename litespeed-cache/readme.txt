@@ -315,6 +315,7 @@ These hook points are provided for hooking into the cache's run time functionali
 == Changelog ==
 
 = 1.0.15 - April 18 2017 =
+* [NEW] Add Purge Pages and Purge Recent Posts Widget pages options
 * [NEW] Add wp-cli command for setting and getting options
 * [NEW] Add an import/export options cli command
 * [UPDATE] Purge adjacent posts when publish a new post.
@@ -322,6 +323,7 @@ These hook points are provided for hooking into the cache's run time functionali
 * [UPDATE] Add new purgeby option to wp-cli
 * [UPDATE] Add third party integration for theme-my-login
 * [UPDATE] Remove nag for multiple sites
+* [UPDATE] Only inject Litespeed javascripts in Litespeed pages
 * [REFACTOR] Properly check for zero in ttl settings
 * [BUGFIX] Fixed the 404 issue that can be caused by some certain plugins when save the settings.
 * [BUGFIX] Fixed mu-plugin compatibility.

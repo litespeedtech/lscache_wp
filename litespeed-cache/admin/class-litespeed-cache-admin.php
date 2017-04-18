@@ -53,7 +53,9 @@ class LiteSpeed_Cache_Admin
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 		}
 
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+		if(!empty($_GET['page']) && substr($_GET['page'], 0, 8) == 'lscache-'){
+			add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+		}
 		add_action('admin_print_styles-settings_page_litespeedcache',
 			array($this, 'enqueue_style'));
 
