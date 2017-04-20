@@ -477,16 +477,15 @@ class LiteSpeed_Cache
 		}
 
 		$this->load_public_actions() ;
-		add_action('init', array($this, 'detect'), 4);
-		// if ($is_ajax) {
-		// }
-		// elseif ((is_admin()) || (is_network_admin())) {
-		// 	add_action('admin_init', array($this, 'detect'), 0);
-		// }
-		// else {
-		// 	add_action('wp', array($this, 'detect'), 4);
-		// }
-
+		if ($is_ajax) {
+			add_action('init', array($this, 'detect'), 4);
+		}
+		elseif ((is_admin()) || (is_network_admin())) {
+			add_action('admin_init', array($this, 'detect'), 0);
+		}
+		else {
+			add_action('wp', array($this, 'detect'), 4);
+		}
 	}
 
 	/**
@@ -1937,6 +1936,9 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers()
 	{
+		global $GLOBALS;
+		global $wpforo;
+		$zz = $GLOBALS['wpforo'];
 		$cache_control_header = '';
 		$cache_tag_header = '';
 		$vary_headers = '';
