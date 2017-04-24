@@ -948,7 +948,7 @@ class LiteSpeed_Cache_Admin
 			) {
 				if (($new_enabled) && ($new_esi_enabled)) {
 					//todo: check if rewrite rule is alread added before this line, otherwise clear that rule
-					LiteSpeed_Cache::plugin()->add_rewrite_rule_esi();
+					LiteSpeed_Cache_Esi::get_instance()->add_rewrite_rule_esi();
 				}
 				flush_rewrite_rules();
 				LiteSpeed_Cache::plugin()->purge_all();

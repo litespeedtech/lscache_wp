@@ -486,7 +486,7 @@ class LiteSpeed_Cache
 			$this->load_logged_out_actions();
 		}
 
-		$this->load_public_actions() ;
+		$this->load_public_actions($is_ajax) ;
 		if ($is_ajax) {
 			add_action('init', array($this, 'detect'), 4);
 		}
