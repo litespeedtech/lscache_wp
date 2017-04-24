@@ -486,19 +486,16 @@ class LiteSpeed_Cache
 			$this->load_logged_out_actions();
 		}
 
-
-		$this->load_public_actions($is_ajax);
-		add_action('init', array($this, 'detect'), 4);
-		// if ($is_ajax) {
-		// 	do_action('litespeed_cache_detect_thirdparty');
-		// }
-		// elseif ((is_admin()) || (is_network_admin())) {
-		// 	add_action('admin_init', array($this, 'detect'), 0);
-		// }
-		// else {
-		// 	add_action('wp', array($this, 'detect'), 4);
-		// }
-
+		$this->load_public_actions() ;
+		if ($is_ajax) {
+			add_action('init', array($this, 'detect'), 4);
+		}
+		elseif ((is_admin()) || (is_network_admin())) {
+			add_action('admin_init', array($this, 'detect'), 0);
+		}
+		else {
+			add_action('wp', array($this, 'detect'), 4);
+		}
 	}
 
 	/**
