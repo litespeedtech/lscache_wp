@@ -44,37 +44,35 @@ if ( ! defined('WPINC') ) {
 	die ;
 }
 
-if(class_exists('LiteSpeed_Cache')) return;
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
+if(class_exists('LiteSpeed_Cache') || defined('LSWCP_DIR')) return;
 
-$lscache_plugin_path = plugin_dir_path(__FILE__);
-require_once $lscache_plugin_path . 'includes/class-litespeed-cache.php' ;
-require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin-error.php';
+if( !defined('WP_CONTENT_DIR') ){
+	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+}
+
+define('LSWCP_DIR', plugin_dir_path(__FILE__));// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
+define('LSWCP_BASENAME', plugin_basename(LSWCP_DIR . 'litespeed-cache.php'));//LSWCP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-config.php';
-	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-esi.php';
-	require_once $lscache_plugin_path . 'includes/class-litespeed-cache-tags.php';
-	require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin.php';
-	require_once $lscache_plugin_path . 'admin/class-litespeed-cache-admin-rules.php';
-	require_once $lscache_plugin_path . 'cli/class-litespeed-cache-cli-admin.php';
-	require_once $lscache_plugin_path . 'cli/class-litespeed-cache-cli-purge.php';
+	require_once LSCWP_DIR . 'includes/class-litespeed-cache-esi.php';
+}
+// Auto register LiteSpeed classes
+require_once LSWCP_DIR . 'includes/litespeed.autoload.php';
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {// todo: where used this
+	WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' );
+	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );
 }
 
 if (!function_exists('is_openlitespeed')) {
-	function is_openlitespeed()
-	{
+	function is_openlitespeed(){
 		return ((isset($_SERVER['LSWS_EDITION']))
 				&& (strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0));
 	}
 }
 
 if (!function_exists('is_webadc')) {
-	function is_webadc()
-	{
+	function is_webadc(){
 		return ((isset($_SERVER['HTTP_X_LSCACHE']))
 			&& ($_SERVER['HTTP_X_LSCACHE']));
 	}
@@ -89,57 +87,32 @@ if (!function_exists('is_webadc')) {
  *
  * @since    1.0.0
  */
-if (!function_exists('run_litespeed_cache')) {
-	function run_litespeed_cache()
-	{
-		$version_supported = true ;
+function run_litespeed_cache(){
+	$version_supported = true ;
 
-		//Check minimum PHP requirements, which is 5.3 at the moment.
-		if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
-			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_PHP_VER
-			);
-			$version_supported = false ;
-		}
-
-		//Check minimum WP requirements, which is 4.0 at the moment.
-		if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
-			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_WP_VER
-			);
-			$version_supported = false ;
-		}
-
-		if ( $version_supported ) {
-			LiteSpeed_Cache::run() ;
-		}
-		else {
-			return false ;
-		}
-		return true;
+	//Check minimum PHP requirements, which is 5.3 at the moment.
+	if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
+		LiteSpeed_Cache_Admin_Error::add_error(
+			LiteSpeed_Cache_Admin_Error::E_PHP_VER
+		);
+		$version_supported = false ;
 	}
 
-	run_litespeed_cache() ;
-}
-
-if (!function_exists('uninstall_litespeed_cache')) {
-	function uninstall_litespeed_cache()
-	{
-
-		$cur_dir = dirname(__FILE__) ;
-		require_once $cur_dir . '/includes/class-litespeed-cache.php';
-		require_once $cur_dir . '/includes/class-litespeed-cache-config.php';
-		require_once $cur_dir . '/admin/class-litespeed-cache-admin.php';
-		require_once $cur_dir . '/admin/class-litespeed-cache-admin-display.php';
-		require_once $cur_dir . '/admin/class-litespeed-cache-admin-rules.php';
-
-		LiteSpeed_Cache_Admin_Rules::clear_rules();
-		delete_option(LiteSpeed_Cache_Config::OPTION_NAME);
-		if (is_multisite()) {
-			delete_site_option(LiteSpeed_Cache_Config::OPTION_NAME);
-		}
-
+	//Check minimum WP requirements, which is 4.0 at the moment.
+	if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
+		LiteSpeed_Cache_Admin_Error::add_error(
+			LiteSpeed_Cache_Admin_Error::E_WP_VER
+		);
+		$version_supported = false ;
 	}
-	register_uninstall_hook(plugin_basename(__FILE__),
-			'uninstall_litespeed_cache');
+
+	if ( $version_supported ) {
+		LiteSpeed_Cache::get_instance() ;
+	}
+	else {
+		return false ;
+	}
+	return true;
 }
+
+run_litespeed_cache() ;

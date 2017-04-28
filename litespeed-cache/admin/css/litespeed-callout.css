@@ -1,0 +1,63 @@
+/** callout style **/
+.litespeed-callout2{
+	margin: 20px;
+	border-left: 1px solid #999;
+	padding-left: 10px;
+}
+
+.litespeed-callout2 h4{
+	font-size: 2.0em;
+	margin-bottom: 10px;
+}
+
+.litespeed-callout {
+	padding: 10px 25px;
+	margin: 10px 0;
+	border: 1px solid #eee;
+	border-left-width: 5px;
+	border-radius: 3px;
+}
+
+.litespeed-callout+.litespeed-callout {
+	margin-top: -5px;
+}
+
+.litespeed-callout p:last-child {
+	margin-bottom: 0;
+}
+
+.litespeed-callout h4 {
+	margin-top: 0;
+	margin-bottom: 5px;
+	margin-left: -10px;
+	font-size: 17px;
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+	color: inherit;
+}
+
+.litespeed-callout ol{
+	margin-bottom: 0;
+}
+
+.litespeed-callout-info{
+	border-left-color: #1b809e;
+}
+.litespeed-callout-info h4{
+	color: #1b809e;
+}
+
+.litespeed-callout-warning{
+	border-left-color: #aa6708;
+}
+.litespeed-callout-warning h4{
+	color: #aa6708;
+}
+
+.litespeed-callout-danger{
+	border-left-color: #ce4844;
+}
+.litespeed-callout-danger h4{
+	color: #ce4844;
+}

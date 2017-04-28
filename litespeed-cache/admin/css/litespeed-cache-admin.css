@@ -4,391 +4,225 @@
  */
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
 @import "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css";
-
-.litespeedcache-button-danger {
-  background: #eb3100 !important;
-  border-color: #eb3100 #eb3100 #eb3100 !important;
-  -webkit-box-shadow: 0 1px 0 #eb3100 !important;
-  box-shadow: 0 1px 0 #eb3100 !important;
-  color: #fff;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 13px;
-	line-height: 26px;
-	height: 28px;
-	margin: 0;
-	padding: 0 10px 1px;
-	cursor: pointer;
-	border-width: 1px;
-	border-style: solid;
-  border-radius: 3px;
-  white-space: nowrap;
-  box-sizing: border-box;
-}
-
-/* Hover tooltips */
-.litespeed-cache-field-tip {
-  position:relative;
-  cursor:help;
-  z-index: 9999 !important;
-  margin-right:10px;
-}
-
-.litespeed-cache-field-tip:before{
-  font-family: FontAwesome;
-	content:"\f059";
-  color:#0085ba;
-}
-
-.litespeed-cache-field-tip .litespeed-cache-tip-content {
-  position:absolute;
-  top:-10px; /* - top padding */
-  right:9999px;
-  width:200px;
-  margin-right:-220px; /* width + left/right padding */
-  padding:10px;
-  color:#fff;
-  background:#333;
-  -webkit-box-shadow:2px 2px 5px #aaa;
-  -moz-box-shadow:2px 2px 5px #aaa;
-  box-shadow:2px 2px 5px #aaa;
-  opacity:0;
-  -webkit-transition:opacity 250ms ease-out;
-  -moz-transition:opacity 250ms ease-out;
-  -ms-transition:opacity 250ms ease-out;
-  -o-transition:opacity 250ms ease-out;
-  transition:opacity 250ms ease-out;
-  font:normal 10px/1.5 Verdana,Arial,sans-serif;
-  font-size:12px;
-}
-
-/* <http://css-tricks.com/snippets/css/css-triangle/> */
-.litespeed-cache-field-tip .litespeed-cache-tip-content:before {
-	content:'';
-	position:absolute;
-	top:50%;
-	left:-16px; /* 2 x border width */
-	width:0;
-	height:0;
-	margin-top:-8px; /* - border width */
-	border:8px solid transparent;   
-  border-right-color:#333;
-  color:#ccc;
- }
- 
- .litespeed-cache-field-tip:hover .litespeed-cache-tip-content {
-  right:-20px;
-  opacity:1;
- }
-
-/* Hover tooltips */
-.litespeed-cache-field-tip-do-not {
-  position:relative;
-  cursor:help;
-  margin-right:10px;
-  top:4px;
-}
-
-.litespeed-cache-field-tip-do-not:before{
-  font-family: FontAwesome;
-  content:"\f059";
-  color:#0085ba;
-}
-
-.litespeed-cache-field-tip-do-not .litespeed-cache-tip-content-do-not {
-  position:absolute;
-  top:-10px; /* - top padding */
-  right:9999px;
-  width:200px;
-  margin-right:-220px; /* width + left/right padding */
-  padding:10px;
-  color:#fff;
-  background:#333;
-  -webkit-box-shadow:2px 2px 5px #aaa;
-  -moz-box-shadow:2px 2px 5px #aaa;
-  box-shadow:2px 2px 5px #aaa;
-  opacity:0;
-  -webkit-transition:opacity 250ms ease-out;
-  -moz-transition:opacity 250ms ease-out;
-  -ms-transition:opacity 250ms ease-out;
-  -o-transition:opacity 250ms ease-out;
-  transition:opacity 250ms ease-out;
-  font:normal 10px/1.5 Verdana,Arial,sans-serif;
-  font-size: 12px;
-}
-
-/* <http://css-tricks.com/snippets/css/css-triangle/> */
-.litespeed-cache-field-tip-do-not .litespeed-cache-tip-content-do-not:before {
-  content:'';
-  position:absolute;
-  top:50%;
-  left:-16px; /* 2 x border width */
-  width:0;
-  height:0;
-  margin-top:-8px; /* - border width */
-  border:8px solid transparent;   
-  border-right-color:#333;
-  color:#ccc;
- }
- 
- .litespeed-cache-field-tip-do-not:hover .litespeed-cache-tip-content-do-not {
-  right:-20px;
-  opacity:1;
- }
-
- /* Hover tooltips */
-.litespeed-cache-field-tip-clear-all {
-  position:relative;
-  cursor:help;
-  margin-right:10px;
-  top:4px;
-}
-
-.litespeed-cache-field-tip-clear-all:before{
-  font-family: FontAwesome;
-  content:"\f06a";
-  color:#ff0000 !important;
-}
-
-.litespeed-cache-field-tip-clear-all .litespeed-cache-tip-content-clear-all {
-  position:absolute;
-  top:-10px; /* - top padding */
-  right:9999px;
-  width:200px;
-  margin-right:-220px; /* width + left/right padding */
-  padding:10px;
-  color:#fff;
-  background:#333;
-  -webkit-box-shadow:2px 2px 5px #aaa;
-  -moz-box-shadow:2px 2px 5px #aaa;
-  box-shadow:2px 2px 5px #aaa;
-  opacity:0;
-  -webkit-transition:opacity 250ms ease-out;
-  -moz-transition:opacity 250ms ease-out;
-  -ms-transition:opacity 250ms ease-out;
-  -o-transition:opacity 250ms ease-out;
-  transition:opacity 250ms ease-out;
-  font:normal 10px/1.5 Verdana,Arial,sans-serif;
-  font-size:12px;
-}
-
-/* <http://css-tricks.com/snippets/css/css-triangle/> */
-.litespeed-cache-field-tip-clear-all .litespeed-cache-tip-content-clear-all:before {
-  content:'';
-  position:absolute;
-  top:50%;
-  left:-16px; /* 2 x border width */
-  width:0;
-  height:0;
-  margin-top:-8px; /* - border width */
-  border:8px solid transparent;   
-  border-right-color:#333;
-  color:#ccc;
- }
- 
- .litespeed-cache-field-tip-clear-all:hover .litespeed-cache-tip-content-clear-all {
-  right:-20px;
-  opacity:1;
- }
-
+@import "litespeed-common.css";
+@import "litespeed-btn.css";
+@import "litespeed-checkbox.css";
+@import "litespeed-label.css";
+@import "litespeed-callout.css";
 
 #litespeedcache-purgeerrors{
-  margin:5px 0 15px 22px;
+	margin:5px 0 15px 22px;
 }
 
-.litespeed-cache-div-table .form-table input[type=checkbox]{
-  margin-top:5px;
+.litespeed-cache-welcome-panel .form-table > tbody > tr > th{
+	padding-left: 10px;
 }
-
-.litespeed-cache-div-table .form-table input[type=text]{
-  margin: 1px;
-  padding: 3px 5px;
-  line-height: 1.50em;
-}
-
-.litespeed-cache-div-table .form-table label{
-  padding-top:4px;
-}
-
-.litespeed-cache-div-table .form-table select, select#purgeby, select#debug{
-  background: transparent !important;
-  width: 150px !important;
-  padding: 2px !important;
-  font-size: 14px !important;
-  cursor: pointer !important;
-  border-width: 1px !important;
-  border-style: solid !important;
-  border-radius: 3px !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  background: url(https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-08-128.png) 96% / 15% no-repeat #fff !important;
-}
-/*target Internet Explorer 9 and Internet Explorer 10:*/
-@media screen and (min-width:0\0) { 
-  .litespeed-cache-div-table .form-table select, select#purgeby, select#debug{
-    background:none !important;
-    padding: 5px !important;
-  }
-}
-
-.litespeed-cache-div-table .form-table select, select#wc_update_interval{
-  background: transparent !important;
-  width: auto !important;
-  padding: 2px !important;
-  font-size: 14px !important;
-  cursor: pointer !important;
-  border-width: 1px !important;
-  border-style: solid !important;
-  border-radius: 3px !important;
-  white-space: nowrap !important;
-  box-sizing: border-box !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  background: url(https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-08-128.png) 98% / 3.7% no-repeat #fff !important;
-  max-width:90% !important;
-}
-/*target Internet Explorer 9 and Internet Explorer 10:*/
-@media screen and (min-width:0\0) { 
-  .litespeed-cache-div-table .form-table select, select#wc_update_interval{
-    background:none !important;
-    padding: 5px !important;
-  }
-}
-
-@media all and (max-width: 600px){
-  .litespeed-cache-div-table .form-table select, select#wc_update_interval {
-    width: 100% !important; 
-    max-width: 100% !important;
-    background: url(https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-08-128.png) 98% / 3.7% no-repeat #fff !important;
-    white-space:pre-wrap !important;
-  }
-}
-.litespeed-cache-welcome-panel{
-  position: relative;
-  overflow: auto;
-  margin: 16px 0;
-  padding: 23px 10px 0;
-  border: 1px solid #e5e5e5;
-  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.04);
-  box-shadow: 0 1px 1px rgba(0,0,0,.04);
-  background: #fff;
-  font-size: 14px;
-}
-
-.litespeed-cache-welcome-panel p{
-  font-size: 14px !important;
-}
-
-.litespeed-cache-welcome-panel .hndle{
-  background-color: #eee;
-  cursor: pointer !important;
-}
-
-.litespeed-cache-welcome-panel .hndle:before{
-  font-family: FontAwesome;
-  content:"\f05a";
-  color:#939393;
-  margin-right:10px;
-
-}
-
-.litespeed-cache-welcome-panel .postbox ol{
-  font-size: 14px;
-  line-height: 1.0em;
+.litespeed-cache-welcome-panel .form-table > tbody > tr:nth-of-type(odd){
+	background-color: #f9f9f9;
 }
 
 .litespeed-cache-advanced-settings{
-  position: relative;
-  background: #fff;
-  font-size: 14px;
-  line-height: 2.1em;
+	position: relative;
+	background: #fff;
+	font-size: 14px;
+	line-height: 2.1em;
 }
 
-.litespeed-cache-advanced-settings .hndle{
-  background-color: #eee;
-  cursor: pointer !important;
-}
-
-.litespeed-cache-advanced-settings .hndle:before{
-  font-family: FontAwesome;
-  content:"\f05a";
-  color:#939393;
-  margin-right:10px;
-}
-
-.litespeed-cache-advanced-settings .postbox ol{
-  font-size: 14px;
-  line-height: 1.0em;
-}
-
-.litespeedcache-postbox-button{
-  display:none !important;
-}
 
 .litespeed-cache-advanced-settings h3{
-  display:inline;
-}
-
-.litespeed-cache-jquery-button {
-  background: #0085ba !important;
-  border-color: #0085ba #0085ba #0085ba !important;
-  -webkit-box-shadow: 0 1px 0 #0085ba !important;
-  box-shadow: 0 1px 0 #0085ba !important;
-  color: #fff;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 13px;
-  line-height: 26px;
-  height: 28px;
-  margin: 0;
-  padding: 0 10px 1px;
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 3px;
-  white-space: nowrap;
-  box-sizing: border-box;
-  float:right;
-  text-align: center;
-}
-
-.litespeed-cache-welcome-panel .litespeed-cache-select-all-button {
-  background: #0085ba !important;
-  border-color: #0085ba #0085ba #0085ba !important;
-  -webkit-box-shadow: 0 1px 0 #0085ba !important;
-  box-shadow: 0 1px 0 #0085ba !important;
-  color: #fff;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 13px;
-  line-height: 26px;
-  height: 28px;
-  margin: 0;
-  padding: 0 10px 1px;
-  cursor: pointer;
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 3px;
-  white-space: nowrap;
-  box-sizing: border-box;
-  float:right;
-  width: auto;
-  text-align: center;
+	display:inline;
 }
 
 textarea#purgebylist{
-  height: auto;
-  min-height: 100%;
-  width: 100%;
-  position: relative;
-  -webkit-font-smoothing: subpixel-antialiased;
+	height: auto;
+	min-height: 100%;
+	width: 100%;
+	position: relative;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+
+
+.litespeed-shell-wrap {
+	width: 98%;
+	background: #141414;
+	margin: 20px auto 0 10px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.4);
+ -webkit-border-radius: 3px;
+ -moz-border-radius: 3px;
+ border-radius: 3px;
+	 height:224px;
+	overflow:auto;
+}
+ 
+.litespeed-shell-top-bar {
+	text-align: center;
+	color: #525252;
+	padding: 5px 0;
+	margin: 0;
+	text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+	font-size: 0.85em;
+	border: 1px solid #CCCCCC;
+	border-bottom: none;
+ 
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+ 
+	background: #f7f7f7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f7f7f7 0%, #B8B8B8 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#B8B8B8)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #f7f7f7 0%,#B8B8B8 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#B8B8B8',GradientType=0 ); /* IE6-9 */
+}
+ 
+.litespeed-shell-body {
+	margin: 0;
+	padding: 5px;
+	list-style: none;
+	background: #141414;
+	color: #45D40C;
+	font: 0.8em 'Andale Mono', Consolas, 'Courier New';
+	line-height: 1.6em;
+ 
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+
+}
+ 
+.litespeed-shell-body li:before {
+	content: '$';
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+ 
+.litespeed-shell-body li {
+	word-wrap: break-word;
+	position: relative;
+	padding: 0 0 0 15px;
+}
+
+
+
+
+
+/* litespeed new style */
+.litespeed-tab{
+	border-top-left-radius  : 8px;
+	border-top-right-radius : 8px;
+}
+
+.litespeed-tab.nav-tab-active{
+	background-color: #FFFFFF;
+	border-bottom-color: #FFFFFF;
+}
+
+.litespeed-cache-welcome-panel{
+	background: none repeat scroll 0 0 #fff;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+	font-size: 14px;
+	/*line-height: 2em;*/
+	margin: 0px 0px 20px 0;
+	overflow: auto;
+	padding: 10px 15px 15px 15px;
+	position: relative;
+	border-top: none;
+}
+.litespeed-cache-welcome-panel p{
+	font-size: 14px;
+	margin: 0 0 10px;
 }
 .litespeed-cache-welcome-panel ul {
-    list-style: disc outside;
-    margin-left: 20px;
-    padding-left: 0;
+	list-style: disc outside;
+	margin-left: 20px;
+	padding-left: 10px;
+}
+
+.litespeed-input-long{
+	width:580px;
+}
+
+.litespeed-title{
+	font-size: 18px;
+	color: #000;
+	border-bottom: 1px solid #d8d8d8;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	display: table;
+	padding-right: 50px;
+}
+
+.litespeed-title:not(:first-of-type){
+	margin-top: 30px;
+}
+
+.litespeed-expend{
+	text-decoration: none;
+	font-size: 21px;
+	width: 40px;
+	text-align: center;
+	display: inline-block;
+}
+
+/* Manage */
+
+.litespeed-cache-purgeby-text{
+	font-size: 11px;
+	font-style: italic;
+	padding-left: 20px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.litespeed-cache-purgeby-textarea{
+	margin-top: 10px;
+    height: auto;
+    width: 100%;
+    position: relative;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* FAQ */
+.litespeed-question{
+	background-color: #eee;
+	border: 1px solid #eee;
+	border-left: 5px solid #1b809e;
+	border-radius: 3px;
+	padding: 20px;
+	margin: 0 20px 5px 10px;
+	font-size: 15px;
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+}
+
+.litespeed-question:hover{
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+.litespeed-answer{
+	margin-left: 20px;
+	padding: 0 20px 20px 20px;
+}
+
+.litespeed-notice{
+	font-size: 11px;
+	font-style: italic;
+	margin-left: 10px;
+	position: relative;
+	top: 3px;
+	color: green;
 }

@@ -312,5 +312,3 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 }
-
-WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );

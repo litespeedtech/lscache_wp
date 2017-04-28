@@ -25,8 +25,7 @@ class LiteSpeed_Cache_ThirdParty_WpForo
 	 * @since 1.0.15
 	 * @access public
 	 */
-	public static function detect()
-	{
+	public static function detect(){
 		if (defined('WPFORO_VERSION')) {
 			add_action('litespeed_cache_add_cache_tags', 'LiteSpeed_Cache_ThirdParty_WpForo::cache_tags');
 		}
@@ -147,5 +146,6 @@ class LiteSpeed_Cache_ThirdParty_WpForo
 }
 
 add_action('litespeed_cache_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_WpForo::detect');
-
-add_action('wpforo_actions', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag');
+if (defined('WPFORO_VERSION')) {
+	add_action('wpforo_actions', 'LiteSpeed_Cache_ThirdParty_WpForo::purge_tag');
+}

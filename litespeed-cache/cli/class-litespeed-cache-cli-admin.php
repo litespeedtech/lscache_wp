@@ -3,14 +3,12 @@
 /**
  * LiteSpeed Cache Admin Interface
  */
-class LiteSpeed_Cache_Cli_Admin
-{
+class LiteSpeed_Cache_Cli_Admin{
 
 	private static $checkboxes;
 	private static $purges;
 
-	function __construct()
-	{
+	function __construct(){
 		self::$checkboxes =
 			array(
 				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
@@ -61,18 +59,11 @@ class LiteSpeed_Cache_Cli_Admin
 	 *     $ wp lscache-admin set_option cache_login false
 	 *
 	 */
-	function set_option($args, $assoc_args)
-	{
-		$plugin_dir = plugin_dir_path(dirname(__FILE__));
-		require_once $plugin_dir . 'admin/class-litespeed-cache-admin.php';
-		require_once $plugin_dir . 'admin/class-litespeed-cache-admin-display.php';
-		require_once $plugin_dir . 'admin/class-litespeed-cache-admin-rules.php';
-
+	function set_option($args, $assoc_args){
 		$key = $args[0];
 		$val = $args[1];
 
-		$config = LiteSpeed_Cache::plugin()->get_config();
-		$options = $config->get_options();
+		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 
 		if (!isset($options) || ((!isset($options[$key]))
 				&& (!isset(self::$purges[$key])))) {
@@ -140,10 +131,7 @@ class LiteSpeed_Cache_Cli_Admin
 			break;
 		}
 
-		$admin = new LiteSpeed_Cache_Admin(LiteSpeed_Cache::PLUGIN_NAME,
-			LiteSpeed_Cache::PLUGIN_VERSION);
-
-		$output = $admin->validate_plugin_settings($options);
+		$output = LiteSpeed_Cache_Admin::get_instance()->validate_plugin_settings($options);
 
 		global $wp_settings_errors;
 
@@ -179,9 +167,8 @@ class LiteSpeed_Cache_Cli_Admin
 	 */
 	function get_options($args, $assoc_args)
 	{
-		$config = LiteSpeed_Cache::plugin()->get_config();
-		$options = $config->get_options();
-		$purge_options = $config->get_purge_options();
+		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
+		$purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options();
 		unset($options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST]);
 		$option_out = array();
 		$purge_diff = array_diff(self::$purges, $purge_options);
@@ -237,7 +224,7 @@ class LiteSpeed_Cache_Cli_Admin
 	 */
 	function export_options($args, $assoc_args)
 	{
-		$options = LiteSpeed_Cache::plugin()->get_config()->get_options();
+		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		$output = '';
 		if (isset($assoc_args['filename'])) {
 			$file = $assoc_args['filename'];
@@ -291,11 +278,10 @@ class LiteSpeed_Cache_Cli_Admin
 		if (!file_exists($file) || !is_readable($file)) {
 			WP_CLI::error('File does not exist or is not readable.');
 		}
-		$config = LiteSpeed_Cache::plugin()->get_config();
 		$content = file_get_contents($file);
 		preg_match_all("/^[^;][^=]+=[^=\n\r]*$/m", $content, $input);
 		$options = array();
-		$default = $config->get_options();
+		$default = LiteSpeed_Cache_Config::get_instance()->get_options();
 
 		foreach ($input as $opt) {
 			$kv = explode('=', $opt);
@@ -306,10 +292,7 @@ class LiteSpeed_Cache_Cli_Admin
 
 		LiteSpeed_Cache_Config::convert_options_to_input($options);
 
-		$admin = new LiteSpeed_Cache_Admin(LiteSpeed_Cache::PLUGIN_NAME,
-			LiteSpeed_Cache::PLUGIN_VERSION);
-
-		$output = $admin->validate_plugin_settings($options);
+		$output = LiteSpeed_Cache_Admin::get_instance()->validate_plugin_settings($options);
 
 		global $wp_settings_errors;
 
@@ -325,4 +308,3 @@ class LiteSpeed_Cache_Cli_Admin
 	}
 }
 
-WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' );

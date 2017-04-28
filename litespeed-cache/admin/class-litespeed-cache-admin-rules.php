@@ -9,14 +9,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Rules
-{
-	private static $instance;
+class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
+	protected static $_instance;
 
-	const EDITOR_INPUT_NAME = 'lscwp_htaccess_save';
-	const EDITOR_INPUT_VAL = 'save_htaccess';
-	const EDITOR_NONCE_NAME = 'lscwp_edit_htaccess';
-	const EDITOR_NONCE_VAL = 'save';
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
 
 	const READABLE = 1;
@@ -35,6 +30,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private static $RW_LOOKUP;
 	private static $RW_LOOKUP_PUBLIC = "CacheLookup Public on";
 	private static $RW_LOOKUP_BOTH = "CacheLookup on";
+	const MARKER = 'LSCACHE';
 
 	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
 	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
@@ -49,34 +45,11 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   private
+	 * @access   protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
 		$this->setup();
-	}
-
-	/**
-	 * Get the LiteSpeed_Cache_Admin_Rules object.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 * @return LiteSpeed_Cache_Admin_Rules Static instance of the LiteSpeed_Cache_Admin_Rules class.
-	 */
-	public static function get_instance()
-	{
-		if (!isset(self::$instance)) {
-			if (is_openlitespeed()) {
-				self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
-			}
-			else {
-				self::$RW_LOOKUP = self::$RW_LOOKUP_BOTH;
-			}
-			self::$RW_PREREQ = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
-
-			self::$instance = new LiteSpeed_Cache_Admin_Rules();
-		}
-		return self::$instance;
 	}
 
 	/**
@@ -136,9 +109,9 @@ class LiteSpeed_Cache_Admin_Rules
 		$home = self::get_home_path();
 		$site = self::get_site_path();
 
-		if (($path === null) || ($path === $home) || ($path === $site)) {
+		if ($path === null || $path === $home || $path === $site) {
 			$rules = self::get_instance();
-			return (($rules->filerw & $permissions) === $permissions);
+			return ($rules->filerw & $permissions) === $permissions;
 		}
 		$perms = 0;
 		$test_permissions = file_exists($path) ? $path : dirname($path);
@@ -149,7 +122,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if (is_writable($test_permissions)) {
 			$perms |= self::WRITABLE;
 		}
-		return (($perms & $permissions) === $permissions);
+		return ($perms & $permissions) === $permissions;
 	}
 
 	/**
@@ -289,6 +262,14 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$this->path_set();
 		clearstatcache();
+                
+                if (is_openlitespeed()) {
+                        self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
+                }
+                else {
+                        self::$RW_LOOKUP = self::$RW_LOOKUP_BOTH;
+                }
+                self::$RW_PREREQ = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
 
 		if ($this->home_path === $this->site_path) {
 			$this->is_subdir_install = false;
@@ -336,8 +317,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public static function file_get(&$content, $path = '')
-	{
+	public static function file_get(&$content, $path = ''){
 		if (empty($path)) {
 			$path = self::get_home_path();
 			if (!file_exists($path)) {
@@ -403,11 +383,8 @@ class LiteSpeed_Cache_Admin_Rules
 			return $buf;
 		}
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
-			$buf = LiteSpeed_Cache_Admin_Display::build_paragraph(
-				LiteSpeed_Cache_Admin_Error::get_error(
-					LiteSpeed_Cache_Admin_Error::E_HTA_ORDER),
-				sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'),
-					'&lt;/IfModule&gt;'));
+			$buf = LiteSpeed_Cache_Admin_Error::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER) . ' '
+				.sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'), '&lt;/IfModule&gt;');
 			return $buf;
 		}
 		--$off_end; // go to end of previous line.
@@ -602,8 +579,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @return boolean true on success, else false.
 	 */
 	public static function file_save($content, $cleanup = true, $path = '',
-		$backup = true)
-	{
+		$backup = true){
 		while (true) {
 			if (empty($path)) {
 				$path = self::get_home_path();
@@ -613,15 +589,13 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 
 			if (self::is_file_able(self::RW, $path) == 0) {
-				LiteSpeed_Cache_Admin_Error::add_error(
-					LiteSpeed_Cache_Admin_Error::E_HTA_RW);
+				LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 				return false;
 			}
 
 			//failed to backup, not good.
 			if (($backup) && (self::file_backup($path) === false)) {
-				 LiteSpeed_Cache_Admin_Error::add_error(
-					LiteSpeed_Cache_Admin_Error::E_HTA_BU);
+				 LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
 				 return false;
 			}
 
@@ -635,9 +609,7 @@ class LiteSpeed_Cache_Admin_Rules
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
-			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_SAVE
-			);
+			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_SAVE);
 			return false;
 		}
 
@@ -963,8 +935,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param array $errors Errors array to add error messages to.
 	 * @return mixed False if there is an error, diff array otherwise.
 	 */
-	public function check_input($options, $input, &$errors)
-	{
+	public function check_input($options, $input, &$errors){
 		$diff = array();
 		$val_check = array(
 			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
@@ -974,25 +945,21 @@ class LiteSpeed_Cache_Admin_Rules
 		$has_error = false;
 
 		foreach ($val_check as $opt) {
-			$ret = LiteSpeed_Cache_Admin::parse_checkbox($opt, $input, $input);
-			if (($ret) || ($options[$opt] !== $ret)) {
-				$diff[$opt] = $ret;
+			$input[$opt] = isset($input[$opt]) ? $input[$opt]%2 : 0;
+			if ($input[$opt] || $options[$opt] != $input[$opt]) {
+				$diff[$opt] = $input[$opt];
 			}
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
 		if ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]) {
 			$list = $input[$id];
-			if ((empty($list)) || (self::check_rewrite($list) === false)) {
+			if (empty($list) || $this->check_rewrite($list) === false) {
 				$err_args = array(
 					$id,
-					(empty($list) ? 'EMPTY' : esc_html($list))
+					empty($list) ? 'EMPTY' : esc_html($list)
 				);
-				$errors[] =
-					LiteSpeed_Cache_Admin_Error::build_error(
-						LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-						$err_args
-						);
+				$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 				$has_error = true;
 			}
 			$diff[$id] = $list;
@@ -1002,56 +969,47 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-		if ((isset($input[$id])) && ($input[$id])) {
+		if (isset($input[$id]) && $input[$id]) {
 			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]);
 		}
 		else {
 			$cookie_list = '';
 		}
 
-		if ((empty($cookie_list)) || (self::check_rewrite($cookie_list))) {
+		if (empty($cookie_list) || $this->check_rewrite($cookie_list)) {
 			$diff[$id] = $cookie_list;
 		}
 		else {
-			$errors[] =
-				LiteSpeed_Cache_Admin_Error::build_error(
-					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
-					array($id, esc_html($cookie_list)));
+			$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html($cookie_list)));
 			$has_error = true;
 		}
 
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		if ((isset($input[$id])) && (self::check_rewrite($input[$id]))) {
+		if (isset($input[$id]) && $this->check_rewrite($input[$id])) {
 			$diff[$id] = $input[$id];
 		}
 		else {
 			$err_args = array($id);
-			if ((!isset($input[$id])) || (empty($input[$id]))) {
+			if (!isset($input[$id]) || empty($input[$id])) {
 				$err_args[] = 'EMPTY';
 			}
 			else {
 				$err_args[] = esc_html($input[$id]);
 			}
 
-			$errors[] =
-				LiteSpeed_Cache_Admin_Error::build_error(
-					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
+			$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 			$has_error = true;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$aExceptions = array('-', '_');
 		if (isset($input[$id])) {
-			if (($input[$id] === '')
-				|| ((ctype_alnum(str_replace($aExceptions, '', $input[$id])))
-					&& (self::check_rewrite($input[$id])))) {
+			if ($input[$id] === ''
+					|| (ctype_alnum(str_replace($aExceptions, '', $input[$id])) && $this->check_rewrite($input[$id]))) {
 				$diff[$id] = $input[$id];
 			}
 			else {
-				$errors[] =
-					LiteSpeed_Cache_Admin_Error::build_error(
-						LiteSpeed_Cache_Admin_Error::E_SETTING_LC,
-						esc_html($input[$id]));
+				$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html($input[$id]));
 				$has_error = true;
 			}
 		}
@@ -1077,10 +1035,9 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param String $rule Input rewrite rule.
 	 * @return boolean True for valid rules, false otherwise.
 	 */
-	private static function check_rewrite($rule)
-	{
+	private function check_rewrite($rule){
 		$escaped = str_replace('@', '\@', $rule);
-		return (@preg_match('@' . $escaped . '@', null) !== false);
+		return @preg_match('@' . $escaped . '@', null) !== false;
 	}
 
 	/**
@@ -1293,13 +1250,12 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function scan_upgrade()
 	{
-		$config = LiteSpeed_Cache::plugin()->get_config();
 		if (is_multisite()) {
-			$options = $config->get_site_options();
+			$options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 			$enabled = $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
 		}
 		else {
-			$options = $config->get_options();
+			$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 			$enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
 		}
 		$content = '';
@@ -1362,8 +1318,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
-	public function validate_common_rewrites($diff, &$errors)
-	{
+	public function validate_common_rewrites($diff, &$errors){
 		$content = '';
 		$buf = "\n";
 		$before = '';
@@ -1457,69 +1412,51 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @access public
-	 * @param string $wrapper A wrapper to a specific rule to match.
 	 */
-	public static function clear_rules($wrapper = '')
-	{
-		$content = '';
-		$site_content = '';
-
+	public static function clear_rules(){
 		clearstatcache();
-		if (self::file_get($content) === false) {
+		$htaccess = self::get_home_path();
+		if (!file_exists($htaccess)) {
 			return;
 		}
-		elseif (!self::is_file_able(self::WRITABLE)) {
+		if (!self::is_file_able(self::WRITABLE)) {
 			return;
 		}
+		insert_with_markers($htaccess, self::MARKER, array());
 
-		if (empty($wrapper)) {
-			$wrapper = self::$RW_WRAPPER;
-		}
-		$pattern = '/###LSCACHE START ' . $wrapper
-			. '###.*###LSCACHE END ' . $wrapper . '###\n?/s';
+		$content = file_get_contents($htaccess);
+		$pattern = '/###LSCACHE START ' . self::$RW_WRAPPER . '###.*###LSCACHE END ' . self::$RW_WRAPPER . '###\n?/s';
 		$buf = preg_replace($pattern, '', $content);
 
-		self::file_save($buf, false);
+		self::file_save($buf, false, $htaccess);
 
+		// check if .htaccess has a new location
 		if (!self::is_subdir()) {
 			return;
 		}
-		$site_path = self::get_site_path();
+		$htaccess = self::get_site_path();
+		if (!file_exists($htaccess)) {
+			return;
+		}
 		if (self::file_get($site_content, $site_path) === false) {
 			return;
 		}
+		insert_with_markers($htaccess, self::MARKER, array());
 
-		if (empty($wrapper)) {
-			$wrapper = self::$RW_WRAPPER;
-		}
-		$pattern = '/###LSCACHE START ' . $wrapper
-			. '###.*###LSCACHE END ' . $wrapper . '###\n?/s';
+		$pattern = '/###LSCACHE START ' . self::$RW_WRAPPER . '###.*###LSCACHE END ' . self::$RW_WRAPPER . '###\n?/s';
 		$site_buf = preg_replace($pattern, '', $site_content);
 		self::file_save($site_buf, false, $site_path);
-
-		return;
 	}
 
 	/**
-	 * Parses the .htaccess buffer when the admin saves changes in the edit
-	 *  .htaccess page.
+	 * Parses the .htaccess buffer when the admin saves changes in the edit .htaccess page.
+	 * Only admin can do this
 	 *
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public static function htaccess_editor_save()
-	{
-		if ((is_multisite()) && (!is_network_admin())) {
-			return;
-		}
-		if (empty($_POST) || empty($_POST['submit'])) {
-			return;
-		}
-		if ((isset($_POST[self::EDITOR_INPUT_NAME]))
-				&& ($_POST[self::EDITOR_INPUT_NAME] === self::EDITOR_INPUT_VAL)
-				&& (check_admin_referer(self::EDITOR_NONCE_NAME,
-					self::EDITOR_NONCE_VAL))
-				&& (isset($_POST[self::EDITOR_TEXTAREA_NAME]))) {
+	public function htaccess_editor_save(){
+		if (isset($_POST[self::EDITOR_TEXTAREA_NAME])) {
 			$msg = self::file_save($_POST[self::EDITOR_TEXTAREA_NAME]);
 			if ($msg === true) {
 				$msg = __('File Saved.', 'litespeed-cache');

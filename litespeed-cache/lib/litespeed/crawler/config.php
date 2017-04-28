@@ -2,7 +2,6 @@
 
 class LiteSpeed_Crawler_Config
 {
-
 	/**
 	 * @var int How long to run this iteration for in seconds.
 	 */
@@ -20,8 +19,24 @@ class LiteSpeed_Crawler_Config
 	 */
 	private $num_threads = 1;
 
-	public function __construct()
+	private static $instance;
+	
+	private function __construct()
 	{
+	}
+
+	/**
+	* Get the LiteSpeed_Crawler_Crawler object.
+	*
+	* @access   public
+	*/
+	public static function get_instance()
+	{
+		if (!isset(self::$instance)) 
+		{
+			self::$instance = new LiteSpeed_Crawler_Config();
+		}
+		return self::$instance;
 	}
 
 	public function set_run_seconds($run_seconds)
@@ -63,7 +78,4 @@ class LiteSpeed_Crawler_Config
 	{
 		return $this->num_threads;
 	}
-
-
-
 }

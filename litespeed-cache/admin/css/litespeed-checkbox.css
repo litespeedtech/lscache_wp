@@ -1,0 +1,332 @@
+.litespeed-radio{
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.litespeed-radio label {
+	min-width: 115px;
+	border-radius: 3px;
+	border: 1px solid #D1D3D4;
+	padding-right: 10px;
+}
+
+.litespeed-radio.litespeed-mini label {
+	min-width: 75px;
+	padding-right: 5px;
+}
+
+.litespeed-radio input:checked:before,
+.litespeed-radio input:empty {
+	width: initial;
+	height: initial;
+	margin: initial;
+	min-width: initial;
+	border: initial;
+	content: initial;
+}
+
+.litespeed-radio input:empty {
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+/* style label */
+.litespeed-radio input:empty ~ label {
+	position: relative;
+	float: left;
+	line-height: 2.5em;
+	text-indent: 3.25em;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.litespeed-radio.litespeed-mini input:empty ~ label {
+	line-height: 1.3em;
+	text-indent: 1.75em;
+}
+
+.litespeed-radio input:empty ~ label:before {
+	position: absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	content: '';
+	width: 2.5em;
+	background: #D1D3D4;
+	border-radius: 3px 0 0 3px;
+}
+
+.litespeed-radio.litespeed-mini input:empty ~ label:before {
+	width: 1.3em;
+	border-radius: 1px 0 0 1px;
+}
+
+.litespeed-radio input:empty ~ label:before {
+	content:'\2714';
+	text-indent: .9em;
+}
+
+.litespeed-radio.cross input:empty ~ label:before {
+	content:'\2716';
+}
+
+.litespeed-radio.litespeed-mini input ~ label:before {
+	text-indent: .2em;
+}
+
+.litespeed-radio input:not(:checked) ~ label:before {
+	color: #C2C2C2;
+}
+
+/* toggle hover */
+.litespeed-radio input:hover:not(:checked) ~ label:before {
+	color: #717171;
+}
+
+.litespeed-radio input:hover:not(:checked) ~ label {
+	color: #777;
+}
+
+/* toggle on */
+.litespeed-radio input:checked ~ label:before {
+	color: #9CE2AE;
+	background-color: #4DCB6D;
+}
+
+.litespeed-radio.cross input:checked ~ label:before {
+	color: #faf4d5;
+	background-color: #f0ad4e;
+}
+
+.litespeed-radio.litespeed-mini input:checked ~ label:before {
+	text-indent: .2em;
+}
+
+.litespeed-radio input:checked ~ label {
+	/*color: #888;*/
+}
+
+/* radio focus */
+.litespeed-radio input:focus ~ label:before {
+	/*box-shadow: 0 0 0 3px #999;*/
+}
+
+/******** switch **************/
+.litespeed-switch{
+	display: inline-block;
+}
+
+.litespeed-switch input {
+	display: none;
+}
+.litespeed-switch label {
+	font-size: 13px;
+	display: inline-block;
+	min-width: 80px;
+	background-color: #e4e4e4;
+	color: #333;
+	font-weight: normal;
+	text-align: center;
+	text-shadow: none;
+	padding: 4px 9px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-transition: all 0.1s ease-in-out;
+	-moz-transition: all 0.1s ease-in-out;
+	-ms-transition: all 0.1s ease-in-out;
+	-o-transition: all 0.1s ease-in-out;
+	transition: all 0.1s ease-in-out;
+	float: left;
+	cursor: pointer;
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+	box-shadow: inset 0 1px 3px -1px rgba(0, 0, 0, 0.3), inset 0 -1px 3px -1px rgba(0, 0, 0, 0.3);
+}
+
+.litespeed-switch label:first-of-type,.litespeed-switch label:last-of-type {
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.litespeed-switch label:first-of-type {
+	border-radius: 4px 0 0 4px;
+}
+
+.litespeed-switch label:last-of-type {
+	border-radius: 0 4px 4px 0;
+}
+
+/*.litespeed-switch label:hover,*/
+.litespeed-switch input:checked + label {
+	background-color: #8a8a8a;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	color: #fff;
+}
+
+.litespeed-switch.litespeed-label-info,
+.litespeed-switch.litespeed-label-success,
+.litespeed-switch.litespeed-label-warning,
+.litespeed-switch.litespeed-label-danger{
+	background-color: initial;
+}
+
+/* .litespeed-switch.litespeed-label-info label:hover, */
+.litespeed-switch.litespeed-label-info input:checked + label {
+	background-color: #43A6DF;
+}
+/*.litespeed-switch.litespeed-label-success label:hover,*/
+.litespeed-switch.litespeed-label-success input:checked + label {
+	background-color: #5cb85c;
+}
+/*.litespeed-switch.litespeed-label-warning label:hover,*/
+.litespeed-switch.litespeed-label-warning input:checked + label {
+	background-color: #f0ad4e;
+}
+/*.litespeed-switch.litespeed-label-danger label:hover,*/
+.litespeed-switch.litespeed-label-danger input:checked + label {
+	background-color: #d9534f;
+}
+
+.litespeed-switch.litespeed-mini label{
+	padding: 1px;
+	font-size: 12px;
+	line-height: 1.9em;
+}
+
+/*.litespeed-switch input[disabled] + label:hover {
+	background-color: #e4e4e4;
+	color: #333;
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+	box-shadow: inset 0 1px 3px -1px rgba(0, 0, 0, 0.3), inset 0 -1px 3px -1px rgba(0, 0, 0, 0.3);
+}
+
+.litespeed-switch input[disabled] + label:first-of-type:hover,.litespeed-switch input[disabled] + label:last-of-type:hover {
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.litespeed-switch input[disabled]:checked + label:hover {
+	background-color: #8a8a8a;
+	color: #fff;
+}*/
+
+.litespeed-switch input[disabled]:checked + label {
+	background-color: #8a8a8a;
+}
+
+
+/******** round on/off switch **************/
+.litespeed-switch-onoff {
+	position: relative;
+	display: block;
+	vertical-align: top;
+	width: 100px;
+	height: 30px;
+	padding: 3px;
+	margin:0;
+	background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+	border-radius: 18px;
+	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+  box-sizing:content-box;
+}
+.litespeed-switch-onoff input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+  box-sizing:content-box;
+}
+.litespeed-switch-onoff span:first-of-type {
+	position: relative;
+	display: block;
+	height: inherit;
+	font-size: 10px;
+	text-transform: uppercase;
+	background: #eceeef;
+	border-radius: inherit;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+	box-sizing:content-box;
+	overflow: hidden;
+}
+.litespeed-switch-onoff span:first-of-type:before, .litespeed-switch-onoff span:first-of-type:after {
+	position: absolute;
+	margin-top: -.5em;
+	line-height: 1;
+	-webkit-transition: inherit;
+	-moz-transition: inherit;
+	-o-transition: inherit;
+	transition: inherit;
+	box-sizing:content-box;
+
+	width: 20px;
+	height: 20px;
+	top: 4px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 11px 0 0 0;
+	border-radius: 20px;
+	box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2), inset 0 0 3px rgba(0, 0, 0, 0.1);
+}
+.litespeed-switch-onoff span:first-of-type:before {
+	content: attr(data-off);
+	right: 11px;
+	color: #aaaaaa;
+	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+	background: #eceeef;
+	text-align: left;
+	padding-left: 80px;
+	text-indent: -30px;
+}
+.litespeed-switch-onoff span:first-of-type:after {
+	content: attr(data-on);
+	color: #FFFFFF;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+	text-align: left;
+	text-indent: 9px;
+	background: #FF7F50;
+	left: -100px;
+	width: 100%;
+}
+.litespeed-switch-onoff input:checked ~ span:first-of-type {
+	background: #E1B42B;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.litespeed-switch-onoff input:checked ~ span:first-of-type:before {
+	left: 100px;
+}
+.litespeed-switch-onoff input:checked ~ span:first-of-type:after {
+	left: 0;
+}
+.litespeed-switch-onoff span:last-of-type {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 28px;
+	height: 28px;
+	background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+	background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+	border-radius: 100%;
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+.litespeed-switch-onoff span:last-of-type:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -6px 0 0 -6px;
+	width: 12px;
+	height: 12px;
+	background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
+	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
+	border-radius: 6px;
+	box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+}
+.litespeed-switch-onoff input:checked ~ span:last-of-type {
+	left: 74px;
+	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+}

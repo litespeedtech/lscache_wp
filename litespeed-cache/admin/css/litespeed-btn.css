@@ -1,0 +1,730 @@
+
+/** button style **/
+.litespeed-btn {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+			touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+		 -moz-user-select: none;
+			-ms-user-select: none;
+					user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	text-decoration: none;
+}
+.litespeed-btn:focus,
+.litespeed-btn:active:focus,
+.litespeed-btn.active:focus,
+.litespeed-btn.focus,
+.litespeed-btn:active.focus,
+.litespeed-btn.active.focus {
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
+}
+.litespeed-btn:hover,
+.litespeed-btn:focus,
+.litespeed-btn.focus {
+	color: #333;
+	text-decoration: none;
+}
+.litespeed-btn:active,
+.litespeed-btn.active {
+	background-image: none;
+	outline: 0;
+	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+					box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.litespeed-btn.disabled,
+.litespeed-btn[disabled],
+fieldset[disabled] .litespeed-btn {
+	cursor: not-allowed;
+	filter: alpha(opacity=65);
+	-webkit-box-shadow: none;
+					box-shadow: none;
+	opacity: .65;
+}
+a.litespeed-btn.disabled,
+fieldset[disabled] a.litespeed-btn {
+	pointer-events: none;
+}
+.litespeed-btn-default {
+	color: #333;
+	background-color: #fff;
+	border-color: #ccc;
+}
+.litespeed-btn-default:focus,
+.litespeed-btn-default.focus {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #8c8c8c;
+}
+.litespeed-btn-default:hover {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
+.litespeed-btn-default:active,
+.litespeed-btn-default.active,
+.open > .dropdown-toggle.litespeed-btn-default {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
+.litespeed-btn-default:active:hover,
+.litespeed-btn-default.active:hover,
+.open > .dropdown-toggle.litespeed-btn-default:hover,
+.litespeed-btn-default:active:focus,
+.litespeed-btn-default.active:focus,
+.open > .dropdown-toggle.litespeed-btn-default:focus,
+.litespeed-btn-default:active.focus,
+.litespeed-btn-default.active.focus,
+.open > .dropdown-toggle.litespeed-btn-default.focus {
+	color: #333;
+	background-color: #d4d4d4;
+	border-color: #8c8c8c;
+}
+.litespeed-btn-default:active,
+.litespeed-btn-default.active,
+.open > .dropdown-toggle.litespeed-btn-default {
+	background-image: none;
+}
+.litespeed-btn-default.disabled:hover,
+.litespeed-btn-default[disabled]:hover,
+fieldset[disabled] .litespeed-btn-default:hover,
+.litespeed-btn-default.disabled:focus,
+.litespeed-btn-default[disabled]:focus,
+fieldset[disabled] .litespeed-btn-default:focus,
+.litespeed-btn-default.disabled.focus,
+.litespeed-btn-default[disabled].focus,
+fieldset[disabled] .litespeed-btn-default.focus {
+	background-color: #fff;
+	border-color: #ccc;
+}
+.litespeed-btn-default .badge {
+	color: #fff;
+	background-color: #333;
+}
+.litespeed-btn-primary {
+	color: #fff;
+	background-color: #337ab7;
+	border-color: #2e6da4;
+}
+.litespeed-btn-primary:focus,
+.litespeed-btn-primary.focus {
+	color: #fff;
+	background-color: #286090;
+	border-color: #122b40;
+}
+.litespeed-btn-primary:hover {
+	color: #fff;
+	background-color: #286090;
+	border-color: #204d74;
+}
+.litespeed-btn-primary:active,
+.litespeed-btn-primary.active,
+.open > .dropdown-toggle.litespeed-btn-primary {
+	color: #fff;
+	background-color: #286090;
+	border-color: #204d74;
+}
+.litespeed-btn-primary:active:hover,
+.litespeed-btn-primary.active:hover,
+.open > .dropdown-toggle.litespeed-btn-primary:hover,
+.litespeed-btn-primary:active:focus,
+.litespeed-btn-primary.active:focus,
+.open > .dropdown-toggle.litespeed-btn-primary:focus,
+.litespeed-btn-primary:active.focus,
+.litespeed-btn-primary.active.focus,
+.open > .dropdown-toggle.litespeed-btn-primary.focus {
+	color: #fff;
+	background-color: #204d74;
+	border-color: #122b40;
+}
+.litespeed-btn-primary:active,
+.litespeed-btn-primary.active,
+.open > .dropdown-toggle.litespeed-btn-primary {
+	background-image: none;
+}
+.litespeed-btn-primary.disabled:hover,
+.litespeed-btn-primary[disabled]:hover,
+fieldset[disabled] .litespeed-btn-primary:hover,
+.litespeed-btn-primary.disabled:focus,
+.litespeed-btn-primary[disabled]:focus,
+fieldset[disabled] .litespeed-btn-primary:focus,
+.litespeed-btn-primary.disabled.focus,
+.litespeed-btn-primary[disabled].focus,
+fieldset[disabled] .litespeed-btn-primary.focus {
+	background-color: #337ab7;
+	border-color: #2e6da4;
+}
+.litespeed-btn-primary .badge {
+	color: #337ab7;
+	background-color: #fff;
+}
+.litespeed-btn-success {
+	color: #fff;
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+}
+.litespeed-btn-success:focus,
+.litespeed-btn-success.focus {
+	color: #fff;
+	background-color: #449d44;
+	border-color: #255625;
+}
+.litespeed-btn-success:hover {
+	color: #fff;
+	background-color: #449d44;
+	border-color: #398439;
+}
+.litespeed-btn-success:active,
+.litespeed-btn-success.active,
+.open > .dropdown-toggle.litespeed-btn-success {
+	color: #fff;
+	background-color: #449d44;
+	border-color: #398439;
+}
+.litespeed-btn-success:active:hover,
+.litespeed-btn-success.active:hover,
+.open > .dropdown-toggle.litespeed-btn-success:hover,
+.litespeed-btn-success:active:focus,
+.litespeed-btn-success.active:focus,
+.open > .dropdown-toggle.litespeed-btn-success:focus,
+.litespeed-btn-success:active.focus,
+.litespeed-btn-success.active.focus,
+.open > .dropdown-toggle.litespeed-btn-success.focus {
+	color: #fff;
+	background-color: #398439;
+	border-color: #255625;
+}
+.litespeed-btn-success:active,
+.litespeed-btn-success.active,
+.open > .dropdown-toggle.litespeed-btn-success {
+	background-image: none;
+}
+.litespeed-btn-success.disabled:hover,
+.litespeed-btn-success[disabled]:hover,
+fieldset[disabled] .litespeed-btn-success:hover,
+.litespeed-btn-success.disabled:focus,
+.litespeed-btn-success[disabled]:focus,
+fieldset[disabled] .litespeed-btn-success:focus,
+.litespeed-btn-success.disabled.focus,
+.litespeed-btn-success[disabled].focus,
+fieldset[disabled] .litespeed-btn-success.focus {
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+}
+.litespeed-btn-success .badge {
+	color: #5cb85c;
+	background-color: #fff;
+}
+.litespeed-btn-info {
+	color: #fff;
+	background-color: #5bc0de;
+	border-color: #46b8da;
+}
+.litespeed-btn-info:focus,
+.litespeed-btn-info.focus {
+	color: #fff;
+	background-color: #31b0d5;
+	border-color: #1b6d85;
+}
+.litespeed-btn-info:hover {
+	color: #fff;
+	background-color: #31b0d5;
+	border-color: #269abc;
+}
+.litespeed-btn-info:active,
+.litespeed-btn-info.active,
+.open > .dropdown-toggle.litespeed-btn-info {
+	color: #fff;
+	background-color: #31b0d5;
+	border-color: #269abc;
+}
+.litespeed-btn-info:active:hover,
+.litespeed-btn-info.active:hover,
+.open > .dropdown-toggle.litespeed-btn-info:hover,
+.litespeed-btn-info:active:focus,
+.litespeed-btn-info.active:focus,
+.open > .dropdown-toggle.litespeed-btn-info:focus,
+.litespeed-btn-info:active.focus,
+.litespeed-btn-info.active.focus,
+.open > .dropdown-toggle.litespeed-btn-info.focus {
+	color: #fff;
+	background-color: #269abc;
+	border-color: #1b6d85;
+}
+.litespeed-btn-info:active,
+.litespeed-btn-info.active,
+.open > .dropdown-toggle.litespeed-btn-info {
+	background-image: none;
+}
+.litespeed-btn-info.disabled:hover,
+.litespeed-btn-info[disabled]:hover,
+fieldset[disabled] .litespeed-btn-info:hover,
+.litespeed-btn-info.disabled:focus,
+.litespeed-btn-info[disabled]:focus,
+fieldset[disabled] .litespeed-btn-info:focus,
+.litespeed-btn-info.disabled.focus,
+.litespeed-btn-info[disabled].focus,
+fieldset[disabled] .litespeed-btn-info.focus {
+	background-color: #5bc0de;
+	border-color: #46b8da;
+}
+.litespeed-btn-info .badge {
+	color: #5bc0de;
+	background-color: #fff;
+}
+.litespeed-btn-warning {
+	color: #fff;
+	background-color: #f0ad4e;
+	border-color: #eea236;
+}
+.litespeed-btn-warning:focus,
+.litespeed-btn-warning.focus {
+	color: #fff;
+	background-color: #ec971f;
+	border-color: #985f0d;
+}
+.litespeed-btn-warning:hover {
+	color: #fff;
+	background-color: #ec971f;
+	border-color: #d58512;
+}
+.litespeed-btn-warning:active,
+.litespeed-btn-warning.active,
+.open > .dropdown-toggle.litespeed-btn-warning {
+	color: #fff;
+	background-color: #ec971f;
+	border-color: #d58512;
+}
+.litespeed-btn-warning:active:hover,
+.litespeed-btn-warning.active:hover,
+.open > .dropdown-toggle.litespeed-btn-warning:hover,
+.litespeed-btn-warning:active:focus,
+.litespeed-btn-warning.active:focus,
+.open > .dropdown-toggle.litespeed-btn-warning:focus,
+.litespeed-btn-warning:active.focus,
+.litespeed-btn-warning.active.focus,
+.open > .dropdown-toggle.litespeed-btn-warning.focus {
+	color: #fff;
+	background-color: #d58512;
+	border-color: #985f0d;
+}
+.litespeed-btn-warning:active,
+.litespeed-btn-warning.active,
+.open > .dropdown-toggle.litespeed-btn-warning {
+	background-image: none;
+}
+.litespeed-btn-warning.disabled:hover,
+.litespeed-btn-warning[disabled]:hover,
+fieldset[disabled] .litespeed-btn-warning:hover,
+.litespeed-btn-warning.disabled:focus,
+.litespeed-btn-warning[disabled]:focus,
+fieldset[disabled] .litespeed-btn-warning:focus,
+.litespeed-btn-warning.disabled.focus,
+.litespeed-btn-warning[disabled].focus,
+fieldset[disabled] .litespeed-btn-warning.focus {
+	background-color: #f0ad4e;
+	border-color: #eea236;
+}
+.litespeed-btn-warning .badge {
+	color: #f0ad4e;
+	background-color: #fff;
+}
+.litespeed-btn-danger {
+	color: #fff;
+	background-color: #d9534f;
+	border-color: #d43f3a;
+}
+.litespeed-btn-danger:focus,
+.litespeed-btn-danger.focus {
+	color: #fff;
+	background-color: #c9302c;
+	border-color: #761c19;
+}
+.litespeed-btn-danger:hover {
+	color: #fff;
+	background-color: #c9302c;
+	border-color: #ac2925;
+}
+.litespeed-btn-danger:active,
+.litespeed-btn-danger.active,
+.open > .dropdown-toggle.litespeed-btn-danger {
+	color: #fff;
+	background-color: #c9302c;
+	border-color: #ac2925;
+}
+.litespeed-btn-danger:active:hover,
+.litespeed-btn-danger.active:hover,
+.open > .dropdown-toggle.litespeed-btn-danger:hover,
+.litespeed-btn-danger:active:focus,
+.litespeed-btn-danger.active:focus,
+.open > .dropdown-toggle.litespeed-btn-danger:focus,
+.litespeed-btn-danger:active.focus,
+.litespeed-btn-danger.active.focus,
+.open > .dropdown-toggle.litespeed-btn-danger.focus {
+	color: #fff;
+	background-color: #ac2925;
+	border-color: #761c19;
+}
+.litespeed-btn-danger:active,
+.litespeed-btn-danger.active,
+.open > .dropdown-toggle.litespeed-btn-danger {
+	background-image: none;
+}
+.litespeed-btn-danger.disabled:hover,
+.litespeed-btn-danger[disabled]:hover,
+fieldset[disabled] .litespeed-btn-danger:hover,
+.litespeed-btn-danger.disabled:focus,
+.litespeed-btn-danger[disabled]:focus,
+fieldset[disabled] .litespeed-btn-danger:focus,
+.litespeed-btn-danger.disabled.focus,
+.litespeed-btn-danger[disabled].focus,
+fieldset[disabled] .litespeed-btn-danger.focus {
+	background-color: #d9534f;
+	border-color: #d43f3a;
+}
+.litespeed-btn-danger .badge {
+	color: #d9534f;
+	background-color: #fff;
+}
+.litespeed-btn-lg,
+.litespeed-btn-group-lg > .litespeed-btn {
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.3333333;
+	border-radius: 6px;
+}
+.litespeed-btn-sm,
+.litespeed-btn-group-sm > .litespeed-btn {
+	padding: 5px 10px;
+	font-size: 12px;
+	line-height: 1.5;
+	border-radius: 3px;
+}
+.litespeed-btn-xs,
+.litespeed-btn-group-xs > .litespeed-btn {
+	padding: 1px 5px;
+	font-size: 12px;
+	line-height: 1.5;
+	border-radius: 3px;
+}
+
+
+.litespeed-btn-default,
+.litespeed-btn-primary,
+.litespeed-btn-success,
+.litespeed-btn-info,
+.litespeed-btn-warning,
+.litespeed-btn-danger {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, .2);
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 1px rgba(0, 0, 0, .075);
+}
+.litespeed-btn-default:active,
+.litespeed-btn-primary:active,
+.litespeed-btn-success:active,
+.litespeed-btn-info:active,
+.litespeed-btn-warning:active,
+.litespeed-btn-danger:active,
+.litespeed-btn-default.active,
+.litespeed-btn-primary.active,
+.litespeed-btn-success.active,
+.litespeed-btn-info.active,
+.litespeed-btn-warning.active,
+.litespeed-btn-danger.active {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.litespeed-btn-default.disabled,
+.litespeed-btn-primary.disabled,
+.litespeed-btn-success.disabled,
+.litespeed-btn-info.disabled,
+.litespeed-btn-warning.disabled,
+.litespeed-btn-danger.disabled,
+.litespeed-btn-default[disabled],
+.litespeed-btn-primary[disabled],
+.litespeed-btn-success[disabled],
+.litespeed-btn-info[disabled],
+.litespeed-btn-warning[disabled],
+.litespeed-btn-danger[disabled],
+fieldset[disabled] .litespeed-btn-default,
+fieldset[disabled] .litespeed-btn-primary,
+fieldset[disabled] .litespeed-btn-success,
+fieldset[disabled] .litespeed-btn-info,
+fieldset[disabled] .litespeed-btn-warning,
+fieldset[disabled] .litespeed-btn-danger {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.litespeed-btn-default .badge,
+.litespeed-btn-primary .badge,
+.litespeed-btn-success .badge,
+.litespeed-btn-info .badge,
+.litespeed-btn-warning .badge,
+.litespeed-btn-danger .badge {
+  text-shadow: none;
+}
+.litespeed-btn:active,
+.litespeed-btn.active {
+  background-image: none;
+}
+.litespeed-btn-default {
+  text-shadow: 0 1px 0 #fff;
+  background-image: -webkit-linear-gradient(top, #fff 0%, #e0e0e0 100%);
+  background-image:      -o-linear-gradient(top, #fff 0%, #e0e0e0 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e0e0e0));
+  background-image:         linear-gradient(to bottom, #fff 0%, #e0e0e0 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe0e0e0', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-repeat: repeat-x;
+  border-color: #dbdbdb;
+  border-color: #ccc;
+}
+.litespeed-btn-default:hover,
+.litespeed-btn-default:focus {
+  background-color: #e0e0e0;
+  background-position: 0 -15px;
+}
+.litespeed-btn-default:active,
+.litespeed-btn-default.active {
+  background-color: #e0e0e0;
+  border-color: #dbdbdb;
+}
+.litespeed-btn-default.disabled,
+.litespeed-btn-default[disabled],
+fieldset[disabled] .litespeed-btn-default,
+.litespeed-btn-default.disabled:hover,
+.litespeed-btn-default[disabled]:hover,
+fieldset[disabled] .litespeed-btn-default:hover,
+.litespeed-btn-default.disabled:focus,
+.litespeed-btn-default[disabled]:focus,
+fieldset[disabled] .litespeed-btn-default:focus,
+.litespeed-btn-default.disabled.focus,
+.litespeed-btn-default[disabled].focus,
+fieldset[disabled] .litespeed-btn-default.focus,
+.litespeed-btn-default.disabled:active,
+.litespeed-btn-default[disabled]:active,
+fieldset[disabled] .litespeed-btn-default:active,
+.litespeed-btn-default.disabled.active,
+.litespeed-btn-default[disabled].active,
+fieldset[disabled] .litespeed-btn-default.active {
+  background-color: #e0e0e0;
+  background-image: none;
+}
+.litespeed-btn-primary {
+  background-image: -webkit-linear-gradient(top, #337ab7 0%, #265a88 100%);
+  background-image:      -o-linear-gradient(top, #337ab7 0%, #265a88 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#337ab7), to(#265a88));
+  background-image:         linear-gradient(to bottom, #337ab7 0%, #265a88 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff265a88', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-repeat: repeat-x;
+  border-color: #245580;
+}
+.litespeed-btn-primary:hover,
+.litespeed-btn-primary:focus {
+  background-color: #265a88;
+  background-position: 0 -15px;
+}
+.litespeed-btn-primary:active,
+.litespeed-btn-primary.active {
+  background-color: #265a88;
+  border-color: #245580;
+}
+.litespeed-btn-primary.disabled,
+.litespeed-btn-primary[disabled],
+fieldset[disabled] .litespeed-btn-primary,
+.litespeed-btn-primary.disabled:hover,
+.litespeed-btn-primary[disabled]:hover,
+fieldset[disabled] .litespeed-btn-primary:hover,
+.litespeed-btn-primary.disabled:focus,
+.litespeed-btn-primary[disabled]:focus,
+fieldset[disabled] .litespeed-btn-primary:focus,
+.litespeed-btn-primary.disabled.focus,
+.litespeed-btn-primary[disabled].focus,
+fieldset[disabled] .litespeed-btn-primary.focus,
+.litespeed-btn-primary.disabled:active,
+.litespeed-btn-primary[disabled]:active,
+fieldset[disabled] .litespeed-btn-primary:active,
+.litespeed-btn-primary.disabled.active,
+.litespeed-btn-primary[disabled].active,
+fieldset[disabled] .litespeed-btn-primary.active {
+  background-color: #265a88;
+  background-image: none;
+}
+.litespeed-btn-success {
+  background-image: -webkit-linear-gradient(top, #5cb85c 0%, #419641 100%);
+  background-image:      -o-linear-gradient(top, #5cb85c 0%, #419641 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#5cb85c), to(#419641));
+  background-image:         linear-gradient(to bottom, #5cb85c 0%, #419641 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5cb85c', endColorstr='#ff419641', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-repeat: repeat-x;
+  border-color: #3e8f3e;
+}
+.litespeed-btn-success:hover,
+.litespeed-btn-success:focus {
+  background-color: #419641;
+  background-position: 0 -15px;
+}
+.litespeed-btn-success:active,
+.litespeed-btn-success.active {
+  background-color: #419641;
+  border-color: #3e8f3e;
+}
+.litespeed-btn-success.disabled,
+.litespeed-btn-success[disabled],
+fieldset[disabled] .litespeed-btn-success,
+.litespeed-btn-success.disabled:hover,
+.litespeed-btn-success[disabled]:hover,
+fieldset[disabled] .litespeed-btn-success:hover,
+.litespeed-btn-success.disabled:focus,
+.litespeed-btn-success[disabled]:focus,
+fieldset[disabled] .litespeed-btn-success:focus,
+.litespeed-btn-success.disabled.focus,
+.litespeed-btn-success[disabled].focus,
+fieldset[disabled] .litespeed-btn-success.focus,
+.litespeed-btn-success.disabled:active,
+.litespeed-btn-success[disabled]:active,
+fieldset[disabled] .litespeed-btn-success:active,
+.litespeed-btn-success.disabled.active,
+.litespeed-btn-success[disabled].active,
+fieldset[disabled] .litespeed-btn-success.active {
+  background-color: #419641;
+  background-image: none;
+}
+.litespeed-btn-info {
+  background-image: -webkit-linear-gradient(top, #5bc0de 0%, #2aabd2 100%);
+  background-image:      -o-linear-gradient(top, #5bc0de 0%, #2aabd2 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#5bc0de), to(#2aabd2));
+  background-image:         linear-gradient(to bottom, #5bc0de 0%, #2aabd2 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff2aabd2', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-repeat: repeat-x;
+  border-color: #28a4c9;
+}
+.litespeed-btn-info:hover,
+.litespeed-btn-info:focus {
+  background-color: #2aabd2;
+  background-position: 0 -15px;
+}
+.litespeed-btn-info:active,
+.litespeed-btn-info.active {
+  background-color: #2aabd2;
+  border-color: #28a4c9;
+}
+.litespeed-btn-info.disabled,
+.litespeed-btn-info[disabled],
+fieldset[disabled] .litespeed-btn-info,
+.litespeed-btn-info.disabled:hover,
+.litespeed-btn-info[disabled]:hover,
+fieldset[disabled] .litespeed-btn-info:hover,
+.litespeed-btn-info.disabled:focus,
+.litespeed-btn-info[disabled]:focus,
+fieldset[disabled] .litespeed-btn-info:focus,
+.litespeed-btn-info.disabled.focus,
+.litespeed-btn-info[disabled].focus,
+fieldset[disabled] .litespeed-btn-info.focus,
+.litespeed-btn-info.disabled:active,
+.litespeed-btn-info[disabled]:active,
+fieldset[disabled] .litespeed-btn-info:active,
+.litespeed-btn-info.disabled.active,
+.litespeed-btn-info[disabled].active,
+fieldset[disabled] .litespeed-btn-info.active {
+  background-color: #2aabd2;
+  background-image: none;
+}
+.litespeed-btn-warning {
+  background-image: -webkit-linear-gradient(top, #f0ad4e 0%, #eb9316 100%);
+  background-image:      -o-linear-gradient(top, #f0ad4e 0%, #eb9316 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f0ad4e), to(#eb9316));
+  background-image:         linear-gradient(to bottom, #f0ad4e 0%, #eb9316 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff0ad4e', endColorstr='#ffeb9316', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-repeat: repeat-x;
+  border-color: #e38d13;
+}
+.litespeed-btn-warning:hover,
+.litespeed-btn-warning:focus {
+  background-color: #eb9316;
+  background-position: 0 -15px;
+}
+.litespeed-btn-warning:active,
+.litespeed-btn-warning.active {
+  background-color: #eb9316;
+  border-color: #e38d13;
+}
+.litespeed-btn-warning.disabled,
+.litespeed-btn-warning[disabled],
+fieldset[disabled] .litespeed-btn-warning,
+.litespeed-btn-warning.disabled:hover,
+.litespeed-btn-warning[disabled]:hover,
+fieldset[disabled] .litespeed-btn-warning:hover,
+.litespeed-btn-warning.disabled:focus,
+.litespeed-btn-warning[disabled]:focus,
+fieldset[disabled] .litespeed-btn-warning:focus,
+.litespeed-btn-warning.disabled.focus,
+.litespeed-btn-warning[disabled].focus,
+fieldset[disabled] .litespeed-btn-warning.focus,
+.litespeed-btn-warning.disabled:active,
+.litespeed-btn-warning[disabled]:active,
+fieldset[disabled] .litespeed-btn-warning:active,
+.litespeed-btn-warning.disabled.active,
+.litespeed-btn-warning[disabled].active,
+fieldset[disabled] .litespeed-btn-warning.active {
+  background-color: #eb9316;
+  background-image: none;
+}
+.litespeed-btn-danger {
+  background-image: -webkit-linear-gradient(top, #d9534f 0%, #c12e2a 100%);
+  background-image:      -o-linear-gradient(top, #d9534f 0%, #c12e2a 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#d9534f), to(#c12e2a));
+  background-image:         linear-gradient(to bottom, #d9534f 0%, #c12e2a 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffd9534f', endColorstr='#ffc12e2a', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background-repeat: repeat-x;
+  border-color: #b92c28;
+}
+.litespeed-btn-danger:hover,
+.litespeed-btn-danger:focus {
+  background-color: #c12e2a;
+  background-position: 0 -15px;
+}
+.litespeed-btn-danger:active,
+.litespeed-btn-danger.active {
+  background-color: #c12e2a;
+  border-color: #b92c28;
+}
+.litespeed-btn-danger.disabled,
+.litespeed-btn-danger[disabled],
+fieldset[disabled] .litespeed-btn-danger,
+.litespeed-btn-danger.disabled:hover,
+.litespeed-btn-danger[disabled]:hover,
+fieldset[disabled] .litespeed-btn-danger:hover,
+.litespeed-btn-danger.disabled:focus,
+.litespeed-btn-danger[disabled]:focus,
+fieldset[disabled] .litespeed-btn-danger:focus,
+.litespeed-btn-danger.disabled.focus,
+.litespeed-btn-danger[disabled].focus,
+fieldset[disabled] .litespeed-btn-danger.focus,
+.litespeed-btn-danger.disabled:active,
+.litespeed-btn-danger[disabled]:active,
+fieldset[disabled] .litespeed-btn-danger:active,
+.litespeed-btn-danger.disabled.active,
+.litespeed-btn-danger[disabled].active,
+fieldset[disabled] .litespeed-btn-danger.active {
+  background-color: #c12e2a;
+  background-image: none;
+}

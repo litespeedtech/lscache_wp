@@ -11,9 +11,8 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Error
-{
-	private static $instance;
+class LiteSpeed_Cache_Admin_Error extends LiteSpeed{
+	protected static $_instance;
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
@@ -68,27 +67,10 @@ class LiteSpeed_Cache_Admin_Error
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.15
-	 * @access   private
+	 * @access   protected
 	 */
-	private function __construct()
+	protected function __construct()
 	{
-	}
-
-	/**
-	 * Get the LiteSpeed_Cache_Admin_Error object.
-	 *
-	 * @since 1.0.15
-	 * @access public
-	 * @return LiteSpeed_Cache_Admin_Error Static instance of the
-	 *  LiteSpeed_Cache_Admin_Error class.
-	 */
-	public static function get_instance()
-	{
-		if (!isset(self::$instance)) {
-			self::$instance = new LiteSpeed_Cache_Admin_Error();
-		}
-
-		return self::$instance;
 	}
 
 	/**
@@ -172,18 +154,13 @@ class LiteSpeed_Cache_Admin_Error
 			return __('Invalid login cookie. Invalid characters found: %s',
 				'litespeed-cache');
 		case self::E_SETTING_REWRITE:
-			return LiteSpeed_Cache_Admin_Display::build_paragraph(
-					__('Invalid Rewrite List.', 'litespeed-cache'),
-					__('Empty or invalid rule.', 'litespeed-cache'),
-					__('Rule: %1$s, list: %2$s', 'litespeed-cache')
-				);
+			return __('Invalid Rewrite List.', 'litespeed-cache') . ' '
+				. __('Empty or invalid rule.', 'litespeed-cache') . ' '
+				. __('Rule: %1$s, list: %2$s', 'litespeed-cache');
 		// Login cookie in settings did not match .htaccess.
 		case self::E_LC_HTA:
-			return LiteSpeed_Cache_Admin_Display::build_paragraph(
-				__('Tried to parse for existing login cookie.', 'litespeed-cache'),
-				sprintf(__('%s file not valid. Please verify contents.',
-					'litespeed-cache'), '.htaccess')
-			);
+			return __('Tried to parse for existing login cookie.', 'litespeed-cache') . ' '
+				. sprintf(__('%s file not valid. Please verify contents.', 'litespeed-cache'), '.htaccess');
 
 		// Could not find something in the .htaccess file. Expect parameter.
 		case self::E_HTA_DNF:
@@ -191,64 +168,48 @@ class LiteSpeed_Cache_Admin_Error
 
 		// Mismatched login cookie.
 		case self::E_LC_MISMATCH:
-			return LiteSpeed_Cache_Admin_Display::build_paragraph(
-				__('This site is a subdirectory install.', 'litespeed-cache'),
-				__('Login cookies do not match.', 'litespeed-cache'),
-				__('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.',
-					'litespeed-cache'));
+			return __('This site is a subdirectory install.', 'litespeed-cache') . ' '
+				. __('Login cookies do not match.', 'litespeed-cache') . ' '
+				. __('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.', 'litespeed-cache');
 
 		// Either running another server or doesn't have cache module.
 		case self::E_SERVER:
-			return LiteSpeed_Cache_Admin_Display::build_paragraph(
-				__('Notice: This plugin requires a LiteSpeed Server with the LSCache Module enabled.', 'litespeed-cache'),
-				__('If you are unable to change your server stack, please contact your hosting provider to request the required changes.', 'litespeed-cache'),
-				__('This plugin will NOT work properly.', 'litespeed-cache')
-			);
+			return __('Notice: This plugin requires a LiteSpeed Server with the LSCache Module enabled.', 'litespeed-cache') . ' '
+				. __('If you are unable to change your server stack, please contact your hosting provider to request the required changes.', 'litespeed-cache') . ' '
+				. __('This plugin will NOT work properly.', 'litespeed-cache');
+
 		case self::E_CONF:
-			return LiteSpeed_Cache_Admin_Display::build_paragraph(
-				__('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache'),
-				sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'),
-					'<br><pre>define(\'WP_CACHE\', true);</pre>')
-			);
+			return __('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache') . ' '
+				. sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'), '<br><pre>define(\'WP_CACHE\', true);</pre>');
 
 		// .htaccess problem.
 		case self::E_HTA_BU:
 			return __('Failed to back up file, aborted changes.', 'litespeed-cache');
 		case self::E_HTA_PUT:
-			return sprintf(__('Failed to put contents into %s', 'litespeed-cache'),
-				'.htaccess');
+			return sprintf(__('Failed to put contents into %s', 'litespeed-cache'), '.htaccess');
 		case self::E_HTA_GET:
-			return sprintf(__('Failed to get %s file contents.', 'litespeed-cache'),
-				'.htaccess');
+			return sprintf(__('Failed to get %s file contents.', 'litespeed-cache'), '.htaccess');
 		case self::E_HTA_RW:
-			return sprintf(__('%s file not readable or not writable.', 'litespeed-cache'),
-				'.htaccess');
+			return sprintf(__('%s file not readable or not writable.', 'litespeed-cache'), '.htaccess');
 		case self::E_HTA_ORDER:
 			return __('Prefix was found after suffix.', 'litespeed-cache');
 		case self::E_HTA_SAVE:
-			return sprintf(__('Failed to overwrite %s.', 'litespeed-cache'),
-				'.htaccess');
+			return sprintf(__('Failed to overwrite %s.', 'litespeed-cache'), '.htaccess');
 
 
 		// wp-config problem.
 		case self::E_CONF_WRITE:
-			$err = sprintf(__('The %1$s file not writeable for %2$s', 'litespeed-cache'),
-					'wp-config', '\'WP_CACHE\'');
+			$err = sprintf(__('The %1$s file not writeable for %2$s', 'litespeed-cache'), 'wp-config', '\'WP_CACHE\'');
 			break;
 		case self::E_CONF_FIND:
-			$err = sprintf(__('%s file did not find a place to insert define.', 'litespeed-cache'),
-					'wp-config');
+			$err = sprintf(__('%s file did not find a place to insert define.', 'litespeed-cache'), 'wp-config');
 			break;
 		default:
 			return '';
 		}
 
-		return $err . '<br>'
-			. LiteSpeed_Cache_Admin_Display::build_paragraph(
-				__('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache'),
-				sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'),
-					'<br><pre>define(\'WP_CACHE\', true);</pre>')
-			);
+		return $err . '<br>' . __('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache') . ' '
+			. sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'), '<br><pre>define(\'WP_CACHE\', true);</pre>');
 	}
 
 	/**
