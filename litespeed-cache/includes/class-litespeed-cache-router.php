@@ -11,38 +11,52 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Router extends LiteSpeed{
-	protected static $_instance;
-	private $_action = false;
-	private $_ip = false;
-	private $_is_ajax = false;
+	const VAR_IP = '_ip';
+	const VAR_ACTION = '_action';
+	const VAR_IS_AJAX = '_is_ajax';
+	const VAR_IS_ADMIN_IP = '_is_admin_ip';
 
 	protected function __construct(){
 	}
 
 	/**
-	 * Generate action
-	 * @since 1.0.16
-	 */
-	public static function init(){
-		self::get_instance()->_is_ajax = defined('DOING_AJAX') && DOING_AJAX;
-		self::get_instance()->verify_action();
-	}
-
-	/**
 	 * Check action
+	 * 
 	 * @since 1.0.16
 	 * @return string
 	 */
-	public static function action(){
-		return self::get_instance()->_action;
+	public static function get_action(){
+		if (!self::is_var(self::VAR_ACTION)) {
+			self::get_instance()->verify_action();
+		}
+		return self::get_var(self::VAR_ACTION);
 	}
 
 	/**
 	 * Check if is ajax call
+	 * 
+	 * @since 1.0.16
 	 * @return boolean
 	 */
 	public static function is_ajax(){
-		return self::get_instance()->_is_ajax;
+		if(!self::is_var(self::VAR_IS_AJAX)){
+			return self::set_var(self::VAR_IS_AJAX, defined('DOING_AJAX') && DOING_AJAX);
+		}
+		return self::get_var(self::VAR_IS_AJAX);
+	}
+
+	/**
+	 * Check if is admin ip
+	 * 
+	 * @since 1.0.16
+	 * @return boolean
+	 */
+	public static function is_admin_ip(){
+		if(!self::is_var(self::VAR_IS_ADMIN_IP)){
+			$ips = LiteSpeed_Cache_Config::get_instance()->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
+			return self::set_var(self::VAR_IS_ADMIN_IP, self::get_instance()->ip_access($ips));
+		}
+		return self::get_var(self::VAR_IS_ADMIN_IP);
 	}
 
 	/**
@@ -50,6 +64,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 	 * @since 1.0.16
 	 */
 	private function verify_action(){
+
 		if(empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) return;
 
 		$action = $_REQUEST[LiteSpeed_Cache::ACTION_KEY];
@@ -60,10 +75,9 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 		if(!$this->verify_nonce($action)){
 
 			// check if it is from admin ip
-			$ips = LiteSpeed_Cache_Config::get_instance()->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
-			if(!$this->ip_access($ips)){
-				if (defined('LSCWP_LOG')) {
-					LiteSpeed_Cache::debug_log('LSCWP_CTRL query string - did not match admin IP');
+			if(!$this->is_admin_ip()){
+				if (LiteSpeed_Cache_Log::get_enabled()) {
+					LiteSpeed_Cache_Log::push('LSCWP_CTRL query string - did not match admin IP');
 				}
 				return;
 			}
@@ -75,8 +89,8 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 					LiteSpeed_Cache::ACTION_PURGE_SINGLE,
 					LiteSpeed_Cache::ACTION_SHOW_HEADERS,
 			))) {
-				if (defined('LSCWP_LOG')) {
-					LiteSpeed_Cache::debug_log('LSCWP_CTRL query string - did not match admin IP Actions');
+				if (LiteSpeed_Cache_Log::get_enabled()) {
+					LiteSpeed_Cache_Log::push('LSCWP_CTRL query string - did not match admin IP Actions');
 				}
 				return;
 			}
@@ -85,8 +99,8 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 		}
 
 		/* Now it is a valid action, lets log and check the permission */
-		if (defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log('LSCWP_CTRL query string action is ' . $action);
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('LSCWP_CTRL query string action is ' . $action);
 		}
 
 		// OK, as we want to do something magic, lets check if its allowed
@@ -103,14 +117,14 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
 				if((!$_is_multisite && $_can_option) || $_can_network_option){
-					$this->_action = $action;
+					$this->set_var(self::VAR_ACTION, $action);
 				}
 				return;
 
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
 				if ($_can_network_option) {
-					$this->_action = $action;
+					$this->set_var(self::VAR_ACTION, $action);
 				}
 				return;
 
@@ -120,13 +134,13 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				if($_is_enabled && ($_can_network_option || $_can_option)){
-					$this->_action = $action;
+					$this->set_var(self::VAR_ACTION, $action);
 				}
 				return;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
 				if($_is_enabled && ($_can_network_option || (!$_is_multisite && $_can_option))){
-					$this->_action = $action;
+					$this->set_var(self::VAR_ACTION, $action);
 				}
 				return;
 
@@ -135,14 +149,14 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
 			case LiteSpeed_Cache::ACTION_SHOW_HEADERS:
 				if($_is_enabled && $_is_public_action){
-					$this->_action = $action;
+					$this->set_var(self::VAR_ACTION, $action);
 				}
 				return;
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 				if ($_is_enabled && self::is_ajax()) {
-					$this->_action = $action;
+					$this->set_var(self::VAR_ACTION, $action);
 				}
 				return;
 
@@ -174,10 +188,12 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 	 */
 	private function ip_access($ial){
 		if(!$ial) Return false;
-		if(!$this->_ip){
-			$this->_ip = $this->get_ip();
+		if (!self::is_var(self::VAR_IP)) {
+			$_ip = self::set_var(self::VAR_IP, $this->get_ip());
+		}else{
+			$_ip = self::get_var(self::VAR_IP);
 		}
-		$uip = explode('.', $this->_ip);
+		$uip = explode('.', $_ip);
 		if(empty($uip) || count($uip) != 4) Return false;
 		if(!is_array($ial)) $ial = explode("\n", $ial);
 		foreach($ial as $key => $ip) $ial[$key] = explode('.', trim($ip));

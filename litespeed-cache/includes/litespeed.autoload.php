@@ -19,6 +19,7 @@ function _litespeed_autoload($cls){
 
 		'LiteSpeed_Cache'					=> 'includes/class-litespeed-cache.php',
 		'LiteSpeed_Cache_Config'			=> 'includes/class-litespeed-cache-config.php',
+		'LiteSpeed_Cache_Log'				=> 'includes/class-litespeed-cache-log.php',
 		'LiteSpeed_Cache_Router'			=> 'includes/class-litespeed-cache-router.php',
 		'LiteSpeed_Cache_Tags'				=> 'includes/class-litespeed-cache-tags.php',
 		'LiteSpeed_Cache_Crawler_Sitemap'	=> 'includes/class-litespeed-cache-sitemap.php',

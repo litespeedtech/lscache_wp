@@ -10,7 +10,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
-	protected static $_instance;
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
@@ -399,9 +398,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param string $str The notice message.
 	 * @return string The built notice html.
 	 */
-	private static function build_notice($color, $str){
-		return '<div class="' . $color . ' is-dismissible"><p>'
-			. $str . '</p></div>';
+	private function build_notice($color, $str){
+		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>';
 	}
 
 	/**
@@ -418,17 +416,15 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 */
 	public function add_notice($color, $msg){
 		if (empty($this->notices)) {
-			add_action(
-				(is_network_admin() ? 'network_admin_notices' : 'admin_notices'),
-				array($this, 'display_notices'));
+			add_action(is_network_admin() ? 'network_admin_notices' : 'admin_notices', array($this, 'display_notices'));
 		}
 		if (!is_array($msg)) {
-			$this->notices[] = self::build_notice($color, $msg);
+			$this->notices[] = $this->build_notice($color, $msg);
 
 			return;
 		}
 		foreach ($msg as $str) {
-			$this->notices[] = self::build_notice($color, $str);
+			$this->notices[] = $this->build_notice($color, $str);
 		}
 	}
 

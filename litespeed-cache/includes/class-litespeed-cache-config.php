@@ -12,8 +12,6 @@
  */
 class LiteSpeed_Cache_Config extends LiteSpeed{
 
-	protected static $_instance;
-
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 	const LOG_LEVEL_NONE = 0 ;
 	const LOG_LEVEL_ERROR = 1 ;
@@ -197,8 +195,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 		if (isset($this->options[$id])) {
 			return $this->options[$id];
 		}
-		if (defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log('Invalid option ID ' . $id);
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('Invalid option ID ' . $id);
 		}
 		return NULL;
 	}
@@ -516,8 +514,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 //		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
-		if (defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log("plugin_upgrade option changed = $res\n");
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n");
 		}
 	}
 
@@ -540,8 +538,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 
 		$res = update_site_option(self::OPTION_NAME, $options);
 
-		if (defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log("plugin_upgrade option changed = $res\n");
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n");
 		}
 
 	}
@@ -617,8 +615,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
 		$default = $this->get_default_options();
 		$res = add_option(self::OPTION_NAME, $default);
-		if (defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log("plugin_activation update option = $res");
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push("plugin_activation update option = $res");
 		}
 		if (is_multisite()) {
 			if (!is_network_admin()) {

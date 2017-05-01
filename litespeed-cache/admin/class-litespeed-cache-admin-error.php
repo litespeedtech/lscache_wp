@@ -12,7 +12,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Admin_Error extends LiteSpeed{
-	protected static $_instance;
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';

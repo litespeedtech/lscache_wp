@@ -14,9 +14,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache extends LiteSpeed{
-
-	protected static $_instance;
-	private static $log_path;
 	private $config;
 
 	const PLUGIN_NAME = 'litespeed-cache';
@@ -86,8 +83,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * @since    1.0.0
 	 */
 	protected function __construct(){
-		self::$log_path = WP_CONTENT_DIR . '/debug.log';
-
 		$this->config = LiteSpeed_Cache_Config::get_instance();
 
 		// Check if debug is on
@@ -96,13 +91,12 @@ class LiteSpeed_Cache extends LiteSpeed{
 			switch ($should_debug) {
 				// NOTSET is used as check admin IP here.
 				case 2:
-					$ips = $this->config->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS);
-					if (strpos($ips, $_SERVER['REMOTE_ADDR']) === false) {
+					if (!LiteSpeed_Cache_Router::is_admin_ip()) {
 						break;
 					}
 					// fall through
 				case 1:
-					define ('LSCWP_LOG', true);
+					LiteSpeed_Cache_Log::set_enabled();
 					break;
 				default:
 					break;
@@ -131,11 +125,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * @access public
 	 */
 	public function init(){
-		LiteSpeed_Cache_Router::init();
-
-		if (defined('LSCWP_LOG')) {
-			self::setup_debug_log();
-		}
 		if(!empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) {
 			$this->cachectrl = self::CACHECTRL_NOCACHE;
 		}
@@ -186,7 +175,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	public function proceed_action(){
 		$msg = false;
 		// handle common actions
-		switch (LiteSpeed_Cache_Router::action()) {
+		switch (LiteSpeed_Cache_Router::get_action()) {
 
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
@@ -375,78 +364,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 */
 	public static function config($opt_id){
 		return LiteSpeed_Cache_Config::get_instance()->get_option($opt_id);
-	}
-
-	/**
-	 * Sets up the log tag and creates initial log messages.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 */
-	private static function setup_debug_log(){
-		if (!defined('LSCWP_LOG_TAG')) {
-			define('LSCWP_LOG_TAG', 'LSCACHE_WP_blogid_' . get_current_blog_id());
-		}
-		self::log_request();
-	}
-
-	/**
-	 * Formats the log message with a consistent prefix.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 * @param string $mesg The log message to write.
-	 * @return string The formatted log message.
-	 */
-	private static function format_message($mesg){
-		$tag = defined('LSCWP_LOG_TAG') ? constant('LSCWP_LOG_TAG') : 'LSCACHE_WP';
-		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'),
-			$_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], $tag, $mesg);
-		return $formatted;
-	}
-
-	/**
-	 * Logs a debug message.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param string $mesg The debug message.
-	 */
-	public static function debug_log($mesg){
-		$formatted = self::format_message($mesg);
-		file_put_contents(self::$log_path, $formatted, FILE_APPEND);
-	}
-
-	/**
-	 * Create the initial log messages with the request parameters.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 */
-	private static function log_request(){
-		$SERVERVARS = array(
-			'Query String' => '',
-			'HTTP_USER_AGENT' => '',
-			'HTTP_ACCEPT_ENCODING' => '',
-			'HTTP_COOKIE' => '',
-			'X-LSCACHE' => '',
-			'LSCACHE_VARY_COOKIE' => '',
-			'LSCACHE_VARY_VALUE' => ''
-		);
-		$SERVER = array_merge($SERVERVARS, $_SERVER);
-		$params = array(
-			sprintf('%s %s %s', $SERVER['REQUEST_METHOD'], $SERVER['SERVER_PROTOCOL'], strtok($SERVER['REQUEST_URI'], '?')),
-			'Query String: '		. $SERVER['QUERY_STRING'],
-			'User Agent: '			. $SERVER['HTTP_USER_AGENT'],
-			'Accept Encoding: '		. $SERVER['HTTP_ACCEPT_ENCODING'],
-			'Cookie: '				. $SERVER['HTTP_COOKIE'],
-			'X-LSCACHE: '			. ($SERVER['X-LSCACHE'] ? 'true' : 'false'),
-			'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'],
-			'LSCACHE_VARY_VALUE: '	. $SERVER['LSCACHE_VARY_VALUE'],
-		);
-
-		$request = array_map('self::format_message', $params);
-		file_put_contents(self::$log_path, $request, FILE_APPEND);
 	}
 
 	/**
@@ -1369,7 +1286,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 		$cacheable = apply_filters('litespeed_cache_is_cacheable', true);
 		if (!$cacheable) {
 			global $wp_filter;
-			if ((!defined('LSCWP_LOG'))
+			if ((!LiteSpeed_Cache_Log::get_enabled())
 				|| (empty($wp_filter['litespeed_cache_is_cacheable']))) {
 				return $this->no_cache_for(
 					'Third Party Plugin determined not cacheable.');
@@ -1467,10 +1384,9 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
-	public function no_cache_for( $reason )
-	{
-		if (defined('LSCWP_LOG')) {
-			$this->debug_log('Do not cache - ' . $reason);
+	private function no_cache_for( $reason ){
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('Do not cache - ' . $reason);
 		}
 		return false ;
 	}
@@ -1540,7 +1456,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 			return;
 		}
 		if (!empty($_GET)) {
-			if (defined('LSCWP_LOG')) {
+			if (LiteSpeed_Cache_Log::get_enabled()) {
 				$this->no_cache_for('Not a get request');
 			}
 			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
@@ -1690,8 +1606,8 @@ class LiteSpeed_Cache extends LiteSpeed{
 							false, false)))))) {
 			$blogs = self::get_network_ids();
 			if (empty($blogs)) {
-				if (defined('LSCWP_LOG')) {
-					self::debug_log('blog list is empty');
+				if (LiteSpeed_Cache_Log::get_enabled()) {
+					LiteSpeed_Cache_Log::push('blog list is empty');
 				}
 				return '';
 			}
@@ -1834,8 +1750,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 
 		if (!empty($hdr_content)) {
 			if ($showhdr) {
-				@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': '
-						. implode('; ', $hdr_content));
+				@header(LiteSpeed_Cache_Tags::HEADER_DEBUG . ': ' . implode('; ', $hdr_content));
 			}
 			else {
 				foreach($hdr_content as $hdr) {
@@ -1847,29 +1762,29 @@ class LiteSpeed_Cache extends LiteSpeed{
 		if(!defined('DOING_AJAX')){
 			echo '<!-- Page generated by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->';
 		}
-		if (defined('LSCWP_LOG')) {
+		if (LiteSpeed_Cache_Log::get_enabled()) {
 			if($cache_hdr){
-				$this->debug_log($cache_hdr);
+				LiteSpeed_Cache_Log::push($cache_hdr);
 				if(!defined('DOING_AJAX')){
 					echo "\n<!-- ".$cache_hdr." -->";
 				}
 			}
 			if($cache_ctrl) {
-				$this->debug_log($cache_ctrl);
+				LiteSpeed_Cache_Log::push($cache_ctrl);
 				if(!defined('DOING_AJAX')){
 					echo "\n<!-- ".$cache_ctrl." -->";
 				}
 			}
 			if (!empty($hdr_content)) {
 				foreach ($hdr_content as $hdr) {
-					self::debug_log('Response header: ' . $hdr);
+                    LiteSpeed_Cache_Log::push('Response header: ' . $hdr);
 					if(!defined('DOING_AJAX')){
 						echo "<!-- ".$hdr." -->\n";
 					}
 				}
 			}
 
-			self::debug_log("End response.\n\n");
+			LiteSpeed_Cache_Log::push("End response.\n");
 		}
 	}
 
@@ -2191,21 +2106,21 @@ class LiteSpeed_Cache extends LiteSpeed{
 			$next_post = get_next_post();
 			if(!empty($prev_post->ID)) {
 				$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $prev_post->ID;
-				if(defined('LSCWP_LOG')){
-					self::debug_log('--------purge_tags prev is: '.$prev_post->ID);
+				if(LiteSpeed_Cache_Log::get_enabled()){
+					LiteSpeed_Cache_Log::push('--------purge_tags prev is: '.$prev_post->ID);
 				}
 			}
 			if(!empty($next_post->ID)) {
 				$purge_tags[] = LiteSpeed_Cache_Tags::TYPE_POST . $next_post->ID;
-				if(defined('LSCWP_LOG')){
-					self::debug_log('--------purge_tags next is: '.$next_post->ID);
+				if(LiteSpeed_Cache_Log::get_enabled()){
+					LiteSpeed_Cache_Log::push('--------purge_tags next is: '.$next_post->ID);
 				}
 			}
 		}
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
-			//$this->debug_log('purge by post, check tax = ' . print_r($taxonomies, true)) ;
+			//LiteSpeed_Cache_Log::push('purge by post, check tax = ' . print_r($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
 				$terms = get_the_terms($post_id, $tax) ;
 				if ( ! empty($terms) ) {

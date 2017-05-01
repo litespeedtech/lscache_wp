@@ -10,7 +10,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
-	protected static $_instance;
 
 	/**
 	 * Initialize the class and set its properties.

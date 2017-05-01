@@ -10,7 +10,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
-	protected static $_instance;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -112,8 +111,8 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 		$content = "<"."?php die();?".">\n\n".$content;
 
 		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false, LSWCP_DIR . 'environment_report.php', false);
-		if ($ret !== true && defined('LSCWP_LOG')) {
-			LiteSpeed_Cache::debug_log('LSCache wordpress plugin attempted to write env report but did not have permissions.');
+		if ($ret !== true && LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('LSCache wordpress plugin attempted to write env report but did not have permissions.');
 		}
 	}
 

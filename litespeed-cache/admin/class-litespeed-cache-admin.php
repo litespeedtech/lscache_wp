@@ -10,7 +10,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Admin extends LiteSpeed{
-	protected static $_instance;
 	private $config;
 	private $display;
 	private $main;

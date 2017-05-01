@@ -10,7 +10,6 @@
  */
 
 class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed{
-	protected static $_instance;
 
 	private $folder;
 	private $filename;

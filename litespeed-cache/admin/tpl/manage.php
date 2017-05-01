@@ -127,51 +127,54 @@ if ($error_msg = LiteSpeed_Cache_Admin_Display::get_instance()->check_license() 
 			if(!in_array($purgeby_option, array('postid', 'tag', 'url'))) $purgeby_option = 'category';
 		?>
 
-		<div class="litespeed-row">
-			<div class="litespeed-switch litespeed-label-info litespeed-mini">
-				<input type="radio" name="purgeby_option" id="purgeby_option_category" value="category" <?=$purgeby_option=='category'?'checked':''?>>
-				<label for="purgeby_option_category"><?=__('Category', 'litespeed-cache')?></label>
+		<form method="post" action="admin.php?page=lscache-dash">
+			<?php $this->form_action(LiteSpeed_Cache::ACTION_PURGE_BY); ?>
+			<div class="litespeed-row">
+				<div class="litespeed-switch litespeed-label-info litespeed-mini">
+					<input type="radio" name="purgeby_option" id="purgeby_option_category" value="category" <?=$purgeby_option=='category'?'checked':''?>>
+					<label for="purgeby_option_category"><?=__('Category', 'litespeed-cache')?></label>
 
-				<input type="radio" name="purgeby_option" id="purgeby_option_postid" value="postid" <?=$purgeby_option=='postid'?'checked':''?>>
-				<label for="purgeby_option_postid"><?=__('Post ID', 'litespeed-cache')?></label>
+					<input type="radio" name="purgeby_option" id="purgeby_option_postid" value="postid" <?=$purgeby_option=='postid'?'checked':''?>>
+					<label for="purgeby_option_postid"><?=__('Post ID', 'litespeed-cache')?></label>
 
-				<input type="radio" name="purgeby_option" id="purgeby_option_tag" value="tag" <?=$purgeby_option=='tag'?'checked':''?>>
-				<label for="purgeby_option_tag"><?=__('Tag', 'litespeed-cache')?></label>
+					<input type="radio" name="purgeby_option" id="purgeby_option_tag" value="tag" <?=$purgeby_option=='tag'?'checked':''?>>
+					<label for="purgeby_option_tag"><?=__('Tag', 'litespeed-cache')?></label>
 
-				<input type="radio" name="purgeby_option" id="purgeby_option_url" value="url" <?=$purgeby_option=='url'?'checked':''?>>
-				<label for="purgeby_option_url"><?=__('URL', 'litespeed-cache')?></label>
+					<input type="radio" name="purgeby_option" id="purgeby_option_url" value="url" <?=$purgeby_option=='url'?'checked':''?>>
+					<label for="purgeby_option_url"><?=__('URL', 'litespeed-cache')?></label>
+				</div>
+
+				<div class="litespeed-cache-purgeby-text">
+					<div class="<?=$purgeby_option=='category'?'':'litespeed-hide'?>" data-purgeby="category">
+						<?=sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
+							'http://example.com/category/category-name/', 'category-name')?>
+					</div>
+					<div class="<?=$purgeby_option=='postid'?'':'litespeed-hide'?>" data-purgeby="postid">
+						<?=__("Purge pages by post ID.", "litespeed-cache")?>
+					</div>
+					<div class="<?=$purgeby_option=='tag'?'':'litespeed-hide'?>" data-purgeby="tag">
+						<?=sprintf(__('Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
+							'http://example.com/tag/tag-name/', 'tag-name')?>
+					</div>
+					<div class="<?=$purgeby_option=='url'?'':'litespeed-hide'?>" data-purgeby="url">
+						<?=__('Purge pages by relative URL.', 'litespeed-cache')?>
+						<?=__('Must be exact match.', 'litespeed-cache')?>
+						<?=sprintf(__('e.g. Use %s for %s.', 'litespeed-cache'),
+							'<b><u>/2016/02/24/hello-world/</u></b>',
+							'http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>')?>
+					</div>
+				</div>
+
 			</div>
 
-			<div class="litespeed-cache-purgeby-text">
-				<div class="<?=$purgeby_option=='category'?'':'litespeed-hide'?>" data-purgeby="category">
-					<?=sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
-						'http://example.com/category/category-name/', 'category-name')?>
-				</div>
-				<div class="<?=$purgeby_option=='postid'?'':'litespeed-hide'?>" data-purgeby="postid">
-					<?=__("Purge pages by post ID.", "litespeed-cache")?>
-				</div>
-				<div class="<?=$purgeby_option=='tag'?'':'litespeed-hide'?>" data-purgeby="tag">
-					<?=sprintf(__('Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
-						'http://example.com/tag/tag-name/', 'tag-name')?>
-				</div>
-				<div class="<?=$purgeby_option=='url'?'':'litespeed-hide'?>" data-purgeby="url">
-					<?=__('Purge pages by relative URL.', 'litespeed-cache')?>
-					<?=__('Must be exact match.', 'litespeed-cache')?>
-					<?=sprintf(__('e.g. Use %s for %s.', 'litespeed-cache'),
-						'<b><u>/2016/02/24/hello-world/</u></b>',
-						'http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>')?>
-				</div>
-			</div>
+			<p>
+				<textarea name="purgeby_content" rows="5" class="code litespeed-cache-purgeby-textarea">/archives/695</textarea>
+			</p>
 
-		</div>
-
-		<p>
-			<textarea name="purgeby_content" rows="5" class="code litespeed-cache-purgeby-textarea"></textarea>
-		</p>
-
-		<p>
-			<button type="submit" class="litespeed-btn litespeed-btn-success"><?=__('Purge List', 'litespeed-cache')?></button>
-		</p>
+			<p>
+				<button type="submit" class="litespeed-btn litespeed-btn-success"><?=__('Purge List', 'litespeed-cache')?></button>
+			</p>
+		</form>
 	<?php endif; ?>
 
 	</div>

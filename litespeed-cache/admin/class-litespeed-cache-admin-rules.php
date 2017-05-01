@@ -10,7 +10,6 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
-	protected static $_instance;
 
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
 
