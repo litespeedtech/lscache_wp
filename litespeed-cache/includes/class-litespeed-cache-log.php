@@ -93,9 +93,13 @@ class LiteSpeed_Cache_Log extends LiteSpeed{
 			'Accept Encoding: '		. $SERVER['HTTP_ACCEPT_ENCODING'],
 			'Cookie: '				. $SERVER['HTTP_COOKIE'],
 			'X-LSCACHE: '			. ($SERVER['X-LSCACHE'] ? 'true' : 'false'),
-			'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'],
-			'LSCACHE_VARY_VALUE: '	. $SERVER['LSCACHE_VARY_VALUE'],
 		);
+		if($SERVER['LSCACHE_VARY_COOKIE']){
+			$params[] = 'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'];
+		}
+		if($SERVER['LSCACHE_VARY_VALUE']){
+			$params[] = 'LSCACHE_VARY_VALUE: ' . $SERVER['LSCACHE_VARY_VALUE'];
+		}
 
 		$request = array_map('self::format_message', $params);
 		file_put_contents(self::$log_path, $request, FILE_APPEND);

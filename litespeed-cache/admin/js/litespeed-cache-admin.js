@@ -84,7 +84,7 @@
 		}
 
 		// Manage page -> purge by
-		$('[name=purgeby_option]').change(function(event) {
+		$('[name=purgeby]').change(function(event) {
 			$('[data-purgeby]').hide();
 			$('[data-purgeby='+this.value+']').show();
 		});

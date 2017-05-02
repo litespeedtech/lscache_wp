@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed{
 	private function save(){
 		if(!file_exists($this->folder)){
 			if(!@mkdir($this->folder)){
-				LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+				LiteSpeed_Cache_Admin_Display::add_notice(
 					LiteSpeed_Cache_Admin_Display::NOTICE_RED,
 					sprintf(__('File can not be written to %s', 'litespeed-cache'), $this->filename));
 				return false;
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed{
 
 		if($this->save()){
 			$msg = sprintf(__('File Successfully created here %s', 'litespeed-cache'), $this->filename);
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+			LiteSpeed_Cache_Admin_Display::add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
 		}
 

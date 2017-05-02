@@ -20,15 +20,15 @@ $known_compat = array(
 $known_uncompat = array();
 
 ?>
-<h3 class="litespeed-title"><?=__('LiteSpeed Cache Plugin Compatibility', 'litespeed-cache')?></h3>
+<h3 class="litespeed-title"><?php echo __('LiteSpeed Cache Plugin Compatibility', 'litespeed-cache'); ?></h3>
 
-<p><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" rel="noopener noreferrer" target="_blank"><?=__('Link Here', 'litespeed-cache')?></a></p>
+<p><a href="https://wordpress.org/support/topic/known-supported-plugins?replies=1" rel="noopener noreferrer" target="_blank"><?php echo __('Link Here', 'litespeed-cache'); ?></a></p>
 <p>
-	<?=__('Please add a comment listing the plugins that you are using and how they are functioning on the support thread.', 'litespeed-cache')?>
-	<?=__('With your help, we can provide the best WordPress caching solution.', 'litespeed-cache')?>
+	<?php echo __('Please add a comment listing the plugins that you are using and how they are functioning on the support thread.', 'litespeed-cache'); ?>
+	<?php echo __('With your help, we can provide the best WordPress caching solution.', 'litespeed-cache'); ?>
 </p>
 
-<h4><?=__('This is a list of plugins that are confirmed to be compatible with LiteSpeed Cache Plugin:', 'litespeed-cache')?></h4>
+<h4><?php echo __('This is a list of plugins that are confirmed to be compatible with LiteSpeed Cache Plugin:', 'litespeed-cache'); ?></h4>
 <ul>
 <?php
 	foreach ($known_compat as $plugin_name) {
@@ -37,7 +37,7 @@ $known_uncompat = array();
 ?>
 </ul>
 
-<h4><?=__('This is a list of known UNSUPPORTED plugins:', 'litespeed-cache')?></h4>
+<h4><?php echo __('This is a list of known UNSUPPORTED plugins:', 'litespeed-cache'); ?></h4>
 <ul>
 <?php
 if($known_uncompat) {

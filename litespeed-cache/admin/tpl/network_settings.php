@@ -13,9 +13,9 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 
 <div class="wrap">
 	<h2>
-		<?=__('LiteSpeed Cache Network Settings', 'litespeed-cache')?>
+		<?php echo __('LiteSpeed Cache Network Settings', 'litespeed-cache'); ?>
 		<span class="litespeed-desc">
-			v<?=LiteSpeed_Cache::PLUGIN_VERSION?>
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
 		</span>
 	</h2>
 </div>
@@ -29,7 +29,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	</h2>
 	<div class="litespeed-cache-welcome-panel">
 		<form method="post" action="options.php" id="ls_form_options">
-			<input type="hidden" name="<?=LiteSpeed_Cache::ACTION_KEY?>" value="<?=LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK?>" />
+			<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK?>" />
 todo: settings_fields(LiteSpeed_Cache_Config::OPTION_NAME); or wp_nonce_field();
 	<?php
 

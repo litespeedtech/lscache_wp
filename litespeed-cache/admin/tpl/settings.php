@@ -1,9 +1,7 @@
 <?php
 if (!defined('WPINC')) die;
 
-if ($error_msg = LiteSpeed_Cache_Admin_Display::get_instance()->check_license() !== true) {
-	echo '<div class="error"><p>' . $error_msg . '</p></div>' . "\n";
-}
+LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 
 $menuArr = array(
 	'general' => __('General', 'litespeed-cache'),
@@ -30,9 +28,9 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 
 <div class="wrap">
 	<h2>
-		<?=__('LiteSpeed Cache Settings', 'litespeed-cache')?>
+		<?php echo __('LiteSpeed Cache Settings', 'litespeed-cache'); ?>
 		<span class="litespeed-desc">
-			v<?=LiteSpeed_Cache::PLUGIN_VERSION?>
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
 		</span>
 	</h2>
 </div>
@@ -46,12 +44,12 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 	</h2>
 	<div class="litespeed-cache-welcome-panel">
 		<form method="post" action="options.php" id="litespeed_form_options">
-			<input type="hidden" name="<?=LiteSpeed_Cache::ACTION_KEY?>" value="<?=LiteSpeed_Cache::ACTION_SAVE_SETTINGS?>" />
+			<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS; ?>" />
 
 	<?php if (LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all()): ?>
 			<p>
-				<?=__('The network admin selected use primary site configs for all subsites.', 'litespeed-cache')?>
-				<?=__('The following options are selected, but are not editable in this settings page.', 'litespeed-cache')?>
+				<?php echo __('The network admin selected use primary site configs for all subsites.', 'litespeed-cache'); ?>
+				<?php echo __('The following options are selected, but are not editable in this settings page.', 'litespeed-cache'); ?>
 			</p>
 	<?php endif; ?>
 

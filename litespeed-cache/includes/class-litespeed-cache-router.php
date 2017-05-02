@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 
 		/* Now it is a valid action, lets log and check the permission */
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('LSCWP_CTRL query string action is ' . $action);
+			LiteSpeed_Cache_Log::push('LSCWP_CTRL: ' . $action);
 		}
 
 		// OK, as we want to do something magic, lets check if its allowed

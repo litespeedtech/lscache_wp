@@ -15,6 +15,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	const NOTICE_GREEN = 'notice notice-success';
 	const NOTICE_RED = 'notice notice-error';
 	const NOTICE_YELLOW = 'notice notice-warning';
+	const TRANSIENT_LITESPEED_MESSAGE = 'litespeed_messages';
 
 	const PURGEBY_CAT = '0';
 	const PURGEBY_PID = '1';
@@ -24,7 +25,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	const PURGEBYOPT_SELECT = 'purgeby';
 	const PURGEBYOPT_LIST = 'purgebylist';
 
-	private $notices = array();
+	private $messages = array();
 	private $disable_all = false;
 
 	/**
@@ -43,7 +44,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 */
 	public function init(){
 		// load assets
-		if(!empty($_GET['page']) && 
+		if(!empty($_GET['page']) &&
 				(substr($_GET['page'], 0, 8) == 'lscache-' || $_GET['page'] == 'litespeedcache')){
 			add_action('admin_enqueue_scripts', array($this, 'load_assets'));
 		}
@@ -55,6 +56,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 		else {
 			add_action('admin_menu', array($this, 'register_admin_menu'));
 		}
+
 	}
 
 	/**
@@ -63,6 +65,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since    1.0.16
 	 */
 	public function load_assets($hook){
+		$this->check_messages();// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
+
 		// Main css&js
 		$this->enqueue_style();
 		$this->enqueue_scripts();
@@ -98,7 +102,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 
 	/**
 	 * Output litespeed form info
-	 * 
+	 *
 	 * @param  string $action
 	 */
 	public function form_action($action){
@@ -378,15 +382,10 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @return mixed True if enabled, error message otherwise.
 	 */
 	public function check_license(){
-		if (LiteSpeed_Cache_Config::get_instance()->is_caching_allowed() == false) {
-			$sentences = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_SERVER
-			);
-
-			return $sentences;
+		if (!LiteSpeed_Cache_Config::get_instance()->is_caching_allowed()) {
+			self::add_error(LiteSpeed_Cache_Admin_Error::E_SERVER);
+			self::display_messages();
 		}
-
-		return true;
 	}
 
 	/**
@@ -398,8 +397,52 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param string $str The notice message.
 	 * @return string The built notice html.
 	 */
-	private function build_notice($color, $str){
+	private static function build_notice($color, $str){
 		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>';
+	}
+
+	/**
+	 * Get the error description
+	 *
+	 * @since 1.0.16
+	 * @param  init $err_code
+	 * @param  mixed $args
+	 * @return mixed String or false
+	 */
+	public static function get_error($err_code, $args = null){
+		$error = LiteSpeed_Cache_Admin_Error::get_instance()->convert_code_to_error($err_code);
+		if (empty($error)) {
+			return false;
+		}
+		$error = 'ERROR ' . $err_code . ': ' . $error;
+		if (!is_null($args)) {
+			if (is_array($args)) {
+				$error = vsprintf($error, $args);
+			}else{
+				$error = sprintf($error, $args);
+			}
+		}
+		return $error;
+	}
+
+	/**
+	 * Adds an error to the admin notice system.
+	 *
+	 * This function will get the error message by error code and arguments
+	 * and append it to the list of outgoing errors.
+	 *
+	 * @access public
+	 * @since 1.0.16
+	 * @param int $err_code The error code to retrieve.
+	 * @param mixed $args Null if no arguments, an array if multiple arguments,
+	 * else a single argument.
+	 */
+	public static function add_error($err_code, $args = null){
+		$error = self::get_error($err_code, $args);
+		if(!$error){
+			return false;
+		}
+		self::add_notice(self::NOTICE_RED, $error);
 	}
 
 	/**
@@ -414,30 +457,47 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param mixed $msg May be a string for a single message or an array for
 	 *     multiple.
 	 */
-	public function add_notice($color, $msg){
-		if (empty($this->notices)) {
-			add_action(is_network_admin() ? 'network_admin_notices' : 'admin_notices', array($this, 'display_notices'));
+	public static function add_notice($color, $msg){
+		$messages = (array)get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
+		if(!$messages){
+			$messages = array();
 		}
-		if (!is_array($msg)) {
-			$this->notices[] = $this->build_notice($color, $msg);
-
-			return;
+		if (is_array($msg)) {
+			foreach ($msg as $str) {
+				$messages[] = self::build_notice($color, $str);
+			}
+		}else{
+			$messages[] = self::build_notice($color, $msg);
 		}
-		foreach ($msg as $str) {
-			$this->notices[] = $this->build_notice($color, $str);
-		}
+		set_transient(self::TRANSIENT_LITESPEED_MESSAGE, $messages, 86400);
 	}
 
 	/**
-	 * Callback function to display any notices from editing cache settings.
+	 * Display notices and errors in dashboard
 	 *
-	 * @since 1.0.7
-	 * @access public
+	 * @since 1.0.16
 	 */
-	public function display_notices(){
-		foreach ($this->notices as $msg) {
-			echo $msg;
+	public function display_messages(){
+		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
+		if(is_array($messages)){
+			foreach ($messages as $msg) {
+				echo $msg;
+			}
 		}
+		delete_transient(self::TRANSIENT_LITESPEED_MESSAGE);
+	}
+
+	/**
+	 * Check if has new messages
+	 *
+	 * @since 1.0.16
+	 */
+	public function check_messages(){
+		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
+		if(!$messages){
+			return;
+		}
+		add_action(is_network_admin() ? 'network_admin_notices' : 'admin_notices', array($this, 'display_messages'));
 	}
 
 	/**
@@ -614,7 +674,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 			. '<br />'
 			. __('If you would rather not move at litespeed, you can deactivate this plugin.', 'litespeed-cache');
 
-		$this->add_notice(self::NOTICE_BLUE . ' lscwp-whm-notice', $buf);
+		self::add_notice(self::NOTICE_BLUE . ' lscwp-whm-notice', $buf);
 	}
 
 	public static function show_error_cookie(){
@@ -623,7 +683,11 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 			. sprintf(__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'),
 				admin_url('admin.php?page=lscache-settings&tab=4'));
 
-		self::get_instance()->add_notice(self::NOTICE_YELLOW, $err);
+		if (is_openlitespeed()) {
+			$err .= ' ' . __('If using OpenLiteSpeed, the server must be restarted once for the changes to take effect.', 'litespeed-cache');
+		}
+
+		self::add_notice(self::NOTICE_YELLOW, $err);
 	}
 
         // TODO: move this

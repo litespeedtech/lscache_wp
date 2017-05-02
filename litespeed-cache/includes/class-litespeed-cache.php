@@ -242,7 +242,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 		}
 
 		if($msg) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
 			LiteSpeed_Cache::get_instance()->admin_ctrl_redirect();
 			return;
 		}
@@ -868,16 +868,16 @@ class LiteSpeed_Cache extends LiteSpeed{
 			return;
 		}
 		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_INV);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_INV);
 			return;
 		}
 		$cat = get_category_by_slug($val);
 		if ($cat == false) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, $val);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, $val);
 			return;
 		}
 
-		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge category %s', 'litespeed-cache'), $val));
+		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge category %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $cat->term_id);
 	}
@@ -896,14 +896,14 @@ class LiteSpeed_Cache extends LiteSpeed{
 			return;
 		}
 		if (!is_numeric($val)) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, $val);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, $val);
 			return;
 		}
 		elseif (get_post_status($val) !== 'publish') {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val);
 			return;
 		}
-		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge Post ID %s', 'litespeed-cache'), $val));
+		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge Post ID %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_POST . $val);
 	}
@@ -922,16 +922,16 @@ class LiteSpeed_Cache extends LiteSpeed{
 			return;
 		}
 		if (preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_INV);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_INV);
 			return;
 		}
 		$term = get_term_by('slug', $val, 'post_tag');
 		if ($term == 0) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_DNE, $val);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_TAG_DNE, $val);
 			return;
 		}
 
-		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
+		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge tag %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_ARCHIVE_TERM . $term->term_id);
 	}
@@ -951,18 +951,18 @@ class LiteSpeed_Cache extends LiteSpeed{
 		}
 
 		if (strpos($val, '<') !== false) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_BAD);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_BAD);
 			return;
 		}
 
 		$hash = self::get_uri_hash($val);
 
 		if ($hash === false) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_INV, $val);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_URL_INV, $val);
 			return;
 		}
 
-		LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge url %s', 'litespeed-cache'), $val));
+		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, sprintf(__('Purge url %s', 'litespeed-cache'), $val));
 
 		LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_URL . $hash);
 		return;
@@ -976,15 +976,16 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * @access public
 	 */
 	public function purge_list(){
-		if (!isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME])) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGE_FORM);
+		if ( !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT])
+			|| !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST])
+		) {
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGE_FORM);
 			return;
 		}
-		$conf = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
-		$sel =  $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
-		$list_buf = $conf[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
+		$sel =  $_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
+		$list_buf = $_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
 		if (empty($list_buf)) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY);
 			return;
 		}
 		$list = explode("\n", $list_buf);
@@ -1002,7 +1003,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 				$cb = 'purgeby_url_cb';
 				break;
 			default:
-				LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD);
+				LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD);
 				return;
 		}
 		array_walk($list, Array($this, $cb));

@@ -2,16 +2,16 @@
 if (!defined('WPINC')) die;
 
 ?>
-<h3 class="litespeed-title"><?=__('Auto Purge Rules For Publish/Update', 'litespeed-cache')?></h3>
+<h3 class="litespeed-title"><?php echo __('Auto Purge Rules For Publish/Update', 'litespeed-cache'); ?></h3>
 
-<p><?=__('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache')?></p>
+<p><?php echo __('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache'); ?></p>
 
 <div class="litespeed-callout litespeed-callout-warning">
-	<h4><?=__('Note:', 'litespeed-cache')?></h4>
+	<h4><?php echo __('Note:', 'litespeed-cache'); ?></h4>
 	<i>
-		<?=__('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache')?><br />
-		<?=__('Other checkboxes will be ignored.', 'litespeed-cache')?><br />
-		<?=__('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache')?>
+		<?php echo __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'); ?><br />
+		<?php echo __('Other checkboxes will be ignored.', 'litespeed-cache'); ?><br />
+		<?php echo __('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache'); ?>
 	</i>
 </div>
 
@@ -49,8 +49,8 @@ $breakArr = array(
 <?php foreach ($optionArr as $id => $title): ?>
 
 	<div class="litespeed-radio">
-		<input type="checkbox" name="<?=LiteSpeed_Cache_Config::OPTION_NAME?>[purge_<?=$id?>]" id="conf_purge_<?=$id?>" value="1" <?=in_array($id, $purge_options)?'checked':'' ?> />
-		<label for="conf_purge_<?=$id?>"><?=$title?></label>
+		<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[purge_<?php echo $id; ?>]" id="conf_purge_<?php echo $id; ?>" value="1" <?php echo in_array($id, $purge_options)?'checked':''; ?> />
+		<label for="conf_purge_<?php echo $id; ?>"><?php echo $title; ?></label>
 	</div>
 
 	<?php if(in_array($id, $breakArr)): ?>

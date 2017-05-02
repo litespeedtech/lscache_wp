@@ -673,10 +673,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 * @access public
 	 * @return boolean True if allowed, false otherwise.
 	 */
-	public function is_caching_allowed()
-	{
-		if (((isset($_SERVER['X-LSCACHE'])) && ($_SERVER['X-LSCACHE'])) //lsws
-			|| (is_webadc())) {
+	public function is_caching_allowed(){
+		if ((isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) //lsws
+			|| is_webadc()
+		){
 			return true;
 		}
 		return false;

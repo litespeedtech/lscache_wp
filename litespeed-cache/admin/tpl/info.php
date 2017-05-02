@@ -11,7 +11,7 @@ $menuArr = array(
 
 ?>
 <div class="wrap">
-	<h2><?=__('LiteSpeed Cache Information', 'litespeed-cache')?></h2>
+	<h2><?php echo __('LiteSpeed Cache Information', 'litespeed-cache'); ?></h2>
 </div>
 <div class="wrap">
 	<h2 class="nav-tab-wrapper">

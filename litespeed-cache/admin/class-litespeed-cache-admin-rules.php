@@ -312,43 +312,29 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 *
 	 * @since 1.0.4
 	 * @access public
-	 * @param string $content Returns the content of the file or an error description.
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public static function file_get(&$content, $path = ''){
+	public static function read_htaccess($path = ''){
 		if (empty($path)) {
 			$path = self::get_home_path();
 			if (!file_exists($path)) {
-				$content = "\n";
-				return true;
+				return "\n";
 			}
 		}
 		if (!self::is_file_able(self::RW)) {
-			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_RW
-			);
-
-			$content = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_RW
-			);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 			return false;
 		}
 
 		$content = file_get_contents($path);
 		if ($content === false) {
-			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_GET
-			);
-
-			$content = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_GET
-			);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_GET);
 			return false;
 		}
 		// Remove ^M characters.
 		$content = str_ireplace("\x0D", "", $content);
-		return true;
+		return $content;
 	}
 
 	/**
@@ -376,13 +362,11 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
 		$off_next = stripos($content, '<IfModule', $off_begin);
 		if ($off_end === false) {
-			$buf = LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'IfModule close'
-			);
+			$buf = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'IfModule close');
 			return $buf;
 		}
 		elseif (($off_next !== false) && ($off_next < $off_end)) {
-			$buf = LiteSpeed_Cache_Admin_Error::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER) . ' '
+			$buf = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER) . ' '
 				.sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'), '&lt;/IfModule&gt;');
 			return $buf;
 		}
@@ -428,10 +412,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			$off_wrapper += strlen($wrapper_begin);
 			$off_wrapper_end = stripos($content, $wrapper_end, $off_wrapper);
 			if ($off_wrapper_end === false) {
-				$buf = LiteSpeed_Cache_Admin_Error::build_error(
-					LiteSpeed_Cache_Admin_Error::E_HTA_DNF,
-					'Plugin wrapper close'
-				);
+				$buf = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'Plugin wrapper close');
 				return false;
 			}
 			--$off_wrapper_end;
@@ -588,13 +569,13 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			}
 
 			if (self::is_file_able(self::RW, $path) == 0) {
-				LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
+				LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 				return false;
 			}
 
 			//failed to backup, not good.
 			if (($backup) && (self::file_backup($path) === false)) {
-				 LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
+				 LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
 				 return false;
 			}
 
@@ -608,7 +589,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX);
 		if (!$ret) {
-			LiteSpeed_Cache_Admin_Error::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_SAVE);
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_SAVE);
 			return false;
 		}
 
@@ -671,8 +652,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			$wrap_begin + strlen($wrapper_begin));
 
 		if ($wrap_end === false) {
-			$err = LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end');
+			$err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end');
 			return array(false, $err);
 		}
 		elseif ($match != '') {
@@ -709,15 +689,11 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF,
-				'suffix ' . $suffix);
+			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
-			$match = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_ORDER
-			);
+			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER);
 			return false;
 		}
 
@@ -727,9 +703,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match'
-			);
+			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -785,9 +759,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		}
 		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
 		if ($wrap_end === false) {
-			$err =LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end'
-			);
+			$err =LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end');
 			return array(false, $err);
 		}
 		elseif ($match != '') {
@@ -825,16 +797,11 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$off_begin += strlen($prefix);
 		$off_end = stripos($match, $suffix, $off_begin);
 		if ($off_end === false) {
-			$match = LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF,
-				'suffix ' . $suffix
-			);
+			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'suffix ' . $suffix);
 			return false;
 		}
 		elseif ($off_begin >= $off_end) {
-			$match = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_ORDER
-			);
+			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER);
 			return false;
 		}
 
@@ -843,8 +810,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$matches = array();
 		$num_matches = preg_match($pattern, $subject, $matches);
 		if ($num_matches === false) {
-			$match = LiteSpeed_Cache_Admin_Error::build_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
+			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
@@ -958,7 +924,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 					$id,
 					empty($list) ? 'EMPTY' : esc_html($list)
 				);
-				$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 				$has_error = true;
 			}
 			$diff[$id] = $list;
@@ -979,7 +945,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			$diff[$id] = $cookie_list;
 		}
 		else {
-			$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html($cookie_list)));
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html($cookie_list)));
 			$has_error = true;
 		}
 
@@ -996,7 +962,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 				$err_args[] = esc_html($input[$id]);
 			}
 
-			$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 			$has_error = true;
 		}
 
@@ -1008,7 +974,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 				$diff[$id] = $input[$id];
 			}
 			else {
-				$errors[] = LiteSpeed_Cache_Admin_Error::build_error(LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html($input[$id]));
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html($input[$id]));
 				$has_error = true;
 			}
 		}
@@ -1145,8 +1111,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$ret = $this->file_combine($before2, $haystack2 . $rule_buf2,
 			$after2, $path);
 		if ($ret !== true) {
-			$errors[] = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_PUT);
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_PUT);
 			return false;
 		}
 		return true;
@@ -1228,10 +1193,10 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			return $split_rule[2];
 		}
 		elseif ($index + 2 > count($split_blocks)) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+			LiteSpeed_Cache_Admin_Display::add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				LiteSpeed_Cache_Admin_Error::get_error(
-					LiteSpeed_Cache_Admin_Error::E_LC_HTA));
+				LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_LC_HTA)
+			);
 			return '';
 		}
 		$split_blocks[$index + 1] .= $replacement;
@@ -1295,12 +1260,11 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		if ((empty($home_cookie) && !empty($site_cookie))
 				|| (!empty($home_cookie) && empty($site_cookie))
 				|| ($home_cookie != $site_cookie)) {
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice(
+			LiteSpeed_Cache_Admin_Display::add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				LiteSpeed_Cache_Admin_Error::get_error(
-					LiteSpeed_Cache_Admin_Error::E_LC_MISMATCH)
-				. '<br>' . self::get_home_path() . ': ' . $home_cookie
-				. '<br>' . $site_path . ': ' . $site_cookie);
+				LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_LC_MISMATCH)
+					. '<br />' . self::get_home_path() . ': ' . $home_cookie . '<br />' . $site_path . ': ' . $site_cookie
+			);
 			return 'err';
 		}
 		self::file_save($content, false);
@@ -1398,9 +1362,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 
 		$ret = $this->file_combine($before, $haystack . $buf, $after);
 		if ($ret !== true) {
-			$errors[] = LiteSpeed_Cache_Admin_Error::get_error(
-				LiteSpeed_Cache_Admin_Error::E_HTA_PUT
-			);
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_PUT);
 			return false;
 		}
 		return $diff;
