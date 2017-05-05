@@ -171,69 +171,18 @@ class LiteSpeed_Cache extends LiteSpeed{
 		}
 
 		// load litespeed actions
-		if (is_admin() || is_network_admin()) {
-			add_action('admin_init', array($this, 'proceed_admin_action'));
-		}
+		$this->proceed_action();
 
 	}
 
 	/**
-	 * Run litespeed admin actions
+	 * Run frontend actions
 	 * 
 	 * @since 1.1.0
 	 */
-	public function proceed_admin_action(){
-		$msg = false;
-		// handle common actions
+	public function proceed_action(){
+		// handle actions
 		switch (LiteSpeed_Cache_Router::get_action()) {
-
-			// Save htaccess
-			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
-				LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_editor_save();
-				break;
-
-			// Save network settings
-			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings();// todo: use wp network setting saving
-				LiteSpeed_Cache_Admin_Report::get_instance()->update_environment_report();
-				break;
-
-			// Handle the ajax request to proceed crawler manually by admin
-			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
-				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
-				break;
-
-			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
-				LiteSpeed_Cache::get_instance()->purge_front();
-				$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
-				break;
-
-			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-				LiteSpeed_Cache::get_instance()->purge_pages();
-				$msg = __('Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache');
-				break;
-
-			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
-				LiteSpeed_Cache::get_instance()->purge_errors();
-				$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
-				break;
-
-			case LiteSpeed_Cache::ACTION_PURGE_ALL:
-				LiteSpeed_Cache::get_instance()->purge_all();
-				$msg = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache');
-				break;
-
-			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
-				LiteSpeed_Cache::get_instance()->purge_all();
-				$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache');
-				break;
-
-			case LiteSpeed_Cache::ACTION_PURGE_BY:
-				LiteSpeed_Cache::get_instance()->purge_list();
-				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
-				break;
-
 			case LiteSpeed_Cache::ACTION_PURGE:
 				$this->cachectrl = LiteSpeed_Cache::CACHECTRL_PURGE;
 				break;
@@ -242,21 +191,9 @@ class LiteSpeed_Cache extends LiteSpeed{
 				$this->cachectrl = LiteSpeed_Cache::CACHECTRL_PURGESINGLE;
 				break;
 
-			case LiteSpeed_Cache::ACTION_DISMISS:
-				delete_transient(LiteSpeed_Cache::WHM_TRANSIENT);
-				$this->admin_ctrl_redirect();
-				return;
-
 			default:
 				break;
 		}
-
-		if($msg) {
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
-			LiteSpeed_Cache::get_instance()->admin_ctrl_redirect();
-			return;
-		}
-
 	}
 
 	/**
