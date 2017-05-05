@@ -288,7 +288,7 @@ class LiteSpeed_Cache_Cli_Admin{
 			$options[$kv[0]] = $kv[1];
 		}
 
-		LiteSpeed_Cache_Config::option_diff($default, $options);
+		$options = LiteSpeed_Cache_Config::option_diff($default, $options);
 
 		LiteSpeed_Cache_Config::convert_options_to_input($options);
 

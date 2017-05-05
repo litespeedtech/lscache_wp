@@ -2,7 +2,7 @@
 if (!defined('WPINC')) die;
 ?>
 	<!-- build_setting_cache_resources -->
-	<?php $file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(LiteSpeed_Cache_Admin_Rules::WRITABLE); ?>
+	<?php $file_writable = LiteSpeed_Cache_Admin_Rules::writable(); ?>
 	<tr>
 		<th><?php echo __('Enable Cache for PHP Resources', 'litespeed-cache'); ?></th>
 		<td>

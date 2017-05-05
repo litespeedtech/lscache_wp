@@ -1,8 +1,8 @@
 <?php
 if (!defined('WPINC')) die;
 
-$readonly = LiteSpeed_Cache_Admin_Rules::get_instance()->is_file_able(LiteSpeed_Cache_Admin_Rules::WRITABLE) ? '' : 'readonly';
-$content = LiteSpeed_Cache_Admin_Rules::read_htaccess();
+$readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
+$content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 
 ?>
 

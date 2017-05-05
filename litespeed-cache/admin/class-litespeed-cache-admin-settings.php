@@ -325,12 +325,12 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 			$diff = array_merge($reset, $added_and_changed);
 		}
 		else {
-			LiteSpeed_Cache_Admin_Rules::clear_rules();
+			$rules->clear_rules();
 			$diff = $rules->check_input($options, $input, $errors);
 		}
 
-		if (!empty($diff) && 
-				($options[$id] == false || $rules->validate_common_rewrites($diff, $errors) !== false)//todo: check if need to use ===
+		if (!empty($diff)
+			 && ($options[$id] == false || $rules->validate_common_rewrites($diff, $errors) !== false)//todo: check if need to use ===
 		) {
 			$options = array_merge($options, $diff);
 		}

@@ -35,14 +35,6 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @access   protected
 	 */
 	protected function __construct(){
-	}
-
-	/**
-	 * Initialize LiteSpeed assets
-	 *
-	 * @since    1.0.16
-	 */
-	public function init(){
 		// load assets
 		if(!empty($_GET['page']) &&
 				(substr($_GET['page'], 0, 8) == 'lscache-' || $_GET['page'] == 'litespeedcache')){
@@ -480,6 +472,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	public function display_messages(){
 		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
 		if(is_array($messages)){
+			$messages = array_unique($messages);
 			foreach ($messages as $msg) {
 				echo $msg;
 			}
@@ -681,7 +674,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache') . ' '
 			. __('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache') . ' '
 			. sprintf(__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'),
-				admin_url('admin.php?page=lscache-settings&tab=4'));
+				admin_url('admin.php?page=lscache-settings#advanced'));
 
 		if (is_openlitespeed()) {
 			$err .= ' ' . __('If using OpenLiteSpeed, the server must be restarted once for the changes to take effect.', 'litespeed-cache');

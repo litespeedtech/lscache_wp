@@ -45,48 +45,42 @@ if (!defined('WPINC')) die;
 
 <p>
 	<?php echo __('Example use case:', 'litespeed-cache'); ?><br />
-	<?php echo sprintf(__('There is a WordPress install for %s.', 'litespeed-cache'), '<u>www.example.com</u>'); ?><br />
-	<?php echo sprintf(__('Then there is another WordPress install (NOT MULTISITE) at %s', 'litespeed-cache'), '<u>www.example.com/blog/</u>'); ?>
+	<?php echo sprintf(__('There is a WordPress installed for %s.', 'litespeed-cache'), '<u>www.example.com</u>'); ?><br />
+	<?php echo sprintf(__('Then another WordPress is installed (NOT MULTISITE) at %s', 'litespeed-cache'), '<u>www.example.com/blog/</u>'); ?>
 	<?php echo __('The cache needs to distinguish who is logged into which WordPress site in order to cache correctly.', 'litespeed-cache'); ?>
 </p>
 
-<?php
-$match = $sub = $cookie = '';
-if (LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule('LOGIN COOKIE', $match, $sub, $cookie) === false): ?>
+<?php $cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie(); ?>
 
-	<p class="attention"><?php echo sprintf(__('Error getting current rules: %s', 'litespeed-cache'), $match); ?></p>
-
-<?php else:
-
-	$return = false;
-	if (!empty($cookie)) {
-		$cookie = trim($cookie, '"');
-		if (strncasecmp($cookie, 'Cache-Vary:', 11)) {
-			echo '<p class="attention">'
-				. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
-				. '</p>';
-			$return = true;
-		}
-		$cookie = substr($cookie, 11);
-		$cookie_arr = explode(',', $cookie);
-	}
-	if (!$return
-		&& $_options[LiteSpeed_Cache_Config::OPID_ENABLED]
-		&& isset($_options[$id])
-		&& isset($cookie_arr)
-		&& !in_array($_options[$id], $cookie_arr)
-	) {
-		echo '<div class="litespeed-callout litespeed-callout-warning">'.
-			__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache').
-			'</div>';
-	}
-
-	if(!$return): ?>
-		<?php $file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(LiteSpeed_Cache_Admin_Rules::WRITABLE); ?>
-		<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" value="<?php echo esc_textarea($_options[$id]); ?>" <?php if(!$file_writable) echo 'disabled'; ?> />
-	<?php endif; ?>
+<?php if ( $cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:' ): ?>
+	<p class="attention">
+		<?php echo sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess'); ?>
+	</p>
 <?php endif; ?>
 
+<?php if ( $_options[LiteSpeed_Cache_Config::OPID_ENABLED] && $_options[$id] ): ?>
+
+	<?php if (!$cookie_rule): ?>
+		<p class="attention">
+			<?php echo sprintf(__('Error getting current rules from %s: %s', 'litespeed-cache'), '.htaccess', LiteSpeed_Cache_Admin_Rules::MARKER_LOGIN_COOKIE); ?>
+		</p>
+	<?php else: ?>
+	<?php
+		$cookie_rule = substr($cookie_rule, 11);
+		$cookie_arr = explode(',', $cookie_rule);
+		if(!in_array($_options[$id], $cookie_arr)) {
+			echo '<div class="litespeed-callout litespeed-callout-warning">'.
+					__('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache').
+				'</div>';
+		}
+	?>
+	<?php endif; ?>
+
+<?php endif; ?>
+
+
+<?php $file_writable = LiteSpeed_Cache_Admin_Rules::writable(); ?>
+<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" value="<?php echo esc_textarea($_options[$id]); ?>" <?php if(!$file_writable) echo 'disabled'; ?> />
 
 
 <h3 class="litespeed-title"><?php echo __('Cache Tag Prefix', 'litespeed-cache'); ?></h3>

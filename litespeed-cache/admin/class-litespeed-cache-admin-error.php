@@ -209,9 +209,6 @@ class LiteSpeed_Cache_Admin_Error extends LiteSpeed{
 			case self::E_HTA_RW:
 				return sprintf(__('%s file not readable or not writable.', 'litespeed-cache'), '.htaccess');
 
-			case self::E_HTA_ORDER:
-				return __('Prefix was found after suffix.', 'litespeed-cache');
-
 			case self::E_HTA_SAVE:
 				return sprintf(__('Failed to overwrite %s.', 'litespeed-cache'), '.htaccess');
 

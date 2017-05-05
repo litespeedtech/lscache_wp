@@ -14,6 +14,6 @@
 	</i>
 </div>
 <?php $id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES; ?>
-<?php $file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(LiteSpeed_Cache_Admin_Rules::WRITABLE); ?>
+<?php $file_writable = LiteSpeed_Cache_Admin_Rules::writable(); ?>
 <textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" rows="5" cols="80" <?php if( !$file_writable ) echo 'disabled'; ?>><?php echo esc_textarea(str_replace('|', "\n", $_options[$id])); ?></textarea>
 

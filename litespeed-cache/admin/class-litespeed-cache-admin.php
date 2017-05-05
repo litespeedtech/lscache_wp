@@ -21,16 +21,15 @@ class LiteSpeed_Cache_Admin extends LiteSpeed{
 	 * @since    1.0.0
 	 */
 	protected function __construct(){
+		// Additional litespeed assets on admin display
+		// Also register menu
 		$this->display = LiteSpeed_Cache_Admin_Display::get_instance();
+
 		$this->config = LiteSpeed_Cache_Config::get_instance();
 
 		if (!function_exists('is_plugin_active_for_network')) {
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php');//todo: check if needed
 		}
-
-		// Additional litespeed assets on admin display
-		// register menu
-		$this->display->init();
 
 		// initialize admin actions
 		add_action('admin_init', array($this, 'admin_init'));

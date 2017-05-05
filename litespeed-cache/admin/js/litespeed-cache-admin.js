@@ -119,7 +119,7 @@
 		});
 		$('#conf_mobileview_enabled_disable').click(function() {
 			if($(this).is(':checked')){
-				$('#litespeed-mobileview-rules').val('');
+				// $('#litespeed-mobileview-rules').val('');
 				$('#litespeed-mobileview-rules').prop('readonly', true);
 			}
 		});

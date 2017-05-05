@@ -4,7 +4,7 @@ if (!defined('WPINC')) die;
 ?>
 
 <!-- build_setting_exclude_useragent -->
-<?php $file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(LiteSpeed_Cache_Admin_Rules::WRITABLE); ?>
+<?php $file_writable = LiteSpeed_Cache_Admin_Rules::writable(); ?>
 <h3 class="litespeed-title"><?php echo __('User Agent List', 'litespeed-cache'); ?></h3>
 <p><?php echo __('To prevent user agents from being cached, enter it in the text field below.', 'litespeed-cache'); ?></p>
 <div class="litespeed-callout litespeed-callout-warning">

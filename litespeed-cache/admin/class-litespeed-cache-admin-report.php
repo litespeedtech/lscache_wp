@@ -32,11 +32,11 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 */
 	public function generate_environment_report($options = null){
 		global $wp_version, $_SERVER;
-		$home = LiteSpeed_Cache_Admin_Rules::get_home_path();
-		$site = LiteSpeed_Cache_Admin_Rules::get_site_path();
-		$paths = array($home);
-		if ($home != $site) {
-			$paths[] = $site;
+		$frontend_htaccess = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess();
+		$backend_htaccess = LiteSpeed_Cache_Admin_Rules::get_backend_htaccess();
+		$paths = array($frontend_htaccess);
+		if ($frontend_htaccess != $backend_htaccess) {
+			$paths[] = $backend_htaccess;
 		}
 
 		if (is_multisite()) {
@@ -110,7 +110,7 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	private function write_environment_report($content){
 		$content = "<"."?php die();?".">\n\n".$content;
 
-		$ret = LiteSpeed_Cache_Admin_Rules::file_save($content, false, LSWCP_DIR . 'environment_report.php', false);
+		$ret = file_put_contents(LSWCP_DIR . 'environment_report.php', $content, LOCK_EX);
 		if ($ret !== true && LiteSpeed_Cache_Log::get_enabled()) {
 			LiteSpeed_Cache_Log::push('LSCache wordpress plugin attempted to write env report but did not have permissions.');
 		}

@@ -2,7 +2,7 @@
 if (!defined('WPINC')) die;
 
 ?>
-	<?php $file_writable = LiteSpeed_Cache_Admin_Rules::is_file_able(LiteSpeed_Cache_Admin_Rules::WRITABLE); ?>
+	<?php $file_writable = LiteSpeed_Cache_Admin_Rules::writable(); ?>
 	<tr>
 		<th><?php echo __('Cache favicon.ico', 'litespeed-cache'); ?></th>
 		<td>

@@ -13,32 +13,35 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
 
-	const READABLE = 1;
-	const WRITABLE = 2;
-	const RW = 3; // Readable and writable.
+	private $frontend_htaccess = null;
+	private $backend_htaccess = null;
+	private $theme_htaccess = null;
+	private $frontend_htaccess_readable = false;
+	private $frontend_htaccess_writable = false;
+	private $backend_htaccess_readable = false;
+	private $backend_htaccess_writable = false;
+	private $theme_htaccess_readable = false;
+	private $theme_htaccess_writable = false;
 
-	private $filerw = null;
-	private $is_subdir_install = null;
-	private $home_path = null;
-	private $site_path = null;
+    private static $RW_LOOKUP;
+    const RW_LOOKUP_PUBLIC = "CacheLookup Public on";
+    const RW_LOOKUP_BOTH = "CacheLookup on";
 
-	private static $RW_BLOCK_START = '<IfModule LiteSpeed>';
-	private static $RW_BLOCK_END = '</IfModule>';
-	private static $RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
-	private static $RW_PREREQ;
-	private static $RW_LOOKUP;
-	private static $RW_LOOKUP_PUBLIC = "CacheLookup Public on";
-	private static $RW_LOOKUP_BOTH = "CacheLookup on";
-	const MARKER = 'LSCACHE';
+	const LS_MODULE_START = '<IfModule LiteSpeed>';
+	const LS_MODULE_END = '</IfModule>';
+	private static $LS_MODULE_REWRITE_ON;
+	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##";
+	const MARKER = 'LiteSpeed WordPress Cache Plugin';
+	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE';
+	const MARKER_MOBILE = '### marker MOBILE';
+	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES';
+	const MARKER_NOCACHE_USER_AGENTS = '### marker NOCACHE USER AGENTS';
+	const MARKER_CACHE_RESOURCE = '### marker CACHE RESOURCE';
+	const MARKER_FAVICON = '### marker FAVICON';
+	const MARKER_START = ' start ###';
+	const MARKER_END = ' end ###';
 
-	private static $RW_PATTERN_COND_START = '/RewriteCond\s%{';
-	private static $RW_PATTERN_COND_END = '}\s+([^[\n]*)\s+[[]*/';
-	private static $RW_PATTERN_RULE = '/RewriteRule\s+(\S+)\s+(\S+)(?:\s+\[E=([^\]\s]*)\])?/';
-	private static $RW_PATTERN_LOGIN = '/(RewriteRule\s+\.[\?\*]\s+-\s+\[E=Cache-Vary:([^\]\s]*)\])/';
-	private static $RW_PATTERN_LOGIN_BLOCK = '!(</?IfModule(?:\s+(LiteSpeed))?>)!';
-	private static $RW_PATTERN_UPGRADE_BLOCK = '!(<IfModule\s+LiteSpeed>[^<]*)(</IfModule>)!';
-	private static $RW_PATTERN_WRAPPERS = '/###LSCACHE START[^#]*###[^#]*###LSCACHE END[^#]*###\n?/';
-	static $RW_PATTERN_RES = 'wp-content/.*/[^/]*(loader|fonts|\.css|\.js)\.php';
+	const RW_PATTERN_RES = 'wp-content/.*/[^/]*(loader|fonts|\.css|\.js)\.php';
 
 	/**
 	 * Initialize the class and set its properties.
@@ -46,130 +49,90 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since    1.0.7
 	 * @access   protected
 	 */
-	protected function __construct()
-	{
-		$this->setup();
-	}
+	protected function __construct(){
+		$this->path_set();
+		clearstatcache();
 
-	/**
-	 * Gets the currently used rules file path.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @return string The rules file path.
-	 */
-	public static function get_home_path()
-	{
-		$rules = self::get_instance();
-		return $rules->home_path;
-	}
-
-	/**
-	 * Gets the site .htaccess path. Useful if subdirectory install.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 * @return string The site path.
-	 */
-	public static function get_site_path()
-	{
-		$rules = self::get_instance();
-		return $rules->site_path;
-	}
-
-	/**
-	 * Checks if the WP install is a subdirectory install. If so, need to test
-	 * multiple .htaccess files.
-	 *
-	 * @since 1.0.7
-	 * @access private
-	 * @return boolean True if it is a subdirectory install, false otherwise.
-	 */
-	private static function is_subdir()
-	{
-		$rules = self::get_instance();
-		return $rules->is_subdir_install;
-	}
-
-	/**
-	 * Checks the .htaccess file(s) permissions. If the file(s) has the given
-	 * permissions, it will return so.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 * @param int $permissions The requested permissions. Consts from this class.
-	 * @param string $path Optional path to check permissions of. If not given,
-	 * will assume it is a .htaccess file.
-	 * @return mixed True/non-zero if the file(s) has the given permissions.
-	 * False/zero otherwise.
-	 */
-	public static function is_file_able($permissions, $path = null)
-	{
-		$home = self::get_home_path();
-		$site = self::get_site_path();
-
-		if ($path === null || $path === $home || $path === $site) {
-			$rules = self::get_instance();
-			return ($rules->filerw & $permissions) === $permissions;
-		}
-		$perms = 0;
-		$test_permissions = file_exists($path) ? $path : dirname($path);
-
+		// frontend .htaccess privilege
+		$test_permissions = file_exists($this->frontend_htaccess) ? $this->frontend_htaccess : dirname($this->frontend_htaccess);
 		if (is_readable($test_permissions)) {
-			$perms |= self::READABLE;
+			$this->frontend_htaccess_readable = true;
 		}
 		if (is_writable($test_permissions)) {
-			$perms |= self::WRITABLE;
+			$this->frontend_htaccess_writable = true;
 		}
-		return ($perms & $permissions) === $permissions;
+        if (is_openlitespeed()) {
+            self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
+        }
+        else {
+            self::$RW_LOOKUP = self::$RW_LOOKUP_BOTH;
+        }
+        self::$LS_MODULE_REWRITE_ON = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
+
+		// backend .htaccess privilege
+		if ($this->frontend_htaccess === $this->backend_htaccess) {
+			$this->backend_htaccess_readable = $this->frontend_htaccess_readable;
+			$this->backend_htaccess_writable = $this->frontend_htaccess_writable;
+		}
+		else{
+			$test_permissions = file_exists($this->backend_htaccess) ? $this->backend_htaccess : dirname($this->backend_htaccess);
+			if (is_readable($test_permissions)) {
+				$this->backend_htaccess_readable = true;
+			}
+			if (is_writable($test_permissions)) {
+				$this->backend_htaccess_writable = true;
+			}
+		}
 	}
 
 	/**
-	 * Build the wrapper string for common rewrite rules.
+	 * Get if htaccess file is readable
 	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @param string $wrapper The common rule wrapper.
-	 * @param string $end Returns the ending wrapper.
-	 * @return string Returns the opening wrapper.
+	 * @since 1.0.16
+	 * @return string
 	 */
-	private function build_wrappers($wrapper, &$end)
-	{
-		$end = '###LSCACHE END ' . $wrapper . '###';
-		return '###LSCACHE START ' . $wrapper . '###';
+	public static function readable($kind = 'frontend'){
+		if( $kind === 'frontend' ){
+			return self::get_instance()->frontend_htaccess_readable;
+		}
+		if( $kind === 'backend' ){
+			return self::get_instance()->backend_htaccess_readable;
+		}
 	}
 
 	/**
-	 * Set up the paths used for searching.
+	 * Get if htaccess file is writable
 	 *
-	 * @since 1.0.11
-	 * @access private
-	 * @param string $common The common part of the paths.
-	 * @param string $install The install path portion. Will contain full path on return.
-	 * @param string $access The access path portion. Will contain full path on return.
+	 * @since 1.0.16
+	 * @return string
 	 */
-	private static function path_search_setup(&$common, &$install, &$access)
-	{
-		$partial_dir = false;
-
-		if ( substr($common, -1) != '/' ) {
-
-			if ( $install !== '' && $install[0] != '/' ) {
-				$partial_dir = true;
-			}
-			elseif ( $access !== '' && $access[0] != '/' ) {
-				$partial_dir = true;
-			}
+	public static function writable($kind = 'frontend'){
+		if( $kind === 'frontend' ){
+			return self::get_instance()->frontend_htaccess_writable;
 		}
-		$install = rtrim($common . $install, '/');
-		$access = rtrim($common . $access, '/');
+		if( $kind === 'backend' ){
+			return self::get_instance()->backend_htaccess_writable;
+		}
+	}
 
-		if ($partial_dir) {
-			$common = dirname($common);
-		}
-		else {
-			$common = rtrim($common, '/');
-		}
+	/**
+	 * Get frontend htaccess path
+	 *
+	 * @since 1.0.16
+	 * @return string
+	 */
+	public static function get_frontend_htaccess(){
+		return self::get_instance()->frontend_htaccess;
+	}
+
+	/**
+	 * Get backend htaccess path
+	 *
+	 * @since 1.0.16
+	 * @return string
+	 */
+	public static function get_backend_htaccess(){
+		return self::get_instance()->backend_htaccess;
 	}
 
 	/**
@@ -187,9 +150,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @return string The deepest path where the file exists,
 	 * or the last path used if it does not exist.
 	 */
-	private static function path_search($stop_path, $start_path, $file)
-	{
-		while ((!file_exists($start_path . $file))) {
+	private function path_search($stop_path, $start_path, $file){
+		while (!file_exists($start_path . $file)) {
 			if ($start_path === $stop_path) {
 				break;
 			}
@@ -204,8 +166,9 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.0.11
 	 * @access private
 	 */
-	private function path_set()
-	{
+	private function path_set(){
+		$this->theme_htaccess = WP_CONTENT_DIR;
+
 		$install = ABSPATH;
 		$access = get_home_path();
 
@@ -236,93 +199,79 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		}
 		else {
 			// they are equal - no need to find paths.
-			$this->home_path = ABSPATH . '.htaccess';
-			$this->site_path = ABSPATH . '.htaccess';
+			$this->frontend_htaccess = ABSPATH . '.htaccess';
+			$this->backend_htaccess = ABSPATH . '.htaccess';
 			return;
 		}
 		$common_path = substr(ABSPATH, 0, -(strlen($install_part) + 1));
 
-		self::path_search_setup($common_path, $install_part, $access_part);
+		$partial_dir = false;
 
-		$this->site_path = self::path_search($common_path, $install_part,
-			'/.htaccess');
-		$this->home_path = self::path_search($common_path, $access_part,
-			'/.htaccess');
-		return;
-	}
-
-	/**
-	 * Sets up the class variables.
-	 *
-	 * @since 1.0.11
-	 * @access private
-	 */
-	private function setup()
-	{
-		$this->path_set();
-		clearstatcache();
-                
-                if (is_openlitespeed()) {
-                        self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
-                }
-                else {
-                        self::$RW_LOOKUP = self::$RW_LOOKUP_BOTH;
-                }
-                self::$RW_PREREQ = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
-
-		if ($this->home_path === $this->site_path) {
-			$this->is_subdir_install = false;
-		}
-		else {
-			$this->is_subdir_install = true;
-		}
-
-		$this->filerw = 0;
-		$test_permissions = file_exists($this->home_path) ? $this->home_path
-			: dirname($this->home_path);
-
-		if (is_readable($test_permissions)) {
-			$this->filerw |= self::READABLE;
-		}
-		if (is_writable($test_permissions)) {
-			$this->filerw |= self::WRITABLE;
-		}
-		if (!$this->is_subdir_install) {
-			return;
-		}
-		elseif (!file_exists($this->site_path)) {
-			$ret = file_put_contents($this->site_path, "\n", LOCK_EX);
-			if (!$ret) {
-				$this->filerw = 0;
-				return;
+		if ( substr($common_path, -1) != '/' ) {
+			if ( $install_part !== '' && $install_part[0] != '/' ) {
+				$partial_dir = true;
+			}
+			elseif ( $access_part !== '' && $access_part[0] != '/' ) {
+				$partial_dir = true;
 			}
 		}
+		$install_part = rtrim($common_path . $install_part, '/');
+		$access_part = rtrim($common_path . $access_part, '/');
 
-		// If site file is not readable/writable, remove the flag.
-		if (!is_readable($this->site_path)) {
-			$this->filerw &= ~self::READABLE;
+		if ($partial_dir) {
+			$common_path = dirname($common_path);
 		}
-		if (!is_writable($this->site_path)) {
-			$this->filerw &= ~self::WRITABLE;
+		else {
+			$common_path = rtrim($common_path, '/');
 		}
+
+		$this->backend_htaccess = $this->path_search($common_path, $install_part,
+			'/.htaccess');
+		$this->frontend_htaccess = $this->path_search($common_path, $access_part,
+			'/.htaccess');
 	}
 
 	/**
-	 * Gets the contents of the rules file.
+	 * Get corresponding htaccess path
+	 *
+	 * @since 1.0.16
+	 * @param  string $kind Frontend or backend
+	 * @return string       Path
+	 */
+	public function htaccess_path($kind = 'frontend'){
+		switch ( $kind ) {
+			case 'frontend':
+				$path = $this->frontend_htaccess;
+				break;
+
+			case 'backend':
+				$path = $this->backend_htaccess;
+				break;
+
+			default:
+				$path = $this->frontend_htaccess;
+				break;
+		}
+		return $path;
+	}
+
+	/**
+	 * Get the content of the rules file.
+	 * If can't read, will add error msg to dashboard
+	 * Only when need to add error msg, this function is used, otherwise use file_get_contents directly
 	 *
 	 * @since 1.0.4
 	 * @access public
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public static function read_htaccess($path = ''){
-		if (empty($path)) {
-			$path = self::get_home_path();
-			if (!file_exists($path)) {
-				return "\n";
-			}
+	public function htaccess_read($kind = 'frontend'){
+		$path = $this->htaccess_path($kind);
+
+		if( !$path || !file_exists($path) ) {
+			return "\n";
 		}
-		if (!self::is_file_able(self::RW)) {
+		if ( !self::readable($kind) || !self::writable($kind) ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 			return false;
 		}
@@ -332,138 +281,44 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_GET);
 			return false;
 		}
+
 		// Remove ^M characters.
 		$content = str_ireplace("\x0D", "", $content);
 		return $content;
 	}
 
 	/**
-	 * Get the ifmodule block if it exists in the content.
+	 * Try to save the rules file changes.
 	 *
-	 * @since 1.0.12
+	 * This function is used by both the edit .htaccess admin page and
+	 * the common rewrite rule configuration options.
+	 *
+	 * This function will create a backup with _lscachebak appended to the file name
+	 * prior to making any changese. If creating the backup fails, an error is returned.
+	 *
+	 * @since 1.0.4
+	 * @since 1.0.12 - Introduce $backup parameter and make function public
 	 * @access public
-	 * @param string $content The content to search.
-	 * @param int $off_begin Will be set to the beginning offset. Starts
-	 * just after the opening <IfModule>.
-	 * @param int $off_end Will be set to the ending offset. Starts just
-	 * before the closing </IfModule>.
-	 * @return bool|string False if not found, True if found. Error message if
-	 * it failed.
+	 * @param string $content The new content to put into the rules file.
+	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
+	 * @param boolean $backup Whether to create backups or not.
+	 * @return boolean true on success, else false.
 	 */
-	public static function file_get_ifmodule_block($content, &$off_begin,
-		&$off_end)
-	{
-		$off_begin = stripos($content, self::$RW_BLOCK_START);
-		//if not found
-		if ($off_begin === false) {
+	public function htaccess_save($content, $kind = 'frontend', $backup = true){
+		$path = $this->htaccess_path($kind);
+
+		if (!self::readable($kind) || !self::writable($kind)) {
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 			return false;
 		}
-		$off_begin += strlen(self::$RW_BLOCK_START);
-		$off_end = stripos($content, self::$RW_BLOCK_END, $off_begin);
-		$off_next = stripos($content, '<IfModule', $off_begin);
-		if ($off_end === false) {
-			$buf = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'IfModule close');
-			return $buf;
+
+		//failed to backup, not good.
+		if ($backup && $this->htaccess_backup($path) === false) {
+			 LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
+			 return false;
 		}
-		elseif (($off_next !== false) && ($off_next < $off_end)) {
-			$buf = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER) . ' '
-				.sprintf(__('The .htaccess file is missing a %s.', 'litespeed-cache'), '&lt;/IfModule&gt;');
-			return $buf;
-		}
-		--$off_end; // go to end of previous line.
+
 		return true;
-	}
-
-	/**
-	 * Searches for the LiteSpeed section in contents.
-	 *
-	 * @since 1.0.7
-	 * @access private
-	 * @param string $content The content to search
-	 * @param string $buf The portion before and including the beginning of
-	 * the section.
-	 * @param string $after The content after the relevant section.
-	 * @return mixed False on failure, the haystack on success.
-	 * The haystack may be a string or null if it did not exist.
-	 */
-	private function file_split($content, &$buf, &$after)
-	{
-		$wrapper_end = '';
-		$wrapper_begin = $this->build_wrappers(self::$RW_WRAPPER, $wrapper_end);
-		$off_begin = 0;
-		$off_end = 0;
-
-		$ret = self::file_get_ifmodule_block($content, $off_begin, $off_end);
-
-		if ($ret === false) {
-			$buf = self::$RW_BLOCK_START . "\n" . $wrapper_begin
-				. self::$RW_PREREQ;
-			$after = $wrapper_end . "\n" . self::$RW_BLOCK_END . "\n" . $content;
-			return NULL;
-		}
-		elseif ($ret !== true) {
-			$buf = $ret;
-			return false;
-		}
-
-		$off_wrapper = stripos($content, $wrapper_begin, $off_begin);
-		// If the wrapper exists
-		if ($off_wrapper !== false) {
-			$off_wrapper += strlen($wrapper_begin);
-			$off_wrapper_end = stripos($content, $wrapper_end, $off_wrapper);
-			if ($off_wrapper_end === false) {
-				$buf = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'Plugin wrapper close');
-				return false;
-			}
-			--$off_wrapper_end;
-
-			$buf = substr($content, 0, $off_wrapper + 1);
-			$after = substr($content, $off_wrapper_end);
-			$block = substr($content, $off_wrapper,
-				$off_wrapper_end - $off_wrapper);
-			return $block;
-		}
-		$buf = substr($content, 0, $off_end) . "\n" . $wrapper_begin
-			. self::$RW_PREREQ;
-		$after = $wrapper_end . substr($content, $off_end);
-		$rules = array();
-		$matched = preg_replace_callback(self::$RW_PATTERN_WRAPPERS,
-			function ($matches) use (&$rules)
-			{
-				$rules[] = $matches[0];
-				return '';
-			},
-			$buf);
-		if (empty($rules)) {
-			return NULL;
-		}
-		$buf = $matched;
-		$block = implode('', $rules);
-		return $block;
-	}
-
-	/**
-	 * Complete the validate changes and save to file.
-	 *
-	 * @since 1.0.7
-	 * @access private
-	 * @param string $beginning The portion that includes the edits.
-	 * @param string $haystack The source section from the original file.
-	 * @param string $after The content after the relevant section.
-	 * @param string $path If path is set, use path, else use home path.
-	 * @return mixed true on success, else error message on failure.
-	 */
-	private function file_combine($beginning, $haystack, $after, $path = '')
-	{
-		if (!is_null($haystack)) {
-			if (!is_openlitespeed()) {
-				$haystack = str_replace(self::$RW_LOOKUP_PUBLIC,
-					self::$RW_LOOKUP_BOTH, $haystack);
-			}
-			$beginning .= $haystack;
-		}
-		$beginning .= $after;
-		return self::file_save($beginning, false, $path);
 	}
 
 	/**
@@ -478,8 +333,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param String $path The .htaccess file path.
 	 * @return boolean True on success, else false on failure.
 	 */
-	private static function file_backup($path)
-	{
+	private function htaccess_backup($path){
 		$bak = '_lscachebak_orig';
 		$i = 1;
 
@@ -491,7 +345,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			}
 		}
 
-		if (($i <= 10) || (!class_exists('ZipArchive'))) {
+		if ( $i <= 10 || !class_exists('ZipArchive') ) {
 			$ret = copy($path, $path . $bak);
 			return $ret;
 		}
@@ -505,8 +359,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			return false;
 		}
 
-		$res = $zip->open($dir . '/lscache_htaccess_bak.zip',
-			ZipArchive::CREATE | ZipArchive::OVERWRITE);
+		$res = $zip->open($dir . '/lscache_htaccess_bak.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
 		if ($res !== true) {
 			error_log('Warning: Failed to archive wordpress backups in ' . $dir);
 			$ret = copy($path, $path . $bak);
@@ -539,355 +392,78 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	}
 
 	/**
-	 * Try to save the rules file changes.
+	 * Get mobile view rule from htaccess file
 	 *
-	 * This function is used by both the edit .htaccess admin page and
-	 * the common rewrite rule configuration options.
-	 *
-	 * This function will create a backup with _lscachebak appended to the file name
-	 * prior to making any changese. If creating the backup fails, an error is returned.
-	 *
-	 * If $cleanup is true, this function strip extra slashes.
-	 *
-	 * @since 1.0.4
-	 * @since 1.0.12 - Introduce $backup parameter and make function public
-	 * @access public
-	 * @param string $content The new content to put into the rules file.
-	 * @param boolean $cleanup True to strip extra slashes, false otherwise.
-	 * @param string $path The file path to edit.
-	 * @param boolean $backup Whether to create backups or not.
-	 * @return boolean true on success, else false.
+	 * @since 1.0.16
+	 * @return string Mobile Agents value
 	 */
-	public static function file_save($content, $cleanup = true, $path = '',
-		$backup = true){
-		while (true) {
-			if (empty($path)) {
-				$path = self::get_home_path();
-				if (!file_exists($path)) {
-					break;
-				}
-			}
-
-			if (self::is_file_able(self::RW, $path) == 0) {
-				LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
-				return false;
-			}
-
-			//failed to backup, not good.
-			if (($backup) && (self::file_backup($path) === false)) {
-				 LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
-				 return false;
-			}
-
-			break;
-		}
-
-		if ($cleanup) {
-			$content = LiteSpeed_Cache_Admin::cleanup_text($content);
-		}
-
-		// File put contents will truncate by default. Will create file if doesn't exist.
-		$ret = file_put_contents($path, $content, LOCK_EX);
-		if (!$ret) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_SAVE);
+	public function get_rewrite_rule_mobile_agents(){
+		$rules = $this->get_rewrite_rule(self::MARKER_MOBILE);
+		if(!isset($rules[0])){
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER_MOBILE);
 			return false;
 		}
-
-		return true;
-	}
-
-	/**
-	 * Updates the specified common rewrite rule based on original content.
-	 *
-	 * If the specified rule is not found, just return the rule.
-	 * Else if it IS found, need to keep the content surrounding the rule.
-	 *
-	 * The return value is mixed.
-	 * Returns true if the rule is not found in the content.
-	 * Returns an array (false, error_msg) on error.
-	 * Returns an array (true, new_content) if the rule is found.
-	 *
-	 * new_content is the original content minus the matched rule. This is
-	 * to prevent losing any of the original content.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @param string $content The original content in the .htaccess file.
-	 * @param string $output Returns the added rule if success.
-	 * @param string $wrapper The wrapper that surrounds the rule.
-	 * @param string $cond The rewrite condition to use with the rule.
-	 * @param string $match The rewrite rule to match against the condition.
-	 * @param string $env The environment change to do if the rule matches.
-	 * @param string $flag The flags to use with the rewrite condition.
-	 * @return mixed Explained above.
-	 */
-	private function set_common_rule($content, &$output, $wrapper, $cond,
-			$match, $env, $flag = '')
-	{
-
-		$wrapper_end = '';
-		$wrapper_begin = $this->build_wrappers($wrapper, $wrapper_end);
-		$rw_cond = 'RewriteCond %{' . $cond . '} ' . $match;
-		if ($flag != '') {
-			$rw_cond .= ' [' . $flag . ']';
-		}
-		$out = $wrapper_begin . "\n" . $rw_cond .  "\n"
-			. 'RewriteRule .* - [' . $env . ']' . "\n" . $wrapper_end . "\n";
-
-		// just create the whole buffer.
-		if (is_null($content)) {
-			if ($match != '') {
-				$output .= $out;
-			}
-			return true;
-		}
-		$wrap_begin = stripos($content, $wrapper_begin);
-		if ($wrap_begin === false) {
-			if ($match != '') {
-				$output .= $out;
-			}
-			return true;
-		}
-		$wrap_end = stripos($content, $wrapper_end,
-			$wrap_begin + strlen($wrapper_begin));
-
-		if ($wrap_end === false) {
-			$err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end');
-			return array(false, $err);
-		}
-		elseif ($match != '') {
-			$output .= $out;
-		}
-		$buf = substr($content, 0, $wrap_begin); // Remove everything between wrap_begin and wrap_end
-		$buf .= substr($content, $wrap_end + strlen($wrapper_end));
-		return array(true, trim($buf));
-	}
-
-	/**
-	 * Finds a specified common rewrite rule from the .htaccess file.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @param string $wrapper The wrapper to look for.
-	 * @param string $cond The condition to look for.
-	 * @param string $match Returns the rewrite rule on success, error message on failure.
-	 * @return boolean True on success, false otherwise.
-	 */
-	public function get_common_rule($wrapper, $cond, &$match)
-	{
-
-		if (self::file_get($match) === false) {
-			return false;
-		}
-		$suffix = '';
-		$prefix = $this->build_wrappers($wrapper, $suffix);
-		$off_begin = stripos($match, $prefix);
-		if ($off_begin === false) {
-			$match = '';
-			return true; // It does not exist yet, not an error.
-		}
-		$off_begin += strlen($prefix);
-		$off_end = stripos($match, $suffix, $off_begin);
-		if ($off_end === false) {
-			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'suffix ' . $suffix);
-			return false;
-		}
-		elseif ($off_begin >= $off_end) {
-			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER);
-			return false;
-		}
-
-		$subject = substr($match, $off_begin, $off_end - $off_begin);
-		$pattern = self::$RW_PATTERN_COND_START . $cond
-			. self::$RW_PATTERN_COND_END;
+		$rule = trim($rules[0]);
+		$pattern = '/RewriteCond\s%{HTTP_USER_AGENT}\s+([^[\n]*)\s+[[]*/';
 		$matches = array();
-		$num_matches = preg_match($pattern, $subject, $matches);
+		$num_matches = preg_match($pattern, $rule, $matches);
 		if ($num_matches === false) {
-			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
 			return false;
 		}
 		$match = trim($matches[1]);
-		return true;
+		return $match;
 	}
 
 	/**
-	 * Updates the specified rewrite rule based on original content.
+	 * Parse rewrites rule from the .htaccess file.
 	 *
-	 * If the specified rule is not found, just return the rule.
-	 * Else if it IS found, need to keep the content surrounding the rule.
-	 *
-	 * The return value is mixed.
-	 * Returns true if the rule is not found in the content.
-	 * Returns an array (false, error_msg) on error.
-	 * Returns an array (true, new_content) if the rule is found.
-	 *
-	 * new_content is the original content minus the matched rule. This is
-	 * to prevent losing any of the original content.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @param string $content The original content in the .htaccess file.
-	 * @param string $output Returns the added rule if success.
-	 * @param string $wrapper The wrapper that surrounds the rule.
-	 * @param string $match The rewrite rule to match against.
-	 * @param string $sub The substitute for the rule match.
-	 * @param string $env The environment change to do if the rule matches.
-	 * @return mixed Explained above.
-	 */
-	private function set_rewrite_rule($content, &$output, $wrapper, $match,
-			$sub, $env)
-	{
-
-		$wrapper_end = '';
-		$wrapper_begin = $this->build_wrappers($wrapper, $wrapper_end);
-		$out = $wrapper_begin . "\nRewriteRule " . $match . ' ' . $sub
-				. ' [' . $env . ']' . "\n" . $wrapper_end . "\n";
-
-		// just create the whole buffer.
-		if (is_null($content)) {
-			if ($match != '') {
-				$output .= $out;
-			}
-			return true;
-		}
-		$wrap_begin = stripos($content, $wrapper_begin);
-		if ($wrap_begin === false) {
-			if ($match != '') {
-				$output .= $out;
-			}
-			return true;
-		}
-		$wrap_end = stripos($content, $wrapper_end, $wrap_begin + strlen($wrapper_begin));
-		if ($wrap_end === false) {
-			$err =LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'wrapper end');
-			return array(false, $err);
-		}
-		elseif ($match != '') {
-			$output .= $out;
-		}
-		$buf = substr($content, 0, $wrap_begin); // Remove everything between wrap_begin and wrap_end
-		$buf .= substr($content, $wrap_end + strlen($wrapper_end));
-		return array(true, trim($buf));
-	}
-
-	/**
-	 * FInds a specified rewrite rule from the .htaccess file.
-	 *
-	 * @since 1.0.4
+	 * @since 1.0.16
 	 * @access public
-	 * @param string $wrapper The wrapper to look for.
-	 * @param string $match Returns the rewrite rule on success, error message on failure.
-	 * @param string $sub Returns the substitute on success, error message on failure.
-	 * @param string $env Returns the environment on success, error message on failure.
-	 * @return boolean True on success, false otherwise.
+	 * @param string $kind The kind of htaccess to search in
+	 * @return array
 	 */
-	public function get_rewrite_rule($wrapper, &$match, &$sub, &$env)
-	{
-
-		if (self::file_get($match) === false) {
-			return false;
-		}
-		$suffix = '';
-		$prefix = $this->build_wrappers($wrapper, $suffix);
-		$off_begin = stripos($match, $prefix);
-		if ($off_begin === false) {
-			$match = '';
-			return true; // It does not exist yet, not an error.
-		}
-		$off_begin += strlen($prefix);
-		$off_end = stripos($match, $suffix, $off_begin);
-		if ($off_end === false) {
-			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'suffix ' . $suffix);
-			return false;
-		}
-		elseif ($off_begin >= $off_end) {
-			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_ORDER);
+	public function get_rewrite_rule_login_cookie($kind = 'frontend'){
+		$rule = $this->get_rewrite_rule(self::MARKER_LOGIN_COOKIE, $kind);
+		if( substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=' ){//todo: use regex
 			return false;
 		}
 
-		$subject = substr($match, $off_begin, $off_end - $off_begin);
-		$pattern = self::$RW_PATTERN_RULE;
-		$matches = array();
-		$num_matches = preg_match($pattern, $subject, $matches);
-		if ($num_matches === false) {
-			$match = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match');
-			return false;
-		}
-		$match = trim($matches[1]);
-		$sub = trim($matches[2]);
-		if (isset($matches[3])) {
-			$env = trim($matches[3]);
-		}
-		else {
-			$env = '';
-		}
-		return true;
+		return substr($rule, strlen('RewriteRule .? - [E='), -1);//todo:user trim('"')
 	}
 
 	/**
-	 * Do the setting cache favicon logic.
-	 *
-	 * @since 1.0.8
-	 * @access private
-	 * @param string $haystack The original content in the .htaccess file.
-	 * @param boolean $action Whether to add or remove the rule.
-	 * @param string $output The current output buffer for the HOME PATH file.
-	 * @param array $errors Errors array to add error messages to.
-	 * @return mixed False on failure/do not update,
-	 *	original content sans favicon on success.
+	 * Get rewrite rules based on tags
+	 * @param  string $cond The tag to be used
+	 * @param  string $kind Frontend or backend .htaccess file
+	 * @return mixed       Rules
 	 */
-	private function set_favicon($haystack, $action, &$output, &$errors)
-	{
-		$match = 'favicon\.ico$';
-		$sub = '-';
-		$env = 'E=cache-control:max-age=86400';
-		$rule_buf = '';
-		if ($action == 0) {
-			$match = '';
-			$sub = '';
-			$env = '';
-		}
-		$ret = $this->set_rewrite_rule($haystack, $rule_buf, 'FAVICON',
-				$match, $sub, $env);
-
-		if ($this->parse_ret($ret, $haystack, $errors) === false) {
+	private function get_rewrite_rule($cond, $kind = 'frontend'){
+		clearstatcache();
+		$path = $this->htaccess_path($kind);
+		if ( !self::readable($kind) ) {
 			return false;
 		}
-		$output .= $rule_buf;
-		return $haystack;
-	}
 
-	/**
-	 * Do the setting cache resource logic.
-	 *
-	 * @since 1.0.8
-	 * @access private
-	 * @param string $haystack The original content in the .htaccess file.
-	 * @param boolean $set Whether to add or remove the rule.
-	 * @param string $output The current output buffer for the HOME PATH file.
-	 * @param array $errors Errors array to add error messages to.
-	 * @return mixed False on failure/do not update,
-	 *	original content sans favicon on success.
-	 */
-	private function set_cache_resource($haystack, $set, &$output, &$errors)
-	{
-		$match = self::$RW_PATTERN_RES;
-		$sub = '-';
-		$env = 'E=cache-control:max-age=3600';
-		$rule_buf = '';
-		if ($set == 0) {
-			$match = '';
-			$sub = '';
-			$env = '';
-		}
-		$ret = $this->set_rewrite_rule($haystack, $rule_buf, 'RESOURCE',
-				$match, $sub, $env);
-
-		if ($this->parse_ret($ret, $haystack, $errors) === false) {
+		$rules = extract_from_markers($path, self::MARKER);
+		if( !in_array($cond . self::MARKER_START, $rules) || !in_array($cond . self::MARKER_END, $rules) ){
 			return false;
 		}
-		$output .= $rule_buf;
-		return $haystack;
+
+		$key_start = array_search($cond . self::MARKER_START, $rules);
+		$key_end = array_search($cond . self::MARKER_END, $rules);
+		if( $key_start === false || $key_end === false ){
+			return false;
+		}
+
+		$results = array_slice($rules, $key_start+1, $key_end-$key_start-1);
+		if(!$results){
+			return false;
+		}
+		if(count($results) == 1){
+			return trim($results[0]);
+		}
+		return array_filter($results);
 	}
 
 	/**
@@ -911,20 +487,20 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 
 		foreach ($val_check as $opt) {
 			$input[$opt] = isset($input[$opt]) ? $input[$opt]%2 : 0;
-			if ($input[$opt] || $options[$opt] != $input[$opt]) {
+			if ( $input[$opt] || $options[$opt] != $input[$opt] ) {
 				$diff[$opt] = $input[$opt];
 			}
 		}
 
+		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
-		if ($input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]) {
+		if ( $input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] ) {
 			$list = $input[$id];
-			if (empty($list) || $this->check_rewrite($list) === false) {
-				$err_args = array(
-					$id,
-					empty($list) ? 'EMPTY' : esc_html($list)
+			if ( empty($list) || $this->check_rewrite($list) === false ) {
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(
+					LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE,
+					array($id, empty($list) ? 'EMPTY' : esc_html($list))
 				);
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 				$has_error = true;
 			}
 			$diff[$id] = $list;
@@ -961,7 +537,6 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			else {
 				$err_args[] = esc_html($input[$id]);
 			}
-
 			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args);
 			$has_error = true;
 		}
@@ -969,8 +544,9 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		$aExceptions = array('-', '_');
 		if (isset($input[$id])) {
-			if ($input[$id] === ''
-					|| (ctype_alnum(str_replace($aExceptions, '', $input[$id])) && $this->check_rewrite($input[$id]))) {
+			if ( $input[$id] === ''
+					|| (ctype_alnum(str_replace($aExceptions, '', $input[$id])) && $this->check_rewrite($input[$id]))
+			) {
 				$diff[$id] = $input[$id];
 			}
 			else {
@@ -1002,274 +578,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 */
 	private function check_rewrite($rule){
 		$escaped = str_replace('@', '\@', $rule);
-		return @preg_match('@' . $escaped . '@', null) !== false;
-	}
-
-	/**
-	 * Parse the return value from set_common_rule and set_rewrite_rule.
-	 *
-	 * @since 1.0.7
-	 * @access private
-	 * @param mixed $ret The return value from the called function.
-	 * @param string $haystack Where to start the next search.
-	 * @param string $errors Errors array in case of error.
-	 * @return boolean False on function failure, true otherwise.
-	 */
-	private function parse_ret($ret, &$haystack, &$errors)
-	{
-		if (!is_array($ret)) {
-			return true;
-		}
-		if ($ret[0]) {
-			$haystack = $ret[1];
-		}
-		else {
-			// failed.
-			$errors[] = $ret[1];
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Do the setting subdir cookies logic. If it is a subdirectory install,
-	 * will write to both .htaccess files.
-	 *
-	 * @since 1.0.7
-	 * @access private
-	 * @param array $diff The rules that need to be set
-	 * @param string $haystack The original content in the .htaccess file.
-	 * @param string $buf The current output buffer for the HOME PATH file.
-	 * @param array $errors Errors array to add error messages to.
-	 * @return mixed False on failure/do not update,
-	 *	original content sans login cookie on success.
-	 */
-	private function set_subdir_cookie($diff, &$haystack, &$buf, &$errors)
-	{
-		$login_id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-		$res_id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
-		if (isset($diff[$login_id])) {
-			if ($diff[$login_id] !== '') {
-				$match = '.?';
-				$sub = '-';
-				if (is_openlitespeed()) {
-					$env = 'E="Cache-Vary:' . $diff[$login_id] . '"';
-				}
-				else {
-					$env = 'E=Cache-Vary:' . $diff[$login_id];
-				}
-			}
-			else {
-				$match = '';
-				$sub = '';
-				$env = '';
-			}
-
-			$ret = $this->set_rewrite_rule($haystack, $buf, 'LOGIN COOKIE',
-				$match, $sub, $env);
-			$this->parse_ret($ret, $haystack, $errors);
-		}
-
-		if (!self::is_subdir()) {
-			if (isset($diff[$res_id])) {
-				$ret = $this->set_cache_resource($haystack, $diff[$res_id],
-					$buf, $errors);
-				if ($ret !== false) {
-					$haystack = $ret;
-				}
-			}
-			return true;
-		}
-
-		$path = self::get_site_path();
-		$content2 = '';
-		$before2 = '';
-		$rule_buf2 = "\n";
-		if (self::file_get($content2, $path) === false) {
-			$errors[] = $content2;
-			return false;
-		}
-
-		$haystack2 = $this->file_split($content2, $before2, $after2);
-		if ($haystack2 === false) {
-			$errors[] = $rule_buf2;
-			return false;
-		}
-		if (isset($diff[$login_id])) {
-			$ret = $this->set_rewrite_rule($haystack2, $rule_buf2,
-				'LOGIN COOKIE', $match, $sub, $env);
-			$this->parse_ret($ret, $haystack2, $errors);
-		}
-		if (isset($diff[$res_id])) {
-			$ret = $this->set_cache_resource($haystack2, $diff[$res_id],
-				$rule_buf2, $errors);
-			if ($ret !== false) {
-				$haystack2 = $ret;
-			}
-		}
-
-		$ret = $this->file_combine($before2, $haystack2 . $rule_buf2,
-			$after2, $path);
-		if ($ret !== true) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_PUT);
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Helper function to set rewrite rules on upgrade.
-	 *
-	 * @since 1.0.8
-	 * @access private
-	 * @param string $wrapper A wrapper to a specific rule
-	 * @param string $match The match to set the rewrite rule to search for.
-	 * @param string $sub The substitution to set the rewrite rule to replace with.
-	 * @param string $flag The flag the rewrite rule should set.
-	 * @param string $content The original content/new content after replacement.
-	 */
-	private function set_on_upgrade($wrapper, $match, $sub, $flag, &$content)
-	{
-		$split_rule = preg_split(self::$RW_PATTERN_UPGRADE_BLOCK, $content, -1,
-				PREG_SPLIT_DELIM_CAPTURE);
-		$rule_buf = '';
-		$ret = $this->set_rewrite_rule($content, $rule_buf, $wrapper, $match, $sub,
-			$flag);
-		if ($ret !== true) {
-			return;
-		}
-		elseif (count($split_rule) == 1) {
-			//not found
-			$content = self::$RW_BLOCK_START . "\n" . $rule_buf
-				. self::$RW_BLOCK_END . "\n" . $content;
-		}
-		else {
-			//else found
-			// split_rule[0] = pre match
-			// split_rule[1] = contents of IfModule
-			// split_rule[2] = closing IfModule
-			// split_rule[3] = post match
-			$split_rule[2] = $rule_buf . "\n" . $split_rule[2];
-			$content = implode('', $split_rule);
-		}
-	}
-
-	/**
-	 * Given a file's contents, search for an existing login cookie.
-	 * If the login cookie exists, this function will modify the content to
-	 * correct the cookie's placement.
-	 *
-	 * @since 1.0.7
-	 * @access private
-	 * @param string $content The content to parse through.
-	 * @return string The login cookie if found, empty string otherwise.
-	 */
-	private function parse_existing_login_cookie(&$content)
-	{
-		// If match found, split_rule will look like:
-		// $split_rule[0] = pre match content.
-		// $split_rule[1] = matching rule.
-		// $split_rule[2] = login cookie
-		// $split_rule[3] = post match content.
-		$split_rule = preg_split(self::$RW_PATTERN_LOGIN, $content, -1,
-				PREG_SPLIT_DELIM_CAPTURE);
-		if (count($split_rule) == 1) {
-			return '';
-		}
-		$suffix = '';
-		$prefix = $this->build_wrappers('LOGIN COOKIE', $suffix);
-		if (strpos($split_rule[0], $prefix) !== false) {
-			return $split_rule[2];
-		}
-		$replacement = $prefix . "\n" . $split_rule[1] . "\n" . $suffix . "\n";
-		$without_rule = $split_rule[0] . $split_rule[3];
-		$split_blocks = preg_split(self::$RW_PATTERN_LOGIN_BLOCK,
-			$without_rule, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$index = array_search('LiteSpeed', $split_blocks);
-		if ($index === false) {
-			// IfModule LiteSpeed not found.
-			$content = self::$RW_BLOCK_START . "\n" . $replacement
-				. self::$RW_BLOCK_END . "\n" . $without_rule;
-			return $split_rule[2];
-		}
-		elseif ($index + 2 > count($split_blocks)) {
-			LiteSpeed_Cache_Admin_Display::add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_LC_HTA)
-			);
-			return '';
-		}
-		$split_blocks[$index + 1] .= $replacement;
-		array_splice($split_blocks, $index, 1);
-		$content = implode('', $split_blocks);
-		return $split_rule[2];
-	}
-
-	/**
-	 * Scans the .htaccess file(s) for existing login cookie rewrite rule.
-	 *
-	 * @since 1.0.7
-	 * @access public
-	 * @return string The login cookie if found, empty string otherwise.
-	 */
-	public function scan_upgrade()
-	{
-		if (is_multisite()) {
-			$options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
-			$enabled = $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
-		}
-		else {
-			$options = LiteSpeed_Cache_Config::get_instance()->get_options();
-			$enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
-		}
-		$content = '';
-		$site_content = '';
-		if (!self::is_file_able(self::RW)) {
-			return '';
-		}
-		if (self::file_get($content) === false) {
-			return '';
-		}
-
-		if ($enabled) {
-			$this->set_on_upgrade('FAVICON', '^favicon\.ico$', '-',
-				'E=cache-control:max-age=86400', $content);
-		}
-
-		$home_cookie = $this->parse_existing_login_cookie($content);
-		if (!self::is_subdir()) {
-			if ($enabled) {
-				$this->set_on_upgrade('RESOURCE', 'wp-content/.*/(loader|fonts)\.php',
-					'-', 'E=cache-control:max-age=3600', $content);
-			}
-			self::file_save($content, false);
-			return $home_cookie;
-		}
-		$site_path = self::get_site_path();
-
-		if (self::file_get($site_content, $site_path) === false) {
-			return '';
-		}
-
-		if ($enabled) {
-			$this->set_on_upgrade('RESOURCE', 'wp-content/.*/(loader|fonts)\.php',
-				'-', 'E=cache-control:max-age=3600', $site_content);
-		}
-
-		$site_cookie = $this->parse_existing_login_cookie($site_content);
-		if ((empty($home_cookie) && !empty($site_cookie))
-				|| (!empty($home_cookie) && empty($site_cookie))
-				|| ($home_cookie != $site_cookie)) {
-			LiteSpeed_Cache_Admin_Display::add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW,
-				LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_LC_MISMATCH)
-					. '<br />' . self::get_home_path() . ': ' . $home_cookie . '<br />' . $site_path . ': ' . $site_cookie
-			);
-			return 'err';
-		}
-		self::file_save($content, false);
-		self::file_save($site_content, false, $site_path);
-		return $home_cookie;
+		return @preg_match('@' . $escaped . '@', null) !== false;//todo: improve to try catch
 	}
 
 	/**
@@ -1282,22 +591,19 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
 	public function validate_common_rewrites($diff, &$errors){
-		$content = '';
-		$buf = "\n";
-		$before = '';
-		$after = '';
 
-		if (self::file_get($content) === false) {
-			$errors[] = $content;
+		if (!self::readable() || !self::writable()) {
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 			return false;
 		}
 
-		$haystack = $this->file_split($content, $before, $after);
-		if ($haystack === false) {
-			$errors[] = $buf;
+		$rules = extract_from_markers($this->frontend_htaccess, self::MARKER);
+		if(!$rules){
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER);
 			return false;
 		}
 
+		// check login cookie
 		if (is_openlitespeed()) {
 			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 			if ($diff[$id]) {
@@ -1308,64 +614,115 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			}
 
 			$tp_cookies = apply_filters('litespeed_cache_get_vary', array());
-			if ((!empty($tp_cookies)) && (is_array($tp_cookies))) {
+			if ( !empty($tp_cookies) && is_array($tp_cookies) ) {
 				$diff[$id] .= ',' . implode(',', $tp_cookies);
 			}
 		}
 
+		$new_rules = array();
+		$new_rules_backend = array();
+		// mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
-
-		if (isset($diff[$id])) {
-			if ($diff[$id]) {
-				$ret = $this->set_common_rule($haystack, $buf, 'MOBILE VIEW',
-					'HTTP_USER_AGENT', $diff[$id],
-					'E=Cache-Control:vary=ismobile', 'NC');
-			}
-			else {
-				$ret = $this->set_common_rule($haystack, $buf,
-						'MOBILE VIEW', '', '', '');
-			}
-			$this->parse_ret($ret, $haystack, $errors);
+		if (isset($diff[$id]) && $diff[$id]) {
+			$new_rules[] = self::MARKER_MOBILE . self::MARKER_START;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $diff[$id] . ' [NC]';
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]';
+			$new_rules[] = self::MARKER_MOBILE . self::MARKER_END;
+			$new_rules[] = '';
 		}
 
+		// nocache cookie
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-
-		if (isset($diff[$id])) {
-			$ret = $this->set_common_rule($haystack, $buf, 'COOKIE',
-					'HTTP_COOKIE', $diff[$id], 'E=Cache-Control:no-cache');
-			$this->parse_ret($ret, $haystack, $errors);
+		if (isset($diff[$id]) && $diff[$id]) {
+			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START;
+			$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $diff[$id];
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
+			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END;
+			$new_rules[] = '';
 		}
 
+		// nocache user agents
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-		if (isset($diff[$id])) {
-			$ret = $this->set_common_rule($haystack, $buf, 'USER AGENT',
-					'HTTP_USER_AGENT', $diff[$id], 'E=Cache-Control:no-cache');
-			$this->parse_ret($ret, $haystack, $errors);
+		if (isset($diff[$id]) && $diff[$id]) {
+			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $diff[$id];
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
+			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END;
+			$new_rules[] = '';
 		}
 
-		if (((isset($diff[LiteSpeed_Cache_Config::OPID_CACHE_RES]))
-				|| (isset($diff[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE])))
-			&& ($this->set_subdir_cookie($diff, $haystack, $buf, $errors)
-				=== false)) {
-			return false;
+		// caching php resource
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
+		if (isset($diff[$id]) && $diff[$id]) {
+			$new_rules[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START;
+			$new_rules[] = 'RewriteRule ' . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]';
+			$new_rules[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END;
+			$new_rules[] = '';
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
-
-		if (isset($diff[$id])) {
-			$ret = $this->set_favicon($haystack, $diff[$id], $buf, $errors);
-			if ($ret !== false) {
-				$haystack = $ret;
+		// login cookie
+		// frontend and backend
+		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
+		if (isset($diff[$id]) && $diff[$id]) {
+			$env = 'Cache-Vary:' . $diff[$id];
+			if (is_openlitespeed()) {
+				$env = '"' . $env . '"';
 			}
-
+			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']';
+			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END;
+			$new_rules[] = '';
 		}
 
-		$ret = $this->file_combine($before, $haystack . $buf, $after);
-		if ($ret !== true) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_PUT);
-			return false;
+		// favicon
+		// frontend and backend
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
+		if (isset($diff[$id]) && $diff[$id]) {
+			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]';
+			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END;
+			$new_rules[] = '';
+		}
+
+        // todo: is this still needed?
+//        if (!is_null($haystack)) {
+//			if (!is_openlitespeed()) {
+//				$haystack = str_replace(self::$RW_LOOKUP_PUBLIC,
+//					self::$RW_LOOKUP_BOTH, $haystack);
+//			}
+//			$beginning .= $haystack;
+//        }
+
+		$this->deprecated_clear_rules();
+		$this->insert_wrapper($new_rules);
+		if ($this->frontend_htaccess !== $this->backend_htaccess) {
+			$this->insert_wrapper($new_rules_backend, 'backend');
 		}
 		return $diff;
+	}
+
+	/**
+	 * Write to htaccess with rules
+	 *
+	 * @since  1.0.16
+	 * @param  array $rules
+	 * @param  string $kind  which htaccess
+	 */
+	public function insert_wrapper($rules = array(), $kind = 'frontend'){
+		$rules = array_merge(
+			array(self::LS_MODULE_DONOTEDIT),
+			array(''),
+			array(self::LS_MODULE_START),
+			array(''),
+			array(self::$LS_MODULE_REWRITE_ON),
+			array(''),
+			$rules,
+			array(self::LS_MODULE_END),
+			array(''),
+			array(self::LS_MODULE_DONOTEDIT)
+		);
+		insert_with_markers($this->htaccess_path($kind), self::MARKER, $rules);
+
 	}
 
 	/**
@@ -1374,39 +731,50 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public static function clear_rules(){
+	public function clear_rules(){
+		$this->deprecated_clear_rules();
+		$this->insert_wrapper();
+		if ($this->frontend_htaccess !== $this->backend_htaccess) {
+			$this->insert_wrapper(array(), 'backend');
+		}
+	}
+
+	/**
+	 * Only used to clear old rules when upgrade to v1.0.16
+	 */
+	public function deprecated_clear_rules(){
+		$RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
+		$pattern = '/###LSCACHE START ' . $RW_WRAPPER . '###.*###LSCACHE END ' . $RW_WRAPPER . '###\n?/s';
 		clearstatcache();
-		$htaccess = self::get_home_path();
-		if (!file_exists($htaccess)) {
+		if ( !file_exists($this->frontend_htaccess) || !self::writable() ) {
 			return;
 		}
-		if (!self::is_file_able(self::WRITABLE)) {
+		$content = file_get_contents($this->frontend_htaccess);
+		if( !$content ){
 			return;
 		}
-		insert_with_markers($htaccess, self::MARKER, array());
 
-		$content = file_get_contents($htaccess);
-		$pattern = '/###LSCACHE START ' . self::$RW_WRAPPER . '###.*###LSCACHE END ' . self::$RW_WRAPPER . '###\n?/s';
 		$buf = preg_replace($pattern, '', $content);
+		$buf = preg_replace("|<IfModule LiteSpeed>\n*</IfModule>|isU", '', $buf);
 
-		self::file_save($buf, false, $htaccess);
+		$this->htaccess_save($buf);
 
-		// check if .htaccess has a new location
-		if (!self::is_subdir()) {
+		// clear backend htaccess
+		if ($this->frontend_htaccess === $this->backend_htaccess) {
 			return;
 		}
-		$htaccess = self::get_site_path();
-		if (!file_exists($htaccess)) {
-			return;
-		}
-		if (self::file_get($site_content, $site_path) === false) {
-			return;
-		}
-		insert_with_markers($htaccess, self::MARKER, array());
 
-		$pattern = '/###LSCACHE START ' . self::$RW_WRAPPER . '###.*###LSCACHE END ' . self::$RW_WRAPPER . '###\n?/s';
-		$site_buf = preg_replace($pattern, '', $site_content);
-		self::file_save($site_buf, false, $site_path);
+		if ( !file_exists($this->backend_htaccess) || !self::writable('backend') ) {
+			return;
+		}
+		$content = file_get_contents($this->backend_htaccess);
+		if( !$content ){
+			return;
+		}
+
+		$buf = preg_replace($pattern, '', $content);
+		$buf = preg_replace("|<IfModule LiteSpeed>\n*</IfModule>|isU", '', $buf);
+		$this->htaccess_save($buf, 'backend');
 	}
 
 	/**
@@ -1418,7 +786,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 */
 	public function htaccess_editor_save(){
 		if (isset($_POST[self::EDITOR_TEXTAREA_NAME])) {
-			$msg = self::file_save($_POST[self::EDITOR_TEXTAREA_NAME]);
+			$content = LiteSpeed_Cache_Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]);
+			$msg = $this->htaccess_save($content);
 			if ($msg === true) {
 				$msg = __('File Saved.', 'litespeed-cache');
 				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN;
@@ -1426,7 +795,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			else {
 				$color = LiteSpeed_Cache_Admin_Display::NOTICE_RED;
 			}
-			LiteSpeed_Cache_Admin_Display::get_instance()->add_notice($color, $msg);
+			LiteSpeed_Cache_Admin_Display::add_notice($color, $msg);
 		}
 
 	}

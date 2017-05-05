@@ -123,8 +123,8 @@ LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 		<?php
 			$purgeby_option = false;
 			$_option_field = LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT;
-			if(!empty($_POST[$_option_field])){
-				$purgeby_option = $_POST[$_option_field];
+			if(!empty($_REQUEST[$_option_field])){
+				$purgeby_option = $_REQUEST[$_option_field];
 			}
 			if( !in_array($purgeby_option, array(
 				LiteSpeed_Cache_Admin_Display::PURGEBY_CAT,
