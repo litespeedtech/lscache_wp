@@ -2,7 +2,7 @@
 /**
  * Auto registration for LiteSpeed classes
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>

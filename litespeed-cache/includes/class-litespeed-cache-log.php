@@ -5,7 +5,7 @@
  *
  * This generate the valid action.
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -26,7 +26,7 @@ class LiteSpeed_Cache_Log extends LiteSpeed{
 	/**
 	 * Enable debug log
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 */
 	public static function set_enabled(){
 		self::$enabled = true;
@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Log extends LiteSpeed{
 	/**
 	 * Get debug log status
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 */
 	public static function get_enabled(){
 		return self::$enabled;

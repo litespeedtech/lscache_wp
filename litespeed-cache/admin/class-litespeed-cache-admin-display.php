@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	/**
 	 * Load LiteSpeed assets
 	 *
-	 * @since    1.0.16
+	 * @since    1.1.0
 	 */
 	public function load_assets($hook){
 		$this->check_messages();// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
@@ -330,7 +330,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 
 	/**
 	 * If show compatibility tab in settings
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return bool True if shows
 	 */
 	public function show_compatibility_tab(){
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	/**
 	 * Get the error description
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  init $err_code
 	 * @param  mixed $args
 	 * @return mixed String or false
@@ -424,7 +424,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * and append it to the list of outgoing errors.
 	 *
 	 * @access public
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param int $err_code The error code to retrieve.
 	 * @param mixed $args Null if no arguments, an array if multiple arguments,
 	 * else a single argument.
@@ -467,7 +467,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	/**
 	 * Display notices and errors in dashboard
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 */
 	public function display_messages(){
 		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
@@ -483,7 +483,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	/**
 	 * Check if has new messages
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 */
 	public function check_messages(){
 		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
@@ -621,7 +621,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	/**
 	 * Outputs the crawler operation page.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access public
 	 */
 	public function show_crawler(){
@@ -636,7 +636,7 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * - third party plugin compatibilities
 	 * - common rewrite rules.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access public
 	 */
 	public function show_info(){

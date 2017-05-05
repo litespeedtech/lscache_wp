@@ -13,8 +13,10 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 			<li><?php echo __('The environment report contains detailed information about the WordPress configuration.', 'litespeed-cache'); ?></li>
 			<li><?php echo __('If you run into any issues, please include the contents of this text area in your support message.', 'litespeed-cache'); ?></li>
 			<li><?php echo __('To easily grab the content, click the <b>Select All and Copy to Clipboard</b> button, to select and copy to clipboard.', 'litespeed-cache'); ?></li>
+			<?php if ( is_writable(LSWCP_DIR) ): ?>
 			<li><?php echo sprintf(__('Alternatively, this information is also saved in %s.', 'litespeed-cache'),
 				'wp-content/plugins/litespeed-cache/environment_report.php'); ?></li>
+			<?php endif; ?>
 		</ul>
 		<p>
 			<b><?php echo __('The text area below contains the following content:', 'litespeed-cache'); ?></b>

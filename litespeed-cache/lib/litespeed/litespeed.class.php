@@ -2,7 +2,7 @@
 
 /**
 * LiteSpeed Library Class
-* @since 1.0.16
+* @since 1.1.0
 */
 class LiteSpeed{
 	private static $_instance_list = array();
@@ -11,7 +11,7 @@ class LiteSpeed{
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access public
 	 * @return Current LiteSpeed child class.
 	 */
@@ -28,7 +28,7 @@ class LiteSpeed{
 	 * Check if a variable from current child class is set
 	 * Set variable while checking
 	 * 
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $var variable name
 	 * @return mixed
 	 */
@@ -43,7 +43,7 @@ class LiteSpeed{
 
 	/**
 	 * Get a variable from current child class
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $var variable name
 	 * @return mixed
 	 */
@@ -54,7 +54,7 @@ class LiteSpeed{
 
 	/**
 	 * Register a variable for current child class
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $var variable name
 	 * @return bool
 	 */
@@ -67,7 +67,7 @@ class LiteSpeed{
 	/**
 	 * Generate variable name
 	 * 
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $var
 	 * @return string
 	 */

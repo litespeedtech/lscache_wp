@@ -4,7 +4,7 @@
  * The crawler class
  *
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -14,7 +14,7 @@ class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.16
+	 * @since    1.1.0
 	 */
 	protected function __construct(){
 	}
@@ -24,7 +24,7 @@ class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
 	/**
 	 * Saves Crawler settings.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access private
 	 * @param array $input The input options.
 	 * @param array $options The current options.
@@ -89,7 +89,7 @@ class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
 	/**
 	 * Saves Cron settings.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access private
 	 * @param array $input The input options.
 	 * @param array $options The current options.
@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
 	/**
 	 * Saves Cron settings.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access private
 	 * @param array $input The input options.
 	 * @param array $options The current options.
@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
 	/**
 	 * Crawling start
 	 *
-	 * @since    1.0.16
+	 * @since    1.1.0
 	 * @access   public
 	 */
 	public function crawl_data(){

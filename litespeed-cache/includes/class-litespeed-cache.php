@@ -150,9 +150,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 		// 	return;
 		// }
 
-		// do litespeed actions
-		$this->proceed_action();
-
 		if (!$bad_cookies && !$this->check_user_logged_in() && !$this->check_cookies()) {
 			$this->load_logged_out_actions();
 		}
@@ -173,10 +170,19 @@ class LiteSpeed_Cache extends LiteSpeed{
 			add_action('wp', array($this, 'detect'), 4);
 		}
 
+		// load litespeed actions
+		if (is_admin() || is_network_admin()) {
+			add_action('admin_init', array($this, 'proceed_admin_action'));
+		}
+
 	}
 
-
-	public function proceed_action(){
+	/**
+	 * Run litespeed admin actions
+	 * 
+	 * @since 1.1.0
+	 */
+	public function proceed_admin_action(){
 		$msg = false;
 		// handle common actions
 		switch (LiteSpeed_Cache_Router::get_action()) {
@@ -190,6 +196,12 @@ class LiteSpeed_Cache extends LiteSpeed{
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
 				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings();// todo: use wp network setting saving
 				LiteSpeed_Cache_Admin_Report::get_instance()->update_environment_report();
+				break;
+
+			// Handle the ajax request to proceed crawler manually by admin
+			case LiteSpeed_Cache::ACTION_DO_CRAWL:
+				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
+				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
@@ -234,12 +246,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 				delete_transient(LiteSpeed_Cache::WHM_TRANSIENT);
 				$this->admin_ctrl_redirect();
 				return;
-
-			// Handle the ajax request to proceed crawler manually by admin
-			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
-				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
-				break;
 
 			default:
 				break;
@@ -414,7 +420,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 
 	/**
 	 * Uninstall plugin
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 */
 	public static function uninstall_litespeed_cache(){
 		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules();
@@ -2213,7 +2219,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * Execute cron
 	 * todo: move to admin class with register_activation()
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access public
 	 */
 	public function scheduleCron() {
@@ -2239,7 +2245,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	/**
 	 * Register cron interval
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access public
 	 */
 	public function lscacheCronTagReg($schedules) {

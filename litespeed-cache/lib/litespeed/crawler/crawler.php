@@ -3,7 +3,7 @@
  * The Crawler Class
  *
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Crawler_Crawler
  * @subpackage LiteSpeed_Cache/lib
  * @author     LiteSpeed Technologies <info@litespeedtech.com>

@@ -5,7 +5,7 @@
  *
  * This generate the valid action.
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -22,7 +22,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 	/**
 	 * Check action
 	 * 
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string
 	 */
 	public static function get_action(){
@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 	/**
 	 * Check if is ajax call
 	 * 
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return boolean
 	 */
 	public static function is_ajax(){
@@ -48,7 +48,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 	/**
 	 * Check if is admin ip
 	 * 
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return boolean
 	 */
 	public static function is_admin_ip(){
@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 
 	/**
 	 * Check privilege and nonce for the action
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 */
 	private function verify_action(){
 
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 
 	/**
 	 * Verify nonce
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $action
 	 * @return bool
 	 */
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 
 	/**
 	 * Check if the ip is in the range
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $ial IP list
 	 * @return bool
 	 */
@@ -206,7 +206,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 
 	/**
 	 * Get client ip
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string
 	 */
 	private function get_ip(){

@@ -4,7 +4,7 @@
  * The report class
  *
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -14,7 +14,7 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.16
+	 * @since    1.1.0
 	 */
 	protected function __construct(){
 	}
@@ -109,6 +109,11 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 */
 	private function write_environment_report($content){
 		$content = "<"."?php die();?".">\n\n".$content;
+
+		if(!is_writable(LSWCP_DIR)){
+			LiteSpeed_Cache_Log::push('LSCache wordpress plugin does not have the permission to write env report.');
+			return;
+		}
 
 		$ret = file_put_contents(LSWCP_DIR . 'environment_report.php', $content, LOCK_EX);
 		if ($ret !== true && LiteSpeed_Cache_Log::get_enabled()) {

@@ -31,7 +31,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	const LS_MODULE_END = '</IfModule>';
 	private static $LS_MODULE_REWRITE_ON;
 	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##";
-	const MARKER = 'LiteSpeed WordPress Cache Plugin';
+	const MARKER = 'LSCACHE';
 	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE';
 	const MARKER_MOBILE = '### marker MOBILE';
 	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES';
@@ -88,7 +88,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Get if htaccess file is readable
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string
 	 */
 	public static function readable($kind = 'frontend'){
@@ -103,7 +103,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Get if htaccess file is writable
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string
 	 */
 	public static function writable($kind = 'frontend'){
@@ -118,7 +118,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Get frontend htaccess path
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string
 	 */
 	public static function get_frontend_htaccess(){
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Get backend htaccess path
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string
 	 */
 	public static function get_backend_htaccess(){
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Get corresponding htaccess path
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @param  string $kind Frontend or backend
 	 * @return string       Path
 	 */
@@ -394,7 +394,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Get mobile view rule from htaccess file
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @return string Mobile Agents value
 	 */
 	public function get_rewrite_rule_mobile_agents(){
@@ -418,7 +418,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Parse rewrites rule from the .htaccess file.
 	 *
-	 * @since 1.0.16
+	 * @since 1.1.0
 	 * @access public
 	 * @param string $kind The kind of htaccess to search in
 	 * @return array
@@ -600,7 +600,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$rules = extract_from_markers($this->frontend_htaccess, self::MARKER);
 		if(!$rules){
 			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER);
-			return false;
+			// return false;
 		}
 
 		// check login cookie
@@ -704,7 +704,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Write to htaccess with rules
 	 *
-	 * @since  1.0.16
+	 * @since  1.1.0
 	 * @param  array $rules
 	 * @param  string $kind  which htaccess
 	 */
@@ -740,7 +740,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	}
 
 	/**
-	 * Only used to clear old rules when upgrade to v1.0.16
+	 * Only used to clear old rules when upgrade to v1.1.0
 	 */
 	public function deprecated_clear_rules(){
 		$RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';

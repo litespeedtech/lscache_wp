@@ -4,7 +4,7 @@
  * The admin settings handler of the plugin.
  *
  *
- * @since      1.0.16
+ * @since      1.1.0
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -14,7 +14,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.16
+	 * @since    1.1.0
 	 */
 	protected function __construct(){
 	}
