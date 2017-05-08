@@ -739,4 +739,122 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 		$buf .= $this->input_group_end();
 		return $buf;
 	}
+
+	/**
+	 * Build a textarea
+	 *
+	 * @since 1.1.0
+	 * @param  string $id
+	 */
+	public function build_textarea($id, $val = null, $disabled = false)
+	{
+		if ( $val === null ){
+			global $_options;
+			$val = $_options[$id];
+		}
+		$disabled = $disabled ? ' disabled ' : '';
+
+		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' rows='5' cols='80' $disabled>" . esc_textarea($val) . "</textarea>";
+	}
+
+	/**
+	 * Build a text input field
+	 *
+	 * @since 1.1.0
+	 * @param  string $id
+	 * @param  string $style Appending styles
+	 */
+	public function build_input($id, $style = false, $disabled = false, $readonly = false, $id_attr = null, $val = null)
+	{
+		if ( $val === null ){
+			global $_options;
+			$val = $_options[$id];
+		}
+		$disabled = $disabled ? ' disabled ' : '';
+		$readonly = $readonly ? ' readonly ' : '';
+		if ( $id_attr !== null ){
+			$id_attr = " id='$id_attr' ";
+		}
+
+		echo "<input type='text' class='regular-text $style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea($val) ."' $disabled $readonly $id_attr /> ";
+	}
+
+	/**
+	 * Build a switch div html snippet
+	 *
+	 * @since 1.1.0
+	 * @param  string $id
+	 */
+	public function build_switch($id, $disabled = false)
+	{
+		echo '<div class="litespeed-row">
+				<div class="litespeed-switch litespeed-label-info">';
+		$this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, null, $disabled);
+		$this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, null, $disabled);
+		echo '</div>
+			</div>';
+	}
+
+	/**
+	 * Build a checkbox html snippet
+	 *
+	 * @since 1.1.0
+	 * @param  string $id
+	 * @param  string $title
+	 * @param  bool $checked
+	 */
+	public function build_checkbox($id, $title, $checked, $is_mini = false)
+	{
+		$checked = $checked ? ' checked ' : '';
+		$is_mini = $is_mini ? ' litespeed-mini ' : '';
+
+		echo "<div class='litespeed-radio $is_mini'>
+				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$id' value='1' $checked />
+				<label for='conf_$id'>$title</label>
+			</div>";
+	}
+
+	/**
+	 * Build a radio input html codes and output
+	 *
+	 * @since 1.1.0
+	 * @param  string $id
+	 * @param  string $val     Default value of this input
+	 * @param  string $txt     Title of this input
+	 * @param  bool $checked   If checked or not
+	 */
+	public function build_radio($id, $val, $txt = null, $checked = null, $disabled = false)
+	{
+		if ( $checked === null ){
+			global $_options;
+			$to_be_checked = is_int($val) ? (int)$_options[$id] : $_options[$id];
+
+			$checked = $to_be_checked === $val ? true : false;
+		}
+
+		$id_attr = is_int($val) ? "conf_{$id}_$val" : md5($val);
+
+		if ( $txt === null ){
+			if ( $val === LiteSpeed_Cache_Config::VAL_ON ){
+				$txt = __('Enable', 'litespeed-cache');
+			}
+
+			if ( $val === LiteSpeed_Cache_Config::VAL_OFF ){
+				$txt = __('Disable', 'litespeed-cache');
+			}
+		}
+
+		$checked = $checked ? ' checked ' : '';
+		$disabled = $disabled ? ' disabled ' : '';
+
+		echo "<input type='radio' "
+			. " name='". LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' "
+			. " id='$id_attr' "
+			. " value='$val' "
+			. " $checked "
+			. " $disabled "
+			. " />"
+			. " <label for='$id_attr'>$txt</label>";
+	}
+
 }

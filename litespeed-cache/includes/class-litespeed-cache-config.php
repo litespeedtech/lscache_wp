@@ -13,8 +13,8 @@
 class LiteSpeed_Cache_Config extends LiteSpeed{
 
 	const OPTION_NAME = 'litespeed-cache-conf' ;
-	const VAL_DISABLED = 0;
-	const VAL_ENABLED = 1;
+	const VAL_OFF = 0;
+	const VAL_ON = 1;
 	const VAL_NOTSET = 2;
 
 	const LOG_LEVEL_NONE = 0 ;

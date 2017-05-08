@@ -9,8 +9,11 @@ $questions = sprintf(__('If there are any questions that are not answered in the
 			'href="' . get_admin_url() . 'admin.php?page=lscache-info"',
 			'href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank"');
 // Change the footer text
-if (!is_multisite() || is_network_admin()){
+if ( !is_multisite()
+	|| is_network_admin())
+{
 	$footer_text = $rate_us . ' ' . $questions;
-}else{
+}
+else{
 	$footer_text = $questions;
 }

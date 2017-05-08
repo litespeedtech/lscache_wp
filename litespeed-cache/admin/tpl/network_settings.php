@@ -7,6 +7,7 @@ $menuArr = array(
 	'advanced' => __('Advanced', 'litespeed-cache'),
 );
 
+global $_options;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 
 ?>

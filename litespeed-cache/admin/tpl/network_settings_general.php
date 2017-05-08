@@ -15,16 +15,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Network Enable Cache', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED; ?>
-			<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_enable" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id; ?>_enable"><?php echo __('Enable', 'litespeed-cache'); ?></label>
-
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_disable" value="0" <?php if(!$_options[$id]) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id; ?>_disable"><?php echo __('Disable', 'litespeed-cache'); ?></label>
-				</div>
-			</div>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Enabling LiteSpeed Cache for WordPress here enables the cache for the network.', 'litespeed-cache'); ?><br />
 				<?php echo __('It is <b>STRONGLY</b> recommend that the compatibility with other plugins on a single/few sites is tested first.', 'litespeed-cache'); ?>
@@ -36,16 +27,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Use Primary Site Configurations', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY; ?>
-			<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_enable" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id; ?>_enable"><?php echo __('Enable', 'litespeed-cache'); ?></label>
-
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_disable" value="0" <?php if(!$_options[$id]) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id?>_disable"><?php echo __('Disable', 'litespeed-cache'); ?></label>
-				</div>
-			</div>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY); ?>
 			<div class="litespeed-desc">
 				<?php echo __("Check this option to use the primary site's configurations for all subsites.", 'litespeed-cache'); ?>
 				<?php echo __('This will disable the settings page on all subsites.', 'litespeed-cache'); ?>

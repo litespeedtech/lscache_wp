@@ -28,9 +28,7 @@ if (!defined('WPINC')) die;
 		<?php echo __('To do an exact match, add \'$\' to the end of the URL. One URL per line.', 'litespeed-cache'); ?>
 	</i>
 </div>
-<?php $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI; ?>
-<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" rows="10" cols="80"><?php echo esc_textarea($_options[$id]); ?></textarea>
-
+<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI); ?>
 
 <!-- Category List -->
 <h3 class="litespeed-title"><?php echo __('Category List', 'litespeed-cache'); ?></h3>
@@ -51,17 +49,16 @@ if (!defined('WPINC')) die;
 		<?php echo __('SYNTAX: One category id per line.', 'litespeed-cache'); ?>
 	</i>
 </div>
-<?php $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT; ?>
 <?php
+	$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
 	$excludes_buf = '';
 	$cat_ids = $_options[$id];
 	if ($cat_ids != '') {
 		$id_list = explode(',', $cat_ids);
 		$excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
 	}
+	$this->build_textarea($id, $excludes_buf);
 ?>
-<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" rows="5" cols="80"><?php echo esc_textarea($excludes_buf); ?></textarea>
-
 
 <!-- Tag List -->
 <h3 class="litespeed-title"><?php echo __('Tag List', 'litespeed-cache'); ?></h3>
@@ -82,8 +79,8 @@ if (!defined('WPINC')) die;
 		<?php echo __('SYNTAX: One tag id per line.', 'litespeed-cache'); ?>
 	</i>
 </div>
-<?php $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG; ?>
 <?php
+	$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
 	$excludes_buf = '';
 	$ids = $_options[$id];
 	if ($ids != '') {
@@ -97,15 +94,14 @@ if (!defined('WPINC')) die;
 			$excludes_buf = implode("\n", $tag_names);
 		}
 	}
+	$this->build_textarea($id, $excludes_buf);
 ?>
-<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" rows="5" cols="80"><?php echo esc_textarea($excludes_buf); ?></textarea>
 
 <?php
 if (is_multisite()) {
 	return;
 }
 ?>
-
 
 <!-- Cookie List -->
 <?php require LSWCP_DIR . 'admin/tpl/settings_inc.exclude_cookies.php'; ?>

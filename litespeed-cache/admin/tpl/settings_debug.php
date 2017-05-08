@@ -9,12 +9,11 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Admin IPs', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS; ?>
-			<input type="text" class="regular-text" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" value="<?php echo esc_textarea($_options[$id]); ?>" />
+			<?php $this->build_input(LiteSpeed_Cache_Config::OPID_ADMIN_IPS); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Allows listed IPs (space or comma separated) to perform certain actions from their browsers.', 'litespeed-cache'); ?><br />
 				<?php echo sprintf(__('More information about the available commands can be found <a href="%s">here</a>.', 'litespeed-cache'),
-					get_admin_url() . 'admin.php?page=lscache-info&tab=adminip'); ?>
+					get_admin_url() . 'admin.php?page=lscache-info#admin_ip'); ?>
 			</div>
 		</td>
 	</tr>
@@ -22,20 +21,25 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Debug Log', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_DEBUG; ?>
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
-					<?php $val = 0; ?>
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_disable" value="<?php echo $val; ?>" <?php if( $_options[$id]==$val ) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id; ?>_disable"><?php echo __('Off', 'litespeed-cache'); ?></label>
+					<?php $this->build_radio(
+						LiteSpeed_Cache_Config::OPID_DEBUG, 
+						LiteSpeed_Cache_Config::VAL_OFF,
+						__('Off', 'litespeed-cache')
+					); ?>
 
-					<?php $val = 1; ?>
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_enable" value="<?php echo $val; ?>" <?php if( $_options[$id]==$val ) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id; ?>_enable"><?php echo __('On', 'litespeed-cache'); ?></label>
+					<?php $this->build_radio(
+						LiteSpeed_Cache_Config::OPID_DEBUG, 
+						LiteSpeed_Cache_Config::VAL_ON,
+						__('On', 'litespeed-cache')
+					); ?>
 
-					<?php $val = 2; ?>
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_admin" value="<?php echo $val; ?>" <?php if( $_options[$id]==$val ) echo 'checked'; ?> />
-					<label for="conf_<?php echo $id; ?>_admin"><?php echo __('Admin IP only', 'litespeed-cache'); ?></label>
+					<?php $this->build_radio(
+						LiteSpeed_Cache_Config::OPID_DEBUG, 
+						LiteSpeed_Cache_Config::VAL_NOTSET,
+						__('Admin IP only', 'litespeed-cache')
+					); ?>
 				</div>
 			</div>
 			<div class="litespeed-desc">

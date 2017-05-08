@@ -22,6 +22,7 @@ if (LiteSpeed_Cache_Admin_Display::get_instance()->show_compatibility_tab()){
 
 $menuArr['crawler'] = __('Crawler', 'litespeed-cache');
 
+global $_options;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 
 ?>

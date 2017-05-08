@@ -90,12 +90,12 @@ class LiteSpeed_Cache extends LiteSpeed{
 			$should_debug = intval($this->config->get_option(LiteSpeed_Cache_Config::OPID_DEBUG));
 			switch ($should_debug) {
 				// NOTSET is used as check admin IP here.
-				case 2:
+				case LiteSpeed_Cache_Config::VAL_NOTSET:
 					if (!LiteSpeed_Cache_Router::is_admin_ip()) {
 						break;
 					}
 					// fall through
-				case 1:
+				case LiteSpeed_Cache_Config::VAL_ON:
 					LiteSpeed_Cache_Log::set_enabled();
 					break;
 				default:

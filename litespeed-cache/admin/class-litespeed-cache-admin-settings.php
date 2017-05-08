@@ -103,7 +103,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 					$enabled =  $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
 				}
 				else{
-					$enabled = LiteSpeed_Cache_Config::VAL_ENABLED;
+					$enabled = LiteSpeed_Cache_Config::VAL_ON;
 				}
 			}
 		}
@@ -667,15 +667,15 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	public static function is_checked($val, $check_notset = false){
 		$val = intval($val);
 
-		if($val === LiteSpeed_Cache_Config::VAL_ENABLED){
-			return LiteSpeed_Cache_Config::VAL_ENABLED;
+		if($val === LiteSpeed_Cache_Config::VAL_ON){
+			return LiteSpeed_Cache_Config::VAL_ON;
 		}
 
 		if($check_notset && $val === LiteSpeed_Cache_Config::VAL_NOTSET){
 			return LiteSpeed_Cache_Config::VAL_NOTSET;
 		}
 
-		return LiteSpeed_Cache_Config::VAL_DISABLED;
+		return LiteSpeed_Cache_Config::VAL_OFF;
 	}
 
 }

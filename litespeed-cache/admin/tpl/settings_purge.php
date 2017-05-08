@@ -46,17 +46,15 @@ $breakArr = array(
 ?>
 
 <div class="litespeed-row litespeed-top20">
-<?php foreach ($optionArr as $id => $title): ?>
+<?php
+	foreach ($optionArr as $id => $title){
 
-	<div class="litespeed-radio">
-		<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[purge_<?php echo $id; ?>]" id="conf_purge_<?php echo $id; ?>" value="1" <?php echo in_array($id, $purge_options)?'checked':''; ?> />
-		<label for="conf_purge_<?php echo $id; ?>"><?php echo $title; ?></label>
-	</div>
+		$this->build_checkbox("purge_$id", $title, in_array($id, $purge_options));
 
-	<?php if(in_array($id, $breakArr)): ?>
-		</div><div class="litespeed-row litespeed-top20">
-	<?php endif; ?>
-
-<?php endforeach; ?>
+		if ( in_array($id, $breakArr) ){
+			echo '</div><div class="litespeed-row litespeed-top20">';
+		}
+	}
+?>
 </div>
 

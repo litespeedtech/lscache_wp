@@ -45,19 +45,9 @@ LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 						<?php $this->form_action(LiteSpeed_Cache::ACTION_PURGE_ERRORS); ?>
 
 						<div class="litespeed-row">
-							<div class="litespeed-radio litespeed-mini">
-								<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[include_403]" id="include_403" value="1" checked />
-								<label for="include_403"><?php echo __('Include 403', 'litespeed-cache'); ?></label>
-							</div>
-							
-							<div class="litespeed-radio litespeed-mini">
-								<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[include_404]" id="include_404" value="1" />
-								<label for="include_404"><?php echo __('Include 404', 'litespeed-cache'); ?></label>
-							</div>
-							<div class="litespeed-radio litespeed-mini">
-								<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[include_500]" id="include_500" value="1" checked />
-								<label for="include_500"><?php echo __('Include 500s', 'litespeed-cache'); ?></label>
-							</div>
+							<?php $this->build_checkbox('include_403', __('Include 403', 'litespeed-cache'), 'checked', 'is_mini'); ?>
+							<?php $this->build_checkbox('include_404', __('Include 404', 'litespeed-cache'), false, 'is_mini'); ?>
+							<?php $this->build_checkbox('include_500', __('Include 500s', 'litespeed-cache'), 'checked', 'is_mini'); ?>
 						</div>
 
 						<div class="litespeed-row">
