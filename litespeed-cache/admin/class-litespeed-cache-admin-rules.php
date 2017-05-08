@@ -313,7 +313,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		}
 
 		//failed to backup, not good.
-		if ($backup && $this->htaccess_backup($path) === false) {
+		if ($backup && $this->htaccess_backup($kind) === false) {
 			 LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
 			 return false;
 		}
@@ -330,10 +330,11 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 *
 	 * @since 1.0.10
 	 * @access private
-	 * @param String $path The .htaccess file path.
+	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
 	 * @return boolean True on success, else false on failure.
 	 */
-	private function htaccess_backup($path){
+	private function htaccess_backup($kind = 'frontend'){
+		$path = $this->htaccess_path($kind);
 		$bak = '_lscachebak_orig';
 		$i = 1;
 
@@ -476,7 +477,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param array $errors Errors array to add error messages to.
 	 * @return mixed False if there is an error, diff array otherwise.
 	 */
-	public function check_input($options, $input, &$errors){
+	public function check_input_for_rewrite($options, $input, &$errors){
 		$diff = array();
 		$val_check = array(
 			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
@@ -486,7 +487,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$has_error = false;
 
 		foreach ($val_check as $opt) {
-			$input[$opt] = isset($input[$opt]) ? $input[$opt]%2 : 0;
+			$input[$opt] = LiteSpeed_Cache_Admin_Settings::is_checked($input[$opt]);
 			if ( $input[$opt] || $options[$opt] != $input[$opt] ) {
 				$diff[$opt] = $input[$opt];
 			}
@@ -595,6 +596,13 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		if (!self::readable() || !self::writable()) {
 			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
 			return false;
+		}
+
+		if ($this->frontend_htaccess !== $this->backend_htaccess) {
+			if (!self::readable('backend') || !self::writable('backend')) {
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
+				return false;
+			}
 		}
 
 		$rules = extract_from_markers($this->frontend_htaccess, self::MARKER);
@@ -709,6 +717,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param  string $kind  which htaccess
 	 */
 	public function insert_wrapper($rules = array(), $kind = 'frontend'){
+		$this->htaccess_backup($kind);
+
 		$rules = array_merge(
 			array(self::LS_MODULE_DONOTEDIT),
 			array(''),

@@ -94,15 +94,16 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		if(!isset($input[$id])){
 			$enabled = 0;
 		}else{
-			$options[$id] = intval($input[$id])%3;
-			if($options[$id] != 2){
+			$options[$id] = self::is_checked($input[$id], true);
+
+			if($options[$id] !== LiteSpeed_Cache_Config::VAL_NOTSET){
 				$enabled = $options[$id];
 			}else{
 				if (is_multisite()) {
 					$enabled =  $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED];
 				}
 				else{
-					$enabled = 1;
+					$enabled = LiteSpeed_Cache_Config::VAL_ENABLED;
 				}
 			}
 		}
@@ -188,13 +189,13 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 		if(!$options[$id]){
 			LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_LOGIN);
 		}
@@ -316,17 +317,17 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
 		if ($input[$id] !== 'changed') {
-			$diff = $rules->check_input($options, $input, $errors);
+			$diff = $rules->check_input_for_rewrite($options, $input, $errors);
 		}
 		elseif ($options[$id]) {
 			$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
-			$added_and_changed = $rules->check_input($reset, $input, $errors);
+			$added_and_changed = $rules->check_input_for_rewrite($reset, $input, $errors);
 			// Merge to include the newly disabled options
 			$diff = array_merge($reset, $added_and_changed);
 		}
 		else {
 			$rules->clear_rules();
-			$diff = $rules->check_input($options, $input, $errors);
+			$diff = $rules->check_input_for_rewrite($options, $input, $errors);
 		}
 
 		if (!empty($diff)
@@ -341,7 +342,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 	}
 
 	/**
@@ -401,8 +402,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG;
-		$debug_level = isset($input[$id]) ? intval($input[$id])%3 : 0;
-		if ($debug_level != $options[$id]){
+		$debug_level = self::is_checked($input[$id]);
+		if ( $debug_level != $options[$id] ){
 			$options[$id] = $debug_level;
 		}
 	}
@@ -420,16 +421,16 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		$ttl_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TTL);
 
 		$id = LiteSpeed_Cache_Config::CRWL_POSTS;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_PAGES;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_CATS;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_TAGS;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT;
 		if (isset($input[$id])) {
@@ -593,7 +594,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		$errors = array();
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED;
-		$network_enabled = isset($input[$id]) ? $input[$id]%2 : 0;
+		$network_enabled = self::is_checked($input[$id]);
 		if ($options[$id] != $network_enabled) {
 			$options[$id] = $network_enabled;
 			if ($network_enabled) {
@@ -611,16 +612,16 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY;
 		$orig_primary = $options[$id];
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 		if ($orig_primary != $options[$id]) {
 			LiteSpeed_Cache::get_instance()->purge_all();
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
-		$options[$id] = isset($input[$id]) ? $input[$id]%2 : 0;
+		$options[$id] = self::is_checked($input[$id]);
 
 		$out = $this->validate_tag_prefix($input, $options);
 		if (is_string($out)) {
@@ -630,16 +631,16 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
 
 		if ($input[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] !== 'changed') {
-			$diff = $rules->check_input($options, $input, $errors);
+			$diff = $rules->check_input_for_rewrite($options, $input, $errors);
 		}
 		elseif ($network_enabled) {
-			$added_and_changed = $rules->check_input($reset, $input, $errors);
+			$added_and_changed = $rules->check_input_for_rewrite($reset, $input, $errors);
 			// Merge to include the newly disabled options
 			$diff = array_merge($reset, $added_and_changed);
 		}
 		else {
 			$rules->validate_common_rewrites($reset, $errors);
-			$diff = $rules->check_input($options, $input, $errors);
+			$diff = $rules->check_input_for_rewrite($options, $input, $errors);
 		}
 
 		if (!empty($diff) && ($network_enabled === false || $rules->validate_common_rewrites($diff, $errors) !== false)
@@ -653,6 +654,28 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		}
 		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __('File saved.', 'litespeed-cache'));
 		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
+	}
+
+	/**
+	 * Filter the value for checkbox (enabled/disabled/notset)
+	 *
+	 * @since  1.1.0
+	 * @param int $val The checkbox value
+	 * @param bool $check_notset If need to check notset
+	 * @return int Filtered value
+	 */
+	public static function is_checked($val, $check_notset = false){
+		$val = intval($val);
+
+		if($val === LiteSpeed_Cache_Config::VAL_ENABLED){
+			return LiteSpeed_Cache_Config::VAL_ENABLED;
+		}
+
+		if($check_notset && $val === LiteSpeed_Cache_Config::VAL_NOTSET){
+			return LiteSpeed_Cache_Config::VAL_NOTSET;
+		}
+
+		return LiteSpeed_Cache_Config::VAL_DISABLED;
 	}
 
 }

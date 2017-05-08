@@ -13,6 +13,10 @@
 class LiteSpeed_Cache_Config extends LiteSpeed{
 
 	const OPTION_NAME = 'litespeed-cache-conf' ;
+	const VAL_DISABLED = 0;
+	const VAL_ENABLED = 1;
+	const VAL_NOTSET = 2;
+
 	const LOG_LEVEL_NONE = 0 ;
 	const LOG_LEVEL_ERROR = 1 ;
 	const LOG_LEVEL_NOTICE = 2 ;
@@ -656,7 +660,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 			$options['lscwp_' . self::OPID_MOBILEVIEW_ENABLED] = self::OPID_MOBILEVIEW_ENABLED;
 		}
 
-		$diff = $rules->check_input($default, $options, $errors);
+		$diff = $rules->check_input_for_rewrite($default, $options, $errors);
 
         if (!empty($diff)) {
             $rules->validate_common_rewrites($diff, $errors);
