@@ -32,7 +32,7 @@ $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 
 			<h3><?php echo sprintf(__('Current %s contents:', 'litespeed-cache'), '.htaccess'); ?></h3>
 
-			<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '###LSCACHE START/END XXXXXX###'); ?></span></p>
+			<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), LiteSpeed_Cache_Admin_Rules::LS_MODULE_DONOTEDIT); ?></span></p>
 
 			<p><?php echo __('These are added by the LS Cache plugin and may cause problems if they are changed.', 'litespeed-cache'); ?></p>
 

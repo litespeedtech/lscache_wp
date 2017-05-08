@@ -181,6 +181,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * @since 1.1.0
 	 */
 	public function proceed_action(){
+		$msg = false;
 		// handle actions
 		switch (LiteSpeed_Cache_Router::get_action()) {
 			case LiteSpeed_Cache::ACTION_PURGE:
@@ -229,12 +230,18 @@ class LiteSpeed_Cache extends LiteSpeed{
 
 			case LiteSpeed_Cache::ACTION_DISMISS:
 				delete_transient(LiteSpeed_Cache::WHM_TRANSIENT);
-				LiteSpeed_Cache::get_instance()->admin_ctrl_redirect();
+				LiteSpeed_Cache_Admin::redirect();
 				return;
 
 			default:
 				break;
 		}
+		if($msg) {
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
+			LiteSpeed_Cache_Admin::redirect();
+			return;
+		}
+
 	}
 
 	/**
@@ -1000,7 +1007,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	}
 
 	/**
-	 * Purges a post on update.
+	 * Purge a post on update.
 	 *
 	 * This function will get the relevant purge tags to add to the response
 	 * as well.
@@ -1469,38 +1476,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 		return;
 	}
 
-	/**
-	 * After a LSCWP_CTRL action, need to redirect back to the same page
-	 * without the nonce and action in the query string.
-	 *
-	 * @since 1.0.12
-	 * @access public
-	 * @global string $pagenow
-	 */
-	public function admin_ctrl_redirect(){
-		global $pagenow;
-		$qs = '';
-
-		if (!empty($_GET)) {
-			if (isset($_GET[LiteSpeed_Cache::ACTION_KEY])) {
-				unset($_GET[LiteSpeed_Cache::ACTION_KEY]);
-			}
-			if (isset($_GET[LiteSpeed_Cache::NONCE_NAME])) {
-				unset($_GET[LiteSpeed_Cache::NONCE_NAME]);
-			}
-			if (!empty($_GET)) {
-				$qs = '?' . http_build_query($_GET);
-			}
-		}
-		if (is_network_admin()) {
-			$url = network_admin_url($pagenow . $qs);
-		}
-		else {
-			$url = admin_url($pagenow . $qs);
-		}
-		wp_redirect($url);
-		exit();
-	}
 
 	/**
 	 * Gathers all the purge headers.
