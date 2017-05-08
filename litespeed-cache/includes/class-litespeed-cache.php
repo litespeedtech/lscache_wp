@@ -191,6 +191,47 @@ class LiteSpeed_Cache extends LiteSpeed{
 				$this->cachectrl = LiteSpeed_Cache::CACHECTRL_PURGESINGLE;
 				break;
 
+			// Handle the ajax request to proceed crawler manually by admin
+			case LiteSpeed_Cache::ACTION_DO_CRAWL:
+				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
+				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
+				break;
+
+			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
+				LiteSpeed_Cache::get_instance()->purge_front();
+				$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
+				break;
+
+			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
+				LiteSpeed_Cache::get_instance()->purge_pages();
+				$msg = __('Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache');
+				break;
+
+			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
+				LiteSpeed_Cache::get_instance()->purge_errors();
+				$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
+				break;
+
+			case LiteSpeed_Cache::ACTION_PURGE_ALL://todo: for cli, move this to ls->proceed_action()
+				LiteSpeed_Cache::get_instance()->purge_all();
+				$msg = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache');
+				break;
+
+			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
+				LiteSpeed_Cache::get_instance()->purge_all();
+				$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache');
+				break;
+
+			case LiteSpeed_Cache::ACTION_PURGE_BY:
+				LiteSpeed_Cache::get_instance()->purge_list();
+				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
+				break;
+
+			case LiteSpeed_Cache::ACTION_DISMISS:
+				delete_transient(LiteSpeed_Cache::WHM_TRANSIENT);
+				LiteSpeed_Cache::get_instance()->admin_ctrl_redirect();
+				return;
+
 			default:
 				break;
 		}

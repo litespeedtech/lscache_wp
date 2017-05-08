@@ -18,10 +18,10 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED; ?>
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>_enable" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
+					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_enable" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
 					<label for="conf_<?php echo $id; ?>_enable"><?php echo __('Enable', 'litespeed-cache'); ?></label>
 
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>_disable" value="0" <?php if(!$_options[$id]) echo 'checked'; ?> />
+					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_disable" value="0" <?php if(!$_options[$id]) echo 'checked'; ?> />
 					<label for="conf_<?php echo $id; ?>_disable"><?php echo __('Disable', 'litespeed-cache'); ?></label>
 				</div>
 			</div>
@@ -39,10 +39,10 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY; ?>
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>_enable" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
+					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_enable" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
 					<label for="conf_<?php echo $id; ?>_enable"><?php echo __('Enable', 'litespeed-cache'); ?></label>
 
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>_disable" value="0" <?php if(!$_options[$id]) echo 'checked'; ?> />
+					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_disable" value="0" <?php if(!$_options[$id]) echo 'checked'; ?> />
 					<label for="conf_<?php echo $id?>_disable"><?php echo __('Disable', 'litespeed-cache'); ?></label>
 				</div>
 			</div>

@@ -15,7 +15,7 @@ if (!defined('WPINC')) die;
 <?php $id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE; ?>
 <div class="litespeed-row">
 	<div class="litespeed-radio">
-		<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
+		<input type="checkbox" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>" value="1" <?php if($_options[$id]) echo 'checked'; ?> />
 		<label for="conf_<?php echo $id; ?>"><?php echo __('Include advanced-cache.php', 'litespeed-cache'); ?></label>
 	</div>
 </div>
@@ -80,7 +80,7 @@ if (!defined('WPINC')) die;
 
 
 <?php $file_writable = LiteSpeed_Cache_Admin_Rules::writable(); ?>
-<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" value="<?php echo esc_textarea($_options[$id]); ?>" <?php if(!$file_writable) echo 'disabled'; ?> />
+<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" value="<?php echo esc_textarea($_options[$id]); ?>" <?php if(!$file_writable) echo 'disabled'; ?> />
 
 
 <h3 class="litespeed-title"><?php echo __('Cache Tag Prefix', 'litespeed-cache'); ?></h3>
@@ -91,4 +91,4 @@ if (!defined('WPINC')) die;
 
 <?php echo __('This can be used to prevent issues when using multiple LiteSpeed caching extensions on the same server.', 'litespeed-cache'); ?>
 
-<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" value="<?php echo esc_textarea($_options[$id]); ?>" />
+<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" value="<?php echo esc_textarea($_options[$id]); ?>" />

@@ -29,7 +29,7 @@ if (!defined('WPINC')) die;
 	</i>
 </div>
 <?php $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI; ?>
-<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" rows="10" cols="80"><?php echo esc_textarea($_options[$id]); ?></textarea>
+<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" rows="10" cols="80"><?php echo esc_textarea($_options[$id]); ?></textarea>
 
 
 <!-- Category List -->
@@ -60,7 +60,7 @@ if (!defined('WPINC')) die;
 		$excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
 	}
 ?>
-<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" rows="5" cols="80"><?php echo esc_textarea($excludes_buf); ?></textarea>
+<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" rows="5" cols="80"><?php echo esc_textarea($excludes_buf); ?></textarea>
 
 
 <!-- Tag List -->
@@ -98,7 +98,7 @@ if (!defined('WPINC')) die;
 		}
 	}
 ?>
-<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" rows="5" cols="80"><?php echo esc_textarea($excludes_buf); ?></textarea>
+<textarea name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" rows="5" cols="80"><?php echo esc_textarea($excludes_buf); ?></textarea>
 
 <?php
 if (is_multisite()) {

@@ -20,4 +20,4 @@ if (!defined('WPINC')) die;
 	</i>
 </div>
 <?php $id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS; ?>
-<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" value="<?php echo esc_textarea($_options[$id]); ?>" <?php if( !$file_writable ) echo 'disabled'; ?> />
+<input type="text" class="regular-text litespeed-input-long" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" value="<?php echo esc_textarea($_options[$id]); ?>" <?php if( !$file_writable ) echo 'disabled'; ?> />

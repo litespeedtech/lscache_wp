@@ -30,8 +30,8 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	<div class="litespeed-cache-welcome-panel">
 		<form method="post" action="options.php" id="ls_form_options">
 			<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK?>" />
-todo: settings_fields(LiteSpeed_Cache_Config::OPTION_NAME); or wp_nonce_field();
 	<?php
+			settings_fields(LiteSpeed_Cache_Config::OPTION_NAME);
 
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {

@@ -11,10 +11,10 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED; ?>
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>_enable" value="1" <?php echo $_options[$id]?'checked':''; ?> <?php echo $file_writable?'':'disabled'; ?> />
+					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_enable" value="1" <?php echo $_options[$id]?'checked':''; ?> <?php echo $file_writable?'':'disabled'; ?> />
 					<label for="conf_<?php echo $id; ?>_enable"><?php echo __('Enable', 'litespeed-cache'); ?></label>
 
-					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" id="conf_<?php echo $id; ?>_disable" value="0" <?php echo $_options[$id]?'':'checked'; ?> <?php echo $file_writable?'':'disabled'; ?> />
+					<input type="radio" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" id="conf_<?php echo $id; ?>_disable" value="0" <?php echo $_options[$id]?'':'checked'; ?> <?php echo $file_writable?'':'disabled'; ?> />
 					<label for="conf_<?php echo $id; ?>_disable"><?php echo __('Disable', 'litespeed-cache'); ?></label>
 				</div>
 			</div>
@@ -61,7 +61,7 @@ if (!defined('WPINC')) die;
 
 				<?php endif; ?>
 
-			<input type="text" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>]" 
+			<input type="text" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME . '[' . $id . ']'; ?>" 
 				id="litespeed-mobileview-rules" 
 				value="<?php echo esc_textarea($input_value); ?>" 
 				<?php if(!$_options[$id]) echo 'readonly'; ?> 
