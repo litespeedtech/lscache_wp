@@ -40,11 +40,16 @@
 
  */
 // If this file is called directly, abort.
-if ( ! defined('WPINC') ) {
+if ( ! defined('WPINC') )
+{
 	die ;
 }
 
-if(class_exists('LiteSpeed_Cache') || defined('LSWCP_DIR')) return;
+if ( class_exists('LiteSpeed_Cache')
+	|| defined('LSWCP_DIR') )
+{
+	return;
+}
 
 define('LSWCP_CONTENT_DIR', dirname(get_theme_root()));
 define('LSWCP_DIR', plugin_dir_path(__FILE__));// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
@@ -56,22 +61,27 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 // Auto register LiteSpeed classes
 require_once LSWCP_DIR . 'includes/litespeed.autoload.php';
 
-if ( defined( 'WP_CLI' ) && WP_CLI ) {// todo: where used this
+if ( defined( 'WP_CLI' ) && WP_CLI )
+{// todo: where used this
 	WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' );
 	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );
 }
 
-if ( !function_exists('is_openlitespeed') ) {
-	function is_openlitespeed(){
-		return ((isset($_SERVER['LSWS_EDITION']))
-				&& (strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0));
+if ( ! function_exists('is_openlitespeed') )
+{
+	function is_openlitespeed()
+	{
+		return isset($_SERVER['LSWS_EDITION'])
+			&& strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0;
 	}
 }
 
-if ( !function_exists('is_webadc') ) {
-	function is_webadc(){
-		return ((isset($_SERVER['HTTP_X_LSCACHE']))
-			&& ($_SERVER['HTTP_X_LSCACHE']));
+if ( ! function_exists('is_webadc') )
+{
+	function is_webadc()
+	{
+		return isset($_SERVER['HTTP_X_LSCACHE'])
+			&& $_SERVER['HTTP_X_LSCACHE'];
 	}
 }
 
@@ -84,12 +94,15 @@ if ( !function_exists('is_webadc') ) {
  *
  * @since    1.0.0
  */
-if ( !function_exists('run_litespeed_cache') ) {
-	function run_litespeed_cache(){
+if ( ! function_exists('run_litespeed_cache') )
+{
+	function run_litespeed_cache()
+	{
 		$version_supported = true ;
 
 		//Check minimum PHP requirements, which is 5.3 at the moment.
-		if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
+		if ( version_compare(PHP_VERSION, '5.3.0', '<') )
+		{
 			LiteSpeed_Cache_Admin_Error::add_error(
 				LiteSpeed_Cache_Admin_Error::E_PHP_VER
 			);
@@ -97,19 +110,22 @@ if ( !function_exists('run_litespeed_cache') ) {
 		}
 
 		//Check minimum WP requirements, which is 4.0 at the moment.
-		if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
+		if ( version_compare($GLOBALS['wp_version'], '4.0', '<') )
+		{
 			LiteSpeed_Cache_Admin_Error::add_error(
-				LiteSpeed_Cache_Admin_Error::E_WP_VER
-			);
+				LiteSpeed_Cache_Admin_Error::E_WP_VER);
 			$version_supported = false ;
 		}
 
-		if ( $version_supported ) {
+		if ( $version_supported )
+		{
 			LiteSpeed_Cache::get_instance() ;
 		}
-		else {
+		else
+		{
 			return false ;
 		}
+
 		return true;
 	}
 

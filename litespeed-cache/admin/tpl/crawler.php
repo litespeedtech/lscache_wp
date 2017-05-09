@@ -11,7 +11,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache'); ?></h3>
-		<a href="<?php echo LiteSpeed_Cache_Admin::build_lscwpctrl_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE); ?>" class="litespeed-btn litespeed-btn-success">
+		<a href="<?php echo LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE); ?>" class="litespeed-btn litespeed-btn-success">
 			<?php echo __('Generate Crawler File', 'litespeed-cache'); ?>
 		</a>
 		<div class="litespeed-desc">
@@ -19,8 +19,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		</div>
 
 <?php
-	$id = LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL;
-	$seconds = $_options[$id];
+	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL];
 	if($seconds > 0):
 		$hours = floor($seconds / 3600);
 		$act = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE;

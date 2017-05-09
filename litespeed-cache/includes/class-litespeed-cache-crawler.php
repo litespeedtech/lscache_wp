@@ -6,115 +6,125 @@
  *
  * @since      1.1.0
  * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/admin
+ * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
+class LiteSpeed_Cache_Crawler extends LiteSpeed
+{
+	private $sitemap_path;
+	private $sitemap_file;
+	private $site_url;
 
 	/**
-	 * Initialize the class and set its properties.
+	 * Initialize crawler, assign sitemap path
 	 *
 	 * @since    1.1.0
 	 */
-	protected function __construct(){
-	}
-
-
-
-	/**
-	 * Saves Crawler settings.
-	 *
-	 * @since 1.1.0
-	 * @access private
-	 * @param array $input The input options.
-	 * @param array $options The current options.
-	 * @param array $errors The errors list.
-	 */
-	private function save_crawler_settings(&$input, &$options, &$errors){
-		$id = LiteSpeed_Cache_Config::CRWL_ORDER_LINKS;
-		$options[$id] = $input[$id];
-
-		$id = LiteSpeed_Cache_Config::CRWL_CPT;
-		$options[$id] = $input[$id];
-
-		$id = LiteSpeed_Cache_Config::CRWL_USLEEP;
-		if ((!$this->validate_cron_settings($input, $id))) {
-			$errors[] = __('Delay must be an integer between 30 and 2147483647', 'litespeed-cache');
+	protected function __construct()
+	{
+		$this->sitemap_path = LSWCP_DIR . 'var';
+		if ( is_multisite() )
+		{
+			$blog_id = get_current_blog_id();
+			$this->sitemap_file = $this->sitemap_path . '/crawlermap-' . $blog_id . '.data';
+			$this->site_url = get_site_url($blog_id);
 		}
 		else{
-			$options[$id] = $input[$id];
+			$this->sitemap_file = $this->sitemap_path . '/crawlermap.data';
+			$this->site_url = get_option('siteurl');
 		}
-
-		$id = LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL;
-		if ((!$this->validate_cron_settings($input, $id))) {
-			$errors[] = __('Cron Interval must be an integer between 30 and 2147483647', 'litespeed-cache');
-		}
-		else{
-			$options[$id] = $input[$id];
-		}
-
-		$id = LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL;
-		if ((!$this->validate_cron_settings($input, $id))) {
-			$errors[] = __('Run Duration must be an integer between 30 and 2147483647', 'litespeed-cache');
-		}
-		else{
-			$options[$id] = $input[$id];
-		}
-
-		$id = LiteSpeed_Cache_Config::CRWL_THREAD;
-		if ((!$this->validate_cron_settings($input, $id, true))) {
-			$errors[] = __('Maximum number of threads should be les than 10', 'litespeed-cache');
-		}
-		else{
-			$options[$id] = $input[$id];
-		}
-
-		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST;
-		$options[$id] = $input[$id];
-
-		self::parse_checkbox(LiteSpeed_Cache_Config::CRWL_PAGES,
-			$input, $options);
-
-		self::parse_checkbox(LiteSpeed_Cache_Config::CRWL_POSTS,
-			$input, $options);
-
-		self::parse_checkbox(LiteSpeed_Cache_Config::CRWL_CATS,
-			$input, $options);
-
-		self::parse_checkbox(LiteSpeed_Cache_Config::CRWL_TAGS,
-			$input, $options);
-		
 	}
 
 	/**
-	 * Saves Cron settings.
-	 *
-	 * @since 1.1.0
-	 * @access private
-	 * @param array $input The input options.
-	 * @param array $options The current options.
+	 * generate sitemap
+	 * 
+	 * @return [type] [description]
 	 */
-	private function save_cron_settings(&$input, &$options){
-		$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE;
-		$options[$id] = $input[$id];
+	public function generate_sitemap()
+	{
+		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data();
+
+		$res = $this->save($this->sitemap_file, implode("\n", $urls));
+		if ( $res )
+		{
+			$msg = sprintf(__('File Successfully created here %s', 'litespeed-cache'), $this->sitemap_file);
+			LiteSpeed_Cache_Admin_Display::add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg
+			);
+		}
 	}
 
 	/**
-	 * Saves Cron settings.
+	 * Save data to file
 	 *
 	 * @since 1.1.0
-	 * @access private
-	 * @param array $input The input options.
-	 * @param array $options The current options.
 	 */
-	private function save_black_list_urls_settings(&$input, &$options){
-		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST;
-		$options[$id] = $input[$id];
+	private function save($filename, $data)
+	{
+		$error = false;
+		$folder = dirname($filename);
 
-		$id = LiteSpeed_Cache_Config::CRWL_TRANSIENT;
-		$options[$id] = $input[$id];
+		// check folder permission
+		if ( ! file_exists($folder) )
+		{
+			if ( ! is_writable(dirname($folder)) )
+			{
+				$error = sprintf(__('Can not create the folder %s', 'litespeed-cache'), $folder);
+			}
+			else
+			{
+				mkdir($folder, 0777, true);
+			}
+		}
+
+		// check file permission
+		if ( file_exists($filename) )
+		{
+			if ( ! is_writable($filename) )
+			{
+				$error = sprintf(__('Sitemap file %s is not writable', 'litespeed-cache'), $filename);
+			}
+		}
+		else
+		{
+			if ( ! is_writable($folder) )
+			{
+				$error = sprintf(__('Folder %s is not writable', 'litespeed-cache'), $folder);
+			}
+		}
+
+		if ( $error )
+		{
+			LiteSpeed_Cache_Admin_Display::add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				$error
+			);
+			return false;
+		}
+
+		return file_put_contents($filename, $data);
 	}
 
+	/**
+	 * Get sitemap file info
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public function info()
+	{
+		if ( ! file_exists($path) )
+		{
+			return false;
+		}
+
+		$info = array(
+			'file_time'	=> filemtime($path),
+			'list_size'	=> '',
+		);
+
+		return $info;
+	}
 
 	/**
 	 * Crawling start
@@ -207,7 +217,7 @@ class LiteSpeed_Cache_Admin_Crawler extends LiteSpeed{
 
 			echo '<li>Skipped URLs: ' . $skipped_urls . '</li>';
 			$this->update_blacklisted_urls($skipped_urls, $data);
-			$sitemap->generateData($options, $skipped);
+			$sitemap->generate_data($skipped);
 		}
 
 		echo __('<li>Page will automaticallly reload in 3 sec(s)</li>', 'litespeed-cache');

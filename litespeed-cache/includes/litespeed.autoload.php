@@ -24,10 +24,11 @@ if ( !function_exists('_litespeed_autoload') )
 			'LiteSpeed_Cache_Activation'		=> 'includes/class-litespeed-cache-activation.php',
 			'LiteSpeed_Cache_Config'			=> 'includes/class-litespeed-cache-config.php',
 			'LiteSpeed_Cache_Cookie'			=> 'includes/class-litespeed-cache-cookie.php',
+			'LiteSpeed_Cache_Crawler'			=> 'includes/class-litespeed-cache-crawler.php',
+			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'includes/class-litespeed-cache-crawler-sitemap.php',
 			'LiteSpeed_Cache_Log'				=> 'includes/class-litespeed-cache-log.php',
 			'LiteSpeed_Cache_Router'			=> 'includes/class-litespeed-cache-router.php',
 			'LiteSpeed_Cache_Tags'				=> 'includes/class-litespeed-cache-tags.php',
-			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'includes/class-litespeed-cache-sitemap.php',
 
 			'LiteSpeed_Cache_Admin'				=> 'admin/class-litespeed-cache-admin.php',
 			'LiteSpeed_Cache_Admin_Display'		=> 'admin/class-litespeed-cache-admin-display.php',
