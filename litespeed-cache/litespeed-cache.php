@@ -46,10 +46,7 @@ if ( ! defined('WPINC') ) {
 
 if(class_exists('LiteSpeed_Cache') || defined('LSWCP_DIR')) return;
 
-if( !defined('WP_CONTENT_DIR') ){
-	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-}
-
+define('LSWCP_CONTENT_DIR', dirname(get_theme_root()));
 define('LSWCP_DIR', plugin_dir_path(__FILE__));// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
 define('LSWCP_BASENAME', plugin_basename(LSWCP_DIR . 'litespeed-cache.php'));//LSWCP_BASENAME='litespeed-cache/litespeed-cache.php'
 

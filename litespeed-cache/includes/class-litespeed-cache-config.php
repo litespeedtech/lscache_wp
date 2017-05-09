@@ -622,7 +622,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 		$default = $this->get_default_options();
 		$res = add_option(self::OPTION_NAME, $default);
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push("plugin_activation update option = $res");
+			LiteSpeed_Cache_Log::push("plugin_activation update option = ".var_export($res, true));
 		}
 		if (is_multisite()) {
 			if (!is_network_admin()) {

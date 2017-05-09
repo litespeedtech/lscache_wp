@@ -16,7 +16,7 @@ class LiteSpeed_Cache_Log extends LiteSpeed{
 	private static $enabled = false;
 
 	protected function __construct(){
-		self::$log_path = WP_CONTENT_DIR . '/debug.log';
+		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log';
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG', 'LSCACHE_WP_blogid_' . get_current_blog_id());
 		}

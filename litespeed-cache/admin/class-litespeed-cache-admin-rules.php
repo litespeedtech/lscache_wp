@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @access private
 	 */
 	private function path_set(){
-		$this->theme_htaccess = WP_CONTENT_DIR;
+		$this->theme_htaccess = LSWCP_CONTENT_DIR;
 
 		$install = ABSPATH;
 		$access = get_home_path();
@@ -316,6 +316,13 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		if ($backup && $this->htaccess_backup($kind) === false) {
 			 LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
 			 return false;
+		}
+
+		// File put contents will truncate by default. Will create file if doesn't exist.
+		$ret = file_put_contents($path, $content, LOCK_EX);
+		if ($ret === false) {
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_SAVE);
+			return false;
 		}
 
 		return true;

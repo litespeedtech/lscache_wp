@@ -207,7 +207,7 @@ class LiteSpeed_Cache_Activation extends LiteSpeed
 			}
 		}
 
-		$adv_cache_path = WP_CONTENT_DIR . '/advanced-cache.php';
+		$adv_cache_path = LSWCP_CONTENT_DIR . '/advanced-cache.php';
 		if ( file_exists($adv_cache_path)
 			&& is_writable($adv_cache_path) )
 		{
@@ -236,7 +236,7 @@ class LiteSpeed_Cache_Activation extends LiteSpeed
 	 */
 	public function try_copy_advanced_cache()
 	{
-		$adv_cache_path = WP_CONTENT_DIR . '/advanced-cache.php';
+		$adv_cache_path = LSWCP_CONTENT_DIR . '/advanced-cache.php';
 		if (file_exists($adv_cache_path)
 			&& (filesize($adv_cache_path) !== 0
 				|| !is_writable($adv_cache_path)) )

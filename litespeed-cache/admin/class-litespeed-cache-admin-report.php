@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 		}
 
 		$ret = file_put_contents(LSWCP_DIR . 'environment_report.php', $content, LOCK_EX);
-		if ($ret !== true && LiteSpeed_Cache_Log::get_enabled()) {
+		if ($ret === false && LiteSpeed_Cache_Log::get_enabled()) {
 			LiteSpeed_Cache_Log::push('LSCache wordpress plugin attempted to write env report but did not have permissions.');
 		}
 	}
