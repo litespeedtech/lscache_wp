@@ -17,7 +17,8 @@ if ( !function_exists('_litespeed_autoload') )
 	function _litespeed_autoload($cls)
 	{
 		$class2fileArr = array(
-			'LiteSpeed'							=> 'lib//litespeed/litespeed.class.php',
+			'LiteSpeed'							=> 'lib/litespeed/litespeed.class.php',
+			'Litespeed_File'					=> 'lib/litespeed/litespeed-file.class.php',
 
 			'LiteSpeed_Cache'					=> 'includes/class-litespeed-cache.php',
 			'LiteSpeed_Cache_Activation'		=> 'includes/class-litespeed-cache-activation.php',

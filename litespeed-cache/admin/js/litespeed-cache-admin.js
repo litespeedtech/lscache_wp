@@ -109,7 +109,7 @@
 		});
 
 		// Settings->General->Enable mobile view
-		$('#conf_mobileview_enabled_enable').click(function() {
+		$('#conf_mobileview_enabled_1').click(function() {
 			if($(this).is(':checked')){
 				if(!$('#litespeed-mobileview-rules').val()){
 					$('#litespeed-mobileview-rules').val($('#litespeed-mobileview-rules-default').val());
@@ -117,7 +117,7 @@
 				$('#litespeed-mobileview-rules').prop('readonly', false);
 			}
 		});
-		$('#conf_mobileview_enabled_disable').click(function() {
+		$('#conf_mobileview_enabled_0').click(function() {
 			if($(this).is(':checked')){
 				// $('#litespeed-mobileview-rules').val('');
 				$('#litespeed-mobileview-rules').prop('readonly', true);
