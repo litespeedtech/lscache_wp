@@ -183,7 +183,7 @@ LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 			</div>
 
 			<p>
-				<textarea name="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST; ?>" rows="5" class="code litespeed-cache-purgeby-textarea">/archives/695</textarea>
+				<textarea name="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST; ?>" rows="5" class="code litespeed-cache-purgeby-textarea"></textarea>
 			</p>
 
 			<p>

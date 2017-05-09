@@ -183,25 +183,25 @@ class LiteSpeed_Cache_Router extends LiteSpeed{
 	/**
 	 * Check if the ip is in the range
 	 * @since 1.1.0
-	 * @param  string $ial IP list
+	 * @param  string $ip_list IP list
 	 * @return bool
 	 */
-	private function ip_access($ial){
-		if(!$ial) Return false;
+	private function ip_access($ip_list){
+		if(!$ip_list) Return false;
 		if (!self::is_var(self::VAR_IP)) {
 			$_ip = self::set_var(self::VAR_IP, $this->get_ip());
 		}else{
 			$_ip = self::get_var(self::VAR_IP);
 		}
-		$uip = explode('.', $_ip);
-		if(empty($uip) || count($uip) != 4) Return false;
-		if(!is_array($ial)) $ial = explode("\n", $ial);
-		foreach($ial as $key => $ip) $ial[$key] = explode('.', trim($ip));
-		foreach($ial as $key => $ip) {
-			if(count($ip) != 4) continue;
-			for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ial[$key][$i] = $uip[$i];
-		}
-		return in_array($uip, $ial);
+		// $uip = explode('.', $_ip);
+		// if(empty($uip) || count($uip) != 4) Return false;
+		if(!is_array($ip_list)) $ip_list = explode("\n", $ip_list);
+		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip));
+		// foreach($ip_list as $key => $ip) {
+		// 	if(count($ip) != 4) continue;
+		// 	for($i = 0; $i <= 3; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i];
+		// }
+		return in_array($_ip, $ip_list);
 	}
 
 	/**

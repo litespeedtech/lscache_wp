@@ -331,8 +331,9 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		}
 
 		if (!empty($diff)
-			 && ($options[$id] == false || $rules->validate_common_rewrites($diff, $errors) !== false)//todo: check if need to use ===
-		) {
+			 && ($options[$id] == false
+			 	|| $rules->validate_common_rewrites($diff, $errors) !== false))//todo: check if need to use ===
+		{
 			$options = array_merge($options, $diff);
 		}
 

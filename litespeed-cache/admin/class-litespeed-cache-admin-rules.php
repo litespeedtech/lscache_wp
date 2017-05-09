@@ -356,12 +356,12 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		$arr = scandir($dir);
 		$parsed = preg_grep('/\.htaccess_lscachebak_[0-9]+/', $arr);
 
-		if (empty($parsed)) {
+		if ( empty($parsed) ) {
 			return false;
 		}
 
 		$res = $zip->open($dir . '/lscache_htaccess_bak.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
-		if ($res !== true) {
+		if ( $res !== true ) {
 			error_log('Warning: Failed to archive wordpress backups in ' . $dir);
 			$ret = copy($path, $path . $bak);
 			return $ret;
@@ -702,9 +702,15 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 //        }
 
 		$this->deprecated_clear_rules();
-		$this->insert_wrapper($new_rules);
-		if ($this->frontend_htaccess !== $this->backend_htaccess) {
-			$this->insert_wrapper($new_rules_backend, 'backend');
+		if ( !$this->insert_wrapper($new_rules) ){
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
+			return false;
+		}
+		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
+			if ( !$this->insert_wrapper($new_rules_backend, 'backend') ){
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU);
+				return false;
+			}
 		}
 		return $diff;
 	}
@@ -717,7 +723,10 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param  string $kind  which htaccess
 	 */
 	public function insert_wrapper($rules = array(), $kind = 'frontend'){
-		$this->htaccess_backup($kind);
+		$res = $this->htaccess_backup($kind);
+		if ( !$res ){
+			return false;
+		}
 
 		$rules = array_merge(
 			array(self::LS_MODULE_DONOTEDIT),
@@ -732,7 +741,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			array(self::LS_MODULE_DONOTEDIT)
 		);
 		insert_with_markers($this->htaccess_path($kind), self::MARKER, $rules);
-
+		return true;
 	}
 
 	/**

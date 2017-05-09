@@ -64,14 +64,14 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {// todo: where used this
 	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );
 }
 
-if (!function_exists('is_openlitespeed')) {
+if ( !function_exists('is_openlitespeed') ) {
 	function is_openlitespeed(){
 		return ((isset($_SERVER['LSWS_EDITION']))
 				&& (strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0));
 	}
 }
 
-if (!function_exists('is_webadc')) {
+if ( !function_exists('is_webadc') ) {
 	function is_webadc(){
 		return ((isset($_SERVER['HTTP_X_LSCACHE']))
 			&& ($_SERVER['HTTP_X_LSCACHE']));
@@ -87,32 +87,34 @@ if (!function_exists('is_webadc')) {
  *
  * @since    1.0.0
  */
-function run_litespeed_cache(){
-	$version_supported = true ;
+if ( !function_exists('run_litespeed_cache') ) {
+	function run_litespeed_cache(){
+		$version_supported = true ;
 
-	//Check minimum PHP requirements, which is 5.3 at the moment.
-	if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
-		LiteSpeed_Cache_Admin_Error::add_error(
-			LiteSpeed_Cache_Admin_Error::E_PHP_VER
-		);
-		$version_supported = false ;
+		//Check minimum PHP requirements, which is 5.3 at the moment.
+		if ( version_compare(PHP_VERSION, '5.3.0', '<') ) {
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_PHP_VER
+			);
+			$version_supported = false ;
+		}
+
+		//Check minimum WP requirements, which is 4.0 at the moment.
+		if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
+			LiteSpeed_Cache_Admin_Error::add_error(
+				LiteSpeed_Cache_Admin_Error::E_WP_VER
+			);
+			$version_supported = false ;
+		}
+
+		if ( $version_supported ) {
+			LiteSpeed_Cache::get_instance() ;
+		}
+		else {
+			return false ;
+		}
+		return true;
 	}
 
-	//Check minimum WP requirements, which is 4.0 at the moment.
-	if ( version_compare($GLOBALS['wp_version'], '4.0', '<') ) {
-		LiteSpeed_Cache_Admin_Error::add_error(
-			LiteSpeed_Cache_Admin_Error::E_WP_VER
-		);
-		$version_supported = false ;
-	}
-
-	if ( $version_supported ) {
-		LiteSpeed_Cache::get_instance() ;
-	}
-	else {
-		return false ;
-	}
-	return true;
+	run_litespeed_cache() ;
 }
-
-run_litespeed_cache() ;
