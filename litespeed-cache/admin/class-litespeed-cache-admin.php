@@ -275,13 +275,13 @@ class LiteSpeed_Cache_Admin extends LiteSpeed{
 			if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) === false) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
-				LiteSpeed_Cache::get_instance()->try_copy_advanced_cache();
+				LiteSpeed_Cache_Activation::get_instance()->try_copy_advanced_cache();
 			}
 
 			return;
 		}
 
-		if (LiteSpeed_Cache::get_instance()->try_copy_advanced_cache()) {
+		if (LiteSpeed_Cache_Activation::get_instance()->try_copy_advanced_cache()) {
 			return;
 		}
 

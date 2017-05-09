@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 		}
 
 		if (!is_null($options) && is_multisite()) {
-			$blogs = LiteSpeed_Cache::get_network_ids();
+			$blogs = LiteSpeed_Cache_Activation::get_network_ids();
 			if (!empty($blogs)) {
 				foreach ($blogs as $blog_id) {
 					$opts = get_blog_option($blog_id, LiteSpeed_Cache_Config::OPTION_NAME, array());

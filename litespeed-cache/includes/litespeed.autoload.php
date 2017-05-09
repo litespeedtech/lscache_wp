@@ -12,13 +12,17 @@ if ( ! defined('WPINC') ) {
 	die ;
 }
 
-if ( !function_exists('_litespeed_autoload') ) {
-	function _litespeed_autoload($cls){
+if ( !function_exists('_litespeed_autoload') )
+{
+	function _litespeed_autoload($cls)
+	{
 		$class2fileArr = array(
 			'LiteSpeed'							=> 'lib//litespeed/litespeed.class.php',
 
 			'LiteSpeed_Cache'					=> 'includes/class-litespeed-cache.php',
+			'LiteSpeed_Cache_Activation'		=> 'includes/class-litespeed-cache-activation.php',
 			'LiteSpeed_Cache_Config'			=> 'includes/class-litespeed-cache-config.php',
+			'LiteSpeed_Cache_Cookie'			=> 'includes/class-litespeed-cache-cookie.php',
 			'LiteSpeed_Cache_Log'				=> 'includes/class-litespeed-cache-log.php',
 			'LiteSpeed_Cache_Router'			=> 'includes/class-litespeed-cache-router.php',
 			'LiteSpeed_Cache_Tags'				=> 'includes/class-litespeed-cache-tags.php',
@@ -34,7 +38,9 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Cli_Admin'			=> 'cli/class-litespeed-cache-cli-admin.php',
 			'LiteSpeed_Cache_Cli_Purge'			=> 'cli/class-litespeed-cache-cli-purge.php',
 		);
-		if(array_key_exists($cls, $class2fileArr) && file_exists(LSWCP_DIR . $class2fileArr[$cls])){
+		if( array_key_exists($cls, $class2fileArr)
+			&& file_exists(LSWCP_DIR . $class2fileArr[$cls]) )
+		{
 			require_once LSWCP_DIR . $class2fileArr[$cls];
 		}
 	}

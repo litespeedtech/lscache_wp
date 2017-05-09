@@ -62,7 +62,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 
 	const WHM_TRANSIENT = 'lscwp_whm_install';
 	const WHM_TRANSIENT_VAL = 'whm_install';
-	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count';
 
 	protected $plugin_dir ;
 	protected $current_vary;
@@ -107,9 +106,14 @@ class LiteSpeed_Cache extends LiteSpeed{
 		include_once LSWCP_DIR . 'thirdparty/litespeed-cache-thirdparty-registry.php';
 		// Register plugin activate/deactivate/uninstall hooks
 		$plugin_file = LSWCP_DIR . 'litespeed-cache.php';
-		register_activation_hook($plugin_file, array( $this, 'register_activation' )) ;
-		register_deactivation_hook($plugin_file, array( $this, 'register_deactivation' )) ;
-		register_uninstall_hook($plugin_file, 'LiteSpeed_Cache::uninstall_litespeed_cache');
+		register_activation_hook($plugin_file,
+			array(LiteSpeed_Cache_Activation::get_instance(), 'register_activation' ));
+
+		register_deactivation_hook($plugin_file,
+			array(LiteSpeed_Cache_Activation::get_instance(), 'register_deactivation' ));
+
+		register_uninstall_hook($plugin_file,
+			'LiteSpeed_Cache_Activation::uninstall_litespeed_cache');
 
 		add_action('after_setup_theme', array( $this, 'init' )) ;
 	}
@@ -144,13 +148,13 @@ class LiteSpeed_Cache extends LiteSpeed{
 		ob_start();
 		add_action('shutdown', array($this, 'send_headers'), 0);
 
-		$bad_cookies = $this->setup_cookies();
+		$bad_cookies = LiteSpeed_Cache_Cookie::get_instance()->setup_cookies();
 
 		// if ( $this->check_esi_page()) {
 		// 	return;
 		// }
 
-		if (!$bad_cookies && !$this->check_user_logged_in() && !$this->check_cookies()) {
+		if (!$bad_cookies && !$this->check_user_logged_in() && !LiteSpeed_Cache_Cookie::get_instance()->check_cookies()) {
 			$this->load_logged_out_actions();
 		}
         else {
@@ -177,7 +181,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 
 	/**
 	 * Run frontend actions
-	 * 
+	 *
 	 * @since 1.1.0
 	 */
 	public function proceed_action(){
@@ -361,230 +365,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 	}
 
 	/**
-	 * The activation hook callback.
-	 *
-	 * Attempts to set up the advanced cache file. If it fails for any reason,
-	 * the plugin will not activate.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function register_activation(){
-		$count = 0;
-		if (!defined('LSCWP_LOG_TAG')) {
-			define('LSCWP_LOG_TAG', 'LSCACHE_WP_activate_' . get_current_blog_id());
-		}
-		$this->try_copy_advanced_cache();
-		$this->config->wp_cache_var_setter(true);
-		//todo: Check if needed to load rewrite rules before flush
-		//todo: Check if rewrite rule is added before this line or not
-		//todo: Check if esi is enabled is run twice
-		if (!is_openlitespeed() && $this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
-			LiteSpeed_Cache_Esi::add_rewrite_rule_esi();
-		}
-		flush_rewrite_rules();
-
-		if (is_multisite()) {
-			$count = $this->get_network_count();
-			if ($count !== false) {
-				$count = intval($count) + 1;
-				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS);
-			}
-		}
-		do_action('litespeed_cache_detect_thirdparty');
-		$this->config->plugin_activation($count);
-		LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report();
-
-		if (defined('LSCWP_PLUGIN_NAME')) {
-			set_transient(self::WHM_TRANSIENT, self::WHM_TRANSIENT_VAL);
-		}
-
-		// Register crawler cron task
-		// $this->scheduleCron();
-	}
-
-	/**
-	 * Uninstall plugin
-	 * @since 1.1.0
-	 */
-	public static function uninstall_litespeed_cache(){
-		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules();
-		delete_option(LiteSpeed_Cache_Config::OPTION_NAME);
-		if (is_multisite()) {
-			delete_site_option(LiteSpeed_Cache_Config::OPTION_NAME);
-		}
-	}
-
-	/**
-	 * Get the blog ids for the network. Accepts function arguments.
-	 *
-	 * Will use wp_get_sites for WP versions less than 4.6
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 * @param array $args Arguments to pass into get_sites/wp_get_sites.
-	 * @return array The array of blog ids.
-	 */
-	private static function get_network_ids($args = array())
-	{
-		global $wp_version;
-		if (version_compare($wp_version, '4.6', '<')) {
-			$blogs = wp_get_sites($args);
-			if (!empty($blogs)) {
-				foreach ($blogs as $key => $blog) {
-					$blogs[$key] = $blog['blog_id'];
-				}
-			}
-		}
-		else {
-			$args['fields'] = 'ids';
-			$blogs = get_sites($args);
-		}
-		return $blogs;
-	}
-
-	/**
-	 * Gets the count of active litespeed cache plugins on multisite.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 * @return mixed The count on success, false on failure.
-	 */
-	private function get_network_count()
-	{
-		$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT);
-		if ($count !== false) {
-			return intval($count);
-		}
-		// need to update
-		$default = array();
-		$count = 0;
-
-		$sites = $this->get_network_ids(array('deleted' => 0));
-		if (empty($sites)) {
-			return false;
-		}
-
-		foreach ($sites as $site) {
-			$plugins = get_blog_option($site->blog_id, 'active_plugins', $default);
-			if (in_array(LSWCP_BASENAME, $plugins, true)) {
-				$count++;
-			}
-		}
-		if (is_plugin_active_for_network(LSWCP_BASENAME)) {
-			$count++;
-		}
-		return $count;
-	}
-
-	/**
-	 * Is this deactivate call the last active installation on the multisite
-	 * network?
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 * @return bool True if yes, false otherwise.
-	 */
-	private function is_deactivate_last(){
-		$count = $this->get_network_count();
-		if ($count === false) {
-			return false;
-		}
-		if ($count !== 1) {
-			// Not deactivating the last one.
-			$count--;
-			set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS);
-			return false;
-		}
-
-		delete_site_transient(self::NETWORK_TRANSIENT_COUNT);
-		return true;
-	}
-
-	/**
-	 * The deactivation hook callback.
-	 *
-	 * Initializes all clean up functionalities.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function register_deactivation(){
-		if (!defined('LSCWP_LOG_TAG')) {
-			define('LSCWP_LOG_TAG', 'LSCACHE_WP_deactivate_' . get_current_blog_id());
-		}
-		$this->purge_all();
-
-		if (is_multisite()) {
-			if (is_network_admin()) {
-				$options = get_site_option(LiteSpeed_Cache_Config::OPTION_NAME);
-				if (isset($options) && is_array($options)) {
-					$opt_str = serialize($options);
-					update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $opt_str);
-				}
-			}
-			if (!$this->is_deactivate_last()) {
-				if (is_network_admin() && isset($opt_str) && $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED]) {
-					$reset = LiteSpeed_Cache_Config::get_rule_reset_options();
-					$errors = array();
-					LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites($reset, $errors);
-				}
-				return;
-			}
-		}
-
-		$adv_cache_path = WP_CONTENT_DIR . '/advanced-cache.php';
-		if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
-			unlink($adv_cache_path) ;
-		}
-		else {
-			error_log('Failed to remove advanced-cache.php, file does not exist or is not writable!') ;
-		}
-
-		if (!LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
-			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!') ;
-		}
-		//todo: remove rewrite rule from load_public_action before flush
-		flush_rewrite_rules();
-		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules();
-		// delete in case it's not deleted prior to deactivation.
-		delete_transient(self::WHM_TRANSIENT);
-	}
-
-	/**
-	 * Gets the current request's user status.
-	 *
-	 * Helper function for other class' usage.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @return int The user status.
-	 */
-	public function get_user_status()
-	{
-		return $this->user_status;
-	}
-
-	/**
-	 * Try to copy our advanced-cache.php file to the wordpress directory.
-	 *
-	 * @since 1.0.11
-	 * @access public
-	 * @return boolean True on success, false on failure.
-	 */
-	public function try_copy_advanced_cache(){
-		$adv_cache_path = WP_CONTENT_DIR . '/advanced-cache.php';
-		if (file_exists($adv_cache_path)
-			&& (filesize($adv_cache_path) !== 0 || !is_writable($adv_cache_path))) {
-			return false;
-		}
-		copy(LSWCP_DIR . 'includes/advanced-cache.php', $adv_cache_path);
-		include($adv_cache_path);
-		$ret = defined('LSCACHE_ADV_CACHE');
-		return $ret;
-	}
-
-	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
 	 * Uses the LiteSpeed_Cache_i18n class in order to set the domain and to register the hook
@@ -611,143 +391,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 		return $params;
 	}
 
-	/**
-	 * Adds the actions used for setting up cookies on log in/out.
-	 *
-	 * Also checks if the database matches the rewrite rule.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @return boolean True if cookies are bad, false otherwise.
-	 */
-	private function setup_cookies(){
-		$ret = false;
-		// Set vary cookie for logging in user, unset for logging out.
-		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
-		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
-
-		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS)) {
-			// Set vary cookie for commenter.
-			add_action('set_comment_cookies', array( $this, 'set_comment_cookie'), 10, 2);
-		}
-		if (is_multisite()) {
-			$options = $this->config->get_site_options();
-			if (is_array($options)) {
-				$db_cookie = $options[
-				LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
-			}
-		}
-		else {
-			$db_cookie = $this->config->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
-		}
-
-		if (!isset($_SERVER[self::LSCOOKIE_VARY_NAME])) {
-			if (!empty($db_cookie)) {
-				$ret = true;
-				if (is_multisite() ? is_network_admin() : is_admin()) {
-					LiteSpeed_Cache_Admin_Display::show_error_cookie();
-				}
-			}
-			$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
-			return $ret;
-		}
-		elseif (empty($db_cookie)) {
-			$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
-			return $ret;
-		}
-		// beyond this point, need to do more processing.
-		$vary_arr = explode(',', $_SERVER[self::LSCOOKIE_VARY_NAME]);
-
-		if (in_array($db_cookie, $vary_arr)) {
-			$this->current_vary = $db_cookie;
-			return $ret;
-		}
-		elseif ((is_multisite() ? is_network_admin() : is_admin())) {
-			LiteSpeed_Cache_Admin_Display::show_error_cookie();
-		}
-		$ret = true;
-		$this->current_vary = self::LSCOOKIE_DEFAULT_VARY;
-		return $ret;
-	}
-
-	/**
-	 * Do the action of setting the vary cookie.
-	 *
-	 * Since we are using bitwise operations, if the resulting cookie has
-	 * value zero, we need to set the expire time appropriately.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @param integer $update_val The value to update.
-	 * @param integer $expire Expire time.
-	 * @param boolean $ssl True if ssl connection, false otherwise.
-	 * @param boolean $httponly True if the cookie is for http requests only, false otherwise.
-	 */
-	private function do_set_cookie($update_val, $expire, $ssl = false, $httponly = false){
-		$curval = 0;
-		if (isset($_COOKIE[$this->current_vary]))
-		{
-			$curval = intval($_COOKIE[$this->current_vary]);
-		}
-
-		// not, remove from curval.
-		if ($update_val < 0) {
-			// If cookie will no longer exist, delete the cookie.
-			if (($curval == 0) || ($curval == (~$update_val))) {
-				// Use a year in case of bad local clock.
-				$expire = time() - 31536001;
-			}
-			$curval &= $update_val;
-		}
-		else { // add to curval.
-			$curval |= $update_val;
-		}
-		setcookie($this->current_vary, $curval, $expire, COOKIEPATH,
-				COOKIE_DOMAIN, $ssl, $httponly);
-	}
-
-	/**
-	 * Sets cookie denoting logged in/logged out.
-	 *
-	 * This will notify the server on next page request not to serve from cache.
-	 *
-	 * @since 1.0.1
-	 * @access public
-	 * @param mixed $logged_in_cookie
-	 * @param string $expire Expire time.
-	 * @param integer $expiration Expire time.
-	 * @param integer $user_id The user's id.
-	 * @param string $action Whether the user is logging in or logging out.
-	 */
-	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
-					$expiration = 0, $user_id = 0, $action = 'logged_out'){
-		if ($action == 'logged_in') {
-			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN, $expire, is_ssl(), true);
-		}
-		else {
-			$this->do_set_cookie(~self::LSCOOKIE_VARY_LOGGED_IN,
-					time() + apply_filters( 'comment_cookie_lifetime', 30000000 ));
-		}
-	}
-
-	/**
-	 * Sets a cookie that marks the user as a commenter.
-	 *
-	 * This will notify the server on next page request not to serve
-	 * from cache if that setting is enabled.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @param mixed $comment Comment object
-	 * @param mixed $user The visiting user object.
-	 */
-	public function set_comment_cookie($comment, $user){
-		if ( $user->exists() ) {
-			return;
-		}
-		$comment_cookie_lifetime = time() + apply_filters( 'comment_cookie_lifetime', 30000000 );
-		$this->do_set_cookie(self::LSCOOKIE_VARY_COMMENTER, $comment_cookie_lifetime);
-	}
 
 	/**
 	 * Adds new purge tags to the array of purge tags for the request.
@@ -1136,69 +779,20 @@ class LiteSpeed_Cache extends LiteSpeed{
 			if ((isset($_COOKIE)) && (isset($_COOKIE[$this->current_vary]))
 				&& (intval($_COOKIE[$this->current_vary])
 					& self::LSCOOKIE_VARY_LOGGED_IN)) {
-				$this->do_set_cookie(~self::LSCOOKIE_VARY_LOGGED_IN,
+
+				LiteSpeed_Cache_Cookie::get_instance()->do_set_cookie(
+					~self::LSCOOKIE_VARY_LOGGED_IN,
 					time() + apply_filters( 'comment_cookie_lifetime', 30000000 ));
 				$_COOKIE[$this->current_vary] &= ~self::LSCOOKIE_VARY_LOGGED_IN;
 			}
 			return false;
 		}
 		elseif (!isset($_COOKIE[$this->current_vary])) {
-			$this->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
+			LiteSpeed_Cache_Cookie::get_instance()->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
 					time() + 2 * DAY_IN_SECONDS, is_ssl(), true);
 		}
 		$this->user_status |= self::LSCOOKIE_VARY_LOGGED_IN;
 		return true;
-	}
-
-	/**
-	 * Check if the user accessing the page has the commenter cookie.
-	 *
-	 * If the user does not want to cache commenters, just check if user is commenter.
-	 * Otherwise if the vary cookie is set, unset it. This is so that when
-	 * the page is cached, the page will appear as if the user was a normal user.
-	 * Normal user is defined as not a logged in user and not a commenter.
-	 *
-	 * @since 1.0.4
-	 * @access private
-	 * @return boolean True if do not cache for commenters and user is a commenter. False otherwise.
-	 */
-	private function check_cookies(){
-		if (!$this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS))
-		{
-			// If do not cache commenters, check cookie for commenter value.
-			if ((isset($_COOKIE[$this->current_vary]))
-					&& ($_COOKIE[$this->current_vary] & self::LSCOOKIE_VARY_COMMENTER)) {
-				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
-				return true;
-			}
-			// If wp commenter cookie exists, need to set vary and do not cache.
-			foreach($_COOKIE as $cookie_name => $cookie_value) {
-				if ((strlen($cookie_name) >= 15)
-						&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
-					$user = wp_get_current_user();
-					$this->set_comment_cookie(NULL, $user);
-					$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
-					return true;
-				}
-			}
-			return false;
-		}
-
-		// If vary cookie is set, need to change the value.
-		if (isset($_COOKIE[$this->current_vary])) {
-			$this->do_set_cookie(~self::LSCOOKIE_VARY_COMMENTER, 14 * DAY_IN_SECONDS);
-			unset($_COOKIE[$this->current_vary]);
-		}
-
-		// If cache commenters, unset comment cookies for caching.
-		foreach($_COOKIE as $cookie_name => $cookie_value) {
-			if ((strlen($cookie_name) >= 15)
-					&& (strncmp($cookie_name, 'comment_author_', 15) == 0)) {
-				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
-				unset($_COOKIE[$cookie_name]);
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -1569,8 +1163,9 @@ class LiteSpeed_Cache extends LiteSpeed{
 			|| ((defined('DOING_AJAX'))
 					&& ((check_ajax_referer('updates', false, false))
 						|| (check_ajax_referer('litespeed-purgeall-network',
-							false, false)))))) {
-			$blogs = self::get_network_ids();
+							false, false))))))
+		{
+			$blogs = LiteSpeed_Cache_Activation::get_network_ids();
 			if (empty($blogs)) {
 				if (LiteSpeed_Cache_Log::get_enabled()) {
 					LiteSpeed_Cache_Log::push('blog list is empty');
@@ -2170,7 +1765,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 
 	/**
 	 * Execute cron
-	 * todo: move to admin class with register_activation()
+	 * todo: move to admin class
 	 *
 	 * @since 1.1.0
 	 * @access public
