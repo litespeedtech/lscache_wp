@@ -11,8 +11,8 @@
  */
 class LiteSpeed_Cache_Crawler extends LiteSpeed
 {
-	private $sitemap_path;
 	private $sitemap_file;
+	private $meta_file;
 	private $site_url;
 
 	/**
@@ -22,17 +22,18 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 */
 	protected function __construct()
 	{
-		$this->sitemap_path = LSWCP_DIR . 'var';
+		$sitemap_path = LSWCP_DIR . 'var';
 		if ( is_multisite() )
 		{
 			$blog_id = get_current_blog_id();
-			$this->sitemap_file = $this->sitemap_path . '/crawlermap-' . $blog_id . '.data';
+			$this->sitemap_file = $sitemap_path . '/crawlermap-' . $blog_id . '.data';
 			$this->site_url = get_site_url($blog_id);
 		}
 		else{
-			$this->sitemap_file = $this->sitemap_path . '/crawlermap.data';
+			$this->sitemap_file = $sitemap_path . '/crawlermap.data';
 			$this->site_url = get_option('siteurl');
 		}
+		$this->meta_file = $this->site_url . '.meta';
 	}
 
 	/**
@@ -43,66 +44,35 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	public function generate_sitemap()
 	{
 		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data();
+		$meta = array(
+			'list_size'	=> count($urls),
+			'file_time'	=> time(),
+			'last_pos'=> 0,
+			'start_time'=> 0,
+		);
 
-		$res = $this->save($this->sitemap_file, implode("\n", $urls));
-		if ( $res )
+		$ret = Litespeed_File::save(
+			$this->sitemap_file,
+			implode("\n", $urls),
+			true
+		);
+		if ( $ret !== true )
 		{
-			$msg = sprintf(__('File Successfully created here %s', 'litespeed-cache'), $this->sitemap_file);
+			LiteSpeed_Cache_Admin_Display::add_notice(
+				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
+				$ret
+			);
+		}
+		else
+		{
+			$msg = sprintf(
+				__('File Successfully created here %s', 'litespeed-cache'),
+				$this->sitemap_file
+			);
 			LiteSpeed_Cache_Admin_Display::add_notice(
 				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg
 			);
 		}
-	}
-
-	/**
-	 * Save data to file
-	 *
-	 * @since 1.1.0
-	 */
-	private function save($filename, $data)
-	{
-		$error = false;
-		$folder = dirname($filename);
-
-		// check folder permission
-		if ( ! file_exists($folder) )
-		{
-			if ( ! is_writable(dirname($folder)) )
-			{
-				$error = sprintf(__('Can not create the folder %s', 'litespeed-cache'), $folder);
-			}
-			else
-			{
-				mkdir($folder, 0777, true);
-			}
-		}
-
-		// check file permission
-		if ( file_exists($filename) )
-		{
-			if ( ! is_writable($filename) )
-			{
-				$error = sprintf(__('Sitemap file %s is not writable', 'litespeed-cache'), $filename);
-			}
-		}
-		else
-		{
-			if ( ! is_writable($folder) )
-			{
-				$error = sprintf(__('Folder %s is not writable', 'litespeed-cache'), $folder);
-			}
-		}
-
-		if ( $error )
-		{
-			LiteSpeed_Cache_Admin_Display::add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				$error
-			);
-			return false;
-		}
-
-		return file_put_contents($filename, $data);
 	}
 
 	/**

@@ -127,14 +127,14 @@ class LiteSpeed_Cache_Cookie extends LiteSpeed
 	 * This will notify the server on next page request not to serve from cache.
 	 *
 	 * @since 1.0.1
-	 * @access private
+	 * @access public
 	 * @param mixed $logged_in_cookie
 	 * @param string $expire Expire time.
 	 * @param integer $expiration Expire time.
 	 * @param integer $user_id The user's id.
 	 * @param string $action Whether the user is logging in or logging out.
 	 */
-	private function set_user_cookie($logged_in_cookie = false, $expire = ' ',
+	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
 					$expiration = 0, $user_id = 0, $action = 'logged_out')
 	{
 		if ($action == 'logged_in')
@@ -155,11 +155,11 @@ class LiteSpeed_Cache_Cookie extends LiteSpeed
 	 * from cache if that setting is enabled.
 	 *
 	 * @since 1.0.4
-	 * @access private
+	 * @access public
 	 * @param mixed $comment Comment object
 	 * @param mixed $user The visiting user object.
 	 */
-	private function set_comment_cookie($comment, $user)
+	public function set_comment_cookie($comment, $user)
 	{
 		if ( $user->exists() )
 		{

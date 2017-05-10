@@ -453,7 +453,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			return false;
 		}
 
-		$rules = Litespeed_File::parse($path, self::MARKER);
+		$rules = Litespeed_File::extract_from_markers($path, self::MARKER);
 		if( !in_array($cond . self::MARKER_START, $rules) || !in_array($cond . self::MARKER_END, $rules) ){
 			return false;
 		}
@@ -612,7 +612,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			}
 		}
 
-		$rules = Litespeed_File::parse($this->frontend_htaccess, self::MARKER);
+		$rules = Litespeed_File::extract_from_markers($this->frontend_htaccess, self::MARKER);
 		if(!$rules){
 			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER);
 			// return false;
@@ -747,7 +747,7 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 			array(''),
 			array(self::LS_MODULE_DONOTEDIT)
 		);
-		return Litespeed_File::append($this->htaccess_path($kind), $rules, self::MARKER, true);
+		return Litespeed_File::insert_with_markers($this->htaccess_path($kind), $rules, self::MARKER, true);
 	}
 
 	/**

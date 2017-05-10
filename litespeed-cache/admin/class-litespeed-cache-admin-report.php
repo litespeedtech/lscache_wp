@@ -9,14 +9,16 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
+class LiteSpeed_Cache_Admin_Report extends LiteSpeed
+{
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.1.0
 	 */
-	protected function __construct(){
+	protected function __construct()
+	{
 	}
 
 
@@ -30,30 +32,37 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 * the options section.
 	 * @return string The built report.
 	 */
-	public function generate_environment_report($options = null){
+	public function generate_environment_report($options = null)
+	{
 		global $wp_version, $_SERVER;
 		$frontend_htaccess = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess();
 		$backend_htaccess = LiteSpeed_Cache_Admin_Rules::get_backend_htaccess();
 		$paths = array($frontend_htaccess);
-		if ($frontend_htaccess != $backend_htaccess) {
+		if ( $frontend_htaccess != $backend_htaccess )
+		{
 			$paths[] = $backend_htaccess;
 		}
 
-		if (is_multisite()) {
+		if ( is_multisite() )
+		{
 			$active_plugins = get_site_option('active_sitewide_plugins');
-			if (!empty($active_plugins)) {
+			if ( ! empty($active_plugins) )
+			{
 				$active_plugins = array_keys($active_plugins);
 			}
 		}
-		else {
+		else
+		{
 			$active_plugins = get_option('active_plugins');
 		}
 
-		if (function_exists('wp_get_theme')) {
+		if ( function_exists('wp_get_theme') )
+		{
 			$theme_obj = wp_get_theme();
 			$active_theme = $theme_obj->get('Name');
 		}
-		else {
+		else
+		{
 			$active_theme = get_current_theme();
 		}
 
@@ -64,16 +73,22 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 			'active plugins' => $active_plugins,
 
 		);
-		if (is_null($options)) {
+		if ( is_null($options) )
+		{
 			$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		}
 
-		if (!is_null($options) && is_multisite()) {
+		if ( ! is_null($options)
+			&& is_multisite() )
+		{
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids();
-			if (!empty($blogs)) {
-				foreach ($blogs as $blog_id) {
+			if ( ! empty($blogs) )
+			{
+				foreach ( $blogs as $blog_id )
+				{
 					$opts = get_blog_option($blog_id, LiteSpeed_Cache_Config::OPTION_NAME, array());
-					if (isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO])) {
+					if ( isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO]) )
+					{
 						$options['blog ' . $blog_id . ' radio select'] = $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO];
 					}
 				}
@@ -94,8 +109,10 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 * @param $unused
 	 * @param mixed $options The updated options. May be array or string.
 	 */
-	public function update_environment_report($unused, $options){
-		if (is_array($options)) {
+	public function update_environment_report($unused, $options)
+	{
+		if ( is_array($options) )
+		{
 			$this->generate_environment_report($options);
 		}
 	}
@@ -107,17 +124,16 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 * @access private
 	 * @param string $content What to write to the environment report.
 	 */
-	private function write_environment_report($content){
+	private function write_environment_report($content)
+	{
 		$content = "<"."?php die();?".">\n\n".$content;
 
-		if(!is_writable(LSWCP_DIR)){
-			LiteSpeed_Cache_Log::push('LSCache wordpress plugin does not have the permission to write env report.');
-			return;
-		}
+		$ret = Litespeed_File::save(LSWCP_DIR . 'environment_report.php', $content);
 
-		$ret = file_put_contents(LSWCP_DIR . 'environment_report.php', $content, LOCK_EX);
-		if ($ret === false && LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('LSCache wordpress plugin attempted to write env report but did not have permissions.');
+		if ( $ret !== true
+			&& LiteSpeed_Cache_Log::get_enabled() )
+		{
+			LiteSpeed_Cache_Log::push($ret);
 		}
 	}
 
@@ -131,7 +147,9 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 * @param array $htaccess_paths - htaccess paths to check.
 	 * @return string The Environment Report buffer.
 	 */
-	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array()){
+	private function build_environment_report($server, $options, $extras = array(),
+		$htaccess_paths = array())
+	{
 		$server_keys = array(
 			'DOCUMENT_ROOT'=>'',
 			'SERVER_SOFTWARE'=>'',
@@ -146,17 +164,23 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 
 		$buf .= $this->format_report_section('Wordpress Specific Extras', $extras);
 
-		if (empty($htaccess_paths)) {
+		if ( empty($htaccess_paths) )
+		{
 			return $buf;
 		}
 
-		foreach ($htaccess_paths as $path) {
-			if (!file_exists($path) || !is_readable($path)) {
+		foreach ( $htaccess_paths as $path )
+		{
+			if ( ! file_exists($path)
+				|| ! is_readable($path) )
+			{
 				$buf .= $path . " does not exist or is not readable.\n";
 				continue;
 			}
+
 			$content = file_get_contents($path);
-			if ($content === false) {
+			if ( $content === false )
+			{
 				$buf .= $path . " returned false for file_get_contents.\n";
 				continue;
 			}
@@ -175,23 +199,31 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed{
 	 * @param array $section An array of information to output
 	 * @return string The created report block.
 	 */
-	private function format_report_section($section_header, $section){
+	private function format_report_section($section_header, $section)
+	{
 		$tab = '    '; // four spaces
 		$nl = "\n";
 
-		if (empty($section)) {
+		if ( empty($section) )
+		{
 			return 'No matching ' . $section_header . $nl . $nl;
 		}
 		$buf = $section_header;
-		foreach ($section as $key=>$val) {
+
+		foreach ( $section as $key=>$val )
+		{
 			$buf .= $nl . $tab;
-			if (!is_numeric($key)) {
+			if ( ! is_numeric($key) )
+			{
 				$buf .= $key . ' = ';
 			}
-			if (!is_string($val)) {
+
+			if ( ! is_string($val) )
+			{
 				$buf .= print_r($val, true);
 			}
-			else {
+			else
+			{
 				$buf .= $val;
 			}
 		}

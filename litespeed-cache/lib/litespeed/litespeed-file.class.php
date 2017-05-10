@@ -6,6 +6,9 @@
 * @since 1.1.0
 */
 
+function litespeed_exception_error_handler($errno, $errstr, $errfile, $errline ) {
+	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
 
 class Litespeed_File
 {
@@ -14,6 +17,63 @@ class Litespeed_File
 	function __construct()
 	{
 		// nothing to do here
+	}
+
+	/**
+	 * Save data to file
+	 *
+	 * @since 1.1.0
+	 */
+	public static function save($filename, $data, $mkdir = false)
+	{
+		$error = false;
+		$folder = dirname($filename);
+
+		// mkdir if folder does not exist
+		if ( ! file_exists($folder) )
+		{
+			if ( ! $mkdir )
+			{
+				return sprintf(__('Folder does not exist: %s', 'litespeed-cache'), $folder);
+			}
+
+			set_error_handler("litespeed_exception_error_handler");
+
+			try
+			{
+				mkdir($folder, 0777, true);
+			}
+			catch ( ErrorException $ex )
+			{
+				return sprintf(__('Can not create folder: %s. Error: ', 'litespeed-cache'), $folder, $ex->getMessage());
+			}
+
+			restore_error_handler();
+		}
+
+		if ( ! file_exists( $filename ) )
+		{
+			if ( ! is_writable( $folder ) )
+			{
+				return sprintf(__('Folder is not writable: %s', 'litespeed-cache'), $folder);
+			}
+			if ( ! touch( $filename ) )
+			{
+				return sprintf(__('File %s is not writable', 'litespeed-cache'), $filename);
+			}
+		}
+		elseif ( ! is_writeable( $filename ) )
+		{
+			return sprintf(__('File %s is not writable', 'litespeed-cache'), $filename);
+		}
+
+		$ret = file_put_contents($filename, $data);
+		if ( $ret === false )
+		{
+			return sprintf(__('Failed to write to %s', 'litespeed-cache'), $filename);
+		}
+
+		return true;
 	}
 
 	/**
@@ -29,7 +89,7 @@ class Litespeed_File
 	 * @param bool 	       $prepend Prepend insertion if not exist.
 	 * @return bool True on write success, false on failure.
 	 */
-	public static function append($filename, $insertion = false, $marker = false, $prepend = false)
+	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false)
 	{
 		if ( !$marker )
 		{
@@ -51,7 +111,7 @@ class Litespeed_File
 	 * @param string $marker
 	 * @return string The block data
 	 */
-	public static function generateBlock($insertion, $marker = false)
+	public static function wrap_marker_data($insertion, $marker = false)
 	{
 		if ( ! $marker )
 		{
@@ -75,7 +135,7 @@ class Litespeed_File
 	 * @param string $marker
 	 * @return string The current block data
 	 */
-	public static function touchBlock($filename, $marker = false)
+	public static function touch_marker_data($filename, $marker = false)
 	{
 		if( ! $marker )
 		{
@@ -106,7 +166,7 @@ class Litespeed_File
 	 * @param string $marker
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
-	public static function parse($filename, $marker = false)
+	public static function extract_from_markers($filename, $marker = false)
 	{
 		if( ! $marker )
 		{
