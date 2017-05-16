@@ -11,9 +11,8 @@
  */
 class LiteSpeed_Cache_Crawler extends LiteSpeed
 {
-	private $sitemap_file;
-	private $meta_file;
-	private $site_url;
+	private $_sitemapFile ;
+	private $_siteUrl ;
 
 	/**
 	 * Initialize crawler, assign sitemap path
@@ -22,57 +21,70 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 */
 	protected function __construct()
 	{
-		$sitemap_path = LSWCP_DIR . 'var';
-		if ( is_multisite() )
-		{
-			$blog_id = get_current_blog_id();
-			$this->sitemap_file = $sitemap_path . '/crawlermap-' . $blog_id . '.data';
-			$this->site_url = get_site_url($blog_id);
+		$sitemapPath = LSWCP_DIR . 'var' ;
+		if ( is_multisite() ) {
+			$blogID = get_current_blog_id() ;
+			$this->_sitemapFile = $sitemapPath . '/crawlermap-' . $blogID . '.data' ;
+			$this->_siteUrl = get_site_url($blogID) ;
 		}
 		else{
-			$this->sitemap_file = $sitemap_path . '/crawlermap.data';
-			$this->site_url = get_option('siteurl');
+			$this->_sitemapFile = $sitemapPath . '/crawlermap.data' ;
+			$this->_siteUrl = get_option('siteurl') ;
 		}
-		$this->meta_file = $this->site_url . '.meta';
 	}
 
 	/**
-	 * generate sitemap
+	 * Return crawler meta file
 	 * 
-	 * @return [type] [description]
+	 * @return string Json data file path
 	 */
-	public function generate_sitemap()
+	public function getCrawlerJsonPath()
 	{
-		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data();
-		$meta = array(
-			'list_size'	=> count($urls),
-			'file_time'	=> time(),
-			'last_pos'=> 0,
-			'start_time'=> 0,
-		);
+		if ( ! file_exists($this->_sitemapFile . '.meta') ) {
+			return false ;
+		}
+		$litespeedPluginPath = implode('/', array_slice(explode('/', LSWCP_DIR), -4)) ;LiteSpeed_Cache_Log::push($litespeedPluginPath);
+		return $this->_siteUrl . '' ;
+	}
 
-		$ret = Litespeed_File::save(
-			$this->sitemap_file,
-			implode("\n", $urls),
-			true
-		);
-		if ( $ret !== true )
-		{
-			LiteSpeed_Cache_Admin_Display::add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_RED,
-				$ret
-			);
+	/**
+	 * Generate sitemap
+	 * 
+	 */
+	public function generateSitemap()
+	{
+		$ret = $this->_generateSitemap() ;
+		if ( $ret !== true ) {
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret) ;
 		}
-		else
-		{
+		else {
 			$msg = sprintf(
-				__('File Successfully created here %s', 'litespeed-cache'),
-				$this->sitemap_file
-			);
-			LiteSpeed_Cache_Admin_Display::add_notice(
-				LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg
-			);
+				__('File created successfully: %s', 'litespeed-cache'),
+				$this->_sitemapFile
+			) ;
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
 		}
+	}
+
+	/**
+	 * Generate the sitemap
+	 * 
+	 * @return string|true 
+	 */
+	protected function _generateSitemap()
+	{
+		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generateData() ;
+
+		// filter urls
+		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST ;
+		$blacklist = LiteSpeed_Cache::config($id) ;
+		$blacklist = explode("\n", $blacklist) ;
+		$urls = array_diff($urls, $blacklist) ;
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			LiteSpeed_Cache_Log::push('Crawler log: Generate sitemap') ;
+		}
+
+		return Litespeed_File::save($this->_sitemapFile, implode("\n", $urls), true) ;
 	}
 
 	/**
@@ -81,19 +93,15 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function info()
+	public function sitemapTime()
 	{
-		if ( ! file_exists($path) )
-		{
-			return false;
+		if ( ! file_exists($this->_sitemapFile) ) {
+			return false ;
 		}
 
-		$info = array(
-			'file_time'	=> filemtime($path),
-			'list_size'	=> '',
-		);
+		$filetime = date('m/d/Y H:i:s', filemtime($this->_sitemapFile)) ;
 
-		return $info;
+		return $filetime ;
 	}
 
 	/**
@@ -102,111 +110,60 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * @since    1.1.0
 	 * @access   public
 	 */
-	public function crawl_data(){
-
-		$options = $this->config->get_options();
-
-		$crawler = LiteSpeed_Crawler_Crawler::get_instance();
-
-		$sitemap = LiteSpeed_Cache_Crawler_Sitemap::get_instance();
-
-		$metadata = LiteSpeed_Crawler_Metadata::get_instance();
-
-		$crwlconfig = LiteSpeed_Crawler_Config::get_instance();
-
-		$id = LiteSpeed_Cache_Config::CRWL_USLEEP;
-		$sleeptime = $options[$id];
-
-		$crwlconfig->set_sleep_milliseconds($sleeptime);
-
-		$id = LiteSpeed_Cache_Config::CRWL_THREAD;
-		$threads = $options[$id];
-
-		$crwlconfig->set_num_threads($threads);
-
-		$id = LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL;
-		$run_interval = $options[$id];
-
-		$crwlconfig->set_run_seconds($run_interval);
-
-		if ( is_multisite() ) {
-			$blog_id = get_current_blog_id();
-			$baseurl = get_site_url($blog_id);//todo: check if site_url() return same
-		}
-		else{
-			$baseurl = site_url();
-		}
-		
-		$metadata->set_base_url($baseurl);
-
-		$mtdt = LiteSpeed_Cache_Config::CRWL_TRANSIENT;
-
-		$transient = false;
-		$tdata = $options[$mtdt];
-		
-		if ( $tdata !== ''){ 
-			$metadata->setMetaCache($tdata);
-			$transient = true;     
-		}
-
-		$crawler->run($crwlconfig, $sitemap);
-		$data = $metadata->meta_data($transient);
-		echo '<li>baseurl:' .$data['baseurl']. ' user-agent:'.$data['user_agent'].'  size:'.$data['size'].'  laststarttime:'.$data['laststarttime'].' lastendtime:'.$data['lastendtime'].'  totaltime:'.$data['totaltime'].'</li>';
-
-		if(sizeof($data['skipped_urls']) > 0 ){
-			$skipped_urls = '';
-			$blk = LiteSpeed_Cache_Config::CRWL_BLACKLIST;
-			$surls = array();
-			$skipped = array();
-			$site_url_len = strlen($baseurl);
-
-			if($options[$blk] !== ''){
-				$surls = explode(', ', $options[$blk]);
+	public function crawlData()
+	{
+		// for the first time running
+		if ( ! file_exists($this->_sitemapFile) ) {
+			$ret = $this->_generateSitemap() ;
+			if ( $ret !== true ) {
+				$this->terminateWithError($ret) ;
 			}
-			
-			foreach($data['skipped_urls'] as $urls)
-			{
-				$url = $baseurl . $urls['url'];
-				if(!in_array($url, $surls))
-				{
-					$surls[] = $url;
-					$reason = 'no-cache';
-					$skipped_urls = implode(', ', $surls);
-				}
-				else
-				{
-					$surls = array_map('trim', $surls);
-					$skipped_urls = implode(', ', $surls);
-				}
-			}
-
-			foreach ($surls as $surl)
-			{
-				$skipped['skipped_urls'][] = array('url'=> substr($surl, $site_url_len) ,'reason' => 'no-cache');
-			}
-
-			echo '<li>Skipped URLs: ' . $skipped_urls . '</li>';
-			$this->update_blacklisted_urls($skipped_urls, $data);
-			$sitemap->generate_data($skipped);
 		}
 
-		echo __('<li>Page will automaticallly reload in 3 sec(s)</li>', 'litespeed-cache');
+		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+
+		$crawler = new Litespeed_Crawler($this->_sitemapFile) ;
+		$crawler->setBaseUrl($this->_siteUrl) ;
+		$crawler->setRunDuration($options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
+		$crawler->setRunDelay($options[LiteSpeed_Cache_Config::CRWL_USLEEP]) ;
+		$crawler->setThreadsLimit($options[LiteSpeed_Cache_Config::CRWL_THREADS]) ;
+		$crawler->setLoadLimit($options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT]) ;
+		$ret = $crawler->engineStart() ;
+
+		// merge blacklist
+		if ( $ret['blacklist'] ) {
+			LiteSpeed_Cache_Config::get_instance()->appendBlacklist($ret['blacklist']) ;
+		}
+
+		// return error
+		if ( $ret['error'] !== false ) {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('Crawler log: ' . $ret['error']) ;
+			}
+			$this->terminateWithError($ret['error']) ;
+		}
+		else {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('Crawler log: End of sitemap file') ;
+			}
+			// regenerate the map and exit
+			$this->_generateSitemap() ;
+			wp_die() ;
+		}
 	}
 
-	function update_blacklisted_urls($skipped_urls, $data){
-		$blk = LiteSpeed_Cache_Config::CRWL_BLACKLIST;
-
-		$mtdt = LiteSpeed_Cache_Config::CRWL_TRANSIENT;
-
-		$data = serialize($data);
-
-		echo '<form method="post" action="options.php" id="blacklist_urls">';
-		settings_fields(LiteSpeed_Cache_Config::OPTION_NAME);
-		echo '<input type="hidden" id="'.$blk.'" name="litespeed-cache-conf['.$blk.']" value="'.$skipped_urls.'"/>';
-		echo '<textarea name="litespeed-cache-conf[crawler_metadata]" type="text" id="crawler_metadata" rows="5" cols="80" style="display:none;">'.
-		$data.'</textarea>';
-		echo '<input type="hidden" name="blacklist_urls_hidden" value="blacklist_urls_hidden"/>';
-		echo '<input type="hidden" name="crawl_page_url" id="crawl_page_url" value="/wp-admin/admin.php?page=lscache-crawler"/>';
-		echo '</form>';
+	/**
+	 * Exit with AJAX error
+	 * 
+	 * @param  string $error Error info
+	 */
+	public function terminateWithError($error)
+	{
+		// return ajax error
+		echo json_encode(array(
+			'error'	=> $error,
+		)) ;
+		wp_die() ;
 	}
+
 }

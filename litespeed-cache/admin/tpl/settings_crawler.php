@@ -7,6 +7,66 @@ if ( !defined('WPINC') ) die;
 
 <table class="form-table"><tbody>
 	<tr>
+		<th><?php echo __('Delay', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_USLEEP); ?> <?php echo __('microseconds', 'litespeed-cache'); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Specify time in microseconds for Crawler delay execution.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Run Duration', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_RUN_DURATION); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Specify how long for each run duration in seconds', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Cron Interval', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Specify the interval between each Cron runs in seconds', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Threads', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Specify Number of Threads to use while crawling', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Server Load Limit', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Set the max server load limit to use crawler', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Sitemap Generation Blacklist', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_BLACKLIST); ?>
+			<div class="litespeed-desc">
+				<?php echo __('All Urls which has no-cache tags will be added here, After the initial crawling.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Include Posts', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_POSTS); ?>
@@ -98,53 +158,4 @@ if ( !defined('WPINC') ) die;
 		</td>
 	</tr>
 
-	<tr>
-		<th><?php echo __('Delay', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_USLEEP); ?> <?php echo __('microseconds', 'litespeed-cache'); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Specify time in microseconds for Crawler delay execution.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __('Run Duration', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_RUN_DURATION); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Specify how long for each run duration in seconds', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __('Cron Interval', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Specify the interval between each Cron runs in seconds', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __('Threads', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Specify Number of Threads to use while crawling', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __('Sitemap Generation Blacklist', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_BLACKLIST); ?>
-			<div class="litespeed-desc">
-				<?php echo __('All Urls which has no-cache tags will be added here, After the initial crawl.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
 </tbody></table>

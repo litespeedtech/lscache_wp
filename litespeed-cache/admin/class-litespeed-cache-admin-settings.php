@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 
 		$id = LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('Delay', 'litespeed-cache'), 0);
+			$errors[] = sprintf($ttl_err, __('Cron Interval', 'litespeed-cache'), 0);
 		}
 		else {
 			$options[$id] = $input[$id];
@@ -478,11 +478,14 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 
 		$id = LiteSpeed_Cache_Config::CRWL_THREADS;
 		if (!$this->validate_ttl($input, $id, 1)) {
-			$errors[] = sprintf($ttl_err, __('Delay', 'litespeed-cache'), 1);
+			$errors[] = sprintf($ttl_err, __('Threads', 'litespeed-cache'), 1);
 		}
 		else {
 			$options[$id] = $input[$id];
 		}
+
+		$id = LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT;
+		$options[$id] = $input[$id];
 
 		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST;
 		if (isset($input[$id])) {

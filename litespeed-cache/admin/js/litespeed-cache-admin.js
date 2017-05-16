@@ -1,5 +1,11 @@
+var _litespeedMeta;
+var _litespeedInterval = 3;// seconds
+var _litespeedIntervalRange = [3, 60];
+var _litespeedIntervalHandle;
+var _litespeedIntervalDisplayHandle;
+
 (function ($) {
-	'use strict';
+	'use strict' ;
 
 	/**
 	 * All of the code for your public-facing JavaScript source
@@ -13,13 +19,13 @@
 	 *
 	 * $(function() {
 	 *
-	 * });
+	 * }) ;
 	 *
 	 * When the window is loaded:
 	 *
 	 * $( window ).load(function() {
 	 *
-	 * });
+	 * }) ;
 	 *
 	 * ...and/or other possibilities.
 	 *
@@ -33,61 +39,61 @@
 		/************** Common LiteSpeed JS **************/
 		// Arrow transform 
 		$('.litespeed-down, .litespeed-up').click(function(event) {
-			$(this).toggleClass('litespeed-up litespeed-down');
-		});
+			$(this).toggleClass('litespeed-up litespeed-down') ;
+		}) ;
 
 		// Link confirm
 		$('[data-litespeed-cfm]').click(function(event) {
 			if(confirm($.trim($(this).data('litespeed-cfm')).replace(/\\n/g,"\n"))) {
-				return true;
+				return true ;
 			}
-			event.preventDefault();
-			event.stopImmediatePropagation();
-			return false;
-		});
+			event.preventDefault() ;
+			event.stopImmediatePropagation() ;
+			return false ;
+		}) ;
 
 		/************** LSWCP JS ****************/
 		// FAQ show and hide
-		$('.litespeed-answer').hide();
+		$('.litespeed-answer').hide() ;
 		$('.litespeed-question').click(function(event) {
-			$(this).next('.litespeed-answer').slideToggle('fast');
-		});
+			$(this).next('.litespeed-answer').slideToggle('fast') ;
+		}) ;
 		$('[data-litespeed-expend-all]').click(function(event) {
-			var range = $(this).data('litespeed-expend-all');
+			var range = $(this).data('litespeed-expend-all') ;
 			if($(this).html() == '+'){
-				$(this).html('-');
-				$('[data-litespeed-layout="'+range+'"] .litespeed-answer').slideDown('fast');
-				$('[data-litespeed-layout="'+range+'"] .litespeed-question').addClass('litespeed-up').removeClass('litespeed-down');
+				$(this).html('-') ;
+				$('[data-litespeed-layout="'+range+'"] .litespeed-answer').slideDown('fast') ;
+				$('[data-litespeed-layout="'+range+'"] .litespeed-question').addClass('litespeed-up').removeClass('litespeed-down') ;
 			}else{
-				$(this).html('+');
-				$('[data-litespeed-layout="'+range+'"] .litespeed-answer').slideUp('fast');
-				$('[data-litespeed-layout="'+range+'"] .litespeed-question').addClass('litespeed-down').removeClass('litespeed-up');
+				$(this).html('+') ;
+				$('[data-litespeed-layout="'+range+'"] .litespeed-answer').slideUp('fast') ;
+				$('[data-litespeed-layout="'+range+'"] .litespeed-question').addClass('litespeed-down').removeClass('litespeed-up') ;
 			}
-		});
+		}) ;
 
 		// page tab switch functionality
 		if($('[data-litespeed-tab]').length > 0){
 			// display default tab
-			var litespeed_tab_current = document.cookie.replace(/(?:(?:^|.*;\s*)litespeed_tab\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+			var litespeed_tab_current = document.cookie.replace(/(?:(?:^|.*;\s*)litespeed_tab\s*\=\s*([^;]*).*$)|^.*$/, "$1") ;
 			if(window.location.hash.substr(1)) {
-				litespeed_tab_current = window.location.hash.substr(1);
+				litespeed_tab_current = window.location.hash.substr(1) ;
 			}
 			if(!litespeed_tab_current || !$('[data-litespeed-tab="'+litespeed_tab_current+'"]').length) {
-				litespeed_tab_current = $('[data-litespeed-tab]').first().data('litespeed-tab');
+				litespeed_tab_current = $('[data-litespeed-tab]').first().data('litespeed-tab') ;
 			}
-			litespeedDisplayTab(litespeed_tab_current);
+			litespeedDisplayTab(litespeed_tab_current) ;
 			// tab switch
 			$('[data-litespeed-tab]').click(function(event) {
-				litespeedDisplayTab($(this).data('litespeed-tab'));
-				document.cookie = 'litespeed_tab='+$(this).data('litespeed-tab');
-			});
+				litespeedDisplayTab($(this).data('litespeed-tab')) ;
+				document.cookie = 'litespeed_tab='+$(this).data('litespeed-tab') ;
+			}) ;
 		}
 
 		// Manage page -> purge by
 		$('[name=purgeby]').change(function(event) {
-			$('[data-purgeby]').hide();
-			$('[data-purgeby='+this.value+']').show();
-		});
+			$('[data-purgeby]').hide() ;
+			$('[data-purgeby='+this.value+']').show() ;
+		}) ;
 
 		//WHM Notice
 		$(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
@@ -99,89 +105,57 @@
 					_wpnonce: lscwp_data.nonce
 				}
 			})
-		});
+		}) ;
 
 		// Select All and Copy to Clipboard
 		$("#litespeed_cache_report_copy").click(function() {
-			$('#litespeed-report').select();
-			document.execCommand('copy');
-			$('#copy_select_all_span').fadeIn('slow').delay(1000).fadeOut('slow');
-		});
+			$('#litespeed-report').select() ;
+			document.execCommand('copy') ;
+			$('#copy_select_all_span').fadeIn('slow').delay(1000).fadeOut('slow') ;
+		}) ;
 
 		// Settings->General->Enable mobile view
 		$('#conf_mobileview_enabled_1').click(function() {
 			if($(this).is(':checked')){
 				if(!$('#litespeed-mobileview-rules').val()){
-					$('#litespeed-mobileview-rules').val($('#litespeed-mobileview-rules-default').val());
+					$('#litespeed-mobileview-rules').val($('#litespeed-mobileview-rules-default').val()) ;
 				}
-				$('#litespeed-mobileview-rules').prop('readonly', false);
+				$('#litespeed-mobileview-rules').prop('readonly', false) ;
 			}
-		});
+		}) ;
 		$('#conf_mobileview_enabled_0').click(function() {
 			if($(this).is(':checked')){
-				// $('#litespeed-mobileview-rules').val('');
-				$('#litespeed-mobileview-rules').prop('readonly', true);
+				// $('#litespeed-mobileview-rules').val('') ;
+				$('#litespeed-mobileview-rules').prop('readonly', true) ;
 			}
-		});
+		}) ;
 
 		/*************** crawler ******************/
-		// Get Activate/De-activate value
-		$("#cron_active").on("click", function(event){
-			var active = $("#crawler_cron_active").val();
-			$("#click").val('active');
-			$('#cron_settings').submit();     
-		});
-		
-		$('#cpt_title').click(function(){
-			$(this).parents().next('.hide').toggle();
-		});
-		
-		//Crawl Urls
-		$('#litespeedcache-button-crawl-url').click(function () { 
-			$(this).attr('disabled', true);
-			$("#crwl_save_settings").attr('disabled', true);
-			$("#crwl_file").attr('disabled', true);
-			$('.shell-wrap').css('display','block');
+		$('#litespeedBtnCrawlUrl').click(function () {
+			if( ! $(this).data('url') ){
+				return false ;
+			}
+			$(this).attr('disabled', true) ;
+			$('.shell-wrap').css('display','block') ;
+			$.ajaxSetup({ cache: false }) ;
+			litespeedGetMeta($(this).data('url')) ;
+			_litespeedIntervalHandle = window.setTimeout('litespeedDynamicTimeout()', _litespeedInterval*1000) ;
+			litespeedPulse() ;
+		}) ;
+	}) ;
+})(jQuery) ;
 
-			var cursor = 0;
-			var intervalId = setInterval(function () {
-					var wait = dots(cursor++, 3, '.');
-					var wait_data = '<li>crawling url(s) please wait'+wait+'</li>';
-					$('.shell-body').html(wait_data);
-				}, 100);
-			$.ajax({
-				url: ajaxurl,
-				data: {action: "crawl_data"},
-				success: function(data){
-					data = data.slice(0, -1);
-					clearInterval(intervalId);
-					$('.shell-body').html(data);
-					$('#litespeedcache-button-crawl-url').attr('disabled', false);
-					$("#crwl_save_settings").attr('disabled', false);
-					$("#crwl_file").attr('disabled', false);
-					var crawl_admin_url = $("input[name=crawl_page_url]").val();
-					$("input[name=_wp_http_referer]").val(crawl_admin_url);
-					var wait=setTimeout(function() { $('#blacklist_urls').submit(); }, 3000);
-				}
-			});
 
-		});
-	});
-})(jQuery);
 
-function litespeedDisplayTab(tab){
+function litespeedDisplayTab(tab) {
 	// setting page -> display submit button
-	if(jQuery('#litespeed-submit').length > 0){
-		jQuery('#litespeed-submit').toggle(tab != 'compatibilities');
+	if ( jQuery('#litespeed-submit').length > 0 ){
+		jQuery('#litespeed-submit').toggle(tab != 'compatibilities') ;
 	}
-	jQuery('[data-litespeed-tab]').removeClass('nav-tab-active');
-	jQuery('[data-litespeed-tab="'+tab+'"]').addClass('nav-tab-active');
-	jQuery('[data-litespeed-layout]').hide();
-	jQuery('[data-litespeed-layout="'+tab+'"]').show();
-}
-
-function dots(cursor, times, string) {
-  return Array(times - Math.abs(cursor % (times * 2) - times) + 1).join(string);
+	jQuery('[data-litespeed-tab]').removeClass('nav-tab-active') ;
+	jQuery('[data-litespeed-tab="'+tab+'"]').addClass('nav-tab-active') ;
+	jQuery('[data-litespeed-layout]').hide() ;
+	jQuery('[data-litespeed-layout="'+tab+'"]').show() ;
 }
 
 function lscwpEsiEnabled(the_checkbox, esi_ids) {
@@ -221,13 +195,82 @@ function lscwpEsiEnabled(the_checkbox, esi_ids) {
 }
 
 // Append params to uri
-function litespeedAppendParam(uri, key, val){
-	var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-	var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+function litespeedAppendParam(uri, key, val) {
+	var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i") ;
+	var separator = uri.indexOf('?') !== -1 ? "&" : "?" ;
 	if (uri.match(re)) {
-		return uri.replace(re, '$1' + key + "=" + val + '$2');
+		return uri.replace(re, '$1' + key + "=" + val + '$2') ;
 	}
 	else {
-		return uri + separator + key + "=" + val;
+		return uri + separator + key + "=" + val ;
 	}
 }
+
+function litespeedPulse() {
+	jQuery('#litespeedIconPulse').animate({
+		width: 27, height: 34, 
+		opacity: 1
+	}, 700, function() {
+		jQuery('#litespeedIconPulse').animate({
+			width: 23, height: 29, 
+			opacity: 0.5
+		}, 700) ;
+	}) ; 
+}
+
+function litespeedGetMeta(url) {
+	jQuery.getJSON(url, function( meta ) {
+		litespeedPulse() ;
+		var changed = false ;
+		if ( meta != _litespeedMeta ) {
+			_litespeedMeta = meta ;
+			changed = true ;
+			var string = '<li>' +
+							'List size: ' + meta.listSize +
+							',		Meta file last modified at : ' + meta.fileTime +
+							',		Last crawled line: ' + meta.lastPos +
+							',		Last crawled threads: ' + meta.lastCount +
+							',		Last started at: ' + meta.listSize +
+							',		Last ended reason: ' + meta.endReason +
+							',		Is crawling: ' + ( meta.isRunning == 1 ? 'Yes' : 'No' ) +
+						'</li>' ;
+			jQuery('.litespeed-shell-body').html(string) ;
+		}
+
+		// dynamic adjust the interval length
+		if ( changed ) {
+			_litespeedInterval -= Math.ceil(_litespeedInterval/2) ;
+		}
+		else{
+			_litespeedInterval ++  ;
+		}
+		if(_litespeedInterval < _litespeedIntervalRange[0]) {
+			_litespeedInterval = _litespeedIntervalRange[0] ;
+		}
+		if(_litespeedInterval > _litespeedIntervalRange[1]) {
+			_litespeedInterval = _litespeedIntervalRange[1] ;
+		}
+		// display interval counting
+		litespeedResetIntervalDisplay() ;
+		_litespeedIntervalHandle = window.setTimeout('litespeedDynamicTimeout()', _litespeedInterval*1000) ;
+	}) ;
+}
+
+function litespeedDynamicTimeout() {
+	window.clearTimeout(_litespeedIntervalHandle) ;
+	getWPcount() ;
+}
+
+function litespeedResetIntervalDisplay() {
+	window.clearInterval(_litespeedIntervalDisplayHandle) ;
+	jQuery('#litespeedInterval').text(_litespeedInterval) ;
+	_litespeedIntervalDisplayHandle = window.setInterval('litespeedDisplayInterval()', 1000) ;
+}
+
+function litespeedDisplayInterval() {
+	var num = jQuery('#litespeedInterval').text() ;
+	if(num > 0) num-- ;
+	if(num < 0) num = '.' ;
+	jQuery('#litespeedInterval').text(num) ;
+}
+

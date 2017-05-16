@@ -4,7 +4,8 @@
 * LiteSpeed Library Class
 * @since 1.1.0
 */
-class LiteSpeed{
+class LiteSpeed
+{
 	private static $_instance_list = array();
 	private static $_var_list = array();
 
@@ -15,7 +16,8 @@ class LiteSpeed{
 	 * @access public
 	 * @return Current LiteSpeed child class.
 	 */
-	public static function get_instance(){
+	public static function get_instance()
+	{
 		$cls = get_called_class();
 		if (!isset(self::$_instance_list[$cls])) {
 			self::$_instance_list[$cls] = new $cls();
@@ -32,7 +34,8 @@ class LiteSpeed{
 	 * @param  string $var variable name
 	 * @return mixed
 	 */
-	public static function is_var($var){
+	public static function is_var($var)
+	{
 		$var = self::_get_var_name($var);
 		if (!isset(self::$_var_list[$var])) {
 			self::$_var_list[$var] = false;
@@ -47,7 +50,8 @@ class LiteSpeed{
 	 * @param  string $var variable name
 	 * @return mixed
 	 */
-	public static function get_var($var){
+	public static function get_var($var)
+	{
 		$var = self::_get_var_name($var);
 		return self::$_var_list[$var];
 	}
@@ -58,7 +62,8 @@ class LiteSpeed{
 	 * @param  string $var variable name
 	 * @return bool
 	 */
-	public static function set_var($var, $val){
+	public static function set_var($var, $val)
+	{
 		$var = self::_get_var_name($var);
 		self::$_var_list[$var] = $val;
 		return $val;
@@ -71,7 +76,8 @@ class LiteSpeed{
 	 * @param  string $var
 	 * @return string
 	 */
-	private static function _get_var_name($var){
+	private static function _get_var_name($var)
+	{
 		$cls = get_called_class();
 		return $cls.'__'.$var;
 	}

@@ -10,8 +10,8 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Config extends LiteSpeed{
-
+class LiteSpeed_Cache_Config extends LiteSpeed
+{
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 	const VAL_OFF = 0;
 	const VAL_ON = 1;
@@ -24,28 +24,28 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	const LOG_LEVEL_DEBUG = 4 ;
 	const OPID_VERSION = 'version' ;
 	const OPID_ENABLED = 'enabled' ;
-	const OPID_ENABLED_RADIO = 'radio_select';
-	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade';
-	const OPID_CACHE_COMMENTERS = 'cache_commenters';
-	const OPID_CACHE_LOGIN = 'cache_login';
-	const OPID_CACHE_FAVICON = 'cache_favicon';
-	const OPID_CACHE_RES = 'cache_resources';
-	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled';
-	const OPID_LOGIN_COOKIE = 'login_cookie';
-	const OPID_TAG_PREFIX = 'tag_prefix';
-	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache';
+	const OPID_ENABLED_RADIO = 'radio_select' ;
+	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
+	const OPID_CACHE_COMMENTERS = 'cache_commenters' ;
+	const OPID_CACHE_LOGIN = 'cache_login' ;
+	const OPID_CACHE_FAVICON = 'cache_favicon' ;
+	const OPID_CACHE_RES = 'cache_resources' ;
+	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled' ;
+	const OPID_LOGIN_COOKIE = 'login_cookie' ;
+	const OPID_TAG_PREFIX = 'tag_prefix' ;
+	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache' ;
 	// do NOT set default options for these three, it is used for admin.
-	const ID_MOBILEVIEW_LIST = 'mobileview_rules';
+	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
 	const ID_NOCACHE_USERAGENTS = 'nocache_useragents' ;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
-	const OPID_FRONT_PAGE_TTL = 'front_page_ttl';
-	const OPID_FEED_TTL = 'feed_ttl';
-	const OPID_403_TTL = '403_ttl';
-	const OPID_404_TTL = '404_ttl';
-	const OPID_500_TTL = '500_ttl';
+	const OPID_FRONT_PAGE_TTL = 'front_page_ttl' ;
+	const OPID_FEED_TTL = 'feed_ttl' ;
+	const OPID_403_TTL = '403_ttl' ;
+	const OPID_404_TTL = '404_ttl' ;
+	const OPID_500_TTL = '500_ttl' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
 	const OPID_ESI_ENABLE = 'esi_enabled';
@@ -65,23 +65,23 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
-	const NETWORK_OPID_ENABLED = 'network_enabled';
-	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings';
+	const NETWORK_OPID_ENABLED = 'network_enabled' ;
+	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings' ;
 
-	const CRWL_POSTS = 'crawler_include_posts';
-	const CRWL_PAGES = 'crawler_include_pages';
-	const CRWL_CATS = 'crawler_include_cats';
-	const CRWL_TAGS = 'crawler_include_tags';
-	const CRWL_EXCLUDES_CPT = 'crawler_excludes_cpt';
+	const CRWL_POSTS = 'crawler_include_posts' ;
+	const CRWL_PAGES = 'crawler_include_pages' ;
+	const CRWL_CATS = 'crawler_include_cats' ;
+	const CRWL_TAGS = 'crawler_include_tags' ;
+	const CRWL_EXCLUDES_CPT = 'crawler_excludes_cpt' ;
 	const CRWL_ORDER_LINKS = 'crawler_order_links' ;
 	const CRWL_USLEEP = 'crawler_usleep' ;
 	const CRWL_RUN_DURATION = 'crawler_run_duration' ;
 	const CRWL_CRON_INTERVAL = 'crawler_cron_interval' ;
 	const CRWL_THREADS  = 'crawler_threads' ;
-	const CRWL_BLACKLIST = 'crawler_blacklist';
+	const CRWL_LOAD_LIMIT  = 'crawler_load_limit' ;
+	const CRWL_BLACKLIST = 'crawler_blacklist' ;
 
-	const CRWL_TRANSIENT = 'crawler_metadata';
-	const CRWL_CRON_ACTIVE = 'crawler_cron_active';
+	const CRWL_CRON_ACTIVE = 'crawler_cron_active' ;
 
 	const CRWL_DATE_DESC = 'date_desc' ;
 	const CRWL_DATE_ASC = 'date_asc' ;
@@ -97,12 +97,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 *
 	 * @since 1.0.0
 	 */
-	protected function __construct(){
-		if ( is_multisite()) {
-			$options = $this->construct_multisite_options();
+	protected function __construct()
+	{
+		if ( is_multisite() ) {
+			$options = $this->construct_multisite_options() ;
 		}
 		else {
-			$options = get_option(self::OPTION_NAME, $this->get_default_options());
+			$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
 		}
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
@@ -110,7 +111,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 		if (isset($options[self::OPID_CHECK_ADVANCEDCACHE])
 			&& $options[self::OPID_CHECK_ADVANCEDCACHE] === false
 			&& !defined('LSCACHE_ADV_CACHE')) {
-			define('LSCACHE_ADV_CACHE', true);
+			define('LSCACHE_ADV_CACHE', true) ;
 		}
 
 		if (WP_DEBUG /* && $this->options[self::OPID_DEBUG] */ ) {
@@ -123,6 +124,22 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	}
 
 	/**
+	 * Append urls to current list
+	 *
+	 * @param  array $list The url list needs to be appended
+	 */
+	public function appendBlacklist($list)
+	{
+		$id = self::CRWL_BLACKLIST ;
+		$this->options[$id] = explode("\n", $this->options[$id]) ;
+		$this->options[$id] = array_filter(array_merge($this->options[$id], $list)) ;
+		$this->options[$id] = implode("\n", array_map('trim', $this->options[$id])) ;
+
+		// update config
+		update_option(self::OPTION_NAME, $this->options) ;
+	}
+
+	/**
 	 * For multisite installations, the single site options need to be updated
 	 * with the network wide options.
 	 *
@@ -132,45 +149,35 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 */
 	private function construct_multisite_options()
 	{
-		$site_options = get_site_option(self::OPTION_NAME);
+		$site_options = get_site_option(self::OPTION_NAME) ;
 
-		if (!function_exists('is_plugin_active_for_network') ) {
-			require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+		if ( ! function_exists('is_plugin_active_for_network') ) {
+			require_once(ABSPATH . '/wp-admin/includes/plugin.php') ;
 		}
 
-		if ((!$site_options) || (!is_array($site_options))
-			|| (!is_plugin_active_for_network('litespeed-cache/litespeed-cache.php'))) {
-			$options = get_option(self::OPTION_NAME,
-				$this->get_default_options());
+		if ( !$site_options || !is_array($site_options) || !is_plugin_active_for_network('litespeed-cache/litespeed-cache.php') ) {
+			$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
 			if ($options[self::OPID_ENABLED_RADIO] == 2) {
 				$options[self::OPID_ENABLED] = true;
 			}
 			return $options;
 		}
-		if ((isset($site_options[self::NETWORK_OPID_USE_PRIMARY]))
-			&& ($site_options[self::NETWORK_OPID_USE_PRIMARY])) {
+		if ( isset($site_options[self::NETWORK_OPID_USE_PRIMARY]) && $site_options[self::NETWORK_OPID_USE_PRIMARY] ) {
 			$main_id = BLOG_ID_CURRENT_SITE;
-			$options = get_blog_option($main_id,
-				LiteSpeed_Cache_Config::OPTION_NAME, array());
+			$options = get_blog_option($main_id, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
 		}
 		else {
-			$options = get_option(self::OPTION_NAME,
-				$this->get_default_options());
+			$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
 		}
 		$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED];
 		if ($options[self::OPID_ENABLED_RADIO] == 2) {
 			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
 		}
-		$options[self::OPID_PURGE_ON_UPGRADE]
-			= $site_options[self::OPID_PURGE_ON_UPGRADE];
-		$options[self::OPID_MOBILEVIEW_ENABLED]
-			= $site_options[self::OPID_MOBILEVIEW_ENABLED];
-		$options[self::ID_MOBILEVIEW_LIST]
-			= $site_options[self::ID_MOBILEVIEW_LIST];
-		$options[self::OPID_LOGIN_COOKIE]
-			= $site_options[self::OPID_LOGIN_COOKIE];
-		$options[self::OPID_TAG_PREFIX]
-			= $site_options[self::OPID_TAG_PREFIX];
+		$options[self::OPID_PURGE_ON_UPGRADE] = $site_options[self::OPID_PURGE_ON_UPGRADE];
+		$options[self::OPID_MOBILEVIEW_ENABLED] = $site_options[self::OPID_MOBILEVIEW_ENABLED];
+		$options[self::ID_MOBILEVIEW_LIST] = $site_options[self::ID_MOBILEVIEW_LIST];
+		$options[self::OPID_LOGIN_COOKIE] = $site_options[self::OPID_LOGIN_COOKIE];
+		$options[self::OPID_TAG_PREFIX] = $site_options[self::OPID_TAG_PREFIX];
 		return $options;
 	}
 
@@ -200,7 +207,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 			return $this->options[$id];
 		}
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('Invalid option ID ' . $id);
+			LiteSpeed_Cache_Log::push('Invalid option ID ' . $id) ;
 		}
 		return NULL;
 	}
@@ -301,9 +308,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 			self::CRWL_RUN_DURATION => '200',
 			self::CRWL_CRON_INTERVAL => '28800',
 			self::CRWL_THREADS => '3',
+			self::CRWL_LOAD_LIMIT => '1',
 			self::CRWL_CRON_ACTIVE => '0',
 			self::CRWL_BLACKLIST => '',
-			self::CRWL_TRANSIENT => '',
 				) ;
 
 		if (!is_openlitespeed()) {
@@ -319,11 +326,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 			return $default_options;
 		}
 
-		$tp_options = $this->get_thirdparty_options($default_options);
+		$tp_options = $this->get_thirdparty_options($default_options) ;
 		if ((!isset($tp_options)) || (!is_array($tp_options))) {
 			return $default_options;
 		}
-		return array_merge($default_options, $tp_options);
+		return array_merge($default_options, $tp_options) ;
 	}
 
 	/**
@@ -348,7 +355,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
-		);
+		) ;
 		return $default_site_options;
 	}
 
@@ -369,7 +376,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES => '',
 			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS => '',
 			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE => ''
-		);
+		) ;
 		return $reset;
 	}
 
@@ -382,20 +389,21 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 * @access public
 	 * @return array Returns the current site options.
 	 */
-	public function get_site_options(){
+	public function get_site_options()
+	{
 		if (!is_multisite()) {
-			return null;
+			return null ;
 		}
-		$site_options = get_site_option(self::OPTION_NAME);
+		$site_options = get_site_option(self::OPTION_NAME) ;
 		if (isset($site_options) && is_array($site_options)) {
-			return $site_options;
+			return $site_options ;
 		}
 		elseif (isset($site_options) && is_string($site_options)) {
-			return $site_options;
+			return $site_options ;
 		}
-		$default_site_options = $this->get_default_site_options();
-		add_site_option(self::OPTION_NAME, $default_site_options);
-		return $default_site_options;
+		$default_site_options = $this->get_default_site_options() ;
+		add_site_option(self::OPTION_NAME, $default_site_options) ;
+		return $default_site_options ;
 	}
 
 	/**
@@ -408,14 +416,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 * @return mixed boolean on failure, array of keys on success.
 	 */
 	public function get_thirdparty_options($options = null){
-		$tp_options = apply_filters('litespeed_cache_get_options', array());
+		$tp_options = apply_filters('litespeed_cache_get_options', array()) ;
 		if (empty($tp_options)) {
-			return false;
+			return false ;
 		}
 		if (!isset($options)) {
-			$options = $this->get_default_options(false);
+			$options = $this->get_default_options(false) ;
 		}
-		return array_diff_key($tp_options, $options);
+		return array_diff_key($tp_options, $options) ;
 	}
 
 	/**
@@ -429,28 +437,27 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 */
 	public static function convert_options_to_input(&$options)
 	{
-		$checkboxes =
-			array(
-				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
-				LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
-				LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
-				LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
-				LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-				LiteSpeed_Cache_Config::OPID_CACHE_RES,
-				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
-			);
+		$checkboxes = array(
+			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
+			LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
+			LiteSpeed_Cache_Config::OPID_CACHE_RES,
+			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+		) ;
 
 		if (isset($options[self::OPID_PURGE_BY_POST])) {
-			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]);
+			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
 
 			foreach ($purge_opts as $purge_opt) {
-				$options['purge_' . $purge_opt] = $purge_opt;
+				$options['purge_' . $purge_opt] = $purge_opt ;
 			}
 		}
 
 		foreach ($checkboxes as $checkbox) {
 			if ((isset($options[$checkbox])) && ($options[$checkbox])) {
-				$options['lscwp_' . $checkbox] = $checkbox;
+				$options['lscwp_' . $checkbox] = $checkbox ;
 			}
 		}
 
@@ -466,24 +473,24 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 * @return array New options.
 	 */
 	public static function option_diff($default_options, $options){
-		$dkeys = array_keys($default_options);
-		$keys = array_keys($options);
-		$newkeys = array_diff($dkeys, $keys);
-		$log = '' ;//todo: useless
+		$dkeys = array_keys($default_options) ;
+		$keys = array_keys($options) ;
+		$newkeys = array_diff($dkeys, $keys) ;
+		$log = ''  ;//todo: useless
 		if ( ! empty($newkeys) ) {
 			foreach ( $newkeys as $newkey ) {
-				$options[$newkey] = $default_options[$newkey] ;
-				$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey] ;
+				$options[$newkey] = $default_options[$newkey]  ;
+				$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey]  ;
 			}
 		}
-		$retiredkeys = array_diff($keys, $dkeys) ;
+		$retiredkeys = array_diff($keys, $dkeys)  ;
 		if ( ! empty($retiredkeys) ) {
 			foreach ( $retiredkeys as $retired ) {
-				unset($options[$retired]) ;
-				$log .= 'Removed ' . $retired ;
+				unset($options[$retired])  ;
+				$log .= 'Removed ' . $retired  ;
 			}
 		}
-		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION;
+		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
 
 		if ($options[self::OPID_MOBILEVIEW_ENABLED] === false) {
 			$options[self::ID_MOBILEVIEW_LIST] = false;
@@ -516,12 +523,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 
 //		if ((!is_multisite()) || (is_network_admin())) {
 //			$this->options[self::OPID_LOGIN_COOKIE]
-//				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
+//				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade() ;
 //		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n");
+			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n") ;
 		}
 	}
 
@@ -532,20 +539,20 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 	 * @access public
 	 */
 	public function plugin_site_upgrade(){
-		$default_options = $this->get_default_site_options();
-		$options = $this->get_site_options();
+		$default_options = $this->get_default_site_options() ;
+		$options = $this->get_site_options() ;
 
 		if ($options[self::OPID_VERSION] == $default_options[self::OPID_VERSION]
 				&& count($default_options) == count($options)) {
 			return;
 		}
 
-		$options = self::option_diff($default_options, $options);
+		$options = self::option_diff($default_options, $options) ;
 
-		$res = update_site_option(self::OPTION_NAME, $options);
+		$res = update_site_option(self::OPTION_NAME, $options) ;
 
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n");
+			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n") ;
 		}
 
 	}
@@ -573,9 +580,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed{
 		}
 		$file = ABSPATH . 'wp-config.php' ;
 		if ( !is_writeable($file) ) {
-			$file = dirname(ABSPATH) . '/wp-config.php';
+			$file = dirname(ABSPATH) . '/wp-config.php' ;
 			if ( !is_writeable($file) ) {
-				error_log('wp-config file not writeable for \'WP_CACHE\'');
+				error_log('wp-config file not writeable for \'WP_CACHE\'') ;
 				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE;
 			}
 		}

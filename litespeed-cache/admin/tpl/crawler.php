@@ -3,6 +3,7 @@ if (!defined('WPINC')) die;
 
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 
+$sitemapTime = LiteSpeed_Cache_Crawler::get_instance()->sitemapTime();
 ?>
 
 <div class="wrap">
@@ -14,6 +15,12 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		<a href="<?php echo LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE); ?>" class="litespeed-btn litespeed-btn-success">
 			<?php echo __('Generate Crawler File', 'litespeed-cache'); ?>
 		</a>
+
+		<?php
+			if ( $sitemapTime ) {
+				echo sprintf(__('Generated at %s', 'litespeed-cache'), $sitemapTime);
+			}
+		 ?>
 		<div class="litespeed-desc">
 			<?php echo __('This will create a Crawler file in plugin folder', 'litespeed-cache'); ?>
 		</div>
@@ -41,9 +48,9 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 			</tr></thead>
 			<tbody>
 				<tr>
-					<td><?php echo __('LiteSpeed Cache Crawler','litespeed-cache'); ?></td>
+					<td><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache'); ?></td>
 					<td>
-						<?php echo sprintf(__('%d hour(s)','litespeed-cache'), $hours); ?>
+						<?php echo sprintf(__('%d hour(s)', 'litespeed-cache'), $hours); ?>
 					</td>
 					<td><?php echo $active_text; ?></td>
 				</tr>
@@ -57,7 +64,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 
 		<h3 class="litespeed-title"><?php echo __('Start Crawler manually', 'litespeed-cache'); ?></h3>
 
-		<input type="button" id="litespeedcache-button-crawl-url" name="litespeedcache-button-crawl-url" value="<?php echo __('Let It Go', 'litespeed-cache'); ?>" class="litespeed-btn litespeed-btn-success"/>
+		<input type="button" id="litespeedBtnCrawlUrl" value="<?php echo __('Show crawler status', 'litespeed-cache'); ?>" class="litespeed-btn litespeed-btn-success" data-url="<?php echo LiteSpeed_Cache_Crawler::get_instance()->getCrawlerJsonPath(); ?>" />
 
 		<div class="litespeed-shell-wrap litespeed-hide">
 			<?php require LSWCP_DIR . 'admin/tpl/snowman.inc.php'; ?>

@@ -85,8 +85,8 @@ class LiteSpeed_Cache extends LiteSpeed{
 		$this->config = LiteSpeed_Cache_Config::get_instance();
 
 		// Check if debug is on
-		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_ENABLED)) {
-			$should_debug = intval($this->config->get_option(LiteSpeed_Cache_Config::OPID_DEBUG));
+		if ($this->config(LiteSpeed_Cache_Config::OPID_ENABLED)) {
+			$should_debug = intval($this->config(LiteSpeed_Cache_Config::OPID_DEBUG));
 			switch ($should_debug) {
 				// NOTSET is used as check admin IP here.
 				case LiteSpeed_Cache_Config::VAL_NOTSET:
@@ -188,8 +188,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	{
 		$msg = false;
 		// handle actions
-		switch ( LiteSpeed_Cache_Router::get_action() )
-		{
+		switch ( LiteSpeed_Cache_Router::get_action() ) {
 			case LiteSpeed_Cache::ACTION_PURGE:
 				$this->cachectrl = LiteSpeed_Cache::CACHECTRL_PURGE;
 				break;
@@ -199,14 +198,14 @@ class LiteSpeed_Cache extends LiteSpeed{
 				break;
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
-				LiteSpeed_Cache_Crawler::get_instance()->generate_sitemap();
+				LiteSpeed_Cache_Crawler::get_instance()->generateSitemap();
 				LiteSpeed_Cache_Admin::redirect();
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
-				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Admin_Crawler::get_instance(), 'crawl_data'));
+				add_action('wp_ajax_crawlData', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawlData'));
+				add_action('wp_ajax_nopriv_crawlData', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawlData'));LiteSpeed_Cache_Crawler::get_instance()->crawlData();
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
@@ -247,8 +246,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 			default:
 				break;
 		}
-		if ( $msg )
-		{
+		if ( $msg ) {
 			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
 			LiteSpeed_Cache_Admin::redirect();
 			return;
@@ -301,9 +299,8 @@ class LiteSpeed_Cache extends LiteSpeed{
 		add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
 		add_filter('status_header', array($this, 'check_error_codes'), 10, 2);
 
-		$cache_res = $this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_RES);
-		if ( $cache_res )
-		{
+		$cache_res = $this->config(LiteSpeed_Cache_Config::OPID_CACHE_RES);
+		if ( $cache_res ) {
 			$uri = esc_url($_SERVER["REQUEST_URI"]);
 			$pattern = '!' . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!';
 			if ( preg_match($pattern, $uri) )
@@ -330,8 +327,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 			'trashed_post',
 			'delete_attachment',
 		) ;
-		foreach ( $purge_post_events as $event )
-		{
+		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags
 			add_action($event, array( $this, 'purge_post' ), 10, 2) ;
 		}
@@ -485,21 +481,17 @@ class LiteSpeed_Cache extends LiteSpeed{
 	public function purge_errors()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR);
-		if ( ! isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME]) )
-		{
+		if ( ! isset($_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
 			return;
 		}
 		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
-		if ( isset($input['include_403']) )
-		{
+		if ( isset($input['include_403']) ) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '403');
 		}
-		if ( isset($input['include_404']) )
-		{
+		if ( isset($input['include_404']) ) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '404');
 		}
-		if ( isset($input['include_500']) )
-		{
+		if ( isset($input['include_500']) ) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_ERROR . '500');
 		}
 	}
@@ -528,18 +520,15 @@ class LiteSpeed_Cache extends LiteSpeed{
 	public function purgeby_cat_cb($value, $key)
 	{
 		$val = trim($value);
-		if ( empty($val) )
-		{
+		if ( empty($val) ) {
 			return;
 		}
-		if ( preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0 )
-		{
+		if ( preg_match('/^[a-zA-Z0-9-]+$/', $val) == 0 ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_INV);
 			return;
 		}
 		$cat = get_category_by_slug($val);
-		if ( $cat == false )
-		{
+		if ( $cat == false ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_CAT_DNE, $val);
 			return;
 		}
@@ -644,8 +633,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 */
 	public function purge_list(){
 		if ( !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT])
-			|| !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST])
-		) {
+				|| !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST]) ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGE_FORM);
 			return;
 		}
