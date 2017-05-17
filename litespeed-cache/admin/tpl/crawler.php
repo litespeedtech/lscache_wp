@@ -79,6 +79,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn litespeed-btn-success" data-url="<?php echo $ajaxUrl ; ?>" />
 
 		<div class="litespeed-shell litespeed-hide">
+			<div class="litespeed-shell-header-bar"></div>
 			<div class="litespeed-shell-header">
 				<div class="litespeed-shell-header-bg"></div>
 				<div class="litespeed-shell-header-num"></div>

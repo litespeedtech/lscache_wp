@@ -189,6 +189,15 @@ textarea#purgebylist{
 	border-top-radius: 3px;
 }
 
+.litespeed-shell-header-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	height: 2px;
+	background-color: #F48024;
+}
+
 .litespeed-shell-header-num{
 	position: absolute;
 	bottom: 2px;
@@ -199,6 +208,7 @@ textarea#purgebylist{
 	color: #808080;
 	font-size: 0.85em;
 	z-index: 5;
+	display: none;
 }
 
 .litespeed-shell-header-icon-container{

@@ -280,11 +280,13 @@ function _litespeed_build_meta(meta) {
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.listSize +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + meta.lastPos +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.lastCount +
-					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: ' + ( meta.lastStatus ? meta.lastStatus : '-' ) +
-					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crawling: ' + ( meta.isRunning ? 'Yes' : '' )
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: '
 				 ;
-	if ( ! meta.isRunning ) {
-		string += ' ' + ( meta.endReason ? meta.endReason : '-' ) ;
+	if ( meta.isRunning ) {
+		string += 'crawling, ' + meta.lastStatus;
+	}
+	else{
+		string += meta.endReason ? meta.endReason : '-' ;
 	}
 	string += '</li>' ;
 	return string;
@@ -299,13 +301,25 @@ function _litespeed_display_interval_reset() {
 	window.clearInterval(_litespeed_shell_display_handle) ;
 	jQuery('.litespeed-shell-header-num').text(_litespeed_shell_interval) ;
 	_litespeed_shell_display_handle = window.setInterval(_litespeed_display_interval, 1000) ;
+
+	jQuery('.litespeed-shell-header-bar').stop().animate({width: '100%'}, 500, function(){
+		jQuery('.litespeed-shell-header-bar').css('width', '0%') ;
+	}) ;
 }
 
 function _litespeed_display_interval() {
 	var num = jQuery('.litespeed-shell-header-num').text() ;
+	jQuery('.litespeed-shell-header-bar').stop().animate({width: litespeed_get_percent(num, _litespeed_shell_interval) + '%'}, 1000) ;
 	if(num > 0) num-- ;
-	if(num < 0) num = '.' ;
+	if(num < 0) num = 0 ;
 	jQuery('.litespeed-shell-header-num').text(num) ;
+}
+
+function litespeed_get_percent(num1, num2){
+	num1 = num1 * 1;
+	num2 = num2 * 1;
+	num = (num2 - num1) / num2;console.log(num1, num2, num);
+	return num * 100;
 }
 
 function _litespeed_loading_dots() {
