@@ -41,82 +41,6 @@ textarea#purgebylist{
 	-webkit-font-smoothing: subpixel-antialiased;
 }
 
-
-
-.litespeed-shell-wrap {
-	width: 98%;
-	background: #141414;
-	margin: 20px auto 0 10px;
-	box-shadow: 0 0 5px rgba(0,0,0,0.4);
- -webkit-border-radius: 3px;
- -moz-border-radius: 3px;
- border-radius: 3px;
-	 height:224px;
-	overflow:auto;
-}
- 
-.litespeed-shell-top-bar {
-	text-align: center;
-	color: #525252;
-	padding: 5px 0;
-	margin: 0;
-	text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
-	font-size: 0.85em;
-	border: 1px solid #CCCCCC;
-	border-bottom: none;
- 
-	-webkit-border-top-left-radius: 3px;
-	-webkit-border-top-right-radius: 3px;
-	-moz-border-radius-topleft: 3px;
-	-moz-border-radius-topright: 3px;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
- 
-	background: #f7f7f7; /* Old browsers */
-	background: -moz-linear-gradient(top,  #f7f7f7 0%, #B8B8B8 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#B8B8B8)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #f7f7f7 0%,#B8B8B8 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #f7f7f7 0%,#B8B8B8 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#B8B8B8',GradientType=0 ); /* IE6-9 */
-}
- 
-.litespeed-shell-body {
-	margin: 0;
-	padding: 5px;
-	list-style: none;
-	background: #141414;
-	color: #45D40C;
-	font: 0.8em 'Andale Mono', Consolas, 'Courier New';
-	line-height: 1.6em;
- 
-	-webkit-border-bottom-right-radius: 3px;
-	-webkit-border-bottom-left-radius: 3px;
-	-moz-border-radius-bottomright: 3px;
-	-moz-border-radius-bottomleft: 3px;
-	border-bottom-right-radius: 3px;
-	border-bottom-left-radius: 3px;
-
-}
- 
-.litespeed-shell-body li:before {
-	content: '$';
-	position: absolute;
-	left: 0;
-	top: 0;
-}
- 
-.litespeed-shell-body li {
-	word-wrap: break-word;
-	position: relative;
-	padding: 0 0 0 15px;
-}
-
-
-
-
-
 /* litespeed new style */
 .litespeed-tab{
 	border-top-left-radius  : 8px;
@@ -225,4 +149,101 @@ textarea#purgebylist{
 	position: relative;
 	top: 3px;
 	color: green;
+}
+
+
+/* shell */
+.litespeed-shell {
+	width: 98%;
+	background: #141414;
+	margin: 20px auto 0 10px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.4);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	position: relative;
+	height: 224px;
+}
+
+.litespeed-shell-header {
+	z-index: 999;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 50px;
+	height: 34px;
+	padding: 5px 0;
+}
+
+.litespeed-shell-header-bg {
+	opacity: 0.4;
+	background-color: #CCCCCC;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 4;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-top-radius: 3px;
+}
+
+.litespeed-shell-header-num{
+	position: absolute;
+	bottom: 2px;
+	right: 2px;
+	width: 14px;
+	height: 14px;
+	text-align: left;
+	color: #808080;
+	font-size: 0.85em;
+	z-index: 5;
+}
+
+.litespeed-shell-header-icon-container{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 29px;
+	height: 34px;
+	z-index: 6;
+}
+
+ul.litespeed-shell-body {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow-y: scroll;
+	margin: 0;
+	padding: 5px;
+	list-style: none;
+	background: #141414;
+	color: #45D40C;
+	font: 0.8em 'Andale Mono', Consolas, 'Courier New';
+	line-height: 1.6em;
+ 
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+
+}
+
+.litespeed-shell-body li:before {
+	content: '>';
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.litespeed-shell-body li {
+	word-wrap: break-word;
+	position: relative;
+	padding: 0 0 0 15px;
+	margin: 0;
 }

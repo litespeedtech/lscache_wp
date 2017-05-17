@@ -7,50 +7,63 @@
 class Litespeed_Crawler
 {
 	private $_baseUrl ;
-	private $_sitemapFile ;
-	private $_metaFile ;
-	private $_runDelay = 500 ;//microseconds
-	private $_runDuration = 200 ;//seconds
-	private $_threadsLimit = 3 ;
-	private $_loadLimit = 1 ;
+	private $_sitemap_file ;
+	private $_meta_file ;
+	private $_run_delay = 500 ;//microseconds
+	private $_run_duration = 200 ;//seconds
+	private $_threads_limit = 3 ;
+	private $_load_limit = 1 ;
 
 	protected $_blacklist ;
 	protected $_meta ;
-	protected $_maxRunTime ;
-	protected $_curThreadTime ;
-	protected $_curThreads = -1 ;
+	protected $_max_run_time ;
+	protected $_cur_thread_time ;
+	protected $_cur_threads = -1 ;
 
 	const CHUNKS = 10;//10000 ;
 
-	public function __construct($sitemapFile)
+	public function __construct($sitemap_file)
 	{
-		$this->_sitemapFile = $sitemapFile ;
-		$this->_metaFile = $this->_sitemapFile . '.meta' ;
+		$this->_sitemap_file = $sitemap_file ;
+		$this->_meta_file = $this->_sitemap_file . '.meta' ;
 	}
 
-	public function setBaseUrl($val)
+	public function set_base_url($val)
 	{
 		$this->_baseUrl = $val ;
 	}
 
-	public function setRunDelay($val)
+	public function set_run_delay($val)
 	{
-		$this->_runDelay = $val ;
+		$this->_run_delay = $val ;
 	}
 
-	public function setRunDuration($val)
+	public function set_run_duration($val)
 	{
-		$this->_runDuration = $val ;
+		$this->_run_duration = $val ;
 	}
 
-	public function setThreadsLimit($val)
+	public function set_threads_limit($val)
 	{
-		$this->_threadsLimit = $val ;
+		$this->_threads_limit = $val ;
 	}
 
-	public function setLoadLimit($val)
+	public function set_load_limit($val)
 	{
-		$this->_loadLimit = $val ;
+		$this->_load_limit = $val ;
+	}
+
+	/**
+	 * Get if last crawler touched end
+	 * 
+	 * @return bool
+	 */
+	public function get_done_status()
+	{
+		if ( $this->read_meta() === true && $this->_meta['done'] === 'touchedEnd' ) {
+			return true ;
+		}
+		return false ;
 	}
 
 	/**
@@ -58,27 +71,27 @@ class Litespeed_Crawler
 	 * 
 	 * @return string|bool crawled result
 	 */
-	public function engineStart()
+	public function engine_start()
 	{
-		$ret = $this->readMeta() ;
+		$ret = $this->read_meta() ;
 		if ( $ret !== true || ! $this->_meta ) {
 			return $this->_return($ret) ;
 		}
 
 		// check if is running
-		if ( $this->_meta['isRunning'] && time() - $this->_meta['isRunning'] < $this->_runDuration ) {
+		if ( $this->_meta['isRunning'] && time() - $this->_meta['isRunning'] < $this->_run_duration ) {
 			return $this->_return(__('Oh look, there is already another LiteSpeed crawler here', 'litespeed-cache')) ;
 		}
 
 		// check current load
-		$this->_adjustCurThreads() ;
-		if ( $this->_curThreads == 0 ) {
+		$this->_adjust_current_threads() ;
+		if ( $this->_cur_threads == 0 ) {
 			return $this->_return(__('Load over limit', 'litespeed-cache')) ;
 		}
 
 		// log started time
 		$this->_meta['lastStartTime'] = time() ;
-		$ret = $this->saveMeta() ;
+		$ret = $this->save_meta() ;
 		if ( $ret !== true ) {
 			return $this->_return($ret) ;
 		}
@@ -90,20 +103,20 @@ class Litespeed_Crawler
 		else {
 			$maxTime -= 5 ;
 		}
-		if ( $maxTime >= $this->_runDuration ) {
-			$maxTime = $this->_runDuration ;
+		if ( $maxTime >= $this->_run_duration ) {
+			$maxTime = $this->_run_duration ;
 		}
-		elseif ( ini_set('max_execution_time', $this->_runDuration + 15 ) !== false ) {
-			$maxTime = $this->_runDuration ;
+		elseif ( ini_set('max_execution_time', $this->_run_duration + 15 ) !== false ) {
+			$maxTime = $this->_run_duration ;
 		}
-		$this->_maxRunTime = $maxTime + time() ;
+		$this->_max_run_time = $maxTime + time() ;
 
 		// mark running
-		$this->_prepareRunning() ;
-		$curlOptions = $this->_getCurlOptions() ;
+		$this->_prepare_running() ;
+		$curlOptions = $this->_get_curl_options() ;
 		// run cralwer
-		$endReason = $this->_doRunning($curlOptions) ;
-		$this->_terminateRunning($endReason) ;
+		$endReason = $this->_do_running($curlOptions) ;
+		$this->_terminate_running($endReason) ;
 
 		return $this->_return($endReason) ;
 	}
@@ -114,16 +127,16 @@ class Litespeed_Crawler
 	 * @param  array $curlOptions Curl options
 	 * @return array              array('error', 'blacklist')
 	 */
-	private function _doRunning($curlOptions)
+	private function _do_running($curlOptions)
 	{
-		while ( $urlChunks = Litespeed_File::read($this->_sitemapFile, $this->_meta['lastPos'], self::CHUNKS) ) {// get url list
+		while ( $urlChunks = Litespeed_File::read($this->_sitemap_file, $this->_meta['lastPos'], self::CHUNKS) ) {// get url list
 			// start crawling
-			$urlChunks = array_chunk($urlChunks, $this->_curThreads) ;
+			$urlChunks = array_chunk($urlChunks, $this->_cur_threads) ;
 			foreach ( $urlChunks as $urls ) {
 				$urls = array_map('trim', $urls) ;
 				// multi curl
 				try {
-					$rets = $this->_multiRequest($urls, $curlOptions) ;
+					$rets = $this->_multi_request($urls, $curlOptions) ;
 				} catch ( Exception $e ) {
 					return 'Error when crawling url ' . implode(' ', $urls) . ' : ' . $e->getMessage() ;
 				}
@@ -140,22 +153,24 @@ class Litespeed_Crawler
 				}
 
 				// update offset position
-				$this->_savePosition(count($urls)) ;
+				$this->_save_position(count($urls)) ;
 
 				// check duration
-				if ( $this->_meta['lastUpdate'] > $this->_maxRunTime ) {
+				if ( $this->_meta['lastUpdate'] > $this->_max_run_time ) {
 					return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache') ;
 				}
 
 				// check loads
-				if ( $this->_meta['lastUpdate'] - $this->_curThreadTime > 60 ) {
-					$this->_adjustCurThreads() ;
-					if ( $this->_curThreads == 0 ) {
+				if ( $this->_meta['lastUpdate'] - $this->_cur_thread_time > 60 ) {
+					$this->_adjust_current_threads() ;
+					if ( $this->_cur_threads == 0 ) {
 						return __('Load over limit', 'litespeed-cache') ;
 					}
 				}
 
-				usleep($this->_runDelay) ;
+				$this->_meta['lastStatus'] = 'sleeping ' . $this->_run_delay . 'ms' ;
+				$this->save_meta() ;
+				usleep($this->_run_delay) ;
 			}
 		}
 
@@ -165,10 +180,12 @@ class Litespeed_Crawler
 	/**
 	 * Mark running status
 	 */
-	protected function _prepareRunning()
+	protected function _prepare_running()
 	{
 		$this->_meta['isRunning'] = time() ;
-		$this->saveMeta() ;
+		$this->_meta['done'] = 0 ;// reset done status
+		$this->_meta['lastStatus'] = 'prepare running' ;
+		$this->save_meta() ;
 	}
 
 	/**
@@ -176,15 +193,17 @@ class Litespeed_Crawler
 	 * 
 	 * @param  string $endReason The reason to terminate
 	 */
-	protected function _terminateRunning($endReason)
+	protected function _terminate_running($endReason)
 	{
 		if ( $endReason === true ) {
 			$endReason = __('End of sitemap file', 'litespeed-cache') ;
 			$this->_meta['lastPos'] = 0 ;// reset last position
+			$this->_meta['done'] = 'touchedEnd' ;// log done status
 		}
+		$this->_meta['lastStatus'] = 'stopped' ;
 		$this->_meta['isRunning'] = 0 ;
 		$this->_meta['endReason'] = $endReason ;
-		$this->saveMeta() ;
+		$this->save_meta() ;
 	}
 
 	/**
@@ -206,64 +225,65 @@ class Litespeed_Crawler
 	 * 
 	 * @param  int $count Offsets to save based on current pos
 	 */
-	protected function _savePosition($count)
+	protected function _save_position($count)
 	{
 		$now = time() ;
 		$this->_meta['lastUpdate'] = $now ;
 		$this->_meta['lastPos'] += $count ;
 		$this->_meta['lastCount'] = $count ;
-		$this->saveMeta() ;
+		$this->_meta['lastStatus'] = 'updated position' ;
+		$this->save_meta() ;
 	}
 
 	/**
 	 * Adjust threads dynamically
 	 */
-	protected function _adjustCurThreads()
+	protected function _adjust_current_threads()
 	{
 		$load = sys_getloadavg() ;
 		$curload = 1 ;
 
-		if ( $this->_curThreads == -1 ) {
+		if ( $this->_cur_threads == -1 ) {
 			// init
-			if ( $curload > $this->_loadLimit ) {
+			if ( $curload > $this->_load_limit ) {
 				$curthreads = 0 ;
 			}
-			elseif ( $curload >= ($this->_loadLimit - 1) ) {
+			elseif ( $curload >= ($this->_load_limit - 1) ) {
 				$curthreads = 1 ;
 			}
 			else {
-				$curthreads = intval($this->_loadLimit - $curload) ;
-				if ( $curthreads > $this->_threadsLimit ) {
-					$curthreads = $this->_threadsLimit ;
+				$curthreads = intval($this->_load_limit - $curload) ;
+				if ( $curthreads > $this->_threads_limit ) {
+					$curthreads = $this->_threads_limit ;
 				}
 			}
 		}
 		else {
 			// adjust
-			$curthreads = $this->_curThreads ;
-			if ( $curload >= $this->_loadLimit + 1 ) {
+			$curthreads = $this->_cur_threads ;
+			if ( $curload >= $this->_load_limit + 1 ) {
 				sleep(5) ;  // sleep 5 secs
 				if ( $curthreads >= 1 ) {
 					$curthreads -- ;
 				}
 			}
-			elseif ( $curload >= $this->_loadLimit ) {
+			elseif ( $curload >= $this->_load_limit ) {
 				if ( $curthreads > 1 ) {// if already 1, keep
 					$curthreads -- ;
 				}
 			}
-			elseif ( ($curload + 1) < $this->_loadLimit ) {
-				if ( $curthreads < $this->_threadsLimit ) {
+			elseif ( ($curload + 1) < $this->_load_limit ) {
+				if ( $curthreads < $this->_threads_limit ) {
 					$curthreads ++ ;
 				}
 			}
 		}
 
-		// $log = 'set current threads = ' . $curthreads . ' previous=' . $this->_curThreads
-		// 	. ' max_allowed=' . $this->_threadsLimit . ' load_limit=' . $this->_loadLimit . ' current_load=' . $curload;
+		// $log = 'set current threads = ' . $curthreads . ' previous=' . $this->_cur_threads
+		// 	. ' max_allowed=' . $this->_threads_limit . ' load_limit=' . $this->_load_limit . ' current_load=' . $curload;
 
-		$this->_curThreads = $curthreads ;
-		$this->_curThreadTime = time() ;
+		$this->_cur_threads = $curthreads ;
+		$this->_cur_thread_time = time() ;
 	}
 
 	/**
@@ -273,7 +293,7 @@ class Litespeed_Crawler
 	 * @param  array $options Curl options
 	 * @return array          Curl results
 	 */
-	protected function _multiRequest($urls, $options)
+	protected function _multi_request($urls, $options)
 	{
 		$mh = curl_multi_init() ;
 		$curls = array() ;
@@ -314,7 +334,7 @@ class Litespeed_Crawler
 	* @return   options array
 	* @access   private
 	*/
-	private function _getCurlOptions($ua = '')
+	private function _get_curl_options($ua = '')
 	{
 		$referer = null ;
 		if ( isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI']) ) {
@@ -359,9 +379,9 @@ class Litespeed_Crawler
 	 * 
 	 * @return mixed True or error message
 	 */
-	public function saveMeta()
+	public function save_meta()
 	{
-		return Litespeed_File::save($this->_metaFile, json_encode($this->_meta)) ;
+		return Litespeed_File::save($this->_meta_file, json_encode($this->_meta)) ;
 	}
 
 	/**
@@ -369,18 +389,18 @@ class Litespeed_Crawler
 	 * 
 	 * @return mixed True or error message
 	 */
-	public function readMeta()
+	public function read_meta()
 	{
 		// get current meta info
-		$meta = Litespeed_File::read($this->_metaFile) ;
+		$meta = Litespeed_File::read($this->_meta_file) ;
 		if ( $meta === false ) {
-			return sprintf(__('Can not read meta file: %s', 'litespeed-cache'), $this->_metaFile) ;
+			return sprintf(__('Can not read meta file: %s', 'litespeed-cache'), $this->_meta_file) ;
 		}
 
 		if ( $meta ) {
 			$meta = json_decode($meta, true) ;
 			// check if sitemap changed since last time
-			if ( ! isset($meta['fileTime']) || $meta['fileTime'] < filemtime($this->_sitemapFile) ) {
+			if ( ! isset($meta['fileTime']) || $meta['fileTime'] < filemtime($this->_sitemap_file) ) {
 				$meta = false ;
 			}
 		}
@@ -388,14 +408,16 @@ class Litespeed_Crawler
 		// initialize meta
 		if ( ! $meta ) {
 			$meta = array(
-				'listSize'	=> Litespeed_File::count_lines($this->_sitemapFile),
-				'fileTime'	=> filemtime($this->_sitemapFile),
+				'listSize'	=> Litespeed_File::count_lines($this->_sitemap_file),
+				'fileTime'	=> filemtime($this->_sitemap_file),
 				'lastUpdate'=> 0,
 				'lastPos'=> 0,
 				'lastCount'=> 0,
 				'lastStartTime'=> 0,
+				'lastStatus'=> '',
 				'isRunning'=> 0,
 				'endReason'=> '',
+				'done'=> 0,
 			) ;
 		}
 

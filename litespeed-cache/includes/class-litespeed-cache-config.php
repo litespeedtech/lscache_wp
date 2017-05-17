@@ -77,6 +77,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	const CRWL_USLEEP = 'crawler_usleep' ;
 	const CRWL_RUN_DURATION = 'crawler_run_duration' ;
 	const CRWL_CRON_INTERVAL = 'crawler_cron_interval' ;
+	const CRWL_WHOLE_INTERVAL = 'crawler_whole_interval' ;
 	const CRWL_THREADS  = 'crawler_threads' ;
 	const CRWL_LOAD_LIMIT  = 'crawler_load_limit' ;
 	const CRWL_BLACKLIST = 'crawler_blacklist' ;
@@ -304,12 +305,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 			self::CRWL_TAGS => true,
 			self::CRWL_EXCLUDES_CPT => '',
 			self::CRWL_ORDER_LINKS => self::CRWL_DATE_DESC,
-			self::CRWL_USLEEP => '10000',
-			self::CRWL_RUN_DURATION => '200',
-			self::CRWL_CRON_INTERVAL => '28800',
-			self::CRWL_THREADS => '3',
-			self::CRWL_LOAD_LIMIT => '1',
-			self::CRWL_CRON_ACTIVE => '0',
+			self::CRWL_USLEEP => 10000,
+			self::CRWL_RUN_DURATION => 200,
+			self::CRWL_CRON_INTERVAL => 28800,
+			self::CRWL_WHOLE_INTERVAL => 604800,
+			self::CRWL_THREADS => 3,
+			self::CRWL_LOAD_LIMIT => 1,
+			self::CRWL_CRON_ACTIVE => 0,
 			self::CRWL_BLACKLIST => '',
 				) ;
 

@@ -1,8 +1,10 @@
-var _litespeedMeta;
-var _litespeedInterval = 3;// seconds
-var _litespeedIntervalRange = [3, 60];
-var _litespeedIntervalHandle;
-var _litespeedIntervalDisplayHandle;
+var _litespeed_meta ;
+var _litespeed_shell_interval = 3 ;// seconds
+var _litespeed_shell_interval_range = [3, 60] ;
+var _litespeed_shell_handle ;
+var _litespeed_shell_display_handle ;
+var _litespeed_crawler_url ;
+var _litespeed_dots ;
 
 (function ($) {
 	'use strict' ;
@@ -81,10 +83,10 @@ var _litespeedIntervalDisplayHandle;
 			if(!litespeed_tab_current || !$('[data-litespeed-tab="'+litespeed_tab_current+'"]').length) {
 				litespeed_tab_current = $('[data-litespeed-tab]').first().data('litespeed-tab') ;
 			}
-			litespeedDisplayTab(litespeed_tab_current) ;
+			litespeed_display_tab(litespeed_tab_current) ;
 			// tab switch
 			$('[data-litespeed-tab]').click(function(event) {
-				litespeedDisplayTab($(this).data('litespeed-tab')) ;
+				litespeed_display_tab($(this).data('litespeed-tab')) ;
 				document.cookie = 'litespeed_tab='+$(this).data('litespeed-tab') ;
 			}) ;
 		}
@@ -131,23 +133,26 @@ var _litespeedIntervalDisplayHandle;
 		}) ;
 
 		/*************** crawler ******************/
-		$('#litespeedBtnCrawlUrl').click(function () {
+		$('#litespeed-crawl-url-btn').click(function () {
 			if( ! $(this).data('url') ){
 				return false ;
 			}
-			$(this).attr('disabled', true) ;
-			$('.shell-wrap').css('display','block') ;
-			$.ajaxSetup({ cache: false }) ;
-			litespeedGetMeta($(this).data('url')) ;
-			_litespeedIntervalHandle = window.setTimeout('litespeedDynamicTimeout()', _litespeedInterval*1000) ;
-			litespeedPulse() ;
+			$('.litespeed-shell').css('display','block') ;
+			_litespeed_dots = window.setInterval(_litespeed_loading_dots, 300) ;
+			_litespeed_crawler_url = $(this).data('url') ;
+			litespeed_fetch_meta() ;
+			$(this).hide() ;
 		}) ;
+
+		$('[target=litespeedHiddenIframe]').click(function(event) {
+			$('#litespeed-loading-dot').before('<li>Manually Started</li>') ;
+		});
 	}) ;
 })(jQuery) ;
 
 
 
-function litespeedDisplayTab(tab) {
+function litespeed_display_tab(tab) {
 	// setting page -> display submit button
 	if ( jQuery('#litespeed-submit').length > 0 ){
 		jQuery('#litespeed-submit').toggle(tab != 'compatibilities') ;
@@ -195,7 +200,7 @@ function lscwpEsiEnabled(the_checkbox, esi_ids) {
 }
 
 // Append params to uri
-function litespeedAppendParam(uri, key, val) {
+function litespeed_append_param(uri, key, val) {
 	var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i") ;
 	var separator = uri.indexOf('?') !== -1 ? "&" : "?" ;
 	if (uri.match(re)) {
@@ -206,71 +211,123 @@ function litespeedAppendParam(uri, key, val) {
 	}
 }
 
-function litespeedPulse() {
-	jQuery('#litespeedIconPulse').animate({
+function litespeed_pulse() {
+	jQuery('#litespeed-shell-icon').animate({
 		width: 27, height: 34, 
 		opacity: 1
 	}, 700, function() {
-		jQuery('#litespeedIconPulse').animate({
+		jQuery('#litespeed-shell-icon').animate({
 			width: 23, height: 29, 
 			opacity: 0.5
 		}, 700) ;
 	}) ; 
 }
 
-function litespeedGetMeta(url) {
-	jQuery.getJSON(url, function( meta ) {
-		litespeedPulse() ;
+function litespeed_fetch_meta() {
+	jQuery('#litespeed-loading-dot').text('') ;
+	jQuery.ajaxSetup({ cache: false }) ;
+	jQuery.getJSON(_litespeed_crawler_url, function( meta ) {
+		litespeed_pulse() ;
 		var changed = false ;
-		if ( meta != _litespeedMeta ) {
-			_litespeedMeta = meta ;
-			changed = true ;
-			var string = '<li>' +
-							'List size: ' + meta.listSize +
-							',		Meta file last modified at : ' + meta.fileTime +
-							',		Last crawled line: ' + meta.lastPos +
-							',		Last crawled threads: ' + meta.lastCount +
-							',		Last started at: ' + meta.listSize +
-							',		Last ended reason: ' + meta.endReason +
-							',		Is crawling: ' + ( meta.isRunning == 1 ? 'Yes' : 'No' ) +
-						'</li>' ;
-			jQuery('.litespeed-shell-body').html(string) ;
-		}
+		if ( meta && 'listSize' in meta ) {
+			new_meta = meta.listSize + ' ' + meta.fileTime + ' ' + meta.lastPos + ' ' + meta.lastCount + ' ' + meta.lastStartTime + ' ' + meta.isRunning ;
+			if ( new_meta != _litespeed_meta ) {
+				_litespeed_meta = new_meta ;
+				changed = true ;
+				string = _litespeed_build_meta(meta);
+				jQuery('#litespeed-loading-dot').before(string) ;
+				// remove first log elements
+				log_length = jQuery('.litespeed-shell-body li').length;
+				if ( log_length > 50) {
+					jQuery('.litespeed-shell-body li:lt(' + (log_length - 50) + ')').remove();
+				}
+				// scroll to end
+				jQuery('.litespeed-shell-body').stop().animate({
+					scrollTop: jQuery('.litespeed-shell-body')[0].scrollHeight
+				}, 800) ;
+			}
 
-		// dynamic adjust the interval length
-		if ( changed ) {
-			_litespeedInterval -= Math.ceil(_litespeedInterval/2) ;
-		}
-		else{
-			_litespeedInterval ++  ;
-		}
-		if(_litespeedInterval < _litespeedIntervalRange[0]) {
-			_litespeedInterval = _litespeedIntervalRange[0] ;
-		}
-		if(_litespeedInterval > _litespeedIntervalRange[1]) {
-			_litespeedInterval = _litespeedIntervalRange[1] ;
+			// dynamic adjust the interval length
+			_litespeed_adjust_interval(changed) ;
 		}
 		// display interval counting
-		litespeedResetIntervalDisplay() ;
-		_litespeedIntervalHandle = window.setTimeout('litespeedDynamicTimeout()', _litespeedInterval*1000) ;
+		_litespeed_display_interval_reset() ;
+		_litespeed_shell_handle = window.setTimeout(_litespeed_dynamic_timeout, _litespeed_shell_interval*1000) ;
 	}) ;
 }
 
-function litespeedDynamicTimeout() {
-	window.clearTimeout(_litespeedIntervalHandle) ;
-	getWPcount() ;
+/**
+ * Dynamic adjust interval
+ */
+function _litespeed_adjust_interval(changed) {
+	if ( changed ) {
+		_litespeed_shell_interval -= Math.ceil(_litespeed_shell_interval/2) ;
+	}
+	else{
+		_litespeed_shell_interval ++ ;
+	}
+
+	if(_litespeed_shell_interval < _litespeed_shell_interval_range[0]) {
+		_litespeed_shell_interval = _litespeed_shell_interval_range[0] ;
+	}
+	if(_litespeed_shell_interval > _litespeed_shell_interval_range[1]) {
+		_litespeed_shell_interval = _litespeed_shell_interval_range[1] ;
+	}
 }
 
-function litespeedResetIntervalDisplay() {
-	window.clearInterval(_litespeedIntervalDisplayHandle) ;
-	jQuery('#litespeedInterval').text(_litespeedInterval) ;
-	_litespeedIntervalDisplayHandle = window.setInterval('litespeedDisplayInterval()', 1000) ;
+function _litespeed_build_meta(meta) {
+	var string = '<li>' + litespeed_date(meta.lastUpdate) + 
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.listSize +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + meta.lastPos +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.lastCount +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: ' + ( meta.lastStatus ? meta.lastStatus : '-' ) +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crawling: ' + ( meta.isRunning ? 'Yes' : '' )
+				 ;
+	if ( ! meta.isRunning ) {
+		string += ' ' + ( meta.endReason ? meta.endReason : '-' ) ;
+	}
+	string += '</li>' ;
+	return string;
 }
 
-function litespeedDisplayInterval() {
-	var num = jQuery('#litespeedInterval').text() ;
+function _litespeed_dynamic_timeout() {
+	window.clearTimeout(_litespeed_shell_handle) ;
+	litespeed_fetch_meta() ;
+}
+
+function _litespeed_display_interval_reset() {
+	window.clearInterval(_litespeed_shell_display_handle) ;
+	jQuery('.litespeed-shell-header-num').text(_litespeed_shell_interval) ;
+	_litespeed_shell_display_handle = window.setInterval(_litespeed_display_interval, 1000) ;
+}
+
+function _litespeed_display_interval() {
+	var num = jQuery('.litespeed-shell-header-num').text() ;
 	if(num > 0) num-- ;
 	if(num < 0) num = '.' ;
-	jQuery('#litespeedInterval').text(num) ;
+	jQuery('.litespeed-shell-header-num').text(num) ;
 }
 
+function _litespeed_loading_dots() {
+	jQuery('#litespeed-loading-dot').append('.') ;
+}
+
+function litespeed_date(timestamp) {
+	var a = new Date(timestamp * 1000) ;
+	var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] ;
+	var year = a.getFullYear() ;
+	var month = months[a.getMonth()] ;
+	var date = litespeed_add_zero(a.getDate()) ;
+	var hour = litespeed_add_zero(a.getHours()) ;
+	var min = litespeed_add_zero(a.getMinutes()) ;
+	var sec = litespeed_add_zero(a.getSeconds()) ;
+	var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec  ;
+	return time ;
+}
+
+function litespeed_add_zero(i) {
+	if (i < 10) {
+		i = "0" + i;
+	}
+	return i;
+}

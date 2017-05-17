@@ -1,76 +1,103 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) die ;
 
-$_options = LiteSpeed_Cache_Config::get_instance()->get_options();
+$_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-$sitemapTime = LiteSpeed_Cache_Crawler::get_instance()->sitemapTime();
+$sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 ?>
 
 <div class="wrap">
-	<h2><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache'); ?></h2>
+	<h2><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?></h2>
 </div>
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">
-		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache'); ?></h3>
-		<a href="<?php echo LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE); ?>" class="litespeed-btn litespeed-btn-success">
-			<?php echo __('Generate Crawler File', 'litespeed-cache'); ?>
+		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
+		<a href="<?php echo LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn litespeed-btn-success">
+			<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
 		</a>
 
 		<?php
-			if ( $sitemapTime ) {
-				echo sprintf(__('Generated at %s', 'litespeed-cache'), $sitemapTime);
+			if ( $sitemap_time ) {
+				echo sprintf(__('Generated at %s', 'litespeed-cache'), $sitemap_time) ;
 			}
 		 ?>
 		<div class="litespeed-desc">
-			<?php echo __('This will create a Crawler file in plugin folder', 'litespeed-cache'); ?>
+			<?php echo __('This will create a Crawler file in plugin folder', 'litespeed-cache') ; ?>
 		</div>
 
 <?php
-	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL];
+	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL] ;
 	if($seconds > 0):
-		$hours = floor($seconds / 3600);
-		$act = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE;
-		$active = $_options[$act];
-		if($active > 0){
-			$active = 0;
-			$active_text = __('Deactivate','litespeed-cache');		
-		}else{
-			$active = 1;
-			$active_text = __('Activate','litespeed-cache');
+		$hours = floor($seconds / 3600) ;
+		$act = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
+		$active = $_options[$act] ;
+		$triggerLink = false ;
+		$triggerLink = admin_url( 'admin-ajax.php?action=crawl_data&' . LiteSpeed_Cache::ACTION_KEY . '=' . LiteSpeed_Cache::ACTION_DO_CRAWL ) ;
+		if ( $active > 0 ) {
+			$active = 0 ;
+			$active_text = __('Deactivate','litespeed-cache') ;
+		}
+		else {
+			$active = 1 ;
+			$active_text = __('Activate','litespeed-cache') ;
 		}
 		?>
-		<h3 class="litespeed-title"><?php echo __('Crawler Cron', 'litespeed-cache'); ?></h3>
+		<h3 class="litespeed-title"><?php echo __('Crawler Cron', 'litespeed-cache') ; ?></h3>
 		<table class="widefat striped">
 			<thead><tr>
-				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache'); ?></th>
-				<th scope="col"><?php echo __('Recurrence', 'litespeed-cache'); ?></th>
-				<th scope="col"><?php echo __('Actions', 'litespeed-cache'); ?></th>
+				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Recurrence', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Actions', 'litespeed-cache') ; ?></th>
 			</tr></thead>
 			<tbody>
 				<tr>
-					<td><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache'); ?></td>
+					<td><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?></td>
 					<td>
-						<?php echo sprintf(__('%d hour(s)', 'litespeed-cache'), $hours); ?>
+						<?php echo sprintf(__('%d hour(s)', 'litespeed-cache'), $hours) ; ?>
 					</td>
-					<td><?php echo $active_text; ?></td>
+					<td><?php
+						echo $active_text ;
+						echo " <a href='$triggerLink' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('reset position', 'litespeed-cache') . "</a>" ;
+						echo " <a href='$triggerLink' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('manually start', 'litespeed-cache') . "</a>" ;
+					?></td>
 				</tr>
 			</tbody>
 		</table>
 		<div class="litespeed-desc">
-			<?php echo __('Recurrence is calculated when you set Cron interval in seconds','litespeed-cache'); ?>
+			<?php echo __('Recurrence is calculated when you set Cron interval in seconds','litespeed-cache') ; ?>
 		</div>
-<?php endif; ?>
+<?php endif ; ?>
 
 
-		<h3 class="litespeed-title"><?php echo __('Start Crawler manually', 'litespeed-cache'); ?></h3>
+		<h3 class="litespeed-title"><?php echo __('Show Crawler Status', 'litespeed-cache') ; ?></h3>
 
-		<input type="button" id="litespeedBtnCrawlUrl" value="<?php echo __('Show crawler status', 'litespeed-cache'); ?>" class="litespeed-btn litespeed-btn-success" data-url="<?php echo LiteSpeed_Cache_Crawler::get_instance()->getCrawlerJsonPath(); ?>" />
+		<?php
+			$ajaxUrl = LiteSpeed_Cache_Crawler::get_instance()->get_crawler_json_path() ;
+			if ( $ajaxUrl ):
+		?>
 
-		<div class="litespeed-shell-wrap litespeed-hide">
-			<?php require LSWCP_DIR . 'admin/tpl/snowman.inc.php'; ?>
-			<ul class="litespeed-shell-body"></ul>
+		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn litespeed-btn-success" data-url="<?php echo $ajaxUrl ; ?>" />
+
+		<div class="litespeed-shell litespeed-hide">
+			<div class="litespeed-shell-header">
+				<div class="litespeed-shell-header-bg"></div>
+				<div class="litespeed-shell-header-num"></div>
+				<div class="litespeed-shell-header-icon-container">
+					<img id="litespeed-shell-icon" src="<?php echo plugins_url('img/Litespeed.icon.svg', dirname(__FILE__)); ?>" />
+				</div>
+			</div>
+			<ul class="litespeed-shell-body">
+				<li>Start watching...</li>
+				<li id="litespeed-loading-dot"></li>
+			</ul>
 		</div>
 
-
+		<?php else: ?>
+		<p>
+			<?php echo __('No crawler meta file generated yet', 'litespeed-cache') ; ?>
+		</p>
+		<?php endif ; ?>
 	</div>
 </div>
+
+<iframe name="litespeedHiddenIframe" src="" width="0" height="0" frameborder="0"></iframe>

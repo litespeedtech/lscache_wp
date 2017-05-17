@@ -198,14 +198,14 @@ class LiteSpeed_Cache extends LiteSpeed{
 				break;
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
-				LiteSpeed_Cache_Crawler::get_instance()->generateSitemap();
+				LiteSpeed_Cache_Crawler::get_instance()->generate_sitemap();
 				LiteSpeed_Cache_Admin::redirect();
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				add_action('wp_ajax_crawlData', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawlData'));
-				add_action('wp_ajax_nopriv_crawlData', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawlData'));LiteSpeed_Cache_Crawler::get_instance()->crawlData();
+				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawl_data'));
+				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawl_data'));
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:

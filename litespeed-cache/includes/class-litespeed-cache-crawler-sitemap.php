@@ -11,7 +11,7 @@
 
 class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 {
-	private $siteUrl ;// Used to simplify urls
+	private $site_url ;// Used to simplify urls
 
 	protected $_urls = array() ;
 
@@ -22,10 +22,10 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 	{
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id() ;
-			$this->siteUrl = get_siteUrl($blog_id) ;
+			$this->site_url = get_site_url($blog_id) ;
 		}
 		else{
-			$this->siteUrl = get_option('siteurl') ;
+			$this->site_url = get_option('siteurl') ;
 		}
 	}
 
@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function generateData($blacklist = array())
+	public function generate_data($blacklist = array())
 	{	
 		global $wpdb ;
 
@@ -96,7 +96,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 			$results = $wpdb->get_results($query) ;
 
 			foreach ( $results as $result ){
-				$slug = str_replace($this->siteUrl, '', get_permalink($result->ID)) ;
+				$slug = str_replace($this->site_url, '', get_permalink($result->ID)) ;
 				if ( ! in_array($slug, $blacklist) ) {
 					$this->_urls[] = $slug ;
 				}
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 			$cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false)) ;
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
-					$slug = str_replace($this->siteUrl, '', get_category_link($cat->term_id)) ;
+					$slug = str_replace($this->site_url, '', get_category_link($cat->term_id)) ;
 					if ( ! in_array($slug, $blacklist) ){
 						$this->_urls[] = $slug ;
 					}
@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 			$tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false)) ;
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
-					$slug = str_replace($this->siteUrl, '', get_tag_link($tag->term_id)) ;
+					$slug = str_replace($this->site_url, '', get_tag_link($tag->term_id)) ;
 					if ( ! in_array($slug, $blacklist) ) {
 						$this->_urls[] = $slug ;
 					}

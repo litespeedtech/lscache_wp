@@ -476,6 +476,14 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 			$options[$id] = $input[$id];
 		}
 
+		$id = LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL;
+		if (!$this->validate_ttl($input, $id)) {
+			$errors[] = sprintf($ttl_err, __('Whole Interval', 'litespeed-cache'), 0);
+		}
+		else {
+			$options[$id] = $input[$id];
+		}
+
 		$id = LiteSpeed_Cache_Config::CRWL_THREADS;
 		if (!$this->validate_ttl($input, $id, 1)) {
 			$errors[] = sprintf($ttl_err, __('Threads', 'litespeed-cache'), 1);

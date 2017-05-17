@@ -37,6 +37,16 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Whole Crawling Interval', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<div class="litespeed-desc">
+				<?php echo __('How many seconds between each whole sitemap crawling', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Threads', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?> <?php echo __('seconds', 'litespeed-cache'); ?>

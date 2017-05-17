@@ -11,8 +11,8 @@
  */
 class LiteSpeed_Cache_Crawler extends LiteSpeed
 {
-	private $_sitemapFile ;
-	private $_siteUrl ;
+	private $_sitemap_file ;
+	private $_site_url ;
 
 	/**
 	 * Initialize crawler, assign sitemap path
@@ -24,12 +24,12 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 		$sitemapPath = LSWCP_DIR . 'var' ;
 		if ( is_multisite() ) {
 			$blogID = get_current_blog_id() ;
-			$this->_sitemapFile = $sitemapPath . '/crawlermap-' . $blogID . '.data' ;
-			$this->_siteUrl = get_site_url($blogID) ;
+			$this->_sitemap_file = $sitemapPath . '/crawlermap-' . $blogID . '.data' ;
+			$this->_site_url = get_site_url($blogID) ;
 		}
 		else{
-			$this->_sitemapFile = $sitemapPath . '/crawlermap.data' ;
-			$this->_siteUrl = get_option('siteurl') ;
+			$this->_sitemap_file = $sitemapPath . '/crawlermap.data' ;
+			$this->_site_url = get_option('siteurl') ;
 		}
 	}
 
@@ -38,29 +38,29 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * 
 	 * @return string Json data file path
 	 */
-	public function getCrawlerJsonPath()
+	public function get_crawler_json_path()
 	{
-		if ( ! file_exists($this->_sitemapFile . '.meta') ) {
+		if ( ! file_exists($this->_sitemap_file . '.meta') ) {
 			return false ;
 		}
-		$litespeedPluginPath = implode('/', array_slice(explode('/', LSWCP_DIR), -4)) ;LiteSpeed_Cache_Log::push($litespeedPluginPath);
-		return $this->_siteUrl . '' ;
+		$metaUrl = implode('/', array_slice(explode('/', $this->_sitemap_file . '.meta'), -5)) ;
+		return $this->_site_url . '/' . $metaUrl ;
 	}
 
 	/**
 	 * Generate sitemap
 	 * 
 	 */
-	public function generateSitemap()
+	public function generate_sitemap()
 	{
-		$ret = $this->_generateSitemap() ;
+		$ret = $this->_generate_sitemap() ;
 		if ( $ret !== true ) {
 			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret) ;
 		}
 		else {
 			$msg = sprintf(
 				__('File created successfully: %s', 'litespeed-cache'),
-				$this->_sitemapFile
+				$this->_sitemap_file
 			) ;
 			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
 		}
@@ -71,9 +71,9 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * 
 	 * @return string|true 
 	 */
-	protected function _generateSitemap()
+	protected function _generate_sitemap()
 	{
-		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generateData() ;
+		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;
 
 		// filter urls
 		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST ;
@@ -84,7 +84,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 			LiteSpeed_Cache_Log::push('Crawler log: Generate sitemap') ;
 		}
 
-		return Litespeed_File::save($this->_sitemapFile, implode("\n", $urls), true) ;
+		return Litespeed_File::save($this->_sitemap_file, implode("\n", $urls), true) ;
 	}
 
 	/**
@@ -93,13 +93,13 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function sitemapTime()
+	public function sitemap_time()
 	{
-		if ( ! file_exists($this->_sitemapFile) ) {
+		if ( ! file_exists($this->_sitemap_file) ) {
 			return false ;
 		}
 
-		$filetime = date('m/d/Y H:i:s', filemtime($this->_sitemapFile)) ;
+		$filetime = date('m/d/Y H:i:s', filemtime($this->_sitemap_file)) ;
 
 		return $filetime ;
 	}
@@ -110,25 +110,28 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * @since    1.1.0
 	 * @access   public
 	 */
-	public function crawlData()
+	public function crawl_data()
 	{
 		// for the first time running
-		if ( ! file_exists($this->_sitemapFile) ) {
-			$ret = $this->_generateSitemap() ;
+		if ( ! file_exists($this->_sitemap_file) ) {
+			$ret = $this->_generate_sitemap() ;
 			if ( $ret !== true ) {
-				$this->terminateWithError($ret) ;
+				$this->terminate_with_error($ret) ;
 			}
 		}
 
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-		$crawler = new Litespeed_Crawler($this->_sitemapFile) ;
-		$crawler->setBaseUrl($this->_siteUrl) ;
-		$crawler->setRunDuration($options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
-		$crawler->setRunDelay($options[LiteSpeed_Cache_Config::CRWL_USLEEP]) ;
-		$crawler->setThreadsLimit($options[LiteSpeed_Cache_Config::CRWL_THREADS]) ;
-		$crawler->setLoadLimit($options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT]) ;
-		$ret = $crawler->engineStart() ;
+		$crawler = new Litespeed_Crawler($this->_sitemap_file) ;
+		if ( $crawler->get_done_status() ) {
+			$this->_generate_sitemap() ;
+		}
+		$crawler->set_base_url($this->_site_url) ;
+		$crawler->set_run_duration($options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
+		$crawler->set_run_delay($options[LiteSpeed_Cache_Config::CRWL_USLEEP]) ;
+		$crawler->set_threads_limit($options[LiteSpeed_Cache_Config::CRWL_THREADS]) ;
+		$crawler->set_load_limit($options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT]) ;
+		$ret = $crawler->engine_start() ;
 
 		// merge blacklist
 		if ( $ret['blacklist'] ) {
@@ -140,14 +143,13 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push('Crawler log: ' . $ret['error']) ;
 			}
-			$this->terminateWithError($ret['error']) ;
+			$this->terminate_with_error($ret['error']) ;
 		}
 		else {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push('Crawler log: End of sitemap file') ;
 			}
-			// regenerate the map and exit
-			$this->_generateSitemap() ;
+
 			wp_die() ;
 		}
 	}
@@ -157,7 +159,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 * 
 	 * @param  string $error Error info
 	 */
-	public function terminateWithError($error)
+	public function terminate_with_error($error)
 	{
 		// return ajax error
 		echo json_encode(array(
