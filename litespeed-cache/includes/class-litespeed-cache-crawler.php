@@ -48,6 +48,19 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	}
 
 	/**
+	 * Return crawler meta info
+	 * 
+	 * @return array Meta array
+	 */
+	public function get_meta()
+	{
+		if ( ! file_exists($this->_sitemap_file . '.meta') || ! $meta = Litespeed_File::read($this->_sitemap_file . '.meta') ) {
+			return false ;
+		}
+		return json_decode($meta) ;
+	}
+
+	/**
 	 * Generate sitemap
 	 * 
 	 */
@@ -159,7 +172,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 
 		// merge blacklist
 		if ( $ret['blacklist'] ) {
-			LiteSpeed_Cache_Config::get_instance()->appendBlacklist($ret['blacklist']) ;
+			LiteSpeed_Cache_Config::get_instance()->append_blacklist($ret['blacklist']) ;
 		}
 
 		// return error
@@ -175,8 +188,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 				LiteSpeed_Cache_Log::push($msg) ;
 			}
 
-			echo $msg ;
-			wp_die() ;
+			wp_die($msg) ;
 		}
 	}
 
@@ -188,8 +200,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	public function terminate_with_error($error)
 	{
 		// return ajax error
-		echo $error ;
-		wp_die() ;
+		wp_die($error) ;
 	}
 
 }

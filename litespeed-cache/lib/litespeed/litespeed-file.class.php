@@ -105,7 +105,7 @@ class Litespeed_File
 			return sprintf(__('File %s is not writable', 'litespeed-cache'), $filename);
 		}
 
-		$ret = file_put_contents($filename, $data);
+		$ret = file_put_contents($filename, $data, LOCK_EX);
 		if ( $ret === false ) {
 			return sprintf(__('Failed to write to %s', 'litespeed-cache'), $filename);
 		}

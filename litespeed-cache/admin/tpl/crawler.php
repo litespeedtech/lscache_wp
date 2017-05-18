@@ -22,42 +22,92 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			}
 		 ?>
 		<div class="litespeed-desc">
-			<?php echo __('This will create a Crawler file in plugin folder', 'litespeed-cache') ; ?>
+			<?php echo sprintf(__('This will create a crawler sitemap file in plugin folder %s manually', 'litespeed-cache'), '`./var`') ; ?>
 		</div>
 
 <?php
 	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL] ;
 	if($seconds > 0):
-		$hours = floor($seconds / 3600) ;
-		$act = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
-		$active = $_options[$act] ;
-		if ( $active > 0 ) {
-			$active = 0 ;
-			$active_text = __('Deactivate','litespeed-cache') ;
+		$recurrence = '' ;
+		$hours = (int)floor($seconds / 3600) ;
+		if ( $hours ) {
+			if ( $hours > 1) {
+				$recurrence .= sprintf(__('%d hours', 'litespeed-cache'), $hours);
+			}
+			else {
+				$recurrence .= sprintf(__('%d hour', 'litespeed-cache'), $hours);
+			}
 		}
-		else {
-			$active = 1 ;
-			$active_text = __('Activate','litespeed-cache') ;
+		$minutes = (int)floor( ($seconds % 3600 ) / 60 ) ;
+		if ( $minutes ) {
+			$recurrence .= ' ' ;
+			if ( $minutes > 1) {
+				$recurrence .= sprintf(__('%d minutes', 'litespeed-cache'), $minutes);
+			}
+			else {
+				$recurrence .= sprintf(__('%d minute', 'litespeed-cache'), $minutes);
+			}
 		}
 		?>
 		<h3 class="litespeed-title"><?php echo __('Crawler Cron', 'litespeed-cache') ; ?></h3>
 		<table class="widefat striped">
-			<thead><tr>
+			<thead><tr >
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Recurrence', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Status', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Activation', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Actions', 'litespeed-cache') ; ?></th>
 			</tr></thead>
 			<tbody>
 				<tr>
-					<td><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?></td>
 					<td>
-						<?php echo sprintf(__('%d hour(s)', 'litespeed-cache'), $hours) ; ?>
+						<?php
+							echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ;
+						?>
+						<div class='litespeed-desc'>
+						<?php
+							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
+							if ( $meta && $meta->last_full_time_cost ) {
+								echo sprintf(__('Totally run once needs %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
+							}
+						?>
+						</div>
 					</td>
-					<td><?php
-						echo $active_text ;
-						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+					<td>
+						<?php echo $recurrence ; ?>
+					</td>
+					<td>
+					<?php
+						if ( $meta ) {
+							echo "Size: {$meta->list_size}<br />Position: {$meta->last_pos}" ;
+							if ( $meta->is_running ) {
+								echo "<br /><div class='litespeed-label litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
+							}
+						}
+						else {
+							echo "-" ;
+						}
+					?>
+					</td>
+					<td>
+						<label class="litespeed-switch-onoff">
+							<input type="checkbox" name="crawler_enable" value="1" <?php if($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE]) echo "checked"; ?> />
+							<span data-on="Enable" data-off="Disable"></span> 
+							<span></span> 
+						</label>
+					</td>
+					<td>
+					<?php
+						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
 						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually start', 'litespeed-cache') . "</a>" ;
-					?></td>
+
+						if ( $meta && $meta->end_reason ):
+					?>
+						<div class='litespeed-desc'>
+							<?php echo sprintf(__('Last ended reason: %s', 'litespeed-cache'), $meta->end_reason) ; ?>
+						</div>
+						<?php endif ; ?>
+					</td>
 				</tr>
 			</tbody>
 		</table>

@@ -211,7 +211,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 				LiteSpeed_Cache_Crawler::get_instance()->crawl_data() ;
-				wp_die() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:

@@ -89,7 +89,7 @@ class Litespeed_Crawler
 		}
 
 		// check if is running
-		if ( $this->_meta['isRunning'] && time() - $this->_meta['isRunning'] < $this->_run_duration ) {
+		if ( $this->_meta['is_running'] && time() - $this->_meta['is_running'] < $this->_run_duration ) {
 			return $this->_return(__('Oh look, there is already another LiteSpeed crawler here', 'litespeed-cache')) ;
 		}
 
@@ -100,7 +100,7 @@ class Litespeed_Crawler
 		}
 
 		// log started time
-		$this->_meta['lastStartTime'] = time() ;
+		$this->_meta['last_start_time'] = time() ;
 		$ret = $this->save_meta() ;
 		if ( $ret !== true ) {
 			return $this->_return($ret) ;
@@ -125,10 +125,10 @@ class Litespeed_Crawler
 		$this->_prepare_running() ;
 		$curlOptions = $this->_get_curl_options() ;
 		// run cralwer
-		$endReason = $this->_do_running($curlOptions) ;
-		$this->_terminate_running($endReason) ;
+		$end_reason = $this->_do_running($curlOptions) ;
+		$this->_terminate_running($end_reason) ;
 
-		return $this->_return($endReason) ;
+		return $this->_return($end_reason) ;
 	}
 
 	/**
@@ -139,7 +139,7 @@ class Litespeed_Crawler
 	 */
 	private function _do_running($curlOptions)
 	{
-		while ( $urlChunks = Litespeed_File::read($this->_sitemap_file, $this->_meta['lastPos'], self::CHUNKS) ) {// get url list
+		while ( $urlChunks = Litespeed_File::read($this->_sitemap_file, $this->_meta['last_pos'], self::CHUNKS) ) {// get url list
 			// start crawling
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads) ;
 			foreach ( $urlChunks as $urls ) {
@@ -163,18 +163,18 @@ class Litespeed_Crawler
 				}
 
 				// update offset position
-				$this->_meta['lastPos'] += $i + 1 ;
-				$this->_meta['lastCount'] = $i + 1 ;
-				$this->_meta['lastUpdate'] = time() ;
-				$this->_meta['lastStatus'] = 'updated position' ;
+				$this->_meta['last_pos'] += $i + 1 ;
+				$this->_meta['last_count'] = $i + 1 ;
+				$this->_meta['last_update'] = time() ;
+				$this->_meta['last_status'] = 'updated position' ;
 
 				// check duration
-				if ( $this->_meta['lastUpdate'] > $this->_max_run_time ) {
+				if ( $this->_meta['last_update'] > $this->_max_run_time ) {
 					return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache') ;
 				}
 
 				// check loads
-				if ( $this->_meta['lastUpdate'] - $this->_cur_thread_time > 60 ) {
+				if ( $this->_meta['last_update'] - $this->_cur_thread_time > 60 ) {
 					$this->_adjust_current_threads() ;
 					if ( $this->_cur_threads == 0 ) {
 						return __('Load over limit', 'litespeed-cache') ;
@@ -183,12 +183,12 @@ class Litespeed_Crawler
 
 				// check if need to reset pos
 				if ( file_exists($this->_meta_file . '.reset') && unlink($this->_meta_file . '.reset') ) {
-					$this->_meta['lastPos'] = 0 ;
+					$this->_meta['last_pos'] = 0 ;
 					return __('Stopped due to reset meta position', 'litespeed-cache') ;
 				}
 
-
-				$this->_meta['lastStatus'] = 'sleeping ' . $this->_run_delay . 'ms' ;
+				$this->_meta['last_status'] = 'sleeping ' . $this->_run_delay . 'ms' ;
+				// LiteSpeed_Cache_Log::push('crawler status: '.$this->_meta['last_status']);
 				$this->save_meta() ;
 				usleep($this->_run_delay) ;
 			}
@@ -202,39 +202,43 @@ class Litespeed_Crawler
 	 */
 	protected function _prepare_running()
 	{
-		$this->_meta['isRunning'] = time() ;
+		$this->_meta['is_running'] = time() ;
 		$this->_meta['done'] = 0 ;// reset done status
-		$this->_meta['lastStatus'] = 'prepare running' ;
+		$this->_meta['last_status'] = 'prepare running' ;
+		if ( $this->_meta['last_pos'] == 0 ) {
+			$this->_meta['this_full_beginning_time'] = time() ;
+		}
 		$this->save_meta() ;
 	}
 
 	/**
 	 * Terminate crawling
 	 * 
-	 * @param  string $endReason The reason to terminate
+	 * @param  string $end_reason The reason to terminate
 	 */
-	protected function _terminate_running($endReason)
+	protected function _terminate_running($end_reason)
 	{
-		if ( $endReason === true ) {
-			$endReason = __('End of sitemap file', 'litespeed-cache') ;
-			$this->_meta['lastPos'] = 0 ;// reset last position
+		if ( $end_reason === true ) {
+			$end_reason = __('End of sitemap file', 'litespeed-cache') ;
+			$this->_meta['last_pos'] = 0 ;// reset last position
 			$this->_meta['done'] = 'touchedEnd' ;// log done status
+			$this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'] ;
 		}
-		$this->_meta['lastStatus'] = 'stopped' ;
-		$this->_meta['isRunning'] = 0 ;
-		$this->_meta['endReason'] = $endReason ;
+		$this->_meta['last_status'] = 'stopped' ;
+		$this->_meta['is_running'] = 0 ;
+		$this->_meta['end_reason'] = $end_reason ;
 		$this->save_meta() ;
 	}
 
 	/**
 	 * Return crawler result
-	 * @param  string $endReason Reason to end
+	 * @param  string $end_reason Reason to end
 	 * @return array             The results of returning
 	 */
-	protected function _return($endReason)
+	protected function _return($end_reason)
 	{
 		return array(
-			'error'		=> $endReason === true ? false : $endReason,
+			'error'		=> $end_reason === true ? false : $end_reason,
 			'blacklist'	=> $this->_blacklist,
 		) ;
 
@@ -310,13 +314,13 @@ class Litespeed_Crawler
 		}
 
 		// execute curl
-		$lastStartTime = null ;
+		$last_start_time = null ;
 		do {
-			curl_multi_exec($mh, $lastStartTime) ;
+			curl_multi_exec($mh, $last_start_time) ;
 			if ( curl_multi_select($mh) == -1 ) {
 				usleep(1) ;
 			}
-		} while ($lastStartTime > 0) ;
+		} while ($last_start_time > 0) ;
 
 		// curl done
 		$ret = array() ;
@@ -386,7 +390,9 @@ class Litespeed_Crawler
 	 */
 	public function save_meta()
 	{
-		return Litespeed_File::save($this->_meta_file, json_encode($this->_meta)) ;
+		$ret = Litespeed_File::save($this->_meta_file, json_encode($this->_meta)) ;
+		// LiteSpeed_Cache_Log::push('Crawler save_meta: '.var_export($this->_meta, true));
+		return $ret ;
 	}
 
 	/**
@@ -402,27 +408,27 @@ class Litespeed_Crawler
 			return sprintf(__('Can not read meta file: %s', 'litespeed-cache'), $this->_meta_file) ;
 		}
 
-		if ( $meta ) {
-			$meta = json_decode($meta, true) ;
+		if ( $meta && $meta = json_decode($meta, true) ) {
 			// check if sitemap changed since last time
-			if ( ! isset($meta['fileTime']) || $meta['fileTime'] < filemtime($this->_sitemap_file) ) {
-				$meta = false ;
+			if ( ! isset($meta['file_time']) || $meta['file_time'] < filemtime($this->_sitemap_file) ) {
+				$meta['file_time'] = filemtime($this->_sitemap_file) ;
+				$meta['last_pos'] = 0 ;
 			}
 		}
-
-		// initialize meta
-		if ( ! $meta ) {
+		else {
+			// initialize meta
 			$meta = array(
-				'listSize'	=> Litespeed_File::count_lines($this->_sitemap_file),
-				'fileTime'	=> filemtime($this->_sitemap_file),
-				'lastUpdate'=> 0,
-				'lastPos'=> 0,
-				'lastCount'=> 0,
-				'lastStartTime'=> 0,
-				'lastStatus'=> '',
-				'isRunning'=> 0,
-				'endReason'=> '',
-				'done'=> 0,
+				'list_size'			=> Litespeed_File::count_lines($this->_sitemap_file),
+				'last_update'		=> 0,
+				'last_pos'			=> 0,
+				'last_count'		=> 0,
+				'last_start_time'	=> 0,
+				'last_status'		=> '',
+				'is_running'		=> 0,
+				'end_reason'		=> '',
+				'done'				=> 0,
+				'this_full_beginning_time'	=> 0,
+				'last_full_time_cost'		=> 0,
 			) ;
 		}
 

@@ -129,12 +129,17 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	 *
 	 * @param  array $list The url list needs to be appended
 	 */
-	public function appendBlacklist($list)
+	public function append_blacklist($list)
 	{
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('Crawler append blacklist ' . count($list)) ;
+		}
 		$id = self::CRWL_BLACKLIST ;
 		$this->options[$id] = explode("\n", $this->options[$id]) ;
-		$this->options[$id] = array_filter(array_merge($this->options[$id], $list)) ;
-		$this->options[$id] = implode("\n", array_map('trim', $this->options[$id])) ;
+		$this->options[$id] = array_merge($this->options[$id], $list) ;
+		$this->options[$id] = array_map('trim', $this->options[$id]) ;
+		$this->options[$id] = array_filter($this->options[$id]) ;
+		$this->options[$id] = implode("\n", $this->options[$id]) ;
 
 		// update config
 		update_option(self::OPTION_NAME, $this->options) ;

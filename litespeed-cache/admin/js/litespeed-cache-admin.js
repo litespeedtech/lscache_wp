@@ -229,8 +229,8 @@ function litespeed_fetch_meta() {
 	jQuery.getJSON(_litespeed_crawler_url, function( meta ) {
 		litespeed_pulse() ;
 		var changed = false ;
-		if ( meta && 'listSize' in meta ) {
-			new_meta = meta.listSize + ' ' + meta.fileTime + ' ' + meta.lastPos + ' ' + meta.lastCount + ' ' + meta.lastStartTime + ' ' + meta.isRunning ;
+		if ( meta && 'list_size' in meta ) {
+			new_meta = meta.list_size + ' ' + meta.file_time + ' ' + meta.last_pos + ' ' + meta.last_count + ' ' + meta.last_start_time + ' ' + meta.is_running ;
 			if ( new_meta != _litespeed_meta ) {
 				_litespeed_meta = new_meta ;
 				changed = true ;
@@ -276,17 +276,17 @@ function _litespeed_adjust_interval(changed) {
 }
 
 function _litespeed_build_meta(meta) {
-	var string = '<li>' + litespeed_date(meta.lastUpdate) + 
-					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.listSize +
-					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + meta.lastPos +
-					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.lastCount +
+	var string = '<li>' + litespeed_date(meta.last_update) + 
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.list_size +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + meta.last_pos +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.last_count +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: '
 				 ;
-	if ( meta.isRunning ) {
-		string += 'crawling, ' + meta.lastStatus;
+	if ( meta.is_running ) {
+		string += 'crawling, ' + meta.last_status;
 	}
 	else{
-		string += meta.endReason ? meta.endReason : '-' ;
+		string += meta.end_reason ? meta.end_reason : '-' ;
 	}
 	string += '</li>' ;
 	return string;
