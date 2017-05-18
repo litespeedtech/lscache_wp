@@ -31,8 +31,6 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 		$hours = floor($seconds / 3600) ;
 		$act = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
 		$active = $_options[$act] ;
-		$triggerLink = false ;
-		$triggerLink = admin_url( 'admin-ajax.php?action=crawl_data&' . LiteSpeed_Cache::ACTION_KEY . '=' . LiteSpeed_Cache::ACTION_DO_CRAWL ) ;
 		if ( $active > 0 ) {
 			$active = 0 ;
 			$active_text = __('Deactivate','litespeed-cache') ;
@@ -57,8 +55,8 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					</td>
 					<td><?php
 						echo $active_text ;
-						echo " <a href='$triggerLink' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('reset position', 'litespeed-cache') . "</a>" ;
-						echo " <a href='$triggerLink' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('manually start', 'litespeed-cache') . "</a>" ;
+						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually start', 'litespeed-cache') . "</a>" ;
 					?></td>
 				</tr>
 			</tbody>
@@ -82,7 +80,6 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			<div class="litespeed-shell-header-bar"></div>
 			<div class="litespeed-shell-header">
 				<div class="litespeed-shell-header-bg"></div>
-				<div class="litespeed-shell-header-num"></div>
 				<div class="litespeed-shell-header-icon-container">
 					<img id="litespeed-shell-icon" src="<?php echo plugins_url('img/Litespeed.icon.svg', dirname(__FILE__)); ?>" />
 				</div>

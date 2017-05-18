@@ -67,6 +67,16 @@ class Litespeed_Crawler
 	}
 
 	/**
+	 * Create reset pos file
+	 * 
+	 * @return mixed True or error message
+	 */
+	public function reset_pos()
+	{
+		return Litespeed_File::save( $this->_meta_file . '.reset', time() , true) ;
+	}
+
+	/**
 	 * Start crawler
 	 * 
 	 * @return string|bool crawled result
@@ -153,7 +163,10 @@ class Litespeed_Crawler
 				}
 
 				// update offset position
-				$this->_save_position(count($urls)) ;
+				$this->_meta['lastPos'] += $i + 1 ;
+				$this->_meta['lastCount'] = $i + 1 ;
+				$this->_meta['lastUpdate'] = time() ;
+				$this->_meta['lastStatus'] = 'updated position' ;
 
 				// check duration
 				if ( $this->_meta['lastUpdate'] > $this->_max_run_time ) {
@@ -167,6 +180,13 @@ class Litespeed_Crawler
 						return __('Load over limit', 'litespeed-cache') ;
 					}
 				}
+
+				// check if need to reset pos
+				if ( file_exists($this->_meta_file . '.reset') && unlink($this->_meta_file . '.reset') ) {
+					$this->_meta['lastPos'] = 0 ;
+					return __('Stopped due to reset meta position', 'litespeed-cache') ;
+				}
+
 
 				$this->_meta['lastStatus'] = 'sleeping ' . $this->_run_delay . 'ms' ;
 				$this->save_meta() ;
@@ -218,21 +238,6 @@ class Litespeed_Crawler
 			'blacklist'	=> $this->_blacklist,
 		) ;
 
-	}
-
-	/**
-	 * Save current position
-	 * 
-	 * @param  int $count Offsets to save based on current pos
-	 */
-	protected function _save_position($count)
-	{
-		$now = time() ;
-		$this->_meta['lastUpdate'] = $now ;
-		$this->_meta['lastPos'] += $count ;
-		$this->_meta['lastCount'] = $count ;
-		$this->_meta['lastStatus'] = 'updated position' ;
-		$this->save_meta() ;
 	}
 
 	/**

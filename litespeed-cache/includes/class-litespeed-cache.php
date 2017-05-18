@@ -31,7 +31,6 @@ class LiteSpeed_Cache extends LiteSpeed{
 	const ACTION_SAVE_HTACCESS = 'save-htaccess';
 	const ACTION_SAVE_SETTINGS = 'save-settings';
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
-	const ACTION_DO_CRAWL = 'do-crawl';
 	const ACTION_DISMISS = 'DISMISS';
 	const ACTION_PURGE = 'PURGE';
 	const ACTION_PURGE_ERRORS = 'PURGE_ERRORS';
@@ -43,7 +42,9 @@ class LiteSpeed_Cache extends LiteSpeed{
 	const ACTION_PURGE_SINGLE = 'PURGESINGLE';
 	const ACTION_SHOW_HEADERS = 'SHOWHEADERS';
 	const ACTION_NOCACHE = 'NOCACHE';
-	const ACTION_CRAWLER_GENERATE_FILE = 'CRAWLER_GENERATE_FILE';
+	const ACTION_CRAWLER_GENERATE_FILE = 'crawler-generate-file';
+	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos';
+	const ACTION_DO_CRAWL = 'do-crawl';
 
 	const ADMINNONCE_PURGEALL = 'litespeed-purgeall';
 	const ADMINNONCE_PURGENETWORKALL = 'litespeed-purgeall-network';
@@ -198,15 +199,20 @@ class LiteSpeed_Cache extends LiteSpeed{
 				break;
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
-				LiteSpeed_Cache_Crawler::get_instance()->generate_sitemap();
-				LiteSpeed_Cache_Admin::redirect();
+				LiteSpeed_Cache_Crawler::get_instance()->generate_sitemap() ;
+				LiteSpeed_Cache_Admin::redirect() ;
+				break;
+
+			case LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS:
+				LiteSpeed_Cache_Crawler::get_instance()->reset_pos() ;
+				LiteSpeed_Cache_Admin::redirect() ;
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				add_action('wp_ajax_crawl_data', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawl_data'));
-				add_action('wp_ajax_nopriv_crawl_data', array(LiteSpeed_Cache_Crawler::get_instance(), 'crawl_data'));
-				break;
+				LiteSpeed_Cache_Crawler::get_instance()->crawl_data() ;
+				wp_die() ;
+				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
 				LiteSpeed_Cache::get_instance()->purge_front();

@@ -92,7 +92,6 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 
 			// check if it is public action
 			if ( ! in_array($action, array(
-					LiteSpeed_Cache::ACTION_DO_CRAWL,
 					LiteSpeed_Cache::ACTION_NOCACHE,
 					LiteSpeed_Cache::ACTION_PURGE,
 					LiteSpeed_Cache::ACTION_PURGE_SINGLE,
@@ -164,14 +163,9 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 				return ;
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
-				if ( $_is_enabled && $_can_option ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
-				}
-				return ;
-
-			// Handle the ajax request to proceed crawler manually by admin
+			case LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				if ( $_is_enabled && self::is_ajax() ) {
+				if ( $_is_enabled && $_can_option && !$_is_network_admin ) {
 					$this->set_var(self::VAR_ACTION, $action) ;
 				}
 				return ;

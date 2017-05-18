@@ -105,6 +105,30 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	}
 
 	/**
+	 * Create reset pos file
+	 * 
+	 * @return mixed True or error message
+	 */
+	public function reset_pos()
+	{
+		$crawler = new Litespeed_Crawler($this->_sitemap_file) ;
+		$ret = $crawler->reset_pos() ;
+		$log = 'Crawler log: Reset pos. ' ;
+		if ( $ret !== true ) {
+			$log .= "Error: $ret" ;
+			$msg = sprintf(__('Failed to send position reset notification: %s', 'litespeed-cache'), $ret) ;
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg) ;
+		}
+		else {
+			$msg = __('Position reset notification sent successfully', 'litespeed-cache') ;
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+		}
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			LiteSpeed_Cache_Log::push($log) ;
+		}
+	}
+
+	/**
 	 * Crawling start
 	 *
 	 * @since    1.1.0
@@ -146,10 +170,12 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 			$this->terminate_with_error($ret['error']) ;
 		}
 		else {
+			$msg = 'Crawler log: End of sitemap file' ;
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push('Crawler log: End of sitemap file') ;
+				LiteSpeed_Cache_Log::push($msg) ;
 			}
 
+			echo $msg ;
 			wp_die() ;
 		}
 	}
@@ -162,9 +188,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	public function terminate_with_error($error)
 	{
 		// return ajax error
-		echo json_encode(array(
-			'error'	=> $error,
-		)) ;
+		echo $error ;
 		wp_die() ;
 	}
 

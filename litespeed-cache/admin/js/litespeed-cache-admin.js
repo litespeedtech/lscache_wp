@@ -299,7 +299,7 @@ function _litespeed_dynamic_timeout() {
 
 function _litespeed_display_interval_reset() {
 	window.clearInterval(_litespeed_shell_display_handle) ;
-	jQuery('.litespeed-shell-header-num').text(_litespeed_shell_interval) ;
+	jQuery('.litespeed-shell-header-bar').data('num', _litespeed_shell_interval) ;
 	_litespeed_shell_display_handle = window.setInterval(_litespeed_display_interval, 1000) ;
 
 	jQuery('.litespeed-shell-header-bar').stop().animate({width: '100%'}, 500, function(){
@@ -308,17 +308,17 @@ function _litespeed_display_interval_reset() {
 }
 
 function _litespeed_display_interval() {
-	var num = jQuery('.litespeed-shell-header-num').text() ;
+	var num = jQuery('.litespeed-shell-header-bar').data('num') ;
 	jQuery('.litespeed-shell-header-bar').stop().animate({width: litespeed_get_percent(num, _litespeed_shell_interval) + '%'}, 1000) ;
 	if(num > 0) num-- ;
 	if(num < 0) num = 0 ;
-	jQuery('.litespeed-shell-header-num').text(num) ;
+	jQuery('.litespeed-shell-header-bar').data('num', num) ;
 }
 
 function litespeed_get_percent(num1, num2){
 	num1 = num1 * 1;
 	num2 = num2 * 1;
-	num = (num2 - num1) / num2;console.log(num1, num2, num);
+	num = (num2 - num1) / num2;
 	return num * 100;
 }
 
