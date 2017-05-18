@@ -117,7 +117,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 <?php endif ; ?>
 
 
-		<h3 class="litespeed-title"><?php echo __('Show Crawler Status', 'litespeed-cache') ; ?></h3>
+		<h3 class="litespeed-title"><?php echo __('Watch Crawler Status', 'litespeed-cache') ; ?></h3>
 
 		<?php
 			$ajaxUrl = LiteSpeed_Cache_Crawler::get_instance()->get_crawler_json_path() ;

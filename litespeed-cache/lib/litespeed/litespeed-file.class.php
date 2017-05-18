@@ -84,7 +84,7 @@ class Litespeed_File
 			set_error_handler("litespeed_exception_error_handler");
 
 			try {
-				mkdir($folder, 0777, true);
+				mkdir($folder, 0755, true);
 			}
 			catch ( ErrorException $ex ) {
 				return sprintf(__('Can not create folder: %s. Error: ', 'litespeed-cache'), $folder, $ex->getMessage());

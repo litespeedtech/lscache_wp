@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 				LiteSpeed_Cache_Log::push($msg) ;
 			}
 
-			wp_die($msg) ;
+			wp_die($msg, '', array('response'=>200)) ;
 		}
 	}
 
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	public function terminate_with_error($error)
 	{
 		// return ajax error
-		wp_die($error) ;
+		wp_die($error, '', array('response'=>200)) ;
 	}
 
 }
