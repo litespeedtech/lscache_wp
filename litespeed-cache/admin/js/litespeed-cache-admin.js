@@ -276,7 +276,7 @@ function _litespeed_adjust_interval(changed) {
 }
 
 function _litespeed_build_meta(meta) {
-	var string = '<li>' + litespeed_date(meta.last_update) + 
+	var string = '<li>' + litespeed_date(meta.last_update_time) + 
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.list_size +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + meta.last_pos +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.last_count +

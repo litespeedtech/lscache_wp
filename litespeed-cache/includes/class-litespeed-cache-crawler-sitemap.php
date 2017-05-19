@@ -110,7 +110,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 				foreach ( $cats as $cat ) {
 					$slug = str_replace($this->site_url, '', get_category_link($cat->term_id)) ;
 					if ( ! in_array($slug, $blacklist) ){
-						$this->_urls[] = $slug ;
+						$this->_urls[] = $slug ;//var_dump($slug);exit;//todo: check permalink
 					}
 				}
 			}

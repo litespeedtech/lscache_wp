@@ -67,20 +67,27 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 						<div class='litespeed-desc'>
 						<?php
 							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
-							if ( $meta && $meta->last_full_time_cost ) {
-								echo sprintf(__('Last ran once needs %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
+							if ( $meta && $meta->this_full_beginning_time ) {
+								echo sprintf(__('Last began at %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->this_full_beginning_time)) ;
 							}
 						?>
 						</div>
 					</td>
 					<td>
 						<?php echo $recurrence ; ?>
+						<div class='litespeed-desc'>
+						<?php
+							if ( $meta && $meta->last_full_time_cost ) {
+								echo sprintf(__('Last whole running cost %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
+							}
+						?>
+						</div>
 					</td>
 					<td>
 					<?php
 						if ( $meta ) {
 							echo "Size: {$meta->list_size}<br />Position: {$meta->last_pos}" ;
-							if ( $meta->is_running ) {
+							if ( $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ) {
 								echo "<br /><div class='litespeed-label litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
 							}
 						}
@@ -99,10 +106,14 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					<td>
 					<?php
 						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
-						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually start', 'litespeed-cache') . "</a>" ;
-
-						if ( $meta && $meta->end_reason ):
+						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually run', 'litespeed-cache') . "</a>" ;
 					?>
+						<?php if ( $meta && $meta->last_start_time ): ?>
+						<div class='litespeed-desc'>
+							<?php echo sprintf(__('Last ran: %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
+						</div>
+						<?php endif ; ?>
+						<?php if ( $meta && $meta->end_reason ): ?>
 						<div class='litespeed-desc'>
 							<?php echo sprintf(__('Last ended reason: %s', 'litespeed-cache'), $meta->end_reason) ; ?>
 						</div>

@@ -163,33 +163,37 @@ class Litespeed_Crawler
 				}
 
 				// update offset position
+				$_time = time() ;
 				$this->_meta['last_pos'] += $i + 1 ;
 				$this->_meta['last_count'] = $i + 1 ;
-				$this->_meta['last_update'] = time() ;
+				$this->_meta['last_update_time'] = $_time ;
 				$this->_meta['last_status'] = 'updated position' ;
 
 				// check duration
-				if ( $this->_meta['last_update'] > $this->_max_run_time ) {
+				if ( $this->_meta['last_update_time'] > $this->_max_run_time ) {
 					return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache') ;
 				}
 
-				// make sure at least each 20s save meta once
-				if ( time() - $this->_meta['meta_save_time'] > 10 ) {
+				// make sure at least each 10s save meta once
+				if ( $_time - $this->_meta['meta_save_time'] > 10 ) {
 					$this->save_meta() ;
 				}
 
+				// check if need to reset pos each 5s
+				if ( $_time > $this->_meta['pos_reset_check'] ) {
+					$this->_meta['pos_reset_check'] = $_time + 5 ;
+					if ( file_exists($this->_meta_file . '.reset') && unlink($this->_meta_file . '.reset') ) {
+						$this->_meta['last_pos'] = 0 ;
+						return __('Stopped due to reset meta position', 'litespeed-cache') ;
+					}
+				}
+
 				// check loads
-				if ( $this->_meta['last_update'] - $this->_cur_thread_time > 60 ) {
+				if ( $this->_meta['last_update_time'] - $this->_cur_thread_time > 60 ) {
 					$this->_adjust_current_threads() ;
 					if ( $this->_cur_threads == 0 ) {
 						return __('Load over limit', 'litespeed-cache') ;
 					}
-				}
-
-				// check if need to reset pos
-				if ( file_exists($this->_meta_file . '.reset') && unlink($this->_meta_file . '.reset') ) {
-					$this->_meta['last_pos'] = 0 ;
-					return __('Stopped due to reset meta position', 'litespeed-cache') ;
 				}
 
 				$this->_meta['last_status'] = 'sleeping ' . $this->_run_delay . 'ms' ;
@@ -424,7 +428,7 @@ class Litespeed_Crawler
 			// initialize meta
 			$meta = array(
 				'list_size'			=> Litespeed_File::count_lines($this->_sitemap_file),
-				'last_update'		=> 0,
+				'last_update_time'	=> 0,
 				'last_pos'			=> 0,
 				'last_count'		=> 0,
 				'last_start_time'	=> 0,
@@ -432,6 +436,7 @@ class Litespeed_Crawler
 				'is_running'		=> 0,
 				'end_reason'		=> '',
 				'meta_save_time'	=> 0,
+				'pos_reset_check'	=> 0,
 				'done'				=> 0,
 				'this_full_beginning_time'	=> 0,
 				'last_full_time_cost'		=> 0,
