@@ -54,7 +54,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			<thead><tr >
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Recurrence', 'litespeed-cache') ; ?></th>
-				<th scope="col"><?php echo __('Status', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Last Status', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Activation', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Actions', 'litespeed-cache') ; ?></th>
 			</tr></thead>
@@ -68,7 +68,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 						<?php
 							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
 							if ( $meta && $meta->last_full_time_cost ) {
-								echo sprintf(__('Totally run once needs %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
+								echo sprintf(__('Last ran once needs %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
 							}
 						?>
 						</div>

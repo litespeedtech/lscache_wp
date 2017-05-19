@@ -173,6 +173,11 @@ class Litespeed_Crawler
 					return __('Stopped due to exceeding defined Maximum Run Time', 'litespeed-cache') ;
 				}
 
+				// make sure at least each 20s save meta once
+				if ( time() - $this->_meta['meta_save_time'] > 10 ) {
+					$this->save_meta() ;
+				}
+
 				// check loads
 				if ( $this->_meta['last_update'] - $this->_cur_thread_time > 60 ) {
 					$this->_adjust_current_threads() ;
@@ -188,8 +193,7 @@ class Litespeed_Crawler
 				}
 
 				$this->_meta['last_status'] = 'sleeping ' . $this->_run_delay . 'ms' ;
-				// LiteSpeed_Cache_Log::push('crawler status: '.$this->_meta['last_status']);
-				$this->save_meta() ;
+
 				usleep($this->_run_delay) ;
 			}
 		}
@@ -363,12 +367,12 @@ class Litespeed_Crawler
 			CURLOPT_HEADER => true,
 			CURLOPT_CUSTOMREQUEST => 'GET',
 			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_ENCODING => "",
+			CURLOPT_ENCODING => 'gzip',
 			CURLOPT_CONNECTTIMEOUT => 10,
 			CURLOPT_TIMEOUT => 10,
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_NOBODY => true,
+			CURLOPT_NOBODY => false,
 			CURL_HTTP_VERSION_1_1 => 1,
 			CURLOPT_HTTPHEADER => $headers
 		) ;
@@ -390,8 +394,9 @@ class Litespeed_Crawler
 	 */
 	public function save_meta()
 	{
+		$this->_meta['meta_save_time'] = time() ;
+
 		$ret = Litespeed_File::save($this->_meta_file, json_encode($this->_meta)) ;
-		// LiteSpeed_Cache_Log::push('Crawler save_meta: '.var_export($this->_meta, true));
 		return $ret ;
 	}
 
@@ -426,6 +431,7 @@ class Litespeed_Crawler
 				'last_status'		=> '',
 				'is_running'		=> 0,
 				'end_reason'		=> '',
+				'meta_save_time'	=> 0,
 				'done'				=> 0,
 				'this_full_beginning_time'	=> 0,
 				'last_full_time_cost'		=> 0,
