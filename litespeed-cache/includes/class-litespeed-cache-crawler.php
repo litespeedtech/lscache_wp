@@ -160,7 +160,17 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
 		$crawler = new Litespeed_Crawler($this->_sitemap_file) ;
-		if ( $crawler->get_done_status() ) {
+		// if finished last time, regenerate sitemap
+		if ( $last_fnished_at = $crawler->get_done_status() ) {
+			// check whole crawling interval
+			if ( time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL] ) {
+				$ret = 'Crawler log: less than whole crawling interval';
+				if ( LiteSpeed_Cache_Log::get_enabled() ) {
+					LiteSpeed_Cache_Log::push($ret) ;
+				}
+				// if not reach whole crawling interval, exit
+				$this->terminate_with_error($ret) ;
+			}
 			$this->_generate_sitemap() ;
 		}
 		$crawler->set_base_url($this->_site_url) ;

@@ -56,12 +56,12 @@ class Litespeed_Crawler
 	/**
 	 * Get if last crawler touched end
 	 * 
-	 * @return bool
+	 * @return bool|int		False or last ended time
 	 */
 	public function get_done_status()
 	{
 		if ( $this->read_meta() === true && $this->_meta['done'] === 'touchedEnd' ) {
-			return true ;
+			return $this->_meta['last_full_time_cost'] + $this->_meta['this_full_beginning_time'] ;
 		}
 		return false ;
 	}
