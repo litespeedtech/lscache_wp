@@ -31,6 +31,9 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 			$this->_sitemap_file = $sitemapPath . '/crawlermap.data' ;
 			$this->_site_url = get_option('siteurl') ;
 		}
+
+		// check if this crawler is enabled
+		
 	}
 
 	/**

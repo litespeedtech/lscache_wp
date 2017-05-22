@@ -125,6 +125,24 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	}
 
 	/**
+	 * Enable/Disable cron task
+	 * 
+	 */
+	public function enable_cron()
+	{
+		$id = self::CRWL_CRON_ACTIVE ;
+		$this->options[$id] = !$this->options[$id];
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('Crawler cron ' . ($this->options[$id] ? 'enabled' : 'disalbed' ) ) ;
+		}
+		// update config
+		update_option(self::OPTION_NAME, $this->options) ;
+
+		echo json_encode(array('enable'=>$this->options[$id]));
+		exit;
+	}
+
+	/**
 	 * Append urls to current list
 	 *
 	 * @param  array $list The url list needs to be appended
@@ -316,8 +334,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 			self::CRWL_WHOLE_INTERVAL => 604800,
 			self::CRWL_THREADS => 3,
 			self::CRWL_LOAD_LIMIT => 1,
-			self::CRWL_CRON_ACTIVE => 0,
 			self::CRWL_BLACKLIST => '',
+			self::CRWL_CRON_ACTIVE => false,
 				) ;
 
 		if (!is_openlitespeed()) {

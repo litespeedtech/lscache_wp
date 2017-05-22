@@ -259,27 +259,34 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * Assumes user capabilities are already checked.
 	 *
 	 * @param string $action The LSCWP_CTRL action to do in the url.
+	 * @param string $ajax_action AJAX call's action
 	 * @return string The built url.
 	 */
-	public static function build_url($action){
+	public static function build_url($action, $ajax_action = false){
 		global $pagenow;
 		$prefix = '?';
 
-		$params = $_GET;
+		if ( $ajax_action === false) {
 
-		if (!empty($params)) {
-			if (isset($params['LSCWP_CTRL'])) {
-				unset($params['LSCWP_CTRL']);
-			}
-			if (isset($params['_wpnonce'])) {
-				unset($params['_wpnonce']);
-			}
+			$params = $_GET;
+
 			if (!empty($params)) {
-				$prefix .= http_build_query($params) . '&';
+				if (isset($params['LSCWP_CTRL'])) {
+					unset($params['LSCWP_CTRL']);
+				}
+				if (isset($params['_wpnonce'])) {
+					unset($params['_wpnonce']);
+				}
+				if (!empty($params)) {
+					$prefix .= http_build_query($params) . '&';
+				}
 			}
+			$combined = $pagenow . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+		}
+		else {
+			$combined = 'admin-ajax.php?action=' . $ajax_action . '&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
 		}
 
-		$combined = $pagenow . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action;
 
 		if (is_network_admin()) {
 			$prenonce = network_admin_url($combined);

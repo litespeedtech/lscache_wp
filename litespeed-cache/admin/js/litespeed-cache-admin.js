@@ -106,7 +106,7 @@ var _litespeed_dots ;
 					LSCWP_CTRL: lscwp_data.lscwpctrl,
 					_wpnonce: lscwp_data.nonce
 				}
-			})
+			});
 		}) ;
 
 		// Select All and Copy to Clipboard
@@ -144,9 +144,17 @@ var _litespeed_dots ;
 			$(this).hide() ;
 		}) ;
 
-		$('[target=litespeedHiddenIframe]').click(function(event) {
+		$('#litespeed_manual_trigger').click(function(event) {
 			$('#litespeed-loading-dot').before('<li>Manually Started</li>') ;
-		});
+		}) ;
+
+		$('#litespeed_crawler_cron_enable').click(function(event) {
+			var that = this ;
+			$.getJSON( $(that).data('url'), function(json){
+				$(that).prop('checked', json.enable) ;
+			} ) ;
+
+		}) ;
 	}) ;
 })(jQuery) ;
 

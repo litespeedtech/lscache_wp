@@ -12,7 +12,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
-		<a href="<?php echo LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn litespeed-btn-success">
+		<a href="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn litespeed-btn-success">
 			<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
 		</a>
 
@@ -98,15 +98,15 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					</td>
 					<td>
 						<label class="litespeed-switch-onoff">
-							<input type="checkbox" name="crawler_enable" value="1" <?php if($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE]) echo "checked"; ?> />
+							<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1" data-url="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, 'enable_cron') ; ?>" <?php if($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE]) echo "checked"; ?> />
 							<span data-on="Enable" data-off="Disable"></span> 
 							<span></span> 
 						</label>
 					</td>
 					<td>
 					<?php
-						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
-						echo " <a href='" . LiteSpeed_Cache_Admin_Display::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually run', 'litespeed-cache') . "</a>" ;
+						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually run', 'litespeed-cache') . "</a>" ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>
@@ -123,7 +123,8 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			</tbody>
 		</table>
 		<div class="litespeed-desc">
-			<?php echo __('Recurrence is calculated when you set Cron interval in seconds','litespeed-cache') ; ?>
+			<div><?php echo __('Recurrence is calculated when you set Cron interval in seconds','litespeed-cache') ; ?></div>
+			<div><?php echo __('Only one crawler can run. When manully run meets cron automatic run, whichever first will run.','litespeed-cache') ; ?></div>
 		</div>
 <?php endif ; ?>
 
@@ -135,7 +136,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			if ( $ajaxUrl ):
 		?>
 
-		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn litespeed-btn-success" data-url="<?php echo $ajaxUrl ; ?>" />
+		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn litespeed-btn-primary" data-url="<?php echo $ajaxUrl ; ?>" />
 
 		<div class="litespeed-shell litespeed-hide">
 			<div class="litespeed-shell-header-bar"></div>

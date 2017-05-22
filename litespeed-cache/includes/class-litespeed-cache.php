@@ -13,7 +13,8 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache extends LiteSpeed{
+class LiteSpeed_Cache extends LiteSpeed
+{
 	private $config;
 
 	const PLUGIN_NAME = 'litespeed-cache';
@@ -44,6 +45,7 @@ class LiteSpeed_Cache extends LiteSpeed{
 	const ACTION_NOCACHE = 'NOCACHE';
 	const ACTION_CRAWLER_GENERATE_FILE = 'crawler-generate-file';
 	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos';
+	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable';
 	const ACTION_DO_CRAWL = 'do-crawl';
 
 	const ADMINNONCE_PURGEALL = 'litespeed-purgeall';
@@ -82,7 +84,8 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 *
 	 * @since    1.0.0
 	 */
-	protected function __construct(){
+	protected function __construct()
+	{
 		$this->config = LiteSpeed_Cache_Config::get_instance();
 
 		// Check if debug is on
@@ -129,7 +132,8 @@ class LiteSpeed_Cache extends LiteSpeed{
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function init(){
+	public function init()
+	{
 		if(!empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) {
 			$this->cachectrl = self::CACHECTRL_NOCACHE;
 		}
@@ -207,6 +211,11 @@ class LiteSpeed_Cache extends LiteSpeed{
 			case LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS:
 				LiteSpeed_Cache_Crawler::get_instance()->reset_pos() ;
 				LiteSpeed_Cache_Admin::redirect() ;
+				break;
+
+			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
+				add_action('wp_ajax_enable_cron', array(LiteSpeed_Cache_Config::get_instance(), 'enable_cron'));
+				add_action('wp_ajax_nopriv_enable_cron', array(LiteSpeed_Cache_Config::get_instance(), 'enable_cron'));
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin

@@ -184,6 +184,9 @@ class Litespeed_Crawler
 					$this->_meta['pos_reset_check'] = $_time + 5 ;
 					if ( file_exists($this->_meta_file . '.reset') && unlink($this->_meta_file . '.reset') ) {
 						$this->_meta['last_pos'] = 0 ;
+						// reset done status
+						$this->_meta['done'] = 0 ;
+						$this->_meta['this_full_beginning_time'] = 0 ;
 						return __('Stopped due to reset meta position', 'litespeed-cache') ;
 					}
 				}

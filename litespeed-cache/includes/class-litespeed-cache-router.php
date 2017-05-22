@@ -164,6 +164,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
 			case LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS:
+			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 				if ( $_is_enabled && $_can_option && !$_is_network_admin ) {
 					$this->set_var(self::VAR_ACTION, $action) ;
