@@ -17,7 +17,8 @@ class LiteSpeed_Cache_Log
 	private static $log_path;
 	private static $enabled = false;
 
-	private function __construct(){
+	private function __construct()
+	{
 		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log';
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG', 'LSCACHE_WP_blogid_' . get_current_blog_id());
@@ -31,7 +32,8 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.1.0
 	 */
-	public static function set_enabled(){
+	public static function set_enabled()
+	{
 		self::$enabled = true;
 	}
 
@@ -40,7 +42,8 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.1.0
 	 */
-	public static function get_enabled(){
+	public static function get_enabled()
+	{
 		return self::$enabled;
 	}
 
@@ -52,7 +55,8 @@ class LiteSpeed_Cache_Log
 	 * @param string $msg The log message to write.
 	 * @return string The formatted log message.
 	 */
-	private static function format_message($msg){
+	private static function format_message($msg)
+	{
 		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'), $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], LSCWP_LOG_TAG, $msg);
 		return $formatted;
 	}
@@ -64,7 +68,8 @@ class LiteSpeed_Cache_Log
 	 * @access public
 	 * @param string $msg The debug message.
 	 */
-	public static function push($msg){
+	public static function push($msg)
+	{
 		if ( !isset(self::$_debug) ) {// If not initialized, do it now
 			self::get_instance();
 		}
@@ -78,7 +83,8 @@ class LiteSpeed_Cache_Log
 	 * @since 1.0.12
 	 * @access private
 	 */
-	private function log_request(){
+	private function log_request()
+	{
 		$SERVERVARS = array(
 			'Query String' => '',
 			'HTTP_USER_AGENT' => '',

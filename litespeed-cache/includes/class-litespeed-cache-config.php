@@ -454,7 +454,8 @@ class LiteSpeed_Cache_Config
 	 * @access protected
 	 * @return array An array of the default options.
 	 */
-	protected function get_default_site_options(){
+	protected function get_default_site_options()
+	{
 		$default_site_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::NETWORK_OPID_ENABLED => false,
@@ -481,7 +482,8 @@ class LiteSpeed_Cache_Config
 	 * @access public
 	 * @return array The list of options to reset.
 	 */
-	public static function get_rule_reset_options(){
+	public static function get_rule_reset_options()
+	{
 		$reset = array(
 			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED => false,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON => false,
@@ -529,7 +531,8 @@ class LiteSpeed_Cache_Config
 	 * @param array $options Optional. The default options to compare against.
 	 * @return mixed boolean on failure, array of keys on success.
 	 */
-	public function get_thirdparty_options($options = null){
+	public function get_thirdparty_options($options = null)
+	{
 		$tp_options = apply_filters('litespeed_cache_get_options', array()) ;
 		if (empty($tp_options)) {
 			return false ;
@@ -586,7 +589,8 @@ class LiteSpeed_Cache_Config
 	 * @param array $options The current options.
 	 * @return array New options.
 	 */
-	public static function option_diff($default_options, $options){
+	public static function option_diff($default_options, $options)
+	{
 		$dkeys = array_keys($default_options) ;
 		$keys = array_keys($options) ;
 		$newkeys = array_diff($dkeys, $keys) ;
@@ -620,7 +624,8 @@ class LiteSpeed_Cache_Config
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function plugin_upgrade(){
+	public function plugin_upgrade()
+	{
 		$default_options = $this->get_default_options() ;
 
 		if ($this->options[self::OPID_VERSION] == $default_options[self::OPID_VERSION]
@@ -652,7 +657,8 @@ class LiteSpeed_Cache_Config
 	 * @since 1.0.11
 	 * @access public
 	 */
-	public function plugin_site_upgrade(){
+	public function plugin_site_upgrade()
+	{
 		$default_options = $this->get_default_site_options() ;
 		$options = $this->get_site_options() ;
 
@@ -737,7 +743,8 @@ class LiteSpeed_Cache_Config
 	 * @access public
 	 * @param int $count The count of blogs active in multisite.
 	 */
-	public function plugin_activation($count){
+	public function plugin_activation($count)
+	{
 		$errors = array();
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
 		$default = $this->get_default_options();

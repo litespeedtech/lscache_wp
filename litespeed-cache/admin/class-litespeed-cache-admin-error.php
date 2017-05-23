@@ -70,7 +70,8 @@ class LiteSpeed_Cache_Admin_Error
 	 * @param int $err_code The error code to retrieve.
 	 * @return string The error message if matching, else an empty string.
 	 */
-	public function convert_code_to_error($err_code){
+	public function convert_code_to_error($err_code)
+	{
 		if (!is_numeric($err_code)) {
 			return false;
 		}
