@@ -8,8 +8,9 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Activation extends LiteSpeed
+class LiteSpeed_Cache_Activation
 {
+	private static $_instance;
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;
 
 
@@ -224,5 +225,22 @@ class LiteSpeed_Cache_Activation extends LiteSpeed
 		include($adv_cache_path) ;
 		$ret = defined('LSCACHE_ADV_CACHE') ;
 		return $ret ;
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
 	}
 }

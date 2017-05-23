@@ -9,18 +9,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Report extends LiteSpeed
+class LiteSpeed_Cache_Admin_Report
 {
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.1.0
-	 */
-	protected function __construct()
-	{
-	}
-
+	private static $_instance;
 
 	/**
 	 * Gathers the environment details and creates the report.
@@ -230,4 +221,20 @@ class LiteSpeed_Cache_Admin_Report extends LiteSpeed
 		return $buf . $nl . $nl;
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

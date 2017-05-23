@@ -10,16 +10,13 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Router extends LiteSpeed
+class LiteSpeed_Cache_Router
 {
-	const VAR_IP = '_ip' ;
-	const VAR_ACTION = '_action' ;
-	const VAR_IS_AJAX = '_is_ajax' ;
-	const VAR_IS_ADMIN_IP = '_is_admin_ip' ;
-
-	protected function __construct()
-	{
-	}
+	private static $_instance;
+	private static $_is_ajax;
+	private static $_ip;
+	private static $_action;
+	private static $_is_admin_ip;
 
 	/**
 	 * Check action
@@ -29,10 +26,10 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 	 */
 	public static function get_action()
 	{
-		if ( ! self::is_var(self::VAR_ACTION) ) {
+		if ( ! isset(self::$_action) ) {
 			self::get_instance()->verify_action() ;
 		}
-		return self::get_var(self::VAR_ACTION) ;
+		return self::$_action ;
 	}
 
 	/**
@@ -43,10 +40,10 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 	 */
 	public static function is_ajax()
 	{
-		if ( ! self::is_var(self::VAR_IS_AJAX) ) {
-			return self::set_var(self::VAR_IS_AJAX, defined('DOING_AJAX') && DOING_AJAX) ;
+		if ( ! isset(self::$_is_ajax) ) {
+			self::$_is_ajax = defined('DOING_AJAX') && DOING_AJAX ;
 		}
-		return self::get_var(self::VAR_IS_AJAX) ;
+		return self::$_is_ajax ;
 	}
 
 	/**
@@ -57,13 +54,12 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 	 */
 	public static function is_admin_ip()
 	{
-		if ( ! self::is_var(self::VAR_IS_ADMIN_IP) ) {
-			$ips = LiteSpeed_Cache_Config::get_instance()->get_option(
-				LiteSpeed_Cache_Config::OPID_ADMIN_IPS) ;
+		if ( ! isset(self::$_is_admin_ip) ) {
+			$ips = LiteSpeed_Cache_Config::get_instance()->get_option(LiteSpeed_Cache_Config::OPID_ADMIN_IPS) ;
 
-			return self::set_var(self::VAR_IS_ADMIN_IP, self::get_instance()->ip_access($ips)) ;
+			self::$_is_admin_ip = self::get_instance()->ip_access($ips) ;
 		}
-		return self::get_var(self::VAR_IS_ADMIN_IP) ;
+		return self::$_is_admin_ip ;
 	}
 
 	/**
@@ -123,14 +119,14 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
 				if ( ( ! $_is_multisite && $_can_option ) || $_can_network_option ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
+					self::$_action = $action ;
 				}
 				return ;
 
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
 				if ( $_can_network_option ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
+					self::$_action = $action ;
 				}
 				return ;
 
@@ -141,7 +137,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				if ( $_is_enabled
 						&& ( $_can_network_option || $_can_option) ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
+					self::$_action = $action ;
 				}
 				return ;
 
@@ -149,7 +145,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 				if ( $_is_enabled
 						&& ( $_can_network_option
 							|| ( ! $_is_multisite && $_can_option ) ) ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
+					self::$_action = $action ;
 				}
 				return ;
 
@@ -158,7 +154,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
 			case LiteSpeed_Cache::ACTION_SHOW_HEADERS:
 				if ( $_is_enabled && $_is_public_action ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
+					self::$_action = $action ;
 				}
 				return ;
 
@@ -167,7 +163,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 				if ( $_is_enabled && $_can_option && !$_is_network_admin ) {
-					$this->set_var(self::VAR_ACTION, $action) ;
+					self::$_action = $action ;
 				}
 				return ;
 
@@ -204,11 +200,8 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 		if ( ! $ip_list ) {
 			return false ;
 		}
-		if ( ! self::is_var(self::VAR_IP) ) {
-			$_ip = self::set_var(self::VAR_IP, $this->get_ip()) ;
-		}
-		else {
-			$_ip = self::get_var(self::VAR_IP) ;
+		if ( ! isset(self::$_ip) ) {
+			self::$_ip = $this->get_ip() ;
 		}
 		// $uip = explode('.', $_ip) ;
 		// if(empty($uip) || count($uip) != 4) Return false ;
@@ -220,7 +213,7 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 		// 	if(count($ip) != 4) continue ;
 		// 	for($i = 0 ; $i <= 3 ; $i++) if($ip[$i] == '*') $ip_list[$key][$i] = $uip[$i] ;
 		// }
-		return in_array($_ip, $ip_list) ;
+		return in_array(self::$_ip, $ip_list) ;
 	}
 
 	/**
@@ -247,4 +240,20 @@ class LiteSpeed_Cache_Router extends LiteSpeed
 		return $_ip ;
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

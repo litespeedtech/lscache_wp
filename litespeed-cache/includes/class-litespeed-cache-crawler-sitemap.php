@@ -9,8 +9,9 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
+class LiteSpeed_Cache_Crawler_Sitemap
 {
+	private static $_instance;
 	private $site_url ;// Used to simplify urls
 
 	protected $_urls = array() ;
@@ -18,7 +19,7 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 	/**
 	 * Instantiate the class
 	 */
-	protected function __construct()
+	private function __construct()
 	{
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id() ;
@@ -132,4 +133,20 @@ class LiteSpeed_Cache_Crawler_Sitemap extends LiteSpeed
 		return apply_filters('litespeed_crawler_sitemap', $this->_urls) ;
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

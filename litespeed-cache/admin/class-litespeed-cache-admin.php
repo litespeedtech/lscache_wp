@@ -9,7 +9,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin extends LiteSpeed{
+class LiteSpeed_Cache_Admin
+{
+	private static $_instance;
 	private $config;
 	private $display;
 	private $main;
@@ -20,7 +22,7 @@ class LiteSpeed_Cache_Admin extends LiteSpeed{
 	 *
 	 * @since    1.0.0
 	 */
-	protected function __construct(){
+	private function __construct(){
 		// Additional litespeed assets on admin display
 		// Also register menu
 		$this->display = LiteSpeed_Cache_Admin_Display::get_instance();
@@ -340,5 +342,22 @@ class LiteSpeed_Cache_Admin extends LiteSpeed{
 		}
 		wp_redirect($url);
 		exit();
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
 	}
 }

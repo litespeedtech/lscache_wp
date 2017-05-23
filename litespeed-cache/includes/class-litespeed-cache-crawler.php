@@ -9,8 +9,9 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Crawler extends LiteSpeed
+class LiteSpeed_Cache_Crawler
 {
+	private static $_instance;
 	private $_sitemap_file ;
 	private $_site_url ;
 
@@ -19,7 +20,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	 *
 	 * @since    1.1.0
 	 */
-	protected function __construct()
+	private function __construct()
 	{
 		$sitemapPath = LSWCP_DIR . 'var' ;
 		if ( is_multisite() ) {
@@ -237,4 +238,20 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 		}
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

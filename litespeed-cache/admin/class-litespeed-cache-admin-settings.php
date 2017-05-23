@@ -9,15 +9,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.1.0
-	 */
-	protected function __construct(){
-	}
+class LiteSpeed_Cache_Admin_Settings
+{
+	private static $_instance;
 
 	/**
 	 * Checks the admin selected option for cache tag prefixes.
@@ -32,7 +26,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current configuration options.
 	 * @return mixed True on success, error message otherwise.
 	 */
-	private function validate_tag_prefix($input, &$options){
+	private function validate_tag_prefix($input, &$options)
+	{
 		$id = LiteSpeed_Cache_Config::OPID_TAG_PREFIX;
 		if (!isset($input[$id])) {
 			return true;
@@ -60,7 +55,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param number $min Minimum number
 	 * @return bool True if valid, false otherwise.
 	 */
-	public function validate_ttl($input, $id, $min = false){
+	public function validate_ttl($input, $id, $min = false)
+	{
 		if (!isset($input[$id])) {
 			return false;
 		}
@@ -86,7 +82,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_general(&$input, &$options, &$errors){
+	private function validate_general(&$input, &$options, &$errors)
+	{
 		$ttl_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TTL);
 
 		// enabled setting
@@ -210,7 +207,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_purge($input, &$options, &$errors){
+	private function validate_purge($input, &$options, &$errors)
+	{
 
 		// get purge options
 		$pvals = array(
@@ -249,7 +247,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_exclude($input, &$options, &$errors){
+	private function validate_exclude($input, &$options, &$errors)
+	{
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI;
 		if (isset($input[$id])) {
 			$uri_arr = array_map('trim', explode("\n", $input[$id]));
@@ -312,7 +311,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_singlesite($input, &$options, &$errors){
+	private function validate_singlesite($input, &$options, &$errors)
+	{
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance();
 
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED;
@@ -355,7 +355,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_debug($input, &$options, &$errors){
+	private function validate_debug($input, &$options, &$errors)
+	{
 		$pattern = "/[\s,]+/";
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS;
 		if (isset($input[$id])) {
@@ -418,7 +419,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_crawler($input, &$options, &$errors){
+	private function validate_crawler($input, &$options, &$errors)
+	{
 		$ttl_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TTL);
 
 		$id = LiteSpeed_Cache_Config::CRWL_POSTS;
@@ -511,7 +513,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param array $input The input options.
 	 * @param array $options The current options.
 	 */
-	private function validate_thirdparty($input, $options){
+	private function validate_thirdparty($input, $options)
+	{
 		$tp_default_options = LiteSpeed_Cache_Config::get_instance()->get_thirdparty_options();
 		if (empty($tp_default_options)) {
 			return $options;
@@ -537,7 +540,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 *     clicking save.
 	 * @return array The updated configuration options.
 	 */
-	public function validate_plugin_settings($input){
+	public function validate_plugin_settings($input)
+	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		$errors = array();
 
@@ -605,7 +609,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function validate_network_settings(){
+	public function validate_network_settings()
+	{
 		$input = array_map("LiteSpeed_Cache_Admin::cleanup_text", $_POST[LiteSpeed_Cache_Config::OPTION_NAME]);
 		$options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 		$errors = array();
@@ -681,7 +686,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 	 * @param bool $check_notset If need to check notset
 	 * @return int Filtered value
 	 */
-	public static function is_checked($val, $check_notset = false){
+	public static function is_checked($val, $check_notset = false)
+	{
 		$val = intval($val);
 
 		if($val === LiteSpeed_Cache_Config::VAL_ON){
@@ -695,4 +701,20 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		return LiteSpeed_Cache_Config::VAL_OFF;
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

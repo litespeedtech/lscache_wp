@@ -8,8 +8,9 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Cookie extends LiteSpeed
+class LiteSpeed_Cache_Cookie
 {
+	private static $_instance;
 
 	/**
 	 * Adds the actions used for setting up cookies on log in/out.
@@ -231,4 +232,20 @@ class LiteSpeed_Cache_Cookie extends LiteSpeed
 		return false;
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

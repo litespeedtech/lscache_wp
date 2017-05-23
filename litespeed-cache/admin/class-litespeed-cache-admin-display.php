@@ -9,8 +9,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Display extends LiteSpeed
+class LiteSpeed_Cache_Admin_Display
 {
+	private static $_instance;
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
@@ -33,9 +34,9 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   protected
+	 * @access   private
 	 */
-	protected function __construct()
+	private function __construct()
 	{
 		// load assets
 		if(!empty($_GET['page']) &&
@@ -883,4 +884,20 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed
 			. " <label for='$id_attr'>$txt</label>";
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

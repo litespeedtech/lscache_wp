@@ -10,17 +10,20 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Log extends LiteSpeed{
-	const VAR_DEBUG = '_debug';
+class LiteSpeed_Cache_Log
+{
+	private static $_instance;
+	private static $_debug;
 	private static $log_path;
 	private static $enabled = false;
 
-	protected function __construct(){
+	private function __construct(){
 		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log';
 		if (!defined('LSCWP_LOG_TAG')) {
 			define('LSCWP_LOG_TAG', 'LSCACHE_WP_blogid_' . get_current_blog_id());
 		}
 		$this->log_request();
+		self::$_debug = true;
 	}
 
 	/**
@@ -62,7 +65,7 @@ class LiteSpeed_Cache_Log extends LiteSpeed{
 	 * @param string $msg The debug message.
 	 */
 	public static function push($msg){
-		if (!self::is_var(self::VAR_DEBUG)) {// If not initialized, do it now
+		if ( !isset(self::$_debug) ) {// If not initialized, do it now
 			self::get_instance();
 		}
 		$formatted = self::format_message($msg);
@@ -103,5 +106,22 @@ class LiteSpeed_Cache_Log extends LiteSpeed{
 
 		$request = array_map('self::format_message', $params);
 		file_put_contents(self::$log_path, $request, FILE_APPEND);
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
 	}
 }

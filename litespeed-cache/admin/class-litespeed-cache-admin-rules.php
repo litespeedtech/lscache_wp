@@ -9,7 +9,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
+class LiteSpeed_Cache_Admin_Rules
+{
+	private static $_instance;
 
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor';
 
@@ -47,9 +49,10 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   protected
+	 * @access   private
 	 */
-	protected function __construct(){
+	private function __construct()
+	{
 		$this->path_set();
 		clearstatcache();
 
@@ -91,7 +94,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function readable($kind = 'frontend'){
+	public static function readable($kind = 'frontend')
+	{
 		if( $kind === 'frontend' ){
 			return self::get_instance()->frontend_htaccess_readable;
 		}
@@ -106,7 +110,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function writable($kind = 'frontend'){
+	public static function writable($kind = 'frontend')
+	{
 		if( $kind === 'frontend' ){
 			return self::get_instance()->frontend_htaccess_writable;
 		}
@@ -121,7 +126,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function get_frontend_htaccess(){
+	public static function get_frontend_htaccess()
+	{
 		return self::get_instance()->frontend_htaccess;
 	}
 
@@ -131,7 +137,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function get_backend_htaccess(){
+	public static function get_backend_htaccess()
+	{
 		return self::get_instance()->backend_htaccess;
 	}
 
@@ -150,7 +157,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @return string The deepest path where the file exists,
 	 * or the last path used if it does not exist.
 	 */
-	private function path_search($stop_path, $start_path, $file){
+	private function path_search($stop_path, $start_path, $file)
+	{
 		while (!file_exists($start_path . $file)) {
 			if ($start_path === $stop_path) {
 				break;
@@ -166,7 +174,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.0.11
 	 * @access private
 	 */
-	private function path_set(){
+	private function path_set()
+	{
 		$this->theme_htaccess = LSWCP_CONTENT_DIR;
 
 		$install = ABSPATH;
@@ -238,7 +247,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param  string $kind Frontend or backend
 	 * @return string       Path
 	 */
-	public function htaccess_path($kind = 'frontend'){
+	public function htaccess_path($kind = 'frontend')
+	{
 		switch ( $kind ) {
 			case 'frontend':
 				$path = $this->frontend_htaccess;
@@ -265,7 +275,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public function htaccess_read($kind = 'frontend'){
+	public function htaccess_read($kind = 'frontend')
+	{
 		$path = $this->htaccess_path($kind);
 
 		if( !$path || !file_exists($path) ) {
@@ -304,7 +315,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param boolean $backup Whether to create backups or not.
 	 * @return boolean true on success, else false.
 	 */
-	public function htaccess_save($content, $kind = 'frontend', $backup = true){
+	public function htaccess_save($content, $kind = 'frontend', $backup = true)
+	{
 		$path = $this->htaccess_path($kind);
 
 		if (!self::readable($kind) || !self::writable($kind)) {
@@ -340,7 +352,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
 	 * @return boolean True on success, else false on failure.
 	 */
-	private function htaccess_backup($kind = 'frontend'){
+	private function htaccess_backup($kind = 'frontend')
+	{
 		$path = $this->htaccess_path($kind);
 		$bak = '_lscachebak_orig';
 		$i = 1;
@@ -405,7 +418,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.1.0
 	 * @return string Mobile Agents value
 	 */
-	public function get_rewrite_rule_mobile_agents(){
+	public function get_rewrite_rule_mobile_agents()
+	{
 		$rules = $this->get_rewrite_rule(self::MARKER_MOBILE);
 		if(!isset($rules[0])){
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER_MOBILE);
@@ -431,7 +445,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param string $kind The kind of htaccess to search in
 	 * @return array
 	 */
-	public function get_rewrite_rule_login_cookie($kind = 'frontend'){
+	public function get_rewrite_rule_login_cookie($kind = 'frontend')
+	{
 		$rule = $this->get_rewrite_rule(self::MARKER_LOGIN_COOKIE, $kind);
 		if( substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=' ){//todo: use regex
 			return false;
@@ -446,7 +461,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param  string $kind Frontend or backend .htaccess file
 	 * @return mixed       Rules
 	 */
-	private function get_rewrite_rule($cond, $kind = 'frontend'){
+	private function get_rewrite_rule($cond, $kind = 'frontend')
+	{
 		clearstatcache();
 		$path = $this->htaccess_path($kind);
 		if ( !self::readable($kind) ) {
@@ -484,7 +500,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param array $errors Errors array to add error messages to.
 	 * @return mixed False if there is an error, diff array otherwise.
 	 */
-	public function check_input_for_rewrite($options, $input, &$errors){
+	public function check_input_for_rewrite($options, $input, &$errors)
+	{
 		$diff = array();
 		$val_check = array(
 			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
@@ -584,7 +601,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param String $rule Input rewrite rule.
 	 * @return boolean True for valid rules, false otherwise.
 	 */
-	private function check_rewrite($rule){
+	private function check_rewrite($rule)
+	{
 		$escaped = str_replace('@', '\@', $rule);
 		return @preg_match('@' . $escaped . '@', null) !== false;//todo: improve to try catch
 	}
@@ -598,7 +616,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
-	public function validate_common_rewrites($diff, &$errors){
+	public function validate_common_rewrites($diff, &$errors)
+	{
 
 		if (!self::readable() || !self::writable()) {
 			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW);
@@ -729,7 +748,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @param  array $rules
 	 * @param  string $kind  which htaccess
 	 */
-	public function insert_wrapper($rules = array(), $kind = 'frontend'){
+	public function insert_wrapper($rules = array(), $kind = 'frontend')
+	{
 		$res = $this->htaccess_backup($kind);
 		if ( !$res ){
 			return false;
@@ -756,7 +776,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function clear_rules(){
+	public function clear_rules()
+	{
 		$this->deprecated_clear_rules();
 		$this->insert_wrapper();
 		if ($this->frontend_htaccess !== $this->backend_htaccess) {
@@ -767,7 +788,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	/**
 	 * Only used to clear old rules when upgrade to v1.1.0
 	 */
-	public function deprecated_clear_rules(){
+	public function deprecated_clear_rules()
+	{
 		$RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!';
 		$pattern = '/###LSCACHE START ' . $RW_WRAPPER . '###.*###LSCACHE END ' . $RW_WRAPPER . '###\n?/s';
 		clearstatcache();
@@ -809,7 +831,8 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function htaccess_editor_save(){
+	public function htaccess_editor_save()
+	{
 		if (isset($_POST[self::EDITOR_TEXTAREA_NAME])) {
 			$content = LiteSpeed_Cache_Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]);
 			$msg = $this->htaccess_save($content);
@@ -824,4 +847,22 @@ class LiteSpeed_Cache_Admin_Rules extends LiteSpeed{
 		}
 
 	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }
+

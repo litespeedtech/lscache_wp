@@ -11,7 +11,9 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Error extends LiteSpeed{
+class LiteSpeed_Cache_Admin_Error
+{
+	private static $_instance;
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
@@ -59,15 +61,6 @@ class LiteSpeed_Cache_Admin_Error extends LiteSpeed{
 	const E_HTA_SAVE = 9060;
 	const E_CONF_WRITE = 9070;
 	const E_CONF_FIND = 9080;
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.15
-	 * @access   protected
-	 */
-	protected function __construct(){
-	}
 
 	/**
 	 * Get the error message by code.
@@ -229,4 +222,20 @@ class LiteSpeed_Cache_Admin_Error extends LiteSpeed{
 			. sprintf(__('Please add the following to the wp-config.php file: %s', 'litespeed-cache'), '<br><pre>define(\'WP_CACHE\', true);</pre>');
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }

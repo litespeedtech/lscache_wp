@@ -10,8 +10,10 @@
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Config extends LiteSpeed
+class LiteSpeed_Cache_Config
 {
+	private static $_instance;
+
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 	const VAL_OFF = 0;
 	const VAL_ON = 1;
@@ -101,7 +103,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	 *
 	 * @since 1.0.0
 	 */
-	protected function __construct()
+	private function __construct()
 	{
 		if ( is_multisite() ) {
 			$options = $this->construct_multisite_options() ;
@@ -825,4 +827,20 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 		return $this->options[self::OPID_ENABLED] ;
 	}
 
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		$cls = get_called_class();
+		if (!isset(self::$_instance)) {
+			self::$_instance = new $cls();
+		}
+
+		return self::$_instance;
+	}
 }
