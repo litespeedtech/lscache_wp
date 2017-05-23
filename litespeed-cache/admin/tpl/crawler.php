@@ -22,7 +22,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			}
 		 ?>
 		<div class="litespeed-desc">
-			<?php echo sprintf(__('This will create a crawler sitemap file in plugin folder %s manually', 'litespeed-cache'), '`./var`') ; ?>
+			<?php echo sprintf(__('This will create a crawler sitemap file in plugin folder %s manually.', 'litespeed-cache'), '`./var`') ; ?>
 		</div>
 
 <?php
@@ -123,8 +123,9 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			</tbody>
 		</table>
 		<div class="litespeed-desc">
-			<div><?php echo __('Recurrence is calculated when you set Cron interval in seconds','litespeed-cache') ; ?></div>
+			<div><?php echo __('Recurrence is calculated when you set Cron interval in seconds.','litespeed-cache') ; ?></div>
 			<div><?php echo __('Only one crawler can run. When manully run meets cron automatic run, whichever first will run.','litespeed-cache') ; ?></div>
+			<div><?php echo sprintf(__('Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-into-the-system-task-scheduler/" target="_blank" ') ; ?></div>
 		</div>
 <?php endif ; ?>
 
