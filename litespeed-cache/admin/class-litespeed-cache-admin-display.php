@@ -9,7 +9,8 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
+class LiteSpeed_Cache_Admin_Display extends LiteSpeed
+{
 
 	const NOTICE_BLUE = 'notice notice-info';
 	const NOTICE_GREEN = 'notice notice-success';
@@ -34,7 +35,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since    1.0.7
 	 * @access   protected
 	 */
-	protected function __construct(){
+	protected function __construct()
+	{
 		// load assets
 		if(!empty($_GET['page']) &&
 				(substr($_GET['page'], 0, 8) == 'lscache-' || $_GET['page'] == 'litespeedcache')){
@@ -56,7 +58,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 *
 	 * @since    1.1.0
 	 */
-	public function load_assets($hook){
+	public function load_assets($hook)
+	{
 		$this->check_messages();// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 
 		// Main css&js
@@ -97,7 +100,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 *
 	 * @param  string $action
 	 */
-	public function form_action($action){
+	public function form_action($action)
+	{
 		echo '<input type="hidden" name="' . LiteSpeed_Cache::ACTION_KEY . '" value="' . $action . '" />';
 		wp_nonce_field($action, LiteSpeed_Cache::NONCE_NAME);
 	}
@@ -108,7 +112,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 *
 	 * @since    1.0.0
 	 */
-	public function register_admin_menu(){
+	public function register_admin_menu()
+	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
 		if (current_user_can($capability)) {
 			// root menu
@@ -147,7 +152,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param string $menu_slug The slug of the page.
 	 * @param string $callback The callback to call if selected.
 	 */
-	private function add_submenu($menu_title, $menu_slug, $callback){
+	private function add_submenu($menu_title, $menu_slug, $callback)
+	{
 		add_submenu_page('lscache-dash', $menu_title, $menu_title, 'manage_options', $menu_slug, array($this, $callback));
 	}
 
@@ -156,7 +162,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 *
 	 * @since    1.0.14
 	 */
-	public function enqueue_style(){
+	public function enqueue_style()
+	{
 		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME,
 			plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css',
 			array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all');
@@ -167,7 +174,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts(){
+	public function enqueue_scripts()
+	{
 		wp_register_script(LiteSpeed_Cache::PLUGIN_NAME,
 			plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
 			array(), LiteSpeed_Cache::PLUGIN_VERSION, false);
@@ -190,7 +198,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param array $links Previously added links from other plugins.
 	 * @return array Links array with the litespeed cache one appended.
 	 */
-	public function add_plugin_links($links){
+	public function add_plugin_links($links)
+	{
 		//$links[] = '<a href="' . admin_url('admin.php?page=litespeedcache') .'">Settings</a>';
 		$links[] = '<a href="' . admin_url('options-general.php?page=litespeedcache') . '">' . __('Settings', 'litespeed-cache') . '</a>';
 
@@ -206,7 +215,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param string $text
 	 * @return string
 	 */
-	public function add_update_text($translations, $text){
+	public function add_update_text($translations, $text)
+	{
 		if ($text !== 'Updated!') {
 			return $translations;
 		}
@@ -221,7 +231,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since 1.0.8.1
 	 * @access public
 	 */
-	public function set_update_text(){
+	public function set_update_text()
+	{
 		add_filter('gettext', array($this, 'add_update_text'), 10, 2);
 	}
 
@@ -231,7 +242,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since 1.0.8.1
 	 * @access public
 	 */
-	public function unset_update_text(){
+	public function unset_update_text()
+	{
 		remove_filter('gettext', array($this, 'add_update_text'));
 	}
 
@@ -242,7 +254,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @global WP_Admin_Bar $wp_admin_bar
 	 * @global string $pagenow
 	 */
-	public function add_quick_purge(){
+	public function add_quick_purge()
+	{
 		global $wp_admin_bar;
 		$url = $this->build_url(LiteSpeed_Cache::ACTION_PURGE_ALL);
 
@@ -262,7 +275,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param string $ajax_action AJAX call's action
 	 * @return string The built url.
 	 */
-	public static function build_url($action, $ajax_action = false){
+	public static function build_url($action, $ajax_action = false)
+	{
 		global $pagenow;
 		$prefix = '?';
 
@@ -306,7 +320,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @param  string $footer_text
 	 * @return string
 	 */
-	public function admin_footer_text($footer_text){
+	public function admin_footer_text($footer_text)
+	{
 		require_once LSWCP_DIR . 'admin/tpl/admin_footer.php';
 
 		return $footer_text;
@@ -321,7 +336,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @access public
 	 * @return bool True to disable all settings, false otherwise.
 	 */
-	public function get_disable_all(){
+	public function get_disable_all()
+	{
 		return $this->disable_all;
 	}
 
@@ -331,7 +347,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since 1.0.13
 	 * @access public
 	 */
-	public function set_disable_all(){
+	public function set_disable_all()
+	{
 		$this->disable_all = true;
 	}
 
@@ -340,7 +357,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since 1.1.0
 	 * @return bool True if shows
 	 */
-	public function show_compatibility_tab(){
+	public function show_compatibility_tab()
+	{
 		return function_exists('the_views');
 	}
 
@@ -350,7 +368,8 @@ class LiteSpeed_Cache_Admin_Display extends LiteSpeed{
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function add_help_tabs(){
+	public function add_help_tabs()
+	{
 		$screen = get_current_screen();
 		$screen->add_help_tab(array(
 			'id'      => 'lsc-overview',

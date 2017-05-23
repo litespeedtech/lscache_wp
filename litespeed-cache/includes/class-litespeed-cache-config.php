@@ -89,6 +89,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	const CRWL_ALPHA_DESC = 'alpha_desc' ;
 	const CRWL_ALPHA_ASC = 'alpha_asc' ;
 
+	const CRON_ACTION_HOOK = 'litespeed_crawl_trigger' ;
+	const CRON_FITLER = 'litespeed_crawl_filter' ;
+
 	protected $options ;
 	protected $purge_options ;
 	protected $debug_tag = 'LiteSpeed_Cache' ;
@@ -128,18 +131,102 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	 * Enable/Disable cron task
 	 * 
 	 */
-	public function enable_cron()
+	public function cron_enable()
 	{
 		$id = self::CRWL_CRON_ACTIVE ;
-		$this->options[$id] = !$this->options[$id];
+		$this->options[$id] = !$this->options[$id] ;
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('Crawler cron ' . ($this->options[$id] ? 'enabled' : 'disalbed' ) ) ;
+			LiteSpeed_Cache_Log::push('Crawler cron log: ' . ($this->options[$id] ? 'enabled' : 'disalbed' ) ) ;
 		}
 		// update config
 		update_option(self::OPTION_NAME, $this->options) ;
 
-		echo json_encode(array('enable'=>$this->options[$id]));
-		exit;
+		$this->cron_update() ;
+
+		echo json_encode(array('enable'=>$this->options[$id])) ;
+		wp_die();
+	}
+
+	/**
+	 * Update cron status
+	 * 
+	 */
+	public function cron_update($options = false)
+	{
+		if ( $options ) {
+			$this->options = $options ;
+		}
+		if ( $this->options[self::CRWL_CRON_ACTIVE] && $this->options[self::OPID_ENABLED] ) {
+			$this->cron_schedule() ;
+			$this->cron_register() ;
+		}
+		else {
+			$this->cron_clear() ;
+		}
+
+	}
+
+	/**
+	 * Schedule cron
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public function cron_schedule()
+	{
+		add_filter('cron_schedules', array($this, 'lscache_cron_filter')) ;
+	}
+
+	/**
+	 * Register cron interval
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public function lscache_cron_filter($schedules)
+	{
+		$intval = $this->options[self::CRWL_CRON_INTERVAL] ;
+		// $wp_schedules = wp_get_schedules() ;
+		if(!array_key_exists(self::CRON_FITLER, $schedules)){
+			// if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			// 	LiteSpeed_Cache_Log::push('Crawler cron log: ......cron filter '.$intval.' added......') ;
+			// }
+			$schedules[self::CRON_FITLER] = array(
+				'interval' => $intval, 
+				'display'  => __( 'LSCache Custom Cron', 'litespeed-cache' ),
+			) ;
+		}
+		return $schedules ;
+	}
+
+	/**
+	 * Register the cron task to WP
+	 * 
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public function cron_register()
+	{
+		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK ) ) {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('Crawler cron log: ......cron hook register......') ;
+			}
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK ) ;
+		}
+	}
+
+	/**
+	 * Clear cron
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public function cron_clear()
+	{
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			LiteSpeed_Cache_Log::push('Crawler cron log: ......cron hook cleared......') ;
+		}
+		wp_clear_scheduled_hook(self::CRON_ACTION_HOOK) ;
 	}
 
 	/**
@@ -150,7 +237,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	public function append_blacklist($list)
 	{
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('Crawler append blacklist ' . count($list)) ;
+			LiteSpeed_Cache_Log::push('Crawler log: append blacklist ' . count($list)) ;
 		}
 		$id = self::CRWL_BLACKLIST ;
 		$this->options[$id] = explode("\n", $this->options[$id]) ;
@@ -711,13 +798,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	 * @access public
 	 * @return boolean True if allowed, false otherwise.
 	 */
-	public function is_caching_allowed(){
-		if ((isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) //lsws
-			|| is_webadc()
-		){
-			return true;
+	public function is_caching_allowed()
+	{
+		if ( (isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) //lsws
+				|| is_webadc() ){
+			return true ;
 		}
-		return false;
+		return false ;
 	}
 
 	/**
@@ -730,13 +817,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed
 	public function is_plugin_enabled()
 	{
 		if (!$this->is_caching_allowed()) {
-			return false;
+			return false ;
 		}
-		elseif ((is_multisite()) && (is_network_admin())
-			&& (current_user_can('manage_network_options'))) {
-			return $this->options[self::NETWORK_OPID_ENABLED];
+		if ( is_multisite() && is_network_admin() && current_user_can('manage_network_options') ) {
+			return $this->options[self::NETWORK_OPID_ENABLED] ;
 		}
-		return $this->options[self::OPID_ENABLED];
+		return $this->options[self::OPID_ENABLED] ;
 	}
 
 }

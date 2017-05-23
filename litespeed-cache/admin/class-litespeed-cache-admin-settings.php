@@ -469,8 +469,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL;
-		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('Cron Interval', 'litespeed-cache'), 0);
+		if (!$this->validate_ttl($input, $id, 60)) {
+			$errors[] = sprintf($ttl_err, __('Cron Interval', 'litespeed-cache'), 60);
 		}
 		else {
 			$options[$id] = $input[$id];
@@ -587,6 +587,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed{
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, implode('<br />', $errors));
 
 			return $options;
+		}
+
+		// check if need to enable crawler cron
+		if ( $input[LiteSpeed_Cache_Config::OPID_ENABLED] === 'changed' ) {
+			LiteSpeed_Cache_Config::get_instance()->cron_update($options) ;
 		}
 
 		$options = $this->validate_thirdparty($input, $options);

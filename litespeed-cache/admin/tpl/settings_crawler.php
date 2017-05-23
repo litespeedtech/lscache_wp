@@ -31,7 +31,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('If cron interval is set to 0, cron task will be disabled', 'litespeed-cache'); ?>
+				<?php echo __('Cron interval must be greater than 60', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

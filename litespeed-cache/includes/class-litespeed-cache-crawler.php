@@ -32,8 +32,9 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 			$this->_site_url = get_option('siteurl') ;
 		}
 
-		// check if this crawler is enabled
-		
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			LiteSpeed_Cache_Log::push('Crawler log: Initialized') ;
+		}
 	}
 
 	/**
@@ -145,18 +146,32 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 	}
 
 	/**
+	 * Proceed crawling
+	 */
+	public static function crawl_data()
+	{
+		return self::get_instance()->_crawl_data() ;
+	}
+
+	/**
 	 * Crawling start
 	 *
 	 * @since    1.1.0
-	 * @access   public
+	 * @access   protected
 	 */
-	public function crawl_data()
+	protected function _crawl_data()
 	{
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			LiteSpeed_Cache_Log::push('Crawler log: ......crawler started......') ;
+		}
 		// for the first time running
 		if ( ! file_exists($this->_sitemap_file) ) {
 			$ret = $this->_generate_sitemap() ;
 			if ( $ret !== true ) {
-				$this->terminate_with_error($ret) ;
+				if ( LiteSpeed_Cache_Log::get_enabled() ) {
+					LiteSpeed_Cache_Log::push('Crawler log: ' . $ret) ;
+				}
+				return $this->output($ret) ;
 			}
 		}
 
@@ -172,7 +187,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 					LiteSpeed_Cache_Log::push($ret) ;
 				}
 				// if not reach whole crawling interval, exit
-				$this->terminate_with_error($ret) ;
+				return $this->output($ret) ;
 			}
 			$this->_generate_sitemap() ;
 		}
@@ -193,7 +208,7 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push('Crawler log: ' . $ret['error']) ;
 			}
-			$this->terminate_with_error($ret['error']) ;
+			return $this->output($ret['error']) ;
 		}
 		else {
 			$msg = 'Crawler log: End of sitemap file' ;
@@ -201,19 +216,25 @@ class LiteSpeed_Cache_Crawler extends LiteSpeed
 				LiteSpeed_Cache_Log::push($msg) ;
 			}
 
-			wp_die($msg, '', array('response'=>200)) ;
+			return $this->output($msg) ;
 		}
 	}
 
 	/**
-	 * Exit with AJAX error
+	 * Output info and exit
 	 * 
 	 * @param  string $error Error info
 	 */
-	public function terminate_with_error($error)
+	protected function output($msg)
 	{
-		// return ajax error
-		wp_die($error, '', array('response'=>200)) ;
+		if ( defined('DOING_CRON') ) {
+			echo $msg ;
+			// exit();
+		}
+		else {
+			echo "<script>alert('" . htmlspecialchars($msg) . "');</script>" ;
+			// exit;
+		}
 	}
 
 }
