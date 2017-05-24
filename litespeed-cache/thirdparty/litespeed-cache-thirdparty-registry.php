@@ -15,21 +15,21 @@ if (!defined('ABSPATH')) {
     die();
 }
 
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-aelia-currencyswitcher.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-autoptimize.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-bbpress.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-betterwp-minify.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-nextgengallery.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-theme-my-login.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-woocommerce.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-wp-polls.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-wptouch.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-yith-wishlist.php');
-include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-wpforo.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-aelia-currencyswitcher.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-autoptimize.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-bbpress.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-betterwp-minify.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-nextgengallery.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-theme-my-login.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-woocommerce.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wp-polls.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wptouch.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-yith-wishlist.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wpforo.php');
 
 // This plugin's integration is sub optimal. Commented out until they use
 // DOING_AJAX or provide a better alternative.
-//include_once(dirname(__FILE__) . '/class-litespeed-cache-thirdparty-like-dislike-counter.php');
+//include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-like-dislike-counter.php');
 
 
 

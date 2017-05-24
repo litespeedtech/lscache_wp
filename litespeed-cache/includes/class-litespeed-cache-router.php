@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Router
 	public static function get_action()
 	{
 		if ( ! isset(self::$_action) ) {
+            self::$_action = false;
 			self::get_instance()->verify_action() ;
 		}
 		return self::$_action ;

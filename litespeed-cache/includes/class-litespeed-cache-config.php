@@ -810,7 +810,7 @@ class LiteSpeed_Cache_Config
 	public function is_caching_allowed()
 	{
 		if ( (isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) //lsws
-				|| is_webadc() ){
+				|| LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' ){
 			return true ;
 		}
 		return false ;

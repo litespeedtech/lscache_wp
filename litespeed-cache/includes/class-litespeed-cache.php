@@ -92,23 +92,15 @@ class LiteSpeed_Cache
 		// Check if debug is on
 		if ($this->config(LiteSpeed_Cache_Config::OPID_ENABLED)) {
 			$should_debug = intval($this->config(LiteSpeed_Cache_Config::OPID_DEBUG));
-			switch ($should_debug) {
-				// NOTSET is used as check admin IP here.
-				case LiteSpeed_Cache_Config::VAL_NOTSET:
-					if (!LiteSpeed_Cache_Router::is_admin_ip()) {
-						break;
-					}
-					// fall through
-				case LiteSpeed_Cache_Config::VAL_ON:
-					LiteSpeed_Cache_Log::set_enabled();
-					break;
-				default:
-					break;
-			}
+            if (($should_debug == LiteSpeed_Cache_Config::VAL_ON) 
+                    || ($should_debug == LiteSpeed_Cache_Config::VAL_NOTSET && LiteSpeed_Cache_Router::is_admin_ip())) {
+                LiteSpeed_Cache_Log::set_enabled();
+            }
+            
+            // Load third party detection if lscache enabled.
+            include_once LSWCP_DIR . 'thirdparty/litespeed-cache-thirdparty-registry.php';
 		}
 
-		// Load third party detection.
-		include_once LSWCP_DIR . 'thirdparty/litespeed-cache-thirdparty-registry.php';
 		// Register plugin activate/deactivate/uninstall hooks
 		$plugin_file = LSWCP_DIR . 'litespeed-cache.php';
 		register_activation_hook($plugin_file,
@@ -231,32 +223,32 @@ class LiteSpeed_Cache
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
-				LiteSpeed_Cache::get_instance()->purge_front();
+				$this->purge_front();
 				$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache');
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-				LiteSpeed_Cache::get_instance()->purge_pages();
+				$this->purge_pages();
 				$msg = __('Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache');
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
-				LiteSpeed_Cache::get_instance()->purge_errors();
+				$this->purge_errors();
 				$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache');
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_ALL://todo: for cli, move this to ls->proceed_action()
-				LiteSpeed_Cache::get_instance()->purge_all();
+				$this->purge_all();
 				$msg = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache');
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
-				LiteSpeed_Cache::get_instance()->purge_all();
+				$this->purge_all();
 				$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache');
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
-				LiteSpeed_Cache::get_instance()->purge_list();
+				$this->purge_list();
 				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
 				break;
 

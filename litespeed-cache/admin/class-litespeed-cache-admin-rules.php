@@ -638,7 +638,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		// check login cookie
-		if (is_openlitespeed()) {
+		if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
 			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 			if ($diff[$id]) {
 				$diff[$id] .= ',wp-postpass_' . COOKIEHASH;
@@ -699,7 +699,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
 		if (isset($diff[$id]) && $diff[$id]) {
 			$env = 'Cache-Vary:' . $diff[$id];
-			if (is_openlitespeed()) {
+			if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
 				$env = '"' . $env . '"';
 			}
 			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START;
