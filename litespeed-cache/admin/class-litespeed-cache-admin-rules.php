@@ -178,8 +178,9 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$this->theme_htaccess = LSWCP_CONTENT_DIR;
 
-		$install = ABSPATH;
-		$access = get_home_path();
+		$real = trailingslashit(realpath(ABSPATH));
+		$install = $real;
+		$access = trailingslashit(get_home_path());
 
 		if ($access === '/') {
 			// get home path failed. Trac ticket #37668
@@ -208,11 +209,11 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		else {
 			// they are equal - no need to find paths.
-			$this->frontend_htaccess = ABSPATH . '.htaccess';
-			$this->backend_htaccess = ABSPATH . '.htaccess';
+			$this->frontend_htaccess = $real . '.htaccess';
+			$this->backend_htaccess = $real . '.htaccess';
 			return;
 		}
-		$common_path = substr(ABSPATH, 0, -(strlen($install_part) + 1));
+		$common_path = substr($real, 0, -(strlen($install_part) + 1));
 
 		$partial_dir = false;
 
