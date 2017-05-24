@@ -632,12 +632,6 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 
-		$rules = Litespeed_File::extract_from_markers($this->frontend_htaccess, self::MARKER);
-		if(!$rules){
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER);
-			// return false;
-		}
-
 		// check login cookie
 		if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
 			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
