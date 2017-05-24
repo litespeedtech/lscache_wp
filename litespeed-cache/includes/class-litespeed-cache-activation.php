@@ -10,7 +10,6 @@
  */
 class LiteSpeed_Cache_Activation
 {
-	private static $_instance;
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;
 
 
@@ -23,17 +22,17 @@ class LiteSpeed_Cache_Activation
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function register_activation()
+	public static function register_activation()
 	{
 		$count = 0 ;
 		if ( !defined('LSCWP_LOG_TAG') ) {
 			define('LSCWP_LOG_TAG', 'LSCACHE_WP_activate_' . get_current_blog_id()) ;
 		}
-		$this->try_copy_advanced_cache() ;
+		self::try_copy_advanced_cache() ;
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 
 		if ( is_multisite() ) {
-			$count = $this->get_network_count() ;
+			$count = self::get_network_count() ;
 			if ( $count !== false ) {
 				$count = intval($count) + 1 ;
 				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS) ;
@@ -100,7 +99,7 @@ class LiteSpeed_Cache_Activation
 	 * @access private
 	 * @return mixed The count on success, false on failure.
 	 */
-	private function get_network_count()
+	private static function get_network_count()
 	{
 		$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT) ;
 		if ( $count !== false ) {
@@ -135,9 +134,9 @@ class LiteSpeed_Cache_Activation
 	 * @access private
 	 * @return bool True if yes, false otherwise.
 	 */
-	private function is_deactivate_last()
+	private static function is_deactivate_last()
 	{
-		$count = $this->get_network_count() ;
+		$count = self::get_network_count() ;
 		if ( $count === false ) {
 			return false ;
 		}
@@ -160,7 +159,7 @@ class LiteSpeed_Cache_Activation
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function register_deactivation()
+	public static function register_deactivation()
 	{
 		LiteSpeed_Cache_Config::get_instance()->cron_clear() ;
 		if (!defined('LSCWP_LOG_TAG')) {
@@ -177,7 +176,7 @@ class LiteSpeed_Cache_Activation
 					update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $opt_str) ;
 				}
 			}
-			if ( !$this->is_deactivate_last() ) {
+			if ( !self::is_deactivate_last() ) {
 				if ( is_network_admin() 
 						&& isset($opt_str) 
 						&& $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] ) {
@@ -212,7 +211,7 @@ class LiteSpeed_Cache_Activation
 	 * @access public
 	 * @return boolean True on success, false on failure.
 	 */
-	public function try_copy_advanced_cache()
+	public static function try_copy_advanced_cache()
 	{
 		$adv_cache_path = LSWCP_CONTENT_DIR . '/advanced-cache.php' ;
 		if (file_exists($adv_cache_path)
@@ -227,20 +226,4 @@ class LiteSpeed_Cache_Activation
 		return $ret ;
 	}
 
-	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		$cls = get_called_class();
-		if (!isset(self::$_instance)) {
-			self::$_instance = new $cls();
-		}
-
-		return self::$_instance;
-	}
 }

@@ -22,7 +22,8 @@ class LiteSpeed_Cache_Admin
 	 *
 	 * @since    1.0.0
 	 */
-	private function __construct(){
+	private function __construct()
+	{
 		// Additional litespeed assets on admin display
 		// Also register menu
 		$this->display = LiteSpeed_Cache_Admin_Display::get_instance();
@@ -43,7 +44,8 @@ class LiteSpeed_Cache_Admin
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function admin_init(){
+	public function admin_init()
+	{
 		LiteSpeed_Cache::get_instance()->set_locale();
 
 		$this->proceed_admin_action();
@@ -239,7 +241,8 @@ class LiteSpeed_Cache_Admin
 	 *
 	 * @since 1.1.0
 	 */
-	public function proceed_admin_action(){
+	public function proceed_admin_action()
+	{
 		// handle actions
 		switch (LiteSpeed_Cache_Router::get_action()) {
 
@@ -269,7 +272,8 @@ class LiteSpeed_Cache_Admin
 	 * @since 1.0.11
 	 * @access private
 	 */
-	private function check_advanced_cache(){
+	private function check_advanced_cache()
+	{
 
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
 		if ((defined('LSCACHE_ADV_CACHE') && LSCACHE_ADV_CACHE)
@@ -277,13 +281,13 @@ class LiteSpeed_Cache_Admin
 			if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) === false) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
-				LiteSpeed_Cache_Activation::get_instance()->try_copy_advanced_cache();
+				LiteSpeed_Cache_Activation::try_copy_advanced_cache();
 			}
 
 			return;
 		}
 
-		if (LiteSpeed_Cache_Activation::get_instance()->try_copy_advanced_cache()) {
+		if (LiteSpeed_Cache_Activation::try_copy_advanced_cache()) {
 			return;
 		}
 
@@ -307,7 +311,8 @@ class LiteSpeed_Cache_Admin
 	 * @param string $input The input string to clean.
 	 * @return string The cleaned up input.
 	 */
-	public static function cleanup_text($input){
+	public static function cleanup_text($input)
+	{
 		return stripslashes(trim($input));
 	}
 
@@ -319,7 +324,8 @@ class LiteSpeed_Cache_Admin
 	 * @access public
 	 * @global string $pagenow
 	 */
-	public static function redirect(){
+	public static function redirect()
+	{
 		global $pagenow;
 		$qs = '';
 
