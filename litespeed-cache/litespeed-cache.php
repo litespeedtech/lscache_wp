@@ -63,24 +63,20 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {// todo: where used this
 	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );
 }
 
-if (!defined('LITESPEED_SERVER_TYPE')) {
-    if (isset($_SERVER['HTTP_X_LSCACHE']) && $_SERVER['HTTP_X_LSCACHE']) {
-        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC');
-    }
-    elseif (isset($_SERVER['LSWS_EDITION'])) {
-        if (strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0) {
-            define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS');
-        }
-        else {
-            define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT');
-        }
-    }
-    else {
-        define('LITESPEED_SERVER_TYPE', 'NONE');
-    }
+if ( !defined('LITESPEED_SERVER_TYPE') ) {
+	if ( isset($_SERVER['HTTP_X_LSCACHE']) && $_SERVER['HTTP_X_LSCACHE'] ) {
+		define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC');
+	}
+	elseif ( isset($_SERVER['LSWS_EDITION']) && strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0 ) {
+			define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS');
+	}
+	elseif ( isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed') {
+		define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT');
+	}
+	else {
+		define('LITESPEED_SERVER_TYPE', 'NONE');
+	}
 }
-    
-
 
 /**
  * Begins execution of the plugin.
