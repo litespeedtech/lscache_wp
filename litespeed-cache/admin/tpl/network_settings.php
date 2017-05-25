@@ -29,10 +29,9 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	?>
 	</h2>
 	<div class="litespeed-cache-welcome-panel">
-		<form method="post" action="options.php" id="ls_form_options">
-			<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK?>" />
+		<form method="post" action="admin.php?page=lscache-settings" id="ls_form_options">
 	<?php
-			settings_fields(LiteSpeed_Cache_Config::OPTION_NAME);
+			$this->form_action(LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK);
 
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {

@@ -676,6 +676,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __('File saved.', 'litespeed-cache'));
 		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options);
+		return $options;
 	}
 
 	/**

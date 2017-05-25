@@ -92,23 +92,6 @@ class LiteSpeed_Cache_Admin_Report
 	}
 
 	/**
-	 * Hooked to the update options/site options actions. Whenever our options
-	 * are updated, update the environment report with the new options.
-	 *
-	 * @since 1.0.12
-	 * @access public
-	 * @param $unused
-	 * @param mixed $options The updated options. May be array or string.
-	 */
-	public function update_environment_report($unused, $options)
-	{
-		if ( is_array($options) )
-		{
-			$this->generate_environment_report($options);
-		}
-	}
-
-	/**
 	 * Write the environment report to the report location.
 	 *
 	 * @since 1.0.12

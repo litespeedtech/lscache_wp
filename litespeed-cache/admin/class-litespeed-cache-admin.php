@@ -253,8 +253,8 @@ class LiteSpeed_Cache_Admin
 
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings();// todo: use wp network setting saving
-				LiteSpeed_Cache_Admin_Report::get_instance()->update_environment_report();
+				$options = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings();// todo: use wp network setting saving
+				LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report($options);
 				break;
 
 			default:
