@@ -94,7 +94,7 @@ class LiteSpeed_Cache_Admin_Settings
 		if(!isset($input[$id])){
 			$enabled = 0;
 		}else{
-			$options[$id] = self::is_checked($input[$id], true);
+			$options[$id] = self::is_checked_radio($input[$id]);
 
 			if($options[$id] !== LiteSpeed_Cache_Config::VAL_NOTSET){
 				$enabled = $options[$id];
@@ -408,7 +408,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG;
-		$debug_level = self::is_checked($input[$id]);
+		$debug_level = self::is_checked_radio($input[$id]);
 		if ( $debug_level != $options[$id] ){
 			$options[$id] = $debug_level;
 		}
@@ -684,14 +684,31 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Filter the value for checkbox (enabled/disabled/notset)
+	 * Filter the value for checkbox (enabled/disabled)
 	 *
 	 * @since  1.1.0
 	 * @param int $val The checkbox value
-	 * @param bool $check_notset If need to check notset
+	 * @return bool Filtered value
+	 */
+	public static function is_checked($val)
+	{
+		$val = intval($val);
+
+		if($val === LiteSpeed_Cache_Config::VAL_ON){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Filter the value for radio (enabled/disabled/notset)
+	 *
+	 * @since  1.1.0
+	 * @param int $val The radio value
 	 * @return int Filtered value
 	 */
-	public static function is_checked($val, $check_notset = false)
+	public static function is_checked_radio($val)
 	{
 		$val = intval($val);
 
@@ -699,7 +716,7 @@ class LiteSpeed_Cache_Admin_Settings
 			return LiteSpeed_Cache_Config::VAL_ON;
 		}
 
-		if($check_notset && $val === LiteSpeed_Cache_Config::VAL_NOTSET){
+		if($val === LiteSpeed_Cache_Config::VAL_NOTSET){
 			return LiteSpeed_Cache_Config::VAL_NOTSET;
 		}
 
