@@ -402,7 +402,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @return mixed True if enabled, error message otherwise.
 	 */
-	public function check_license(){
+	public function check_license()
+	{
 		if (!LiteSpeed_Cache_Config::get_instance()->is_caching_allowed()) {
 			self::add_error(LiteSpeed_Cache_Admin_Error::E_SERVER);
 			self::display_messages();
@@ -418,7 +419,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param string $str The notice message.
 	 * @return string The built notice html.
 	 */
-	private static function build_notice($color, $str){
+	private static function build_notice($color, $str)
+	{
 		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>';
 	}
 
@@ -430,7 +432,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  mixed $args
 	 * @return mixed String or false
 	 */
-	public static function get_error($err_code, $args = null){
+	public static function get_error($err_code, $args = null)
+	{
 		$error = LiteSpeed_Cache_Admin_Error::get_instance()->convert_code_to_error($err_code);
 		if (empty($error)) {
 			return false;
@@ -458,7 +461,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param mixed $args Null if no arguments, an array if multiple arguments,
 	 * else a single argument.
 	 */
-	public static function add_error($err_code, $args = null){
+	public static function add_error($err_code, $args = null)
+	{
 		$error = self::get_error($err_code, $args);
 		if(!$error){
 			return false;
@@ -478,7 +482,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param mixed $msg May be a string for a single message or an array for
 	 *     multiple.
 	 */
-	public static function add_notice($color, $msg){
+	public static function add_notice($color, $msg)
+	{
 		$messages = (array)get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
 		if(!$messages){
 			$messages = array();
@@ -498,7 +503,8 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 */
-	public function display_messages(){
+	public function display_messages()
+	{
 		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
 		if(is_array($messages)){
 			$messages = array_unique($messages);
@@ -514,7 +520,8 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 */
-	public function check_messages(){
+	public function check_messages()
+	{
 		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE);
 		if(!$messages){
 			return;
@@ -594,7 +601,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function show_menu_manage(){
+	public function show_menu_manage()
+	{
 		require_once LSWCP_DIR . 'admin/tpl/manage.php';
 	}
 
@@ -604,7 +612,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function show_menu_settings(){
+	public function show_menu_settings()
+	{
 		if (is_network_admin()) {
 			require_once LSWCP_DIR . 'admin/tpl/network_settings.php';
 		}
@@ -633,7 +642,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function show_menu_edit_htaccess(){
+	public function show_menu_edit_htaccess()
+	{
 		require_once LSWCP_DIR . 'admin/tpl/edit_htaccess.php';
 	}
 
@@ -643,7 +653,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.0.12
 	 * @access public
 	 */
-	public function show_report(){
+	public function show_report()
+	{
 		require_once LSWCP_DIR . 'admin/tpl/report.php';
 	}
 
@@ -653,7 +664,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function show_crawler(){
+	public function show_crawler()
+	{
 		require_once LSWCP_DIR . 'admin/tpl/crawler.php';
 	}
 
@@ -668,7 +680,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function show_info(){
+	public function show_info()
+	{
 		require_once LSWCP_DIR . 'admin/tpl/info.php';
 	}
 
@@ -679,7 +692,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.0.12
 	 * @access public
 	 */
-	public function show_display_installed(){
+	public function show_display_installed()
+	{
 		$buf = '<h3>'. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache'). '</h3>' . ' '
 			. __('This message indicates that the plugin was installed by the server admin.', 'litespeed-cache') . ' '
 			. __('The LiteSpeed Cache plugin is used to cache pages - a simple way to improve the performance of the site.', 'litespeed-cache') . ' '
@@ -699,7 +713,8 @@ class LiteSpeed_Cache_Admin_Display
 		self::add_notice(self::NOTICE_BLUE . ' lscwp-whm-notice', $buf);
 	}
 
-	public static function show_error_cookie(){
+	public static function show_error_cookie()
+	{
 		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache') . ' '
 			. __('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache') . ' '
 			. sprintf(__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'),

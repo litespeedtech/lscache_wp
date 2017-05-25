@@ -66,9 +66,10 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 						?>
 						<div class='litespeed-desc'>
 						<?php
-							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta();
+							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
+							$is_running = $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
 							if ( $meta && $meta->this_full_beginning_time ) {
-								if (is running) {
+								if ( $is_running ) {
 									echo sprintf(__('The current sitemap crawl began at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
 
@@ -76,9 +77,10 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 								else {
 									echo sprintf(__('The last sitemap crawl began at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
+									echo "</div><div class='litespeed-desc'>";
 									echo sprintf(__('The next sitemap crawl will start at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s',$meta->this_full_beginning_time
-													+ $meta->last_full_time_cost + $_options[LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL]));
+													+ $meta->last_full_time_cost + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]));
 								}
 
 							}
@@ -99,7 +101,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					<?php
 						if ( $meta ) {
 							echo "Size: {$meta->list_size}<br />Position: {$meta->last_pos}" ;
-							if ( $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ) {
+							if ( $is_running ) {
 								echo "<br /><div class='litespeed-label litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
 							}
 						}
