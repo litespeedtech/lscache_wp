@@ -217,7 +217,7 @@ class LiteSpeed_Cache
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				LiteSpeed_Cache_Crawler::crawl_data() ;
+				LiteSpeed_Cache_Crawler::crawl_data(true) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:

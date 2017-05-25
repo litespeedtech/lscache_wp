@@ -166,6 +166,7 @@ class Litespeed_Crawler
 				$_time = time() ;
 				$this->_meta['last_pos'] += $i + 1 ;
 				$this->_meta['last_count'] = $i + 1 ;
+				$this->_meta['last_crawled'] += $i + 1 ;
 				$this->_meta['last_update_time'] = $_time ;
 				$this->_meta['last_status'] = 'updated position' ;
 
@@ -216,6 +217,7 @@ class Litespeed_Crawler
 		$this->_meta['is_running'] = time() ;
 		$this->_meta['done'] = 0 ;// reset done status
 		$this->_meta['last_status'] = 'prepare running' ;
+		$this->_meta['last_crawled'] = 0 ;
 		if ( $this->_meta['last_pos'] == 0 ) {
 			$this->_meta['this_full_beginning_time'] = time() ;
 		}
@@ -251,6 +253,7 @@ class Litespeed_Crawler
 		return array(
 			'error'		=> $end_reason === true ? false : $end_reason,
 			'blacklist'	=> $this->_blacklist,
+			'crawled'	=> $this->_meta['last_crawled'],
 		) ;
 
 	}
@@ -434,6 +437,7 @@ class Litespeed_Crawler
 				'last_update_time'	=> 0,
 				'last_pos'			=> 0,
 				'last_count'		=> 0,
+				'last_crawled'		=> 0,
 				'last_start_time'	=> 0,
 				'last_status'		=> '',
 				'is_running'		=> 0,

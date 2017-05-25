@@ -148,19 +148,27 @@ class LiteSpeed_Cache_Crawler
 
 	/**
 	 * Proceed crawling
+	 *
+	 * @param bool $force If ignore whole crawling interval
 	 */
-	public static function crawl_data()
+	public static function crawl_data($force = false)
 	{
-		return self::get_instance()->_crawl_data() ;
+		if ( $force ) {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('Crawler log: ......crawler manually ran......') ;
+			}
+		}
+		return self::get_instance()->_crawl_data($force) ;
 	}
 
 	/**
 	 * Crawling start
 	 *
 	 * @since    1.1.0
+	 * @param bool $force If ignore whole crawling interval
 	 * @access   protected
 	 */
-	protected function _crawl_data()
+	protected function _crawl_data($force)
 	{
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
 			LiteSpeed_Cache_Log::push('Crawler log: ......crawler started......') ;
@@ -182,7 +190,7 @@ class LiteSpeed_Cache_Crawler
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL] ) {
+			if ( ! $force && time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL] ) {
 				$ret = 'Crawler log: less than whole crawling interval';
 				if ( LiteSpeed_Cache_Log::get_enabled() ) {
 					LiteSpeed_Cache_Log::push($ret) ;
@@ -202,6 +210,10 @@ class LiteSpeed_Cache_Crawler
 		// merge blacklist
 		if ( $ret['blacklist'] ) {
 			LiteSpeed_Cache_Config::get_instance()->append_blacklist($ret['blacklist']) ;
+		}
+
+		if ( ! empty($ret['crawled']) && LiteSpeed_Cache_Log::get_enabled() ) {
+			LiteSpeed_Cache_Log::push('Crawler log: Last crawled ' . $ret['crawled'] . ' item(s)') ;
 		}
 
 		// return error

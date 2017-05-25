@@ -113,9 +113,16 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 							<?php echo sprintf(__('Last ran: %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
 						</div>
 						<?php endif ; ?>
+
 						<?php if ( $meta && $meta->end_reason ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('Last ended reason: %s', 'litespeed-cache'), $meta->end_reason) ; ?>
+							<?php echo sprintf(__('Ended reason: %s', 'litespeed-cache'), $meta->end_reason) ; ?>
+						</div>
+						<?php endif ; ?>
+
+						<?php if ( $meta && $meta->last_crawled ): ?>
+						<div class='litespeed-desc'>
+							<?php echo sprintf(__('Last crawled: %s item(s)', 'litespeed-cache'), $meta->last_crawled) ; ?>
 						</div>
 						<?php endif ; ?>
 					</td>
