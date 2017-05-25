@@ -78,8 +78,8 @@ class LiteSpeed_Cache_Config
 	const CRWL_ORDER_LINKS = 'crawler_order_links' ;
 	const CRWL_USLEEP = 'crawler_usleep' ;
 	const CRWL_RUN_DURATION = 'crawler_run_duration' ;
-	const CRWL_CRON_INTERVAL = 'crawler_cron_interval' ;
-	const CRWL_WHOLE_INTERVAL = 'crawler_whole_interval' ;
+	const CRWL_RUN_INTERVAL = 'crawler_run_interval' ;
+	const CRWL_CRAWL_INTERVAL = 'crawler_crawl_interval' ;
 	const CRWL_THREADS  = 'crawler_threads' ;
 	const CRWL_LOAD_LIMIT  = 'crawler_load_limit' ;
 	const CRWL_BLACKLIST = 'crawler_blacklist' ;
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Config
 
 	/**
 	 * Enable/Disable cron task
-	 * 
+	 *
 	 */
 	public function cron_enable()
 	{
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Config
 
 	/**
 	 * Update cron status
-	 * 
+	 *
 	 */
 	public function cron_update($options = false)
 	{
@@ -187,14 +187,14 @@ class LiteSpeed_Cache_Config
 	 */
 	public function lscache_cron_filter($schedules)
 	{
-		$intval = $this->options[self::CRWL_CRON_INTERVAL] ;
+		$intval = $this->options[self::CRWL_RUN_INTERVAL] ;
 		// $wp_schedules = wp_get_schedules() ;
 		if(!array_key_exists(self::CRON_FITLER, $schedules)){
 			// if ( LiteSpeed_Cache_Log::get_enabled() ) {
 			// 	LiteSpeed_Cache_Log::push('Crawler cron log: ......cron filter '.$intval.' added......') ;
 			// }
 			$schedules[self::CRON_FITLER] = array(
-				'interval' => $intval, 
+				'interval' => $intval,
 				'display'  => __( 'LSCache Custom Cron', 'litespeed-cache' ),
 			) ;
 		}
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Config
 
 	/**
 	 * Register the cron task to WP
-	 * 
+	 *
 	 * @since 1.1.0
 	 * @access public
 	 */
@@ -419,8 +419,8 @@ class LiteSpeed_Cache_Config
 			self::CRWL_ORDER_LINKS => self::CRWL_DATE_DESC,
 			self::CRWL_USLEEP => 10000,
 			self::CRWL_RUN_DURATION => 200,
-			self::CRWL_CRON_INTERVAL => 28800,
-			self::CRWL_WHOLE_INTERVAL => 604800,
+			self::CRWL_RUN_INTERVAL => 28800,
+			self::CRWL_CRAWL_INTERVAL => 604800,
 			self::CRWL_THREADS => 3,
 			self::CRWL_LOAD_LIMIT => 1,
 			self::CRWL_BLACKLIST => '',

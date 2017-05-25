@@ -2,7 +2,7 @@
 /**
 * LiteSpeed File Operator Library Class
 * Append/Replace content to a file
-* 
+*
 * @since 1.1.0
 */
 
@@ -14,7 +14,7 @@ function litespeed_exception_error_handler($errno, $errstr, $errfile, $errline )
 class Litespeed_File
 {
 	const MARKER = 'LiteSpeed Operator' ;
-	
+
 	function __construct()
 	{
 		// nothing to do here
@@ -87,7 +87,7 @@ class Litespeed_File
 				mkdir($folder, 0755, true) ;
 			}
 			catch ( ErrorException $ex ) {
-				return sprintf(__('Can not create folder: %s. Error: ', 'litespeed-cache'), $folder, $ex->getMessage()) ;
+				return sprintf(__('Can not create folder: %1$s. Error: %2$s', 'litespeed-cache'), $folder, $ex->getMessage()) ;
 			}
 
 			restore_error_handler() ;
@@ -95,24 +95,24 @@ class Litespeed_File
 
 		if ( ! file_exists($filename) ) {
 			if ( ! is_writable($folder) ) {
-				return sprintf(__('Folder is not writable: %s', 'litespeed-cache'), $folder) ;
+				return sprintf(__('Folder is not writable: %s.', 'litespeed-cache'), $folder) ;
 			}
 			set_error_handler("litespeed_exception_error_handler") ;
 			try {
 				touch($filename) ;
 			}
 			catch ( ErrorException $ex ){
-				return sprintf(__('File %s is not writable', 'litespeed-cache'), $filename) ;
+				return sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename) ;
 			}
 			restore_error_handler() ;
 		}
 		elseif ( ! is_writeable($filename) ) {
-			return sprintf(__('File %s is not writable', 'litespeed-cache'), $filename) ;
+			return sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename) ;
 		}
 
 		$ret = file_put_contents($filename, $data, LOCK_EX) ;
 		if ( $ret === false ) {
-			return sprintf(__('Failed to write to %s', 'litespeed-cache'), $filename) ;
+			return sprintf(__('Failed to write to %s.', 'litespeed-cache'), $filename) ;
 		}
 
 		return true ;

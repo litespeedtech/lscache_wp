@@ -190,7 +190,7 @@ class LiteSpeed_Cache_Crawler
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL] ) {
+			if ( ! $force && time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL] ) {
 				$ret = 'Crawler log: less than whole crawling interval';
 				if ( LiteSpeed_Cache_Log::get_enabled() ) {
 					LiteSpeed_Cache_Log::push($ret) ;

@@ -1,7 +1,7 @@
 <?php
 /**
 * LiteSpeed Crawler Class
-* 
+*
 * @since 1.1.0
 */
 class Litespeed_Crawler
@@ -55,7 +55,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Get if last crawler touched end
-	 * 
+	 *
 	 * @return bool|int		False or last ended time
 	 */
 	public function get_done_status()
@@ -68,7 +68,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Create reset pos file
-	 * 
+	 *
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -78,7 +78,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Start crawler
-	 * 
+	 *
 	 * @return string|bool crawled result
 	 */
 	public function engine_start()
@@ -90,13 +90,13 @@ class Litespeed_Crawler
 
 		// check if is running
 		if ( $this->_meta['is_running'] && time() - $this->_meta['is_running'] < $this->_run_duration ) {
-			return $this->_return(__('Oh look, there is already another LiteSpeed crawler here', 'litespeed-cache')) ;
+			return $this->_return(__('Oh look, there is already another LiteSpeed crawler running!', 'litespeed-cache')) ;
 		}
 
 		// check current load
 		$this->_adjust_current_threads() ;
 		if ( $this->_cur_threads == 0 ) {
-			return $this->_return(__('Load over limit', 'litespeed-cache')) ;
+			return $this->_return(__('Load hit the maximum.', 'litespeed-cache')) ;
 		}
 
 		// log started time
@@ -108,7 +108,7 @@ class Litespeed_Crawler
 		// set time limit
 		$maxTime = (int) ini_get('max_execution_time') ;
 		if ( $maxTime == 0 ) {
-			$maxTime = 300 ; // hardlimit 
+			$maxTime = 300 ; // hardlimit
 		}
 		else {
 			$maxTime -= 5 ;
@@ -133,7 +133,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Run crawler
-	 * 
+	 *
 	 * @param  array $curlOptions Curl options
 	 * @return array              array('error', 'blacklist')
 	 */
@@ -226,13 +226,13 @@ class Litespeed_Crawler
 
 	/**
 	 * Terminate crawling
-	 * 
+	 *
 	 * @param  string $end_reason The reason to terminate
 	 */
 	protected function _terminate_running($end_reason)
 	{
 		if ( $end_reason === true ) {
-			$end_reason = __('End of sitemap file', 'litespeed-cache') ;
+			$end_reason = __('End of sitemap file.', 'litespeed-cache') ;
 			$this->_meta['last_pos'] = 0 ;// reset last position
 			$this->_meta['done'] = 'touchedEnd' ;// log done status
 			$this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'] ;
@@ -311,7 +311,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Send multi curl requests
-	 * 
+	 *
 	 * @param  array $urls    The url lists to send to
 	 * @param  array $options Curl options
 	 * @return array          Curl results
@@ -399,7 +399,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Save existing meta
-	 * 
+	 *
 	 * @return mixed True or error message
 	 */
 	public function save_meta()
@@ -412,7 +412,7 @@ class Litespeed_Crawler
 
 	/**
 	 * Read existing meta
-	 * 
+	 *
 	 * @return mixed True or error message
 	 */
 	public function read_meta()
@@ -420,7 +420,7 @@ class Litespeed_Crawler
 		// get current meta info
 		$meta = Litespeed_File::read($this->_meta_file) ;
 		if ( $meta === false ) {
-			return sprintf(__('Can not read meta file: %s', 'litespeed-cache'), $this->_meta_file) ;
+			return sprintf(__('Cannot read meta file: %s', 'litespeed-cache'), $this->_meta_file) ;
 		}
 
 		if ( $meta && $meta = json_decode($meta, true) ) {

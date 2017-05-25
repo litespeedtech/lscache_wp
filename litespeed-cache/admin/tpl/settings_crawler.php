@@ -11,7 +11,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_USLEEP); ?> <?php echo __('microseconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify time in microseconds for Crawler delay execution.', 'litespeed-cache'); ?>
+				<?php echo __('Specify time in microseconds for the delay between requests during a crawl.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -21,27 +21,27 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_RUN_DURATION); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify how long for each run duration in seconds', 'litespeed-cache'); ?>
+				<?php echo __('Specify time in seconds for the duration of the crawl interval.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __('Cron Interval', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Interval Between Runs', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Cron interval must be greater than 60', 'litespeed-cache'); ?>
+				<?php echo __('Specify time in seconds for the time between each run interval. Must be greater than 60.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __('Whole Crawling Interval', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Crawl Interval', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('How many seconds between each whole sitemap crawling', 'litespeed-cache'); ?>
+				<?php echo __('Specify how long in seconds before the crawler should initiate crawling the entire sitemap again.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -51,7 +51,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify Number of Threads to use while crawling', 'litespeed-cache'); ?>
+				<?php echo __('Specify Number of Threads to use while crawling.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -61,7 +61,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Set the max server load limit to use crawler', 'litespeed-cache'); ?>
+				<?php echo __('Set the max server load limit before terminating the cron run.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -71,7 +71,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_BLACKLIST); ?>
 			<div class="litespeed-desc">
-				<?php echo __('All Urls which has no-cache tags will be added here, After the initial crawling.', 'litespeed-cache'); ?>
+				<?php echo __('All Urls which returned no-cache tags will be added here, after the initial crawling.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -81,7 +81,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_POSTS); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Include Posts URL for Crawler', 'litespeed-cache'); ?>
+				<?php echo __('Include Posts in crawler sitemap generation.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -91,7 +91,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_PAGES); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Include Pages URL for Crawler', 'litespeed-cache'); ?>
+				<?php echo __('Include Pages in crawler sitemap generation.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -101,7 +101,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_CATS); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Include Categories URL for Crawler', 'litespeed-cache'); ?>
+				<?php echo __('Include Categories pages in crawler sitemap generation.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -111,7 +111,7 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_TAGS); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Include Tags URL for Crawler', 'litespeed-cache'); ?>
+				<?php echo __('Include Tags pages in crawler sitemap generation.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -122,7 +122,7 @@ if ( !defined('WPINC') ) die;
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT); ?>
 
 			<div class="litespeed-desc">
-				<?php echo __('If you want to exlude Custom Post Type URL in Crawler file, Add the Custom Post Types in the box. One per line.', 'litespeed-cache'); ?>
+				<?php echo __('If you want to exclude certain Custom Post Types in sitemap, add the Custom Post Types in the box, one per line.', 'litespeed-cache'); ?>
 			</div>
 
 			<div class="litespeed-callout litespeed-callout-warning">
@@ -138,32 +138,32 @@ if ( !defined('WPINC') ) die;
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
 					<?php $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS, 
+						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
 						LiteSpeed_Cache_Config::CRWL_DATE_DESC,
 						__('Date, descending (Default)', 'litespeed-cache')
 					); ?>
 
 					<?php $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS, 
+						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
 						LiteSpeed_Cache_Config::CRWL_DATE_ASC,
 						__('Date, ascending', 'litespeed-cache')
 					); ?>
 
 					<?php $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS, 
+						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
 						LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
 						__('Alphabetical, descending', 'litespeed-cache')
 					); ?>
 
 					<?php $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS, 
+						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
 						LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
 						__('Alphabetical, ascending', 'litespeed-cache')
 					); ?>
 				</div>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo __('Please choose one of the above options, to set the order of your links', 'litespeed-cache'); ?>
+				<?php echo __('Please choose one of the above options to set the order in which the sitemap will be parsed.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

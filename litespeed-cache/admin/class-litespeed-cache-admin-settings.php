@@ -34,7 +34,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		$prefix = $input[$id];
 		if ($prefix !== '' && !ctype_alnum($prefix)) {
-			return __('Invalid Tag Prefix input.', 'litespeed-cache') . ' ' . __('Input should only contain letters and numbers.', 'litespeed-cache');
+			return __('Invalid Tag Prefix input.', 'litespeed-cache') . ' '
+					. __('Input should only contain letters and numbers.', 'litespeed-cache');
 		}
 		if ($options[$id] !== $prefix) {
 			$options[$id] = $prefix;
@@ -53,9 +54,10 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $input Input array
 	 * @param string $id Option ID
 	 * @param number $min Minimum number
+	 * @param number $max Maximum number
 	 * @return bool True if valid, false otherwise.
 	 */
-	public function validate_ttl($input, $id, $min = false)
+	public function validate_ttl($input, $id, $min = false, $max = 2147483647)
 	{
 		if (!isset($input[$id])) {
 			return false;
@@ -70,7 +72,7 @@ class LiteSpeed_Cache_Admin_Settings
 			return false;
 		}
 
-		return ctype_digit($sval) && $ival >= 0 && $ival < 2147483647;
+		return ctype_digit($sval) && $ival >= 0 && $ival < $max;
 	}
 
 	/**
@@ -84,7 +86,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function validate_general(&$input, &$options, &$errors)
 	{
-		$ttl_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TTL);
+		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC);
+		$max_ttl = 2147483647;
 
 		// enabled setting
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO;
@@ -127,7 +130,8 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL;
 		if (!$this->validate_ttl($input, $id, 30)) {
-			$errors[] = sprintf($ttl_err, __('Default Public Cache', 'litespeed-cache'), 30);
+			$errors[] = sprintf($num_err,
+					__('Default Public Cache', 'litespeed-cache'), 30, $max_ttl);
 		}
 		else {
 			$options[$id] = $input[$id];
@@ -135,7 +139,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL;
 		if (!$this->validate_ttl($input, $id, 30)) {
-			$errors[] = sprintf($ttl_err, __('Default Front Page', 'litespeed-cache'), 30);
+			$errors[] = sprintf($num_err, __('Default Front Page', 'litespeed-cache'), 30, $max_ttl);
 		}
 		else {
 			$options[$id] = $input[$id];
@@ -143,7 +147,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('Feed', 'litespeed-cache'), 0);
+			$errors[] = sprintf($num_err, __('Feed', 'litespeed-cache'), 0, $max_ttl);
 		}
 		elseif ($input[$id] < 30) {
 			$options[$id] = 0;
@@ -154,7 +158,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_404_TTL;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('404', 'litespeed-cache'), 0);
+			$errors[] = sprintf($num_err, __('404', 'litespeed-cache'), 0, $max_ttl);
 		}
 		elseif ($input[$id] < 30) {
 			$options[$id] = 0;
@@ -165,7 +169,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_403_TTL;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('403', 'litespeed-cache'), 0);
+			$errors[] = sprintf($num_err, __('403', 'litespeed-cache'), 0, $max_ttl);
 		}
 		elseif ($input[$id] < 30) {
 			$options[$id] = 0;
@@ -176,7 +180,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_500_TTL;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('500', 'litespeed-cache'), 0);
+			$errors[] = sprintf($num_err, __('500', 'litespeed-cache'), 0, $max_ttl);
 		}
 		elseif ($input[$id] < 30) {
 			$options[$id] = 0;
@@ -421,7 +425,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function validate_crawler($input, &$options, &$errors)
 	{
-		$ttl_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TTL);
+		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC);
 
 		$id = LiteSpeed_Cache_Config::CRWL_POSTS;
 		$options[$id] = self::is_checked($input[$id]);
@@ -455,8 +459,8 @@ class LiteSpeed_Cache_Admin_Settings
 		$options[$id] = $input[$id];
 
 		$id = LiteSpeed_Cache_Config::CRWL_USLEEP;
-		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('Delay', 'litespeed-cache'), 0);
+		if (!$this->validate_ttl($input, $id, 0, 30000)) {
+			$errors[] = sprintf($num_err, __('Delay', 'litespeed-cache'), 0, 30000);
 		}
 		else {
 			$options[$id] = $input[$id];
@@ -464,23 +468,23 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::CRWL_RUN_DURATION;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('Run Duration', 'litespeed-cache'), 0);
+			$errors[] = sprintf($num_err, __('Run Duration', 'litespeed-cache'), 0, 2147483647);
 		}
 		else {
 			$options[$id] = $input[$id];
 		}
 
-		$id = LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL;
+		$id = LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL;
 		if (!$this->validate_ttl($input, $id, 60)) {
-			$errors[] = sprintf($ttl_err, __('Cron Interval', 'litespeed-cache'), 60);
+			$errors[] = sprintf($num_err, __('Cron Interval', 'litespeed-cache'), 60, 2147483647);
 		}
 		else {
 			$options[$id] = $input[$id];
 		}
 
-		$id = LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL;
+		$id = LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL;
 		if (!$this->validate_ttl($input, $id)) {
-			$errors[] = sprintf($ttl_err, __('Whole Interval', 'litespeed-cache'), 0);
+			$errors[] = sprintf($num_err, __('Whole Interval', 'litespeed-cache'), 0, 2147483647);
 		}
 		else {
 			$options[$id] = $input[$id];
@@ -488,7 +492,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::CRWL_THREADS;
 		if (!$this->validate_ttl($input, $id, 1)) {
-			$errors[] = sprintf($ttl_err, __('Threads', 'litespeed-cache'), 1);
+			$errors[] = sprintf($num_err, __('Threads', 'litespeed-cache'), 1, 16);
 		}
 		else {
 			$options[$id] = $input[$id];

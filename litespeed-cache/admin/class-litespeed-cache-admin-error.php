@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Admin_Error
 	const E_SETTING_ADMIN_IP_INV = 3000;
 	const E_SETTING_TEST_IP_INV = 3010;
 
-	const E_SETTING_TTL = 3500;
+	const E_SETTING_NUMERIC = 3500;
 	const E_SETTING_CAT = 3510;
 	const E_SETTING_TAG = 3520;
 	const E_SETTING_LC = 3530; // login cookie setting
@@ -141,9 +141,9 @@ class LiteSpeed_Cache_Admin_Error
 				return __('Invalid data in Test IPs.', 'litespeed-cache');
 
 			// Admin settings with expected parameters for message.
-			case self::E_SETTING_TTL:
-				// %1 is the name of the TTL, %2 is the minimum integer allowed.
-				return __('%1$s TTL must be an integer between %2$d and 2147483647',
+			case self::E_SETTING_NUMERIC:
+				// %1 is the name of the option, %2 is the minimum integer allowed.
+				return __('%1$s must be an integer between %2$d and %3$d',
 					'litespeed-cache');
 
 			case self::E_SETTING_CAT:

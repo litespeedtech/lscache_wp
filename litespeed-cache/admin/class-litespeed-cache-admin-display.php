@@ -375,8 +375,10 @@ class LiteSpeed_Cache_Admin_Display
 		$screen->add_help_tab(array(
 			'id'      => 'lsc-overview',
 			'title'   => __('Overview', 'litespeed-cache'),
-			'content' => '<p>' . __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server.', 'litespeed-cache') . ' ' . __('This plugin communicates with LiteSpeed Web Server to let it know which pages are cache-able and when to purge them.', 'litespeed-cache') . '</p><p>'
-				. __('A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be installed and enabled.', 'litespeed-cache')
+			'content' => '<p>'
+				. __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server.', 'litespeed-cache') . ' '
+				. __('This plugin communicates with LiteSpeed Web Server to let it know which pages are cacheable and when to purge them.', 'litespeed-cache')
+				. '</p><p>' . __('A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be installed and enabled.', 'litespeed-cache')
 				. '</p>',
 		));
 

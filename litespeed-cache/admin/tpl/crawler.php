@@ -22,11 +22,11 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			}
 		 ?>
 		<div class="litespeed-desc">
-			<?php echo sprintf(__('This will create a crawler sitemap file in plugin folder %s manually.', 'litespeed-cache'), '`./var`') ; ?>
+			<?php echo sprintf(__('On click, this will create a crawler sitemap file in plugin directory %s.', 'litespeed-cache'), '`./var`') ; ?>
 		</div>
 
 <?php
-	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_CRON_INTERVAL] ;
+	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL] ;
 	if($seconds > 0):
 		$recurrence = '' ;
 		$hours = (int)floor($seconds / 3600) ;
@@ -53,7 +53,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 		<table class="widefat striped">
 			<thead><tr >
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
-				<th scope="col"><?php echo __('Recurrence', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Last Status', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Activation', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Actions', 'litespeed-cache') ; ?></th>
@@ -62,13 +62,25 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 				<tr>
 					<td>
 						<?php
-							echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ;
+							echo __('LiteSpeed Cache Crawler', 'litespeed-cache');
 						?>
 						<div class='litespeed-desc'>
 						<?php
-							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
+							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta();
 							if ( $meta && $meta->this_full_beginning_time ) {
-								echo sprintf(__('Last began at %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->this_full_beginning_time)) ;
+								if (is running) {
+									echo sprintf(__('The current sitemap crawl began at %s', 'litespeed-cache'),
+											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
+
+								}
+								else {
+									echo sprintf(__('The last sitemap crawl began at %s', 'litespeed-cache'),
+											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
+									echo sprintf(__('The next sitemap crawl will start at %s', 'litespeed-cache'),
+											date('m/d/Y H:i:s',$meta->this_full_beginning_time
+													+ $meta->last_full_time_cost + $_options[LiteSpeed_Cache_Config::CRWL_WHOLE_INTERVAL]));
+								}
+
 							}
 						?>
 						</div>
@@ -78,7 +90,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 						<div class='litespeed-desc'>
 						<?php
 							if ( $meta && $meta->last_full_time_cost ) {
-								echo sprintf(__('Last whole running cost %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
+								echo sprintf(__('The last complete run cost %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
 							}
 						?>
 						</div>
@@ -99,8 +111,8 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					<td>
 						<label class="litespeed-switch-onoff">
 							<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1" data-url="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, 'cron_enable') ; ?>" <?php if($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE]) echo "checked"; ?> />
-							<span data-on="Enable" data-off="Disable"></span> 
-							<span></span> 
+							<span data-on="Enable" data-off="Disable"></span>
+							<span></span>
 						</label>
 					</td>
 					<td>
@@ -110,7 +122,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('Last ran: %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
+							<?php echo sprintf(__('Last interval: %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
 						</div>
 						<?php endif ; ?>
 
@@ -130,8 +142,9 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			</tbody>
 		</table>
 		<div class="litespeed-desc">
-			<div><?php echo __('Recurrence is calculated when you set Cron interval in seconds.','litespeed-cache') ; ?></div>
-			<div><?php echo __('Only one crawler can run. When manully run meets cron automatic run, whichever first will run.','litespeed-cache') ; ?></div>
+			<div><?php echo __('Run frequency is set by the Interval Between Runs setting.','litespeed-cache') ; ?></div>
+			<div><?php echo __('Only one crawler can run concurrently.', 'litespeed-cache')
+					. __('If both the cron and manual run start at a similar time, the first one to start will run.','litespeed-cache') ; ?></div>
 			<div><?php echo sprintf(__('Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-into-the-system-task-scheduler/" target="_blank" ') ; ?></div>
 		</div>
 <?php endif ; ?>
