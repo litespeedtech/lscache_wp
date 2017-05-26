@@ -19,13 +19,13 @@ if (!defined('WPINC')) die;
 			?>
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
-					<?php $this->build_radio(
+					<?php echo $this->build_radio(
 						$id, 
 						LiteSpeed_Cache_Config::VAL_ON,
 						__('Enable', 'litespeed-cache')
 					); ?>
 
-					<?php $this->build_radio(
+					<?php echo $this->build_radio(
 						$id, 
 						LiteSpeed_Cache_Config::VAL_OFF,
 						__('Disable', 'litespeed-cache')
@@ -33,7 +33,7 @@ if (!defined('WPINC')) die;
 
 					<?php
 						if ( is_multisite() ){
-							$this->build_radio(
+							echo $this->build_radio(
 								$id, 
 								LiteSpeed_Cache_Config::VAL_NOTSET,
 								__('Use Network Admin Setting', 'litespeed-cache')

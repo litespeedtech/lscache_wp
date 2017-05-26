@@ -829,14 +829,21 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @param  string $id
 	 */
-	public function build_switch($id, $disabled = false)
+	public function build_switch($id, $disabled = false, $return = false)
 	{
-		echo '<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">';
-		$this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, null, $disabled);
-		$this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, null, $disabled);
-		echo '</div>
-			</div>';
+		$html = '<div class="litespeed-row">
+					<div class="litespeed-switch litespeed-label-info">' ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, null, $disabled) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, null, $disabled) ;
+		$html .= '	</div>
+				</div>' ;
+
+		if ( $return ) {
+			return $html ;
+		}
+		else {
+			echo $html ;
+		}
 	}
 
 	/**
@@ -891,7 +898,7 @@ class LiteSpeed_Cache_Admin_Display
 		$checked = $checked ? ' checked ' : '';
 		$disabled = $disabled ? ' disabled ' : '';
 
-		echo "<input type='radio' "
+		return "<input type='radio' "
 			. " name='". LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' "
 			. " id='$id_attr' "
 			. " value='$val' "

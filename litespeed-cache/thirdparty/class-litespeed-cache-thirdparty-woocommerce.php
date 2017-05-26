@@ -620,7 +620,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return $configs;
 		}
 		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS;
-		$configs[self::OPTION_SHOP_FRONT_TTL] = self::OPTION_SHOP_FRONT_TTL;
+		$configs[self::OPTION_SHOP_FRONT_TTL] = true;
 
 		return $configs;
 	}
@@ -637,85 +637,73 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function add_config($tabs, $options, $option_group)
 	{
-		$title = __('WooCommerce Configurations', 'litespeed-cache');
-		$slug = 'woocom';
-		$selected_value = self::OPT_PQS_CS;
+		$_title = __('WooCommerce Configurations', 'litespeed-cache') ;
+		$_slug = 'woocom' ;
 		$seloptions = array(
 			__('Purge product on changes to the quantity or stock status.', 'litespeed-cache')
-			. __('Purge categories only when stock status changes.', 'litespeed-cache'),
+				. ' ' . __('Purge categories only when stock status changes.', 'litespeed-cache'),
 			__('Purge product and categories only when the stock status changes.', 'litespeed-cache'),
 			__('Purge product only when the stock status changes.', 'litespeed-cache')
-			. __('Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache'),
+				. ' ' . __('Do not purge categories on changes to the quantity or stock status.', 'litespeed-cache'),
 			__('Always purge both product and categories on changes to the quantity or stock status.', 'litespeed-cache'),
-		);
+		) ;
 		$update_desc =
-			__('Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache');
+			__('Determines how changes in product quantity and product stock status affect product pages and their associated category pages.', 'litespeed-cache') ;
 		$ttl_desc = __('Checking this option will force the shop page to use the front page TTL setting.', 'litespeed-cache')
-			. sprintf(__('For example, if the homepage for the site is located at %1$s, the shop page may be located at %2$s.', 'litespeed-cache'),
-				'https://www.example.com', 'https://www.example.com/shop');
+					. ' ' . sprintf(__('For example, if the homepage for the site is located at %1$s, the shop page may be located at %2$s.', 'litespeed-cache'),
+						'https://www.example.com', 'https://www.example.com/shop') ;
 
 		if ($tabs === false) {
-			return $tabs;
+			return false ;
 		}
 
+		$selected_value = self::OPT_PQS_CS ;
 		if (isset($options)) {
 			if (isset($options[self::OPTION_UPDATE_INTERVAL])) {
-				$selected_value = $options[self::OPTION_UPDATE_INTERVAL];
-			}
-			if (isset($options[self::OPTION_SHOP_FRONT_TTL])) {
-				$checked_value = $options[self::OPTION_SHOP_FRONT_TTL];
+				$selected_value = $options[self::OPTION_UPDATE_INTERVAL] ;
 			}
 		}
 
-		$content = '<h3 class="title">'
-			. $title . "</h3><hr/>"
-			. '<div class="litespeed-cache-div-table>">'
-			. '<table class="form-table">'
-			. '<tr><th scope="row">'
-			. __('Product Update Interval', 'litespeed-cache') . '</th><td>';
-
-		$content .= '<span class="litespeed-cache-field-tip"><span class="litespeed-cache-tip-content">'
-			. $update_desc
-			. '</span></span><select name="'
-			. $option_group . '['
-			. self::OPTION_UPDATE_INTERVAL . ']" id="'
-			. self::OPTION_UPDATE_INTERVAL . '" style="">';
-		foreach ($seloptions as $val => $label) {
-			$content .= '<option value="' . $val . '"';
-			if ($selected_value == $val) {
-				$content .= ' selected="selected"';
-			}
-			$content .= '>' . $label . '</option>';
+		$update_intval_html = '' ;
+		$id = self::OPTION_UPDATE_INTERVAL ;
+		foreach ($seloptions as $val => $title) {
+			$checked = $selected_value == $val ? ' checked="checked" ' : '';
+			$update_intval_html .= "<div class='litespeed-radio cross litespeed-top10'>
+										<input type='checkbox' name='{$option_group}[$id]' id='conf_{$id}_$val' value='1' $checked />
+										<label for='conf_{$id}_$val'>$title</label>
+									</div>" ;
 		}
-		$content .= '</select>';
-		$content .= "</td></tr>\n";
-		$content .= '<tr><th scope="row">'
-			. __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . '</th><td>';
-		$content .=
-			'<span class="litespeed-cache-field-tip"><span class="litespeed-cache-tip-content">'
-			. $ttl_desc
-			. '</span></span><input name="'
-			. $option_group . '['
-			. self::OPTION_SHOP_FRONT_TTL . ']" type="checkbox" id="'
-			. self::OPTION_SHOP_FRONT_TTL . '" value="'
-			. self::OPTION_SHOP_FRONT_TTL . '"';
-		if (($checked_value === self::OPTION_SHOP_FRONT_TTL)) {
-			$content .= ' checked="checked" ';
-		}
-		$content .= '/>';
-		$content .= "</p></td></tr>\n";
-		$content .= "</table></div>\n";
 
-		$content .= '<h3>' . __('NOTE:', 'litespeed-cache') . '</h3><p>'
-			. __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache')
-			. sprintf(__('To test the cart, visit the %s.', 'litespeed-cache'),
-				'<a href=' . get_admin_url() . 'admin.php?page=lscache-info>FAQ</a>')
-			. '</p>';
-		$content .= "\n";
+		$content = "<h3 class='litespeed-title'>{$_title}</h3>
+					<table class='form-table'><tbody>
+						<tr>
+							<th>" . __('Product Update Interval', 'litespeed-cache') . "</th>
+							<td>
+								$update_intval_html
+								<div class='litespeed-desc'>$update_desc</div>
+							</td>
+						</tr>
+						<tr>
+							<th>" . __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . "</th>
+							<td>
+								" . LiteSpeed_Cache_Admin_Display::get_instance()->build_switch(self::OPTION_SHOP_FRONT_TTL, false, true) . "
+								<div class='litespeed-desc'>$ttl_desc</div>
+							</td>
+						</tr>
+					</tbody></table>
+					<div class='litespeed-callout litespeed-callout-warning'>
+						<h4>" . __('Note:', 'litespeed-cache') . "</h4>
+						<i>
+							" . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . "
+							" . sprintf(__('To test the cart, visit the %s.', 'litespeed-cache'), '<a href=' . get_admin_url() . 'admin.php?page=lscache-info>FAQ</a>') . "
+						</i>
+					</div>
+
+					" ;
 
 		$tab = array(
-			'title'   => $title,
-			'slug'    => $slug,
+			'title'   => $_title,
+			'slug'    => $_slug,
 			'content' => $content,
 		);
 
@@ -753,16 +741,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 		}
 
-		if ((isset($input[self::OPTION_SHOP_FRONT_TTL]))
-			&& ($input[self::OPTION_SHOP_FRONT_TTL]
-				=== self::OPTION_SHOP_FRONT_TTL)
-		) {
-			$options[self::OPTION_SHOP_FRONT_TTL] =
-				self::OPTION_SHOP_FRONT_TTL;
-		}
-		else {
-			$options[self::OPTION_SHOP_FRONT_TTL] = false;
-		}
+		$options[self::OPTION_SHOP_FRONT_TTL] = LiteSpeed_Cache_Admin_Settings::is_checked($input[self::OPTION_SHOP_FRONT_TTL]);
 
 		return $options;
 	}

@@ -23,19 +23,19 @@ if (!defined('WPINC')) die;
 		<td>
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
-					<?php $this->build_radio(
+					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::OPID_DEBUG, 
 						LiteSpeed_Cache_Config::VAL_OFF,
 						__('Off', 'litespeed-cache')
 					); ?>
 
-					<?php $this->build_radio(
+					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::OPID_DEBUG, 
 						LiteSpeed_Cache_Config::VAL_ON,
 						__('On', 'litespeed-cache')
 					); ?>
 
-					<?php $this->build_radio(
+					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::OPID_DEBUG, 
 						LiteSpeed_Cache_Config::VAL_NOTSET,
 						__('Admin IP only', 'litespeed-cache')
