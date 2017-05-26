@@ -46,6 +46,13 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function admin_init()
 	{
+		// check for upgrade
+		// NOTE: upgrade checking needs to be before `register_setting` to avoid update_options() be checked by our filter
+		$this->config->plugin_upgrade();
+		if (is_network_admin() && current_user_can('manage_network_options')) {
+			$this->config->plugin_site_upgrade();
+		}
+
 		LiteSpeed_Cache::get_instance()->set_locale();
 
 		$this->proceed_admin_action();
@@ -102,12 +109,6 @@ class LiteSpeed_Cache_Admin
 			if ($add_var !== true) {
 				LiteSpeed_Cache_Admin_Error::add_error($add_var);
 			}
-		}
-
-		// check for upgrade
-		$this->config->plugin_upgrade();
-		if (is_network_admin() && current_user_can('manage_network_options')) {
-			$this->config->plugin_site_upgrade();
 		}
 
 		// check management action

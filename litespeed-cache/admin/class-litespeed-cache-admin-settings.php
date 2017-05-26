@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$input_purge_options = array();
 		foreach ($pvals as $pval) {
 			$input_name = 'purge_' . $pval;
-			if (isset($input[$input_name]) && $input[$input_name]) {
+			if (self::is_checked($input[$input_name])) {
 				$input_purge_options[] = $pval;
 			}
 		}
