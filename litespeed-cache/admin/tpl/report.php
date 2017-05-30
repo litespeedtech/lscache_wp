@@ -5,7 +5,12 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 ?>
 
 <div class="wrap">
-	<h2><?php echo __('LiteSpeed Cache Report', 'litespeed-cache'); ?></h2>
+	<h2>
+		<?php echo __('LiteSpeed Cache Report', 'litespeed-cache'); ?>
+		<span class="litespeed-desc">
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+		</span>
+	</h2>
 </div>
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">

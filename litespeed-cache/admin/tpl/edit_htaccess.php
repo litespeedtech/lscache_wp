@@ -7,7 +7,12 @@ $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 ?>
 
 <div class="wrap">
-	<h2><?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?></h2>
+	<h2>
+		<?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?>
+		<span class="litespeed-desc">
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+		</span>
+	</h2>
 </div>
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">

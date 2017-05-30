@@ -11,7 +11,12 @@ $menuArr = array(
 
 ?>
 <div class="wrap">
-	<h2><?php echo __('LiteSpeed Cache Information', 'litespeed-cache'); ?></h2>
+	<h2>
+		<?php echo __('LiteSpeed Cache Information', 'litespeed-cache'); ?>
+		<span class="litespeed-desc">
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+		</span>
+	</h2>
 </div>
 <div class="wrap">
 	<h2 class="nav-tab-wrapper">

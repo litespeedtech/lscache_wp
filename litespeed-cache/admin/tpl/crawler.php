@@ -7,7 +7,12 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 ?>
 
 <div class="wrap">
-	<h2><?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?></h2>
+	<h2>
+		<?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?>
+		<span class="litespeed-desc">
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+		</span>
+	</h2>
 </div>
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">

@@ -6,7 +6,12 @@ LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 ?>
 
 <div class="wrap">
-	<h2><?php echo __('LiteSpeed Cache Management', 'litespeed-cache'); ?></h2>
+	<h2>
+		<?php echo __('LiteSpeed Cache Management', 'litespeed-cache'); ?>
+		<span class="litespeed-desc">
+			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+		</span>
+	</h2>
 </div>
 <div class="wrap">
 	<div class="litespeed-cache-welcome-panel">
