@@ -669,7 +669,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		foreach ($seloptions as $val => $title) {
 			$checked = $selected_value == $val ? ' checked="checked" ' : '';
 			$update_intval_html .= "<div class='litespeed-radio cross litespeed-top10'>
-										<input type='checkbox' name='{$option_group}[$id]' id='conf_{$id}_$val' value='1' $checked />
+										<input type='radio' name='{$option_group}[$id]' id='conf_{$id}_$val' value='$val' $checked />
 										<label for='conf_{$id}_$val'>$title</label>
 									</div>" ;
 		}
