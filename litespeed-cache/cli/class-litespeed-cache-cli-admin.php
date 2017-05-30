@@ -3,12 +3,14 @@
 /**
  * LiteSpeed Cache Admin Interface
  */
-class LiteSpeed_Cache_Cli_Admin{
+class LiteSpeed_Cache_Cli_Admin
+{
 
 	private static $checkboxes;
 	private static $purges;
 
-	function __construct(){
+	public function __construct()
+	{
 		self::$checkboxes =
 			array(
 				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
@@ -59,7 +61,8 @@ class LiteSpeed_Cache_Cli_Admin{
 	 *     $ wp lscache-admin set_option cache_login false
 	 *
 	 */
-	function set_option($args, $assoc_args){
+	public function set_option($args, $assoc_args)
+	{
 		$key = $args[0];
 		$val = $args[1];
 
@@ -74,64 +77,67 @@ class LiteSpeed_Cache_Cli_Admin{
 		LiteSpeed_Cache_Config::convert_options_to_input($options);
 
 		switch ($key) {
-		case LiteSpeed_Cache_Config::OPID_VERSION:
-			//do not allow
-			WP_CLI::error('This option is not available for setting.');
-			return;
-		case LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED:
-			// set list then do checkbox
-			if ($val === 'true') {
-				$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] =
-					'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
-			}
-			//fall through
-		case LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE:
-		case LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS:
-		case LiteSpeed_Cache_Config::OPID_CACHE_LOGIN:
-		case LiteSpeed_Cache_Config::OPID_CACHE_FAVICON:
-		case LiteSpeed_Cache_Config::OPID_CACHE_RES:
-		case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
-			//checkbox
-			if ($val === 'true') {
-				$options['lscwp_' . $key] = $key;
-			}
-			elseif ($val === 'false') {
-				unset($options['lscwp_' . $key]);
-			}
-			else {
-				WP_CLI::error('Checkbox value must be true or false.');
+			case LiteSpeed_Cache_Config::OPID_VERSION:
+				//do not allow
+				WP_CLI::error('This option is not available for setting.');
 				return;
-			}
-			break;
-		case LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST:
-			$enable_key = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
-			if (!$options[$enable_key]) {
-				$options['lscwp_' . $enable_key] = $enable_key;
-			}
-			$options[$key] = $val;
-			break;
-		default:
-			if (substr($key, 0, 6) === 'purge_') {
+
+			case LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED:
+				// set list then do checkbox
 				if ($val === 'true') {
-					WP_CLI::line('key is ' . $key . ', substr is ' . substr($key, 6));
-					$options[$key] = substr($key, 6);
+					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] =
+						'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
+				}
+				//fall through
+			case LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE:
+			case LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS:
+			case LiteSpeed_Cache_Config::OPID_CACHE_LOGIN:
+			case LiteSpeed_Cache_Config::OPID_CACHE_FAVICON:
+			case LiteSpeed_Cache_Config::OPID_CACHE_RES:
+			case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
+				//checkbox
+				if ($val === 'true') {
+					$options[$key] = true;
 				}
 				elseif ($val === 'false') {
 					unset($options[$key]);
 				}
 				else {
-					WP_CLI::error('Purge checkbox value must be true or false.');
+					WP_CLI::error('Checkbox value must be true or false.');
 					return;
 				}
-			}
-			else {
-				// Everything else, just set the value
+				break;
+
+			case LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST:
+				$enable_key = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
+				if (!$options[$enable_key]) {
+					$options[$enable_key] = $enable_key;
+				}
 				$options[$key] = $val;
-			}
-			break;
+				break;
+
+			default:
+				if (substr($key, 0, 6) === 'purge_') {
+					if ($val === 'true') {
+						WP_CLI::line('key is ' . $key . ', val is ' . $val);
+						$options[$key] = true;
+					}
+					elseif ($val === 'false') {
+						unset($options[$key]);
+					}
+					else {
+						WP_CLI::error('Purge checkbox value must be true or false.');
+						return;
+					}
+				}
+				else {
+					// Everything else, just set the value
+					$options[$key] = $val;
+				}
+				break;
 		}
 
-		$output = LiteSpeed_Cache_Admin::get_instance()->validate_plugin_settings($options);
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options);
 
 		global $wp_settings_errors;
 
@@ -165,7 +171,7 @@ class LiteSpeed_Cache_Cli_Admin{
 	 *     $ wp lscache-admin get_options
 	 *
 	 */
-	function get_options($args, $assoc_args)
+	public function get_options($args, $assoc_args)
 	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		$purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options();
@@ -222,7 +228,7 @@ class LiteSpeed_Cache_Cli_Admin{
 	 *     $ wp lscache-admin export_options
 	 *
 	 */
-	function export_options($args, $assoc_args)
+	public function export_options($args, $assoc_args)
 	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		$output = '';
@@ -272,7 +278,7 @@ class LiteSpeed_Cache_Cli_Admin{
 	 *     $ wp lscache-admin import_options options.txt
 	 *
 	 */
-	function import_options($args, $assoc_args)
+	public function import_options($args, $assoc_args)
 	{
 		$file = $args[0];
 		if (!file_exists($file) || !is_readable($file)) {
@@ -283,7 +289,7 @@ class LiteSpeed_Cache_Cli_Admin{
 		$options = array();
 		$default = LiteSpeed_Cache_Config::get_instance()->get_options();
 
-		foreach ($input as $opt) {
+		foreach ($input[0] as $opt) {
 			$kv = explode('=', $opt);
 			$options[$kv[0]] = $kv[1];
 		}
@@ -292,7 +298,7 @@ class LiteSpeed_Cache_Cli_Admin{
 
 		LiteSpeed_Cache_Config::convert_options_to_input($options);
 
-		$output = LiteSpeed_Cache_Admin::get_instance()->validate_plugin_settings($options);
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options);
 
 		global $wp_settings_errors;
 

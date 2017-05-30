@@ -49,10 +49,6 @@ class LiteSpeed_Cache
 	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable';
 	const ACTION_DO_CRAWL = 'do-crawl';
 
-	const ADMINNONCE_PURGEALL = 'litespeed-purgeall';
-	const ADMINNONCE_PURGENETWORKALL = 'litespeed-purgeall-network';
-	const ADMINNONCE_PURGEBY = 'litespeed-purgeby';
-
 	const CACHECTRL_NOCACHE = 0;
 	const CACHECTRL_PUBLIC = 1;
 	const CACHECTRL_PURGE = 2;
@@ -103,7 +99,7 @@ class LiteSpeed_Cache
 
 		// Register plugin activate/deactivate/uninstall hooks
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
-		if( is_admin() ) {
+		if( is_admin() || LiteSpeed_Cache_Router::is_cli() ) {
 			$plugin_file = LSWCP_DIR . 'litespeed-cache.php';
 			register_activation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_activation' ));
 			register_deactivation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' ));
@@ -258,7 +254,7 @@ class LiteSpeed_Cache
 			default:
 				break;
 		}
-		if ( $msg ) {
+		if ( $msg && ! LiteSpeed_Cache_Router::is_ajax() ) {
 			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg);
 			LiteSpeed_Cache_Admin::redirect();
 			return;
@@ -648,17 +644,18 @@ class LiteSpeed_Cache
 	 */
 	public function purge_list()
 	{
-		if ( !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT])
-				|| !isset($_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST]) ) {
+		if ( !isset($_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT])
+				|| !isset($_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST]) ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGE_FORM);
 			return;
 		}
-		$sel =  $_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
-		$list_buf = $_POST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
+		$sel =  $_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT];
+		$list_buf = $_REQUEST[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST];
 		if (empty($list_buf)) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY);
 			return;
 		}
+		$list_buf = str_replace(",", "\n", $list_buf);// for cli
 		$list = explode("\n", $list_buf);
 		switch($sel) {
 			case LiteSpeed_Cache_Admin_Display::PURGEBY_CAT:

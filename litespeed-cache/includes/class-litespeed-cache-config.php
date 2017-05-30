@@ -568,13 +568,13 @@ class LiteSpeed_Cache_Config
 			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
 
 			foreach ($purge_opts as $purge_opt) {
-				$options['purge_' . $purge_opt] = $purge_opt ;
+				$options['purge_' . $purge_opt] = true ;
 			}
 		}
 
 		foreach ($checkboxes as $checkbox) {
 			if ((isset($options[$checkbox])) && ($options[$checkbox])) {
-				$options['lscwp_' . $checkbox] = $checkbox ;
+				$options[$checkbox] = true ;
 			}
 		}
 
@@ -776,17 +776,6 @@ class LiteSpeed_Cache_Config
 		}
 
 		$default = self::get_rule_reset_options();
-
-		//todo: why set here
-		if ($options[self::OPID_CACHE_FAVICON]) {
-			$options['lscwp_' . self::OPID_CACHE_FAVICON] = self::OPID_CACHE_FAVICON;
-		}
-		if ($options[self::OPID_CACHE_RES]) {
-			$options['lscwp_' . self::OPID_CACHE_RES] = self::OPID_CACHE_RES;
-		}
-		if ($options[self::OPID_MOBILEVIEW_ENABLED]) {
-			$options['lscwp_' . self::OPID_MOBILEVIEW_ENABLED] = self::OPID_MOBILEVIEW_ENABLED;
-		}
 
 		$diff = $rules->check_input_for_rewrite($default, $options, $errors);
 

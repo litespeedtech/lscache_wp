@@ -14,6 +14,7 @@ class LiteSpeed_Cache_Router
 {
 	private static $_instance;
 	private static $_is_ajax;
+	private static $_is_cli;
 	private static $_ip;
 	private static $_action;
 	private static $_is_admin_ip;
@@ -29,8 +30,26 @@ class LiteSpeed_Cache_Router
 		if ( ! isset(self::$_action) ) {
             self::$_action = false;
 			self::get_instance()->verify_action() ;
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('LSCWP_CTRL after verified is ' . var_export(self::$_action, true)) ;
+			}
+
 		}
 		return self::$_action ;
+	}
+
+	/**
+	 * Check if is cli usage
+	 * 
+	 * @since 1.1.0
+	 * @return boolean
+	 */
+	public static function is_cli()
+	{
+		if ( ! isset(self::$_is_cli) ) {
+			self::$_is_cli = defined('WP_CLI') && WP_CLI ;
+		}
+		return self::$_is_cli ;
 	}
 
 	/**
@@ -114,8 +133,6 @@ class LiteSpeed_Cache_Router
 		$_can_network_option = $_is_network_admin && current_user_can('manage_network_options') ;
 		$_can_option = current_user_can('manage_options') ;
 
-		//todo: check if is cli
-
 		switch ($action) {
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
@@ -137,7 +154,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				if ( $_is_enabled
-						&& ( $_can_network_option || $_can_option) ) {
+						&& ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//todo: here may need more security
 					self::$_action = $action ;
 				}
 				return ;
@@ -154,7 +171,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_PURGE:
 			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
 			case LiteSpeed_Cache::ACTION_SHOW_HEADERS:
-				if ( $_is_enabled && $_is_public_action ) {
+				if ( $_is_enabled && ( $_is_public_action || self::is_ajax() ) ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -169,6 +186,9 @@ class LiteSpeed_Cache_Router
 				return ;
 
 			default:
+				if ( LiteSpeed_Cache_Log::get_enabled() ) {
+					LiteSpeed_Cache_Log::push('LSCWP_CTRL match falied: ' . $action) ;
+				}
 				return ;
 		}
 
