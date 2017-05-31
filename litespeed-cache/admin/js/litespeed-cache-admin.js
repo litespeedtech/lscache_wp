@@ -97,18 +97,6 @@ var _litespeed_dots ;
 			$('[data-purgeby='+this.value+']').show() ;
 		}) ;
 
-		//WHM Notice
-		$(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
-			$.ajax({
-				url: ajaxurl,
-				data: {
-					action: 'lscache_dismiss_whm',
-					LSCWP_CTRL: lscwp_data.lscwpctrl,
-					_wpnonce: lscwp_data.nonce
-				}
-			});
-		}) ;
-
 		// Select All and Copy to Clipboard
 		$("#litespeed_cache_report_copy").click(function() {
 			$('#litespeed-report').select() ;

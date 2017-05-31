@@ -180,14 +180,7 @@ class LiteSpeed_Cache_Admin_Display
 		wp_register_script(LiteSpeed_Cache::PLUGIN_NAME,
 			plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
 			array(), LiteSpeed_Cache::PLUGIN_VERSION, false);
-		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT) === LiteSpeed_Cache::WHM_TRANSIENT_VAL) {
-			$data = array(
-				'lscwpctrl' => LiteSpeed_Cache::ACTION_DISMISS,
-				'nonce' => wp_create_nonce('litespeed-dismiss')
-			);
-			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'lscwp_data', $data);
 
-		}
 		wp_enqueue_script(LiteSpeed_Cache::PLUGIN_NAME);
 	}
 

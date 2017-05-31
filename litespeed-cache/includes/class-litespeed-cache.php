@@ -33,7 +33,6 @@ class LiteSpeed_Cache
 	const ACTION_SAVE_HTACCESS = 'save-htaccess';
 	const ACTION_SAVE_SETTINGS = 'save-settings';
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
-	const ACTION_DISMISS = 'DISMISS';
 	const ACTION_PURGE = 'PURGE';
 	const ACTION_PURGE_ERRORS = 'PURGE_ERRORS';
 	const ACTION_PURGE_PAGES = 'PURGE_PAGES';
@@ -245,11 +244,6 @@ class LiteSpeed_Cache
 				$this->purge_list();
 				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
 				break;
-
-			case LiteSpeed_Cache::ACTION_DISMISS:
-				delete_transient(LiteSpeed_Cache::WHM_TRANSIENT);
-				LiteSpeed_Cache_Admin::redirect();
-				return;
 
 			default:
 				break;

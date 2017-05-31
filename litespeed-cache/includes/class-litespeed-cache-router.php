@@ -30,8 +30,8 @@ class LiteSpeed_Cache_Router
 		if ( ! isset(self::$_action) ) {
             self::$_action = false;
 			self::get_instance()->verify_action() ;
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push('LSCWP_CTRL after verified is ' . var_export(self::$_action, true)) ;
+			if ( self::$_action && LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('LSCWP_CTRL verified: ' . var_export(self::$_action, true)) ;
 			}
 
 		}
@@ -154,7 +154,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				if ( $_is_enabled
-						&& ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//todo: here may need more security
+						&& ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
 					self::$_action = $action ;
 				}
 				return ;

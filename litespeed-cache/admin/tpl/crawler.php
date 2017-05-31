@@ -72,7 +72,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 						<div class='litespeed-desc'>
 						<?php
 							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
-							$is_running = $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
+							$is_running = $meta && $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
 							if ( $meta && $meta->this_full_beginning_time ) {
 								if ( $is_running ) {
 									echo sprintf(__('The current sitemap crawl began at %s', 'litespeed-cache'),
