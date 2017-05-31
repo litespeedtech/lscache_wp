@@ -44,8 +44,24 @@ class LiteSpeed_Cache_Admin_Display
 			add_action('admin_enqueue_scripts', array($this, 'load_assets'));
 		}
 
+		// main css
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_style'));
+
+		$is_network_admin = is_network_admin() ;
+
+		// Quick access menu
+		if (is_multisite() && $is_network_admin) {
+			$manage = 'manage_network_options';
+		}
+		else {
+			$manage = 'manage_options';
+		}
+		if (current_user_can($manage)) {
+			add_action('wp_before_admin_bar_render', array($this, 'add_quick_purge'));
+		}
+
 		// add menus
-		if (is_network_admin() && is_plugin_active_for_network(LSWCP_BASENAME)) {
+		if ($is_network_admin && is_plugin_active_for_network(LSWCP_BASENAME)) {
 			add_action('network_admin_menu', array($this, 'register_admin_menu'));
 		}
 		else {
@@ -63,8 +79,7 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$this->check_messages();// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 
-		// Main css&js
-		$this->enqueue_style();
+		// Main js
 		$this->enqueue_scripts();
 
 		// Admin footer
@@ -76,17 +91,6 @@ class LiteSpeed_Cache_Admin_Display
 		if(LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled()){
 			// Help tab
 			$this->add_help_tabs();
-
-			// Quick access menu
-			if (is_multisite() && is_network_admin()) {
-				$manage = 'manage_network_options';
-			}
-			else {
-				$manage = 'manage_options';
-			}
-			if (current_user_can($manage)) {
-				add_action('wp_before_admin_bar_render', array($this, 'add_quick_purge'));
-			}
 
 			global $pagenow;
 			if ($pagenow === 'plugins.php') {//todo: check if work
@@ -118,8 +122,7 @@ class LiteSpeed_Cache_Admin_Display
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
 		if (current_user_can($capability)) {
 			// root menu
-			$svg = file_get_contents(plugins_url('img/LiteSpeed.svg', __FILE__));
-			add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'lscache-dash', '', $svg);
+			add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'lscache-dash');
 
 			// sub menus
 			$this->add_submenu(__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage');
@@ -255,8 +258,9 @@ class LiteSpeed_Cache_Admin_Display
 
 		$wp_admin_bar->add_node(array(
 			'id'    => 'lscache-quick-purge',
-			'title' => __('LiteSpeed Cache Purge All', 'litespeed-cache'),
+			'title' => '<span class="ab-icon"></span><span class="ab-label">' . __('LiteSpeed Cache Purge All', 'litespeed-cache') . '</span>',
 			'href'  => $url,
+			'meta'  => array('class' => 'litespeed-top-toolbar'),
 		));
 	}
 

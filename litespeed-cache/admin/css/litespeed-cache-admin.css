@@ -9,6 +9,7 @@
 @import "litespeed-checkbox.css";
 @import "litespeed-label.css";
 @import "litespeed-callout.css";
+@import "litespeed-icon.css";
 
 #litespeedcache-purgeerrors{
 	margin:5px 0 15px 22px;
