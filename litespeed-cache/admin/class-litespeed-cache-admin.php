@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Admin
 
 		// purge all on upgrade
 		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE)) {
-			add_action('upgrader_process_complete', array($this, 'purge_all'));
+			add_action('upgrader_process_complete', array(LiteSpeed_Cache::get_instance(), 'purge_all'));
 		}
 
 		// check if WP_CACHE is defined and true in the wp-config.php file.
