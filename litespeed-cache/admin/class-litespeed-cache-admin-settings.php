@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$input_purge_options = array();
 		foreach ($pvals as $pval) {
 			$input_name = 'purge_' . $pval;
-			if (self::is_checked($input[$input_name])) {
+			if ( isset($input[$input_name]) && self::is_checked($input[$input_name]) ) {
 				$input_purge_options[] = $pval;
 			}
 		}
@@ -347,7 +347,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 	}
 
 	/**
@@ -501,12 +501,6 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT;
 		$options[$id] = $input[$id];
 
-		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST;
-		if (isset($input[$id])) {
-			$uri_arr = array_map('trim', explode("\n", $input[$id]));
-			$options[$id] = implode("\n", array_filter($uri_arr));
-		}
-
 	}
 
 	/**
@@ -647,7 +641,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$options[$id] = self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$out = $this->validate_tag_prefix($input, $options);
 		if (is_string($out)) {

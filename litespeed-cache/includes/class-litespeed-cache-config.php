@@ -82,7 +82,6 @@ class LiteSpeed_Cache_Config
 	const CRWL_CRAWL_INTERVAL = 'crawler_crawl_interval' ;
 	const CRWL_THREADS  = 'crawler_threads' ;
 	const CRWL_LOAD_LIMIT  = 'crawler_load_limit' ;
-	const CRWL_BLACKLIST = 'crawler_blacklist' ;
 
 	const CRWL_CRON_ACTIVE = 'crawler_cron_active' ;
 
@@ -229,27 +228,6 @@ class LiteSpeed_Cache_Config
 			LiteSpeed_Cache_Log::push('Crawler cron log: ......cron hook cleared......') ;
 		}
 		wp_clear_scheduled_hook(self::CRON_ACTION_HOOK) ;
-	}
-
-	/**
-	 * Append urls to current list
-	 *
-	 * @param  array $list The url list needs to be appended
-	 */
-	public function append_blacklist($list)
-	{
-		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('Crawler log: append blacklist ' . count($list)) ;
-		}
-		$id = self::CRWL_BLACKLIST ;
-		$this->options[$id] = explode("\n", $this->options[$id]) ;
-		$this->options[$id] = array_merge($this->options[$id], $list) ;
-		$this->options[$id] = array_map('trim', $this->options[$id]) ;
-		$this->options[$id] = array_filter($this->options[$id]) ;
-		$this->options[$id] = implode("\n", $this->options[$id]) ;
-
-		// update config
-		update_option(self::OPTION_NAME, $this->options) ;
 	}
 
 	/**
@@ -423,7 +401,6 @@ class LiteSpeed_Cache_Config
 			self::CRWL_CRAWL_INTERVAL => 604800,
 			self::CRWL_THREADS => 3,
 			self::CRWL_LOAD_LIMIT => 1,
-			self::CRWL_BLACKLIST => '',
 			self::CRWL_CRON_ACTIVE => false,
 				) ;
 

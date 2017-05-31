@@ -185,6 +185,25 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 			<?php echo __('No crawler meta file generated yet', 'litespeed-cache') ; ?>
 		</p>
 		<?php endif ; ?>
+
+
+		<h3 class="litespeed-title"><?php echo __('Sitemap Generation Blacklist', 'litespeed-cache') ; ?></h3>
+
+		<form method="post" action="admin.php?page=lscache-crawler">
+			<?php $this->form_action(LiteSpeed_Cache::ACTION_BLACKLIST_SAVE); ?>
+			<p>
+				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="code litespeed-cache-blacklist"><?php echo LiteSpeed_Cache_Crawler::get_instance()->get_blacklist(); ?></textarea>
+			</p>
+
+			<p>
+				<button type="submit" class="litespeed-btn litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
+			</p>
+		</form>
+		<div class="litespeed-desc">
+			<p><?php echo sprintf(__('Current blacklist has %s item(s).', 'litespeed-cache'), LiteSpeed_Cache_Crawler::get_instance()->count_blacklist()); ?></p>
+			<p><?php echo __('All Urls which returned no-cache tags will be added here, after the initial crawling.', 'litespeed-cache'); ?></p>
+		</div>
+
 	</div>
 </div>
 

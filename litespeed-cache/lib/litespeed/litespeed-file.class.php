@@ -22,6 +22,10 @@ class Litespeed_File
 
 	public static function count_lines($filename)
 	{
+		if ( ! file_exists($filename) ) {
+			return 0 ;
+		}
+
 		$file = new SplFileObject($filename) ;
 		$file->seek(PHP_INT_MAX) ;
 		return $file->key() + 1 ;
@@ -32,7 +36,8 @@ class Litespeed_File
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
-	 * @param bool $per_line
+	 * @param int $start_line
+	 * @param int $lines
 	 */
 	public static function read($filename, $start_line = null, $lines = null)
 	{
@@ -49,12 +54,20 @@ class Litespeed_File
 			$file = new SplFileObject($filename) ;
 			$file->seek($start_line) ;
 
-			for ( $i=0 ; $i < $lines ; $i++ ) {
-				if ( $file->eof() ) {
-					break ;
+			if ( $lines === null) {
+				while ( ! $file->eof() ) {
+					$res[] = $file->fgets() ;
 				}
-				$res[] = $file->fgets() ;
 			}
+			else{
+				for ( $i=0 ; $i < $lines ; $i++ ) {
+					if ( $file->eof() ) {
+						break ;
+					}
+					$res[] = $file->fgets() ;
+				}
+			}
+
 			unset($file) ;
 			return $res ;
 		}

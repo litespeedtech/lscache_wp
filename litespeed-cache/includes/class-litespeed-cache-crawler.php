@@ -13,7 +13,9 @@ class LiteSpeed_Cache_Crawler
 {
 	private static $_instance;
 	private $_sitemap_file ;
+	private $_blacklist_file ;
 	private $_site_url ;
+	const CRWL_BLACKLIST = 'crawler_blacklist' ;
 
 	/**
 	 * Initialize crawler, assign sitemap path
@@ -32,6 +34,7 @@ class LiteSpeed_Cache_Crawler
 			$this->_sitemap_file = $sitemapPath . '/crawlermap.data' ;
 			$this->_site_url = get_option('siteurl') ;
 		}
+		$this->_blacklist_file = $this->_sitemap_file . '.blacklist' ;
 
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
 			LiteSpeed_Cache_Log::push('Crawler log: Initialized') ;
@@ -66,6 +69,87 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
+	 * Return blacklist content
+	 *
+	 * @return string
+	 */
+	public function get_blacklist()
+	{
+		return Litespeed_File::read($this->_blacklist_file) ;
+	}
+
+	/**
+	 * Return blacklist count
+	 *
+	 * @return string
+	 */
+	public function count_blacklist()
+	{
+		return Litespeed_File::count_lines($this->_blacklist_file) ;
+	}
+
+	/**
+	 * Save blacklist to file
+	 *
+	 * @return bool If saved successfully
+	 */
+	public function save_blacklist()
+	{
+		if ( !isset($_POST[self::CRWL_BLACKLIST]) ) {
+			$msg = __('Can not find any form data for blacklist', 'litespeed-cache') ;
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg) ;
+			return false;
+		}
+		$content = $_POST[self::CRWL_BLACKLIST];
+		$content = array_map('trim', explode("\n", $content));// remove space
+		$content = implode("\n", array_filter($content));
+
+		// save blacklist file
+		$ret = Litespeed_File::save($this->_blacklist_file, $content, true) ;
+		if ( $ret !== true ) {
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret) ;
+		}
+		else {
+			$msg = sprintf(
+				__('File saved successfully: %s', 'litespeed-cache'),
+				$this->_blacklist_file
+			) ;
+			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Append urls to current list
+	 *
+	 * @param  array $list The url list needs to be appended
+	 */
+	public function append_blacklist($list)
+	{
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('Crawler log: append blacklist ' . count($list)) ;
+		}
+		$ori_list = Litespeed_File::read($this->_blacklist_file) ;
+		$ori_list = explode("\n", $ori_list) ;
+		$ori_list = array_merge($ori_list, $list) ;
+		$ori_list = array_map('trim', $ori_list) ;
+		$ori_list = array_filter($ori_list) ;
+		$content = implode("\n", $ori_list) ;
+
+		// save blacklist
+		$ret = Litespeed_File::save($this->_blacklist_file, $content, true) ;
+		if ( $ret !== true ) {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('Crawler log: append blacklist failed: ' . $ret) ;
+			}
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Generate sitemap
 	 * 
 	 */
@@ -94,8 +178,7 @@ class LiteSpeed_Cache_Crawler
 		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;
 
 		// filter urls
-		$id = LiteSpeed_Cache_Config::CRWL_BLACKLIST ;
-		$blacklist = LiteSpeed_Cache::config($id) ;
+		$blacklist = Litespeed_File::read($this->_blacklist_file) ;
 		$blacklist = explode("\n", $blacklist) ;
 		$urls = array_diff($urls, $blacklist) ;
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
@@ -209,7 +292,7 @@ class LiteSpeed_Cache_Crawler
 
 		// merge blacklist
 		if ( $ret['blacklist'] ) {
-			LiteSpeed_Cache_Config::get_instance()->append_blacklist($ret['blacklist']) ;
+			$this->append_blacklist($ret['blacklist']) ;
 		}
 
 		if ( ! empty($ret['crawled']) && LiteSpeed_Cache_Log::get_enabled() ) {

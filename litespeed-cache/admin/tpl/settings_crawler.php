@@ -67,16 +67,6 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Sitemap Generation Blacklist', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_BLACKLIST); ?>
-			<div class="litespeed-desc">
-				<?php echo __('All Urls which returned no-cache tags will be added here, after the initial crawling.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
 		<th><?php echo __('Include Posts', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_POSTS); ?>

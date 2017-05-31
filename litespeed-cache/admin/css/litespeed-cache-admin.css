@@ -110,12 +110,17 @@ textarea#purgebylist{
 	vertical-align: top;
 }
 
-.litespeed-cache-purgeby-textarea{
+.litespeed-cache-purgeby-textarea,
+.litespeed-cache-blacklist{
 	margin-top: 10px;
     height: auto;
     width: 100%;
     position: relative;
     -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.litespeed-cache-blacklist{
+	max-width: 600px;
 }
 
 /* FAQ */

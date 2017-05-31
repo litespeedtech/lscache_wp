@@ -180,6 +180,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS:
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
+			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
 				if ( $_is_enabled && $_can_option && !$_is_network_admin ) {
 					self::$_action = $action ;
 				}

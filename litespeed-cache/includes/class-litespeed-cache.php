@@ -47,6 +47,7 @@ class LiteSpeed_Cache
 	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos';
 	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable';
 	const ACTION_DO_CRAWL = 'do-crawl';
+	const ACTION_BLACKLIST_SAVE = 'blacklist-save';
 
 	const CACHECTRL_NOCACHE = 0;
 	const CACHECTRL_PUBLIC = 1;
@@ -213,6 +214,11 @@ class LiteSpeed_Cache
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 				LiteSpeed_Cache_Crawler::crawl_data(true) ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
+				LiteSpeed_Cache_Crawler::get_instance()->save_blacklist() ;
+				$msg = __('Crawler blacklist is saved.', 'litespeed-cache');
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
