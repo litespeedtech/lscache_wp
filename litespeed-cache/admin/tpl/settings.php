@@ -99,7 +99,7 @@ else {
 	</h2>
 	<div class="litespeed-cache-welcome-panel">
 		<form method="post" action="options.php" id="litespeed_form_options">
-			<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" />
+			<!--input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" /-->
 
 	<?php if ($this->get_disable_all()): ?>
 			<p>

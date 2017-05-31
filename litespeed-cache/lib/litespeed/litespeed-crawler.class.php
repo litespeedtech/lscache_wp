@@ -154,7 +154,7 @@ class Litespeed_Crawler
 				// check result headers
 				foreach ( $urls as $i => $url ) {
 					// check response
-					if ( stripos(strtolower($rets[$i]), "max-age=0") !== false ) {//todo: check x-litespeed cache
+					if ( stripos(strtolower($rets[$i]), "no-cache") !== false ) {
 						$this->_blacklist[] = $url ;
 					}
 					elseif ( stripos(strtolower($rets[$i]), "HTTP/1.1 200 OK") === false ){

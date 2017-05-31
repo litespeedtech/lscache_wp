@@ -134,6 +134,8 @@ var _litespeed_dots ;
 
 		$('#litespeed_manual_trigger').click(function(event) {
 			$('#litespeed-loading-dot').before('<li>Manually Started</li>') ;
+			_litespeed_shell_interval = _litespeed_shell_interval_range[0] ;
+			litespeed_fetch_meta() ;
 		}) ;
 
 		$('#litespeed_crawler_cron_enable').click(function(event) {
@@ -220,6 +222,7 @@ function litespeed_pulse() {
 }
 
 function litespeed_fetch_meta() {
+	window.clearTimeout(_litespeed_shell_handle) ;
 	jQuery('#litespeed-loading-dot').text('') ;
 	jQuery.ajaxSetup({ cache: false }) ;
 	jQuery.getJSON(_litespeed_crawler_url, function( meta ) {
@@ -247,7 +250,7 @@ function litespeed_fetch_meta() {
 			_litespeed_adjust_interval(changed) ;
 		}
 		// display interval counting
-		_litespeed_display_interval_reset() ;
+		litespeed_display_interval_reset() ;
 		_litespeed_shell_handle = window.setTimeout(_litespeed_dynamic_timeout, _litespeed_shell_interval*1000) ;
 	}) ;
 }
@@ -274,7 +277,7 @@ function _litespeed_adjust_interval(changed) {
 function _litespeed_build_meta(meta) {
 	var string = '<li>' + litespeed_date(meta.last_update_time) + 
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.list_size +
-					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + meta.last_pos +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + (meta.last_pos*1+1) +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.last_count +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: '
 				 ;
@@ -289,11 +292,10 @@ function _litespeed_build_meta(meta) {
 }
 
 function _litespeed_dynamic_timeout() {
-	window.clearTimeout(_litespeed_shell_handle) ;
 	litespeed_fetch_meta() ;
 }
 
-function _litespeed_display_interval_reset() {
+function litespeed_display_interval_reset() {
 	window.clearInterval(_litespeed_shell_display_handle) ;
 	jQuery('.litespeed-shell-header-bar').data('num', _litespeed_shell_interval) ;
 	_litespeed_shell_display_handle = window.setInterval(_litespeed_display_interval, 1000) ;

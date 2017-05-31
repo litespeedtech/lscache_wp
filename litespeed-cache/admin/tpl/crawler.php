@@ -105,7 +105,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					<td>
 					<?php
 						if ( $meta ) {
-							echo "Size: {$meta->list_size}<br />Position: {$meta->last_pos}" ;
+							echo "Size: {$meta->list_size}<br />Position: " . ($meta->last_pos + 1) ;
 							if ( $is_running ) {
 								echo "<br /><div class='litespeed-label litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
 							}

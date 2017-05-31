@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Router
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
 				if ( LiteSpeed_Cache_Log::get_enabled() ) {
-					LiteSpeed_Cache_Log::push('LSCWP_CTRL query string - did not match admin IP') ;
+					LiteSpeed_Cache_Log::push('LSCWP_CTRL query string - did not match admin IP: ' . $action) ;
 				}
 				return ;
 			}
@@ -113,7 +113,7 @@ class LiteSpeed_Cache_Router
 					LiteSpeed_Cache::ACTION_PURGE_SINGLE,
 					LiteSpeed_Cache::ACTION_SHOW_HEADERS,)) ) {
 				if ( LiteSpeed_Cache_Log::get_enabled() ) {
-					LiteSpeed_Cache_Log::push('LSCWP_CTRL query string - did not match admin IP Actions') ;
+					LiteSpeed_Cache_Log::push('LSCWP_CTRL query string - did not match admin IP Actions: ' . $action) ;
 				}
 				return ;
 			}
