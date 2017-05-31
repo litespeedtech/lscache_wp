@@ -137,27 +137,7 @@ class LiteSpeed_Cache_Cli_Admin
 				break;
 		}
 
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options);
-
-		global $wp_settings_errors;
-
-		if (!empty($wp_settings_errors)) {
-			foreach ($wp_settings_errors as $err) {
-				WP_CLI::error($err['message']);
-			}
-			return;
-		}
-
-		$ret = update_option(LiteSpeed_Cache_Config::OPTION_NAME, $output);
-
-		if ($ret) {
-			WP_CLI::success('Options updated. Please purge the cache.');
-		}
-		else {
-			WP_CLI::error('No options updated.');
-		}
-
-
+		$this->update_options($options);
 	}
 
 	/**
@@ -194,6 +174,9 @@ class LiteSpeed_Cache_Cli_Admin
 			}
 			elseif ($value === '') {
 				$value = "''";
+			}
+			elseif ( $key == 'crawler_blacklist' ) {
+				$value = count(explode("\n", $value)) . " item(s)" ;
 			}
 			$option_out[] = array('key' => $key, 'value' => $value);
 		}
@@ -298,6 +281,14 @@ class LiteSpeed_Cache_Cli_Admin
 
 		LiteSpeed_Cache_Config::convert_options_to_input($options);
 
+		$this->update_options($options);
+	}
+
+	/**
+	 * Update options
+	 */
+	private function update_options($options)
+	{
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options);
 
 		global $wp_settings_errors;
@@ -308,9 +299,16 @@ class LiteSpeed_Cache_Cli_Admin
 			}
 			return;
 		}
-		WP_CLI::success('Options updated. Please purge the cache. New options: '
-			. print_r($output, true));
 
+		$ret = update_option(LiteSpeed_Cache_Config::OPTION_NAME, $output);
+
+		if ($ret) {
+			$output['crawler_blacklist'] = !empty($output['crawler_blacklist']) ? count(explode("\n", $output['crawler_blacklist'])) . " item(s)" : "''" ;
+			WP_CLI::success('Options updated. Please purge the cache. New options: ' . print_r($output, true));
+		}
+		else {
+			WP_CLI::error('No options updated.');
+		}
 	}
 }
 
