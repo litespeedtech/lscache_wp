@@ -220,6 +220,7 @@ class Litespeed_Crawler
 		$this->_meta['last_crawled'] = 0 ;
 		if ( $this->_meta['last_pos'] == 0 ) {
 			$this->_meta['this_full_beginning_time'] = time() ;
+			$this->_meta['list_size'] = Litespeed_File::count_lines($this->_sitemap_file) ;
 		}
 		$this->save_meta() ;
 	}
