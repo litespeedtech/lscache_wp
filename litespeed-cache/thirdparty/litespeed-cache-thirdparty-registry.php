@@ -23,6 +23,7 @@ include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-nextgengal
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-theme-my-login.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-woocommerce.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wp-polls.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wplister.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wptouch.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-yith-wishlist.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wpforo.php');

@@ -15,6 +15,7 @@ $known_compat = array(
 	'WP Touch',
 	'Theme My Login',
 	'wpForo',
+	'WPLister',
 );
 
 $known_uncompat = array();

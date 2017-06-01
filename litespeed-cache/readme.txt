@@ -70,6 +70,7 @@ Additional plugin features:
 * [WP Touch](https://wordpress.org/plugins/wptouch/)
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
 * [wpForo](https://wordpress.org/plugins/wpforo/)
+* [WPLister](https://www.wplab.com/plugins/wp-lister/)
 
 = Known Uncompatible Plugins =
 
