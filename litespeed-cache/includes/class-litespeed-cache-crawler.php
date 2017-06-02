@@ -21,6 +21,7 @@ class LiteSpeed_Cache_Crawler
 	 * Initialize crawler, assign sitemap path
 	 *
 	 * @since    1.1.0
+	 * @access private
 	 */
 	private function __construct()
 	{
@@ -44,6 +45,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Return crawler meta file
 	 * 
+	 * @since    1.1.0
+	 * @access public
 	 * @return string Json data file path
 	 */
 	public function get_crawler_json_path()
@@ -58,6 +61,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Return crawler meta info
 	 * 
+	 * @since    1.1.0
+	 * @access public
 	 * @return array Meta array
 	 */
 	public function get_meta()
@@ -71,6 +76,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Return blacklist content
 	 *
+	 * @since    1.1.0
+	 * @access public
 	 * @return string
 	 */
 	public function get_blacklist()
@@ -81,6 +88,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Return blacklist count
 	 *
+	 * @since    1.1.0
+	 * @access public
 	 * @return string
 	 */
 	public function count_blacklist()
@@ -91,6 +100,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Save blacklist to file
 	 *
+	 * @since    1.1.0
+	 * @access public
 	 * @return bool If saved successfully
 	 */
 	public function save_blacklist()
@@ -123,6 +134,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Append urls to current list
 	 *
+	 * @since    1.1.0
+	 * @access public
 	 * @param  array $list The url list needs to be appended
 	 */
 	public function append_blacklist($list)
@@ -152,6 +165,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Generate sitemap
 	 * 
+	 * @since    1.1.0
+	 * @access public
 	 */
 	public function generate_sitemap()
 	{
@@ -171,6 +186,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Generate the sitemap
 	 * 
+	 * @since    1.1.0
+	 * @access protected
 	 * @return string|true 
 	 */
 	protected function _generate_sitemap()
@@ -185,7 +202,13 @@ class LiteSpeed_Cache_Crawler
 			LiteSpeed_Cache_Log::push('Crawler log: Generate sitemap') ;
 		}
 
-		return Litespeed_File::save($this->_sitemap_file, implode("\n", $urls), true) ;
+		$ret = Litespeed_File::save($this->_sitemap_file, implode("\n", $urls), true) ;
+
+		// refresh list size in meta
+		$crawler = new Litespeed_Crawler($this->_sitemap_file) ;
+		$crawler->refresh_list_size() ;
+
+		return $ret ;
 	}
 
 	/**
@@ -208,6 +231,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Create reset pos file
 	 * 
+	 * @since    1.1.0
+	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -232,6 +257,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Proceed crawling
 	 *
+	 * @since    1.1.0
+	 * @access public
 	 * @param bool $force If ignore whole crawling interval
 	 */
 	public static function crawl_data($force = false)
@@ -248,8 +275,8 @@ class LiteSpeed_Cache_Crawler
 	 * Crawling start
 	 *
 	 * @since    1.1.0
-	 * @param bool $force If ignore whole crawling interval
 	 * @access   protected
+	 * @param bool $force If ignore whole crawling interval
 	 */
 	protected function _crawl_data($force)
 	{
@@ -319,6 +346,8 @@ class LiteSpeed_Cache_Crawler
 	/**
 	 * Output info and exit
 	 * 
+	 * @since    1.1.0
+	 * @access protected
 	 * @param  string $error Error info
 	 */
 	protected function output($msg)

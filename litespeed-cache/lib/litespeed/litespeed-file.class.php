@@ -56,7 +56,8 @@ class Litespeed_File
 
 			if ( $lines === null) {
 				while ( ! $file->eof() ) {
-					$res[] = $file->fgets() ;
+					$res[] = rtrim($file->current(), "\n") ;
+					$file->next() ;
 				}
 			}
 			else{
@@ -64,7 +65,8 @@ class Litespeed_File
 					if ( $file->eof() ) {
 						break ;
 					}
-					$res[] = $file->fgets() ;
+					$res[] = rtrim($file->current(), "\n") ;
+					$file->next() ;
 				}
 			}
 

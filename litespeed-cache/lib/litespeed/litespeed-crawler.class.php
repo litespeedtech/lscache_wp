@@ -20,34 +20,76 @@ class Litespeed_Crawler
 	protected $_cur_thread_time ;
 	protected $_cur_threads = -1 ;
 
-	const CHUNKS = 10;//10000 ;
+	const CHUNKS = 10000 ;
 
+	/**
+	 * Set load limit
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @param  string $sitemap_file Sitemap file location
+	 */
 	public function __construct($sitemap_file)
 	{
 		$this->_sitemap_file = $sitemap_file ;
 		$this->_meta_file = $this->_sitemap_file . '.meta' ;
 	}
 
+	/**
+	 * Set domain url
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @param  string $val The prefix url
+	 */
 	public function set_base_url($val)
 	{
 		$this->_baseUrl = $val ;
 	}
 
+	/**
+	 * Set run delay
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @param  int $val Delay microseconds
+	 */
 	public function set_run_delay($val)
 	{
 		$this->_run_delay = $val ;
 	}
 
+	/**
+	 * Set load limit
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @param  int $val Run duration in seconds
+	 */
 	public function set_run_duration($val)
 	{
 		$this->_run_duration = $val ;
 	}
 
+	/**
+	 * Set load limit
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @param  int $val Threads limit in a time
+	 */
 	public function set_threads_limit($val)
 	{
 		$this->_threads_limit = $val ;
 	}
 
+	/**
+	 * Set load limit
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @param  int $val Server load limit to be checked before crawling
+	 */
 	public function set_load_limit($val)
 	{
 		$this->_load_limit = $val ;
@@ -56,6 +98,8 @@ class Litespeed_Crawler
 	/**
 	 * Get if last crawler touched end
 	 *
+	 * @since  1.1.0
+	 * @access public
 	 * @return bool|int		False or last ended time
 	 */
 	public function get_done_status()
@@ -67,8 +111,26 @@ class Litespeed_Crawler
 	}
 
 	/**
+	 * Refresh list_size in meta
+	 *
+	 * @since  1.1.0
+	 * @access public
+	 * @return boolean True if succeeded, false otherwise
+	 */
+	public function refresh_list_size()
+	{
+		if ( $this->read_meta() === true ) {
+			$this->_meta['list_size'] = Litespeed_File::count_lines($this->_sitemap_file) ;
+			$this->save_meta() ;
+		}
+		return false ;
+	}
+
+	/**
 	 * Create reset pos file
 	 *
+	 * @since  1.1.0
+	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -79,6 +141,8 @@ class Litespeed_Crawler
 	/**
 	 * Start crawler
 	 *
+	 * @since  1.1.0
+	 * @access public
 	 * @return string|bool crawled result
 	 */
 	public function engine_start()
@@ -134,6 +198,8 @@ class Litespeed_Crawler
 	/**
 	 * Run crawler
 	 *
+	 * @since  1.1.0
+	 * @access private
 	 * @param  array $curlOptions Curl options
 	 * @return array              array('error', 'blacklist')
 	 */
@@ -211,6 +277,9 @@ class Litespeed_Crawler
 
 	/**
 	 * Mark running status
+	 *
+	 * @since  1.1.0
+	 * @access protected
 	 */
 	protected function _prepare_running()
 	{
@@ -228,6 +297,8 @@ class Litespeed_Crawler
 	/**
 	 * Terminate crawling
 	 *
+	 * @since  1.1.0
+	 * @access protected
 	 * @param  string $end_reason The reason to terminate
 	 */
 	protected function _terminate_running($end_reason)
@@ -246,6 +317,9 @@ class Litespeed_Crawler
 
 	/**
 	 * Return crawler result
+	 *
+	 * @since  1.1.0
+	 * @access protected
 	 * @param  string $end_reason Reason to end
 	 * @return array             The results of returning
 	 */
@@ -261,6 +335,9 @@ class Litespeed_Crawler
 
 	/**
 	 * Adjust threads dynamically
+	 *
+	 * @since  1.1.0
+	 * @access protected
 	 */
 	protected function _adjust_current_threads()
 	{
@@ -313,6 +390,8 @@ class Litespeed_Crawler
 	/**
 	 * Send multi curl requests
 	 *
+	 * @since  1.1.0
+	 * @access protected
 	 * @param  array $urls    The url lists to send to
 	 * @param  array $options Curl options
 	 * @return array          Curl results
@@ -352,12 +431,13 @@ class Litespeed_Crawler
 	}
 
 	/**
-	* Get curl_options
-	*
-	* @param    string $ua as user-agent
-	* @return   options array
-	* @access   private
-	*/
+	 * Get curl_options
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 * @param    string $ua as user-agent
+	 * @return   options array
+	 */
 	private function _get_curl_options($ua = '')
 	{
 		$referer = null ;
@@ -401,6 +481,8 @@ class Litespeed_Crawler
 	/**
 	 * Save existing meta
 	 *
+	 * @since  1.1.0
+	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function save_meta()
@@ -414,6 +496,8 @@ class Litespeed_Crawler
 	/**
 	 * Read existing meta
 	 *
+	 * @since  1.1.0
+	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function read_meta()
