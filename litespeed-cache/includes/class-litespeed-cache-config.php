@@ -101,6 +101,7 @@ class LiteSpeed_Cache_Config
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.0
+	 * @access private
 	 */
 	private function __construct()
 	{
@@ -113,9 +114,9 @@ class LiteSpeed_Cache_Config
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
 
-		if (isset($options[self::OPID_CHECK_ADVANCEDCACHE])
+		if ( isset($options[self::OPID_CHECK_ADVANCEDCACHE])
 			&& $options[self::OPID_CHECK_ADVANCEDCACHE] === false
-			&& !defined('LSCACHE_ADV_CACHE')) {
+			&& !defined('LSCACHE_ADV_CACHE') ) {
 			define('LSCACHE_ADV_CACHE', true) ;
 		}
 
@@ -131,14 +132,17 @@ class LiteSpeed_Cache_Config
 	/**
 	 * Enable/Disable cron task
 	 *
+	 * @since 1.1.0
+	 * @access public
 	 */
 	public function cron_enable()
 	{
 		$id = self::CRWL_CRON_ACTIVE ;
 		$this->options[$id] = !$this->options[$id] ;
 		if (LiteSpeed_Cache_Log::get_enabled()) {
-			LiteSpeed_Cache_Log::push('Crawler cron log: ' . ($this->options[$id] ? 'enabled' : 'disalbed' ) ) ;
+			LiteSpeed_Cache_Log::push('Crawler log: Crawler is ' . ($this->options[$id] ? 'enabled' : 'disabled' ) ) ;
 		}
+
 		// update config
 		update_option(self::OPTION_NAME, $this->options) ;
 
@@ -151,6 +155,9 @@ class LiteSpeed_Cache_Config
 	/**
 	 * Update cron status
 	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @param array $options The options to check if cron should be enabled
 	 */
 	public function cron_update($options = false)
 	{
@@ -183,6 +190,7 @@ class LiteSpeed_Cache_Config
 	 *
 	 * @since 1.1.0
 	 * @access public
+	 * @param array $schedules WP Hook
 	 */
 	public function lscache_cron_filter($schedules)
 	{
@@ -525,36 +533,30 @@ class LiteSpeed_Cache_Config
 	 *
 	 * The only difference is the checkboxes.
 	 *
-	 * @access public
 	 * @since 1.0.15
+	 * @access public
 	 * @param array $options The options array to port to input format.
+	 * @return array $options The options array with input format.
 	 */
-	public static function convert_options_to_input(&$options)
+	public static function convert_options_to_input($options)
 	{
-		$checkboxes = array(
-			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
-			LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
-			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
-			LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
-			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-			LiteSpeed_Cache_Config::OPID_CACHE_RES,
-			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
-		) ;
-
+		foreach ( $options as $key => $val ) {
+			if ( $val === true ) {
+				$options[$key] = self::VAL_ON ;
+			}
+			elseif ( $val === false ) {
+				$options[$key] = self::VAL_OFF ;
+			}
+		}
 		if (isset($options[self::OPID_PURGE_BY_POST])) {
 			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
 
 			foreach ($purge_opts as $purge_opt) {
-				$options['purge_' . $purge_opt] = true ;
+				$options['purge_' . $purge_opt] = self::VAL_ON ;
 			}
 		}
 
-		foreach ($checkboxes as $checkbox) {
-			if ((isset($options[$checkbox])) && ($options[$checkbox])) {
-				$options[$checkbox] = true ;
-			}
-		}
-
+		return $options;
 	}
 
 	/**

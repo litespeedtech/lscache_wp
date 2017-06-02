@@ -156,7 +156,7 @@ class LiteSpeed_Cache
 		// load cron task for crawler
 		if ( $this->config(LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE) ) {
 			// keep cron intval filter
-			LiteSpeed_Cache_Config::get_instance()->cron_schedule() ;
+			$this->config->cron_schedule() ;
 
 			// cron hook
 			add_action(LiteSpeed_Cache_Config::CRON_ACTION_HOOK, 'LiteSpeed_Cache_Crawler::crawl_data') ;
@@ -207,8 +207,7 @@ class LiteSpeed_Cache
 				break;
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
-				add_action('wp_ajax_cron_enable', array(LiteSpeed_Cache_Config::get_instance(), 'cron_enable'));
-				add_action('wp_ajax_nopriv_cron_enable', array(LiteSpeed_Cache_Config::get_instance(), 'cron_enable'));
+				$this->config->cron_enable();
 				break;
 
 			// Handle the ajax request to proceed crawler manually by admin

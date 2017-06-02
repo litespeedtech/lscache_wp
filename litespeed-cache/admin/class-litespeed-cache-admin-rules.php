@@ -512,7 +512,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$has_error = false;
 
 		foreach ($val_check as $opt) {
-			$input[$opt] = LiteSpeed_Cache_Admin_Settings::is_checked($input[$opt]);
+			$input[$opt] = isset($input[$opt]) && LiteSpeed_Cache_Admin_Settings::is_checked($input[$opt]);
 			if ( $input[$opt] || $options[$opt] != $input[$opt] ) {
 				$diff[$opt] = $input[$opt];
 			}

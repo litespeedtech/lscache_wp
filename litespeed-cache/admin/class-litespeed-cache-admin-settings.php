@@ -190,13 +190,13 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 		if(!$options[$id]){
 			LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_LOGIN);
 		}
@@ -428,16 +428,16 @@ class LiteSpeed_Cache_Admin_Settings
 		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC);
 
 		$id = LiteSpeed_Cache_Config::CRWL_POSTS;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_PAGES;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_CATS;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_TAGS;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT;
 		if (isset($input[$id])) {
@@ -532,6 +532,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Callback function that will validate any changes made in the settings
 	 * page.
 	 *
+	 * NOTE: Anytime that validate_plugin_settings is called, `convert_options_to_input` must be done first if not from option page
+	 *
 	 * @since 1.0.0
 	 * @access public
 	 * @param array $input The configurations selected by the admin when
@@ -540,6 +542,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public function validate_plugin_settings($input)
 	{
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			LiteSpeed_Cache_Log::push('settings->validate_plugin_settings called') ;
+		}
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options();
 		$errors = array();
 
@@ -591,8 +596,20 @@ class LiteSpeed_Cache_Admin_Settings
 			return $options;
 		}
 
+		$cron_changed = false ;
+		if ( LiteSpeed_Cache_Router::is_cli() ) {
+			$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
+			$cron_val = $options[$id] ;
+			// assign crawler_cron_active to $options if exists in $input separately for CLI
+			// This has to be specified cos crawler cron activation is not set in admin setting page
+			$options[$id] = isset($input[$id]) && self::is_checked($input[$id]) ;
+			if ( $cron_val != $options[$id] ) {
+				$cron_changed = true ;
+			}
+		}
+
 		// check if need to enable crawler cron
-		if ( $input[LiteSpeed_Cache_Config::OPID_ENABLED] === 'changed' ) {
+		if ( $input[LiteSpeed_Cache_Config::OPID_ENABLED] === 'changed' || $cron_changed ) {
 			LiteSpeed_Cache_Config::get_instance()->cron_update($options) ;
 		}
 
@@ -614,7 +631,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$errors = array();
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED;
-		$network_enabled = self::is_checked($input[$id]);
+		$network_enabled = isset($input[$id]) && self::is_checked($input[$id]);
 		if ($options[$id] != $network_enabled) {
 			$options[$id] = $network_enabled;
 			if ($network_enabled) {
@@ -632,13 +649,13 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY;
 		$orig_primary = $options[$id];
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 		if ($orig_primary != $options[$id]) {
 			LiteSpeed_Cache::get_instance()->purge_all();
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE;
-		$options[$id] = self::is_checked($input[$id]);
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
 		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);

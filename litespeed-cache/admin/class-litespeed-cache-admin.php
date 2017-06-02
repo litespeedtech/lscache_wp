@@ -67,8 +67,10 @@ class LiteSpeed_Cache_Admin
 			return;
 		}
 
-		// Save setting
-		if (!is_network_admin()) {
+		// Save setting from admin settings page
+		// NOTE: cli will call `validate_plugin_settings` manually. Cron activation doesn't need to validate
+		global $pagenow ;
+		if ( !is_network_admin() && $pagenow === 'options.php' ) {
 			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME,
 				array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings')
 			);
@@ -278,9 +280,9 @@ class LiteSpeed_Cache_Admin
 	{
 
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options';
-		if ((defined('LSCACHE_ADV_CACHE') && LSCACHE_ADV_CACHE)
-				|| !current_user_can($capability)) {
-			if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) === false) {
+		if ( (defined('LSCACHE_ADV_CACHE') && LSCACHE_ADV_CACHE)
+				|| !current_user_can($capability) ) {
+			if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) === false ) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
 				LiteSpeed_Cache_Activation::try_copy_advanced_cache();
@@ -289,7 +291,7 @@ class LiteSpeed_Cache_Admin
 			return;
 		}
 
-		if (LiteSpeed_Cache_Activation::try_copy_advanced_cache()) {
+		if ( LiteSpeed_Cache_Activation::try_copy_advanced_cache() ) {
 			return;
 		}
 

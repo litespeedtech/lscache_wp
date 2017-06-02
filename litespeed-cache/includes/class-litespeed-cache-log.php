@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Log
 	 * Enable debug log
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 */
 	public static function set_enabled()
 	{
@@ -41,6 +42,7 @@ class LiteSpeed_Cache_Log
 	 * Get debug log status
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 */
 	public static function get_enabled()
 	{
@@ -57,7 +59,8 @@ class LiteSpeed_Cache_Log
 	 */
 	private static function format_message($msg)
 	{
-		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'), $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], LSCWP_LOG_TAG, $msg);
+		$port = isset($_SERVER['REMOTE_PORT']) ? $_SERVER['REMOTE_PORT'] : '' ;
+		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'), $_SERVER['REMOTE_ADDR'], $port, LSCWP_LOG_TAG, $msg);
 		return $formatted;
 	}
 

@@ -6,42 +6,36 @@
 class LiteSpeed_Cache_Cli_Admin
 {
 
-	private static $checkboxes;
-	private static $purges;
+	private static $checkboxes ;
+	private static $purges ;
 
 	public function __construct()
 	{
-		self::$checkboxes =
-			array(
-				LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
-				LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
-				LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
-				LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
-				LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-				LiteSpeed_Cache_Config::OPID_CACHE_RES,
-				LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
-			);
-		self::$purges =
-			array(
-				'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES =>
-					LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_FRONT_PAGE =>
-					LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_HOME_PAGE =>
-					LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_AUTHOR =>
-					LiteSpeed_Cache_Config::PURGE_AUTHOR,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_YEAR =>
-					LiteSpeed_Cache_Config::PURGE_YEAR,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_MONTH =>
-					LiteSpeed_Cache_Config::PURGE_MONTH,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_DATE =>
-					LiteSpeed_Cache_Config::PURGE_DATE,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_TERM =>
-					LiteSpeed_Cache_Config::PURGE_TERM,
-				'purge_' . LiteSpeed_Cache_Config::PURGE_POST_TYPE =>
-					LiteSpeed_Cache_Config::PURGE_POST_TYPE,
-			);
+		self::$checkboxes = array(
+			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
+			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
+			LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
+			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
+			LiteSpeed_Cache_Config::OPID_CACHE_RES,
+			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
+			LiteSpeed_Cache_Config::CRWL_POSTS,
+			LiteSpeed_Cache_Config::CRWL_PAGES,
+			LiteSpeed_Cache_Config::CRWL_CATS,
+			LiteSpeed_Cache_Config::CRWL_TAGS,
+			LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE,
+		);
+		self::$purges = array(
+			'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES => LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_FRONT_PAGE => LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_HOME_PAGE => LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_AUTHOR => LiteSpeed_Cache_Config::PURGE_AUTHOR,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_YEAR => LiteSpeed_Cache_Config::PURGE_YEAR,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_MONTH => LiteSpeed_Cache_Config::PURGE_MONTH,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_DATE => LiteSpeed_Cache_Config::PURGE_DATE,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_TERM => LiteSpeed_Cache_Config::PURGE_TERM,
+			'purge_' . LiteSpeed_Cache_Config::PURGE_POST_TYPE => LiteSpeed_Cache_Config::PURGE_POST_TYPE,
+		);
 	}
 
 	/**
@@ -74,7 +68,7 @@ class LiteSpeed_Cache_Cli_Admin
 			return;
 		}
 
-		LiteSpeed_Cache_Config::convert_options_to_input($options);
+		$options = LiteSpeed_Cache_Config::convert_options_to_input($options);
 
 		switch ($key) {
 			case LiteSpeed_Cache_Config::OPID_VERSION:
@@ -95,9 +89,14 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_CACHE_FAVICON:
 			case LiteSpeed_Cache_Config::OPID_CACHE_RES:
 			case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
+			case LiteSpeed_Cache_Config::CRWL_POSTS:
+			case LiteSpeed_Cache_Config::CRWL_PAGES:
+			case LiteSpeed_Cache_Config::CRWL_CATS:
+			case LiteSpeed_Cache_Config::CRWL_TAGS:
+			case LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE:
 				//checkbox
 				if ($val === 'true') {
-					$options[$key] = true;
+					$options[$key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
 				elseif ($val === 'false') {
 					unset($options[$key]);
@@ -110,8 +109,8 @@ class LiteSpeed_Cache_Cli_Admin
 
 			case LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST:
 				$enable_key = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED;
-				if (!$options[$enable_key]) {
-					$options[$enable_key] = $enable_key;
+				if ( !isset($options[$enable_key]) || ! $options[$enable_key] ) {
+					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
 				$options[$key] = $val;
 				break;
@@ -120,7 +119,7 @@ class LiteSpeed_Cache_Cli_Admin
 				if (substr($key, 0, 6) === 'purge_') {
 					if ($val === 'true') {
 						WP_CLI::line('key is ' . $key . ', val is ' . $val);
-						$options[$key] = true;
+						$options[$key] = LiteSpeed_Cache_Config::VAL_ON ;
 					}
 					elseif ($val === 'false') {
 						unset($options[$key]);
@@ -174,9 +173,6 @@ class LiteSpeed_Cache_Cli_Admin
 			}
 			elseif ($value === '') {
 				$value = "''";
-			}
-			elseif ( $key == 'crawler_blacklist' ) {
-				$value = count(explode("\n", $value)) . " item(s)" ;
 			}
 			$option_out[] = array('key' => $key, 'value' => $value);
 		}
@@ -279,13 +275,17 @@ class LiteSpeed_Cache_Cli_Admin
 
 		$options = LiteSpeed_Cache_Config::option_diff($default, $options);
 
-		LiteSpeed_Cache_Config::convert_options_to_input($options);
+		$options = LiteSpeed_Cache_Config::convert_options_to_input($options);
 
 		$this->update_options($options);
 	}
 
 	/**
 	 * Update options
+	 *
+	 * @access private
+	 * @since 1.1.0
+	 * @param array $options The options array to store
 	 */
 	private function update_options($options)
 	{
@@ -303,7 +303,6 @@ class LiteSpeed_Cache_Cli_Admin
 		$ret = update_option(LiteSpeed_Cache_Config::OPTION_NAME, $output);
 
 		if ($ret) {
-			$output['crawler_blacklist'] = !empty($output['crawler_blacklist']) ? count(explode("\n", $output['crawler_blacklist'])) . " item(s)" : "''" ;
 			WP_CLI::success('Options updated. Please purge the cache. New options: ' . print_r($output, true));
 		}
 		else {
