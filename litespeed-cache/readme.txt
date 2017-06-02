@@ -65,6 +65,7 @@ Additional plugin features:
 * [NextGen Gallery](https://wordpress.org/plugins/nextgen-gallery/)
 * <a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
 * Aelia CurrencySwitcher
+* [Fast Velocity Minify](https://wordpress.org/plugins/fast-velocity-minify/) - Thanks Raul Peixoto!
 * [Autoptimize](https://wordpress.org/plugins/autoptimize/)
 * [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
 * [WP Touch](https://wordpress.org/plugins/wptouch/)

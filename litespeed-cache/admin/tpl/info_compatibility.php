@@ -10,6 +10,7 @@ $known_compat = array(
 	'Wordfence Security',
 	'NextGen Gallery',
 	'Aelia CurrencySwitcher',
+	'Fast Velocity Minify, thanks to Raul Peixoto',
 	'Autoptimize',
 	'Better WP Minify',
 	'WP Touch',
