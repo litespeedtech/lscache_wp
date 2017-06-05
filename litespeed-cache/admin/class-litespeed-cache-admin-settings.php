@@ -361,20 +361,20 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function validate_debug($input, &$options, &$errors)
 	{
-		$pattern = "/[\s,]+/";
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS;
 		if (isset($input[$id])) {
-			$admin_ips = trim($input[$id]);
+			$admin_ips = array_map('trim', explode("\n", trim($input[$id]))) ;
+			$admin_ips = array_filter($admin_ips) ;
 			$has_err = false;
 			if ($admin_ips) {
-				$ips = preg_split($pattern, $admin_ips, null, PREG_SPLIT_NO_EMPTY);
-				foreach ($ips as $ip) {
+				foreach ($admin_ips as $ip) {
 					if (!WP_Http::is_ip_address($ip)) {
 						$has_err = true;
 						break;
 					}
 				}
 			}
+			$admin_ips = implode("\n", $admin_ips) ;
 
 			if ($has_err) {
 				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_ADMIN_IP_INV);
@@ -387,17 +387,18 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS;
 		if (isset($input[$id])) {
 			// this feature has not implemented yet
-			$test_ips = trim($input[$id]);
+			$test_ips = array_map('trim', explode("\n", trim($input[$id]))) ;
+			$test_ips = array_filter($test_ips) ;
 			$has_err = false;
 			if ($test_ips) {
-				$ips = preg_split($pattern, $test_ips, null, PREG_SPLIT_NO_EMPTY);
-				foreach ($ips as $ip) {
+				foreach ($test_ips as $ip) {
 					if (!WP_Http::is_ip_address($ip)) {
 						$has_err = true;
 						break;
 					}
 				}
 			}
+			$test_ips = implode("\n", $test_ips) ;
 
 			if ($has_err) {
 				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TEST_IP_INV);

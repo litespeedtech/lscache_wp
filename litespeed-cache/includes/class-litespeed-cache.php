@@ -121,10 +121,6 @@ class LiteSpeed_Cache
 	 */
 	public function init()
 	{
-		if( !empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY]) ) {
-			$this->cachectrl = self::CACHECTRL_NOCACHE ;
-		}
-
 		if( is_admin() ) {
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
@@ -885,6 +881,10 @@ class LiteSpeed_Cache
 		// logged_in users already excluded, no hook added
 		$method = $_SERVER["REQUEST_METHOD"] ;
 		$conf = $this->config;
+
+		if( !empty($_REQUEST[self::ACTION_KEY]) ) {
+			return $this->no_cache_for('Query String Action') ;
+		}
 
 		if ( 'GET' !== $method ) {
 			return $this->no_cache_for('not GET method') ;
