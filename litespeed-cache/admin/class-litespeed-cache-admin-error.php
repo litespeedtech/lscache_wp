@@ -65,8 +65,8 @@ class LiteSpeed_Cache_Admin_Error
 	/**
 	 * Get the error message by code.
 	 *
-	 * @access public
 	 * @since 1.0.15
+	 * @access public
 	 * @param int $err_code The error code to retrieve.
 	 * @return string The error message if matching, else an empty string.
 	 */

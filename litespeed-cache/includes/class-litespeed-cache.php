@@ -182,6 +182,7 @@ class LiteSpeed_Cache
 	 * Run frontend actions
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 */
 	public function proceed_action($action)
 	{
@@ -803,6 +804,7 @@ class LiteSpeed_Cache
 	 * Checks if the user is logged in. If the user is logged in, does an
 	 * additional check to make sure it's using the correct login cookie.
 	 *
+	 * @access private
 	 * @return boolean True if logged in, false otherwise.
 	 */
 	private function check_user_logged_in()

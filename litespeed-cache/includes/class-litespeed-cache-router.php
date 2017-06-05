@@ -23,6 +23,7 @@ class LiteSpeed_Cache_Router
 	 * Check action
 	 * 
 	 * @since 1.1.0
+	 * @access public
 	 * @return string
 	 */
 	public static function get_action()
@@ -42,6 +43,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is cli usage
 	 * 
 	 * @since 1.1.0
+	 * @access public
 	 * @return boolean
 	 */
 	public static function is_cli()
@@ -56,6 +58,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is ajax call
 	 * 
 	 * @since 1.1.0
+	 * @access public
 	 * @return boolean
 	 */
 	public static function is_ajax()
@@ -70,6 +73,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is admin ip
 	 * 
 	 * @since 1.1.0
+	 * @access public
 	 * @return boolean
 	 */
 	public static function is_admin_ip()
@@ -84,7 +88,9 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Check privilege and nonce for the action
+	 *
 	 * @since 1.1.0
+	 * @access private
 	 */
 	private function verify_action()
 	{
@@ -197,7 +203,9 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Verify nonce
+	 *
 	 * @since 1.1.0
+	 * @access private
 	 * @param  string $action
 	 * @return bool
 	 */
@@ -213,7 +221,9 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Check if the ip is in the range
+	 *
 	 * @since 1.1.0
+	 * @access private
 	 * @param  string $ip_list IP list
 	 * @return bool
 	 */
@@ -240,7 +250,9 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Get client ip
+	 *
 	 * @since 1.1.0
+	 * @access private
 	 * @return string
 	 */
 	private function get_ip()

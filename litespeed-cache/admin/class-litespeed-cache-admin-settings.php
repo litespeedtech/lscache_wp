@@ -698,6 +698,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for checkbox (enabled/disabled)
 	 *
 	 * @since  1.1.0
+	 * @access public
 	 * @param int $val The checkbox value
 	 * @return bool Filtered value
 	 */
@@ -716,6 +717,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for radio (enabled/disabled/notset)
 	 *
 	 * @since  1.1.0
+	 * @access public
 	 * @param int $val The radio value
 	 * @return int Filtered value
 	 */

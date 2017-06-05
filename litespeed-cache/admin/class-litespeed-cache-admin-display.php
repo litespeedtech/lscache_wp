@@ -74,6 +74,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * Load LiteSpeed assets
 	 *
 	 * @since    1.1.0
+	 * @access public
+	 * @param  array $hook WP hook
 	 */
 	public function load_assets($hook)
 	{
@@ -103,6 +105,8 @@ class LiteSpeed_Cache_Admin_Display
 	/**
 	 * Output litespeed form info
 	 *
+	 * @since    1.1.0
+	 * @access public
 	 * @param  string $action
 	 */
 	public function form_action($action)
@@ -116,6 +120,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Register the admin menu display.
 	 *
 	 * @since    1.0.0
+	 * @access public
 	 */
 	public function register_admin_menu()
 	{
@@ -165,6 +170,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.14
+	 * @access public
 	 */
 	public function enqueue_style()
 	{
@@ -177,6 +183,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
+	 * @access public
 	 */
 	public function enqueue_scripts()
 	{
@@ -248,6 +255,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Hooked to wp_before_admin_bar_render.
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
+	 * @access public
 	 * @global WP_Admin_Bar $wp_admin_bar
 	 * @global string $pagenow
 	 */
@@ -269,6 +277,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * Assumes user capabilities are already checked.
 	 *
+	 * @access public
 	 * @param string $action The LSCWP_CTRL action to do in the url.
 	 * @param string $ajax_action AJAX call's action
 	 * @return string The built url.
@@ -499,6 +508,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display notices and errors in dashboard
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 */
 	public function display_messages()
 	{
@@ -516,6 +526,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Check if has new messages
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 */
 	public function check_messages()
 	{
@@ -785,7 +796,10 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a textarea
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 * @param  string $id
+	 * @param  string $val Value of input
+	 * @param  boolean $disabled If this input is disabled or not
 	 */
 	public function build_textarea($id, $val = null, $disabled = false)
 	{
@@ -802,6 +816,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a text input field
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 * @param  string $id
 	 * @param  string $style Appending styles
 	 */
@@ -824,6 +839,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a switch div html snippet
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 * @param  string $id
 	 */
 	public function build_switch($id, $disabled = false, $return = false)
@@ -847,6 +863,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a checkbox html snippet
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 * @param  string $id
 	 * @param  string $title
 	 * @param  bool $checked
@@ -866,6 +883,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a radio input html codes and output
 	 *
 	 * @since 1.1.0
+	 * @access public
 	 * @param  string $id
 	 * @param  string $val     Default value of this input
 	 * @param  string $txt     Title of this input

@@ -18,6 +18,9 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 	/**
 	 * Instantiate the class
+	 *
+	 * @since 1.1.0
+	 * @access private
 	 */
 	private function __construct()
 	{
