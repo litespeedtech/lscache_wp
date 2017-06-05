@@ -49,7 +49,7 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Threads', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify Number of Threads to use while crawling.', 'litespeed-cache'); ?>
 			</div>
