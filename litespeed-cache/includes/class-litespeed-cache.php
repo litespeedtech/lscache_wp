@@ -189,6 +189,10 @@ class LiteSpeed_Cache
 				$this->cachectrl = LiteSpeed_Cache::CACHECTRL_PURGE;
 				break;
 
+			case self::ACTION_SHOW_HEADERS:
+				$this->cachectrl |= self::CACHECTRL_SHOWHEADERS;
+				break;
+
 			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
 				$this->cachectrl = LiteSpeed_Cache::CACHECTRL_PURGESINGLE;
 				break;
