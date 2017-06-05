@@ -945,8 +945,7 @@ class LiteSpeed_Cache
 		}
 
 		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
-		if (( ! empty($excludes))
-			&& (has_category(explode(',', $excludes)))) {
+		if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
 			return $this->no_cache_for('Admin configured Category Do not cache.');
 		}
 

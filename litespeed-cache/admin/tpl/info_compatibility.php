@@ -17,6 +17,7 @@ $known_compat = array(
 	'Theme My Login',
 	'wpForo',
 	'WPLister',
+	'Avada',
 );
 
 $known_uncompat = array();

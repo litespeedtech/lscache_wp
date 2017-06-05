@@ -41,7 +41,7 @@ if (!defined('WPINC')) die;
 	<ol>
 		<li><?php echo __('If the Category ID is not found, the name will be removed on save.', 'litespeed-cache'); ?></li>
 		<li><?php echo sprintf(__('e.g. to exclude %1$s, insert %2$s', 'litespeed-cache'),
-				'<code style="font-size: 11px;">http://www.example.com/category/category/category-id/</code>', 'category-id'); ?></li>
+				'<code style="font-size: 11px;">http://www.example.com/category/category-id/</code>', 'category-id'); ?></li>
 	</ol>
 </div>
 <div class="litespeed-desc">

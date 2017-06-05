@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, cache, performance, optimization, wp-cache, busting, wordpress cache busting, litespeed, http2, varnish, widget, litespeed web server, lsws, availability, pagespeed, woocommerce, bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite, scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize, wp-super-cache, w3total cache, w3totalcache, w3 total cache, wp super cache, wp rocket
 Requires at least: 4.0
-Tested up to: 4.7.3
-Stable tag: 1.0.16
+Tested up to: 4.7.4
+Stable tag: 1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -72,6 +72,7 @@ Additional plugin features:
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
 * [wpForo](https://wordpress.org/plugins/wpforo/)
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
+* [Avada](https://avada.theme-fusion.com/)
 
 = Known Uncompatible Plugins =
 

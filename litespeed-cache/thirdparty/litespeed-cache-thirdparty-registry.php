@@ -27,6 +27,7 @@ include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wplister.p
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wptouch.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-yith-wishlist.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wpforo.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-avada.php');
 
 // This plugin's integration is sub optimal. Commented out until they use
 // DOING_AJAX or provide a better alternative.
