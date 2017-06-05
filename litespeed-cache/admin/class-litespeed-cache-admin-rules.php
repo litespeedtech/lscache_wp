@@ -359,6 +359,10 @@ class LiteSpeed_Cache_Admin_Rules
 		$bak = '_lscachebak_orig';
 		$i = 1;
 
+		if ( ! file_exists($path) ) {
+			return true;
+		}
+
 		if ( file_exists($path . $bak) ) {
 			$bak = sprintf("_lscachebak_%02d", $i);
 			while (file_exists($path . $bak)) {
