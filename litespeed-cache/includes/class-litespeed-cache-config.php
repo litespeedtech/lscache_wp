@@ -254,20 +254,25 @@ class LiteSpeed_Cache_Config
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php') ;
 		}
 
+		$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
+
 		if ( !$site_options || !is_array($site_options) || !is_plugin_active_for_network('litespeed-cache/litespeed-cache.php') ) {
-			$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
 			if ($options[self::OPID_ENABLED_RADIO] == 2) {
 				$options[self::OPID_ENABLED] = true;
 			}
 			return $options;
 		}
+
 		if ( isset($site_options[self::NETWORK_OPID_USE_PRIMARY]) && $site_options[self::NETWORK_OPID_USE_PRIMARY] ) {
-			$main_id = BLOG_ID_CURRENT_SITE;
-			$options = get_blog_option($main_id, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
+			// save temparary cron setting
+			$CRWL_CRON_ACTIVE = $options[self::CRWL_CRON_ACTIVE] ;
+
+			$options = get_blog_option(BLOG_ID_CURRENT_SITE, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
+
+			// crawler cron activation is separated
+			$options[self::CRWL_CRON_ACTIVE] = $CRWL_CRON_ACTIVE;
 		}
-		else {
-			$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
-		}
+		
 		$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED];
 		if ($options[self::OPID_ENABLED_RADIO] == 2) {
 			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
@@ -403,7 +408,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_TAGS => true,
 			self::CRWL_EXCLUDES_CPT => '',
 			self::CRWL_ORDER_LINKS => self::CRWL_DATE_DESC,
-			self::CRWL_USLEEP => 10000,
+			self::CRWL_USLEEP => 500,
 			self::CRWL_RUN_DURATION => 200,
 			self::CRWL_RUN_INTERVAL => 28800,
 			self::CRWL_CRAWL_INTERVAL => 604800,
