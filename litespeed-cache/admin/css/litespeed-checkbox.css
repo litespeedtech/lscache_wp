@@ -280,7 +280,7 @@
 	background: #eceeef;
 	text-align: left;
 	padding-left: 80px;
-	text-indent: -30px;
+	text-indent: -40px;
 }
 .litespeed-switch-onoff span:first-of-type:after {
 	content: attr(data-on);
