@@ -7,7 +7,7 @@ $notice_content = '';
 if ((is_multisite()) && (!is_network_admin())) {
 	$notice_title = __('NOTE:', 'litespeed-cache');
 	$notice_content = 
-		'<p>'.__('The following configurations can only be changed by the network admin.', 'litespeed-cache').'</p>'.
+		'<p>'.__('The following configuration can only be changed by the network admin.', 'litespeed-cache').'</p>'.
 		'<p>'.__('Please contact the network admin to make any changes.', 'litespeed-cache').'</p>';
 }
 else {

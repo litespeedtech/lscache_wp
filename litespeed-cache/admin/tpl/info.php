@@ -3,7 +3,7 @@ if (!defined('WPINC')) die;
 
 $menuArr = array(
 	'faqs' => __('FAQs', 'litespeed-cache'),
-	'config' => __('Configurations', 'litespeed-cache'),
+	'config' => __('Configuration', 'litespeed-cache'),
 	'compatibility' => __('Plugin Compatibilities', 'litespeed-cache'),
 	'common_rewrite' => __('Common Rewrite Rules', 'litespeed-cache'),
 	'admin_ip' => __('Admin IP Commands', 'litespeed-cache'),

@@ -1,7 +1,7 @@
 <?php
 if (!defined('WPINC')) die;
 ?>
-<h3 class="litespeed-title"><?php echo __('LiteSpeed Cache Configurations', 'litespeed-cache'); ?></h3>
+<h3 class="litespeed-title"><?php echo __('LiteSpeed Cache Configuration', 'litespeed-cache'); ?></h3>
 
 
 <h4><?php echo __('Instructions for LiteSpeed Web Server Enterprise', 'litespeed-cache'); ?></h4>

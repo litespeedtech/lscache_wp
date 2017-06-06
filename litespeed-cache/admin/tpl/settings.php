@@ -29,7 +29,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
 /**
  * This hook allows third party plugins to create litespeed cache
- * specific configurations.
+ * specific configuration.
  *
  * Each config should append an array containing the following:
  * 'title' (required) - The tab's title.
@@ -42,7 +42,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
  *
  * @see TODO: add option save filter.
  * @since 1.0.9
- * @param array $tabs An array of third party configurations.
+ * @param array $tabs An array of third party configuration.
  * @param array $options The current configuration options.
  * @param string $option_group The option group to use for options.
  * @param boolean $disableall Whether to disable the settings or not.

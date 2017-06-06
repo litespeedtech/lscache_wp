@@ -21,7 +21,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.9
 	 * @access private
-	 * @param array $input The configurations selected by the admin when
+	 * @param array $input The configuration selected by the admin when
 	 *     clicking save.
 	 * @param array $options The current configuration options.
 	 * @return mixed True on success, error message otherwise.
@@ -537,7 +537,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param array $input The configurations selected by the admin when
+	 * @param array $input The configuration selected by the admin when
 	 *     clicking save.
 	 * @return array The updated configuration options.
 	 */

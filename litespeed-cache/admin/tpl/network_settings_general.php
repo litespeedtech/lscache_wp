@@ -2,9 +2,9 @@
 if (!defined('WPINC')) die;
 
 ?>
-<h3 class="litespeed-title"><?php echo __('General Network Configurations', 'litespeed-cache'); ?></h3>
+<h3 class="litespeed-title"><?php echo __('General Network Configuration', 'litespeed-cache'); ?></h3>
 
-<p><?php echo __('These configurations are only available network wide.', 'litespeed-cache'); ?></p>
+<p><?php echo __('These configuration are only available network wide.', 'litespeed-cache'); ?></p>
 
 <p>
 	<?php echo __('Separate Mobile Views should be enabled if any of the network enabled themes require a different view for mobile devices.', 'litespeed-cache'); ?>
@@ -25,11 +25,11 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Use Primary Site Configurations', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Use Primary Site Configuration', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY); ?>
 			<div class="litespeed-desc">
-				<?php echo __("Check this option to use the primary site's configurations for all subsites.", 'litespeed-cache'); ?>
+				<?php echo __("Check this option to use the primary site's configuration for all subsites.", 'litespeed-cache'); ?>
 				<?php echo __('This will disable the settings page on all subsites.', 'litespeed-cache'); ?>
 			</div>
 		</td>
