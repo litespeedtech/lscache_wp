@@ -687,10 +687,10 @@ class LiteSpeed_Cache_Admin_Rules
 		// caching php resource
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
 		if (isset($diff[$id]) && $diff[$id]) {
-			$new_rules[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START;
-			$new_rules[] = 'RewriteRule ' . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]';
-			$new_rules[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END;
-			$new_rules[] = '';
+			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]';
+			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END;
+			$new_rules[] = $new_rules_backend[] = '';
 		}
 
 		// login cookie
