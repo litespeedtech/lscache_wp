@@ -312,10 +312,24 @@ These hook points are provided for hooking into the cache's run time functionali
 2. Admin Settings - Auto Purge Rules
 3. Admin Management Page
 4. Admin Information Page
-5. Cache Miss Example
-6. Cache Hit Example
+5. Admin Settings - Crawler Settings
+6. Admin Crawler Status Page
+7. Cache Miss Example
+8. Cache Hit Example
 
 == Changelog ==
+
+= 1.1.0 - June 6 2017 =
+* [NEW] Added a crawler - this includes configuration options and a dedicated admin page. Uses wp-cron
+* [NEW] Added integration for WPLister
+* [NEW] Added integration for Avada
+* [UPDATE] General structure of the plugin revamped
+* [UPDATE] Improved look of admin pages
+* [BUGFIX] Fix any/all wp-content path retrieval issues
+* [BUGFIX] Use realpath to clear symbolic link when determining .htaccess paths
+* [BUGFIX] Fixed a bug where upgrading multiple plugins did not trigger a purge all
+* [BUGFIX] Fixed a bug where cli import_options did not actually update the options.
+* [REFACTOR] Most of the files in the code were split into more, smaller files
 
 = 1.0.15 - April 20 2017 =
 * [NEW] Added Purge Pages and Purge Recent Posts Widget pages options.
