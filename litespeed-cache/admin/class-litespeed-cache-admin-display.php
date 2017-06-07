@@ -625,7 +625,9 @@ class LiteSpeed_Cache_Admin_Display
 			require_once LSWCP_DIR . 'admin/tpl/network_settings.php';
 		}
 		else {
-			settings_errors();
+			if ( $_GET['page'] != 'litespeedcache' ) {// ls settings msg need to display manually
+				settings_errors();
+			}
 			require_once LSWCP_DIR . 'admin/tpl/settings.php';
                 // TODO: move this
 		$esi_tab = '';

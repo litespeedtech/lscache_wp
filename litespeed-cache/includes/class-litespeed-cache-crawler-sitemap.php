@@ -96,6 +96,10 @@ class LiteSpeed_Cache_Crawler_Sitemap
 		if ( ! empty($post_type_array) ) {
 			$post_type = implode("','", $post_type_array) ;
 
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push("Crawler sitemap log: post_type is '$post_type'") ;
+			}
+
 			$query = "SELECT ID, post_date FROM ".$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy ;
 			$results = $wpdb->get_results($query) ;
 

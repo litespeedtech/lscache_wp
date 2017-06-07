@@ -90,10 +90,10 @@ else {
 	<h2 class="nav-tab-wrapper">
 	<?php
 		foreach ($menu_list as $tab => $val){
-			echo "<a class='nav-tab litespeed-tab' href='?page=lscache-settings#$tab' data-litespeed-tab='$tab'>$val</a>" ;
+			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab'>$val</a>" ;
 		}
 		foreach ($tp_tabs as $val){
-			echo "<a class='nav-tab litespeed-tab' href='?page=lscache-settings#$val[slug]' data-litespeed-tab='$val[slug]'>$val[title]</a>" ;
+			echo "<a class='nav-tab litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]'>$val[title]</a>" ;
 		}
 	?>
 	</h2>

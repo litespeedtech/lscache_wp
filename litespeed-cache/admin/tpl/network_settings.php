@@ -24,7 +24,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	<h2 class="nav-tab-wrapper">
 	<?php
 		foreach ($menuArr as $tab => $val){
-			echo "<a class='nav-tab litespeed-tab' href='?page=lscache-settings#$tab' data-litespeed-tab='$tab'>$val</a>";
+			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab'>$val</a>";
 		}
 	?>
 	</h2>
