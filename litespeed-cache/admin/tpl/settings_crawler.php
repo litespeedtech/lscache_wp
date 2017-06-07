@@ -61,7 +61,11 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Set the max server load limit before terminating the cron run.', 'litespeed-cache'); ?>
+				<?php echo __('The maximum average server load allowed while crawling.'
+                        . ' The number of crawler threads in use will be actively reduced until'
+                        . ' average server load falls under this limit. If this cannot be achieved with a'
+                        . ' single thread, the current crawler run will be terminated.', 'litespeed-cache');
+                ?>
 			</div>
 		</td>
 	</tr>
