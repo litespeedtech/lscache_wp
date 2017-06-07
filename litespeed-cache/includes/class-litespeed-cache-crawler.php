@@ -301,12 +301,12 @@ class LiteSpeed_Cache_Crawler
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
 			if ( ! $force && time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL] ) {
-				$ret = 'Crawler log: less than whole crawling interval';
+				$ret = 'Cron abort: cache warmed already.';
 				if ( LiteSpeed_Cache_Log::get_enabled() ) {
-					LiteSpeed_Cache_Log::push($ret) ;
+					LiteSpeed_Cache_Log::push('Crawler log: ' . $ret) ;
 				}
 				// if not reach whole crawling interval, exit
-				return $this->output($ret) ;
+				return;
 			}
 			$this->_generate_sitemap() ;
 		}
@@ -334,12 +334,13 @@ class LiteSpeed_Cache_Crawler
 			return $this->output($ret['error']) ;
 		}
 		else {
-			$msg = 'Crawler log: End of sitemap file' ;
+			$msg = 'Reached end of sitemap file. Crawling completed.' ;
+			$msg_t = __('Reached end of sitemap file. Crawling completed.', 'litespeed-cache') ;
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push($msg) ;
+				LiteSpeed_Cache_Log::push('Crawler log: ' . $msg) ;
 			}
 
-			return $this->output($msg) ;
+			return $this->output($msg_t) ;
 		}
 	}
 

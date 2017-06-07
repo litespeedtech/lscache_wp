@@ -160,7 +160,7 @@ class Litespeed_Crawler
 		// check current load
 		$this->_adjust_current_threads() ;
 		if ( $this->_cur_threads == 0 ) {
-			return $this->_return(__('Load hit the maximum.', 'litespeed-cache')) ;
+			return $this->_return(__('Stopped due to load hit the maximum.', 'litespeed-cache')) ;
 		}
 
 		// log started time
@@ -214,7 +214,7 @@ class Litespeed_Crawler
 				try {
 					$rets = $this->_multi_request($urls, $curlOptions) ;
 				} catch ( Exception $e ) {
-					return 'Error when crawling url ' . implode(' ', $urls) . ' : ' . $e->getMessage() ;
+					return sprintf(__('Stopped due to error when crawling urls %1$s : %2$s', 'litespeed-cache'), implode(' ', $urls) , $e->getMessage()) ;
 				}
 
 				// check result headers
@@ -262,7 +262,7 @@ class Litespeed_Crawler
 				if ( $this->_meta['last_update_time'] - $this->_cur_thread_time > 60 ) {
 					$this->_adjust_current_threads() ;
 					if ( $this->_cur_threads == 0 ) {
-						return __('Load over limit', 'litespeed-cache') ;
+						return __('Stopped due to load over limit', 'litespeed-cache') ;
 					}
 				}
 
@@ -304,7 +304,7 @@ class Litespeed_Crawler
 	protected function _terminate_running($end_reason)
 	{
 		if ( $end_reason === true ) {
-			$end_reason = __('End of sitemap file.', 'litespeed-cache') ;
+			$end_reason = __('Reached end of sitemap file. Crawling completed.', 'litespeed-cache') ;
 			$this->_meta['last_pos'] = 0 ;// reset last position
 			$this->_meta['done'] = 'touchedEnd' ;// log done status
 			$this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'] ;

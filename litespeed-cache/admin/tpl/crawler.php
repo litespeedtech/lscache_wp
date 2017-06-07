@@ -75,15 +75,15 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 							$is_running = $meta && $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
 							if ( $meta && $meta->this_full_beginning_time ) {
 								if ( $is_running ) {
-									echo sprintf(__('The current sitemap crawl began at %s', 'litespeed-cache'),
+									echo sprintf(__('The current sitemap crawl started at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
 
 								}
 								else {
-									echo sprintf(__('The last sitemap crawl began at %s', 'litespeed-cache'),
+									echo sprintf(__('The current sitemap crawl started at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
 									echo "</div><div class='litespeed-desc'>";
-									echo sprintf(__('The next sitemap crawl will start at %s', 'litespeed-cache'),
+									echo sprintf(__('The next complete sitemap crawl will start at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s',$meta->this_full_beginning_time
 													+ $meta->last_full_time_cost + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]));
 								}
@@ -135,19 +135,19 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('Last interval: %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
+							<?php echo sprintf(__('<b>Last interval:</b> %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
 						</div>
 						<?php endif ; ?>
 
 						<?php if ( $meta && $meta->end_reason ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('Ended reason: %s', 'litespeed-cache'), $meta->end_reason) ; ?>
+							<?php echo sprintf(__('<b>Ended reason:</b> %s', 'litespeed-cache'), $meta->end_reason) ; ?>
 						</div>
 						<?php endif ; ?>
 
 						<?php if ( $meta && $meta->last_crawled ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('Last crawled: %s item(s)', 'litespeed-cache'), $meta->last_crawled) ; ?>
+							<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $meta->last_crawled) ; ?>
 						</div>
 						<?php endif ; ?>
 					</td>
