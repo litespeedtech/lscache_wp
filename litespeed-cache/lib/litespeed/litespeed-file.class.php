@@ -256,7 +256,7 @@ class Litespeed_File
 			}
 		}
 
-		return $result ;
+		return array_map('trim', $result) ;
 	}
 
 	/**
