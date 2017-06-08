@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, cache, performance, optimization, wp-cache, busting, wordpress cache busting, litespeed, http2, varnish, widget, litespeed web server, lsws, availability, pagespeed, woocommerce, bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite, scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize, wp-super-cache, w3total cache, w3totalcache, w3 total cache, wp super cache, wp rocket
 Requires at least: 4.0
-Tested up to: 4.7.4
-Stable tag: 1.1.0
+Tested up to: 4.8
+Stable tag: 1.1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -318,6 +318,14 @@ These hook points are provided for hooking into the cache's run time functionali
 8. Cache Hit Example
 
 == Changelog ==
+
+= 1.1.0.1 - June 8 2017 =
+[UPDATE] Improved default crawler interval setting.
+[UPDATE] Tested up to WP 4.8.
+[BUGFIX] Fixed compatibility with plugins that output json data.
+[BUGFIX] Fixed tab switching bug.
+[BUGFIX] Removed occasional duplicated messages on save.
+[COSMETIC] Improved crawler tooltips and descriptions.
 
 = 1.1.0 - June 6 2017 =
 * [NEW] Added a crawler - this includes configuration options and a dedicated admin page. Uses wp-cron
