@@ -27,7 +27,7 @@ if (!defined('WPINC')) die;
 <h4><?php echo __('Instructions for OpenLiteSpeed', 'litespeed-cache'); ?></h4>
 <p><?php echo __('This integration utilizes OLS\'s cache module.', 'litespeed-cache'); ?></p>
 <p>
-	<?php echo sprintf(__('If it is a fresh OLS installation, the easiest way to integrate is to use <a >ols1clk.</a>', 'litespeed-cache'),
+	<?php echo sprintf(__('If it is a fresh OLS installation, the easiest way to integrate is to use <a %s>ols1clk.</a>', 'litespeed-cache'),
 			'href="http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install" rel="noopener noreferrer" target="_blank"'); ?>
 	<?php echo sprintf(__('If using an existing WordPress installation, use the %s parameter.', 'litespeed-cache'), '--wordpresspath'); ?>
 	<?php echo sprintf(__('Else if OLS and WordPress are already installed, please follow the instructions <a %s>here.</a>', 'litespeed-cache'),
