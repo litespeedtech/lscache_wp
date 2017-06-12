@@ -11,24 +11,25 @@
  */
 class LiteSpeed_Cache_Admin_Display
 {
-	private static $_instance;
+	private static $_instance ;
 
-	const NOTICE_BLUE = 'notice notice-info';
-	const NOTICE_GREEN = 'notice notice-success';
-	const NOTICE_RED = 'notice notice-error';
-	const NOTICE_YELLOW = 'notice notice-warning';
-	const TRANSIENT_LITESPEED_MESSAGE = 'litespeed_messages';
+	const NOTICE_BLUE = 'notice notice-info' ;
+	const NOTICE_GREEN = 'notice notice-success' ;
+	const NOTICE_RED = 'notice notice-error' ;
+	const NOTICE_YELLOW = 'notice notice-warning' ;
+	const TRANSIENT_LITESPEED_MESSAGE = 'litespeed_messages' ;
 
-	const PURGEBY_CAT = '0';
-	const PURGEBY_PID = '1';
-	const PURGEBY_TAG = '2';
-	const PURGEBY_URL = '3';
+	const PURGEBY_CAT = '0' ;
+	const PURGEBY_PID = '1' ;
+	const PURGEBY_TAG = '2' ;
+	const PURGEBY_URL = '3' ;
 
-	const PURGEBYOPT_SELECT = 'purgeby';
-	const PURGEBYOPT_LIST = 'purgebylist';
+	const PURGEBYOPT_SELECT = 'purgeby' ;
+	const PURGEBYOPT_LIST = 'purgebylist' ;
 
-	private $messages = array();
-	private $disable_all = false;
+	private $messages = array() ;
+	private $disable_all = false ;
+	private $default_settings = array() ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -69,6 +70,8 @@ class LiteSpeed_Cache_Admin_Display
 			add_action('admin_menu', array($this, 'register_admin_menu'));
 		}
 
+		// get default setting values
+		$this->default_settings = LiteSpeed_Cache_Config::get_instance()->get_default_options() ;
 	}
 
 	/**
@@ -927,6 +930,20 @@ class LiteSpeed_Cache_Admin_Display
 			. " $disabled "
 			. " />"
 			. " <label for='$id_attr'>$txt</label>";
+	}
+
+	/**
+	 * Display default value
+	 *
+	 * @since  1.1.1
+	 * @access public
+	 * @param  string $id The setting tag
+	 */
+	public function recommended($id) {
+		$val = isset($this->default_settings[$id]) ? $this->default_settings[$id] : '' ;
+		if ( $val ) {
+			echo sprintf(__('Recommended value: %s.', 'litespeed-cache'), $val) ;
+		}
 	}
 
 	/**

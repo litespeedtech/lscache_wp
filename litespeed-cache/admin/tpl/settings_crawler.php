@@ -9,9 +9,11 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Delay', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_USLEEP); ?> <?php echo __('microseconds', 'litespeed-cache'); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_USLEEP ; ?>
+			<?php $this->build_input($id); ?> <?php echo __('microseconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify time in microseconds for the delay between requests during a crawl.', 'litespeed-cache'); ?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -19,9 +21,11 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Run Duration', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_RUN_DURATION); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_RUN_DURATION ; ?>
+			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify time in seconds for the duration of the crawl interval.', 'litespeed-cache'); ?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -29,9 +33,11 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Interval Between Runs', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL ; ?>
+			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify time in seconds for the time between each run interval. Must be greater than 60.', 'litespeed-cache'); ?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -39,9 +45,11 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Crawl Interval', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL ; ?>
+			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long in seconds before the crawler should initiate crawling the entire sitemap again.', 'litespeed-cache'); ?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -49,9 +57,11 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Threads', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_THREADS); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_THREADS ; ?>
+			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify Number of Threads to use while crawling.', 'litespeed-cache'); ?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -59,13 +69,15 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Server Load Limit', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT ; ?>
+			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __('The maximum average server load allowed while crawling.'
 						. ' The number of crawler threads in use will be actively reduced until'
 						. ' average server load falls under this limit. If this cannot be achieved with a'
 						. ' single thread, the current crawler run will be terminated.', 'litespeed-cache');
 				?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -73,10 +85,12 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Domain IP', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_DOMAIN_IP); ?>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP ; ?>
+			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specifying domain IP can make crawler directly hit server, which can speed up crawling. Especially when using CDN, this option can get crawler bypass CDN.', 'litespeed-cache');
 				?>
+				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
 	</tr>
