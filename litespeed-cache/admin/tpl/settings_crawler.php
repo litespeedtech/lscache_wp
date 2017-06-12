@@ -62,10 +62,21 @@ if ( !defined('WPINC') ) die;
 			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT); ?>
 			<div class="litespeed-desc">
 				<?php echo __('The maximum average server load allowed while crawling.'
-                        . ' The number of crawler threads in use will be actively reduced until'
-                        . ' average server load falls under this limit. If this cannot be achieved with a'
-                        . ' single thread, the current crawler run will be terminated.', 'litespeed-cache');
-                ?>
+						. ' The number of crawler threads in use will be actively reduced until'
+						. ' average server load falls under this limit. If this cannot be achieved with a'
+						. ' single thread, the current crawler run will be terminated.', 'litespeed-cache');
+				?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Domain IP', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_input(LiteSpeed_Cache_Config::CRWL_DOMAIN_IP); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Specifying domain IP can make crawler directly hit server, which can speed up crawling. Especially when using CDN, this option can get crawler bypass CDN.', 'litespeed-cache');
+				?>
 			</div>
 		</td>
 	</tr>

@@ -502,6 +502,14 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT;
 		$options[$id] = $input[$id];
 
+		$id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP;
+		if ( isset($input[$id]) && ! WP_Http::is_ip_address($input[$id]) ) {
+			$errors[] = __('Domain IP has a wrong IP value', 'litespeed-cache');
+		}
+		else {
+			$options[$id] = $input[$id];
+		}
+
 	}
 
 	/**

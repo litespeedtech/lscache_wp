@@ -80,8 +80,9 @@ class LiteSpeed_Cache_Config
 	const CRWL_RUN_DURATION = 'crawler_run_duration' ;
 	const CRWL_RUN_INTERVAL = 'crawler_run_interval' ;
 	const CRWL_CRAWL_INTERVAL = 'crawler_crawl_interval' ;
-	const CRWL_THREADS  = 'crawler_threads' ;
-	const CRWL_LOAD_LIMIT  = 'crawler_load_limit' ;
+	const CRWL_THREADS = 'crawler_threads' ;
+	const CRWL_LOAD_LIMIT = 'crawler_load_limit' ;
+	const CRWL_DOMAIN_IP = 'crawler_domain_ip' ;
 
 	const CRWL_CRON_ACTIVE = 'crawler_cron_active' ;
 
@@ -414,6 +415,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_CRAWL_INTERVAL => 302400,
 			self::CRWL_THREADS => 3,
 			self::CRWL_LOAD_LIMIT => 1,
+			self::CRWL_DOMAIN_IP => '',
 			self::CRWL_CRON_ACTIVE => false,
 				) ;
 

@@ -13,6 +13,7 @@ class Litespeed_Crawler
 	private $_run_duration = 200 ;//seconds
 	private $_threads_limit = 3 ;
 	private $_load_limit = 1 ;
+	private $_domain_ip = '' ;
 
 	protected $_blacklist ;
 	protected $_meta ;
@@ -21,6 +22,8 @@ class Litespeed_Crawler
 	protected $_cur_threads = -1 ;
 
 	const CHUNKS = 10000 ;
+	const USER_AGENT = 'lscache_walker' ;
+	const FAST_USER_AGENT = 'lscache_runner' ;
 
 	/**
 	 * Set load limit
@@ -33,6 +36,18 @@ class Litespeed_Crawler
 	{
 		$this->_sitemap_file = $sitemap_file ;
 		$this->_meta_file = $this->_sitemap_file . '.meta' ;
+	}
+
+	/**
+	 * Set domain ip
+	 *
+	 * @since  1.1.1
+	 * @access public
+	 * @param  string $val The domain's direct ip
+	 */
+	public function set_domain_ip($val)
+	{
+		$this->_domain_ip = $val ;
 	}
 
 	/**
@@ -205,6 +220,7 @@ class Litespeed_Crawler
 	 */
 	private function _do_running($curlOptions)
 	{
+// var_dump($curlOptions);
 		while ( $urlChunks = Litespeed_File::read($this->_sitemap_file, $this->_meta['last_pos'], self::CHUNKS) ) {// get url list
 			// start crawling
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads) ;
@@ -216,14 +232,14 @@ class Litespeed_Crawler
 				} catch ( Exception $e ) {
 					return sprintf(__('Stopped due to error when crawling urls %1$s : %2$s', 'litespeed-cache'), implode(' ', $urls) , $e->getMessage()) ;
 				}
-
+// var_dump($urls,$rets);exit;
 				// check result headers
 				foreach ( $urls as $i => $url ) {
 					// check response
 					if ( stripos(strtolower($rets[$i]), "no-cache") !== false ) {
 						$this->_blacklist[] = $url ;
 					}
-					elseif ( stripos(strtolower($rets[$i]), "HTTP/1.1 200 OK") === false ){
+					elseif ( stripos(strtolower($rets[$i]), "HTTP/1.1 200 OK") === false && stripos(strtolower($rets[$i]), "HTTP/1.1 201 Created") === false ){
 						$this->_blacklist[] = $url ;
 					}
 				}
@@ -445,14 +461,6 @@ class Litespeed_Crawler
 			$referer = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ;
 		}
 
-		$headers = array() ;
-
-		if ( $ua != '' ) {
-			$headers[] = 'User-Agent: '. $ua ;
-		}
-
-		$headers[] = "Cache-Control: max-age=0" ;
-
 		$options = array(
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_HEADER => true,
@@ -465,8 +473,26 @@ class Litespeed_Crawler
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
 			CURL_HTTP_VERSION_1_1 => 1,
-			CURLOPT_HTTPHEADER => $headers
+			CURLOPT_HTTPHEADER => array(),
 		) ;
+		$options[CURLOPT_HTTPHEADER][] = "Cache-Control: max-age=0" ;
+
+		if ( ! $ua ) {
+			$ua = self::FAST_USER_AGENT ;
+		}
+		$options[CURLOPT_USERAGENT] = $ua ;
+
+		if ( $this->_domain_ip && $this->_baseUrl ) {
+			$parsed_url = parse_url($this->_baseUrl) ;
+
+			if ( !empty($parsed_url['host']) ) {
+				// assign domain for curl
+				$options[CURLOPT_HTTPHEADER][] = "Host: " . $parsed_url['host'] ;
+				// replace domain with direct ip
+				$parsed_url['host'] = $this->_domain_ip ;
+				$this->_baseUrl = http_build_url($parsed_url) ;
+			}
+		}
 
 		// if is walker
 		// $options[CURLOPT_FRESH_CONNECT] = true ;
@@ -540,4 +566,112 @@ class Litespeed_Crawler
 		return true ;
 	}
 
+}
+
+/**
+ * http_build_url() compatibility
+ *
+ */
+if ( ! function_exists('http_build_url') ) {
+	define('HTTP_URL_REPLACE', 1);              // Replace every part of the first URL when there's one of the second URL
+	define('HTTP_URL_JOIN_PATH', 2);            // Join relative paths
+	define('HTTP_URL_JOIN_QUERY', 4);           // Join query strings
+	define('HTTP_URL_STRIP_USER', 8);           // Strip any user authentication information
+	define('HTTP_URL_STRIP_PASS', 16);          // Strip any password authentication information
+	define('HTTP_URL_STRIP_AUTH', 32);          // Strip any authentication information
+	define('HTTP_URL_STRIP_PORT', 64);          // Strip explicit port numbers
+	define('HTTP_URL_STRIP_PATH', 128);         // Strip complete path
+	define('HTTP_URL_STRIP_QUERY', 256);        // Strip query string
+	define('HTTP_URL_STRIP_FRAGMENT', 512);     // Strip any fragments (#identifier)
+	define('HTTP_URL_STRIP_ALL', 1024);         // Strip anything but scheme and host
+
+	// Build an URL
+	// The parts of the second URL will be merged into the first according to the flags argument.
+	//
+	// @param   mixed           (Part(s) of) an URL in form of a string or associative array like parse_url() returns
+	// @param   mixed           Same as the first argument
+	// @param   int             A bitmask of binary or'ed HTTP_URL constants (Optional)HTTP_URL_REPLACE is the default
+	// @param   array           If set, it will be filled with the parts of the composed url like parse_url() would return
+	function http_build_url($url, $parts = array(), $flags = HTTP_URL_REPLACE, &$new_url = false)
+	{
+		$keys = array('user','pass','port','path','query','fragment');
+
+		// HTTP_URL_STRIP_ALL becomes all the HTTP_URL_STRIP_Xs
+		if ( $flags & HTTP_URL_STRIP_ALL ) {
+			$flags |= HTTP_URL_STRIP_USER;
+			$flags |= HTTP_URL_STRIP_PASS;
+			$flags |= HTTP_URL_STRIP_PORT;
+			$flags |= HTTP_URL_STRIP_PATH;
+			$flags |= HTTP_URL_STRIP_QUERY;
+			$flags |= HTTP_URL_STRIP_FRAGMENT;
+		}
+		// HTTP_URL_STRIP_AUTH becomes HTTP_URL_STRIP_USER and HTTP_URL_STRIP_PASS
+		else if ( $flags & HTTP_URL_STRIP_AUTH ) {
+			$flags |= HTTP_URL_STRIP_USER;
+			$flags |= HTTP_URL_STRIP_PASS;
+		}
+
+		// Parse the original URL
+		// - Suggestion by Sayed Ahad Abbas
+		//   In case you send a parse_url array as input
+		$parse_url = !is_array($url) ? parse_url($url) : $url;
+
+		// Scheme and Host are always replaced
+		if ( isset($parts['scheme']) ) {
+			$parse_url['scheme'] = $parts['scheme'];
+		}
+		if ( isset($parts['host']) ) {
+			$parse_url['host'] = $parts['host'];
+		}
+
+		// (If applicable) Replace the original URL with it's new parts
+		if ( $flags & HTTP_URL_REPLACE ) {
+			foreach ($keys as $key) {
+				if ( isset($parts[$key]) ) {
+					$parse_url[$key] = $parts[$key];
+				}
+			}
+		}
+		else {
+			// Join the original URL path with the new path
+			if (isset($parts['path']) && ($flags & HTTP_URL_JOIN_PATH)) {
+				if ( isset($parse_url['path']) ) {
+					$parse_url['path'] = rtrim(str_replace(basename($parse_url['path']), '', $parse_url['path']), '/') . '/' . ltrim($parts['path'], '/');
+				}
+				else {
+					$parse_url['path'] = $parts['path'];
+				}
+			}
+
+			// Join the original query string with the new query string
+			if ( isset($parts['query']) && ($flags & HTTP_URL_JOIN_QUERY) ) {
+				if ( isset($parse_url['query']) ) {
+					$parse_url['query'] .= '&' . $parts['query'];
+				}
+				else {
+					$parse_url['query'] = $parts['query'];
+				}
+			}
+		}
+
+		// Strips all the applicable sections of the URL
+		// Note: Scheme and Host are never stripped
+		foreach ($keys as $key) {
+			if ( $flags & (int)constant('HTTP_URL_STRIP_' . strtoupper($key)) ) {
+				unset($parse_url[$key]);
+			}
+		}
+
+		$new_url = $parse_url;
+
+		return
+			 (isset($parse_url['scheme']) ? $parse_url['scheme'] . '://' : '')
+			.(isset($parse_url['user']) ? $parse_url['user'] . (isset($parse_url['pass']) ? ':' . $parse_url['pass'] : '') .'@' : '')
+			.(isset($parse_url['host']) ? $parse_url['host'] : '')
+			.(isset($parse_url['port']) ? ':' . $parse_url['port'] : '')
+			.(isset($parse_url['path']) ? $parse_url['path'] : '')
+			.(isset($parse_url['query']) ? '?' . $parse_url['query'] : '')
+			.(isset($parse_url['fragment']) ? '#' . $parse_url['fragment'] : '')
+		;
+	}
 }

@@ -315,6 +315,9 @@ class LiteSpeed_Cache_Crawler
 		$crawler->set_run_delay($options[LiteSpeed_Cache_Config::CRWL_USLEEP]) ;
 		$crawler->set_threads_limit($options[LiteSpeed_Cache_Config::CRWL_THREADS]) ;
 		$crawler->set_load_limit($options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT]) ;
+		if ( $options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP] ) {
+			$crawler->set_domain_ip($options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP]) ;
+		}
 		$ret = $crawler->engine_start() ;
 
 		// merge blacklist
