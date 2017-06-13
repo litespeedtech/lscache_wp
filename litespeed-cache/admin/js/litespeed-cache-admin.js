@@ -39,7 +39,7 @@ var _litespeed_dots ;
 
 	jQuery(document).ready(function () {
 		/************** Common LiteSpeed JS **************/
-		// Arrow transform 
+		// Arrow transform
 		$('.litespeed-down, .litespeed-up').click(function(event) {
 			$(this).toggleClass('litespeed-up litespeed-down') ;
 		}) ;
@@ -143,8 +143,13 @@ var _litespeed_dots ;
 			$.getJSON( $(that).data('url'), function(json){
 				$(that).prop('checked', json.enable) ;
 			} ) ;
-
 		}) ;
+
+		$('#litespeed_custom_sitemap').keyup(function(event) {
+			$('[data-litespeed-selfsitemap]').toggle(!$(this).val()) ;
+		}) ;
+
+		$('[data-litespeed-selfsitemap]').toggle(!$('#litespeed_custom_sitemap').val()) ;
 	}) ;
 })(jQuery) ;
 
@@ -211,14 +216,14 @@ function litespeed_append_param(uri, key, val) {
 
 function litespeed_pulse() {
 	jQuery('#litespeed-shell-icon').animate({
-		width: 27, height: 34, 
+		width: 27, height: 34,
 		opacity: 1
 	}, 700, function() {
 		jQuery('#litespeed-shell-icon').animate({
-			width: 23, height: 29, 
+			width: 23, height: 29,
 			opacity: 0.5
 		}, 700) ;
-	}) ; 
+	}) ;
 }
 
 function litespeed_fetch_meta() {
@@ -275,7 +280,7 @@ function _litespeed_adjust_interval(changed) {
 }
 
 function _litespeed_build_meta(meta) {
-	var string = '<li>' + litespeed_date(meta.last_update_time) + 
+	var string = '<li>' + litespeed_date(meta.last_update_time) +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.list_size +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + (meta.last_pos*1+1) +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.last_count +

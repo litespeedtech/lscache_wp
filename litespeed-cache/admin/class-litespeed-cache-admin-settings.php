@@ -510,6 +510,26 @@ class LiteSpeed_Cache_Admin_Settings
 			$options[$id] = $input[$id];
 		}
 
+		$id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP;
+		if ( !empty($input[$id]) && ! $this->validate_custom_sitemap($input[$id]) ) {
+			$errors[] = __('Custom Sitemap can not be parsed', 'litespeed-cache');
+		}
+		else {
+			$options[$id] = $input[$id];
+		}
+
+	}
+
+	/**
+	 * Validates the custom sitemap settings.
+	 *
+	 * @since 1.1.1
+	 * @access private
+	 * @param string $url The sitemap url
+	 */
+	private function validate_custom_sitemap($url)
+	{
+		return LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap($url, false) ;
 	}
 
 	/**

@@ -83,6 +83,7 @@ class LiteSpeed_Cache_Config
 	const CRWL_THREADS = 'crawler_threads' ;
 	const CRWL_LOAD_LIMIT = 'crawler_load_limit' ;
 	const CRWL_DOMAIN_IP = 'crawler_domain_ip' ;
+	const CRWL_CUSTOM_SITEMAP = 'crawler_custom_sitemap' ;
 
 	const CRWL_CRON_ACTIVE = 'crawler_cron_active' ;
 
@@ -273,7 +274,7 @@ class LiteSpeed_Cache_Config
 			// crawler cron activation is separated
 			$options[self::CRWL_CRON_ACTIVE] = $CRWL_CRON_ACTIVE;
 		}
-		
+
 		$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED];
 		if ($options[self::OPID_ENABLED_RADIO] == 2) {
 			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED];
@@ -416,6 +417,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_THREADS => 3,
 			self::CRWL_LOAD_LIMIT => 1,
 			self::CRWL_DOMAIN_IP => '',
+			self::CRWL_CUSTOM_SITEMAP => '',
 			self::CRWL_CRON_ACTIVE => false,
 				) ;
 

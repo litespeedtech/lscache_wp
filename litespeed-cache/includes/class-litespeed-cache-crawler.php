@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Crawler
 
 	/**
 	 * Return crawler meta file
-	 * 
+	 *
 	 * @since    1.1.0
 	 * @access public
 	 * @return string Json data file path
@@ -60,7 +60,7 @@ class LiteSpeed_Cache_Crawler
 
 	/**
 	 * Return crawler meta info
-	 * 
+	 *
 	 * @since    1.1.0
 	 * @access public
 	 * @return array Meta array
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Crawler
 
 	/**
 	 * Generate sitemap
-	 * 
+	 *
 	 * @since    1.1.0
 	 * @access public
 	 */
@@ -184,15 +184,97 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
+	 * Parse custom sitemap and return urls
+	 *
+	 * @since    1.1.1
+	 * @access public
+	 * @param  string  $sitemap       The url set map address
+	 * @param  boolean $return_detail If return url list
+	 * @return bollean|array          Url list or if is a sitemap
+	 */
+	public function parse_custom_sitemap($sitemap, $return_detail = true)
+	{
+		if ( ! file_get_contents($sitemap) ) {
+			return false ;
+		}
+		$xml_object = simplexml_load_file($sitemap) ;
+		if ( ! $xml_object ) {
+			return false ;
+		}
+		if ( ! $return_detail ) {
+			return true ;
+		}
+		// start parsing
+		$_urls = array() ;
+
+		$xml_array = (array)$xml_object ;
+		if ( !empty($xml_array['sitemap']) ) {// parse sitemap set
+			if ( is_object($xml_array['sitemap']) ) {
+				$xml_array['sitemap'] = (array)$xml_array['sitemap'];
+			}
+			if ( !empty($xml_array['sitemap']['loc']) ) {// is single sitemap
+				$urls = $this->parse_custom_sitemap($xml_array['sitemap']['loc']) ;
+				if ( $urls ) {
+					$_urls = array_merge($_urls, $urls) ;
+				}
+			}
+			else {
+				// parse multiple sitemaps
+				foreach ($xml_array['sitemap'] as $val) {
+					$val = (array)$val ;
+					if ( !empty($val['loc']) ) {
+						$urls = $this->parse_custom_sitemap($val['loc']) ;// recursive parse sitemap
+						if ( $urls ) {
+							$_urls = array_merge($_urls, $urls) ;
+						}
+					}
+				}
+			}
+		}
+		elseif ( !empty($xml_array['url']) ) {// parse url set
+			if ( is_object($xml_array['url']) ) {
+				$xml_array['url'] = (array)$xml_array['url'] ;
+			}
+			// if only 1 element
+			if ( !empty($xml_array['url']['loc']) ) {
+				$_urls[] = $xml_array['url']['loc'] ;
+			}
+			else {
+				foreach ($xml_array['url'] as $val) {
+					$val = (array)$val ;
+					if ( !empty($val['loc']) ) {
+						$_urls[] = $val['loc'] ;
+					}
+				}
+			}
+		}
+
+		return $_urls ;
+	}
+
+	/**
 	 * Generate the sitemap
-	 * 
+	 *
 	 * @since    1.1.0
 	 * @access protected
-	 * @return string|true 
+	 * @return string|true
 	 */
 	protected function _generate_sitemap()
 	{
-		$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;
+		// use custom sitemap
+		if ( $sitemap = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP) ) {
+			$sitemap_urls = $this->parse_custom_sitemap($sitemap) ;
+			$urls = array() ;
+			$offset = strlen($this->_site_url) ;
+			foreach ($sitemap_urls as $val) {
+				if ( stripos($val, $this->_site_url) === 0 ) {
+					$urls[] = substr($val, $offset) ;
+				}
+			}
+		}
+		else {
+			$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;
+		}
 
 		// filter urls
 		$blacklist = Litespeed_File::read($this->_blacklist_file) ;
@@ -230,7 +312,7 @@ class LiteSpeed_Cache_Crawler
 
 	/**
 	 * Create reset pos file
-	 * 
+	 *
 	 * @since    1.1.0
 	 * @access public
 	 * @return mixed True or error message
@@ -349,7 +431,7 @@ class LiteSpeed_Cache_Crawler
 
 	/**
 	 * Output info and exit
-	 * 
+	 *
 	 * @since    1.1.0
 	 * @access protected
 	 * @param  string $error Error info

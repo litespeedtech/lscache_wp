@@ -96,6 +96,18 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Custom Sitemap', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ; ?>
+			<?php $this->build_input($id, false, false, false, 'litespeed_custom_sitemap'); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Specifying the sitemap for crawler. If this is set, the crawler will not generate the sitemap by itself but use this sitemap.', 'litespeed-cache');
+				?>
+			</div>
+		</td>
+	</tr>
+
+	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Include Posts', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_POSTS); ?>
@@ -105,7 +117,7 @@ if ( !defined('WPINC') ) die;
 		</td>
 	</tr>
 
-	<tr>
+	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Include Pages', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_PAGES); ?>
@@ -115,7 +127,7 @@ if ( !defined('WPINC') ) die;
 		</td>
 	</tr>
 
-	<tr>
+	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Include Categories', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_CATS); ?>
@@ -125,7 +137,7 @@ if ( !defined('WPINC') ) die;
 		</td>
 	</tr>
 
-	<tr>
+	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Include Tags', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_TAGS); ?>
@@ -135,7 +147,7 @@ if ( !defined('WPINC') ) die;
 		</td>
 	</tr>
 
-	<tr>
+	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Exclude Custom Post Types', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT); ?>
@@ -151,7 +163,7 @@ if ( !defined('WPINC') ) die;
 		</td>
 	</tr>
 
-	<tr>
+	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Order links by', 'litespeed-cache'); ?></th>
 		<td>
 			<div class="litespeed-row">
