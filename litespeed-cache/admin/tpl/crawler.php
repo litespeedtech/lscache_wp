@@ -4,6 +4,9 @@ if (!defined('WPINC')) die ;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
 $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
+
+$disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
+
 ?>
 
 <div class="wrap">
@@ -55,6 +58,12 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 		}
 		?>
 		<h3 class="litespeed-title"><?php echo __('Crawler Cron', 'litespeed-cache') ; ?></h3>
+		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
+			<div class="litespeed-callout litespeed-callout-danger">
+				<p><span class="attention"><?php echo __('WARNING', 'litespeed-cache'); ?></span></p>
+				<?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?>
+			</div>
+		<?php endif; ?>
 		<table class="widefat striped">
 			<thead><tr >
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
@@ -122,7 +131,8 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 								id="litespeed_crawler_cron_enable"
 								value="1"
 								data-url="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, 'cron_enable') ; ?>"
-								<?php if($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE]) echo "checked"; ?>
+								<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
+								<?php echo $disabled ; ?>
 							/>
 							<span data-on="<?php echo __('Enable', 'litespeed-cache'); ?>" data-off="<?php echo __('Disable', 'litespeed-cache'); ?>"></span>
 							<span></span>
@@ -131,7 +141,9 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 					<td>
 					<?php
 						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
-						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) . "' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs'>" . __('Manually run', 'litespeed-cache') . "</a>" ;
+
+						$href = LiteSpeed_Cache_Router::can_crawl() ? $this->build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
+						echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>

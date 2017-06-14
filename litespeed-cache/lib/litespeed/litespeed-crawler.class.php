@@ -220,7 +220,6 @@ class Litespeed_Crawler
 	 */
 	private function _do_running($curlOptions)
 	{
-// var_dump($curlOptions);
 		while ( $urlChunks = Litespeed_File::read($this->_sitemap_file, $this->_meta['last_pos'], self::CHUNKS) ) {// get url list
 			// start crawling
 			$urlChunks = array_chunk($urlChunks, $this->_cur_threads) ;
@@ -232,15 +231,18 @@ class Litespeed_Crawler
 				} catch ( Exception $e ) {
 					return sprintf(__('Stopped due to error when crawling urls %1$s : %2$s', 'litespeed-cache'), implode(' ', $urls) , $e->getMessage()) ;
 				}
-// var_dump($urls,$rets);exit;
+
 				// check result headers
 				foreach ( $urls as $i => $url ) {
 					// check response
-					if ( stripos(strtolower($rets[$i]), "no-cache") !== false ) {
+					if ( stripos($rets[$i], "no-cache") !== false ) {
 						$this->_blacklist[] = $url ;
 					}
-					elseif ( stripos(strtolower($rets[$i]), "HTTP/1.1 200 OK") === false && stripos(strtolower($rets[$i]), "HTTP/1.1 201 Created") === false ){
+					elseif ( stripos($rets[$i], "HTTP/1.1 200 OK") === false && stripos($rets[$i], "HTTP/1.1 201 Created") === false ){
 						$this->_blacklist[] = $url ;
+					}
+					elseif ( stripos($rets[$i], "HTTP/1.1 428 Precondition Required") !== false ) {
+						return __('Stopped due to crawler disabled by the server admin', 'litespeed-cache') ;
 					}
 				}
 

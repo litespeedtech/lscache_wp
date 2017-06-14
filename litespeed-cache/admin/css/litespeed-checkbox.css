@@ -233,13 +233,16 @@
 	cursor: pointer;
 	box-sizing:content-box;
 }
-.litespeed-switch-onoff input {
+
+.litespeed-switch-onoff input,
+.litespeed-switch-onoff input:disabled {
 	position: absolute;
 	top: 0;
 	left: 0;
 	opacity: 0;
 	box-sizing:content-box;
 }
+
 .litespeed-switch-onoff span:first-of-type {
 	position: relative;
 	display: block;

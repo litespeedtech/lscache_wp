@@ -15,13 +15,29 @@ class LiteSpeed_Cache_Router
 	private static $_instance;
 	private static $_is_ajax;
 	private static $_is_cli;
+	private static $_can_crawl;
 	private static $_ip;
 	private static $_action;
 	private static $_is_admin_ip;
 
 	/**
+	 * Check if crawler is enabled on server level
+	 *
+	 * @since 1.1.1
+	 * @access public
+	 * @return boolean
+	 */
+	public static function can_crawl()
+	{
+		if ( ! isset(self::$_can_crawl) ) {
+			self::$_can_crawl = isset($_SERVER['X-LSCACHE']) && strpos($_SERVER['X-LSCACHE'], 'crawler') !== false ;
+		}
+		return self::$_can_crawl ;
+	}
+
+	/**
 	 * Check action
-	 * 
+	 *
 	 * @since 1.1.0
 	 * @access public
 	 * @return string
@@ -41,7 +57,7 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Check if is cli usage
-	 * 
+	 *
 	 * @since 1.1.0
 	 * @access public
 	 * @return boolean
@@ -56,7 +72,7 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Check if is ajax call
-	 * 
+	 *
 	 * @since 1.1.0
 	 * @access public
 	 * @return boolean
@@ -71,7 +87,7 @@ class LiteSpeed_Cache_Router
 
 	/**
 	 * Check if is admin ip
-	 * 
+	 *
 	 * @since 1.1.0
 	 * @access public
 	 * @return boolean

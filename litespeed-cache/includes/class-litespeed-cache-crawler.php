@@ -345,6 +345,12 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public static function crawl_data($force = false)
 	{
+		if ( ! LiteSpeed_Cache_Router::can_crawl() ) {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push('Crawler log: ......crawler is NOT allowed by the server admin......') ;
+			}
+			return false;
+		}
 		if ( $force ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push('Crawler log: ......crawler manually ran......') ;

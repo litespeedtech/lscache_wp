@@ -151,7 +151,7 @@ class LiteSpeed_Cache
 		$this->load_public_actions() ;
 
 		// load cron task for crawler
-		if ( $this->config(LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE) ) {
+		if ( $this->config(LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE) && LiteSpeed_Cache_Router::can_crawl() ) {
 			// keep cron intval filter
 			$this->config->cron_schedule() ;
 
