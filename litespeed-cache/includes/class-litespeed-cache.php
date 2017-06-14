@@ -705,7 +705,7 @@ class LiteSpeed_Cache
 	{
 		$post_id = intval($id);
 		// ignore the status we don't care
-		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private' )) ) {
+		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private', 'draft' )) ) {
 			return ;
 		}
 
