@@ -627,6 +627,12 @@ class LiteSpeed_Cache
 			return;
 		}
 
+		// replace site_url if the url is full url
+		$site_url =  LiteSpeed_Cache_Router::get_siteurl() ;
+		if ( strpos($val, $site_url) === 0 ) {
+			$val = substr($val, strlen($site_url)) ;
+		}
+
 		$hash = self::get_uri_hash($val);
 
 		if ($hash === false) {

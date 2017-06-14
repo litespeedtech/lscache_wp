@@ -136,32 +136,32 @@ LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info litespeed-mini">
 					<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_CAT;?>
-					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_category" 
+					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_category"
 						value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 					/>
 					<label for="purgeby_option_category"><?php echo __('Category', 'litespeed-cache'); ?></label>
 
 					<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_PID;?>
-					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_postid" 
+					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_postid"
 						value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 					/>
 					<label for="purgeby_option_postid"><?php echo __('Post ID', 'litespeed-cache'); ?></label>
 
 					<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_TAG;?>
-					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_tag" 
+					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_tag"
 						value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 					/>
 					<label for="purgeby_option_tag"><?php echo __('Tag', 'litespeed-cache'); ?></label>
 
 					<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_URL;?>
-					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_url" 
+					<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_url"
 						value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 					/>
 					<label for="purgeby_option_url"><?php echo __('URL', 'litespeed-cache'); ?></label>
 				</div>
 
 				<div class="litespeed-cache-purgeby-text">
-					<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_CAT) echo 'litespeed-hide'; ?>" 
+					<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_CAT) echo 'litespeed-hide'; ?>"
 						data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_CAT; ?>">
 						<?php echo sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
 							'http://example.com/category/category-name/', 'category-name'); ?>
@@ -177,11 +177,10 @@ LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
 					</div>
 					<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_URL) echo 'litespeed-hide'; ?>"
 						data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_URL; ?>">
-						<?php echo __('Purge pages by relative URL.', 'litespeed-cache'); ?>
-						<?php echo __('Must be exact match.', 'litespeed-cache'); ?>
-						<?php echo sprintf(__('e.g. Use %s for %s.', 'litespeed-cache'),
+						<?php echo __('Purge pages by relative or full URL.', 'litespeed-cache'); ?>
+						<?php echo sprintf(__('e.g. Use %s or %s.', 'litespeed-cache'),
 							'<b><u>/2016/02/24/hello-world/</u></b>',
-							'http://www.myexamplesite.com<b><u>/2016/02/24/hello-world/</u></b>'); ?>
+							'<b><u>http://www.myexamplesite.com/2016/02/24/hello-world/</u></b>'); ?>
 					</div>
 				</div>
 

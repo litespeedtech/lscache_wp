@@ -19,6 +19,28 @@ class LiteSpeed_Cache_Router
 	private static $_ip;
 	private static $_action;
 	private static $_is_admin_ip;
+	private static $_siteurl;
+
+	/**
+	 * Check if crawler is enabled on server level
+	 *
+	 * @since 1.1.1
+	 * @access public
+	 * @return string
+	 */
+	public static function get_siteurl()
+	{
+		if ( ! isset(self::$_siteurl) ) {
+			if ( is_multisite() ) {
+				$blogID = get_current_blog_id() ;
+				self::$_siteurl = get_site_url($blogID) ;
+			}
+			else{
+				self::$_siteurl = get_option('siteurl') ;
+			}
+		}
+		return self::$_siteurl ;
+	}
 
 	/**
 	 * Check if crawler is enabled on server level
