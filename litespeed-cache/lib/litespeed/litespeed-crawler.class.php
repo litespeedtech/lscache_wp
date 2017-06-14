@@ -235,14 +235,14 @@ class Litespeed_Crawler
 				// check result headers
 				foreach ( $urls as $i => $url ) {
 					// check response
-					if ( stripos($rets[$i], "no-cache") !== false ) {
+					if ( stripos($rets[$i], "HTTP/1.1 428 Precondition Required") !== false ) {
+						return __('Stopped: crawler disabled by the server admin', 'litespeed-cache') ;
+					}
+					elseif ( stripos($rets[$i], "no-cache") !== false ) {
 						$this->_blacklist[] = $url ;
 					}
 					elseif ( stripos($rets[$i], "HTTP/1.1 200 OK") === false && stripos($rets[$i], "HTTP/1.1 201 Created") === false ){
 						$this->_blacklist[] = $url ;
-					}
-					elseif ( stripos($rets[$i], "HTTP/1.1 428 Precondition Required") !== false ) {
-						return __('Stopped due to crawler disabled by the server admin', 'litespeed-cache') ;
 					}
 				}
 
