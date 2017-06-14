@@ -18,6 +18,7 @@ $known_compat = array(
 	'wpForo',
 	'WPLister',
 	'Avada',
+	'WP-PostRatings',
 );
 
 $known_uncompat = array();

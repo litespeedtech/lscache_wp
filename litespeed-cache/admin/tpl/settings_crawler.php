@@ -83,12 +83,12 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Domain IP', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Site IP', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP ; ?>
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specifying domain IP can make crawler directly hit server, which can speed up crawling. Especially when using CDN, this option can get crawler bypass CDN.', 'litespeed-cache');
+				<?php echo __('Specifying site IP will instruct the crawler to try to use the IP first during a crawl. This may speed up crawling in certain situations, such as when using a CDN. This option will bypass visiting the CDN and skip an unnecessary extra step.', 'litespeed-cache');
 				?>
 				<?php $this->recommended($id) ; ?>
 			</div>
@@ -101,7 +101,7 @@ if ( !defined('WPINC') ) die;
 			<?php $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ; ?>
 			<?php $this->build_input($id, false, false, false, 'litespeed_custom_sitemap'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specifying the sitemap for crawler. If this is set, the crawler will not generate the sitemap by itself but use this sitemap.', 'litespeed-cache');
+				<?php echo __('Specify the sitemap for the crawler to use. If this is set, the crawler will not generate the sitemap by itself and use this sitemap instead.', 'litespeed-cache');
 				?>
 			</div>
 		</td>

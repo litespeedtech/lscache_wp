@@ -28,6 +28,7 @@ include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wptouch.ph
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-yith-wishlist.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wpforo.php');
 include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-avada.php');
+include_once(LSWCP_DIR . 'thirdparty/class-litespeed-cache-thirdparty-wp-postratings.php');
 
 // This plugin's integration is sub optimal. Commented out until they use
 // DOING_AJAX or provide a better alternative.
