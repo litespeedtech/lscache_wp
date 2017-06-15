@@ -191,6 +191,15 @@ We recommend you trying an image optimization plugin like <a href="https://short
 
 3. Purge the cache to use the updated pages.
 
+= How do I enable the crawler? =
+
+The crawler is disabled by default, and must be enabled by the server admin first.
+
+Then, you can enable crawler from "LiteSpeed Cache" -> "Crawler".
+
+For more detailed information about crawler setup, please see [our blog post on the subject](https://blog.litespeedtech.com/2017/06/14/wpw-crawl-your-site-make-it-fly/).
+
+
 == Plugin Developers ==
 
 Any WP plugin that populates front end content that can be publicly cached should work with LSCache.
