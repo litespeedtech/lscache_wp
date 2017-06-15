@@ -329,6 +329,9 @@ These hook points are provided for hooking into the cache's run time functionali
 
 == Changelog ==
 
+= 1.1.1.1 - June 15 2017 =
+[BUGFIX] Hotfix for insufficient validation of site IP value in crawler settings.
+
 = 1.1.1 - June 15 2017 =
 [NEW] As of LiteSpeed Web Server v.5.1.16, the crawler can now be enabled/disabled at the server level.
 [NEW] Added the ability to provide a custom sitemap for crawling.
