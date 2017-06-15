@@ -47,6 +47,8 @@ class LiteSpeed_Cache_Admin_Display
 
 		// main css
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_style'));
+		// Main js
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
 
 		$is_network_admin = is_network_admin() ;
 
@@ -83,9 +85,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function load_assets($hook)
 	{
-		// Main js
-		$this->enqueue_scripts();
-
 		// Admin footer
 		add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1);
 
@@ -191,9 +190,15 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		wp_register_script(LiteSpeed_Cache::PLUGIN_NAME,
 			plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js',
-			array(), LiteSpeed_Cache::PLUGIN_VERSION, false);
+			array(), LiteSpeed_Cache::PLUGIN_VERSION, false
+		) ;
 
-		wp_enqueue_script(LiteSpeed_Cache::PLUGIN_NAME);
+		if ( LiteSpeed_Cache_Router::has_whm_msg() ) {
+			$ajax_url_dismiss_whm = self::build_url(LiteSpeed_Cache::ACTION_DISMISS_WHM, LiteSpeed_Cache::ACTION_DISMISS_WHM) ;
+			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_whm' => $ajax_url_dismiss_whm)) ;
+		}
+
+		wp_enqueue_script(LiteSpeed_Cache::PLUGIN_NAME) ;
 	}
 
 	/**
@@ -264,7 +269,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function add_quick_purge()
 	{
 		global $wp_admin_bar;
-		$url = $this->build_url(LiteSpeed_Cache::ACTION_PURGE_ALL);
+		$url = self::build_url(LiteSpeed_Cache::ACTION_PURGE_ALL);
 
 		$wp_admin_bar->add_node(array(
 			'id'    => 'lscache-quick-purge',
@@ -725,6 +730,12 @@ class LiteSpeed_Cache_Admin_Display
 		self::add_notice(self::NOTICE_BLUE . ' lscwp-whm-notice', $buf);
 	}
 
+	/**
+	 * Display error cookie msg.
+	 *
+	 * @since 1.0.12
+	 * @access public
+	 */
 	public static function show_error_cookie()
 	{
 		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache') . ' '

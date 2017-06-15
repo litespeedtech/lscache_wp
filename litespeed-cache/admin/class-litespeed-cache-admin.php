@@ -141,7 +141,8 @@ class LiteSpeed_Cache_Admin
 		elseif (!current_user_can('manage_network_options')) {
 			return;
 		}
-		if (get_transient(LiteSpeed_Cache::WHM_TRANSIENT) == LiteSpeed_Cache::WHM_TRANSIENT_VAL) {
+
+		if (LiteSpeed_Cache_Router::has_whm_msg()) {
 			$this->display->show_display_installed();
 		}
 	}

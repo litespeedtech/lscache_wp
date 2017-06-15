@@ -30,6 +30,7 @@ class LiteSpeed_Cache
 
 	const NONCE_NAME = 'LSCWP_NONCE';
 	const ACTION_KEY = 'LSCWP_CTRL';
+	const ACTION_DISMISS_WHM = 'dismiss-whm';
 	const ACTION_SAVE_HTACCESS = 'save-htaccess';
 	const ACTION_SAVE_SETTINGS = 'save-settings';
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network';
@@ -251,6 +252,10 @@ class LiteSpeed_Cache
 				$this->purge_list();
 				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache');
 				break;
+
+			case LiteSpeed_Cache::ACTION_DISMISS_WHM:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
+				LiteSpeed_Cache_Activation::dismiss_whm() ;
+				break ;
 
 			default:
 				break;

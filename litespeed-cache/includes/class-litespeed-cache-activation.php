@@ -170,15 +170,15 @@ class LiteSpeed_Cache_Activation
 		if ( is_multisite() ) {
 			if ( is_network_admin() ) {
 				$options = get_site_option(LiteSpeed_Cache_Config::OPTION_NAME) ;
-				if ( isset($options) 
+				if ( isset($options)
 					&& is_array($options) ) {
 					$opt_str = serialize($options) ;
 					update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $opt_str) ;
 				}
 			}
 			if ( !self::is_deactivate_last() ) {
-				if ( is_network_admin() 
-						&& isset($opt_str) 
+				if ( is_network_admin()
+						&& isset($opt_str)
 						&& $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] ) {
 					$reset = LiteSpeed_Cache_Config::get_rule_reset_options() ;
 					$errors = array() ;
@@ -201,7 +201,7 @@ class LiteSpeed_Cache_Activation
 		}
 		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
 		// delete in case it's not deleted prior to deactivation.
-		delete_transient(LiteSpeed_Cache::WHM_TRANSIENT) ;
+		self::dismiss_whm() ;
 	}
 
 	/**
@@ -225,5 +225,17 @@ class LiteSpeed_Cache_Activation
 		$ret = defined('LSCACHE_ADV_CACHE') ;
 		return $ret ;
 	}
+
+	/**
+	 * Delete whm transient msg tag
+	 *
+	 * @since 1.1.1
+	 * @access public
+	 */
+	public static function dismiss_whm()
+	{
+		delete_transient(LiteSpeed_Cache::WHM_TRANSIENT) ;
+	}
+
 
 }

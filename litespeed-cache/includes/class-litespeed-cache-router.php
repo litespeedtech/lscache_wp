@@ -20,6 +20,7 @@ class LiteSpeed_Cache_Router
 	private static $_action;
 	private static $_is_admin_ip;
 	private static $_siteurl;
+	private static $_has_whm_msg;
 
 	/**
 	 * Check if crawler is enabled on server level
@@ -40,6 +41,21 @@ class LiteSpeed_Cache_Router
 			}
 		}
 		return self::$_siteurl ;
+	}
+
+	/**
+	 * Check if has whm notice
+	 *
+	 * @since 1.1.1
+	 * @access public
+	 * @return boolean
+	 */
+	public static function has_whm_msg()
+	{
+		if ( ! isset(self::$_has_whm_msg) ) {
+			self::$_has_whm_msg = get_transient(LiteSpeed_Cache::WHM_TRANSIENT) == LiteSpeed_Cache::WHM_TRANSIENT_VAL ;
+		}
+		return self::$_has_whm_msg ;
 	}
 
 	/**
@@ -226,6 +242,12 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
 				if ( $_is_enabled && $_can_option && !$_is_network_admin ) {
+					self::$_action = $action ;
+				}
+				return ;
+
+			case LiteSpeed_Cache::ACTION_DISMISS_WHM:
+				if ( self::is_ajax() ) {
 					self::$_action = $action ;
 				}
 				return ;
