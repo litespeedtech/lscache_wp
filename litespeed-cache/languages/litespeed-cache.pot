@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1.0.1\n"
+"Project-Id-Version: 1.1.1\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2017-06-08 14:40-0500\n"
+"POT-Creation-Date: 2017-06-15 12:11-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,149 +17,154 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin/class-litespeed-cache-admin-display.php:132
+#: admin/class-litespeed-cache-admin-display.php:134
 msgid "Manage"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:134
-#: admin/class-litespeed-cache-admin-display.php:207
+#: admin/class-litespeed-cache-admin-display.php:136
+#: admin/class-litespeed-cache-admin-display.php:215
 msgid "Settings"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:137
+#: admin/class-litespeed-cache-admin-display.php:139
 msgid "Edit .htaccess"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:140
+#: admin/class-litespeed-cache-admin-display.php:142
 msgid "Information"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:142
+#: admin/class-litespeed-cache-admin-display.php:144
 msgid "Environment Report"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:146 admin/tpl/settings.php:23
+#: admin/class-litespeed-cache-admin-display.php:148 admin/tpl/settings.php:23
 msgid "Crawler"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:228
+#: admin/class-litespeed-cache-admin-display.php:236
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:268
+#: admin/class-litespeed-cache-admin-display.php:276
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:382
+#: admin/class-litespeed-cache-admin-display.php:390
 msgid "Overview"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:384
+#: admin/class-litespeed-cache-admin-display.php:392
 msgid "LiteSpeed Cache is a page cache built into LiteSpeed Web Server."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:385
+#: admin/class-litespeed-cache-admin-display.php:393
 msgid ""
 "This plugin communicates with LiteSpeed Web Server to let it know which "
 "pages are cacheable and when to purge them."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:386
+#: admin/class-litespeed-cache-admin-display.php:394
 msgid ""
 "A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be "
 "installed and enabled."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:397
+#: admin/class-litespeed-cache-admin-display.php:405
 msgid "For more information:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:399
+#: admin/class-litespeed-cache-admin-display.php:407
 msgid "Support Forum"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:630
+#: admin/class-litespeed-cache-admin-display.php:638
 msgid "LiteSpeed Cache plugin is installed!"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:631
+#: admin/class-litespeed-cache-admin-display.php:639
 msgid ""
 "This message indicates that the plugin was installed by the server admin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:632
+#: admin/class-litespeed-cache-admin-display.php:640
 msgid ""
 "The LiteSpeed Cache plugin is used to cache pages - a simple way to improve "
 "the performance of the site."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:633
+#: admin/class-litespeed-cache-admin-display.php:641
 msgid ""
 "However, there is no way of knowing all the possible customizations that "
 "were implemented."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:634
+#: admin/class-litespeed-cache-admin-display.php:642
 msgid ""
 "For that reason, please test the site to make sure everything still "
 "functions properly."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:636
+#: admin/class-litespeed-cache-admin-display.php:644
 msgid "Examples of test cases include:"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:638
+#: admin/class-litespeed-cache-admin-display.php:646
 msgid "Visit the site while logged out."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:639
+#: admin/class-litespeed-cache-admin-display.php:647
 msgid "Create a post, make sure the front page is accurate."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:641
+#: admin/class-litespeed-cache-admin-display.php:649
 #, php-format
 msgid ""
 "If there are any questions, the team is always happy to answer any questions "
 "on the <a %s>support forum</a>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:644
+#: admin/class-litespeed-cache-admin-display.php:652
 msgid ""
 "If you would rather not move at litespeed, you can deactivate this plugin."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:651
+#: admin/class-litespeed-cache-admin-display.php:665
 msgid "NOTICE: Database login cookie did not match your login cookie."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:652
+#: admin/class-litespeed-cache-admin-display.php:666
 msgid ""
 "If the login cookie was recently changed in the settings, please log out and "
 "back in."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:653
+#: admin/class-litespeed-cache-admin-display.php:667
 #, php-format
 msgid ""
 "If not, please verify the setting in the <a href=\"%1$s\">Advanced tab</a>."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:657
+#: admin/class-litespeed-cache-admin-display.php:671
 msgid ""
 "If using OpenLiteSpeed, the server must be restarted once for the changes to "
 "take effect."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:778 admin/tpl/crawler.php:127
+#: admin/class-litespeed-cache-admin-display.php:792 admin/tpl/crawler.php:137
 #: admin/tpl/settings_general.php:25
 msgid "Enable"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-display.php:782 admin/tpl/crawler.php:127
+#: admin/class-litespeed-cache-admin-display.php:796 admin/tpl/crawler.php:137
 #: admin/tpl/settings_general.php:31
 msgid "Disable"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-display.php:823
+#, php-format
+msgid "Recommended value: %s."
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-error.php:82
@@ -417,7 +422,7 @@ msgid "Delay"
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-settings.php:472
-#: admin/tpl/settings_crawler.php:20
+#: admin/tpl/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
@@ -430,15 +435,23 @@ msgid "Whole Interval"
 msgstr ""
 
 #: admin/class-litespeed-cache-admin-settings.php:496
-#: admin/tpl/settings_crawler.php:50
+#: admin/tpl/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-settings.php:555
+#: admin/class-litespeed-cache-admin-settings.php:507
+msgid "Domain IP has a wrong IP value"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-settings.php:515
+msgid "Custom Sitemap can not be parsed"
+msgstr ""
+
+#: admin/class-litespeed-cache-admin-settings.php:583
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/class-litespeed-cache-admin-settings.php:675
+#: admin/class-litespeed-cache-admin-settings.php:703
 msgid "File saved."
 msgstr ""
 
@@ -480,162 +493,172 @@ msgid ""
 "not hesitate to ask them on the <a %s>support forum</a>."
 msgstr ""
 
-#: admin/tpl/crawler.php:11 admin/tpl/crawler.php:70
+#: admin/tpl/crawler.php:14 admin/tpl/crawler.php:79
 msgid "LiteSpeed Cache Crawler"
 msgstr ""
 
-#: admin/tpl/crawler.php:19
+#: admin/tpl/crawler.php:22
 msgid "Crawler File"
 msgstr ""
 
-#: admin/tpl/crawler.php:21
+#: admin/tpl/crawler.php:24
 msgid "Generate Crawler File"
 msgstr ""
 
-#: admin/tpl/crawler.php:26
+#: admin/tpl/crawler.php:29
 #, php-format
 msgid "Generated at %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:30
+#: admin/tpl/crawler.php:33
 #, php-format
 msgid ""
 "On click, this will create a crawler sitemap file in plugin directory %s."
 msgstr ""
 
-#: admin/tpl/crawler.php:40
+#: admin/tpl/crawler.php:43
 #, php-format
 msgid "%d hours"
 msgstr ""
 
-#: admin/tpl/crawler.php:43
+#: admin/tpl/crawler.php:46
 #, php-format
 msgid "%d hour"
 msgstr ""
 
-#: admin/tpl/crawler.php:50
+#: admin/tpl/crawler.php:53
 #, php-format
 msgid "%d minutes"
 msgstr ""
 
-#: admin/tpl/crawler.php:53
+#: admin/tpl/crawler.php:56
 #, php-format
 msgid "%d minute"
 msgstr ""
 
-#: admin/tpl/crawler.php:57
+#: admin/tpl/crawler.php:60
 msgid "Crawler Cron"
 msgstr ""
 
-#: admin/tpl/crawler.php:60
-msgid "Cron Name"
-msgstr ""
-
-#: admin/tpl/crawler.php:61
-msgid "Run Frequency"
-msgstr ""
-
-#: admin/tpl/crawler.php:62
-msgid "Last Status"
-msgstr ""
-
 #: admin/tpl/crawler.php:63
-msgid "Activation"
+msgid "WARNING"
 msgstr ""
 
 #: admin/tpl/crawler.php:64
+msgid ""
+"The crawler feature is not enabled on the LiteSpeed server. Please consult "
+"your server admin."
+msgstr ""
+
+#: admin/tpl/crawler.php:69
+msgid "Cron Name"
+msgstr ""
+
+#: admin/tpl/crawler.php:70
+msgid "Run Frequency"
+msgstr ""
+
+#: admin/tpl/crawler.php:71
+msgid "Last Status"
+msgstr ""
+
+#: admin/tpl/crawler.php:72
+msgid "Activation"
+msgstr ""
+
+#: admin/tpl/crawler.php:73
 msgid "Actions"
 msgstr ""
 
-#: admin/tpl/crawler.php:78 admin/tpl/crawler.php:83
+#: admin/tpl/crawler.php:87 admin/tpl/crawler.php:92
 #, php-format
 msgid "The current sitemap crawl started at %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:86
+#: admin/tpl/crawler.php:95
 #, php-format
 msgid "The next complete sitemap crawl will start at %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:100
+#: admin/tpl/crawler.php:109
 #, php-format
 msgid "The last complete run cost %s seconds"
 msgstr ""
 
-#: admin/tpl/crawler.php:110
+#: admin/tpl/crawler.php:119
 msgid "Is running"
 msgstr ""
 
-#: admin/tpl/crawler.php:133
+#: admin/tpl/crawler.php:143
 msgid "Reset position"
 msgstr ""
 
-#: admin/tpl/crawler.php:134
+#: admin/tpl/crawler.php:146
 msgid "Manually run"
-msgstr ""
-
-#: admin/tpl/crawler.php:138
-#, php-format
-msgid "<b>Last interval:</b> %s"
-msgstr ""
-
-#: admin/tpl/crawler.php:144
-#, php-format
-msgid "<b>Ended reason:</b> %s"
 msgstr ""
 
 #: admin/tpl/crawler.php:150
 #, php-format
+msgid "<b>Last interval:</b> %s"
+msgstr ""
+
+#: admin/tpl/crawler.php:156
+#, php-format
+msgid "<b>Ended reason:</b> %s"
+msgstr ""
+
+#: admin/tpl/crawler.php:162
+#, php-format
 msgid "<b>Last crawled:</b> %s item(s)"
 msgstr ""
 
-#: admin/tpl/crawler.php:158
+#: admin/tpl/crawler.php:170
 msgid "Run frequency is set by the Interval Between Runs setting."
 msgstr ""
 
-#: admin/tpl/crawler.php:159
+#: admin/tpl/crawler.php:171
 msgid "Only one crawler can run concurrently."
 msgstr ""
 
-#: admin/tpl/crawler.php:160
+#: admin/tpl/crawler.php:172
 msgid ""
 "If both the cron and manual run start at a similar time, the first one to "
 "start will run."
 msgstr ""
 
-#: admin/tpl/crawler.php:161
+#: admin/tpl/crawler.php:173
 #, php-format
 msgid ""
 "Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to "
 "create the system cron task."
 msgstr ""
 
-#: admin/tpl/crawler.php:166
+#: admin/tpl/crawler.php:178
 msgid "Watch Crawler Status"
 msgstr ""
 
-#: admin/tpl/crawler.php:173
+#: admin/tpl/crawler.php:185
 msgid "Show crawler status"
 msgstr ""
 
-#: admin/tpl/crawler.php:191
+#: admin/tpl/crawler.php:203
 msgid "No crawler meta file generated yet"
 msgstr ""
 
-#: admin/tpl/crawler.php:196
+#: admin/tpl/crawler.php:208
 msgid "Sitemap Generation Blacklist"
 msgstr ""
 
-#: admin/tpl/crawler.php:205 admin/tpl/edit_htaccess.php:48
+#: admin/tpl/crawler.php:217 admin/tpl/edit_htaccess.php:48
 msgid "Save"
 msgstr ""
 
-#: admin/tpl/crawler.php:209
+#: admin/tpl/crawler.php:221
 #, php-format
 msgid "Current blacklist has %s item(s)."
 msgstr ""
 
-#: admin/tpl/crawler.php:210
+#: admin/tpl/crawler.php:222
 msgid ""
 "All Urls which returned no-cache tags will be added here, after the initial "
 "crawling."
@@ -840,31 +863,31 @@ msgid ""
 "it sees a specified User Agent."
 msgstr ""
 
-#: admin/tpl/info_compatibility.php:26
+#: admin/tpl/info_compatibility.php:27
 msgid "LiteSpeed Cache Plugin Compatibility"
 msgstr ""
 
-#: admin/tpl/info_compatibility.php:28
+#: admin/tpl/info_compatibility.php:29
 msgid "Link Here"
 msgstr ""
 
-#: admin/tpl/info_compatibility.php:30
+#: admin/tpl/info_compatibility.php:31
 msgid ""
 "Please add a comment listing the plugins that you are using and how they are "
 "functioning on the support thread."
 msgstr ""
 
-#: admin/tpl/info_compatibility.php:31
+#: admin/tpl/info_compatibility.php:32
 msgid "With your help, we can provide the best WordPress caching solution."
 msgstr ""
 
-#: admin/tpl/info_compatibility.php:34
+#: admin/tpl/info_compatibility.php:35
 msgid ""
 "This is a list of plugins that are confirmed to be compatible with LiteSpeed "
 "Cache Plugin:"
 msgstr ""
 
-#: admin/tpl/info_compatibility.php:43
+#: admin/tpl/info_compatibility.php:44
 msgid "This is a list of known UNSUPPORTED plugins:"
 msgstr ""
 
@@ -916,9 +939,10 @@ msgid "This integration utilizes OLS's cache module."
 msgstr ""
 
 #: admin/tpl/info_config.php:30
+#, php-format
 msgid ""
 "If it is a fresh OLS installation, the easiest way to integrate is to use <a "
-">ols1clk.</a>"
+"%s>ols1clk.</a>"
 msgstr ""
 
 #: admin/tpl/info_config.php:32
@@ -1288,19 +1312,15 @@ msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
 #: admin/tpl/manage.php:180
-msgid "Purge pages by relative URL."
+msgid "Purge pages by relative or full URL."
 msgstr ""
 
 #: admin/tpl/manage.php:181
-msgid "Must be exact match."
-msgstr ""
-
-#: admin/tpl/manage.php:182
 #, php-format
-msgid "e.g. Use %s for %s."
+msgid "e.g. Use %s or %s."
 msgstr ""
 
-#: admin/tpl/manage.php:195
+#: admin/tpl/manage.php:194
 msgid "Purge List"
 msgstr ""
 
@@ -1633,56 +1653,56 @@ msgstr ""
 msgid "Crawler Settings"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:12
+#: admin/tpl/settings_crawler.php:13
 msgid "microseconds"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:14
+#: admin/tpl/settings_crawler.php:15
 msgid ""
 "Specify time in microseconds for the delay between requests during a crawl."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:22 admin/tpl/settings_crawler.php:32
-#: admin/tpl/settings_crawler.php:42 admin/tpl/settings_general.php:60
-#: admin/tpl/settings_general.php:70 admin/tpl/settings_general.php:80
-#: admin/tpl/settings_general.php:91 admin/tpl/settings_general.php:102
-#: admin/tpl/settings_general.php:113
+#: admin/tpl/settings_crawler.php:25 admin/tpl/settings_crawler.php:37
+#: admin/tpl/settings_crawler.php:49 admin/tpl/settings_general.php:61
+#: admin/tpl/settings_general.php:73 admin/tpl/settings_general.php:85
+#: admin/tpl/settings_general.php:98 admin/tpl/settings_general.php:111
+#: admin/tpl/settings_general.php:124
 msgid "seconds"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:24
+#: admin/tpl/settings_crawler.php:27
 msgid "Specify time in seconds for the duration of the crawl interval."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:30
+#: admin/tpl/settings_crawler.php:34
 msgid "Interval Between Runs"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:34
+#: admin/tpl/settings_crawler.php:39
 msgid ""
 "Specify time in seconds for the time between each run interval. Must be "
 "greater than 60."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:40
+#: admin/tpl/settings_crawler.php:46
 msgid "Crawl Interval"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:44
+#: admin/tpl/settings_crawler.php:51
 msgid ""
 "Specify how long in seconds before the crawler should initiate crawling the "
 "entire sitemap again."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:54
+#: admin/tpl/settings_crawler.php:63
 msgid "Specify Number of Threads to use while crawling."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:60
+#: admin/tpl/settings_crawler.php:70
 msgid "Server Load Limit"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:64
+#: admin/tpl/settings_crawler.php:75
 msgid ""
 "The maximum average server load allowed while crawling. The number of "
 "crawler threads in use will be actively reduced until average server load "
@@ -1690,73 +1710,95 @@ msgid ""
 "current crawler run will be terminated."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:74
-msgid "Include Posts"
+#: admin/tpl/settings_crawler.php:86
+msgid "Site IP"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:78
-msgid "Include Posts in crawler sitemap generation."
+#: admin/tpl/settings_crawler.php:91
+msgid ""
+"Specifying site IP will instruct the crawler to try to use the IP first "
+"during a crawl. This may speed up crawling in certain situations, such as "
+"when using a CDN. This option will bypass visiting the CDN and skip an "
+"unnecessary extra step."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:84
-msgid "Include Pages"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:88
-msgid "Include Pages in crawler sitemap generation."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:94
-msgid "Include Categories"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:98
-msgid "Include Categories pages in crawler sitemap generation."
+#: admin/tpl/settings_crawler.php:99
+msgid "Custom Sitemap"
 msgstr ""
 
 #: admin/tpl/settings_crawler.php:104
+msgid ""
+"Specify the sitemap for the crawler to use. If this is set, the crawler will "
+"not generate the sitemap by itself and use this sitemap instead."
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:111
+msgid "Include Posts"
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:115
+msgid "Include Posts in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:121
+msgid "Include Pages"
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:125
+msgid "Include Pages in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:131
+msgid "Include Categories"
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:135
+msgid "Include Categories pages in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/settings_crawler.php:141
 msgid "Include Tags"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:108
+#: admin/tpl/settings_crawler.php:145
 msgid "Include Tags pages in crawler sitemap generation."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:114
+#: admin/tpl/settings_crawler.php:151
 msgid "Exclude Custom Post Types"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:119
+#: admin/tpl/settings_crawler.php:156
 msgid ""
 "If you want to exclude certain Custom Post Types in sitemap, add the Custom "
 "Post Types in the box, one per line."
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:123
+#: admin/tpl/settings_crawler.php:160
 msgid "Available Custom Post Type"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:130
+#: admin/tpl/settings_crawler.php:167
 msgid "Order links by"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:137
+#: admin/tpl/settings_crawler.php:174
 msgid "Date, descending (Default)"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:143
+#: admin/tpl/settings_crawler.php:180
 msgid "Date, ascending"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:149
+#: admin/tpl/settings_crawler.php:186
 msgid "Alphabetical, descending"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:155
+#: admin/tpl/settings_crawler.php:192
 msgid "Alphabetical, ascending"
 msgstr ""
 
-#: admin/tpl/settings_crawler.php:160
+#: admin/tpl/settings_crawler.php:197
 msgid ""
 "Please choose one of the above options to set the order in which the sitemap "
 "will be parsed."
@@ -1940,80 +1982,80 @@ msgstr ""
 msgid "Default Public Cache TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:62
+#: admin/tpl/settings_general.php:63
 msgid ""
 "Specify how long, in seconds, public pages are cached. Minimum is 30 seconds."
 msgstr ""
 
-#: admin/tpl/settings_general.php:68
+#: admin/tpl/settings_general.php:70
 msgid "Default Front Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:72
+#: admin/tpl/settings_general.php:75
 msgid ""
 "Specify how long, in seconds, the front page is cached. Minimum is 30 "
 "seconds."
 msgstr ""
 
-#: admin/tpl/settings_general.php:78
+#: admin/tpl/settings_general.php:82
 msgid "Default Feed TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:82
+#: admin/tpl/settings_general.php:87
 msgid "Specify how long, in seconds, feeds are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:83
+#: admin/tpl/settings_general.php:88
 msgid "If this is set to a number less than 30, feeds will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:89
+#: admin/tpl/settings_general.php:95
 msgid "Default 404 Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:93
+#: admin/tpl/settings_general.php:100
 msgid "Specify how long, in seconds, 404 pages are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:94
+#: admin/tpl/settings_general.php:101
 msgid "If this is set to a number less than 30, 404 pages will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:100
+#: admin/tpl/settings_general.php:108
 msgid "Default 403 Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:104
+#: admin/tpl/settings_general.php:113
 msgid "Specify how long, in seconds, 403 pages are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:105
+#: admin/tpl/settings_general.php:114
 msgid "If this is set to a number less than 30, 403 pages will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:111
+#: admin/tpl/settings_general.php:121
 msgid "Default 500 Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:115
+#: admin/tpl/settings_general.php:126
 msgid "Specify how long, in seconds, 500 pages are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:116
+#: admin/tpl/settings_general.php:127
 msgid "If this is set to a number less than 30, 500 pages will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:122
+#: admin/tpl/settings_general.php:134
 msgid "Enable Cache for Commenters"
 msgstr ""
 
-#: admin/tpl/settings_general.php:126
+#: admin/tpl/settings_general.php:138
 msgid ""
 "When enabled, commenters will not be able to see their comments awaiting "
 "moderation."
 msgstr ""
 
-#: admin/tpl/settings_general.php:127
+#: admin/tpl/settings_general.php:139
 msgid ""
 "Disabling this option will display those types of comments, but the cache "
 "will not perform as well."
@@ -2244,7 +2286,7 @@ msgstr ""
 msgid "Purged the tags!"
 msgstr ""
 
-#: includes/class-litespeed-cache-config.php:203
+#: includes/class-litespeed-cache-config.php:205
 msgid "LSCache Custom Cron"
 msgstr ""
 
@@ -2262,94 +2304,98 @@ msgstr ""
 msgid "File created successfully: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache-crawler.php:245
+#: includes/class-litespeed-cache-crawler.php:327
 #, php-format
 msgid "Failed to send position reset notification: %s"
 msgstr ""
 
-#: includes/class-litespeed-cache-crawler.php:249
+#: includes/class-litespeed-cache-crawler.php:331
 msgid "Position reset notification sent successfully"
 msgstr ""
 
-#: includes/class-litespeed-cache-crawler.php:338
-#: lib/litespeed/litespeed-crawler.class.php:307
+#: includes/class-litespeed-cache-crawler.php:429
+#: lib/litespeed/litespeed-crawler.class.php:325
 msgid "Reached end of sitemap file. Crawling completed."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:215
+#: includes/class-litespeed-cache.php:217
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:220
+#: includes/class-litespeed-cache.php:222
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:225
+#: includes/class-litespeed-cache.php:227
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:230
+#: includes/class-litespeed-cache.php:232
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:235
+#: includes/class-litespeed-cache.php:237
 msgid "Notified LiteSpeed Web Server to purge the public cache."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:240
+#: includes/class-litespeed-cache.php:242
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:245
+#: includes/class-litespeed-cache.php:247
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: includes/class-litespeed-cache.php:493
+#: includes/class-litespeed-cache.php:503
 #, php-format
 msgid "Purge category %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:520
+#: includes/class-litespeed-cache.php:530
 #, php-format
 msgid "Purge Post ID %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:549
+#: includes/class-litespeed-cache.php:559
 #, php-format
 msgid "Purge tag %s"
 msgstr ""
 
-#: includes/class-litespeed-cache.php:581
+#: includes/class-litespeed-cache.php:597
 #, php-format
 msgid "Purge url %s"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:157
+#: lib/litespeed/litespeed-crawler.class.php:172
 msgid "Oh look, there is already another LiteSpeed crawler running!"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:163
+#: lib/litespeed/litespeed-crawler.class.php:178
 msgid "Stopped due to load hit the maximum."
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:217
+#: lib/litespeed/litespeed-crawler.class.php:232
 #, php-format
 msgid "Stopped due to error when crawling urls %1$s : %2$s"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:241
+#: lib/litespeed/litespeed-crawler.class.php:239
+msgid "Stopped: crawler disabled by the server admin"
+msgstr ""
+
+#: lib/litespeed/litespeed-crawler.class.php:259
 msgid "Stopped due to exceeding defined Maximum Run Time"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:257
+#: lib/litespeed/litespeed-crawler.class.php:275
 msgid "Stopped due to reset meta position"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:265
+#: lib/litespeed/litespeed-crawler.class.php:283
 msgid "Stopped due to load over limit"
 msgstr ""
 
-#: lib/litespeed/litespeed-crawler.class.php:508
+#: lib/litespeed/litespeed-crawler.class.php:536
 #, php-format
 msgid "Cannot read meta file: %s"
 msgstr ""
