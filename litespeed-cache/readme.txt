@@ -329,6 +329,17 @@ These hook points are provided for hooking into the cache's run time functionali
 
 == Changelog ==
 
+= 1.1.1 - June 15 2017 =
+[NEW] As of LiteSpeed Web Server v.5.1.16, the crawler can now be enabled/disabled at the server level.
+[NEW] Added the ability to provide a custom sitemap for crawling.
+[NEW] Added ability to use site IP address directly in crawler settings.
+[NEW] Crawler performance improved with the use of new custom user agent 'lsrunner'.
+[NEW] "Purge By URLs" now supports full URL paths.
+[NEW] Added thirdparty WP-PostRatings compatibility;
+[BUGFIX] Cache is now cleared when changing post status from published to draft.
+[BUGFIX] WHM activation message no longer continues to reappear after being dismissed.
+[COSMETIC] Display recommended values for settings.
+
 = 1.1.0.1 - June 8 2017 =
 [UPDATE] Improved default crawler interval setting.
 [UPDATE] Tested up to WP 4.8.
