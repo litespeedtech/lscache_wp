@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private $config;
 
 	const PLUGIN_NAME = 'litespeed-cache';
-	const PLUGIN_VERSION = '1.1.1.1';
+	const PLUGIN_VERSION = '1.1.2';
 
 	const LSCOOKIE_VARY_NAME = 'LSCACHE_VARY_COOKIE' ;
 	const LSCOOKIE_DEFAULT_VARY = '_lscache_vary' ;
