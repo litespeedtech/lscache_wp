@@ -1415,6 +1415,25 @@ class LiteSpeed_Cache
 	 */
 	public static function litespeed_comment_info()
 	{
+		// double check to make sure it is a html file
+		$buffer = ob_get_contents() ;
+		if ( strlen($buffer) > 300 ) {
+			$buffer = substr($buffer, 0, 300);
+		}
+		if ( strstr($buffer, '<!--') !== false ) {
+			$buffer = preg_replace('|<!--.*?-->|s', '', $buffer);
+		}
+		$is_html = stripos($buffer, '<html') === 0 || stripos($buffer, '<!DOCTYPE') === 0 ;
+		if ( defined('DOING_AJAX') ) {
+			return ;
+		}
+		if ( defined('DOING_CRON') ) {
+			return ;
+		}
+		if ( ! $is_html ) {
+			return ;
+		}
+
 		define('LITESPEED_COMMENT_INFO', true);
 	}
 
