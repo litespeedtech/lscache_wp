@@ -330,11 +330,11 @@ These hook points are provided for hooking into the cache's run time functionali
 == Changelog ==
 
 = 1.1.2 - June 20 2017 =
-* [BUGFIX] Fixed missing form close tag;
+* [BUGFIX] Fixed missing form close tag.
 * [UPDATE] Added a wiki link for enabling the crawler.
 * [UPDATE] Improved Site IP description.
-* [UPDATE] Added an introduction to the crawler on the Information page;
-* [REFACTOR] Added more detailed error messages for Site IP and Custom Sitemap settings;
+* [UPDATE] Added an introduction to the crawler on the Information page.
+* [REFACTOR] Added more detailed error messages for Site IP and Custom Sitemap settings.
 
 = 1.1.1.1 - June 15 2017 =
 * [BUGFIX] Hotfix for insufficient validation of site IP value in crawler settings.
@@ -345,7 +345,7 @@ These hook points are provided for hooking into the cache's run time functionali
 * [NEW] Added ability to use site IP address directly in crawler settings.
 * [NEW] Crawler performance improved with the use of new custom user agent 'lsrunner'.
 * [NEW] "Purge By URLs" now supports full URL paths.
-* [NEW] Added thirdparty WP-PostRatings compatibility;
+* [NEW] Added thirdparty WP-PostRatings compatibility.
 * [BUGFIX] Cache is now cleared when changing post status from published to draft.
 * [BUGFIX] WHM activation message no longer continues to reappear after being dismissed.
 * [COSMETIC] Display recommended values for settings.
