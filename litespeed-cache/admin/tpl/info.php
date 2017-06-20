@@ -7,6 +7,7 @@ $menuArr = array(
 	'compatibility' => __('Plugin Compatibilities', 'litespeed-cache'),
 	'common_rewrite' => __('Common Rewrite Rules', 'litespeed-cache'),
 	'admin_ip' => __('Admin IP Commands', 'litespeed-cache'),
+	'crawler' => __('Crawler', 'litespeed-cache'),
 );
 
 ?>

@@ -504,15 +504,15 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP;
 		if ( !empty($input[$id]) && ! WP_Http::is_ip_address($input[$id]) ) {
-			$errors[] = __('Domain IP has a wrong IP value', 'litespeed-cache');
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_SITE_IP, $input[$id]);
 		}
 		else {
 			$options[$id] = $input[$id];
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP;
-		if ( !empty($input[$id]) && ! $this->validate_custom_sitemap($input[$id]) ) {
-			$errors[] = __('Custom Sitemap can not be parsed', 'litespeed-cache');
+		if ( !empty($input[$id]) && ($err = $this->validate_custom_sitemap($input[$id])) !== true ) {
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error($err, $input[$id]) ;
 		}
 		else {
 			$options[$id] = $input[$id];

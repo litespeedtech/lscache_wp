@@ -37,6 +37,9 @@ class LiteSpeed_Cache_Admin_Error
 
 	const E_SETTING_ADMIN_IP_INV = 3000;
 	const E_SETTING_TEST_IP_INV = 3010;
+	const E_SETTING_SITE_IP = 3020;
+	const E_SETTING_CUSTOM_SITEMAP_READ = 3030;
+	const E_SETTING_CUSTOM_SITEMAP_PARSE = 3031;
 
 	const E_SETTING_NUMERIC = 3500;
 	const E_SETTING_CAT = 3510;
@@ -139,6 +142,16 @@ class LiteSpeed_Cache_Admin_Error
 
 			case self::E_SETTING_TEST_IP_INV:
 				return __('Invalid data in Test IPs.', 'litespeed-cache');
+
+			case self::E_SETTING_SITE_IP:
+				return __('Invalid Site IP: %s', 'litespeed-cache');
+
+			case self::E_SETTING_CUSTOM_SITEMAP_READ:
+				return __('Can not fetch Custom Sitemap: %s', 'litespeed-cache');
+
+			case self::E_SETTING_CUSTOM_SITEMAP_PARSE:
+				return __('Can not parse custom sitemap xml file: %s.', 'litespeed-cache') . ' '
+					. sprintf(__('Please make sure the file is xml format and the %s extension is installed on the server.', 'litespeed-cache'), 'php-xml') ;
 
 			// Admin settings with expected parameters for message.
 			case self::E_SETTING_NUMERIC:

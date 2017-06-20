@@ -195,11 +195,11 @@ class LiteSpeed_Cache_Crawler
 	public function parse_custom_sitemap($sitemap, $return_detail = true)
 	{
 		if ( ! file_get_contents($sitemap) ) {
-			return false ;
+			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ ;
 		}
 		$xml_object = simplexml_load_file($sitemap) ;
 		if ( ! $xml_object ) {
-			return false ;
+			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE ;
 		}
 		if ( ! $return_detail ) {
 			return true ;
@@ -214,7 +214,7 @@ class LiteSpeed_Cache_Crawler
 			}
 			if ( !empty($xml_array['sitemap']['loc']) ) {// is single sitemap
 				$urls = $this->parse_custom_sitemap($xml_array['sitemap']['loc']) ;
-				if ( $urls ) {
+				if ( is_array($urls) && !empty($urls) ) {
 					$_urls = array_merge($_urls, $urls) ;
 				}
 			}
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Crawler
 					$val = (array)$val ;
 					if ( !empty($val['loc']) ) {
 						$urls = $this->parse_custom_sitemap($val['loc']) ;// recursive parse sitemap
-						if ( $urls ) {
+						if ( is_array($urls) && !empty($urls) ) {
 							$_urls = array_merge($_urls, $urls) ;
 						}
 					}
@@ -266,9 +266,11 @@ class LiteSpeed_Cache_Crawler
 			$sitemap_urls = $this->parse_custom_sitemap($sitemap) ;
 			$urls = array() ;
 			$offset = strlen($this->_site_url) ;
-			foreach ($sitemap_urls as $val) {
-				if ( stripos($val, $this->_site_url) === 0 ) {
-					$urls[] = substr($val, $offset) ;
+			if ( is_array($sitemap_urls) && !empty($sitemap_urls) ) {
+				foreach ($sitemap_urls as $val) {
+					if ( stripos($val, $this->_site_url) === 0 ) {
+						$urls[] = substr($val, $offset) ;
+					}
 				}
 			}
 		}
