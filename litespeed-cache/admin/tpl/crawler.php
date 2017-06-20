@@ -61,7 +61,8 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
 			<div class="litespeed-callout litespeed-callout-danger">
 				<p><span class="attention"><?php echo __('WARNING', 'litespeed-cache'); ?></span></p>
-				<?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?>
+				<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
+				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed infomation.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
 			</div>
 		<?php endif; ?>
 		<table class="widefat striped">

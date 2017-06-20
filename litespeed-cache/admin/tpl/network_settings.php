@@ -49,5 +49,6 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	submit_button();
 
 	?>
+	</form>
 	</div>
 </div>

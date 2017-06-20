@@ -136,5 +136,6 @@ else {
 	}
 
 	?>
+	</form>
 	</div>
 </div>

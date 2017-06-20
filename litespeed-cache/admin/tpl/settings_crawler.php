@@ -88,9 +88,7 @@ if ( !defined('WPINC') ) die;
 			<?php $id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP ; ?>
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specifying site IP will instruct the crawler to try to use the IP first during a crawl. This may speed up crawling in certain situations, such as when using a CDN. This option will bypass visiting the CDN and skip an unnecessary extra step.', 'litespeed-cache');
-				?>
-				<?php $this->recommended($id) ; ?>
+				<?php echo __('Enter this site\'s IP address to crawl by IP instead of domain name. This eliminates the overhead of DNS and CDN lookups. (optional)', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -101,8 +99,7 @@ if ( !defined('WPINC') ) die;
 			<?php $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ; ?>
 			<?php $this->build_input($id, false, false, false, 'litespeed_custom_sitemap'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify the sitemap for the crawler to use. If this is set, the crawler will not generate the sitemap by itself and use this sitemap instead.', 'litespeed-cache');
-				?>
+				<?php echo __('The crawler can use your Google XML Sitemap instead of its own. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
