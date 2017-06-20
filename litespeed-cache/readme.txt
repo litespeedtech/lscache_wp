@@ -329,27 +329,34 @@ These hook points are provided for hooking into the cache's run time functionali
 
 == Changelog ==
 
+= 1.1.2 - June 20 2017 =
+* [BUGFIX] Fixed missing form close tag;
+* [UPDATE] Added a wiki link for enabling the crawler.
+* [UPDATE] Improved Site IP description.
+* [UPDATE] Added an introduction to the crawler on the Information page;
+* [REFACTOR] Added more detailed error messages for Site IP and Custom Sitemap settings;
+
 = 1.1.1.1 - June 15 2017 =
-[BUGFIX] Hotfix for insufficient validation of site IP value in crawler settings.
+* [BUGFIX] Hotfix for insufficient validation of site IP value in crawler settings.
 
 = 1.1.1 - June 15 2017 =
-[NEW] As of LiteSpeed Web Server v.5.1.16, the crawler can now be enabled/disabled at the server level.
-[NEW] Added the ability to provide a custom sitemap for crawling.
-[NEW] Added ability to use site IP address directly in crawler settings.
-[NEW] Crawler performance improved with the use of new custom user agent 'lsrunner'.
-[NEW] "Purge By URLs" now supports full URL paths.
-[NEW] Added thirdparty WP-PostRatings compatibility;
-[BUGFIX] Cache is now cleared when changing post status from published to draft.
-[BUGFIX] WHM activation message no longer continues to reappear after being dismissed.
-[COSMETIC] Display recommended values for settings.
+* [NEW] As of LiteSpeed Web Server v.5.1.16, the crawler can now be enabled/disabled at the server level.
+* [NEW] Added the ability to provide a custom sitemap for crawling.
+* [NEW] Added ability to use site IP address directly in crawler settings.
+* [NEW] Crawler performance improved with the use of new custom user agent 'lsrunner'.
+* [NEW] "Purge By URLs" now supports full URL paths.
+* [NEW] Added thirdparty WP-PostRatings compatibility;
+* [BUGFIX] Cache is now cleared when changing post status from published to draft.
+* [BUGFIX] WHM activation message no longer continues to reappear after being dismissed.
+* [COSMETIC] Display recommended values for settings.
 
 = 1.1.0.1 - June 8 2017 =
-[UPDATE] Improved default crawler interval setting.
-[UPDATE] Tested up to WP 4.8.
-[BUGFIX] Fixed compatibility with plugins that output json data.
-[BUGFIX] Fixed tab switching bug.
-[BUGFIX] Removed occasional duplicated messages on save.
-[COSMETIC] Improved crawler tooltips and descriptions.
+* [UPDATE] Improved default crawler interval setting.
+* [UPDATE] Tested up to WP 4.8.
+* [BUGFIX] Fixed compatibility with plugins that output json data.
+* [BUGFIX] Fixed tab switching bug.
+* [BUGFIX] Removed occasional duplicated messages on save.
+* [COSMETIC] Improved crawler tooltips and descriptions.
 
 = 1.1.0 - June 6 2017 =
 * [NEW] Added a crawler - this includes configuration options and a dedicated admin page. Uses wp-cron
