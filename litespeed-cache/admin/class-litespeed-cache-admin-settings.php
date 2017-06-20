@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->validate_crawler($input, $options, $errors);
 		}
 
-		if (!is_openlitespeed()) {
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 			$this->validate_esi($input, $options, $errors);
 
 			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];

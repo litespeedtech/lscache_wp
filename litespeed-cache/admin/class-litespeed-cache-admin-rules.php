@@ -64,7 +64,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if (is_writable($test_permissions)) {
 			$this->frontend_htaccess_writable = true;
 		}
-        if (is_openlitespeed()) {
+        if ( LITESPEED_SERVER_TYPE == 'LITESPEED_SERVER_OLS' ) {
             self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
         }
         else {
@@ -719,7 +719,7 @@ class LiteSpeed_Cache_Admin_Rules
 
         // todo: is this still needed?
 //        if (!is_null($haystack)) {
-//			if (!is_openlitespeed()) {
+//			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 //				$haystack = str_replace(self::$RW_LOOKUP_PUBLIC,
 //					self::$RW_LOOKUP_BOTH, $haystack);
 //			}

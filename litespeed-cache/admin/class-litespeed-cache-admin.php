@@ -92,7 +92,7 @@ class LiteSpeed_Cache_Admin
 			add_action($event, array( LiteSpeed_Cache::get_instance(), 'purge_all' ));
 		}
 
-		if (!is_openlitespeed()) {
+		if (  LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 			add_action('in_widget_form',
 				array(LiteSpeed_Cache_Admin_Display::get_instance(),
 					'show_widget_edit'), 100, 3);

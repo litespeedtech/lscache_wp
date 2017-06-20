@@ -421,7 +421,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_CRON_ACTIVE => false,
 				) ;
 
-		if (!is_openlitespeed()) {
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 			$default_options[self::OPID_ESI_ENABLE] = false;
 			$default_options[self::OPID_ESI_CACHE] = false;
 		}
@@ -622,7 +622,7 @@ class LiteSpeed_Cache_Config
 		}
 
 		$this->options = self::option_diff($default_options, $this->options);
-		// if ((!is_openlitespeed())
+		// if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' )
 		// 	&& ($this->options[self::OPID_ENABLED])
 		// 	&& ($this->options[self::OPID_ESI_ENABLE])) {
 		// 	LiteSpeed_Cache::plugin()->set_esi_post_type();

@@ -290,7 +290,7 @@ class LiteSpeed_Cache
 	 */
 	private function load_logged_in_actions()
 	{
-		if (!is_openlitespeed()) {
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 			add_action('wp_logout', array($this, 'purge_on_logout'));
 			if ($this->config->get_option(
 				LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
@@ -349,7 +349,7 @@ class LiteSpeed_Cache
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
 		//todo: make a constant for esiEnable included is_openlitespeed&cfg esi eanbled
-		if ((!is_openlitespeed()) && (!$is_ajax)
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' && (!$is_ajax)
 			&& $this->config->get_option(LiteSpeed_Cache_Config::OPID_ESI_ENABLE)) {
 			$esi = LiteSpeed_Cache_Esi::get_instance();
 			add_action('init', array($esi, 'register_post_type'));
@@ -456,7 +456,7 @@ class LiteSpeed_Cache
 	public function purge_all()
 	{
 		$this->add_purge_tags('*');
-		if (!is_openlitespeed()) {
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 			$this->add_purge_tags('*', false);
 		}
 		// check if need to reset crawler
@@ -474,7 +474,7 @@ class LiteSpeed_Cache
 	public function purge_front()
 	{
 		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE);
-		if (!is_openlitespeed()) {
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 			$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_FRONTPAGE, false);
 		}
 	}
@@ -1028,7 +1028,7 @@ class LiteSpeed_Cache
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
-	 * @access public
+	 * @access private
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
@@ -1405,17 +1405,14 @@ class LiteSpeed_Cache
 					echo "\n<!-- ".$cache_ctrl." -->" ;
 				}
 			}
-
-			if (!empty($hdr_content)) {
-				foreach ($hdr_content as $hdr) {
-                    LiteSpeed_Cache_Log::push('Response header: ' . $hdr);
-					if(!defined('DOING_AJAX')){
-						echo "<!-- ".$hdr." -->\n";
-					}
+			if($purge_hdr) {
+				LiteSpeed_Cache_Log::push($purge_hdr) ;
+				if( $running_info_showing ) {
+					echo "\n<!-- ".$purge_hdr." -->" ;
 				}
 			}
 
-			LiteSpeed_Cache_Log::push("End response.\n");
+			LiteSpeed_Cache_Log::push("End response.\n") ;
 		}
 	}
 
@@ -1465,8 +1462,7 @@ class LiteSpeed_Cache
 
 		$purge_header = $this->get_purge_header($stale);
 
-		$this->header_out($showhdr, $ctrl_header, $purge_header, $tags_header,
-			$vary_headers);
+		$this->header_out($showhdr, $ctrl_header, $purge_header, $tags_header, $vary_headers);
 	}
 
 	/**
@@ -1538,7 +1534,7 @@ class LiteSpeed_Cache
 	 */
 	private function setup_ctrl_hdr($mode, $novary)
 	{
-		if ((!is_openlitespeed())
+		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS'
 			&& (LiteSpeed_Cache_Esi::get_instance()->has_esi())) {
 			$esi_hdr = ',esi=on';
 		}
