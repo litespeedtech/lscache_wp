@@ -65,10 +65,10 @@ class LiteSpeed_Cache_Admin_Rules
 			$this->frontend_htaccess_writable = true;
 		}
         if ( LITESPEED_SERVER_TYPE == 'LITESPEED_SERVER_OLS' ) {
-            self::$RW_LOOKUP = self::$RW_LOOKUP_PUBLIC;
+            self::$RW_LOOKUP = self::RW_LOOKUP_PUBLIC;
         }
         else {
-            self::$RW_LOOKUP = self::$RW_LOOKUP_BOTH;
+            self::$RW_LOOKUP = self::RW_LOOKUP_BOTH;
         }
         self::$LS_MODULE_REWRITE_ON = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
 
@@ -720,8 +720,8 @@ class LiteSpeed_Cache_Admin_Rules
         // todo: is this still needed?
 //        if (!is_null($haystack)) {
 //			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-//				$haystack = str_replace(self::$RW_LOOKUP_PUBLIC,
-//					self::$RW_LOOKUP_BOTH, $haystack);
+//				$haystack = str_replace(self::RW_LOOKUP_PUBLIC,
+//					self::RW_LOOKUP_BOTH, $haystack);
 //			}
 //			$beginning .= $haystack;
 //        }

@@ -93,11 +93,8 @@ class LiteSpeed_Cache_Admin
 		}
 
 		if (  LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			add_action('in_widget_form',
-				array(LiteSpeed_Cache_Admin_Display::get_instance(),
-					'show_widget_edit'), 100, 3);
-			add_filter('widget_update_callback',
-				array($admin, 'validate_widget_save'), 10, 4);
+			add_action('in_widget_form', array(LiteSpeed_Cache_Admin_Display::get_instance(), 'show_widget_edit'), 100, 3);
+			add_filter('widget_update_callback', array($this, 'validate_widget_save'), 10, 4);
 		}
 
 		// purge all on upgrade
@@ -189,8 +186,7 @@ class LiteSpeed_Cache_Admin
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
-	public function validate_widget_save($instance, $new_instance,
-		$old_instance, $widget)
+	public function validate_widget_save($instance, $new_instance, $old_instance, $widget)
 	{
 		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME];
 		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];

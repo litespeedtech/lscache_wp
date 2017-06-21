@@ -384,28 +384,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function add_help_tabs()
 	{
-		$screen = get_current_screen();
-		$screen->add_help_tab(array(
-			'id'      => 'lsc-overview',
-			'title'   => __('Overview', 'litespeed-cache'),
-			'content' => '<p>'
-				. __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server.', 'litespeed-cache') . ' '
-				. __('This plugin communicates with LiteSpeed Web Server to let it know which pages are cacheable and when to purge them.', 'litespeed-cache')
-				. '</p><p>' . __('A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be installed and enabled.', 'litespeed-cache')
-				. '</p>',
-		));
-
-//		$screen->add_help_tab(array(
-//			'id'      => 'lst-purgerules',
-//			'title'   => __('Auto Purge Rules', 'litespeed-cache'),
-//			'content' => '<p>' . __('You can set what pages will be purged when a post is published or updated.', 'litespeed-cache') . '</p>',
-//		));
-
-		$screen->set_help_sidebar(
-			'<p><strong>' . __('For more information:', 'litespeed-cache') . '</strong></p>' .
-//				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" rel="noopener noreferrer" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
-			'<p><a href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
-		);
+		require_once LSWCP_DIR . 'admin/tpl/help_tabs.php';
 	}
 
 	/**
@@ -557,57 +536,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		$options = null;
-		$enable_levels = array(
-			LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE => __('Disable', 'litespeed-cache'),
-			LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE => __('Enable', 'litespeed-cache'));
-
-		$options = LiteSpeed_Cache_Esi::widget_load_get_options($widget);
-		if (empty($options)) {
-			$options = array(
-				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE
-					=> false,
-				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => '300'
-			);
-			$options = apply_filters('litespeed_cache_widget_default_options',
-				$options, $widget);
-		}
-		if (empty($options)) {
-			$esi = false;
-			$ttl = '300';
-		}
-		else {
-			$esi = $options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE]
-				? LiteSpeed_Cache_Config::OPID_ENABLED_ENABLE
-				: LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE;
-			$ttl = $options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL];
-		}
-
-		$buf = '<h4>LiteSpeed Cache:</h4>';
-
-		$buf .= '<label for="' . LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE
-			. '">' . __('Enable ESI for this Widget:', 'litespeed-cache')
-			. '&nbsp;&nbsp;&nbsp;</label>';
-
-		$buf .= $this->input_field_radio(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE,
-			$enable_levels, $esi);
-
-		$buf .= '<br><br>';
-
-		$buf .= '<label for="' . LiteSpeed_Cache_Esi::WIDGET_OPID_TTL
-			. '">' . __('Widget Cache TTL:', 'litespeed-cache')
-			. '&nbsp;&nbsp;&nbsp;</label>';
-
-		$buf .= $this->input_field_text(LiteSpeed_Cache_Esi::WIDGET_OPID_TTL,
-			$ttl, '7', '', __('seconds', 'litespeed-cache'));
-
-		$buf .= '<p class="install-help">'
-			. __('Default value 300 seconds (5 minutes).', 'litespeed-cache')
-			. __(' A TTL of 0 indicates do not cache.', 'litespeed-cache')
-			. '</p>';
-
-		$buf .= '<br><br>';
-		echo $buf;
+		require_once LSWCP_DIR . 'admin/tpl/esi_widget_edit.php';
 	}
 
 	/**
@@ -701,23 +630,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_display_installed()
 	{
-		$buf = '<h3>'. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache'). '</h3>' . ' '
-			. __('This message indicates that the plugin was installed by the server admin.', 'litespeed-cache') . ' '
-			. __('The LiteSpeed Cache plugin is used to cache pages - a simple way to improve the performance of the site.', 'litespeed-cache') . ' '
-			. __('However, there is no way of knowing all the possible customizations that were implemented.', 'litespeed-cache') . ' '
-			. __('For that reason, please test the site to make sure everything still functions properly.', 'litespeed-cache')
-			. '<br /><br />'
-			. __('Examples of test cases include:', 'litespeed-cache')
-			. '<ul>'
-				. '<li>' . __('Visit the site while logged out.', 'litespeed-cache') . '</li>'
-				. '<li>' . __('Create a post, make sure the front page is accurate.', 'litespeed-cache') . '</li>'
-			. '</ul>'
-			. sprintf(__('If there are any questions, the team is always happy to answer any questions on the <a %s>support forum</a>.', 'litespeed-cache'),
-				'href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank"')
-			. '<br />'
-			. __('If you would rather not move at litespeed, you can deactivate this plugin.', 'litespeed-cache');
-
-		self::add_notice(self::NOTICE_BLUE . ' lscwp-whm-notice', $buf);
+		require_once LSWCP_DIR . 'admin/tpl/show_display_installed.php';
 	}
 
 	/**
@@ -728,16 +641,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function show_error_cookie()
 	{
-		$err = __('NOTICE: Database login cookie did not match your login cookie.', 'litespeed-cache') . ' '
-			. __('If the login cookie was recently changed in the settings, please log out and back in.', 'litespeed-cache') . ' '
-			. sprintf(__('If not, please verify the setting in the <a href="%1$s">Advanced tab</a>.', 'litespeed-cache'),
-				admin_url('admin.php?page=lscache-settings#advanced'));
-
-		if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
-			$err .= ' ' . __('If using OpenLiteSpeed, the server must be restarted once for the changes to take effect.', 'litespeed-cache');
-		}
-
-		self::add_notice(self::NOTICE_YELLOW, $err);
+		require_once LSWCP_DIR . 'admin/tpl/show_error_cookie.php';
 	}
 
 	/**
@@ -771,9 +675,14 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @access public
 	 * @param  string $id
-	 * @param  string $style Appending styles
+	 * @param  string $style     Appending styles
+	 * @param  boolean $disabled Disable this field
+	 * @param  boolean $readonly If is readonly
+	 * @param  string $id_attr   ID for this field
+	 * @param  string $val       Field value
+	 * @param  string $attrs     Additional attributes
 	 */
-	public function build_input($id, $style = false, $disabled = false, $readonly = false, $id_attr = null, $val = null)
+	public function build_input($id, $style = false, $disabled = false, $readonly = false, $id_attr = null, $val = null, $attrs = '')
 	{
 		if ( $val === null ){
 			global $_options;
@@ -785,7 +694,7 @@ class LiteSpeed_Cache_Admin_Display
 			$id_attr = " id='$id_attr' ";
 		}
 
-		echo "<input type='text' class='regular-text $style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea($val) ."' $disabled $readonly $id_attr /> ";
+		echo "<input type='text' class='regular-text $style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea($val) ."' $disabled $readonly $id_attr $attrs /> ";
 	}
 
 	/**
@@ -794,13 +703,16 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @access public
 	 * @param  string $id
+	 * @param  boolean $disabled Disable this field
+	 * @param  boolean $return   Return the html or echo it
+	 * @param  boolean $checked  If the value is on
 	 */
-	public function build_switch($id, $disabled = false, $return = false)
+	public function build_switch($id, $disabled = false, $return = false, $checked = null)
 	{
 		$html = '<div class="litespeed-row">
 					<div class="litespeed-switch litespeed-label-info">' ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, null, $disabled) ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, null, $disabled) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $disabled) ;
 		$html .= '	</div>
 				</div>' ;
 
