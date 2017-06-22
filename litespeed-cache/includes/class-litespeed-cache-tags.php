@@ -117,70 +117,68 @@ class LiteSpeed_Cache_Tags
 	/**
 	 * Gets private cache tags that are already added for the current page.
 	 *
-	 * @since 1.0.12
+	 * @since 1.2.0
 	 * @access public
 	 * @return array An array of all private cache tags currently added.
 	 */
 	public static function get_private_cache_tags()
 	{
-		if (empty(self::$thirdparty_priv_cache_tags)) {
-			return self::$thirdparty_priv_cache_tags;
+		if ( empty(self::$thirdparty_priv_cache_tags) ) {
+			return self::$thirdparty_priv_cache_tags ;
 		}
-		return array_unique(self::$thirdparty_priv_cache_tags);
+		return array_unique(self::$thirdparty_priv_cache_tags) ;
 	}
 
 	/**
 	 * Adds private cache tags to the list of private cache tags for the
 	 * current page.
 	 *
-	 * @since 1.0.12
+	 * @since 1.2.0
 	 * @access public
 	 * @param mixed $tag A string or array of private cache tags to add to the
 	 * current list.
 	 */
 	public static function add_private_cache_tag($tag)
 	{
-		if (is_array($tag)) {
-			self::$thirdparty_priv_cache_tags = array_merge(
-				self::$thirdparty_priv_cache_tags, $tag);
+		if ( is_array($tag) ) {
+			self::$thirdparty_priv_cache_tags = array_merge(self::$thirdparty_priv_cache_tags, $tag) ;
 		}
 		else {
-			self::$thirdparty_priv_cache_tags[] = $tag;
+			self::$thirdparty_priv_cache_tags[] = $tag ;
 		}
 	}
 
 	/**
 	 * Gets private purge tags that are already added for the current page.
 	 *
-	 * @since 1.0.12
+	 * @since 1.2.0
 	 * @access public
 	 * @return array An array of all private purge tags currently added.
 	 */
 	public static function get_private_purge_tags()
 	{
-		if (empty(self::$thirdparty_priv_purge_tags)) {
-			return self::$thirdparty_priv_purge_tags;
+		if ( empty(self::$thirdparty_priv_purge_tags) ) {
+			return self::$thirdparty_priv_purge_tags ;
 		}
-		return array_unique(self::$thirdparty_priv_purge_tags);
+		return array_unique(self::$thirdparty_priv_purge_tags) ;
 	}
 
 	/**
 	 * Adds private purge tags to the list of private purge tags for the
 	 * current page.
 	 *
-	 * @since 1.0.12
+	 * @since 1.2.0
 	 * @access public
 	 * @param mixed $tag A string or array of private purge tags to add to the
 	 * current list.
 	 */
 	public static function add_private_purge_tag($tag)
 	{
-		if (is_array($tag)) {
-			self::$thirdparty_priv_purge_tags = array_merge(
-				self::$thirdparty_priv_purge_tags, $tag);
+		if ( is_array($tag) ) {
+			self::$thirdparty_priv_purge_tags = array_merge(self::$thirdparty_priv_purge_tags, $tag) ;
 		}
 		else {
-			self::$thirdparty_priv_purge_tags[] = $tag;
+			self::$thirdparty_priv_purge_tags[] = $tag ;
 		}
 	}
 
@@ -193,17 +191,17 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function get_vary_cookies()
 	{
-		if (empty(self::$thirdparty_vary_cookies)) {
-			return self::$thirdparty_vary_cookies;
+		if ( empty(self::$thirdparty_vary_cookies) ) {
+			return self::$thirdparty_vary_cookies ;
 		}
-		$cookies = array_unique(self::$thirdparty_vary_cookies);
-		if (empty($cookies)) {
-			return $cookies;
+		$cookies = array_unique(self::$thirdparty_vary_cookies) ;
+		if ( empty($cookies) ) {
+			return $cookies ;
 		}
 		foreach ($cookies as $key => $val) {
-			$cookies[$key] = 'cookie=' . $val;
+			$cookies[$key] = 'cookie=' . $val ;
 		}
-		return $cookies;
+		return $cookies ;
 	}
 
 	/**
@@ -216,12 +214,11 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function add_vary_cookie($cookie)
 	{
-		if (is_array($cookie)) {
-			self::$thirdparty_vary_cookies =
-				array_merge(self::$thirdparty_vary_cookies, $cookie);
+		if ( is_array($cookie) ) {
+			self::$thirdparty_vary_cookies = array_merge(self::$thirdparty_vary_cookies, $cookie) ;
 		}
 		else {
-			self::$thirdparty_vary_cookies[] = $cookie;
+			self::$thirdparty_vary_cookies[] = $cookie ;
 		}
 	}
 
@@ -234,7 +231,7 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function is_noncacheable()
 	{
-		return self::$thirdparty_noncacheable;
+		return self::$thirdparty_noncacheable ;
 	}
 
 	/**
@@ -249,23 +246,24 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function set_noncacheable()
 	{
-		if (LiteSpeed_Cache_Log::get_enabled()) {
-			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-			LiteSpeed_Cache_Log::push('Thirdparty called set_noncacheable(): ' . $trace[1]['class']);
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2) ;
+			LiteSpeed_Cache_Log::push('Thirdparty called set_noncacheable(): ' . $trace[1]['class']) ;
 		}
-		self::$thirdparty_noncacheable = true;
+		self::$thirdparty_noncacheable = true ;
 	}
 
 	/**
 	 * Gets whether any plugins determined that the current page is
 	 * mobile.
 	 *
+	 * @access public
 	 * @return boolean True if the current page was deemed mobile,
 	 * false otherwise.
 	 */
 	public static function is_mobile()
 	{
-		return self::$thirdparty_mobile;
+		return self::$thirdparty_mobile ;
 	}
 
 	/**
@@ -279,7 +277,7 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function set_mobile()
 	{
-		self::$thirdparty_mobile = true;
+		self::$thirdparty_mobile = true ;
 	}
 
 	/**
@@ -292,7 +290,7 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function get_use_frontpage_ttl()
 	{
-		return self::$thirdparty_use_front_ttl;
+		return self::$thirdparty_use_front_ttl ;
 	}
 
 	/**
@@ -303,7 +301,7 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function set_use_frontpage_ttl()
 	{
-		self::$thirdparty_use_front_ttl = true;
+		self::$thirdparty_use_front_ttl = true ;
 	}
 
 }

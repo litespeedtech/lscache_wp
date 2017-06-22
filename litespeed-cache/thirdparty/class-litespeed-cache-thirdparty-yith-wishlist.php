@@ -91,7 +91,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		$post = get_post($params[self::ESI_PARAM_POSTID]);
 		$wp_query->setup_postdata($post);
 		echo YITH_WCWL_Shortcode::add_to_wishlist(/*$params[self::ESI_PARAM_ATTS]*/array());
-		LiteSpeed_Cache::plugin()->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
+		LiteSpeed_Cache::get_instance()->set_cachectrl(LiteSpeed_Cache::CACHECTRL_PRIVATE);
 	}
 
 }

@@ -536,7 +536,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		require_once LSWCP_DIR . 'admin/tpl/esi_widget_edit.php';
+		require_once LSWCP_DIR . 'admin/tpl/esi_widget_edit.php' ;
 	}
 
 	/**

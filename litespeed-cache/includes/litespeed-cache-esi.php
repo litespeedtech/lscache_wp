@@ -1,10 +1,9 @@
 <?php
 
-
 if (!defined('ABSPATH')) {
-    die();
+    die() ;
 }
 
-LiteSpeed_Cache_Esi::load_esi_block();
+LiteSpeed_Cache_Esi::load_esi_block() ;
 
 

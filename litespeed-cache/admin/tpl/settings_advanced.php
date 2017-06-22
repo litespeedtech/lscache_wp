@@ -11,7 +11,7 @@ if (!defined('WPINC')) die;
 	</ol>
 </div>
 
-<h3 class="litespeed-title"><?php echo __('Check advanced-cache.php', 'litespeed-cache'); ?></h3>
+<h3 class="litespeed-title"><?php echo __('Check Advanced Cache', 'litespeed-cache'); ?></h3>
 <?php
 	$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
 	$this->build_checkbox($id, __('Include advanced-cache.php', 'litespeed-cache'), $_options[$id]);
@@ -25,7 +25,7 @@ if (!defined('WPINC')) die;
 </div>
 
 <h3 class="litespeed-title"><?php echo __('Login Cookie', 'litespeed-cache'); ?></h3>
-<?php 
+<?php
 
 echo __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
 	. ' ' . __('No spaces and case sensitive.', 'litespeed-cache')

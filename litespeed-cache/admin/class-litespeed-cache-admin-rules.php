@@ -25,9 +25,9 @@ class LiteSpeed_Cache_Admin_Rules
 	private $theme_htaccess_readable = false;
 	private $theme_htaccess_writable = false;
 
-    private static $RW_LOOKUP;
-    const RW_LOOKUP_PUBLIC = "CacheLookup Public on";
-    const RW_LOOKUP_BOTH = "CacheLookup on";
+	private static $RW_LOOKUP;
+	const RW_LOOKUP_PUBLIC = "CacheLookup Public on";
+	const RW_LOOKUP_BOTH = "CacheLookup on";
 
 	const LS_MODULE_START = '<IfModule LiteSpeed>';
 	const LS_MODULE_END = '</IfModule>';
@@ -64,13 +64,13 @@ class LiteSpeed_Cache_Admin_Rules
 		if (is_writable($test_permissions)) {
 			$this->frontend_htaccess_writable = true;
 		}
-        if ( LITESPEED_SERVER_TYPE == 'LITESPEED_SERVER_OLS' ) {
-            self::$RW_LOOKUP = self::RW_LOOKUP_PUBLIC;
-        }
-        else {
-            self::$RW_LOOKUP = self::RW_LOOKUP_BOTH;
-        }
-        self::$LS_MODULE_REWRITE_ON = "\nRewriteEngine on\n" . self::$RW_LOOKUP;
+		if ( LITESPEED_SERVER_TYPE == 'LITESPEED_SERVER_OLS' ) {
+			self::$RW_LOOKUP = self::RW_LOOKUP_PUBLIC ;
+		}
+		else {
+			self::$RW_LOOKUP = self::RW_LOOKUP_BOTH ;
+		}
+		self::$LS_MODULE_REWRITE_ON = "\nRewriteEngine on\n" . self::$RW_LOOKUP ;
 
 		// backend .htaccess privilege
 		if ($this->frontend_htaccess === $this->backend_htaccess) {
@@ -717,7 +717,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules[] = '';
 		}
 
-        // todo: is this still needed?
+		// todo: is this still needed?
 //        if (!is_null($haystack)) {
 //			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 //				$haystack = str_replace(self::RW_LOOKUP_PUBLIC,

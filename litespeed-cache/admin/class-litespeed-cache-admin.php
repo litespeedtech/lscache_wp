@@ -93,8 +93,8 @@ class LiteSpeed_Cache_Admin
 		}
 
 		if (  LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			add_action('in_widget_form', array(LiteSpeed_Cache_Admin_Display::get_instance(), 'show_widget_edit'), 100, 3);
-			add_filter('widget_update_callback', array($this, 'validate_widget_save'), 10, 4);
+			add_action('in_widget_form', array(LiteSpeed_Cache_Admin_Display::get_instance(), 'show_widget_edit'), 100, 3) ;
+			add_filter('widget_update_callback', array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_widget_save'), 10, 4) ;
 		}
 
 		// purge all on upgrade
@@ -142,99 +142,6 @@ class LiteSpeed_Cache_Admin
 		if (LiteSpeed_Cache_Router::has_whm_msg()) {
 			$this->display->show_display_installed();
 		}
-	}
-
-	/**
-	 * Validates the esi settings.
-	 *
-	 * @since 1.1.0
-	 * @access private
-	 * @param array $input The input options.
-	 * @param array $options The current options.
-	 * @param array $errors The errors list.
-	 */
-	private function validate_esi($input, &$options, &$errors)
-	{
-		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_ENABLE,
-			$input, $options);
-
-		self::parse_checkbox(LiteSpeed_Cache_Config::OPID_ESI_CACHE,
-			$input, $options);
-	}
-
-	/**
-	 * Hooked to the wp_redirect filter.
-	 * This will only hook if there was a problem when saving the widget.
-	 *
-	 * @param string $location The location string.
-	 * @return string the updated location string.
-	 */
-	public function widget_save_err($location)
-	{
-		return str_replace('?message=0', '?error=0', $location);
-	}
-
-	/**
-	 * Hooked to the widget_update_callback filter.
-	 * Validate the LiteSpeed Cache settings on edit widget save.
-	 *
-	 * @access public
-	 * @since 1.1.0
-	 * @param array $instance The new settings.
-	 * @param array $new_instance
-	 * @param array $old_instance The original settings.
-	 * @param WP_Widget $widget The widget
-	 * @return mixed Updated settings on success, false on error.
-	 */
-	public function validate_widget_save($instance, $new_instance, $old_instance, $widget)
-	{
-		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME];
-		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME];
-		if (empty($input)) {
-			return $instance;
-		}
-		$esistr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE];
-		$ttlstr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL];
-
-		if ((!is_numeric($ttlstr)) || (!is_numeric($esistr))) {
-			add_filter('wp_redirect', array($this, 'widget_save_err'));
-			return false;
-		}
-
-		$esi = intval($esistr);
-		$ttl = intval($ttlstr);
-
-		if (($ttl != 0) && ($ttl < 30)) {
-			add_filter('wp_redirect', array($this, 'widget_save_err'));
-			return false; // invalid ttl.
-		}
-
-		if (is_null($instance[LiteSpeed_Cache_Config::OPTION_NAME])) {
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array(
-				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE => $esi,
-				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => $ttl
-			);
-		}
-		else {
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME]
-				[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = $esi;
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME]
-				[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = $ttl;
-		}
-
-		if ((!isset($current))
-			|| ($esi
-				!= $current[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE])) {
-			LiteSpeed_Cache_Tags::add_purge_tag('*');
-		}
-		elseif (($ttl != 0)
-			&& ($ttl != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL])) {
-			LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $widget->id);
-		}
-
-		LiteSpeed_Cache::plugin()->purge_all();
-		return $instance;
 	}
 
 	/**

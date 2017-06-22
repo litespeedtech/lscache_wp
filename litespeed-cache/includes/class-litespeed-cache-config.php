@@ -50,8 +50,8 @@ class LiteSpeed_Cache_Config
 	const OPID_500_TTL = '500_ttl' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
-	const OPID_ESI_ENABLE = 'esi_enabled';
-	const OPID_ESI_CACHE = 'esi_cached';
+	const OPID_ESI_ENABLE = 'esi_enabled' ;
+	const OPID_ESI_CACHE = 'esi_cached' ;
 	const PURGE_ALL_PAGES = '-' ;
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
@@ -422,8 +422,8 @@ class LiteSpeed_Cache_Config
 				) ;
 
 		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			$default_options[self::OPID_ESI_ENABLE] = false;
-			$default_options[self::OPID_ESI_CACHE] = false;
+			$default_options[self::OPID_ESI_ENABLE] = false ;
+			$default_options[self::OPID_ESI_CACHE] = false ;
 		}
 
 		if (is_multisite()) {
@@ -621,11 +621,11 @@ class LiteSpeed_Cache_Config
 			return;
 		}
 
-		$this->options = self::option_diff($default_options, $this->options);
+		$this->options = self::option_diff($default_options, $this->options) ;
 		// if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' )
 		// 	&& ($this->options[self::OPID_ENABLED])
 		// 	&& ($this->options[self::OPID_ESI_ENABLE])) {
-		// 	LiteSpeed_Cache::plugin()->set_esi_post_type();
+		// 	LiteSpeed_Cache::get_instance()->set_esi_post_type();
 		// }
 
 //		if ((!is_multisite()) || (is_network_admin())) {

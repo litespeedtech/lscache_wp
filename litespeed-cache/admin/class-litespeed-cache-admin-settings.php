@@ -76,6 +76,77 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
+	 * Hooked to the wp_redirect filter.
+	 * This will only hook if there was a problem when saving the widget.
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 * @param string $location The location string.
+	 * @return string the updated location string.
+	 */
+	public function widget_save_err($location)
+	{
+		return str_replace('?message=0', '?error=0', $location) ;
+	}
+
+	/**
+	 * Hooked to the widget_update_callback filter.
+	 * Validate the LiteSpeed Cache settings on edit widget save.
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 * @param array $instance The new settings.
+	 * @param array $new_instance
+	 * @param array $old_instance The original settings.
+	 * @param WP_Widget $widget The widget
+	 * @return mixed Updated settings on success, false on error.
+	 */
+	public function validate_widget_save($instance, $new_instance, $old_instance, $widget)
+	{
+		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
+		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
+		if ( empty($input) ) {
+			return $instance ;
+		}
+		$esistr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] ;
+		$ttlstr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] ;
+
+		if ( ! is_numeric($ttlstr) || ! is_numeric($esistr) ) {
+			add_filter('wp_redirect', array($this, 'widget_save_err')) ;
+			return false ;
+		}
+
+		$esi = intval($esistr) ;
+		$ttl = intval($ttlstr) ;
+
+		if ( $ttl != 0 && $ttl < 30 ) {
+			add_filter('wp_redirect', array($this, 'widget_save_err')) ;
+			return false ; // invalid ttl.
+		}
+
+		if ( is_null($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array(
+				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE => $esi,
+				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => $ttl
+			) ;
+		}
+		else {
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = $esi ;
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = $ttl ;
+		}
+
+		if ( !isset($current) || $esi != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] ) {
+			LiteSpeed_Cache_Tags::add_purge_tag('*') ;
+		}
+		elseif ( $ttl != 0 && $ttl != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] ) {
+			LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_WIDGET . $widget->id) ;
+		}
+
+		LiteSpeed_Cache::get_instance()->purge_all() ;
+		return $instance ;
+	}
+
+	/**
 	 * Validates the general settings.
 	 *
 	 * @since 1.0.12
@@ -558,6 +629,24 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
+	 * Validates the esi settings.
+	 *
+	 * @since 1.2.0
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
+	private function validate_esi($input, &$options, &$errors)
+	{
+		$id = LiteSpeed_Cache_Config::OPID_ESI_ENABLE ;
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE ;
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]) ;
+	}
+
+	/**
 	 * Callback function that will validate any changes made in the settings
 	 * page.
 	 *
@@ -602,20 +691,18 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			$this->validate_esi($input, $options, $errors);
+			$this->validate_esi($input, $options, $errors) ;
 
-			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED];
-			$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE];
+			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED] ;
+			$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE] ;
 
-			if (($orig_enabled !== $new_enabled)
-				|| ($orig_esi_enabled !== $new_esi_enabled)
-			) {
-				if (($new_enabled) && ($new_esi_enabled)) {
+			if ( $orig_enabled !== $new_enabled || $orig_esi_enabled !== $new_esi_enabled ) {
+				if ( $new_enabled && $new_esi_enabled ) {
 					//todo: check if rewrite rule is alread added before this line, otherwise clear that rule
-					LiteSpeed_Cache_Esi::get_instance()->add_rewrite_rule_esi();
+					LiteSpeed_Cache_Esi::get_instance()->add_rewrite_rule_esi() ;
 				}
-				flush_rewrite_rules();
-				LiteSpeed_Cache::plugin()->purge_all();
+				flush_rewrite_rules() ;
+				LiteSpeed_Cache::get_instance()->purge_all() ;
 			}
 		}
 
