@@ -28,8 +28,7 @@ class LiteSpeed_Cache_Cookie
 		add_action('set_logged_in_cookie', array( $this, 'set_user_cookie'), 10, 5);
 		add_action('clear_auth_cookie', array( $this, 'set_user_cookie'), 10, 5);
 
-		if ( !LiteSpeed_Cache_Config::get_instance()->get_option(
-				LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS) )
+		if ( !LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS) )
 		{
 			// Set vary cookie for commenter.
 			add_action('set_comment_cookies', array( $this, 'set_comment_cookie'), 10, 2);
@@ -43,7 +42,7 @@ class LiteSpeed_Cache_Cookie
 			}
 		}
 		else {
-			$db_cookie = LiteSpeed_Cache_Config::get_instance()->get_option(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
+			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
 		}
 
 		if ( !isset($_SERVER[LiteSpeed_Cache::LSCOOKIE_VARY_NAME]) )
@@ -135,17 +134,13 @@ class LiteSpeed_Cache_Cookie
 	 * @param integer $user_id The user's id.
 	 * @param string $action Whether the user is logging in or logging out.
 	 */
-	public function set_user_cookie($logged_in_cookie = false, $expire = ' ',
-					$expiration = 0, $user_id = 0, $action = 'logged_out')
+	public function set_user_cookie($logged_in_cookie = false, $expire = ' ', $expiration = 0, $user_id = 0, $action = 'logged_out')
 	{
-		if ($action == 'logged_in')
-		{
-			$this->do_set_cookie(LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN, $expire, is_ssl(), true);
+		if ( $action == 'logged_in' ) {
+			$this->do_set_cookie(LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN, $expire, is_ssl(), true) ;
 		}
-		else
-		{
-			$this->do_set_cookie(~LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN,
-					time() + apply_filters( 'comment_cookie_lifetime', 30000000 ));
+		else {
+			$this->do_set_cookie(~LiteSpeed_Cache::LSCOOKIE_VARY_LOGGED_IN, time() + apply_filters('comment_cookie_lifetime', 30000000)) ;
 		}
 	}
 
@@ -162,12 +157,11 @@ class LiteSpeed_Cache_Cookie
 	 */
 	public function set_comment_cookie($comment, $user)
 	{
-		if ( $user->exists() )
-		{
-			return;
+		if ( $user->exists() ) {
+			return ;
 		}
-		$comment_cookie_lifetime = time() + apply_filters( 'comment_cookie_lifetime', 30000000 );
-		$this->do_set_cookie(LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER, $comment_cookie_lifetime);
+		$comment_cookie_lifetime = time() + apply_filters( 'comment_cookie_lifetime', 30000000 ) ;
+		$this->do_set_cookie(LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER, $comment_cookie_lifetime) ;
 	}
 
 	/**
@@ -184,52 +178,40 @@ class LiteSpeed_Cache_Cookie
 	 */
 	public function check_cookies()
 	{
-		$vary = LiteSpeed_Cache::get_instance()->get_vary();
+		$vary = LiteSpeed_Cache::get_instance()->get_vary() ;
 
-		if ( !LiteSpeed_Cache_Config::get_instance()->get_option(
-				LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS) )
-		{
+		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS) ) {
 			// If do not cache commenters, check cookie for commenter value.
-			if ( isset($_COOKIE[$vary])
-					&& ($_COOKIE[$vary]
-						& LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER))
-			{
-				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
-				return true;
+			if ( isset($_COOKIE[$vary]) && ($_COOKIE[$vary] & LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER) ) {
+				LiteSpeed_Cache::get_instance()->set_user_status(LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER) ;
+				return true ;
 			}
 			// If wp commenter cookie exists, need to set vary and do not cache.
-			foreach( $_COOKIE as $cookie_name => $cookie_value )
-			{
-				if ( strlen($cookie_name) >= 15
-						&& strncmp($cookie_name, 'comment_author_', 15) == 0)
-				{
-					$user = wp_get_current_user();
-					$this->set_comment_cookie(NULL, $user);
-					$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
-					return true;
+			foreach( $_COOKIE as $cookie_name => $cookie_value ) {
+				if ( strlen($cookie_name) >= 15 && strncmp($cookie_name, 'comment_author_', 15) == 0 ) {
+					$user = wp_get_current_user() ;
+					$this->set_comment_cookie(NULL, $user) ;
+					LiteSpeed_Cache::get_instance()->set_user_status(LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER) ;
+					return true ;
 				}
 			}
-			return false;
+			return false ;
 		}
 
 		// If vary cookie is set, need to change the value.
-		if ( isset($_COOKIE[$vary]) )
-		{
-			$this->do_set_cookie(~LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER, 14 * DAY_IN_SECONDS);
-			unset($_COOKIE[$vary]);
+		if ( isset($_COOKIE[$vary]) ) {
+			$this->do_set_cookie(~LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER, 14 * DAY_IN_SECONDS) ;
+			unset($_COOKIE[$vary]) ;
 		}
 
 		// If cache commenters, unset comment cookies for caching.
-		foreach( $_COOKIE as $cookie_name => $cookie_value )
-		{
-			if ( strlen($cookie_name) >= 15
-					&& strncmp($cookie_name, 'comment_author_', 15) == 0)
-			{
-				$this->user_status |= self::LSCOOKIE_VARY_COMMENTER;
-				unset($_COOKIE[$cookie_name]);
+		foreach( $_COOKIE as $cookie_name => $cookie_value ) {
+			if ( strlen($cookie_name) >= 15 && strncmp($cookie_name, 'comment_author_', 15) == 0 ) {
+				LiteSpeed_Cache::get_instance()->set_user_status(LiteSpeed_Cache::LSCOOKIE_VARY_COMMENTER) ;
+				unset($_COOKIE[$cookie_name]) ;
 			}
 		}
-		return false;
+		return false ;
 	}
 
 	/**
@@ -241,11 +223,12 @@ class LiteSpeed_Cache_Cookie
 	 */
 	public static function get_instance()
 	{
-		$cls = get_called_class();
-		if (!isset(self::$_instance)) {
-			self::$_instance = new $cls();
+		$cls = get_called_class() ;
+		if ( ! isset(self::$_instance) ) {
+			self::$_instance = new $cls() ;
 		}
 
-		return self::$_instance;
+		return self::$_instance ;
 	}
+
 }

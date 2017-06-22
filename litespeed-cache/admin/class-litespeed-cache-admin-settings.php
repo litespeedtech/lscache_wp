@@ -691,6 +691,9 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
+			$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED] ;
+			$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE] ;
+
 			$this->validate_esi($input, $options, $errors) ;
 
 			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED] ;

@@ -386,6 +386,32 @@ class LiteSpeed_Cache
 	}
 
 	/**
+	 * Gets the current request's user status.
+	 *
+	 * Helper function for other class' usage.
+	 *
+	 * @access public
+	 * @since 1.2.0
+	 * @return int The user status.
+	 */
+	public function get_user_status()
+	{
+		return $this->user_status ;
+	}
+
+	/**
+	 * Append user status.
+	 *
+	 * @access public
+	 * @since 1.2.0
+	 * @param int $status The user status bit
+	 */
+	public function set_user_status($bit)
+	{
+		$this->user_status |= $bit ;
+	}
+
+	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
 	 * Uses the LiteSpeed_Cache_i18n class in order to set the domain and to register the hook
@@ -854,7 +880,7 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Cookie::get_instance()->do_set_cookie(self::LSCOOKIE_VARY_LOGGED_IN,
 					time() + 2 * DAY_IN_SECONDS, is_ssl(), true);
 		}
-		$this->user_status |= self::LSCOOKIE_VARY_LOGGED_IN;
+		$this->set_user_status(self::LSCOOKIE_VARY_LOGGED_IN) ;
 		return true;
 	}
 
@@ -1016,8 +1042,8 @@ class LiteSpeed_Cache
 	 */
 	public function check_error_codes($header, $code)
 	{
-		$ttl_403 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_403_TTL);
-		$ttl_500 = $this->config->get_option(LiteSpeed_Cache_Config::OPID_500_TTL);
+		$ttl_403 = $this->config(LiteSpeed_Cache_Config::OPID_403_TTL);
+		$ttl_500 = $this->config(LiteSpeed_Cache_Config::OPID_500_TTL);
 		if ($code == 403) {
 			if ($ttl_403 <= 30) {
 				LiteSpeed_Cache_Tags::set_noncacheable();
@@ -1111,7 +1137,7 @@ class LiteSpeed_Cache
 	 */
 	public function check_login_cacheable()
 	{
-		if ($this->config->get_option(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) === false) {
+		if ($this->config(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) === false) {
 			return;
 		}
 		$this->check_cacheable();
@@ -1608,7 +1634,7 @@ class LiteSpeed_Cache
 	{
 		static $prefix = null;
 		if (is_null($prefix)) {
-			$prefix = $this->config->get_option(
+			$prefix = $this->config(
 				LiteSpeed_Cache_Config::OPID_TAG_PREFIX);
 			if (empty($prefix)) {
 				$prefix = '';

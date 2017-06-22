@@ -12,7 +12,7 @@
  */
 class LiteSpeed_Cache_Esi
 {
-	private static $instance;
+	private static $_instance;
 
 	private $has_esi = false;
 	private $esi_args = null;
