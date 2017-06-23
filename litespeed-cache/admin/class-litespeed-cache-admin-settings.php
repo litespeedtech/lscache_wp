@@ -103,11 +103,11 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public function validate_widget_save($instance, $new_instance, $old_instance, $widget)
 	{
-		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		if ( empty($input) ) {
+		if ( empty($_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
 			return $instance ;
 		}
+		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
+		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
 		$esistr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] ;
 		$ttlstr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] ;
 

@@ -4,17 +4,25 @@
 	margin-top: 5px;
 }
 
+.litespeed-reset{
+	width: initial;
+}
+
+.litespeed-inline{
+	display: inline-block;
+}
+
 .litespeed-left{
 	float: left;
 }
 
 .litespeed-row:before{
-	content: " "; 
+	content: " ";
 }
 
 .litespeed-row:after,
 .litespeed-clearfix:after{
-	content: " "; 
+	content: " ";
 	display: block;
 	clear: both;
 }

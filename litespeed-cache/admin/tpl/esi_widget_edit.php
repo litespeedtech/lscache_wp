@@ -23,14 +23,16 @@ else {
 ?>
 <h4>LiteSpeed Cache:</h4>
 
-<?php echo __('Enable ESI for this Widget:', 'litespeed-cache') ; ?>
-&nbsp;&nbsp;&nbsp;
-<?php LiteSpeed_Cache_Admin_Display::get_instance()->build_switch(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE, false, false, $esi) ; ?>
+<?php echo __('Enable ESI', 'litespeed-cache') ; ?>:
+&nbsp;&nbsp;
+<div class="litespeed-inline">
+	<?php LiteSpeed_Cache_Admin_Display::get_instance()->build_switch(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE, false, false, $esi) ; ?>
+</div>
 <br /><br />
 
 <?php echo __('Widget Cache TTL:', 'litespeed-cache') ; ?>
-&nbsp;&nbsp;&nbsp;
-<?php LiteSpeed_Cache_Admin_Display::get_instance()->build_input(LiteSpeed_Cache_Esi::WIDGET_OPID_TTL, false, false, false, null, $ttl, 'size="7"') ; ?>
+&nbsp;&nbsp;
+<?php LiteSpeed_Cache_Admin_Display::get_instance()->build_input(LiteSpeed_Cache_Esi::WIDGET_OPID_TTL, 'litespeed-reset', false, false, null, $ttl, 'size="7"') ; ?>
 <?php echo __('seconds', 'litespeed-cache') ; ?>
 
 <p class="install-help">

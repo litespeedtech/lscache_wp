@@ -235,7 +235,7 @@ class LiteSpeed_Cache_Esi
 		$cachectrl = apply_filters('litespeed_cache_sub_esi_cachectrl-' . $block_id, $cachectrl) ;
 		if ( !is_array($params) || !is_string($cachectrl) ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache::push("Sub esi hooks returned Params: \n"
+				LiteSpeed_Cache_Log::push("Sub esi hooks returned Params: \n"
 					. print_r($params, true) . "\ncache control: \n"
 					. print_r($cachectrl, true)) ;
 			}
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_Esi
 				$logInfo .= ' Name: ' . $params[self::PARAM_NAME] . ', ' ;
 			}
 			$logInfo .= ' Block ID: ' . $params[self::PARAM_BLOCK_ID] ;
-			LiteSpeed_Cache::push($logInfo) ;
+			LiteSpeed_Cache_Log::push($logInfo) ;
 		}
 		global $_SERVER ;
 		$orig = $_SERVER['REQUEST_URI'] ;
@@ -450,7 +450,7 @@ class LiteSpeed_Cache_Esi
 			return $instance ;
 		}
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		if ( ! isset($options) || $options[self::WIDGET_OPID_ESIENABLE] == LiteSpeed_Cache_Config::OPID_ENABLED_DISABLE ) {
+		if ( ! isset($options) || $options[self::WIDGET_OPID_ESIENABLE] == LiteSpeed_Cache_Config::OPID_ENABLED ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push('Do not esi widget ' . $name . ' because '. (!isset($options) ? 'options not set' : 'esi disabled for widget')) ;
 			}
