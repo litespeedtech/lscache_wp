@@ -1067,11 +1067,11 @@ class LiteSpeed_Cache
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
-	 * @access private
+	 * @access public
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
-	private function no_cache_for( $reason )
+	public function no_cache_for( $reason )
 	{
 		if (LiteSpeed_Cache_Log::get_enabled()) {
 			LiteSpeed_Cache_Log::push('Do not cache - ' . $reason);

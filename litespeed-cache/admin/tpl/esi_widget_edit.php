@@ -26,7 +26,7 @@ else {
 <?php echo __('Enable ESI', 'litespeed-cache') ; ?>:
 &nbsp;&nbsp;
 <div class="litespeed-inline">
-	<?php LiteSpeed_Cache_Admin_Display::get_instance()->build_switch(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE, false, false, $esi) ; ?>
+	<?php LiteSpeed_Cache_Admin_Display::get_instance()->build_switch(LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE, false, false, $esi, 'litespeed-cfg-'.$widget->id) ; ?>
 </div>
 <br /><br />
 

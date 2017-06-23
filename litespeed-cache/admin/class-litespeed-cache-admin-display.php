@@ -706,13 +706,16 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  boolean $disabled Disable this field
 	 * @param  boolean $return   Return the html or echo it
 	 * @param  boolean $checked  If the value is on
+	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
 	 */
-	public function build_switch($id, $disabled = false, $return = false, $checked = null)
+	public function build_switch($id, $disabled = false, $return = false, $checked = null, $id_attr = null)
 	{
+		$id_attr_on = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_ON ;
+		$id_attr_off = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_OFF ;
 		$html = '<div class="litespeed-row">
 					<div class="litespeed-switch litespeed-label-info">' ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled) ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $disabled) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled, $id_attr_on) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $disabled, $id_attr_off) ;
 		$html .= '	</div>
 				</div>' ;
 
@@ -753,8 +756,9 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $val     Default value of this input
 	 * @param  string $txt     Title of this input
 	 * @param  bool $checked   If checked or not
+	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
 	 */
-	public function build_radio($id, $val, $txt = null, $checked = null, $disabled = false)
+	public function build_radio($id, $val, $txt = null, $checked = null, $disabled = false, $id_attr = null)
 	{
 		if ( $checked === null ){
 			global $_options;
@@ -763,7 +767,12 @@ class LiteSpeed_Cache_Admin_Display
 			$checked = $to_be_checked === $val ? true : false;
 		}
 
-		$id_attr = is_int($val) ? "conf_{$id}_$val" : md5($val);
+		if ( $id_attr === null ) {
+			$id_attr = is_int($val) ? "conf_{$id}_$val" : md5($val) ;
+		}
+		elseif ( $id_attr === true ) {
+			$id_attr = md5($val);
+		}
 
 		if ( $txt === null ){
 			if ( $val === LiteSpeed_Cache_Config::VAL_ON ){
