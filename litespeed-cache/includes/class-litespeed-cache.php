@@ -347,7 +347,7 @@ class LiteSpeed_Cache
 
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
-		//todo: make a constant for esiEnable included is_openlitespeed&cfg esi eanbled
+		//todo: make a constant for esiEnable included cfg esi eanbled
 		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' && !LiteSpeed_Cache_Router::is_ajax() && $this->config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
 			$esi = LiteSpeed_Cache_Esi::get_instance() ;
 			add_action('init', array($esi, 'register_post_type')) ;
@@ -1187,7 +1187,7 @@ class LiteSpeed_Cache
 
 		$priv_purge_tags = array_merge($this->priv_purge_tags, LiteSpeed_Cache_Tags::get_private_purge_tags()) ;
 		$priv_purge_tags = array_unique($priv_purge_tags) ;
-		$private_prefix = LiteSpeed_Cache_Tags::HEADER_PURGE . 'private,' ;
+		$private_prefix = LiteSpeed_Cache_Tags::HEADER_PURGE . ': private,' ;
 
 		if ( empty($purge_tags) && empty($priv_purge_tags) ) {
 			return '' ;
@@ -1201,7 +1201,7 @@ class LiteSpeed_Cache
 				// If this ends up empty, private will also end up empty
 				return '' ;
 			}
-			$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE . 'public,' ;
+			$cache_purge_header = LiteSpeed_Cache_Tags::HEADER_PURGE . ': public,' ;
 			if ($stale) {
 				$cache_purge_header .= 'stale,' ;
 			}
@@ -1423,7 +1423,7 @@ class LiteSpeed_Cache
 				}
 			}
 
-			LiteSpeed_Cache_Log::push("End response.\n") ;
+			LiteSpeed_Cache_Log::push("End response.\n\n") ;
 		}
 	}
 

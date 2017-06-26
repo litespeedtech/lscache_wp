@@ -240,7 +240,7 @@ ul.litespeed-shell-body {
 	color: #45D40C;
 	font: 0.8em 'Andale Mono', Consolas, 'Courier New';
 	line-height: 1.6em;
- 
+
 	-webkit-border-bottom-right-radius: 3px;
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-bottomright: 3px;
@@ -262,4 +262,10 @@ ul.litespeed-shell-body {
 	position: relative;
 	padding: 0 0 0 15px;
 	margin: 0;
+}
+
+.litespeed-widget-setting{
+	background-color: #ecebdc;
+	padding: 5px 14px;
+	margin: 5px -15px;
 }

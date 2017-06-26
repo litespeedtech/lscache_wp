@@ -90,7 +90,7 @@ class LiteSpeed_Cache_Esi
 				'public' => false,
 				'publicly_queryable' => true,
 				'supports' => false,
-				'rewrite' => array('slug' => 'lscacheesi'),
+				'rewrite' => array('slug' => self::POSTTYPE),
 				'query_var' => true
 			)
 		) ;
@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Esi
 	 * @since 1.2.0
 	 */
 	public function add_rewrite_rule_esi(){
-		add_rewrite_rule('lscacheesi/?', 'index.php?post_type=lscacheesi', 'top') ;
+		add_rewrite_rule(self::POSTTYPE . '/?', 'index.php?post_type=' . self::POSTTYPE, 'top') ;
 	}
 
 	/**

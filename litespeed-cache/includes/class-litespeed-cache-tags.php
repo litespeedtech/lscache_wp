@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Tags
 	const TYPE_LOGIN = 'L';
 	const TYPE_URL = 'URL.';
 	const TYPE_WIDGET = 'W.';
-	const HEADER_PURGE = 'X-LiteSpeed-Purge: ' ;
+	const HEADER_PURGE = 'X-LiteSpeed-Purge' ;
 	const HEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
 	const HEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
 	const HEADER_CACHE_VARY = 'X-LiteSpeed-Vary' ;
