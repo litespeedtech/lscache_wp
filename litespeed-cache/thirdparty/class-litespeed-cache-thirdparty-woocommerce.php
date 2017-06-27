@@ -3,8 +3,8 @@
 /**
  * The Third Party integration with the WooCommerce plugin.
  *
- * @since        1.0.5
- * @package        LiteSpeed_Cache
+ * @since         1.0.5
+ * @package       LiteSpeed_Cache
  * @subpackage    LiteSpeed_Cache/thirdparty
  * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
@@ -38,50 +38,34 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function detect()
 	{
-		if (!defined('WOOCOMMERCE_VERSION')) {
-			return;
+		if ( ! defined('WOOCOMMERCE_VERSION') ) {
+			return ;
 		}
-		add_filter('litespeed_cache_is_cacheable',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable');
+		add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable') ;
 
-		add_action('woocommerce_after_checkout_validation',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge');
-		add_filter('litespeed_cache_get_options',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config');
-		add_action('comment_post',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3);
+		add_action('woocommerce_after_checkout_validation', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge') ;
+		add_filter('litespeed_cache_get_options', 'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config') ;
+		add_action('comment_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3) ;
 
-		if (!is_shop()) {
-			add_action('litespeed_cache_is_not_esi_template',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template');
-			add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block');
-			add_action('litespeed_cache_load_esi_block-storefront-cart-header',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header');
-			add_action('litespeed_cache_load_esi_block-widget',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view');
+		if ( !is_shop() ) {
+			add_action('litespeed_cache_is_not_esi_template', 'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template') ;
+			add_action('litespeed_cache_load_esi_block-wc-add-to-cart-form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block') ;
+			add_action('litespeed_cache_load_esi_block-storefront-cart-header', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header') ;
+			add_action('litespeed_cache_load_esi_block-widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view') ;
 		}
 
-		if (is_product()) {
-			add_filter('litespeed_cache_sub_esi_params-widget',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id');
+		if ( is_product() ) {
+			add_filter('litespeed_cache_sub_esi_params-widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id') ;
 		}
 
-		add_action('litespeed_cache_is_not_esi_template',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart');
+		add_action('litespeed_cache_is_not_esi_template', 'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart') ;
 
-		if (is_admin()) {
-			add_action('litespeed_cache_on_purge_post',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge');
-			add_action('delete_term_relationships',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2);
-			add_filter('litespeed_cache_add_config_tab',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3);
-			add_filter('litespeed_cache_save_options',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2);
-			add_filter('litespeed_cache_widget_default_options',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::wc_widget_default',
-				10, 2);
+		if ( is_admin() ) {
+			add_action('litespeed_cache_on_purge_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge') ;
+			add_action('delete_term_relationships', 'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2) ;
+			add_filter('litespeed_cache_add_config_tab', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3) ;
+			add_filter('litespeed_cache_save_options', 'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2) ;
+			add_filter('litespeed_cache_widget_default_options', 'LiteSpeed_Cache_ThirdParty_WooCommerce::wc_widget_default', 10, 2) ;
 		}
 	}
 
@@ -95,8 +79,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function set_block_template()
 	{
-		add_action('woocommerce_before_template_part',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4);
+		add_action('woocommerce_before_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999, 4) ;
 	}
 
 	/**
@@ -111,12 +94,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function set_swap_header_cart()
 	{
-		$priority = has_action('storefront_header', 'storefront_header_cart');
-		if ($priority !== false) {
-			remove_action('storefront_header', 'storefront_header_cart', $priority);
-			add_action('storefront_header',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::esi_cart_header',
-				$priority);
+		$priority = has_action('storefront_header', 'storefront_header_cart') ;
+		if ( $priority !== false ) {
+			remove_action('storefront_header', 'storefront_header_cart', $priority) ;
+			add_action('storefront_header', 'LiteSpeed_Cache_ThirdParty_WooCommerce::esi_cart_header', $priority) ;
 		}
 	}
 
@@ -135,21 +116,17 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @param type $located
 	 * @param type $args
 	 */
-	public static function block_template($template_name, $template_path,
-		$located, $args)
+	public static function block_template($template_name, $template_path, $located, $args)
 	{
-		if (strpos($template_name, 'add-to-cart') === false) {
-			if (strpos($template_name, 'related.php') !== false) {
-				remove_action('woocommerce_before_template_part',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999);
-				add_filter('woocommerce_related_products_args',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::add_related_tags');
-				add_action('woocommerce_after_template_part',
-					'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
+		if ( strpos($template_name, 'add-to-cart') === false ) {
+			if ( strpos($template_name, 'related.php') !== false ) {
+				remove_action('woocommerce_before_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::block_template', 999) ;
+				add_filter('woocommerce_related_products_args', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_related_tags') ;
+				add_action('woocommerce_after_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999) ;
 			}
-			return;
+			return ;
 		}
-		global $post;
+		global $post ;
 		$params = array(
 			self::ESI_PARAM_ARGS => $args,
 			self::ESI_PARAM_NAME => $template_name,
@@ -157,13 +134,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			self::ESI_PARAM_PATH => $template_path,
 			self::ESI_PARAM_LOCATED => $located
 		);
-		add_action('woocommerce_after_add_to_cart_form',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
-		add_action('woocommerce_after_template_part',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999);
-		LiteSpeed_Cache_Esi::sub_esi_block('wc-add-to-cart-form', 'WC_CART_FORM',
-			$params);
-		ob_start();
+		add_action('woocommerce_after_add_to_cart_form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form') ;
+		add_action('woocommerce_after_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999) ;
+		LiteSpeed_Cache_Esi::sub_esi_block('wc-add-to-cart-form', 'WC_CART_FORM', $params) ;
+		ob_start() ;
 	}
 
 	/**
@@ -176,15 +150,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function end_form($template_name = '')
 	{
-		if ((!empty($template_name))
-			&& (strpos($template_name, 'add-to-cart') === false)) {
-				return;
+		if ( ! empty($template_name) && strpos($template_name, 'add-to-cart') === false ) {
+			return ;
 		}
-		ob_clean();
-		remove_action('woocommerce_after_add_to_cart_form',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form');
-		remove_action('woocommerce_after_template_part',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999);
+		ob_clean() ;
+		remove_action('woocommerce_after_add_to_cart_form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form') ;
+		remove_action('woocommerce_after_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999) ;
 	}
 
 	/**
@@ -199,15 +170,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function add_related_tags($args)
 	{
-		if ((empty($args)) || (!isset($args['post__in']))) {
-			return $args;
+		if ( empty($args) || ! isset($args['post__in']) ) {
+			return $args ;
 		}
-		$related_posts = $args['post__in'];
-		foreach ($related_posts as $related) {
-			LiteSpeed_Cache_Tags::add_cache_tag(
-				LiteSpeed_Cache_Tags::TYPE_POST . $related);
+		$related_posts = $args['post__in'] ;
+		foreach ( $related_posts as $related ) {
+			LiteSpeed_Cache_Tags::add_cache_tag(LiteSpeed_Cache_Tags::TYPE_POST . $related) ;
 		}
-		return $args;
+		return $args ;
 	}
 
 	/**
@@ -220,10 +190,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function end_template($template_name)
 	{
-		if (strpos($template_name, 'related.php') !== false) {
-			remove_action('woocommerce_after_template_part',
-				'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999);
-			self::set_block_template();
+		if ( strpos($template_name, 'related.php') !== false ) {
+			remove_action('woocommerce_after_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_template', 999) ;
+			self::set_block_template() ;
 		}
 	}
 
@@ -236,8 +205,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function esi_cart_header()
 	{
-		LiteSpeed_Cache_Esi::sub_esi_block('storefront-cart-header',
-			'STOREFRONT_CART_HEADER');
+		LiteSpeed_Cache_Esi::sub_esi_block('storefront-cart-header', 'STOREFRONT_CART_HEADER') ;
 	}
 
 	/**
@@ -249,7 +217,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function load_cart_header()
 	{
-		storefront_header_cart();
+		storefront_header_cart() ;
 	}
 
 	/**
@@ -265,11 +233,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function load_add_to_cart_form_block($params)
 	{
-		global $post, $wp_query;
-		$post = get_post($params[self::ESI_PARAM_POSTID]);
-		$wp_query->setup_postdata($post);
-		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS],
-			$params[self::ESI_PARAM_PATH]);
+		global $post, $wp_query ;
+		$post = get_post($params[self::ESI_PARAM_POSTID]) ;
+		$wp_query->setup_postdata($post) ;
+		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS], $params[self::ESI_PARAM_PATH]) ;
 	}
 
 	/**
@@ -284,24 +251,23 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function register_post_view($params)
 	{
-		if ($params[LiteSpeed_Cache_Esi::PARAM_NAME]
-			!== 'WC_Widget_Recently_Viewed') {
-			return;
+		if ( $params[LiteSpeed_Cache_Esi::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
+			return ;
 		}
-		if (!isset($params[self::ESI_PARAM_POSTID])) {
-			return;
+		if ( ! isset($params[self::ESI_PARAM_POSTID]) ) {
+			return ;
 		}
-		$id = $params[self::ESI_PARAM_POSTID];
-		$esi_post = get_post($id);
-		$product = wc_get_product($esi_post);
+		$id = $params[self::ESI_PARAM_POSTID] ;
+		$esi_post = get_post($id) ;
+		$product = wc_get_product($esi_post) ;
 
-		if (empty($product)) {
-			return;
+		if ( empty($product) ) {
+			return ;
 		}
 
-		global $post;
-		$post = $esi_post;
-		wc_track_product_view();
+		global $post ;
+		$post = $esi_post ;
+		wc_track_product_view() ;
 	}
 
 	/**
@@ -316,14 +282,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function add_post_id($params)
 	{
-		if ((!isset($params))
-			|| (!isset($params[LiteSpeed_Cache_Esi::PARAM_NAME]))
-			|| ($params[LiteSpeed_Cache_Esi::PARAM_NAME]
-				!== 'WC_Widget_Recently_Viewed')) {
-			return $params;
+		if ( ! isset($params) || ! isset($params[LiteSpeed_Cache_Esi::PARAM_NAME]) || $params[LiteSpeed_Cache_Esi::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
+			return $params ;
 		}
-		$params[self::ESI_PARAM_POSTID] = get_the_ID();
-		return $params;
+		$params[self::ESI_PARAM_POSTID] = get_the_ID() ;
+		return $params ;
 	}
 
 	/**
@@ -340,19 +303,19 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function wc_widget_default($options, $widget)
 	{
-		if (!is_array($options)) {
-			return $options;
+		if ( ! is_array($options) ) {
+			return $options ;
 		}
-		$widget_name = get_class($widget);
-		if ($widget_name === 'WC_Widget_Recently_Viewed') {
-			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
-			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 0;
+		$widget_name = get_class($widget) ;
+		if ( $widget_name === 'WC_Widget_Recently_Viewed' ) {
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true ;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 0 ;
 		}
-		elseif ($widget_name === 'WC_Widget_Recent_Reviews') {
-			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true;
-			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 86400;
+		elseif ( $widget_name === 'WC_Widget_Recent_Reviews' ) {
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = true ;
+			$options[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = 86400 ;
 		}
-		return $options;
+		return $options ;
 	}
 
 	/**
@@ -363,39 +326,38 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	private static function set_cache_tags()
 	{
-		$id = get_the_ID();
-		if ($id === false) {
-			return;
+		$id = get_the_ID() ;
+		if ( $id === false ) {
+			return ;
 		}
-		if (is_shop()) {
-			LiteSpeed_Cache_Tags::add_cache_tag(self::CACHETAG_SHOP);
-			if (LiteSpeed_Cache::config(self::OPTION_SHOP_FRONT_TTL) !== false) {
-				LiteSpeed_Cache_Tags::set_use_frontpage_ttl();
+		if ( is_shop() ) {
+			LiteSpeed_Cache_Tags::add_cache_tag(self::CACHETAG_SHOP) ;
+			if ( LiteSpeed_Cache::config(self::OPTION_SHOP_FRONT_TTL) !== false ) {
+				LiteSpeed_Cache_Tags::set_use_frontpage_ttl() ;
 			}
 		}
-		if (!is_product_taxonomy()) {
-			return;
+		if ( ! is_product_taxonomy() ) {
+			return ;
 		}
-		if (isset($GLOBALS['product_cat'])) {
-			$term = get_term_by('slug', $GLOBALS['product_cat'], 'product_cat');
+		if ( isset($GLOBALS['product_cat']) ) {
+			$term = get_term_by('slug', $GLOBALS['product_cat'], 'product_cat') ;
 		}
-		elseif (isset($GLOBALS['product_tag'])) {
-			$term = get_term_by('slug', $GLOBALS['product_tag'], 'product_tag');
+		elseif ( isset($GLOBALS['product_tag']) ) {
+			$term = get_term_by('slug', $GLOBALS['product_tag'], 'product_tag') ;
 		}
 		else {
-			$term = false;
+			$term = false ;
 		}
 
-		if ($term === false) {
-			return;
+		if ( $term === false ) {
+			return ;
 		}
-		while (isset($term)) {
-			LiteSpeed_Cache_Tags::add_cache_tag(
-				self::CACHETAG_TERM . $term->term_id);
-			if ($term->parent == 0) {
-				break;
+		while ( isset($term) ) {
+			LiteSpeed_Cache_Tags::add_cache_tag(self::CACHETAG_TERM . $term->term_id) ;
+			if ( $term->parent == 0 ) {
+				break ;
 			}
-			$term = get_term($term->parent);
+			$term = get_term($term->parent) ;
 		}
 	}
 
@@ -410,84 +372,69 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function is_cacheable($cacheable)
 	{
-		if (!$cacheable) {
-			return false;
+		if ( ! $cacheable ) {
+			return false ;
 		}
-		$woocom = WC();
-		if (!isset($woocom)) {
-			return true;
+
+		$woocom = WC() ;
+		if ( ! isset($woocom) ) {
+			return true ;
 		}
 
 		// For later versions, DONOTCACHEPAGE should be set.
 		// No need to check uri/qs.
-		if (version_compare($woocom->version, '1.4.2', '>=')) {
-			if ((defined('DONOTCACHEPAGE')) && (DONOTCACHEPAGE)) {
-				return false;
+		if ( version_compare($woocom->version, '1.4.2', '>=') ) {
+			if ( defined('DONOTCACHEPAGE') && DONOTCACHEPAGE ) {
+				if (LiteSpeed_Cache_Log::get_enabled()) {
+					LiteSpeed_Cache_Log::push('3rd party woocommerce not cache by constant');
+				}
+				return false ;
 			}
-			elseif ((version_compare($woocom->version, '2.1.0', '>='))
-				&& ((is_null($woocom->cart))
-					|| ($woocom->cart->get_cart_contents_count() !== 0)
-					|| (wc_notice_count() > 0))
-			) {
-				return false;
+			elseif ( version_compare($woocom->version, '2.1.0', '>=') ) {
+				$err = false;
+				if ( is_null($woocom->cart) ) {
+					$err = 'null cart' ;
+				}
+				elseif ( $woocom->cart->get_cart_contents_count() !== 0 ) {
+					$err = 'cart is not empty' ;
+				}
+				elseif ( wc_notice_count() > 0 ) {
+					$err = 'has wc notice' ;
+				}
+
+				if ( $err ) {
+					if (LiteSpeed_Cache_Log::get_enabled()) {
+						LiteSpeed_Cache_Log::push('3rd party woocommerce not cache due to ' . $err);
+					}
+					return false ;
+				}
 			}
-			self::set_cache_tags();
+			self::set_cache_tags() ;
 
-			return true;
-		}
-		$uri = esc_url($_SERVER["REQUEST_URI"]);
-		$uri_len = strlen($uri);
-
-		if ($uri_len < 5) {
-			self::set_cache_tags();
-
-			return true;
-		}
-		$sub = substr($uri, 2);
-		$sub_len = $uri_len - 2;
-		switch ($uri[1]) {
-			case 'c':
-				if ((($sub_len == 4) && (strncmp($sub, 'art/', 4) == 0))
-					|| (($sub_len == 8) && (strncmp($sub, 'heckout/', 8) == 0))
-				) {
-					return false;
-				}
-				break;
-			case 'm':
-				if (strncmp($sub, 'y-account/', 10) == 0) {
-					return false;
-				}
-				break;
-			case 'a':
-				if (($sub_len == 6) && (strncmp($sub, 'ddons/', 6) == 0)) {
-					return false;
-				}
-				break;
-			case 'l':
-				if ((($sub_len == 6) && (strncmp($sub, 'ogout/', 6) == 0))
-					|| (($sub_len == 13) && (strncmp($sub, 'ost-password/', 13) == 0))
-				) {
-					return false;
-				}
-				break;
-			case 'p':
-				if (strncmp($sub, 'roduct/', 7) == 0) {
-					return false;
-				}
-				break;
+			return true ;
 		}
 
-		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]);
-		$qs_len = strlen($qs);
-		if (!empty($qs) && ($qs_len >= 12)
-			&& (strncmp($qs, 'add-to-cart=', 12) == 0)
-		) {
+		$uri = esc_url($_SERVER["REQUEST_URI"]) ;
+		$uri_len = strlen($uri) ;
+		if ( $uri_len < 5 ) {
+			self::set_cache_tags() ;
+
+			return true ;
+		}
+
+		if ( in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/')) ) {
 			return false;
 		}
 
-		self::set_cache_tags();
+		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]) ;
+		$qs_len = strlen($qs) ;
+		if ( ! empty($qs) && $qs_len >= 12 && strncmp($qs, 'add-to-cart=', 12) == 0 ) {
+			return false ;
+		}
 
-		return true;
+		self::set_cache_tags() ;
+
+		return true ;
 	}
 
 	/**
@@ -500,8 +447,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function add_purge()
 	{
-		add_action('woocommerce_product_set_stock',
-			'LiteSpeed_Cache_ThirdParty_WooCommerce::purge_product');
+		add_action('woocommerce_product_set_stock', 'LiteSpeed_Cache_ThirdParty_WooCommerce::purge_product') ;
 	}
 
 	/**
@@ -513,23 +459,22 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function purge_product($product)
 	{
-		$config = LiteSpeed_Cache::config(self::OPTION_UPDATE_INTERVAL);
-		if (is_null($config)) {
-			$config = self::OPT_PQS_CS;
+		$config = LiteSpeed_Cache::config(self::OPTION_UPDATE_INTERVAL) ;
+		if ( is_null($config) ) {
+			$config = self::OPT_PQS_CS ;
 		}
 
-		if ($config === self::OPT_PQS_CQS) {
-			self::backend_purge($product->get_id());
+		if ( $config === self::OPT_PQS_CQS ) {
+			self::backend_purge($product->get_id()) ;
 		}
-		elseif (($config !== self::OPT_PQS_CS) && ($product->is_in_stock())) {
-			return;
+		elseif ( $config !== self::OPT_PQS_CS && $product->is_in_stock() ) {
+			return ;
 		}
-		elseif (($config !== self::OPT_PS_CN) && (!$product->is_in_stock())) {
-			self::backend_purge($product->get_id());
+		elseif ( $config !== self::OPT_PS_CN && ! $product->is_in_stock() ) {
+			self::backend_purge($product->get_id()) ;
 		}
 
-		LiteSpeed_Cache_Tags::add_purge_tag(
-			LiteSpeed_Cache_Tags::TYPE_POST . $product->get_id());
+		LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_POST . $product->get_id()) ;
 	}
 
 	/**
@@ -544,11 +489,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function delete_rel($post_id, $term_ids)
 	{
-		if ((empty($term_ids)) || (wc_get_product($post_id) === false)) {
-			return;
+		if ( empty($term_ids) || wc_get_product($post_id) === false ) {
+			return ;
 		}
-		foreach ($term_ids as $term_id) {
-			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $term_id);
+		foreach ( $term_ids as $term_id ) {
+			LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $term_id) ;
 		}
 	}
 
@@ -561,22 +506,21 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function backend_purge($post_id)
 	{
-		if ((!isset($post_id)) || (wc_get_product($post_id) === false)) {
-			return;
+		if ( ! isset($post_id) || wc_get_product($post_id) === false ) {
+			return ;
 		}
 
-		$cats = self::get_cats($post_id);
-		if (!empty($cats)) {
-			foreach ($cats as $cat) {
-				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $cat);
+		$cats = self::get_cats($post_id) ;
+		if ( ! empty($cats) ) {
+			foreach ( $cats as $cat ) {
+				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $cat) ;
 			}
 		}
 
-		$tags = wc_get_product_terms($post_id, 'product_tag',
-			array('fields' => 'ids'));
-		if (!empty($tags)) {
-			foreach ($tags as $tag) {
-				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $tag);
+		$tags = wc_get_product_terms($post_id, 'product_tag', array('fields' => 'ids')) ;
+		if ( ! empty($tags) ) {
+			foreach ( $tags as $tag ) {
+				LiteSpeed_Cache_Tags::add_purge_tag(self::CACHETAG_TERM . $tag) ;
 			}
 		}
 	}
@@ -590,20 +534,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @param integer $comment_approved Whether the comment is approved or not.
 	 * @param array $commentdata Information about the comment.
 	 */
-	public static function add_review($unused, $comment_approved,
-	                                  $commentdata)
+	public static function add_review($unused, $comment_approved, $commentdata)
 	{
-		$post_id = $commentdata['comment_post_ID'];
-		if (($comment_approved !== 1) || (!isset($post_id))
-			|| (wc_get_product($post_id) === false)) {
-			return;
+		$post_id = $commentdata['comment_post_ID'] ;
+		if ( $comment_approved !== 1 || ! isset($post_id) || wc_get_product($post_id) === false ) {
+			return ;
 		}
-		global $wp_widget_factory;
-		$recent_reviews =
-			$wp_widget_factory->widgets['WC_Widget_Recent_Reviews'];
-		if (!is_null($recent_reviews)) {
-			LiteSpeed_Cache_Tags::add_purge_tag(
-				LiteSpeed_Cache_Tags::TYPE_WIDGET . $recent_reviews->id);
+		global $wp_widget_factory ;
+		$recent_reviews = $wp_widget_factory->widgets['WC_Widget_Recent_Reviews'] ;
+		if ( ! is_null($recent_reviews) ) {
+			LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_WIDGET . $recent_reviews->id) ;
 		}
 	}
 
@@ -616,13 +556,13 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function get_config($configs)
 	{
-		if (!is_array($configs)) {
-			return $configs;
+		if ( ! is_array($configs) ) {
+			return $configs ;
 		}
-		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS;
-		$configs[self::OPTION_SHOP_FRONT_TTL] = true;
+		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS ;
+		$configs[self::OPTION_SHOP_FRONT_TTL] = true ;
 
-		return $configs;
+		return $configs ;
 	}
 
 	/**
@@ -707,9 +647,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			'content' => $content,
 		);
 
-		$tabs[] = $tab;
+		$tabs[] = $tab ;
 
-		return $tabs;
+		return $tabs ;
 	}
 
 	/**
@@ -723,27 +663,27 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function save_config($options, $input)
 	{
-		if (!isset($options)) {
-			return $options;
+		if ( ! isset($options) ) {
+			return $options ;
 		}
-		if (isset($input[self::OPTION_UPDATE_INTERVAL])) {
-			$update_val_in = $input[self::OPTION_UPDATE_INTERVAL];
+		if ( isset($input[self::OPTION_UPDATE_INTERVAL]) ) {
+			$update_val_in = $input[self::OPTION_UPDATE_INTERVAL] ;
 			switch ($update_val_in) {
 				case self::OPT_PQS_CS:
 				case self::OPT_PS_CS:
 				case self::OPT_PS_CN:
 				case self::OPT_PQS_CQS:
-					$options[self::OPTION_UPDATE_INTERVAL] = intval($update_val_in);
-					break;
+					$options[self::OPTION_UPDATE_INTERVAL] = intval($update_val_in) ;
+					break ;
 				default:
 					// add error message?
-					break;
+					break ;
 			}
 		}
 
 		$options[self::OPTION_SHOP_FRONT_TTL] = isset($input[self::OPTION_SHOP_FRONT_TTL]) && LiteSpeed_Cache_Admin_Settings::is_checked($input[self::OPTION_SHOP_FRONT_TTL]) ;
 
-		return $options;
+		return $options ;
 	}
 
 	/**
@@ -757,21 +697,18 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	private static function get_cats($product_id)
 	{
-		$woocom = WC();
-		if ((isset($woocom)) &&
-			(version_compare($woocom->version, '2.5.0', '>='))
-		) {
-			return wc_get_product_cat_ids($product_id);
+		$woocom = WC() ;
+		if ( isset($woocom) && version_compare($woocom->version, '2.5.0', '>=') ) {
+			return wc_get_product_cat_ids($product_id) ;
 		}
-		$product_cats = wp_get_post_terms($product_id, 'product_cat',
-			array("fields" => "ids"));
-		foreach ($product_cats as $product_cat) {
-			$product_cats = array_merge($product_cats, get_ancestors($product_cat, 'product_cat'));
+		$product_cats = wp_get_post_terms($product_id, 'product_cat', array("fields" => "ids")) ;
+		foreach ( $product_cats as $product_cat ) {
+			$product_cats = array_merge($product_cats, get_ancestors($product_cat, 'product_cat')) ;
 		}
 
-		return $product_cats;
+		return $product_cats ;
 	}
 
 }
 
-add_action('litespeed_cache_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_WooCommerce::detect');
+add_action('litespeed_cache_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_WooCommerce::detect') ;

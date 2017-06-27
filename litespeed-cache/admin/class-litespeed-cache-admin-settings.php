@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Admin_Settings
 		if ( empty($_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
 			return $instance ;
 		}
-		$current = $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
+		$current = !empty($old_instance[LiteSpeed_Cache_Config::OPTION_NAME]) ? $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] : false ;
 		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
 		$esistr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] ;
 		$ttlstr = $input[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] ;
@@ -124,18 +124,13 @@ class LiteSpeed_Cache_Admin_Settings
 			return false ; // invalid ttl.
 		}
 
-		if ( is_null($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array(
-				LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE => $esi,
-				LiteSpeed_Cache_Esi::WIDGET_OPID_TTL => $ttl
-			) ;
+		if ( empty($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array() ;
 		}
-		else {
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = $esi ;
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = $ttl ;
-		}
+		$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] = $esi ;
+		$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] = $ttl ;
 
-		if ( !isset($current) || $esi != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] ) {
+		if ( !$current || $esi != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_ESIENABLE] ) {
 			LiteSpeed_Cache_Tags::add_purge_tag('*') ;
 		}
 		elseif ( $ttl != 0 && $ttl != $current[LiteSpeed_Cache_Esi::WIDGET_OPID_TTL] ) {

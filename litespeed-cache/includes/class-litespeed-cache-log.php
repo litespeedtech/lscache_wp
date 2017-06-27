@@ -116,6 +116,11 @@ class LiteSpeed_Cache_Log
 		}
 
 		$request = array_map('self::format_message', $params);
+
+		// For more than 2s's requests, add more break
+		if ( time() - filemtime(self::$log_path) > 2 ) {
+			file_put_contents(self::$log_path, "\n\n\n\n", FILE_APPEND);
+		}
 		file_put_contents(self::$log_path, $request, FILE_APPEND);
 	}
 

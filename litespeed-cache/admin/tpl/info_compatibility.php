@@ -49,7 +49,7 @@ if($known_uncompat) {
 		echo '<li>' . $plugin_name . '</li>';
 	}
 }else{
-	echo "<li>NILL</li>";
+	echo "<li>Nil</li>";
 }
 ?>
 </ul>
