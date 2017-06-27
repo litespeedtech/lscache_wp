@@ -103,9 +103,11 @@ class LiteSpeed_Cache_Log
 			'Query String: '		. $SERVER['QUERY_STRING'],
 			'User Agent: '			. $SERVER['HTTP_USER_AGENT'],
 			'Accept Encoding: '		. $SERVER['HTTP_ACCEPT_ENCODING'],
-			'Cookie: '				. $SERVER['HTTP_COOKIE'],
-			'X-LSCACHE: '			. ($SERVER['X-LSCACHE'] ? 'true' : 'false'),
 		);
+		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE) ) {
+			$params[] = 'Cookie: ' . $SERVER['HTTP_COOKIE'] ;
+		}
+		$params[] = 'X-LSCACHE: ' . ($SERVER['X-LSCACHE'] ? 'true' : 'false') ;
 		if($SERVER['LSCACHE_VARY_COOKIE']){
 			$params[] = 'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'];
 		}

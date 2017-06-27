@@ -1423,7 +1423,7 @@ class LiteSpeed_Cache
 				}
 			}
 
-			LiteSpeed_Cache_Log::push("End response.\n\n") ;
+			LiteSpeed_Cache_Log::push("End response.\n--------------------------------------------------------------------------------") ;
 		}
 	}
 

@@ -12,19 +12,19 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-row">
 				<div class="litespeed-switch litespeed-label-info">
 					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG, 
+						LiteSpeed_Cache_Config::OPID_DEBUG,
 						LiteSpeed_Cache_Config::VAL_OFF,
 						__('Off', 'litespeed-cache')
 					); ?>
 
 					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG, 
+						LiteSpeed_Cache_Config::OPID_DEBUG,
 						LiteSpeed_Cache_Config::VAL_ON,
 						__('On', 'litespeed-cache')
 					); ?>
 
 					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG, 
+						LiteSpeed_Cache_Config::OPID_DEBUG,
 						LiteSpeed_Cache_Config::VAL_NOTSET,
 						__('Admin IP only', 'litespeed-cache')
 					); ?>
@@ -47,6 +47,16 @@ if (!defined('WPINC')) die;
 				<?php echo __('Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache'); ?><br />
 				<?php echo sprintf(__('More information about the available commands can be found <a href="%s">here</a>.', 'litespeed-cache'),
 					get_admin_url() . 'admin.php?page=lscache-info#admin_ip'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Log Cookies', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Turn this on to log the cookie value.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
