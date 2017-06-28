@@ -100,10 +100,14 @@ class LiteSpeed_Cache_Log
 		$SERVER = array_merge($SERVERVARS, $_SERVER);
 		$params = array(
 			sprintf('%s %s %s', $SERVER['REQUEST_METHOD'], $SERVER['SERVER_PROTOCOL'], strtok($SERVER['REQUEST_URI'], '?')),
-			'Query String: '		. $SERVER['QUERY_STRING'],
-			'User Agent: '			. $SERVER['HTTP_USER_AGENT'],
-			'Accept Encoding: '		. $SERVER['HTTP_ACCEPT_ENCODING'],
 		);
+		$qs = $SERVER['QUERY_STRING'] ;
+		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_COLLAPS_QS) && strlen($qs) > 53 ) {
+			$qs = substr($qs, 0, 53) . '...' ;
+		}
+		$params[] = 'Query String: ' . $qs ;
+		$params[] = 'User Agent: ' . $SERVER['HTTP_USER_AGENT'] ;
+		$params[] = 'Accept Encoding: ' . $SERVER['HTTP_ACCEPT_ENCODING'] ;
 		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE) ) {
 			$params[] = 'Cookie: ' . $SERVER['HTTP_COOKIE'] ;
 		}

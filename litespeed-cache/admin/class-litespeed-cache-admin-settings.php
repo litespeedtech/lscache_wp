@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Admin_Settings
 			return false ;
 		}
 
-		$esi = intval($esistr) ;
+		$esi = self::is_checked($esistr) ;
 		$ttl = intval($ttlstr) ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
@@ -481,6 +481,9 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE;
+		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
+
+		$id = LiteSpeed_Cache_Config::OPID_COLLAPS_QS;
 		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]);
 	}
 

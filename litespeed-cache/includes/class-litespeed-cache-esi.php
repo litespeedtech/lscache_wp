@@ -14,25 +14,25 @@ class LiteSpeed_Cache_Esi
 {
 	private static $_instance;
 
-	private $has_esi = false;
-	private $esi_args = null;
+	private $has_esi = false ;
+	private $esi_args = null ;
 
-	const URL = '/lscacheesi/';
-	const POSTTYPE = 'lscacheesi';
+	const URL = '/lscacheesi/' ;
+	const POSTTYPE = 'lscacheesi' ;
 
-	const QS_ACTION = 'action=lscache';
-	const QS_PARAMS = 'lscache';
+	const QS_ACTION = 'action=lscache' ;
+	const QS_PARAMS = 'lscache' ;
 
-	const PARAM_ARGS = 'args';
-	const PARAM_BLOCK_ID = 'block_id';
-	const PARAM_ID = 'id';
-	const PARAM_INSTANCE = 'instance';
-	const PARAM_NAME = 'name';
+	const PARAM_ARGS = 'args' ;
+	const PARAM_BLOCK_ID = 'block_id' ;
+	const PARAM_ID = 'id' ;
+	const PARAM_INSTANCE = 'instance' ;
+	const PARAM_NAME = 'name' ;
 
-	const CACHECTRL_PRIV = 'no-vary,private';
+	const CACHECTRL_PRIV = 'no-vary,private' ;
 
-	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable';
-	const WIDGET_OPID_TTL = 'widget_ttl';
+	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable' ;
+	const WIDGET_OPID_TTL = 'widget_ttl' ;
 
 	/**
 	 * Constructor of ESI
@@ -41,6 +41,10 @@ class LiteSpeed_Cache_Esi
 	 */
 	private function __construct()
 	{
+		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
+			return ;
+		}
+
 		add_action('litespeed_cache_is_esi_template', array($this, 'register_esi_actions')) ;
 		add_action('litespeed_cache_is_not_esi_template', array($this, 'register_not_esi_actions')) ;
 	}
@@ -450,7 +454,7 @@ class LiteSpeed_Cache_Esi
 			return $instance ;
 		}
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		if ( ! isset($options) || $options[self::WIDGET_OPID_ESIENABLE] == LiteSpeed_Cache_Config::OPID_ENABLED ) {
+		if ( ! isset($options) || ! $options[self::WIDGET_OPID_ESIENABLE] ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push('Do not esi widget ' . $name . ' because '. (!isset($options) ? 'options not set' : 'esi disabled for widget')) ;
 			}

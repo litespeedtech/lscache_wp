@@ -61,6 +61,16 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __('Collapse Query String', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_COLLAPS_QS); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Shorten the query string in debug log to make the log easier to read.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
 
 <?php
