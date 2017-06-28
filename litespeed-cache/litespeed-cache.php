@@ -113,3 +113,25 @@ if ( ! function_exists('run_litespeed_cache') ) {
 
 	run_litespeed_cache() ;
 }
+
+/**
+ * Easier API for Purging a single post.
+ *
+ * If a third party plugin needs to purge a single post, it can send
+ * a purge tag using this function.
+ *
+ * @since 1.0.1
+ * @access public
+ * @param integer $id The post id to purge.
+ */
+
+if ( ! function_exists('litespeed_purge_single_post') ) {
+	function litespeed_purge_single_post($id)
+	{
+		$post_id = intval($id);
+		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
+			return ;
+		}
+		LiteSpeed_Cache_Tags::add_purge_tag(LiteSpeed_Cache_Tags::TYPE_POST . $post_id);
+	}
+}

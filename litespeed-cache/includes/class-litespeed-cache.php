@@ -762,11 +762,7 @@ class LiteSpeed_Cache
 	 */
 	public function purge_single_post($id)
 	{
-		$post_id = intval($id);
-		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash' )) ) {
-			return ;
-		}
-		$this->add_purge_tags(LiteSpeed_Cache_Tags::TYPE_POST . $post_id);
+		litespeed_purge_single_post($id);
 		// $this->send_purge_headers();
 	}
 
