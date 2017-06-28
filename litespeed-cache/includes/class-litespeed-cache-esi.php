@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Esi
 	private $has_esi = false ;
 	private $esi_args = null ;
 
-	const URL = '/lscacheesi/' ;
+	const URL = '/lscacheesi' ;
 	const POSTTYPE = 'lscacheesi' ;
 
 	const QS_ACTION = 'action=lscache' ;
@@ -292,7 +292,7 @@ class LiteSpeed_Cache_Esi
 		}
 		global $_SERVER ;
 		$orig = $_SERVER['REQUEST_URI'] ;
-		$_SERVER['REQUEST_URI'] = $_SERVER['ESI_REFERER'] ;
+		$_SERVER['REQUEST_URI'] = !empty($_SERVER['ESI_REFERER']) ? $_SERVER['ESI_REFERER'] : false ;
 		if ( isset($params[self::PARAM_BLOCK_ID]) ) {
 			do_action('litespeed_cache_load_esi_block-' . $params[self::PARAM_BLOCK_ID], $params) ;
 		}
