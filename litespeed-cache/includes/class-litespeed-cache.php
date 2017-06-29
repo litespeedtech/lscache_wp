@@ -349,16 +349,12 @@ class LiteSpeed_Cache
 		// Removing the openlitespeed check will simply break the page.
 		//todo: make a constant for esiEnable included cfg esi eanbled
 		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' && !LiteSpeed_Cache_Router::is_ajax() && $this->config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-			$esi = LiteSpeed_Cache_Esi::get_instance() ;
-			add_action('init', array($esi, 'register_post_type')) ;
-			add_action('template_include', array($esi, 'esi_template'), 100) ;
-			add_action('load-widgets.php', array($this, 'purge_widget')) ;
-			add_action('wp_update_comment_count', array($this, 'purge_comment_widget')) ;
-
-			// backend add rewrite rule
-			if( is_admin() || is_network_admin() ){// always add rewrite rule to backend in case any other plugins flush rules
-				add_action('init', array($esi, 'add_rewrite_rule_esi')) ;
+			if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
+				add_action('template_include', 'LiteSpeed_Cache_Esi::esi_template', 100) ;
+				add_action('load-widgets.php', array($this, 'purge_widget')) ;
+				add_action('wp_update_comment_count', array($this, 'purge_comment_widget')) ;
 			}
+
 		}
 		add_action('wp_update_comment_count', array($this, 'purge_feeds')) ;
 

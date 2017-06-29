@@ -21,6 +21,7 @@ class LiteSpeed_Cache_Router
 	private static $_is_admin_ip;
 	private static $_siteurl;
 	private static $_has_whm_msg;
+	private static $_is_esi;
 
 	/**
 	 * Check if crawler is enabled on server level
@@ -121,6 +122,21 @@ class LiteSpeed_Cache_Router
 			self::$_is_ajax = defined('DOING_AJAX') && DOING_AJAX ;
 		}
 		return self::$_is_ajax ;
+	}
+
+	/**
+	 * Check if is an esi page request
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 * @return boolean
+	 */
+	public static function is_esi()
+	{
+		if ( ! isset(self::$_is_esi) ) {
+			self::$_is_esi = !empty($_GET[LiteSpeed_Cache_Esi::QS_ACTION]) && $_GET[LiteSpeed_Cache_Esi::QS_ACTION] == LiteSpeed_Cache_Esi::POSTTYPE ;
+		}
+		return self::$_is_esi ;
 	}
 
 	/**

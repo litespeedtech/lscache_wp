@@ -638,6 +638,7 @@ class LiteSpeed_Cache_Config
 //		}
 
 		$res = update_option(self::OPTION_NAME, $this->options) ;
+		LiteSpeed_Cache::get_instance()->purge_all() ;
 		if (LiteSpeed_Cache_Log::get_enabled()) {
 			LiteSpeed_Cache_Log::push("plugin_upgrade option changed = $res\n") ;
 		}

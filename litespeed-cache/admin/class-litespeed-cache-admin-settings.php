@@ -701,11 +701,6 @@ class LiteSpeed_Cache_Admin_Settings
 			$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE] ;
 
 			if ( $orig_enabled !== $new_enabled || $orig_esi_enabled !== $new_esi_enabled ) {
-				if ( $new_enabled && $new_esi_enabled ) {
-					//todo: check if rewrite rule is alread added before this line, otherwise clear that rule
-					LiteSpeed_Cache_Esi::get_instance()->add_rewrite_rule_esi() ;
-				}
-				flush_rewrite_rules() ;
 				LiteSpeed_Cache::get_instance()->purge_all() ;
 			}
 		}
