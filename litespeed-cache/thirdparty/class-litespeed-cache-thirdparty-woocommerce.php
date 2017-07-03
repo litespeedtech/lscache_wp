@@ -712,3 +712,4 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 }
 
 add_action('litespeed_cache_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_WooCommerce::detect') ;
+
