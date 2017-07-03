@@ -28,6 +28,17 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
+	 * Check if log class finished initialized
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function initialized()
+	{
+		return isset(self::$_debug) ;
+	}
+
+	/**
 	 * Enable debug log
 	 *
 	 * @since 1.1.0

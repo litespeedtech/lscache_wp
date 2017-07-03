@@ -314,7 +314,7 @@ class LiteSpeed_Cache_Config
 		if (isset($this->options[$id])) {
 			return $this->options[$id];
 		}
-		if (LiteSpeed_Cache_Log::get_enabled()) {
+		if (LiteSpeed_Cache_Log::initialized() && LiteSpeed_Cache_Log::get_enabled()) {
 			LiteSpeed_Cache_Log::push('Invalid option ID ' . $id) ;
 		}
 		return NULL;

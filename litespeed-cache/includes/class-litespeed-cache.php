@@ -919,8 +919,7 @@ class LiteSpeed_Cache
 	/**
 	 * Check if a page is cacheable.
 	 *
-	 * This will check what we consider not cacheable as well as what
-	 * third party plugins consider not cacheable.
+	 * This will check what we consider not cacheable as well as what third party plugins consider not cacheable.
 	 *
 	 * @since 1.0.0
 	 * @access private
@@ -940,8 +939,7 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('not GET method') ;
 		}
 
-		if (($conf->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) === 0)
-			&& (is_feed())) {
+		if ( is_feed() && $conf->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) === 0 ) {
 			return $this->no_cache_for('feed') ;
 		}
 
@@ -949,8 +947,7 @@ class LiteSpeed_Cache
 			return $this->no_cache_for('trackback') ;
 		}
 
-		if (($conf->get_option(LiteSpeed_Cache_Config::OPID_404_TTL) === 0)
-			&& (is_404())) {
+		if ( is_404() && $conf->get_option(LiteSpeed_Cache_Config::OPID_404_TTL) === 0 ) {
 			return $this->no_cache_for('404 pages') ;
 		}
 
@@ -984,50 +981,45 @@ class LiteSpeed_Cache
 				}
 			}
 			$tmp_separator = "\n\t\t\t\t\t\t\t\t\t\t" ;
-			$this->no_cache_for("One of the following functions determined that this page is not cacheable:$tmp_separator" . implode($tmp_separator, $funcs)) ;
-			return false ;
+			return $this->no_cache_for("One of the following functions determined that this page is not cacheable:$tmp_separator" . implode($tmp_separator, $funcs)) ;
 		}
 
-		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
-		if (( ! empty($excludes))
-			&& ( $this->is_uri_excluded(explode("\n", $excludes))))
-		{
-			return $this->no_cache_for('Admin configured URI Do not cache: '
-					. $_SERVER['REQUEST_URI']);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI) ;
+		if ( ! empty($excludes) && $this->is_uri_excluded(explode("\n", $excludes)) ) {
+			return $this->no_cache_for('Admin configured URI Do not cache: ' . $_SERVER['REQUEST_URI']) ;
 		}
 
-		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT) ;
 		if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
-			return $this->no_cache_for('Admin configured Category Do not cache.');
+			return $this->no_cache_for('Admin configured Category Do not cache.') ;
 		}
 
-		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG);
-		if (( ! empty($excludes))
-			&& (has_tag(explode(',', $excludes)))) {
-			return $this->no_cache_for('Admin configured Tag Do not cache.');
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG) ;
+		if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
+			return $this->no_cache_for('Admin configured Tag Do not cache.') ;
 		}
 
-		$excludes = $conf->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES);
-		if ((!empty($excludes)) && (!empty($_COOKIE))) {
-			$exclude_list = explode('|', $excludes);
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES) ;
+		if ( ! empty($excludes) && ! empty($_COOKIE) ) {
+			$exclude_list = explode('|', $excludes) ;
 
 			foreach( $_COOKIE as $key=>$val) {
 				if (in_array($key, $exclude_list)) {
-					return $this->no_cache_for('Admin configured Cookie Do not cache.');
+					return $this->no_cache_for('Admin configured Cookie Do not cache.') ;
 				}
 			}
 		}
 
-		$excludes = $conf->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS);
-		if ((!empty($excludes)) && (isset($_SERVER['HTTP_USER_AGENT']))) {
-			$pattern = '/' . $excludes . '/';
-			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
-			if ($nummatches) {
-					return $this->no_cache_for('Admin configured User Agent Do not cache.');
+		$excludes = $conf->get_option(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS) ;
+		if ( ! empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
+			$pattern = '/' . $excludes . '/' ;
+			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']) ;
+			if ( $nummatches ) {
+					return $this->no_cache_for('Admin configured User Agent Do not cache.') ;
 			}
 		}
 
-		return true;
+		return true ;
 	}
 
 	/**
@@ -1085,7 +1077,7 @@ class LiteSpeed_Cache
 	 */
 	public function check_cacheable()
 	{
-		if ( LiteSpeed_Cache_Tags::is_noncacheable() == false && $this->is_cacheable() ) {
+		if ( ! LiteSpeed_Cache_Tags::is_cacheable() && $this->is_cacheable() ) {
 			if ( defined('LSCACHE_ESI_LOGGEDIN') ) {
 				$this->set_cachectrl(self::CACHECTRL_SHARED) ;
 			}
@@ -1363,7 +1355,7 @@ class LiteSpeed_Cache
 			return self::CACHECTRL_NOCACHE ;
 		}
 
-		if ( (defined('LSCACHE_NO_CACHE') && constant('LSCACHE_NO_CACHE')) || LiteSpeed_Cache_Tags::is_noncacheable() ) {
+		if ( (defined('LSCACHE_NO_CACHE') && constant('LSCACHE_NO_CACHE')) || LiteSpeed_Cache_Tags::is_cacheable() ) {
 			return self::CACHECTRL_NOCACHE ;
 		}
 

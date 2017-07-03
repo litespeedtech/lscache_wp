@@ -229,7 +229,7 @@ class LiteSpeed_Cache_Tags
 	 * @return boolean True if the current page was deemed non-cacheable,
 	 * false otherwise.
 	 */
-	public static function is_noncacheable()
+	public static function is_cacheable()
 	{
 		return self::$thirdparty_noncacheable ;
 	}
