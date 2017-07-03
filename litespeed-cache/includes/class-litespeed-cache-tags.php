@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Tags
 	 */
 	public static function is_cacheable()
 	{
-		return self::$thirdparty_noncacheable ;
+		return ! self::$thirdparty_noncacheable ;
 	}
 
 	/**

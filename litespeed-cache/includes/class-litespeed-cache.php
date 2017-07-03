@@ -142,10 +142,20 @@ class LiteSpeed_Cache
 		// }
 
 		if ( !$bad_cookies && !$this->check_user_logged_in() && !LiteSpeed_Cache_Cookie::get_instance()->check_cookies() ) {
-			$this->load_logged_out_actions() ;
+			// user is not logged in
+			add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
+			add_filter('status_header', array($this, 'check_error_codes'), 10, 2) ;
 		}
 		else {
-			$this->load_logged_in_actions();
+			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
+				add_action('wp_logout', array($this, 'purge_on_logout'));
+				if ( $this->config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
+					define('LSCACHE_ESI_LOGGEDIN', true);
+					// user is not logged in
+					add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
+					add_filter('status_header', array($this, 'check_error_codes'), 10, 2) ;
+				}
+			}
 		}
 
 		// Load public hooks
@@ -280,47 +290,6 @@ class LiteSpeed_Cache
 	public function detect()
 	{
 		do_action('litespeed_cache_detect_thirdparty');
-	}
-
-	/**
-	 * Register all the hooks for logged in users.
-	 *
-	 * @since    1.2.0
-	 * @access   private
-	 */
-	private function load_logged_in_actions()
-	{
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			add_action('wp_logout', array($this, 'purge_on_logout'));
-			if ( $this->config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-				$this->load_logged_out_actions();
-				define('LSCACHE_ESI_LOGGEDIN', true);
-			}
-		}
-	}
-
-	/**
-	 * Register all the hooks for non-logged in users.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function load_logged_out_actions()
-	{
-		// user is not logged in
-		add_action('wp', array( $this, 'check_cacheable' ), 5) ;
-		add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
-		add_filter('status_header', array($this, 'check_error_codes'), 10, 2);
-
-		$cache_res = $this->config(LiteSpeed_Cache_Config::OPID_CACHE_RES);
-		if ( $cache_res ) {
-			$uri = esc_url($_SERVER["REQUEST_URI"]);
-			$pattern = '!' . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!';
-			if ( preg_match($pattern, $uri) )
-			{
-				add_action('wp_loaded', array( $this, 'check_cacheable' ), 5) ;
-			}
-		}
 	}
 
 	/**
@@ -1077,7 +1046,7 @@ class LiteSpeed_Cache
 	 */
 	public function check_cacheable()
 	{
-		if ( ! LiteSpeed_Cache_Tags::is_cacheable() && $this->is_cacheable() ) {
+		if ( LiteSpeed_Cache_Tags::is_cacheable() && $this->is_cacheable() ) {
 			if ( defined('LSCACHE_ESI_LOGGEDIN') ) {
 				$this->set_cachectrl(self::CACHECTRL_SHARED) ;
 			}
@@ -1153,18 +1122,18 @@ class LiteSpeed_Cache
 	public function check_login_cacheable()
 	{
 		if ( ! $this->config(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) ) {
-			return;
+			return ;
 		}
-		$this->check_cacheable();
-		if ($this->cachectrl !== self::CACHECTRL_PUBLIC) {
-			return;
+		$this->check_cacheable() ;
+		if ( $this->cachectrl !== self::CACHECTRL_PUBLIC ) {
+			return ;
 		}
-		if (!empty($_GET)) {
-			if (LiteSpeed_Cache_Log::get_enabled()) {
-				$this->no_cache_for('Not a get request');
+		if ( !empty($_GET) ) {
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				$this->no_cache_for('Not a get request') ;
 			}
-			$this->set_cachectrl(self::CACHECTRL_NOCACHE);
-			return;
+			$this->set_cachectrl(self::CACHECTRL_NOCACHE) ;
+			return ;
 		}
 
 		LiteSpeed_Cache_Tags::add_cache_tag(LiteSpeed_Cache_Tags::TYPE_LOGIN);
@@ -1355,7 +1324,7 @@ class LiteSpeed_Cache
 			return self::CACHECTRL_NOCACHE ;
 		}
 
-		if ( (defined('LSCACHE_NO_CACHE') && constant('LSCACHE_NO_CACHE')) || LiteSpeed_Cache_Tags::is_cacheable() ) {
+		if ( (defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE) || ! LiteSpeed_Cache_Tags::is_cacheable() ) {
 			return self::CACHECTRL_NOCACHE ;
 		}
 
@@ -1488,6 +1457,8 @@ class LiteSpeed_Cache
 		$stale = false ;
 		$novary = false ;
 		do_action('litespeed_cache_add_purge_tags') ;
+
+		$this->check_cacheable() ;
 
 		$mode = $this->validate_mode($showhdr, $stale, $novary) ;
 
