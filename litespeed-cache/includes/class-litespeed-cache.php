@@ -962,24 +962,30 @@ class LiteSpeed_Cache
 //			return $this->no_cache_for('no theme used') ;
 //		}
 
-		$cacheable = apply_filters('litespeed_cache_is_cacheable', true);
-		if (!$cacheable) {
-			global $wp_filter;
-			if ((!LiteSpeed_Cache_Log::get_enabled())
-				|| (empty($wp_filter['litespeed_cache_is_cacheable']))) {
-				return $this->no_cache_for(
-					'Third Party Plugin determined not cacheable.');
+		// parse ESI block id
+		$esi_id = false ;
+		if ( LiteSpeed_Cache_Router::is_esi() ) {
+			$params = LiteSpeed_Cache_Esi::parse_esi_param() ;
+			if ( $params !== false ) {
+				$esi_id = $params[LiteSpeed_Cache_Esi::PARAM_BLOCK_ID] ;
 			}
-			$funcs = array();
+		}
+		// Apply 3rd party filter
+		$cacheable = apply_filters('litespeed_cache_is_cacheable', true, $esi_id) ;
+		if ( ! $cacheable ) {
+			global $wp_filter ;
+			if ( ! LiteSpeed_Cache_Log::get_enabled() || empty($wp_filter['litespeed_cache_is_cacheable']) ) {
+				return $this->no_cache_for('Third Party Plugin determined not cacheable.') ;
+			}
+			$funcs = array() ;
 			foreach ($wp_filter['litespeed_cache_is_cacheable'] as $hook_level) {
 				foreach ($hook_level as $func=>$params) {
-					$funcs[] = $func;
+					$funcs[] = $func ;
 				}
 			}
-			$this->no_cache_for('One of the following functions '
-				. "determined that this page is not cacheable:\n\t\t"
-				. implode("\n\t\t", $funcs));
-			return false;
+			$tmp_separator = "\n\t\t\t\t\t\t\t\t\t\t" ;
+			$this->no_cache_for("One of the following functions determined that this page is not cacheable:$tmp_separator" . implode($tmp_separator, $funcs)) ;
+			return false ;
 		}
 
 		$excludes = $conf->get_option(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI);
@@ -1104,6 +1110,31 @@ class LiteSpeed_Cache
 		if ( $novary ) {
 			$this->cachectrl |= self::CACHECTRL_NO_VARY ;
 		}
+		if (LiteSpeed_Cache_Log::get_enabled()) {
+			$log = '' ;
+			switch ($val) {
+				case self::CACHECTRL_NOCACHE:
+					$log = 'no-cache' ;
+					break ;
+
+				case self::CACHECTRL_SHARED:
+					$log = 'shared,private' ;
+					break ;
+
+				case self::CACHECTRL_PRIVATE:
+					$log = 'private' ;
+					break ;
+
+				case self::CACHECTRL_PUBLIC:
+					$log = 'public' ;
+					break ;
+			}
+			if ($novary) {
+				$log .= ',no-vary' ;
+			}
+
+			LiteSpeed_Cache_Log::push('Set cache ctrl - ' . $log) ;
+		}
 	}
 
 	/**
@@ -1129,7 +1160,7 @@ class LiteSpeed_Cache
 	 */
 	public function check_login_cacheable()
 	{
-		if ($this->config(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) === false) {
+		if ( ! $this->config(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) ) {
 			return;
 		}
 		$this->check_cacheable();

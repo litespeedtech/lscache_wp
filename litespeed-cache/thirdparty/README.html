@@ -128,7 +128,7 @@ require some minor additions to make their plugin compatible with the cache.</p>
  * You should replace the asterisk with the name of the plugin.
  * The file is named the same as the class, except with dashes, '-', instead of underscores, '_'
  * and with all lowercase letters.
- * 
+ *
  */</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LiteSpeed_Cache_ThirdParty_Plugin</span>
 </span>{
@@ -154,9 +154,10 @@ require some minor additions to make their plugin compatible with the cache.</p>
      * This filter is used to let the cache know if a page is cacheable.
      *
      * <span class="hljs-doctag">@param</span> $cacheable true/false, whether a previous filter determined this page is cacheable or not.
+     * <span class="hljs-doctag">@param</span> $esi_block_id string/false, The ESI block id if this page is ESI.
      * <span class="hljs-doctag">@return</span> true if cacheable, false if not.
      */</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">is_cacheable</span><span class="hljs-params">(<span class="hljs-variable">$cacheable</span>)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">is_cacheable</span><span class="hljs-params">(<span class="hljs-variable">$cacheable</span>, <span class="hljs-variable">$esi_block_id</span>)</span>
     </span>{
         <span class="hljs-keyword">if</span> (!<span class="hljs-variable">$cacheable</span>) {
             <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;

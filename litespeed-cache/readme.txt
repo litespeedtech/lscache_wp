@@ -290,13 +290,17 @@ These hook points are provided for hooking into the cache's run time functionali
 
   If, however, the callback determines that it is a forum page, it is recommended to add any needed actions/filters in the callback.
 
-* **Filter - litespeed_cache_is_cacheable($cacheable)**
+* **Filter - litespeed_cache_is_cacheable($cacheable, $esi_block_id)**
 
   Triggered when the cache plugin is checking if the current page is cacheable. This filter will not trigger on admin pages nor regular pages when visited by a logged in user.
 
   * **Parameters**
 
      *$cacheable* `boolean` Represents whether a previous filter determined the cache to be cacheable or not. If this is false, it is strongly recommended to return false immediately to optimize performance.
+
+  * **Parameters**
+
+     *$esi_block_id* `string` The ESI block id if a request is a ESI request.
 
   * **Returns**
 

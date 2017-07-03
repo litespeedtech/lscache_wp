@@ -41,7 +41,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( ! defined('WOOCOMMERCE_VERSION') ) {
 			return ;
 		}
-		add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable') ;
+		add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_WooCommerce::is_cacheable', 10, 2) ;
 
 		add_action('woocommerce_after_checkout_validation', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge') ;
 		add_filter('litespeed_cache_get_options', 'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config') ;
@@ -366,11 +366,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.5
 	 * @access public
-	 * @param boolean $cacheable True if previous filter determined the page is
-	 *     cacheable.
-	 * @return boolean True if cacheable, false if not.
+	 * @param boolean $cacheable  	True if previous filter determined the page is cacheable.
+     * @param string $esi_id 		The ESI block id if a request is an ESI request.
+	 * @return boolean           	True if cacheable, false if not.
 	 */
-	public static function is_cacheable($cacheable)
+	public static function is_cacheable($cacheable, $esi_id)
 	{
 		if ( ! $cacheable ) {
 			return false ;
@@ -395,7 +395,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				if ( is_null($woocom->cart) ) {
 					$err = 'null cart' ;
 				}
-				elseif ( $woocom->cart->get_cart_contents_count() !== 0 ) {
+				elseif ( $esi_id === 'storefront-cart-header' && $woocom->cart->get_cart_contents_count() !== 0 ) {
 					$err = 'cart is not empty' ;
 				}
 				elseif ( wc_notice_count() > 0 ) {

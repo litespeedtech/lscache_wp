@@ -47,10 +47,11 @@ class LiteSpeed_Cache_ThirdParty_Plugin
     /**
      * This filter is used to let the cache know if a page is cacheable.
      *
-     * @param $cacheable true/false, whether a previous filter determined this page is cacheable or not.
-     * @return true if cacheable, false if not.
+     * @param boolean $cacheable    Whether a previous filter determined this page is cacheable or not.
+     * @param boolean $esi_block_id The ESI block id if is an ESI request.
+     * @return true                 If cacheable, false if not.
      */
-    public static function is_cacheable($cacheable)
+    public static function is_cacheable($cacheable, $esi_block_id)
     {
         if (!$cacheable) {
             return false;

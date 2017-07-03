@@ -217,28 +217,42 @@ class LiteSpeed_Cache_Esi
 	}
 
 	/**
-	 * Parses the request parameters on an ESI request and selects the correct
-	 * esi output based on the parameters.
+	 * Parses the request parameters on an ESI request
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function parse_esi_param()
+	{
+		if ( ! isset($_REQUEST[self::QS_PARAMS]) ) {
+			return false;
+		}
+		$req_params = $_REQUEST[self::QS_PARAMS] ;
+		$unencrypted = base64_decode($req_params) ;
+		if ($unencrypted === false) {
+			return false;
+		}
+		$unencoded = urldecode($unencrypted) ;
+		$params = unserialize($unencoded) ;
+		if ($params === false || ! isset($params[self::PARAM_BLOCK_ID]) ) {
+			return false;
+		}
+
+		return $params ;
+	}
+
+	/**
+	 * Select the correct esi output based on the parameters in an ESI request.
 	 *
 	 * @since 1.2.0
 	 * @access public
 	 */
 	public static function load_esi_block()
 	{
-		if ( ! isset($_REQUEST[self::QS_PARAMS]) ) {
-			return;
-		}
-		$req_params = $_REQUEST[self::QS_PARAMS] ;
-		$unencrypted = base64_decode($req_params) ;
-		if ($unencrypted === false) {
+		$params = self::parse_esi_param() ;
+		if ( $params === false ) {
 			return ;
 		}
-		$unencoded = urldecode($unencrypted) ;
-		$params = unserialize($unencoded) ;
-		if ($params === false) {
-			return ;
-		}
-
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
 			$logInfo = 'Got an esi request.' ;
 			if( ! empty($params[self::PARAM_NAME]) ) {
@@ -250,9 +264,9 @@ class LiteSpeed_Cache_Esi
 		global $_SERVER ;
 		$orig = $_SERVER['REQUEST_URI'] ;
 		$_SERVER['REQUEST_URI'] = !empty($_SERVER['ESI_REFERER']) ? $_SERVER['ESI_REFERER'] : false ;
-		if ( isset($params[self::PARAM_BLOCK_ID]) ) {
-			do_action('litespeed_cache_load_esi_block-' . $params[self::PARAM_BLOCK_ID], $params) ;
-		}
+
+		do_action('litespeed_cache_load_esi_block-' . $params[self::PARAM_BLOCK_ID], $params) ;
+
 		$_SERVER['REQUEST_URI'] = $orig ;
 	}
 
