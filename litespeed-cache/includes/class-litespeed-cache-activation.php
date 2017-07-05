@@ -189,10 +189,10 @@ class LiteSpeed_Cache_Activation
 		}
 
 		$adv_cache_path = LSWCP_CONTENT_DIR . '/advanced-cache.php' ;
-		if ( file_exists($adv_cache_path) && is_writable($adv_cache_path) &&
-				((LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) && defined('LSCACHE_ADV_CACHE') )
-					|| strpos(file_get_contents($adv_cache_path), 'LSCACHE_ADV_CACHE') !== false ) ) {
-			unlink($adv_cache_path) ;
+		if ( file_exists($adv_cache_path) && is_writable($adv_cache_path)
+                && ((LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) && defined('LSCACHE_ADV_CACHE') )
+                    || strpos(file_get_contents($adv_cache_path), 'LSCACHE_ADV_CACHE') !== false ) ) {
+			unlink($adv_cache_path)  ;
 		}
 		else {
 			error_log('Failed to remove advanced-cache.php, file does not exist or is not writable!')  ;
