@@ -333,6 +333,9 @@ These hook points are provided for hooking into the cache's run time functionali
 
 == Changelog ==
 
+= 1.1.2.1 - July 5 2017 = 
+* [UPDATE] Improved compatibility with WooCommerce v3.1.0.
+
 = 1.1.2 - June 20 2017 =
 * [BUGFIX] Fixed missing form close tag.
 * [UPDATE] Added a wiki link for enabling the crawler.
