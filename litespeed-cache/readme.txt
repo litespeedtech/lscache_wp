@@ -151,7 +151,7 @@ However, other themes like the E-Commerce theme, do not, so please verify the th
 
 As of version 1.0.10, you may simply add `define('LSCACHE_NO_CACHE', true);` sometime before the shutdown hook, and it should be recognized by the cache.
 
-Alternatively, you may use the function `LiteSpeed_Cache_Tags::set_noncacheable();` for earlier versions (1.0.7+).
+Alternatively, you may use the function xxx`LiteSpeed_Cache_Tags::set_noncacheable();` for earlier versions (1.0.7+).
 
 If using the function, make sure to check that the class exists prior to using the function.
 
@@ -272,7 +272,7 @@ The following functions may be used at any hook point prior to the 'shutdown' ho
 
      *$tag* `String/Array` A (list of) cache tag(s) to associate with the page.
 
-* **LiteSpeed_Cache_Tags::add_purge_tag(_$tag_)**
+* **LiteSpeed_Cache_Tag::add(_$tag_)**
 
   Adds a single or group of purge tags to the list of tags to be purged with the request. This may be useful for situations where another plugin needs to purge custom cache tags or associated pages.
 
@@ -284,13 +284,13 @@ The following functions may be used at any hook point prior to the 'shutdown' ho
 
 These hook points are provided for hooking into the cache's run time functionality. It is not required to hook into any of these hook points; these are provided more for convenience. It is possible that a plugin only needs to hook into its own hook points.
 
-* **Action - litespeed_cache_detect_thirdparty**
+* **Action - litespeed_cache_api_detect_thirdparty**
 
   This action may be used to check if it is necessary to add any further functionality to the current request. For example, if a user visits a shopping page, there is no need for the forum plugin to do its extra checks/add its tags because the page is unrelated.
 
   If, however, the callback determines that it is a forum page, it is recommended to add any needed actions/filters in the callback.
 
-* **Filter - litespeed_cache_is_cacheable($cacheable, $esi_block_id)**
+* **Filter - litespeed_cache_api_control($cacheable, $esi_block_id)**
 
   Triggered when the cache plugin is checking if the current page is cacheable. This filter will not trigger on admin pages nor regular pages when visited by a logged in user.
 
@@ -316,7 +316,7 @@ These hook points are provided for hooking into the cache's run time functionali
 
   Called at the end of every request. This hook provides an access point to any plugin that needs to add purge tags to the current request.
 
-* **Action - litespeed_cache_add_cache_tags**
+* **Action - litespeed_cache_add_tags**
 
   Called at the end of every cacheable request. This hook provides an access point to any plugin that needs to add cache tags to the current request.
 
@@ -333,7 +333,7 @@ These hook points are provided for hooking into the cache's run time functionali
 
 == Changelog ==
 
-= 1.1.2.1 - July 5 2017 = 
+= 1.1.2.1 - July 5 2017 =
 * [UPDATE] Improved compatibility with WooCommerce v3.1.0.
 
 = 1.1.2 - June 20 2017 =

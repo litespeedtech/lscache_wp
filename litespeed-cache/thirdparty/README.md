@@ -60,14 +60,14 @@ A post is considered non cacheable if...
 There are five hook points available for use. You may also use your own hook points
 prior to the 'shutdown' action to add response headers.
 
-- litespeed_cache_detect_thirdparty - This action is used to detect whether you want
+- litespeed_cache_api_detect_thirdparty - This action is used to detect whether you want
 to add your functions to the below hook points.
 It is not required to use this hook point, but it is provided in case it is needed.
   - As an example, suppose I have a shop plugin and a forum plugin.
   I don't want my forums plugin to add actions when someone visits /shop/,
   so I use this hook point to determine if this is a forum page.
   If it is, I will add the rest of my hooks.
-- litespeed_cache_is_cacheable - This filter is triggered when the cache checks
+- litespeed_cache_api_control - This filter is triggered when the cache checks
 if the current page is cacheable.
   - The one parameter is a boolean true/false.
   If it is false, that means another plugin determined the page was uncacheable,
@@ -85,7 +85,7 @@ requires that other pages are purged as well.
   affected.
 - litespeed_cache_add_purge_tags - This action is called at the end of each request.
 It may be used to add any last minute purge tags.
-- litespeed_cache_add_cache_tags - This action is called at the end of each request.
+- litespeed_cache_add_tags - This action is called at the end of each request.
 It may be used to add any last minute cache tags.
 
 ## Functions
@@ -144,10 +144,10 @@ class LiteSpeed_Cache_ThirdParty_Plugin
     public static function detect()
     {
         if (isMyPluginEnabled()) {
-            add_filter('litespeed_cache_is_cacheable', 'LiteSpeed_Cache_ThirdParty_Plugin::is_cacheable');
+            add_filter('litespeed_cache_api_control', 'LiteSpeed_Cache_ThirdParty_Plugin::is_cacheable');
             add_action('litespeed_cache_on_purge_post', 'LiteSpeed_Cache_ThirdParty_Plugin::on_purge');
             add_action('litespeed_cache_add_purge_tags', 'LiteSpeed_Cache_ThirdParty_Plugin::add_purge_tags');
-            add_action('litespeed_cache_add_cache_tags', 'LiteSpeed_Cache_ThirdParty_Plugin::add_cache_tags');
+            add_action('litespeed_cache_add_tags', 'LiteSpeed_Cache_ThirdParty_Plugin::add_cache_tags');
         }
     }
 
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_ThirdParty_Plugin
 
 }
 
-add_action('litespeed_cache_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_Plugin::detect');
+add_action('litespeed_cache_api_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_Plugin::detect');
 
 
 ```

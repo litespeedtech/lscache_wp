@@ -56,7 +56,7 @@ Then, if a change is made where all pages tagged <code>MTPP_F.1</code> need to b
 <p>There are five hook points available for use. You may also use your own hook points
 prior to the ‘shutdown’ action to add response headers.</p>
 <ul>
-<li>litespeed_cache_detect_thirdparty - This action is used to detect whether you want
+<li>litespeed_cache_api_detect_thirdparty - This action is used to detect whether you want
 to add your functions to the below hook points.
 It is not required to use this hook point, but it is provided in case it is needed.
 <ul>
@@ -66,7 +66,7 @@ so I use this hook point to determine if this is a forum page.
 If it is, I will add the rest of my hooks.</li>
 </ul>
 </li>
-<li>litespeed_cache_is_cacheable - This filter is triggered when the cache checks
+<li>litespeed_cache_api_control - This filter is triggered when the cache checks
 if the current page is cacheable.
 <ul>
 <li>The one parameter is a boolean true/false.
@@ -90,7 +90,7 @@ affected.</li>
 </li>
 <li>litespeed_cache_add_purge_tags - This action is called at the end of each request.
 It may be used to add any last minute purge tags.</li>
-<li>litespeed_cache_add_cache_tags - This action is called at the end of each request.
+<li>litespeed_cache_add_tags - This action is called at the end of each request.
 It may be used to add any last minute cache tags.</li>
 </ul>
 <h2><a id="Functions_90"></a>Functions</h2>
@@ -143,10 +143,10 @@ require some minor additions to make their plugin compatible with the cache.</p>
     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">detect</span><span class="hljs-params">()</span>
     </span>{
         <span class="hljs-keyword">if</span> (isMyPluginEnabled()) {
-            add_filter(<span class="hljs-string">'litespeed_cache_is_cacheable'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::is_cacheable'</span>);
+            add_filter(<span class="hljs-string">'litespeed_cache_api_control'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::is_cacheable'</span>);
             add_action(<span class="hljs-string">'litespeed_cache_on_purge_post'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::on_purge'</span>);
             add_action(<span class="hljs-string">'litespeed_cache_add_purge_tags'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::add_purge_tags'</span>);
-            add_action(<span class="hljs-string">'litespeed_cache_add_cache_tags'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::add_cache_tags'</span>);
+            add_action(<span class="hljs-string">'litespeed_cache_add_tags'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::add_cache_tags'</span>);
         }
     }
 
@@ -223,7 +223,7 @@ require some minor additions to make their plugin compatible with the cache.</p>
 
 }
 
-add_action(<span class="hljs-string">'litespeed_cache_detect_thirdparty'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::detect'</span>);
+add_action(<span class="hljs-string">'litespeed_cache_api_detect_thirdparty'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::detect'</span>);
 
 
 </code></pre>
