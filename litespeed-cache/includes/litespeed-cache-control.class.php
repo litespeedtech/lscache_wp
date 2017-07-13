@@ -121,14 +121,12 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.2.0
+	 * @param string $reason The reason to no cache
 	 */
-	public static function set_nocache()
+	public static function set_nocache($reason = false)
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2) ;
-			LiteSpeed_Cache_Log::push('Cache_control is set to nocache by: ' . $trace[1]['class']) ;
-		}
+		LiteSpeed_Cache_Log::debug('Control set No Cache: ' . $reason, 2) ;
 	}
 
 	/**
@@ -207,8 +205,6 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function output()
 	{
-		self::_finalize() ;
-
 		$esi_hdr = '' ;
 		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' && LiteSpeed_Cache_ESI::get_instance()->has_esi() ) {
 			$esi_hdr = ',esi=on' ;
@@ -242,11 +238,21 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Generate all `control` tags before output
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.2.0
 	 */
-	private static function _finalize()
+	public static function finalize()
 	{
+		if ( is_admin() || is_network_admin() ) {
+			self::set_nocache('Admin page') ;
+			return ;
+		}
+
+		if ( defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE ) {
+			self::set_nocache('LSCACHE_NO_CACHE constant defined') ;
+			return ;
+		}
+
 		// Apply 3rd party filter
 		// Parse ESI block id
 		$esi_id = false ;
@@ -270,21 +276,11 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 
-		if ( is_admin() || is_network_admin() ) {
-			self::set_nocache() ;
-			return ;
-		}
-
-		if ( defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE ) {
-			self::set_nocache() ;
-			return ;
-		}
-
 		// If user has password cookie, do not cache (moved from vary)
 		global $post ;
 		if ( ! empty($post->post_password) && isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
 			// If user has password cookie, do not cache
-			self::set_nocache() ;
+			self::set_nocache('pswd cookie') ;
 			return ;
 		}
 
@@ -295,7 +291,7 @@ class LiteSpeed_Cache_Control
 		// The following check to the end is ONLY for mobile
 		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED) ) {
 			if ( self::is_mobile() ) {
-				self::set_nocache() ;
+				self::set_nocache('mobile') ;
 			}
 			return ;
 		}

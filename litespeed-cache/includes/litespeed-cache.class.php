@@ -117,7 +117,7 @@ class LiteSpeed_Cache
 		// 	return ;
 		// }
 
-		if ( ! $bad_cookies && ! LiteSpeed_Cache_Vary::check_user_logged_in() && ! LiteSpeed_Cache_Vary::check_cookies() ) {
+		if ( ! $bad_cookies && ! LiteSpeed_Cache_Vary::check_user_logged_in() && ! LiteSpeed_Cache_Vary::check_cookies() ) {// todo: check check_cookies comment vary
 			// user is not logged in
 			add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
 			add_filter('status_header', 'LiteSpeed_Cache::check_error_codes', 10, 2) ;
@@ -440,9 +440,12 @@ class LiteSpeed_Cache
 	public function send_headers()
 	{
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_cache_api_control`.
-		$control_header = LiteSpeed_Cache_Control::get_instance()->output() ;
+		LiteSpeed_Cache_Control::finalize() ;
 
 		$vary_header = LiteSpeed_Cache_Vary::output() ;
+		if ( empty($vary_header) && LiteSpeed_Cache_Control::get_cacheable() ) {
+			LiteSpeed_Cache_Control::set_nocache('empty vary header') ;
+		}
 
 		$tag_header = '' ;
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
@@ -452,15 +455,16 @@ class LiteSpeed_Cache
 		}
 		elseif ( $is_cacheable ) {
 			$tag_header = LiteSpeed_Cache_Tag::output() ;
-		}
-
-		if ( empty($tag_header) ) {
-			//$mode = self::CACHECTRL_NOCACHE ;xx
-			// todo1
+			if ( ! $tag_header ) {
+				LiteSpeed_Cache_Control::set_nocache('empty tag header') ;
+			}
 		}
 
 		// NOTE: `purge` output needs to be after `tag` output as Admin QS may need to send `tag` header
 		$purge_header = LiteSpeed_Cache_Purge::output() ;
+
+		// generate `control` header in the end in case control status is changed by other headers.
+		$control_header = LiteSpeed_Cache_Control::output() ;
 
 		if ( $control_header ) {
 			$hdr_content[] = $control_header ;

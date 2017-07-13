@@ -69,38 +69,74 @@ class LiteSpeed_Cache_Log
 	 */
 	private static function format_message($msg)
 	{
+		return self::prefix() . $msg . "\n" ;
+	}
+
+	/**
+	 * Formats the consistent prefix.
+	 *
+	 * @since 1.2.0
+	 * @access private
+	 * @return string The formatted log prefix.
+	 */
+	private static function prefix()
+	{
 		$port = isset($_SERVER['REMOTE_PORT']) ? $_SERVER['REMOTE_PORT'] : '' ;
-		$formatted = sprintf("%s [%s:%s] [%s] %s\n", date('r'), $_SERVER['REMOTE_ADDR'], $port, LSCWP_LOG_TAG, $msg) ;
-		return $formatted ;
+		$prefix = sprintf("%s [%s:%s] [%s] ", date('r'), $_SERVER['REMOTE_ADDR'], $port, LSCWP_LOG_TAG) ;
+		return $prefix ;
 	}
 
 	/**
 	 * Direct call to log a debug message.
 	 *
-	 * @since 1.0.0
+	 * @since 1.2.0
 	 * @access public
 	 * @param string $msg The debug message.
+	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	public static function debug($msg)
+	public static function debug($msg, $backtrace_limit = false)
 	{
 		if ( self::get_enabled() ) {
-			self::push($msg) ;
+			self::push($msg, $backtrace_limit+1) ;
 		}
 	}
 
 	/**
 	 * Logs a debug message.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.0
 	 * @access public
 	 * @param string $msg The debug message.
+	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	public static function push($msg)
+	public static function push($msg, $backtrace_limit = false)
 	{
 		if ( !isset(self::$_debug) ) {// If not initialized, do it now
 			self::get_instance() ;
 		}
+
 		$formatted = self::format_message($msg) ;
+
+		// backtrace handler
+		if ( $backtrace_limit !== false ) {
+			$prefix = str_repeat(' ', strlen(self::prefix())+3) . str_repeat('-', 7) . ' ' ;
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit+2) ;
+			for ($i=1 ; $i <= $backtrace_limit+1 ; $i++) {// the 0st item is push()
+				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
+					continue ;
+				}
+				if ( empty($trace[$i]['class']) ) {
+					break ;
+				}
+				$log = $trace[$i]['class'] . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
+				if ( ! empty($trace[$i-1]['line']) ) {
+					$log .= ' @ ' . $trace[$i-1]['line'] ;
+				}
+				$formatted .= $prefix . $log . "\n" ;
+			}
+
+		}
+
 		file_put_contents(self::$log_path, $formatted, FILE_APPEND) ;
 	}
 
