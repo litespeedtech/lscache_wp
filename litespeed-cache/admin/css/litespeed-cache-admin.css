@@ -2,8 +2,6 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
-@import "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css";
 @import "litespeed-common.css";
 @import "litespeed-btn.css";
 @import "litespeed-checkbox.css";
