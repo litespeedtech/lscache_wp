@@ -119,20 +119,20 @@ class LiteSpeed_Cache_Log
 
 		// backtrace handler
 		if ( $backtrace_limit !== false ) {
-			$prefix = str_repeat(' ', strlen(self::prefix())+3) . str_repeat('-', 7) . ' ' ;
+			$prefix = str_repeat(' ', strlen(self::prefix())+3) ;
 			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit+2) ;
 			for ($i=1 ; $i <= $backtrace_limit+1 ; $i++) {// the 0st item is push()
-				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
-					continue ;
-				}
 				if ( empty($trace[$i]['class']) ) {
 					break ;
+				}
+				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
+					continue ;
 				}
 				$log = $trace[$i]['class'] . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
 				if ( ! empty($trace[$i-1]['line']) ) {
 					$log .= ' @ ' . $trace[$i-1]['line'] ;
 				}
-				$formatted .= $prefix . $log . "\n" ;
+				$formatted .= $prefix . "- $log\n" ;
 			}
 
 		}

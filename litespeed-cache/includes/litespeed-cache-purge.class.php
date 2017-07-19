@@ -15,7 +15,7 @@ class LiteSpeed_Cache_Purge
 	protected static $_purge_related = false ;
 	protected static $_purge_single = false ;
 
-	const HEADER_PURGE = 'X-LiteSpeed-Purge' ;
+	const X_HEADER = 'X-LiteSpeed-Purge' ;
 
 	/**
 	 * Adds new public purge tags to the array of purge tags for the request.
@@ -465,7 +465,7 @@ class LiteSpeed_Cache_Purge
 		}
 
 		$purge_header = '' ;
-		$private_prefix = self::HEADER_PURGE . ': private,' ;
+		$private_prefix = self::X_HEADER . ': private,' ;
 		$prefix = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_TAG_PREFIX) ?: '' ;
 
 		if ( ! empty(self::$_pub_purge) ) {
@@ -474,7 +474,7 @@ class LiteSpeed_Cache_Purge
 				// If this ends up empty, private will also end up empty
 				return '' ;
 			}
-			$purge_header = self::HEADER_PURGE . ': public,' ;
+			$purge_header = self::X_HEADER . ': public,' ;
 			if ( LiteSpeed_Cache_Control::is_stale() ) {
 				$purge_header .= 'stale,' ;
 			}

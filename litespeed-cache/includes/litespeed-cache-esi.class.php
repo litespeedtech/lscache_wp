@@ -132,7 +132,7 @@ class LiteSpeed_Cache_ESI
 		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
 
 		// separate admin_bar esi
-		if ( LiteSpeed_Cache_Vary::get_user_loggedin() ) {
+		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000) ;
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000) ;
 		}

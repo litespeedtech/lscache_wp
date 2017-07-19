@@ -111,25 +111,24 @@ class LiteSpeed_Cache
 		add_action('shutdown', array($this, 'send_headers'), 0) ;
 		add_action('wp_footer', 'LiteSpeed_Cache::litespeed_comment_info') ;
 
-		$bad_cookies = LiteSpeed_Cache_Vary::setup_cookies() ;
+		LiteSpeed_Cache_Vary::get_instance() ;
 
 		// if ( $this->check_esi_page()) {
 		// 	return ;
 		// }
 
-		if ( ! $bad_cookies && ! LiteSpeed_Cache_Vary::check_user_logged_in() && ! LiteSpeed_Cache_Vary::check_cookies() ) {// todo: check check_cookies comment vary
-			// user is not logged in
+		if ( ! LiteSpeed_Cache_Router::is_logged_in() ) {// If user is not logged in
+			// If still cacheable, check `login page` and `error page` cacheable setting
 			add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
 			add_filter('status_header', 'LiteSpeed_Cache::check_error_codes', 10, 2) ;
 		}
 		else {
+			// Check ESI for logged in user
 			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
 				add_action('wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout') ;
 				if ( self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-					define('LSCACHE_ESI_LOGGEDIN', true) ;
-					// user is not logged in
-					add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
 					add_filter('status_header', 'LiteSpeed_Cache::check_error_codes', 10, 2) ;
+					define('LSCACHE_ESI_LOGGEDIN', true) ;
 				}
 			}
 		}
@@ -332,16 +331,16 @@ class LiteSpeed_Cache
 		$ttl_403 = self::config(LiteSpeed_Cache_Config::OPID_403_TTL) ;
 		$ttl_500 = self::config(LiteSpeed_Cache_Config::OPID_500_TTL) ;
 		if ( $code == 403 ) {
-			if ( $ttl_403 <= 30 ) {
-				LiteSpeed_Cache_Control::set_nocache() ;
+			if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
+				LiteSpeed_Cache_Control::set_nocache('403 TTL is less than 30s') ;
 			}
 			else {
 				self::$_error_status = $code ;
 			}
 		}
 		elseif ( $code >= 500 && $code < 600 ) {
-			if ( $ttl_500 <= 30 ) {
-				LiteSpeed_Cache_Control::set_nocache() ;
+			if ( $ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
+				LiteSpeed_Cache_Control::set_nocache('TTL is less than 30s') ;
 			}
 		}
 		elseif ( $code > 400 ) {
@@ -373,14 +372,12 @@ class LiteSpeed_Cache
 		if ( ! self::config(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) ) {
 			return ;
 		}
-		// not sure if need to use LiteSpeed_Cache_Control::finalize()
-		if ( ! LiteSpeed_Cache_Control::get_cacheable() ) {
+		if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
 			return ;
 		}
 
-		if ( !empty($_GET) ) {
-			LiteSpeed_Cache_Log::debug('Do not cache - Not a get request') ;
-			LiteSpeed_Cache_Control::set_nocache() ;
+		if ( ! empty($_GET) ) {
+			LiteSpeed_Cache_Control::set_nocache('Do not cache - has GET request') ;
 			return ;
 		}
 
@@ -443,13 +440,10 @@ class LiteSpeed_Cache
 		LiteSpeed_Cache_Control::finalize() ;
 
 		$vary_header = LiteSpeed_Cache_Vary::output() ;
-		if ( empty($vary_header) && LiteSpeed_Cache_Control::get_cacheable() ) {
-			LiteSpeed_Cache_Control::set_nocache('empty vary header') ;
-		}
 
 		$tag_header = '' ;
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
-		$is_cacheable = LiteSpeed_Cache_Control::get_cacheable() ;
+		$is_cacheable = LiteSpeed_Cache_Control::is_cacheable() ;
 		if ( ! $is_cacheable && LiteSpeed_Cache_Purge::get_qs_purge() ) {
 			LiteSpeed_Cache_Tag::finalize() ;
 		}

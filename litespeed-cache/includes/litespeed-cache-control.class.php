@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Control
 	const BM_NO_VARY = 8 ;
 	const BM_STALE = 128 ;
 
-	const HEADER_CACHE_CONTROL = 'X-LiteSpeed-Cache-Control' ;
+	const X_HEADER = 'X-LiteSpeed-Cache-Control' ;
 
 	protected static $_control = 0 ;
 	protected static $_custom_ttl = 0 ;
@@ -136,7 +136,7 @@ class LiteSpeed_Cache_Control
 	 * @since 1.2.0
 	 * @return bool True if is still cacheable, otherwise false.
 	 */
-	public static function get_cacheable()
+	public static function is_cacheable()
 	{
 		return ! (self::$_control & self::BM_NOTCACHEABLE) ;
 	}
@@ -210,9 +210,9 @@ class LiteSpeed_Cache_Control
 			$esi_hdr = ',esi=on' ;
 		}
 
-		$hdr = self::HEADER_CACHE_CONTROL . ': ' ;
+		$hdr = self::X_HEADER . ': ' ;
 
-		if ( ! self::get_cacheable() ) {
+		if ( ! self::is_cacheable() ) {
 			$hdr .= 'no-cache' . $esi_hdr ;
 			return $hdr ;
 		}
@@ -243,6 +243,12 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function finalize()
 	{
+		// if is not cacheable, terminate check
+		// Even no need to run 3rd party hook
+		if ( ! self::is_cacheable() ) {
+			return ;
+		}
+
 		if ( is_admin() || is_network_admin() ) {
 			self::set_nocache('Admin page') ;
 			return ;
@@ -262,11 +268,11 @@ class LiteSpeed_Cache_Control
 				$esi_id = $params[LiteSpeed_Cache_ESI::PARAM_BLOCK_ID] ;
 			}
 		}
-		// NOTE: Hook always needs to run asap because some 3rdparty set is_mobile in this hook
+		// NOTE: Hook always needs to run asap because some 3rd party set is_mobile in this hook
 		do_action('litespeed_cache_api_control', $esi_id) ;
 
 		// if is not cacheable, terminate check
-		if ( ! self::get_cacheable() ) {
+		if ( ! self::is_cacheable() ) {
 			return ;
 		}
 

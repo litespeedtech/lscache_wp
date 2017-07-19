@@ -71,7 +71,7 @@ class LiteSpeed_Cache_API
 	 */
 	public static function not_cacheable()
 	{
-		return ! LiteSpeed_Cache_Control::get_cacheable() ;
+		return ! LiteSpeed_Cache_Control::is_cacheable() ;
 	}
 
 	/**
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_API
 	 */
 	public static function build_switch($id, $disabled = false, $return = false)
 	{
-		LiteSpeed_Cache_Admin_Display::get_instance()->build_switch($id, $disabled, $return) ;
+		return LiteSpeed_Cache_Admin_Display::get_instance()->build_switch($id, $disabled, $return) ;
 	}
 
 	/**

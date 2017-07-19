@@ -14,6 +14,7 @@ class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
 	private static $_is_ajax ;
+	private static $_is_logged_in ;
 	private static $_is_cli ;
 	private static $_can_crawl ;
 	private static $_ip ;
@@ -69,7 +70,7 @@ class LiteSpeed_Cache_Router
 	public static function can_crawl()
 	{
 		if ( ! isset(self::$_can_crawl) ) {
-			self::$_can_crawl = isset($_SERVER['X-LSCACHE']) && strpos($_SERVER['X-LSCACHE'], 'crawler') !== false ;
+			self::$_can_crawl = (isset($_SERVER['X-LSCACHE']) && strpos($_SERVER['X-LSCACHE'], 'crawler') !== false) || PHP_SAPI == 'cli' ;// CLI will bypass this check as crawler library can always do the 428 check
 		}
 		return self::$_can_crawl ;
 	}
@@ -92,6 +93,21 @@ class LiteSpeed_Cache_Router
 
 		}
 		return self::$_action ;
+	}
+
+	/**
+	 * Check if is logged in
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 * @return boolean
+	 */
+	public static function is_logged_in()
+	{
+		if ( ! isset(self::$_is_logged_in) ) {
+			self::$_is_logged_in = is_user_logged_in() ;
+		}
+		return self::$_is_logged_in ;
 	}
 
 	/**

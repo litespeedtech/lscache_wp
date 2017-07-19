@@ -27,7 +27,7 @@ class LiteSpeed_Cache_Tag
 	const TYPE_URL = 'URL.' ;
 	const TYPE_WIDGET = 'W.' ;
 
-	const HEADER_CACHE_TAG = 'X-LiteSpeed-Tag' ;
+	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
 	private static $_tags = array() ;
 	private static $_tags_priv = array() ; // not used so far
@@ -222,7 +222,7 @@ class LiteSpeed_Cache_Tag
 			$prefix_tags[] = $prefix . $tag ;
 		}
 
-		$hdr = self::HEADER_CACHE_TAG . ': ' . implode(',', $prefix_tags) ;
+		$hdr = self::X_HEADER . ': ' . implode(',', $prefix_tags) ;
 
 		return $hdr ;
 	}
