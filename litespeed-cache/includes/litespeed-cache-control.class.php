@@ -331,7 +331,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' ) {
-			return self::_no_cache_for('not GET method') ;
+			return self::_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
 		}
 
 		if ( is_feed() && LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_FEED_TTL) == 0 ) {

@@ -2,7 +2,7 @@
 /**
  * The plugin vary class to manage X-LiteSpeed-Vary
  *
- * @since      1.2.0
+ * @since      1.1.3
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -99,7 +99,7 @@ class LiteSpeed_Cache_Vary
 	/**
 	 * Check if cookie has a curtain bitmask
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access private
 	 */
 	private static function cookie_has_bm($bm)
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Vary
 	/**
 	 * Append user status with logged in
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function add_logged_in($logged_in_cookie = false, $expire = false)
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_Vary
 	/**
 	 * Remove user logged in status
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function remove_logged_in()
@@ -159,7 +159,7 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * This is ONLY used when submit a comment
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function add_commenter()
@@ -172,7 +172,7 @@ class LiteSpeed_Cache_Vary
 			$_COOKIE[self::$_vary_name] |= self::BM_COMMENTER ;
 			// save it
 			// only set commenter status for current domain path
-			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, false) ;
+			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
 		}
 		LiteSpeed_Cache_Control::set_nocache('new commenter') ;
 	}
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Vary
 	/**
 	 * Remove user commenter status
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access private
 	 */
 	private static function remove_commenter()
@@ -189,9 +189,24 @@ class LiteSpeed_Cache_Vary
 			// remove logged in status from global var
 			$_COOKIE[self::$_vary_name] &= ~self::BM_COMMENTER ;
 			// save it
-			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, false) ;
+			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
 			LiteSpeed_Cache_Control::set_nocache('removing commenter status') ;
 		}
+	}
+
+	/**
+	 * Generate relative path for cookie
+	 *
+	 * @since 1.1.3
+	 * @access private
+	 */
+	private static function _relative_path()
+	{
+		$path = false ;
+		if ( !empty($_SERVER["HTTP_REFERER"]) ) {
+			$path = wp_make_link_relative($_SERVER["HTTP_REFERER"]) ;
+		}
+		return $path ;
 	}
 
 	/**
@@ -234,7 +249,7 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * Helper function for other class' usage.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return int The user status.
 	 */
@@ -326,21 +341,21 @@ class LiteSpeed_Cache_Vary
 	 * @param integer $expire Expire time.
 	 * @param boolean $ssl True if ssl connection, false otherwise.
 	 * @param boolean $httponly True if the cookie is for http requests only, false otherwise.
-	 * @param boolean $use_root_path True if use wp root path as cookie path
+	 * @param boolean $path False if use wp root path as cookie path
 	 */
-	private static function cookie($val = false, $expire = false, $ssl = false, $httponly = false, $use_root_path = true)
+	private static function cookie($val = false, $expire = false, $ssl = false, $httponly = false, $path = false)
 	{
 		if ( ! $val ) {
 			$expire = 1 ;
 		}
-		$path = $use_root_path ? COOKIEPATH : '' ;
-		setcookie(self::$_vary_name, $val, $expire, $path, COOKIE_DOMAIN, $ssl, $httponly) ;
+
+		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $ssl, $httponly) ;
 	}
 
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return Current class instance.
 	 */
