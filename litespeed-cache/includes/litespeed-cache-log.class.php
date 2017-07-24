@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Log
 	public static function debug($msg, $backtrace_limit = false)
 	{
 		if ( self::get_enabled() ) {
-			self::push($msg, $backtrace_limit+1) ;
+			self::push($msg, $backtrace_limit !== false ? $backtrace_limit+1 : false) ;
 		}
 	}
 
