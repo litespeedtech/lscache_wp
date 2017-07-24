@@ -328,7 +328,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_CRON_ACTIVE => false,
 				) ;
 
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
+		if ( LSWCP_ESI_SUPPORT ) {
 			$default_options[self::OPID_ESI_ENABLE] = false ;
 			$default_options[self::OPID_ESI_CACHE] = false ;
 		}

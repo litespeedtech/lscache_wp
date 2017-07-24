@@ -78,12 +78,12 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Hooked to the wp_redirect filter.
 	 * This will only hook if there was a problem when saving the widget.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param string $location The location string.
 	 * @return string the updated location string.
 	 */
-	public function widget_save_err($location)
+	public static function widget_save_err($location)
 	{
 		return str_replace('?message=0', '?error=0', $location) ;
 	}
@@ -92,7 +92,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Hooked to the widget_update_callback filter.
 	 * Validate the LiteSpeed Cache settings on edit widget save.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param array $instance The new settings.
 	 * @param array $new_instance
@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
-	public function validate_widget_save($instance, $new_instance, $old_instance, $widget)
+	public static function validate_widget_save($instance, $new_instance, $old_instance, $widget)
 	{
 		if ( empty($_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
 			return $instance ;
@@ -111,7 +111,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$ttlstr = $input[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL] ;
 
 		if ( ! is_numeric($ttlstr) || ! is_numeric($esistr) ) {
-			add_filter('wp_redirect', array($this, 'widget_save_err')) ;
+			add_filter('wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err') ;
 			return false ;
 		}
 
@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$ttl = intval($ttlstr) ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
-			add_filter('wp_redirect', array($this, 'widget_save_err')) ;
+			add_filter('wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err') ;
 			return false ; // invalid ttl.
 		}
 
@@ -628,7 +628,7 @@ class LiteSpeed_Cache_Admin_Settings
 	/**
 	 * Validates the esi settings.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access private
 	 * @param array $input The input options.
 	 * @param array $options The current options.
@@ -683,7 +683,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->validate_crawler($input, $options, $errors) ;
 		}
 
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
+		if ( LSWCP_ESI_SUPPORT ) {
 			$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED] ;
 			$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE] ;
 

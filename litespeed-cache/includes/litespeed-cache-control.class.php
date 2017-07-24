@@ -206,7 +206,7 @@ class LiteSpeed_Cache_Control
 	public static function output()
 	{
 		$esi_hdr = '' ;
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' && LiteSpeed_Cache_ESI::get_instance()->has_esi() ) {
+		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache_ESI::has_esi() ) {
 			$esi_hdr = ',esi=on' ;
 		}
 

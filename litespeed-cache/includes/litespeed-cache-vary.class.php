@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Vary
 			}
 			$_COOKIE[self::$_vary_name] |= self::BM_LOGGED_IN ;
 			// save it
-			self::cookie($_COOKIE[self::$_vary_name], $expire, is_ssl(), true) ;
+			self::_cookie($_COOKIE[self::$_vary_name], $expire, is_ssl(), true) ;
 		}
 		LiteSpeed_Cache_Control::set_nocache('is logged in') ;
 	}
@@ -149,7 +149,7 @@ class LiteSpeed_Cache_Vary
 			// remove logged in status from global var
 			$_COOKIE[self::$_vary_name] &= ~self::BM_LOGGED_IN ;
 			// save it
-			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000)) ;
+			self::_cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000)) ;
 			LiteSpeed_Cache_Control::set_nocache('removing logged in status') ;
 		}
 	}
@@ -172,7 +172,7 @@ class LiteSpeed_Cache_Vary
 			$_COOKIE[self::$_vary_name] |= self::BM_COMMENTER ;
 			// save it
 			// only set commenter status for current domain path
-			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
+			self::_cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
 		}
 		LiteSpeed_Cache_Control::set_nocache('new commenter') ;
 	}
@@ -189,7 +189,7 @@ class LiteSpeed_Cache_Vary
 			// remove logged in status from global var
 			$_COOKIE[self::$_vary_name] &= ~self::BM_COMMENTER ;
 			// save it
-			self::cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
+			self::_cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
 			LiteSpeed_Cache_Control::set_nocache('removing commenter status') ;
 		}
 	}
@@ -343,7 +343,7 @@ class LiteSpeed_Cache_Vary
 	 * @param boolean $httponly True if the cookie is for http requests only, false otherwise.
 	 * @param boolean $path False if use wp root path as cookie path
 	 */
-	private static function cookie($val = false, $expire = false, $ssl = false, $httponly = false, $path = false)
+	private static function _cookie($val = false, $expire = false, $ssl = false, $httponly = false, $path = false)
 	{
 		if ( ! $val ) {
 			$expire = 1 ;

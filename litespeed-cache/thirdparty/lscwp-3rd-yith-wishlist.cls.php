@@ -31,6 +31,9 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		if ( ! defined('WOOCOMMERCE_VERSION') || ! defined('YITH_WCWL') ) {
 			return ;
 		}
+		if ( ! LSWCP_ESI_SUPPORT ) {
+			return ;
+		}
 		LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_Yith_Wishlist::is_not_esi') ;
 		LiteSpeed_Cache_API::hook_tpl_esi('yith-wcwl-add', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::load_add_to_wishlist') ;
 	}

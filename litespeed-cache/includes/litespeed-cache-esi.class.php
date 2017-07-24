@@ -14,7 +14,7 @@ class LiteSpeed_Cache_ESI
 {
 	private static $_instance ;
 
-	private $has_esi = false ;
+	private static $has_esi = false ;
 	private $esi_args = null ;
 
 	const QS_ACTION = 'lsesi' ;
@@ -46,12 +46,12 @@ class LiteSpeed_Cache_ESI
 	 * header.
 	 *
 	 * @since 1.2.0
-	 * @access private
+	 * @access public
 	 * @return string Esi On header if request has esi, empty string otherwise.
 	 */
-	public function has_esi()
+	public static function has_esi()
 	{
-		return $this->has_esi ;
+		return self::$has_esi ;
 	}
 
 	/**
@@ -60,9 +60,9 @@ class LiteSpeed_Cache_ESI
 	 * @since 1.2.0
 	 * @access public
 	 */
-	public function set_has_esi()
+	public static function set_has_esi()
 	{
-		$this->has_esi = true ;
+		self::$has_esi = true ;
 	}
 
 	/**
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_ESI
 			return $output ;
 		}
 		echo $output ;
-		self::get_instance()->has_esi = true ;
+		self::set_has_esi() ;
 	}
 
 	/**

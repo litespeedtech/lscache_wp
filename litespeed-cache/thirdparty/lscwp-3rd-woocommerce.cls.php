@@ -47,18 +47,20 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		LiteSpeed_Cache_API::hook_get_options('LiteSpeed_Cache_ThirdParty_WooCommerce::get_config') ;
 		add_action('comment_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3) ;
 
-		if ( !is_shop() ) {
-			LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template') ;
-			LiteSpeed_Cache_API::hook_tpl_esi('wc-add-to-cart-form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block') ;
-			LiteSpeed_Cache_API::hook_tpl_esi('storefront-cart-header', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header') ;
-			LiteSpeed_Cache_API::hook_tpl_esi('widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view') ;
-		}
+		if ( LSWCP_ESI_SUPPORT ) {
+			if ( !is_shop() ) {
+				LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template') ;
+				LiteSpeed_Cache_API::hook_tpl_esi('wc-add-to-cart-form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block') ;
+				LiteSpeed_Cache_API::hook_tpl_esi('storefront-cart-header', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header') ;
+				LiteSpeed_Cache_API::hook_tpl_esi('widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view') ;
+			}
 
-		if ( is_product() ) {
-			LiteSpeed_Cache_API::hook_esi_param('widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id') ;
-		}
+			if ( is_product() ) {
+				LiteSpeed_Cache_API::hook_esi_param('widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id') ;
+			}
 
-		LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart') ;
+			LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart') ;
+		}
 
 		if ( is_admin() ) {
 			LiteSpeed_Cache_API::hook_purge_post('LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge') ;

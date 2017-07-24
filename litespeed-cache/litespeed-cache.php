@@ -45,34 +45,38 @@ if ( ! defined('WPINC') ) {
 }
 
 if ( class_exists('LiteSpeed_Cache') || defined('LSWCP_DIR') ) {
-	return;
+	return ;
 }
 
-define('LSWCP_CONTENT_DIR', dirname(get_theme_root()));
-define('LSWCP_DIR', plugin_dir_path(__FILE__));// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
-define('LSWCP_BASENAME', plugin_basename(LSWCP_DIR . 'litespeed-cache.php'));//LSWCP_BASENAME='litespeed-cache/litespeed-cache.php'
+define('LSWCP_CONTENT_DIR', dirname(get_theme_root())) ;
+define('LSWCP_DIR', plugin_dir_path(__FILE__)) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
+define('LSWCP_BASENAME', plugin_basename(LSWCP_DIR . 'litespeed-cache.php')) ;//LSWCP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 // Auto register LiteSpeed classes
-require_once LSWCP_DIR . 'includes/litespeed.autoload.php';
+require_once LSWCP_DIR . 'includes/litespeed.autoload.php' ;
 
 if ( LiteSpeed_Cache_Router::is_cli() ) {
-	WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' );
-	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' );
+	WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
+	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
 }
 
 if ( !defined('LITESPEED_SERVER_TYPE') ) {
 	if ( isset($_SERVER['HTTP_X_LSCACHE']) && $_SERVER['HTTP_X_LSCACHE'] ) {
-		define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC');
+		define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC') ;
 	}
 	elseif ( isset($_SERVER['LSWS_EDITION']) && strncmp($_SERVER['LSWS_EDITION'], 'Openlitespeed', 13) == 0 ) {
-			define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS');
+			define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS') ;
 	}
 	elseif ( isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed') {
-		define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT');
+		define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT') ;
 	}
 	else {
-		define('LITESPEED_SERVER_TYPE', 'NONE');
+		define('LITESPEED_SERVER_TYPE', 'NONE') ;
 	}
+}
+
+if ( ! defined('LSWCP_ESI_SUPPORT') ) {
+	define('LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? false : false) ;
 }
 
 /**

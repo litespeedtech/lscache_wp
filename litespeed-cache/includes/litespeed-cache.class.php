@@ -124,7 +124,7 @@ class LiteSpeed_Cache
 		}
 		else {
 			// Check ESI for logged in user
-			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
+			if ( LSWCP_ESI_SUPPORT ) {
 				add_action('wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout') ;
 				if ( self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
 					add_filter('status_header', 'LiteSpeed_Cache::check_error_codes', 10, 2) ;
@@ -145,6 +145,7 @@ class LiteSpeed_Cache
 			add_action(LiteSpeed_Cache_Task::CRON_ACTION_HOOK, 'LiteSpeed_Cache_Crawler::crawl_data') ;
 		}
 
+		// Load 3rd party hooks
 		if ( LiteSpeed_Cache_Router::is_ajax() ) {
 			add_action('init', array($this, 'detect'), 4) ;
 		}
@@ -291,8 +292,8 @@ class LiteSpeed_Cache
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
 		//todo: make a constant for esiEnable included cfg esi eanbled
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' && !LiteSpeed_Cache_Router::is_ajax() && self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-			if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
+		if ( LSWCP_ESI_SUPPORT ) {
+			if ( !LiteSpeed_Cache_Router::is_ajax() && self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
 				add_action('template_include', 'LiteSpeed_Cache_ESI::esi_template', 100) ;
 				add_action('load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget') ;
 				add_action('wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget') ;

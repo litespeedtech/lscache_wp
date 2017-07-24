@@ -10,7 +10,7 @@ $menu_list = array(
 	'excludes' => __('Do Not Cache Rules', 'litespeed-cache'),
 ) ;
 
-if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
+if ( LSWCP_ESI_SUPPORT ) {
 	$menu_list['esi'] = __('ESI Settings', 'litespeed-cache') ;
 }
 
