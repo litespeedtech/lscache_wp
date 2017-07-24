@@ -466,10 +466,9 @@ class LiteSpeed_Cache_Purge
 
 		$purge_header = '' ;
 		$private_prefix = self::X_HEADER . ': private,' ;
-		$prefix = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_TAG_PREFIX) ?: '' ;
 
 		if ( ! empty(self::$_pub_purge) ) {
-			$public_tags = self::_build($prefix, self::$_pub_purge) ;
+			$public_tags = self::_build(self::$_pub_purge) ;
 			if ( empty($public_tags) ) {
 				// If this ends up empty, private will also end up empty
 				return '' ;
@@ -489,7 +488,7 @@ class LiteSpeed_Cache_Purge
 			$purge_header .= $private_prefix . '*' ;
 		}
 		else {
-			$private_tags = self::_build($prefix, self::$_priv_purge) ;
+			$private_tags = self::_build(self::$_priv_purge) ;
 			if ( ! empty($private_tags) ) {
 				$purge_header .= $private_prefix . 'tag=' . implode(',', $private_tags) ;
 			}
@@ -499,46 +498,48 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Builds an array of purge headers with the given prefix.
+	 * Builds an array of purge headers
 	 *
 	 * @since 1.1.0
 	 * @access private
-	 * @param string $prefix The prefix to apply to each tag
-	 * @param array @purge_tags The purge tags to apply the prefix to.
+	 * @param array $purge_tags The purge tags to apply the prefix to.
 	 * @return array The array of built purge tags.
 	 */
-	private static function _build($prefix, $purge_tags)
+	private static function _build($purge_tags)
 	{
-		$tags = array() ;
+		$curr_bid = get_current_blog_id() ;
+
 		if ( ! in_array('*', $purge_tags) ) {
-			$prefix .= 'B' . get_current_blog_id() . '_' ;
+			$tags = array() ;
 			foreach ($purge_tags as $val) {
-				$tags[] = $prefix . $val ;
+				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . $val ;
 			}
+			return $tags ;
 		}
-		elseif ( isset($_POST['clearcache']) ) {
-			$tags = array('*') ;
+
+		if ( defined('LSWCP_EMPTYCACHE') ) {
+			return array('*') ;
 		}
+
 		// Would only use multisite and network admin except is_network_admin
 		// is false for ajax calls, which is used by wordpress updates v4.6+
-		elseif ( is_multisite()
-					&& (is_network_admin()
-						|| (LiteSpeed_Cache_Router::is_ajax()
-							&& (check_ajax_referer('updates', false, false) || check_ajax_referer('litespeed-purgeall-network', false, false)))) ) {
+		if ( is_multisite() && (is_network_admin() || (
+				LiteSpeed_Cache_Router::is_ajax() && (check_ajax_referer('updates', false, false) || check_ajax_referer('litespeed-purgeall-network', false, false))
+				)) ) {
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			if ( empty($blogs) ) {
 				LiteSpeed_Cache_Log::debug('build_purge_headers: blog list is empty') ;
 				return '' ;
 			}
+			$tags = array() ;
 			foreach ($blogs as $blog_id) {
-				$tags[] = sprintf('%sB%s_', $prefix, $blog_id) ;
+				$tags[] = LSWCP_TAG_PREFIX . $blog_id ;
 			}
+			return $tags ;
 		}
 		else {
-			$tags[] = $prefix . 'B' . get_current_blog_id() . '_' ;
+			return array(LSWCP_TAG_PREFIX . $curr_bid) ;
 		}
-
-		return $tags ;
 	}
 
 	/**

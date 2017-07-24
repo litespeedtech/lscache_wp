@@ -76,18 +76,4 @@ if ( $_options[LiteSpeed_Cache_Config::OPID_ENABLED] && $_options[$id] ){
 $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 $this->build_input($id, 'litespeed-input-long', !$file_writable);
 
-?>
-
-
-<h3 class="litespeed-title"><?php echo __('Cache Tag Prefix', 'litespeed-cache'); ?></h3>
-
-<?php
-echo '<p>'
-		. __('Add an alpha-numeric prefix to cache and purge tags.', 'litespeed-cache')
-		. ' ' . __('This can be used to prevent issues when using multiple LiteSpeed caching extensions on the same server.', 'litespeed-cache')
-	. '</p>';
-
-$this->build_input(LiteSpeed_Cache_Config::OPID_TAG_PREFIX, 'litespeed-input-long');
-
-
 

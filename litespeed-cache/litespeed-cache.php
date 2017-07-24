@@ -75,8 +75,13 @@ if ( !defined('LITESPEED_SERVER_TYPE') ) {
 	}
 }
 
+// ESI const defination
 if ( ! defined('LSWCP_ESI_SUPPORT') ) {
 	define('LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? false : false) ;
+}
+
+if ( ! defined('LSWCP_TAG_PREFIX') ) {
+	define('LSWCP_TAG_PREFIX', substr(md5(LSWCP_DIR), -5)) ;
 }
 
 /**

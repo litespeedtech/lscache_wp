@@ -13,38 +13,6 @@ class LiteSpeed_Cache_Admin_Settings
 	private static $_instance ;
 
 	/**
-	 * Checks the admin selected option for cache tag prefixes.
-	 *
-	 * Prefixes are only allowed to be alphanumeric. On failure, will
-	 * return error message.
-	 *
-	 * @since 1.0.9
-	 * @access private
-	 * @param array $input The configuration selected by the admin when
-	 *     clicking save.
-	 * @param array $options The current configuration options.
-	 * @return mixed True on success, error message otherwise.
-	 */
-	private function validate_tag_prefix($input, &$options)
-	{
-		$id = LiteSpeed_Cache_Config::OPID_TAG_PREFIX ;
-		if ( ! isset($input[$id]) ) {
-			return true ;
-		}
-		$prefix = $input[$id] ;
-		if ( $prefix !== '' && ! ctype_alnum($prefix) ) {
-			return __('Invalid Tag Prefix input.', 'litespeed-cache') . ' '
-					. __('Input should only contain letters and numbers.', 'litespeed-cache') ;
-		}
-		if ( $options[$id] !== $prefix ) {
-			$options[$id] = $prefix ;
-			LiteSpeed_Cache_Purge::purge_all() ;
-		}
-
-		return true ;
-	}
-
-	/**
 	 * Helper function to validate TTL settings. Will check if it's set,
 	 * is an integer, and is greater than 0 and less than INT_MAX.
 	 *
@@ -401,11 +369,6 @@ class LiteSpeed_Cache_Admin_Settings
 
 		if ( ! empty($diff) && ($options[$id] == false || $rules->validate_common_rewrites($diff, $errors) !== false) ) {//todo: check if need to use ===
 			$options = array_merge($options, $diff) ;
-		}
-
-		$out = $this->validate_tag_prefix($input, $options) ;
-		if ( is_string($out) ) {
-			$errors[] = $out ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
@@ -766,11 +729,6 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
 		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]) ;
-
-		$out = $this->validate_tag_prefix($input, $options) ;
-		if ( is_string($out) ) {
-			$errors[] = $out ;
-		}
 
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance() ;
 

@@ -230,6 +230,7 @@ class LiteSpeed_Cache
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
+				define('LSWCP_EMPTYCACHE', true) ;// clear all sites caches
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache') ;
 				break;
