@@ -49,7 +49,6 @@ class LiteSpeed_Cache
 
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug' ;
 
-	protected static $_error_status = false ;
 	protected static $_debug_show_header = false ;
 
 	/**
@@ -102,14 +101,14 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
 
-		if ( !LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled() || !defined('LSCACHE_ADV_CACHE') || !LSCACHE_ADV_CACHE ) {
+		if ( ! LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled() || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
 			return ;
 		}
 
-		define('LITESPEED_CACHE_ENABLED', true) ;
+		define( 'LITESPEED_CACHE_ENABLED', true ) ;
 		ob_start() ;
-		add_action('shutdown', array($this, 'send_headers'), 0) ;
-		add_action('wp_footer', 'LiteSpeed_Cache::litespeed_comment_info') ;
+		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
+		add_action( 'wp_footer', 'LiteSpeed_Cache::litespeed_comment_info' ) ;
 
 		LiteSpeed_Cache_Vary::get_instance() ;
 
@@ -119,16 +118,21 @@ class LiteSpeed_Cache
 
 		if ( ! LiteSpeed_Cache_Router::is_logged_in() ) {// If user is not logged in
 			// If still cacheable, check `login page` and `error page` cacheable setting
-			add_action('login_init', array( $this, 'check_login_cacheable' ), 5) ;
-			add_filter('status_header', 'LiteSpeed_Cache::check_error_codes', 10, 2) ;
+			add_action( 'login_init', 'LiteSpeed_Cache_Tag::check_login_cacheable', 5 ) ;
+			$this->init_cacheable() ;
+			// Check error page
+			add_filter( 'status_header', 'LiteSpeed_Cache_Tag::check_error_codes', 10, 2 ) ;
 		}
 		else {
 			// Check ESI for logged in user
 			if ( LSWCP_ESI_SUPPORT ) {
-				add_action('wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout') ;
-				if ( self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-					add_filter('status_header', 'LiteSpeed_Cache::check_error_codes', 10, 2) ;
-					define('LSCACHE_ESI_LOGGEDIN', true) ;
+				add_action( 'wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
+				if ( self::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+					define( 'LSCACHE_ESI_LOGGEDIN', true ) ;
+					$this->init_cacheable() ;
+					// Check error page
+					add_filter( 'status_header', 'LiteSpeed_Cache_Tag::check_error_codes', 10, 2 ) ;
+
 				}
 			}
 		}
@@ -137,28 +141,53 @@ class LiteSpeed_Cache
 		$this->load_public_actions() ;
 
 		// load cron task for crawler
-		if ( self::config(LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE) && LiteSpeed_Cache_Router::can_crawl() ) {
+		if ( self::config( LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ) && LiteSpeed_Cache_Router::can_crawl() ) {
 			// keep cron intval filter
 			LiteSpeed_Cache_Task::schedule_filter() ;
 
 			// cron hook
-			add_action(LiteSpeed_Cache_Task::CRON_ACTION_HOOK, 'LiteSpeed_Cache_Crawler::crawl_data') ;
+			add_action( LiteSpeed_Cache_Task::CRON_ACTION_HOOK, 'LiteSpeed_Cache_Crawler::crawl_data' ) ;
 		}
 
 		// Load 3rd party hooks
 		if ( LiteSpeed_Cache_Router::is_ajax() ) {
-			add_action('init', array($this, 'detect'), 4) ;
+			add_action( 'init', array( $this, 'load_thirdparty' ), 4 ) ;
 		}
 		elseif ( is_admin() || is_network_admin() ) {
-			add_action('admin_init', array($this, 'detect'), 0) ;
+			add_action( 'admin_init', array( $this, 'load_thirdparty' ), 0 ) ;
 		}
 		else {
-			add_action('wp', array($this, 'detect'), 4) ;
+			add_action( 'wp', array( $this, 'load_thirdparty' ), 4 ) ;
 		}
 
 		// load litespeed actions
 		if ( $action = LiteSpeed_Cache_Router::get_action() ) {
-			$this->proceed_action($action) ;
+			$this->proceed_action( $action ) ;
+		}
+	}
+
+	/**
+	 * 1. Initialize cacheable status for `wp` hook
+	 * 2. Hook error page tags
+	 *
+	 * @since 1.1.3
+	 * @access public
+	 */
+	public function init_cacheable()
+	{
+		// Hook `wp` to mark default cacheable status
+		// NOTE: Any process that does NOT run into `wp` hook will not get cacheable by default
+		add_action( 'wp', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+
+		// Cache resources
+		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
+		$cache_res = self::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
+		if ( $cache_res ) {
+			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;
+			$pattern = '!' . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
+			if ( preg_match( $pattern, $uri ) ) {
+				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+			}
 		}
 	}
 
@@ -168,7 +197,7 @@ class LiteSpeed_Cache
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function proceed_action($action)
+	public function proceed_action( $action )
 	{
 		$msg = false ;
 		// handle actions
@@ -201,43 +230,43 @@ class LiteSpeed_Cache
 
 			// Handle the ajax request to proceed crawler manually by admin
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
-				LiteSpeed_Cache_Crawler::crawl_data(true) ;
+				LiteSpeed_Cache_Crawler::crawl_data( true ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
 				LiteSpeed_Cache_Crawler::get_instance()->save_blacklist() ;
-				$msg = __('Crawler blacklist is saved.', 'litespeed-cache') ;
+				$msg = __( 'Crawler blacklist is saved.', 'litespeed-cache' ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
 				LiteSpeed_Cache_Purge::purge_front() ;
-				$msg = __('Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache') ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache' ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
 				LiteSpeed_Cache_Purge::purge_pages() ;
-				$msg = __('Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache') ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache' ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
 				LiteSpeed_Cache_Purge::purge_errors() ;
-				$msg = __('Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache') ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_ALL://todo: for cli, move this to ls->proceed_action()
 				LiteSpeed_Cache_Purge::purge_all() ;
-				$msg = __('Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache') ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
-				define('LSWCP_EMPTYCACHE', true) ;// clear all sites caches
+				define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 				LiteSpeed_Cache_Purge::purge_all() ;
-				$msg = __('Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache') ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				LiteSpeed_Cache_Purge::get_instance()->purge_list() ;
-				$msg = __('Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache') ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_DISMISS_WHM:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
@@ -248,7 +277,7 @@ class LiteSpeed_Cache
 				break ;
 		}
 		if ( $msg && ! LiteSpeed_Cache_Router::is_ajax() ) {
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
 			LiteSpeed_Cache_Admin::redirect() ;
 			return ;
 		}
@@ -257,15 +286,14 @@ class LiteSpeed_Cache
 	/**
 	 * Callback used to call the detect third party action.
 	 *
-	 * The detect action is used by third party plugin integration classes
-	 * to determine if they should add the rest of their hooks.
+	 * The detect action is used by third party plugin integration classes to determine if they should add the rest of their hooks.
 	 *
 	 * @since 1.0.5
 	 * @access public
 	 */
-	public function detect()
+	public function load_thirdparty()
 	{
-		do_action('litespeed_cache_api_detect_thirdparty') ;
+		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
 	}
 
 	/**
@@ -287,23 +315,23 @@ class LiteSpeed_Cache
 		) ;
 		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags
-			add_action($event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2) ;
+			add_action( $event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2 ) ;
 		}
 
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
 		//todo: make a constant for esiEnable included cfg esi eanbled
 		if ( LSWCP_ESI_SUPPORT ) {
-			if ( !LiteSpeed_Cache_Router::is_ajax() && self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-				add_action('template_include', 'LiteSpeed_Cache_ESI::esi_template', 100) ;
-				add_action('load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget') ;
-				add_action('wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget') ;
+			if ( ! LiteSpeed_Cache_Router::is_ajax() && self::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+				add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
+				add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
+				add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
 			}
 		}
-		add_action('wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds') ;
+		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
 
 		// register recent posts widget tag before theme renders it to make it work
-		add_filter('widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts') ;
+		add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
 	}
 
 	/**
@@ -314,87 +342,9 @@ class LiteSpeed_Cache
 	 * @param string $opt_id An option ID if getting an option.
 	 * @return the option value
 	 */
-	public static function config($opt_id)
+	public static function config( $opt_id )
 	{
-		return LiteSpeed_Cache_Config::get_instance()->get_option($opt_id) ;
-	}
-
-	/**
-	 * Check if the page returns 403 and 500 errors.
-	 *
-	 * @since 1.0.13.1
-	 * @access public
-	 * @param $header
-	 * @param $code
-	 * @return $eror_status
-	 */
-	public static function check_error_codes($header, $code)
-	{
-		$ttl_403 = self::config(LiteSpeed_Cache_Config::OPID_403_TTL) ;
-		$ttl_500 = self::config(LiteSpeed_Cache_Config::OPID_500_TTL) ;
-		if ( $code == 403 ) {
-			if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-				LiteSpeed_Cache_Control::set_nocache('403 TTL is less than 30s') ;
-			}
-			else {
-				self::$_error_status = $code ;
-			}
-		}
-		elseif ( $code >= 500 && $code < 600 ) {
-			if ( $ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-				LiteSpeed_Cache_Control::set_nocache('TTL is less than 30s') ;
-			}
-		}
-		elseif ( $code > 400 ) {
-			self::$_error_status = $code ;
-		}
-		return self::$_error_status ;
-	}
-
-	/**
-	 * Get error code.
-	 *
-	 * @since 1.2.0
-	 * @access public
-	 */
-	public static function get_error_code()
-	{
-		return self::$_error_status ;
-	}
-
-	/**
-	 * Check if the login page is cacheable.
-	 * If not, unset the cacheable member variable.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function check_login_cacheable()
-	{
-		if ( ! self::config(LiteSpeed_Cache_Config::OPID_CACHE_LOGIN) ) {
-			return ;
-		}
-		if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
-			return ;
-		}
-
-		if ( ! empty($_GET) ) {
-			LiteSpeed_Cache_Control::set_nocache('Do not cache - has GET request') ;
-			return ;
-		}
-
-		LiteSpeed_Cache_Tag::add(LiteSpeed_Cache_Tag::TYPE_LOGIN) ;
-
-		$list = headers_list() ;
-		if ( empty($list) ) {
-			return ;
-		}
-		foreach ($list as $hdr) {
-			if ( strncasecmp($hdr, 'set-cookie:', 11) == 0 ) {
-				$cookie = substr($hdr, 12) ;
-				@header('lsc-cookie: ' . $cookie, false) ;
-			}
-		}
+		return LiteSpeed_Cache_Config::get_instance()->get_option( $opt_id ) ;
 	}
 
 	/**

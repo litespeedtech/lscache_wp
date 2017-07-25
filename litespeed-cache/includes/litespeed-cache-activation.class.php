@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Activation
 				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS) ;
 			}
 		}
-		do_action('litespeed_cache_api_detect_thirdparty') ;
+		do_action('litespeed_cache_api_load_thirdparty') ;
 		LiteSpeed_Cache_Config::get_instance()->plugin_activation($count) ;
 		LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
 

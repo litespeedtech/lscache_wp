@@ -60,7 +60,7 @@ A post is considered non cacheable if...
 There are five hook points available for use. You may also use your own hook points
 prior to the 'shutdown' action to add response headers.
 
-- litespeed_cache_api_detect_thirdparty - This action is used to detect whether you want
+- litespeed_cache_api_load_thirdparty - This action is used to detect whether you want
 to add your functions to the below hook points.
 It is not required to use this hook point, but it is provided in case it is needed.
   - As an example, suppose I have a shop plugin and a forum plugin.
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_ThirdParty_Plugin
 
 }
 
-add_action('litespeed_cache_api_detect_thirdparty', 'LiteSpeed_Cache_ThirdParty_Plugin::detect');
+add_action('litespeed_cache_api_load_thirdparty', 'LiteSpeed_Cache_ThirdParty_Plugin::detect');
 
 
 ```

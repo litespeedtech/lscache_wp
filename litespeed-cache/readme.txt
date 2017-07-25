@@ -284,7 +284,7 @@ The following functions may be used at any hook point prior to the 'shutdown' ho
 
 These hook points are provided for hooking into the cache's run time functionality. It is not required to hook into any of these hook points; these are provided more for convenience. It is possible that a plugin only needs to hook into its own hook points.
 
-* **Action - litespeed_cache_api_detect_thirdparty**
+* **Action - litespeed_cache_api_load_thirdparty**
 
   This action may be used to check if it is necessary to add any further functionality to the current request. For example, if a user visits a shopping page, there is no need for the forum plugin to do its extra checks/add its tags because the page is unrelated.
 
@@ -333,10 +333,10 @@ These hook points are provided for hooking into the cache's run time functionali
 
 == Changelog ==
 
-= 1.1.2.2 - July 13 2017 = 
+= 1.1.2.2 - July 13 2017 =
 * [BUGFIX] Fixed blank page in Hebrew language post editor by removing unused font-awesome and jquery-ui css libraries.
 
-= 1.1.2.1 - July 5 2017 = 
+= 1.1.2.1 - July 5 2017 =
 * [UPDATE] Improved compatibility with WooCommerce v3.1.0.
 
 = 1.1.2 - June 20 2017 =

@@ -56,7 +56,7 @@ Then, if a change is made where all pages tagged <code>MTPP_F.1</code> need to b
 <p>There are five hook points available for use. You may also use your own hook points
 prior to the ‘shutdown’ action to add response headers.</p>
 <ul>
-<li>litespeed_cache_api_detect_thirdparty - This action is used to detect whether you want
+<li>litespeed_cache_api_load_thirdparty - This action is used to detect whether you want
 to add your functions to the below hook points.
 It is not required to use this hook point, but it is provided in case it is needed.
 <ul>
@@ -223,7 +223,7 @@ require some minor additions to make their plugin compatible with the cache.</p>
 
 }
 
-add_action(<span class="hljs-string">'litespeed_cache_api_detect_thirdparty'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::detect'</span>);
+add_action(<span class="hljs-string">'litespeed_cache_api_load_thirdparty'</span>, <span class="hljs-string">'LiteSpeed_Cache_ThirdParty_Plugin::detect'</span>);
 
 
 </code></pre>

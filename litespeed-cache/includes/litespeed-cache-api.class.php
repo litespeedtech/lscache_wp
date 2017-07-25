@@ -330,7 +330,7 @@ class LiteSpeed_Cache_API
 	 */
 	public static function register($cls)
 	{
-		add_action('litespeed_cache_api_detect_thirdparty', $cls . '::detect') ;
+		add_action('litespeed_cache_api_load_thirdparty', $cls . '::detect') ;
 	}
 
 }

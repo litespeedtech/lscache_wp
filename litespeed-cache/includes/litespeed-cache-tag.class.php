@@ -9,7 +9,7 @@
  */
 class LiteSpeed_Cache_Tag
 {
-	private static $_instance ;
+	// private static $_instance ;
 
 	const TYPE_FEED = 'FD' ;
 	const TYPE_FRONTPAGE = 'F' ;
@@ -31,6 +31,88 @@ class LiteSpeed_Cache_Tag
 
 	private static $_tags = array() ;
 	private static $_tags_priv = array() ; // not used so far
+	protected static $_error_status = false ;
+
+	/**
+	 * Check if the login page is cacheable.
+	 * If not, unset the cacheable member variable.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public static function check_login_cacheable()
+	{
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_LOGIN ) ) {
+			return ;
+		}
+		if ( LiteSpeed_Cache_Control::isset_notcacheable() ) {
+			return ;
+		}
+
+		if ( ! empty( $_GET ) ) {
+			LiteSpeed_Cache_Control::set_nocache( 'has GET request' ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Control::set_cacheable() ;
+
+		self::add( self::TYPE_LOGIN ) ;
+
+		// we need to send lsc-cookie manually to make it be sent to all other users when is cacheable
+		$list = headers_list() ;
+		if ( empty( $list ) ) {
+			return ;
+		}
+		foreach ( $list as $hdr ) {
+			if ( strncasecmp( $hdr, 'set-cookie:', 11 ) == 0 ) {
+				$cookie = substr( $hdr, 12 ) ;
+				@header( 'lsc-cookie: ' . $cookie, false ) ;
+			}
+		}
+	}
+
+	/**
+	 * Check if the page returns 403 and 500 errors.
+	 *
+	 * @since 1.0.13.1
+	 * @access public
+	 * @param $header
+	 * @param $code
+	 * @return $eror_status
+	 */
+	public static function check_error_codes( $header, $code )
+	{
+		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
+		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_500_TTL ) ;
+		if ( $code == 403 ) {
+			if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
+				LiteSpeed_Cache_Control::set_nocache( '403 TTL is less than 30s' ) ;
+			}
+			else {
+				self::$_error_status = $code ;
+			}
+		}
+		elseif ( $code >= 500 && $code < 600 ) {
+			if ( $ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
+				LiteSpeed_Cache_Control::set_nocache( 'TTL is less than 30s' ) ;
+			}
+		}
+		elseif ( $code > 400 ) {
+			self::$_error_status = $code ;
+		}
+		return self::$_error_status ;
+	}
+
+	/**
+	 * Get error code.
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function get_error_code()
+	{
+		return self::$_error_status ;
+	}
 
 	/**
 	 * Register purge tag for pages with recent posts widget
@@ -40,9 +122,9 @@ class LiteSpeed_Cache_Tag
 	 * @access   public
 	 * @param array $params [wordpress params for widget_posts_args]
 	 */
-	public static function add_widget_recent_posts($params)
+	public static function add_widget_recent_posts( $params )
 	{
-		self::add(self::TYPE_PAGES_WITH_RECENT_POSTS) ;
+		self::add( self::TYPE_PAGES_WITH_RECENT_POSTS ) ;
 		return $params ;
 	}
 
@@ -53,13 +135,13 @@ class LiteSpeed_Cache_Tag
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add($tags)
+	public static function add( $tags )
 	{
-		if ( ! is_array($tags) ) {
-			$tags = array($tags) ;
+		if ( ! is_array( $tags ) ) {
+			$tags = array( $tags ) ;
 		}
 
-		self::$_tags = array_merge(self::$_tags, $tags) ;
+		self::$_tags = array_merge( self::$_tags, $tags ) ;
 	}
 
 	/**
@@ -81,14 +163,14 @@ class LiteSpeed_Cache_Tag
 	 * @param string $uri The uri to get the hash of.
 	 * @return bool|string False on input error, hash otherwise.
 	 */
-	public static function get_uri_tag($uri)
+	public static function get_uri_tag( $uri )
 	{
-		$no_qs = strtok($uri, '?') ;
-		if ( empty($no_qs) ) {
+		$no_qs = strtok( $uri, '?' ) ;
+		if ( empty( $no_qs ) ) {
 			return false ;
 		}
-		$slashed = trailingslashit($no_qs) ;
-		return self::TYPE_URL . md5($slashed) ;
+		$slashed = trailingslashit( $no_qs ) ;
+		return self::TYPE_URL . md5( $slashed ) ;
 	}
 
 	/**
@@ -99,7 +181,7 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function build_uri_tag()
 	{
-		return self::get_uri_tag(urldecode($_SERVER['REQUEST_URI'])) ;
+		return self::get_uri_tag( urldecode( $_SERVER['REQUEST_URI'] ) ) ;
 	}
 
 	/**
@@ -117,7 +199,7 @@ class LiteSpeed_Cache_Tag
 		$tags = array() ;
 		$tags[] = self::build_uri_tag() ;
 
-		if ( ! defined('LSCACHE_IS_ESI') ) {
+		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
 			if ( is_front_page() ) {
 				$tags[] = self::TYPE_FRONTPAGE ;
 			}
@@ -126,7 +208,7 @@ class LiteSpeed_Cache_Tag
 			}
 		}
 
-		$err = LiteSpeed_Cache::get_instance()->get_error_code() ;
+		$err = self::get_error_code() ;
 		if ( $err !== false ) {
 			$tags[] = self::TYPE_ERROR . $err ;
 		}
@@ -139,7 +221,7 @@ class LiteSpeed_Cache_Tag
 			}
 			elseif ( is_post_type_archive() ) {
 				global $wp_query ;
-				$post_type = $wp_query->get('post_type') ;
+				$post_type = $wp_query->get( 'post_type' ) ;
 				$tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type ;
 			}
 			elseif ( is_author() ) {
@@ -148,15 +230,15 @@ class LiteSpeed_Cache_Tag
 			elseif ( is_date() ) {
 				global $post ;
 				$date = $post->post_date ;
-				$date = strtotime($date) ;
+				$date = strtotime( $date ) ;
 				if ( is_day() ) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date) ;
+					$tags[] = self::TYPE_ARCHIVE_DATE . date( 'Ymd', $date ) ;
 				}
 				elseif ( is_month() ) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date) ;
+					$tags[] = self::TYPE_ARCHIVE_DATE . date( 'Ym', $date ) ;
 				}
 				elseif ( is_year() ) {
-					$tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date) ;
+					$tags[] = self::TYPE_ARCHIVE_DATE . date( 'Y', $date ) ;
 				}
 			}
 		}
@@ -184,14 +266,14 @@ class LiteSpeed_Cache_Tag
 	public static function finalize()
 	{
 		// run 3rdparty hooks to tag
-		do_action('litespeed_cache_api_tag') ;
+		do_action( 'litespeed_cache_api_tag' ) ;
 		// generate wp tags
 		$type_tags = self::_build_type_tags() ;
-		self::$_tags = array_merge(self::$_tags, $type_tags) ;
+		self::$_tags = array_merge( self::$_tags, $type_tags ) ;
 		// append blog main tag
 		self::$_tags[] = '' ;
 		// removed duplicates
-		self::$_tags = array_unique(self::$_tags) ;
+		self::$_tags = array_unique( self::$_tags ) ;
 	}
 
 	/**
@@ -211,17 +293,17 @@ class LiteSpeed_Cache_Tag
 
 		// If is_private and has private tags, append them first, then specify prefix to `public` for public tags
 		if ( LiteSpeed_Cache_Control::is_private() ) {
-			foreach (self::$_tags_priv as $priv_tag) {
+			foreach ( self::$_tags_priv as $priv_tag ) {
 				$prefix_tags[] = $prefix . $priv_tag ;
 			}
 			$prefix = 'public: ' . $prefix ;
 		}
 
-		foreach (self::$_tags as $tag) {
+		foreach ( self::$_tags as $tag ) {
 			$prefix_tags[] = $prefix . $tag ;
 		}
 
-		$hdr = self::X_HEADER . ': ' . implode(',', $prefix_tags) ;
+		$hdr = self::X_HEADER . ': ' . implode( ',', $prefix_tags ) ;
 
 		return $hdr ;
 	}
@@ -233,14 +315,14 @@ class LiteSpeed_Cache_Tag
 	 * @access public
 	 * @return Current class instance.
 	 */
-	public static function get_instance()
-	{
-		$cls = get_called_class() ;
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new $cls() ;
-		}
+	// public static function get_instance()
+	// {
+	// 	$cls = get_called_class() ;
+	// 	if ( ! isset(self::$_instance) ) {
+	// 		self::$_instance = new $cls() ;
+	// 	}
 
-		return self::$_instance ;
-	}
+	// 	return self::$_instance ;
+	// }
 
 }

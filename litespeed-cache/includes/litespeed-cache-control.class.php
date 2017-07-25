@@ -2,20 +2,21 @@
 /**
  * The plugin cache-control class for X-Litespeed-Cache-Control
  *
- * @since      1.2.0
+ * @since      1.1.3
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Control
 {
-	private static $_instance ;
+	// private static $_instance ;
 
-	const BM_NOTCACHEABLE = 1 ;
+	const BM_CACHEABLE = 1 ;
 	const BM_PRIVATE = 2 ;
 	const BM_SHARED = 4 ;
 	const BM_NO_VARY = 8 ;
 	const BM_STALE = 128 ;
+	const BM_NOTCACHEABLE = 256 ;
 
 	const X_HEADER = 'X-LiteSpeed-Cache-Control' ;
 
@@ -27,7 +28,7 @@ class LiteSpeed_Cache_Control
 	 * Set no vary setting
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function set_no_vary()
 	{
@@ -39,7 +40,7 @@ class LiteSpeed_Cache_Control
 	 * Get no vary setting
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function is_no_vary()
 	{
@@ -50,7 +51,7 @@ class LiteSpeed_Cache_Control
 	 * Set stale
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function set_stale()
 	{
@@ -62,7 +63,7 @@ class LiteSpeed_Cache_Control
 	 * Get stale
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function is_stale()
 	{
@@ -73,7 +74,7 @@ class LiteSpeed_Cache_Control
 	 * Set cache control to shared private
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function set_shared()
 	{
@@ -86,7 +87,7 @@ class LiteSpeed_Cache_Control
 	 * Check if is shared private
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function is_shared()
 	{
@@ -97,7 +98,7 @@ class LiteSpeed_Cache_Control
 	 * Set cache control to private
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function set_private()
 	{
@@ -109,7 +110,7 @@ class LiteSpeed_Cache_Control
 	 * Check if is private
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function is_private()
 	{
@@ -117,35 +118,59 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
+	 * Initialize cacheable status in `wp` hook, if not call this, by default it will be non-cacheable
+	 *
+	 * @access public
+	 * @since 1.1.3
+	 */
+	public static function set_cacheable()
+	{
+		self::$_control |= self::BM_CACHEABLE ;
+		LiteSpeed_Cache_Log::debug( 'Control set initialized cacheable' ) ;
+	}
+
+	/**
 	 * Switch to nocacheable status
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_nocache($reason = false)
+	public static function set_nocache( $reason = false )
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
-		LiteSpeed_Cache_Log::debug('Control set No Cache: ' . $reason, 2) ;
+		LiteSpeed_Cache_Log::debug( 'Control set No Cache: ' . $reason, 2 ) ;
+	}
+
+	/**
+	 * Check current notcacheable bit set
+	 *
+	 * @access public
+	 * @since 1.1.3
+	 * @return bool True if notcacheable bit is set, otherwise false.
+	 */
+	public static function isset_notcacheable()
+	{
+		return self::$_control & self::BM_NOTCACHEABLE ;
 	}
 
 	/**
 	 * Check current cacheable status
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @return bool True if is still cacheable, otherwise false.
 	 */
 	public static function is_cacheable()
 	{
-		return ! (self::$_control & self::BM_NOTCACHEABLE) ;
+		return ! self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE ;
 	}
 
 	/**
 	 * Set a custom TTL to use with the request if needed.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
 	 */
 	public static function set_custom_ttl($ttl)
@@ -160,7 +185,7 @@ class LiteSpeed_Cache_Control
 	 * Generate final TTL.
 	 *
 	 * @access private
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @return int $ttl An integer to use as the TTL.
 	 */
 	private static function _get_ttl()
@@ -183,10 +208,10 @@ class LiteSpeed_Cache_Control
 		elseif ( is_404() && $ttl_404 > 0 ) {
 			$ttl = $ttl_404 ;
 		}
-		elseif ( LiteSpeed_Cache::get_error_code() === 403 ) {
+		elseif ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
 			$ttl = $ttl_403 ;
 		}
-		elseif ( LiteSpeed_Cache::get_error_code() >= 500 ) {
+		elseif ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
 			$ttl = $ttl_500 ;
 		}
 		else {
@@ -199,7 +224,7 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Sets up the Cache Control header.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return string empty string if empty, otherwise the cache control header.
 	 */
@@ -239,7 +264,7 @@ class LiteSpeed_Cache_Control
 	 * Generate all `control` tags before output
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function finalize()
 	{
@@ -473,17 +498,17 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return Current class instance.
 	 */
-	public static function get_instance()
-	{
-		$cls = get_called_class() ;
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new $cls() ;
-		}
+	// public static function get_instance()
+	// {
+	// 	$cls = get_called_class() ;
+	// 	if ( ! isset(self::$_instance) ) {
+	// 		self::$_instance = new $cls() ;
+	// 	}
 
-		return self::$_instance ;
-	}
+	// 	return self::$_instance ;
+	// }
 }
