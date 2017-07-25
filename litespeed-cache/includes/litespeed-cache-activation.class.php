@@ -55,10 +55,10 @@ class LiteSpeed_Cache_Activation
 	public static function uninstall_litespeed_cache()
 	{
 		LiteSpeed_Cache_Task::clear() ;
-		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
-		delete_option(LiteSpeed_Cache_Config::OPTION_NAME) ;
+		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules( true ) ;
+		delete_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
 		if ( is_multisite() ) {
-			delete_site_option(LiteSpeed_Cache_Config::OPTION_NAME) ;
+			delete_site_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
 		}
 	}
 
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Activation
 		if ( !LiteSpeed_Cache_Config::wp_cache_var_setter(false) ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 		}
-		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
+		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules( true ) ;
 		// delete in case it's not deleted prior to deactivation.
 		self::dismiss_whm() ;
 	}

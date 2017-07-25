@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			self::$RW_LOOKUP = self::RW_LOOKUP_BOTH ;
 		}
-		self::$LS_MODULE_REWRITE_ON = "\nRewriteEngine on\n" . self::$RW_LOOKUP ;
+		self::$LS_MODULE_REWRITE_ON = "RewriteEngine on\n" . self::$RW_LOOKUP ;
 
 		// backend .htaccess privilege
 		if ( $this->frontend_htaccess === $this->backend_htaccess ) {
@@ -746,18 +746,17 @@ class LiteSpeed_Cache_Admin_Rules
 			return false ;
 		}
 
-		$rules = array_merge(
-			array(self::LS_MODULE_DONOTEDIT),
-			array(''),
-			array(self::LS_MODULE_START),
-			array(''),
-			array(self::$LS_MODULE_REWRITE_ON),
-			array(''),
-			$rules,
-			array(self::LS_MODULE_END),
-			array(''),
-			array(self::LS_MODULE_DONOTEDIT)
-		) ;
+		if ( $rules !== false ) {
+			$rules = array_merge(
+				array(self::LS_MODULE_DONOTEDIT),
+				array(self::LS_MODULE_START),
+				array(self::$LS_MODULE_REWRITE_ON),
+				array(''),
+				$rules,
+				array(self::LS_MODULE_END),
+				array(self::LS_MODULE_DONOTEDIT)
+			) ;
+		}
 		return Litespeed_File::insert_with_markers($this->htaccess_path($kind), $rules, self::MARKER, true) ;
 	}
 
@@ -767,12 +766,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function clear_rules()
+	public function clear_rules( $clear_all = false )
 	{
+		$keep_wrapper = $clear_all === true ? false : array() ;
 		$this->deprecated_clear_rules() ;
-		$this->insert_wrapper() ;
+		$this->insert_wrapper( $keep_wrapper ) ;
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			$this->insert_wrapper(array(), 'backend') ;
+			$this->insert_wrapper( $keep_wrapper, 'backend' ) ;
 		}
 	}
 
