@@ -192,13 +192,13 @@ class LiteSpeed_Cache_Config
 	 * @param string $id Configuration ID.
 	 * @return mixed Selected option if set, NULL if not.
 	 */
-	public function get_option($id)
+	public function get_option( $id )
 	{
-		if ( isset($this->options[$id]) ) {
+		if ( isset( $this->options[$id] ) ) {
 			return $this->options[$id] ;
 		}
-		if ( LiteSpeed_Cache_Log::initialized() && LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push('Invalid option ID ' . $id) ;
+		if ( LiteSpeed_Cache_Log::initialized() ) {
+			LiteSpeed_Cache_Log::debug( 'Invalid option ID ' . $id ) ;
 		}
 		return NULL ;
 	}
@@ -208,17 +208,17 @@ class LiteSpeed_Cache_Config
 	 *
 	 * NOTE: No validation here. Do validate before use this function with LiteSpeed_Cache_Admin_Settings->validate_plugin_settings().
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param array $new_cfg The new settings to update, which will be update $this->options too.
 	 * @return array The result of update.
 	 */
-	public function update_options($new_cfg = array())
+	public function update_options( $new_cfg = array() )
 	{
-		if ( ! empty($new_cfg) ) {
-			$this->options = array_merge($this->options, $new_cfg) ;
+		if ( ! empty( $new_cfg ) ) {
+			$this->options = array_merge( $this->options, $new_cfg ) ;
 		}
-		return update_option(self::OPTION_NAME, $this->options) ;
+		return update_option( self::OPTION_NAME, $this->options ) ;
 	}
 
 	/**
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Config
 	 */
 	public function purge_by_post( $flag )
 	{
-		return in_array($flag, $this->purge_options) ;
+		return in_array( $flag, $this->purge_options ) ;
 	}
 
 	/**

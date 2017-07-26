@@ -29,7 +29,7 @@ class LiteSpeed_Cache_Log
 	/**
 	 * Check if log class finished initialized
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function initialized()
@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Log
 	/**
 	 * Formats the consistent prefix.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access private
 	 * @return string The formatted log prefix.
 	 */
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Log
 	/**
 	 * Direct call to log a debug message.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.

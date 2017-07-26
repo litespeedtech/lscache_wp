@@ -324,12 +324,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Check and set shop front page ttl
 	 *
 	 * @access private
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	private static function set_ttl()
 	{
 		if ( is_shop() ) {
-			if ( LiteSpeed_Cache_API::config(self::OPTION_SHOP_FRONT_TTL) ) {
+			if ( LiteSpeed_Cache_API::config( self::OPTION_SHOP_FRONT_TTL ) ) {
 				LiteSpeed_Cache_API::set_use_frontpage_ttl() ;
 			}
 		}

@@ -2,7 +2,7 @@
 /**
  * The plugin cache-tag class for X-LiteSpeed-Tag
  *
- * @since      1.2.0
+ * @since      1.1.3
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Get error code.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function get_error_code()
@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Return tags for Admin QS
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function output_tags()
@@ -176,7 +176,7 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Get the unique tag based on self url.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function build_uri_tag()
@@ -261,7 +261,7 @@ class LiteSpeed_Cache_Tag
 	 * Generate all cache tags before output
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public static function finalize()
 	{
@@ -280,7 +280,7 @@ class LiteSpeed_Cache_Tag
 	 * Sets up the Cache Tags header.
 	 * ONLY need to run this if is cacheable
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return string empty string if empty, otherwise the cache tags header.
 	 */
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return Current class instance.
 	 */

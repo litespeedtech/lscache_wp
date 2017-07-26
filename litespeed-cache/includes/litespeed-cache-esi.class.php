@@ -5,7 +5,7 @@
  *
  * This is used to define all esi related functions.
  *
- * @since      1.2.0
+ * @since      1.1.3
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -35,7 +35,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Constructor of ESI
 	 *
-	 * @since    1.2.0
+	 * @since    1.1.3
 	 */
 	private function __construct()
 	{
@@ -45,7 +45,7 @@ class LiteSpeed_Cache_ESI
 	 * Check if the requested page has esi elements. If so, return esi on
 	 * header.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return string Esi On header if request has esi, empty string otherwise.
 	 */
@@ -57,7 +57,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Sets that the requested page has esi elements.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function set_has_esi()
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_ESI
 	 * Hooked to the template_include action.
 	 * Selects the esi template file when the post type is a LiteSpeed ESI page.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param string $template The template path filtered.
 	 * @return string The new template path.
@@ -94,7 +94,7 @@ class LiteSpeed_Cache_ESI
 	 * Register all of the hooks related to the esi logic of the plugin.
 	 * Specifically when the page IS an esi page.
 	 *
-	 * @since    1.2.0
+	 * @since    1.1.3
 	 * @access   public
 	 */
 	public function register_esi_actions()
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_ESI
 	 * Register all of the hooks related to the esi logic of the plugin.
 	 * Specifically when the page is NOT an esi page.
 	 *
-	 * @since    1.2.0
+	 * @since    1.1.3
 	 * @access   public
 	 */
 	public function register_not_esi_actions()
@@ -154,7 +154,7 @@ class LiteSpeed_Cache_ESI
 	 * and an esi block is added. The remaining comment form is also buffered
 	 * and cleared.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param array $defaults The default comment form settings.
 	 * @return array The default comment form settings.
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_ESI
 	 *
 	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access private
 	 * @param string $block_id The id to use to display the correct esi block.
 	 * @param string $wrapper The wrapper for the esi comments.
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Parses the request parameters on an ESI request
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function parse_esi_param()
@@ -244,7 +244,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Select the correct esi output based on the parameters in an ESI request.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public static function load_esi_block()
@@ -277,7 +277,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Get the configuration option for the current widget.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param WP_Widget $widget The widget to get the options for.
 	 * @return mixed null if not found, an array of the options otherwise.
@@ -313,7 +313,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Loads the default options for default WordPress widgets.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param array $options The current options selected.
 	 * @param WP_Widget $widget The widget to be configured.
@@ -343,7 +343,7 @@ class LiteSpeed_Cache_ESI
 	 * comment_form_comments_closed actions.
 	 * @see register_comment_form_actions
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public function comment_form_sub_cancel()
@@ -355,7 +355,7 @@ class LiteSpeed_Cache_ESI
 	 * Hooked to the comment_form_after action.
 	 * Cleans up the remaining comment form output.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 */
 	public function comment_form_sub_clean()
@@ -369,7 +369,7 @@ class LiteSpeed_Cache_ESI
 	 * This will only be used if the comments section are to be displayed
 	 * via ESI.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return string Dummy template file.
 	 */
@@ -411,7 +411,7 @@ class LiteSpeed_Cache_ESI
 	 * If the admin configured the widget to display via esi, this function
 	 * will set up the esi request and cancel the widget display.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @param array $instance Parameter used to build the widget.
 	 * @param WP_Widget $widget The widget to build.
@@ -447,7 +447,7 @@ class LiteSpeed_Cache_ESI
 	 * Sets up the ESI request for the admin bar.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @global type $wp_admin_bar
 	 */
 	public function sub_admin_bar_block()
@@ -468,7 +468,7 @@ class LiteSpeed_Cache_ESI
 	 * args. The difference will be passed to the esi request.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @global type $post
 	 * @param $unused
 	 * @param array $args The used comment form args.
@@ -521,7 +521,7 @@ class LiteSpeed_Cache_ESI
 	 * Else the comments do not need to be ESI.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @global type $post
 	 * @param array $comments The current comments to output
 	 * @return array The comments to output.
@@ -556,7 +556,7 @@ class LiteSpeed_Cache_ESI
 	 * Parses the esi input parameters and generates the widget for esi display.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @global $wp_widget_factory
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
@@ -587,7 +587,7 @@ class LiteSpeed_Cache_ESI
 	 * Generates the admin bar for esi display.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 */
 	public function load_admin_bar_block()
 	{
@@ -602,7 +602,7 @@ class LiteSpeed_Cache_ESI
 	 * esi display.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @param array $params Input parameters needed to correctly display comment form
 	 */
 	public function load_comment_form_block($params)
@@ -623,7 +623,7 @@ class LiteSpeed_Cache_ESI
 	 * Outputs the ESI comments block.
 	 *
 	 * @access public
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @global type $post
 	 * @global type $wp_query
 	 * @param array $params The parameters used to help display the comments.
@@ -647,7 +647,7 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return Current class instance.
 	 */

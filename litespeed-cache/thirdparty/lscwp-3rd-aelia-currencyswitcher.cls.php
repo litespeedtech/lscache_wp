@@ -16,6 +16,13 @@ LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 
 class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 {
+	private static $_cookies = array(
+		'aelia_cs_selected_currency',
+		'aelia_customer_country',
+		'aelia_customer_state',
+		'aelia_tax_exempt',
+	) ;
+
 	/**
 	 * Detects if WooCommerce is installed.
 	 *
@@ -50,16 +57,9 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 		}
 
 		if ( isset($_COOKIE) && ! empty($_COOKIE) ) {
-			$cookies = array(
-				'aelia_cs_selected_currency',
-				'aelia_customer_country',
-				'aelia_customer_state',
-				'aelia_tax_exempt',
-			) ;
-
-			foreach ($cookies as $cookie) {
+			foreach (self::$_cookies as $cookie) {
 				if ( ! empty($_COOKIE[$cookie]) ) {
-					LiteSpeed_Cache_API::vary_add($cookies) ;
+					LiteSpeed_Cache_API::vary_add(self::$_cookies) ;
 					return ;
 				}
 			}
@@ -81,15 +81,9 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 	 */
 	public static function get_vary($vary_arr)
 	{
-		$cookies = array(
-			'aelia_cs_selected_currency',
-			'aelia_customer_country',
-			'aelia_customer_state',
-			'aelia_tax_exempt',
-		);
 		if ( ! is_array($vary_arr) ) {
 			return $vary_arr ;
 		}
-		return array_merge($vary_arr, $cookies) ;
+		return array_merge($vary_arr, self::$_cookies) ;
 	}
 }

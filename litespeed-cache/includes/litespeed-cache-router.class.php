@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Router
 	/**
 	 * Check if is logged in
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return boolean
 	 */
@@ -150,7 +150,7 @@ class LiteSpeed_Cache_Router
 	/**
 	 * Check if is an esi page request
 	 *
-	 * @since 1.2.0
+	 * @since 1.1.3
 	 * @access public
 	 * @return boolean
 	 */
