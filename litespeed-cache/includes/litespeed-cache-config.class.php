@@ -679,8 +679,16 @@ class LiteSpeed_Cache_Config
 	 */
 	public function is_caching_allowed()
 	{
-		if ( (isset($_SERVER['X-LSCACHE']) && $_SERVER['X-LSCACHE']) //lsws
-				|| LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' ){
+		//lsws
+		if ( isset( $_SERVER['X-LSCACHE'] ) && $_SERVER['X-LSCACHE'] ) {
+			return true ;
+		}
+		// web adc
+		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' ) {
+			return true ;
+		}
+		// cli call
+		if ( PHP_SAPI == 'cli' ) {
 			return true ;
 		}
 		return false ;
