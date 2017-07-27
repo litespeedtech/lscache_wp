@@ -576,7 +576,7 @@ class LiteSpeed_Cache_Purge
 
 		// post
 		$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_POST . $post_id ;
-		$purge_tags[] = LiteSpeed_Cache_Tag::get_uri_tag(wp_make_link_relative(get_post_permalink($post_id))) ;
+		$purge_tags[] = LiteSpeed_Cache_Tag::get_uri_tag(wp_make_link_relative(get_permalink($post_id))) ;
 
 		// for archive of categories|tags|custom tax
 		global $post ;
