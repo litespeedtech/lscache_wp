@@ -155,7 +155,7 @@ class LiteSpeed_Cache_Log
 	private function _init_request()
 	{
 		// For more than 2s's requests, add more break
-		if ( time() - filemtime( self::$log_path ) > 2 ) {
+		if ( file_exists( self::$log_path ) && time() - filemtime( self::$log_path ) > 2 ) {
 			file_put_contents( self::$log_path, "\n\n\n\n", FILE_APPEND ) ;
 		}
 
