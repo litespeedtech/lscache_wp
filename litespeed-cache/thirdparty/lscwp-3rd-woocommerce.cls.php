@@ -480,7 +480,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			self::backend_purge($product->get_id()) ;
 		}
 
-		LiteSpeed_Cache_API::tag_add(LiteSpeed_Cache_API::TYPE_POST . $product->get_id()) ;
+		LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $product->get_id()) ;
 	}
 
 	/**
@@ -499,7 +499,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return ;
 		}
 		foreach ( $term_ids as $term_id ) {
-			LiteSpeed_Cache_API::tag_add(self::CACHETAG_TERM . $term_id) ;
+			LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $term_id) ;
 		}
 	}
 
@@ -519,14 +519,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$cats = self::get_cats($post_id) ;
 		if ( ! empty($cats) ) {
 			foreach ( $cats as $cat ) {
-				LiteSpeed_Cache_API::tag_add(self::CACHETAG_TERM . $cat) ;
+				LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $cat) ;
 			}
 		}
 
 		$tags = wc_get_product_terms($post_id, 'product_tag', array('fields' => 'ids')) ;
 		if ( ! empty($tags) ) {
 			foreach ( $tags as $tag ) {
-				LiteSpeed_Cache_API::tag_add(self::CACHETAG_TERM . $tag) ;
+				LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $tag) ;
 			}
 		}
 	}
