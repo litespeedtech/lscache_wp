@@ -289,7 +289,7 @@ class LiteSpeed_Cache_Tag
 		self::finalize() ;
 
 		$prefix_tags = array() ;
-		$prefix = LSWCP_TAG_PREFIX . get_current_blog_id() ;
+		$prefix = LSWCP_TAG_PREFIX . get_current_blog_id() . '_' ;
 
 		// If is_private and has private tags, append them first, then specify prefix to `public` for public tags
 		if ( LiteSpeed_Cache_Control::is_private() ) {

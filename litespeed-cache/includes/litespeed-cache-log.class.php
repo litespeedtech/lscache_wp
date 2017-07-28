@@ -121,11 +121,8 @@ class LiteSpeed_Cache_Log
 			self::get_instance() ;
 		}
 
-		$formatted = self::format_message( $msg ) ;
-
 		// backtrace handler
 		if ( $backtrace_limit !== false ) {
-			$prefix = str_repeat( ' ', strlen( self::prefix() ) + 3 ) ;
 			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 2 ) ;
 			for ( $i=1 ; $i <= $backtrace_limit + 1 ; $i++ ) {// the 0st item is push()
 				if ( empty( $trace[$i]['class'] ) ) {
@@ -134,16 +131,16 @@ class LiteSpeed_Cache_Log
 				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
 					continue ;
 				}
-				$log = $trace[$i]['class'] . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
+				$log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
 				if ( ! empty( $trace[$i-1]['line'] ) ) {
-					$log .= ' @ ' . $trace[$i-1]['line'] ;
+					$log .= '@' . $trace[$i-1]['line'] ;
 				}
-				$formatted .= $prefix . "- $log\n" ;
+				$msg .= " \ $log" ;
 			}
 
 		}
 
-		file_put_contents( self::$log_path, $formatted, FILE_APPEND ) ;
+		file_put_contents( self::$log_path, self::format_message( $msg ), FILE_APPEND ) ;
 	}
 
 	/**

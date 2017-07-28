@@ -515,7 +515,7 @@ class LiteSpeed_Cache_Purge
 		if ( ! in_array('*', $purge_tags) ) {
 			$tags = array() ;
 			foreach ($purge_tags as $val) {
-				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . $val ;
+				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . '_' . $val ;
 			}
 			return $tags ;
 		}
@@ -536,12 +536,12 @@ class LiteSpeed_Cache_Purge
 			}
 			$tags = array() ;
 			foreach ($blogs as $blog_id) {
-				$tags[] = LSWCP_TAG_PREFIX . $blog_id ;
+				$tags[] = LSWCP_TAG_PREFIX . $blog_id . '_' ;
 			}
 			return $tags ;
 		}
 		else {
-			return array(LSWCP_TAG_PREFIX . $curr_bid) ;
+			return array(LSWCP_TAG_PREFIX . $curr_bid . '_') ;
 		}
 	}
 

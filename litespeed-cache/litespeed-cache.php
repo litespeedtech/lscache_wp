@@ -81,7 +81,7 @@ if ( ! defined( 'LSWCP_ESI_SUPPORT' ) ) {
 }
 
 if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
-	define( 'LSWCP_TAG_PREFIX', substr( md5( LSWCP_DIR ), -5 ) ) ;
+	define( 'LSWCP_TAG_PREFIX', substr( md5( LSWCP_DIR ), -3 ) ) ;
 }
 
 /**

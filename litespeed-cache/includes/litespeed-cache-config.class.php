@@ -536,6 +536,7 @@ class LiteSpeed_Cache_Config
 //		}
 
 		$res = $this->update_options() ;
+		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 		LiteSpeed_Cache_Log::debug("plugin_upgrade option changed = $res\n") ;
 	}
