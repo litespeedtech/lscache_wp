@@ -28,18 +28,18 @@ class LiteSpeed_Cache
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
-	const ACTION_PURGE = 'PURGE' ;
 	const ACTION_PURGE_ERRORS = 'PURGE_ERRORS' ;
 	const ACTION_PURGE_PAGES = 'PURGE_PAGES' ;
 	const ACTION_PURGE_BY = 'PURGE_BY' ;
 	const ACTION_PURGE_FRONT = 'PURGE_FRONT' ;
 	const ACTION_PURGE_ALL = 'PURGE_ALL' ;
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE' ;
-	const ACTION_PURGE_SINGLE = 'PURGESINGLE' ;
-	const ACTION_SHOW_HEADERS = 'SHOWHEADERS' ;
+	const ACTION_QS_PURGE = 'PURGE' ;
+	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE' ;
+	const ACTION_QS_SHOW_HEADERS = 'SHOWHEADERS' ;
 	const ACTION_QS_PURGE_ALL = 'purge_all' ;
 	const ACTION_QS_PURGE_EMPTYCACHE = 'empty_all' ;
-	const ACTION_NOCACHE = 'NOCACHE' ;
+	const ACTION_QS_NOCACHE = 'NOCACHE' ;
 	const ACTION_CRAWLER_GENERATE_FILE = 'crawler-generate-file' ;
 	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos' ;
 	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable' ;
@@ -204,15 +204,15 @@ class LiteSpeed_Cache
 		$msg = false ;
 		// handle actions
 		switch ( $action ) {
-			case LiteSpeed_Cache::ACTION_PURGE:
+			case LiteSpeed_Cache::ACTION_QS_PURGE:
 				LiteSpeed_Cache_Purge::set_purge_related() ;
 				break;
 
-			case self::ACTION_SHOW_HEADERS:
+			case self::ACTION_QS_SHOW_HEADERS:
 				self::$_debug_show_header = true ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
+			case LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE:
 				LiteSpeed_Cache_Purge::set_purge_single() ;
 				break;
 

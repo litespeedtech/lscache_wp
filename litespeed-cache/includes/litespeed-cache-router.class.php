@@ -205,10 +205,10 @@ class LiteSpeed_Cache_Router
 
 			// check if it is public action
 			if ( ! in_array( $action, array(
-					LiteSpeed_Cache::ACTION_NOCACHE,
-					LiteSpeed_Cache::ACTION_PURGE,
-					LiteSpeed_Cache::ACTION_PURGE_SINGLE,
-					LiteSpeed_Cache::ACTION_SHOW_HEADERS,
+					LiteSpeed_Cache::ACTION_QS_NOCACHE,
+					LiteSpeed_Cache::ACTION_QS_PURGE,
+					LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE,
+					LiteSpeed_Cache::ACTION_QS_SHOW_HEADERS,
 					LiteSpeed_Cache::ACTION_QS_PURGE_ALL,
 					LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
 					) ) ) {
@@ -263,10 +263,10 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
-			case LiteSpeed_Cache::ACTION_NOCACHE:
-			case LiteSpeed_Cache::ACTION_PURGE:
-			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
-			case LiteSpeed_Cache::ACTION_SHOW_HEADERS:
+			case LiteSpeed_Cache::ACTION_QS_NOCACHE:
+			case LiteSpeed_Cache::ACTION_QS_PURGE:
+			case LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE:
+			case LiteSpeed_Cache::ACTION_QS_SHOW_HEADERS:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE:
 				if ( $_is_enabled && ( $_is_public_action || self::is_ajax() ) ) {

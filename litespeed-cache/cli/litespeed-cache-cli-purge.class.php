@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Cli_Purge
 	public function url($args, $assoc_args)
 	{
 		$data = array(
-			LiteSpeed_Cache::ACTION_KEY => LiteSpeed_Cache::ACTION_PURGE,
+			LiteSpeed_Cache::ACTION_KEY => LiteSpeed_Cache::ACTION_QS_PURGE,
 		) ;
 		$url = $args[0] ;
 		$deconstructed = wp_parse_url($url) ;
