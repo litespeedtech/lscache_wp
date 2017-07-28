@@ -52,7 +52,6 @@ class LiteSpeed_Cache_Cli_Purge
 	private function _send_request($action, $extra = array())
 	{
 		$data = array(
-			'action' => 'lscache_cli',
 			LiteSpeed_Cache::ACTION_KEY => $action,
 			LiteSpeed_Cache::NONCE_NAME => wp_create_nonce($action),
 		) ;
@@ -76,9 +75,17 @@ class LiteSpeed_Cache_Cli_Purge
 	 *     $ wp lscache-purge all
 	 *
 	 */
-	public function all($args, $assoc_args)
+	public function all( $args, $assoc_args )
 	{
-		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_PURGE_ALL) ;
+		if ( is_multisite() ) {
+			$action = LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE ;
+		}
+		else {
+			$action = LiteSpeed_Cache::ACTION_QS_PURGE_ALL ;
+		}
+
+		$purge_ret = $this->_send_request( $action ) ;
+
 		if ( $purge_ret->success ) {
 			WP_CLI::success(__('Purged All!', 'litespeed-cache')) ;
 		}
@@ -123,7 +130,7 @@ class LiteSpeed_Cache_Cli_Purge
 		}
 		switch_to_blog($blogid) ;
 
-		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_PURGE_ALL) ;
+		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_QS_PURGE_ALL) ;
 		if ( $purge_ret->success ) {
 			WP_CLI::success(__('Purged the blog!', 'litespeed-cache')) ;
 		}
@@ -235,7 +242,7 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 	/**
-	 * Purges all cache tags for a WordPress tag
+	 * Purges cache tags for a WordPress tag
 	 *
 	 * ## OPTIONS
 	 *
@@ -254,7 +261,7 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 	/**
-	 * Purges all cache tags for a WordPress category
+	 * Purges cache tags for a WordPress category
 	 *
 	 * ## OPTIONS
 	 *
@@ -273,7 +280,7 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 	/**
-	 * Purges all cache tags for a WordPress Post/Product
+	 * Purges cache tags for a WordPress Post/Product
 	 *
 	 * @alias product
 	 *

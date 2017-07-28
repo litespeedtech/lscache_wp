@@ -37,6 +37,8 @@ class LiteSpeed_Cache
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE' ;
 	const ACTION_PURGE_SINGLE = 'PURGESINGLE' ;
 	const ACTION_SHOW_HEADERS = 'SHOWHEADERS' ;
+	const ACTION_QS_PURGE_ALL = 'purge_all' ;
+	const ACTION_QS_PURGE_EMPTYCACHE = 'empty_all' ;
 	const ACTION_NOCACHE = 'NOCACHE' ;
 	const ACTION_CRAWLER_GENERATE_FILE = 'crawler-generate-file' ;
 	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos' ;
@@ -253,12 +255,14 @@ class LiteSpeed_Cache
 				$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' ) ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_PURGE_ALL://todo: for cli, move this to ls->proceed_action()
+			case LiteSpeed_Cache::ACTION_PURGE_ALL:
+			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
+			case LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE:
 				define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;

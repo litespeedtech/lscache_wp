@@ -209,6 +209,8 @@ class LiteSpeed_Cache_Router
 					LiteSpeed_Cache::ACTION_PURGE,
 					LiteSpeed_Cache::ACTION_PURGE_SINGLE,
 					LiteSpeed_Cache::ACTION_SHOW_HEADERS,
+					LiteSpeed_Cache::ACTION_QS_PURGE_ALL,
+					LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
 					) ) ) {
 				LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
 				return ;
@@ -265,6 +267,8 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_PURGE:
 			case LiteSpeed_Cache::ACTION_PURGE_SINGLE:
 			case LiteSpeed_Cache::ACTION_SHOW_HEADERS:
+			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
+			case LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE:
 				if ( $_is_enabled && ( $_is_public_action || self::is_ajax() ) ) {
 					self::$_action = $action ;
 				}
