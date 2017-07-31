@@ -334,6 +334,20 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 
 == Changelog ==
 
+= 1.1.3 July 31 2017 =
+* [NEW FEATURE] New Litespeed_Cache_API class and documentation for 3rd party integration.
+* [NEW FEATURE] New API function litespeed_purge_single_post($post_id).
+* [NEW FEATURE] PHP CLI support for crawler.
+* [IMPROVEMENT] Set 'no cache' for same location 301 redirects.
+* [IMPROVEMENT] Improved LiteSpeed footer comment compatibility.
+* [UPDATE] Removed 'cache tag prefix' setting.
+* [BUGFIX] Fixed a bug involving CLI purge all.
+* [BUGFIX] Crawler now honors X-LiteSpeed-Cache-Control for the 'no-cache' header.
+* [BUGFIX] Cache/rewrite rules are now cleared when the plugin is uninstalled.
+* [BUGFIX] Prevent incorrect removal of the advanced-cache.php on deactivation if it was added by another plugin.
+* [BUGFIX] Fixed subfolder WP installations being unable to Purge By URL using a full URL path.
+* [REFACTOR] Reorganized existing code for an upcoming ESI release.
+
 = 1.1.2.2 - July 13 2017 =
 * [BUGFIX] Fixed blank page in Hebrew language post editor by removing unused font-awesome and jquery-ui css libraries.
 
