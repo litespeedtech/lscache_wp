@@ -50,6 +50,15 @@ if (!defined('WPINC')) die;
 		'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing" rel="noopener noreferrer" target="_blank"'); ?>
 </p>
 
+<h3><?php echo __( 'Cache tag prefix setting', 'litespeed-cache' ) ; ?></h3>
+<p>
+	<?php echo sprintf(
+		__( 'The value of this wordpress cache tag prefix is %1$s. If you want to change the value to avoid conflicts with multiple sites, please add %2$s to %3$s.', 'litespeed-cache' ),
+		'<code>' . LSWCP_TAG_PREFIX . '</code>',
+		'<code>define( "LSWCP_TAG_PREFIX", "YourUniqueStringHere" ) ;</code>',
+		'<code>wp-config.php</code>'
+	) ; ?>
+</p>
 
 
 

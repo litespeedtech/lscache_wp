@@ -115,6 +115,7 @@ class LiteSpeed_Cache_Admin_Report
 			'HTTP_X_LSCACHE'=>''
 		) ;
 		$server_vars = array_intersect_key($server, $server_keys) ;
+		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 
 		$buf = $this->format_report_section('Server Variables', $server_vars) ;
 

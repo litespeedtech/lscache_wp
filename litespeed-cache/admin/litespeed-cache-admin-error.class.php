@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Admin_Error
 
 			// other plugin left cache expired rules in .htaccess which will cause conflicts
 			case self::E_CACHE_EXPIRED_RULE_CONFLICT:
-				return sprintf( __( 'In %s file found one unexpected cache rule `%s` left by other cache plugins. Please remove it to get LiteSpeed Cache Plugin work well.', 'litespeed-cache' ), '.htaccess', 'ExpiresDefault' ) ;
+				return sprintf( __( 'In %s file found one unexpected cache rule %s left by other cache plugins. Please remove it to get LiteSpeed Cache Plugin work well.', 'litespeed-cache' ), '.htaccess', '`ExpiresDefault`' ) ;
 
 			// Could not find something in the .htaccess file. Expect parameter.
 			case self::E_HTA_DNF:
