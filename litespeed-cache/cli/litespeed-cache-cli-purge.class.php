@@ -209,8 +209,8 @@ class LiteSpeed_Cache_Cli_Purge
 				continue ;
 			}
 			$term = $callback($val) ;
-			if ( ! empty($term) ) {
-				$filtered[] = $val ;
+			if ( ! empty($term) ) {WP_CLI::line($term->name);
+				$filtered[] = in_array( $callback, array( 'get_tag', 'get_category' ) ) ? $term->name : $val ;
 			}
 			else {
 				WP_CLI::debug('[LSCACHE] Skip val, not a valid term. ' . $val) ;
