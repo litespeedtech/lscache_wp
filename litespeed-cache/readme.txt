@@ -334,7 +334,7 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 
 == Changelog ==
 
-= 1.1.3 July 31 2017 =
+= 1.1.3 - July 31 2017 =
 * [NEW FEATURE] New Litespeed_Cache_API class and documentation for 3rd party integration.
 * [NEW FEATURE] New API function litespeed_purge_single_post($post_id).
 * [NEW FEATURE] PHP CLI support for crawler.
