@@ -257,6 +257,10 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 
   Check if the current page is not cacheable or not.
 
+* **litespeed_purge_single_post(_$post_id_)**
+
+  Purge single post by id
+
 * **LiteSpeed_Cache_API::purge_all()**
 
   Purge all existing caches.
