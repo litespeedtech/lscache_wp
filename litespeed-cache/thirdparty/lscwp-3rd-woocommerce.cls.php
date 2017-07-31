@@ -408,7 +408,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				if ( is_null($woocom->cart) ) {
 					$err = 'null cart' ;
 				}
-				elseif ( $esi_id === 'storefront-cart-header' && $woocom->cart->get_cart_contents_count() !== 0 ) {
+				elseif ( $woocom->cart->get_cart_contents_count() !== 0 ) {//$esi_id === 'storefront-cart-header' &&
 					$err = 'cart is not empty' ;
 				}
 				elseif ( wc_notice_count() > 0 ) {
