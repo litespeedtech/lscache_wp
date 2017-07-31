@@ -336,6 +336,9 @@ class LiteSpeed_Cache
 
 		// register recent posts widget tag before theme renders it to make it work
 		add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
+
+		// 301 redirect hook
+		add_filter( 'wp_redirect', 'LiteSpeed_Cache_Control::check_redirect', 10, 2 ) ;
 	}
 
 	/**

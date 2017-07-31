@@ -222,6 +222,24 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
+	 * Check if need to set no cache status for redirection or not
+	 *
+	 * @access public
+	 * @since 1.1.3
+	 */
+	public static function check_redirect( $location, $status )
+	{
+		if ( $status == '301' && ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
+			LiteSpeed_Cache_Log::debug( "301 from " . $_SERVER['SCRIPT_URI'] ) ;
+			LiteSpeed_Cache_Log::debug( "301 to $location" ) ;
+			if ( $_SERVER['SCRIPT_URI'] == $location ) {
+				self::set_nocache( '301 to same url' ) ;
+			}
+		}
+		return $location ;
+	}
+
+	/**
 	 * Sets up the Cache Control header.
 	 *
 	 * @since 1.1.3
