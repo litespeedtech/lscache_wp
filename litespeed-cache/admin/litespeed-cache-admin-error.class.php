@@ -48,6 +48,7 @@ class LiteSpeed_Cache_Admin_Error
 	const E_SETTING_REWRITE = 3540 ;
 
 	const E_LC_HTA = 4000 ; // login cookie .htaccess not correct
+	const E_CACHE_EXPIRED_RULE_CONFLICT = 4010 ; // login cookie .htaccess not correct
 
 	const E_HTA_DNF = 4500 ; // .htaccess did not find.
 
@@ -182,6 +183,10 @@ class LiteSpeed_Cache_Admin_Error
 			case self::E_LC_HTA:
 				return __('Tried to parse for existing login cookie.', 'litespeed-cache') . ' '
 					. sprintf(__('%s file not valid. Please verify contents.', 'litespeed-cache'), '.htaccess') ;
+
+			// other plugin left cache expired rules in .htaccess which will cause conflicts
+			case self::E_CACHE_EXPIRED_RULE_CONFLICT:
+				return sprintf( __( 'In %s file found one unexpected cache rule `%s` left by other cache plugins. Please remove it to get LiteSpeed Cache Plugin work well.', 'litespeed-cache' ), '.htaccess', 'ExpiresDefault' ) ;
 
 			// Could not find something in the .htaccess file. Expect parameter.
 			case self::E_HTA_DNF:

@@ -114,6 +114,15 @@ class LiteSpeed_Cache_Admin
 			$this->check_advanced_cache() ;
 		}
 
+		// Check if there is `ExpiresDefault` in .htaccess
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
+			$htaccess_con = Litespeed_File::read( LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ) ;
+			if ( $htaccess_con && stripos( $htaccess_con, "\nExpiresDefault" ) !== false ) {
+				// Need to add a notice for browser cache compatibility
+				LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_CACHE_EXPIRED_RULE_CONFLICT ) ;
+			}
+		}
+
 		if ( ! is_multisite() ) {
 			if( ! current_user_can('manage_options') ){
 				return ;
