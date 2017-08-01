@@ -88,9 +88,6 @@ class LiteSpeed_Cache_Admin_Display
 		// Admin footer
 		add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1) ;
 
-		// add link to plugin list page
-		add_filter('plugin_action_links_' . LSWCP_BASENAME, array($this, 'add_plugin_links')) ;// todo:check if work
-
 		if( LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled() ) {
 			// Help tab
 			$this->add_help_tabs() ;
