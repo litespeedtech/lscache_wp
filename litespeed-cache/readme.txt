@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, cache, performance, optimization, wp-cache, busting, wordpress cache busting, litespeed, http2, varnish, widget, litespeed web server, lsws, availability, pagespeed, woocommerce, bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite, scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize, wp-super-cache, w3total cache, w3totalcache, w3 total cache, wp super cache, wp rocket
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 1.1.3.1
+Stable tag: 1.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -333,6 +333,14 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 8. Cache Hit Example
 
 == Changelog ==
+
+= 1.1.4 - August 1 2017 =
+[UPDATE] Added backward compatibility for v1.1.2.2 API calls. (used by 3rd-party plugins) 
+[IMPROVEMENT] Unexpected rewrite rules will now show an error message.
+[IMPROVEMENT] Added Cache Tag Prefix setting info in the Env Report and Info page.
+[IMPROVEMENT] LSC-WP setting link is now displayed in the plugin list.
+[IMPROVEMENT] Improved performance when setting cache control.
+[BUGFIX] Fixed WPCLI purge tag/category never succeeding.
 
 = 1.1.3 - July 31 2017 =
 * [NEW FEATURE] New Litespeed_Cache_API class and documentation for 3rd party integration.

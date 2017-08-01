@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1.3\n"
+"Project-Id-Version: 1.1.4\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2017-07-31 14:03-0500\n"
+"POT-Creation-Date: 2017-08-01 13:53-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,287 +17,294 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin/litespeed-cache-admin-display.class.php:134
+#: admin/litespeed-cache-admin-display.class.php:131
 msgid "Manage"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:136
-#: admin/litespeed-cache-admin-display.class.php:210
+#: admin/litespeed-cache-admin-display.class.php:133
+#: admin/litespeed-cache-admin-display.class.php:207
 msgid "Settings"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:139
+#: admin/litespeed-cache-admin-display.class.php:136
 msgid "Edit .htaccess"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:142
+#: admin/litespeed-cache-admin-display.class.php:139
 msgid "Information"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:144
+#: admin/litespeed-cache-admin-display.class.php:141
 msgid "Environment Report"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:148 admin/tpl/info.php:10
+#: admin/litespeed-cache-admin-display.class.php:145 admin/tpl/info.php:10
 #: admin/tpl/settings.php:27
 msgid "Crawler"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:230
+#: admin/litespeed-cache-admin-display.class.php:227
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:270
+#: admin/litespeed-cache-admin-display.class.php:267
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:773 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:770 admin/tpl/crawler.php:138
 #: admin/tpl/settings_general.php:25
 msgid "Enable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:777 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:774 admin/tpl/crawler.php:138
 #: admin/tpl/settings_general.php:31
 msgid "Disable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:804
+#: admin/litespeed-cache-admin-display.class.php:801
 #, php-format
 msgid "Recommended value: %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:85
+#: admin/litespeed-cache-admin-error.class.php:86
 msgid "The installed PHP version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:87
+#: admin/litespeed-cache-admin-error.class.php:88
 #, php-format
 msgid "The LiteSpeed Cache Plugin requires at least PHP %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:89
+#: admin/litespeed-cache-admin-error.class.php:90
 #, php-format
 msgid ""
 "The currently installed version is PHP %s, which is out-dated and insecure."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:91
-#: admin/litespeed-cache-admin-error.class.php:100
+#: admin/litespeed-cache-admin-error.class.php:92
+#: admin/litespeed-cache-admin-error.class.php:101
 #, php-format
 msgid ""
 "Please upgrade or go to <a href=\"%s\">active plugins</a> and deactivate the "
 "LiteSpeed Cache plugin to hide this message."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:96
+#: admin/litespeed-cache-admin-error.class.php:97
 msgid ""
 "The installed WordPress version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:98
+#: admin/litespeed-cache-admin-error.class.php:99
 #, php-format
 msgid "The LiteSpeed Cache Plugin requires at least WordPress %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:105
+#: admin/litespeed-cache-admin-error.class.php:106
 msgid "Something went wrong with the form! Please try again."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:108
+#: admin/litespeed-cache-admin-error.class.php:109
 msgid "Tried to purge list with empty list."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:111
+#: admin/litespeed-cache-admin-error.class.php:112
 msgid "Bad Purge By selected value."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:114
+#: admin/litespeed-cache-admin-error.class.php:115
 msgid "Failed to purge by category, invalid category slug."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:117
+#: admin/litespeed-cache-admin-error.class.php:118
 msgid "Failed to purge by tag, invalid tag slug."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:120
+#: admin/litespeed-cache-admin-error.class.php:121
 msgid "Failed to purge by url, contained \"<\"."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:124
+#: admin/litespeed-cache-admin-error.class.php:125
 #, php-format
 msgid "Failed to purge by Post ID, given ID is not numeric: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:127
+#: admin/litespeed-cache-admin-error.class.php:128
 #, php-format
 msgid ""
 "Failed to purge by Post ID, given ID does not exist or is not published: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:131
+#: admin/litespeed-cache-admin-error.class.php:132
 #, php-format
 msgid "Failed to purge by url, invalid input: %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:134
+#: admin/litespeed-cache-admin-error.class.php:135
 #, php-format
 msgid "Failed to purge by category, does not exist: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:137
+#: admin/litespeed-cache-admin-error.class.php:138
 #, php-format
 msgid "Failed to purge by tag, does not exist: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:141
+#: admin/litespeed-cache-admin-error.class.php:142
 msgid "Invalid data in Admin IPs."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:144
+#: admin/litespeed-cache-admin-error.class.php:145
 msgid "Invalid data in Test IPs."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:147
+#: admin/litespeed-cache-admin-error.class.php:148
 #, php-format
 msgid "Invalid Site IP: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:150
+#: admin/litespeed-cache-admin-error.class.php:151
 #, php-format
 msgid "Can not fetch Custom Sitemap: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:153
+#: admin/litespeed-cache-admin-error.class.php:154
 #, php-format
 msgid "Can not parse custom sitemap xml file: %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:154
+#: admin/litespeed-cache-admin-error.class.php:155
 #, php-format
 msgid ""
 "Please make sure the file is xml format and the %s extension is installed on "
 "the server."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:159
+#: admin/litespeed-cache-admin-error.class.php:160
 #, php-format
 msgid "%1$s must be an integer between %2$d and %3$d"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:164
+#: admin/litespeed-cache-admin-error.class.php:165
 #, php-format
 msgid "Removed category \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:169
+#: admin/litespeed-cache-admin-error.class.php:170
 #, php-format
 msgid "Removed tag \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:173
+#: admin/litespeed-cache-admin-error.class.php:174
 #, php-format
 msgid "Invalid login cookie. Invalid characters found: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:177
+#: admin/litespeed-cache-admin-error.class.php:178
 msgid "Invalid Rewrite List."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:178
+#: admin/litespeed-cache-admin-error.class.php:179
 msgid "Empty or invalid rule."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:179
+#: admin/litespeed-cache-admin-error.class.php:180
 #, php-format
 msgid "Rule: %1$s, list: %2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:183
+#: admin/litespeed-cache-admin-error.class.php:184
 msgid "Tried to parse for existing login cookie."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:184
+#: admin/litespeed-cache-admin-error.class.php:185
 #, php-format
 msgid "%s file not valid. Please verify contents."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:188
+#: admin/litespeed-cache-admin-error.class.php:189
+#, php-format
+msgid ""
+"In %s file found one unexpected cache rule %s left by other cache plugins. "
+"Please remove it to get LiteSpeed Cache Plugin work well."
+msgstr ""
+
+#: admin/litespeed-cache-admin-error.class.php:193
 #, php-format
 msgid "Could not find %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:192
+#: admin/litespeed-cache-admin-error.class.php:197
 msgid "This site is a subdirectory install."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:193
+#: admin/litespeed-cache-admin-error.class.php:198
 msgid "Login cookies do not match."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:194
+#: admin/litespeed-cache-admin-error.class.php:199
 msgid ""
 "Please remove both and set the login cookie in LiteSpeed Cache advanced "
 "settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:198
+#: admin/litespeed-cache-admin-error.class.php:203
 msgid ""
 "Notice: This plugin requires a LiteSpeed Server with the LSCache Module "
 "enabled."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:199
+#: admin/litespeed-cache-admin-error.class.php:204
 msgid ""
 "If you are unable to change your server stack, please contact your hosting "
 "provider to request the required changes."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:200
+#: admin/litespeed-cache-admin-error.class.php:205
 msgid "This plugin will NOT work properly."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:203
-#: admin/litespeed-cache-admin-error.class.php:235
+#: admin/litespeed-cache-admin-error.class.php:208
+#: admin/litespeed-cache-admin-error.class.php:240
 msgid "LiteSpeed Cache was unable to write to the wp-config.php file."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:204
-#: admin/litespeed-cache-admin-error.class.php:236
+#: admin/litespeed-cache-admin-error.class.php:209
+#: admin/litespeed-cache-admin-error.class.php:241
 #, php-format
 msgid "Please add the following to the wp-config.php file: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:208
+#: admin/litespeed-cache-admin-error.class.php:213
 msgid "Failed to back up file, aborted changes."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:211
+#: admin/litespeed-cache-admin-error.class.php:216
 #, php-format
 msgid "Failed to put contents into %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:214
+#: admin/litespeed-cache-admin-error.class.php:219
 #, php-format
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:217
+#: admin/litespeed-cache-admin-error.class.php:222
 #, php-format
 msgid "%s file not readable or not writable."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:220
+#: admin/litespeed-cache-admin-error.class.php:225
 #, php-format
 msgid "Failed to overwrite %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:224
+#: admin/litespeed-cache-admin-error.class.php:229
 #, php-format
 msgid "The %1$s file not writeable for %2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:228
+#: admin/litespeed-cache-admin-error.class.php:233
 #, php-format
 msgid "%s file did not find a place to insert define."
 msgstr ""
@@ -361,25 +368,25 @@ msgstr ""
 msgid "File saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:197
+#: admin/litespeed-cache-admin.class.php:208
 msgid ""
 "For this scenario only, the network admin may uncheck \"Check Advanced Cache"
 "\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:199
+#: admin/litespeed-cache-admin.class.php:210
 msgid ""
 "For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:201
+#: admin/litespeed-cache-admin.class.php:212
 msgid ""
 "Please disable/deactivate any other Full Page Cache solutions that are "
 "currently being used."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:202
+#: admin/litespeed-cache-admin.class.php:213
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
@@ -947,6 +954,17 @@ msgstr ""
 #: admin/tpl/info_config.php:49
 #, php-format
 msgid "Please visit <a %s>this page</a> for more information."
+msgstr ""
+
+#: admin/tpl/info_config.php:53
+msgid "Cache tag prefix setting"
+msgstr ""
+
+#: admin/tpl/info_config.php:56
+#, php-format
+msgid ""
+"The value of this wordpress cache tag prefix is %1$s. If you want to change "
+"the value to avoid conflicts with multiple sites, please add %2$s to %3$s."
 msgstr ""
 
 #: admin/tpl/info_crawler.php:7
