@@ -71,7 +71,7 @@ Additional plugin features:
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
 * [wpForo](https://wordpress.org/plugins/wpforo/)
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
-* [Avada 5.3+](https://avada.theme-fusion.com/)
+* [Avada](https://avada.theme-fusion.com/)
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
 
 = Known Uncompatible Plugins =

@@ -44,6 +44,8 @@ if ( !function_exists('_litespeed_autoload') ) {
 
 			'LiteSpeed_Cache_Cli_Admin'			=> 'cli/litespeed-cache-cli-admin.class.php',
 			'LiteSpeed_Cache_Cli_Purge'			=> 'cli/litespeed-cache-cli-purge.class.php',
+
+			'LiteSpeed_Cache_Tags'				=> 'includes/deprecated-litespeed-cache-tags.class.php',
 		);
 		if( array_key_exists($cls, $class2fileArr) && file_exists(LSWCP_DIR . $class2fileArr[$cls]) ) {
 			require_once LSWCP_DIR . $class2fileArr[$cls];
