@@ -32,6 +32,9 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function set_no_vary()
 	{
+		if ( self::is_no_vary() ) {
+			return ;
+		}
 		self::$_control |= self::BM_NO_VARY ;
 		LiteSpeed_Cache_Log::debug('Cache_control is set to no_vary') ;
 	}
@@ -55,6 +58,9 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function set_stale()
 	{
+		if ( self::is_stale() ) {
+			return ;
+		}
 		self::$_control |= self::BM_STALE ;
 		LiteSpeed_Cache_Log::debug('Cache_control is set to stale') ;
 	}
@@ -78,6 +84,9 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function set_shared()
 	{
+		if ( self::is_shared() ) {
+			return ;
+		}
 		self::$_control |= self::BM_SHARED ;
 		self::set_private() ;
 		LiteSpeed_Cache_Log::debug('Cache_control is set to shared') ;
@@ -102,6 +111,9 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function set_private()
 	{
+		if ( self::is_private() ) {
+			return ;
+		}
 		self::$_control |= self::BM_PRIVATE ;
 		LiteSpeed_Cache_Log::debug('Cache_control is set to private') ;
 	}

@@ -47,7 +47,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		LiteSpeed_Cache_API::hook_get_options('LiteSpeed_Cache_ThirdParty_WooCommerce::get_config') ;
 		add_action('comment_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3) ;
 
-		if ( LSWCP_ESI_SUPPORT && self::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
+		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
 			if ( !is_shop() ) {
 				LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template') ;
 				LiteSpeed_Cache_API::hook_tpl_esi('wc-add-to-cart-form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block') ;
