@@ -133,7 +133,9 @@ class LiteSpeed_Cache_Vary
 			// save it
 			self::_cookie($_COOKIE[self::$_vary_name], $expire, is_ssl(), true) ;
 		}
-		LiteSpeed_Cache_Control::set_nocache('is logged in') ;
+		if ( ! LSWCP_ESI_SUPPORT || ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+			LiteSpeed_Cache_Control::set_nocache('is logged in') ;
+		}
 	}
 
 	/**

@@ -71,8 +71,9 @@ Additional plugin features:
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
 * [wpForo](https://wordpress.org/plugins/wpforo/)
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
-* [Avada](https://avada.theme-fusion.com/)
+* [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
+* [Elegant Themes Divi 3.0.67]
 
 = Known Uncompatible Plugins =
 
@@ -335,7 +336,7 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 == Changelog ==
 
 = 1.1.4 - August 1 2017 =
-* [UPDATE] Added backward compatibility for v1.1.2.2 API calls. (used by 3rd-party plugins) 
+* [UPDATE] Added backward compatibility for v1.1.2.2 API calls. (used by 3rd-party plugins)
 * [IMPROVEMENT] Unexpected rewrite rules will now show an error message.
 * [IMPROVEMENT] Added Cache Tag Prefix setting info in the Env Report and Info page.
 * [IMPROVEMENT] LSCWP setting link is now displayed in the plugin list.
