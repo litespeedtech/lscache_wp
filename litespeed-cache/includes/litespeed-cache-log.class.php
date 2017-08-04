@@ -26,6 +26,58 @@ class LiteSpeed_Cache_Log
 		self::$_debug = true ;
 	}
 
+	public static function log_filters()
+	{
+		$action = current_filter() ;
+		$exclude = array ( 'gettext', 'gettext_with_context', 'get_the_terms', 'get_term', 'wc_get_template', 'pre_kses' ) ;
+		if ( in_array( $action, $exclude ) ) {
+			return ;
+		}
+		$exclude_strings = array(
+			'order',
+			'cart',
+			'price',
+			'order',
+			'_url',
+			'query',
+			'option',
+			'_key',
+			'settings',
+			'locale',
+			'i18n',
+			'email',
+			'_html',
+			'salt',
+			'sanitize',
+			'_widget',
+			'taxonomy',
+			'get_post_metadata',
+			'post_type',
+			'charset',
+			'attribute',
+		) ;
+		foreach ( $exclude_strings as $value ) {
+			if ( stripos( $action, $value ) !== false ) {
+				return ;
+			}
+		}
+
+		// if (
+		// 	stripos($action, 'wc') === false &&
+		// 	stripos($action, 'woo') === false &&
+		// 	stripos($action, 'litespeed') === false
+		// ) {
+		// 	return ;
+		// }
+
+		if( $action == 'wp' ) {
+			LiteSpeed_Cache_Log::debug( "+++++++++++++" ) ;
+		}
+		LiteSpeed_Cache_Log::debug( "===log filter: $action" ) ;
+	}
+
+
+
 	/**
 	 * Check if log class finished initialized
 	 *
@@ -46,6 +98,9 @@ class LiteSpeed_Cache_Log
 	public static function set_enabled()
 	{
 		self::$_enabled = true ;
+
+		// Check if hook filters
+		// add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
 	}
 
 	/**
