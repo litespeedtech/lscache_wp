@@ -84,7 +84,7 @@ class LiteSpeed_Cache
 			register_uninstall_hook($plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache') ;
 		}
 
-		add_action('after_setup_theme', array( $this, 'init' )) ;
+		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
 	}
 
 	/**
@@ -152,15 +152,7 @@ class LiteSpeed_Cache
 		}
 
 		// Load 3rd party hooks
-		if ( LiteSpeed_Cache_Router::is_ajax() ) {
-			add_action( 'init', array( $this, 'load_thirdparty' ), 4 ) ;
-		}
-		elseif ( is_admin() || is_network_admin() ) {
-			add_action( 'admin_init', array( $this, 'load_thirdparty' ), 0 ) ;
-		}
-		else {
-			add_action( 'wp', array( $this, 'load_thirdparty' ), 4 ) ;
-		}
+		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 ) ;
 
 		// load litespeed actions
 		if ( $action = LiteSpeed_Cache_Router::get_action() ) {
@@ -316,6 +308,7 @@ class LiteSpeed_Cache
 			'deleted_post',
 			'trashed_post',
 			'delete_attachment',
+			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
 		) ;
 		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags

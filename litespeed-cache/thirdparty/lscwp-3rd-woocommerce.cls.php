@@ -43,7 +43,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_WooCommerce::set_control') ;
 		LiteSpeed_Cache_API::hook_tag('LiteSpeed_Cache_ThirdParty_WooCommerce::set_tag') ;
 
-		add_action('woocommerce_after_checkout_validation', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_purge') ;
+		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
+		add_action('woocommerce_product_set_stock', 'LiteSpeed_Cache_ThirdParty_WooCommerce::purge_product') ;
+
 		LiteSpeed_Cache_API::hook_get_options('LiteSpeed_Cache_ThirdParty_WooCommerce::get_config') ;
 		add_action('comment_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3) ;
 
@@ -441,19 +443,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			LiteSpeed_Cache_API::set_nocache() ;
 			return ;
 		}
-	}
-
-	/**
-	 * Purging a product on stock change should only occur during
-	 * product purchase. This function will add the purging callback
-	 * when an order is complete.
-	 *
-	 * @access public
-	 * @since 1.0.9
-	 */
-	public static function add_purge()
-	{
-		add_action('woocommerce_product_set_stock', 'LiteSpeed_Cache_ThirdParty_WooCommerce::purge_product') ;
 	}
 
 	/**

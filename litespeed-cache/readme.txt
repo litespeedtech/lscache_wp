@@ -344,7 +344,7 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 * [BUGFIX] Fixed WPCLI purge tag/category never succeeding.
 
 = 1.1.3 - July 31 2017 =
-* [NEW FEATURE] New Litespeed_Cache_API class and documentation for 3rd party integration.
+* [NEW FEATURE] New LiteSpeed_Cache_API class and documentation for 3rd party integration.
 * [NEW FEATURE] New API function litespeed_purge_single_post($post_id).
 * [NEW FEATURE] PHP CLI support for crawler.
 * [IMPROVEMENT] Set 'no cache' for same location 301 redirects.
