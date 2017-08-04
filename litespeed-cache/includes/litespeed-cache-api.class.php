@@ -75,7 +75,7 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
-	 * Set cache status to not cacheable
+	 * Set cache control ttl to use frontpage ttl
 	 *
 	 * @since 1.1.3
 	 * @access public
@@ -83,6 +83,28 @@ class LiteSpeed_Cache_API
 	public static function set_use_frontpage_ttl()
 	{
 		LiteSpeed_Cache_Control::set_custom_ttl(self::config(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL)) ;
+	}
+
+	/**
+	 * Set cache control ttl
+	 *
+	 * @since 1.1.4.1
+	 * @access public
+	 */
+	public static function set_ttl( $val )
+	{
+		LiteSpeed_Cache_Control::set_custom_ttl( $val ) ;
+	}
+
+	/**
+	 * Get current cache control ttl
+	 *
+	 * @since 1.1.4.1
+	 * @access public
+	 */
+	public static function get_ttl()
+	{
+		return LiteSpeed_Cache_Control::get_ttl() ;
 	}
 
 	/**

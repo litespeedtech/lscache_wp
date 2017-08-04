@@ -349,6 +349,23 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( $id === false ) {
 			return ;
 		}
+
+		// Check if product has a cache ttl limit or not
+		$sale_from = get_post_meta( $id, '_sale_price_dates_from', true ) ;
+		$sale_to = get_post_meta( $id, '_sale_price_dates_to', true ) ;
+		$now = current_time( 'timestamp' ) ;
+		$ttl = false ;
+		if ( $sale_from && $now < $sale_from ) {
+			$ttl = $sale_from - $now ;
+		}
+		elseif ( $sale_to && $now < $sale_to ) {
+			$ttl = $sale_to - $now ;
+		}
+		if ( $ttl && $ttl < LiteSpeed_Cache_API::get_ttl() ) {
+			LiteSpeed_Cache_API::debug( "WooCommerce set scheduled TTL to $ttl" ) ;
+			LiteSpeed_Cache_API::set_ttl( $ttl ) ;
+		}
+
 		if ( is_shop() ) {
 			LiteSpeed_Cache_API::tag_add(self::CACHETAG_SHOP) ;
 		}

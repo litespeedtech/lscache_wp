@@ -196,11 +196,11 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Generate final TTL.
 	 *
-	 * @access private
+	 * @access public
 	 * @since 1.1.3
 	 * @return int $ttl An integer to use as the TTL.
 	 */
-	private static function _get_ttl()
+	public static function get_ttl()
 	{
 		$feed_ttl = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_FEED_TTL) ;
 		$ttl_403 = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_403_TTL) ;
@@ -286,7 +286,7 @@ class LiteSpeed_Cache_Control
 			$hdr .= ',no-vary' ;
 		}
 
-		$hdr .= ',max-age=' . self::_get_ttl() . $esi_hdr ;
+		$hdr .= ',max-age=' . self::get_ttl() . $esi_hdr ;
 		return $hdr ;
 	}
 

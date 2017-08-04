@@ -16,6 +16,12 @@ class LiteSpeed_Cache_Log
 	private static $log_path ;
 	private static $_enabled = false ;
 
+	/**
+	 * Log class Constructor
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 */
 	private function __construct()
 	{
 		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log' ;
@@ -26,6 +32,12 @@ class LiteSpeed_Cache_Log
 		self::$_debug = true ;
 	}
 
+	/**
+	 * Log all filters and action hooks
+	 *
+	 * @since 1.1.4.1
+	 * @access public
+	 */
 	public static function log_filters()
 	{
 		$action = current_filter() ;

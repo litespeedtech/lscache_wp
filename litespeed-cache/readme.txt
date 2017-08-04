@@ -73,7 +73,7 @@ Additional plugin features:
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
-* [Elegant Themes Divi 3.0.67]
+* [Elegant Themes Divi 3.0.67+]
 
 = Known Uncompatible Plugins =
 
