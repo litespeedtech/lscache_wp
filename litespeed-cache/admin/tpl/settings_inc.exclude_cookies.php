@@ -18,6 +18,6 @@
 
 $id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
 
-$file_writable = LiteSpeed_Cache_Admin_Rules::writable(); 
+$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 
-$this->build_textarea($id, str_replace('|', "\n", $_options[$id]), !$file_writable);
+$this->build_textarea($id, str_replace('|', "\n", $_options[$id]));//, !$file_writable

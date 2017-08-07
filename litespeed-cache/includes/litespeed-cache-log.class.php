@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Log
 	/**
 	 * Log all filters and action hooks
 	 *
-	 * @since 1.1.4.1
+	 * @since 1.1.5
 	 * @access public
 	 */
 	public static function log_filters()

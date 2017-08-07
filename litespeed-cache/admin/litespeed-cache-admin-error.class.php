@@ -61,6 +61,8 @@ class LiteSpeed_Cache_Admin_Error
 	const E_HTA_PUT = 9020 ; // failed to put
 	const E_HTA_GET = 9030 ; // failed to get
 	const E_HTA_RW = 9040 ; // read write
+	const E_HTA_R = 9041 ; // read
+	const E_HTA_W = 9042 ; // write
 	const E_HTA_ORDER = 9050 ; // prefix found after suffix
 	const E_HTA_SAVE = 9060 ;
 	const E_CONF_WRITE = 9070 ;
@@ -220,6 +222,12 @@ class LiteSpeed_Cache_Admin_Error
 
 			case self::E_HTA_RW:
 				return sprintf(__('%s file not readable or not writable.', 'litespeed-cache'), '.htaccess') ;
+
+			case self::E_HTA_R:
+				return sprintf(__('%s file not readable.', 'litespeed-cache'), '.htaccess') ;
+
+			case self::E_HTA_W:
+				return sprintf(__('%s file not writable.', 'litespeed-cache'), '.htaccess') ;
 
 			case self::E_HTA_SAVE:
 				return sprintf(__('Failed to overwrite %s.', 'litespeed-cache'), '.htaccess') ;

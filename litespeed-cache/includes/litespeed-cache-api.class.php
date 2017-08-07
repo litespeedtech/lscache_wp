@@ -88,7 +88,7 @@ class LiteSpeed_Cache_API
 	/**
 	 * Set cache control ttl
 	 *
-	 * @since 1.1.4.1
+	 * @since 1.1.5
 	 * @access public
 	 */
 	public static function set_ttl( $val )
@@ -99,7 +99,7 @@ class LiteSpeed_Cache_API
 	/**
 	 * Get current cache control ttl
 	 *
-	 * @since 1.1.4.1
+	 * @since 1.1.5
 	 * @access public
 	 */
 	public static function get_ttl()

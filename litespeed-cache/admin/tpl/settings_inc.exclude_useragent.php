@@ -23,4 +23,4 @@ if (!defined('WPINC')) die;
 
 $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 
-$this->build_input(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS, 'litespeed-input-long', !$file_writable);
+$this->build_input(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS, 'litespeed-input-long');//, !$file_writable

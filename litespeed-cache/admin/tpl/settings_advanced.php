@@ -74,6 +74,6 @@ if ( $_options[LiteSpeed_Cache_Config::OPID_ENABLED] && $_options[$id] ){
 }
 
 $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
-$this->build_input($id, 'litespeed-input-long', !$file_writable);
+$this->build_input($id, 'litespeed-input-long');// , !$file_writable
 
 

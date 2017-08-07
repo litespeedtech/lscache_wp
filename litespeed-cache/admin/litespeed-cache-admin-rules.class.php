@@ -317,8 +317,13 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$path = $this->htaccess_path($kind) ;
 
-		if ( ! self::readable($kind) || ! self::writable($kind) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW) ;
+		if ( ! self::readable($kind) ) {
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_R) ;
+			return false ;
+		}
+
+		if ( ! self::writable($kind) ) {
+			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_W) ;
 			return false ;
 		}
 
@@ -616,14 +621,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function validate_common_rewrites($diff, &$errors)
 	{
-		if ( ! self::readable() || ! self::writable() ) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW) ;
+		if ( ! self::readable() ) {
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_R) ;
 			return false ;
 		}
 
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			if ( ! self::readable('backend') || ! self::writable('backend') ) {
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW) ;
+			if ( ! self::readable('backend') ) {
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_R) ;
 				return false ;
 			}
 		}
@@ -720,12 +725,14 @@ class LiteSpeed_Cache_Admin_Rules
 
 		$this->deprecated_clear_rules() ;
 		if ( ! $this->insert_wrapper($new_rules) ) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU) ;
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_W) ;
+			$errors[] = $this->rewrite_codes_msg( $this->frontend_htaccess, $new_rules ) ;
 			return false ;
 		}
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
 			if ( ! $this->insert_wrapper($new_rules_backend, 'backend') ) {
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU) ;
+				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_W) ;
+				$errors[] = $this->rewrite_codes_msg( $this->backend_htaccess, $new_rules ) ;
 				return false ;
 			}
 		}
@@ -733,19 +740,51 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Write to htaccess with rules
+	 * Output the msg with rules plain data for manual insert
 	 *
-	 * @since  1.1.0
-	 * @param  array $rules
-	 * @param  string $kind  which htaccess
+	 * @since  1.1.5
+	 * @param  string  $file
+	 * @param  array  $rules
+	 * @return string        final msg to output
 	 */
-	public function insert_wrapper($rules = array(), $kind = 'frontend')
+	private function rewrite_codes_msg( $file, $rules )
 	{
-		$res = $this->htaccess_backup($kind) ;
-		if ( ! $res ) {
-			return false ;
-		}
+		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s' , 'litespeed-cache' ),
+				$file,
+				'<textarea style="width:100%;" rows="10" readonly>' . htmlspecialchars( $this->wrap_rules_with_marker( $rules ) ) . '</textarea>'
+			) ;
+	}
 
+	/**
+	 * Generate rules plain data for manual insert
+	 *
+	 * @since  1.1.5
+	 * @param  array  $rules
+	 * @return array        final rules data for htaccess
+	 */
+	private function wrap_rules_with_marker( $rules )
+	{
+		$marker = self::MARKER ;
+		$start_marker = "# BEGIN {$marker}" ;
+		$end_marker   = "# END {$marker}" ;
+		$new_file_data = implode( "\n", array_merge(
+			array( $start_marker ),
+			$this->wrap_rules($rules),
+			array( $end_marker )
+		) ) ;
+
+		return $new_file_data ;
+	}
+
+	/**
+	 * wrap rules with module on info
+	 *
+	 * @since  1.1.5
+	 * @param  array  $rules
+	 * @return array        wrapped rules with module info
+	 */
+	private function wrap_rules( $rules )
+	{
 		if ( $rules !== false ) {
 			$rules = array_merge(
 				array(self::LS_MODULE_DONOTEDIT),
@@ -757,7 +796,24 @@ class LiteSpeed_Cache_Admin_Rules
 				array(self::LS_MODULE_DONOTEDIT)
 			) ;
 		}
-		return Litespeed_File::insert_with_markers($this->htaccess_path($kind), $rules, self::MARKER, true) ;
+		return $rules ;
+	}
+
+	/**
+	 * Write to htaccess with rules
+	 *
+	 * @since  1.1.0
+	 * @param  array $rules
+	 * @param  string $kind  which htaccess
+	 */
+	public function insert_wrapper( $rules = array(), $kind = 'frontend' )
+	{
+		$res = $this->htaccess_backup( $kind ) ;
+		if ( ! $res ) {
+			return false ;
+		}
+
+		return Litespeed_File::insert_with_markers( $this->htaccess_path($kind), $this->wrap_rules( $rules ), self::MARKER, true ) ;
 	}
 
 	/**

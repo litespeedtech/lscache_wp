@@ -7,9 +7,9 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Enable Separate Mobile View', 'litespeed-cache'); ?></th>
 		<td>
-			<?php 
+			<?php
 				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
-				$this->build_switch(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED, !$file_writable);
+				$this->build_switch(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED); //, !$file_writable
 			?>
 			<div class="litespeed-desc">
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>
@@ -55,9 +55,9 @@ if (!defined('WPINC')) die;
 				$this->build_input($id, 'widget ui-draggable-dragging code', false, !$_options[$id], 'litespeed-mobileview-rules', $input_value);
 			?>
 
-			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]" 
-				id="litespeed-mobileview-rules-default" 
-				value="<?php echo esc_textarea($_options[$id] ?: $wp_default_mobile); ?>" 
+			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"
+				id="litespeed-mobileview-rules-default"
+				value="<?php echo esc_textarea($_options[$id] ?: $wp_default_mobile); ?>"
 			/>
 
 			<div class="litespeed-desc">
@@ -65,7 +65,7 @@ if (!defined('WPINC')) die;
 				<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?><br />
 
 				<i>
-				<?php 
+				<?php
 					echo sprintf(__('SYNTAX: Each entry should be separated with a bar, %s', 'litespeed-cache'), "'|'.")
 						. ' ' . sprintf(__('Any spaces should be escaped with a backslash before the space, %s', 'litespeed-cache'), "'\\ '.")
 						. '<br />'
