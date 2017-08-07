@@ -13,6 +13,7 @@
 class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
+	private static $_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
 	private static $_is_cli ;
@@ -44,6 +45,21 @@ class LiteSpeed_Cache_Router
 			}
 		}
 		return self::$_siteurl ;
+	}
+
+	/**
+	 * Check if cache is enabled or not
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 * @return boolean
+	 */
+	public static function cache_enabled()
+	{
+		if ( ! isset( self::$_enabled ) ) {
+			self::$_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ;
+		}
+		return self::$_enabled ;
 	}
 
 	/**

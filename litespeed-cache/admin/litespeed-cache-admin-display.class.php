@@ -60,7 +60,9 @@ class LiteSpeed_Cache_Admin_Display
 			$manage = 'manage_options' ;
 		}
 		if ( current_user_can($manage) ) {
-			add_action('wp_before_admin_bar_render', array($this, 'add_quick_purge')) ;
+			if ( LiteSpeed_Cache_Router::cache_enabled() ) {
+				add_action('wp_before_admin_bar_render', array($this, 'add_quick_purge')) ;
+			}
 			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 		}
 
