@@ -25,6 +25,7 @@ class LiteSpeed_Cache
 	const NONCE_NAME = 'LSCWP_NONCE' ;
 	const ACTION_KEY = 'LSCWP_CTRL' ;
 	const ACTION_DISMISS_WHM = 'dismiss-whm' ;
+	const ACTION_DISMISS_EXPIRESDEFAULT = 'dismiss-ExpiresDefault' ;
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
@@ -267,6 +268,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_DISMISS_WHM:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
 				LiteSpeed_Cache_Activation::dismiss_whm() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
+				update_option( LiteSpeed_Cache_Config::DISMISS_MSG, LiteSpeed_Cache_Config::RULECONFLICT_DISMISSED ) ;
 				break ;
 
 			default:

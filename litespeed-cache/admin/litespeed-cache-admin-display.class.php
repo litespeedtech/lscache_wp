@@ -190,6 +190,11 @@ class LiteSpeed_Cache_Admin_Display
 			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_whm' => $ajax_url_dismiss_whm)) ;
 		}
 
+		if ( LiteSpeed_Cache_Router::has_msg_ruleconflict() ) {
+			$ajax_url = self::build_url(LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT, LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT) ;
+			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_ruleconflict' => $ajax_url)) ;
+		}
+
 		wp_enqueue_script(LiteSpeed_Cache::PLUGIN_NAME) ;
 	}
 
@@ -610,6 +615,17 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_info()
 	{
 		require_once LSWCP_DIR . 'admin/tpl/info.php' ;
+	}
+
+	/**
+	 * Outputs a notice to the admin panel when ExpiresDefault is detected
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 */
+	public function show_rule_conflict()
+	{
+		require_once LSWCP_DIR . 'admin/tpl/show_rule_conflict.php' ;
 	}
 
 	/**

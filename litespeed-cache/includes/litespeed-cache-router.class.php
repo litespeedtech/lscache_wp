@@ -22,6 +22,7 @@ class LiteSpeed_Cache_Router
 	private static $_is_admin_ip ;
 	private static $_siteurl ;
 	private static $_has_whm_msg ;
+	private static $_has_msg_ruleconflict ;
 	private static $_is_esi ;
 
 	/**
@@ -43,6 +44,21 @@ class LiteSpeed_Cache_Router
 			}
 		}
 		return self::$_siteurl ;
+	}
+
+	/**
+	 * Check if has rule conflict notice
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 * @return boolean
+	 */
+	public static function has_msg_ruleconflict()
+	{
+		if ( ! isset( self::$_has_msg_ruleconflict ) ) {
+			self::$_has_msg_ruleconflict = get_option( LiteSpeed_Cache_Config::DISMISS_MSG ) == LiteSpeed_Cache_Config::RULECONFLICT_ON ;
+		}
+		return self::$_has_msg_ruleconflict ;
 	}
 
 	/**
@@ -285,6 +301,7 @@ class LiteSpeed_Cache_Router
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DISMISS_WHM:
+			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
 				if ( self::is_ajax() ) {
 					self::$_action = $action ;
 				}

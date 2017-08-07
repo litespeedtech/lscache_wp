@@ -18,6 +18,10 @@ class LiteSpeed_Cache_Config
 	const VAL_ON = 1 ;
 	const VAL_NOTSET = 2 ;
 
+	const DISMISS_MSG = 'litespeed-cache-dismiss' ;
+	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
+	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
+
 	const LOG_LEVEL_NONE = 0 ;
 	const LOG_LEVEL_ERROR = 1 ;
 	const LOG_LEVEL_NOTICE = 2 ;

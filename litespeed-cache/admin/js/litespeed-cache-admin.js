@@ -155,6 +155,10 @@ var _litespeed_dots ;
 		$(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
 			$.get(litespeed_data.ajax_url_dismiss_whm) ;
 		});
+		/******************** Clear rule conflict msg ********************/
+		$(document).on('click', '.lscwp-notice-ruleconflict .notice-dismiss', function () {
+			$.get(litespeed_data.ajax_url_dismiss_ruleconflict) ;
+		});
 	}) ;
 })(jQuery) ;
 
