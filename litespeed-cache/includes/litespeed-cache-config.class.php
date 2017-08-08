@@ -44,6 +44,7 @@ class LiteSpeed_Cache_Config
 	const ID_NOCACHE_USERAGENTS = 'nocache_useragents' ;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
+	const OPID_LOG_FILE_SIZE = 'log_file_size' ;
 	const OPID_HEARTBEAT = 'heartbeat' ;
 	const OPID_DEBUG_COOKIE = 'debug_cookie' ;
 	const OPID_COLLAPS_QS = 'collaps_qs' ;
@@ -302,6 +303,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
+			self::OPID_LOG_FILE_SIZE => 30,
 			self::OPID_HEARTBEAT => true,
 			self::OPID_DEBUG_COOKIE => false,
 			self::OPID_COLLAPS_QS => false,

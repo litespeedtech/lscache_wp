@@ -206,6 +206,12 @@ class LiteSpeed_Cache_Log
 	 */
 	private function _init_request()
 	{
+		// Check log file size
+		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ) ;
+		if ( file_exists( self::$log_path ) && filesize( self::$log_path ) > $log_file_size*1000000 ) {
+			file_put_contents( self::$log_path, '' ) ;
+		}
+
 		// For more than 2s's requests, add more break
 		if ( file_exists( self::$log_path ) && time() - filemtime( self::$log_path ) > 2 ) {
 			file_put_contents( self::$log_path, "\n\n\n\n", FILE_APPEND ) ;

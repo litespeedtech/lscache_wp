@@ -52,6 +52,18 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Log File Size Limit', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ; ?>
+			<?php $this->build_input( $id, 'small-text' ) ; ?> <?php echo __( 'MB', 'litespeed-cache' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the maximum size of the log file. Minimum is 3MB. Maximum is 3000MB.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Heartbeat', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_HEARTBEAT); ?>

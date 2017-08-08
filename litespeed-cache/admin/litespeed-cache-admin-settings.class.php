@@ -386,6 +386,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function validate_debug($input, &$options, &$errors)
 	{
+		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC) ;
+
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
 		if ( isset($input[$id]) ) {
 			$admin_ips = array_map('trim', explode("\n", trim($input[$id]))) ;
@@ -437,6 +439,14 @@ class LiteSpeed_Cache_Admin_Settings
 		$debug_level = self::is_checked_radio($input[$id]) ;
 		if ( $debug_level != $options[$id] ){
 			$options[$id] = $debug_level ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ;
+		if ( ! $this->validate_ttl( $input, $id, 3, 3000 ) ) {
+			$errors[] = sprintf( $num_err, __( 'Log File Size Limit', 'litespeed-cache' ), 3, 3000 ) ;
+		}
+		else {
+			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_HEARTBEAT ;

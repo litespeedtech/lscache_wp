@@ -36,8 +36,9 @@ class LiteSpeed_Cache_Purge
 		self::$_pub_purge = array_merge( self::$_pub_purge, $tags ) ;
 
 		// Send purge header immediately
-		@header( self::_build() ) ;
-
+		$curr_built = self::_build() ;
+		@header( $curr_built ) ;
+		LiteSpeed_Cache_Log::debug( $curr_built ) ;
 	}
 
 	/**

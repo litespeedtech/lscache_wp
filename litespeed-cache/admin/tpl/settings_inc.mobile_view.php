@@ -52,7 +52,7 @@ if (!defined('WPINC')) die;
 					}
 				}
 
-				$this->build_input($id, 'widget ui-draggable-dragging code', false, !$_options[$id], 'litespeed-mobileview-rules', $input_value);
+				$this->build_input($id, 'large-text widget ui-draggable-dragging code', false, !$_options[$id], 'litespeed-mobileview-rules', $input_value);
 			?>
 
 			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"
