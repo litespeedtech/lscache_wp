@@ -71,6 +71,36 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __('Log Filters', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_LOG_FILTERS); ?>
+			<div class="litespeed-desc">
+				<?php echo __('This will log all WordPress filters hooks. NOTE: This may cause a huge log file. ONLY enable this when necessary.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Exclude Filters', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS, null, false, 30); ?>
+			<div class="litespeed-desc">
+				<?php echo __('The filters listed (one per line) will not be logged.', 'litespeed-cache'); ?><br />
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Exclude Part Filters', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS, null, false, 30); ?>
+			<div class="litespeed-desc">
+				<?php echo __('The filter that contains these strings (one per line) will not be logged.', 'litespeed-cache'); ?><br />
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
 
 <?php

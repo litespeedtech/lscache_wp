@@ -411,8 +411,8 @@ class LiteSpeed_Cache
 	public function send_headers( $is_forced = false )
 	{
 		// Make sure header output only run once
-		if ( ! defined( 'LITESPEED_HEADER_SENT' ) ) {
-			define( 'LITESPEED_HEADER_SENT', true ) ;
+		if ( ! defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
+			define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 		}
 		else {
 			return ;

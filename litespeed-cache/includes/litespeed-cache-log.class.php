@@ -19,6 +19,8 @@ class LiteSpeed_Cache_Log
 	/**
 	 * Log class Constructor
 	 *
+	 * NOTE: in this process, until last step ( self::$_debug = true ), any usage to WP filter should not be used to prevent infinite loop with log_filters()
+	 *
 	 * @since 1.1.2
 	 * @access public
 	 */
@@ -31,64 +33,6 @@ class LiteSpeed_Cache_Log
 		$this->_init_request() ;
 		self::$_debug = true ;
 	}
-
-	/**
-	 * Log all filters and action hooks
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public static function log_filters()
-	{
-		$action = current_filter() ;
-		$exclude = array ( 'gettext', 'gettext_with_context', 'get_the_terms', 'get_term', 'wc_get_template', 'pre_kses' ) ;
-		if ( in_array( $action, $exclude ) ) {
-			return ;
-		}
-		$exclude_strings = array(
-			'order',
-			'cart',
-			'price',
-			'order',
-			'_url',
-			'query',
-			'option',
-			'_key',
-			'settings',
-			'locale',
-			'i18n',
-			'email',
-			'_html',
-			'salt',
-			'sanitize',
-			'_widget',
-			'taxonomy',
-			'get_post_metadata',
-			'post_type',
-			'charset',
-			'attribute',
-		) ;
-		foreach ( $exclude_strings as $value ) {
-			if ( stripos( $action, $value ) !== false ) {
-				return ;
-			}
-		}
-
-		// if (
-		// 	stripos($action, 'wc') === false &&
-		// 	stripos($action, 'woo') === false &&
-		// 	stripos($action, 'litespeed') === false
-		// ) {
-		// 	return ;
-		// }
-
-		if( $action == 'wp' ) {
-			LiteSpeed_Cache_Log::debug( "+++++++++++++" ) ;
-		}
-		LiteSpeed_Cache_Log::debug( "===log filter: $action" ) ;
-	}
-
-
 
 	/**
 	 * Check if log class finished initialized
@@ -112,7 +56,40 @@ class LiteSpeed_Cache_Log
 		self::$_enabled = true ;
 
 		// Check if hook filters
-		// add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILTERS ) ) {
+			add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
+		}
+	}
+
+	/**
+	 * Log all filters and action hooks
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 */
+	public static function log_filters()
+	{
+		$action = current_filter() ;
+		if ( $ignore_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS ) ) {
+			$ignore_filters = explode( "\n", $ignore_filters ) ;
+			if ( in_array( $action, $ignore_filters ) ) {
+				return ;
+			}
+		}
+
+		if ( $ignore_part_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS ) ) {
+			$ignore_part_filters = explode( "\n", $ignore_part_filters ) ;
+			foreach ( $ignore_part_filters as $val ) {
+				if ( stripos( $action, $val ) !== false ) {
+					return ;
+				}
+			}
+		}
+
+		if( $action == 'wp' ) {
+			self::debug( "+++++++wp+hook+start++++++" ) ;
+		}
+		self::debug( "===log filter: $action" ) ;
 	}
 
 	/**

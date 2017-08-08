@@ -29,7 +29,15 @@ class LiteSpeed_Cache_Purge
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags ) ;
 		}
+		if ( ! array_diff( $tags, self::$_pub_purge ) ) {
+			return ;
+		}
+
 		self::$_pub_purge = array_merge( self::$_pub_purge, $tags ) ;
+
+		// Send purge header immediately
+		@header( self::_build() ) ;
+
 	}
 
 	/**
@@ -44,7 +52,14 @@ class LiteSpeed_Cache_Purge
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags ) ;
 		}
+		if ( ! array_diff( $tags, self::$_priv_purge ) ) {
+			return ;
+		}
+
 		self::$_priv_purge = array_merge( self::$_priv_purge, $tags ) ;
+
+		// Send purge header immediately
+		@header( self::_build() ) ;
 	}
 
 	/**
@@ -424,6 +439,14 @@ class LiteSpeed_Cache_Purge
 	 */
 	private static function _finalize()
 	{
+		// Make sure header output only run once
+		if ( ! defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
+			define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
+		}
+		else {
+			return ;
+		}
+
 		do_action('litespeed_cache_api_purge') ;
 
 		// Append unique uri purge tags if Admin QS is `PURGESINGLE`
@@ -463,37 +486,49 @@ class LiteSpeed_Cache_Purge
 	{
 		self::_finalize() ;
 
-		if ( empty(self::$_pub_purge) && empty(self::$_priv_purge) ) {
-			return '' ;
+		return self::_build() ;
+	}
+
+	/**
+	 * Build the current purge headers.
+	 *
+	 * @since 1.1.5
+	 * @access private
+	 * @return string the built purge header
+	 */
+	private static function _build()
+	{
+		if ( empty( self::$_pub_purge ) && empty( self::$_priv_purge ) ) {
+			return ;
 		}
 
 		$purge_header = '' ;
 		$private_prefix = self::X_HEADER . ': private,' ;
 
-		if ( ! empty(self::$_pub_purge) ) {
-			$public_tags = self::_build(self::$_pub_purge) ;
-			if ( empty($public_tags) ) {
+		if ( ! empty( self::$_pub_purge ) ) {
+			$public_tags = self::_append_prefix( self::$_pub_purge ) ;
+			if ( empty( $public_tags ) ) {
 				// If this ends up empty, private will also end up empty
-				return '' ;
+				return ;
 			}
 			$purge_header = self::X_HEADER . ': public,' ;
 			if ( LiteSpeed_Cache_Control::is_stale() ) {
 				$purge_header .= 'stale,' ;
 			}
-			$purge_header .= 'tag=' . implode(',', $public_tags) ;
+			$purge_header .= 'tag=' . implode( ',', $public_tags ) ;
 			$private_prefix = ';private,' ;
 		}
 
-		if ( empty(self::$_priv_purge) ) {
-			return $purge_header ;
-		}
-		elseif ( in_array('*', self::$_priv_purge) ) {
-			$purge_header .= $private_prefix . '*' ;
-		}
-		else {
-			$private_tags = self::_build(self::$_priv_purge) ;
-			if ( ! empty($private_tags) ) {
-				$purge_header .= $private_prefix . 'tag=' . implode(',', $private_tags) ;
+		// Handle priv purge tags
+		if ( ! empty( self::$_priv_purge ) ) {
+			if ( in_array( '*', self::$_priv_purge ) ) {
+				$purge_header .= $private_prefix . '*' ;
+			}
+			else {
+				$private_tags = self::_append_prefix( self::$_priv_purge ) ;
+				if ( ! empty( $private_tags ) ) {
+					$purge_header .= $private_prefix . 'tag=' . implode( ',', $private_tags ) ;
+				}
 			}
 		}
 
@@ -501,14 +536,14 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Builds an array of purge headers
+	 * Append prefix to an array of purge headers
 	 *
 	 * @since 1.1.0
 	 * @access private
 	 * @param array $purge_tags The purge tags to apply the prefix to.
 	 * @return array The array of built purge tags.
 	 */
-	private static function _build($purge_tags)
+	private static function _append_prefix($purge_tags)
 	{
 		$curr_bid = get_current_blog_id() ;
 

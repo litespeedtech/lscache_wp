@@ -440,10 +440,28 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ;
-		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]) ;
+		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_COLLAPS_QS ;
-		$options[$id] = isset($input[$id]) && self::is_checked($input[$id]) ;
+		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_LOG_FILTERS ;
+		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS ;
+		if ( isset( $input[ $id ] ) ) {
+			$items = array_map( 'trim', explode( "\n", trim( $input[ $id ] ) ) ) ;
+			$items = implode( "\n", array_filter( $items ) ) ;
+			$options[ $id ] = $items ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS ;
+		if ( isset( $input[ $id ] ) ) {
+			$items = array_map( 'trim', explode( "\n", trim( $input[ $id ] ) ) ) ;
+			$items = implode( "\n", array_filter( $items ) ) ;
+			$options[ $id ] = $items ;
+		}
+
 	}
 
 	/**
