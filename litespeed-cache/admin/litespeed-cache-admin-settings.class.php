@@ -439,6 +439,9 @@ class LiteSpeed_Cache_Admin_Settings
 			$options[$id] = $debug_level ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_HEARTBEAT ;
+		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ;
 		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
 

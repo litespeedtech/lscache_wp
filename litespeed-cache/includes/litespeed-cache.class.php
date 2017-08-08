@@ -76,6 +76,10 @@ class LiteSpeed_Cache
 			include_once LSWCP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
+			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
+		}
+
 		// Register plugin activate/deactivate/uninstall hooks
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
 		if( is_admin() || LiteSpeed_Cache_Router::is_cli() ) {

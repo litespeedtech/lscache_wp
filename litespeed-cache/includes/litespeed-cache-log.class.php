@@ -35,6 +35,17 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
+	 * Heartbeat control
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 */
+	public static function disable_heartbeat()
+	{
+		wp_deregister_script( 'heartbeat' ) ;
+	}
+
+	/**
 	 * Check if log class finished initialized
 	 *
 	 * @since 1.1.3

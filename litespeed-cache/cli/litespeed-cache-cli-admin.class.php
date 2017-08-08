@@ -24,6 +24,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::CRWL_CATS,
 			LiteSpeed_Cache_Config::CRWL_TAGS,
 			LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE,
+			LiteSpeed_Cache_Config::OPID_HEARTBEAT,
 			LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE,
 			LiteSpeed_Cache_Config::OPID_COLLAPS_QS,
 			LiteSpeed_Cache_Config::OPID_LOG_FILTERS,
@@ -95,6 +96,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::CRWL_CATS:
 			case LiteSpeed_Cache_Config::CRWL_TAGS:
 			case LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE:
+			case LiteSpeed_Cache_Config::OPID_HEARTBEAT:
 			case LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE:
 			case LiteSpeed_Cache_Config::OPID_COLLAPS_QS:
 			case LiteSpeed_Cache_Config::OPID_LOG_FILTERS:

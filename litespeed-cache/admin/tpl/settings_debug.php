@@ -52,6 +52,16 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Heartbeat', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_HEARTBEAT); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Control WordPress heartbeat. NOTE: Disabling this may cause WordPress tasks triggered by AJAX to stop working.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Log Cookies', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE); ?>
