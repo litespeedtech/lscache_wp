@@ -15,7 +15,7 @@ if ( LSWCP_ESI_SUPPORT ) {
 }
 
 if (!is_multisite()) {
-	$menu_list['advanced'] = __('Advanced Settings', 'litespeed-cache') ;
+	$menu_list['advanced'] = __('Advanced', 'litespeed-cache') ;
 }
 
 $menu_list['debug'] = __('Debug', 'litespeed-cache') ;

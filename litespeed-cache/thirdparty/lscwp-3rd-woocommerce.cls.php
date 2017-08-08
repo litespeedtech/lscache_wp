@@ -589,7 +589,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function add_config($tabs, $options, $option_group)
 	{
-		$_title = __('WooCommerce Configuration', 'litespeed-cache') ;
+		$_title = __('WooCommerce', 'litespeed-cache') ;
 		$_slug = 'woocom' ;
 		$seloptions = array(
 			__('Purge product on changes to the quantity or stock status.', 'litespeed-cache')

@@ -72,6 +72,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function update_image()
 	{
+		if ( isset( $_GET['gallery_id'] ) ) {
+			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_GET['gallery_id'] ) ;
+			return ;
+		}
+
 		if ( isset($_POST['id']) ) {
 			$id = $_POST['id'] ;
 		}
