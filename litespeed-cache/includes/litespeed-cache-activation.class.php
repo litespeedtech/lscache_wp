@@ -24,7 +24,7 @@ class LiteSpeed_Cache_Activation
 	{
 		$count = 0 ;
 		if ( ! defined('LSCWP_LOG_TAG') ) {
-			define('LSCWP_LOG_TAG', 'LSCACHE_WP_activate_' . get_current_blog_id()) ;
+			define('LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id()) ;
 		}
 		self::try_copy_advanced_cache() ;
 		LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Activation
 	{
 		LiteSpeed_Cache_Task::clear() ;
 		if (!defined('LSCWP_LOG_TAG')) {
-			define('LSCWP_LOG_TAG', 'LSCACHE_WP_deactivate_' . get_current_blog_id()) ;
+			define('LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id()) ;
 		}
 		LiteSpeed_Cache_Purge::purge_all() ;
 

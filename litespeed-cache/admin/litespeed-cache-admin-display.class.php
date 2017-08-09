@@ -705,12 +705,13 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $id_attr   ID for this field
 	 * @param  string $val       Field value
 	 * @param  string $attrs     Additional attributes
+	 * @param  string $type      Input type
 	 */
-	public function build_input($id, $style = false, $disabled = false, $readonly = false, $id_attr = null, $val = null, $attrs = '')
+	public function build_input( $id, $style = false, $disabled = false, $readonly = false, $id_attr = null, $val = null, $attrs = '', $type = 'text' )
 	{
 		if ( $val === null ) {
 			global $_options ;
-			$val = $_options[$id] ;
+			$val = $_options[ $id ] ;
 		}
 		$disabled = $disabled ? ' disabled ' : '' ;
 		$readonly = $readonly ? ' readonly ' : '' ;
@@ -718,7 +719,11 @@ class LiteSpeed_Cache_Admin_Display
 			$id_attr = " id='$id_attr' " ;
 		}
 
-		echo "<input type='text' class='regular-text $style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea($val) ."' $disabled $readonly $id_attr $attrs /> " ;
+		if ( $type == 'text' ) {
+			$style = "regular-text $style" ;
+		}
+
+		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea( $val ) ."' $disabled $readonly $id_attr $attrs /> " ;
 	}
 
 	/**

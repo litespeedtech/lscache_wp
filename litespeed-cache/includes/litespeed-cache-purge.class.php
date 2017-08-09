@@ -272,14 +272,7 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 
-		require_once LSWCP_DIR . 'lib/litespeed-php-compatibility.func.php' ;
-
-		// replace site_url if the url is full url
-		// NOTE: for subfolder site_url, need to strip subfolder part (strip anything but scheme and host)
-		$site_url_domain = http_build_url( LiteSpeed_Cache_Router::get_siteurl(), array(), HTTP_URL_STRIP_ALL ) ;
-		if ( strpos( $val, $site_url_domain ) === 0 ) {
-			$val = substr( $val, strlen( $site_url_domain ) ) ;
-		}
+		$val = LiteSpeed_Cache_Utility::make_relative( $val ) ;
 
 		$hash = LiteSpeed_Cache_Tag::get_uri_tag( $val ) ;
 

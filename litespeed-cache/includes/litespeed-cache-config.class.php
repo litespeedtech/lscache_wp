@@ -33,6 +33,8 @@ class LiteSpeed_Cache_Config
 	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
 	const OPID_CACHE_COMMENTERS = 'cache_commenters' ;
 	const OPID_CACHE_LOGIN = 'cache_login' ;
+	const OPID_TIMED_URLS = 'timed_urls' ;
+	const OPID_TIMED_URLS_TIME = 'timed_urls_time' ;
 	const OPID_CACHE_FAVICON = 'cache_favicon' ;
 	const OPID_CACHE_RES = 'cache_resources' ;
 	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled' ;
@@ -295,6 +297,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_COMMENTERS => true,
 			self::OPID_CACHE_LOGIN => true,
+			self::OPID_TIMED_URLS => '',
+			self::OPID_TIMED_URLS_TIME => '',
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_MOBILEVIEW_ENABLED => false,

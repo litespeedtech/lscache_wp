@@ -161,15 +161,22 @@ class LiteSpeed_Cache_Tag
 	 * @since 1.0.12
 	 * @access public
 	 * @param string $uri The uri to get the hash of.
+	 * @param boolean $ori Return the original url or not
 	 * @return bool|string False on input error, hash otherwise.
 	 */
-	public static function get_uri_tag( $uri )
+	public static function get_uri_tag( $uri, $ori = false )
 	{
 		$no_qs = strtok( $uri, '?' ) ;
 		if ( empty( $no_qs ) ) {
 			return false ;
 		}
 		$slashed = trailingslashit( $no_qs ) ;
+
+		// If only needs uri tag
+		if ( $ori ) {
+			return $slashed ;
+		}
+
 		return self::TYPE_URL . md5( $slashed ) ;
 	}
 
@@ -178,10 +185,11 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.1.3
 	 * @access public
+	 * @param boolean $ori Return the original url or not
 	 */
-	public static function build_uri_tag()
+	public static function build_uri_tag( $ori = false )
 	{
-		return self::get_uri_tag( urldecode( $_SERVER['REQUEST_URI'] ) ) ;
+		return self::get_uri_tag( urldecode( $_SERVER['REQUEST_URI'] ), $ori ) ;
 	}
 
 	/**

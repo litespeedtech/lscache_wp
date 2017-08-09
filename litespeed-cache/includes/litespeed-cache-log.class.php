@@ -14,6 +14,7 @@ class LiteSpeed_Cache_Log
 	private static $_instance ;
 	private static $_debug ;
 	private static $log_path ;
+	private static $_prefix ;
 	private static $_enabled = false ;
 
 	/**
@@ -28,7 +29,7 @@ class LiteSpeed_Cache_Log
 	{
 		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log' ;
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
-			define( 'LSCWP_LOG_TAG', 'LSCACHE_WP_blogid_' . get_current_blog_id() ) ;
+			define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
 		}
 		$this->_init_request() ;
 		self::$_debug = true ;
@@ -121,27 +122,24 @@ class LiteSpeed_Cache_Log
 	 */
 	private static function format_message( $msg )
 	{
-		return self::prefix() . $msg . "\n" ;
-	}
-
-	/**
-	 * Formats the consistent prefix.
-	 *
-	 * @since 1.1.3
-	 * @access private
-	 * @return string The formatted log prefix.
-	 */
-	private static function prefix()
-	{
-		$port = isset( $_SERVER['REMOTE_PORT'] ) ? $_SERVER['REMOTE_PORT'] : '' ;
-		if ( PHP_SAPI == 'cli' ) {
-			$addr = '=CLI=' ;
+		if ( ! isset( self::$_prefix ) ) {
+			$port = isset( $_SERVER['REMOTE_PORT'] ) ? $_SERVER['REMOTE_PORT'] : '' ;
+			if ( PHP_SAPI == 'cli' ) {
+				$addr = '=CLI=' ;
+			}
+			else {
+				$addr = $_SERVER['REMOTE_ADDR'] ;
+			}
+			// Generate a unique string per request
+			$unique = '' ;
+			$_random_list = '0123456789abcdefghijklmnopqrstuvwxyz' ;
+			$max = strlen( $_random_list ) - 1 ;
+			for( $i = 0 ; $i < 3 ; $i++ ) {
+				$unique .= $_random_list[ mt_rand( 0, $max ) ] ;
+			}
+			self::$_prefix = sprintf( " [%s:%s:%s %s] ", $addr, $port, $unique, LSCWP_LOG_TAG ) ;
 		}
-		else {
-			$addr = $_SERVER['REMOTE_ADDR'] ;
-		}
-		$prefix = sprintf( "%s [%s:%s] [%s] ", date( 'r' ), $addr, $port, LSCWP_LOG_TAG ) ;
-		return $prefix ;
+		return date( 'm/d/y H:i:s' ) . self::$_prefix . $msg . "\n" ;
 	}
 
 	/**

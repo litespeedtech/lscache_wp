@@ -202,35 +202,53 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function get_ttl()
 	{
-		$feed_ttl = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_FEED_TTL) ;
-		$ttl_403 = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_403_TTL) ;
-		$ttl_404 = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_404_TTL) ;
-		$ttl_500 = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_500_TTL) ;
-
-		$ttl = 0 ;
-		if (self::$_custom_ttl != 0) {
-			$ttl = self::$_custom_ttl ;
-		}
-		elseif ( is_front_page() ){
-			$ttl = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL) ;
-		}
-		elseif ( is_feed() && $feed_ttl > 0 ) {
-			$ttl = $feed_ttl ;
-		}
-		elseif ( is_404() && $ttl_404 > 0 ) {
-			$ttl = $ttl_404 ;
-		}
-		elseif ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
-			$ttl = $ttl_403 ;
-		}
-		elseif ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
-			$ttl = $ttl_500 ;
-		}
-		else {
-			$ttl = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_PUBLIC_TTL) ;
+		if ( self::$_custom_ttl != 0 ) {
+			return self::$_custom_ttl ;
 		}
 
-		return $ttl ;
+		// Check if is in timed url list or not
+		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_TIMED_URLS ) ;
+		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ) ;
+		if ( $timed_urls && $timed_urls_time ) {
+			$timed_urls = explode( "\n", $timed_urls ) ;
+			$current_url = LiteSpeed_Cache_Tag::build_uri_tag( true ) ;
+			if ( in_array( $current_url, $timed_urls ) ) {
+				// Use time limit ttl
+				$scheduled_time = strtotime( $timed_urls_time ) ;
+				$ttl = $scheduled_time - time() ;
+				if ( $ttl < 0 ) {
+					$ttl += 86400 ;// add one day
+				}
+				LiteSpeed_Cache_Log::debug( 'Cache_control TTL is limited to ' . $ttl ) ;
+				return $ttl ;
+			}
+		}
+
+		if ( is_front_page() ){
+			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ) ;
+		}
+
+		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FEED_TTL ) ;
+		if ( is_feed() && $feed_ttl > 0 ) {
+			return $feed_ttl ;
+		}
+
+		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_404_TTL ) ;
+		if ( is_404() && $ttl_404 > 0 ) {
+			return $ttl_404 ;
+		}
+
+		if ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
+			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
+			return $ttl_403 ;
+		}
+
+		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_500_TTL ) ;
+		if ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
+			return $ttl_500 ;
+		}
+
+		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ) ;
 	}
 
 	/**

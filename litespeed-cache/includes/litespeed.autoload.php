@@ -34,6 +34,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Tag'				=> 'includes/litespeed-cache-tag.class.php',
 			'LiteSpeed_Cache_Task'				=> 'includes/litespeed-cache-task.class.php',
 			'LiteSpeed_Cache_Vary'				=> 'includes/litespeed-cache-vary.class.php',
+			'LiteSpeed_Cache_Utility'			=> 'includes/litespeed-cache-utility.class.php',
 
 			'LiteSpeed_Cache_Admin'				=> 'admin/litespeed-cache-admin.class.php',
 			'LiteSpeed_Cache_Admin_Display'		=> 'admin/litespeed-cache-admin-display.class.php',
