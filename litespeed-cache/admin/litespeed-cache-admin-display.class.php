@@ -147,6 +147,10 @@ class LiteSpeed_Cache_Admin_Display
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
 			}
 
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				$this->add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
+			}
+
 			// sub menus under options
 			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_settings')) ;
 		}
@@ -601,6 +605,17 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_crawler()
 	{
 		require_once LSWCP_DIR . 'admin/tpl/crawler.php' ;
+	}
+
+	/**
+	 * Outputs the debug log.
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 */
+	public function show_debug_log()
+	{
+		require_once LSWCP_DIR . 'admin/tpl/debug_log.php' ;
 	}
 
 	/**
