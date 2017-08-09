@@ -123,12 +123,18 @@ class LiteSpeed_Cache_Log
 	private static function format_message( $msg )
 	{
 		if ( ! isset( self::$_prefix ) ) {
-			$port = isset( $_SERVER['REMOTE_PORT'] ) ? $_SERVER['REMOTE_PORT'] : '' ;
+			// address
 			if ( PHP_SAPI == 'cli' ) {
 				$addr = '=CLI=' ;
+				if ( isset( $_SERVER[ 'USER' ] ) ) {
+					$addr .= $_SERVER[ 'USER' ] ;
+				}
+				elseif ( $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] ) {
+					$addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] ;
+				}
 			}
 			else {
-				$addr = $_SERVER['REMOTE_ADDR'] ;
+				$addr = $_SERVER[ 'REMOTE_ADDR' ] . ':' . $_SERVER[ 'REMOTE_PORT' ] ;
 			}
 			// Generate a unique string per request
 			$unique = '' ;
@@ -137,7 +143,7 @@ class LiteSpeed_Cache_Log
 			for( $i = 0 ; $i < 3 ; $i++ ) {
 				$unique .= $_random_list[ mt_rand( 0, $max ) ] ;
 			}
-			self::$_prefix = sprintf( " [%s:%s:%s %s] ", $addr, $port, $unique, LSCWP_LOG_TAG ) ;
+			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, $unique ) ;
 		}
 		return date( 'm/d/y H:i:s' ) . self::$_prefix . $msg . "\n" ;
 	}
