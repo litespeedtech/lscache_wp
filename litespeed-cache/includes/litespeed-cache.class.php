@@ -108,7 +108,7 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
 
-		if ( ! LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled() || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
+		if ( ! LiteSpeed_Cache_Router::cache_enabled() || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
 			return ;
 		}
 

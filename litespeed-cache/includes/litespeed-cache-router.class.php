@@ -13,7 +13,7 @@
 class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
-	private static $_enabled ;
+	private static $_is_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
 	private static $_is_cli ;
@@ -56,10 +56,18 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function cache_enabled()
 	{
-		if ( ! isset( self::$_enabled ) ) {
-			self::$_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ;
+		if ( ! isset( self::$_is_enabled ) ) {
+			if ( ! LiteSpeed_Cache_Config::get_instance()->is_caching_allowed() ) {
+				self::$_is_enabled = false ;
+			}
+			elseif ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) ) {
+				self::$_is_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ) ;
+			}
+			else {
+				self::$_is_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ;
+			}
 		}
-		return self::$_enabled ;
+		return self::$_is_enabled ;
 	}
 
 	/**
@@ -255,7 +263,7 @@ class LiteSpeed_Cache_Router
 		LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL: ' . $action ) ;
 
 		// OK, as we want to do something magic, lets check if its allowed
-		$_is_enabled = LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled() ;
+		$_is_enabled = self::cache_enabled() ;
 		$_is_multisite = is_multisite() ;
 		$_is_network_admin = $_is_multisite && is_network_admin() ;
 		$_can_network_option = $_is_network_admin && current_user_can( 'manage_network_options' ) ;

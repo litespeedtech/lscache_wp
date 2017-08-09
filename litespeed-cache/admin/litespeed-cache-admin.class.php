@@ -29,14 +29,34 @@ class LiteSpeed_Cache_Admin
 
 		$this->config = LiteSpeed_Cache_Config::get_instance() ;
 
-		if ( ! function_exists('is_plugin_active_for_network') ) {
-			require_once(ABSPATH . '/wp-admin/includes/plugin.php') ;//todo: check if needed
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;//todo: check if needed
 		}
 
 		// initialize admin actions
-		add_action('admin_init', array($this, 'admin_init')) ;
+		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
 		// add link to plugin list page
-		add_filter('plugin_action_links_' . LSWCP_BASENAME, array($this->display, 'add_plugin_links')) ;
+		add_filter( 'plugin_action_links_' . LSWCP_BASENAME, array( $this->display, 'add_plugin_links' ) ) ;
+
+		if ( LiteSpeed_Cache_Router::cache_enabled() ) {
+			// register purge_all actions
+			$purge_all_events = array(
+				'switch_theme',
+				'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
+				'create_term', 'edit_terms', 'delete_term',
+				'add_link', 'edit_link', 'delete_link'
+			) ;
+			// purge all on upgrade
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ) ) {
+				$purge_all_events[] = 'upgrader_process_complete' ;
+				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
+			}
+			foreach ( $purge_all_events as $event ) {
+				add_action( $event, 'LiteSpeed_Cache_Purge::purge_all' ) ;
+			}
+			add_filter( 'upgrader_pre_download', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;
+			add_filter( 'site_transient_update_plugins', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;
+		}
 	}
 
 	/**
@@ -77,30 +97,13 @@ class LiteSpeed_Cache_Admin
 		}
 
 		// step out if plugin is not enabled
-		if ( ! $this->config->is_plugin_enabled() ) {
+		if ( ! LiteSpeed_Cache_Router::cache_enabled() ) {
 			return ;
-		}
-
-		// register purge_all actions
-		$purge_all_events = array(
-			'switch_theme',
-			'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
-			'create_term', 'edit_terms', 'delete_term',
-			'add_link', 'edit_link', 'delete_link'
-		) ;
-		foreach ( $purge_all_events as $event ) {
-			add_action($event, 'LiteSpeed_Cache_Purge::purge_all') ;
 		}
 
 		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
 			add_action('in_widget_form', array(LiteSpeed_Cache_Admin_Display::get_instance(), 'show_widget_edit'), 100, 3) ;
 			add_filter('widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4) ;
-		}
-
-		// purge all on upgrade
-		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE) ) {
-			add_action('upgrader_process_complete', 'LiteSpeed_Cache_Purge::purge_all') ;
-			add_action('admin_action_do-plugin-upgrade', 'LiteSpeed_Cache_Purge::purge_all') ;
 		}
 
 		// check if WP_CACHE is defined and true in the wp-config.php file.

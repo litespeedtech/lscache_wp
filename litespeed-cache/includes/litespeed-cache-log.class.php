@@ -97,9 +97,6 @@ class LiteSpeed_Cache_Log
 			}
 		}
 
-		if( $action == 'wp' ) {
-			self::debug( "+++++++wp+hook+start++++++" ) ;
-		}
 		self::debug( "===log filter: $action" ) ;
 	}
 
@@ -195,7 +192,7 @@ class LiteSpeed_Cache_Log
 
 		}
 
-		file_put_contents( self::$log_path, self::format_message( $msg ), FILE_APPEND ) ;
+		Litespeed_File::append( self::$log_path, self::format_message( $msg ) ) ;
 	}
 
 	/**
@@ -209,12 +206,12 @@ class LiteSpeed_Cache_Log
 		// Check log file size
 		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ) ;
 		if ( file_exists( self::$log_path ) && filesize( self::$log_path ) > $log_file_size*1000000 ) {
-			file_put_contents( self::$log_path, '' ) ;
+			Litespeed_File::save( self::$log_path, '' ) ;
 		}
 
 		// For more than 2s's requests, add more break
 		if ( file_exists( self::$log_path ) && time() - filemtime( self::$log_path ) > 2 ) {
-			file_put_contents( self::$log_path, "\n\n\n\n", FILE_APPEND ) ;
+			Litespeed_File::append( self::$log_path, "\n\n\n\n" ) ;
 		}
 
 		if ( PHP_SAPI == 'cli' ) {
@@ -255,7 +252,7 @@ class LiteSpeed_Cache_Log
 
 		$request = array_map( 'self::format_message', $params ) ;
 
-		file_put_contents( self::$log_path, $request, FILE_APPEND ) ;
+		Litespeed_File::append( self::$log_path, $request ) ;
 	}
 
 	/**

@@ -152,7 +152,7 @@ class Litespeed_Crawler
 	 */
 	public function reset_pos()
 	{
-		return Litespeed_File::save( $this->_meta_file . '.reset', time() , true) ;
+		return Litespeed_File::save( $this->_meta_file . '.reset', time() , true, false, false ) ;
 	}
 
 	/**
@@ -517,9 +517,9 @@ class Litespeed_Crawler
 	 */
 	public function save_meta()
 	{
-		$this->_meta['meta_save_time'] = time() ;
+		$this->_meta[ 'meta_save_time' ] = time() ;
 
-		$ret = Litespeed_File::save($this->_meta_file, json_encode($this->_meta)) ;
+		$ret = Litespeed_File::save( $this->_meta_file, json_encode( $this->_meta ), false, false, false ) ;
 		return $ret ;
 	}
 

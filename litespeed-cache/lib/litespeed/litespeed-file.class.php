@@ -78,56 +78,73 @@ class Litespeed_File
 	}
 
 	/**
+	 * Append data to file
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 * @param string $filename
+	 * @param string $data
+	 * @param boolean $mkdir
+	 * @param boolean $silence Used to avoid WP's functions are used
+	 */
+	public static function append( $filename, $data, $mkdir = false, $silence = true )
+	{
+		return self::save( $filename, $data, $mkdir, true, $silence ) ;
+	}
+
+	/**
 	 * Save data to file
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
 	 * @param string $data
-	 * @param bool $mkdir
+	 * @param boolean $mkdir
+	 * @param boolean $append If the content needs to be appended
+	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function save($filename, $data, $mkdir = false)
+	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true )
 	{
 		$error = false ;
-		$folder = dirname($filename) ;
+		$folder = dirname( $filename ) ;
 
 		// mkdir if folder does not exist
-		if ( ! file_exists($folder) ) {
+		if ( ! file_exists( $folder ) ) {
 			if ( ! $mkdir ) {
-				return sprintf(__('Folder does not exist: %s', 'litespeed-cache'), $folder) ;
+				return $silence ? false : sprintf( __( 'Folder does not exist: %s', 'litespeed-cache' ), $folder ) ;
 			}
 
-			set_error_handler("litespeed_exception_error_handler") ;
+			set_error_handler( 'litespeed_exception_error_handler' ) ;
 
 			try {
-				mkdir($folder, 0755, true) ;
+				mkdir( $folder, 0755, true ) ;
 			}
 			catch ( ErrorException $ex ) {
-				return sprintf(__('Can not create folder: %1$s. Error: %2$s', 'litespeed-cache'), $folder, $ex->getMessage()) ;
+				return $silence ? false : sprintf( __( 'Can not create folder: %1$s. Error: %2$s', 'litespeed-cache' ), $folder, $ex->getMessage() ) ;
 			}
 
 			restore_error_handler() ;
 		}
 
-		if ( ! file_exists($filename) ) {
-			if ( ! is_writable($folder) ) {
-				return sprintf(__('Folder is not writable: %s.', 'litespeed-cache'), $folder) ;
+		if ( ! file_exists( $filename ) ) {
+			if ( ! is_writable( $folder ) ) {
+				return $silence ? false : sprintf( __( 'Folder is not writable: %s.', 'litespeed-cache' ), $folder ) ;
 			}
-			set_error_handler("litespeed_exception_error_handler") ;
+			set_error_handler( 'litespeed_exception_error_handler' ) ;
 			try {
-				touch($filename) ;
+				touch( $filename ) ;
 			}
 			catch ( ErrorException $ex ){
-				return sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename) ;
+				return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 			}
 			restore_error_handler() ;
 		}
-		elseif ( ! is_writeable($filename) ) {
-			return sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename) ;
+		elseif ( ! is_writeable( $filename ) ) {
+			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 		}
 
-		$ret = file_put_contents($filename, $data, LOCK_EX) ;
+		$ret = file_put_contents( $filename, $data, $append ? FILE_APPEND : LOCK_EX ) ;
 		if ( $ret === false ) {
-			return sprintf(__('Failed to write to %s.', 'litespeed-cache'), $filename) ;
+			return $silence ? false : sprintf( __( 'Failed to write to %s.', 'litespeed-cache' ), $filename ) ;
 		}
 
 		return true ;

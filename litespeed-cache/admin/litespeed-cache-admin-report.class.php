@@ -85,14 +85,14 @@ class LiteSpeed_Cache_Admin_Report
 	 * @access private
 	 * @param string $content What to write to the environment report.
 	 */
-	private function write_environment_report($content)
+	private function write_environment_report( $content )
 	{
-		$content = "<"."?php die();?".">\n\n".$content ;
+		$content = "<" . "?php die() ; ?" . ">\n\n" . $content ;
 
-		$ret = Litespeed_File::save(LSWCP_DIR . 'environment_report.php', $content) ;
+		$ret = Litespeed_File::save( LSWCP_DIR . 'environment_report.php', $content, false, false, false ) ;
 
 		if ( $ret !== true && LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push($ret) ;
+			LiteSpeed_Cache_Log::push( $ret ) ;
 		}
 	}
 

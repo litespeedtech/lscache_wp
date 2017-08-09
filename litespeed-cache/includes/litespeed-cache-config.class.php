@@ -711,24 +711,6 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 * Checks if caching is allowed, then if the plugin is enabled in configs.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return boolean True if enabled, false otherwise.
-	 */
-	public function is_plugin_enabled()
-	{
-		if ( ! $this->is_caching_allowed() ) {
-			return false ;
-		}
-		if ( is_multisite() && is_network_admin() && current_user_can('manage_network_options') ) {
-			return $this->options[self::NETWORK_OPID_ENABLED] ;
-		}
-		return $this->options[self::OPID_ENABLED] ;
-	}
-
-	/**
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0

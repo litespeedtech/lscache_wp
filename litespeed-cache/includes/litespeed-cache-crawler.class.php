@@ -104,29 +104,29 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function save_blacklist()
 	{
-		if ( !isset($_POST[self::CRWL_BLACKLIST]) ) {
-			$msg = __('Can not find any form data for blacklist', 'litespeed-cache') ;
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg) ;
-			return false;
+		if ( ! isset( $_POST[ self::CRWL_BLACKLIST ] ) ) {
+			$msg = __( 'Can not find any form data for blacklist', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg ) ;
+			return false ;
 		}
-		$content = $_POST[self::CRWL_BLACKLIST];
-		$content = array_map('trim', explode("\n", $content));// remove space
-		$content = implode("\n", array_filter($content));
+		$content = $_POST[ self::CRWL_BLACKLIST ] ;
+		$content = array_map( 'trim', explode( "\n", $content ) ) ;// remove space
+		$content = implode( "\n", array_filter( $content ) ) ;
 
 		// save blacklist file
-		$ret = Litespeed_File::save($this->_blacklist_file, $content, true) ;
+		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
 		if ( $ret !== true ) {
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret) ;
+			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret ) ;
 		}
 		else {
 			$msg = sprintf(
-				__('File saved successfully: %s', 'litespeed-cache'),
+				__( 'File saved successfully: %s', 'litespeed-cache' ),
 				$this->_blacklist_file
 			) ;
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
 		}
 
-		return true;
+		return true ;
 	}
 
 	/**
@@ -136,24 +136,22 @@ class LiteSpeed_Cache_Crawler
 	 * @access public
 	 * @param  array $list The url list needs to be appended
 	 */
-	public function append_blacklist($list)
+	public function append_blacklist( $list )
 	{
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push('Crawler log: append blacklist ' . count($list)) ;
+			LiteSpeed_Cache_Log::push( 'Crawler log: append blacklist ' . count( $list ) ) ;
 		}
-		$ori_list = Litespeed_File::read($this->_blacklist_file) ;
-		$ori_list = explode("\n", $ori_list) ;
-		$ori_list = array_merge($ori_list, $list) ;
-		$ori_list = array_map('trim', $ori_list) ;
-		$ori_list = array_filter($ori_list) ;
-		$content = implode("\n", $ori_list) ;
+		$ori_list = Litespeed_File::read( $this->_blacklist_file ) ;
+		$ori_list = explode( "\n", $ori_list ) ;
+		$ori_list = array_merge( $ori_list, $list ) ;
+		$ori_list = array_map( 'trim', $ori_list ) ;
+		$ori_list = array_filter( $ori_list ) ;
+		$content = implode( "\n", $ori_list ) ;
 
 		// save blacklist
-		$ret = Litespeed_File::save($this->_blacklist_file, $content, true) ;
+		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
 		if ( $ret !== true ) {
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push('Crawler log: append blacklist failed: ' . $ret) ;
-			}
+			LiteSpeed_Cache_Log::debug( 'Crawler log: append blacklist failed: ' . $ret ) ;
 			return false ;
 		}
 
@@ -260,14 +258,14 @@ class LiteSpeed_Cache_Crawler
 	protected function _generate_sitemap()
 	{
 		// use custom sitemap
-		if ( $sitemap = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP) ) {
-			$sitemap_urls = $this->parse_custom_sitemap($sitemap) ;
+		if ( $sitemap = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ) ) {
+			$sitemap_urls = $this->parse_custom_sitemap( $sitemap ) ;
 			$urls = array() ;
-			$offset = strlen($this->_site_url) ;
-			if ( is_array($sitemap_urls) && !empty($sitemap_urls) ) {
-				foreach ($sitemap_urls as $val) {
-					if ( stripos($val, $this->_site_url) === 0 ) {
-						$urls[] = substr($val, $offset) ;
+			$offset = strlen( $this->_site_url ) ;
+			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
+				foreach ( $sitemap_urls as $val ) {
+					if ( stripos( $val, $this->_site_url ) === 0 ) {
+						$urls[] = substr( $val, $offset ) ;
 					}
 				}
 			}
@@ -277,15 +275,15 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// filter urls
-		$blacklist = Litespeed_File::read($this->_blacklist_file) ;
-		$blacklist = explode("\n", $blacklist) ;
-		$urls = array_diff($urls, $blacklist) ;
-		LiteSpeed_Cache_Log::debug('Crawler log: Generate sitemap') ;
+		$blacklist = Litespeed_File::read( $this->_blacklist_file ) ;
+		$blacklist = explode( "\n", $blacklist ) ;
+		$urls = array_diff( $urls, $blacklist ) ;
+		LiteSpeed_Cache_Log::debug( 'Crawler log: Generate sitemap' ) ;
 
-		$ret = Litespeed_File::save($this->_sitemap_file, implode("\n", $urls), true) ;
+		$ret = Litespeed_File::save( $this->_sitemap_file, implode( "\n", $urls ), true, false, false ) ;
 
 		// refresh list size in meta
-		$crawler = new Litespeed_Crawler($this->_sitemap_file) ;
+		$crawler = new Litespeed_Crawler( $this->_sitemap_file ) ;
 		$crawler->refresh_list_size() ;
 
 		return $ret ;

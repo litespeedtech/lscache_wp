@@ -705,6 +705,20 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
+	 * The dummy filter for purge all
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 * @param string $val The filter value
+	 * @return string     The filter value
+	 */
+	public static function filter_with_purge_all( $val )
+	{
+		self::purge_all() ;
+		return $val ;
+	}
+
+	/**
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.3

@@ -90,7 +90,7 @@ class LiteSpeed_Cache_Admin_Display
 		// Admin footer
 		add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1) ;
 
-		if( LiteSpeed_Cache_Config::get_instance()->is_plugin_enabled() ) {
+		if( LiteSpeed_Cache_Router::cache_enabled() ) {
 			// Help tab
 			$this->add_help_tabs() ;
 
