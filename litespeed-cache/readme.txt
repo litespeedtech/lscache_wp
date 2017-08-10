@@ -325,22 +325,40 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 == Screenshots ==
 
 1. Admin Settings - General Settings
-2. Admin Settings - Auto Purge Rules
-3. Admin Management Page
-4. Admin Information Page
-5. Admin Settings - Crawler Settings
-6. Admin Crawler Status Page
-7. Cache Miss Example
-8. Cache Hit Example
+2. Admin Settings - Specific Pages
+3. Admin Settings - Purge Rules
+4. Admin Settings - Debug
+5. Admin Settings - Crawler
+6. Admin Management Page
+7. Admin Information Page
+8. Admin Crawler Status Page
+9. Cache Miss Example
+10. Cache Hit Example
 
 == Changelog ==
 
+= 1.1.5 - August 10 2017 =
+* [NEW FEATURE] Scheduled Purge URLs feature.
+* [NEW FEATURE] Added buffer callback to improve compatibility with some plugins that force buffer cleaning. 
+* [NEW FEATURE] Hide purge_all admin bar quick link if cache is disabled.
+* [NEW FEATURE] Required htaccess rules are now displayed when .htaccess is not writable.
+* [NEW FEATURE] Debug log features: filter log support; heartbeat control; log file size limit; log viewer.
+* [IMPROVEMENT] Separate crawler access log.
+* [IMPROVEMENT] Lazy PURGE requests made after output are now queued and working.
+* [IMPROVEMENT] Improved readme.txt with keywords relating to our compatible plugins list.
+* [UPDATE] 'ExpiresDefault' conflict msg is now closeable and only appears in the .htaccess edit screen.
+* [UPDATE] Improved debug log formatting.
+* [INTEGRATION] Compatibility with MainWP plugin.
+* [BUGFIX] Fixed Woocommerce order not purging product stock quantity.
+* [BUGFIX] Fixed Woocommerce scheduled sale price not updating issue.
+* [REFACTOR] Combined cache_enable functions into a single function.
+
 = 1.1.4 - August 1 2017 =
-* [UPDATE] Added backward compatibility for v1.1.2.2 API calls. (used by 3rd-party plugins)
 * [IMPROVEMENT] Unexpected rewrite rules will now show an error message.
 * [IMPROVEMENT] Added Cache Tag Prefix setting info in the Env Report and Info page.
 * [IMPROVEMENT] LSCWP setting link is now displayed in the plugin list.
 * [IMPROVEMENT] Improved performance when setting cache control.
+* [UPDATE] Added backward compatibility for v1.1.2.2 API calls. (used by 3rd-party plugins)
 * [BUGFIX] Fixed WPCLI purge tag/category never succeeding.
 
 = 1.1.3 - July 31 2017 =
