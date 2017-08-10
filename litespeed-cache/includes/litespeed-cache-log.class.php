@@ -28,6 +28,9 @@ class LiteSpeed_Cache_Log
 	private function __construct()
 	{
 		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log' ;
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && $_SERVER[ 'HTTP_USER_AGENT' ] === Litespeed_Crawler::FAST_USER_AGENT ) {
+			self::$log_path = LSWCP_CONTENT_DIR . '/crawler.log' ;
+		}
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
 			define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
 		}
