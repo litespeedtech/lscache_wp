@@ -78,7 +78,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Turn this on to log the cookie values.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Log request cookie values.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -88,7 +88,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Shortens query strings in the debug log to improve readability.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Shorten query strings in the debug log to improve readability.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -98,7 +98,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_LOG_FILTERS ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This will log all WordPress filter hooks. WARNING: Enabling this option will cause log file size to grow quickly.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Log all WordPress filter hooks. WARNING: Enabling this option will cause log file size to grow quickly.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
