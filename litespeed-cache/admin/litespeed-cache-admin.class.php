@@ -54,8 +54,7 @@ class LiteSpeed_Cache_Admin
 			foreach ( $purge_all_events as $event ) {
 				add_action( $event, 'LiteSpeed_Cache_Purge::purge_all' ) ;
 			}
-			add_filter( 'upgrader_pre_download', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;
-			add_filter( 'site_transient_update_plugins', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;
+			// add_filter( 'upgrader_pre_download', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;
 		}
 	}
 

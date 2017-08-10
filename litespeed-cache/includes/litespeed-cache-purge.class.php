@@ -16,6 +16,7 @@ class LiteSpeed_Cache_Purge
 	protected static $_purge_single = false ;
 
 	const X_HEADER = 'X-LiteSpeed-Purge' ;
+	const PURGE_QUEUE = 'litespeed-cache-purge-queue' ;
 
 	/**
 	 * Adds new public purge tags to the array of purge tags for the request.
@@ -37,8 +38,15 @@ class LiteSpeed_Cache_Purge
 
 		// Send purge header immediately
 		$curr_built = self::_build() ;
-		@header( $curr_built ) ;
-		LiteSpeed_Cache_Log::debug( $curr_built ) ;
+		if ( defined( 'LITESPEED_DID_send_headers' ) ) {
+			// Can't send, already has output, need to save and wait for next run
+			update_option( self::PURGE_QUEUE, $curr_built ) ;
+			LiteSpeed_Cache_Log::debug( 'Output existed, Purge queue stored: ' . $curr_built ) ;
+		}
+		else {
+			@header( $curr_built ) ;
+			LiteSpeed_Cache_Log::debug( $curr_built ) ;
+		}
 	}
 
 	/**

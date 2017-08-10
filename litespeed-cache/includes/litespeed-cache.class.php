@@ -90,6 +90,13 @@ class LiteSpeed_Cache
 		}
 
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
+
+		// Check if there is a purge request in queue
+		if ( $purge_queue = get_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ) {
+			@header( $purge_queue ) ;
+			LiteSpeed_Cache_Log::debug( 'Purge Queue found&sent: ' . $purge_queue ) ;
+			delete_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ;
+		}
 	}
 
 	/**
