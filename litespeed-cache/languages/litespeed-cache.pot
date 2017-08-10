@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1.4\n"
+"Project-Id-Version: 1.1.5\n"
 "Report-Msgid-Bugs-To: info@litespeedtech.com\n"
-"POT-Creation-Date: 2017-08-01 13:53-0500\n"
+"POT-Creation-Date: 2017-08-10 12:21-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,299 +17,314 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: admin/litespeed-cache-admin-display.class.php:131
+#: admin/litespeed-cache-admin-display.class.php:137
 msgid "Manage"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:133
-#: admin/litespeed-cache-admin-display.class.php:207
+#: admin/litespeed-cache-admin-display.class.php:139
+#: admin/litespeed-cache-admin-display.class.php:222
 msgid "Settings"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:136
+#: admin/litespeed-cache-admin-display.class.php:142
 msgid "Edit .htaccess"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:139
+#: admin/litespeed-cache-admin-display.class.php:145
 msgid "Information"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:141
+#: admin/litespeed-cache-admin-display.class.php:147
 msgid "Environment Report"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:145 admin/tpl/info.php:10
+#: admin/litespeed-cache-admin-display.class.php:151 admin/tpl/info.php:10
 #: admin/tpl/settings.php:27
 msgid "Crawler"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:227
+#: admin/litespeed-cache-admin-display.class.php:155
+#: admin/tpl/settings_debug.php:10
+msgid "Debug Log"
+msgstr ""
+
+#: admin/litespeed-cache-admin-display.class.php:242
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:267
+#: admin/litespeed-cache-admin-display.class.php:282
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:770 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:812 admin/tpl/crawler.php:138
 #: admin/tpl/settings_general.php:25
 msgid "Enable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:774 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:816 admin/tpl/crawler.php:138
 #: admin/tpl/settings_general.php:31
 msgid "Disable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:801
+#: admin/litespeed-cache-admin-display.class.php:843
 #, php-format
 msgid "Recommended value: %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:86
+#: admin/litespeed-cache-admin-error.class.php:87
 msgid "The installed PHP version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:88
+#: admin/litespeed-cache-admin-error.class.php:89
 #, php-format
 msgid "The LiteSpeed Cache Plugin requires at least PHP %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:90
+#: admin/litespeed-cache-admin-error.class.php:91
 #, php-format
 msgid ""
 "The currently installed version is PHP %s, which is out-dated and insecure."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:92
-#: admin/litespeed-cache-admin-error.class.php:101
+#: admin/litespeed-cache-admin-error.class.php:93
+#: admin/litespeed-cache-admin-error.class.php:102
 #, php-format
 msgid ""
 "Please upgrade or go to <a href=\"%s\">active plugins</a> and deactivate the "
 "LiteSpeed Cache plugin to hide this message."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:97
+#: admin/litespeed-cache-admin-error.class.php:98
 msgid ""
 "The installed WordPress version is too old for the LiteSpeed Cache Plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:99
+#: admin/litespeed-cache-admin-error.class.php:100
 #, php-format
 msgid "The LiteSpeed Cache Plugin requires at least WordPress %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:106
+#: admin/litespeed-cache-admin-error.class.php:107
 msgid "Something went wrong with the form! Please try again."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:109
+#: admin/litespeed-cache-admin-error.class.php:110
 msgid "Tried to purge list with empty list."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:112
+#: admin/litespeed-cache-admin-error.class.php:113
 msgid "Bad Purge By selected value."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:115
+#: admin/litespeed-cache-admin-error.class.php:116
 msgid "Failed to purge by category, invalid category slug."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:118
+#: admin/litespeed-cache-admin-error.class.php:119
 msgid "Failed to purge by tag, invalid tag slug."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:121
+#: admin/litespeed-cache-admin-error.class.php:122
 msgid "Failed to purge by url, contained \"<\"."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:125
+#: admin/litespeed-cache-admin-error.class.php:126
 #, php-format
 msgid "Failed to purge by Post ID, given ID is not numeric: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:128
+#: admin/litespeed-cache-admin-error.class.php:129
 #, php-format
 msgid ""
 "Failed to purge by Post ID, given ID does not exist or is not published: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:132
+#: admin/litespeed-cache-admin-error.class.php:133
 #, php-format
 msgid "Failed to purge by url, invalid input: %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:135
+#: admin/litespeed-cache-admin-error.class.php:136
 #, php-format
 msgid "Failed to purge by category, does not exist: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:138
+#: admin/litespeed-cache-admin-error.class.php:139
 #, php-format
 msgid "Failed to purge by tag, does not exist: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:142
+#: admin/litespeed-cache-admin-error.class.php:143
 msgid "Invalid data in Admin IPs."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:145
+#: admin/litespeed-cache-admin-error.class.php:146
 msgid "Invalid data in Test IPs."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:148
+#: admin/litespeed-cache-admin-error.class.php:149
 #, php-format
 msgid "Invalid Site IP: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:151
+#: admin/litespeed-cache-admin-error.class.php:152
 #, php-format
 msgid "Can not fetch Custom Sitemap: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:154
+#: admin/litespeed-cache-admin-error.class.php:155
 #, php-format
 msgid "Can not parse custom sitemap xml file: %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:155
+#: admin/litespeed-cache-admin-error.class.php:156
 #, php-format
 msgid ""
 "Please make sure the file is xml format and the %s extension is installed on "
 "the server."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:160
+#: admin/litespeed-cache-admin-error.class.php:161
 #, php-format
 msgid "%1$s must be an integer between %2$d and %3$d"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:165
+#: admin/litespeed-cache-admin-error.class.php:166
 #, php-format
 msgid "Removed category \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:170
+#: admin/litespeed-cache-admin-error.class.php:171
 #, php-format
 msgid "Removed tag \"%s\" from list, ID does not exist."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:174
+#: admin/litespeed-cache-admin-error.class.php:175
 #, php-format
 msgid "Invalid login cookie. Invalid characters found: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:178
+#: admin/litespeed-cache-admin-error.class.php:179
 msgid "Invalid Rewrite List."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:179
+#: admin/litespeed-cache-admin-error.class.php:180
 msgid "Empty or invalid rule."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:180
+#: admin/litespeed-cache-admin-error.class.php:181
 #, php-format
 msgid "Rule: %1$s, list: %2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:184
+#: admin/litespeed-cache-admin-error.class.php:185
 msgid "Tried to parse for existing login cookie."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:185
+#: admin/litespeed-cache-admin-error.class.php:186
 #, php-format
 msgid "%s file not valid. Please verify contents."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:189
-#, php-format
-msgid ""
-"In %s file found one unexpected cache rule %s left by other cache plugins. "
-"Please remove it to get LiteSpeed Cache Plugin work well."
-msgstr ""
-
-#: admin/litespeed-cache-admin-error.class.php:193
+#: admin/litespeed-cache-admin-error.class.php:190
 #, php-format
 msgid "Could not find %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:197
+#: admin/litespeed-cache-admin-error.class.php:194
 msgid "This site is a subdirectory install."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:198
+#: admin/litespeed-cache-admin-error.class.php:195
 msgid "Login cookies do not match."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:199
+#: admin/litespeed-cache-admin-error.class.php:196
 msgid ""
 "Please remove both and set the login cookie in LiteSpeed Cache advanced "
 "settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:203
+#: admin/litespeed-cache-admin-error.class.php:200
 msgid ""
 "Notice: This plugin requires a LiteSpeed Server with the LSCache Module "
 "enabled."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:204
+#: admin/litespeed-cache-admin-error.class.php:201
 msgid ""
 "If you are unable to change your server stack, please contact your hosting "
 "provider to request the required changes."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:205
+#: admin/litespeed-cache-admin-error.class.php:202
 msgid "This plugin will NOT work properly."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:208
-#: admin/litespeed-cache-admin-error.class.php:240
+#: admin/litespeed-cache-admin-error.class.php:205
+#: admin/litespeed-cache-admin-error.class.php:243
 msgid "LiteSpeed Cache was unable to write to the wp-config.php file."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:209
-#: admin/litespeed-cache-admin-error.class.php:241
+#: admin/litespeed-cache-admin-error.class.php:206
+#: admin/litespeed-cache-admin-error.class.php:244
 #, php-format
 msgid "Please add the following to the wp-config.php file: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:213
+#: admin/litespeed-cache-admin-error.class.php:210
 msgid "Failed to back up file, aborted changes."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:216
+#: admin/litespeed-cache-admin-error.class.php:213
 #, php-format
 msgid "Failed to put contents into %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:219
+#: admin/litespeed-cache-admin-error.class.php:216
 #, php-format
 msgid "Failed to get %s file contents."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:222
+#: admin/litespeed-cache-admin-error.class.php:219
 #, php-format
 msgid "%s file not readable or not writable."
 msgstr ""
 
+#: admin/litespeed-cache-admin-error.class.php:222
+#, php-format
+msgid "%s file not readable."
+msgstr ""
+
 #: admin/litespeed-cache-admin-error.class.php:225
+#, php-format
+msgid "%s file not writable."
+msgstr ""
+
+#: admin/litespeed-cache-admin-error.class.php:228
 #, php-format
 msgid "Failed to overwrite %s."
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:229
+#: admin/litespeed-cache-admin-error.class.php:232
 #, php-format
 msgid "The %1$s file not writeable for %2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-error.class.php:233
+#: admin/litespeed-cache-admin-error.class.php:236
 #, php-format
 msgid "%s file did not find a place to insert define."
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:831
+#: admin/litespeed-cache-admin-rules.class.php:752
+#, php-format
+msgid ""
+"<p>Please add/replace the following codes into the beginning of %1$s:</p> "
+"%2$s"
+msgstr ""
+
+#: admin/litespeed-cache-admin-rules.class.php:887
 msgid "File Saved."
 msgstr ""
 
@@ -337,56 +352,61 @@ msgstr ""
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:495
+#: admin/litespeed-cache-admin-settings.class.php:469
+#: admin/tpl/settings_debug.php:55
+msgid "Log File Size Limit"
+msgstr ""
+
+#: admin/litespeed-cache-admin-settings.class.php:549
 #: admin/tpl/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:503
+#: admin/litespeed-cache-admin-settings.class.php:557
 #: admin/tpl/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:511
+#: admin/litespeed-cache-admin-settings.class.php:565
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:519
+#: admin/litespeed-cache-admin-settings.class.php:573
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:527
+#: admin/litespeed-cache-admin-settings.class.php:581
 #: admin/tpl/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:628
+#: admin/litespeed-cache-admin-settings.class.php:682
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:756
+#: admin/litespeed-cache-admin-settings.class.php:810
 msgid "File saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:208
+#: admin/litespeed-cache-admin.class.php:201
 msgid ""
 "For this scenario only, the network admin may uncheck \"Check Advanced Cache"
 "\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:210
+#: admin/litespeed-cache-admin.class.php:203
 msgid ""
 "For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:212
+#: admin/litespeed-cache-admin.class.php:205
 msgid ""
 "Please disable/deactivate any other Full Page Cache solutions that are "
 "currently being used."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:213
+#: admin/litespeed-cache-admin.class.php:206
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
@@ -568,7 +588,7 @@ msgstr ""
 msgid "Sitemap Generation Blacklist"
 msgstr ""
 
-#: admin/tpl/crawler.php:218 admin/tpl/edit_htaccess.php:48
+#: admin/tpl/crawler.php:218 admin/tpl/edit_htaccess.php:66
 msgid "Save"
 msgstr ""
 
@@ -583,37 +603,41 @@ msgid ""
 "crawling."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:11
+#: admin/tpl/debug_log.php:9
+msgid "LiteSpeed Cache Debug Log Viewer"
+msgstr ""
+
+#: admin/tpl/edit_htaccess.php:31
 msgid "LiteSpeed Cache Edit .htaccess"
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:20
+#: admin/tpl/edit_htaccess.php:40
 msgid "WARNING: This page is meant for advanced users."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:21
+#: admin/tpl/edit_htaccess.php:41
 msgid "Any changes made to the .htaccess file may break the site."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:22
+#: admin/tpl/edit_htaccess.php:42
 msgid "Please consult the host/server admin before making any changes."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:26
+#: admin/tpl/edit_htaccess.php:46
 msgid "File editing is disabled in configuration."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:38
+#: admin/tpl/edit_htaccess.php:56
 #, php-format
 msgid "Current %s contents:"
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:40
+#: admin/tpl/edit_htaccess.php:58
 #, php-format
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:42
+#: admin/tpl/edit_htaccess.php:60
 msgid ""
 "These are added by the LS Cache plugin and may cause problems if they are "
 "changed."
@@ -1462,7 +1486,7 @@ msgstr ""
 msgid "Do Not Cache Rules"
 msgstr ""
 
-#: admin/tpl/network_settings.php:7
+#: admin/tpl/network_settings.php:7 admin/tpl/settings.php:18
 msgid "Advanced"
 msgstr ""
 
@@ -1581,10 +1605,6 @@ msgstr ""
 
 #: admin/tpl/settings.php:14 admin/tpl/settings_esi.php:9
 msgid "ESI Settings"
-msgstr ""
-
-#: admin/tpl/settings.php:18
-msgid "Advanced Settings"
 msgstr ""
 
 #: admin/tpl/settings.php:21
@@ -1917,10 +1937,6 @@ msgstr ""
 msgid "Developer Testing"
 msgstr ""
 
-#: admin/tpl/settings_debug.php:10
-msgid "Debug Log"
-msgstr ""
-
 #: admin/tpl/settings_debug.php:17
 msgid "Off"
 msgstr ""
@@ -1970,20 +1986,66 @@ msgid ""
 "\">here</a>."
 msgstr ""
 
-#: admin/tpl/settings_debug.php:55
+#: admin/tpl/settings_debug.php:58
+msgid "MB"
+msgstr ""
+
+#: admin/tpl/settings_debug.php:60
+msgid ""
+"Specify the maximum size of the log file. Minimum is 3MB. Maximum is 3000MB."
+msgstr ""
+
+#: admin/tpl/settings_debug.php:67
+msgid "Heartbeat"
+msgstr ""
+
+#: admin/tpl/settings_debug.php:71
+msgid ""
+"Disable WordPress heartbeat to prevent AJAX calls from breaking debug "
+"logging. WARNING: Disabling this may cause WordPress tasks triggered by AJAX "
+"to stop working."
+msgstr ""
+
+#: admin/tpl/settings_debug.php:77
 msgid "Log Cookies"
 msgstr ""
 
-#: admin/tpl/settings_debug.php:59
-msgid "Turn this on to log the cookie value."
+#: admin/tpl/settings_debug.php:81
+msgid "Log request cookie values."
 msgstr ""
 
-#: admin/tpl/settings_debug.php:65
-msgid "Collapse Query String"
+#: admin/tpl/settings_debug.php:87
+msgid "Collapse Query Strings"
 msgstr ""
 
-#: admin/tpl/settings_debug.php:69
-msgid "Shorten the query string in debug log to make the log easier to read."
+#: admin/tpl/settings_debug.php:91
+msgid "Shorten query strings in the debug log to improve readability."
+msgstr ""
+
+#: admin/tpl/settings_debug.php:97
+msgid "Log Filters"
+msgstr ""
+
+#: admin/tpl/settings_debug.php:101
+msgid ""
+"Log all WordPress filter hooks. WARNING: Enabling this option will cause log "
+"file size to grow quickly."
+msgstr ""
+
+#: admin/tpl/settings_debug.php:107
+msgid "Exclude Filters"
+msgstr ""
+
+#: admin/tpl/settings_debug.php:111
+msgid "Listed filters (one per line) will not be logged."
+msgstr ""
+
+#: admin/tpl/settings_debug.php:117
+msgid "Exclude Part Filters"
+msgstr ""
+
+#: admin/tpl/settings_debug.php:121
+msgid "Filters containing these strings (one per line) will not be logged."
 msgstr ""
 
 #: admin/tpl/settings_esi.php:11
@@ -2361,7 +2423,7 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/settings_purge.php:10
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:641
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:647
 msgid "Note:"
 msgstr ""
 
@@ -2431,6 +2493,36 @@ msgstr ""
 
 #: admin/tpl/settings_specific.php:12
 msgid "Disabling this option may negatively affect performance."
+msgstr ""
+
+#: admin/tpl/settings_specific.php:25 admin/tpl/settings_specific.php:41
+msgid "Scheduled Purge URLs"
+msgstr ""
+
+#: admin/tpl/settings_specific.php:29
+#, php-format
+msgid ""
+"The URLs here (one per line) will be purged automatically at the time set in "
+"the option \"%s\"."
+msgstr ""
+
+#: admin/tpl/settings_specific.php:29 admin/tpl/settings_specific.php:36
+msgid "Scheduled Purge Time"
+msgstr ""
+
+#: admin/tpl/settings_specific.php:30
+#, php-format
+msgid "Both %1$s and %2$s are acceptable."
+msgstr ""
+
+#: admin/tpl/settings_specific.php:41
+#, php-format
+msgid "Specify the time to purge the \"%s\" list."
+msgstr ""
+
+#: admin/tpl/settings_specific.php:42
+#, php-format
+msgid "Current server time is %s."
 msgstr ""
 
 #: admin/tpl/show_display_installed.php:5
@@ -2506,6 +2598,15 @@ msgid ""
 "take effect."
 msgstr ""
 
+#: admin/tpl/show_rule_conflict.php:5
+#, php-format
+msgid ""
+"Unexpected cache rule %2$s found in %1$s file. This rule may cause visitors "
+"to see old versions of pages due to the browser caching html pages. If you "
+"are sure that html pages are not being browser cached, this message can be "
+"dismissed. (<a %3$s>Learn More</a>)"
+msgstr ""
+
 #: cli/litespeed-cache-cli-purge.class.php:90
 msgid "Purged All!"
 msgstr ""
@@ -2531,41 +2632,41 @@ msgstr ""
 msgid "File saved successfully: %s"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:177
+#: includes/litespeed-cache-crawler.class.php:175
 #, php-format
 msgid "File created successfully: %s"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:325
+#: includes/litespeed-cache-crawler.class.php:323
 #, php-format
 msgid "Failed to send position reset notification: %s"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:329
+#: includes/litespeed-cache-crawler.class.php:327
 msgid "Position reset notification sent successfully"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:412
+#: includes/litespeed-cache-crawler.class.php:410
 #: lib/litespeed/litespeed-crawler.class.php:327
 msgid "Reached end of sitemap file. Crawling completed."
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:178
+#: includes/litespeed-cache-purge.class.php:202
 #, php-format
 msgid "Purge category %s"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:205
+#: includes/litespeed-cache-purge.class.php:229
 #, php-format
 msgid "Purge Post ID %s"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:234
+#: includes/litespeed-cache-purge.class.php:258
 #, php-format
 msgid "Purge tag %s"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:275
+#: includes/litespeed-cache-purge.class.php:292
 #, php-format
 msgid "Purge url %s"
 msgstr ""
@@ -2574,31 +2675,31 @@ msgstr ""
 msgid "LiteSpeed Cache Custom Cron"
 msgstr ""
 
-#: includes/litespeed-cache.class.php:240
+#: includes/litespeed-cache.class.php:244
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:245
+#: includes/litespeed-cache.class.php:249
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:250
+#: includes/litespeed-cache.class.php:254
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:255
+#: includes/litespeed-cache.class.php:259
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:261
+#: includes/litespeed-cache.class.php:265
 msgid "Notified LiteSpeed Web Server to purge the public cache."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:268
+#: includes/litespeed-cache.class.php:272
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:273
+#: includes/litespeed-cache.class.php:277
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
@@ -2636,94 +2737,94 @@ msgstr ""
 msgid "Cannot read meta file: %s"
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:96
+#: lib/litespeed/litespeed-file.class.php:113
 #, php-format
 msgid "Folder does not exist: %s"
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:105
+#: lib/litespeed/litespeed-file.class.php:122
 #, php-format
 msgid "Can not create folder: %1$s. Error: %2$s"
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:113
+#: lib/litespeed/litespeed-file.class.php:130
 #, php-format
 msgid "Folder is not writable: %s."
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:120
-#: lib/litespeed/litespeed-file.class.php:125
+#: lib/litespeed/litespeed-file.class.php:137
+#: lib/litespeed/litespeed-file.class.php:142
 #, php-format
 msgid "File %s is not writable."
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:130
+#: lib/litespeed/litespeed-file.class.php:147
 #, php-format
 msgid "Failed to write to %s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:586
-msgid "WooCommerce Configuration"
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:592
+msgid "WooCommerce"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:589
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:595
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:590
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:596
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:591
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:597
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:592
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:598
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:593
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:599
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:594
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:600
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:597
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:603
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:598
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:604
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:599
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:605
 #, php-format
 msgid ""
 "For example, if the homepage for the site is located at %1$s, the shop page "
 "may be located at %2$s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:626
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:632
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:633
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:639
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:643
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:649
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:644
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:650
 #, php-format
 msgid "To test the cart, visit the %s."
 msgstr ""
