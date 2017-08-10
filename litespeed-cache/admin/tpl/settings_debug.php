@@ -78,7 +78,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Turn this on to log the cookie values.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Log request cookie values.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
