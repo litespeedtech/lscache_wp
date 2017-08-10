@@ -282,7 +282,7 @@ class LiteSpeed_Cache
 				break ;
 
 			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
-				update_option( LiteSpeed_Cache_Config::DISMISS_MSG, LiteSpeed_Cache_Config::RULECONFLICT_DISMISSED ) ;
+				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
 				break ;
 
 			default:

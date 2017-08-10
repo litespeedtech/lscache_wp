@@ -27,6 +27,10 @@ class LiteSpeed_Cache_Admin_Display
 	const PURGEBYOPT_SELECT = 'purgeby' ;
 	const PURGEBYOPT_LIST = 'purgebylist' ;
 
+	const DISMISS_MSG = 'litespeed-cache-dismiss' ;
+	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
+	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
+
 	private $messages = array() ;
 	private $disable_all = false ;
 	private $default_settings = array() ;

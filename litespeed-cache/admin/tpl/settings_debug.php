@@ -84,11 +84,11 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Collapse Query String', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Collapse Query Strings', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_COLLAPS_QS); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Shorten the query string in debug log to make the log easier to read.', 'litespeed-cache'); ?>
+				<?php echo __('Shortens query strings in the debug log to improve readability.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -98,7 +98,7 @@ if (!defined('WPINC')) die;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_LOG_FILTERS); ?>
 			<div class="litespeed-desc">
-				<?php echo __('This will log all WordPress filters hooks. NOTE: This may cause a huge log file. ONLY enable this when necessary.', 'litespeed-cache'); ?>
+				<?php echo __('This will log all WordPress filter hooks. WARNING: Enabling this option will cause log file size to grow quickly.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -108,7 +108,7 @@ if (!defined('WPINC')) die;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS, null, false, 30); ?>
 			<div class="litespeed-desc">
-				<?php echo __('The filters listed (one per line) will not be logged.', 'litespeed-cache'); ?><br />
+				<?php echo __('Listed filters (one per line) will not be logged.', 'litespeed-cache'); ?><br />
 			</div>
 		</td>
 	</tr>
@@ -118,7 +118,7 @@ if (!defined('WPINC')) die;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS, null, false, 30); ?>
 			<div class="litespeed-desc">
-				<?php echo __('The filter that contains these strings (one per line) will not be logged.', 'litespeed-cache'); ?><br />
+				<?php echo __('Filters containing these strings (one per line) will not be logged.', 'litespeed-cache'); ?><br />
 			</div>
 		</td>
 	</tr>

@@ -80,7 +80,7 @@ class LiteSpeed_Cache_Router
 	public static function has_msg_ruleconflict()
 	{
 		if ( ! isset( self::$_has_msg_ruleconflict ) ) {
-			self::$_has_msg_ruleconflict = get_option( LiteSpeed_Cache_Config::DISMISS_MSG ) == LiteSpeed_Cache_Config::RULECONFLICT_ON ;
+			self::$_has_msg_ruleconflict = get_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG ) == LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ;
 		}
 		return self::$_has_msg_ruleconflict ;
 	}

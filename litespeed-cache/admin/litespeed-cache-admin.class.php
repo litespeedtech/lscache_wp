@@ -140,25 +140,6 @@ class LiteSpeed_Cache_Admin
 			return ;
 		}
 
-		// Check if there is `ExpiresDefault` in .htaccess
-		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
-		// 	$htaccess_con = Litespeed_File::read( LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ) ;
-		// 	if ( $htaccess_con && stripos( $htaccess_con, "\nExpiresDefault" ) !== false ) {
-		// 		$is_dismissed = get_option( LiteSpeed_Cache_Config::DISMISS_MSG ) ;
-		// 		if ( $is_dismissed !== LiteSpeed_Cache_Config::RULECONFLICT_DISMISSED ) {
-		// 			// Need to add a notice for browser cache compatibility
-		// 			update_option( LiteSpeed_Cache_Config::DISMISS_MSG, LiteSpeed_Cache_Config::RULECONFLICT_ON ) ;
-		// 		}
-		// 		if ( $is_dismissed === LiteSpeed_Cache_Config::RULECONFLICT_ON ) {
-		// 			$this->display->show_rule_conflict() ;
-		// 		}
-		// 	}
-		// 	// don't dismiss the msg automatically
-		// 	// elseif ( $is_dismissed === LiteSpeed_Cache_Config::RULECONFLICT_ON ) {
-		// 	// 	update_option( LiteSpeed_Cache_Config::DISMISS_MSG, LiteSpeed_Cache_Config::RULECONFLICT_DISMISSED ) ;
-		// 	// }
-		// }
-
 		if ( LiteSpeed_Cache_Router::has_whm_msg() ) {
 			$this->display->show_display_installed() ;
 		}

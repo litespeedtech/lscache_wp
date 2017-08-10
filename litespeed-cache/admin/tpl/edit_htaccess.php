@@ -4,6 +4,26 @@ if (!defined('WPINC')) die;
 $readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
 $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 
+// Check if there is `ExpiresDefault` in .htaccess
+if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
+	$htaccess_con = Litespeed_File::read( LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ) ;
+	if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
+		$is_dismissed = get_option( self::DISMISS_MSG ) ;
+		if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {
+			// Need to add a notice for browser cache compatibility
+			if ( $is_dismissed !== self::RULECONFLICT_ON ) {
+				update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
+			}
+			$this->show_rule_conflict() ;
+		}
+	}
+	// don't dismiss the msg automatically
+	// elseif ( $is_dismissed === LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ) {
+	// 	update_option( self::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+	// }
+}
+
+
 ?>
 
 <div class="wrap">
