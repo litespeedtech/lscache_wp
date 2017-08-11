@@ -434,17 +434,10 @@ class LiteSpeed_Cache
 
 		$vary_header = LiteSpeed_Cache_Vary::output() ;
 
-		$tag_header = '' ;
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
-		$is_cacheable = LiteSpeed_Cache_Control::is_cacheable() ;
-		if ( ! $is_cacheable && LiteSpeed_Cache_Purge::get_qs_purge() ) {
-			LiteSpeed_Cache_Tag::finalize() ;
-		}
-		elseif ( $is_cacheable ) {
-			$tag_header = LiteSpeed_Cache_Tag::output() ;
-			if ( ! $tag_header ) {
-				LiteSpeed_Cache_Control::set_nocache('empty tag header') ;
-			}
+		$tag_header = LiteSpeed_Cache_Tag::output() ;
+		if ( LiteSpeed_Cache_Control::is_cacheable() && ! $tag_header ) {
+			LiteSpeed_Cache_Control::set_nocache( 'empty tag header' ) ;
 		}
 
 		// NOTE: `purge` output needs to be after `tag` output as Admin QS may need to send `tag` header
@@ -453,30 +446,7 @@ class LiteSpeed_Cache
 		// generate `control` header in the end in case control status is changed by other headers.
 		$control_header = LiteSpeed_Cache_Control::output() ;
 
-		if ( $control_header ) {
-			$hdr_content[] = $control_header ;
-		}
-		if ( $purge_header ) {
-			$hdr_content[] = $purge_header ;
-		}
-		if ( $tag_header ) {
-			$hdr_content[] = $tag_header ;
-		}
-		if ( $vary_header ) {
-			$hdr_content[] = $vary_header ;
-		}
-
-		if ( ! empty( $hdr_content ) ) {
-			if ( self::$_debug_show_header ) {
-				@header( self::HEADER_DEBUG . ': ' . implode( '; ', $hdr_content ) ) ;
-			}
-			else {
-				foreach( $hdr_content as $hdr ) {
-					@header( $hdr ) ;
-				}
-			}
-		}
-
+		// Init comment info
 		$running_info_showing = defined( 'LITESPEED_COMMENT_INFO' ) || defined( 'LSCACHE_IS_ESI' ) ;
 		$comment = '' ;
 		if ( $running_info_showing ) {
@@ -487,32 +457,72 @@ class LiteSpeed_Cache
 				$comment .= '<!-- LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
 			}
 		}
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			if ( $tag_header ) {
-				LiteSpeed_Cache_Log::push($tag_header) ;
-				if ( $running_info_showing ) {
-					$comment .= "\n<!-- " . $tag_header . " -->" ;
-				}
-			}
-			if ( $control_header ) {
+
+		// send Control header
+		if ( $control_header ) {
+			@header( $control_header ) ;
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push( $control_header ) ;
 				if ( $running_info_showing ) {
 					$comment .= "\n<!-- " . $control_header . " -->" ;
 				}
 			}
-			if ( $purge_header ) {
-				LiteSpeed_Cache_Log::push($purge_header) ;
+		}
+		// send PURGE header
+		if ( $purge_header ) {
+			@header( $purge_header ) ;
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push( $purge_header ) ;
 				if ( $running_info_showing ) {
 					$comment .= "\n<!-- " . $purge_header . " -->" ;
 				}
 			}
-
-			LiteSpeed_Cache_Log::push(
-				'End response'
-				 . ( $is_forced ? '(forced)' : '' )
-				. ".\n--------------------------------------------------------------------------------\n"
-			) ;
 		}
+		// send Vary header
+		if ( $vary_header ) {
+			@header( $vary_header ) ;
+			if ( LiteSpeed_Cache_Log::get_enabled() ) {
+				LiteSpeed_Cache_Log::push( $vary_header ) ;
+				if ( $running_info_showing ) {
+					$comment .= "\n<!-- " . $vary_header . " -->" ;
+				}
+			}
+		}
+
+		// Admin QS show header action
+		if ( self::$_debug_show_header ) {
+			$debug_header = self::HEADER_DEBUG . ': ' ;
+			if ( $control_header ) {
+				$debug_header .= $control_header . '; ' ;
+			}
+			if ( $purge_header ) {
+				$debug_header .= $purge_header . '; ' ;
+			}
+			if ( $tag_header ) {
+				$debug_header .= $tag_header . '; ' ;
+			}
+			if ( $vary_header ) {
+				$debug_header .= $vary_header . '; ' ;
+			}
+			@header( $debug_header ) ;
+			LiteSpeed_Cache_Log::debug( $debug_header ) ;
+		}
+		else {
+			// Control header
+			if ( LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
+				@header( $tag_header ) ;
+				if ( LiteSpeed_Cache_Log::get_enabled() ) {
+					LiteSpeed_Cache_Log::push( $tag_header ) ;
+					if ( $running_info_showing ) {
+						$comment .= "\n<!-- " . $tag_header . " -->" ;
+					}
+				}
+			}
+		}
+
+		LiteSpeed_Cache_Log::debug(
+			'End response' . ( $is_forced ? '(forced)' : '' ) . ".\n--------------------------------------------------------------------------------\n"
+		) ;
 
 		if ( $comment ) {
 			if ( $is_forced ) {

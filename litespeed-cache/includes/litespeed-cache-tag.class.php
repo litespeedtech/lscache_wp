@@ -181,6 +181,7 @@ class LiteSpeed_Cache_Tag
 			return $slashed ;
 		}
 
+		return self::TYPE_URL . ( $slashed ) ;
 		return self::TYPE_URL . md5( $slashed ) ;
 	}
 
@@ -272,10 +273,10 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Generate all cache tags before output
 	 *
-	 * @access public
+	 * @access private
 	 * @since 1.1.3
 	 */
-	public static function finalize()
+	private static function _finalize()
 	{
 		// run 3rdparty hooks to tag
 		do_action( 'litespeed_cache_api_tag' ) ;
@@ -298,7 +299,7 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function output()
 	{
-		self::finalize() ;
+		self::_finalize() ;
 
 		$prefix_tags = array() ;
 		$prefix = LSWCP_TAG_PREFIX . get_current_blog_id() . '_' ;
