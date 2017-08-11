@@ -172,6 +172,10 @@ class LiteSpeed_Cache_Tag
 		}
 		$slashed = trailingslashit( $no_qs ) ;
 
+		if ( defined( 'LSCACHE_IS_ESI' ) ) {
+			$slashed = 'esi' ;
+		}
+
 		// If only needs uri tag
 		if ( $ori ) {
 			return $slashed ;

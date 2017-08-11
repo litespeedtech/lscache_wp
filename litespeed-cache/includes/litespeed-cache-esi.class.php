@@ -76,7 +76,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	public static function esi_template($template)
 	{
-		if ( LiteSpeed_Cache_Router::is_esi() ) {
+		if ( ! empty( $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] ) && $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] == LiteSpeed_Cache_ESI::POSTTYPE ) {
 			define('LSCACHE_IS_ESI', true) ;
 
 			self::get_instance()->register_esi_actions() ;

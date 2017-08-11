@@ -125,16 +125,16 @@ class LiteSpeed_Cache_Vary
 			$expire = time() + 2 * DAY_IN_SECONDS ;
 		}
 		// If the cookie is lost somehow, set it
-		if ( ! self::cookie_has_bm(self::BM_LOGGED_IN) ) {
-			if ( empty($_COOKIE[self::$_vary_name]) ) {
-				$_COOKIE[self::$_vary_name] = 0 ;
+		if ( ! self::cookie_has_bm( self::BM_LOGGED_IN ) ) {
+			if ( empty( $_COOKIE[ self::$_vary_name ] ) ) {
+				$_COOKIE[ self::$_vary_name ] = 0 ;
 			}
-			$_COOKIE[self::$_vary_name] |= self::BM_LOGGED_IN ;
+			$_COOKIE[ self::$_vary_name ] |= self::BM_LOGGED_IN ;
 			// save it
-			self::_cookie($_COOKIE[self::$_vary_name], $expire, is_ssl(), true) ;
+			self::_cookie( $_COOKIE[ self::$_vary_name ], $expire ) ;
 		}
 		if ( ! LSWCP_ESI_SUPPORT || ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
-			LiteSpeed_Cache_Control::set_nocache('is logged in') ;
+			LiteSpeed_Cache_Control::set_nocache( 'is logged in' ) ;
 		}
 	}
 
@@ -147,12 +147,12 @@ class LiteSpeed_Cache_Vary
 	public static function remove_logged_in()
 	{
 		// If the cookie is set, unset it.
-		if ( self::cookie_has_bm(self::BM_LOGGED_IN) ) {
+		if ( self::cookie_has_bm( self::BM_LOGGED_IN ) ) {
 			// remove logged in status from global var
-			$_COOKIE[self::$_vary_name] &= ~self::BM_LOGGED_IN ;
+			$_COOKIE[ self::$_vary_name ] &= ~self::BM_LOGGED_IN ;
 			// save it
-			self::_cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000)) ;
-			LiteSpeed_Cache_Control::set_nocache('removing logged in status') ;
+			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ) ) ;
+			LiteSpeed_Cache_Control::set_nocache( 'removing logged in status' ) ;
 		}
 	}
 
@@ -174,9 +174,9 @@ class LiteSpeed_Cache_Vary
 			$_COOKIE[self::$_vary_name] |= self::BM_COMMENTER ;
 			// save it
 			// only set commenter status for current domain path
-			self::_cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
+			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path() ) ;
 		}
-		LiteSpeed_Cache_Control::set_nocache('new commenter') ;
+		LiteSpeed_Cache_Control::set_nocache( 'new commenter' ) ;
 	}
 
 	/**
@@ -191,7 +191,7 @@ class LiteSpeed_Cache_Vary
 			// remove logged in status from global var
 			$_COOKIE[self::$_vary_name] &= ~self::BM_COMMENTER ;
 			// save it
-			self::_cookie($_COOKIE[self::$_vary_name], time() + apply_filters('comment_cookie_lifetime', 30000000), false, false, self::_relative_path()) ;
+			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path() ) ;
 			LiteSpeed_Cache_Control::set_nocache('removing commenter status') ;
 		}
 	}
@@ -341,17 +341,15 @@ class LiteSpeed_Cache_Vary
 	 * @access private
 	 * @param integer $val The value to update.
 	 * @param integer $expire Expire time.
-	 * @param boolean $ssl True if ssl connection, false otherwise.
-	 * @param boolean $httponly True if the cookie is for http requests only, false otherwise.
 	 * @param boolean $path False if use wp root path as cookie path
 	 */
-	private static function _cookie($val = false, $expire = false, $ssl = false, $httponly = false, $path = false)
+	private static function _cookie($val = false, $expire = false, $path = false)
 	{
 		if ( ! $val ) {
 			$expire = 1 ;
 		}
 
-		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $ssl, $httponly) ;
+		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true) ;
 	}
 
 	/**

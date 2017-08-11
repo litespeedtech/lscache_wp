@@ -335,7 +335,7 @@ class LiteSpeed_Cache_Control
 		// Apply 3rd party filter
 		// Parse ESI block id
 		$esi_id = false ;
-		if ( LiteSpeed_Cache_Router::is_esi() ) {
+		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			$params = LiteSpeed_Cache_ESI::parse_esi_param() ;
 			if ( $params !== false ) {
 				$esi_id = $params[LiteSpeed_Cache_ESI::PARAM_BLOCK_ID] ;
