@@ -142,29 +142,27 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Check to see if a file exists starting at $start_path and going up
-	 * directories until it hits stop_path.
+	 * Check to see if .htaccess exists starting at $start_path and going up directories until it hits DOCUMENT_ROOT.
 	 *
-	 * As dirname() strips the ending '/', paths passed in must exclude the
-	 * final '/', and the file must start with a '/'.
+	 * As dirname() strips the ending '/', paths passed in must exclude the final '/'
+	 *
+	 * If can't find, return false
 	 *
 	 * @since 1.0.11
 	 * @access private
-	 * @param string $stop_path The last directory level to search.
 	 * @param string $start_path The first directory level to search.
-	 * @param string $file The file to search for.
-	 * @return string The deepest path where the file exists,
-	 * or the last path used if it does not exist.
+	 * @return string The deepest path where .htaccess exists, False if not.
 	 */
-	private function path_search($stop_path, $start_path, $file)
+	private function htaccess_search( $start_path )
 	{
-		while ( ! file_exists($start_path . $file) ) {
-			if ( $start_path === $stop_path ) {
-				break ;
+		while ( ! file_exists( $start_path . '/.htaccess' ) ) {
+			if ( $start_path === $_SERVER[ 'DOCUMENT_ROOT' ] || $start_path === '/' || ! $start_path ) {
+				return false ;
 			}
-			$start_path = dirname($start_path) ;
+			$start_path = dirname( $start_path ) ;
 		}
-		return $start_path . $file ;
+
+		return $start_path ;
 	}
 
 	/**
@@ -177,65 +175,39 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$this->theme_htaccess = LSWCP_CONTENT_DIR ;
 
-		$real = trailingslashit(realpath(ABSPATH)) ;
-		$install = $real ;
-		$access = trailingslashit(get_home_path()) ;
-
-		if ( $access === '/' ) {
-			// get home path failed. Trac ticket #37668
-			$install = set_url_scheme( get_option( 'siteurl' ), 'http' ) ;
-			$access = set_url_scheme( get_option( 'home' ), 'http' ) ;
+		$frontend = rtrim( get_home_path(), '/' ) ; // /home/user/public_html/frontend
+		// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
+		if ( ! $frontend ) {
+			$frontend = parse_url( get_option( 'home' ) ) ;
+			$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
+			$frontend = $_SERVER["DOCUMENT_ROOT"] . $frontend ;
 		}
+		$frontend = realpath( $frontend ) ;
+		$frontend_htaccess_search = $this->htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
+		$this->frontend_htaccess = ( $frontend_htaccess_search ?: $frontend ) . '/.htaccess' ;
 
-		/**
-		 * Converts the intersection of $access and $install to \0
-		 * then counts the number of \0 characters before the first non-\0.
-		 */
-		$common_count = strspn($access ^ $install, "\0") ;
-
-		$install_part = substr($install, $common_count) ;
-		$access_part = substr($access, $common_count) ;
-		if ( $access_part !== false ) {
-			// access is longer than install or they are in different dirs.
-			if ( $install_part === false ) {
-				$install_part = '' ;
-			}
-		}
-		elseif ( $install_part !== false ) {
-			// Install is longer than access
-			$access_part = '' ;
-			$install_part = rtrim($install_part, '/') ;
-		}
-		else {
-			// they are equal - no need to find paths.
-			$this->frontend_htaccess = $real . '.htaccess' ;
-			$this->backend_htaccess = $real . '.htaccess' ;
+		$backend = realpath( ABSPATH ) ; // /home/user/public_html/backend/
+		if ( $frontend == $backend ) {
+			$this->backend_htaccess = $this->frontend_htaccess ;
 			return ;
 		}
-		$common_path = substr($real, 0, -(strlen($install_part) + 1)) ;
 
-		$partial_dir = false ;
-
-		if ( substr($common_path, -1) != '/' ) {
-			if ( $install_part !== '' && $install_part[0] != '/' ) {
-				$partial_dir = true ;
-			}
-			elseif ( $access_part !== '' && $access_part[0] != '/' ) {
-				$partial_dir = true ;
-			}
-		}
-		$install_part = rtrim($common_path . $install_part, '/') ;
-		$access_part = rtrim($common_path . $access_part, '/') ;
-
-		if ( $partial_dir ) {
-			$common_path = dirname($common_path) ;
-		}
-		else {
-			$common_path = rtrim($common_path, '/') ;
+		// Backend is a different path
+		$backend_htaccess_search = $this->htaccess_search( $backend ) ;
+		// Found affected .htaccess
+		if ( $backend_htaccess_search ) {
+			$this->backend_htaccess = $backend_htaccess_search . '/.htaccess' ;
+			return ;
 		}
 
-		$this->backend_htaccess = $this->path_search($common_path, $install_part, '/.htaccess') ;
-		$this->frontend_htaccess = $this->path_search($common_path, $access_part, '/.htaccess') ;
+		// Frontend path is the parent of backend path
+		if ( stripos( $backend, $frontend . '/' ) === 0 ) {
+			// backend use frontend htaccess
+			$this->backend_htaccess = $this->frontend_htaccess ;
+			return ;
+		}
+
+		$this->backend_htaccess = $backend . '/.htaccess' ;
 	}
 
 	/**
