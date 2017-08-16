@@ -517,7 +517,7 @@ class LiteSpeed_Cache_Purge
 			if ( LiteSpeed_Cache_Control::is_stale() ) {
 				$purge_header .= 'stale,' ;
 			}
-			$purge_header .= 'tag=' . implode( ',', $public_tags ) ;
+			$purge_header .= implode( ',', $public_tags ) ;
 			$private_prefix = ';private,' ;
 		}
 
@@ -529,7 +529,7 @@ class LiteSpeed_Cache_Purge
 			else {
 				$private_tags = self::_append_prefix( self::$_priv_purge ) ;
 				if ( ! empty( $private_tags ) ) {
-					$purge_header .= $private_prefix . 'tag=' . implode( ',', $private_tags ) ;
+					$purge_header .= $private_prefix . implode( ',', $private_tags ) ;
 				}
 			}
 		}

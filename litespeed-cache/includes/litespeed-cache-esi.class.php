@@ -123,6 +123,7 @@ class LiteSpeed_Cache_ESI
 	{
 		do_action('litespeed_cache_is_not_esi_template') ;
 
+		// Add comment list ESI
 		add_filter('comments_array', array($this, 'sub_comments_block')) ;
 
 		if ( LiteSpeed_Cache_Router::is_ajax() ) {
@@ -131,13 +132,13 @@ class LiteSpeed_Cache_ESI
 
 		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
 
-		// separate admin_bar esi
+		// Add admin_bar esi
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000) ;
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000) ;
 		}
 
-		// comment forum esi
+		// Add comment forum esi
 		if ( LiteSpeed_Cache_Vary::get_user_status() ) {
 			add_filter('comment_form_defaults', array($this, 'register_comment_form_actions')) ;
 		}
@@ -209,6 +210,9 @@ class LiteSpeed_Cache_ESI
 			$output .= " cache-control='$control'" ;
 		}
 		$output .= " /><!-- lscwp $wrapper esi end -->" ;
+
+		LiteSpeed_Cache_Log::debug( "ESI block ID:$block_id; $wrapper; $control" ) ;
+
 		if ( $echo == false ) {
 			return $output ;
 		}
@@ -253,21 +257,27 @@ class LiteSpeed_Cache_ESI
 		if ( $params === false ) {
 			return ;
 		}
+		$esi_id = $params[ self::PARAM_BLOCK_ID ] ;
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			$logInfo = 'Got an esi request.' ;
-			if( ! empty($params[self::PARAM_NAME]) ) {
-				$logInfo .= ' Name: ' . $params[self::PARAM_NAME] . ', ' ;
+			$logInfo = '------- ESI ------- ' ;
+			if( ! empty( $params[ self::PARAM_NAME ] ) ) {
+				$logInfo .= ' Name: ' . $params[ self::PARAM_NAME ] . ' ----- ' ;
 			}
-			$logInfo .= ' Block ID: ' . $params[self::PARAM_BLOCK_ID] ;
-			LiteSpeed_Cache_Log::push($logInfo) ;
+			$logInfo .= $esi_id . ' -------' ;
+			LiteSpeed_Cache_Log::push( $logInfo ) ;
 		}
-		global $_SERVER ;
-		$orig = $_SERVER['REQUEST_URI'] ;
-		$_SERVER['REQUEST_URI'] = !empty($_SERVER['ESI_REFERER']) ? $_SERVER['ESI_REFERER'] : false ;
 
-		do_action('litespeed_cache_load_esi_block-' . $params[self::PARAM_BLOCK_ID], $params) ;
+		$orig = $_SERVER[ 'REQUEST_URI' ] ;
+		$_SERVER[ 'REQUEST_URI' ] = !empty( $_SERVER[ 'ESI_REFERER' ] ) ? $_SERVER[ 'ESI_REFERER' ] : false ;
 
-		$_SERVER['REQUEST_URI'] = $orig ;
+		LiteSpeed_Cache_Tag::add( rtrim( LiteSpeed_Cache_Tag::TYPE_ESI, '.' ) ) ;
+		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . $esi_id ) ;
+
+		// LiteSpeed_Cache_Log::debug(var_export($params, true ));
+
+		do_action('litespeed_cache_load_esi_block-' . $esi_id, $params) ;
+
+		$_SERVER[ 'REQUEST_URI' ] = $orig ;
 	}
 
 // BEGIN helper functions
@@ -387,20 +397,20 @@ class LiteSpeed_Cache_ESI
 	 * @param array $comments The comments to be displayed.
 	 * @return array Returns input array
 	 */
-	public function comments_load_cache_type($comments)
+	public function comments_load_cache_type( $comments )
 	{
-		if ( empty($comments) ) {
-			LiteSpeed_Cache_Control::set_shared() ;
+		if ( empty( $comments ) ) {
+			LiteSpeed_Cache_Control::set_shared( 'empty comment' ) ;
 			return $comments ;
 		}
 
-		foreach ($comments as $comment) {
+		foreach ( $comments as $comment ) {
 			if ( ! $comment->comment_approved ) {
-				LiteSpeed_Cache_Control::set_private() ;
+				LiteSpeed_Cache_Control::set_private( 'comment awaiting moderation' ) ;
 				return $comments ;
 			}
 		}
-		LiteSpeed_Cache_Control::set_shared() ;
+		LiteSpeed_Cache_Control::set_shared( 'comment list shared' ) ;
 		return $comments ;
 	}
 
@@ -427,7 +437,7 @@ class LiteSpeed_Cache_ESI
 		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
 		if ( ! isset($options) || ! $options[self::WIDGET_OPID_ESIENABLE] ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push('Do not esi widget ' . $name . ' because '. (!isset($options) ? 'options not set' : 'esi disabled for widget')) ;
+				LiteSpeed_Cache_Log::push('ESI off for widget ' . $name . ' because '. (!isset($options) ? 'options not set' : 'esi disabled for widget')) ;
 			}
 			return $instance ;
 		}
@@ -516,8 +526,8 @@ class LiteSpeed_Cache_ESI
 
 	/**
 	 * Hooked to the comments_array filter.
-	 * If there are pending comments, the whole comments section should be an
-	 * ESI block.
+	 *
+	 * If there are pending comments, the whole comments section should be an ESI block.
 	 * Else the comments do not need to be ESI.
 	 *
 	 * @access public
@@ -568,11 +578,10 @@ class LiteSpeed_Cache_ESI
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[self::WIDGET_OPID_TTL] ;
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push('Esi widget render: name ' . $params[self::PARAM_NAME] . ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl) ;
+			LiteSpeed_Cache_Log::push('ESI widget render: name ' . $params[self::PARAM_NAME] . ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl) ;
 		}
 		if ( $ttl == 0 ) {
-			LiteSpeed_Cache_Log::debug('Do not cache - Widget time to live set to 0.') ;
-			LiteSpeed_Cache_Control::set_nocache() ;
+			LiteSpeed_Cache_Control::set_nocache( 'ESI Widget time to live set to 0' ) ;
 		}
 		else {
 			LiteSpeed_Cache_Control::set_custom_ttl($ttl) ;

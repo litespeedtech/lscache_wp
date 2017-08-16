@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_NO_VARY ;
-		LiteSpeed_Cache_Log::debug('Cache_control is set to no_vary') ;
+		LiteSpeed_Cache_Log::debug('X Cache_control -> no_vary') ;
 	}
 
 	/**
@@ -62,7 +62,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_STALE ;
-		LiteSpeed_Cache_Log::debug('Cache_control is set to stale') ;
+		LiteSpeed_Cache_Log::debug('X Cache_control -> stale') ;
 	}
 
 	/**
@@ -81,15 +81,16 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.1.3
+	 * @param string $reason The reason to no cache
 	 */
-	public static function set_shared()
+	public static function set_shared( $reason = false )
 	{
 		if ( self::is_shared() ) {
 			return ;
 		}
 		self::$_control |= self::BM_SHARED ;
 		self::set_private() ;
-		LiteSpeed_Cache_Log::debug('Cache_control is set to shared') ;
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> shared; ' . $reason ) ;
 	}
 
 	/**
@@ -108,14 +109,15 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.1.3
+	 * @param string $reason The reason to no cache
 	 */
-	public static function set_private()
+	public static function set_private( $reason = false )
 	{
 		if ( self::is_private() ) {
 			return ;
 		}
 		self::$_control |= self::BM_PRIVATE ;
-		LiteSpeed_Cache_Log::debug('Cache_control is set to private') ;
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> private; ' . $reason) ;
 	}
 
 	/**
@@ -138,7 +140,7 @@ class LiteSpeed_Cache_Control
 	public static function set_cacheable()
 	{
 		self::$_control |= self::BM_CACHEABLE ;
-		LiteSpeed_Cache_Log::debug( 'Control set initialized cacheable' ) ;
+		LiteSpeed_Cache_Log::debug( 'X Cache_control init on' ) ;
 	}
 
 	/**
@@ -151,7 +153,7 @@ class LiteSpeed_Cache_Control
 	public static function set_nocache( $reason = false )
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
-		LiteSpeed_Cache_Log::debug( 'Control set No Cache: ' . $reason, 2 ) ;
+		LiteSpeed_Cache_Log::debug( 'X Cache_control set No Cache: ' . $reason, 2 ) ;
 	}
 
 	/**
@@ -189,7 +191,7 @@ class LiteSpeed_Cache_Control
 	{
 		if ( is_numeric($ttl) ) {
 			self::$_custom_ttl = $ttl ;
-			LiteSpeed_Cache_Log::debug('Cache_control TTL is set to ' . $ttl) ;
+			LiteSpeed_Cache_Log::debug('X Cache_control TTL -> ' . $ttl) ;
 		}
 	}
 
@@ -219,7 +221,7 @@ class LiteSpeed_Cache_Control
 				if ( $ttl < 0 ) {
 					$ttl += 86400 ;// add one day
 				}
-				LiteSpeed_Cache_Log::debug( 'Cache_control TTL is limited to ' . $ttl ) ;
+				LiteSpeed_Cache_Log::debug( 'X Cache_control TTL is limited to ' . $ttl ) ;
 				return $ttl ;
 			}
 		}
@@ -363,9 +365,9 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 
-		if ( defined('LSCACHE_ESI_LOGGEDIN') ) {
-			self::set_shared() ;
-		}
+		// if ( defined( 'LSCACHE_ESI_LOGGEDIN' ) ) {
+		// 	self::set_shared( 'ESI loggedin' ) ;
+		// }
 
 		// The following check to the end is ONLY for mobile
 		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED) ) {
@@ -475,7 +477,7 @@ class LiteSpeed_Cache_Control
 	 */
 	private static function _no_cache_for( $reason )
 	{
-		LiteSpeed_Cache_Log::debug('Do not cache - ' . $reason) ;
+		LiteSpeed_Cache_Log::debug('X Cache_control off - ' . $reason) ;
 		return false ;
 	}
 

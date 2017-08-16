@@ -249,6 +249,9 @@ class LiteSpeed_Cache_Log
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ) {
 			$params[] = 'Cookie: ' . $SERVER['HTTP_COOKIE'] ;
 		}
+		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
+			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
+		}
 		$params[] = 'X-LSCACHE: ' . ( $SERVER['X-LSCACHE'] ? 'true' : 'false' ) ;
 		if( $SERVER['LSCACHE_VARY_COOKIE'] ) {
 			$params[] = 'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'] ;

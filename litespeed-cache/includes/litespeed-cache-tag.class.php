@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Tag
 	const TYPE_LOGIN = 'L' ;
 	const TYPE_URL = 'URL.' ;
 	const TYPE_WIDGET = 'W.' ;
+	const TYPE_ESI = 'ESI.' ;
 
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
@@ -172,16 +173,11 @@ class LiteSpeed_Cache_Tag
 		}
 		$slashed = trailingslashit( $no_qs ) ;
 
-		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			$slashed = 'esi' ;
-		}
-
 		// If only needs uri tag
 		if ( $ori ) {
 			return $slashed ;
 		}
-
-		return self::TYPE_URL . ( $slashed ) ;
+		// return self::TYPE_URL . ( $slashed ) ;
 		return self::TYPE_URL . md5( $slashed ) ;
 	}
 
@@ -210,15 +206,14 @@ class LiteSpeed_Cache_Tag
 	private static function _build_type_tags()
 	{
 		$tags = array() ;
+
 		$tags[] = self::build_uri_tag() ;
 
-		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
-			if ( is_front_page() ) {
-				$tags[] = self::TYPE_FRONTPAGE ;
-			}
-			elseif ( is_home() ) {
-				$tags[] = self::TYPE_HOME ;
-			}
+		if ( is_front_page() ) {
+			$tags[] = self::TYPE_FRONTPAGE ;
+		}
+		elseif ( is_home() ) {
+			$tags[] = self::TYPE_HOME ;
 		}
 
 		$err = self::get_error_code() ;
@@ -281,8 +276,10 @@ class LiteSpeed_Cache_Tag
 		// run 3rdparty hooks to tag
 		do_action( 'litespeed_cache_api_tag' ) ;
 		// generate wp tags
-		$type_tags = self::_build_type_tags() ;
-		self::$_tags = array_merge( self::$_tags, $type_tags ) ;
+		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
+			$type_tags = self::_build_type_tags() ;
+			self::$_tags = array_merge( self::$_tags, $type_tags ) ;
+		}
 		// append blog main tag
 		self::$_tags[] = '' ;
 		// removed duplicates
@@ -309,7 +306,7 @@ class LiteSpeed_Cache_Tag
 			foreach ( self::$_tags_priv as $priv_tag ) {
 				$prefix_tags[] = $prefix . $priv_tag ;
 			}
-			$prefix = 'public: ' . $prefix ;
+			$prefix = 'public:' . $prefix ;
 		}
 
 		foreach ( self::$_tags as $tag ) {
