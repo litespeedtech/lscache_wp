@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, cache, performance, optimization, wp-cache, busting, wordpress cache busting, litespeed, http2, woo, yoast, wordfence, contact, Contact Form 7, varnish, widget, litespeed web server, lsws, availability, pagespeed, woocommerce, bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite, scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize, wp-super-cache, w3total cache, w3totalcache, w3 total cache, wp super cache, wp rocket
 Requires at least: 4.0
-Tested up to: 4.8
-Stable tag: 1.1.5
+Tested up to: 4.8.1
+Stable tag: 1.1.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -339,7 +339,7 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 
 = 1.1.5 - August 10 2017 =
 * [NEW FEATURE] Scheduled Purge URLs feature.
-* [NEW FEATURE] Added buffer callback to improve compatibility with some plugins that force buffer cleaning. 
+* [NEW FEATURE] Added buffer callback to improve compatibility with some plugins that force buffer cleaning.
 * [NEW FEATURE] Hide purge_all admin bar quick link if cache is disabled.
 * [NEW FEATURE] Required htaccess rules are now displayed when .htaccess is not writable.
 * [NEW FEATURE] Debug log features: filter log support; heartbeat control; log file size limit; log viewer.
