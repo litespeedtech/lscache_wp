@@ -337,6 +337,12 @@ All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache
 
 == Changelog ==
 
+= 1.1.5.1 - August 16 2017 =
+* [IMPROVEMENT] Improved compatibility of frontend&backend .htaccess path detection when site url is different than installation path.
+* [UPDATE] Removed unused format string from header tags.
+* [BUGFIX] 'showheader' Admin Query String now works.
+* [REFACTOR] Cache tags will no longer output if not needed.
+
 = 1.1.5 - August 10 2017 =
 * [NEW FEATURE] Scheduled Purge URLs feature.
 * [NEW FEATURE] Added buffer callback to improve compatibility with some plugins that force buffer cleaning.
