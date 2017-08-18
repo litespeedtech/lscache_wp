@@ -34,6 +34,11 @@ class LiteSpeed_Cache_Log
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
 			define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
 		}
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL ) ) {
+			define( 'LSCWP_LOG_MORE', true ) ;
+		}
+
 		$this->_init_request() ;
 		self::$_debug = true ;
 	}
@@ -69,6 +74,10 @@ class LiteSpeed_Cache_Log
 	public static function set_enabled()
 	{
 		self::$_enabled = true ;
+
+		if ( ! isset( self::$_debug ) ) {// If not initialized, do it now
+			self::get_instance() ;
+		}
 
 		// Check if hook filters
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILTERS ) ) {
@@ -176,12 +185,8 @@ class LiteSpeed_Cache_Log
 	 */
 	public static function push( $msg, $backtrace_limit = false )
 	{
-		if ( ! isset( self::$_debug ) ) {// If not initialized, do it now
-			self::get_instance() ;
-		}
-
 		// backtrace handler
-		if ( $backtrace_limit !== false ) {
+		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {
 			$trace = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 2 ) ;
 			for ( $i=1 ; $i <= $backtrace_limit + 1 ; $i++ ) {// the 0st item is push()
 				if ( empty( $trace[$i]['class'] ) ) {
@@ -244,15 +249,19 @@ class LiteSpeed_Cache_Log
 			$qs = substr( $qs, 0, 53 ) . '...' ;
 		}
 		$params[] = 'Query String: ' . $qs ;
-		$params[] = 'User Agent: ' . $SERVER['HTTP_USER_AGENT'] ;
-		$params[] = 'Accept Encoding: ' . $SERVER['HTTP_ACCEPT_ENCODING'] ;
+		if ( defined( 'LSCWP_LOG_MORE' ) ) {
+			$params[] = 'User Agent: ' . $SERVER[ 'HTTP_USER_AGENT' ] ;
+			$params[] = 'Accept Encoding: ' . $SERVER['HTTP_ACCEPT_ENCODING'] ;
+		}
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ) {
 			$params[] = 'Cookie: ' . $SERVER['HTTP_COOKIE'] ;
 		}
 		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
 			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
 		}
-		$params[] = 'X-LSCACHE: ' . ( $SERVER['X-LSCACHE'] ? 'true' : 'false' ) ;
+		if ( defined( 'LSCWP_LOG_MORE' ) ) {
+			$params[] = 'X-LSCACHE: ' . ( $SERVER[ 'X-LSCACHE' ] ? 'true' : 'false' ) ;
+		}
 		if( $SERVER['LSCACHE_VARY_COOKIE'] ) {
 			$params[] = 'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'] ;
 		}

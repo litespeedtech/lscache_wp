@@ -117,7 +117,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_general(&$input, &$options, &$errors)
+	private function validate_general( &$input, &$options, &$errors )
 	{
 		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC) ;
 		$max_ttl = 2147483647 ;
@@ -223,16 +223,74 @@ class LiteSpeed_Cache_Admin_Settings
 			$options[ $id ] = intval($input[ $id ]) ;
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+	}
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+	/**
+	 * Validates the cache control settings.
+	 *
+	 * @since 1.1.6
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
+	private function validate_cache( &$input, &$options, &$errors )
+	{
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_PRIV ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_LOGIN ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_REST ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 		if( ! $options[ $id ] ) {
 			LiteSpeed_Cache_Purge::add(LiteSpeed_Cache_Tag::TYPE_LOGIN) ;
+		}
+	}
+
+	/**
+	 * Validates the purge settings.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 * @param array $input The input options.
+	 * @param array $options The current options.
+	 * @param array $errors The errors list.
+	 */
+	private function validate_purge( $input, &$options, &$errors )
+	{
+		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+
+		// get auto purge rules options
+		$pvals = array(
+			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
+			LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
+			LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
+			LiteSpeed_Cache_Config::PURGE_PAGES,
+			LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS,
+			LiteSpeed_Cache_Config::PURGE_AUTHOR,
+			LiteSpeed_Cache_Config::PURGE_YEAR,
+			LiteSpeed_Cache_Config::PURGE_MONTH,
+			LiteSpeed_Cache_Config::PURGE_DATE,
+			LiteSpeed_Cache_Config::PURGE_TERM,
+			LiteSpeed_Cache_Config::PURGE_POST_TYPE,
+		) ;
+		$input_purge_options = array() ;
+		foreach ($pvals as $pval) {
+			$input_name = 'purge_' . $pval ;
+			if ( self::parse_onoff( $input, $input_name ) ) {
+				$input_purge_options[] = $pval ;
+			}
+		}
+		sort( $input_purge_options ) ;
+		$purge_by_post = implode( '.', $input_purge_options ) ;
+		if ( $purge_by_post !== $options[ LiteSpeed_Cache_Config::OPID_PURGE_BY_POST ] ) {
+			$options[ LiteSpeed_Cache_Config::OPID_PURGE_BY_POST ] = $purge_by_post ;
 		}
 
 		// Filter scheduled purge URLs
@@ -256,46 +314,6 @@ class LiteSpeed_Cache_Admin_Settings
 		// Schduled Purge Time
 		$id = LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ;
 		$options[ $id ] = $input[ $id ] ;
-
-	}
-
-	/**
-	 * Validates the purge rules settings.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 * @param array $input The input options.
-	 * @param array $options The current options.
-	 * @param array $errors The errors list.
-	 */
-	private function validate_purge($input, &$options, &$errors)
-	{
-		// get purge options
-		$pvals = array(
-			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
-			LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
-			LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
-			LiteSpeed_Cache_Config::PURGE_PAGES,
-			LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS,
-			LiteSpeed_Cache_Config::PURGE_AUTHOR,
-			LiteSpeed_Cache_Config::PURGE_YEAR,
-			LiteSpeed_Cache_Config::PURGE_MONTH,
-			LiteSpeed_Cache_Config::PURGE_DATE,
-			LiteSpeed_Cache_Config::PURGE_TERM,
-			LiteSpeed_Cache_Config::PURGE_POST_TYPE,
-		) ;
-		$input_purge_options = array() ;
-		foreach ($pvals as $pval) {
-			$input_name = 'purge_' . $pval ;
-			if ( isset($input[$input_name]) && self::is_checked($input[$input_name]) ) {
-				$input_purge_options[] = $pval ;
-			}
-		}
-		sort($input_purge_options) ;
-		$purge_by_post = implode('.', $input_purge_options) ;
-		if ( $purge_by_post !== $options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] ) {
-			$options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST] = $purge_by_post ;
-		}
 	}
 
 	/**
@@ -395,7 +413,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 	}
 
 	/**
@@ -464,6 +482,9 @@ class LiteSpeed_Cache_Admin_Settings
 			$options[ $id ] = $debug_level ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+
 		$id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ;
 		if ( ! $this->validate_ttl( $input, $id, 3, 3000 ) ) {
 			$errors[] = sprintf( $num_err, __( 'Log File Size Limit', 'litespeed-cache' ), 3, 3000 ) ;
@@ -473,16 +494,16 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_HEARTBEAT ;
-		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ;
-		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_COLLAPS_QS ;
-		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_LOG_FILTERS ;
-		$options[ $id ] = isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS ;
 		if ( isset( $input[ $id ] ) ) {
@@ -514,16 +535,16 @@ class LiteSpeed_Cache_Admin_Settings
 		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC) ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_POSTS ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_PAGES ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_CATS ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_TAGS ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT ;
 		if ( isset($input[ $id ]) ) {
@@ -654,10 +675,10 @@ class LiteSpeed_Cache_Admin_Settings
 	private function validate_esi($input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_ESI_ENABLE ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 	}
 
 	/**
@@ -685,6 +706,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$this->validate_general($input, $options, $errors) ;
+
+		$this->validate_cache($input, $options, $errors) ;
 
 		$this->validate_purge($input, $options, $errors) ;
 
@@ -726,7 +749,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$cron_val = $options[ $id ] ;
 			// assign crawler_cron_active to $options if exists in $input separately for CLI
 			// This has to be specified cos crawler cron activation is not set in admin setting page
-			$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+			$options[ $id ] = self::parse_onoff( $input, $id ) ;
 			if ( $cron_val != $options[ $id ] ) {
 				$cron_changed = true ;
 			}
@@ -755,7 +778,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$errors = array() ;
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ;
-		$network_enabled = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$network_enabled = self::parse_onoff( $input, $id ) ;
 		if ( $options[ $id ] != $network_enabled ) {
 			$options[ $id ] = $network_enabled ;
 			if ( $network_enabled ) {
@@ -773,16 +796,16 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
 		$orig_primary = $options[ $id ] ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 		if ( $orig_primary != $options[ $id ] ) {
 			LiteSpeed_Cache_Purge::purge_all() ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
-		$options[ $id ] = isset($input[ $id ]) && self::is_checked($input[ $id ]) ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance() ;
 
@@ -810,6 +833,20 @@ class LiteSpeed_Cache_Admin_Settings
 		LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __('File saved.', 'litespeed-cache')) ;
 		update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $options) ;
 		return $options ;
+	}
+
+	/**
+	 * Filter the value for checkbox via input and id (enabled/disabled)
+	 *
+	 * @since  1.1.6
+	 * @access public
+	 * @param int $input The whole input array
+	 * @param string $id The ID of the option
+	 * @return bool Filtered value
+	 */
+	public static function parse_onoff( $input, $id )
+	{
+		return isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
 	}
 
 	/**

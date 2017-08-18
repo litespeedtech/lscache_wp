@@ -130,21 +130,5 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
-	<tr>
-		<th><?php echo __('Enable Cache for Commenters', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS); ?>
-			<div class="litespeed-desc">
-				<?php echo __('When enabled, commenters will not be able to see their comments awaiting moderation.', 'litespeed-cache'); ?>
-				<?php echo __('Disabling this option will display those types of comments, but the cache will not perform as well.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<?php if (!is_multisite()): ?>
-		<?php require LSWCP_DIR . 'admin/tpl/settings_inc.purge_on_upgrade.php'; ?>
-		<?php require LSWCP_DIR . 'admin/tpl/settings_inc.mobile_view.php'; ?>
-	<?php endif; ?>
-
 </tbody></table>
 

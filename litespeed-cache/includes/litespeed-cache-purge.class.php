@@ -116,9 +116,6 @@ class LiteSpeed_Cache_Purge
 	public static function purge_all()
 	{
 		self::add( '*' ) ;
-		if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-			self::add_private( '*' ) ;
-		}
 
 		// check if need to reset crawler
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ) ) {
@@ -523,15 +520,8 @@ class LiteSpeed_Cache_Purge
 
 		// Handle priv purge tags
 		if ( ! empty( self::$_priv_purge ) ) {
-			if ( in_array( '*', self::$_priv_purge ) ) {
-				$purge_header .= $private_prefix . '*' ;
-			}
-			else {
-				$private_tags = self::_append_prefix( self::$_priv_purge ) ;
-				if ( ! empty( $private_tags ) ) {
-					$purge_header .= $private_prefix . implode( ',', $private_tags ) ;
-				}
-			}
+			$private_tags = self::_append_prefix( self::$_priv_purge, true ) ;
+			$purge_header .= $private_prefix . implode( ',', $private_tags ) ;
 		}
 
 		return $purge_header ;
@@ -543,9 +533,10 @@ class LiteSpeed_Cache_Purge
 	 * @since 1.1.0
 	 * @access private
 	 * @param array $purge_tags The purge tags to apply the prefix to.
+	 * @param  boolean $is_private If is private tags or not.
 	 * @return array The array of built purge tags.
 	 */
-	private static function _append_prefix($purge_tags)
+	private static function _append_prefix( $purge_tags, $is_private = false )
 	{
 		$curr_bid = get_current_blog_id() ;
 
@@ -557,7 +548,7 @@ class LiteSpeed_Cache_Purge
 			return $tags ;
 		}
 
-		if ( defined('LSWCP_EMPTYCACHE') ) {
+		if ( defined('LSWCP_EMPTYCACHE') || $is_private ) {
 			return array('*') ;
 		}
 

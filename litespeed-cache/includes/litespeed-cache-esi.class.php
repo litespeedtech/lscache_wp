@@ -27,8 +27,6 @@ class LiteSpeed_Cache_ESI
 	const PARAM_INSTANCE = 'instance' ;
 	const PARAM_NAME = 'name' ;
 
-	const CACHECTRL_PRIV = 'no-vary,private' ;
-
 	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable' ;
 	const WIDGET_OPID_TTL = 'widget_ttl' ;
 
@@ -76,13 +74,19 @@ class LiteSpeed_Cache_ESI
 	 */
 	public static function esi_template($template)
 	{
+		// Add comment forum esi for logged-in user or commenter
+		if ( LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
+			add_filter( 'comment_form_defaults', array( self::get_instance(), 'register_comment_form_actions' ) ) ;
+		}
+
+		// Check if is an ESI request
 		if ( ! empty( $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] ) && $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] == LiteSpeed_Cache_ESI::POSTTYPE ) {
 			define('LSCACHE_IS_ESI', true) ;
 
 			self::get_instance()->register_esi_actions() ;
 
 			if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_CACHE) ) {
-				LiteSpeed_Cache_Control::set_nocache() ;
+				LiteSpeed_Cache_Control::set_nocache( 'ESI page is not cacheable' ) ;
 			}
 			return LSWCP_DIR . 'includes/litespeed-cache-esi.tpl.php' ;
 		}
@@ -102,14 +106,6 @@ class LiteSpeed_Cache_ESI
 		add_action('litespeed_cache_load_esi_block-widget', array($this, 'load_widget_block')) ;
 		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
 		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
-		add_action('litespeed_cache_load_esi_block-comments', array($this, 'load_comments_block')) ;
-
-		if ( LiteSpeed_Cache_Router::is_ajax() ) {
-			return ;
-		}
-		if ( LiteSpeed_Cache_Vary::get_user_status() ) {
-			add_filter('comment_form_defaults', array($this, 'register_comment_form_actions')) ;
-		}
 	}
 
 	/**
@@ -123,9 +119,6 @@ class LiteSpeed_Cache_ESI
 	{
 		do_action('litespeed_cache_is_not_esi_template') ;
 
-		// Add comment list ESI
-		add_filter('comments_array', array($this, 'sub_comments_block')) ;
-
 		if ( LiteSpeed_Cache_Router::is_ajax() ) {
 			return ;
 		}
@@ -138,22 +131,14 @@ class LiteSpeed_Cache_ESI
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000) ;
 		}
 
-		// Add comment forum esi
-		if ( LiteSpeed_Cache_Vary::get_user_status() ) {
-			add_filter('comment_form_defaults', array($this, 'register_comment_form_actions')) ;
-		}
 	}
 
 	/**
 	 * Hooked to the comment_form_defaults filter.
 	 * Stores the default comment form settings.
-	 * This method initializes an output buffer and adds two hook functions
-	 * to the WP process.
-	 * If comment_form_sub_cancel is triggered, the output buffer is flushed
-	 * because there is no need to make the comment form ESI.
-	 * Else if sub_comment_form_block is triggered, the output buffer is cleared
-	 * and an esi block is added. The remaining comment form is also buffered
-	 * and cleared.
+	 * This method initializes an output buffer and adds two hook functions to the WP process.
+	 * If comment_form_sub_cancel is triggered, the output buffer is flushed because there is no need to make the comment form ESI.
+	 * Else if sub_comment_form_block is triggered, the output buffer is cleared and an esi block is added. The remaining comment form is also buffered and cleared.
 	 *
 	 * @since 1.1.3
 	 * @access public
@@ -171,8 +156,7 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
-	 * Build the esi url. This method will build the html comment wrapper
-	 * as well as serialize and encode the parameter array.
+	 * Build the esi url. This method will build the html comment wrapper as well as serialize and encode the parameter array.
 	 *
 	 * The block_id parameter should contain alphanumeric and '-_' only.
 	 *
@@ -187,7 +171,7 @@ class LiteSpeed_Cache_ESI
 	 * @param boolean $echo Whether to echo the output or return it.
 	 * @return mixed False on error, nothing if echo is true, the output otherwise.
 	 */
-	public static function sub_esi_block($block_id, $wrapper, $params = array(), $control = '', $echo = true)
+	public static function sub_esi_block($block_id, $wrapper, $params = array(), $control = 'private,no-vary', $echo = true)
 	{
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
@@ -206,7 +190,7 @@ class LiteSpeed_Cache_ESI
 
 		$url = wp_make_link_relative(home_url()) . '?' . self::QS_ACTION . '=' . self::POSTTYPE . '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
 		$output = "<!-- lscwp $wrapper --><esi:include src='$url'" ;
-		if ( ! empty($control) ) {
+		if ( ! empty( $control ) ) {
 			$output .= " cache-control='$control'" ;
 		}
 		$output .= " /><!-- lscwp $wrapper esi end -->" ;
@@ -351,7 +335,6 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Hooked to the comment_form_must_log_in_after and
 	 * comment_form_comments_closed actions.
-	 * @see register_comment_form_actions
 	 *
 	 * @since 1.1.3
 	 * @access public
@@ -371,47 +354,6 @@ class LiteSpeed_Cache_ESI
 	public function comment_form_sub_clean()
 	{
 		ob_clean() ;
-	}
-
-	/**
-	 * Hooked to the comments_template filter.
-	 * Loads a dummy comments template file so that no extra processing is done.
-	 * This will only be used if the comments section are to be displayed
-	 * via ESI.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @return string Dummy template file.
-	 */
-	public function comments_sub_dummy_template()
-	{
-		return LSWCP_DIR . 'includes/litespeed-cache-esi-dummy.tpl.php' ;
-	}
-
-	/**
-	 * Hooked to the comments_array filter.
-	 * Parses the comments array to determine the types of comments associated
-	 * with the post. If there are any unapproved comments, the comments block
-	 * should be a private cache. Else use shared.
-	 *
-	 * @param array $comments The comments to be displayed.
-	 * @return array Returns input array
-	 */
-	public function comments_load_cache_type( $comments )
-	{
-		if ( empty( $comments ) ) {
-			LiteSpeed_Cache_Control::set_shared( 'empty comment' ) ;
-			return $comments ;
-		}
-
-		foreach ( $comments as $comment ) {
-			if ( ! $comment->comment_approved ) {
-				LiteSpeed_Cache_Control::set_private( 'comment awaiting moderation' ) ;
-				return $comments ;
-			}
-		}
-		LiteSpeed_Cache_Control::set_shared( 'comment list shared' ) ;
-		return $comments ;
 	}
 
 // END helper functions.
@@ -468,14 +410,13 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-		self::sub_esi_block('admin-bar', 'adminbar', array(), self::CACHECTRL_PRIV) ;
+		self::sub_esi_block('admin-bar', 'adminbar') ;
 	}
 
 	/**
 	 * Hooked to the comment_form_submit_button filter.
-	 * @see register_comment_form_actions
-	 * This method will compare the used comment form args against the default
-	 * args. The difference will be passed to the esi request.
+	 *
+	 * This method will compare the used comment form args against the default args. The difference will be passed to the esi request.
 	 *
 	 * @access public
 	 * @since 1.1.3
@@ -490,7 +431,6 @@ class LiteSpeed_Cache_ESI
 			LiteSpeed_Cache_Log::debug('comment form args empty?') ;
 			return $unused ;
 		}
-		$control = '' ;
 		$esi_args = array() ;
 
 		foreach ($args as $key => $val) {
@@ -515,51 +455,10 @@ class LiteSpeed_Cache_ESI
 			self::PARAM_ARGS => $esi_args,
 		) ;
 
-		if ( LiteSpeed_Cache_Vary::get_user_status() ) {
-			$control = self::CACHECTRL_PRIV ;
-		}
-		self::sub_esi_block('comment-form', 'comment form', $params, $control) ;
+		self::sub_esi_block('comment-form', 'comment form', $params) ;
 		ob_start() ;
 		add_action('comment_form_after', array($this, 'comment_form_sub_clean')) ;
 		return $unused ;
-	}
-
-	/**
-	 * Hooked to the comments_array filter.
-	 *
-	 * If there are pending comments, the whole comments section should be an ESI block.
-	 * Else the comments do not need to be ESI.
-	 *
-	 * @access public
-	 * @since 1.1.3
-	 * @global type $post
-	 * @param array $comments The current comments to output
-	 * @return array The comments to output.
-	 */
-	public function sub_comments_block($comments)
-	{
-		global $post ;
-		$args = array(
-			'status' => 'hold',
-			'number' => '1',
-			'post_id' => $post->ID,
-		) ;
-
-		$on_hold = get_comments($args) ;
-
-		if ( empty($on_hold) ) {
-			// No comments on hold, comments section can be skipped
-			return $comments ;
-		}
-		// Else need to ESI comments.
-
-		$params = array(
-			self::PARAM_ID => $post->ID,
-			self::PARAM_ARGS => get_query_var( 'cpage' ),
-		) ;
-		self::sub_esi_block('comments', 'comments', $params, self::CACHECTRL_PRIV) ;
-		add_filter('comments_template', array($this, 'comments_sub_dummy_template'), 1000) ;
-		return array() ;
 	}
 
 	/**
@@ -607,8 +506,7 @@ class LiteSpeed_Cache_ESI
 
 
 	/**
-	 * Parses the esi input parameters and generates the comment form for
-	 * esi display.
+	 * Parses the esi input parameters and generates the comment form for esi display.
 	 *
 	 * @access public
 	 * @since 1.1.3
@@ -618,7 +516,7 @@ class LiteSpeed_Cache_ESI
 	{
 		remove_filter('comment_form_defaults', array($this, 'register_comment_form_actions')) ;
 		comment_form($params[self::PARAM_ARGS], $params[self::PARAM_ID]) ;
-		if ( LiteSpeed_Cache_Vary::get_user_status() ) {
+		if ( LiteSpeed_Cache_Vary::has_vary() ) {
 			LiteSpeed_Cache_Control::set_private() ;
 			LiteSpeed_Cache_Control::set_no_vary() ;
 		}
@@ -626,31 +524,6 @@ class LiteSpeed_Cache_ESI
 			// LiteSpeed_Cache_Control::set_public() ; no need as by default its public
 		// }
 
-	}
-
-	/**
-	 * Outputs the ESI comments block.
-	 *
-	 * @access public
-	 * @since 1.1.3
-	 * @global type $post
-	 * @global type $wp_query
-	 * @param array $params The parameters used to help display the comments.
-	 */
-	public function load_comments_block($params)
-	{
-		global $post, $wp_query ;
-		$wp_query->is_singular = true ;
-		$wp_query->is_single = true ;
-		if ( ! empty($params[self::PARAM_ARGS]) ) {
-			$wp_query->set('cpage', $params[self::PARAM_ARGS]) ;
-		}
-		$post = get_post($params[self::PARAM_ID]) ;
-		$wp_query->setup_postdata($post) ;
-		add_filter('comments_array', array($this, 'comments_load_cache_type')) ;
-		comments_template() ;
-		LiteSpeed_Cache_Control::set_private() ;
-		LiteSpeed_Cache_Control::set_no_vary() ;
 	}
 
 	/**

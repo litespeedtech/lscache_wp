@@ -52,6 +52,30 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Debug Level', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<div class="litespeed-row">
+				<div class="litespeed-switch litespeed-label-info">
+					<?php echo $this->build_radio(
+						LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
+						LiteSpeed_Cache_Config::VAL_OFF,
+						__( 'Basic', 'litespeed-cache' )
+					) ; ?>
+
+					<?php echo $this->build_radio(
+						LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
+						LiteSpeed_Cache_Config::VAL_ON,
+						__( 'Advanced', 'litespeed-cache' )
+					) ; ?>
+				</div>
+			</div>
+			<div class="litespeed-desc">
+				<?php echo __( 'Advanced level will log more details.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Log File Size Limit', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ; ?>

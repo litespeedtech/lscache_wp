@@ -2,18 +2,7 @@
 if (!defined('WPINC')) die;
 
 ?>
-<h3 class="litespeed-title"><?php echo __('Auto Purge Rules For Publish/Update', 'litespeed-cache'); ?></h3>
-
-<p><?php echo __('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache'); ?></p>
-
-<div class="litespeed-callout litespeed-callout-warning">
-	<h4><?php echo __('Note:', 'litespeed-cache'); ?></h4>
-	<i>
-		<?php echo __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'); ?><br />
-		<?php echo __('Other checkboxes will be ignored.', 'litespeed-cache'); ?><br />
-		<?php echo __('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache'); ?>
-	</i>
-</div>
+<h3 class="litespeed-title"><?php echo __('Purge Settings', 'litespeed-cache'); ?></h3>
 
 <?php
 $purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options();
@@ -45,16 +34,64 @@ $breakArr = array(
 
 ?>
 
-<div class="litespeed-row litespeed-top20">
-<?php
-	foreach ($optionArr as $id => $title){
+<table class="form-table"><tbody>
 
-		$this->build_checkbox("purge_$id", $title, in_array($id, $purge_options));
+	<?php if (!is_multisite()): ?>
+		<?php require LSWCP_DIR . 'admin/tpl/settings_inc.purge_on_upgrade.php'; ?>
+	<?php endif; ?>
 
-		if ( in_array($id, $breakArr) ){
-			echo '</div><div class="litespeed-row litespeed-top20">';
-		}
-	}
-?>
-</div>
+	<tr>
+		<th><?php echo __('Auto Purge Rules For Publish/Update', 'litespeed-cache'); ?></th>
+		<td>
+			<div class="litespeed-desc">
+				<div class="litespeed-callout litespeed-callout-warning">
+					<h4><?php echo __('Note:', 'litespeed-cache'); ?></h4>
+					<i>
+						<?php echo __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'); ?><br />
+						<?php echo __('Other checkboxes will be ignored.', 'litespeed-cache'); ?><br />
+						<?php echo __('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache'); ?>
+					</i>
+				</div>
+			</div>
+			<div class="litespeed-row litespeed-top20">
+			<?php
+				foreach ($optionArr as $id => $title){
+
+					$this->build_checkbox("purge_$id", $title, in_array($id, $purge_options));
+
+					if ( in_array($id, $breakArr) ){
+						echo '</div><div class="litespeed-row litespeed-top20">';
+					}
+				}
+			?>
+			</div>
+			<div class="litespeed-desc">
+				<?php echo __('Select which pages will be automatically purged when posts are published/updated.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Scheduled Purge URLs', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_TIMED_URLS, null, false, 80 ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'The URLs here (one per line) will be purged automatically at the time set in the option "%s".', 'litespeed-cache' ), __( 'Scheduled Purge Time', 'litespeed-cache' ) ) ; ?><br />
+				<?php echo sprintf( __( 'Both %1$s and %2$s are acceptable.', 'litespeed-cache' ), '<i>http://www.example.com/path/url.php</i>', '<i>/path/url.php</i>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Scheduled Purge Time', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ; ?>
+			<?php $this->build_input( $id, '', false, false, null, null, '', 'time' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Specify the time to purge the "%s" list.', 'litespeed-cache' ), __( 'Scheduled Purge URLs', 'litespeed-cache' ) ) ; ?>
+				<?php echo sprintf( __( 'Current server time is %s.', 'litespeed-cache' ), '<i>' . date( 'H:i:s' ) . '</i>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+</tbody></table>
 

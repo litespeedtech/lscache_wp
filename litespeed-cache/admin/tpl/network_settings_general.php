@@ -6,11 +6,6 @@ if (!defined('WPINC')) die;
 
 <p><?php echo __('These configuration are only available network wide.', 'litespeed-cache'); ?></p>
 
-<p>
-	<?php echo __('Separate Mobile Views should be enabled if any of the network enabled themes require a different view for mobile devices.', 'litespeed-cache'); ?>
-	<?php echo __('Responsive themes can handle this part automatically.', 'litespeed-cache'); ?>
-</p>
-
 <table class="form-table"><tbody>
 	<tr>
 		<th><?php echo __('Network Enable Cache', 'litespeed-cache'); ?></th>
@@ -34,11 +29,6 @@ if (!defined('WPINC')) die;
 			</div>
 		</td>
 	</tr>
-
-	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.purge_on_upgrade.php'; ?>
-	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_favicon.php'; ?>
-	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_resources.php'; ?>
-	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.mobile_view.php'; ?>
 
 </tbody></table>
 

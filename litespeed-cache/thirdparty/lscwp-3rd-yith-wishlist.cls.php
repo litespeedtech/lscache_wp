@@ -65,13 +65,13 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * @param $template unused
 	 * @return string The html for future callbacks to filter.
 	 */
-	public static function sub_add_to_wishlist($template)
+	public static function sub_add_to_wishlist( $template )
 	{
 		global $post ;
 		$params = array(
 			self::ESI_PARAM_POSTID => $post->ID
 		) ;
-		LiteSpeed_Cache_API::esi_url('yith-wcwl-add', 'YITH ADD TO WISHLIST', $params, LiteSpeed_Cache_ESI::CACHECTRL_PRIV) ;
+		LiteSpeed_Cache_API::esi_url( 'yith-wcwl-add', 'YITH ADD TO WISHLIST', $params ) ;
 		return '' ;
 	}
 

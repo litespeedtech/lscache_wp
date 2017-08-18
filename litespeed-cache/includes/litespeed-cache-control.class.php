@@ -25,6 +25,39 @@ class LiteSpeed_Cache_Control
 	private static $_mobile = false ;
 
 	/**
+	 * 1. Initialize cacheable status for `wp` hook
+	 * 2. Hook error page tags for cacheable pages
+	 *
+	 * @since 1.1.3
+	 * @access public
+	 */
+	public static function init_cacheable()
+	{
+		// Hook `wp` to mark default cacheable status
+		// NOTE: Any process that does NOT run into `wp` hook will not get cacheable by default
+		add_action( 'wp', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+
+		// Hook WP REST to be cacheable
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_REST ) ) {
+			add_action( 'rest_api_init', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+		}
+
+		// Cache resources
+		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
+		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
+		if ( $cache_res ) {
+			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;
+			$pattern = '!' . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
+			if ( preg_match( $pattern, $uri ) ) {
+				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
+			}
+		}
+
+		// Check error page
+		add_filter( 'status_header', 'LiteSpeed_Cache_Tag::check_error_codes', 10, 2 ) ;
+	}
+
+	/**
 	 * Set no vary setting
 	 *
 	 * @access public
@@ -90,7 +123,10 @@ class LiteSpeed_Cache_Control
 		}
 		self::$_control |= self::BM_SHARED ;
 		self::set_private() ;
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> shared; ' . $reason ) ;
+		if ( $reason ) {
+			$reason = "( $reason )" ;
+		}
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> shared ' . $reason ) ;
 	}
 
 	/**
@@ -117,7 +153,10 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_PRIVATE ;
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> private; ' . $reason) ;
+		if ( $reason ) {
+			$reason = "( $reason )" ;
+		}
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> private ' . $reason) ;
 	}
 
 	/**
@@ -153,7 +192,10 @@ class LiteSpeed_Cache_Control
 	public static function set_nocache( $reason = false )
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
-		LiteSpeed_Cache_Log::debug( 'X Cache_control set No Cache: ' . $reason, 2 ) ;
+		if ( $reason ) {
+			$reason = "( $reason )" ;
+		}
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> no Cache ' . $reason, 2 ) ;
 	}
 
 	/**
@@ -179,6 +221,9 @@ class LiteSpeed_Cache_Control
 	{
 		return ! self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE ;
 	}
+
+
+
 
 	/**
 	 * Set a custom TTL to use with the request if needed.
@@ -321,11 +366,7 @@ class LiteSpeed_Cache_Control
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
-			return ;
-		}
-
-		if ( is_admin() || is_network_admin() ) {
-			self::set_nocache('Admin page') ;
+			LiteSpeed_Cache_Log::debug( 'not cacheable before ctrl finalize' ) ;
 			return ;
 		}
 
@@ -348,6 +389,7 @@ class LiteSpeed_Cache_Control
 
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
+			LiteSpeed_Cache_Log::debug( 'not cacheable after api_control' ) ;
 			return ;
 		}
 
@@ -365,12 +407,8 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 
-		// if ( defined( 'LSCACHE_ESI_LOGGEDIN' ) ) {
-		// 	self::set_shared( 'ESI loggedin' ) ;
-		// }
-
 		// The following check to the end is ONLY for mobile
-		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED) ) {
+		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE) ) {
 			if ( self::is_mobile() ) {
 				self::set_nocache('mobile') ;
 			}
@@ -379,12 +417,12 @@ class LiteSpeed_Cache_Control
 
 		if ( isset($_SERVER['LSCACHE_VARY_VALUE']) && $_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile' ) {
 			if ( ! wp_is_mobile() && ! self::is_mobile() ) {
-				self::set_nocache() ;
+				self::set_nocache( 'is not mobile' ) ;
 				return ;
 			}
 		}
 		elseif ( wp_is_mobile() || self::is_mobile() ) {
-			self::set_nocache() ;
+			self::set_nocache( 'is mobile' ) ;
 			return ;
 		}
 

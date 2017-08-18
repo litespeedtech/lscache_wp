@@ -5,11 +5,11 @@ if (!defined('WPINC')) die;
 
 	<!-- build_setting_mobile_view start -->
 	<tr>
-		<th><?php echo __('Enable Separate Mobile View', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Cache Mobile', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
 				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
-				$this->build_switch(LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED); //, !$file_writable
+				$this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE); //, !$file_writable
 			?>
 			<div class="litespeed-desc">
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>
@@ -19,7 +19,7 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('List of Mobile View User Agents', 'litespeed-cache'); ?></th>
+		<th><?php echo __('List of Mobile User Agents', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
 				$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;

@@ -5,7 +5,7 @@ $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 ?>
 	<!-- build_setting_cache_resources -->
 	<tr>
-		<th><?php echo __('Enable Cache for PHP Resources', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Cache PHP Resources', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_RES);/*, !$file_writable*/ ?>
 			<div class="litespeed-desc">

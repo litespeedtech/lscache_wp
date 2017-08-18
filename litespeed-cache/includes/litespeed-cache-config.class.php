@@ -26,22 +26,28 @@ class LiteSpeed_Cache_Config
 	const OPID_VERSION = 'version' ;
 	const OPID_ENABLED = 'enabled' ;
 	const OPID_ENABLED_RADIO = 'radio_select' ;
-	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
-	const OPID_CACHE_COMMENTERS = 'cache_commenters' ;
-	const OPID_CACHE_LOGIN = 'cache_login' ;
-	const OPID_TIMED_URLS = 'timed_urls' ;
-	const OPID_TIMED_URLS_TIME = 'timed_urls_time' ;
+
+	const OPID_CACHE_PRIV = 'cache_priv' ;
+	const OPID_CACHE_COMMENTER = 'cache_commenter' ;
+	const OPID_CACHE_REST = 'cache_rest' ;
+	const OPID_CACHE_PAGE_LOGIN = 'cache_page_login' ;
 	const OPID_CACHE_FAVICON = 'cache_favicon' ;
 	const OPID_CACHE_RES = 'cache_resources' ;
-	const OPID_MOBILEVIEW_ENABLED = 'mobileview_enabled' ;
+	const OPID_CACHE_MOBILE = 'mobileview_enabled' ;
+	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
+
+	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
+	const OPID_TIMED_URLS = 'timed_urls' ;
+	const OPID_TIMED_URLS_TIME = 'timed_urls_time' ;
+
 	const OPID_LOGIN_COOKIE = 'login_cookie' ;
 	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache' ;
 	// do NOT set default options for these three, it is used for admin.
-	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
 	const ID_NOCACHE_USERAGENTS = 'nocache_useragents' ;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
+	const OPID_DEBUG_LEVEL = 'debug_level' ;
 	const OPID_LOG_FILE_SIZE = 'log_file_size' ;
 	const OPID_HEARTBEAT = 'heartbeat' ;
 	const OPID_DEBUG_COOKIE = 'debug_cookie' ;
@@ -174,7 +180,7 @@ class LiteSpeed_Cache_Config
 			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED] ;
 		}
 		$options[self::OPID_PURGE_ON_UPGRADE] = $site_options[self::OPID_PURGE_ON_UPGRADE] ;
-		$options[self::OPID_MOBILEVIEW_ENABLED] = $site_options[self::OPID_MOBILEVIEW_ENABLED] ;
+		$options[self::OPID_CACHE_MOBILE] = $site_options[self::OPID_CACHE_MOBILE] ;
 		$options[self::ID_MOBILEVIEW_LIST] = $site_options[self::ID_MOBILEVIEW_LIST] ;
 		$options[self::OPID_LOGIN_COOKIE] = $site_options[self::OPID_LOGIN_COOKIE] ;
 		return $options ;
@@ -291,18 +297,21 @@ class LiteSpeed_Cache_Config
 			self::OPID_ENABLED => $default_enabled,
 			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPID_PURGE_ON_UPGRADE => true,
-			self::OPID_CACHE_COMMENTERS => true,
-			self::OPID_CACHE_LOGIN => true,
+			self::OPID_CACHE_PRIV => true,
+			self::OPID_CACHE_COMMENTER => true,
+			self::OPID_CACHE_REST => true,
+			self::OPID_CACHE_PAGE_LOGIN => true,
 			self::OPID_TIMED_URLS => '',
 			self::OPID_TIMED_URLS_TIME => '',
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
-			self::OPID_MOBILEVIEW_ENABLED => false,
+			self::OPID_CACHE_MOBILE => false,
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
+			self::OPID_DEBUG_LEVEL => false,
 			self::OPID_LOG_FILE_SIZE => 30,
 			self::OPID_HEARTBEAT => true,
 			self::OPID_DEBUG_COOKIE => false,
@@ -376,7 +385,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
-			self::OPID_MOBILEVIEW_ENABLED => 0,
+			self::OPID_CACHE_MOBILE => 0, // todo: why not false
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
@@ -397,7 +406,7 @@ class LiteSpeed_Cache_Config
 	public static function get_rule_reset_options()
 	{
 		$reset = array(
-			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED => false,
+			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE => false,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON => false,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES => false,
 			LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST => false,
@@ -516,7 +525,7 @@ class LiteSpeed_Cache_Config
 		}
 		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
 
-		if ( $options[self::OPID_MOBILEVIEW_ENABLED] === false ) {
+		if ( $options[self::OPID_CACHE_MOBILE] === false ) {
 			$options[self::ID_MOBILEVIEW_LIST] = false ;
 		}
 		return $options ;

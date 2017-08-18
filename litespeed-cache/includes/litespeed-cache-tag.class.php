@@ -38,12 +38,14 @@ class LiteSpeed_Cache_Tag
 	 * Check if the login page is cacheable.
 	 * If not, unset the cacheable member variable.
 	 *
+	 * NOTE: This is checked separately because login page doesn't go through WP logic.
+	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
 	public static function check_login_cacheable()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_LOGIN ) ) {
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ) ) {
 			return ;
 		}
 		if ( LiteSpeed_Cache_Control::isset_notcacheable() ) {

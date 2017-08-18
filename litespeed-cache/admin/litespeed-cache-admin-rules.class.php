@@ -156,7 +156,10 @@ class LiteSpeed_Cache_Admin_Rules
 	private function htaccess_search( $start_path )
 	{
 		while ( ! file_exists( $start_path . '/.htaccess' ) ) {
-			if ( $start_path === $_SERVER[ 'DOCUMENT_ROOT' ] || $start_path === '/' || ! $start_path ) {
+			if ( $start_path === '/' || ! $start_path ) {
+				return false ;
+			}
+			if ( ! empty( $_SERVER[ 'DOCUMENT_ROOT' ] ) && $start_path === $_SERVER[ 'DOCUMENT_ROOT' ] ) {
 				return false ;
 			}
 			$start_path = dirname( $start_path ) ;
@@ -483,14 +486,14 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$diff = array() ;
 		$val_check = array(
-			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES
 		) ;
 		$has_error = false ;
 
 		foreach ($val_check as $opt) {
-			$input[$opt] = isset($input[$opt]) && LiteSpeed_Cache_Admin_Settings::is_checked($input[$opt]) ;
+			$input[$opt] = LiteSpeed_Cache_Admin_Settings::parse_onoff( $input, $opt ) ;
 			if ( $input[$opt] || $options[$opt] != $input[$opt] ) {
 				$diff[$opt] = $input[$opt] ;
 			}
@@ -498,7 +501,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
-		if ( $input[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED] ) {
+		if ( $input[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE] ) {
 			$list = $input[$id] ;
 			if ( empty($list) || $this->check_rewrite($list) === false ) {
 				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, empty($list) ? 'EMPTY' : esc_html($list))
@@ -507,7 +510,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 			$diff[$id] = $list ;
 		}
-		elseif ( isset($diff[LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED]) ) {
+		elseif ( isset($diff[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]) ) {
 			$diff[$id] = false ;
 		}
 

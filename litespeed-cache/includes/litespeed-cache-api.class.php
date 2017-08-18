@@ -58,9 +58,9 @@ class LiteSpeed_Cache_API
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function set_nocache()
+	public static function set_nocache( $reason = false )
 	{
-		LiteSpeed_Cache_Control::set_nocache() ;
+		LiteSpeed_Cache_Control::set_nocache( $reason ?: 'api' ) ;
 	}
 
 	/**
@@ -166,17 +166,19 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
-	 * Filter the value for checkbox (enabled/disabled)
+	 * Filter the value for checkbox via input and id (enabled/disabled)
 	 *
-	 * @since  1.1.3
+	 * @since  1.1.6
 	 * @access public
-	 * @param int $val The checkbox value
+	 * @param int $input The whole input array
+	 * @param string $id The ID of the option
 	 * @return bool Filtered value
 	 */
-	public static function is_checked($val)
+	public static function parse_onoff( $input, $id )
 	{
-		return LiteSpeed_Cache_Admin_Settings::is_checked($val) ;
+		return LiteSpeed_Cache_Admin_Settings::parse_onoff( $input, $id ) ;
 	}
+
 
 	/**
 	 * Hook cacheable check to cache control
@@ -317,7 +319,7 @@ class LiteSpeed_Cache_API
 	 * @access public
 	 * @param string $control Cache control tag
 	 */
-	public static function esi_url($block_id, $wrapper, $params = array(), $control = '')
+	public static function esi_url($block_id, $wrapper, $params = array(), $control = 'private,no-vary')
 	{
 		LiteSpeed_Cache_ESI::sub_esi_block($block_id, $wrapper, $params, $control) ;
 	}

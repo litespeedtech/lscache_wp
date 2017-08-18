@@ -124,32 +124,9 @@ class LiteSpeed_Cache
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
 		add_action( 'wp_footer', 'LiteSpeed_Cache::litespeed_comment_info' ) ;
 
+		// 1. Init vary
+		// 2. Init cacheable status
 		LiteSpeed_Cache_Vary::get_instance() ;
-
-		// if ( $this->check_esi_page()) {
-		// 	return ;
-		// }
-
-		if ( ! LiteSpeed_Cache_Router::is_logged_in() ) {// If user is not logged in
-			// If still cacheable, check `login page` and `error page` cacheable setting
-			add_action( 'login_init', 'LiteSpeed_Cache_Tag::check_login_cacheable', 5 ) ;
-			$this->init_cacheable() ;
-			// Check error page
-			add_filter( 'status_header', 'LiteSpeed_Cache_Tag::check_error_codes', 10, 2 ) ;
-		}
-		else {
-			// Check ESI for logged in user
-			if ( LSWCP_ESI_SUPPORT ) {
-				add_action( 'wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
-				if ( self::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
-					define( 'LSCACHE_ESI_LOGGEDIN', true ) ;
-					$this->init_cacheable() ;
-					// Check error page
-					add_filter( 'status_header', 'LiteSpeed_Cache_Tag::check_error_codes', 10, 2 ) ;
-
-				}
-			}
-		}
 
 		// Load public hooks
 		$this->load_public_actions() ;
@@ -169,31 +146,6 @@ class LiteSpeed_Cache
 		// load litespeed actions
 		if ( $action = LiteSpeed_Cache_Router::get_action() ) {
 			$this->proceed_action( $action ) ;
-		}
-	}
-
-	/**
-	 * 1. Initialize cacheable status for `wp` hook
-	 * 2. Hook error page tags
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public function init_cacheable()
-	{
-		// Hook `wp` to mark default cacheable status
-		// NOTE: Any process that does NOT run into `wp` hook will not get cacheable by default
-		add_action( 'wp', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
-
-		// Cache resources
-		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
-		$cache_res = self::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
-		if ( $cache_res ) {
-			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;
-			$pattern = '!' . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
-			if ( preg_match( $pattern, $uri ) ) {
-				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
-			}
 		}
 	}
 

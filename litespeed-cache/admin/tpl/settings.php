@@ -5,13 +5,13 @@ $this->check_license() ;
 
 $menu_list = array(
 	'general' => __('General', 'litespeed-cache'),
-	'specific' => __('Specific Pages', 'litespeed-cache'),
-	'purge' => __('Purge Rules', 'litespeed-cache'),
-	'excludes' => __('Do Not Cache Rules', 'litespeed-cache'),
+	'cache' => __('Cache', 'litespeed-cache'),
+	'purge' => __('Purge', 'litespeed-cache'),
+	'excludes' => __('Excludes', 'litespeed-cache'),
 ) ;
 
 if ( LSWCP_ESI_SUPPORT ) {
-	$menu_list['esi'] = __('ESI Settings', 'litespeed-cache') ;
+	$menu_list['esi'] = __('ESI', 'litespeed-cache') ;
 }
 
 if (!is_multisite()) {
@@ -21,7 +21,7 @@ if (!is_multisite()) {
 $menu_list['debug'] = __('Debug', 'litespeed-cache') ;
 
 if ($this->show_compatibility_tab()){
-	$menu_list['compatibilities'] = __('Plugin Compatibilities', 'litespeed-cache') ;
+	$menu_list['compatibilities'] = __('Compatibilities', 'litespeed-cache') ;
 }
 
 $menu_list['crawler'] = __('Crawler', 'litespeed-cache') ;

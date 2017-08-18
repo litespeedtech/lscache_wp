@@ -13,9 +13,6 @@ class LiteSpeed_Cache_Vary
 
 	const X_HEADER = 'X-LiteSpeed-Vary' ;
 
-	const BM_LOGGED_IN = 1 ;
-	const BM_COMMENTER = 2 ;
-
 	private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
 	private static $_vary_cookies = array() ; // vary header only!
 
@@ -28,29 +25,53 @@ class LiteSpeed_Cache_Vary
 	 */
 	private function __construct()
 	{
-		// logged in user doesn't cache
+		// logged in user
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
 			// Make sure the cookie value is corrent
 			self::add_logged_in() ;
 
+			// If not esi, check cache logged-in user setting
+			if ( ! LSWCP_ESI_SUPPORT || ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+				// If cache logged-in, then init cacheable to private
+				if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PRIV ) ) {
+					add_action( 'wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
+
+					LiteSpeed_Cache_Control::init_cacheable() ;
+					LiteSpeed_Cache_Control::set_private( 'logged in user' ) ;
+				}
+				// No cache for logged-in user
+				else {
+					LiteSpeed_Cache_Control::set_nocache( 'logged in user' ) ;
+				}
+			}
+			// ESI is on, can be public cache
+			else {
+				LiteSpeed_Cache_Control::init_cacheable() ;
+			}
+
 			// register logout hook to clear login status
-			add_action('clear_auth_cookie', 'LiteSpeed_Cache_Vary::remove_logged_in') ;
+			add_action( 'clear_auth_cookie', 'LiteSpeed_Cache_Vary::remove_logged_in' ) ;
+
 		}
 		else {
 			// Make sure the cookie value is corrent
 			self::remove_logged_in() ;
-			// Set vary cookie for logging in user
-			add_action('set_logged_in_cookie', 'LiteSpeed_Cache_Vary::add_logged_in', 10, 2) ;
 
-			// Commenter won't cache
-			self::check_commenter() ;
+			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
+			add_action( 'set_logged_in_cookie', 'LiteSpeed_Cache_Vary::add_logged_in', 10, 2 ) ;
+
+			LiteSpeed_Cache_Control::init_cacheable() ;
+
+			// Check `login page` cacheable setting because they don't go through main WP logic
+			add_action( 'login_init', 'LiteSpeed_Cache_Tag::check_login_cacheable', 5 ) ;
+
 		}
 
-		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS) ) {// If don't cache pending comments
-			// Set vary cookie for commenter.
-			add_action('set_comment_cookies', 'LiteSpeed_Cache_Vary::add_commenter') ;
-		}
+		// Add comment list ESI
+		add_filter('comments_array', array( $this, 'check_commenter' ) ) ;
 
+		// Set vary cookie for commenter.
+		add_action('set_comment_cookies', array( $this, 'add_commenter' ) ) ;
 
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
@@ -97,20 +118,62 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Check if cookie has a curtain bitmask
+	 * Hooked to the comments_array filter.
+	 *
+	 * Check if the user accessing the page has the commenter cookie.
+	 *
+	 * If the user does not want to cache commenters, just check if user is commenter.
+	 * Otherwise if the vary cookie is set, unset it. This is so that when the page is cached, the page will appear as if the user was a normal user.
+	 * Normal user is defined as not a logged in user and not a commenter.
+	 *
+	 * @since 1.0.4
+	 * @access public
+	 * @global type $post
+	 * @param array $comments The current comments to output
+	 * @return array The comments to output.
+	 */
+	public function check_commenter( $comments )
+	{
+		$pending = false ;
+		foreach ( $comments as $comment ) {
+			if ( ! $comment->comment_approved ) {// current user has pending comment
+				$pending = true ;
+				break ;
+			}
+		}
+
+		// No pending comments, don't need to add private cache
+		if ( ! $pending ) {
+			$this->remove_commenter() ;
+			return $comments ;
+		}
+
+		// Current user/visitor has pending comments
+		// set vary=2 for next time vary lookup
+		$this->add_commenter() ;
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER ) ) {
+			LiteSpeed_Cache_Control::set_private( 'existing commenter' ) ;
+		}
+		else {
+			LiteSpeed_Cache_Control::set_nocache( 'existing commenter' ) ;
+		}
+
+		return $comments ;
+	}
+
+	/**
+	 * Check if default vary has a value
 	 *
 	 * @since 1.1.3
 	 * @access private
 	 */
-	private static function cookie_has_bm($bm)
+	private static function has_vary()
 	{
-		if ( empty($_COOKIE[self::$_vary_name]) ) {
+		if ( empty( $_COOKIE[ self::$_vary_name ] ) ) {
 			return false ;
 		}
-		if ( ! (intval($_COOKIE[self::$_vary_name]) & $bm) ) {
-			return false ;
-		}
-		return true ;
+		return intval( $_COOKIE[ self::$_vary_name ] ) ;
 	}
 
 	/**
@@ -121,20 +184,16 @@ class LiteSpeed_Cache_Vary
 	 */
 	public static function add_logged_in($logged_in_cookie = false, $expire = false)
 	{
-		if ( ! $expire ) {
-			$expire = time() + 2 * DAY_IN_SECONDS ;
-		}
 		// If the cookie is lost somehow, set it
-		if ( ! self::cookie_has_bm( self::BM_LOGGED_IN ) ) {
-			if ( empty( $_COOKIE[ self::$_vary_name ] ) ) {
-				$_COOKIE[ self::$_vary_name ] = 0 ;
-			}
-			$_COOKIE[ self::$_vary_name ] |= self::BM_LOGGED_IN ;
+		if ( ! self::has_vary() ) {
+			$_COOKIE[ self::$_vary_name ] = 1 ;
+
 			// save it
+			if ( ! $expire ) {
+				$expire = time() + 2 * DAY_IN_SECONDS ;
+			}
 			self::_cookie( $_COOKIE[ self::$_vary_name ], $expire ) ;
-		}
-		if ( ! LSWCP_ESI_SUPPORT || ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
-			LiteSpeed_Cache_Control::set_nocache( 'is logged in' ) ;
+			LiteSpeed_Cache_Control::set_nocache( 'adding logged in status' ) ;
 		}
 	}
 
@@ -147,11 +206,11 @@ class LiteSpeed_Cache_Vary
 	public static function remove_logged_in()
 	{
 		// If the cookie is set, unset it.
-		if ( self::cookie_has_bm( self::BM_LOGGED_IN ) ) {
+		if ( self::has_vary() === 1 ) {
 			// remove logged in status from global var
-			$_COOKIE[ self::$_vary_name ] &= ~self::BM_LOGGED_IN ;
+			unset( $_COOKIE[ self::$_vary_name ] ) ;
 			// save it
-			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ) ) ;
+			self::_cookie() ;
 			LiteSpeed_Cache_Control::set_nocache( 'removing logged in status' ) ;
 		}
 	}
@@ -164,19 +223,16 @@ class LiteSpeed_Cache_Vary
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function add_commenter()
+	public function add_commenter()
 	{
 		// If the cookie is lost somehow, set it
-		if ( ! self::cookie_has_bm(self::BM_COMMENTER) ) {
-			if ( empty($_COOKIE[self::$_vary_name]) ) {
-				$_COOKIE[self::$_vary_name] = 0 ;
-			}
-			$_COOKIE[self::$_vary_name] |= self::BM_COMMENTER ;
+		if ( self::has_vary() !== 2 ) {
+			$_COOKIE[ self::$_vary_name ] = 2 ;
 			// save it
 			// only set commenter status for current domain path
 			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path() ) ;
+			LiteSpeed_Cache_Control::set_nocache( 'adding commenter status' ) ;
 		}
-		LiteSpeed_Cache_Control::set_nocache( 'new commenter' ) ;
 	}
 
 	/**
@@ -185,14 +241,14 @@ class LiteSpeed_Cache_Vary
 	 * @since 1.1.3
 	 * @access private
 	 */
-	private static function remove_commenter()
+	private function remove_commenter()
 	{
-		if ( self::cookie_has_bm(self::BM_COMMENTER) ) {
+		if ( self::has_vary() === 2 ) {
 			// remove logged in status from global var
-			$_COOKIE[self::$_vary_name] &= ~self::BM_COMMENTER ;
+			unset( $_COOKIE[ self::$_vary_name ] ) ;
 			// save it
-			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path() ) ;
-			LiteSpeed_Cache_Control::set_nocache('removing commenter status') ;
+			self::_cookie( false, false, self::_relative_path() ) ;
+			LiteSpeed_Cache_Control::set_nocache( 'removing commenter status' ) ;
 		}
 	}
 
@@ -205,59 +261,10 @@ class LiteSpeed_Cache_Vary
 	private static function _relative_path()
 	{
 		$path = false ;
-		if ( !empty($_SERVER["HTTP_REFERER"]) ) {
-			$path = wp_make_link_relative($_SERVER["HTTP_REFERER"]) ;
+		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			$path = wp_make_link_relative( $_SERVER[ 'HTTP_REFERER' ] ) ;
 		}
 		return $path ;
-	}
-
-	/**
-	 * Check if the user accessing the page has the commenter cookie.
-	 *
-	 * If the user does not want to cache commenters, just check if user is commenter.
-	 * Otherwise if the vary cookie is set, unset it. This is so that when the page is cached, the page will appear as if the user was a normal user.
-	 * Normal user is defined as not a logged in user and not a commenter.
-	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @return boolean True if do not cache for commenters and user is a commenter. False otherwise.
-	 */
-	public static function check_commenter()
-	{
-		// ONLY when user has the specific commenter status cookie, it is considered as a commenter
-		// Otherwise we need to remove WP cookie to avoid pending comment been cached
-		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS) && self::cookie_has_bm(self::BM_COMMENTER) ) {
-			LiteSpeed_Cache_Control::set_nocache('existing commenter') ;
-			return ;
-		}
-
-		// Now, we need to cache commenter or the current visitor, that means:
-		// 1. We need to remove commenter status from vary.
-		// 2. We need to remove WP comment $_COOKIE value temporarily
-
-		// If vary cookie is set, need to change the value.
-		self::remove_commenter() ;
-
-		// Unset comment cookies for caching.
-		foreach( $_COOKIE as $cookie_name => $cookie_value ) {
-			if ( strlen($cookie_name) >= 15 && strncmp($cookie_name, 'comment_author_', 15) == 0 ) {
-				unset($_COOKIE[$cookie_name]) ;
-			}
-		}
-	}
-
-	/**
-	 * Gets the current request's user status.
-	 *
-	 * Helper function for other class' usage.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @return int The user status.
-	 */
-	public static function get_user_status()
-	{
-		return !empty($_COOKIE[self::$_vary_name]) ? $_COOKIE[self::$_vary_name] : false ;
 	}
 
 	/**

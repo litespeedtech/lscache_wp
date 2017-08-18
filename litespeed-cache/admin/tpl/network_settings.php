@@ -3,7 +3,9 @@ if (!defined('WPINC')) die;
 
 $menuArr = array(
 	'general' => __('General', 'litespeed-cache'),
-	'excludes' => __('Do Not Cache Rules', 'litespeed-cache'),
+	'cache' => __('Cache', 'litespeed-cache'),
+	'purge' => __('Purge', 'litespeed-cache'),
+	'excludes' => __('Excludes', 'litespeed-cache'),
 	'advanced' => __('Advanced', 'litespeed-cache'),
 );
 

@@ -12,10 +12,12 @@ class LiteSpeed_Cache_Cli_Admin
 	public function __construct()
 	{
 		self::$checkboxes = array(
-			LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED,
+			LiteSpeed_Cache_Config::OPID_CACHE_PRIV,
+			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER,
+			LiteSpeed_Cache_Config::OPID_CACHE_REST,
+			LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN,
+			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE,
 			LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
-			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS,
-			LiteSpeed_Cache_Config::OPID_CACHE_LOGIN,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES,
 			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
@@ -24,6 +26,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::CRWL_CATS,
 			LiteSpeed_Cache_Config::CRWL_TAGS,
 			LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE,
+			LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
 			LiteSpeed_Cache_Config::OPID_HEARTBEAT,
 			LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE,
 			LiteSpeed_Cache_Config::OPID_COLLAPS_QS,
@@ -79,15 +82,17 @@ class LiteSpeed_Cache_Cli_Admin
 				WP_CLI::error('This option is not available for setting.') ;
 				return ;
 
-			case LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED:
+			case LiteSpeed_Cache_Config::OPID_CACHE_MOBILE:
 				// set list then do checkbox
 				if ( $val === 'true' ) {
 					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 				}
 				//fall through
+			case LiteSpeed_Cache_Config::OPID_CACHE_PRIV:
+			case LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER:
+			case LiteSpeed_Cache_Config::OPID_CACHE_REST:
+			case LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN:
 			case LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE:
-			case LiteSpeed_Cache_Config::OPID_CACHE_COMMENTERS:
-			case LiteSpeed_Cache_Config::OPID_CACHE_LOGIN:
 			case LiteSpeed_Cache_Config::OPID_CACHE_FAVICON:
 			case LiteSpeed_Cache_Config::OPID_CACHE_RES:
 			case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
@@ -96,6 +101,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::CRWL_CATS:
 			case LiteSpeed_Cache_Config::CRWL_TAGS:
 			case LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE:
+			case LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL:
 			case LiteSpeed_Cache_Config::OPID_HEARTBEAT:
 			case LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE:
 			case LiteSpeed_Cache_Config::OPID_COLLAPS_QS:
@@ -114,7 +120,7 @@ class LiteSpeed_Cache_Cli_Admin
 				break ;
 
 			case LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST:
-				$enable_key = LiteSpeed_Cache_Config::OPID_MOBILEVIEW_ENABLED ;
+				$enable_key = LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ;
 				if ( ! isset($options[$enable_key]) || ! $options[$enable_key] ) {
 					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}

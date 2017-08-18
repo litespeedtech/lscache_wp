@@ -693,7 +693,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 		}
 
-		$options[self::OPTION_SHOP_FRONT_TTL] = isset($input[self::OPTION_SHOP_FRONT_TTL]) && LiteSpeed_Cache_API::is_checked($input[self::OPTION_SHOP_FRONT_TTL]) ;
+		$options[ self::OPTION_SHOP_FRONT_TTL ] = LiteSpeed_Cache_API::parse_onoff( $input, self::OPTION_SHOP_FRONT_TTL ) ;
 
 		return $options ;
 	}

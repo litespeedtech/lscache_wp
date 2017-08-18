@@ -146,8 +146,18 @@
 	box-shadow: inset 0 1px 3px -1px rgba(0, 0, 0, 0.3), inset 0 -1px 3px -1px rgba(0, 0, 0, 0.3);
 }
 
+.litespeed-switch label:hover{
+	color: #666;
+	background-color: #dedddd ;
+}
+
 .litespeed-switch label:first-of-type,.litespeed-switch label:last-of-type {
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.litespeed-switch label:first-of-type:hover,
+.litespeed-switch label:last-of-type:hover {
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .litespeed-switch label:first-of-type {
@@ -158,7 +168,6 @@
 	border-radius: 0 4px 4px 0;
 }
 
-/*.litespeed-switch label:hover,*/
 .litespeed-switch input:checked + label {
 	background-color: #8a8a8a;
 	-webkit-box-shadow: none;
@@ -177,6 +186,11 @@
 .litespeed-switch.litespeed-label-info input:checked + label {
 	background-color: #43A6DF;
 }
+
+.litespeed-switch.litespeed-label-info input:checked + label:hover {
+	background-color: #40a0d8 ;
+}
+
 /*.litespeed-switch.litespeed-label-success label:hover,*/
 .litespeed-switch.litespeed-label-success input:checked + label {
 	background-color: #5cb85c;
