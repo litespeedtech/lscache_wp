@@ -25,6 +25,7 @@ class LiteSpeed_Cache_Vary
 	 */
 	private function __construct()
 	{
+		setcookie('litespeed_cache', 'lswcp', time()+86400 , COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true) ;
 		// logged in user
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
 			// Make sure the cookie value is corrent
@@ -261,8 +262,9 @@ class LiteSpeed_Cache_Vary
 	private static function _relative_path()
 	{
 		$path = false ;
-		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
-			$path = wp_make_link_relative( $_SERVER[ 'HTTP_REFERER' ] ) ;
+		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
+			// $path = wp_make_link_relative( $_SERVER[ 'REQUEST_URI' ] ) ;
+			$path = $_SERVER[ 'REQUEST_URI' ] ;
 		}
 		return $path ;
 	}
