@@ -37,20 +37,23 @@ Because LSCache is built directly into LSWS, overhead is significantly reduced a
 
 * If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the --wordpresspath parameter.
 
-* Else if OLS and WordPress are already installed, please follow the instructions [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
+* If OLS and WordPress are already installed, please follow the instructions [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
 
 Additional plugin features:
 
 * Automatic page caching greatly improves site performance
 * Automatically purge related pages based on certain events
+* Smart preload crawler with support to SEO friendly sitemap
+* Cache logged in users with private cache
+* Cache WordPress REST API calls
+* Cache desktop and mobile views separately
+* Scheduled Purge URLs at a certain time
 * Support for HTTP/2 & HTTPS out-of-box
 * Single Site and Multi Sites support
 * Supports WooCommerce and bbPress
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
-* Cache desktop and mobile views separately
-* Do-not-cache configuration by URI, Categories, Tags, Cookies, and User Agents
+* No Cache configuration by URI, Categories, Tags, Cookies, and User Agents
 * Works with LiteSpeed Web ADC in clustered environments.
-* Smart preload crawler with support to SEO friendly sitemap
 * Nice looking :)
 
 = Known Compatible Plugins =
@@ -202,125 +205,7 @@ For more detailed information about crawler setup, please see [our blog post on 
 
 == Plugin Developers ==
 
-Any WP plugin that populates front end content that can be publicly cached should work with LSCache.
-
-However if the plugin needs to update some data and the cache does not automatically purge the cached page, you may be required to write an integration script to remedy this or call LSCWP APIs.
-
-= How It Works =
-
-LSCache works by tagging each cacheable page. In its most basic form, each page is tagged with its Post ID, then sent to the server to be cached. When someone makes a change to the page, that request will notify the server to purge the cached items associated with that page's post id.
-
-Multiple tags can be set on a single page, and a single tag may be used on multiple pages. This many to many mapping provides a flexible system enabling you to group pages in many ways.
-
-For example, a page may be tagged with `MTPP_F.1 (forum), MTPP_G.4 (group), MTPP_S.georgia (state)` because the page is in forum 1, group 4, and related to the state of Georgia. Then another page is tagged `MTPP_F.1, MTPP_G.2, MTPP_S.iowa`. If a change is made where all pages tagged `MTPP_F.1` need to be purged, the tag system makes it easy to purge the specific pages.
-
-A post will automatically be purged if the following events are triggered:
-
- * edit_post
- * save_post
- * deleted_post
- * trashed_post
- * delete_attachment
-
-These cases cover most situations in which a cache purge is necessary. If all the correct pages are purged, there may be no need to add additional tags.
-
-Another application for creating a third party integration class is to notify LSCache if the plugin generates private/transient data that cannot be cached for certain responses. Below is a list of what is already considered non-cacheable.
-
-A page is considered non cacheable if…
-
- * It is an admin page
- * The user is logged in
- * It is a post request
- * is_trackback() is true
- * is_search() is true
- * No theme is used
- * The URI matches any of the do not cache URI config
- * The post has a category matching the do not cache category config
- * The post has a tag matching the do not cache tag config
- * The request has a cookie matching the do not cache cookie config
- * The request has a user agent matching the do not cache user agent config
-
-= Set No Cache =
-
-If your plugin needs to set the current page as non cacheable, you can use `define('LSCACHE_NO_CACHE', true);` or use the API call.
-
-All API calls must be prior to the shutdown hook to ensure that it is recognized.
-
-= API =
-
-All the API functions are from `plugins/litespeed-cache/includes/litespeed-cache-api.class.php`.
-
-* **LiteSpeed_Cache_API::set_nocache()**
-
-  Mark the current page as non cacheable.
-
-* **LiteSpeed_Cache_API::not_cacheable()**
-
-  Check if the current page is not cacheable or not.
-
-* **litespeed_purge_single_post(_$post_id_)**
-
-  Purge single post by id
-
-* **LiteSpeed_Cache_API::purge_all()**
-
-  Purge all existing caches.
-
-* **LiteSpeed_Cache_API::tag_add(_$tag_)**
-
-  Add a single or group of cache tags to the list of cache tags associated with the current page. These will be appended to the LiteSpeed Cache Plugin generated list of cache tags. This may be useful to purge by a custom tag rather than resorting to the WordPress site wide tags.
-
-* **LiteSpeed_Cache_API::vary_add(_$tag_)**
-
-  Add a single or group of tags to the list of vary cookies associated with the current page. These will be appended to the LiteSpeed Cache Plugin generated list of vary cookies. This may be useful to serve different cache copies based on visitor's certain cookie values.
-
-* **LiteSpeed_Cache_API::purge(_$tag_)**
-
-  Add a single or group of purge tags to the list of tags to be purged with the request. This may be useful if need to purge custom cache tags or associated pages.
-
-* **LiteSpeed_Cache_API::hook_control(_$hook_)**
-
-  Hook to cache control. Triggered when the cache plugin is checking if the current page is cacheable or not. This filter will not trigger on admin pages nor any pages that has been marked as non cacheable.
-
-* **LiteSpeed_Cache_API::hook_tag(_$hook_)**
-
-  Called at the end of every cacheable request. This hook provides an access point to any plugin that needs to add cache tags to the current request.
-
-* **LiteSpeed_Cache_API::hook_vary(_$hook_)**
-
-  Hook to vary cookie finalizing process.
-
-* **LiteSpeed_Cache_API::hook_purge(_$hook_)**
-
-  Called at the end of every request. This hook provides an access point to any plugin that needs to add purge tags to the current request.
-
-* **LiteSpeed_Cache_API::hook_setting_tab(_$hook_)**
-
-  Hook to LiteSpeed Cache setting tabs. This is used to add a new tab after original LiteSpeed setting tabs.
-
-* **LiteSpeed_Cache_API::hook_setting_save(_$hook_)**
-
-  Hook to LiteSpeed Cache setting saving proccess.
-
-* **LiteSpeed_Cache_API::hook_widget_default_options(_$hook_)**
-
-  Hook to LiteSpeed Cache widget default options init proccess.
-
-* **LiteSpeed_Cache_API::hook_get_options(_$hook_)**
-
-  Hook to LiteSpeed Cache options init proccess.
-
-* **LiteSpeed_Cache_API::debug(_$info_)**
-
-  Log a debug info into `wp-content/debug.log`.
-
-* **LiteSpeed_Cache_API::config(_$field_)**
-
-  Get the setting value from LiteSpeed config settings. The setting name is from LiteSpeed_Cache_Config class constants. e.g.`LiteSpeed_Cache_Config::OPID_403_TTL`
-
-* **LiteSpeed_Cache_API::register(_$classname_)**
-
-  Register a third-party class to LiteSpeed Cache plugin. The class should be under `thirdparty` folder and has the function `detect()`. This action may be used to check if it is necessary to add any further functionality to the current request. For example, if a user visits a shopping page, there is no need for the forum plugin to do its extra checks/add its tags because the page is unrelated.
+Here is the LiteSpeed WordPress Cache plugin API documentation: [Latest LiteSpeed Cache API Documentation for Plugin Developers](https://wordpress.org/support/topic/litespeed-cache-api-documentation-for-plugin-developers/).
 
 == Screenshots ==
 
