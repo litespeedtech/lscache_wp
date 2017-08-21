@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Tag
 	const TYPE_URL = 'URL.' ;
 	const TYPE_WIDGET = 'W.' ;
 	const TYPE_ESI = 'ESI.' ;
+	const TYPE_REST = 'REST' ;
 
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
@@ -262,6 +263,16 @@ class LiteSpeed_Cache_Tag
 		}
 		elseif ( is_feed() ) {
 			$tags[] = self::TYPE_FEED ;
+		}
+
+		// Check REST API
+		if ( defined( 'REST_REQUEST' ) ) {
+			$tags[] = self::TYPE_REST ;
+
+			global $post;
+			if ( ! empty( $post->ID ) && substr( $_SERVER[ 'REQUEST_URI' ], - strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
+				$tags[] = self::TYPE_POST . $post->ID ;
+			}
 		}
 
 		return $tags ;

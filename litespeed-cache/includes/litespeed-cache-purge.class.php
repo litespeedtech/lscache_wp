@@ -358,11 +358,14 @@ class LiteSpeed_Cache_Purge
 		if ( empty($purge_tags) ) {
 			return ;
 		}
-		if ( in_array('*', $purge_tags) ) {
+		if ( in_array( '*', $purge_tags ) ) {
 			self::purge_all() ;
 		}
 		else {
-			self::add($purge_tags) ;
+			self::add( $purge_tags ) ;
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_REST ) ) {
+				self::add( LiteSpeed_Cache_Tag::TYPE_REST ) ;
+			}
 		}
 		LiteSpeed_Cache_Control::set_stale() ;
 	}
