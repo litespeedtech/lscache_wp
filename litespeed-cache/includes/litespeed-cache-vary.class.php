@@ -25,7 +25,6 @@ class LiteSpeed_Cache_Vary
 	 */
 	private function __construct()
 	{
-		setcookie('litespeed_cache', 'lswcp', time()+86400 , COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true) ;
 		// logged in user
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
 			// Make sure the cookie value is corrent
