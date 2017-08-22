@@ -28,6 +28,7 @@ class LiteSpeed_Cache_Tag
 	const TYPE_WIDGET = 'W.' ;
 	const TYPE_ESI = 'ESI.' ;
 	const TYPE_REST = 'REST' ;
+	const TYPE_LIST = 'LIST' ;
 
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
@@ -269,10 +270,25 @@ class LiteSpeed_Cache_Tag
 		if ( defined( 'REST_REQUEST' ) ) {
 			$tags[] = self::TYPE_REST ;
 
-			global $post;
-			if ( ! empty( $post->ID ) && substr( $_SERVER[ 'REQUEST_URI' ], - strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
-				$tags[] = self::TYPE_POST . $post->ID ;
+			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
+			if ( $path ) {
+				// posts collections tag
+				if ( substr( $path, -6 ) == '/posts' ) {
+					$tags[] = self::TYPE_LIST ;// Not used for purge yet
+				}
+
+				// single post tag
+				global $post;
+				if ( ! empty( $post->ID ) && substr( $path, - strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
+					$tags[] = self::TYPE_POST . $post->ID ;
+				}
+
+				// pages collections & single page tag
+				if ( stripos( $path, '/pages' ) !== false ) {
+					$tags[] = self::TYPE_PAGES ;
+				}
 			}
+
 		}
 
 		return $tags ;

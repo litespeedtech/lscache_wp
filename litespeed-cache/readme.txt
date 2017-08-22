@@ -207,6 +207,8 @@ For more detailed information about crawler setup, please see [our blog post on 
 
 Here is the LiteSpeed WordPress Cache plugin API documentation: [Latest LiteSpeed Cache API Documentation for Plugin Developers](https://wordpress.org/support/topic/litespeed-cache-api-documentation-for-plugin-developers/).
 
+Our GitHub is: [LiteSpeed Cache plugin for WordPress](https://github.com/litespeedtech/lscache_wp/).
+
 == Screenshots ==
 
 1. Admin Settings - General Settings

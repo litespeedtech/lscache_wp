@@ -214,7 +214,7 @@ class LiteSpeed_Cache
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
 				LiteSpeed_Cache_Purge::purge_all() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge the public cache.', 'litespeed-cache' ) ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge all caches.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:

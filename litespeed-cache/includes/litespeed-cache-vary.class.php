@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Vary
 		add_filter('comments_array', array( $this, 'check_commenter' ) ) ;
 
 		// Set vary cookie for commenter.
-		add_action('set_comment_cookies', array( $this, 'add_commenter' ) ) ;
+		add_action('set_comment_cookies', array( $this, 'append_commenter' ) ) ;
 
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
@@ -220,17 +220,29 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * This is ONLY used when submit a comment
 	 *
-	 * @since 1.1.3
+	 * @since 1.1.6
 	 * @access public
 	 */
-	public function add_commenter()
+	public function append_commenter()
+	{
+		$this->add_commenter( true ) ;
+	}
+
+	/**
+	 * Correct user status with commenter
+	 *
+	 * @since 1.1.3
+	 * @access private
+	 * @param  boolean $from_redirect If the request is from redirect page or not
+	 */
+	private function add_commenter( $from_redirect = false )
 	{
 		// If the cookie is lost somehow, set it
 		if ( self::has_vary() !== 2 ) {
 			$_COOKIE[ self::$_vary_name ] = 2 ;
 			// save it
 			// only set commenter status for current domain path
-			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path() ) ;
+			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path( $from_redirect ) ) ;
 			LiteSpeed_Cache_Control::set_nocache( 'adding commenter status' ) ;
 		}
 	}
@@ -257,13 +269,14 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.1.3
 	 * @access private
+	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
-	private static function _relative_path()
+	private static function _relative_path( $from_redirect = false )
 	{
 		$path = false ;
-		if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
-			// $path = wp_make_link_relative( $_SERVER[ 'REQUEST_URI' ] ) ;
-			$path = $_SERVER[ 'REQUEST_URI' ] ;
+		$tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL' ;
+		if ( ! empty( $_SERVER[ $tag ] ) ) {
+			$path = wp_make_link_relative( $_SERVER[ $tag ] ) ;
 		}
 		return $path ;
 	}

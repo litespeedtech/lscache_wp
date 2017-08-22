@@ -9,7 +9,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_PRIV ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache logged in user with private cache for frontend pages.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Cache logged in user for frontend pages. Use private cache (LSWS v5.2.1+).', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -19,7 +19,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache commenters with private cache. Disabling this option will serve commenters with non cacheable pages.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Cache commenters that have pending comments. Use private cache (LSWS v5.2.1+). Disabling this option will serve commenters with non-cacheable pages.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
