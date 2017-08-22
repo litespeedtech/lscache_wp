@@ -5,21 +5,21 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table class="form-table"><tbody>
 	<tr>
-		<th><?php echo __( 'Cache Logged in User', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Cache Logged-in Users', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_PRIV ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache logged in user for frontend pages. Use private cache (LSWS v5.2.1+).', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Privately cache frontend pages for logged-in users. (LSWS %s required)', 'litespeed-cache' ), 'v5.2.1+' ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Cache Commenter', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Cache Commenters', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache commenters that have pending comments. Use private cache (LSWS v5.2.1+). Disabling this option will serve commenters with non-cacheable pages.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Privately cache commenters that have pending comments. Disabling this option will serve non-cacheable pages to commenters. (LSWS %s required)', 'litespeed-cache' ), 'v5.2.1+' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -29,7 +29,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_REST ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Cache WordPress REST API calls.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Cache requests made by WordPress REST API calls.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
