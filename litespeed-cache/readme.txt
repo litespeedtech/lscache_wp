@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, cache, performance, optimization, wp-cache, busting, wordpress cache busting, litespeed, http2, woo, yoast, wordfence, contact, Contact Form 7, varnish, widget, litespeed web server, lsws, availability, pagespeed, woocommerce, bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite, scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize, wp-super-cache, w3total cache, w3totalcache, w3 total cache, wp super cache, wp rocket
 Requires at least: 4.0
 Tested up to: 4.8.1
-Stable tag: 1.1.5.1
+Stable tag: 1.1.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -205,24 +205,31 @@ For more detailed information about crawler setup, please see [our blog post on 
 
 == Plugin Developers ==
 
-Here is the LiteSpeed WordPress Cache plugin API documentation: [Latest LiteSpeed Cache API Documentation for Plugin Developers](https://wordpress.org/support/topic/litespeed-cache-api-documentation-for-plugin-developers/).
+[Latest LiteSpeed Cache plugin for WordPress API Documentation for Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
 
-Our GitHub is: [LiteSpeed Cache plugin for WordPress](https://github.com/litespeedtech/lscache_wp/).
+[LiteSpeed Cache plugin for WordPress GitHub](https://github.com/litespeedtech/lscache_wp/)
 
 == Screenshots ==
 
-1. Admin Settings - General Settings
-2. Admin Settings - Specific Pages
-3. Admin Settings - Purge Rules
-4. Admin Settings - Debug
-5. Admin Settings - Crawler
-6. Admin Management Page
-7. Admin Information Page
-8. Admin Crawler Status Page
-9. Cache Miss Example
-10. Cache Hit Example
+1. Admin Settings - General
+2. Admin Settings - Cache
+3. Admin Settings - Purge
+4. Admin Settings - Excludes
+5. Admin Settings - Debug
+6. Admin Settings - Crawler
+7. Admin Management Page
+8. Admin Information Page
+9. Admin Crawler Status Page
+10. Cache Miss Example
+11. Cache Hit Example
 
 == Changelog ==
+
+= 1.1.6 - August 23 2017 =
+* [NEW FEATURE] Added option to privately cache logged-in users.
+* [NEW FEATURE] Added option to privately cache commenters.
+* [NEW FEATURE] Added option to cache requests made through WordPress REST API.
+* [GUI] New Cache and Purge menus in Settings.
 
 = 1.1.5.1 - August 16 2017 =
 * [IMPROVEMENT] Improved compatibility of frontend&backend .htaccess path detection when site url is different than installation path.
