@@ -122,12 +122,12 @@ class LiteSpeed_Cache_Config
 			$options = $this->construct_multisite_options() ;
 		}
 		else {
-			$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
+			$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
 		}
 		$this->options = $options ;
-		$this->purge_options = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
+		$this->purge_options = explode('.', $options[ self::OPID_PURGE_BY_POST ] ) ;
 
-		if ( isset($options[self::OPID_CHECK_ADVANCEDCACHE]) && $options[self::OPID_CHECK_ADVANCEDCACHE] === false && ! defined('LSCACHE_ADV_CACHE') ) {
+		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $options[self::OPID_CHECK_ADVANCEDCACHE] === false && ! defined('LSCACHE_ADV_CACHE') ) {
 			define('LSCACHE_ADV_CACHE', true) ;
 		}
 
@@ -179,10 +179,9 @@ class LiteSpeed_Cache_Config
 		if ($options[self::OPID_ENABLED_RADIO] == 2) {
 			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED] ;
 		}
-		$options[self::OPID_PURGE_ON_UPGRADE] = $site_options[self::OPID_PURGE_ON_UPGRADE] ;
-		$options[self::OPID_CACHE_MOBILE] = $site_options[self::OPID_CACHE_MOBILE] ;
-		$options[self::ID_MOBILEVIEW_LIST] = $site_options[self::ID_MOBILEVIEW_LIST] ;
-		$options[self::OPID_LOGIN_COOKIE] = $site_options[self::OPID_LOGIN_COOKIE] ;
+		unset( $site_options[ self::NETWORK_OPID_ENABLED ] ) ;
+		unset( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+		$options = array_merge( $options, $site_options ) ;
 		return $options ;
 	}
 
@@ -548,16 +547,6 @@ class LiteSpeed_Cache_Config
 		}
 
 		$this->options = self::option_diff($default_options, $this->options) ;
-		// if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' )
-		// 	&& ($this->options[self::OPID_ENABLED])
-		// 	&& ($this->options[self::OPID_ESI_ENABLE])) {
-		// 	LiteSpeed_Cache::get_instance()->set_esi_post_type();
-		// }
-
-//		if ((!is_multisite()) || (is_network_admin())) {
-//			$this->options[self::OPID_LOGIN_COOKIE]
-//				= LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade() ;
-//		}
 
 		$res = $this->update_options() ;
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
