@@ -229,6 +229,7 @@ For more detailed information about crawler setup, please see [our blog post on 
 * [NEW FEATURE] Added option to privately cache logged-in users.
 * [NEW FEATURE] Added option to privately cache commenters.
 * [NEW FEATURE] Added option to cache requests made through WordPress REST API.
+* [BUGFIX] Fixed network 3rd-party full-page cache detection bug.
 * [GUI] New Cache and Purge menus in Settings.
 
 = 1.1.5.1 - August 16 2017 =
