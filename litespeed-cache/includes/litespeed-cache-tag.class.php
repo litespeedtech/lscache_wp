@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Tag
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
 	private static $_tags = array() ;
-	private static $_tags_priv = array() ; // not used so far
+	private static $_tags_priv = array( 'tag_priv' ) ;
 	protected static $_error_status = false ;
 
 	/**
