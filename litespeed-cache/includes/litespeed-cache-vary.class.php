@@ -59,6 +59,7 @@ class LiteSpeed_Cache_Vary
 
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
 			add_action( 'set_logged_in_cookie', 'LiteSpeed_Cache_Vary::add_logged_in', 10, 2 ) ;
+			add_action( 'wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
 
 			LiteSpeed_Cache_Control::init_cacheable() ;
 
@@ -145,6 +146,13 @@ class LiteSpeed_Cache_Vary
 		// No pending comments, don't need to add private cache
 		if ( ! $pending ) {
 			$this->remove_commenter() ;
+
+			foreach( $_COOKIE as $cookie_name => $cookie_value ) {
+				if ( strlen( $cookie_name ) >= 15 && strncmp( $cookie_name, 'comment_author_', 15 ) == 0 ) {
+					unset( $_COOKIE[ $cookie_name ] ) ;
+				}
+			}
+
 			return $comments ;
 		}
 
@@ -276,7 +284,9 @@ class LiteSpeed_Cache_Vary
 		$path = false ;
 		$tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL' ;
 		if ( ! empty( $_SERVER[ $tag ] ) ) {
-			$path = wp_make_link_relative( $_SERVER[ $tag ] ) ;
+			$path = parse_url( $_SERVER[ $tag ] ) ;
+			$path = ! empty( $path[ 'path' ] ) ? $path[ 'path' ] : false ;
+			LiteSpeed_Cache_Log::debug( 'Cookie Vary path: ' . $path ) ;
 		}
 		return $path ;
 	}
