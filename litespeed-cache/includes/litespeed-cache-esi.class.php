@@ -370,16 +370,16 @@ class LiteSpeed_Cache_ESI
 	 * @param array $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
-	public function sub_widget_block(array $instance, WP_Widget $widget, array $args)
+	public function sub_widget_block( array $instance, WP_Widget $widget, array $args )
 	{
-		$name = get_class($widget) ;
-		if ( ! isset($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+		$name = get_class( $widget ) ;
+		if ( ! isset( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
 			return $instance ;
 		}
-		$options = $instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		if ( ! isset($options) || ! $options[self::WIDGET_OPID_ESIENABLE] ) {
+		$options = $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
+		if ( ! isset( $options ) || ! $options[ self::WIDGET_OPID_ESIENABLE ] ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push('ESI off for widget ' . $name . ' because '. (!isset($options) ? 'options not set' : 'esi disabled for widget')) ;
+				LiteSpeed_Cache_Log::push( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
 			}
 			return $instance ;
 		}
@@ -390,7 +390,7 @@ class LiteSpeed_Cache_ESI
 			self::PARAM_ARGS => $args
 		) ;
 
-		self::sub_esi_block('widget', 'widget ' . $name, $params, 'no-vary') ;
+		self::sub_esi_block( 'widget', 'widget ' . $name, $params, 'no-vary' ) ;
 		return false ;
 	}
 

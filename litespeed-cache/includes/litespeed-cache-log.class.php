@@ -242,13 +242,23 @@ class LiteSpeed_Cache_Log
 		$SERVER = array_merge( $SERVERVARS, $_SERVER ) ;
 		$params = array() ;
 
-		$params[] = sprintf( '%s %s %s', $SERVER['REQUEST_METHOD'], $SERVER['SERVER_PROTOCOL'], strtok( $SERVER['REQUEST_URI'], '?' ) ) ;
+		$param = sprintf( '%s %s %s', $SERVER['REQUEST_METHOD'], $SERVER['SERVER_PROTOCOL'], strtok( $SERVER['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $SERVER['QUERY_STRING'] ) ? $SERVER['QUERY_STRING'] : '' ;
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) && strlen( $qs ) > 53 ) {
-			$qs = substr( $qs, 0, 53 ) . '...' ;
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ) {
+			if ( strlen( $qs ) > 53 ) {
+				$qs = substr( $qs, 0, 53 ) . '...' ;
+			}
+			if ( $qs ) {
+				$param .= ' ? ' . $qs ;
+			}
+			$params[] = $param ;
 		}
-		$params[] = 'Query String: ' . $qs ;
+		else {
+			$params[] = $param ;
+			$params[] = 'Query String: ' . $qs ;
+		}
+
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
 			$params[] = 'User Agent: ' . $SERVER[ 'HTTP_USER_AGENT' ] ;
 			$params[] = 'Accept Encoding: ' . $SERVER['HTTP_ACCEPT_ENCODING'] ;
