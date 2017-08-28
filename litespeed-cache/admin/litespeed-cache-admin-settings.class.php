@@ -679,6 +679,13 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE ;
 		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+
+		// Save vary group settings
+		$vary_groups = $_POST[ LiteSpeed_Cache_Config::VARY_GROUP ] ;
+		$vary_groups = array_map( 'trim', $vary_groups ) ;
+		$vary_groups = array_filter( $vary_groups ) ;
+		update_option( LiteSpeed_Cache_Config::VARY_GROUP, $vary_groups ) ;
+
 	}
 
 	/**

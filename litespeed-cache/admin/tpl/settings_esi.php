@@ -1,8 +1,13 @@
 <?php
-if ( !defined('WPINC') ) die;
-		// comments
-		// comment form
-		// admin bar
+if ( ! defined( 'WPINC' ) ) die ;
+
+global $wp_roles ;
+if ( !isset( $wp_roles ) ) {
+	$wp_roles = new WP_Roles() ;
+}
+$roles = array_keys( $wp_roles->roles ) ;
+
+sort( $roles ) ;
 
 ?>
 
@@ -34,5 +39,29 @@ if ( !defined('WPINC') ) die;
 			</div>
 		</td>
 	</tr>
+
+	<tr>
+		<th><?php echo __('Vary Group', 'litespeed-cache'); ?></th>
+		<td>
+			<table class="litespeed-vary-table"><tbody>
+			<?php foreach ( $roles as $role ): ?>
+				<tr>
+					<td class='litespeed-vary-title'><?php echo $role ; ?></td>
+					<td class='litespeed-vary-val'>
+						<input type="text" class="regular-text small-text"
+							name="<?php echo LiteSpeed_Cache_Config::VARY_GROUP ; ?>[<?php echo $role ; ?>]"
+							value="<?php echo $this->config->in_vary_group( $role ) ; ?>" />
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody></table>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify separate groups for logged-in users with default vary in public cache. E.g. on frontend there are some contents that admin can see but the other roles can not see, then set role admin to a different group.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+
+
 
 </tbody></table>

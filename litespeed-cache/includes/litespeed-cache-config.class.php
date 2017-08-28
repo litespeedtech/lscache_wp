@@ -14,6 +14,7 @@ class LiteSpeed_Cache_Config
 	private static $_instance ;
 
 	const OPTION_NAME = 'litespeed-cache-conf' ;
+	const VARY_GROUP = 'litespeed-cache-vary-group' ;
 	const VAL_OFF = 0 ;
 	const VAL_ON = 1 ;
 	const VAL_NOTSET = 2 ;
@@ -107,6 +108,7 @@ class LiteSpeed_Cache_Config
 	const CRWL_ALPHA_ASC = 'alpha_asc' ;
 
 	protected $options ;
+	protected $vary_groups ;
 	protected $purge_options ;
 	protected $debug_tag = 'LiteSpeed_Cache' ;
 
@@ -138,6 +140,9 @@ class LiteSpeed_Cache_Config
 				$this->debug_tag .= ' [' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'] . ':' . $msec1 . '] ' ;
 			}
 		}
+
+		// Vary group settings
+		$this->vary_groups = (array)get_option( self::VARY_GROUP ) ;
 	}
 
 	/**
@@ -232,6 +237,16 @@ class LiteSpeed_Cache_Config
 			$this->options = array_merge( $this->options, $new_cfg ) ;
 		}
 		return update_option( self::OPTION_NAME, $this->options ) ;
+	}
+
+	/**
+	 * Check if one user role is in vary group settings
+	 * @param  string $vary The user role
+	 * @return int       The set value if already set
+	 */
+	public function in_vary_group( $vary )
+	{
+		return array_key_exists( $vary, $this->vary_groups ) ? $this->vary_groups[ $vary ] : 0 ;
 	}
 
 	/**

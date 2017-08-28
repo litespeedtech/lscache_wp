@@ -46,6 +46,7 @@ class LiteSpeed_Cache_Vary
 			}
 			// ESI is on, can be public cache
 			else {
+				// Need to make sure vary is using group id
 				LiteSpeed_Cache_Control::init_cacheable() ;
 			}
 
@@ -58,7 +59,7 @@ class LiteSpeed_Cache_Vary
 			self::remove_logged_in() ;
 
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
-			add_action( 'set_logged_in_cookie', 'LiteSpeed_Cache_Vary::add_logged_in', 10, 2 ) ;
+			add_action( 'set_logged_in_cookie', 'LiteSpeed_Cache_Vary::add_logged_in', 10, 4 ) ;
 			add_action( 'wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
 
 			LiteSpeed_Cache_Control::init_cacheable() ;
@@ -147,6 +148,7 @@ class LiteSpeed_Cache_Vary
 		if ( ! $pending ) {
 			$this->remove_commenter() ;
 
+			// Remove commenter prefilled info if exists, for public cache
 			foreach( $_COOKIE as $cookie_name => $cookie_value ) {
 				if ( strlen( $cookie_name ) >= 15 && strncmp( $cookie_name, 'comment_author_', 15 ) == 0 ) {
 					unset( $_COOKIE[ $cookie_name ] ) ;
@@ -181,7 +183,7 @@ class LiteSpeed_Cache_Vary
 		if ( empty( $_COOKIE[ self::$_vary_name ] ) ) {
 			return false ;
 		}
-		return intval( $_COOKIE[ self::$_vary_name ] ) ;
+		return $_COOKIE[ self::$_vary_name ] ;
 	}
 
 	/**
@@ -190,17 +192,19 @@ class LiteSpeed_Cache_Vary
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function add_logged_in($logged_in_cookie = false, $expire = false)
+	public static function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $user_id = false )
 	{
 		// If the cookie is lost somehow, set it
-		if ( ! self::has_vary() ) {
-			$_COOKIE[ self::$_vary_name ] = 1 ;
+		$vary = self::generate_vary( $user_id ) ;
+		$current_vary = self::has_vary() ;
+		if ( $current_vary !== $vary && $current_vary !== 'commenter' ) {
+			// $_COOKIE[ self::$_vary_name ] = $vary ; // not needed
 
 			// save it
 			if ( ! $expire ) {
 				$expire = time() + 2 * DAY_IN_SECONDS ;
 			}
-			self::_cookie( $_COOKIE[ self::$_vary_name ], $expire ) ;
+			self::_cookie( $vary, $expire ) ;
 			LiteSpeed_Cache_Control::set_nocache( 'adding logged in status' ) ;
 		}
 	}
@@ -213,14 +217,68 @@ class LiteSpeed_Cache_Vary
 	 */
 	public static function remove_logged_in()
 	{
-		// If the cookie is set, unset it.
-		if ( self::has_vary() === 1 ) {
+		// If the cookie is set and not commenter, unset it.
+		$current_vary = self::has_vary() ;
+		if ( $current_vary && $current_vary !== 'commenter' ) {
 			// remove logged in status from global var
-			unset( $_COOKIE[ self::$_vary_name ] ) ;
+			// unset( $_COOKIE[ self::$_vary_name ] ) ; // not needed
+
 			// save it
 			self::_cookie() ;
 			LiteSpeed_Cache_Control::set_nocache( 'removing logged in status' ) ;
 		}
+	}
+
+	/**
+	 * Get user vary tag based on admin_bar & role
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function generate_vary( $user_id )
+	{
+		if ( ! $user_id ) {
+			$user = wp_get_current_user() ;
+			$user_id = $user->ID ;
+			LiteSpeed_Cache_Log::debug( 'getting user_id: ' . $user_id ) ;
+		}
+		$vary = array( 'logged-in' => 1 ) ;
+		// get user's group id
+		$user = get_userdata( $user_id ) ;
+		if ( empty( $user->roles[ 0 ] ) ) {
+			// Guest user
+			LiteSpeed_Cache_Log::debug( 'Vary role id: failed, guest' ) ;
+			return false ;
+		}
+
+		// parge role group from settings
+		$gid = $user->roles[ 0 ] ?: 0 ;
+		if ( $role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group( $gid ) ) {
+			$vary[ 'role' ] = $role_group ;
+			LiteSpeed_Cache_Log::debug( 'Vary role group: ' . $gid ) ;
+		}
+
+		// Get admin bar set
+		// see @_get_admin_bar_pref()
+		$pref = get_user_option( 'show_admin_bar_front', $user_id ) ;
+		LiteSpeed_Cache_Log::debug( 'Vary show_admin_bar_front: ' . $pref ) ;
+		$admin_bar = $pref === false || $pref === 'true' ;
+
+		if ( $admin_bar ) {
+			$vary[ 'admin_bar' ] = 1 ;
+			LiteSpeed_Cache_Log::debug( 'Vary admin bar : true' ) ;
+		}
+
+		ksort( $vary ) ;
+		$res = array() ;
+		foreach ( $vary as $key => $val ) {
+			$res[] = $key . ':' . $val ;
+		}
+
+		if ( ! $res ) {
+			return false ;
+		}
+		return implode( ';', $res ) ;// Encrypt in production
 	}
 
 	/**
@@ -246,11 +304,12 @@ class LiteSpeed_Cache_Vary
 	private function add_commenter( $from_redirect = false )
 	{
 		// If the cookie is lost somehow, set it
-		if ( self::has_vary() !== 2 ) {
-			$_COOKIE[ self::$_vary_name ] = 2 ;
+		if ( self::has_vary() !== 'commenter' ) {
+			// $_COOKIE[ self::$_vary_name ] = 'commenter' ; // not needed
+
 			// save it
 			// only set commenter status for current domain path
-			self::_cookie( $_COOKIE[ self::$_vary_name ], time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path( $from_redirect ) ) ;
+			self::_cookie( 'commenter', time() + apply_filters( 'comment_cookie_lifetime', 30000000 ), self::_relative_path( $from_redirect ) ) ;
 			LiteSpeed_Cache_Control::set_nocache( 'adding commenter status' ) ;
 		}
 	}
@@ -263,9 +322,10 @@ class LiteSpeed_Cache_Vary
 	 */
 	private function remove_commenter()
 	{
-		if ( self::has_vary() === 2 ) {
+		if ( self::has_vary() === 'commenter' ) {
 			// remove logged in status from global var
-			unset( $_COOKIE[ self::$_vary_name ] ) ;
+			// unset( $_COOKIE[ self::$_vary_name ] ) ; // not needed
+
 			// save it
 			self::_cookie( false, false, self::_relative_path() ) ;
 			LiteSpeed_Cache_Control::set_nocache( 'removing commenter status' ) ;

@@ -267,3 +267,20 @@ ul.litespeed-shell-body {
 	padding: 5px 14px;
 	margin: 5px -15px;
 }
+
+
+
+.litespeed-vary-table td {
+	padding: 5px 5px 5px 10px ;
+}
+.litespeed-vary-table .litespeed-vary-title {
+	width:50%;
+	border-bottom: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
+}
+.litespeed-vary-table .litespeed-vary-val {
+	border-bottom: 1px solid #cccccc;
+}
+.litespeed-vary-table tr:first-child td{
+	border-top: 1px solid #cccccc;
+}

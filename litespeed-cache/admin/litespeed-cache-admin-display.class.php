@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Admin_Display
 	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
+	private $config ;
 	private $messages = array() ;
 	private $disable_all = false ;
 	private $default_settings = array() ;
@@ -78,8 +79,10 @@ class LiteSpeed_Cache_Admin_Display
 			add_action('admin_menu', array($this, 'register_admin_menu')) ;
 		}
 
+		$this->config = LiteSpeed_Cache_Config::get_instance() ;
+
 		// get default setting values
-		$this->default_settings = LiteSpeed_Cache_Config::get_instance()->get_default_options() ;
+		$this->default_settings = $this->config->get_default_options() ;
 	}
 
 	/**
