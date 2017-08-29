@@ -176,9 +176,9 @@ class LiteSpeed_Cache_Vary
 	 * Check if default vary has a value
 	 *
 	 * @since 1.1.3
-	 * @access private
+	 * @access public
 	 */
-	private static function has_vary()
+	public static function has_vary()
 	{
 		if ( empty( $_COOKIE[ self::$_vary_name ] ) ) {
 			return false ;

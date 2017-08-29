@@ -241,12 +241,23 @@ class LiteSpeed_Cache_Config
 
 	/**
 	 * Check if one user role is in vary group settings
-	 * @param  string $vary The user role
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_vary_group( $vary )
+	public function in_vary_group( $role )
 	{
-		return array_key_exists( $vary, $this->vary_groups ) ? $this->vary_groups[ $vary ] : 0 ;
+		$group = 0 ;
+		if ( array_key_exists( $role, $this->vary_groups ) ) {
+			$group = $this->vary_groups[ $role ] ;
+		}
+		elseif ( $role === 'administrator' ) {
+			$group = 99 ;
+		}
+
+		return $group ;
 	}
 
 	/**

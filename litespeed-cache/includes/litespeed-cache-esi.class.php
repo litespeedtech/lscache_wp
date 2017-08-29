@@ -75,7 +75,7 @@ class LiteSpeed_Cache_ESI
 	public static function esi_template($template)
 	{
 		// Add comment forum esi for logged-in user or commenter
-		if ( LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
+		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
 			add_filter( 'comment_form_defaults', array( self::get_instance(), 'register_comment_form_actions' ) ) ;
 		}
 
