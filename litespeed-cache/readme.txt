@@ -1,6 +1,6 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: caching, cache, performance, optimization, wp-cache, busting, wordpress cache busting, litespeed, http2, woo, yoast, wordfence, contact, Contact Form 7, varnish, widget, litespeed web server, lsws, availability, pagespeed, woocommerce, bbpress, nextgengallery, wp-polls, wptouch, customization, plugin, rewrite, scalability, speed, multisite, cpanel, openlitespeed, ols, google, optimize, wp-super-cache, w3total cache, w3totalcache, w3 total cache, wp super cache, wp rocket
+Tags: cache, wp-cache, litespeed, super cache, http2, wordfence, bbpress, nextgengallery
 Requires at least: 4.0
 Tested up to: 4.8.1
 Stable tag: 1.1.6
@@ -11,50 +11,52 @@ Quickly and easily implement high-performance page caching on your WordPress sit
 
 == Description ==
 
-The LiteSpeed Cache Plugin for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server (LSWS) and its built-in page cache, LSCache.
+The LiteSpeed Cache Plugin for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server and its built-in page cache, LSCache.
 
-Because LSCache is built directly into LSWS, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches.
+Because LSCache is built directly into the server, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches.
 
 = Installation =
 
-1. Install `LiteSpeed Web Server Enterprise` (LSWS) or `OpenLiteSeed` (OLS) [Free].
-
-2. Install `LiteSpeed Cache` and activate.
-
-3. Goto `LiteSpeed Cache` -> `Settings`, make sure the option `Enable LiteSpeed Cache` is `Enable`.
-
+1. Install LiteSpeed Web Server Enterprise with LSCache Module or OpenLiteSpeed with cache module [Free].
+2. Install the LiteSpeed Cache for WordPress plugin and activate it.
+3. From the WordPress Dashboard, navigate to *LiteSpeed Cache -> Settings*, make sure the option *Enable LiteSpeed Cache* is set to `Enable`.
 4. Enjoy!
 
-= Instructions for LiteSpeed Web Server Enterprise (LSWS) =
+= Notes for LiteSpeed Web Server Enterprise =
 
-1. Make sure that your license includes the LSCache module enabled. A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") is available for free for 15 days.
+* Make sure that your license includes the LSCache module. A [2-CPU trial license with LSCache module](https://www.litespeedtech.com/products/litespeed-web-server/download/get-a-trial-license "trial license") is available for free for 15 days.
+* The server must be configured to have caching enabled. If you are the server admin, [click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration) for instructions. Otherwise, please request that the server admin configure the cache root for the server.
 
-2. The server must be configured to have caching enabled. If you are the server admin, [click here](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:common_installation#web_server_configuration). Otherwise request that the server admin configure the cache root for the server.
-
-= Instructions for OpenLiteSpeed (OLS) =
+= Notes for OpenLiteSpeed =
 
 * This integration utilizes OLS's cache module.
+* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the `--wordpresspath` parameter.
+* If OLS and WordPress are both already installed, please follow the instructions in [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
 
-* If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the --wordpresspath parameter.
+= Performance Optimization =
 
-* If OLS and WordPress are already installed, please follow the instructions [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
 
-Additional plugin features:
+= Plugin Features =
 
-* Automatic page caching greatly improves site performance
-* Automatically purge related pages based on certain events
-* Smart preload crawler with support to SEO friendly sitemap
-* Cache logged in users with private cache
-* Cache WordPress REST API calls
-* Cache desktop and mobile views separately
-* Scheduled Purge URLs at a certain time
+LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
+
+* Automatic page caching to greatly improve site performance
+* Automatic purge of related pages based on certain events
+* Smart preload crawler with support for SEO-friendly sitemap
+* Private cache for logged-in users
+* Caching of WordPress REST API calls
+* Separate caching of desktop and mobile views
+* Ability to schedule purge for specified URLs at specified time of day
 * Support for HTTP/2 & HTTPS out-of-box
-* Single Site and Multi Sites support
-* Supports WooCommerce and bbPress
+* Single Site and Multi Site support
+* Support for  WooCommerce and bbPress
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
-* No Cache configuration by URI, Categories, Tags, Cookies, and User Agents
-* Works with LiteSpeed Web ADC in clustered environments.
-* Nice looking :)
+* No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
+* Attractive, easy-to-understand interface
+
+LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
+
+* Support for clustered environments via LiteSpeed Web ADC
 
 = Known Compatible Plugins =
 

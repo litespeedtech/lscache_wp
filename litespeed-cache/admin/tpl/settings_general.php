@@ -67,6 +67,18 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Default Private Cache TTL', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ; ?>
+			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache' ), 60, 3600 ) ; ?>
+				<?php $this->recommended($id) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Default Front Page TTL', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ; ?>

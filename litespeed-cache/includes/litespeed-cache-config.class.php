@@ -58,6 +58,7 @@ class LiteSpeed_Cache_Config
 	const OPID_LOG_IGNORE_PART_FILTERS = 'log_ignore_part_filters' ;
 
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
+	const OPID_PRIVATE_TTL = 'private_ttl' ;
 	const OPID_FRONT_PAGE_TTL = 'front_page_ttl' ;
 	const OPID_FEED_TTL = 'feed_ttl' ;
 	const OPID_403_TTL = '403_ttl' ;
@@ -346,6 +347,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_LOG_IGNORE_PART_FILTERS => "i18n\nlocale\nsettings\noption",
 			self::OPID_TEST_IPS => '',
 			self::OPID_PUBLIC_TTL => 604800,
+			self::OPID_PRIVATE_TTL => 1800,
 			self::OPID_FRONT_PAGE_TTL => 604800,
 			self::OPID_FEED_TTL => 0,
 			self::OPID_403_TTL => 3600,

@@ -24,22 +24,22 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param number $max Maximum number
 	 * @return bool True if valid, false otherwise.
 	 */
-	public function validate_ttl($input, $id, $min = false, $max = 2147483647)
+	public function validate_ttl( $input, $id, $min = false, $max = 2147483647)
 	{
-		if ( ! isset($input[ $id ]) ) {
+		if ( ! isset( $input[ $id ]) ) {
 			return false ;
 		}
 
 		$val = $input[ $id ] ;
 
-		$ival = intval($val) ;
-		$sval = strval($val) ;
+		$ival = intval( $val) ;
+		$sval = strval( $val) ;
 
 		if( $min && $ival < $min ) {
 			return false ;
 		}
 
-		return ctype_digit($sval) && $ival >= 0 && $ival < $max ;
+		return ctype_digit( $sval) && $ival >= 0 && $ival < $max ;
 	}
 
 	/**
@@ -51,7 +51,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param string $location The location string.
 	 * @return string the updated location string.
 	 */
-	public static function widget_save_err($location)
+	public static function widget_save_err( $location)
 	{
 		return str_replace('?message=0', '?error=0', $location) ;
 	}
@@ -68,30 +68,30 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
-	public static function validate_widget_save($instance, $new_instance, $old_instance, $widget)
+	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget)
 	{
-		if ( empty($_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+		if ( empty( $_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
 			return $instance ;
 		}
-		$current = ! empty($old_instance[LiteSpeed_Cache_Config::OPTION_NAME]) ? $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] : false ;
+		$current = ! empty( $old_instance[LiteSpeed_Cache_Config::OPTION_NAME]) ? $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] : false ;
 		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
 		$esistr = $input[LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE] ;
 		$ttlstr = $input[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL] ;
 
-		if ( ! is_numeric($ttlstr) || ! is_numeric($esistr) ) {
+		if ( ! is_numeric( $ttlstr) || ! is_numeric( $esistr) ) {
 			add_filter('wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err') ;
 			return false ;
 		}
 
-		$esi = self::is_checked($esistr) ;
-		$ttl = intval($ttlstr) ;
+		$esi = self::is_checked( $esistr) ;
+		$ttl = intval( $ttlstr) ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
 			add_filter('wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err') ;
 			return false ; // invalid ttl.
 		}
 
-		if ( empty($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+		if ( empty( $instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
 			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array() ;
 		}
 		$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE] = $esi ;
@@ -124,11 +124,11 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// enabled setting
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO ;
-		if( ! isset($input[ $id ]) ) {
+		if( ! isset( $input[ $id ]) ) {
 			$enabled = 0 ;
 		}
 		else {
-			$options[ $id ] = self::is_checked_radio($input[ $id ]) ;
+			$options[ $id ] = self::is_checked_radio( $input[ $id ]) ;
 
 			if( $options[ $id ] !== LiteSpeed_Cache_Config::VAL_NOTSET ){
 				$enabled = $options[ $id ] ;
@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
 		if ( $enabled !== $options[ $id ] ) {
 			$options[ $id ] = $enabled ;
-			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter($enabled) ;
+			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( $enabled) ;
 			if ( $ret !== true ) {
 				$errors[] = $ret ;
 			}
@@ -164,63 +164,71 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ;
-		if ( ! $this->validate_ttl($input, $id, 30) ) {
-			$errors[] = sprintf($num_err, __('Default Public Cache', 'litespeed-cache'), 30, $max_ttl) ;
+		if ( ! $this->validate_ttl( $input, $id, 30 ) ) {
+			$errors[] = sprintf( $num_err, __( 'Default Public Cache', 'litespeed-cache' ), 30, $max_ttl ) ;
+		}
+		else {
+			$options[ $id ] = $input[ $id ] ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ;
+		if ( ! $this->validate_ttl( $input, $id, 60, 3600 ) ) {
+			$errors[] = sprintf( $num_err, __( 'Default Private Cache', 'litespeed-cache' ), 60, 3600 ) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ;
-		if ( ! $this->validate_ttl($input, $id, 30) ) {
-			$errors[] = sprintf($num_err, __('Default Front Page', 'litespeed-cache'), 30, $max_ttl) ;
+		if ( ! $this->validate_ttl( $input, $id, 30) ) {
+			$errors[] = sprintf( $num_err, __('Default Front Page', 'litespeed-cache'), 30, $max_ttl) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_FEED_TTL ;
-		if ( ! $this->validate_ttl($input, $id) ) {
-			$errors[] = sprintf($num_err, __('Feed', 'litespeed-cache'), 0, $max_ttl) ;
+		if ( ! $this->validate_ttl( $input, $id) ) {
+			$errors[] = sprintf( $num_err, __('Feed', 'litespeed-cache'), 0, $max_ttl) ;
 		}
 		elseif ( $input[ $id ] < 30 ) {
 			$options[ $id ] = 0 ;
 		}
 		else {
-			$options[ $id ] = intval($input[ $id ]) ;
+			$options[ $id ] = intval( $input[ $id ]) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_404_TTL ;
-		if ( ! $this->validate_ttl($input, $id) ) {
-			$errors[] = sprintf($num_err, __('404', 'litespeed-cache'), 0, $max_ttl) ;
+		if ( ! $this->validate_ttl( $input, $id) ) {
+			$errors[] = sprintf( $num_err, __('404', 'litespeed-cache'), 0, $max_ttl) ;
 		}
 		elseif ( $input[ $id ] < 30 ) {
 			$options[ $id ] = 0 ;
 		}
 		else {
-			$options[ $id ] = intval($input[ $id ]) ;
+			$options[ $id ] = intval( $input[ $id ]) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_403_TTL ;
-		if ( ! $this->validate_ttl($input, $id) ) {
-			$errors[] = sprintf($num_err, __('403', 'litespeed-cache'), 0, $max_ttl) ;
+		if ( ! $this->validate_ttl( $input, $id) ) {
+			$errors[] = sprintf( $num_err, __('403', 'litespeed-cache'), 0, $max_ttl) ;
 		}
 		elseif ( $input[ $id ] < 30 ) {
 			$options[ $id ] = 0 ;
 		}
 		else {
-			$options[ $id ] = intval($input[ $id ]) ;
+			$options[ $id ] = intval( $input[ $id ]) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_500_TTL ;
-		if ( ! $this->validate_ttl($input, $id) ) {
-			$errors[] = sprintf($num_err, __('500', 'litespeed-cache'), 0, $max_ttl) ;
+		if ( ! $this->validate_ttl( $input, $id) ) {
+			$errors[] = sprintf( $num_err, __('500', 'litespeed-cache'), 0, $max_ttl) ;
 		}
 		elseif ( $input[ $id ] < 30 ) {
 			$options[ $id ] = 0 ;
 		}
 		else {
-			$options[ $id ] = intval($input[ $id ]) ;
+			$options[ $id ] = intval( $input[ $id ]) ;
 		}
 
 	}
@@ -281,7 +289,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::PURGE_POST_TYPE,
 		) ;
 		$input_purge_options = array() ;
-		foreach ($pvals as $pval) {
+		foreach ( $pvals as $pval) {
 			$input_name = 'purge_' . $pval ;
 			if ( self::parse_onoff( $input, $input_name ) ) {
 				$input_purge_options[] = $pval ;
@@ -325,25 +333,25 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_exclude($input, &$options, &$errors)
+	private function validate_exclude( $input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
-		if ( isset($input[ $id ]) ) {
+		if ( isset( $input[ $id ]) ) {
 			$uri_arr = array_map('trim', explode("\n", $input[ $id ])) ;
-			$options[ $id ] = implode("\n", array_filter($uri_arr)) ;
+			$options[ $id ] = implode("\n", array_filter( $uri_arr)) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
 		$options[ $id ] = '' ;
-		if ( isset($input[ $id ]) ) {
+		if ( isset( $input[ $id ]) ) {
 			$cat_ids = array() ;
 			$cats = explode("\n", $input[ $id ]) ;
-			foreach ($cats as $cat) {
-				$cat_name = trim($cat) ;
+			foreach ( $cats as $cat) {
+				$cat_name = trim( $cat) ;
 				if ( $cat_name == '' ) {
 					continue ;
 				}
-				$cat_id = get_cat_ID($cat_name) ;
+				$cat_id = get_cat_ID( $cat_name) ;
 				if ( $cat_id == 0 ) {
 					$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_CAT, $cat_name) ;
 				}
@@ -351,18 +359,18 @@ class LiteSpeed_Cache_Admin_Settings
 					$cat_ids[] = $cat_id ;
 				}
 			}
-			if ( ! empty($cat_ids) ) {
+			if ( ! empty( $cat_ids) ) {
 				$options[ $id ] = implode(',', $cat_ids) ;
 			}
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG ;
 		$options[ $id ] = '' ;
-		if ( isset($input[ $id ]) ) {
+		if ( isset( $input[ $id ]) ) {
 			$tag_ids = array() ;
 			$tags = explode("\n", $input[ $id ]) ;
-			foreach ($tags as $tag) {
-				$tag_name = trim($tag) ;
+			foreach ( $tags as $tag) {
+				$tag_name = trim( $tag) ;
 				if ( $tag_name == '' ) {
 					continue ;
 				}
@@ -374,7 +382,7 @@ class LiteSpeed_Cache_Admin_Settings
 					$tag_ids[] = $term->term_id ;
 				}
 			}
-			if ( ! empty($tag_ids) ) {
+			if ( ! empty( $tag_ids) ) {
 				$options[ $id ] = implode(',', $tag_ids) ;
 			}
 		}
@@ -389,27 +397,27 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_singlesite($input, &$options, &$errors)
+	private function validate_singlesite( $input, &$options, &$errors)
 	{
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance() ;
 
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED ;
 		if ( $input[ $id ] !== 'changed' ) {
-			$diff = $rules->check_input_for_rewrite($options, $input, $errors) ;
+			$diff = $rules->check_input_for_rewrite( $options, $input, $errors) ;
 		}
 		elseif ( $options[ $id ] ) {
 			$reset = LiteSpeed_Cache_Config::get_rule_reset_options() ;
-			$added_and_changed = $rules->check_input_for_rewrite($reset, $input, $errors) ;
+			$added_and_changed = $rules->check_input_for_rewrite( $reset, $input, $errors) ;
 			// Merge to include the newly disabled options
-			$diff = array_merge($reset, $added_and_changed) ;
+			$diff = array_merge( $reset, $added_and_changed) ;
 		}
 		else {
 			$rules->clear_rules() ;
-			$diff = $rules->check_input_for_rewrite($options, $input, $errors) ;
+			$diff = $rules->check_input_for_rewrite( $options, $input, $errors) ;
 		}
 
-		if ( ! empty($diff) && ($options[ $id ] == false || $rules->validate_common_rewrites($diff, $errors) !== false) ) {//todo: check if need to use ===
-			$options = array_merge($options, $diff) ;
+		if ( ! empty( $diff) && ( $options[ $id ] == false || $rules->validate_common_rewrites( $diff, $errors) !== false) ) {//todo: check if need to use ===
+			$options = array_merge( $options, $diff) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
@@ -425,18 +433,18 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_debug($input, &$options, &$errors)
+	private function validate_debug( $input, &$options, &$errors)
 	{
 		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_ADMIN_IPS ;
-		if ( isset($input[ $id ]) ) {
-			$admin_ips = array_map('trim', explode("\n", trim($input[ $id ]))) ;
-			$admin_ips = array_filter($admin_ips) ;
+		if ( isset( $input[ $id ]) ) {
+			$admin_ips = array_map('trim', explode("\n", trim( $input[ $id ]))) ;
+			$admin_ips = array_filter( $admin_ips) ;
 			$has_err = false ;
 			if ( $admin_ips ) {
-				foreach ($admin_ips as $ip) {
-					if ( ! WP_Http::is_ip_address($ip) ) {
+				foreach ( $admin_ips as $ip) {
+					if ( ! WP_Http::is_ip_address( $ip) ) {
 						$has_err = true ;
 						break ;
 					}
@@ -453,14 +461,14 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_TEST_IPS ;
-		if ( isset($input[ $id ]) ) {
+		if ( isset( $input[ $id ]) ) {
 			// this feature has not implemented yet
-			$test_ips = array_map('trim', explode("\n", trim($input[ $id ]))) ;
-			$test_ips = array_filter($test_ips) ;
+			$test_ips = array_map('trim', explode("\n", trim( $input[ $id ]))) ;
+			$test_ips = array_filter( $test_ips) ;
 			$has_err = false ;
 			if ( $test_ips ) {
-				foreach ($test_ips as $ip) {
-					if ( ! WP_Http::is_ip_address($ip) ) {
+				foreach ( $test_ips as $ip) {
+					if ( ! WP_Http::is_ip_address( $ip) ) {
 						$has_err = true ;
 						break ;
 					}
@@ -477,7 +485,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_DEBUG ;
-		$debug_level = self::is_checked_radio($input[ $id ]) ;
+		$debug_level = self::is_checked_radio( $input[ $id ]) ;
 		if ( $debug_level != $options[ $id ] ){
 			$options[ $id ] = $debug_level ;
 		}
@@ -530,7 +538,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_crawler($input, &$options, &$errors)
+	private function validate_crawler( $input, &$options, &$errors)
 	{
 		$num_err = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC) ;
 
@@ -547,15 +555,15 @@ class LiteSpeed_Cache_Admin_Settings
 		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT ;
-		if ( isset($input[ $id ]) ) {
+		if ( isset( $input[ $id ]) ) {
 			$arr = array_map('trim', explode("\n", $input[ $id ])) ;
-			$arr = array_filter($arr) ;
+			$arr = array_filter( $arr) ;
 			$ori = array_diff(get_post_types( '', 'names' ), array('post', 'page')) ;
-			$options[ $id ] = implode("\n", array_intersect($arr, $ori)) ;
+			$options[ $id ] = implode("\n", array_intersect( $arr, $ori)) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_ORDER_LINKS ;
-		if( ! isset($input[ $id ]) || ! in_array($input[ $id ], array(
+		if( ! isset( $input[ $id ]) || ! in_array( $input[ $id ], array(
 				LiteSpeed_Cache_Config::CRWL_DATE_DESC,
 				LiteSpeed_Cache_Config::CRWL_DATE_ASC,
 				LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
@@ -566,40 +574,40 @@ class LiteSpeed_Cache_Admin_Settings
 		$options[ $id ] = $input[ $id ] ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_USLEEP ;
-		if ( ! $this->validate_ttl($input, $id, 0, 30000) ) {
-			$errors[] = sprintf($num_err, __('Delay', 'litespeed-cache'), 0, 30000) ;
+		if ( ! $this->validate_ttl( $input, $id, 0, 30000) ) {
+			$errors[] = sprintf( $num_err, __('Delay', 'litespeed-cache'), 0, 30000) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_RUN_DURATION ;
-		if ( ! $this->validate_ttl($input, $id) ) {
-			$errors[] = sprintf($num_err, __('Run Duration', 'litespeed-cache'), 0, 2147483647) ;
+		if ( ! $this->validate_ttl( $input, $id) ) {
+			$errors[] = sprintf( $num_err, __('Run Duration', 'litespeed-cache'), 0, 2147483647) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL ;
-		if ( ! $this->validate_ttl($input, $id, 60) ) {
-			$errors[] = sprintf($num_err, __('Cron Interval', 'litespeed-cache'), 60, 2147483647) ;
+		if ( ! $this->validate_ttl( $input, $id, 60) ) {
+			$errors[] = sprintf( $num_err, __('Cron Interval', 'litespeed-cache'), 60, 2147483647) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL ;
-		if ( ! $this->validate_ttl($input, $id) ) {
-			$errors[] = sprintf($num_err, __('Whole Interval', 'litespeed-cache'), 0, 2147483647) ;
+		if ( ! $this->validate_ttl( $input, $id) ) {
+			$errors[] = sprintf( $num_err, __('Whole Interval', 'litespeed-cache'), 0, 2147483647) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_THREADS ;
-		if ( ! $this->validate_ttl($input, $id, 1) ) {
-			$errors[] = sprintf($num_err, __('Threads', 'litespeed-cache'), 1, 16) ;
+		if ( ! $this->validate_ttl( $input, $id, 1) ) {
+			$errors[] = sprintf( $num_err, __('Threads', 'litespeed-cache'), 1, 16) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
@@ -609,7 +617,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$options[ $id ] = $input[ $id ] ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP ;
-		if ( ! empty($input[ $id ]) && ! WP_Http::is_ip_address($input[ $id ]) ) {
+		if ( ! empty( $input[ $id ]) && ! WP_Http::is_ip_address( $input[ $id ]) ) {
 			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_SITE_IP, $input[ $id ]) ;
 		}
 		else {
@@ -617,8 +625,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ;
-		if ( ! empty($input[ $id ]) && ($err = $this->validate_custom_sitemap($input[ $id ])) !== true ) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error($err, $input[ $id ]) ;
+		if ( ! empty( $input[ $id ]) && ( $err = $this->validate_custom_sitemap( $input[ $id ])) !== true ) {
+			$errors[] = LiteSpeed_Cache_Admin_Display::get_error( $err, $input[ $id ]) ;
 		}
 		else {
 			$options[ $id ] = $input[ $id ] ;
@@ -633,9 +641,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @access private
 	 * @param string $url The sitemap url
 	 */
-	private function validate_custom_sitemap($url)
+	private function validate_custom_sitemap( $url)
 	{
-		return LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap($url, false) ;
+		return LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $url, false) ;
 	}
 
 	/**
@@ -646,19 +654,19 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $input The input options.
 	 * @param array $options The current options.
 	 */
-	private function validate_thirdparty($input, $options)
+	private function validate_thirdparty( $input, $options)
 	{
 		$tp_default_options = LiteSpeed_Cache_Config::get_instance()->get_thirdparty_options() ;
-		if ( empty($tp_default_options) ) {
+		if ( empty( $tp_default_options) ) {
 			return $options ;
 		}
-		$tp_input = array_intersect_key($input, $tp_default_options) ;
-		if ( empty($tp_input) ) {
+		$tp_input = array_intersect_key( $input, $tp_default_options) ;
+		if ( empty( $tp_input) ) {
 			return $options ;
 		}
-		$tp_options = apply_filters('litespeed_cache_save_options', array_intersect_key($options, $tp_default_options), $tp_input) ;
-		if ( ! empty($tp_options) && is_array($tp_options) ) {
-			$options = array_merge($options, $tp_options) ;
+		$tp_options = apply_filters('litespeed_cache_save_options', array_intersect_key( $options, $tp_default_options), $tp_input) ;
+		if ( ! empty( $tp_options) && is_array( $tp_options) ) {
+			$options = array_merge( $options, $tp_options) ;
 		}
 		return $options ;
 	}
@@ -672,7 +680,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $options The current options.
 	 * @param array $errors The errors list.
 	 */
-	private function validate_esi($input, &$options, &$errors)
+	private function validate_esi( $input, &$options, &$errors)
 	{
 		$id = LiteSpeed_Cache_Config::OPID_ESI_ENABLE ;
 		$options[ $id ] = self::parse_onoff( $input, $id ) ;
@@ -700,7 +708,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 *     clicking save.
 	 * @return array The updated configuration options.
 	 */
-	public function validate_plugin_settings($input)
+	public function validate_plugin_settings( $input)
 	{
 		LiteSpeed_Cache_Log::debug('settings->validate_plugin_settings called') ;
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
@@ -712,29 +720,29 @@ class LiteSpeed_Cache_Admin_Settings
 			return $options ;
 		}
 
-		$this->validate_general($input, $options, $errors) ;
+		$this->validate_general( $input, $options, $errors) ;
 
-		$this->validate_cache($input, $options, $errors) ;
+		$this->validate_cache( $input, $options, $errors) ;
 
-		$this->validate_purge($input, $options, $errors) ;
+		$this->validate_purge( $input, $options, $errors) ;
 
-		$this->validate_exclude($input, $options, $errors) ;
+		$this->validate_exclude( $input, $options, $errors) ;
 
-		$this->validate_debug($input, $options, $errors) ;
+		$this->validate_debug( $input, $options, $errors) ;
 
 		if ( ! is_multisite() ) {
-			$this->validate_singlesite($input, $options, $errors) ;
+			$this->validate_singlesite( $input, $options, $errors) ;
 		}
 
 		if ( ! is_network_admin() ) {
-			$this->validate_crawler($input, $options, $errors) ;
+			$this->validate_crawler( $input, $options, $errors) ;
 		}
 
 		if ( LSWCP_ESI_SUPPORT ) {
 			$orig_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED] ;
 			$orig_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE] ;
 
-			$this->validate_esi($input, $options, $errors) ;
+			$this->validate_esi( $input, $options, $errors) ;
 
 			$new_enabled = $options[LiteSpeed_Cache_Config::OPID_ENABLED] ;
 			$new_esi_enabled = $options[LiteSpeed_Cache_Config::OPID_ESI_ENABLE] ;
@@ -744,7 +752,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		if ( ! empty($errors) ) {
+		if ( ! empty( $errors) ) {
 			add_settings_error(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, implode('<br />', $errors)) ;
 
 			return $options ;
@@ -764,10 +772,10 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// check if need to enable crawler cron
 		if ( $input[LiteSpeed_Cache_Config::OPID_ENABLED] === 'changed' || $cron_changed ) {
-			LiteSpeed_Cache_Task::update($options) ;
+			LiteSpeed_Cache_Task::update( $options) ;
 		}
 
-		$options = $this->validate_thirdparty($input, $options) ;
+		$options = $this->validate_thirdparty( $input, $options) ;
 
 		return $options ;
 	}
@@ -817,23 +825,23 @@ class LiteSpeed_Cache_Admin_Settings
 		$rules = LiteSpeed_Cache_Admin_Rules::get_instance() ;
 
 		if ( $input[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] !== 'changed' ) {
-			$diff = $rules->check_input_for_rewrite($options, $input, $errors) ;
+			$diff = $rules->check_input_for_rewrite( $options, $input, $errors) ;
 		}
 		elseif ( $network_enabled ) {
-			$added_and_changed = $rules->check_input_for_rewrite($reset, $input, $errors) ;
+			$added_and_changed = $rules->check_input_for_rewrite( $reset, $input, $errors) ;
 			// Merge to include the newly disabled options
-			$diff = array_merge($reset, $added_and_changed) ;
+			$diff = array_merge( $reset, $added_and_changed) ;
 		}
 		else {
-			$rules->validate_common_rewrites($reset, $errors) ;
-			$diff = $rules->check_input_for_rewrite($options, $input, $errors) ;
+			$rules->validate_common_rewrites( $reset, $errors) ;
+			$diff = $rules->check_input_for_rewrite( $options, $input, $errors) ;
 		}
 
-		if ( ! empty($diff) && ($network_enabled === false || $rules->validate_common_rewrites($diff, $errors) !== false) ) {
-			$options = array_merge($options, $diff) ;
+		if ( ! empty( $diff) && ( $network_enabled === false || $rules->validate_common_rewrites( $diff, $errors) !== false) ) {
+			$options = array_merge( $options, $diff) ;
 		}
 
-		if ( ! empty($errors) ) {
+		if ( ! empty( $errors) ) {
 			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $errors) ;
 			return ;
 		}
@@ -864,9 +872,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param int $val The checkbox value
 	 * @return bool Filtered value
 	 */
-	public static function is_checked($val)
+	public static function is_checked( $val)
 	{
-		$val = intval($val) ;
+		$val = intval( $val) ;
 
 		if( $val === LiteSpeed_Cache_Config::VAL_ON ){
 			return true ;
@@ -883,9 +891,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param int $val The radio value
 	 * @return int Filtered value
 	 */
-	public static function is_checked_radio($val)
+	public static function is_checked_radio( $val)
 	{
-		$val = intval($val) ;
+		$val = intval( $val) ;
 
 		if( $val === LiteSpeed_Cache_Config::VAL_ON ){
 			return LiteSpeed_Cache_Config::VAL_ON ;

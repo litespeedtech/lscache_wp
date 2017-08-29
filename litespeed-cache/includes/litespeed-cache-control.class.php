@@ -271,6 +271,11 @@ class LiteSpeed_Cache_Control
 			}
 		}
 
+		// Private cache uses private ttl setting
+		if ( self::is_private() ) {
+			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ) ;
+		}
+
 		if ( is_front_page() ){
 			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ) ;
 		}
