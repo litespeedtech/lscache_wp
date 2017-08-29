@@ -70,20 +70,20 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget)
 	{
-		if ( empty( $_POST[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+		if ( empty( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
 			return $instance ;
 		}
-		$current = ! empty( $old_instance[LiteSpeed_Cache_Config::OPTION_NAME]) ? $old_instance[LiteSpeed_Cache_Config::OPTION_NAME] : false ;
-		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		$esistr = $input[LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE] ;
-		$ttlstr = $input[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL] ;
+		$current = ! empty( $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : false ;
+		$input = $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
+		$esistr = $input[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
+		$ttlstr = $input[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
 
-		if ( ! is_numeric( $ttlstr) || ! is_numeric( $esistr) ) {
-			add_filter('wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err') ;
+		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
+			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
 			return false ;
 		}
 
-		$esi = self::is_checked( $esistr) ;
+		$esi = self::is_checked_radio( $esistr) ;
 		$ttl = intval( $ttlstr) ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
@@ -91,17 +91,17 @@ class LiteSpeed_Cache_Admin_Settings
 			return false ; // invalid ttl.
 		}
 
-		if ( empty( $instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
-			$instance[LiteSpeed_Cache_Config::OPTION_NAME] = array() ;
+		if ( empty( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
+			$instance[ LiteSpeed_Cache_Config::OPTION_NAME ] = array() ;
 		}
-		$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE] = $esi ;
-		$instance[LiteSpeed_Cache_Config::OPTION_NAME][LiteSpeed_Cache_ESI::WIDGET_OPID_TTL] = $ttl ;
+		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] = $esi ;
+		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] = $ttl ;
 
-		if ( ! $current || $esi != $current[LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE] ) {
+		if ( ! $current || $esi != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ) {
 			LiteSpeed_Cache_Purge::purge_all() ;
 		}
-		elseif ( $ttl != 0 && $ttl != $current[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL] ) {
-			LiteSpeed_Cache_Purge::add(LiteSpeed_Cache_Tag::TYPE_WIDGET . $widget->id) ;
+		elseif ( $ttl != 0 && $ttl != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ) {
+			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_WIDGET . $widget->id ) ;
 		}
 
 		LiteSpeed_Cache_Purge::purge_all() ;
@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Admin_Settings
 		else {
 			$options[ $id ] = self::is_checked_radio( $input[ $id ]) ;
 
-			if( $options[ $id ] !== LiteSpeed_Cache_Config::VAL_NOTSET ){
+			if( $options[ $id ] !== LiteSpeed_Cache_Config::VAL_ON2 ){
 				$enabled = $options[ $id ] ;
 			}
 			else{
@@ -899,8 +899,8 @@ class LiteSpeed_Cache_Admin_Settings
 			return LiteSpeed_Cache_Config::VAL_ON ;
 		}
 
-		if( $val === LiteSpeed_Cache_Config::VAL_NOTSET ){
-			return LiteSpeed_Cache_Config::VAL_NOTSET ;
+		if( $val === LiteSpeed_Cache_Config::VAL_ON2 ){
+			return LiteSpeed_Cache_Config::VAL_ON2 ;
 		}
 
 		return LiteSpeed_Cache_Config::VAL_OFF ;

@@ -35,7 +35,7 @@ if (!defined('WPINC')) die;
 						if ( is_multisite() ){
 							echo $this->build_radio(
 								$id,
-								LiteSpeed_Cache_Config::VAL_NOTSET,
+								LiteSpeed_Cache_Config::ON2,
 								__('Use Network Admin Setting', 'litespeed-cache')
 							);
 						}

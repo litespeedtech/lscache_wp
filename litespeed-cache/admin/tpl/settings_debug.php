@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::OPID_DEBUG,
-						LiteSpeed_Cache_Config::VAL_NOTSET,
+						LiteSpeed_Cache_Config::VAL_ON2,
 						__( 'Admin IP only', 'litespeed-cache' )
 					) ; ?>
 				</div>

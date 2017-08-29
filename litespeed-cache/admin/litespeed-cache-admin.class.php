@@ -102,9 +102,9 @@ class LiteSpeed_Cache_Admin
 
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
-		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-			add_action('in_widget_form', array(LiteSpeed_Cache_Admin_Display::get_instance(), 'show_widget_edit'), 100, 3) ;
-			add_filter('widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4) ;
+		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
+			add_filter( 'widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4 ) ;
 		}
 
 		// check if WP_CACHE is defined and true in the wp-config.php file.

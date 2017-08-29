@@ -383,6 +383,9 @@ class LiteSpeed_Cache_ESI
 			}
 			return $instance ;
 		}
+
+		$esi_private = $options[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ? 'private,' : '' ;
+
 		$params = array(
 			self::PARAM_NAME => $name,
 			self::PARAM_ID => $widget->id,
@@ -390,7 +393,7 @@ class LiteSpeed_Cache_ESI
 			self::PARAM_ARGS => $args
 		) ;
 
-		self::sub_esi_block( 'widget', 'widget ' . $name, $params, 'no-vary' ) ;
+		self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
 		return false ;
 	}
 
@@ -469,26 +472,29 @@ class LiteSpeed_Cache_ESI
 	 * @global $wp_widget_factory
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
-	public function load_widget_block($params)
+	public function load_widget_block( $params )
 	{
 		global $wp_widget_factory ;
-		$widget = $wp_widget_factory->widgets[$params[self::PARAM_NAME]] ;
-		$option = self::widget_load_get_options($widget) ;
+		$widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
+		$option = self::widget_load_get_options( $widget ) ;
 		// Since we only reach here via esi, safe to assume setting exists.
-		$ttl = $option[self::WIDGET_OPID_TTL] ;
+		$ttl = $option[ self::WIDGET_OPID_TTL ] ;
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push('ESI widget render: name ' . $params[self::PARAM_NAME] . ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl) ;
+			LiteSpeed_Cache_Log::push( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
 		}
 		if ( $ttl == 0 ) {
 			LiteSpeed_Cache_Control::set_nocache( 'ESI Widget time to live set to 0' ) ;
 		}
 		else {
-			LiteSpeed_Cache_Control::set_custom_ttl($ttl) ;
+			LiteSpeed_Cache_Control::set_custom_ttl( $ttl ) ;
+
+			if ( $option[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ) {
+				LiteSpeed_Cache_Control::set_private() ;
+			}
 			LiteSpeed_Cache_Control::set_no_vary() ;
-			// LiteSpeed_Cache_Control::set_public() ; no need as by default its public
-			LiteSpeed_Cache_Tag::add(LiteSpeed_Cache_Tag::TYPE_WIDGET . $params[self::PARAM_ID]) ;
+			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_WIDGET . $params[ self::PARAM_ID ] ) ;
 		}
-		the_widget($params[self::PARAM_NAME], $params[self::PARAM_INSTANCE], $params[self::PARAM_ARGS]) ;
+		the_widget( $params[ self::PARAM_NAME ], $params[ self::PARAM_INSTANCE ], $params[ self::PARAM_ARGS ] ) ;
 	}
 
 	/**

@@ -68,7 +68,7 @@ class LiteSpeed_Cache
 		// Check if debug is on
 		if ( self::config(LiteSpeed_Cache_Config::OPID_ENABLED) ) {
 			$should_debug = intval(self::config(LiteSpeed_Cache_Config::OPID_DEBUG)) ;
-			if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ($should_debug == LiteSpeed_Cache_Config::VAL_NOTSET && LiteSpeed_Cache_Router::is_admin_ip()) ) {
+			if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ($should_debug == LiteSpeed_Cache_Config::VAL_ON2 && LiteSpeed_Cache_Router::is_admin_ip()) ) {
 				LiteSpeed_Cache_Log::set_enabled() ;
 			}
 
