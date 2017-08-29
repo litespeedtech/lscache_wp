@@ -188,7 +188,7 @@ class LiteSpeed_Cache_ESI
 			return false ;
 		}
 
-		$url = wp_make_link_relative(home_url()) . '?' . self::QS_ACTION . '=' . self::POSTTYPE . '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
+		$url = trailingslashit( wp_make_link_relative( home_url() ) ) . '?' . self::QS_ACTION . '=' . self::POSTTYPE . '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
 		$output = "<!-- lscwp $wrapper --><esi:include src='$url'" ;
 		if ( ! empty( $control ) ) {
 			$output .= " cache-control='$control'" ;
