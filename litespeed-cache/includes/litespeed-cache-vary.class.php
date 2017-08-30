@@ -240,7 +240,7 @@ class LiteSpeed_Cache_Vary
 		if ( ! $user_id ) {
 			$user = wp_get_current_user() ;
 			$user_id = $user->ID ;
-			LiteSpeed_Cache_Log::debug( 'getting user_id: ' . $user_id ) ;
+			LiteSpeed_Cache_Log::debug2( 'getting user_id: ' . $user_id ) ;
 		}
 		$vary = array( 'logged-in' => 1 ) ;
 		// get user's group id
@@ -255,18 +255,18 @@ class LiteSpeed_Cache_Vary
 		$gid = $user->roles[ 0 ] ?: 0 ;
 		if ( $role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group( $gid ) ) {
 			$vary[ 'role' ] = $role_group ;
-			LiteSpeed_Cache_Log::debug( 'Vary role group: ' . $gid ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary role group: ' . $gid ) ;
 		}
 
 		// Get admin bar set
 		// see @_get_admin_bar_pref()
 		$pref = get_user_option( 'show_admin_bar_front', $user_id ) ;
-		LiteSpeed_Cache_Log::debug( 'Vary show_admin_bar_front: ' . $pref ) ;
+		LiteSpeed_Cache_Log::debug2( 'Vary show_admin_bar_front: ' . $pref ) ;
 		$admin_bar = $pref === false || $pref === 'true' ;
 
 		if ( $admin_bar ) {
 			$vary[ 'admin_bar' ] = 1 ;
-			LiteSpeed_Cache_Log::debug( 'Vary admin bar : true' ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary admin bar : true' ) ;
 		}
 
 		ksort( $vary ) ;

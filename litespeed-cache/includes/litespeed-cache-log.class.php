@@ -176,6 +176,24 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
+	 * Direct call to log an advanced debug message.
+	 *
+	 * @since 1.1.6.1
+	 * @access public
+	 * @param string $msg The debug message.
+	 * @param int $backtrace_limit Backtrace depth.
+	 */
+	public static function debug2( $msg, $backtrace_limit = false )
+	{
+		if ( ! defined( 'LSCWP_LOG_MORE' ) ) {
+			return ;
+		}
+		if ( self::get_enabled() ) {
+			self::push( $msg, $backtrace_limit !== false ? $backtrace_limit+1 : false ) ;
+		}
+	}
+
+	/**
 	 * Logs a debug message.
 	 *
 	 * @since 1.1.0
