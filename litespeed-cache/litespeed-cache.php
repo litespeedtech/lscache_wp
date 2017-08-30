@@ -77,7 +77,7 @@ if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 
 // ESI const defination
 if ( ! defined( 'LSWCP_ESI_SUPPORT' ) ) {
-	define( 'LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? false : false ) ;
+	define( 'LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false ) ;
 }
 
 if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
