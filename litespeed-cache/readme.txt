@@ -3,19 +3,27 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, wordfence, bbpress, nextgengallery
 Requires at least: 4.0
 Tested up to: 4.8.1
-Stable tag: 1.1.6
+Stable tag: 1.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Quickly and easily implement high-performance page caching on your WordPress site with the ultra-efficient LiteSpeed Cache.
+Speed up your page-load times. Get a faster site with high-performance page caching from LiteSpeed Cache. Easy to set up. Easy to use.
 
 == Description ==
 
-The LiteSpeed Cache Plugin for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server and its built-in page cache, LSCache.
+LiteSpeed Cache for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
 
-Because LSCache is built directly into the server, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches.
+Because LSCache is built directly into the server, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches (WP Super Cache, W3 Total Cache, WP Fastest Cache, WP Rocket, etc.).
 
-= Installation =
+LSCache is a server-side page cache. Page caches save time and resources, and they do so by storing the full content of dynamically-generated pages so that static copies may be served to the user. A page cache allows the server to bypass PHP and database queries altogether. LSCache, in particular, because of its close relationship with the server, can remember things about the cache entries that other plugins cannot, and it can analyze dependencies. It can utilize tags to manage the smart purging of the cache, and it can use vary cookies to serve multiple versions of cached content based on things like mobile vs. desktop, geographic location, and currencies.
+
+If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPress works right out of the box with default settings that are appropriate for most sites. And if you do need help, we're just [a forum post](https://wordpress.org/support/plugin/litespeed-cache/) away.
+
+LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
+
+Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
+
+== Installation ==
 
 1. Install LiteSpeed Web Server Enterprise with LSCache Module or OpenLiteSpeed with cache module [Free].
 2. Install the LiteSpeed Cache for WordPress plugin and activate it.
@@ -29,14 +37,11 @@ Because LSCache is built directly into the server, overhead is significantly red
 
 = Notes for OpenLiteSpeed =
 
-* This integration utilizes OLS's cache module.
+* This integration utilizes OpenLiteSpeed's cache module.
 * If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the `--wordpresspath` parameter.
 * If OLS and WordPress are both already installed, please follow the instructions in [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
 
-= Performance Optimization =
-
-
-= Plugin Features =
+== Plugin Features ==
 
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
@@ -58,7 +63,18 @@ LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
 
 * Support for clustered environments via LiteSpeed Web ADC
 
-= Known Compatible Plugins =
+== Third Party Compatibility ==
+
+The vast majority of plugins and themes are compatible with LSCache. Our API is available for those that are not.
+
+= Developers =
+
+If you have a plugin or theme that you would like to make compatible with LSCWP, please see the following resources:
+
+* [Latest LiteSpeed Cache plugin for WordPress API Documentation for Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
+* [LiteSpeed Cache plugin for WordPress GitHub](https://github.com/litespeedtech/lscache_wp/)
+
+= Known Compatible Plugins and Themes =
 
 * [bbPress](https://wordpress.org/plugins/bbpress/)
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/)
@@ -67,7 +83,7 @@ LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
 * [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
 * [Wordfence Security](https://wordpress.org/plugins/wordfence/)
 * [NextGen Gallery](https://wordpress.org/plugins/nextgen-gallery/)
-* <a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>
+* [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/)
 * Aelia CurrencySwitcher
 * [Fast Velocity Minify](https://wordpress.org/plugins/fast-velocity-minify/) - Thanks Raul Peixoto!
 * [Autoptimize](https://wordpress.org/plugins/autoptimize/)
@@ -76,33 +92,27 @@ LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
 * [wpForo](https://wordpress.org/plugins/wpforo/)
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
-* [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
-* [Elegant Themes Divi 3.0.67+]
+* [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
+* Elegant Themes Divi 3.0.67+
 
 = Known Uncompatible Plugins =
 
-* No known uncompatible plugins at this time.
-
-For support visit [WordPress LiteSpeed Support Forums](https://wordpress.org/support/plugin/litespeed-cache "WordPress LiteSpeed forums"), [LiteSpeedWiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp "wiki"), or email us at info@litespeedtech.com.
-
-= How to test the plugin =
-
-The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers. Visiting a page for the first time should result in a `X-LiteSpeed-Cache-Control:miss` or `X-LiteSpeed-Cache-Control:no-cache` response header for the page. Subsequent requests should have the `X-LiteSpeed-Cache-Control:hit` response header until the page is updated, expired, or purged. Please visit [LiteSpeed Cache Plugin Testing](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing) for more information.
+There are no known uncompatible plugins at this time.
 
 == Frequently Asked Questions ==
 
 = Is the LiteSpeed Cache Plugin for WordPress free? =
 
-Yes, the plugin itself will remain free and open source. That said, a LiteSpeed server is required (see question 2).
+Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is required, and there are fees associated with some LiteSpeed server editions (see question 2).
 
 = What server software is required for this plugin? =
 
 A LiteSpeed server is required in order to use this plugin.
 
-1. LiteSPeed Web Server Enterprise with LSCache Module (v5.0.10+)
+1. LiteSpeed Web Server Enterprise with LSCache Module (v5.0.10+)
 
-2. OpenLiteSpeed (v1.4.17+)
+2. OpenLiteSpeed (v1.4.17+) - Free and open source!
 
 3. LiteSpeed WebADC (v2.0+)
 
@@ -110,7 +120,7 @@ Any single server or cluster including a LiteSpeed server will work.
 
 = Does this plugin work in a clustered environment? =
 
-The cache entries are stored at the litespeed server level. The simplest solution is to use LiteSpeed WebADC, as the cache entries will be cached at that level.
+The cache entries are stored at the LiteSpeed server level. The simplest solution is to use LiteSpeed WebADC, as the cache entries will be stored at that level.
 
 If using another load balancer, the cache entries will only be stored at the backend nodes, not at the load balancer.
 
@@ -124,33 +134,15 @@ NOTICE: The rewrite rules created by this plugin must be copied to the Load Bala
 
 The actual cached pages are stored and managed by LiteSpeed Servers.
 
-Nothing is stored on the PHP side.
+Nothing is stored within the WordPress file structure.
 
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 
-Yes it can work well with OpenLiteSpeed. As well, any settings changes that require modifying the .htaccess file requires a server restart.
+Yes it can work well with OpenLiteSpeed, although some features may not be supported. See **Plugin Features** above for details. Any setting changes that require modifying the .htaccess file will require a server restart.
 
 = Is WooCommerce supported? =
 
-In short, yes. However, for some woocommerce themes, the cart may not be updated correctly.
-
-To test the cart:
-
-1. On a non-logged-in browser, visit and cache a page, then visit and cache a product page.
-
-2. The first page should be accessible from the product page (e.g. the shop).
-
-3. Once both pages are confirmed cached, add the product to your cart.
-
-4. After adding to the cart, visit the first page.
-
-5. The page should still be cached, and the cart should be up to date.
-
-6. If that is not the case, please add woocommerce_items_in_cart to the do not cache cookie list.
-
-Some themes like Storefront and Shop Isle are built such that the cart works without the rule.
-
-However, other themes like the E-Commerce theme, do not, so please verify the theme used.
+In short, yes. However, for some woocommerce themes, the cart may not be updated correctly. Please [visit our blog](https://blog.litespeedtech.com/2017/05/31/wpw-fixing-lscachewoocommerce-conflicts/) for a quick tutorial on how to detect this problem and fix it if necessary.
 
 = My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
 
@@ -160,13 +152,13 @@ Alternatively, you may use the function xxx`LiteSpeed_Cache_Tags::set_noncacheab
 
 If using the function, make sure to check that the class exists prior to using the function.
 
-Please visit the [Other Notes tab](https://wordpress.org/plugins/litespeed-cache/other_notes/) for more information.
+Please see [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api) for more information and to learn what else you can do to integrate your plugin with LSCWP.
 
 = Are my images optimized? =
 
-The cache plugin does not do anything with the images themselves.
+LSCWP does not do anything with your images.
 
-We recommend you trying an image optimization plugin like <a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a> to optimize your images. It can reduce your site's images up to 90%.
+If you want to optimize your images, we recommend trying a plugin like [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/). It can reduce your site's images up to 90%.
 
 = How do I get WP-PostViews to display an updating view count? =
 
@@ -200,16 +192,10 @@ We recommend you trying an image optimization plugin like <a href="https://short
 
 The crawler is disabled by default, and must be enabled by the server admin first.
 
-Then, you can enable crawler from "LiteSpeed Cache" -> "Crawler".
+Once the crawler is enabled on the server side, navigate to **LiteSpeed Cache > Crawler** and set **Activation** to `Enable`.
 
-For more detailed information about crawler setup, please see [our blog post on the subject](https://blog.litespeedtech.com/2017/06/14/wpw-crawl-your-site-make-it-fly/).
+For more detailed information about crawler setup, please see [our blog post](https://blog.litespeedtech.com/2017/06/14/wpw-crawl-your-site-make-it-fly/).
 
-
-== Plugin Developers ==
-
-[Latest LiteSpeed Cache plugin for WordPress API Documentation for Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
-
-[LiteSpeed Cache plugin for WordPress GitHub](https://github.com/litespeedtech/lscache_wp/)
 
 == Screenshots ==
 
@@ -226,6 +212,12 @@ For more detailed information about crawler setup, please see [our blog post on 
 11. Cache Hit Example
 
 == Changelog ==
+
+= 1.2.0 - August 31 2017 =
+* [NEW FEATURE] Added ESI support.
+* [NEW FEATURE] Added a private cache TTL setting.
+* [NEW FEATURE] Debug level can now be set to either 'Basic' or 'Advanced'.
+* [REFACTOR] Renamed const 'NOTSET' to 'ON2' in class config.
 
 = 1.1.6 - August 23 2017 =
 * [NEW FEATURE] Added option to privately cache logged-in users.
