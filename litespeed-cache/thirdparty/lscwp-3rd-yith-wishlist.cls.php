@@ -31,10 +31,25 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		if ( ! defined('WOOCOMMERCE_VERSION') || ! defined('YITH_WCWL') ) {
 			return ;
 		}
-		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+		if ( LiteSpeed_Cache_API::esi_enabled() ) {
 			LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_Yith_Wishlist::is_not_esi') ;
 			LiteSpeed_Cache_API::hook_tpl_esi('yith-wcwl-add', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::load_add_to_wishlist') ;
+
+			// hook to add/delete wishlist
+			add_action( 'yith_wcwl_added_to_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge' ) ;
+			add_action( 'yith_wcwl_removed_from_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge' ) ;
 		}
+	}
+
+	/**
+	 * Purge ESI yith cache when add/remove items
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function purge()
+	{
+		LiteSpeed_Cache_API::purge( LiteSpeed_Cache_Tag::TYPE_ESI . 'yith-wcwl-add' ) ;
 	}
 
 	/**
@@ -92,6 +107,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		$wp_query->setup_postdata($post) ;
 		echo YITH_WCWL_Shortcode::add_to_wishlist(/*$params[self::ESI_PARAM_ATTS]*/array()) ;
 		LiteSpeed_Cache_API::set_cache_private();
+		LiteSpeed_Cache_API::set_cache_no_vary();
 	}
 
 }

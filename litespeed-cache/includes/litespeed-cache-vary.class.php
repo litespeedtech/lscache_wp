@@ -31,7 +31,7 @@ class LiteSpeed_Cache_Vary
 			self::add_logged_in() ;
 
 			// If not esi, check cache logged-in user setting
-			if ( ! LSWCP_ESI_SUPPORT || ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
+			if ( ! LiteSpeed_Cache_Router::esi_enabled() ) {
 				// If cache logged-in, then init cacheable to private
 				if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PRIV ) ) {
 					add_action( 'wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;

@@ -37,39 +37,41 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public static function detect()
 	{
-		if ( ! defined('WOOCOMMERCE_VERSION') ) {
+		if ( ! defined( 'WOOCOMMERCE_VERSION' ) ) {
 			return ;
 		}
-		LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_WooCommerce::set_control') ;
-		LiteSpeed_Cache_API::hook_tag('LiteSpeed_Cache_ThirdParty_WooCommerce::set_tag') ;
+		LiteSpeed_Cache_API::hook_control( 'LiteSpeed_Cache_ThirdParty_WooCommerce::set_control' ) ;
+		LiteSpeed_Cache_API::hook_tag( 'LiteSpeed_Cache_ThirdParty_WooCommerce::set_tag' ) ;
 
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
-		add_action('woocommerce_product_set_stock', 'LiteSpeed_Cache_ThirdParty_WooCommerce::purge_product') ;
+		add_action( 'woocommerce_product_set_stock', 'LiteSpeed_Cache_ThirdParty_WooCommerce::purge_product' ) ;
 
-		LiteSpeed_Cache_API::hook_get_options('LiteSpeed_Cache_ThirdParty_WooCommerce::get_config') ;
-		add_action('comment_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3) ;
+		LiteSpeed_Cache_API::hook_get_options( 'LiteSpeed_Cache_ThirdParty_WooCommerce::get_config' ) ;
+		add_action( 'comment_post', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_review', 10, 3 ) ;
 
-		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_ENABLE) ) {
-			if ( !is_shop() ) {
-				LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template') ;
-				LiteSpeed_Cache_API::hook_tpl_esi('wc-add-to-cart-form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block') ;
-				LiteSpeed_Cache_API::hook_tpl_esi('storefront-cart-header', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header') ;
-				LiteSpeed_Cache_API::hook_tpl_esi('widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view') ;
+		if ( LiteSpeed_Cache_API::esi_enabled() ) {
+			if ( ! is_shop() ) {
+				LiteSpeed_Cache_API::hook_tpl_not_esi( 'LiteSpeed_Cache_ThirdParty_WooCommerce::set_block_template' ) ;
+				// No need for add-to-cart button
+				// LiteSpeed_Cache_API::hook_tpl_esi( 'wc-add-to-cart-form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_add_to_cart_form_block' ) ;
+
+				LiteSpeed_Cache_API::hook_tpl_esi( 'storefront-cart-header', 'LiteSpeed_Cache_ThirdParty_WooCommerce::load_cart_header' ) ;
+				LiteSpeed_Cache_API::hook_tpl_esi( 'widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::register_post_view' ) ;
 			}
 
 			if ( is_product() ) {
-				LiteSpeed_Cache_API::hook_esi_param('widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id') ;
+				LiteSpeed_Cache_API::hook_esi_param( 'widget', 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_post_id' ) ;
 			}
 
-			LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart') ;
+			LiteSpeed_Cache_API::hook_tpl_not_esi( 'LiteSpeed_Cache_ThirdParty_WooCommerce::set_swap_header_cart' ) ;
 		}
 
 		if ( is_admin() ) {
-			LiteSpeed_Cache_API::hook_purge_post('LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge') ;
-			add_action('delete_term_relationships', 'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2) ;
-			LiteSpeed_Cache_API::hook_setting_tab('LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3) ;
-			LiteSpeed_Cache_API::hook_setting_save('LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2) ;
-			LiteSpeed_Cache_API::hook_widget_default_options('LiteSpeed_Cache_ThirdParty_WooCommerce::wc_widget_default', 10, 2) ;
+			LiteSpeed_Cache_API::hook_purge_post( 'LiteSpeed_Cache_ThirdParty_WooCommerce::backend_purge' ) ;
+			add_action( 'delete_term_relationships', 'LiteSpeed_Cache_ThirdParty_WooCommerce::delete_rel', 10, 2 ) ;
+			LiteSpeed_Cache_API::hook_setting_tab( 'LiteSpeed_Cache_ThirdParty_WooCommerce::add_config', 10, 3 ) ;
+			LiteSpeed_Cache_API::hook_setting_save( 'LiteSpeed_Cache_ThirdParty_WooCommerce::save_config', 10, 2 ) ;
+			LiteSpeed_Cache_API::hook_widget_default_options( 'LiteSpeed_Cache_ThirdParty_WooCommerce::wc_widget_default', 10, 2 ) ;
 		}
 	}
 
@@ -130,6 +132,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 			return ;
 		}
+		return ;
 		global $post ;
 		$params = array(
 			self::ESI_PARAM_ARGS => $args,
@@ -427,8 +430,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				if ( is_null($woocom->cart) ) {
 					$err = 'null cart' ;
 				}
-				elseif ( $woocom->cart->get_cart_contents_count() !== 0 ) {//$esi_id === 'storefront-cart-header' &&
+				elseif ( $woocom->cart->get_cart_contents_count() !== 0 && ! LiteSpeed_Cache_Router::esi_enabled() ) {
 					$err = 'cart is not empty' ;
+				}
+				elseif ( $esi_id === 'storefront-cart-header' ) {
+					$err = 'ESI cart should be nocache' ;
 				}
 				elseif ( wc_notice_count() > 0 ) {
 					$err = 'has wc notice' ;

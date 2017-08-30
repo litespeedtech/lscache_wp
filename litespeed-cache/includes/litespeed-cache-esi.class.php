@@ -33,10 +33,14 @@ class LiteSpeed_Cache_ESI
 	/**
 	 * Constructor of ESI
 	 *
-	 * @since    1.1.3
+	 * @since    1.2.0
+	 * @access private
 	 */
 	private function __construct()
 	{
+		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
+		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
+		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
 	}
 
 	/**

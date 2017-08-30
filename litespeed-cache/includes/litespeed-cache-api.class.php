@@ -53,6 +53,17 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
+	 * Set cache status to no vary
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function set_cache_no_vary()
+	{
+		LiteSpeed_Cache_Control::set_no_vary() ;
+	}
+
+	/**
 	 * Set cache status to not cacheable
 	 *
 	 * @since 1.1.3
@@ -333,6 +344,17 @@ class LiteSpeed_Cache_API
 	public static function debug($info)
 	{
 		LiteSpeed_Cache_Log::debug($info) ;
+	}
+
+	/**
+	 * Get ESI enable setting value
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 */
+	public static function esi_enabled()
+	{
+		return LiteSpeed_Cache_Router::esi_enabled() ;
 	}
 
 	/**

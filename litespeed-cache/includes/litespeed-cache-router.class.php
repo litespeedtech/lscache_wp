@@ -14,6 +14,7 @@ class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
 	private static $_is_enabled ;
+	private static $_esi_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
 	private static $_is_cli ;
@@ -44,6 +45,21 @@ class LiteSpeed_Cache_Router
 			}
 		}
 		return self::$_siteurl ;
+	}
+
+	/**
+	 * Check if ESI is enabled or not
+	 *
+	 * @since 1.2.0
+	 * @access public
+	 * @return boolean
+	 */
+	public static function esi_enabled()
+	{
+		if ( ! isset( self::$_esi_enabled ) ) {
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
+		}
+		return self::$_esi_enabled ;
 	}
 
 	/**

@@ -76,7 +76,7 @@ class LiteSpeed_Cache
 			include_once LSWCP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
+		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
 
@@ -285,14 +285,10 @@ class LiteSpeed_Cache
 
 		// The ESI functionality is an enterprise feature.
 		// Removing the openlitespeed check will simply break the page.
-		//todo: make a constant for esiEnable included cfg esi eanbled
-		if ( LSWCP_ESI_SUPPORT ) {
-			if ( ! LiteSpeed_Cache_Router::is_ajax() && self::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ) {
-				add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
-				add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
-				add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
-			}
+		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
+			LiteSpeed_Cache_ESI::get_instance() ;
 		}
+
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
 
 		// register recent posts widget tag before theme renders it to make it work
