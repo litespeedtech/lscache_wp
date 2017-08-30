@@ -25,7 +25,29 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	{
 		if ( function_exists('is_bbpress') ) {
 			LiteSpeed_Cache_API::hook_purge_post('LiteSpeed_Cache_ThirdParty_BBPress::on_purge') ;
+			if ( LiteSpeed_Cache_Router::esi_enabled() ) {// don't consider private cache yet (will do if any feedback)
+				LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_BBPress::set_control') ;
+			}
 		}
+	}
+
+	/**
+	 * This filter is used to let the cache know if a page is cacheable.
+	 *
+	 * @access public
+	 * @since 1.2.0
+	 */
+	public static function set_control()
+	{
+		if ( LiteSpeed_Cache_API::not_cacheable() ) {
+			return ;
+		}
+
+		// set non ESI public
+		if ( is_bbpress() && LiteSpeed_Cache_Router::is_logged_in() ) {
+			LiteSpeed_Cache_API::set_nocache( 'bbpress cant cache loggedin' ) ;
+		}
+
 	}
 
 	/**
