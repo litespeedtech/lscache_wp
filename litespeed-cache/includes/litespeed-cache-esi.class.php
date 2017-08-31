@@ -327,7 +327,7 @@ class LiteSpeed_Cache_ESI
 		switch ($widget_name) {
 			case 'WP_Widget_Recent_Posts' :
 			case 'WP_Widget_Recent_Comments' :
-				$options[self::WIDGET_OPID_ESIENABLE] = true ;
+				$options[self::WIDGET_OPID_ESIENABLE] = LiteSpeed_Cache_Config::VAL_OFF ;
 				$options[self::WIDGET_OPID_TTL] = 86400 ;
 				break ;
 			default :
