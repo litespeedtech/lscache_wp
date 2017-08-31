@@ -22,7 +22,8 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_CACHE_RES,
 			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
 			LiteSpeed_Cache_Config::OPID_ESI_ENABLE,
-			LiteSpeed_Cache_Config::OPID_ESI_CACHE,
+			LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR,
+			LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM,
 			LiteSpeed_Cache_Config::CRWL_POSTS,
 			LiteSpeed_Cache_Config::CRWL_PAGES,
 			LiteSpeed_Cache_Config::CRWL_CATS,
@@ -99,7 +100,8 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_CACHE_RES:
 			case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
 			case LiteSpeed_Cache_Config::OPID_ESI_ENABLE:
-			case LiteSpeed_Cache_Config::OPID_ESI_CACHE:
+			case LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR:
+			case LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM:
 			case LiteSpeed_Cache_Config::CRWL_POSTS:
 			case LiteSpeed_Cache_Config::CRWL_PAGES:
 			case LiteSpeed_Cache_Config::CRWL_CATS:

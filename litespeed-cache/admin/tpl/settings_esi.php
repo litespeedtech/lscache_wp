@@ -31,11 +31,21 @@ sort( $roles ) ;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Cache ESI', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Cache Admin Bar', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_ESI_CACHE); ?>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Cache the ESI blocks.', 'litespeed-cache'); ?>
+				<?php echo __('Cache the build-in admin bar ESI block.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Cache Comment Form', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM); ?>
+			<div class="litespeed-desc">
+				<?php echo __('Cache the build-in comment form ESI block.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

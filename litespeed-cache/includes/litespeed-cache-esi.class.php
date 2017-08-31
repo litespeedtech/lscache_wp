@@ -89,9 +89,6 @@ class LiteSpeed_Cache_ESI
 
 			self::get_instance()->register_esi_actions() ;
 
-			if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_CACHE) ) {
-				LiteSpeed_Cache_Control::set_nocache( 'ESI page is not cacheable' ) ;
-			}
 			return LSWCP_DIR . 'includes/litespeed-cache-esi.tpl.php' ;
 		}
 		self::get_instance()->register_not_esi_actions() ;
@@ -510,8 +507,13 @@ class LiteSpeed_Cache_ESI
 	public function load_admin_bar_block()
 	{
 		wp_admin_bar_render() ;
-		LiteSpeed_Cache_Control::set_private() ;
-		LiteSpeed_Cache_Control::set_no_vary() ;
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ) ) {
+			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
+		}
+		else {
+			LiteSpeed_Cache_Control::set_private() ;
+			LiteSpeed_Cache_Control::set_no_vary() ;
+		}
 	}
 
 
@@ -526,13 +528,17 @@ class LiteSpeed_Cache_ESI
 	{
 		remove_filter('comment_form_defaults', array($this, 'register_comment_form_actions')) ;
 		comment_form($params[self::PARAM_ARGS], $params[self::PARAM_ID]) ;
-		if ( LiteSpeed_Cache_Vary::has_vary() ) {
-			LiteSpeed_Cache_Control::set_private() ;
-			LiteSpeed_Cache_Control::set_no_vary() ;
+
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
+			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
-		// else {
-			// LiteSpeed_Cache_Control::set_public() ; no need as by default its public
-		// }
+		else {
+			// by default comment form is public
+			if ( LiteSpeed_Cache_Vary::has_vary() ) {
+				LiteSpeed_Cache_Control::set_private() ;
+				LiteSpeed_Cache_Control::set_no_vary() ;
+			}
+		}
 
 	}
 

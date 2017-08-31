@@ -685,7 +685,10 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPID_ESI_ENABLE ;
 		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE ;
+		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ;
+		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+
+		$id = LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ;
 		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 
 		// Save vary group settings

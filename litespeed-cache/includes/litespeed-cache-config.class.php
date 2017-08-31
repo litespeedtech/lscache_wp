@@ -67,7 +67,8 @@ class LiteSpeed_Cache_Config
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
 	const OPID_TEST_IPS = 'test_ips' ;
 	const OPID_ESI_ENABLE = 'esi_enabled' ;
-	const OPID_ESI_CACHE = 'esi_cached' ;
+	const OPID_ESI_CACHE_ADMBAR = 'esi_cached_admbar' ;
+	const OPID_ESI_CACHE_COMMFORM = 'esi_cached_commform' ;
 	const PURGE_ALL_PAGES = '-' ;
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
@@ -378,7 +379,8 @@ class LiteSpeed_Cache_Config
 
 		if ( LSWCP_ESI_SUPPORT ) {
 			$default_options[self::OPID_ESI_ENABLE] = false ;
-			$default_options[self::OPID_ESI_CACHE] = false ;
+			$default_options[self::OPID_ESI_CACHE_ADMBAR] = true ;
+			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
 		}
 
 		if ( is_multisite() ) {
