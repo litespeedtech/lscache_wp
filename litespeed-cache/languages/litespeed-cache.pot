@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.1.6\n"
+"Project-Id-Version: LiteSpeed Cache 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-08-23 21:39:09+00:00\n"
+"POT-Creation-Date: 2017-08-31 17:51:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,57 +12,57 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin/litespeed-cache-admin-display.class.php:137
+#: admin/litespeed-cache-admin-display.class.php:140
 msgid "Manage"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:139
-#: admin/litespeed-cache-admin-display.class.php:222
+#: admin/litespeed-cache-admin-display.class.php:142
+#: admin/litespeed-cache-admin-display.class.php:225
 msgid "Settings"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:142
+#: admin/litespeed-cache-admin-display.class.php:145
 msgid "Edit .htaccess"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:145
+#: admin/litespeed-cache-admin-display.class.php:148
 msgid "Information"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:147
+#: admin/litespeed-cache-admin-display.class.php:150
 msgid "Environment Report"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:151 admin/tpl/info.php:10
+#: admin/litespeed-cache-admin-display.class.php:154 admin/tpl/info.php:10
 #: admin/tpl/settings.php:27
 msgid "Crawler"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:155
+#: admin/litespeed-cache-admin-display.class.php:158
 #: admin/tpl/settings_debug.php:10
 msgid "Debug Log"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:242
+#: admin/litespeed-cache-admin-display.class.php:245
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:282
+#: admin/litespeed-cache-admin-display.class.php:285
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:812 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:815 admin/tpl/crawler.php:138
 #: admin/tpl/settings_general.php:25
 msgid "Enable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:816 admin/tpl/crawler.php:138
-#: admin/tpl/settings_general.php:31
+#: admin/litespeed-cache-admin-display.class.php:819 admin/tpl/crawler.php:138
+#: admin/tpl/esi_widget_edit.php:58 admin/tpl/settings_general.php:31
 msgid "Disable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:843
+#: admin/litespeed-cache-admin-display.class.php:846
 msgid "Recommended value: %s."
 msgstr ""
 
@@ -297,58 +297,62 @@ msgid "Default Public Cache"
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:176
-msgid "Default Front Page"
+msgid "Default Private Cache"
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:184
+msgid "Default Front Page"
+msgstr ""
+
+#: admin/litespeed-cache-admin-settings.class.php:192
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:195
+#: admin/litespeed-cache-admin-settings.class.php:203
 msgid "404"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:206
+#: admin/litespeed-cache-admin-settings.class.php:214
 msgid "403"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:217
+#: admin/litespeed-cache-admin-settings.class.php:225
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:490
+#: admin/litespeed-cache-admin-settings.class.php:498
 #: admin/tpl/settings_debug.php:79
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:570
+#: admin/litespeed-cache-admin-settings.class.php:578
 #: admin/tpl/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:578
+#: admin/litespeed-cache-admin-settings.class.php:586
 #: admin/tpl/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:586
+#: admin/litespeed-cache-admin-settings.class.php:594
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:594
+#: admin/litespeed-cache-admin-settings.class.php:602
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:602
+#: admin/litespeed-cache-admin-settings.class.php:610
 #: admin/tpl/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:703
+#: admin/litespeed-cache-admin-settings.class.php:721
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:833
+#: admin/litespeed-cache-admin-settings.class.php:851
 msgid "File saved."
 msgstr ""
 
@@ -588,27 +592,36 @@ msgid ""
 "changed."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:28 admin/tpl/settings_esi.php:17
+#: admin/tpl/esi_widget_edit.php:30 admin/tpl/settings_esi.php:27
 msgid "Enable ESI"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:35
+#: admin/tpl/esi_widget_edit.php:40
+msgid "Public"
+msgstr ""
+
+#: admin/tpl/esi_widget_edit.php:49
+msgid "Private"
+msgstr ""
+
+#: admin/tpl/esi_widget_edit.php:69
 msgid "Widget Cache TTL:"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:38 admin/tpl/settings_crawler.php:25
+#: admin/tpl/esi_widget_edit.php:72 admin/tpl/settings_crawler.php:25
 #: admin/tpl/settings_crawler.php:37 admin/tpl/settings_crawler.php:49
 #: admin/tpl/settings_general.php:61 admin/tpl/settings_general.php:73
-#: admin/tpl/settings_general.php:85 admin/tpl/settings_general.php:98
-#: admin/tpl/settings_general.php:111 admin/tpl/settings_general.php:124
+#: admin/tpl/settings_general.php:85 admin/tpl/settings_general.php:97
+#: admin/tpl/settings_general.php:110 admin/tpl/settings_general.php:123
+#: admin/tpl/settings_general.php:136
 msgid "seconds"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:41
+#: admin/tpl/esi_widget_edit.php:75
 msgid "Recommended value: 28800 seconds (8 hours)."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:42
+#: admin/tpl/esi_widget_edit.php:76
 msgid "A TTL of 0 indicates do not cache."
 msgstr ""
 
@@ -2028,46 +2041,63 @@ msgstr ""
 msgid "Filters containing these strings (one per line) will not be logged."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:9
+#: admin/tpl/settings_esi.php:14
 msgid "ESI Settings"
 msgstr ""
 
-#: admin/tpl/settings_esi.php:11
+#: admin/tpl/settings_esi.php:17
 msgid ""
-"ESI enables the capability to cache pages for logged in users/commenters."
+"With ESI (Edge Side Includes), pages may be served from cache for logged-in "
+"users."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:12
+#: admin/tpl/settings_esi.php:18
 msgid ""
-"ESI functions by replacing the private information blocks with an ESI "
-"include."
+"ESI allows you to designate parts of your dynamic page as separate fragments "
+"that are then assembled together to make the whole page. In other words, ESI "
+"lets you “punch holes” in a page, and then fill those holes with content "
+"that may be cached privately, cached publicly with its own TTL, or not "
+"cached at all."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:13
+#: admin/tpl/settings_esi.php:20
+msgid "Learn more about public cache vs. private cache <a %s>on our blog</a>."
+msgstr ""
+
+#: admin/tpl/settings_esi.php:31
 msgid ""
-"When the server sees an ESI include, a sub request is created, containing "
-"the private information."
+"Enable caches public pages for logged in users and serves the Admin Bar and "
+"Comment Form via ESI blocks. These two blocks will be uncached unless "
+"enabled below."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:21
-msgid "Enabling ESI will cache the public page for logged in users."
+#: admin/tpl/settings_esi.php:37
+msgid "Cache Admin Bar"
 msgstr ""
 
-#: admin/tpl/settings_esi.php:22
+#: admin/tpl/settings_esi.php:41
+msgid "Cache the build-in Admin Bar ESI block."
+msgstr ""
+
+#: admin/tpl/settings_esi.php:47
+msgid "Cache Comment Form"
+msgstr ""
+
+#: admin/tpl/settings_esi.php:51
+msgid "Cache the build-in Comment Form ESI block."
+msgstr ""
+
+#: admin/tpl/settings_esi.php:57
+msgid "Vary Group"
+msgstr ""
+
+#: admin/tpl/settings_esi.php:72
 msgid ""
-"The Admin Bar, comments, and comment form will be served via ESI blocks."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:23
-msgid "The ESI blocks will not be cached until Cache ESI is checked."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:29
-msgid "Cache ESI"
-msgstr ""
-
-#: admin/tpl/settings_esi.php:33
-msgid "Cache the ESI blocks."
+"If your site contains public content that certain user roles can see but "
+"other roles cannot, you can specify a Vary Group for those user roles. For "
+"example, specifying an administrator vary group allows there to be a "
+"separate publicly-cached page tailored to administrators (with “edit” links, "
+"etc), while all other user roles see the default public page."
 msgstr ""
 
 #: admin/tpl/settings_excludes.php:7
@@ -2194,60 +2224,70 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/settings_general.php:70
-msgid "Default Front Page TTL"
+msgid "Default Private Cache TTL"
 msgstr ""
 
 #: admin/tpl/settings_general.php:75
+msgid ""
+"Specify how long, in seconds, private pages are cached. Minimum is %1$s "
+"seconds. Maximum is %2$s seconds."
+msgstr ""
+
+#: admin/tpl/settings_general.php:82
+msgid "Default Front Page TTL"
+msgstr ""
+
+#: admin/tpl/settings_general.php:87
 msgid ""
 "Specify how long, in seconds, the front page is cached. Minimum is 30 "
 "seconds."
 msgstr ""
 
-#: admin/tpl/settings_general.php:82
+#: admin/tpl/settings_general.php:94
 msgid "Default Feed TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:87
+#: admin/tpl/settings_general.php:99
 msgid "Specify how long, in seconds, feeds are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:88
+#: admin/tpl/settings_general.php:100
 msgid "If this is set to a number less than 30, feeds will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:95
+#: admin/tpl/settings_general.php:107
 msgid "Default 404 Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:100
+#: admin/tpl/settings_general.php:112
 msgid "Specify how long, in seconds, 404 pages are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:101
+#: admin/tpl/settings_general.php:113
 msgid "If this is set to a number less than 30, 404 pages will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:108
+#: admin/tpl/settings_general.php:120
 msgid "Default 403 Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:113
+#: admin/tpl/settings_general.php:125
 msgid "Specify how long, in seconds, 403 pages are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:114
+#: admin/tpl/settings_general.php:126
 msgid "If this is set to a number less than 30, 403 pages will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:121
+#: admin/tpl/settings_general.php:133
 msgid "Default 500 Page TTL"
 msgstr ""
 
-#: admin/tpl/settings_general.php:126
+#: admin/tpl/settings_general.php:138
 msgid "Specify how long, in seconds, 500 pages are cached."
 msgstr ""
 
-#: admin/tpl/settings_general.php:127
+#: admin/tpl/settings_general.php:139
 msgid "If this is set to a number less than 30, 500 pages will not be cached."
 msgstr ""
 
@@ -2423,7 +2463,7 @@ msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
 #: admin/tpl/settings_purge.php:48
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:647
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:653
 msgid "Note:"
 msgstr ""
 
@@ -2696,67 +2736,67 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:592
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:598
 msgid "WooCommerce"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:595
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:601
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:596
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:602
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:597
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:603
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:598
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:604
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:599
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:605
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:600
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:606
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:603
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:609
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:604
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:610
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:605
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:611
 msgid ""
 "For example, if the homepage for the site is located at %1$s, the shop page "
 "may be located at %2$s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:632
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:638
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:639
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:645
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:649
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:655
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:650
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:656
 msgid "To test the cart, visit the %s."
 msgstr ""
 

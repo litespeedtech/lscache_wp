@@ -13,9 +13,14 @@ sort( $roles ) ;
 
 <h3 class="litespeed-title"><?php echo __('ESI Settings', 'litespeed-cache'); ?></h3>
 
-<p><?php echo __('ESI enables the capability to publicly cache pages for logged in users.', 'litespeed-cache'); ?></p>
-<p><?php echo __('ESI functions by replacing the private information blocks with an ESI include.', 'litespeed-cache'); ?></p>
-<p><?php echo __('When the server sees an ESI include, a sub request is created, containing the private information.', 'litespeed-cache'); ?></p>
+<div class="litespeed-desc">
+	<p><?php echo __('With ESI (Edge Side Includes), pages may be served from cache for logged-in users.', 'litespeed-cache'); ?></p>
+	<p><?php echo __('ESI allows you to designate parts of your dynamic page as separate fragments that are then assembled together to make the whole page. In other words, ESI lets you “punch holes” in a page, and then fill those holes with content that may be cached privately, cached publicly with its own TTL, or not cached at all.', 'litespeed-cache'); ?></p>
+	<p><?php echo sprintf(
+		__( 'Learn more about public cache vs. private cache <a %s>on our blog</a>.', 'litespeed-cache' ),
+		'href="https://blog.litespeedtech.com/2017/08/30/wpw-private-cache-vs-public-cache/" target="_blank"'
+		) ; ?></p>
+</div>
 
 <table class="form-table"><tbody>
 	<tr>
@@ -23,9 +28,7 @@ sort( $roles ) ;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_ESI_ENABLE); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Enabling ESI will cache the public page for logged in users.', 'litespeed-cache'); ?>
-				<?php echo __('The Admin Bar and comment form will be served via ESI blocks.', 'litespeed-cache'); ?>
-				<?php echo __('The ESI blocks will not be cached until Cache ESI is checked.', 'litespeed-cache'); ?>
+				<?php echo __('Enable caches public pages for logged in users and serves the Admin Bar and Comment Form via ESI blocks. These two blocks will be uncached unless enabled below.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -35,7 +38,7 @@ sort( $roles ) ;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Cache the build-in admin bar ESI block.', 'litespeed-cache'); ?>
+				<?php echo __('Cache the build-in Admin Bar ESI block.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -45,7 +48,7 @@ sort( $roles ) ;
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Cache the build-in comment form ESI block.', 'litespeed-cache'); ?>
+				<?php echo __('Cache the build-in Comment Form ESI block.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -66,7 +69,7 @@ sort( $roles ) ;
 			<?php endforeach; ?>
 			</tbody></table>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify separate groups for logged-in users with default vary in public cache. E.g. on frontend there are some contents that admin can see but the other roles can not see, then set role admin to a different group.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'If your site contains public content that certain user roles can see but other roles cannot, you can specify a Vary Group for those user roles. For example, specifying an administrator vary group allows there to be a separate publicly-cached page tailored to administrators (with “edit” links, etc), while all other user roles see the default public page.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
