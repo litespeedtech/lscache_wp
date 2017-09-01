@@ -13,7 +13,7 @@ Speed up your page-load times. Get a faster site with high-performance page cach
 
 LiteSpeed Cache for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
 
-Because LSCache is built directly into the server, overhead is significantly reduced and caching can be done more efficiently than with other PHP-based caches (WP Super Cache, W3 Total Cache, WP Fastest Cache, WP Rocket, etc.).
+Because LSCache is built directly into the server, overhead is significantly reduced and caching can be done [more efficiently than with other PHP-based caches](https://www.litespeedtech.com/benchmarks/wordpress).
 
 LSCache is a server-side page cache. Page caches save time and resources, and they do so by storing the full content of dynamically-generated pages so that static copies may be served to the user. A page cache allows the server to bypass PHP and database queries altogether. LSCache, in particular, because of its close relationship with the server, can remember things about the cache entries that other plugins cannot, and it can analyze dependencies. It can utilize tags to manage the smart purging of the cache, and it can use vary cookies to serve multiple versions of cached content based on things like mobile vs. desktop, geographic location, and currencies.
 
@@ -62,6 +62,8 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
 
 * Support for clustered environments via LiteSpeed Web ADC
+* Supports [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) right out of the box
+* Supports ESI cache
 
 == Third Party Compatibility ==
 
