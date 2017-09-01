@@ -18,7 +18,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.2.0' ;
+	const PLUGIN_VERSION = '1.2.0.1' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 

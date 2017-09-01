@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, wordfence, bbpress, nextgengallery
 Requires at least: 4.0
 Tested up to: 4.8.1
-Stable tag: 1.2.0
+Stable tag: 1.2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -214,6 +214,9 @@ For more detailed information about crawler setup, please see [our blog post](ht
 11. Cache Hit Example
 
 == Changelog ==
+
+= 1.2.0.1 - September 1 2017 =
+* [BUGFIX] Fixed a naming bug for network constant ON2.
 
 = 1.2.0 - September 1 2017 =
 * [NEW FEATURE] Added ESI support.
