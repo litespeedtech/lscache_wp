@@ -213,7 +213,7 @@ For more detailed information about crawler setup, please see [our blog post](ht
 
 == Changelog ==
 
-= 1.2.0 - August 31 2017 =
+= 1.2.0 - September 1 2017 =
 * [NEW FEATURE] Added ESI support.
 * [NEW FEATURE] Added a private cache TTL setting.
 * [NEW FEATURE] Debug level can now be set to either 'Basic' or 'Advanced'.
