@@ -296,9 +296,10 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param string $action The LSCWP_CTRL action to do in the url.
 	 * @param string $ajax_action AJAX call's action
+	 * @param string $append_str The appending string to url
 	 * @return string The built url.
 	 */
-	public static function build_url($action, $ajax_action = false)
+	public static function build_url($action, $ajax_action = false, $append_str = false)
 	{
 		global $pagenow ;
 		$prefix = '?' ;
@@ -330,6 +331,10 @@ class LiteSpeed_Cache_Admin_Display
 			$prenonce = admin_url($combined) ;
 		}
 		$url = wp_nonce_url($prenonce, $action, LiteSpeed_Cache::NONCE_NAME) ;
+
+		if ( $append_str ) {
+			$url .= '&' . $append_str ;
+		}
 
 		return $url ;
 	}

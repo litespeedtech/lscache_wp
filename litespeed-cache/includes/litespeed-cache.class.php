@@ -47,6 +47,8 @@ class LiteSpeed_Cache
 	const ACTION_DO_CRAWL = 'do-crawl' ;
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 
+	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
+
 	const WHM_TRANSIENT = 'lscwp_whm_install' ;
 	const WHM_TRANSIENT_VAL = 'whm_install' ;
 
@@ -235,6 +237,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
 				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
+				$msg = LiteSpeed_Cache_Admin_Optimize::run_db_clean() ;
 				break ;
 
 			default:

@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Log
 	/**
 	 * Direct call to log an advanced debug message.
 	 *
-	 * @since 1.1.6.1
+	 * @since 1.2.0
 	 * @access public
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.

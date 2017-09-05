@@ -295,6 +295,12 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
+			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
+				if ( $_is_enabled && ( $_can_network_option || $_can_option ) ) {
+					self::$_action = $action ;
+				}
+				return ;
+
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
 				if ( $_is_enabled
 						&& ( $_can_network_option
