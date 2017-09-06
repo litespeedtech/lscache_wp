@@ -92,3 +92,23 @@
 	font-size: 12px ;
 	line-height: 22px ;
 }
+
+.litespeed-warning {
+    color: #ffc107!important;
+}
+
+.litespeed-danger {
+	color: #dc3545!important;
+}
+
+.litespeed-alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.litespeed-alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}

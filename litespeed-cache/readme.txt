@@ -45,6 +45,7 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
+* Database Cleaner and Optimizer
 * Automatic page caching to greatly improve site performance
 * Automatic purge of related pages based on certain events
 * Smart preload crawler with support for SEO-friendly sitemap
@@ -174,7 +175,7 @@ If you want to optimize your images, we recommend trying a plugin like [ShortPix
 
 2. Replace the ajax query in `wp-content/plugins/wp-postviews/postviews-cache.js` with
 
-    ```
+    `
     jQuery.ajax({
         type:"GET",
         url:viewsCacheL10n.admin_ajax_url,
@@ -186,7 +187,7 @@ If you want to optimize your images, we recommend trying a plugin like [ShortPix
             }
        }
     });
-    ```
+    `
 
 3. Purge the cache to use the updated pages.
 

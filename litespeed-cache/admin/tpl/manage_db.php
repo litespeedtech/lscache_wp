@@ -2,10 +2,6 @@
 if ( ! defined( 'WPINC' ) ) die ;
 
 $_panels = array(
-	'optimize_tables' => array(
-		'title'	=> __( 'Optimize Tables', 'litespeed-cache' ),
-		'desc'	=> __( 'Optimize all tables in your databse', 'litespeed-cache' ),
-	),
 	'all' => array(
 		'title'	=> __( 'All', 'litespeed-cache' ),
 		'desc'	=> __( 'Clean all options', 'litespeed-cache' ),
@@ -42,6 +38,10 @@ $_panels = array(
 		'title'	=> __( 'All Transients', 'litespeed-cache' ),
 		'desc'	=> __( 'Clean all transient options', 'litespeed-cache' ),
 	),
+	'optimize_tables' => array(
+		'title'	=> __( 'Optimize Tables', 'litespeed-cache' ),
+		'desc'	=> __( 'Optimize all tables in your databse', 'litespeed-cache' ),
+	),
 ) ;
 
 $total = 0 ;
@@ -61,19 +61,21 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 
 <h3 class="litespeed-title"><?php echo __('Database Optimizer', 'litespeed-cache'); ?></h3>
 
-<?php foreach ( $_panels as $val ): ?>
+<div class="litespeed-panel-wrapper">
 
-<a href="<?php echo $val[ 'link' ] ; ?>">
-	<article class="litespeed-panel">
-		<section class="litespeed-panel-db"></section>
+<?php foreach ( $_panels as $tag => $val ): ?>
+
+	<a href="<?php echo $val[ 'link' ] ; ?>" class="litespeed-panel">
+		<section class="litespeed-panel-icon-<?php echo $tag ; ?>"></section>
 		<section class="litespeed-panel-content">
-			<h3 class="litespeed-panel-h3">
+			<span class="litespeed-panel-h3">
 				<?php echo $val[ 'title' ] ; ?>
 				<span class="litespeed-panel-counter">(<?php echo $val[ 'count' ] ; ?>)</span>
-			</h3>
-			<p class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></p>
+			</span>
+			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
 		</section>
-		<section class="litespeed-panel-top-right-icon"></section>
-	</article>
-</a>
+		<section class="litespeed-panel-top-right-icon<?php echo $val[ 'count' ] > 0 ? '-cross' : '-tick' ; ?>"></section>
+	</a>
 <?php endforeach; ?>
+
+</div>

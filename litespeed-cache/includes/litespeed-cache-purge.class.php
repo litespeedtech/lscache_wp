@@ -157,19 +157,11 @@ class LiteSpeed_Cache_Purge
 	public static function purge_errors()
 	{
 		self::add( LiteSpeed_Cache_Tag::TYPE_ERROR ) ;
-		if ( ! isset( $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ) ) {
+		if ( ! isset( $_GET[ 'lserr' ] ) || ! in_array( $_GET[ 'lserr' ], array( '403', '404', '500' ) ) ) {
 			return ;
 		}
-		$input = $_POST[LiteSpeed_Cache_Config::OPTION_NAME] ;
-		if ( isset( $input['include_403'] ) ) {
-			self::add( LiteSpeed_Cache_Tag::TYPE_ERROR . '403' ) ;
-		}
-		if ( isset( $input['include_404'] ) ) {
-			self::add( LiteSpeed_Cache_Tag::TYPE_ERROR . '404' ) ;
-		}
-		if ( isset( $input['include_500'] ) ) {
-			self::add( LiteSpeed_Cache_Tag::TYPE_ERROR . '500' ) ;
-		}
+
+		self::add( LiteSpeed_Cache_Tag::TYPE_ERROR . $_GET[ 'lserr' ] ) ;
 	}
 
 	/**

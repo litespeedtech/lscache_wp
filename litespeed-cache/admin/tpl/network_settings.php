@@ -25,8 +25,11 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 <div class="wrap">
 	<h2 class="nav-tab-wrapper">
 	<?php
+		$i = 1 ;
 		foreach ($menuArr as $tab => $val){
-			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab'>$val</a>";
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
+			$i ++ ;
 		}
 	?>
 	</h2>

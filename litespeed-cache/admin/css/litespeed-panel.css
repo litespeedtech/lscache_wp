@@ -1,53 +1,93 @@
 
-.litespeed-panel-h3, .litespeed-panel-para{
-font-family: "Open Sans", Arial, sans-serif;
-color:#444;
-}
 .litespeed-panel-h3 {
-line-height: 18px;
+	font-family: "Open Sans", Arial, sans-serif;
+	color:#444;
+	line-height: 32px;
+	margin: 0 0 0 12px;
+	font-weight: bold;
 }
+
 .litespeed-panel-para {
-line-height: 18px;
-margin-top: -10px;
+	line-height: 13px;
+	margin: 0 0 0 12px;
+	font-family: "Open Sans", Arial, sans-serif;
+	color: #a7a7a7;
+	font-size: 12px;
+	display: block;
 }
+
+.litespeed-panel-wrapper {
+	display: flex;
+	width: 100%;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+}
+.litespeed-panel-wrapper a {
+	text-decoration: none;
+}
+
 .litespeed-panel {
-display:flex;
-justify-content: space-between;
-border: 1px solid #ccc;
-border-radius: 5px;
-box-shadow: 1px 1px 0.5px 0px rgba(0,0,0,0.1);
-background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.1) 100%);
-padding: 5px 5px 15px 15px;
-width: 45%;
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 1px 1px 0.5px 0px rgba(0,0,0,0.1);
+	background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.1) 100%);
+	padding: 5px 5px 4px 15px;
+	width: 300px;
+	margin: 5px;
+	min-height: 55px;
 }
 
 .litespeed-panel:hover {
-border: 1px solid #bbb;
-border-radius: 5px;
-box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.1);
-background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.2) 100%);
-}
-
-.litespeed-panel-db {
-background-image: url("../img/db.svg");
-background-size: contain;
-width: 60px;
-height: 60px;
-margin: 15px 15px;
-background-repeat: no-repeat;
+	border: 1px solid #bbb;
+	border-radius: 5px;
+	box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.1);
+	background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.2) 100%);
 }
 
 .litespeed-panel-content {
-width:85%;
+	width:85%;
 }
 
 .litespeed-panel-counter {
-color: #6fb353;
+	color: #6fb353;
 }
-.litespeed-panel-top-right-icon {
-background-image: url("../img/success_icon.svg");
-background-size: contain;
-width:25px;
-height:25px;
-background-repeat: no-repeat;
+
+.litespeed-panel-top-right-icon-tick,
+.litespeed-panel-top-right-icon-cross {
+	background-size: contain;
+	width:25px;
+	height:25px;
+	background-repeat: no-repeat;
 }
+
+[class^="litespeed-panel-icon-"] {
+	background-size: contain;
+	width: 60px;
+	height: 60px;
+	margin: 4px;
+	background-repeat: no-repeat;
+}
+
+.litespeed-panel-icon-all 				{ background-image: url("../img/icons/all.svg") ; }
+.litespeed-panel-icon-revision 			{ background-image: url("../img/icons/revision.svg") ; }
+.litespeed-panel-icon-auto_draft 		{ background-image: url("../img/icons/auto_draft.svg") ; }
+.litespeed-panel-icon-trash_post 		{ background-image: url("../img/icons/trash_post.svg") ; }
+.litespeed-panel-icon-spam_comment 		{ background-image: url("../img/icons/spam_comment.svg") ; }
+.litespeed-panel-icon-trash_comment 	{ background-image: url("../img/icons/trash_comment.svg") ; }
+.litespeed-panel-icon-trackback-pingback{ background-image: url("../img/icons/trackback-pingback.svg") ; }
+.litespeed-panel-icon-expired_transient { background-image: url("../img/icons/expired_transient.svg") ; }
+.litespeed-panel-icon-all_transients 	{ background-image: url("../img/icons/all_transients.svg") ; }
+.litespeed-panel-icon-optimize_tables 	{ background-image: url("../img/icons/optimize_tables.svg") ; }
+.litespeed-panel-icon-purge-front 		{ background-image: url("../img/icons/purge-front.svg") ; }
+.litespeed-panel-icon-purge-pages 		{ background-image: url("../img/icons/purge-pages.svg") ; }
+.litespeed-panel-icon-purge-all 		{ background-image: url("../img/icons/purge-all.svg") ; }
+.litespeed-panel-icon-empty-cache 		{ background-image: url("../img/icons/empty-cache.svg") ; }
+.litespeed-panel-icon-purge-403 		{ background-image: url("../img/icons/purge-403.svg") ; }
+.litespeed-panel-icon-purge-404 		{ background-image: url("../img/icons/purge-404.svg") ; }
+.litespeed-panel-icon-purge-500 		{ background-image: url("../img/icons/purge-500.svg") ; }
+.litespeed-panel-top-right-icon-cross 	{ background-image: url("../img/icons/cross_icon.svg") ; }
+.litespeed-panel-top-right-icon-tick 	{ background-image: url("../img/icons/success_icon.svg") ; }
+
+
