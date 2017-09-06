@@ -79,3 +79,12 @@
 		-ms-transition: all .3s ease;
 		-o-transition: all .3s ease;
 }
+
+*[litespeed-accesskey]:before {
+    content: '[' attr(litespeed-accesskey) '] ';
+}
+
+.litespeed-tab {
+	font-size: 12px ;
+	line-height: 22px ;
+}

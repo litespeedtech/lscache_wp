@@ -159,10 +159,30 @@ var _litespeed_dots ;
 		$(document).on('click', '.lscwp-notice-ruleconflict .notice-dismiss', function () {
 			$.get(litespeed_data.ajax_url_dismiss_ruleconflict) ;
 		});
+
+		/** Accesskey **/
+		$( '[litespeed-accesskey]' ).map( function() {
+			var thiskey = $( this ).attr( 'litespeed-accesskey' ) ;
+			$( this ).attr( 'title', 'Shortcut : ' + thiskey.toLocaleUpperCase() ) ;
+			var that = this ;
+			$( document ).on( 'keydown', function( e ) {
+				if( $(":input:focus").length > 0 ) return ;
+				if( event.metaKey ) return ;
+				if( event.ctrlKey ) return ;
+				if( event.altKey ) return ;
+				if( event.shiftKey ) return ;
+				if( litespeed_keycode( thiskey.charCodeAt( 0 ) ) ) $( that )[ 0 ].click() ;
+			});
+		});
 	}) ;
 })(jQuery) ;
 
-
+function litespeed_keycode( num ) {
+	var num = num || 13 ;
+	var code = window.event ? event.keyCode : event.which ;
+	if( num == code ) return true ;
+	return false ;
+}
 
 function litespeed_display_tab(tab) {
 	// setting page -> display submit button

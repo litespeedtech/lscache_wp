@@ -93,11 +93,16 @@ else {
 <div class="wrap">
 	<h2 class="nav-tab-wrapper">
 	<?php
+		$i = 1 ;
 		foreach ($menu_list as $tab => $val){
-			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab'>$val</a>" ;
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			$i ++ ;
 		}
 		foreach ($tp_tabs as $val){
-			echo "<a class='nav-tab litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]'>$val[title]</a>" ;
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='nav-tab litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
+			$i ++ ;
 		}
 	?>
 	</h2>

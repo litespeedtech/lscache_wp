@@ -12,7 +12,14 @@ $menu_list = array(
 
 <div class="wrap">
 	<h2>
-		<?php echo __('LiteSpeed Cache Management', 'litespeed-cache'); ?>
+		<?php
+			if ( is_network_admin() ) {
+				echo __('LiteSpeed Cache Network Management', 'litespeed-cache');
+			}
+			else {
+				echo __('LiteSpeed Cache Management', 'litespeed-cache');
+			}
+		?>
 		<span class="litespeed-desc">
 			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 		</span>
@@ -21,8 +28,11 @@ $menu_list = array(
 <div class="wrap">
 	<h2 class="nav-tab-wrapper">
 	<?php
+		$i = 1 ;
 		foreach ($menu_list as $tab => $val){
-			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab'>$val</a>" ;
+			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			$i ++ ;
 		}
 	?>
 	</h2>
