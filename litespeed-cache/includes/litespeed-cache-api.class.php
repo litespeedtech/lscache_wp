@@ -30,6 +30,10 @@ class LiteSpeed_Cache_API
 	const WIDGET_OPID_ESIENABLE =	LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
 	const WIDGET_OPID_TTL =			LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ;
 
+	const VAL_OFF	= LiteSpeed_Cache_Config::VAL_OFF ;
+	const VAL_ON	= LiteSpeed_Cache_Config::VAL_ON ;
+	const VAL_ON2	= LiteSpeed_Cache_Config::VAL_ON2 ;
+
 	/**
 	 * Set mobile
 	 *
