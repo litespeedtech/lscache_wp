@@ -363,7 +363,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false ;
 		}
 
-		$res = $zip->open($dir . '/lscache_htaccess_bak.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE) ;
+		$res = $zip->open($dir . '/.lscache_htaccess_bak.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE) ;
 		if ( $res !== true ) {
 			error_log('Warning: Failed to archive wordpress backups in ' . $dir) ;
 			$ret = copy($path, $path . $bak) ;
