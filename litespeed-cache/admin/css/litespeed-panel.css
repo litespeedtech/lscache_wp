@@ -1,0 +1,53 @@
+
+.litespeed-panel-h3, .litespeed-panel-para{
+font-family: "Open Sans", Arial, sans-serif;
+color:#444;
+}
+.litespeed-panel-h3 {
+line-height: 18px;
+}
+.litespeed-panel-para {
+line-height: 18px;
+margin-top: -10px;
+}
+.litespeed-panel {
+display:flex;
+justify-content: space-between;
+border: 1px solid #ccc;
+border-radius: 5px;
+box-shadow: 1px 1px 0.5px 0px rgba(0,0,0,0.1);
+background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.1) 100%);
+padding: 5px 5px 15px 15px;
+width: 45%;
+}
+
+.litespeed-panel:hover {
+border: 1px solid #bbb;
+border-radius: 5px;
+box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.1);
+background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.2) 100%);
+}
+
+.litespeed-panel-db {
+background-image: url("../img/db.svg");
+background-size: contain;
+width: 60px;
+height: 60px;
+margin: 15px 15px;
+background-repeat: no-repeat;
+}
+
+.litespeed-panel-content {
+width:85%;
+}
+
+.litespeed-panel-counter {
+color: #6fb353;
+}
+.litespeed-panel-top-right-icon {
+background-image: url("../img/success_icon.svg");
+background-size: contain;
+width:25px;
+height:25px;
+background-repeat: no-repeat;
+}

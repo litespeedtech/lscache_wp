@@ -88,6 +88,7 @@ var _litespeed_dots ;
 			$('[data-litespeed-tab]').click(function(event) {
 				litespeed_display_tab($(this).data('litespeed-tab')) ;
 				document.cookie = 'litespeed_tab='+$(this).data('litespeed-tab') ;
+				$(this).blur() ;
 			}) ;
 		}
 

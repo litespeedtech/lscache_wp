@@ -70,6 +70,14 @@ class LiteSpeed_Cache_Admin_Optimize
 	 */
 	public static function db_count( $type, $ignore_multisite = false )
 	{
+		if ( $type === 'all' ) {
+			$num = 0 ;
+			foreach ( self::$_types as $val ) {
+				$num += self::db_count( $val ) ;
+			}
+			return $num ;
+		}
+
 		if ( ! $ignore_multisite ) {
 			if ( is_multisite() && is_network_admin() ) {
 				$num = 0 ;
@@ -135,35 +143,35 @@ class LiteSpeed_Cache_Admin_Optimize
 		switch ( $type ) {
 			case 'revision':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'" ) ;
-				return __( 'Cleaned post revisions.', 'litespeed-cache' ) ;
+				return __( 'Cleaned post revisions successfully.', 'litespeed-cache' ) ;
 
 			case 'auto_draft':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" ) ;
-				return __( 'Cleaned auto draft posts.', 'litespeed-cache' ) ;
+				return __( 'Cleaned auto drafts successfully.', 'litespeed-cache' ) ;
 
 			case 'trash_post':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'" ) ;
-				return __( 'Cleaned transhed posts.', 'litespeed-cache' ) ;
+				return __( 'Cleaned transhed posts and pages successfully.', 'litespeed-cache' ) ;
 
 			case 'spam_comment':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" ) ;
-				return __( 'Cleaned spam comments.', 'litespeed-cache' ) ;
+				return __( 'Cleaned spam comments successfully.', 'litespeed-cache' ) ;
 
 			case 'trash_comment':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" ) ;
-				return __( 'Cleaned trashed comments.', 'litespeed-cache' ) ;
+				return __( 'Cleaned trashed comments successfully.', 'litespeed-cache' ) ;
 
 			case 'trackback-pingback':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" ) ;
-				return __( 'Cleaned trackback and pingback.', 'litespeed-cache' ) ;
+				return __( 'Cleaned trackbacks and pingbacks successfully.', 'litespeed-cache' ) ;
 
 			case 'expired_transient':
 				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time() ) ;
-				return __( 'Cleaned expired transients.', 'litespeed-cache' ) ;
+				return __( 'Cleaned expired transients successfully.', 'litespeed-cache' ) ;
 
 			case 'all_transients':
 				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" ) ;
-				return __( 'Cleaned all transients.', 'litespeed-cache' ) ;
+				return __( 'Cleaned all transients successfully.', 'litespeed-cache' ) ;
 
 			case 'optimize_tables':
 				$sql = "SELECT table_name, data_free FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0" ;

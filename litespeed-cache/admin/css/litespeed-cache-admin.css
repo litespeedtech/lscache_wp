@@ -8,6 +8,7 @@
 @import "litespeed-label.css";
 @import "litespeed-callout.css";
 @import "litespeed-icon.css";
+@import "litespeed-panel.css";
 
 #litespeedcache-purgeerrors{
 	margin:5px 0 15px 22px;
