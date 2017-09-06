@@ -803,7 +803,10 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		if ( $checked === null ) {
 			global $_options ;
-			$to_be_checked = is_int($val) ? (int)$_options[$id] : $_options[$id] ;
+			$to_be_checked = null ;
+			if ( ! empty( $_options[ $id ] ) ) {
+				$to_be_checked = is_int( $val ) ? (int)$_options[ $id ] : $_options[ $id ] ;
+			}
 
 			$checked = $to_be_checked === $val ? true : false ;
 		}

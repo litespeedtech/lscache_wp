@@ -27,6 +27,10 @@
 	clear: both;
 }
 
+.litespeed-relative {
+	position: relative ;
+}
+
 .litespeed-desc{
 	font-size: 12px;
 	font-weight: normal;

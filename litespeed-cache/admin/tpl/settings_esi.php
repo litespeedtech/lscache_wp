@@ -22,6 +22,14 @@ sort( $roles ) ;
 		) ; ?></p>
 </div>
 
+<div class="litespeed-relative">
+
+<?php if ( ! LSWCP_ESI_SUPPORT ) : ?>
+	<div class="litespeed-ent-notice">
+		<div class="litespeed-ent-notice-desc"><?php echo __('Available in LiteSpeed Enterprise version', 'litespeed-cache'); ?></div>
+	</div>
+<?php endif; ?>
+
 <table class="form-table"><tbody>
 	<tr>
 		<th><?php echo __('Enable ESI', 'litespeed-cache'); ?></th>
@@ -78,3 +86,5 @@ sort( $roles ) ;
 
 
 </tbody></table>
+
+</div>

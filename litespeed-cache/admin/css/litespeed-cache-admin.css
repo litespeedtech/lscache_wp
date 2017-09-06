@@ -285,3 +285,24 @@ ul.litespeed-shell-body {
 .litespeed-vary-table tr:first-child td{
 	border-top: 1px solid #cccccc;
 }
+
+.litespeed-ent-notice {
+	position: absolute ;
+	left: 0 ;
+	top: 0 ;
+	right: 0 ;
+	bottom: 0 ;
+	background-color: #333 ;
+	z-index: 999 ;
+	opacity: 0.8 ;
+	text-align: center ;
+	font-size: 3rem ;
+	color: #1865c5 ;
+}
+
+.litespeed-ent-notice-desc {
+	position: relative ;
+	top: 30% ;
+	transform: rotate(-20deg) ;
+	text-shadow: 2px 2px 4px #000000 ;
+}
