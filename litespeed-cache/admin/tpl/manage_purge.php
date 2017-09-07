@@ -53,7 +53,7 @@ $_panels = array(
 if ( ! is_multisite() || is_network_admin() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Empty Entire Cache', 'litespeed-cache' ),
-		'desc'	=> __( 'Clears all cache entries related to this site, <i>including other web applications</i>.', 'litespeed-cache' ) . '<b>' .
+		'desc'	=> __( 'Clears all cache entries related to this site, <i>including other web applications</i>.', 'litespeed-cache' ) . ' <b>' .
 					__('This action should only be used if things are cached incorrectly.', 'litespeed-cache') . '</b>',
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE,
 		'icon'	=> 'empty-cache',
@@ -76,13 +76,13 @@ if ( ! is_multisite() || is_network_admin() ) {
 		href="<?php echo LiteSpeed_Cache_Admin_Display::build_url( $val[ 'tag' ], false, ! empty( $val[ 'append_url' ] ) ? $val[ 'append_url' ] : false ) ; ?>"
 		<?php if ( ! empty( $val[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $val[ 'cfm' ] . '"' ; ?>
 	>
-		<section class="litespeed-panel-icon-<?php echo $val[ 'icon' ] ; ?>"></section>
-		<section class="litespeed-panel-content">
+		<span class="litespeed-panel-icon-<?php echo $val[ 'icon' ] ; ?>"></span>
+		<span class="litespeed-panel-content">
 			<span class="litespeed-panel-h3 <?php if ( ! empty( $val[ 'title_cls' ] ) ) echo $val[ 'title_cls' ] ; ?>">
 				<?php echo $val[ 'title' ] ; ?>
 			</span>
 			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
-		</section>
+		</span>
 	</a>
 
 <?php endforeach; ?>

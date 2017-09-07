@@ -1,19 +1,22 @@
+.litespeed-panel-h3, .litespeed-panel-para {
+	font-family: "Open Sans", Arial, sans-serif;
+}
 
 .litespeed-panel-h3 {
-	font-family: "Open Sans", Arial, sans-serif;
-	color:#444;
-	line-height: 32px;
-	margin: 0 0 0 12px;
-	font-weight: bold;
+	line-height: 18px;
+	color: #264d73;
+	font-size: 16px;
+	margin: 1em 0 6px;
+	display: inline-block;
+	font-weight: 600;
 }
 
 .litespeed-panel-para {
-	line-height: 13px;
-	margin: 0 0 0 12px;
-	font-family: "Open Sans", Arial, sans-serif;
-	color: #a7a7a7;
-	font-size: 12px;
-	display: block;
+	line-height: 18px;
+	font-size: 14px;
+	color: #264d73;
+	text-decoration: none;
+	display: inline-block;
 }
 
 .litespeed-panel-wrapper {
@@ -22,52 +25,69 @@
 	flex-flow: row wrap;
 	justify-content: flex-start;
 }
+
 .litespeed-panel-wrapper a {
 	text-decoration: none;
 }
 
 .litespeed-panel {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 1px 1px 0.5px 0px rgba(0,0,0,0.1);
-	background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.1) 100%);
-	padding: 5px 5px 4px 15px;
-	width: 300px;
-	margin: 5px;
-	min-height: 55px;
+	border: 1px solid #b4cce4;
+	border-radius: 2px;
+	/* box-shadow: 1px 1px 0.5px 0px rgba(0,0,0,0.1); */
+	background: #f9fafc;
+	padding: 5px;
+	width: 311px;
+	margin: 0px 0px 10px 10px;
+	min-height: 83px;
+	position: relative ;
 }
 
 .litespeed-panel:hover {
-	border: 1px solid #bbb;
-	border-radius: 5px;
-	box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.1);
-	background: linear-gradient(to bottom, rgba(0,0,0,0) 50%,rgba(128,128,128,0.2) 100%);
+	border: 1px solid #00a3cc;
+	/* border-radius: 5px; */
+	/* box-shadow: 0.5px 0.5px 0px 0px rgba(0,0,0,0.1); */
+	background: #fff;
+
 }
 
 .litespeed-panel-content {
-	width:85%;
+	width: 76%;
 }
 
 .litespeed-panel-counter {
-	color: #6fb353;
+	color: #36b0b0;
+}
+
+.litespeed-panel-counter-red {
+	color: #cc3d6a ;
 }
 
 .litespeed-panel-top-right-icon-tick,
 .litespeed-panel-top-right-icon-cross {
+	position: absolute ;
+	right: 5px ;
 	background-size: contain;
 	width:25px;
 	height:25px;
 	background-repeat: no-repeat;
 }
 
+.litespeed-panel-top-right-icon-tick,
+.litespeed-panel-top-right-icon-cross,
+[class^="litespeed-panel-icon-"] {
+	display: inline-block ;
+}
+
 [class^="litespeed-panel-icon-"] {
 	background-size: contain;
 	width: 60px;
 	height: 60px;
-	margin: 4px;
+	margin: 7px 0px 0px 2px;
 	background-repeat: no-repeat;
+	display: inline-block;
 }
 
 .litespeed-panel-icon-all 				{ background-image: url("../img/icons/all.svg") ; }
@@ -89,5 +109,3 @@
 .litespeed-panel-icon-purge-500 		{ background-image: url("../img/icons/purge-500.svg") ; }
 .litespeed-panel-top-right-icon-cross 	{ background-image: url("../img/icons/cross_icon.svg") ; }
 .litespeed-panel-top-right-icon-tick 	{ background-image: url("../img/icons/success_icon.svg") ; }
-
-

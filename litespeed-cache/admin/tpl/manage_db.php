@@ -3,8 +3,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 $_panels = array(
 	'all' => array(
-		'title'	=> __( 'All', 'litespeed-cache' ),
-		'desc'	=> __( 'Clean all options', 'litespeed-cache' ),
+		'title'	=> __( 'Clean All', 'litespeed-cache' ),
+		'desc'	=> '',
 	),
 	'revision' => array(
 		'title'	=> __( 'Post Revisions', 'litespeed-cache' ),
@@ -27,7 +27,7 @@ $_panels = array(
 		'desc'	=> __( 'Clean all trashed comments', 'litespeed-cache' ),
 	),
 	'trackback-pingback' => array(
-		'title'	=> __( 'Trackbacks & Pingbacks', 'litespeed-cache' ),
+		'title'	=> __( 'Trackbacks/Pingbacks', 'litespeed-cache' ),
 		'desc'	=> __( 'Clean all trackbacks and pingbacks', 'litespeed-cache' ),
 	),
 	'expired_transient' => array(
@@ -66,15 +66,15 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 <?php foreach ( $_panels as $tag => $val ): ?>
 
 	<a href="<?php echo $val[ 'link' ] ; ?>" class="litespeed-panel">
-		<section class="litespeed-panel-icon-<?php echo $tag ; ?>"></section>
-		<section class="litespeed-panel-content">
+		<span class="litespeed-panel-top-right-icon<?php echo $val[ 'count' ] > 0 ? '-cross' : '-tick' ; ?>"></span>
+		<span class="litespeed-panel-icon-<?php echo $tag ; ?>"></span>
+		<span class="litespeed-panel-content">
 			<span class="litespeed-panel-h3">
 				<?php echo $val[ 'title' ] ; ?>
-				<span class="litespeed-panel-counter">(<?php echo $val[ 'count' ] ; ?>)</span>
+				<span class="litespeed-panel-counter<?php if ( $val[ 'count' ] > 0 ) echo '-red' ; ?>">(<?php echo $val[ 'count' ] ; ?>)</span>
 			</span>
 			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
-		</section>
-		<section class="litespeed-panel-top-right-icon<?php echo $val[ 'count' ] > 0 ? '-cross' : '-tick' ; ?>"></section>
+		</span>
 	</a>
 <?php endforeach; ?>
 
