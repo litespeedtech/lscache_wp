@@ -1,9 +1,9 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: cache, wp-cache, litespeed, super cache, http2, wordfence, bbpress, nextgengallery
+Tags: cache, wp-cache, litespeed, super cache, http2, wordfence, nextgengallery
 Requires at least: 4.0
 Tested up to: 4.8.1
-Stable tag: 1.2.0.1
+Stable tag: 1.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -208,13 +208,23 @@ For more detailed information about crawler setup, please see [our blog post](ht
 4. Admin Settings - Excludes
 5. Admin Settings - Debug
 6. Admin Settings - Crawler
-7. Admin Management Page
-8. Admin Information Page
-9. Admin Crawler Status Page
-10. Cache Miss Example
-11. Cache Hit Example
+7. Admin Management - Purge
+8. Admin Management - DB Optimizer
+9. Admin Information Page
+10. Admin Crawler Status Page
+11. Cache Miss Example
+12. Cache Hit Example
 
 == Changelog ==
+
+= 1.2.1 - September 7 2017 =
+* [NEW FEATURE] Added Database Optimizer.
+* [NEW FEATURE] Added Tab switch shortcut.
+* [IMPROVEMENT] Added cache disabled check for management pages.
+* [IMPROVEMENT] Renamed .htaccess backup for security.
+* [BUGFIX] Fixed woocommerce default ESI setting bug.
+* [REFACTOR] Show ESI page for OLS with notice.
+* [REFACTOR] Management Purge GUI updated.
 
 = 1.2.0.1 - September 1 2017 =
 * [BUGFIX] Fixed a naming bug for network constant ON2.
