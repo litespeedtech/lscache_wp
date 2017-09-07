@@ -112,7 +112,6 @@ class LiteSpeed_Cache_Config
 	protected $options ;
 	protected $vary_groups ;
 	protected $purge_options ;
-	protected $debug_tag = 'LiteSpeed_Cache' ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -133,14 +132,6 @@ class LiteSpeed_Cache_Config
 
 		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $options[self::OPID_CHECK_ADVANCEDCACHE] === false && ! defined('LSCACHE_ADV_CACHE') ) {
 			define('LSCACHE_ADV_CACHE', true) ;
-		}
-
-		if (WP_DEBUG /* && $this->options[self::OPID_DEBUG] */ ) {
-			$msec = microtime() ;
-			$msec1 = substr($msec, 2, strpos($msec, ' ') - 2) ;
-			if ( array_key_exists('REMOTE_ADDR', $_SERVER) && array_key_exists('REMOTE_PORT', $_SERVER) ) {
-				$this->debug_tag .= ' [' . $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'] . ':' . $msec1 . '] ' ;
-			}
 		}
 
 		// Vary group settings
