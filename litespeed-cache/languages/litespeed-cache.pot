@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.2.0\n"
+"Project-Id-Version: LiteSpeed Cache 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-08-31 17:51:29+00:00\n"
+"POT-Creation-Date: 2017-09-07 20:48:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -34,7 +34,7 @@ msgid "Environment Report"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:154 admin/tpl/info.php:10
-#: admin/tpl/settings.php:27
+#: admin/tpl/settings.php:26
 msgid "Crawler"
 msgstr ""
 
@@ -52,17 +52,17 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:815 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:823 admin/tpl/crawler.php:138
 #: admin/tpl/settings_general.php:25
 msgid "Enable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:819 admin/tpl/crawler.php:138
+#: admin/litespeed-cache-admin-display.class.php:827 admin/tpl/crawler.php:138
 #: admin/tpl/esi_widget_edit.php:58 admin/tpl/settings_general.php:31
 msgid "Disable"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:846
+#: admin/litespeed-cache-admin-display.class.php:854
 msgid "Recommended value: %s."
 msgstr ""
 
@@ -280,6 +280,46 @@ msgstr ""
 
 #: admin/litespeed-cache-admin-error.class.php:236
 msgid "%s file did not find a place to insert define."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:139
+msgid "Clean all successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:146
+msgid "Clean post revisions successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:150
+msgid "Clean auto drafts successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:154
+msgid "Clean transhed posts and pages successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:158
+msgid "Clean spam comments successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:162
+msgid "Clean trashed comments successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:166
+msgid "Clean trackbacks and pingbacks successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:170
+msgid "Clean expired transients successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:174
+msgid "Clean all transients successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-optimize.class.php:184
+msgid "Optimized all tables."
 msgstr ""
 
 #: admin/litespeed-cache-admin-rules.class.php:728
@@ -592,7 +632,7 @@ msgid ""
 "changed."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:30 admin/tpl/settings_esi.php:27
+#: admin/tpl/esi_widget_edit.php:30 admin/tpl/settings_esi.php:35
 msgid "Enable ESI"
 msgstr ""
 
@@ -1253,165 +1293,240 @@ msgstr ""
 msgid "Purge the cache to use the updated pages."
 msgstr ""
 
-#: admin/tpl/manage.php:10
+#: admin/tpl/manage.php:7 admin/tpl/manage_purge.php:69
+#: admin/tpl/network_settings.php:7 admin/tpl/settings.php:9
+msgid "Purge"
+msgstr ""
+
+#: admin/tpl/manage.php:8
+msgid "DB Optimizer"
+msgstr ""
+
+#: admin/tpl/manage.php:17
+msgid "LiteSpeed Cache Network Management"
+msgstr ""
+
+#: admin/tpl/manage.php:20
 msgid "LiteSpeed Cache Management"
 msgstr ""
 
-#: admin/tpl/manage.php:18
+#: admin/tpl/manage.php:42
 msgid ""
-"From this screen, one can inform the server to purge the selected cached "
-"pages or empty the entire cache."
+"WARNING: LiteSpeed cache is disabled. The functionalities here can not work."
 msgstr ""
 
-#: admin/tpl/manage.php:23
-msgid "Purge the Front Page."
+#: admin/tpl/manage_db.php:6
+msgid "Clean All"
 msgstr ""
 
-#: admin/tpl/manage.php:26
+#: admin/tpl/manage_db.php:10
+msgid "Post Revisions"
+msgstr ""
+
+#: admin/tpl/manage_db.php:11
+msgid "Clean all post revisions"
+msgstr ""
+
+#: admin/tpl/manage_db.php:14
+msgid "Auto Drafts"
+msgstr ""
+
+#: admin/tpl/manage_db.php:15
+msgid "Clean all auto saved drafts"
+msgstr ""
+
+#: admin/tpl/manage_db.php:18
+msgid "Trashed Posts"
+msgstr ""
+
+#: admin/tpl/manage_db.php:19
+msgid "Clean all trashed posts and pages"
+msgstr ""
+
+#: admin/tpl/manage_db.php:22
+msgid "Spam Comments"
+msgstr ""
+
+#: admin/tpl/manage_db.php:23
+msgid "Clean all spam comments"
+msgstr ""
+
+#: admin/tpl/manage_db.php:26
+msgid "Trashed Comments"
+msgstr ""
+
+#: admin/tpl/manage_db.php:27
+msgid "Clean all trashed comments"
+msgstr ""
+
+#: admin/tpl/manage_db.php:30
+msgid "Trackbacks/Pingbacks"
+msgstr ""
+
+#: admin/tpl/manage_db.php:31
+msgid "Clean all trackbacks and pingbacks"
+msgstr ""
+
+#: admin/tpl/manage_db.php:34
+msgid "Expired Transients"
+msgstr ""
+
+#: admin/tpl/manage_db.php:35
+msgid "Clean expired transient options"
+msgstr ""
+
+#: admin/tpl/manage_db.php:38
+msgid "All Transients"
+msgstr ""
+
+#: admin/tpl/manage_db.php:39
+msgid "Clean all transient options"
+msgstr ""
+
+#: admin/tpl/manage_db.php:42
+msgid "Optimize Tables"
+msgstr ""
+
+#: admin/tpl/manage_db.php:43
+msgid "Optimize all tables in your databse"
+msgstr ""
+
+#: admin/tpl/manage_db.php:62
+msgid "Database Optimizer"
+msgstr ""
+
+#: admin/tpl/manage_purge.php:7
 msgid "Purge Front Page"
 msgstr ""
 
-#: admin/tpl/manage.php:29
+#: admin/tpl/manage_purge.php:8
 msgid "This will Purge Front Page only"
 msgstr ""
 
-#: admin/tpl/manage.php:35
-msgid "Purge Pages."
-msgstr ""
-
-#: admin/tpl/manage.php:38
+#: admin/tpl/manage_purge.php:13
 msgid "Purge Pages"
 msgstr ""
 
-#: admin/tpl/manage.php:41
+#: admin/tpl/manage_purge.php:14
 msgid "This will Purge Pages only"
 msgstr ""
 
-#: admin/tpl/manage.php:47
-msgid "Purge the error pages."
+#: admin/tpl/manage_purge.php:19
+msgid "Purge 403 Error"
 msgstr ""
 
-#: admin/tpl/manage.php:53
-msgid "Include 403"
+#: admin/tpl/manage_purge.php:20
+msgid "Purge error pages, including 403 pages"
 msgstr ""
 
-#: admin/tpl/manage.php:54
-msgid "Include 404"
+#: admin/tpl/manage_purge.php:26
+msgid "Purge 404 Error"
 msgstr ""
 
-#: admin/tpl/manage.php:55
-msgid "Include 500s"
+#: admin/tpl/manage_purge.php:27
+msgid "Purge error pages, including 404 pages"
 msgstr ""
 
-#: admin/tpl/manage.php:60
-msgid "Purge Error Pages"
+#: admin/tpl/manage_purge.php:33
+msgid "Purge 500 Error"
 msgstr ""
 
-#: admin/tpl/manage.php:65
-msgid "Purges the error page cache entries created by this plugin."
+#: admin/tpl/manage_purge.php:34
+msgid "Purge error pages, including 500 pages"
 msgstr ""
 
-#: admin/tpl/manage.php:72
-msgid "Purge all WordPress pages."
-msgstr ""
-
-#: admin/tpl/manage.php:76
-msgid "This will purge everything for all blogs."
-msgstr ""
-
-#: admin/tpl/manage.php:76 admin/tpl/manage.php:78
-msgid "Are you sure you want to purge all?"
-msgstr ""
-
-#: admin/tpl/manage.php:81
+#: admin/tpl/manage_purge.php:40
 msgid "Purge All"
 msgstr ""
 
-#: admin/tpl/manage.php:84
-msgid "Purge the cache entries created by this plugin."
+#: admin/tpl/manage_purge.php:41
+msgid "Purge the cache entries created by this plugin"
 msgstr ""
 
-#: admin/tpl/manage.php:91
-msgid "Clear all cache entries."
+#: admin/tpl/manage_purge.php:46
+msgid "This will purge everything for all blogs."
 msgstr ""
 
-#: admin/tpl/manage.php:94
-msgid "This will clear EVERYTHING inside the cache."
+#: admin/tpl/manage_purge.php:47 admin/tpl/manage_purge.php:49
+msgid "Are you sure you want to purge all?"
 msgstr ""
 
-#: admin/tpl/manage.php:95
-msgid "This may cause heavy load on the server."
-msgstr ""
-
-#: admin/tpl/manage.php:96
-msgid "If only the WordPress site should be purged, use purge all."
-msgstr ""
-
-#: admin/tpl/manage.php:98
+#: admin/tpl/manage_purge.php:55
 msgid "Empty Entire Cache"
 msgstr ""
 
-#: admin/tpl/manage.php:101
+#: admin/tpl/manage_purge.php:56
 msgid ""
 "Clears all cache entries related to this site, <i>including other web "
 "applications</i>."
 msgstr ""
 
-#: admin/tpl/manage.php:102
-msgid ""
-"<b>This action should only be used if things are cached incorrectly.</b>"
+#: admin/tpl/manage_purge.php:57
+msgid "This action should only be used if things are cached incorrectly."
 msgstr ""
 
-#: admin/tpl/manage.php:111
+#: admin/tpl/manage_purge.php:61
+msgid "This will clear EVERYTHING inside the cache."
+msgstr ""
+
+#: admin/tpl/manage_purge.php:62
+msgid "This may cause heavy load on the server."
+msgstr ""
+
+#: admin/tpl/manage_purge.php:63
+msgid "If only the WordPress site should be purged, use purge all."
+msgstr ""
+
+#: admin/tpl/manage_purge.php:94
 msgid "Purge By..."
 msgstr ""
 
-#: admin/tpl/manage.php:114
+#: admin/tpl/manage_purge.php:97
 msgid "Select below for \"Purge by\" options."
 msgstr ""
 
-#: admin/tpl/manage.php:115
+#: admin/tpl/manage_purge.php:98
 msgid "Please enter one per line."
 msgstr ""
 
-#: admin/tpl/manage.php:142
+#: admin/tpl/manage_purge.php:125
 msgid "Category"
 msgstr ""
 
-#: admin/tpl/manage.php:148
+#: admin/tpl/manage_purge.php:131
 msgid "Post ID"
 msgstr ""
 
-#: admin/tpl/manage.php:154
+#: admin/tpl/manage_purge.php:137
 msgid "Tag"
 msgstr ""
 
-#: admin/tpl/manage.php:160
+#: admin/tpl/manage_purge.php:143
 msgid "URL"
 msgstr ""
 
-#: admin/tpl/manage.php:166
+#: admin/tpl/manage_purge.php:149
 msgid ""
 "Purge pages by category name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
-#: admin/tpl/manage.php:171
+#: admin/tpl/manage_purge.php:154
 msgid "Purge pages by post ID."
 msgstr ""
 
-#: admin/tpl/manage.php:175
+#: admin/tpl/manage_purge.php:158
 msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
-#: admin/tpl/manage.php:180
+#: admin/tpl/manage_purge.php:163
 msgid "Purge pages by relative or full URL."
 msgstr ""
 
-#: admin/tpl/manage.php:181
+#: admin/tpl/manage_purge.php:164
 msgid "e.g. Use %s or %s."
 msgstr ""
 
-#: admin/tpl/manage.php:194
+#: admin/tpl/manage_purge.php:177
 msgid "Purge List"
 msgstr ""
 
@@ -1424,15 +1539,11 @@ msgstr ""
 msgid "Cache"
 msgstr ""
 
-#: admin/tpl/network_settings.php:7 admin/tpl/settings.php:9
-msgid "Purge"
-msgstr ""
-
 #: admin/tpl/network_settings.php:8 admin/tpl/settings.php:10
 msgid "Excludes"
 msgstr ""
 
-#: admin/tpl/network_settings.php:9 admin/tpl/settings.php:18
+#: admin/tpl/network_settings.php:9 admin/tpl/settings.php:17
 #: admin/tpl/settings_debug.php:68
 msgid "Advanced"
 msgstr ""
@@ -1553,37 +1664,37 @@ msgstr ""
 msgid "ESI"
 msgstr ""
 
-#: admin/tpl/settings.php:21
+#: admin/tpl/settings.php:20
 msgid "Debug"
 msgstr ""
 
-#: admin/tpl/settings.php:24
+#: admin/tpl/settings.php:23
 msgid "Compatibilities"
 msgstr ""
 
-#: admin/tpl/settings.php:65
+#: admin/tpl/settings.php:64
 msgid "WARNING: Third party tab input invalid."
 msgstr ""
 
-#: admin/tpl/settings.php:72
+#: admin/tpl/settings.php:71
 msgid "WARNING: Third party config slug contains invalid characters."
 msgstr ""
 
-#: admin/tpl/settings.php:87
+#: admin/tpl/settings.php:86
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/tpl/settings.php:110
+#: admin/tpl/settings.php:114
 msgid "The network admin selected use primary site configs for all subsites."
 msgstr ""
 
-#: admin/tpl/settings.php:111
+#: admin/tpl/settings.php:115
 msgid ""
 "The following options are selected, but are not editable in this settings "
 "page."
 msgstr ""
 
-#: admin/tpl/settings.php:132 admin/tpl/settings.php:135
+#: admin/tpl/settings.php:136 admin/tpl/settings.php:139
 msgid "Save Changes"
 msgstr ""
 
@@ -2064,34 +2175,38 @@ msgstr ""
 msgid "Learn more about public cache vs. private cache <a %s>on our blog</a>."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:31
+#: admin/tpl/settings_esi.php:29
+msgid "Available in LiteSpeed Enterprise version"
+msgstr ""
+
+#: admin/tpl/settings_esi.php:39
 msgid ""
 "Enable caches public pages for logged in users and serves the Admin Bar and "
 "Comment Form via ESI blocks. These two blocks will be uncached unless "
 "enabled below."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:37
+#: admin/tpl/settings_esi.php:45
 msgid "Cache Admin Bar"
 msgstr ""
 
-#: admin/tpl/settings_esi.php:41
+#: admin/tpl/settings_esi.php:49
 msgid "Cache the build-in Admin Bar ESI block."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:47
+#: admin/tpl/settings_esi.php:55
 msgid "Cache Comment Form"
 msgstr ""
 
-#: admin/tpl/settings_esi.php:51
+#: admin/tpl/settings_esi.php:59
 msgid "Cache the build-in Comment Form ESI block."
 msgstr ""
 
-#: admin/tpl/settings_esi.php:57
+#: admin/tpl/settings_esi.php:65
 msgid "Vary Group"
 msgstr ""
 
-#: admin/tpl/settings_esi.php:72
+#: admin/tpl/settings_esi.php:80
 msgid ""
 "If your site contains public content that certain user roles can see but "
 "other roles cannot, you can specify a Vary Group for those user roles. For "
@@ -2410,6 +2525,18 @@ msgid ""
 "or WordPress core is upgraded."
 msgstr ""
 
+#: admin/tpl/settings_optimize.php:7
+msgid "Optimization Settings"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:11
+msgid "Text"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:15
+msgid "test."
+msgstr ""
+
 #: admin/tpl/settings_purge.php:5
 msgid "Purge Settings"
 msgstr ""
@@ -2635,19 +2762,19 @@ msgstr ""
 msgid "Reached end of sitemap file. Crawling completed."
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:199
+#: includes/litespeed-cache-purge.class.php:191
 msgid "Purge category %s"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:226
+#: includes/litespeed-cache-purge.class.php:218
 msgid "Purge Post ID %s"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:255
+#: includes/litespeed-cache-purge.class.php:247
 msgid "Purge tag %s"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:289
+#: includes/litespeed-cache-purge.class.php:281
 msgid "Purge url %s"
 msgstr ""
 
@@ -2655,31 +2782,31 @@ msgstr ""
 msgid "LiteSpeed Cache Custom Cron"
 msgstr ""
 
-#: includes/litespeed-cache.class.php:196
+#: includes/litespeed-cache.class.php:198
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:201
+#: includes/litespeed-cache.class.php:203
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:206
+#: includes/litespeed-cache.class.php:208
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:211
+#: includes/litespeed-cache.class.php:213
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:217
+#: includes/litespeed-cache.class.php:219
 msgid "Notified LiteSpeed Web Server to purge all caches."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:224
+#: includes/litespeed-cache.class.php:226
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:229
+#: includes/litespeed-cache.class.php:231
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
