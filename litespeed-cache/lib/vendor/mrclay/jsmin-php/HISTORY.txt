@@ -1,0 +1,24 @@
+JSMin fixes (from Minify)
+
+Version 2.3.0
+    * Removes leading UTF-8 BOM
+
+Version 2.2.0
+    * Fix handling of RegEx in certain situations in JSMin
+    * Fix bug in JSMin exceptions
+
+Version 2.1.6
+    * JSMin fixes
+
+Version 2.1.4
+    * JSMin won't choke on common Closure compiler syntaxes (i+ ++j)
+    * mbstring.func_overload usage is safer
+
+Version 2.1.2
+    * quote characters inside RegExp literals no longer cause exception
+
+Version 2.1.0
+    * JS: preserves IE conditional comments
+
+Version 1.0.1 (2007-05-05)
+    * Replaced old JSMin library with a much faster custom implementation.

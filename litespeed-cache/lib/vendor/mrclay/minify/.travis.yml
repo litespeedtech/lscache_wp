@@ -1,0 +1,37 @@
+language: php
+sudo: false
+
+php:
+  - 7.0
+  - 5.6
+  - 5.5
+  - 5.4
+  - hhvm
+
+env:
+  - CLOSURE_VERSION: 20161024
+
+matrix:
+  allow_failures:
+    - php: hhvm
+    - php: 7.0
+
+services:
+  - memcached
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - vendor
+
+install:
+  - composer update --no-interaction --prefer-source
+
+before_script:
+  - tests/dl-closure.sh
+
+script:
+  - composer validate
+  - phpunit --verbose
+
+# vim:ts=2:sw=2:et
