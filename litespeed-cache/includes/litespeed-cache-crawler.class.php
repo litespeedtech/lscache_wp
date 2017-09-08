@@ -441,9 +441,8 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public static function get_instance()
 	{
-		$cls = get_called_class() ;
 		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new $cls() ;
+			self::$_instance = new self() ;
 		}
 
 		return self::$_instance ;

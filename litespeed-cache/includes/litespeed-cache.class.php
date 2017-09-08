@@ -489,23 +489,6 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Get the current instance object.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return Current class instance.
-	 */
-	public static function get_instance()
-	{
-		$cls = get_called_class() ;
-		if ( ! isset(self::$_instance) ) {
-			self::$_instance = new $cls() ;
-		}
-
-		return self::$_instance ;
-	}
-
-	/**
 	 * Deprecated calls for backward compatibility to v1.1.2.2
 	 */
 	public function purge_post( $id )
@@ -519,6 +502,22 @@ class LiteSpeed_Cache
 	public function purge_all()
 	{
 		LiteSpeed_Cache_API::purge_all() ;
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		if ( ! isset(self::$_instance) ) {
+			self::$_instance = new self() ;
+		}
+
+		return self::$_instance ;
 	}
 
 }
