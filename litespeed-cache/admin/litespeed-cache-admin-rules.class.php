@@ -179,14 +179,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$this->theme_htaccess = LSWCP_CONTENT_DIR ;
 
-		$frontend = rtrim( get_home_path(), '/' ) ; // /home/user/public_html/frontend
-		// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
-		if ( ! $frontend ) {
-			$frontend = parse_url( get_option( 'home' ) ) ;
-			$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
-			$frontend = $_SERVER["DOCUMENT_ROOT"] . $frontend ;
-		}
-		$frontend = realpath( $frontend ) ;
+		$frontend = LiteSpeed_Cache_Router::frontend_path() ;
 		$frontend_htaccess_search = $this->htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
 		$this->frontend_htaccess = ( $frontend_htaccess_search ?: $frontend ) . '/.htaccess' ;
 

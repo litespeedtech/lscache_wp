@@ -29,6 +29,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'includes/litespeed-cache-crawler-sitemap.class.php',
 			'LiteSpeed_Cache_ESI'				=> 'includes/litespeed-cache-esi.class.php',
 			'LiteSpeed_Cache_Log'				=> 'includes/litespeed-cache-log.class.php',
+			'LiteSpeed_Cache_Optimize'			=> 'includes/litespeed-cache-optimize.class.php',
 			'LiteSpeed_Cache_Purge'				=> 'includes/litespeed-cache-purge.class.php',
 			'LiteSpeed_Cache_Router'			=> 'includes/litespeed-cache-router.class.php',
 			'LiteSpeed_Cache_Tag'				=> 'includes/litespeed-cache-tag.class.php',
@@ -56,3 +57,15 @@ if ( !function_exists('_litespeed_autoload') ) {
 }
 
 spl_autoload_register('_litespeed_autoload');
+
+/**
+ * Load vendor loader
+ *
+ * @since  1.2.2
+ */
+if ( !function_exists('litespeed_load_vendor') ) {
+	function litespeed_load_vendor()
+	{
+		require_once LSWCP_DIR.'lib/vendor/autoload.php';
+	}
+}

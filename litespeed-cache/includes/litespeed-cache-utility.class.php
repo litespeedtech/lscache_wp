@@ -12,6 +12,17 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Improve compatibility to PHP old versions
+	 *
+	 * @since  1.2.2
+	 *
+	 */
+	public static function compatibility()
+	{
+		require_once LSWCP_DIR . 'lib/litespeed-php-compatibility.func.php' ;
+	}
+
+	/**
 	 * Make URL to be relative
 	 *
 	 * @param  string $url
@@ -21,7 +32,7 @@ class LiteSpeed_Cache_Utility
 	{
 		// replace site_url if the url is full url
 		// NOTE: for subfolder site_url, need to strip subfolder part (strip anything but scheme and host)
-		require_once LSWCP_DIR . 'lib/litespeed-php-compatibility.func.php' ;
+		self::compatibility() ;
 		$site_url_domain = http_build_url( LiteSpeed_Cache_Router::get_siteurl(), array(), HTTP_URL_STRIP_ALL ) ;
 		if ( strpos( $url, $site_url_domain ) === 0 ) {
 			$url = substr( $url, strlen( $site_url_domain ) ) ;

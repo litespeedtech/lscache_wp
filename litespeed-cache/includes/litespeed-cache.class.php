@@ -18,7 +18,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.2.1' ;
+	const PLUGIN_VERSION = '1.2.2dev' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -359,7 +359,13 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers_force( $buffer )
 	{
+		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 		$buffer .= $this->send_headers( true ) ;
+
+		LiteSpeed_Cache_Log::debug(
+			"End response\n--------------------------------------------------------------------------------\n"
+		) ;
+
 		return $buffer ;
 	}
 
@@ -382,6 +388,7 @@ class LiteSpeed_Cache
 		else {
 			return ;
 		}
+LiteSpeed_Cache_Control::set_nocache( 'test opt' ) ;
 
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_cache_api_control`.
 		LiteSpeed_Cache_Control::finalize() ;
@@ -474,9 +481,9 @@ class LiteSpeed_Cache
 			}
 		}
 
-		LiteSpeed_Cache_Log::debug(
-			'End response' . ( $is_forced ? '(forced)' : '' ) . ".\n--------------------------------------------------------------------------------\n"
-		) ;
+		if ( $is_forced ) {
+			LiteSpeed_Cache_Log::debug( '--forced--' ) ;
+		}
 
 		if ( $comment ) {
 			if ( $is_forced ) {

@@ -389,6 +389,26 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
+	 * Validates the optimize settings.
+	 *
+	 * @since 1.2.2
+	 * @access private
+	 */
+	private function validate_optimize( $input, &$options, &$errors)
+	{
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
+		) ;
+		foreach ( $ids as $id ) {
+			$options[ $id ] = self::parse_onoff( $input, $id ) ;
+		}
+	}
+
+	/**
 	 * Validates the single site specific settings.
 	 *
 	 * @since 1.0.12
@@ -730,6 +750,8 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->validate_purge( $input, $options, $errors) ;
 
 		$this->validate_exclude( $input, $options, $errors) ;
+
+		$this->validate_optimize( $input, $options, $errors) ;
 
 		$this->validate_debug( $input, $options, $errors) ;
 

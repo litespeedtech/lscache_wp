@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Admin_Optimize
 
 			case 'trash_post':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'" ) ;
-				return __( 'Clean transhed posts and pages successfully.', 'litespeed-cache' ) ;
+				return __( 'Clean trashed posts and pages successfully.', 'litespeed-cache' ) ;
 
 			case 'spam_comment':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" ) ;

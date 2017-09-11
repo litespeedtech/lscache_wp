@@ -8,7 +8,7 @@ $menu_list = array(
 	'cache' => __('Cache', 'litespeed-cache'),
 	'purge' => __('Purge', 'litespeed-cache'),
 	'excludes' => __('Excludes', 'litespeed-cache'),
-	// 'optimize' => __('Optimze', 'litespeed-cache'),
+	'optimize' => __('Optimze', 'litespeed-cache'),
 ) ;
 
 $menu_list['esi'] = __('ESI', 'litespeed-cache') ;

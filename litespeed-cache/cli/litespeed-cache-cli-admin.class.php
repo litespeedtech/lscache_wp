@@ -34,6 +34,12 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE,
 			LiteSpeed_Cache_Config::OPID_COLLAPS_QS,
 			LiteSpeed_Cache_Config::OPID_LOG_FILTERS,
+
+			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
 		) ;
 		self::$purges = array(
 			'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES => LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -112,6 +118,12 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE:
 			case LiteSpeed_Cache_Config::OPID_COLLAPS_QS:
 			case LiteSpeed_Cache_Config::OPID_LOG_FILTERS:
+
+			case LiteSpeed_Cache_Config::OPID_CSS_MINIFY:
+			case LiteSpeed_Cache_Config::OPID_CSS_COMBINE:
+			case LiteSpeed_Cache_Config::OPID_JS_MINIFY:
+			case LiteSpeed_Cache_Config::OPID_JS_COMBINE:
+			case LiteSpeed_Cache_Config::OPID_HTML_MINIFY:
 				//checkbox
 				if ( $val === 'true' ) {
 					$options[$key] = LiteSpeed_Cache_Config::VAL_ON  ;

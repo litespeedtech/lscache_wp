@@ -4,7 +4,7 @@
 *
 * @since 1.1.0
 */
-require_once LSWCP_DIR . 'lib/litespeed-php-compatibility.func.php' ;
+LiteSpeed_Cache_Utility::compatibility() ;
 
 class Litespeed_Crawler
 {

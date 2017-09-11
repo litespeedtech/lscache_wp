@@ -40,7 +40,7 @@ $_panels = array(
 	),
 	'optimize_tables' => array(
 		'title'	=> __( 'Optimize Tables', 'litespeed-cache' ),
-		'desc'	=> __( 'Optimize all tables in your databse', 'litespeed-cache' ),
+		'desc'	=> __( 'Optimize all tables in your database', 'litespeed-cache' ),
 	),
 ) ;
 

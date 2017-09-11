@@ -25,6 +25,31 @@ class LiteSpeed_Cache_Router
 	private static $_siteurl ;
 	private static $_has_whm_msg ;
 	private static $_has_msg_ruleconflict ;
+	private static $_frontend_path ;
+
+	/**
+	 * Get frontend path
+	 *
+	 * @since 1.2.2
+	 * @access public
+	 * @return boolean
+	 */
+	public static function frontend_path()
+	{
+		if ( ! isset( self::$_frontend_path ) ) {
+			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
+			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
+			if ( ! $frontend ) {
+				$frontend = parse_url( get_option( 'home' ) ) ;
+				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
+				$frontend = $_SERVER["DOCUMENT_ROOT"] . $frontend ;
+			}
+			$frontend = realpath( $frontend ) ;
+
+			self::$_frontend_path = $frontend ;
+		}
+		return self::$_frontend_path ;
+	}
 
 	/**
 	 * Check if crawler is enabled on server level
