@@ -203,10 +203,10 @@ class LiteSpeed_Cache_Optimize
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
 		if ( $file_type == 'css' ) {
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ;
+			$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
 		}
 		else {
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ;
+			$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ) ;
 		}
 		if ( $excludes ) {
 			$excludes = explode( "\n", $excludes ) ;
