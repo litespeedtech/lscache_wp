@@ -421,6 +421,12 @@ class LiteSpeed_Cache_Admin_Settings
 			$options[ $id ] = implode( "\n", $options[ $id ] ) ;
 		}
 
+		$id = LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ;
+		if ( ! $this->validate_ttl( $input, $id, 3600 ) ) {
+			$input[ $id ] = 3600 ;
+		}
+		$options[ $id ] = $input[ $id ] ;
+
 	}
 
 	/**

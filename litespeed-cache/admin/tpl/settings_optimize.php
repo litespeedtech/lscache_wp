@@ -94,6 +94,18 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'CSS/JS Cache TTL', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Specify how long, in seconds, the CSS/JS are cached. Minimum is %1$s seconds.', 'litespeed-cache' ), 3600 ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'HTML Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ; ?>

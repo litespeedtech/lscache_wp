@@ -40,6 +40,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_NOCACHE_USER_AGENTS = '### marker NOCACHE USER AGENTS' ;
 	const MARKER_CACHE_RESOURCE = '### marker CACHE RESOURCE' ;
 	const MARKER_FAVICON = '### marker FAVICON' ;
+	const MARKER_MINIFY = '### marker MINIFY' ;
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
 
@@ -683,14 +684,19 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules[] = '' ;
 		}
 
-		// todo: is this still needed?
-//        if (!is_null($haystack)) {
-//			if ( LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ) {
-//				$haystack = str_replace(self::RW_LOOKUP_PUBLIC,
-//					self::RW_LOOKUP_BOTH, $haystack) ;
-//			}
-//			$beginning .= $haystack ;
-//        }
+		// minify file rewrite `wp-content/cache/min/`
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
+		) ;
+		if ( 1 ) {
+			$new_rules[] = $new_rules_backend[] = self::MARKER_MINIFY . self::MARKER_START ;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule "wp-content/cache/min/(.*)" index.php?' . LiteSpeed_Cache_Optimize::REWRITE_QS . '=$1 [E=cache-control:no-vary,L]' ;
+			$new_rules[] = $new_rules_backend[] = self::MARKER_MINIFY . self::MARKER_END ;
+			$new_rules[] = $new_rules_backend[] = '' ;
+		}
 
 		$this->deprecated_clear_rules() ;
 		if ( ! $this->insert_wrapper($new_rules) ) {

@@ -126,6 +126,9 @@ class LiteSpeed_Cache
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
 		add_action( 'wp_footer', 'LiteSpeed_Cache::litespeed_comment_info' ) ;
 
+		// Check minify file request in the very beginning
+		LiteSpeed_Cache_Optimize::get_instance() ;
+
 		// 1. Init vary
 		// 2. Init cacheable status
 		LiteSpeed_Cache_Vary::get_instance() ;
@@ -359,7 +362,9 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers_force( $buffer )
 	{
-		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
+		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {
+			$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
+		}
 		$buffer .= $this->send_headers( true ) ;
 
 		LiteSpeed_Cache_Log::debug(
@@ -388,7 +393,6 @@ class LiteSpeed_Cache
 		else {
 			return ;
 		}
-LiteSpeed_Cache_Control::set_nocache( 'test opt' ) ;
 
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_cache_api_control`.
 		LiteSpeed_Cache_Control::finalize() ;

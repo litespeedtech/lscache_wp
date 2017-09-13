@@ -29,6 +29,7 @@ class LiteSpeed_Cache_Tag
 	const TYPE_ESI = 'ESI.' ;
 	const TYPE_REST = 'REST' ;
 	const TYPE_LIST = 'LIST' ;
+	const TYPE_MIN = 'MIN' ;
 
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 

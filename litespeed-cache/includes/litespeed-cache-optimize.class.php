@@ -13,21 +13,82 @@ class LiteSpeed_Cache_Optimize
 {
 	private static $_instance ;
 
+	const OPTION_OPTIMIZED = 'litespeed-cache-optimized' ;
 	const DIR_MIN = '/cache/min' ;
+	const REWRITE_QS = 'ls_opt_file' ;
 
 	private $content ;
 	private $http2_headers = array() ;
 
-	private $http2_css = false ;
-	private $http2_js = false ;
+	private $cfg_http2_css ;
+	private $cfg_http2_js ;
+	private $cfg_css_minify ;
+	private $cfg_css_combine ;
+	private $cfg_js_minify ;
+	private $cfg_js_combine ;
+	private $cfg_html_minify ;
 
-	private $concatOnly ;
 	private $minify_cache ;
 	private $minify_minify ;
 	private $minify_env ;
 	private $minify_sourceFactory ;
 	private $minify_controller ;
 	private $minify_options ;
+
+	/**
+	 * Init optimizer
+	 *
+	 * @since  1.2.2
+	 * @access private
+	 */
+	private function __construct()
+	{
+		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_HTTP2 ) ;
+		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_HTTP2 ) ;
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
+		$this->cfg_html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
+
+		$this->_request_check() ;
+	}
+
+	/**
+	 * Check if the request is for static file
+	 *
+	 * @since  1.2.2
+	 * @access private
+	 * @return  string The static file content
+	 */
+	private function _request_check()
+	{
+		if ( empty( $_GET[ self::REWRITE_QS ] ) ) {
+			return ;
+		}
+
+		define( 'LITESPEED_MIN_FILE', true ) ;
+
+		$result = $this->_minify( $_GET[ self::REWRITE_QS ] ) ;
+
+		if ( ! $result ) {
+			LiteSpeed_Cache_Control::set_nocache( 'Empty content from optimizer' ) ;
+			exit ;
+		}
+
+		foreach ( $result[ 'headers' ] as $key => $val ) {
+			if ( in_array( $key, array( 'Content-Length', 'Content-Type' ) ) ) {
+				header( $key . ': ' . $val ) ;
+			}
+		}
+
+		LiteSpeed_Cache_Control::set_cacheable() ;
+		LiteSpeed_Cache_Control::set_custom_ttl( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ) ;
+		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
+
+		echo $result[ 'content' ] ;
+		exit ;
+	}
 
 	/**
 	 * Run optimize process
@@ -56,33 +117,21 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
-		$css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
-		$css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
-		$js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
-		$js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
-		$html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
-
-		$this->http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_HTTP2 ) ;
-		$this->http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_HTTP2 ) ;
-
 		// The html codes needed to be added to head
-		$html_ae = '';
+		$html_head = '';
+		$html_foot = '';
 
-		if ( $css_minify || $css_combine || $this->http2_css ) {
-			litespeed_load_vendor() ;
-
-			$this->concatOnly = ! $css_minify ;
-
+		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css ) {
 			list( $src_list, $html_list ) = $this->_parse_css() ;
 
 			if ( $src_list ) {
-				list( $ignored_html, $src_queue_list, $src2file_queue_list ) = $this->_analyse_links( $src_list, $html_list ) ;
+				list( $ignored_html, $src_queue_list ) = $this->_analyse_links( $src_list, $html_list ) ;
 
 				// IF combine
-				if ( $css_combine ) {
-					$url = $this->_minify( $src_queue_list, $src2file_queue_list ) ;
+				if ( $this->cfg_css_combine ) {
+					$url = $this->_build_hash_url( $src_queue_list ) ;
 
-					$html_ae .= implode( '', $ignored_html ) . "<link data-minified='1' rel='stylesheet' href='$url' />" ;
+					$html_head .= implode( '', $ignored_html ) . "<link data-minified='1' rel='stylesheet' href='$url' />" ;
 					// Move all css to top
 					$this->content = str_replace( $html_list, '', $this->content ) ;
 
@@ -91,8 +140,8 @@ class LiteSpeed_Cache_Optimize
 
 				}
 				// Only minify
-				elseif ( $css_minify ) {
-					$this->_src_queue_handler( $src_queue_list, $src2file_queue_list, $html_list ) ;
+				elseif ( $this->cfg_css_minify ) {
+					$this->_src_queue_handler( $src_queue_list, $html_list ) ;
 				}
 				// Only HTTP2 push
 				else {
@@ -103,21 +152,49 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
-		if ( $js_minify || $js_combine ) {
-			litespeed_load_vendor() ;
-
-			$this->concatOnly = ! $js_minify ;
-
-			list( $src_list, $html_list ) = $this->_parse_js() ;
+		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js ) {
+			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js() ;
 
 			if ( $src_list ) {
-				list( $ignored_html, $src_queue_list, $src2file_queue_list ) = $this->_analyse_links( $src_list, $html_list ) ;
+				list( $ignored_html, $src_queue_list ) = $this->_analyse_links( $src_list, $html_list, 'js' ) ;
 
 				// IF combine
-				if ( $js_combine ) {
-					$url = $this->_minify( $src_queue_list, $src2file_queue_list, 'js' ) ;
-					$html_ae .= implode( '', $ignored_html ) . "<script data-minified='1' src='$url'></script>" ;
-					// Move all js to top
+				if ( $this->cfg_js_combine ) {
+					// separate head/foot js/raw html
+					$head_js = array() ;
+					$head_ignored_html = array() ;
+					$foot_js = array() ;
+					$foot_ignored_html = array() ;
+					foreach ( $src_queue_list as $src ) {
+						if ( in_array( $src, $head_src_list ) ) {
+							$head_js[] = $src ;
+						}
+						else {
+							$foot_js[] = $src ;
+						}
+					}
+					foreach ( $ignored_html as $src => $html ) {
+						if ( in_array( $src, $head_src_list ) ) {
+							$head_ignored_html[] = $html ;
+						}
+						else {
+							$foot_ignored_html[] = $html ;
+						}
+					}
+
+					$url = $this->_build_hash_url( $head_js, 'js' ) ;
+					if ( $url ) {
+						$html = "<script data-minified='1' src='$url'></script>" ;
+					}
+					$html_head .= implode( '', $head_ignored_html ) . $html ;
+
+					$url = $this->_build_hash_url( $foot_js, 'js' ) ;
+					if ( $url ) {
+						$html = "<script data-minified='1' src='$url'></script>" ;
+					}
+					$html_foot .= implode( '', $foot_ignored_html ) . $html ;
+
+					// Will move all js to top/bottom
 					$this->content = str_replace( $html_list, '', $this->content ) ;
 
 					// Add to HTTP2
@@ -125,8 +202,8 @@ class LiteSpeed_Cache_Optimize
 
 				}
 				// Only minify
-				elseif ( $js_minify ) {
-					$this->_src_queue_handler( $src_queue_list, $src2file_queue_list, $html_list, 'js' ) ;
+				elseif ( $this->cfg_js_minify ) {
+					$this->_src_queue_handler( $src_queue_list, $html_list, 'js' ) ;
 				}
 				// Only HTTP2 push
 				else {
@@ -137,11 +214,16 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
-		if ( $html_ae ) {
-			$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $html_ae , $this->content, 1 ) ;
+		if ( $html_head ) {
+			$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $html_head , $this->content, 1 ) ;
 		}
 
-		if ( $html_minify ) {
+		if ( $html_foot ) {
+			$this->content = str_replace( '</body>', $html_foot . '</body>' , $this->content ) ;
+		}
+
+		if ( $this->cfg_html_minify ) {
+			litespeed_load_vendor() ;
 			$this->content = Minify_HTML::minify( $this->content ) ;
 			$this->content .= '<!-- Page minified by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
 		}
@@ -152,37 +234,16 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Append to HTTP2 header
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 */
-	private function append_http2( $url, $file_type = 'css' )
-	{
-		if ( ! ( $file_type === 'css' ? $this->http2_css : $this->http2_js ) ) {
-			return ;
-		}
-
-		$uri = LiteSpeed_Cache_Utility::url2uri( $url ) ;
-
-		if ( ! $uri ) {
-			return ;
-		}
-
-		$this->http2_headers[] = '<' . $uri . '>; rel=preload; as=' . ( $file_type === 'css' ? 'style' : 'script' ) ;
-	}
-
-	/**
 	 * Run minify with src queue list
 	 *
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _src_queue_handler( $src_queue_list, $src2file_queue_list, $html_list, $file_type = 'css' )
+	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' )
 	{
 		$tag = $file_type === 'css' ? 'link' : 'script' ;
 		foreach ( $src_queue_list as $key => $src ) {
-			$url = $this->_minify( $src, $src2file_queue_list[ $key ], $file_type ) ;
+			$url = $this->_build_hash_url( $src, $file_type ) ;
 			$html = str_replace( $src, $url, $html_list[ $key ] ) ;
 			$html = str_replace( "<$tag ", "<$tag data-minified='1' ", $html ) ;
 
@@ -198,7 +259,7 @@ class LiteSpeed_Cache_Optimize
 	 *
 	 * @since  1.2.2
 	 * @access private
-	 * @return array Array(Ignored raw html, src needed to be handled list, real files of src)
+	 * @return array Array(Ignored raw html, src needed to be handled list)
 	 */
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
@@ -214,87 +275,165 @@ class LiteSpeed_Cache_Optimize
 
 		$ignored_html = array() ;
 		$src_queue_list = array() ;
-		$src2file_queue_list = array() ;
 
 		// Analyse links
-		$frontend_url = parse_url( get_option( 'home' ) ) ;
 		foreach ( $src_list as $key => $src ) {
-			LiteSpeed_Cache_Log::debug( 'Opt: ' . $src ) ;
-			// Check if is external URL
-			$src_parsed = parse_url( $src ) ;
-
-			if ( isset( $src_parsed[ 'host' ] ) && $src_parsed[ 'host' ] !== $frontend_url[ 'host' ] ) {
-				$ignored_html[] = $html_list[ $key ] ;
-				LiteSpeed_Cache_Log::debug( 'Opt:    Abort external not ' . $frontend_url[ 'host' ] ) ;
-				continue ;
-			}
+			LiteSpeed_Cache_Log::debug2( 'Opt: ' . $src ) ;
 
 			if ( $excludes ) {
 				foreach ( $excludes as $exclude ) {
 					if ( stripos( $src, $exclude ) !== false ) {
 						$ignored_html[] = $html_list[ $key ] ;
-						LiteSpeed_Cache_Log::debug( 'Opt:    Abort excludes ' . $exclude ) ;
+						LiteSpeed_Cache_Log::debug2( 'Opt:    Abort excludes ' . $exclude ) ;
 						continue 2 ;
 					}
 				}
 			}
 
-			// Parse file path
-			if ( substr( $src_parsed[ 'path' ], 0, 1 ) === '/' ) {
-				$file_path = $_SERVER[ 'DOCUMENT_ROOT' ] . $src_parsed[ 'path' ] ;
-			}
-			else {
-				$file_path = LiteSpeed_Cache_Router::frontend_path() . '/' . $src_parsed[ 'path' ] ;
-			}
-			$file_path = realpath( $file_path ) ;
-			if ( ! is_file( $file_path ) ) {
-				$ignored_html[] = $html_list[ $key ] ;
-				LiteSpeed_Cache_Log::debug( 'Opt:    Abort non-exist ' . $file_path ) ;
+			// Check if is external URL
+			$url_parsed = parse_url( $src ) ;
+			if ( ! $this->_is_file_url( $src ) ) {
+				$ignored_html[ $src ] = $html_list[ $key ] ;
+				LiteSpeed_Cache_Log::debug2( 'Opt:    Abort external/non-exist ' ) ;
 				continue ;
 			}
 
 			$src_queue_list[ $key ] = $src ;
-			$src2file_queue_list[ $key ] = $file_path ;
 		}
 
-		return array( $ignored_html, $src_queue_list, $src2file_queue_list ) ;
+		return array( $ignored_html, $src_queue_list ) ;
 	}
 
 	/**
-	 * Run minify process
-	 * Save to cache folder
-	 * Return final URL
+	 * Check if an URL is a internal existing file
+	 *
+	 * @since  1.2.2
+	 * @access private
+	 * @return string|bool The real path of file OR false
+	 */
+	private function _is_file_url( $url )
+	{
+		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
+			$frontend_url = parse_url( get_option( 'home' ), PHP_URL_HOST ) ;
+			define( 'LITESPEED_FRONTEND_HOST', $frontend_url ) ;
+		}
+
+		$url_parsed = parse_url( $url ) ;
+		if ( isset( $url_parsed[ 'host' ] ) && $url_parsed[ 'host' ] !== LITESPEED_FRONTEND_HOST ) {
+			return false ;
+		}
+
+		if ( empty( $url_parsed[ 'path' ] ) ) {
+			return false ;
+		}
+
+		// Parse file path
+		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
+			$file_path = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
+		}
+		else {
+			$file_path = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
+		}
+		$file_path = realpath( $file_path ) ;
+		if ( ! is_file( $file_path ) ) {
+			return false ;
+		}
+
+		return $file_path ;
+	}
+
+	/**
+	 * Run minify process and return final content
+	 *
+	 * @since  1.2.2
+	 * @access private
+	 * @return string The final content
+	 */
+	private function _minify( $filename )
+	{
+		// Search filename in db for src URLs
+		$hashes = get_option( self::OPTION_OPTIMIZED ) ;
+		if ( ! $hashes || ! is_array( $hashes ) || empty( $hashes[ $filename ] ) ) {
+			return false;
+		}
+
+		$urls = $hashes[ $filename ] ;
+		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 ) ;
+
+		// Parse real file path
+		$real_files = array() ;
+		foreach ( $urls as $url ) {
+			$real_file = $this->_is_file_url( $url ) ;
+			if ( ! $real_file ) {
+				continue ;
+			}
+			$real_files[] = $real_file ;
+		}
+
+		if ( ! $real_files ) {
+			return false;
+		}
+
+		// Request to minify
+		$result = $this->_minify_serve( $real_files, $file_type ) ;
+
+		if ( empty( $result[ 'success' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'Opt:    Lib serve failed ' . $result[ 'statusCode' ] ) ;
+			return false ;
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Opt:    Generated content' ) ;
+
+		return $result ;
+	}
+
+	/**
+	 * Generate full URL path with hash for a list of src
 	 *
 	 * @since  1.2.2
 	 * @access private
 	 * @return string The final URL
 	 */
-	private function _minify( $src, $real_files, $file_type = 'css' )
+	private function _build_hash_url( $src, $file_type = 'css' )
 	{
+		if ( ! $src ) {
+			return false ;
+		}
+
 		if ( ! is_array( $src ) ) {
 			$src = array( $src ) ;
 		}
-		if ( ! is_array( $real_files ) ) {
-			$real_files = array( $real_files ) ;
+		$src = array_values( $src ) ;
+
+		$hash = md5( serialize( $src ) ) ;
+
+		$short = substr( $hash, -5 ) ;
+
+		$filename = $short ;
+
+		// Need to check conflicts
+		$hashes = get_option( self::OPTION_OPTIMIZED ) ;
+		if ( ! is_array( $hashes ) ) {
+			$hashes = array() ;
+		}
+		// If short hash exists
+		if ( $hashes && ! empty( $hashes[ $short . '.' . $file_type ] ) ) {
+			// If conflicts
+			if ( $hashes[ $short . '.' . $file_type ] !== $src ) {
+				$hashes[ $hash . '.' . $file_type ] = $src ;
+				update_option( self::OPTION_OPTIMIZED, $hashes ) ;
+				$filename = $hash ;
+			}
+		}
+		else {
+			// Short hash is safe now
+			$hashes[ $short . '.' . $file_type ] = $src ;
+			update_option( self::OPTION_OPTIMIZED, $hashes ) ;
 		}
 
-		// Request to minify
-		$result = $this->_minify_serve( $real_files ) ;
+		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;
 
-		if ( empty( $result[ 'success' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'Opt:    Lib serve failed ' . $result[ 'statusCode' ] ) ;
-		}
-
-		// Get hash url
-		$file_to_save = md5( serialize( $src ) ) . '.' . $file_type ;
-		LiteSpeed_Cache_Log::debug( 'Opt:    Added ' . $file_to_save ) ;
-		$file_to_save = self::DIR_MIN . '/' . $file_to_save ;
-
-		Litespeed_File::save( LSWCP_CONTENT_DIR . $file_to_save, $result[ 'content' ], true ) ;
-
-		$url = content_url( $file_to_save ) ;
-
-		return $url ;
+		return content_url( $file_to_save ) ;
 	}
 
 	/**
@@ -308,11 +447,17 @@ class LiteSpeed_Cache_Optimize
 	{
 		$src_list = array() ;
 		$html_list = array() ;
+		$head_src_list = array() ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
-		preg_match_all( '#<script\s+([^>]+)>\s*</script>#isU', $content, $matches, PREG_SET_ORDER ) ;
+		preg_match_all( '#<script\s+([^>]+)>\s*</script>|</head>#isU', $content, $matches, PREG_SET_ORDER ) ;
 		$i = 0;
+		$is_head = true ;
 		foreach ( $matches as $match ) {
+			if ( $match[ 0 ] === '</head>' ) {
+				$is_head = false ;
+				continue ;
+			}
 			$attrs = $this->_parse_attr( $match[ 1 ] ) ;
 
 			if ( ! empty( $attrs[ 'data-minified' ] ) ) {
@@ -324,9 +469,13 @@ class LiteSpeed_Cache_Optimize
 
 			$src_list[] = $attrs[ 'src' ] ;
 			$html_list[] = $match[ 0 ] ;
+
+			if ( $is_head ) {
+				$head_src_list[] = $attrs[ 'src' ] ;
+			}
 		}
 
-		return array( $src_list, $html_list ) ;
+		return array( $src_list, $html_list, $head_src_list ) ;
 	}
 
 	/**
@@ -390,6 +539,27 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
+	 * Append to HTTP2 header
+	 *
+	 * @since  1.2.2
+	 * @access private
+	 */
+	private function append_http2( $url, $file_type = 'css' )
+	{
+		if ( ! ( $file_type === 'css' ? $this->cfg_http2_css : $this->cfg_http2_js ) ) {
+			return ;
+		}
+
+		$uri = LiteSpeed_Cache_Utility::url2uri( $url ) ;
+
+		if ( ! $uri ) {
+			return ;
+		}
+
+		$this->http2_headers[] = '<' . $uri . '>; rel=preload; as=' . ( $file_type === 'css' ? 'style' : 'script' ) ;
+	}
+
+	/**
 	 * Run minify serve
 	 *
 	 * @since  1.2.2
@@ -397,8 +567,9 @@ class LiteSpeed_Cache_Optimize
 	 * @param array|string $files The file(s) to minify/combine
 	 * @return  string The string after effect
 	 */
-	private function _minify_serve( $files )
+	private function _minify_serve( $files, $file_type )
 	{
+		litespeed_load_vendor() ;
 		if ( ! isset( $this->minify_cache ) ) {
 			$this->minify_cache = new Minify_Cache_File() ;
 		}
@@ -421,7 +592,7 @@ class LiteSpeed_Cache_Optimize
 			] ;
 		}
 
-		$this->minify_options[ 'concatOnly' ] = $this->concatOnly ;
+		$this->minify_options[ 'concatOnly' ] =  ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
 		$this->minify_options[ 'files' ] = $files ;
 
