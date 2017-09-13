@@ -83,6 +83,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		LiteSpeed_Cache_Control::set_cacheable() ;
+		LiteSpeed_Cache_Control::set_no_vary() ;
 		LiteSpeed_Cache_Control::set_custom_ttl( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ) ;
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
 
@@ -229,7 +230,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		if ( $this->http2_headers ) {
-			@header( 'Link: ' . implode( ',', $this->http2_headers ) ) ;
+			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
 		}
 	}
 
