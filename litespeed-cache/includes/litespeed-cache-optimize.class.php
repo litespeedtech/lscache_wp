@@ -194,16 +194,24 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Run minify process
-	 * Save to cache folder
-	 * Return final URL
+	 * Check if links are internal or external
 	 *
 	 * @since  1.2.2
 	 * @access private
 	 * @return array Array(Ignored raw html, src needed to be handled list, real files of src)
 	 */
-	private function _analyse_links( $src_list, $html_list )
+	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
+		if ( $file_type == 'css' ) {
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ;
+		}
+		else {
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ;
+		}
+		if ( $excludes ) {
+			$excludes = explode( "\n", $excludes ) ;
+		}
+
 		$ignored_html = array() ;
 		$src_queue_list = array() ;
 		$src2file_queue_list = array() ;
@@ -221,8 +229,24 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 
+			if ( $excludes ) {
+				foreach ( $excludes as $exclude ) {
+					if ( stripos( $src, $exclude ) !== false ) {
+						$ignored_html[] = $html_list[ $key ] ;
+						LiteSpeed_Cache_Log::debug( 'Opt:    Abort excludes ' . $exclude ) ;
+						continue 2 ;
+					}
+				}
+			}
+
 			// Parse file path
-			$file_path = realpath( $_SERVER[ 'DOCUMENT_ROOT' ] . $src_parsed[ 'path' ] ) ;
+			if ( substr( $src_parsed[ 'path' ], 0, 1 ) === '/' ) {
+				$file_path = $_SERVER[ 'DOCUMENT_ROOT' ] . $src_parsed[ 'path' ] ;
+			}
+			else {
+				$file_path = LiteSpeed_Cache_Router::frontend_path() . '/' . $src_parsed[ 'path' ] ;
+			}
+			$file_path = realpath( $file_path ) ;
 			if ( ! is_file( $file_path ) ) {
 				$ignored_html[] = $html_list[ $key ] ;
 				LiteSpeed_Cache_Log::debug( 'Opt:    Abort non-exist ' . $file_path ) ;
