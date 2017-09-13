@@ -23,6 +23,19 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
+	 * Convert URL to URI
+	 *
+	 * @since  1.2.2
+	 *
+	 */
+	public static function url2uri( $url )
+	{
+		$url = trim( $url ) ;
+		$uri = @parse_url( $url, PHP_URL_PATH ) ;
+		return $uri ;
+	}
+
+	/**
 	 * Make URL to be relative
 	 *
 	 * @param  string $url

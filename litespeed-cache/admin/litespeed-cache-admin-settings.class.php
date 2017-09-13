@@ -399,13 +399,28 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
 			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_CSS_HTTP2,
 			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
 			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_JS_HTTP2,
 			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
 		) ;
 		foreach ( $ids as $id ) {
 			$options[ $id ] = self::parse_onoff( $input, $id ) ;
 		}
+
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES,
+			LiteSpeed_Cache_Config::OPID_JS_EXCLUDES,
+		) ;
+		foreach ( $ids as $id ) {
+			$options[ $id ] = explode( "\n", $input[ $id ] ) ;
+			$options[ $id ] = array_map( 'LiteSpeed_Cache_Utility::url2uri', $options[ $id ] ) ;
+			$options[ $id ] = array_unique( $options[ $id ] ) ;
+			$options[ $id ] = array_filter( $options[ $id ] ) ;
+			$options[ $id ] = implode( "\n", $options[ $id ] ) ;
+		}
+
 	}
 
 	/**
