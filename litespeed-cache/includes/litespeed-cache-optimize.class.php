@@ -444,7 +444,7 @@ class LiteSpeed_Cache_Optimize
 
 		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;
 
-		return content_url( $file_to_save ) ;
+		return $GLOBALS[ 'wp_rewrite' ]->using_permalinks() ? home_url( $file_to_save ) : home_url() . '/?' . $file_to_save ;
 	}
 
 	/**
