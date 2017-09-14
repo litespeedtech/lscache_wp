@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 	const LS_MODULE_START = '<IfModule LiteSpeed>' ;
 	const LS_MODULE_END = '</IfModule>' ;
+	const LS_MODULE_REWRITE_START = '<IfModule mod_rewrite.c>' ;
 	private static $LS_MODULE_REWRITE_ON ;
 	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##" ;
 	const MARKER = 'LSCACHE' ;
@@ -480,14 +481,18 @@ class LiteSpeed_Cache_Admin_Rules
 	public function check_input_for_rewrite($options, $input, &$errors)
 	{
 		$diff = array() ;
-		$val_check = array(
+		$opts = array(
 			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-			LiteSpeed_Cache_Config::OPID_CACHE_RES
+			LiteSpeed_Cache_Config::OPID_CACHE_RES,
+			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
+			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
 		) ;
 		$has_error = false ;
 
-		foreach ($val_check as $opt) {
+		foreach ($opts as $opt) {
 			$input[$opt] = LiteSpeed_Cache_Admin_Settings::parse_onoff( $input, $opt ) ;
 			if ( $input[$opt] || $options[$opt] != $input[$opt] ) {
 				$diff[$opt] = $input[$opt] ;
@@ -692,10 +697,12 @@ class LiteSpeed_Cache_Admin_Rules
 			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
 		) ;
 		if ( 1 ) {
-			$new_rules[] = $new_rules_backend[] = self::MARKER_MINIFY . self::MARKER_START ;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule "wp-content/cache/min/(.*)" index.php?' . LiteSpeed_Cache_Optimize::REWRITE_QS . '=$1 [E=cache-control:no-vary,L]' ;
-			$new_rules[] = $new_rules_backend[] = self::MARKER_MINIFY . self::MARKER_END ;
-			$new_rules[] = $new_rules_backend[] = '' ;
+			$new_rules[] = self::MARKER_MINIFY . self::MARKER_START ;
+			$new_rules[] = self::LS_MODULE_REWRITE_START ;
+			$new_rules[] = 'RewriteRule "wp-content' . LiteSpeed_Cache_Optimize::DIR_MIN . '/(.*)" index.php?' . LiteSpeed_Cache_Optimize::REWRITE_QS . '=$1 [E=cache-control:no-vary,L]' ;
+			$new_rules[] = self::LS_MODULE_END ;
+			$new_rules[] = self::MARKER_MINIFY . self::MARKER_END ;
+			$new_rules[] = '' ;
 		}
 
 		$this->deprecated_clear_rules() ;
