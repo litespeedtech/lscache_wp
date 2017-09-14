@@ -214,7 +214,7 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
 				LiteSpeed_Cache_Purge::purge_cssjs() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge css/js cache.', 'litespeed-cache' ) ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:

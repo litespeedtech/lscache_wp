@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <div class="litespeed-callout litespeed-callout-warning">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ) ; ?></h4>
-	<?php echo __( 'Please test thoroughly when enable any option in this list. After changed Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?>
+	<?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?>
 </div>
 
 
@@ -38,7 +38,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CSS_HTTP2 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Send all internal CSS files to browser before requested when using HTTP/2 protocol.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Pre-send internal CSS files to the browser before they are requested. (Requires the HTTP/2 protocol)', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -48,7 +48,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Exclude these CSS files from minify/combine. Can use full URL or part string.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Listed CSS files will not be minified/combined. The full URL or a partial string can be used.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -78,7 +78,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_JS_HTTP2 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Send all internal JS files to browser before requested when using HTTP/2 protocol.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Pre-send internal JS files to the browser before they are requested. (Requires the HTTP/2 protocol)', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -88,7 +88,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_JS_EXCLUDES); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Exclude these JS files from minify/combine. Can use full URL or part string.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Listed JS files will not be minified/combined. The full URL or a partial string can be used.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -99,7 +99,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $id = LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ; ?>
 			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Specify how long, in seconds, the CSS/JS are cached. Minimum is %1$s seconds.', 'litespeed-cache' ), 3600 ) ; ?>
+				<?php echo sprintf( __( 'Specify how long, in seconds, CSS/JS files are cached. Minimum is %1$s seconds.', 'litespeed-cache' ), 3600 ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
 			</div>
 		</td>

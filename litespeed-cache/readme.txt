@@ -1,9 +1,9 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: cache, wp-cache, litespeed, super cache, http2, wordfence, nextgengallery
+Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -20,6 +20,8 @@ LSCache is a server-side page cache. Page caches save time and resources, and th
 If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPress works right out of the box with default settings that are appropriate for most sites. And if you do need help, we're just [a forum post](https://wordpress.org/support/plugin/litespeed-cache/) away.
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
+
+* NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, and HTTP/2 push! *
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -45,7 +47,10 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
-* Database Cleaner and Optimizer
+* *NEW* - Minify CSS, JavaScript, and HTML
+* *NEW* - Combine CSS and JavaScript
+* *NEW* - HTTP/2 Push for CSS and JS
+* *NEW* - Database Cleaner and Optimizer
 * Automatic page caching to greatly improve site performance
 * Automatic purge of related pages based on certain events
 * Smart preload crawler with support for SEO-friendly sitemap
@@ -206,16 +211,26 @@ For more detailed information about crawler setup, please see [our blog post](ht
 2. Admin Settings - Cache
 3. Admin Settings - Purge
 4. Admin Settings - Excludes
-5. Admin Settings - Debug
-6. Admin Settings - Crawler
-7. Admin Management - Purge
-8. Admin Management - DB Optimizer
-9. Admin Information Page
-10. Admin Crawler Status Page
-11. Cache Miss Example
-12. Cache Hit Example
+5. Admin Settings - Optimize
+6. Admin Settings - Debug
+7. Admin Settings - Crawler
+8. Admin Management - Purge
+9. Admin Management - DB Optimizer
+10. Admin Information Page
+11. Admin Crawler Status Page
+12. Cache Miss Example
+13. Cache Hit Example
 
 == Changelog ==
+
+= 1.2.2 - September 14 2017 =
+* [NEW FEATURE] Added CSS/JS minification.
+* [NEW FEATURE] Added CSS/JS combining.
+* [NEW FEATURE] Added CSS/JS HTTP/2 server push.
+* [NEW FEATURE] Added HTML minification.
+* [NEW FEATURE] Added CSS/JS cache purge button in management.
+* [UPDATE] Improved debug log formatting.
+* [UPDATE] Fixed some description typos.
 
 = 1.2.1 - September 7 2017 =
 * [NEW FEATURE] Added Database Optimizer.

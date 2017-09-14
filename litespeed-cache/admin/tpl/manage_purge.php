@@ -17,7 +17,7 @@ $_panels = array(
 	),
 	array(
 		'title'	=> __( 'Purge CSS/JS Cache', 'litespeed-cache' ),
-		'desc'	=> __( 'This will Purge All minify/combine CSS/JS cache only', 'litespeed-cache' ),
+		'desc'	=> __( 'This will purge all minified/combined CSS/JS entries only', 'litespeed-cache' ),
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_CSSJS,
 		'icon'	=> 'purge-cssjs',
 	),
