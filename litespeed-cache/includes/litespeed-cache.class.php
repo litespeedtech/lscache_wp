@@ -350,6 +350,7 @@ class LiteSpeed_Cache
 			return ;
 		}
 		if ( ! $is_html ) {
+			LiteSpeed_Cache_Log::debug( 'Footer check failed: ' . substr( $buffer, 0, 20 ) ) ;
 			return ;
 		}
 
