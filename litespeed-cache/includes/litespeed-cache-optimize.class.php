@@ -14,8 +14,8 @@ class LiteSpeed_Cache_Optimize
 	private static $_instance ;
 
 	const OPTION_OPTIMIZED = 'litespeed-cache-optimized' ;
-	const DIR_MIN = '/cache/min' ;
-	const REWRITE_QS = 'ls_opt_file' ;
+	const DIR_MIN = '/min' ;
+	const REWRITE_QS = 'ls_optm_file' ;
 
 	private $content ;
 	private $http2_headers = array() ;
@@ -279,13 +279,13 @@ class LiteSpeed_Cache_Optimize
 
 		// Analyse links
 		foreach ( $src_list as $key => $src ) {
-			LiteSpeed_Cache_Log::debug2( 'Opt: ' . $src ) ;
+			LiteSpeed_Cache_Log::debug2( 'Optm: ' . $src ) ;
 
 			if ( $excludes ) {
 				foreach ( $excludes as $exclude ) {
 					if ( stripos( $src, $exclude ) !== false ) {
 						$ignored_html[] = $html_list[ $key ] ;
-						LiteSpeed_Cache_Log::debug2( 'Opt:    Abort excludes ' . $exclude ) ;
+						LiteSpeed_Cache_Log::debug2( 'Optm:    Abort excludes ' . $exclude ) ;
 						continue 2 ;
 					}
 				}
@@ -295,7 +295,7 @@ class LiteSpeed_Cache_Optimize
 			$url_parsed = parse_url( $src ) ;
 			if ( ! $this->_is_file_url( $src ) ) {
 				$ignored_html[ $src ] = $html_list[ $key ] ;
-				LiteSpeed_Cache_Log::debug2( 'Opt:    Abort external/non-exist ' ) ;
+				LiteSpeed_Cache_Log::debug2( 'Optm:    Abort external/non-exist ' ) ;
 				continue ;
 			}
 
@@ -379,11 +379,11 @@ class LiteSpeed_Cache_Optimize
 		$result = $this->_minify_serve( $real_files, $file_type ) ;
 
 		if ( empty( $result[ 'success' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'Opt:    Lib serve failed ' . $result[ 'statusCode' ] ) ;
+			LiteSpeed_Cache_Log::debug( 'Optm:    Lib serve failed ' . $result[ 'statusCode' ] ) ;
 			return false ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Opt:    Generated content' ) ;
+		LiteSpeed_Cache_Log::debug( 'Optm:    Generated content' ) ;
 
 		return $result ;
 	}

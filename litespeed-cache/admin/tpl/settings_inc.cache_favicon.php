@@ -9,7 +9,7 @@ $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_FAVICON);/*, !$file_writable*/ ?>
 			<div class="litespeed-desc">
 				<?php echo __('favicon.ico is requested on most pages.', 'litespeed-cache'); ?>
-				<?php echo __('Caching this recource may improve server performance by avoiding unnecessary PHP calls.', 'litespeed-cache'); ?>
+				<?php echo __('Caching this resource may improve server performance by avoiding unnecessary PHP calls.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
