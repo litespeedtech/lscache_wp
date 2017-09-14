@@ -485,10 +485,6 @@ class LiteSpeed_Cache_Admin_Rules
 			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE,
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES,
-			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
-			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
-			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
-			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
 		) ;
 		$has_error = false ;
 
@@ -686,22 +682,6 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
 			$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
-
-		// minify file rewrite `wp-content/cache/min/`
-		$ids = array(
-			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
-			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
-			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
-			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
-		) ;
-		if ( 1 ) {
-			$new_rules[] = self::MARKER_MINIFY . self::MARKER_START ;
-			$new_rules[] = self::LS_MODULE_REWRITE_START ;
-			$new_rules[] = 'RewriteRule "wp-content' . LiteSpeed_Cache_Optimize::DIR_MIN . '/(.*)" index.php?' . LiteSpeed_Cache_Optimize::REWRITE_QS . '=$1 [E=cache-control:no-vary,L]' ;
-			$new_rules[] = self::LS_MODULE_END ;
-			$new_rules[] = self::MARKER_MINIFY . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}
 

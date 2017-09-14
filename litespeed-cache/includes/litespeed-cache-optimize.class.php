@@ -15,7 +15,6 @@ class LiteSpeed_Cache_Optimize
 
 	const OPTION_OPTIMIZED = 'litespeed-cache-optimized' ;
 	const DIR_MIN = '/min' ;
-	const REWRITE_QS = 'ls_optm_file' ;
 
 	private $content ;
 	private $http2_headers = array() ;
@@ -63,13 +62,24 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _request_check()
 	{
-		if ( empty( $_GET[ self::REWRITE_QS ] ) ) {
+		// If not turn on min files
+		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
 			return ;
 		}
 
+		if ( empty( $_SERVER[ 'REQUEST_URI' ] ) || strpos( $_SERVER[ 'REQUEST_URI' ], self::DIR_MIN . '/' ) === false ) {
+			return ;
+		}
+
+		// try to match `http://home_url/min/xx.css
+		if ( ! preg_match( '#' . self::DIR_MIN . '/(\w+\.(css|js))#U', $_SERVER[ 'REQUEST_URI' ], $match ) ) {
+			return ;
+		}
+
+		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
-		$result = $this->_minify( $_GET[ self::REWRITE_QS ] ) ;
+		$result = $this->_minify( $match[ 1 ] ) ;
 
 		if ( ! $result ) {
 			LiteSpeed_Cache_Control::set_nocache( 'Empty content from optimizer' ) ;
