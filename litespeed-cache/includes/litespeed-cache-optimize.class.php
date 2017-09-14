@@ -76,6 +76,8 @@ class LiteSpeed_Cache_Optimize
 			return ;
 		}
 
+		LiteSpeed_Cache_Log::debug( 'Optimizer start minifying file' ) ;
+
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
@@ -111,8 +113,12 @@ class LiteSpeed_Cache_Optimize
 	public static function run( $content )
 	{
 		if ( ! defined( 'LITESPEED_COMMENT_INFO' ) ) {
+			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: No footer info' ) ;
 			return $content ;
 		}
+
+		LiteSpeed_Cache_Log::debug( 'Optimizer start' ) ;
+
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
 
