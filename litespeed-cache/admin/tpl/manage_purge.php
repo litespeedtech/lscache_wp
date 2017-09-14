@@ -16,6 +16,12 @@ $_panels = array(
 		'icon'	=> 'purge-pages',
 	),
 	array(
+		'title'	=> __( 'Purge CSS/JS Cache', 'litespeed-cache' ),
+		'desc'	=> __( 'This will Purge All minify/combine CSS/JS cache only', 'litespeed-cache' ),
+		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_CSSJS,
+		'icon'	=> 'purge-cssjs',
+	),
+	array(
 		'title'	=> __( 'Purge 403 Error', 'litespeed-cache' ),
 		'desc'	=> __( 'Purge error pages, including 403 pages', 'litespeed-cache' ),
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,

@@ -18,7 +18,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.2.2dev' ;
+	const PLUGIN_VERSION = '1.2.2' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -31,6 +31,7 @@ class LiteSpeed_Cache
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
 	const ACTION_PURGE_ERRORS = 'PURGE_ERRORS' ;
 	const ACTION_PURGE_PAGES = 'PURGE_PAGES' ;
+	const ACTION_PURGE_CSSJS = 'PURGE_CSSJS' ;
 	const ACTION_PURGE_BY = 'PURGE_BY' ;
 	const ACTION_PURGE_FRONT = 'PURGE_FRONT' ;
 	const ACTION_PURGE_ALL = 'PURGE_ALL' ;
@@ -209,6 +210,11 @@ class LiteSpeed_Cache
 			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
 				LiteSpeed_Cache_Purge::purge_pages() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache' ) ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
+				LiteSpeed_Cache_Purge::purge_cssjs() ;
+				$msg = __( 'Notified LiteSpeed Web Server to purge css/js cache.', 'litespeed-cache' ) ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:

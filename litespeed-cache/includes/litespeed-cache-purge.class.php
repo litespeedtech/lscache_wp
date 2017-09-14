@@ -149,6 +149,17 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
+	 * Alerts LiteSpeed Web Server to purge pages.
+	 *
+	 * @since    1.2.2
+	 * @access   public
+	 */
+	public static function purge_cssjs()
+	{
+		self::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
+	}
+
+	/**
 	 * Alerts LiteSpeed Web Server to purge error pages.
 	 *
 	 * @since    1.0.14

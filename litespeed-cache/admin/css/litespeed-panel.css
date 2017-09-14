@@ -102,6 +102,7 @@
 .litespeed-panel-icon-optimize_tables 	{ background-image: url("../img/icons/optimize_tables.svg") ; }
 .litespeed-panel-icon-purge-front 		{ background-image: url("../img/icons/purge-front.svg") ; }
 .litespeed-panel-icon-purge-pages 		{ background-image: url("../img/icons/purge-pages.svg") ; }
+.litespeed-panel-icon-purge-cssjs 		{ background-image: url("../img/icons/purge-cssjs.svg") ; }
 .litespeed-panel-icon-purge-all 		{ background-image: url("../img/icons/purge-all.svg") ; }
 .litespeed-panel-icon-empty-cache 		{ background-image: url("../img/icons/empty-cache.svg") ; }
 .litespeed-panel-icon-purge-403 		{ background-image: url("../img/icons/purge-403.svg") ; }

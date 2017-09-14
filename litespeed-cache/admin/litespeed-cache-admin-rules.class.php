@@ -28,6 +28,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const RW_LOOKUP_PUBLIC = "CacheLookup Public on" ;
 	const RW_LOOKUP_BOTH = "CacheLookup on" ;
 	const RW_PRIV_BYPASS_POST_PURGE = "RewriteRule .* - [E=Cache-Control:no-autoflush]" ;
+	const RW_OPTM_NO_VARY = "RewriteRule min/\w+\.(css|js) - [E=cache-control:no-vary]" ;
 
 	const LS_MODULE_START = '<IfModule LiteSpeed>' ;
 	const LS_MODULE_END = '</IfModule>' ;
@@ -72,7 +73,7 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			self::$RW_LOOKUP = self::RW_LOOKUP_BOTH ;
 		}
-		self::$LS_MODULE_REWRITE_ON = "RewriteEngine on\n" . self::$RW_LOOKUP . "\n" . self::RW_PRIV_BYPASS_POST_PURGE ;
+		self::$LS_MODULE_REWRITE_ON = "RewriteEngine on\n" . self::$RW_LOOKUP . "\n" . self::RW_PRIV_BYPASS_POST_PURGE . "\n" . self::RW_OPTM_NO_VARY ;
 
 		// backend .htaccess privilege
 		if ( $this->frontend_htaccess === $this->backend_htaccess ) {

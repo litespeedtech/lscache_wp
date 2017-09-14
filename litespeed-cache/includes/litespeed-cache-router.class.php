@@ -311,6 +311,7 @@ class LiteSpeed_Cache_Router
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
 			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
+			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
