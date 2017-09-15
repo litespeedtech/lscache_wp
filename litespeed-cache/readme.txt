@@ -223,7 +223,7 @@ For more detailed information about crawler setup, please see [our blog post](ht
 
 == Changelog ==
 
-= 1.2.2 - September 14 2017 =
+= 1.2.2 - September 15 2017 =
 * [NEW FEATURE] Added CSS/JS minification.
 * [NEW FEATURE] Added CSS/JS combining.
 * [NEW FEATURE] Added CSS/JS HTTP/2 server push.

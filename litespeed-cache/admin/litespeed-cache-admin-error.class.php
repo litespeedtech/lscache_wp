@@ -229,7 +229,7 @@ class LiteSpeed_Cache_Admin_Error
 
 			// wp-config problem.
 			case self::E_CONF_WRITE:
-				$err = sprintf(__('The %1$s file not writeable for %2$s', 'litespeed-cache'), 'wp-config', '\'WP_CACHE\'') ;
+				$err = sprintf(__('The %1$s file not writable for %2$s', 'litespeed-cache'), 'wp-config', '\'WP_CACHE\'') ;
 				break ;
 
 			case self::E_CONF_FIND:
