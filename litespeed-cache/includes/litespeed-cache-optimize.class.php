@@ -81,7 +81,14 @@ class LiteSpeed_Cache_Optimize
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
-		$result = $this->_minify( $match[ 1 ] ) ;
+		try {
+			$result = $this->_minify( $match[ 1 ] ) ;
+		} catch ( Exception $e ) {
+			LiteSpeed_Cache_Control::set_nocache( 'Error in optimizer' ) ;
+			echo $e->getMessage() ;
+			exit ;
+		}
+
 
 		if ( ! $result ) {
 			LiteSpeed_Cache_Control::set_nocache( 'Empty content from optimizer' ) ;
@@ -392,7 +399,12 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Request to minify
-		$result = $this->_minify_serve( $real_files, $file_type ) ;
+		try {
+			$result = $this->_minify_serve( $real_files, $file_type ) ;
+		} catch ( Exception $e ) {
+			LiteSpeed_Cache_Control::debug( 'Error when serving from optimizer' ) ;
+			return $e->getMessage() ;
+		}
 
 		if ( empty( $result[ 'success' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'Optm:    Lib serve failed ' . $result[ 'statusCode' ] ) ;

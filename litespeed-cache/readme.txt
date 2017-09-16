@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-* NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, and HTTP/2 push! *
+*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, and HTTP/2 push! *
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
