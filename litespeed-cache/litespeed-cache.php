@@ -138,3 +138,14 @@ if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
 		LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_POST . $post_id ) ;
 	}
 }
+
+/**
+ * Handle exception
+ */
+if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	{
+		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+	}
+}
+

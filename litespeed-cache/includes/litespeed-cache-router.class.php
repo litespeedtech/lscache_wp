@@ -42,7 +42,7 @@ class LiteSpeed_Cache_Router
 			if ( ! $frontend ) {
 				$frontend = parse_url( get_option( 'home' ) ) ;
 				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
-				$frontend = $_SERVER["DOCUMENT_ROOT"] . $frontend ;
+				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend ;
 			}
 			$frontend = realpath( $frontend ) ;
 

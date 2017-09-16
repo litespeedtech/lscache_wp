@@ -369,14 +369,12 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers_force( $buffer )
 	{
-		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {
+		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
 			$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 		}
 		$buffer .= $this->send_headers( true ) ;
 
-		LiteSpeed_Cache_Log::debug(
-			"End response\n--------------------------------------------------------------------------------\n"
-		) ;
+		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
 
 		return $buffer ;
 	}

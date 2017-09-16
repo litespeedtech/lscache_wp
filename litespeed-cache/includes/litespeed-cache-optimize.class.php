@@ -81,14 +81,7 @@ class LiteSpeed_Cache_Optimize
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
-		try {
-			$result = $this->_minify( $match[ 1 ] ) ;
-		} catch ( Exception $e ) {
-			LiteSpeed_Cache_Control::set_nocache( 'Error in optimizer' ) ;
-			echo $e->getMessage() ;
-			exit ;
-		}
-
+		$result = $this->_minify( $match[ 1 ] ) ;
 
 		if ( ! $result ) {
 			LiteSpeed_Cache_Control::set_nocache( 'Empty content from optimizer' ) ;
@@ -112,6 +105,7 @@ class LiteSpeed_Cache_Optimize
 
 	/**
 	 * Run optimize process
+	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
 	 * @since  1.2.2
 	 * @access public
@@ -246,10 +240,24 @@ class LiteSpeed_Cache_Optimize
 			$this->content = str_replace( '</body>', $html_foot . '</body>' , $this->content ) ;
 		}
 
+		// HTML minify
 		if ( $this->cfg_html_minify ) {
-			litespeed_load_vendor() ;
-			$this->content = Minify_HTML::minify( $this->content ) ;
-			$this->content .= '<!-- Page minified by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
+			$ori = $this->content ;
+
+			set_error_handler( 'litespeed_exception_handler' ) ;
+			try {
+				litespeed_load_vendor() ;
+				$this->content = Minify_HTML::minify( $this->content ) ;
+				$this->content .= '<!-- Page minified by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
+
+			} catch ( ErrorException $e ) {
+				LiteSpeed_Cache_Control::debug( 'Error when optimizing HTML: ' . $e->getMessage() ) ;
+				error_log( 'LiteSpeed Optimizer optimizing HTML Error: ' . $e->getMessage() ) ;
+				// If failed to minify HTML, restore original content
+				$this->content = $ori ;
+			}
+			restore_error_handler() ;
+
 		}
 
 		if ( $this->http2_headers ) {
@@ -351,6 +359,21 @@ class LiteSpeed_Cache_Optimize
 			return false ;
 		}
 
+		// Need to replace child blog path for assets, ref: .htaccess
+		if ( is_multisite() && defined( 'PATH_CURRENT_SITE' ) ) {
+			$pattern = '#^' . PATH_CURRENT_SITE . '([_0-9a-zA-Z-]+/)(wp-(content|admin|includes))#U' ;
+			$replacement = PATH_CURRENT_SITE . '$2' ;
+			$url_parsed[ 'path' ] = preg_replace( $pattern, $replacement, $url_parsed[ 'path' ] ) ;
+			// $current_blog = (int) get_current_blog_id() ;
+			// $main_blog_id = (int) get_network()->site_id ;
+			// if ( $current_blog === $main_blog_id ) {
+			// 	define( 'LITESPEED_IS_MAIN_BLOG', true ) ;
+			// }
+			// else {
+			// 	define( 'LITESPEED_IS_MAIN_BLOG', false ) ;
+			// }
+		}
+
 		// Parse file path
 		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
 			$file_path = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
@@ -399,12 +422,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Request to minify
-		try {
-			$result = $this->_minify_serve( $real_files, $file_type ) ;
-		} catch ( Exception $e ) {
-			LiteSpeed_Cache_Control::debug( 'Error when serving from optimizer' ) ;
-			return $e->getMessage() ;
-		}
+		$result = $this->_minify_serve( $real_files, $file_type ) ;
 
 		if ( empty( $result[ 'success' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'Optm:    Lib serve failed ' . $result[ 'statusCode' ] ) ;
@@ -598,34 +616,45 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _minify_serve( $files, $file_type )
 	{
-		litespeed_load_vendor() ;
-		if ( ! isset( $this->minify_cache ) ) {
-			$this->minify_cache = new Minify_Cache_File() ;
-		}
-		if ( ! isset( $this->minify_minify ) ) {
-			$this->minify_minify = new Minify( $this->minify_cache ) ;
-		}
-		if ( ! isset( $this->minify_env ) ) {
-			$this->minify_env = new Minify_Env() ;
-		}
-		if ( ! isset( $this->minify_sourceFactory ) ) {
-			$this->minify_sourceFactory = new Minify_Source_Factory( $this->minify_env, array(), $this->minify_cache ) ;
-		}
-		if ( ! isset( $this->minify_controller ) ) {
-			$this->minify_controller = new Minify_Controller_Files( $this->minify_env, $this->minify_sourceFactory ) ;
-		}
-		if ( ! isset( $this->minify_options ) ) {
-			$this->minify_options = [
-				'encodeOutput' => false,
-				'quiet' => true,
-			] ;
-		}
+		set_error_handler( 'litespeed_exception_handler' ) ;
+		try {
+			litespeed_load_vendor() ;
+			if ( ! isset( $this->minify_cache ) ) {
+				$this->minify_cache = new Minify_Cache_File() ;
+			}
+			if ( ! isset( $this->minify_minify ) ) {
+				$this->minify_minify = new Minify( $this->minify_cache ) ;
+			}
+			if ( ! isset( $this->minify_env ) ) {
+				$this->minify_env = new Minify_Env() ;
+			}
+			if ( ! isset( $this->minify_sourceFactory ) ) {
+				$this->minify_sourceFactory = new Minify_Source_Factory( $this->minify_env, array(), $this->minify_cache ) ;
+			}
+			if ( ! isset( $this->minify_controller ) ) {
+				$this->minify_controller = new Minify_Controller_Files( $this->minify_env, $this->minify_sourceFactory ) ;
+			}
+			if ( ! isset( $this->minify_options ) ) {
+				$this->minify_options = [
+					'encodeOutput' => false,
+					'quiet' => true,
+				] ;
+			}
 
-		$this->minify_options[ 'concatOnly' ] =  ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
+			$this->minify_options[ 'concatOnly' ] =  ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
-		$this->minify_options[ 'files' ] = $files ;
+			$this->minify_options[ 'files' ] = $files ;
 
-		return $this->minify_minify->serve($this->minify_controller, $this->minify_options) ;
+			$content = $this->minify_minify->serve( $this->minify_controller, $this->minify_options ) ;
+
+		} catch ( ErrorException $e ) {
+			LiteSpeed_Cache_Control::debug( 'Error when serving from optimizer: ' . $e->getMessage() ) ;
+			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
+			return false ;
+		}
+		restore_error_handler() ;
+
+		return $content ;
 	}
 
 	/**

@@ -6,9 +6,11 @@
 * @since 1.1.0
 */
 
-function litespeed_exception_error_handler($errno, $errstr, $errfile, $errline )
-{
-	throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	{
+		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+	}
 }
 
 class Litespeed_File
@@ -113,7 +115,7 @@ class Litespeed_File
 				return $silence ? false : sprintf( __( 'Folder does not exist: %s', 'litespeed-cache' ), $folder ) ;
 			}
 
-			set_error_handler( 'litespeed_exception_error_handler' ) ;
+			set_error_handler( 'litespeed_exception_handler' ) ;
 
 			try {
 				mkdir( $folder, 0755, true ) ;
@@ -129,7 +131,7 @@ class Litespeed_File
 			if ( ! is_writable( $folder ) ) {
 				return $silence ? false : sprintf( __( 'Folder is not writable: %s.', 'litespeed-cache' ), $folder ) ;
 			}
-			set_error_handler( 'litespeed_exception_error_handler' ) ;
+			set_error_handler( 'litespeed_exception_handler' ) ;
 			try {
 				touch( $filename ) ;
 			}
@@ -295,7 +297,7 @@ class Litespeed_File
 			if ( ! is_writable( dirname($filename) ) ) {
 				return false ;
 			}
-			set_error_handler("litespeed_exception_error_handler") ;
+			set_error_handler("litespeed_exception_handler") ;
 			try {
 				touch($filename) ;
 			}
