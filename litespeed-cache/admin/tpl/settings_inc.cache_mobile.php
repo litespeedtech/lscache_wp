@@ -43,16 +43,16 @@ if (!defined('WPINC')) die;
 						}
 
 						if ( $mobile_agents !== $_options[$id] ){
-							echo '<p class="attention">'
+							echo '<div class="litespeed-callout-danger">'
 									. __('Htaccess did not match configuration option.', 'litespeed-cache')
 									. ' ' . __('Please re-enter the mobile view setting.', 'litespeed-cache')
 									. ' ' . sprintf(__('List in WordPress database is: %s', 'litespeed-cache'), '<b>' . $_options[$id] . '</b>')
-								. '</p>';
+								. '</div>';
 						}
 					}
 				}
 
-				$this->build_input($id, 'large-text widget ui-draggable-dragging code', false, !$_options[$id], 'litespeed-mobileview-rules', $input_value);
+				$this->build_input($id, 'litespeed-input-long', false, !$_options[$id], 'litespeed-mobileview-rules', $input_value);
 			?>
 
 			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"

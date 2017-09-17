@@ -622,18 +622,19 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 		}
 
-		$update_intval_html = '' ;
+		$update_intval_html = '<div class="litespeed-radio-vertical">' ;
 		$id = self::OPTION_UPDATE_INTERVAL ;
 		foreach ($seloptions as $val => $title) {
 			$checked = $selected_value == $val ? ' checked="checked" ' : '';
-			$update_intval_html .= "<div class='litespeed-radio cross litespeed-top10'>
+			$update_intval_html .= "<div class='litespeed-radio-vertical-row'>
 										<input type='radio' name='{$option_group}[$id]' id='conf_{$id}_$val' value='$val' $checked />
 										<label for='conf_{$id}_$val'>$title</label>
 									</div>" ;
 		}
+		$update_intval_html .= '</div>' ;
 
 		$content = "<h3 class='litespeed-title'>{$_title}</h3>
-					<table class='form-table'><tbody>
+					<table class='litespeed-form-table'><tbody>
 						<tr>
 							<th>" . __('Product Update Interval', 'litespeed-cache') . "</th>
 							<td>
@@ -649,7 +650,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 							</td>
 						</tr>
 					</tbody></table>
-					<div class='litespeed-callout litespeed-callout-warning'>
+					<div class='litespeed-callout-warning'>
 						<h4>" . __('Note:', 'litespeed-cache') . "</h4>
 						<i>
 							" . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . "

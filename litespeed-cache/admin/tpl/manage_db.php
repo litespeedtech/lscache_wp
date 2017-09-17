@@ -66,15 +66,19 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 <?php foreach ( $_panels as $tag => $val ): ?>
 
 	<a href="<?php echo $val[ 'link' ] ; ?>" class="litespeed-panel">
-		<span class="litespeed-panel-top-right-icon<?php echo $val[ 'count' ] > 0 ? '-cross' : '-tick' ; ?>"></span>
-		<span class="litespeed-panel-icon-<?php echo $tag ; ?>"></span>
-		<span class="litespeed-panel-content">
-			<span class="litespeed-panel-h3">
+		<section class="litespeed-panel-wrapper-icon">
+			<span class="litespeed-panel-icon-<?php echo $tag ; ?>"></span>
+		</section>
+		<section class="litespeed-panel-content">
+			<h3>
 				<?php echo $val[ 'title' ] ; ?>
 				<span class="litespeed-panel-counter<?php if ( $val[ 'count' ] > 0 ) echo '-red' ; ?>">(<?php echo $val[ 'count' ] ; ?>)</span>
-			</span>
-			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
-		</span>
+			</h3>
+			<div class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></div>
+		</section>
+		<section class="litespeed-panel-wrapper-top-right">
+			<span class="litespeed-panel-top-right-icon<?php echo $val[ 'count' ] > 0 ? '-cross' : '-tick' ; ?>"></span>
+		</section>
 	</a>
 <?php endforeach; ?>
 

@@ -4,7 +4,7 @@ if (!defined('WPINC')) die;
 ?>
 <h3 class="litespeed-title"><?php echo __('General', 'litespeed-cache'); ?></h3>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __('Enable LiteSpeed Cache', 'litespeed-cache'); ?></th>
 		<td>
@@ -18,17 +18,17 @@ if (!defined('WPINC')) die;
 				}
 			?>
 			<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">
-					<?php echo $this->build_radio(
-						$id,
-						LiteSpeed_Cache_Config::VAL_ON,
-						__('Enable', 'litespeed-cache')
-					); ?>
-
+				<div class="litespeed-switch">
 					<?php echo $this->build_radio(
 						$id,
 						LiteSpeed_Cache_Config::VAL_OFF,
 						__('Disable', 'litespeed-cache')
+					); ?>
+
+					<?php echo $this->build_radio(
+						$id,
+						LiteSpeed_Cache_Config::VAL_ON,
+						__('Enable', 'litespeed-cache')
 					); ?>
 
 					<?php

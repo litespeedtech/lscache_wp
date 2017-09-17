@@ -6,7 +6,7 @@ if (!defined('WPINC')) die;
 
 <p><?php echo __('These configuration are only available network wide.', 'litespeed-cache'); ?></p>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __('Network Enable Cache', 'litespeed-cache'); ?></th>
 		<td>

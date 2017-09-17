@@ -6,13 +6,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <h3 class="litespeed-title"><?php echo __( 'Optimization Settings', 'litespeed-cache' ) ; ?></h3>
 
-<div class="litespeed-callout litespeed-callout-warning">
+<div class="litespeed-callout-warning">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ) ; ?></h4>
 	<?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?>
 </div>
 
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __( 'CSS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>

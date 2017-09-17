@@ -1,0 +1,1090 @@
+/********************************* common *******************************/
+*[litespeed-accesskey]:before {
+	content: '[' attr(litespeed-accesskey) '] ';
+}
+
+.litespeed-row {
+	display: block;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.litespeed-reset{
+	width: initial;
+}
+
+.litespeed-inline{
+	display: inline-block;
+}
+
+.litespeed-warning {
+    color: #ffc107!important;
+}
+
+.litespeed-danger {
+	color: #dc3545!important;
+}
+
+.litespeed-top10 {
+	margin-top: 10px;
+}
+
+.litespeed-top20 {
+	margin-top: 20px;
+}
+
+.litespeed-desc {
+	font-size: 12px;
+	font-weight: normal;
+	color: #538ac6;
+	color: #9e9e9e;
+	margin-top: 5px;
+}
+
+.litespeed-hide {
+	display: none;
+}
+
+.litespeed-relative {
+	position: relative ;
+}
+
+
+/********************************* logo *******************************/
+@font-face {
+	font-family: 'litespeedfont';
+	src:  url('fonts/litespeedfont.eot?rs8ttq');
+	src:  url('fonts/litespeedfont.eot?rs8ttq#iefix') format('embedded-opentype'),
+		url('fonts/litespeedfont.ttf?rs8ttq') format('truetype'),
+		url('fonts/litespeedfont.woff?rs8ttq') format('woff'),
+		url('fonts/litespeedfont.svg?rs8ttq#litespeedfont') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+#adminmenu #toplevel_page_lscache-dash .menu-icon-generic div.wp-menu-image:before,
+.litespeed-top-toolbar .ab-icon::before{
+	content: "\e900";
+	font-family: 'litespeedfont' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+}
+
+/********************************* layout *******************************/
+.litespeed-body{
+	background: none repeat scroll 0 0 #fff;
+	border: 1px solid #6699cc;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+	font-size: 14px;
+	/*line-height: 2em;*/
+	margin: 0px 0px 20px 0;
+	overflow: auto;
+	padding: 10px 15px 15px 15px;
+	position: relative;
+	border-top: none;
+}
+
+.litespeed-body i {
+	font-size: 13px;
+	line-height: 16px;
+}
+
+
+/********************************* nav tabs *******************************/
+.litespeed-wrap {
+	margin: 10px 20px 0 2px;
+}
+
+.litespeed-header {
+	border-bottom: 1px solid #6699cc;
+	margin: 0;
+	padding-top: 9px;
+	padding-bottom: 0;
+	line-height: 24px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #264d73;
+}
+
+.litespeed-header:not(.wp-clearfix):after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.litespeed-tab {
+	text-decoration: none;
+	float: left;
+	border: 1px solid #6699cc;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	font-size: 13px;
+	line-height: 24px;
+	border-bottom: none;
+	margin-left: .5em;
+	padding: 2px 9px;
+	min-width: 50px;
+	background: #f9fafc;
+	color: #6699cc;
+	text-align: center;
+	font-weight: 400;
+	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+}
+
+.litespeed-tab-active {
+	margin-bottom: -1px;
+	color: #264d73;
+	border-bottom: 1px solid #fff;
+
+}
+
+.litespeed-tab-active, .litespeed-tab-active:focus, .litespeed-tab-active:focus:active, .litespeed-tab-active:hover {
+	border-bottom: 1px solid #fff;
+	background: #fff;
+	color: #264d73;
+}
+
+.litespeed-tab-active, .litespeed-tab:focus:active {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	font-weight: 600;
+	font-size: 13px;
+	color: #264d73;
+}
+
+.litespeed-tab:focus, .litespeed-tab:hover {
+	background-color: #fff;
+	color: #264d73;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	font-weight: 600;
+	font-size: 13px;
+	border-bottom: 1px solid #fff;
+	margin-bottom: -1px;
+}
+
+/********************************* panel *******************************/
+.litespeed-panel-wrapper {
+	display: flex;
+	width: 100%;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+}
+
+.litespeed-panel-wrapper a{
+	text-decoration: none;
+}
+
+.litespeed-panel-wrapper a:hover{
+	color: #538ac6;
+}
+
+.litespeed-panel {
+	display: flex;
+	justify-content: space-between;
+	border: 1px solid #6699cc;
+	-moz-box-shadow: 0 0 0 1px rgba(102, 153, 204, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(102, 153, 204, 0.25);
+	box-shadow: 0 0 0 1px rgba(102, 153, 204, 0.25);
+	border-radius: 3px;
+	background: #f9fafc;
+	padding: 5px 0px 5px 5px;
+	width: 310px;
+	margin: 15px 5px 15px 15px;
+	height: 75px;
+}
+
+.litespeed-panel:hover {
+	border: 1px solid #00a3cc;
+	background: #fff;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.litespeed-panel-wrapper-icon {
+	width: 25%;
+	height:100%;
+}
+
+[class*="litespeed-panel-icon-"] {
+	background-size: contain;
+	width: 60px;
+	height: 60px;
+	margin: 5px;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+.litespeed-panel-icon-all 				{ background-image: url("../img/icons/all.svg") ; }
+.litespeed-panel-icon-revision 			{ background-image: url("../img/icons/revision.svg") ; }
+.litespeed-panel-icon-auto_draft 		{ background-image: url("../img/icons/auto_draft.svg") ; }
+.litespeed-panel-icon-trash_post 		{ background-image: url("../img/icons/trash_post.svg") ; }
+.litespeed-panel-icon-spam_comment 		{ background-image: url("../img/icons/spam_comment.svg") ; }
+.litespeed-panel-icon-trash_comment 	{ background-image: url("../img/icons/trash_comment.svg") ; }
+.litespeed-panel-icon-trackback-pingback{ background-image: url("../img/icons/trackback-pingback.svg") ; }
+.litespeed-panel-icon-expired_transient { background-image: url("../img/icons/expired_transient.svg") ; }
+.litespeed-panel-icon-all_transients 	{ background-image: url("../img/icons/all_transients.svg") ; }
+.litespeed-panel-icon-optimize_tables 	{ background-image: url("../img/icons/optimize_tables.svg") ; }
+.litespeed-panel-icon-purge-front 		{ background-image: url("../img/icons/purge-front.svg") ; }
+.litespeed-panel-icon-purge-pages 		{ background-image: url("../img/icons/purge-pages.svg") ; }
+.litespeed-panel-icon-purge-cssjs 		{ background-image: url("../img/icons/purge-cssjs.svg") ; }
+.litespeed-panel-icon-purge-all 		{ background-image: url("../img/icons/purge-all.svg") ; }
+.litespeed-panel-icon-empty-cache 		{ background-image: url("../img/icons/empty-cache.svg") ; }
+.litespeed-panel-icon-purge-403 		{ background-image: url("../img/icons/purge-403.svg") ; }
+.litespeed-panel-icon-purge-404 		{ background-image: url("../img/icons/purge-404.svg") ; }
+.litespeed-panel-icon-purge-500 		{ background-image: url("../img/icons/purge-500.svg") ; }
+.litespeed-panel-top-right-icon-cross 	{ background-image: url("../img/icons/cross_icon.svg") ; }
+.litespeed-panel-top-right-icon-tick 	{ background-image: url("../img/icons/success_icon.svg") ; }
+
+
+.litespeed-panel-content {
+	width: 75%;
+	height:100%;
+	margin-top: 3px;
+}
+
+.litespeed-panel-h3, .litespeed-panel-para {
+	font-family: "Open Sans", Arial, sans-serif;
+	line-height: 18px;
+	color: #264d73;
+}
+
+.litespeed-panel-h3{
+	font-size: 14px;
+}
+
+.litespeed-panel-counter {
+	color: #3abfbf;
+}
+
+.litespeed-panel-counter-red {
+	color: #cc3d6a ;
+}
+
+.litespeed-panel-para {
+	margin-top: -12px;
+	font-size: 13px;
+}
+
+.litespeed-panel-wrapper-top-right {
+	width: 10%;
+	height:100%;
+}
+
+.litespeed-panel-top-right-icon-tick,
+.litespeed-panel-top-right-icon-cross {
+	background-size: contain;
+	width: 20px;
+	height: 20px;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+/********************************* btn *******************************/
+.litespeed-body [class*="litespeed-btn-"] {
+	padding: 6px 10px 8px 10px;
+	padding: 5px 10px;
+	font-weight:400;
+	border-radius: 3px;
+	margin: 5px;
+	text-align: center;
+	background: #fff;
+	min-width: 155px;
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-block;
+	height: initial;
+}
+
+.litespeed-body [class*="litespeed-btn-"]:hover {
+	font-weight: 600;
+	color: #fff;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.litespeed-body .litespeed-btn-danger {
+	color: #cc3d6a;
+	border: 1px solid #cc3d6a;
+	-moz-box-shadow: 0 0 0 1px rgba(204, 61, 106, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(204, 61, 106, 0.25);
+	box-shadow: 0 0 0 1px rgba(204, 61, 106, 0.25);
+}
+
+.litespeed-body .litespeed-btn-danger:hover {
+	background: #cc3d6a;
+}
+
+.litespeed-body .litespeed-btn-warning {
+	color: #e59544;
+	border: 1px solid #e59544;
+	-moz-box-shadow: 0 0 0 1px rgba(230, 150, 69, 0.25);
+	-webkit-box-shadow: 00 0 0 1px rgba(230, 150, 69, 0.25);
+	box-shadow: 0 0 0 1px rgba(230, 150, 69, 0.25);
+}
+
+.litespeed-body .litespeed-btn-warning:hover {
+	background: #e59544;
+}
+
+.litespeed-body .litespeed-btn-success {
+	color: #36b0b0;
+	border: 1px solid #36b0b0;
+	-moz-box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
+	box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
+}
+
+.litespeed-body .litespeed-btn-success:hover {
+	background: #36b0b0;
+}
+
+.litespeed-body .litespeed-btn-primary {
+	color: #538ac6;
+	border: 1px solid #538ac6;
+	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+}
+
+.litespeed-body .litespeed-btn-primary:hover {
+	background: #538ac6;
+}
+
+.litespeed-body .litespeed-btn-xs {
+	padding: 1px 8px;
+	font-size: 13px;
+	line-height: 1.5;
+	border-radius: 2px;
+	min-width: 100px;
+}
+
+
+/********************************* switch *******************************/
+.litespeed-switch {
+	border: 1px solid #538ac6;
+	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	border-radius: 3px;
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0px;
+	background-color: #fff;
+	padding: -1px;
+	display: inline-block;
+}
+
+.litespeed-switch input:checked + label {
+	background-color: #36b0b0;
+	color: #fff;
+	font-weight: 600;
+	border: 1px solid #36b0b0;
+}
+
+.litespeed-switch label {
+	font-size: 14px;
+	display: inline-block;
+	min-width: 75px;
+	background-color: #fff;
+	color: #6699cc;
+	font-weight: 400;
+	text-align: center;
+	padding: 5px 9px;
+	float: left;
+	cursor: pointer;
+	border: 1px solid #f9fafc;
+}
+
+.litespeed-switch label:hover {
+	background-color: #f9fafc;
+	font-weight: 500;
+}
+
+.litespeed-switch input {
+	display: none;
+}
+
+.litespeed-cache-purgeby-text {
+	font-size: 13px;
+	padding-left: 20px;
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 5px;
+}
+
+
+/********************************* switch drag *******************************/
+.litespeed-switch-drag {
+	position: relative;
+	width: 100px;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select: none;
+	border: 1px solid #538ac6;
+	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	border-radius: 3px;
+	display: inline-block;
+}
+
+.litespeed-switch-drag input {
+	display: none;
+}
+
+.litespeed-switch-drag-label {
+	display: block;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.litespeed-switch-drag-inner {
+	display: block;
+	width: 200%;
+	margin-left: -100%;
+	transition: margin 0.1s ease-in 0s;
+}
+
+.litespeed-switch-drag-inner:before, .litespeed-switch-drag-inner:after {
+	display: block;
+	float: left;
+	width: 50%;
+	height: 25px;
+	padding: 0;
+	line-height: 25px;
+	font-size: 13px;
+	color: #fff;
+	font-weight: 600;
+	box-sizing: border-box;
+	-moz-box-shadow: inset 0 0 1px 2px rgba(38, 77, 115, .15);
+	-webkit-box-shadow: inset 0 0 1px 2px rgba(38, 77, 115, .15);
+	box-shadow: inset 0 0 1px 2px rgba(38, 77, 115, .15);
+}
+
+.litespeed-switch-drag-inner:before {
+	content: attr(data-on);
+	padding-left: 10px;
+	background-color: #36b0b0;
+	color: #FFFFFF;
+
+}
+
+.litespeed-switch-drag-inner:after {
+	content: attr(data-off);
+	padding-right: 8px;
+	background-color: #f9fafc;
+	color: #6699cc;
+	text-align: right;
+	font-weight: 400;
+}
+
+.litespeed-switch-drag-switch {
+	display: block;
+	width: 25px;
+	margin: 0px;
+	background: #F9FAFC;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 73px;
+	border: 1px solid #6699CC;
+	border-radius: 2px;
+	-moz-box-shadow: 0 0 1px 1px rgba(102, 153, 204, 0.5);
+	-webkit-box-shadow: 0 0 1px 1px rgba(102, 153, 204, 0.5);
+	box-shadow: 0 0 1px 1px rgba(102, 153, 204, 0.5);
+	transition: all 0.1s ease-in 0s;
+}
+
+.litespeed-switch-drag input:checked + .litespeed-switch-drag-label .litespeed-switch-drag-inner {
+	margin-left: 0;
+}
+
+.litespeed-switch-drag input:checked + .litespeed-switch-drag-label .litespeed-switch-drag-switch {
+	right: 0px;
+}
+
+/********************************* label *******************************/
+[class*="litespeed-label-"] {
+	display: inline;
+	padding: .2em .6em .3em;
+	font-size: 75%;
+	font-weight: bold;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+}
+[class*="litespeed-label-"]:hover,
+[class*="litespeed-label-"]:focus {
+	color: #fff;
+	text-decoration: none;
+	cursor: pointer;
+}
+[class*="litespeed-label-"]:empty {
+	display: none;
+}
+.litespeed-label-default {
+	background-color: #777;
+}
+.litespeed-label-default[href]:hover,
+.litespeed-label-default[href]:focus {
+	background-color: #5e5e5e;
+}
+.litespeed-label-primary {
+	background-color: #337ab7;
+}
+.litespeed-label-primary[href]:hover,
+.litespeed-label-primary[href]:focus {
+	background-color: #286090;
+}
+.litespeed-label-success {
+	background-color: #5cb85c;
+}
+.litespeed-label-success[href]:hover,
+.litespeed-label-success[href]:focus {
+	background-color: #449d44;
+}
+.litespeed-label-info {
+	background-color: #5bc0de;
+}
+.litespeed-label-info[href]:hover,
+.litespeed-label-info[href]:focus {
+	background-color: #31b0d5;
+}
+.litespeed-label-warning {
+	background-color: #f0ad4e;
+}
+.litespeed-label-warning[href]:hover,
+.litespeed-label-warning[href]:focus {
+	background-color: #ec971f;
+}
+.litespeed-label-danger {
+	background-color: #d9534f;
+}
+.litespeed-label-danger[href]:hover,
+.litespeed-label-danger[href]:focus {
+	background-color: #c9302c;
+}
+
+/********************************* shell *******************************/
+.litespeed-shell {
+	width: 98%;
+	background: #141414;
+	margin: 20px auto 0 10px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.4);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	position: relative;
+	height: 224px;
+}
+
+.litespeed-shell-header {
+	z-index: 999;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 50px;
+	height: 34px;
+	padding: 5px 0;
+}
+
+.litespeed-shell-header-bg {
+	opacity: 0.4;
+	background-color: #CCCCCC;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 4;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-top-radius: 3px;
+}
+
+.litespeed-shell-header-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	height: 2px;
+	background-color: #F48024;
+}
+
+/*.litespeed-shell-header-num{
+	position: absolute;
+	bottom: 2px;
+	right: 2px;
+	width: 14px;
+	height: 14px;
+	text-align: left;
+	color: #808080;
+	font-size: 0.85em;
+	z-index: 5;
+	display: none;
+}*/
+
+.litespeed-shell-header-icon-container{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 29px;
+	height: 34px;
+	z-index: 6;
+}
+
+ul.litespeed-shell-body {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow-y: scroll;
+	margin: 0;
+	padding: 5px;
+	list-style: none;
+	background: #141414;
+	color: #45D40C;
+	font: 0.8em 'Andale Mono', Consolas, 'Courier New';
+	line-height: 1.6em;
+
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-moz-border-radius-bottomleft: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+
+}
+
+.litespeed-shell-body li:before {
+	content: '>';
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.litespeed-shell-body li {
+	word-wrap: break-word;
+	position: relative;
+	padding: 0 0 0 15px;
+	margin: 0;
+}
+
+.litespeed-widget-setting{
+	background-color: #ecebdc;
+	padding: 5px 14px;
+	margin: 5px -15px;
+}
+
+
+/********************************* callout *******************************/
+[class*="litespeed-callout-"] {
+	padding: 15px 25px 20px 20px;
+	border: 1px solid #6699cc;
+	border-radius: 3px;
+	line-height: 18px;
+	border-left-color: #6699cc;
+	border-left-width: 5px;
+	color: #538ac6;
+	margin: 10px 0;
+}
+
+[class*="litespeed-callout-"] h4 {
+	margin-top: 0;
+	margin-bottom: 8px;
+	font-size: 14px;
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+}
+
+[class*="litespeed-callout-"] ol {
+	padding-left: 15px;
+}
+
+.litespeed-callout-warning h4 {
+	color: #e59544;
+}
+
+.litespeed-callout-warning {
+	border-left-color: #e59544 !important;
+	border-left-width: 5px;
+}
+
+.litespeed-callout-danger h4 {
+	color: #cc3d6a;
+}
+
+.litespeed-callout-danger {
+	border-left-color: #cc3d6a !important;
+	border-left-width: 5px;
+}
+
+/********************************* small table *******************************/
+.litespeed-vary-table {
+	margin-top: -15px;
+	width: 250px;
+}
+
+.litespeed-vary-table tr {
+	width: 200px;
+}
+
+.litespeed-vary-table tr:first-child td {
+/*    border-top: 1px solid #cccccc; */
+}
+.litespeed-vary-table .litespeed-vary-title {
+	width: 50%;
+/*    border-bottom: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;*/
+}
+.litespeed-vary-table .litespeed-vary-val {
+/*    border-bottom: 1px solid #cccccc;*/
+}
+
+
+/********************************* tick checkbox *******************************/
+.litespeed-tick {
+	display: inline-block;
+	min-width: 150px;
+	background: #f9fafc;
+	padding: 5px 0 5px 0px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.litespeed-tick input[type="checkbox"] {
+	height: 18px;
+	width: 18px;
+	vertical-align: middle;
+	margin: 0 0 0 35px;
+	border: 1px solid #538ac6;
+	-webkit-appearance: none;
+	-moz-appearance:none;
+	appearance: none;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+}
+
+.litespeed-tick input[type="checkbox"]:not(:disabled):hover {
+	border-color: #538ac6;
+
+}
+
+.litespeed-tick input[type="checkbox"]:active:not(:disabled) {
+	border-color: #538ac6;
+}
+
+.litespeed-tick input[type="checkbox"]:focus {
+	outline:none;
+}
+
+.litespeed-tick input[type="checkbox"]:checked {
+	border-color: #538ac6;
+	background-color: #538ac6;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.litespeed-tick input[type="checkbox"]:checked:before {
+	content: '';
+	display: block;
+	width: 5px;
+	height: 11px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+	margin-left: 5px;
+	margin-top: -1px;
+}
+
+.litespeed-tick label {
+	min-width: 115px;
+	padding: 3px 10px 6px 8px;
+}
+
+.litespeed-tick label:hover {
+	min-width: 115px;
+	color: #6699cc;
+	padding: 3px 10px 6px 8px;
+}
+
+
+/********************************* vertical radio *******************************/
+
+.litespeed-radio-vertical {
+	border-left: 1px solid #538ac6;
+	height: 100%;
+	margin-left: 8px;
+	display: inline-block;
+	min-width: 150px;
+	background: #f9fafc;
+	padding: 5px 0 5px 0px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.litespeed-radio-vertical label {
+	min-width: 115px;
+	padding: 3px 10px 6px 8px;
+}
+
+.litespeed-radio-vertical label:hover {
+	min-width: 115px;
+	color: #6699cc;
+	padding: 3px 10px 6px 8px;
+}
+
+
+.litespeed-radio-vertical-row {
+	margin: 20px 10px 25px 0px;
+	width: 100%;
+}
+
+.litespeed-radio-vertical-row input {
+	height: 15px;
+	min-width: 15px;
+	vertical-align: middle;
+	margin: -2px 0 0 -8px;
+	border: 1px solid #538ac6;
+	-webkit-appearance: none;
+	-moz-appearance:none;
+	appearance: none;
+	background: #fff;
+	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.litespeed-radio-vertical-row input:not(:disabled):hover {
+	border-color: #538ac6;
+	-moz-box-shadow: inset 0 0 1px 3px #36b0b0;
+	-webkit-box-shadow: inset 0 1px 3px #36b0b0;
+	box-shadow: inset 0 0 1px 3px #36b0b0;
+
+}
+
+.litespeed-radio-vertical-row input:active:not(:disabled) {
+	border-color: #538ac6;
+}
+
+.litespeed-radio-vertical-row input:focus {
+	outline:none;
+}
+
+.litespeed-radio-vertical-row input:checked {
+	border-color: #538ac6;
+	-moz-box-shadow: inset 0 0 0.5px 3px #fff;
+	-webkit-box-shadow: inset 0 0 0.5px 3px #fff;
+	box-shadow: inset 0 0 0.5px 3px #fff;
+	background: #36b0b0;
+}
+
+.litespeed-radio-vertical-row input:checked:before {
+	/*content: '\25CF';
+	font-size: 16px;*/
+	background-color: #36b0b0;
+	display: block;
+	margin-left: 1.5px;
+	margin-top: -7px;
+}
+
+/********************************* Q&A *******************************/
+.litespeed-question:hover {
+	color: #6699cc;
+	cursor: pointer;
+	background: #fff;
+	border-left: 5px solid #6699cc;
+}
+
+.litespeed-question {
+	background-color: #f9fafc;
+	border: 1px solid #f9fafc;
+	border-left: 5px solid #538ac6 !important;
+	border-radius: 3px;
+	padding: 20px;
+	margin: 0 20px 5px 5px;
+	font-family: "Open Sans", Arial, sans-serif;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 1.1;
+	color: #264d73;
+}
+
+.litespeed-answer {
+	margin-left: 20px;
+	padding: 0 20px 20px 10px;
+}
+
+.litespeed-up:after {
+	content: ' ';
+	border: solid #36b0b0;
+	border-width: 0 2px 2px 0;
+	display: inline-block;
+	padding: 3px;
+	margin-left: 15px;
+	transform: rotate(-135deg);
+	-webkit-transform: rotate(-135deg);
+	-webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	-o-transition: all .3s ease;
+}
+
+.litespeed-down:after {
+	content: ' ';
+	border: solid #36b0b0;
+	border-width: 0 2px 2px 0;
+	display: inline-block;
+	padding: 3px;
+	margin-left: 15px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	-webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	-o-transition: all .3s ease;
+}
+
+
+/********************************* enterprise notice *******************************/
+.litespeed-ent-notice {
+	position: absolute ;
+	left: 0 ;
+	top: 0 ;
+	right: 0 ;
+	bottom: 0 ;
+	background-color: #333 ;
+	z-index: 999 ;
+	opacity: 0.8 ;
+	text-align: center ;
+	font-size: 3rem ;
+	color: #1865c5 ;
+}
+
+.litespeed-ent-notice-desc {
+	position: relative ;
+	top: 30% ;
+	transform: rotate(-20deg) ;
+	text-shadow: 2px 2px 4px #000000 ;
+}
+
+/********************************* todo *******************************/
+/********************************* todo *******************************/
+/* input field */
+.litespeed-textarea {
+	width: 60% ;
+}
+
+.litespeed-body tbody > tr > th{
+	padding-left: 10px;
+}
+
+.litespeed-body tbody > tr:nth-of-type(odd){
+	background-color: #f9f9f9;
+}
+
+.litespeed-form-table input[type=radio] {/* todo: to be deleted */
+	margin-top: 0px;
+	margin-right: 4px;
+	float: none;
+}
+
+.litespeed-form-table th {
+	vertical-align: top;
+	text-align: left;
+	padding: 18px 10px 20px 0;
+	width: 200px;
+	font-family: "Open Sans", Arial, sans-serif;
+	font-weight: 600;
+	font-size: 14px;
+	color: #264d73;
+}
+
+.litespeed-form-table td {
+	margin-bottom: 9px;
+	padding: 15px 10px;
+	line-height: 1.3;
+	vertical-align: middle;
+	font-family: "Open Sans", Arial, sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	color: #264d73;
+}
+
+
+.litespeed-form-table input,.litespeed-form-table textarea {
+	border: 1px solid #6699cc;
+	border-radius: 3px;
+	background: #fff;
+	color: #264d73;
+	margin-right: 8px;
+	font-size: 14px;
+	font-family: "Open Sans", Arial, sans-serif;
+}
+
+.litespeed-regular-text {
+	padding-left: 5px;
+	width: 25em;
+	font-size: 14px;
+	font-family: "Open Sans", Arial, sans-serif;
+}
+
+.litespeed-input-long {
+	width: 99%;
+}
+
+.litespeed-input-short {
+	width: 45px;
+	padding: 1px 6px;
+}
+
+/*text area */
+
+.litespeed-form-table textarea {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	height: 101px;
+	z-index: auto;
+	position: relative;
+	line-height: 19.6px;
+	font-size: 14px;
+	transition: none;
+	background: transparent;
+	padding: 5px 10px;
+	box-sizing: border-box;
+}
+
+/*text area read only */
+
+.litespeed-form-table input.readonly, .litespeed-form-table input[readonly], .litespeed-form-table textarea.readonly, .litespeed-form-table textarea[readonly] {
+	background-color: #f9fafc;
+}
+

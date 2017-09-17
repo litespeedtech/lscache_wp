@@ -22,21 +22,21 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<h2 class="nav-tab-wrapper">
+<div class="litespeed-wrap">
+	<h2 class="litespeed-header">
 	<?php
 		$i = 1 ;
 		foreach ($menuArr as $tab => $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
+			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
 			$i ++ ;
 		}
 	?>
 	</h2>
-	<div class="litespeed-cache-welcome-panel">
-		<form method="post" action="admin.php?page=lscache-settings" id="ls_form_options">
+	<div class="litespeed-body">
+	<form method="post" action="admin.php?page=lscache-settings" id="ls_form_options">
 	<?php
-			$this->form_action(LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK);
+		$this->form_action(LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK);
 
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {

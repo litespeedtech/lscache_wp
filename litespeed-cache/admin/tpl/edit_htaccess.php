@@ -34,10 +34,10 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<div class="litespeed-cache-welcome-panel">
-		<div class="litespeed-callout litespeed-callout-danger">
-			<p><span class="attention"><?php echo __('WARNING: This page is meant for advanced users.', 'litespeed-cache'); ?></span></p>
+<div class="litespeed-wrap">
+	<div class="litespeed-body">
+		<div class="litespeed-callout-danger">
+			<h4><?php echo __('WARNING: This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
 			<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
 			<?php echo __('Please consult the host/server admin before making any changes.', 'litespeed-cache'); ?>
 		</div>
@@ -63,7 +63,7 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
 				<?php echo $readonly; ?>
 			><?php echo esc_textarea($content); ?></textarea>
 
-			<button type="submit" class="litespeed-btn litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
+			<button type="submit" class="litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
 		</form>
 
 		<?php require LSWCP_DIR . 'admin/tpl/info_common_rewrite.php'; ?>

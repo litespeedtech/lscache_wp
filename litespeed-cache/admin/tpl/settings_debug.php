@@ -5,12 +5,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <h3 class="litespeed-title"><?php echo __( 'Developer Testing', 'litespeed-cache' ) ; ?></h3>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __( 'Debug Log', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">
+				<div class="litespeed-switch">
 					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::OPID_DEBUG,
 						LiteSpeed_Cache_Config::VAL_OFF,
@@ -55,7 +55,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Debug Level', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">
+				<div class="litespeed-switch">
 					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
 						LiteSpeed_Cache_Config::VAL_OFF,
@@ -79,7 +79,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Log File Size Limit', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ; ?>
-			<?php $this->build_input( $id, 'small-text' ) ; ?> <?php echo __( 'MB', 'litespeed-cache' ) ; ?>
+			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?> <?php echo __( 'MB', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the maximum size of the log file. Minimum is 3MB. Maximum is 3000MB.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>

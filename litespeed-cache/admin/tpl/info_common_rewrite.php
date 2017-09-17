@@ -6,13 +6,13 @@ $notice_content = '';
 
 if ((is_multisite()) && (!is_network_admin())) {
 	$notice_title = __('NOTE:', 'litespeed-cache');
-	$notice_content = 
+	$notice_content =
 		'<p>'.__('The following configuration can only be changed by the network admin.', 'litespeed-cache').'</p>'.
 		'<p>'.__('Please contact the network admin to make any changes.', 'litespeed-cache').'</p>';
 }
 else {
 	$notice_title = __('NOTICE:', 'litespeed-cache');
-	$notice_content = 
+	$notice_content =
 		'<p>'.
 		__('The following rewrite rules can be configured in the LiteSpeed Cache settings page.', 'litespeed-cache').' '.
 		__('Please make any needed changes on that page.', 'litespeed-cache').' '.
@@ -23,7 +23,7 @@ else {
 
 <h3 class="litespeed-title"><?php echo __('LiteSpeed Cache Common Rewrite Rules', 'litespeed-cache'); ?></h3>
 
-<div class="litespeed-callout litespeed-callout-warning">
+<div class="litespeed-callout-warning">
 	<h4><?php echo $notice_title; ?></h4>
 	<?php echo $notice_content; ?>
 </div>

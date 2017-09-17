@@ -30,7 +30,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 	<b><?php echo __( 'Enable ESI', 'litespeed-cache' ) ; ?>:</b>
 	&nbsp;&nbsp;
 	<div class="litespeed-inline">
-		<div class="litespeed-switch litespeed-mini litespeed-label-info">
+		<div class="litespeed-switch litespeed-mini">
 		<?php
 			$id = LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
 

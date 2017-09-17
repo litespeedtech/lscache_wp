@@ -190,8 +190,8 @@ function litespeed_display_tab(tab) {
 	if ( jQuery('#litespeed-submit').length > 0 ){
 		jQuery('#litespeed-submit').toggle(tab != 'compatibilities') ;
 	}
-	jQuery('[data-litespeed-tab]').removeClass('nav-tab-active') ;
-	jQuery('[data-litespeed-tab="'+tab+'"]').addClass('nav-tab-active') ;
+	jQuery('[data-litespeed-tab]').removeClass('litespeed-tab-active') ;
+	jQuery('[data-litespeed-tab="'+tab+'"]').addClass('litespeed-tab-active') ;
 	jQuery('[data-litespeed-layout]').hide() ;
 	jQuery('[data-litespeed-layout="'+tab+'"]').show() ;
 }

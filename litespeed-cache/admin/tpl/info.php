@@ -19,15 +19,15 @@ $menuArr = array(
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<h2 class="nav-tab-wrapper">
+<div class="litespeed-wrap">
+	<h2 class="litespeed-header">
 	<?php
 		foreach ($menuArr as $tab => $val){
-			echo "<a class='nav-tab litespeed-tab' href='?page=lscache-info#$tab' data-litespeed-tab='$tab'>$val</a>";
+			echo "<a class='litespeed-tab' href='?page=lscache-info#$tab' data-litespeed-tab='$tab'>$val</a>";
 		}
 	?>
 	</h2>
-	<div class="litespeed-cache-welcome-panel">
+	<div class="litespeed-body">
 
 	<?php
 	// include all tpl for faster UE

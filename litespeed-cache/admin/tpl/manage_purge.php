@@ -82,13 +82,15 @@ if ( ! is_multisite() || is_network_admin() ) {
 		href="<?php echo LiteSpeed_Cache_Admin_Display::build_url( $val[ 'tag' ], false, ! empty( $val[ 'append_url' ] ) ? $val[ 'append_url' ] : false ) ; ?>"
 		<?php if ( ! empty( $val[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $val[ 'cfm' ] . '"' ; ?>
 	>
-		<span class="litespeed-panel-icon-<?php echo $val[ 'icon' ] ; ?>"></span>
-		<span class="litespeed-panel-content">
-			<span class="litespeed-panel-h3 <?php if ( ! empty( $val[ 'title_cls' ] ) ) echo $val[ 'title_cls' ] ; ?>">
+		<section class="litespeed-panel-wrapper-icon">
+			<span class="litespeed-panel-icon-<?php echo $val[ 'icon' ] ; ?>"></span>
+		</section>
+		<section class="litespeed-panel-content">
+			<div class="litespeed-panel-h3 <?php if ( ! empty( $val[ 'title_cls' ] ) ) echo $val[ 'title_cls' ] ; ?>">
 				<?php echo $val[ 'title' ] ; ?>
-			</span>
+			</div>
 			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
-		</span>
+		</section>
 	</a>
 
 <?php endforeach; ?>
@@ -99,10 +101,10 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 	<h3><?php echo __('Purge By...', 'litespeed-cache'); ?></h3>
 	<hr/>
-	<p>
+	<div class="litespeed-desc">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
 		<?php echo __('Please enter one per line.', 'litespeed-cache'); ?>
-	</p>
+	</div>
 
 	<?php
 		$purgeby_option = false;
@@ -123,7 +125,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 	<form method="post" action="admin.php?page=lscache-dash">
 		<?php $this->form_action(LiteSpeed_Cache::ACTION_PURGE_BY); ?>
 		<div class="litespeed-row">
-			<div class="litespeed-switch litespeed-label-info litespeed-mini">
+			<div class="litespeed-switch litespeed-mini">
 				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_CAT;?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_category"
 					value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
@@ -176,11 +178,11 @@ if ( ! is_multisite() || is_network_admin() ) {
 		</div>
 
 		<p>
-			<textarea name="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST; ?>" rows="5" class="code litespeed-cache-purgeby-textarea"></textarea>
+			<textarea name="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST; ?>" rows="5" class="litespeed-textarea"></textarea>
 		</p>
 
 		<p>
-			<button type="submit" class="litespeed-btn litespeed-btn-success"><?php echo __('Purge List', 'litespeed-cache'); ?></button>
+			<button type="submit" class="litespeed-btn-success"><?php echo __('Purge List', 'litespeed-cache'); ?></button>
 		</p>
 	</form>
 <?php endif; ?>

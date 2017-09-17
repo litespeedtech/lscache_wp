@@ -1,7 +1,7 @@
 <!-- build_setting_exclude_cookies -->
 <h3 class="litespeed-title"><?php echo __('Cookie List', 'litespeed-cache'); ?></h3>
 <p><?php echo __('To prevent cookies from being cached, enter it in the text area below.', 'litespeed-cache'); ?></p>
-<div class="litespeed-callout litespeed-callout-warning">
+<div class="litespeed-callout-warning">
 	<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
 	<ol>
 		<li><?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?></li>

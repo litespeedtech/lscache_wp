@@ -185,7 +185,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_style()
 	{
-		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, plugin_dir_url(__FILE__) . 'css/litespeed-cache-admin.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
+		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, plugin_dir_url(__FILE__) . 'css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
 	}
 
 	/**
@@ -732,7 +732,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $type == 'text' ) {
-			$style = "regular-text $style" ;
+			$style = "litespeed-regular-text $style" ;
 		}
 
 		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea( $val ) ."' $disabled $readonly $id_attr $attrs /> " ;
@@ -754,9 +754,9 @@ class LiteSpeed_Cache_Admin_Display
 		$id_attr_on = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_ON ;
 		$id_attr_off = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_OFF ;
 		$html = '<div class="litespeed-row">
-					<div class="litespeed-switch litespeed-label-info">' ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled, $id_attr_on) ;
+					<div class="litespeed-switch">' ;
 		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $disabled, $id_attr_off) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled, $id_attr_on) ;
 		$html .= '	</div>
 				</div>' ;
 
@@ -782,7 +782,7 @@ class LiteSpeed_Cache_Admin_Display
 		$checked = $checked ? ' checked ' : '' ;
 		$is_mini = $is_mini ? ' litespeed-mini ' : '' ;
 
-		echo "<div class='litespeed-radio $is_mini'>
+		echo "<div class='litespeed-tick $is_mini'>
 				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$id' value='1' $checked />
 				<label for='conf_$id'>$title</label>
 			</div>" ;
@@ -820,11 +820,11 @@ class LiteSpeed_Cache_Admin_Display
 
 		if ( $txt === null ){
 			if ( $val === LiteSpeed_Cache_Config::VAL_ON ){
-				$txt = __('Enable', 'litespeed-cache') ;
+				$txt = __( 'ON', 'litespeed-cache' ) ;
 			}
 
 			if ( $val === LiteSpeed_Cache_Config::VAL_OFF ){
-				$txt = __('Disable', 'litespeed-cache') ;
+				$txt = __( 'OFF', 'litespeed-cache' ) ;
 			}
 		}
 

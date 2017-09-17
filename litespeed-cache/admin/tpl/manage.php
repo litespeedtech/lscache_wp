@@ -25,32 +25,33 @@ $menu_list = array(
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<h2 class="nav-tab-wrapper">
+<div class="litespeed-wrap">
+	<h2 class="litespeed-header">
 	<?php
 		$i = 1 ;
 		foreach ($menu_list as $tab => $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;
 		}
 	?>
 	</h2>
-	<div class="litespeed-cache-welcome-panel">
-		<?php if ( ! LiteSpeed_Cache_Router::cache_enabled() ) : ?>
-			<div class="litespeed-callout litespeed-callout-warning">
-				<p><span class="attention"><?php echo __('WARNING: LiteSpeed cache is disabled. The functionalities here can not work.', 'litespeed-cache'); ?></span></p>
-			</div>
-		<?php endif ; ?>
 
+	<?php if ( ! LiteSpeed_Cache_Router::cache_enabled() ) : ?>
+		<div class="litespeed-callout-warning">
+			<h4><?php echo __('WARNING: LiteSpeed cache is disabled. The functionalities here can not work.', 'litespeed-cache'); ?></h4>
+		</div>
+	<?php endif ; ?>
+
+	<div class="litespeed-body">
 	<?php
 
-	// include all tpl for faster UE
-	foreach ($menu_list as $tab => $val) {
-		echo "<div data-litespeed-layout='$tab'>" ;
-		require LSWCP_DIR . "admin/tpl/manage_$tab.php" ;
-		echo "</div>" ;
-	}
+		// include all tpl for faster UE
+		foreach ($menu_list as $tab => $val) {
+			echo "<div data-litespeed-layout='$tab'>" ;
+			require LSWCP_DIR . "admin/tpl/manage_$tab.php" ;
+			echo "</div>" ;
+		}
 
 	?>
 	</div>

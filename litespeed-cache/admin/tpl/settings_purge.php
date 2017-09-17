@@ -34,7 +34,7 @@ $breakArr = array(
 
 ?>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 
 	<?php if (!is_multisite()): ?>
 		<?php require LSWCP_DIR . 'admin/tpl/settings_inc.purge_on_upgrade.php'; ?>
@@ -43,15 +43,13 @@ $breakArr = array(
 	<tr>
 		<th><?php echo __('Auto Purge Rules For Publish/Update', 'litespeed-cache'); ?></th>
 		<td>
-			<div class="litespeed-desc">
-				<div class="litespeed-callout litespeed-callout-warning">
-					<h4><?php echo __('Note:', 'litespeed-cache'); ?></h4>
-					<i>
-						<?php echo __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'); ?><br />
-						<?php echo __('Other checkboxes will be ignored.', 'litespeed-cache'); ?><br />
-						<?php echo __('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache'); ?>
-					</i>
-				</div>
+			<div class="litespeed-callout-warning">
+				<h4><?php echo __('Note:', 'litespeed-cache'); ?></h4>
+				<i>
+					<?php echo __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'); ?><br />
+					<?php echo __('Other checkboxes will be ignored.', 'litespeed-cache'); ?><br />
+					<?php echo __('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache'); ?>
+				</i>
 			</div>
 			<div class="litespeed-row litespeed-top20">
 			<?php

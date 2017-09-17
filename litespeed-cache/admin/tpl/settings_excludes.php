@@ -10,7 +10,7 @@ if (!defined('WPINC')) die;
 	<li><?php echo __('The urls will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?></li>
 	<li><?php echo __('There should only be one url per line.', 'litespeed-cache'); ?></li>
 </ol>
-<div class="litespeed-callout litespeed-callout-warning">
+<div class="litespeed-callout-warning">
 	<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
 	<ol>
 		<li><?php echo __('URLs must start with a \'/\' to be correctly matched.', 'litespeed-cache'); ?></li>
@@ -36,7 +36,7 @@ if (!defined('WPINC')) die;
 	<li><b><?php echo __('All categories are cached by default.', 'litespeed-cache'); ?></b></li>
 	<li><?php echo __('To prevent a category from being cached, enter it in the text area below, one per line.', 'litespeed-cache'); ?></li>
 </ol>
-<div class="litespeed-callout litespeed-callout-warning">
+<div class="litespeed-callout-warning">
 	<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
 	<ol>
 		<li><?php echo __('If the Category ID is not found, the name will be removed on save.', 'litespeed-cache'); ?></li>
@@ -66,7 +66,7 @@ if (!defined('WPINC')) die;
 	<li><b><?php echo __('All tags are cached by default.', 'litespeed-cache'); ?></b></li>
 	<li><?php echo __('To prevent tags from being cached, enter the tag in the text area below, one per line.', 'litespeed-cache'); ?></li>
 </ol>
-<div class="litespeed-callout litespeed-callout-warning">
+<div class="litespeed-callout-warning">
 	<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
 	<ol>
 		<li><?php echo __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache'); ?></li>

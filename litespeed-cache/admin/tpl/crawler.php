@@ -17,10 +17,10 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<div class="litespeed-cache-welcome-panel">
+<div class="litespeed-wrap">
+	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
-		<a href="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn litespeed-btn-success">
+		<a href="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn-success">
 			<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
 		</a>
 
@@ -59,8 +59,8 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		?>
 		<h3 class="litespeed-title"><?php echo __('Crawler Cron', 'litespeed-cache') ; ?></h3>
 		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
-			<div class="litespeed-callout litespeed-callout-danger">
-				<p><span class="attention"><?php echo __('WARNING', 'litespeed-cache'); ?></span></p>
+			<div class="litespeed-callout-danger">
+				<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 				<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
 				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed infomation.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
 			</div>
@@ -117,7 +117,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 						if ( $meta ) {
 							echo "Size: {$meta->list_size}<br />Position: " . ($meta->last_pos + 1) ;
 							if ( $is_running ) {
-								echo "<br /><div class='litespeed-label litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
+								echo "<br /><div class='litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
 							}
 						}
 						else {
@@ -126,25 +126,24 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 					?>
 					</td>
 					<td>
-						<label class="litespeed-switch-onoff">
-							<input type="checkbox"
-								name="litespeed_crawler_cron_enable"
-								id="litespeed_crawler_cron_enable"
-								value="1"
+						<div class="litespeed-switch-drag">
+							<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
 								data-url="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, 'cron_enable') ; ?>"
 								<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
 								<?php echo $disabled ; ?>
 							/>
-							<span data-on="<?php echo __('Enable', 'litespeed-cache'); ?>" data-off="<?php echo __('Disable', 'litespeed-cache'); ?>"></span>
-							<span></span>
-						</label>
+							<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
+								<span class="litespeed-switch-drag-inner" data-on="<?php echo __('Enable', 'litespeed-cache'); ?>" data-off="<?php echo __('Disable', 'litespeed-cache'); ?>"></span>
+								<span class="litespeed-switch-drag-switch"></span>
+							</label>
+						</div>
 					</td>
 					<td>
 					<?php
-						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
 
 						$href = LiteSpeed_Cache_Router::can_crawl() ? $this->build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
-						echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
+						echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>
@@ -183,7 +182,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			if ( $ajaxUrl ):
 		?>
 
-		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn litespeed-btn-primary" data-url="<?php echo $ajaxUrl ; ?>" />
+		<input type="button" id="litespeed-crawl-url-btn" value="<?php echo __('Show crawler status', 'litespeed-cache') ; ?>" class="litespeed-btn-primary" data-url="<?php echo $ajaxUrl ; ?>" />
 
 		<div class="litespeed-shell litespeed-hide">
 			<div class="litespeed-shell-header-bar"></div>
@@ -211,11 +210,11 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		<form method="post" action="admin.php?page=lscache-crawler">
 			<?php $this->form_action(LiteSpeed_Cache::ACTION_BLACKLIST_SAVE); ?>
 			<p>
-				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="code litespeed-cache-blacklist"><?php echo LiteSpeed_Cache_Crawler::get_instance()->get_blacklist(); ?></textarea>
+				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="litespeed-textarea"><?php echo LiteSpeed_Cache_Crawler::get_instance()->get_blacklist(); ?></textarea>
 			</p>
 
 			<p>
-				<button type="submit" class="litespeed-btn litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
+				<button type="submit" class="litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
 			</p>
 		</form>
 		<div class="litespeed-desc">

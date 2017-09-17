@@ -12,8 +12,8 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<div class="litespeed-cache-welcome-panel">
+<div class="litespeed-wrap">
+	<div class="litespeed-body">
 		<ul>
 			<li><?php echo __('The environment report contains detailed information about the WordPress configuration.', 'litespeed-cache'); ?></li>
 			<li><?php echo __('If you run into any issues, please include the contents of this text area in your support message.', 'litespeed-cache'); ?></li>
@@ -32,10 +32,10 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 			</span>
 		</p>
 		<p>
-			<button class="litespeed-btn litespeed-btn-primary" id='litespeed_cache_report_copy'>
+			<button class="litespeed-btn-primary" id='litespeed_cache_report_copy'>
 				<?php echo __("Select All and Copy to Clipboard", "litespeed-cache"); ?>
 			</button>
-			<span class="litespeed-hide litespeed-notice" id="copy_select_all_span">
+			<span class="litespeed-hide" id="copy_select_all_span">
 				<?php echo __("Environment Report copied to Clipboard!", "litespeed-cache"); ?>
 			</span>
 		</p>

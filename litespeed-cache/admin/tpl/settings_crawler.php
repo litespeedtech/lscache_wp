@@ -5,7 +5,7 @@ if ( !defined('WPINC') ) die;
 
 <h3 class="litespeed-title"><?php echo __('Crawler Settings', 'litespeed-cache'); ?></h3>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __('Delay', 'litespeed-cache'); ?></th>
 		<td>
@@ -58,7 +58,7 @@ if ( !defined('WPINC') ) die;
 		<th><?php echo __('Threads', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::CRWL_THREADS ; ?>
-			<?php $this->build_input($id); ?>
+			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify Number of Threads to use while crawling.', 'litespeed-cache'); ?>
 				<?php $this->recommended($id) ; ?>
@@ -150,7 +150,7 @@ if ( !defined('WPINC') ) die;
 				<?php echo __('If you want to exclude certain Custom Post Types in sitemap, add the Custom Post Types in the box, one per line.', 'litespeed-cache'); ?>
 			</div>
 
-			<div class="litespeed-callout litespeed-callout-warning">
+			<div class="litespeed-callout-warning">
 				<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
 				<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>
 			</div>
@@ -161,7 +161,7 @@ if ( !defined('WPINC') ) die;
 		<th><?php echo __('Order links by', 'litespeed-cache'); ?></th>
 		<td>
 			<div class="litespeed-row">
-				<div class="litespeed-switch litespeed-label-info">
+				<div class="litespeed-switch">
 					<?php echo $this->build_radio(
 						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
 						LiteSpeed_Cache_Config::CRWL_DATE_DESC,

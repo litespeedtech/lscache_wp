@@ -89,31 +89,32 @@ else {
 		</span>
 	</h2>
 </div>
-<div class="wrap">
-	<h2 class="nav-tab-wrapper">
+<div class="litespeed-wrap">
+	<h2 class="litespeed-header">
 	<?php
 		$i = 1 ;
 		foreach ($menu_list as $tab => $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-			echo "<a class='nav-tab litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
+			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;
 		}
 		foreach ($tp_tabs as $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-			echo "<a class='nav-tab litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
+			echo "<a class='litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
 			$i ++ ;
 		}
 	?>
 	</h2>
-	<div class="litespeed-cache-welcome-panel">
-		<form method="post" action="options.php" id="litespeed_form_options">
-			<!--input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" /-->
+	<div class="litespeed-body">
+	<form method="post" action="options.php" id="litespeed_form_options">
+		<!--input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" /-->
 
 	<?php if ($this->get_disable_all()): ?>
-			<p>
-				<?php echo __('The network admin selected use primary site configs for all subsites.', 'litespeed-cache') ; ?>
-				<?php echo __('The following options are selected, but are not editable in this settings page.', 'litespeed-cache') ; ?>
-			</p>
+		<div class="litespeed-callout-danger">
+			<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
+			<?php echo __('The network admin selected use primary site configs for all subsites.', 'litespeed-cache') ; ?>
+			<?php echo __('The following options are selected, but are not editable in this settings page.', 'litespeed-cache') ; ?>
+		</div>
 	<?php endif ; ?>
 
 	<?php
@@ -133,10 +134,10 @@ else {
 	echo "<div class='litespeed-top20'></div>" ;
 
 	if ($this->get_disable_all()) {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'primary', 'litespeed-submit', true, array('disabled' => true)) ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit', true, array('disabled' => true)) ;
 	}
 	else {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'primary', 'litespeed-submit') ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit') ;
 	}
 
 	?>

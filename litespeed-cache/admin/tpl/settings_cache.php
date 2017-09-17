@@ -3,7 +3,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 ?>
 <h3 class="litespeed-title"><?php echo __( 'Cache Control Settings', 'litespeed-cache' ) ; ?></h3>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __( 'Cache Logged-in Users', 'litespeed-cache' ) ; ?></th>
 		<td>

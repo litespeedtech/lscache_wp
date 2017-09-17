@@ -30,7 +30,7 @@ sort( $roles ) ;
 	</div>
 <?php endif; ?>
 
-<table class="form-table"><tbody>
+<table class="litespeed-form-table"><tbody>
 	<tr>
 		<th><?php echo __('Enable ESI', 'litespeed-cache'); ?></th>
 		<td>
@@ -69,7 +69,7 @@ sort( $roles ) ;
 				<tr>
 					<td class='litespeed-vary-title'><?php echo $role ; ?></td>
 					<td class='litespeed-vary-val'>
-						<input type="text" class="regular-text small-text"
+						<input type="text" class="litespeed-input-short"
 							name="<?php echo LiteSpeed_Cache_Config::VARY_GROUP ; ?>[<?php echo $role ; ?>]"
 							value="<?php echo $this->config->in_vary_group( $role ) ; ?>" />
 					</td>
