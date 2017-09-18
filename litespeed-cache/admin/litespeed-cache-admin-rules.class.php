@@ -46,7 +46,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
 
-	const RW_PATTERN_RES = 'wp-content/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php' ;
+	const RW_PATTERN_RES = LSWCP_CONTENT_FOLDER . '/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php' ;
 
 	/**
 	 * Initialize the class and set its properties.

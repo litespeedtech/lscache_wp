@@ -2,6 +2,7 @@
 if (!defined('WPINC')) die;
 
 $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report();
+
 ?>
 
 <div class="wrap">
@@ -20,7 +21,7 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 			<li><?php echo __('To easily grab the content, click the <b>Select All and Copy to Clipboard</b> button, to select and copy to clipboard.', 'litespeed-cache'); ?></li>
 			<?php if ( is_writable(LSWCP_DIR) ): ?>
 			<li><?php echo sprintf(__('Alternatively, this information is also saved in %s.', 'litespeed-cache'),
-				'wp-content/plugins/litespeed-cache/environment_report.php'); ?></li>
+				LSWCP_CONTENT_FOLDER . '/plugins/litespeed-cache/environment_report.php'); ?></li>
 			<?php endif; ?>
 		</ul>
 		<p>
