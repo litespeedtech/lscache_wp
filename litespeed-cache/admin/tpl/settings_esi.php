@@ -30,7 +30,7 @@ sort( $roles ) ;
 	</div>
 <?php endif; ?>
 
-<table class="litespeed-form-table"><tbody>
+<table><tbody>
 	<tr>
 		<th><?php echo __('Enable ESI', 'litespeed-cache'); ?></th>
 		<td>

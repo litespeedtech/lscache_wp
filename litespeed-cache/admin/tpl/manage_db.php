@@ -70,11 +70,11 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 			<span class="litespeed-panel-icon-<?php echo $tag ; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<h3>
+			<div class="litespeed-panel-h3">
 				<?php echo $val[ 'title' ] ; ?>
 				<span class="litespeed-panel-counter<?php if ( $val[ 'count' ] > 0 ) echo '-red' ; ?>">(<?php echo $val[ 'count' ] ; ?>)</span>
-			</h3>
-			<div class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></div>
+			</div>
+			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
 		</section>
 		<section class="litespeed-panel-wrapper-top-right">
 			<span class="litespeed-panel-top-right-icon<?php echo $val[ 'count' ] > 0 ? '-cross' : '-tick' ; ?>"></span>

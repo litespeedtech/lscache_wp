@@ -34,7 +34,7 @@ $breakArr = array(
 
 ?>
 
-<table class="litespeed-form-table"><tbody>
+<table><tbody>
 
 	<?php if (!is_multisite()): ?>
 		<?php require LSWCP_DIR . 'admin/tpl/settings_inc.purge_on_upgrade.php'; ?>

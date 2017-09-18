@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<?php echo __( 'Responsive themes can handle this part automatically.', 'litespeed-cache' ) ; ?>
 </p>
 
-<table class="litespeed-form-table"><tbody>
+<table><tbody>
 
 	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_favicon.php' ; ?>
 	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_resources.php' ; ?>

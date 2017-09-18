@@ -18,10 +18,10 @@ if (!defined('WPINC')) die;
 </p>
 <p>
 	<?php echo __('In the .htaccess file for the WordPress installation, add the following:', 'litespeed-cache'); ?>
-<textarea id="wpwrap" rows="3" readonly>&lt;IfModule LiteSpeed&gt;
+</p>
+<textarea class="litespeed-textarea" rows="3" readonly>&lt;IfModule LiteSpeed&gt;
    CacheLookup public on
 &lt;/IfModule&gt;</textarea>
-</p>
 
 
 <h4><?php echo __('Instructions for OpenLiteSpeed', 'litespeed-cache'); ?></h4>

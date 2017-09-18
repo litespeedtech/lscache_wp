@@ -37,7 +37,7 @@ else {
 	<p>
 		<?php echo __('This configuration can be added on the settings page in the General tab.', 'litespeed-cache'); ?>
 	</p>
-	<textarea id="wpwrap" rows="2" readonly>RewriteCond %{HTTP_USER_AGENT} Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi [NC]
+	<textarea class="litespeed-textarea" rows="2" readonly>RewriteCond %{HTTP_USER_AGENT} Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi [NC]
 RewriteRule .* - [E=Cache-Control:vary=ismobile]</textarea>
 </div>
 
@@ -45,7 +45,7 @@ RewriteRule .* - [E=Cache-Control:vary=ismobile]</textarea>
 <div class="litespeed-answer">
 	<p><?php echo __('Another common rewrite rule is to notify the cache not to cache when it sees a specified cookie name.', 'litespeed-cache'); ?></p>
 	<p><?php echo __('This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache'); ?></p>
-	<textarea id="wpwrap" rows="2" readonly>RewriteCond %{HTTP_COOKIE} dontcachecookie
+	<textarea class="litespeed-textarea" rows="2" readonly>RewriteCond %{HTTP_COOKIE} dontcachecookie
 RewriteRule .* - [E=Cache-Control:no-cache]</textarea>
 </div>
 
@@ -53,6 +53,6 @@ RewriteRule .* - [E=Cache-Control:no-cache]</textarea>
 <div class="litespeed-answer">
 	<p><?php echo __('A not so commonly used rewrite rule is to notify the cache not to cache when it sees a specified User Agent.', 'litespeed-cache'); ?></p>
 	<p><?php echo __('This configuration can be added on the settings page in the Do Not Cache tab.', 'litespeed-cache'); ?></p>
-	<textarea id="wpwrap" rows="2" readonly>RewriteCond %{HTTP_USER_AGENT} dontcacheuseragent
+	<textarea class="litespeed-textarea" rows="2" readonly>RewriteCond %{HTTP_USER_AGENT} dontcacheuseragent
 RewriteRule .* - [E=Cache-Control:no-cache]</textarea>
 </div>

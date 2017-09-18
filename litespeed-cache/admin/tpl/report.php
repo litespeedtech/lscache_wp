@@ -39,7 +39,7 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 				<?php echo __("Environment Report copied to Clipboard!", "litespeed-cache"); ?>
 			</span>
 		</p>
-		<textarea id="litespeed-report" rows="20" cols="80" readonly><?php echo $report; ?></textarea>
+		<textarea id="litespeed-report" rows="40" cols="80" readonly><?php echo $report; ?></textarea>
 	</div>
 </div>
 

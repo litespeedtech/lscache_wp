@@ -134,6 +134,7 @@
 	padding: 2px 9px;
 	min-width: 50px;
 	background: #f9fafc;
+	background: #f1f1f1;
 	color: #6699cc;
 	text-align: center;
 	font-weight: 400;
@@ -1011,13 +1012,13 @@ ul.litespeed-shell-body {
 	background-color: #f9f9f9;
 }
 
-.litespeed-form-table input[type=radio] {/* todo: to be deleted */
+.litespeed-body input[type=radio] {/* todo: to be deleted */
 	margin-top: 0px;
 	margin-right: 4px;
 	float: none;
 }
 
-.litespeed-form-table th {
+.litespeed-body th {
 	vertical-align: top;
 	text-align: left;
 	padding: 18px 10px 20px 0;
@@ -1028,7 +1029,7 @@ ul.litespeed-shell-body {
 	color: #264d73;
 }
 
-.litespeed-form-table td {
+.litespeed-body td {
 	margin-bottom: 9px;
 	padding: 15px 10px;
 	line-height: 1.3;
@@ -1040,7 +1041,7 @@ ul.litespeed-shell-body {
 }
 
 
-.litespeed-form-table input,.litespeed-form-table textarea {
+.litespeed-body input,.litespeed-body textarea {
 	border: 1px solid #6699cc;
 	border-radius: 3px;
 	background: #fff;
@@ -1068,10 +1069,9 @@ ul.litespeed-shell-body {
 
 /*text area */
 
-.litespeed-form-table textarea {
+.litespeed-body textarea {
 	margin-top: 0px;
 	margin-bottom: 0px;
-	height: 101px;
 	z-index: auto;
 	position: relative;
 	line-height: 19.6px;
@@ -1084,7 +1084,8 @@ ul.litespeed-shell-body {
 
 /*text area read only */
 
-.litespeed-form-table input.readonly, .litespeed-form-table input[readonly], .litespeed-form-table textarea.readonly, .litespeed-form-table textarea[readonly] {
+.litespeed-body input.readonly, .litespeed-body input[readonly], .litespeed-body textarea.readonly, .litespeed-body textarea[readonly] {
 	background-color: #f9fafc;
+	background-color: #eee;
 }
 

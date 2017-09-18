@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 </div>
 
 
-<table class="litespeed-form-table"><tbody>
+<table><tbody>
 	<tr>
 		<th><?php echo __( 'CSS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>

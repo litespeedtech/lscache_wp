@@ -851,7 +851,13 @@ class LiteSpeed_Cache_Admin_Display
 	public function recommended($id) {
 		$val = isset($this->default_settings[$id]) ? $this->default_settings[$id] : '' ;
 		if ( $val ) {
-			echo sprintf(__('Recommended value: %s.', 'litespeed-cache'), $val) ;
+			if ( ! is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
+				$val = "<textarea readonly rows='5'>$val</textarea>" ;
+			}
+			else {
+				$val = "<code>$val</code>" ;
+			}
+			echo sprintf( __( 'Recommended value: %s.', 'litespeed-cache' ), $val ) ;
 		}
 	}
 

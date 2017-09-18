@@ -59,7 +59,7 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
 
 			<p><?php echo __('These are added by the LS Cache plugin and may cause problems if they are changed.', 'litespeed-cache'); ?></p>
 
-			<textarea id="wpwrap" name="<?php echo LiteSpeed_Cache_Admin_Rules::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="30" class="code"
+			<textarea name="<?php echo LiteSpeed_Cache_Admin_Rules::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="30" class="litespeed-input-long"
 				<?php echo $readonly; ?>
 			><?php echo esc_textarea($content); ?></textarea>
 
