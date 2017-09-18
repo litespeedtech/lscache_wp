@@ -398,6 +398,11 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 
+		if ( is_preview() ) {
+			self::set_nocache( 'preview page' ) ;
+			return ;
+		}
+
 		// Check litespeed setting to set cacheable status
 		if ( ! self::_setting_cacheable() ) {
 			self::set_nocache() ;
