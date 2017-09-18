@@ -18,11 +18,15 @@
 }
 
 .litespeed-warning {
-    color: #ffc107!important;
+	color: #ffc107!important;
 }
 
 .litespeed-danger {
 	color: #dc3545!important;
+}
+
+.litespeed-left10 {
+	margin-left: 10px;
 }
 
 .litespeed-top10 {
@@ -38,7 +42,7 @@
 	font-weight: normal;
 	color: #538ac6;
 	color: #9e9e9e;
-	margin-top: 5px;
+	margin: 10px 5px;
 }
 
 .litespeed-hide {
@@ -49,6 +53,14 @@
 	position: relative ;
 }
 
+.litespeed-h3{
+	font-family: "Open Sans", Arial, sans-serif;
+	line-height: 18px;
+	color: #264d73;
+	font-size: 18px;
+	font-weight: 600;
+	margin: 2px 0;
+}
 
 /********************************* logo *******************************/
 @font-face {
@@ -91,6 +103,7 @@
 	padding: 10px 15px 15px 15px;
 	position: relative;
 	border-top: none;
+	color: #264d73;
 }
 
 .litespeed-body i {
@@ -98,6 +111,20 @@
 	line-height: 16px;
 }
 
+.litespeed-body p {
+	margin: 1em ;
+}
+
+.litespeed-title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #264d73;
+	border-bottom: 1px solid #6699cc;
+	margin: 35px 0px 20px 0;
+	display: table;
+	padding-right: 50px;
+	padding-left: 3px;
+}
 
 /********************************* nav tabs *******************************/
 .litespeed-wrap {
@@ -159,7 +186,6 @@
 .litespeed-tab-active, .litespeed-tab:focus:active {
 	-webkit-box-shadow: none;
 	box-shadow: none;
-	font-weight: 600;
 	font-size: 13px;
 	color: #264d73;
 }
@@ -170,7 +196,6 @@
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
-	font-weight: 600;
 	font-size: 13px;
 	border-bottom: 1px solid #fff;
 	margin-bottom: -1px;
@@ -184,15 +209,8 @@
 	justify-content: flex-start;
 }
 
-.litespeed-panel-wrapper a{
-	text-decoration: none;
-}
-
-.litespeed-panel-wrapper a:hover{
-	color: #538ac6;
-}
-
 .litespeed-panel {
+	text-decoration: none;
 	display: flex;
 	justify-content: space-between;
 	border: 1px solid #6699cc;
@@ -201,13 +219,14 @@
 	box-shadow: 0 0 0 1px rgba(102, 153, 204, 0.25);
 	border-radius: 3px;
 	background: #f9fafc;
-	padding: 5px 0px 5px 5px;
+	padding: 6px 0px 4px 5px;
 	width: 310px;
 	margin: 15px 5px 15px 15px;
-	height: 75px;
+	min-height: 75px;
 }
 
 .litespeed-panel:hover {
+	color: #538ac6;
 	border: 1px solid #00a3cc;
 	background: #fff;
 	-moz-box-shadow: none;
@@ -254,16 +273,16 @@
 .litespeed-panel-content {
 	width: 75%;
 	height:100%;
-	margin-top: 3px;
+	margin-top: 10px;
 }
 
-.litespeed-panel-h3, .litespeed-panel-para {
+.litespeed-panel-para {
 	font-family: "Open Sans", Arial, sans-serif;
 	line-height: 18px;
 	color: #264d73;
 }
 
-.litespeed-panel-h3{
+.litespeed-panel .litespeed-h3{
 	font-size: 14px;
 }
 
@@ -296,11 +315,11 @@
 
 /********************************* btn *******************************/
 .litespeed-body [class*="litespeed-btn-"] {
-	padding: 6px 10px 8px 10px;
 	padding: 5px 10px;
+	font-size: 14px !important;
 	font-weight:400;
 	border-radius: 3px;
-	margin: 5px;
+	margin: 15px 5px;
 	text-align: center;
 	background: #fff;
 	min-width: 155px;
@@ -311,7 +330,7 @@
 }
 
 .litespeed-body [class*="litespeed-btn-"]:hover {
-	font-weight: 600;
+	font-weight: 400;
 	color: #fff;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
@@ -364,6 +383,7 @@
 
 .litespeed-body .litespeed-btn-primary:hover {
 	background: #538ac6;
+	border-color: #538ac6;
 }
 
 .litespeed-body .litespeed-btn-xs {
@@ -384,7 +404,7 @@
 	border-radius: 3px;
 	font-size: 14px;
 	font-weight: 600;
-	margin: 0px;
+	margin: 0 0 0 ;
 	background-color: #fff;
 	padding: -1px;
 	display: inline-block;
@@ -413,7 +433,8 @@
 
 .litespeed-switch label:hover {
 	background-color: #f9fafc;
-	font-weight: 500;
+	font-weight: 400;
+	color: #538ac6;
 }
 
 .litespeed-switch input {
@@ -706,7 +727,7 @@ ul.litespeed-shell-body {
 	border-left-color: #6699cc;
 	border-left-width: 5px;
 	color: #538ac6;
-	margin: 10px 0;
+	margin: 13px 0;
 }
 
 [class*="litespeed-callout-"] h4 {
@@ -720,6 +741,7 @@ ul.litespeed-shell-body {
 
 [class*="litespeed-callout-"] ol {
 	padding-left: 15px;
+	margin-left: 10px;
 }
 
 .litespeed-callout-warning h4 {
@@ -740,25 +762,46 @@ ul.litespeed-shell-body {
 	border-left-width: 5px;
 }
 
+/********************************* inline table *******************************/
+.litespeed-body table {
+	background: #fff;
+	padding: 10px;
+	word-wrap: break-word;
+	-webkit-font-smoothing: subpixel-antialiased;
+	border-spacing: 0;
+	width: 100%;
+	clear: both;
+}
+
+.litespeed-body table thead tr th{
+	color: #264d73;
+	padding-left: 10px;
+}
+
+.litespeed-table {
+	border: 1px solid #538ac6;
+	border-radius: 3px;
+}
+
 /********************************* small table *******************************/
-.litespeed-vary-table {
+.litespeed-body .litespeed-vary-table {
 	margin-top: -15px;
 	width: 250px;
 }
 
-.litespeed-vary-table tr {
+.litespeed-body .litespeed-vary-table tr {
 	width: 200px;
 }
 
-.litespeed-vary-table tr:first-child td {
+.litespeed-body .litespeed-vary-table tr:first-child td {
 /*    border-top: 1px solid #cccccc; */
 }
-.litespeed-vary-table .litespeed-vary-title {
+.litespeed-body .litespeed-vary-table .litespeed-vary-title {
 	width: 50%;
 /*    border-bottom: 1px solid #cccccc;
 	border-right: 1px solid #cccccc;*/
 }
-.litespeed-vary-table .litespeed-vary-val {
+.litespeed-body .litespeed-vary-table .litespeed-vary-val {
 /*    border-bottom: 1px solid #cccccc;*/
 }
 
@@ -766,27 +809,29 @@ ul.litespeed-shell-body {
 /********************************* tick checkbox *******************************/
 .litespeed-tick {
 	display: inline-block;
-	min-width: 150px;
+	min-width: 125px;
 	background: #f9fafc;
 	padding: 5px 0 5px 0px;
 	border-radius: 3px;
 	cursor: pointer;
+	margin: 5px;
 }
 
 .litespeed-tick input[type="checkbox"] {
 	height: 18px;
 	width: 18px;
 	vertical-align: middle;
-	margin: 0 0 0 35px;
+	margin: 0 10px 0 20px;
 	border: 1px solid #538ac6;
 	-webkit-appearance: none;
-	-moz-appearance:none;
+	-moz-appearance: none;
 	appearance: none;
-	-webkit-border-radius:3px;
-	border-radius:3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
 	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
 	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
+	cursor: pointer;
 }
 
 .litespeed-tick input[type="checkbox"]:not(:disabled):hover {
@@ -821,17 +866,18 @@ ul.litespeed-shell-body {
 	transform: rotate(45deg);
 	margin-left: 5px;
 	margin-top: -1px;
+	cursor: pointer;
 }
 
 .litespeed-tick label {
-	min-width: 115px;
-	padding: 3px 10px 6px 8px;
+	padding: 2px 5px 10px 15px;
+	font-size: 14px;
+	color: #264d73;
 }
 
 .litespeed-tick label:hover {
 	min-width: 115px;
 	color: #6699cc;
-	padding: 3px 10px 6px 8px;
 }
 
 
@@ -879,8 +925,8 @@ ul.litespeed-shell-body {
 	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
 	-webkit-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
 	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
-	-webkit-border-radius: 50%;
-	border-radius: 50%;
+	-webkit-border-radius: 50% !important;
+	border-radius: 50% !important;
 	cursor: pointer;
 }
 
@@ -911,10 +957,14 @@ ul.litespeed-shell-body {
 .litespeed-radio-vertical-row input:checked:before {
 	/*content: '\25CF';
 	font-size: 16px;*/
-	background-color: #36b0b0;
-	display: block;
-	margin-left: 1.5px;
-	margin-top: -7px;
+	text-indent: -9999px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+	font-size: 24px;
+	width: 6px;
+	height: 6px;
+	margin: 4px;
+	line-height: 16px;
 }
 
 /********************************* Q&A *******************************/
@@ -1010,6 +1060,7 @@ ul.litespeed-shell-body {
 
 .litespeed-body tbody > tr:nth-of-type(odd){
 	background-color: #f9f9f9;
+	background-color: #f9fafc;
 }
 
 .litespeed-body input[type=radio] {/* todo: to be deleted */
@@ -1027,6 +1078,7 @@ ul.litespeed-shell-body {
 	font-weight: 600;
 	font-size: 14px;
 	color: #264d73;
+	border-radius: 3px;
 }
 
 .litespeed-body td {
@@ -1038,6 +1090,7 @@ ul.litespeed-shell-body {
 	font-weight: 400;
 	font-size: 14px;
 	color: #264d73;
+	border-radius: 3px;
 }
 
 
@@ -1084,7 +1137,7 @@ ul.litespeed-shell-body {
 
 /*text area read only */
 
-.litespeed-body input.readonly, .litespeed-body input[readonly], .litespeed-body textarea.readonly, .litespeed-body textarea[readonly] {
+.litespeed-body input[readonly], .litespeed-body textarea[readonly] {
 	background-color: #f9fafc;
 	background-color: #eee;
 }

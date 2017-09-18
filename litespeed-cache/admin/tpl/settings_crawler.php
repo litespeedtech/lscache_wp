@@ -160,32 +160,30 @@ if ( !defined('WPINC') ) die;
 	<tr data-litespeed-selfsitemap="1">
 		<th><?php echo __('Order links by', 'litespeed-cache'); ?></th>
 		<td>
-			<div class="litespeed-row">
-				<div class="litespeed-switch">
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-						LiteSpeed_Cache_Config::CRWL_DATE_DESC,
-						__('Date, descending (Default)', 'litespeed-cache')
-					); ?>
+			<div class="litespeed-switch">
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+					LiteSpeed_Cache_Config::CRWL_DATE_DESC,
+					__('Date, descending (Default)', 'litespeed-cache')
+				); ?>
 
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-						LiteSpeed_Cache_Config::CRWL_DATE_ASC,
-						__('Date, ascending', 'litespeed-cache')
-					); ?>
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+					LiteSpeed_Cache_Config::CRWL_DATE_ASC,
+					__('Date, ascending', 'litespeed-cache')
+				); ?>
 
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-						LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
-						__('Alphabetical, descending', 'litespeed-cache')
-					); ?>
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+					LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
+					__('Alphabetical, descending', 'litespeed-cache')
+				); ?>
 
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-						LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
-						__('Alphabetical, ascending', 'litespeed-cache')
-					); ?>
-				</div>
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+					LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
+					__('Alphabetical, ascending', 'litespeed-cache')
+				); ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __('Please choose one of the above options to set the order in which the sitemap will be parsed.', 'litespeed-cache'); ?>

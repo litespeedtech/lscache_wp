@@ -753,12 +753,10 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$id_attr_on = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_ON ;
 		$id_attr_off = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_OFF ;
-		$html = '<div class="litespeed-row">
-					<div class="litespeed-switch">' ;
+		$html = '<div class="litespeed-switch">' ;
 		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $disabled, $id_attr_off) ;
 		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled, $id_attr_on) ;
-		$html .= '	</div>
-				</div>' ;
+		$html .= '</div>' ;
 
 		if ( $return ) {
 			return $html ;
@@ -783,8 +781,8 @@ class LiteSpeed_Cache_Admin_Display
 		$is_mini = $is_mini ? ' litespeed-mini ' : '' ;
 
 		echo "<div class='litespeed-tick $is_mini'>
-				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$id' value='1' $checked />
 				<label for='conf_$id'>$title</label>
+				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$id' value='1' $checked />
 			</div>" ;
 	}
 
@@ -852,7 +850,7 @@ class LiteSpeed_Cache_Admin_Display
 		$val = isset($this->default_settings[$id]) ? $this->default_settings[$id] : '' ;
 		if ( $val ) {
 			if ( ! is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
-				$val = "<textarea readonly rows='5'>$val</textarea>" ;
+				$val = "<textarea readonly rows='5' class='litespeed-left10'>$val</textarea>" ;
 			}
 			else {
 				$val = "<code>$val</code>" ;

@@ -51,14 +51,14 @@ $breakArr = array(
 					<?php echo __('Select only the archive types that are currently used, the others can be left unchecked.', 'litespeed-cache'); ?>
 				</i>
 			</div>
-			<div class="litespeed-row litespeed-top20">
+			<div class="litespeed-top20">
 			<?php
 				foreach ($optionArr as $id => $title){
 
 					$this->build_checkbox("purge_$id", $title, in_array($id, $purge_options));
 
 					if ( in_array($id, $breakArr) ){
-						echo '</div><div class="litespeed-row litespeed-top20">';
+						echo '</div><div class="litespeed-top20">';
 					}
 				}
 			?>

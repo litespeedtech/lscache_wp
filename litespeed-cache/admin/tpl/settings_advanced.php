@@ -16,20 +16,21 @@ if (!defined('WPINC')) die;
 	$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
 	$this->build_checkbox($id, __('Include advanced-cache.php', 'litespeed-cache'), $_options[$id]);
 ?>
-<div class="litespeed-row litespeed-top10">
+<p>
 	<?php echo __('The advanced-cache.php file is used by many caching plugins to signal that a cache is active.', 'litespeed-cache'); ?>
 	<?php echo __('When this option is checked and this file is detected as belonging to another plugin, LiteSpeed Cache will not cache.', 'litespeed-cache'); ?>
-</div>
-<div class="litespeed-row litespeed-top10">
+</p>
+<p>
 	<i><?php echo __('Uncheck this option only if the other plugin is used for non-caching purposes, such as minifying css/js files.', 'litespeed-cache'); ?></i>
-</div>
+</p>
 
 <h3 class="litespeed-title"><?php echo __('Login Cookie', 'litespeed-cache'); ?></h3>
 <?php
 
-echo __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
+echo '<p>' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
 	. ' ' . __('No spaces and case sensitive.', 'litespeed-cache')
 	. ' ' . __('MUST BE UNIQUE FROM OTHER WEB APPLICATIONS.', 'litespeed-cache')
+	. '</p>'
 	. '<p>'
 		. sprintf(__('The default login cookie is %s.', 'litespeed-cache'), '_lscache_vary')
 		. ' ' . __('The server will determine if the user is logged in based on the existance of this cookie.', 'litespeed-cache')

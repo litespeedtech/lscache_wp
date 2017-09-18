@@ -35,7 +35,7 @@ if (!defined('WPINC')) die;
 </p>
 
 
-<h3><?php echo __('How to test the plugin', 'litespeed-cache'); ?></h3>
+<div class="litespeed-h3"><?php echo __('How to test the plugin', 'litespeed-cache'); ?></div>
 <p><?php echo __('The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers.', 'litespeed-cache'); ?></p>
 <p>
 	<?php echo sprintf(__('Visiting a page for the first time should result in a %s or %s response header for the page.', 'litespeed-cache'),
@@ -50,7 +50,7 @@ if (!defined('WPINC')) die;
 		'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation#testing" rel="noopener noreferrer" target="_blank"'); ?>
 </p>
 
-<h3><?php echo __( 'Cache tag prefix setting', 'litespeed-cache' ) ; ?></h3>
+<div class="litespeed-h3"><?php echo __( 'Cache tag prefix setting', 'litespeed-cache' ) ; ?></div>
 <p>
 	<?php echo sprintf(
 		__( 'The value of this wordpress cache tag prefix is %1$s. If you want to change the value to avoid conflicts with multiple sites, please add %2$s to %3$s.', 'litespeed-cache' ),

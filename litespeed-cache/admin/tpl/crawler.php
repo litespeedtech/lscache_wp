@@ -65,7 +65,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed infomation.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
 			</div>
 		<?php endif; ?>
-		<table class="widefat striped">
+		<table class="litespeed-table">
 			<thead><tr >
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache') ; ?></th>

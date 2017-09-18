@@ -9,26 +9,24 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Debug Log', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<div class="litespeed-row">
-				<div class="litespeed-switch">
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG,
-						LiteSpeed_Cache_Config::VAL_OFF,
-						__( 'Off', 'litespeed-cache' )
-					) ; ?>
+			<div class="litespeed-switch">
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_DEBUG,
+					LiteSpeed_Cache_Config::VAL_OFF,
+					__( 'Off', 'litespeed-cache' )
+				) ; ?>
 
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG,
-						LiteSpeed_Cache_Config::VAL_ON,
-						__( 'On', 'litespeed-cache' )
-					) ; ?>
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_DEBUG,
+					LiteSpeed_Cache_Config::VAL_ON,
+					__( 'On', 'litespeed-cache' )
+				) ; ?>
 
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG,
-						LiteSpeed_Cache_Config::VAL_ON2,
-						__( 'Admin IP only', 'litespeed-cache' )
-					) ; ?>
-				</div>
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_DEBUG,
+					LiteSpeed_Cache_Config::VAL_ON2,
+					__( 'Admin IP only', 'litespeed-cache' )
+				) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Outputs to WordPress debug log.', 'litespeed-cache' ) ; ?>
@@ -54,20 +52,18 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Debug Level', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<div class="litespeed-row">
-				<div class="litespeed-switch">
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
-						LiteSpeed_Cache_Config::VAL_OFF,
-						__( 'Basic', 'litespeed-cache' )
-					) ; ?>
+			<div class="litespeed-switch">
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
+					LiteSpeed_Cache_Config::VAL_OFF,
+					__( 'Basic', 'litespeed-cache' )
+				) ; ?>
 
-					<?php echo $this->build_radio(
-						LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
-						LiteSpeed_Cache_Config::VAL_ON,
-						__( 'Advanced', 'litespeed-cache' )
-					) ; ?>
-				</div>
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
+					LiteSpeed_Cache_Config::VAL_ON,
+					__( 'Advanced', 'litespeed-cache' )
+				) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Advanced level will log more details.', 'litespeed-cache' ) ; ?>

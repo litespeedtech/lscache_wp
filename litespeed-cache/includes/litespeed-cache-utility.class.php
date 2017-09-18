@@ -23,6 +23,21 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
+	 * Check if the host is the internal host
+	 *
+	 * @since  1.2.3
+	 *
+	 */
+	public static function internal( $host )
+	{
+		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
+			define( 'LITESPEED_FRONTEND_HOST', parse_url( get_option( 'home' ), PHP_URL_HOST ) ) ;
+		}
+
+		return $host === LITESPEED_FRONTEND_HOST ;
+	}
+
+	/**
 	 * Convert URL to URI
 	 *
 	 * @since  1.2.2

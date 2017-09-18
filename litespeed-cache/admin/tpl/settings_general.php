@@ -17,30 +17,28 @@ if (!defined('WPINC')) die;
 					$_options[$id] = 1;
 				}
 			?>
-			<div class="litespeed-row">
-				<div class="litespeed-switch">
-					<?php echo $this->build_radio(
-						$id,
-						LiteSpeed_Cache_Config::VAL_OFF,
-						__('Disable', 'litespeed-cache')
-					); ?>
+			<div class="litespeed-switch">
+				<?php echo $this->build_radio(
+					$id,
+					LiteSpeed_Cache_Config::VAL_OFF,
+					__('Disable', 'litespeed-cache')
+				); ?>
 
-					<?php echo $this->build_radio(
-						$id,
-						LiteSpeed_Cache_Config::VAL_ON,
-						__('Enable', 'litespeed-cache')
-					); ?>
+				<?php echo $this->build_radio(
+					$id,
+					LiteSpeed_Cache_Config::VAL_ON,
+					__('Enable', 'litespeed-cache')
+				); ?>
 
-					<?php
-						if ( is_multisite() ){
-							echo $this->build_radio(
-								$id,
-								LiteSpeed_Cache_Config::VAL_ON2,
-								__('Use Network Admin Setting', 'litespeed-cache')
-							);
-						}
-					?>
-				</div>
+				<?php
+					if ( is_multisite() ){
+						echo $this->build_radio(
+							$id,
+							LiteSpeed_Cache_Config::VAL_ON2,
+							__('Use Network Admin Setting', 'litespeed-cache')
+						);
+					}
+				?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo sprintf(__('Please visit the <a %s>Information</a> page on how to test the cache.', 'litespeed-cache'),

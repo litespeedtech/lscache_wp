@@ -86,7 +86,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 			<span class="litespeed-panel-icon-<?php echo $val[ 'icon' ] ; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<div class="litespeed-panel-h3 <?php if ( ! empty( $val[ 'title_cls' ] ) ) echo $val[ 'title_cls' ] ; ?>">
+			<div class="litespeed-h3 <?php if ( ! empty( $val[ 'title_cls' ] ) ) echo $val[ 'title_cls' ] ; ?>">
 				<?php echo $val[ 'title' ] ; ?>
 			</div>
 			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
@@ -99,8 +99,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 <?php if (!is_multisite() || !is_network_admin()): ?>
 
-	<h3><?php echo __('Purge By...', 'litespeed-cache'); ?></h3>
-	<hr/>
+	<div class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></div>
 	<div class="litespeed-desc">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
 		<?php echo __('Please enter one per line.', 'litespeed-cache'); ?>

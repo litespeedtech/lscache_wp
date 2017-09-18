@@ -345,13 +345,8 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _is_file_url( $url )
 	{
-		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
-			$frontend_url = parse_url( get_option( 'home' ), PHP_URL_HOST ) ;
-			define( 'LITESPEED_FRONTEND_HOST', $frontend_url ) ;
-		}
-
 		$url_parsed = parse_url( $url ) ;
-		if ( isset( $url_parsed[ 'host' ] ) && $url_parsed[ 'host' ] !== LITESPEED_FRONTEND_HOST ) {
+		if ( isset( $url_parsed[ 'host' ] ) && ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) ) {
 			return false ;
 		}
 

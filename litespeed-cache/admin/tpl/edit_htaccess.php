@@ -43,17 +43,17 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
 		</div>
 
 		<?php if (defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT): ?>
-		<h3><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></h3>
+		<div class="litespeed-h3"><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></div>
 
 		<?php elseif($content === false): ?>
-		<h3><?php $this->display_messages(); ?></h3>
+		<div class="litespeed-h3"><?php $this->display_messages(); ?></div>
 
 		<?php else: ?>
 
 		<form method="post" action="admin.php?page=<?php echo LiteSpeed_Cache::PAGE_EDIT_HTACCESS; ?>">
 			<?php $this->form_action(LiteSpeed_Cache::ACTION_SAVE_HTACCESS); ?>
 
-			<h3><?php echo sprintf(__('Current %s contents:', 'litespeed-cache'), '.htaccess'); ?></h3>
+			<div class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></div>
 
 			<!--p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), LiteSpeed_Cache_Admin_Rules::LS_MODULE_DONOTEDIT); ?></span></p-->
 
