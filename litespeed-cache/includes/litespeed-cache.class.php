@@ -18,7 +18,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.2.2' ;
+	const PLUGIN_VERSION = '1.2.3dev' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -133,6 +133,9 @@ class LiteSpeed_Cache
 		// 1. Init vary
 		// 2. Init cacheable status
 		LiteSpeed_Cache_Vary::get_instance() ;
+
+		// Hook cdn for attachements
+		LiteSpeed_Cache_CDN::get_instance() ;
 
 		// Load public hooks
 		$this->load_public_actions() ;
@@ -350,7 +353,7 @@ class LiteSpeed_Cache
 			return ;
 		}
 		if ( ! $is_html ) {
-			LiteSpeed_Cache_Log::debug( 'Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 20 ) ) ;
+			LiteSpeed_Cache_Log::debug( 'Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
 			return ;
 		}
 
@@ -372,6 +375,8 @@ class LiteSpeed_Cache
 		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
 			$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 		}
+		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
+
 		$buffer .= $this->send_headers( true ) ;
 
 		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;

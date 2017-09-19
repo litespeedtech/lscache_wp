@@ -389,6 +389,50 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
+	 * Validates the CDN settings.
+	 *
+	 * @since 1.2.2
+	 * @access private
+	 */
+	private function validate_cdn( $input, &$options, &$errors)
+	{
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CDN,
+			LiteSpeed_Cache_Config::OPID_CDN_INC_IMG,
+			LiteSpeed_Cache_Config::OPID_CDN_INC_CSS,
+			LiteSpeed_Cache_Config::OPID_CDN_INC_JS,
+		);
+		foreach ( $ids as $id ) {
+			$options[ $id ] = self::parse_onoff( $input, $id ) ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_CDN_ORI ;
+		$options[ $id ] = $input[ $id ] ;
+		if ( $options[ $id ] ) {
+			$tmp = parse_url( $options[ $id ] ) ;
+			if ( ! empty( $tmp[ 'scheme' ] ) ) {
+				$options[ $id ] = str_replace( $tmp[ 'scheme' ] . ':', '', $options[ $id ] ) ;
+			}
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_CDN_URL ;
+		$options[ $id ] = $input[ $id ] ;
+
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CDN_FILETYPE,
+			LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE,
+		) ;
+		foreach ( $ids as $id ) {
+			$options[ $id ] = explode( "\n", $input[ $id ] ) ;
+			$options[ $id ] = array_map( 'trim', $options[ $id ] ) ;
+			$options[ $id ] = array_unique( $options[ $id ] ) ;
+			$options[ $id ] = array_filter( $options[ $id ] ) ;
+			$options[ $id ] = implode( "\n", $options[ $id ] ) ;
+		}
+	}
+
+
+	/**
 	 * Validates the optimize settings.
 	 *
 	 * @since 1.2.2
@@ -773,6 +817,8 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->validate_exclude( $input, $options, $errors) ;
 
 		$this->validate_optimize( $input, $options, $errors) ;
+
+		$this->validate_cdn( $input, $options, $errors) ;
 
 		$this->validate_debug( $input, $options, $errors) ;
 

@@ -9,6 +9,7 @@ $menu_list = array(
 	'purge' => __('Purge', 'litespeed-cache'),
 	'excludes' => __('Excludes', 'litespeed-cache'),
 	'optimize' => __('Optimize', 'litespeed-cache'),
+	'cdn' => __('CDN', 'litespeed-cache'),
 ) ;
 
 $menu_list['esi'] = __('ESI', 'litespeed-cache') ;
@@ -112,8 +113,10 @@ else {
 	<?php if ($this->get_disable_all()): ?>
 		<div class="litespeed-callout-danger">
 			<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
-			<?php echo __('The network admin selected use primary site configs for all subsites.', 'litespeed-cache') ; ?>
-			<?php echo __('The following options are selected, but are not editable in this settings page.', 'litespeed-cache') ; ?>
+			<p>
+				<?php echo __('The network admin selected use primary site configs for all subsites.', 'litespeed-cache') ; ?>
+				<?php echo __('The following options are selected, but are not editable in this settings page.', 'litespeed-cache') ; ?>
+			</p>
 		</div>
 	<?php endif ; ?>
 
@@ -134,10 +137,10 @@ else {
 	echo "<div class='litespeed-top20'></div>" ;
 
 	if ($this->get_disable_all()) {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit', true, array('disabled' => true)) ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit', true, array('disabled' => true)) ;
 	}
 	else {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit') ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit') ;
 	}
 
 	?>

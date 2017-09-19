@@ -347,7 +347,10 @@ class LiteSpeed_Cache_Optimize
 	{
 		$url_parsed = parse_url( $url ) ;
 		if ( isset( $url_parsed[ 'host' ] ) && ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) ) {
-			return false ;
+			// Check if is cdn path
+			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
+				return false ;
+			}
 		}
 
 		if ( empty( $url_parsed[ 'path' ] ) ) {

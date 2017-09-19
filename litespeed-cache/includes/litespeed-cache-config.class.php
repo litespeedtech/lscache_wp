@@ -95,6 +95,15 @@ class LiteSpeed_Cache_Config
 	const OPID_OPTIMIZE_TTL = 'optimize_ttl' ;
 	const OPID_HTML_MINIFY = 'html_minify' ;
 
+	const OPID_CDN = 'cdn' ;
+	const OPID_CDN_ORI = 'cdn_ori' ;
+	const OPID_CDN_URL = 'cdn_url' ;
+	const OPID_CDN_INC_IMG = 'cdn_inc_img' ;
+	const OPID_CDN_INC_CSS = 'cdn_inc_css' ;
+	const OPID_CDN_INC_JS = 'cdn_inc_js' ;
+	const OPID_CDN_FILETYPE = 'cdn_filetype' ;
+	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
+
 	const NETWORK_OPID_ENABLED = 'network_enabled' ;
 	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings' ;
 
@@ -371,6 +380,15 @@ class LiteSpeed_Cache_Config
 			self::OPID_JS_EXCLUDES 	=> '',
 			self::OPID_OPTIMIZE_TTL => 604800,
 			self::OPID_HTML_MINIFY 	=> false,
+
+			self::OPID_CDN 			=> false,
+			self::OPID_CDN_ORI 		=> '',
+			self::OPID_CDN_URL 		=> '',
+			self::OPID_CDN_INC_IMG 	=> false,
+			self::OPID_CDN_INC_CSS 	=> false,
+			self::OPID_CDN_INC_JS 	=> false,
+			self::OPID_CDN_FILETYPE => ".aac\n.css\n.eot\n.gif\n.jpeg\n.js\n.jpg\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.png\n.svg\n.ttf\n.woff",
+			self::OPID_CDN_EXCLUDE 	=> '',
 
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',

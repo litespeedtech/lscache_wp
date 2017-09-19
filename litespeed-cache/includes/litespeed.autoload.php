@@ -23,6 +23,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache'					=> 'includes/litespeed-cache.class.php',
 			'LiteSpeed_Cache_Activation'		=> 'includes/litespeed-cache-activation.class.php',
 			'LiteSpeed_Cache_API'				=> 'includes/litespeed-cache-api.class.php',
+			'LiteSpeed_Cache_CDN'				=> 'includes/litespeed-cache-cdn.class.php',
 			'LiteSpeed_Cache_Config'			=> 'includes/litespeed-cache-config.class.php',
 			'LiteSpeed_Cache_Control'			=> 'includes/litespeed-cache-control.class.php',
 			'LiteSpeed_Cache_Crawler'			=> 'includes/litespeed-cache-crawler.class.php',

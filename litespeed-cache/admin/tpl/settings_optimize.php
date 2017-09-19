@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <div class="litespeed-callout-warning">
 	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ) ; ?></h4>
-	<?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?>
+	<p><?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?></p>
 </div>
 
 

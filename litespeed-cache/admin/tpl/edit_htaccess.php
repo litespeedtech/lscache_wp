@@ -38,8 +38,10 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
 	<div class="litespeed-body">
 		<div class="litespeed-callout-danger">
 			<h4><?php echo __('WARNING: This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
-			<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
-			<?php echo __('Please consult the host/server admin before making any changes.', 'litespeed-cache'); ?>
+			<p>
+				<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
+				<?php echo __('Please consult the host/server admin before making any changes.', 'litespeed-cache'); ?>
+			</p>
 		</div>
 
 		<?php if (defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT): ?>
