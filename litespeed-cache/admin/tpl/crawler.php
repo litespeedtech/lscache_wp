@@ -86,15 +86,15 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 							if ( $meta && $meta->this_full_beginning_time ) {
 								if ( $is_running ) {
 									echo sprintf(__('The current sitemap crawl started at %s', 'litespeed-cache'),
-											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
+											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET ));
 
 								}
 								else {
 									echo sprintf(__('The current sitemap crawl started at %s', 'litespeed-cache'),
-											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time));
+											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET ));
 									echo "</div><div class='litespeed-desc'>";
 									echo sprintf(__('The next complete sitemap crawl will start at %s', 'litespeed-cache'),
-											date('m/d/Y H:i:s',$meta->this_full_beginning_time
+											date('m/d/Y H:i:s',$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET
 													+ $meta->last_full_time_cost + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]));
 								}
 
@@ -147,7 +147,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('<b>Last interval:</b> %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time)) ; ?>
+							<?php echo sprintf(__('<b>Last interval:</b> %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time+ LITESPEED_TIME_OFFSET )) ; ?>
 						</div>
 						<?php endif ; ?>
 

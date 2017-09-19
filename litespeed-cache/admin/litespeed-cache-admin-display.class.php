@@ -855,7 +855,7 @@ class LiteSpeed_Cache_Admin_Display
 			else {
 				$val = "<code>$val</code>" ;
 			}
-			echo sprintf( __( 'Recommended value: %s.', 'litespeed-cache' ), $val ) ;
+			echo sprintf( __( 'Recommended value: %s', 'litespeed-cache' ), $val ) ;
 		}
 	}
 

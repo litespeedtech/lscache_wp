@@ -786,6 +786,7 @@ ul.litespeed-shell-body {
 /********************************* small table *******************************/
 .litespeed-body .litespeed-vary-table {
 	margin-top: -15px;
+	padding-left: 0;
 	width: 250px;
 }
 
@@ -1138,7 +1139,7 @@ ul.litespeed-shell-body {
 /*text area read only */
 
 .litespeed-body input[readonly], .litespeed-body textarea[readonly] {
-	background-color: #f9fafc;
 	background-color: #eee;
+	background-color: #f2f9ff;
 }
 

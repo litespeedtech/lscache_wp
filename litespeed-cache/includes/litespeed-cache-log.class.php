@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Log
 			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, $unique ) ;
 		}
 		list( $usec, $sec ) = explode(' ', microtime() ) ;
-		return date( 'm/d/y H:i:s', $sec ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n" ;
+		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n" ;
 	}
 
 	/**

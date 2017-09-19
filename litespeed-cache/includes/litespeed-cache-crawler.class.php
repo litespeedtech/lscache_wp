@@ -301,7 +301,7 @@ class LiteSpeed_Cache_Crawler
 			return false ;
 		}
 
-		$filetime = date('m/d/Y H:i:s', filemtime($this->_sitemap_file)) ;
+		$filetime = date('m/d/Y H:i:s', filemtime($this->_sitemap_file) + LITESPEED_TIME_OFFSET ) ;
 
 		return $filetime ;
 	}
