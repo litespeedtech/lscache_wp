@@ -183,8 +183,8 @@ class LiteSpeed_Cache_ESI
 		if ( !is_array($params) || !is_string($control) ) {
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push("Sub esi hooks returned Params: \n"
-					. print_r($params, true) . "\ncache control: \n"
-					. print_r($control, true)) ;
+					. var_export($params, true) . "\ncache control: \n"
+					. var_export($control, true)) ;
 			}
 			return false ;
 		}

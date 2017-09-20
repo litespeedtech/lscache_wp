@@ -639,7 +639,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
-			//LiteSpeed_Cache_Log::push('purge by post, check tax = ' . print_r($taxonomies, true)) ;
+			//LiteSpeed_Cache_Log::push('purge by post, check tax = ' . var_export($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
 				$terms = get_the_terms($post_id, $tax) ;
 				if ( ! empty($terms) ) {

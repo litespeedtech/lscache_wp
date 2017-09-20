@@ -170,7 +170,7 @@ class LiteSpeed_Cache_Admin_Report
 			}
 
 			if ( ! is_string($val) ) {
-				$buf .= print_r($val, true) ;
+				$buf .= var_export($val, true) ;
 			}
 			else {
 				$buf .= $val ;

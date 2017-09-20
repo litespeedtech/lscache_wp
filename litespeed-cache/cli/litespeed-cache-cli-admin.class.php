@@ -343,7 +343,7 @@ class LiteSpeed_Cache_Cli_Admin
 		$ret = LiteSpeed_Cache_Config::get_instance()->update_options($output) ;
 
 		if ( $ret ) {
-			WP_CLI::success('Options updated. Please purge the cache. New options: ' . print_r($output, true)) ;
+			WP_CLI::success('Options updated. Please purge the cache. New options: ' . var_export($output, true)) ;
 		}
 		else {
 			WP_CLI::error('No options updated.') ;
