@@ -372,14 +372,25 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers_force( $buffer )
 	{
-		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
-			$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
+		set_error_handler( 'litespeed_exception_handler' ) ;
+		try {
+			$buffer2 = $buffer ;
+
+			if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
+				$buffer2 = LiteSpeed_Cache_Optimize::run( $buffer2 ) ;
+			}
+			$buffer2 = LiteSpeed_Cache_CDN::run( $buffer2 ) ;
+
+			$buffer2 .= $this->send_headers( true ) ;
+
+			LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
+
+			$buffer = $buffer2 ;
+
+		} catch ( ErrorException $e ) {
+			error_log( 'LiteSpeed Error: ' . $e->getMessage() ) ;
 		}
-		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
-
-		$buffer .= $this->send_headers( true ) ;
-
-		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
+		restore_error_handler() ;
 
 		return $buffer ;
 	}

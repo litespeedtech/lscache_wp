@@ -108,7 +108,8 @@
 
 .litespeed-body code{
 	color: #9b908b ;
-	background-color: #dae7f2;
+	background-color: #e6f9ff;
+	border-radius: 3px;
 }
 
 .litespeed-body ul{
@@ -137,6 +138,10 @@
 	display: table;
 	padding-right: 50px;
 	padding-left: 3px;
+}
+
+.litespeed-title a {
+    text-decoration: none;
 }
 
 /********************************* nav tabs *******************************/
