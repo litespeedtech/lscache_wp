@@ -633,10 +633,10 @@ class LiteSpeed_Cache_Optimize
 				$this->minify_controller = new Minify_Controller_Files( $this->minify_env, $this->minify_sourceFactory ) ;
 			}
 			if ( ! isset( $this->minify_options ) ) {
-				$this->minify_options = [
+				$this->minify_options = array(
 					'encodeOutput' => false,
 					'quiet' => true,
-				] ;
+				) ;
 			}
 
 			$this->minify_options[ 'concatOnly' ] =  ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
