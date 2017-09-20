@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.2.3
+Stable tag: 1.2.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -224,6 +224,9 @@ For more detailed information about crawler setup, please see [our blog post](ht
 14. Cache Hit Example
 
 == Changelog ==
+
+= 1.2.3.1 - September 20 2017 =
+* [UPDATE] Improved PHP5.3 compatibility.
 
 = 1.2.3 - September 20 2017 =
 * [NEW FEATURE] Added CDN support.
