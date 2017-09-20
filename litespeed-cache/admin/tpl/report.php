@@ -33,7 +33,7 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 			</span>
 		</p>
 		<p>
-			<button class="litespeed-btn-primary" id='litespeed_cache_report_copy'>
+			<button class="litespeed-btn-success" id='litespeed_cache_report_copy'>
 				<?php echo __("Select All and Copy to Clipboard", "litespeed-cache"); ?>
 			</button>
 			<span class="litespeed-hide" id="copy_select_all_span">

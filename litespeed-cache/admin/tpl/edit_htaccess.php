@@ -65,7 +65,7 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
 				<?php echo $readonly; ?>
 			><?php echo esc_textarea($content); ?></textarea>
 
-			<button type="submit" class="litespeed-btn-success"><?php echo __('Save', 'litespeed-cache'); ?></button>
+			<button type="submit" class="litespeed-btn-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
 		</form>
 
 		<?php require LSWCP_DIR . 'admin/tpl/info_common_rewrite.php'; ?>

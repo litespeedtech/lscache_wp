@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
-Tested up to: 4.8.1
-Stable tag: 1.2.2
+Tested up to: 4.8.2
+Stable tag: 1.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, and HTTP/2 push! *
+*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push, and CDN support! *
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -47,6 +47,7 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
+* *NEW* - Content Delivery Network support
 * *NEW* - Minify CSS, JavaScript, and HTML
 * *NEW* - Combine CSS and JavaScript
 * *NEW* - HTTP/2 Push for CSS and JS
@@ -212,16 +213,27 @@ For more detailed information about crawler setup, please see [our blog post](ht
 3. Admin Settings - Purge
 4. Admin Settings - Excludes
 5. Admin Settings - Optimize
-6. Admin Settings - Debug
-7. Admin Settings - Crawler
-8. Admin Management - Purge
-9. Admin Management - DB Optimizer
-10. Admin Information Page
-11. Admin Crawler Status Page
-12. Cache Miss Example
-13. Cache Hit Example
+6. Admin Settings - CDN
+7. Admin Settings - ESI
+8. Admin Settings - Crawler
+9. Admin Settings - Thirdparty WooCommerce
+10. Admin Management - Purge
+11. Admin Management - DB Optimizer
+12. Admin Crawler Status Page
+13. Cache Miss Example
+14. Cache Hit Example
 
 == Changelog ==
+
+= 1.2.3 - September 20 2017 =
+* [NEW FEATURE] Added CDN support.
+* [IMPROVEMENT] Improved compatibility when upgrading by fixing a possible fatal error.
+* [IMPROVEMENT] Added support for custom wp-content paths.
+* [BUGFIX] Fixed non-primary network blogs not being able to minify.
+* [BUGFIX] Fixed HTML Minify preventing Facebook from being able to parse og tags.
+* [BUGFIX] Preview page is no longer cacheable.
+* [BUGFIX] Corrected log and crawler timezone to match set WP timezone.
+* [GUI] Revamp of plugin GUI.
 
 = 1.2.2 - September 15 2017 =
 * [NEW FEATURE] Added CSS/JS minification.

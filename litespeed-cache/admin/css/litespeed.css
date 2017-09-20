@@ -107,8 +107,8 @@
 }
 
 .litespeed-body code{
-	color: #9b908b ;
-	background-color: #e6f9ff;
+	color: #998c85 ;
+	background-color: #dde9f5;
 	border-radius: 3px;
 }
 
@@ -746,6 +746,7 @@ ul.litespeed-shell-body {
 	border-left-width: 5px;
 	color: #538ac6;
 	margin: 13px 0;
+	background: #fff;
 }
 
 [class*="litespeed-callout-"] h4 {

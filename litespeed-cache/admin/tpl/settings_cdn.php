@@ -16,7 +16,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Enabling this option will enable Content Delivery Network for your site.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Enable Content Delivery Network use.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -26,7 +26,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 		<td>
 			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_ORI, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'The URL of your site to be replaced. Beginning with %1$s. For example, %2$s', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
+				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -46,7 +46,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_INC_IMG ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Include all images in CDN. This will affect all attachements, and HTML tag %s or CSS attribute %s.', 'litespeed-cache' ), '<code>&lt;img</code>', '<code>url()</code>' ) ; ?>
+				<?php echo sprintf( __( 'Serve all image files through the CDN. This will affect all attachments, HTML %s tags, and CSS %s attributes.', 'litespeed-cache' ), '<code>&lt;img</code>', '<code>url()</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -56,7 +56,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_INC_CSS ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Include all CSS in CDN. This will affect all enqueued WP CSS.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Serve all CSS files through the CDN. This will affect all enqueued WP CSS files.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -66,7 +66,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_INC_JS ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Include all JavaScript in CDN. This will affect all enqueued WP JavaScript.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Serve all JavaScript files through the CDN. This will affect all enqueued WP JavaScript files.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -78,8 +78,8 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 				<?php $id = LiteSpeed_Cache_Config::OPID_CDN_FILETYPE ; ?>
 				<?php $this->build_textarea( $id, null, false, 30 ) ; ?>
 				<div class="litespeed-desc">
-					<p><?php echo __( 'The static file types that will be replaced to CDN links. One per line.', 'litespeed-cache' ) ; ?></p>
-					<p><?php echo sprintf( __( 'This will affect all tags containing attributes : %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?></p>
+					<p><?php echo __( 'Static file type links to be replaced by CDN links. One per line.', 'litespeed-cache' ) ; ?></p>
+					<p><?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?></p>
 				</div>
 			</div>
 			<div style="float:left; display:flex;">
@@ -96,7 +96,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 			<?php $id = LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ; ?>
 			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'The pathes containing these strings will be excluded from CDN.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
