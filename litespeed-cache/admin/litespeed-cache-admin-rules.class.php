@@ -46,7 +46,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
 
-	const RW_PATTERN_RES = LSWCP_CONTENT_FOLDER . '/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php' ;
+	const RW_PATTERN_RES = '/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php' ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -657,7 +657,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES ;
 		if ( isset($diff[$id]) && $diff[$id] ) {
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSWCP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
 			$new_rules[] = $new_rules_backend[] = '' ;
 		}
