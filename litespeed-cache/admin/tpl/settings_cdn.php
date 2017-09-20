@@ -22,21 +22,21 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Original URL', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_ORI, 'litespeed-input-long' ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
 		<th><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_URL, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Original URL', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_ORI, 'litespeed-input-long' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
