@@ -20,7 +20,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
-		<a href="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn-success">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE) ; ?>" class="litespeed-btn-success">
 			<?php echo __('Generate Crawler File', 'litespeed-cache') ; ?>
 		</a>
 
@@ -128,7 +128,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 					<td>
 						<div class="litespeed-switch-drag">
 							<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
-								data-url="<?php echo $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, 'cron_enable') ; ?>"
+								data-url="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, 'cron_enable') ; ?>"
 								<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
 								<?php echo $disabled ; ?>
 							/>
@@ -140,9 +140,9 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 					</td>
 					<td>
 					<?php
-						echo " <a href='" . $this->build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+						echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
 
-						$href = LiteSpeed_Cache_Router::can_crawl() ? $this->build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
+						$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
 						echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
@@ -189,7 +189,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<div class="litespeed-shell-header">
 				<div class="litespeed-shell-header-bg"></div>
 				<div class="litespeed-shell-header-icon-container">
-					<img id="litespeed-shell-icon" src="<?php echo plugins_url('img/Litespeed.icon.svg', dirname(__FILE__)); ?>" />
+					<img id="litespeed-shell-icon" src="<?php echo LSWCP_PLUGIN_URL . 'img/Litespeed.icon.svg' ; ?>" />
 				</div>
 			</div>
 			<ul class="litespeed-shell-body">

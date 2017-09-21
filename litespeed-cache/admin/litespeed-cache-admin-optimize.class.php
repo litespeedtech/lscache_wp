@@ -25,7 +25,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 */
 	public static function generate_url( $type )
 	{
-		$url = LiteSpeed_Cache_Admin_Display::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, false, self::TYPE . '=' . $type ) ;
+		$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, false, self::TYPE . '=' . $type ) ;
 		return $url ;
 	}
 

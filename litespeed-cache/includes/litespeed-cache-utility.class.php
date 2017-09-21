@@ -67,4 +67,73 @@ class LiteSpeed_Cache_Utility
 		}
 		return trim( $url ) ;
 	}
+
+	/**
+	 * Builds an url with an action and a nonce.
+	 *
+	 * Assumes user capabilities are already checked.
+	 *
+	 * @access public
+	 * @param string $action The LSCWP_CTRL action to do in the url.
+	 * @param string $ajax_action AJAX call's action
+	 * @param string $append_str The appending string to url
+	 * @return string The built url.
+	 */
+	public static function build_url( $action, $ajax_action = false, $append_str = false, $page = null )
+	{
+		$prefix = '?' ;
+
+		if ( $ajax_action === false ) {
+			if ( $page ) {
+				// If use admin url
+				if ( $page === true ) {
+					$page = 'admin.php' ;
+				}
+				else {
+					if ( strpos( $page, '?' ) !== false ) {
+						$prefix = '&' ;
+					}
+				}
+				$combined = $page . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+			}
+			else {
+				// Current page rebuild URL
+				$params = $_GET ;
+
+				if ( ! empty( $params ) ) {
+					if ( isset( $params[ 'LSCWP_CTRL' ] ) ) {
+						unset( $params[ 'LSCWP_CTRL' ] ) ;
+					}
+					if ( isset( $params[ '_wpnonce' ] ) ) {
+						unset( $params[ '_wpnonce' ] ) ;
+					}
+					if ( ! empty( $params ) ) {
+						$prefix .= http_build_query( $params ) . '&' ;
+					}
+				}
+				global $pagenow ;
+				$combined = $pagenow . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+			}
+		}
+		else {
+			$combined = 'admin-ajax.php?action=' . $ajax_action . '&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+		}
+
+		if ( is_network_admin() ) {
+			$prenonce = network_admin_url( $combined ) ;
+		}
+		else {
+			$prenonce = admin_url( $combined ) ;
+		}
+		$url = wp_nonce_url( $prenonce, $action, LiteSpeed_Cache::NONCE_NAME ) ;
+
+		if ( $append_str ) {
+			$url .= '&' . $append_str ;
+		}
+
+		return $url ;
+	}
 }
+
+
+

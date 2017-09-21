@@ -48,6 +48,8 @@ class LiteSpeed_Cache
 	const ACTION_DO_CRAWL = 'do-crawl' ;
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 
+	const ACTION_FRONT_PURGE = 'front-purge' ;
+
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 
 	const WHM_TRANSIENT = 'lscwp_whm_install' ;
@@ -77,10 +79,6 @@ class LiteSpeed_Cache
 
 			// Load third party detection if lscache enabled.
 			include_once LSWCP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
-		}
-
-		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
-			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
 
 		// Register plugin activate/deactivate/uninstall hooks
@@ -114,6 +112,10 @@ class LiteSpeed_Cache
 	 */
 	public function init()
 	{
+		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
+			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
+		}
+
 		if( is_admin() ) {
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
@@ -156,6 +158,10 @@ class LiteSpeed_Cache
 		if ( $action = LiteSpeed_Cache_Router::get_action() ) {
 			$this->proceed_action( $action ) ;
 		}
+
+		// Load frontend GUI
+		LiteSpeed_Cache_GUI::get_instance() ;
+
 	}
 
 	/**
@@ -237,6 +243,11 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;
 				break;
+
+			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
+				// redirect inside
+				LiteSpeed_Cache_Purge::frontend_purge() ;
+				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				LiteSpeed_Cache_Purge::get_instance()->purge_list() ;

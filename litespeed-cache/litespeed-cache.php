@@ -50,6 +50,7 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSWCP_DIR' ) ) {
 
 define( 'LSWCP_CONTENT_DIR', dirname( get_theme_root() ) ) ;
 define( 'LSWCP_DIR', plugin_dir_path( __FILE__ ) ) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
+define( 'LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 define( 'LSWCP_BASENAME', plugin_basename( LSWCP_DIR . 'litespeed-cache.php' ) ) ;//LSWCP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 define( 'LSWCP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`

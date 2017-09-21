@@ -185,7 +185,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_style()
 	{
-		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, plugin_dir_url(__FILE__) . 'css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
+		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
 	}
 
 	/**
@@ -196,15 +196,15 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_scripts()
 	{
-		wp_register_script(LiteSpeed_Cache::PLUGIN_NAME, plugin_dir_url(__FILE__) . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false) ;
+		wp_register_script(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false) ;
 
 		if ( LiteSpeed_Cache_Router::has_whm_msg() ) {
-			$ajax_url_dismiss_whm = self::build_url(LiteSpeed_Cache::ACTION_DISMISS_WHM, LiteSpeed_Cache::ACTION_DISMISS_WHM) ;
+			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS_WHM, LiteSpeed_Cache::ACTION_DISMISS_WHM) ;
 			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_whm' => $ajax_url_dismiss_whm)) ;
 		}
 
 		if ( LiteSpeed_Cache_Router::has_msg_ruleconflict() ) {
-			$ajax_url = self::build_url(LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT, LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT) ;
+			$ajax_url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT, LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT) ;
 			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_ruleconflict' => $ajax_url)) ;
 		}
 
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function add_quick_purge()
 	{
 		global $wp_admin_bar ;
-		$url = self::build_url(LiteSpeed_Cache::ACTION_PURGE_ALL) ;
+		$url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_PURGE_ALL) ;
 
 		$wp_admin_bar->add_node(array(
 			'id'    => 'lscache-quick-purge',
@@ -286,57 +286,6 @@ class LiteSpeed_Cache_Admin_Display
 			'href'  => $url,
 			'meta'  => array('class' => 'litespeed-top-toolbar'),
 		)) ;
-	}
-
-	/**
-	 * Builds an admin url with an action and a nonce.
-	 *
-	 * Assumes user capabilities are already checked.
-	 *
-	 * @access public
-	 * @param string $action The LSCWP_CTRL action to do in the url.
-	 * @param string $ajax_action AJAX call's action
-	 * @param string $append_str The appending string to url
-	 * @return string The built url.
-	 */
-	public static function build_url($action, $ajax_action = false, $append_str = false)
-	{
-		global $pagenow ;
-		$prefix = '?' ;
-
-		if ( $ajax_action === false ) {
-			$params = $_GET ;
-
-			if ( ! empty($params) ) {
-				if ( isset($params['LSCWP_CTRL']) ) {
-					unset($params['LSCWP_CTRL']) ;
-				}
-				if ( isset($params['_wpnonce']) ) {
-					unset($params['_wpnonce']) ;
-				}
-				if ( ! empty($params) ) {
-					$prefix .= http_build_query($params) . '&' ;
-				}
-			}
-			$combined = $pagenow . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
-		}
-		else {
-			$combined = 'admin-ajax.php?action=' . $ajax_action . '&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
-		}
-
-		if ( is_network_admin() ) {
-			$prenonce = network_admin_url($combined) ;
-		}
-		else {
-			$prenonce = admin_url($combined) ;
-		}
-		$url = wp_nonce_url($prenonce, $action, LiteSpeed_Cache::NONCE_NAME) ;
-
-		if ( $append_str ) {
-			$url .= '&' . $append_str ;
-		}
-
-		return $url ;
 	}
 
 	/**

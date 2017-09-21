@@ -79,7 +79,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 <?php foreach ( $_panels as $val ): ?>
 
 	<a 	class="litespeed-panel"
-		href="<?php echo LiteSpeed_Cache_Admin_Display::build_url( $val[ 'tag' ], false, ! empty( $val[ 'append_url' ] ) ? $val[ 'append_url' ] : false ) ; ?>"
+		href="<?php echo LiteSpeed_Cache_Utility::build_url( $val[ 'tag' ], false, ! empty( $val[ 'append_url' ] ) ? $val[ 'append_url' ] : false ) ; ?>"
 		<?php if ( ! empty( $val[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $val[ 'cfm' ] . '"' ; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">

@@ -268,7 +268,7 @@ class LiteSpeed_Cache_Purge
 	 * @param string $value A url to purge.
 	 * @param string $key Unused.
 	 */
-	public function purgeby_url_cb( $value, $key )
+	public function purgeby_url_cb( $value, $key = false )
 	{
 		$val = trim( $value ) ;
 		if ( empty( $val ) ) {
@@ -337,6 +337,25 @@ class LiteSpeed_Cache_Purge
 
 		// for redirection
 		$_GET[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT] = $sel ;
+	}
+
+	/**
+	 * Purge frontend url
+	 *
+	 * @since 1.2.4
+	 * @access public
+	 */
+	public static function frontend_purge()
+	{
+		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			exit( 'no referer' ) ;
+		}
+		$instance = self::get_instance() ;
+
+		$instance->purgeby_url_cb( $_SERVER[ 'HTTP_REFERER' ] ) ;
+
+		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] ) ;
+		exit() ;
 	}
 
 	/**

@@ -4,7 +4,7 @@ if (!defined('WPINC')) die;
 ?>
 	<!-- build_setting_purge_on_upgrade -->
 	<tr>
-		<th><?php echo __('Purge All on upgrade', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Purge All On Upgrade', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE); ?>
 			<div class="litespeed-desc">

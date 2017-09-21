@@ -29,6 +29,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Crawler'			=> 'includes/litespeed-cache-crawler.class.php',
 			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'includes/litespeed-cache-crawler-sitemap.class.php',
 			'LiteSpeed_Cache_ESI'				=> 'includes/litespeed-cache-esi.class.php',
+			'LiteSpeed_Cache_GUI'				=> 'includes/litespeed-cache-gui.class.php',
 			'LiteSpeed_Cache_Log'				=> 'includes/litespeed-cache-log.class.php',
 			'LiteSpeed_Cache_Optimize'			=> 'includes/litespeed-cache-optimize.class.php',
 			'LiteSpeed_Cache_Purge'				=> 'includes/litespeed-cache-purge.class.php',
