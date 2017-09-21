@@ -534,39 +534,29 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since 1.0.1
 	 * @access private
-	 * @param array $excludes_list List of excluded URIs
+	 * @param array $excludes List of excluded URIs
 	 * @return boolean True if excluded, false otherwise.
 	 */
-	private static function _is_uri_excluded($excludes_list)
+	private static function _is_uri_excluded( $excludes )
 	{
-		$uri = esc_url($_SERVER["REQUEST_URI"]);
-		$uri_len = strlen( $uri ) ;
-		if (is_multisite()) {
-			$blog_details = get_blog_details(get_current_blog_id());
-			$blog_path = $blog_details->path;
-			$blog_path_len = strlen($blog_path);
-			if (($uri_len >= $blog_path_len)
-				&& (strncmp($uri, $blog_path, $blog_path_len) == 0)) {
-				$uri = substr($uri, $blog_path_len - 1);
-				$uri_len = strlen( $uri ) ;
-			}
-		}
-		foreach( $excludes_list as $excludes_rule ){
-			$rule_len = strlen( $excludes_rule );
-			if (($excludes_rule[$rule_len - 1] == '$')) {
-				if ($uri_len != (--$rule_len)) {
-					continue;
+		$uri = esc_url( $_SERVER[ 'REQUEST_URI' ] ) ;
+
+		foreach( $excludes as $exclude ) {
+			// do exact match
+			if ( substr( $exclude, -1 ) === '$' ) {
+				if ( $uri === substr( $exclude, 1 ) ) {
+					return true ;
 				}
 			}
-			elseif ( $uri_len < $rule_len ) {
-				continue;
+			else {
+				if ( strpos( $uri, $exclude ) !== false ) {
+					return true ;
+				}
 			}
 
-			if ( strncmp( $uri, $excludes_rule, $rule_len ) == 0 ){
-				return true ;
-			}
 		}
-		return false;
+
+		return false ;
 	}
 
 	/**
