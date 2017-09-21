@@ -337,8 +337,12 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
 		if ( isset( $input[ $id ]) ) {
-			$uri_arr = array_map('trim', explode("\n", $input[ $id ])) ;
-			$options[ $id ] = implode("\n", array_filter( $uri_arr)) ;
+			$arr = explode( "\n", $input[ $id ] ) ;
+			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;
+			$arr = array_unique( $arr ) ;
+			$arr = array_filter( $arr ) ;
+			// Remove domain
+			$options[ $id ] = implode( "\n", $arr ) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
@@ -423,11 +427,11 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE,
 		) ;
 		foreach ( $ids as $id ) {
-			$options[ $id ] = explode( "\n", $input[ $id ] ) ;
-			$options[ $id ] = array_map( 'trim', $options[ $id ] ) ;
-			$options[ $id ] = array_unique( $options[ $id ] ) ;
-			$options[ $id ] = array_filter( $options[ $id ] ) ;
-			$options[ $id ] = implode( "\n", $options[ $id ] ) ;
+			$arr = explode( "\n", $input[ $id ] ) ;
+			$arr = array_map( 'trim', $arr ) ;
+			$arr = array_unique( $arr ) ;
+			$arr = array_filter( $arr ) ;
+			$options[ $id ] = implode( "\n", $arr ) ;
 		}
 	}
 

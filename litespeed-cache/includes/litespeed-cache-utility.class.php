@@ -53,13 +53,14 @@ class LiteSpeed_Cache_Utility
 	/**
 	 * Make URL to be relative
 	 *
+	 * NOTE: for subfolder site_url, need to strip subfolder part (strip anything but scheme and host)
+	 *
 	 * @param  string $url
-	 * @return string      Relative URL
+	 * @return string      Relative URL, start with /
 	 */
 	public static function make_relative( $url )
 	{
 		// replace site_url if the url is full url
-		// NOTE: for subfolder site_url, need to strip subfolder part (strip anything but scheme and host)
 		self::compatibility() ;
 		$site_url_domain = http_build_url( LiteSpeed_Cache_Router::get_siteurl(), array(), HTTP_URL_STRIP_ALL ) ;
 		if ( strpos( $url, $site_url_domain ) === 0 ) {
