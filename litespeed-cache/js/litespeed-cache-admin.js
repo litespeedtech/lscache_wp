@@ -175,6 +175,11 @@ var _litespeed_dots ;
 				if( litespeed_keycode( thiskey.charCodeAt( 0 ) ) ) $( that )[ 0 ].click() ;
 			});
 		});
+
+		/** Lets copy one more submit button **/
+		if ( $( '#litespeed_form_options' ).length > 0 ) {
+			$( '#litespeed_form_options [type="submit"]' ).clone().addClass( 'litespeed-float-submit' ).prependTo( '#litespeed_form_options' ) ;
+		}
 	}) ;
 })(jQuery) ;
 

@@ -90,7 +90,7 @@ if (!defined('WPINC')) die;
 		</li>
 		<li><?php echo sprintf(__('Replace the ajax query in %1$s with %2$s', 'litespeed-cache'),
 					'<code>wp-content/plugins/wp-postviews/postviews-cache.js</code>',
-					'<textarea class="litespeed-textarea" rows="11" readonly>jQuery.ajax({
+					'<br /><textarea class="litespeed-textarea" rows="11" readonly>jQuery.ajax({
 		type:"GET",
 		url:viewsCacheL10n.admin_ajax_url,
 		data:"postviews_id="+viewsCacheL10n.post_id+"&amp;action=postviews",

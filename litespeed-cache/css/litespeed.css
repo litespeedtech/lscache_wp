@@ -110,6 +110,8 @@
 	color: #998c85 ;
 	background-color: #dde9f5;
 	border-radius: 3px;
+	font-size: 11px;
+	font-style: normal;
 }
 
 .litespeed-body ul{
@@ -1118,6 +1120,11 @@ ul.litespeed-shell-body {
 	border-radius: 3px;
 }
 
+.litespeed-float-submit {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
 
 .litespeed-body input,.litespeed-body textarea {
 	border: 1px solid #6699cc;

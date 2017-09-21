@@ -107,7 +107,7 @@ else {
 	?>
 	</h2>
 	<div class="litespeed-body">
-	<form method="post" action="options.php" id="litespeed_form_options">
+	<form method="post" action="options.php" id="litespeed_form_options" class="litespeed-relative">
 		<!--input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" /-->
 
 	<?php if ($this->get_disable_all()): ?>
@@ -136,7 +136,7 @@ else {
 
 	echo "<div class='litespeed-top20'></div>" ;
 
-	if ($this->get_disable_all()) {
+	if ( $this->get_disable_all() ) {
 		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit', true, array('disabled' => true)) ;
 	}
 	else {

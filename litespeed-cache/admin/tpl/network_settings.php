@@ -34,7 +34,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	?>
 	</h2>
 	<div class="litespeed-body">
-	<form method="post" action="admin.php?page=lscache-settings" id="ls_form_options">
+	<form method="post" action="admin.php?page=lscache-settings" id="litespeed_form_options" class="litespeed-relative">
 	<?php
 		$this->form_action(LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK);
 
