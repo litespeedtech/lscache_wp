@@ -49,6 +49,7 @@ class LiteSpeed_Cache
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 
 	const ACTION_FRONT_PURGE = 'front-purge' ;
+	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 
@@ -247,6 +248,11 @@ class LiteSpeed_Cache
 			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
 				// redirect inside
 				LiteSpeed_Cache_Purge::frontend_purge() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
+				// redirect inside
+				LiteSpeed_Cache_Config::frontend_save() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_BY:

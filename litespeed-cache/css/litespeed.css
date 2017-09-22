@@ -123,6 +123,10 @@
 	line-height: 16px;
 }
 
+.litespeed-body .litespeed-desc i {
+	font-size: 12px;
+}
+
 .litespeed-body p {
 	margin: 1em ;
 }
@@ -748,7 +752,7 @@ ul.litespeed-shell-body {
 	border-left-width: 5px;
 	color: #538ac6;
 	margin: 13px 0;
-	background: #fff;
+	background: #f2f9ff;
 }
 
 [class*="litespeed-callout-"] h4 {

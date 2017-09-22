@@ -55,12 +55,41 @@ class LiteSpeed_Cache_GUI
 			'href'	=> get_admin_url( null, 'admin.php?page=lscache-settings' ),
 			'meta'	=> array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 		) ) ;
+
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-single',
 			'title'		=> __( 'Purge this page', 'litespeed-cache' ),
 			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_PURGE, false, false, true ),
 			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-single-action',
+			'title'		=> __( 'Mark this page as ', 'litespeed-cache' ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-single-action',
+			'id'		=> 'litespeed-single-noncache',
+			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, false, 'type=nocache', true ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-single-action',
+			'id'		=> 'litespeed-single-private',
+			'title'		=> __( 'Private cache', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, false, 'type=private', true ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-single-action',
+			'id'		=> 'litespeed-single-more',
+			'title'		=> __( 'More settings', 'litespeed-cache' ),
+			'href'		=> get_admin_url( null, 'admin.php?page=lscache-settings#excludes' ),
 		) );
 
 

@@ -316,6 +316,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
+			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
 				if ( $_is_enabled
 						&& ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
 					self::$_action = $action ;

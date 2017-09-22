@@ -36,6 +36,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_RES = 'cache_resources' ;
 	const OPID_CACHE_MOBILE = 'mobileview_enabled' ;
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
+	const OPID_CACHE_URI_PRIV = 'cache_uri_priv' ;
 
 	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
 	const OPID_TIMED_URLS = 'timed_urls' ;
@@ -81,6 +82,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
 	const OPID_EXCLUDES_URI = 'excludes_uri' ;
+	const OPID_EXCLUDES_QS = 'excludes_qs' ;
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
@@ -253,6 +255,39 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Save frontend url to private cached uri/no cache uri
+	 *
+	 * @since 1.2.4
+	 * @access public
+	 */
+	public static function frontend_save()
+	{
+		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			exit( 'no referer' ) ;
+		}
+
+		if ( empty( $_GET[ 'type' ] ) ) {
+			exit( 'no type' ) ;
+		}
+
+		$id = $_GET[ 'type' ] == 'nocache' ? self::OPID_EXCLUDES_URI : self::OPID_CACHE_URI_PRIV ;
+		$instance = self::get_instance() ;
+		$list = $instance->get_option( $id ) ;
+
+		$list = explode( "\n", $list ) ;
+		$list[] = $_SERVER[ 'HTTP_REFERER' ] ;
+		$list = array_map( 'LiteSpeed_Cache_Utility::make_relative', $list ) ;// Remove domain
+		$list = array_unique( $list ) ;
+		$list = array_filter( $list ) ;
+		$list = implode( "\n", $list ) ;
+
+		$instance->update_options( array( $id => $list ) ) ;
+
+		wp_redirect( $_SERVER[ 'HTTP_REFERER' ] ) ;
+		exit() ;
+	}
+
+	/**
 	 * Check if one user role is in vary group settings
 	 *
 	 * @since 1.2.0
@@ -345,6 +380,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_RES => true,
 			self::OPID_CACHE_MOBILE => false,
 			self::ID_MOBILEVIEW_LIST => false,
+			self::OPID_CACHE_URI_PRIV => '',
+
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
@@ -367,6 +404,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_500_TTL => 3600,
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
 			self::OPID_EXCLUDES_URI => '',
+			self::OPID_EXCLUDES_QS => '',
 			self::OPID_EXCLUDES_CAT => '',
 			self::OPID_EXCLUDES_TAG => '',
 

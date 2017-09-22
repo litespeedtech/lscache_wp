@@ -12,6 +12,36 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Check if an array has a string
+	 *
+	 * Support $ exact match
+	 *
+	 * @since 1.2.4
+	 * @access private
+	 * @param string $needle The string to search with
+	 * @param array $haystack
+	 * @return bool|string False if not found, otherwise return the matched string in haystack.
+	 */
+	public static function is_in_array( $needle, $haystack )
+	{
+		foreach( $haystack as $item ) {
+			// do exact match
+			if ( substr( $item, -1 ) === '$' ) {
+				if ( $needle === substr( $item, 1 ) ) {
+					return $item ;
+				}
+			}
+			else {
+				if ( strpos( $needle, $item ) !== false ) {
+					return $item ;
+				}
+			}
+		}
+
+		return false ;
+	}
+
+	/**
 	 * Improve compatibility to PHP old versions
 	 *
 	 * @since  1.2.2

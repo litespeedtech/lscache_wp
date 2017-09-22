@@ -244,19 +244,28 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function validate_cache( &$input, &$options, &$errors )
 	{
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_PRIV ;
-		$options[ $id ] = self::parse_onoff( $input, $id ) ;
-
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER ;
-		$options[ $id ] = self::parse_onoff( $input, $id ) ;
-
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_REST ;
-		$options[ $id ] = self::parse_onoff( $input, $id ) ;
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CACHE_PRIV,
+			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER,
+			LiteSpeed_Cache_Config::OPID_CACHE_REST,
+		);
+		foreach ( $ids as $id ) {
+			$options[ $id ] = self::parse_onoff( $input, $id ) ;
+		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ;
 		$options[ $id ] = self::parse_onoff( $input, $id ) ;
 		if( ! $options[ $id ] ) {
 			LiteSpeed_Cache_Purge::add(LiteSpeed_Cache_Tag::TYPE_LOGIN) ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_URI_PRIV ;
+		if ( isset( $input[ $id ]) ) {
+			$arr = explode( "\n", $input[ $id ] ) ;
+			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
+			$arr = array_unique( $arr ) ;
+			$arr = array_filter( $arr ) ;
+			$options[ $id ] = implode( "\n", $arr ) ;
 		}
 	}
 
@@ -338,10 +347,18 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
 		if ( isset( $input[ $id ]) ) {
 			$arr = explode( "\n", $input[ $id ] ) ;
-			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;
+			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
 			$arr = array_unique( $arr ) ;
 			$arr = array_filter( $arr ) ;
-			// Remove domain
+			$options[ $id ] = implode( "\n", $arr ) ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ;
+		if ( isset( $input[ $id ]) ) {
+			$arr = explode( "\n", $input[ $id ] ) ;
+			$arr = array_map( 'trim', $arr ) ;
+			$arr = array_unique( $arr ) ;
+			$arr = array_filter( $arr ) ;
 			$options[ $id ] = implode( "\n", $arr ) ;
 		}
 
