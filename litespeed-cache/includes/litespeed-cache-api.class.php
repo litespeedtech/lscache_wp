@@ -10,6 +10,8 @@
  */
 class LiteSpeed_Cache_API
 {
+	const VERSION =	LiteSpeed_Cache::PLUGIN_VERSION ;
+
 	const TYPE_FEED =						LiteSpeed_Cache_Tag::TYPE_FEED ;
 	const TYPE_FRONTPAGE =					LiteSpeed_Cache_Tag::TYPE_FRONTPAGE ;
 	const TYPE_HOME =						LiteSpeed_Cache_Tag::TYPE_HOME ;
@@ -33,6 +35,17 @@ class LiteSpeed_Cache_API
 	const VAL_OFF	= LiteSpeed_Cache_Config::VAL_OFF ;
 	const VAL_ON	= LiteSpeed_Cache_Config::VAL_ON ;
 	const VAL_ON2	= LiteSpeed_Cache_Config::VAL_ON2 ;
+
+	/**
+	 * Compare version
+	 *
+	 * @since 1.2.4
+	 * @access public
+	 */
+	public static function v( $v )
+	{
+		return version_compare( self::VERSION, $v, '>=' ) ;
+	}
 
 	/**
 	 * Set mobile
@@ -232,6 +245,8 @@ class LiteSpeed_Cache_API
 	/**
 	 * Hook vary appending to vary
 	 *
+	 * NOTE: This will add vary to rewrite rule
+	 *
 	 * @since 1.1.3
 	 * @access public
 	 */
@@ -346,9 +361,9 @@ class LiteSpeed_Cache_API
 	 * @access public
 	 * @param string $control Cache control tag
 	 */
-	public static function esi_url($block_id, $wrapper, $params = array(), $control = 'private,no-vary')
+	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $echo = true )
 	{
-		LiteSpeed_Cache_ESI::sub_esi_block($block_id, $wrapper, $params, $control) ;
+		return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $echo ) ;
 	}
 
 	/**

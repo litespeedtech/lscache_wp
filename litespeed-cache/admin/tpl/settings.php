@@ -26,7 +26,6 @@ if ($this->show_compatibility_tab()){
 
 $menu_list['crawler'] = __('Crawler', 'litespeed-cache') ;
 
-
 global $_options ;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
