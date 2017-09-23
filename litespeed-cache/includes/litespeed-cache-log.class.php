@@ -134,6 +134,11 @@ class LiteSpeed_Cache_Log
 	 */
 	private static function format_message( $msg )
 	{
+		// If call here without calling get_enabled() first, improve compatibility
+		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
+			return $msg . "\n" ;
+		}
+
 		if ( ! isset( self::$_prefix ) ) {
 			// address
 			if ( PHP_SAPI == 'cli' ) {
@@ -148,14 +153,9 @@ class LiteSpeed_Cache_Log
 			else {
 				$addr = $_SERVER[ 'REMOTE_ADDR' ] . ':' . $_SERVER[ 'REMOTE_PORT' ] ;
 			}
+
 			// Generate a unique string per request
-			$unique = '' ;
-			$_random_list = '0123456789abcdefghijklmnopqrstuvwxyz' ;
-			$max = strlen( $_random_list ) - 1 ;
-			for( $i = 0 ; $i < 3 ; $i++ ) {
-				$unique .= $_random_list[ mt_rand( 0, $max ) ] ;
-			}
-			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, $unique ) ;
+			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, Litespeed_String::rrand( 3 ) ) ;
 		}
 		list( $usec, $sec ) = explode(' ', microtime() ) ;
 		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n" ;

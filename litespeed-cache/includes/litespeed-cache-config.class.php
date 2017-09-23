@@ -106,6 +106,8 @@ class LiteSpeed_Cache_Config
 	const OPID_CDN_FILETYPE = 'cdn_filetype' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 
+	const HASH = 'hash' ;
+
 	const NETWORK_OPID_ENABLED = 'network_enabled' ;
 	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings' ;
 
@@ -149,6 +151,7 @@ class LiteSpeed_Cache_Config
 		else {
 			$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
 		}
+
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[ self::OPID_PURGE_BY_POST ] ) ;
 
@@ -158,6 +161,12 @@ class LiteSpeed_Cache_Config
 
 		// Vary group settings
 		$this->vary_groups = (array)get_option( self::VARY_GROUP ) ;
+
+		// Set security key if not initialized yet
+		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {
+			$this->update_options( array( self::HASH => Litespeed_String::rrand( 32 ) ) ) ;
+		}
+
 	}
 
 	/**
@@ -427,6 +436,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_CDN_INC_JS 	=> false,
 			self::OPID_CDN_FILETYPE => ".aac\n.css\n.eot\n.gif\n.jpeg\n.js\n.jpg\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.png\n.svg\n.ttf\n.woff",
 			self::OPID_CDN_EXCLUDE 	=> '',
+
+			self::HASH 	=> '',
 
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',

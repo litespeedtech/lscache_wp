@@ -19,6 +19,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed'							=> 'lib/litespeed/litespeed.class.php',
 			'Litespeed_Crawler'					=> 'lib/litespeed/litespeed-crawler.class.php',
 			'Litespeed_File'					=> 'lib/litespeed/litespeed-file.class.php',
+			'Litespeed_String'					=> 'lib/litespeed/litespeed-string.class.php',
 
 			'LiteSpeed_Cache'					=> 'includes/litespeed-cache.class.php',
 			'LiteSpeed_Cache_Activation'		=> 'includes/litespeed-cache-activation.class.php',

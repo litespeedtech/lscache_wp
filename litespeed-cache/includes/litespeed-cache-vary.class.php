@@ -278,7 +278,13 @@ class LiteSpeed_Cache_Vary
 		if ( ! $res ) {
 			return false ;
 		}
-		return implode( ';', $res ) ;// Encrypt in production
+
+		$res = implode( ';', $res ) ;
+		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+			return $res ;
+		}
+		// Encrypt in production
+		return md5( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::HASH ) . $res ) ;
 	}
 
 	/**
