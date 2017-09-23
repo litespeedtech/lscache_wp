@@ -156,6 +156,18 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
+	 * Purge single action
+	 *
+	 * @since 1.2.4
+	 * @access public
+	 * @param  int $pid The ID of a post
+	 */
+	public static function purge_post( $pid )
+	{
+		LiteSpeed_Cache_Purge::purge_post( $pid ) ;
+	}
+
+	/**
 	 * Add purge tags
 	 *
 	 * @since 1.1.3

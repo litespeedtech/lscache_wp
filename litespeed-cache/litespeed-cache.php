@@ -138,11 +138,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
 if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
 	function litespeed_purge_single_post( $id )
 	{
-		$post_id = intval( $id ) ;
-		if ( ! in_array( get_post_status( $post_id ), array( 'publish', 'trash' ) ) ) {
-			return ;
-		}
-		LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_POST . $post_id ) ;
+		LiteSpeed_Cache_Purge::purge_post( $id ) ;
 	}
 }
 
