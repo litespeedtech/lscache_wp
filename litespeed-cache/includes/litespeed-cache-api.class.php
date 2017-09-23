@@ -361,9 +361,9 @@ class LiteSpeed_Cache_API
 	 * @access public
 	 * @param string $control Cache control tag
 	 */
-	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $echo = true )
+	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'private,no-vary' )
 	{
-		return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $echo ) ;
+		return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control ) ;
 	}
 
 	/**

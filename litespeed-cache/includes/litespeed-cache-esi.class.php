@@ -161,18 +161,15 @@ class LiteSpeed_Cache_ESI
 	 *
 	 * The block_id parameter should contain alphanumeric and '-_' only.
 	 *
-	 * If echo is false *HAS_ESI WILL NOT BE SET TO TRUE*!
-	 *
 	 * @since 1.1.3
 	 * @access private
 	 * @param string $block_id The id to use to display the correct esi block.
 	 * @param string $wrapper The wrapper for the esi comments.
 	 * @param array $params The esi parameters.
 	 * @param string $control The cache control attribute if any.
-	 * @param boolean $echo Whether to echo the output or return it.
-	 * @return mixed False on error, nothing if echo is true, the output otherwise.
+	 * @return bool|string    False on error, the output otherwise.
 	 */
-	public static function sub_esi_block($block_id, $wrapper, $params = array(), $control = 'private,no-vary', $echo = true)
+	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary' )
 	{
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
@@ -198,11 +195,8 @@ class LiteSpeed_Cache_ESI
 
 		LiteSpeed_Cache_Log::debug( "ESI block ID:$block_id; $wrapper; $control" ) ;
 
-		if ( $echo == false ) {
-			return $output ;
-		}
-		echo $output ;
 		self::set_has_esi() ;
+		return $output ;
 	}
 
 	/**
@@ -394,7 +388,7 @@ class LiteSpeed_Cache_ESI
 			self::PARAM_ARGS => $args
 		) ;
 
-		self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
+		echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
 		return false ;
 	}
 
@@ -414,7 +408,7 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-		self::sub_esi_block('admin-bar', 'adminbar') ;
+		echo self::sub_esi_block('admin-bar', 'adminbar') ;
 	}
 
 	/**
@@ -459,7 +453,7 @@ class LiteSpeed_Cache_ESI
 			self::PARAM_ARGS => $esi_args,
 		) ;
 
-		self::sub_esi_block('comment-form', 'comment form', $params) ;
+		echo self::sub_esi_block('comment-form', 'comment form', $params) ;
 		ob_start() ;
 		add_action('comment_form_after', array($this, 'comment_form_sub_clean')) ;
 		return $unused ;
