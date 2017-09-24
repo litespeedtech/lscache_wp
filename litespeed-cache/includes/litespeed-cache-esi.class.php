@@ -167,14 +167,21 @@ class LiteSpeed_Cache_ESI
 	 * @param string $wrapper The wrapper for the esi comments.
 	 * @param array $params The esi parameters.
 	 * @param string $control The cache control attribute if any.
+	 * @param bool $silence If generate wrapper comment or not
 	 * @return bool|string    False on error, the output otherwise.
 	 */
-	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary' )
+	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false )
 	{
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
 		}
-		$params[self::PARAM_BLOCK_ID] = $block_id ;
+
+		$params[ self::PARAM_BLOCK_ID ] = $block_id ;
+		if ( $silence ) {
+			// Don't add comment to esi block ( orignal for nonce used in tag property data-nonce='esi_block' )
+			$params[ '_ls_silence' ] = true ;
+		}
+
 		$params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id, $params) ;
 		$control = apply_filters('litespeed_cache_sub_esi_control-' . $block_id, $control) ;
 		if ( !is_array($params) || !is_string($control) ) {
@@ -187,11 +194,15 @@ class LiteSpeed_Cache_ESI
 		}
 
 		$url = trailingslashit( wp_make_link_relative( home_url() ) ) . '?' . self::QS_ACTION . '=' . self::POSTTYPE . '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
-		$output = "<!-- lscwp $wrapper --><esi:include src='$url'" ;
+		$output = "<esi:include src='$url'" ;
 		if ( ! empty( $control ) ) {
 			$output .= " cache-control='$control'" ;
 		}
-		$output .= " /><!-- lscwp $wrapper esi end -->" ;
+		$output .= " />" ;
+
+		if ( ! $silence ) {
+			$output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->" ;
+		}
 
 		LiteSpeed_Cache_Log::debug( "ESI block ID:$block_id; $wrapper; $control" ) ;
 
@@ -244,6 +255,10 @@ class LiteSpeed_Cache_ESI
 			}
 			$logInfo .= $esi_id . ' -------' ;
 			LiteSpeed_Cache_Log::push( $logInfo ) ;
+		}
+
+		if ( ! empty( $params[ '_ls_silence' ] ) ) {
+			define( 'LSCACHE_ESI_SILENCE', true ) ;
 		}
 
 		$orig = $_SERVER[ 'REQUEST_URI' ] ;
