@@ -82,7 +82,7 @@ class LiteSpeed_Cache_Router
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && self::cache_enabled() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
 		}
 		return self::$_esi_enabled ;
 	}
