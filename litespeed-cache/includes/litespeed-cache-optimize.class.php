@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_js_minify ;
 	private $cfg_js_combine ;
 	private $cfg_html_minify ;
+	private $cfg_optm_qs_trim ;
 
 	private $minify_cache ;
 	private $minify_minify ;
@@ -49,6 +50,12 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
 		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
 		$this->cfg_html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
+		$this->cfg_optm_qs_trim = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM ) ;
+
+		if ( $this->_can_optm() && $this->cfg_optm_qs_trim ) {
+			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+		}
 
 		$this->_request_check() ;
 	}
@@ -104,6 +111,43 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
+	 * Remove QS
+	 *
+	 * @since  1.2.4
+	 * @access public
+	 */
+	public function remove_query_strings( $src )
+	{
+		if ( strpos( $src, 'ver=' ) !== false ) {
+			$src = preg_replace( '#[&\?]+(ver=([\w\-\.]+))#i', '', $src ) ;
+		}
+		return $src ;
+	}
+
+	/**
+	 * Check if can run optimize
+	 *
+	 * @since  1.2.4
+	 * @access private
+	 */
+	private function _can_optm()
+	{
+		if ( is_admin() ) {
+			return false ;
+		}
+
+		if ( is_feed() ) {
+			return false ;
+		}
+
+		if ( is_preview() ) {
+			return false ;
+		}
+
+		return true ;
+	}
+
+	/**
 	 * Run optimize process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
@@ -135,6 +179,11 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
+		if ( ! $this->_can_optm() ) {
+			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: admin/feed/preview' ) ;
+			return ;
+		}
+
 		// The html codes needed to be added to head
 		$html_head = '';
 		$html_foot = '';

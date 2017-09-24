@@ -115,4 +115,14 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Remove Query Strings From Static Resources ', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This can improve your speed scores in services like Pingdom, GTmetrix, PageSpeed and YSlow.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
