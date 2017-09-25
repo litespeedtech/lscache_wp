@@ -55,7 +55,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function add_image($image)
 	{
-		if ( ! $image ) {
+		if ( ! $image || ! method_exists( $image, 'get_gallery' ) ) {
 			return ;
 		}
 		$gallery = $image->get_gallery() ;
