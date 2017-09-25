@@ -332,15 +332,18 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function rewrite( $url )
 	{
+		LiteSpeed_Cache_Log::debug2( 'CDN: try rewriting ' . $url ) ;
 		$url_parsed = parse_url( $url ) ;
 
 		// Only images under wp-cotnent/wp-includes can be replaced
 		if ( stripos( $url_parsed[ 'path' ], LSWCP_CONTENT_FOLDER ) === false && stripos( $url_parsed[ 'path' ], 'wp-includes' ) === false  && stripos( $url_parsed[ 'path' ], '/min/' ) === false ) {
+			LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: path not match ' ) ;
 			return false ;
 		}
 
 		// Check if is external url
 		if ( ! empty( $url_parsed[ 'host' ] ) && ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) ) {
+			LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: host not internal' ) ;
 			return false ;
 		}
 
@@ -353,15 +356,22 @@ class LiteSpeed_Cache_CDN
 			}
 		}
 
-		// Fill complete url before replacement
+		// Fill full url before replacement
 		if ( empty( $url_parsed[ 'host' ] ) ) {
-			$url = home_url( '/' ) . ltrim( $url, '/' ) ;
+			$url = home_url( '/' ) . ltrim( $url, '/' ) ;// todo: Need to test if wp is in subfolder, will subfolder be duplicated?
+			LiteSpeed_Cache_Log::debug2( 'CDN:    fill before rewritten: ' . $url ) ;
+
+			$url_parsed = parse_url( $url ) ;
 		}
 
 		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
+		if ( $scheme ) {
+			LiteSpeed_Cache_Log::debug2( 'CDN:    scheme from url: ' . $scheme ) ;
+		}
 
 		// Now lets replace CDN url
 		$url = str_replace( $scheme . $this->cfg_url_ori, $this->cfg_cdn_url, $url ) ;
+		LiteSpeed_Cache_Log::debug2( 'CDN:    after rewritten: ' . $url ) ;
 
 		return $url ;
 	}
