@@ -53,8 +53,14 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_optm_qs_trim = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM ) ;
 
 		if ( $this->_can_optm() && $this->cfg_optm_qs_trim ) {
-			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
-			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			// To make sure minify&combine always be new filename when version changed
+			if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
+				add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			}
+
+			if ( ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
+				add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			}
 		}
 
 		$this->_request_check() ;
