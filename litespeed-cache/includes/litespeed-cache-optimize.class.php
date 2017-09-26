@@ -167,6 +167,15 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public static function run( $content )
 	{
+		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
+			return $content ;
+		}
+
+		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
+			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: Not frontend HTML type' ) ;
+			return $content ;
+		}
+
 		LiteSpeed_Cache_Log::debug( 'Optimizer start' ) ;
 
 		$instance = self::get_instance() ;
@@ -184,11 +193,6 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
-		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
-			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: Not frontend HTML type' ) ;
-			return ;
-		}
-
 		if ( ! $this->_can_optm() ) {
 			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: admin/feed/preview' ) ;
 			return ;

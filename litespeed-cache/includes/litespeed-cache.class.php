@@ -416,9 +416,8 @@ class LiteSpeed_Cache
 	{
 		$this->_check_is_html( $buffer ) ;
 
-		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
-			$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
-		}
+		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
+
 		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
 
 		$buffer .= $this->send_headers( true ) ;
