@@ -128,7 +128,7 @@ class LiteSpeed_Cache
 		define( 'LITESPEED_CACHE_ENABLED', true ) ;
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
-		add_action( 'wp_footer', 'LiteSpeed_Cache::litespeed_comment_info' ) ;
+		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;
 
 		// Check minify file request in the very beginning
 		LiteSpeed_Cache_Optimize::get_instance() ;
@@ -347,15 +347,43 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Tigger coment info display for wp_footer hook
+	 * Mark wp_footer called
 	 *
-	 * @since 1.1.1
+	 * @since 1.3
 	 * @access public
 	 */
-	public static function litespeed_comment_info()
+	public static function footer_hook()
 	{
+		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
+			define( 'LITESPEED_FOOTER_CALLED', true ) ;
+		}
+	}
+
+	/**
+	 * Tigger coment info display hook
+	 *
+	 * @since 1.3
+	 * @access private
+	 */
+	private function _check_is_html( $buffer = null )
+	{
+		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
+			return ;
+		}
+
+		if ( defined( 'DOING_AJAX' ) ) {
+			return ;
+		}
+
+		if ( defined( 'DOING_CRON' ) ) {
+			return ;
+		}
+
+		if ( $buffer === null ) {
+			$buffer = ob_get_contents() ;
+		}
+
 		// double check to make sure it is a html file
-		$buffer = ob_get_contents() ;
 		if ( strlen( $buffer ) > 300 ) {
 			$buffer = substr( $buffer, 0, 300 ) ;
 		}
@@ -363,24 +391,21 @@ class LiteSpeed_Cache
 			$buffer = preg_replace( '|<!--.*?-->|s', '', $buffer ) ;
 		}
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
-		if ( defined( 'DOING_AJAX' ) ) {
-			return ;
-		}
-		if ( defined( 'DOING_CRON' ) ) {
-			return ;
-		}
+
 		if ( ! $is_html ) {
 			LiteSpeed_Cache_Log::debug( 'Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
 			return ;
 		}
 
-		if ( ! defined( 'LITESPEED_COMMENT_INFO' ) ) {
-			define( 'LITESPEED_COMMENT_INFO', true ) ;
+		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
+			define( 'LITESPEED_IS_HTML', true ) ;
 		}
 	}
 
 	/**
 	 * For compatibility with those plugins have 'Bad' logic that forced all buffer output even it is NOT their buffer :(
+	 *
+	 * Usually this is called after send_headers() if following orignal WP process
 	 *
 	 * @since 1.1.5
 	 * @access public
@@ -389,6 +414,8 @@ class LiteSpeed_Cache
 	 */
 	public function send_headers_force( $buffer )
 	{
+		$this->_check_is_html( $buffer ) ;
+
 		if ( ! defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
 			$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 		}
@@ -404,8 +431,7 @@ class LiteSpeed_Cache
 	/**
 	 * Sends the headers out at the end of processing the request.
 	 *
-	 * This will send out all LiteSpeed Cache related response headers
-	 * needed for the post.
+	 * This will send out all LiteSpeed Cache related response headers needed for the post.
 	 *
 	 * @since 1.0.5
 	 * @access public
@@ -420,6 +446,8 @@ class LiteSpeed_Cache
 		else {
 			return ;
 		}
+
+		$this->_check_is_html() ;
 
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_cache_api_control`.
 		LiteSpeed_Cache_Control::finalize() ;
@@ -439,7 +467,7 @@ class LiteSpeed_Cache
 		$control_header = LiteSpeed_Cache_Control::output() ;
 
 		// Init comment info
-		$running_info_showing = defined( 'LITESPEED_COMMENT_INFO' ) || defined( 'LSCACHE_IS_ESI' ) ;
+		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( 'ESI silence' ) ;
