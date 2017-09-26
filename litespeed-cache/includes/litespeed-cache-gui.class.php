@@ -3,7 +3,7 @@
 /**
  * The frontend GUI class.
  *
- * @since      1.2.4
+ * @since      1.3
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/includes
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
@@ -16,7 +16,7 @@ class LiteSpeed_Cache_GUI
 	/**
 	 * Init
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access private
 	 */
 	private function __construct()
@@ -31,7 +31,7 @@ class LiteSpeed_Cache_GUI
 	/**
 	 * Load frontend menu shortcut
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access private
 	 */
 	public function frontend_enqueue_style()
@@ -42,7 +42,7 @@ class LiteSpeed_Cache_GUI
 	/**
 	 * Load frontend menu shortcut
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access private
 	 */
 	public function frontend_shortcut()
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_GUI
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access public
 	 * @return Current class instance.
 	 */

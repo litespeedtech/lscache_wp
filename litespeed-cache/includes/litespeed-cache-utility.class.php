@@ -16,7 +16,7 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * Support $ exact match
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access private
 	 * @param string $needle The string to search with
 	 * @param array $haystack

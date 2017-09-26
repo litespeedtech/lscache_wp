@@ -555,7 +555,7 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check if current request has qs excluded setting
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access private
 	 * @param  array  $excludes QS excludes setting
 	 * @return boolean|string False if not excluded, otherwise the hit qs list
@@ -595,7 +595,7 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access public
 	 * @return Current class instance.
 	 */

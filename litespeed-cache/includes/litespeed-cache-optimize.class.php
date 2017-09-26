@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Optimize
 	/**
 	 * Remove QS
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access public
 	 */
 	public function remove_query_strings( $src )
@@ -133,7 +133,7 @@ class LiteSpeed_Cache_Optimize
 	/**
 	 * Check if can run optimize
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access private
 	 */
 	private function _can_optm()
@@ -150,6 +150,10 @@ class LiteSpeed_Cache_Optimize
 			return false ;
 		}
 
+		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+			return false ;
+		}
+
 		return true ;
 	}
 
@@ -163,10 +167,10 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public static function run( $content )
 	{
-		if ( ! defined( 'LITESPEED_COMMENT_INFO' ) ) {
-			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: No footer info' ) ;
-			return $content ;
-		}
+		// if ( ! defined( 'LITESPEED_COMMENT_INFO' ) ) {
+		// 	LiteSpeed_Cache_Log::debug( 'Optimizer bypass: No footer info' ) ;
+		// 	return $content ;
+		// }
 
 		LiteSpeed_Cache_Log::debug( 'Optimizer start' ) ;
 

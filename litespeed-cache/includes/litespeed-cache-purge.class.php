@@ -342,7 +342,7 @@ class LiteSpeed_Cache_Purge
 	/**
 	 * Purge frontend url
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access public
 	 */
 	public static function frontend_purge()

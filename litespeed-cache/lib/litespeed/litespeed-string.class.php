@@ -2,7 +2,7 @@
 /**
 * LiteSpeed String Operator Library Class
 *
-* @since 1.2.4
+* @since 1.3
 */
 
 class Litespeed_String
@@ -11,7 +11,7 @@ class Litespeed_String
 	/**
 	 * Generate random string
 	 *
-	 * @since  1.2.4
+	 * @since  1.3
 	 * @access public
 	 * @param  int  $len  	 Length of string
 	 * @param  int  $type    1-Number 2-LowerChar 4-UpperChar

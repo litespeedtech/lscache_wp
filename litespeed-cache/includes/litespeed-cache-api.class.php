@@ -39,7 +39,7 @@ class LiteSpeed_Cache_API
 	/**
 	 * Compare version
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access public
 	 */
 	public static function v( $v )
@@ -171,7 +171,7 @@ class LiteSpeed_Cache_API
 	/**
 	 * Purge single action
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access public
 	 * @param  int $pid The ID of a post
 	 */

@@ -61,8 +61,10 @@ if (!defined('WPINC')) die;
 			/>
 
 			<div class="litespeed-desc">
-				<strong><?php echo __('NOTICE:', 'litespeed-cache'); ?></strong>
-				<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?><br />
+				<p class="litespeed-warning">
+					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
+				</p>
 
 				<i>
 				<?php
