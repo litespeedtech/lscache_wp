@@ -26,7 +26,8 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_js_minify ;
 	private $cfg_js_combine ;
 	private $cfg_html_minify ;
-	private $cfg_optm_qs_trim ;
+
+	private $css_to_be_removed = array() ;
 
 	private $minify_cache ;
 	private $minify_minify ;
@@ -50,9 +51,10 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
 		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
 		$this->cfg_html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
-		$this->cfg_optm_qs_trim = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM ) ;
 
-		if ( $this->_can_optm() && $this->cfg_optm_qs_trim ) {
+		$this->_static_request_check() ;
+
+		if ( $this->_can_optm() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ) {
 			// To make sure minify&combine always be new filename when version changed
 			if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
 				add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
@@ -62,8 +64,6 @@ class LiteSpeed_Cache_Optimize
 				add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
 			}
 		}
-
-		$this->_request_check() ;
 	}
 
 	/**
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_Optimize
 	 * @access private
 	 * @return  string The static file content
 	 */
-	private function _request_check()
+	private function _static_request_check()
 	{
 		// If not turn on min files
 		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
@@ -202,8 +202,18 @@ class LiteSpeed_Cache_Optimize
 		$html_head = '';
 		$html_foot = '';
 
+		// Parse css from content
+		$ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ;
+		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css || $ggfonts_rm ) {
+			// To remove google fonts
+			if ( $ggfonts_rm ) {
+				$this->css_to_be_removed[] = 'fonts.googleapis.com' ;
+			}
+			list( $src_list, $html_list ) = $this->_handle_css() ;
+		}
+
+		// css optimizer
 		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css ) {
-			list( $src_list, $html_list ) = $this->_parse_css() ;
 
 			if ( $src_list ) {
 				list( $ignored_html, $src_queue_list ) = $this->_analyse_links( $src_list, $html_list ) ;
@@ -233,6 +243,7 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
+		// js optimizer
 		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js ) {
 			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js() ;
 
@@ -587,14 +598,16 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Parse css src
+	 * Parse css src and remove to-be-removed css
 	 *
 	 * @since  1.2.2
 	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
-	private function _parse_css()
+	private function _handle_css()
 	{
+		$this->css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', $this->css_to_be_removed ) ;
+
 		$src_list = array() ;
 		$html_list = array() ;
 
@@ -618,6 +631,13 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 			if ( empty( $attrs[ 'href' ] ) ) {
+				continue ;
+			}
+
+			// Check if need to remove this css
+			if ( $this->css_to_be_removed && LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'href' ], $this->css_to_be_removed ) ) {
+				// Delete this css snipit from orig html
+				$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
 				continue ;
 			}
 

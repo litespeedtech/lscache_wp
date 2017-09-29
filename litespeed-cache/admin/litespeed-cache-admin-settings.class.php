@@ -476,7 +476,8 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
 			LiteSpeed_Cache_Config::OPID_JS_HTTP2,
 			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
-			LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM,
+			LiteSpeed_Cache_Config::OPID_OPTM_QS_RM,
+			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;

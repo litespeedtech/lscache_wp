@@ -118,10 +118,20 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Remove Query Strings', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'This will remove query strings from static resources.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'It can improve your speed scores in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Remove Google Fonts', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This will prevent google fonts from loading on all your pages.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

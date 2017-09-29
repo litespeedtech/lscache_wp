@@ -42,7 +42,8 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
 			LiteSpeed_Cache_Config::OPID_JS_HTTP2,
 			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
-			LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM,
+			LiteSpeed_Cache_Config::OPID_OPTM_QS_RM,
+			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM,
 
 			LiteSpeed_Cache_Config::OPID_CDN,
 			LiteSpeed_Cache_Config::OPID_CDN_INC_IMG,
@@ -132,7 +133,8 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_JS_MINIFY:
 			case LiteSpeed_Cache_Config::OPID_JS_COMBINE:
 			case LiteSpeed_Cache_Config::OPID_HTML_MINIFY:
-			case LiteSpeed_Cache_Config::OPID_OPTM_QS_TRIM:
+			case LiteSpeed_Cache_Config::OPID_OPTM_QS_RM:
+			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM:
 
 			case LiteSpeed_Cache_Config::OPID_CDN:
 			case LiteSpeed_Cache_Config::OPID_CDN_INC_IMG:

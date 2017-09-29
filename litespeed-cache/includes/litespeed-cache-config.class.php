@@ -95,7 +95,8 @@ class LiteSpeed_Cache_Config
 	const OPID_JS_EXCLUDES = 'js_exclude' ;
 	const OPID_OPTIMIZE_TTL = 'optimize_ttl' ;
 	const OPID_HTML_MINIFY = 'html_minify' ;
-	const OPID_OPTM_QS_TRIM = 'optm_qs_trim' ;
+	const OPID_OPTM_QS_RM = 'optm_qs_rm' ;
+	const OPID_OPTM_GGFONTS_RM = 'optm_ggfonts_rm' ;
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
@@ -445,7 +446,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_JS_EXCLUDES 	=> '',
 			self::OPID_OPTIMIZE_TTL => 604800,
 			self::OPID_HTML_MINIFY 	=> false,
-			self::OPID_OPTM_QS_TRIM => false,
+			self::OPID_OPTM_QS_RM 	=> false,
+			self::OPID_OPTM_GGFONTS_RM => false,
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',

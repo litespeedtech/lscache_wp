@@ -483,7 +483,7 @@ class LiteSpeed_Cache_Control
 		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_URI_PRIV ) ;
 		if ( ! empty( $excludes ) ) {
 			$uri = esc_url( $_SERVER[ 'REQUEST_URI' ] ) ;
-			$result = LiteSpeed_Cache_Utility::is_in_array( $uri, explode( "\n", $excludes ) ) ;
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $uri, explode( "\n", $excludes ) ) ;
 			if ( $result ) {
 				self::set_private( 'Admin cfg Private Cached URI: ' . $result ) ;
 			}
@@ -493,7 +493,7 @@ class LiteSpeed_Cache_Control
 		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			$uri = esc_url( $_SERVER[ 'REQUEST_URI' ] ) ;
-			$result =  LiteSpeed_Cache_Utility::is_in_array( $uri, explode( "\n", $excludes ) ) ;
+			$result =  LiteSpeed_Cache_Utility::str_hit_array( $uri, explode( "\n", $excludes ) ) ;
 			if ( $result ) {
 				return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
 			}

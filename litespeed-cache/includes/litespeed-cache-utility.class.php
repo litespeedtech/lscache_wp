@@ -22,7 +22,7 @@ class LiteSpeed_Cache_Utility
 	 * @param array $haystack
 	 * @return bool|string False if not found, otherwise return the matched string in haystack.
 	 */
-	public static function is_in_array( $needle, $haystack )
+	public static function str_hit_array( $needle, $haystack )
 	{
 		foreach( $haystack as $item ) {
 			// do exact match
