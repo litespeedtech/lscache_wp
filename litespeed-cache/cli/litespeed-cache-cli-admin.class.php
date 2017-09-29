@@ -101,8 +101,8 @@ class LiteSpeed_Cache_Cli_Admin
 
 			case LiteSpeed_Cache_Config::OPID_CACHE_MOBILE:
 				// set list then do checkbox
-				if ( $val === 'true' ) {
-					$options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
+				if ( $val === 'true' && empty( $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] ) ) {
+					$options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 				}
 				//fall through
 			case LiteSpeed_Cache_Config::OPID_CACHE_PRIV:

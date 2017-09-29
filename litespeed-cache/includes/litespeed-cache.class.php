@@ -71,8 +71,9 @@ class LiteSpeed_Cache
 	 */
 	private function __construct()
 	{
+		LiteSpeed_Cache_Config::get_instance() ;
 		// Check if debug is on
-		if ( self::config(LiteSpeed_Cache_Config::OPID_ENABLED) ) {
+		if ( defined( 'LITESPEED_ON' ) ) {
 			$should_debug = intval(self::config(LiteSpeed_Cache_Config::OPID_DEBUG)) ;
 			if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ($should_debug == LiteSpeed_Cache_Config::VAL_ON2 && LiteSpeed_Cache_Router::is_admin_ip()) ) {
 				LiteSpeed_Cache_Log::set_enabled() ;
@@ -84,7 +85,7 @@ class LiteSpeed_Cache
 
 		// Register plugin activate/deactivate/uninstall hooks
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
-		if( is_admin() || LiteSpeed_Cache_Router::is_cli() ) {
+		if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
 			$plugin_file = LSWCP_DIR . 'litespeed-cache.php' ;
 			register_activation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_activation' )) ;
 			register_deactivation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' )) ;
@@ -121,11 +122,10 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
 
-		if ( ! LiteSpeed_Cache_Router::cache_enabled() || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
+		if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
 			return ;
 		}
 
-		define( 'LITESPEED_CACHE_ENABLED', true ) ;
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
 		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;

@@ -55,7 +55,7 @@ if ( $cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:' ){
 }
 
 $id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-if ( $_options[LiteSpeed_Cache_Config::OPID_ENABLED] && $_options[$id] ){
+if ( defined( 'LITESPEED_ON' ) && $_options[$id] ){
 
 	if (!$cookie_rule){
 		echo '<div class="litespeed-callout-danger">'

@@ -13,11 +13,9 @@
 class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
-	private static $_is_enabled ;
 	private static $_esi_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
-	private static $_is_cli ;
 	private static $_can_crawl ;
 	private static $_ip ;
 	private static $_action ;
@@ -82,32 +80,9 @@ class LiteSpeed_Cache_Router
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && self::cache_enabled() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
 		}
 		return self::$_esi_enabled ;
-	}
-
-	/**
-	 * Check if cache is enabled or not
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 * @return boolean
-	 */
-	public static function cache_enabled()
-	{
-		if ( ! isset( self::$_is_enabled ) ) {
-			if ( ! LiteSpeed_Cache_Config::get_instance()->is_caching_allowed() ) {
-				self::$_is_enabled = false ;
-			}
-			elseif ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) ) {
-				self::$_is_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ) ;
-			}
-			else {
-				self::$_is_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ;
-			}
-		}
-		return self::$_is_enabled ;
 	}
 
 	/**
@@ -155,7 +130,7 @@ class LiteSpeed_Cache_Router
 				self::$_can_crawl = true ;
 			}
 			// CLI will bypass this check as crawler library can always do the 428 check
-			if ( PHP_SAPI == 'cli' ) {
+			if ( defined( 'LITESPEED_CLI' ) ) {
 				self::$_can_crawl = true ;
 			}
 		}
@@ -195,21 +170,6 @@ class LiteSpeed_Cache_Router
 			self::$_is_logged_in = is_user_logged_in() ;
 		}
 		return self::$_is_logged_in ;
-	}
-
-	/**
-	 * Check if is cli usage
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @return boolean
-	 */
-	public static function is_cli()
-	{
-		if ( ! isset( self::$_is_cli ) ) {
-			self::$_is_cli = defined( 'WP_CLI' ) && WP_CLI ;
-		}
-		return self::$_is_cli ;
 	}
 
 	/**
@@ -288,7 +248,6 @@ class LiteSpeed_Cache_Router
 		LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL: ' . $action ) ;
 
 		// OK, as we want to do something magic, lets check if its allowed
-		$_is_enabled = self::cache_enabled() ;
 		$_is_multisite = is_multisite() ;
 		$_is_network_admin = $_is_multisite && is_network_admin() ;
 		$_can_network_option = $_is_network_admin && current_user_can( 'manage_network_options' ) ;
@@ -317,22 +276,19 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
 			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
-				if ( $_is_enabled
-						&& ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
+				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
 					self::$_action = $action ;
 				}
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
-				if ( $_is_enabled && ( $_can_network_option || $_can_option ) ) {
+				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option ) ) {
 					self::$_action = $action ;
 				}
 				return ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
-				if ( $_is_enabled
-						&& ( $_can_network_option
-							|| ( ! $_is_multisite && $_can_option ) ) ) {
+				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -343,7 +299,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_QS_SHOW_HEADERS:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE:
-				if ( $_is_enabled && ( $_is_public_action || self::is_ajax() ) ) {
+				if ( defined( 'LITESPEED_ON' ) && ( $_is_public_action || self::is_ajax() ) ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -353,7 +309,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
-				if ( $_is_enabled && $_can_option && ! $_is_network_admin ) {
+				if ( defined( 'LITESPEED_ON' ) && $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
 				return ;

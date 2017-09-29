@@ -42,6 +42,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_NOCACHE_USER_AGENTS = '### marker NOCACHE USER AGENTS' ;
 	const MARKER_CACHE_RESOURCE = '### marker CACHE RESOURCE' ;
 	const MARKER_FAVICON = '### marker FAVICON' ;
+	const MARKER_BROWSER_CACHE = '### marker BROWSER CACHE' ;
 	const MARKER_MINIFY = '### marker MINIFY' ;
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
@@ -73,7 +74,13 @@ class LiteSpeed_Cache_Admin_Rules
 		else {
 			self::$RW_LOOKUP = self::RW_LOOKUP_BOTH ;
 		}
-		self::$LS_MODULE_REWRITE_ON = "RewriteEngine on\n" . self::$RW_LOOKUP . "\n" . self::RW_PRIV_BYPASS_POST_PURGE . "\n" . self::RW_OPTM_NO_VARY ;
+
+		self::$LS_MODULE_REWRITE_ON = array(
+			'RewriteEngine on',
+			self::$RW_LOOKUP,
+			self::RW_PRIV_BYPASS_POST_PURGE,
+			self::RW_OPTM_NO_VARY,
+		) ;
 
 		// backend .htaccess privilege
 		if ( $this->frontend_htaccess === $this->backend_htaccess ) {
@@ -399,7 +406,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function get_rewrite_rule_mobile_agents()
 	{
-		$rules = $this->get_rewrite_rule(self::MARKER_MOBILE) ;
+		$rules = $this->_get_rule_by(self::MARKER_MOBILE) ;
 		if( ! isset($rules[0]) ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER_MOBILE) ;
 			return false ;
@@ -426,7 +433,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function get_rewrite_rule_login_cookie($kind = 'frontend')
 	{
-		$rule = $this->get_rewrite_rule(self::MARKER_LOGIN_COOKIE, $kind) ;
+		$rule = $this->_get_rule_by(self::MARKER_LOGIN_COOKIE, $kind) ;
 		if( substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=' ) {//todo: use regex
 			return false ;
 		}
@@ -440,7 +447,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  string $kind Frontend or backend .htaccess file
 	 * @return mixed       Rules
 	 */
-	private function get_rewrite_rule($cond, $kind = 'frontend')
+	private function _get_rule_by($cond, $kind = 'frontend')
 	{
 		clearstatcache() ;
 		$path = $this->htaccess_path($kind) ;
@@ -470,164 +477,68 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Parses the input to see if there is a need to edit the .htaccess file.
+	 * Generate browser cache rules
 	 *
-	 * @since 1.0.8
-	 * @access public
-	 * @param array $options The current options
-	 * @param array $input The input
-	 * @param array $errors Errors array to add error messages to.
-	 * @return mixed False if there is an error, diff array otherwise.
-	 */
-	public function check_input_for_rewrite($options, $input, &$errors)
-	{
-		$diff = array() ;
-		$opts = array(
-			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE,
-			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-			LiteSpeed_Cache_Config::OPID_CACHE_RES,
-		) ;
-		$has_error = false ;
-
-		foreach ($opts as $opt) {
-			$input[$opt] = LiteSpeed_Cache_Admin_Settings::parse_onoff( $input, $opt ) ;
-			if ( $input[$opt] || $options[$opt] != $input[$opt] ) {
-				$diff[$opt] = $input[$opt] ;
-			}
-		}
-
-		// check mobile agents
-		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
-		if ( $input[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE] ) {
-			$list = $input[$id] ;
-			if ( empty($list) || $this->check_rewrite($list) === false ) {
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, empty($list) ? 'EMPTY' : esc_html($list))
-				) ;
-				$has_error = true ;
-			}
-			$diff[$id] = $list ;
-		}
-		elseif ( isset($diff[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]) ) {
-			$diff[$id] = false ;
-		}
-
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES ;
-		if ( isset($input[$id]) && $input[$id] ) {
-			$cookie_list = preg_replace("/[\r\n]+/", '|', $input[$id]) ;
-		}
-		else {
-			$cookie_list = '' ;
-		}
-
-		if ( empty($cookie_list) || $this->check_rewrite($cookie_list) ) {
-			$diff[$id] = $cookie_list ;
-		}
-		else {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html($cookie_list))) ;
-			$has_error = true ;
-		}
-
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS ;
-		if ( isset($input[$id]) && $this->check_rewrite($input[$id]) ) {
-			$diff[$id] = $input[$id] ;
-		}
-		else {
-			$err_args = array($id) ;
-			if ( ! isset($input[$id]) || empty($input[$id]) ) {
-				$err_args[] = 'EMPTY' ;
-			}
-			else {
-				$err_args[] = esc_html($input[$id]) ;
-			}
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, $err_args) ;
-			$has_error = true ;
-		}
-
-		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
-		$aExceptions = array('-', '_') ;
-		if ( isset($input[$id]) ) {
-			if ( $input[$id] === '' || (ctype_alnum(str_replace($aExceptions, '', $input[$id])) && $this->check_rewrite($input[$id])) ) {
-				$diff[$id] = $input[$id] ;
-			}
-			else {
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html($input[$id])) ;
-				$has_error = true ;
-			}
-		}
-
-		if ( $has_error ) {
-			return false ;
-		}
-		return $diff ;
-	}
-
-	/**
-	 * Parse rewrite input to check for possible issues (e.g. unescaped spaces).
-	 *
-	 * Issues tracked:
-	 * Starts with |
-	 * Ends with |
-	 * Double |
-	 * Unescaped space
-	 * Invalid character (NOT \w, -, \, |, \s, /, ., +, *, (, ))
-	 *
-	 * @since 1.0.9
+	 * @since  1.3
 	 * @access private
-	 * @param String $rule Input rewrite rule.
-	 * @return boolean True for valid rules, false otherwise.
+	 * @return array Rules set
 	 */
-	private function check_rewrite($rule)
+	private function _browser_cache_rules()
 	{
-		$escaped = str_replace('@', '\@', $rule) ;
-		return @preg_match('@' . $escaped . '@', null) !== false ;//todo: improve to try catch
+		$rules = array(
+			'<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
+				'<IfModule mod_expires.c>',
+					'ExpiresActive on',
+					'ExpiresByType application/pdf A2592000',
+					'ExpiresByType image/x-icon A2592000',
+					'ExpiresByType image/vnd.microsoft.icon A2592000',
+					'ExpiresByType image/svg+xml A2592000',
+					'',
+					'ExpiresByType image/jpg A2592000',
+					'ExpiresByType image/jpeg A2592000',
+					'ExpiresByType image/png A2592000',
+					'ExpiresByType image/gif A2592000',
+					'ExpiresByType image/webp A2592000',
+					'',
+					'ExpiresByType video/ogg A2592000',
+					'ExpiresByType audio/ogg A2592000',
+					'ExpiresByType video/mp4 A2592000',
+					'ExpiresByType video/webm A2592000',
+					'',
+					'ExpiresByType text/css A2592000',
+					'ExpiresByType text/javascript A2592000',
+					'ExpiresByType application/javascript A2592000',
+					'ExpiresByType application/x-javascript A2592000',
+					'',
+					'ExpiresByType application/x-font-ttf A2592000',
+					'ExpiresByType application/font-woff A2592000',
+					'ExpiresByType application/font-woff2 A2592000',
+					'ExpiresByType application/vnd.ms-fontobject A2592000',
+					'',
+				'</IfModule>',
+			'</FilesMatch>',
+		) ;
+		return $rules ;
 	}
 
 	/**
-	 * Validate common rewrite rules configured by the admin.
+	 * Generate rewrite rules based on settings
 	 *
-	 * @since 1.0.4
-	 * @access public
-	 * @param array $diff The rules that need to be set.
-	 * @param array $errors Returns error messages added if failed.
-	 * @return mixed Returns updated options array on success, false otherwise.
+	 * @since  1.3
+	 * @access private
+	 * @param  array $cfg  The settings to be used for rewrite rule
+	 * @return array      Rules array
 	 */
-	public function validate_common_rewrites($diff, &$errors)
+	private function _generate_rules( $cfg )
 	{
-		if ( ! self::readable() ) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_R) ;
-			return false ;
-		}
-
-		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			if ( ! self::readable('backend') ) {
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_R) ;
-				return false ;
-			}
-		}
-
-		// check login cookie
-		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
-			if ( $diff[$id] ) {
-				$diff[$id] .= ',wp-postpass_' . COOKIEHASH ;
-			}
-			else {
-				$diff[$id] = 'wp-postpass_' . COOKIEHASH ;
-			}
-
-			$tp_cookies = apply_filters('litespeed_cache_api_vary', array()) ;
-			if ( ! empty($tp_cookies) && is_array($tp_cookies) ) {
-				$diff[$id] .= ',' . implode(',', $tp_cookies) ;
-			}
-		}
-
 		$new_rules = array() ;
 		$new_rules_backend = array() ;
+
 		// mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
-		if ( isset($diff[$id]) && $diff[$id] ) {
+		if ( ! empty( $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $diff[$id] . ' [NC]' ;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] . ' [NC]' ;
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
 			$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
 			$new_rules[] = '' ;
@@ -635,9 +546,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// nocache cookie
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES ;
-		if ( isset($diff[$id]) && $diff[$id] ) {
+		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $diff[$id] ;
+			$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $cfg[ $id ] ;
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
 			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END ;
 			$new_rules[] = '' ;
@@ -645,9 +556,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// nocache user agents
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS ;
-		if ( isset($diff[$id]) && $diff[$id] ) {
+		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $diff[$id] ;
+			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] ;
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
 			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
 			$new_rules[] = '' ;
@@ -655,18 +566,31 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// caching php resource
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES ;
-		if ( isset($diff[$id]) && $diff[$id] ) {
+		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
 			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSWCP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
 			$new_rules[] = $new_rules_backend[] = '' ;
 		}
 
-		// login cookie
-		// frontend and backend
+		// check login cookie
 		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
-		if ( isset($diff[$id]) && $diff[$id] ) {
-			$env = 'Cache-Vary:' . $diff[$id] ;
+		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
+			}
+			else {
+				$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
+			}
+
+			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
+				$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
+			}
+		}
+		// frontend and backend
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$env = 'Cache-Vary:' . $cfg[ $id ] ;
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
 				$env = '"' . $env . '"' ;
 			}
@@ -679,27 +603,25 @@ class LiteSpeed_Cache_Admin_Rules
 		// favicon
 		// frontend and backend
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
-		if ( isset($diff[$id]) && $diff[$id] ) {
+		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
 			$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}
 
-		$this->deprecated_clear_rules() ;
-		if ( ! $this->insert_wrapper($new_rules) ) {
-			$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_W) ;
-			$errors[] = $this->rewrite_codes_msg( $this->frontend_htaccess, $new_rules ) ;
-			return false ;
+		// Browser cache
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
+			$new_rules = array_merge( $new_rules, $this->_browser_cache_rules() ) ;
+			$new_rules_backend = array_merge( $new_rules_backend, $this->_browser_cache_rules() ) ;
+			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_END ;
+			$new_rules[] = '' ;
 		}
-		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			if ( ! $this->insert_wrapper($new_rules_backend, 'backend') ) {
-				$errors[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_W) ;
-				$errors[] = $this->rewrite_codes_msg( $this->backend_htaccess, $new_rules ) ;
-				return false ;
-			}
-		}
-		return $diff ;
+
+		return array( $new_rules, $new_rules_backend ) ;
+
 	}
 
 	/**
@@ -714,7 +636,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s' , 'litespeed-cache' ),
 				$file,
-				'<textarea style="width:100%;" rows="10" readonly>' . htmlspecialchars( $this->wrap_rules_with_marker( $rules ) ) . '</textarea>'
+				'<textarea style="width:100%;" rows="10" readonly>' . htmlspecialchars( $this->_wrap_rules_with_marker( $rules ) ) . '</textarea>'
 			) ;
 	}
 
@@ -725,14 +647,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array  $rules
 	 * @return array        final rules data for htaccess
 	 */
-	private function wrap_rules_with_marker( $rules )
+	private function _wrap_rules_with_marker( $rules )
 	{
 		$marker = self::MARKER ;
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 		$new_file_data = implode( "\n", array_merge(
 			array( $start_marker ),
-			$this->wrap_rules($rules),
+			$this->_wrap_rules($rules),
 			array( $end_marker )
 		) ) ;
 
@@ -746,13 +668,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array  $rules
 	 * @return array        wrapped rules with module info
 	 */
-	private function wrap_rules( $rules )
+	private function _wrap_rules( $rules )
 	{
 		if ( $rules !== false ) {
 			$rules = array_merge(
 				array(self::LS_MODULE_DONOTEDIT),
 				array(self::LS_MODULE_START),
-				array(self::$LS_MODULE_REWRITE_ON),
+				self::$LS_MODULE_REWRITE_ON,
 				array(''),
 				$rules,
 				array(self::LS_MODULE_END),
@@ -776,7 +698,71 @@ class LiteSpeed_Cache_Admin_Rules
 			return false ;
 		}
 
-		return Litespeed_File::insert_with_markers( $this->htaccess_path($kind), $this->wrap_rules( $rules ), self::MARKER, true ) ;
+		return Litespeed_File::insert_with_markers( $this->htaccess_path($kind), $this->_wrap_rules( $rules ), self::MARKER, true ) ;
+	}
+
+	/**
+	 * Update rewrite rules based on setting
+	 *
+	 * @since 1.3
+	 * @access public
+	 * @param array $cfg The rules that need to be set.
+	 */
+	public function update( $cfg )
+	{
+		if ( ! LiteSpeed_Cache_Admin_Rules::readable() ) {
+			return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
+		}
+
+		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
+			if ( ! LiteSpeed_Cache_Admin_Rules::readable( 'backend' ) ) {
+				return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
+			}
+		}
+
+		list( $frontend_rules, $backend_rules ) = $this->_generate_rules( $cfg ) ;
+		// Check frontend content
+		if ( $this->_wrap_rules( $frontend_rules ) != $this->extract_rules() ) {
+			// Need to update frontend htaccess
+			if ( ! $this->insert_wrapper( $frontend_rules ) ) {
+				$manual_guide_codes = $this->rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
+				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+			}
+		}
+
+		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
+			// Check backend content
+			if ( $this->_wrap_rules( $backend_rules ) != $this->extract_rules( 'backend' ) ) {
+				// Need to update backend htaccess
+				if ( ! $this->insert_wrapper( $backend_rules, 'backend' ) ) {
+					$manual_guide_codes = $this->rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
+					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				}
+			}
+		}
+
+		return true ;
+	}
+
+	/**
+	 * Get existing rewrite rules
+	 *
+	 * @since  1.3
+	 * @access public
+	 * @param  string $kind Frontend or backend .htaccess file
+	 * @return bool|array       False if failed to read, rules array otherwise
+	 */
+	public function extract_rules( $kind = 'frontend' )
+	{
+		clearstatcache() ;
+		$path = $this->htaccess_path( $kind ) ;
+		if ( ! self::readable( $kind ) ) {
+			return false ;
+		}
+
+		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
+
+		return $rules ;
 	}
 
 	/**
@@ -788,7 +774,6 @@ class LiteSpeed_Cache_Admin_Rules
 	public function clear_rules( $clear_all = false )
 	{
 		$keep_wrapper = $clear_all === true ? false : array() ;
-		$this->deprecated_clear_rules() ;
 		$this->insert_wrapper( $keep_wrapper ) ;
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
 			$this->insert_wrapper( $keep_wrapper, 'backend' ) ;
@@ -867,7 +852,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( ! isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

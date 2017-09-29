@@ -100,6 +100,34 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
+	 * Array map one textarea to sanitize the url
+	 *
+	 * @since  1.3
+	 * @access public
+	 * @param  string $content
+	 * @param  bool $type String handler type
+	 * @return string
+	 */
+	public static function sanitize_lines( $content, $type = null )
+	{
+		if ( ! $content ) {
+			return $content ;
+		}
+
+		$arr = explode( "\n", $content ) ;
+		if ( $type === 'uri' ) {
+			$arr = array_map( 'LiteSpeed_Cache_Utility::url2uri', $arr ) ;
+		}
+		if ( $type === 'relative' ) {
+			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
+		}
+		$arr = array_map( 'trim', $arr ) ;
+		$arr = array_unique( $arr ) ;
+		$arr = array_filter( $arr ) ;
+		return implode( "\n", $arr ) ;
+	}
+
+	/**
 	 * Builds an url with an action and a nonce.
 	 *
 	 * Assumes user capabilities are already checked.

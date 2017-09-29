@@ -47,13 +47,22 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function update( $options = false )
 	{
-		$id_task_enabled = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
-		$id_plugin_enabled = LiteSpeed_Cache_Config::OPID_ENABLED ;
-		if ( $options && isset( $options[$id_task_enabled] ) && isset( $options[$id_plugin_enabled] ) ) {
-			$is_active = $options[$id_task_enabled] && $options[$id_plugin_enabled] ;
+		$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
+		if ( $options && isset( $options[ $id ] ) ) {
+			$is_active = $options[$id] ;
 		}
 		else {
-			$is_active = LiteSpeed_Cache::config( $id_task_enabled ) && LiteSpeed_Cache::config( $id_plugin_enabled ) ;
+			$is_active = LiteSpeed_Cache::config( $id ) ;
+		}
+
+		// If cron setting is on, check cache status
+		if ( $is_active ) {
+			if ( defined( 'LITESPEED_NEW_OFF' ) ) {
+				$is_active = false ;
+			}
+			elseif ( ! defined( 'LITESPEED_ON' ) && ! defined( 'LITESPEED_NEW_ON' ) ) {
+				$is_active = false ;
+			}
 		}
 
 		if ( $is_active ) {

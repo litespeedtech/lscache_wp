@@ -17,10 +17,10 @@ if (!defined('WPINC')) die;
 					<?php echo sprintf( __( 'SYNTAX: Separate each user agent with a bar, %s.', 'litespeed-cache' ), '<code>|</code>' ) ; ?>
 					<?php echo sprintf( __( 'Spaces should have a backslash in front of them, %s.', 'litespeed-cache' ), '<code>\</code>' ) ; ?>
 				</i>
-				<p class="litespeed-warning">
+				<i class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
-				</p>
+				</i>
 			</div>
 		</td>
 	</tr>

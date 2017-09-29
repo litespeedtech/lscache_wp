@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Admin
 		// add link to plugin list page
 		add_filter( 'plugin_action_links_' . LSWCP_BASENAME, array( $this->display, 'add_plugin_links' ) ) ;
 
-		if ( LiteSpeed_Cache_Router::cache_enabled() ) {
+		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
 			$purge_all_events = array(
 				'switch_theme',
@@ -96,7 +96,7 @@ class LiteSpeed_Cache_Admin
 		}
 
 		// step out if plugin is not enabled
-		if ( ! LiteSpeed_Cache_Router::cache_enabled() ) {
+		if ( ! defined( 'LITESPEED_ON' ) ) {
 			return ;
 		}
 

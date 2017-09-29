@@ -65,7 +65,7 @@ class LiteSpeed_Cache_Admin_Display
 			$manage = 'manage_options' ;
 		}
 		if ( current_user_can($manage) ) {
-			if ( LiteSpeed_Cache_Router::cache_enabled() ) {
+			if ( defined( 'LITESPEED_ON' ) ) {
 				add_action('wp_before_admin_bar_render', array($this, 'add_quick_purge')) ;
 			}
 			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Admin_Display
 		// Admin footer
 		add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1) ;
 
-		if( LiteSpeed_Cache_Router::cache_enabled() ) {
+		if( defined( 'LITESPEED_ON' ) ) {
 			// Help tab
 			$this->add_help_tabs() ;
 
@@ -357,7 +357,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function check_license()
 	{
-		if ( ! LiteSpeed_Cache_Config::get_instance()->is_caching_allowed() ) {
+		if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
 			self::add_error(LiteSpeed_Cache_Admin_Error::E_SERVER) ;
 			self::display_messages() ;
 		}

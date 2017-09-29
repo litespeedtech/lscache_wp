@@ -25,7 +25,6 @@ class LiteSpeed_Cache_Config
 	const LOG_LEVEL_INFO = 3 ;
 	const LOG_LEVEL_DEBUG = 4 ;
 	const OPID_VERSION = 'version' ;
-	const OPID_ENABLED = 'enabled' ;
 	const OPID_ENABLED_RADIO = 'radio_select' ;
 
 	const OPID_CACHE_PRIV = 'cache_priv' ;
@@ -37,6 +36,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_MOBILE = 'mobileview_enabled' ;
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
 	const OPID_CACHE_URI_PRIV = 'cache_uri_priv' ;
+	const OPID_CACHE_BROWSER = 'cache_browser' ;
 
 	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
 	const OPID_TIMED_URLS = 'timed_urls' ;
@@ -66,7 +66,6 @@ class LiteSpeed_Cache_Config
 	const OPID_404_TTL = '404_ttl' ;
 	const OPID_500_TTL = '500_ttl' ;
 	const OPID_PURGE_BY_POST = 'purge_by_post' ;
-	const OPID_TEST_IPS = 'test_ips' ;
 	const OPID_ESI_ENABLE = 'esi_enabled' ;
 	const OPID_ESI_CACHE_ADMBAR = 'esi_cached_admbar' ;
 	const OPID_ESI_CACHE_COMMFORM = 'esi_cached_commform' ;
@@ -156,12 +155,20 @@ class LiteSpeed_Cache_Config
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[ self::OPID_PURGE_BY_POST ] ) ;
 
-		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $options[self::OPID_CHECK_ADVANCEDCACHE] === false && ! defined('LSCACHE_ADV_CACHE') ) {
-			define('LSCACHE_ADV_CACHE', true) ;
+		// Init global const cache on set
+		if ( $this->options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON
+		//	 || ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) && $this->options[ LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ] ) todo: need to check when primary is off and network is on, if can manage
+		) {
+			defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+		}
+
+		// Check advanced_cache set
+		if ( isset( $this->options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $this->options[ self::OPID_CHECK_ADVANCEDCACHE ] === false && ! defined( 'LSCACHE_ADV_CACHE' ) ) {
+			define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 
 		// Vary group settings
-		$this->vary_groups = (array)get_option( self::VARY_GROUP ) ;
+		$this->vary_groups = (array) get_option( self::VARY_GROUP ) ;
 
 		// Set security key if not initialized yet
 		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {
@@ -171,8 +178,7 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
-	 * For multisite installations, the single site options need to be updated
-	 * with the network wide options.
+	 * For multisite installations, the single site options need to be updated with the network wide options.
 	 *
 	 * @since 1.0.13
 	 * @access private
@@ -180,38 +186,51 @@ class LiteSpeed_Cache_Config
 	 */
 	private function construct_multisite_options()
 	{
-		$site_options = get_site_option(self::OPTION_NAME) ;
+		$site_options = get_site_option( self::OPTION_NAME ) ;
 
-		if ( ! function_exists('is_plugin_active_for_network') ) {
+		if ( ! function_exists('is_plugin_active_for_network') ) { // todo: check if needed
 			require_once(ABSPATH . '/wp-admin/includes/plugin.php') ;
 		}
 
-		$options = get_option(self::OPTION_NAME, $this->get_default_options()) ;
+		$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
-		if ( ! $site_options || ! is_array($site_options) || ! is_plugin_active_for_network('litespeed-cache/litespeed-cache.php') ) {
-			if ($options[self::OPID_ENABLED_RADIO] == 2) {
-				$options[self::OPID_ENABLED] = true ;
+		// If don't have site options
+		if ( ! $site_options || ! is_array( $site_options ) || ! is_plugin_active_for_network( 'litespeed-cache/litespeed-cache.php' ) ) {
+			if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
+				defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
 			}
 			return $options ;
 		}
 
-		if ( isset($site_options[self::NETWORK_OPID_USE_PRIMARY]) && $site_options[self::NETWORK_OPID_USE_PRIMARY] ) {
-			// save temparary cron setting
-			$CRWL_CRON_ACTIVE = $options[self::CRWL_CRON_ACTIVE] ;
+		// If network set to use primary setting
+		if ( ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
 
-			$options = get_blog_option(BLOG_ID_CURRENT_SITE, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
+			// save temparary cron setting
+			$CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
+
+			// Get the primary site settings
+			$options = get_blog_option( BLOG_ID_CURRENT_SITE, LiteSpeed_Cache_Config::OPTION_NAME, array() ) ;
 
 			// crawler cron activation is separated
-			$options[self::CRWL_CRON_ACTIVE] = $CRWL_CRON_ACTIVE ;
+			$options[ self::CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
 		}
 
-		$options[self::NETWORK_OPID_ENABLED] = $site_options[self::NETWORK_OPID_ENABLED] ;
-		if ($options[self::OPID_ENABLED_RADIO] == 2) {
-			$options[self::OPID_ENABLED] = $options[self::NETWORK_OPID_ENABLED] ;
+		// If use network setting
+		if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $site_options[ self::NETWORK_OPID_ENABLED ] ) {
+			defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
 		}
+		// Set network eanble to on
+		if ( $site_options[ self::NETWORK_OPID_ENABLED ] ) {
+			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
+		}
+
+		// These two are not for single blog options
 		unset( $site_options[ self::NETWORK_OPID_ENABLED ] ) ;
 		unset( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+
+		// Append site options to single blog options
 		$options = array_merge( $options, $site_options ) ;
+
 		return $options ;
 	}
 
@@ -267,7 +286,7 @@ class LiteSpeed_Cache_Config
 	/**
 	 * Save frontend url to private cached uri/no cache uri
 	 *
-	 * @since 1.2.4
+	 * @since 1.3
 	 * @access public
 	 */
 	public static function frontend_save()
@@ -368,17 +387,14 @@ class LiteSpeed_Cache_Config
 
 		//For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 		if ( is_multisite() ) {
-			$default_enabled = false ;
 			$default_radio = 2 ;
 		}
 		else {
-			$default_enabled = true ;
 			$default_radio = 1 ;
 		}
 
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::OPID_ENABLED => $default_enabled,
 			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_PRIV => true,
@@ -392,6 +408,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_MOBILE => false,
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_CACHE_URI_PRIV => '',
+			self::OPID_CACHE_BROWSER => false,
 
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
@@ -405,7 +422,6 @@ class LiteSpeed_Cache_Config
 			self::OPID_LOG_FILTERS => false,
 			self::OPID_LOG_IGNORE_FILTERS => "gettext\ngettext_with_context\nget_the_terms\nget_term",
 			self::OPID_LOG_IGNORE_PART_FILTERS => "i18n\nlocale\nsettings\noption",
-			self::OPID_TEST_IPS => '',
 			self::OPID_PUBLIC_TTL => 604800,
 			self::OPID_PRIVATE_TTL => 1800,
 			self::OPID_FRONT_PAGE_TTL => 604800,
@@ -467,10 +483,6 @@ class LiteSpeed_Cache_Config
 			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
 		}
 
-		if ( is_multisite() ) {
-			$default_options[self::NETWORK_OPID_ENABLED] = false ;
-		}
-
 		if ( ! $include_thirdparty ) {
 			return $default_options ;
 		}
@@ -500,34 +512,13 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_RES => true,
 			self::OPID_CACHE_MOBILE => 0, // todo: why not false
 			self::ID_MOBILEVIEW_LIST => false,
+			self::OPID_CACHE_BROWSER => false,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
 		) ;
 		return $default_site_options ;
-	}
-
-	/**
-	 * When the .htaccess files need to be reset, use this array to denote
-	 * everything off.
-	 *
-	 * @since 1.0.12
-	 * @access public
-	 * @return array The list of options to reset.
-	 */
-	public static function get_rule_reset_options()
-	{
-		$reset = array(
-			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE => false,
-			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON => false,
-			LiteSpeed_Cache_Config::OPID_CACHE_RES => false,
-			LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST => false,
-			LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES => '',
-			LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS => '',
-			LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE => ''
-		) ;
-		return $reset ;
 	}
 
 	/**
@@ -544,15 +535,15 @@ class LiteSpeed_Cache_Config
 		if ( ! is_multisite() ) {
 			return null ;
 		}
-		$site_options = get_site_option(self::OPTION_NAME) ;
-		if ( isset($site_options) && is_array($site_options) ) {
+		$site_options = get_site_option( self::OPTION_NAME ) ;
+
+		if ( isset( $site_options ) && is_array( $site_options ) ) {
 			return $site_options ;
 		}
-		elseif ( isset($site_options) && is_string($site_options) ) {
-			return $site_options ;
-		}
+
 		$default_site_options = $this->get_default_site_options() ;
-		add_site_option(self::OPTION_NAME, $default_site_options) ;
+		add_site_option( self::OPTION_NAME, $default_site_options ) ;
+
 		return $default_site_options ;
 	}
 
@@ -638,9 +629,6 @@ class LiteSpeed_Cache_Config
 		}
 		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
 
-		if ( $options[self::OPID_CACHE_MOBILE] === false ) {
-			$options[self::ID_MOBILEVIEW_LIST] = false ;
-		}
 		return $options ;
 	}
 
@@ -656,16 +644,16 @@ class LiteSpeed_Cache_Config
 	{
 		$default_options = $this->get_default_options() ;
 
-		if ( $this->options[self::OPID_VERSION] == $default_options[self::OPID_VERSION] && count($default_options) == count($this->options) ) {
+		if ( $this->options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] && count( $default_options ) == count( $this->options ) ) {
 			return ;
 		}
 
-		$this->options = self::option_diff($default_options, $this->options) ;
+		$this->options = self::option_diff( $default_options, $this->options ) ;
 
 		$res = $this->update_options() ;
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
-		LiteSpeed_Cache_Log::debug("plugin_upgrade option changed = $res\n") ;
+		LiteSpeed_Cache_Log::debug( "plugin_upgrade option changed = $res\n" ) ;
 	}
 
 	/**
@@ -679,15 +667,15 @@ class LiteSpeed_Cache_Config
 		$default_options = $this->get_default_site_options() ;
 		$options = $this->get_site_options() ;
 
-		if ( $options[self::OPID_VERSION] == $default_options[self::OPID_VERSION] && count($default_options) == count($options) ) {
+		if ( $options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] && count( $default_options ) == count( $options ) ) {
 			return ;
 		}
 
-		$options = self::option_diff($default_options, $options) ;
+		$options = self::option_diff( $default_options, $options ) ;
 
-		$res = update_site_option(self::OPTION_NAME, $options) ;
+		$res = update_site_option( self::OPTION_NAME, $options ) ;
 
-		LiteSpeed_Cache_Log::debug("plugin_upgrade option changed = $res\n") ;
+		LiteSpeed_Cache_Log::debug( "plugin_upgrade option changed = $res\n" ) ;
 	}
 
 	/**
@@ -704,44 +692,47 @@ class LiteSpeed_Cache_Config
 	public static function wp_cache_var_setter( $enable )
 	{
 		if ( $enable ) {
-			if ( defined('WP_CACHE') && WP_CACHE ) {
+			if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
 				return true ;
 			}
 		}
-		elseif ( ! defined('WP_CACHE') || (defined('WP_CACHE') && ! WP_CACHE) ) {
+		elseif ( ! defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && ! WP_CACHE ) ) {
 				return true ;
 		}
+
 		$file = ABSPATH . 'wp-config.php' ;
-		if ( ! is_writeable($file) ) {
-			$file = dirname(ABSPATH) . '/wp-config.php' ;
-			if ( ! is_writeable($file) ) {
-				error_log('wp-config file not writable for \'WP_CACHE\'') ;
+
+		if ( ! is_writeable( $file ) ) {
+			$file = dirname( ABSPATH ) . '/wp-config.php' ; // todo: is the path correct?
+			if ( ! is_writeable( $file ) ) {
+				error_log( 'wp-config file not writable for \'WP_CACHE\'' ) ;
 				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE ;
 			}
 		}
-		$file_content = file_get_contents($file) ;
+
+		$file_content = file_get_contents( $file ) ;
 
 		if ( $enable ) {
 			$count = 0 ;
 
-			$new_file_content = preg_replace('/[\/]*define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', true);", $file_content, -1, $count) ;
+			$new_file_content = preg_replace( '/[\/]*define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', true);", $file_content, -1, $count ) ;
 			if ( $count == 0 ) {
-				$new_file_content = preg_replace('/(\$table_prefix)/', "define('WP_CACHE', true);\n$1", $file_content) ;
+				$new_file_content = preg_replace( '/(\$table_prefix)/', "define('WP_CACHE', true);\n$1", $file_content ) ;
 				if ( $count == 0 ) {
-					$new_file_content = preg_replace('/(\<\?php)/', "$1\ndefine('WP_CACHE', true);", $file_content, -1, $count) ;
+					$new_file_content = preg_replace( '/(\<\?php)/', "$1\ndefine('WP_CACHE', true);", $file_content, -1, $count ) ;
 				}
 
 				if ( $count == 0 ) {
-					error_log('wp-config file did not find a place to insert define.') ;
+					error_log( 'wp-config file did not find a place to insert define.' ) ;
 					return LiteSpeed_Cache_Admin_Error::E_CONF_FIND ;
 				}
 			}
 		}
 		else {
-			$new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', false);", $file_content) ;
+			$new_file_content = preg_replace( '/define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', false);", $file_content ) ;
 		}
 
-		file_put_contents($file, $new_file_content) ;
+		file_put_contents( $file, $new_file_content ) ;
 		return true ;
 	}
 
@@ -752,74 +743,53 @@ class LiteSpeed_Cache_Config
 	 * @access public
 	 * @param int $count The count of blogs active in multisite.
 	 */
-	public function plugin_activation($count)
+	public function plugin_activation( $count )
 	{
 		$errors = array() ;
-		$rules = LiteSpeed_Cache_Admin_Rules::get_instance() ;
-		$default = $this->get_default_options() ;
-		$res = add_option(self::OPTION_NAME, $default) ;
+
+		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
+
 		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push("plugin_activation update option = ".var_export($res, true)) ;
+			LiteSpeed_Cache_Log::push( "plugin_activation update option = " . var_export( $res, true ) ) ;
 		}
+
 		if ( is_multisite() ) {
+
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
-					$rules->validate_common_rewrites(array(), $errors) ;
+					// Only itself is activated, set .htaccess with only CacheLookUp
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
 				}
 				return ;
 			}
-			$options = $this->get_site_options() ;
-			if ( isset($options) && is_string($options) ) {
-				$options = unserialize($options) ;
-				update_site_option(self::OPTION_NAME, $options) ;
+			else {
+				// Network admin should make a wapper to avoid subblogs cache not work
+				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
 			}
-			if ( $res == true || $options[self::NETWORK_OPID_ENABLED] == false ) {
+
+			$options = $this->get_site_options() ;
+
+			if ( $res == true || $options[ self::NETWORK_OPID_ENABLED ] == false ) {
 				return ;
 			}
+
 		}
-		elseif ( $res == false && $this->get_option(self::OPID_ENABLED) == false ) {
+		elseif ( $res == false && ! defined( 'LITESPEED_ON' ) ) {// todo: why do this
 			return ;
 		}
 		else {
 			$options = $this->get_options() ;
 		}
 
-		$default = self::get_rule_reset_options() ;
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options ) ;
 
-		$diff = $rules->check_input_for_rewrite($default, $options, $errors) ;
-
-        if ( ! empty($diff) ) {
-            $rules->validate_common_rewrites($diff, $errors) ;
+        if ( $res !== true ) {
+        	if ( ! is_array( $res ) ) {
+        		exit( $res ) ;
+        	}
+			exit( implode( "\n", $res ) ) ;
         }
 
-        if ( ! empty($errors) ) {
-			exit(implode("\n", $errors)) ;
-        }
-
-	}
-
-	/**
-	 * Checks if caching is allowed via server variable.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return boolean True if allowed, false otherwise.
-	 */
-	public function is_caching_allowed()
-	{
-		//lsws
-		if ( isset( $_SERVER['X-LSCACHE'] ) && $_SERVER['X-LSCACHE'] ) {
-			return true ;
-		}
-		// web adc
-		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' ) {
-			return true ;
-		}
-		// cli call
-		if ( PHP_SAPI == 'cli' ) {
-			return true ;
-		}
-		return false ;
 	}
 
 	/**
@@ -831,7 +801,7 @@ class LiteSpeed_Cache_Config
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( ! isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

@@ -68,6 +68,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<?php
+		if ( ! is_multisite() ) :
+			require LSWCP_DIR . 'admin/tpl/settings_inc.cache_browser.php' ;
+		endif ;
+	?>
 
 </tbody></table>
 

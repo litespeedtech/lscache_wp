@@ -392,6 +392,17 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
+	 * Get cache enable setting value
+	 *
+	 * @since 1.3
+	 * @access public
+	 */
+	public static function cache_enabled()
+	{
+		return defined( 'LITESPEED_ON' ) ;
+	}
+
+	/**
 	 * Get cfg setting value
 	 *
 	 * @since 1.1.3

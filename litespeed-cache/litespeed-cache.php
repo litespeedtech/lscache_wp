@@ -62,17 +62,24 @@ if ( ! defined( 'LITESPEED_TIME_OFFSET' ) ) {
 // Auto register LiteSpeed classes
 require_once LSWCP_DIR . 'includes/litespeed.autoload.php' ;
 
-if ( LiteSpeed_Cache_Router::is_cli() ) {
-	WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
-	WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
+// Define CLI
+if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
+	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
+
+	// Register CLI cmd
+	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
+		WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
+		WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
+	}
 }
 
+// Server type
 if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 	if ( isset( $_SERVER['HTTP_X_LSCACHE'] ) && $_SERVER['HTTP_X_LSCACHE'] ) {
 		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC' ) ;
 	}
 	elseif ( isset( $_SERVER['LSWS_EDITION'] ) && strncmp( $_SERVER['LSWS_EDITION'], 'Openlitespeed', 13 ) == 0 ) {
-			define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS' ) ;
+		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS' ) ;
 	}
 	elseif ( isset( $_SERVER['SERVER_SOFTWARE'] ) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed' ) {
 		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT' ) ;
@@ -80,6 +87,11 @@ if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 	else {
 		define( 'LITESPEED_SERVER_TYPE', 'NONE' ) ;
 	}
+}
+
+// Checks if caching is allowed via server variable
+if ( ! empty ( $_SERVER['X-LSCACHE'] ) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined( 'LITESPEED_CLI' ) ) {
+	! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
 }
 
 // ESI const defination

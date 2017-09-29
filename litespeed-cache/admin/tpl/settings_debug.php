@@ -144,14 +144,3 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 </tbody></table>
-
-<?php
-
-/* Maybe add this feature later
-  $id = LiteSpeed_Cache_Config::OPID_TEST_IPS;
-  $input_test_ips  = $this->input_field_text($id, $options[$id], '', 'regular-text');
-  $buf .= $this->display_config_row('Test IPs', $input_test_ips,
-  'Enable LiteSpeed Cache only for specified IPs. (Space or comma separated.)
- * Allows testing on a live site. If empty, cache will be served to everyone.');
- *
- */

@@ -23,25 +23,24 @@ class LiteSpeed_Cache_Activation
 	public static function register_activation()
 	{
 		$count = 0 ;
-		if ( ! defined('LSCWP_LOG_TAG') ) {
-			define('LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id()) ;
-		}
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() ) ;
+
 		self::try_copy_advanced_cache() ;
-		LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
+		LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
 
 		if ( is_multisite() ) {
 			$count = self::get_network_count() ;
 			if ( $count !== false ) {
-				$count = intval($count) + 1 ;
-				set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS) ;
+				$count = intval( $count ) + 1 ;
+				set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
 			}
 		}
-		do_action('litespeed_cache_api_load_thirdparty') ;
-		LiteSpeed_Cache_Config::get_instance()->plugin_activation($count) ;
+		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
+		LiteSpeed_Cache_Config::get_instance()->plugin_activation( $count ) ;
 		LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
 
-		if (defined('LSCWP_PLUGIN_NAME')) {
-			set_transient(LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL) ;
+		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
+			set_transient( LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL ) ;
 		}
 
 		// Register crawler cron task
@@ -72,20 +71,20 @@ class LiteSpeed_Cache_Activation
 	 * @param array $args Arguments to pass into get_sites/wp_get_sites.
 	 * @return array The array of blog ids.
 	 */
-	public static function get_network_ids($args = array())
+	public static function get_network_ids( $args = array() )
 	{
 		global $wp_version ;
-		if ( version_compare($wp_version, '4.6', '<') ) {
-			$blogs = wp_get_sites($args) ;
-			if ( !empty($blogs) ) {
+		if ( version_compare( $wp_version, '4.6', '<' ) ) {
+			$blogs = wp_get_sites( $args ) ;
+			if ( ! empty( $blogs ) ) {
 				foreach ( $blogs as $key => $blog ) {
-					$blogs[$key] = $blog['blog_id'] ;
+					$blogs[ $key ] = $blog[ 'blog_id' ] ;
 				}
 			}
 		}
 		else {
-			$args['fields'] = 'ids' ;
-			$blogs = get_sites($args) ;
+			$args[ 'fields' ] = 'ids' ;
+			$blogs = get_sites( $args ) ;
 		}
 		return $blogs ;
 	}
@@ -99,26 +98,27 @@ class LiteSpeed_Cache_Activation
 	 */
 	private static function get_network_count()
 	{
-		$count = get_site_transient(self::NETWORK_TRANSIENT_COUNT) ;
+		$count = get_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
 		if ( $count !== false ) {
-			return intval($count) ;
+			return intval( $count ) ;
 		}
 		// need to update
 		$default = array() ;
 		$count = 0 ;
 
-		$sites = self::get_network_ids(array('deleted' => 0)) ;
-		if ( empty($sites) ) {
+		$sites = self::get_network_ids( array( 'deleted' => 0 ) ) ;
+		if ( empty( $sites ) ) {
 			return false ;
 		}
 
 		foreach ( $sites as $site ) {
-			$plugins = get_blog_option($site->blog_id, 'active_plugins', $default) ;
-			if ( in_array(LSWCP_BASENAME, $plugins, true) ) {
+			$bid = is_object( $site ) && property_exists( $site, 'blog_id' ) ? $site->blog_id : $site ;
+			$plugins = get_blog_option( $bid , 'active_plugins', $default ) ;
+			if ( in_array( LSWCP_BASENAME, $plugins, true ) ) {
 				$count++ ;
 			}
 		}
-		if ( is_plugin_active_for_network(LSWCP_BASENAME) ) {
+		if ( is_plugin_active_for_network( LSWCP_BASENAME ) ) {
 			$count++ ;
 		}
 		return $count ;
@@ -141,11 +141,11 @@ class LiteSpeed_Cache_Activation
 		if ( $count !== 1 ) {
 			// Not deactivating the last one.
 			$count-- ;
-			set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS) ;
+			set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
 			return false ;
 		}
 
-		delete_site_transient(self::NETWORK_TRANSIENT_COUNT) ;
+		delete_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
 		return true ;
 	}
 
@@ -160,27 +160,17 @@ class LiteSpeed_Cache_Activation
 	public static function register_deactivation()
 	{
 		LiteSpeed_Cache_Task::clear() ;
-		if (!defined('LSCWP_LOG_TAG')) {
-			define('LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id()) ;
-		}
+
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
+
 		LiteSpeed_Cache_Purge::purge_all() ;
 
 		if ( is_multisite() ) {
-			if ( is_network_admin() ) {
-				$options = get_site_option(LiteSpeed_Cache_Config::OPTION_NAME) ;
-				if ( isset($options)
-					&& is_array($options) ) {
-					$opt_str = serialize($options) ;
-					update_site_option(LiteSpeed_Cache_Config::OPTION_NAME, $opt_str) ;
-				}
-			}
-			if ( !self::is_deactivate_last() ) {
-				if ( is_network_admin()
-						&& isset($opt_str)
-						&& $options[LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED] ) {
-					$reset = LiteSpeed_Cache_Config::get_rule_reset_options() ;
-					$errors = array() ;
-					LiteSpeed_Cache_Admin_Rules::get_instance()->validate_common_rewrites($reset, $errors) ;
+
+			if ( ! self::is_deactivate_last() ) {
+				if ( is_network_admin() ) {
+					// Still other activated subsite left, set .htaccess with only CacheLookUp
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
 				}
 				return ;
 			}
@@ -188,22 +178,24 @@ class LiteSpeed_Cache_Activation
 
 		$adv_cache_path = LSWCP_CONTENT_DIR . '/advanced-cache.php' ;
 		// this file can be generated by other cache plugin like w3tc, we only delete our own file
-		if ( file_exists($adv_cache_path) && is_writable($adv_cache_path) ) {
-			if ( strpos(file_get_contents($adv_cache_path), 'LSCACHE_ADV_CACHE') !== false ) {
-				unlink($adv_cache_path) ;
+		if ( file_exists( $adv_cache_path ) && is_writable( $adv_cache_path ) ) {
+			if ( strpos( file_get_contents( $adv_cache_path ), 'LSCACHE_ADV_CACHE' ) !== false ) {
+				unlink( $adv_cache_path ) ;
 			}
 			else {
-				error_log('Keep advanced-cache.php as it belongs to other plugins') ;
+				error_log(' Keep advanced-cache.php as it belongs to other plugins' ) ;
 			}
 		}
 		else {
-			error_log('Failed to remove advanced-cache.php, file does not exist or is not writable!') ;
+			error_log( 'Failed to remove advanced-cache.php, file does not exist or is not writable!' ) ;
 		}
 
-		if ( !LiteSpeed_Cache_Config::wp_cache_var_setter(false) ) {
+		if ( ! LiteSpeed_Cache_Config::wp_cache_var_setter( false ) ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 		}
+
 		LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules( true ) ;
+
 		// delete in case it's not deleted prior to deactivation.
 		self::dismiss_whm() ;
 	}
@@ -218,15 +210,13 @@ class LiteSpeed_Cache_Activation
 	public static function try_copy_advanced_cache()
 	{
 		$adv_cache_path = LSWCP_CONTENT_DIR . '/advanced-cache.php' ;
-		if (file_exists($adv_cache_path)
-				&& (filesize($adv_cache_path) !== 0
-					|| !is_writable($adv_cache_path)) ) {
+		if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || ! is_writable( $adv_cache_path ) ) ) {
 			return false ;
 		}
 
-		copy(LSWCP_DIR . 'includes/advanced-cache.php', $adv_cache_path) ;
-		include($adv_cache_path) ;
-		$ret = defined('LSCACHE_ADV_CACHE') ;
+		copy( LSWCP_DIR . 'includes/advanced-cache.php', $adv_cache_path ) ;
+		include( $adv_cache_path ) ;
+		$ret = defined( 'LSCACHE_ADV_CACHE' ) ;
 		return $ret ;
 	}
 
@@ -238,7 +228,7 @@ class LiteSpeed_Cache_Activation
 	 */
 	public static function dismiss_whm()
 	{
-		delete_transient(LiteSpeed_Cache::WHM_TRANSIENT) ;
+		delete_transient( LiteSpeed_Cache::WHM_TRANSIENT ) ;
 	}
 
 

@@ -80,9 +80,7 @@ class LiteSpeed_Cache_Vary
 		$db_cookie = false ;
 		if ( is_multisite() ) {
 			$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
-			if ( is_array($options) ) {
-				$db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE] ;
-			}
+			$db_cookie = $options[ LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ] ;
 		}
 		else {
 			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE) ;

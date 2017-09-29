@@ -82,6 +82,11 @@ If you have a plugin or theme that you would like to make compatible with LSCWP,
 
 * [Latest LiteSpeed Cache plugin for WordPress API Documentation for Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
 * [LiteSpeed Cache plugin for WordPress GitHub](https://github.com/litespeedtech/lscache_wp/)
+* [ESI example: How to use ESI for WordPress nonce with cache in my plugin ?](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample)
+* [ESI example: How to make Caldera Form work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_replace)
+* [ESI example: How to make Visual Composer's WordPress nonce work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_nonce)
+
+If you have any API requirements, please inform us anytime in [WP Forum](https://wordpress.org/support/plugin/litespeed-cache) or [GitHub Issues](https://github.com/litespeedtech/lscache_wp/issues). We will add them ASAP.
 
 = Known Compatible Plugins and Themes =
 
@@ -104,6 +109,7 @@ If you have a plugin or theme that you would like to make compatible with LSCWP,
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * Elegant Themes Divi 3.0.67+
+* [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
 
 = Known Uncompatible Plugins =
 

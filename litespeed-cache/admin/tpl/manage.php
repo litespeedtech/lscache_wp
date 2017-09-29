@@ -37,7 +37,7 @@ $menu_list = array(
 	?>
 	</h2>
 
-	<?php if ( ! LiteSpeed_Cache_Router::cache_enabled() ) : ?>
+	<?php if ( ! defined( 'LITESPEED_ON' ) ) : ?>
 		<div class="litespeed-callout-warning">
 			<h4><?php echo __('WARNING: LiteSpeed cache is disabled. The functionalities here can not work.', 'litespeed-cache'); ?></h4>
 		</div>

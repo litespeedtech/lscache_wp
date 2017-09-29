@@ -5,7 +5,7 @@ $readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
 $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 
 // Check if there is `ExpiresDefault` in .htaccess
-if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ENABLED ) ) {
+if ( defined( 'LITESPEED_ON' ) ) {
 	$htaccess_con = Litespeed_File::read( LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ) ;
 	if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
 		$is_dismissed = get_option( self::DISMISS_MSG ) ;

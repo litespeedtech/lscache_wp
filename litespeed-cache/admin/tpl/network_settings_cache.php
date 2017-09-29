@@ -13,6 +13,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_favicon.php' ; ?>
 	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_resources.php' ; ?>
 	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_mobile.php' ; ?>
+	<?php require LSWCP_DIR . 'admin/tpl/settings_inc.cache_browser.php' ; ?>
 
 </tbody></table>
 
