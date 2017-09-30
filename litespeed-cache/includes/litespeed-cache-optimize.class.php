@@ -385,7 +385,7 @@ class LiteSpeed_Cache_Optimize
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
 			$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
-			$this->html_head .= "<script type='text/javascript' src='" . $css_async_lib_url . "'></script>" ;
+			$this->html_head .= "<script type='text/javascript' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
 			$this->append_http2( $css_async_lib_url ) ; // async lib will be http/2 pushed always
 		}
 
