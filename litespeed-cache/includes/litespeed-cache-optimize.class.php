@@ -15,6 +15,7 @@ class LiteSpeed_Cache_Optimize
 
 	const OPTION_OPTIMIZED = 'litespeed-cache-optimized' ;
 	const DIR_MIN = '/min' ;
+	const CSS_ASYNC_LIB = '/min/css_async.js' ;
 
 	private $content ;
 	private $http2_headers = array() ;
@@ -26,7 +27,12 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_js_minify ;
 	private $cfg_js_combine ;
 	private $cfg_html_minify ;
+	private $cfg_css_async ;
+	private $cfg_js_defer ;
 
+
+	private $html_foot = '' ; // The html info append to <body>
+	private $html_head = '' ; // The html info prepend to <body>
 	private $css_to_be_removed = array() ;
 
 	private $minify_cache ;
@@ -51,6 +57,8 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
 		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
 		$this->cfg_html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
+		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ;
+		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ;
 
 		$this->_static_request_check() ;
 
@@ -75,6 +83,24 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _static_request_check()
 	{
+		// This request is for js/css_async.js
+		if ( $this->cfg_css_async && strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
+			LiteSpeed_Cache_Log::debug( 'Optimizer start serving static file' ) ;
+
+			LiteSpeed_Cache_Control::set_cacheable() ;
+			LiteSpeed_Cache_Control::set_no_vary() ;
+			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
+			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_CSS_ASYNC' ) ;
+
+			$file = LSWCP_DIR . 'js/css_async.js' ;
+
+			header( 'Content-Length: ' . filesize( $file ) ) ;
+			header( 'Content-Type: application/javascript' ) ;
+
+			echo file_get_contents( $file ) ;
+			exit ;
+		}
+
 		// If not turn on min files
 		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
 			return ;
@@ -198,13 +224,11 @@ class LiteSpeed_Cache_Optimize
 			return ;
 		}
 
-		// The html codes needed to be added to head
-		$html_head = '';
-		$html_foot = '';
+		do_action( 'litespeed_optm' ) ;
 
 		// Parse css from content
 		$ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ;
-		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css || $ggfonts_rm ) {
+		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css || $ggfonts_rm || $this->cfg_css_async ) {
 			// To remove google fonts
 			if ( $ggfonts_rm ) {
 				$this->css_to_be_removed[] = 'fonts.googleapis.com' ;
@@ -216,13 +240,30 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css ) {
 
 			if ( $src_list ) {
+				// Analyze local file
 				list( $ignored_html, $src_queue_list ) = $this->_analyse_links( $src_list, $html_list ) ;
 
 				// IF combine
 				if ( $this->cfg_css_combine ) {
 					$url = $this->_build_hash_url( $src_queue_list ) ;
 
-					$html_head .= implode( '', $ignored_html ) . "<link data-minified='1' rel='stylesheet' href='$url' />" ;
+					$snippet = "<link data-minified='1' rel='stylesheet' href='$url' />" ;
+
+					// Handle css async load
+					if ( $this->cfg_css_async ) {
+						// Only ignored html snippet needs async
+						list( $noscript, $ignored_html_async ) = $this->_async_css_list( $ignored_html ) ;
+
+						$noscript .= $snippet ;
+						$snippet = "<link rel='preload' data-preload='1' data-minified='1' as='style' onload='this.rel=\"stylesheet\"' href='$url' />" ;
+
+						$this->html_head .= implode( '', $ignored_html_async ) . $snippet ;
+						$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
+					}
+					else {
+						$this->html_head .= implode( '', $ignored_html ) . $snippet ;
+					}
+
 					// Move all css to top
 					$this->content = str_replace( $html_list, '', $this->content ) ;
 
@@ -232,6 +273,7 @@ class LiteSpeed_Cache_Optimize
 				}
 				// Only minify
 				elseif ( $this->cfg_css_minify ) {
+					// will handle async css load inside
 					$this->_src_queue_handler( $src_queue_list, $html_list ) ;
 				}
 				// Only HTTP2 push
@@ -243,9 +285,26 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
+		// Handle css lazy load if not handled async loaded yet
+		if ( $this->cfg_css_async && ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
+			// async html
+			list( $noscript, $html_list_async ) = $this->_async_css_list( $html_list ) ;
+
+			// add noscript
+			$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
+
+			// Replace async css
+			$this->content = str_replace( $html_list, $html_list_async, $this->content ) ;
+
+		}
+
+		// Parse js from buffer as needed
+		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js || $this->cfg_js_defer ) {
+			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js() ;
+		}
+
 		// js optimizer
 		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js ) {
-			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js() ;
 
 			if ( $src_list ) {
 				list( $ignored_html, $src_queue_list ) = $this->_analyse_links( $src_list, $html_list, 'js' ) ;
@@ -276,15 +335,21 @@ class LiteSpeed_Cache_Optimize
 
 					$url = $this->_build_hash_url( $head_js, 'js' ) ;
 					if ( $url ) {
-						$html = "<script data-minified='1' src='$url'></script>" ;
+						$html = "<script data-minified='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
 					}
-					$html_head .= implode( '', $head_ignored_html ) . $html ;
+					if ( $this->cfg_js_defer ) {
+						$head_ignored_html = $this->_js_defer( $head_ignored_html ) ;
+					}
+					$this->html_head .= implode( '', $head_ignored_html ) . $html ;
 
 					$url = $this->_build_hash_url( $foot_js, 'js' ) ;
 					if ( $url ) {
-						$html = "<script data-minified='1' src='$url'></script>" ;
+						$html = "<script data-minified='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
 					}
-					$html_foot .= implode( '', $foot_ignored_html ) . $html ;
+					if ( $this->cfg_js_defer ) {
+						$foot_ignored_html = $this->_js_defer( $foot_ignored_html ) ;
+					}
+					$this->html_foot .= implode( '', $foot_ignored_html ) . $html ;
 
 					// Will move all js to top/bottom
 					$this->content = str_replace( $html_list, '', $this->content ) ;
@@ -295,6 +360,7 @@ class LiteSpeed_Cache_Optimize
 				}
 				// Only minify
 				elseif ( $this->cfg_js_minify ) {
+					// Will handle js defer inside
 					$this->_src_queue_handler( $src_queue_list, $html_list, 'js' ) ;
 				}
 				// Only HTTP2 push
@@ -306,12 +372,33 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
-		if ( $html_head ) {
-			$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $html_head , $this->content, 1 ) ;
+		// Handle js defer if not handled defer yet
+		if ( $this->cfg_js_defer && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
+			// defer html
+			$html_list2 = $this->_js_defer( $html_list ) ;
+
+			// Replace async js
+			$this->content = str_replace( $html_list, $html_list2, $this->content ) ;
 		}
 
-		if ( $html_foot ) {
-			$this->content = str_replace( '</body>', $html_foot . '</body>' , $this->content ) ;
+
+		// Append async compatibility lib to head
+		if ( $this->cfg_css_async ) {
+			$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
+			$this->html_head .= "<script type='text/javascript' src='" . $css_async_lib_url . "'></script>" ;
+			$this->append_http2( $css_async_lib_url ) ; // async lib will be http/2 pushed always
+		}
+
+		// Replace html head part
+		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head ) ;
+		if ( $this->html_head ) {
+			$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 ) ;
+		}
+
+		// Replace html foot part
+		$this->html_foot = apply_filters( 'litespeed_optm_html_foot', $this->html_foot ) ;
+		if ( $this->html_foot ) {
+			$this->content = str_replace( '</body>', $this->html_foot . '</body>' , $this->content ) ;
 		}
 
 		// HTML minify
@@ -347,17 +434,33 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' )
 	{
+		$noscript = '' ;
+		$html_list_ori = $html_list ;
+
 		$tag = $file_type === 'css' ? 'link' : 'script' ;
 		foreach ( $src_queue_list as $key => $src ) {
 			$url = $this->_build_hash_url( $src, $file_type ) ;
-			$html = str_replace( $src, $url, $html_list[ $key ] ) ;
-			$html = str_replace( "<$tag ", "<$tag data-minified='1' ", $html ) ;
+			$snippet = str_replace( $src, $url, $html_list[ $key ] ) ;
+			$snippet = str_replace( "<$tag ", "<$tag data-minified='1' ", $snippet ) ;
 
-			$this->content = str_replace( $html_list[ $key ], $html, $this->content ) ;
+			$html_list[ $key ] = $snippet ;
 
 			// Add to HTTP2
 			$this->append_http2( $url, $file_type ) ;
 		}
+
+		// Handle css async load
+		if ( $file_type === 'css' && $this->cfg_css_async ) {
+			list( $noscript, $html_list ) = $this->_async_css_list( $html_list ) ;
+			$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
+		}
+
+		// Handle js defer
+		if ( $file_type === 'js' && $this->cfg_js_defer ) {
+			$html_list = $this->_js_defer( $html_list ) ;
+		}
+
+		$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
 	}
 
 	/**
@@ -552,7 +655,7 @@ class LiteSpeed_Cache_Optimize
 
 		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;
 
-		return $GLOBALS[ 'wp_rewrite' ]->using_permalinks() ? home_url( $file_to_save ) : home_url() . '/?' . $file_to_save ;
+		return LiteSpeed_Cache_Utility::get_permalink_url( $file_to_save ) ;
 	}
 
 	/**
@@ -636,7 +739,8 @@ class LiteSpeed_Cache_Optimize
 
 			// Check if need to remove this css
 			if ( $this->css_to_be_removed && LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'href' ], $this->css_to_be_removed ) ) {
-				// Delete this css snipit from orig html
+				LiteSpeed_Cache_Log::debug( 'Optm: rm css snippet ' . $attrs[ 'href' ] ) ;
+				// Delete this css snippet from orig html
 				$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
 				continue ;
 			}
@@ -646,6 +750,53 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		return array( $src_list, $html_list ) ;
+	}
+
+	/**
+	 * Replace css to async loaded css
+	 *
+	 * @since  1.3
+	 * @access private
+	 * @param  array $html_list Orignal css array
+	 * @return array            array( (string)noscript, (array)css_async_list )
+	 */
+	private function _async_css_list( $html_list )
+	{
+		$noscript = '' ;
+		foreach ( $html_list as $k => $ori ) {
+			// Append to noscript content
+			$noscript .= $ori ;
+			// async replacement
+			$v = str_replace( 'stylesheet', 'preload', $ori ) ;
+			$v = str_replace( '<link', "<link data-preload='1' as='style' onload='this.rel=\"stylesheet\"' ", $v ) ;
+			$html_list[ $k ] = $v ;
+		}
+		return array( $noscript, $html_list ) ;
+	}
+
+	/**
+	 * Add defer to js
+	 *
+	 * @since  1.3
+	 * @access private
+	 */
+	private function _js_defer( $html_list )
+	{
+		foreach ( $html_list as $k => $v ) {
+			if ( strpos( $v, 'async' ) !== false ) {
+				continue ;
+			}
+			if ( strpos( $v, 'defer' ) !== false ) {
+				continue ;
+			}
+			if ( strpos( $v, 'data-defer' ) !== false ) {
+				continue ;
+			}
+
+			$html_list[ $k ] = str_replace( '></script>', ' defer></script>', $v ) ;
+		}
+
+		return $html_list ;
 	}
 
 	/**

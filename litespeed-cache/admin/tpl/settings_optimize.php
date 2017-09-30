@@ -120,8 +120,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This will remove query strings from static resources.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'It can improve your speed scores in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Remove query strings from static resources.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -131,7 +131,29 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This will prevent google fonts from loading on all your pages.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Prevent google fonts from loading on all your pages.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Load CSS Asynchronously', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Optimize CSS delivery. This will load Google Fonts asynchronously too.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Load JS Deferred', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

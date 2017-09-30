@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Outputs to WordPress debug log.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This should be set to off once everything is working to prevent filling the disk.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'The Admin IP option will only output log messages on requests from admin IPs.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'The logs will be outputted to the debug.log in the wp-content directory.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'The logs will be outputted to %s.', 'litespeed-cache' ), '<code>wp-content/debug.log</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>

@@ -12,6 +12,18 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Get url based on permalink setting
+	 *
+	 * @since  1.3
+	 * @access public
+	 * @return string
+	 */
+	public static function get_permalink_url( $relative_url )
+	{
+		return $GLOBALS[ 'wp_rewrite' ]->using_permalinks() ? home_url( $relative_url ) : home_url() . '/?' . $relative_url ;
+	}
+
+	/**
 	 * Check if an array has a string
 	 *
 	 * Support $ exact match
