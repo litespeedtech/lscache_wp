@@ -148,6 +148,16 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Critical CSS Rules', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, get_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Specify critical CSS rules for above-the-fold content when enabling %s.', 'litespeed-cache' ), __( 'Load CSS Asynchronously', 'litespeed-cache' ) ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Load JS Deferred', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ; ?>

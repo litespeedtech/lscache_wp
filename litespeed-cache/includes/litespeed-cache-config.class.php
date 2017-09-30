@@ -15,6 +15,7 @@ class LiteSpeed_Cache_Config
 
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 	const VARY_GROUP = 'litespeed-cache-vary-group' ;
+	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
 	const VAL_OFF = 0 ;
 	const VAL_ON = 1 ;
 	const VAL_ON2 = 2 ;

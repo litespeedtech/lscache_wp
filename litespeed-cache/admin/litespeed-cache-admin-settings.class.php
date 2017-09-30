@@ -499,6 +499,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
+		// Update critical css
+		update_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, $this->_input[ LiteSpeed_Cache_Config::ITEM_OPTM_CSS ] ) ;
 	}
 
 	/**

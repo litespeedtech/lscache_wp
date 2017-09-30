@@ -72,6 +72,29 @@ class LiteSpeed_Cache_Optimize
 				add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
 			}
 		}
+
+		// Check if there is any critical css rules setting
+		if ( $this->cfg_css_async ) {
+			add_action( 'wp_head', array( $this, 'prepend_critical_css' ), 1 ) ;
+		}
+	}
+
+	/**
+	 * Output critical css
+	 *
+	 * @since  1.3
+	 * @access private
+	 * @return  string The static file content
+	 */
+	public function prepend_critical_css()
+	{
+
+		$rules = get_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ;
+		if ( ! $rules ) {
+			return ;
+		}
+
+		echo '<style id="litespeed-optm-css-rules">' . $rules . '</style>' ;
 	}
 
 	/**
