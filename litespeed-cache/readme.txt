@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.2.3.1
+Stable tag: 1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push, and CDN support! *
+** NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, and Browser Cache! **
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -47,11 +47,14 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
-* *NEW* - Content Delivery Network support
-* *NEW* - Minify CSS, JavaScript, and HTML
-* *NEW* - Combine CSS and JavaScript
-* *NEW* - HTTP/2 Push for CSS and JS
-* *NEW* - Database Cleaner and Optimizer
+* PageSpeed score optimization
+* Load CSS/JS Asynchronously
+* Content Delivery Network support
+* Minify CSS, JavaScript, and HTML
+* Combine CSS and JavaScript
+* HTTP/2 Push for CSS and JS
+* Database Cleaner and Optimizer
+* Browser Cache
 * Automatic page caching to greatly improve site performance
 * Automatic purge of related pages based on certain events
 * Smart preload crawler with support for SEO-friendly sitemap
@@ -60,8 +63,9 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * Separate caching of desktop and mobile views
 * Ability to schedule purge for specified URLs at specified time of day
 * Support for HTTP/2 & HTTPS out-of-box
-* Single Site and Multi Site support
+* Single Site and Multi Site ( Network ) support
 * Support for  WooCommerce and bbPress
+* [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli)
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
 * No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
 * Attractive, easy-to-understand interface
@@ -80,11 +84,11 @@ The vast majority of plugins and themes are compatible with LSCache. Our API is 
 
 If you have a plugin or theme that you would like to make compatible with LSCWP, please see the following resources:
 
-* [Latest LiteSpeed Cache plugin for WordPress API Documentation for Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
-* [LiteSpeed Cache plugin for WordPress GitHub](https://github.com/litespeedtech/lscache_wp/)
-* [ESI example: How to use ESI for WordPress nonce with cache in my plugin ?](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample)
-* [ESI example: How to make Caldera Form work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_replace)
-* [ESI example: How to make Visual Composer's WordPress nonce work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_nonce)
+* [LSCWP API Documentation for WordPress Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
+* [LSCWP GitHub](https://github.com/litespeedtech/lscache_wp/)
+* [ESI example: Use ESI for WordPress nonce with cache ?](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample)
+* [ESI example: Make Caldera Form v1.5.6.1 work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_replace)
+* [ESI example: Make Visual Composer's WordPress nonce work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_nonce)
 
 If you have any API requirements, please inform us anytime in [WP Forum](https://wordpress.org/support/plugin/litespeed-cache) or [GitHub Issues](https://github.com/litespeedtech/lscache_wp/issues). We will add them ASAP.
 
@@ -228,8 +232,42 @@ For more detailed information about crawler setup, please see [our blog post](ht
 12. Admin Crawler Status Page
 13. Cache Miss Example
 14. Cache Hit Example
+15. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.3 - October 1 2017 =
+* [NEW FEATURE] Added Browser Cache support.
+* [NEW FEATURE] Added Remove Query Strings support.
+* [NEW FEATURE] Added Remove Google Fonts support.
+* [NEW FEATURE] Added Load CSS Asynchronously support.
+* [NEW FEATURE] Added Load JS Deferred support.
+* [NEW FEATURE] Added Critical CSS Rules support.
+* [NEW FEATURE] Added Private Cached URIs support.
+* [NEW FEATURE] Added Do Not Cache Query Strings support.
+* [NEW FEATURE] Added frontend adminbar shortcuts ( Purge this page/Do Not Cache/Private cache ).
+* [IMPROVEMENT] Do Not Cache URIs now supports full URLs.
+* [IMPROVEMENT] Improved performance of Do Not Cache settings.
+* [IMPROVEMENT] Encrypted vary cookie.
+* [IMPROVEMENT] Enhanced HTML optimizer.
+* [IMPROVEMENT] Limited combined file size to avoid heavy memory usage.
+* [IMPROVEMENT] CDN supports custom upload folder for media files.
+* [API] Added purge single post API.
+* [API] Added version compare API.
+* [API] Enhanced ESI API for third party plugins.
+* [INTEGRATION] Compatibility with NextGEN Gallery v2.2.14.
+* [INTEGRATION] Compatibility with Caldera Forms v1.5.6.2+.
+* [BUGFIX] Fixed CDN&Minify compatibility with css url links.
+* [BUGFIX] Fixed .htaccess being regenerated despite there being no changes.
+* [BUGFIX] Fixed CDN path bug for subfolder WP instance.
+* [BUGFIX] Fixed crawler path bug for subfolder WP instance with different site url and home url.
+* [BUGFIX] Fixed a potential Optimizer generating redundant duplicated JS in HTML bug.
+* [GUI] Added a more easily accessed submit button in admin settings.
+* [GUI] Admin settings page cosmetic changes.
+* [GUI] Reorganized GUI css/img folder structure.
+* [REFACTOR] Refactored configuration init.
+* [REFACTOR] Refactored admin setting save.
+* [REFACTOR] Refactored .htaccess operator and rewrite rule generation.
 
 = 1.2.3.1 - September 20 2017 =
 * [UPDATE] Improved PHP5.3 compatibility.

@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.2.3\n"
+"Project-Id-Version: LiteSpeed Cache 1.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-09-20 16:04:18+00:00\n"
+"POT-Creation-Date: 2017-10-01 21:27:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,15 +52,15 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:821
+#: admin/litespeed-cache-admin-display.class.php:770
 msgid "ON"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:825
+#: admin/litespeed-cache-admin-display.class.php:774
 msgid "OFF"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:858
+#: admin/litespeed-cache-admin-display.class.php:807
 msgid "Recommended value: %s"
 msgstr ""
 
@@ -320,78 +320,78 @@ msgstr ""
 msgid "Optimized all tables."
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:715
+#: admin/litespeed-cache-admin-rules.class.php:637
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:850
+#: admin/litespeed-cache-admin-rules.class.php:835
 msgid "File Saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:168
+#: admin/litespeed-cache-admin-settings.class.php:50
+msgid "'Use primary site settings' set by Network Administrator."
+msgstr ""
+
+#: admin/litespeed-cache-admin-settings.class.php:217
+msgid "Site options saved."
+msgstr ""
+
+#: admin/litespeed-cache-admin-settings.class.php:256
 msgid "Default Public Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:176
+#: admin/litespeed-cache-admin-settings.class.php:257
 msgid "Default Private Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:184
+#: admin/litespeed-cache-admin-settings.class.php:258
 msgid "Default Front Page"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:192
+#: admin/litespeed-cache-admin-settings.class.php:259
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:203
+#: admin/litespeed-cache-admin-settings.class.php:260
 msgid "404"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:214
+#: admin/litespeed-cache-admin-settings.class.php:261
 msgid "403"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:225
+#: admin/litespeed-cache-admin-settings.class.php:262
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:583
+#: admin/litespeed-cache-admin-settings.class.php:542
 #: admin/tpl/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:663
+#: admin/litespeed-cache-admin-settings.class.php:608
 #: admin/tpl/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:671
+#: admin/litespeed-cache-admin-settings.class.php:609
 #: admin/tpl/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:679
+#: admin/litespeed-cache-admin-settings.class.php:610
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:687
+#: admin/litespeed-cache-admin-settings.class.php:611
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:695
+#: admin/litespeed-cache-admin-settings.class.php:612
 #: admin/tpl/settings_crawler.php:58
 msgid "Threads"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:806
-msgid "'Use primary site settings' set by Network Administrator."
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:940
-msgid "File saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin.class.php:203
@@ -471,7 +471,7 @@ msgstr ""
 msgid "Crawler Cron"
 msgstr ""
 
-#: admin/tpl/crawler.php:63 admin/tpl/settings.php:115
+#: admin/tpl/crawler.php:63 admin/tpl/settings.php:114
 msgid "WARNING"
 msgstr ""
 
@@ -779,10 +779,14 @@ msgid ""
 "To trigger the action for a page, access the page with the query string %s"
 msgstr ""
 
-#: admin/tpl/info_common_rewrite.php:8 admin/tpl/settings_excludes.php:14
-#: admin/tpl/settings_excludes.php:40 admin/tpl/settings_excludes.php:70
-#: admin/tpl/settings_inc.exclude_cookies.php:5
-#: admin/tpl/settings_inc.exclude_useragent.php:10
+#: admin/tpl/info_common_rewrite.php:8 admin/tpl/settings_excludes.php:57
+#: admin/tpl/settings_excludes.php:95
+#: admin/tpl/settings_inc.cache_browser.php:12
+#: admin/tpl/settings_inc.cache_favicon.php:14
+#: admin/tpl/settings_inc.cache_mobile.php:18
+#: admin/tpl/settings_inc.cache_resources.php:15
+#: admin/tpl/settings_inc.exclude_cookies.php:22
+#: admin/tpl/settings_inc.exclude_useragent.php:21
 msgid "NOTE:"
 msgstr ""
 
@@ -795,7 +799,6 @@ msgid "Please contact the network admin to make any changes."
 msgstr ""
 
 #: admin/tpl/info_common_rewrite.php:14 admin/tpl/settings_advanced.php:6
-#: admin/tpl/settings_inc.cache_mobile.php:64
 #: admin/tpl/settings_optimize.php:10
 msgid "NOTICE:"
 msgstr ""
@@ -1696,29 +1699,29 @@ msgstr ""
 msgid "Compatibilities"
 msgstr ""
 
-#: admin/tpl/settings.php:65
+#: admin/tpl/settings.php:64
 msgid "WARNING: Third party tab input invalid."
 msgstr ""
 
-#: admin/tpl/settings.php:72
+#: admin/tpl/settings.php:71
 msgid "WARNING: Third party config slug contains invalid characters."
 msgstr ""
 
-#: admin/tpl/settings.php:87
+#: admin/tpl/settings.php:86
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/tpl/settings.php:117
+#: admin/tpl/settings.php:116
 msgid "The network admin selected use primary site configs for all subsites."
 msgstr ""
 
-#: admin/tpl/settings.php:118
+#: admin/tpl/settings.php:117
 msgid ""
 "The following options are selected, but are not editable in this settings "
 "page."
 msgstr ""
 
-#: admin/tpl/settings.php:140 admin/tpl/settings.php:143
+#: admin/tpl/settings.php:139 admin/tpl/settings.php:142
 msgid "Save Changes"
 msgstr ""
 
@@ -1871,6 +1874,29 @@ msgstr ""
 msgid "Disabling this option may negatively affect performance."
 msgstr ""
 
+#: admin/tpl/settings_cache.php:56
+msgid "Private Cached URIs"
+msgstr ""
+
+#: admin/tpl/settings_cache.php:60
+msgid "URI Paths containing these strings will NOT be cached as public."
+msgstr ""
+
+#: admin/tpl/settings_cache.php:61 admin/tpl/settings_excludes.php:13
+msgid "The URLs will be compared to the REQUEST_URI server variable."
+msgstr ""
+
+#: admin/tpl/settings_cache.php:64 admin/tpl/settings_excludes.php:16
+msgid "To do an exact match, add %s to the end of the URL."
+msgstr ""
+
+#: admin/tpl/settings_cache.php:65 admin/tpl/settings_excludes.php:17
+#: admin/tpl/settings_excludes.php:30 admin/tpl/settings_excludes.php:53
+#: admin/tpl/settings_excludes.php:91
+#: admin/tpl/settings_inc.exclude_cookies.php:19
+msgid "One per line."
+msgstr ""
+
 #: admin/tpl/settings_cdn.php:11
 msgid "CDN Settings"
 msgstr ""
@@ -1884,20 +1910,20 @@ msgid "Enable Content Delivery Network use."
 msgstr ""
 
 #: admin/tpl/settings_cdn.php:25
-msgid "Original URL"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:29
-msgid ""
-"Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:35
 msgid "CDN URL"
 msgstr ""
 
-#: admin/tpl/settings_cdn.php:39
+#: admin/tpl/settings_cdn.php:29
 msgid "CDN URL to be used. For example, %s"
+msgstr ""
+
+#: admin/tpl/settings_cdn.php:35
+msgid "Original URL"
+msgstr ""
+
+#: admin/tpl/settings_cdn.php:39
+msgid ""
+"Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s"
 msgstr ""
 
 #: admin/tpl/settings_cdn.php:45
@@ -2161,8 +2187,7 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/settings_debug.php:35
-msgid ""
-"The logs will be outputted to the debug.log in the wp-content directory."
+msgid "The logs will be outputted to %s."
 msgstr ""
 
 #: admin/tpl/settings_debug.php:41
@@ -2318,93 +2343,66 @@ msgid ""
 "etc), while all other user roles see the default public page."
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:7
-msgid "URI List"
+#: admin/tpl/settings_excludes.php:4
+msgid "Do Not Cache Settings"
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:9
-msgid "Enter a list of urls that should not be cached."
+#: admin/tpl/settings_excludes.php:8
+msgid "Do Not Cache URIs"
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:10
-msgid "The urls will be compared to the REQUEST_URI server variable."
+#: admin/tpl/settings_excludes.php:12
+msgid "Paths containing these strings will not be cached."
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:11
-msgid "There should only be one url per line."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:16
-msgid "URLs must start with a '/' to be correctly matched."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:17
-msgid "To do an exact match, add '$' to the end of the URL."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:18
-msgid "Any surrounding whitespaces will be trimmed."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:19 admin/tpl/settings_excludes.php:43
-#: admin/tpl/settings_excludes.php:73
-msgid "e.g. to exclude %1$s, insert %2$s"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:21
-msgid "Similarly, to exclude %1$s(accessed with the /blog), insert %2$s"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:27
-msgid "SYNTAX: URLs must start with a '/' to be correctly matched."
+#: admin/tpl/settings_excludes.php:24
+msgid "Do Not Cache Query Strings"
 msgstr ""
 
 #: admin/tpl/settings_excludes.php:28
-msgid "To do an exact match, add '$' to the end of the URL. One URL per line."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:34
-msgid "Category List"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:36
-msgid "All categories are cached by default."
+msgid "Query string containing these parameters will not be cached."
 msgstr ""
 
 #: admin/tpl/settings_excludes.php:37
-msgid ""
-"To prevent a category from being cached, enter it in the text area below, "
-"one per line."
+msgid "Do Not Cache Categories"
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:42
+#: admin/tpl/settings_excludes.php:50
+msgid "All categories are cached by default."
+msgstr ""
+
+#: admin/tpl/settings_excludes.php:51 admin/tpl/settings_excludes.php:89
+#: admin/tpl/settings_inc.exclude_cookies.php:16
+#: admin/tpl/settings_inc.exclude_useragent.php:15
+msgid "To prevent %s from being cached, enter it here."
+msgstr ""
+
+#: admin/tpl/settings_excludes.php:51
+msgid "categories"
+msgstr ""
+
+#: admin/tpl/settings_excludes.php:59
 msgid "If the Category ID is not found, the name will be removed on save."
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:49
-msgid "SYNTAX: One category id per line."
+#: admin/tpl/settings_excludes.php:60 admin/tpl/settings_excludes.php:98
+msgid "To exclude %1$s, insert %2$s."
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:64
-msgid "Tag List"
+#: admin/tpl/settings_excludes.php:68
+msgid "Do Not Cache Tags"
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:66
+#: admin/tpl/settings_excludes.php:88
 msgid "All tags are cached by default."
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:67
-msgid ""
-"To prevent tags from being cached, enter the tag in the text area below, one "
-"per line."
+#: admin/tpl/settings_excludes.php:89
+msgid "tags"
 msgstr ""
 
-#: admin/tpl/settings_excludes.php:72
+#: admin/tpl/settings_excludes.php:97
 msgid "If the Tag ID is not found, the name will be removed on save."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:79
-msgid "SYNTAX: One tag id per line."
 msgstr ""
 
 #: admin/tpl/settings_general.php:9
@@ -2509,6 +2507,31 @@ msgstr ""
 msgid "If this is set to a number less than 30, 500 pages will not be cached."
 msgstr ""
 
+#: admin/tpl/settings_inc.cache_browser.php:6
+msgid "Browser Cache"
+msgstr ""
+
+#: admin/tpl/settings_inc.cache_browser.php:10
+msgid ""
+"Browser caching stores static files locally in the user's browser. Turn on "
+"this setting to reduce repeated requests for static files."
+msgstr ""
+
+#: admin/tpl/settings_inc.cache_browser.php:13
+#: admin/tpl/settings_inc.cache_favicon.php:15
+#: admin/tpl/settings_inc.cache_mobile.php:19
+#: admin/tpl/settings_inc.cache_resources.php:16
+#: admin/tpl/settings_inc.exclude_cookies.php:23
+#: admin/tpl/settings_inc.exclude_useragent.php:22
+msgid "This setting will edit the .htaccess file."
+msgstr ""
+
+#: admin/tpl/settings_inc.cache_browser.php:15
+msgid ""
+"You can turn on browser caching in server admin too. <a %s>Learn more about "
+"LiteSpeed browser cache setting</a>."
+msgstr ""
+
 #: admin/tpl/settings_inc.cache_favicon.php:7
 msgid "Cache favicon.ico"
 msgstr ""
@@ -2535,37 +2558,31 @@ msgstr ""
 msgid "A site built with responsive design does not need to check this."
 msgstr ""
 
-#: admin/tpl/settings_inc.cache_mobile.php:22
+#: admin/tpl/settings_inc.cache_mobile.php:26
 msgid "List of Mobile User Agents"
 msgstr ""
 
-#: admin/tpl/settings_inc.cache_mobile.php:47
+#: admin/tpl/settings_inc.cache_mobile.php:43
 msgid "Htaccess did not match configuration option."
 msgstr ""
 
-#: admin/tpl/settings_inc.cache_mobile.php:48
+#: admin/tpl/settings_inc.cache_mobile.php:44
 msgid "Please re-enter the mobile view setting."
 msgstr ""
 
-#: admin/tpl/settings_inc.cache_mobile.php:49
+#: admin/tpl/settings_inc.cache_mobile.php:45
 msgid "List in WordPress database is: %s"
 msgstr ""
 
+#: admin/tpl/settings_inc.cache_mobile.php:61
+msgid "SYNTAX: Each entry should be separated with a bar, %s."
+msgstr ""
+
+#: admin/tpl/settings_inc.cache_mobile.php:62
+msgid "Any spaces should be escaped with a backslash before the space, %s."
+msgstr ""
+
 #: admin/tpl/settings_inc.cache_mobile.php:65
-#: admin/tpl/settings_inc.exclude_cookies.php:7
-#: admin/tpl/settings_inc.exclude_useragent.php:12
-msgid "This setting will edit the .htaccess file."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:69
-msgid "SYNTAX: Each entry should be separated with a bar, %s"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:70
-msgid "Any spaces should be escaped with a backslash before the space, %s"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:72
 msgid "The default list WordPress uses is %s"
 msgstr ""
 
@@ -2583,43 +2600,33 @@ msgid ""
 "PHP calls."
 msgstr ""
 
-#: admin/tpl/settings_inc.exclude_cookies.php:2
-msgid "Cookie List"
+#: admin/tpl/settings_inc.exclude_cookies.php:6
+msgid "Do Not Cache Cookies"
 msgstr ""
 
-#: admin/tpl/settings_inc.exclude_cookies.php:3
-msgid "To prevent cookies from being cached, enter it in the text area below."
+#: admin/tpl/settings_inc.exclude_cookies.php:16
+msgid "cookies"
 msgstr ""
 
-#: admin/tpl/settings_inc.exclude_cookies.php:12
-msgid "SYNTAX: Cookies should be listed one per line."
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_cookies.php:13
-msgid "Spaces should have a backslash in front of them, %s"
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_useragent.php:7
-msgid "User Agent List"
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_useragent.php:8
-msgid ""
-"To prevent user agents from being cached, enter it in the text field below."
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_useragent.php:17
-msgid ""
-"SYNTAX: Separate each user agent with a bar, <font style=\"font-style:normal"
-"\">%s</font>."
-msgstr ""
-
+#: admin/tpl/settings_inc.exclude_cookies.php:18
 #: admin/tpl/settings_inc.exclude_useragent.php:18
 msgid "Spaces should have a backslash in front of them, %s."
 msgstr ""
 
+#: admin/tpl/settings_inc.exclude_useragent.php:7
+msgid "Do Not Cache User Agents"
+msgstr ""
+
+#: admin/tpl/settings_inc.exclude_useragent.php:15
+msgid "user agents"
+msgstr ""
+
+#: admin/tpl/settings_inc.exclude_useragent.php:17
+msgid "SYNTAX: Separate each user agent with a bar, %s."
+msgstr ""
+
 #: admin/tpl/settings_inc.purge_on_upgrade.php:7
-msgid "Purge All on upgrade"
+msgid "Purge All On Upgrade"
 msgstr ""
 
 #: admin/tpl/settings_inc.purge_on_upgrade.php:11
@@ -2726,6 +2733,53 @@ msgstr ""
 
 #: admin/tpl/settings_optimize.php:113
 msgid "Minify HTML content."
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:119
+msgid "Remove Query Strings"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:123
+msgid "Remove query strings from static resources."
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:124 admin/tpl/settings_optimize.php:145
+#: admin/tpl/settings_optimize.php:166
+msgid ""
+"This can improve your speed score in services like Pingdom, GTmetrix and "
+"PageSpeed."
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:130
+msgid "Remove Google Fonts"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:134
+msgid "Prevent google fonts from loading on all your pages."
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:140 admin/tpl/settings_optimize.php:155
+msgid "Load CSS Asynchronously"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:144
+msgid "Optimize CSS delivery. This will load Google Fonts asynchronously too."
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:151
+msgid "Critical CSS Rules"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:155
+msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:161
+msgid "Load JS Deferred"
+msgstr ""
+
+#: admin/tpl/settings_optimize.php:165
+msgid "Doing so can help reduce resource contention and improve performance."
 msgstr ""
 
 #: admin/tpl/settings_purge.php:5
@@ -2920,11 +2974,11 @@ msgstr ""
 msgid "Purged the blog!"
 msgstr ""
 
-#: cli/litespeed-cache-cli-purge.class.php:187
+#: cli/litespeed-cache-cli-purge.class.php:186
 msgid "Purged the url!"
 msgstr ""
 
-#: cli/litespeed-cache-cli-purge.class.php:236
+#: cli/litespeed-cache-cli-purge.class.php:235
 msgid "Purged the tags!"
 msgstr ""
 
@@ -2953,6 +3007,26 @@ msgstr ""
 msgid "Reached end of sitemap file. Crawling completed."
 msgstr ""
 
+#: includes/litespeed-cache-gui.class.php:62
+msgid "Purge this page"
+msgstr ""
+
+#: includes/litespeed-cache-gui.class.php:70
+msgid "Mark this page as "
+msgstr ""
+
+#: includes/litespeed-cache-gui.class.php:77
+msgid "Non cacheable"
+msgstr ""
+
+#: includes/litespeed-cache-gui.class.php:84
+msgid "Private cache"
+msgstr ""
+
+#: includes/litespeed-cache-gui.class.php:91
+msgid "More settings"
+msgstr ""
+
 #: includes/litespeed-cache-purge.class.php:202
 msgid "Purge category %s"
 msgstr ""
@@ -2969,39 +3043,39 @@ msgstr ""
 msgid "Purge url %s"
 msgstr ""
 
-#: includes/litespeed-cache-task.class.php:97
+#: includes/litespeed-cache-task.class.php:106
 msgid "LiteSpeed Cache Custom Cron"
 msgstr ""
 
-#: includes/litespeed-cache.class.php:205
+#: includes/litespeed-cache.class.php:212
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:210
+#: includes/litespeed-cache.class.php:217
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:215
+#: includes/litespeed-cache.class.php:222
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:220
+#: includes/litespeed-cache.class.php:227
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:225
+#: includes/litespeed-cache.class.php:232
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:231
+#: includes/litespeed-cache.class.php:238
 msgid "Notified LiteSpeed Web Server to purge all caches."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:238
+#: includes/litespeed-cache.class.php:245
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:243
+#: includes/litespeed-cache.class.php:260
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
