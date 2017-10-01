@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 ?>
-<h3 class="litespeed-title"><?php echo __( 'Non Cacheable Settings', 'litespeed-cache' ) ; ?></h3>
+<h3 class="litespeed-title"><?php echo __( 'Do Not Cache Settings', 'litespeed-cache' ) ; ?></h3>
 
 <table><tbody>
 	<tr>

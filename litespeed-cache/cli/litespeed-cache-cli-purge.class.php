@@ -172,8 +172,7 @@ class LiteSpeed_Cache_Cli_Purge
 			}
 		}
 		else {
-			$site_url = get_site_url() ;
-			$deconstructed_site = wp_parse_url($site_url) ;
+			$deconstructed_site = wp_parse_url( get_home_url() ) ;
 			if ( $deconstructed['host'] !== $deconstructed_site['host'] ) {
 				WP_CLI::error('Single site url passed in is invalid.') ;
 				return ;

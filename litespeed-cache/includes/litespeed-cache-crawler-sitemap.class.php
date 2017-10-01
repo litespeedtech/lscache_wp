@@ -12,7 +12,7 @@
 class LiteSpeed_Cache_Crawler_Sitemap
 {
 	private static $_instance ;
-	private $site_url ;// Used to simplify urls
+	private $home_url ;// Used to simplify urls
 
 	protected $_urls = array() ;
 
@@ -25,11 +25,10 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	private function __construct()
 	{
 		if ( is_multisite() ) {
-			$blog_id = get_current_blog_id() ;
-			$this->site_url = get_site_url($blog_id) ;
+			$this->home_url = get_home_url( get_current_blog_id() ) ;
 		}
 		else{
-			$this->site_url = get_option('siteurl') ;
+			$this->home_url = get_home_url() ;
 		}
 	}
 
@@ -102,7 +101,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$results = $wpdb->get_results($query) ;
 
 			foreach ( $results as $result ){
-				$slug = str_replace($this->site_url, '', get_permalink($result->ID)) ;
+				$slug = str_replace($this->home_url, '', get_permalink($result->ID)) ;
 				if ( ! in_array($slug, $blacklist) ) {
 					$this->_urls[] = $slug ;
 				}
@@ -114,7 +113,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false)) ;
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
-					$slug = str_replace($this->site_url, '', get_category_link($cat->term_id)) ;
+					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
 					if ( ! in_array($slug, $blacklist) ){
 						$this->_urls[] = $slug ;//var_dump($slug);exit;//todo: check permalink
 					}
@@ -127,7 +126,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false)) ;
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
-					$slug = str_replace($this->site_url, '', get_tag_link($tag->term_id)) ;
+					$slug = str_replace($this->home_url, '', get_tag_link($tag->term_id)) ;
 					if ( ! in_array($slug, $blacklist) ) {
 						$this->_urls[] = $slug ;
 					}

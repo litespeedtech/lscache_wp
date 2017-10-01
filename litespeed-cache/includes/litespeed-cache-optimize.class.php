@@ -62,7 +62,11 @@ class LiteSpeed_Cache_Optimize
 
 		$this->_static_request_check() ;
 
-		if ( $this->_can_optm() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ) {
+		if ( ! $this->_can_optm() ) {
+			return ;
+		}
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ) {
 			// To make sure minify&combine always be new filename when version changed
 			if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
 				add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;

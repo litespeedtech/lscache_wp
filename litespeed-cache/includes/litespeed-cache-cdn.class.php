@@ -360,7 +360,7 @@ class LiteSpeed_Cache_CDN
 
 		// Fill full url before replacement
 		if ( empty( $url_parsed[ 'host' ] ) ) {
-			$url = home_url( '/' ) . ltrim( $url, '/' ) ;// todo: Need to test if wp is in subfolder, will subfolder be duplicated?
+			$url = LiteSpeed_Cache_Utility::uri2url( $url ) ;
 			LiteSpeed_Cache_Log::debug2( 'CDN:    fill before rewritten: ' . $url ) ;
 
 			$url_parsed = parse_url( $url ) ;

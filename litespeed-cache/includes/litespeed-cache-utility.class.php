@@ -80,10 +80,31 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
+	 * Convert URI to URL
+	 *
+	 * @since  1.3
+	 * @access public
+	 * @param  string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
+	 * @return  string http://www.example.com/subfolder/xx/xx.html
+	 */
+	public static function uri2url( $uri )
+	{
+		if ( substr( $uri, 0, 1 ) === '/' ) {
+			self::domain_const() ;
+			$url = LSCWP_DOMAIN . $uri ;
+		}
+		else {
+			$url = home_url( '/' ) . $uri ;
+		}
+
+		return $url ;
+	}
+
+	/**
 	 * Convert URL to URI
 	 *
 	 * @since  1.2.2
-	 *
+	 * @access public
 	 */
 	public static function url2uri( $url )
 	{
@@ -95,20 +116,43 @@ class LiteSpeed_Cache_Utility
 	/**
 	 * Make URL to be relative
 	 *
-	 * NOTE: for subfolder site_url, need to strip subfolder part (strip anything but scheme and host)
+	 * NOTE: for subfolder home_url, need to strip subfolder part (strip anything but scheme and host)
 	 *
 	 * @param  string $url
 	 * @return string      Relative URL, start with /
 	 */
 	public static function make_relative( $url )
 	{
-		// replace site_url if the url is full url
-		self::compatibility() ;
-		$site_url_domain = http_build_url( LiteSpeed_Cache_Router::get_siteurl(), array(), HTTP_URL_STRIP_ALL ) ;
-		if ( strpos( $url, $site_url_domain ) === 0 ) {
-			$url = substr( $url, strlen( $site_url_domain ) ) ;
+		// replace home_url if the url is full url
+		self::domain_const() ;
+		if ( strpos( $url, LSCWP_DOMAIN ) === 0 ) {
+			$url = substr( $url, strlen( LSCWP_DOMAIN ) ) ;
 		}
 		return trim( $url ) ;
+	}
+
+	/**
+	 * Generate domain const
+	 *
+	 * This will generate http://www.example.com even there is a subfolder in home_url setting
+	 *
+	 * Const LSCWP_DOMAIN has NO trailing /
+	 *
+	 * @since  1.3
+	 * @access public
+	 */
+	public static function domain_const()
+	{
+		if ( defined( 'LSCWP_DOMAIN' ) ) {
+			return ;
+		}
+
+		$home_url = get_home_url( is_multisite() ? get_current_blog_id() : null ) ;
+
+		self::compatibility() ;
+		$domain = http_build_url( $home_url, array(), HTTP_URL_STRIP_ALL ) ;
+
+		define( 'LSCWP_DOMAIN', $domain ) ;
 	}
 
 	/**
