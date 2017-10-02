@@ -168,4 +168,15 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Remove WordPress Emoji', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Load emoji from user\'s browser. This will stop loading emoji JS from WordPress.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>

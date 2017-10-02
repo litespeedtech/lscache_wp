@@ -66,6 +66,11 @@ class LiteSpeed_Cache_Optimize
 			return ;
 		}
 
+		// To remove emoji from WP
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ) {
+			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
+		}
+
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ) {
 			// To make sure minify&combine always be new filename when version changed
 			if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
@@ -84,10 +89,24 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
+	 * Remove emoji from WP
+	 *
+	 * @since  1.4
+	 * @access public
+	 */
+	public function emoji_rm()
+	{
+		remove_action( 'wp_head' , 'print_emoji_detection_script', 7 ) ;
+		remove_action( 'admin_print_scripts' , 'print_emoji_detection_script' ) ;
+		remove_filter( 'the_content_feed' , 'wp_staticize_emoji' ) ;
+		remove_filter( 'comment_text_rss' , 'wp_staticize_emoji' ) ;
+	}
+
+	/**
 	 * Output critical css
 	 *
 	 * @since  1.3
-	 * @access private
+	 * @access public
 	 * @return  string The static file content
 	 */
 	public function prepend_critical_css()
