@@ -24,8 +24,6 @@ class LiteSpeed_Cache_Admin_Rules
 	private $theme_htaccess_readable = false ;
 	private $theme_htaccess_writable = false ;
 
-	private static $RW_LOOKUP ;
-	const RW_LOOKUP_PUBLIC = "CacheLookup Public on" ;
 	const RW_LOOKUP_BOTH = "CacheLookup on" ;
 	const RW_PRIV_BYPASS_POST_PURGE = "RewriteRule .* - [E=Cache-Control:no-autoflush]" ;
 	const RW_OPTM_NO_VARY = "RewriteRule min/\w+\.(css|js) - [E=cache-control:no-vary]" ;
@@ -68,16 +66,10 @@ class LiteSpeed_Cache_Admin_Rules
 		if ( is_writable($test_permissions) ) {
 			$this->frontend_htaccess_writable = true ;
 		}
-		if ( LITESPEED_SERVER_TYPE == 'LITESPEED_SERVER_OLS' ) {
-			self::$RW_LOOKUP = self::RW_LOOKUP_PUBLIC ;
-		}
-		else {
-			self::$RW_LOOKUP = self::RW_LOOKUP_BOTH ;
-		}
 
 		self::$LS_MODULE_REWRITE_ON = array(
 			'RewriteEngine on',
-			self::$RW_LOOKUP,
+			self::RW_LOOKUP_BOTH,
 			self::RW_PRIV_BYPASS_POST_PURGE,
 			self::RW_OPTM_NO_VARY,
 		) ;
