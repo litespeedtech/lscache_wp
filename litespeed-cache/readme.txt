@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-** NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, and Browser Cache! **
+*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, and Browser Cache!*
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -86,9 +86,9 @@ If you have a plugin or theme that you would like to make compatible with LSCWP,
 
 * [LSCWP API Documentation for WordPress Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
 * [LSCWP GitHub](https://github.com/litespeedtech/lscache_wp/)
-* [ESI example: Use ESI for WordPress nonce with cache ?](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample)
-* [ESI example: Make Caldera Form v1.5.6.1 work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_replace)
-* [ESI example: Make Visual Composer's WordPress nonce work with cache ?] (https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_nonce)
+* [ESI example: Use ESI for WordPress nonce with cache](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample)
+* [ESI example: Make Caldera Form v1.5.6.1 work with cache](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_replace)
+* [ESI example: Make Visual Composer's WordPress nonce work with cache](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_nonce)
 
 If you have any API requirements, please inform us anytime in [WP Forum](https://wordpress.org/support/plugin/litespeed-cache) or [GitHub Issues](https://github.com/litespeedtech/lscache_wp/issues). We will add them ASAP.
 

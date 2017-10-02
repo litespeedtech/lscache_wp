@@ -390,6 +390,7 @@ class LiteSpeed_Cache
 		if ( strstr( $buffer, '<!--' ) !== false ) {
 			$buffer = preg_replace( '|<!--.*?-->|s', '', $buffer ) ;
 		}
+		$buffer = trim( $buffer ) ;
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
 
 		if ( ! $is_html ) {
