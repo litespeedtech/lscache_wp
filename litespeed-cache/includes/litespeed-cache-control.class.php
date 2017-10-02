@@ -311,10 +311,10 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function check_redirect( $location, $status )
 	{
-		if ( $status == '301' && ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) {
-			LiteSpeed_Cache_Log::debug( "301 from " . $_SERVER['SCRIPT_URI'] ) ;
+		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
+			LiteSpeed_Cache_Log::debug( "301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
 			LiteSpeed_Cache_Log::debug( "301 to $location" ) ;
-			if ( $_SERVER['SCRIPT_URI'] == $location ) {
+			if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], PHP_URL_PATH ) == parse_url( $location, PHP_URL_PATH ) ) {
 				self::set_nocache( '301 to same url' ) ;
 			}
 		}
