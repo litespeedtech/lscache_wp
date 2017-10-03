@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Optimize
 			$file = LSWCP_DIR . 'js/css_async.js' ;
 
 			header( 'Content-Length: ' . filesize( $file ) ) ;
-			header( 'Content-Type: application/javascript' ) ;
+			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
 
 			echo file_get_contents( $file ) ;
 			exit ;
@@ -429,7 +429,7 @@ class LiteSpeed_Cache_Optimize
 				// Only HTTP2 push
 				else {
 					foreach ( $src_queue_list as $val ) {
-						$this->append_http2( $val ) ;
+						$this->append_http2( $val, 'js' ) ;
 					}
 				}
 			}
@@ -448,8 +448,8 @@ class LiteSpeed_Cache_Optimize
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
 			$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
-			$this->html_head .= "<script type='text/javascript' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
-			$this->append_http2( $css_async_lib_url ) ; // async lib will be http/2 pushed always
+			$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+			$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 		}
 
 		// Replace html head part
