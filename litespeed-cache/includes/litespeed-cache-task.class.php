@@ -67,7 +67,6 @@ class LiteSpeed_Cache_Task
 
 		if ( $is_active ) {
 			self::schedule_filter() ;
-			self::register() ;
 		}
 		else {
 			self::clear() ;
@@ -84,6 +83,12 @@ class LiteSpeed_Cache_Task
 	public static function schedule_filter()
 	{
 		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
+
+		// Schedule event here to see if it can lost again or not
+		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK ) ) {
+			LiteSpeed_Cache_Log::debug( 'Crawler cron log: ......cron hook register......' ) ;
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK ) ;
+		}
 	}
 
 	/**
@@ -107,20 +112,6 @@ class LiteSpeed_Cache_Task
 			) ;
 		}
 		return $schedules ;
-	}
-
-	/**
-	 * Register the cron task to WP
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 */
-	public static function register()
-	{
-		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK ) ) {
-			LiteSpeed_Cache_Log::debug( 'Crawler cron log: ......cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK ) ;
-		}
 	}
 
 	/**
