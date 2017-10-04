@@ -29,6 +29,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_html_minify ;
 	private $cfg_css_async ;
 	private $cfg_js_defer ;
+	private $cfg_qs_rm ;
 
 
 	private $html_foot = '' ; // The html info append to <body>
@@ -59,6 +60,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
 		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ;
 		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ;
+		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ;
 
 		$this->_static_request_check() ;
 
@@ -71,15 +73,9 @@ class LiteSpeed_Cache_Optimize
 			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
 		}
 
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ) {
-			// To make sure minify&combine always be new filename when version changed
-			if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
-				add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
-			}
-
-			if ( ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
-				add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
-			}
+		if ( $this->cfg_qs_rm ) {
+			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
 		}
 
 		// Check if there is any critical css rules setting
@@ -487,6 +483,7 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->http2_headers ) {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
 		}
+
 	}
 
 	/**
