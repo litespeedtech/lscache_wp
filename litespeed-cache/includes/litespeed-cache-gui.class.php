@@ -104,7 +104,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( ! isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

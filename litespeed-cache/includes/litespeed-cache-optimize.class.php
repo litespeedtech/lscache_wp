@@ -13,7 +13,6 @@ class LiteSpeed_Cache_Optimize
 {
 	private static $_instance ;
 
-	const OPTION_OPTIMIZED = 'litespeed-cache-optimized' ;
 	const DIR_MIN = '/min' ;
 	const CSS_ASYNC_LIB = '/min/css_async.js' ;
 
@@ -673,12 +672,11 @@ class LiteSpeed_Cache_Optimize
 	private function _minify( $filename )
 	{
 		// Search filename in db for src URLs
-		$hashes = get_option( self::OPTION_OPTIMIZED ) ;
-		if ( ! $hashes || ! is_array( $hashes ) || empty( $hashes[ $filename ] ) ) {
+		$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
+		if ( ! $urls || ! is_array( $urls ) ) {
 			return false;
 		}
 
-		$urls = $hashes[ $filename ] ;
 		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 ) ;
 
 		// Parse real file path
@@ -733,23 +731,17 @@ class LiteSpeed_Cache_Optimize
 		$filename = $short ;
 
 		// Need to check conflicts
-		$hashes = get_option( self::OPTION_OPTIMIZED ) ;
-		if ( ! is_array( $hashes ) ) {
-			$hashes = array() ;
-		}
 		// If short hash exists
-		if ( $hashes && ! empty( $hashes[ $short . '.' . $file_type ] ) ) {
+		if ( $urls = LiteSpeed_Cache_Data::optm_hash2src( $short . '.' . $file_type ) ) {
 			// If conflicts
-			if ( $hashes[ $short . '.' . $file_type ] !== $src ) {
-				$hashes[ $hash . '.' . $file_type ] = $src ;
-				update_option( self::OPTION_OPTIMIZED, $hashes ) ;
+			if ( $urls !== $src ) {
+				LiteSpeed_Cache_Data::optm_save_src( $hash . '.' . $file_type, $src ) ;
 				$filename = $hash ;
 			}
 		}
 		else {
 			// Short hash is safe now
-			$hashes[ $short . '.' . $file_type ] = $src ;
-			update_option( self::OPTION_OPTIMIZED, $hashes ) ;
+			LiteSpeed_Cache_Data::optm_save_src( $short . '.' . $file_type, $src ) ;
 		}
 
 		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;
