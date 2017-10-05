@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -104,7 +104,7 @@ If you have any API requirements, please inform us anytime in [WP Forum](https:/
 * [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/)
 * Aelia CurrencySwitcher
 * [Fast Velocity Minify](https://wordpress.org/plugins/fast-velocity-minify/) - Thanks Raul Peixoto!
-* [Autoptimize](https://wordpress.org/plugins/autoptimize/)
+* Autoptimize
 * [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
 * [WP Touch](https://wordpress.org/plugins/wptouch/)
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
@@ -235,6 +235,16 @@ For more detailed information about crawler setup, please see [our blog post](ht
 15. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.3.1 - October 5 2017 =
+* [NEW FEATURE] Remove WP Emoji Option.
+* [IMPROVEMENT] Separated optimizer data from wp_options to improve compatibility with backup plugins.
+* [IMPROVEMENT] Enhanced crawler cron hook to prevent de-scheduling in some cases.
+* [IMPROVEMENT] Enhanced Remove Query Strings to also remove Emoji query strings.
+* [IMPROVEMENT] Enhanced HTML detection when extra spaces are present at the beginning.
+* [UPDATE] Added private cache support for OLS.
+* [BUGFIX] Self-redirects are no longer cached.
+* [BUGFIX] Fixed css async lib warning when loading in HTTP/2 push.
 
 = 1.3 - October 1 2017 =
 * [NEW FEATURE] Added Browser Cache support.
