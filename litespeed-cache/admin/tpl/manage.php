@@ -8,6 +8,7 @@ $menu_list = array(
 	'db' => __('DB Optimizer', 'litespeed-cache'),
 ) ;
 
+include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
 ?>
 
 <div class="wrap">

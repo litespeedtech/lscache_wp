@@ -18,7 +18,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.3.1.1' ;
+	const PLUGIN_VERSION = '1.3.2dev' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -26,6 +26,7 @@ class LiteSpeed_Cache
 	const ACTION_KEY = 'LSCWP_CTRL' ;
 	const ACTION_DISMISS_WHM = 'dismiss-whm' ;
 	const ACTION_DISMISS_EXPIRESDEFAULT = 'dismiss-ExpiresDefault' ;
+	const ACTION_DISMISS_PROMO = 'dismiss-promo' ;
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
@@ -266,6 +267,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
 				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_DISMISS_PROMO:
+				LiteSpeed_Cache_Router::dismiss_promo_msg() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:

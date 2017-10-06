@@ -196,19 +196,29 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_scripts()
 	{
-		wp_register_script(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false) ;
+		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
 
+		$localize_data = array() ;
 		if ( LiteSpeed_Cache_Router::has_whm_msg() ) {
-			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS_WHM, LiteSpeed_Cache::ACTION_DISMISS_WHM) ;
-			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_whm' => $ajax_url_dismiss_whm)) ;
+			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS_WHM, LiteSpeed_Cache::ACTION_DISMISS_WHM ) ;
+			$localize_data[ 'ajax_url_dismiss_whm' ] = $ajax_url_dismiss_whm ;
 		}
 
 		if ( LiteSpeed_Cache_Router::has_msg_ruleconflict() ) {
-			$ajax_url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT, LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT) ;
-			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', array('ajax_url_dismiss_ruleconflict' => $ajax_url)) ;
+			$ajax_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT, LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT ) ;
+			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url ;
 		}
 
-		wp_enqueue_script(LiteSpeed_Cache::PLUGIN_NAME) ;
+		if ( LiteSpeed_Cache_Router::has_promo_msg() ) {
+			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS_PROMO, LiteSpeed_Cache::ACTION_DISMISS_PROMO ) ;
+			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
+		}
+
+		if ( $localize_data ) {
+			wp_localize_script(LiteSpeed_Cache::PLUGIN_NAME, 'litespeed_data', $localize_data ) ;
+		}
+
+		wp_enqueue_script( LiteSpeed_Cache::PLUGIN_NAME ) ;
 	}
 
 	/**

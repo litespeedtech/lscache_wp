@@ -94,6 +94,37 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
+	 * Check if has promotion notice
+	 *
+	 * @since 1.3.2
+	 * @access public
+	 * @return boolean
+	 */
+	public static function has_promo_msg()
+	{
+		$promo = get_option( 'litespeed-banner-promo' ) ;
+		if ( $promo == 'done' ) {
+			return false ;
+		}
+		if ( $promo && time() - $promo < 864000 ) {
+			return false ;
+		}
+		return true ;
+	}
+
+	/**
+	 * update promotion notice
+	 *
+	 * @since 1.3.2
+	 * @access public
+	 * @return boolean
+	 */
+	public static function dismiss_promo_msg()
+	{
+		update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() ) ;
+	}
+
+	/**
 	 * Check if crawler is enabled on server level
 	 *
 	 * @since 1.1.1
@@ -294,6 +325,7 @@ class LiteSpeed_Cache_Router
 
 			case LiteSpeed_Cache::ACTION_DISMISS_WHM:
 			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
+			case LiteSpeed_Cache::ACTION_DISMISS_PROMO:
 				if ( self::is_ajax() ) {
 					self::$_action = $action ;
 				}

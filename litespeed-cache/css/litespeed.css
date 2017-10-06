@@ -338,7 +338,7 @@
 }
 
 /********************************* btn *******************************/
-.litespeed-body [class*="litespeed-btn-"] {
+.litespeed-wrap [class*="litespeed-btn-"] {
 	padding: 5px 10px;
 	font-size: 14px !important;
 	font-weight:400;
@@ -353,7 +353,7 @@
 	height: initial;
 }
 
-.litespeed-body [class*="litespeed-btn-"]:hover {
+.litespeed-wrap [class*="litespeed-btn-"]:hover {
 	font-weight: 400;
 	color: #fff;
 	-moz-box-shadow: none;
@@ -361,7 +361,7 @@
 	box-shadow: none;
 }
 
-.litespeed-body .litespeed-btn-danger {
+.litespeed-wrap .litespeed-btn-danger {
 	color: #cc3d6a;
 	border: 1px solid #cc3d6a;
 	-moz-box-shadow: 0 0 0 1px rgba(204, 61, 106, 0.25);
@@ -369,11 +369,11 @@
 	box-shadow: 0 0 0 1px rgba(204, 61, 106, 0.25);
 }
 
-.litespeed-body .litespeed-btn-danger:hover {
+.litespeed-wrap .litespeed-btn-danger:hover {
 	background: #cc3d6a;
 }
 
-.litespeed-body .litespeed-btn-warning {
+.litespeed-wrap .litespeed-btn-warning {
 	color: #e59544;
 	border: 1px solid #e59544;
 	-moz-box-shadow: 0 0 0 1px rgba(230, 150, 69, 0.25);
@@ -381,11 +381,11 @@
 	box-shadow: 0 0 0 1px rgba(230, 150, 69, 0.25);
 }
 
-.litespeed-body .litespeed-btn-warning:hover {
+.litespeed-wrap .litespeed-btn-warning:hover {
 	background: #e59544;
 }
 
-.litespeed-body .litespeed-btn-success {
+.litespeed-wrap .litespeed-btn-success {
 	color: #36b0b0;
 	border: 1px solid #36b0b0;
 	-moz-box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
@@ -393,11 +393,11 @@
 	box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
 }
 
-.litespeed-body .litespeed-btn-success:hover {
+.litespeed-wrap .litespeed-btn-success:hover {
 	background: #36b0b0;
 }
 
-.litespeed-body .litespeed-btn-primary {
+.litespeed-wrap .litespeed-btn-primary {
 	color: #538ac6;
 	border: 1px solid #538ac6;
 	-moz-box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
@@ -405,12 +405,12 @@
 	box-shadow: 0 0 0 1px rgba(83, 138, 198, 0.25);
 }
 
-.litespeed-body .litespeed-btn-primary:hover {
+.litespeed-wrap .litespeed-btn-primary:hover {
 	background: #538ac6;
 	border-color: #538ac6;
 }
 
-.litespeed-body .litespeed-btn-xs {
+.litespeed-wrap .litespeed-btn-xs {
 	padding: 1px 8px;
 	font-size: 13px;
 	line-height: 1.5;
@@ -1078,6 +1078,26 @@ ul.litespeed-shell-body {
 	text-shadow: 2px 2px 4px #000000 ;
 }
 
+/********************************* promo banner *******************************/
+.litespeed-banner-promo{
+	display: flex;
+	padding: 10px;
+}
+
+.litespeed-banner-promo-logo{
+	background-image: url("../img/lscwp-logo_256x256.png") ;
+	background-size: contain;
+	width: 150px;
+	height: 150px;
+	margin: 5px;
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+
+.litespeed-banner-promo-content{
+	margin-left: 20px;
+}
+
 /********************************* todo *******************************/
 /********************************* todo *******************************/
 /* input field */
@@ -1177,4 +1197,5 @@ ul.litespeed-shell-body {
 	background-color: #eee;
 	background-color: #f2f9ff;
 }
+
 

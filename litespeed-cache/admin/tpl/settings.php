@@ -80,7 +80,9 @@ else {
 }
 
 
+include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
 ?>
+
 <div class="wrap">
 	<h2>
 		<?php echo __('LiteSpeed Cache Settings', 'litespeed-cache') ; ?>
