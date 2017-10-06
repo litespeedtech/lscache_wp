@@ -61,6 +61,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
 				<br />
 				<i>
+					<?php echo sprintf( __( 'To match the beginning, add %s to the beginning of the item.', 'litespeed-cache' ), '<code>^</code>' ) ; ?>
 					<?php echo sprintf( __( 'To do an exact match, add %s to the end of the URL.', 'litespeed-cache' ), '<code>$</code>' ) ; ?>
 					<?php echo __('One per line.', 'litespeed-cache'); ?>
 				</i>

@@ -37,9 +37,15 @@ class LiteSpeed_Cache_Utility
 	public static function str_hit_array( $needle, $haystack )
 	{
 		foreach( $haystack as $item ) {
-			// do exact match
 			if ( substr( $item, -1 ) === '$' ) {
-				if ( $needle === substr( $item, 1 ) ) {
+				// do exact match
+				if ( substr( $item, 0, -1 ) === $needle ) {
+					return $item ;
+				}
+			}
+			elseif ( substr( $item, 0, 1 ) === '^' ) {
+				// match beginning
+				if ( substr( $item, 1 ) === substr( $needle, 0, strlen( $item ) - 1 ) ) {
 					return $item ;
 				}
 			}
