@@ -124,7 +124,7 @@ class LiteSpeed_Cache_Data
 		$s = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`hash_name` varchar(255) NOT NULL COMMENT "hash.filetype",
+				`hash_name` varchar(60) NOT NULL COMMENT "hash.filetype",
 				`src` text NOT NULL COMMENT "full url array set",
 				`dateline` int(11) NOT NULL,
 				`refer` varchar(255) NOT NULL COMMENT "The container page url",

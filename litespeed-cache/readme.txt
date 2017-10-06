@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.3.1
+Stable tag: 1.3.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -235,6 +235,9 @@ For more detailed information about crawler setup, please see [our blog post](ht
 15. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.3.1.1 - October 6 2017 =
+* [BUGFIX] Improved optimizer table creating process in certain database charset to avoid css/js minify/combination failure.
 
 = 1.3.1 - October 5 2017 =
 * [NEW FEATURE] Remove WP Emoji Option.
