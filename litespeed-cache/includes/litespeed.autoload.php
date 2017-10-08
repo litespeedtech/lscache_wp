@@ -28,7 +28,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Config'			=> 'includes/litespeed-cache-config.class.php',
 			'LiteSpeed_Cache_Control'			=> 'includes/litespeed-cache-control.class.php',
 			'LiteSpeed_Cache_Crawler'			=> 'includes/litespeed-cache-crawler.class.php',
-			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'includes/litespeed-cache-crawler-sitemap.class.php',
+			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'inc/crawler-sitemap.class.php',
 			'LiteSpeed_Cache_Data'				=> 'inc/data.class.php',
 			'LiteSpeed_Cache_ESI'				=> 'includes/litespeed-cache-esi.class.php',
 			'LiteSpeed_Cache_GUI'				=> 'includes/litespeed-cache-gui.class.php',

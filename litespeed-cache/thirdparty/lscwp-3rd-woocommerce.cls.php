@@ -144,7 +144,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		add_action('woocommerce_after_add_to_cart_form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form') ;
 		add_action('woocommerce_after_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999) ;
 		echo LiteSpeed_Cache_API::esi_url('wc-add-to-cart-form', 'WC_CART_FORM', $params) ;
-		ob_start() ;
+		echo LiteSpeed_Cache_API::clean_wrapper_begin() ;
 	}
 
 	/**
@@ -160,7 +160,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( ! empty($template_name) && strpos($template_name, 'add-to-cart') === false ) {
 			return ;
 		}
-		ob_clean() ;
+		echo LiteSpeed_Cache_API::clean_wrapper_end() ;
 		remove_action('woocommerce_after_add_to_cart_form', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form') ;
 		remove_action('woocommerce_after_template_part', 'LiteSpeed_Cache_ThirdParty_WooCommerce::end_form', 999) ;
 	}

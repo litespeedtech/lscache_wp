@@ -441,7 +441,6 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_comment_form_block($params)
 	{
-		LiteSpeed_Cache_Log::debug(var_export($params, true));
 		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {

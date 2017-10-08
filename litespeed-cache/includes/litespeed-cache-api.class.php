@@ -37,6 +37,28 @@ class LiteSpeed_Cache_API
 	const VAL_ON2	= LiteSpeed_Cache_Config::VAL_ON2 ;
 
 	/**
+	 * Start a to-be-removed html wrapper
+	 *
+	 * @since 1.4
+	 * @access public
+	 */
+	public static function clean_wrapper_begin( $counter = false )
+	{
+		return LiteSpeed_Cache_GUI::clean_wrapper_begin( $counter ) ;
+	}
+
+	/**
+	 * End a to-be-removed html wrapper
+	 *
+	 * @since 1.4
+	 * @access public
+	 */
+	public static function clean_wrapper_end( $counter = false )
+	{
+		return LiteSpeed_Cache_GUI::clean_wrapper_end( $counter ) ;
+	}
+
+	/**
 	 * Compare version
 	 *
 	 * @since 1.3

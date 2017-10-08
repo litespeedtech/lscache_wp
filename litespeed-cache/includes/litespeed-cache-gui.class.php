@@ -141,6 +141,7 @@ class LiteSpeed_Cache_GUI
 		if ( $counter === false ) {
 			self::$_clean_counter ++ ;
 			$counter = self::$_clean_counter ;
+			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter begin" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->' ;
 	}
@@ -155,6 +156,7 @@ class LiteSpeed_Cache_GUI
 	{
 		if ( $counter === false ) {
 			$counter = self::$_clean_counter ;
+			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter end" ) ;
 		}
 		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
 	}
