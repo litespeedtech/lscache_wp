@@ -13,6 +13,8 @@ class LiteSpeed_Cache_GUI
 {
 	private static $_instance ;
 
+	private static $_clean_counter = 0 ;
+
 	/**
 	 * Init
 	 *
@@ -91,8 +93,70 @@ class LiteSpeed_Cache_GUI
 			'title'		=> __( 'More settings', 'litespeed-cache' ),
 			'href'		=> get_admin_url( null, 'admin.php?page=lscache-settings#excludes' ),
 		) );
+	}
 
+	/**
+	 * Clean wrapper from buffer
+	 *
+	 * @since  1.4
+	 * @access public
+	 */
+	public static function clean_wrapper( $buffer )
+	{
+		if ( self::$_clean_counter < 1 ) {
+			return $buffer ;
+		}
 
+		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
+			// If miss beginning
+			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
+			if ( $start === false ) {
+				$buffer = str_replace( self::clean_wrapper_end( $i ), '', $buffer ) ;
+				continue;
+			}
+
+			// If miss end
+			$end_wrapper = self::clean_wrapper_end( $i ) ;
+			$end = strpos( $buffer, $end_wrapper ) ;
+			if ( $end === false ) {
+				$buffer = str_replace( self::clean_wrapper_begin( $i ), '', $buffer ) ;
+				continue;
+			}
+
+			// Now replace wrapped content
+			$buffer = substr_replace( $buffer, '', $start, $end - $start + strlen( $end_wrapper ) ) ;
+		}
+
+		return $buffer ;
+	}
+
+	/**
+	 * Display a to-be-removed html wrapper
+	 *
+	 * @since  1.4
+	 * @access public
+	 */
+	public static function clean_wrapper_begin( $counter = false )
+	{
+		if ( $counter === false ) {
+			self::$_clean_counter ++ ;
+			$counter = self::$_clean_counter ;
+		}
+		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->' ;
+	}
+
+	/**
+	 * Display a to-be-removed html wrapper
+	 *
+	 * @since  1.4
+	 * @access public
+	 */
+	public static function clean_wrapper_end( $counter = false )
+	{
+		if ( $counter === false ) {
+			$counter = self::$_clean_counter ;
+		}
+		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
 	}
 
 	/**

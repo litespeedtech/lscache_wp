@@ -403,6 +403,8 @@ class LiteSpeed_Cache
 			return ;
 		}
 
+		LiteSpeed_Cache_Log::debug( 'Footer check passed' ) ;
+
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			define( 'LITESPEED_IS_HTML', true ) ;
 		}
@@ -425,6 +427,8 @@ class LiteSpeed_Cache
 		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 
 		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
+
+		$buffer = LiteSpeed_Cache_GUI::clean_wrapper( $buffer ) ;
 
 		$buffer .= $this->send_headers( true ) ;
 

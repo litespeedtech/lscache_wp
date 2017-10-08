@@ -78,18 +78,13 @@ class LiteSpeed_Cache_ESI
 	 */
 	public static function esi_template($template)
 	{
-		// Add comment forum esi for logged-in user or commenter
-		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
-			add_filter( 'comment_form_defaults', array( self::get_instance(), 'register_comment_form_actions' ) ) ;
-		}
-
 		// Check if is an ESI request
 		if ( ! empty( $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] ) && $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] == LiteSpeed_Cache_ESI::POSTTYPE ) {
 			define('LSCACHE_IS_ESI', true) ;
 
 			self::get_instance()->register_esi_actions() ;
 
-			return LSWCP_DIR . 'includes/litespeed-cache-esi.tpl.php' ;
+			return LSWCP_DIR . 'tpl/esi.tpl.php' ;
 		}
 		self::get_instance()->register_not_esi_actions() ;
 		return $template ;
@@ -132,28 +127,11 @@ class LiteSpeed_Cache_ESI
 			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000) ;
 		}
 
-	}
+		// Add comment forum esi for logged-in user or commenter
+		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
+			add_filter( 'comment_form_defaults', array( $this, 'register_comment_form_actions' ) ) ;
+		}
 
-	/**
-	 * Hooked to the comment_form_defaults filter.
-	 * Stores the default comment form settings.
-	 * This method initializes an output buffer and adds two hook functions to the WP process.
-	 * If comment_form_sub_cancel is triggered, the output buffer is flushed because there is no need to make the comment form ESI.
-	 * Else if sub_comment_form_block is triggered, the output buffer is cleared and an esi block is added. The remaining comment form is also buffered and cleared.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @param array $defaults The default comment form settings.
-	 * @return array The default comment form settings.
-	 */
-	public function register_comment_form_actions($defaults)
-	{
-		$this->esi_args = $defaults ;
-		ob_start() ;
-		add_action('comment_form_must_log_in_after', array($this, 'comment_form_sub_cancel')) ;
-		add_action('comment_form_comments_closed', array($this, 'comment_form_sub_cancel')) ;
-		add_filter('comment_form_submit_button', array($this, 'sub_comment_form_block'), 1000, 2) ;
-		return $defaults ;
 	}
 
 	/**
@@ -342,30 +320,6 @@ class LiteSpeed_Cache_ESI
 		return $options ;
 	}
 
-	/**
-	 * Hooked to the comment_form_must_log_in_after and
-	 * comment_form_comments_closed actions.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public function comment_form_sub_cancel()
-	{
-		ob_flush() ;
-	}
-
-	/**
-	 * Hooked to the comment_form_after action.
-	 * Cleans up the remaining comment form output.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public function comment_form_sub_clean()
-	{
-		ob_clean() ;
-	}
-
 // END helper functions.
 
 	/**
@@ -424,54 +378,6 @@ class LiteSpeed_Cache_ESI
 		}
 
 		echo self::sub_esi_block('admin-bar', 'adminbar') ;
-	}
-
-	/**
-	 * Hooked to the comment_form_submit_button filter.
-	 *
-	 * This method will compare the used comment form args against the default args. The difference will be passed to the esi request.
-	 *
-	 * @access public
-	 * @since 1.1.3
-	 * @global type $post
-	 * @param $unused
-	 * @param array $args The used comment form args.
-	 * @return unused.
-	 */
-	public function sub_comment_form_block($unused, $args)
-	{
-		if ( empty($args) || empty($this->esi_args) ) {
-			LiteSpeed_Cache_Log::debug('comment form args empty?') ;
-			return $unused ;
-		}
-		$esi_args = array() ;
-
-		foreach ($args as $key => $val) {
-			if ( ! isset($this->esi_args[$key]) ) {
-				$esi_args[$key] = $val ;
-			}
-			elseif ( is_array($val) ) {
-				$diff = array_diff_assoc($val, $this->esi_args[$key]) ;
-				if ( ! empty($diff) ) {
-					$esi_args[$key] = $diff ;
-				}
-			}
-			elseif ( $val !== $this->esi_args[$key] ) {
-				$esi_args[$key] = $val ;
-			}
-		}
-
-		ob_clean() ;
-		global $post ;
-		$params = array(
-			self::PARAM_ID => $post->ID,
-			self::PARAM_ARGS => $esi_args,
-		) ;
-
-		echo self::sub_esi_block('comment-form', 'comment form', $params) ;
-		ob_start() ;
-		add_action('comment_form_after', array($this, 'comment_form_sub_clean')) ;
-		return $unused ;
 	}
 
 	/**
@@ -535,8 +441,8 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_comment_form_block($params)
 	{
-		remove_filter('comment_form_defaults', array($this, 'register_comment_form_actions')) ;
-		comment_form($params[self::PARAM_ARGS], $params[self::PARAM_ID]) ;
+		LiteSpeed_Cache_Log::debug(var_export($params, true));
+		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
@@ -548,7 +454,86 @@ class LiteSpeed_Cache_ESI
 				LiteSpeed_Cache_Control::set_no_vary() ;
 			}
 		}
+	}
 
+	/**
+	 * Hooked to the comment_form_defaults filter.
+	 * Stores the default comment form settings.
+	 * If sub_comment_form_block is triggered, the output buffer is cleared and an esi block is added. The remaining comment form is also buffered and cleared.
+	 * Else there is no need to make the comment form ESI.
+	 *
+	 * @since 1.1.3
+	 * @access public
+	 * @param array $defaults The default comment form settings.
+	 * @return array The default comment form settings.
+	 */
+	public function register_comment_form_actions( $defaults )
+	{
+		$this->esi_args = $defaults ;
+		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
+		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
+		return $defaults ;
+	}
+
+	/**
+	 * Hooked to the comment_form_submit_button filter.
+	 *
+	 * This method will compare the used comment form args against the default args. The difference will be passed to the esi request.
+	 *
+	 * @access public
+	 * @since 1.1.3
+	 * @global type $post
+	 * @param $unused
+	 * @param array $args The used comment form args.
+	 * @return unused.
+	 */
+	public function sub_comment_form_block( $unused, $args )
+	{
+		if ( empty( $args ) || empty( $this->esi_args ) ) {
+			LiteSpeed_Cache_Log::debug( 'comment form args empty?' ) ;
+			return $unused ;
+		}
+		$esi_args = array() ;
+
+		// compare current args with default ones
+		foreach ( $args as $k => $v ) {
+			if ( ! isset( $this->esi_args[ $k ] ) ) {
+				$esi_args[ $k ] = $v ;
+			}
+			elseif ( is_array( $v ) ) {
+				$diff = array_diff_assoc( $v, $this->esi_args[ $k ] ) ;
+				if ( ! empty( $diff ) ) {
+					$esi_args[ $k ] = $diff ;
+				}
+			}
+			elseif ( $v !== $this->esi_args[ $k ] ) {
+				$esi_args[ $k ] = $v ;
+			}
+		}
+
+		echo LiteSpeed_Cache_GUI::clean_wrapper_end() ;
+		global $post ;
+		$params = array(
+			self::PARAM_ID => $post->ID,
+			self::PARAM_ARGS => $esi_args,
+		) ;
+
+		echo self::sub_esi_block( 'comment-form', 'comment form', $params ) ;
+		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
+		add_action( 'comment_form_after', array( $this, 'comment_form_sub_clean' ) ) ;
+		return $unused ;
+	}
+
+	/**
+	 * Hooked to the comment_form_after action.
+	 * Cleans up the remaining comment form output.
+	 *
+	 * @since 1.1.3
+	 * @access public
+	 */
+	public function comment_form_sub_clean()
+	{
+		echo LiteSpeed_Cache_GUI::clean_wrapper_end() ;
 	}
 
 	/**
