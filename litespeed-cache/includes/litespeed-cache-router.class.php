@@ -103,6 +103,10 @@ class LiteSpeed_Cache_Router
 	public static function has_promo_msg()
 	{
 		$promo = get_option( 'litespeed-banner-promo' ) ;
+		if ( ! $promo ) {
+			update_option( 'litespeed-banner-promo', time() - 86400 * 9 ) ;
+			return false ;
+		}
 		if ( $promo == 'done' ) {
 			return false ;
 		}
