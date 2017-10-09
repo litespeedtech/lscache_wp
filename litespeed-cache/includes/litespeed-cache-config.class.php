@@ -307,7 +307,21 @@ class LiteSpeed_Cache_Config
 			exit( 'no type' ) ;
 		}
 
-		$id = $_GET[ 'type' ] == 'nocache' ? self::OPID_EXCLUDES_URI : self::OPID_CACHE_URI_PRIV ;
+		switch ( $_GET[ 'type' ] ) {
+			case 'private' :
+				$id = self::OPID_CACHE_URI_PRIV ;
+				break ;
+
+			case 'nonoptimize' :
+				$id = self::OPID_OPTM_EXCLUDES ;
+				break ;
+
+			case 'nocache' :
+			default:
+				$id = self::OPID_EXCLUDES_URI ;
+				break ;
+		}
+
 		$instance = self::get_instance() ;
 		$list = $instance->get_option( $id ) ;
 

@@ -89,6 +89,13 @@ class LiteSpeed_Cache_GUI
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
+			'id'		=> 'litespeed-single-nonoptimize',
+			'title'		=> __( 'No optimization', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, false, 'type=nonoptimize', true ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-more',
 			'title'		=> __( 'More settings', 'litespeed-cache' ),
 			'href'		=> get_admin_url( null, 'admin.php?page=lscache-settings#excludes' ),

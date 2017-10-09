@@ -245,10 +245,12 @@ class LiteSpeed_Cache_Optimize
 
 		// Check if hit URI excludes
 		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXCLUDES ) ;
-		$result = LiteSpeed_Cache_Utility::str_hit_array( esc_url( $_SERVER[ 'REQUEST_URI' ] ), explode( "\n", $excludes ) ) ;
-		if ( $result ) {
-			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: hit URI Excludes setting: ' . $result ) ;
-			return $content ;
+		if ( ! empty( $excludes ) ) {
+			$result = LiteSpeed_Cache_Utility::str_hit_array( esc_url( $_SERVER[ 'REQUEST_URI' ] ), explode( "\n", $excludes ) ) ;
+			if ( $result ) {
+				LiteSpeed_Cache_Log::debug( 'Optimizer bypass: hit URI Excludes setting: ' . $result ) ;
+				return $content ;
+			}
 		}
 
 		LiteSpeed_Cache_Log::debug( 'Optimizer start' ) ;
