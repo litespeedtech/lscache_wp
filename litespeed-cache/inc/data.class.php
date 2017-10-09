@@ -37,6 +37,17 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
+	 * Get optimizer table
+	 *
+	 * @since  1.4
+	 * @access public
+	 */
+	public static function get_optm_table()
+	{
+		return self::get_instance()->_tb_optm ;
+	}
+
+	/**
 	 * Check if optimizer table exists or not
 	 *
 	 * @since  1.3.1.1
@@ -131,7 +142,7 @@ class LiteSpeed_Cache_Data
 			'hash_name'	=> $filename,
 			'src'		=> $src,
 			'dateline'	=> time(),
-			'refer' 	=> ! empty( $SERVER[ 'SCRIPT_URI' ] ) ? $SERVER[ 'SCRIPT_URI' ] : '',
+			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
 		) ;
 
 		$res = $wpdb->replace( $this->_tb_optm, $f ) ;

@@ -249,7 +249,7 @@ class LiteSpeed_Cache_Log
 			return ;
 		}
 
-		$SERVERVARS = array(
+		$servervars = array(
 			'Query String' => '',
 			'HTTP_USER_AGENT' => '',
 			'HTTP_ACCEPT_ENCODING' => '',
@@ -258,12 +258,12 @@ class LiteSpeed_Cache_Log
 			'LSCACHE_VARY_COOKIE' => '',
 			'LSCACHE_VARY_VALUE' => ''
 		) ;
-		$SERVER = array_merge( $SERVERVARS, $_SERVER ) ;
+		$server = array_merge( $servervars, $_SERVER ) ;
 		$params = array() ;
 
-		$param = sprintf( '%s %s %s', $SERVER['REQUEST_METHOD'], $SERVER['SERVER_PROTOCOL'], strtok( $SERVER['REQUEST_URI'], '?' ) ) ;
+		$param = sprintf( '%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
-		$qs = ! empty( $SERVER['QUERY_STRING'] ) ? $SERVER['QUERY_STRING'] : '' ;
+		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ) {
 			if ( strlen( $qs ) > 53 ) {
 				$qs = substr( $qs, 0, 53 ) . '...' ;
@@ -279,23 +279,23 @@ class LiteSpeed_Cache_Log
 		}
 
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'User Agent: ' . $SERVER[ 'HTTP_USER_AGENT' ] ;
-			$params[] = 'Accept Encoding: ' . $SERVER['HTTP_ACCEPT_ENCODING'] ;
+			$params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ] ;
+			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
 		}
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ) {
-			$params[] = 'Cookie: ' . $SERVER['HTTP_COOKIE'] ;
+			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'] ;
 		}
 		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
 			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
 		}
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'X-LSCACHE: ' . ( $SERVER[ 'X-LSCACHE' ] ? 'true' : 'false' ) ;
+			$params[] = 'X-LSCACHE: ' . ( $server[ 'X-LSCACHE' ] ? 'true' : 'false' ) ;
 		}
-		if( $SERVER['LSCACHE_VARY_COOKIE'] ) {
-			$params[] = 'LSCACHE_VARY_COOKIE: ' . $SERVER['LSCACHE_VARY_COOKIE'] ;
+		if( $server['LSCACHE_VARY_COOKIE'] ) {
+			$params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'] ;
 		}
-		if( $SERVER['LSCACHE_VARY_VALUE'] ) {
-			$params[] = 'LSCACHE_VARY_VALUE: ' . $SERVER['LSCACHE_VARY_VALUE'] ;
+		if( $server['LSCACHE_VARY_VALUE'] ) {
+			$params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'] ;
 		}
 
 		$request = array_map( 'self::format_message', $params ) ;

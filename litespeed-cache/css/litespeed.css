@@ -281,6 +281,7 @@
 .litespeed-panel-icon-trackback-pingback{ background-image: url("../img/icons/trackback-pingback.svg") ; }
 .litespeed-panel-icon-expired_transient { background-image: url("../img/icons/expired_transient.svg") ; }
 .litespeed-panel-icon-all_transients 	{ background-image: url("../img/icons/all_transients.svg") ; }
+.litespeed-panel-icon-all_cssjs 		{ background-image: url("../img/icons/purge-cssjs.svg") ; }
 .litespeed-panel-icon-optimize_tables 	{ background-image: url("../img/icons/optimize_tables.svg") ; }
 .litespeed-panel-icon-purge-front 		{ background-image: url("../img/icons/purge-front.svg") ; }
 .litespeed-panel-icon-purge-pages 		{ background-image: url("../img/icons/purge-pages.svg") ; }

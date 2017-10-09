@@ -76,20 +76,20 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 <div class="litespeed-panel-wrapper">
 
-<?php foreach ( $_panels as $val ): ?>
+<?php foreach ( $_panels as $v ): ?>
 
 	<a 	class="litespeed-panel"
-		href="<?php echo LiteSpeed_Cache_Utility::build_url( $val[ 'tag' ], false, ! empty( $val[ 'append_url' ] ) ? $val[ 'append_url' ] : false ) ; ?>"
-		<?php if ( ! empty( $val[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $val[ 'cfm' ] . '"' ; ?>
+		href="<?php echo LiteSpeed_Cache_Utility::build_url( $v[ 'tag' ], false, ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ) ; ?>"
+		<?php if ( ! empty( $v[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"' ; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">
-			<span class="litespeed-panel-icon-<?php echo $val[ 'icon' ] ; ?>"></span>
+			<span class="litespeed-panel-icon-<?php echo $v[ 'icon' ] ; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<div class="litespeed-h3 <?php if ( ! empty( $val[ 'title_cls' ] ) ) echo $val[ 'title_cls' ] ; ?>">
-				<?php echo $val[ 'title' ] ; ?>
+			<div class="litespeed-h3 <?php if ( ! empty( $v[ 'title_cls' ] ) ) echo $v[ 'title_cls' ] ; ?>">
+				<?php echo $v[ 'title' ] ; ?>
 			</div>
-			<span class="litespeed-panel-para"><?php echo $val[ 'desc' ] ; ?></span>
+			<span class="litespeed-panel-para"><?php echo $v[ 'desc' ] ; ?></span>
 		</section>
 	</a>
 

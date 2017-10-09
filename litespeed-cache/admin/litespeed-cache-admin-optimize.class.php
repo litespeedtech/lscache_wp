@@ -120,7 +120,12 @@ class LiteSpeed_Cache_Admin_Optimize
 
 			case 'optimize_tables':
 				return $wpdb->get_var( "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0" ) ;
+
+			case 'all_cssjs' :
+				return $wpdb->get_var( "SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::get_optm_table() . "`" ) ;
 		}
+
+		return '-' ;
 	}
 
 	/**
@@ -182,6 +187,12 @@ class LiteSpeed_Cache_Admin_Optimize
 					}
 				}
 				return __( 'Optimized all tables.', 'litespeed-cache' ) ;
+
+			case 'all_cssjs' :
+				LiteSpeed_Cache_Purge::purge_all() ;
+				$wpdb->query( "TRUNCATE `" . LiteSpeed_Cache_Data::get_optm_table() . "`" ) ;
+				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' ) ;
+
 		}
 
 	}
