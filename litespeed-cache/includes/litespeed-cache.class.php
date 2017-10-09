@@ -131,6 +131,13 @@ class LiteSpeed_Cache
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
 		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;
 
+		/**
+		 * Check lazy lib request in the very beginning
+		 * @since 1.4
+		 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
+		 */
+		LiteSpeed_Cache_Media::get_instance() ;
+
 		// Check minify file request in the very beginning
 		LiteSpeed_Cache_Optimize::get_instance() ;
 
@@ -423,6 +430,9 @@ class LiteSpeed_Cache
 	public function send_headers_force( $buffer )
 	{
 		$this->_check_is_html( $buffer ) ;
+
+		// Image lazy load check
+		$buffer = LiteSpeed_Cache_Media::run( $buffer ) ;
 
 		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 

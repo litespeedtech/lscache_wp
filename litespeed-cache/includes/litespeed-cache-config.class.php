@@ -111,6 +111,8 @@ class LiteSpeed_Cache_Config
 	const OPID_CDN_FILETYPE = 'cdn_filetype' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 
+	const OPID_MEDIA_IMG_LAZY = 'media_img_lazy' ;
+
 	const HASH = 'hash' ;
 
 	const NETWORK_OPID_ENABLED = 'network_enabled' ;
@@ -464,6 +466,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_CDN_INC_JS 	=> false,
 			self::OPID_CDN_FILETYPE => ".aac\n.css\n.eot\n.gif\n.jpeg\n.js\n.jpg\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.png\n.svg\n.ttf\n.woff",
 			self::OPID_CDN_EXCLUDE 	=> '',
+
+			self::OPID_MEDIA_IMG_LAZY 	=> false,
 
 			self::HASH 	=> '',
 

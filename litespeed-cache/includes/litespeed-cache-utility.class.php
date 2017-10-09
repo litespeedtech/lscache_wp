@@ -10,6 +10,24 @@
  */
 class LiteSpeed_Cache_Utility
 {
+	/**
+	 * Parse attributes from string
+	 *
+	 * @since  1.2.2
+	 * @since  1.4 Moved from optimize to utility
+	 * @access private
+	 * @param  string $str
+	 * @return array  All the attributes
+	 */
+	public static function parse_attr( $str )
+	{
+		$attrs = array() ;
+		preg_match_all( '#(\w+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER ) ;
+		foreach ( $matches as $match ) {
+			$attrs[ $match[ 1 ] ] = trim( $match[ 2 ] ) ;
+		}
+		return $attrs ;
+	}
 
 	/**
 	 * Get url based on permalink setting

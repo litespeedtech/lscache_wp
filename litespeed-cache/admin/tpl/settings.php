@@ -9,6 +9,7 @@ $menu_list = array(
 	'purge' => __('Purge', 'litespeed-cache'),
 	'excludes' => __('Excludes', 'litespeed-cache'),
 	'optimize' => __('Optimize', 'litespeed-cache'),
+	'media' => __('Media', 'litespeed-cache'),
 	'cdn' => __('CDN', 'litespeed-cache'),
 ) ;
 

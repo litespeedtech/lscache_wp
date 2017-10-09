@@ -64,6 +64,8 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$this->_validate_optimize() ;
 
+		$this->_validate_media() ;
+
 		$this->_validate_cdn() ;
 
 		$this->_validate_debug() ;
@@ -457,6 +459,22 @@ class LiteSpeed_Cache_Admin_Settings
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
+		}
+	}
+
+	/**
+	 * Validates the media settings.
+	 *
+	 * @since 1.4
+	 * @access private
+	 */
+	private function _validate_media()
+	{
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
+		) ;
+		foreach ( $ids as $id ) {
+			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 	}
 

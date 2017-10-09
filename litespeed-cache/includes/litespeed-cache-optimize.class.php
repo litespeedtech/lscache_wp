@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public static function run( $content )
 	{
-		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again
+		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again ( But can be removed as mini file doesn't have LITESPEED_IS_HTML, keep for efficiency)
 			return $content ;
 		}
 
@@ -763,20 +763,24 @@ class LiteSpeed_Cache_Optimize
 		$head_src_list = array() ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
-		preg_match_all( '#<script\s+([^>]+)>\s*</script>|</head>#isU', $content, $matches, PREG_SET_ORDER ) ;
-		$i = 0;
+		preg_match_all( '#<script \s*([^>]+)>\s*</script>|</head>#isU', $content, $matches, PREG_SET_ORDER ) ;
 		$is_head = true ;
 		foreach ( $matches as $match ) {
 			if ( $match[ 0 ] === '</head>' ) {
 				$is_head = false ;
 				continue ;
 			}
-			$attrs = $this->_parse_attr( $match[ 1 ] ) ;
+			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
 
 			if ( ! empty( $attrs[ 'data-minified' ] ) ) {
 				continue ;
 			}
 			if ( empty( $attrs[ 'src' ] ) ) {
+				continue ;
+			}
+
+			// to avoid multiple replacement
+			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue ;
 			}
 
@@ -810,10 +814,9 @@ class LiteSpeed_Cache_Optimize
 		// $items = $dom->find( 'link' ) ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
-		preg_match_all( '#<link\s+([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ) ;
-		$i = 0;
+		preg_match_all( '#<link \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ) ;
 		foreach ( $matches as $match ) {
-			$attrs = $this->_parse_attr( $match[ 1 ] ) ;
+			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
 
 			if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
 				continue ;
@@ -833,6 +836,11 @@ class LiteSpeed_Cache_Optimize
 				LiteSpeed_Cache_Log::debug( 'Optm: rm css snippet ' . $attrs[ 'href' ] ) ;
 				// Delete this css snippet from orig html
 				$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
+				continue ;
+			}
+
+			// to avoid multiple replacement
+			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue ;
 			}
 
@@ -888,24 +896,6 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		return $html_list ;
-	}
-
-	/**
-	 * Parse attributes from string
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 * @param  string $str
-	 * @return array  All the attributes
-	 */
-	private function _parse_attr( $str )
-	{
-		$attrs = array() ;
-		preg_match_all( '#(\w+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER ) ;
-		foreach ( $matches as $match ) {
-			$attrs[ $match[ 1 ] ] = trim( $match[ 2 ] ) ;
-		}
-		return $attrs ;
 	}
 
 	/**
