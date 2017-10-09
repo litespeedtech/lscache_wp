@@ -92,28 +92,49 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _proceed()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ) {
-			return ;
+		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
+		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
+
+		// image lazy load
+		if ( $cfg_img_lazy ) {
+			$html_list = $this->_parse_img() ;
+			$html_list_ori = $html_list ;
+
+			foreach ( $html_list as $k => $v ) {
+				$snippet = '<noscript>' . $v . '</noscript>' ;
+				$v = str_replace( array( ' src=', ' srcset=' ), array( ' data-src=', ' data-srcset=' ), $v ) ;
+				$v = str_replace( '<img ', '<img data-lazyloaded="1" src="' . LITESPEED_PLACEHOLDER . '" ', $v ) ;
+				$snippet = $v . $snippet ;
+
+				$html_list[ $k ] = $snippet ;
+			}
+
+			$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
 		}
 
-		$lazy_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::LAZY_LIB ) ;
+		// iframe lazy load
+		if ( $cfg_iframe_lazy ) {
+			$html_list = $this->_parse_iframe() ;
+			$html_list_ori = $html_list ;
 
-		$this->content = str_replace( '</head>', '<script>window.lazyLoadOptions={threshold:50};</script></head>', $this->content ) ;
-		$this->content = str_replace( '</body>', '<script src="' . $lazy_lib_url . '"></script></body>', $this->content ) ;
+			foreach ( $html_list as $k => $v ) {
+				$snippet = '<noscript>' . $v . '</noscript>' ;
+				$v = str_replace( ' src=', ' data-src=', $v ) ;
+				$v = str_replace( '<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v ) ;
+				$snippet = $v . $snippet ;
 
-		$html_list = $this->_parse_img() ;
-		$html_list_ori = $html_list ;
+				$html_list[ $k ] = $snippet ;
+			}
 
-		foreach ( $html_list as $k => $v ) {
-			$snippet = '<noscript>' . $v . '</noscript>' ;
-			$v = str_replace( array( ' src=', ' srcset=' ), array( ' data-src=', ' data-srcset=' ), $v ) ;
-			$v = str_replace( '<img ', '<img data-lazyloaded="1" src="' . LITESPEED_PLACEHOLDER . '" ', $v ) ;
-			$snippet = $v . $snippet ;
-
-			$html_list[ $k ] = $snippet ;
+			$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
 		}
 
-		$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
+		// Include lazyload lib js and init lazyload
+		if ( $cfg_img_lazy || $cfg_iframe_lazy ) {
+			$this->content = str_replace( '</head>', '<script>window.lazyLoadOptions={elements_selector:"[data-lazyloaded]"};</script></head>', $this->content ) ;
+			$lazy_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::LAZY_LIB ) ;
+			$this->content = str_replace( '</body>', '<script src="' . $lazy_lib_url . '"></script></body>', $this->content ) ;
+		}
 	}
 
 	/**
@@ -139,6 +160,44 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Log::debug2( 'Media found: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
+				LiteSpeed_Cache_Log::debug2( 'Media bypassed' ) ;
+				continue ;
+			}
+
+			// to avoid multiple replacement
+			if ( in_array( $match[ 0 ], $html_list ) ) {
+				continue ;
+			}
+
+			$html_list[] = $match[ 0 ] ;
+		}
+
+		return $html_list ;
+	}
+
+	/**
+	 * Parse iframe src
+	 *
+	 * @since  1.4
+	 * @access private
+	 * @return array  All the src & related raw html list
+	 */
+	private function _parse_iframe()
+	{
+		$html_list = array() ;
+
+		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
+		preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER ) ;
+		foreach ( $matches as $match ) {
+			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
+
+			if ( empty( $attrs[ 'src' ] ) ) {
+				continue ;
+			}
+
+			LiteSpeed_Cache_Log::debug2( 'Media found iframe: ' . $attrs[ 'src' ] ) ;
+
+			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( 'Media bypassed' ) ;
 				continue ;
 			}

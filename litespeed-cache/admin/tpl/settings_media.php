@@ -17,5 +17,16 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Iframes Lazyload', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Load iframes only when they enter the viewport.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can reduce HTTP requests to improve page loading time.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 
 </tbody></table>
