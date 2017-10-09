@@ -11,6 +11,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will not be cached.', 'litespeed-cache'); ?>
 				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
 				<br />
 				<i>
 					<?php echo sprintf( __( 'To match the beginning, add %s to the beginning of the item.', 'litespeed-cache' ), '<code>^</code>' ) ; ?>
@@ -27,6 +28,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_EXCLUDES_QS); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Query string containing these parameters will not be cached.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, for %s, %s and %s can be used here.', 'litespeed-cache' ), '<code>?aa=bb&cc=dd</code>', '<code>aa</code>', '<code>cc</code>' ) ; ?>
 				<i>
 					<?php echo __('One per line.', 'litespeed-cache'); ?>
 				</i>

@@ -184,4 +184,15 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'URI Excludes', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_OPTM_EXCLUDES); ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent these pages from any optimization. The full URL or a partial string can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>

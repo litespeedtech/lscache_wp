@@ -520,6 +520,13 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update critical css
 		update_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, $this->_input[ LiteSpeed_Cache_Config::ITEM_OPTM_CSS ] ) ;
+
+		// prevent URI from optimization
+		$id = LiteSpeed_Cache_Config::OPID_OPTM_EXCLUDES ;
+		if ( isset( $this->_input[ $id ]) ) {
+			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
+		}
+
 	}
 
 	/**

@@ -55,9 +55,11 @@ define( 'LSWCP_BASENAME', plugin_basename( LSWCP_DIR . 'litespeed-cache.php' ) )
 
 define( 'LSWCP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
 
-if ( ! defined( 'LITESPEED_TIME_OFFSET' ) ) {
-	define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
-}
+! defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
+
+// Placeholder for lazyload img
+! defined( 'LITESPEED_PLACEHOLDER' ) && define( 'LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=' ) ;
+
 
 // Auto register LiteSpeed classes
 require_once LSWCP_DIR . 'includes/litespeed.autoload.php' ;

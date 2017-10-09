@@ -107,7 +107,7 @@ class LiteSpeed_Cache_Media
 		foreach ( $html_list as $k => $v ) {
 			$snippet = '<noscript>' . $v . '</noscript>' ;
 			$v = str_replace( array( ' src=', ' srcset=' ), array( ' data-src=', ' data-srcset=' ), $v ) ;
-			$v = str_replace( '<img ', '<img data-lazyloaded="1" src="data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" ', $v ) ;
+			$v = str_replace( '<img ', '<img data-lazyloaded="1" src="' . LITESPEED_PLACEHOLDER . '" ', $v ) ;
 			$snippet = $v . $snippet ;
 
 			$html_list[ $k ] = $snippet ;

@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Utility
 	/**
 	 * Make URL to be relative
 	 *
-	 * NOTE: for subfolder home_url, need to strip subfolder part (strip anything but scheme and host)
+	 * NOTE: for subfolder home_url, will keep subfolder part (strip nothing but scheme and host)
 	 *
 	 * @param  string $url
 	 * @return string      Relative URL, start with /
