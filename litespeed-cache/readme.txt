@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.3.1.1
+Stable tag: 1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, and Browser Cache!*
+*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache and Lazyload images!*
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -49,6 +49,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
 * PageSpeed score optimization
 * Load CSS/JS Asynchronously
+* Lazyload images/iframes
 * Content Delivery Network support
 * Minify CSS, JavaScript, and HTML
 * Combine CSS and JavaScript
@@ -223,18 +224,33 @@ For more detailed information about crawler setup, please see [our blog post](ht
 3. Admin Settings - Purge
 4. Admin Settings - Excludes
 5. Admin Settings - Optimize
-6. Admin Settings - CDN
-7. Admin Settings - ESI
-8. Admin Settings - Crawler
-9. Admin Settings - Thirdparty WooCommerce
-10. Admin Management - Purge
-11. Admin Management - DB Optimizer
-12. Admin Crawler Status Page
-13. Cache Miss Example
-14. Cache Hit Example
-15. Frontend Adminbar Shortcut
+6. Admin Settings - Media
+7. Admin Settings - CDN
+8. Admin Settings - ESI
+9. Admin Settings - Crawler
+10. Admin Settings - Thirdparty WooCommerce
+11. Admin Management - Purge
+12. Admin Management - DB Optimizer
+13. Admin Crawler Status Page
+14. Cache Miss Example
+15. Cache Hit Example
+16. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.4 - October 11 2017 =
+* [NEW FEATURE] Lazy load images/iframes.
+* [NEW FEATURE] Clean CSS/JS optimizer data functionality in DB Optimizer panel.
+* [NEW FEATURE] Exclude certain URIs from optimizer.
+* [IMPROVEMENT] Improved optimizer HTML check compatibility to avoid conflicts with ESI functions.
+* [IMPROVEMENT] Added support for using ^ when matching the start of a path in matching settings.
+* [IMPROVEMENT] Added wildcard support in CDN original URL.
+* [IMPROVEMENT] Moved optimizer table initialization to admin setting panel with failure warning.
+* [UPDATE] Added a one-time welcome banner.
+* [UPDATE] Partly relocated class: 'api'.
+* [API] Added API wrapper for removing wrapped HTML output.
+* [INTEGRATION] Fixed WooCommerce conflict with optimizer.
+* [GUI] Added No Optimization menu to frontend.
 
 = 1.3.1.1 - October 6 2017 =
 * [BUGFIX] Improved optimizer table creating process in certain database charset to avoid css/js minify/combination failure.
