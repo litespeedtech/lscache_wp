@@ -7,23 +7,23 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Images Lazyload', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Lazyload Images', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load images only when they enter the viewport.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This can reduce HTTP requests to improve page loading time.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Iframes Lazyload', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Lazyload Iframes', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load iframes only when they enter the viewport.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This can reduce HTTP requests to improve page loading time.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

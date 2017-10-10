@@ -53,7 +53,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed CSS files will not be minified/combined. The full URL or a partial string can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Listed CSS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -93,7 +94,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_JS_EXCLUDES); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed JS files will not be minified/combined. The full URL or a partial string can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -178,7 +180,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Enable this setting to stop loading emoji from wordpress.org. The visitor\'s browser default emoji will be displayed instead.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Stop loading wordpress.org emoji. Browser default emoji will be displayed instead.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
@@ -189,7 +191,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_OPTM_EXCLUDES); ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Prevent these pages from any optimization. The full URL or a partial string can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Prevent any optimization of listed pages.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
 			</div>
 		</td>

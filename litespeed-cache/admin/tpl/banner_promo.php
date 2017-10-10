@@ -14,8 +14,9 @@ if ( ! LiteSpeed_Cache_Router::has_promo_msg() ) {
 		<h2><?php echo __( 'Welcome to LiteSpeed', 'litespeed-cache' ) ; ?></h2>
 
 		<p>
+			<?php echo __( 'Thank you for using LiteSpeed.', 'litespeed-cache' ) ; ?>
 			<?php echo sprintf(
-				__( 'Thanks for using LiteSpeed. If there is any question, please don\'t hesitate to let us know. You can ask in <a %s>support forum</a> or <a %s>submit a ticket</a>.', 'litespeed-cache' ),
+				__( 'If you have any questions, please do not hesitate to let us know in <a %s>our support forum</a> or by <a %s>submitting a ticket with us</a>.', 'litespeed-cache' ),
 				'href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank"',
 				'href="https://www.litespeedtech.com/support" target="_blank"'
 			) ; ?>
