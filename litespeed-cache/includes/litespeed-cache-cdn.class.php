@@ -60,6 +60,14 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
+		// Check if need preg_replace
+		if ( strpos( $this->cfg_url_ori, '*' ) !== false ) {
+			LiteSpeed_Cache_Log::debug( 'CDN: wildcard rule in ' . $this->cfg_url_ori ) ;
+			$this->cfg_url_ori = preg_quote( $this->cfg_url_ori, '#' ) ;
+			$this->cfg_url_ori = str_replace( '\*', '.*', $this->cfg_url_ori ) ;
+			LiteSpeed_Cache_Log::debug2( 'CDN: translated rule is ' . $this->cfg_url_ori ) ;
+		}
+
 		$this->cfg_cdn_inc_img = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_INC_IMG ) ;
 		$this->cfg_cdn_inc_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_INC_CSS ) ;
 		$this->cfg_cdn_inc_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_INC_JS ) ;
@@ -372,7 +380,12 @@ class LiteSpeed_Cache_CDN
 		}
 
 		// Now lets replace CDN url
-		$url = str_replace( $scheme . $this->cfg_url_ori, $this->cfg_cdn_url, $url ) ;
+		if ( strpos( $this->cfg_url_ori, '*' ) !== false ) {
+			$url = preg_replace( '#' . $scheme . $this->cfg_url_ori . '#iU', $this->cfg_cdn_url, $url ) ;
+		}
+		else {
+			$url = str_replace( $scheme . $this->cfg_url_ori, $this->cfg_cdn_url, $url ) ;
+		}
 		LiteSpeed_Cache_Log::debug2( 'CDN:    after rewritten: ' . $url ) ;
 
 		return $url ;
