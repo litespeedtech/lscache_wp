@@ -102,7 +102,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 	<div class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></div>
 	<div class="litespeed-desc">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
-		<?php echo __('Please enter one per line.', 'litespeed-cache'); ?>
+		<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
 	</div>
 
 	<?php
@@ -154,7 +154,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_CAT) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_CAT; ?>">
 					<?php echo sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
-						'http://example.com/category/category-name/', 'category-name'); ?>
+						'<code>http://example.com/category/category-name/</code>', '<code>category-name</code>'); ?>
 				</div>
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_PID) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_PID; ?>">
@@ -163,14 +163,14 @@ if ( ! is_multisite() || is_network_admin() ) {
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_TAG) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_TAG; ?>">
 					<?php echo sprintf(__('Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
-						'http://example.com/tag/tag-name/', 'tag-name'); ?>
+						'<code>http://example.com/tag/tag-name/</code>', '<code>tag-name</code>'); ?>
 				</div>
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_URL) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_URL; ?>">
 					<?php echo __('Purge pages by relative or full URL.', 'litespeed-cache'); ?>
 					<?php echo sprintf(__('e.g. Use %s or %s.', 'litespeed-cache'),
-						'<b><u>/2016/02/24/hello-world/</u></b>',
-						'<b><u>http://www.myexamplesite.com/2016/02/24/hello-world/</u></b>'); ?>
+						'<code>/2016/02/24/hello-world/</code>',
+						'<code>http://www.myexamplesite.com/2016/02/24/hello-world/</code>'); ?>
 				</div>
 			</div>
 

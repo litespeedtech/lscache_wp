@@ -55,6 +55,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed CSS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -96,6 +97,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
@@ -194,6 +196,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Prevent any optimization of listed pages.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

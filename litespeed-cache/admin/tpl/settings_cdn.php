@@ -98,6 +98,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
