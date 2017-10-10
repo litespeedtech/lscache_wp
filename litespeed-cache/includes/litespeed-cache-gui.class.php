@@ -111,14 +111,18 @@ class LiteSpeed_Cache_GUI
 	public static function clean_wrapper( $buffer )
 	{
 		if ( self::$_clean_counter < 1 ) {
+			LiteSpeed_Cache_Log::debug2( "GUI bypassed by no counter" ) ;
 			return $buffer ;
 		}
+
+		LiteSpeed_Cache_Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
 
 		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
 			// If miss beginning
 			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
 			if ( $start === false ) {
 				$buffer = str_replace( self::clean_wrapper_end( $i ), '', $buffer ) ;
+				LiteSpeed_Cache_Log::debug2( "GUI lost beginning wrapper $i" ) ;
 				continue;
 			}
 
@@ -127,11 +131,13 @@ class LiteSpeed_Cache_GUI
 			$end = strpos( $buffer, $end_wrapper ) ;
 			if ( $end === false ) {
 				$buffer = str_replace( self::clean_wrapper_begin( $i ), '', $buffer ) ;
+				LiteSpeed_Cache_Log::debug2( "GUI lost ending wrapper $i" ) ;
 				continue;
 			}
 
 			// Now replace wrapped content
 			$buffer = substr_replace( $buffer, '', $start, $end - $start + strlen( $end_wrapper ) ) ;
+			LiteSpeed_Cache_Log::debug2( "GUI cleaned wrapper $i" ) ;
 		}
 
 		return $buffer ;

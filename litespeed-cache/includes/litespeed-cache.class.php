@@ -434,11 +434,16 @@ class LiteSpeed_Cache
 		// Image lazy load check
 		$buffer = LiteSpeed_Cache_Media::run( $buffer ) ;
 
+		/**
+		 * Clean wrapper mainly for esi block
+		 * NOTE: this needs to be before optimizer to avoid wrapper being removed
+		 * @since 1.4
+		 */
+		$buffer = LiteSpeed_Cache_GUI::clean_wrapper( $buffer ) ;
+
 		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
 
 		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
-
-		$buffer = LiteSpeed_Cache_GUI::clean_wrapper( $buffer ) ;
 
 		$buffer .= $this->send_headers( true ) ;
 
