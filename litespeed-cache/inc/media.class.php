@@ -48,7 +48,7 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_LAZY' ) ;
 
-			$file = LSWCP_DIR . 'js/lazyload.js' ;
+			$file = LSWCP_DIR . 'js/lazyload.min.js' ;
 
 			header( 'Content-Length: ' . filesize( $file ) ) ;
 			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
@@ -70,6 +70,11 @@ class LiteSpeed_Cache_Media
 	 */
 	public static function run( $content )
 	{
+		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
+			LiteSpeed_Cache_Log::debug2( 'Media bypass: NO_LAZY const' ) ;
+			return $content ;
+		}
+
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			LiteSpeed_Cache_Log::debug2( 'Media bypass: Not frontend HTML type' ) ;
 			return $content ;
@@ -131,7 +136,6 @@ class LiteSpeed_Cache_Media
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_img_lazy || $cfg_iframe_lazy ) {
-			$this->content = str_replace( '</head>', '<script>window.lazyLoadOptions={elements_selector:"[data-lazyloaded]"};</script></head>', $this->content ) ;
 			$lazy_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::LAZY_LIB ) ;
 			$this->content = str_replace( '</body>', '<script src="' . $lazy_lib_url . '"></script></body>', $this->content ) ;
 		}
