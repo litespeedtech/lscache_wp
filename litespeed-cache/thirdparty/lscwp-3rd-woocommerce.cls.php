@@ -420,14 +420,23 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		// For later versions, DONOTCACHEPAGE should be set.
 		// No need to check uri/qs.
 		if ( version_compare($woocom->version, '1.4.2', '>=') ) {
-			if ( defined('DONOTCACHEPAGE') && DONOTCACHEPAGE ) {
+			if ( version_compare( $woocom->version, '3.2.0', '<' ) && defined('DONOTCACHEPAGE') && DONOTCACHEPAGE ) {
 				LiteSpeed_Cache_API::debug('3rd party woocommerce not cache by constant') ;
 				LiteSpeed_Cache_API::set_nocache() ;
 				return ;
 			}
 			elseif ( version_compare($woocom->version, '2.1.0', '>=') ) {
 				$err = false ;
-				if ( is_null($woocom->cart) ) {
+
+				/**
+				 * From woo/inc/class-wc-cache-helper.php:prevent_caching()
+				 * @since  1.4
+				 */
+				$page_ids = array_filter( array( wc_get_page_id( 'cart' ), wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ) );
+				if ( isset( $_GET['download_file'] ) || isset( $_GET['add-to-cart'] ) || is_page( $page_ids ) ) {
+					$err = 'woo non cacheable pages' ;
+				}
+				elseif ( is_null($woocom->cart) ) {
 					$err = 'null cart' ;
 				}
 				elseif ( $woocom->cart->get_cart_contents_count() !== 0 && ! LiteSpeed_Cache_Router::esi_enabled() ) {
