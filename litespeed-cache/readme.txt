@@ -239,17 +239,18 @@ For more detailed information about crawler setup, please see [our blog post](ht
 == Changelog ==
 
 = 1.4 - October 11 2017 =
-* [NEW FEATURE] Lazy load images/iframes.
-* [NEW FEATURE] Clean CSS/JS optimizer data functionality in DB Optimizer panel.
-* [NEW FEATURE] Exclude certain URIs from optimizer.
-* [IMPROVEMENT] Improved optimizer HTML check compatibility to avoid conflicts with ESI functions.
-* [IMPROVEMENT] Added support for using ^ when matching the start of a path in matching settings.
-* [IMPROVEMENT] Added wildcard support in CDN original URL.
-* [IMPROVEMENT] Moved optimizer table initialization to admin setting panel with failure warning.
-* [UPDATE] Added a one-time welcome banner.
-* [UPDATE] Partly relocated class: 'api'.
+* [New] Lazy load images/iframes.
+* [New] Clean CSS/JS optimizer data functionality in DB Optimizer panel.
+* [New] Exclude certain URIs from optimizer.
+* [Improvement] Improved optimizer HTML check compatibility to avoid conflicts with ESI functions.
+* [Improvement] Added support for using ^ when matching the start of a path in matching settings.
+* [Improvement] Added wildcard support in CDN original URL.
+* [Improvement] Moved optimizer table initialization to admin setting panel with failure warning.
+* [Update] Added a one-time welcome banner.
+* [Update] Partly relocated class: 'api'.
 * [API] Added API wrapper for removing wrapped HTML output.
-* [INTEGRATION] Fixed WooCommerce conflict with optimizer.
+* [Integration] Fixed WooCommerce conflict with optimizer.
+* [Integration] Private cache support for WooCommerce v3.2.0+.
 * [GUI] Added No Optimization menu to frontend.
 
 = 1.3.1.1 - October 6 2017 =
