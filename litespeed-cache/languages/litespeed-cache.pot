@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 1.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-10-10 19:32:18+00:00\n"
+"POT-Creation-Date: 2017-10-11 15:27:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -697,7 +697,7 @@ msgstr ""
 #: admin/tpl/settings_general.php:59 admin/tpl/settings_general.php:71
 #: admin/tpl/settings_general.php:83 admin/tpl/settings_general.php:95
 #: admin/tpl/settings_general.php:108 admin/tpl/settings_general.php:121
-#: admin/tpl/settings_general.php:134 admin/tpl/settings_optimize.php:107
+#: admin/tpl/settings_general.php:134 admin/tpl/settings_optimize.php:109
 msgid "seconds"
 msgstr ""
 
@@ -1548,8 +1548,14 @@ msgstr ""
 msgid "Select below for \"Purge by\" options."
 msgstr ""
 
-#: admin/tpl/manage_purge.php:105
-msgid "Please enter one per line."
+#: admin/tpl/manage_purge.php:105 admin/tpl/settings_cache.php:67
+#: admin/tpl/settings_cdn.php:101 admin/tpl/settings_excludes.php:19
+#: admin/tpl/settings_excludes.php:33 admin/tpl/settings_excludes.php:56
+#: admin/tpl/settings_excludes.php:94
+#: admin/tpl/settings_inc.exclude_cookies.php:19
+#: admin/tpl/settings_optimize.php:58 admin/tpl/settings_optimize.php:100
+#: admin/tpl/settings_optimize.php:199 admin/tpl/settings_purge.php:79
+msgid "One per line."
 msgstr ""
 
 #: admin/tpl/manage_purge.php:132
@@ -1935,7 +1941,7 @@ msgid "The URLs will be compared to the REQUEST_URI server variable."
 msgstr ""
 
 #: admin/tpl/settings_cache.php:62 admin/tpl/settings_excludes.php:14
-#: admin/tpl/settings_optimize.php:196
+#: admin/tpl/settings_optimize.php:198
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
@@ -1945,13 +1951,6 @@ msgstr ""
 
 #: admin/tpl/settings_cache.php:66 admin/tpl/settings_excludes.php:18
 msgid "To do an exact match, add %s to the end of the URL."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:67 admin/tpl/settings_excludes.php:19
-#: admin/tpl/settings_excludes.php:33 admin/tpl/settings_excludes.php:56
-#: admin/tpl/settings_excludes.php:94
-#: admin/tpl/settings_inc.exclude_cookies.php:19
-msgid "One per line."
 msgstr ""
 
 #: admin/tpl/settings_cdn.php:11
@@ -2777,125 +2776,125 @@ msgstr ""
 msgid "Listed CSS files will not be minified/combined."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:57 admin/tpl/settings_optimize.php:98
-#: admin/tpl/settings_optimize.php:195
+#: admin/tpl/settings_optimize.php:57 admin/tpl/settings_optimize.php:99
+#: admin/tpl/settings_optimize.php:197
 msgid "Both full URLs and partial strings can be used."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:63
+#: admin/tpl/settings_optimize.php:64
 msgid "JS Minify"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:67
+#: admin/tpl/settings_optimize.php:68
 msgid "Minify JS files."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:73
+#: admin/tpl/settings_optimize.php:74
 msgid "JS Combine"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:77
+#: admin/tpl/settings_optimize.php:78
 msgid "Combine JS files."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:83
+#: admin/tpl/settings_optimize.php:84
 msgid "JS HTTP/2 Push"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:87
+#: admin/tpl/settings_optimize.php:88
 msgid ""
 "Pre-send internal JS files to the browser before they are requested. "
 "(Requires the HTTP/2 protocol)"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:93
+#: admin/tpl/settings_optimize.php:94
 msgid "JS Excludes"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:97
+#: admin/tpl/settings_optimize.php:98
 msgid "Listed JS files will not be minified/combined."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:104
+#: admin/tpl/settings_optimize.php:106
 msgid "CSS/JS Cache TTL"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:109
+#: admin/tpl/settings_optimize.php:111
 msgid ""
 "Specify how long, in seconds, CSS/JS files are cached. Minimum is %1$s "
 "seconds."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:116
+#: admin/tpl/settings_optimize.php:118
 msgid "HTML Minify"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:120
+#: admin/tpl/settings_optimize.php:122
 msgid "Minify HTML content."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:126
+#: admin/tpl/settings_optimize.php:128
 msgid "Remove Query Strings"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:130
+#: admin/tpl/settings_optimize.php:132
 msgid "Remove query strings from static resources."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:131 admin/tpl/settings_optimize.php:152
-#: admin/tpl/settings_optimize.php:173 admin/tpl/settings_optimize.php:184
+#: admin/tpl/settings_optimize.php:133 admin/tpl/settings_optimize.php:154
+#: admin/tpl/settings_optimize.php:175 admin/tpl/settings_optimize.php:186
 msgid ""
 "This can improve your speed score in services like Pingdom, GTmetrix and "
 "PageSpeed."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:137
+#: admin/tpl/settings_optimize.php:139
 msgid "Remove Google Fonts"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:141
+#: admin/tpl/settings_optimize.php:143
 msgid "Prevent google fonts from loading on all your pages."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:147 admin/tpl/settings_optimize.php:162
+#: admin/tpl/settings_optimize.php:149 admin/tpl/settings_optimize.php:164
 msgid "Load CSS Asynchronously"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:151
+#: admin/tpl/settings_optimize.php:153
 msgid "Optimize CSS delivery. This will load Google Fonts asynchronously too."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:158
+#: admin/tpl/settings_optimize.php:160
 msgid "Critical CSS Rules"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:162
+#: admin/tpl/settings_optimize.php:164
 msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:168
+#: admin/tpl/settings_optimize.php:170
 msgid "Load JS Deferred"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:172
+#: admin/tpl/settings_optimize.php:174
 msgid "Doing so can help reduce resource contention and improve performance."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:179
+#: admin/tpl/settings_optimize.php:181
 msgid "Remove WordPress Emoji"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:183
+#: admin/tpl/settings_optimize.php:185
 msgid ""
 "Stop loading wordpress.org emoji. Browser default emoji will be displayed "
 "instead."
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:190
+#: admin/tpl/settings_optimize.php:192
 msgid "URI Excludes"
 msgstr ""
 
-#: admin/tpl/settings_optimize.php:194
+#: admin/tpl/settings_optimize.php:196
 msgid "Prevent any optimization of listed pages."
 msgstr ""
 
@@ -2978,7 +2977,7 @@ msgid ""
 "updated."
 msgstr ""
 
-#: admin/tpl/settings_purge.php:73 admin/tpl/settings_purge.php:89
+#: admin/tpl/settings_purge.php:73 admin/tpl/settings_purge.php:90
 msgid "Scheduled Purge URLs"
 msgstr ""
 
@@ -2988,7 +2987,7 @@ msgid ""
 "the option \"%s\"."
 msgstr ""
 
-#: admin/tpl/settings_purge.php:77 admin/tpl/settings_purge.php:84
+#: admin/tpl/settings_purge.php:77 admin/tpl/settings_purge.php:85
 msgid "Scheduled Purge Time"
 msgstr ""
 
@@ -2996,11 +2995,11 @@ msgstr ""
 msgid "Both %1$s and %2$s are acceptable."
 msgstr ""
 
-#: admin/tpl/settings_purge.php:89
+#: admin/tpl/settings_purge.php:90
 msgid "Specify the time to purge the \"%s\" list."
 msgstr ""
 
-#: admin/tpl/settings_purge.php:90
+#: admin/tpl/settings_purge.php:91
 msgid "Current server time is %s."
 msgstr ""
 
