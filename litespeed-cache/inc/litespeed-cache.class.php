@@ -62,6 +62,8 @@ class LiteSpeed_Cache
 
 	protected static $_debug_show_header = false ;
 
+	private $footer_comment = '' ;
+
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -450,7 +452,11 @@ class LiteSpeed_Cache
 
 		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
 
-		$buffer .= $this->send_headers( true ) ;
+		$this->send_headers( true ) ;
+
+		if ( $this->footer_comment ) {
+			$buffer .= $this->footer_comment ;
+		}
 
 		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
 
@@ -502,13 +508,13 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Log::debug( 'ESI silence' ) ;
 		}
 
-		$comment = '' ;
 		if ( $running_info_showing ) {
-			$comment .= sprintf(
-				'<!-- %1$s %2$s by LiteSpeed Cache on %3$s -->',
+			$this->footer_comment .= sprintf(
+				'<!-- %1$s %2$s by LiteSpeed Cache %4$s on %3$s -->',
 				defined( 'LSCACHE_IS_ESI' ) ? 'Block' : 'Page',
 				LiteSpeed_Cache_Control::is_cacheable() ? 'generated' : 'uncached',
-				date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET )
+				date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET ),
+				self::PLUGIN_VERSION
 			) ;
 		}
 
@@ -518,7 +524,7 @@ class LiteSpeed_Cache
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push( $control_header ) ;
 				if ( $running_info_showing ) {
-					$comment .= "\n<!-- " . $control_header . " -->" ;
+					$this->footer_comment .= "\n<!-- " . $control_header . " -->" ;
 				}
 			}
 		}
@@ -528,7 +534,7 @@ class LiteSpeed_Cache
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push( $purge_header ) ;
 				if ( $running_info_showing ) {
-					$comment .= "\n<!-- " . $purge_header . " -->" ;
+					$this->footer_comment .= "\n<!-- " . $purge_header . " -->" ;
 				}
 			}
 		}
@@ -538,7 +544,7 @@ class LiteSpeed_Cache
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
 				LiteSpeed_Cache_Log::push( $vary_header ) ;
 				if ( $running_info_showing ) {
-					$comment .= "\n<!-- " . $vary_header . " -->" ;
+					$this->footer_comment .= "\n<!-- " . $vary_header . " -->" ;
 				}
 			}
 		}
@@ -568,7 +574,7 @@ class LiteSpeed_Cache
 				if ( LiteSpeed_Cache_Log::get_enabled() ) {
 					LiteSpeed_Cache_Log::push( $tag_header ) ;
 					if ( $running_info_showing ) {
-						$comment .= "\n<!-- " . $tag_header . " -->" ;
+						$this->footer_comment .= "\n<!-- " . $tag_header . " -->" ;
 					}
 				}
 			}
@@ -578,14 +584,6 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Log::debug( '--forced--' ) ;
 		}
 
-		if ( $comment ) {
-			if ( $is_forced ) {
-				return $comment ;
-			}
-			else {
-				echo $comment ;
-			}
-		}
 	}
 
 	/**

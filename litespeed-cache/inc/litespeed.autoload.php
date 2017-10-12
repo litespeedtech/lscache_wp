@@ -22,7 +22,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'Litespeed_File'					=> 'lib/litespeed/litespeed-file.class.php',
 			'Litespeed_String'					=> 'lib/litespeed/litespeed-string.class.php',
 
-			'LiteSpeed_Cache'					=> 'inc/class.php',
+			'LiteSpeed_Cache'					=> 'inc/litespeed-cache.class.php',
 			'LiteSpeed_Cache_Activation'		=> 'inc/activation.class.php',
 			'LiteSpeed_Cache_API'				=> 'inc/api.class.php',
 			'LiteSpeed_Cache_CDN'				=> 'inc/cdn.class.php',
