@@ -62,7 +62,7 @@ define( 'LSWCP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL
 
 
 // Auto register LiteSpeed classes
-require_once LSWCP_DIR . 'includes/litespeed.autoload.php' ;
+require_once LSWCP_DIR . 'inc/litespeed.autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {

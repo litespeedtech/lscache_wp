@@ -3,10 +3,11 @@
 /**
  * The plugin API class.
  *
- * @since      1.1.3
- * @package    LiteSpeed_Cache
- * @subpackage LiteSpeed_Cache/includes
- * @author     LiteSpeed Technologies <info@litespeedtech.com>
+ * @since      	1.1.3
+ * @since  		1.4 Moved into /inc
+ * @package    	LiteSpeed_Cache
+ * @subpackage 	LiteSpeed_Cache/inc
+ * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_API
 {
