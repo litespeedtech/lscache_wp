@@ -316,7 +316,7 @@ class LiteSpeed_Cache_Optimize
 
 					$snippet = '' ;
 					foreach ( $urls as $url ) {
-						$snippet .= "<link data-minified='2' rel='stylesheet' href='$url' />" ;// use 2 as combined
+						$snippet .= "<link data-optimized='2' rel='stylesheet' href='$url' />" ;// use 2 as combined
 					}
 
 					// Handle css async load
@@ -327,7 +327,7 @@ class LiteSpeed_Cache_Optimize
 						$noscript .= $snippet ;
 						$snippet = '' ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<link rel='preload' data-preload='1' data-minified='2' as='style' onload='this.rel=\"stylesheet\"' href='$url' />" ;
+							$snippet .= "<link rel='preload' data-asynced='1' data-optimized='2' as='style' onload='this.rel=\"stylesheet\"' href='$url' />" ;
 						}
 
 						$this->html_head .= implode( '', $ignored_html_async ) . $snippet ;
@@ -412,7 +412,7 @@ class LiteSpeed_Cache_Optimize
 					if ( $head_js ) {
 						$urls = $this->_limit_size_build_hash_url( $head_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<script data-minified='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -427,7 +427,7 @@ class LiteSpeed_Cache_Optimize
 					if ( $foot_js ) {
 						$urls = $this->_limit_size_build_hash_url( $foot_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<script data-minified='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -493,7 +493,7 @@ class LiteSpeed_Cache_Optimize
 			try {
 				litespeed_load_vendor() ;
 				$this->content = Minify_HTML::minify( $this->content ) ;
-				$this->content .= '<!-- Page minified by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
+				$this->content .= '<!-- Page optimized by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
 
 			} catch ( ErrorException $e ) {
 				LiteSpeed_Cache_Control::debug( 'Error when optimizing HTML: ' . $e->getMessage() ) ;
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Optimize
 		foreach ( $src_queue_list as $key => $src ) {
 			$url = $this->_build_hash_url( $src, $file_type ) ;
 			$snippet = str_replace( $src, $url, $html_list[ $key ] ) ;
-			$snippet = str_replace( "<$tag ", "<$tag data-minified='1' ", $snippet ) ;
+			$snippet = str_replace( "<$tag ", "<$tag data-optimized='1' ", $snippet ) ;
 
 			$html_list[ $key ] = $snippet ;
 
@@ -625,7 +625,7 @@ class LiteSpeed_Cache_Optimize
 			// Check if has no-optimize attr
 			if ( strpos( $html_list[ $key ], 'data-no-optimize' ) !== false ) {
 				$ignored_html[] = $html_list[ $key ] ;
-				LiteSpeed_Cache_Log::debug2( 'Optm:    Abort excludes: attr no-optimize' ) ;
+				LiteSpeed_Cache_Log::debug2( 'Optm:    Abort excludes: attr data-no-optimize' ) ;
 				continue ;
 			}
 
@@ -820,7 +820,7 @@ class LiteSpeed_Cache_Optimize
 			}
 			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
 
-			if ( ! empty( $attrs[ 'data-minified' ] ) ) {
+			if ( ! empty( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
 			if ( empty( $attrs[ 'src' ] ) ) {
@@ -869,7 +869,7 @@ class LiteSpeed_Cache_Optimize
 			if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
 				continue ;
 			}
-			if ( ! empty( $attrs[ 'data-minified' ] ) ) {
+			if ( ! empty( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
 			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
@@ -914,8 +914,13 @@ class LiteSpeed_Cache_Optimize
 	{
 		$noscript = '' ;
 		foreach ( $html_list as $k => $ori ) {
+			if ( strpos( $ori, 'data-asynced' ) !== false ) {
+				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr data-asynced exist' ) ;
+				continue ;
+			}
+
 			if ( strpos( $ori, 'data-no-async' ) !== false ) {
-				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr api no-async' ) ;
+				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr api data-no-async' ) ;
 				continue ;
 			}
 
@@ -923,7 +928,7 @@ class LiteSpeed_Cache_Optimize
 			$noscript .= $ori ;
 			// async replacement
 			$v = str_replace( 'stylesheet', 'preload', $ori ) ;
-			$v = str_replace( '<link', "<link data-preload='1' as='style' onload='this.rel=\"stylesheet\"' ", $v ) ;
+			$v = str_replace( '<link', "<link data-asynced='1' as='style' onload='this.rel=\"stylesheet\"' ", $v ) ;
 			$html_list[ $k ] = $v ;
 		}
 		return array( $noscript, $html_list ) ;
@@ -944,12 +949,12 @@ class LiteSpeed_Cache_Optimize
 			if ( strpos( $v, 'defer' ) !== false ) {
 				continue ;
 			}
-			if ( strpos( $v, 'data-defer' ) !== false ) {
-				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr data-defer exist' ) ;
+			if ( strpos( $v, 'data-deferred' ) !== false ) {
+				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr data-deferred exist' ) ;
 				continue ;
 			}
 			if ( strpos( $v, 'data-no-defer' ) !== false ) {
-				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr api no-defer' ) ;
+				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr api data-no-defer' ) ;
 				continue ;
 			}
 
@@ -996,7 +1001,7 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 
-			$html_list[ $k ] = str_replace( '></script>', ' defer></script>', $v ) ;
+			$html_list[ $k ] = str_replace( '></script>', ' defer data-deferred="1"></script>', $v ) ;
 		}
 
 		return $html_list ;
