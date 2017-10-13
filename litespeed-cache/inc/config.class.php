@@ -116,6 +116,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 
 	const OPID_MEDIA_IMG_LAZY = 'media_img_lazy' ;
+	const OPID_MEDIA_IMG_LAZY_PLACEHOLDER = 'media_img_lazy_placeholder' ;
 	const OPID_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
 
 	const HASH = 'hash' ;
@@ -489,6 +490,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CDN_EXCLUDE 	=> '',
 
 			self::OPID_MEDIA_IMG_LAZY 	=> false,
+			self::OPID_MEDIA_IMG_LAZY_PLACEHOLDER 	=> '',
 			self::OPID_MEDIA_IFRAME_LAZY 	=> false,
 
 			self::HASH 	=> '',

@@ -37,7 +37,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_ORI, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
-				<p><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?></p>
+				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -79,8 +79,8 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 				<?php $id = LiteSpeed_Cache_Config::OPID_CDN_FILETYPE ; ?>
 				<?php $this->build_textarea( $id, null, false, 30 ) ; ?>
 				<div class="litespeed-desc">
-					<p><?php echo __( 'Static file type links to be replaced by CDN links. One per line.', 'litespeed-cache' ) ; ?></p>
-					<p><?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?></p>
+					<?php echo __( 'Static file type links to be replaced by CDN links. One per line.', 'litespeed-cache' ) ; ?>
+					<br /><?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
 				</div>
 			</div>
 			<div style="float:left; display:flex;">

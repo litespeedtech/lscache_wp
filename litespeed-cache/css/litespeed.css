@@ -17,6 +17,10 @@
 	display: inline-block;
 }
 
+.litespeed-success {
+	color: #73b38d!important;
+}
+
 .litespeed-warning {
 	color: #e59544!important;
 }
@@ -43,6 +47,7 @@
 	color: #9e9e9e;
 	color: #7a919e;
 	margin: 10px 5px;
+	line-height: 1.7;
 }
 
 .litespeed-hide {

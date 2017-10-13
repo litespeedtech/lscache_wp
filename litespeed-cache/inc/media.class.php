@@ -106,10 +106,12 @@ class LiteSpeed_Cache_Media
 			$html_list = $this->_parse_img() ;
 			$html_list_ori = $html_list ;
 
+			$placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+
 			foreach ( $html_list as $k => $v ) {
 				$snippet = '<noscript>' . $v . '</noscript>' ;
 				$v = str_replace( array( ' src=', ' srcset=' ), array( ' data-src=', ' data-srcset=' ), $v ) ;
-				$v = str_replace( '<img ', '<img data-lazyloaded="1" src="' . LITESPEED_PLACEHOLDER . '" ', $v ) ;
+				$v = str_replace( '<img ', '<img data-lazyloaded="1" src="' . $placeholder . '" ', $v ) ;
 				$snippet = $v . $snippet ;
 
 				$html_list[ $k ] = $snippet ;

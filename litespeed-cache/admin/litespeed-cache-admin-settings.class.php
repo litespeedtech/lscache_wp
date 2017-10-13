@@ -477,6 +477,9 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
+
+		$id = LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ;
+		$this->_options[ $id ] = $this->_input[ $id ] ;
 	}
 
 	/**

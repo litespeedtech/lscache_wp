@@ -14,10 +14,10 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>
 				<?php echo __('A site built with responsive design does not need to check this.', 'litespeed-cache'); ?>
-				<i class="litespeed-warning">
+				<font class="litespeed-warning">
 					<?php echo __( 'NOTE:', 'litespeed-cache' ) ; ?>
 					<?php echo __( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) ; ?>
-				</i>
+				</font>
 			</div>
 		</td>
 	</tr>
@@ -61,9 +61,8 @@ if (!defined('WPINC')) die;
 					<?php echo sprintf( __( 'SYNTAX: Each entry should be separated with a bar, %s.', 'litespeed-cache'), "<code>|</code>" ) ; ?>
 					<?php echo sprintf( __( 'Any spaces should be escaped with a backslash before the space, %s.', 'litespeed-cache' ), "<code>\\</code>" ) ; ?>
 				</i>
-				<p>
+				<br />
 					<?php echo sprintf( __( 'The default list WordPress uses is %s', 'litespeed-cache' ), "<code>$wp_default_mobile</code>" ) ; ?>
-				</p>
 			</div>
 		</td>
 	</tr>
