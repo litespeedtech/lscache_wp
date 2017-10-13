@@ -13,8 +13,21 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Load images only when they enter the viewport.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Lazyload Image Excludes', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Listed items will not be lazyload.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-success">
 					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_media_lazy_img_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-lazy="1"</code>' ) ; ?>
 				</font>
 			</div>

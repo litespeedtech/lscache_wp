@@ -153,6 +153,15 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _parse_img()
 	{
+		/**
+		 * Exclude list
+		 * @since 1.5
+		 */
+		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', get_option( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ) ;
+		if ( $excludes ) {
+			$excludes = explode( "\n", $excludes ) ;
+		}
+
 		$html_list = array() ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
@@ -164,10 +173,19 @@ class LiteSpeed_Cache_Media
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug2( 'Media found: ' . $attrs[ 'src' ] ) ;
+			LiteSpeed_Cache_Log::debug2( 'Media: found: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( 'Media bypassed' ) ;
+				continue ;
+			}
+
+			/**
+			 * Exclude from lazyload by setting
+			 * @since  1.5
+			 */
+			if ( $excludes && LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
+				LiteSpeed_Cache_Log::debug2( 'Media: lazyload image exclude ' . $attrs[ 'src' ] ) ;
 				continue ;
 			}
 

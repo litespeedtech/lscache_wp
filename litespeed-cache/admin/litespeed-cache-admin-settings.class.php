@@ -480,6 +480,11 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
+
+		// Update lazyload image excludes
+		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ;
+		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'uri' ) ) ;
+
 	}
 
 	/**

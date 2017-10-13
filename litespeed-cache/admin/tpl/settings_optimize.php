@@ -187,10 +187,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
-				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
-					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
-				</font>
 			</div>
 		</td>
 	</tr>
@@ -203,6 +199,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<br /><font class="litespeed-success">
+					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ) ; ?>
+					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>
