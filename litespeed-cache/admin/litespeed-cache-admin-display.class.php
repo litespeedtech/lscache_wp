@@ -649,7 +649,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  boolean $disabled If this input is disabled or not
 	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea($id, $val = null, $disabled = false, $cols = false)
+	public function build_textarea( $id, $val = null, $disabled = false, $cols = false )
 	{
 		if ( $val === null ) {
 			global $_options ;
@@ -662,6 +662,30 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' rows='5' cols='$cols' $disabled>" . esc_textarea($val) . "</textarea>" ;
+	}
+
+	/**
+	 * Build a textarea based on separate stored option data
+	 *
+	 * @since 1.5
+	 * @access public
+	 * @param  string $id
+	 * @param  string $val Value of input
+	 * @param  boolean $disabled If this input is disabled or not
+	 * @param  int $cols The width of textarea
+	 */
+	public function build_textarea2( $id, $val = null, $disabled = false, $cols = false, $default_val = null )
+	{
+		if ( $val === null ) {
+			$val = get_option( $id, $default_val ) ;
+		}
+		$disabled = $disabled ? ' disabled ' : '' ;
+
+		if ( $cols === false ) {
+			$cols = 80 ;
+		}
+
+		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' rows='5' cols='$cols' $disabled>" . esc_textarea( $val ) . "</textarea>" ;
 	}
 
 	/**

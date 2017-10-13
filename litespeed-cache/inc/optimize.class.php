@@ -29,6 +29,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_html_minify ;
 	private $cfg_css_async ;
 	private $cfg_js_defer ;
+	private $cfg_js_defer_exc = false ;
 	private $cfg_qs_rm ;
 
 
@@ -82,6 +83,18 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->cfg_css_async ) {
 			add_action( 'wp_head', array( $this, 'prepend_critical_css' ), 1 ) ;
 		}
+
+		/**
+		 * Exclude js from deferred setting
+		 * @since 1.5
+		 */
+		if ( $this->cfg_js_defer ) {
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', get_option( LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ) ) ;
+			if ( $this->cfg_js_defer_exc ) {
+				$this->cfg_js_defer_exc = explode( "\n", $this->cfg_js_defer_exc ) ;
+			}
+		}
+
 	}
 
 	/**
@@ -454,7 +467,7 @@ class LiteSpeed_Cache_Optimize
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
 			$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
-			$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+			$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
 			$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 		}
 
@@ -901,6 +914,21 @@ class LiteSpeed_Cache_Optimize
 			}
 			if ( strpos( $v, 'data-defer' ) !== false ) {
 				continue ;
+			}
+
+			/**
+			 * Exclude js from setting
+			 * @since 1.5
+			 */
+			if ( $this->cfg_js_defer_exc ) {
+				// parse js src
+				preg_match( '#<script \s*([^>]+)>#isU', $v, $matches ) ;
+				$attrs = LiteSpeed_Cache_Utility::parse_attr( $matches[ 1 ] ) ;
+
+				if ( LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $this->cfg_js_defer_exc ) ) {
+					LiteSpeed_Cache_Log::debug( 'Optm: js defer exclude ' . $attrs[ 'src' ] ) ;
+					continue ;
+				}
 			}
 
 			$html_list[ $k ] = str_replace( '></script>', ' defer></script>', $v ) ;

@@ -159,7 +159,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Critical CSS Rules', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, get_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify critical CSS rules for above-the-fold content when enabling %s.', 'litespeed-cache' ), __( 'Load CSS Asynchronously', 'litespeed-cache' ) ) ; ?>
 			</div>
@@ -173,6 +173,18 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Doing so can help reduce resource contention and improve performance.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'JS Deferred Excludes', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

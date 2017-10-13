@@ -528,6 +528,10 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
 		}
 
+		// Update js deferred excludes
+		$id = LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ;
+		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'uri' ) ) ;
+
 	}
 
 	/**
