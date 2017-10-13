@@ -213,4 +213,19 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Exclude jQuery', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent jQuery from any optimization.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'To improve compatibility with inline JS, this is suggested to be %s.', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
+				<i class="litespeed-warning">
+					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo sprintf( __( 'If there is any JS error related to %1$s when enabled %2$s, please try this option.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
+				</i>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>

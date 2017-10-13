@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_js_defer ;
 	private $cfg_js_defer_exc = false ;
 	private $cfg_qs_rm ;
+	private $cfg_exc_jquery ;
 
 
 	private $html_foot = '' ; // The html info append to <body>
@@ -62,6 +63,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ;
 		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ;
 		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ;
+		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
 
 		$this->_static_request_check() ;
 
@@ -628,6 +630,21 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 
+			/**
+			 * Check if exclude jQuery or not
+			 * Exclude from minify/combine
+			 * @since  1.5
+			 */
+			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
+				$ignored_html[ $src ] = $html_list[ $key ] ;
+				LiteSpeed_Cache_Log::debug2( 'Optm:    Abort jQuery by setting' ) ;
+
+				// Add to HTTP2 as its ignored but still internal src
+				$this->append_http2( $src, 'js' ) ;
+
+				continue ;
+			}
+
 			$src_queue_list[ $key ] = $src ;
 			$file_size_list[ $key ] = $file_info[ 1 ] ;
 		}
@@ -917,24 +934,63 @@ class LiteSpeed_Cache_Optimize
 			}
 
 			/**
+			 * Parse src for excluding js from setting
+			 * @since 1.5
+			 */
+			if ( $this->cfg_js_defer_exc || $this->cfg_exc_jquery ) {
+				// parse js src
+				preg_match( '#<script \s*([^>]+)>#isU', $v, $matches ) ;
+				if ( empty( $matches[ 1 ] ) ) {
+					LiteSpeed_Cache_Log::debug( 'Optm: js defer parse html failed: ' . $v ) ;
+					continue ;
+				}
+
+				$attrs = LiteSpeed_Cache_Utility::parse_attr( $matches[ 1 ] ) ;
+
+				if ( empty( $attrs[ 'src' ] ) ) {
+					LiteSpeed_Cache_Log::debug( 'Optm: js defer parse src failed: ' . $matches[ 1 ] ) ;
+					continue ;
+				}
+
+				$src = $attrs[ 'src' ] ;
+			}
+
+			/**
 			 * Exclude js from setting
 			 * @since 1.5
 			 */
 			if ( $this->cfg_js_defer_exc ) {
-				// parse js src
-				preg_match( '#<script \s*([^>]+)>#isU', $v, $matches ) ;
-				$attrs = LiteSpeed_Cache_Utility::parse_attr( $matches[ 1 ] ) ;
 
-				if ( LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $this->cfg_js_defer_exc ) ) {
-					LiteSpeed_Cache_Log::debug( 'Optm: js defer exclude ' . $attrs[ 'src' ] ) ;
+				if ( LiteSpeed_Cache_Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
+					LiteSpeed_Cache_Log::debug( 'Optm: js defer exclude ' . $src ) ;
 					continue ;
 				}
+			}
+
+			/**
+			 * Check if exclude jQuery
+			 * @since  1.5
+			 */
+			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
+				LiteSpeed_Cache_Log::debug2( 'Optm:   js defer Abort jQuery by setting' ) ;
+				continue ;
 			}
 
 			$html_list[ $k ] = str_replace( '></script>', ' defer></script>', $v ) ;
 		}
 
 		return $html_list ;
+	}
+
+	/**
+	 * Check if is jq lib
+	 *
+	 * @since  1.5
+	 * @access private
+	 */
+	private function _is_jquery( $src )
+	{
+		return stripos( $src, 'jquery.js' ) !== false || stripos( $src, 'jquery.min.js' ) !== false ;
 	}
 
 	/**

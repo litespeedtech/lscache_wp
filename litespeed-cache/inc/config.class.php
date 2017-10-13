@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Config
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 	const VARY_GROUP = 'litespeed-cache-vary-group' ;
 	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
-	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-exc' ;
+	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-excludes' ;
 	const VAL_OFF = 0 ;
 	const VAL_ON = 1 ;
 	const VAL_ON2 = 2 ;
@@ -104,6 +104,7 @@ class LiteSpeed_Cache_Config
 	const OPID_OPTM_JS_DEFER = 'optm_js_defer' ;
 	const OPID_OPTM_EMOJI_RM = 'optm_emoji_rm' ;
 	const OPID_OPTM_EXCLUDES = 'optm_excludes' ;
+	const OPID_OPTM_EXC_JQUERY = 'optm_exclude_jquery' ;
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
@@ -476,6 +477,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_OPTM_JS_DEFER => false,
 			self::OPID_OPTM_EMOJI_RM => false,
 			self::OPID_OPTM_EXCLUDES => '',
+			self::OPID_OPTM_EXC_JQUERY => true,
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',
