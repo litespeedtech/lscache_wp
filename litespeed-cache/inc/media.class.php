@@ -110,7 +110,7 @@ class LiteSpeed_Cache_Media
 
 			foreach ( $html_list as $k => $v ) {
 				$snippet = '<noscript>' . $v . '</noscript>' ;
-				$v = str_replace( array( ' src=', ' srcset=' ), array( ' data-src=', ' data-srcset=' ), $v ) ;
+				$v = str_replace( array( ' src=', ' srcset=', ' sizes=' ), array( ' data-src=', ' data-srcset=', ' data-sizes=' ), $v ) ;
 				$v = str_replace( '<img ', '<img data-lazyloaded="1" src="' . $placeholder . '" ', $v ) ;
 				$snippet = $v . $snippet ;
 
