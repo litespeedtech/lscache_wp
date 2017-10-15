@@ -42,6 +42,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_FAVICON = '### marker FAVICON' ;
 	const MARKER_BROWSER_CACHE = '### marker BROWSER CACHE' ;
 	const MARKER_MINIFY = '### marker MINIFY' ;
+	const MARKER_CORS = '### marker CORS' ;
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
 
@@ -514,6 +515,24 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Generate CORS rules for fonts
+	 *
+	 * @since  1.5
+	 * @access private
+	 * @return array Rules set
+	 */
+	private function _cors_rules()
+	{
+		return array(
+			'<FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font\.css)$">',
+				'<IfModule mod_headers.c>',
+					'Header set Access-Control-Allow-Origin "*"',
+				'</IfModule>',
+			'</FilesMatch>',
+		) ;
+	}
+
+	/**
 	 * Generate rewrite rules based on settings
 	 *
 	 * @since  1.3
@@ -609,6 +628,15 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules = array_merge( $new_rules, $this->_browser_cache_rules() ) ;
 			$new_rules_backend = array_merge( $new_rules_backend, $this->_browser_cache_rules() ) ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
+
+		// CORS font rules
+		$id = LiteSpeed_Cache_Config::OPID_CDN ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
+			$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
+			$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}
 
