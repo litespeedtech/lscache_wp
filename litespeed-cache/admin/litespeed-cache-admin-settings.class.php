@@ -460,6 +460,14 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
 		}
+
+		/**
+		 * Load jQuery from cdn
+		 * @since 1.5
+		 */
+		$id = LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ;
+		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
+
 	}
 
 	/**

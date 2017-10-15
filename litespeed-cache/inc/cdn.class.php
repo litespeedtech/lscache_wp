@@ -26,6 +26,7 @@ class LiteSpeed_Cache_CDN
 	private $cfg_cdn_inc_js ;
 	private $cfg_cdn_filetype ;
 	private $cfg_cdn_exclude ;
+	private $cfg_cdn_remote_jquery ;
 
 	/**
 	 * Init
@@ -42,6 +43,16 @@ class LiteSpeed_Cache_CDN
 				define( self::BYPASS, true ) ;
 			}
 			return ;
+		}
+
+		/**
+		 * Remotely load jQuery
+		 * This is separate from CDN on/off
+		 * @since 1.5
+		 */
+		$this->cfg_cdn_remote_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ) ;
+		if ( $this->cfg_cdn_remote_jquery ) {
+			add_action( 'init', array( $this, 'load_jquery_remotely' ) ) ;
 		}
 
 		$this->cfg_cdn = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN ) ;
@@ -390,6 +401,30 @@ class LiteSpeed_Cache_CDN
 		LiteSpeed_Cache_Log::debug2( 'CDN:    after rewritten: ' . $url ) ;
 
 		return $url ;
+	}
+
+	/**
+	 * Remote load jQuery remotely
+	 *
+	 * @since  1.5
+	 * @access public
+	 */
+	public function load_jquery_remotely()
+	{
+		// default jq version
+		$v = '1.12.4' ;
+
+		// load wp's jq version
+		global $wp_scripts ;
+		if ( isset( $wp_scripts->registered[ 'jquery' ]->ver ) ) {
+			$v = $wp_scripts->registered[ 'jquery' ]->ver ;
+		}
+
+		$src = $this->cfg_cdn_remote_jquery === LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;
+
+		wp_deregister_script( 'jquery' ) ;
+
+		wp_register_script( 'jquery', $src, false, $v ) ;
 	}
 
 	/**

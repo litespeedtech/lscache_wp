@@ -103,4 +103,32 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Load JQuery Remotely', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<div class="litespeed-switch">
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
+					LiteSpeed_Cache_Config::VAL_OFF,
+					__( 'Off', 'litespeed-cache' )
+				) ; ?>
+
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
+					LiteSpeed_Cache_Config::VAL_ON,
+					__( 'Google', 'litespeed-cache' )
+				) ; ?>
+
+				<?php echo $this->build_radio(
+					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
+					LiteSpeed_Cache_Config::VAL_ON2,
+					__( 'cdnjs', 'litespeed-cache' )
+				) ; ?>
+			</div>
+			<div class="litespeed-desc">
+				<?php echo __( 'Load jQuery from a remote CDN service instead of local to speed up loading.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>
