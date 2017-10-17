@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.5dev' ;
+	const PLUGIN_VERSION = '1.5' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -54,6 +54,9 @@ class LiteSpeed_Cache
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
+
+	const ACTION_SAPI_PROCEED = 'sapi_proceed' ;
+	const ACTION_SAPI_CALLBACK = 'sapi_callback' ;
 
 	const WHM_TRANSIENT = 'lscwp_whm_install' ;
 	const WHM_TRANSIENT_VAL = 'whm_install' ;
@@ -285,6 +288,14 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
 				$msg = LiteSpeed_Cache_Admin_Optimize::run_db_clean() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_SAPI_PROCEED:
+				$msg = LiteSpeed_Cache_Admin_API::sapi_proceed() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_SAPI_CALLBACK:
+				LiteSpeed_Cache_Admin_API::sapi_callback() ;
 				break ;
 
 			default:

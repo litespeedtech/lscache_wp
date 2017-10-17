@@ -81,7 +81,7 @@ else {
 }
 
 
-include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
+include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
@@ -128,7 +128,7 @@ include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
 	// include all tpl for faster UE
 	foreach ($menu_list as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>" ;
-		require LSWCP_DIR . "admin/tpl/settings_$tab.php" ;
+		require LSWCP_DIR . "admin/tpl/setting/settings_$tab.php" ;
 		echo "</div>" ;
 	}
 

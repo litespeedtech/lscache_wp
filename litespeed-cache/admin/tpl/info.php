@@ -33,7 +33,7 @@ $menuArr = array(
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>";
-		require LSWCP_DIR . "admin/tpl/info_$tab.php";
+		require LSWCP_DIR . "admin/tpl/info/info_$tab.php";
 		echo "</div>";
 	}
 

@@ -44,6 +44,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Utility'			=> 'inc/utility.class.php',
 
 			'LiteSpeed_Cache_Admin'				=> 'admin/litespeed-cache-admin.class.php',
+			'LiteSpeed_Cache_Admin_API'			=> 'admin/admin-api.class.php',
 			'LiteSpeed_Cache_Admin_Display'		=> 'admin/litespeed-cache-admin-display.class.php',
 			'LiteSpeed_Cache_Admin_Error'		=> 'admin/litespeed-cache-admin-error.class.php',
 			'LiteSpeed_Cache_Admin_Optimize'	=> 'admin/litespeed-cache-admin-optimize.class.php',

@@ -8,7 +8,7 @@ $menu_list = array(
 	'db' => __('DB Optimizer', 'litespeed-cache'),
 ) ;
 
-include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
+include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
@@ -38,11 +38,7 @@ include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
 	?>
 	</h2>
 
-	<?php if ( ! defined( 'LITESPEED_ON' ) ) : ?>
-		<div class="litespeed-callout-warning">
-			<h4><?php echo __('WARNING: LiteSpeed cache is disabled. The functionalities here can not work.', 'litespeed-cache'); ?></h4>
-		</div>
-	<?php endif ; ?>
+	<?php include_once LSWCP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
 
 	<div class="litespeed-body">
 	<?php
@@ -50,7 +46,7 @@ include_once LSWCP_DIR . "admin/tpl/banner_promo.php" ;
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSWCP_DIR . "admin/tpl/manage_$tab.php" ;
+			require LSWCP_DIR . "admin/tpl/manage/manage_$tab.php" ;
 			echo "</div>" ;
 		}
 

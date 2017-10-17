@@ -37,7 +37,7 @@ $breakArr = array(
 <table><tbody>
 
 	<?php if (!is_multisite()): ?>
-		<?php require LSWCP_DIR . 'admin/tpl/settings_inc.purge_on_upgrade.php'; ?>
+		<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.purge_on_upgrade.php'; ?>
 	<?php endif; ?>
 
 	<tr>

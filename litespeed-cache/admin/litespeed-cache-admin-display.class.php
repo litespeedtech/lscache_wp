@@ -146,12 +146,14 @@ class LiteSpeed_Cache_Admin_Display
 			}
 
 			$this->add_submenu(__('Information', 'litespeed-cache'), 'lscache-info', 'show_info') ;
-			if ( ! is_multisite() || is_network_admin() ) {
-				$this->add_submenu(__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
-			}
 
 			if ( ! is_network_admin() ) {
+				// $this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
+			}
+
+			if ( ! is_multisite() || is_network_admin() ) {
+				$this->add_submenu(__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
 			}
 
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {
@@ -307,7 +309,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function admin_footer_text($footer_text)
 	{
-		require_once LSWCP_DIR . 'admin/tpl/admin_footer.php' ;
+		require_once LSWCP_DIR . 'admin/tpl/inc/admin_footer.php' ;
 
 		return $footer_text ;
 	}
@@ -355,7 +357,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function add_help_tabs()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/help_tabs.php' ;
+		require_once LSWCP_DIR . 'admin/tpl/inc/help_tabs.php' ;
 	}
 
 	/**
@@ -579,6 +581,17 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Outputs the optimization operation page.
+	 *
+	 * @since 1.6
+	 * @access public
+	 */
+	public function show_optimization()
+	{
+		require_once LSWCP_DIR . 'admin/tpl/image_optimization.php' ;
+	}
+
+	/**
 	 * Outputs the debug log.
 	 *
 	 * @since 1.1.5
@@ -606,17 +619,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Outputs a notice to the admin panel when ExpiresDefault is detected
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public function show_rule_conflict()
-	{
-		require_once LSWCP_DIR . 'admin/tpl/show_rule_conflict.php' ;
-	}
-
-	/**
 	 * Outputs a notice to the admin panel when the plugin is installed
 	 * via the WHM plugin.
 	 *
@@ -625,7 +627,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_display_installed()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/show_display_installed.php' ;
+		require_once LSWCP_DIR . 'admin/tpl/inc/show_display_installed.php' ;
 	}
 
 	/**
@@ -636,7 +638,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function show_error_cookie()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/show_error_cookie.php' ;
+		require_once LSWCP_DIR . 'admin/tpl/inc/show_error_cookie.php' ;
 	}
 
 	/**

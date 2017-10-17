@@ -14,7 +14,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 			if ( $is_dismissed !== self::RULECONFLICT_ON ) {
 				update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
 			}
-			$this->show_rule_conflict() ;
+			require_once LSWCP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
 		}
 	}
 	// don't dismiss the msg automatically
@@ -68,7 +68,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 			<button type="submit" class="litespeed-btn-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
 		</form>
 
-		<?php require LSWCP_DIR . 'admin/tpl/info_common_rewrite.php'; ?>
+		<?php require LSWCP_DIR . 'admin/tpl/info/info_common_rewrite.php'; ?>
 
 		<?php endif; ?>
 	</div>

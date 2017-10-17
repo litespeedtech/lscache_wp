@@ -235,7 +235,7 @@ class LiteSpeed_Cache_Router
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
-		if ( ! $this->verify_nonce( $action ) ) {
+		if ( ! $this->verify_nonce( $action ) && ! $this->_verify_sapi_token( $action ) ) {
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
 				LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
@@ -323,9 +323,14 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
+			case LiteSpeed_Cache::ACTION_SAPI_PROCEED:
 				if ( defined( 'LITESPEED_ON' ) && $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
+				return ;
+
+			case LiteSpeed_Cache::ACTION_SAPI_CALLBACK : // as long as it passed nonce check
+				self::$_action = $action ;
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DISMISS_WHM:
@@ -341,6 +346,19 @@ class LiteSpeed_Cache_Router
 				return ;
 		}
 
+	}
+
+	/**
+	 * Verify sapi token
+	 *
+	 * @since 1.5
+	 * @access private
+	 * @param  string $action
+	 * @return bool
+	 */
+	private function _verify_sapi_token( $action )
+	{
+		return LiteSpeed_Cache_Admin_API::sapi_token_check() && $action === LiteSpeed_Cache::ACTION_SAPI_CALLBACK ;
 	}
 
 	/**
