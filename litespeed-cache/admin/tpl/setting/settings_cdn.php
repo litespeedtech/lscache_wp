@@ -126,7 +126,7 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 				) ; ?>
 			</div>
 			<div class="litespeed-desc">
-				<?php echo __( 'Load jQuery from a remote CDN service instead of local to speed up loading.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

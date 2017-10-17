@@ -59,7 +59,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<br /><font class="litespeed-success">
 					<?php echo __('API:', 'litespeed-cache'); ?>
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_optimize_css_excludes</code>' ) ; ?>
-					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
 				</font>
 			</div>
 		</td>
@@ -106,7 +106,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<br /><font class="litespeed-success">
 					<?php echo __('API:', 'litespeed-cache'); ?>
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_optimize_js_excludes</code>' ) ; ?>
-					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
 				</font>
 			</div>
 		</td>
@@ -164,7 +164,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 				<br /><font class="litespeed-success">
 					<?php echo __('API:', 'litespeed-cache'); ?>
-					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>
 				</font>
 			</div>
 		</td>
@@ -202,7 +202,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<br /><font class="litespeed-success">
 					<?php echo __('API:', 'litespeed-cache'); ?>
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ) ; ?>
-					<?php echo sprintf( __( 'The elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
 				</font>
 			</div>
 		</td>
@@ -237,9 +237,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Prevent jQuery from any optimization.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'To improve compatibility with inline JS, this is suggested to be %s.', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
-				<font class="litespeed-warning">
+				<?php echo sprintf( __( 'Improve compatibility with inline JS by preventing jQuery optimization. (Recommended Setting: %s)', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
+				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo sprintf( __( 'If there is any JS error related to %1$s when enabled %2$s, please try this option.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
 				</font>
