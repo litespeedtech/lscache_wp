@@ -7,7 +7,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Lazyload Images', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Lazy Load Images', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ; ?>
 			<div class="litespeed-desc">
@@ -18,11 +18,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazyload Image Excludes', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Lazy Load Image Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed items will not be lazyload.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Listed items will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-success">
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazyload Image Placeholder', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Lazy Load Image Placeholder', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
@@ -49,7 +49,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazyload Iframes', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Lazy Load Iframes', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ; ?>
 			<div class="litespeed-desc">

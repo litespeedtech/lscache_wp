@@ -422,6 +422,8 @@ class LiteSpeed_Cache_CDN
 
 		$src = $this->cfg_cdn_remote_jquery === LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;
 
+		LiteSpeed_Cache_Log::debug2( 'CDN: load_jquery_remotely: ' . $src ) ;
+
 		wp_deregister_script( 'jquery' ) ;
 
 		wp_register_script( 'jquery', $src, false, $v ) ;

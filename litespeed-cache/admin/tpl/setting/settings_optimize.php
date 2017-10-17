@@ -233,7 +233,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Exclude jQuery', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Exclude JQuery', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ; ?>
 			<div class="litespeed-desc">
