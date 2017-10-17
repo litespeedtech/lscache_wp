@@ -14,7 +14,7 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>
 				<?php echo __('A site built with responsive design does not need to check this.', 'litespeed-cache'); ?>
-				<font class="litespeed-warning">
+				<br /><font class="litespeed-warning">
 					<?php echo __( 'NOTE:', 'litespeed-cache' ) ; ?>
 					<?php echo __( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) ; ?>
 				</font>

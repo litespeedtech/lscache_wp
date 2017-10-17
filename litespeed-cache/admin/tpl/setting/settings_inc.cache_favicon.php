@@ -10,7 +10,7 @@ $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 			<div class="litespeed-desc">
 				<?php echo __('favicon.ico is requested on most pages.', 'litespeed-cache'); ?>
 				<?php echo __('Caching this resource may improve server performance by avoiding unnecessary PHP calls.', 'litespeed-cache'); ?>
-				<font class="litespeed-warning">
+				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
 				</font>

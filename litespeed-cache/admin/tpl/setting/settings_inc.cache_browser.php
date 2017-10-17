@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_BROWSER ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Browser caching stores static files locally in the user\'s browser. Turn on this setting to reduce repeated requests for static files.', 'litespeed-cache' ) ; ?>
-				<font class="litespeed-warning">
+				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
 				</font>

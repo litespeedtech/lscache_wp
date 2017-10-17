@@ -11,7 +11,7 @@ $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 			<div class="litespeed-desc">
 				<?php echo __('Some themes and plugins add resources via a PHP request.', 'litespeed-cache'); ?>
 				<?php echo __('Caching these pages may improve server performance by avoiding unnecessary PHP calls.', 'litespeed-cache'); ?>
-				<font class="litespeed-warning">
+				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
 				</font>

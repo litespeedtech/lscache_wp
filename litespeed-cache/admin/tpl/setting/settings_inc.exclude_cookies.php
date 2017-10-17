@@ -18,7 +18,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<?php echo sprintf(__('Spaces should have a backslash in front of them, %s.', 'litespeed-cache'), '<code>\ </code>'); ?>
 					<?php echo __('One per line.', 'litespeed-cache'); ?>
 				</i>
-				<font class="litespeed-warning">
+				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
 				</font>
