@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.4\n"
+"Project-Id-Version: LiteSpeed Cache 1.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-10-11 15:27:42+00:00\n"
+"POT-Creation-Date: 2017-10-17 18:43:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,12 +12,16 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
+#: admin/admin-api.class.php:153
+msgid "Generate the key from server successfully"
+msgstr ""
+
 #: admin/litespeed-cache-admin-display.class.php:140
 msgid "Manage"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:142
-#: admin/litespeed-cache-admin-display.class.php:235
+#: admin/litespeed-cache-admin-display.class.php:237
 msgid "Settings"
 msgstr ""
 
@@ -29,38 +33,39 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:150
-msgid "Environment Report"
-msgstr ""
-
-#: admin/litespeed-cache-admin-display.class.php:154 admin/tpl/info.php:10
+#: admin/litespeed-cache-admin-display.class.php:152 admin/tpl/info.php:10
 #: admin/tpl/settings.php:28
 msgid "Crawler"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:158
-#: admin/tpl/settings_debug.php:10
+#: admin/litespeed-cache-admin-display.class.php:156
+msgid "Environment Report"
+msgstr ""
+
+#: admin/litespeed-cache-admin-display.class.php:160
+#: admin/tpl/setting/settings_debug.php:10
 msgid "Debug Log"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:255
+#: admin/litespeed-cache-admin-display.class.php:257
 msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:295
+#: admin/litespeed-cache-admin-display.class.php:297
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:780
+#: admin/litespeed-cache-admin-display.class.php:806
+#: admin/tpl/setting/settings_optimize.php:240
 msgid "ON"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:784
+#: admin/litespeed-cache-admin-display.class.php:810
 msgid "OFF"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:817
+#: admin/litespeed-cache-admin-display.class.php:843
 msgid "Recommended value: %s"
 msgstr ""
 
@@ -324,13 +329,13 @@ msgstr ""
 msgid "Clean all CSS/JS optimizer data successfully."
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:629
+#: admin/litespeed-cache-admin-rules.class.php:657
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:827
+#: admin/litespeed-cache-admin-rules.class.php:855
 msgid "File Saved."
 msgstr ""
 
@@ -370,31 +375,31 @@ msgstr ""
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:569
-#: admin/tpl/settings_debug.php:75
+#: admin/litespeed-cache-admin-settings.class.php:590
+#: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:635
-#: admin/tpl/settings_crawler.php:10
+#: admin/litespeed-cache-admin-settings.class.php:656
+#: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:636
-#: admin/tpl/settings_crawler.php:22
+#: admin/litespeed-cache-admin-settings.class.php:657
+#: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:637
+#: admin/litespeed-cache-admin-settings.class.php:658
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:638
+#: admin/litespeed-cache-admin-settings.class.php:659
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:639
-#: admin/tpl/settings_crawler.php:58
+#: admin/litespeed-cache-admin-settings.class.php:660
+#: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
 
@@ -420,50 +425,6 @@ msgstr ""
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
-msgstr ""
-
-#: admin/tpl/admin_footer.php:5
-msgid ""
-"Rate <strong>LiteSpeed Cache</strong> with %s on WordPress.org if you like "
-"us!"
-msgstr ""
-
-#: admin/tpl/admin_footer.php:8
-msgid ""
-"If there are any questions that are not answered in the <a %s>FAQs</a>, do "
-"not hesitate to ask them on the <a %s>support forum</a>."
-msgstr ""
-
-#: admin/tpl/banner_promo.php:14
-msgid "Welcome to LiteSpeed"
-msgstr ""
-
-#: admin/tpl/banner_promo.php:17
-msgid "Thank you for using LiteSpeed."
-msgstr ""
-
-#: admin/tpl/banner_promo.php:19
-msgid ""
-"If you have any questions, please do not hesitate to let us know in <a "
-"%s>our support forum</a> or by <a %s>submitting a ticket with us</a>."
-msgstr ""
-
-#: admin/tpl/banner_promo.php:26
-msgid ""
-"This plugin is created with love by LiteSpeed. Your rating is the simplest "
-"way to support us. We really appreciate it!"
-msgstr ""
-
-#: admin/tpl/banner_promo.php:29
-msgid "Sure I'd love to!"
-msgstr ""
-
-#: admin/tpl/banner_promo.php:30
-msgid "I've already left a review"
-msgstr ""
-
-#: admin/tpl/banner_promo.php:31
-msgid "Maybe later"
 msgstr ""
 
 #: admin/tpl/crawler.php:14 admin/tpl/crawler.php:80
@@ -507,8 +468,8 @@ msgstr ""
 msgid "Crawler Cron"
 msgstr ""
 
-#: admin/tpl/crawler.php:63 admin/tpl/settings.php:117
-#: admin/tpl/settings_optimize.php:9
+#: admin/tpl/crawler.php:63 admin/tpl/setting/settings_optimize.php:9
+#: admin/tpl/settings.php:117
 msgid "WARNING"
 msgstr ""
 
@@ -559,12 +520,12 @@ msgstr ""
 msgid "Is running"
 msgstr ""
 
-#: admin/tpl/crawler.php:136 admin/tpl/settings_general.php:30
+#: admin/tpl/crawler.php:136 admin/tpl/setting/settings_general.php:30
 msgid "Enable"
 msgstr ""
 
 #: admin/tpl/crawler.php:136 admin/tpl/esi_widget_edit.php:58
-#: admin/tpl/settings_general.php:24
+#: admin/tpl/setting/settings_general.php:24
 msgid "Disable"
 msgstr ""
 
@@ -676,7 +637,7 @@ msgid ""
 "changed."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:30 admin/tpl/settings_esi.php:35
+#: admin/tpl/esi_widget_edit.php:30 admin/tpl/setting/settings_esi.php:35
 msgid "Enable ESI"
 msgstr ""
 
@@ -692,12 +653,17 @@ msgstr ""
 msgid "Widget Cache TTL:"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:72 admin/tpl/settings_crawler.php:25
-#: admin/tpl/settings_crawler.php:37 admin/tpl/settings_crawler.php:49
-#: admin/tpl/settings_general.php:59 admin/tpl/settings_general.php:71
-#: admin/tpl/settings_general.php:83 admin/tpl/settings_general.php:95
-#: admin/tpl/settings_general.php:108 admin/tpl/settings_general.php:121
-#: admin/tpl/settings_general.php:134 admin/tpl/settings_optimize.php:109
+#: admin/tpl/esi_widget_edit.php:72 admin/tpl/setting/settings_crawler.php:25
+#: admin/tpl/setting/settings_crawler.php:37
+#: admin/tpl/setting/settings_crawler.php:49
+#: admin/tpl/setting/settings_general.php:59
+#: admin/tpl/setting/settings_general.php:71
+#: admin/tpl/setting/settings_general.php:83
+#: admin/tpl/setting/settings_general.php:95
+#: admin/tpl/setting/settings_general.php:108
+#: admin/tpl/setting/settings_general.php:121
+#: admin/tpl/setting/settings_general.php:134
+#: admin/tpl/setting/settings_optimize.php:119
 msgid "seconds"
 msgstr ""
 
@@ -709,32 +675,743 @@ msgstr ""
 msgid "A TTL of 0 indicates do not cache."
 msgstr ""
 
-#: admin/tpl/help_tabs.php:7
+#: admin/tpl/inc/admin_footer.php:5
+msgid ""
+"Rate <strong>LiteSpeed Cache</strong> with %s on WordPress.org if you like "
+"us!"
+msgstr ""
+
+#: admin/tpl/inc/admin_footer.php:8
+msgid ""
+"If there are any questions that are not answered in the <a %s>FAQs</a>, do "
+"not hesitate to ask them on the <a %s>support forum</a>."
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:14
+msgid "Welcome to LiteSpeed"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:17
+msgid "Thank you for using LiteSpeed."
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:19
+msgid ""
+"If you have any questions, please do not hesitate to let us know in <a "
+"%s>our support forum</a> or by <a %s>submitting a ticket with us</a>."
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:26
+msgid ""
+"This plugin is created with love by LiteSpeed. Your rating is the simplest "
+"way to support us. We really appreciate it!"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:29
+msgid "Sure I'd love to!"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:30
+msgid "I've already left a review"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:31
+msgid "Maybe later"
+msgstr ""
+
+#: admin/tpl/inc/check_cache_disabled.php:10
+msgid ""
+"WARNING: LiteSpeed cache is disabled. The functionalities here can not work."
+msgstr ""
+
+#: admin/tpl/inc/help_tabs.php:7
 msgid "Overview"
 msgstr ""
 
-#: admin/tpl/help_tabs.php:9
+#: admin/tpl/inc/help_tabs.php:9
 msgid "LiteSpeed Cache is a page cache built into LiteSpeed Web Server."
 msgstr ""
 
-#: admin/tpl/help_tabs.php:10
+#: admin/tpl/inc/help_tabs.php:10
 msgid ""
 "This plugin communicates with LiteSpeed Web Server to let it know which "
 "pages are cacheable and when to purge them."
 msgstr ""
 
-#: admin/tpl/help_tabs.php:11
+#: admin/tpl/inc/help_tabs.php:11
 msgid ""
 "A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be "
 "installed and enabled."
 msgstr ""
 
-#: admin/tpl/help_tabs.php:22
+#: admin/tpl/inc/help_tabs.php:22
 msgid "For more information:"
 msgstr ""
 
-#: admin/tpl/help_tabs.php:24
+#: admin/tpl/inc/help_tabs.php:24
 msgid "Support Forum"
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:5
+msgid "LiteSpeed Cache plugin is installed!"
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:6
+msgid ""
+"This message indicates that the plugin was installed by the server admin."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:7
+msgid ""
+"The LiteSpeed Cache plugin is used to cache pages - a simple way to improve "
+"the performance of the site."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:8
+msgid ""
+"However, there is no way of knowing all the possible customizations that "
+"were implemented."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:9
+msgid ""
+"For that reason, please test the site to make sure everything still "
+"functions properly."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:11
+msgid "Examples of test cases include:"
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:13
+msgid "Visit the site while logged out."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:14
+msgid "Create a post, make sure the front page is accurate."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:16
+msgid ""
+"If there are any questions, the team is always happy to answer any questions "
+"on the <a %s>support forum</a>."
+msgstr ""
+
+#: admin/tpl/inc/show_display_installed.php:19
+msgid ""
+"If you would rather not move at litespeed, you can deactivate this plugin."
+msgstr ""
+
+#: admin/tpl/inc/show_error_cookie.php:4
+msgid "NOTICE: Database login cookie did not match your login cookie."
+msgstr ""
+
+#: admin/tpl/inc/show_error_cookie.php:5
+msgid ""
+"If the login cookie was recently changed in the settings, please log out and "
+"back in."
+msgstr ""
+
+#: admin/tpl/inc/show_error_cookie.php:6
+msgid ""
+"If not, please verify the setting in the <a href=\"%1$s\">Advanced tab</a>."
+msgstr ""
+
+#: admin/tpl/inc/show_error_cookie.php:10
+msgid ""
+"If using OpenLiteSpeed, the server must be restarted once for the changes to "
+"take effect."
+msgstr ""
+
+#: admin/tpl/inc/show_rule_conflict.php:5
+msgid ""
+"Unexpected cache rule %2$s found in %1$s file. This rule may cause visitors "
+"to see old versions of pages due to the browser caching html pages. If you "
+"are sure that html pages are not being browser cached, this message can be "
+"dismissed. (<a %3$s>Learn More</a>)"
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:5
+msgid "This is used to display a page without caching it."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:6
+msgid ""
+"An example use case is to compare a cached version of a page with an "
+"uncached version."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:9
+msgid "This is used to purge most cache tags associated with the page."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:10
+msgid "The lone exception is the blog ID tag."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:11
+msgid ""
+"Note that this means that pages with the same cache tag will be purged as "
+"well."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:14
+msgid "This is used to show all the cache headers associated with a page."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:15
+msgid "This may be useful for debugging purposes."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:19
+msgid "Admin IP Query String Actions"
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:21
+msgid ""
+"The following commands are available to the admin and do not require log-in, "
+"providing quick access to actions on the various pages."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:23
+msgid "Action List:"
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:28
+msgid "This is used to purge the first cache tag associated with the page."
+msgstr ""
+
+#: admin/tpl/info/info_admin_ip.php:32
+msgid ""
+"To trigger the action for a page, access the page with the query string %s"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:8
+#: admin/tpl/setting/settings_excludes.php:60
+#: admin/tpl/setting/settings_excludes.php:98
+#: admin/tpl/setting/settings_inc.cache_browser.php:12
+#: admin/tpl/setting/settings_inc.cache_favicon.php:14
+#: admin/tpl/setting/settings_inc.cache_mobile.php:18
+#: admin/tpl/setting/settings_inc.cache_resources.php:15
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:22
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:21
+#: admin/tpl/setting/settings_optimize.php:242
+msgid "NOTE:"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:10
+msgid "The following configuration can only be changed by the network admin."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:11
+msgid "Please contact the network admin to make any changes."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:14
+#: admin/tpl/setting/settings_advanced.php:6
+msgid "NOTICE:"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:17
+msgid ""
+"The following rewrite rules can be configured in the LiteSpeed Cache "
+"settings page."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:18
+msgid "Please make any needed changes on that page."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:19
+msgid "It will automatically generate the correct rules in the htaccess file."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:24
+msgid "LiteSpeed Cache Common Rewrite Rules"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:31
+msgid "Mobile Views:"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:34
+msgid ""
+"Some sites have adaptive views, meaning the page sent will adapt to the "
+"browser type (desktop vs mobile)."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:35
+msgid ""
+"This rewrite rule is used for sites that load a different page for each type."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:38
+msgid ""
+"This configuration can be added on the settings page in the General tab."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:44
+msgid "Do Not Cache Cookies:"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:46
+msgid ""
+"Another common rewrite rule is to notify the cache not to cache when it sees "
+"a specified cookie name."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:47
+#: admin/tpl/info/info_common_rewrite.php:55
+msgid ""
+"This configuration can be added on the settings page in the Do Not Cache tab."
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:52
+msgid "Do Not Cache User Agent:"
+msgstr ""
+
+#: admin/tpl/info/info_common_rewrite.php:54
+msgid ""
+"A not so commonly used rewrite rule is to notify the cache not to cache when "
+"it sees a specified User Agent."
+msgstr ""
+
+#: admin/tpl/info/info_compatibility.php:27
+msgid "LiteSpeed Cache Plugin Compatibility"
+msgstr ""
+
+#: admin/tpl/info/info_compatibility.php:29
+msgid "Link Here"
+msgstr ""
+
+#: admin/tpl/info/info_compatibility.php:31
+msgid ""
+"Please add a comment listing the plugins that you are using and how they are "
+"functioning on the support thread."
+msgstr ""
+
+#: admin/tpl/info/info_compatibility.php:32
+msgid "With your help, we can provide the best WordPress caching solution."
+msgstr ""
+
+#: admin/tpl/info/info_compatibility.php:35
+msgid ""
+"This is a list of plugins that are confirmed to be compatible with LiteSpeed "
+"Cache Plugin:"
+msgstr ""
+
+#: admin/tpl/info/info_compatibility.php:44
+msgid "This is a list of known UNSUPPORTED plugins:"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:4
+msgid "LiteSpeed Cache Configuration"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:7
+msgid "Instructions for LiteSpeed Web Server Enterprise"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:9
+msgid "Make sure that the server license has the LSCache module enabled."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:10
+msgid ""
+"A <a %s>2-CPU trial license with LSCache module</a> is available for free "
+"for %d days."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:14
+msgid "The server must be configured to have caching enabled."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:15
+msgid "If you are the server admin, <a %s>click here.</a>"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:17
+msgid ""
+"Otherwise request that the server admin configure the cache root for the "
+"server."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:20
+msgid ""
+"In the .htaccess file for the WordPress installation, add the following:"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:27
+msgid "Instructions for OpenLiteSpeed"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:28
+msgid "This integration utilizes OLS's cache module."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:30
+msgid ""
+"If it is a fresh OLS installation, the easiest way to integrate is to use <a "
+"%s>ols1clk.</a>"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:32
+msgid "If using an existing WordPress installation, use the %s parameter."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:33
+msgid ""
+"Else if OLS and WordPress are already installed, please follow the "
+"instructions <a %s>here.</a>"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:38
+msgid "How to test the plugin"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:39
+msgid ""
+"The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:41
+msgid ""
+"Visiting a page for the first time should result in a %s or %s response "
+"header for the page."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:46
+msgid ""
+"Subsequent requests should have the %s response header until the page is "
+"updated, expired, or purged."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:49
+msgid "Please visit <a %s>this page</a> for more information."
+msgstr ""
+
+#: admin/tpl/info/info_config.php:53
+msgid "Cache tag prefix setting"
+msgstr ""
+
+#: admin/tpl/info/info_config.php:56
+msgid ""
+"The value of this wordpress cache tag prefix is %1$s. If you want to change "
+"the value to avoid conflicts with multiple sites, please add %2$s to %3$s."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:7
+msgid "Crawler Introduction"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:11
+msgid "How Does the Crawler Work?"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:13
+msgid ""
+"Using a sitemap as a guide, LSCache’s crawler, travels its way throughout "
+"the backend, refreshing pages that have expired in the cache. The purpose is "
+"to keep the cache as fresh as possible while minimizing visitor exposure to "
+"uncached content."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:15
+msgid ""
+"The sitemap can be generated by the crawler, or you can provide your own "
+"custom map."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:17
+msgid ""
+"To learn more about each of the crawler settings, see <a %s>our wiki - "
+"Crawler Settings</a>."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:21
+msgid "Should I Enable the Crawler?"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:23
+msgid "Not every site needs a crawler."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:25
+msgid ""
+"In WordPress,  the first visitor to an uncached page waits for the page to "
+"be dynamically-generated and served, and the page is then cached for "
+"subsequent visitors."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:27
+msgid ""
+"The LSCache crawler makes the first visitor’s experience better by "
+"essentially becoming the first visitor. The crawler caches the page, and the "
+"visitor who would have been first is spared the wait. As such, the crawler "
+"realistically only benefits the first out of the many users who visit that "
+"page before it expires. If you have a small user base, then crawling impacts "
+"a greater percentage of your visitors than it would on a site that draws a "
+"large crowd."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:29
+msgid ""
+"You should weigh this benefit against your server’s resources. If resources "
+"are plentiful, then the crawler is a nice thing to have."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:31
+msgid ""
+"If your site is busy, you’ll find that commonly-visited pages are quickly re-"
+"cached by new visitors, without the aid of a crawler. An extra crawler task "
+"would compete for server resources while delivering minimal benefits."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:33
+msgid ""
+"The decision to use a crawler depends on the busy-ness of the site and the "
+"availability of server resources. Ultimately, it is the hosting provider who "
+"can best make this call."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:38
+msgid "Enabling the Crawler"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:40
+msgid ""
+"Due to the potential of the crawler to consume considerable resources, we "
+"have put the on/off switch in the hands of the server administrators. The "
+"crawler is disabled by default and can only be enabled by an admin."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:42
+msgid ""
+"Instructions for enabling the crawler can be found in <a %s>our wiki - "
+"Enabling the Crawler</a>. If you do not have access to server configuration "
+"files or virtual host include files, you will need to ask your web host for "
+"assistance."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:47
+msgid "Testing the Crawler"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:49
+msgid ""
+"To determine whether the crawler is working as expected, you can test it "
+"with a single URL."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:53
+msgid "Pick a URL from your sitemap and purge it:"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:54
+msgid ""
+"Navigate to <b>LiteSpeed Cache > Manage > Purge By… > URL</b> and enter the "
+"full URL in the text box."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:57
+msgid "Manually run the crawler:"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:58
+msgid ""
+"Navigate to <b>LiteSpeed Cache > Crawler</b>, make sure <b>Activation</b> is "
+"set to Enable, and press the <b>Manually run</b> button. Wait for it to "
+"finish."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:61
+msgid "See if the purged URL was cached during the crawl:"
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:62
+msgid ""
+"Turn on your browser’s Developer Tool/Inspector. Visit the URL that should "
+"have been crawled. Select the <b>Network</b> tab in the inspector, select "
+"the page request (the URL we just visited - it should be the first entry in "
+"the list), and select the <b>Header</b> tab. If the URL was crawled "
+"correctly, you will see the response header X-LiteSpeed-Cache: hit."
+msgstr ""
+
+#: admin/tpl/info/info_crawler.php:67
+msgid ""
+"If you don’t see X-LiteSpeed-Cache: hit, and you can’t figure out why the "
+"crawler didn’t cache the purged URL, you can visit <a %s>our support forum</"
+"a> for help."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:5
+msgid "LiteSpeed Cache FAQs"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:9
+msgid "Is the LiteSpeed Cache Plugin for WordPress free?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:12
+msgid "Yes, the plugin itself will remain free and open source."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:13
+msgid "That said, a LiteSpeed server is required (see question 2)"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:17
+msgid "What server software is required for this plugin?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:19
+msgid "A LiteSpeed server is required in order to use this plugin."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:25
+msgid "Any single server or cluster including a LiteSpeed server will work."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:28
+msgid "Does this plugin work in a clustered environment?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:31
+msgid "The cache entries are stored at the litespeed server level."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:32
+msgid ""
+"The simplest solution is to use LiteSpeed WebADC, as the cache entries will "
+"be cached at that level."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:35
+msgid ""
+"If using another load balancer, the cache entries will only be stored at the "
+"backend nodes, not at the load balancer."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:36
+msgid ""
+"The purges will also not be synchronized across the nodes, so this is not "
+"recommended."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:39
+msgid "If a customized solution is required, please contact %s at %s"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:42
+msgid ""
+"NOTICE: The rewrite rules created by this plugin must be copied to the WebADC"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:45
+msgid "Where are the cache entries stored?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:47
+msgid ""
+"The actual cached pages are stored and managed by LiteSpeed Servers. Nothing "
+"is stored on the PHP side."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:50
+msgid "Is WooCommerce supported?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:53
+msgid "In short, yes."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:54
+msgid ""
+"However, for some woocommerce themes, the cart may not be updated correctly."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:56
+msgid "To test the cart:"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:58
+msgid ""
+"On a non-logged-in browser, visit and cache a page, then visit and cache a "
+"product page."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:59
+msgid ""
+"The first page should be accessible from the product page (e.g. the shop)."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:60
+msgid "Once both pages are confirmed cached, add the product to the cart."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:61
+msgid "After adding to the cart, visit the first page."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:62
+msgid "The page should still be cached, and the cart should be up to date."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:63
+msgid ""
+"If that is not the case, please add woocommerce_items_in_cart to the do not "
+"cache cookie list."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:66
+msgid ""
+"Some themes like Storefront and Shop Isle are built such that the cart works "
+"without the rule."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:67
+msgid ""
+"However, other themes like the E-Commerce theme, do not, so please verify "
+"the theme used."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:71
+msgid "Are my images optimized?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:74
+msgid "The cache plugin does not do anything with the images themselves."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:75
+msgid ""
+"We recommend you trying an image optimization plugin like %s to optimize "
+"your images."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:77
+msgid "It can reduce your site's images up to 90%."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:81
+msgid "How do I get WP-PostViews to display an updating view count?"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:84
+msgid "Use %1$s to replace %2$s"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:88
+msgid ""
+"NOTE: The id can be changed, but the div id and the ajax function must match."
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:91
+msgid "Replace the ajax query in %1$s with %2$s"
+msgstr ""
+
+#: admin/tpl/info/info_faqs.php:106
+msgid "Purge the cache to use the updated pages."
 msgstr ""
 
 #: admin/tpl/info.php:5
@@ -761,588 +1438,253 @@ msgstr ""
 msgid "LiteSpeed Cache Information"
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:5
-msgid "This is used to display a page without caching it."
+#: admin/tpl/manage/manage_db.php:6
+msgid "Clean All"
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:6
+#: admin/tpl/manage/manage_db.php:10
+msgid "Post Revisions"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:11
+msgid "Clean all post revisions"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:14
+msgid "Auto Drafts"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:15
+msgid "Clean all auto saved drafts"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:18
+msgid "Trashed Posts"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:19
+msgid "Clean all trashed posts and pages"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:22
+msgid "Spam Comments"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:23
+msgid "Clean all spam comments"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:26
+msgid "Trashed Comments"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:27
+msgid "Clean all trashed comments"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:30
+msgid "Trackbacks/Pingbacks"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:31
+msgid "Clean all trackbacks and pingbacks"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:34
+msgid "Expired Transients"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:35
+msgid "Clean expired transient options"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:38
+msgid "All Transients"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:39
+msgid "Clean all transient options"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:42
+msgid "Optimize Tables"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:43
+msgid "Optimize all tables in your database"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:46
+msgid "Clean CSS/JS Optimizer"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:47
+msgid "Purge all and clean all minified/combined CSS/JS data"
+msgstr ""
+
+#: admin/tpl/manage/manage_db.php:68
+msgid "Database Optimizer"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:7
+msgid "Purge Front Page"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:8
+msgid "This will Purge Front Page only"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:13
+msgid "Purge Pages"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:14
+msgid "This will Purge Pages only"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:19
+msgid "Purge CSS/JS Cache"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:20
+msgid "This will purge all minified/combined CSS/JS entries only"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:25
+msgid "Purge 403 Error"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:26
+msgid "Purge error pages, including 403 pages"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:32
+msgid "Purge 404 Error"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:33
+msgid "Purge error pages, including 404 pages"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:39
+msgid "Purge 500 Error"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:40
+msgid "Purge error pages, including 500 pages"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:46
+msgid "Purge All"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:47
+msgid "Purge the cache entries created by this plugin"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:52
+msgid "This will purge everything for all blogs."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:53 admin/tpl/manage/manage_purge.php:55
+msgid "Are you sure you want to purge all?"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:61
+msgid "Empty Entire Cache"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:62
 msgid ""
-"An example use case is to compare a cached version of a page with an "
-"uncached version."
+"Clears all cache entries related to this site, <i>including other web "
+"applications</i>."
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:9
-msgid "This is used to purge most cache tags associated with the page."
+#: admin/tpl/manage/manage_purge.php:63
+msgid "This action should only be used if things are cached incorrectly."
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:10
-msgid "The lone exception is the blog ID tag."
+#: admin/tpl/manage/manage_purge.php:67
+msgid "This will clear EVERYTHING inside the cache."
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:11
-msgid ""
-"Note that this means that pages with the same cache tag will be purged as "
-"well."
+#: admin/tpl/manage/manage_purge.php:68
+msgid "This may cause heavy load on the server."
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:14
-msgid "This is used to show all the cache headers associated with a page."
+#: admin/tpl/manage/manage_purge.php:69
+msgid "If only the WordPress site should be purged, use purge all."
 msgstr ""
 
-#: admin/tpl/info_admin_ip.php:15
-msgid "This may be useful for debugging purposes."
-msgstr ""
-
-#: admin/tpl/info_admin_ip.php:19
-msgid "Admin IP Query String Actions"
-msgstr ""
-
-#: admin/tpl/info_admin_ip.php:21
-msgid ""
-"The following commands are available to the admin and do not require log-in, "
-"providing quick access to actions on the various pages."
-msgstr ""
-
-#: admin/tpl/info_admin_ip.php:23
-msgid "Action List:"
-msgstr ""
-
-#: admin/tpl/info_admin_ip.php:28
-msgid "This is used to purge the first cache tag associated with the page."
-msgstr ""
-
-#: admin/tpl/info_admin_ip.php:32
-msgid ""
-"To trigger the action for a page, access the page with the query string %s"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:8 admin/tpl/settings_excludes.php:60
-#: admin/tpl/settings_excludes.php:98
-#: admin/tpl/settings_inc.cache_browser.php:12
-#: admin/tpl/settings_inc.cache_favicon.php:14
-#: admin/tpl/settings_inc.cache_mobile.php:18
-#: admin/tpl/settings_inc.cache_resources.php:15
-#: admin/tpl/settings_inc.exclude_cookies.php:22
-#: admin/tpl/settings_inc.exclude_useragent.php:21
-msgid "NOTE:"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:10
-msgid "The following configuration can only be changed by the network admin."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:11
-msgid "Please contact the network admin to make any changes."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:14 admin/tpl/settings_advanced.php:6
-msgid "NOTICE:"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:17
-msgid ""
-"The following rewrite rules can be configured in the LiteSpeed Cache "
-"settings page."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:18
-msgid "Please make any needed changes on that page."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:19
-msgid "It will automatically generate the correct rules in the htaccess file."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:24
-msgid "LiteSpeed Cache Common Rewrite Rules"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:31
-msgid "Mobile Views:"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:34
-msgid ""
-"Some sites have adaptive views, meaning the page sent will adapt to the "
-"browser type (desktop vs mobile)."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:35
-msgid ""
-"This rewrite rule is used for sites that load a different page for each type."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:38
-msgid ""
-"This configuration can be added on the settings page in the General tab."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:44
-msgid "Do Not Cache Cookies:"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:46
-msgid ""
-"Another common rewrite rule is to notify the cache not to cache when it sees "
-"a specified cookie name."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:47 admin/tpl/info_common_rewrite.php:55
-msgid ""
-"This configuration can be added on the settings page in the Do Not Cache tab."
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:52
-msgid "Do Not Cache User Agent:"
-msgstr ""
-
-#: admin/tpl/info_common_rewrite.php:54
-msgid ""
-"A not so commonly used rewrite rule is to notify the cache not to cache when "
-"it sees a specified User Agent."
-msgstr ""
-
-#: admin/tpl/info_compatibility.php:27
-msgid "LiteSpeed Cache Plugin Compatibility"
-msgstr ""
-
-#: admin/tpl/info_compatibility.php:29
-msgid "Link Here"
-msgstr ""
-
-#: admin/tpl/info_compatibility.php:31
-msgid ""
-"Please add a comment listing the plugins that you are using and how they are "
-"functioning on the support thread."
-msgstr ""
-
-#: admin/tpl/info_compatibility.php:32
-msgid "With your help, we can provide the best WordPress caching solution."
-msgstr ""
-
-#: admin/tpl/info_compatibility.php:35
-msgid ""
-"This is a list of plugins that are confirmed to be compatible with LiteSpeed "
-"Cache Plugin:"
-msgstr ""
-
-#: admin/tpl/info_compatibility.php:44
-msgid "This is a list of known UNSUPPORTED plugins:"
-msgstr ""
-
-#: admin/tpl/info_config.php:4
-msgid "LiteSpeed Cache Configuration"
-msgstr ""
-
-#: admin/tpl/info_config.php:7
-msgid "Instructions for LiteSpeed Web Server Enterprise"
-msgstr ""
-
-#: admin/tpl/info_config.php:9
-msgid "Make sure that the server license has the LSCache module enabled."
-msgstr ""
-
-#: admin/tpl/info_config.php:10
-msgid ""
-"A <a %s>2-CPU trial license with LSCache module</a> is available for free "
-"for %d days."
-msgstr ""
-
-#: admin/tpl/info_config.php:14
-msgid "The server must be configured to have caching enabled."
-msgstr ""
-
-#: admin/tpl/info_config.php:15
-msgid "If you are the server admin, <a %s>click here.</a>"
-msgstr ""
-
-#: admin/tpl/info_config.php:17
-msgid ""
-"Otherwise request that the server admin configure the cache root for the "
-"server."
-msgstr ""
-
-#: admin/tpl/info_config.php:20
-msgid ""
-"In the .htaccess file for the WordPress installation, add the following:"
-msgstr ""
-
-#: admin/tpl/info_config.php:27
-msgid "Instructions for OpenLiteSpeed"
-msgstr ""
-
-#: admin/tpl/info_config.php:28
-msgid "This integration utilizes OLS's cache module."
-msgstr ""
-
-#: admin/tpl/info_config.php:30
-msgid ""
-"If it is a fresh OLS installation, the easiest way to integrate is to use <a "
-"%s>ols1clk.</a>"
-msgstr ""
-
-#: admin/tpl/info_config.php:32
-msgid "If using an existing WordPress installation, use the %s parameter."
-msgstr ""
-
-#: admin/tpl/info_config.php:33
-msgid ""
-"Else if OLS and WordPress are already installed, please follow the "
-"instructions <a %s>here.</a>"
-msgstr ""
-
-#: admin/tpl/info_config.php:38
-msgid "How to test the plugin"
-msgstr ""
-
-#: admin/tpl/info_config.php:39
-msgid ""
-"The LiteSpeed Cache Plugin utilizes LiteSpeed specific response headers."
-msgstr ""
-
-#: admin/tpl/info_config.php:41
-msgid ""
-"Visiting a page for the first time should result in a %s or %s response "
-"header for the page."
-msgstr ""
-
-#: admin/tpl/info_config.php:46
-msgid ""
-"Subsequent requests should have the %s response header until the page is "
-"updated, expired, or purged."
-msgstr ""
-
-#: admin/tpl/info_config.php:49
-msgid "Please visit <a %s>this page</a> for more information."
-msgstr ""
-
-#: admin/tpl/info_config.php:53
-msgid "Cache tag prefix setting"
-msgstr ""
-
-#: admin/tpl/info_config.php:56
-msgid ""
-"The value of this wordpress cache tag prefix is %1$s. If you want to change "
-"the value to avoid conflicts with multiple sites, please add %2$s to %3$s."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:7
-msgid "Crawler Introduction"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:11
-msgid "How Does the Crawler Work?"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:13
-msgid ""
-"Using a sitemap as a guide, LSCache’s crawler, travels its way throughout "
-"the backend, refreshing pages that have expired in the cache. The purpose is "
-"to keep the cache as fresh as possible while minimizing visitor exposure to "
-"uncached content."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:15
-msgid ""
-"The sitemap can be generated by the crawler, or you can provide your own "
-"custom map."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:17
-msgid ""
-"To learn more about each of the crawler settings, see <a %s>our wiki - "
-"Crawler Settings</a>."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:21
-msgid "Should I Enable the Crawler?"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:23
-msgid "Not every site needs a crawler."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:25
-msgid ""
-"In WordPress,  the first visitor to an uncached page waits for the page to "
-"be dynamically-generated and served, and the page is then cached for "
-"subsequent visitors."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:27
-msgid ""
-"The LSCache crawler makes the first visitor’s experience better by "
-"essentially becoming the first visitor. The crawler caches the page, and the "
-"visitor who would have been first is spared the wait. As such, the crawler "
-"realistically only benefits the first out of the many users who visit that "
-"page before it expires. If you have a small user base, then crawling impacts "
-"a greater percentage of your visitors than it would on a site that draws a "
-"large crowd."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:29
-msgid ""
-"You should weigh this benefit against your server’s resources. If resources "
-"are plentiful, then the crawler is a nice thing to have."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:31
-msgid ""
-"If your site is busy, you’ll find that commonly-visited pages are quickly re-"
-"cached by new visitors, without the aid of a crawler. An extra crawler task "
-"would compete for server resources while delivering minimal benefits."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:33
-msgid ""
-"The decision to use a crawler depends on the busy-ness of the site and the "
-"availability of server resources. Ultimately, it is the hosting provider who "
-"can best make this call."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:38
-msgid "Enabling the Crawler"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:40
-msgid ""
-"Due to the potential of the crawler to consume considerable resources, we "
-"have put the on/off switch in the hands of the server administrators. The "
-"crawler is disabled by default and can only be enabled by an admin."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:42
-msgid ""
-"Instructions for enabling the crawler can be found in <a %s>our wiki - "
-"Enabling the Crawler</a>. If you do not have access to server configuration "
-"files or virtual host include files, you will need to ask your web host for "
-"assistance."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:47
-msgid "Testing the Crawler"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:49
-msgid ""
-"To determine whether the crawler is working as expected, you can test it "
-"with a single URL."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:53
-msgid "Pick a URL from your sitemap and purge it:"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:54
-msgid ""
-"Navigate to <b>LiteSpeed Cache > Manage > Purge By… > URL</b> and enter the "
-"full URL in the text box."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:57
-msgid "Manually run the crawler:"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:58
-msgid ""
-"Navigate to <b>LiteSpeed Cache > Crawler</b>, make sure <b>Activation</b> is "
-"set to Enable, and press the <b>Manually run</b> button. Wait for it to "
-"finish."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:61
-msgid "See if the purged URL was cached during the crawl:"
-msgstr ""
-
-#: admin/tpl/info_crawler.php:62
-msgid ""
-"Turn on your browser’s Developer Tool/Inspector. Visit the URL that should "
-"have been crawled. Select the <b>Network</b> tab in the inspector, select "
-"the page request (the URL we just visited - it should be the first entry in "
-"the list), and select the <b>Header</b> tab. If the URL was crawled "
-"correctly, you will see the response header X-LiteSpeed-Cache: hit."
-msgstr ""
-
-#: admin/tpl/info_crawler.php:67
-msgid ""
-"If you don’t see X-LiteSpeed-Cache: hit, and you can’t figure out why the "
-"crawler didn’t cache the purged URL, you can visit <a %s>our support forum</"
-"a> for help."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:5
-msgid "LiteSpeed Cache FAQs"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:9
-msgid "Is the LiteSpeed Cache Plugin for WordPress free?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:12
-msgid "Yes, the plugin itself will remain free and open source."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:13
-msgid "That said, a LiteSpeed server is required (see question 2)"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:17
-msgid "What server software is required for this plugin?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:19
-msgid "A LiteSpeed server is required in order to use this plugin."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:25
-msgid "Any single server or cluster including a LiteSpeed server will work."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:28
-msgid "Does this plugin work in a clustered environment?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:31
-msgid "The cache entries are stored at the litespeed server level."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:32
-msgid ""
-"The simplest solution is to use LiteSpeed WebADC, as the cache entries will "
-"be cached at that level."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:35
-msgid ""
-"If using another load balancer, the cache entries will only be stored at the "
-"backend nodes, not at the load balancer."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:36
-msgid ""
-"The purges will also not be synchronized across the nodes, so this is not "
-"recommended."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:39
-msgid "If a customized solution is required, please contact %s at %s"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:42
-msgid ""
-"NOTICE: The rewrite rules created by this plugin must be copied to the WebADC"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:45
-msgid "Where are the cache entries stored?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:47
-msgid ""
-"The actual cached pages are stored and managed by LiteSpeed Servers. Nothing "
-"is stored on the PHP side."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:50
-msgid "Is WooCommerce supported?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:53
-msgid "In short, yes."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:54
-msgid ""
-"However, for some woocommerce themes, the cart may not be updated correctly."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:56
-msgid "To test the cart:"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:58
-msgid ""
-"On a non-logged-in browser, visit and cache a page, then visit and cache a "
-"product page."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:59
-msgid ""
-"The first page should be accessible from the product page (e.g. the shop)."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:60
-msgid "Once both pages are confirmed cached, add the product to the cart."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:61
-msgid "After adding to the cart, visit the first page."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:62
-msgid "The page should still be cached, and the cart should be up to date."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:63
-msgid ""
-"If that is not the case, please add woocommerce_items_in_cart to the do not "
-"cache cookie list."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:66
-msgid ""
-"Some themes like Storefront and Shop Isle are built such that the cart works "
-"without the rule."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:67
-msgid ""
-"However, other themes like the E-Commerce theme, do not, so please verify "
-"the theme used."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:71
-msgid "Are my images optimized?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:74
-msgid "The cache plugin does not do anything with the images themselves."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:75
-msgid ""
-"We recommend you trying an image optimization plugin like %s to optimize "
-"your images."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:77
-msgid "It can reduce your site's images up to 90%."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:81
-msgid "How do I get WP-PostViews to display an updating view count?"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:84
-msgid "Use %1$s to replace %2$s"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:88
-msgid ""
-"NOTE: The id can be changed, but the div id and the ajax function must match."
-msgstr ""
-
-#: admin/tpl/info_faqs.php:91
-msgid "Replace the ajax query in %1$s with %2$s"
-msgstr ""
-
-#: admin/tpl/info_faqs.php:106
-msgid "Purge the cache to use the updated pages."
-msgstr ""
-
-#: admin/tpl/manage.php:7 admin/tpl/manage_purge.php:75
+#: admin/tpl/manage/manage_purge.php:75 admin/tpl/manage.php:7
 #: admin/tpl/network_settings.php:7 admin/tpl/settings.php:9
 msgid "Purge"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:102
+msgid "Purge By..."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:104
+msgid "Select below for \"Purge by\" options."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:105
+#: admin/tpl/setting/settings_cache.php:67
+#: admin/tpl/setting/settings_cdn.php:101
+#: admin/tpl/setting/settings_excludes.php:19
+#: admin/tpl/setting/settings_excludes.php:33
+#: admin/tpl/setting/settings_excludes.php:56
+#: admin/tpl/setting/settings_excludes.php:94
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:19
+#: admin/tpl/setting/settings_media.php:27
+#: admin/tpl/setting/settings_optimize.php:58
+#: admin/tpl/setting/settings_optimize.php:105
+#: admin/tpl/setting/settings_optimize.php:201
+#: admin/tpl/setting/settings_optimize.php:230
+#: admin/tpl/setting/settings_purge.php:79
+msgid "One per line."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:132
+msgid "Category"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:138
+msgid "Post ID"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:144
+msgid "Tag"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:150
+msgid "URL"
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:156
+msgid ""
+"Purge pages by category name - e.g. %2$s should be used for the URL %1$s."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:161
+msgid "Purge pages by post ID."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:165
+msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:170
+msgid "Purge pages by relative or full URL."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:171
+msgid "e.g. Use %s or %s."
+msgstr ""
+
+#: admin/tpl/manage/manage_purge.php:184
+msgid "Purge List"
 msgstr ""
 
 #: admin/tpl/manage.php:8
@@ -1357,250 +1699,8 @@ msgstr ""
 msgid "LiteSpeed Cache Management"
 msgstr ""
 
-#: admin/tpl/manage.php:43
-msgid ""
-"WARNING: LiteSpeed cache is disabled. The functionalities here can not work."
-msgstr ""
-
-#: admin/tpl/manage_db.php:6
-msgid "Clean All"
-msgstr ""
-
-#: admin/tpl/manage_db.php:10
-msgid "Post Revisions"
-msgstr ""
-
-#: admin/tpl/manage_db.php:11
-msgid "Clean all post revisions"
-msgstr ""
-
-#: admin/tpl/manage_db.php:14
-msgid "Auto Drafts"
-msgstr ""
-
-#: admin/tpl/manage_db.php:15
-msgid "Clean all auto saved drafts"
-msgstr ""
-
-#: admin/tpl/manage_db.php:18
-msgid "Trashed Posts"
-msgstr ""
-
-#: admin/tpl/manage_db.php:19
-msgid "Clean all trashed posts and pages"
-msgstr ""
-
-#: admin/tpl/manage_db.php:22
-msgid "Spam Comments"
-msgstr ""
-
-#: admin/tpl/manage_db.php:23
-msgid "Clean all spam comments"
-msgstr ""
-
-#: admin/tpl/manage_db.php:26
-msgid "Trashed Comments"
-msgstr ""
-
-#: admin/tpl/manage_db.php:27
-msgid "Clean all trashed comments"
-msgstr ""
-
-#: admin/tpl/manage_db.php:30
-msgid "Trackbacks/Pingbacks"
-msgstr ""
-
-#: admin/tpl/manage_db.php:31
-msgid "Clean all trackbacks and pingbacks"
-msgstr ""
-
-#: admin/tpl/manage_db.php:34
-msgid "Expired Transients"
-msgstr ""
-
-#: admin/tpl/manage_db.php:35
-msgid "Clean expired transient options"
-msgstr ""
-
-#: admin/tpl/manage_db.php:38
-msgid "All Transients"
-msgstr ""
-
-#: admin/tpl/manage_db.php:39
-msgid "Clean all transient options"
-msgstr ""
-
-#: admin/tpl/manage_db.php:42
-msgid "Optimize Tables"
-msgstr ""
-
-#: admin/tpl/manage_db.php:43
-msgid "Optimize all tables in your database"
-msgstr ""
-
-#: admin/tpl/manage_db.php:46
-msgid "Clean CSS/JS Optimizer"
-msgstr ""
-
-#: admin/tpl/manage_db.php:47
-msgid "Purge all and clean all minified/combined CSS/JS data"
-msgstr ""
-
-#: admin/tpl/manage_db.php:68
-msgid "Database Optimizer"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:7
-msgid "Purge Front Page"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:8
-msgid "This will Purge Front Page only"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:13
-msgid "Purge Pages"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:14
-msgid "This will Purge Pages only"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:19
-msgid "Purge CSS/JS Cache"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:20
-msgid "This will purge all minified/combined CSS/JS entries only"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:25
-msgid "Purge 403 Error"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:26
-msgid "Purge error pages, including 403 pages"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:32
-msgid "Purge 404 Error"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:33
-msgid "Purge error pages, including 404 pages"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:39
-msgid "Purge 500 Error"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:40
-msgid "Purge error pages, including 500 pages"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:46
-msgid "Purge All"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:47
-msgid "Purge the cache entries created by this plugin"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:52
-msgid "This will purge everything for all blogs."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:53 admin/tpl/manage_purge.php:55
-msgid "Are you sure you want to purge all?"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:61
-msgid "Empty Entire Cache"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:62
-msgid ""
-"Clears all cache entries related to this site, <i>including other web "
-"applications</i>."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:63
-msgid "This action should only be used if things are cached incorrectly."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:67
-msgid "This will clear EVERYTHING inside the cache."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:68
-msgid "This may cause heavy load on the server."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:69
-msgid "If only the WordPress site should be purged, use purge all."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:102
-msgid "Purge By..."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:104
-msgid "Select below for \"Purge by\" options."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:105 admin/tpl/settings_cache.php:67
-#: admin/tpl/settings_cdn.php:101 admin/tpl/settings_excludes.php:19
-#: admin/tpl/settings_excludes.php:33 admin/tpl/settings_excludes.php:56
-#: admin/tpl/settings_excludes.php:94
-#: admin/tpl/settings_inc.exclude_cookies.php:19
-#: admin/tpl/settings_optimize.php:58 admin/tpl/settings_optimize.php:100
-#: admin/tpl/settings_optimize.php:199 admin/tpl/settings_purge.php:79
-msgid "One per line."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:132
-msgid "Category"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:138
-msgid "Post ID"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:144
-msgid "Tag"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:150
-msgid "URL"
-msgstr ""
-
-#: admin/tpl/manage_purge.php:156
-msgid ""
-"Purge pages by category name - e.g. %2$s should be used for the URL %1$s."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:161
-msgid "Purge pages by post ID."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:165
-msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:170
-msgid "Purge pages by relative or full URL."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:171
-msgid "e.g. Use %s or %s."
-msgstr ""
-
-#: admin/tpl/manage_purge.php:184
-msgid "Purge List"
-msgstr ""
-
-#: admin/tpl/network_settings.php:5 admin/tpl/settings.php:7
-#: admin/tpl/settings_general.php:5
+#: admin/tpl/network_settings.php:5 admin/tpl/setting/settings_general.php:5
+#: admin/tpl/settings.php:7
 msgid "General"
 msgstr ""
 
@@ -1612,77 +1712,13 @@ msgstr ""
 msgid "Excludes"
 msgstr ""
 
-#: admin/tpl/network_settings.php:9 admin/tpl/settings.php:19
-#: admin/tpl/settings_debug.php:65
+#: admin/tpl/network_settings.php:9 admin/tpl/setting/settings_debug.php:65
+#: admin/tpl/settings.php:19
 msgid "Advanced"
 msgstr ""
 
 #: admin/tpl/network_settings.php:19
 msgid "LiteSpeed Cache Network Settings"
-msgstr ""
-
-#: admin/tpl/network_settings_cache.php:4
-msgid "Cache Control Network Settings"
-msgstr ""
-
-#: admin/tpl/network_settings_cache.php:7
-msgid ""
-"Separate Mobile Views should be enabled if any of the network enabled themes "
-"require a different view for mobile devices."
-msgstr ""
-
-#: admin/tpl/network_settings_cache.php:8
-msgid "Responsive themes can handle this part automatically."
-msgstr ""
-
-#: admin/tpl/network_settings_excludes.php:5
-msgid "Network Do Not Cache Rules"
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:5
-msgid "General Network Configuration"
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:7
-msgid "These configuration are only available network wide."
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:11
-msgid "Network Enable Cache"
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:15
-msgid ""
-"Enabling LiteSpeed Cache for WordPress here enables the cache for the "
-"network."
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:16
-msgid ""
-"It is <b>STRONGLY</b> recommend that the compatibility with other plugins on "
-"a single/few sites is tested first."
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:17
-msgid ""
-"This is to ensure compatibility prior to enabling the cache for all sites."
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:23
-msgid "Use Primary Site Configuration"
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:27
-msgid ""
-"Check this option to use the primary site's configuration for all subsites."
-msgstr ""
-
-#: admin/tpl/network_settings_general.php:28
-msgid "This will disable the settings page on all subsites."
-msgstr ""
-
-#: admin/tpl/network_settings_purge.php:4
-msgid "Purge Network Settings"
 msgstr ""
 
 #: admin/tpl/report.php:10
@@ -1727,6 +1763,1409 @@ msgstr ""
 
 #: admin/tpl/report.php:40
 msgid "Environment Report copied to Clipboard!"
+msgstr ""
+
+#: admin/tpl/setting/network_settings_cache.php:4
+msgid "Cache Control Network Settings"
+msgstr ""
+
+#: admin/tpl/setting/network_settings_cache.php:7
+msgid ""
+"Separate Mobile Views should be enabled if any of the network enabled themes "
+"require a different view for mobile devices."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_cache.php:8
+msgid "Responsive themes can handle this part automatically."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_excludes.php:5
+msgid "Network Do Not Cache Rules"
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:5
+msgid "General Network Configuration"
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:7
+msgid "These configuration are only available network wide."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:11
+msgid "Network Enable Cache"
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:15
+msgid ""
+"Enabling LiteSpeed Cache for WordPress here enables the cache for the "
+"network."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:16
+msgid ""
+"It is <b>STRONGLY</b> recommend that the compatibility with other plugins on "
+"a single/few sites is tested first."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:17
+msgid ""
+"This is to ensure compatibility prior to enabling the cache for all sites."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:23
+msgid "Use Primary Site Configuration"
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:27
+msgid ""
+"Check this option to use the primary site's configuration for all subsites."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_general.php:28
+msgid "This will disable the settings page on all subsites."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_purge.php:4
+msgid "Purge Network Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:8
+msgid "These settings are meant for ADVANCED USERS ONLY."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:9
+msgid "Please take great care when changing any of these settings."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:10
+msgid "If there are any questions, do not hesitate to submit a support thread."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:14
+msgid "Check Advanced Cache"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:17
+msgid "Include advanced-cache.php"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:20
+msgid ""
+"The advanced-cache.php file is used by many caching plugins to signal that a "
+"cache is active."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:21
+msgid ""
+"When this option is checked and this file is detected as belonging to "
+"another plugin, LiteSpeed Cache will not cache."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:24
+msgid ""
+"Uncheck this option only if the other plugin is used for non-caching "
+"purposes, such as minifying css/js files."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:27
+msgid "Login Cookie"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:30
+msgid "SYNTAX: alphanumeric and \"_\"."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:31
+msgid "No spaces and case sensitive."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:32
+msgid "MUST BE UNIQUE FROM OTHER WEB APPLICATIONS."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:35
+msgid "The default login cookie is %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:36
+msgid ""
+"The server will determine if the user is logged in based on the existance of "
+"this cookie."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:37
+msgid ""
+"This setting is useful for those that have multiple web applications for the "
+"same domain."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:38
+msgid ""
+"If every web application uses the same cookie, the server may confuse "
+"whether a user is logged in or not."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:39
+msgid "The cookie set here will be used for this WordPress installation."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:42
+msgid "Example use case:"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:44
+msgid "There is a WordPress installed for %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:46
+msgid "Then another WordPress is installed (NOT MULTISITE) at %s"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:47
+msgid ""
+"The cache needs to distinguish who is logged into which WordPress site in "
+"order to cache correctly."
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:53
+msgid "Error: invalid login cookie. Please check the %s file"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:62
+msgid "Error getting current rules from %s: %s"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:70
+msgid ""
+"WARNING: The .htaccess login cookie and Database login cookie do not match."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:4
+msgid "Cache Control Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:8
+msgid "Cache Logged-in Users"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:12
+msgid "Privately cache frontend pages for logged-in users. (LSWS %s required)"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:18
+msgid "Cache Commenters"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:22
+msgid ""
+"Privately cache commenters that have pending comments. Disabling this option "
+"will serve non-cacheable pages to commenters. (LSWS %s required)"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:28
+msgid "Cache REST API"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:32
+msgid "Cache requests made by WordPress REST API calls."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:38
+msgid "Cache Login Page"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:42
+msgid "Disabling this option may negatively affect performance."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:56
+msgid "Private Cached URIs"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:60
+msgid "URI Paths containing these strings will NOT be cached as public."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:61
+#: admin/tpl/setting/settings_excludes.php:13
+msgid "The URLs will be compared to the REQUEST_URI server variable."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:62
+#: admin/tpl/setting/settings_excludes.php:14
+#: admin/tpl/setting/settings_optimize.php:229
+msgid "For example, for %s, %s can be used here."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:65
+#: admin/tpl/setting/settings_excludes.php:17
+msgid "To match the beginning, add %s to the beginning of the item."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:66
+#: admin/tpl/setting/settings_excludes.php:18
+msgid "To do an exact match, add %s to the end of the URL."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:11
+msgid "CDN Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:15
+msgid "Enable CDN"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:19
+msgid "Enable Content Delivery Network use."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:25
+msgid "CDN URL"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:29
+msgid "CDN URL to be used. For example, %s"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:35
+msgid "Original URL"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:39
+msgid ""
+"Site URL to be served through the CDN. Beginning with %1$s. For example, "
+"%2$s."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:40
+msgid ""
+"Wildcard %1$s supported (match zero or more characters). For example, to "
+"match %2$s and %3$s, use %4$s."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:46
+msgid "Include Images"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:50
+msgid ""
+"Serve all image files through the CDN. This will affect all attachments, "
+"HTML %s tags, and CSS %s attributes."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:56
+msgid "Include CSS"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:60
+msgid ""
+"Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
+"files."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:66
+msgid "Include JS"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:70
+msgid ""
+"Serve all JavaScript files through the CDN. This will affect all enqueued WP "
+"JavaScript files."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:76
+msgid "Include File Types"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:82
+msgid "Static file type links to be replaced by CDN links. One per line."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:83
+msgid "This will affect all tags containing attributes: %s %s %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:95
+msgid "Exclude Path"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:100
+msgid "Paths containing these strings will not be served from the CDN."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:107
+msgid "Load JQuery Remotely"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:113
+#: admin/tpl/setting/settings_debug.php:16
+msgid "Off"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:119
+msgid "Google"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:125
+msgid "cdnjs"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:129
+msgid ""
+"Improve page load time by loading jQuery from a remote CDN service instead "
+"of locally."
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:7
+msgid "Compatibility with WP-PostViews"
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:9
+msgid "To make LiteSpeed Cache compatible with WP-PostViews:"
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:13
+msgid ""
+"Replace the following calls in the active theme's template files with a div "
+"or span with a unique ID."
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:14
+msgid "e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>"
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:21
+msgid "Update the ajax request to output the results to that div."
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:22
+msgid "Example:"
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:34
+msgid "The ajax code can be found at"
+msgstr ""
+
+#: admin/tpl/setting/settings_compatibilities.php:37
+msgid "After purging the cache, the view count should be updating."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:6
+msgid "Crawler Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:13
+msgid "microseconds"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:15
+msgid ""
+"Specify time in microseconds for the delay between requests during a crawl."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:27
+msgid "Specify time in seconds for the duration of the crawl interval."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:34
+msgid "Interval Between Runs"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:39
+msgid ""
+"Specify time in seconds for the time between each run interval. Must be "
+"greater than 60."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:46
+msgid "Crawl Interval"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:51
+msgid ""
+"Specify how long in seconds before the crawler should initiate crawling the "
+"entire sitemap again."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:63
+msgid "Specify Number of Threads to use while crawling."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:70
+msgid "Server Load Limit"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:75
+msgid ""
+"The maximum average server load allowed while crawling. The number of "
+"crawler threads in use will be actively reduced until average server load "
+"falls under this limit. If this cannot be achieved with a single thread, the "
+"current crawler run will be terminated."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:83
+msgid "Site IP"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:88
+msgid ""
+"Enter this site's IP address to crawl by IP instead of domain name. This "
+"eliminates the overhead of DNS and CDN lookups. (optional)"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:94
+msgid "Custom Sitemap"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:99
+msgid ""
+"The crawler can use your Google XML Sitemap instead of its own. Enter the "
+"full URL to your sitemap here."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:105
+msgid "Include Posts"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:109
+msgid "Include Posts in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:115
+msgid "Include Pages"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:119
+msgid "Include Pages in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:125
+msgid "Include Categories"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:129
+msgid "Include Categories pages in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:135
+msgid "Include Tags"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:139
+msgid "Include Tags pages in crawler sitemap generation."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:145
+msgid "Exclude Custom Post Types"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:150
+msgid ""
+"If you want to exclude certain Custom Post Types in sitemap, add the Custom "
+"Post Types in the box, one per line."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:154
+msgid "Available Custom Post Type"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:163
+msgid "Order links by"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:169
+msgid "Date, descending (Default)"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:175
+msgid "Date, ascending"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:181
+msgid "Alphabetical, descending"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:187
+msgid "Alphabetical, ascending"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:191
+msgid ""
+"Please choose one of the above options to set the order in which the sitemap "
+"will be parsed."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:6
+msgid "Developer Testing"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:22
+msgid "On"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:28
+msgid "Admin IP only"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:32
+msgid "Outputs to WordPress debug log."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:33
+msgid ""
+"This should be set to off once everything is working to prevent filling the "
+"disk."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:34
+msgid ""
+"The Admin IP option will only output log messages on requests from admin IPs."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:35
+msgid "The logs will be outputted to %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:41
+msgid "Admin IPs"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:45
+msgid ""
+"Allows listed IPs (one per line) to perform certain actions from their "
+"browsers."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:46
+msgid ""
+"More information about the available commands can be found <a href=\"%s"
+"\">here</a>."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:53
+msgid "Debug Level"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:59
+msgid "Basic"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:69
+msgid "Advanced level will log more details."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:78
+msgid "MB"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:80
+msgid ""
+"Specify the maximum size of the log file. Minimum is 3MB. Maximum is 3000MB."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:87
+msgid "Heartbeat"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:91
+msgid ""
+"Disable WordPress heartbeat to prevent AJAX calls from breaking debug "
+"logging. WARNING: Disabling this may cause WordPress tasks triggered by AJAX "
+"to stop working."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:97
+msgid "Log Cookies"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:101
+msgid "Log request cookie values."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:107
+msgid "Collapse Query Strings"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:111
+msgid "Shorten query strings in the debug log to improve readability."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:117
+msgid "Log Filters"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:121
+msgid ""
+"Log all WordPress filter hooks. WARNING: Enabling this option will cause log "
+"file size to grow quickly."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:127
+msgid "Exclude Filters"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:131
+msgid "Listed filters (one per line) will not be logged."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:137
+msgid "Exclude Part Filters"
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:141
+msgid "Filters containing these strings (one per line) will not be logged."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:14
+msgid "ESI Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:17
+msgid ""
+"With ESI (Edge Side Includes), pages may be served from cache for logged-in "
+"users."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:18
+msgid ""
+"ESI allows you to designate parts of your dynamic page as separate fragments "
+"that are then assembled together to make the whole page. In other words, ESI "
+"lets you “punch holes” in a page, and then fill those holes with content "
+"that may be cached privately, cached publicly with its own TTL, or not "
+"cached at all."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:20
+msgid "Learn more about public cache vs. private cache <a %s>on our blog</a>."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:29
+msgid "Available in LiteSpeed Enterprise version"
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:39
+msgid ""
+"Enable caches public pages for logged in users and serves the Admin Bar and "
+"Comment Form via ESI blocks. These two blocks will be uncached unless "
+"enabled below."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:45
+msgid "Cache Admin Bar"
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:49
+msgid "Cache the build-in Admin Bar ESI block."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:55
+msgid "Cache Comment Form"
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:59
+msgid "Cache the build-in Comment Form ESI block."
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:65
+msgid "Vary Group"
+msgstr ""
+
+#: admin/tpl/setting/settings_esi.php:80
+msgid ""
+"If your site contains public content that certain user roles can see but "
+"other roles cannot, you can specify a Vary Group for those user roles. For "
+"example, specifying an administrator vary group allows there to be a "
+"separate publicly-cached page tailored to administrators (with “edit” links, "
+"etc), while all other user roles see the default public page."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:4
+msgid "Do Not Cache Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:8
+msgid "Do Not Cache URIs"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:12
+msgid "Paths containing these strings will not be cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:26
+msgid "Do Not Cache Query Strings"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:30
+msgid "Query string containing these parameters will not be cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:31
+msgid "For example, for %s, %s and %s can be used here."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:40
+msgid "Do Not Cache Categories"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:53
+msgid "All categories are cached by default."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:54
+#: admin/tpl/setting/settings_excludes.php:92
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:16
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:15
+msgid "To prevent %s from being cached, enter it here."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:54
+msgid "categories"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:62
+msgid "If the Category ID is not found, the name will be removed on save."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:63
+#: admin/tpl/setting/settings_excludes.php:101
+msgid "To exclude %1$s, insert %2$s."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:71
+msgid "Do Not Cache Tags"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:91
+msgid "All tags are cached by default."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:92
+msgid "tags"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:100
+msgid "If the Tag ID is not found, the name will be removed on save."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:9
+msgid "Enable LiteSpeed Cache"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:38
+msgid "Use Network Admin Setting"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:44
+msgid "Please visit the <a %s>Information</a> page on how to test the cache."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:47
+#: admin/tpl/setting/settings_optimize.php:15
+msgid "NOTICE"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:47
+msgid ""
+"When disabling the cache, all cached entries for this blog will be purged."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:49
+msgid "The network admin setting can be overridden here."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:56
+msgid "Default Public Cache TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:61
+msgid ""
+"Specify how long, in seconds, public pages are cached. Minimum is 30 seconds."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:68
+msgid "Default Private Cache TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:73
+msgid ""
+"Specify how long, in seconds, private pages are cached. Minimum is %1$s "
+"seconds. Maximum is %2$s seconds."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:80
+msgid "Default Front Page TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:85
+msgid ""
+"Specify how long, in seconds, the front page is cached. Minimum is 30 "
+"seconds."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:92
+msgid "Default Feed TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:97
+msgid "Specify how long, in seconds, feeds are cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:98
+msgid "If this is set to a number less than 30, feeds will not be cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:105
+msgid "Default 404 Page TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:110
+msgid "Specify how long, in seconds, 404 pages are cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:111
+msgid "If this is set to a number less than 30, 404 pages will not be cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:118
+msgid "Default 403 Page TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:123
+msgid "Specify how long, in seconds, 403 pages are cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:124
+msgid "If this is set to a number less than 30, 403 pages will not be cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:131
+msgid "Default 500 Page TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:136
+msgid "Specify how long, in seconds, 500 pages are cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_general.php:137
+msgid "If this is set to a number less than 30, 500 pages will not be cached."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_browser.php:6
+msgid "Browser Cache"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_browser.php:10
+msgid ""
+"Browser caching stores static files locally in the user's browser. Turn on "
+"this setting to reduce repeated requests for static files."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_browser.php:13
+#: admin/tpl/setting/settings_inc.cache_favicon.php:15
+#: admin/tpl/setting/settings_inc.cache_mobile.php:19
+#: admin/tpl/setting/settings_inc.cache_resources.php:16
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:23
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:22
+msgid "This setting will edit the .htaccess file."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_browser.php:15
+msgid ""
+"You can turn on browser caching in server admin too. <a %s>Learn more about "
+"LiteSpeed browser cache setting</a>."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_favicon.php:7
+msgid "Cache favicon.ico"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_favicon.php:11
+msgid "favicon.ico is requested on most pages."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_favicon.php:12
+msgid ""
+"Caching this resource may improve server performance by avoiding unnecessary "
+"PHP calls."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:8
+msgid "Cache Mobile"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:15
+msgid "When enabled, mobile views will be cached separately."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:16
+msgid "A site built with responsive design does not need to check this."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:26
+msgid "List of Mobile User Agents"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:43
+msgid "Htaccess did not match configuration option."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:44
+msgid "Please re-enter the mobile view setting."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:45
+msgid "List in WordPress database is: %s"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:61
+msgid "SYNTAX: Each entry should be separated with a bar, %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:62
+msgid "Any spaces should be escaped with a backslash before the space, %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_mobile.php:65
+msgid "The default list WordPress uses is %s"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_resources.php:8
+msgid "Cache PHP Resources"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_resources.php:12
+msgid "Some themes and plugins add resources via a PHP request."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_resources.php:13
+msgid ""
+"Caching these pages may improve server performance by avoiding unnecessary "
+"PHP calls."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:6
+msgid "Do Not Cache Cookies"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:16
+msgid "cookies"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.exclude_cookies.php:18
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:18
+msgid "Spaces should have a backslash in front of them, %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:7
+msgid "Do Not Cache User Agents"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:15
+msgid "user agents"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.exclude_useragent.php:17
+msgid "SYNTAX: Separate each user agent with a bar, %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.purge_on_upgrade.php:7
+msgid "Purge All On Upgrade"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.purge_on_upgrade.php:11
+msgid ""
+"When enabled, the cache will automatically purge when any plugins, themes, "
+"or WordPress core is upgraded."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:6
+msgid "Media Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:10
+msgid "Lazy Load Images"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:14
+msgid "Load images only when they enter the viewport."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:15
+#: admin/tpl/setting/settings_media.php:56
+msgid "This can improve page loading time by reducing initial HTTP requests."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:21
+msgid "Lazy Load Image Excludes"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:25
+msgid "Listed images will not be lazy loaded."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:26
+#: admin/tpl/setting/settings_optimize.php:57
+#: admin/tpl/setting/settings_optimize.php:104
+#: admin/tpl/setting/settings_optimize.php:200
+#: admin/tpl/setting/settings_optimize.php:228
+msgid "Both full URLs and partial strings can be used."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:29
+#: admin/tpl/setting/settings_optimize.php:60
+#: admin/tpl/setting/settings_optimize.php:107
+#: admin/tpl/setting/settings_optimize.php:166
+#: admin/tpl/setting/settings_optimize.php:203
+msgid "API:"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:30
+#: admin/tpl/setting/settings_optimize.php:61
+#: admin/tpl/setting/settings_optimize.php:108
+#: admin/tpl/setting/settings_optimize.php:204
+msgid "Filter %s is supported."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:31
+#: admin/tpl/setting/settings_optimize.php:62
+#: admin/tpl/setting/settings_optimize.php:109
+#: admin/tpl/setting/settings_optimize.php:167
+#: admin/tpl/setting/settings_optimize.php:205
+msgid "Elements with attribute %s in html code will be excluded."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:38
+msgid "Lazy Load Image Placeholder"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:42
+msgid ""
+"Specify a base64 image to be used as a placeholder while other images finish "
+"loading."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:43
+msgid ""
+"This can be predefined in %2$s as well using constant %1$s, with this "
+"setting taking priority."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:44
+msgid "By default a gray image placeholder %s will be used."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:45
+msgid "For example, %s can be used for a transparent placeholder."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:51
+msgid "Lazy Load Iframes"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:55
+msgid "Load iframes only when they enter the viewport."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:5
+msgid "Optimization Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:10
+msgid ""
+"Failed to create Optimizer table. Please follow <a %s>Table Creation "
+"guidance from LiteSpeed Wiki</a> to finish setup."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:16
+msgid ""
+"Please test thoroughly when enabling any option in this list. After changing "
+"Minify/Combine settings, please do a Purge All action."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:22
+msgid "CSS Minify"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:26
+msgid "Minify CSS files."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:32
+msgid "CSS Combine"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:36
+msgid "Combine CSS files."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:42
+msgid "CSS HTTP/2 Push"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:46
+msgid ""
+"Pre-send internal CSS files to the browser before they are requested. "
+"(Requires the HTTP/2 protocol)"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:52
+msgid "CSS Excludes"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:56
+msgid "Listed CSS files will not be minified/combined."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:69
+msgid "JS Minify"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:73
+msgid "Minify JS files."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:79
+#: admin/tpl/setting/settings_optimize.php:243
+msgid "JS Combine"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:83
+msgid "Combine JS files."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:89
+msgid "JS HTTP/2 Push"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:93
+msgid ""
+"Pre-send internal JS files to the browser before they are requested. "
+"(Requires the HTTP/2 protocol)"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:99
+msgid "JS Excludes"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:103
+msgid "Listed JS files will not be minified/combined."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:116
+msgid "CSS/JS Cache TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:121
+msgid ""
+"Specify how long, in seconds, CSS/JS files are cached. Minimum is %1$s "
+"seconds."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:128
+msgid "HTML Minify"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:132
+msgid "Minify HTML content."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:138
+msgid "Remove Query Strings"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:142
+msgid "Remove query strings from static resources."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:143
+#: admin/tpl/setting/settings_optimize.php:164
+#: admin/tpl/setting/settings_optimize.php:189
+#: admin/tpl/setting/settings_optimize.php:217
+msgid ""
+"This can improve your speed score in services like Pingdom, GTmetrix and "
+"PageSpeed."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:149
+msgid "Remove Google Fonts"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:153
+msgid "Prevent google fonts from loading on all your pages."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:159
+#: admin/tpl/setting/settings_optimize.php:178
+msgid "Load CSS Asynchronously"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:163
+msgid "Optimize CSS delivery. This will load Google Fonts asynchronously too."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:174
+msgid "Critical CSS Rules"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:178
+msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:184
+msgid "Load JS Deferred"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:188
+msgid "Doing so can help reduce resource contention and improve performance."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:195
+msgid "JS Deferred Excludes"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:199
+msgid "Listed JS files will not be deferred."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:212
+msgid "Remove WordPress Emoji"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:216
+msgid ""
+"Stop loading wordpress.org emoji. Browser default emoji will be displayed "
+"instead."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:223
+msgid "URI Excludes"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:227
+msgid "Prevent any optimization of listed pages."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:236
+msgid "Exclude JQuery"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:240
+msgid ""
+"Improve compatibility with inline JS by preventing jQuery optimization. "
+"(Recommended Setting: %s)"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:243
+msgid ""
+"If there is any JS error related to %1$s when enabled %2$s, please try this "
+"option."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:5
+msgid "Purge Settings"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:10
+msgid "All pages"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:11
+msgid "Front page"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:12
+msgid "Home page"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:13
+msgid "Pages"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:15
+msgid "All pages with Recent Posts Widget"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:17
+msgid "Author archive"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:18
+msgid "Post type archive"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:20
+msgid "Yearly archive"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:21
+msgid "Monthly archive"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:22
+msgid "Daily archive"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:24
+msgid "Term archive (include category, tag, and tax)"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:44
+msgid "Auto Purge Rules For Publish/Update"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:47
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:663
+msgid "Note:"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:49
+msgid ""
+"Select \"All\" if there are dynamic widgets linked to posts on pages other "
+"than the front or home pages."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:50
+msgid "Other checkboxes will be ignored."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:51
+msgid ""
+"Select only the archive types that are currently used, the others can be "
+"left unchecked."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:67
+msgid ""
+"Select which pages will be automatically purged when posts are published/"
+"updated."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:73
+#: admin/tpl/setting/settings_purge.php:90
+msgid "Scheduled Purge URLs"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:77
+msgid ""
+"The URLs here (one per line) will be purged automatically at the time set in "
+"the option \"%s\"."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:77
+#: admin/tpl/setting/settings_purge.php:85
+msgid "Scheduled Purge Time"
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:78
+msgid "Both %1$s and %2$s are acceptable."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:90
+msgid "Specify the time to purge the \"%s\" list."
+msgstr ""
+
+#: admin/tpl/setting/settings_purge.php:91
+msgid "Current server time is %s."
 msgstr ""
 
 #: admin/tpl/settings.php:11
@@ -1779,1309 +3218,6 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: admin/tpl/settings_advanced.php:8
-msgid "These settings are meant for ADVANCED USERS ONLY."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:9
-msgid "Please take great care when changing any of these settings."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:10
-msgid "If there are any questions, do not hesitate to submit a support thread."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:14
-msgid "Check Advanced Cache"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:17
-msgid "Include advanced-cache.php"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:20
-msgid ""
-"The advanced-cache.php file is used by many caching plugins to signal that a "
-"cache is active."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:21
-msgid ""
-"When this option is checked and this file is detected as belonging to "
-"another plugin, LiteSpeed Cache will not cache."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:24
-msgid ""
-"Uncheck this option only if the other plugin is used for non-caching "
-"purposes, such as minifying css/js files."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:27
-msgid "Login Cookie"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:30
-msgid "SYNTAX: alphanumeric and \"_\"."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:31
-msgid "No spaces and case sensitive."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:32
-msgid "MUST BE UNIQUE FROM OTHER WEB APPLICATIONS."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:35
-msgid "The default login cookie is %s."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:36
-msgid ""
-"The server will determine if the user is logged in based on the existance of "
-"this cookie."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:37
-msgid ""
-"This setting is useful for those that have multiple web applications for the "
-"same domain."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:38
-msgid ""
-"If every web application uses the same cookie, the server may confuse "
-"whether a user is logged in or not."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:39
-msgid "The cookie set here will be used for this WordPress installation."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:42
-msgid "Example use case:"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:44
-msgid "There is a WordPress installed for %s."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:46
-msgid "Then another WordPress is installed (NOT MULTISITE) at %s"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:47
-msgid ""
-"The cache needs to distinguish who is logged into which WordPress site in "
-"order to cache correctly."
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:53
-msgid "Error: invalid login cookie. Please check the %s file"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:62
-msgid "Error getting current rules from %s: %s"
-msgstr ""
-
-#: admin/tpl/settings_advanced.php:70
-msgid ""
-"WARNING: The .htaccess login cookie and Database login cookie do not match."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:4
-msgid "Cache Control Settings"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:8
-msgid "Cache Logged-in Users"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:12
-msgid "Privately cache frontend pages for logged-in users. (LSWS %s required)"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:18
-msgid "Cache Commenters"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:22
-msgid ""
-"Privately cache commenters that have pending comments. Disabling this option "
-"will serve non-cacheable pages to commenters. (LSWS %s required)"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:28
-msgid "Cache REST API"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:32
-msgid "Cache requests made by WordPress REST API calls."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:38
-msgid "Cache Login Page"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:42
-msgid "Disabling this option may negatively affect performance."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:56
-msgid "Private Cached URIs"
-msgstr ""
-
-#: admin/tpl/settings_cache.php:60
-msgid "URI Paths containing these strings will NOT be cached as public."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:61 admin/tpl/settings_excludes.php:13
-msgid "The URLs will be compared to the REQUEST_URI server variable."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:62 admin/tpl/settings_excludes.php:14
-#: admin/tpl/settings_optimize.php:198
-msgid "For example, for %s, %s can be used here."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:65 admin/tpl/settings_excludes.php:17
-msgid "To match the beginning, add %s to the beginning of the item."
-msgstr ""
-
-#: admin/tpl/settings_cache.php:66 admin/tpl/settings_excludes.php:18
-msgid "To do an exact match, add %s to the end of the URL."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:11
-msgid "CDN Settings"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:15
-msgid "Enable CDN"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:19
-msgid "Enable Content Delivery Network use."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:25
-msgid "CDN URL"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:29
-msgid "CDN URL to be used. For example, %s"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:35
-msgid "Original URL"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:39
-msgid ""
-"Site URL to be served through the CDN. Beginning with %1$s. For example, "
-"%2$s."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:40
-msgid ""
-"Wildcard %1$s supported (match zero or more characters). For example, to "
-"match %2$s and %3$s, use %4$s."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:46
-msgid "Include Images"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:50
-msgid ""
-"Serve all image files through the CDN. This will affect all attachments, "
-"HTML %s tags, and CSS %s attributes."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:56
-msgid "Include CSS"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:60
-msgid ""
-"Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
-"files."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:66
-msgid "Include JS"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:70
-msgid ""
-"Serve all JavaScript files through the CDN. This will affect all enqueued WP "
-"JavaScript files."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:76
-msgid "Include File Types"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:82
-msgid "Static file type links to be replaced by CDN links. One per line."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:83
-msgid "This will affect all tags containing attributes: %s %s %s."
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:95
-msgid "Exclude Path"
-msgstr ""
-
-#: admin/tpl/settings_cdn.php:100
-msgid "Paths containing these strings will not be served from the CDN."
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:7
-msgid "Compatibility with WP-PostViews"
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:9
-msgid "To make LiteSpeed Cache compatible with WP-PostViews:"
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:13
-msgid ""
-"Replace the following calls in the active theme's template files with a div "
-"or span with a unique ID."
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:14
-msgid "e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>"
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:21
-msgid "Update the ajax request to output the results to that div."
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:22
-msgid "Example:"
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:34
-msgid "The ajax code can be found at"
-msgstr ""
-
-#: admin/tpl/settings_compatibilities.php:37
-msgid "After purging the cache, the view count should be updating."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:6
-msgid "Crawler Settings"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:13
-msgid "microseconds"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:15
-msgid ""
-"Specify time in microseconds for the delay between requests during a crawl."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:27
-msgid "Specify time in seconds for the duration of the crawl interval."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:34
-msgid "Interval Between Runs"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:39
-msgid ""
-"Specify time in seconds for the time between each run interval. Must be "
-"greater than 60."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:46
-msgid "Crawl Interval"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:51
-msgid ""
-"Specify how long in seconds before the crawler should initiate crawling the "
-"entire sitemap again."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:63
-msgid "Specify Number of Threads to use while crawling."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:70
-msgid "Server Load Limit"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:75
-msgid ""
-"The maximum average server load allowed while crawling. The number of "
-"crawler threads in use will be actively reduced until average server load "
-"falls under this limit. If this cannot be achieved with a single thread, the "
-"current crawler run will be terminated."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:83
-msgid "Site IP"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:88
-msgid ""
-"Enter this site's IP address to crawl by IP instead of domain name. This "
-"eliminates the overhead of DNS and CDN lookups. (optional)"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:94
-msgid "Custom Sitemap"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:99
-msgid ""
-"The crawler can use your Google XML Sitemap instead of its own. Enter the "
-"full URL to your sitemap here."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:105
-msgid "Include Posts"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:109
-msgid "Include Posts in crawler sitemap generation."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:115
-msgid "Include Pages"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:119
-msgid "Include Pages in crawler sitemap generation."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:125
-msgid "Include Categories"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:129
-msgid "Include Categories pages in crawler sitemap generation."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:135
-msgid "Include Tags"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:139
-msgid "Include Tags pages in crawler sitemap generation."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:145
-msgid "Exclude Custom Post Types"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:150
-msgid ""
-"If you want to exclude certain Custom Post Types in sitemap, add the Custom "
-"Post Types in the box, one per line."
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:154
-msgid "Available Custom Post Type"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:163
-msgid "Order links by"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:169
-msgid "Date, descending (Default)"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:175
-msgid "Date, ascending"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:181
-msgid "Alphabetical, descending"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:187
-msgid "Alphabetical, ascending"
-msgstr ""
-
-#: admin/tpl/settings_crawler.php:191
-msgid ""
-"Please choose one of the above options to set the order in which the sitemap "
-"will be parsed."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:6
-msgid "Developer Testing"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:16
-msgid "Off"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:22
-msgid "On"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:28
-msgid "Admin IP only"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:32
-msgid "Outputs to WordPress debug log."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:33
-msgid ""
-"This should be set to off once everything is working to prevent filling the "
-"disk."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:34
-msgid ""
-"The Admin IP option will only output log messages on requests from admin IPs."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:35
-msgid "The logs will be outputted to %s."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:41
-msgid "Admin IPs"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:45
-msgid ""
-"Allows listed IPs (one per line) to perform certain actions from their "
-"browsers."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:46
-msgid ""
-"More information about the available commands can be found <a href=\"%s"
-"\">here</a>."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:53
-msgid "Debug Level"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:59
-msgid "Basic"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:69
-msgid "Advanced level will log more details."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:78
-msgid "MB"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:80
-msgid ""
-"Specify the maximum size of the log file. Minimum is 3MB. Maximum is 3000MB."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:87
-msgid "Heartbeat"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:91
-msgid ""
-"Disable WordPress heartbeat to prevent AJAX calls from breaking debug "
-"logging. WARNING: Disabling this may cause WordPress tasks triggered by AJAX "
-"to stop working."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:97
-msgid "Log Cookies"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:101
-msgid "Log request cookie values."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:107
-msgid "Collapse Query Strings"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:111
-msgid "Shorten query strings in the debug log to improve readability."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:117
-msgid "Log Filters"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:121
-msgid ""
-"Log all WordPress filter hooks. WARNING: Enabling this option will cause log "
-"file size to grow quickly."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:127
-msgid "Exclude Filters"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:131
-msgid "Listed filters (one per line) will not be logged."
-msgstr ""
-
-#: admin/tpl/settings_debug.php:137
-msgid "Exclude Part Filters"
-msgstr ""
-
-#: admin/tpl/settings_debug.php:141
-msgid "Filters containing these strings (one per line) will not be logged."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:14
-msgid "ESI Settings"
-msgstr ""
-
-#: admin/tpl/settings_esi.php:17
-msgid ""
-"With ESI (Edge Side Includes), pages may be served from cache for logged-in "
-"users."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:18
-msgid ""
-"ESI allows you to designate parts of your dynamic page as separate fragments "
-"that are then assembled together to make the whole page. In other words, ESI "
-"lets you “punch holes” in a page, and then fill those holes with content "
-"that may be cached privately, cached publicly with its own TTL, or not "
-"cached at all."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:20
-msgid "Learn more about public cache vs. private cache <a %s>on our blog</a>."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:29
-msgid "Available in LiteSpeed Enterprise version"
-msgstr ""
-
-#: admin/tpl/settings_esi.php:39
-msgid ""
-"Enable caches public pages for logged in users and serves the Admin Bar and "
-"Comment Form via ESI blocks. These two blocks will be uncached unless "
-"enabled below."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:45
-msgid "Cache Admin Bar"
-msgstr ""
-
-#: admin/tpl/settings_esi.php:49
-msgid "Cache the build-in Admin Bar ESI block."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:55
-msgid "Cache Comment Form"
-msgstr ""
-
-#: admin/tpl/settings_esi.php:59
-msgid "Cache the build-in Comment Form ESI block."
-msgstr ""
-
-#: admin/tpl/settings_esi.php:65
-msgid "Vary Group"
-msgstr ""
-
-#: admin/tpl/settings_esi.php:80
-msgid ""
-"If your site contains public content that certain user roles can see but "
-"other roles cannot, you can specify a Vary Group for those user roles. For "
-"example, specifying an administrator vary group allows there to be a "
-"separate publicly-cached page tailored to administrators (with “edit” links, "
-"etc), while all other user roles see the default public page."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:4
-msgid "Do Not Cache Settings"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:8
-msgid "Do Not Cache URIs"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:12
-msgid "Paths containing these strings will not be cached."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:26
-msgid "Do Not Cache Query Strings"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:30
-msgid "Query string containing these parameters will not be cached."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:31
-msgid "For example, for %s, %s and %s can be used here."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:40
-msgid "Do Not Cache Categories"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:53
-msgid "All categories are cached by default."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:54 admin/tpl/settings_excludes.php:92
-#: admin/tpl/settings_inc.exclude_cookies.php:16
-#: admin/tpl/settings_inc.exclude_useragent.php:15
-msgid "To prevent %s from being cached, enter it here."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:54
-msgid "categories"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:62
-msgid "If the Category ID is not found, the name will be removed on save."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:63 admin/tpl/settings_excludes.php:101
-msgid "To exclude %1$s, insert %2$s."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:71
-msgid "Do Not Cache Tags"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:91
-msgid "All tags are cached by default."
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:92
-msgid "tags"
-msgstr ""
-
-#: admin/tpl/settings_excludes.php:100
-msgid "If the Tag ID is not found, the name will be removed on save."
-msgstr ""
-
-#: admin/tpl/settings_general.php:9
-msgid "Enable LiteSpeed Cache"
-msgstr ""
-
-#: admin/tpl/settings_general.php:38
-msgid "Use Network Admin Setting"
-msgstr ""
-
-#: admin/tpl/settings_general.php:44
-msgid "Please visit the <a %s>Information</a> page on how to test the cache."
-msgstr ""
-
-#: admin/tpl/settings_general.php:47 admin/tpl/settings_optimize.php:15
-msgid "NOTICE"
-msgstr ""
-
-#: admin/tpl/settings_general.php:47
-msgid ""
-"When disabling the cache, all cached entries for this blog will be purged."
-msgstr ""
-
-#: admin/tpl/settings_general.php:49
-msgid "The network admin setting can be overridden here."
-msgstr ""
-
-#: admin/tpl/settings_general.php:56
-msgid "Default Public Cache TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:61
-msgid ""
-"Specify how long, in seconds, public pages are cached. Minimum is 30 seconds."
-msgstr ""
-
-#: admin/tpl/settings_general.php:68
-msgid "Default Private Cache TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:73
-msgid ""
-"Specify how long, in seconds, private pages are cached. Minimum is %1$s "
-"seconds. Maximum is %2$s seconds."
-msgstr ""
-
-#: admin/tpl/settings_general.php:80
-msgid "Default Front Page TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:85
-msgid ""
-"Specify how long, in seconds, the front page is cached. Minimum is 30 "
-"seconds."
-msgstr ""
-
-#: admin/tpl/settings_general.php:92
-msgid "Default Feed TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:97
-msgid "Specify how long, in seconds, feeds are cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:98
-msgid "If this is set to a number less than 30, feeds will not be cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:105
-msgid "Default 404 Page TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:110
-msgid "Specify how long, in seconds, 404 pages are cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:111
-msgid "If this is set to a number less than 30, 404 pages will not be cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:118
-msgid "Default 403 Page TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:123
-msgid "Specify how long, in seconds, 403 pages are cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:124
-msgid "If this is set to a number less than 30, 403 pages will not be cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:131
-msgid "Default 500 Page TTL"
-msgstr ""
-
-#: admin/tpl/settings_general.php:136
-msgid "Specify how long, in seconds, 500 pages are cached."
-msgstr ""
-
-#: admin/tpl/settings_general.php:137
-msgid "If this is set to a number less than 30, 500 pages will not be cached."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_browser.php:6
-msgid "Browser Cache"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_browser.php:10
-msgid ""
-"Browser caching stores static files locally in the user's browser. Turn on "
-"this setting to reduce repeated requests for static files."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_browser.php:13
-#: admin/tpl/settings_inc.cache_favicon.php:15
-#: admin/tpl/settings_inc.cache_mobile.php:19
-#: admin/tpl/settings_inc.cache_resources.php:16
-#: admin/tpl/settings_inc.exclude_cookies.php:23
-#: admin/tpl/settings_inc.exclude_useragent.php:22
-msgid "This setting will edit the .htaccess file."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_browser.php:15
-msgid ""
-"You can turn on browser caching in server admin too. <a %s>Learn more about "
-"LiteSpeed browser cache setting</a>."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_favicon.php:7
-msgid "Cache favicon.ico"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_favicon.php:11
-msgid "favicon.ico is requested on most pages."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_favicon.php:12
-msgid ""
-"Caching this resource may improve server performance by avoiding unnecessary "
-"PHP calls."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:8
-msgid "Cache Mobile"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:15
-msgid "When enabled, mobile views will be cached separately."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:16
-msgid "A site built with responsive design does not need to check this."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:26
-msgid "List of Mobile User Agents"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:43
-msgid "Htaccess did not match configuration option."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:44
-msgid "Please re-enter the mobile view setting."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:45
-msgid "List in WordPress database is: %s"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:61
-msgid "SYNTAX: Each entry should be separated with a bar, %s."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:62
-msgid "Any spaces should be escaped with a backslash before the space, %s."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_mobile.php:65
-msgid "The default list WordPress uses is %s"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_resources.php:8
-msgid "Cache PHP Resources"
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_resources.php:12
-msgid "Some themes and plugins add resources via a PHP request."
-msgstr ""
-
-#: admin/tpl/settings_inc.cache_resources.php:13
-msgid ""
-"Caching these pages may improve server performance by avoiding unnecessary "
-"PHP calls."
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_cookies.php:6
-msgid "Do Not Cache Cookies"
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_cookies.php:16
-msgid "cookies"
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_cookies.php:18
-#: admin/tpl/settings_inc.exclude_useragent.php:18
-msgid "Spaces should have a backslash in front of them, %s."
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_useragent.php:7
-msgid "Do Not Cache User Agents"
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_useragent.php:15
-msgid "user agents"
-msgstr ""
-
-#: admin/tpl/settings_inc.exclude_useragent.php:17
-msgid "SYNTAX: Separate each user agent with a bar, %s."
-msgstr ""
-
-#: admin/tpl/settings_inc.purge_on_upgrade.php:7
-msgid "Purge All On Upgrade"
-msgstr ""
-
-#: admin/tpl/settings_inc.purge_on_upgrade.php:11
-msgid ""
-"When enabled, the cache will automatically purge when any plugins, themes, "
-"or WordPress core is upgraded."
-msgstr ""
-
-#: admin/tpl/settings_media.php:6
-msgid "Media Settings"
-msgstr ""
-
-#: admin/tpl/settings_media.php:10
-msgid "Lazyload Images"
-msgstr ""
-
-#: admin/tpl/settings_media.php:14
-msgid "Load images only when they enter the viewport."
-msgstr ""
-
-#: admin/tpl/settings_media.php:15 admin/tpl/settings_media.php:26
-msgid "This can improve page loading time by reducing initial HTTP requests."
-msgstr ""
-
-#: admin/tpl/settings_media.php:21
-msgid "Lazyload Iframes"
-msgstr ""
-
-#: admin/tpl/settings_media.php:25
-msgid "Load iframes only when they enter the viewport."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:5
-msgid "Optimization Settings"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:10
-msgid ""
-"Failed to create Optimizer table. Please follow <a %s>Table Creation "
-"guidance from LiteSpeed Wiki</a> to finish setup."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:16
-msgid ""
-"Please test thoroughly when enabling any option in this list. After changing "
-"Minify/Combine settings, please do a Purge All action."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:22
-msgid "CSS Minify"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:26
-msgid "Minify CSS files."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:32
-msgid "CSS Combine"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:36
-msgid "Combine CSS files."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:42
-msgid "CSS HTTP/2 Push"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:46
-msgid ""
-"Pre-send internal CSS files to the browser before they are requested. "
-"(Requires the HTTP/2 protocol)"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:52
-msgid "CSS Excludes"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:56
-msgid "Listed CSS files will not be minified/combined."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:57 admin/tpl/settings_optimize.php:99
-#: admin/tpl/settings_optimize.php:197
-msgid "Both full URLs and partial strings can be used."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:64
-msgid "JS Minify"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:68
-msgid "Minify JS files."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:74
-msgid "JS Combine"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:78
-msgid "Combine JS files."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:84
-msgid "JS HTTP/2 Push"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:88
-msgid ""
-"Pre-send internal JS files to the browser before they are requested. "
-"(Requires the HTTP/2 protocol)"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:94
-msgid "JS Excludes"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:98
-msgid "Listed JS files will not be minified/combined."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:106
-msgid "CSS/JS Cache TTL"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:111
-msgid ""
-"Specify how long, in seconds, CSS/JS files are cached. Minimum is %1$s "
-"seconds."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:118
-msgid "HTML Minify"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:122
-msgid "Minify HTML content."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:128
-msgid "Remove Query Strings"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:132
-msgid "Remove query strings from static resources."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:133 admin/tpl/settings_optimize.php:154
-#: admin/tpl/settings_optimize.php:175 admin/tpl/settings_optimize.php:186
-msgid ""
-"This can improve your speed score in services like Pingdom, GTmetrix and "
-"PageSpeed."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:139
-msgid "Remove Google Fonts"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:143
-msgid "Prevent google fonts from loading on all your pages."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:149 admin/tpl/settings_optimize.php:164
-msgid "Load CSS Asynchronously"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:153
-msgid "Optimize CSS delivery. This will load Google Fonts asynchronously too."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:160
-msgid "Critical CSS Rules"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:164
-msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:170
-msgid "Load JS Deferred"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:174
-msgid "Doing so can help reduce resource contention and improve performance."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:181
-msgid "Remove WordPress Emoji"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:185
-msgid ""
-"Stop loading wordpress.org emoji. Browser default emoji will be displayed "
-"instead."
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:192
-msgid "URI Excludes"
-msgstr ""
-
-#: admin/tpl/settings_optimize.php:196
-msgid "Prevent any optimization of listed pages."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:5
-msgid "Purge Settings"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:10
-msgid "All pages"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:11
-msgid "Front page"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:12
-msgid "Home page"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:13
-msgid "Pages"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:15
-msgid "All pages with Recent Posts Widget"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:17
-msgid "Author archive"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:18
-msgid "Post type archive"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:20
-msgid "Yearly archive"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:21
-msgid "Monthly archive"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:22
-msgid "Daily archive"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:24
-msgid "Term archive (include category, tag, and tax)"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:44
-msgid "Auto Purge Rules For Publish/Update"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:47
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:654
-msgid "Note:"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:49
-msgid ""
-"Select \"All\" if there are dynamic widgets linked to posts on pages other "
-"than the front or home pages."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:50
-msgid "Other checkboxes will be ignored."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:51
-msgid ""
-"Select only the archive types that are currently used, the others can be "
-"left unchecked."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:67
-msgid ""
-"Select which pages will be automatically purged when posts are published/"
-"updated."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:73 admin/tpl/settings_purge.php:90
-msgid "Scheduled Purge URLs"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:77
-msgid ""
-"The URLs here (one per line) will be purged automatically at the time set in "
-"the option \"%s\"."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:77 admin/tpl/settings_purge.php:85
-msgid "Scheduled Purge Time"
-msgstr ""
-
-#: admin/tpl/settings_purge.php:78
-msgid "Both %1$s and %2$s are acceptable."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:90
-msgid "Specify the time to purge the \"%s\" list."
-msgstr ""
-
-#: admin/tpl/settings_purge.php:91
-msgid "Current server time is %s."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:5
-msgid "LiteSpeed Cache plugin is installed!"
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:6
-msgid ""
-"This message indicates that the plugin was installed by the server admin."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:7
-msgid ""
-"The LiteSpeed Cache plugin is used to cache pages - a simple way to improve "
-"the performance of the site."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:8
-msgid ""
-"However, there is no way of knowing all the possible customizations that "
-"were implemented."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:9
-msgid ""
-"For that reason, please test the site to make sure everything still "
-"functions properly."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:11
-msgid "Examples of test cases include:"
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:13
-msgid "Visit the site while logged out."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:14
-msgid "Create a post, make sure the front page is accurate."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:16
-msgid ""
-"If there are any questions, the team is always happy to answer any questions "
-"on the <a %s>support forum</a>."
-msgstr ""
-
-#: admin/tpl/show_display_installed.php:19
-msgid ""
-"If you would rather not move at litespeed, you can deactivate this plugin."
-msgstr ""
-
-#: admin/tpl/show_error_cookie.php:4
-msgid "NOTICE: Database login cookie did not match your login cookie."
-msgstr ""
-
-#: admin/tpl/show_error_cookie.php:5
-msgid ""
-"If the login cookie was recently changed in the settings, please log out and "
-"back in."
-msgstr ""
-
-#: admin/tpl/show_error_cookie.php:6
-msgid ""
-"If not, please verify the setting in the <a href=\"%1$s\">Advanced tab</a>."
-msgstr ""
-
-#: admin/tpl/show_error_cookie.php:10
-msgid ""
-"If using OpenLiteSpeed, the server must be restarted once for the changes to "
-"take effect."
-msgstr ""
-
-#: admin/tpl/show_rule_conflict.php:5
-msgid ""
-"Unexpected cache rule %2$s found in %1$s file. This rule may cause visitors "
-"to see old versions of pages due to the browser caching html pages. If you "
-"are sure that html pages are not being browser cached, this message can be "
-"dismissed. (<a %3$s>Learn More</a>)"
-msgstr ""
-
 #: cli/litespeed-cache-cli-purge.class.php:90
 msgid "Purged All!"
 msgstr ""
@@ -3098,105 +3234,105 @@ msgstr ""
 msgid "Purged the tags!"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:108
+#: inc/crawler.class.php:109 includes/litespeed-cache-crawler.class.php:109
 msgid "Can not find any form data for blacklist"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:123
+#: inc/crawler.class.php:124 includes/litespeed-cache-crawler.class.php:124
 msgid "File saved successfully: %s"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:175
+#: inc/crawler.class.php:176 includes/litespeed-cache-crawler.class.php:176
 msgid "File created successfully: %s"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:323
+#: inc/crawler.class.php:324 includes/litespeed-cache-crawler.class.php:324
 msgid "Failed to send position reset notification: %s"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:327
+#: inc/crawler.class.php:328 includes/litespeed-cache-crawler.class.php:328
 msgid "Position reset notification sent successfully"
 msgstr ""
 
-#: includes/litespeed-cache-crawler.class.php:410
+#: inc/crawler.class.php:411 includes/litespeed-cache-crawler.class.php:411
 #: lib/litespeed/litespeed-crawler.class.php:327
 msgid "Reached end of sitemap file. Crawling completed."
 msgstr ""
 
-#: includes/litespeed-cache-gui.class.php:64
+#: inc/gui.class.php:65 includes/litespeed-cache-gui.class.php:65
 msgid "Purge this page"
 msgstr ""
 
-#: includes/litespeed-cache-gui.class.php:72
+#: inc/gui.class.php:73 includes/litespeed-cache-gui.class.php:73
 msgid "Mark this page as "
 msgstr ""
 
-#: includes/litespeed-cache-gui.class.php:79
+#: inc/gui.class.php:80 includes/litespeed-cache-gui.class.php:80
 msgid "Non cacheable"
 msgstr ""
 
-#: includes/litespeed-cache-gui.class.php:86
+#: inc/gui.class.php:87 includes/litespeed-cache-gui.class.php:87
 msgid "Private cache"
 msgstr ""
 
-#: includes/litespeed-cache-gui.class.php:93
+#: inc/gui.class.php:94 includes/litespeed-cache-gui.class.php:94
 msgid "No optimization"
 msgstr ""
 
-#: includes/litespeed-cache-gui.class.php:100
+#: inc/gui.class.php:101 includes/litespeed-cache-gui.class.php:101
 msgid "More settings"
 msgstr ""
 
-#: includes/litespeed-cache-purge.class.php:202
-msgid "Purge category %s"
-msgstr ""
-
-#: includes/litespeed-cache-purge.class.php:229
-msgid "Purge Post ID %s"
-msgstr ""
-
-#: includes/litespeed-cache-purge.class.php:258
-msgid "Purge tag %s"
-msgstr ""
-
-#: includes/litespeed-cache-purge.class.php:292
-msgid "Purge url %s"
-msgstr ""
-
-#: includes/litespeed-cache-task.class.php:111
-msgid "LiteSpeed Cache Custom Cron"
-msgstr ""
-
-#: includes/litespeed-cache.class.php:220
+#: inc/litespeed-cache.class.php:226 includes/litespeed-cache.class.php:226
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:225
+#: inc/litespeed-cache.class.php:231 includes/litespeed-cache.class.php:231
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:230
+#: inc/litespeed-cache.class.php:236 includes/litespeed-cache.class.php:236
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:235
+#: inc/litespeed-cache.class.php:241 includes/litespeed-cache.class.php:241
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:240
+#: inc/litespeed-cache.class.php:246 includes/litespeed-cache.class.php:246
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:246
+#: inc/litespeed-cache.class.php:252 includes/litespeed-cache.class.php:252
 msgid "Notified LiteSpeed Web Server to purge all caches."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:253
+#: inc/litespeed-cache.class.php:259 includes/litespeed-cache.class.php:259
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: includes/litespeed-cache.class.php:268
+#: inc/litespeed-cache.class.php:274 includes/litespeed-cache.class.php:274
 msgid "Notified LiteSpeed Web Server to purge the list."
+msgstr ""
+
+#: inc/purge.class.php:203 includes/litespeed-cache-purge.class.php:203
+msgid "Purge category %s"
+msgstr ""
+
+#: inc/purge.class.php:230 includes/litespeed-cache-purge.class.php:230
+msgid "Purge Post ID %s"
+msgstr ""
+
+#: inc/purge.class.php:259 includes/litespeed-cache-purge.class.php:259
+msgid "Purge tag %s"
+msgstr ""
+
+#: inc/purge.class.php:293 includes/litespeed-cache-purge.class.php:293
+msgid "Purge url %s"
+msgstr ""
+
+#: inc/task.class.php:112 includes/litespeed-cache-task.class.php:112
+msgid "LiteSpeed Cache Custom Cron"
 msgstr ""
 
 #: lib/litespeed/litespeed-crawler.class.php:174
@@ -3252,67 +3388,67 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:598
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:607
 msgid "WooCommerce"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:601
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:610
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:602
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:611
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:603
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:612
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:604
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:613
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:605
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:614
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:606
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:615
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:609
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:618
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:610
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:619
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:611
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:620
 msgid ""
 "For example, if the homepage for the site is located at %1$s, the shop page "
 "may be located at %2$s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:639
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:648
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:646
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:655
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:656
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:665
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:657
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:666
 msgid "To test the cart, visit the %s."
 msgstr ""
 

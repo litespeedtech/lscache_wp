@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.4
+Stable tag: 1.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -238,19 +238,33 @@ For more detailed information about crawler setup, please see [our blog post](ht
 
 == Changelog ==
 
+= 1.5 - October 17 2017 =
+* [NEW FEATURE] Exclude JQuery (to fix inline JS error when using JS Combine).
+* [NEW FEATURE] Load JQuery Remotely.
+* [NEW FEATURE] JS Deferred Excludes.
+* [NEW FEATURE] Lazy Load Images Excludes.
+* [NEW FEATURE] Lazy Load Image Placeholder.
+* [IMPROVEMENT] Improved Lazy Load size attribute for w3c validator.
+* [UPDATE] Added basic caching info and LSCWP version to HTML comment.
+* [UPDATE] Added debug log to HTML detection.
+* [BUGFIX] Fixed potential font CORS issue when using CDN.
+* [GUI] Added API docs to setting description.
+* [REFACTOR] Relocated all classes under includes with backwards compatibility.
+* [REFACTOR] Relocated admin templates.
+
 = 1.4 - October 11 2017 =
-* [New] Lazy load images/iframes.
-* [New] Clean CSS/JS optimizer data functionality in DB Optimizer panel.
-* [New] Exclude certain URIs from optimizer.
-* [Improvement] Improved optimizer HTML check compatibility to avoid conflicts with ESI functions.
-* [Improvement] Added support for using ^ when matching the start of a path in matching settings.
-* [Improvement] Added wildcard support in CDN original URL.
-* [Improvement] Moved optimizer table initialization to admin setting panel with failure warning.
-* [Update] Added a one-time welcome banner.
-* [Update] Partly relocated class: 'api'.
+* [NEW FEATURE] Lazy load images/iframes.
+* [NEW FEATURE] Clean CSS/JS optimizer data functionality in DB Optimizer panel.
+* [NEW FEATURE] Exclude certain URIs from optimizer.
+* [IMPROVEMENT] Improved optimizer HTML check compatibility to avoid conflicts with ESI functions.
+* [IMPROVEMENT] Added support for using ^ when matching the start of a path in matching settings.
+* [IMPROVEMENT] Added wildcard support in CDN original URL.
+* [IMPROVEMENT] Moved optimizer table initialization to admin setting panel with failure warning.
+* [UPDATE] Added a one-time welcome banner.
+* [UPDATE] Partly relocated class: 'api'.
 * [API] Added API wrapper for removing wrapped HTML output.
-* [Integration] Fixed WooCommerce conflict with optimizer.
-* [Integration] Private cache support for WooCommerce v3.2.0+.
+* [INTEGRATION] Fixed WooCommerce conflict with optimizer.
+* [INTEGRATION] Private cache support for WooCommerce v3.2.0+.
 * [GUI] Added No Optimization menu to frontend.
 
 = 1.3.1.1 - October 6 2017 =
