@@ -213,17 +213,18 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * Assumes user capabilities are already checked.
 	 *
+	 * @since  1.6 Changed order of 2nd&3rd param, changed 3rd param `append_str` to 2nd `type`
 	 * @access public
 	 * @param string $action The LSCWP_CTRL action to do in the url.
-	 * @param string $ajax_action AJAX call's action
-	 * @param string $append_str The appending string to url
+	 * @param string $is_ajax if is AJAX call or not
+	 * @param string $type The appending type to url
 	 * @return string The built url.
 	 */
-	public static function build_url( $action, $ajax_action = false, $append_str = false, $page = null )
+	public static function build_url( $action, $type = false, $is_ajax = false, $page = null )
 	{
 		$prefix = '?' ;
 
-		if ( $ajax_action === false ) {
+		if ( ! $is_ajax ) {
 			if ( $page ) {
 				// If use admin url
 				if ( $page === true ) {
@@ -256,7 +257,7 @@ class LiteSpeed_Cache_Utility
 			}
 		}
 		else {
-			$combined = 'admin-ajax.php?action=' . $ajax_action . '&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+			$combined = 'admin-ajax.php?action=litespeed_ajax&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
 		}
 
 		if ( is_network_admin() ) {
@@ -267,8 +268,8 @@ class LiteSpeed_Cache_Utility
 		}
 		$url = wp_nonce_url( $prenonce, $action, LiteSpeed_Cache::NONCE_NAME ) ;
 
-		if ( $append_str ) {
-			$url .= '&' . $append_str ;
+		if ( $type ) {
+			$url .= '&' . LiteSpeed_Cache_Router::build_type( $type ) ;
 		}
 
 		return $url ;

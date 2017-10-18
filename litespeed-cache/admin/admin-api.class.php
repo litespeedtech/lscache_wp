@@ -17,8 +17,8 @@ class LiteSpeed_Cache_Admin_API
 	const DB_SAPI_SERVER = 'litespeed_sapi_server' ;
 	const DB_SAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
 
-	const ACTION_REQUEST_KEY = 'request_key' ;
-	const ACTION_REQUEST_KEY_CALLBACK = 'request_key_callback' ;
+	const TYPE_REQUEST_KEY = 'request_key' ;
+	const TYPE_REQUEST_KEY_CALLBACK = 'request_key_callback' ;
 
 	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
 
@@ -42,16 +42,10 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	public static function sapi_callback()
 	{
-		if ( empty( $_GET[ 'type' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI callback no type ' ) ;
-			return ;
-		}
-		LiteSpeed_Cache_Log::debug( 'SAPI callback type: ' . $_GET[ 'type' ] ) ;
-
 		$instance = self::get_instance() ;
 
-		switch ( $_GET[ 'type' ] ) {
-			case self::ACTION_REQUEST_KEY_CALLBACK :
+		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+			case self::TYPE_REQUEST_KEY_CALLBACK :
 				$instance->_request_key_callback() ;
 				break ;
 
@@ -71,16 +65,10 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	public static function sapi_proceed()
 	{
-		if ( empty( $_GET[ 'type' ] ) ) {
-			return ;
-		}
-
-		LiteSpeed_Cache_Log::debug( 'SAPI proceed type: ' . $_GET[ 'type' ] ) ;
-
 		$instance = self::get_instance() ;
 
-		switch ( $_GET[ 'type' ] ) {
-			case self::ACTION_REQUEST_KEY :
+		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+			case self::TYPE_REQUEST_KEY :
 				return $instance->_request_key() ;
 				break ;
 

@@ -19,15 +19,13 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.5' ;
+	const PLUGIN_VERSION = '1.6dev' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
 	const NONCE_NAME = 'LSCWP_NONCE' ;
 	const ACTION_KEY = 'LSCWP_CTRL' ;
-	const ACTION_DISMISS_WHM = 'dismiss-whm' ;
-	const ACTION_DISMISS_EXPIRESDEFAULT = 'dismiss-ExpiresDefault' ;
-	const ACTION_DISMISS_PROMO = 'dismiss-promo' ;
+	const ACTION_DISMISS = 'dismiss' ;
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
@@ -55,7 +53,8 @@ class LiteSpeed_Cache
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 
-	const ACTION_SAPI_PROCEED = 'sapi_proceed' ;
+	const ACTION_MEDIA = 'media' ;
+	const ACTION_SAPI = 'sapi' ;
 	const ACTION_SAPI_CALLBACK = 'sapi_callback' ;
 
 	const WHM_TRANSIENT = 'lscwp_whm_install' ;
@@ -274,23 +273,15 @@ class LiteSpeed_Cache
 				$msg = __( 'Notified LiteSpeed Web Server to purge the list.', 'litespeed-cache' ) ;
 				break;
 
-			case LiteSpeed_Cache::ACTION_DISMISS_WHM:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
-				LiteSpeed_Cache_Activation::dismiss_whm() ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
-				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_DISMISS_PROMO:
-				LiteSpeed_Cache_Router::dismiss_promo_msg() ;
+			case LiteSpeed_Cache::ACTION_DISMISS:// Even its from ajax, we don't need to register wp ajax callback function but directly use our action
+				LiteSpeed_Cache_GUI::dismiss() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
 				$msg = LiteSpeed_Cache_Admin_Optimize::run_db_clean() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_SAPI_PROCEED:
+			case LiteSpeed_Cache::ACTION_SAPI:
 				$msg = LiteSpeed_Cache_Admin_API::sapi_proceed() ;
 				break ;
 

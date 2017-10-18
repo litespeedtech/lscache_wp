@@ -26,21 +26,21 @@ $_panels = array(
 		'desc'	=> __( 'Purge error pages, including 403 pages', 'litespeed-cache' ),
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,
 		'icon'	=> 'purge-403',
-		'append_url'	=> 'lserr=403',
+		'append_url'	=> '403',
 	),
 	array(
 		'title'	=> __( 'Purge 404 Error', 'litespeed-cache' ),
 		'desc'	=> __( 'Purge error pages, including 404 pages', 'litespeed-cache' ),
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,
 		'icon'	=> 'purge-404',
-		'append_url'	=> 'lserr=404',
+		'append_url'	=> '404',
 	),
 	array(
 		'title'	=> __( 'Purge 500 Error', 'litespeed-cache' ),
 		'desc'	=> __( 'Purge error pages, including 500 pages', 'litespeed-cache' ),
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,
 		'icon'	=> 'purge-500',
-		'append_url'	=> 'lserr=500',
+		'append_url'	=> '500',
 	),
 	array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ),
@@ -79,7 +79,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 <?php foreach ( $_panels as $v ): ?>
 
 	<a 	class="litespeed-panel"
-		href="<?php echo LiteSpeed_Cache_Utility::build_url( $v[ 'tag' ], false, ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ) ; ?>"
+		href="<?php echo LiteSpeed_Cache_Utility::build_url( $v[ 'tag' ], ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ) ; ?>"
 		<?php if ( ! empty( $v[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"' ; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">

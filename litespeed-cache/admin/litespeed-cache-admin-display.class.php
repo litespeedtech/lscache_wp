@@ -148,7 +148,7 @@ class LiteSpeed_Cache_Admin_Display
 			$this->add_submenu(__('Information', 'litespeed-cache'), 'lscache-info', 'show_info') ;
 
 			if ( ! is_network_admin() ) {
-				// $this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
+				$this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
 			}
 
@@ -201,18 +201,18 @@ class LiteSpeed_Cache_Admin_Display
 		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
 
 		$localize_data = array() ;
-		if ( LiteSpeed_Cache_Router::has_whm_msg() ) {
-			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS_WHM, LiteSpeed_Cache::ACTION_DISMISS_WHM ) ;
+		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
+			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_WHM, true ) ;
 			$localize_data[ 'ajax_url_dismiss_whm' ] = $ajax_url_dismiss_whm ;
 		}
 
-		if ( LiteSpeed_Cache_Router::has_msg_ruleconflict() ) {
-			$ajax_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT, LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT ) ;
+		if ( LiteSpeed_Cache_GUI::has_msg_ruleconflict() ) {
+			$ajax_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_EXPIRESDEFAULT, true ) ;
 			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url ;
 		}
 
-		if ( LiteSpeed_Cache_Router::has_promo_msg() ) {
-			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS_PROMO, LiteSpeed_Cache::ACTION_DISMISS_PROMO ) ;
+		if ( LiteSpeed_Cache_GUI::has_promo_msg() ) {
+			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 

@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Admin
 			return ;
 		}
 
-		if ( LiteSpeed_Cache_Router::has_whm_msg() ) {
+		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
 			$this->display->show_display_installed() ;
 		}
 	}

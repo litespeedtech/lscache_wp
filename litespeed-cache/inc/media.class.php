@@ -16,6 +16,8 @@ class LiteSpeed_Cache_Media
 
 	const LAZY_LIB = '/min/lazyload.js' ;
 
+	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
+
 	private $content ;
 
 	/**

@@ -16,6 +16,10 @@ class LiteSpeed_Cache_GUI
 
 	private static $_clean_counter = 0 ;
 
+	const TYPE_DISMISS_WHM = 'whm' ;
+	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault' ;
+	const TYPE_DISMISS_PROMO = 'promo' ;
+
 	/**
 	 * Init
 	 *
@@ -29,6 +33,76 @@ class LiteSpeed_Cache_GUI
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
 			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
 		}
+	}
+
+	public static function dismiss()
+	{
+		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+			case self::TYPE_DISMISS_WHM :
+				LiteSpeed_Cache_Activation::dismiss_whm() ;
+				break ;
+
+			case self::TYPE_DISMISS_EXPIRESDEFAULT :
+				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+				break ;
+
+			case self::TYPE_DISMISS_PROMO :
+				update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() ) ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		// All dismiss actions are considered as ajax call, so just exit
+		exit( json_encode( array( 'success' => 1 ) ) ) ;
+	}
+
+	/**
+	 * Check if has rule conflict notice
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 * @return boolean
+	 */
+	public static function has_msg_ruleconflict()
+	{
+		return get_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG ) == LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ;
+	}
+
+	/**
+	 * Check if has whm notice
+	 *
+	 * @since 1.1.1
+	 * @access public
+	 * @return boolean
+	 */
+	public static function has_whm_msg()
+	{
+		return get_transient( LiteSpeed_Cache::WHM_TRANSIENT ) == LiteSpeed_Cache::WHM_TRANSIENT_VAL ;
+	}
+
+	/**
+	 * Check if has promotion notice
+	 *
+	 * @since 1.3.2
+	 * @access public
+	 * @return boolean
+	 */
+	public static function has_promo_msg()
+	{
+		$promo = get_option( 'litespeed-banner-promo' ) ;
+		if ( ! $promo ) {
+			update_option( 'litespeed-banner-promo', time() - 86400 * 8 ) ;
+			return false ;
+		}
+		if ( $promo == 'done' ) {
+			return false ;
+		}
+		if ( $promo && time() - $promo < 864000 ) {
+			return false ;
+		}
+		return true ;
 	}
 
 	/**
@@ -78,21 +152,21 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-noncache',
 			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, false, 'type=nocache', true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'nocache', false, true ),
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-private',
 			'title'		=> __( 'Private cache', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, false, 'type=private', true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'private', false, true ),
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-nonoptimize',
 			'title'		=> __( 'No optimization', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, false, 'type=nonoptimize', true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'nonoptimize', false, true ),
 		) );
 
 		$wp_admin_bar->add_menu( array(

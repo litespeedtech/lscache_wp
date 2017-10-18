@@ -10,9 +10,6 @@
  */
 class LiteSpeed_Cache_Admin_Optimize
 {
-
-	const TYPE = 'ls_opt_type' ;
-
 	private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
 
 	/**
@@ -25,7 +22,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 */
 	public static function generate_url( $type )
 	{
-		$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, false, self::TYPE . '=' . $type ) ;
+		$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $type ) ;
 		return $url ;
 	}
 
@@ -37,7 +34,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 */
 	public static function run_db_clean()
 	{
-		if( empty( $_GET[ self::TYPE ] ) ) {
+		if( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
 			return ;
 		}
 
@@ -47,12 +44,12 @@ class LiteSpeed_Cache_Admin_Optimize
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			foreach ( $blogs as $blog_id ) {
 				switch_to_blog( $blog_id ) ;
-				$res = self::db_clean( $_GET[ self::TYPE ] ) ;
+				$res = self::db_clean( $type ) ;
 				restore_current_blog() ;
 			}
 		}
 		else {
-			$res = self::db_clean( $_GET[ self::TYPE ] ) ;
+			$res = self::db_clean( $type ) ;
 		}
 
 		return $res ;

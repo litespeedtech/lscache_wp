@@ -169,11 +169,13 @@ class LiteSpeed_Cache_Purge
 	public static function purge_errors()
 	{
 		self::add( LiteSpeed_Cache_Tag::TYPE_ERROR ) ;
-		if ( ! isset( $_GET[ 'lserr' ] ) || ! in_array( $_GET[ 'lserr' ], array( '403', '404', '500' ) ) ) {
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+		if ( ! $type || ! in_array( $type, array( '403', '404', '500' ) ) ) {
 			return ;
 		}
 
-		self::add( LiteSpeed_Cache_Tag::TYPE_ERROR . $_GET[ 'lserr' ] ) ;
+		self::add( LiteSpeed_Cache_Tag::TYPE_ERROR . $type ) ;
 	}
 
 	/**

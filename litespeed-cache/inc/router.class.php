@@ -21,8 +21,6 @@ class LiteSpeed_Cache_Router
 	private static $_ip ;
 	private static $_action ;
 	private static $_is_admin_ip ;
-	private static $_has_whm_msg ;
-	private static $_has_msg_ruleconflict ;
 	private static $_frontend_path ;
 
 	/**
@@ -62,71 +60,6 @@ class LiteSpeed_Cache_Router
 			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
 		}
 		return self::$_esi_enabled ;
-	}
-
-	/**
-	 * Check if has rule conflict notice
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 * @return boolean
-	 */
-	public static function has_msg_ruleconflict()
-	{
-		if ( ! isset( self::$_has_msg_ruleconflict ) ) {
-			self::$_has_msg_ruleconflict = get_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG ) == LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ;
-		}
-		return self::$_has_msg_ruleconflict ;
-	}
-
-	/**
-	 * Check if has whm notice
-	 *
-	 * @since 1.1.1
-	 * @access public
-	 * @return boolean
-	 */
-	public static function has_whm_msg()
-	{
-		if ( ! isset( self::$_has_whm_msg ) ) {
-			self::$_has_whm_msg = get_transient( LiteSpeed_Cache::WHM_TRANSIENT ) == LiteSpeed_Cache::WHM_TRANSIENT_VAL ;
-		}
-		return self::$_has_whm_msg ;
-	}
-
-	/**
-	 * Check if has promotion notice
-	 *
-	 * @since 1.3.2
-	 * @access public
-	 * @return boolean
-	 */
-	public static function has_promo_msg()
-	{
-		$promo = get_option( 'litespeed-banner-promo' ) ;
-		if ( ! $promo ) {
-			update_option( 'litespeed-banner-promo', time() - 86400 * 8 ) ;
-			return false ;
-		}
-		if ( $promo == 'done' ) {
-			return false ;
-		}
-		if ( $promo && time() - $promo < 864000 ) {
-			return false ;
-		}
-		return true ;
-	}
-
-	/**
-	 * update promotion notice
-	 *
-	 * @since 1.3.2
-	 * @access public
-	 * @return boolean
-	 */
-	public static function dismiss_promo_msg()
-	{
-		update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() ) ;
 	}
 
 	/**
@@ -216,6 +149,38 @@ class LiteSpeed_Cache_Router
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
 		}
 		return self::$_is_admin_ip ;
+	}
+
+
+
+
+	/**
+	 * Create type value for url
+	 *
+	 * @since 1.6
+	 * @access public
+	 */
+	public static function build_type( $val )
+	{
+		return 'type=' . $val ;
+	}
+
+	/**
+	 * Get type value
+	 *
+	 * @since 1.6
+	 * @access public
+	 */
+	public static function verify_type()
+	{
+		if ( empty( $_GET[ 'type' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'Router no type', 2 ) ;
+			return false ;
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Router parsed type: ' . $_GET[ 'type' ], 2 ) ;
+
+		return $_GET[ 'type' ] ;
 	}
 
 	/**
@@ -323,7 +288,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
-			case LiteSpeed_Cache::ACTION_SAPI_PROCEED:
+			case LiteSpeed_Cache::ACTION_SAPI:
 				if ( defined( 'LITESPEED_ON' ) && $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
@@ -333,9 +298,7 @@ class LiteSpeed_Cache_Router
 				self::$_action = $action ;
 				return ;
 
-			case LiteSpeed_Cache::ACTION_DISMISS_WHM:
-			case LiteSpeed_Cache::ACTION_DISMISS_EXPIRESDEFAULT:
-			case LiteSpeed_Cache::ACTION_DISMISS_PROMO:
+			case LiteSpeed_Cache::ACTION_DISMISS:
 				if ( self::is_ajax() ) {
 					self::$_action = $action ;
 				}

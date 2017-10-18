@@ -311,11 +311,11 @@ class LiteSpeed_Cache_Config
 			exit( 'no referer' ) ;
 		}
 
-		if ( empty( $_GET[ 'type' ] ) ) {
+		if ( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
 			exit( 'no type' ) ;
 		}
 
-		switch ( $_GET[ 'type' ] ) {
+		switch ( $type ) {
 			case 'private' :
 				$id = self::OPID_CACHE_URI_PRIV ;
 				break ;
