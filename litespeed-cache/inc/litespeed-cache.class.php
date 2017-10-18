@@ -289,6 +289,10 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Admin_API::sapi_callback() ;
 				break ;
 
+			case LiteSpeed_Cache::ACTION_MEDIA:
+				$msg = LiteSpeed_Cache_Media::handler() ;
+				break ;
+
 			default:
 				break ;
 		}
@@ -441,18 +445,18 @@ class LiteSpeed_Cache
 		$this->_check_is_html( $buffer ) ;
 
 		// Image lazy load check
-		$buffer = LiteSpeed_Cache_Media::run( $buffer ) ;
+		$buffer = LiteSpeed_Cache_Media::finalize( $buffer ) ;
 
 		/**
 		 * Clean wrapper mainly for esi block
 		 * NOTE: this needs to be before optimizer to avoid wrapper being removed
 		 * @since 1.4
 		 */
-		$buffer = LiteSpeed_Cache_GUI::clean_wrapper( $buffer ) ;
+		$buffer = LiteSpeed_Cache_GUI::finalize( $buffer ) ;
 
-		$buffer = LiteSpeed_Cache_Optimize::run( $buffer ) ;
+		$buffer = LiteSpeed_Cache_Optimize::finalize( $buffer ) ;
 
-		$buffer = LiteSpeed_Cache_CDN::run( $buffer ) ;
+		$buffer = LiteSpeed_Cache_CDN::finalize( $buffer ) ;
 
 		$this->send_headers( true ) ;
 

@@ -61,6 +61,11 @@ class LiteSpeed_Cache_Media
 		}
 	}
 
+	public static function handler()
+	{
+
+	}
+
 	/**
 	 * Run lazy load process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
@@ -71,7 +76,7 @@ class LiteSpeed_Cache_Media
 	 * @access public
 	 * @return  string The buffer
 	 */
-	public static function run( $content )
+	public static function finalize( $content )
 	{
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
 			LiteSpeed_Cache_Log::debug2( 'Media bypass: NO_LAZY const' ) ;
@@ -88,7 +93,7 @@ class LiteSpeed_Cache_Media
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
 
-		$instance->_proceed() ;
+		$instance->_lazyload() ;
 		return $instance->content ;
 	}
 
@@ -98,7 +103,7 @@ class LiteSpeed_Cache_Media
 	 * @since  1.4
 	 * @access private
 	 */
-	private function _proceed()
+	private function _lazyload()
 	{
 		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
 		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;

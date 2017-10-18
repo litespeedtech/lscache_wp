@@ -178,12 +178,25 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Finalize buffer by GUI class
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
+	public static function finalize( $buffer )
+	{
+		$instance = self::get_instance() ;
+		return $instance->_clean_wrapper( $buffer ) ;
+	}
+
+	/**
 	 * Clean wrapper from buffer
 	 *
 	 * @since  1.4
-	 * @access public
+	 * @since  1.6 converted to private with adding prefix _
+	 * @access private
 	 */
-	public static function clean_wrapper( $buffer )
+	private function _clean_wrapper( $buffer )
 	{
 		if ( self::$_clean_counter < 1 ) {
 			LiteSpeed_Cache_Log::debug2( "GUI bypassed by no counter" ) ;

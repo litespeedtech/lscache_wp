@@ -248,7 +248,7 @@ class LiteSpeed_Cache_Optimize
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public static function run( $content )
+	public static function finalize( $content )
 	{
 		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again ( But can be removed as mini file doesn't have LITESPEED_IS_HTML, keep for efficiency)
 			return $content ;

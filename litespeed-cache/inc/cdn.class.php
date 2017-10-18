@@ -144,7 +144,7 @@ class LiteSpeed_Cache_CDN
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public static function run( $content )
+	public static function finalize( $content )
 	{
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
