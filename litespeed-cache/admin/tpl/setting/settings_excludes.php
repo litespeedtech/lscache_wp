@@ -59,9 +59,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-callout-warning">
 				<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
 				<ol>
-					<li><?php echo __('If the Category ID is not found, the name will be removed on save.', 'litespeed-cache'); ?></li>
+					<li><?php echo __('If the category slug is not found, the category will be removed from the list on save.', 'litespeed-cache'); ?></li>
 					<li><?php echo sprintf(__('To exclude %1$s, insert %2$s.', 'litespeed-cache'),
-							'<code>http://www.example.com/category/category-id/</code>', '<code>category-id</code>'); ?></li>
+							'<code>http://www.example.com/category/category-slug/</code>', '<code>category-slug</code>'); ?></li>
 				</ol>
 			</div>
 		</td>
@@ -97,9 +97,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-callout-warning">
 				<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
 				<ol>
-					<li><?php echo __('If the Tag ID is not found, the name will be removed on save.', 'litespeed-cache'); ?></li>
+					<li><?php echo __('If the tag slug is not found, the tag will be removed from the list on save.', 'litespeed-cache'); ?></li>
 					<li><?php echo sprintf(__('To exclude %1$s, insert %2$s.', 'litespeed-cache'),
-							'<code>http://www.example.com/tag/category/tag-id/</code>', '<code>tag-id</code>'); ?></li>
+							'<code>http://www.example.com/tag/category/tag-slug/</code>', '<code>tag-slug</code>'); ?></li>
 				</ol>
 			</div>
 		</td>

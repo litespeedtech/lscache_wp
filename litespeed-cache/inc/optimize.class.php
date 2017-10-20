@@ -496,7 +496,7 @@ class LiteSpeed_Cache_Optimize
 				$this->content .= '<!-- Page optimized by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
 
 			} catch ( ErrorException $e ) {
-				LiteSpeed_Cache_Control::debug( 'Error when optimizing HTML: ' . $e->getMessage() ) ;
+				LiteSpeed_Cache_Log::debug( 'Error when optimizing HTML: ' . $e->getMessage() ) ;
 				error_log( 'LiteSpeed Optimizer optimizing HTML Error: ' . $e->getMessage() ) ;
 				// If failed to minify HTML, restore original content
 				$this->content = $ori ;
@@ -1081,7 +1081,7 @@ class LiteSpeed_Cache_Optimize
 			$content = $this->minify_minify->serve( $this->minify_controller, $this->minify_options ) ;
 
 		} catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Control::debug( 'Error when serving from optimizer: ' . $e->getMessage() ) ;
+			LiteSpeed_Cache_Log::debug( 'Error when serving from optimizer: ' . $e->getMessage() ) ;
 			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
 			return false ;
 		}
