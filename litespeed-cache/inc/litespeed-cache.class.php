@@ -55,7 +55,8 @@ class LiteSpeed_Cache
 
 	const ACTION_MEDIA = 'media' ;
 	const ACTION_SAPI = 'sapi' ;
-	const ACTION_SAPI_CALLBACK = 'sapi_callback' ;
+	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
+	const ACTION_SAPI_AGGRESSIVE_CALLBACK = 'sapi_aggressive_callback' ;
 
 	const WHM_TRANSIENT = 'lscwp_whm_install' ;
 	const WHM_TRANSIENT_VAL = 'whm_install' ;
@@ -285,8 +286,12 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_Admin_API::sapi_proceed() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_SAPI_CALLBACK:
-				LiteSpeed_Cache_Admin_API::sapi_callback() ;
+			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK:
+				LiteSpeed_Cache_Admin_API::sapi_passive_callback() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK:
+				LiteSpeed_Cache_Admin_API::sapi_aggressive_callback() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_MEDIA:

@@ -12,15 +12,19 @@ class LiteSpeed_Cache_Admin_API
 	private static $_instance ;
 
 	private $_sapi_key ;
+	private $_sapi_server ;
 
 	const DB_SAPI_KEY = 'litespeed_sapi_key' ;
 	const DB_SAPI_SERVER = 'litespeed_sapi_server' ;
 	const DB_SAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
 
 	const TYPE_REQUEST_KEY = 'request_key' ;
-	const TYPE_REQUEST_KEY_CALLBACK = 'request_key_callback' ;
+
+	// For each request, send a callback to confirm
+	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
 
 	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
+	const SAPI_ACTION_IMG_OPTIMIZE = 'img_optimize' ;
 
 	/**
 	 * Init
@@ -30,30 +34,53 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_sapi_key = get_option( self::DB_SAPI_KEY ) ;
+		$this->_sapi_key = get_option( self::DB_SAPI_KEY ) ?: '' ;
+		$this->_sapi_server = get_option( self::DB_SAPI_SERVER ) ;
 	}
 
 
 	/**
-	 * Handle callback requests from LiteSpeed server
+	 * Handle aggressive callback requests from LiteSpeed server
 	 *
-	 * @since  1.5
+	 * @since  1.6
 	 * @access public
 	 */
-	public static function sapi_callback()
+	public static function sapi_aggressive_callback()
 	{
 		$instance = self::get_instance() ;
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_REQUEST_KEY_CALLBACK :
-				$instance->_request_key_callback() ;
+			case self::TYPE_REQUEST_CALLBACK :
+				$instance->_request_callback() ;
 				break ;
 
 			default:
 				break ;
 		}
 
+		exit ;
+	}
 
+	/**
+	 * Handle passive callback requests from LiteSpeed server
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
+	public static function sapi_passive_callback()
+	{
+		$instance = self::get_instance() ;
+
+		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+			case self::TYPE_REQUEST_CALLBACK :
+				$instance->_request_callback() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		exit ;
 	}
 
 	/**
@@ -69,13 +96,14 @@ class LiteSpeed_Cache_Admin_API
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
 			case self::TYPE_REQUEST_KEY :
-				return $instance->_request_key() ;
+				$instance->_request_key() ;
 				break ;
 
 			default:
 				break ;
 		}
 
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**
@@ -84,10 +112,10 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  1.5
 	 * @access private
 	 */
-	private function _request_key_callback()
+	private function _request_callback()
 	{
-		$key_hash = get_transient( self::DB_SAPI_KEY_HASH ) ;
-		LiteSpeed_Cache_Log::debug( 'SAPI callback request key hash: ' . $key_hash ) ;
+		$key_hash = get_option( self::DB_SAPI_KEY_HASH ) ;
+		LiteSpeed_Cache_Log::debug( 'SAPI __callback request hash: ' . $key_hash ) ;
 		exit( $key_hash ) ;
 	}
 
@@ -99,37 +127,17 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function _request_key()
 	{
-		$hash = Litespeed_String::rrand( 16 ) ;
-		// store hash
-		set_transient( self::DB_SAPI_KEY_HASH, $hash, 300 ) ;
+		// reset current key first
+		delete_option( self::DB_SAPI_KEY ) ;
 
-		// send the request
-		$url = 'https://wp.api.litespeedtech.com/' . self::SAPI_ACTION_REQUEST_KEY ;
-		$param = array(
-			'hash'	=> $hash,
-			'callback' => home_url(),
-		) ;
-		$response = wp_remote_post( $url, array( 'body' => $param ) ) ;
+		// Send request to LiteSpeed
+		$json = $this->_post( self::SAPI_ACTION_REQUEST_KEY, home_url() ) ;
 
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( 'SAPI failed to send request' ) ;
-			return ;
-		}
-
-		// parse data from server
-		set_error_handler( 'litespeed_exception_handler' ) ;
-		try {
-			$json = json_decode( $response[ 'body' ], true ) ;
-		}
-		catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI failed to decode json: ' . $response[ 'body' ] ) ;
-			return ;
-		}
-		restore_error_handler() ;
-
+		// Check if get key&server correctly
 		if ( empty( $json[ 'auth_key' ] ) || empty( $json[ 'distribute_server' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI failed to get key and server: ' . $response[ 'body' ] ) ;
+			LiteSpeed_Cache_Log::debug( 'SAPI request key failed: ', $json ) ;
+			$msg = sprintf( __( 'SAPI Error %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
 
@@ -138,37 +146,119 @@ class LiteSpeed_Cache_Admin_API
 		update_option( self::DB_SAPI_SERVER, $json[ 'distribute_server' ] ) ;
 		LiteSpeed_Cache_Log::debug( 'SAPI distribute server: ' . $json[ 'distribute_server' ] ) ;
 
-		return __( 'Generate the key from server successfully', 'litespeed-cache' ) ;
+		$msg = __( 'Generate the key from server successfully', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
 	}
 
 	/**
-	 * Check if the get token is correct with server api key
+	 * Check if is valid callback from litespeed passive request
 	 *
 	 * @since  1.5
 	 * @access public
 	 * @return bool True if correct
 	 */
-	public static function sapi_token_check()
+	public static function sapi_valiate_passive_callback()
 	{
-		if ( empty( $_GET[ 'token' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI bypassed token check' ) ;
+		if ( empty( $_REQUEST[ 'hash' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'SAPI __callback bypassed passive check' ) ;
 			return false ;
 		}
 		$instance = self::get_instance() ;
 
+		// use tmp hash to check
+		$key_hash = get_option( self::DB_SAPI_KEY_HASH ) ;
+		$hash_check = md5( $key_hash ) === $_REQUEST[ 'hash' ] ;
+
+		LiteSpeed_Cache_Log::debug( 'SAPI __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
+
+		return $hash_check ;
+	}
+
+	/**
+	 * Check if is valid callback from litespeed aggressive request
+	 *
+	 * @since  1.6
+	 * @access public
+	 * @return bool True if correct
+	 */
+	public static function sapi_validate_aggressive_callback()
+	{
+		$instance = self::get_instance() ;
+
 		// don't have auth_key yet
 		if ( ! $instance->_sapi_key ) {
-			// use tmp hash to check
-			$key_hash = get_transient( self::DB_SAPI_KEY_HASH ) ;
-			$res = md5( $key_hash ) === $_GET[ 'token' ] ;
-
-			LiteSpeed_Cache_Log::debug( 'SAPI token init check ' . $key_hash . ': ' . ( $res ? 'passed' : 'failed' ) ) ;
-			return $res ;
+			LiteSpeed_Cache_Log::debug( 'SAPI __callback aggressive check failed: No init key' ) ;
+			return false ;
 		}
 
-		$res = md5( $instance->_sapi_key ) === $_GET[ 'token' ] ;
-		LiteSpeed_Cache_Log::debug( 'SAPI token check: ' . ( $res ? 'passed' : 'failed' ) ) ;
+		// Once client has auth_key, each time when callback to check, need to carry on this key
+		if ( empty( $_REQUEST[ 'auth_key' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'SAPI __callback aggressive check failed: lack of auth_key' ) ;
+			return false ;
+		}
+
+		$res = md5( $instance->_sapi_key ) === $_REQUEST[ 'auth_key' ] ;
+		LiteSpeed_Cache_Log::debug( 'SAPI __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
 		return $res ;
+	}
+
+	/**
+	 * Post data to LiteSpeed server
+	 *
+	 * @since  1.6
+	 * @access public
+	 * @param  array $data
+	 */
+	public static function post( $action, $data )
+	{
+		$instance = self::get_instance() ;
+		return $instance->_post( $action, $data ) ;
+	}
+
+	/**
+	 * Post data to LiteSpeed server
+	 *
+	 * @since  1.6
+	 * @access private
+	 * @param  array $data
+	 */
+	private function _post( $action, $data )
+	{
+		$hash = Litespeed_String::rrand( 16 ) ;
+		// store hash
+		update_option( self::DB_SAPI_KEY_HASH, $hash ) ;
+
+		$server = $this->_sapi_server ;
+		if ( in_array( $action, array( self::SAPI_ACTION_REQUEST_KEY ) ) ) {
+			$server = 'https://wp.api.litespeedtech.com' ;
+		}
+
+		$url = $server . '/' . $action ;
+
+		LiteSpeed_Cache_Log::debug( 'SAPI posting to : ' . $url ) ;
+
+		$param = array(
+			'auth_key'	=> $this->_sapi_key,
+			'hash'	=> $hash,
+			'data' => $data,
+		) ;
+		$response = wp_remote_post( $url, array( 'body' => $param ) ) ;
+
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message() ;
+			LiteSpeed_Cache_Log::debug( 'SAPI failed to post: ' . $error_message ) ;
+			return $error_message ;
+		}
+
+		// parse data from server
+		$json = json_decode( $response[ 'body' ], true ) ;
+
+		if ( ! is_array( $json ) ) {
+			LiteSpeed_Cache_Log::debug( 'SAPI failed to decode post json: ' . $response[ 'body' ] ) ;
+		}
+
+		return $json ;
 	}
 
 	/**

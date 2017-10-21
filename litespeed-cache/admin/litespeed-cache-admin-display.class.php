@@ -437,6 +437,28 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Display success notice
+	 *
+	 * @since 1.6
+	 * @access public
+	 */
+	public static function succeed( $msg )
+	{
+		self::add_notice( self::NOTICE_GREEN, $msg ) ;
+	}
+
+	/**
+	 * Display error notice
+	 *
+	 * @since 1.6
+	 * @access public
+	 */
+	public static function error( $msg )
+	{
+		self::add_notice( self::NOTICE_RED, $msg ) ;
+	}
+
+	/**
 	 * Adds a notice to display on the admin page. Multiple messages of the
 	 * same color may be added in a single call. If the list is empty, this
 	 * method will add the action to display notices.

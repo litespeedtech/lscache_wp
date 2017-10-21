@@ -18,7 +18,18 @@ class LiteSpeed_Cache_Media
 
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
 
+	const DB_POSTMETA_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
+	const DB_POSTMETA_OPTIMIZE_STATUS = 'litespeed-optimize-status' ;
+	const DB_POSTMETA_OPTIMIZE_STATUS_REQUESTED = 'requested' ;
+	const DB_POSTMETA_OPTIMIZE_STATUS_SERVER_FINISHED = 'server_finished' ;
+	const DB_POSTMETA_OPTIMIZE_STATUS_PULLED = 'pulled' ;
+
 	private $content ;
+	private $wp_upload_dir ;
+	private $tmp_pid ;
+	private $tmp_path ;
+	private $_img_in_queue = array() ;
+	private $_img_total = 0 ;
 
 	/**
 	 * Init
@@ -31,6 +42,8 @@ class LiteSpeed_Cache_Media
 		LiteSpeed_Cache_Log::debug2( 'Media init' ) ;
 
 		$this->_static_request_check() ;
+
+		$this->wp_upload_dir = wp_upload_dir() ;
 	}
 
 	/**
@@ -61,9 +74,246 @@ class LiteSpeed_Cache_Media
 		}
 	}
 
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
 	public static function handler()
 	{
+		$instance = self::get_instance() ;
 
+		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+			case self::TYPE_IMG_OPTIMIZE :
+				$instance->_img_optimize() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Push raw img to LiteSpeed server
+	 *
+	 * @since 1.6
+	 * @access private
+	 */
+	private function _img_optimize()
+	{
+
+		LiteSpeed_Cache_Log::debug( 'Media preparing images to push' ) ;
+
+		global $wpdb ;
+		// Get images
+		$q = "SELECT b.post_id, b.meta_value
+			FROM $wpdb->posts a
+			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.ID AND c.meta_key = %s
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+				AND c.post_id IS NULL
+			ORDER BY a.ID DESC
+			LIMIT %d
+			" ;
+		$q = $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS, apply_filters( 'litespeed_img_optimize_max_rows', 500 ) ) ) ;
+
+		$img_set = array() ;
+		$list = $wpdb->get_results( $q ) ;
+		if ( ! $list ) {
+			LiteSpeed_Cache_Log::debug( 'Media optimize bypass: no image found' ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Media found images: ' . count( $list ) ) ;
+
+		foreach ( $list as $v ) {
+
+			if ( ! $v->meta_value ) {
+				LiteSpeed_Cache_Log::debug( 'Media bypass image due to no meta_value: pid ' . $v->post_id ) ;
+				continue ;
+			}
+
+			try {
+				$meta_value = unserialize( $v->meta_value ) ;
+			}
+			catch ( \Exception $e ) {
+				LiteSpeed_Cache_Log::debug( 'Media bypass image due to meta_value not json: pid ' . $v->post_id ) ;
+				continue ;
+			}
+
+			if ( empty( $meta_value[ 'file' ] ) ) {
+				LiteSpeed_Cache_Log::debug( 'Media bypass image due to no ori file: pid ' . $v->post_id ) ;
+				continue ;
+			}
+
+			// push orig image to queue
+			$this->tmp_pid = $v->post_id ;
+			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/' ;
+			$this->_img_queue( $meta_value, true ) ;
+			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+				array_map( array( $this, '_img_queue' ), $meta_value[ 'sizes' ] ) ;
+			}
+
+		}
+
+		// push to LiteSpeed server
+		if ( ! empty( $this->_img_in_queue ) ) {
+			$total_groups = count( $this->_img_in_queue ) ;
+			LiteSpeed_Cache_Log::debug( 'Media prepared images to push: gruops ' . $total_groups . ' images ' . $this->_img_total ) ;
+
+			// Push to LiteSpeed server
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_IMG_OPTIMIZE, $this->_img_in_queue ) ;
+
+			if ( ! is_array( $json ) ) {
+				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
+				$msg = sprintf( __( 'Failed to push to LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+				return ;
+			}
+
+			// Mark them as requested
+			$pids = $json[ 'pids' ] ;
+			if ( empty( $pids ) || ! is_array( $pids ) ) {
+				LiteSpeed_Cache_Log::debug( 'Media: Failed to parse data from LiteSpeed server ', $pids ) ;
+				$msg = sprintf( __( 'Failed to parse data from LiteSpeed server: %s', 'litespeed-cache' ), $pids ) ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+				return ;
+			}
+
+			LiteSpeed_Cache_Log::debug( 'Media: posts data from LiteSpeed server count: ' . count( $pids ) ) ;
+
+			// Exclude those who have meta already
+			$q = "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s and post_id in ( " . implode( ',', array_fill( 0, count( $pids ), '%s' ) ) . " )" ;
+			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_POSTMETA_OPTIMIZE_STATUS ), $pids ) ) ) ;
+			$exists_pids = array() ;
+			foreach ( $tmp as $v ) {
+				$exists_pids[] = $v->post_id ;
+			}
+			if ( $exists_pids ) {
+				LiteSpeed_Cache_Log::debug( 'Media: existing posts data from LiteSpeed server count: ' . count( $exists_pids ) ) ;
+			}
+			$pids = array_diff( $pids, $exists_pids ) ;
+
+			if ( ! $pids ) {
+				LiteSpeed_Cache_Log::debug( 'Media: Failed to store data from LiteSpeed server with empty pids' ) ;
+				LiteSpeed_Cache_Admin_Display::error( __( 'Post data is empty.', 'litespeed-cache' ) ) ;
+				return ;
+			}
+
+			LiteSpeed_Cache_Log::debug( 'Media: diff posts data from LiteSpeed server count: ' . count( $pids ) ) ;
+
+			$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
+			$data_to_add = array() ;
+			foreach ( $pids as $v ) {
+				$data_to_add[] = $v ;
+				$data_to_add[] = self::DB_POSTMETA_OPTIMIZE_STATUS ;
+				$data_to_add[] = self::DB_POSTMETA_OPTIMIZE_STATUS_REQUESTED ;
+			}
+			// Add placeholder
+			$q .= implode( ',', array_map(
+				function( $el ) { return '(' . implode( ',', $el ) . ')' ; },
+				array_chunk( array_fill( 0, count( $data_to_add ), '%s' ), 3 )
+			) ) ;
+			// Store data
+			$wpdb->query( $wpdb->prepare( $q, $data_to_add ) ) ;
+
+
+			$accepted_groups = count( $pids ) ;
+			$accepted_imgs = $json[ 'total' ] ;
+
+			$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
+	}
+
+	/**
+	 * Add a new img to queue which will be pushed to LiteSpeed
+	 *
+	 * @since 1.6
+	 * @access private
+	 */
+	private function _img_queue( $meta_value, $ori_file = false )
+	{
+		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
+			LiteSpeed_Cache_Log::debug2( 'Media bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value ) ;
+			return ;
+		}
+
+		if ( ! $ori_file ) {
+			$meta_value[ 'file' ] = $this->tmp_path . $meta_value[ 'file' ] ;
+		}
+
+		// check file exists or not
+		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $meta_value[ 'file' ] ;
+		if ( ! file_exists( $real_file ) ) {
+			LiteSpeed_Cache_Log::debug2( 'Media bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $real_file ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug2( 'Media adding image: pid ' . $this->tmp_pid ) ;
+
+		$img_info = array(
+			'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
+			'width'	=> $meta_value[ 'width' ],
+			'height'	=> $meta_value[ 'height' ],
+			'mime_type'	=> ! empty( $meta_value[ 'mime_type' ] ) ? $meta_value[ 'mime_type' ] : '' ,
+		) ;
+		$img_info[ 'md5' ] = md5_file( $real_file ) ;
+
+		if ( empty( $this->_img_in_queue[ $this->tmp_pid ] ) ) {
+			$this->_img_in_queue[ $this->tmp_pid ] = array() ;
+		}
+		$this->_img_in_queue[ $this->tmp_pid ][] = $img_info ;
+		$this->_img_total ++ ;
+	}
+
+	/**
+	 * Count images
+	 *
+	 * @since 1.6
+	 * @access public
+	 */
+	public function img_count()
+	{
+		global $wpdb ;
+		$q = "SELECT count(*)
+			FROM $wpdb->posts a
+			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+			" ;
+		// $q = "SELECT count(*) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type IN ('image/jpeg', 'image/png') " ;
+		$total_img = $wpdb->get_var( $q ) ;
+
+		$q = "SELECT count(*)
+			FROM $wpdb->posts a
+			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.ID
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+				AND c.meta_key = %s
+				AND c.meta_value= %s
+			" ;
+		$total_requested = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS, self::DB_POSTMETA_OPTIMIZE_STATUS_REQUESTED ) ) ) ;
+		$total_server_finished = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS, self::DB_POSTMETA_OPTIMIZE_STATUS_SERVER_FINISHED ) ) ) ;
+		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS, self::DB_POSTMETA_OPTIMIZE_STATUS_PULLED ) ) ) ;
+
+		return array(
+			'total_img'	=> $total_img,
+			'total_requested'	=> $total_requested,
+			'total_server_finished'	=> $total_server_finished,
+			'total_pulled'	=> $total_pulled,
+		) ;
 	}
 
 	/**

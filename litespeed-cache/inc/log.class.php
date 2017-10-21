@@ -166,15 +166,29 @@ class LiteSpeed_Cache_Log
 	 * Direct call to log a debug message.
 	 *
 	 * @since 1.1.3
+	 * @since 1.6 Added array dump as 2nd param
 	 * @access public
 	 * @param string $msg The debug message.
-	 * @param int $backtrace_limit Backtrace depth.
+	 * @param int|array $backtrace_limit Backtrace depth, Or the array to dump
 	 */
 	public static function debug( $msg, $backtrace_limit = false )
 	{
-		if ( self::get_enabled() ) {
-			self::push( $msg, $backtrace_limit !== false ? $backtrace_limit+1 : false ) ;
+		if ( ! self::get_enabled() ) {
+			return ;
 		}
+
+		if ( $backtrace_limit !== false ) {
+			if ( ! is_numeric( $backtrace_limit ) ) {
+				$msg .= ' --- ' . var_export( $backtrace_limit, true ) ;
+				self::push( $msg ) ;
+				return ;
+			}
+
+			self::push( $msg, $backtrace_limit + 1 ) ;
+			return ;
+		}
+
+		self::push( $msg ) ;
 	}
 
 	/**
@@ -190,9 +204,7 @@ class LiteSpeed_Cache_Log
 		if ( ! defined( 'LSCWP_LOG_MORE' ) ) {
 			return ;
 		}
-		if ( self::get_enabled() ) {
-			self::push( $msg, $backtrace_limit !== false ? $backtrace_limit+1 : false ) ;
-		}
+		self::debug( $msg, $backtrace_limit ) ;
 	}
 
 	/**

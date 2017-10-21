@@ -173,14 +173,14 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function verify_type()
 	{
-		if ( empty( $_GET[ 'type' ] ) ) {
+		if ( empty( $_REQUEST[ 'type' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'Router no type', 2 ) ;
 			return false ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Router parsed type: ' . $_GET[ 'type' ], 2 ) ;
+		LiteSpeed_Cache_Log::debug( 'Router parsed type: ' . $_REQUEST[ 'type' ], 2 ) ;
 
-		return $_GET[ 'type' ] ;
+		return $_REQUEST[ 'type' ] ;
 	}
 
 	/**
@@ -191,16 +191,17 @@ class LiteSpeed_Cache_Router
 	 */
 	private function verify_action()
 	{
-		if( empty( $_REQUEST[LiteSpeed_Cache::ACTION_KEY] ) ) {
+		if ( empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
+			LiteSpeed_Cache_Log::debug2( 'LSCWP_CTRL bypassed empty' ) ;
 			return ;
 		}
 
-		$action = $_REQUEST[LiteSpeed_Cache::ACTION_KEY] ;
+		$action = $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ;
 		$_is_public_action = false ;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
-		if ( ! $this->verify_nonce( $action ) && ! $this->_verify_sapi_token( $action ) ) {
+		if ( ! $this->verify_nonce( $action ) && ! $this->_verify_sapi_passive( $action ) && ! $this->_verify_sapi_aggressive( $action ) ) {
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
 				LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
@@ -295,7 +296,8 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
-			case LiteSpeed_Cache::ACTION_SAPI_CALLBACK : // as long as it passed nonce check
+			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK :
+			case LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK :
 				self::$_action = $action ;
 				return ;
 
@@ -313,16 +315,29 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Verify sapi token
+	 * Verify sapi passive callback
 	 *
 	 * @since 1.5
 	 * @access private
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function _verify_sapi_token( $action )
+	private function _verify_sapi_passive( $action )
 	{
-		return LiteSpeed_Cache_Admin_API::sapi_token_check() && $action === LiteSpeed_Cache::ACTION_SAPI_CALLBACK ;
+		return $action === LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK && LiteSpeed_Cache_Admin_API::sapi_valiate_passive_callback() ;
+	}
+
+	/**
+	 * Verify sapi aggressive callback
+	 *
+	 * @since 1.6
+	 * @access private
+	 * @param  string $action
+	 * @return bool
+	 */
+	private function _verify_sapi_aggressive( $action )
+	{
+		return $action === LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK && LiteSpeed_Cache_Admin_API::sapi_validate_aggressive_callback() ;
 	}
 
 	/**
