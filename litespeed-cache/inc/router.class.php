@@ -151,9 +151,6 @@ class LiteSpeed_Cache_Router
 		return self::$_is_admin_ip ;
 	}
 
-
-
-
 	/**
 	 * Create type value for url
 	 *
@@ -162,7 +159,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function build_type( $val )
 	{
-		return 'type=' . $val ;
+		return array( 'type' => $val ) ;
 	}
 
 	/**

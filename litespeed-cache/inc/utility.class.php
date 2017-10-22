@@ -269,7 +269,13 @@ class LiteSpeed_Cache_Utility
 		$url = wp_nonce_url( $prenonce, $action, LiteSpeed_Cache::NONCE_NAME ) ;
 
 		if ( $type ) {
-			$url .= '&' . LiteSpeed_Cache_Router::build_type( $type ) ;
+			// Remove potential param `type` from url
+			$url = parse_url( htmlspecialchars_decode( $url ) ) ;
+			parse_str( $url[ 'query' ], $query ) ;
+			$url[ 'query' ] = http_build_query( array_merge( $query, LiteSpeed_Cache_Router::build_type( $type ) ) ) ;
+			self::compatibility() ;
+			$url = http_build_url( $url ) ;
+			$url = htmlspecialchars( $url ) ;
 		}
 
 		return $url ;
