@@ -173,6 +173,15 @@ class LiteSpeed_Cache_CDN
 			return false ;
 		}
 
+		/**
+		 * Bypass login/reg page
+		 * @since  1.6
+		 */
+		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
+			LiteSpeed_Cache_Log::debug( 'CDN bypassed as is login/reg page' ) ;
+			return false ;
+		}
+
 		return true ;
 	}
 
