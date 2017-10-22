@@ -782,14 +782,19 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $title
 	 * @param  bool $checked
 	 */
-	public function build_checkbox($id, $title, $checked, $is_mini = false)
+	public function build_checkbox($id, $title, $checked, $value = 1 )
 	{
 		$checked = $checked ? ' checked ' : '' ;
-		$is_mini = $is_mini ? ' litespeed-mini ' : '' ;
 
-		echo "<div class='litespeed-tick $is_mini'>
-				<label for='conf_$id'>$title</label>
-				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$id' value='1' $checked />
+		$label_id = str_replace( array( '[', ']' ), '_', $id ) ;
+
+		if ( $value !== 1 ) {
+			$label_id .= '_' . $value ;
+		}
+
+		echo "<div class='litespeed-tick'>
+				<label for='conf_$label_id'>$title</label>
+				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$label_id' value='$value' $checked />
 			</div>" ;
 	}
 

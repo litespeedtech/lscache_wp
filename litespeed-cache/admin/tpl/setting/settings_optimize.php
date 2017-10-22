@@ -1,5 +1,14 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
+
+global $wp_roles ;
+if ( !isset( $wp_roles ) ) {
+	$wp_roles = new WP_Roles() ;
+}
+$roles = array_keys( $wp_roles->roles ) ;
+
+sort( $roles ) ;
+
 ?>
 
 <h3 class="litespeed-title"><?php echo __( 'Optimization Settings', 'litespeed-cache' ) ; ?></h3>
@@ -228,6 +237,18 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Role Excludes', 'litespeed-cache'); ?></th>
+		<td>
+			<?php foreach ( $roles as $role ): ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES . "][", $role, $this->config->in_exclude_optimization_roles( $role ), $role ) ; ?>
+			<?php endforeach; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prevent any optimization of list roles.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

@@ -268,6 +268,12 @@ class LiteSpeed_Cache_Vary
 			LiteSpeed_Cache_Log::debug2( 'Vary admin bar : true' ) ;
 		}
 
+		/**
+		 * Add filter
+		 * @since 1.6 Added for Role Excludes for optimization cls
+		 */
+		$vary = apply_filters( 'litespeed_vary', $vary ) ;
+
 		ksort( $vary ) ;
 		$res = array() ;
 		foreach ( $vary as $key => $val ) {

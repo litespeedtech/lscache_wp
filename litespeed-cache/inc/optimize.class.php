@@ -97,6 +97,27 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
+		/**
+		 * Add vary filter for Role Excludes
+		 * @since  1.6
+		 */
+		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+
+	}
+
+	/**
+	 * Exclude role from optimization filter
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
+	public function vary_add_role_exclude( $varys )
+	{
+		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+			return $varys ;
+		}
+		$varys[ 'role_exclude_optm' ] = 1 ;
+		return $varys ;
 	}
 
 	/**
@@ -268,6 +289,13 @@ class LiteSpeed_Cache_Optimize
 				return $content ;
 			}
 		}
+
+		// Check if is exclude optm roles ( Need to set Vary too )
+		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+			LiteSpeed_Cache_Log::debug( 'Optimizer bypass: hit Role Excludes setting: ' . $result ) ;
+			return $content ;
+		}
+
 
 		LiteSpeed_Cache_Log::debug( 'Optimizer start' ) ;
 

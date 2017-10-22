@@ -262,7 +262,7 @@ class LiteSpeed_Cache_Media
 			'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
 			'width'	=> $meta_value[ 'width' ],
 			'height'	=> $meta_value[ 'height' ],
-			'mime_type'	=> ! empty( $meta_value[ 'mime_type' ] ) ? $meta_value[ 'mime_type' ] : '' ,
+			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
 		) ;
 		$img_info[ 'md5' ] = md5_file( $real_file ) ;
 
