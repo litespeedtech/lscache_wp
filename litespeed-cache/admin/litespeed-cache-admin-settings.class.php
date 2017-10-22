@@ -551,7 +551,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
-		update_option( $id, $this->_input[ $id ] ) ;
+		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
 	}
 
