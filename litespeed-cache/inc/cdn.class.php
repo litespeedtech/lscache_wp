@@ -149,7 +149,7 @@ class LiteSpeed_Cache_CDN
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
 
-		$instance->_process() ;
+		$instance->_finalize() ;
 		return $instance->content ;
 	}
 
@@ -191,14 +191,14 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.2.3
 	 * @access private
 	 */
-	private function _process()
+	private function _finalize()
 	{
 		if ( defined( self::BYPASS ) ) {
 			LiteSpeed_Cache_Log::debug2( 'CDN bypass' ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'CDN _process' ) ;
+		LiteSpeed_Cache_Log::debug( 'CDN _finalize' ) ;
 
 		// Start replacing img src
 		if ( $this->cfg_cdn_inc_img ) {
@@ -366,7 +366,7 @@ class LiteSpeed_Cache_CDN
 
 		// Only images under wp-cotnent/wp-includes can be replaced
 		if ( stripos( $url_parsed[ 'path' ], LSWCP_CONTENT_FOLDER ) === false && stripos( $url_parsed[ 'path' ], 'wp-includes' ) === false  && stripos( $url_parsed[ 'path' ], '/min/' ) === false ) {
-			if ( defined( 'UPLOADS' ) && stripos( $url_parsed[ 'path' ], UPLOADS ) === false ) {
+			if ( ! defined( 'UPLOADS' ) || stripos( $url_parsed[ 'path' ], UPLOADS ) === false ) {
 				LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: path not match ' ) ;
 				return false ;
 			}
