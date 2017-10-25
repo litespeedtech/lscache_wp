@@ -20,6 +20,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
 	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_EXC = 'litespeed-media-lazy-img-excludes' ;
+	const ITEM_MEDIA_NEED_PULL = 'litespeed-media-need-pull' ;
 
 	const VAL_OFF = 0 ;
 	const VAL_ON = 1 ;

@@ -11,8 +11,35 @@
  */
 class LiteSpeed_Cache_Task
 {
+	private static $_instance ;
+
 	const CRON_ACTION_HOOK = 'litespeed_crawl_trigger' ;
 	const CRON_FITLER = 'litespeed_crawl_filter' ;
+
+	/**
+	 * Init
+	 *
+	 * @since  1.6
+	 * @access private
+	 */
+	private function __construct()
+	{
+		LiteSpeed_Cache_Log::debug2( 'Task init' ) ;
+
+		// Register crawler cron
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ) && LiteSpeed_Cache_Router::can_crawl() ) {
+			// keep cron intval filter
+			self::schedule_filter() ;
+
+			// cron hook
+			add_action( self::CRON_ACTION_HOOK, 'LiteSpeed_Cache_Crawler::crawl_data' ) ;
+		}
+
+		// Register img optimization fetch ( always fetch immediately )
+		if ( LiteSpeed_Cache_Media::check_need_pull() ) {
+			LiteSpeed_Cache_Media::pull_optimized_img() ;
+		}
+	}
 
 	/**
 	 * Enable/Disable cron task
@@ -126,4 +153,22 @@ class LiteSpeed_Cache_Task
 		LiteSpeed_Cache_Log::debug( 'Crawler cron log: ......cron hook cleared......' ) ;
 		wp_clear_scheduled_hook( self::CRON_ACTION_HOOK ) ;
 	}
+
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 1.6
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self() ;
+		}
+
+		return self::$_instance ;
+	}
+
 }

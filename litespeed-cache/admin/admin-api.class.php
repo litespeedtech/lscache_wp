@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Admin_API
 
 	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const SAPI_ACTION_IMG_OPTIMIZE = 'img_optimize' ;
+	const SAPI_ACTION_PULL_IMG = 'client_pull' ;
 
 	/**
 	 * Init
@@ -38,7 +39,6 @@ class LiteSpeed_Cache_Admin_API
 		$this->_sapi_key = get_option( self::DB_SAPI_KEY ) ?: '' ;
 		$this->_sapi_server = get_option( self::DB_SAPI_SERVER ) ;
 	}
-
 
 	/**
 	 * Handle aggressive callback requests from LiteSpeed server
@@ -104,6 +104,16 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Return server url
+	 *
+	 * @since  1.6
+	 */
+	public static function server_url()
+	{
+		return self::get_instance()->_sapi_server ;
 	}
 
 	/**

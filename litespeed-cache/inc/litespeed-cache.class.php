@@ -157,14 +157,8 @@ class LiteSpeed_Cache
 		// Load public hooks
 		$this->load_public_actions() ;
 
-		// load cron task for crawler
-		if ( self::config( LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ) && LiteSpeed_Cache_Router::can_crawl() ) {
-			// keep cron intval filter
-			LiteSpeed_Cache_Task::schedule_filter() ;
-
-			// cron hook
-			add_action( LiteSpeed_Cache_Task::CRON_ACTION_HOOK, 'LiteSpeed_Cache_Crawler::crawl_data' ) ;
-		}
+		// load cron tasks
+		LiteSpeed_Cache_Task::get_instance() ;
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 ) ;
