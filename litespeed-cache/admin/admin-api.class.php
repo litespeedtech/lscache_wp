@@ -22,6 +22,7 @@ class LiteSpeed_Cache_Admin_API
 
 	// For each request, send a callback to confirm
 	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
+	const TYPE_NOTIFY_IMG_OPTIMIZED = 'notify_img_optimized' ;
 
 	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const SAPI_ACTION_IMG_OPTIMIZE = 'img_optimize' ;
@@ -47,11 +48,10 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	public static function sapi_aggressive_callback()
 	{
-		$instance = self::get_instance() ;
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_REQUEST_CALLBACK :
-				$instance->_request_callback() ;
+			case self::TYPE_NOTIFY_IMG_OPTIMIZED :
+				LiteSpeed_Cache_Media::get_instance()->notify_img_optimized() ;
 				break ;
 
 			default:

@@ -96,6 +96,58 @@ class LiteSpeed_Cache_Media
 		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
+
+	/**
+	 * notify img optimized callback from LiteSpeed
+	 *
+	 * @since  1.6
+	 * @access private
+	 */
+	public function notify_img_optimized()
+	{
+		$notified_data = unserialize( base64_decode( $_POST[ 'data' ] ) ) ;
+		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
+			LiteSpeed_Cache_Log::debug( 'SAPI exit: no notified data' ) ;
+			exit( json_encode( 'no notified data' ) ) ;
+		}
+
+		global $wpdb ;
+
+		$pids = array_keys( $notified_data ) ;
+
+		$q = "SELECT meta_id, post_id, meta_value FROM $wpdb->postmeta WHERE post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%d' ) ) . " ) AND meta_key = %s" ;
+		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( $pids, array( self::DB_POSTMETA_OPTIMIZE_DATA ) ) ) ) ;
+
+		foreach ( $meta_value_list as $v ) {
+			$changed = false ;
+			$md52src_list = unserialize( $v->meta_value ) ;
+			// replace src tag from requested to notified
+			foreach ( $md52src_list as $md5 => $v2 ) {
+				if ( in_array( $md5, $notified_data[ $v->post_id ] )  && $v2[ 1 ] === 'requested' ) {
+					$md52src_list[ $md5 ][ 1 ] = 'notified' ;
+					$changed = true ;
+				}
+			}
+
+			if ( ! $changed ) {
+				LiteSpeed_Cache_Log::debug( 'SAPI continue: no change meta' ) ;
+				continue ;
+			}
+
+			// Save meta data
+			$md52src_list = serialize( $md52src_list ) ;
+			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d" ;
+			$wpdb->query( $wpdb->prepare( $q, array( $md52src_list, $v->meta_id ) ) ) ;
+
+			// Save meta status to server finished to get client fetch it
+			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE post_id = %d AND meta_key = %s" ;
+			$wpdb->query( $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS_SERVER_FINISHED, $v->post_id, self::DB_POSTMETA_OPTIMIZE_STATUS ) ) ) ;
+		}
+
+		echo json_encode( array( 'count' => count( $notified_data ) ) ) ;
+		exit() ;
+	}
+
 	/**
 	 * Push raw img to LiteSpeed server
 	 *
@@ -121,7 +173,7 @@ class LiteSpeed_Cache_Media
 			ORDER BY a.ID DESC
 			LIMIT %d
 			" ;
-		$q = $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS, apply_filters( 'litespeed_img_optimize_max_rows', 500 ) ) ) ;
+		$q = $wpdb->prepare( $q, array( self::DB_POSTMETA_OPTIMIZE_STATUS, apply_filters( 'litespeed_img_optimize_max_rows', 300 ) ) ) ;
 
 		$img_set = array() ;
 		$list = $wpdb->get_results( $q ) ;
@@ -210,10 +262,17 @@ class LiteSpeed_Cache_Media
 
 			$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
 			$data_to_add = array() ;
-			foreach ( $pids as $v ) {
-				$data_to_add[] = $v ;
+			foreach ( $pids as $pid ) {
+				$data_to_add[] = $pid ;
 				$data_to_add[] = self::DB_POSTMETA_OPTIMIZE_STATUS ;
 				$data_to_add[] = self::DB_POSTMETA_OPTIMIZE_STATUS_REQUESTED ;
+				$data_to_add[] = $pid ;
+				$data_to_add[] = self::DB_POSTMETA_OPTIMIZE_DATA ;
+				$md52src_list = array() ;
+				foreach ( $this->_img_in_queue[ $pid ] as $src_data ) {
+					$md52src_list[ $src_data[ 'md5' ] ] = array( $src_data[ 'file' ], 'requested' ) ;
+				}
+				$data_to_add[] = serialize( $md52src_list ) ;
 			}
 			// Add placeholder
 			$q .= implode( ',', array_map(
@@ -260,6 +319,7 @@ class LiteSpeed_Cache_Media
 
 		$img_info = array(
 			'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
+			'file'	=> $meta_value[ 'file' ], // not needed in LiteSpeed sapi, just leave for local storage after post
 			'width'	=> $meta_value[ 'width' ],
 			'height'	=> $meta_value[ 'height' ],
 			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
@@ -427,6 +487,15 @@ class LiteSpeed_Cache_Media
 			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
 
 			if ( empty( $attrs[ 'src' ] ) ) {
+				continue ;
+			}
+
+			/**
+			 * Add src validation to bypass base64 img src
+			 * @since  1.6
+			 */
+			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
+				LiteSpeed_Cache_Log::debug2( 'Media bypassed base64 img' ) ;
 				continue ;
 			}
 
