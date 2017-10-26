@@ -340,6 +340,8 @@ class LiteSpeed_Cache_Optimize
 
 				// IF combine
 				if ( $this->cfg_css_combine ) {
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINED_PRIORITY ) ;
+
 					$urls = $this->_limit_size_build_hash_url( $src_queue_list, $file_size_list ) ;
 
 					$snippet = '' ;
@@ -352,17 +354,37 @@ class LiteSpeed_Cache_Optimize
 						// Only ignored html snippet needs async
 						list( $noscript, $ignored_html_async ) = $this->_async_css_list( $ignored_html ) ;
 
-						$noscript .= $snippet ;
+						// enqueue combined file first
+						if ( $enqueue_first ) {
+							$noscript = $snippet . $noscript ;
+						}
+						else {
+							$noscript .= $snippet ;
+						}
+
 						$snippet = '' ;
 						foreach ( $urls as $url ) {
 							$snippet .= "<link rel='preload' data-asynced='1' data-optimized='2' as='style' onload='this.rel=\"stylesheet\"' href='$url' />" ;
 						}
 
-						$this->html_head .= implode( '', $ignored_html_async ) . $snippet ;
+						// enqueue combined file first
+						if ( $enqueue_first ) {
+							$this->html_head .= $snippet . implode( '', $ignored_html_async ) ;
+						}
+						else {
+							$this->html_head .= implode( '', $ignored_html_async ) . $snippet ;
+						}
+
 						$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
 					}
 					else {
-						$this->html_head .= implode( '', $ignored_html ) . $snippet ;
+						// enqueue combined file first
+						if ( $enqueue_first ) {
+							$this->html_head .= $snippet . implode( '', $ignored_html ) ;
+						}
+						else {
+							$this->html_head .= implode( '', $ignored_html ) . $snippet ;
+						}
 					}
 
 					// Move all css to top
@@ -414,6 +436,8 @@ class LiteSpeed_Cache_Optimize
 
 				// IF combine
 				if ( $this->cfg_js_combine ) {
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY ) ;
+
 					// separate head/foot js/raw html
 					$head_js = array() ;
 					$head_ignored_html = array() ;
@@ -449,7 +473,14 @@ class LiteSpeed_Cache_Optimize
 					if ( $this->cfg_js_defer ) {
 						$head_ignored_html = $this->_js_defer( $head_ignored_html ) ;
 					}
-					$this->html_head .= implode( '', $head_ignored_html ) . $snippet ;
+
+					// enqueue combined file first
+					if ( $enqueue_first ) {
+						$this->html_head .= $snippet . implode( '', $head_ignored_html ) ;
+					}
+					else {
+						$this->html_head .= implode( '', $head_ignored_html ) . $snippet ;
+					}
 
 					$snippet = '' ;
 					if ( $foot_js ) {
@@ -464,7 +495,14 @@ class LiteSpeed_Cache_Optimize
 					if ( $this->cfg_js_defer ) {
 						$foot_ignored_html = $this->_js_defer( $foot_ignored_html ) ;
 					}
-					$this->html_foot .= implode( '', $foot_ignored_html ) . $snippet ;
+
+					// enqueue combined file first
+					if ( $enqueue_first ) {
+						$this->html_foot .= $snippet . implode( '', $foot_ignored_html ) ;
+					}
+					else {
+						$this->html_foot .= implode( '', $foot_ignored_html ) . $snippet ;
+					}
 
 					// Will move all js to top/bottom
 					$this->content = str_replace( $html_list, '', $this->content ) ;

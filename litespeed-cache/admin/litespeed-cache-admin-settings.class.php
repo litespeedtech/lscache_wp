@@ -506,9 +506,11 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
 			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_CSS_COMBINED_PRIORITY,
 			LiteSpeed_Cache_Config::OPID_CSS_HTTP2,
 			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
 			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
+			LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY,
 			LiteSpeed_Cache_Config::OPID_JS_HTTP2,
 			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
 			LiteSpeed_Cache_Config::OPID_OPTM_QS_RM,

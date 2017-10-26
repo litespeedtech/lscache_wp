@@ -94,10 +94,12 @@ class LiteSpeed_Cache_Config
 
 	const OPID_CSS_MINIFY = 'css_minify' ;
 	const OPID_CSS_COMBINE = 'css_combine' ;
+	const OPID_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
 	const OPID_CSS_HTTP2 = 'css_http2' ;
 	const OPID_CSS_EXCLUDES = 'css_exclude' ;
 	const OPID_JS_MINIFY = 'js_minify' ;
 	const OPID_JS_COMBINE = 'js_combine' ;
+	const OPID_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
 	const OPID_JS_HTTP2 = 'js_http2' ;
 	const OPID_JS_EXCLUDES = 'js_exclude' ;
 	const OPID_OPTIMIZE_TTL = 'optimize_ttl' ;
@@ -499,10 +501,12 @@ class LiteSpeed_Cache_Config
 
 			self::OPID_CSS_MINIFY 	=> false,
 			self::OPID_CSS_COMBINE 	=> false,
+			self::OPID_CSS_COMBINED_PRIORITY 	=> false,
 			self::OPID_CSS_HTTP2 	=> false,
 			self::OPID_CSS_EXCLUDES => '',
 			self::OPID_JS_MINIFY 	=> false,
 			self::OPID_JS_COMBINE 	=> false,
+			self::OPID_JS_COMBINED_PRIORITY 	=> false,
 			self::OPID_JS_HTTP2 	=> false,
 			self::OPID_JS_EXCLUDES 	=> '',
 			self::OPID_OPTIMIZE_TTL => 604800,
