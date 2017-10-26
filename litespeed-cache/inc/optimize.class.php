@@ -453,7 +453,7 @@ class LiteSpeed_Cache_Optimize
 					}
 					foreach ( $ignored_html as $src => $html ) {
 						if ( in_array( $src, $head_src_list ) ) {
-							$head_ignored_html[] = $html ;
+							$head_ignored_html[ $src ] = $html ;
 						}
 						else {
 							$foot_ignored_html[] = $html ;
@@ -474,8 +474,21 @@ class LiteSpeed_Cache_Optimize
 						$head_ignored_html = $this->_js_defer( $head_ignored_html ) ;
 					}
 
-					// enqueue combined file first
+					/**
+					 * Enqueue combined file first
+					 * @since  1.6
+					 */
 					if ( $enqueue_first ) {
+						// Make jQuery to be the first one
+						// Suppose jQuery is in header
+						foreach ( $head_ignored_html as $src => $html ) {
+							if ( $this->_is_jquery( $src ) ) {
+								// jQuery should be always the first one
+								$this->html_head .= $html ;
+								unset( $head_ignored_html[ $src ] ) ;
+								break ;
+							}
+						}
 						$this->html_head .= $snippet . implode( '', $head_ignored_html ) ;
 					}
 					else {
