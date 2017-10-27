@@ -225,17 +225,18 @@ For more detailed information about crawler setup, please see [our blog post](ht
 3. Admin Settings - Purge
 4. Admin Settings - Excludes
 5. Admin Settings - Optimize
-6. Admin Settings - Media
-7. Admin Settings - CDN
-8. Admin Settings - ESI
-9. Admin Settings - Crawler
-10. Admin Settings - Thirdparty WooCommerce
-11. Admin Management - Purge
-12. Admin Management - DB Optimizer
-13. Admin Crawler Status Page
-14. Cache Miss Example
-15. Cache Hit Example
-16. Frontend Adminbar Shortcut
+6. Admin Settings - Tuning
+7. Admin Settings - Media
+8. Admin Settings - CDN
+9. Admin Settings - ESI
+10. Admin Settings - Crawler
+11. Admin Settings - Thirdparty WooCommerce
+12. Admin Management - Purge
+13. Admin Management - DB Optimizer
+14. Admin Crawler Status Page
+15. Cache Miss Example
+16. Cache Hit Example
+17. Frontend Adminbar Shortcut
 
 == Changelog ==
 
