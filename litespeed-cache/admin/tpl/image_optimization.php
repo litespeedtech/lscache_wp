@@ -17,6 +17,7 @@ $img_count = $media->img_count() ;
 		</span>
 	</h2>
 </div>
+
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Optimization Information', 'litespeed-cache') ; ?></h3>
@@ -44,7 +45,9 @@ $img_count = $media->img_count() ;
 			<?php endif ; ?>
 		</span>
 
-		<h3 class="litespeed-title"><?php echo __('Images Information', 'litespeed-cache') ; ?></h3>
+		<h3 class="litespeed-title"><?php echo __('Images Information', 'litespeed-cache') ; ?>
+			<span class="litespeed-desc">beta version</span>
+		</h3>
 
 		<p>Total images: <?php echo $img_count[ 'total_img' ] ; ?></p>
 		<p>Images needed to request: <?php echo $img_count[ 'total_not_requested' ] ; ?></p>

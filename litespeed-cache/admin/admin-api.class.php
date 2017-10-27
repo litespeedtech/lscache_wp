@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Admin_API
 			update_option( self::DB_SAPI_IMG_REDUCED, $json[ 'reduced' ] ) ;
 		}
 
-		$msg = __( 'Generated the key from server successfully', 'litespeed-cache' ) ;
+		$msg = __( 'Sync data with server successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 	}
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @param  array $data
 	 */
-	private function _post( $action, $data, $server )
+	private function _post( $action, $data, $server = false )
 	{
 		$hash = Litespeed_String::rrand( 16 ) ;
 		// store hash

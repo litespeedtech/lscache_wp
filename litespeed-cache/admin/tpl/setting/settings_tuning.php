@@ -16,14 +16,15 @@ sort( $roles ) ;
 <table><tbody>
 
 	<tr>
-		<th><?php echo __( 'CSS Combined Priority', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Combined CSS Priority', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CSS_COMBINED_PRIORITY ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Load the combined CSS files first, before the other CSS files. By default the uncombined CSS will enqueue first.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Load combined CSS files before other CSS files.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Set to %s by default.', 'litespeed-cache' ), __( 'OFF', 'litespeed-cache' ) ) ; ?>
 				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
-					<?php echo __( 'Only turn this on when you need to change the order of combined and uncombined CSS.', 'litespeed-cache') ; ?>
+					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined CSS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				</font>
 			</div>
 		</td>
@@ -47,14 +48,15 @@ sort( $roles ) ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'JS Combined Priority', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Combined JS Priority', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Load the combined JS files first, before the other JS files. By default the uncombined JS will enqueue first.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Load combined JS files before other JS files.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Set to %s by default.', 'litespeed-cache' ), __( 'OFF', 'litespeed-cache' ) ) ; ?>
 				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
-					<?php echo __( 'Only turn this on when you need to change the order of combined and uncombined JS.', 'litespeed-cache') ; ?>
+					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined JS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				</font>
 			</div>
 		</td>
@@ -156,7 +158,7 @@ sort( $roles ) ;
 				<?php $this->build_checkbox( LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES . "][", $role, $this->config->in_exclude_optimization_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Prevent any optimization of list roles.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Selected roles will be excluded from all optimizations.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
