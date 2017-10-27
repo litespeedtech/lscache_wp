@@ -15,6 +15,7 @@ class LiteSpeed_Cache_Admin_API
 
 	const DB_SAPI_KEY = 'litespeed_sapi_key' ;
 	const DB_SAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
+	const DB_SAPI_IMG_REDUCED = 'litespeed_sapi_img_reduced' ;
 
 	const TYPE_REQUEST_KEY = 'request_key' ;
 
@@ -142,6 +143,10 @@ class LiteSpeed_Cache_Admin_API
 		update_option( self::DB_SAPI_KEY, $json[ 'auth_key' ] ) ;
 		LiteSpeed_Cache_Log::debug( 'SAPI applied auth_key' ) ;
 
+		if ( ! empty( $json[ 'reduced' ] ) ) {
+			update_option( self::DB_SAPI_IMG_REDUCED, $json[ 'reduced' ] ) ;
+		}
+
 		$msg = __( 'Generated the key from server successfully', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
@@ -206,10 +211,10 @@ class LiteSpeed_Cache_Admin_API
 	 * @access public
 	 * @param  array $data
 	 */
-	public static function post( $action, $data )
+	public static function post( $action, $data, $server = false )
 	{
 		$instance = self::get_instance() ;
-		return $instance->_post( $action, $data ) ;
+		return $instance->_post( $action, $data, $server ) ;
 	}
 
 	/**
@@ -219,13 +224,17 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @param  array $data
 	 */
-	private function _post( $action, $data )
+	private function _post( $action, $data, $server )
 	{
 		$hash = Litespeed_String::rrand( 16 ) ;
 		// store hash
 		update_option( self::DB_SAPI_KEY_HASH, $hash ) ;
 
-		$url = 'https://wp.api.litespeedtech.com/' . $action ;
+		if ( $server == false ) {
+			$server = 'https://wp.api.litespeedtech.com' ;
+		}
+
+		$url = $server . '/' . $action ;
 
 		LiteSpeed_Cache_Log::debug( 'SAPI posting to : ' . $url ) ;
 

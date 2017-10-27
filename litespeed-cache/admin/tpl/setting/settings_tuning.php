@@ -21,6 +21,10 @@ sort( $roles ) ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CSS_COMBINED_PRIORITY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load the combined CSS files first, before the other CSS files. By default the uncombined CSS will enqueue first.', 'litespeed-cache' ) ; ?>
+				<br /><font class="litespeed-warning">
+					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __( 'Only turn this on when you need to change the order of combined and uncombined CSS.', 'litespeed-cache') ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>
@@ -48,6 +52,10 @@ sort( $roles ) ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load the combined JS files first, before the other JS files. By default the uncombined JS will enqueue first.', 'litespeed-cache' ) ; ?>
+				<br /><font class="litespeed-warning">
+					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __( 'Only turn this on when you need to change the order of combined and uncombined JS.', 'litespeed-cache') ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>
