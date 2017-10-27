@@ -12,10 +12,8 @@ class LiteSpeed_Cache_Admin_API
 	private static $_instance ;
 
 	private $_sapi_key ;
-	private $_sapi_server ;
 
 	const DB_SAPI_KEY = 'litespeed_sapi_key' ;
-	const DB_SAPI_SERVER = 'litespeed_sapi_server' ;
 	const DB_SAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
 
 	const TYPE_REQUEST_KEY = 'request_key' ;
@@ -25,7 +23,7 @@ class LiteSpeed_Cache_Admin_API
 	const TYPE_NOTIFY_IMG_OPTIMIZED = 'notify_img_optimized' ;
 
 	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
-	const SAPI_ACTION_IMG_OPTIMIZE = 'img_optimize' ;
+	const SAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const SAPI_ACTION_PULL_IMG = 'client_pull' ;
 
 	/**
@@ -37,7 +35,6 @@ class LiteSpeed_Cache_Admin_API
 	private function __construct()
 	{
 		$this->_sapi_key = get_option( self::DB_SAPI_KEY ) ?: '' ;
-		$this->_sapi_server = get_option( self::DB_SAPI_SERVER ) ;
 	}
 
 	/**
@@ -107,16 +104,6 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Return server url
-	 *
-	 * @since  1.6
-	 */
-	public static function server_url()
-	{
-		return self::get_instance()->_sapi_server ;
-	}
-
-	/**
 	 * request key callback from LiteSpeed
 	 *
 	 * @since  1.5
@@ -144,7 +131,7 @@ class LiteSpeed_Cache_Admin_API
 		$json = $this->_post( self::SAPI_ACTION_REQUEST_KEY, home_url() ) ;
 
 		// Check if get key&server correctly
-		if ( empty( $json[ 'auth_key' ] ) || empty( $json[ 'distribute_server' ] ) ) {
+		if ( empty( $json[ 'auth_key' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'SAPI request key failed: ', $json ) ;
 			$msg = sprintf( __( 'SAPI Error %s', 'litespeed-cache' ), $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
@@ -153,10 +140,9 @@ class LiteSpeed_Cache_Admin_API
 
 		// store data into option locally
 		update_option( self::DB_SAPI_KEY, $json[ 'auth_key' ] ) ;
-		update_option( self::DB_SAPI_SERVER, $json[ 'distribute_server' ] ) ;
-		LiteSpeed_Cache_Log::debug( 'SAPI distribute server: ' . $json[ 'distribute_server' ] ) ;
+		LiteSpeed_Cache_Log::debug( 'SAPI applied auth_key' ) ;
 
-		$msg = __( 'Generate the key from server successfully', 'litespeed-cache' ) ;
+		$msg = __( 'Generated the key from server successfully', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 	}
@@ -239,12 +225,7 @@ class LiteSpeed_Cache_Admin_API
 		// store hash
 		update_option( self::DB_SAPI_KEY_HASH, $hash ) ;
 
-		$server = $this->_sapi_server ;
-		if ( in_array( $action, array( self::SAPI_ACTION_REQUEST_KEY ) ) ) {
-			$server = 'https://wp.api.litespeedtech.com' ;
-		}
-
-		$url = $server . '/' . $action ;
+		$url = 'https://wp.api.litespeedtech.com/' . $action ;
 
 		LiteSpeed_Cache_Log::debug( 'SAPI posting to : ' . $url ) ;
 

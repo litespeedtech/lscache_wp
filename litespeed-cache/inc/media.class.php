@@ -147,8 +147,7 @@ class LiteSpeed_Cache_Media
 					$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v2[ 0 ] ;
 
 					// Fetch webp image
-					$url_to_fetch = LiteSpeed_Cache_Admin_API::server_url() . '/' . $json[ 'webp' ] ;
-					file_put_contents( $local_file . '.webp', file_get_contents( $url_to_fetch ) ) ;
+					file_put_contents( $local_file . '.webp', file_get_contents( $json[ 'webp' ] ) ) ;
 					// Unknown issue
 					if ( md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
 						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img webp: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
@@ -159,8 +158,7 @@ class LiteSpeed_Cache_Media
 
 					// Fetch optimized image itself
 					if ( ! empty( $json[ 'target_file' ] ) ) {
-						$url_to_fetch = LiteSpeed_Cache_Admin_API::server_url() . '/' . $json[ 'target_file' ] ;
-						file_put_contents( $local_file . '.tmp', file_get_contents( $url_to_fetch ) ) ;
+						file_put_contents( $local_file . '.tmp', file_get_contents( $json[ 'target_file' ] ) ) ;
 						// Unknown issue
 						if ( md5_file( $local_file . '.tmp' ) !== $json[ 'target_md5' ] ) {
 							LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img iteself: file md5 dismatch, server md5: ' . $json[ 'target_md5' ] ) ;
@@ -351,7 +349,7 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Log::debug( 'Media prepared images to push: gruops ' . $total_groups . ' images ' . $this->_img_total ) ;
 
 			// Push to LiteSpeed server
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_IMG_OPTIMIZE, $this->_img_in_queue ) ;
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_REQUEST_OPTIMIZE, $this->_img_in_queue ) ;
 
 			if ( ! is_array( $json ) ) {
 				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
@@ -499,8 +497,11 @@ class LiteSpeed_Cache_Media
 		$total_server_finished = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ) ;
 		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ) ;
 
+		$total_not_requested = $total_img - $total_requested - $total_server_finished - $total_pulled ;
+
 		return array(
 			'total_img'	=> $total_img,
+			'total_not_requested'	=> $total_not_requested,
 			'total_requested'	=> $total_requested,
 			'total_server_finished'	=> $total_server_finished,
 			'total_pulled'	=> $total_pulled,

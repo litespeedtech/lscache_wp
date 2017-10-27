@@ -27,18 +27,29 @@ $img_count = $media->img_count() ;
 			<?php echo __( 'Sync Key', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'This will communicate with LiteSpeed server, get a free key, and get the assigned server for optimization requests.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'This will communicate with LiteSpeed server, get a free unique key for optimization requests.', 'litespeed-cache' ) ; ?>
 		</span>
 
 		<h3 class="litespeed-title"><?php echo __('Images', 'litespeed-cache') ; ?></h3>
 
 		<p>Total images: <?php echo $img_count[ 'total_img' ] ; ?></p>
+		<p>Images needed to request: <?php echo $img_count[ 'total_not_requested' ] ; ?></p>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE ) ; ?>" class="litespeed-btn-success">
+			<?php echo __( 'Send Request to LiteSpeed Server', 'litespeed-cache' ) ; ?>
+		</a>
+		<div class="litespeed-desc">
+			<?php echo __( 'This will send the optimization request with the images to LiteSpeed server.', 'litespeed-cache' ) ; ?>
+		</div>
+
+		<hr />
+
 		<p>Requested images: <?php echo $img_count[ 'total_requested' ] ; ?></p>
 		<p>Server finished images: <?php echo $img_count[ 'total_server_finished' ] ; ?></p>
 		<p>Optimized images: <?php echo $img_count[ 'total_pulled' ] ; ?></p>
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE ) ; ?>" class="litespeed-btn-success">
-			<?php echo __( 'Optimize Images', 'litespeed-cache' ) ; ?>
-		</a>
+		<div class="litespeed-desc">
+			<?php echo __( 'After LiteSpeed server finished optimization, it will notify your server to pull the optimized images.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'All these processes are automatic.', 'litespeed-cache' ) ; ?>
+		</div>
 
 	</div>
 </div>
