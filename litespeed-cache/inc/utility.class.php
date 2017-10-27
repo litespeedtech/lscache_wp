@@ -13,13 +13,30 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Convert array to string
+	 *
+	 * @since  1.6
+	 * @access public
+	 * @return string
+	 */
+	public static function arr2str( $arr )
+	{
+		if ( ! is_array( $arr ) ) {
+			return $arr ;
+		}
+
+		return base64_encode( serialize( $arr ) ) ;
+	}
+
+	/**
 	 * Get human readable size
 	 *
 	 * @since  1.6
 	 * @access public
 	 * @return string
 	 */
-	public static function real_size( $filesize ) {
+	public static function real_size( $filesize )
+	{
 		if ( $filesize >= 1073741824 ) {
 			$filesize = round( $filesize / 1073741824 * 100 ) / 100 . 'G' ;
 		}

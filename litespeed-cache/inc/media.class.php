@@ -368,10 +368,10 @@ class LiteSpeed_Cache_Media
 		// push to LiteSpeed server
 		if ( ! empty( $this->_img_in_queue ) ) {
 			$total_groups = count( $this->_img_in_queue ) ;
-			LiteSpeed_Cache_Log::debug( 'Media prepared images to push: gruops ' . $total_groups . ' images ' . $this->_img_total ) ;
+			LiteSpeed_Cache_Log::debug( 'Media prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
 			// Push to LiteSpeed server
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_REQUEST_OPTIMIZE, $this->_img_in_queue ) ;
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $this->_img_in_queue ) ) ;
 
 			if ( ! is_array( $json ) ) {
 				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
