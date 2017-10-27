@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Admin_API
 			update_option( self::DB_SAPI_IMG_REDUCED, $json[ 'reduced' ] ) ;
 		}
 
-		$msg = __( 'Sync data with server successfully.', 'litespeed-cache' ) ;
+		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 	}

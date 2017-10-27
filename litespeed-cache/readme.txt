@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-*NEW - LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache and Lazyload images!*
+LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache, Lazyload images and image optimization!
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -47,6 +47,7 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
+* Image optimization
 * PageSpeed score optimization
 * Load CSS/JS Asynchronously
 * Lazyload images/iframes
@@ -237,6 +238,20 @@ For more detailed information about crawler setup, please see [our blog post](ht
 16. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6 - October 27 2017 =
+* [NEW FEATURE] Image Optimization.
+* [NEW FEATURE] Role Excludes for Optimization.
+* [NEW FEATURE] Combined CSS/JS Priority.
+* [IMPROVEMENT] Bypass CDN for login/register page.
+* [UPDATE] Expanded ExpiresByType rules to include new font types. ( Thanks to JMCA2 )
+* [UPDATE] Removed duplicated type param in admin action link.
+* [BUGFIX] Fixed CDN wrongly replacing img base64 and "fake" src in JS.
+* [BUGFIX] Fixed image lazy load replacing base64 src.
+* [BUGFIX] Fixed a typo in Optimize class exception.
+* [GUI] New Tuning tab in admin settings panel.
+* [REFACTOR] Simplified router by reducing actions and adding types.
+* [REFACTOR] Renamed `run()` to `finalize()` in buffer process.
 
 = 1.5 - October 17 2017 =
 * [NEW FEATURE] Exclude JQuery (to fix inline JS error when using JS Combine).
