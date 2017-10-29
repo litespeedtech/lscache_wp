@@ -240,6 +240,7 @@ class LiteSpeed_Cache_Admin_API
 
 		$param = array(
 			'auth_key'	=> $this->_sapi_key,
+			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
 			'hash'	=> $hash,
 			'data' => $data,
 		) ;

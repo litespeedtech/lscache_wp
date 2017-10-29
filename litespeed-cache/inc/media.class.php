@@ -124,11 +124,11 @@ class LiteSpeed_Cache_Media
 			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id
 			WHERE a.meta_key = %s AND a.meta_value = %s AND b.meta_key = %s
 			ORDER BY a.post_id DESC
+			LIMIT 10
 		" ;
 		$cond = array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_DATA ) ;
 		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, $cond ) ) ;
 
-		$final_has_notified_still = false ;
 		foreach ( $meta_value_list as $v ) {
 			$meta_value = unserialize( $v->meta_value ) ;
 
@@ -144,13 +144,13 @@ class LiteSpeed_Cache_Media
 					$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_PULL_IMG, $data, $server ) ;
 					if ( empty( $json[ 'webp' ] ) ) {
 						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img: ', $json ) ;
-						continue ;
+						return ;
 					}
 
 					$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v2[ 0 ] ;
 
 					// Fetch webp image
-					file_put_contents( $local_file . '.webp', file_get_contents( $server . '/' . $json[ 'webp' ] ) ) ;
+					file_put_contents( $local_file . '.webp', file_get_contents( $json[ 'webp' ] ) ) ;
 					// Unknown issue
 					if ( md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
 						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img webp: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Media
 
 					// Fetch optimized image itself
 					if ( ! empty( $json[ 'target_file' ] ) ) {
-						file_put_contents( $local_file . '.tmp', file_get_contents( $server . '/' . $json[ 'target_file' ] ) ) ;
+						file_put_contents( $local_file . '.tmp', file_get_contents( $json[ 'target_file' ] ) ) ;
 						// Unknown issue
 						if ( md5_file( $local_file . '.tmp' ) !== $json[ 'target_md5' ] ) {
 							LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img iteself: file md5 dismatch, server md5: ' . $json[ 'target_md5' ] ) ;
@@ -198,9 +198,9 @@ class LiteSpeed_Cache_Media
 				}
 				if ( $v2[ 1 ] === self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
 					$has_notify = true ;
-					$final_has_notified_still = true ;
 				}
 			}
+
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
 
 			// Update pid status
@@ -214,7 +214,9 @@ class LiteSpeed_Cache_Media
 		}
 
 		// If all pulled, update tag to done
-		if ( ! $final_has_notified_still ) {
+		$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s LIMIT 1" ;
+		$meta_value_list = $wpdb->get_row( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ) ;
+		if ( ! $meta_value_list ) {
 			update_option( LiteSpeed_Cache_Config::ITEM_MEDIA_NEED_PULL, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ;
 		}
 	}
@@ -232,7 +234,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * notify img optimized callback from LiteSpeed
+	 * LiteSpeed Child server notify Client img has been optimized and can be pulled
 	 *
 	 * @since  1.6
 	 * @access private
@@ -324,7 +326,7 @@ class LiteSpeed_Cache_Media
 			ORDER BY a.ID DESC
 			LIMIT %d
 			" ;
-		$q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, apply_filters( 'litespeed_img_optimize_max_rows', 300 ) ) ) ;
+		$q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, apply_filters( 'litespeed_img_optimize_max_rows', 100 ) ) ) ;
 
 		$img_set = array() ;
 		$list = $wpdb->get_results( $q ) ;

@@ -177,9 +177,7 @@ Please see [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/li
 
 = Are my images optimized? =
 
-LSCWP does not do anything with your images.
-
-If you want to optimize your images, we recommend trying a plugin like [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/). It can reduce your site's images up to 90%.
+Yes we do. LSCWP v1.6+ can optimize your images.
 
 = How do I get WP-PostViews to display an updating view count? =
 

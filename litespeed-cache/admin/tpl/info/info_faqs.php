@@ -71,10 +71,7 @@ if (!defined('WPINC')) die;
 <h4 class="litespeed-question litespeed-down"><?php echo __('Are my images optimized?', 'litespeed-cache'); ?></h4>
 <div class="litespeed-answer">
 	<p>
-		<?php echo __('The cache plugin does not do anything with the images themselves.', 'litespeed-cache'); ?>
-		<?php echo sprintf(__('We recommend you trying an image optimization plugin like %s to optimize your images.', 'litespeed-cache'),
-		'<a href="https://shortpixel.com/h/af/CXNO4OI28044" rel="friend noopener noreferer" target="_blank">ShortPixel</a>'); ?>
-		<?php echo __("It can reduce your site's images up to 90%.", 'litespeed-cache'); ?>
+		<?php echo sprintf( __( 'Yes we do. LSCWP %s can optimize your images.', 'litespeed-cache' ), 'v1.6+' ) ; ?>
 	</p>
 </div>
 
