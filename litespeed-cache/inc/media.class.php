@@ -17,6 +17,7 @@ class LiteSpeed_Cache_Media
 	const LAZY_LIB = '/min/lazyload.js' ;
 
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
+	const OPT_CRON_RUN = 'img_optm_cron_run' ; // last cron running time
 
 	const DB_IMG_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
 	const DB_IMG_OPTIMIZE_STATUS = 'litespeed-optimize-status' ;
@@ -97,6 +98,33 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
+	 * Check if fetch cron is running
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function _cron_running()
+	{
+		$last_run = get_option( self::OPT_CRON_RUN ) ;
+		if ( ! $last_run || time() - $last_run > 120 ) {
+			return false ;
+		}
+
+		return true ;
+	}
+
+	/**
+	 * Update fetch cron timestamp tag
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function _update_cron_running()
+	{
+		update_option( self::OPT_CRON_RUN, time() ) ;
+	}
+
+	/**
 	 * Pull optimized img
 	 *
 	 * @since  1.6
@@ -117,6 +145,11 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _pull_optimized_img()
 	{
+		if ( $this->_cron_running() ) {
+			LiteSpeed_Cache_Log::debug( 'Media: fetch cron is running' ) ;
+			return ;
+		}
+
 		global $wpdb ;
 
 		$q = "SELECT a.meta_id, a.post_id, b.meta_id as bmeta_id, b.meta_value
@@ -134,6 +167,13 @@ class LiteSpeed_Cache_Media
 
 			// Start fetching
 			foreach ( $meta_value as $md5 => $v2 ) {
+
+				/**
+				 * Update cron timestamp to avoid duplicated running
+				 * @since  1.6.2
+				 */
+				$this->_update_cron_running() ;
+
 				if ( $v2[ 1 ] === self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
 					$server = $v2[ 2 ] ;
 					// send fetch request
