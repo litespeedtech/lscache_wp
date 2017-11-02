@@ -28,9 +28,6 @@ class LiteSpeed_Cache_Vary
 	{
 		// logged in user
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
-			// Make sure the cookie value is corrent
-			self::add_logged_in() ;
-
 			// If not esi, check cache logged-in user setting
 			if ( ! LiteSpeed_Cache_Router::esi_enabled() ) {
 				// If cache logged-in, then init cacheable to private
@@ -52,15 +49,12 @@ class LiteSpeed_Cache_Vary
 			}
 
 			// register logout hook to clear login status
-			add_action( 'clear_auth_cookie', 'LiteSpeed_Cache_Vary::remove_logged_in' ) ;
+			add_action( 'clear_auth_cookie', array( $this, 'remove_logged_in' ) ) ;
 
 		}
 		else {
-			// Make sure the cookie value is corrent
-			self::remove_logged_in() ;
-
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
-			add_action( 'set_logged_in_cookie', 'LiteSpeed_Cache_Vary::add_logged_in', 10, 4 ) ;
+			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 ) ;
 			add_action( 'wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
 
 			LiteSpeed_Cache_Control::init_cacheable() ;
@@ -189,14 +183,60 @@ class LiteSpeed_Cache_Vary
 	 * Append user status with logged in
 	 *
 	 * @since 1.1.3
+	 * @since 1.6.2 Removed static referral
 	 * @access public
 	 */
-	public static function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $user_id = false )
+	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false )
 	{
 		// If the cookie is lost somehow, set it
-		$vary = self::generate_vary( $user_id ) ;
+		$this->_update_default_vary( $uid, $expire ) ;
+	}
+
+	/**
+	 * Remove user logged in status
+	 *
+	 * @since 1.1.3
+	 * @since 1.6.2 Removed static referral
+	 * @access public
+	 */
+	public function remove_logged_in()
+	{
+		// Force update vary to remove login status
+		$this->_update_default_vary( -1 ) ;
+	}
+
+	/**
+	 * Check if can change default vary
+	 *
+	 * @since 1.6.2
+	 * @access private
+	 */
+	private function can_change_vary()
+	{
+		// Don't change for ajax due to ajax not sending webp header
+		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+			return false ;
+		}
+
+		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' ) {
+			return false ;
+		}
+
+		return true ;
+	}
+
+	/**
+	 * Update default vary
+	 *
+	 * @since 1.6.2
+	 * @access private
+	 */
+	private function _update_default_vary( $uid = false, $expire = false )
+	{
+		// If the cookie is lost somehow, set it
+		$vary = $this->_finalize_default_vary( $uid ) ;
 		$current_vary = self::has_vary() ;
-		if ( $current_vary !== $vary && $current_vary !== 'commenter' ) {
+		if ( $current_vary !== $vary && $current_vary !== 'commenter' && $this->can_change_vary() ) {
 			// $_COOKIE[ self::$_vary_name ] = $vary ; // not needed
 
 			// save it
@@ -204,82 +244,76 @@ class LiteSpeed_Cache_Vary
 				$expire = time() + 2 * DAY_IN_SECONDS ;
 			}
 			self::_cookie( $vary, $expire ) ;
-			LiteSpeed_Cache_Control::set_nocache( 'adding logged in status' ) ;
+			LiteSpeed_Cache_Control::set_nocache( 'changing default vary' . " $current_vary => $vary" ) ;
 		}
 	}
 
 	/**
-	 * Remove user logged in status
+	 * Finalize default vary
 	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function remove_logged_in()
-	{
-		// If the cookie is set and not commenter, unset it.
-		$current_vary = self::has_vary() ;
-		if ( $current_vary && $current_vary !== 'commenter' ) {
-			// remove logged in status from global var
-			// unset( $_COOKIE[ self::$_vary_name ] ) ; // not needed
-
-			// save it
-			self::_cookie() ;
-			LiteSpeed_Cache_Control::set_nocache( 'removing logged in status' ) ;
-		}
-	}
-
-	/**
-	 * Get user vary tag based on admin_bar & role
+	 *  Get user vary tag based on admin_bar & role
 	 *
-	 * @since 1.2.0
-	 * @access public
+	 * NOTE: Login process will also call this because it does not call wp hook as normal page loading
+	 *
+	 * @since 1.6.2
+	 * @access private
 	 */
-	public static function generate_vary( $user_id )
+	private function _finalize_default_vary( $uid = false )
 	{
-		if ( ! $user_id ) {
-			$user_id = LiteSpeed_Cache_Router::get_uid() ;
+		$vary = array() ;
+
+		if ( ! $uid ) {
+			$uid = LiteSpeed_Cache_Router::get_uid() ;
 		}
-		$vary = array( 'logged-in' => 1 ) ;
+
 		// get user's group id
-		$user = get_userdata( $user_id ) ;
-		if ( empty( $user->roles[ 0 ] ) ) {
+		if ( $uid > 0 ) {
+			$user = get_userdata( $uid ) ;
+		}
+
+		if ( $uid > 0 && ! empty( $user->roles[ 0 ] ) ) {
+			$vary[ 'logged-in' ] = 1 ;
+
+			// parge role group from settings
+			$gid = $user->roles[ 0 ] ?: 0 ;
+			if ( $role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group( $gid ) ) {
+				$vary[ 'role' ] = $role_group ;
+				LiteSpeed_Cache_Log::debug2( 'Vary role group: ' . $gid ) ;
+			}
+
+			// Get admin bar set
+			// see @_get_admin_bar_pref()
+			$pref = get_user_option( 'show_admin_bar_front', $uid ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary show_admin_bar_front: ' . $pref ) ;
+			$admin_bar = $pref === false || $pref === 'true' ;
+
+			if ( $admin_bar ) {
+				$vary[ 'admin_bar' ] = 1 ;
+				LiteSpeed_Cache_Log::debug2( 'Vary admin bar : true' ) ;
+			}
+
+		}
+		else {
 			// Guest user
 			LiteSpeed_Cache_Log::debug( 'Vary role id: failed, guest' ) ;
-			return false ;
-		}
 
-		// parge role group from settings
-		$gid = $user->roles[ 0 ] ?: 0 ;
-		if ( $role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group( $gid ) ) {
-			$vary[ 'role' ] = $role_group ;
-			LiteSpeed_Cache_Log::debug2( 'Vary role group: ' . $gid ) ;
-		}
-
-		// Get admin bar set
-		// see @_get_admin_bar_pref()
-		$pref = get_user_option( 'show_admin_bar_front', $user_id ) ;
-		LiteSpeed_Cache_Log::debug2( 'Vary show_admin_bar_front: ' . $pref ) ;
-		$admin_bar = $pref === false || $pref === 'true' ;
-
-		if ( $admin_bar ) {
-			$vary[ 'admin_bar' ] = 1 ;
-			LiteSpeed_Cache_Log::debug2( 'Vary admin bar : true' ) ;
 		}
 
 		/**
 		 * Add filter
 		 * @since 1.6 Added for Role Excludes for optimization cls
+		 * @since 1.6.2 Hooked to webp
 		 */
 		$vary = apply_filters( 'litespeed_vary', $vary ) ;
+
+		if ( ! $vary ) {
+			return false ;
+		}
 
 		ksort( $vary ) ;
 		$res = array() ;
 		foreach ( $vary as $key => $val ) {
 			$res[] = $key . ':' . $val ;
-		}
-
-		if ( ! $res ) {
-			return false ;
 		}
 
 		$res = implode( ';', $res ) ;
@@ -288,6 +322,7 @@ class LiteSpeed_Cache_Vary
 		}
 		// Encrypt in production
 		return md5( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::HASH ) . $res ) ;
+
 	}
 
 	/**
@@ -367,7 +402,7 @@ class LiteSpeed_Cache_Vary
 	 * @access private
 	 * @return array An array of all vary cookies currently added.
 	 */
-	private static function _format_vary_cookies()
+	private function _format_vary_cookies()
 	{
 		if ( empty(self::$_vary_cookies) ) {
 			return false ;
@@ -393,12 +428,21 @@ class LiteSpeed_Cache_Vary
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 * if the post is not password protected. Vary header otherwise.
 	 */
-	public static function output()
+	public static function finalize()
 	{
+		return self::get_instance()->_finalize() ;
+
+	}
+
+	private function _finalize()
+	{
+		// Finalize default vary
+		$this->_update_default_vary() ;
+
 		if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
-			return ;
+			return false;
 		}
-		$tp_cookies = self::_format_vary_cookies() ;
+		$tp_cookies = $this->_format_vary_cookies() ;
 		global $post ;
 		if ( ! empty($post->post_password) ) {
 			if ( isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
@@ -414,6 +458,7 @@ class LiteSpeed_Cache_Vary
 			return ;
 		}
 		return self::X_HEADER . ': ' . implode(',', $tp_cookies) ;
+
 	}
 
 	/**

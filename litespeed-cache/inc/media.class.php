@@ -49,16 +49,42 @@ class LiteSpeed_Cache_Media
 		$this->wp_upload_dir = wp_upload_dir() ;
 		$this->cfg_img_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
 
+		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
 		if ( $this->cfg_img_webp ) {
-			// Hook to srcset
-			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-				add_filter( 'wp_calculate_image_srcset', __CLASS__ . '::srcset', 988 ) ;
+			/**
+			 * Add vary filter
+			 * @since  1.6.2
+			 */
+			// Moved to htaccess
+			// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) ) ;
+
+			//
+			if ( $this->webp_support() ) {
+				// Hook to srcset
+				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
+					add_filter( 'wp_calculate_image_srcset', __CLASS__ . '::webp_srcset', 988 ) ;
+				}
+				// Hook to mime icon
+				add_filter( 'wp_get_attachment_image_src', __CLASS__ . '::webp_attach_img_src', 988 ) ;
+				add_filter( 'wp_get_attachment_url', __CLASS__ . '::webp_url', 988 ) ;
 			}
-			// Hook to mime icon
-			add_filter( 'wp_get_attachment_image_src', __CLASS__ . '::attach_img_src', 988 ) ;
-			add_filter( 'wp_get_attachment_url', __CLASS__ . '::url', 988 ) ;
 		}
 
+	}
+
+	/**
+	 * Exclude role from optimization filter
+	 *
+	 * @since  1.6.2
+	 * @access public
+	 */
+	private function webp_support()
+	{
+		if ( empty( $_SERVER[ 'HTTP_ACCEPT' ] ) || strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) === false ) {
+			return false ;
+		}
+
+		return true ;
 	}
 
 	/**
@@ -798,7 +824,7 @@ class LiteSpeed_Cache_Media
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
-	public static function attach_img_src( $img )
+	public static function webp_webp_attach_img_src( $img )
 	{
 		$instance = self::get_instance() ;
 		if ( $img && $url = $instance->_replace_webp( $img[ 0 ] ) ) {
@@ -815,7 +841,7 @@ class LiteSpeed_Cache_Media
 	 * @param  string $url
 	 * @return string
 	 */
-	public static function url( $url )
+	public static function webp_url( $url )
 	{
 		$instance = self::get_instance() ;
 		if ( $url && $url2 = $instance->_replace_webp( $url ) ) {
@@ -832,7 +858,7 @@ class LiteSpeed_Cache_Media
 	 * @param  array $srcs
 	 * @return array
 	 */
-	public static function srcset( $srcs )
+	public static function webp_srcset( $srcs )
 	{
 		if ( $srcs ) {
 			$instance = self::get_instance() ;

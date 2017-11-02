@@ -43,7 +43,7 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Exclude role from optimization filter
 	 *
-	 * @since  1.6
+	 * @since  1.6.2
 	 * @access public
 	 */
 	public function vary_add_role_exclude( $varys )

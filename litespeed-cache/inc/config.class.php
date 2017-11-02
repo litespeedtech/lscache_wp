@@ -398,6 +398,10 @@ class LiteSpeed_Cache_Config
 			$role = LiteSpeed_Cache_Router::get_role() ;
 		}
 
+		if ( ! $role ) {
+			return false ;
+		}
+
 		return in_array( $role, $this->exclude_optimization_roles ) ? $role : false ;
 	}
 
@@ -414,6 +418,10 @@ class LiteSpeed_Cache_Config
 		// Get user role
 		if ( $role === null ) {
 			$role = LiteSpeed_Cache_Router::get_role() ;
+		}
+
+		if ( ! $role ) {
+			return false ;
 		}
 
 		return in_array( $role, $this->exclude_cache_roles ) ? $role : false ;
@@ -462,7 +470,7 @@ class LiteSpeed_Cache_Config
 			self::PURGE_AUTHOR,
 			self::PURGE_MONTH,
 			self::PURGE_TERM,
-			self::PURGE_POST_TYPE
+			self::PURGE_POST_TYPE,
 		) ;
 		sort($default_purge_options) ;
 
@@ -613,6 +621,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
+			self::OPID_MEDIA_IMG_WEBP => false,
 		) ;
 		return $default_site_options ;
 	}

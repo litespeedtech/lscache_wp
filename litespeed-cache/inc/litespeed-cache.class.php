@@ -498,7 +498,7 @@ class LiteSpeed_Cache
 		// NOTE: cache ctrl output needs to be done first, as currently some varies are added in 3rd party hook `litespeed_cache_api_control`.
 		LiteSpeed_Cache_Control::finalize() ;
 
-		$vary_header = LiteSpeed_Cache_Vary::output() ;
+		$vary_header = LiteSpeed_Cache_Vary::finalize() ;
 
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
 		$tag_header = LiteSpeed_Cache_Tag::output() ;

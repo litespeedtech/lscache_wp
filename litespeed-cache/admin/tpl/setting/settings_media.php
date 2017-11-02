@@ -69,15 +69,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
-	<tr>
-		<th><?php echo __( 'Image Webp Replacement', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Replace the current images with the optimized %s images to improve the loading time significantly.', 'litespeed-cache' ), '.webp' ) ; ?>
-			</div>
-		</td>
-	</tr>
+	<?php
+		if ( ! is_multisite() ) :
+			// webp
+			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ;
+
+		endif ;
+	?>
 
 
 </tbody></table>

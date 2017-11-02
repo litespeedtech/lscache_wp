@@ -7,6 +7,7 @@ $menuArr = array(
 	'purge' => __('Purge', 'litespeed-cache'),
 	'excludes' => __('Excludes', 'litespeed-cache'),
 	'advanced' => __('Advanced', 'litespeed-cache'),
+	'media' => __('Media', 'litespeed-cache'),
 );
 
 global $_options;

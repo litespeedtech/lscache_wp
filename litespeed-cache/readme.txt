@@ -239,7 +239,7 @@ For more detailed information about crawler setup, please see [our blog post](ht
 == Changelog ==
 
 = 1.6.1 - October 29 2017 =
-* [SAPI] Updated LiteSpeed Image Optimization Server API to v1.6.1.
+* [IAPI] Updated LiteSpeed Image Optimization Server API to v1.6.1.
 
 = 1.6 - October 27 2017 =
 * [NEW FEATURE] Image Optimization.

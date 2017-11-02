@@ -43,6 +43,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_BROWSER_CACHE = '### marker BROWSER CACHE' ;
 	const MARKER_MINIFY = '### marker MINIFY' ;
 	const MARKER_CORS = '### marker CORS' ;
+	const MARKER_WEBP = '### marker WEBP' ;
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
 
@@ -641,6 +642,16 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
 			$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
 			$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
+
+		// webp support
+		$id = LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ;
+		if ( ! empty( $cfg[ $id ] ) ) {
+			$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
+			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"' ;
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=webp]' ;
+			$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}
 
