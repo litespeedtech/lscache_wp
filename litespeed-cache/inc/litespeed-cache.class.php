@@ -112,9 +112,9 @@ class LiteSpeed_Cache
 	/**
 	 * The plugin initializer.
 	 *
-	 * This function checks if the cache is enabled and ready to use, then
-	 * determines what actions need to be set up based on the type of user
-	 * and page accessed. Output is buffered if the cache is enabled.
+	 * This function checks if the cache is enabled and ready to use, then determines what actions need to be set up based on the type of user and page accessed. Output is buffered if the cache is enabled.
+	 *
+	 * NOTE: WP user doesn't init yet
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -146,6 +146,12 @@ class LiteSpeed_Cache
 
 		// Check minify file request in the very beginning
 		LiteSpeed_Cache_Optimize::get_instance() ;
+
+		/**
+		 * Register vary filter
+		 * @since  1.6.2
+		 */
+		LiteSpeed_Cache_Control::get_instance() ;
 
 		// 1. Init vary
 		// 2. Init cacheable status

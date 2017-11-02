@@ -24,6 +24,53 @@ class LiteSpeed_Cache_Router
 	private static $_frontend_path ;
 
 	/**
+	 * Get user id
+	 *
+	 * @since  1.6.2
+	 */
+	public static function get_uid()
+	{
+		if ( defined( 'LITESPEED_WP_UID' ) ) {
+			return LITESPEED_WP_UID ;
+		}
+
+		$user = wp_get_current_user() ;
+		$user_id = $user->ID ;
+
+		LiteSpeed_Cache_Log::debug2( 'get_uid ' . $user_id ) ;
+
+		define( 'LITESPEED_WP_UID', $user_id ) ;
+
+		return LITESPEED_WP_UID ;
+	}
+
+	/**
+	 * Get user role
+	 *
+	 * @since  1.6.2
+	 */
+	public static function get_role()
+	{
+		if ( defined( 'LITESPEED_WP_ROLE' ) ) {
+			return LITESPEED_WP_ROLE ;
+		}
+		$user = get_userdata( self::get_uid() ) ;
+		if ( empty( $user->roles[ 0 ] ) ) {
+			// Guest user
+			LiteSpeed_Cache_Log::debug( 'bypassed role check, guest' ) ;
+
+			define( 'LITESPEED_WP_ROLE', false ) ;
+
+			return false ;
+		}
+		$role = $user->roles[ 0 ] ;
+
+		define( 'LITESPEED_WP_ROLE', $role ) ;
+
+		return LITESPEED_WP_ROLE ;
+	}
+
+	/**
 	 * Get frontend path
 	 *
 	 * @since 1.2.2

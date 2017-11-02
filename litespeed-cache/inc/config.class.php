@@ -17,6 +17,7 @@ class LiteSpeed_Cache_Config
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 	const VARY_GROUP = 'litespeed-cache-vary-group' ;
 	const EXCLUDE_OPTIMIZATION_ROLES = 'litespeed-cache-exclude-optimization-roles' ;
+	const EXCLUDE_CACHE_ROLES = 'litespeed-cache-exclude-cache-roles' ;
 	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
 	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_EXC = 'litespeed-media-lazy-img-excludes' ;
@@ -158,6 +159,7 @@ class LiteSpeed_Cache_Config
 	protected $options ;
 	protected $vary_groups ;
 	protected $exclude_optimization_roles ;
+	protected $exclude_cache_roles ;
 	protected $purge_options ;
 
 	/**
@@ -195,6 +197,9 @@ class LiteSpeed_Cache_Config
 
 		// Exclude optimization role setting
 		$this->exclude_optimization_roles = (array) get_option( self::EXCLUDE_OPTIMIZATION_ROLES ) ;
+
+		// Exclude cache role setting
+		$this->exclude_cache_roles = (array) get_option( self::EXCLUDE_CACHE_ROLES ) ;
 
 		// Set security key if not initialized yet
 		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {
@@ -390,18 +395,28 @@ class LiteSpeed_Cache_Config
 	{
 		// Get user role
 		if ( $role === null ) {
-			$user = wp_get_current_user() ;
-			$user_id = $user->ID ;
-			$user = get_userdata( $user_id ) ;
-			if ( empty( $user->roles[ 0 ] ) ) {
-				// Guest user
-				LiteSpeed_Cache_Log::debug( 'Optimization bypassed role check, guest' ) ;
-				return false ;
-			}
-			$role = $user->roles[ 0 ] ;
+			$role = LiteSpeed_Cache_Router::get_role() ;
 		}
 
 		return in_array( $role, $this->exclude_optimization_roles ) ? $role : false ;
+	}
+
+	/**
+	 * Check if one user role is in exclude cache group settings
+	 *
+	 * @since 1.6.2
+	 * @access public
+	 * @param  string $role The user role
+	 * @return int       The set value if already set
+	 */
+	public function in_exclude_cache_roles( $role = null )
+	{
+		// Get user role
+		if ( $role === null ) {
+			$role = LiteSpeed_Cache_Router::get_role() ;
+		}
+
+		return in_array( $role, $this->exclude_cache_roles ) ? $role : false ;
 	}
 
 	/**

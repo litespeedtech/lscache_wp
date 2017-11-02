@@ -237,9 +237,7 @@ class LiteSpeed_Cache_Vary
 	public static function generate_vary( $user_id )
 	{
 		if ( ! $user_id ) {
-			$user = wp_get_current_user() ;
-			$user_id = $user->ID ;
-			LiteSpeed_Cache_Log::debug2( 'getting user_id: ' . $user_id ) ;
+			$user_id = LiteSpeed_Cache_Router::get_uid() ;
 		}
 		$vary = array( 'logged-in' => 1 ) ;
 		// get user's group id

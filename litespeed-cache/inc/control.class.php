@@ -26,6 +26,36 @@ class LiteSpeed_Cache_Control
 	private static $_mobile = false ;
 
 	/**
+	 * Init cache control
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function __construct()
+	{
+		/**
+		 * Add vary filter for Role Excludes
+		 * @since  1.6.2
+		 */
+		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+	}
+
+	/**
+	 * Exclude role from optimization filter
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
+	public function vary_add_role_exclude( $varys )
+	{
+		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
+			return $varys ;
+		}
+		$varys[ 'role_exclude_cache' ] = 1 ;
+		return $varys ;
+	}
+
+	/**
 	 * 1. Initialize cacheable status for `wp` hook
 	 * 2. Hook error page tags for cacheable pages
 	 *
@@ -535,6 +565,13 @@ class LiteSpeed_Cache_Control
 					return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
 			}
 		}
+
+		// Check if is exclude roles ( Need to set Vary too )
+		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
+			return $this->_no_cache_for( 'Role Excludes setting ' . $result ) ;
+		}
+
+
 
 		return true ;
 	}

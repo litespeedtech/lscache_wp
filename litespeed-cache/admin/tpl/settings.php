@@ -81,6 +81,18 @@ else {
 	$tp_tabs = array() ;
 }
 
+/**
+ * Generate rules for setting usage
+ * @since 1.6.2
+ */
+global $wp_roles ;
+if ( !isset( $wp_roles ) ) {
+	$wp_roles = new WP_Roles() ;
+}
+$roles = array_keys( $wp_roles->roles ) ;
+
+sort( $roles ) ;
+
 
 include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>

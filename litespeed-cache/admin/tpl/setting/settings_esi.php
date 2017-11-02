@@ -1,14 +1,6 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-global $wp_roles ;
-if ( !isset( $wp_roles ) ) {
-	$wp_roles = new WP_Roles() ;
-}
-$roles = array_keys( $wp_roles->roles ) ;
-
-sort( $roles ) ;
-
 ?>
 
 <h3 class="litespeed-title"><?php echo __('ESI Settings', 'litespeed-cache'); ?></h3>

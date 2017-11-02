@@ -421,6 +421,14 @@ class LiteSpeed_Cache_Admin_Settings
 				$this->_options[ $id ] = implode( ',', $tag_ids ) ;
 			}
 		}
+
+		/**
+		 * Update Role Excludes
+		 * @since 1.6.2
+		 */
+		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
+		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
+
 	}
 
 	/**
