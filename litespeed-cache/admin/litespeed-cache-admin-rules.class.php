@@ -650,7 +650,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"' ;
-			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=webp]' ;
+			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]' ;
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}

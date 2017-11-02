@@ -62,11 +62,11 @@ class LiteSpeed_Cache_Media
 			if ( $this->webp_support() ) {
 				// Hook to srcset
 				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-					add_filter( 'wp_calculate_image_srcset', __CLASS__ . '::webp_srcset', 988 ) ;
+					add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
 				}
 				// Hook to mime icon
-				add_filter( 'wp_get_attachment_image_src', __CLASS__ . '::webp_attach_img_src', 988 ) ;
-				add_filter( 'wp_get_attachment_url', __CLASS__ . '::webp_url', 988 ) ;
+				add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;
+				add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ;
 			}
 		}
 
@@ -824,10 +824,9 @@ class LiteSpeed_Cache_Media
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
-	public static function webp_webp_attach_img_src( $img )
+	public function webp_attach_img_src( $img )
 	{
-		$instance = self::get_instance() ;
-		if ( $img && $url = $instance->_replace_webp( $img[ 0 ] ) ) {
+		if ( $img && $url = $this->_replace_webp( $img[ 0 ] ) ) {
 			$img[ 0 ] = $url ;
 		}
 		return $img ;
@@ -841,10 +840,9 @@ class LiteSpeed_Cache_Media
 	 * @param  string $url
 	 * @return string
 	 */
-	public static function webp_url( $url )
+	public function webp_url( $url )
 	{
-		$instance = self::get_instance() ;
-		if ( $url && $url2 = $instance->_replace_webp( $url ) ) {
+		if ( $url && $url2 = $this->_replace_webp( $url ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -858,12 +856,11 @@ class LiteSpeed_Cache_Media
 	 * @param  array $srcs
 	 * @return array
 	 */
-	public static function webp_srcset( $srcs )
+	public function webp_srcset( $srcs )
 	{
 		if ( $srcs ) {
-			$instance = self::get_instance() ;
 			foreach ( $srcs as $w => $data ) {
-				if( ! $url = $instance->_replace_webp( $data[ 'url' ] ) ) {
+				if( ! $url = $this->_replace_webp( $data[ 'url' ] ) ) {
 					continue ;
 				}
 				$srcs[ $w ][ 'url' ] = $url ;
