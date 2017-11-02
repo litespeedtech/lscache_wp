@@ -321,6 +321,65 @@ class LiteSpeed_Cache_Utility
 
 		return $url ;
 	}
+
+	/**
+	 * Check if an URL is a internal existing file
+	 *
+	 * @since  1.2.2
+	 * @since  1.6.2 Moved here from optm.cls due to usage of media.cls
+	 * @access public
+	 * @return string|bool The real path of file OR false
+	 */
+	public static function is_internal_file( $url )
+	{
+		$url_parsed = parse_url( $url ) ;
+		if ( isset( $url_parsed[ 'host' ] ) && ! self::internal( $url_parsed[ 'host' ] ) ) {
+			// Check if is cdn path
+			// Do this to avoid user hardcoded src in tpl
+			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
+				return false ;
+			}
+		}
+
+		if ( empty( $url_parsed[ 'path' ] ) ) {
+			return false ;
+		}
+
+		// Need to replace child blog path for assets, ref: .htaccess
+		if ( is_multisite() && defined( 'PATH_CURRENT_SITE' ) ) {
+			$pattern = '#^' . PATH_CURRENT_SITE . '([_0-9a-zA-Z-]+/)(wp-(content|admin|includes))#U' ;
+			$replacement = PATH_CURRENT_SITE . '$2' ;
+			$url_parsed[ 'path' ] = preg_replace( $pattern, $replacement, $url_parsed[ 'path' ] ) ;
+			// $current_blog = (int) get_current_blog_id() ;
+			// $main_blog_id = (int) get_network()->site_id ;
+			// if ( $current_blog === $main_blog_id ) {
+			// 	define( 'LITESPEED_IS_MAIN_BLOG', true ) ;
+			// }
+			// else {
+			// 	define( 'LITESPEED_IS_MAIN_BLOG', false ) ;
+			// }
+		}
+
+		// Parse file path
+		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
+			$file_path = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
+		}
+		else {
+			$file_path = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
+		}
+		$file_path = realpath( $file_path ) ;
+		if ( ! is_file( $file_path ) ) {
+			return false ;
+		}
+
+		return array( $file_path, filesize( $file_path ) ) ;
+	}
+
+
+
+
+
+
 }
 
 

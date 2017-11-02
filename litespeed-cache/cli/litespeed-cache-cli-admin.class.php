@@ -59,6 +59,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON,
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP,
 		) ;
 		self::$purges = array(
 			'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES => LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
@@ -158,6 +159,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON:
+			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP:
 				//checkbox
 				if ( $val === 'true' ) {
 					$options[$key] = LiteSpeed_Cache_Config::VAL_ON  ;

@@ -63,8 +63,18 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON ) ; ?>
 			<div class="litespeed-desc">
+				<?php echo __( 'Do the cron job to fetch the optimized images from LiteSpeed Image Server.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Turn this on after sent the image optimization request.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This will allow your server do the cron fetching to LiteSpeed Image Server to fetch the optimized images.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Image Webp Replacement', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Replace the current images with the optimized %s images to improve the loading time significantly.', 'litespeed-cache' ), '.webp' ) ; ?>
 			</div>
 		</td>
 	</tr>

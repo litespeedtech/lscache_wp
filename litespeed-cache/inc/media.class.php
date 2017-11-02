@@ -32,6 +32,8 @@ class LiteSpeed_Cache_Media
 	private $_img_in_queue = array() ;
 	private $_img_total = 0 ;
 
+	private $cfg_img_webp ;
+
 	/**
 	 * Init
 	 *
@@ -45,6 +47,18 @@ class LiteSpeed_Cache_Media
 		$this->_static_request_check() ;
 
 		$this->wp_upload_dir = wp_upload_dir() ;
+		$this->cfg_img_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
+
+		if ( $this->cfg_img_webp ) {
+			// Hook to srcset
+			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
+				add_filter( 'wp_calculate_image_srcset', __CLASS__ . '::srcset', 988 ) ;
+			}
+			// Hook to mime icon
+			add_filter( 'wp_get_attachment_image_src', __CLASS__ . '::attach_img_src', 988 ) ;
+			add_filter( 'wp_get_attachment_url', __CLASS__ . '::url', 988 ) ;
+		}
+
 	}
 
 	/**
@@ -599,7 +613,7 @@ class LiteSpeed_Cache_Media
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
 
-		$instance->_lazyload() ;
+		$instance->_finalize() ;
 		return $instance->content ;
 	}
 
@@ -609,15 +623,27 @@ class LiteSpeed_Cache_Media
 	 * @since  1.4
 	 * @access private
 	 */
-	private function _lazyload()
+	private function _finalize()
 	{
 		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
 		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
 
+		if ( $cfg_img_lazy ) {
+			list( $src_list, $html_list ) = $this->_parse_img() ;
+			$html_list_ori = $html_list ;
+		}
+
+		/**
+		 * Use webp for optimized images
+		 * @since 1.6.2
+		 * Will use wp attachment hook instead of this
+		 */
+		// if ( $this->cfg_img_webp ) {
+		// 	$html_list = $this->_replace_webp( $src_list, $html_list ) ;
+		// }
+
 		// image lazy load
 		if ( $cfg_img_lazy ) {
-			$html_list = $this->_parse_img() ;
-			$html_list_ori = $html_list ;
 
 			$placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 
@@ -629,7 +655,9 @@ class LiteSpeed_Cache_Media
 
 				$html_list[ $k ] = $snippet ;
 			}
+		}
 
+		if ( $cfg_img_lazy ) {
 			$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
 		}
 
@@ -675,6 +703,7 @@ class LiteSpeed_Cache_Media
 			$excludes = explode( "\n", $excludes ) ;
 		}
 
+		$src_list = array() ;
 		$html_list = array() ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
@@ -716,10 +745,11 @@ class LiteSpeed_Cache_Media
 				continue ;
 			}
 
+			$src_list[] = $attrs[ 'src' ] ;
 			$html_list[] = $match[ 0 ] ;
 		}
 
-		return $html_list ;
+		return array( $src_list, $html_list ) ;
 	}
 
 	/**
@@ -758,6 +788,87 @@ class LiteSpeed_Cache_Media
 		}
 
 		return $html_list ;
+	}
+
+	/**
+	 * Hook to wp_get_attachment_image_src
+	 *
+	 * @since  1.6.2
+	 * @access public
+	 * @param  array $img The URL of the attachment image src, the width, the height
+	 * @return array
+	 */
+	public static function attach_img_src( $img )
+	{
+		$instance = self::get_instance() ;
+		if ( $img && $url = $instance->_replace_webp( $img[ 0 ] ) ) {
+			$img[ 0 ] = $url ;
+		}
+		return $img ;
+	}
+
+	/**
+	 * Try to replace img url
+	 *
+	 * @since  1.6.2
+	 * @access public
+	 * @param  string $url
+	 * @return string
+	 */
+	public static function url( $url )
+	{
+		$instance = self::get_instance() ;
+		if ( $url && $url2 = $instance->_replace_webp( $url ) ) {
+			$url = $url2 ;
+		}
+		return $url ;
+	}
+
+	/**
+	 * Hook to replace WP responsive images
+	 *
+	 * @since  1.6.2
+	 * @access public
+	 * @param  array $srcs
+	 * @return array
+	 */
+	public static function srcset( $srcs )
+	{
+		if ( $srcs ) {
+			$instance = self::get_instance() ;
+			foreach ( $srcs as $w => $data ) {
+				if( ! $url = $instance->_replace_webp( $data[ 'url' ] ) ) {
+					continue ;
+				}
+				$srcs[ $w ][ 'url' ] = $url ;
+			}
+		}
+		return $srcs ;
+	}
+
+	/**
+	 * Replace internal image src to webp
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function _replace_webp( $url )
+	{
+		LiteSpeed_Cache_Log::debug2( 'Media: webp replacing: ' . $url ) ;
+		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
+			// check if has webp file
+			if ( LiteSpeed_Cache_Utility::is_internal_file( $url  . '.webp' ) ) {
+				$url .= '.webp' ;
+			}
+			else {
+				LiteSpeed_Cache_Log::debug2( 'Media: no webp file, bypassed' ) ;
+			}
+		}
+		else {
+			LiteSpeed_Cache_Log::debug2( 'Media: no file, bypassed' ) ;
+		}
+
+		return $url ;
 	}
 
 	/**

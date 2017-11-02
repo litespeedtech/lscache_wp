@@ -710,7 +710,7 @@ class LiteSpeed_Cache_Optimize
 
 			// Check if is external URL
 			$url_parsed = parse_url( $src ) ;
-			if ( ! $file_info = $this->_is_file_url( $src ) ) {
+			if ( ! $file_info = LiteSpeed_Cache_Utility::is_internal_file( $src ) ) {
 				$ignored_html[ $src ] = $html_list[ $key ] ;
 				LiteSpeed_Cache_Log::debug2( 'Optm:    Abort external/non-exist' ) ;
 				continue ;
@@ -739,57 +739,6 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Check if an URL is a internal existing file
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 * @return string|bool The real path of file OR false
-	 */
-	private function _is_file_url( $url )
-	{
-		$url_parsed = parse_url( $url ) ;
-		if ( isset( $url_parsed[ 'host' ] ) && ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) ) {
-			// Check if is cdn path
-			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
-				return false ;
-			}
-		}
-
-		if ( empty( $url_parsed[ 'path' ] ) ) {
-			return false ;
-		}
-
-		// Need to replace child blog path for assets, ref: .htaccess
-		if ( is_multisite() && defined( 'PATH_CURRENT_SITE' ) ) {
-			$pattern = '#^' . PATH_CURRENT_SITE . '([_0-9a-zA-Z-]+/)(wp-(content|admin|includes))#U' ;
-			$replacement = PATH_CURRENT_SITE . '$2' ;
-			$url_parsed[ 'path' ] = preg_replace( $pattern, $replacement, $url_parsed[ 'path' ] ) ;
-			// $current_blog = (int) get_current_blog_id() ;
-			// $main_blog_id = (int) get_network()->site_id ;
-			// if ( $current_blog === $main_blog_id ) {
-			// 	define( 'LITESPEED_IS_MAIN_BLOG', true ) ;
-			// }
-			// else {
-			// 	define( 'LITESPEED_IS_MAIN_BLOG', false ) ;
-			// }
-		}
-
-		// Parse file path
-		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
-			$file_path = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
-		}
-		else {
-			$file_path = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
-		}
-		$file_path = realpath( $file_path ) ;
-		if ( ! is_file( $file_path ) ) {
-			return false ;
-		}
-
-		return array( $file_path, filesize( $file_path ) ) ;
-	}
-
-	/**
 	 * Run minify process and return final content
 	 *
 	 * @since  1.2.2
@@ -809,7 +758,7 @@ class LiteSpeed_Cache_Optimize
 		// Parse real file path
 		$real_files = array() ;
 		foreach ( $urls as $url ) {
-			$real_file = $this->_is_file_url( $url ) ;
+			$real_file = LiteSpeed_Cache_Utility::is_internal_file( $url ) ;
 			if ( ! $real_file ) {
 				continue ;
 			}
