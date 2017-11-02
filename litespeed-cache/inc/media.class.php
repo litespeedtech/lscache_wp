@@ -65,7 +65,7 @@ class LiteSpeed_Cache_Media
 					add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
 				}
 				// Hook to mime icon
-				add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;
+				add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
 				add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ;
 			}
 		}
@@ -662,11 +662,10 @@ class LiteSpeed_Cache_Media
 		/**
 		 * Use webp for optimized images
 		 * @since 1.6.2
-		 * Will use wp attachment hook instead of this
 		 */
-		// if ( $this->cfg_img_webp ) {
-		// 	$html_list = $this->_replace_webp( $src_list, $html_list ) ;
-		// }
+		if ( $this->cfg_img_webp ) {
+			$this->_replace_buffer_img_webp() ;
+		}
 
 		// image lazy load
 		if ( $cfg_img_lazy ) {
@@ -817,6 +816,35 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
+	 * Replace image src to webp
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function _replace_buffer_img_webp()
+	{
+		preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches ) ;
+		foreach ( $matches[ 3 ] as $k => $url ) {
+			// Check if is a DATA-URI
+			if ( strpos( $url, 'data:image' ) !== false ) {
+				continue ;
+			}
+
+			if ( ! $url2 = $this->_replace_webp( $url ) ) {
+				continue ;
+			}
+
+			$html_snippet = sprintf(
+				'<img %1$s src=%2$s %3$s>',
+				$matches[ 1 ][ $k ],
+				$matches[ 2 ][ $k ] . $url2 . $matches[ 4 ][ $k ],
+				$matches[ 5 ][ $k ]
+			) ;
+			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
+		}
+	}
+
+	/**
 	 * Hook to wp_get_attachment_image_src
 	 *
 	 * @since  1.6.2
@@ -826,6 +854,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public function webp_attach_img_src( $img )
 	{
+		LiteSpeed_Cache_Log::debug2( 'Media changing attach src: ' . $img[0] ) ;
 		if ( $img && $url = $this->_replace_webp( $img[ 0 ] ) ) {
 			$img[ 0 ] = $url ;
 		}
@@ -885,10 +914,12 @@ class LiteSpeed_Cache_Media
 			}
 			else {
 				LiteSpeed_Cache_Log::debug2( 'Media: no webp file, bypassed' ) ;
+				return false ;
 			}
 		}
 		else {
 			LiteSpeed_Cache_Log::debug2( 'Media: no file, bypassed' ) ;
+			return false ;
 		}
 
 		return $url ;
