@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.6\n"
+"Project-Id-Version: LiteSpeed Cache 1.6.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-10-28 02:41:49+00:00\n"
+"POT-Creation-Date: 2017-11-03 19:12:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,11 +12,11 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin/admin-api.class.php:137
+#: admin/admin-api.class.php:135
 msgid "SAPI Error %s"
 msgstr ""
 
-#: admin/admin-api.class.php:150
+#: admin/admin-api.class.php:148
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
@@ -65,15 +65,16 @@ msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:833
+#: admin/tpl/setting/settings_media.php:66
 #: admin/tpl/setting/settings_optimize.php:135
-#: admin/tpl/setting/settings_tuning.php:27
-#: admin/tpl/setting/settings_tuning.php:59
+#: admin/tpl/setting/settings_tuning.php:19
+#: admin/tpl/setting/settings_tuning.php:51
 msgid "ON"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:837
-#: admin/tpl/setting/settings_tuning.php:24
-#: admin/tpl/setting/settings_tuning.php:56
+#: admin/tpl/setting/settings_tuning.php:16
+#: admin/tpl/setting/settings_tuning.php:48
 msgid "OFF"
 msgstr ""
 
@@ -341,13 +342,13 @@ msgstr ""
 msgid "Clean all CSS/JS optimizer data successfully."
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:661
+#: admin/litespeed-cache-admin-rules.class.php:672
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:859
+#: admin/litespeed-cache-admin-rules.class.php:870
 msgid "File Saved."
 msgstr ""
 
@@ -387,53 +388,53 @@ msgstr ""
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:596
+#: admin/litespeed-cache-admin-settings.class.php:606
 #: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:662
+#: admin/litespeed-cache-admin-settings.class.php:672
 #: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:663
+#: admin/litespeed-cache-admin-settings.class.php:673
 #: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:664
+#: admin/litespeed-cache-admin-settings.class.php:674
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:665
+#: admin/litespeed-cache-admin-settings.class.php:675
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:666
+#: admin/litespeed-cache-admin-settings.class.php:676
 #: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:203
+#: admin/litespeed-cache-admin.class.php:205
 msgid ""
 "For this scenario only, the network admin may uncheck \"Check Advanced Cache"
 "\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:205
+#: admin/litespeed-cache-admin.class.php:207
 msgid ""
 "For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:207
+#: admin/litespeed-cache-admin.class.php:209
 msgid ""
 "Please disable/deactivate any other Full Page Cache solutions that are "
 "currently being used."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:208
+#: admin/litespeed-cache-admin.class.php:210
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
@@ -481,7 +482,7 @@ msgid "Crawler Cron"
 msgstr ""
 
 #: admin/tpl/crawler.php:63 admin/tpl/setting/settings_optimize.php:10
-#: admin/tpl/settings.php:118
+#: admin/tpl/settings.php:130
 msgid "WARNING"
 msgstr ""
 
@@ -649,7 +650,7 @@ msgid ""
 "changed."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:30 admin/tpl/setting/settings_esi.php:35
+#: admin/tpl/esi_widget_edit.php:30 admin/tpl/setting/settings_esi.php:27
 msgid "Enable ESI"
 msgstr ""
 
@@ -967,9 +968,10 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_resources.php:15
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:22
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:21
+#: admin/tpl/setting/settings_inc.media_webp.php:12
 #: admin/tpl/setting/settings_optimize.php:137
-#: admin/tpl/setting/settings_tuning.php:26
-#: admin/tpl/setting/settings_tuning.php:58
+#: admin/tpl/setting/settings_tuning.php:18
+#: admin/tpl/setting/settings_tuning.php:50
 msgid "NOTE:"
 msgstr ""
 
@@ -1454,37 +1456,27 @@ msgid "Are my images optimized?"
 msgstr ""
 
 #: admin/tpl/info/info_faqs.php:74
-msgid "The cache plugin does not do anything with the images themselves."
+msgid "Yes we do. LSCWP %s can optimize your images."
 msgstr ""
 
-#: admin/tpl/info/info_faqs.php:75
-msgid ""
-"We recommend you trying an image optimization plugin like %s to optimize "
-"your images."
-msgstr ""
-
-#: admin/tpl/info/info_faqs.php:77
-msgid "It can reduce your site's images up to 90%."
-msgstr ""
-
-#: admin/tpl/info/info_faqs.php:81
+#: admin/tpl/info/info_faqs.php:78
 msgid "How do I get WP-PostViews to display an updating view count?"
 msgstr ""
 
-#: admin/tpl/info/info_faqs.php:84
+#: admin/tpl/info/info_faqs.php:81
 msgid "Use %1$s to replace %2$s"
 msgstr ""
 
-#: admin/tpl/info/info_faqs.php:88
+#: admin/tpl/info/info_faqs.php:85
 msgid ""
 "NOTE: The id can be changed, but the div id and the ajax function must match."
 msgstr ""
 
-#: admin/tpl/info/info_faqs.php:91
+#: admin/tpl/info/info_faqs.php:88
 msgid "Replace the ajax query in %1$s with %2$s"
 msgstr ""
 
-#: admin/tpl/info/info_faqs.php:106
+#: admin/tpl/info/info_faqs.php:103
 msgid "Purge the cache to use the updated pages."
 msgstr ""
 
@@ -1713,10 +1705,10 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:27
 #: admin/tpl/setting/settings_purge.php:79
-#: admin/tpl/setting/settings_tuning.php:40
-#: admin/tpl/setting/settings_tuning.php:72
-#: admin/tpl/setting/settings_tuning.php:120
-#: admin/tpl/setting/settings_tuning.php:149
+#: admin/tpl/setting/settings_tuning.php:32
+#: admin/tpl/setting/settings_tuning.php:64
+#: admin/tpl/setting/settings_tuning.php:112
+#: admin/tpl/setting/settings_tuning.php:141
 msgid "One per line."
 msgstr ""
 
@@ -1791,7 +1783,11 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: admin/tpl/network_settings.php:19
+#: admin/tpl/network_settings.php:10 admin/tpl/settings.php:13
+msgid "Media"
+msgstr ""
+
+#: admin/tpl/network_settings.php:20
 msgid "LiteSpeed Cache Network Settings"
 msgstr ""
 
@@ -1897,6 +1893,10 @@ msgstr ""
 
 #: admin/tpl/setting/network_settings_general.php:28
 msgid "This will disable the settings page on all subsites."
+msgstr ""
+
+#: admin/tpl/setting/network_settings_media.php:4
+msgid "Network Media Settings"
 msgstr ""
 
 #: admin/tpl/setting/network_settings_purge.php:4
@@ -2067,7 +2067,7 @@ msgstr ""
 
 #: admin/tpl/setting/settings_cache.php:62
 #: admin/tpl/setting/settings_excludes.php:14
-#: admin/tpl/setting/settings_tuning.php:148
+#: admin/tpl/setting/settings_tuning.php:140
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
@@ -2490,17 +2490,17 @@ msgstr ""
 msgid "Filters containing these strings (one per line) will not be logged."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:14
+#: admin/tpl/setting/settings_esi.php:6
 msgid "ESI Settings"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:17
+#: admin/tpl/setting/settings_esi.php:9
 msgid ""
 "With ESI (Edge Side Includes), pages may be served from cache for logged-in "
 "users."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:18
+#: admin/tpl/setting/settings_esi.php:10
 msgid ""
 "ESI allows you to designate parts of your dynamic page as separate fragments "
 "that are then assembled together to make the whole page. In other words, ESI "
@@ -2509,42 +2509,42 @@ msgid ""
 "cached at all."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:20
+#: admin/tpl/setting/settings_esi.php:12
 msgid "Learn more about public cache vs. private cache <a %s>on our blog</a>."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:29
+#: admin/tpl/setting/settings_esi.php:21
 msgid "Available in LiteSpeed Enterprise version"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:39
+#: admin/tpl/setting/settings_esi.php:31
 msgid ""
 "Enable caches public pages for logged in users and serves the Admin Bar and "
 "Comment Form via ESI blocks. These two blocks will be uncached unless "
 "enabled below."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:45
+#: admin/tpl/setting/settings_esi.php:37
 msgid "Cache Admin Bar"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:49
+#: admin/tpl/setting/settings_esi.php:41
 msgid "Cache the build-in Admin Bar ESI block."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:55
+#: admin/tpl/setting/settings_esi.php:47
 msgid "Cache Comment Form"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:59
+#: admin/tpl/setting/settings_esi.php:51
 msgid "Cache the build-in Comment Form ESI block."
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:65
+#: admin/tpl/setting/settings_esi.php:57
 msgid "Vary Group"
 msgstr ""
 
-#: admin/tpl/setting/settings_esi.php:80
+#: admin/tpl/setting/settings_esi.php:72
 msgid ""
 "If your site contains public content that certain user roles can see but "
 "other roles cannot, you can specify a Vary Group for those user roles. For "
@@ -2622,6 +2622,14 @@ msgstr ""
 #: admin/tpl/setting/settings_excludes.php:100
 msgid ""
 "If the tag slug is not found, the tag will be removed from the list on save."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:121
+msgid "Do Not Cache Roles"
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:127
+msgid "Selected roles will be excluded from cache."
 msgstr ""
 
 #: admin/tpl/setting/settings_general.php:9
@@ -2743,6 +2751,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_resources.php:16
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:23
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:22
+#: admin/tpl/setting/settings_inc.media_webp.php:13
 msgid "This setting will edit the .htaccess file."
 msgstr ""
 
@@ -2845,6 +2854,16 @@ msgstr ""
 msgid "SYNTAX: Separate each user agent with a bar, %s."
 msgstr ""
 
+#: admin/tpl/setting/settings_inc.media_webp.php:6
+msgid "Image WebP Replacement"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.media_webp.php:10
+msgid ""
+"Significantly improve load time by replacing images with their optimized %s "
+"versions."
+msgstr ""
+
 #: admin/tpl/setting/settings_inc.purge_on_upgrade.php:7
 msgid "Purge All On Upgrade"
 msgstr ""
@@ -2881,33 +2900,33 @@ msgid "Listed images will not be lazy loaded."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:26
-#: admin/tpl/setting/settings_tuning.php:39
-#: admin/tpl/setting/settings_tuning.php:71
-#: admin/tpl/setting/settings_tuning.php:119
-#: admin/tpl/setting/settings_tuning.php:147
+#: admin/tpl/setting/settings_tuning.php:31
+#: admin/tpl/setting/settings_tuning.php:63
+#: admin/tpl/setting/settings_tuning.php:111
+#: admin/tpl/setting/settings_tuning.php:139
 msgid "Both full URLs and partial strings can be used."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:29
 #: admin/tpl/setting/settings_optimize.php:112
-#: admin/tpl/setting/settings_tuning.php:42
-#: admin/tpl/setting/settings_tuning.php:74
-#: admin/tpl/setting/settings_tuning.php:122
+#: admin/tpl/setting/settings_tuning.php:34
+#: admin/tpl/setting/settings_tuning.php:66
+#: admin/tpl/setting/settings_tuning.php:114
 msgid "API:"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:30
-#: admin/tpl/setting/settings_tuning.php:43
-#: admin/tpl/setting/settings_tuning.php:75
-#: admin/tpl/setting/settings_tuning.php:123
+#: admin/tpl/setting/settings_tuning.php:35
+#: admin/tpl/setting/settings_tuning.php:67
+#: admin/tpl/setting/settings_tuning.php:115
 msgid "Filter %s is supported."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:31
 #: admin/tpl/setting/settings_optimize.php:113
-#: admin/tpl/setting/settings_tuning.php:44
-#: admin/tpl/setting/settings_tuning.php:76
-#: admin/tpl/setting/settings_tuning.php:124
+#: admin/tpl/setting/settings_tuning.php:36
+#: admin/tpl/setting/settings_tuning.php:68
+#: admin/tpl/setting/settings_tuning.php:116
 msgid "Elements with attribute %s in html code will be excluded."
 msgstr ""
 
@@ -2941,6 +2960,16 @@ msgstr ""
 
 #: admin/tpl/setting/settings_media.php:55
 msgid "Load iframes only when they enter the viewport."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:62
+msgid "Disable Optimization Poll"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:66
+msgid ""
+"Set this option to %s to disable the cron job responsible for fetching "
+"optimized images from LiteSpeed's Image Server."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:6
@@ -3031,7 +3060,7 @@ msgid "Minify HTML content."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:105
-#: admin/tpl/setting/settings_tuning.php:108
+#: admin/tpl/setting/settings_tuning.php:100
 msgid "Load CSS Asynchronously"
 msgstr ""
 
@@ -3041,8 +3070,8 @@ msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:110
 #: admin/tpl/setting/settings_optimize.php:125
-#: admin/tpl/setting/settings_tuning.php:88
-#: admin/tpl/setting/settings_tuning.php:136
+#: admin/tpl/setting/settings_tuning.php:80
+#: admin/tpl/setting/settings_tuning.php:128
 msgid ""
 "This can improve your speed score in services like Pingdom, GTmetrix and "
 "PageSpeed."
@@ -3179,114 +3208,114 @@ msgstr ""
 msgid "Current server time is %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:14
+#: admin/tpl/setting/settings_tuning.php:6
 msgid "Tuning Settings"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:19
+#: admin/tpl/setting/settings_tuning.php:11
 msgid "Combined CSS Priority"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:23
+#: admin/tpl/setting/settings_tuning.php:15
 msgid "Load combined CSS files before other CSS files."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:24
-#: admin/tpl/setting/settings_tuning.php:56
+#: admin/tpl/setting/settings_tuning.php:16
+#: admin/tpl/setting/settings_tuning.php:48
 msgid "Set to %s by default."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:27
+#: admin/tpl/setting/settings_tuning.php:19
 msgid ""
 "Only set to %s when changing the order of combined and uncombined CSS is "
 "needed."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:34
+#: admin/tpl/setting/settings_tuning.php:26
 msgid "CSS Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:38
+#: admin/tpl/setting/settings_tuning.php:30
 msgid "Listed CSS files will not be minified/combined."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:51
+#: admin/tpl/setting/settings_tuning.php:43
 msgid "Combined JS Priority"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:55
+#: admin/tpl/setting/settings_tuning.php:47
 msgid "Load combined JS files before other JS files."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:59
+#: admin/tpl/setting/settings_tuning.php:51
 msgid ""
 "Only set to %s when changing the order of combined and uncombined JS is "
 "needed."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:66
+#: admin/tpl/setting/settings_tuning.php:58
 msgid "JS Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:70
+#: admin/tpl/setting/settings_tuning.php:62
 msgid "Listed JS files will not be minified/combined."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:83
+#: admin/tpl/setting/settings_tuning.php:75
 msgid "Remove Query Strings"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:87
+#: admin/tpl/setting/settings_tuning.php:79
 msgid "Remove query strings from static resources."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:94
+#: admin/tpl/setting/settings_tuning.php:86
 msgid "Remove Google Fonts"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:98
+#: admin/tpl/setting/settings_tuning.php:90
 msgid "Prevent google fonts from loading on all your pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:104
+#: admin/tpl/setting/settings_tuning.php:96
 msgid "Critical CSS Rules"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:108
+#: admin/tpl/setting/settings_tuning.php:100
 msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:114
+#: admin/tpl/setting/settings_tuning.php:106
 msgid "JS Deferred Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:118
+#: admin/tpl/setting/settings_tuning.php:110
 msgid "Listed JS files will not be deferred."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:131
+#: admin/tpl/setting/settings_tuning.php:123
 msgid "Remove WordPress Emoji"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:135
+#: admin/tpl/setting/settings_tuning.php:127
 msgid ""
 "Stop loading wordpress.org emoji. Browser default emoji will be displayed "
 "instead."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:142
+#: admin/tpl/setting/settings_tuning.php:134
 msgid "URI Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:146
+#: admin/tpl/setting/settings_tuning.php:138
 msgid "Prevent any optimization of listed pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:155
+#: admin/tpl/setting/settings_tuning.php:147
 msgid "Role Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:161
+#: admin/tpl/setting/settings_tuning.php:153
 msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
@@ -3296,10 +3325,6 @@ msgstr ""
 
 #: admin/tpl/settings.php:12
 msgid "Tuning"
-msgstr ""
-
-#: admin/tpl/settings.php:13
-msgid "Media"
 msgstr ""
 
 #: admin/tpl/settings.php:14
@@ -3326,21 +3351,21 @@ msgstr ""
 msgid "WARNING: Third party config slug contains invalid characters."
 msgstr ""
 
-#: admin/tpl/settings.php:90
+#: admin/tpl/settings.php:102
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/tpl/settings.php:120
+#: admin/tpl/settings.php:132
 msgid "The network admin selected use primary site configs for all subsites."
 msgstr ""
 
-#: admin/tpl/settings.php:121
+#: admin/tpl/settings.php:133
 msgid ""
 "The following options are selected, but are not editable in this settings "
 "page."
 msgstr ""
 
-#: admin/tpl/settings.php:143 admin/tpl/settings.php:146
+#: admin/tpl/settings.php:155 admin/tpl/settings.php:158
 msgid "Save Changes"
 msgstr ""
 
@@ -3409,51 +3434,83 @@ msgstr ""
 msgid "More settings"
 msgstr ""
 
-#: inc/litespeed-cache.class.php:220 includes/litespeed-cache.class.php:220
+#: inc/litespeed-cache.class.php:226 includes/litespeed-cache.class.php:226
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:225 includes/litespeed-cache.class.php:225
+#: inc/litespeed-cache.class.php:231 includes/litespeed-cache.class.php:231
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:230 includes/litespeed-cache.class.php:230
+#: inc/litespeed-cache.class.php:236 includes/litespeed-cache.class.php:236
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:235 includes/litespeed-cache.class.php:235
+#: inc/litespeed-cache.class.php:241 includes/litespeed-cache.class.php:241
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:240 includes/litespeed-cache.class.php:240
+#: inc/litespeed-cache.class.php:246 includes/litespeed-cache.class.php:246
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:246 includes/litespeed-cache.class.php:246
+#: inc/litespeed-cache.class.php:252 includes/litespeed-cache.class.php:252
 msgid "Notified LiteSpeed Web Server to purge all caches."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:253 includes/litespeed-cache.class.php:253
+#: inc/litespeed-cache.class.php:259 includes/litespeed-cache.class.php:259
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:268 includes/litespeed-cache.class.php:268
+#: inc/litespeed-cache.class.php:274 includes/litespeed-cache.class.php:274
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: inc/media.class.php:378
+#: inc/media.class.php:119
+msgid "Disable WebP"
+msgstr ""
+
+#: inc/media.class.php:122
+msgid "Enable WebP"
+msgstr ""
+
+#: inc/media.class.php:135
+msgid "Restore Original File"
+msgstr ""
+
+#: inc/media.class.php:138
+msgid "Swith To Optimized File"
+msgstr ""
+
+#: inc/media.class.php:195
+msgid "Disabled WebP file successfully."
+msgstr ""
+
+#: inc/media.class.php:213
+msgid "Enabled WebP file successfully."
+msgstr ""
+
+#: inc/media.class.php:242
+msgid "Restored original file successfully."
+msgstr ""
+
+#: inc/media.class.php:263
+msgid "Swithed to optimized file successfully."
+msgstr ""
+
+#: inc/media.class.php:718
 msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
-#: inc/media.class.php:387
+#: inc/media.class.php:727
 msgid "Failed to parse data from LiteSpeed server: %s"
 msgstr ""
 
-#: inc/media.class.php:408
+#: inc/media.class.php:748
 msgid "Post data is empty."
 msgstr ""
 
-#: inc/media.class.php:440
+#: inc/media.class.php:780
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
@@ -3475,8 +3532,12 @@ msgstr ""
 msgid "Purge url %s"
 msgstr ""
 
-#: inc/task.class.php:139 includes/litespeed-cache-task.class.php:139
-msgid "LiteSpeed Cache Custom Cron"
+#: inc/task.class.php:155 includes/litespeed-cache-task.class.php:155
+msgid "LiteSpeed Cache Custom Cron ImgOptm"
+msgstr ""
+
+#: inc/task.class.php:178 includes/litespeed-cache-task.class.php:178
+msgid "LiteSpeed Cache Custom Cron Crawler"
 msgstr ""
 
 #: lib/litespeed/litespeed-crawler.class.php:174

@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -48,6 +48,7 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
 * Image optimization
+* WebP image format support
 * PageSpeed score optimization
 * Load CSS/JS Asynchronously
 * Lazyload images/iframes
@@ -237,6 +238,17 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.2 - November 3 2017 =
+* [NEW FEATURE] Do Not Cache Roles.
+* [NEW FEATURE] Use WebP Images for supported browsers.
+* [NEW FEATURE] Disable Optimization Poll ON/OFF Switch in Media tab.
+* [NEW FEATURE] Revert image optimization per image in Media list.
+* [NEW FEATURE] Disable/Enable image WebP per image in Media list.
+* [IAPI] Limit optimized images fetching cron to a single process.
+* [IAPI] Updated IAPI to v1.6.2.
+* [IAPI] Fixed repeating image request issue by adding a failure status to local images.
+* [REFACTOR] Refactored login vary logic.
 
 = 1.6.1 - October 29 2017 =
 * [IAPI] Updated LiteSpeed Image Optimization Server API to v1.6.1.
