@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Admin_API
 	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const SAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const SAPI_ACTION_PULL_IMG = 'client_pull' ;
+	const SAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
 
 	/**
 	 * Init
