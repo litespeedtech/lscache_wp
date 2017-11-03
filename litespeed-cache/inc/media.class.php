@@ -44,33 +44,51 @@ class LiteSpeed_Cache_Media
 	{
 		LiteSpeed_Cache_Log::debug2( 'Media init' ) ;
 
-		$this->_static_request_check() ;
-
 		$this->wp_upload_dir = wp_upload_dir() ;
-		$this->cfg_img_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
 
-		// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
-		if ( $this->cfg_img_webp ) {
-			/**
-			 * Add vary filter
-			 * @since  1.6.2
-			 */
-			// Moved to htaccess
-			// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) ) ;
+		if ( $this->can_media() ) {
+			$this->_static_request_check() ;
 
-			//
-			if ( $this->webp_support() ) {
-				// Hook to srcset
-				if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-					add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
+			$this->cfg_img_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
+
+			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
+			if ( $this->cfg_img_webp ) {
+				/**
+				 * Add vary filter
+				 * @since  1.6.2
+				 */
+				// Moved to htaccess
+				// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) ) ;
+
+				//
+				if ( $this->webp_support() ) {
+					// Hook to srcset
+					if ( function_exists( 'wp_calculate_image_srcset' ) ) {
+						add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
+					}
+					// Hook to mime icon
+					// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
+					// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ; // disabled to avoid wp-admin display
 				}
-				// Hook to mime icon
-				// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
-				// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ; // disabled to avoid wp-admin display
 			}
 		}
 
 		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
+	}
+
+	/**
+	 * Check if it can use Media frontend
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function can_media()
+	{
+		if ( is_admin() ) {
+			return false ;
+		}
+
+		return true ;
 	}
 
 	/**
@@ -134,37 +152,113 @@ class LiteSpeed_Cache_Media
 	private function _switch_optm_file( $type )
 	{
 		$pid = substr( $type, 4 ) ;
-		$local_file = get_attached_file( $pid ) ;
 
-		//todo: also change child images from get_image_sizes()
+		global $wpdb ;
+		$q = "SELECT meta_value
+			FROM $wpdb->postmeta
+			WHERE post_id = %d AND meta_key = %s
+		" ;
+		$cond = array( $pid, self::DB_IMG_OPTIMIZE_DATA ) ;
+		$meta_value_list = $wpdb->get_var( $wpdb->prepare( $q, $cond ) ) ;
+		$meta_value_list = unserialize( $meta_value_list ) ;
+		$child_images = array() ;
+		foreach ( $meta_value_list as $v ) {
+			if ( $v[ 1 ] !== 'pulled' ) {
+				continue ;
+			}
+			$child_images[] = $v[ 0 ] ;
+		}
+		LiteSpeed_Cache_Log::debug( 'Media: child images:', $child_images ) ;
+
+		$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $child_images[ 0 ] ;
+		$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+		$filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
 
 		// to switch webp file
 		if ( substr( $type, 0, 4 ) === 'webp' ) {
 			if ( file_exists( $local_file . '.webp' ) ) {
 				rename( $local_file . '.webp', $local_file . '.optm.webp' ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: Disabled webp: ' . $local_file ) ;
+
+				// rename child
+				if ( count( $child_images ) > 1 ) {
+					foreach ( $child_images as $src ) {
+						$child_filename = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
+						if ( file_exists( $child_filename . '.webp' ) ) {
+							rename( $child_filename . '.webp', $child_filename . '.optm.webp' ) ;
+							LiteSpeed_Cache_Log::debug( 'Media: Disabled child webp: ' . $child_filename ) ;
+						}
+					}
+				}
+
 				$msg = __( 'Disabled webp file successfully.', 'litespeed-cache' ) ;
+
 			}
 			elseif ( file_exists( $local_file . '.optm.webp' ) ) {
 				rename( $local_file . '.optm.webp', $local_file . '.webp' ) ;
-				$msg = __( 'Enable webp file successfully.', 'litespeed-cache' ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: Enable webp: ' . $local_file ) ;
+
+				// rename child
+				if ( count( $child_images ) > 1 ) {
+					foreach ( $child_images as $src ) {
+						$child_filename = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
+						if ( file_exists( $child_filename . '.optm.webp' ) ) {
+							rename( $child_filename . '.optm.webp', $child_filename . '.webp' ) ;
+							LiteSpeed_Cache_Log::debug( 'Media: Enable child webp: ' . $child_filename ) ;
+						}
+					}
+				}
+
+				$msg = __( 'Enabled webp file successfully.', 'litespeed-cache' ) ;
 			}
 
 		}
 		// to switch original file
 		else {
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
-			$bk_optm_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
+			$bk_file = $filename . '.bk.' . $extension ;
+			$bk_optm_file = $filename . '.bk.optm.' . $extension ;
 
 			// revert ori back
 			if ( file_exists( $bk_file ) ) {
 				rename( $local_file, $bk_optm_file ) ;
 				rename( $bk_file, $local_file ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: Restore original img: ' . $local_file ) ;
+
+				// rename child
+				if ( count( $child_images ) > 1 ) {
+					foreach ( $child_images as $src ) {
+						$child_filename = substr( $this->wp_upload_dir[ 'basedir' ] . '/' . $src, 0, - strlen( $extension ) ) ;
+						$child_bk_file = $child_filename . 'bk.' . $extension ;
+						$child_bk_optm_file = $child_filename . 'bk.optm.' . $extension ;
+						if ( file_exists( $child_bk_file ) ) {
+							rename( $child_filename . $extension, $child_bk_optm_file ) ;
+							rename( $child_bk_file, $child_filename . $extension ) ;
+							LiteSpeed_Cache_Log::debug( 'Media: Restore original child img: ' . $child_filename . $extension ) ;
+						}
+					}
+				}
+
 				$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
 			}
 			elseif ( file_exists( $bk_optm_file ) ) {
 				rename( $local_file, $bk_file ) ;
 				rename( $bk_optm_file, $local_file ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: Switch to optm img: ' . $local_file ) ;
+
+				// rename child
+				if ( count( $child_images ) > 1 ) {
+					foreach ( $child_images as $src ) {
+						$child_filename = substr( $this->wp_upload_dir[ 'basedir' ] . '/' . $src, 0, - strlen( $extension ) ) ;
+						$child_bk_file = $child_filename . 'bk.' . $extension ;
+						$child_bk_optm_file = $child_filename . 'bk.optm.' . $extension ;
+						if ( file_exists( $child_bk_optm_file ) ) {
+							rename( $child_filename . $extension, $child_bk_file ) ;
+							rename( $child_bk_optm_file, $child_filename . $extension ) ;
+							LiteSpeed_Cache_Log::debug( 'Media: Switch to optm child img: ' . $child_filename . $extension ) ;
+						}
+					}
+				}
+
 				$msg = __( 'Swithed to optimized file successfully.', 'litespeed-cache' ) ;
 			}
 
@@ -180,12 +274,12 @@ class LiteSpeed_Cache_Media
 	 * @access private
 	 * @return array $sizes Data for all currently-registered image sizes.
 	 */
-	private function get_image_sizes() {
+	public function get_image_sizes() {
 		global $_wp_additional_image_sizes ;
 		$sizes = array();
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
 				$sizes[ $_size ][ 'width' ] = get_option( $_size . '_size_w' ) ;
 				$sizes[ $_size ][ 'height' ] = get_option( $_size . '_size_h' ) ;
 				$sizes[ $_size ][ 'crop' ] = (bool) get_option( $_size . '_crop' ) ;
@@ -197,6 +291,17 @@ class LiteSpeed_Cache_Media
 				) ;
 			}
 		}
+		//Medium Large
+		if ( ! isset( $sizes[ 'medium_large' ] ) || empty( $sizes[ 'medium_large' ] ) ) {
+			$width  = intval( get_option( 'medium_large_size_w' ) ) ;
+			$height = intval( get_option( 'medium_large_size_h' ) ) ;
+
+			$sizes[ 'medium_large' ] = array(
+				'width'  => $width,
+				'height' => $height,
+			) ;
+		}
+
 
 		return $sizes ;
 	}
@@ -771,7 +876,7 @@ class LiteSpeed_Cache_Media
 			return $content ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Media start' ) ;
+		LiteSpeed_Cache_Log::debug( 'Media finalize' ) ;
 
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
