@@ -489,7 +489,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON,
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP,
 		) ;
 		foreach ( $ids as $id ) {

@@ -59,12 +59,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Image Optimization Cron', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Disable Optimization Poll', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Do the cron job to fetch the optimized images from LiteSpeed Image Server.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Turn this on after sent the image optimization request.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Set this option to %s to disable the cron job responsible for fetching optimized images from LiteSpeed\'s Image Server.', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
 			</div>
 		</td>
 	</tr>

@@ -115,10 +115,10 @@ class LiteSpeed_Cache_Media
 		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'webp' . $post->ID ) ;
 		$desc = false ;
 		if ( file_exists( $local_file . '.webp' ) ) {
-			$desc = __( 'Disable Webp', 'litespeed-cache' ) ;
+			$desc = __( 'Disable WebP', 'litespeed-cache' ) ;
 		}
 		elseif ( file_exists( $local_file . '.optm.webp' ) ) {
-			$desc = __( 'Enable Webp', 'litespeed-cache' ) ;
+			$desc = __( 'Enable WebP', 'litespeed-cache' ) ;
 		}
 		if ( $desc ) {
 			$actions[ 'webp_bypass' ] = sprintf( '<a href="%s">%s</a>', $link, $desc ) ;
@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Media
 		if ( substr( $type, 0, 4 ) === 'webp' ) {
 			if ( file_exists( $local_file . '.webp' ) ) {
 				rename( $local_file . '.webp', $local_file . '.optm.webp' ) ;
-				LiteSpeed_Cache_Log::debug( 'Media: Disabled webp: ' . $local_file ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: Disabled WebP: ' . $local_file ) ;
 
 				// rename child
 				if ( count( $child_images ) > 1 ) {
@@ -186,17 +186,17 @@ class LiteSpeed_Cache_Media
 						$child_filename = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
 						if ( file_exists( $child_filename . '.webp' ) ) {
 							rename( $child_filename . '.webp', $child_filename . '.optm.webp' ) ;
-							LiteSpeed_Cache_Log::debug( 'Media: Disabled child webp: ' . $child_filename ) ;
+							LiteSpeed_Cache_Log::debug( 'Media: Disabled child WebP: ' . $child_filename ) ;
 						}
 					}
 				}
 
-				$msg = __( 'Disabled webp file successfully.', 'litespeed-cache' ) ;
+				$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
 
 			}
 			elseif ( file_exists( $local_file . '.optm.webp' ) ) {
 				rename( $local_file . '.optm.webp', $local_file . '.webp' ) ;
-				LiteSpeed_Cache_Log::debug( 'Media: Enable webp: ' . $local_file ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: Enable WebP: ' . $local_file ) ;
 
 				// rename child
 				if ( count( $child_images ) > 1 ) {
@@ -204,12 +204,12 @@ class LiteSpeed_Cache_Media
 						$child_filename = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
 						if ( file_exists( $child_filename . '.optm.webp' ) ) {
 							rename( $child_filename . '.optm.webp', $child_filename . '.webp' ) ;
-							LiteSpeed_Cache_Log::debug( 'Media: Enable child webp: ' . $child_filename ) ;
+							LiteSpeed_Cache_Log::debug( 'Media: Enable child WebP: ' . $child_filename ) ;
 						}
 					}
 				}
 
-				$msg = __( 'Enabled webp file successfully.', 'litespeed-cache' ) ;
+				$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
 			}
 
 		}
@@ -270,16 +270,18 @@ class LiteSpeed_Cache_Media
 	/**
 	 * Get wp size info
 	 *
+	 * NOTE: this is not used because it has to be after admin_init
+	 *
 	 * @since 1.6.2
 	 * @access private
 	 * @return array $sizes Data for all currently-registered image sizes.
 	 */
-	public function get_image_sizes() {
+	private function get_image_sizes() {
 		global $_wp_additional_image_sizes ;
 		$sizes = array();
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
 				$sizes[ $_size ][ 'width' ] = get_option( $_size . '_size_w' ) ;
 				$sizes[ $_size ][ 'height' ] = get_option( $_size . '_size_h' ) ;
 				$sizes[ $_size ][ 'crop' ] = (bool) get_option( $_size . '_crop' ) ;
@@ -291,17 +293,6 @@ class LiteSpeed_Cache_Media
 				) ;
 			}
 		}
-		//Medium Large
-		if ( ! isset( $sizes[ 'medium_large' ] ) || empty( $sizes[ 'medium_large' ] ) ) {
-			$width  = intval( get_option( 'medium_large_size_w' ) ) ;
-			$height = intval( get_option( 'medium_large_size_h' ) ) ;
-
-			$sizes[ 'medium_large' ] = array(
-				'width'  => $width,
-				'height' => $height,
-			) ;
-		}
-
 
 		return $sizes ;
 	}
@@ -475,11 +466,11 @@ class LiteSpeed_Cache_Media
 					file_put_contents( $local_file . '.webp', file_get_contents( $json[ 'webp' ] ) ) ;
 					// Unknown issue
 					if ( md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
-						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img webp: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
+						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img WebP: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
 						return ;// exit from running pull process
 					}
 
-					LiteSpeed_Cache_Log::debug( 'Media: Pulled optimized img webp: ' . $local_file . '.webp' ) ;
+					LiteSpeed_Cache_Log::debug( 'Media: Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
 
 					// Fetch optimized image itself
 					if ( ! empty( $json[ 'target_file' ] ) ) {
@@ -1155,7 +1146,7 @@ class LiteSpeed_Cache_Media
 				$url .= '.webp' ;
 			}
 			else {
-				LiteSpeed_Cache_Log::debug2( 'Media: no webp file, bypassed' ) ;
+				LiteSpeed_Cache_Log::debug2( 'Media: no WebP file, bypassed' ) ;
 				return false ;
 			}
 		}

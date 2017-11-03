@@ -125,9 +125,6 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function _request_key()
 	{
-		// reset current key first
-		delete_option( self::DB_SAPI_KEY ) ;
-
 		// Send request to LiteSpeed
 		$json = $this->_post( self::SAPI_ACTION_REQUEST_KEY, home_url() ) ;
 
