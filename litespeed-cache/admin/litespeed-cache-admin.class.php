@@ -145,6 +145,8 @@ class LiteSpeed_Cache_Admin
 		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
 			$this->display->show_display_installed() ;
 		}
+
+		do_action( 'litspeed_after_admin_init' ) ;
 	}
 
 	/**

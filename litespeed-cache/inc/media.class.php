@@ -65,12 +65,142 @@ class LiteSpeed_Cache_Media
 					add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
 				}
 				// Hook to mime icon
-				add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
-				add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ;
+				// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
+				// add_filter( 'wp_get_attachment_url', array( $this, 'webp_url' ), 988 ) ; // disabled to avoid wp-admin display
 			}
 		}
 
+		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
 	}
+
+	/**
+	 * Register admin menu
+	 *
+	 * @since 1.6.2
+	 * @access public
+	 */
+	public function after_admin_init()
+	{
+		add_filter( 'media_row_actions', array( $this, 'media_row_actions' ), 10, 2 ) ;
+	}
+
+	/**
+	 * Register admin menu
+	 *
+	 * @since 1.6.2
+	 * @access public
+	 */
+	public function media_row_actions( $actions, $post )
+	{
+		$local_file = get_attached_file( $post->ID ) ;
+
+		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'webp' . $post->ID ) ;
+		$desc = false ;
+		if ( file_exists( $local_file . '.webp' ) ) {
+			$desc = __( 'Disable Webp', 'litespeed-cache' ) ;
+		}
+		elseif ( file_exists( $local_file . '.optm.webp' ) ) {
+			$desc = __( 'Enable Webp', 'litespeed-cache' ) ;
+		}
+		if ( $desc ) {
+			$actions[ 'webp_bypass' ] = sprintf( '<a href="%s">%s</a>', $link, $desc ) ;
+		}
+
+		$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+		$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
+		$bk_optm_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
+
+		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'orig' . $post->ID ) ;
+		$desc = false ;
+		if ( file_exists( $bk_file ) ) {
+			$desc = __( 'Restore Original File', 'litespeed-cache' ) ;
+		}
+		elseif ( file_exists( $bk_optm_file ) ) {
+			$desc = __( 'Swith To Optimized File', 'litespeed-cache' ) ;
+		}
+		if ( $desc ) {
+			$actions[ 'ori_recover' ] = sprintf( '<a href="%s">%s</a>', $link, $desc ) ;
+		}
+
+		return $actions ;
+	}
+
+	/**
+	 * Switch image between original one and optimized one
+	 *
+	 * @since 1.6.2
+	 * @access private
+	 */
+	private function _switch_optm_file( $type )
+	{
+		$pid = substr( $type, 4 ) ;
+		$local_file = get_attached_file( $pid ) ;
+
+		//todo: also change child images from get_image_sizes()
+
+		// to switch webp file
+		if ( substr( $type, 0, 4 ) === 'webp' ) {
+			if ( file_exists( $local_file . '.webp' ) ) {
+				rename( $local_file . '.webp', $local_file . '.optm.webp' ) ;
+				$msg = __( 'Disabled webp file successfully.', 'litespeed-cache' ) ;
+			}
+			elseif ( file_exists( $local_file . '.optm.webp' ) ) {
+				rename( $local_file . '.optm.webp', $local_file . '.webp' ) ;
+				$msg = __( 'Enable webp file successfully.', 'litespeed-cache' ) ;
+			}
+
+		}
+		// to switch original file
+		else {
+			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+			$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
+			$bk_optm_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
+
+			// revert ori back
+			if ( file_exists( $bk_file ) ) {
+				rename( $local_file, $bk_optm_file ) ;
+				rename( $bk_file, $local_file ) ;
+				$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
+			}
+			elseif ( file_exists( $bk_optm_file ) ) {
+				rename( $local_file, $bk_file ) ;
+				rename( $bk_optm_file, $local_file ) ;
+				$msg = __( 'Swithed to optimized file successfully.', 'litespeed-cache' ) ;
+			}
+
+		}
+
+		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
+	}
+
+	/**
+	 * Get wp size info
+	 *
+	 * @since 1.6.2
+	 * @access private
+	 * @return array $sizes Data for all currently-registered image sizes.
+	 */
+	private function get_image_sizes() {
+		global $_wp_additional_image_sizes ;
+		$sizes = array();
+
+		foreach ( get_intermediate_image_sizes() as $_size ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
+				$sizes[ $_size ][ 'width' ] = get_option( $_size . '_size_w' ) ;
+				$sizes[ $_size ][ 'height' ] = get_option( $_size . '_size_h' ) ;
+				$sizes[ $_size ][ 'crop' ] = (bool) get_option( $_size . '_crop' ) ;
+			} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
+				$sizes[ $_size ] = array(
+					'width' => $_wp_additional_image_sizes[ $_size ][ 'width' ],
+					'height' => $_wp_additional_image_sizes[ $_size ][ 'height' ],
+					'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ]
+				) ;
+			}
+		}
+
+		return $sizes ;
+	}
+
 
 	/**
 	 * Exclude role from optimization filter
@@ -125,9 +255,16 @@ class LiteSpeed_Cache_Media
 	{
 		$instance = self::get_instance() ;
 
-		switch ( LiteSpeed_Cache_Router::verify_type() ) {
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
 			case self::TYPE_IMG_OPTIMIZE :
 				$instance->_img_optimize() ;
+				break ;
+
+			case substr( $type, 0, 4 ) === 'webp' :
+			case substr( $type, 0, 4 ) === 'orig' :
+				$instance->_switch_optm_file( $type ) ;
 				break ;
 
 			default:
