@@ -170,7 +170,7 @@ class LiteSpeed_Cache_Utility
 	 * Convert URL to URI
 	 *
 	 * @since  1.2.2
-	 * @since  1.6.3 Added 2nd param keep_qs
+	 * @since  1.6.2.1 Added 2nd param keep_qs
 	 * @access public
 	 */
 	public static function url2uri( $url, $keep_qs = false )

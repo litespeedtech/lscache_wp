@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Optimize
 		remove_filter( 'comment_text_rss' , 'wp_staticize_emoji' ) ;
 		/**
 		 * Added for better result
-		 * @since  1.6.3
+		 * @since  1.6.2.1
 		 */
 		remove_action( 'wp_print_styles', 'print_emoji_styles' ) ;
 		remove_action( 'admin_print_styles', 'print_emoji_styles' ) ;
@@ -1067,7 +1067,7 @@ class LiteSpeed_Cache_Optimize
 
 		/**
 		 * Keep QS for constance by set 2nd param to true
-		 * @since  1.6.3
+		 * @since  1.6.2.1
 		 */
 		$uri = LiteSpeed_Cache_Utility::url2uri( $url, true ) ;
 

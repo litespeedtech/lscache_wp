@@ -411,6 +411,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return ;
 		}
 
+		/**
+		 * Avoid possible 500 issue
+		 * @since 1.6.2.1
+		 */
+		if ( ! function_exists( 'WC' ) ) {
+			return ;
+		}
+
 		$woocom = WC() ;
 		if ( ! isset($woocom) ) {
 			return ;
