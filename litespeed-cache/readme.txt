@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.8.2
-Stable tag: 1.6.2
+Stable tag: 1.6.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -238,6 +238,15 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.2.1 - November 6 2017 =
+* [INTEGRATION] Improved compatibility with old WooCommerce versions to avoid unknown 500 errors.
+* [BUGFIX] Fixed WebP images sometimes being used in non-supported browsers.
+* [BUGFIX] Kept query strings for HTTP/2 push to avoid re-fetching pushed sources.
+* [BUGFIX] Excluded JS/CSS from HTTP/2 push when using CDN.
+* [GUI] Fixed a typo in Media list.
+* [GUI] Made more image optimization strings translatable.
+* [GUI] Updated Tuning description to include API documentation.
 
 = 1.6.2 - November 3 2017 =
 * [NEW FEATURE] Do Not Cache Roles.
