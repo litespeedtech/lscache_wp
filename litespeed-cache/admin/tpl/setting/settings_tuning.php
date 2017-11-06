@@ -18,6 +18,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined CSS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				</font>
+				<br /><font class="litespeed-success">
+					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded from moving to top.', 'litespeed-cache' ), '<code>data-optimized="0"</code>' ) ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>
@@ -49,6 +53,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<br /><font class="litespeed-warning">
 					<?php echo __('NOTE:', 'litespeed-cache'); ?>
 					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined JS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
+				</font>
+				<br /><font class="litespeed-success">
+					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded from moving to top/bottom.', 'litespeed-cache' ), '<code>data-optimized="0"</code>' ) ; ?>
 				</font>
 			</div>
 		</td>
