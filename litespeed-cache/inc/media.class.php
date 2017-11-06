@@ -921,7 +921,7 @@ class LiteSpeed_Cache_Media
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
-		if ( $this->cfg_img_webp ) {
+		if ( $this->cfg_img_webp && $this->webp_support() ) {
 			$this->_replace_buffer_img_webp() ;
 		}
 
