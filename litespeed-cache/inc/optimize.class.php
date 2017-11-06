@@ -1066,6 +1066,14 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		/**
+		 * For CDN enabled ones, bypass http/2 push
+		 * @since  1.6.2.1
+		 */
+		if ( LiteSpeed_Cache_CDN::inc_type( $file_type ) ) {
+			return ;
+		}
+
+		/**
 		 * Keep QS for constance by set 2nd param to true
 		 * @since  1.6.2.1
 		 */

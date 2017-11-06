@@ -117,6 +117,27 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
+	 * If include css/js in CDN
+	 *
+	 * @since  1.6.2.1
+	 * @return bool true if included in CDN
+	 */
+	public static function inc_type( $type )
+	{
+		$instance = self::get_instance() ;
+
+		if ( $type == 'css' && $instance->cfg_cdn_inc_css ) {
+			return true ;
+		}
+
+		if ( $type == 'js' && $instance->cfg_cdn_inc_js ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
 	 * Check if the host is the CDN internal host
 	 *
 	 * @since  1.2.3
