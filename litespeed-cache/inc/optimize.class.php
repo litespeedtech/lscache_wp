@@ -1058,7 +1058,11 @@ class LiteSpeed_Cache_Optimize
 			return ;
 		}
 
-		$uri = LiteSpeed_Cache_Utility::url2uri( $url ) ;
+		/**
+		 * Keep QS for constance by set 2nd param to true
+		 * @since  1.6.3
+		 */
+		$uri = LiteSpeed_Cache_Utility::url2uri( $url, true ) ;
 
 		if ( ! $uri ) {
 			return ;
