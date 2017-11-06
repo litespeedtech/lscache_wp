@@ -135,7 +135,7 @@ class LiteSpeed_Cache_Media
 			$desc = __( 'Restore Original File', 'litespeed-cache' ) ;
 		}
 		elseif ( file_exists( $bk_optm_file ) ) {
-			$desc = __( 'Swith To Optimized File', 'litespeed-cache' ) ;
+			$desc = __( 'Switch To Optimized File', 'litespeed-cache' ) ;
 		}
 		if ( $desc ) {
 			$actions[ 'ori_recover' ] = sprintf( '<a href="%s">%s</a>', $link, $desc ) ;
@@ -260,7 +260,7 @@ class LiteSpeed_Cache_Media
 					}
 				}
 
-				$msg = __( 'Swithed to optimized file successfully.', 'litespeed-cache' ) ;
+				$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
 			}
 
 		}
