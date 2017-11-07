@@ -1150,10 +1150,11 @@ ul.litespeed-shell-body {
 	border-radius: 3px;
 }
 
-.litespeed-float-submit {
+.litespeed-wrap .litespeed-float-submit {
 	position: absolute;
 	right: 10px;
-	top: 10px;
+	top: 0;
+	margin-top: 0;
 }
 
 .litespeed-body input,.litespeed-body textarea {
