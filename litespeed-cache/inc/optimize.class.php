@@ -855,7 +855,7 @@ class LiteSpeed_Cache_Optimize
 			}
 			$attrs = LiteSpeed_Cache_Utility::parse_attr( $match[ 1 ] ) ;
 
-			if ( ! empty( $attrs[ 'data-optimized' ] ) ) {
+			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
 			if ( empty( $attrs[ 'src' ] ) ) {
@@ -904,7 +904,7 @@ class LiteSpeed_Cache_Optimize
 			if ( empty( $attrs[ 'rel' ] ) || $attrs[ 'rel' ] !== 'stylesheet' ) {
 				continue ;
 			}
-			if ( ! empty( $attrs[ 'data-optimized' ] ) ) {
+			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
 			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {

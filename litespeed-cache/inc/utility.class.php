@@ -64,7 +64,7 @@ class LiteSpeed_Cache_Utility
 	public static function parse_attr( $str )
 	{
 		$attrs = array() ;
-		preg_match_all( '#(\w+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER ) ;
+		preg_match_all( '#([\w-]+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER ) ;
 		foreach ( $matches as $match ) {
 			$attrs[ $match[ 1 ] ] = trim( $match[ 2 ] ) ;
 		}
