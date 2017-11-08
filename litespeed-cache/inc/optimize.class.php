@@ -573,7 +573,13 @@ class LiteSpeed_Cache_Optimize
 		// Replace html head part
 		$this->html_head = apply_filters( 'litespeed_optm_html_head', $this->html_head ) ;
 		if ( $this->html_head ) {
-			$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 ) ;
+			// Put header content to be after charset
+			if ( strpos( $this->content, '<meta charset' ) !== false ) {
+				$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head , $this->content, 1 ) ;
+			}
+			else {
+				$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 ) ;
+			}
 		}
 
 		// Replace html foot part
