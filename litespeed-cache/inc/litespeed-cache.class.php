@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.6.2.1' ;
+	const PLUGIN_VERSION = '1.6.3dev' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -520,6 +520,10 @@ class LiteSpeed_Cache
 		}
 
 		if ( $running_info_showing ) {
+			// Give one more break to avoid ff crash
+			if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
+				$this->footer_comment .= "\n" ;
+			}
 			$this->footer_comment .= sprintf(
 				'<!-- %1$s %2$s by LiteSpeed Cache %4$s on %3$s -->',
 				defined( 'LSCACHE_IS_ESI' ) ? 'Block' : 'Page',
