@@ -32,6 +32,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_js_defer_exc = false ;
 	private $cfg_qs_rm ;
 	private $cfg_exc_jquery ;
+	private $cfg_ggfonts_async ;
 
 
 	private $html_foot = '' ; // The html info append to <body>
@@ -64,6 +65,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ;
 		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ;
 		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
+		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ;
 
 		$this->_static_request_check() ;
 
@@ -169,7 +171,7 @@ class LiteSpeed_Cache_Optimize
 	private function _static_request_check()
 	{
 		// This request is for js/css_async.js
-		if ( $this->cfg_css_async && strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
+		if ( ( $this->cfg_css_async || $this->cfg_ggfonts_async ) && strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
 			LiteSpeed_Cache_Log::debug( 'Optimizer start serving static file' ) ;
 
 			LiteSpeed_Cache_Control::set_cacheable() ;
@@ -330,7 +332,7 @@ class LiteSpeed_Cache_Optimize
 
 		// Parse css from content
 		$ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ;
-		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css || $ggfonts_rm || $this->cfg_css_async ) {
+		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css || $ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async ) {
 			// To remove google fonts
 			if ( $ggfonts_rm ) {
 				$this->css_to_be_removed[] = 'fonts.googleapis.com' ;
@@ -359,15 +361,7 @@ class LiteSpeed_Cache_Optimize
 					// Handle css async load
 					if ( $this->cfg_css_async ) {
 						// Only ignored html snippet needs async
-						list( $noscript, $ignored_html_async ) = $this->_async_css_list( $ignored_html ) ;
-
-						// enqueue combined file first
-						if ( $enqueue_first ) {
-							$noscript = $snippet . $noscript ;
-						}
-						else {
-							$noscript .= $snippet ;
-						}
+						$ignored_html_async = $this->_async_css_list( $ignored_html ) ;
 
 						$snippet = '' ;
 						foreach ( $urls as $url ) {
@@ -382,7 +376,6 @@ class LiteSpeed_Cache_Optimize
 							$this->html_head .= implode( '', $ignored_html_async ) . $snippet ;
 						}
 
-						$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
 					}
 					else {
 						// enqueue combined file first
@@ -420,14 +413,28 @@ class LiteSpeed_Cache_Optimize
 		// Handle css lazy load if not handled async loaded yet
 		if ( $this->cfg_css_async && ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
 			// async html
-			list( $noscript, $html_list_async ) = $this->_async_css_list( $html_list ) ;
-
-			// add noscript
-			$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
+			$html_list_async = $this->_async_css_list( $html_list ) ;
 
 			// Replace async css
 			$this->content = str_replace( $html_list, $html_list_async, $this->content ) ;
 
+		}
+
+		// Handle google fonts async
+		if ( ! $this->cfg_css_async && $this->cfg_ggfonts_async ) {
+			foreach ( $html_list as $k => $v ) {
+				if ( strpos( $src_list[ $k ], 'fonts.googleapis.com' ) === false ) {
+					unset( $html_list[ $k ] ) ;
+					continue ;
+				}
+
+				LiteSpeed_Cache_Log::debug( 'Optm: google fonts async loading: ' . $src_list[ $k ] ) ;
+			}
+			// async html
+			$html_list_async = $this->_async_css_list( $html_list ) ;
+
+			// Replace async css
+			$this->content = str_replace( $html_list, $html_list_async, $this->content ) ;
 		}
 
 		// Parse js from buffer as needed
@@ -553,10 +560,14 @@ class LiteSpeed_Cache_Optimize
 
 
 		// Append async compatibility lib to head
-		if ( $this->cfg_css_async ) {
+		if ( $this->cfg_css_async || $this->cfg_ggfonts_async ) {
 			$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
 			$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
 			$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
+		}
+
+		if ( $this->cfg_ggfonts_async ) {
+			$this->html_head .= '<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />' ;
 		}
 
 		// Replace html head part
@@ -579,7 +590,7 @@ class LiteSpeed_Cache_Optimize
 			try {
 				litespeed_load_vendor() ;
 				$this->content = Minify_HTML::minify( $this->content ) ;
-				$this->content .= '<!-- Page optimized by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
+				$this->content .= "\n" . '<!-- Page optimized by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
 
 			} catch ( ErrorException $e ) {
 				LiteSpeed_Cache_Log::debug( 'Error when optimizing HTML: ' . $e->getMessage() ) ;
@@ -642,7 +653,6 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' )
 	{
-		$noscript = '' ;
 		$html_list_ori = $html_list ;
 
 		$tag = $file_type === 'css' ? 'link' : 'script' ;
@@ -659,8 +669,7 @@ class LiteSpeed_Cache_Optimize
 
 		// Handle css async load
 		if ( $file_type === 'css' && $this->cfg_css_async ) {
-			list( $noscript, $html_list ) = $this->_async_css_list( $html_list ) ;
-			$this->html_head .= '<noscript>' . $noscript . '</noscript>' ;
+			$html_list = $this->_async_css_list( $html_list ) ;
 		}
 
 		// Handle js defer
@@ -943,11 +952,10 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.3
 	 * @access private
 	 * @param  array $html_list Orignal css array
-	 * @return array            array( (string)noscript, (array)css_async_list )
+	 * @return array            (array)css_async_list
 	 */
 	private function _async_css_list( $html_list )
 	{
-		$noscript = '' ;
 		foreach ( $html_list as $k => $ori ) {
 			if ( strpos( $ori, 'data-asynced' ) !== false ) {
 				LiteSpeed_Cache_Log::debug2( 'Optm bypass: attr data-asynced exist' ) ;
@@ -959,14 +967,14 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 
-			// Append to noscript content
-			$noscript .= $ori ;
 			// async replacement
 			$v = str_replace( 'stylesheet', 'preload', $ori ) ;
 			$v = str_replace( '<link', "<link data-asynced='1' as='style' onload='this.rel=\"stylesheet\"' ", $v ) ;
+			// Append to noscript content
+			$v .= '<noscript>' . $ori . '</noscript>' ;
 			$html_list[ $k ] = $v ;
 		}
-		return array( $noscript, $html_list ) ;
+		return $html_list ;
 	}
 
 	/**

@@ -68,6 +68,7 @@ $img_count = $media->img_count() ;
 			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
 			<?php echo __( 'All these processes are automatic.', 'litespeed-cache' ) ; ?>
 		</div>
+		<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>
 
 	</div>
 </div>

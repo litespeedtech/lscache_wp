@@ -112,6 +112,7 @@ class LiteSpeed_Cache_Config
 	const OPID_OPTM_EMOJI_RM = 'optm_emoji_rm' ;
 	const OPID_OPTM_EXCLUDES = 'optm_excludes' ;
 	const OPID_OPTM_EXC_JQUERY = 'optm_exclude_jquery' ;
+	const OPID_OPTM_GGFONTS_ASYNC = 'optm_ggfonts_async' ;
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
@@ -543,6 +544,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_OPTM_EMOJI_RM => false,
 			self::OPID_OPTM_EXCLUDES => '',
 			self::OPID_OPTM_EXC_JQUERY => true,
+			self::OPID_OPTM_GGFONTS_ASYNC => false,
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',

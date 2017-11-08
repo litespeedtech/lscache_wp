@@ -50,6 +50,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER,
 			LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM,
 			LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY,
+			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC,
 
 			LiteSpeed_Cache_Config::OPID_CDN,
 			LiteSpeed_Cache_Config::OPID_CDN_INC_IMG,
@@ -150,6 +151,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER:
 			case LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM:
 			case LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY:
+			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC:
 
 			case LiteSpeed_Cache_Config::OPID_CDN:
 			case LiteSpeed_Cache_Config::OPID_CDN_INC_IMG:

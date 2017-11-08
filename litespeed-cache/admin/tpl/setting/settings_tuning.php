@@ -91,6 +91,17 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Load Google Fonts Asynchronously', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This is useful if you only want to load Google Fonts asynchronously while leave other CSS intact.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will also add a preconnect to Google for faster Google Fonts downloading.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Remove Google Fonts', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ; ?>

@@ -529,6 +529,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER,
 			LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM,
 			LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY,
+			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
