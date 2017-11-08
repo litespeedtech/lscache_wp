@@ -368,7 +368,14 @@ class LiteSpeed_Cache_Router
 	 */
 	private function _verify_sapi_passive( $action )
 	{
-		return $action === LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK && LiteSpeed_Cache_Admin_API::sapi_valiate_passive_callback() ;
+		if ( $action === LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK ) {
+			if ( LiteSpeed_Cache_Admin_API::sapi_valiate_passive_callback() ) {
+				return true ;
+			}
+			exit( 'wrong passive callback' ) ;
+		}
+
+		return false ;
 	}
 
 	/**
@@ -381,7 +388,14 @@ class LiteSpeed_Cache_Router
 	 */
 	private function _verify_sapi_aggressive( $action )
 	{
-		return $action === LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK && LiteSpeed_Cache_Admin_API::sapi_validate_aggressive_callback() ;
+		if ( $action === LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK ) {
+			if ( LiteSpeed_Cache_Admin_API::sapi_validate_aggressive_callback() ) {
+				return true ;
+			}
+
+			exit( 'wrong aggressive callback' ) ;
+		}
+		return false ;
 	}
 
 	/**
