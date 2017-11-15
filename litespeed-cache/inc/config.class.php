@@ -129,6 +129,7 @@ class LiteSpeed_Cache_Config
 	const OPID_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
 	const OPID_MEDIA_IMG_OPTM_CRON_OFF = 'media_img_optm_cron_off' ;
 	const OPID_MEDIA_IMG_WEBP = 'media_img_webp' ;
+	const OPID_MEDIA_IMG_WEBP_ONLY = 'media_img_webp_only' ;
 
 	const HASH = 'hash' ;
 
@@ -561,6 +562,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_MEDIA_IFRAME_LAZY 	=> false,
 			self::OPID_MEDIA_IMG_OPTM_CRON_OFF 	=> false,
 			self::OPID_MEDIA_IMG_WEBP 	=> false,
+			self::OPID_MEDIA_IMG_WEBP_ONLY 	=> false,
 
 			self::HASH 	=> '',
 

@@ -76,5 +76,15 @@ if ( ! defined( 'WPINC' ) ) die ;
 		endif ;
 	?>
 
+	<tr>
+		<th><?php echo __( 'Only WebP Optimization', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Only use WebP for image optimization. This will exclude replacement of original images and only generate WebP version for them.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 
 </tbody></table>

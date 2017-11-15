@@ -436,6 +436,8 @@ class LiteSpeed_Cache_Media
 		$cond = array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_DATA ) ;
 		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, $cond ) ) ;
 
+		$webp_only = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ;
+
 		foreach ( $meta_value_list as $v ) {
 			$meta_value = unserialize( $v->meta_value ) ;
 
@@ -484,7 +486,7 @@ class LiteSpeed_Cache_Media
 					LiteSpeed_Cache_Log::debug( 'Media: Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
 
 					// Fetch optimized image itself
-					if ( ! empty( $json[ 'target_file' ] ) ) {
+					if ( ! $webp_only && ! empty( $json[ 'target_file' ] ) ) {
 						file_put_contents( $local_file . '.tmp', file_get_contents( $json[ 'target_file' ] ) ) ;
 						// Unknown issue
 						if ( md5_file( $local_file . '.tmp' ) !== $json[ 'target_md5' ] ) {
@@ -710,8 +712,13 @@ class LiteSpeed_Cache_Media
 			$total_groups = count( $this->_img_in_queue ) ;
 			LiteSpeed_Cache_Log::debug( 'Media prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
+			$data = array(
+				'list' => $this->_img_in_queue,
+				'webp_only'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ),
+			) ;
+
 			// Push to LiteSpeed server
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $this->_img_in_queue ) ) ;
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
 
 			if ( ! is_array( $json ) ) {
 				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
