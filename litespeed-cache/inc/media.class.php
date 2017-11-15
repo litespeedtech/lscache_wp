@@ -17,6 +17,8 @@ class LiteSpeed_Cache_Media
 	const LAZY_LIB = '/min/lazyload.js' ;
 
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
+	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
+	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
 	const OPT_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
 
 	const DB_IMG_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
@@ -145,6 +147,69 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
+	 * Batch switch images to ori/optm version
+	 *
+	 * @since  1.6.2
+	 * @access private
+	 */
+	private function _batch_switch( $type )
+	{
+		global $wpdb ;
+		$q = "SELECT meta_value
+			FROM $wpdb->postmeta
+			WHERE meta_key = %s
+		" ;
+		$cond = array( self::DB_IMG_OPTIMIZE_DATA ) ;
+		$meta_value_lists = $wpdb->get_results( $wpdb->prepare( $q, $cond ) ) ;
+
+		$i = 0 ;
+		foreach ( $meta_value_lists as $v ) {
+			$meta_value_list = unserialize( $v->meta_value ) ;
+
+			foreach ( $meta_value_list as $v2 ) {
+				if ( $v2[ 1 ] !== 'pulled' ) {
+					continue ;
+				}
+
+				$src = $v2[ 0 ] ;
+				$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
+
+				$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+				$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+				$bk_file = $local_filename . '.bk.' . $extension ;
+				$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+
+				// switch to ori
+				if ( $type === self::TYPE_IMG_BATCH_SWITCH_ORI ) {
+					if ( ! file_exists( $bk_file ) ) {
+						continue ;
+					}
+
+					$i ++ ;
+
+					rename( $local_file, $bk_optm_file ) ;
+					rename( $bk_file, $local_file ) ;
+				}
+				// switch to optm
+				elseif ( $type === self::TYPE_IMG_BATCH_SWITCH_OPTM ) {
+					if ( ! file_exists( $bk_optm_file ) ) {
+						continue ;
+					}
+
+					$i ++ ;
+
+					rename( $local_file, $bk_file ) ;
+					rename( $bk_optm_file, $local_file ) ;
+				}
+
+			}
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Media: batch switched images total: ' . $i ) ;
+
+	}
+
+	/**
 	 * Switch image between original one and optimized one
 	 *
 	 * @since 1.6.2
@@ -153,6 +218,7 @@ class LiteSpeed_Cache_Media
 	private function _switch_optm_file( $type )
 	{
 		$pid = substr( $type, 4 ) ;
+		$switch_type = substr( $type, 0, 4 ) ;
 
 		global $wpdb ;
 		$q = "SELECT meta_value
@@ -162,107 +228,56 @@ class LiteSpeed_Cache_Media
 		$cond = array( $pid, self::DB_IMG_OPTIMIZE_DATA ) ;
 		$meta_value_list = $wpdb->get_var( $wpdb->prepare( $q, $cond ) ) ;
 		$meta_value_list = unserialize( $meta_value_list ) ;
-		$child_images = array() ;
+
+		$msg = 'Unknown Msg' ;
+
 		foreach ( $meta_value_list as $v ) {
 			if ( $v[ 1 ] !== 'pulled' ) {
 				continue ;
 			}
-			$child_images[] = $v[ 0 ] ;
-		}
-		LiteSpeed_Cache_Log::debug( 'Media: child images:', $child_images ) ;
 
-		$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $child_images[ 0 ] ;
-		$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-		$filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$src = $v[ 0 ] ;
+			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
 
-		// to switch webp file
-		if ( substr( $type, 0, 4 ) === 'webp' ) {
-			if ( file_exists( $local_file . '.webp' ) ) {
-				rename( $local_file . '.webp', $local_file . '.optm.webp' ) ;
-				LiteSpeed_Cache_Log::debug( 'Media: Disabled WebP: ' . $local_file ) ;
+			// to switch webp file
+			if ( $switch_type === 'webp' ) {
+				if ( file_exists( $local_file . '.webp' ) ) {
+					rename( $local_file . '.webp', $local_file . '.optm.webp' ) ;
+					LiteSpeed_Cache_Log::debug( 'Media: Disabled WebP: ' . $local_file ) ;
 
-				// rename child
-				if ( count( $child_images ) > 1 ) {
-					foreach ( $child_images as $src ) {
-						$child_filename = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
-						if ( file_exists( $child_filename . '.webp' ) ) {
-							rename( $child_filename . '.webp', $child_filename . '.optm.webp' ) ;
-							LiteSpeed_Cache_Log::debug( 'Media: Disabled child WebP: ' . $child_filename ) ;
-						}
-					}
+					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
+				}
+				elseif ( file_exists( $local_file . '.optm.webp' ) ) {
+					rename( $local_file . '.optm.webp', $local_file . '.webp' ) ;
+					LiteSpeed_Cache_Log::debug( 'Media: Enable WebP: ' . $local_file ) ;
+
+					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
+				}
+			}
+			// to switch original file
+			else {
+				$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+				$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+				$bk_file = $local_filename . '.bk.' . $extension ;
+				$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+
+				// revert ori back
+				if ( file_exists( $bk_file ) ) {
+					rename( $local_file, $bk_optm_file ) ;
+					rename( $bk_file, $local_file ) ;
+					LiteSpeed_Cache_Log::debug( 'Media: Restore original img: ' . $child_filename . $extension ) ;
+
+					$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
+				}
+				elseif ( file_exists( $bk_optm_file ) ) {
+					rename( $local_file, $bk_file ) ;
+					rename( $bk_optm_file, $local_file ) ;
+					LiteSpeed_Cache_Log::debug( 'Media: Switch to optm img: ' . $local_file ) ;
+
+					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
 				}
 
-				$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
-
 			}
-			elseif ( file_exists( $local_file . '.optm.webp' ) ) {
-				rename( $local_file . '.optm.webp', $local_file . '.webp' ) ;
-				LiteSpeed_Cache_Log::debug( 'Media: Enable WebP: ' . $local_file ) ;
-
-				// rename child
-				if ( count( $child_images ) > 1 ) {
-					foreach ( $child_images as $src ) {
-						$child_filename = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
-						if ( file_exists( $child_filename . '.optm.webp' ) ) {
-							rename( $child_filename . '.optm.webp', $child_filename . '.webp' ) ;
-							LiteSpeed_Cache_Log::debug( 'Media: Enable child WebP: ' . $child_filename ) ;
-						}
-					}
-				}
-
-				$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
-			}
-
-		}
-		// to switch original file
-		else {
-			$bk_file = $filename . '.bk.' . $extension ;
-			$bk_optm_file = $filename . '.bk.optm.' . $extension ;
-
-			// revert ori back
-			if ( file_exists( $bk_file ) ) {
-				rename( $local_file, $bk_optm_file ) ;
-				rename( $bk_file, $local_file ) ;
-				LiteSpeed_Cache_Log::debug( 'Media: Restore original img: ' . $local_file ) ;
-
-				// rename child
-				if ( count( $child_images ) > 1 ) {
-					foreach ( $child_images as $src ) {
-						$child_filename = substr( $this->wp_upload_dir[ 'basedir' ] . '/' . $src, 0, - strlen( $extension ) ) ;
-						$child_bk_file = $child_filename . 'bk.' . $extension ;
-						$child_bk_optm_file = $child_filename . 'bk.optm.' . $extension ;
-						if ( file_exists( $child_bk_file ) ) {
-							rename( $child_filename . $extension, $child_bk_optm_file ) ;
-							rename( $child_bk_file, $child_filename . $extension ) ;
-							LiteSpeed_Cache_Log::debug( 'Media: Restore original child img: ' . $child_filename . $extension ) ;
-						}
-					}
-				}
-
-				$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
-			}
-			elseif ( file_exists( $bk_optm_file ) ) {
-				rename( $local_file, $bk_file ) ;
-				rename( $bk_optm_file, $local_file ) ;
-				LiteSpeed_Cache_Log::debug( 'Media: Switch to optm img: ' . $local_file ) ;
-
-				// rename child
-				if ( count( $child_images ) > 1 ) {
-					foreach ( $child_images as $src ) {
-						$child_filename = substr( $this->wp_upload_dir[ 'basedir' ] . '/' . $src, 0, - strlen( $extension ) ) ;
-						$child_bk_file = $child_filename . 'bk.' . $extension ;
-						$child_bk_optm_file = $child_filename . 'bk.optm.' . $extension ;
-						if ( file_exists( $child_bk_optm_file ) ) {
-							rename( $child_filename . $extension, $child_bk_file ) ;
-							rename( $child_bk_optm_file, $child_filename . $extension ) ;
-							LiteSpeed_Cache_Log::debug( 'Media: Switch to optm child img: ' . $child_filename . $extension ) ;
-						}
-					}
-				}
-
-				$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
-			}
-
 		}
 
 		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
@@ -355,6 +370,15 @@ class LiteSpeed_Cache_Media
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
+			/**
+			 * Batch switch
+			 * @since 1.6.3
+			 */
+			case self::TYPE_IMG_BATCH_SWITCH_ORI :
+			case self::TYPE_IMG_BATCH_SWITCH_OPTM :
+				$instance->_batch_switch( $type ) ;
+				break ;
+
 			case self::TYPE_IMG_OPTIMIZE :
 				$instance->_img_optimize() ;
 				break ;

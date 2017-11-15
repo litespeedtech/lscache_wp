@@ -64,11 +64,36 @@ $img_count = $media->img_count() ;
 		<p><?php echo __('Images requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_requested' ] ; ?></b></p>
 		<p><?php echo __('Images optimized and waiting to be pulled', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_server_finished' ] ; ?></b></p>
 		<p><?php echo __('Images optimized and pulled', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_pulled' ] ; ?></b></p>
-		<div class="litespeed-desc">
+		<p class="litespeed-desc">
 			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
 			<?php echo __( 'All these processes are automatic.', 'litespeed-cache' ) ; ?>
-		</div>
+		</p>
 		<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>
+
+		<hr />
+
+		<h3 class="litespeed-title"><?php echo __('Batch Switch', 'litespeed-cache') ; ?></h3>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-danger">
+			<?php echo __( 'Switch To Original Images', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'This will switch all optimized images to their original version.', 'litespeed-cache' ) ; ?>
+		</span>
+
+		<br />
+
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-warning">
+			<?php echo __( 'Switch To Optimized Images', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'This will switch all original images to optimized images if they have optimized.', 'litespeed-cache' ) ; ?>
+		</span>
+
+		<br />
+		<p>
+			<?php echo sprintf( __( 'You can check the result in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
+		</p>
+
 
 	</div>
 </div>
