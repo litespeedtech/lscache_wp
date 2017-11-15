@@ -102,48 +102,70 @@ class LiteSpeed_Cache_Media
 	 */
 	public function after_admin_init()
 	{
-		add_filter( 'media_row_actions', array( $this, 'media_row_actions' ), 10, 2 ) ;
+		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
+		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
 	}
 
 	/**
-	 * Register admin menu
+	 * Media Admin Menu -> Image Optimization Column Title
+	 *
+	 * @since 1.6.3
+	 * @access public
+	 */
+	public function media_row_title( $posts_columns )
+	{
+		$posts_columns[ 'imgoptm' ] = __( 'LiteSpeed Optimization', 'litespeed-cache' ) ;
+
+		return $posts_columns ;
+	}
+
+	/**
+	 * Media Admin Menu -> Image Optimization Column
 	 *
 	 * @since 1.6.2
 	 * @access public
 	 */
-	public function media_row_actions( $actions, $post )
+	public function media_row_actions( $column_name, $post_id )
 	{
-		$local_file = get_attached_file( $post->ID ) ;
+		if ( $column_name !== 'imgoptm' ) {
+			return ;
+		}
 
-		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'webp' . $post->ID ) ;
+		$local_file = get_attached_file( $post_id ) ;
+
+		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'webp' . $post_id ) ;
 		$desc = false ;
+		$cls = 'litespeed-icon-media-webp' ;
 		if ( file_exists( $local_file . '.webp' ) ) {
 			$desc = __( 'Disable WebP', 'litespeed-cache' ) ;
 		}
 		elseif ( file_exists( $local_file . '.optm.webp' ) ) {
+			$cls .= '-disabled' ;
 			$desc = __( 'Enable WebP', 'litespeed-cache' ) ;
 		}
+
 		if ( $desc ) {
-			$actions[ 'webp_bypass' ] = sprintf( '<a href="%s">%s</a>', $link, $desc ) ;
+			echo sprintf( '<a href="%1$s" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
 		}
 
 		$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
 		$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
 		$bk_optm_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.optm.' . $extension ;
 
-		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'orig' . $post->ID ) ;
+		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'orig' . $post_id ) ;
 		$desc = false ;
+		$cls = 'litespeed-icon-media-optm' ;
 		if ( file_exists( $bk_file ) ) {
 			$desc = __( 'Restore Original File', 'litespeed-cache' ) ;
 		}
 		elseif ( file_exists( $bk_optm_file ) ) {
+			$cls .= '-disabled' ;
 			$desc = __( 'Switch To Optimized File', 'litespeed-cache' ) ;
 		}
-		if ( $desc ) {
-			$actions[ 'ori_recover' ] = sprintf( '<a href="%s">%s</a>', $link, $desc ) ;
-		}
 
-		return $actions ;
+		if ( $desc ) {
+			echo sprintf( '<a href="%1$s" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
+		}
 	}
 
 	/**
@@ -265,7 +287,7 @@ class LiteSpeed_Cache_Media
 				if ( file_exists( $bk_file ) ) {
 					rename( $local_file, $bk_optm_file ) ;
 					rename( $bk_file, $local_file ) ;
-					LiteSpeed_Cache_Log::debug( 'Media: Restore original img: ' . $child_filename . $extension ) ;
+					LiteSpeed_Cache_Log::debug( 'Media: Restore original img: ' . $bk_file ) ;
 
 					$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
 				}
