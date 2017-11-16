@@ -67,10 +67,6 @@
 	margin: 2px 0;
 }
 
-.litespeed-reset-width {
-	min-width: initial !important;
-}
-
 /********************************* logo *******************************/
 @font-face {
 	font-family: 'litespeedfont';
@@ -1120,6 +1116,11 @@ ul.litespeed-shell-body {
 }
 
 /********************************* admin -> media lib icon *******************************/
+.litespeed-media-href {
+	display: inline-table;
+}
+
+
 [class*="litespeed-icon-media-"] {
 	background-size: contain;
 	width: 42px;
@@ -1128,9 +1129,11 @@ ul.litespeed-shell-body {
 	background-repeat: no-repeat;
 	display: inline-block;
 }
+
 [class*="litespeed-icon-media-"]:hover {
 	opacity: 0.7 ;
 }
+
 .litespeed-icon-media-webp 			{ background-image: url("../img/icons/img_webp.svg") ; }
 .litespeed-icon-media-webp-disabled { background-image: url("../img/icons/img_webp_disabled.svg") ; }
 .litespeed-icon-media-optm 			{ background-image: url("../img/icons/img_optm.svg") ; }

@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		if ( $desc ) {
-			echo sprintf( '<a href="%1$s" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
+			echo sprintf( '<a href="%1$s" class="litespeed-media-href" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
 		}
 
 		$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		if ( $desc ) {
-			echo sprintf( '<a href="%1$s" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
+			echo sprintf( '<a href="%1$s" class="litespeed-media-href" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
 		}
 	}
 
