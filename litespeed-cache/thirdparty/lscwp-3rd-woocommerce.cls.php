@@ -18,6 +18,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	const CACHETAG_TERM = 'WC_T.' ;
 	const OPTION_UPDATE_INTERVAL = 'wc_update_interval' ;
 	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl' ;
+	const OPTION_WOO_CACHE_CART = 'woo_cache_cart' ;
 	const OPT_PQS_CS = 0 ; // flush product on quantity + stock change, categories on stock change
 	const OPT_PS_CS = 1 ; // flush product and categories on stock change
 	const OPT_PS_CN = 2 ; // flush product on stock change, categories no flush
@@ -447,11 +448,23 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				elseif ( is_null($woocom->cart) ) {
 					$err = 'null cart' ;
 				}
-				elseif ( $woocom->cart->get_cart_contents_count() !== 0 && ! LiteSpeed_Cache_Router::esi_enabled() ) {
-					$err = 'cart is not empty' ;
+				elseif ( ! LiteSpeed_Cache_API::esi_enabled() && $woocom->cart->get_cart_contents_count() !== 0 ) {
+					if ( LiteSpeed_Cache_API::config( self::OPTION_WOO_CACHE_CART ) ) {
+						LiteSpeed_Cache_API::set_cache_private() ;
+						LiteSpeed_Cache_API::set_cache_no_vary() ;
+					}
+					else {
+						$err = 'cart is not empty' ;
+					}
 				}
 				elseif ( $esi_id === 'storefront-cart-header' ) {
-					$err = 'ESI cart should be nocache' ;
+					if ( LiteSpeed_Cache_API::config( self::OPTION_WOO_CACHE_CART ) ) {
+						LiteSpeed_Cache_API::set_cache_private() ;
+						LiteSpeed_Cache_API::set_cache_no_vary() ;
+					}
+					else {
+						$err = 'ESI cart should be nocache' ;
+					}
 				}
 				elseif ( wc_notice_count() > 0 ) {
 					$err = 'has wc notice' ;
@@ -596,6 +609,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS ;
 		$configs[self::OPTION_SHOP_FRONT_TTL] = true ;
+		$configs[self::OPTION_WOO_CACHE_CART] = true ;
 
 		return $configs ;
 	}
@@ -666,6 +680,15 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 								<div class='litespeed-desc'>$ttl_desc</div>
 							</td>
 						</tr>
+						<tr>
+							<th>" . __('Cache Cart', 'litespeed-cache') . "</th>
+							<td>
+								" . LiteSpeed_Cache_API::build_switch(self::OPTION_WOO_CACHE_CART, false, true) . "
+								<div class='litespeed-desc'>"
+								 	. __('Cache cart privately if cart is not empty.', 'litespeed-cache') . "
+								 </div>
+							</td>
+						</tr>
 					</tbody></table>
 					<div class='litespeed-callout-warning'>
 						<h4>" . __('Note:', 'litespeed-cache') . "</h4>
@@ -718,6 +741,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		$options[ self::OPTION_SHOP_FRONT_TTL ] = LiteSpeed_Cache_API::parse_onoff( $input, self::OPTION_SHOP_FRONT_TTL ) ;
+		$options[ self::OPTION_WOO_CACHE_CART ] = LiteSpeed_Cache_API::parse_onoff( $input, self::OPTION_WOO_CACHE_CART ) ;
 
 		return $options ;
 	}
