@@ -45,6 +45,7 @@ class LiteSpeed_Cache_Config
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
 	const OPID_CACHE_URI_PRIV = 'cache_uri_priv' ;
 	const OPID_CACHE_BROWSER = 'cache_browser' ;
+	const OPID_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
 	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
 	const OPID_TIMED_URLS = 'timed_urls' ;
@@ -500,6 +501,7 @@ class LiteSpeed_Cache_Config
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_CACHE_URI_PRIV => '',
 			self::OPID_CACHE_BROWSER => false,
+			self::OPID_CACHE_BROWSER_TTL => 2592000,
 
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
@@ -621,6 +623,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_MOBILE => 0, // todo: why not false
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_CACHE_BROWSER => false,
+			self::OPID_CACHE_BROWSER_TTL => 2592000,
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::ID_NOCACHE_COOKIES => '',

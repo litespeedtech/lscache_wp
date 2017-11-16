@@ -17,3 +17,15 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Browser Cache TTL', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ; ?>
+			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify how long the browser cache is, in seconds. Minimum is 30 seconds.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended($id) ; ?>
+			</div>
+		</td>
+	</tr>
+

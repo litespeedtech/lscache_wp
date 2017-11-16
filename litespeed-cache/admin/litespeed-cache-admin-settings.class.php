@@ -742,6 +742,21 @@ class LiteSpeed_Cache_Admin_Settings
 			$new_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 
+		// TTL check
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL 		=> array( __( 'Default Public Cache', 'litespeed-cache' ), 30, $this->_max_int ),
+		) ;
+		foreach ( $ids as $id => $v ) {
+			list( $desc, $min, $max ) = $v ;
+			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
+				$this->_err[] = sprintf( $this->_err_msg_numeric, $desc, $min, $max ) ;
+			}
+			else {
+				$new_options[ $id ] = $this->_input[ $id ] ;
+			}
+		}
+
+
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
 		if ( ! $this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {

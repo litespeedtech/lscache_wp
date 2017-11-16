@@ -477,41 +477,47 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access private
 	 * @return array Rules set
 	 */
-	private function _browser_cache_rules()
+	private function _browser_cache_rules( $cfg )
 	{
+		/**
+		 * Add ttl setting
+		 * @since 1.6.3
+		 */
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ;
+		$ttl = $cfg[ $id ] ;
 		$rules = array(
 			'<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
 				'<IfModule mod_expires.c>',
 					'ExpiresActive on',
-					'ExpiresByType application/pdf A2592000',
-					'ExpiresByType image/x-icon A2592000',
-					'ExpiresByType image/vnd.microsoft.icon A2592000',
-					'ExpiresByType image/svg+xml A2592000',
+					'ExpiresByType application/pdf A' . $ttl,
+					'ExpiresByType image/x-icon A' . $ttl,
+					'ExpiresByType image/vnd.microsoft.icon A' . $ttl,
+					'ExpiresByType image/svg+xml A' . $ttl,
 					'',
-					'ExpiresByType image/jpg A2592000',
-					'ExpiresByType image/jpeg A2592000',
-					'ExpiresByType image/png A2592000',
-					'ExpiresByType image/gif A2592000',
-					'ExpiresByType image/webp A2592000',
+					'ExpiresByType image/jpg A' . $ttl,
+					'ExpiresByType image/jpeg A' . $ttl,
+					'ExpiresByType image/png A' . $ttl,
+					'ExpiresByType image/gif A' . $ttl,
+					'ExpiresByType image/webp A' . $ttl,
 					'',
-					'ExpiresByType video/ogg A2592000',
-					'ExpiresByType audio/ogg A2592000',
-					'ExpiresByType video/mp4 A2592000',
-					'ExpiresByType video/webm A2592000',
+					'ExpiresByType video/ogg A' . $ttl,
+					'ExpiresByType audio/ogg A' . $ttl,
+					'ExpiresByType video/mp4 A' . $ttl,
+					'ExpiresByType video/webm A' . $ttl,
 					'',
-					'ExpiresByType text/css A2592000',
-					'ExpiresByType text/javascript A2592000',
-					'ExpiresByType application/javascript A2592000',
-					'ExpiresByType application/x-javascript A2592000',
+					'ExpiresByType text/css A' . $ttl,
+					'ExpiresByType text/javascript A' . $ttl,
+					'ExpiresByType application/javascript A' . $ttl,
+					'ExpiresByType application/x-javascript A' . $ttl,
 					'',
-					'ExpiresByType application/x-font-ttf A2592000',
-					'ExpiresByType application/x-font-woff A2592000',
-					'ExpiresByType application/font-woff A2592000',
-					'ExpiresByType application/font-woff2 A2592000',
-					'ExpiresByType application/vnd.ms-fontobject A2592000',
-					'ExpiresByType font/ttf A2592000',
-					'ExpiresByType font/woff A2592000',
-					'ExpiresByType font/woff2 A2592000',
+					'ExpiresByType application/x-font-ttf A' . $ttl,
+					'ExpiresByType application/x-font-woff A' . $ttl,
+					'ExpiresByType application/font-woff A' . $ttl,
+					'ExpiresByType application/font-woff2 A' . $ttl,
+					'ExpiresByType application/vnd.ms-fontobject A' . $ttl,
+					'ExpiresByType font/ttf A' . $ttl,
+					'ExpiresByType font/woff A' . $ttl,
+					'ExpiresByType font/woff2 A' . $ttl,
 					'',
 				'</IfModule>',
 			'</FilesMatch>',
@@ -630,8 +636,8 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER ;
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
-			$new_rules = array_merge( $new_rules, $this->_browser_cache_rules() ) ;
-			$new_rules_backend = array_merge( $new_rules_backend, $this->_browser_cache_rules() ) ;
+			$new_rules = array_merge( $new_rules, $this->_browser_cache_rules( $cfg ) ) ;
+			$new_rules_backend = array_merge( $new_rules_backend, $this->_browser_cache_rules( $cfg ) ) ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}
