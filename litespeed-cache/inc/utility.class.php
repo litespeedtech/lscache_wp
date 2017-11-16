@@ -369,12 +369,18 @@ class LiteSpeed_Cache_Utility
 		}
 
 		// Parse file path
-		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
-			$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
-		}
-		else {
+		/**
+		 * Trying to fix pure /.htaccess rewrite to /wordpress case
+		 * @internal #611001 - Combine & Minify not working?
+		 * @since  1.6.3
+		 */
+		// if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
+		// 	$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
+		// }
+		// else {
 			$file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
-		}
+		// }
+
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
 			LiteSpeed_Cache_Log::debug2( 'Utility: file not exist: ' . $file_path_ori ) ;
