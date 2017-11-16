@@ -371,15 +371,23 @@ class LiteSpeed_Cache_Utility
 		// Parse file path
 		/**
 		 * Trying to fix pure /.htaccess rewrite to /wordpress case
+		 *
+		 * Add `define( 'LITESPEED_WP_REALPATH', '/wordpress' ) ;` in wp-config.php in this case
+		 *
 		 * @internal #611001 - Combine & Minify not working?
 		 * @since  1.6.3
 		 */
-		// if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
-		// 	$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
-		// }
-		// else {
+		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
+			if ( defined( 'LITESPEED_WP_REALPATH' ) ) {
+				$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . LITESPEED_WP_REALPATH . $url_parsed[ 'path' ] ;
+			}
+			else {
+				$file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ] ;
+			}
+		}
+		else {
 			$file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
-		// }
+		}
 
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
