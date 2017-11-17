@@ -97,13 +97,15 @@ class LiteSpeed_Cache_Media
 	/**
 	 * Register admin menu
 	 *
-	 * @since 1.6.2
+	 * @since 1.6.3
 	 * @access public
 	 */
 	public function after_admin_init()
 	{
-		add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
-		add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+		if ( get_option( LiteSpeed_Cache_Config::ITEM_MEDIA_NEED_PULL ) ) {
+			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
+			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+		}
 	}
 
 	/**
