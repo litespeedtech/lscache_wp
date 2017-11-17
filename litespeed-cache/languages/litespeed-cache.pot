@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 1.6.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-11-06 21:23:33+00:00\n"
+"POT-Creation-Date: 2017-11-17 21:47:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -342,13 +342,13 @@ msgstr ""
 msgid "Clean all CSS/JS optimizer data successfully."
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:672
+#: admin/litespeed-cache-admin-rules.class.php:678
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:870
+#: admin/litespeed-cache-admin-rules.class.php:876
 msgid "File Saved."
 msgstr ""
 
@@ -361,6 +361,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:258
+#: admin/litespeed-cache-admin-settings.class.php:747
 msgid "Default Public Cache"
 msgstr ""
 
@@ -388,30 +389,30 @@ msgstr ""
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:606
+#: admin/litespeed-cache-admin-settings.class.php:608
 #: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:672
+#: admin/litespeed-cache-admin-settings.class.php:674
 #: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:673
+#: admin/litespeed-cache-admin-settings.class.php:675
 #: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:674
+#: admin/litespeed-cache-admin-settings.class.php:676
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:675
+#: admin/litespeed-cache-admin-settings.class.php:677
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:676
+#: admin/litespeed-cache-admin-settings.class.php:678
 #: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
@@ -676,6 +677,7 @@ msgstr ""
 #: admin/tpl/setting/settings_general.php:108
 #: admin/tpl/setting/settings_general.php:121
 #: admin/tpl/setting/settings_general.php:134
+#: admin/tpl/setting/settings_inc.cache_browser.php:24
 #: admin/tpl/setting/settings_optimize.php:86
 msgid "seconds"
 msgstr ""
@@ -733,11 +735,11 @@ msgid "Beta Version"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:53
-msgid "Images total"
+msgid "Image groups total"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:54
-msgid "Images not yet requested"
+msgid "Image groups not yet requested"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:56
@@ -751,15 +753,15 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/image_optimization.php:64
-msgid "Images requested"
+msgid "Image groups requested"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:65
-msgid "Images optimized and waiting to be pulled"
+msgid "Image groups optimized and waiting to be pulled"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:66
-msgid "Images optimized and pulled"
+msgid "Image groups optimized and pulled"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:68
@@ -770,6 +772,40 @@ msgstr ""
 
 #: admin/tpl/image_optimization.php:69
 msgid "All these processes are automatic."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:71
+msgid "Learn More"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:75
+msgid "Revert Optimization"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:78
+msgid ""
+"Switch all images in the media library back to their original unoptimized "
+"versions."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:84
+msgid "Undo Optimization"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:87
+msgid "Revert all optimized images back to their original versions."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:93
+msgid "Re-do Optimization"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:96
+msgid "Switch back to using optimized images."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:101
+msgid "Results can be checked in <a %s>Media Library</a>."
 msgstr ""
 
 #: admin/tpl/inc/admin_footer.php:5
@@ -1731,8 +1767,8 @@ msgstr ""
 #: admin/tpl/setting/settings_purge.php:79
 #: admin/tpl/setting/settings_tuning.php:36
 #: admin/tpl/setting/settings_tuning.php:72
-#: admin/tpl/setting/settings_tuning.php:120
-#: admin/tpl/setting/settings_tuning.php:149
+#: admin/tpl/setting/settings_tuning.php:131
+#: admin/tpl/setting/settings_tuning.php:160
 msgid "One per line."
 msgstr ""
 
@@ -2091,7 +2127,7 @@ msgstr ""
 
 #: admin/tpl/setting/settings_cache.php:62
 #: admin/tpl/setting/settings_excludes.php:14
-#: admin/tpl/setting/settings_tuning.php:148
+#: admin/tpl/setting/settings_tuning.php:159
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
@@ -2785,6 +2821,16 @@ msgid ""
 "LiteSpeed browser cache setting</a>."
 msgstr ""
 
+#: admin/tpl/setting/settings_inc.cache_browser.php:21
+msgid "Browser Cache TTL"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_browser.php:26
+msgid ""
+"The amount of time, in seconds, that files will be stored in browser cache "
+"before expiring. Minimum is %s seconds."
+msgstr ""
+
 #: admin/tpl/setting/settings_inc.cache_favicon.php:7
 msgid "Cache favicon.ico"
 msgstr ""
@@ -2926,8 +2972,8 @@ msgstr ""
 #: admin/tpl/setting/settings_media.php:26
 #: admin/tpl/setting/settings_tuning.php:35
 #: admin/tpl/setting/settings_tuning.php:71
-#: admin/tpl/setting/settings_tuning.php:119
-#: admin/tpl/setting/settings_tuning.php:147
+#: admin/tpl/setting/settings_tuning.php:130
+#: admin/tpl/setting/settings_tuning.php:158
 msgid "Both full URLs and partial strings can be used."
 msgstr ""
 
@@ -2937,14 +2983,14 @@ msgstr ""
 #: admin/tpl/setting/settings_tuning.php:38
 #: admin/tpl/setting/settings_tuning.php:58
 #: admin/tpl/setting/settings_tuning.php:74
-#: admin/tpl/setting/settings_tuning.php:122
+#: admin/tpl/setting/settings_tuning.php:133
 msgid "API:"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:30
 #: admin/tpl/setting/settings_tuning.php:39
 #: admin/tpl/setting/settings_tuning.php:75
-#: admin/tpl/setting/settings_tuning.php:123
+#: admin/tpl/setting/settings_tuning.php:134
 msgid "Filter %s is supported."
 msgstr ""
 
@@ -2952,7 +2998,7 @@ msgstr ""
 #: admin/tpl/setting/settings_optimize.php:113
 #: admin/tpl/setting/settings_tuning.php:40
 #: admin/tpl/setting/settings_tuning.php:76
-#: admin/tpl/setting/settings_tuning.php:124
+#: admin/tpl/setting/settings_tuning.php:135
 msgid "Elements with attribute %s in html code will be excluded."
 msgstr ""
 
@@ -2996,6 +3042,16 @@ msgstr ""
 msgid ""
 "Set this option to %s to disable the cron job responsible for fetching "
 "optimized images from LiteSpeed's Image Server."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:80
+msgid "Only Request WebP"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:84
+msgid ""
+"Prevent images from being replaced with optimized versions when optimizing. "
+"WebP versions will still be generated."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:6
@@ -3086,7 +3142,7 @@ msgid "Minify HTML content."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:105
-#: admin/tpl/setting/settings_tuning.php:108
+#: admin/tpl/setting/settings_tuning.php:119
 msgid "Load CSS Asynchronously"
 msgstr ""
 
@@ -3097,7 +3153,7 @@ msgstr ""
 #: admin/tpl/setting/settings_optimize.php:110
 #: admin/tpl/setting/settings_optimize.php:125
 #: admin/tpl/setting/settings_tuning.php:88
-#: admin/tpl/setting/settings_tuning.php:136
+#: admin/tpl/setting/settings_tuning.php:147
 msgid ""
 "This can improve your speed score in services like Pingdom, GTmetrix and "
 "PageSpeed."
@@ -3180,7 +3236,7 @@ msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
 #: admin/tpl/setting/settings_purge.php:47
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:671
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:771
 msgid "Note:"
 msgstr ""
 
@@ -3307,52 +3363,68 @@ msgid "Remove query strings from static resources."
 msgstr ""
 
 #: admin/tpl/setting/settings_tuning.php:94
-msgid "Remove Google Fonts"
+msgid "Load Google Fonts Asynchronously"
 msgstr ""
 
 #: admin/tpl/setting/settings_tuning.php:98
+msgid ""
+"This is useful if you only want to load Google Fonts asynchronously while "
+"leave other CSS intact."
+msgstr ""
+
+#: admin/tpl/setting/settings_tuning.php:99
+msgid ""
+"This will also add a preconnect to Google for faster Google Fonts "
+"downloading."
+msgstr ""
+
+#: admin/tpl/setting/settings_tuning.php:105
+msgid "Remove Google Fonts"
+msgstr ""
+
+#: admin/tpl/setting/settings_tuning.php:109
 msgid "Prevent google fonts from loading on all your pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:104
+#: admin/tpl/setting/settings_tuning.php:115
 msgid "Critical CSS Rules"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:108
+#: admin/tpl/setting/settings_tuning.php:119
 msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:114
+#: admin/tpl/setting/settings_tuning.php:125
 msgid "JS Deferred Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:118
+#: admin/tpl/setting/settings_tuning.php:129
 msgid "Listed JS files will not be deferred."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:131
+#: admin/tpl/setting/settings_tuning.php:142
 msgid "Remove WordPress Emoji"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:135
+#: admin/tpl/setting/settings_tuning.php:146
 msgid ""
 "Stop loading wordpress.org emoji. Browser default emoji will be displayed "
 "instead."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:142
+#: admin/tpl/setting/settings_tuning.php:153
 msgid "URI Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:146
+#: admin/tpl/setting/settings_tuning.php:157
 msgid "Prevent any optimization of listed pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:155
+#: admin/tpl/setting/settings_tuning.php:166
 msgid "Role Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:161
+#: admin/tpl/setting/settings_tuning.php:172
 msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
@@ -3503,51 +3575,55 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: inc/media.class.php:119
+#: inc/media.class.php:121
+msgid "LiteSpeed Optimization"
+msgstr ""
+
+#: inc/media.class.php:144
 msgid "Disable WebP"
 msgstr ""
 
-#: inc/media.class.php:122
+#: inc/media.class.php:148
 msgid "Enable WebP"
 msgstr ""
 
-#: inc/media.class.php:135
+#: inc/media.class.php:163
 msgid "Restore Original File"
 msgstr ""
 
-#: inc/media.class.php:138
+#: inc/media.class.php:167
 msgid "Switch To Optimized File"
 msgstr ""
 
-#: inc/media.class.php:195
+#: inc/media.class.php:274
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/media.class.php:213
+#: inc/media.class.php:280
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/media.class.php:242
+#: inc/media.class.php:296
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/media.class.php:263
+#: inc/media.class.php:303
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/media.class.php:718
+#: inc/media.class.php:787
 msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
-#: inc/media.class.php:727
+#: inc/media.class.php:796
 msgid "Failed to parse data from LiteSpeed server: %s"
 msgstr ""
 
-#: inc/media.class.php:748
+#: inc/media.class.php:817
 msgid "Post data is empty."
 msgstr ""
 
-#: inc/media.class.php:780
+#: inc/media.class.php:849
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
@@ -3630,67 +3706,75 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:615
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:706
 msgid "WooCommerce"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:618
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:709
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:619
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:710
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:620
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:711
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:621
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:712
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:622
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:713
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:623
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:714
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:626
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:717
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:627
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:718
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:628
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:719
 msgid ""
 "For example, if the homepage for the site is located at %1$s, the shop page "
 "may be located at %2$s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:656
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:747
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:663
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:754
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:673
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:761
+msgid "Privately Cache Cart"
+msgstr ""
+
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:765
+msgid "Privately cache cart when not empty."
+msgstr ""
+
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:773
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:674
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:774
 msgid "To test the cart, visit the %s."
 msgstr ""
 

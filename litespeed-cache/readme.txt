@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
-Tested up to: 4.8.2
-Stable tag: 1.6.2.1
+Tested up to: 4.9
+Stable tag: 1.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -238,6 +238,25 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.3 - November 17 2017 =
+* [NEW FEATURE] Only async Google Fonts setting.
+* [NEW FEATURE] Only create WebP images when optimizing setting.
+* [NEW FEATURE] Batch switch images to original/optimized versions in Image Optimization.
+* [NEW FEATURE] Browser Cache TTL setting.
+* [NEW FEATURE] Cache WooCommerce Cart setting.
+* [IMPROVEMENT] Moved optimized JS/CSS snippet in header html to after meta charset.
+* [IMPROVEMENT] Added a constant for better JS/CSS optimization compatibility for different dir WordPress installation.
+* [IAPI] Take over failed callback check instead of bypassing it.
+* [IAPI] Image optimization requests are now limited to 500 images per request.
+* [BUGFIX] Fixed a parsing failure bug not using attributes in html elements with dash.
+* [BUGFIX] Fixed a bug causing non-script code to move to the top of a page when not using combination.
+* [UPDATE] Added detailed logs for external link detection.
+* [UPDATE] Added new lines in footer comment to avoid Firefox crash when enabled HTML minify.
+* [API] `Purge private` / `Purge private all` / `Add private tag` functions.
+* [GUI] Redesigned image optimization operation links in Media Lib list.
+* [GUI] Tweaked wp-admin form save button position.
+* [GUI] Added "learn more" link for image optimization.
 
 = 1.6.2.1 - November 6 2017 =
 * [INTEGRATION] Improved compatibility with old WooCommerce versions to avoid unknown 500 errors.
