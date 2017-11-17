@@ -23,7 +23,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ; ?>
 			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify how long the browser cache is, in seconds. Minimum is 30 seconds.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'The amount of time, in seconds, that files will be stored in browser cache before expiring. Minimum is %s seconds.', 'litespeed-cache' ), 30 ) ; ?>
 				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
