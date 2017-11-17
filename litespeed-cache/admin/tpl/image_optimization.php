@@ -72,26 +72,33 @@ $img_count = $media->img_count() ;
 
 		<hr />
 
-		<h3 class="litespeed-title"><?php echo __('Batch Switch', 'litespeed-cache') ; ?></h3>
+		<h3 class="litespeed-title"><?php echo __('Revert Optimization', 'litespeed-cache') ; ?></h3>
+
+		<span class="litespeed-desc">
+			<?php echo __( 'Switch all images in the media library back to their original unoptimized versions.', 'litespeed-cache' ) ; ?>
+		</span>
+
+		<br />
+
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-danger">
-			<?php echo __( 'Switch To Original Images', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'This will switch all optimized images to their original version.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>
 		</span>
 
 		<br />
 
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-warning">
-			<?php echo __( 'Switch To Optimized Images', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'This will switch all original images to optimized images if they have optimized.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>
 		</span>
 
 		<br />
 		<p>
-			<?php echo sprintf( __( 'You can check the result in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
+			<?php echo sprintf( __( 'Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
 		</p>
 
 

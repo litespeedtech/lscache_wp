@@ -105,7 +105,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				'woocommerce_after_cart_item_quantity_update',
 				'woocommerce_applied_coupon', 'woocommerce_removed_coupon',
 				'woocommerce_checkout_order_processed',
-			) ;//woocommerce_checkout_order_processed
+			) ;
 			foreach ( $hooks_to_purge as $v ) {
 				if ( $this->esi_eanbled ) {
 					add_action( $v, array( $this, 'purge_esi' ) ) ;

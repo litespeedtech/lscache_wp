@@ -28,6 +28,8 @@ class LiteSpeed_Cache_Media
 	const DB_IMG_OPTIMIZE_STATUS_PULLED = 'pulled' ;
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
 
+	const IAPI_IMG_REQUEST_LIMIT = 500 ;// Limit total images request one time
+
 	private $content ;
 	private $wp_upload_dir ;
 	private $tmp_pid ;
@@ -743,6 +745,18 @@ class LiteSpeed_Cache_Media
 			if ( empty( $meta_value[ 'file' ] ) ) {
 				LiteSpeed_Cache_Log::debug( 'Media bypass image due to no ori file: pid ' . $v->post_id ) ;
 				continue ;
+			}
+
+			/**
+			 * Only send 500 images one time
+			 * @since 1.6.3
+			 */
+			$num_will_incease = 1 ;
+			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
+				$num_will_incease += count( $meta_value[ 'sizes' ] ) ;
+			}
+			if ( $this->_img_total + $num_will_incease >= self::IAPI_IMG_REQUEST_LIMIT ) {
+				break ;
 			}
 
 			// push orig image to queue
