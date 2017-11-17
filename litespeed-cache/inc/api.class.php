@@ -170,6 +170,17 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
+	 * Add public tag to cache
+	 *
+	 * @since 1.6.3
+	 * @access public
+	 */
+	public static function add_private( $tags )
+	{
+		LiteSpeed_Cache_Tag::add_private( $tags ) ;
+	}
+
+	/**
 	 * Add vary
 	 *
 	 * @since 1.1.3
@@ -189,6 +200,28 @@ class LiteSpeed_Cache_API
 	public static function purge_all()
 	{
 		LiteSpeed_Cache_Purge::purge_all() ;
+	}
+
+	/**
+	 * Purge all private
+	 *
+	 * @since 1.6.3
+	 * @access public
+	 */
+	public static function purge_private_all()
+	{
+		LiteSpeed_Cache_Purge::add_private( '*' ) ;
+	}
+
+	/**
+	 * Purge private tag
+	 *
+	 * @since 1.6.3
+	 * @access public
+	 */
+	public static function purge_private( $tags )
+	{
+		LiteSpeed_Cache_Purge::add_private( $tags ) ;
 	}
 
 	/**

@@ -152,6 +152,22 @@ class LiteSpeed_Cache_Tag
 	}
 
 	/**
+	 * Adds private cache tags to the list of cache tags for the current page.
+	 *
+	 * @since 1.6.3
+	 * @access public
+	 * @param mixed $tags A string or array of cache tags to add to the current list.
+	 */
+	public static function add_private( $tags )
+	{
+		if ( ! is_array( $tags ) ) {
+			$tags = array( $tags ) ;
+		}
+
+		self::$_tags_priv = array_merge( self::$_tags_priv, $tags ) ;
+	}
+
+	/**
 	 * Return tags for Admin QS
 	 *
 	 * @since 1.1.3
