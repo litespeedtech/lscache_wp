@@ -242,7 +242,11 @@ class LiteSpeed_Cache_Admin_API
 			'hash'	=> $hash,
 			'data' => $data,
 		) ;
-		$response = wp_remote_post( $url, array( 'body' => $param ) ) ;
+		/**
+		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
+		 * @since 1.6.4
+		 */
+		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;

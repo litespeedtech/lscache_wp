@@ -388,7 +388,7 @@ class LiteSpeed_Cache_CDN
 		// Only images under wp-cotnent/wp-includes can be replaced
 		if ( stripos( $url_parsed[ 'path' ], LSWCP_CONTENT_FOLDER ) === false && stripos( $url_parsed[ 'path' ], 'wp-includes' ) === false  && stripos( $url_parsed[ 'path' ], '/min/' ) === false ) {
 			if ( ! defined( 'UPLOADS' ) || stripos( $url_parsed[ 'path' ], UPLOADS ) === false ) {
-				LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: path not match ' ) ;
+				LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: path not match: ' . LSWCP_CONTENT_FOLDER ) ;
 				return false ;
 			}
 		}
