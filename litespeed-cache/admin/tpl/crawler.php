@@ -7,6 +7,7 @@ $sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
 
 $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 
+include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">

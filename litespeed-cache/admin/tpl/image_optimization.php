@@ -7,6 +7,7 @@ $reduced = get_option( LiteSpeed_Cache_Admin_API::DB_SAPI_IMG_REDUCED ) ;
 $media = LiteSpeed_Cache_Media::get_instance() ;
 $img_count = $media->img_count() ;
 
+include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
