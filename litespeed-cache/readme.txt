@@ -244,6 +244,7 @@ For more detailed information about crawler setup, please see [our blog post](ht
 * [IAPI] Increased request timeout to fix a cUrl 28 timeout issue.
 * [BUGFIX] Fixed a TTL max value validation bug.
 * [INTEGRATION] Improved Contact Form 7 REST call compatibility for logged in users.
+* Thanks for all your ratings. That encouraged us to be more diligent. Happy Thanksgiving.
 
 = 1.6.3 - November 17 2017 =
 * [NEW FEATURE] Only async Google Fonts setting.
