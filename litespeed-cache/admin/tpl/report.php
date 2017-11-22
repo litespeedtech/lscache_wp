@@ -1,7 +1,10 @@
 <?php
 if (!defined('WPINC')) die;
 
-$report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report();
+$_report = LiteSpeed_Cache_Admin_Report::get_instance() ;
+$report = $_report->generate_environment_report();
+
+$env_ref = $_report->get_env_ref() ;
 
 ?>
 
@@ -41,6 +44,25 @@ $report = LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_rep
 			</span>
 		</p>
 		<textarea id="litespeed-report" rows="40" cols="80" readonly><?php echo $report; ?></textarea>
+
+		<hr />
+
+		<h3 class="litespeed-title"><?php echo __('LiteSpeed Report Number', 'litespeed-cache') ; ?></h3>
+
+		<p><?php echo __('Report number', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'num' ] ; ?></b></p>
+		<p><?php echo __('Report date', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'dateline' ] ; ?></b></p>
+
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_SAPI, LiteSpeed_Cache_Admin_API::SAPI_ACTION_ENV_REPORT ) ; ?>" class="litespeed-btn-warning">
+			<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'Send this report to LiteSpeed and get the report number so you can refer it when you create a post in WordPress forum.', 'litespeed-cache' ) ; ?>
+		</span>
+
+
+
+
+
 	</div>
 </div>
 

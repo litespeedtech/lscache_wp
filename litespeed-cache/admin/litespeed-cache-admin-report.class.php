@@ -11,7 +11,61 @@
  */
 class LiteSpeed_Cache_Admin_Report
 {
-	private static $_instance;
+	private static $_instance ;
+
+	/**
+	 * post env report number to ls center server
+	 *
+	 * @since  1.6.4
+	 * @access public
+	 */
+	public function post_env()
+	{
+		$report_con = $this->generate_environment_report() ;
+		$data = array(
+			'env' => $report_con,
+		) ;
+
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+
+		if ( ! is_array( $json ) ) {
+			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
+			$msg = sprintf( __( 'Failed to push to LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		$data = array(
+			'num'	=> ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
+			'dateline'	=> time(),
+		) ;
+
+		update_option( LiteSpeed_Cache_Config::ITEM_ENV_REF, $data ) ;
+
+	}
+
+	/**
+	 * Get env report number from db
+	 *
+	 * @since  1.6.4
+	 * @access public
+	 * @return array
+	 */
+	public function get_env_ref()
+	{
+		$info = get_option( LiteSpeed_Cache_Config::ITEM_ENV_REF ) ;
+
+		if ( ! is_array( $info ) ) {
+			return array(
+				'num'	=> '-',
+				'dateline'	=> '-',
+			) ;
+		}
+
+		$info[ 'dateline' ] = date( 'm/d/Y H:i:s', $info[ 'dateline' ] ) ;
+
+		return $info ;
+	}
 
 	/**
 	 * Gathers the environment details and creates the report.

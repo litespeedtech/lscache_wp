@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Admin_API
 	const SAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const SAPI_ACTION_PULL_IMG = 'client_pull' ;
 	const SAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
+	const SAPI_ACTION_ENV_REPORT = 'env_report' ;
 
 	/**
 	 * Init
@@ -96,6 +97,10 @@ class LiteSpeed_Cache_Admin_API
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
 			case self::TYPE_REQUEST_KEY :
 				$instance->_request_key() ;
+				break ;
+
+			case self::SAPI_ACTION_ENV_REPORT :
+				LiteSpeed_Cache_Admin_Report::get_instance()->post_env() ;
 				break ;
 
 			default:
