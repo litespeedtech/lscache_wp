@@ -978,7 +978,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$max = $this->_max_int ;
 		}
 
-		return ctype_digit( $sval ) && $ival >= 0 && $ival < $max ;
+		return ctype_digit( $sval ) && $ival >= 0 && $ival <= $max ;
 	}
 
 	/**
