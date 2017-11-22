@@ -20,6 +20,7 @@ $thirdparty_list = array(
 	'autoptimize',
 	'bbpress',
 	'betterwp-minify',
+	'contact-form-7',
 	'nextgengallery',
 	'theme-my-login',
 	'woocommerce',

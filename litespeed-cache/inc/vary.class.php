@@ -222,6 +222,10 @@ class LiteSpeed_Cache_Vary
 			return false ;
 		}
 
+		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
+			return false ;
+		}
+
 		return true ;
 	}
 
@@ -274,7 +278,7 @@ class LiteSpeed_Cache_Vary
 		if ( $uid > 0 && ! empty( $user->roles[ 0 ] ) ) {
 			$vary[ 'logged-in' ] = 1 ;
 
-			// parge role group from settings
+			// parse role group from settings
 			$gid = $user->roles[ 0 ] ?: 0 ;
 			if ( $role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group( $gid ) ) {
 				$vary[ 'role' ] = $role_group ;
