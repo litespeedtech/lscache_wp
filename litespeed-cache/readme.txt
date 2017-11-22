@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -115,7 +115,7 @@ If you have any API requirements, please inform us anytime in [WP Forum](https:/
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
-* Elegant Themes Divi 3.0.67+
+* [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
 * [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
 
 = Known Uncompatible Plugins =
@@ -238,6 +238,12 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.4 - November 22 2017 =
+* [NEW FEATURE] Send env reports privately with a new built-in report number referral system.
+* [IAPI] Increased request timeout to fix a cUrl 28 timeout issue.
+* [BUGFIX] Fixed a TTL max value validation bug.
+* [INTEGRATION] Improved Contact Form 7 REST call compatibility for logged in users.
 
 = 1.6.3 - November 17 2017 =
 * [NEW FEATURE] Only async Google Fonts setting.

@@ -56,7 +56,7 @@ $env_ref = $_report->get_env_ref() ;
 			<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'Send this report to LiteSpeed and get the report number so you can refer it when you create a post in WordPress forum.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
 		</span>
 
 

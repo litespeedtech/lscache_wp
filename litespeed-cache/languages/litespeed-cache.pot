@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.6.2.1\n"
+"Project-Id-Version: LiteSpeed Cache 1.6.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-11-17 21:47:51+00:00\n"
+"POT-Creation-Date: 2017-11-22 18:37:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,11 +12,11 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin/admin-api.class.php:135
+#: admin/admin-api.class.php:140
 msgid "SAPI Error %s"
 msgstr ""
 
-#: admin/admin-api.class.php:148
+#: admin/admin-api.class.php:153
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
@@ -340,6 +340,10 @@ msgstr ""
 
 #: admin/litespeed-cache-admin-optimize.class.php:191
 msgid "Clean all CSS/JS optimizer data successfully."
+msgstr ""
+
+#: admin/litespeed-cache-admin-report.class.php:33 inc/media.class.php:787
+msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
 #: admin/litespeed-cache-admin-rules.class.php:678
@@ -1851,48 +1855,70 @@ msgstr ""
 msgid "LiteSpeed Cache Network Settings"
 msgstr ""
 
-#: admin/tpl/report.php:10
+#: admin/tpl/report.php:13
 msgid "LiteSpeed Cache Report"
 msgstr ""
 
-#: admin/tpl/report.php:19
+#: admin/tpl/report.php:22
 msgid ""
 "The environment report contains detailed information about the WordPress "
 "configuration."
 msgstr ""
 
-#: admin/tpl/report.php:20
+#: admin/tpl/report.php:23
 msgid ""
 "If you run into any issues, please include the contents of this text area in "
 "your support message."
 msgstr ""
 
-#: admin/tpl/report.php:21
+#: admin/tpl/report.php:24
 msgid ""
 "To easily grab the content, click the <b>Select All and Copy to Clipboard</"
 "b> button, to select and copy to clipboard."
 msgstr ""
 
-#: admin/tpl/report.php:23
+#: admin/tpl/report.php:26
 msgid "Alternatively, this information is also saved in %s."
 msgstr ""
 
-#: admin/tpl/report.php:28
+#: admin/tpl/report.php:31
 msgid "The text area below contains the following content:"
 msgstr ""
 
-#: admin/tpl/report.php:32
+#: admin/tpl/report.php:35
 msgid ""
 "Server Variables, Plugin Options, WordPress information (version, locale, "
 "active plugins, etc.), and .htaccess file content."
 msgstr ""
 
-#: admin/tpl/report.php:37
+#: admin/tpl/report.php:40
 msgid "Select All and Copy to Clipboard"
 msgstr ""
 
-#: admin/tpl/report.php:40
+#: admin/tpl/report.php:43
 msgid "Environment Report copied to Clipboard!"
+msgstr ""
+
+#: admin/tpl/report.php:50
+msgid "LiteSpeed Report Number"
+msgstr ""
+
+#: admin/tpl/report.php:52
+msgid "Report number"
+msgstr ""
+
+#: admin/tpl/report.php:53
+msgid "Report date"
+msgstr ""
+
+#: admin/tpl/report.php:56
+msgid "Send To LiteSpeed"
+msgstr ""
+
+#: admin/tpl/report.php:59
+msgid ""
+"Send this report to LiteSpeed. Refer to this report number when posting in "
+"the WordPress support forum."
 msgstr ""
 
 #: admin/tpl/setting/network_settings_cache.php:4
@@ -3609,10 +3635,6 @@ msgstr ""
 
 #: inc/media.class.php:303
 msgid "Switched to optimized file successfully."
-msgstr ""
-
-#: inc/media.class.php:787
-msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
 #: inc/media.class.php:796
