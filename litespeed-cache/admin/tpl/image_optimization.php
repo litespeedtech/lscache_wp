@@ -1,8 +1,8 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$sapi_key = get_option( LiteSpeed_Cache_Admin_API::DB_SAPI_KEY ) ;
-$reduced = get_option( LiteSpeed_Cache_Admin_API::DB_SAPI_IMG_REDUCED ) ;
+$sapi_key = get_option( LiteSpeed_Cache_Admin_API::DB_IAPI_KEY ) ;
+$reduced = get_option( LiteSpeed_Cache_Admin_API::DB_IAPI_IMG_REDUCED ) ;
 
 $media = LiteSpeed_Cache_Media::get_instance() ;
 $img_count = $media->img_count() ;

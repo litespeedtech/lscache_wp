@@ -13,9 +13,9 @@ class LiteSpeed_Cache_Admin_API
 
 	private $_sapi_key ;
 
-	const DB_SAPI_KEY = 'litespeed_sapi_key' ;
-	const DB_SAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
-	const DB_SAPI_IMG_REDUCED = 'litespeed_sapi_img_reduced' ;
+	const DB_IAPI_KEY = 'litespeed_sapi_key' ;
+	const DB_IAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
+	const DB_IAPI_IMG_REDUCED = 'litespeed_sapi_img_reduced' ;
 
 	const TYPE_REQUEST_KEY = 'request_key' ;
 
@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_sapi_key = get_option( self::DB_SAPI_KEY ) ?: '' ;
+		$this->_sapi_key = get_option( self::DB_IAPI_KEY ) ?: '' ;
 	}
 
 	/**
@@ -118,8 +118,8 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function _request_callback()
 	{
-		$key_hash = get_option( self::DB_SAPI_KEY_HASH ) ;
-		LiteSpeed_Cache_Log::debug( 'SAPI __callback request hash: ' . $key_hash ) ;
+		$key_hash = get_option( self::DB_IAPI_KEY_HASH ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI __callback request hash: ' . $key_hash ) ;
 		exit( $key_hash ) ;
 	}
 
@@ -136,18 +136,18 @@ class LiteSpeed_Cache_Admin_API
 
 		// Check if get key&server correctly
 		if ( empty( $json[ 'auth_key' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI request key failed: ', $json ) ;
-			$msg = sprintf( __( 'SAPI Error %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Log::debug( 'IAPI request key failed: ', $json ) ;
+			$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
 
 		// store data into option locally
-		update_option( self::DB_SAPI_KEY, $json[ 'auth_key' ] ) ;
-		LiteSpeed_Cache_Log::debug( 'SAPI applied auth_key' ) ;
+		update_option( self::DB_IAPI_KEY, $json[ 'auth_key' ] ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI applied auth_key' ) ;
 
 		if ( ! empty( $json[ 'reduced' ] ) ) {
-			update_option( self::DB_SAPI_IMG_REDUCED, $json[ 'reduced' ] ) ;
+			update_option( self::DB_IAPI_IMG_REDUCED, $json[ 'reduced' ] ) ;
 		}
 
 		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
@@ -165,16 +165,16 @@ class LiteSpeed_Cache_Admin_API
 	public static function sapi_valiate_passive_callback()
 	{
 		if ( empty( $_REQUEST[ 'hash' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI __callback bypassed passive check' ) ;
+			LiteSpeed_Cache_Log::debug( 'IAPI __callback bypassed passive check' ) ;
 			return false ;
 		}
 		$instance = self::get_instance() ;
 
 		// use tmp hash to check
-		$key_hash = get_option( self::DB_SAPI_KEY_HASH ) ;
+		$key_hash = get_option( self::DB_IAPI_KEY_HASH ) ;
 		$hash_check = md5( $key_hash ) === $_REQUEST[ 'hash' ] ;
 
-		LiteSpeed_Cache_Log::debug( 'SAPI __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
 
 		return $hash_check ;
 	}
@@ -192,18 +192,18 @@ class LiteSpeed_Cache_Admin_API
 
 		// don't have auth_key yet
 		if ( ! $instance->_sapi_key ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI __callback aggressive check failed: No init key' ) ;
+			LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive check failed: No init key' ) ;
 			return false ;
 		}
 
 		// Once client has auth_key, each time when callback to check, need to carry on this key
 		if ( empty( $_REQUEST[ 'auth_key' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI __callback aggressive check failed: lack of auth_key' ) ;
+			LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive check failed: lack of auth_key' ) ;
 			return false ;
 		}
 
 		$res = md5( $instance->_sapi_key ) === $_REQUEST[ 'auth_key' ] ;
-		LiteSpeed_Cache_Log::debug( 'SAPI __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
 		return $res ;
 	}
 
@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Admin_API
 	{
 		$hash = Litespeed_String::rrand( 16 ) ;
 		// store hash
-		update_option( self::DB_SAPI_KEY_HASH, $hash ) ;
+		update_option( self::DB_IAPI_KEY_HASH, $hash ) ;
 
 		if ( $server == false ) {
 			$server = 'https://wp.api.litespeedtech.com' ;
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Admin_API
 
 		$url = $server . '/' . $action ;
 
-		LiteSpeed_Cache_Log::debug( 'SAPI posting to : ' . $url ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI posting to : ' . $url ) ;
 
 		$param = array(
 			'auth_key'	=> $this->_sapi_key,
@@ -255,7 +255,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( 'SAPI failed to post: ' . $error_message ) ;
+			LiteSpeed_Cache_Log::debug( 'IAPI failed to post: ' . $error_message ) ;
 			return $error_message ;
 		}
 
@@ -263,7 +263,7 @@ class LiteSpeed_Cache_Admin_API
 		$json = json_decode( $response[ 'body' ], true ) ;
 
 		if ( ! is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( 'SAPI failed to decode post json: ' . $response[ 'body' ] ) ;
+			LiteSpeed_Cache_Log::debug( 'IAPI failed to decode post json: ' . $response[ 'body' ] ) ;
 		}
 
 		return $json ;

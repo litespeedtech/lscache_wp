@@ -516,8 +516,24 @@ class LiteSpeed_Cache_Media
 
 					$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v2[ 0 ] ;
 
+					/**
+					 * Use wp orignal get func to avoid allow_url_open off issue
+					 * @since  1.6.4.1
+					 */
 					// Fetch webp image
-					file_put_contents( $local_file . '.webp', file_get_contents( $json[ 'webp' ] ) ) ;
+					$response = wp_remote_get( $json[ 'webp' ], array( 'timeout' => 15 ) ) ;
+					if ( is_wp_error( $response ) ) {
+						$error_message = $response->get_error_message() ;
+						LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
+						return ;
+					}
+
+					file_put_contents( $local_file . '.webp', $response[ 'body' ] ) ;
+
+					if ( ! file_exists( $local_file . '.webp' ) ) {
+						return ;
+					}
+
 					// Unknown issue
 					if ( md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
 						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img WebP: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
@@ -537,7 +553,17 @@ class LiteSpeed_Cache_Media
 
 					// Fetch optimized image itself
 					if ( ! $webp_only && ! empty( $json[ 'target_file' ] ) ) {
-						file_put_contents( $local_file . '.tmp', file_get_contents( $json[ 'target_file' ] ) ) ;
+
+						// Fetch failed, unkown issue, return
+						// NOTE: if this failed more than 5 times, next time fetching webp will touch err limit on server side, whole image will be failed
+						$response = wp_remote_get( $json[ 'target_file' ], array( 'timeout' => 15 ) ) ;
+						if ( is_wp_error( $response ) ) {
+							$error_message = $response->get_error_message() ;
+							LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
+							return ;
+						}
+
+						file_put_contents( $local_file . '.tmp', $response[ 'body' ] ) ;
 						// Unknown issue
 						if ( md5_file( $local_file . '.tmp' ) !== $json[ 'target_md5' ] ) {
 							LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img iteself: file md5 dismatch, server md5: ' . $json[ 'target_md5' ] ) ;
