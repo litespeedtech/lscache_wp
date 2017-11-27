@@ -518,7 +518,7 @@ class LiteSpeed_Cache_Media
 
 					/**
 					 * Use wp orignal get func to avoid allow_url_open off issue
-					 * @since  1.6.4.1
+					 * @since  1.6.5
 					 */
 					// Fetch webp image
 					$response = wp_remote_get( $json[ 'webp' ], array( 'timeout' => 15 ) ) ;

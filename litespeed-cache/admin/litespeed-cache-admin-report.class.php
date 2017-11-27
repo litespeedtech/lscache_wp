@@ -128,7 +128,11 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
-		$this->write_environment_report($report) ;
+		/**
+		 * Don't write env report to file as not needed anymore
+		 * @since 1.6.5
+		 */
+		// $this->write_environment_report($report) ;
 		return $report ;
 	}
 
