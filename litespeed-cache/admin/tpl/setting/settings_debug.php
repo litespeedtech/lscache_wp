@@ -43,8 +43,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_ADMIN_IPS, null, false, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ) ; ?><br />
-				<?php echo sprintf( __( 'More information about the available commands can be found <a href="%s">here</a>.', 'litespeed-cache' ),
-					get_admin_url() . 'admin.php?page=lscache-info#admin_ip' ) ; ?>
+				<?php echo sprintf( __( 'More information about the available commands can be found <a %s>here</a>.', 'litespeed-cache' ),
+					'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands" target="_blank"' ) ; ?>
 			</div>
 		</td>
 	</tr>

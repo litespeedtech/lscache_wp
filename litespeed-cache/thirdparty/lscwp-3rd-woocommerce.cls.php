@@ -771,7 +771,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						<h4>" . __('Note:', 'litespeed-cache') . "</h4>
 						<i>
 							" . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . "
-							" . sprintf(__('To test the cart, visit the %s.', 'litespeed-cache'), '<a href=' . get_admin_url() . 'admin.php?page=lscache-info>FAQ</a>') . "
+							" . sprintf(__('To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"' ) . "
 						</i>
 					</div>
 

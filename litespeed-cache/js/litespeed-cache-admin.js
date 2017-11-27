@@ -98,13 +98,6 @@ var _litespeed_dots ;
 			$('[data-purgeby='+this.value+']').show() ;
 		}) ;
 
-		// Select All and Copy to Clipboard
-		$("#litespeed_cache_report_copy").click(function() {
-			$('#litespeed-report').select() ;
-			document.execCommand('copy') ;
-			$('#copy_select_all_span').fadeIn('slow').delay(1000).fadeOut('slow') ;
-		}) ;
-
 		// Settings->General->Enable mobile view
 		$('#conf_mobileview_enabled_1').click(function() {
 			if($(this).is(':checked')){

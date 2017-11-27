@@ -20,30 +20,9 @@ $env_ref = $_report->get_env_ref() ;
 	<div class="litespeed-body">
 		<ul>
 			<li><?php echo __('The environment report contains detailed information about the WordPress configuration.', 'litespeed-cache'); ?></li>
-			<li><?php echo __('If you run into any issues, please include the contents of this text area in your support message.', 'litespeed-cache'); ?></li>
-			<li><?php echo __('To easily grab the content, click the <b>Select All and Copy to Clipboard</b> button, to select and copy to clipboard.', 'litespeed-cache'); ?></li>
-			<?php if ( is_writable(LSWCP_DIR) ): ?>
-			<li><?php echo sprintf(__('Alternatively, this information is also saved in %s.', 'litespeed-cache'),
-				LSWCP_CONTENT_FOLDER . '/plugins/litespeed-cache/environment_report.php'); ?></li>
-			<?php endif; ?>
+			<li><?php echo __('If you run into any issues, please refer to the report number in your support message.', 'litespeed-cache'); ?></li>
 		</ul>
-		<p>
-			<b><?php echo __('The text area below contains the following content:', 'litespeed-cache'); ?></b>
-		</p>
-		<p>
-			<span style="font-size:11px; font-style:italic">
-				<?php echo __('Server Variables, Plugin Options, WordPress information (version, locale, active plugins, etc.), and .htaccess file content.', 'litespeed-cache'); ?>
-			</span>
-		</p>
-		<p>
-			<button class="litespeed-btn-success" id='litespeed_cache_report_copy'>
-				<?php echo __("Select All and Copy to Clipboard", "litespeed-cache"); ?>
-			</button>
-			<span class="litespeed-hide" id="copy_select_all_span">
-				<?php echo __("Environment Report copied to Clipboard!", "litespeed-cache"); ?>
-			</span>
-		</p>
-		<textarea id="litespeed-report" rows="40" cols="80" readonly><?php echo $report; ?></textarea>
+		<textarea id="litespeed-report" rows="20" cols="100" readonly><?php echo $report; ?></textarea>
 
 		<hr />
 

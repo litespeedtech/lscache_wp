@@ -145,8 +145,6 @@ class LiteSpeed_Cache_Admin_Display
 				$this->add_submenu(__('Edit .htaccess', 'litespeed-cache'), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess') ;
 			}
 
-			$this->add_submenu(__('Information', 'litespeed-cache'), 'lscache-info', 'show_info') ;
-
 			if ( ! is_network_admin() ) {
 				$this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
