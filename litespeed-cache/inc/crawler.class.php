@@ -326,7 +326,7 @@ class LiteSpeed_Cache_Crawler
 		}
 		else {
 			$msg = __('Position reset notification sent successfully', 'litespeed-cache') ;
-			LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
+			// LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
 		}
 		LiteSpeed_Cache_Log::debug($log) ;
 	}
