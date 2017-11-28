@@ -16,6 +16,7 @@ class LiteSpeed_Cache_Media
 
 	const LAZY_LIB = '/min/lazyload.js' ;
 
+	const TYPE_SYNC_DATA = 'sync_data' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
@@ -29,6 +30,8 @@ class LiteSpeed_Cache_Media
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
 
 	const IAPI_IMG_REQUEST_LIMIT = 500 ;// Limit total images request one time
+
+	const DB_IMG_REDUCED = 'litespeed_img_reduced' ;
 
 	private $content ;
 	private $wp_upload_dir ;
@@ -384,6 +387,34 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
+	 * Sync data from litespeed server
+	 *
+	 * @since  1.6.5
+	 * @access private
+	 */
+	private function _sync_data()
+	{
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA ) ;
+
+		if ( ! is_array( $json ) ) {
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
+			$msg = sprintf( __( 'Failed to communicate with LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		if ( ! empty( $json[ 'reduced' ] ) ) {
+			update_option( self::DB_IMG_REDUCED, $json[ 'reduced' ] ) ;
+		}
+
+		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+		LiteSpeed_Cache_Admin::redirect() ;
+
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.6
@@ -403,6 +434,10 @@ class LiteSpeed_Cache_Media
 			case self::TYPE_IMG_BATCH_SWITCH_ORI :
 			case self::TYPE_IMG_BATCH_SWITCH_OPTM :
 				$instance->_batch_switch( $type ) ;
+				break ;
+
+			case self::TYPE_SYNC_DATA :
+				$instance->_sync_data() ;
 				break ;
 
 			case self::TYPE_IMG_OPTIMIZE :
@@ -508,7 +543,7 @@ class LiteSpeed_Cache_Media
 						'src_md5' => $md5,
 						'meta'	=> $v->meta_value,
 					) ;
-					$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_PULL_IMG, $data, $server ) ;
+					$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server ) ;
 					if ( empty( $json[ 'webp' ] ) ) {
 						LiteSpeed_Cache_Log::debug( 'Media: Failed to pull optimized img: ', $json ) ;
 						return ;
@@ -544,7 +579,7 @@ class LiteSpeed_Cache_Media
 						$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
 
 						// Notify server to update status
-						LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
+						LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
 
 						return ;// exit from running pull process
 					}
@@ -574,7 +609,7 @@ class LiteSpeed_Cache_Media
 							$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
 
 							// Notify server to update status
-							LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
+							LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
 
 							return ; // exit from running pull process
 						}
@@ -806,7 +841,7 @@ class LiteSpeed_Cache_Media
 			) ;
 
 			// Push to LiteSpeed server
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
 
 			if ( ! is_array( $json ) ) {
 				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;

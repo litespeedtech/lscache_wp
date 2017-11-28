@@ -13,20 +13,47 @@ class LiteSpeed_Cache_Admin_Report
 {
 	private static $_instance ;
 
+	const TYPE_SEND_REPORT = 'send_report' ;
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.6.5
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+
+			case self::TYPE_SEND_REPORT :
+				$instance->_post_env() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
 	/**
 	 * post env report number to ls center server
 	 *
-	 * @since  1.6.4
-	 * @access public
+	 * @since  1.6.5
+	 * @access private
 	 */
-	public function post_env()
+	private function _post_env()
 	{
 		$report_con = $this->generate_environment_report() ;
 		$data = array(
 			'env' => $report_con,
 		) ;
 
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::SAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
@@ -107,6 +134,8 @@ class LiteSpeed_Cache_Admin_Report
 
 		$extras = array(
 			'wordpress version' => $wp_version,
+			'siteurl' => get_option( 'siteurl' ),
+			'home' => get_option( 'home' ),
 			'locale' => get_locale(),
 			'active theme' => $active_theme,
 			'active plugins' => $active_plugins,
@@ -128,30 +157,7 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
-		/**
-		 * Don't write env report to file as not needed anymore
-		 * @since 1.6.5
-		 */
-		// $this->write_environment_report($report) ;
 		return $report ;
-	}
-
-	/**
-	 * Write the environment report to the report location.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 * @param string $content What to write to the environment report.
-	 */
-	private function write_environment_report( $content )
-	{
-		$content = "<" . "?php die() ; ?" . ">\n\n" . $content ;
-
-		$ret = Litespeed_File::save( LSWCP_DIR . 'environment_report.php', $content, false, false, false ) ;
-
-		if ( $ret !== true && LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push( $ret ) ;
-		}
 	}
 
 	/**

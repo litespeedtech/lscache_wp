@@ -148,10 +148,7 @@ class LiteSpeed_Cache_Admin_Display
 			if ( ! is_network_admin() ) {
 				$this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
-			}
-
-			if ( ! is_multisite() || is_network_admin() ) {
-				$this->add_submenu(__('Environment Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
+				$this->add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
 			}
 
 			if ( LiteSpeed_Cache_Log::get_enabled() ) {

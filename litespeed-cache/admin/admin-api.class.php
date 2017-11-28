@@ -13,21 +13,19 @@ class LiteSpeed_Cache_Admin_API
 
 	private $_sapi_key ;
 
-	const DB_IAPI_KEY = 'litespeed_sapi_key' ;
-	const DB_IAPI_KEY_HASH = 'litespeed_sapi_key_hash' ;
-	const DB_IAPI_IMG_REDUCED = 'litespeed_sapi_img_reduced' ;
-
-	const TYPE_REQUEST_KEY = 'request_key' ;
+	const DB_API_KEY = 'litespeed_api_key' ;
+	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
 
 	// For each request, send a callback to confirm
 	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
 	const TYPE_NOTIFY_IMG_OPTIMIZED = 'notify_img_optimized' ;
 
-	const SAPI_ACTION_REQUEST_KEY = 'request_key' ;
-	const SAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
-	const SAPI_ACTION_PULL_IMG = 'client_pull' ;
-	const SAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
-	const SAPI_ACTION_ENV_REPORT = 'env_report' ;
+	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
+	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
+	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
+	const IAPI_ACTION_PULL_IMG = 'client_pull' ;
+	const IAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
+	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
 
 	/**
 	 * Init
@@ -37,7 +35,7 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_sapi_key = get_option( self::DB_IAPI_KEY ) ?: '' ;
+		$this->_sapi_key = get_option( self::DB_API_KEY ) ?: '' ;
 	}
 
 	/**
@@ -84,33 +82,6 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Handle local request
-	 *
-	 * @since  1.5
-	 * @access public
-	 * @return string The msg shown in admin page
-	 */
-	public static function sapi_proceed()
-	{
-		$instance = self::get_instance() ;
-
-		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_REQUEST_KEY :
-				$instance->_request_key() ;
-				break ;
-
-			case self::SAPI_ACTION_ENV_REPORT :
-				LiteSpeed_Cache_Admin_Report::get_instance()->post_env() ;
-				break ;
-
-			default:
-				break ;
-		}
-
-		LiteSpeed_Cache_Admin::redirect() ;
-	}
-
-	/**
 	 * request key callback from LiteSpeed
 	 *
 	 * @since  1.5
@@ -118,41 +89,9 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function _request_callback()
 	{
-		$key_hash = get_option( self::DB_IAPI_KEY_HASH ) ;
+		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
 		LiteSpeed_Cache_Log::debug( 'IAPI __callback request hash: ' . $key_hash ) ;
 		exit( $key_hash ) ;
-	}
-
-	/**
-	 * request key from LiteSpeed
-	 *
-	 * @since  1.5
-	 * @access private
-	 */
-	private function _request_key()
-	{
-		// Send request to LiteSpeed
-		$json = $this->_post( self::SAPI_ACTION_REQUEST_KEY, home_url() ) ;
-
-		// Check if get key&server correctly
-		if ( empty( $json[ 'auth_key' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI request key failed: ', $json ) ;
-			$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-			return ;
-		}
-
-		// store data into option locally
-		update_option( self::DB_IAPI_KEY, $json[ 'auth_key' ] ) ;
-		LiteSpeed_Cache_Log::debug( 'IAPI applied auth_key' ) ;
-
-		if ( ! empty( $json[ 'reduced' ] ) ) {
-			update_option( self::DB_IAPI_IMG_REDUCED, $json[ 'reduced' ] ) ;
-		}
-
-		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
-
 	}
 
 	/**
@@ -171,7 +110,7 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		// use tmp hash to check
-		$key_hash = get_option( self::DB_IAPI_KEY_HASH ) ;
+		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
 		$hash_check = md5( $key_hash ) === $_REQUEST[ 'hash' ] ;
 
 		LiteSpeed_Cache_Log::debug( 'IAPI __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
@@ -214,10 +153,46 @@ class LiteSpeed_Cache_Admin_API
 	 * @access public
 	 * @param  array $data
 	 */
-	public static function post( $action, $data, $server = false )
+	public static function post( $action, $data = false, $server = false )
 	{
 		$instance = self::get_instance() ;
+
+		/**
+		 * All requests must have api_key first
+		 * @since  1.6.5
+		 */
+		if ( ! $instance->_sapi_key ) {
+			$instance->_request_key() ;
+		}
+
 		return $instance->_post( $action, $data, $server ) ;
+	}
+
+	/**
+	 * request key from LiteSpeed
+	 *
+	 * @since  1.5
+	 * @access private
+	 */
+	private function _request_key()
+	{
+		// Send request to LiteSpeed
+		$json = $this->_post( self::IAPI_ACTION_REQUEST_KEY, home_url() ) ;
+
+		// Check if get key&server correctly
+		if ( empty( $json[ 'auth_key' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'IAPI request key failed: ', $json ) ;
+			$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		// store data into option locally
+		update_option( self::DB_API_KEY, $json[ 'auth_key' ] ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI applied auth_key' ) ;
+
+		$this->_sapi_key = $json[ 'auth_key' ] ;
+
 	}
 
 	/**
@@ -227,11 +202,11 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @param  array $data
 	 */
-	private function _post( $action, $data, $server = false )
+	private function _post( $action, $data = false, $server = false )
 	{
 		$hash = Litespeed_String::rrand( 16 ) ;
 		// store hash
-		update_option( self::DB_IAPI_KEY_HASH, $hash ) ;
+		update_option( self::DB_API_KEY_HASH, $hash ) ;
 
 		if ( $server == false ) {
 			$server = 'https://wp.api.litespeedtech.com' ;
@@ -264,6 +239,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( 'IAPI failed to decode post json: ' . $response[ 'body' ] ) ;
+			return $response[ 'body' ] ;
 		}
 
 		return $json ;

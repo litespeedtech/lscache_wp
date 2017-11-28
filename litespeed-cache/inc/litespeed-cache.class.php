@@ -54,7 +54,7 @@ class LiteSpeed_Cache
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 
 	const ACTION_MEDIA = 'media' ;
-	const ACTION_SAPI = 'sapi' ;
+	const ACTION_REPORT = 'report' ;
 	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
 	const ACTION_SAPI_AGGRESSIVE_CALLBACK = 'sapi_aggressive_callback' ;
 
@@ -282,10 +282,6 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_Admin_Optimize::run_db_clean() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_SAPI:
-				$msg = LiteSpeed_Cache_Admin_API::sapi_proceed() ;
-				break ;
-
 			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK:
 				LiteSpeed_Cache_Admin_API::sapi_passive_callback() ;
 				break ;
@@ -296,6 +292,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_MEDIA:
 				$msg = LiteSpeed_Cache_Media::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_REPORT:
+				$msg = LiteSpeed_Cache_Admin_Report::handler() ;
 				break ;
 
 			default:
@@ -513,7 +513,7 @@ class LiteSpeed_Cache
 		$control_header = LiteSpeed_Cache_Control::output() ;
 
 		// Init comment info
-		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' ) ;
+		$running_info_showing = ( defined( 'LITESPEED_IS_HTML' ) && LITESPEED_IS_HTML ) || ( defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( 'ESI silence' ) ;

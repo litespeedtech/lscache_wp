@@ -1,8 +1,8 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$sapi_key = get_option( LiteSpeed_Cache_Admin_API::DB_IAPI_KEY ) ;
-$reduced = get_option( LiteSpeed_Cache_Admin_API::DB_IAPI_IMG_REDUCED ) ;
+$api_key = get_option( LiteSpeed_Cache_Admin_API::DB_API_KEY ) ;
+$reduced = get_option( LiteSpeed_Cache_Media::DB_IMG_REDUCED ) ;
 
 $media = LiteSpeed_Cache_Media::get_instance() ;
 $img_count = $media->img_count() ;
@@ -22,12 +22,6 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Optimization Summary', 'litespeed-cache') ; ?></h3>
-		<?php if ( $sapi_key ) : ?>
-			<p>
-				<?php echo __('Your API key is ', 'litespeed-cache') ; ?>
-				<code><?php echo substr( $sapi_key, 0, 5 ) . str_repeat( '*', strlen( $sapi_key ) - 5 ) ; ?></code>
-			</p>
-		<?php endif ; ?>
 
 		<?php if ( $reduced ) : ?>
 			<p>
@@ -36,16 +30,14 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			</p>
 		<?php endif ; ?>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_SAPI, LiteSpeed_Cache_Admin_API::TYPE_REQUEST_KEY ) ; ?>" class="litespeed-btn-success">
-			<?php echo $sapi_key ? __( 'Update Reduction Status', 'litespeed-cache' ) : __( 'Request Key', 'litespeed-cache' ) ; ?>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_SYNC_DATA ) ; ?>" class="litespeed-btn-success">
+			<?php echo __( 'Update Reduction Status', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php if ( ! $sapi_key ) : ?>
-				<?php echo __( 'This will request a key from LiteSpeed\'s Image Optimization Server for later optimization requests.', 'litespeed-cache' ) ; ?>
-			<?php else : ?>
-				<?php echo __( 'This will communicate with LiteSpeed\'s Image Optimization Server and retrieve the most recent status.', 'litespeed-cache' ) ; ?>
-			<?php endif ; ?>
+			<?php echo __( 'This will communicate with LiteSpeed\'s Image Optimization Server and retrieve the most recent status.', 'litespeed-cache' ) ; ?>
 		</span>
+
+		<?php include_once LSWCP_DIR . "admin/tpl/inc/api_key.php" ; ?>
 
 		<h3 class="litespeed-title"><?php echo __('Image Information', 'litespeed-cache') ; ?>
 			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>
