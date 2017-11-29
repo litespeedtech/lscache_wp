@@ -18,7 +18,7 @@ class LiteSpeed_Cache_Admin_API
 
 	// For each request, send a callback to confirm
 	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
-	const TYPE_NOTIFY_IMG_OPTIMIZED = 'notify_img_optimized' ;
+	const TYPE_NOTIFY_IMG = 'notify_img' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
@@ -48,8 +48,8 @@ class LiteSpeed_Cache_Admin_API
 	{
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_NOTIFY_IMG_OPTIMIZED :
-				LiteSpeed_Cache_Media::get_instance()->notify_img_optimized() ;
+			case self::TYPE_NOTIFY_IMG :
+				LiteSpeed_Cache_Media::get_instance()->notify_img() ;
 				break ;
 
 			default:

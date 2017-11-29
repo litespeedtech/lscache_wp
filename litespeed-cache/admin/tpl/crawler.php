@@ -85,14 +85,8 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
 							$is_running = $meta && $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
 							if ( $meta && $meta->this_full_beginning_time ) {
-								if ( $is_running ) {
-									echo sprintf(__('The current sitemap crawl started at %s', 'litespeed-cache'),
-											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET ));
-
-								}
-								else {
-									echo sprintf(__('The current sitemap crawl started at %s', 'litespeed-cache'),
-											date('m/d/Y H:i:s' ,$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET ));
+								echo sprintf( __( 'The current sitemap crawl started at %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::readable_time( $meta->this_full_beginning_time ) ) ;
+								if ( ! $is_running ) {
 									echo "</div><div class='litespeed-desc'>";
 									echo sprintf(__('The next complete sitemap crawl will start at %s', 'litespeed-cache'),
 											date('m/d/Y H:i:s',$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET
@@ -148,7 +142,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 					?>
 						<?php if ( $meta && $meta->last_start_time ): ?>
 						<div class='litespeed-desc'>
-							<?php echo sprintf(__('<b>Last interval:</b> %s', 'litespeed-cache'), date('m/d/Y H:i:s' ,$meta->last_start_time+ LITESPEED_TIME_OFFSET )) ; ?>
+							<?php echo sprintf(__('<b>Last interval:</b> %s', 'litespeed-cache'), LiteSpeed_Cache_Utility::readable_time( $meta->last_start_time ) ) ; ?>
 						</div>
 						<?php endif ; ?>
 

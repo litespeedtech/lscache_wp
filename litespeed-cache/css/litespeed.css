@@ -152,7 +152,7 @@
 }
 
 .litespeed-title a {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 /********************************* nav tabs *******************************/
@@ -425,6 +425,27 @@
 	background: #538ac6;
 	border-color: #538ac6;
 }
+
+.litespeed-wrap .litespeed-btn-default,
+.litespeed-btn-default {
+	color: #a7a7a7;
+	border: 1px solid #a7a7a7;
+	-moz-box-shadow: 0 0 0 1px rgba(158, 158, 158, 0.25);
+	-webkit-box-shadow: 0 0 0 1px rgba(158, 158, 158, 0.25);
+	box-shadow: 0 0 0 1px rgba(158, 158, 158, 0.25);
+}
+
+.litespeed-wrap .litespeed-btn-default:hover,
+.litespeed-btn-default:hover {
+	background: #a7a7a7;
+}
+
+.litespeed-wrap .litespeed-btn-default.disabled:hover,
+.litespeed-btn-default.disabled:hover {
+	color: #a7a7a7;
+	background: #fff;
+}
+
 
 .litespeed-wrap .litespeed-btn-xs,
 .litespeed-btn-xs {
@@ -1123,9 +1144,10 @@ ul.litespeed-shell-body {
 
 [class*="litespeed-icon-media-"] {
 	background-size: contain;
-	width: 42px;
-	height: 42px;
-	margin: 0 15px;
+	width: 25px;
+	height: 25px;
+	vertical-align: middle;
+	margin: 0;
 	background-repeat: no-repeat;
 	display: inline-block;
 }
@@ -1138,6 +1160,48 @@ ul.litespeed-shell-body {
 .litespeed-icon-media-webp-disabled { background-image: url("../img/icons/img_webp_disabled.svg") ; }
 .litespeed-icon-media-optm 			{ background-image: url("../img/icons/img_optm.svg") ; }
 .litespeed-icon-media-optm-disabled { background-image: url("../img/icons/img_optm_disabled.svg") ; }
+
+p.litespeed-txt-webp {
+	color: #83b04a ;
+}
+
+p.litespeed-txt-ori {
+	color: #5967b3 ;
+}
+
+p.litespeed-txt-disabled {
+	color: #ced2d9 ;
+}
+
+.litespeed-media-svg {
+	vertical-align: middle;
+	margin: 5px;
+	width: 25px;
+	height: auto;
+}
+.litespeed-pie_info {
+}
+
+circle.litespeed-pie_bg {
+	stroke: #cfe7f2;
+	stroke-width: 2;
+	fill: none;
+	cx: 17.5;
+	cy: 17.5;
+	r: 16.5;
+}
+
+circle.litespeed-pie_circle {
+	animation: litespeed-pie-fill 2s reverse; /* 1 */
+	stroke: #00afbf;
+	stroke-width: 2;
+	stroke-dasharray: 30, 100;
+	stroke-linecap: round;
+	fill: none;
+	cx: 17;
+	cy: 17.5;
+	r: 16.5;
+}
 
 
 /********************************* todo *******************************/

@@ -18,6 +18,7 @@ class LiteSpeed_Cache_Media
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
+	const TYPE_IMG_PULL = 'img_pull' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
 	const OPT_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
@@ -28,10 +29,12 @@ class LiteSpeed_Cache_Media
 	const DB_IMG_OPTIMIZE_STATUS_NOTIFIED = 'notified' ;
 	const DB_IMG_OPTIMIZE_STATUS_PULLED = 'pulled' ;
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
+	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
 
 	const IAPI_IMG_REQUEST_LIMIT = 500 ;// Limit total images request one time
 
 	const DB_IMG_REDUCED = 'litespeed_img_reduced' ;
+	const DB_IMG_FAILED = 'litespeed_img_failed' ;
 
 	private $content ;
 	private $wp_upload_dir ;
@@ -143,16 +146,23 @@ class LiteSpeed_Cache_Media
 		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'webp' . $post_id ) ;
 		$desc = false ;
 		$cls = 'litespeed-icon-media-webp' ;
+		$size_webp = 0 ;
+		$cls_webp = '' ;
 		if ( file_exists( $local_file . '.webp' ) ) {
+			$size_webp = filesize( $local_file . '.webp' ) ;
 			$desc = __( 'Disable WebP', 'litespeed-cache' ) ;
+			$cls_webp = 'litespeed-txt-webp' ;
 		}
 		elseif ( file_exists( $local_file . '.optm.webp' ) ) {
+			$size_webp = filesize( $local_file . '.optm.webp' ) ;
 			$cls .= '-disabled' ;
 			$desc = __( 'Enable WebP', 'litespeed-cache' ) ;
+			$cls_webp = 'litespeed-txt-disabled' ;
 		}
 
+		$link_webp = '' ;
 		if ( $desc ) {
-			echo sprintf( '<a href="%1$s" class="litespeed-media-href" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
+			$link_webp = sprintf( '<a href="%1$s" class="litespeed-media-href" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
 		}
 
 		$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
@@ -161,18 +171,53 @@ class LiteSpeed_Cache_Media
 
 		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'orig' . $post_id ) ;
 		$desc = false ;
+		$size_optm = 0 ;
 		$cls = 'litespeed-icon-media-optm' ;
+		$cls_ori = '' ;
 		if ( file_exists( $bk_file ) ) {
+			$size_ori = filesize( $bk_file ) ;
+			$size_optm = filesize( $local_file ) ;
 			$desc = __( 'Restore Original File', 'litespeed-cache' ) ;
+
+			$cls_ori = 'litespeed-txt-ori' ;
 		}
 		elseif ( file_exists( $bk_optm_file ) ) {
+			$size_ori = filesize( $local_file ) ;
+			$size_optm = filesize( $bk_optm_file ) ;
 			$cls .= '-disabled' ;
 			$desc = __( 'Switch To Optimized File', 'litespeed-cache' ) ;
+			$cls_ori = 'litespeed-txt-disabled' ;
+		}
+		else {
+			$size_ori = filesize( $local_file ) ;
 		}
 
+		$link_ori = '' ;
 		if ( $desc ) {
-			echo sprintf( '<a href="%1$s" class="litespeed-media-href" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
+			$link_ori = sprintf( '<a href="%1$s" class="litespeed-media-href" title="%3$s"><span class="%2$s"></span></a>', $link, $cls, $desc ) ;
 		}
+
+		$info_webp = '' ;
+		if ( $size_webp ) {
+			$saved = $size_ori - $size_webp ;
+			$percent = ceil( $saved * 100 / $size_ori ) ;
+			$pie_webp = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
+			$txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $saved ) ) ;
+
+			$info_webp = sprintf( '%s %s %s', $pie_webp, $txt_webp, $link_webp ) ;
+		}
+
+		$info_ori = '' ;
+		if ( $size_optm ) {
+			$saved = $size_ori - $size_optm ;
+			$percent = ceil( $saved * 100 / $size_ori ) ;
+			$pie_ori = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
+			$txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $saved ) ) ;
+
+			$info_ori = sprintf( '%s %s %s', $pie_ori, $txt_ori, $link_ori ) ;
+		}
+
+		echo "<p class='$cls_webp'>$info_webp</p><p class='$cls_ori'>$info_ori</p>" ;
 	}
 
 	/**
@@ -444,6 +489,11 @@ class LiteSpeed_Cache_Media
 				$instance->_img_optimize() ;
 				break ;
 
+			case self::TYPE_IMG_PULL :
+				LiteSpeed_Cache_Log::debug( 'Media: Manually running Cron pull_optimized_img' ) ;
+				$instance->_pull_optimized_img() ;
+				break ;
+
 			case substr( $type, 0, 4 ) === 'webp' :
 			case substr( $type, 0, 4 ) === 'orig' :
 				$instance->_switch_optm_file( $type ) ;
@@ -460,16 +510,19 @@ class LiteSpeed_Cache_Media
 	 * Check if fetch cron is running
 	 *
 	 * @since  1.6.2
-	 * @access private
+	 * @access public
 	 */
-	private function _cron_running()
+	public function cron_running( $bool_res = true )
 	{
 		$last_run = get_option( self::OPT_CRON_RUN ) ;
-		if ( ! $last_run || time() - $last_run > 120 ) {
-			return false ;
+
+		$is_running = $last_run && time() - $last_run <= 120 ;
+
+		if ( $bool_res ) {
+			return $is_running ;
 		}
 
-		return true ;
+		return array( $last_run, $is_running ) ;
 	}
 
 	/**
@@ -504,7 +557,7 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _pull_optimized_img()
 	{
-		if ( $this->_cron_running() ) {
+		if ( $this->cron_running() ) {
 			LiteSpeed_Cache_Log::debug( 'Media: fetch cron is running' ) ;
 			return ;
 		}
@@ -577,6 +630,8 @@ class LiteSpeed_Cache_Media
 						$meta_value[ $md5 ][ 1 ] = self::DB_IMG_OPTIMIZE_STATUS_FAILED ;
 						$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
 						$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
+
+						update_option( self::DB_IMG_FAILED, (int)get_option( self::DB_IMG_FAILED ) + 1 ) ;
 
 						// Notify server to update status
 						LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
@@ -685,24 +740,43 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * LiteSpeed Child server notify Client img has been optimized and can be pulled
+	 * parse LiteSpeed server data
 	 *
-	 * @since  1.6
-	 * @access private
+	 * @since  1.6.5
+	 * @access public
 	 */
-	public function notify_img_optimized()
+	private function _parse_notify_data()
 	{
 		$notified_data = unserialize( base64_decode( $_POST[ 'data' ] ) ) ;
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
-			LiteSpeed_Cache_Log::debug( 'Media: notify_img_optimized exit: no notified data' ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: notify exit: no notified data' ) ;
 			exit( json_encode( 'no notified data' ) ) ;
 		}
 
 		if ( empty( $_POST[ 'server' ] ) || substr( $_POST[ 'server' ], -21 ) !== 'api.litespeedtech.com' ) {
-			LiteSpeed_Cache_Log::debug( 'Media: notify_img_optimized exit: no/wrong server' ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: notify exit: no/wrong server' ) ;
 			exit( json_encode( 'no/wrong server' ) ) ;
 		}
-		$server = $_POST[ 'server' ] ;
+
+		$_allowed_status = array( self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_STATUS_ERR, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ;
+
+		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
+			LiteSpeed_Cache_Log::debug( 'Media: notify exit: no/wrong status' ) ;
+			exit( json_encode( 'no/wrong status' ) ) ;
+		}
+
+		return array( $notified_data, $_POST[ 'server' ], $_POST[ 'status' ] ) ;
+	}
+
+	/**
+	 * LiteSpeed Child server notify Client img has been optimized and can be pulled
+	 *
+	 * @since  1.6
+	 * @access public
+	 */
+	public function notify_img()
+	{
+		list( $notified_data, $server, $status ) = $this->_parse_notify_data() ;
 
 		global $wpdb ;
 
@@ -718,15 +792,15 @@ class LiteSpeed_Cache_Media
 			$md52src_list = unserialize( $v->meta_value ) ;
 			// replace src tag from requested to notified
 			foreach ( $md52src_list as $md5 => $v2 ) {
-				if ( in_array( $md5, $notified_data[ $v->post_id ] ) && $v2[ 1 ] === self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) {
-					$md52src_list[ $md5 ][ 1 ] = self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ;
+				if ( in_array( $md5, $notified_data[ $v->post_id ] ) && $v2[ 1 ] !== self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
+					$md52src_list[ $md5 ][ 1 ] = $status ;
 					$md52src_list[ $md5 ][ 2 ] = $server ;
 					$changed = true ;
 				}
 			}
 
 			if ( ! $changed ) {
-				LiteSpeed_Cache_Log::debug( 'Media: notify_img_optimized continue: no change meta' ) ;
+				LiteSpeed_Cache_Log::debug( 'Media: notify_img [status] ' . $status . ' continue: no changed meta [pid] ' . $v->post_id ) ;
 				continue ;
 			}
 
@@ -735,18 +809,23 @@ class LiteSpeed_Cache_Media
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d" ;
 			$wpdb->query( $wpdb->prepare( $q, array( $md52src_list, $v->meta_id ) ) ) ;
 
-			// Save meta status to server finished to get client fetch it
+			// Overwrite post meta status to the latest one
+			// NOTE: if partly needs notified to pull, notified should be sent after err on server side
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE post_id = %d AND meta_key = %s" ;
-			$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, $v->post_id, self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
+			$wpdb->query( $wpdb->prepare( $q, array( $status, $v->post_id, self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
 
-			LiteSpeed_Cache_Log::debug( 'Media: notify_img_optimized update post_meta pid: ' . $v->post_id ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: notify_img [status] ' . $status . ' updated post_meta [pid] ' . $v->post_id ) ;
 
-			$need_pull = true ;
+			if ( $status == self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
+				$need_pull = true ;
+			}
 		}
 
 		if ( $need_pull ) {
 			update_option( LiteSpeed_Cache_Config::ITEM_MEDIA_NEED_PULL, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 		}
+
+		// redo count err
 
 		echo json_encode( array( 'count' => count( $notified_data ) ) ) ;
 		exit() ;
@@ -988,15 +1067,22 @@ class LiteSpeed_Cache_Media
 		$total_requested = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ) ;
 		$total_server_finished = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ) ;
 		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ) ;
+		$total_err = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ) ;
+
+		$total_pull_failed = (int) get_option( self::DB_IMG_FAILED ) ;
+		$reduced = get_option( LiteSpeed_Cache_Media::DB_IMG_REDUCED ) ;
 
 		$total_not_requested = $total_img - $total_requested - $total_server_finished - $total_pulled ;
 
 		return array(
+			'reduced'	=> $reduced,
 			'total_img'	=> $total_img,
 			'total_not_requested'	=> $total_not_requested,
 			'total_requested'	=> $total_requested,
+			'total_err'	=> $total_err,
 			'total_server_finished'	=> $total_server_finished,
 			'total_pulled'	=> $total_pulled,
+			'total_pull_failed'	=> $total_pull_failed,
 		) ;
 	}
 

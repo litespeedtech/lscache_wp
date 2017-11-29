@@ -13,6 +13,60 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Set seconds/timestamp to readable format
+	 *
+	 * @since  1.6.5
+	 * @access public
+	 */
+	public static function readable_time( $seconds_or_timestamp, $timeout = 3600 )
+	{
+
+		if ( strlen( $seconds_or_timestamp ) == 10 ) {
+			$seconds = time() - $seconds_or_timestamp ;
+			if ( $seconds > $timeout ) {
+				return date( 'm/d/Y H:i:s', $seconds_or_timestamp + LITESPEED_TIME_OFFSET ) ;
+			}
+		}
+		else {
+			$seconds = $seconds_or_timestamp ;
+		}
+
+		$res = '';
+		if ( $seconds > 86400 ) {
+			$num = floor( $seconds / 86400 ) ;
+			$res .= $num . 'd ' ;
+			$seconds %= 86400 ;
+		}
+
+		if ( $seconds > 3600 ) {
+			if ( $res ) {
+				$res .= ', ' ;
+			}
+			$num = floor( $seconds / 3600 ) ;
+			$res .= $num . 'h ' ;
+			$seconds %= 3600 ;
+		}
+
+		if ( $seconds > 60 ) {
+			if ( $res ) {
+				$res .= ', ' ;
+			}
+			$num = floor( $seconds / 60 ) ;
+			$res .= $num . 'm ' ;
+			$seconds %= 60 ;
+		}
+
+		if ( $seconds > 0 ) {
+			$res .= $seconds . 's ' ;
+		}
+
+		$res = sprintf( __( ' %s ago ', 'litespeed-cache' ), $res ) ;
+
+		return $res ;
+	}
+
+
+	/**
 	 * Convert array to string
 	 *
 	 * @since  1.6
