@@ -456,6 +456,14 @@
 	min-width: 100px;
 }
 
+.litespeed-wrap .litespeed-btn-tiny,
+.litespeed-btn-tiny {
+	padding: 1px 8px;
+	font-size: 13px;
+	line-height: 1.5;
+	border-radius: 2px;
+	min-width: 14px ;
+}
 
 /********************************* switch *******************************/
 .litespeed-switch {
@@ -1204,7 +1212,12 @@ circle.litespeed-pie_circle {
 }
 
 
-/********************************* todo *******************************/
+/********************************* utility *******************************/
+.litespeed-unicode-refresh{
+
+}
+
+
 /********************************* todo *******************************/
 /* input field */
 .litespeed-textarea {

@@ -17,6 +17,7 @@ class LiteSpeed_Cache_Media
 	const LAZY_LIB = '/min/lazyload.js' ;
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
+	const TYPE_IMG_UPDATE_RAW = 'img_update_raw' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
 	const TYPE_IMG_PULL = 'img_pull' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
@@ -30,11 +31,11 @@ class LiteSpeed_Cache_Media
 	const DB_IMG_OPTIMIZE_STATUS_PULLED = 'pulled' ;
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
 	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
+	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
 	const IAPI_IMG_REQUEST_LIMIT = 500 ;// Limit total images request one time
 
-	const DB_IMG_REDUCED = 'litespeed_img_reduced' ;
-	const DB_IMG_FAILED = 'litespeed_img_failed' ;
+	const DB_IMG_OPTM_LOG = 'litespeed_img_optm_log' ;
 
 	private $content ;
 	private $wp_upload_dir ;
@@ -146,15 +147,12 @@ class LiteSpeed_Cache_Media
 		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'webp' . $post_id ) ;
 		$desc = false ;
 		$cls = 'litespeed-icon-media-webp' ;
-		$size_webp = 0 ;
 		$cls_webp = '' ;
 		if ( file_exists( $local_file . '.webp' ) ) {
-			$size_webp = filesize( $local_file . '.webp' ) ;
 			$desc = __( 'Disable WebP', 'litespeed-cache' ) ;
 			$cls_webp = 'litespeed-txt-webp' ;
 		}
 		elseif ( file_exists( $local_file . '.optm.webp' ) ) {
-			$size_webp = filesize( $local_file . '.optm.webp' ) ;
 			$cls .= '-disabled' ;
 			$desc = __( 'Enable WebP', 'litespeed-cache' ) ;
 			$cls_webp = 'litespeed-txt-disabled' ;
@@ -171,25 +169,16 @@ class LiteSpeed_Cache_Media
 
 		$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, 'orig' . $post_id ) ;
 		$desc = false ;
-		$size_optm = 0 ;
 		$cls = 'litespeed-icon-media-optm' ;
 		$cls_ori = '' ;
 		if ( file_exists( $bk_file ) ) {
-			$size_ori = filesize( $bk_file ) ;
-			$size_optm = filesize( $local_file ) ;
 			$desc = __( 'Restore Original File', 'litespeed-cache' ) ;
-
 			$cls_ori = 'litespeed-txt-ori' ;
 		}
 		elseif ( file_exists( $bk_optm_file ) ) {
-			$size_ori = filesize( $local_file ) ;
-			$size_optm = filesize( $bk_optm_file ) ;
 			$cls .= '-disabled' ;
 			$desc = __( 'Switch To Optimized File', 'litespeed-cache' ) ;
 			$cls_ori = 'litespeed-txt-disabled' ;
-		}
-		else {
-			$size_ori = filesize( $local_file ) ;
 		}
 
 		$link_ori = '' ;
@@ -198,26 +187,25 @@ class LiteSpeed_Cache_Media
 		}
 
 		$info_webp = '' ;
-		if ( $size_webp ) {
-			$saved = $size_ori - $size_webp ;
-			$percent = ceil( $saved * 100 / $size_ori ) ;
+		$size_meta = get_post_meta( $post_id, self::DB_IMG_OPTIMIZE_SIZE, true ) ;
+		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
+			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
 			$pie_webp = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
-			$txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $saved ) ) ;
+			$txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $size_meta[ 'webp_saved' ] ) ) ;
 
-			$info_webp = sprintf( '%s %s %s', $pie_webp, $txt_webp, $link_webp ) ;
+			$info_webp = sprintf( '%s %s', $pie_webp, $txt_webp ) ;
 		}
 
 		$info_ori = '' ;
-		if ( $size_optm ) {
-			$saved = $size_ori - $size_optm ;
-			$percent = ceil( $saved * 100 / $size_ori ) ;
+		if ( $size_meta && ! empty ( $size_meta[ 'ori_saved' ] ) ) {
+			$percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] ) ;
 			$pie_ori = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
-			$txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $saved ) ) ;
+			$txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $size_meta[ 'ori_saved' ] ) ) ;
 
-			$info_ori = sprintf( '%s %s %s', $pie_ori, $txt_ori, $link_ori ) ;
+			$info_ori = sprintf( '%s %s', $pie_ori, $txt_ori ) ;
 		}
 
-		echo "<p class='$cls_webp'>$info_webp</p><p class='$cls_ori'>$info_ori</p>" ;
+		echo "<p class='$cls_webp'>$info_webp $link_webp</p><p class='$cls_ori'>$info_ori $link_ori</p>" ;
 	}
 
 	/**
@@ -443,13 +431,13 @@ class LiteSpeed_Cache_Media
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
-			$msg = sprintf( __( 'Failed to communicate with LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+			$msg = __( 'Failed to communicate with LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
 
-		if ( ! empty( $json[ 'reduced' ] ) ) {
-			update_option( self::DB_IMG_REDUCED, $json[ 'reduced' ] ) ;
+		if ( ! empty( $json ) ) {
+			update_option( self::DB_IMG_OPTM_LOG, $json ) ;
 		}
 
 		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
@@ -489,6 +477,10 @@ class LiteSpeed_Cache_Media
 				$instance->_img_optimize() ;
 				break ;
 
+			case self::TYPE_IMG_UPDATE_RAW :
+				$instance->_img_update_raw() ;//todo
+				break ;
+
 			case self::TYPE_IMG_PULL :
 				LiteSpeed_Cache_Log::debug( 'Media: Manually running Cron pull_optimized_img' ) ;
 				$instance->_pull_optimized_img() ;
@@ -504,6 +496,29 @@ class LiteSpeed_Cache_Media
 		}
 
 		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Update requested images status from litespeed server
+	 *
+	 * @since  1.6.5
+	 * @access public
+	 */
+	public function _img_update_raw()
+	{
+		$q = "SELECT count(*)
+			FROM $wpdb->posts a
+			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.ID
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+				AND c.meta_key = %s
+				AND c.meta_value= %s
+			" ;
+		$total_requested = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ) ;
+
 	}
 
 	/**
@@ -564,20 +579,33 @@ class LiteSpeed_Cache_Media
 
 		global $wpdb ;
 
-		$q = "SELECT a.meta_id, a.post_id, b.meta_id as bmeta_id, b.meta_value
+		$q = "SELECT a.meta_id, a.post_id, b.meta_id as bmeta_id, b.meta_value, c.meta_id as cmeta_id, c.meta_value as cmeta_value
 			FROM $wpdb->postmeta a
 			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id
+			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.post_id AND c.meta_key = %s
 			WHERE a.meta_key = %s AND a.meta_value = %s AND b.meta_key = %s
 			ORDER BY a.post_id DESC
 			LIMIT 10
 		" ;
-		$cond = array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_DATA ) ;
+		$cond = array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_DATA ) ;
 		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, $cond ) ) ;
 
 		$webp_only = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ;
 
 		foreach ( $meta_value_list as $v ) {
 			$meta_value = unserialize( $v->meta_value ) ;
+
+			if ( $v->cmeta_value ) {
+				$cmeta_value = unserialize( $v->cmeta_value ) ;
+			}
+			else {
+				$cmeta_value = array(
+					'ori_total' => 0,
+					'ori_saved' => 0,
+					'webp_total' => 0,
+					'webp_saved' => 0,
+				) ;
+			}
 
 			// Start fetching
 			foreach ( $meta_value as $md5 => $v2 ) {
@@ -603,6 +631,7 @@ class LiteSpeed_Cache_Media
 					}
 
 					$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v2[ 0 ] ;
+					$ori_size = filesize( $local_file ) ;
 
 					/**
 					 * Use wp orignal get func to avoid allow_url_open off issue
@@ -631,12 +660,17 @@ class LiteSpeed_Cache_Media
 						$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
 						$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
 
-						update_option( self::DB_IMG_FAILED, (int)get_option( self::DB_IMG_FAILED ) + 1 ) ;
-
 						// Notify server to update status
 						LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
 
 						return ;// exit from running pull process
+					}
+
+					// log webp file saved size summary
+					$saved = $ori_size - filesize( $local_file . '.webp' ) ;
+					if ( $saved > 0 ) {
+						$cmeta_value[ 'webp_total' ] += $ori_size ;
+						$cmeta_value[ 'webp_saved' ] += $saved ;
 					}
 
 					LiteSpeed_Cache_Log::debug( 'Media: Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
@@ -669,6 +703,13 @@ class LiteSpeed_Cache_Media
 							return ; // exit from running pull process
 						}
 
+						// log webp file saved size summary
+						$saved = $ori_size - filesize( $local_file . '.tmp' ) ;
+						if ( $saved > 0 ) {
+							$cmeta_value[ 'ori_total' ] += $ori_size ;
+							$cmeta_value[ 'ori_saved' ] += $saved ;
+						}
+
 						// Backup ori img
 						$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
 						$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
@@ -691,6 +732,19 @@ class LiteSpeed_Cache_Media
 			// Update data tag
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
 			$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
+
+			/**
+			 * Update size saved info
+			 * @since  1.6.5
+			 */
+			if ( $v->cmeta_id ) {
+				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
+				$wpdb->query( $wpdb->prepare( $q, array( serialize( $cmeta_value ), $v->cmeta_id ) ) ) ;
+			}
+			else {
+				$q = "INSERT INTO $wpdb->postmeta SET meta_value = %s, meta_id = %d, meta_key = %s, post_id = %d ";
+				$wpdb->query( $wpdb->prepare( $q, array( serialize( $cmeta_value ), $v->cmeta_id, self::DB_IMG_OPTIMIZE_SIZE, $v->post_id ) ) ) ;
+			}
 
 			// Update status tag if all pulled or still has requested img
 			$has_notify = false ;// it may be bypassed in above loop
@@ -769,9 +823,10 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * LiteSpeed Child server notify Client img has been optimized and can be pulled
+	 * LiteSpeed Child server notify Client img status changed
 	 *
 	 * @since  1.6
+	 * @since  1.6.5 Added err/request status free switch
 	 * @access public
 	 */
 	public function notify_img()
@@ -790,12 +845,25 @@ class LiteSpeed_Cache_Media
 		foreach ( $meta_value_list as $v ) {
 			$changed = false ;
 			$md52src_list = unserialize( $v->meta_value ) ;
+			$has_notify = false ;
+			$has_request = false ;
+			$has_pull = false ;
 			// replace src tag from requested to notified
 			foreach ( $md52src_list as $md5 => $v2 ) {
 				if ( in_array( $md5, $notified_data[ $v->post_id ] ) && $v2[ 1 ] !== self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
 					$md52src_list[ $md5 ][ 1 ] = $status ;
 					$md52src_list[ $md5 ][ 2 ] = $server ;
 					$changed = true ;
+				}
+
+				if ( $md52src_list[ $md5 ][ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
+					$has_notify = true ;
+				}
+				if ( $md52src_list[ $md5 ][ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) {
+					$has_request = true ;
+				}
+				if ( $md52src_list[ $md5 ][ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
+					$has_pull = true ;
 				}
 			}
 
@@ -810,9 +878,21 @@ class LiteSpeed_Cache_Media
 			$wpdb->query( $wpdb->prepare( $q, array( $md52src_list, $v->meta_id ) ) ) ;
 
 			// Overwrite post meta status to the latest one
-			// NOTE: if partly needs notified to pull, notified should be sent after err on server side
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE post_id = %d AND meta_key = %s" ;
-			$wpdb->query( $wpdb->prepare( $q, array( $status, $v->post_id, self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
+			// If partly needs notified to pull, notified should overwrite this post's status always
+			if ( $has_notify ) {
+				$new_status = self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ;
+			}
+			elseif ( $has_request ) {
+				$new_status = self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ;
+			}
+			elseif ( $has_pull ) {
+				$new_status = self::DB_IMG_OPTIMIZE_STATUS_PULLED ;
+			}
+			else {
+				$new_status = $status ;
+			}
+			$wpdb->query( $wpdb->prepare( $q, array( $new_status, $v->post_id, self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
 
 			LiteSpeed_Cache_Log::debug( 'Media: notify_img [status] ' . $status . ' updated post_meta [pid] ' . $v->post_id ) ;
 
@@ -921,6 +1001,9 @@ class LiteSpeed_Cache_Media
 
 			// Push to LiteSpeed server
 			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+			if ( $json === null ) {// admin_api will handle common err
+				return ;
+			}
 
 			if ( ! is_array( $json ) ) {
 				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
@@ -1069,20 +1152,28 @@ class LiteSpeed_Cache_Media
 		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ) ;
 		$total_err = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ) ;
 
-		$total_pull_failed = (int) get_option( self::DB_IMG_FAILED ) ;
-		$reduced = get_option( LiteSpeed_Cache_Media::DB_IMG_REDUCED ) ;
+		$optm_log = (array) get_option( self::DB_IMG_OPTM_LOG ) ;
 
-		$total_not_requested = $total_img - $total_requested - $total_server_finished - $total_pulled ;
+		$q = "SELECT count(*)
+			FROM $wpdb->posts a
+			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
+			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.ID AND c.meta_key = %s
+			WHERE a.post_type = 'attachment'
+				AND a.post_status = 'inherit'
+				AND a.post_mime_type IN ('image/jpeg', 'image/png')
+				AND b.meta_key = '_wp_attachment_metadata'
+				AND c.post_id IS NULL
+			" ;
+		$total_not_requested = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
 
 		return array(
-			'reduced'	=> $reduced,
+			'optm_log'	=> $optm_log,
 			'total_img'	=> $total_img,
 			'total_not_requested'	=> $total_not_requested,
 			'total_requested'	=> $total_requested,
 			'total_err'	=> $total_err,
 			'total_server_finished'	=> $total_server_finished,
 			'total_pulled'	=> $total_pulled,
-			'total_pull_failed'	=> $total_pull_failed,
 		) ;
 	}
 

@@ -21,11 +21,29 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Optimization Summary', 'litespeed-cache') ; ?></h3>
 
-		<?php if ( $img_count[ 'reduced' ] ) : ?>
+		<?php if ( ! empty( $img_count[ 'optm_log' ][ 'reduced' ] ) ) : ?>
 			<p>
 				<?php echo __('Total Reduction:', 'litespeed-cache') ; ?>
-				<b><?php echo LiteSpeed_Cache_Utility::real_size( $img_count[ 'reduced' ] ) ; ?></b>
+				<b><?php echo LiteSpeed_Cache_Utility::real_size( $img_count[ 'optm_log' ][ 'reduced' ] ) ; ?></b>
 			</p>
+		<?php endif ; ?>
+
+		<?php if ( ! empty( $img_count[ 'optm_log' ][ 'fetch_failed' ] ) ) : ?>
+		<p>
+			<?php echo __('Images failed to fetch', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'optm_log' ][ 'fetch_failed' ] ; ?></b>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( ! empty( $img_count[ 'optm_log' ][ 'notify_failed' ] ) ) : ?>
+		<p>
+			<?php echo __('Images failed to notify', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'optm_log' ][ 'notify_failed' ] ; ?></b>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( ! empty( $img_count[ 'optm_log' ][ 'pull_failed' ] ) ) : ?>
+		<p>
+			<?php echo __('Images failed to pull', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'optm_log' ][ 'pull_failed' ] ; ?></b>
+		</p>
 		<?php endif ; ?>
 
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_SYNC_DATA ) ; ?>" class="litespeed-btn-success">
@@ -64,10 +82,18 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 		<hr />
 
-		<p><?php echo __('Image groups requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_requested' ] ; ?></b></p>
+		<p>
+			<?php echo __('Image groups requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_requested' ] ; ?></b>
+			<?php if ( $img_count[ 'total_requested' ] ) : ?>
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_UPDATE_RAW ) ; ?>" class="litespeed-btn-success litespeed-btn-tiny">⟳</a>
+				<span class="litespeed-desc">
+					<?php echo __( 'This will update status from LiteSpeed Image Server.', 'litespeed-cache' ) ; ?>
+				</span>
+			<?php endif ; ?>
+		</p>
 		<p><?php echo __('Image groups failed to optimize', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_err' ] ; ?></b></p>
 		<p>
-			<?php echo __('Image groups optimized and waiting to be pulled', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_server_finished' ] ; ?></b>
+			<?php echo __('Image groups notified to pull', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_server_finished' ] ; ?></b>
 			<?php if ( $img_count[ 'total_server_finished' ] && ! $is_running ) : ?>
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_PULL ) ; ?>" class="litespeed-btn-success">
 					<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
@@ -80,9 +106,6 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 					<?php echo sprintf( __( 'Last cron running time is %s.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Utility::readable_time( $last_run ) . '</code>' ) ; ?>
 				</span>
 			<?php endif ; ?>
-		</p>
-		<p>
-			<?php echo __('Images failed to pull', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_pull_failed' ] ; ?></b>
 		</p>
 		<p><?php echo __('Image groups optimized and pulled', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_pulled' ] ; ?></b></p>
 		<p class="litespeed-desc">

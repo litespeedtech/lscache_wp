@@ -242,6 +242,18 @@ class LiteSpeed_Cache_Admin_API
 			return $response[ 'body' ] ;
 		}
 
+		if ( ! empty( $json[ 'err' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'IAPI err: ' . $json[ 'err' ] ) ;
+			$msg = __( 'Failed to communicate with LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ 'err' ] ;
+			if ( ! empty( $json[ 'links' ] ) ) {
+				foreach ( $json[ 'links' ] as $v ) {
+					$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
+				}
+			}
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return null ;
+		}
+
 		return $json ;
 	}
 
