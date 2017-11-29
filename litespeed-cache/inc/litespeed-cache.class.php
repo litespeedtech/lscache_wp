@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.6.4' ;
+	const PLUGIN_VERSION = '1.6.5' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -406,6 +406,11 @@ class LiteSpeed_Cache
 
 		if ( defined( 'DOING_CRON' ) ) {
 			LiteSpeed_Cache_Log::debug2( 'CHK html bypass: doing cron' ) ;
+			return ;
+		}
+
+		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
+			LiteSpeed_Cache_Log::debug2( 'CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
 			return ;
 		}
 
