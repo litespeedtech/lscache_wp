@@ -454,10 +454,11 @@ class LiteSpeed_Cache_Router
 	 * Get client ip
 	 *
 	 * @since 1.1.0
-	 * @access private
+	 * @since  1.6.5 changed to public
+	 * @access public
 	 * @return string
 	 */
-	private function get_ip()
+	public static function get_ip()
 	{
 		$_ip = '' ;
 		if ( function_exists( 'apache_request_headers' ) ) {

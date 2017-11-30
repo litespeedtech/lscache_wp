@@ -47,6 +47,7 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	public static function sapi_aggressive_callback()
 	{
+		$instance = self::get_instance() ;
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
 			case self::TYPE_NOTIFY_IMG :
@@ -54,6 +55,7 @@ class LiteSpeed_Cache_Admin_API
 				break ;
 
 			case self::TYPE_CHECK_IMG :
+				$instance->validate_lsserver() ;
 				LiteSpeed_Cache_Media::get_instance()->check_img() ;
 				break ;
 
@@ -62,6 +64,20 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		exit ;
+	}
+
+	/**
+	 * Validate litespeed api server IP
+	 *
+	 * @since  1.6.5
+	 * @access public
+	 */
+	public function validate_lsserver()
+	{
+		$ip = gethostbyname( 'wp.api.litespeedtech.com' ) ;
+		if ( $ip != LiteSpeed_Cache_Router::get_ip() ) {
+			exit( 'wrong ip' ) ;
+		}
 	}
 
 	/**
