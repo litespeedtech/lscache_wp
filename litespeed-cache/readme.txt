@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
-Tested up to: 4.9
-Stable tag: 1.6.4
+Tested up to: 4.9.1
+Stable tag: 1.6.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -238,6 +238,22 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.5 - November 30 2017 =
+* [IAPI] Manually pull image optimization action button.
+* [IAPI] Automatic credit system for image optimization to bypass unfinished image optimization error.
+* [IAPI] Notify failed images from LiteSpeed's Image Server.
+* [IAPI] Reset/Clear failed images feature.
+* [IAPI] Redesigned report page.
+* [REFACTOR] Moved pull_img logic from admin_api to media.
+* [BUGFIX] Fixed a compatibility issue for clients who have allow_url_open setting off.
+* [UPDATE] Environment report is no longer saved to a file.
+* [UPDATE] Removed crawler reset notification.
+* [GUI] Added more details on image optimization.
+* [GUI] Removed info page from admin menu.
+* [GUI] Moved environment report from network level to single site level.
+* [GUI] Crawler time added in a user friendly format.
+* [INTEGRATION] Improved compatibility with FacetWP json call.
 
 = 1.6.4 - November 22 2017 =
 * [NEW FEATURE] Send env reports privately with a new built-in report number referral system.

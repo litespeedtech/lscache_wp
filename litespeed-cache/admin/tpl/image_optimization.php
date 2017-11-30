@@ -11,10 +11,12 @@ list( $last_run, $is_running ) = $media->cron_running( false ) ;
 $_optm_summary_list = array(
 	'level'	=> array(
 		'title'	=> __( 'Level', 'litespeed-cache' ),
+		'must'	=> true,
 	),
 	'credit'	=> array(
 		'title'	=> __( 'Credit', 'litespeed-cache' ),
-		'desc'	=> __( 'Increase when pull successfully', 'litespeed-cache' ),
+		'desc'	=> __( 'Credit recovers with each successful pull.', 'litespeed-cache' ),
+		'must'	=> true,
 	),
 	'reduced'	=> array(
 		'title'	=> __( 'Total Reduction', 'litespeed-cache' ),
@@ -31,6 +33,10 @@ $_optm_summary_list = array(
 	),
 	'pull_failed'	=> array(
 		'title'	=> __( 'Images failed to pull', 'litespeed-cache' ),
+	),
+	'last_requested'	=> array(
+		'title'	=> __( 'Last Request', 'litespeed-cache' ),
+		'type'	=> 'date',
 	),
 ) ;
 
@@ -52,13 +58,18 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<h3 class="litespeed-title"><?php echo __('Optimization Summary', 'litespeed-cache') ; ?></h3>
 
 		<?php foreach ( $_optm_summary_list as $k => $v ) : ?>
-			<?php if ( ! empty( $optm_summary[ $k ] ) ) : ?>
+			<?php if ( isset( $optm_summary[ $k ] ) && ( $optm_summary[ $k ] || ! empty( $v[ 'must' ] ) ) ) : ?>
 			<p>
 				<?php echo $v[ 'title' ] ; ?>:
 				<b>
 					<?php
 					if ( ! empty( $v[ 'type' ] ) ) {
-						echo LiteSpeed_Cache_Utility::real_size( $optm_summary[ $k ] ) ;
+						if ( $v[ 'type' ] == 'file_size' ) {
+							echo LiteSpeed_Cache_Utility::real_size( $optm_summary[ $k ] ) ;
+						}
+						if ( $v[ 'type' ] == 'date' ) {
+							echo LiteSpeed_Cache_Utility::readable_time( $optm_summary[ $k ] ) ;
+						}
 					}
 					else {
 						echo $optm_summary[ $k ] ;
@@ -94,7 +105,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 				<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 			</a>
 			<span class="litespeed-desc">
-				<?php echo __( 'Please update status before send new request.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Please press the %s button before sending a new request.', 'litespeed-cache' ), __( 'Update Reduction Status', 'litespeed-cache' ) ) ; ?>
 			</span>
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 		<?php else : ?>
@@ -102,7 +113,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 				<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 			</a>
 			<span class="litespeed-desc">
-				<?php echo __( 'This will send the optimization request with the images to LiteSpeed\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will send the optimization request and the images to LiteSpeed\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'You can send at most %s images at once.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
 			</span>
 		<?php endif ; ?>
@@ -117,6 +128,10 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<?php endif ; ?>
 		</p>
 		<p><?php echo __('Image groups failed to optimize', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_err' ] ; ?></b></p>
+		<p class="litespeed-desc">
+			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'This process is automatic.', 'litespeed-cache' ) ; ?>
+		</p>
 		<p>
 			<?php echo __('Image groups notified to pull', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_server_finished' ] ; ?></b>
 			<?php if ( $img_count[ 'total_server_finished' ] && ! $is_running ) : ?>
@@ -124,19 +139,16 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 					<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
 				</a>
 				<span class="litespeed-desc">
-					<?php echo __( 'If you have cron job running already, the optimized images will be pulled automatically.', 'litespeed-cache' ) ; ?>
+					<?php echo __( 'Only press the button if the pull cron job is disabled.', 'litespeed-cache' ) ; ?>
+					<?php echo __( 'Images will be pulled automatically if the cron job is running.', 'litespeed-cache' ) ; ?>
 				</span>
 			<?php elseif ( $last_run ) : ?>
 				<span class="litespeed-desc">
-					<?php echo sprintf( __( 'Last cron running time is %s.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Utility::readable_time( $last_run ) . '</code>' ) ; ?>
+					<?php echo sprintf( __( 'Last pull initiated by cron at %s.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Utility::readable_time( $last_run ) . '</code>' ) ; ?>
 				</span>
 			<?php endif ; ?>
 		</p>
 		<p><?php echo __('Image groups optimized and pulled', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_pulled' ] ; ?></b></p>
-		<p class="litespeed-desc">
-			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
-			<?php echo __( 'All these processes are automatic.', 'litespeed-cache' ) ; ?>
-		</p>
 		<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>
 
 		<hr />

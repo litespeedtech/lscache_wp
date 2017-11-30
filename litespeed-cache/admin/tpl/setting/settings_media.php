@@ -59,7 +59,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Disable Optimization Poll', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Disable Optimization Pull', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF ) ; ?>
 			<div class="litespeed-desc">

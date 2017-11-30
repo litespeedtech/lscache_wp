@@ -1175,7 +1175,7 @@ class LiteSpeed_Cache_Media
 		if ( ! $field ) {
 			return $optm_summary ;
 		}
-		return ! empty( $optm_summary[ $field ] ) ? $optm_summary[ $field ] : '' ;
+		return ! empty( $optm_summary[ $field ] ) ? $optm_summary[ $field ] : 0 ;
 	}
 
 	/**
