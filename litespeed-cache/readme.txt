@@ -247,6 +247,7 @@ For more detailed information about crawler setup, please see [our blog post](ht
 * [IAPI] Redesigned report page.
 * [REFACTOR] Moved pull_img logic from admin_api to media.
 * [BUGFIX] Fixed a compatibility issue for clients who have allow_url_open setting off.
+* [BUGFIX] Fixed logged in users sometimes being served from guest cache.
 * [UPDATE] Environment report is no longer saved to a file.
 * [UPDATE] Removed crawler reset notification.
 * [GUI] Added more details on image optimization.
