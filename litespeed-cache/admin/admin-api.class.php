@@ -263,19 +263,56 @@ class LiteSpeed_Cache_Admin_API
 			return $response[ 'body' ] ;
 		}
 
-		if ( ! empty( $json[ 'err' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI err: ' . $json[ 'err' ] ) ;
-			$msg = __( 'Failed to communicate with LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ 'err' ] ;
-			if ( ! empty( $json[ 'links' ] ) ) {
-				foreach ( $json[ 'links' ] as $v ) {
-					$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
-				}
-			}
+		if ( ! empty( $json[ '_err' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'IAPI _err: ' . $json[ '_err' ] ) ;
+			$msg = __( 'Failed to communicate with LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
+			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return null ;
 		}
 
+		if ( ! empty( $json[ '_info' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'IAPI _info: ' . $json[ '_info' ] ) ;
+			$msg = __( 'Message from LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ '_info' ] ;
+			$msg .= $this->_parse_link( $json ) ;
+			LiteSpeed_Cache_Admin_Display::info( $msg ) ;
+			unset( $json[ '_info' ] ) ;
+			if ( ! empty( $json[ 'links' ] ) ) {
+				unset( $json[ 'links' ] ) ;
+			}
+		}
+
+		if ( ! empty( $json[ '_note' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'IAPI _note: ' . $json[ '_note' ] ) ;
+			$msg = __( 'Message from LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ '_note' ] ;
+			$msg .= $this->_parse_link( $json ) ;
+			LiteSpeed_Cache_Admin_Display::note( $msg ) ;
+			unset( $json[ '_note' ] ) ;
+			if ( ! empty( $json[ 'links' ] ) ) {
+				unset( $json[ 'links' ] ) ;
+			}
+		}
+
 		return $json ;
+	}
+
+	/**
+	 * Parse links from json
+	 *
+	 * @since  1.6.5
+	 * @access private
+	 */
+	private function _parse_link( $json )
+	{
+		$msg = '' ;
+
+		if ( ! empty( $json[ 'links' ] ) ) {
+			foreach ( $json[ 'links' ] as $v ) {
+				$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
+			}
+		}
+
+		return $msg ;
 	}
 
 	/**

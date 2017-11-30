@@ -432,6 +432,28 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Display info notice
+	 *
+	 * @since 1.6.5
+	 * @access public
+	 */
+	public static function info( $msg )
+	{
+		self::add_notice( self::NOTICE_BLUE, $msg ) ;
+	}
+
+	/**
+	 * Display note notice
+	 *
+	 * @since 1.6.5
+	 * @access public
+	 */
+	public static function note( $msg )
+	{
+		self::add_notice( self::NOTICE_YELLOW, $msg ) ;
+	}
+
+	/**
 	 * Display success notice
 	 *
 	 * @since 1.6

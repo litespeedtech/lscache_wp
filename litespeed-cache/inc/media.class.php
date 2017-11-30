@@ -33,9 +33,7 @@ class LiteSpeed_Cache_Media
 	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
 	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
-	const IAPI_IMG_REQUEST_LIMIT = 500 ;// Limit total images request one time
-
-	const DB_IMG_OPTM_LOG = 'litespeed_img_optm_log' ;
+	const DB_IMG_OPTM_SUMMARY = 'litespeed_img_optm_summary' ;
 
 	private $content ;
 	private $wp_upload_dir ;
@@ -437,7 +435,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		if ( ! empty( $json ) ) {
-			update_option( self::DB_IMG_OPTM_LOG, $json ) ;
+			update_option( self::DB_IMG_OPTM_SUMMARY, $json ) ;
 		}
 
 		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
@@ -945,6 +943,7 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _img_optimize()
 	{
+		$_credit = (int) $this->summary_info( 'credit' ) ;
 
 		LiteSpeed_Cache_Log::debug( 'Media preparing images to push' ) ;
 
@@ -996,12 +995,14 @@ class LiteSpeed_Cache_Media
 			/**
 			 * Only send 500 images one time
 			 * @since 1.6.3
+			 * @since 1.6.5 use credit limit
 			 */
 			$num_will_incease = 1 ;
 			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
 				$num_will_incease += count( $meta_value[ 'sizes' ] ) ;
 			}
-			if ( $this->_img_total + $num_will_incease >= self::IAPI_IMG_REQUEST_LIMIT ) {
+			if ( $this->_img_total + $num_will_incease >= $_credit ) {
+				LiteSpeed_Cache_Log::debug( 'Media img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
 				break ;
 			}
 
@@ -1097,6 +1098,11 @@ class LiteSpeed_Cache_Media
 
 			$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+			// Update credit info
+			if ( isset( $json[ 'credit' ] ) ) {
+				$this->_update_credit( $json[ 'credit' ] ) ;
+			}
 		}
 	}
 
@@ -1143,6 +1149,36 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
+	 * Update client credit info
+	 *
+	 * @since 1.6.5
+	 * @access private
+	 */
+	private function _update_credit( $credit )
+	{
+		$summary = (array) get_option( self::DB_IMG_OPTM_SUMMARY ) ;
+		$summary[ 'credit' ] = $credit ;
+
+		update_option( self::DB_IMG_OPTM_SUMMARY, $summary ) ;
+	}
+
+	/**
+	 * Get optm summary
+	 *
+	 * @since 1.6.5
+	 * @access public
+	 */
+	public function summary_info( $field = false )
+	{
+		$optm_summary = (array) get_option( self::DB_IMG_OPTM_SUMMARY ) ;
+
+		if ( ! $field ) {
+			return $optm_summary ;
+		}
+		return ! empty( $optm_summary[ $field ] ) ? $optm_summary[ $field ] : '' ;
+	}
+
+	/**
 	 * Count images
 	 *
 	 * @since 1.6
@@ -1178,8 +1214,6 @@ class LiteSpeed_Cache_Media
 		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ) ;
 		$total_err = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ) ;
 
-		$optm_log = (array) get_option( self::DB_IMG_OPTM_LOG ) ;
-
 		$q = "SELECT count(*)
 			FROM $wpdb->posts a
 			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
@@ -1193,7 +1227,6 @@ class LiteSpeed_Cache_Media
 		$total_not_requested = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
 
 		return array(
-			'optm_log'	=> $optm_log,
 			'total_img'	=> $total_img,
 			'total_not_requested'	=> $total_not_requested,
 			'total_requested'	=> $total_requested,

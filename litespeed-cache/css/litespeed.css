@@ -51,7 +51,7 @@
 }
 
 .litespeed-hide {
-	display: none;
+	display: none !important;
 }
 
 .litespeed-relative {
