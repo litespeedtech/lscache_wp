@@ -218,7 +218,11 @@ class LiteSpeed_Cache_Vary
 			return false ;
 		}
 
-		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' ) {
+		/**
+		 * POST request can set vary to fix #820789 login "loop" guest cache issue
+		 * @since 1.6.5
+		 */
+		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
 			return false ;
 		}
 
