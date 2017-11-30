@@ -806,12 +806,14 @@ class LiteSpeed_Cache_Media
 		LiteSpeed_Cache_Log::debug( 'Media: Check image [ID] ' . $pid ) ;
 
 		$info = get_post_meta( $pid, self::DB_IMG_OPTIMIZE_STATUS, true ) ;
-		echo "\n---" . self::DB_IMG_OPTIMIZE_STATUS . "---\n" ;
-		echo var_export( $info, true ) ;
+
+		$data = array(
+			self::DB_IMG_OPTIMIZE_STATUS => $info,
+		) ;
 
 		$info = get_post_meta( $pid, self::DB_IMG_OPTIMIZE_DATA, true ) ;
-		echo "\n---" . self::DB_IMG_OPTIMIZE_DATA . "---\n" ;
-		echo var_export( $info, true ) ;
+		$data[ self::DB_IMG_OPTIMIZE_DATA ] = $info ;
+		echo json_encode( $data ) ;
 		exit;
 	}
 
