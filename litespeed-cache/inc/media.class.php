@@ -805,14 +805,16 @@ class LiteSpeed_Cache_Media
 
 		LiteSpeed_Cache_Log::debug( 'Media: Check image [ID] ' . $pid ) ;
 
-		$info = get_post_meta( $pid, self::DB_IMG_OPTIMIZE_STATUS, true ) ;
+		$data = array() ;
 
-		$data = array(
-			self::DB_IMG_OPTIMIZE_STATUS => $info,
-		) ;
+		$data[ 'img_count' ] = $this->img_count() ;
+
+		$info = get_post_meta( $pid, self::DB_IMG_OPTIMIZE_STATUS, true ) ;
+		$data[ self::DB_IMG_OPTIMIZE_STATUS ] = $info ;
 
 		$info = get_post_meta( $pid, self::DB_IMG_OPTIMIZE_DATA, true ) ;
 		$data[ self::DB_IMG_OPTIMIZE_DATA ] = $info ;
+
 		echo json_encode( $data ) ;
 		exit;
 	}
