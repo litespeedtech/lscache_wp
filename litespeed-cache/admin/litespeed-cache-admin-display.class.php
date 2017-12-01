@@ -642,22 +642,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Outputs the html for the info page.
-	 *
-	 * This page includes three tabs:
-	 * - configuration
-	 * - third party plugin compatibilities
-	 * - common rewrite rules.
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 */
-	public function show_info()
-	{
-		require_once LSWCP_DIR . 'admin/tpl/info.php' ;
-	}
-
-	/**
 	 * Outputs a notice to the admin panel when the plugin is installed
 	 * via the WHM plugin.
 	 *

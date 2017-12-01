@@ -61,14 +61,12 @@ if ( defined( 'LITESPEED_ON' ) ) {
 
 			<p><?php echo __('These are added by the LS Cache plugin and may cause problems if they are changed.', 'litespeed-cache'); ?></p>
 
-			<textarea name="<?php echo LiteSpeed_Cache_Admin_Rules::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="30" class="litespeed-input-long"
+			<textarea name="<?php echo LiteSpeed_Cache_Admin_Rules::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="litespeed-input-long"
 				<?php echo $readonly; ?>
 			><?php echo esc_textarea($content); ?></textarea>
 
 			<button type="submit" class="litespeed-btn-primary"><?php echo __('Save', 'litespeed-cache'); ?></button>
 		</form>
-
-		<?php require LSWCP_DIR . 'admin/tpl/info/info_common_rewrite.php'; ?>
 
 		<?php endif; ?>
 	</div>
