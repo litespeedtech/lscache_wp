@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.6.5
+Stable tag: 1.6.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -238,6 +238,9 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.5.1 - December 1 2017 =
+* [HOTFIX] Fixed warning message on Edit .htaccess page.
 
 = 1.6.5 - November 30 2017 =
 * [IAPI] Manually pull image optimization action button.
