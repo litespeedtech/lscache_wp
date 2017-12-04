@@ -40,7 +40,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Handle aggressive callback requests from LiteSpeed server
+	 * Handle aggressive callback requests from LiteSpeed image server
 	 *
 	 * @since  1.6
 	 * @access public
@@ -81,7 +81,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Handle passive callback requests from LiteSpeed server
+	 * Handle passive callback requests from LiteSpeed image server
 	 *
 	 * @since  1.6
 	 * @access public
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Post data to LiteSpeed server
+	 * Post data to LiteSpeed image server
 	 *
 	 * @since  1.6
 	 * @access public
@@ -217,7 +217,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Post data to LiteSpeed server
+	 * Post data to LiteSpeed image server
 	 *
 	 * @since  1.6
 	 * @access private
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( ! empty( $json[ '_err' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'IAPI _err: ' . $json[ '_err' ] ) ;
-			$msg = __( 'Failed to communicate with LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
+			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return null ;
@@ -273,7 +273,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( ! empty( $json[ '_info' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'IAPI _info: ' . $json[ '_info' ] ) ;
-			$msg = __( 'Message from LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ '_info' ] ;
+			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_info' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::info( $msg ) ;
 			unset( $json[ '_info' ] ) ;
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( ! empty( $json[ '_note' ] ) ) {
 			LiteSpeed_Cache_Log::debug( 'IAPI _note: ' . $json[ '_note' ] ) ;
-			$msg = __( 'Message from LiteSpeed server', 'litespeed-cache' ) . ': ' . $json[ '_note' ] ;
+			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_note' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::note( $msg ) ;
 			unset( $json[ '_note' ] ) ;

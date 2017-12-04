@@ -136,6 +136,7 @@ class LiteSpeed_Cache_Admin_Report
 			'wordpress version' => $wp_version,
 			'siteurl' => get_option( 'siteurl' ),
 			'home' => get_option( 'home' ),
+			'home_url' => home_url(),
 			'locale' => get_locale(),
 			'active theme' => $active_theme,
 			'active plugins' => $active_plugins,
@@ -183,9 +184,9 @@ class LiteSpeed_Cache_Admin_Report
 
 		$buf = $this->format_report_section('Server Variables', $server_vars) ;
 
-		$buf .= $this->format_report_section('LSCache Plugin Options', $options) ;
-
 		$buf .= $this->format_report_section('Wordpress Specific Extras', $extras) ;
+
+		$buf .= $this->format_report_section('LSCache Plugin Options', $options) ;
 
 		if ( empty($htaccess_paths) ) {
 			return $buf ;
