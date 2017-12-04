@@ -583,18 +583,24 @@ class LiteSpeed_Cache_Media
 			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.post_id AND c.meta_key = %s
 			WHERE a.meta_key = %s AND a.meta_value = %s AND b.meta_key = %s
 			ORDER BY a.post_id DESC
-			LIMIT 10
+			LIMIT 1
 		" ;
 		$cond = array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_DATA ) ;
-		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, $cond ) ) ;
+		$query = $wpdb->prepare( $q, $cond ) ;
 
 		$webp_only = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ;
 
-		foreach ( $meta_value_list as $v ) {
-			$meta_value = unserialize( $v->meta_value ) ;
+		for ( $i=0 ; $i < 10 ; $i++ ) {
+			$meta_value_row = $wpdb->get_row( $query ) ;
 
-			if ( $v->cmeta_value ) {
-				$cmeta_value = unserialize( $v->cmeta_value ) ;
+			if ( ! $meta_value_row ) {
+				break ;
+			}
+
+			$meta_value = unserialize( $meta_value_row->meta_value ) ;
+
+			if ( $meta_value_row->cmeta_value ) {
+				$cmeta_value = unserialize( $meta_value_row->cmeta_value ) ;
 			}
 			else {
 				$cmeta_value = array(
@@ -618,9 +624,9 @@ class LiteSpeed_Cache_Media
 					$server = $v2[ 2 ] ;
 					// send fetch request
 					$data = array(
-						'pid' => $v->post_id,
+						'pid' => $meta_value_row->post_id,
 						'src_md5' => $md5,
-						'meta'	=> $v->meta_value,
+						'meta'	=> $meta_value_row->meta_value,
 					) ;
 					$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server ) ;
 					if ( empty( $json[ 'webp' ] ) ) {
@@ -656,7 +662,7 @@ class LiteSpeed_Cache_Media
 						// update status to failed
 						$meta_value[ $md5 ][ 1 ] = self::DB_IMG_OPTIMIZE_STATUS_FAILED ;
 						$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
-						$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
+						$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $meta_value_row->bmeta_id ) ) ) ;
 
 						// Notify server to update status
 						LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
@@ -693,7 +699,7 @@ class LiteSpeed_Cache_Media
 							// update status to failed
 							$meta_value[ $md5 ][ 1 ] = self::DB_IMG_OPTIMIZE_STATUS_FAILED ;
 							$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
-							$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
+							$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $meta_value_row->bmeta_id ) ) ) ;
 
 							// Notify server to update status
 							LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
@@ -725,23 +731,23 @@ class LiteSpeed_Cache_Media
 				}
 			}
 
-			LiteSpeed_Cache_Log::debug( 'Media: Pulled optimized img done, updating record pid: ' . $v->post_id ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: Pulled optimized img done, updating record pid: ' . $meta_value_row->post_id ) ;
 
 			// Update data tag
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
-			$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $v->bmeta_id ) ) ) ;
+			$wpdb->query( $wpdb->prepare( $q, array( serialize( $meta_value ), $meta_value_row->bmeta_id ) ) ) ;
 
 			/**
 			 * Update size saved info
 			 * @since  1.6.5
 			 */
-			if ( $v->cmeta_id ) {
+			if ( $meta_value_row->cmeta_id ) {
 				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
-				$wpdb->query( $wpdb->prepare( $q, array( serialize( $cmeta_value ), $v->cmeta_id ) ) ) ;
+				$wpdb->query( $wpdb->prepare( $q, array( serialize( $cmeta_value ), $meta_value_row->cmeta_id ) ) ) ;
 			}
 			else {
 				$q = "INSERT INTO $wpdb->postmeta SET meta_value = %s, meta_id = %d, meta_key = %s, post_id = %d ";
-				$wpdb->query( $wpdb->prepare( $q, array( serialize( $cmeta_value ), $v->cmeta_id, self::DB_IMG_OPTIMIZE_SIZE, $v->post_id ) ) ) ;
+				$wpdb->query( $wpdb->prepare( $q, array( serialize( $cmeta_value ), $meta_value_row->cmeta_id, self::DB_IMG_OPTIMIZE_SIZE, $meta_value_row->post_id ) ) ) ;
 			}
 
 			// Update status tag if all pulled or still has requested img
@@ -766,7 +772,7 @@ class LiteSpeed_Cache_Media
 				}
 				LiteSpeed_Cache_Log::debug( 'Media: Updated pid status: ' . $new_status ) ;
 
-				$wpdb->query( $wpdb->prepare( $q, array( $new_status, $v->meta_id ) ) ) ;
+				$wpdb->query( $wpdb->prepare( $q, array( $new_status, $meta_value_row->meta_id ) ) ) ;
 			}
 		}
 
