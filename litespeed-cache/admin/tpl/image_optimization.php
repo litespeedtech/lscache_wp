@@ -97,7 +97,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>
 		</h3>
 
-		<p><?php echo __('Image groups total', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_img' ] ; ?></b></p>
+		<p><?php echo sprintf( __( '<a %s>Image groups</a> total', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank"' ) ; ?>: <b><?php echo $img_count[ 'total_img' ] ; ?></b></p>
 		<p><?php echo __('Image groups not yet requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_not_requested' ] ; ?></b></p>
 		<?php if ( $img_count[ 'total_not_requested' ] ) : ?>
 		<?php if ( empty( $optm_summary[ 'level' ] ) ) : ?>
