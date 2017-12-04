@@ -3,6 +3,7 @@
  * The Third Party integration with the WooCommerce plugin.
  *
  * @since         1.0.5
+ * @since  1.6.6 Added function_exists check for compatibility
  * @package       LiteSpeed_Cache
  * @subpackage    LiteSpeed_Cache/thirdparty
  * @author        LiteSpeed Technologies <info@litespeedtech.com>
@@ -72,7 +73,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		add_action( 'comment_post', array( $this, 'add_review' ), 10, 3 ) ;
 
 		if ( $this->esi_eanbled ) {
-			if ( ! is_shop() ) {
+			if ( function_exists( 'is_shop' ) && ! is_shop() ) {
 				LiteSpeed_Cache_API::hook_tpl_not_esi( array( $this, 'set_block_template' ) ) ;
 				// No need for add-to-cart button
 				// LiteSpeed_Cache_API::hook_tpl_esi( 'wc-add-to-cart-form', array( $this, 'load_add_to_cart_form_block' ) ) ;
@@ -81,7 +82,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				LiteSpeed_Cache_API::hook_tpl_esi( 'widget', array( $this, 'register_post_view' ) ) ;
 			}
 
-			if ( is_product() ) {
+			if ( function_exists( 'is_product' ) && is_product() ) {
 				LiteSpeed_Cache_API::hook_esi_param( 'widget', array( $this, 'add_post_id' ) ) ;
 			}
 
@@ -307,7 +308,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		global $post, $wp_query ;
 		$post = get_post($params[self::ESI_PARAM_POSTID]) ;
 		$wp_query->setup_postdata($post) ;
-		wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS], $params[self::ESI_PARAM_PATH]) ;
+		function_exists( 'wc_get_template' ) && wc_get_template($params[self::ESI_PARAM_NAME], $params[self::ESI_PARAM_ARGS], $params[self::ESI_PARAM_PATH]) ;
 	}
 
 	/**
@@ -331,7 +332,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		$id = $params[self::ESI_PARAM_POSTID] ;
 		$esi_post = get_post($id) ;
-		$product = wc_get_product($esi_post) ;
+		$product = function_exists( 'wc_get_product' ) ? wc_get_product($esi_post) : false ;
 
 		if ( empty($product) ) {
 			return ;
@@ -339,7 +340,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		global $post ;
 		$post = $esi_post ;
-		wc_track_product_view() ;
+		function_exists( 'wc_track_product_view' ) && wc_track_product_view() ;
 	}
 
 	/**
@@ -401,7 +402,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	private function set_ttl()
 	{
-		if ( is_shop() ) {
+		if ( function_exists( 'is_shop' ) && is_shop() ) {
 			if ( LiteSpeed_Cache_API::config( self::OPTION_SHOP_FRONT_TTL ) ) {
 				LiteSpeed_Cache_API::set_use_frontpage_ttl() ;
 			}
@@ -438,10 +439,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			LiteSpeed_Cache_API::set_ttl( $ttl ) ;
 		}
 
-		if ( is_shop() ) {
+		if ( function_exists( 'is_shop' ) && is_shop() ) {
 			LiteSpeed_Cache_API::tag_add(self::CACHETAG_SHOP) ;
 		}
-		if ( ! is_product_taxonomy() ) {
+		if ( function_exists( 'is_product_taxonomy' ) && ! is_product_taxonomy() ) {
 			return ;
 		}
 		if ( isset($GLOBALS['product_cat']) ) {
@@ -506,6 +507,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			elseif ( version_compare($woocom->version, '2.1.0', '>=') ) {
 				$err = false ;
 
+				if ( ! function_exists( 'wc_get_page_id' ) ) {
+					return ;
+				}
 				/**
 				 * From woo/inc/class-wc-cache-helper.php:prevent_caching()
 				 * @since  1.4
@@ -537,7 +541,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						$err = 'ESI cart should be nocache' ;
 					}
 				}
-				elseif ( wc_notice_count() > 0 ) {
+				elseif ( function_exists( 'wc_notice_count' ) && wc_notice_count() > 0 ) {
 					$err = 'has wc notice' ;
 				}
 
@@ -610,6 +614,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function delete_rel($post_id, $term_ids)
 	{
+		if ( ! function_exists( 'wc_get_product' ) ) {
+			return ;
+		}
+
 		if ( empty($term_ids) || wc_get_product($post_id) === false ) {
 			return ;
 		}
@@ -628,6 +636,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function backend_purge($post_id)
 	{
+		if ( ! function_exists( 'wc_get_product' ) ) {
+			return ;
+		}
+
 		if ( ! isset($post_id) || wc_get_product($post_id) === false ) {
 			return ;
 		}
@@ -637,6 +649,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			foreach ( $cats as $cat ) {
 				LiteSpeed_Cache_API::purge(self::CACHETAG_TERM . $cat) ;
 			}
+		}
+
+		if ( ! function_exists( 'wc_get_product_terms' ) ) {
+			return ;
 		}
 
 		$tags = wc_get_product_terms($post_id, 'product_tag', array('fields' => 'ids')) ;
@@ -659,6 +675,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function add_review($unused, $comment_approved, $commentdata)
 	{
+		if ( ! function_exists( 'wc_get_product' ) ) {
+			return ;
+		}
+
 		$post_id = $commentdata['comment_post_ID'] ;
 		if ( $comment_approved !== 1 || ! isset($post_id) || wc_get_product($post_id) === false ) {
 			return ;
@@ -836,8 +856,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	private function get_cats($product_id)
 	{
+		if ( ! function_exists( 'WC' ) ) {
+			return ;
+		}
+
 		$woocom = WC() ;
-		if ( isset($woocom) && version_compare($woocom->version, '2.5.0', '>=') ) {
+		if ( isset($woocom) && version_compare($woocom->version, '2.5.0', '>=') && function_exists( 'wc_get_product_cat_ids' ) ) {
 			return wc_get_product_cat_ids($product_id) ;
 		}
 		$product_cats = wp_get_post_terms($product_id, 'product_cat', array("fields" => "ids")) ;
