@@ -117,6 +117,7 @@ If you have any API requirements, please inform us anytime in [WP Forum](https:/
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
 * [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
+* Login With Ajax
 
 = Known Uncompatible Plugins =
 

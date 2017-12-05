@@ -873,6 +873,9 @@ class LiteSpeed_Cache_Optimize
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
+			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+				continue ;
+			}
 			if ( empty( $attrs[ 'src' ] ) ) {
 				continue ;
 			}
