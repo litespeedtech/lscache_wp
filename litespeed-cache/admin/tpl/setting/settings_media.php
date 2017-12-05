@@ -86,5 +86,27 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Preserve EXIF data', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This might be inportant to photographers.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will increase the optimized file size.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'WebP Lossless Compression', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Compress WebP with lossless option.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will increase the optimized file size.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 
 </tbody></table>

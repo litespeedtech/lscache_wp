@@ -492,6 +492,8 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY,
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF,
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;

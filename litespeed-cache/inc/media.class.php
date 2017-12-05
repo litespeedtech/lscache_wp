@@ -1034,6 +1034,8 @@ class LiteSpeed_Cache_Media
 			$data = array(
 				'list' => $this->_img_in_queue,
 				'webp_only'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ),
+				'keep_exif'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ),
+				'webp_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ),
 			) ;
 
 			// Push to LiteSpeed server
