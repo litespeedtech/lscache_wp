@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Vary
 		 * @since  1.6.6
 		 */
 		if ( LiteSpeed_Cache_Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
-			LiteSpeed_Cache_Log::debug2( 'Vary: bypass due to ajax call' ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary: can_change_vary bypassed due to ajax call' ) ;
 			return false ;
 		}
 
@@ -228,12 +228,12 @@ class LiteSpeed_Cache_Vary
 		 * @since 1.6.5
 		 */
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
-			LiteSpeed_Cache_Log::debug2( 'Vary: bypass due to method not get/post' ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary: can_change_vary bypassed due to method not get/post' ) ;
 			return false ;
 		}
 
 		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
-			LiteSpeed_Cache_Log::debug2( 'Vary: bypass due to litespeed_can_change_vary hook' ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary: can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
 			return false ;
 		}
 
@@ -455,6 +455,7 @@ class LiteSpeed_Cache_Vary
 		$this->_update_default_vary() ;
 
 		if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
+			LiteSpeed_Cache_Log::debug2( 'Vary: bypass finalize due to not cacheable' ) ;
 			return false;
 		}
 		$tp_cookies = $this->_format_vary_cookies() ;

@@ -509,7 +509,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_DEBUG_LEVEL => false,
-			self::OPID_LOG_FILE_SIZE => 30,
+			self::OPID_LOG_FILE_SIZE => 3,
 			self::OPID_HEARTBEAT => true,
 			self::OPID_DEBUG_COOKIE => false,
 			self::OPID_COLLAPS_QS => false,

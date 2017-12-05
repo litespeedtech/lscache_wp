@@ -24,4 +24,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 		echo nl2br( htmlspecialchars( $logs ) ) ;
 
 	?>
+
+	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_LOG, LiteSpeed_Cache_Log::TYPE_CLEAR_LOG ) ; ?>" class="litespeed-btn-success">
+		<?php echo __( 'Clear Log', 'litespeed-cache' ) ; ?>
+	</a>
+
 </div>

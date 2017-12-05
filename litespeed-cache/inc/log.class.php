@@ -18,6 +18,8 @@ class LiteSpeed_Cache_Log
 	private static $_prefix ;
 	private static $_enabled = false ;
 
+	const TYPE_CLEAR_LOG = 'clear_log' ;
+
 	/**
 	 * Log class Constructor
 	 *
@@ -42,6 +44,41 @@ class LiteSpeed_Cache_Log
 
 		$this->_init_request() ;
 		self::$_debug = true ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.6.6
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_CLEAR_LOG :
+				$instance->_clear_log() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Clear log file
+	 *
+	 * @since 1.6.6
+	 * @access private
+	 */
+	private function _clear_log()
+	{
+		Litespeed_File::save( self::$log_path, '' ) ;
 	}
 
 	/**

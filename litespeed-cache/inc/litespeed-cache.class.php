@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.6.5.1' ;
+	const PLUGIN_VERSION = '1.6.6' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -52,6 +52,7 @@ class LiteSpeed_Cache
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
+	const ACTION_LOG = 'log' ;
 
 	const ACTION_MEDIA = 'media' ;
 	const ACTION_REPORT = 'report' ;
@@ -304,6 +305,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_MEDIA:
 				$msg = LiteSpeed_Cache_Media::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_LOG:
+				$msg = LiteSpeed_Cache_Log::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_REPORT:

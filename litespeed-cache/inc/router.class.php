@@ -339,6 +339,12 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
+			case LiteSpeed_Cache::ACTION_LOG:
+				if ( $_can_network_option || $_can_option ) {
+					self::$_action = $action ;
+				}
+				return ;
+
 			case LiteSpeed_Cache::ACTION_REPORT:
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
