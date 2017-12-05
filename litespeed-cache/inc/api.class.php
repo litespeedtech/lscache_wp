@@ -480,4 +480,15 @@ class LiteSpeed_Cache_API
 		add_action('litespeed_cache_api_load_thirdparty', $cls . '::detect') ;
 	}
 
+	/**
+	 * Hook to litespeed init
+	 *
+	 * @since 1.6.6
+	 * @access public
+	 */
+	public static function hook_init( $hook )
+	{
+		add_action('litespeed_init', $hook) ;
+	}
+
 }

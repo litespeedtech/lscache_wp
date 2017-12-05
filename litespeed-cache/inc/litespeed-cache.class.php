@@ -107,6 +107,12 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Log::debug( 'Purge Queue found&sent: ' . $purge_queue ) ;
 			delete_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ;
 		}
+
+		/**
+		 * Added hook before init
+		 * @since  1.6.6
+		 */
+		do_action( 'litespeed_before_init' ) ;
 	}
 
 	/**
@@ -121,6 +127,12 @@ class LiteSpeed_Cache
 	 */
 	public function init()
 	{
+		/**
+		 * Added hook before init
+		 * @since  1.6.6
+		 */
+		do_action( 'litespeed_init' ) ;
+
 		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
