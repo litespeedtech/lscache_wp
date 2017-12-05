@@ -1008,6 +1008,10 @@ class LiteSpeed_Cache_Media
 				$num_will_incease += count( $meta_value[ 'sizes' ] ) ;
 			}
 			if ( $this->_img_total + $num_will_incease > $_credit ) {
+				if ( ! $this->_img_total ) {
+					$msg = sprintf( __( 'Number of images in one image group (%s) exceeds the credit (%s)', 'litespeed-cache' ), $num_will_incease, $_credit ) ;
+					LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+				}
 				LiteSpeed_Cache_Log::debug( 'Media img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
 				break ;
 			}
