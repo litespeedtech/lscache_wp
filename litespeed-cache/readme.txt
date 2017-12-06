@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.6.5.1
+Stable tag: 1.6.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -239,6 +239,18 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.6 - December 6 2017 =
+* [NEW FEATURE] Preserve EXIF in Media setting.
+* [NEW FEATURE] Clear log button in Debug Log Viewer.
+* [IAPI] Fixed notified images resetting to previous status when pulling.
+* [IAPI] Fixed HTTPS compatibility for image optimization initialization.
+* [IAPI] An error message is now displayed when image optimization request submission is bypassed due to a lack of credit.
+* [IAPI] IAPI v1.6.6.
+* [IMPROVEMENT] Support JS data-no-optimize attribute to bypass optimization.
+* [GUI] Added image group wiki link.
+* [INTEGRATION] Improved compatibility with Login With Ajax.
+* [INTEGRATION] Added function_exists check for WooCommerce to avoid 500 errors.
 
 = 1.6.5.1 - December 1 2017 =
 * [HOTFIX] Fixed warning message on Edit .htaccess page.

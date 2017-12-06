@@ -91,19 +91,19 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This might be inportant to photographers.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This will increase the optimized file size.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Preserve EXIF data (copyright, GPS, descriptions, tags, etc) when optimizing.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
 
-	<tr>
+	<tr class="litespeed-hide">
 		<th><?php echo __( 'WebP Lossless Compression', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Compress WebP with lossless option.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This will increase the optimized file size.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Generate WebP images using lossless compression.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve quality at the cost of larger images.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

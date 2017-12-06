@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.6.5\n"
+"Project-Id-Version: LiteSpeed Cache 1.6.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-11-30 20:28:55+00:00\n"
+"POT-Creation-Date: 2017-12-06 19:50:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,12 +16,12 @@ msgstr ""
 msgid "IAPI Error %s"
 msgstr ""
 
-#: admin/admin-api.class.php:268 inc/media.class.php:432
-msgid "Failed to communicate with LiteSpeed server"
+#: admin/admin-api.class.php:268
+msgid "Failed to communicate with LiteSpeed image server"
 msgstr ""
 
 #: admin/admin-api.class.php:276 admin/admin-api.class.php:287
-msgid "Message from LiteSpeed server"
+msgid "Message from LiteSpeed image server"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:140
@@ -63,7 +63,7 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:850
+#: admin/litespeed-cache-admin-display.class.php:834
 #: admin/tpl/setting/settings_media.php:66
 #: admin/tpl/setting/settings_optimize.php:135
 #: admin/tpl/setting/settings_tuning.php:19
@@ -71,13 +71,13 @@ msgstr ""
 msgid "ON"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:854
+#: admin/litespeed-cache-admin-display.class.php:838
 #: admin/tpl/setting/settings_tuning.php:16
 #: admin/tpl/setting/settings_tuning.php:52
 msgid "OFF"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:887
+#: admin/litespeed-cache-admin-display.class.php:871
 msgid "Recommended value: %s"
 msgstr ""
 
@@ -341,7 +341,7 @@ msgstr ""
 msgid "Clean all CSS/JS optimizer data successfully."
 msgstr ""
 
-#: admin/litespeed-cache-admin-report.class.php:60 inc/media.class.php:1037
+#: admin/litespeed-cache-admin-report.class.php:60 inc/media.class.php:1049
 msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
@@ -364,7 +364,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:258
-#: admin/litespeed-cache-admin-settings.class.php:747
+#: admin/litespeed-cache-admin-settings.class.php:749
 msgid "Default Public Cache"
 msgstr ""
 
@@ -392,30 +392,30 @@ msgstr ""
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:608
+#: admin/litespeed-cache-admin-settings.class.php:610
 #: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:674
+#: admin/litespeed-cache-admin-settings.class.php:676
 #: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:675
+#: admin/litespeed-cache-admin-settings.class.php:677
 #: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:676
+#: admin/litespeed-cache-admin-settings.class.php:678
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:677
+#: admin/litespeed-cache-admin-settings.class.php:679
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:678
+#: admin/litespeed-cache-admin-settings.class.php:680
 #: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
@@ -620,6 +620,10 @@ msgstr ""
 msgid "LiteSpeed Cache Debug Log Viewer"
 msgstr ""
 
+#: admin/tpl/debug_log.php:29
+msgid "Clear Log"
+msgstr ""
+
 #: admin/tpl/edit_htaccess.php:31
 msgid "LiteSpeed Cache Edit .htaccess"
 msgstr ""
@@ -756,7 +760,7 @@ msgid "Beta Version"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:100
-msgid "Image groups total"
+msgid "<a %s>Image groups</a> total"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:101
@@ -2523,6 +2527,31 @@ msgid ""
 "WebP versions will still be generated."
 msgstr ""
 
+#: admin/tpl/setting/settings_media.php:90
+msgid "Preserve EXIF data"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:94
+msgid ""
+"Preserve EXIF data (copyright, GPS, descriptions, tags, etc) when optimizing."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:95
+msgid "This will increase the size of optimized files."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:101
+msgid "WebP Lossless Compression"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:105
+msgid "Generate WebP images using lossless compression."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:106
+msgid "This can improve quality at the cost of larger images."
+msgstr ""
+
 #: admin/tpl/setting/settings_optimize.php:6
 msgid "Optimization Settings"
 msgstr ""
@@ -2705,7 +2734,7 @@ msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
 #: admin/tpl/setting/settings_purge.php:47
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:771
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:791
 msgid "Note:"
 msgstr ""
 
@@ -3012,35 +3041,35 @@ msgstr ""
 msgid "More settings"
 msgstr ""
 
-#: inc/litespeed-cache.class.php:226 includes/litespeed-cache.class.php:226
+#: inc/litespeed-cache.class.php:239 includes/litespeed-cache.class.php:239
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:231 includes/litespeed-cache.class.php:231
+#: inc/litespeed-cache.class.php:244 includes/litespeed-cache.class.php:244
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:236 includes/litespeed-cache.class.php:236
+#: inc/litespeed-cache.class.php:249 includes/litespeed-cache.class.php:249
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:241 includes/litespeed-cache.class.php:241
+#: inc/litespeed-cache.class.php:254 includes/litespeed-cache.class.php:254
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:246 includes/litespeed-cache.class.php:246
+#: inc/litespeed-cache.class.php:259 includes/litespeed-cache.class.php:259
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:252 includes/litespeed-cache.class.php:252
+#: inc/litespeed-cache.class.php:265 includes/litespeed-cache.class.php:265
 msgid "Notified LiteSpeed Web Server to purge all caches."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:259 includes/litespeed-cache.class.php:259
+#: inc/litespeed-cache.class.php:272 includes/litespeed-cache.class.php:272
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:274 includes/litespeed-cache.class.php:274
+#: inc/litespeed-cache.class.php:287 includes/litespeed-cache.class.php:287
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
@@ -3088,19 +3117,27 @@ msgstr ""
 msgid "Switched to optimized file successfully."
 msgstr ""
 
+#: inc/media.class.php:432
+msgid "Failed to communicate with LiteSpeed server"
+msgstr ""
+
 #: inc/media.class.php:441
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/media.class.php:1046
+#: inc/media.class.php:1012
+msgid "Number of images in one image group (%s) exceeds the credit (%s)"
+msgstr ""
+
+#: inc/media.class.php:1058
 msgid "Failed to parse data from LiteSpeed server: %s"
 msgstr ""
 
-#: inc/media.class.php:1067
+#: inc/media.class.php:1079
 msgid "Post data is empty."
 msgstr ""
 
-#: inc/media.class.php:1099
+#: inc/media.class.php:1111
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
@@ -3187,75 +3224,75 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:706
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:726
 msgid "WooCommerce"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:709
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:729
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:710
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:730
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:711
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:731
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:712
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:732
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:713
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:733
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:714
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:734
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:717
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:737
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:718
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:738
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:719
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:739
 msgid ""
 "For example, if the homepage for the site is located at %1$s, the shop page "
 "may be located at %2$s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:747
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:767
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:754
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:774
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:761
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:781
 msgid "Privately Cache Cart"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:765
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:785
 msgid "Privately cache cart when not empty."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:773
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:793
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:774
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:794
 msgid "To test the cart, visit the <a %s>FAQ</a>."
 msgstr ""
 
