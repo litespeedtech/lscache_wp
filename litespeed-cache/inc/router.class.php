@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Router
 		$user = wp_get_current_user() ;
 		$user_id = $user->ID ;
 
-		LiteSpeed_Cache_Log::debug2( 'get_uid: ' . $user_id ) ;
+		LiteSpeed_Cache_Log::debug( 'get_uid: ' . $user_id ) ;
 
 		define( 'LITESPEED_WP_UID', $user_id ) ;
 
@@ -64,6 +64,8 @@ class LiteSpeed_Cache_Router
 			return false ;
 		}
 		$role = $user->roles[ 0 ] ;
+
+		LiteSpeed_Cache_Log::debug( 'get_role: ' . $role ) ;
 
 		define( 'LITESPEED_WP_ROLE', $role ) ;
 
