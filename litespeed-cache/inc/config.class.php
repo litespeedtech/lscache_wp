@@ -386,6 +386,10 @@ class LiteSpeed_Cache_Config
 			$group = 99 ;
 		}
 
+		if ( $group ) {
+			LiteSpeed_Cache_Log::debug2( 'Config: role in vary_group [group] ' . $group ) ;
+		}
+
 		return $group ;
 	}
 

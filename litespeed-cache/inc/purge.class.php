@@ -36,6 +36,7 @@ class LiteSpeed_Cache_Purge
 		}
 
 		self::$_pub_purge = array_merge( self::$_pub_purge, $tags ) ;
+		LiteSpeed_Cache_Log::debug( 'Purge: added ' . implode( ',', $tags ), 3 ) ;
 
 		// Send purge header immediately
 		$curr_built = self::_build() ;
@@ -65,6 +66,8 @@ class LiteSpeed_Cache_Purge
 		if ( ! array_diff( $tags, self::$_priv_purge ) ) {
 			return ;
 		}
+
+		LiteSpeed_Cache_Log::debug( 'Purge: added [private] ' . implode( ',', $tags ), 3 ) ;
 
 		self::$_priv_purge = array_merge( self::$_priv_purge, $tags ) ;
 

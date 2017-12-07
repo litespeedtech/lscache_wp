@@ -431,9 +431,20 @@ class LiteSpeed_Cache_API
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function debug($info)
+	public static function debug( $info, $backtrace_limit = false )
 	{
-		LiteSpeed_Cache_Log::debug($info) ;
+		LiteSpeed_Cache_Log::debug( $info, $backtrace_limit ) ;
+	}
+
+	/**
+	 * Log debug info ( advanced mode )
+	 *
+	 * @since 1.6.6.1
+	 * @access public
+	 */
+	public static function debug2( $info, $backtrace_limit = false )
+	{
+		LiteSpeed_Cache_Log::debug2( $info, $backtrace_limit ) ;
 	}
 
 	/**
