@@ -112,7 +112,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 					add_action( $v, array( $this, 'purge_esi' ) ) ;
 				}
 				else {
-					LiteSpeed_Cache_API::purge_private_all() ;
+					add_action( $v, 'LiteSpeed_Cache_API::purge_private_all' ) ;
 				}
 			}
 		}
