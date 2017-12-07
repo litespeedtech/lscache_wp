@@ -23,7 +23,7 @@ class LiteSpeed_Cache_ThirdParty_Login_With_Ajax
 	 */
 	public static function detect()
 	{
-		LiteSpeed_Cache_API::debug( '3rd lwa checking' ) ;
+		LiteSpeed_Cache_API::debug2( '3rd lwa checking' ) ;
 		if ( defined( 'LOGIN_WITH_AJAX_VERSION' ) ) {
 			LiteSpeed_Cache_API::debug( '3rd lwa found' ) ;
 			if ( ! empty( $_REQUEST[ "login-with-ajax" ] ) ) {

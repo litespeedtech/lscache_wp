@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Router
 		$user = wp_get_current_user() ;
 		$user_id = $user->ID ;
 
-		LiteSpeed_Cache_Log::debug( 'get_uid: ' . $user_id ) ;
+		LiteSpeed_Cache_Log::debug( 'Router: get_uid: ' . $user_id ) ;
 
 		define( 'LITESPEED_WP_UID', $user_id ) ;
 
@@ -57,7 +57,7 @@ class LiteSpeed_Cache_Router
 		$user = get_userdata( self::get_uid() ) ;
 		if ( empty( $user->roles[ 0 ] ) ) {
 			// Guest user
-			LiteSpeed_Cache_Log::debug( 'bypassed role check, guest' ) ;
+			LiteSpeed_Cache_Log::debug( 'Router: bypassed role check, guest' ) ;
 
 			define( 'LITESPEED_WP_ROLE', false ) ;
 
@@ -65,7 +65,7 @@ class LiteSpeed_Cache_Router
 		}
 		$role = $user->roles[ 0 ] ;
 
-		LiteSpeed_Cache_Log::debug( 'get_role: ' . $role ) ;
+		LiteSpeed_Cache_Log::debug( 'Router: get_role: ' . $role ) ;
 
 		define( 'LITESPEED_WP_ROLE', $role ) ;
 

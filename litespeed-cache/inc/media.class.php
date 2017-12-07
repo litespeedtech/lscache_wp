@@ -950,6 +950,7 @@ class LiteSpeed_Cache_Media
 	private function _img_optimize()
 	{
 		$_credit = (int) $this->summary_info( 'credit' ) ;
+		$img_taken = (int) $this->summary_info( 'img_taken' ) ;
 
 		LiteSpeed_Cache_Log::debug( 'Media preparing images to push' ) ;
 
@@ -1013,6 +1014,14 @@ class LiteSpeed_Cache_Media
 					LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 				}
 				LiteSpeed_Cache_Log::debug( 'Media img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
+				break ;
+			}
+			/**
+			 * Check if need to test run ( new user only allow 1 group at first time)
+			 * @since 1.6.6.1
+			 */
+			if ( $this->_img_total && ! $img_taken ) {
+				LiteSpeed_Cache_Log::debug( 'Media: test run only allow 1 group ' ) ;
 				break ;
 			}
 

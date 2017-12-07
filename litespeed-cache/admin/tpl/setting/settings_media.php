@@ -91,7 +91,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Preserve EXIF data (copyright, GPS, descriptions, tags, etc) when optimizing.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
