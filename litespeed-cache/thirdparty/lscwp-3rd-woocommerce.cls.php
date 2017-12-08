@@ -524,7 +524,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				elseif ( ! $this->esi_eanbled && $woocom->cart->get_cart_contents_count() !== 0 ) {
 					if ( $this->cache_cart ) {
 						LiteSpeed_Cache_API::set_cache_private() ;
-						LiteSpeed_Cache_API::set_cache_no_vary() ;
+						/**
+						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary
+						 * @since 1.6.6.1
+						 */
+						// LiteSpeed_Cache_API::set_cache_no_vary() ;
 						LiteSpeed_Cache_API::add_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
 					}
 					else {

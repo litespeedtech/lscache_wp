@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_NO_VARY ;
-		LiteSpeed_Cache_Log::debug('X Cache_control -> no-vary') ;
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> no-vary', 3 ) ;
 	}
 
 	/**
