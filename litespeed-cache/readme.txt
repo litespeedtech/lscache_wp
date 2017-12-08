@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.6.6
+Stable tag: 1.6.6.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -239,6 +239,12 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.6.6.1 - December 8 2017 =
+* [IAPI] Limit first-time submission to one image group for test-run purposes.
+* [BUGFIX] Fixed vary group generation issue associated with custom user role plugins.
+* [BUGFIX] Fixed WooCommerce issue where logged-in users were erroneously purged when ESI is off.
+* [BUGFIX] Fixed WooCommerce cache miss issue when ESI is off.
 
 = 1.6.6 - December 6 2017 =
 * [NEW FEATURE] Preserve EXIF in Media setting.
