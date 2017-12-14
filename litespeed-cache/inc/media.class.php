@@ -19,6 +19,7 @@ class LiteSpeed_Cache_Media
 	const TYPE_SYNC_DATA = 'sync_data' ;
 	const TYPE_IMG_UPDATE_RAW = 'img_update_raw' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
+	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan' ;
 	const TYPE_IMG_PULL = 'img_pull' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
@@ -475,6 +476,10 @@ class LiteSpeed_Cache_Media
 				$instance->_img_optimize() ;
 				break ;
 
+			case self::TYPE_IMG_OPTIMIZE_RESCAN :
+				$instance->_img_optimize_rescan() ;
+				break ;
+
 			case self::TYPE_IMG_UPDATE_RAW :
 				$instance->_img_update_raw() ;//todo
 				break ;
@@ -875,9 +880,6 @@ class LiteSpeed_Cache_Media
 		foreach ( $meta_value_list as $v ) {
 			$changed = false ;
 			$md52src_list = unserialize( $v->meta_value ) ;
-			$has_notify = false ;
-			$has_request = false ;
-			$has_pull = false ;
 			// replace src tag from requested to notified
 			foreach ( $md52src_list as $md5 => $v2 ) {
 				if ( in_array( $md5, $notified_data[ $v->post_id ] ) && $v2[ 1 ] !== self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
@@ -885,22 +887,14 @@ class LiteSpeed_Cache_Media
 					$md52src_list[ $md5 ][ 2 ] = $server ;
 					$changed = true ;
 				}
-
-				if ( $md52src_list[ $md5 ][ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
-					$has_notify = true ;
-				}
-				if ( $md52src_list[ $md5 ][ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) {
-					$has_request = true ;
-				}
-				if ( $md52src_list[ $md5 ][ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
-					$has_pull = true ;
-				}
 			}
 
 			if ( ! $changed ) {
 				LiteSpeed_Cache_Log::debug( 'Media: notify_img [status] ' . $status . ' continue: no changed meta [pid] ' . $v->post_id ) ;
 				continue ;
 			}
+
+			$new_status = $this->_get_status_by_meta_data( $md52src_list, $status ) ;
 
 			// Save meta data
 			$md52src_list = serialize( $md52src_list ) ;
@@ -910,18 +904,6 @@ class LiteSpeed_Cache_Media
 			// Overwrite post meta status to the latest one
 			$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE post_id = %d AND meta_key = %s" ;
 			// If partly needs notified to pull, notified should overwrite this post's status always
-			if ( $has_notify ) {
-				$new_status = self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ;
-			}
-			elseif ( $has_request ) {
-				$new_status = self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ;
-			}
-			elseif ( $has_pull ) {
-				$new_status = self::DB_IMG_OPTIMIZE_STATUS_PULLED ;
-			}
-			else {
-				$new_status = $status ;
-			}
 			$wpdb->query( $wpdb->prepare( $q, array( $new_status, $v->post_id, self::DB_IMG_OPTIMIZE_STATUS ) ) ) ;
 
 			LiteSpeed_Cache_Log::debug( 'Media: notify_img [status] ' . $status . ' updated post_meta [pid] ' . $v->post_id ) ;
@@ -939,6 +921,262 @@ class LiteSpeed_Cache_Media
 
 		echo json_encode( array( 'count' => count( $notified_data ) ) ) ;
 		exit() ;
+	}
+
+	/**
+	 * Generate post's img optm status from child images meta value
+	 *
+	 * @since 1.6.7
+	 * @access private
+	 */
+	private function _get_status_by_meta_data( $md52src_list, $default_status )
+	{
+		$has_notify = false ;
+		$has_request = false ;
+		$has_pull = false ;
+
+		foreach ( $md52src_list as $v ) {
+			if ( $v[ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
+				$has_notify = true ;
+			}
+			if ( $v[ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) {
+				$has_request = true ;
+			}
+			if ( $v[ 1 ] == self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
+				$has_pull = true ;
+			}
+		}
+
+		if ( $has_notify ) {
+			$new_status = self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ;
+		}
+		elseif ( $has_request ) {
+			$new_status = self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ;
+		}
+		elseif ( $has_pull ) {
+			$new_status = self::DB_IMG_OPTIMIZE_STATUS_PULLED ;
+		}
+		else {
+			$new_status = $default_status ;
+		}
+
+		return $new_status ;
+
+	}
+
+	/**
+	 * Parse wp's meta value
+	 *
+	 * @since 1.6.7
+	 * @access private
+	 */
+	private function _parse_wp_meta_value( $v )
+	{
+			if ( ! $v->meta_value ) {
+				LiteSpeed_Cache_Log::debug( 'Media: bypassed parsing meta due to no meta_value: pid ' . $v->post_id ) ;
+				return false ;
+			}
+
+			try {
+				$meta_value = unserialize( $v->meta_value ) ;
+			}
+			catch ( \Exception $e ) {
+				LiteSpeed_Cache_Log::debug( 'Media: bypassed parsing meta due to meta_value not json: pid ' . $v->post_id ) ;
+				return false ;
+			}
+
+			if ( empty( $meta_value[ 'file' ] ) ) {
+				LiteSpeed_Cache_Log::debug( 'Media: bypassed parsing meta due to no ori file: pid ' . $v->post_id ) ;
+				return false ;
+			}
+
+			return $meta_value ;
+
+	}
+
+	/**
+	 * Push img to LiteSpeed server
+	 *
+	 * @since 1.6.7
+	 * @access private
+	 */
+	private function _push_img_in_queue_to_ls()
+	{
+		$data = array(
+			'list' => $this->_img_in_queue,
+			'webp_only'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ),
+			'keep_exif'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ),
+			'webp_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ),
+		) ;
+
+		// Push to LiteSpeed server
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+
+		if ( $json === null ) {// admin_api will handle common err
+			return null ;
+		}
+
+		if ( ! is_array( $json ) ) {
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
+			$msg = sprintf( __( 'Failed to push to LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return null ;
+		}
+
+		// Check data format
+		if ( empty( $json[ 'pids' ] ) || ! is_array( $json[ 'pids' ] ) ) {
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to parse data from LiteSpeed server ', $json[ 'pids' ] ) ;
+			$msg = sprintf( __( 'Failed to parse data from LiteSpeed server: %s', 'litespeed-cache' ), $json[ 'pids' ] ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return null ;
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Media: posts data from LiteSpeed server count: ' . count( $json[ 'pids' ] ) ) ;
+
+		return $json ;
+
+	}
+
+	/**
+	 * Resend requested img to LiteSpeed server
+	 *
+	 * @since 1.6.7
+	 * @access private
+	 */
+	private function _img_optimize_rescan()
+	{
+		LiteSpeed_Cache_Log::debug( 'Media: resend requested images' ) ;
+
+		$_credit = (int) $this->summary_info( 'credit' ) ;
+
+		global $wpdb ;
+
+		$q = "SELECT a.post_id, a.meta_value, b.meta_id as bmeta_id, c.meta_id as cmeta_id, c.meta_value as cmeta_value
+			FROM $wpdb->postmeta a
+			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id
+			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.post_id
+			WHERE a.meta_key = '_wp_attachment_metadata'
+				AND b.meta_key = %s
+				AND c.meta_key= %s
+			LIMIT %d
+			" ;
+		$limit_rows = apply_filters( 'litespeed_img_optm_resend_rows', 300 ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_DATA, $limit_rows ) ) ) ;
+		if ( ! $list ) {
+			LiteSpeed_Cache_Log::debug( 'Media: resend request bypassed: no image found' ) ;
+			$msg = __( 'No image found', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		// meta list
+		$optm_data_list = array() ;
+		$optm_data_pid2mid_list = array() ;
+
+		foreach ( $list as $v ) {
+			// wp meta
+			$meta_value = $this->_parse_wp_meta_value( $v ) ;
+			if ( ! $meta_value ) {
+				continue ;
+			}
+			if ( empty( $meta_value[ 'sizes' ] ) ) {
+				continue ;
+			}
+
+			$optm_data_pid2mid_list[ $v->post_id ] = array( 'status_mid' => $v->bmeta_id, 'data_mid' => $v->cmeta_id ) ;
+
+			// prepare for pushing
+			$this->tmp_pid = $v->post_id ;
+			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/' ;
+
+			// ls optimized meta
+			$optm_meta = $optm_data_list[ $v->post_id ] = unserialize( $v->cmeta_value ) ;
+			$optm_list = array() ;
+			foreach ( $optm_meta as $md5 => $optm_row ) {
+				$optm_list[] = $optm_row[ 0 ] ;
+				// only do for requested/notified img
+				// if ( ! in_array( $optm_row[ 1 ], array( self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ) {
+				// 	continue ;
+				// }
+			}
+
+			// check if there is new files from wp meta
+			$img_queue = array() ;
+			foreach ( $meta_value[ 'sizes' ] as $v2 ) {
+				$curr_file = $this->tmp_path . $v2[ 'file' ] ;
+
+				// new child file OR not finished yet
+				if ( ! in_array( $curr_file, $optm_list ) ) {
+					$img_queue[] = $v2 ;
+				}
+			}
+
+			// nothing to add
+			if ( ! $img_queue ) {
+				continue ;
+			}
+
+			$num_will_incease = count( $img_queue ) ;
+			if ( $this->_img_total + $num_will_incease > $_credit ) {
+				LiteSpeed_Cache_Log::debug( 'Media: resend img request hit limit: [total] ' . $this->_img_total . " \t[add] $num_will_incease \t[credit] $_credit" ) ;
+				break ;
+			}
+
+			foreach ( $img_queue as $v2 ) {
+				$this->_img_queue( $v2 ) ;
+			}
+		}
+
+		// push to LiteSpeed server
+		if ( empty( $this->_img_in_queue ) ) {
+			$msg = __( 'No image found.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			return ;
+		}
+
+		$total_groups = count( $this->_img_in_queue ) ;
+		LiteSpeed_Cache_Log::debug( 'Media: prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
+
+		// Push to LiteSpeed server
+		$json = $this->_push_img_in_queue_to_ls() ;
+		if ( $json === null ) {
+			return ;
+		}
+		// Returned data is the requested and notifed images
+		$pids = $json[ 'pids' ] ;
+
+		LiteSpeed_Cache_Log::debug( 'Media: returned data from LiteSpeed server count: ' . count( $pids ) ) ;
+
+		$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d" ;
+
+		// Update data
+		foreach ( $pids as $pid ) {
+			$md52src_list = $optm_data_list[ $pid ] ;
+
+			foreach ( $this->_img_in_queue[ $pid ] as $md5 => $src_data ) {
+				$md52src_list[ $md5 ] = array( $src_data[ 'file' ], self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ;
+			}
+
+			$new_status = $this->_get_status_by_meta_data( $md52src_list, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ;
+
+			$md52src_list = serialize( $md52src_list ) ;
+
+			// Store data
+			$wpdb->query( $wpdb->prepare( $q, array( $new_status, $optm_data_pid2mid_list[ $pid ][ 'status_mid' ] ) ) ) ;
+			$wpdb->query( $wpdb->prepare( $q, array( $md52src_list, $optm_data_pid2mid_list[ $pid ][ 'data_mid' ] ) ) ) ;
+		}
+
+		$accepted_groups = count( $pids ) ;
+		$accepted_imgs = $json[ 'total' ] ;
+
+		$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+		// Update credit info
+		if ( isset( $json[ 'credit' ] ) ) {
+			$this->_update_credit( $json[ 'credit' ] ) ;
+		}
+
 	}
 
 	/**
@@ -981,21 +1219,8 @@ class LiteSpeed_Cache_Media
 
 		foreach ( $list as $v ) {
 
-			if ( ! $v->meta_value ) {
-				LiteSpeed_Cache_Log::debug( 'Media bypass image due to no meta_value: pid ' . $v->post_id ) ;
-				continue ;
-			}
-
-			try {
-				$meta_value = unserialize( $v->meta_value ) ;
-			}
-			catch ( \Exception $e ) {
-				LiteSpeed_Cache_Log::debug( 'Media bypass image due to meta_value not json: pid ' . $v->post_id ) ;
-				continue ;
-			}
-
-			if ( empty( $meta_value[ 'file' ] ) ) {
-				LiteSpeed_Cache_Log::debug( 'Media bypass image due to no ori file: pid ' . $v->post_id ) ;
+			$meta_value = $this->_parse_wp_meta_value( $v ) ;
+			if ( ! $meta_value ) {
 				continue ;
 			}
 
@@ -1036,94 +1261,74 @@ class LiteSpeed_Cache_Media
 		}
 
 		// push to LiteSpeed server
-		if ( ! empty( $this->_img_in_queue ) ) {
-			$total_groups = count( $this->_img_in_queue ) ;
-			LiteSpeed_Cache_Log::debug( 'Media prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
-
-			$data = array(
-				'list' => $this->_img_in_queue,
-				'webp_only'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ),
-				'keep_exif'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ),
-				'webp_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ),
-			) ;
-
-			// Push to LiteSpeed server
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
-			if ( $json === null ) {// admin_api will handle common err
-				return ;
-			}
-
-			if ( ! is_array( $json ) ) {
-				LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
-				$msg = sprintf( __( 'Failed to push to LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
-				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-				return ;
-			}
-
-			// Mark them as requested
-			$pids = $json[ 'pids' ] ;
-			if ( empty( $pids ) || ! is_array( $pids ) ) {
-				LiteSpeed_Cache_Log::debug( 'Media: Failed to parse data from LiteSpeed server ', $pids ) ;
-				$msg = sprintf( __( 'Failed to parse data from LiteSpeed server: %s', 'litespeed-cache' ), $pids ) ;
-				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-				return ;
-			}
-
-			LiteSpeed_Cache_Log::debug( 'Media: posts data from LiteSpeed server count: ' . count( $pids ) ) ;
-
-			// Exclude those who have meta already
-			$q = "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s and post_id in ( " . implode( ',', array_fill( 0, count( $pids ), '%s' ) ) . " )" ;
-			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_STATUS ), $pids ) ) ) ;
-			$exists_pids = array() ;
-			foreach ( $tmp as $v ) {
-				$exists_pids[] = $v->post_id ;
-			}
-			if ( $exists_pids ) {
-				LiteSpeed_Cache_Log::debug( 'Media: existing posts data from LiteSpeed server count: ' . count( $exists_pids ) ) ;
-			}
-			$pids = array_diff( $pids, $exists_pids ) ;
-
-			if ( ! $pids ) {
-				LiteSpeed_Cache_Log::debug( 'Media: Failed to store data from LiteSpeed server with empty pids' ) ;
-				LiteSpeed_Cache_Admin_Display::error( __( 'Post data is empty.', 'litespeed-cache' ) ) ;
-				return ;
-			}
-
-			LiteSpeed_Cache_Log::debug( 'Media: diff posts data from LiteSpeed server count: ' . count( $pids ) ) ;
-
-			$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
-			$data_to_add = array() ;
-			foreach ( $pids as $pid ) {
-				$data_to_add[] = $pid ;
-				$data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS ;
-				$data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ;
-				$data_to_add[] = $pid ;
-				$data_to_add[] = self::DB_IMG_OPTIMIZE_DATA ;
-				$md52src_list = array() ;
-				foreach ( $this->_img_in_queue[ $pid ] as $md5 => $src_data ) {
-					$md52src_list[ $md5 ] = array( $src_data[ 'file' ], self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ;
-				}
-				$data_to_add[] = serialize( $md52src_list ) ;
-			}
-			// Add placeholder
-			$q .= implode( ',', array_map(
-				function( $el ) { return '(' . implode( ',', $el ) . ')' ; },
-				array_chunk( array_fill( 0, count( $data_to_add ), '%s' ), 3 )
-			) ) ;
-			// Store data
-			$wpdb->query( $wpdb->prepare( $q, $data_to_add ) ) ;
-
-
-			$accepted_groups = count( $pids ) ;
-			$accepted_imgs = $json[ 'total' ] ;
-
-			$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
+		if ( empty( $this->_img_in_queue ) ) {
+			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			return ;
+		}
 
-			// Update credit info
-			if ( isset( $json[ 'credit' ] ) ) {
-				$this->_update_credit( $json[ 'credit' ] ) ;
+		$total_groups = count( $this->_img_in_queue ) ;
+		LiteSpeed_Cache_Log::debug( 'Media prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
+
+		// Push to LiteSpeed server
+		$json = $this->_push_img_in_queue_to_ls() ;
+		if ( $json === null ) {
+			return ;
+		}
+		$pids = $json[ 'pids' ] ;
+
+		// Exclude those who have meta already
+		$q = "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s and post_id in ( " . implode( ',', array_fill( 0, count( $pids ), '%s' ) ) . " )" ;
+		$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_STATUS ), $pids ) ) ) ;
+		$exists_pids = array() ;
+		foreach ( $tmp as $v ) {
+			$exists_pids[] = $v->post_id ;
+		}
+		if ( $exists_pids ) {
+			LiteSpeed_Cache_Log::debug( 'Media: existing posts data from LiteSpeed server count: ' . count( $exists_pids ) ) ;
+		}
+		$pids = array_diff( $pids, $exists_pids ) ;
+
+		if ( ! $pids ) {
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to store data from LiteSpeed server with empty pids' ) ;
+			LiteSpeed_Cache_Admin_Display::error( __( 'Post data is empty.', 'litespeed-cache' ) ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Media: diff posts data from LiteSpeed server count: ' . count( $pids ) ) ;
+
+		$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
+		$data_to_add = array() ;
+		foreach ( $pids as $pid ) {
+			$data_to_add[] = $pid ;
+			$data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS ;
+			$data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ;
+			$data_to_add[] = $pid ;
+			$data_to_add[] = self::DB_IMG_OPTIMIZE_DATA ;
+			$md52src_list = array() ;
+			foreach ( $this->_img_in_queue[ $pid ] as $md5 => $src_data ) {
+				$md52src_list[ $md5 ] = array( $src_data[ 'file' ], self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ;
 			}
+			$data_to_add[] = serialize( $md52src_list ) ;
+		}
+		// Add placeholder
+		$q .= implode( ',', array_map(
+			function( $el ) { return '(' . implode( ',', $el ) . ')' ; },
+			array_chunk( array_fill( 0, count( $data_to_add ), '%s' ), 3 )
+		) ) ;
+		// Store data
+		$wpdb->query( $wpdb->prepare( $q, $data_to_add ) ) ;
+
+
+		$accepted_groups = count( $pids ) ;
+		$accepted_imgs = $json[ 'total' ] ;
+
+		$msg = sprintf( __( 'Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache' ), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+		// Update credit info
+		if ( isset( $json[ 'credit' ] ) ) {
+			$this->_update_credit( $json[ 'credit' ] ) ;
 		}
 	}
 

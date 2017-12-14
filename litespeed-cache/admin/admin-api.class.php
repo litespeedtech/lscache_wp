@@ -11,7 +11,7 @@ class LiteSpeed_Cache_Admin_API
 {
 	private static $_instance ;
 
-	private $_sapi_key ;
+	private $_iapi_key ;
 
 	const DB_API_KEY = 'litespeed_api_key' ;
 	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function __construct()
 	{
-		$this->_sapi_key = get_option( self::DB_API_KEY ) ?: '' ;
+		$this->_iapi_key = get_option( self::DB_API_KEY ) ?: '' ;
 	}
 
 	/**
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		// don't have auth_key yet
-		if ( ! $instance->_sapi_key ) {
+		if ( ! $instance->_iapi_key ) {
 			LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive check failed: No init key' ) ;
 			return false ;
 		}
@@ -162,7 +162,7 @@ class LiteSpeed_Cache_Admin_API
 			return false ;
 		}
 
-		$res = md5( $instance->_sapi_key ) === $_REQUEST[ 'auth_key' ] ;
+		$res = md5( $instance->_iapi_key ) === $_REQUEST[ 'auth_key' ] ;
 		LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
 		return $res ;
 	}
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Admin_API
 		 * All requests must have api_key first
 		 * @since  1.6.5
 		 */
-		if ( ! $instance->_sapi_key ) {
+		if ( ! $instance->_iapi_key ) {
 			$instance->_request_key() ;
 		}
 
@@ -212,7 +212,7 @@ class LiteSpeed_Cache_Admin_API
 		update_option( self::DB_API_KEY, $json[ 'auth_key' ] ) ;
 		LiteSpeed_Cache_Log::debug( 'IAPI applied auth_key' ) ;
 
-		$this->_sapi_key = $json[ 'auth_key' ] ;
+		$this->_iapi_key = $json[ 'auth_key' ] ;
 
 	}
 
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Admin_API
 		LiteSpeed_Cache_Log::debug( 'IAPI posting to : ' . $url ) ;
 
 		$param = array(
-			'auth_key'	=> $this->_sapi_key,
+			'auth_key'	=> $this->_iapi_key,
 			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
 			'hash'	=> $hash,
 			'data' => $data,

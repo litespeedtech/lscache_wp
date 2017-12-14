@@ -182,6 +182,13 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<?php echo sprintf( __( 'Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
 		</p>
 
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success">
+			<?php echo __( 'Rescan and Send New Thumbnails Request', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'Rescan local images and send not finished images request again.', 'litespeed-cache' ) ; ?>
+		</span>
+
 
 	</div>
 </div>
