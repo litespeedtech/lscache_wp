@@ -277,8 +277,8 @@ class LiteSpeed_Cache_Admin_API
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::info( $msg ) ;
 			unset( $json[ '_info' ] ) ;
-			if ( ! empty( $json[ 'links' ] ) ) {
-				unset( $json[ 'links' ] ) ;
+			if ( ! empty( $json[ '_links' ] ) ) {
+				unset( $json[ '_links' ] ) ;
 			}
 		}
 
@@ -288,8 +288,8 @@ class LiteSpeed_Cache_Admin_API
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::note( $msg ) ;
 			unset( $json[ '_note' ] ) ;
-			if ( ! empty( $json[ 'links' ] ) ) {
-				unset( $json[ 'links' ] ) ;
+			if ( ! empty( $json[ '_links' ] ) ) {
+				unset( $json[ '_links' ] ) ;
 			}
 		}
 
@@ -297,7 +297,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Parse links from json
+	 * Parse _links from json
 	 *
 	 * @since  1.6.5
 	 * @access private
@@ -306,8 +306,8 @@ class LiteSpeed_Cache_Admin_API
 	{
 		$msg = '' ;
 
-		if ( ! empty( $json[ 'links' ] ) ) {
-			foreach ( $json[ 'links' ] as $v ) {
+		if ( ! empty( $json[ '_links' ] ) ) {
+			foreach ( $json[ '_links' ] as $v ) {
 				$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
 			}
 		}
