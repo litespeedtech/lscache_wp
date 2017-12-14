@@ -70,6 +70,15 @@ class LiteSpeed_Cache_Vary
 		// Set vary cookie for commenter.
 		add_action('set_comment_cookies', array( $this, 'append_commenter' ) ) ;
 
+		/**
+		 * Don't change for REST call because they don't carry on user info usually
+		 * @since 1.6.7
+		 */
+		add_action( 'rest_api_init', function(){
+			LiteSpeed_Cache_Log::debug( 'Vary: Rest API init disabled vary change' ) ;
+			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
+		} ) ;
+
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
 		$db_cookie = false ;
