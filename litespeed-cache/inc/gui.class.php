@@ -35,14 +35,19 @@ class LiteSpeed_Cache_GUI
 		}
 	}
 
+	/**
+	 * Display a pie
+	 *
+	 * @since 1.6.6
+	 */
 	public static function pie( $percent, $width = 50 )
 	{
 		return "
-		<svg class='litespeed-media-svg' width='$width' viewBox='0 0 33.83098862 33.83098862' xmlns='http://www.w3.org/2000/svg'>
-			<circle class='litespeed-pie_bg' cx='17.5' cy='17.5' r='16.5'></circle>
-			<circle class='litespeed-pie_circle' cx='17' cy='17.5' r='16.5'></circle>
+		<svg class='litespeed-pie' viewbox='0 0 33.83098862 33.83098862' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>
+			<circle class='litespeed-pie_bg' />
+			<circle class='litespeed-pie_circle' stroke-dasharray='$percent,100' />
 			<g class='litespeed-pie_info'>
-				<text x='16.91549431' y='15.5' alignment-baseline='central' text-anchor='middle'>$percent%</text>
+				<text x='16.91549431' y='15.5'>$percent%</text>
 			</g>
 		</svg>
 		";

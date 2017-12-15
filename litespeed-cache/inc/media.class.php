@@ -205,7 +205,7 @@ class LiteSpeed_Cache_Media
 			$info_ori = sprintf( '%s %s', $pie_ori, $txt_ori ) ;
 		}
 
-		echo "<p class='$cls_webp'>$info_webp $link_webp</p><p class='$cls_ori'>$info_ori $link_ori</p>" ;
+		echo "<p class='litespeed-media-p $cls_webp'>$info_webp $link_webp</p><p class='litespeed-media-p $cls_ori'>$info_ori $link_ori</p>" ;
 	}
 
 	/**
@@ -1122,7 +1122,7 @@ class LiteSpeed_Cache_Media
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_DATA, $limit_rows ) ) ) ;
 		if ( ! $list ) {
 			LiteSpeed_Cache_Log::debug( 'Media: resend request bypassed: no image found' ) ;
-			$msg = __( 'No image found', 'litespeed-cache' ) ;
+			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}

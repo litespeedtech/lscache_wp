@@ -1169,6 +1169,10 @@ ul.litespeed-shell-body {
 .litespeed-icon-media-optm 			{ background-image: url("../img/icons/img_optm.svg") ; }
 .litespeed-icon-media-optm-disabled { background-image: url("../img/icons/img_optm_disabled.svg") ; }
 
+p.litespeed-media-p{
+	margin-bottom: 1px !important;
+}
+
 p.litespeed-txt-webp {
 	color: #83b04a ;
 }
@@ -1187,28 +1191,43 @@ p.litespeed-txt-disabled {
 	width: 25px;
 	height: auto;
 }
-.litespeed-pie_info {
+
+@keyframes litespeed-circle-chart-fill {
+	to { stroke-dasharray: 0 100; }
+}
+
+.litespeed-pie{
+	vertical-align: middle;
+	margin: 5px;
 }
 
 circle.litespeed-pie_bg {
-	stroke: #cfe7f2;
+	stroke: #efefef;
 	stroke-width: 2;
 	fill: none;
-	cx: 17.5;
-	cy: 17.5;
-	r: 16.5;
+	cx: 16.91549431;
+	cy: 16.91549431;
+	r: 15.91549431;
 }
 
 circle.litespeed-pie_circle {
+	animation: litespeed-circle-chart-fill 2s reverse;
+	transform: rotate(-90deg);
+	transform-origin: center;
+
 	animation: litespeed-pie-fill 2s reverse; /* 1 */
-	stroke: #00afbf;
+	stroke: #00acc1;
 	stroke-width: 2;
-	stroke-dasharray: 30, 100;
 	stroke-linecap: round;
 	fill: none;
-	cx: 17;
-	cy: 17.5;
-	r: 16.5;
+	cx: 16.91549431;
+	cy: 16.91549431;
+	r: 15.91549431;
+}
+
+g.litespeed-pie_info text{
+	alignment-baseline: central;
+	text-anchor: middle;
 }
 
 
