@@ -1246,7 +1246,7 @@ class LiteSpeed_Cache_Media
 	private function _img_optimize()
 	{
 		$_credit = (int) $this->summary_info( 'credit' ) ;
-		$img_taken = (int) $this->summary_info( 'img_taken' ) ;
+		$credit_recovered = (int) $this->summary_info( 'credit_recovered' ) ;
 
 		LiteSpeed_Cache_Log::debug( 'Media preparing images to push' ) ;
 
@@ -1303,7 +1303,7 @@ class LiteSpeed_Cache_Media
 			 * Check if need to test run ( new user only allow 1 group at first time)
 			 * @since 1.6.6.1
 			 */
-			if ( $this->_img_total && ! $img_taken ) {
+			if ( $this->_img_total && ! $credit_recovered ) {
 				LiteSpeed_Cache_Log::debug( 'Media: test run only allow 1 group ' ) ;
 				break ;
 			}
