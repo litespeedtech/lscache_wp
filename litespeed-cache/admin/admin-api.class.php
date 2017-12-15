@@ -20,12 +20,14 @@ class LiteSpeed_Cache_Admin_API
 	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
 	const TYPE_NOTIFY_IMG = 'notify_img' ;
 	const TYPE_CHECK_IMG = 'check_img' ;
+	const TYPE_IMG_DESTROY_CALLBACK = 'imgoptm_destroy' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const IAPI_ACTION_PULL_IMG = 'client_pull' ;
 	const IAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
+	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
 
 	/**
@@ -43,6 +45,7 @@ class LiteSpeed_Cache_Admin_API
 	 * Handle aggressive callback requests from LiteSpeed image server
 	 *
 	 * @since  1.6
+	 * @since  1.6.7 Added destroy callback
 	 * @access public
 	 */
 	public static function sapi_aggressive_callback()
@@ -57,6 +60,10 @@ class LiteSpeed_Cache_Admin_API
 			case self::TYPE_CHECK_IMG :
 				$instance->validate_lsserver() ;
 				LiteSpeed_Cache_Media::get_instance()->check_img() ;
+				break ;
+
+			case self::TYPE_IMG_DESTROY_CALLBACK :
+				LiteSpeed_Cache_Media::get_instance()->img_optimize_destroy_callback() ;
 				break ;
 
 			default:
@@ -277,9 +284,6 @@ class LiteSpeed_Cache_Admin_API
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::info( $msg ) ;
 			unset( $json[ '_info' ] ) ;
-			if ( ! empty( $json[ '_links' ] ) ) {
-				unset( $json[ '_links' ] ) ;
-			}
 		}
 
 		if ( ! empty( $json[ '_note' ] ) ) {
@@ -288,9 +292,6 @@ class LiteSpeed_Cache_Admin_API
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::note( $msg ) ;
 			unset( $json[ '_note' ] ) ;
-			if ( ! empty( $json[ '_links' ] ) ) {
-				unset( $json[ '_links' ] ) ;
-			}
 		}
 
 		return $json ;
@@ -300,9 +301,10 @@ class LiteSpeed_Cache_Admin_API
 	 * Parse _links from json
 	 *
 	 * @since  1.6.5
+	 * @since  1.6.7 Self clean the parameter
 	 * @access private
 	 */
-	private function _parse_link( $json )
+	private function _parse_link( &$json )
 	{
 		$msg = '' ;
 
@@ -310,6 +312,8 @@ class LiteSpeed_Cache_Admin_API
 			foreach ( $json[ '_links' ] as $v ) {
 				$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
 			}
+
+			unset( $json[ '_links' ] ) ;
 		}
 
 		return $msg ;

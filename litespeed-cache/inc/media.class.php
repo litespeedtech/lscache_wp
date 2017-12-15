@@ -17,14 +17,15 @@ class LiteSpeed_Cache_Media
 	const LAZY_LIB = '/min/lazyload.js' ;
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
-	const TYPE_IMG_UPDATE_RAW = 'img_update_raw' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
 	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan' ;
+	const TYPE_IMG_OPTIMIZE_DESTROY = 'img_optm_destroy' ;
 	const TYPE_IMG_PULL = 'img_pull' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
 	const OPT_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
 
+	const DB_IMG_OPTIMIZE_DESTROY = 'litespeed-optimize-destroy' ;
 	const DB_IMG_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
 	const DB_IMG_OPTIMIZE_STATUS = 'litespeed-optimize-status' ;
 	const DB_IMG_OPTIMIZE_STATUS_REQUESTED = 'requested' ;
@@ -419,7 +420,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Sync data from litespeed server
+	 * Sync data from litespeed IAPI server
 	 *
 	 * @since  1.6.5
 	 * @access private
@@ -429,8 +430,8 @@ class LiteSpeed_Cache_Media
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA ) ;
 
 		if ( ! is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
-			$msg = __( 'Failed to communicate with LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed IAPI server ', $json ) ;
+			$msg = __( 'Failed to communicate with LiteSpeed IAPI server', 'litespeed-cache' ) . ': ' . $json ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
@@ -480,8 +481,8 @@ class LiteSpeed_Cache_Media
 				$instance->_img_optimize_rescan() ;
 				break ;
 
-			case self::TYPE_IMG_UPDATE_RAW :
-				$instance->_img_update_raw() ;//todo
+			case self::TYPE_IMG_OPTIMIZE_DESTROY :
+				$instance->_img_optimize_destroy() ;
 				break ;
 
 			case self::TYPE_IMG_PULL :
@@ -499,29 +500,6 @@ class LiteSpeed_Cache_Media
 		}
 
 		LiteSpeed_Cache_Admin::redirect() ;
-	}
-
-	/**
-	 * Update requested images status from litespeed server
-	 *
-	 * @since  1.6.5
-	 * @access public
-	 */
-	public function _img_update_raw()
-	{
-		$q = "SELECT count(*)
-			FROM $wpdb->posts a
-			LEFT JOIN $wpdb->postmeta b ON b.post_id = a.ID
-			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.ID
-			WHERE a.post_type = 'attachment'
-				AND a.post_status = 'inherit'
-				AND a.post_mime_type IN ('image/jpeg', 'image/png')
-				AND b.meta_key = '_wp_attachment_metadata'
-				AND c.meta_key = %s
-				AND c.meta_value= %s
-			" ;
-		$total_requested = $wpdb->get_var( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ) ;
-
 	}
 
 	/**
@@ -829,7 +807,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * parse LiteSpeed server data
+	 * parse LiteSpeed IAPI server data
 	 *
 	 * @since  1.6.5
 	 * @access public
@@ -995,7 +973,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Push img to LiteSpeed server
+	 * Push img to LiteSpeed IAPI server
 	 *
 	 * @since 1.6.7
 	 * @access private
@@ -1009,7 +987,7 @@ class LiteSpeed_Cache_Media
 			'webp_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ),
 		) ;
 
-		// Push to LiteSpeed server
+		// Push to LiteSpeed IAPI server
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
 
 		if ( $json === null ) {// admin_api will handle common err
@@ -1017,28 +995,108 @@ class LiteSpeed_Cache_Media
 		}
 
 		if ( ! is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed server ', $json ) ;
-			$msg = sprintf( __( 'Failed to push to LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to post to LiteSpeed IAPI server ', $json ) ;
+			$msg = sprintf( __( 'Failed to push to LiteSpeed IAPI server: %s', 'litespeed-cache' ), $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return null ;
 		}
 
 		// Check data format
 		if ( empty( $json[ 'pids' ] ) || ! is_array( $json[ 'pids' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'Media: Failed to parse data from LiteSpeed server ', $json[ 'pids' ] ) ;
-			$msg = sprintf( __( 'Failed to parse data from LiteSpeed server: %s', 'litespeed-cache' ), $json[ 'pids' ] ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to parse data from LiteSpeed IAPI server ', $json[ 'pids' ] ) ;
+			$msg = sprintf( __( 'Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache' ), $json[ 'pids' ] ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return null ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Media: posts data from LiteSpeed server count: ' . count( $json[ 'pids' ] ) ) ;
+		LiteSpeed_Cache_Log::debug( 'Media: posts data from LiteSpeed IAPI server count: ' . count( $json[ 'pids' ] ) ) ;
 
 		return $json ;
 
 	}
 
 	/**
-	 * Resend requested img to LiteSpeed server
+	 * Send destroy all requests cmd to LiteSpeed IAPI server and get the link to finish it ( avoid click by mistake )
+	 *
+	 * @since 1.6.7
+	 * @access private
+	 */
+	private function _img_optimize_destroy()
+	{
+		LiteSpeed_Cache_Log::debug( 'Media: sending DESTROY cmd to LiteSpeed IAPI' ) ;
+
+		// Mark request time to avoid duplicated request
+		update_option( self::DB_IMG_OPTIMIZE_DESTROY, time() ) ;
+
+		// Push to LiteSpeed IAPI server
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY ) ;
+
+		// confirm link will be displayed by Admin_API automatically
+		if ( is_array( $json ) && $json ) {
+			LiteSpeed_Cache_Log::debug( 'Media: cmd result', $json ) ;
+		}
+
+	}
+
+	/**
+	 * Callback from LiteSpeed IAPI server to destroy all optm data
+	 *
+	 * @since 1.6.7
+	 * @access private
+	 */
+	public function img_optimize_destroy_callback()
+	{
+		global $wpdb ;
+		LiteSpeed_Cache_Log::debug( 'Media: excuting DESTROY process' ) ;
+
+		$request_time = get_option( self::DB_IMG_OPTIMIZE_DESTROY ) ;
+		if ( time() - $request_time > 300 ) {
+			LiteSpeed_Cache_Log::debug( 'Media: terminate DESTROY process due to timeout' ) ;
+			exit( 'Destroy callback timeout ( 300 seconds )' ) ;
+		}
+
+		// Start deleting files
+		$q = "SELECT * from $wpdb->postmeta WHERE meta_key = %s" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_DATA ) ) ) ;
+		if ( $list ) {
+			foreach ( $list as $v ) {
+				$meta_value_list = unserialize( $v->meta_value ) ;
+				foreach ( $meta_value_list as $v2 ) {
+
+					$src = $v2[ 0 ] ;
+					$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $src ;
+
+					// del webp
+					file_exists( $local_file . '.webp' ) && unlink( $local_file . '.webp' ) ;
+					file_exists( $local_file . '.optm.webp' ) && unlink( $local_file . '.optm.webp' ) ;
+
+					$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+					$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+					$bk_file = $local_filename . '.bk.' . $extension ;
+					$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+
+					// del optimized ori
+					if ( file_exists( $bk_file ) ) {
+						unlink( $local_file ) ;
+						rename( $bk_file, $local_file ) ;
+					}
+					file_exists( $bk_optm_file ) && unlink( $bk_optm_file ) ;
+				}
+			}
+		}
+
+		// Delete optm info
+		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'litespeed-optimize%'" ;
+		$wpdb->query( $q ) ;
+
+		// Clear credit info
+		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
+
+		exit( 'ok' ) ;
+	}
+
+	/**
+	 * Resend requested img to LiteSpeed IAPI server
 	 *
 	 * @since 1.6.7
 	 * @access private
@@ -1057,7 +1115,7 @@ class LiteSpeed_Cache_Media
 			LEFT JOIN $wpdb->postmeta c ON c.post_id = a.post_id
 			WHERE a.meta_key = '_wp_attachment_metadata'
 				AND b.meta_key = %s
-				AND c.meta_key= %s
+				AND c.meta_key = %s
 			LIMIT %d
 			" ;
 		$limit_rows = apply_filters( 'litespeed_img_optm_resend_rows', 300 ) ;
@@ -1127,7 +1185,7 @@ class LiteSpeed_Cache_Media
 			}
 		}
 
-		// push to LiteSpeed server
+		// push to LiteSpeed IAPI server
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
@@ -1137,7 +1195,7 @@ class LiteSpeed_Cache_Media
 		$total_groups = count( $this->_img_in_queue ) ;
 		LiteSpeed_Cache_Log::debug( 'Media: prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
-		// Push to LiteSpeed server
+		// Push to LiteSpeed IAPI server
 		$json = $this->_push_img_in_queue_to_ls() ;
 		if ( $json === null ) {
 			return ;
@@ -1145,7 +1203,7 @@ class LiteSpeed_Cache_Media
 		// Returned data is the requested and notifed images
 		$pids = $json[ 'pids' ] ;
 
-		LiteSpeed_Cache_Log::debug( 'Media: returned data from LiteSpeed server count: ' . count( $pids ) ) ;
+		LiteSpeed_Cache_Log::debug( 'Media: returned data from LiteSpeed IAPI server count: ' . count( $pids ) ) ;
 
 		$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d" ;
 
@@ -1180,7 +1238,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Push raw img to LiteSpeed server
+	 * Push raw img to LiteSpeed IAPI server
 	 *
 	 * @since 1.6
 	 * @access private
@@ -1260,7 +1318,7 @@ class LiteSpeed_Cache_Media
 
 		}
 
-		// push to LiteSpeed server
+		// push to LiteSpeed IAPI server
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
@@ -1270,7 +1328,7 @@ class LiteSpeed_Cache_Media
 		$total_groups = count( $this->_img_in_queue ) ;
 		LiteSpeed_Cache_Log::debug( 'Media prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
-		// Push to LiteSpeed server
+		// Push to LiteSpeed IAPI server
 		$json = $this->_push_img_in_queue_to_ls() ;
 		if ( $json === null ) {
 			return ;
@@ -1285,17 +1343,17 @@ class LiteSpeed_Cache_Media
 			$exists_pids[] = $v->post_id ;
 		}
 		if ( $exists_pids ) {
-			LiteSpeed_Cache_Log::debug( 'Media: existing posts data from LiteSpeed server count: ' . count( $exists_pids ) ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: existing posts data from LiteSpeed IAPI server count: ' . count( $exists_pids ) ) ;
 		}
 		$pids = array_diff( $pids, $exists_pids ) ;
 
 		if ( ! $pids ) {
-			LiteSpeed_Cache_Log::debug( 'Media: Failed to store data from LiteSpeed server with empty pids' ) ;
+			LiteSpeed_Cache_Log::debug( 'Media: Failed to store data from LiteSpeed IAPI server with empty pids' ) ;
 			LiteSpeed_Cache_Admin_Display::error( __( 'Post data is empty.', 'litespeed-cache' ) ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Media: diff posts data from LiteSpeed server count: ' . count( $pids ) ) ;
+		LiteSpeed_Cache_Log::debug( 'Media: diff posts data from LiteSpeed IAPI server count: ' . count( $pids ) ) ;
 
 		$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
 		$data_to_add = array() ;

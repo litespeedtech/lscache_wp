@@ -123,9 +123,6 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 		<p>
 			<?php echo __('Image groups requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_requested' ] ; ?></b>
-			<?php if ( $img_count[ 'total_requested' ] ) : ?>
-				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_UPDATE_RAW ) ; ?>" class="litespeed-btn-success litespeed-btn-tiny litespeed-hide">⟳</a>
-			<?php endif ; ?>
 		</p>
 		<p><?php echo __('Image groups failed to optimize', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_err' ] ; ?></b></p>
 		<p class="litespeed-desc">
@@ -153,6 +150,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 		<hr />
 
+	<?php if ( ! empty( $optm_summary[ 'level' ] ) ) : ?>
 		<h3 class="litespeed-title"><?php echo __('Revert Optimization', 'litespeed-cache') ; ?></h3>
 
 		<span class="litespeed-desc">
@@ -183,11 +181,25 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		</p>
 
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success">
-			<?php echo __( 'Rescan and Send New Thumbnails Request', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'Rescan local images and send not finished images request again.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>
 		</span>
+
+		<br />
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE_DESTROY ) ; ?>" class="litespeed-btn-danger">
+			<?php echo __( 'Destroy All Optimization Data!', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'Remove all previous image optimization requests/results, revert completed optimizations, and delete all optimization files.', 'litespeed-cache' ) ; ?>
+			<font class="litespeed-warning">
+				<?php echo __('NOTE:', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'If there are unfinished requests in progress, the requests\' credits will NOT be recovered.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
+			</font>
+
+		</span>
+	<?php endif ; ?>
 
 
 	</div>
