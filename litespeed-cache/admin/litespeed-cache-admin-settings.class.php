@@ -307,6 +307,14 @@ class LiteSpeed_Cache_Admin_Settings
 		if ( isset( $this->_input[ $id ]) ) {
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
 		}
+
+		/**
+		 * Update Drop Query String
+		 * @since 1.7
+		 */
+		$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
+		update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+
 	}
 
 	/**

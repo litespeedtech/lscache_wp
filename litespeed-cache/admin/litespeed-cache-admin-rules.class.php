@@ -44,6 +44,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const MARKER_MINIFY = '### marker MINIFY' ;
 	const MARKER_CORS = '### marker CORS' ;
 	const MARKER_WEBP = '### marker WEBP' ;
+	const MARKER_DROPQS = '### marker DROPQS' ;
 	const MARKER_START = ' start ###' ;
 	const MARKER_END = ' end ###' ;
 
@@ -658,6 +659,17 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"' ;
 			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]' ;
 			$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
+			$new_rules[] = '' ;
+		}
+
+		// drop qs support
+		$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
+		if ( $cfg_info = get_option( $id ) ) {
+			$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
+			foreach ( explode( "\n", $cfg_info ) as $v ) {
+				$new_rules[] = 'CacheKeyModify -qs:' . $v ;
+			}
+			$new_rules[] = self::MARKER_DROPQS . self::MARKER_END ;
 			$new_rules[] = '' ;
 		}
 

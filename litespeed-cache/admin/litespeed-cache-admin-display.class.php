@@ -704,6 +704,9 @@ class LiteSpeed_Cache_Admin_Display
 		if ( $val === null ) {
 			$val = get_option( $id, $default_val ) ;
 		}
+		if ( is_array( $val ) ) {
+			$val = implode( "\n", $val ) ;
+		}
 		$disabled = $disabled ? ' disabled ' : '' ;
 
 		if ( $cols === false ) {
