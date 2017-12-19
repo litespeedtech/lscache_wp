@@ -539,7 +539,13 @@ class LiteSpeed_Cache_Vary
 			$expire = 1 ;
 		}
 
-		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true) ;
+		/**
+		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
+		 * @since 1.7
+		 */
+		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ? false : is_ssl() ;
+
+		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true) ;
 	}
 
 	/**

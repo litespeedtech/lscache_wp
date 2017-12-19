@@ -74,7 +74,22 @@ if ( defined( 'LITESPEED_ON' ) && $_options[$id] ){
 
 }
 
-$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
+// $file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 $this->build_input($id, 'litespeed-input-long');// , !$file_writable
 
+?>
 
+<table><tbody>
+	<tr>
+		<th><?php echo __( 'Improve HTTP/HTTPS Compatibility', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Enable this option if you are using both HTTP and HTTPS in the same domain and are noticing cache irregularities.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#improve_http_https_compatibility" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+
+			</div>
+		</td>
+	</tr>
+
+</tbody></table>

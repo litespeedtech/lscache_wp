@@ -55,6 +55,7 @@ class LiteSpeed_Cache_Config
 
 	const OPID_LOGIN_COOKIE = 'login_cookie' ;
 	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache' ;
+	const OPID_USE_HTTP_FOR_HTTPS_VARY = 'use_http_for_https_vary' ;
 	// do NOT set default options for these three, it is used for admin.
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
 	const ID_NOCACHE_USERAGENTS = 'nocache_useragents' ;
@@ -513,6 +514,7 @@ class LiteSpeed_Cache_Config
 
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
+			self::OPID_USE_HTTP_FOR_HTTPS_VARY => false,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_DEBUG_LEVEL => false,
