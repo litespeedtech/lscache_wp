@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Optimize
 					}
 
 					// Move all css to top
-					$this->content = str_replace( $html_list, '', $this->content ) ;
+					$this->content = str_replace( $html_list, '', $this->content ) ;// todo: need to keep position for certain files
 
 					// Add to HTTP2
 					foreach ( $urls as $url ) {
@@ -695,15 +695,15 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
-		if ( $file_type == 'css' ) {
-			$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
-		}
-		else {
-			$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ) ;
-		}
-		if ( $excludes ) {
-			$excludes = explode( "\n", $excludes ) ;
-		}
+		// if ( $file_type == 'css' ) {
+		// 	$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
+		// }
+		// else {
+		// 	$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ) ;
+		// }
+		// if ( $excludes ) {
+		// 	$excludes = explode( "\n", $excludes ) ;
+		// }
 
 		$ignored_html = array() ;
 		$src_queue_list = array() ;
@@ -713,15 +713,15 @@ class LiteSpeed_Cache_Optimize
 		foreach ( $src_list as $key => $src ) {
 			LiteSpeed_Cache_Log::debug2( 'Optm: ' . $src ) ;
 
-			if ( $excludes ) {
-				foreach ( $excludes as $exclude ) {
-					if ( stripos( $src, $exclude ) !== false ) {
-						$ignored_html[] = $html_list[ $key ] ;
-						LiteSpeed_Cache_Log::debug2( 'Optm:    Abort excludes: ' . $exclude ) ;
-						continue 2 ;
-					}
-				}
-			}
+			/**
+			 * Excluded links won't be done any optm
+			 * @since 1.7
+			 */
+			// if ( $excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array( $src, $excludes ) ) {
+			// 	$ignored_html[] = $html_list[ $key ] ;
+			// 	LiteSpeed_Cache_Log::debug2( 'Optm:    Abort excludes: ' . $exclude ) ;
+			// 	continue ;
+			// }
 
 			// Check if has no-optimize attr
 			if ( strpos( $html_list[ $key ], 'data-no-optimize' ) !== false ) {
@@ -856,6 +856,11 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _parse_js()
 	{
+		$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ) ;
+		if ( $excludes ) {
+			$excludes = explode( "\n", $excludes ) ;
+		}
+
 		$src_list = array() ;
 		$html_list = array() ;
 		$head_src_list = array() ;
@@ -884,6 +889,11 @@ class LiteSpeed_Cache_Optimize
 			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue ;
 			}
+// todo @v2.0: allow defer even exclude from optm
+			if ( $excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
+				LiteSpeed_Cache_Log::debug2( 'Optm: _parse_js bypassed exclude ' . $exclude ) ;
+				continue ;
+			}
 
 			$src_list[] = $attrs[ 'src' ] ;
 			$html_list[] = $match[ 0 ] ;
@@ -905,6 +915,11 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _handle_css()
 	{
+		$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
+		if ( $excludes ) {
+			$excludes = explode( "\n", $excludes ) ;
+		}
+
 		$this->css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', $this->css_to_be_removed ) ;
 
 		$src_list = array() ;
@@ -932,6 +947,11 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 			if ( empty( $attrs[ 'href' ] ) ) {
+				continue ;
+			}
+
+			if ( $excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'href' ], $excludes ) ) {
+				LiteSpeed_Cache_Log::debug2( 'Optm: _handle_css bypassed exclude ' . $exclude ) ;
 				continue ;
 			}
 
@@ -1036,12 +1056,9 @@ class LiteSpeed_Cache_Optimize
 			 * Exclude js from setting
 			 * @since 1.5
 			 */
-			if ( $this->cfg_js_defer_exc ) {
-
-				if ( LiteSpeed_Cache_Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
-					LiteSpeed_Cache_Log::debug( 'Optm: js defer exclude ' . $src ) ;
-					continue ;
-				}
+			if ( $this->cfg_js_defer_exc && LiteSpeed_Cache_Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
+				LiteSpeed_Cache_Log::debug( 'Optm: js defer exclude ' . $src ) ;
+				continue ;
 			}
 
 			/**
