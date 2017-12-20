@@ -53,6 +53,8 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	</h2>
 </div>
 
+<?php include_once LSWCP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Optimization Summary', 'litespeed-cache') ; ?></h3>

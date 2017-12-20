@@ -18,6 +18,9 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		</span>
 	</h2>
 </div>
+
+<?php include_once LSWCP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Crawler File', 'litespeed-cache') ; ?></h3>
