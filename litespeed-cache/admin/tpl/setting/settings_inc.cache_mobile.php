@@ -48,7 +48,7 @@ if (!defined('WPINC')) die;
 					}
 				}
 
-				$this->build_input( $id, 'litespeed-input-long', false, ! $_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ], 'litespeed-mobileview-rules' ) ;
+				$this->build_input( $id, 'litespeed-input-long', null, 'litespeed-mobileview-rules', '', 'text', ! $_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) ;
 			?>
 
 			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"

@@ -40,7 +40,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Admin IPs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_ADMIN_IPS, null, false, 30 ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_ADMIN_IPS, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ) ; ?><br />
 				<?php echo sprintf( __( 'More information about the available commands can be found <a %s>here</a>.', 'litespeed-cache' ),
@@ -126,7 +126,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Exclude Filters', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS, null, false, 30 ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed filters (one per line) will not be logged.', 'litespeed-cache' ) ; ?><br />
 			</div>
@@ -136,7 +136,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Exclude Part Filters', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS, null, false, 30 ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Filters containing these strings (one per line) will not be logged.', 'litespeed-cache' ) ; ?><br />
 			</div>

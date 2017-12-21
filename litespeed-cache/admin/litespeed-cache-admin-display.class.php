@@ -668,75 +668,78 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a textarea
 	 *
 	 * @since 1.1.0
+	 * @since  1.7 Changed cols param order to be the 2nd from 4th
 	 * @access public
 	 * @param  string $id
 	 * @param  string $val Value of input
 	 * @param  boolean $disabled If this input is disabled or not
 	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea( $id, $val = null, $disabled = false, $cols = false )
+	public function build_textarea( $id, $cols = false, $val = null, $disabled = false )
 	{
-		if ( $val === null ) {
-			global $_options ;
-			$val = $_options[$id] ;
+		if ( strpos( $id, '[' ) === false ) {
+			if ( $val === null ) {
+				global $_options ;
+				$val = $_options[$id] ;
+			}
+
+			$id = "[$id]" ;
 		}
+
 		$disabled = $disabled ? ' disabled ' : '' ;
 
-		if ( $cols === false ) {
+		if ( ! $cols ) {
 			$cols = 80 ;
 		}
 
-		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' rows='5' cols='$cols' $disabled>" . esc_textarea($val) . "</textarea>" ;
+		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' rows='5' cols='$cols' $disabled>" . esc_textarea($val) . "</textarea>" ;
 	}
 
 	/**
 	 * Build a textarea based on separate stored option data
 	 *
 	 * @since 1.5
+	 * @since  1.7 Changed cols param order to be the 2nd from 4th
 	 * @access public
 	 * @param  string $id
-	 * @param  string $val Value of input
-	 * @param  boolean $disabled If this input is disabled or not
 	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea2( $id, $val = null, $disabled = false, $cols = false, $default_val = null )
+	public function build_textarea2( $id, $cols = false )
 	{
-		if ( $val === null ) {
-			$val = get_option( $id, $default_val ) ;
-		}
+		$val = get_option( $id, null ) ;
+
 		if ( is_array( $val ) ) {
 			$val = implode( "\n", $val ) ;
 		}
-		$disabled = $disabled ? ' disabled ' : '' ;
 
-		if ( $cols === false ) {
-			$cols = 80 ;
-		}
-
-		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' rows='5' cols='$cols' $disabled>" . esc_textarea( $val ) . "</textarea>" ;
+		$this->build_textarea( $id, $cols, $val ) ;
 	}
 
 	/**
 	 * Build a text input field
 	 *
 	 * @since 1.1.0
+	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
 	 * @access public
 	 * @param  string $id
 	 * @param  string $style     Appending styles
-	 * @param  boolean $disabled Disable this field
 	 * @param  boolean $readonly If is readonly
 	 * @param  string $id_attr   ID for this field
 	 * @param  string $val       Field value
 	 * @param  string $attrs     Additional attributes
 	 * @param  string $type      Input type
 	 */
-	public function build_input( $id, $style = false, $disabled = false, $readonly = false, $id_attr = null, $val = null, $attrs = '', $type = 'text' )
+	public function build_input( $id, $style = false, $val = null, $id_attr = null, $attrs = '', $type = 'text', $readonly = false )
 	{
-		if ( $val === null ) {
-			global $_options ;
-			$val = $_options[ $id ] ;
+		if ( strpos( $id, '[' ) === false ) {
+			if ( $val === null ) {
+				global $_options ;
+				$val = $_options[ $id ] ;
+			}
+
+			$id = "[$id]" ;
 		}
-		$disabled = $disabled ? ' disabled ' : '' ;
+
 		$readonly = $readonly ? ' readonly ' : '' ;
 		if ( $id_attr !== null ) {
 			$id_attr = " id='$id_attr' " ;
@@ -746,7 +749,7 @@ class LiteSpeed_Cache_Admin_Display
 			$style = "litespeed-regular-text $style" ;
 		}
 
-		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' value='" . esc_textarea( $val ) ."' $disabled $readonly $id_attr $attrs /> " ;
+		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' value='" . esc_textarea( $val ) ."' $readonly $id_attr $attrs /> " ;
 	}
 
 	/**
@@ -775,6 +778,32 @@ class LiteSpeed_Cache_Admin_Display
 		else {
 			echo $html ;
 		}
+	}
+
+	/**
+	 * Build a toggle checkbox html snippet
+	 *
+	 * @since 1.7
+	 */
+	public function build_toggle( $id, $title, $checked = null )
+	{
+		if ( strpos( $id, '[' ) === false ) {
+			if ( $checked === null ) {
+				global $_options ;
+				$to_be_checked = null ;
+				if ( isset( $_options[ $id ] ) ) {
+					$to_be_checked = $_options[ $id ] ;
+				}
+
+				$checked = $to_be_checked ? true : false ;
+			}
+
+			$id = "[$id]" ;
+		}
+
+		$checked = $checked ? ' checked ' : '' ;
+
+		echo "<input type='checkbox' data-toggle='toggle' data-on='$title' data-off='$title' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' $checked />";
 	}
 
 	/**

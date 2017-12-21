@@ -6,6 +6,9 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
+$cdn_mapping = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
+
+
 ?>
 
 <h3 class="litespeed-title"><?php echo __( 'CDN Settings', 'litespeed-cache' ) ; ?></h3>
@@ -22,12 +25,68 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'CDN Mapping', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_URL, 'litespeed-input-long' ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ) ; ?>
+		<?php foreach ( $cdn_mapping as $v ) : ?>
+
+			<div style="border: 1px dotted #28a745;border-radius:16px; display: flex;padding: 10px;">
+				<div style="flex: 0 0 35%;">
+					<h4><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?></h4>
+					<?php
+						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ;
+						$this->build_input( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 'litespeed-input-long', $v[ $id ] ) ;
+					?>
+					<div class="litespeed-desc">
+						<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ) ; ?>
+					</div>
+				</div>
+				<div style="flex: 0 0 65%;">
+					<div class="litespeed-row">
+						<?php
+							$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ;
+							$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", __( 'Include Images', 'litespeed-cache' ), $v[ $id ] ) ;
+						?>
+						<span class="litespeed-desc">
+							<?php echo sprintf( __( 'Serve all image files through the CDN. This will affect all attachments, HTML %s tags, and CSS %s attributes.', 'litespeed-cache' ), '<code>&lt;img</code>', '<code>url()</code>' ) ; ?>
+						</span>
+					</div>
+					<div class="litespeed-row">
+						<?php
+							$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ;
+							$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", __( 'Include CSS', 'litespeed-cache' ), $v[ $id ] ) ;
+						?>
+						<span class="litespeed-desc">
+							<?php echo __( 'Serve all CSS files through the CDN. This will affect all enqueued WP CSS files.', 'litespeed-cache' ) ; ?>
+						</span>
+					</div>
+					<div class="litespeed-row">
+						<?php
+							$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ;
+							$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", __( 'Include JS', 'litespeed-cache' ), $v[ $id ] ) ;
+						?>
+						<span class="litespeed-desc">
+							<?php echo __( 'Serve all JavaScript files through the CDN. This will affect all enqueued WP JavaScript files.', 'litespeed-cache' ) ; ?>
+						</span>
+					</div>
+					<div class="litespeed-row" style="display: flex;">
+						<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ; ?>
+						<?php $this->build_textarea( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 20, $v[ $id ] ) ; ?>
+						<span class="litespeed-desc">
+							<?php echo __( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ) ; ?>
+							<?php echo __('One per line.', 'litespeed-cache'); ?>
+							<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn#enable_cdn" target="_blank"><?php echo __('Default value', 'litespeed-cache') ; ?></a>
+							<br /><?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
+						</span>
+					</div>
+				</div>
 			</div>
+
+		<?php endforeach ; ?>
+
+		<div class="litespeed-desc">
+			<?php echo __( 'If there are multiple URL with same setting on, the last one will overwrite the others.', 'litespeed-cache' ) ; ?>
+		</div>
+
 		</td>
 	</tr>
 
@@ -38,55 +97,6 @@ $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __( 'Include Images', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_INC_IMG ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Serve all image files through the CDN. This will affect all attachments, HTML %s tags, and CSS %s attributes.', 'litespeed-cache' ), '<code>&lt;img</code>', '<code>url()</code>' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __( 'Include CSS', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_INC_CSS ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Serve all CSS files through the CDN. This will affect all enqueued WP CSS files.', 'litespeed-cache' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __( 'Include JS', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_INC_JS ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Serve all JavaScript files through the CDN. This will affect all enqueued WP JavaScript files.', 'litespeed-cache' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<div style="float:left; margin-right: 125px;">
-				<?php $id = LiteSpeed_Cache_Config::OPID_CDN_FILETYPE ; ?>
-				<?php $this->build_textarea( $id, null, false, 30 ) ; ?>
-				<div class="litespeed-desc">
-					<?php echo __( 'Static file type links to be replaced by CDN links. One per line.', 'litespeed-cache' ) ; ?>
-					<br /><?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
-				</div>
-			</div>
-			<div style="float:left; display:flex;">
-				<div style="display: flex; margin-right: 50px;">
-					<?php $this->recommended($id) ; ?>
-				</div>
 			</div>
 		</td>
 	</tr>

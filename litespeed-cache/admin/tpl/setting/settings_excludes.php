@@ -47,7 +47,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					$id_list = explode(',', $cat_ids);
 					$excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
 				}
-				$this->build_textarea($id, $excludes_buf);
+				$this->build_textarea($id, false, $excludes_buf);
 			?>
 			<div class="litespeed-desc">
 				<b><?php echo __('All categories are cached by default.', 'litespeed-cache'); ?></b>
@@ -85,7 +85,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 						$excludes_buf = implode("\n", $tag_names);
 					}
 				}
-				$this->build_textarea($id, $excludes_buf);
+				$this->build_textarea($id, false, $excludes_buf);
 			?>
 			<div class="litespeed-desc">
 				<b><?php echo __('All tags are cached by default.', 'litespeed-cache'); ?></b>

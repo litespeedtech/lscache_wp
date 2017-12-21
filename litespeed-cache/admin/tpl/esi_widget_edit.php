@@ -68,7 +68,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 
 	<b><?php echo __( 'Widget Cache TTL:', 'litespeed-cache' ) ; ?></b>
 	&nbsp;&nbsp;
-	<?php $display->build_input( LiteSpeed_Cache_ESI::WIDGET_OPID_TTL, 'litespeed-reset', false, false, null, $ttl, 'size="7"' ) ; ?>
+	<?php $display->build_input( LiteSpeed_Cache_ESI::WIDGET_OPID_TTL, 'litespeed-reset', $ttl, null, 'size="7"' ) ; ?>
 	<?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 
 	<p class="install-help">

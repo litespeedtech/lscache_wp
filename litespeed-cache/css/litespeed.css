@@ -446,6 +446,11 @@
 	background: #fff;
 }
 
+.litespeed-btn-default.active{
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
 
 .litespeed-wrap .litespeed-btn-xs,
 .litespeed-btn-xs {
@@ -463,6 +468,68 @@
 	line-height: 1.5;
 	border-radius: 2px;
 	min-width: 14px ;
+}
+
+
+.btn{
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+
+.btn:hover, .btn:focus {
+	color: #333;
+	text-decoration: none;
+}
+
+.btn:active, .btn.active {
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+
+.btn-success{
+	color: #fff;
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+}
+
+.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active{
+	color: #fff;
+	background-color: #449d44;
+	border-color: #398439;
+}
+
+
+.btn-default {
+	color: #333;
+	background-color: #fff;
+	border-color: #ccc;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active{
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
+
+.btn-default:active, .btn-default.active {
+    background-image: none;
 }
 
 /********************************* switch *******************************/
@@ -1044,64 +1111,6 @@ ul.litespeed-shell-body {
 	line-height: 16px;
 }
 
-/********************************* Q&A *******************************/
-.litespeed-question:hover {
-	color: #6699cc;
-	cursor: pointer;
-	background: #fff;
-	border-left: 5px solid #6699cc;
-}
-
-.litespeed-question {
-	background-color: #f9fafc;
-	border: 1px solid #f9fafc;
-	border-left: 5px solid #538ac6 !important;
-	border-radius: 3px;
-	padding: 20px;
-	margin: 0 20px 5px 5px;
-	font-family: "Open Sans", Arial, sans-serif;
-	font-weight: 600;
-	font-size: 14px;
-	line-height: 1.1;
-	color: #264d73;
-}
-
-.litespeed-answer {
-	margin-left: 20px;
-	padding: 0 20px 20px 10px;
-}
-
-.litespeed-up:after {
-	content: ' ';
-	border: solid #36b0b0;
-	border-width: 0 2px 2px 0;
-	display: inline-block;
-	padding: 3px;
-	margin-left: 15px;
-	transform: rotate(-135deg);
-	-webkit-transform: rotate(-135deg);
-	-webkit-transition: all .3s ease;
-	-moz-transition: all .3s ease;
-	-ms-transition: all .3s ease;
-	-o-transition: all .3s ease;
-}
-
-.litespeed-down:after {
-	content: ' ';
-	border: solid #36b0b0;
-	border-width: 0 2px 2px 0;
-	display: inline-block;
-	padding: 3px;
-	margin-left: 15px;
-	transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	-webkit-transition: all .3s ease;
-	-moz-transition: all .3s ease;
-	-ms-transition: all .3s ease;
-	-o-transition: all .3s ease;
-}
-
-
 /********************************* enterprise notice *******************************/
 .litespeed-ent-notice {
 	position: absolute ;
@@ -1231,10 +1240,35 @@ g.litespeed-pie_info text{
 }
 
 
-/********************************* utility *******************************/
-.litespeed-unicode-refresh{
-
-}
+/********************************* bootstrap toggle *******************************/
+/*! ========================================================================
+ * Bootstrap Toggle: bootstrap-toggle.css v2.2.0
+ * http://www.bootstraptoggle.com
+ * ========================================================================
+ * Copyright 2014 Min Hur, The New York Times Company
+ * Licensed under MIT
+ * ======================================================================== */
+.checkbox label .toggle,.checkbox-inline .toggle{margin-left:-20px;margin-right:5px}
+.toggle{position:relative;overflow:hidden}
+.toggle input[type=checkbox]{display:none}
+.toggle-group{position:absolute;width:200%;top:0;bottom:0;left:0;transition:left .35s;-webkit-transition:left .35s;-moz-user-select:none;-webkit-user-select:none}
+.toggle.off .toggle-group{left:-100%}
+.toggle-on{position:absolute;top:0;bottom:0;left:0;right:50%;margin:0;border:0;border-radius:0}
+.toggle-off{position:absolute;top:0;bottom:0;left:50%;right:0;margin:0;border:0;border-radius:0}
+.toggle-handle{position:relative;margin:0 auto;padding-top:0;padding-bottom:0;height:100%;width:0;border-width:0 1px}
+.toggle.btn{min-width:59px;min-height:34px}
+.toggle-on.btn{padding-right:24px}
+.toggle-off.btn{padding-left:24px}
+.toggle.btn-lg{min-width:79px;min-height:45px}
+.toggle-on.btn-lg{padding-right:31px}
+.toggle-off.btn-lg{padding-left:31px}
+.toggle-handle.btn-lg{width:40px}
+.toggle.btn-sm{min-width:50px;min-height:30px}
+.toggle-on.btn-sm{padding-right:20px}
+.toggle-off.btn-sm{padding-left:20px}
+.toggle.btn-xs{min-width:35px;min-height:22px}
+.toggle-on.btn-xs{padding-right:12px}
+.toggle-off.btn-xs{padding-left:12px}
 
 
 /********************************* todo *******************************/

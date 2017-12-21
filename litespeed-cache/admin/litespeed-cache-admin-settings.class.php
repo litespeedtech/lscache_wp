@@ -449,9 +449,6 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CDN,
-			LiteSpeed_Cache_Config::OPID_CDN_INC_IMG,
-			LiteSpeed_Cache_Config::OPID_CDN_INC_CSS,
-			LiteSpeed_Cache_Config::OPID_CDN_INC_JS,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -466,16 +463,35 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_CDN_URL ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_CDN_FILETYPE,
 			LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
 		}
+
+		/**
+		 * Handle multiple CDN setting
+		 * @since 1.7
+		 */
+		$cdn_mapping = array() ;
+		$mapping_fields = array(
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE
+		) ;
+		$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ;
+		foreach ( $this->_input[ $id ][ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] as $k => $v ) {
+			$this_mapping = array() ;
+			foreach ( $mapping_fields as $f ) {
+				$this_mapping[ $f ] = ! empty( $this->_input[ $id ][ $f ][ $k ] ) ? $this->_input[ $id ][ $f ][ $k ] : false ;
+			}
+
+			$cdn_mapping[] = $this_mapping ;
+		}
+		update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, $cdn_mapping ) ;
 
 		/**
 		 * Load jQuery from cdn

@@ -24,6 +24,13 @@ class LiteSpeed_Cache_Config
 	const ITEM_MEDIA_NEED_PULL = 'litespeed-media-need-pull' ;
 	const ITEM_ENV_REF = 'litespeed-env-ref' ;
 	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
+	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
+
+	const ITEM_CDN_MAPPING_URL = 'url' ;
+	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;
+	const ITEM_CDN_MAPPING_INC_CSS = 'inc_css' ;
+	const ITEM_CDN_MAPPING_INC_JS = 'inc_js' ;
+	const ITEM_CDN_MAPPING_FILETYPE = 'filetype' ;
 
 	const VAL_OFF = 0 ;
 	const VAL_ON = 1 ;
@@ -120,11 +127,6 @@ class LiteSpeed_Cache_Config
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
-	const OPID_CDN_URL = 'cdn_url' ;
-	const OPID_CDN_INC_IMG = 'cdn_inc_img' ;
-	const OPID_CDN_INC_CSS = 'cdn_inc_css' ;
-	const OPID_CDN_INC_JS = 'cdn_inc_js' ;
-	const OPID_CDN_FILETYPE = 'cdn_filetype' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
 
@@ -561,11 +563,6 @@ class LiteSpeed_Cache_Config
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',
-			self::OPID_CDN_URL 		=> '',
-			self::OPID_CDN_INC_IMG 	=> false,
-			self::OPID_CDN_INC_CSS 	=> false,
-			self::OPID_CDN_INC_JS 	=> false,
-			self::OPID_CDN_FILETYPE => ".aac\n.css\n.eot\n.gif\n.jpeg\n.js\n.jpg\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.png\n.svg\n.ttf\n.woff",
 			self::OPID_CDN_EXCLUDE 	=> '',
 			self::OPID_CDN_REMOTE_JQUERY 	=> false,
 
@@ -772,12 +769,28 @@ class LiteSpeed_Cache_Config
 			return ;
 		}
 
+		/**
+		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
+		 * @since 1.7
+		 */
+		if ( isset( $this->options[ 'cdn_url' ] ) ) {
+			$cdn_mapping = array(
+				self::ITEM_CDN_MAPPING_URL 		=> $this->options[ 'cdn_url' ],
+				self::ITEM_CDN_MAPPING_INC_IMG 	=> $this->options[ 'cdn_inc_img' ],
+				self::ITEM_CDN_MAPPING_INC_CSS 	=> $this->options[ 'cdn_inc_css' ],
+				self::ITEM_CDN_MAPPING_INC_JS 	=> $this->options[ 'cdn_inc_js' ],
+				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
+			) ;
+			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
+			LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option adding CDN map" ) ;
+		}
+
 		$this->options = self::option_diff( $default_options, $this->options ) ;
 
 		$res = $this->update_options() ;
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
-		LiteSpeed_Cache_Log::debug( "plugin_upgrade option changed = $res\n" ) ;
+		LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option changed = $res" ) ;
 	}
 
 	/**

@@ -53,9 +53,6 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC,
 
 			LiteSpeed_Cache_Config::OPID_CDN,
-			LiteSpeed_Cache_Config::OPID_CDN_INC_IMG,
-			LiteSpeed_Cache_Config::OPID_CDN_INC_CSS,
-			LiteSpeed_Cache_Config::OPID_CDN_INC_JS,
 
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
@@ -157,9 +154,6 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC:
 
 			case LiteSpeed_Cache_Config::OPID_CDN:
-			case LiteSpeed_Cache_Config::OPID_CDN_INC_IMG:
-			case LiteSpeed_Cache_Config::OPID_CDN_INC_CSS:
-			case LiteSpeed_Cache_Config::OPID_CDN_INC_JS:
 
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY:
