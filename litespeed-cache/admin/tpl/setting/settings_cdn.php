@@ -42,7 +42,7 @@ if ( ! $cdn_mapping ) {
 				<div style="flex: 0 0 35%;">
 					<h4 style="position:relative;"><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?>
 						<span style="position: absolute;right:0;top:0;">
-							<button class="litespeed-btn-danger litespeed-btn-tiny" style="border-radius: 13px;margin: 0;" data-litespeed-cdn-mapping-del="1">X</button>
+							<button type="button" class="litespeed-btn-danger litespeed-btn-tiny" style="border-radius: 13px;margin: 0;" data-litespeed-cdn-mapping-del="1">X</button>
 						</span>
 					</h4>
 
@@ -88,7 +88,7 @@ if ( ! $cdn_mapping ) {
 
 		<?php endforeach ; ?>
 
-			<p><button class="litespeed-btn-success litespeed-btn-tiny" id="litespeed-cdn-mapping-add">+</button></p>
+			<p><button type="button" class="litespeed-btn-success litespeed-btn-tiny" id="litespeed-cdn-mapping-add">+</button></p>
 
 			<div class="litespeed-warning">
 				<?php echo __('NOTE:', 'litespeed-cache'); ?>
