@@ -753,60 +753,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a switch div html snippet
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 * @param  string $id
-	 * @param  boolean $disabled Disable this field
-	 * @param  boolean $return   Return the html or echo it
-	 * @param  boolean $checked  If the value is on
-	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
-	 */
-	public function build_switch($id, $disabled = false, $return = false, $checked = null, $id_attr = null)
-	{
-		$id_attr_on = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_ON ;
-		$id_attr_off = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_OFF ;
-		$html = '<div class="litespeed-switch">' ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $disabled, $id_attr_off) ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $disabled, $id_attr_on) ;
-		$html .= '</div>' ;
-
-		if ( $return ) {
-			return $html ;
-		}
-		else {
-			echo $html ;
-		}
-	}
-
-	/**
-	 * Build a toggle checkbox html snippet
-	 *
-	 * @since 1.7
-	 */
-	public function build_toggle( $id, $title, $checked = null )
-	{
-		if ( strpos( $id, '[' ) === false ) {
-			if ( $checked === null ) {
-				global $_options ;
-				$to_be_checked = null ;
-				if ( isset( $_options[ $id ] ) ) {
-					$to_be_checked = $_options[ $id ] ;
-				}
-
-				$checked = $to_be_checked ? true : false ;
-			}
-
-			$id = "[$id]" ;
-		}
-
-		$checked = $checked ? ' checked ' : '' ;
-
-		echo "<input type='checkbox' data-toggle='toggle' data-on='$title' data-off='$title' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' $checked />";
-	}
-
-	/**
 	 * Build a checkbox html snippet
 	 *
 	 * @since 1.1.0
@@ -832,6 +778,62 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Build a toggle checkbox html snippet
+	 *
+	 * @since 1.7
+	 */
+	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null )
+	{
+		if ( strpos( $id, '[' ) === false ) {
+			if ( $checked === null ) {
+				global $_options ;
+				$to_be_checked = null ;
+				if ( isset( $_options[ $id ] ) ) {
+					$to_be_checked = $_options[ $id ] ;
+				}
+				$checked = $to_be_checked ? true : false ;
+			}
+			$id = "[$id]" ;
+		}
+		$checked = $checked ? ' checked ' : '' ;
+
+		if ( $title_on === null ) {
+			$title_on = __( 'ON', 'litespeed-cache' ) ;
+			$title_off = __( 'OFF', 'litespeed-cache' ) ;
+		}
+
+		echo "<input type='checkbox' data-toggle='toggle' data-on='$title_on' data-off='$title_off' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' $checked />";
+	}
+
+	/**
+	 * Build a switch div html snippet
+	 *
+	 * @since 1.1.0
+	 * @since 1.7 removed param $disable
+	 * @access public
+	 * @param  string $id
+	 * @param  boolean $return   Return the html or echo it
+	 * @param  boolean $checked  If the value is on
+	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
+	 */
+	public function build_switch($id, $checked = null, $return = false, $id_attr = null)
+	{
+		$id_attr_on = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_ON ;
+		$id_attr_off = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_OFF ;
+		$html = '<div class="litespeed-switch">' ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $id_attr_off) ;
+		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $id_attr_on) ;
+		$html .= '</div>' ;
+
+		if ( $return ) {
+			return $html ;
+		}
+		else {
+			echo $html ;
+		}
+	}
+
+	/**
 	 * Build a radio input html codes and output
 	 *
 	 * @since 1.1.0
@@ -842,20 +844,24 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  bool $checked   If checked or not
 	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
 	 */
-	public function build_radio($id, $val, $txt = null, $checked = null, $disabled = false, $id_attr = null)
+	public function build_radio($id, $val, $txt = null, $checked = null, $id_attr = null)
 	{
-		if ( $checked === null ) {
-			global $_options ;
-			$to_be_checked = null ;
-			if ( isset( $_options[ $id ] ) ) {
-				$to_be_checked = is_int( $val ) ? (int)$_options[ $id ] : $_options[ $id ] ;
+		if ( strpos( $id, '[' ) === false ) {
+			if ( $checked === null ) {
+				global $_options ;
+				$to_be_checked = null ;
+				if ( isset( $_options[ $id ] ) ) {
+					$to_be_checked = is_int( $val ) ? (int)$_options[ $id ] : $_options[ $id ] ;
+				}
+
+				$checked = $to_be_checked === $val ? true : false ;
 			}
 
-			$checked = $to_be_checked === $val ? true : false ;
+			$id = "[$id]" ;
 		}
 
 		if ( $id_attr === null ) {
-			$id_attr = is_int($val) ? "conf_{$id}_$val" : md5($val) ;
+			$id_attr = is_int($val) ? "conf_" . str_replace( array( '[', ']' ), '_', $id ) . "_$val" : md5($val) ;
 		}
 		elseif ( $id_attr === true ) {
 			$id_attr = md5($val) ;
@@ -872,16 +878,8 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		$checked = $checked ? ' checked ' : '' ;
-		$disabled = $disabled ? ' disabled ' : '' ;
 
-		return "<input type='radio' "
-			. " name='". LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' "
-			. " id='$id_attr' "
-			. " value='$val' "
-			. " $checked "
-			. " $disabled "
-			. " />"
-			. " <label for='$id_attr'>$txt</label>" ;
+		return "<input type='radio' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**

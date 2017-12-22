@@ -81,7 +81,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS, 40 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('Drop certain query strings from caching.', 'litespeed-cache'); ?>
+				<?php echo __('Ignore certain query strings when caching.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, to drop parameters beginning with %s, %s can be used here.', 'litespeed-cache' ), '<code>utm</code>', '<code>utm*</code>' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 

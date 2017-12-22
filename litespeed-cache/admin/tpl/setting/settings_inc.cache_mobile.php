@@ -8,8 +8,7 @@ if (!defined('WPINC')) die;
 		<th><?php echo __('Cache Mobile', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
-				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
-				$this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE); //, !$file_writable
+				$this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE);
 			?>
 			<div class="litespeed-desc">
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>

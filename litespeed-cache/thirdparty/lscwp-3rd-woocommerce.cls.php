@@ -777,14 +777,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						<tr>
 							<th>" . __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . "</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch(self::OPTION_SHOP_FRONT_TTL, false, true) . "
+								" . LiteSpeed_Cache_API::build_switch(self::OPTION_SHOP_FRONT_TTL, null, true) . "
 								<div class='litespeed-desc'>$ttl_desc</div>
 							</td>
 						</tr>
 						<tr>
 							<th>" . __('Privately Cache Cart', 'litespeed-cache') . "</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch( self::OPTION_WOO_CACHE_CART, false, true ) . "
+								" . LiteSpeed_Cache_API::build_switch( self::OPTION_WOO_CACHE_CART, null, true ) . "
 								<div class='litespeed-desc'>"
 								 	. __( 'Privately cache cart when not empty.', 'litespeed-cache' ) . "
 								 </div>

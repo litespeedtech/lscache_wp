@@ -344,71 +344,6 @@
 }
 
 /********************************* btn *******************************/
-
-.litespeed-toggle-btn{
-	display: inline-block;
-	padding: 6px 12px;
-	margin-bottom: 0;
-	font-size: 14px;
-	font-weight: 400;
-	height: 20px;
-
-	// line-height: 1.42857143;
-	text-align: center;
-	white-space: nowrap;
-	vertical-align: middle;
-	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	background-image: none;
-	border: 1px solid transparent;
-	border-radius: 4px;
-}
-
-.litespeed-toggle-btn:hover, .litespeed-toggle-btn:focus {
-	color: #333;
-	text-decoration: none;
-}
-
-.litespeed-toggle-btn:active, .litespeed-toggle-btn.litespeed-toggle-active {
-    background-image: none;
-    outline: 0;
-    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-}
-
-.litespeed-toggle-btn-success{
-	color: #fff;
-	background-color: #5cb85c;
-	border-color: #4cae4c;
-}
-
-.litespeed-toggle-btn-success:hover, .litespeed-toggle-btn-success:focus, .litespeed-toggle-btn-success:active, .litespeed-toggle-btn-success.litespeed-toggle-active{
-	color: #fff;
-	background-color: #449d44;
-	border-color: #398439;
-}
-
-
-.litespeed-toggle-btn-default {
-	color: #333;
-	background-color: #fff;
-	border-color: #ccc;
-}
-
-.litespeed-toggle-btn-default:hover, .litespeed-toggle-btn-default:focus, .litespeed-toggle-btn-default:active, .litespeed-toggle-btn-default.litespeed-toggle-active{
-	color: #333;
-	background-color: #e6e6e6;
-	border-color: #adadad;
-}
-
-.litespeed-toggle-btn-default:active, .litespeed-toggle-btn-default.litespeed-toggle-active {
-    background-image: none;
-}
-
-
 .litespeed-wrap [class*="litespeed-btn-"],
 [class*="litespeed-btn-"] {
 	padding: 5px 10px;
@@ -1242,26 +1177,10 @@ g.litespeed-pie_info text{
 	text-anchor: middle;
 }
 
-
-/********************************* bootstrap toggle *******************************/
-/*! ========================================================================
- * Bootstrap Toggle: bootstrap-toggle.css v2.2.0
- * http://www.bootstraptoggle.com
- * ========================================================================
- * Copyright 2014 Min Hur, The New York Times Company
- * Licensed under MIT
- * ======================================================================== */
-.checkbox label .litespeed-toggle,.checkbox-inline .litespeed-toggle{margin-left:-20px;margin-right:5px}
-.litespeed-toggle{position:relative;overflow:hidden}
-.litespeed-toggle input[type=checkbox]{display:none}
-.litespeed-toggle-group{position:absolute;width:200%;top:0;bottom:0;left:0;transition:left .35s;-webkit-transition:left .35s;-moz-user-select:none;-webkit-user-select:none}
-.litespeed-toggle.off .litespeed-toggle-group{left:-100%}
-.litespeed-toggle-on{position:absolute;top:0;bottom:0;left:0;right:50%;margin:0;border:0;border-radius:0}
-.litespeed-toggle-off{position:absolute;top:0;bottom:0;left:50%;right:0;margin:0;border:0;border-radius:0}
-.litespeed-toggle-handle{position:relative;margin:0 auto;padding-top:0;padding-bottom:0;height:100%;width:0;border-width:0 1px}
-.litespeed-toggle.litespeed-toggle-btn{min-width:135px;}
-.litespeed-toggle-on.litespeed-toggle-btn{padding-right:24px}
-.litespeed-toggle-off.litespeed-toggle-btn{padding-left:24px}
+/********************************* multiple cdn mapping styling *******************************/
+[data-litespeed-cdn-mapping]:first-child [data-litespeed-cdn-mapping-del]{
+	display: none;
+}
 
 /********************************* todo *******************************/
 /* input field */

@@ -498,7 +498,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		if ( empty($tp_cookies) ) {
-			LiteSpeed_Cache_Log::debug( 'Vary: finalize bypassed due to no vary ' ) ;
+			LiteSpeed_Cache_Log::debug( 'Vary: no custimzed vary ' ) ;
 			return ;
 		}
 

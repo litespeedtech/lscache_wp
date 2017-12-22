@@ -39,7 +39,6 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 				LiteSpeed_Cache_Config::VAL_ON,
 				__( 'Public', 'litespeed-cache' ),
 				$esi === LiteSpeed_Cache_Config::VAL_ON,
-				false,
 				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON
 			);
 
@@ -48,7 +47,6 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 				LiteSpeed_Cache_Config::VAL_ON2,
 				__( 'Private', 'litespeed-cache' ),
 				$esi === LiteSpeed_Cache_Config::VAL_ON2,
-				false,
 				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON2
 			);
 
@@ -57,7 +55,6 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 				LiteSpeed_Cache_Config::VAL_OFF,
 				__( 'Disable', 'litespeed-cache' ),
 				$esi === LiteSpeed_Cache_Config::VAL_OFF,
-				false,
 				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_OFF
 			);
 		?>

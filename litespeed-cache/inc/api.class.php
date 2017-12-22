@@ -253,12 +253,11 @@ class LiteSpeed_Cache_API
 	 * @since 1.1.3
 	 * @access public
 	 * @param  string $id
-	 * @param  boolean $disabled Disable this field
 	 * @param  boolean $return   Return the html or echo it
 	 */
-	public static function build_switch($id, $disabled = false, $return = false)
+	public static function build_switch( $id, $checked = null, $return = false )
 	{
-		return LiteSpeed_Cache_Admin_Display::get_instance()->build_switch($id, $disabled, $return) ;
+		return LiteSpeed_Cache_Admin_Display::get_instance()->build_switch( $id, $checked, $return ) ;
 	}
 
 	/**
