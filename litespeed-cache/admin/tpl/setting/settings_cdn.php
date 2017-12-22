@@ -29,7 +29,7 @@ $cdn_mapping = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
 		<td>
 		<?php foreach ( $cdn_mapping as $v ) : ?>
 
-			<div style="border: 1px dotted #28a745;border-radius:16px; display: flex;padding: 10px;">
+			<div style="border: 1px dotted #28a745;border-radius:16px; display: flex;padding: 10px;margin-bottom: 5px;" data-litespeed-cdn-mapping="1">
 				<div style="flex: 0 0 35%;">
 					<h4><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?></h4>
 					<?php
@@ -40,7 +40,7 @@ $cdn_mapping = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
 						<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ) ; ?>
 					</div>
 				</div>
-				<div style="flex: 0 0 65%;">
+				<div style="flex: 0 0 65%;position:relative;">
 					<div class="litespeed-row">
 						<?php
 							$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ;
@@ -70,7 +70,7 @@ $cdn_mapping = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
 					</div>
 					<div class="litespeed-row" style="display: flex;">
 						<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ; ?>
-						<?php $this->build_textarea( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 20, $v[ $id ] ) ; ?>
+						<?php $this->build_textarea( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 17, $v[ $id ] ) ; ?>
 						<span class="litespeed-desc">
 							<?php echo __( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ) ; ?>
 							<?php echo __('One per line.', 'litespeed-cache'); ?>
@@ -78,10 +78,18 @@ $cdn_mapping = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
 							<br /><?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
 						</span>
 					</div>
+
+
+					<div style="position: absolute;right:0;bottom:0;">
+						<a class="litespeed-btn-danger litespeed-btn-tiny" style="border-radius: 13px;margin: 0;">X</a>
+					</div>
+
 				</div>
 			</div>
 
 		<?php endforeach ; ?>
+
+		<p><a class="litespeed-btn-success litespeed-btn-tiny" id="litespeed-cdn-mapping-add">+</a></p>
 
 		<div class="litespeed-desc">
 			<?php echo __( 'If there are multiple URL with same setting on, the last one will overwrite the others.', 'litespeed-cache' ) ; ?>
