@@ -487,6 +487,9 @@ class LiteSpeed_Cache_Admin_Settings
 			$this_mapping = array() ;
 			foreach ( $mapping_fields as $f ) {
 				$this_mapping[ $f ] = ! empty( $this->_input[ $id ][ $f ][ $k ] ) ? $this->_input[ $id ][ $f ][ $k ] : false ;
+				if ( $f === LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ) {
+					$this_mapping[ $f ] = LiteSpeed_Cache_Utility::sanitize_lines( $this_mapping[ $f ] ) ;
+				}
 			}
 
 			$cdn_mapping[] = $this_mapping ;
