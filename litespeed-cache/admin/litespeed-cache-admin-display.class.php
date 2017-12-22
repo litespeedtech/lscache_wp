@@ -802,7 +802,7 @@ class LiteSpeed_Cache_Admin_Display
 			$title_off = __( 'OFF', 'litespeed-cache' ) ;
 		}
 
-		echo "<input type='checkbox' data-toggle='toggle' data-on='$title_on' data-off='$title_off' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' $checked />";
+		echo "<input type='checkbox' data-toggle='toggle' data-on='$title_on' data-off='$title_off' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' $checked value='1' />";
 	}
 
 	/**
