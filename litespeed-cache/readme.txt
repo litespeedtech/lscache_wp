@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.6.7
+Stable tag: 1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -220,7 +220,7 @@ For more detailed information about crawler setup, please see [our blog post](ht
 
 == Screenshots ==
 
-1. Admin Settings - General
+1. Plugin Benchmarks
 2. Admin Settings - Cache
 3. Admin Settings - Purge
 4. Admin Settings - Excludes
@@ -239,6 +239,17 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.7 - December 22 2017 =
+* [NEW FEATURE] Drop Query Strings setting in the Cache tab.
+* [NEW FEATURE] Multiple CDN Mapping in the CDN tab.
+* [IMPROVEMENT] Improve HTTP/HTTPS Compatibility setting in the Advanced tab.
+* [IMPROVEMENT] Keep JS/CSS original position in HTML when excluded in setting.
+* [IAPI] Reset client level credit after Image Optimization data is destroyed.
+* [REFACTOR] Refactored build_input/textarea functions in admin_display class.
+* [REFACTOR] Refactored CDN class.
+* [GUI] Added a notice to Image Optimization and Crawler to warn when cache is disabled.
+* [GUI] Improved image optimization indicator styles in Media Library List.
 
 = 1.6.7 - December 15 2017 =
 * [IAPI] Added ability to scan for new image thumbnail sizes and auto-resend image optimization requests.

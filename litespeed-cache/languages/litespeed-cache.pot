@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.6.7\n"
+"Project-Id-Version: LiteSpeed Cache 1.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-12-15 17:17:00+00:00\n"
+"POT-Creation-Date: 2017-12-23 02:29:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -63,21 +63,23 @@ msgstr ""
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:834
-#: admin/tpl/setting/settings_media.php:66
+#: admin/litespeed-cache-admin-display.class.php:801
+#: admin/litespeed-cache-admin-display.class.php:886
+#: admin/tpl/setting/settings_media.php:70
 #: admin/tpl/setting/settings_optimize.php:135
 #: admin/tpl/setting/settings_tuning.php:19
 #: admin/tpl/setting/settings_tuning.php:55
 msgid "ON"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:838
+#: admin/litespeed-cache-admin-display.class.php:802
+#: admin/litespeed-cache-admin-display.class.php:890
 #: admin/tpl/setting/settings_tuning.php:16
 #: admin/tpl/setting/settings_tuning.php:52
 msgid "OFF"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:871
+#: admin/litespeed-cache-admin-display.class.php:915
 msgid "Recommended value: %s"
 msgstr ""
 
@@ -345,13 +347,13 @@ msgstr ""
 msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:678
+#: admin/litespeed-cache-admin-rules.class.php:690
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:876
+#: admin/litespeed-cache-admin-rules.class.php:888
 msgid "File Saved."
 msgstr ""
 
@@ -364,7 +366,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:258
-#: admin/litespeed-cache-admin-settings.class.php:749
+#: admin/litespeed-cache-admin-settings.class.php:776
 msgid "Default Public Cache"
 msgstr ""
 
@@ -392,30 +394,30 @@ msgstr ""
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:610
+#: admin/litespeed-cache-admin-settings.class.php:637
 #: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:676
+#: admin/litespeed-cache-admin-settings.class.php:703
 #: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:677
+#: admin/litespeed-cache-admin-settings.class.php:704
 #: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:678
+#: admin/litespeed-cache-admin-settings.class.php:705
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:679
+#: admin/litespeed-cache-admin-settings.class.php:706
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:680
+#: admin/litespeed-cache-admin-settings.class.php:707
 #: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
@@ -444,173 +446,173 @@ msgid ""
 "page caching offerings—such as minifying css/js files."
 msgstr ""
 
-#: admin/tpl/crawler.php:15 admin/tpl/crawler.php:81
+#: admin/tpl/crawler.php:15 admin/tpl/crawler.php:84
 msgid "LiteSpeed Cache Crawler"
 msgstr ""
 
-#: admin/tpl/crawler.php:23
+#: admin/tpl/crawler.php:26
 msgid "Crawler File"
 msgstr ""
 
-#: admin/tpl/crawler.php:25
+#: admin/tpl/crawler.php:28
 msgid "Generate Crawler File"
 msgstr ""
 
-#: admin/tpl/crawler.php:30
+#: admin/tpl/crawler.php:33
 msgid "Generated at %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:34
+#: admin/tpl/crawler.php:37
 msgid ""
 "On click, this will create a crawler sitemap file in plugin directory %s."
 msgstr ""
 
-#: admin/tpl/crawler.php:44
+#: admin/tpl/crawler.php:47
 msgid "%d hours"
 msgstr ""
 
-#: admin/tpl/crawler.php:47
+#: admin/tpl/crawler.php:50
 msgid "%d hour"
 msgstr ""
 
-#: admin/tpl/crawler.php:54
+#: admin/tpl/crawler.php:57
 msgid "%d minutes"
 msgstr ""
 
-#: admin/tpl/crawler.php:57
+#: admin/tpl/crawler.php:60
 msgid "%d minute"
 msgstr ""
 
-#: admin/tpl/crawler.php:61
+#: admin/tpl/crawler.php:64
 msgid "Crawler Cron"
 msgstr ""
 
-#: admin/tpl/crawler.php:64 admin/tpl/setting/settings_optimize.php:10
+#: admin/tpl/crawler.php:67 admin/tpl/setting/settings_optimize.php:10
 #: admin/tpl/settings.php:130
 msgid "WARNING"
 msgstr ""
 
-#: admin/tpl/crawler.php:65
+#: admin/tpl/crawler.php:68
 msgid ""
 "The crawler feature is not enabled on the LiteSpeed server. Please consult "
 "your server admin."
 msgstr ""
 
-#: admin/tpl/crawler.php:66
+#: admin/tpl/crawler.php:69
 msgid ""
 "See <a %s>Introduction for Enabling the Crawler</a> for detailed infomation."
 msgstr ""
 
-#: admin/tpl/crawler.php:71
+#: admin/tpl/crawler.php:74
 msgid "Cron Name"
 msgstr ""
 
-#: admin/tpl/crawler.php:72
+#: admin/tpl/crawler.php:75
 msgid "Run Frequency"
 msgstr ""
 
-#: admin/tpl/crawler.php:73
+#: admin/tpl/crawler.php:76
 msgid "Last Status"
 msgstr ""
 
-#: admin/tpl/crawler.php:74
+#: admin/tpl/crawler.php:77
 msgid "Activation"
 msgstr ""
 
-#: admin/tpl/crawler.php:75
+#: admin/tpl/crawler.php:78
 msgid "Actions"
 msgstr ""
 
-#: admin/tpl/crawler.php:88
+#: admin/tpl/crawler.php:91
 msgid "The current sitemap crawl started at %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:91
+#: admin/tpl/crawler.php:94
 msgid "The next complete sitemap crawl will start at %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:105
+#: admin/tpl/crawler.php:108
 msgid "The last complete run cost %s seconds"
 msgstr ""
 
-#: admin/tpl/crawler.php:115
+#: admin/tpl/crawler.php:118
 msgid "Is running"
 msgstr ""
 
-#: admin/tpl/crawler.php:131 admin/tpl/setting/settings_general.php:30
+#: admin/tpl/crawler.php:134 admin/tpl/setting/settings_general.php:30
 msgid "Enable"
 msgstr ""
 
-#: admin/tpl/crawler.php:131 admin/tpl/esi_widget_edit.php:58
+#: admin/tpl/crawler.php:134 admin/tpl/esi_widget_edit.php:56
 #: admin/tpl/setting/settings_general.php:24
 msgid "Disable"
 msgstr ""
 
-#: admin/tpl/crawler.php:138
+#: admin/tpl/crawler.php:141
 msgid "Reset position"
 msgstr ""
 
-#: admin/tpl/crawler.php:141
+#: admin/tpl/crawler.php:144
 msgid "Manually run"
 msgstr ""
 
-#: admin/tpl/crawler.php:145
+#: admin/tpl/crawler.php:148
 msgid "<b>Last interval:</b> %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:151
+#: admin/tpl/crawler.php:154
 msgid "<b>Ended reason:</b> %s"
 msgstr ""
 
-#: admin/tpl/crawler.php:157
+#: admin/tpl/crawler.php:160
 msgid "<b>Last crawled:</b> %s item(s)"
 msgstr ""
 
-#: admin/tpl/crawler.php:165
+#: admin/tpl/crawler.php:168
 msgid "Run frequency is set by the Interval Between Runs setting."
 msgstr ""
 
-#: admin/tpl/crawler.php:166
+#: admin/tpl/crawler.php:169
 msgid "Only one crawler can run concurrently."
 msgstr ""
 
-#: admin/tpl/crawler.php:167
+#: admin/tpl/crawler.php:170
 msgid ""
 "If both the cron and manual run start at a similar time, the first one to "
 "start will run."
 msgstr ""
 
-#: admin/tpl/crawler.php:168
+#: admin/tpl/crawler.php:171
 msgid ""
 "Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to "
 "create the system cron task."
 msgstr ""
 
-#: admin/tpl/crawler.php:173
+#: admin/tpl/crawler.php:176
 msgid "Watch Crawler Status"
 msgstr ""
 
-#: admin/tpl/crawler.php:180
+#: admin/tpl/crawler.php:183
 msgid "Show crawler status"
 msgstr ""
 
-#: admin/tpl/crawler.php:198
+#: admin/tpl/crawler.php:201
 msgid "No crawler meta file generated yet"
 msgstr ""
 
-#: admin/tpl/crawler.php:203
+#: admin/tpl/crawler.php:206
 msgid "Sitemap Generation Blacklist"
 msgstr ""
 
-#: admin/tpl/crawler.php:212 admin/tpl/edit_htaccess.php:68
+#: admin/tpl/crawler.php:215 admin/tpl/edit_htaccess.php:68
 msgid "Save"
 msgstr ""
 
-#: admin/tpl/crawler.php:216
+#: admin/tpl/crawler.php:219
 msgid "Current blacklist has %s item(s)."
 msgstr ""
 
-#: admin/tpl/crawler.php:217
+#: admin/tpl/crawler.php:220
 msgid ""
 "All Urls which returned no-cache tags will be added here, after the initial "
 "crawling."
@@ -666,15 +668,15 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:49
+#: admin/tpl/esi_widget_edit.php:48
 msgid "Private"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:69
+#: admin/tpl/esi_widget_edit.php:66
 msgid "Widget Cache TTL:"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:72 admin/tpl/setting/settings_crawler.php:25
+#: admin/tpl/esi_widget_edit.php:69 admin/tpl/setting/settings_crawler.php:25
 #: admin/tpl/setting/settings_crawler.php:37
 #: admin/tpl/setting/settings_crawler.php:49
 #: admin/tpl/setting/settings_general.php:59
@@ -689,11 +691,11 @@ msgstr ""
 msgid "seconds"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:75
+#: admin/tpl/esi_widget_edit.php:72
 msgid "Recommended value: 28800 seconds (8 hours)."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:76
+#: admin/tpl/esi_widget_edit.php:73
 msgid "A TTL of 0 indicates do not cache."
 msgstr ""
 
@@ -737,157 +739,159 @@ msgstr ""
 msgid "LiteSpeed Cache Image Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:58
+#: admin/tpl/image_optimization.php:60
 msgid "Optimization Summary"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:88 admin/tpl/image_optimization.php:108
+#: admin/tpl/image_optimization.php:90 admin/tpl/image_optimization.php:110
 msgid "Update Reduction Status"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:91
+#: admin/tpl/image_optimization.php:93
 msgid ""
 "This will communicate with LiteSpeed's Image Optimization Server and "
 "retrieve the most recent status."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:96
+#: admin/tpl/image_optimization.php:98
 msgid "Image Information"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:97
+#: admin/tpl/image_optimization.php:99
 msgid "Beta Version"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:100
+#: admin/tpl/image_optimization.php:102
 msgid "<a %s>Image groups</a> total"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:101
+#: admin/tpl/image_optimization.php:103
 msgid "Image groups not yet requested"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:105 admin/tpl/image_optimization.php:113
+#: admin/tpl/image_optimization.php:107 admin/tpl/image_optimization.php:115
 msgid "Send Optimization Request"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:108
+#: admin/tpl/image_optimization.php:110
 msgid "Please press the %s button before sending a new request."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:110 admin/tpl/image_optimization.php:149
+#: admin/tpl/image_optimization.php:112 admin/tpl/image_optimization.php:151
+#: admin/tpl/setting/settings_advanced.php:89
+#: admin/tpl/setting/settings_cache.php:86
 msgid "Learn More"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:116
+#: admin/tpl/image_optimization.php:118
 msgid ""
 "This will send the optimization request and the images to LiteSpeed's Image "
 "Optimization Server."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:117
+#: admin/tpl/image_optimization.php:119
 msgid "You can send at most %s images at once."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:125
+#: admin/tpl/image_optimization.php:127
 msgid "Image groups requested"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:127
+#: admin/tpl/image_optimization.php:129
 msgid "Image groups failed to optimize"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:129
+#: admin/tpl/image_optimization.php:131
 msgid ""
 "After LiteSpeed's Image Optimization Server finishes optimization, it will "
 "notify your site to pull the optimized images."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:130
+#: admin/tpl/image_optimization.php:132
 msgid "This process is automatic."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:133
+#: admin/tpl/image_optimization.php:135
 msgid "Image groups notified to pull"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:136
+#: admin/tpl/image_optimization.php:138
 msgid "Pull Images"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:139
+#: admin/tpl/image_optimization.php:141
 msgid "Only press the button if the pull cron job is disabled."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:140
+#: admin/tpl/image_optimization.php:142
 msgid "Images will be pulled automatically if the cron job is running."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:144
+#: admin/tpl/image_optimization.php:146
 msgid "Last pull initiated by cron at %s."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:148
+#: admin/tpl/image_optimization.php:150
 msgid "Image groups optimized and pulled"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:154
+#: admin/tpl/image_optimization.php:156
 msgid "Revert Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:157
+#: admin/tpl/image_optimization.php:159
 msgid ""
 "Switch all images in the media library back to their original unoptimized "
 "versions."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:163
+#: admin/tpl/image_optimization.php:165
 msgid "Undo Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:166
+#: admin/tpl/image_optimization.php:168
 msgid "Revert all optimized images back to their original versions."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:172
+#: admin/tpl/image_optimization.php:174
 msgid "Re-do Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:175
+#: admin/tpl/image_optimization.php:177
 msgid "Switch back to using optimized images."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:180
+#: admin/tpl/image_optimization.php:182
 msgid "Results can be checked in <a %s>Media Library</a>."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:184
+#: admin/tpl/image_optimization.php:186
 msgid "Send New Thumbnail Requests"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:187
+#: admin/tpl/image_optimization.php:189
 msgid ""
 "Scan for any new unoptimized image thumbnail sizes and resend necessary "
 "image optimization requests."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:192
+#: admin/tpl/image_optimization.php:194
 msgid "Destroy All Optimization Data!"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:195
+#: admin/tpl/image_optimization.php:197
 msgid ""
 "Remove all previous image optimization requests/results, revert completed "
 "optimizations, and delete all optimization files."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:197
+#: admin/tpl/image_optimization.php:199 admin/tpl/setting/settings_cdn.php:94
 #: admin/tpl/setting/settings_excludes.php:60
 #: admin/tpl/setting/settings_excludes.php:98
 #: admin/tpl/setting/settings_inc.cache_browser.php:12
-#: admin/tpl/setting/settings_inc.cache_favicon.php:14
-#: admin/tpl/setting/settings_inc.cache_mobile.php:18
-#: admin/tpl/setting/settings_inc.cache_resources.php:15
+#: admin/tpl/setting/settings_inc.cache_favicon.php:13
+#: admin/tpl/setting/settings_inc.cache_mobile.php:17
+#: admin/tpl/setting/settings_inc.cache_resources.php:14
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:22
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:21
 #: admin/tpl/setting/settings_inc.media_webp.php:12
@@ -897,13 +901,13 @@ msgstr ""
 msgid "NOTE:"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:198
+#: admin/tpl/image_optimization.php:200
 msgid ""
 "If there are unfinished requests in progress, the requests' credits will NOT "
 "be recovered."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:198
+#: admin/tpl/image_optimization.php:200
 #: admin/tpl/setting/settings_optimize.php:63
 #: admin/tpl/setting/settings_optimize.php:138
 msgid "JS Combine"
@@ -1262,13 +1266,15 @@ msgstr ""
 
 #: admin/tpl/manage/manage_purge.php:105
 #: admin/tpl/setting/settings_cache.php:67
-#: admin/tpl/setting/settings_cdn.php:101
+#: admin/tpl/setting/settings_cache.php:90
+#: admin/tpl/setting/settings_cdn.php:113
+#: admin/tpl/setting/settings_cdn.php:139
 #: admin/tpl/setting/settings_excludes.php:19
 #: admin/tpl/setting/settings_excludes.php:33
 #: admin/tpl/setting/settings_excludes.php:56
 #: admin/tpl/setting/settings_excludes.php:94
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
-#: admin/tpl/setting/settings_media.php:27
+#: admin/tpl/setting/settings_media.php:31
 #: admin/tpl/setting/settings_purge.php:79
 #: admin/tpl/setting/settings_tuning.php:36
 #: admin/tpl/setting/settings_tuning.php:72
@@ -1581,6 +1587,16 @@ msgid ""
 "WARNING: The .htaccess login cookie and Database login cookie do not match."
 msgstr ""
 
+#: admin/tpl/setting/settings_advanced.php:84
+msgid "Improve HTTP/HTTPS Compatibility"
+msgstr ""
+
+#: admin/tpl/setting/settings_advanced.php:88
+msgid ""
+"Enable this option if you are using both HTTP and HTTPS in the same domain "
+"and are noticing cache irregularities."
+msgstr ""
+
 #: admin/tpl/setting/settings_cache.php:4
 msgid "Cache Control Settings"
 msgstr ""
@@ -1648,110 +1664,139 @@ msgstr ""
 msgid "To do an exact match, add %s to the end of the URL."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:11
+#: admin/tpl/setting/settings_cache.php:80
+msgid "Drop Query String"
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:84
+msgid "Ignore certain query strings when caching."
+msgstr ""
+
+#: admin/tpl/setting/settings_cache.php:85
+msgid "For example, to drop parameters beginning with %s, %s can be used here."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:23
 msgid "CDN Settings"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:15
+#: admin/tpl/setting/settings_cdn.php:27
 msgid "Enable CDN"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:19
+#: admin/tpl/setting/settings_cdn.php:31
 msgid "Enable Content Delivery Network use."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:25
+#: admin/tpl/setting/settings_cdn.php:37
+msgid "CDN Mapping"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:43
 msgid "CDN URL"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:29
+#: admin/tpl/setting/settings_cdn.php:52
 msgid "CDN URL to be used. For example, %s"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:35
-msgid "Original URL"
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:39
-msgid ""
-"Site URL to be served through the CDN. Beginning with %1$s. For example, "
-"%2$s."
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:40
-msgid ""
-"Wildcard %1$s supported (match zero or more characters). For example, to "
-"match %2$s and %3$s, use %4$s."
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:46
+#: admin/tpl/setting/settings_cdn.php:58 admin/tpl/setting/settings_cdn.php:99
 msgid "Include Images"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:50
+#: admin/tpl/setting/settings_cdn.php:65
+#: admin/tpl/setting/settings_cdn.php:103
+msgid "Include CSS"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:72
+#: admin/tpl/setting/settings_cdn.php:107
+msgid "Include JS"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:82
+#: admin/tpl/setting/settings_cdn.php:111
+msgid "Include File Types"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:95
+msgid ""
+"If multiple CDN paths are configured with the same settings, the last one "
+"will overwrite the others."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:100
 msgid ""
 "Serve all image files through the CDN. This will affect all attachments, "
 "HTML %s tags, and CSS %s attributes."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:56
-msgid "Include CSS"
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:60
+#: admin/tpl/setting/settings_cdn.php:104
 msgid ""
 "Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
 "files."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:66
-msgid "Include JS"
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:70
+#: admin/tpl/setting/settings_cdn.php:108
 msgid ""
 "Serve all JavaScript files through the CDN. This will affect all enqueued WP "
 "JavaScript files."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:76
-msgid "Include File Types"
+#: admin/tpl/setting/settings_cdn.php:112
+msgid "Static file type links to be replaced by CDN links."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:82
-msgid "Static file type links to be replaced by CDN links. One per line."
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:83
+#: admin/tpl/setting/settings_cdn.php:114
 msgid "This will affect all tags containing attributes: %s %s %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:95
+#: admin/tpl/setting/settings_cdn.php:115
+msgid "Default value"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:122
+msgid "Original URL"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:126
+msgid ""
+"Site URL to be served through the CDN. Beginning with %1$s. For example, "
+"%2$s."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:127
+msgid ""
+"Wildcard %1$s supported (match zero or more characters). For example, to "
+"match %2$s and %3$s, use %4$s."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:133
 msgid "Exclude Path"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:100
+#: admin/tpl/setting/settings_cdn.php:138
 msgid "Paths containing these strings will not be served from the CDN."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:107
+#: admin/tpl/setting/settings_cdn.php:145
 msgid "Load JQuery Remotely"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:113
+#: admin/tpl/setting/settings_cdn.php:151
 #: admin/tpl/setting/settings_debug.php:16
 msgid "Off"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:119
+#: admin/tpl/setting/settings_cdn.php:157
 msgid "Google"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:125
+#: admin/tpl/setting/settings_cdn.php:163
 msgid "cdnjs"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:129
+#: admin/tpl/setting/settings_cdn.php:167
 msgid ""
 "Improve page load time by loading jQuery from a remote CDN service instead "
 "of locally."
@@ -2312,9 +2357,9 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_browser.php:13
-#: admin/tpl/setting/settings_inc.cache_favicon.php:15
-#: admin/tpl/setting/settings_inc.cache_mobile.php:19
-#: admin/tpl/setting/settings_inc.cache_resources.php:16
+#: admin/tpl/setting/settings_inc.cache_favicon.php:14
+#: admin/tpl/setting/settings_inc.cache_mobile.php:18
+#: admin/tpl/setting/settings_inc.cache_resources.php:15
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:23
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:22
 #: admin/tpl/setting/settings_inc.media_webp.php:13
@@ -2337,15 +2382,15 @@ msgid ""
 "before expiring. Minimum is %s seconds."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_favicon.php:7
+#: admin/tpl/setting/settings_inc.cache_favicon.php:6
 msgid "Cache favicon.ico"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_favicon.php:11
+#: admin/tpl/setting/settings_inc.cache_favicon.php:10
 msgid "favicon.ico is requested on most pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_favicon.php:12
+#: admin/tpl/setting/settings_inc.cache_favicon.php:11
 msgid ""
 "Caching this resource may improve server performance by avoiding unnecessary "
 "PHP calls."
@@ -2355,51 +2400,51 @@ msgstr ""
 msgid "Cache Mobile"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:15
+#: admin/tpl/setting/settings_inc.cache_mobile.php:14
 msgid "When enabled, mobile views will be cached separately."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:16
+#: admin/tpl/setting/settings_inc.cache_mobile.php:15
 msgid "A site built with responsive design does not need to check this."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:26
+#: admin/tpl/setting/settings_inc.cache_mobile.php:25
 msgid "List of Mobile User Agents"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:43
+#: admin/tpl/setting/settings_inc.cache_mobile.php:42
 msgid "Htaccess did not match configuration option."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:44
+#: admin/tpl/setting/settings_inc.cache_mobile.php:43
 msgid "Please re-enter the mobile view setting."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:45
+#: admin/tpl/setting/settings_inc.cache_mobile.php:44
 msgid "List in WordPress database is: %s"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:61
+#: admin/tpl/setting/settings_inc.cache_mobile.php:60
 msgid "SYNTAX: Each entry should be separated with a bar, %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:62
+#: admin/tpl/setting/settings_inc.cache_mobile.php:61
 msgid "Any spaces should be escaped with a backslash before the space, %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_mobile.php:65
+#: admin/tpl/setting/settings_inc.cache_mobile.php:64
 msgid "The default list WordPress uses is %s"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_resources.php:8
+#: admin/tpl/setting/settings_inc.cache_resources.php:7
 msgid "Cache PHP Resources"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_resources.php:12
+#: admin/tpl/setting/settings_inc.cache_resources.php:11
 msgid "Some themes and plugins add resources via a PHP request."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_resources.php:13
+#: admin/tpl/setting/settings_inc.cache_resources.php:12
 msgid ""
 "Caching these pages may improve server performance by avoiding unnecessary "
 "PHP calls."
@@ -2463,19 +2508,27 @@ msgid "Load images only when they enter the viewport."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:15
-#: admin/tpl/setting/settings_media.php:56
+#: admin/tpl/setting/settings_media.php:60
 msgid "This can improve page loading time by reducing initial HTTP requests."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:21
-msgid "Lazy Load Image Excludes"
+#: admin/tpl/setting/settings_media.php:17
+msgid "Tip"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:18
+msgid "Adding Style to Your Lazy-Loaded Images"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:25
+msgid "Lazy Load Image Excludes"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:29
 msgid "Listed images will not be lazy loaded."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:26
+#: admin/tpl/setting/settings_media.php:30
 #: admin/tpl/setting/settings_tuning.php:35
 #: admin/tpl/setting/settings_tuning.php:71
 #: admin/tpl/setting/settings_tuning.php:130
@@ -2483,7 +2536,7 @@ msgstr ""
 msgid "Both full URLs and partial strings can be used."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:29
+#: admin/tpl/setting/settings_media.php:33
 #: admin/tpl/setting/settings_optimize.php:112
 #: admin/tpl/setting/settings_tuning.php:22
 #: admin/tpl/setting/settings_tuning.php:38
@@ -2493,14 +2546,14 @@ msgstr ""
 msgid "API:"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:30
+#: admin/tpl/setting/settings_media.php:34
 #: admin/tpl/setting/settings_tuning.php:39
 #: admin/tpl/setting/settings_tuning.php:75
 #: admin/tpl/setting/settings_tuning.php:134
 msgid "Filter %s is supported."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:31
+#: admin/tpl/setting/settings_media.php:35
 #: admin/tpl/setting/settings_optimize.php:113
 #: admin/tpl/setting/settings_tuning.php:40
 #: admin/tpl/setting/settings_tuning.php:76
@@ -2508,80 +2561,80 @@ msgstr ""
 msgid "Elements with attribute %s in html code will be excluded."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:38
+#: admin/tpl/setting/settings_media.php:42
 msgid "Lazy Load Image Placeholder"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:42
+#: admin/tpl/setting/settings_media.php:46
 msgid ""
 "Specify a base64 image to be used as a placeholder while other images finish "
 "loading."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:43
+#: admin/tpl/setting/settings_media.php:47
 msgid ""
 "This can be predefined in %2$s as well using constant %1$s, with this "
 "setting taking priority."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:44
+#: admin/tpl/setting/settings_media.php:48
 msgid "By default a gray image placeholder %s will be used."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:45
+#: admin/tpl/setting/settings_media.php:49
 msgid "For example, %s can be used for a transparent placeholder."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:51
+#: admin/tpl/setting/settings_media.php:55
 msgid "Lazy Load Iframes"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:55
+#: admin/tpl/setting/settings_media.php:59
 msgid "Load iframes only when they enter the viewport."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:62
+#: admin/tpl/setting/settings_media.php:66
 msgid "Disable Optimization Pull"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:66
+#: admin/tpl/setting/settings_media.php:70
 msgid ""
 "Set this option to %s to disable the cron job responsible for fetching "
 "optimized images from LiteSpeed's Image Server."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:80
+#: admin/tpl/setting/settings_media.php:84
 msgid "Only Request WebP"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:84
+#: admin/tpl/setting/settings_media.php:88
 msgid ""
 "Prevent images from being replaced with optimized versions when optimizing. "
 "WebP versions will still be generated."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:90
+#: admin/tpl/setting/settings_media.php:94
 msgid "Preserve EXIF data"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:94
+#: admin/tpl/setting/settings_media.php:98
 msgid ""
 "Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:95
+#: admin/tpl/setting/settings_media.php:99
 msgid "This will increase the size of optimized files."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:101
+#: admin/tpl/setting/settings_media.php:105
 msgid "WebP Lossless Compression"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:105
+#: admin/tpl/setting/settings_media.php:109
 msgid "Generate WebP images using lossless compression."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:106
+#: admin/tpl/setting/settings_media.php:110
 msgid "This can improve quality at the cost of larger images."
 msgstr ""
 
@@ -3045,27 +3098,27 @@ msgstr ""
 msgid "Reached end of sitemap file. Crawling completed."
 msgstr ""
 
-#: inc/gui.class.php:153 includes/litespeed-cache-gui.class.php:153
+#: inc/gui.class.php:158 includes/litespeed-cache-gui.class.php:158
 msgid "Purge this page"
 msgstr ""
 
-#: inc/gui.class.php:161 includes/litespeed-cache-gui.class.php:161
+#: inc/gui.class.php:166 includes/litespeed-cache-gui.class.php:166
 msgid "Mark this page as "
 msgstr ""
 
-#: inc/gui.class.php:168 includes/litespeed-cache-gui.class.php:168
+#: inc/gui.class.php:173 includes/litespeed-cache-gui.class.php:173
 msgid "Non cacheable"
 msgstr ""
 
-#: inc/gui.class.php:175 includes/litespeed-cache-gui.class.php:175
+#: inc/gui.class.php:180 includes/litespeed-cache-gui.class.php:180
 msgid "Private cache"
 msgstr ""
 
-#: inc/gui.class.php:182 includes/litespeed-cache-gui.class.php:182
+#: inc/gui.class.php:187 includes/litespeed-cache-gui.class.php:187
 msgid "No optimization"
 msgstr ""
 
-#: inc/gui.class.php:189 includes/litespeed-cache-gui.class.php:189
+#: inc/gui.class.php:194 includes/litespeed-cache-gui.class.php:194
 msgid "More settings"
 msgstr ""
 
@@ -3161,11 +3214,7 @@ msgstr ""
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/media.class.php:1125
-msgid "No image found"
-msgstr ""
-
-#: inc/media.class.php:1190 inc/media.class.php:1323
+#: inc/media.class.php:1125 inc/media.class.php:1190 inc/media.class.php:1323
 msgid "No image found."
 msgstr ""
 
