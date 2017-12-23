@@ -795,14 +795,28 @@ class LiteSpeed_Cache_Admin_Display
 			}
 			$id = "[$id]" ;
 		}
-		$checked = $checked ? ' checked ' : '' ;
+		$checked = $checked ? 1 : 0 ;
 
 		if ( $title_on === null ) {
 			$title_on = __( 'ON', 'litespeed-cache' ) ;
 			$title_off = __( 'OFF', 'litespeed-cache' ) ;
 		}
 
-		echo "<input type='checkbox' data-toggle='toggle' data-on='$title_on' data-off='$title_off' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' $checked value='1' />";
+		if ( $checked ) {
+			$cls = 'primary' ;
+		}
+		else {
+			$cls = 'default litespeed-toggleoff' ;
+		}
+
+		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default'>
+				<input name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' type='hidden' value='$checked' />
+				<div class='litespeed-toggle-group'>
+					<label class='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>$title_on</label>
+					<label class='litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off'>$title_off</label>
+					<span class='litespeed-toggle-handle litespeed-toggle-btn litespeed-toggle-btn-default'></span>
+				</div>
+			</div>" ;
 	}
 
 	/**

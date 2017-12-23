@@ -14,7 +14,7 @@ if ( ! $cdn_mapping ) {
 		LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG => false,
 		LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS => false,
 		LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS => false,
-		LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE => '',
+		LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE =>  ".aac\n.css\n.eot\n.gif\n.jpeg\n.js\n.jpg\n.less\n.mp3\n.mp4\n.ogg\n.otf\n.pdf\n.png\n.svg\n.ttf\n.woff",
 	) ) ;
 }
 
@@ -38,12 +38,10 @@ if ( ! $cdn_mapping ) {
 		<td>
 		<?php foreach ( $cdn_mapping as $v ) : ?>
 
-			<div style="border: 1px dotted #28a745;border-radius:16px; display: flex;padding: 10px;margin-bottom: 5px;" data-litespeed-cdn-mapping="1">
-				<div style="flex: 0 0 35%;">
-					<h4 style="position:relative;"><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?>
-						<span style="position: absolute;right:0;top:0;">
-							<button type="button" class="litespeed-btn-danger litespeed-btn-tiny" style="border-radius: 13px;margin: 0;" data-litespeed-cdn-mapping-del="1">X</button>
-						</span>
+			<div class="litespeed-cdn-mapping-block" data-litespeed-cdn-mapping="1">
+				<div class='litespeed-cdn-mapping-col1'>
+					<h4><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?>
+						<button type="button" class="litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
 					</h4>
 
 					<?php
@@ -55,34 +53,36 @@ if ( ! $cdn_mapping ) {
 					</div>
 				</div>
 
-				<div style="flex: 0 0 45%;">
+				<div class='litespeed-cdn-mapping-col2'>
 					<div class="litespeed-row">
+						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include Images', 'litespeed-cache' ) ; ?></div>
 					<?php
-						echo __( 'Include Images', 'litespeed-cache' ) ;
 						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ;
 						$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 					<div class="litespeed-row">
+						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include CSS', 'litespeed-cache' ) ; ?></div>
 					<?php
-						echo __( 'Include CSS', 'litespeed-cache' ) ;
 						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ;
 						$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 					<div class="litespeed-row">
+						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include JS', 'litespeed-cache' ) ; ?></div>
 					<?php
-						echo __( 'Include JS', 'litespeed-cache' ) ;
 						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ;
 						$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 				</div>
 
-				<div style="flex: 0 0 20%;">
-					<?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?>
-					<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ; ?>
-					<?php $this->build_textarea( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 17, $v[ $id ] ) ; ?>
+				<div class='litespeed-cdn-mapping-col3'>
+					<div class="litespeed-row">
+						<div class="litespeed-cdn-mapping-col3-title"><?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?></div>
+						<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ; ?>
+						<?php $this->build_textarea( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 17, $v[ $id ] ) ; ?>
+					</div>
 				</div>
 			</div>
 

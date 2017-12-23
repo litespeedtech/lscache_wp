@@ -1182,6 +1182,189 @@ g.litespeed-pie_info text{
 	display: none;
 }
 
+.litespeed-cdn-mapping-block {
+	border: 1px dotted #6699cc;
+	border-radius:5px;
+	display: flex;
+	padding: 10px;
+	margin-bottom: 5px;
+}
+
+.litespeed-cdn-mapping-col1 {
+	flex: 0 0 35%;
+	padding-left: 17px;
+}
+
+.litespeed-cdn-mapping-col2 {
+	flex: 0 0 22%;
+}
+
+.litespeed-cdn-mapping-col3 {
+	display: flex;
+}
+
+.litespeed-cdn-mapping-col1 h4 {
+	position:relative;
+	margin-top: 10px;
+}
+
+.litespeed-btn-danger[data-litespeed-cdn-mapping-del] {
+	border-radius: 13px;
+	margin: 0 10px 0 0;
+	position: absolute;
+	right:10px;
+	top:0;
+	background: #cc3d6a;
+	color: #fff;
+	padding: 1px 8px;
+	font-size: 13px;
+	line-height: 1.5;
+	min-width: 14px;
+}
+
+#litespeed-cdn-mapping-add {
+	background: #36b0b0;
+	color: #fff;
+}
+
+.litespeed-cdn-mapping-inc {
+	display: inline-block;
+	margin-left: 36px ;
+	min-width: 100px ;
+	font-weight: bold;
+}
+
+.litespeed-cdn-mapping-col3-title {
+	display: inline-block;
+	vertical-align: top ;
+	font-weight: bold;
+	margin-left: 36px ;
+	margin-right: 10px;
+}
+
+
+/********************************* toggle *******************************/
+
+.litespeed-toggle {
+	position: relative;
+	overflow: hidden;
+	min-width: 58px ;
+	height: 21px ;
+	margin-left: 30px ;
+}
+
+.litespeed-toggle-group {
+	position: absolute;
+	width: 200%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	transition: left 0.35s;
+	-webkit-transition: left 0.35s;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.litespeed-toggle-on {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 50%;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+}
+
+.litespeed-toggle-on.litespeed-toggle-btn {
+	padding-right: 24px;
+}
+
+.litespeed-toggle-off.litespeed-toggle-btn {
+	padding-left: 24px;
+}
+
+.litespeed-toggle-handle {
+	position: relative;
+	margin: 0 auto;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	height: 100%;
+	width: 0px;
+	border-width: 0 1px;
+}
+
+.litespeed-toggle-off {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	right: 0;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+}
+
+.litespeed-toggleoff .litespeed-toggle-group {
+	left: -100%;
+}
+
+.litespeed-toggle-btn {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.42857143;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+
+.litespeed-toggle-btn-primary {
+	color: #fff;
+	background-color: #36b0b0;
+	border-color: #6699cc;
+}
+
+.litespeed-toggle-btn-default {
+	color: #333;
+	background-color: #fff;
+	border-color: #ccc;
+}
+
+.litespeed-toggle-btn-success:hover, .litespeed-toggle-btn-success:focus, .litespeed-toggle-btn-success:active, .litespeed-toggle-btn-success.litespeed-toggle-active {
+	color: #fff;
+	background-color: #00bfbf;
+	border-color: #6699cc;
+}
+
+.litespeed-toggle-btn-default:hover, .litespeed-toggle-btn-default:focus, .litespeed-toggle-btn-default:active, .litespeed-toggle-btn-default.litespeed-toggle-active {
+	color: #333;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+}
+
+.litespeed-toggle-btn:active, .litespeed-toggle-btn.litespeed-toggle-active {
+	background-image: none;
+	outline: 0;
+	-webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+	box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+
+.litespeed-toggle-btn-default:active, .litespeed-toggle-btn-default.litespeed-toggle-active {
+	background-image: none;
+}
+
+
 /********************************* todo *******************************/
 /* input field */
 .litespeed-textarea {
