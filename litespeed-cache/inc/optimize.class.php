@@ -33,6 +33,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_qs_rm ;
 	private $cfg_exc_jquery ;
 	private $cfg_ggfonts_async ;
+	private $cfg_optm_max_size ;
 
 	private $dns_prefetch ;
 
@@ -67,6 +68,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ;
 		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
 		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ;
+		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ) * 1000000 ;
 
 		$this->_static_request_check() ;
 
@@ -697,7 +699,7 @@ class LiteSpeed_Cache_Optimize
 
 			$total += $file_size_list[ $k ] ;
 
-			if ( $total > 1000000 ) { // If larger than 1M, separate them
+			if ( $total > $this->cfg_optm_max_size ) { // If larger than 1M, separate them
 				$total = 0;
 				$i ++ ;
 			}

@@ -603,6 +603,12 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ;
 		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'domain' ) ) ;
 
+		/**
+		 * Combined file max size
+		 * @since 1.7.1
+		 */
+		$id = LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ;
+		$this->_options[ $id ] = $this->_input[ $id ] ;
 	}
 
 	/**

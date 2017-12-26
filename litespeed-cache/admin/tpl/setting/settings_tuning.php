@@ -80,6 +80,19 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Combined File Maximum Size', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ; ?>
+			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?> <?php echo __( 'MB', 'litespeed-cache' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the maximum size of the combined file.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Larger will generate fewer files, which is better for page score, but may cause heavy memory usage.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Remove Query Strings', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ; ?>
