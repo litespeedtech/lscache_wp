@@ -706,7 +706,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_textarea2( $id, $cols = false )
 	{
-		$val = get_option( $id, null ) ;
+		$val = get_option( $id, false ) ;
 
 		if ( is_array( $val ) ) {
 			$val = implode( "\n", $val ) ;
