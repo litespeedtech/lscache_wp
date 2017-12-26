@@ -34,6 +34,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_exc_jquery ;
 	private $cfg_ggfonts_async ;
 
+	private $dns_prefetch ;
 
 	private $html_foot = '' ; // The html info append to <body>
 	private $html_head = '' ; // The html info prepend to <body>
@@ -104,6 +105,12 @@ class LiteSpeed_Cache_Optimize
 		 * @since  1.6
 		 */
 		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+
+		/**
+		 * Prefetch DNS
+		 * @since 1.7.1
+		 */
+		$this->_dns_prefetch_init() ;
 
 	}
 
@@ -612,6 +619,63 @@ class LiteSpeed_Cache_Optimize
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
 		}
 
+	}
+
+	/**
+	 * Prefetch DNS
+	 *
+	 * @since 1.7.1
+	 * @access private
+	 */
+	private function _dns_prefetch_init()
+	{
+		$this->dns_prefetch = get_option( LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ) ;
+		if ( ! $this->dns_prefetch ) {
+			return ;
+		}
+
+		if ( function_exists( 'wp_resource_hints' ) ) {
+			add_filter( 'wp_resource_hints', array( $this, 'dns_prefetch_filter' ), 10, 2 ) ;
+		}
+		else {
+			add_action( 'litespeed_optm', array( $this, 'dns_prefetch_output' ) ) ;
+		}
+	}
+
+	/**
+	 * Prefetch DNS hook for WP
+	 *
+	 * @since 1.7.1
+	 * @access public
+	 */
+	public function dns_prefetch_filter( $urls, $relation_type )
+	{
+		if ( $relation_type !== 'dns-prefetch' ) {
+			return $urls ;
+		}
+
+		foreach ( explode( "\n", $this->dns_prefetch ) as $v ) {
+			if ( $v ) {
+				$urls[] = $v ;
+			}
+		}
+
+		return $urls ;
+	}
+
+	/**
+	 * Prefetch DNS
+	 *
+	 * @since 1.7.1
+	 * @access public
+	 */
+	public function dns_prefetch_output()
+	{
+		foreach ( explode( "\n", $this->dns_prefetch ) as $v ) {
+			if ( $v ) {
+				$this->html_head .= "<link rel='dns-prefetch' href='$v' />" ;
+			}
+		}
 	}
 
 	/**

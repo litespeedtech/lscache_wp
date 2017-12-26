@@ -596,6 +596,13 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
 		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
+		/**
+		 * DNS prefetch
+		 * @since 1.7.1
+		 */
+		$id = LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ;
+		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'domain' ) ) ;
+
 	}
 
 	/**

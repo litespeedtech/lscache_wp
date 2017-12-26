@@ -25,6 +25,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_ENV_REF = 'litespeed-env-ref' ;
 	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
+	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
 
 	const ITEM_CDN_MAPPING_URL = 'url' ;
 	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;

@@ -141,4 +141,17 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'DNS Prefetch', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.litespeedtech.com</code>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
+				<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
 </tbody></table>

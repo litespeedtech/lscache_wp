@@ -259,6 +259,25 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
+	 * Convert URL to domain only
+	 *
+	 * @since  1.7.1
+	 */
+	public static function parse_domain( $url )
+	{
+		$url = @parse_url( $url ) ;
+		if ( empty( $url[ 'host' ] ) ) {
+			return '' ;
+		}
+
+		if ( ! empty( $url[ 'scheme' ] ) ) {
+			return $url[ 'scheme' ] . '://' . $url[ 'host' ] ;
+		}
+
+		return '//' . $url[ 'host' ] ;
+	}
+
+	/**
 	 * Generate domain const
 	 *
 	 * This will generate http://www.example.com even there is a subfolder in home_url setting
@@ -303,6 +322,9 @@ class LiteSpeed_Cache_Utility
 		}
 		if ( $type === 'relative' ) {
 			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
+		}
+		if ( $type === 'domain' ) {
+			$arr = array_map( 'LiteSpeed_Cache_Utility::parse_domain', $arr ) ;// Only keep domain
 		}
 		$arr = array_map( 'trim', $arr ) ;
 		$arr = array_unique( $arr ) ;
