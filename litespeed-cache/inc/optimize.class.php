@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Optimize
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_CSS_ASYNC' ) ;
 
-			$file = LSWCP_DIR . 'js/css_async.js' ;
+			$file = LSWCP_DIR . 'js/css_async.min.js' ;
 
 			header( 'Content-Length: ' . filesize( $file ) ) ;
 			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
@@ -1225,6 +1225,14 @@ class LiteSpeed_Cache_Optimize
 
 			$this->minify_options[ 'files' ] = $files ;
 
+			/**
+			 * Clean comment when minify
+			 * @since  1.7.1
+			 */
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
+				$this->minify_options[ 'postprocessor' ] = 'LiteSpeed_Cache_Optimize::remove_comment' ;
+			}
+
 			$content = $this->minify_minify->serve( $this->minify_controller, $this->minify_options ) ;
 
 		} catch ( ErrorException $e ) {
@@ -1234,6 +1242,21 @@ class LiteSpeed_Cache_Optimize
 		}
 		restore_error_handler() ;
 
+		return $content ;
+	}
+
+	/**
+	 * Remove comment when minify
+	 *
+	 * @since  1.7.1
+	 * @access public
+	 */
+	public static function remove_comment( $content, $type )
+	{
+		$content = preg_replace( '|\/\*\!.*\*\/|sU', "\n", $content ) ;
+		$content = preg_replace( "|\n+|", "\n", $content ) ;
+		$content = preg_replace( "|;+\n*;+|", ";", $content ) ;
+		$content = trim( $content ) ;
 		return $content ;
 	}
 

@@ -51,6 +51,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM,
 			LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY,
 			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC,
+			LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT,
 
 			LiteSpeed_Cache_Config::OPID_CDN,
 
@@ -152,6 +153,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM:
 			case LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY:
 			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC:
+			case LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT:
 
 			case LiteSpeed_Cache_Config::OPID_CDN:
 
