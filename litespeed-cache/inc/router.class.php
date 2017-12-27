@@ -62,7 +62,7 @@ class LiteSpeed_Cache_Router
 		$role = false ;
 		if ( $uid ) {
 			$user = get_userdata( $uid ) ;
-			if ( is_array( $user->roles ) ) {
+			if ( isset( $user->roles ) && is_array( $user->roles ) ) {
 				$tmp = array_values( $user->roles ) ;
 				$role = array_shift( $tmp ) ;
 			}
