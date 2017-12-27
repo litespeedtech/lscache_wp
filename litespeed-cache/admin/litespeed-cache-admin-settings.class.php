@@ -68,6 +68,8 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$this->_validate_cdn() ;
 
+		$this->_validate_adv() ;
+
 		$this->_validate_debug() ;
 
 		$this->_validate_crawler() ; // Network setup doesn't run validate_plugin_settings
@@ -609,6 +611,18 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
+	}
+
+	/**
+	 * Validate advanced setting
+	 *
+	 * @since 1.7.1
+	 * @access private
+	 */
+	private function _validate_adv()
+	{
+		$id = LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ;
+		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 	}
 
 	/**
