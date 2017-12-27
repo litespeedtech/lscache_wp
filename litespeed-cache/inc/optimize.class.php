@@ -1230,7 +1230,7 @@ class LiteSpeed_Cache_Optimize
 			 * @since  1.7.1
 			 */
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
-				$this->minify_options[ 'postprocessor' ] = 'LiteSpeed_Cache_Optimize::remove_comment' ;
+				$this->minify_options[ 'postprocessor' ] = __CLASS__ . '::remove_comment' ;
 			}
 
 			$content = $this->minify_minify->serve( $this->minify_controller, $this->minify_options ) ;
