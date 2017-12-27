@@ -1253,9 +1253,23 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public static function remove_comment( $content, $type )
 	{
-		$content = preg_replace( '|\/\*\!.*\*\/|sU', "\n", $content ) ;
-		$content = preg_replace( "|\n+|", "\n", $content ) ;
-		$content = preg_replace( "|;+\n*;+|", ';', $content ) ;
+		$_from = array(
+			'|\/\*\!.*\*\/|sU',
+			"|\n+|",
+			"|;+\n*;+|",
+			"|\n+;|",
+			"|;\n+|"
+		) ;
+
+		$_to = array(
+			"\n",
+			"\n",
+			';',
+			';',
+			';',
+		) ;
+
+		$content = preg_replace( $_from, $_to, $content ) ;
 		if ( $type == 'text/css' ) {
 			$content = preg_replace( "|: *|", ':', $content ) ;
 			$content = preg_replace( "| */ *|", '/', $content ) ;
