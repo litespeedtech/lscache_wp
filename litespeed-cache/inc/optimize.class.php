@@ -1258,6 +1258,7 @@ class LiteSpeed_Cache_Optimize
 		$content = preg_replace( "|;+\n*;+|", ';', $content ) ;
 		if ( $type == 'text/css' ) {
 			$content = preg_replace( "|: *|", ':', $content ) ;
+			$content = preg_replace( "| */ *|", '/', $content ) ;
 		}
 		$content = trim( $content ) ;
 		return $content ;
