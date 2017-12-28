@@ -16,6 +16,7 @@ class LiteSpeed_Cache_Control
 	const BM_PRIVATE = 2 ;
 	const BM_SHARED = 4 ;
 	const BM_NO_VARY = 8 ;
+	const BM_PUBLIC_FORCED = 64 ;
 	const BM_STALE = 128 ;
 	const BM_NOTCACHEABLE = 256 ;
 
@@ -172,6 +173,36 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
+	 * Set cache control to forced public
+	 *
+	 * @access public
+	 * @since 1.7.1
+	 * @param string $reason The reason to no cache
+	 */
+	public static function set_public_forced( $reason = false )
+	{
+		if ( self::is_public_forced() ) {
+			return ;
+		}
+		self::$_control |= self::BM_PUBLIC_FORCED ;
+		if ( $reason ) {
+			$reason = "( $reason )" ;
+		}
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> public forced ' . $reason ) ;
+	}
+
+	/**
+	 * Check if is public forced
+	 *
+	 * @access public
+	 * @since 1.7.1
+	 */
+	public static function is_public_forced()
+	{
+		return self::$_control & self::BM_PUBLIC_FORCED ;
+	}
+
+	/**
 	 * Set cache control to private
 	 *
 	 * @access public
@@ -187,7 +218,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> private ' . $reason) ;
+		LiteSpeed_Cache_Log::debug( 'X Cache_control -> private ' . $reason ) ;
 	}
 
 	/**
@@ -198,7 +229,7 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function is_private()
 	{
-		return self::$_control & self::BM_PRIVATE ;
+		return self::$_control & self::BM_PRIVATE && ! self::is_public_forced() ;
 	}
 
 	/**

@@ -184,6 +184,7 @@ class LiteSpeed_Cache_Optimize
 			LiteSpeed_Cache_Log::debug( 'Optimizer start serving static file' ) ;
 
 			LiteSpeed_Cache_Control::set_cacheable() ;
+			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: css async js' ) ;
 			LiteSpeed_Cache_Control::set_no_vary() ;
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_CSS_ASYNC' ) ;
@@ -230,6 +231,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		LiteSpeed_Cache_Control::set_cacheable() ;
+		LiteSpeed_Cache_Control::set_public_forced( 'OPTM: min file ' . $match[ 1 ] ) ;
 		LiteSpeed_Cache_Control::set_no_vary() ;
 		LiteSpeed_Cache_Control::set_custom_ttl( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ) ;
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;

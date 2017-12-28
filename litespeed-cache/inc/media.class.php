@@ -405,6 +405,7 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Log::debug( 'Media run lazyload lib' ) ;
 
 			LiteSpeed_Cache_Control::set_cacheable() ;
+			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: lazyload js' ) ;
 			LiteSpeed_Cache_Control::set_no_vary() ;
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_LAZY' ) ;
