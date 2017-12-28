@@ -248,6 +248,8 @@ For more detailed information about crawler setup, please see [our blog post](ht
 * [UPDATE] Fixed a potential warning for new installations on the Settings page.
 * [UPDATE] Fixed an issue with guest users occasionally receiving PHP warnings.
 * [BUGFIX] Fixed a bug with the Improve HTTPS Compatibility setting failing to save.
+* Thanks to all of our users for your encouragement and support! Happy New Year!
+* PS: Lookout 2018, we're back!
 
 = 1.7 - December 22 2017 =
 * [NEW FEATURE] Drop Query Strings setting in the Cache tab.
