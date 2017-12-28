@@ -148,7 +148,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
 				<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
