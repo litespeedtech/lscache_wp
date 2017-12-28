@@ -155,11 +155,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Remove comments When Minifying', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Remove Comments', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Clear comments when minifing CSS/JS.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Remove the comments inside of JS/CSS files when minifying.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>

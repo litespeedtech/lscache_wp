@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.7\n"
+"Project-Id-Version: LiteSpeed Cache 1.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-12-23 02:29:11+00:00\n"
+"POT-Creation-Date: 2017-12-28 17:38:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -361,63 +361,63 @@ msgstr ""
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:219
+#: admin/litespeed-cache-admin-settings.class.php:221
 msgid "Site options saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:258
-#: admin/litespeed-cache-admin-settings.class.php:776
+#: admin/litespeed-cache-admin-settings.class.php:260
+#: admin/litespeed-cache-admin-settings.class.php:804
 msgid "Default Public Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:259
+#: admin/litespeed-cache-admin-settings.class.php:261
 msgid "Default Private Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:260
+#: admin/litespeed-cache-admin-settings.class.php:262
 msgid "Default Front Page"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:261
+#: admin/litespeed-cache-admin-settings.class.php:263
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:262
+#: admin/litespeed-cache-admin-settings.class.php:264
 msgid "404"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:263
+#: admin/litespeed-cache-admin-settings.class.php:265
 msgid "403"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:264
+#: admin/litespeed-cache-admin-settings.class.php:266
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:637
+#: admin/litespeed-cache-admin-settings.class.php:665
 #: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:703
+#: admin/litespeed-cache-admin-settings.class.php:731
 #: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:704
+#: admin/litespeed-cache-admin-settings.class.php:732
 #: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:705
+#: admin/litespeed-cache-admin-settings.class.php:733
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:706
+#: admin/litespeed-cache-admin-settings.class.php:734
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:707
+#: admin/litespeed-cache-admin-settings.class.php:735
 #: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
@@ -780,6 +780,7 @@ msgstr ""
 #: admin/tpl/image_optimization.php:112 admin/tpl/image_optimization.php:151
 #: admin/tpl/setting/settings_advanced.php:89
 #: admin/tpl/setting/settings_cache.php:86
+#: admin/tpl/setting/settings_optimize.php:151
 msgid "Learn More"
 msgstr ""
 
@@ -1275,11 +1276,12 @@ msgstr ""
 #: admin/tpl/setting/settings_excludes.php:94
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:31
+#: admin/tpl/setting/settings_optimize.php:152
 #: admin/tpl/setting/settings_purge.php:79
 #: admin/tpl/setting/settings_tuning.php:36
 #: admin/tpl/setting/settings_tuning.php:72
-#: admin/tpl/setting/settings_tuning.php:131
-#: admin/tpl/setting/settings_tuning.php:160
+#: admin/tpl/setting/settings_tuning.php:144
+#: admin/tpl/setting/settings_tuning.php:173
 msgid "One per line."
 msgstr ""
 
@@ -1650,7 +1652,7 @@ msgstr ""
 
 #: admin/tpl/setting/settings_cache.php:62
 #: admin/tpl/setting/settings_excludes.php:14
-#: admin/tpl/setting/settings_tuning.php:159
+#: admin/tpl/setting/settings_tuning.php:172
 msgid "For example, for %s, %s can be used here."
 msgstr ""
 
@@ -2040,6 +2042,7 @@ msgid "Advanced level will log more details."
 msgstr ""
 
 #: admin/tpl/setting/settings_debug.php:78
+#: admin/tpl/setting/settings_tuning.php:86
 msgid "MB"
 msgstr ""
 
@@ -2531,8 +2534,8 @@ msgstr ""
 #: admin/tpl/setting/settings_media.php:30
 #: admin/tpl/setting/settings_tuning.php:35
 #: admin/tpl/setting/settings_tuning.php:71
-#: admin/tpl/setting/settings_tuning.php:130
-#: admin/tpl/setting/settings_tuning.php:158
+#: admin/tpl/setting/settings_tuning.php:143
+#: admin/tpl/setting/settings_tuning.php:171
 msgid "Both full URLs and partial strings can be used."
 msgstr ""
 
@@ -2542,14 +2545,14 @@ msgstr ""
 #: admin/tpl/setting/settings_tuning.php:38
 #: admin/tpl/setting/settings_tuning.php:58
 #: admin/tpl/setting/settings_tuning.php:74
-#: admin/tpl/setting/settings_tuning.php:133
+#: admin/tpl/setting/settings_tuning.php:146
 msgid "API:"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:34
 #: admin/tpl/setting/settings_tuning.php:39
 #: admin/tpl/setting/settings_tuning.php:75
-#: admin/tpl/setting/settings_tuning.php:134
+#: admin/tpl/setting/settings_tuning.php:147
 msgid "Filter %s is supported."
 msgstr ""
 
@@ -2557,7 +2560,7 @@ msgstr ""
 #: admin/tpl/setting/settings_optimize.php:113
 #: admin/tpl/setting/settings_tuning.php:40
 #: admin/tpl/setting/settings_tuning.php:76
-#: admin/tpl/setting/settings_tuning.php:135
+#: admin/tpl/setting/settings_tuning.php:148
 msgid "Elements with attribute %s in html code will be excluded."
 msgstr ""
 
@@ -2721,7 +2724,7 @@ msgid "Minify HTML content."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:105
-#: admin/tpl/setting/settings_tuning.php:119
+#: admin/tpl/setting/settings_tuning.php:132
 msgid "Load CSS Asynchronously"
 msgstr ""
 
@@ -2731,8 +2734,9 @@ msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:110
 #: admin/tpl/setting/settings_optimize.php:125
-#: admin/tpl/setting/settings_tuning.php:88
-#: admin/tpl/setting/settings_tuning.php:147
+#: admin/tpl/setting/settings_optimize.php:163
+#: admin/tpl/setting/settings_tuning.php:101
+#: admin/tpl/setting/settings_tuning.php:160
 msgid ""
 "This can improve your speed score in services like Pingdom, GTmetrix and "
 "PageSpeed."
@@ -2760,6 +2764,26 @@ msgstr ""
 msgid ""
 "If there is any JS error related to %1$s when enabled %2$s, please try this "
 "option."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:145
+msgid "DNS Prefetch"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:149
+msgid "Prefetching DNS can reduce latency for visiters."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:150
+msgid "For example"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:158
+msgid "Remove Comments"
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:162
+msgid "Remove the comments inside of JS/CSS files when minifying."
 msgstr ""
 
 #: admin/tpl/setting/settings_purge.php:5
@@ -2934,76 +2958,90 @@ msgid "Listed JS files will not be minified/combined."
 msgstr ""
 
 #: admin/tpl/setting/settings_tuning.php:83
+msgid "Combined File Maximum Size"
+msgstr ""
+
+#: admin/tpl/setting/settings_tuning.php:88
+msgid "Specify the maximum size in megabytes for combined files."
+msgstr ""
+
+#: admin/tpl/setting/settings_tuning.php:89
+msgid ""
+"Larger numbers will generate fewer files, which is better for achieving "
+"higher page scores, but can cause heavy memory usage."
+msgstr ""
+
+#: admin/tpl/setting/settings_tuning.php:96
 msgid "Remove Query Strings"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:87
+#: admin/tpl/setting/settings_tuning.php:100
 msgid "Remove query strings from static resources."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:94
+#: admin/tpl/setting/settings_tuning.php:107
 msgid "Load Google Fonts Asynchronously"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:98
+#: admin/tpl/setting/settings_tuning.php:111
 msgid ""
 "This is useful if you only want to load Google Fonts asynchronously while "
 "leave other CSS intact."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:99
+#: admin/tpl/setting/settings_tuning.php:112
 msgid ""
 "This will also add a preconnect to Google for faster Google Fonts "
 "downloading."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:105
+#: admin/tpl/setting/settings_tuning.php:118
 msgid "Remove Google Fonts"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:109
+#: admin/tpl/setting/settings_tuning.php:122
 msgid "Prevent google fonts from loading on all your pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:115
+#: admin/tpl/setting/settings_tuning.php:128
 msgid "Critical CSS Rules"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:119
+#: admin/tpl/setting/settings_tuning.php:132
 msgid "Specify critical CSS rules for above-the-fold content when enabling %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:125
+#: admin/tpl/setting/settings_tuning.php:138
 msgid "JS Deferred Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:129
+#: admin/tpl/setting/settings_tuning.php:142
 msgid "Listed JS files will not be deferred."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:142
+#: admin/tpl/setting/settings_tuning.php:155
 msgid "Remove WordPress Emoji"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:146
+#: admin/tpl/setting/settings_tuning.php:159
 msgid ""
 "Stop loading wordpress.org emoji. Browser default emoji will be displayed "
 "instead."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:153
+#: admin/tpl/setting/settings_tuning.php:166
 msgid "URI Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:157
+#: admin/tpl/setting/settings_tuning.php:170
 msgid "Prevent any optimization of listed pages."
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:166
+#: admin/tpl/setting/settings_tuning.php:179
 msgid "Role Excludes"
 msgstr ""
 
-#: admin/tpl/setting/settings_tuning.php:172
+#: admin/tpl/setting/settings_tuning.php:185
 msgid "Selected roles will be excluded from all optimizations."
 msgstr ""
 
@@ -3198,37 +3236,37 @@ msgstr ""
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/media.class.php:434
+#: inc/media.class.php:435
 msgid "Failed to communicate with LiteSpeed IAPI server"
 msgstr ""
 
-#: inc/media.class.php:443
+#: inc/media.class.php:444
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/media.class.php:999
+#: inc/media.class.php:1000
 msgid "Failed to push to LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/media.class.php:1007
+#: inc/media.class.php:1008
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/media.class.php:1125 inc/media.class.php:1190 inc/media.class.php:1323
+#: inc/media.class.php:1126 inc/media.class.php:1191 inc/media.class.php:1324
 msgid "No image found."
 msgstr ""
 
-#: inc/media.class.php:1230 inc/media.class.php:1384
+#: inc/media.class.php:1231 inc/media.class.php:1385
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/media.class.php:1296
+#: inc/media.class.php:1297
 msgid "Number of images in one image group (%s) exceeds the credit (%s)"
 msgstr ""
 
-#: inc/media.class.php:1352
+#: inc/media.class.php:1353
 msgid "Post data is empty."
 msgstr ""
 

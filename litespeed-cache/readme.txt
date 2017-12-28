@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.7
+Stable tag: 1.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -239,6 +239,15 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.7.1 - December 28 2017 =
+* [NEW FEATURE] Added DNS Prefetch setting on the Optimize page.
+* [NEW FEATURE] Added Combined File Max Size setting on the Tuning page.
+* [IMPROVEMENT] Improved JS/CSS minify to achieve higher page scores.
+* [IMPROVEMENT] Optimized JS/CSS files will not be served from private cache for OLS or with ESI off.
+* [UPDATE] Fixed a potential warning for new installations on the Settings page.
+* [UPDATE] Fixed an issue with guest users occasionally receiving PHP warnings.
+* [BUGFIX] Fixed a bug with the Improve HTTPS Compatibility setting failing to save.
 
 = 1.7 - December 22 2017 =
 * [NEW FEATURE] Drop Query Strings setting in the Cache tab.
