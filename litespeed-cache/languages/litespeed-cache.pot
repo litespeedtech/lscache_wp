@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 1.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2017-12-28 17:38:02+00:00\n"
+"POT-Creation-Date: 2017-12-28 18:39:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2958,7 +2958,7 @@ msgid "Listed JS files will not be minified/combined."
 msgstr ""
 
 #: admin/tpl/setting/settings_tuning.php:83
-msgid "Combined File Maximum Size"
+msgid "Max Combined File Size"
 msgstr ""
 
 #: admin/tpl/setting/settings_tuning.php:88
