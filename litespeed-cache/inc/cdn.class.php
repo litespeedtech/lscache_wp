@@ -16,6 +16,8 @@ class LiteSpeed_Cache_CDN
 
 	const BYPASS = 'LITESPEED_BYPASS_CDN' ;
 
+	const TYPE_CLOUDFLARE_PURGE_ALL = 'cloudflare_purge_all' ;
+
 	private $content ;
 
 	private $cfg_cdn ;
@@ -134,6 +136,30 @@ class LiteSpeed_Cache_CDN
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
 		}
 
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.7.2
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_CLOUDFLARE_PURGE_ALL :
+				$instance->_cloudflare_purge_all() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**
@@ -513,6 +539,123 @@ class LiteSpeed_Cache_CDN
 		wp_deregister_script( 'jquery' ) ;
 
 		wp_register_script( 'jquery', $src, false, $v ) ;
+	}
+
+	/**
+	 * Purge Cloudflare cache
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function _cloudflare_purge_all()
+	{
+		LiteSpeed_Cache_Log::debug( 'CDN: _cloudflare_purge_all' ) ;
+
+		$cf_on = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ;
+		if ( ! $cf_on ) {
+			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		$zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
+		if ( ! $zone ) {
+			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache' ;
+		$data = array( 'purge_everything' => true ) ;
+
+		$res = $this->_cloudflare_call( $url, 'DELETE', $data ) ;
+
+		if ( ! $res ) {
+			$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return ;
+		}
+
+		$msg = __( 'Communicated with Cloudflare to purge all successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+	}
+
+	/**
+	 * Get Cloudflare zone settings
+	 *
+	 * @since  1.7.2
+	 * @access public
+	 */
+	public function cloudflare_get_zone( $options )
+	{
+		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
+
+		$zones = $this->_cloudflare_call( $url, 'GET', false, $options ) ;
+
+		if ( ! $zones ) {
+			return false ;
+		}
+
+		$kw = $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] ;
+		if ( ! $kw ) {
+			return $zones[ 0 ] ;
+		}
+
+		foreach ( $zones as $v ) {
+			if ( strpos( $v[ 'name' ], $kw ) !== false ) {
+				return $v ;
+			}
+		}
+
+		return $zones[ 0 ] ;
+	}
+
+	/**
+	 * Cloudflare API
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function _cloudflare_call( $url, $method = 'GET', $data = false, $token = false )
+	{
+		LiteSpeed_Cache_Log::debug( "CDN: _cloudflare_call \t\t[URL] $url" ) ;
+
+		$header = array(
+			'Content-Type: application/json',
+		) ;
+		if ( $token ) {
+			LiteSpeed_Cache_Log::debug2( 'CDN: _cloudflare_call use param token' ) ;
+			$header[] = 'X-Auth-Email: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ] ;
+			$header[] = 'X-Auth-Key: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] ;
+		}
+		else {
+			$header[] = 'X-Auth-Email: ' . LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ) ;
+			$header[] = 'X-Auth-Key: ' . LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ) ;
+		}
+
+		$ch = curl_init() ;
+		curl_setopt( $ch, CURLOPT_URL, $url ) ;
+		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method ) ;
+		curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ) ;
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ) ;
+		if ( $data ) {
+			if ( is_array( $data ) ) {
+				$data = json_encode( $data ) ;
+			}
+			curl_setopt( $ch, CURLOPT_POSTFIELDS, $data ) ;
+		}
+		$result = curl_exec( $ch ) ;
+
+		$json = json_decode( $result, true ) ;
+
+		if ( $json && $json[ 'success' ] && $json[ 'result' ] ) {
+			LiteSpeed_Cache_Log::debug( "CDN: _cloudflare_call called successfully" ) ;
+			return $json[ 'result' ] ;
+		}
+
+		LiteSpeed_Cache_Log::debug( "CDN: _cloudflare_call called failed: $result" ) ;
+
+		return false ;
 	}
 
 	/**

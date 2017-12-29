@@ -54,6 +54,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT,
 
 			LiteSpeed_Cache_Config::OPID_CDN,
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE,
 
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
@@ -156,6 +157,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT:
 
 			case LiteSpeed_Cache_Config::OPID_CDN:
+			case LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE:
 
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY:

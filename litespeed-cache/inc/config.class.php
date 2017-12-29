@@ -132,6 +132,11 @@ class LiteSpeed_Cache_Config
 	const OPID_CDN_ORI = 'cdn_ori' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
+	const OPID_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
+	const OPID_CDN_CLOUDFLARE_EMAIL = 'cdn_cloudflare_email' ;
+	const OPID_CDN_CLOUDFLARE_KEY = 'cdn_cloudflare_key' ;
+	const OPID_CDN_CLOUDFLARE_NAME = 'cdn_cloudflare_name' ;
+	const OPID_CDN_CLOUDFLARE_ZONE = 'cdn_cloudflare_zone' ;
 
 	const OPID_MEDIA_IMG_LAZY = 'media_img_lazy' ;
 	const OPID_MEDIA_IMG_LAZY_PLACEHOLDER = 'media_img_lazy_placeholder' ;
@@ -570,6 +575,11 @@ class LiteSpeed_Cache_Config
 			self::OPID_CDN_ORI 		=> '',
 			self::OPID_CDN_EXCLUDE 	=> '',
 			self::OPID_CDN_REMOTE_JQUERY 	=> false,
+			self::OPID_CDN_CLOUDFLARE 	=> false,
+			self::OPID_CDN_CLOUDFLARE_EMAIL 	=> '',
+			self::OPID_CDN_CLOUDFLARE_KEY 	=> '',
+			self::OPID_CDN_CLOUDFLARE_NAME 	=> '',
+			self::OPID_CDN_CLOUDFLARE_ZONE 	=> '',
 
 			self::OPID_MEDIA_IMG_LAZY 	=> false,
 			self::OPID_MEDIA_IMG_LAZY_PLACEHOLDER 	=> '',

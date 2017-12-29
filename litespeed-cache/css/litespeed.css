@@ -1242,6 +1242,11 @@ g.litespeed-pie_info text{
 	margin-right: 10px;
 }
 
+.litespeed-child-col{
+	flex: 0 0 30%;
+	padding-left: 17px;
+}
+
 
 /********************************* toggle *******************************/
 
@@ -1443,6 +1448,13 @@ g.litespeed-pie_info text{
 	padding: 1px 6px;
 }
 
+input.litespeed-input-success {
+	border-color: #28a745;
+}
+
+input.litespeed-input-warning {
+	border-color: #e59544;
+}
 /*text area */
 
 .litespeed-body textarea {

@@ -449,11 +449,24 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_cdn()
 	{
+		$cdn_cloudflare_changed = false ;
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CDN,
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE,
 		) ;
 		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+			$v = self::parse_onoff( $this->_input, $id ) ;
+			if ( $this->_options[ $id ] === $v ) {
+				continue ;
+			}
+
+			$this->_options[ $id ] = $v ;
+
+			// Cloudflare setting is changed
+			if ( $id == LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) {
+				$cdn_cloudflare_changed = true ;
+			}
+
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CDN_ORI ;
@@ -505,6 +518,37 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ;
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
 
+		/**
+		 * CLoudflare API
+		 * @since  1.7.2
+		 */
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL,
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME,
+		) ;
+		foreach ( $ids as $id ) {
+			if ( $this->_options[ $id ] === $this->_input[ $id ] ) {
+				continue ;
+			}
+			$cdn_cloudflare_changed = true ;
+			$this->_options[ $id ] = $this->_input[ $id ] ;
+		}
+
+		// If cloudflare API is on, refresh the zone
+		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ] && $cdn_cloudflare_changed ) {
+			$zone = LiteSpeed_Cache_CDN::get_instance()->cloudflare_get_zone( $this->_options ) ;
+			if ( $zone ) {
+				$this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] = $zone[ 'name' ] ;
+				$this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ] = $zone[ 'id' ] ;
+
+				LiteSpeed_Cache_Log::debug( "Settings: Get zone successfully \t\t[ID] $zone[id]" ) ;
+			}
+			else {
+				$this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ] = '' ;
+				LiteSpeed_Cache_Log::debug( 'Settings: Get zone failed, clean zone' ) ;
+			}
+		}
 	}
 
 	/**

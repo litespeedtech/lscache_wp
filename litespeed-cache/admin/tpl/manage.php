@@ -8,6 +8,10 @@ $menu_list = array(
 	'db' => __('DB Optimizer', 'litespeed-cache'),
 ) ;
 
+if ( ! is_network_admin() ) {
+	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
+}
+
 include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 

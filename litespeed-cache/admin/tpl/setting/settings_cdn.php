@@ -160,11 +160,55 @@ if ( ! $cdn_mapping ) {
 				<?php echo $this->build_radio(
 					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
 					LiteSpeed_Cache_Config::VAL_ON2,
-					__( 'cdnjs', 'litespeed-cache' )
+					__( 'Cdnjs', 'litespeed-cache' )
 				) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Cloudflare API', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Turn this on if you want to use Cloudflare API functionality.', 'litespeed-cache' ) ; ?>
+			</div>
+			<div class="litespeed-cdn-mapping-block">
+				<div class='litespeed-child-col'>
+					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Your Email address on Cloudflare.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col'>
+					<h4><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Your API key is used to access Cloudflare APIs.', 'litespeed-cache' ) ; ?>
+						<?php echo sprintf( __( 'Get it from <a %s>Cloudflare account</a>.', 'litespeed-cache' ), 'href="https://www.cloudflare.com/a/profile" target="_blank"' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col'>
+					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
+
+				<?php
+					$cf_zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
+					$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
+					$this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME, $cls ) ;
+				?>
+					<div class="litespeed-desc">
+						<?php echo __( 'You can just type part of the domain.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
 			</div>
 		</td>
 	</tr>
