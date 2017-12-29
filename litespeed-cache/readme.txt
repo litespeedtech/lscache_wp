@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.7.1
+Stable tag: 1.7.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -78,6 +78,8 @@ LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
 * Support for clustered environments via LiteSpeed Web ADC
 * Supports [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) right out of the box
 * Supports ESI cache
+
+Please consider helping translate LiteSpeed Cache plugin at our [GlotPress project](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache). Growing the LiteSpeed Cache plugin community means better software for everyone!
 
 == Third Party Compatibility ==
 
@@ -239,6 +241,10 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.7.1.1 - December 29 2017 =
+* [BUGFIX] Fixed an extra trailing underscore issue when saving multiple lines with DNS Prefetch.
+* [UPDATE] Cleaned up unused dependency vendor files.
 
 = 1.7.1 - December 28 2017 =
 * [NEW FEATURE] Added DNS Prefetch setting on the Optimize page.
