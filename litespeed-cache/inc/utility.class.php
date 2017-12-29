@@ -317,6 +317,7 @@ class LiteSpeed_Cache_Utility
 		}
 
 		$arr = explode( "\n", $content ) ;
+		$arr = array_map( 'trim', $arr ) ;
 		if ( $type === 'uri' ) {
 			$arr = array_map( 'LiteSpeed_Cache_Utility::url2uri', $arr ) ;
 		}
