@@ -1441,7 +1441,7 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _update_credit( $credit )
 	{
-		$summary = (array) get_option( self::DB_IMG_OPTM_SUMMARY ) ;
+		$summary = get_option( self::DB_IMG_OPTM_SUMMARY, array() ) ;
 		$summary[ 'credit' ] = $credit ;
 
 		update_option( self::DB_IMG_OPTM_SUMMARY, $summary ) ;
@@ -1455,7 +1455,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public function summary_info( $field = false )
 	{
-		$optm_summary = (array) get_option( self::DB_IMG_OPTM_SUMMARY ) ;
+		$optm_summary = get_option( self::DB_IMG_OPTM_SUMMARY, array() ) ;
 
 		if ( ! $field ) {
 			return $optm_summary ;

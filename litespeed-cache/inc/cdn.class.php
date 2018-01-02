@@ -17,6 +17,9 @@ class LiteSpeed_Cache_CDN
 	const BYPASS = 'LITESPEED_BYPASS_CDN' ;
 
 	const TYPE_CLOUDFLARE_PURGE_ALL = 'cloudflare_purge_all' ;
+	const TYPE_CLOUDFLARE_GET_DEVMODE = 'cloudflare_get_devmode' ;
+	const TYPE_CLOUDFLARE_SET_DEVMODE_ON = 'cloudflare_set_devmode_on' ;
+	const TYPE_CLOUDFLARE_SET_DEVMODE_OFF = 'cloudflare_set_devmode_off' ;
 
 	private $content ;
 
@@ -64,7 +67,7 @@ class LiteSpeed_Cache_CDN
 		}
 
 		$this->cfg_url_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_ORI ) ;
-		$cfg_cdn_url = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
+		$cfg_cdn_url = get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array() ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
@@ -153,6 +156,15 @@ class LiteSpeed_Cache_CDN
 		switch ( $type ) {
 			case self::TYPE_CLOUDFLARE_PURGE_ALL :
 				$instance->_cloudflare_purge_all() ;
+				break ;
+
+			case self::TYPE_CLOUDFLARE_GET_DEVMODE :
+				$instance->_cloudflare_get_devmode() ;
+				break ;
+
+			case self::TYPE_CLOUDFLARE_SET_DEVMODE_ON :
+			case self::TYPE_CLOUDFLARE_SET_DEVMODE_OFF :
+				$instance->_cloudflare_set_devmode( $type ) ;
 				break ;
 
 			default:
@@ -542,6 +554,71 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
+	 * Get Cloudflare development mode
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function _cloudflare_get_devmode( $show_msg = true )
+	{
+		LiteSpeed_Cache_Log::debug( 'CDN: _cloudflare_get_devmode' ) ;
+
+		$zone = $this->_cloudflare_zone() ;
+		if ( ! $zone ) {
+			return ;
+		}
+
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
+		$res = $this->_cloudflare_call( $url, 'GET', false, false, $show_msg ) ;
+
+		if ( ! $res ) {
+			return ;
+		}
+		LiteSpeed_Cache_Log::debug( 'CDN: _cloudflare_get_devmode result ', $res ) ;
+
+		$curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array() ) ;
+		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
+		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
+
+		// update status
+		update_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, $curr_status ) ;
+
+	}
+
+	/**
+	 * Set Cloudflare development mode
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function _cloudflare_set_devmode( $type )
+	{
+		LiteSpeed_Cache_Log::debug( 'CDN: _cloudflare_set_devmode' ) ;
+
+		$zone = $this->_cloudflare_zone() ;
+		if ( ! $zone ) {
+			return ;
+		}
+
+		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
+		$new_val = $type == self::TYPE_CLOUDFLARE_SET_DEVMODE_ON ? 'on' : 'off' ;
+		$data = array( 'value' => $new_val ) ;
+		$res = $this->_cloudflare_call( $url, 'PATCH', $data ) ;
+
+		if ( ! $res ) {
+			return ;
+		}
+
+		$res = $this->_cloudflare_get_devmode( false ) ;
+
+		if ( $res ) {
+			$msg = sprintf( __( 'Notified Cloudflare to set development mode to %s successfully.', 'litespeed-cache' ), strtoupper( $new_val ) ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
+
+	}
+
+	/**
 	 * Purge Cloudflare cache
 	 *
 	 * @since  1.7.2
@@ -558,10 +635,8 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
+		$zone = $this->_cloudflare_zone() ;
 		if ( ! $zone ) {
-			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
 
@@ -570,14 +645,28 @@ class LiteSpeed_Cache_CDN
 
 		$res = $this->_cloudflare_call( $url, 'DELETE', $data ) ;
 
-		if ( ! $res ) {
-			$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' ) ;
+		if ( $res ) {
+			$msg = __( 'Notified Cloudflare to purge all successfully.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
+	}
+
+	/**
+	 * Get current Cloudflare zone from cfg
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function _cloudflare_zone()
+	{
+		$zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
+		if ( ! $zone ) {
+			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-			return ;
+			return false ;
 		}
 
-		$msg = __( 'Communicated with Cloudflare to purge all successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		return $zone ;
 	}
 
 	/**
@@ -586,11 +675,11 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function cloudflare_get_zone( $options )
+	public function cloudflare_fetch_zone( $options )
 	{
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
 
-		$zones = $this->_cloudflare_call( $url, 'GET', false, $options ) ;
+		$zones = $this->_cloudflare_call( $url, 'GET', false, $options, false ) ;
 
 		if ( ! $zones ) {
 			return false ;
@@ -616,7 +705,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _cloudflare_call( $url, $method = 'GET', $data = false, $token = false )
+	private function _cloudflare_call( $url, $method = 'GET', $data = false, $token = false, $show_msg = true )
 	{
 		LiteSpeed_Cache_Log::debug( "CDN: _cloudflare_call \t\t[URL] $url" ) ;
 
@@ -650,10 +739,19 @@ class LiteSpeed_Cache_CDN
 
 		if ( $json && $json[ 'success' ] && $json[ 'result' ] ) {
 			LiteSpeed_Cache_Log::debug( "CDN: _cloudflare_call called successfully" ) ;
+			if ( $show_msg ) {
+				$msg = __( 'Communicated with Cloudflare successfully.', 'litespeed-cache' ) ;
+				LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			}
+
 			return $json[ 'result' ] ;
 		}
 
 		LiteSpeed_Cache_Log::debug( "CDN: _cloudflare_call called failed: $result" ) ;
+		if ( $show_msg ) {
+			$msg = __( 'Failed to communicate with Cloudflare', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+		}
 
 		return false ;
 	}

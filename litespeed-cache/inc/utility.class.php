@@ -18,7 +18,7 @@ class LiteSpeed_Cache_Utility
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public static function readable_time( $seconds_or_timestamp, $timeout = 3600 )
+	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $backward = true )
 	{
 
 		if ( strlen( $seconds_or_timestamp ) == 10 ) {
@@ -34,7 +34,7 @@ class LiteSpeed_Cache_Utility
 		$res = '';
 		if ( $seconds > 86400 ) {
 			$num = floor( $seconds / 86400 ) ;
-			$res .= $num . 'd ' ;
+			$res .= $num . 'd' ;
 			$seconds %= 86400 ;
 		}
 
@@ -43,7 +43,7 @@ class LiteSpeed_Cache_Utility
 				$res .= ', ' ;
 			}
 			$num = floor( $seconds / 3600 ) ;
-			$res .= $num . 'h ' ;
+			$res .= $num . 'h' ;
 			$seconds %= 3600 ;
 		}
 
@@ -52,15 +52,18 @@ class LiteSpeed_Cache_Utility
 				$res .= ', ' ;
 			}
 			$num = floor( $seconds / 60 ) ;
-			$res .= $num . 'm ' ;
+			$res .= $num . 'm' ;
 			$seconds %= 60 ;
 		}
 
 		if ( $seconds > 0 ) {
-			$res .= $seconds . 's ' ;
+			if ( $res ) {
+				$res .= ' ' ;
+			}
+			$res .= $seconds . 's' ;
 		}
 
-		$res = sprintf( __( ' %s ago ', 'litespeed-cache' ), $res ) ;
+		$res = sprintf( $backward ? __( ' %s ago', 'litespeed-cache' ) : __( ' %s later', 'litespeed-cache' ), $res ) ;
 
 		return $res ;
 	}

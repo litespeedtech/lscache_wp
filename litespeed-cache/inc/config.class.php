@@ -26,6 +26,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
 	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
+	const ITEM_CLOUDFLARE_STATUS = 'litespeed-cache-cloudflare_status' ;
 
 	const ITEM_CDN_MAPPING_URL = 'url' ;
 	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;
@@ -211,13 +212,13 @@ class LiteSpeed_Cache_Config
 		}
 
 		// Vary group settings
-		$this->vary_groups = (array) get_option( self::VARY_GROUP ) ;
+		$this->vary_groups = get_option( self::VARY_GROUP, array() ) ;
 
 		// Exclude optimization role setting
-		$this->exclude_optimization_roles = (array) get_option( self::EXCLUDE_OPTIMIZATION_ROLES ) ;
+		$this->exclude_optimization_roles = get_option( self::EXCLUDE_OPTIMIZATION_ROLES, array() ) ;
 
 		// Exclude cache role setting
-		$this->exclude_cache_roles = (array) get_option( self::EXCLUDE_CACHE_ROLES ) ;
+		$this->exclude_cache_roles = get_option( self::EXCLUDE_CACHE_ROLES, array() ) ;
 
 		// Set security key if not initialized yet
 		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {

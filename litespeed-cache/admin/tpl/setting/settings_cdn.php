@@ -6,7 +6,7 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = (array) get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
+$cdn_mapping = get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array() ) ;
 if ( ! $cdn_mapping ) {
 	// generate one by default
 	$cdn_mapping = array( array(
