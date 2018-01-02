@@ -66,7 +66,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 		if ( current_user_can($manage) ) {
 			if ( defined( 'LITESPEED_ON' ) ) {
-				add_action('wp_before_admin_bar_render', array($this, 'add_quick_purge')) ;
+				add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
 			}
 			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 		}
@@ -272,27 +272,6 @@ class LiteSpeed_Cache_Admin_Display
 	public function unset_update_text()
 	{
 		remove_filter('gettext', array($this, 'add_update_text')) ;
-	}
-
-	/**
-	 * Hooked to wp_before_admin_bar_render.
-	 * Adds a link to the admin bar so users can quickly purge all.
-	 *
-	 * @access public
-	 * @global WP_Admin_Bar $wp_admin_bar
-	 * @global string $pagenow
-	 */
-	public function add_quick_purge()
-	{
-		global $wp_admin_bar ;
-		$url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_PURGE_ALL) ;
-
-		$wp_admin_bar->add_node(array(
-			'id'    => 'lscache-quick-purge',
-			'title' => '<span class="ab-icon"></span><span class="ab-label">' . __('LiteSpeed Cache Purge All', 'litespeed-cache') . '</span>',
-			'href'  => $url,
-			'meta'  => array('class' => 'litespeed-top-toolbar'),
-		)) ;
 	}
 
 	/**

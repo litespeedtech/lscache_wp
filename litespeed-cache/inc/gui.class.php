@@ -143,8 +143,8 @@ class LiteSpeed_Cache_GUI
 	 */
 	public function frontend_shortcut()
 	{
-
 		global $wp_admin_bar ;
+
 		$wp_admin_bar->add_menu( array(
 			'id'	=> 'litespeed-menu',
 			'title'	=> '<span class="ab-icon"></span>',
@@ -194,6 +194,37 @@ class LiteSpeed_Cache_GUI
 			'title'		=> __( 'More settings', 'litespeed-cache' ),
 			'href'		=> get_admin_url( null, 'admin.php?page=lscache-settings#excludes' ),
 		) );
+	}
+
+	/**
+	 * Hooked to wp_before_admin_bar_render.
+	 * Adds a link to the admin bar so users can quickly purge all.
+	 *
+	 * @access public
+	 * @global WP_Admin_Bar $wp_admin_bar
+	 * @since 1.7.2 Moved from admin_display.cls to gui.cls; Renamed from `add_quick_purge` to `backend_shortcut`
+	 */
+	public function backend_shortcut()
+	{
+		global $wp_admin_bar ;
+
+		$wp_admin_bar->add_menu( array(
+			'id'    => 'litespeed-menu',
+			'title' => '<span class="ab-icon"></span><span class="ab-label">' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '</span>',
+			'href'  => LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+			'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
+		) ) ;
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-cloudflare',
+				'title'		=> __( 'Cloudflare Purge All', 'litespeed-cache' ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN, LiteSpeed_Cache_CDN::TYPE_CLOUDFLARE_PURGE_ALL ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
 	}
 
 	/**
