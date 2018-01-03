@@ -1,7 +1,7 @@
 <?php
 if (!defined('WPINC')) die;
 
-$current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
+// $current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
 
 ?>
 <h3 class="litespeed-title"><?php echo __( 'Advanced', 'litespeed-cache' ) ; ?></h3>
