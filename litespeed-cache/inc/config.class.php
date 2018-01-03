@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_OPTM_EXC_JQUERY => true,
 			self::OPID_OPTM_GGFONTS_ASYNC => false,
 			self::OPID_OPTM_MAX_SIZE => 1.2,
-			self::OPID_OPTM_RM_COMMENT => true,
+			self::OPID_OPTM_RM_COMMENT => false,
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',
