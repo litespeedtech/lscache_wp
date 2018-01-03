@@ -33,6 +33,35 @@ class LiteSpeed_Cache_GUI
 			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
 			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
 		}
+
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_FAVICON ) ) {
+			if ( is_admin() ) {
+				add_action( 'admin_head', array( $this, 'favicon' ) ) ;
+			}
+			else {
+				add_action( 'wp_head', array( $this, 'favicon' ) ) ;
+			}
+		}
+	}
+
+	/**
+	 * Display the favicon
+	 *
+	 * @since 1.7.2
+	 */
+	public function favicon()
+	{
+		$current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
+		if ( is_admin() ) {
+			if ( ! empty( $current_favicon[ 'backend' ] ) ) {
+				echo "<link rel='icon' href='$current_favicon[backend]' />" ;
+			}
+		}
+		else {
+			if ( ! empty( $current_favicon[ 'frontend' ] ) ) {
+				echo "<link rel='icon' href='$current_favicon[frontend]' />" ;
+			}
+		}
 	}
 
 	/**
