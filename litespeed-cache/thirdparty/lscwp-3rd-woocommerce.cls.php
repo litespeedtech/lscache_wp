@@ -179,7 +179,19 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	private function vary_needed()
 	{
-		return function_exists( 'WC' ) && ( $woocom = WC() ) && $woocom->cart->get_cart_contents_count() > 0 ;
+		if ( ! function_exists( 'WC' ) ) {
+			return false ;
+		}
+
+		$woocom = WC() ;
+		if ( ! $woocom ) {
+			return false ;
+		}
+
+		if ( is_null( $woocom->cart ) ) {
+			return false ;
+		}
+		return $woocom->cart->get_cart_contents_count() > 0 ;
 	}
 
 	/**
