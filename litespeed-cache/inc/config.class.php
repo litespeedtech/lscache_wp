@@ -27,7 +27,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
 	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
 	const ITEM_CLOUDFLARE_STATUS = 'litespeed-cache-cloudflare_status' ;
-	const ITEM_FAVICON = 'litespeed-cache-favicon' ;
+	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
 
 	const ITEM_CDN_MAPPING_URL = 'url' ;
 	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;
@@ -107,7 +107,7 @@ class LiteSpeed_Cache_Config
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
-	const OPID_ADV_FAVICON = 'adv_favicon' ;
+	// const OPID_ADV_FAVICON = 'adv_favicon' ;
 
 	const OPID_CSS_MINIFY = 'css_minify' ;
 	const OPID_CSS_COMBINE = 'css_combine' ;
@@ -552,7 +552,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_EXCLUDES_CAT => '',
 			self::OPID_EXCLUDES_TAG => '',
 
-			self::OPID_ADV_FAVICON 	=> false,
+			// self::OPID_ADV_FAVICON 	=> false,
 
 			self::OPID_CSS_MINIFY 	=> false,
 			self::OPID_CSS_COMBINE 	=> false,

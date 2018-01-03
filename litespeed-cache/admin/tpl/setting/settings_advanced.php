@@ -99,6 +99,7 @@ $current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
 		</td>
 	</tr>
 
+	<?php /*
 	<tr>
 		<th><?php echo __( 'Favicon', 'litespeed-cache' ) ; ?></th>
 		<td>
@@ -146,5 +147,6 @@ $current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
 
 		</td>
 	</tr>
+	*/ ?>
 
 </tbody></table>

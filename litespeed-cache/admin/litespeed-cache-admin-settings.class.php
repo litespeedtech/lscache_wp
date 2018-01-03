@@ -668,7 +668,7 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY,
-			LiteSpeed_Cache_Config::OPID_ADV_FAVICON,
+			// LiteSpeed_Cache_Config::OPID_ADV_FAVICON,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -678,30 +678,30 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Added Favicon
 		 * @since  1.7.2
 		 */
-		$fav_file_arr = array( 'frontend', 'backend' ) ;
-		$new_favicons = array() ;
-		foreach ( $fav_file_arr as $v ) {
-			if ( ! empty( $_FILES[ 'litespeed-file-favicon_' . $v ][ 'name' ] ) ) {
-				$file = wp_handle_upload( $_FILES[ 'litespeed-file-favicon_' . $v ], array( 'action' => 'update' ) ) ;
-				if ( ! empty( $file[ 'url' ] ) ) {
-					LiteSpeed_Cache_Log::debug( 'Settings: Updated favicon [' . $v . '] ' . $file[ 'url' ] ) ;
+		// $fav_file_arr = array( 'frontend', 'backend' ) ;
+		// $new_favicons = array() ;
+		// foreach ( $fav_file_arr as $v ) {
+		// 	if ( ! empty( $_FILES[ 'litespeed-file-favicon_' . $v ][ 'name' ] ) ) {
+		// 		$file = wp_handle_upload( $_FILES[ 'litespeed-file-favicon_' . $v ], array( 'action' => 'update' ) ) ;
+		// 		if ( ! empty( $file[ 'url' ] ) ) {
+		// 			LiteSpeed_Cache_Log::debug( 'Settings: Updated favicon [' . $v . '] ' . $file[ 'url' ] ) ;
 
-					$new_favicons[ $v ] = $file[ 'url' ] ;
+		// 			$new_favicons[ $v ] = $file[ 'url' ] ;
 
-				}
-				elseif ( isset( $file[ 'error' ] ) ) {
-					LiteSpeed_Cache_Log::debug( 'Settings: Failed to update favicon: [' . $v . '] ' . $file[ 'error' ] ) ;
-				}
-				else {
-					LiteSpeed_Cache_Log::debug( 'Settings: Failed to update favicon: Unkown err [' . $v . ']' ) ;
-				}
-			}
-		}
+		// 		}
+		// 		elseif ( isset( $file[ 'error' ] ) ) {
+		// 			LiteSpeed_Cache_Log::debug( 'Settings: Failed to update favicon: [' . $v . '] ' . $file[ 'error' ] ) ;
+		// 		}
+		// 		else {
+		// 			LiteSpeed_Cache_Log::debug( 'Settings: Failed to update favicon: Unkown err [' . $v . ']' ) ;
+		// 		}
+		// 	}
+		// }
 
-		if ( $new_favicons ) {
-			$cfg_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
-			update_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array_merge( $cfg_favicon, $new_favicons ) ) ;
-		}
+		// if ( $new_favicons ) {
+		// 	$cfg_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
+		// 	update_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array_merge( $cfg_favicon, $new_favicons ) ) ;
+		// }
 	}
 
 	/**

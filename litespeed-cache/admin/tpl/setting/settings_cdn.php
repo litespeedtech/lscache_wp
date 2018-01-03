@@ -175,6 +175,7 @@ if ( ! $cdn_mapping ) {
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Turn this on if you want to use Cloudflare API functionality.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Go to %1$s to <a %2$s>manage it</a>.', 'litespeed-cache' ), '<code>' . __( 'Manage', 'litespeed-cache' ) . '</code> -&gt; <code>' . __( 'CDN', 'litespeed-cache' ) . '</code>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
 			</div>
 			<div class="litespeed-cdn-mapping-block">
 				<div class='litespeed-child-col'>
