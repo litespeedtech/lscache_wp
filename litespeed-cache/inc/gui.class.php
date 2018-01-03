@@ -244,6 +244,30 @@ class LiteSpeed_Cache_GUI
 			'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 		) ) ;
 
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-bar-manage',
+			'title'		=> __( 'Manage', 'litespeed-cache' ),
+			'href'		=> 'admin.php?page=lscache-settings',
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-bar-setting',
+			'title'		=> __( 'Settings', 'litespeed-cache' ),
+			'href'		=> 'admin.php?page=lscache-dash',
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-bar-imgoptm',
+			'title'		=> __( 'Image Optimization', 'litespeed-cache' ),
+			'href'		=> 'admin.php?page=lscache-optimization',
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
