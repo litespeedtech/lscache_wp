@@ -311,6 +311,17 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
+	 * Hook vary tags to vary finialization
+	 *
+	 * @since 1.7.2
+	 * @access public
+	 */
+	public static function hook_vary_finalize( $hook )
+	{
+		add_filter( 'litespeed_vary', $hook ) ;
+	}
+
+	/**
 	 * Hook purge tags appending to purge
 	 *
 	 * @since 1.1.3

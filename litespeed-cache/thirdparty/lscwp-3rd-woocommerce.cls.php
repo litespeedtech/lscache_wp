@@ -86,7 +86,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				LiteSpeed_Cache_API::hook_esi_param( 'widget', array( $this, 'add_post_id' ) ) ;
 			}
 
-			LiteSpeed_Cache_API::hook_tpl_not_esi( array( $this, 'set_swap_header_cart' ) ) ;
+			/**
+			 * Only when cart is not empty, give it an ESI with private cache
+			 * Call when template_include to make sure woo cart is initialized
+			 * @since  1.7.2
+			 */
+			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
+			LiteSpeed_Cache_API::hook_vary_finalize( array( $this, 'vary_maintain' ) ) ;
+
 		}
 
 		if ( is_admin() ) {
@@ -129,6 +136,50 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	{
 		LiteSpeed_Cache_API::debug( '3rd woo purge ESI in action: ' . current_filter() ) ;
 		LiteSpeed_Cache_API::purge_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
+
+	}
+
+	/**
+	 * Check if need to give an ESI block for cart
+	 *
+	 * @since  1.7.2
+	 * @access public
+	 */
+	public function check_if_need_esi( $template )
+	{
+		if (  $this->vary_needed() ) {
+			LiteSpeed_Cache_API::debug( 'API: 3rd woo added ESI' ) ;
+			LiteSpeed_Cache_API::hook_tpl_not_esi( array( $this, 'set_swap_header_cart' ) ) ;
+		}
+
+		return $template ;
+
+	}
+
+	/**
+	 * Keep vary on if cart is not empty
+	 *
+	 * @since  1.7.2
+	 * @access public
+	 */
+	public function vary_maintain( $vary )
+	{
+		if ( $this->vary_needed() ) {
+			LiteSpeed_Cache_API::debug( 'API: 3rd woo added vary due to cart not empty' ) ;
+			$vary[ 'woo_cart' ] = 1 ;
+		}
+		return $vary ;
+	}
+
+	/**
+	 * Check if vary need to be on based on cart
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function vary_needed()
+	{
+		return function_exists( 'WC' ) && ( $woocom = WC() ) && $woocom->cart->get_cart_contents_count() > 0 ;
 	}
 
 	/**
@@ -275,7 +326,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function esi_cart_header()
 	{
-		echo LiteSpeed_Cache_API::esi_url('storefront-cart-header', 'STOREFRONT_CART_HEADER') ;
+		echo LiteSpeed_Cache_API::esi_url( 'storefront-cart-header', 'STOREFRONT_CART_HEADER' ) ;
 	}
 
 	/**
