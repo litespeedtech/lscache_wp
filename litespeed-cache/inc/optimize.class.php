@@ -1256,6 +1256,7 @@ class LiteSpeed_Cache_Optimize
 	public static function remove_comment( $content, $type )
 	{
 		$_from = array(
+			'|\/\*.*\*\/|U',
 			'|\/\*.*\*\/|sU',
 			"|\n+|",
 			"|;+\n*;+|",
@@ -1264,6 +1265,7 @@ class LiteSpeed_Cache_Optimize
 		) ;
 
 		$_to = array(
+			'',
 			"\n",
 			"\n",
 			';',
