@@ -162,6 +162,8 @@ class LiteSpeed_Cache_Admin_Report
 			$options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] = str_repeat( '*', strlen( $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] ) ) ;
 		}
 
+		$options[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ] = get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
+
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
 		return $report ;
 	}
