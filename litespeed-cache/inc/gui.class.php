@@ -248,7 +248,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-bar-manage',
 			'title'		=> __( 'Manage', 'litespeed-cache' ),
-			'href'		=> 'admin.php?page=lscache-settings',
+			'href'		=> 'admin.php?page=lscache-dash',
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -256,17 +256,19 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-bar-setting',
 			'title'		=> __( 'Settings', 'litespeed-cache' ),
-			'href'		=> 'admin.php?page=lscache-dash',
+			'href'		=> 'admin.php?page=lscache-settings',
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		$wp_admin_bar->add_menu( array(
-			'parent'	=> 'litespeed-menu',
-			'id'		=> 'litespeed-bar-imgoptm',
-			'title'		=> __( 'Image Optimization', 'litespeed-cache' ),
-			'href'		=> 'admin.php?page=lscache-optimization',
-			'meta'		=> array( 'tabindex' => '0' ),
-		) );
+		if ( ! is_network_admin() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-bar-imgoptm',
+				'title'		=> __( 'Image Optimization', 'litespeed-cache' ),
+				'href'		=> 'admin.php?page=lscache-optimization',
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
 
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
