@@ -21,6 +21,7 @@ class LiteSpeed_Cache_Admin_API
 	const TYPE_NOTIFY_IMG = 'notify_img' ;
 	const TYPE_CHECK_IMG = 'check_img' ;
 	const TYPE_IMG_DESTROY_CALLBACK = 'imgoptm_destroy' ;
+	const TYPE_RESET_KEY = 'reset_key' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
@@ -39,6 +40,30 @@ class LiteSpeed_Cache_Admin_API
 	private function __construct()
 	{
 		$this->_iapi_key = get_option( self::DB_API_KEY ) ?: '' ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.7.2
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_RESET_KEY :
+				$instance->_reset_key() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**
@@ -220,7 +245,21 @@ class LiteSpeed_Cache_Admin_API
 		LiteSpeed_Cache_Log::debug( 'IAPI applied auth_key' ) ;
 
 		$this->_iapi_key = $json[ 'auth_key' ] ;
+	}
 
+	/**
+	 * delete key
+	 *
+	 * @since  1.7.2
+	 * @access private
+	 */
+	private function _reset_key()
+	{
+		delete_option( self::DB_API_KEY ) ;
+		LiteSpeed_Cache_Log::debug( 'IAPI delete auth_key' ) ;
+
+		$msg = __( 'Reset IAPI key successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**

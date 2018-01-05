@@ -55,6 +55,7 @@ class LiteSpeed_Cache
 	const ACTION_LOG = 'log' ;
 
 	const ACTION_MEDIA = 'media' ;
+	const ACTION_IAPI = 'iapi' ;
 	const ACTION_CDN = 'cdn' ;
 	const ACTION_REPORT = 'report' ;
 	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
@@ -306,6 +307,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_MEDIA:
 				$msg = LiteSpeed_Cache_Media::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_IAPI:
+				$msg = LiteSpeed_Cache_Admin_API::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_CDN:

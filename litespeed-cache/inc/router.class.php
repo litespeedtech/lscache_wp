@@ -343,6 +343,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
 			case LiteSpeed_Cache::ACTION_MEDIA:
+			case LiteSpeed_Cache::ACTION_IAPI:
 			case LiteSpeed_Cache::ACTION_CDN:
 				if ( defined( 'LITESPEED_ON' ) && $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;

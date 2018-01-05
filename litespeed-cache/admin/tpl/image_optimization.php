@@ -190,6 +190,14 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		</span>
 
 		<br />
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IAPI, LiteSpeed_Cache_Admin_API::TYPE_RESET_KEY ) ; ?>" class="litespeed-btn-warning">
+			<?php echo __( 'Reset The IAPI Key', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'If the home URL or domain is changed, this action is needed to reset your current IAPI key before next request.', 'litespeed-cache' ) ; ?>
+		</span>
+
+		<br />
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE_DESTROY ) ; ?>" class="litespeed-btn-danger">
 			<?php echo __( 'Destroy All Optimization Data!', 'litespeed-cache' ) ; ?>
 		</a>
