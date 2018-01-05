@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.7.1.1
+Stable tag: 1.7.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -58,6 +58,8 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * HTTP/2 Push for CSS and JS
 * Database Cleaner and Optimizer
 * Browser Cache
+* DNS Prefetch
+* Cloudflare API
 * Automatic page caching to greatly improve site performance
 * Automatic purge of related pages based on certain events
 * Smart preload crawler with support for SEO-friendly sitemap
@@ -241,6 +243,14 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.7.2 - January 5 2018 =
+* [NEW FEATURE] Cloudflare API support.
+* [IMPROVEMENT] IAPI key can now be reset to avoid issues when domain is changed.
+* [BUGFIX] Fixed JS optimizer breaking certain plugins JS.
+* [UPDATE] Added cdn settings to environment report.
+* [GUI] Added more shortcuts to backend adminbar.
+* [INTEGRATION] WooCommerce visitors are now served from public cache when cart is empty.
 
 = 1.7.1.1 - December 29 2017 =
 * [BUGFIX] Fixed an extra trailing underscore issue when saving multiple lines with DNS Prefetch.

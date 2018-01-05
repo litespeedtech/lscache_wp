@@ -92,7 +92,7 @@ if ( ! $cdn_mapping ) {
 
 			<div class="litespeed-warning">
 				<?php echo __('NOTE:', 'litespeed-cache'); ?>
-				<?php echo __( 'If multiple CDN paths are configured with the same settings, the last one will overwrite the others.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'If multiple CDN paths are configured with the same settings, the last one will override the others.', 'litespeed-cache' ) ; ?>
 			</div>
 
 			<div class="litespeed-desc">
@@ -108,7 +108,7 @@ if ( ! $cdn_mapping ) {
 				<?php echo __( 'Serve all JavaScript files through the CDN. This will affect all enqueued WP JavaScript files.', 'litespeed-cache' ) ; ?>
 
 				<br />
-				<b><?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?></b>
+				<b><?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?></b>:
 				<?php echo __( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
@@ -174,8 +174,8 @@ if ( ! $cdn_mapping ) {
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Turn this on if you want to use Cloudflare API functionality.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'Go to %1$s to <a %2$s>manage it</a>.', 'litespeed-cache' ), '<code>' . __( 'Manage', 'litespeed-cache' ) . '</code> -&gt; <code>' . __( 'CDN', 'litespeed-cache' ) . '</code>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
+				<?php echo __( 'Use Cloudflare API functionality.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'Manage', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'CDN', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
 			</div>
 			<div class="litespeed-cdn-mapping-block">
 				<div class='litespeed-child-col'>
