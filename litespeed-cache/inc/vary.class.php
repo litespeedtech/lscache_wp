@@ -498,7 +498,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		if ( empty($tp_cookies) ) {
-			LiteSpeed_Cache_Log::debug( 'Vary: no custimzed vary ' ) ;
+			LiteSpeed_Cache_Log::debug2( 'Vary: no custimzed vary ' ) ;
 			return ;
 		}
 
