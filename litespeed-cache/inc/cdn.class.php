@@ -677,25 +677,41 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function cloudflare_fetch_zone( $options )
 	{
+		$kw = $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] ;
+
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
 
+		// Try exact match first
+		if ( $kw && strpos( $kw, '.' ) ) {
+			$zones = $this->_cloudflare_call( $url . '&name=' . $kw, 'GET', false, $options, false ) ;
+			if ( $zones ) {
+				LiteSpeed_Cache_Log::debug( 'CDN: cloudflare_fetch_zone exact matched' ) ;
+				return $zones[ 0 ] ;
+			}
+		}
+
+		// Can't find, try to get default one
 		$zones = $this->_cloudflare_call( $url, 'GET', false, $options, false ) ;
 
 		if ( ! $zones ) {
+			LiteSpeed_Cache_Log::debug( 'CDN: cloudflare_fetch_zone no zone' ) ;
 			return false ;
 		}
 
-		$kw = $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] ;
 		if ( ! $kw ) {
+			LiteSpeed_Cache_Log::debug( 'CDN: cloudflare_fetch_zone no set name, use first one by default' ) ;
 			return $zones[ 0 ] ;
 		}
 
 		foreach ( $zones as $v ) {
 			if ( strpos( $v[ 'name' ], $kw ) !== false ) {
+				LiteSpeed_Cache_Log::debug( 'CDN: cloudflare_fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ] ) ;
 				return $v ;
 			}
 		}
 
+		// Can't match current name, return default one
+		LiteSpeed_Cache_Log::debug( 'CDN: cloudflare_fetch_zone failed match name, use first one by default' ) ;
 		return $zones[ 0 ] ;
 	}
 
