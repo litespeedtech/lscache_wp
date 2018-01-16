@@ -138,10 +138,11 @@ class LiteSpeed_Cache_Object
 	public function reconnect( $cfg )
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Reconnecting' ) ;
-
+// error_log( 'Object: reconnect !' ) ;
 		if ( isset( $this->_conn ) ) {
+// error_log( 'Object: Quiting existing connection!' ) ;
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Quiting existing connection' ) ;
-			$this->_conn->quit() ;
+			$this->_conn->resetServerList() ;
 		}
 
 		self::$_instance = new self( $cfg ) ;
@@ -166,13 +167,15 @@ class LiteSpeed_Cache_Object
 		if ( $this->_cfg_persistent ) {
 			$this->_conn = new Memcached( $this->_get_mem_id() ) ;
 			if ( $this->_conn->getServerList() ) {
+// error_log( 'Object: persistent memcached connection' ) ;
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: persistent memcached connection' ) ;
 				return true ;
 			}
-
+// error_log( 'Object: persistent getServerList failed!' ) ;
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to get persistent memcached server list!' ) ;
 		}
 		else {
+// error_log( 'Object: new memcached!' ) ;
 			$this->_conn = new Memcached ;
 		}
 
@@ -314,6 +317,8 @@ class LiteSpeed_Cache_Object
 		$this->_connect() ;
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: flush!' ) ;
+
+		$this->_conn->resetServerList() ;
 
 		$res = $this->_conn->flush() ;
 
