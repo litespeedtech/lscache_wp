@@ -410,7 +410,7 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_LAZY' ) ;
 
-			$file = LSWCP_DIR . 'js/lazyload.min.js' ;
+			$file = LSCWP_DIR . 'js/lazyload.min.js' ;
 
 			header( 'Content-Length: ' . filesize( $file ) ) ;
 			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;

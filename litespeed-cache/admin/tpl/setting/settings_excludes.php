@@ -108,10 +108,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<?php
 		if ( ! is_multisite() ) :
 			// Cookie
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
 
 			// User Agent
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php' ;
 
 		endif ;
 	?>

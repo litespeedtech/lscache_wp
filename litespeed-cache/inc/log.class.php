@@ -13,26 +13,24 @@
 class LiteSpeed_Cache_Log
 {
 	private static $_instance ;
-	private static $_debug ;
 	private static $log_path ;
 	private static $_prefix ;
-	private static $_enabled = false ;
 
 	const TYPE_CLEAR_LOG = 'clear_log' ;
 
 	/**
 	 * Log class Constructor
 	 *
-	 * NOTE: in this process, until last step ( self::$_debug = true ), any usage to WP filter should not be used to prevent infinite loop with log_filters()
+	 * NOTE: in this process, until last step ( define const LSCWP_LOG = true ), any usage to WP filter will not be logged to prevent infinite loop with log_filters()
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 */
 	private function __construct()
 	{
-		self::$log_path = LSWCP_CONTENT_DIR . '/debug.log' ;
+		self::$log_path = LSCWP_CONTENT_DIR . '/debug.log' ;
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && $_SERVER[ 'HTTP_USER_AGENT' ] === Litespeed_Crawler::FAST_USER_AGENT ) {
-			self::$log_path = LSWCP_CONTENT_DIR . '/crawler.log' ;
+			self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log' ;
 		}
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
 			define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
@@ -43,7 +41,7 @@ class LiteSpeed_Cache_Log
 		}
 
 		$this->_init_request() ;
-		self::$_debug = true ;
+		define( 'LSCWP_LOG', true ) ;
 	}
 
 	/**
@@ -93,27 +91,14 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Check if log class finished initialized
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function initialized()
-	{
-		return isset( self::$_debug ) ;
-	}
-
-	/**
 	 * Enable debug log
 	 *
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public static function set_enabled()
+	public static function init()
 	{
-		self::$_enabled = true ;
-
-		if ( ! isset( self::$_debug ) ) {// If not initialized, do it now
+		if ( ! defined( 'LSCWP_LOG' ) ) {// If not initialized, do it now
 			self::get_instance() ;
 		}
 
@@ -132,14 +117,14 @@ class LiteSpeed_Cache_Log
 	public static function log_filters()
 	{
 		$action = current_filter() ;
-		if ( $ignore_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS ) ) {
+		if ( $ignore_filters = get_option( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS ) ) {
 			$ignore_filters = explode( "\n", $ignore_filters ) ;
 			if ( in_array( $action, $ignore_filters ) ) {
 				return ;
 			}
 		}
 
-		if ( $ignore_part_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS ) ) {
+		if ( $ignore_part_filters = get_option( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS ) ) {
 			$ignore_part_filters = explode( "\n", $ignore_part_filters ) ;
 			foreach ( $ignore_part_filters as $val ) {
 				if ( stripos( $action, $val ) !== false ) {
@@ -149,17 +134,6 @@ class LiteSpeed_Cache_Log
 		}
 
 		self::debug( "===log filter: $action" ) ;
-	}
-
-	/**
-	 * Get debug log status
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 */
-	public static function get_enabled()
-	{
-		return self::$_enabled ;
 	}
 
 	/**
@@ -210,7 +184,7 @@ class LiteSpeed_Cache_Log
 	 */
 	public static function debug( $msg, $backtrace_limit = false )
 	{
-		if ( ! self::get_enabled() ) {
+		if ( ! defined( 'LSCWP_LOG' ) ) {
 			return ;
 		}
 
@@ -248,11 +222,11 @@ class LiteSpeed_Cache_Log
 	 * Logs a debug message.
 	 *
 	 * @since 1.1.0
-	 * @access public
+	 * @access private
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	public static function push( $msg, $backtrace_limit = false )
+	private static function push( $msg, $backtrace_limit = false )
 	{
 		// backtrace handler
 		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {

@@ -79,7 +79,7 @@ class LiteSpeed_Cache_Control
 		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
 		if ( $cache_res ) {
 			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;
-			$pattern = '!' . LSWCP_CONTENT_FOLDER . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
+			$pattern = '!' . LSCWP_CONTENT_FOLDER . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
 			if ( preg_match( $pattern, $uri ) ) {
 				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
 			}

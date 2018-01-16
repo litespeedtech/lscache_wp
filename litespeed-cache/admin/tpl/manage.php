@@ -12,7 +12,7 @@ if ( ! is_network_admin() ) {
 	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
 }
 
-include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
+include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
@@ -42,7 +42,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	?>
 	</h2>
 
-	<?php include_once LSWCP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+	<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
 
 	<div class="litespeed-body">
 	<?php
@@ -50,7 +50,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSWCP_DIR . "admin/tpl/manage/manage_$tab.php" ;
+			require LSCWP_DIR . "admin/tpl/manage/manage_$tab.php" ;
 			echo "</div>" ;
 		}
 

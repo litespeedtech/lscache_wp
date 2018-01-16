@@ -10,10 +10,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 
-	<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_favicon.php' ; ?>
-	<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_resources.php' ; ?>
-	<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_mobile.php' ; ?>
-	<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_favicon.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_resources.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_mobile.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ; ?>
 
 </tbody></table>
 

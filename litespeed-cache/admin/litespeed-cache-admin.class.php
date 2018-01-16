@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Admin
 		// initialize admin actions
 		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
 		// add link to plugin list page
-		add_filter( 'plugin_action_links_' . LSWCP_BASENAME, array( $this->display, 'add_plugin_links' ) ) ;
+		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->display, 'add_plugin_links' ) ) ;
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions

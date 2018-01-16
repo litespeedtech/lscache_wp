@@ -44,25 +44,21 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSWCP_DIR' ) ) {
+if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 	return ;
 }
 
-define( 'LSWCP_CONTENT_DIR', dirname( get_theme_root() ) ) ;
-define( 'LSWCP_DIR', plugin_dir_path( __FILE__ ) ) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/'
-define( 'LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
-define( 'LSWCP_BASENAME', plugin_basename( LSWCP_DIR . 'litespeed-cache.php' ) ) ;//LSWCP_BASENAME='litespeed-cache/litespeed-cache.php'
-
-define( 'LSWCP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
+! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
+! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/' or MU
+! defined( 'LSCWP_BASENAME' ) && define( 'LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php' ) ;//LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 ! defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
 
 // Placeholder for lazyload img
 ! defined( 'LITESPEED_PLACEHOLDER' ) && define( 'LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=' ) ;
 
-
 // Auto register LiteSpeed classes
-require_once LSWCP_DIR . 'inc/litespeed.autoload.php' ;
+require_once LSCWP_DIR . 'inc/litespeed.autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
@@ -102,7 +98,7 @@ if ( ! defined( 'LSWCP_ESI_SUPPORT' ) ) {
 }
 
 if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
-	define( 'LSWCP_TAG_PREFIX', substr( md5( LSWCP_DIR ), -3 ) ) ;
+	define( 'LSWCP_TAG_PREFIX', substr( md5( LSCWP_DIR ), -3 ) ) ;
 }
 
 /**

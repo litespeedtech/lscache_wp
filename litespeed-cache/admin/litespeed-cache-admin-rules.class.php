@@ -16,7 +16,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private $frontend_htaccess = null ;
 	private $backend_htaccess = null ;
-	private $theme_htaccess = null ;
+	private $theme_htaccess = null ;// Not used yet
 	private $frontend_htaccess_readable = false ;
 	private $frontend_htaccess_writable = false ;
 	private $backend_htaccess_readable = false ;
@@ -182,8 +182,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function path_set()
 	{
-		$this->theme_htaccess = LSWCP_CONTENT_DIR ;
-
 		$frontend = LiteSpeed_Cache_Router::frontend_path() ;
 		$frontend_htaccess_search = $this->htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
 		$this->frontend_htaccess = ( $frontend_htaccess_search ?: $frontend ) . '/.htaccess' ;
@@ -591,7 +589,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES ;
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSWCP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
+			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
 			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
 			$new_rules[] = $new_rules_backend[] = '' ;
 		}

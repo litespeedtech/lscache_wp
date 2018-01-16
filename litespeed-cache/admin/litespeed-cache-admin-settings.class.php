@@ -149,6 +149,13 @@ class LiteSpeed_Cache_Admin_Settings
 		else {
 			LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
 		}
+
+		/**
+		 * Validate Object Cache
+		 * @since 1.8
+		 */
+		$this->_validate_object_cache() ;
+
 	}
 
 	/**
@@ -213,6 +220,12 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
 		}
 
+		/**
+		 * Validate Object Cache
+		 * @since 1.8
+		 */
+		$this->_validate_object_cache() ;
+
 		if ( ! empty( $this->_err ) ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $this->_err ) ;
 			return ;
@@ -221,6 +234,64 @@ class LiteSpeed_Cache_Admin_Settings
 		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __( 'Site options saved.', 'litespeed-cache' ) ) ;
 		update_site_option( LiteSpeed_Cache_Config::OPTION_NAME, $options ) ;
 		return $options ;
+	}
+
+	/**
+	 * Validates object cache settings.
+	 *
+	 * @since 1.8
+	 * @access private
+	 */
+	private function _validate_object_cache()
+	{
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN,
+		) ;
+		foreach ( $ids as $id ) {
+			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+		}
+
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE,
+		);
+		foreach ( $ids as $id ) {
+			$this->_options[ $id ] = $this->_input[ $id ] ;
+		}
+
+		$ids = array(
+			LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS,
+			LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
+		);
+		$item_options = array() ;
+		foreach ( $ids as $id ) {
+			$item_options[ $id ] = ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ;
+			update_option( $id, $item_options[ $id ] ) ;
+		}
+
+		/**
+		 * Check if object cache file existing or not
+		 */
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ;
+		if ( $this->_options[ $id ] ) {
+			$all_options = array_merge( $this->_options, $item_options ) ;
+			LiteSpeed_Cache_Log::debug( 'Settings: Update .object_cache.ini and flush object cache' ) ;
+			LiteSpeed_Cache_Object::get_instance()->update_file( true, $all_options ) ;
+			/**
+			 * Clear object cache
+			 */
+			LiteSpeed_Cache_Object::get_instance()->reconnect( $all_options ) ;
+			LiteSpeed_Cache_Object::get_instance()->flush() ;
+		}
+		else {
+			if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+				LiteSpeed_Cache_Log::debug( 'Settings: Remove .object_cache.ini' ) ;
+				LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
+			}
+		}
+
 	}
 
 	/**
@@ -310,12 +381,12 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
 		}
 
-		/**
-		 * Update Drop Query String
-		 * @since 1.7
-		 */
-		$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+		$ids = array(
+			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS, // Update Drop Query String @since 1.7
+		);
+		foreach ( $ids as $id ) {
+			update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+		}
 
 	}
 
@@ -759,11 +830,11 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Filters ignored
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS,
-			LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS,
+			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS,
+			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS,
 		) ;
 		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
+			update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
 		}
 	}
 

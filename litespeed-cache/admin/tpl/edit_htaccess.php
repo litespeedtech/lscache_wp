@@ -14,7 +14,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 			if ( $is_dismissed !== self::RULECONFLICT_ON ) {
 				update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
 			}
-			require_once LSWCP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
+			require_once LSCWP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
 		}
 	}
 	// don't dismiss the msg automatically

@@ -152,8 +152,8 @@ class LiteSpeed_Cache_Router
 		if ( ! isset( self::$_action ) ) {
             self::$_action = false;
 			self::get_instance()->verify_action() ;
-			if ( self::$_action && LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push( 'LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
+			if ( self::$_action ) {
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
 			}
 
 		}
@@ -342,6 +342,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE:
 			case LiteSpeed_Cache::ACTION_DO_CRAWL:
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
+			case LiteSpeed_Cache::ACTION_PURGE:
 			case LiteSpeed_Cache::ACTION_MEDIA:
 			case LiteSpeed_Cache::ACTION_IAPI:
 			case LiteSpeed_Cache::ACTION_CDN:

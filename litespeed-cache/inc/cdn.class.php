@@ -468,9 +468,9 @@ class LiteSpeed_Cache_CDN
 		$url_parsed = parse_url( $url ) ;
 
 		// Only images under wp-cotnent/wp-includes can be replaced
-		if ( stripos( $url_parsed[ 'path' ], LSWCP_CONTENT_FOLDER ) === false && stripos( $url_parsed[ 'path' ], 'wp-includes' ) === false  && stripos( $url_parsed[ 'path' ], '/min/' ) === false ) {
+		if ( stripos( $url_parsed[ 'path' ], LSCWP_CONTENT_FOLDER ) === false && stripos( $url_parsed[ 'path' ], 'wp-includes' ) === false  && stripos( $url_parsed[ 'path' ], '/min/' ) === false ) {
 			if ( ! defined( 'UPLOADS' ) || stripos( $url_parsed[ 'path' ], UPLOADS ) === false ) {
-				LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: path not match: ' . LSWCP_CONTENT_FOLDER ) ;
+				LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
 				return false ;
 			}
 		}

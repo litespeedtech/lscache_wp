@@ -75,7 +75,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<?php
 		if ( ! is_multisite() ) :
 			// webp
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ;
 
 		endif ;
 	?>

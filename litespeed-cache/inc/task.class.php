@@ -170,9 +170,7 @@ class LiteSpeed_Cache_Task
 		$interval = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::CRON_FITLER_CRAWLER, $schedules ) ) {
-			// if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			// 	LiteSpeed_Cache_Log::push('Crawler cron log: ......cron filter '.$interval.' added......') ;
-			// }
+			// 	LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
 			$schedules[ self::CRON_FITLER_CRAWLER ] = array(
 				'interval' => $interval,
 				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),

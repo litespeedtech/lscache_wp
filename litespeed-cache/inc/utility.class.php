@@ -184,7 +184,7 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function compatibility()
 	{
-		require_once LSWCP_DIR . 'lib/litespeed-php-compatibility.func.php' ;
+		require_once LSCWP_DIR . 'lib/litespeed-php-compatibility.func.php' ;
 	}
 
 	/**

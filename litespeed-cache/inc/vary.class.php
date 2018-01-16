@@ -353,7 +353,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		$res = implode( ';', $res ) ;
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+		if ( defined( 'LSCWP_LOG' ) ) {
 			return $res ;
 		}
 		// Encrypt in production

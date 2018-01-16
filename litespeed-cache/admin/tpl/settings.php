@@ -62,16 +62,12 @@ $tp_tabs = apply_filters('litespeed_cache_add_config_tab',
 if ( !empty($tp_tabs) && is_array($tp_tabs) ) {
 	foreach ($tp_tabs as $key => $tab) {
 		if ( !is_array($tab) || !isset($tab['title']) || !isset($tab['slug']) || !isset($tab['content']) ) {
-			if (LiteSpeed_Cache_Log::get_enabled()) {
-				LiteSpeed_Cache_Log::push(__('WARNING: Third party tab input invalid.', 'litespeed-cache')) ;
-			}
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'WARNING: Third party tab input invalid' ) ;
 			unset($tp_tabs[$key]) ;
 			continue ;
 		}
 		if ( preg_match('/[^-\w]/', $tab['slug']) ) {
-			if (LiteSpeed_Cache_Log::get_enabled()) {
-				LiteSpeed_Cache_Log::push(__('WARNING: Third party config slug contains invalid characters.', 'litespeed-cache')) ;
-			}
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'WARNING: Third party config slug contains invalid characters' ) ;
 			unset($tp_tabs[$key]) ;
 			continue ;
 		}
@@ -94,7 +90,7 @@ $roles = array_keys( $wp_roles->roles ) ;
 sort( $roles ) ;
 
 
-include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
+include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
@@ -141,7 +137,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	// include all tpl for faster UE
 	foreach ($menu_list as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>" ;
-		require LSWCP_DIR . "admin/tpl/setting/settings_$tab.php" ;
+		require LSCWP_DIR . "admin/tpl/setting/settings_$tab.php" ;
 		echo "</div>" ;
 	}
 

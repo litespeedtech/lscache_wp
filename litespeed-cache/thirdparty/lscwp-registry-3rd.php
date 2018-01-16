@@ -35,5 +35,5 @@ $thirdparty_list = array(
 ) ;
 
 foreach ($thirdparty_list as $val) {
-	include_once(LSWCP_DIR . 'thirdparty/lscwp-3rd-' . $val . '.cls.php') ;
+	include_once(LSCWP_DIR . 'thirdparty/lscwp-3rd-' . $val . '.cls.php') ;
 }

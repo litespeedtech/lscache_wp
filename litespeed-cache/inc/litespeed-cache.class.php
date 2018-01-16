@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.7.2' ;
+	const PLUGIN_VERSION = '1.8' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -54,6 +54,7 @@ class LiteSpeed_Cache
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 	const ACTION_LOG = 'log' ;
 
+	const ACTION_PURGE = 'purge' ;
 	const ACTION_MEDIA = 'media' ;
 	const ACTION_IAPI = 'iapi' ;
 	const ACTION_CDN = 'cdn' ;
@@ -86,17 +87,17 @@ class LiteSpeed_Cache
 		if ( defined( 'LITESPEED_ON' ) ) {
 			$should_debug = intval(self::config(LiteSpeed_Cache_Config::OPID_DEBUG)) ;
 			if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ($should_debug == LiteSpeed_Cache_Config::VAL_ON2 && LiteSpeed_Cache_Router::is_admin_ip()) ) {
-				LiteSpeed_Cache_Log::set_enabled() ;
+				LiteSpeed_Cache_Log::init() ;
 			}
 
 			// Load third party detection if lscache enabled.
-			include_once LSWCP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
+			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
 		// Register plugin activate/deactivate/uninstall hooks
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
 		if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
-			$plugin_file = LSWCP_DIR . 'litespeed-cache.php' ;
+			$plugin_file = LSCWP_DIR . 'litespeed-cache.php' ;
 			register_activation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_activation' )) ;
 			register_deactivation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' )) ;
 			register_uninstall_hook($plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache') ;
@@ -135,6 +136,10 @@ class LiteSpeed_Cache
 		 * @since  1.6.6
 		 */
 		do_action( 'litespeed_init' ) ;
+
+		define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
+		define( 'LSWCP_PLUGIN_URL', plugin_dir_url( dirname( __FILE__ ) ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
+
 
 		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
@@ -307,6 +312,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_MEDIA:
 				$msg = LiteSpeed_Cache_Media::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_PURGE:
+				$msg = LiteSpeed_Cache_Purge::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_IAPI:
@@ -568,8 +577,8 @@ class LiteSpeed_Cache
 		// send Control header
 		if ( $control_header ) {
 			@header( $control_header ) ;
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push( $control_header ) ;
+			if ( defined( 'LSCWP_LOG' ) ) {
+				LiteSpeed_Cache_Log::debug( $control_header ) ;
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $control_header . " -->" ;
 				}
@@ -578,8 +587,8 @@ class LiteSpeed_Cache
 		// send PURGE header
 		if ( $purge_header ) {
 			@header( $purge_header ) ;
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push( $purge_header ) ;
+			if ( defined( 'LSCWP_LOG' ) ) {
+				LiteSpeed_Cache_Log::debug( $purge_header ) ;
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $purge_header . " -->" ;
 				}
@@ -588,8 +597,8 @@ class LiteSpeed_Cache
 		// send Vary header
 		if ( $vary_header ) {
 			@header( $vary_header ) ;
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push( $vary_header ) ;
+			if ( defined( 'LSCWP_LOG' ) ) {
+				LiteSpeed_Cache_Log::debug( $vary_header ) ;
 				if ( $running_info_showing ) {
 					$this->footer_comment .= "\n<!-- " . $vary_header . " -->" ;
 				}
@@ -618,13 +627,18 @@ class LiteSpeed_Cache
 			// Control header
 			if ( LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header ) ;
-				if ( LiteSpeed_Cache_Log::get_enabled() ) {
-					LiteSpeed_Cache_Log::push( $tag_header ) ;
+				if ( defined( 'LSCWP_LOG' ) ) {
+					LiteSpeed_Cache_Log::debug( $tag_header ) ;
 					if ( $running_info_showing ) {
 						$this->footer_comment .= "\n<!-- " . $tag_header . " -->" ;
 					}
 				}
 			}
+		}
+
+		// Object cache comment
+		if ( $running_info_showing && defined( 'LSCWP_LOG' ) && defined( 'LSCWP_OBJECT_CACHE' ) && method_exists( 'WP_Object_Cache', 'debug' ) ) {
+			$this->footer_comment .= "\n<!-- Object Cache " . WP_Object_Cache::get_instance()->debug() . " -->" ;
 		}
 
 		if ( $is_forced ) {

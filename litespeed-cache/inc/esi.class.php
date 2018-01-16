@@ -85,7 +85,7 @@ class LiteSpeed_Cache_ESI
 
 			self::get_instance()->register_esi_actions() ;
 
-			return LSWCP_DIR . 'tpl/esi.tpl.php' ;
+			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
 		}
 		self::get_instance()->register_not_esi_actions() ;
 		return $template ;
@@ -164,11 +164,8 @@ class LiteSpeed_Cache_ESI
 		$params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id, $params) ;
 		$control = apply_filters('litespeed_cache_sub_esi_control-' . $block_id, $control) ;
 		if ( !is_array($params) || !is_string($control) ) {
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push("Sub esi hooks returned Params: \n"
-					. var_export($params, true) . "\ncache control: \n"
-					. var_export($control, true)) ;
-			}
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "Sub esi hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
+
 			return false ;
 		}
 
@@ -227,13 +224,13 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 		$esi_id = $params[ self::PARAM_BLOCK_ID ] ;
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
+		if ( defined( 'LSCWP_LOG' ) ) {
 			$logInfo = '------- ESI ------- ' ;
 			if( ! empty( $params[ self::PARAM_NAME ] ) ) {
 				$logInfo .= ' Name: ' . $params[ self::PARAM_NAME ] . ' ----- ' ;
 			}
 			$logInfo .= $esi_id . ' -------' ;
-			LiteSpeed_Cache_Log::push( $logInfo ) ;
+			LiteSpeed_Cache_Log::debug( $logInfo ) ;
 		}
 
 		if ( ! empty( $params[ '_ls_silence' ] ) ) {
@@ -343,9 +340,8 @@ class LiteSpeed_Cache_ESI
 		}
 		$options = $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
 		if ( ! isset( $options ) || ! $options[ self::WIDGET_OPID_ESIENABLE ] ) {
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				LiteSpeed_Cache_Log::push( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
-			}
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
+
 			return $instance ;
 		}
 
@@ -396,9 +392,7 @@ class LiteSpeed_Cache_ESI
 		$option = self::widget_load_get_options( $widget ) ;
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[ self::WIDGET_OPID_TTL ] ;
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
-		}
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
 		if ( $ttl == 0 ) {
 			LiteSpeed_Cache_Control::set_nocache( 'ESI Widget time to live set to 0' ) ;
 		}

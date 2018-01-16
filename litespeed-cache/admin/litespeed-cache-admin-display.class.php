@@ -72,7 +72,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		// add menus
-		if ( $is_network_admin && is_plugin_active_for_network(LSWCP_BASENAME) ) {
+		if ( $is_network_admin && is_plugin_active_for_network(LSCWP_BASENAME) ) {
 			add_action('network_admin_menu', array($this, 'register_admin_menu')) ;
 		}
 		else {
@@ -151,9 +151,7 @@ class LiteSpeed_Cache_Admin_Display
 				$this->add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
 			}
 
-			if ( LiteSpeed_Cache_Log::get_enabled() ) {
-				$this->add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
-			}
+			defined( 'LSCWP_LOG' ) && $this->add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
 
 			// sub menus under options
 			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_settings')) ;
@@ -283,7 +281,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function admin_footer_text($footer_text)
 	{
-		require_once LSWCP_DIR . 'admin/tpl/inc/admin_footer.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/admin_footer.php' ;
 
 		return $footer_text ;
 	}
@@ -331,7 +329,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function add_help_tabs()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/inc/help_tabs.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/help_tabs.php' ;
 	}
 
 	/**
@@ -529,7 +527,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		require LSWCP_DIR . 'admin/tpl/esi_widget_edit.php' ;
+		require LSCWP_DIR . 'admin/tpl/esi_widget_edit.php' ;
 	}
 
 	/**
@@ -540,7 +538,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_manage()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/manage.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/manage.php' ;
 	}
 
 	/**
@@ -552,13 +550,13 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_menu_settings()
 	{
 		if ( is_network_admin() ) {
-			require_once LSWCP_DIR . 'admin/tpl/network_settings.php' ;
+			require_once LSCWP_DIR . 'admin/tpl/network_settings.php' ;
 		}
 		else {
 			if ( $_GET['page'] != 'litespeedcache' ) {// ls settings msg need to display manually
 				settings_errors() ;
 			}
-			require_once LSWCP_DIR . 'admin/tpl/settings.php' ;
+			require_once LSCWP_DIR . 'admin/tpl/settings.php' ;
 		}
 	}
 
@@ -573,7 +571,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_edit_htaccess()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/edit_htaccess.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php' ;
 	}
 
 	/**
@@ -584,7 +582,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_report()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/report.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/report.php' ;
 	}
 
 	/**
@@ -595,7 +593,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_crawler()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/crawler.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/crawler.php' ;
 	}
 
 	/**
@@ -606,7 +604,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_optimization()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/image_optimization.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/image_optimization.php' ;
 	}
 
 	/**
@@ -617,7 +615,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_debug_log()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/debug_log.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/debug_log.php' ;
 	}
 
 	/**
@@ -629,7 +627,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_display_installed()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/inc/show_display_installed.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/show_display_installed.php' ;
 	}
 
 	/**
@@ -640,7 +638,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function show_error_cookie()
 	{
-		require_once LSWCP_DIR . 'admin/tpl/inc/show_error_cookie.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/show_error_cookie.php' ;
 	}
 
 	/**
@@ -685,7 +683,10 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_textarea2( $id, $cols = false )
 	{
-		$val = get_option( $id, false ) ;
+		// Get default val for separate item
+		$default_val = $this->config->default_item( $id ) ;
+
+		$val = get_option( $id, $default_val ) ;
 
 		if ( is_array( $val ) ) {
 			$val = implode( "\n", $val ) ;

@@ -26,7 +26,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	private function __construct()
 	{
-		$sitemapPath = LSWCP_DIR . 'var' ;
+		$sitemapPath = LSCWP_DIR . 'var' ;
 		if ( is_multisite() ) {
 			$blogID = get_current_blog_id() ;
 			$this->_sitemap_file = $sitemapPath . '/crawlermap-' . $blogID . '.data' ;
@@ -139,9 +139,8 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function append_blacklist( $list )
 	{
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push( 'Crawler log: append blacklist ' . count( $list ) ) ;
-		}
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler log: append blacklist ' . count( $list ) ) ;
+
 		$ori_list = Litespeed_File::read( $this->_blacklist_file ) ;
 		$ori_list = explode( "\n", $ori_list ) ;
 		$ori_list = array_merge( $ori_list, $list ) ;
@@ -397,8 +396,8 @@ class LiteSpeed_Cache_Crawler
 			$this->append_blacklist($ret['blacklist']) ;
 		}
 
-		if ( ! empty($ret['crawled']) && LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push('Crawler log: Last crawled ' . $ret['crawled'] . ' item(s)') ;
+		if ( ! empty($ret['crawled']) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler log: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' ) ;
 		}
 
 		// return error
@@ -442,7 +441,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( ! isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

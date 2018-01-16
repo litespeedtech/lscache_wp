@@ -41,7 +41,7 @@ $_optm_summary_list = array(
 ) ;
 
 
-include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
+include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
@@ -53,7 +53,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	</h2>
 </div>
 
-<?php include_once LSWCP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
 
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
@@ -93,7 +93,7 @@ include_once LSWCP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<?php echo __( 'This will communicate with LiteSpeed\'s Image Optimization Server and retrieve the most recent status.', 'litespeed-cache' ) ; ?>
 		</span>
 
-		<?php include_once LSWCP_DIR . "admin/tpl/inc/api_key.php" ; ?>
+		<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
 
 		<h3 class="litespeed-title"><?php echo __('Image Information', 'litespeed-cache') ; ?>
 			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>

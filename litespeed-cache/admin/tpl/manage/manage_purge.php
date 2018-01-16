@@ -56,6 +56,16 @@ $_panels = array(
 	),
 ) ;
 
+if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+	$_panels[] = array(
+		'title'	=> __( 'Object Cache Purge All', 'litespeed-cache' ),
+		'desc'	=> __( 'Purge all the object caches', 'litespeed-cache' ),
+		'tag'	=> LiteSpeed_Cache::ACTION_PURGE,
+		'icon'	=> 'purge-object',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_OBJECT_PURGE_ALL,
+	) ;
+}
+
 if ( ! is_multisite() || is_network_admin() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Empty Entire Cache', 'litespeed-cache' ),

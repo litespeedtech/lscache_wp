@@ -7,9 +7,9 @@ if (!defined('WPINC')) die;
 <table><tbody>
 
 	<!-- User Agent List -->
-	<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php'; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php'; ?>
 
 	<!-- Cookie List -->
-	<?php require LSWCP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php'; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php'; ?>
 
 </tbody></table>

@@ -46,9 +46,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 	<?php
 		if ( ! is_multisite() ) :
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_favicon.php' ;
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_resources.php' ;
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_mobile.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_favicon.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_resources.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_mobile.php' ;
 		endif ;
 	?>
 
@@ -72,7 +72,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 	<?php
 		if ( ! is_multisite() ) :
-			require LSWCP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ;
 		endif ;
 	?>
 

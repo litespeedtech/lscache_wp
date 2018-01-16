@@ -35,6 +35,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_GUI'				=> 'inc/gui.class.php',
 			'LiteSpeed_Cache_Log'				=> 'inc/log.class.php',
 			'LiteSpeed_Cache_Media'				=> 'inc/media.class.php',
+			'LiteSpeed_Cache_Object'			=> 'inc/object.class.php',
 			'LiteSpeed_Cache_Optimize'			=> 'inc/optimize.class.php',
 			'LiteSpeed_Cache_Purge'				=> 'inc/purge.class.php',
 			'LiteSpeed_Cache_Router'			=> 'inc/router.class.php',
@@ -57,8 +58,8 @@ if ( !function_exists('_litespeed_autoload') ) {
 
 			'LiteSpeed_Cache_Tags'				=> 'includes/deprecated-litespeed-cache-tags.class.php',
 		);
-		if( array_key_exists($cls, $class2fileArr) && file_exists(LSWCP_DIR . $class2fileArr[$cls]) ) {
-			require_once LSWCP_DIR . $class2fileArr[$cls];
+		if( array_key_exists($cls, $class2fileArr) && file_exists(LSCWP_DIR . $class2fileArr[$cls]) ) {
+			require_once LSCWP_DIR . $class2fileArr[$cls];
 		}
 	}
 }
@@ -73,6 +74,6 @@ spl_autoload_register('_litespeed_autoload');
 if ( !function_exists('litespeed_load_vendor') ) {
 	function litespeed_load_vendor()
 	{
-		require_once LSWCP_DIR.'lib/vendor/autoload.php';
+		require_once LSCWP_DIR.'lib/vendor/autoload.php';
 	}
 }

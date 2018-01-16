@@ -126,9 +126,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Exclude Filters', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_FILTERS, 30 ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS, 30 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Listed filters (one per line) will not be logged.', 'litespeed-cache' ) ; ?><br />
+				<?php echo __( 'Listed filters (one per line) will not be logged.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug#exclude_filters" target="_blank"><?php echo __('Recommended default value', 'litespeed-cache') ; ?></a>
 			</div>
 		</td>
 	</tr>
@@ -136,9 +137,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Exclude Part Filters', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_LOG_IGNORE_PART_FILTERS, 30 ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS, 30 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Filters containing these strings (one per line) will not be logged.', 'litespeed-cache' ) ; ?><br />
+				<?php echo __( 'Filters containing these strings (one per line) will not be logged.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:debug#exclude_part_filters" target="_blank"><?php echo __('Recommended default value', 'litespeed-cache') ; ?></a>
 			</div>
 		</td>
 	</tr>

@@ -19,6 +19,57 @@ class LiteSpeed_Cache_Purge
 	const X_HEADER = 'X-LiteSpeed-Purge' ;
 	const PURGE_QUEUE = 'litespeed-cache-purge-queue' ;
 
+	const TYPE_OBJECT_PURGE_ALL = 'object_purge_all' ;
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.8
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_OBJECT_PURGE_ALL :
+				$instance->_object_purge_all() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Purge object cache
+	 *
+	 * @since  1.8
+	 * @access private
+	 */
+	private function _object_purge_all()
+	{
+		if ( ! defined( 'LSCWP_OBJECT_CACHE' ) ) {
+			LiteSpeed_Cache_Log::debug( 'Purge: Failed to flush object cache due to object cache not enabled' ) ;
+
+			$msg = __( 'Object cache is not enabled.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
+			return false ;
+		}
+		LiteSpeed_Cache_Object::flush() ;
+		LiteSpeed_Cache_Log::debug( 'Purge: Flushed object cache' ) ;
+
+		$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+		return true ;
+	}
+
 	/**
 	 * Adds new public purge tags to the array of purge tags for the request.
 	 *
@@ -664,7 +715,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
-			//LiteSpeed_Cache_Log::push('purge by post, check tax = ' . var_export($taxonomies, true)) ;
+			//LiteSpeed_Cache_Log::debug('purge by post, check tax = ' . var_export($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
 				$terms = get_the_terms($post_id, $tax) ;
 				if ( ! empty($terms) ) {

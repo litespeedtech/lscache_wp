@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 <div class="wrap">
 	<?php
 
-		$file = LSWCP_CONTENT_DIR . '/debug.log' ;
+		$file = LSCWP_CONTENT_DIR . '/debug.log' ;
 		$lines = Litespeed_File::count_lines( $file ) ;
 		$start = $lines > 1000 ? $lines - 1000 : 0 ;
 		$logs = Litespeed_File::read( $file, $start ) ;

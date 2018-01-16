@@ -43,9 +43,9 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	foreach ($menuArr as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>";
 		if($tab == 'advanced') {
-			require LSWCP_DIR . 'admin/tpl/setting/settings_advanced.php';
+			require LSCWP_DIR . 'admin/tpl/setting/settings_advanced.php';
 		}else{
-			require LSWCP_DIR . "admin/tpl/setting/network_settings_$tab.php";
+			require LSCWP_DIR . "admin/tpl/setting/network_settings_$tab.php";
 		}
 		echo "</div>";
 	}

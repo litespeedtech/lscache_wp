@@ -27,6 +27,11 @@ class LiteSpeed_Cache_Config
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
 	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
 	const ITEM_CLOUDFLARE_STATUS = 'litespeed-cache-cloudflare_status' ;
+	const ITEM_LOG_IGNORE_FILTERS = 'litespeed-log_ignore_filters' ;
+	const ITEM_LOG_IGNORE_PART_FILTERS = 'litespeed-log_ignore_part_filters' ;
+	const ITEM_OBJECT_GLOBAL_GROUPS = 'litespeed-object_global_groups' ;
+	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'litespeed-object_non_persistent_groups' ;
+
 	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
 
 	const ITEM_CDN_MAPPING_URL = 'url' ;
@@ -56,6 +61,11 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_MOBILE = 'mobileview_enabled' ;
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
 	const OPID_CACHE_URI_PRIV = 'cache_uri_priv' ;
+	const OPID_CACHE_OBJECT = 'cache_object' ;
+	const OPID_CACHE_OBJECT_HOST = 'cache_object_host' ;
+	const OPID_CACHE_OBJECT_PORT = 'cache_object_port' ;
+	const OPID_CACHE_OBJECT_LIFE = 'cache_object_life' ;
+	const OPID_CACHE_OBJECT_ADMIN = 'cache_object_admin' ;
 	const OPID_CACHE_BROWSER = 'cache_browser' ;
 	const OPID_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
@@ -77,8 +87,6 @@ class LiteSpeed_Cache_Config
 	const OPID_DEBUG_COOKIE = 'debug_cookie' ;
 	const OPID_COLLAPS_QS = 'collaps_qs' ;
 	const OPID_LOG_FILTERS = 'log_filters' ;
-	const OPID_LOG_IGNORE_FILTERS = 'log_ignore_filters' ;
-	const OPID_LOG_IGNORE_PART_FILTERS = 'log_ignore_part_filters' ;
 
 	const OPID_PUBLIC_TTL = 'public_ttl' ;
 	const OPID_PRIVATE_TTL = 'private_ttl' ;
@@ -312,9 +320,9 @@ class LiteSpeed_Cache_Config
 		if ( isset( $this->options[$id] ) ) {
 			return $this->options[$id] ;
 		}
-		if ( LiteSpeed_Cache_Log::initialized() ) {
-			LiteSpeed_Cache_Log::debug( 'Invalid option ID ' . $id ) ;
-		}
+
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Invalid option ID ' . $id ) ;
+
 		return NULL ;
 	}
 
@@ -523,6 +531,11 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_MOBILE => false,
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_CACHE_URI_PRIV => '',
+			self::OPID_CACHE_OBJECT => false,
+			self::OPID_CACHE_OBJECT_HOST => 'localhost',
+			self::OPID_CACHE_OBJECT_PORT => '11211',
+			self::OPID_CACHE_OBJECT_LIFE => '360',
+			self::OPID_CACHE_OBJECT_ADMIN => false,
 			self::OPID_CACHE_BROWSER => false,
 			self::OPID_CACHE_BROWSER_TTL => 2592000,
 
@@ -537,8 +550,6 @@ class LiteSpeed_Cache_Config
 			self::OPID_DEBUG_COOKIE => false,
 			self::OPID_COLLAPS_QS => false,
 			self::OPID_LOG_FILTERS => false,
-			self::OPID_LOG_IGNORE_FILTERS => "gettext\ngettext_with_context\nget_the_terms\nget_term",
-			self::OPID_LOG_IGNORE_PART_FILTERS => "i18n\nlocale\nsettings\noption",
 			self::OPID_PUBLIC_TTL => 604800,
 			self::OPID_PRIVATE_TTL => 1800,
 			self::OPID_FRONT_PAGE_TTL => 604800,
@@ -652,6 +663,11 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_RES => true,
 			self::OPID_CACHE_MOBILE => 0, // todo: why not false
 			self::ID_MOBILEVIEW_LIST => false,
+			self::OPID_CACHE_OBJECT => false,
+			self::OPID_CACHE_OBJECT_HOST => 'localhost',
+			self::OPID_CACHE_OBJECT_PORT => '11211',
+			self::OPID_CACHE_OBJECT_LIFE => '360',
+			self::OPID_CACHE_OBJECT_ADMIN => false,
 			self::OPID_CACHE_BROWSER => false,
 			self::OPID_CACHE_BROWSER_TTL => 2592000,
 			self::OPID_LOGIN_COOKIE => '',
@@ -661,6 +677,28 @@ class LiteSpeed_Cache_Config
 			self::OPID_MEDIA_IMG_WEBP => false,
 		) ;
 		return $default_site_options ;
+	}
+
+	/**
+	 * Get default item val
+	 *
+	 * @since 1.8
+	 * @access public
+	 */
+	public function default_item( $k )
+	{
+		switch ( $k ) {
+			case self::ITEM_OBJECT_GLOBAL_GROUPS :
+				return "users\nuserlogins\nusermeta\nuser_meta\nsite-transient\nsite-options\nsite-lookup\nblog-lookup\nblog-details\nrss\nglobal-posts\nblog-id-cache" ;
+
+			case self::ITEM_OBJECT_NON_PERSISTENT_GROUPS :
+				return "comment\ncounts\nplugins" ;
+
+			default :
+				break ;
+		}
+
+		return false ;
 	}
 
 	/**
@@ -907,9 +945,7 @@ class LiteSpeed_Cache_Config
 
 		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
-		if ( LiteSpeed_Cache_Log::get_enabled() ) {
-			LiteSpeed_Cache_Log::push( "plugin_activation update option = " . var_export( $res, true ) ) ;
-		}
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "plugin_activation update option = " . var_export( $res, true ) ) ;
 
 		if ( is_multisite() ) {
 

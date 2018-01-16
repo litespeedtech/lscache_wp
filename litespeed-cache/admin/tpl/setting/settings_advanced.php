@@ -99,6 +99,39 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Object Cache', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<div class="litespeed-cdn-mapping-block">
+				<div class='litespeed-child-col-auto'>
+					<h4><?php echo __( 'Cache Wp-admin', 'litespeed-cache' ) ; ?></h4>
+					<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Get wp-admin faster, but may meet expired data.', 'litespeed-cache' ) ; ?>
+						<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#admin_object" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto'>
+					<h4><?php echo __( 'Global Groups', 'litespeed-cache' ) ; ?></h4>
+					<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Stored these groups\' cache in network level.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto'>
+					<h4><?php echo __( 'Non Persistent Groups', 'litespeed-cache' ) ; ?></h4>
+					<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'These groups will not be cached.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+
+			</div>
+		</td>
+	</tr>
+
 	<?php /*
 	<tr>
 		<th><?php echo __( 'Favicon', 'litespeed-cache' ) ; ?></th>
