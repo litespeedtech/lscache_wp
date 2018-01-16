@@ -41,6 +41,10 @@
 	margin-top: 20px;
 }
 
+.litespeed-top30 {
+	margin-top: 30px;
+}
+
 .litespeed-desc {
 	font-size: 12px;
 	font-weight: normal;
@@ -1194,6 +1198,7 @@ g.litespeed-pie_info text{
 	border: 1px dotted #6699cc;
 	border-radius:5px;
 	display: flex;
+	flex-wrap: wrap;
 	padding: 10px;
 	margin-bottom: 5px;
 }
@@ -1257,6 +1262,18 @@ g.litespeed-pie_info text{
 
 .litespeed-child-col-auto{
 	padding-left: 17px;
+}
+
+.litespeed-child-col-br{
+	flex: 0 0 100% ;
+	border-top: 1px dotted #6699cc;
+}
+
+.litespeed-child-col-inc{
+	display: inline-block;
+	margin-top: 16px ;
+	min-width: 150px ;
+	font-weight: bold;
 }
 
 

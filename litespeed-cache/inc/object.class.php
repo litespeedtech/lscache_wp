@@ -18,6 +18,7 @@ class LiteSpeed_Cache_Object
 	private $_cfg_enabled ;
 	private $_cfg_host ;
 	private $_cfg_port ;
+	private $_cfg_persistent ;
 	private $_cfg_admin ;
 	private $_default_life = 360 ;
 
@@ -40,10 +41,11 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_host = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ] ;
 			$this->_cfg_port = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ] ;
 			$this->_cfg_life = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ] ;
+			$this->_cfg_persistent = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ;
 			$this->_cfg_admin = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ;
 			$this->_global_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) ;
 			$this->_non_persistent_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
-			$this->_cfg_enabled = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ] && class_exists( 'Memcached' ) && $this->_cfg_host && $this->_cfg_port ;
+			$this->_cfg_enabled = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ] && class_exists( 'Memcached' ) && $this->_cfg_host ;
 
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: init with cfg result : ', $this->_cfg_enabled ) ;
 		}
@@ -51,20 +53,22 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_host = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ) ;
 			$this->_cfg_port = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ) ;
 			$this->_cfg_life = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ) ;
+			$this->_cfg_persistent = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ;
 			$this->_cfg_admin = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ;
 			$this->_global_groups = explode( "\n", get_option( LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ) ) ;
 			$this->_non_persistent_groups = explode( "\n", get_option( LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ) ) ;
-			$this->_cfg_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ) && class_exists( 'Memcached' ) && $this->_cfg_host && $this->_cfg_port ;
+			$this->_cfg_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ) && class_exists( 'Memcached' ) && $this->_cfg_host ;
 		}
 		elseif ( file_exists( $this->_oc_data_file ) ) { // Get cfg from oc_data_file
 			$cfg = parse_ini_file( $this->_oc_data_file, true ) ;
 			$this->_cfg_host = $cfg[ 'object_cache' ][ 'host' ] ;
 			$this->_cfg_port = $cfg[ 'object_cache' ][ 'port' ] ;
 			$this->_cfg_life = ! empty( $cfg[ 'object_cache' ][ 'life' ] ) ? $cfg[ 'object_cache' ][ 'life' ] : $this->_default_life ;
+			$this->_cfg_persistent = ! empty( $cfg[ 'object_cache' ][ 'persistent' ] ) ? $cfg[ 'object_cache' ][ 'persistent' ] : false ;
 			$this->_cfg_admin = ! empty( $cfg[ 'object_cache' ][ 'cache_admin' ] ) ? $cfg[ 'object_cache' ][ 'cache_admin' ] : false ;
 			$this->_global_groups = ! empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : array() ;
 			$this->_non_persistent_groups = ! empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : array() ;
-			$this->_cfg_enabled = class_exists( 'Memcached' ) && $this->_cfg_host && $this->_cfg_port ;
+			$this->_cfg_enabled = class_exists( 'Memcached' ) && $this->_cfg_host ;
 		}
 		else {
 			$this->_cfg_enabled = false ;
@@ -87,9 +91,10 @@ class LiteSpeed_Cache_Object
 			// Update data file
 			$data = "[object_cache]"
 				. "\nhost = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ]
-				. "\nport = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
+				. "\nport = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
 				. "\nlife = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ]
-				. "\ncache_admin = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ]
+				. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ? 1 : 0 )
+				. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ? 1 : 0 )
 				. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) )
 				. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) )
 				;
@@ -119,7 +124,7 @@ class LiteSpeed_Cache_Object
 	 */
 	public function test_connection()
 	{
-		if ( ! class_exists( 'Memcached' ) || ! $this->_cfg_host || ! $this->_cfg_port ) {
+		if ( ! class_exists( 'Memcached' ) || ! $this->_cfg_host ) {
 			return null ;
 		}
 
@@ -133,6 +138,11 @@ class LiteSpeed_Cache_Object
 	public function reconnect( $cfg )
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Reconnecting' ) ;
+
+		if ( isset( $this->_conn ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Quiting existing connection' ) ;
+			$this->_conn->quit() ;
+		}
 
 		self::$_instance = new self( $cfg ) ;
 
@@ -152,12 +162,30 @@ class LiteSpeed_Cache_Object
 		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
-		$this->_conn = new Memcached ;
-		$this->_conn->addServer( $this->_cfg_host, $this->_cfg_port ) ;
+
+		if ( $this->_cfg_persistent ) {
+			$this->_conn = new Memcached( $this->_get_mem_id() ) ;
+			if ( $this->_conn->getServerList() ) {
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: persistent memcached connection' ) ;
+				return true ;
+			}
+
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to get persistent memcached server list!' ) ;
+		}
+		else {
+			$this->_conn = new Memcached ;
+		}
+
+		if ( substr( $this->_cfg_host, 0, 5 ) == 'unix:' ) {
+			$this->_conn->addServer( $this->_cfg_host, 0 ) ;
+		}
+		else {
+			$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port ) ;
+		}
 
 		// Check connection
 		$memList = $this->_conn->getStats() ;
-		if ( $memList[ $this->_cfg_host . ':' . $this->_cfg_port ][ 'pid' ] <= 0 ) {
+		if ( $memList[ $this->_cfg_host . ':' . (int) $this->_cfg_port ][ 'pid' ] <= 0 ) {// todo: check if work for `unix:`
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to connect memcached server!' ) ;
 			$this->_cfg_enabled = false ;
 
@@ -167,6 +195,22 @@ class LiteSpeed_Cache_Object
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: connected' ) ;
 
 		return true ;
+	}
+
+	/**
+	 * Get memcached unique id to be used for connecting
+	 *
+	 * @since  1.8
+	 * @access private
+	 */
+	private function _get_mem_id()
+	{
+		$mem_id = 'litespeed' ;
+		if ( is_multisite() ) {
+			$mem_id .= '_' . get_current_blog_id() ;
+		}
+
+		return $mem_id ;
 	}
 
 	/**

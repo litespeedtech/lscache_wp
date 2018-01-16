@@ -65,6 +65,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_OBJECT_HOST = 'cache_object_host' ;
 	const OPID_CACHE_OBJECT_PORT = 'cache_object_port' ;
 	const OPID_CACHE_OBJECT_LIFE = 'cache_object_life' ;
+	const OPID_CACHE_OBJECT_PERSISTENT = 'cache_object_persistent' ;
 	const OPID_CACHE_OBJECT_ADMIN = 'cache_object_admin' ;
 	const OPID_CACHE_BROWSER = 'cache_browser' ;
 	const OPID_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
@@ -535,6 +536,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
 			self::OPID_CACHE_OBJECT_PORT => '11211',
 			self::OPID_CACHE_OBJECT_LIFE => '360',
+			self::OPID_CACHE_OBJECT_PERSISTENT => true,
 			self::OPID_CACHE_OBJECT_ADMIN => false,
 			self::OPID_CACHE_BROWSER => false,
 			self::OPID_CACHE_BROWSER_TTL => 2592000,
@@ -667,6 +669,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
 			self::OPID_CACHE_OBJECT_PORT => '11211',
 			self::OPID_CACHE_OBJECT_LIFE => '360',
+			self::OPID_CACHE_OBJECT_PERSISTENT => true,
 			self::OPID_CACHE_OBJECT_ADMIN => false,
 			self::OPID_CACHE_BROWSER => false,
 			self::OPID_CACHE_BROWSER_TTL => 2592000,

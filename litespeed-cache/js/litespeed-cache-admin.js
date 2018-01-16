@@ -216,6 +216,15 @@ var _litespeed_dots ;
 	}) ;
 })(jQuery) ;
 
+/**
+ * Trigger a click event on an element
+ * @since  1.8
+ */
+function litespeed_trigger_click( selector )
+{
+	jQuery( selector ).trigger( 'click' ) ;
+}
+
 function litespeed_keycode( num ) {
 	var num = num || 13 ;
 	var code = window.event ? event.keyCode : event.which ;

@@ -247,6 +247,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
