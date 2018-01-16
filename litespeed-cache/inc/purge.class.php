@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Purge
 
 			return false ;
 		}
-		LiteSpeed_Cache_Object::flush() ;
+		LiteSpeed_Cache_Object::get_instance()->flush() ;
 		LiteSpeed_Cache_Log::debug( 'Purge: Flushed object cache' ) ;
 
 		$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' ) ;
