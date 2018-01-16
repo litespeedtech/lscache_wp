@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Object
 
 		// Check connection
 		$memList = $this->_conn->getStats() ;
-		if ( $memList[ $this->_cfg_host . ':' . (int) $this->_cfg_port ][ 'pid' ] <= 0 ) {// todo: check if work for `unix:`
+		if ( ! empty( $memList[ $this->_cfg_host . ':' . (int) $this->_cfg_port ] ) && $memList[ $this->_cfg_host . ':' . (int) $this->_cfg_port ][ 'pid' ] <= 0 ) {// todo: check if work for `unix:`
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to connect memcached server!' ) ;
 			$this->_cfg_enabled = false ;
 
@@ -318,9 +318,9 @@ class LiteSpeed_Cache_Object
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: flush!' ) ;
 
-		$this->_conn->resetServerList() ;
-
 		$res = $this->_conn->flush() ;
+
+		$this->_conn->resetServerList() ;
 
 		return $res ;
 	}

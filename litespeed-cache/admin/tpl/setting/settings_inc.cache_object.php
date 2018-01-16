@@ -28,7 +28,7 @@ else {
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use object cache functionality.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:object_cache" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</div>
 			<div class="litespeed-cdn-mapping-block">
 				<div class='litespeed-child-col-auto'>
