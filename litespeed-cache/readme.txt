@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.7.2
+Stable tag: 1.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -21,7 +21,7 @@ If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPre
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache, Lazyload images and image optimization!
+LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache, Object Cache, Lazyload images and image optimization!
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
@@ -57,6 +57,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * Combine CSS and JavaScript
 * HTTP/2 Push for CSS and JS
 * Database Cleaner and Optimizer
+* Object Cache
 * Browser Cache
 * DNS Prefetch
 * Cloudflare API
@@ -122,10 +123,7 @@ If you have any API requirements, please inform us anytime in [WP Forum](https:/
 * [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
 * [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
 * Login With Ajax
-
-= Known Uncompatible Plugins =
-
-There are no known uncompatible plugins at this time.
+* [Post Types Order 1.9.3.6+](https://wordpress.org/plugins/post-types-order/)
 
 == Frequently Asked Questions ==
 
@@ -243,6 +241,13 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.8 - January 17 2018 =
+* [NEW FEATURE] Object Cache.
+* [REFACTOR] Refactored Log class.
+* [REFACTOR] Refactored LSCWP basic const initialization.
+* [BUGFIX] Fixed Cloudflare domain search breaking when saving more than 50 domains under a single account.
+* [UPDATE] Log filter settings are now their own item in the wp-option table.
 
 = 1.7.2 - January 5 2018 =
 * [NEW FEATURE] Cloudflare API support.
