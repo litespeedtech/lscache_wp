@@ -51,7 +51,7 @@ else {
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE, 'litespeed-input-short2' ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 					<div class="litespeed-desc">
-						<?php echo __( 'How many seconds the default object cache should use.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Default TTL for cached objects.', 'litespeed-cache' ) ; ?>
 					</div>
 				</div>
 
@@ -68,15 +68,16 @@ else {
 					<h4><?php echo __( 'Global Groups', 'litespeed-cache' ) ; ?></h4>
 					<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
-						<?php echo __( 'Stored these groups\' cache in network level.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Groups cached at the network level.', 'litespeed-cache' ) ; ?>
+						<?php echo __('One per line.', 'litespeed-cache'); ?>
 					</div>
 				</div>
 
 				<div class='litespeed-child-col-auto'>
-					<h4><?php echo __( 'Non Persistent Groups', 'litespeed-cache' ) ; ?></h4>
+					<h4><?php echo __( 'Do Not Cache Groups', 'litespeed-cache' ) ; ?></h4>
 					<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
-						<?php echo __( 'These groups will not be cached.', 'litespeed-cache' ) ; ?>
+						<?php echo __('One per line.', 'litespeed-cache'); ?>
 					</div>
 				</div>
 
@@ -86,14 +87,14 @@ else {
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ; ?>
 					</div>
 					<div class="litespeed-desc">
-						<?php echo __( 'Keep connection for each request to speed up memcached.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Use keep-alive connections to speed up memcached.', 'litespeed-cache' ) ; ?>
 					</div>
 					<div class="litespeed-row litespeed-top30">
 						<div class="litespeed-child-col-inc"><?php echo __( 'Cache Wp-admin', 'litespeed-cache' ) ; ?></div>
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ; ?>
 					</div>
 					<div class="litespeed-desc">
-						<?php echo __( 'Get wp-admin faster, but may meet expired data.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Improve wp-admin speed through caching. (May encounter expired data)', 'litespeed-cache' ) ; ?>
 					</div>
 				</div>
 

@@ -284,7 +284,6 @@ class LiteSpeed_Cache_Admin_Settings
 			 * Clear object cache
 			 */
 			LiteSpeed_Cache_Object::get_instance()->reconnect( $all_options ) ;
-			LiteSpeed_Cache_Object::get_instance()->flush() ;
 		}
 		else {
 			if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {

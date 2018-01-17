@@ -142,12 +142,17 @@ class LiteSpeed_Cache_Object
 		if ( isset( $this->_conn ) ) {
 // error_log( 'Object: Quiting existing connection!' ) ;
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Quiting existing connection' ) ;
-			$this->_conn->resetServerList() ;
+			$this->flush() ;
+			$this->_conn = null ;
+			self::$_instance = null ;
 		}
 
 		self::$_instance = new self( $cfg ) ;
+		self::$_instance->_connect() ;
+		if ( isset( self::$_instance->_conn ) ) {
+			self::$_instance->flush() ;
+		}
 
-		$this->_conn = null ;
 	}
 
 	/**
@@ -158,7 +163,8 @@ class LiteSpeed_Cache_Object
 	 */
 	private function _connect()
 	{
-		if ( is_object( $this->_conn ) ) {
+		if ( isset( $this->_conn ) ) {
+// error_log( 'Object: _connected' ) ;
 			return true ;
 		}
 
@@ -166,18 +172,20 @@ class LiteSpeed_Cache_Object
 
 		if ( $this->_cfg_persistent ) {
 			$this->_conn = new Memcached( $this->_get_mem_id() ) ;
-			if ( $this->_conn->getServerList() ) {
-// error_log( 'Object: persistent memcached connection' ) ;
+			if ( $this->_server_enabled() ) {
+
+// error_log( 'Object: _server_enabled' ) ;
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: persistent memcached connection' ) ;
 				return true ;
 			}
-// error_log( 'Object: persistent getServerList failed!' ) ;
+
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to get persistent memcached server list!' ) ;
 		}
 		else {
 // error_log( 'Object: new memcached!' ) ;
 			$this->_conn = new Memcached ;
 		}
+// error_log( 'Object: host:' . $this->_cfg_host ) ;
 
 		if ( substr( $this->_cfg_host, 0, 5 ) == 'unix:' ) {
 			$this->_conn->addServer( $this->_cfg_host, 0 ) ;
@@ -187,17 +195,40 @@ class LiteSpeed_Cache_Object
 		}
 
 		// Check connection
-		$memList = $this->_conn->getStats() ;
-		if ( ! empty( $memList[ $this->_cfg_host . ':' . (int) $this->_cfg_port ] ) && $memList[ $this->_cfg_host . ':' . (int) $this->_cfg_port ][ 'pid' ] <= 0 ) {// todo: check if work for `unix:`
+		if ( ! $this->_server_enabled() ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to connect memcached server!' ) ;
-			$this->_cfg_enabled = false ;
 
+			$this->_conn = null ;
+
+			$this->_cfg_enabled = false ;
+// error_log( 'Object: false!' ) ;
 			return false ;
 		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: connected' ) ;
-
+// error_log( 'Object: true!' . var_export( $list , true) ) ;
 		return true ;
+	}
+
+	/**
+	 * Check if the connected host is the one in cfg
+	 *
+	 * @since  1.8
+	 * @access private
+	 */
+	private function _server_enabled()
+	{
+		$mem_list = $this->_conn->getStats() ;
+		foreach ( $mem_list as $k => $v ) {
+			if ( substr( $k, 0, strlen( $this->_cfg_host ) ) != $this->_cfg_host ) {
+				continue ;
+			}
+			if ( $v[ 'pid' ] > 0 ) {
+				return true ;
+			}
+		}
+
+		return false ;
 	}
 
 	/**
@@ -232,7 +263,9 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		$this->_connect() ;
+		if( ! $this->_connect() ) {
+			return null ;
+		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: get ' . $key ) ;
 
@@ -257,7 +290,9 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		$this->_connect() ;
+		if( ! $this->_connect() ) {
+			return null ;
+		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: set ' . $key ) ;
 
@@ -292,7 +327,9 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		$this->_connect() ;
+		if( ! $this->_connect() ) {
+			return null ;
+		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: delete ' . $key ) ;
 
@@ -314,7 +351,9 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		$this->_connect() ;
+		if( ! $this->_connect() ) {
+			return null ;
+		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: flush!' ) ;
 
