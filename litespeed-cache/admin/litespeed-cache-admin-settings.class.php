@@ -246,6 +246,7 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT,
 		) ;
@@ -257,6 +258,8 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		);
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = $this->_input[ $id ] ;

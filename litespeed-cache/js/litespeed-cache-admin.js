@@ -185,6 +185,16 @@ var _litespeed_dots ;
 		litespeed_toggle() ;
 		litespeed_cdn_mapping_del_init() ;
 
+		/** Object Cache switching */
+		$( '#litespeed-oc-mem' ).click( function( event ) {
+			$( '[name="litespeed-cache-conf[cache_object_port]"]' ).val( 11211 ) ;
+			$( '[data="litespeed-redis-divs"]' ).addClass( 'litespeed-hide' ) ;
+		} ) ;
+		$( '#litespeed-oc-redis' ).click( function( event ) {
+			$( '[name="litespeed-cache-conf[cache_object_port]"]' ).val( 6379 ) ;
+			$( '[data="litespeed-redis-divs"]' ).removeClass( 'litespeed-hide' ) ;
+		} ) ;
+
 		function litespeed_cdn_mapping_del_init() {
 			$( '[data-litespeed-cdn-mapping-del]' ).off().click(function(event) {
 				if ( ! confirm( 'Are you sure?' ) ) {

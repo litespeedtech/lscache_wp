@@ -16,11 +16,16 @@ class LiteSpeed_Cache_Object
 	private $_oc_data_file ;
 	private $_conn ;
 	private $_cfg_enabled ;
+	private $_cfg_method ;
 	private $_cfg_host ;
 	private $_cfg_port ;
 	private $_cfg_persistent ;
 	private $_cfg_admin ;
+	private $_cfg_db ;
+	private $_cfg_pswd ;
 	private $_default_life = 360 ;
+
+	private $_oc_driver = 'Memcached' ; // Redis or Memcached
 
 	private $_global_groups ;
 	private $_non_persistent_groups ;
@@ -38,37 +43,58 @@ class LiteSpeed_Cache_Object
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
 
 		if ( $cfg ) {
+			$this->_cfg_method = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ] ? true : false ;
 			$this->_cfg_host = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ] ;
 			$this->_cfg_port = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ] ;
 			$this->_cfg_life = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ] ;
 			$this->_cfg_persistent = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ;
 			$this->_cfg_admin = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ;
+			$this->_cfg_db = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ] ;
+			$this->_cfg_pswd = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] ;
 			$this->_global_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) ;
 			$this->_non_persistent_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
-			$this->_cfg_enabled = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ] && class_exists( 'Memcached' ) && $this->_cfg_host ;
+
+			if ( $this->_cfg_method ) {
+				$this->_oc_driver = 'Redis' ;
+			}
+			$this->_cfg_enabled = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: init with cfg result : ', $this->_cfg_enabled ) ;
 		}
 		elseif ( class_exists( 'LiteSpeed_Cache' ) ) {
+			$this->_cfg_method = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ) ? true : false ;
 			$this->_cfg_host = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ) ;
 			$this->_cfg_port = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ) ;
 			$this->_cfg_life = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ) ;
 			$this->_cfg_persistent = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ;
 			$this->_cfg_admin = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ;
+			$this->_cfg_db = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ) ;
+			$this->_cfg_pswd = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ;
 			$this->_global_groups = explode( "\n", get_option( LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ) ) ;
 			$this->_non_persistent_groups = explode( "\n", get_option( LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ) ) ;
-			$this->_cfg_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ) && class_exists( 'Memcached' ) && $this->_cfg_host ;
+
+			if ( $this->_cfg_method ) {
+				$this->_oc_driver = 'Redis' ;
+			}
+			$this->_cfg_enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ) && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 		}
 		elseif ( file_exists( $this->_oc_data_file ) ) { // Get cfg from oc_data_file
 			$cfg = parse_ini_file( $this->_oc_data_file, true ) ;
+			$this->_cfg_method = ! empty( $cfg[ 'object_cache' ][ 'method' ] ) ? $cfg[ 'object_cache' ][ 'method' ] : false ;
 			$this->_cfg_host = $cfg[ 'object_cache' ][ 'host' ] ;
 			$this->_cfg_port = $cfg[ 'object_cache' ][ 'port' ] ;
 			$this->_cfg_life = ! empty( $cfg[ 'object_cache' ][ 'life' ] ) ? $cfg[ 'object_cache' ][ 'life' ] : $this->_default_life ;
 			$this->_cfg_persistent = ! empty( $cfg[ 'object_cache' ][ 'persistent' ] ) ? $cfg[ 'object_cache' ][ 'persistent' ] : false ;
 			$this->_cfg_admin = ! empty( $cfg[ 'object_cache' ][ 'cache_admin' ] ) ? $cfg[ 'object_cache' ][ 'cache_admin' ] : false ;
+			$this->_cfg_db = ! empty( $cfg[ 'object_cache' ][ 'db' ] ) ? $cfg[ 'object_cache' ][ 'db' ] : 0 ;
+			$this->_cfg_pswd = ! empty( $cfg[ 'object_cache' ][ 'pswd' ] ) ? $cfg[ 'object_cache' ][ 'pswd' ] : '' ;
 			$this->_global_groups = ! empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : array() ;
 			$this->_non_persistent_groups = ! empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : array() ;
-			$this->_cfg_enabled = class_exists( 'Memcached' ) && $this->_cfg_host ;
+
+			if ( $this->_cfg_method ) {
+				$this->_oc_driver = 'Redis' ;
+			}
+			$this->_cfg_enabled = class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 		}
 		else {
 			$this->_cfg_enabled = false ;
@@ -90,9 +116,12 @@ class LiteSpeed_Cache_Object
 		if ( $keep ) {
 			// Update data file
 			$data = "[object_cache]"
+				. "\nmethod = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ]
 				. "\nhost = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ]
 				. "\nport = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
 				. "\nlife = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ]
+				. "\npswd = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] . "'"
+				. "\ndb = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ]
 				. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ? 1 : 0 )
 				. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ? 1 : 0 )
 				. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) )
@@ -116,6 +145,13 @@ class LiteSpeed_Cache_Object
 		}
 	}
 
+	private function _ext_enabled( $is_redis = false )
+	{
+		if ( $is_redis ) {
+			return  ;
+		}
+	}
+
 	/**
 	 * Try to build connection
 	 *
@@ -124,7 +160,7 @@ class LiteSpeed_Cache_Object
 	 */
 	public function test_connection()
 	{
-		if ( ! class_exists( 'Memcached' ) || ! $this->_cfg_host ) {
+		if ( ! class_exists( $this->_oc_driver ) || ! $this->_cfg_host ) {
 			return null ;
 		}
 
@@ -138,9 +174,9 @@ class LiteSpeed_Cache_Object
 	public function reconnect( $cfg )
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Reconnecting' ) ;
-// error_log( 'Object: reconnect !' ) ;
+		// error_log( 'Object: reconnect !' ) ;
 		if ( isset( $this->_conn ) ) {
-// error_log( 'Object: Quiting existing connection!' ) ;
+			// error_log( 'Object: Quiting existing connection!' ) ;
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Quiting existing connection' ) ;
 			$this->flush() ;
 			$this->_conn = null ;
@@ -156,7 +192,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Connect to Memcached server
+	 * Connect to Memcached/Redis server
 	 *
 	 * @since  1.8
 	 * @access private
@@ -164,59 +200,113 @@ class LiteSpeed_Cache_Object
 	private function _connect()
 	{
 		if ( isset( $this->_conn ) ) {
-// error_log( 'Object: _connected' ) ;
+			// error_log( 'Object: _connected' ) ;
 			return true ;
 		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
 
-		if ( $this->_cfg_persistent ) {
-			$this->_conn = new Memcached( $this->_get_mem_id() ) ;
-			if ( $this->_server_enabled() ) {
+		$failed = false ;
+		/**
+		 * Connect to Redis
+		 *
+		 * @since  1.8.1
+		 * @see https://github.com/phpredis/phpredis/#example-1
+		 */
+		if ( $this->_oc_driver == 'Redis' ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Init ' . $this->_oc_driver . ' connection' ) ;
 
-// error_log( 'Object: _server_enabled' ) ;
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: persistent memcached connection' ) ;
-				return true ;
+			try {
+				$this->_conn = new Redis() ;
+				 // error_log( 'Object: _connect Redis' ) ;
+
+				if ( $this->_cfg_persistent ) {
+					if ( $this->_cfg_port ) {
+						$this->_conn->pconnect( $this->_cfg_host, $this->_cfg_port ) ;
+					}
+					else {
+						$this->_conn->pconnect( $this->_cfg_host ) ;
+					}
+				}
+				else {
+					if ( $this->_cfg_port ) {
+						$this->_conn->connect( $this->_cfg_host, $this->_cfg_port ) ;
+					}
+					else {
+						$this->_conn->connect( $this->_cfg_host ) ;
+					}
+				}
+
+				if ( $this->_cfg_pswd ) {
+					$this->_conn->auth( $this->_cfg_pswd ) ;
+				}
+
+				if ( $this->_cfg_db ) {
+					$this->_conn->select( $this->_cfg_db ) ;
+				}
+
+				$res = $this->_conn->ping() ;
+
+				if ( $res != '+PONG' ) {
+					$failed = true ;
+				}
+			}
+			catch ( Exception $exception ) {
+				$failed = true ;
 			}
 
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to get persistent memcached server list!' ) ;
 		}
+		/**
+		 * Connect to Memcached
+		 */
 		else {
-// error_log( 'Object: new memcached!' ) ;
-			$this->_conn = new Memcached ;
-		}
-// error_log( 'Object: host:' . $this->_cfg_host ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Init ' . $this->_oc_driver . ' connection' ) ;
+			if ( $this->_cfg_persistent ) {
+				$this->_conn = new Memcached( $this->_get_mem_id() ) ;
 
-		if ( substr( $this->_cfg_host, 0, 5 ) == 'unix:' ) {
-			$this->_conn->addServer( $this->_cfg_host, 0 ) ;
-		}
-		else {
+				// Check memcached persistent connection
+				if ( $this->_validate_mem_server() ) {
+					// error_log( 'Object: _validate_mem_server' ) ;
+					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Got persistent ' . $this->_oc_driver . ' connection' ) ;
+					return true ;
+				}
+
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: No persistent ' . $this->_oc_driver . ' server list!' ) ;
+			}
+			else {
+				// error_log( 'Object: new memcached!' ) ;
+				$this->_conn = new Memcached ;
+			}
+
 			$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port ) ;
+
+			// Check connection
+			if ( ! $this->_validate_mem_server() ) {
+				$failed = true ;
+			}
 		}
 
-		// Check connection
-		if ( ! $this->_server_enabled() ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: failed to connect memcached server!' ) ;
-
+		// If failed to connect
+		if ( $failed ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Failed to connect ' . $this->_oc_driver . ' server!' ) ;
 			$this->_conn = null ;
-
 			$this->_cfg_enabled = false ;
-// error_log( 'Object: false!' ) ;
+			// error_log( 'Object: false!' ) ;
 			return false ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: connected' ) ;
-// error_log( 'Object: true!' . var_export( $list , true) ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: Connected' ) ;
+
 		return true ;
 	}
 
 	/**
-	 * Check if the connected host is the one in cfg
+	 * Check if the connected memcached host is the one in cfg
 	 *
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _server_enabled()
+	private function _validate_mem_server()
 	{
 		$mem_list = $this->_conn->getStats() ;
 		if ( empty( $mem_list ) ) {
@@ -300,7 +390,16 @@ class LiteSpeed_Cache_Object
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: set ' . $key ) ;
 
-		$res = $this->_conn->set( $key, $data, $expire ?: $this->_cfg_life ) ;
+		// error_log( 'Object: set ' . $key ) ;
+
+		$ttl = $expire ?: $this->_cfg_life ;
+
+		if ( $this->_oc_driver == 'Redis' ) {
+			$res = $this->_conn->setEx( $key, $ttl, $data ) ;
+		}
+		else {
+			$res = $this->_conn->set( $key, $data, $ttl ) ;
+		}
 
 		return $res ;
 	}
@@ -361,9 +460,13 @@ class LiteSpeed_Cache_Object
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: flush!' ) ;
 
-		$res = $this->_conn->flush() ;
-
-		$this->_conn->resetServerList() ;
+		if ( $this->_oc_driver == 'Redis' ) {
+			$res = $this->_conn->flushDb() ;
+		}
+		else {
+			$res = $this->_conn->flush() ;
+			$this->_conn->resetServerList() ;
+		}
 
 		return $res ;
 	}

@@ -244,6 +244,8 @@ class WP_Object_Cache
 		elseif ( ! array_key_exists( $final_key, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
 			$v = $this->_object_cache->get( $final_key ) ;
 
+			$v = @unserialize( $v ) ;
+
 			// To be compatible with false val
 			if ( is_array( $v ) && array_key_exists( 'data', $v ) ) {
 				$this->count_hit ++ ;
@@ -296,7 +298,7 @@ class WP_Object_Cache
 		}
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			$this->_object_cache->set( $final_key, array( 'data' => $data ), $expire ) ;
+			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
 			$this->count_set ++ ;
 		}
 

@@ -1,12 +1,11 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-if ( class_exists( 'Memcached' ) ) {
-	$mem_enabled = '<font class="litespeed-success">' . __( 'Enabled', 'litespeed-cache' ) . '</font>' ;
-}
-else {
-	$mem_enabled = '<font class="litespeed-warning">' . __( 'Disabled', 'litespeed-cache' ) . '</font>' ;
-}
+$lang_enabled = '<font class="litespeed-success">' . __( 'Enabled', 'litespeed-cache' ) . '</font>' ;
+$lang_disabled = '<font class="litespeed-warning">' . __( 'Disabled', 'litespeed-cache' ) . '</font>' ;
+
+$mem_enabled = class_exists( 'Memcached' ) ? $lang_enabled : $lang_disabled ;
+$redis_enabled = class_exists( 'Redis' ) ? $lang_enabled : $lang_disabled ;
 
 $mem_conn = LiteSpeed_Cache_Object::get_instance()->test_connection() ;
 if ( $mem_conn === null ) {
@@ -18,6 +17,8 @@ elseif ( $mem_conn ) {
 else {
 	$mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
 }
+
+$hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
 
 ?>
 
@@ -32,11 +33,20 @@ else {
 			</div>
 			<div class="litespeed-cdn-mapping-block">
 				<div class='litespeed-child-col-auto'>
+					<h4><?php echo __( 'Method', 'litespeed-cache' ) ; ?></h4>
+
+					<div class="litespeed-switch">
+						<?php echo $this->build_radio( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_OFF, 'Memcached', null, 'litespeed-oc-mem' ) ; ?>
+						<?php echo $this->build_radio( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_ON, 'Redis', null, 'litespeed-oc-redis' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto'>
 					<h4><?php echo __( 'Host', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ) ; ?>
 					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'Your Memcached/<a %s>LSMCD</a> Hostname or IP address.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/open-source/litespeed-memcached" target="_blank"' ) ; ?>
+						<?php echo sprintf( __( 'Your %s Hostname or IP address.', 'litespeed-cache' ), 'Memcached/<a href="https://www.litespeedtech.com/open-source/litespeed-memcached" target="_blank">LSMCD</a>/Redis' ) ; ?>
 					</div>
 				</div>
 
@@ -59,7 +69,28 @@ else {
 					<h4><?php echo __( 'Status', 'litespeed-cache' ) ; ?></h4>
 
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Memcached' ) ; ?>: <?php echo $mem_enabled ; ?><br />
+					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Redis' ) ; ?>: <?php echo $redis_enabled ; ?><br />
 					<?php echo __( 'Connection Test', 'litespeed-cache' ) ; ?>: <?php echo $mem_conn_desc ; ?><br />
+				</div>
+
+				<div class='litespeed-child-col-br <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs"></div>
+
+				<div class='litespeed-child-col-auto <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs">
+					<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Specify the password when connecting.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs">
+					<h4><?php echo __( 'Redis Database ID', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID, 'litespeed-input-short' ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Database to be used', 'litespeed-cache' ) ; ?>
+					</div>
 				</div>
 
 				<div class='litespeed-child-col-br'></div>

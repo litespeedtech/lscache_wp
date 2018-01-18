@@ -21,6 +21,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND,
 
 			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
 			LiteSpeed_Cache_Config::OPID_ESI_ENABLE,
@@ -130,6 +131,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_CACHE_FAVICON:
 			case LiteSpeed_Cache_Config::OPID_CACHE_RES:
 			case LiteSpeed_Cache_Config::OPID_CACHE_OBJECT:
+			case LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND:
 
 			case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
 			case LiteSpeed_Cache_Config::OPID_ESI_ENABLE:

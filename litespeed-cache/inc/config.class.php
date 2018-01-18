@@ -62,11 +62,14 @@ class LiteSpeed_Cache_Config
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
 	const OPID_CACHE_URI_PRIV = 'cache_uri_priv' ;
 	const OPID_CACHE_OBJECT = 'cache_object' ;
+	const OPID_CACHE_OBJECT_KIND = 'cache_object_kind' ;
 	const OPID_CACHE_OBJECT_HOST = 'cache_object_host' ;
 	const OPID_CACHE_OBJECT_PORT = 'cache_object_port' ;
 	const OPID_CACHE_OBJECT_LIFE = 'cache_object_life' ;
 	const OPID_CACHE_OBJECT_PERSISTENT = 'cache_object_persistent' ;
 	const OPID_CACHE_OBJECT_ADMIN = 'cache_object_admin' ;
+	const OPID_CACHE_OBJECT_DB_ID = 'cache_object_db_id' ;
+	const OPID_CACHE_OBJECT_PSWD = 'cache_object_pswd' ;
 	const OPID_CACHE_BROWSER = 'cache_browser' ;
 	const OPID_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
@@ -533,11 +536,14 @@ class LiteSpeed_Cache_Config
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_CACHE_URI_PRIV => '',
 			self::OPID_CACHE_OBJECT => false,
+			self::OPID_CACHE_OBJECT_KIND => false,
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
 			self::OPID_CACHE_OBJECT_PORT => '11211',
 			self::OPID_CACHE_OBJECT_LIFE => '360',
 			self::OPID_CACHE_OBJECT_PERSISTENT => true,
 			self::OPID_CACHE_OBJECT_ADMIN => false,
+			self::OPID_CACHE_OBJECT_DB_ID => 0,
+			self::OPID_CACHE_OBJECT_PSWD => '',
 			self::OPID_CACHE_BROWSER => false,
 			self::OPID_CACHE_BROWSER_TTL => 2592000,
 
@@ -666,6 +672,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_MOBILE => 0, // todo: why not false
 			self::ID_MOBILEVIEW_LIST => false,
 			self::OPID_CACHE_OBJECT => false,
+			self::OPID_CACHE_OBJECT_KIND => false,
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
 			self::OPID_CACHE_OBJECT_PORT => '11211',
 			self::OPID_CACHE_OBJECT_LIFE => '360',
