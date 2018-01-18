@@ -219,6 +219,10 @@ class LiteSpeed_Cache_Object
 	private function _server_enabled()
 	{
 		$mem_list = $this->_conn->getStats() ;
+		if ( empty( $mem_list ) ) {
+			return false ;
+		}
+
 		foreach ( $mem_list as $k => $v ) {
 			if ( substr( $k, 0, strlen( $this->_cfg_host ) ) != $this->_cfg_host ) {
 				continue ;

@@ -57,7 +57,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * Combine CSS and JavaScript
 * HTTP/2 Push for CSS and JS
 * Database Cleaner and Optimizer
-* Object Cache
+* Object Cache (Memcached/LSMCD)
 * Browser Cache
 * DNS Prefetch
 * Cloudflare API
