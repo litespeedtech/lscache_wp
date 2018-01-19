@@ -160,10 +160,6 @@ class LiteSpeed_Cache_Object
 	 */
 	public function test_connection()
 	{
-		if ( ! class_exists( $this->_oc_driver ) || ! $this->_cfg_host ) {
-			return null ;
-		}
-
 		return $this->_connect() ;
 	}
 
@@ -202,6 +198,10 @@ class LiteSpeed_Cache_Object
 		if ( isset( $this->_conn ) ) {
 			// error_log( 'Object: _connected' ) ;
 			return true ;
+		}
+
+		if ( ! class_exists( $this->_oc_driver ) || ! $this->_cfg_host ) {
+			return null ;
 		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
