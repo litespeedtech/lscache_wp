@@ -158,8 +158,14 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		// Security: Remove cf key in report
-		if ( ! empty( $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] ) ) {
-			$options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] = str_repeat( '*', strlen( $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] ) ) ;
+		$secure_fields = array(
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
+		) ;
+		foreach ( $secure_fields as $v ) {
+			if ( ! empty( $options[ $v ] ) ) {
+				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
+			}
 		}
 
 		$options[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ] = get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
