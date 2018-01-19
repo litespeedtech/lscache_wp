@@ -9,6 +9,17 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
+/**
+ * Handle exception
+ */
+if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	{
+		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+	}
+}
+
+
 class LiteSpeed_Cache_Object
 {
 	private static $_instance ;
@@ -22,6 +33,7 @@ class LiteSpeed_Cache_Object
 	private $_cfg_persistent ;
 	private $_cfg_admin ;
 	private $_cfg_db ;
+	private $_cfg_user ;
 	private $_cfg_pswd ;
 	private $_default_life = 360 ;
 
@@ -50,6 +62,7 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_persistent = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ;
 			$this->_cfg_admin = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ;
 			$this->_cfg_db = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ] ;
+			$this->_cfg_user = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ] ;
 			$this->_cfg_pswd = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] ;
 			$this->_global_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) ;
 			$this->_non_persistent_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
@@ -69,6 +82,7 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_persistent = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ;
 			$this->_cfg_admin = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ;
 			$this->_cfg_db = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ) ;
+			$this->_cfg_user = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ) ;
 			$this->_cfg_pswd = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ;
 			$this->_global_groups = explode( "\n", get_option( LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ) ) ;
 			$this->_non_persistent_groups = explode( "\n", get_option( LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ) ) ;
@@ -87,6 +101,7 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_persistent = ! empty( $cfg[ 'object_cache' ][ 'persistent' ] ) ? $cfg[ 'object_cache' ][ 'persistent' ] : false ;
 			$this->_cfg_admin = ! empty( $cfg[ 'object_cache' ][ 'cache_admin' ] ) ? $cfg[ 'object_cache' ][ 'cache_admin' ] : false ;
 			$this->_cfg_db = ! empty( $cfg[ 'object_cache' ][ 'db' ] ) ? $cfg[ 'object_cache' ][ 'db' ] : 0 ;
+			$this->_cfg_user = ! empty( $cfg[ 'object_cache' ][ 'user' ] ) ? $cfg[ 'object_cache' ][ 'user' ] : '' ;
 			$this->_cfg_pswd = ! empty( $cfg[ 'object_cache' ][ 'pswd' ] ) ? $cfg[ 'object_cache' ][ 'pswd' ] : '' ;
 			$this->_global_groups = ! empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : array() ;
 			$this->_non_persistent_groups = ! empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : array() ;
@@ -120,6 +135,7 @@ class LiteSpeed_Cache_Object
 				. "\nhost = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ]
 				. "\nport = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
 				. "\nlife = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ]
+				. "\nuser = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ] . "'"
 				. "\npswd = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] . "'"
 				. "\ndb = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ]
 				. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ? 1 : 0 )
@@ -216,6 +232,7 @@ class LiteSpeed_Cache_Object
 		if ( $this->_oc_driver == 'Redis' ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Init ' . $this->_oc_driver . ' connection' ) ;
 
+			set_error_handler( 'litespeed_exception_handler' ) ;
 			try {
 				$this->_conn = new Redis() ;
 				 // error_log( 'Object: _connect Redis' ) ;
@@ -251,9 +268,15 @@ class LiteSpeed_Cache_Object
 					$failed = true ;
 				}
 			}
-			catch ( Exception $exception ) {
+			catch ( \Exception $e ) {
+				error_log( $e->getMessage() ) ;
 				$failed = true ;
 			}
+			catch ( ErrorException $e ) {
+				error_log( $e->getMessage() ) ;
+				$failed = true ;
+			}
+			restore_error_handler() ;
 
 		}
 		/**
@@ -279,6 +302,14 @@ class LiteSpeed_Cache_Object
 			}
 
 			$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port ) ;
+
+			/**
+			 * Add SASL auth
+			 * @since  1.8.1
+			 */
+			if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $this->_conn, 'setSaslAuthData' ) && ini_get( 'memcached.use_sasl' ) ) {
+				$this->_conn->setSaslAuthData( $this->_cfg_user, $this->_cfg_pswd ) ;
+			}
 
 			// Check connection
 			if ( ! $this->_validate_mem_server() ) {

@@ -188,10 +188,12 @@ var _litespeed_dots ;
 		/** Object Cache switching */
 		$( '#litespeed-oc-mem' ).click( function( event ) {
 			$( '[name="litespeed-cache-conf[cache_object_port]"]' ).val( 11211 ) ;
+			$( '[data="litespeed-mem-divs"]' ).removeClass( 'litespeed-hide' ) ;
 			$( '[data="litespeed-redis-divs"]' ).addClass( 'litespeed-hide' ) ;
 		} ) ;
 		$( '#litespeed-oc-redis' ).click( function( event ) {
 			$( '[name="litespeed-cache-conf[cache_object_port]"]' ).val( 6379 ) ;
+			$( '[data="litespeed-mem-divs"]' ).addClass( 'litespeed-hide' ) ;
 			$( '[data="litespeed-redis-divs"]' ).removeClass( 'litespeed-hide' ) ;
 		} ) ;
 

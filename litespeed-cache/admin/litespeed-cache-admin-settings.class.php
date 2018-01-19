@@ -263,6 +263,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		);
 		foreach ( $ids as $id ) {

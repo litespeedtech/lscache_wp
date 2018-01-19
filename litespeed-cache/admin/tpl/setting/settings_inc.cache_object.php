@@ -18,6 +18,7 @@ else {
 	$mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
 }
 
+$hide_mem_options = ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
 $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ) ? '' : ' litespeed-hide' ;
 
 ?>
@@ -73,9 +74,18 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					<?php echo __( 'Connection Test', 'litespeed-cache' ) ; ?>: <?php echo $mem_conn_desc ; ?><br />
 				</div>
 
-				<div class='litespeed-child-col-br <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs"></div>
+				<div class='litespeed-child-col-br'></div>
 
-				<div class='litespeed-child-col-auto <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs">
+				<div class='litespeed-child-col-auto <?php echo $hide_mem_options ; ?>' data="litespeed-mem-divs">
+					<h4><?php echo __( 'Username', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo sprintf( __( 'Only available when %s is installed.', 'litespeed-cache' ), 'SASL' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto'>
 					<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ; ?>
@@ -118,7 +128,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ; ?>
 					</div>
 					<div class="litespeed-desc">
-						<?php echo __( 'Use keep-alive connections to speed up memcached.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Use keep-alive connections to speed up cache operations.', 'litespeed-cache' ) ; ?>
 					</div>
 					<div class="litespeed-row litespeed-top30">
 						<div class="litespeed-child-col-inc"><?php echo __( 'Cache Wp-admin', 'litespeed-cache' ) ; ?></div>
