@@ -23,6 +23,11 @@ class LiteSpeed_Cache_Admin
 	 */
 	private function __construct()
 	{
+		// Define LSCWP_MU_PLUGIN if is mu-plugins
+		if ( defined( 'WPMU_PLUGIN_DIR' ) && dirname( LSCWP_DIR ) == WPMU_PLUGIN_DIR ) {
+			define( 'LSCWP_MU_PLUGIN', true ) ;
+		}
+
 		// Additional litespeed assets on admin display
 		// Also register menu
 		$this->display = LiteSpeed_Cache_Admin_Display::get_instance() ;

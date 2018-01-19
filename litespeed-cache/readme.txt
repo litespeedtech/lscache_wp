@@ -11,13 +11,13 @@ Speed up your page-load times. Get a faster site with high-performance page cach
 
 == Description ==
 
-LiteSpeed Cache for WordPress (LSCWP) is a PHP-based plugin that communicates with your installation of LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
+LiteSpeed Cache for WordPress (LSCWP) communicates with your LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
 
-Because LSCache is built directly into the server, overhead is significantly reduced and caching can be done [more efficiently than with other PHP-based caches](https://www.litespeedtech.com/benchmarks/wordpress).
+LSCache is a server-level cache, so it's faster than PHP-level caches. [Benchmarks: Comparison with other PHP-based caches](https://www.litespeedtech.com/benchmarks/wordpress).
 
-LSCache is a server-side page cache. Page caches save time and resources, and they do so by storing the full content of dynamically-generated pages so that static copies may be served to the user. A page cache allows the server to bypass PHP and database queries altogether. LSCache, in particular, because of its close relationship with the server, can remember things about the cache entries that other plugins cannot, and it can analyze dependencies. It can utilize tags to manage the smart purging of the cache, and it can use vary cookies to serve multiple versions of cached content based on things like mobile vs. desktop, geographic location, and currencies.
+A page cache allows the server to bypass PHP and database queries altogether. LSCache, in particular, because of its close relationship with the server, can remember things about the cache entries that other plugins cannot, and it can analyze dependencies. It can utilize tags to manage the smart purging of the cache, and it can use vary cookies to serve multiple versions of cached content based on things like mobile vs. desktop, geographic location, and currencies.
 
-If all of that sounds complicated, no need to worry. LiteSpeed Cache for WordPress works right out of the box with default settings that are appropriate for most sites. And if you do need help, we're just [a forum post](https://wordpress.org/support/plugin/litespeed-cache/) away.
+If all of that sounds complicated, no need to worry. LSCWP works right out of the box with default settings that are appropriate for most sites. And if you do need help, we're just [a forum post](https://wordpress.org/support/plugin/litespeed-cache/) away.
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
@@ -57,7 +57,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * Combine CSS and JavaScript
 * HTTP/2 Push for CSS and JS
 * Database Cleaner and Optimizer
-* Object Cache (Memcached/LSMCD)
+* Object Cache (Memcached/LSMCD/Redis)
 * Browser Cache
 * DNS Prefetch
 * Cloudflare API

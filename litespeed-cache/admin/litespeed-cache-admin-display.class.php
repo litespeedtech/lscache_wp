@@ -71,8 +71,8 @@ class LiteSpeed_Cache_Admin_Display
 			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 		}
 
-		// add menus
-		if ( $is_network_admin && is_plugin_active_for_network(LSCWP_BASENAME) ) {
+		// add menus ( Also check for mu-plugins)
+		if ( $is_network_admin && ( is_plugin_active_for_network( LSCWP_BASENAME ) || defined( 'LSCWP_MU_PLUGIN' ) ) ) {
 			add_action('network_admin_menu', array($this, 'register_admin_menu')) ;
 		}
 		else {
