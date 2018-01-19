@@ -154,7 +154,8 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Validate Object Cache
 		 * @since 1.8
 		 */
-		$this->_validate_object_cache() ;
+		$new_options = $this->_validate_object_cache() ;
+		$this->_options = array_merge( $this->_options, $new_options ) ;
 
 	}
 
@@ -224,7 +225,8 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Validate Object Cache
 		 * @since 1.8
 		 */
-		$this->_validate_object_cache() ;
+		$new_options = $this->_validate_object_cache() ;
+		$options = array_merge( $options, $new_options ) ;
 
 		if ( ! empty( $this->_err ) ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $this->_err ) ;
@@ -244,6 +246,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_object_cache()
 	{
+		$new_options = array() ;
+
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND,
@@ -251,7 +255,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT,
 		) ;
 		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+			$new_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 
 		$ids = array(
@@ -262,7 +266,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		);
 		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
+			$new_options[ $id ] = $this->_input[ $id ] ;
 		}
 
 		$ids = array(
@@ -279,8 +283,8 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Check if object cache file existing or not
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ;
-		if ( $this->_options[ $id ] ) {
-			$all_options = array_merge( $this->_options, $item_options ) ;
+		if ( $new_options[ $id ] ) {
+			$all_options = array_merge( $new_options, $item_options ) ;
 			LiteSpeed_Cache_Log::debug( 'Settings: Update .object_cache.ini and flush object cache' ) ;
 			LiteSpeed_Cache_Object::get_instance()->update_file( true, $all_options ) ;
 			/**
@@ -294,6 +298,8 @@ class LiteSpeed_Cache_Admin_Settings
 				LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
 			}
 		}
+
+		return $new_options ;
 
 	}
 
