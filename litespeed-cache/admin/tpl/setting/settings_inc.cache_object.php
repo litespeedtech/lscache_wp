@@ -90,7 +90,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ; ?>
 					<div class="litespeed-desc">
-						<?php echo __( 'Specify the password when connecting.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Specify the password used when connecting.', 'litespeed-cache' ) ; ?>
 					</div>
 				</div>
 

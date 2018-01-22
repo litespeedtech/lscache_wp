@@ -42,6 +42,19 @@ class LiteSpeed_Cache_ESI
 		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
+
+		/**
+		 * Recover REQUEST_URI
+		 * @since  1.8.1
+		 */
+		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
+			define( 'LSCACHE_IS_ESI', true ) ;
+
+			if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) ) {
+				$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
+			}
+		}
+
 	}
 
 	/**
@@ -80,9 +93,7 @@ class LiteSpeed_Cache_ESI
 	public static function esi_template($template)
 	{
 		// Check if is an ESI request
-		if ( ! empty( $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] ) && $_GET[ LiteSpeed_Cache_ESI::QS_ACTION ] == LiteSpeed_Cache_ESI::POSTTYPE ) {
-			define('LSCACHE_IS_ESI', true) ;
-
+		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			self::get_instance()->register_esi_actions() ;
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
@@ -180,7 +191,7 @@ class LiteSpeed_Cache_ESI
 			$output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->" ;
 		}
 
-		LiteSpeed_Cache_Log::debug( "ESI block ID:$block_id; $wrapper; $control" ) ;
+		LiteSpeed_Cache_Log::debug( "ESI: \t\t[block ID] $block_id \t\t\t[wrapper] $wrapper \t\t\t[Control] $control" ) ;
 
 		self::set_has_esi() ;
 		return $output ;
@@ -237,17 +248,12 @@ class LiteSpeed_Cache_ESI
 			define( 'LSCACHE_ESI_SILENCE', true ) ;
 		}
 
-		$orig = $_SERVER[ 'REQUEST_URI' ] ;
-		$_SERVER[ 'REQUEST_URI' ] = !empty( $_SERVER[ 'ESI_REFERER' ] ) ? $_SERVER[ 'ESI_REFERER' ] : false ;
-
 		LiteSpeed_Cache_Tag::add( rtrim( LiteSpeed_Cache_Tag::TYPE_ESI, '.' ) ) ;
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . $esi_id ) ;
 
 		// LiteSpeed_Cache_Log::debug(var_export($params, true ));
 
 		do_action('litespeed_cache_load_esi_block-' . $esi_id, $params) ;
-
-		$_SERVER[ 'REQUEST_URI' ] = $orig ;
 	}
 
 // BEGIN helper functions
@@ -374,7 +380,12 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-		echo self::sub_esi_block('admin-bar', 'adminbar') ;
+		// To make each admin bar ESI request different for `Edit` button different link
+		$params = array(
+			'ref' => $_SERVER[ 'REQUEST_URI' ],
+		) ;
+
+		echo self::sub_esi_block( 'admin-bar', 'adminbar', $params ) ;
 	}
 
 	/**
@@ -424,6 +435,8 @@ class LiteSpeed_Cache_ESI
 			LiteSpeed_Cache_Control::set_private() ;
 			LiteSpeed_Cache_Control::set_no_vary() ;
 		}
+
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI: adminbar ref: ' . $_SERVER[ 'REQUEST_URI' ] ) ;
 	}
 
 
