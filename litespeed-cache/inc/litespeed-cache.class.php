@@ -117,6 +117,14 @@ class LiteSpeed_Cache
 		 * @since  1.6.6
 		 */
 		do_action( 'litespeed_before_init' ) ;
+
+		/**
+		 * Preload ESI functionality for ESI request uri recovery
+		 * @since 1.8.1
+		 */
+		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
+			LiteSpeed_Cache_ESI::get_instance() ;
+		}
 	}
 
 	/**
@@ -378,12 +386,6 @@ class LiteSpeed_Cache
 		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags
 			add_action( $event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2 ) ;
-		}
-
-		// The ESI functionality is an enterprise feature.
-		// Removing the openlitespeed check will simply break the page.
-		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
-			LiteSpeed_Cache_ESI::get_instance() ;
 		}
 
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
