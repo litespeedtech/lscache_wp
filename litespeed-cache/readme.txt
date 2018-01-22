@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.8
+Stable tag: 1.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -241,6 +241,15 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.8.1 - January 22 2018 =
+* [NEW FEATURE] Object Cache now supports Redis.
+* [IMPROVEMENT] Memcached Object Cache now supports authorization.
+* [IMPROVEMENT] A 500 error will no longer be encountered when turning on Object Cache without the proper PHP extension installed.
+* [BUGFIX] Object Cache settings can now be saved at the Network level.
+* [BUGFIX] Mu-plugin now supports Network setting.
+* [BUGFIX] Fixed admin bar showing inaccurate Edit Page link.
+* [UPDATE] Removed warning information when no Memcached server is available.
 
 = 1.8 - January 17 2018 =
 * [NEW FEATURE] Object Cache.
