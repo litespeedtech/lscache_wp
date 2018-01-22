@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 1.8\n"
+"Project-Id-Version: LiteSpeed Cache 1.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-01-17 21:18:44+00:00\n"
+"POT-Creation-Date: 2018-01-22 19:06:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -365,86 +365,86 @@ msgstr ""
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:234
+#: admin/litespeed-cache-admin-settings.class.php:236
 msgid "Site options saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:331
-#: admin/litespeed-cache-admin-settings.class.php:953
+#: admin/litespeed-cache-admin-settings.class.php:341
+#: admin/litespeed-cache-admin-settings.class.php:963
 msgid "Default Public Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:332
+#: admin/litespeed-cache-admin-settings.class.php:342
 msgid "Default Private Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:333
+#: admin/litespeed-cache-admin-settings.class.php:343
 msgid "Default Front Page"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:334
+#: admin/litespeed-cache-admin-settings.class.php:344
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:335
+#: admin/litespeed-cache-admin-settings.class.php:345
 msgid "404"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:336
+#: admin/litespeed-cache-admin-settings.class.php:346
 msgid "403"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:337
+#: admin/litespeed-cache-admin-settings.class.php:347
 msgid "500"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:814
+#: admin/litespeed-cache-admin-settings.class.php:824
 #: admin/tpl/setting/settings_debug.php:75
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:880
+#: admin/litespeed-cache-admin-settings.class.php:890
 #: admin/tpl/setting/settings_crawler.php:10
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:881
+#: admin/litespeed-cache-admin-settings.class.php:891
 #: admin/tpl/setting/settings_crawler.php:22
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:882
+#: admin/litespeed-cache-admin-settings.class.php:892
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:883
+#: admin/litespeed-cache-admin-settings.class.php:893
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:884
+#: admin/litespeed-cache-admin-settings.class.php:894
 #: admin/tpl/setting/settings_crawler.php:58
 msgid "Threads"
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:205
+#: admin/litespeed-cache-admin.class.php:210
 msgid ""
 "For this scenario only, the network admin may uncheck \"Check Advanced Cache"
 "\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:207
+#: admin/litespeed-cache-admin.class.php:212
 msgid ""
 "For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:209
+#: admin/litespeed-cache-admin.class.php:214
 msgid ""
 "Please disable/deactivate any other Full Page Cache solutions that are "
 "currently being used."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:210
+#: admin/litespeed-cache-admin.class.php:215
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
@@ -691,7 +691,7 @@ msgstr ""
 #: admin/tpl/setting/settings_general.php:121
 #: admin/tpl/setting/settings_general.php:134
 #: admin/tpl/setting/settings_inc.cache_browser.php:24
-#: admin/tpl/setting/settings_inc.cache_object.php:52
+#: admin/tpl/setting/settings_inc.cache_object.php:63
 #: admin/tpl/setting/settings_optimize.php:86
 msgid "seconds"
 msgstr ""
@@ -786,7 +786,7 @@ msgstr ""
 #: admin/tpl/manage/manage_cdn.php:60
 #: admin/tpl/setting/settings_advanced.php:96
 #: admin/tpl/setting/settings_cache.php:87
-#: admin/tpl/setting/settings_inc.cache_object.php:31
+#: admin/tpl/setting/settings_inc.cache_object.php:33
 #: admin/tpl/setting/settings_optimize.php:151
 msgid "Learn More"
 msgstr ""
@@ -1364,8 +1364,8 @@ msgstr ""
 #: admin/tpl/setting/settings_excludes.php:33
 #: admin/tpl/setting/settings_excludes.php:56
 #: admin/tpl/setting/settings_excludes.php:94
-#: admin/tpl/setting/settings_inc.cache_object.php:72
-#: admin/tpl/setting/settings_inc.cache_object.php:80
+#: admin/tpl/setting/settings_inc.cache_object.php:113
+#: admin/tpl/setting/settings_inc.cache_object.php:121
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:31
 #: admin/tpl/setting/settings_optimize.php:152
@@ -2576,91 +2576,120 @@ msgstr ""
 msgid "The default list WordPress uses is %s"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:5
+#: admin/tpl/setting/settings_inc.cache_object.php:4
 msgid "Enabled"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:8
+#: admin/tpl/setting/settings_inc.cache_object.php:5
 msgid "Disabled"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:13
+#: admin/tpl/setting/settings_inc.cache_object.php:12
 msgid "Not Available"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:16
+#: admin/tpl/setting/settings_inc.cache_object.php:15
 msgid "Passed"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:19
+#: admin/tpl/setting/settings_inc.cache_object.php:18
 msgid "Failed"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:26
+#: admin/tpl/setting/settings_inc.cache_object.php:28
 msgid "Object Cache"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:30
+#: admin/tpl/setting/settings_inc.cache_object.php:32
 msgid "Use object cache functionality."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:35
+#: admin/tpl/setting/settings_inc.cache_object.php:37
+msgid "Method"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:46
 msgid "Host"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:39
-msgid "Your Memcached/<a %s>LSMCD</a> Hostname or IP address."
+#: admin/tpl/setting/settings_inc.cache_object.php:50
+msgid "Your %s Hostname or IP address."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:44
+#: admin/tpl/setting/settings_inc.cache_object.php:55
 msgid "Port"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:50
+#: admin/tpl/setting/settings_inc.cache_object.php:61
 msgid "Default Object Lifetime"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:54
+#: admin/tpl/setting/settings_inc.cache_object.php:65
 msgid "Default TTL for cached objects."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:59
+#: admin/tpl/setting/settings_inc.cache_object.php:70
 msgid "Status"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:61
+#: admin/tpl/setting/settings_inc.cache_object.php:72
+#: admin/tpl/setting/settings_inc.cache_object.php:73
 msgid "%s Extension"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:62
+#: admin/tpl/setting/settings_inc.cache_object.php:74
 msgid "Connection Test"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:68
-msgid "Global Groups"
+#: admin/tpl/setting/settings_inc.cache_object.php:80
+msgid "Username"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:71
-msgid "Groups cached at the network level."
+#: admin/tpl/setting/settings_inc.cache_object.php:84
+msgid "Only available when %s is installed."
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:77
-msgid "Do Not Cache Groups"
-msgstr ""
-
-#: admin/tpl/setting/settings_inc.cache_object.php:86
-msgid "Persistent Connection"
-msgstr ""
-
-#: admin/tpl/setting/settings_inc.cache_object.php:90
-msgid "Use keep-alive connections to speed up memcached."
+#: admin/tpl/setting/settings_inc.cache_object.php:89
+msgid "Password"
 msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_object.php:93
+msgid "Specify the password used when connecting."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:98
+msgid "Redis Database ID"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:102
+msgid "Database to be used"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:109
+msgid "Global Groups"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:112
+msgid "Groups cached at the network level."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:118
+msgid "Do Not Cache Groups"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:127
+msgid "Persistent Connection"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:131
+msgid "Use keep-alive connections to speed up cache operations."
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:134
 msgid "Cache Wp-admin"
 msgstr ""
 
-#: admin/tpl/setting/settings_inc.cache_object.php:97
+#: admin/tpl/setting/settings_inc.cache_object.php:138
 msgid "Improve wp-admin speed through caching. (May encounter expired data)"
 msgstr ""
 
@@ -3405,35 +3434,35 @@ msgstr ""
 msgid "Cloudflare Purge All"
 msgstr ""
 
-#: inc/litespeed-cache.class.php:246 includes/litespeed-cache.class.php:246
+#: inc/litespeed-cache.class.php:254 includes/litespeed-cache.class.php:254
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:251 includes/litespeed-cache.class.php:251
+#: inc/litespeed-cache.class.php:259 includes/litespeed-cache.class.php:259
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:256 includes/litespeed-cache.class.php:256
+#: inc/litespeed-cache.class.php:264 includes/litespeed-cache.class.php:264
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:261 includes/litespeed-cache.class.php:261
+#: inc/litespeed-cache.class.php:269 includes/litespeed-cache.class.php:269
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:266 includes/litespeed-cache.class.php:266
+#: inc/litespeed-cache.class.php:274 includes/litespeed-cache.class.php:274
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:272 includes/litespeed-cache.class.php:272
+#: inc/litespeed-cache.class.php:280 includes/litespeed-cache.class.php:280
 msgid "Notified LiteSpeed Web Server to purge all caches."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:279 includes/litespeed-cache.class.php:279
+#: inc/litespeed-cache.class.php:287 includes/litespeed-cache.class.php:287
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:294 includes/litespeed-cache.class.php:294
+#: inc/litespeed-cache.class.php:302 includes/litespeed-cache.class.php:302
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
