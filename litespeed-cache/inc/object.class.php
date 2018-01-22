@@ -161,11 +161,22 @@ class LiteSpeed_Cache_Object
 		}
 	}
 
-	private function _ext_enabled( $is_redis = false )
+	/**
+	 * Remove object cache file
+	 *
+	 * @since  1.8.2
+	 * @access public
+	 */
+	public function del_file()
 	{
-		if ( $is_redis ) {
-			return  ;
+		$wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
+		$ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
+
+		if ( file_exists( $wp_file ) && md5_file( $wp_file ) === md5_file( $ori_file ) ) {
+			unlink( $wp_file ) ;
 		}
+
+		file_exists( $this->_oc_data_file ) && unlink( $this->_oc_data_file ) ;
 	}
 
 	/**

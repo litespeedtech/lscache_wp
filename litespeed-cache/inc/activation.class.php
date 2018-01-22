@@ -191,6 +191,12 @@ class LiteSpeed_Cache_Activation
 			error_log( 'Failed to remove advanced-cache.php, file does not exist or is not writable!' ) ;
 		}
 
+		/**
+		 * Remove object cache file if is us
+		 * @since  1.8.2
+		 */
+		LiteSpeed_Cache_Object::get_instance()->del_file() ;
+
 		if ( ! LiteSpeed_Cache_Config::wp_cache_var_setter( false ) ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 		}
