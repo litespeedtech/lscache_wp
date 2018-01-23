@@ -58,6 +58,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * HTTP/2 Push for CSS and JS
 * Database Cleaner and Optimizer
 * Object Cache (Memcached/LSMCD/Redis)
+* OPcode Cache
 * Browser Cache
 * DNS Prefetch
 * Cloudflare API
@@ -74,6 +75,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli)
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
 * No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
+* Import / Export settings
 * Attractive, easy-to-understand interface
 
 LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:

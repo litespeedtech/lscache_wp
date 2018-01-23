@@ -33,6 +33,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Data'				=> 'inc/data.class.php',
 			'LiteSpeed_Cache_ESI'				=> 'inc/esi.class.php',
 			'LiteSpeed_Cache_GUI'				=> 'inc/gui.class.php',
+			'LiteSpeed_Cache_Import'			=> 'inc/import.class.php',
 			'LiteSpeed_Cache_Log'				=> 'inc/log.class.php',
 			'LiteSpeed_Cache_Media'				=> 'inc/media.class.php',
 			'LiteSpeed_Cache_Object'			=> 'inc/object.class.php',

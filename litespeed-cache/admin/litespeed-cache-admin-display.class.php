@@ -116,9 +116,12 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $action
 	 */
-	public function form_action($action)
+	public function form_action( $action, $type = false )
 	{
 		echo '<input type="hidden" name="' . LiteSpeed_Cache::ACTION_KEY . '" value="' . $action . '" />' ;
+		if ( $type ) {
+			echo '<input type="hidden" name="type" value="' . $type . '" />' ;
+		}
 		wp_nonce_field($action, LiteSpeed_Cache::NONCE_NAME) ;
 	}
 
@@ -149,6 +152,7 @@ class LiteSpeed_Cache_Admin_Display
 				$this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
 				$this->add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
+				$this->add_submenu(__('Import / Export', 'litespeed-cache'), 'lscache-import', 'show_import_export') ;
 			}
 
 			defined( 'LSCWP_LOG' ) && $this->add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
@@ -583,6 +587,17 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_report()
 	{
 		require_once LSCWP_DIR . 'admin/tpl/report.php' ;
+	}
+
+	/**
+	 * Outputs the html for the Import/Export page.
+	 *
+	 * @since 1.8.2
+	 * @access public
+	 */
+	public function show_import_export()
+	{
+		require_once LSCWP_DIR . 'admin/tpl/import_export.php' ;
 	}
 
 	/**

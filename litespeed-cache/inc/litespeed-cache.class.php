@@ -54,6 +54,7 @@ class LiteSpeed_Cache
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 	const ACTION_LOG = 'log' ;
 
+	const ACTION_IMPORT = 'import' ;
 	const ACTION_PURGE = 'purge' ;
 	const ACTION_MEDIA = 'media' ;
 	const ACTION_IAPI = 'iapi' ;
@@ -340,6 +341,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_REPORT:
 				$msg = LiteSpeed_Cache_Admin_Report::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_IMPORT:
+				$msg = LiteSpeed_Cache_Import::handler() ;
 				break ;
 
 			default:

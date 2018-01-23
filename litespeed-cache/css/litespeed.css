@@ -45,6 +45,10 @@
 	margin-top: 30px;
 }
 
+.litespeed-left20 {
+	margin-left: 20px;
+}
+
 .litespeed-desc {
 	font-size: 12px;
 	font-weight: normal;
@@ -76,6 +80,16 @@
 	align-items: center ;
 	display: flex ;
 	flex-grow: 1 ;
+}
+
+.litespeed-div {
+	display: inline-block;
+	min-width: 100px ;
+}
+
+.litespeed-div .submit {
+	margin: 5px;
+	padding: 5px;
 }
 
 /********************************* logo *******************************/
