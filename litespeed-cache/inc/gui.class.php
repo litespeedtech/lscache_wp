@@ -311,6 +311,16 @@ class LiteSpeed_Cache_GUI
 			) );
 		}
 
+		if ( LiteSpeed_Cache_Router::opcache_enabled() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-opcache',
+				'title'		=> __( 'Opcode Cache Purge All', 'litespeed-cache' ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_OPCACHE_PURGE_ALL ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
+
 	}
 
 	/**

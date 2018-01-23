@@ -20,6 +20,7 @@ class LiteSpeed_Cache_Purge
 	const PURGE_QUEUE = 'litespeed-cache-purge-queue' ;
 
 	const TYPE_OBJECT_PURGE_ALL = 'object_purge_all' ;
+	const TYPE_OPCACHE_PURGE_ALL = 'opcache_purge_all' ;
 
 	/**
 	 * Handle all request actions from main cls
@@ -38,11 +39,42 @@ class LiteSpeed_Cache_Purge
 				$instance->_object_purge_all() ;
 				break ;
 
+			case self::TYPE_OPCACHE_PURGE_ALL :
+				$instance->_opcache_purge_all() ;
+				break ;
+
 			default:
 				break ;
 		}
 
 		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Purge opcode cache
+	 *
+	 * @since  1.8.2
+	 * @access private
+	 */
+	private function _opcache_purge_all()
+	{
+		if ( ! LiteSpeed_Cache_Router::opcache_enabled() ) {
+			LiteSpeed_Cache_Log::debug( 'Purge: Failed to reset opcode cache due to opcache not enabled' ) ;
+
+			$msg = __( 'Opcode cache is not enabled.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
+			return false ;
+		}
+
+		// Purge opcode cache
+		opcache_reset() ;
+		LiteSpeed_Cache_Log::debug( 'Purge: Reset opcode cache' ) ;
+
+		$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+		return true ;
 	}
 
 	/**

@@ -496,6 +496,17 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
+	 * Check if opcode cache is enabled
+	 *
+	 * @since  1.8.2
+	 * @access public
+	 */
+	public static function opcache_enabled()
+	{
+		return function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ;
+	}
+
+	/**
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0

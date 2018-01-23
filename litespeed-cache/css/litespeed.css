@@ -303,6 +303,7 @@
 .litespeed-panel-icon-purge-pages 		{ background-image: url("../img/icons/purge-pages.svg") ; }
 .litespeed-panel-icon-purge-cssjs 		{ background-image: url("../img/icons/purge-cssjs.svg") ; }
 .litespeed-panel-icon-purge-object 		{ background-image: url("../img/icons/purge-object.svg") ; }
+.litespeed-panel-icon-purge-opcache 	{ background-image: url("../img/icons/purge-opcache.svg") ; }
 .litespeed-panel-icon-purge-all 		{ background-image: url("../img/icons/purge-all.svg") ; }
 .litespeed-panel-icon-empty-cache 		{ background-image: url("../img/icons/empty-cache.svg") ; }
 .litespeed-panel-icon-purge-403 		{ background-image: url("../img/icons/purge-403.svg") ; }

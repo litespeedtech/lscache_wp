@@ -66,6 +66,16 @@ if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 	) ;
 }
 
+if ( LiteSpeed_Cache_Router::opcache_enabled() ) {
+	$_panels[] = array(
+		'title'	=> __( 'Opcode Cache Purge All', 'litespeed-cache' ),
+		'desc'	=> __( 'Reset the entire opcode cache', 'litespeed-cache' ),
+		'tag'	=> LiteSpeed_Cache::ACTION_PURGE,
+		'icon'	=> 'purge-opcache',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_OPCACHE_PURGE_ALL,
+	) ;
+}
+
 if ( ! is_multisite() || is_network_admin() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Empty Entire Cache', 'litespeed-cache' ),
@@ -74,6 +84,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE,
 		'icon'	=> 'empty-cache',
 		'title_cls'	=> 'litespeed-danger',
+		'newline'	=> true,
 		'cfm'	=>  esc_html( __( 'This will clear EVERYTHING inside the cache.', 'litespeed-cache' ) ) . ' ' .
 					esc_html( __( 'This may cause heavy load on the server.', 'litespeed-cache' ) ) . ' ' .
 					esc_html( __( 'If only the WordPress site should be purged, use purge all.', 'litespeed-cache' ) )
@@ -87,6 +98,10 @@ if ( ! is_multisite() || is_network_admin() ) {
 <div class="litespeed-panel-wrapper">
 
 <?php foreach ( $_panels as $v ): ?>
+
+	<?php if ( ! empty( $v[ 'newline' ] ) ) : ?>
+		<div class='litespeed-child-col-br'></div>
+	<?php endif; ?>
 
 	<a 	class="litespeed-panel"
 		href="<?php echo LiteSpeed_Cache_Utility::build_url( $v[ 'tag' ], ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ) ; ?>"
