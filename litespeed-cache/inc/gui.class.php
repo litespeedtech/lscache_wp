@@ -28,10 +28,20 @@ class LiteSpeed_Cache_GUI
 	 */
 	private function __construct()
 	{
-		if ( ! is_admin() && is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
+		if ( ! is_admin() ) {
 			LiteSpeed_Cache_Log::debug( 'GUI init' ) ;
-			add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
-			add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
+			if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
+				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
+				add_action( 'admin_bar_menu', array( $this, 'frontend_shortcut' ), 95 ) ;
+			}
+
+			/**
+			 * Turn on instant click
+			 * @since  1.8.2
+			 */
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK ) ) {
+				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
+			}
 		}
 
 		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_FAVICON ) ) {
@@ -154,10 +164,21 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Load frontend public script
+	 *
+	 * @since  1.8.2
+	 * @access public
+	 */
+	public function frontend_enqueue_style_public()
+	{
+		wp_enqueue_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/instant_click.min.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, true ) ;
+	}
+
+	/**
 	 * Load frontend menu shortcut
 	 *
 	 * @since  1.3
-	 * @access private
+	 * @access public
 	 */
 	public function frontend_enqueue_style()
 	{
@@ -168,7 +189,7 @@ class LiteSpeed_Cache_GUI
 	 * Load frontend menu shortcut
 	 *
 	 * @since  1.3
-	 * @access private
+	 * @access public
 	 */
 	public function frontend_shortcut()
 	{

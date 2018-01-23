@@ -99,6 +99,22 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
+	<tr>
+		<th><?php echo __( 'Instant Click', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Preload the next page when visitor hovers the link to fast the loading speed.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<br /><font class="litespeed-danger">
+					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __('This will increase extra requests to server which will increase server load.', 'litespeed-cache'); ?>
+				</font>
+
+			</div>
+		</td>
+	</tr>
+
 	<?php /*
 	<tr>
 		<th><?php echo __( 'Favicon', 'litespeed-cache' ) ; ?></th>

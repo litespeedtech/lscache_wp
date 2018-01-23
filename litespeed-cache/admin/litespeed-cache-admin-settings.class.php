@@ -750,6 +750,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY,
 			// LiteSpeed_Cache_Config::OPID_ADV_FAVICON,
+			LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;

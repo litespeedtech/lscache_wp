@@ -121,6 +121,7 @@ class LiteSpeed_Cache_Config
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
 
 	// const OPID_ADV_FAVICON = 'adv_favicon' ;
+	const OPID_ADV_INSTANT_CLICK = 'instant_click' ;
 
 	const OPID_CSS_MINIFY = 'css_minify' ;
 	const OPID_CSS_COMBINE = 'css_combine' ;
@@ -574,6 +575,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_EXCLUDES_TAG => '',
 
 			// self::OPID_ADV_FAVICON 	=> false,
+			self::OPID_ADV_INSTANT_CLICK 	=> false,
 
 			self::OPID_CSS_MINIFY 	=> false,
 			self::OPID_CSS_COMBINE 	=> false,

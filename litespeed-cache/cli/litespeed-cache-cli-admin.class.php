@@ -165,6 +165,8 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_CDN:
 			case LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE:
 
+			case LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK:
+
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF:
