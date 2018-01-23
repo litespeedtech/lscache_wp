@@ -1414,6 +1414,25 @@ g.litespeed-pie_info text{
 }
 
 
+/********************************* setting panel *******************************/
+.litespeed-setting-basic{
+	margin-left: 50px;
+}
+
+.litespeed-setting-advanced{
+	margin-left: 10px;
+}
+
+.litespeed-setting-basic,
+.litespeed-setting-advanced {
+	color: #264d73;
+	text-decoration: none;
+}
+
+.litespeed-setting-curr{
+	border-bottom:1px solid #6699cc;
+}
+
 /********************************* todo *******************************/
 /* input field */
 .litespeed-textarea {

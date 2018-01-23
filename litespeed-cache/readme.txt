@@ -76,6 +76,7 @@ LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
 * No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
 * Import / Export settings
+* Basic / Advanced setting view
 * Attractive, easy-to-understand interface
 
 LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:

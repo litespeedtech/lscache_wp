@@ -89,8 +89,41 @@ $roles = array_keys( $wp_roles->roles ) ;
 
 sort( $roles ) ;
 
-
 include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
+
+/**
+ * Switch basic/advanced mode
+ * @since  1.8.2
+ */
+if ( ! empty( $_GET[ 'mode' ] ) ) {
+	$adv_mode = $_GET[ 'mode' ] == 'advanced' ? true : false ;
+	update_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE, $adv_mode ) ;
+}
+else {
+	$adv_mode = get_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE ) ;
+}
+
+$class_basic = $adv_mode ? '' : ' litespeed-setting-curr' ;
+$class_advanced = ! $adv_mode ? '' : ' litespeed-setting-curr' ;
+
+$hide_tabs = array() ;
+$_hide_in_basic_mode = '' ;
+
+if ( ! $adv_mode ) {
+	$hide_tabs = array(
+		'optimize',
+		'tuning',
+		'media',
+		'cdn',
+		'esi',
+		'advanced',
+		'debug',
+		'crawler',
+	) ;
+
+	$_hide_in_basic_mode = 'class="litespeed-hide"' ;
+}
+
 ?>
 
 <div class="wrap">
@@ -99,6 +132,10 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<span class="litespeed-desc">
 			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 		</span>
+		<span class="litespeed-desc">
+			<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-setting-basic <?php echo $class_basic ; ?>"><?php echo __( 'Basic View', 'litespeed-cache' ) ; ?></a>
+			<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-setting-advanced <?php echo $class_advanced ; ?>"><?php echo __( 'Advanced View', 'litespeed-cache' ) ; ?></a>
+		</span>
 	</h2>
 </div>
 <div class="litespeed-wrap">
@@ -106,6 +143,9 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	<?php
 		$i = 1 ;
 		foreach ($menu_list as $tab => $val){
+			if ( in_array( $tab, $hide_tabs ) ) {
+				continue ;
+			}
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;

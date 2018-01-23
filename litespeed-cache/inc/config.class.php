@@ -32,6 +32,8 @@ class LiteSpeed_Cache_Config
 	const ITEM_OBJECT_GLOBAL_GROUPS = 'litespeed-object_global_groups' ;
 	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'litespeed-object_non_persistent_groups' ;
 
+	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
+
 	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
 
 	const ITEM_CDN_MAPPING_URL = 'url' ;
