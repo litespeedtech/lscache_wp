@@ -202,6 +202,11 @@ class WP_Object_Cache
 		$this->multisite = is_multisite() ;
 		$this->blog_prefix = $this->multisite ? get_current_blog_id() . ':' : '' ;
 
+		/**
+		 * Fix multiple instance using same oc issue
+		 * @since  1.8.2
+		 */
+		! defined( 'LSOC_PREFIX' ) && define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) ) ;
 	}
 
 	/**
@@ -452,7 +457,7 @@ class WP_Object_Cache
 	{
 		$prefix = $this->_object_cache->is_global( $group ) ? '' : $this->blog_prefix ;
 
-		return $prefix . $group . '.' . $key ;
+		return LSOC_PREFIX . $prefix . $group . '.' . $key ;
 	}
 
 	/**
