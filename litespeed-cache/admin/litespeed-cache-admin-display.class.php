@@ -758,6 +758,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_checkbox($id, $title, $checked, $value = 1 )
 	{
+		$aria_checked = $checked ? ' aria-checked="true" ' : ' aria-checked="false" ' ;
 		$checked = $checked ? ' checked ' : '' ;
 
 		$label_id = str_replace( array( '[', ']' ), '_', $id ) ;
@@ -768,7 +769,8 @@ class LiteSpeed_Cache_Admin_Display
 
 		echo "<div class='litespeed-tick'>
 				<label for='conf_$label_id'>$title</label>
-				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$label_id' value='$value' $checked />
+				<input type='checkbox' role='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$label_id' value='$value'
+					$checked $aria_checked />
 			</div>" ;
 	}
 
@@ -886,9 +888,10 @@ class LiteSpeed_Cache_Admin_Display
 			}
 		}
 
+		$aria_checked = $checked ? ' aria-checked="true" ' : ' aria-checked="false" ' ;
 		$checked = $checked ? ' checked ' : '' ;
 
-		return "<input type='radio' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+		return "<input type='radio' role='switch' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked $aria_checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**
