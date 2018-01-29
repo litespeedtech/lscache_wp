@@ -12,15 +12,9 @@ $menu_list = array(
 	'tuning' => __('Tuning', 'litespeed-cache'),
 	'media' => __('Media', 'litespeed-cache'),
 	'cdn' => __('CDN', 'litespeed-cache'),
+	'advanced' => __('Advanced', 'litespeed-cache'),
+	'debug' => __('Debug', 'litespeed-cache'),
 ) ;
-
-$menu_list['esi'] = __('ESI', 'litespeed-cache') ;
-
-if (!is_multisite()) {
-	$menu_list['advanced'] = __('Advanced', 'litespeed-cache') ;
-}
-
-$menu_list['debug'] = __('Debug', 'litespeed-cache') ;
 
 if ($this->show_compatibility_tab()){
 	$menu_list['compatibilities'] = __('Compatibilities', 'litespeed-cache') ;

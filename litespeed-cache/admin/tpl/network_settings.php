@@ -6,8 +6,8 @@ $menuArr = array(
 	'cache' => __('Cache', 'litespeed-cache'),
 	'purge' => __('Purge', 'litespeed-cache'),
 	'excludes' => __('Excludes', 'litespeed-cache'),
-	'advanced' => __('Advanced', 'litespeed-cache'),
 	'media' => __('Media', 'litespeed-cache'),
+	'advanced' => __('Advanced', 'litespeed-cache'),
 );
 
 global $_options;
@@ -42,11 +42,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 	// include all tpl for faster UE
 	foreach ($menuArr as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>";
-		if($tab == 'advanced') {
-			require LSCWP_DIR . 'admin/tpl/setting/settings_advanced.php';
-		}else{
-			require LSCWP_DIR . "admin/tpl/setting/network_settings_$tab.php";
-		}
+		require LSCWP_DIR . "admin/tpl/setting/network_settings_$tab.php" ;
 		echo "</div>";
 	}
 
