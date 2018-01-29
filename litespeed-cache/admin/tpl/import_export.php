@@ -53,7 +53,7 @@ $log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
 		<?php endif ; ?>
 
 		<div class="litespeed-desc">
-			<?php echo __( 'This will import a setting file and override all current LiteSpeed Cache settings.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'This will import settings from a file and override all current LiteSpeed Cache settings.', 'litespeed-cache' ) ; ?>
 		</div>
 
 	</div>

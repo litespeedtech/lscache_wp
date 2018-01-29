@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,6 +244,16 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.8.2 - January 29 2018 =
+* [NEW FEATURE] Instant Click in the Advanced tab.
+* [NEW FEATURE] Import/Export settings.
+* [NEW FEATURE] Opcode Cache support.
+* [NEW FEATURE] Basic/Advanced setting view.
+* [IMPROVEMENT] Added ARIA support in widget settings.
+* [BUGFIX] Multiple WordPress instances with same Object Cache address will no longer see shared data.
+* [BUGFIX] WebP Replacement may now be set at the Network level.
+* [BUGFIX] Object Cache file can now be removed at the Network level uninstall.
 
 = 1.8.1 - January 22 2018 =
 * [NEW FEATURE] Object Cache now supports Redis.
