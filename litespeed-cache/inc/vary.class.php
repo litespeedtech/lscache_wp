@@ -152,7 +152,7 @@ class LiteSpeed_Cache_Vary
 
 			// Remove commenter prefilled info if exists, for public cache
 			foreach( $_COOKIE as $cookie_name => $cookie_value ) {
-				if ( strlen( $cookie_name ) >= 15 && strncmp( $cookie_name, 'comment_author_', 15 ) == 0 ) {
+				if ( strlen( $cookie_name ) >= 15 && strpos( $cookie_name, 'comment_author_' ) === 0 ) {
 					unset( $_COOKIE[ $cookie_name ] ) ;
 				}
 			}

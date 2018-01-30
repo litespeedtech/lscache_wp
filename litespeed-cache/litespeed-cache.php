@@ -76,7 +76,7 @@ if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 	if ( isset( $_SERVER['HTTP_X_LSCACHE'] ) && $_SERVER['HTTP_X_LSCACHE'] ) {
 		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC' ) ;
 	}
-	elseif ( isset( $_SERVER['LSWS_EDITION'] ) && strncmp( $_SERVER['LSWS_EDITION'], 'Openlitespeed', 13 ) == 0 ) {
+	elseif ( isset( $_SERVER['LSWS_EDITION'] ) && strpos( $_SERVER['LSWS_EDITION'], 'Openlitespeed' ) === 0 ) {
 		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS' ) ;
 	}
 	elseif ( isset( $_SERVER['SERVER_SOFTWARE'] ) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed' ) {

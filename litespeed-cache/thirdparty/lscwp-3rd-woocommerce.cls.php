@@ -634,7 +634,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]) ;
 		$qs_len = strlen($qs) ;
-		if ( ! empty($qs) && $qs_len >= 12 && strncmp($qs, 'add-to-cart=', 12) == 0 ) {
+		if ( ! empty($qs) && $qs_len >= 12 && strpos( $qs, 'add-to-cart=' ) === 0 ) {
 			LiteSpeed_Cache_API::set_nocache() ;
 			return ;
 		}
