@@ -510,6 +510,7 @@
 	background-color: #fff;
 	padding: -1px;
 	display: inline-block;
+	position: relative;
 }
 
 .litespeed-switch input:checked + label {
@@ -528,19 +529,23 @@
 	font-weight: 400;
 	text-align: center;
 	padding: 5px 9px;
-	float: left;
 	cursor: pointer;
 	border: 1px solid #f9fafc;
+	position: relative;
 }
 
-.litespeed-switch label:hover {
+.litespeed-switch input:hover + label,
+.litespeed-switch input:focus + label {
 	background-color: #f9fafc;
 	font-weight: 400;
 	color: #538ac6;
+	outline: 2px solid #538ac6;
 }
 
 .litespeed-switch input {
-	display: none;
+	display: inline-block;
+	position: absolute;
+	z-index: -1;
 }
 
 .litespeed-cache-purgeby-text {
