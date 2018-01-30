@@ -96,7 +96,7 @@ var _litespeed_dots ;
 			if( ! $(this).data('url') ){
 				return false ;
 			}
-			$('.litespeed-shell').css('display','block') ;
+			$('.litespeed-shell').removeClass( 'litespeed-hide' ) ;
 			_litespeed_dots = window.setInterval(_litespeed_loading_dots, 300) ;
 			_litespeed_crawler_url = $(this).data('url') ;
 			litespeed_fetch_meta() ;
