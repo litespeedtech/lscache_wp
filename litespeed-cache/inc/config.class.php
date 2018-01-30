@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Config
 		}
 
 		// Vary group settings
-		$this->vary_groups = get_option( self::VARY_GROUP, array() ) ;
+		$this->vary_groups = (array) get_option( self::VARY_GROUP, array() ) ;
 
 		// Exclude optimization role setting
 		$this->exclude_optimization_roles = get_option( self::EXCLUDE_OPTIMIZATION_ROLES, array() ) ;
