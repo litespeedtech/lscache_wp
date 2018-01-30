@@ -1,8 +1,11 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 ?>
-<h3 class="litespeed-title"><?php echo __( 'Do Not Cache Settings', 'litespeed-cache' ) ; ?></h3>
 
+<h3 class="litespeed-title-short">
+	<?php echo __('Do Not Cache Settings', 'litespeed-cache'); ?>
+	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:excludes" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+</h3>
 <table><tbody>
 	<tr>
 		<th><?php echo __( 'Do Not Cache URIs', 'litespeed-cache' ) ; ?></th>

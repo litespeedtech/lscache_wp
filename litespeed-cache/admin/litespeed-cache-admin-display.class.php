@@ -898,7 +898,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $id The setting tag
 	 */
-	public function recommended($id) {
+	public function recommended( $id )
+	{
 		$val = isset($this->default_settings[$id]) ? $this->default_settings[$id] : '' ;
 		if ( $val ) {
 			if ( ! is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
@@ -909,6 +910,24 @@ class LiteSpeed_Cache_Admin_Display
 			}
 			echo sprintf( __( 'Recommended value: %s', 'litespeed-cache' ), $val ) ;
 		}
+	}
+
+	/**
+	 * Display API environment variable support
+	 *
+	 * @since  1.8.3
+	 * @access private
+	 */
+	private function _api_env_var()
+	{
+		$s = '<code>' . implode( '</code>, <code>', func_get_args() ) . '</code>' ;
+
+		echo '<font class="litespeed-success"> '
+			. __( 'API', 'litespeed-cache' ) . ': '
+			. sprintf( __( 'Server variable %s is available to override this setting.', 'litespeed-cache' ), $s )
+			. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:server_variables" target="_blank">'
+				. __( 'Learn More', 'litespeed-cache' )
+			. '</a>' ;
 	}
 
 	/**

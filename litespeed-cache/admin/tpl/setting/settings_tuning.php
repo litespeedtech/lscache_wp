@@ -3,8 +3,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 ?>
 
-<h3 class="litespeed-title"><?php echo __( 'Tuning Settings', 'litespeed-cache' ) ; ?></h3>
-
+<h3 class="litespeed-title-short">
+	<?php echo __('Tuning Settings', 'litespeed-cache'); ?>
+	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+</h3>
 <table><tbody>
 
 	<tr>

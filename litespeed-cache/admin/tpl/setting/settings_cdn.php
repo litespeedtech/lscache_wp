@@ -20,7 +20,10 @@ if ( ! $cdn_mapping ) {
 
 ?>
 
-<h3 class="litespeed-title"><?php echo __( 'CDN Settings', 'litespeed-cache' ) ; ?></h3>
+<h3 class="litespeed-title-short">
+	<?php echo __('CDN Settings', 'litespeed-cache'); ?>
+	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+</h3>
 
 <table><tbody>
 	<tr>

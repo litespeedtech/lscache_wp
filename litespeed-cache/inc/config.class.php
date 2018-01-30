@@ -34,6 +34,11 @@ class LiteSpeed_Cache_Config
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 
+	// Server variables
+	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
+	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT' ;
+	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE' ;
+
 	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
 
 	const ITEM_CDN_MAPPING_URL = 'url' ;

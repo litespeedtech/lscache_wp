@@ -383,9 +383,26 @@ class LiteSpeed_Cache_Crawler
 		}
 		$crawler->set_base_url($this->_home_url) ;
 		$crawler->set_run_duration($options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
-		$crawler->set_run_delay($options[LiteSpeed_Cache_Config::CRWL_USLEEP]) ;
+
+		/**
+		 * Limit delay to use server setting
+		 * @since 1.8.3
+		 */
+		$usleep = $options[ LiteSpeed_Cache_Config::CRWL_USLEEP ] ;
+		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] > $usleep ) ) {
+			$usleep = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
+		}
+		$crawler->set_run_delay( $usleep ) ;
 		$crawler->set_threads_limit($options[LiteSpeed_Cache_Config::CRWL_THREADS]) ;
-		$crawler->set_load_limit($options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT]) ;
+
+		$server_load_limit = $options[ LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT ] ;
+		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) {
+			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
+		}
+		elseif ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) ) {
+			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ;
+		}
+		$crawler->set_load_limit( $server_load_limit ) ;
 		if ( $options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP] ) {
 			$crawler->set_domain_ip($options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP]) ;
 		}

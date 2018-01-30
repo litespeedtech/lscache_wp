@@ -92,6 +92,13 @@
 	padding: 5px;
 }
 
+h3 .litespeed-learn-more {
+	font-size: 12px;
+	font-weight: normal;
+	color:#7a919e;
+	margin-left: 30px;
+}
+
 /********************************* logo *******************************/
 @font-face {
 	font-family: 'litespeedfont';
@@ -165,7 +172,8 @@
 	margin-left: 0;
 }
 
-.litespeed-title {
+.litespeed-title,
+.litespeed-title-short {
 	font-size: 18px;
 	font-weight: 600;
 	color: #264d73;
@@ -176,8 +184,13 @@
 	padding-left: 3px;
 }
 
-.litespeed-title a {
+.litespeed-title a,
+.litespeed-title-short a {
 	text-decoration: none;
+}
+
+.litespeed-title-short {
+	padding-right: 20px;
 }
 
 /********************************* nav tabs *******************************/
