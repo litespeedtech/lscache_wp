@@ -542,6 +542,13 @@
 	outline: 2px solid #538ac6;
 }
 
+.litespeed-switch input:checked:hover + label,
+.litespeed-switch input:checked:focus + label {
+	background-color: #36b0b0;
+	color: #fff;
+	font-weight: 600;
+}
+
 .litespeed-switch input {
 	display: inline-block;
 	position: absolute;
