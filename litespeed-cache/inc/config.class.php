@@ -75,6 +75,7 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_OBJECT_LIFE = 'cache_object_life' ;
 	const OPID_CACHE_OBJECT_PERSISTENT = 'cache_object_persistent' ;
 	const OPID_CACHE_OBJECT_ADMIN = 'cache_object_admin' ;
+	const OPID_CACHE_OBJECT_TRANSIENTS = 'cache_object_transients' ;
 	const OPID_CACHE_OBJECT_DB_ID = 'cache_object_db_id' ;
 	const OPID_CACHE_OBJECT_USER = 'cache_object_user' ;
 	const OPID_CACHE_OBJECT_PSWD = 'cache_object_pswd' ;
@@ -550,7 +551,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_OBJECT_PORT => '11211',
 			self::OPID_CACHE_OBJECT_LIFE => '360',
 			self::OPID_CACHE_OBJECT_PERSISTENT => true,
-			self::OPID_CACHE_OBJECT_ADMIN => false,
+			self::OPID_CACHE_OBJECT_ADMIN => true,
+			self::OPID_CACHE_OBJECT_TRANSIENTS => true,
 			self::OPID_CACHE_OBJECT_DB_ID => 0,
 			self::OPID_CACHE_OBJECT_USER => '',
 			self::OPID_CACHE_OBJECT_PSWD => '',
@@ -688,7 +690,8 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_OBJECT_PORT => '11211',
 			self::OPID_CACHE_OBJECT_LIFE => '360',
 			self::OPID_CACHE_OBJECT_PERSISTENT => true,
-			self::OPID_CACHE_OBJECT_ADMIN => false,
+			self::OPID_CACHE_OBJECT_ADMIN => true,
+			self::OPID_CACHE_OBJECT_TRANSIENTS => true,
 			self::OPID_CACHE_OBJECT_DB_ID => 0,
 			self::OPID_CACHE_OBJECT_USER => '',
 			self::OPID_CACHE_OBJECT_PSWD => '',

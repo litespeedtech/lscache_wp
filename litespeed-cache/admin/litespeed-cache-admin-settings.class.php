@@ -252,6 +252,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT,
 		) ;
 		foreach ( $ids as $id ) {

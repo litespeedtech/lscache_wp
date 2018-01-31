@@ -32,6 +32,7 @@ class LiteSpeed_Cache_Object
 	private $_cfg_port ;
 	private $_cfg_persistent ;
 	private $_cfg_admin ;
+	private $_cfg_transients ;
 	private $_cfg_db ;
 	private $_cfg_user ;
 	private $_cfg_pswd ;
@@ -61,6 +62,7 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_life = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ] ;
 			$this->_cfg_persistent = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ;
 			$this->_cfg_admin = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ;
+			$this->_cfg_transients = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ] ;
 			$this->_cfg_db = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ] ;
 			$this->_cfg_user = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ] ;
 			$this->_cfg_pswd = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] ;
@@ -81,6 +83,7 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_life = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ) ;
 			$this->_cfg_persistent = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ;
 			$this->_cfg_admin = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ;
+			$this->_cfg_transients = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ) ;
 			$this->_cfg_db = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ) ;
 			$this->_cfg_user = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ) ;
 			$this->_cfg_pswd = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ;
@@ -100,6 +103,7 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_life = ! empty( $cfg[ 'object_cache' ][ 'life' ] ) ? $cfg[ 'object_cache' ][ 'life' ] : $this->_default_life ;
 			$this->_cfg_persistent = ! empty( $cfg[ 'object_cache' ][ 'persistent' ] ) ? $cfg[ 'object_cache' ][ 'persistent' ] : false ;
 			$this->_cfg_admin = ! empty( $cfg[ 'object_cache' ][ 'cache_admin' ] ) ? $cfg[ 'object_cache' ][ 'cache_admin' ] : false ;
+			$this->_cfg_transients = ! empty( $cfg[ 'object_cache' ][ 'cache_transients' ] ) ? $cfg[ 'object_cache' ][ 'cache_transients' ] : false ;
 			$this->_cfg_db = ! empty( $cfg[ 'object_cache' ][ 'db' ] ) ? $cfg[ 'object_cache' ][ 'db' ] : 0 ;
 			$this->_cfg_user = ! empty( $cfg[ 'object_cache' ][ 'user' ] ) ? $cfg[ 'object_cache' ][ 'user' ] : '' ;
 			$this->_cfg_pswd = ! empty( $cfg[ 'object_cache' ][ 'pswd' ] ) ? $cfg[ 'object_cache' ][ 'pswd' ] : '' ;
@@ -114,6 +118,28 @@ class LiteSpeed_Cache_Object
 		else {
 			$this->_cfg_enabled = false ;
 		}
+	}
+
+	/**
+	 * Get `Store Transients` setting value
+	 *
+	 * @since  1.8.3
+	 * @access public
+	 */
+	public function store_transients( $group )
+	{
+		return $this->_cfg_transients && $this->_is_transients_group( $group ) ;
+	}
+
+	/**
+	 * Check if the group belongs to transients or not
+	 *
+	 * @since  1.8.3
+	 * @access private
+	 */
+	private function _is_transients_group( $group )
+	{
+		return in_array( $group, array( 'transient', 'site-transient' ) ) ;
 	}
 
 	/**
@@ -140,6 +166,7 @@ class LiteSpeed_Cache_Object
 				. "\ndb = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ]
 				. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ? 1 : 0 )
 				. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ? 1 : 0 )
+				. "\ncache_transients = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ] ? 1 : 0 )
 				. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) )
 				. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) )
 				;

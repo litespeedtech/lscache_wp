@@ -68,7 +68,7 @@ class LiteSpeed_Cache_Admin_Display
 			if ( defined( 'LITESPEED_ON' ) ) {
 				add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
 			}
-			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this cos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
+			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 		}
 
 		// add menus ( Also check for mu-plugins)

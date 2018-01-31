@@ -139,6 +139,17 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
+				<div class='litespeed-child-col-auto'>
+					<div class="litespeed-row">
+						<div class="litespeed-child-col-inc"><?php echo __( 'Store Transients', 'litespeed-cache' ) ; ?></div>
+						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ) ; ?>
+					</div>
+					<div class="litespeed-desc">
+						<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . __( 'Cache Wp-admin', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
+						<br /><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache#store_transients" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+					</div>
+				</div>
+
 			</div>
 		</td>
 	</tr>
