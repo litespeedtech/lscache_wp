@@ -12,6 +12,7 @@ $menu_list = array(
 	'tuning' => __('Tuning', 'litespeed-cache'),
 	'media' => __('Media', 'litespeed-cache'),
 	'cdn' => __('CDN', 'litespeed-cache'),
+	'esi' => __('ESI', 'litespeed-cache'),
 	'advanced' => __('Advanced', 'litespeed-cache'),
 	'debug' => __('Debug', 'litespeed-cache'),
 ) ;
