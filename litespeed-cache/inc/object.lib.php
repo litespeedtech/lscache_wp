@@ -413,11 +413,10 @@ class WP_Object_Cache
 			$this->_transient_del( $key, $group ) ;
 		}
 
-		if ( ! array_key_exists( $final_key, $this->_cache ) ) {// todo: this may need to be removed as $this->_cache may not include the key
-			return false ;
+		if ( array_key_exists( $final_key, $this->_cache ) ) {
+			unset( $this->_cache[ $final_key ] ) ;
 		}
 // error_log("oc: delete \t\t\t[key] " . $final_key ) ;
-		unset( $this->_cache[ $final_key ] ) ;
 
 		if ( $this->_object_cache->is_non_persistent( $group ) ) {
 			return false ;
