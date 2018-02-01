@@ -105,6 +105,8 @@ class LiteSpeed_Cache_Admin
 			return ;
 		}
 
+		do_action( 'litspeed_after_admin_init' ) ;
+
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
 		if ( LiteSpeed_Cache_Router::esi_enabled() ) {
@@ -150,8 +152,6 @@ class LiteSpeed_Cache_Admin
 		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
 			$this->display->show_display_installed() ;
 		}
-
-		do_action( 'litspeed_after_admin_init' ) ;
 	}
 
 	/**
