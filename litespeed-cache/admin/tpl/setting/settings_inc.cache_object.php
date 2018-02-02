@@ -71,7 +71,8 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Memcached' ) ; ?>: <?php echo $mem_enabled ; ?><br />
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Redis' ) ; ?>: <?php echo $redis_enabled ; ?><br />
-					<?php echo __( 'Connection Test', 'litespeed-cache' ) ; ?>: <?php echo $mem_conn_desc ; ?><br />
+					<?php echo __( 'Connection Test', 'litespeed-cache' ) ; ?>: <?php echo $mem_conn_desc ; ?>
+					<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache#how_to_debug" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 				</div>
 
 				<div class='litespeed-child-col-br'></div>
@@ -131,7 +132,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 						<?php echo __( 'Use keep-alive connections to speed up cache operations.', 'litespeed-cache' ) ; ?>
 					</div>
 					<div class="litespeed-row litespeed-top30">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Cache Wp-admin', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-child-col-inc"><?php echo __( 'Cache Wp-Admin', 'litespeed-cache' ) ; ?></div>
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ; ?>
 					</div>
 					<div class="litespeed-desc">
@@ -145,7 +146,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ) ; ?>
 					</div>
 					<div class="litespeed-desc">
-						<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . __( 'Cache Wp-admin', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
+						<?php echo sprintf( __( 'Save transients in database when %1$s is %2$s.', 'litespeed-cache' ), '<code>' . __( 'Cache Wp-Admin', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
 						<br /><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache#store_transients" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 					</div>
 				</div>

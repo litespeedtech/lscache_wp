@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.1
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -244,6 +244,18 @@ For more detailed information about crawler setup, please see [our blog post](ht
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.8.3 - February 2 2018 =
+* [NEW FEATURE] Added server variable limitation support for the Crawler.
+* [IMPROVEMENT] Added Store Transients option to fix transients missing issue when Cache Wp-Admin option is off.
+* [IMPROVEMENT] Tweaked ARIA support. (@steverep)
+* [IMPROVEMENT] Used strpos instead of strncmp for performance. (@Zach E)
+* [BUGFIX] Transient cache now can be removed when Cache Wp-Admin is ON in Object Cache.
+* [BUGFIX] Network sites now can save Advanced setting.
+* [BUGFIX] Media list in network sites now can be displayed.
+* [BUGFIX] Show Crawler Status button works again.
+* [UPDATE] Fixed a few potential PHP notices on Network cache tab or when no vary group is set.
+* [GUI] Added Learn More link to all settings pages.
 
 = 1.8.2 - January 29 2018 =
 * [NEW FEATURE] Instant Click in the Advanced tab.

@@ -62,6 +62,10 @@ if (!defined('WPINC')) die;
 				</i>
 				<br />
 					<?php echo sprintf( __( 'The default list WordPress uses is %s', 'litespeed-cache' ), "<code>$wp_default_mobile</code>" ) ; ?>
+				<br /><font class="litespeed-warning">
+					<?php echo __( 'NOTE:', 'litespeed-cache' ) ; ?>
+					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ) ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>

@@ -920,11 +920,12 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _api_env_var()
 	{
-		$s = '<code>' . implode( '</code>, <code>', func_get_args() ) . '</code>' ;
+		$args = func_get_args() ;
+		$s = '<code>' . implode( '</code>, <code>', $args ) . '</code>' ;
 
 		echo '<font class="litespeed-success"> '
 			. __( 'API', 'litespeed-cache' ) . ': '
-			. sprintf( __( 'Server variable %s is available to override this setting.', 'litespeed-cache' ), $s )
+			. sprintf( __( 'Server variable(s) %s available to override this setting.', 'litespeed-cache' ), $s )
 			. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:server_variables" target="_blank">'
 				. __( 'Learn More', 'litespeed-cache' )
 			. '</a>' ;
