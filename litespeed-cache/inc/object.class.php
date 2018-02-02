@@ -430,7 +430,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: get ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: get ' . $key ) ;
 
 		$res = $this->_conn->get( $key ) ;
 
@@ -457,7 +457,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: set ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: set ' . $key ) ;
 
 		// error_log( 'Object: set ' . $key ) ;
 
@@ -503,7 +503,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: delete ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: delete ' . $key ) ;
 
 		$res = $this->_conn->delete( $key ) ;
 
