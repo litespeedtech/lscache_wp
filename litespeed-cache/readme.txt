@@ -246,16 +246,16 @@ For more detailed information about crawler setup, please see [our blog post](ht
 == Changelog ==
 
 = 1.8.3 - February 2 2018 =
-* [NEW FEATURE] Added server variable limitation support for the Crawler.
-* [IMPROVEMENT] Added Store Transients option to fix transients missing issue when Cache Wp-Admin option is off.
+* [NEW FEATURE] Crawler server variable limitation support.
+* [IMPROVEMENT] Added Store Transients option to fix transients missing issue when Cache Wp-Admin setting is OFF.
 * [IMPROVEMENT] Tweaked ARIA support. (@steverep)
 * [IMPROVEMENT] Used strpos instead of strncmp for performance. (@Zach E)
-* [BUGFIX] Transient cache now can be removed when Cache Wp-Admin is ON in Object Cache.
-* [BUGFIX] Network sites now can save Advanced setting.
-* [BUGFIX] Media list in network sites now can be displayed.
-* [BUGFIX] Show Crawler Status button works again.
-* [UPDATE] Fixed a few potential PHP notices on Network cache tab or when no vary group is set.
-* [GUI] Added Learn More link to all settings pages.
+* [BUGFIX] Transient cache can now be removed when the Cache Wp-Admin setting is ON in Object Cache.
+* [BUGFIX] Network sites can now save Advanced settings.
+* [BUGFIX] Media list now shows in network sites.
+* [BUGFIX] Show Crawler Status button is working again.
+* [UPDATE] Fixed a couple of potential PHP notices in the Network cache tab and when no vary group is set.
+* [GUI] Added Learn More link to all setting pages.
 
 = 1.8.2 - January 29 2018 =
 * [NEW FEATURE] Instant Click in the Advanced tab.
