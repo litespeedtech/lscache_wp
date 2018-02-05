@@ -21,7 +21,7 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
-	<tr <?php echo $_hide_in_basic_mode ; ?>>
+	<tr>
 		<th><?php echo __('List of Mobile User Agents', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
