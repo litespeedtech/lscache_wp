@@ -74,13 +74,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
-	<?php
-		if ( ! is_multisite() ) :
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ;
-		endif ;
-	?>
-
 	<tr <?php echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Drop Query String', 'litespeed-cache' ) ; ?></th>
 		<td>
