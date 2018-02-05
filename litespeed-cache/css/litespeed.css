@@ -92,6 +92,10 @@
 	padding: 5px;
 }
 
+.litespeed-h1 {
+	display: inline-block ;
+}
+
 h3 .litespeed-learn-more {
 	font-size: 12px;
 	font-weight: normal;

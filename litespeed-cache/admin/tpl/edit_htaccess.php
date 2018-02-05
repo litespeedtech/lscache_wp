@@ -27,12 +27,12 @@ if ( defined( 'LITESPEED_ON' ) ) {
 ?>
 
 <div class="wrap">
-	<h2>
+	<h1 class="litespeed-h1">
 		<?php echo __('LiteSpeed Cache Edit .htaccess', 'litespeed-cache'); ?>
-		<span class="litespeed-desc">
-			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
-		</span>
-	</h2>
+	</h1>
+	<span class="litespeed-desc">
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+	</span>
 </div>
 <div class="litespeed-wrap">
 	<div class="litespeed-body">

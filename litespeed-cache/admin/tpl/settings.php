@@ -122,16 +122,16 @@ if ( ! $adv_mode ) {
 ?>
 
 <div class="wrap">
-	<h2>
+	<h1 class="litespeed-h1">
 		<?php echo __('LiteSpeed Cache Settings', 'litespeed-cache') ; ?>
-		<span class="litespeed-desc">
-			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
-		</span>
-		<span class="litespeed-desc">
-			<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-setting-basic <?php echo $class_basic ; ?>"><?php echo __( 'Basic View', 'litespeed-cache' ) ; ?></a>
-			<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-setting-advanced <?php echo $class_advanced ; ?>"><?php echo __( 'Advanced View', 'litespeed-cache' ) ; ?></a>
-		</span>
-	</h2>
+	</h1>
+	<span class="litespeed-desc">
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+	</span>
+	<span class="litespeed-desc">
+		<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-setting-basic <?php echo $class_basic ; ?>"><?php echo __( 'Basic View', 'litespeed-cache' ) ; ?></a>
+		<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-setting-advanced <?php echo $class_advanced ; ?>"><?php echo __( 'Advanced View', 'litespeed-cache' ) ; ?></a>
+	</span>
 </div>
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">

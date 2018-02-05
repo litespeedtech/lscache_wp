@@ -18,12 +18,12 @@ $_hide_in_basic_mode = '' ;
 ?>
 
 <div class="wrap">
-	<h2>
+	<h1 class="litespeed-h1">
 		<?php echo __('LiteSpeed Cache Network Settings', 'litespeed-cache'); ?>
-		<span class="litespeed-desc">
-			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
-		</span>
-	</h2>
+	</h1>
+	<span class="litespeed-desc">
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+	</span>
 </div>
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">

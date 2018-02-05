@@ -16,7 +16,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
-	<h2>
+	<h1 class="litespeed-h1">
 		<?php
 			if ( is_network_admin() ) {
 				echo __('LiteSpeed Cache Network Management', 'litespeed-cache');
@@ -25,10 +25,10 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 				echo __('LiteSpeed Cache Management', 'litespeed-cache');
 			}
 		?>
-		<span class="litespeed-desc">
-			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
-		</span>
-	</h2>
+	</h1>
+	<span class="litespeed-desc">
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+	</span>
 </div>
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">

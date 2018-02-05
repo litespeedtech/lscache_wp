@@ -11,12 +11,12 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
 
 <div class="wrap">
-	<h2>
+	<h1 class="litespeed-h1">
 		<?php echo __('LiteSpeed Cache Crawler', 'litespeed-cache') ; ?>
-		<span class="litespeed-desc">
-			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
-		</span>
-	</h2>
+	</h1>
+	<span class="litespeed-desc">
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+	</span>
 </div>
 
 <?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>

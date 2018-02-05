@@ -9,12 +9,12 @@ $env_ref = $_report->get_env_ref() ;
 ?>
 
 <div class="wrap">
-	<h2>
+	<h1 class="litespeed-h1">
 		<?php echo __('LiteSpeed Cache Report', 'litespeed-cache'); ?>
-		<span class="litespeed-desc">
-			v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
-		</span>
-	</h2>
+	</h1>
+	<span class="litespeed-desc">
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
+	</span>
 </div>
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
