@@ -132,6 +132,7 @@ if ( ! $adv_mode ) {
 		<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-setting-basic <?php echo $class_basic ; ?>"><?php echo __( 'Basic View', 'litespeed-cache' ) ; ?></a>
 		<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-setting-advanced <?php echo $class_advanced ; ?>"><?php echo __( 'Advanced View', 'litespeed-cache' ) ; ?></a>
 	</span>
+	<hr class="wp-header-end">
 </div>
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">
