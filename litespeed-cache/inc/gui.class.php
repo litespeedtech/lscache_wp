@@ -260,8 +260,8 @@ class LiteSpeed_Cache_GUI
 
 		$wp_admin_bar->add_menu( array(
 			'id'    => 'litespeed-menu',
-			'title' => '<span class="ab-icon"></span><span class="ab-label">' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '</span>',
-			'href'  => LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+			'title' => '<span class="ab-icon"></span>',
+			'href'		=> 'admin.php?page=lscache-dash',
 			'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 		) ) ;
 
@@ -290,6 +290,14 @@ class LiteSpeed_Cache_GUI
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-purge-all',
+			'title'		=> __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ),
+			'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
 
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
