@@ -125,6 +125,7 @@ class LiteSpeed_Cache_Optimizer
 
 		foreach ( $headers as $key => $val ) {
 			header( $key . ': ' . $val ) ;
+			LiteSpeed_Cache_Log::debug( 'HEADER ' . $key . ': ' . $val ) ;
 		}
 
 		return $content ;
