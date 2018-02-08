@@ -217,17 +217,14 @@ class LiteSpeed_Cache_Optimize
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
-		$result = $this->_minify( $match[ 1 ] ) ;
+		$file_type = substr( $match[ 1 ], strrpos( $match[ 1 ], '.' ) + 1 ) ;
+		$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
-		if ( ! $result ) {
+		$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
+
+		if ( ! $content ) {
 			LiteSpeed_Cache_Control::set_nocache( 'Empty content from optimizer' ) ;
 			exit ;
-		}
-
-		foreach ( $result[ 'headers' ] as $key => $val ) {
-			if ( in_array( $key, array( 'Content-Length', 'Content-Type' ) ) ) {
-				header( $key . ': ' . $val ) ;
-			}
 		}
 
 		LiteSpeed_Cache_Control::set_cacheable() ;
@@ -236,7 +233,7 @@ class LiteSpeed_Cache_Optimize
 		LiteSpeed_Cache_Control::set_custom_ttl( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ) ;
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
 
-		echo $result[ 'content' ] ;
+		echo $content ;
 		exit ;
 	}
 
@@ -829,50 +826,6 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Run minify process and return final content
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 * @return string The final content
-	 */
-	private function _minify( $filename )
-	{
-		// Search filename in db for src URLs
-		$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
-		if ( ! $urls || ! is_array( $urls ) ) {
-			return false;
-		}
-
-		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 ) ;
-
-		// Parse real file path
-		$real_files = array() ;
-		foreach ( $urls as $url ) {
-			$real_file = LiteSpeed_Cache_Utility::is_internal_file( $url ) ;
-			if ( ! $real_file ) {
-				continue ;
-			}
-			$real_files[] = $real_file[ 0 ] ;
-		}
-
-		if ( ! $real_files ) {
-			return false;
-		}
-
-		// Request to minify
-		$result = $this->_minify_serve( $real_files, $file_type ) ;
-
-		if ( empty( $result[ 'success' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'Optm:    Lib serve failed ' . $result[ 'statusCode' ] ) ;
-			return false ;
-		}
-
-		LiteSpeed_Cache_Log::debug( 'Optm:    Generated content' ) ;
-
-		return $result ;
-	}
-
-	/**
 	 * Generate full URL path with hash for a list of src
 	 *
 	 * @since  1.2.2
@@ -1186,100 +1139,6 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		$this->http2_headers[] = '<' . $uri . '>; rel=preload; as=' . ( $file_type === 'css' ? 'style' : 'script' ) ;
-	}
-
-	/**
-	 * Run minify serve
-	 *
-	 * @since  1.2.2
-	 * @access private
-	 * @param array|string $files The file(s) to minify/combine
-	 * @return  string The string after effect
-	 */
-	private function _minify_serve( $files, $file_type )
-	{
-		set_error_handler( 'litespeed_exception_handler' ) ;
-		try {
-			litespeed_load_vendor() ;
-			if ( ! isset( $this->minify_cache ) ) {
-				$this->minify_cache = new Minify_Cache_File() ;
-			}
-			if ( ! isset( $this->minify_minify ) ) {
-				$this->minify_minify = new Minify( $this->minify_cache ) ;
-			}
-			if ( ! isset( $this->minify_env ) ) {
-				$this->minify_env = new Minify_Env() ;
-			}
-			if ( ! isset( $this->minify_sourceFactory ) ) {
-				$this->minify_sourceFactory = new Minify_Source_Factory( $this->minify_env, array(), $this->minify_cache ) ;
-			}
-			if ( ! isset( $this->minify_controller ) ) {
-				$this->minify_controller = new Minify_Controller_Files( $this->minify_env, $this->minify_sourceFactory ) ;
-			}
-			if ( ! isset( $this->minify_options ) ) {
-				$this->minify_options = array(
-					'encodeOutput' => false,
-					'quiet' => true,
-				) ;
-			}
-
-			$this->minify_options[ 'concatOnly' ] =  ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
-
-			$this->minify_options[ 'files' ] = $files ;
-
-			/**
-			 * Clean comment when minify
-			 * @since  1.7.1
-			 */
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
-				$this->minify_options[ 'postprocessor' ] = __CLASS__ . '::remove_comment' ;
-			}
-
-			$content = $this->minify_minify->serve( $this->minify_controller, $this->minify_options ) ;
-
-		} catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Log::debug( 'Error when serving from optimizer: ' . $e->getMessage() ) ;
-			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
-			return false ;
-		}
-		restore_error_handler() ;
-
-		return $content ;
-	}
-
-	/**
-	 * Remove comment when minify
-	 *
-	 * @since  1.7.1
-	 * @access public
-	 */
-	public static function remove_comment( $content, $type )
-	{
-		$_from = array(
-			'|\/\*.*\*\/|U',
-			'|\/\*.*\*\/|sU',
-			"|\n+|",
-			// "|;+\n*;+|",
-			// "|\n+;|",
-			// "|;\n+|"
-		) ;
-
-		$_to = array(
-			'',
-			"\n",
-			"\n",
-			// ';',
-			// ';',
-			// ';',
-		) ;
-
-		$content = preg_replace( $_from, $_to, $content ) ;
-		if ( $type == 'text/css' ) {
-			$content = preg_replace( "|: *|", ':', $content ) ;
-			$content = preg_replace( "| */ *|", '/', $content ) ;
-		}
-		$content = trim( $content ) ;
-		return $content ;
 	}
 
 	/**
