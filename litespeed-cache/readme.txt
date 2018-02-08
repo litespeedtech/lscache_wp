@@ -222,6 +222,12 @@ Once the crawler is enabled on the server side, navigate to **LiteSpeed Cache > 
 
 For more detailed information about crawler setup, please see [our blog post](https://blog.litespeedtech.com/2017/06/14/wpw-crawl-your-site-make-it-fly/).
 
+= Why are some settings tabs missing? =
+
+LSCWP has a "Basic View" and an "Advanced View." While in Basic View, you will see the following settings tabs: *General*, *Cache*, *Purge*, *Excludes*, and (optionally) *WooCommerce*. These are all that is necessary to manage the LiteSpeed Cache.
+
+Click on the `Advanced View` link at the top of the page, and several more tabs will be revealed: *Optimize*, *Tuning*, *Media*, *CDN*, *ESI*, *Advanced*, *Debug*, *Crawler*. These tabs contain more expert-level cache options as well as non-cache-related optimization functionality.
+
 
 == Screenshots ==
 
