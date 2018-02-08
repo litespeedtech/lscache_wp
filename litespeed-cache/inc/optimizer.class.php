@@ -8,20 +8,53 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-require_once LSCWP_DIR . 'lib/css_min.cls.php' ;
-require_once LSCWP_DIR . 'lib/css_min.colors.cls.php' ;
-require_once LSCWP_DIR . 'lib/css_min.utils.cls.php' ;
-require_once LSCWP_DIR . 'lib/url_rewritter.cls.php' ;
+require_once LSCWP_DIR . 'lib/js_min.class.php' ;
+require_once LSCWP_DIR . 'lib/css_min.class.php' ;
+require_once LSCWP_DIR . 'lib/css_min.colors.class.php' ;
+require_once LSCWP_DIR . 'lib/css_min.utils.class.php' ;
+require_once LSCWP_DIR . 'lib/url_rewritter.class.php' ;
 
 use tubalmartin\CssMin\Minifier as CSSmin;
 use tubalmartin\CssMin\Colors as Colors;
 use tubalmartin\CssMin\Utils as Utils;
 
 
-
 class LiteSpeed_Cache_Optimizer
 {
 	private static $_instance ;
+
+	/**
+	 * Init optimizer
+	 *
+	 * @since  1.9
+	 * @access private
+	 */
+	private function __construct()
+	{
+		$this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY ) ;
+		$this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY ) ;
+	}
+
+	/**
+	 * Run HTML minify process and return final content
+	 *
+	 * @since  1.9
+	 * @access public
+	 */
+	public function html_min( $content )
+	{
+		$options = array() ;
+		if ( $this->cfg_css_inline_minify ) {
+			$options[ 'cssMinifier' ] = array( new CSSmin(), 'run' ) ;
+		}
+
+		if ( $this->cfg_js_inline_minify ) {
+			$options[ 'jsMinifier' ] = 'JSMin\JSMin::minify' ;
+		}
+
+		$obj = new Minify_HTML( $content, $options ) ;
+		return $obj->process() ;
+	}
 
 	/**
 	 * Run minify process and return final content
@@ -62,11 +95,13 @@ class LiteSpeed_Cache_Optimizer
 		try {
 			// Handle CSS
 			if ( $file_type === 'css' ) {
-				$content = $this->_serve_css( $files, $concat_only ) ;
+				$content = $this->_serve_css( $real_files, $concat_only ) ;
 				$headers[ 'Content-Encoding' ] = 'text/css; charset=utf-8' ;
 			}
 			// Handle JS
 			else {
+				$content = $this->_serve_js( $real_files, $concat_only ) ;
+				$headers[ 'Content-Encoding' ] = 'application/x-javascript' ;
 			}
 
 		} catch ( ErrorException $e ) {
@@ -101,15 +136,15 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  1.9
 	 * @access private
 	 */
-	private function _serve_css( $files, $concat_only )
+	private function _serve_css( $files, $concat_only = false )
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			$data = file_get_contents( $real_path ) ;
+			$data = $this->_read( $real_path ) ;
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
 
-			if ( ! $concat_only ) {
+			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
 				$obj = new CSSmin() ;
 				$data = $obj->run( $data ) ;
 			}
@@ -122,10 +157,68 @@ class LiteSpeed_Cache_Optimizer
 		return implode( '', $con ) ;
 	}
 
+	/**
+	 * Serve JS with/without minify
+	 *
+	 * @since  1.9
+	 * @access private
+	 */
+	private function _serve_js( $files, $concat_only )
+	{
+		$con = array() ;
+		foreach ( $files as $real_path ) {
+			$data = $this->_read( $real_path ) ;
 
+			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
+				$data = JSMin\JSMin::minify( $data ) ;
+			}
+			else {
+				$data = $this->_null_minifier( $data ) ;
+			}
 
+			$con[] = $data ;
+		}
 
+		return implode( "\n;", $con ) ;
+	}
 
+	private function _null_minifier( $content )
+	{
+		$content = str_replace( "\r\n", "\n", $content ) ;
+
+		return trim( $content ) ;
+	}
+
+	/**
+	 * Check if the file is already min file
+	 *
+	 * @since  1.9
+	 * @access private
+	 */
+	private function _is_min( $filename )
+	{
+		$basename = basename( $filename ) ;
+		if ( preg_match( '|[-\.]min\.(?:[a-zA-Z]+)$|i', $basename ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * Read content and remove UTF-8 BOM if present
+	 *
+	 * @since  1.9
+	 * @access private
+	 */
+	private function _read( $file )
+	{
+		$content = file_get_contents( $file ) ;
+		if ( substr( $content, 0, 3 ) === "\xEF\xBB\xBF" ) {
+			$content = substr( $content, 3 ) ;
+		}
+		return $content ;
+	}
 
 	/**
 	 * Remove comment when minify
@@ -155,7 +248,7 @@ class LiteSpeed_Cache_Optimizer
 		) ;
 
 		$content = preg_replace( $_from, $_to, $content ) ;
-		if ( $type == 'text/css' ) {
+		if ( $type == 'css' ) {
 			$content = preg_replace( "|: *|", ':', $content ) ;
 			$content = preg_replace( "| */ *|", '/', $content ) ;
 		}

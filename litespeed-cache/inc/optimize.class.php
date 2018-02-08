@@ -602,8 +602,7 @@ class LiteSpeed_Cache_Optimize
 
 			set_error_handler( 'litespeed_exception_handler' ) ;
 			try {
-				litespeed_load_vendor() ;
-				$this->content = Minify_HTML::minify( $this->content ) ;
+				$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 				$this->content .= "\n" . '<!-- Page optimized by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
 
 			} catch ( ErrorException $e ) {

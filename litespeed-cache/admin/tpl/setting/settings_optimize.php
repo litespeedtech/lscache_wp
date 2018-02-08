@@ -33,6 +33,16 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Inline CSS Minify', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Minify inline CSS codes.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'CSS Combine', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ; ?>
@@ -59,6 +69,16 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify JS files.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Inline JS Minify', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Minify inline JS codes.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
