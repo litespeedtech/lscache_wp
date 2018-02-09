@@ -96,12 +96,12 @@ class LiteSpeed_Cache_Optimizer
 			// Handle CSS
 			if ( $file_type === 'css' ) {
 				$content = $this->_serve_css( $real_files, $concat_only ) ;
-				$headers[ 'Content-Encoding' ] = 'text/css; charset=utf-8' ;
+				$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
 			}
 			// Handle JS
 			else {
 				$content = $this->_serve_js( $real_files, $concat_only ) ;
-				$headers[ 'Content-Encoding' ] = 'application/x-javascript' ;
+				$headers[ 'Content-Type' ] = 'application/x-javascript' ;
 			}
 
 		} catch ( ErrorException $e ) {
@@ -141,6 +141,7 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
+			LiteSpeed_Cache_Log::debug( 'Optimizer: [real_path] ' . $real_path ) ;
 			$data = $this->_read( $real_path ) ;
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
