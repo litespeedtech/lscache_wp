@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Minify inline CSS codes.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Minify inline CSS code.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -78,7 +78,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Minify inline JS codes.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Minify inline JS code.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

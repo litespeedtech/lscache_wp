@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
-Tested up to: 4.9.1
-Stable tag: 1.8.3
+Tested up to: 4.9.4
+Stable tag: 1.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,6 +250,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.9 - February 12 2018 =
+* [NEW FEATURE] Added Inline CSS/JS Minify.
+* [IMPROVEMENT] Removed Composer vendor to thin the plugin folder.
+* [UPDATE] Tweaked H2 to H1 in Admin headings for accessibility. (@steverep)
+* [GUI] Added Mobile User Agents to basic view.
+* [GUI] Moved Object Cache & Browser Cache from Cache tab to Advanced tab.
+* [GUI] Moved LSCache Purge All from Adminbar to dropdown menu.
 
 = 1.8.3 - February 2 2018 =
 * [NEW FEATURE] Crawler server variable limitation support.
