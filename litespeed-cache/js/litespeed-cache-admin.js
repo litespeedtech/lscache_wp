@@ -76,7 +76,7 @@ var _litespeed_dots ;
 		}) ;
 
 		// Settings->General->Enable mobile view
-		$('#conf_mobileview_enabled_1').click(function() {
+		$('[name="litespeed-cache-conf[mobileview_enabled]"][value=1]').click(function() {
 			if($(this).is(':checked')){
 				if(!$('#litespeed-mobileview-rules').val()){
 					$('#litespeed-mobileview-rules').val($('#litespeed-mobileview-rules-default').val()) ;
@@ -84,7 +84,7 @@ var _litespeed_dots ;
 				$('#litespeed-mobileview-rules').prop('readonly', false) ;
 			}
 		}) ;
-		$('#conf_mobileview_enabled_0').click(function() {
+		$('[name="litespeed-cache-conf[mobileview_enabled]"][value=0]').click(function() {
 			if($(this).is(':checked')){
 				// $('#litespeed-mobileview-rules').val('') ;
 				$('#litespeed-mobileview-rules').prop('readonly', true) ;

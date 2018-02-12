@@ -252,7 +252,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 1.9 - February 12 2018 =
-* [NEW FEATURE] Added Inline CSS/JS Minify.
+* [NEW FEATURE] Inline CSS/JS Minify.
 * [IMPROVEMENT] Removed Composer vendor to thin the plugin folder.
 * [UPDATE] Tweaked H2 to H1 in Admin headings for accessibility. (@steverep)
 * [GUI] Added Mobile User Agents to basic view.
