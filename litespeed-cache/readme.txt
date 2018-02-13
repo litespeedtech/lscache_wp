@@ -21,13 +21,13 @@ If all of that sounds complicated, no need to worry. LSCWP works right out of th
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
 
-LSCWP now includes additional optimization features, including Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache, Object Cache, Lazyload images and image optimization!
+LSCWP includes additional optimization features, such as Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache, Object Cache, Lazyload images and image optimization!
 
 Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
 
 == Installation ==
 
-1. Install LiteSpeed Web Server Enterprise with LSCache Module or OpenLiteSpeed with cache module [Free].
+1. Install [LiteSpeed Web Server Enterprise](https://www.litespeedtech.com/products/litespeed-web-server) with LSCache Module, [LiteSpeed Web ADC](https://www.litespeedtech.com/products/litespeed-web-adc), or [OpenLiteSpeed](https://www.litespeedtech.com/open-source/openlitespeed) with cache module [Free].
 2. Install the LiteSpeed Cache for WordPress plugin and activate it.
 3. From the WordPress Dashboard, navigate to *LiteSpeed Cache -> Settings*, make sure the option *Enable LiteSpeed Cache* is set to `Enable`.
 4. Enjoy!
