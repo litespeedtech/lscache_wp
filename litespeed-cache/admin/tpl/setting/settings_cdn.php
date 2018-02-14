@@ -172,7 +172,7 @@ if ( ! $cdn_mapping ) {
 		</td>
 	</tr>
 
-	<tr>
+	<tr class="litespeed-hide">
 		<th><?php echo __( 'Quic Cloud API', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_QUIC ) ; ?>

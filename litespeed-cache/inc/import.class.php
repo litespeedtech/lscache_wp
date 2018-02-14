@@ -46,6 +46,7 @@ class LiteSpeed_Cache_Import
 			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS,
 			LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS,
 			LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
+			LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS,
 		) ;
 	}
 

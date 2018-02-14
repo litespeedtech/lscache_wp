@@ -123,10 +123,23 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Roles Simulation', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS, 20 ) ; ?>
+
+			<div class="litespeed-desc">
+				<?php echo __('To crawl the site as a logged-in user, enter the user ids to be simulated.', 'litespeed-cache'); ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
+			</div>
+
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Custom Sitemap', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ; ?>
-			<?php $this->build_input($id, false, null, 'litespeed_custom_sitemap'); ?>
+			<?php $this->build_input($id, 'litespeed-input-long', null, 'litespeed_custom_sitemap'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('The crawler can use your Google XML Sitemap instead of its own. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
 			</div>
@@ -134,94 +147,93 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr data-litespeed-selfsitemap="1">
-		<th><?php echo __('Include Posts', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Sitemap Generation', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_POSTS); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Include Posts in crawler sitemap generation.', 'litespeed-cache'); ?>
+			<div class="litespeed-cdn-mapping-block">
+				<div class='litespeed-cdn-mapping-col2'>
+					<div class="litespeed-row">
+						<div class="litespeed-child-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ) ; ?></div>
+					<?php
+						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_POSTS ) ;
+					?>
+					</div>
+
+					<div class="litespeed-row">
+						<div class="litespeed-child-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ) ; ?></div>
+					<?php
+						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_PAGES ) ;
+					?>
+					</div>
+
+					<div class="litespeed-row">
+						<div class="litespeed-child-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ) ; ?></div>
+					<?php
+						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_CATS ) ;
+					?>
+					</div>
+
+					<div class="litespeed-row">
+						<div class="litespeed-child-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ) ; ?></div>
+					<?php
+						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_TAGS ) ;
+					?>
+					</div>
+
+				</div>
+
+				<div class='litespeed-child-col-auto'>
+					<h4><?php echo __('Exclude Custom Post Types', 'litespeed-cache'); ?></h4>
+
+					<?php $this->build_textarea( LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT, 40 ) ; ?>
+
+					<div class="litespeed-desc">
+						<?php echo __('Exclude certain Custom Post Types in sitemap.', 'litespeed-cache'); ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto'>
+					<div class="litespeed-callout-warning">
+						<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
+						<p>
+							<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>
+						</p>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col-auto'>
+					<h4><?php echo __('Order links by', 'litespeed-cache'); ?></h4>
+
+					<div class="litespeed-switch">
+						<?php echo $this->build_radio(
+							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+							LiteSpeed_Cache_Config::CRWL_DATE_DESC,
+							__('Date, descending (Default)', 'litespeed-cache')
+						); ?>
+
+						<?php echo $this->build_radio(
+							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+							LiteSpeed_Cache_Config::CRWL_DATE_ASC,
+							__('Date, ascending', 'litespeed-cache')
+						); ?>
+
+						<?php echo $this->build_radio(
+							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+							LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
+							__('Alphabetical, descending', 'litespeed-cache')
+						); ?>
+
+						<?php echo $this->build_radio(
+							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+							LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
+							__('Alphabetical, ascending', 'litespeed-cache')
+						); ?>
+					</div>
+					<div class="litespeed-desc">
+						<?php echo sprintf( __( 'These options will be invalid when using %s.', 'litespeed-cache' ), '<code>' . __( 'Custom Sitemap', 'litespeed-cache' ) . '</code>' ) ; ?>
+					</div>
+				</div>
 			</div>
-		</td>
-	</tr>
 
-	<tr data-litespeed-selfsitemap="1">
-		<th><?php echo __('Include Pages', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_PAGES); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Include Pages in crawler sitemap generation.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr data-litespeed-selfsitemap="1">
-		<th><?php echo __('Include Categories', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_CATS); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Include Categories pages in crawler sitemap generation.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr data-litespeed-selfsitemap="1">
-		<th><?php echo __('Include Tags', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::CRWL_TAGS); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Include Tags pages in crawler sitemap generation.', 'litespeed-cache'); ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr data-litespeed-selfsitemap="1">
-		<th><?php echo __('Exclude Custom Post Types', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT); ?>
-
-			<div class="litespeed-desc">
-				<?php echo __('If you want to exclude certain Custom Post Types in sitemap, add the Custom Post Types in the box, one per line.', 'litespeed-cache'); ?>
-			</div>
-
-			<div class="litespeed-callout-warning">
-				<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
-				<p>
-					<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>
-				</p>
-			</div>
-		</td>
-	</tr>
-
-	<tr data-litespeed-selfsitemap="1">
-		<th><?php echo __('Order links by', 'litespeed-cache'); ?></th>
-		<td>
-			<div class="litespeed-switch">
-				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-					LiteSpeed_Cache_Config::CRWL_DATE_DESC,
-					__('Date, descending (Default)', 'litespeed-cache')
-				); ?>
-
-				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-					LiteSpeed_Cache_Config::CRWL_DATE_ASC,
-					__('Date, ascending', 'litespeed-cache')
-				); ?>
-
-				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-					LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
-					__('Alphabetical, descending', 'litespeed-cache')
-				); ?>
-
-				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-					LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
-					__('Alphabetical, ascending', 'litespeed-cache')
-				); ?>
-			</div>
-			<div class="litespeed-desc">
-				<?php echo __('Please choose one of the above options to set the order in which the sitemap will be parsed.', 'litespeed-cache'); ?>
-			</div>
 		</td>
 	</tr>
 

@@ -943,6 +943,9 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = $this->_input[ $id ] ;
 		}
 
+		$id = LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ;
+		update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+
 	}
 
 	/**

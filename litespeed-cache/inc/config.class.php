@@ -31,6 +31,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_LOG_IGNORE_PART_FILTERS = 'litespeed-log_ignore_part_filters' ;
 	const ITEM_OBJECT_GLOBAL_GROUPS = 'litespeed-object_global_groups' ;
 	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'litespeed-object_non_persistent_groups' ;
+	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 
