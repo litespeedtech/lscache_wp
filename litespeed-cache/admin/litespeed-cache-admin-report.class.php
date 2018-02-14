@@ -159,6 +159,7 @@ class LiteSpeed_Cache_Admin_Report
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		) ;

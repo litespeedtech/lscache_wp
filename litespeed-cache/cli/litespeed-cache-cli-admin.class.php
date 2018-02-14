@@ -59,6 +59,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT,
 
 			LiteSpeed_Cache_Config::OPID_CDN,
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE,
 
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,

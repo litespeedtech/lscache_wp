@@ -534,6 +534,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$cdn_cloudflare_changed = false ;
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CDN,
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE,
 		) ;
 		foreach ( $ids as $id ) {
@@ -599,6 +600,22 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ;
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
+
+		/**
+		 * Quic API
+		 * @since  1.9.1
+		 */
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL,
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY,
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC_SITE,
+		) ;
+		foreach ( $ids as $id ) {
+			if ( $this->_options[ $id ] === $this->_input[ $id ] ) {
+				continue ;
+			}
+			$this->_options[ $id ] = $this->_input[ $id ] ;
+		}
 
 		/**
 		 * CLoudflare API

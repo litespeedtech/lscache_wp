@@ -173,6 +173,49 @@ if ( ! $cdn_mapping ) {
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Quic Cloud API', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_QUIC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Use Quic Cloud API functionality.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'Manage', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'CDN', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
+			</div>
+			<div class="litespeed-cdn-mapping-block">
+				<div class='litespeed-child-col'>
+					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Your Email address on Quic Cloud.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col'>
+					<h4><?php echo __( 'User API Key', 'litespeed-cache' ) ; ?></h4>
+
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY ) ; ?>
+					<div class="litespeed-desc">
+						<?php echo __( 'Your API key is used to access Quic Cloud APIs.', 'litespeed-cache' ) ; ?>
+						<?php echo sprintf( __( 'Get it from <a %s>Quic Cloud</a>.', 'litespeed-cache' ), 'href="https://quic.cloud/dashboard" target="_blank"' ) ; ?>
+					</div>
+				</div>
+
+				<div class='litespeed-child-col'>
+					<h4><?php echo __( 'Site Domain', 'litespeed-cache' ) ; ?></h4>
+
+				<?php
+					$this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_SITE ) ;
+				?>
+					<div class="litespeed-desc">
+						<?php echo __( 'You can just type part of the domain.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Cloudflare API', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ; ?>
