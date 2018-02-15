@@ -139,14 +139,14 @@ if ( !defined('WPINC') ) die;
 		<th><?php echo __('Custom Sitemap', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ; ?>
-			<?php $this->build_input($id, 'litespeed-input-long', null, 'litespeed_custom_sitemap'); ?>
+			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('The crawler can use your Google XML Sitemap instead of its own. Enter the full URL to your sitemap here.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>
 
-	<tr data-litespeed-selfsitemap="1">
+	<tr>
 		<th><?php echo __('Sitemap Generation', 'litespeed-cache'); ?></th>
 		<td>
 			<div class="litespeed-cdn-mapping-block">

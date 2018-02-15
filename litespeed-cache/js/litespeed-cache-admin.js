@@ -116,12 +116,6 @@ var _litespeed_dots ;
 			} ) ;
 		}) ;
 
-		$('#litespeed_custom_sitemap').keyup(function(event) {
-			$('[data-litespeed-selfsitemap]').toggle(!$(this).val()) ;
-		}) ;
-
-		$('[data-litespeed-selfsitemap]').toggle(!$('#litespeed_custom_sitemap').val()) ;
-
 		/******************** Clear whm msg ********************/
 		$(document).on('click', '.lscwp-whm-notice .notice-dismiss', function () {
 			$.get(litespeed_data.ajax_url_dismiss_whm) ;
