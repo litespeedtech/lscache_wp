@@ -1462,6 +1462,19 @@ g.litespeed-pie_info text{
 	border-bottom:1px solid #6699cc;
 }
 
+/********************************* crawler *******************************/
+.litespeed-crawler-curr{
+	vertical-align: middle;
+	height: 20px;
+	margin-left: 10px;
+}
+
+.litespeed-cron-onoff-btn {
+	position: absolute ;
+	left: 180px ;
+	top: -7px ;
+}
+
 /********************************* todo *******************************/
 /* input field */
 .litespeed-textarea {

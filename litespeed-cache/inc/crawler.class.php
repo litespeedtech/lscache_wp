@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Crawler
 		}
 		$this->_blacklist_file = $this->_sitemap_file . '.blacklist' ;
 
-		LiteSpeed_Cache_Log::debug('Crawler log: Initialized') ;
+		LiteSpeed_Cache_Log::debug('Crawler: Initialized') ;
 	}
 
 	/**
@@ -55,21 +55,6 @@ class LiteSpeed_Cache_Crawler
 		}
 		$metaUrl = implode('/', array_slice(explode('/', $this->_sitemap_file . '.meta'), -5)) ;
 		return $this->_home_url . '/' . $metaUrl ;
-	}
-
-	/**
-	 * Return crawler meta info
-	 *
-	 * @since    1.1.0
-	 * @access public
-	 * @return array Meta array
-	 */
-	public function get_meta()
-	{
-		if ( ! file_exists($this->_sitemap_file . '.meta') || ! $meta = Litespeed_File::read($this->_sitemap_file . '.meta') ) {
-			return false ;
-		}
-		return json_decode($meta) ;
 	}
 
 	/**
@@ -139,7 +124,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function append_blacklist( $list )
 	{
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler log: append blacklist ' . count( $list ) ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler: append blacklist ' . count( $list ) ) ;
 
 		$ori_list = Litespeed_File::read( $this->_blacklist_file ) ;
 		$ori_list = explode( "\n", $ori_list ) ;
@@ -151,7 +136,7 @@ class LiteSpeed_Cache_Crawler
 		// save blacklist
 		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
 		if ( $ret !== true ) {
-			LiteSpeed_Cache_Log::debug( 'Crawler log: append blacklist failed: ' . $ret ) ;
+			LiteSpeed_Cache_Log::debug( 'Crawler: append blacklist failed: ' . $ret ) ;
 			return false ;
 		}
 
@@ -278,9 +263,11 @@ class LiteSpeed_Cache_Crawler
 		$blacklist = Litespeed_File::read( $this->_blacklist_file ) ;
 		$blacklist = explode( "\n", $blacklist ) ;
 		$urls = array_diff( $urls, $blacklist ) ;
-		LiteSpeed_Cache_Log::debug( 'Crawler log: Generate sitemap' ) ;
+		LiteSpeed_Cache_Log::debug( 'Crawler: Generate sitemap' ) ;
 
 		$ret = Litespeed_File::save( $this->_sitemap_file, implode( "\n", $urls ), true, false, false ) ;
+
+		clearstatcache() ;
 
 		// refresh list size in meta
 		$crawler = new Litespeed_Crawler( $this->_sitemap_file ) ;
@@ -317,7 +304,7 @@ class LiteSpeed_Cache_Crawler
 	{
 		$crawler = new Litespeed_Crawler($this->_sitemap_file) ;
 		$ret = $crawler->reset_pos() ;
-		$log = 'Crawler log: Reset pos. ' ;
+		$log = 'Crawler: Reset pos. ' ;
 		if ( $ret !== true ) {
 			$log .= "Error: $ret" ;
 			$msg = sprintf(__('Failed to send position reset notification: %s', 'litespeed-cache'), $ret) ;
@@ -340,13 +327,25 @@ class LiteSpeed_Cache_Crawler
 	public static function crawl_data($force = false)
 	{
 		if ( ! LiteSpeed_Cache_Router::can_crawl() ) {
-			LiteSpeed_Cache_Log::debug('Crawler log: ......crawler is NOT allowed by the server admin......') ;
+			LiteSpeed_Cache_Log::debug('Crawler: ......crawler is NOT allowed by the server admin......') ;
 			return false;
 		}
 		if ( $force ) {
-			LiteSpeed_Cache_Log::debug('Crawler log: ......crawler manually ran......') ;
+			LiteSpeed_Cache_Log::debug('Crawler: ......crawler manually ran......') ;
 		}
 		return self::get_instance()->_crawl_data($force) ;
+	}
+
+	/**
+	 * Receive meta info from crawler
+	 *
+	 * @since    1.9.1
+	 * @access   public
+	 */
+	public function read_meta()
+	{
+		$crawler = new Litespeed_Crawler( $this->_sitemap_file ) ;
+		return $crawler->read_meta() ;
 	}
 
 	/**
@@ -358,12 +357,12 @@ class LiteSpeed_Cache_Crawler
 	 */
 	protected function _crawl_data($force)
 	{
-		LiteSpeed_Cache_Log::debug('Crawler log: ......crawler started......') ;
+		LiteSpeed_Cache_Log::debug('Crawler: ......crawler started......') ;
 		// for the first time running
 		if ( ! file_exists($this->_sitemap_file) ) {
 			$ret = $this->_generate_sitemap() ;
 			if ( $ret !== true ) {
-				LiteSpeed_Cache_Log::debug('Crawler log: ' . $ret) ;
+				LiteSpeed_Cache_Log::debug('Crawler: ' . $ret) ;
 				return $this->output($ret) ;
 			}
 		}
@@ -375,10 +374,11 @@ class LiteSpeed_Cache_Crawler
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
 			if ( ! $force && time() - $last_fnished_at < $options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL] ) {
-				LiteSpeed_Cache_Log::debug('Crawler log: Cron abort: cache warmed already.') ;
+				LiteSpeed_Cache_Log::debug('Crawler: Cron abort: cache warmed already.') ;
 				// if not reach whole crawling interval, exit
 				return;
 			}
+			LiteSpeed_Cache_Log::debug( 'Crawler: TouchedEnd. regenerate sitemap....' ) ;
 			$this->_generate_sitemap() ;
 		}
 		$crawler->set_base_url($this->_home_url) ;
@@ -406,6 +406,43 @@ class LiteSpeed_Cache_Crawler
 		if ( $options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP] ) {
 			$crawler->set_domain_ip($options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP]) ;
 		}
+
+		// Get current crawler
+		$meta = $crawler->read_meta() ;
+		$curr_crawler_pos = $meta[ 'curr_crawler' ] ;
+
+		// Generate all crawlers
+		$crawlers = $this->list_crawlers() ;
+
+		// In case crawlers are all done but not reload, reload it
+		if ( empty( $crawlers[ $curr_crawler_pos ] ) ) {
+			$curr_crawler_pos = 0 ;
+		}
+		$current_crawler = $crawlers[ $curr_crawler_pos ] ;
+		/**
+		 * Set role simulation
+		 * @since 1.9.1
+		 */
+		if ( $current_crawler[ 'uid' ] ) {
+			// Get role simulation vary name
+			$vary_inst = LiteSpeed_Cache_Vary::get_instance() ;
+			$vary_name = $vary_inst->get_vary_name() ;
+			$vary_val = $vary_inst->finalize_default_vary( $current_crawler[ 'uid' ] ) ;
+			$cookies = array(
+				$vary_name => $vary_val,
+				'litespeed_role' => $current_crawler[ 'uid' ],
+			) ;
+
+			$crawler->set_cookies( $cookies ) ;
+		}
+		/**
+		 * Set WebP simulation
+		 * @since  1.9.1
+		 */
+		if ( $current_crawler[ 'webp' ] ) {
+			$crawler->set_headers( array( 'Accept: image/webp,*/*' ) ) ;
+		}
+
 		$ret = $crawler->engine_start() ;
 
 		// merge blacklist
@@ -414,20 +451,70 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		if ( ! empty($ret['crawled']) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler log: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' ) ;
 		}
 
 		// return error
 		if ( $ret['error'] !== false ) {
-			LiteSpeed_Cache_Log::debug('Crawler log: ' . $ret['error']) ;
+			LiteSpeed_Cache_Log::debug('Crawler: ' . $ret['error']) ;
 			return $this->output($ret['error']) ;
 		}
 		else {
-			$msg = 'Reached end of sitemap file. Crawling completed.' ;
-			$msg_t = __('Reached end of sitemap file. Crawling completed.', 'litespeed-cache') ;
-			LiteSpeed_Cache_Log::debug('Crawler log: ' . $msg) ;
+			$msg = 'Crawler #' . ( $curr_crawler_pos + 1 ) . ' reached end of sitemap file.' ;
+			$msg_t = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $curr_crawler_pos + 1 ) )  ;
+			LiteSpeed_Cache_Log::debug('Crawler: ' . $msg) ;
 			return $this->output($msg_t) ;
 		}
+	}
+
+	/**
+	 * List all crawlers
+	 *
+	 * @since    1.9.1
+	 * @access   public
+	 */
+	public function list_crawlers( $count_only = false )
+	{
+		// Get roles set
+		$roles = get_option( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
+		$roles = explode( "\n", $roles ) ;
+
+		// WebP on/off
+		$webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
+
+		if ( $count_only ) {
+			$count = count( $roles ) + 1 ;
+			if ( $webp ) {
+				$count *= 2 ;
+			}
+			return $count ;
+		}
+
+		$crawler_list = array(
+			array( 'uid' => 0, 'role_title' => __( 'Guest', 'litespeed-cache' ), 'webp' => 0 ),
+		) ;
+
+		if ( $webp ) {
+			$crawler_list[] = array( 'uid' => 0, 'role_title' => __( 'Guest', 'litespeed-cache' ), 'webp' => 1 ) ;
+		}
+
+		// List all roles
+		foreach ( $roles as $v ) {
+			$role_title = '' ;
+			$udata = get_userdata( $v ) ;
+			if ( isset( $udata->roles ) && is_array( $udata->roles ) ) {
+				$tmp = array_values( $udata->roles ) ;
+				$role_title = array_shift( $tmp ) ;
+			}
+			$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 0 ) ;
+
+			if ( $webp ) {
+				$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 1 ) ;
+			}
+		}
+
+		return $crawler_list ;
+
 	}
 
 	/**

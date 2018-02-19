@@ -24,6 +24,43 @@ class LiteSpeed_Cache_Router
 	private static $_frontend_path ;
 
 	/**
+	 * Crawler simulate role
+	 *
+	 * @since  1.9.1
+	 * @access public
+	 */
+	public function is_crawler_role_simulation()
+	{
+		if( is_admin() ) {
+			return ;
+		}
+
+		if ( empty( $_COOKIE[ 'litespeed_role' ] ) || empty( $_COOKIE[ 'litespeed_hash' ] ) ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( 'Router: starting crawler role validation' ) ;
+
+		// Check if is from crawler
+		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || $_SERVER[ 'HTTP_USER_AGENT' ] !== Litespeed_Crawler::FAST_USER_AGENT ) {
+			LiteSpeed_Cache_Log::debug( 'Router: user agent not match' ) ;
+			return ;
+		}
+
+		// Hash validation
+		$hash = get_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH ) ;
+		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
+			LiteSpeed_Cache_Log::debug( 'Router: crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
+			return ;
+		}
+
+		$role_uid = $_COOKIE[ 'litespeed_role' ] ;
+		LiteSpeed_Cache_Log::debug( 'Router: role simulate litespeed_role uid ' . $role_uid ) ;
+
+		wp_set_current_user( $role_uid ) ;
+	}
+
+	/**
 	 * Get user id
 	 *
 	 * @since  1.6.2

@@ -17,6 +17,9 @@ class Litespeed_Crawler
 	private $_load_limit = 1 ;
 	private $_domain_ip = '' ;
 
+	private $_curl_headers = array() ;
+	private $_cookies = array() ;
+
 	protected $_blacklist ;
 	protected $_meta ;
 	protected $_max_run_time ;
@@ -38,6 +41,28 @@ class Litespeed_Crawler
 	{
 		$this->_sitemap_file = $sitemap_file ;
 		$this->_meta_file = $this->_sitemap_file . '.meta' ;
+	}
+
+	/**
+	 * Set headers for curl request
+	 *
+	 * @since  1.9.1
+	 * @access public
+	 */
+	public function set_headers( $headers )
+	{
+		$this->_curl_headers = $headers ;
+	}
+
+	/**
+	 * Set cookies for curl request
+	 *
+	 * @since  1.9.1
+	 * @access public
+	 */
+	public function set_cookies( $cookies )
+	{
+		$this->_cookies = $cookies ;
 	}
 
 	/**
@@ -121,7 +146,8 @@ class Litespeed_Crawler
 	 */
 	public function get_done_status()
 	{
-		if ( $this->read_meta() === true && $this->_meta['done'] === 'touchedEnd' ) {
+		$this->read_meta() ;
+		if ( $this->_meta['done'] === 'touchedEnd' ) {
 			return $this->_meta['last_full_time_cost'] + $this->_meta['this_full_beginning_time'] ;
 		}
 		return false ;
@@ -136,10 +162,11 @@ class Litespeed_Crawler
 	 */
 	public function refresh_list_size()
 	{
-		if ( $this->read_meta() === true ) {
-			$this->_meta['list_size'] = Litespeed_File::count_lines($this->_sitemap_file) ;
-			$this->save_meta() ;
-		}
+		$this->read_meta() ;
+
+		$this->_meta['list_size'] = Litespeed_File::count_lines($this->_sitemap_file) ;
+		$this->save_meta() ;
+
 		return false ;
 	}
 
@@ -164,9 +191,9 @@ class Litespeed_Crawler
 	 */
 	public function engine_start()
 	{
-		$ret = $this->read_meta() ;
-		if ( $ret !== true || ! $this->_meta ) {
-			return $this->_return($ret) ;
+		$this->read_meta() ;
+		if ( ! isset( $this->_meta ) ) {
+			return $this->_return( sprintf(__('Cannot read meta file: %s', 'litespeed-cache'), $this->_meta_file) ) ;// NOTE: deprecated due to default_meta usage
 		}
 
 		// check if is running
@@ -241,10 +268,15 @@ class Litespeed_Crawler
 						return __('Stopped: crawler disabled by the server admin', 'litespeed-cache') ;
 					}
 					elseif ( stripos($rets[$i], "X-Litespeed-Cache-Control: no-cache") !== false ) {
-						$this->_blacklist[] = $url ;
+						// Only default visitor crawler needs to add blacklist
+						if ( $this->_meta[ 'curr_crawler' ] == 0 ) {
+							$this->_blacklist[] = $url ;
+						}
 					}
 					elseif ( stripos($rets[$i], "HTTP/1.1 200 OK") === false && stripos($rets[$i], "HTTP/1.1 201 Created") === false ){
-						$this->_blacklist[] = $url ;
+						if ( $this->_meta[ 'curr_crawler' ] == 0 ) {
+							$this->_blacklist[] = $url ;
+						}
 					}
 				}
 
@@ -271,6 +303,7 @@ class Litespeed_Crawler
 					$this->_meta['pos_reset_check'] = $_time + 5 ;
 					if ( file_exists($this->_meta_file . '.reset') && unlink($this->_meta_file . '.reset') ) {
 						$this->_meta['last_pos'] = 0 ;
+						$this->_meta['curr_crawler'] = 0 ;
 						// reset done status
 						$this->_meta['done'] = 0 ;
 						$this->_meta['this_full_beginning_time'] = 0 ;
@@ -307,7 +340,13 @@ class Litespeed_Crawler
 		$this->_meta['done'] = 0 ;// reset done status
 		$this->_meta['last_status'] = 'prepare running' ;
 		$this->_meta['last_crawled'] = 0 ;
+
+		// Current crawler starttime mark
 		if ( $this->_meta['last_pos'] == 0 ) {
+			$this->_meta[ 'curr_crawler_beginning_time' ] = time() ;
+		}
+
+		if ( $this->_meta['curr_crawler'] == 0 && $this->_meta['last_pos'] == 0 ) {
 			$this->_meta['this_full_beginning_time'] = time() ;
 			$this->_meta['list_size'] = Litespeed_File::count_lines($this->_sitemap_file) ;
 		}
@@ -323,11 +362,18 @@ class Litespeed_Crawler
 	 */
 	protected function _terminate_running($end_reason)
 	{
-		if ( $end_reason === true ) {
-			$end_reason = __('Reached end of sitemap file. Crawling completed.', 'litespeed-cache') ;
-			$this->_meta['last_pos'] = 0 ;// reset last position
-			$this->_meta['done'] = 'touchedEnd' ;// log done status
-			$this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'] ;
+		if ( $end_reason === true ) { // Current crawler is fully done
+			$end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_meta['curr_crawler'] + 1 ) ) ;
+			$this->_meta[ 'curr_crawler' ]++ ; // Jump to next cralwer
+			$this->_meta[ 'last_pos' ] = 0 ;// reset last position
+			$this->_meta[ 'last_crawler_total_cost' ] = time() - $this->_meta[ 'curr_crawler_beginning_time' ] ;
+			$count_crawlers = LiteSpeed_Cache_Crawler::get_instance()->list_crawlers( true ) ;
+			if ( $this->_meta[ 'curr_crawler' ] >= $count_crawlers ) {
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: _terminate_running Touched end, whole crawled. Reload crawler!' ) ;
+				$this->_meta[ 'curr_crawler' ] = 0 ;
+				$this->_meta['done'] = 'touchedEnd' ;// log done status
+				$this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'] ;
+			}
 		}
 		$this->_meta['last_status'] = 'stopped' ;
 		$this->_meta['is_running'] = 0 ;
@@ -477,7 +523,7 @@ class Litespeed_Crawler
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
 			CURL_HTTP_VERSION_1_1 => 1,
-			CURLOPT_HTTPHEADER => array(),
+			CURLOPT_HTTPHEADER => $this->_curl_headers,
 		) ;
 		$options[CURLOPT_HTTPHEADER][] = "Cache-Control: max-age=0" ;
 
@@ -504,6 +550,20 @@ class Litespeed_Crawler
 		if ( !empty($referer) ) {
 			$options[CURLOPT_REFERER] = $referer ;
 		}
+
+		/**
+		 * Append hash to cookie for validation
+		 * @since  1.9.1
+		 */
+		$hash = Litespeed_String::rrand( 6 ) ;
+		update_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH, $hash ) ;
+		$this->_cookies[ 'litespeed_hash' ] = $hash ;
+
+		$cookies = array() ;
+		foreach ( $this->_cookies as $k => $v ) {
+			$cookies[] = "$k=" . urlencode( $v ) ;
+		}
+		$options[ CURLOPT_COOKIE ] = implode( '; ', $cookies ) ;
 
 		return $options ;
 	}
@@ -534,40 +594,53 @@ class Litespeed_Crawler
 	{
 		// get current meta info
 		$meta = Litespeed_File::read($this->_meta_file) ;
-		if ( $meta === false ) {
-			return sprintf(__('Cannot read meta file: %s', 'litespeed-cache'), $this->_meta_file) ;
-		}
 
-		if ( $meta && $meta = json_decode($meta, true) ) {
+		if ( $meta && $meta = json_decode( $meta, true ) ) {
 			// check if sitemap changed since last time
 			if ( ! isset($meta['file_time']) || $meta['file_time'] < filemtime($this->_sitemap_file) ) {
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: Sitemap timestamp changed, reset crawler' ) ;
 				$meta['file_time'] = filemtime($this->_sitemap_file) ;
 				$meta['last_pos'] = 0 ;
+				$meta['curr_crawler'] = 0 ;
 			}
 		}
-		else {
-			// initialize meta
-			$meta = array(
-				'list_size'			=> Litespeed_File::count_lines($this->_sitemap_file),
-				'last_update_time'	=> 0,
-				'last_pos'			=> 0,
-				'last_count'		=> 0,
-				'last_crawled'		=> 0,
-				'last_start_time'	=> 0,
-				'last_status'		=> '',
-				'is_running'		=> 0,
-				'end_reason'		=> '',
-				'meta_save_time'	=> 0,
-				'pos_reset_check'	=> 0,
-				'done'				=> 0,
-				'this_full_beginning_time'	=> 0,
-				'last_full_time_cost'		=> 0,
-			) ;
+
+		if ( ! $meta ) {
+			$meta = array() ;
 		}
 
-		$this->_meta = $meta ;
+		$this->_meta = array_merge( $this->_default_meta(), $meta ) ;
 
-		return true ;
+		return $this->_meta ;
+	}
+
+	/**
+	 * Get defaut meta to avoid missing key warning
+	 *
+	 * @since  1.9.1
+	 * @access private
+	 */
+	private function _default_meta()
+	{
+		return array(
+			'list_size'			=> Litespeed_File::count_lines($this->_sitemap_file),
+			'last_update_time'	=> 0,
+			'curr_crawler'		=> 0,
+			'curr_crawler_beginning_time'	=> 0,
+			'last_pos'			=> 0,
+			'last_count'		=> 0,
+			'last_crawled'		=> 0,
+			'last_start_time'	=> 0,
+			'last_status'		=> '',
+			'is_running'		=> 0,
+			'end_reason'		=> '',
+			'meta_save_time'	=> 0,
+			'pos_reset_check'	=> 0,
+			'done'				=> 0,
+			'this_full_beginning_time'	=> 0,
+			'last_full_time_cost'		=> 0,
+			'last_crawler_total_cost'	=> 0,
+		) ;
 	}
 
 }

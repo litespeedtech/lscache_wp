@@ -3,7 +3,18 @@ if (!defined('WPINC')) die ;
 
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-$sitemap_time = LiteSpeed_Cache_Crawler::get_instance()->sitemap_time() ;
+$_crawler_instance = LiteSpeed_Cache_Crawler::get_instance() ;
+
+$sitemap_time = $_crawler_instance->sitemap_time() ;
+
+$crawler_list = $_crawler_instance->list_crawlers() ;
+
+$meta = $_crawler_instance->read_meta() ;
+if ( $meta[ 'curr_crawler' ] >= count( $crawler_list ) ) {
+	$meta[ 'curr_crawler' ] = 0 ;
+}
+
+$is_running = time() - $meta[ 'is_running' ] <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
 
 $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 
@@ -17,6 +28,8 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
 	</span>
+	<hr class="wp-header-end">
+
 </div>
 
 <?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
@@ -61,7 +74,21 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			}
 		}
 		?>
-		<h3 class="litespeed-title"><?php echo __('Crawler Cron', 'litespeed-cache') ; ?></h3>
+
+		<h3 class="litespeed-title litespeed-relative">
+			<?php echo __('Crawler Cron', 'litespeed-cache') ; ?>
+			<span class="litespeed-switch-drag litespeed-cron-onoff-btn">
+				<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
+					data-url="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
+					<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
+					<?php echo $disabled ; ?>
+				/>
+				<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
+					<span class="litespeed-switch-drag-inner" data-on="<?php echo __('Enable', 'litespeed-cache'); ?>" data-off="<?php echo __('Disable', 'litespeed-cache'); ?>"></span>
+					<span class="litespeed-switch-drag-switch"></span>
+				</label>
+			</span>
+		</h3>
 		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
 			<div class="litespeed-callout-danger">
 				<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
@@ -69,99 +96,107 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed infomation.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
 			</div>
 		<?php endif; ?>
+
+
+		<?php if ( $meta[ 'this_full_beginning_time' ] ) : ?>
+		<p>
+			<b><?php echo __( 'Current sitemap crawl started at', 'litespeed-cache' ) ; ?>:</b>
+			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'this_full_beginning_time' ] ) ; ?>
+		</p>
+			<?php if ( ! $is_running ) {
+					echo '<p>' . sprintf(__('The next complete sitemap crawl will start at %s', 'litespeed-cache'),
+							date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]))
+					. '</p>' ;
+				}
+			?>
+		<?php endif ; ?>
+		<?php if ( $meta[ 'last_full_time_cost' ] ) : ?>
+		<p>
+			<b><?php echo __( 'Last complete run cost', 'litespeed-cache' ) ; ?>:</b>
+			<?php echo sprintf( __( '%d seconds', 'litespeed-cache' ), $meta[ 'last_full_time_cost' ] ) ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( $meta[ 'curr_crawler_beginning_time' ] ) : ?>
+		<p>
+			<b><?php echo __('Current crawler started at', 'litespeed-cache') ; ?>:</b>
+			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'curr_crawler_beginning_time' ] ) ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( $meta[ 'last_crawler_total_cost' ] ) : ?>
+		<p>
+			<b><?php echo __('Last crawler cost totally', 'litespeed-cache') ; ?>:</b>
+			<?php echo sprintf( __( '%d seconds', 'litespeed-cache' ), $meta[ 'last_crawler_total_cost' ] ) ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( $meta[ 'last_start_time' ] ) : ?>
+		<p class='litespeed-desc'>
+			<b><?php echo __('Last interval', 'litespeed-cache') ; ?>:</b>
+			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'last_start_time' ] ) ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( $meta[ 'end_reason' ] ) : ?>
+		<p class='litespeed-desc'>
+			<b><?php echo __( 'Ended reason', 'litespeed-cache' ) ; ?>:</b>
+			<?php echo $meta[ 'end_reason' ] ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( $meta[ 'last_crawled' ] ) : ?>
+		<p class='litespeed-desc'>
+			<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $meta[ 'last_crawled' ] ) ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+
+		$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
+		echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
+		?>
+
+
 		<table class="litespeed-table">
 			<thead><tr >
+				<th scope="col">#</th>
 				<th scope="col"><?php echo __('Cron Name', 'litespeed-cache') ; ?></th>
 				<th scope="col"><?php echo __('Run Frequency', 'litespeed-cache') ; ?></th>
-				<th scope="col"><?php echo __('Last Status', 'litespeed-cache') ; ?></th>
-				<th scope="col"><?php echo __('Activation', 'litespeed-cache') ; ?></th>
-				<th scope="col"><?php echo __('Actions', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Size', 'litespeed-cache') ; ?></th>
+				<th scope="col"><?php echo __('Status', 'litespeed-cache') ; ?></th>
 			</tr></thead>
 			<tbody>
+				<?php foreach ( $crawler_list as $i => $v ) : ?>
 				<tr>
 					<td>
-						<?php
-							echo __('LiteSpeed Cache Crawler', 'litespeed-cache');
-						?>
-						<div class='litespeed-desc'>
-						<?php
-							$meta = LiteSpeed_Cache_Crawler::get_instance()->get_meta() ;
-							$is_running = $meta && $meta->is_running && time() - $meta->is_running <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION] ;
-							if ( $meta && $meta->this_full_beginning_time ) {
-								echo sprintf( __( 'The current sitemap crawl started at %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::readable_time( $meta->this_full_beginning_time ) ) ;
-								if ( ! $is_running ) {
-									echo "</div><div class='litespeed-desc'>";
-									echo sprintf(__('The next complete sitemap crawl will start at %s', 'litespeed-cache'),
-											date('m/d/Y H:i:s',$meta->this_full_beginning_time + LITESPEED_TIME_OFFSET
-													+ $meta->last_full_time_cost + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]));
-								}
-
-							}
-						?>
-						</div>
+					<?php
+						echo $i + 1 ;
+						if ( $i == $meta[ 'curr_crawler' ] ) {
+							echo "<img class='litespeed-crawler-curr' src='" . LSWCP_PLUGIN_URL . "img/Litespeed.icon.svg' />" ;
+						}
+					?>
 					</td>
 					<td>
-						<?php echo $recurrence ; ?>
-						<div class='litespeed-desc'>
-						<?php
-							if ( $meta && $meta->last_full_time_cost ) {
-								echo sprintf(__('The last complete run cost %s seconds', 'litespeed-cache'), $meta->last_full_time_cost) ;
-							}
-						?>
-						</div>
+						<?php echo ucfirst( $v[ 'role_title' ] ) ; ?>
+						<?php if ( $v[ 'webp' ] ) {
+							echo ' - WebP' ;
+						} ?>
 					</td>
+					<td><?php echo $recurrence ; ?></td>
+					<td><?php echo "Size: $meta[list_size]" ; ?></td>
 					<td>
 					<?php
-						if ( $meta ) {
-							echo "Size: {$meta->list_size}<br />Position: " . ($meta->last_pos + 1) ;
+						if ( $i == $meta[ 'curr_crawler' ] ) {
+							echo "Position: " . ( $meta[ 'last_pos' ] + 1 ) ;
 							if ( $is_running ) {
-								echo "<br /><div class='litespeed-label-success'>" . __('Is running', 'litespeed-cache') . "</div>" ;
+								echo " <span class='litespeed-label-success'>" . __( 'running', 'litespeed-cache' ) . "</span>" ;
 							}
 						}
-						else {
-							echo "-" ;
-						}
 					?>
-					</td>
-					<td>
-						<div class="litespeed-switch-drag">
-							<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
-								data-url="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
-								<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
-								<?php echo $disabled ; ?>
-							/>
-							<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
-								<span class="litespeed-switch-drag-inner" data-on="<?php echo __('Enable', 'litespeed-cache'); ?>" data-off="<?php echo __('Disable', 'litespeed-cache'); ?>"></span>
-								<span class="litespeed-switch-drag-switch"></span>
-							</label>
-						</div>
-					</td>
-					<td>
-					<?php
-						echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
-
-						$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
-						echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
-					?>
-						<?php if ( $meta && $meta->last_start_time ): ?>
-						<div class='litespeed-desc'>
-							<?php echo sprintf(__('<b>Last interval:</b> %s', 'litespeed-cache'), LiteSpeed_Cache_Utility::readable_time( $meta->last_start_time ) ) ; ?>
-						</div>
-						<?php endif ; ?>
-
-						<?php if ( $meta && $meta->end_reason ): ?>
-						<div class='litespeed-desc'>
-							<?php echo sprintf(__('<b>Ended reason:</b> %s', 'litespeed-cache'), $meta->end_reason) ; ?>
-						</div>
-						<?php endif ; ?>
-
-						<?php if ( $meta && $meta->last_crawled ): ?>
-						<div class='litespeed-desc'>
-							<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $meta->last_crawled) ; ?>
-						</div>
-						<?php endif ; ?>
 					</td>
 				</tr>
+				<?php endforeach ; ?>
 			</tbody>
 		</table>
 		<div class="litespeed-desc">
@@ -176,7 +211,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<h3 class="litespeed-title"><?php echo __('Watch Crawler Status', 'litespeed-cache') ; ?></h3>
 
 		<?php
-			$ajaxUrl = LiteSpeed_Cache_Crawler::get_instance()->get_crawler_json_path() ;
+			$ajaxUrl = $_crawler_instance->get_crawler_json_path() ;
 			if ( $ajaxUrl ):
 		?>
 
@@ -208,7 +243,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<form method="post" action="admin.php?page=lscache-crawler">
 			<?php $this->form_action(LiteSpeed_Cache::ACTION_BLACKLIST_SAVE); ?>
 			<p>
-				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="litespeed-textarea"><?php echo LiteSpeed_Cache_Crawler::get_instance()->get_blacklist(); ?></textarea>
+				<textarea name="<?php echo LiteSpeed_Cache_Crawler::CRWL_BLACKLIST; ?>" rows="10" class="litespeed-textarea"><?php echo $_crawler_instance->get_blacklist(); ?></textarea>
 			</p>
 
 			<p>
@@ -216,7 +251,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			</p>
 		</form>
 		<div class="litespeed-desc">
-			<p><?php echo sprintf(__('Current blacklist has %s item(s).', 'litespeed-cache'), LiteSpeed_Cache_Crawler::get_instance()->count_blacklist()); ?></p>
+			<p><?php echo sprintf(__('Current blacklist has %s item(s).', 'litespeed-cache'), $_crawler_instance->count_blacklist()); ?></p>
 			<p><?php echo __('All Urls which returned no-cache tags will be added here, after the initial crawling.', 'litespeed-cache'); ?></p>
 		</div>
 

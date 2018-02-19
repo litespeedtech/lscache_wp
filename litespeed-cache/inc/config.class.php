@@ -34,6 +34,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
+	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
 
 	// Server variables
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;

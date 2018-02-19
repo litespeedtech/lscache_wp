@@ -15,7 +15,9 @@ $env_ref = $_report->get_env_ref() ;
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
 	</span>
+	<hr class="wp-header-end">
 </div>
+
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 

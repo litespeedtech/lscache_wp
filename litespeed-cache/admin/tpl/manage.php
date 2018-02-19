@@ -29,7 +29,9 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 	</span>
+	<hr class="wp-header-end">
 </div>
+
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">
 	<?php

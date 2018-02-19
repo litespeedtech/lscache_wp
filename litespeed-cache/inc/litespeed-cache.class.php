@@ -153,7 +153,6 @@ class LiteSpeed_Cache
 		 */
 		do_action( 'litespeed_init' ) ;
 
-
 		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
@@ -165,6 +164,8 @@ class LiteSpeed_Cache
 		if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
 			return ;
 		}
+
+		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
 
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;

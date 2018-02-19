@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				. ' ' . __('MUST BE UNIQUE FROM OTHER WEB APPLICATIONS.', 'litespeed-cache')
 				. '</p>'
 				. '<p>'
-					. sprintf(__('The default login cookie is %s.', 'litespeed-cache'), '_lscache_vary')
+					. sprintf(__('The default login cookie is %s.', 'litespeed-cache'), '<code>_lscache_vary</code>')
 					. ' ' . __('The server will determine if the user is logged in based on the existance of this cookie.', 'litespeed-cache')
 					. ' ' . __('This setting is useful for those that have multiple web applications for the same domain.', 'litespeed-cache')
 					. ' ' . __('If every web application uses the same cookie, the server may confuse whether a user is logged in or not.', 'litespeed-cache')

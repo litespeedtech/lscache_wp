@@ -11,6 +11,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 	</span>
+	<hr class="wp-header-end">
 </div>
 <div class="wrap">
 	<?php

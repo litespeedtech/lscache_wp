@@ -11,6 +11,7 @@ $log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
 	</span>
+	<hr class="wp-header-end">
 </div>
 
 <?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>

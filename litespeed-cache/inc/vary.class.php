@@ -270,7 +270,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		// If the cookie is lost somehow, set it
-		$vary = $this->_finalize_default_vary( $uid ) ;
+		$vary = $this->finalize_default_vary( $uid ) ;
 		$current_vary = self::has_vary() ;
 		if ( $current_vary !== $vary && $current_vary !== 'commenter' && $this->can_change_vary() ) {
 			// $_COOKIE[ self::$_vary_name ] = $vary ; // not needed
@@ -286,6 +286,17 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
+	 * Get vary name
+	 *
+	 * @since 1.9.1
+	 * @access public
+	 */
+	public function get_vary_name()
+	{
+		return self::$_vary_name ;
+	}
+
+	/**
 	 * Finalize default vary
 	 *
 	 *  Get user vary tag based on admin_bar & role
@@ -293,9 +304,9 @@ class LiteSpeed_Cache_Vary
 	 * NOTE: Login process will also call this because it does not call wp hook as normal page loading
 	 *
 	 * @since 1.6.2
-	 * @access private
+	 * @access public
 	 */
-	private function _finalize_default_vary( $uid = false )
+	public function finalize_default_vary( $uid = false )
 	{
 		$vary = array() ;
 

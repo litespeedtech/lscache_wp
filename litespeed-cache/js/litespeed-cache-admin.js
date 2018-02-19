@@ -317,7 +317,7 @@ function litespeed_fetch_meta() {
 		litespeed_pulse() ;
 		var changed = false ;
 		if ( meta && 'list_size' in meta ) {
-			new_meta = meta.list_size + ' ' + meta.file_time + ' ' + meta.last_pos + ' ' + meta.last_count + ' ' + meta.last_start_time + ' ' + meta.is_running ;
+			new_meta = meta.list_size + ' ' + meta.file_time + ' ' + meta.curr_crawler + ' ' + meta.last_pos + ' ' + meta.last_count + ' ' + meta.last_start_time + ' ' + meta.is_running ;
 			if ( new_meta != _litespeed_meta ) {
 				_litespeed_meta = new_meta ;
 				changed = true ;
@@ -365,6 +365,7 @@ function _litespeed_adjust_interval(changed) {
 function _litespeed_build_meta(meta) {
 	var string = '<li>' + litespeed_date(meta.last_update_time) +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Size: ' + meta.list_size +
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Crawler: #' + (meta.curr_crawler*1+1) +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Position: ' + (meta.last_pos*1+1) +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Threads: ' + meta.last_count +
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status: '
