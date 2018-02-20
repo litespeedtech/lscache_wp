@@ -477,7 +477,7 @@ class LiteSpeed_Cache_Crawler
 	{
 		// Get roles set
 		$roles = get_option( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
-		$roles = explode( "\n", $roles ) ;
+		$roles = $roles ? explode( "\n", $roles ) : array() ;
 
 		// WebP on/off
 		$webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
@@ -505,6 +505,9 @@ class LiteSpeed_Cache_Crawler
 			if ( isset( $udata->roles ) && is_array( $udata->roles ) ) {
 				$tmp = array_values( $udata->roles ) ;
 				$role_title = array_shift( $tmp ) ;
+			}
+			if ( ! $role_title ) {
+				continue ;
 			}
 			$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 0 ) ;
 

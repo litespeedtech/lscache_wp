@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 1.9.1
+Stable tag: 1.9.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,6 +250,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.9.1.1 - February 20 2018 =
+* [Hotfix] Removed empty crawler when no role simulation is set.
 
 = 1.9.1 - February 20 2018 =
 * [NEW FEATURE] Role Simulation crawler.
