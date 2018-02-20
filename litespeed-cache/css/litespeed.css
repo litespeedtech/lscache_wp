@@ -1475,7 +1475,14 @@ g.litespeed-pie_info text{
 	top: -7px ;
 }
 
+/********************************* form input *******************************/
+input.litespeed-input[type="file"]{
+	padding: 9px ;
+	min-width: 500px ;
+}
+
 /********************************* todo *******************************/
+
 /* input field */
 .litespeed-textarea {
 	width: 60% ;
