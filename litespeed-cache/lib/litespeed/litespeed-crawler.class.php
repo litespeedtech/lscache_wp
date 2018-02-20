@@ -522,10 +522,20 @@ class Litespeed_Crawler
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
-			CURL_HTTP_VERSION_1_1 => 1,
 			CURLOPT_HTTPHEADER => $this->_curl_headers,
 		) ;
 		$options[CURLOPT_HTTPHEADER][] = "Cache-Control: max-age=0" ;
+
+		/**
+		 * Try to enable http2 connection (only available since PHP7+)
+		 * @since  1.9.1
+		 */
+		if ( defined( 'CURL_HTTP_VERSION_2' ) ) {
+			$options[ CURL_HTTP_VERSION_2 ] = 1 ;
+		}
+		else {
+			$options[ CURL_HTTP_VERSION_1_1 ] = 1 ;
+		}
 
 		if ( ! $ua ) {
 			$ua = self::FAST_USER_AGENT ;
