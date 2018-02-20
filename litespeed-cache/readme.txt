@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 1.9
+Stable tag: 1.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -250,6 +250,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 17. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 1.9.1 - February 20 2018 =
+* [NEW FEATURE] Role Simulation crawler.
+* [NEW FEATURE] WebP multiple crawler.
+* [NEW FEATURE] HTTP/2 support for crawler.
+* [BUGFIX] Fixed a js bug with the auto complete mobile user agents field when cache mobile is turned on.
+* [BUGFIX] Fixed a constant undefined warning after activation.
+* [GUI] Sitemap generation settings are no longer hidden when using a custom sitemap.
 
 = 1.9 - February 12 2018 =
 * [NEW FEATURE] Inline CSS/JS Minify.

@@ -103,17 +103,26 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<b><?php echo __( 'Current sitemap crawl started at', 'litespeed-cache' ) ; ?>:</b>
 			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'this_full_beginning_time' ] ) ; ?>
 		</p>
-			<?php if ( ! $is_running ) {
-					echo '<p>' . sprintf(__('The next complete sitemap crawl will start at %s', 'litespeed-cache'),
-							date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]))
-					. '</p>' ;
-				}
-			?>
+
+			<?php if ( ! $is_running ) : ?>
+		<p>
+			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ) ; ?>:</b>
+			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]) ; ?>
+			<?php endif ; ?>
+		</p>
+
 		<?php endif ; ?>
 		<?php if ( $meta[ 'last_full_time_cost' ] ) : ?>
 		<p>
-			<b><?php echo __( 'Last complete run cost', 'litespeed-cache' ) ; ?>:</b>
+			<b><?php echo __( 'Last complete run time for all crawlers', 'litespeed-cache' ) ; ?>:</b>
 			<?php echo sprintf( __( '%d seconds', 'litespeed-cache' ), $meta[ 'last_full_time_cost' ] ) ; ?>
+		</p>
+		<?php endif ; ?>
+
+		<?php if ( $meta[ 'last_crawler_total_cost' ] ) : ?>
+		<p>
+			<b><?php echo __('Run time for previous crawler', 'litespeed-cache') ; ?>:</b>
+			<?php echo sprintf( __( '%d seconds', 'litespeed-cache' ), $meta[ 'last_crawler_total_cost' ] ) ; ?>
 		</p>
 		<?php endif ; ?>
 
@@ -121,13 +130,6 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<p>
 			<b><?php echo __('Current crawler started at', 'litespeed-cache') ; ?>:</b>
 			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'curr_crawler_beginning_time' ] ) ; ?>
-		</p>
-		<?php endif ; ?>
-
-		<?php if ( $meta[ 'last_crawler_total_cost' ] ) : ?>
-		<p>
-			<b><?php echo __('Last crawler cost totally', 'litespeed-cache') ; ?>:</b>
-			<?php echo sprintf( __( '%d seconds', 'litespeed-cache' ), $meta[ 'last_crawler_total_cost' ] ) ; ?>
 		</p>
 		<?php endif ; ?>
 

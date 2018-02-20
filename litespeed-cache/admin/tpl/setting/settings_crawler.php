@@ -123,7 +123,7 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Roles Simulation', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Role Simulation', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS, 20 ) ; ?>
 
