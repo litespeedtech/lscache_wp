@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '1.9.1.1' ;
+	const PLUGIN_VERSION = '1.9.2' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -47,6 +47,7 @@ class LiteSpeed_Cache
 	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable' ;
 	const ACTION_DO_CRAWL = 'do-crawl' ;
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
+	const ACTION_QUIC_CLOUD = 'quic_cloud' ;
 
 	const ACTION_FRONT_PURGE = 'front-purge' ;
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
@@ -350,6 +351,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_IMPORT:
 				$msg = LiteSpeed_Cache_Import::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_QUIC_CLOUD:
+				$msg = LiteSpeed_Cache_QUIC_CLOUD::handler() ;
 				break ;
 
 			default:

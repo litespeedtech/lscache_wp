@@ -66,9 +66,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Vary Group', 'litespeed-cache'); ?></th>
 		<td>
 			<table class="litespeed-vary-table"><tbody>
-			<?php foreach ( $roles as $role ): ?>
+			<?php foreach ( $roles as $role => $title ): ?>
 				<tr>
-					<td class='litespeed-vary-title'><?php echo $role ; ?></td>
+					<td class='litespeed-vary-title'><?php echo $title ; ?></td>
 					<td class='litespeed-vary-val'>
 						<input type="text" class="litespeed-input-short"
 							name="<?php echo LiteSpeed_Cache_Config::VARY_GROUP ; ?>[<?php echo $role ; ?>]"

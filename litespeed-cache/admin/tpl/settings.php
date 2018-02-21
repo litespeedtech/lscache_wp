@@ -80,9 +80,12 @@ global $wp_roles ;
 if ( !isset( $wp_roles ) ) {
 	$wp_roles = new WP_Roles() ;
 }
-$roles = array_keys( $wp_roles->roles ) ;
 
-sort( $roles ) ;
+$roles = array() ;
+foreach ( $wp_roles->roles as $k => $v ) {
+	$roles[ $k ] = $v[ 'name' ] ;
+}
+ksort( $roles ) ;
 
 include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 

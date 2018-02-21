@@ -1,6 +1,6 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: cache, wp-cache, litespeed, super cache, http2, total cache, wordfence
+Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize
 Requires at least: 4.0
 Tested up to: 4.9.4
 Stable tag: 1.9.1.1
