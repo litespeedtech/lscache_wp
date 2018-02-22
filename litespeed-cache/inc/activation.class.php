@@ -119,6 +119,16 @@ class LiteSpeed_Cache_Activation
 				$count++ ;
 			}
 		}
+
+		/**
+		 * In case this is called outside the admin page
+		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
+		 * @since  1.9.2
+		 */
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+		}
+
 		if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
 			$count++ ;
 		}

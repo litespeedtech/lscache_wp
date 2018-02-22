@@ -271,11 +271,16 @@ class LiteSpeed_Cache_Config
 	{
 		$site_options = get_site_option( self::OPTION_NAME ) ;
 
-		if ( ! function_exists('is_plugin_active_for_network') ) { // todo: check if needed
-			require_once(ABSPATH . '/wp-admin/includes/plugin.php') ;
-		}
-
 		$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
+
+		/**
+		 * In case this is called outside the admin page
+		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
+		 * @since  1.9.2
+		 */
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+		}
 
 		// If don't have site options
 		if ( ! $site_options || ! is_array( $site_options ) || ! is_plugin_active_for_network( 'litespeed-cache/litespeed-cache.php' ) ) {
