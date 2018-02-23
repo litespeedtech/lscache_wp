@@ -134,7 +134,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Optimize CSS delivery. This will load Google Fonts asynchronously too.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>
 				</font>
 			</div>
@@ -159,7 +159,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Improve compatibility with inline JS by preventing jQuery optimization. (Recommended Setting: %s)', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				<br /><font class="litespeed-warning">
-					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __('NOTE', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'If there is any JS error related to %1$s when enabled %2$s, please try this option.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
 				</font>
 			</div>

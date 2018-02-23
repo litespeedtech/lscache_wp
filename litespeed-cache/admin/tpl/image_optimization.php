@@ -205,7 +205,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<span class="litespeed-desc">
 			<?php echo __( 'Remove all previous image optimization requests/results, revert completed optimizations, and delete all optimization files.', 'litespeed-cache' ) ; ?>
 			<font class="litespeed-warning">
-				<?php echo __('NOTE:', 'litespeed-cache'); ?>
+				<?php echo __('NOTE', 'litespeed-cache'); ?>:
 				<?php echo sprintf( __( 'If there are unfinished requests in progress, the requests\' credits will NOT be recovered.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
 			</font>
 

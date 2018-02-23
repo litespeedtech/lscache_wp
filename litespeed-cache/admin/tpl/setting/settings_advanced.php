@@ -47,7 +47,7 @@ if (!defined('WPINC')) die;
 				<?php echo __( 'When a vistor hovers over a page link, preload that page. This will speed up the visit to that link.', 'litespeed-cache' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 				<br /><font class="litespeed-danger">
-					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __('NOTE', 'litespeed-cache'); ?>:
 					<?php echo __('This will generate extra requests to the server, which will increase server load.', 'litespeed-cache'); ?>
 				</font>
 

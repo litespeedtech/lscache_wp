@@ -48,7 +48,7 @@ $breakArr = array(
 		<th><?php echo __('Auto Purge Rules For Publish/Update', 'litespeed-cache'); ?></th>
 		<td>
 			<div class="litespeed-callout-warning">
-				<h4><?php echo __('Note:', 'litespeed-cache'); ?></h4>
+				<h4><?php echo __('Note', 'litespeed-cache'); ?></h4>:
 				<i>
 					<?php echo __('Select "All" if there are dynamic widgets linked to posts on pages other than the front or home pages.', 'litespeed-cache'); ?><br />
 					<?php echo __('Other checkboxes will be ignored.', 'litespeed-cache'); ?><br />

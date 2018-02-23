@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_media_lazy_img_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-lazy="1"</code>' ) ; ?>
 				</font>

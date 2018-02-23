@@ -855,7 +855,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						</tr>
 					</tbody></table>
 					<div class='litespeed-callout-warning'>
-						<h4>" . __('Note:', 'litespeed-cache') . "</h4>
+						<h4>" . __('Note', 'litespeed-cache') . ":</h4>
 						<i>
 							" . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . "
 							" . sprintf(__('To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"' ) . "

@@ -60,7 +60,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				</i>
 			</div>
 			<div class="litespeed-callout-warning">
-				<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
+				<h4><?php echo __('NOTE', 'litespeed-cache'); ?>:</h4>
 				<ol>
 					<li><?php echo __('If the category slug is not found, the category will be removed from the list on save.', 'litespeed-cache'); ?></li>
 					<li><?php echo sprintf(__('To exclude %1$s, insert %2$s.', 'litespeed-cache'),
@@ -98,7 +98,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				</i>
 			</div>
 			<div class="litespeed-callout-warning">
-				<h4><?php echo __('NOTE:', 'litespeed-cache'); ?></h4>
+				<h4><?php echo __('NOTE', 'litespeed-cache'); ?>:</h4>
 				<ol>
 					<li><?php echo __('If the tag slug is not found, the tag will be removed from the list on save.', 'litespeed-cache'); ?></li>
 					<li><?php echo sprintf(__('To exclude %1$s, insert %2$s.', 'litespeed-cache'),

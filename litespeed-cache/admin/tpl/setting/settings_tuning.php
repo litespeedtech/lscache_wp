@@ -17,11 +17,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Load combined CSS files before other CSS files.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'Set to %s by default.', 'litespeed-cache' ), __( 'OFF', 'litespeed-cache' ) ) ; ?>
 				<br /><font class="litespeed-warning">
-					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __('NOTE', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined CSS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				</font>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded from moving to top.', 'litespeed-cache' ), '<code>data-optimized="0"</code>' ) ; ?>
 				</font>
 			</div>
@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_optimize_css_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
 				</font>
@@ -53,11 +53,11 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Load combined JS files before other JS files.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'Set to %s by default.', 'litespeed-cache' ), __( 'OFF', 'litespeed-cache' ) ) ; ?>
 				<br /><font class="litespeed-warning">
-					<?php echo __('NOTE:', 'litespeed-cache'); ?>
+					<?php echo __('NOTE', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined JS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				</font>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded from moving to top/bottom.', 'litespeed-cache' ), '<code>data-optimized="0"</code>' ) ; ?>
 				</font>
 			</div>
@@ -73,7 +73,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_optimize_js_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
 				</font>
@@ -145,7 +145,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API:', 'litespeed-cache'); ?>
+					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
 				</font>

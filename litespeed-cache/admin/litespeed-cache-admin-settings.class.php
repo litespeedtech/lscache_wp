@@ -343,9 +343,9 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL	 	=> array( __( 'Default Private Cache', 'litespeed-cache' ), 60, 3600 ),
 			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL 	=> array( __( 'Default Front Page', 'litespeed-cache' ), 30, $this->_max_int ),
 			LiteSpeed_Cache_Config::OPID_FEED_TTL		 	=> array( __( 'Feed', 'litespeed-cache' ), 0, $this->_max_int, 30 ),
-			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array( __( '404', 'litespeed-cache' ), 0, $this->_max_int, 30 ),
-			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array( __( '403', 'litespeed-cache' ), 0, $this->_max_int, 30 ),
-			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array( __( '500', 'litespeed-cache' ), 0, $this->_max_int, 30 ),
+			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array( '404', 0, $this->_max_int, 30 ),
+			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array( '403', 0, $this->_max_int, 30 ),
+			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array( '500', 0, $this->_max_int, 30 ),
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $desc, $min, $max ) = $v ;
