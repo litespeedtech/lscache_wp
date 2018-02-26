@@ -11,6 +11,7 @@ class Litespeed_Crawler
 	private $_baseUrl ;
 	private $_sitemap_file ;
 	private $_meta_file ;
+	private $_http2 = true ;
 	private $_run_delay = 500 ;//microseconds
 	private $_run_duration = 200 ;//seconds
 	private $_threads_limit = 3 ;
@@ -41,6 +42,17 @@ class Litespeed_Crawler
 	{
 		$this->_sitemap_file = $sitemap_file ;
 		$this->_meta_file = $this->_sitemap_file . '.meta' ;
+	}
+
+	/**
+	 * Set http/2 option for curl request
+	 *
+	 * @since  1.9.2
+	 * @access public
+	 */
+	public function set_http2( $is_enabled )
+	{
+		$this->_http2 = $is_enabled ;
 	}
 
 	/**
@@ -554,7 +566,8 @@ class Litespeed_Crawler
 		 * Try to enable http2 connection (only available since PHP7+)
 		 * @since  1.9.1
 		 */
-		if ( defined( 'CURL_HTTP_VERSION_2' ) ) {
+		if ( defined( 'CURL_HTTP_VERSION_2' ) && $this->_http2 ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: Enabled HTTP2' ) ;
 			$options[ CURL_HTTP_VERSION_2 ] = 1 ;
 		}
 		else {

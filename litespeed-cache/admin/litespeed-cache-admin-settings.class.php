@@ -881,6 +881,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::CRWL_PAGES,
 			LiteSpeed_Cache_Config::CRWL_CATS,
 			LiteSpeed_Cache_Config::CRWL_TAGS,
+			LiteSpeed_Cache_Config::CRWL_HTTP2,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
