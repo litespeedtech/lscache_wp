@@ -240,6 +240,34 @@ class Litespeed_Crawler
 	}
 
 	/**
+	 * Check returned curl header to find if the status is 200 ok or not
+	 *
+	 * @since  1.9.2
+	 * @access private
+	 */
+	private function _status_ok_and_cached( $headers )
+	{
+		if ( stripos( $headers, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
+			return false ;
+		}
+
+		$_http_status_ok_list = array(
+			'HTTP/1.1 200 OK',
+			'HTTP/1.1 201 Created',
+			'HTTP/2 200',
+			'HTTP/2 201',
+		) ;
+
+		foreach ( $_http_status_ok_list as $http_status ) {
+			if ( stripos( $headers, $http_status ) !== false ) {
+				return true ;
+			}
+		}
+
+		return false ;
+	}
+
+	/**
 	 * Run crawler
 	 *
 	 * @since  1.1.0
@@ -267,13 +295,9 @@ class Litespeed_Crawler
 					if ( stripos($rets[$i], "HTTP/1.1 428 Precondition Required") !== false ) {
 						return __('Stopped: crawler disabled by the server admin', 'litespeed-cache') ;
 					}
-					elseif ( stripos($rets[$i], "X-Litespeed-Cache-Control: no-cache") !== false ) {
+
+					if ( ! $this->_status_ok_and_cached( $rets[ $i ] ) ) {
 						// Only default visitor crawler needs to add blacklist
-						if ( $this->_meta[ 'curr_crawler' ] == 0 ) {
-							$this->_blacklist[] = $url ;
-						}
-					}
-					elseif ( stripos($rets[$i], "HTTP/1.1 200 OK") === false && stripos($rets[$i], "HTTP/1.1 201 Created") === false ){
 						if ( $this->_meta[ 'curr_crawler' ] == 0 ) {
 							$this->_blacklist[] = $url ;
 						}
