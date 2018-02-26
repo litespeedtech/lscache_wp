@@ -80,21 +80,29 @@ class LiteSpeed_Cache_CDN
 			}
 			$this_url = $v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] ;
 			$this_host = parse_url( $this_url, PHP_URL_HOST ) ;
+			// Check img/css/js
 			foreach ( $mapping_to_check as $to_check ) {
 				if ( $v[ $to_check ] ) {
 					LiteSpeed_Cache_Log::debug2( 'CDN: mapping ' . $to_check . ' -> ' . $this_url ) ;
-					$this->cfg_cdn_mapping[ $to_check ] = $this_url ;
+
+					// If filetype to url is one to many, make url be an array
+					$this->_append_cdn_mapping( $to_check, $this_url ) ;
+
 					if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
 						$this->cdn_mapping_hosts[] = $this_host ;
 					}
 				}
 			}
+			// Check file types
 			if ( $v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ] ) {
 				$filetypes = array_map( 'trim', explode( "\n", $v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ] ) ) ;
 				foreach ( $filetypes as $v2 ) {
 					if ( $v2 ) {
 						$this->cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ] = true ;
-						$this->cfg_cdn_mapping[ $v2 ] = $this_url ;
+
+						// If filetype to url is one to many, make url be an array
+						$this->_append_cdn_mapping( $v2, $this_url ) ;
+
 						if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
 							$this->cdn_mapping_hosts[] = $this_host ;
 						}
@@ -139,6 +147,28 @@ class LiteSpeed_Cache_CDN
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
 		}
 
+	}
+
+	/**
+	 * Associate all filetypes with url
+	 *
+	 * @since  1.9.2
+	 * @access private
+	 */
+	private function _append_cdn_mapping( $filetype, $url )
+	{
+		// If filetype to url is one to many, make url be an array
+		if ( empty( $this->cfg_cdn_mapping[ $filetype ] ) ) {
+			$this->cfg_cdn_mapping[ $filetype ] = $url ;
+		}
+		elseif ( is_array( $this->cfg_cdn_mapping[ $filetype ] ) ) {
+			// Append url to filetype
+			$this->cfg_cdn_mapping[ $filetype ][] = $url ;
+		}
+		else {
+			// Convert cfg_cdn_mapping from string to array
+			$this->cfg_cdn_mapping[ $filetype ] = array( $this->cfg_cdn_mapping[ $filetype ], $url ) ;
+		}
 	}
 
 	/**
@@ -513,6 +543,11 @@ class LiteSpeed_Cache_CDN
 		else {
 			// select from file type
 			$final_url = $this->cfg_cdn_mapping[ $postfix ] ;
+		}
+
+		// If filetype to url is one to many, need to random one
+		if ( is_array( $final_url ) ) {
+			$final_url = $final_url[ mt_rand( 0, count( $final_url ) - 1 ) ] ;
 		}
 
 		// Now lets replace CDN url
