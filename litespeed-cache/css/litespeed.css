@@ -54,6 +54,7 @@
 	margin-top: 30px;
 }
 
+.litespeed-wrap .litespeed-left20,
 .litespeed-left20 {
 	margin-left: 20px;
 }
@@ -152,8 +153,11 @@ h3 .litespeed-learn-more {
 	overflow: auto;
 	padding: 10px 15px 15px 15px;
 	position: relative;
-	border-top: none;
 	color: #264d73;
+}
+
+.litespeed-header + .litespeed-body {
+	border-top: none;
 }
 
 .litespeed-body code{
@@ -195,6 +199,7 @@ h3 .litespeed-learn-more {
 	display: table;
 	padding-right: 50px;
 	padding-left: 3px;
+	padding-bottom: 3px;
 }
 
 .litespeed-title a,
@@ -1531,6 +1536,41 @@ g.litespeed-pie_info text{
 input.litespeed-input[type="file"]{
 	padding: 9px ;
 	min-width: 500px ;
+}
+
+/********************************* guidance *******************************/
+.litespeed-guide {
+	border:1px solid #73b38d;
+	max-width: 50%;
+	padding: 20px;
+}
+
+.litespeed-guide h2 {
+	color: #73b38d;
+	border-bottom:1px solid #73b38d;
+	display: table;
+	padding-right: 50px;
+	padding-left: 3px;
+	padding-bottom: 3px;
+}
+
+.litespeed-guide li {
+	font-size: 15px;
+	line-height: 30px;
+	margin: 10px 10px 10px 16px ;
+}
+
+.litespeed-guide li.litespeed-guide-done:before{
+	content: '\2713' ;
+	font-size: 26px ;
+	color: #73b38d ;
+	margin-left: -37px ;
+	margin-right: 18px ;
+	opacity: 1 ;
+}
+
+.litespeed-guide li.litespeed-guide-done {
+	opacity: .9 ;
 }
 
 /********************************* todo *******************************/
