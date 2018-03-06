@@ -152,7 +152,7 @@ class LiteSpeed_Cache_CDN
 	/**
 	 * Associate all filetypes with url
 	 *
-	 * @since  1.9.2
+	 * @since  2.0
 	 * @access private
 	 */
 	private function _append_cdn_mapping( $filetype, $url )

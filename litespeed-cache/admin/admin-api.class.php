@@ -79,16 +79,16 @@ class LiteSpeed_Cache_Admin_API
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
 			case self::TYPE_NOTIFY_IMG :
-				LiteSpeed_Cache_Media::get_instance()->notify_img() ;
+				LiteSpeed_Cache_Img_Optm::get_instance()->notify_img() ;
 				break ;
 
 			case self::TYPE_CHECK_IMG :
 				$instance->validate_lsserver() ;
-				LiteSpeed_Cache_Media::get_instance()->check_img() ;
+				LiteSpeed_Cache_Img_Optm::get_instance()->check_img() ;
 				break ;
 
 			case self::TYPE_IMG_DESTROY_CALLBACK :
-				LiteSpeed_Cache_Media::get_instance()->img_optimize_destroy_callback() ;
+				LiteSpeed_Cache_Img_Optm::get_instance()->img_optimize_destroy_callback() ;
 				break ;
 
 			default:
@@ -143,7 +143,7 @@ class LiteSpeed_Cache_Admin_API
 	private function _request_callback()
 	{
 		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
-		LiteSpeed_Cache_Log::debug( 'IAPI __callback request hash: ' . $key_hash ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] __callback request hash: ' . $key_hash ) ;
 		exit( $key_hash ) ;
 	}
 
@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Admin_API
 	public static function sapi_valiate_passive_callback()
 	{
 		if ( empty( $_REQUEST[ 'hash' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI __callback bypassed passive check' ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] __callback bypassed passive check' ) ;
 			return false ;
 		}
 		$instance = self::get_instance() ;
@@ -166,7 +166,7 @@ class LiteSpeed_Cache_Admin_API
 		$key_hash = get_option( self::DB_API_KEY_HASH ) ;
 		$hash_check = md5( $key_hash ) === $_REQUEST[ 'hash' ] ;
 
-		LiteSpeed_Cache_Log::debug( 'IAPI __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] __callback hash check ' . $key_hash . ': ' . ( $hash_check ? 'passed' : 'failed' ) ) ;
 
 		return $hash_check ;
 	}
@@ -184,18 +184,18 @@ class LiteSpeed_Cache_Admin_API
 
 		// don't have auth_key yet
 		if ( ! $instance->_iapi_key ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive check failed: No init key' ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive check failed: No init key' ) ;
 			return false ;
 		}
 
 		// Once client has auth_key, each time when callback to check, need to carry on this key
 		if ( empty( $_REQUEST[ 'auth_key' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive check failed: lack of auth_key' ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive check failed: lack of auth_key' ) ;
 			return false ;
 		}
 
 		$res = md5( $instance->_iapi_key ) === $_REQUEST[ 'auth_key' ] ;
-		LiteSpeed_Cache_Log::debug( 'IAPI __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
 		return $res ;
 	}
 
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Admin_API
 
 		// Check if get key&server correctly
 		if ( empty( $json[ 'auth_key' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI request key failed: ', $json ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] request key failed: ', $json ) ;
 			$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
@@ -242,7 +242,7 @@ class LiteSpeed_Cache_Admin_API
 
 		// store data into option locally
 		update_option( self::DB_API_KEY, $json[ 'auth_key' ] ) ;
-		LiteSpeed_Cache_Log::debug( 'IAPI applied auth_key' ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] applied auth_key' ) ;
 
 		$this->_iapi_key = $json[ 'auth_key' ] ;
 	}
@@ -256,7 +256,7 @@ class LiteSpeed_Cache_Admin_API
 	private function _reset_key()
 	{
 		delete_option( self::DB_API_KEY ) ;
-		LiteSpeed_Cache_Log::debug( 'IAPI delete auth_key' ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] delete auth_key' ) ;
 
 		$msg = __( 'Reset IAPI key successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
@@ -281,7 +281,7 @@ class LiteSpeed_Cache_Admin_API
 
 		$url = $server . '/' . $action ;
 
-		LiteSpeed_Cache_Log::debug( 'IAPI posting to : ' . $url ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] posting to : ' . $url ) ;
 
 		$param = array(
 			'auth_key'	=> $this->_iapi_key,
@@ -297,7 +297,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( 'IAPI failed to post: ' . $error_message ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] failed to post: ' . $error_message ) ;
 			return $error_message ;
 		}
 
@@ -305,12 +305,12 @@ class LiteSpeed_Cache_Admin_API
 		$json = json_decode( $response[ 'body' ], true ) ;
 
 		if ( ! is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI failed to decode post json: ' . $response[ 'body' ] ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] failed to decode post json: ' . $response[ 'body' ] ) ;
 			return $response[ 'body' ] ;
 		}
 
 		if ( ! empty( $json[ '_err' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI _err: ' . $json[ '_err' ] ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] _err: ' . $json[ '_err' ] ) ;
 			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
@@ -318,7 +318,7 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		if ( ! empty( $json[ '_info' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI _info: ' . $json[ '_info' ] ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] _info: ' . $json[ '_info' ] ) ;
 			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_info' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::info( $msg ) ;
@@ -326,7 +326,7 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		if ( ! empty( $json[ '_note' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'IAPI _note: ' . $json[ '_note' ] ) ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] _note: ' . $json[ '_note' ] ) ;
 			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_note' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::note( $msg ) ;

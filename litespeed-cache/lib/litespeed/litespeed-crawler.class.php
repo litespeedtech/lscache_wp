@@ -47,7 +47,7 @@ class Litespeed_Crawler
 	/**
 	 * Set http/2 option for curl request
 	 *
-	 * @since  1.9.2
+	 * @since  2.0
 	 * @access public
 	 */
 	public function set_http2( $is_enabled )
@@ -254,7 +254,7 @@ class Litespeed_Crawler
 	/**
 	 * Check returned curl header to find if the status is 200 ok or not
 	 *
-	 * @since  1.9.2
+	 * @since  2.0
 	 * @access private
 	 */
 	private function _status_ok_and_cached( $headers )

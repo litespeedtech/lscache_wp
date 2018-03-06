@@ -1,12 +1,15 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$media = LiteSpeed_Cache_Media::get_instance() ;
+// Update table data for upgrading
+LiteSpeed_Cache_Data::get_instance() ;
 
-$img_count = $media->img_count() ;
-$optm_summary = $media->summary_info() ;
+$img_optm = LiteSpeed_Cache_Img_Optm::get_instance() ;
 
-list( $last_run, $is_running ) = $media->cron_running( false ) ;
+$img_count = $img_optm->img_count() ;
+$optm_summary = $img_optm->summary_info() ;
+
+list( $last_run, $is_running ) = $img_optm->cron_running( false ) ;
 
 $_optm_summary_list = array(
 	'level'	=> array(
@@ -40,6 +43,18 @@ $_optm_summary_list = array(
 	),
 ) ;
 
+// Guidance check
+$current_step = false ;
+if ( empty( $optm_summary[ 'level' ] ) || $optm_summary[ 'level' ] < 2 ) {
+	$current_step = $img_optm->get_guidance_pos() ;
+}
+$guidance_steps = array(
+	sprintf( __( 'Click the %s button.', 'litespeed-cache' ), '<font class="litespeed-success">' . __( 'Update Status', 'litespeed-cache' ) . '</font>' ),
+	sprintf( __( 'Click the %s button.', 'litespeed-cache' ), '<font class="litespeed-success">' . __( 'Send Optimization Request', 'litespeed-cache' ) . '</font>' ),
+	sprintf( __( 'Click the %s button or wait for the cron job to finish the pull action.', 'litespeed-cache' ), '<font class="litespeed-success">' . __( 'Pull Images', 'litespeed-cache' ) . '</font>' ),
+	__( 'Repeat the above steps until you have leveled up.', 'litespeed-cache' )
+) ;
+
 
 include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 ?>
@@ -58,6 +73,10 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
+		<?php if ( $current_step ) : ?>
+			<?php echo LiteSpeed_Cache_Admin_Display::guidance( __( 'How to Level Up', 'litespeed-cache' ), $guidance_steps, $current_step ) ; ?>
+		<?php endif ; ?>
+
 		<h3 class="litespeed-title"><?php echo __('Optimization Summary', 'litespeed-cache') ; ?></h3>
 
 		<?php foreach ( $_optm_summary_list as $k => $v ) : ?>
@@ -87,8 +106,8 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<?php endif ; ?>
 		<?php endforeach ; ?>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_SYNC_DATA ) ; ?>" class="litespeed-btn-success">
-			<?php echo __( 'Update Reduction Status', 'litespeed-cache' ) ; ?>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="litespeed-btn-success">
+			<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
 			<?php echo __( 'This will communicate with LiteSpeed\'s Image Optimization Server and retrieve the most recent status.', 'litespeed-cache' ) ; ?>
@@ -100,19 +119,26 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>
 		</h3>
 
-		<p><?php echo sprintf( __( '<a %s>Image groups</a> total', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank"' ) ; ?>: <b><?php echo $img_count[ 'total_img' ] ; ?></b></p>
-		<p><?php echo __('Image groups not yet requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_not_requested' ] ; ?></b></p>
+		<p>
+			<?php echo __( 'Images total', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_img' ] ) ; ?></b>
+			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-left20"><?php echo __( 'What is a group?', 'litespeed-cache') ; ?></a>
+		</p>
+		<p>
+			<?php echo __('Images not yet requested', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_not_requested' ] ) ; ?></b>
+		</p>
 		<?php if ( $img_count[ 'total_not_requested' ] ) : ?>
 		<?php if ( empty( $optm_summary[ 'level' ] ) ) : ?>
 			<a href="#" class="litespeed-btn-default disabled">
 				<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 			</a>
 			<span class="litespeed-desc">
-				<?php echo sprintf( __( 'Please press the %s button before sending a new request.', 'litespeed-cache' ), __( 'Update Reduction Status', 'litespeed-cache' ) ) ; ?>
+				<?php echo sprintf( __( 'Please press the %s button before sending a new request.', 'litespeed-cache' ), __( 'Update Status', 'litespeed-cache' ) ) ; ?>
 			</span>
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 		<?php else : ?>
-			<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE ) ; ?>" class="litespeed-btn-success">
+			<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>" class="litespeed-btn-success">
 				<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 			</a>
 			<span class="litespeed-desc">
@@ -125,17 +151,26 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		<hr />
 
 		<p>
-			<?php echo __('Image groups requested', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_requested' ] ; ?></b>
+			<?php echo __('Images requested', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_requested_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_requested' ], 'image' ) ; ?></b>)
 		</p>
-		<p><?php echo __('Image groups failed to optimize', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_err' ] ; ?></b></p>
+		<p>
+			<?php echo __('Images failed to optimize', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err' ], 'image' ) ; ?></b>)
+		</p>
 		<p class="litespeed-desc">
 			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
 			<?php echo __( 'This process is automatic.', 'litespeed-cache' ) ; ?>
 		</p>
 		<p>
-			<?php echo __('Image groups notified to pull', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_server_finished' ] ; ?></b>
+			<?php echo __('Images notified to pull', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_server_finished_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_server_finished' ], 'image' ) ; ?></b>)
+
 			<?php if ( $img_count[ 'total_server_finished' ] && ! $is_running ) : ?>
-				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_PULL ) ; ?>" class="litespeed-btn-success">
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL ) ; ?>" class="litespeed-btn-success">
 					<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
 				</a>
 				<span class="litespeed-desc">
@@ -148,7 +183,11 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 				</span>
 			<?php endif ; ?>
 		</p>
-		<p><?php echo __('Image groups optimized and pulled', 'litespeed-cache') ; ?>: <b><?php echo $img_count[ 'total_pulled' ] ; ?></b></p>
+		<p>
+			<?php echo __('Images optimized and pulled', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_pulled_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_pulled' ], 'image' ) ; ?></b>)
+		</p>
 		<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>
 
 		<hr />
@@ -162,7 +201,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 		<br />
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-danger">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-danger">
 			<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
@@ -171,7 +210,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 		<br />
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-warning">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-warning">
 			<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
@@ -183,7 +222,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<?php echo sprintf( __( 'Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
 		</p>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success">
 			<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
@@ -199,7 +238,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		</span>
 
 		<br />
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_IMG_OPTIMIZE_DESTROY ) ; ?>" class="litespeed-btn-danger">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_DESTROY ) ; ?>" class="litespeed-btn-danger">
 			<?php echo __( 'Destroy All Optimization Data!', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">

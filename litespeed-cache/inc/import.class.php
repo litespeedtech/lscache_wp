@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Import
 			LiteSpeed_Cache_Config::ITEM_OPTM_CSS,
 			LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC,
 			LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC,
-			LiteSpeed_Cache_Config::ITEM_MEDIA_NEED_PULL,
+			LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL,
 			LiteSpeed_Cache_Config::ITEM_ENV_REF,
 			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS,
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING,

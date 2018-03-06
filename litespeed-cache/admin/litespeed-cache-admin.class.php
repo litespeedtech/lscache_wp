@@ -235,29 +235,31 @@ class LiteSpeed_Cache_Admin
 	 * @access public
 	 * @global string $pagenow
 	 */
-	public static function redirect()
+	public static function redirect( $url = false )
 	{
 		global $pagenow ;
 		$qs = '' ;
+		if ( ! $url ) {
+			if ( ! empty( $_GET ) ) {
+				if ( isset( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
+					unset( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) ;
+				}
+				if ( isset( $_GET[ LiteSpeed_Cache::NONCE_NAME ] ) ) {
+					unset( $_GET[ LiteSpeed_Cache::NONCE_NAME ] ) ;
+				}
+				if ( ! empty( $_GET ) ) {
+					$qs = '?' . http_build_query( $_GET ) ;
+				}
+			}
+			if ( is_network_admin() ) {
+				$url = network_admin_url( $pagenow . $qs ) ;
+			}
+			else {
+				$url = admin_url( $pagenow . $qs ) ;
+			}
+		}
 
-		if ( ! empty($_GET) ) {
-			if ( isset($_GET[LiteSpeed_Cache::ACTION_KEY]) ) {
-				unset($_GET[LiteSpeed_Cache::ACTION_KEY]) ;
-			}
-			if ( isset($_GET[LiteSpeed_Cache::NONCE_NAME]) ) {
-				unset($_GET[LiteSpeed_Cache::NONCE_NAME]) ;
-			}
-			if ( ! empty($_GET) ) {
-				$qs = '?' . http_build_query($_GET) ;
-			}
-		}
-		if ( is_network_admin() ) {
-			$url = network_admin_url($pagenow . $qs) ;
-		}
-		else {
-			$url = admin_url($pagenow . $qs) ;
-		}
-		wp_redirect($url) ;
+		wp_redirect( $url ) ;
 		exit() ;
 	}
 

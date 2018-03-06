@@ -39,23 +39,23 @@ class LiteSpeed_Cache_Router
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Router: starting crawler role validation' ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] starting crawler role validation' ) ;
 
 		// Check if is from crawler
 		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || $_SERVER[ 'HTTP_USER_AGENT' ] !== Litespeed_Crawler::FAST_USER_AGENT ) {
-			LiteSpeed_Cache_Log::debug( 'Router: user agent not match' ) ;
+			LiteSpeed_Cache_Log::debug( '[Router] user agent not match' ) ;
 			return ;
 		}
 
 		// Hash validation
 		$hash = get_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH ) ;
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
-			LiteSpeed_Cache_Log::debug( 'Router: crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
+			LiteSpeed_Cache_Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
 			return ;
 		}
 
 		$role_uid = $_COOKIE[ 'litespeed_role' ] ;
-		LiteSpeed_Cache_Log::debug( 'Router: role simulate litespeed_role uid ' . $role_uid ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] role simulate litespeed_role uid ' . $role_uid ) ;
 
 		wp_set_current_user( $role_uid ) ;
 	}
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Router
 		$user = wp_get_current_user() ;
 		$user_id = $user->ID ;
 
-		LiteSpeed_Cache_Log::debug( 'Router: get_uid: ' . $user_id, 3 ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] get_uid: ' . $user_id, 3 ) ;
 
 		define( 'LITESPEED_WP_UID', $user_id ) ;
 
@@ -104,11 +104,11 @@ class LiteSpeed_Cache_Router
 				$role = array_shift( $tmp ) ;
 			}
 		}
-		LiteSpeed_Cache_Log::debug( 'Router: get_role: ' . $role ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] get_role: ' . $role ) ;
 
 		if ( ! $role ) {
 			// Guest user
-			LiteSpeed_Cache_Log::debug( 'Router: role: guest' ) ;
+			LiteSpeed_Cache_Log::debug( '[Router] role: guest' ) ;
 		}
 
 		define( 'LITESPEED_WP_ROLE', $role ) ;
@@ -190,7 +190,7 @@ class LiteSpeed_Cache_Router
             self::$_action = false;
 			self::get_instance()->verify_action() ;
 			if ( self::$_action ) {
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
 			}
 
 		}
@@ -264,11 +264,11 @@ class LiteSpeed_Cache_Router
 	public static function verify_type()
 	{
 		if ( empty( $_REQUEST[ 'type' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'Router no type', 2 ) ;
+			LiteSpeed_Cache_Log::debug( '[Router] no type', 2 ) ;
 			return false ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Router parsed type: ' . $_REQUEST[ 'type' ], 2 ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] parsed type: ' . $_REQUEST[ 'type' ], 2 ) ;
 
 		return $_REQUEST[ 'type' ] ;
 	}
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Router
 	private function verify_action()
 	{
 		if ( empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
-			LiteSpeed_Cache_Log::debug2( 'LSCWP_CTRL bypassed empty' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
 			return ;
 		}
 
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_Router
 		if ( ! $this->verify_nonce( $action ) && ! $this->_verify_sapi_passive( $action ) && ! $this->_verify_sapi_aggressive( $action ) ) {
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
-				LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
+				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
 				return ;
 			}
 
@@ -307,7 +307,7 @@ class LiteSpeed_Cache_Router
 					LiteSpeed_Cache::ACTION_QS_PURGE_ALL,
 					LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
 					) ) ) {
-				LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
+				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
 				return ;
 			}
 
@@ -315,7 +315,7 @@ class LiteSpeed_Cache_Router
 		}
 
 		/* Now it is a valid action, lets log and check the permission */
-		LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL: ' . $action ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL: ' . $action ) ;
 
 		// OK, as we want to do something magic, lets check if its allowed
 		$_is_multisite = is_multisite() ;
@@ -381,6 +381,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_BLACKLIST_SAVE:
 			case LiteSpeed_Cache::ACTION_PURGE:
 			case LiteSpeed_Cache::ACTION_MEDIA:
+			case LiteSpeed_Cache::ACTION_IMG_OPTM:
 			case LiteSpeed_Cache::ACTION_IAPI:
 			case LiteSpeed_Cache::ACTION_CDN:
 			case LiteSpeed_Cache::ACTION_IMPORT:
@@ -414,7 +415,7 @@ class LiteSpeed_Cache_Router
 				return ;
 
 			default:
-				LiteSpeed_Cache_Log::debug( 'LSCWP_CTRL match falied: ' . $action ) ;
+				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL match falied: ' . $action ) ;
 				return ;
 		}
 

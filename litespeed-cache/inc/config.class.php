@@ -21,7 +21,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
 	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_EXC = 'litespeed-media-lazy-img-excludes' ;
-	const ITEM_MEDIA_NEED_PULL = 'litespeed-media-need-pull' ;
+	const ITEM_IMG_OPTM_NEED_PULL = 'litespeed-media-need-pull' ;
 	const ITEM_ENV_REF = 'litespeed-env-ref' ;
 	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
@@ -35,6 +35,7 @@ class LiteSpeed_Cache_Config
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
+	const ITEM_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
 
 	// Server variables
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
@@ -277,7 +278,7 @@ class LiteSpeed_Cache_Config
 		/**
 		 * In case this is called outside the admin page
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
-		 * @since  1.9.2
+		 * @since  2.0
 		 */
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
@@ -898,6 +899,9 @@ class LiteSpeed_Cache_Config
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 		LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option changed = $res" ) ;
+
+		// Update img_optm table data for upgrading
+		LiteSpeed_Cache_Data::get_instance() ;
 	}
 
 	/**

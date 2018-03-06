@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Vary
 		 * @since 1.6.7
 		 */
 		add_action( 'rest_api_init', function(){
-			LiteSpeed_Cache_Log::debug( 'Vary: Rest API init disabled vary change' ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] Rest API init disabled vary change' ) ;
 			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
 		} ) ;
 
@@ -197,7 +197,7 @@ class LiteSpeed_Cache_Vary
 	 */
 	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false )
 	{
-		LiteSpeed_Cache_Log::debug( 'Vary: add_logged_in' ) ;
+		LiteSpeed_Cache_Log::debug( '[Vary] add_logged_in' ) ;
 		// If the cookie is lost somehow, set it
 		$this->_update_default_vary( $uid, $expire ) ;
 	}
@@ -211,7 +211,7 @@ class LiteSpeed_Cache_Vary
 	 */
 	public function remove_logged_in()
 	{
-		LiteSpeed_Cache_Log::debug( 'Vary: remove_logged_in' ) ;
+		LiteSpeed_Cache_Log::debug( '[Vary] remove_logged_in' ) ;
 		// Force update vary to remove login status
 		$this->_update_default_vary( -1 ) ;
 	}
@@ -230,7 +230,7 @@ class LiteSpeed_Cache_Vary
 		 * @since  1.6.6
 		 */
 		if ( LiteSpeed_Cache_Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
-			LiteSpeed_Cache_Log::debug( 'Vary: can_change_vary bypassed due to ajax call' ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to ajax call' ) ;
 			return false ;
 		}
 
@@ -239,12 +239,12 @@ class LiteSpeed_Cache_Vary
 		 * @since 1.6.5
 		 */
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
-			LiteSpeed_Cache_Log::debug( 'Vary: can_change_vary bypassed due to method not get/post' ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to method not get/post' ) ;
 			return false ;
 		}
 
 		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
-			LiteSpeed_Cache_Log::debug( 'Vary: can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
 			return false ;
 		}
 
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Vary
 			define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 		}
 		else {
-			LiteSpeed_Cache_Log::debug2( "Vary: _update_default_vary bypassed due to run already" ) ;
+			LiteSpeed_Cache_Log::debug2( "[Vary] _update_default_vary bypassed due to run already" ) ;
 			return ;
 		}
 
@@ -280,7 +280,7 @@ class LiteSpeed_Cache_Vary
 				$expire = time() + 2 * DAY_IN_SECONDS ;
 			}
 			self::_cookie( $vary, $expire ) ;
-			LiteSpeed_Cache_Log::debug( "Vary: set_cookie ---> $vary" ) ;
+			LiteSpeed_Cache_Log::debug( "[Vary] set_cookie ---> $vary" ) ;
 			LiteSpeed_Cache_Control::set_nocache( 'changing default vary' . " $current_vary => $vary" ) ;
 		}
 	}
@@ -314,7 +314,7 @@ class LiteSpeed_Cache_Vary
 			$uid = LiteSpeed_Cache_Router::get_uid() ;
 		}
 		else {
-			LiteSpeed_Cache_Log::debug( 'Vary:  uid: ' . $uid ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] uid: ' . $uid ) ;
 		}
 
 		// get user's group id
@@ -336,13 +336,13 @@ class LiteSpeed_Cache_Vary
 
 			if ( $admin_bar ) {
 				$vary[ 'admin_bar' ] = 1 ;
-				LiteSpeed_Cache_Log::debug2( 'Vary: admin bar : true' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Vary] admin bar : true' ) ;
 			}
 
 		}
 		else {
 			// Guest user
-			LiteSpeed_Cache_Log::debug( 'Vary: role id: failed, guest' ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] role id: failed, guest' ) ;
 
 		}
 
@@ -437,7 +437,7 @@ class LiteSpeed_Cache_Vary
 		if ( ! empty( $_SERVER[ $tag ] ) ) {
 			$path = parse_url( $_SERVER[ $tag ] ) ;
 			$path = ! empty( $path[ 'path' ] ) ? $path[ 'path' ] : false ;
-			LiteSpeed_Cache_Log::debug( 'Cookie Vary path: ' . $path ) ;
+			LiteSpeed_Cache_Log::debug( '[Vary] Cookie Vary path: ' . $path ) ;
 		}
 		return $path ;
 	}
@@ -499,7 +499,7 @@ class LiteSpeed_Cache_Vary
 		global $post ;
 		if ( ! empty($post->post_password) ) {
 			if ( isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
-				LiteSpeed_Cache_Log::debug( 'Vary: finalize bypassed due to password protected vary ' ) ;
+				LiteSpeed_Cache_Log::debug( '[Vary] finalize bypassed due to password protected vary ' ) ;
 				// If user has password cookie, do not cache
 				LiteSpeed_Cache_Control::set_nocache('password protected vary') ;
 				return ;

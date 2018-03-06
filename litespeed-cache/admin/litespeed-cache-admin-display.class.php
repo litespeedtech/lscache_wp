@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Admin_Display
 		/**
 		 * In case this is called outside the admin page
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
-		 * @since  1.9.2
+		 * @since  2.0
 		 */
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
@@ -938,6 +938,73 @@ class LiteSpeed_Cache_Admin_Display
 			. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:server_variables" target="_blank">'
 				. __( 'Learn More', 'litespeed-cache' )
 			. '</a>' ;
+	}
+
+	/**
+	 * Return groups string
+	 *
+	 * @since  2.0
+	 * @access public
+	 */
+	public static function print_plural( $num, $kind = 'group' )
+	{
+		if ( $num > 1 ) {
+			switch ( $kind ) {
+				case 'group' :
+					return sprintf( __( '%s groups', 'litespeed-cache' ), $num ) ;
+
+				case 'image' :
+					return sprintf( __( '%s images', 'litespeed-cache' ), $num ) ;
+
+				default:
+					return $num ;
+			}
+
+		}
+
+		switch ( $kind ) {
+			case 'group' :
+				return sprintf( __( '%s group', 'litespeed-cache' ), $num ) ;
+
+			case 'image' :
+				return sprintf( __( '%s image', 'litespeed-cache' ), $num ) ;
+
+			default:
+				return $num ;
+		}
+	}
+
+	/**
+	 * Return guidance html
+	 *
+	 * @since  2.0
+	 * @access public
+	 */
+	public static function guidance( $title, $steps, $current_step )
+	{
+		if ( $current_step === 'done' ) {
+			$current_step = count( $steps ) + 1 ;
+		}
+
+		$percentage = ' (' . floor( ( $current_step - 1 ) * 100 / count( $steps ) ) . '%)' ;
+
+		$html = '<div class="litespeed-guide">'
+					. '<h2>' . $title . $percentage . '</h2>'
+					. '<ol>' ;
+		foreach ( $steps as $k => $v ) {
+			$step = $k + 1 ;
+			if ( $current_step > $step ) {
+				$html .= '<li class="litespeed-guide-done">' ;
+			}
+			else {
+				$html .= '<li>' ;
+			}
+			$html .= $v . '</li>' ;
+		}
+
+		$html .= '</ol></div>' ;
+
+		return $html ;
 	}
 
 	/**

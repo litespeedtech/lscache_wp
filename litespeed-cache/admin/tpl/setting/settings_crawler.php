@@ -140,8 +140,8 @@ if ( !defined('WPINC') ) die;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::CRWL_HTTP2 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Crawl with HTTP/2 protocal.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Curl HTTP/2 extension status', 'litespeed-cache' ) ; ?>:
+				<?php echo __( 'Crawl using the HTTP/2 protocal.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Current curl HTTP/2 extension status', 'litespeed-cache' ) ; ?>:
 				<?php if ( defined( 'CURL_HTTP_VERSION_2' ) ) : ?>
 					<font class="litespeed-warning"><?php echo __( 'Enabled', 'litespeed-cache' ) ; ?></font>
 				<?php else : ?>

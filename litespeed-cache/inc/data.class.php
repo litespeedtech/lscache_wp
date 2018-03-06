@@ -15,9 +15,11 @@ class LiteSpeed_Cache_Data
 	private static $_instance ;
 
 	const TB_OPTIMIZER = 'litespeed_optimizer' ;
+	const TB_IMG_OPTM = 'litespeed_img_optm' ;
 
 	private $_charset_collate ;
 	private $_tb_optm ;
+	private $_tb_img_optm ;
 
 	/**
 	 * Init
@@ -33,8 +35,21 @@ class LiteSpeed_Cache_Data
 		$this->_charset_collate = $wpdb->get_charset_collate() ;
 
 		$this->_tb_optm = $wpdb->base_prefix . self::TB_OPTIMIZER ;
+		$this->_tb_img_optm = $wpdb->base_prefix . self::TB_IMG_OPTM ;
 
-		$this->_optm_sync() ;
+		$this->_create_tb_img_optm() ;
+		$this->_create_tb_html_optm() ;
+	}
+
+	/**
+	 * Get img_optm table name
+	 *
+	 * @since  2.0
+	 * @access public
+	 */
+	public static function get_tb_img_optm()
+	{
+		return self::get_instance()->_tb_img_optm ;
 	}
 
 	/**
@@ -62,12 +77,43 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Create optimizer table
+	 * Get data structure of one table
 	 *
-	 * @since  1.3.1
+	 * @since  2.0
 	 * @access private
 	 */
-	private function _optm_sync()
+	private function _get_data_structure( $tb )
+	{
+		return Litespeed_File::read( LSCWP_DIR . 'inc/data_structure/' . $tb . '.sql' ) ;
+	}
+
+	/**
+	 * Drop table img_optm
+	 *
+	 * @since  2.0
+	 * @access private
+	 */
+	public function delete_tb_img_optm()
+	{
+		global $wpdb ;
+
+		if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Data] Deleting img_optm table' ) ;
+
+		$q = "DROP TABLE IF EXISTS $this->_tb_img_optm" ;
+		$wpdb->query( $q ) ;
+	}
+
+	/**
+	 * Create img optm table and sync data from wp_postmeta
+	 *
+	 * @since  2.0
+	 * @access private
+	 */
+	private function _create_tb_img_optm()
 	{
 		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
 			return ;
@@ -76,27 +122,99 @@ class LiteSpeed_Cache_Data
 
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug2( 'Data: Checking optm table' ) ;
+		LiteSpeed_Cache_Log::debug2( '[Data] Checking img_optm table' ) ;
 
 		// Check if table exists first
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_optm'" ) ) {
-			LiteSpeed_Cache_Log::debug2( 'Data: Existed' ) ;
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+			// return ;
+		}
+		else {
+			LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
+
+			$sql = sprintf(
+				'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'img_optm' ) . ') %2$s;',
+				$this->_tb_img_optm,
+				$this->_charset_collate
+			) ;
+
+			$wpdb->query( $sql ) ;
+		}
+
+		// Table version only exists after all old data migrated
+		$ver = get_option( $this->_tb_img_optm ) ;
+		if ( $ver && LiteSpeed_Cache_API::v( $ver ) ) {
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Data: Creating optm table' ) ;
+		// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
+		$mids_to_del = array() ;
+		$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
+		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array( LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_DATA ) ) ) ;
+		if ( $meta_value_list ) {
+			$max_k = count( $meta_value_list ) - 1 ;
+			foreach ( $meta_value_list as $k => $v ) {
+				$md52src_list = unserialize( $v->meta_value ) ;
+				foreach ( $md52src_list as $md5 => $v2 ) {
+					$f = array(
+						'post_id'	=> $v->post_id,
+						'optm_status'		=> $v2[ 1 ],
+						'src'		=> $v2[ 0 ],
+						'srcpath_md5'		=> md5( $v2[ 0 ] ),
+						'src_md5'		=> $md5,
+						'server'		=> $v2[ 2 ],
+					) ;
+					$wpdb->replace( $this->_tb_img_optm, $f ) ;
+				}
+				$mids_to_del[] = $v->meta_id ;
+
+				// Delete from postmeta
+				if ( count( $mids_to_del ) > 100 || $k == $max_k ) {
+					$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . " ) " ;
+					$wpdb->query( $wpdb->prepare( $q, $mids_to_del ) ) ;
+
+					$mids_to_del = array() ;
+				}
+			}
+
+			LiteSpeed_Cache_Log::debug( '[Data] img_optm inserted records: ' . $k ) ;
+		}
+
+		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s" ;
+		$rows = $wpdb->query( $wpdb->prepare( $q, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS ) ) ;
+		LiteSpeed_Cache_Log::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
+
+		// Record tb version
+		update_option( $this->_tb_img_optm, LiteSpeed_Cache::PLUGIN_VERSION ) ;
+	}
+
+	/**
+	 * Create optimizer table
+	 *
+	 * @since  1.3.1
+	 * @access private
+	 */
+	private function _create_tb_html_optm()
+	{
+		if ( defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
+			return ;
+		}
+		define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
+
+		global $wpdb ;
+
+		LiteSpeed_Cache_Log::debug2( '[Data] Checking optm table' ) ;
+
+		// Check if table exists first
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_optm'" ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Data] Creating optm table' ) ;
 
 		$sql = sprintf(
-			'CREATE TABLE IF NOT EXISTS `%1$s` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`hash_name` varchar(60) NOT NULL COMMENT "hash.filetype",
-				`src` text NOT NULL COMMENT "full url array set",
-				`dateline` int(11) NOT NULL,
-				`refer` varchar(255) NOT NULL COMMENT "The container page url",
-				PRIMARY KEY (`id`),
-				UNIQUE KEY `hash_name` (`hash_name`),
-				KEY `dateline` (`dateline`)
-			) %2$s;',
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'optm' ) . ') %2$s;',
 			$this->_tb_optm,
 			$this->_charset_collate
 		) ;
@@ -169,7 +287,7 @@ class LiteSpeed_Cache_Data
 		$sql = $wpdb->prepare( 'SELECT src FROM `' . $this->_tb_optm . '` WHERE `hash_name` = %s', $filename ) ;
 		$res = $wpdb->get_var( $sql ) ;
 
-		LiteSpeed_Cache_Log::debug2( 'Data: Loaded hash2src ' . $res ) ;
+		LiteSpeed_Cache_Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
 
 		$res = unserialize( $res ) ;
 
