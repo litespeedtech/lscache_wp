@@ -30,6 +30,7 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTIMIZE_STATUS_NOTIFIED = 'notified' ;
 	const DB_IMG_OPTIMIZE_STATUS_PULLED = 'pulled' ;
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
+	const DB_IMG_OPTIMIZE_STATUS_MISS = 'miss' ;
 	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
 	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
@@ -40,6 +41,7 @@ class LiteSpeed_Cache_Img_Optm
 	private $tmp_path ;
 	private $_img_in_queue = array() ;
 	private $_img_duplicated_in_queue = array() ;
+	private $_missed_img_in_queue = array() ;
 	private $_img_srcpath_md5_array = array() ;
 	private $_img_total = 0 ;
 	private $_table_img_optm ;
@@ -178,12 +180,16 @@ class LiteSpeed_Cache_Img_Optm
 			if ( ! empty( $meta_value[ 'sizes' ] ) ) {
 				array_map( array( $this, '_img_queue' ), $meta_value[ 'sizes' ] ) ;
 			}
-
 		}
+
+		// Save missed images into img_optm
+		$this->_save_missed_into_img_optm() ;
 
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
 			return ;
 		}
 
@@ -359,6 +365,7 @@ class LiteSpeed_Cache_Img_Optm
 					unset( $this->_img_in_queue[ $pid ][ $md5 ] ) ;
 
 					// Size info exists. Prepare size info for `wp_postmeta`
+					// Only pulled images have size_info
 					if ( $existing_info[ 'status' ] == self::DB_IMG_OPTIMIZE_STATUS_PULLED ) {
 						$size_to_store[ $pid ] = $existing_info[ 'pid' ] ;
 					}
@@ -494,6 +501,29 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
+	 * Saved non-existed images into img_optm
+	 *
+	 * @since 2.0
+	 * @access private
+	 */
+	private function _save_missed_into_img_optm()
+	{
+		if ( ! $this->_missed_img_in_queue ) {
+			return ;
+		}
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] Missed img need to save [total] ' . count( $this->_missed_img_in_queue ) ) ;
+
+		$data_to_add = array() ;
+		foreach ( $this->_missed_img_in_queue as $src_data ) {
+			$data_to_add[] = $src_data[ 'pid' ] ;
+			$data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS_MISS ;
+			$data_to_add[] = $src_data[ 'src' ] ;
+			$data_to_add[] = $src_data[ 'srcpath_md5' ] ;
+		}
+		$this->_insert_img_optm( $data_to_add, 'post_id, optm_status, src, srcpath_md5' ) ;
+	}
+
+	/**
 	 * Add a new img to queue which will be pushed to LiteSpeed
 	 *
 	 * @since 1.6
@@ -513,6 +543,11 @@ class LiteSpeed_Cache_Img_Optm
 		// check file exists or not
 		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $meta_value[ 'file' ] ;
 		if ( ! file_exists( $real_file ) ) {
+			$this->_missed_img_in_queue[] = array(
+				'pid'	=> $this->tmp_pid,
+				'src'	=> $meta_value[ 'file' ],
+				'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
+			) ;
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $real_file ) ;
 			return ;
 		}
@@ -1300,6 +1335,8 @@ class LiteSpeed_Cache_Img_Optm
 		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 		$total_err_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ;
 		$total_err = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ;
+		$total_miss_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_MISS ) ) ;
+		$total_miss = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_MISS ) ) ;
 
 		return array(
 			'total_img'	=> $total_img,
@@ -1308,6 +1345,8 @@ class LiteSpeed_Cache_Img_Optm
 			'total_requested'	=> $total_requested,
 			'total_err_groups'	=> $total_err_groups,
 			'total_err'	=> $total_err,
+			'total_miss_groups'	=> $total_miss_groups,
+			'total_miss'	=> $total_miss,
 			'total_server_finished_groups'	=> $total_server_finished_groups,
 			'total_server_finished'	=> $total_server_finished,
 			'total_pulled_groups'	=> $total_pulled_groups,

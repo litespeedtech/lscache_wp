@@ -160,6 +160,11 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err_groups' ] ) ; ?></b>
 			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err' ], 'image' ) ; ?></b>)
 		</p>
+		<p>
+			<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss' ], 'image' ) ; ?></b>)
+		</p>
 		<p class="litespeed-desc">
 			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
 			<?php echo __( 'This process is automatic.', 'litespeed-cache' ) ; ?>
