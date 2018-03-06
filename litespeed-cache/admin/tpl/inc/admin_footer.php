@@ -1,19 +1,21 @@
 <?php
 if (!defined('WPINC')) die;
 
+// &#10030;&#10030;&#10030;&#10030;&#10030;
+$rate_us = '<a href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" rel="noopener noreferer" target="_blank">'
+				. sprintf( __( 'Rate %s on %s', 'litespeed-cache' ), '<strong>' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '</strong>', 'WordPress.org' )
+			. '</a>' ;
 
-$rate_us = sprintf(__('Rate <strong>LiteSpeed Cache</strong> with %s on WordPress.org if you like us!', 'litespeed-cache'),
-		'<a href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" rel="noopener noreferer" target="_blank">&#10030;&#10030;&#10030;&#10030;&#10030;</a>'
-);
-$questions = sprintf(__('If there are any questions that are not answered in the <a %s>FAQs</a>, do not hesitate to ask them on the <a %s>support forum</a>.', 'litespeed-cache'),
-			'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp" target="_blank"',
-			'href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank"');
+$wiki = '<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp" target="_blank">' . __( 'Read LiteSpeed Wiki', 'litespeed-cache' ) . '</a>' ;
+
+$forum = '<a href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank">' . __( 'Visit LSCWP support forum', 'litespeed-cache' ) . '</a>' ;
+
+$community = '<a href="https://goo.gl/FG9S4N" target="_blank">' . __( 'Join LiteSpeed Slack community', 'litespeed-cache' ) . '</a>' ;
+
 // Change the footer text
-if ( !is_multisite()
-	|| is_network_admin())
-{
-	$footer_text = $rate_us . ' ' . $questions;
+if ( ! is_multisite() || is_network_admin() ) {
+	$footer_text = $rate_us . ' | ' . $wiki . ' | ' . $forum . ' | ' . $community ;
 }
-else{
-	$footer_text = $questions;
+else {
+	$footer_text = $wiki . ' | ' . $forum . ' | ' . $community ;
 }
