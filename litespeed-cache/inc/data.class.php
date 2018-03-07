@@ -140,7 +140,11 @@ class LiteSpeed_Cache_Data
 				$this->_charset_collate
 			) ;
 
-			$wpdb->query( $sql ) ;
+			$res = $wpdb->query( $sql ) ;
+			if ( $res !== true ) {
+				LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
+			}
+
 		}
 
 		// Table version only exists after all old data migrated
@@ -205,7 +209,7 @@ class LiteSpeed_Cache_Data
 
 		global $wpdb ;
 
-		LiteSpeed_Cache_Log::debug2( '[Data] Checking optm table' ) ;
+		LiteSpeed_Cache_Log::debug2( '[Data] Checking html optm table' ) ;
 
 		// Check if table exists first
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_optm'" ) ) {
@@ -213,7 +217,7 @@ class LiteSpeed_Cache_Data
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Creating optm table' ) ;
+		LiteSpeed_Cache_Log::debug( '[Data] Creating html optm table' ) ;
 
 		$sql = sprintf(
 			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'optm' ) . ') %2$s;',
@@ -221,7 +225,10 @@ class LiteSpeed_Cache_Data
 			$this->_charset_collate
 		) ;
 
-		$wpdb->query( $sql ) ;
+		$res = $wpdb->query( $sql ) ;
+		if ( $res !== true ) {
+			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating html optm table failed!' ) ;
+		}
 
 		// Move data from wp_options to here
 		$hashes = get_option( 'litespeed-cache-optimized' ) ;
