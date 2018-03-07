@@ -125,7 +125,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>
 		</h3>
 
-		<div class="litespeed-block">
+		<div class="litespeed-block-tiny">
 			<div class="litespeed-col-auto">
 				<?php echo LiteSpeed_Cache_GUI::pie( $finished_percentage, 100, true ) ; ?>
 			</div>

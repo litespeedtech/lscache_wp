@@ -1263,13 +1263,18 @@ g.litespeed-pie_info text{
 }
 
 /********************************* block and columns *******************************/
-.litespeed-block {
+.litespeed-block,
+.litespeed-block-tiny {
 	border: 1px dotted #6699cc;
 	border-radius:5px;
 	display: flex;
 	flex-wrap: wrap;
 	padding: 10px;
 	margin-bottom: 5px;
+}
+
+.litespeed-block-tiny {
+	max-width: 670px ;
 }
 
 .litespeed-col{
