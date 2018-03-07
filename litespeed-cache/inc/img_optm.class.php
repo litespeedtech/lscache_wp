@@ -1607,6 +1607,11 @@ class LiteSpeed_Cache_Img_Optm
 			$guide_status = array() ;
 		}
 
+		if ( ! empty( $guide_status[ 'img_optm' ] ) && $guide_status[ 'img_optm' ] == $pos ) {
+			LiteSpeed_Cache_Log::debug2( '[Img_Optm] _update_guidance_pos: bypassed due to same pos [step] ' . $pos ) ;
+			return ;
+		}
+
 		$guide_status[ 'img_optm' ] = $pos ;
 
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] _update_guidance_pos [step] ' . $pos ) ;
