@@ -79,15 +79,17 @@ class LiteSpeed_Cache_GUI
 	 *
 	 * @since 1.6.6
 	 */
-	public static function pie( $percent, $width = 50 )
+	public static function pie( $percent, $width = 50, $finished_tick = false )
 	{
+		$percentage = '<text x="16.91549431" y="15.5">' . $percent . '%</text>' ;
+		if ( $percent == 100 && $finished_tick ) {
+			$percentage = '<text x="16.91549431" y="15.5" fill="#73b38d">&#x2713</text>' ;
+		}
 		return "
 		<svg class='litespeed-pie' viewbox='0 0 33.83098862 33.83098862' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>
 			<circle class='litespeed-pie_bg' />
 			<circle class='litespeed-pie_circle' stroke-dasharray='$percent,100' />
-			<g class='litespeed-pie_info'>
-				<text x='16.91549431' y='15.5'>$percent%</text>
-			</g>
+			<g class='litespeed-pie_info'>$percentage</g>
 		</svg>
 		";
 

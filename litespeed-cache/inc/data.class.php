@@ -137,7 +137,7 @@ class LiteSpeed_Cache_Data
 			$sql = sprintf(
 				'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'img_optm' ) . ') %2$s;',
 				$this->_tb_img_optm,
-				$this->_charset_collate
+				'DEFAULT CHARSET=utf8'//$this->_charset_collate
 			) ;
 
 			$res = $wpdb->query( $sql ) ;

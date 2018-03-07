@@ -1119,6 +1119,8 @@ class LiteSpeed_Cache_Img_Optm
 		// Clear credit info
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
 
+		$this->_update_guidance_pos( 1 ) ;
+
 		exit( 'ok' ) ;
 	}
 
