@@ -267,6 +267,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [IMPROVEMENT] *Image Optimization* Fixed issue where phantom images continued to show in not-yet-requested queue.
 * [BUGFIX] *Core* Improved compatibility when upgrading outside of WP Admin. (@jikatal @TylorB)
 * [BUGFIX] *Crawler* Improved HTTP/2 compatibility to avoid erroneous blacklisting.
+* [BUGFIX] *Crawler* Changing Delay setting will use server variable for min value validation if set.
 * [UPDATE] *Crawler* Added HTTP/2 protocol switch in the Crawler settings.
 * [UPDATE] Removed unnecessary translation strings.
 * [GUI] Display translated role group name string instead of English values. (@Richard Hordern)

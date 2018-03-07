@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-03-07 17:00:51+00:00\n"
+"POT-Creation-Date: 2018-03-07 18:04:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -432,7 +432,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:342
-#: admin/litespeed-cache-admin-settings.class.php:988
+#: admin/litespeed-cache-admin-settings.class.php:994
 msgid "Default Public Cache"
 msgstr ""
 
@@ -453,25 +453,25 @@ msgstr ""
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:911
+#: admin/litespeed-cache-admin-settings.class.php:917
 #: admin/tpl/setting/settings_crawler.php:13
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:912
+#: admin/litespeed-cache-admin-settings.class.php:918
 #: admin/tpl/setting/settings_crawler.php:37
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:913
+#: admin/litespeed-cache-admin-settings.class.php:919
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:914
+#: admin/litespeed-cache-admin-settings.class.php:920
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:915
+#: admin/litespeed-cache-admin-settings.class.php:921
 #: admin/tpl/setting/settings_crawler.php:73
 msgid "Threads"
 msgstr ""
