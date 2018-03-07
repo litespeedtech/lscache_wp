@@ -16,8 +16,6 @@ class LiteSpeed_Cache_Admin_Settings
 	private $_options ;
 	private $_err ;
 
-	private $_err_msg_numeric ;
-
 	private $_max_int = 2147483647 ;
 
 	/**
@@ -28,7 +26,21 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function __construct()
 	{
-		$this->_err_msg_numeric = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_NUMERIC ) ;
+	}
+
+	/**
+	 * Display err msg for ttl
+	 *
+	 * @since  2.0
+	 * @access private
+	 */
+	private function _show_ttl_err( $desc, $min, $max )
+	{
+		if ( ! $max ) {
+			return sprintf( __( '%1$s must be an integer larger than %2$d', 'litespeed-cache' ), $desc, $min ) ;
+		}
+
+		return sprintf( __( '%1$s must be an integer between %2$d and %3$d', 'litespeed-cache' ), $desc, $min, $max ) ;
 	}
 
 	/**
@@ -350,7 +362,7 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $ids as $id => $v ) {
 			list( $desc, $min, $max ) = $v ;
 			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
-				$this->_err[] = sprintf( $this->_err_msg_numeric, $desc, $min, $max ) ;
+				$this->_err[] = $this->_show_ttl_err( $desc, $min, $max ) ;
 			}
 			else {
 				if ( ! empty( $v[ 3 ] ) && $this->_input[ $id ] < $v[ 3 ] ) {
@@ -841,7 +853,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ;
 		if ( ! $this->_check_ttl( $this->_input, $id, 3, 3000 ) ) {
-			$this->_err[] = sprintf( $this->_err_msg_numeric, __( 'Log File Size Limit', 'litespeed-cache' ), 3, 3000 ) ;
+			$this->_err[] = $this->_show_ttl_err( __( 'Log File Size Limit', 'litespeed-cache' ), 3, 3000 ) ;
 		}
 		else {
 			$this->_options[ $id ] = $this->_input[ $id ] ;
@@ -923,7 +935,7 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $ids as $id => $v ) {
 			list( $desc, $min, $max ) = $v ;
 			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
-				$this->_err[] = sprintf( $this->_err_msg_numeric, $desc, $min, $max ) ;
+				$this->_err[] = $this->_show_ttl_err( $desc, $min, $max ) ;
 			}
 			else {
 				$this->_options[ $id ] = $this->_input[ $id ] ;
@@ -996,7 +1008,7 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $ids as $id => $v ) {
 			list( $desc, $min, $max ) = $v ;
 			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
-				$this->_err[] = sprintf( $this->_err_msg_numeric, $desc, $min, $max ) ;
+				$this->_err[] = $this->_show_ttl_err( $desc, $min, $max ) ;
 			}
 			else {
 				$new_options[ $id ] = $this->_input[ $id ] ;

@@ -41,7 +41,6 @@ class LiteSpeed_Cache_Admin_Error
 	const E_SETTING_CUSTOM_SITEMAP_READ = 3030 ;
 	const E_SETTING_CUSTOM_SITEMAP_PARSE = 3031 ;
 
-	const E_SETTING_NUMERIC = 3500 ;
 	const E_SETTING_CAT = 3510 ;
 	const E_SETTING_TAG = 3520 ;
 	const E_SETTING_LC = 3530 ; // login cookie setting
@@ -154,12 +153,6 @@ class LiteSpeed_Cache_Admin_Error
 			case self::E_SETTING_CUSTOM_SITEMAP_PARSE:
 				return __('Can not parse custom sitemap xml file: %s.', 'litespeed-cache') . ' '
 					. sprintf(__('Please make sure the file is xml format and the %s extension is installed on the server.', 'litespeed-cache'), 'php-xml') ;
-
-			// Admin settings with expected parameters for message.
-			case self::E_SETTING_NUMERIC:
-				// %1 is the name of the option, %2 is the minimum integer allowed.
-				return __('%1$s must be an integer between %2$d and %3$d',
-					'litespeed-cache') ;
 
 			case self::E_SETTING_CAT:
 				// %s is the category attempted to be added.
