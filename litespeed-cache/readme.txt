@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 1.9.1.1
+Stable tag: 2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -246,12 +246,33 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 11. Admin Settings - Thirdparty WooCommerce
 12. Admin Management - Purge
 13. Admin Management - DB Optimizer
-14. Admin Crawler Status Page
-15. Cache Miss Example
-16. Cache Hit Example
-17. Frontend Adminbar Shortcut
+14. Image Optimization
+15. Admin Crawler Status Page
+16. Cache Miss Example
+17. Cache Hit Example
+18. Frontend Adminbar Shortcut
 
 == Changelog ==
+
+= 2.0 - Mar 7 2018 =
+* [NEW FEATURE] *Image Optimization* Added level up guidance.
+* [REFACTOR] *Image Optimization* Refactored Image Optimization class.
+* [IAPI] *Image Optimization* New European Image Optimization server (EU2).
+* [IMPROVEMENT] *Image Optimization* Manual pull action continues pulling until complete.
+* [IMPROVEMENT] *CDN* Multiple CDNs can now be randomized for a single resource.
+* [IMPROVEMENT] *Image Optimization* Improved compatibility of long src images.
+* [IMPROVEMENT] *Image Optimization* Reduced runtime load.
+* [IMPROVEMENT] *Image Optimization* Avoid potential loss/reset of notified images status when pulling.
+* [IMPROVEMENT] *Image Optimization* Avoid duplicated optimization for multiple records in Media that have the same image source.
+* [IMPROVEMENT] *Image Optimization* Fixed issue where phantom images continued to show in not-yet-requested queue.
+* [BUGFIX] *Core* Improved compatibility when upgrading outside of WP Admin. (@jikatal @TylorB)
+* [BUGFIX] *Crawler* Improved HTTP/2 compatibility to avoid erroneous blacklisting.
+* [UPDATE] *Crawler* Added HTTP/2 protocol switch in the Crawler settings.
+* [UPDATE] Removed unnecessary translation strings.
+* [GUI] Display translated role group name string instead of English values. (@Richard Hordern)
+* [GUI] Added Join LiteSpeed Slack link.
+* [GUI] *Import / Export* Cosmetic changes to Import Settings file field.
+* [INTEGRATION] Improved compatibility with WPML Media for Image Optimization. (@szmigieldesign)
 
 = 1.9.1.1 - February 20 2018 =
 * [Hotfix] Removed empty crawler when no role simulation is set.
