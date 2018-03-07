@@ -911,7 +911,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$usleep_max = 30000 ;
 		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) ) {
 			$usleep_min = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
-			$usleep_max = $usleep_min * 10 ;
+			$usleep_max = null ;
 		}
 		$ids = array(
 			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( __( 'Delay', 'litespeed-cache' ), $usleep_min, $usleep_max ),
