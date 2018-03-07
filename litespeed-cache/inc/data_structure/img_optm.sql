@@ -3,7 +3,7 @@
   `optm_status` varchar(255) NOT NULL DEFAULT '',
   `src` varchar(1000) NOT NULL DEFAULT '',
   `srcpath_md5` varchar(128) NOT NULL DEFAULT '',
-  `src_md5` varchar(255) NOT NULL DEFAULT '',
+  `src_md5` varchar(128) NOT NULL DEFAULT '',
   `server` varchar(255) NOT NULL DEFAULT '',
   `root_id` int(11) NOT NULL DEFAULT '0',
   `src_filesize` int(11) NOT NULL DEFAULT '0',
