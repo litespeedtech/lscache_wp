@@ -105,6 +105,8 @@ class LiteSpeed_Cache_Data
 
 		$q = "DROP TABLE IF EXISTS $this->_tb_img_optm" ;
 		$wpdb->query( $q ) ;
+
+		delete_option( $this->_tb_img_optm ) ;
 	}
 
 	/**
