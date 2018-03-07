@@ -145,6 +145,11 @@ class LiteSpeed_Cache_Data
 				LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
 			}
 
+			// Clear OC to avoid get `_tb_img_optm` from option failed
+			if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+				LiteSpeed_Cache_Object::get_instance()->flush() ;
+			}
+
 		}
 
 		// Table version only exists after all old data migrated
