@@ -100,7 +100,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 <?php foreach ( $_panels as $v ): ?>
 
 	<?php if ( ! empty( $v[ 'newline' ] ) ) : ?>
-		<div class='litespeed-child-col-br'></div>
+		<div class='litespeed-col-br'></div>
 	<?php endif; ?>
 
 	<a 	class="litespeed-panel"

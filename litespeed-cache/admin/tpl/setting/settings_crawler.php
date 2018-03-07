@@ -165,31 +165,31 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Sitemap Generation', 'litespeed-cache'); ?></th>
 		<td>
-			<div class="litespeed-cdn-mapping-block">
+			<div class="litespeed-block">
 				<div class='litespeed-cdn-mapping-col2'>
 					<div class="litespeed-row">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ) ; ?></div>
 					<?php
 						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_POSTS ) ;
 					?>
 					</div>
 
 					<div class="litespeed-row">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ) ; ?></div>
 					<?php
 						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_PAGES ) ;
 					?>
 					</div>
 
 					<div class="litespeed-row">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ) ; ?></div>
 					<?php
 						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_CATS ) ;
 					?>
 					</div>
 
 					<div class="litespeed-row">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ) ; ?></div>
 					<?php
 						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_TAGS ) ;
 					?>
@@ -197,7 +197,7 @@ if ( !defined('WPINC') ) die;
 
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __('Exclude Custom Post Types', 'litespeed-cache'); ?></h4>
 
 					<?php $this->build_textarea( LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT, 40 ) ; ?>
@@ -207,7 +207,7 @@ if ( !defined('WPINC') ) die;
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<div class="litespeed-callout-warning">
 						<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
 						<p>
@@ -216,7 +216,7 @@ if ( !defined('WPINC') ) die;
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __('Order links by', 'litespeed-cache'); ?></h4>
 
 					<div class="litespeed-switch">

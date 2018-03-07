@@ -41,7 +41,7 @@ if ( ! $cdn_mapping ) {
 		<td>
 		<?php foreach ( $cdn_mapping as $v ) : ?>
 
-			<div class="litespeed-cdn-mapping-block" data-litespeed-cdn-mapping="1">
+			<div class="litespeed-block" data-litespeed-cdn-mapping="1">
 				<div class='litespeed-cdn-mapping-col1'>
 					<h4><?php echo __( 'CDN URL', 'litespeed-cache' ) ; ?>
 						<button type="button" class="litespeed-btn-danger" data-litespeed-cdn-mapping-del="1">X</button>
@@ -202,8 +202,8 @@ if ( ! $cdn_mapping ) {
 				?>
 				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'Manage', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'CDN', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
 			</div>
-			<div class="litespeed-cdn-mapping-block">
-				<div class='litespeed-child-col'>
+			<div class="litespeed-block">
+				<div class='litespeed-col'>
 					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ) ; ?>
@@ -212,7 +212,7 @@ if ( ! $cdn_mapping ) {
 					</div>
 				</div>
 
-				<div class='litespeed-child-col'>
+				<div class='litespeed-col'>
 					<h4><?php echo __( 'User API Key', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY ) ; ?>
@@ -222,7 +222,7 @@ if ( ! $cdn_mapping ) {
 					</div>
 				</div>
 
-				<div class='litespeed-child-col'>
+				<div class='litespeed-col'>
 					<h4><?php echo __( 'Site Domain', 'litespeed-cache' ) ; ?></h4>
 
 				<?php
@@ -245,8 +245,8 @@ if ( ! $cdn_mapping ) {
 				<?php echo sprintf( __( 'Use %s API functionality.', 'litespeed-cache' ), 'Cloudflare' ) ; ?>
 				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'Manage', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'CDN', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
 			</div>
-			<div class="litespeed-cdn-mapping-block">
-				<div class='litespeed-child-col'>
+			<div class="litespeed-block">
+				<div class='litespeed-col'>
 					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ) ; ?>
@@ -255,7 +255,7 @@ if ( ! $cdn_mapping ) {
 					</div>
 				</div>
 
-				<div class='litespeed-child-col'>
+				<div class='litespeed-col'>
 					<h4><?php echo __( 'Global API Key', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ) ; ?>
@@ -265,7 +265,7 @@ if ( ! $cdn_mapping ) {
 					</div>
 				</div>
 
-				<div class='litespeed-child-col'>
+				<div class='litespeed-col'>
 					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
 
 				<?php

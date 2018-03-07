@@ -32,8 +32,8 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 				<?php echo __( 'Use object cache functionality.', 'litespeed-cache' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 			</div>
-			<div class="litespeed-cdn-mapping-block">
-				<div class='litespeed-child-col-auto'>
+			<div class="litespeed-block">
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Method', 'litespeed-cache' ) ; ?></h4>
 
 					<div class="litespeed-switch">
@@ -42,7 +42,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Host', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ) ; ?>
@@ -51,13 +51,13 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Port', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT, 'litespeed-input-short2' ) ; ?>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Default Object Lifetime', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE, 'litespeed-input-short2' ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
@@ -66,7 +66,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Status', 'litespeed-cache' ) ; ?></h4>
 
 					<?php echo sprintf( __( '%s Extension', 'litespeed-cache' ), 'Memcached' ) ; ?>: <?php echo $mem_enabled ; ?><br />
@@ -75,9 +75,9 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache#how_to_debug" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 				</div>
 
-				<div class='litespeed-child-col-br'></div>
+				<div class='litespeed-col-br'></div>
 
-				<div class='litespeed-child-col-auto <?php echo $hide_mem_options ; ?>' data="litespeed-mem-divs">
+				<div class='litespeed-col-auto <?php echo $hide_mem_options ; ?>' data="litespeed-mem-divs">
 					<h4><?php echo __( 'Username', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ) ; ?>
@@ -86,7 +86,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ) ; ?>
@@ -95,7 +95,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs">
+				<div class='litespeed-col-auto <?php echo $hide_redis_options ; ?>' data="litespeed-redis-divs">
 					<h4><?php echo __( 'Redis Database ID', 'litespeed-cache' ) ; ?></h4>
 
 					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID, 'litespeed-input-short' ) ; ?>
@@ -104,9 +104,9 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-br'></div>
+				<div class='litespeed-col-br'></div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Global Groups', 'litespeed-cache' ) ; ?></h4>
 					<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
@@ -115,7 +115,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Do Not Cache Groups', 'litespeed-cache' ) ; ?></h4>
 					<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
@@ -123,16 +123,16 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<div class="litespeed-row">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Persistent Connection', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Persistent Connection', 'litespeed-cache' ) ; ?></div>
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ) ; ?>
 					</div>
 					<div class="litespeed-desc">
 						<?php echo __( 'Use keep-alive connections to speed up cache operations.', 'litespeed-cache' ) ; ?>
 					</div>
 					<div class="litespeed-row litespeed-top30">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Cache Wp-Admin', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Cache Wp-Admin', 'litespeed-cache' ) ; ?></div>
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ) ; ?>
 					</div>
 					<div class="litespeed-desc">
@@ -140,9 +140,9 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 					</div>
 				</div>
 
-				<div class='litespeed-child-col-auto'>
+				<div class='litespeed-col-auto'>
 					<div class="litespeed-row">
-						<div class="litespeed-child-col-inc"><?php echo __( 'Store Transients', 'litespeed-cache' ) ; ?></div>
+						<div class="litespeed-col-inc"><?php echo __( 'Store Transients', 'litespeed-cache' ) ; ?></div>
 						<?php $this->build_toggle( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ) ; ?>
 					</div>
 					<div class="litespeed-desc">

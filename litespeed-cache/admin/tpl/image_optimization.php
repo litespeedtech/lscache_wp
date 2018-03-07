@@ -125,12 +125,12 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>
 		</h3>
 
-		<div class="litespeed-cdn-mapping-block">
-			<div class="litespeed-child-col-auto">
+		<div class="litespeed-block">
+			<div class="litespeed-col-auto">
 				<?php echo LiteSpeed_Cache_GUI::pie( $finished_percentage, 100, true ) ; ?>
 			</div>
 
-			<div class="litespeed-child-col-auto">
+			<div class="litespeed-col-auto">
 				<p>
 					<?php echo __( 'Images total', 'litespeed-cache') ; ?>:
 					<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_img' ] ) ; ?></b>

@@ -65,7 +65,7 @@ if (!defined('WPINC')) die;
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#favicon" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 
 			</div>
-			<div class="litespeed-cdn-mapping-block">
+			<div class="litespeed-block">
 				<div class='litespeed-cdn-mapping-col1'>
 					<h4><?php echo __( 'Frontend Favicon File', 'litespeed-cache' ) ; ?></h4>
 
