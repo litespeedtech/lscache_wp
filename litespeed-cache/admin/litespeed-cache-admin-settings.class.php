@@ -907,8 +907,14 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
+		$usleep_min = 0 ;
+		$usleep_max = 30000 ;
+		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) ) {
+			$usleep_min = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
+			$usleep_max = $usleep_min * 10 ;
+		}
 		$ids = array(
-			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( __( 'Delay', 'litespeed-cache' ), 0, 30000 ),
+			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( __( 'Delay', 'litespeed-cache' ), $usleep_min, $usleep_max ),
 			LiteSpeed_Cache_Config::CRWL_RUN_DURATION 	=> array( __( 'Run Duration', 'litespeed-cache' ), 0, $this->_max_int ),
 			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL 	=> array( __( 'Cron Interval', 'litespeed-cache' ), 60, $this->_max_int ),
 			LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL => array( __( 'Whole Interval', 'litespeed-cache' ), 0, $this->_max_int ),
