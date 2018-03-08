@@ -1262,6 +1262,10 @@ g.litespeed-pie_info text{
 	text-anchor: middle;
 }
 
+td.column-imgoptm .litespeed-pie_info {
+	font-size: 12px ;
+}
+
 /********************************* block and columns *******************************/
 .litespeed-block,
 .litespeed-block-tiny {
@@ -1354,6 +1358,11 @@ g.litespeed-pie_info text{
 	font-weight: bold;
 	margin-left: 36px ;
 	margin-right: 10px;
+}
+
+/********************************* img optm page *******************************/
+.litespeed-block-tiny  .litespeed-pie_info {
+	font-size: 13px ;
 }
 
 /********************************* toggle *******************************/
