@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Img_Optm
 		$this->_save_missed_into_img_optm() ;
 
 		if ( empty( $this->_img_in_queue ) ) {
-			$msg = __( 'No image found.', 'litespeed-cache' ) ;
+			$msg = __( 'Requested successfully.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
@@ -765,7 +765,7 @@ class LiteSpeed_Cache_Img_Optm
 				'pid' => $row_img->post_id,
 				'src_md5' => $row_img->src_md5,
 			) ;
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server ) ;
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server, true ) ;
 			if ( empty( $json[ 'webp' ] ) ) {
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: ', $json ) ;
 				return ;
@@ -803,7 +803,7 @@ class LiteSpeed_Cache_Img_Optm
 				$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
 				// Notify server to update status
-				LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
+				LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server, true ) ;
 
 				return ;// exit from running pull process
 			}
@@ -850,7 +850,7 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
 					// Notify server to update status
-					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server ) ;
+					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server, true ) ;
 
 					return ; // exit from running pull process
 				}

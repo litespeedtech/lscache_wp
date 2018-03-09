@@ -206,7 +206,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access public
 	 * @param  array $data
 	 */
-	public static function post( $action, $data = false, $server = false )
+	public static function post( $action, $data = false, $server = false, $no_hash = false )
 	{
 		$instance = self::get_instance() ;
 
@@ -218,7 +218,7 @@ class LiteSpeed_Cache_Admin_API
 			$instance->_request_key() ;
 		}
 
-		return $instance->_post( $action, $data, $server ) ;
+		return $instance->_post( $action, $data, $server, $no_hash ) ;
 	}
 
 	/**
@@ -269,11 +269,14 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @param  array $data
 	 */
-	private function _post( $action, $data = false, $server = false )
+	private function _post( $action, $data = false, $server = false, $no_hash = false )
 	{
-		$hash = Litespeed_String::rrand( 16 ) ;
-		// store hash
-		update_option( self::DB_API_KEY_HASH, $hash ) ;
+		$hash = 'no_hash' ;
+		if ( ! $no_hash ) {
+			$hash = Litespeed_String::rrand( 16 ) ;
+			// store hash
+			update_option( self::DB_API_KEY_HASH, $hash ) ;
+		}
 
 		if ( $server == false ) {
 			$server = 'https://wp.api.litespeedtech.com' ;

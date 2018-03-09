@@ -121,9 +121,7 @@ include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 
 		<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
 
-		<h3 class="litespeed-title"><?php echo __('Image Information', 'litespeed-cache') ; ?>
-			<span class="litespeed-desc"><?php echo __('Beta Version', 'litespeed-cache') ; ?></span>
-		</h3>
+		<h3 class="litespeed-title"><?php echo __('Image Information', 'litespeed-cache') ; ?></h3>
 
 		<div class="litespeed-block-tiny">
 			<div class="litespeed-col-auto">
