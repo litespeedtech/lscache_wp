@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -50,30 +50,30 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
 
 * Image optimization
-* WebP image format support
-* PageSpeed score optimization
+* WebP image format support [lscache]
+* PageSpeed score optimization [lscache]
 * Load CSS/JS Asynchronously
-* Lazyload images/iframes
+* Lazyload images/iframes [lscache]
 * Content Delivery Network support
-* Minify CSS, JavaScript, and HTML
-* Combine CSS and JavaScript
-* HTTP/2 Push for CSS and JS
+* Minify CSS, JavaScript, and HTML [lscache]
+* Combine CSS and JavaScript [lscache]
+* HTTP/2 Push for CSS and JS [lscache]
 * Database Cleaner and Optimizer
 * Object Cache (Memcached/LSMCD/Redis)
 * OPcode Cache
-* Browser Cache
+* Browser Cache [lscache]
 * DNS Prefetch
 * Cloudflare API
-* Automatic page caching to greatly improve site performance
-* Automatic purge of related pages based on certain events
+* Automatic page caching to greatly improve site performance [lscache]
+* Automatic purge of related pages based on certain events [lscache]
 * Smart preload crawler with support for SEO-friendly sitemap
-* Private cache for logged-in users
-* Caching of WordPress REST API calls
-* Separate caching of desktop and mobile views
-* Ability to schedule purge for specified URLs at specified time of day
-* Support for HTTP/2 & HTTPS out-of-box
+* Private cache for logged-in users [lscache]
+* Caching of WordPress REST API calls [lscache]
+* Separate caching of desktop and mobile views [lscache]
+* Ability to schedule purge for specified URLs at specified time of day [lscache]
+* Support for HTTP/2 & HTTPS out-of-box [lscache]
 * Single Site and Multi Site ( Network ) support
-* Support for  WooCommerce and bbPress
+* Support for  WooCommerce and bbPress [lscache]
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli)
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
 * No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
@@ -254,25 +254,32 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.1 - Mar 15 2018 =
+* [IMPROVEMENT] <b>CDN</b> Multiple domains can now be used.
+* [IAPI] IAPI v2.0.
+* [REFACTOR] Separated Cloudflare CDN class.
+* [BUGFIX] <b>Image Optimization</b> Fixed certain MySQL version failed to create img_optm table issue. (@philippwidmer)
+* [GUI] Added slack community banner.
+
 = 2.0 - Mar 7 2018 =
-* [NEW FEATURE] *Image Optimization* Added level up guidance.
-* [REFACTOR] *Image Optimization* Refactored Image Optimization class.
-* [IAPI] *Image Optimization* New European Image Optimization server (EU2).
-* [IMPROVEMENT] *Image Optimization* Manual pull action continues pulling until complete.
-* [IMPROVEMENT] *CDN* Multiple CDNs can now be randomized for a single resource.
-* [IMPROVEMENT] *Image Optimization* Improved compatibility of long src images.
-* [IMPROVEMENT] *Image Optimization* Reduced runtime load.
-* [IMPROVEMENT] *Image Optimization* Avoid potential loss/reset of notified images status when pulling.
-* [IMPROVEMENT] *Image Optimization* Avoid duplicated optimization for multiple records in Media that have the same image source.
-* [IMPROVEMENT] *Image Optimization* Fixed issue where phantom images continued to show in not-yet-requested queue.
-* [BUGFIX] *Core* Improved compatibility when upgrading outside of WP Admin. (@jikatal @TylorB)
-* [BUGFIX] *Crawler* Improved HTTP/2 compatibility to avoid erroneous blacklisting.
-* [BUGFIX] *Crawler* Changing Delay setting will use server variable for min value validation if set.
-* [UPDATE] *Crawler* Added HTTP/2 protocol switch in the Crawler settings.
+* [NEW FEATURE] <b>Image Optimization</b> Added level up guidance.
+* [REFACTOR] <b>Image Optimization</b> Refactored Image Optimization class.
+* [IAPI] <b>Image Optimization</b> New European Image Optimization server (EU2).
+* [IMPROVEMENT] <b>Image Optimization</b> Manual pull action continues pulling until complete.
+* [IMPROVEMENT] <b>CDN</b> Multiple CDNs can now be randomized for a single resource.
+* [IMPROVEMENT] <b>Image Optimization</b> Improved compatibility of long src images.
+* [IMPROVEMENT] <b>Image Optimization</b> Reduced runtime load.
+* [IMPROVEMENT] <b>Image Optimization</b> Avoid potential loss/reset of notified images status when pulling.
+* [IMPROVEMENT] <b>Image Optimization</b> Avoid duplicated optimization for multiple records in Media that have the same image source.
+* [IMPROVEMENT] <b>Image Optimization</b> Fixed issue where phantom images continued to show in not-yet-requested queue.
+* [BUGFIX] <b>Core</b> Improved compatibility when upgrading outside of WP Admin. (@jikatal @TylorB)
+* [BUGFIX] <b>Crawler</b> Improved HTTP/2 compatibility to avoid erroneous blacklisting.
+* [BUGFIX] <b>Crawler</b> Changing Delay setting will use server variable for min value validation if set.
+* [UPDATE] <b>Crawler</b> Added HTTP/2 protocol switch in the Crawler settings.
 * [UPDATE] Removed unnecessary translation strings.
 * [GUI] Display translated role group name string instead of English values. (@Richard Hordern)
 * [GUI] Added Join LiteSpeed Slack link.
-* [GUI] *Import / Export* Cosmetic changes to Import Settings file field.
+* [GUI] <b>Import / Export</b> Cosmetic changes to Import Settings file field.
 * [INTEGRATION] Improved compatibility with WPML Media for Image Optimization. (@szmigieldesign)
 
 = 1.9.1.1 - February 20 2018 =
