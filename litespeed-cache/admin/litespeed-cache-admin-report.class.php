@@ -139,8 +139,18 @@ class LiteSpeed_Cache_Admin_Report
 			'home_url' => home_url(),
 			'locale' => get_locale(),
 			'active theme' => $active_theme,
-			'active plugins' => $active_plugins,
 		) ;
+
+		$consts = array(
+			'WP_SITEURL',
+			'WP_HOME',
+		) ;
+		foreach ( $consts as $v ) {
+			$extras[ $v ] = constant( $v ) ;
+		}
+
+		$extras[ 'active plugins' ] = $active_plugins ;
+
 		if ( is_null($options) ) {
 			$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 		}
