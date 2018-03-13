@@ -567,10 +567,14 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPID_CDN_ORI ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 		if ( $this->_options[ $id ] ) {
-			$tmp = parse_url( $this->_options[ $id ] ) ;
-			if ( ! empty( $tmp[ 'scheme' ] ) ) {
-				$this->_options[ $id ] = str_replace( $tmp[ 'scheme' ] . ':', '', $this->_options[ $id ] ) ;
+			$ori_list = explode( ',', $this->_options[ $id ] ) ;
+			foreach ( $ori_list as $k => $v ) {
+				$tmp = parse_url( $v ) ;
+				if ( ! empty( $tmp[ 'scheme' ] ) ) {
+					$ori_list[ $k ] = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
+				}
 			}
+			$this->_options[ $id ] = implode( ',', $ori_list ) ;
 		}
 
 		$ids = array(

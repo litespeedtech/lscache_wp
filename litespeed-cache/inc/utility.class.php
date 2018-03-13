@@ -188,21 +188,6 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Check if the host is the internal host
-	 *
-	 * @since  1.2.3
-	 *
-	 */
-	public static function internal( $host )
-	{
-		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
-			define( 'LITESPEED_FRONTEND_HOST', parse_url( get_option( 'home' ), PHP_URL_HOST ) ) ;
-		}
-
-		return $host === LITESPEED_FRONTEND_HOST ;
-	}
-
-	/**
 	 * Convert URI to URL
 	 *
 	 * @since  1.3
@@ -410,6 +395,27 @@ class LiteSpeed_Cache_Utility
 		}
 
 		return $url ;
+	}
+
+	/**
+	 * Check if the host is the internal host
+	 *
+	 * @since  1.2.3
+	 *
+	 */
+	public static function internal( $host )
+	{
+		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
+			if ( defined( 'WP_HOME' ) ) {
+				$home_host = WP_HOME ;// Also think of `WP_SITEURL`
+			}
+			else {
+				$home_host = get_option( 'home' ) ;
+			}
+			define( 'LITESPEED_FRONTEND_HOST', parse_url( $home_host, PHP_URL_HOST ) ) ;
+		}
+
+		return $host === LITESPEED_FRONTEND_HOST ;
 	}
 
 	/**

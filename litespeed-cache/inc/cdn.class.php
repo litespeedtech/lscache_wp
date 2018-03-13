@@ -126,6 +126,8 @@ class LiteSpeed_Cache_CDN
 			LiteSpeed_Cache_Log::debug2( 'CDN: translated rule is ' . $this->cfg_url_ori ) ;
 		}
 
+		$this->cfg_url_ori = explode( ',', $this->cfg_url_ori ) ;
+
 		$this->cfg_cdn_exclude = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ) ;
 		$this->cfg_cdn_exclude = explode( "\n", $this->cfg_cdn_exclude ) ;
 
@@ -223,23 +225,6 @@ class LiteSpeed_Cache_CDN
 		}
 
 		return false ;
-	}
-
-	/**
-	 * Check if the host is the CDN internal host
-	 *
-	 * @since  1.2.3
-	 *
-	 */
-	public static function internal( $host )
-	{
-		if ( defined( self::BYPASS ) ) {
-			return false ;
-		}
-
-		$instance = self::get_instance() ;
-
-		return in_array( $host, $instance->cdn_mapping_hosts ) ;
 	}
 
 	/**
@@ -506,9 +491,11 @@ class LiteSpeed_Cache_CDN
 		}
 
 		// Check if is external url
-		if ( ! empty( $url_parsed[ 'host' ] ) && ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) ) {
-			LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: host not internal' ) ;
-			return false ;
+		if ( ! empty( $url_parsed[ 'host' ] ) ) {
+			if ( ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
+				LiteSpeed_Cache_Log::debug2( 'CDN:    rewriting failed: host not internal' ) ;
+				return false ;
+			}
 		}
 
 		if ( $this->cfg_cdn_exclude ) {
@@ -551,15 +538,63 @@ class LiteSpeed_Cache_CDN
 		}
 
 		// Now lets replace CDN url
-		if ( strpos( $this->cfg_url_ori, '*' ) !== false ) {
-			$url = preg_replace( '#' . $scheme . $this->cfg_url_ori . '#iU', $final_url, $url ) ;
-		}
-		else {
-			$url = str_replace( $scheme . $this->cfg_url_ori, $final_url, $url ) ;
+		foreach ( $this->cfg_url_ori as $v ) {
+			if ( strpos( $v, '*' ) !== false ) {
+				$url = preg_replace( '#' . $scheme . $v . '#iU', $final_url, $url ) ;
+			}
+			else {
+				$url = str_replace( $scheme . $v, $final_url, $url ) ;
+			}
 		}
 		LiteSpeed_Cache_Log::debug2( 'CDN:    after rewritten: ' . $url ) ;
 
 		return $url ;
+	}
+
+	/**
+	 * Check if is orignal URL of CDN or not
+	 *
+	 * @since  2.1
+	 * @access private
+	 */
+	private function _is_ori_url( $url )
+	{
+		$url_parsed = parse_url( $url ) ;
+
+		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
+
+		foreach ( $this->cfg_url_ori as $v ) {
+			$needle = $scheme . $v ;
+			if ( strpos( $v, '*' ) !== false ) {
+				if( preg_match( '#' . $needle . '#iU', $url ) ) {
+					return true ;
+				}
+			}
+			else {
+				if ( strpos( $url, $needle ) === 0 ) {
+					return true ;
+				}
+			}
+		}
+
+		return false ;
+	}
+
+	/**
+	 * Check if the host is the CDN internal host
+	 *
+	 * @since  1.2.3
+	 *
+	 */
+	public static function internal( $host )
+	{
+		if ( defined( self::BYPASS ) ) {
+			return false ;
+		}
+
+		$instance = self::get_instance() ;
+
+		return in_array( $host, $instance->cdn_mapping_hosts ) ;// todo: can add $this->_is_ori_url() check in future
 	}
 
 	/**
