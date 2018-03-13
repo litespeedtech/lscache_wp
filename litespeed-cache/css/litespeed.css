@@ -1157,9 +1157,15 @@ ul.litespeed-shell-body {
 }
 
 /********************************* promo banner *******************************/
-.litespeed-banner-promo{
+.litespeed-banner-promo,
+.litespeed-banner-promo-full{
 	display: flex;
 	padding: 10px;
+}
+
+.litespeed-banner-promo-full{
+	margin:0px;
+	padding: 0px;
 }
 
 .litespeed-banner-promo-logo{
@@ -1172,8 +1178,62 @@ ul.litespeed-shell-body {
 	display: inline-block;
 }
 
+.litespeed-banner-promo-full .litespeed-banner-promo-logo {
+	margin: 0px;
+	width: 170px;
+}
+
 .litespeed-banner-promo-content{
 	margin-left: 20px;
+}
+
+.litespeed-banner-promo-full .litespeed-banner-promo-content {
+	width: 100%;
+}
+
+.litespeed-banner-promo-content h1{
+	font-weight: 600;
+	color:#538ac6;
+	margin-top: 10px;
+}
+
+.litespeed-banner-promo-slacklogo{
+	background-image: url("../img/slack-logo.png") ;
+	background-size: contain;
+	width: 75px;
+	height: 75px;
+	background-repeat: no-repeat;
+	display: inline-block;
+	padding:0px;
+	flex: 0 0 5%;
+}
+
+.litespeed-banner-promo .litespeed-banner-promo-slack-line1{
+	font-size: 18px;
+	margin-top:0px;
+	line-height: 21px;
+}
+
+.litespeed-banner-promo .litespeed-banner-promo-slack-textlink{
+	color: #e59544;
+	text-decoration: none;
+}
+
+.litespeed-banner-promo .litespeed-banner-promo-slack-textlink:hover{
+	opacity: 0.8;
+}
+
+.litespeed-banner-promo-slack-line2{
+	font-size: 18px;
+	margin: 0px;
+}
+
+.litespeed-banner-promo-slack-link{
+	color: #888888;
+}
+
+a.litespeed-btn-xs.litespeed-banner-promo-slack-btn{
+	margin:0px 50px 0px 50px;
 }
 
 /********************************* admin -> media lib icon *******************************/

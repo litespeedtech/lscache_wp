@@ -87,7 +87,7 @@ foreach ( $wp_roles->roles as $k => $v ) {
 }
 ksort( $roles ) ;
 
-include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
+LiteSpeed_Cache_GUI::show_promo() ;
 
 /**
  * Switch basic/advanced mode

@@ -217,7 +217,7 @@ class LiteSpeed_Cache_Admin_Display
 			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url ;
 		}
 
-		if ( LiteSpeed_Cache_GUI::has_promo_msg() ) {
+		if ( LiteSpeed_Cache_GUI::has_promo_msg() || LiteSpeed_Cache_GUI::has_promo_msg( 'slack' ) ) {
 			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}

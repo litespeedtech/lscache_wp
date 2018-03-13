@@ -154,6 +154,10 @@ var _litespeed_dots ;
 			$( '.litespeed-banner-promo' ).slideUp() ;
 			$.get( litespeed_data.ajax_url_promo + '&later=1' ) ;
 		} ) ;
+		// Slack
+		$(document).on('click', '#litespeed-banner-promo-slack .notice-dismiss', function () {
+			$.get( litespeed_data.ajax_url_promo + '&slack=1' ) ;
+		} ) ;
 
 		/** CDN mapping **/
 		$( '#litespeed-cdn-mapping-add' ).click(function(event) {

@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-if ( ! LiteSpeed_Cache_GUI::has_promo_msg() ) {
+if ( ! LiteSpeed_Cache_GUI::should_show_promo() ) {
 	return ;
 }
 

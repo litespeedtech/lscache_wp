@@ -18,7 +18,7 @@ $is_running = time() - $meta[ 'is_running' ] <= $_options[LiteSpeed_Cache_Config
 
 $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 
-include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
+LiteSpeed_Cache_GUI::show_promo() ;
 ?>
 
 <div class="wrap">

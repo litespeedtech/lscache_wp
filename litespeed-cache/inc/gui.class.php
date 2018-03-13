@@ -95,6 +95,12 @@ class LiteSpeed_Cache_GUI
 
 	}
 
+	/**
+	 * Dismiss banner
+	 *
+	 * @since 1.0
+	 * @access public
+	 */
 	public static function dismiss()
 	{
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
@@ -107,7 +113,20 @@ class LiteSpeed_Cache_GUI
 				break ;
 
 			case self::TYPE_DISMISS_PROMO :
-				update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() ) ;
+
+				if ( ! empty( $_GET[ 'slack' ] ) ) {
+					// Update slack
+					update_option( 'litespeed-banner-promo-slack', 'done' ) ;
+
+					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo slack' ) ;
+				}
+				else {
+					// Update welcome banner
+					update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() ) ;
+
+					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo welcome' ) ;
+				}
+
 				break ;
 
 			default:
@@ -155,17 +174,42 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Detect if need to display promo banner or not
+	 *
+	 * @since 2.1
+	 * @access public
+	 */
+	public static function should_show_promo( $banner = false )
+	{
+		// Only show one promo at one time
+		if ( defined( 'LITESPEED_PROMO_SHOWN' ) ) {
+			return false ;
+		}
+
+		if ( ! self::has_promo_msg( $banner ) ) {
+			return false ;
+		}
+
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $banner ) ;
+
+		! defined( 'LITESPEED_PROMO_SHOWN' ) && define( 'LITESPEED_PROMO_SHOWN', true ) ;
+
+		return true ;
+	}
+
+	/**
 	 * Check if has promotion notice
 	 *
 	 * @since 1.3.2
 	 * @access public
 	 * @return boolean
 	 */
-	public static function has_promo_msg( $banner = false, $delay_days = 2 )
+	public static function has_promo_msg( $banner = false )
 	{
-		// Only show one promo at one time
-		if ( defined( 'LITESPEED_HAS_PROMO' ) ) {
-			return false ;
+		// How many days delayed to show the banner
+		$delay_days = 2 ;
+		if ( $banner == 'slack' ) {
+			$delay_days = 3 ;
 		}
 
 		$option_name = 'litespeed-banner-promo' ;
@@ -184,10 +228,6 @@ class LiteSpeed_Cache_GUI
 		if ( $promo && time() - $promo < 864000 ) {
 			return false ;
 		}
-
-		! defined( 'LITESPEED_HAS_PROMO' ) && define( 'LITESPEED_HAS_PROMO', true ) ;
-
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $banner ) ;
 
 		return true ;
 	}

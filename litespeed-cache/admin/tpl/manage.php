@@ -12,7 +12,7 @@ if ( ! is_network_admin() ) {
 	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
 }
 
-include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
+LiteSpeed_Cache_GUI::show_promo() ;
 ?>
 
 <div class="wrap">

@@ -62,7 +62,7 @@ else {
 	$finished_percentage = 0 ;
 }
 
-include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
+LiteSpeed_Cache_GUI::show_promo() ;
 ?>
 
 <div class="wrap">
