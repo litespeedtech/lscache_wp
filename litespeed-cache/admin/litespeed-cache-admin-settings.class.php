@@ -652,7 +652,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// If cloudflare API is on, refresh the zone
 		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ] && $cdn_cloudflare_changed ) {
-			$zone = LiteSpeed_Cache_CDN::get_instance()->cloudflare_fetch_zone( $this->_options ) ;
+			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone( $this->_options ) ;
 			if ( $zone ) {
 				$this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] = $zone[ 'name' ] ;
 				$this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ] = $zone[ 'id' ] ;

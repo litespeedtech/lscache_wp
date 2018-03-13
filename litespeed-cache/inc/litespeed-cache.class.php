@@ -47,7 +47,8 @@ class LiteSpeed_Cache
 	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable' ;
 	const ACTION_DO_CRAWL = 'do-crawl' ;
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
-	const ACTION_QUIC_CLOUD = 'quic_cloud' ;
+	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
+	const ACTION_CDN_QUICCLOUD = 'cdn_quiccloud' ;
 
 	const ACTION_FRONT_PURGE = 'front-purge' ;
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
@@ -342,10 +343,6 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_Admin_API::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CDN:
-				$msg = LiteSpeed_Cache_CDN::handler() ;
-				break ;
-
 			case LiteSpeed_Cache::ACTION_LOG:
 				$msg = LiteSpeed_Cache_Log::handler() ;
 				break ;
@@ -358,8 +355,12 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_Import::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_QUIC_CLOUD:
-				$msg = LiteSpeed_Cache_QUIC_CLOUD::handler() ;
+			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:
+				$msg = LiteSpeed_Cache_CDN_Cloudflare::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_CDN_QUICCLOUD:
+				$msg = LiteSpeed_Cache_CDN_Quiccloud::handler() ;
 				break ;
 
 			default:

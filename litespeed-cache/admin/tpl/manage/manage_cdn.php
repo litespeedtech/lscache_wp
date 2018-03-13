@@ -24,13 +24,13 @@ $curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array
 
 <p>
 	<b><?php echo __( 'Development Mode', 'litespeed-cache' ) ; ?>:</b>
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN, LiteSpeed_Cache_CDN::TYPE_CLOUDFLARE_SET_DEVMODE_ON ) ; ?>" class="litespeed-btn-warning">
+	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_SET_DEVMODE_ON ) ; ?>" class="litespeed-btn-warning">
 		<?php echo __( 'Turn ON', 'litespeed-cache' ) ; ?>
 	</a>
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN, LiteSpeed_Cache_CDN::TYPE_CLOUDFLARE_SET_DEVMODE_OFF ) ; ?>" class="litespeed-btn-warning">
+	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_SET_DEVMODE_OFF ) ; ?>" class="litespeed-btn-warning">
 		<?php echo __( 'Turn OFF', 'litespeed-cache' ) ; ?>
 	</a>
-	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN, LiteSpeed_Cache_CDN::TYPE_CLOUDFLARE_GET_DEVMODE ) ; ?>" class="litespeed-btn-success">
+	<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_GET_DEVMODE ) ; ?>" class="litespeed-btn-success">
 		<?php echo __( 'Check Status', 'litespeed-cache' ) ; ?>
 	</a>
 
@@ -66,7 +66,7 @@ $curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array
 	<?php if ( ! $cf_on ) : ?>
 		<a href="#" class="litespeed-btn-default disabled">
 	<?php else : ?>
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN, LiteSpeed_Cache_CDN::TYPE_CLOUDFLARE_PURGE_ALL ) ; ?>" class="litespeed-btn-danger">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="litespeed-btn-danger">
 	<?php endif ; ?>
 		<?php echo __( 'Purge Everything', 'litespeed-cache' ) ; ?>
 	</a>

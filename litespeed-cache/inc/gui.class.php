@@ -143,17 +143,39 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Display promo banner
+	 *
+	 * @since 2.1
+	 * @access public
+	 */
+	public static function show_promo()
+	{
+		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
+		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.slack.php" ;
+	}
+
+	/**
 	 * Check if has promotion notice
 	 *
 	 * @since 1.3.2
 	 * @access public
 	 * @return boolean
 	 */
-	public static function has_promo_msg()
+	public static function has_promo_msg( $banner = false, $delay_days = 2 )
 	{
-		$promo = get_option( 'litespeed-banner-promo' ) ;
+		// Only show one promo at one time
+		if ( defined( 'LITESPEED_HAS_PROMO' ) ) {
+			return false ;
+		}
+
+		$option_name = 'litespeed-banner-promo' ;
+		if ( $banner ) {
+			$option_name .= '-' . $banner ;
+		}
+
+		$promo = get_option( $option_name ) ;
 		if ( ! $promo ) {
-			update_option( 'litespeed-banner-promo', time() - 86400 * 8 ) ;
+			update_option( $option_name, time() - 86400 * ( 10 - $delay_days ) ) ;
 			return false ;
 		}
 		if ( $promo == 'done' ) {
@@ -162,6 +184,11 @@ class LiteSpeed_Cache_GUI
 		if ( $promo && time() - $promo < 864000 ) {
 			return false ;
 		}
+
+		! defined( 'LITESPEED_HAS_PROMO' ) && define( 'LITESPEED_HAS_PROMO', true ) ;
+
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $banner ) ;
+
 		return true ;
 	}
 
@@ -306,7 +333,7 @@ class LiteSpeed_Cache_GUI
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
 				'title'		=> __( 'Cloudflare Purge All', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN, LiteSpeed_Cache_CDN::TYPE_CLOUDFLARE_PURGE_ALL ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_PURGE_ALL ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
