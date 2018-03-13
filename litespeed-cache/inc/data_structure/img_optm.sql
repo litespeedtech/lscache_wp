@@ -1,6 +1,6 @@
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `post_id` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `optm_status` varchar(255) NOT NULL DEFAULT '',
+  `optm_status` varchar(64) NOT NULL DEFAULT '',
   `src` varchar(1000) NOT NULL DEFAULT '',
   `srcpath_md5` varchar(128) NOT NULL DEFAULT '',
   `src_md5` varchar(128) NOT NULL DEFAULT '',
