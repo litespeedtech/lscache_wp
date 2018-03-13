@@ -146,7 +146,7 @@ class LiteSpeed_Cache_Admin_Report
 			'WP_HOME',
 		) ;
 		foreach ( $consts as $v ) {
-			$extras[ $v ] = constant( $v ) ;
+			$extras[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
 		}
 
 		$extras[ 'active plugins' ] = $active_plugins ;
