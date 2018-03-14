@@ -11,28 +11,103 @@ Speed up your page-load times. Get a faster site with high-performance page cach
 
 == Description ==
 
-LiteSpeed Cache for WordPress (LSCWP) communicates with your LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
+LiteSpeed Cache for WordPress (LSCWP) is an all-in-one site acceleration plugin, featuring a server-level cache and a collection of optimization features.
 
-LSCache is a server-level cache, so it's faster than PHP-level caches. [Benchmarks: Comparison with other PHP-based caches](https://www.litespeedtech.com/benchmarks/wordpress).
+LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO.
 
-A page cache allows the server to bypass PHP and database queries altogether. LSCache, in particular, because of its close relationship with the server, can remember things about the cache entries that other plugins cannot, and it can analyze dependencies. It can utilize tags to manage the smart purging of the cache, and it can use vary cookies to serve multiple versions of cached content based on things like mobile vs. desktop, geographic location, and currencies.
+== Plugin Features ==
 
-If all of that sounds complicated, no need to worry. LSCWP works right out of the box with default settings that are appropriate for most sites. And if you do need help, we're just [a forum post](https://wordpress.org/support/plugin/litespeed-cache/) away.
+A LiteSpeed server is no longer required for some optimization features! 
 
-LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO. Scroll down for a complete list.
+= No LiteSpeed Server Required =
 
-LSCWP includes additional optimization features, such as Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 push CDN support, Browser Cache, Object Cache, Lazyload images and image optimization!
+* Image optimization
+* Load CSS/JS Asynchronously
+* Content Delivery Network support
+* Database Cleaner and Optimizer
+* OPcode Cache
+* DNS Prefetch
+* Cloudflare API
+* Single Site and Multi Site (Network) support
+* Import/Export settings
+* Basic/Advanced setting view
+* Attractive, easy-to-understand interface
 
-Want to know more about caching in general, and LiteSpeed caching in particular? See [our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
+= Required: LSWS Enterprise, LiteSpeed Web ADC or OpenLiteSpeed =
 
-[Join our Slack community](https://goo.gl/FG9S4N).
+* WebP image format support
+* PageSpeed score optimization
+* Lazyload images/iframes
+* Minify CSS, JavaScript, and HTML
+* Combine CSS and JavaScript
+* HTTP/2 Push for CSS and JS
+* Object Cache (Memcached/LSMCD/Redis)
+* Browser Cache
+* Automatic page caching to greatly improve site performance
+* Automatic purge of related pages based on certain events
+* Private cache for logged-in users
+* Caching of WordPress REST API calls
+* Separate caching of desktop and mobile views
+* Smart preload crawler with support for SEO-friendly sitemap
+* Ability to schedule purge for specified URLs
+* HTTP/2 & HTTPS support right out of the box
+* WooCommerce and bbPress support
+* [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli) commands
+* Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities
+* No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
+
+= Required: LiteSpeed Web Server Enterprise or LiteSpeed Web ADC =
+
+* [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support right out of the box
+* ESI (Edge Side Includes) cache support
+
+= Required: LiteSpeed Web ADC =
+
+* Clustered environment support
+
+== Screenshots ==
+
+1. Plugin Benchmarks
+2. Admin Settings - Cache
+3. Admin Settings - Purge
+4. Admin Settings - Excludes
+5. Admin Settings - Optimize
+6. Admin Settings - Tuning
+7. Admin Settings - Media
+8. Admin Settings - CDN
+9. Admin Settings - ESI
+10. Admin Settings - Crawler
+11. Admin Settings - Thirdparty WooCommerce
+12. Admin Management - Purge
+13. Admin Management - DB Optimizer
+14. Image Optimization
+15. Admin Crawler Status Page
+16. Cache Miss Example
+17. Cache Hit Example
+18. Frontend Adminbar Shortcut
+
+== LSCWP Resources ==
+[Join our Slack community](https://goo.gl/FG9S4N) to connect with other LiteSpeed users.
+[Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
+[View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
+[Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
+[Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache). 
 
 == Installation ==
 
+[View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
+
+= For Optimization Without a LiteSpeed Server =
+1. Install the LiteSpeed Cache for WordPress plugin and activate it.
+2. From the WordPress Dashboard, navigate to *LiteSpeed Cache -> Settings*. Click *Advanced View*, and enable the available optimization features in the various tabs.
+3. Enjoy!
+
+= For Caching and Optimization With a LiteSpeed Server =
 1. Install [LiteSpeed Web Server Enterprise](https://www.litespeedtech.com/products/litespeed-web-server) with LSCache Module, [LiteSpeed Web ADC](https://www.litespeedtech.com/products/litespeed-web-adc), or [OpenLiteSpeed](https://www.litespeedtech.com/open-source/openlitespeed) with cache module [Free].
 2. Install the LiteSpeed Cache for WordPress plugin and activate it.
 3. From the WordPress Dashboard, navigate to *LiteSpeed Cache -> Settings*, make sure the option *Enable LiteSpeed Cache* is set to `Enable`.
-4. Enjoy!
+4. Click *Advanced View* to enable any desired optimization features in the various tabs.
+5. Enjoy!
 
 = Notes for LiteSpeed Web Server Enterprise =
 
@@ -45,100 +120,32 @@ Want to know more about caching in general, and LiteSpeed caching in particular?
 * If it is a fresh OLS installation, the easiest way to integrate is to use [ols1clk](http://open.litespeedtech.com/mediawiki/index.php/Help:1-Click_Install). If using an existing WordPress installation, use the `--wordpresspath` parameter.
 * If OLS and WordPress are both already installed, please follow the instructions in [How To Set Up LSCache For WordPress](http://open.litespeedtech.com/mediawiki/index.php/Help:How_To_Set_Up_LSCache_For_WordPress).
 
-== Plugin Features ==
-
-LiteSpeed Web Server Enterprise, LiteSpeed Web ADC and OpenLiteSpeed:
-
-* Image optimization
-* WebP image format support [lscache]
-* PageSpeed score optimization [lscache]
-* Load CSS/JS Asynchronously
-* Lazyload images/iframes [lscache]
-* Content Delivery Network support
-* Minify CSS, JavaScript, and HTML [lscache]
-* Combine CSS and JavaScript [lscache]
-* HTTP/2 Push for CSS and JS [lscache]
-* Database Cleaner and Optimizer
-* Object Cache (Memcached/LSMCD/Redis)
-* OPcode Cache
-* Browser Cache [lscache]
-* DNS Prefetch
-* Cloudflare API
-* Automatic page caching to greatly improve site performance [lscache]
-* Automatic purge of related pages based on certain events [lscache]
-* Smart preload crawler with support for SEO-friendly sitemap
-* Private cache for logged-in users [lscache]
-* Caching of WordPress REST API calls [lscache]
-* Separate caching of desktop and mobile views [lscache]
-* Ability to schedule purge for specified URLs at specified time of day [lscache]
-* Support for HTTP/2 & HTTPS out-of-box [lscache]
-* Single Site and Multi Site ( Network ) support
-* Support for  WooCommerce and bbPress [lscache]
-* [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli)
-* Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities.
-* No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
-* Import / Export settings
-* Basic / Advanced setting view
-* Attractive, easy-to-understand interface
-
-LiteSpeed Web Server Enterprise Edition and LiteSpeed Web ADC Only:
-
-* Support for clustered environments via LiteSpeed Web ADC
-* Supports [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) right out of the box
-* Supports ESI cache
-
-Please consider helping translate LiteSpeed Cache plugin at our [GlotPress project](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache). Growing the LiteSpeed Cache plugin community means better software for everyone!
-
 == Third Party Compatibility ==
 
-The vast majority of plugins and themes are compatible with LSCache. Our API is available for those that are not.
-
-= Developers =
-
-If you have a plugin or theme that you would like to make compatible with LSCWP, please see the following resources:
-
-* [LSCWP API Documentation for WordPress Plugin Developers](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api)
-* [LSCWP GitHub](https://github.com/litespeedtech/lscache_wp/)
-* [ESI example: Use ESI for WordPress nonce with cache](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample)
-* [ESI example: Make Caldera Form v1.5.6.1 work with cache](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_replace)
-* [ESI example: Make Visual Composer's WordPress nonce work with cache](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_nonce)
-
-If you have any API requirements, please inform us anytime in [WP Forum](https://wordpress.org/support/plugin/litespeed-cache) or [GitHub Issues](https://github.com/litespeedtech/lscache_wp/issues). We will add them ASAP.
-
-= Known Compatible Plugins and Themes =
-
-* [bbPress](https://wordpress.org/plugins/bbpress/)
-* [WooCommerce](https://wordpress.org/plugins/woocommerce/)
-* [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
-* [Google XML Sitemaps](https://wordpress.org/plugins/google-sitemap-generator/)
-* [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
-* [Wordfence Security](https://wordpress.org/plugins/wordfence/)
-* [NextGen Gallery](https://wordpress.org/plugins/nextgen-gallery/)
-* [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/)
-* Aelia CurrencySwitcher
-* [Fast Velocity Minify](https://wordpress.org/plugins/fast-velocity-minify/) - Thanks Raul Peixoto!
-* Autoptimize
-* [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
-* [WP Touch](https://wordpress.org/plugins/wptouch/)
-* [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
-* [wpForo](https://wordpress.org/plugins/wpforo/)
-* [WPLister](https://www.wplab.com/plugins/wp-lister/)
-* [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
-* [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
-* [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
-* [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
-* Login With Ajax
-* [Post Types Order 1.9.3.6+](https://wordpress.org/plugins/post-types-order/)
+The vast majority of plugins and themes are compatible with LSCache. [Our API](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api) is available for those that are not.
 
 == Frequently Asked Questions ==
 
+= How do the Cache features of LSCache work? =
+This plugin communicates with your LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
+
+LSCache is a server-level cache, so it's faster than PHP-level caches. [Compare with other PHP-based caches](https://www.litespeedtech.com/benchmarks/wordpress).
+
+A page cache allows the server to bypass PHP and database queries altogether. LSCache, in particular, because of its close relationship with the server, can remember things about the cache entries that other plugins cannot, and it can analyze dependencies. It can utilize tags to manage the smart purging of the cache, and it can use vary cookies to serve multiple versions of cached content based on things like mobile vs. desktop, geographic location, and currencies. [See our Caching 101 blog series](https://blog.litespeedtech.com/tag/caching-101/).
+
+If all of that sounds complicated, no need to worry. LSCWP works right out of the box with default settings that are appropriate for most sites. [See the Beginner's Guide](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:beginner).
+
+= What about the optimization features of LSCache? =
+
+LSCWP includes additional optimization features, such as Database Optimization, Minification and Combination of CSS and JS files, HTTP/2 Push, CDN Support, Browser Cache, Object Cache, Lazy Load for Images, and Image Optimization! And now, many of these features do not require the use of a LiteSpeed web server.
+
 = Is the LiteSpeed Cache Plugin for WordPress free? =
 
-Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is required, and there are fees associated with some LiteSpeed server editions (see question 2).
+Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is required for some features, and there are fees associated with some LiteSpeed server editions (see question 2).
 
 = What server software is required for this plugin? =
 
-A LiteSpeed server is required in order to use this plugin.
+A LiteSpeed server is required in order to use the cache functions of this plugin. Some optimization functions also require a LiteSpeed server. See *Plugin Features* above for details.
 
 1. LiteSpeed Web Server Enterprise with LSCache Module (v5.0.10+)
 
@@ -172,7 +179,7 @@ Yes it can work well with OpenLiteSpeed, although some features may not be suppo
 
 = Is WooCommerce supported? =
 
-In short, yes. However, for some woocommerce themes, the cart may not be updated correctly. Please [visit our blog](https://blog.litespeedtech.com/2017/05/31/wpw-fixing-lscachewoocommerce-conflicts/) for a quick tutorial on how to detect this problem and fix it if necessary.
+In short, yes. However, for some WooCommerce themes, the cart may not be updated correctly. Please [visit our blog](https://blog.litespeedtech.com/2017/05/31/wpw-fixing-lscachewoocommerce-conflicts/) for a quick tutorial on how to detect this problem and fix it if necessary.
 
 = My plugin has some pages that are not cacheable. How do I instruct the LiteSpeed Cache Plugin to not cache the page? =
 
@@ -186,7 +193,7 @@ Please see [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/li
 
 = Are my images optimized? =
 
-Yes we do. LSCWP v1.6+ can optimize your images.
+Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to *LiteSpeec Cache > Image Optimization*.
 
 = How do I get WP-PostViews to display an updating view count? =
 
@@ -220,9 +227,9 @@ Yes we do. LSCWP v1.6+ can optimize your images.
 
 The crawler is disabled by default, and must be enabled by the server admin first.
 
-Once the crawler is enabled on the server side, navigate to **LiteSpeed Cache > Crawler** and set **Activation** to `Enable`.
+Once the crawler is enabled on the server side, navigate to *LiteSpeed Cache > Crawler* and set *Activation* to `Enable`.
 
-For more detailed information about crawler setup, please see [our blog post](https://blog.litespeedtech.com/2017/06/14/wpw-crawl-your-site-make-it-fly/).
+For more detailed information about crawler setup, please see [our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler).
 
 = Why are some settings tabs missing? =
 
@@ -230,27 +237,31 @@ LSCWP has a "Basic View" and an "Advanced View." While in Basic View, you will s
 
 Click on the `Advanced View` link at the top of the page, and several more tabs will be revealed: *Optimize*, *Tuning*, *Media*, *CDN*, *ESI*, *Advanced*, *Debug*, *Crawler*. These tabs contain more expert-level cache options as well as non-cache-related optimization functionality.
 
+= What are the known compatible plugins and themes? =
 
-== Screenshots ==
+* [bbPress](https://wordpress.org/plugins/bbpress/)
+* [WooCommerce](https://wordpress.org/plugins/woocommerce/)
+* [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
+* [Google XML Sitemaps](https://wordpress.org/plugins/google-sitemap-generator/)
+* [Yoast SEO](https://wordpress.org/plugins/wordpress-seo/)
+* [Wordfence Security](https://wordpress.org/plugins/wordfence/)
+* [NextGen Gallery](https://wordpress.org/plugins/nextgen-gallery/)
+* [ShortPixel](https://shortpixel.com/h/af/CXNO4OI28044/)
+* Aelia CurrencySwitcher
+* [Fast Velocity Minify](https://wordpress.org/plugins/fast-velocity-minify/) - Thanks Raul Peixoto!
+* Autoptimize
+* [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
+* [WP Touch](https://wordpress.org/plugins/wptouch/)
+* [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
+* [wpForo](https://wordpress.org/plugins/wpforo/)
+* [WPLister](https://www.wplab.com/plugins/wp-lister/)
+* [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
+* [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
+* [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
+* [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
+* Login With Ajax
+* [Post Types Order 1.9.3.6+](https://wordpress.org/plugins/post-types-order/)
 
-1. Plugin Benchmarks
-2. Admin Settings - Cache
-3. Admin Settings - Purge
-4. Admin Settings - Excludes
-5. Admin Settings - Optimize
-6. Admin Settings - Tuning
-7. Admin Settings - Media
-8. Admin Settings - CDN
-9. Admin Settings - ESI
-10. Admin Settings - Crawler
-11. Admin Settings - Thirdparty WooCommerce
-12. Admin Management - Purge
-13. Admin Management - DB Optimizer
-14. Image Optimization
-15. Admin Crawler Status Page
-16. Cache Miss Example
-17. Cache Hit Example
-18. Frontend Adminbar Shortcut
 
 == Changelog ==
 
