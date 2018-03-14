@@ -166,14 +166,22 @@ class LiteSpeed_Cache_Router
 	{
 		if ( ! isset( self::$_can_crawl ) ) {
 			self::$_can_crawl = false ;
+
 			if ( isset( $_SERVER['X-LSCACHE'] ) && strpos( $_SERVER['X-LSCACHE'], 'crawler' ) !== false ) {
 				self::$_can_crawl = true ;
 			}
+
 			// CLI will bypass this check as crawler library can always do the 428 check
 			if ( defined( 'LITESPEED_CLI' ) ) {
 				self::$_can_crawl = true ;
 			}
+
+			// For non-ls users, they can use crawler
+			if ( ! defined( 'LITESPEED_ON' ) ) {
+				self::$_can_crawl = true ;
+			}
 		}
+
 		return self::$_can_crawl ;
 	}
 

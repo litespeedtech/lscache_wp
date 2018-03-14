@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Activation
 		}
 		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
 		LiteSpeed_Cache_Config::get_instance()->plugin_activation( $count ) ;
-		LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
+		// LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
 
 		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
 			set_transient( LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL ) ;

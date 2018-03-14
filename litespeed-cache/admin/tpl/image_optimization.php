@@ -75,8 +75,6 @@ LiteSpeed_Cache_GUI::show_promo() ;
 	<hr class="wp-header-end">
 </div>
 
-<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
-
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<?php if ( $current_step ) : ?>

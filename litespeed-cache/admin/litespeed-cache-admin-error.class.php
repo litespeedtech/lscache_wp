@@ -52,8 +52,6 @@ class LiteSpeed_Cache_Admin_Error
 
 	const E_LC_MISMATCH = 5000 ; // login cookie mismatch
 
-	const E_SERVER = 6000 ;
-
 	const E_CONF = 9000 ; // general config failed to write.
 	const E_HTA_BU = 9010 ; // backup
 	const E_HTA_PUT = 9020 ; // failed to put
@@ -187,12 +185,6 @@ class LiteSpeed_Cache_Admin_Error
 				return __('This site is a subdirectory install.', 'litespeed-cache') . ' '
 					. __('Login cookies do not match.', 'litespeed-cache') . ' '
 					. __('Please remove both and set the login cookie in LiteSpeed Cache advanced settings.', 'litespeed-cache') ;
-
-			// Either running another server or doesn't have cache module.
-			case self::E_SERVER:
-				return __('Notice: This plugin requires a LiteSpeed Server with the LSCache Module enabled.', 'litespeed-cache') . ' '
-					. __('If you are unable to change your server stack, please contact your hosting provider to request the required changes.', 'litespeed-cache') . ' '
-					. __('This plugin will NOT work properly.', 'litespeed-cache') ;
 
 			case self::E_CONF:
 				return __('LiteSpeed Cache was unable to write to the wp-config.php file.', 'litespeed-cache') . ' '
