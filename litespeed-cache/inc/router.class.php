@@ -348,13 +348,18 @@ class LiteSpeed_Cache_Router
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
 			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
 			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
+					self::$_action = $action ;
+				}
+				return ;
+
+			case LiteSpeed_Cache::ACTION_PURGE_CSSJS: // will clear non-ls users file-based cache folder too
+				if ( $_can_network_option || $_can_option || self::is_ajax() ) {
 					self::$_action = $action ;
 				}
 				return ;

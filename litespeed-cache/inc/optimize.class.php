@@ -277,6 +277,23 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
+	 * Delete file-based cache folder
+	 *
+	 * @since  2.1
+	 * @access public
+	 */
+	public function rm_cache_folder()
+	{
+		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/css' ) ) {
+			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/css' ) ;
+		}
+
+		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/js' ) ) {
+			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/js' ) ;
+		}
+	}
+
+	/**
 	 * Remove QS
 	 *
 	 * @since  1.3
