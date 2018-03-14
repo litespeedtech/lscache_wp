@@ -17,7 +17,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 == Plugin Features ==
 
-A LiteSpeed server is no longer required for some optimization features! 
+NEW! Some optimization features are now available for non-LiteSpeed-server users! 
 
 = No LiteSpeed Server Required =
 
@@ -99,15 +99,13 @@ A LiteSpeed server is no longer required for some optimization features!
 
 = For Optimization Without a LiteSpeed Server =
 1. Install the LiteSpeed Cache for WordPress plugin and activate it.
-2. From the WordPress Dashboard, navigate to *LiteSpeed Cache -> Settings*. Click *Advanced View*, and enable the available optimization features in the various tabs.
-3. Enjoy!
+1. From the WordPress Dashboard, navigate to **LiteSpeed Cache -> Settings**. Click **Advanced View**, and enable the available optimization features in the various tabs.
 
 = For Caching and Optimization With a LiteSpeed Server =
 1. Install [LiteSpeed Web Server Enterprise](https://www.litespeedtech.com/products/litespeed-web-server) with LSCache Module, [LiteSpeed Web ADC](https://www.litespeedtech.com/products/litespeed-web-adc), or [OpenLiteSpeed](https://www.litespeedtech.com/open-source/openlitespeed) with cache module [Free].
-2. Install the LiteSpeed Cache for WordPress plugin and activate it.
-3. From the WordPress Dashboard, navigate to *LiteSpeed Cache -> Settings*, make sure the option *Enable LiteSpeed Cache* is set to `Enable`.
-4. Click *Advanced View* to enable any desired optimization features in the various tabs.
-5. Enjoy!
+1. Install the LiteSpeed Cache for WordPress plugin and activate it.
+1. From the WordPress Dashboard, navigate to **LiteSpeed Cache -> Settings**, make sure the option **Enable LiteSpeed Cache** is set to `Enable`.
+1. Click **Advanced View** to enable any desired optimization features in the various tabs.
 
 = Notes for LiteSpeed Web Server Enterprise =
 
@@ -145,13 +143,11 @@ Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is
 
 = What server software is required for this plugin? =
 
-A LiteSpeed server is required in order to use the cache functions of this plugin. Some optimization functions also require a LiteSpeed server. See *Plugin Features* above for details.
+A LiteSpeed server is required in order to use the cache functions of this plugin. Some optimization functions also require a LiteSpeed server. See **Plugin Features** above for details.
 
-1. LiteSpeed Web Server Enterprise with LSCache Module (v5.0.10+)
-
-2. OpenLiteSpeed (v1.4.17+) - Free and open source!
-
-3. LiteSpeed WebADC (v2.0+)
+* LiteSpeed Web Server Enterprise with LSCache Module (v5.0.10+)
+* OpenLiteSpeed (v1.4.17+) - Free and open source!
+* LiteSpeed WebADC (v2.0+)
 
 Any single server or cluster including a LiteSpeed server will work.
 
@@ -163,7 +159,7 @@ If using another load balancer, the cache entries will only be stored at the bac
 
 The purges will also not be synchronized across the nodes, so this is not recommended.
 
-If a customized solution is required, please contact LiteSpeed Technologies at info@litespeedtech.com
+If a customized solution is required, please contact LiteSpeed Technologies at `info@litespeedtech.com`
 
 NOTICE: The rewrite rules created by this plugin must be copied to the Load Balancer.
 
@@ -175,7 +171,7 @@ Nothing is stored within the WordPress file structure.
 
 = Does LiteSpeed Cache for WordPress work with OpenLiteSpeed? =
 
-Yes it can work well with OpenLiteSpeed, although some features may not be supported. See **Plugin Features** above for details. Any setting changes that require modifying the .htaccess file will require a server restart.
+Yes it can work well with OpenLiteSpeed, although some features may not be supported. See **Plugin Features** above for details. Any setting changes that require modifying the `.htaccess` file will require a server restart.
 
 = Is WooCommerce supported? =
 
@@ -193,20 +189,15 @@ Please see [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/li
 
 = Are my images optimized? =
 
-Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to *LiteSpeec Cache > Image Optimization*.
+Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to **LiteSpeed Cache > Image Optimization**.
 
 = How do I get WP-PostViews to display an updating view count? =
 
 1. Use: `<div id="postviews_lscwp"></div>`
-
     to replace
-
     `<?php if(function_exists('the_views')) { the_views(); } ?>`
-
     * NOTE: The id can be changed, but the div id and the ajax function must match.
-
-2. Replace the ajax query in `wp-content/plugins/wp-postviews/postviews-cache.js` with
-
+1. Replace the ajax query in `wp-content/plugins/wp-postviews/postviews-cache.js` with
     `
     jQuery.ajax({
         type:"GET",
@@ -220,22 +211,21 @@ Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to 
        }
     });
     `
-
-3. Purge the cache to use the updated pages.
+1. Purge the cache to use the updated pages.
 
 = How do I enable the crawler? =
 
 The crawler is disabled by default, and must be enabled by the server admin first.
 
-Once the crawler is enabled on the server side, navigate to *LiteSpeed Cache > Crawler* and set *Activation* to `Enable`.
+Once the crawler is enabled on the server side, navigate to **LiteSpeed Cache > Crawler** and set *Activation* to `Enable`.
 
 For more detailed information about crawler setup, please see [our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler).
 
 = Why are some settings tabs missing? =
 
-LSCWP has a "Basic View" and an "Advanced View." While in Basic View, you will see the following settings tabs: *General*, *Cache*, *Purge*, *Excludes*, and (optionally) *WooCommerce*. These are all that is necessary to manage the LiteSpeed Cache.
+LSCWP has a "Basic View" and an "Advanced View." While in Basic View, you will see the following settings tabs: **General**, **Cache**, **Purge**, **Excludes**, and (optionally) **WooCommerce**. These are all that is necessary to manage the LiteSpeed Cache.
 
-Click on the `Advanced View` link at the top of the page, and several more tabs will be revealed: *Optimize*, *Tuning*, *Media*, *CDN*, *ESI*, *Advanced*, *Debug*, *Crawler*. These tabs contain more expert-level cache options as well as non-cache-related optimization functionality.
+Click on the `Advanced View` link at the top of the page, and several more tabs will be revealed: **Optimize**, **Tuning**, **Media**, **CDN**, **ESI**, **Advanced**, **Debug**, **Crawler**. These tabs contain more expert-level cache options as well as non-cache-related optimization functionality.
 
 = What are the known compatible plugins and themes? =
 
@@ -895,4 +885,3 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 1.0.0 - January 20 2016 =
 * Initial Release.
-
