@@ -360,7 +360,7 @@ class LiteSpeed_Cache_Router
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
-				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option ) ) {
+				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -394,7 +394,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:
 			case LiteSpeed_Cache::ACTION_CDN_QUICCLOUD:
 			case LiteSpeed_Cache::ACTION_IMPORT:
-				if ( defined( 'LITESPEED_ON' ) && $_can_option && ! $_is_network_admin ) {
+				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
 				return ;
