@@ -26,31 +26,31 @@ NEW! Some optimization features are now available for non-LiteSpeed-server users
 * Content Delivery Network support
 * Database Cleaner and Optimizer
 * OPcode Cache
+* Lazyload images/iframes
+* Minify CSS, JavaScript, and HTML
+* Combine CSS and JavaScript
+* HTTP/2 Push for CSS and JS
+* Object Cache (Memcached/LSMCD/Redis)
 * DNS Prefetch
 * Cloudflare API
+* Smart preload crawler with support for SEO-friendly sitemap
 * Single Site and Multi Site (Network) support
 * Import/Export settings
 * Basic/Advanced setting view
+* HTTP/2 & HTTPS support right out of the box
 * Attractive, easy-to-understand interface
 
 = Required: LSWS Enterprise, LiteSpeed Web ADC or OpenLiteSpeed =
 
 * WebP image format support
 * PageSpeed score optimization
-* Lazyload images/iframes
-* Minify CSS, JavaScript, and HTML
-* Combine CSS and JavaScript
-* HTTP/2 Push for CSS and JS
-* Object Cache (Memcached/LSMCD/Redis)
 * Browser Cache
 * Automatic page caching to greatly improve site performance
 * Automatic purge of related pages based on certain events
 * Private cache for logged-in users
 * Caching of WordPress REST API calls
 * Separate caching of desktop and mobile views
-* Smart preload crawler with support for SEO-friendly sitemap
 * Ability to schedule purge for specified URLs
-* HTTP/2 & HTTPS support right out of the box
 * WooCommerce and bbPress support
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli) commands
 * Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities
