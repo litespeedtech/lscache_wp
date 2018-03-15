@@ -37,10 +37,10 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Basic/Advanced setting view
 * HTTP/2 & HTTPS support right out of the box
 * Attractive, easy-to-understand interface
+* WebP image format support
 
 = LiteSpeed Exclusive Features =
 
-* WebP image format support
 * PageSpeed score optimization
 * Browser Cache
 * Automatic page caching to greatly improve site performance
