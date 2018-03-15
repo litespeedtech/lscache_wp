@@ -84,7 +84,7 @@ NOTE: **LiteSpeed Exclusive Features** require the use of a LiteSpeed web server
 [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
 [View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
 [Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
-[Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache). 
+[Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
 
 == Installation ==
 
@@ -251,11 +251,21 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.1 - Mar 15 2018 =
-* [IMPROVEMENT] <b>CDN</b> Multiple domains can now be used.
+* [NEW FEATURE] <b>Image Optimization</b> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <b>Object Cache</b> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <b>Crawler</b> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <b>Database Cleaner and Optimizer</b> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <b>Lazy Load Images</b> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <b>CSS/JS/HTML Minify/Combine Optimize</b> Unlocked for non-LiteSpeed users.
 * [IAPI] IAPI v2.0.
+* [IAPI] Increased max rows prefetch when client has additional credit.
+* [IMPROVEMENT] <b>CDN</b> Multiple domains may now be used.
+* [IMPROVEMENT] <b>Report</b> Added WP environment constants for better debugging.
 * [REFACTOR] Separated Cloudflare CDN class.
-* [BUGFIX] <b>Image Optimization</b> Fixed certain MySQL version failed to create img_optm table issue. (@philippwidmer)
-* [GUI] Added slack community banner.
+* [BUGFIX] <b>Image Optimization</b> Fixed issue where certain MySQL version failed to create img_optm table. (@philippwidmer)
+* [BUGFIX] <b>Image Optimization</b> Fixed issue where callback validation failed when pulling and sending request simultaneously.
+* [GUI] Added Slack community banner.
+* [INTEGRATION] CDN compatibility with WPML multiple domains. (@egemensarica)
 
 = 2.0 - Mar 7 2018 =
 * [NEW FEATURE] <b>Image Optimization</b> Added level up guidance.
