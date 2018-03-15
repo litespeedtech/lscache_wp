@@ -1,6 +1,6 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize
+Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.4
 Stable tag: 2.1
@@ -11,15 +11,13 @@ Speed up your page-load times. Get a faster site with high-performance page cach
 
 == Description ==
 
-LiteSpeed Cache for WordPress (LSCWP) is an all-in-one site acceleration plugin, featuring a server-level cache and a collection of optimization features.
+LiteSpeed Cache for WordPress (LSCWP) is an all-in-one site acceleration plugin, featuring an exclusive server-level cache and a collection of optimization features.
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO.
 
 == Plugin Features ==
 
-NEW! Some optimization features are now available for non-LiteSpeed-server users! 
-
-= No LiteSpeed Server Required =
+= General Features =
 
 * Image optimization
 * Load CSS/JS Asynchronously
@@ -40,7 +38,7 @@ NEW! Some optimization features are now available for non-LiteSpeed-server users
 * HTTP/2 & HTTPS support right out of the box
 * Attractive, easy-to-understand interface
 
-= Required: LSWS Enterprise, LiteSpeed Web ADC or OpenLiteSpeed =
+= LiteSpeed Exclusive Features =
 
 * WebP image format support
 * PageSpeed score optimization
@@ -53,17 +51,12 @@ NEW! Some optimization features are now available for non-LiteSpeed-server users
 * Ability to schedule purge for specified URLs
 * WooCommerce and bbPress support
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli) commands
-* Simple API system that enables other plugins to easily integrate with cache and operate cache functionalities
-* No-Cache configuration by URI, Categories, Tags, Cookies, and User Agents
+* Simple API system for each cache integration
+* Exclude from cache by URI, Category, Tag, Cookie, User Agent
+* [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support out of the box (Not available in OpenLiteSpeed)
+* ESI (Edge Side Includes) support (Not available in OpenLiteSpeed)
 
-= Required: LiteSpeed Web Server Enterprise or LiteSpeed Web ADC =
-
-* [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support right out of the box
-* ESI (Edge Side Includes) cache support
-
-= Required: LiteSpeed Web ADC =
-
-* Clustered environment support
+NOTE: **LiteSpeed Exclusive Features** require the use of a LiteSpeed web server with cache module installed. **General Features** may be used by anyone with any web server.
 
 == Screenshots ==
 
@@ -97,11 +90,11 @@ NEW! Some optimization features are now available for non-LiteSpeed-server users
 
 [View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
 
-= For Optimization Without a LiteSpeed Server =
+= For Optimization Without a LiteSpeed Web Server =
 1. Install the LiteSpeed Cache for WordPress plugin and activate it.
 1. From the WordPress Dashboard, navigate to **LiteSpeed Cache -> Settings**. Click **Advanced View**, and enable the available optimization features in the various tabs.
 
-= For Caching and Optimization With a LiteSpeed Server =
+= For Caching and Optimization With a LiteSpeed Web Server =
 1. Install [LiteSpeed Web Server Enterprise](https://www.litespeedtech.com/products/litespeed-web-server) with LSCache Module, [LiteSpeed Web ADC](https://www.litespeedtech.com/products/litespeed-web-adc), or [OpenLiteSpeed](https://www.litespeedtech.com/open-source/openlitespeed) with cache module [Free].
 1. Install the LiteSpeed Cache for WordPress plugin and activate it.
 1. From the WordPress Dashboard, navigate to **LiteSpeed Cache -> Settings**, make sure the option **Enable LiteSpeed Cache** is set to `Enable`.
@@ -139,17 +132,19 @@ LSCWP includes additional optimization features, such as Database Optimization, 
 
 = Is the LiteSpeed Cache Plugin for WordPress free? =
 
-Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is required for some features, and there are fees associated with some LiteSpeed server editions (see question 2).
+Yes, LSCWP will always be free and open source. That said, a LiteSpeed server is required for the **LiteSpeed Exclusive Features** (see the list above), and there are fees associated with some LiteSpeed server editions (see question 2).
 
 = What server software is required for this plugin? =
 
-A LiteSpeed server is required in order to use the cache functions of this plugin. Some optimization functions also require a LiteSpeed server. See **Plugin Features** above for details.
+A LiteSpeed web server is required in order to use the LiteSpeed Exclusive Features of this plugin. See **Plugin Features** above for details.
 
 * LiteSpeed Web Server Enterprise with LSCache Module (v5.0.10+)
 * OpenLiteSpeed (v1.4.17+) - Free and open source!
 * LiteSpeed WebADC (v2.0+)
 
 Any single server or cluster including a LiteSpeed server will work.
+
+The General Features may be used with any web server. LiteSpeed is not required.
 
 = Does this plugin work in a clustered environment? =
 
