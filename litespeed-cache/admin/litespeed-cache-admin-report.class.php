@@ -210,6 +210,7 @@ class LiteSpeed_Cache_Admin_Report
 			'LITESPEED_CLI',
 			'LITESPEED_ALLOWED',
 			'LITESPEED_ON',
+			'LITESPEED_ON_IN_SETTING',
 			'LSCACHE_ADV_CACHE',
 		) ;
 		foreach ( $consts as $v ) {
