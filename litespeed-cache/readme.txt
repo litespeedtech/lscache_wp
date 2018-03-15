@@ -80,11 +80,11 @@ NOTE: **LiteSpeed Exclusive Features** require the use of a LiteSpeed web server
 18. Frontend Adminbar Shortcut
 
 == LSCWP Resources ==
-[Join our Slack community](https://goo.gl/FG9S4N) to connect with other LiteSpeed users.
-[Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
-[View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
-[Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
-[Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
+* [Join our Slack community](https://goo.gl/FG9S4N) to connect with other LiteSpeed users.
+* [Ask a question on our support forum](https://wordpress.org/support/plugin/litespeed-cache/).
+* [View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
+* [Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
+* [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
 
 == Installation ==
 
