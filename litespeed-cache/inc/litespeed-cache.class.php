@@ -605,7 +605,7 @@ class LiteSpeed_Cache
 		}
 
 		// send Control header
-		if ( $control_header ) {
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) && $control_header ) {
 			@header( $control_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $control_header ) ;
@@ -614,7 +614,7 @@ class LiteSpeed_Cache
 				}
 			}
 		}
-		// send PURGE header
+		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( $purge_header ) {
 			@header( $purge_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
@@ -625,7 +625,7 @@ class LiteSpeed_Cache
 			}
 		}
 		// send Vary header
-		if ( $vary_header ) {
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) && $vary_header ) {
 			@header( $vary_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $vary_header ) ;
@@ -655,7 +655,7 @@ class LiteSpeed_Cache
 		}
 		else {
 			// Control header
-			if ( LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
+			if ( defined( 'LITESPEED_ON_IN_SETTING' ) && LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header ) ;
 				if ( defined( 'LSCWP_LOG' ) ) {
 					LiteSpeed_Cache_Log::debug( $tag_header ) ;
