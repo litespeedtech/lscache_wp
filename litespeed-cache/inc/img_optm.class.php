@@ -1048,8 +1048,13 @@ class LiteSpeed_Cache_Img_Optm
 			return false ;
 		}
 
+		if ( function_exists( 'is_serialized' ) && ! is_serialized( $v->meta_value ) ) {
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to wrong meta_value: pid ' . $v->post_id ) ;
+			return false ;
+		}
+
 		try {
-			$meta_value = unserialize( $v->meta_value ) ;
+			$meta_value = @unserialize( $v->meta_value ) ;
 		}
 		catch ( \Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to meta_value not json: pid ' . $v->post_id ) ;
