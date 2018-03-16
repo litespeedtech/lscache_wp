@@ -166,16 +166,6 @@ LiteSpeed_Cache_GUI::show_promo() ;
 			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_requested_groups' ] ) ; ?></b>
 			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_requested' ], 'image' ) ; ?></b>)
 		</p>
-		<p>
-			<?php echo __('Images failed to optimize', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err' ], 'image' ) ; ?></b>)
-		</p>
-		<p>
-			<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss' ], 'image' ) ; ?></b>)
-		</p>
 		<p class="litespeed-desc">
 			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
 			<?php echo __( 'This process is automatic.', 'litespeed-cache' ) ; ?>
@@ -203,6 +193,20 @@ LiteSpeed_Cache_GUI::show_promo() ;
 			<?php echo __('Images optimized and pulled', 'litespeed-cache') ; ?>:
 			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_pulled_groups' ] ) ; ?></b>
 			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_pulled' ], 'image' ) ; ?></b>)
+		</p>
+		<p>
+			<?php echo __('Images failed to optimize', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err' ], 'image' ) ; ?></b>)
+		</p>
+		<p>
+			<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss_groups' ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss' ], 'image' ) ; ?></b>)
+		</p>
+		<p>
+			<?php echo __('Images with wrong meta', 'litespeed-cache') ; ?>:
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_xmeta_groups' ] ) ; ?></b>
 		</p>
 		<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>
 

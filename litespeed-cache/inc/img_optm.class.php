@@ -32,6 +32,7 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
 	const DB_IMG_OPTIMIZE_STATUS_MISS = 'miss' ;
 	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
+	const DB_IMG_OPTIMIZE_STATUS_XMETA = 'xmeta' ;
 	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
 	const DB_IMG_OPTM_SUMMARY = 'litespeed_img_optm_summary' ;
@@ -144,6 +145,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			$meta_value = $this->_parse_wp_meta_value( $v ) ;
 			if ( ! $meta_value ) {
+				$this->_mark_wrong_meta_src( $v->post_id ) ;
 				continue ;
 			}
 
@@ -328,6 +330,22 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		return $existing_img_list ;
+	}
+
+	/**
+	 * Save failed to parse meta info
+	 *
+	 * @since 2.1.1
+	 * @access private
+	 */
+	private function _mark_wrong_meta_src( $pid )
+	{
+		$data = array(
+			$pid,
+			self::DB_IMG_OPTIMIZE_STATUS_XMETA,
+		) ;
+		$this->_insert_img_optm( $data, 'post_id, optm_status' ) ;
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] Mark wrong meta [pid] ' . $pid ) ;
 	}
 
 	/**
@@ -1339,6 +1357,7 @@ class LiteSpeed_Cache_Img_Optm
 		$total_err = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ;
 		$total_miss_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_MISS ) ) ;
 		$total_miss = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_MISS ) ) ;
+		$total_xmeta_groups = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_XMETA ) ) ;
 
 		return array(
 			'total_img'	=> $total_img,
@@ -1353,6 +1372,7 @@ class LiteSpeed_Cache_Img_Optm
 			'total_server_finished'	=> $total_server_finished,
 			'total_pulled_groups'	=> $total_pulled_groups,
 			'total_pulled'	=> $total_pulled,
+			'total_xmeta_groups'	=> $total_xmeta_groups,
 		) ;
 	}
 

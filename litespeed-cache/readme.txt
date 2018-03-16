@@ -251,41 +251,41 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.1 - Mar 15 2018 =
-* [NEW FEATURE] <b>Image Optimization</b> Unlocked for non-LiteSpeed users.
-* [NEW FEATURE] <b>Object Cache</b> Unlocked for non-LiteSpeed users.
-* [NEW FEATURE] <b>Crawler</b> Unlocked for non-LiteSpeed users.
-* [NEW FEATURE] <b>Database Cleaner and Optimizer</b> Unlocked for non-LiteSpeed users.
-* [NEW FEATURE] <b>Lazy Load Images</b> Unlocked for non-LiteSpeed users.
-* [NEW FEATURE] <b>CSS/JS/HTML Minify/Combine Optimize</b> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Image Optimization</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Object Cache</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Crawler</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Database Cleaner and Optimizer</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Lazy Load Images</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>CSS/JS/HTML Minify/Combine Optimize</strong> Unlocked for non-LiteSpeed users.
 * [IAPI] IAPI v2.0.
 * [IAPI] Increased max rows prefetch when client has additional credit.
-* [IMPROVEMENT] <b>CDN</b> Multiple domains may now be used.
-* [IMPROVEMENT] <b>Report</b> Added WP environment constants for better debugging.
+* [IMPROVEMENT] <strong>CDN</strong> Multiple domains may now be used.
+* [IMPROVEMENT] <strong>Report</strong> Added WP environment constants for better debugging.
 * [REFACTOR] Separated Cloudflare CDN class.
-* [BUGFIX] <b>Image Optimization</b> Fixed issue where certain MySQL version failed to create img_optm table. (@philippwidmer)
-* [BUGFIX] <b>Image Optimization</b> Fixed issue where callback validation failed when pulling and sending request simultaneously.
+* [BUGFIX] <strong>Image Optimization</strong> Fixed issue where certain MySQL version failed to create img_optm table. (@philippwidmer)
+* [BUGFIX] <strong>Image Optimization</strong> Fixed issue where callback validation failed when pulling and sending request simultaneously.
 * [GUI] Added Slack community banner.
 * [INTEGRATION] CDN compatibility with WPML multiple domains. (@egemensarica)
 
 = 2.0 - Mar 7 2018 =
-* [NEW FEATURE] <b>Image Optimization</b> Added level up guidance.
-* [REFACTOR] <b>Image Optimization</b> Refactored Image Optimization class.
-* [IAPI] <b>Image Optimization</b> New European Image Optimization server (EU2).
-* [IMPROVEMENT] <b>Image Optimization</b> Manual pull action continues pulling until complete.
-* [IMPROVEMENT] <b>CDN</b> Multiple CDNs can now be randomized for a single resource.
-* [IMPROVEMENT] <b>Image Optimization</b> Improved compatibility of long src images.
-* [IMPROVEMENT] <b>Image Optimization</b> Reduced runtime load.
-* [IMPROVEMENT] <b>Image Optimization</b> Avoid potential loss/reset of notified images status when pulling.
-* [IMPROVEMENT] <b>Image Optimization</b> Avoid duplicated optimization for multiple records in Media that have the same image source.
-* [IMPROVEMENT] <b>Image Optimization</b> Fixed issue where phantom images continued to show in not-yet-requested queue.
-* [BUGFIX] <b>Core</b> Improved compatibility when upgrading outside of WP Admin. (@jikatal @TylorB)
-* [BUGFIX] <b>Crawler</b> Improved HTTP/2 compatibility to avoid erroneous blacklisting.
-* [BUGFIX] <b>Crawler</b> Changing Delay setting will use server variable for min value validation if set.
-* [UPDATE] <b>Crawler</b> Added HTTP/2 protocol switch in the Crawler settings.
+* [NEW FEATURE] <strong>Image Optimization</strong> Added level up guidance.
+* [REFACTOR] <strong>Image Optimization</strong> Refactored Image Optimization class.
+* [IAPI] <strong>Image Optimization</strong> New European Image Optimization server (EU2).
+* [IMPROVEMENT] <strong>Image Optimization</strong> Manual pull action continues pulling until complete.
+* [IMPROVEMENT] <strong>CDN</strong> Multiple CDNs can now be randomized for a single resource.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Improved compatibility of long src images.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Reduced runtime load.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Avoid potential loss/reset of notified images status when pulling.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Avoid duplicated optimization for multiple records in Media that have the same image source.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Fixed issue where phantom images continued to show in not-yet-requested queue.
+* [BUGFIX] <strong>Core</strong> Improved compatibility when upgrading outside of WP Admin. (@jikatal @TylorB)
+* [BUGFIX] <strong>Crawler</strong> Improved HTTP/2 compatibility to avoid erroneous blacklisting.
+* [BUGFIX] <strong>Crawler</strong> Changing Delay setting will use server variable for min value validation if set.
+* [UPDATE] <strong>Crawler</strong> Added HTTP/2 protocol switch in the Crawler settings.
 * [UPDATE] Removed unnecessary translation strings.
 * [GUI] Display translated role group name string instead of English values. (@Richard Hordern)
 * [GUI] Added Join LiteSpeed Slack link.
-* [GUI] <b>Import / Export</b> Cosmetic changes to Import Settings file field.
+* [GUI] <strong>Import / Export</strong> Cosmetic changes to Import Settings file field.
 * [INTEGRATION] Improved compatibility with WPML Media for Image Optimization. (@szmigieldesign)
 
 = 1.9.1.1 - February 20 2018 =
