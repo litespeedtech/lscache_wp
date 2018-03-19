@@ -397,7 +397,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_IMG_OPTM:
 			case LiteSpeed_Cache::ACTION_IAPI:
 			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:
-			case LiteSpeed_Cache::ACTION_CDN_QUICCLOUD:
+			case LiteSpeed_Cache::ACTION_CDN_QUIC:
 			case LiteSpeed_Cache::ACTION_IMPORT:
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;

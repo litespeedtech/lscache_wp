@@ -7,7 +7,7 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-class LiteSpeed_Cache_CDN_Quiccloud
+class LiteSpeed_Cache_CDN_Quic
 {
 	private static $_instance ;
 
