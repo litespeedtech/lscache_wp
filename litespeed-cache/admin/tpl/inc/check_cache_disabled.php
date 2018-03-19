@@ -6,7 +6,7 @@ $reasons = array() ;
 if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
 	$reasons[] = array(
 		'title' => __( 'LSCache Module is disabled.', 'litespeed-cache' ),
-		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache#prerequisites',
+		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation',
 	) ;
 }
 
