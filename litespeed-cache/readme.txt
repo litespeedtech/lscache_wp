@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.1
+Stable tag: 2.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -19,19 +19,21 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 = General Features =
 
-* Image optimization
-* Load CSS/JS Asynchronously
-* Content Delivery Network support
-* Database Cleaner and Optimizer
-* OPcode Cache
-* Lazyload images/iframes
+* Object Cache (Memcached/LSMCD/Redis)
+* Image Optimization
 * Minify CSS, JavaScript, and HTML
 * Combine CSS and JavaScript
+* Lazyload images/iframes
+* Multiple CDN support
+* Load CSS/JS Asynchronously
+* Browser Cache
+* Smart preload crawler with support for SEO-friendly sitemap
+* Database Cleaner and Optimizer
+* PageSpeed score optimization
+* OPcode Cache
 * HTTP/2 Push for CSS and JS
-* Object Cache (Memcached/LSMCD/Redis)
 * DNS Prefetch
 * Cloudflare API
-* Smart preload crawler with support for SEO-friendly sitemap
 * Single Site and Multi Site (Network) support
 * Import/Export settings
 * Basic/Advanced setting view
@@ -41,8 +43,6 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 = LiteSpeed Exclusive Features =
 
-* PageSpeed score optimization
-* Browser Cache
 * Automatic page caching to greatly improve site performance
 * Automatic purge of related pages based on certain events
 * Private cache for logged-in users
@@ -249,6 +249,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.1.1 - Mar 20 2018 =
+* [NEW FEATURE] <strong>Browser Cache</strong> Unlocked for non-LiteSpeed users.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Fixed issue where images with bad postmeta value continued to show in not-yet-requested queue.
 
 = 2.1 - Mar 15 2018 =
 * [NEW FEATURE] <strong>Image Optimization</strong> Unlocked for non-LiteSpeed users.
