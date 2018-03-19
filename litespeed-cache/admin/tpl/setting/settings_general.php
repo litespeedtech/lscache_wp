@@ -8,6 +8,8 @@ if (!defined('WPINC')) die;
 	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 </h3>
 
+<?php $this->cache_disabled_warning() ; ?>
+
 <table><tbody>
 	<tr>
 		<th><?php echo __('Enable LiteSpeed Cache', 'litespeed-cache'); ?></th>

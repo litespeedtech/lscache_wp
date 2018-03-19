@@ -700,6 +700,11 @@ h3 .litespeed-learn-more {
 	right: 0px;
 }
 
+.litespeed-list li:before {
+	content: '>' ;
+	color: #cc3d6a ;
+}
+
 /********************************* label *******************************/
 [class*="litespeed-label-"] {
 	display: inline;

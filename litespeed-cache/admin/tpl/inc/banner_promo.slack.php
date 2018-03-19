@@ -24,7 +24,7 @@ if ( ! LiteSpeed_Cache_GUI::should_show_promo( 'slack' ) ) {
 
 				<p class="litespeed-banner-promo-slack-line2">
 					<span class="litespeed-banner-promo-slack-link">golitespeed.slack.com</span>
-					<a href="https://goo.gl/mrKuTw" target="_blank" class="litespeed-btn-success litespeed-btn-xs litespeed-banner-promo-slack-btn">Join Us on Slack</a>
+					<a href="https://goo.gl/mrKuTw" target="_blank" class="litespeed-btn-success litespeed-btn-xs litespeed-banner-promo-slack-btn"><?php echo __( 'Join Us on Slack', 'litespeed-cache' ) ; ?></a>
 				</p>
 			</div>
 

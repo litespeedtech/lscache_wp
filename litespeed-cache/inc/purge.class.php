@@ -244,6 +244,9 @@ class LiteSpeed_Cache_Purge
 	public static function purge_cssjs()
 	{
 		self::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
+
+		// For non-ls users
+		LiteSpeed_Cache_Optimize::get_instance()->rm_cache_folder() ;
 	}
 
 	/**

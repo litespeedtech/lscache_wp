@@ -166,14 +166,22 @@ class LiteSpeed_Cache_Router
 	{
 		if ( ! isset( self::$_can_crawl ) ) {
 			self::$_can_crawl = false ;
+
 			if ( isset( $_SERVER['X-LSCACHE'] ) && strpos( $_SERVER['X-LSCACHE'], 'crawler' ) !== false ) {
 				self::$_can_crawl = true ;
 			}
+
 			// CLI will bypass this check as crawler library can always do the 428 check
 			if ( defined( 'LITESPEED_CLI' ) ) {
 				self::$_can_crawl = true ;
 			}
+
+			// For non-ls users, they can use crawler
+			if ( ! defined( 'LITESPEED_ON' ) ) {
+				self::$_can_crawl = true ;
+			}
 		}
+
 		return self::$_can_crawl ;
 	}
 
@@ -340,7 +348,6 @@ class LiteSpeed_Cache_Router
 
 			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
 			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
 			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
 			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
@@ -351,8 +358,14 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
+			case LiteSpeed_Cache::ACTION_PURGE_CSSJS: // will clear non-ls users file-based cache folder too
+				if ( $_can_network_option || $_can_option || self::is_ajax() ) {
+					self::$_action = $action ;
+				}
+				return ;
+
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
-				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option ) ) {
+				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -386,7 +399,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:
 			case LiteSpeed_Cache::ACTION_CDN_QUICCLOUD:
 			case LiteSpeed_Cache::ACTION_IMPORT:
-				if ( defined( 'LITESPEED_ON' ) && $_can_option && ! $_is_network_admin ) {
+				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
 				return ;

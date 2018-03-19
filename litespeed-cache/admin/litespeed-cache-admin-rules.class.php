@@ -29,11 +29,13 @@ class LiteSpeed_Cache_Admin_Rules
 	const RW_OPTM_NO_VARY = "RewriteRule min/\w+\.(css|js) - [E=cache-control:no-vary]" ;
 
 	const LS_MODULE_START = '<IfModule LiteSpeed>' ;
+	const EXPIRES_MODULE_START = '<IfModule mod_expires.c>' ;
 	const LS_MODULE_END = '</IfModule>' ;
 	const LS_MODULE_REWRITE_START = '<IfModule mod_rewrite.c>' ;
 	private static $LS_MODULE_REWRITE_ON ;
 	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##" ;
 	const MARKER = 'LSCACHE' ;
+	const MARKER_NONLS = 'NON_LSCACHE' ;
 	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE' ;
 	const MARKER_MOBILE = '### marker MOBILE' ;
 	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES' ;
@@ -485,41 +487,41 @@ class LiteSpeed_Cache_Admin_Rules
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ;
 		$ttl = $cfg[ $id ] ;
 		$rules = array(
+			self::EXPIRES_MODULE_START,
 			'<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
-				'<IfModule mod_expires.c>',
-					'ExpiresActive on',
-					'ExpiresByType application/pdf A' . $ttl,
-					'ExpiresByType image/x-icon A' . $ttl,
-					'ExpiresByType image/vnd.microsoft.icon A' . $ttl,
-					'ExpiresByType image/svg+xml A' . $ttl,
-					'',
-					'ExpiresByType image/jpg A' . $ttl,
-					'ExpiresByType image/jpeg A' . $ttl,
-					'ExpiresByType image/png A' . $ttl,
-					'ExpiresByType image/gif A' . $ttl,
-					'ExpiresByType image/webp A' . $ttl,
-					'',
-					'ExpiresByType video/ogg A' . $ttl,
-					'ExpiresByType audio/ogg A' . $ttl,
-					'ExpiresByType video/mp4 A' . $ttl,
-					'ExpiresByType video/webm A' . $ttl,
-					'',
-					'ExpiresByType text/css A' . $ttl,
-					'ExpiresByType text/javascript A' . $ttl,
-					'ExpiresByType application/javascript A' . $ttl,
-					'ExpiresByType application/x-javascript A' . $ttl,
-					'',
-					'ExpiresByType application/x-font-ttf A' . $ttl,
-					'ExpiresByType application/x-font-woff A' . $ttl,
-					'ExpiresByType application/font-woff A' . $ttl,
-					'ExpiresByType application/font-woff2 A' . $ttl,
-					'ExpiresByType application/vnd.ms-fontobject A' . $ttl,
-					'ExpiresByType font/ttf A' . $ttl,
-					'ExpiresByType font/woff A' . $ttl,
-					'ExpiresByType font/woff2 A' . $ttl,
-					'',
-				'</IfModule>',
+				'ExpiresActive on',
+				'ExpiresByType application/pdf A' . $ttl,
+				'ExpiresByType image/x-icon A' . $ttl,
+				'ExpiresByType image/vnd.microsoft.icon A' . $ttl,
+				'ExpiresByType image/svg+xml A' . $ttl,
+				'',
+				'ExpiresByType image/jpg A' . $ttl,
+				'ExpiresByType image/jpeg A' . $ttl,
+				'ExpiresByType image/png A' . $ttl,
+				'ExpiresByType image/gif A' . $ttl,
+				'ExpiresByType image/webp A' . $ttl,
+				'',
+				'ExpiresByType video/ogg A' . $ttl,
+				'ExpiresByType audio/ogg A' . $ttl,
+				'ExpiresByType video/mp4 A' . $ttl,
+				'ExpiresByType video/webm A' . $ttl,
+				'',
+				'ExpiresByType text/css A' . $ttl,
+				'ExpiresByType text/javascript A' . $ttl,
+				'ExpiresByType application/javascript A' . $ttl,
+				'ExpiresByType application/x-javascript A' . $ttl,
+				'',
+				'ExpiresByType application/x-font-ttf A' . $ttl,
+				'ExpiresByType application/x-font-woff A' . $ttl,
+				'ExpiresByType application/font-woff A' . $ttl,
+				'ExpiresByType application/font-woff2 A' . $ttl,
+				'ExpiresByType application/vnd.ms-fontobject A' . $ttl,
+				'ExpiresByType font/ttf A' . $ttl,
+				'ExpiresByType font/woff A' . $ttl,
+				'ExpiresByType font/woff2 A' . $ttl,
+				'',
 			'</FilesMatch>',
+			self::LS_MODULE_END,
 		) ;
 		return $rules ;
 	}
@@ -553,7 +555,9 @@ class LiteSpeed_Cache_Admin_Rules
 	private function _generate_rules( $cfg )
 	{
 		$new_rules = array() ;
+		$new_rules_nonls = array() ;
 		$new_rules_backend = array() ;
+		$new_rules_backend_nonls = array() ;
 
 		// mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
@@ -634,11 +638,11 @@ class LiteSpeed_Cache_Admin_Rules
 		// Browser cache
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER ;
 		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
-			$new_rules = array_merge( $new_rules, $this->_browser_cache_rules( $cfg ) ) ;
-			$new_rules_backend = array_merge( $new_rules_backend, $this->_browser_cache_rules( $cfg ) ) ;
-			$new_rules[] = $new_rules_backend[] = self::MARKER_BROWSER_CACHE . self::MARKER_END ;
-			$new_rules[] = '' ;
+			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
+			$new_rules_nonls = array_merge( $new_rules_nonls, $this->_browser_cache_rules( $cfg ) ) ;
+			$new_rules_backend_nonls = array_merge( $new_rules_backend_nonls, $this->_browser_cache_rules( $cfg ) ) ;
+			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_END ;
+			$new_rules_nonls[] = '' ;
 		}
 
 		// CORS font rules
@@ -671,45 +675,45 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules[] = '' ;
 		}
 
-		return array( $new_rules, $new_rules_backend ) ;
+		// Add module wrapper for LiteSpeed rules
+		if ( $new_rules ) {
+			$new_rules = $this->_wrap_ls_module( $new_rules ) ;
+		}
 
+		if ( $new_rules_backend ) {
+			$new_rules_backend = $this->_wrap_ls_module( $new_rules_backend ) ;
+		}
+
+		return array( $new_rules, $new_rules_backend, $new_rules_nonls, $new_rules_backend_nonls ) ;
 	}
 
 	/**
-	 * Output the msg with rules plain data for manual insert
+	 * Add LitSpeed module wrapper with rewrite on
 	 *
-	 * @since  1.1.5
-	 * @param  string  $file
-	 * @param  array  $rules
-	 * @return string        final msg to output
+	 * @since  2.1.1
+	 * @access private
 	 */
-	private function rewrite_codes_msg( $file, $rules )
+	private function _wrap_ls_module( $rules = array() )
 	{
-		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s' , 'litespeed-cache' ),
-				$file,
-				'<textarea style="width:100%;" rows="10" readonly>' . htmlspecialchars( $this->_wrap_rules_with_marker( $rules ) ) . '</textarea>'
-			) ;
+		return array_merge(
+			array( self::LS_MODULE_START ),
+			self::$LS_MODULE_REWRITE_ON,
+			array( '' ),
+			$rules,
+			array( self::LS_MODULE_END )
+		) ;
 	}
 
 	/**
-	 * Generate rules plain data for manual insert
+	 * Insert LitSpeed module wrapper with rewrite on
 	 *
-	 * @since  1.1.5
-	 * @param  array  $rules
-	 * @return array        final rules data for htaccess
+	 * @since  2.1.1
+	 * @access public
 	 */
-	private function _wrap_rules_with_marker( $rules )
+	public function insert_ls_wrapper()
 	{
-		$marker = self::MARKER ;
-		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
-		$new_file_data = implode( "\n", array_merge(
-			array( $start_marker ),
-			$this->_wrap_rules($rules),
-			array( $end_marker )
-		) ) ;
-
-		return $new_file_data ;
+		$rules = $this->_wrap_ls_module() ;
+		return $this->_insert_wrapper( $rules ) ;
 	}
 
 	/**
@@ -719,19 +723,19 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array  $rules
 	 * @return array        wrapped rules with module info
 	 */
-	private function _wrap_rules( $rules )
+	private function _wrap_do_no_edit( $rules )
 	{
-		if ( $rules !== false ) {
-			$rules = array_merge(
-				array(self::LS_MODULE_DONOTEDIT),
-				array(self::LS_MODULE_START),
-				self::$LS_MODULE_REWRITE_ON,
-				array(''),
-				$rules,
-				array(self::LS_MODULE_END),
-				array(self::LS_MODULE_DONOTEDIT)
-			) ;
+		// When to clear rules, don't need DONOTEDIT msg
+		if ( $rules === false || ! is_array( $rules ) ) {
+			return $rules ;
 		}
+
+		$rules = array_merge(
+			array( self::LS_MODULE_DONOTEDIT ),
+			$rules,
+			array( self::LS_MODULE_DONOTEDIT )
+		) ;
+
 		return $rules ;
 	}
 
@@ -739,17 +743,27 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Write to htaccess with rules
 	 *
 	 * @since  1.1.0
+	 * @access private
 	 * @param  array $rules
 	 * @param  string $kind  which htaccess
 	 */
-	public function insert_wrapper( $rules = array(), $kind = 'frontend' )
+	private function _insert_wrapper( $rules = array(), $kind = false, $marker = false )
 	{
+		if ( $kind === false ) {
+			$kind = 'frontend' ;
+		}
+
+		// Default marker is LiteSpeed marker `LSCACHE`
+		if ( $marker === false ) {
+			$marker = self::MARKER ;
+		}
+
 		$res = $this->htaccess_backup( $kind ) ;
 		if ( ! $res ) {
 			return false ;
 		}
 
-		return Litespeed_File::insert_with_markers( $this->htaccess_path($kind), $this->_wrap_rules( $rules ), self::MARKER, true ) ;
+		return Litespeed_File::insert_with_markers( $this->htaccess_path($kind), $this->_wrap_do_no_edit( $rules ), $marker, true ) ;
 	}
 
 	/**
@@ -771,22 +785,54 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 
-		list( $frontend_rules, $backend_rules ) = $this->_generate_rules( $cfg ) ;
+		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg ) ;
+
 		// Check frontend content
-		if ( $this->_wrap_rules( $frontend_rules ) != $this->extract_rules() ) {
+		list( $rules, $rules_nonls ) = $this->_extract_rules() ;
+
+		// Check Non-LiteSpeed rules
+		if ( $this->_wrap_do_no_edit( $frontend_rules_nonls ) != $rules_nonls ) {
+			LiteSpeed_Cache_Log::debug( '[Rules] Update non-ls frontend rules' ) ;
 			// Need to update frontend htaccess
-			if ( ! $this->insert_wrapper( $frontend_rules ) ) {
-				$manual_guide_codes = $this->rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
+			if ( ! $this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ) {
+				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
+				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+			}
+		}
+
+		// Check LiteSpeed rules
+		if ( $this->_wrap_do_no_edit( $frontend_rules ) != $rules ) {
+			LiteSpeed_Cache_Log::debug( '[Rules] Update frontend rules' ) ;
+			// Need to update frontend htaccess
+			if ( ! $this->_insert_wrapper( $frontend_rules ) ) {
+				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
 				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
 			}
 		}
 
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
+			list( $rules, $rules_nonls ) = $this->_extract_rules( 'backend' ) ;
+
+			// Check Non-LiteSpeed rules for backend
+			if ( $this->_wrap_do_no_edit( $backend_rules_nonls ) != $rules_nonls ) {
+				LiteSpeed_Cache_Log::debug( '[Rules] Update non-ls backend rules' ) ;
+				// Need to update frontend htaccess
+				if ( ! $this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ) {
+					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
+					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				}
+			}
+
 			// Check backend content
-			if ( $this->_wrap_rules( $backend_rules ) != $this->extract_rules( 'backend' ) ) {
+			if ( $this->_wrap_do_no_edit( $backend_rules ) != $rules ) {
+				LiteSpeed_Cache_Log::debug( '[Rules] Update backend rules' ) ;
 				// Need to update backend htaccess
-				if ( ! $this->insert_wrapper( $backend_rules, 'backend' ) ) {
-					$manual_guide_codes = $this->rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
+				if ( ! $this->_insert_wrapper( $backend_rules, 'backend' ) ) {
+					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
 					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
 				}
 			}
@@ -799,11 +845,11 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Get existing rewrite rules
 	 *
 	 * @since  1.3
-	 * @access public
+	 * @access private
 	 * @param  string $kind Frontend or backend .htaccess file
 	 * @return bool|array       False if failed to read, rules array otherwise
 	 */
-	public function extract_rules( $kind = 'frontend' )
+	private function _extract_rules( $kind = 'frontend' )
 	{
 		clearstatcache() ;
 		$path = $this->htaccess_path( $kind ) ;
@@ -812,8 +858,50 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
+		$rules_nonls = Litespeed_File::extract_from_markers( $path, self::MARKER_NONLS ) ;
 
-		return $rules ;
+		return array( $rules, $rules_nonls ) ;
+	}
+
+	/**
+	 * Output the msg with rules plain data for manual insert
+	 *
+	 * @since  1.1.5
+	 * @param  string  $file
+	 * @param  array  $rules
+	 * @return string        final msg to output
+	 */
+	private function _rewrite_codes_msg( $file, $rules, $marker = false )
+	{
+		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s' , 'litespeed-cache' ),
+				$file,
+				'<textarea style="width:100%;" rows="10" readonly>' . htmlspecialchars( $this->_wrap_rules_with_marker( $rules, $marker ) ) . '</textarea>'
+			) ;
+	}
+
+	/**
+	 * Generate rules plain data for manual insert
+	 *
+	 * @since  1.1.5
+	 * @param  array  $rules
+	 * @return array        final rules data for htaccess
+	 */
+	private function _wrap_rules_with_marker( $rules, $marker = false )
+	{
+		// Default marker is LiteSpeed marker `LSCACHE`
+		if ( $marker === false ) {
+			$marker = self::MARKER ;
+		}
+
+		$start_marker = "# BEGIN {$marker}" ;
+		$end_marker   = "# END {$marker}" ;
+		$new_file_data = implode( "\n", array_merge(
+			array( $start_marker ),
+			$this->_wrap_do_no_edit($rules),
+			array( $end_marker )
+		) ) ;
+
+		return $new_file_data ;
 	}
 
 	/**
@@ -824,10 +912,15 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function clear_rules( $clear_all = false )
 	{
-		$keep_wrapper = $clear_all === true ? false : array() ;
-		$this->insert_wrapper( $keep_wrapper ) ;
+		$rules = false ;
+
+		if ( $clear_all !== true ) {
+			$rules = $this->_wrap_ls_module() ;
+		}
+
+		$this->_insert_wrapper( $rules ) ;
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			$this->insert_wrapper( $keep_wrapper, 'backend' ) ;
+			$this->_insert_wrapper( $rules, 'backend' ) ;
 		}
 	}
 

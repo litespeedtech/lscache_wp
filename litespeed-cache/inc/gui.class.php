@@ -327,12 +327,21 @@ class LiteSpeed_Cache_GUI
 	{
 		global $wp_admin_bar ;
 
-		$wp_admin_bar->add_menu( array(
-			'id'    => 'litespeed-menu',
-			'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '""></span>',
-			'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
-			'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
-		) ) ;
+		if ( defined( 'LITESPEED_ON' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'id'    => 'litespeed-menu',
+				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '""></span>',
+				'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
+			) ) ;
+		}
+		else {
+			$wp_admin_bar->add_menu( array(
+				'id'    => 'litespeed-menu',
+				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache', 'litespeed-cache' ) . '""></span>',
+				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
+			) ) ;
+		}
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',

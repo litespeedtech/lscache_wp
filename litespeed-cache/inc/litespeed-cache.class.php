@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '2.1' ;
+	const PLUGIN_VERSION = '2.1.1' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -87,13 +87,14 @@ class LiteSpeed_Cache
 	private function __construct()
 	{
 		LiteSpeed_Cache_Config::get_instance() ;
-		// Check if debug is on
-		if ( defined( 'LITESPEED_ON' ) ) {
-			$should_debug = intval(self::config(LiteSpeed_Cache_Config::OPID_DEBUG)) ;
-			if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ($should_debug == LiteSpeed_Cache_Config::VAL_ON2 && LiteSpeed_Cache_Router::is_admin_ip()) ) {
-				LiteSpeed_Cache_Log::init() ;
-			}
 
+		// Check if debug is on
+		$should_debug = intval( self::config( LiteSpeed_Cache_Config::OPID_DEBUG ) ) ;
+		if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ( $should_debug == LiteSpeed_Cache_Config::VAL_ON2 && LiteSpeed_Cache_Router::is_admin_ip() ) ) {
+			LiteSpeed_Cache_Log::init() ;
+		}
+
+		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.
 			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
@@ -109,9 +110,9 @@ class LiteSpeed_Cache
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
 		if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
 			$plugin_file = LSCWP_DIR . 'litespeed-cache.php' ;
-			register_activation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_activation' )) ;
-			register_deactivation_hook($plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' )) ;
-			register_uninstall_hook($plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache') ;
+			register_activation_hook( $plugin_file, array( 'LiteSpeed_Cache_Activation', 'register_activation' ) ) ;
+			register_deactivation_hook( $plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' ) ) ;
+			register_uninstall_hook( $plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache' ) ;
 		}
 
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
@@ -164,11 +165,11 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
 
-		if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
-			return ;
-		}
-
 		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
+
+		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
+		// 	return ;
+		// }
 
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
@@ -588,17 +589,23 @@ class LiteSpeed_Cache
 			if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
 				$this->footer_comment .= "\n" ;
 			}
+
+			$cache_support = 'supported' ;
+			if ( defined( 'LITESPEED_ON' ) ) {
+				$cache_support = LiteSpeed_Cache_Control::is_cacheable() ? 'generated' : 'uncached' ;
+			}
+
 			$this->footer_comment .= sprintf(
 				'<!-- %1$s %2$s by LiteSpeed Cache %4$s on %3$s -->',
 				defined( 'LSCACHE_IS_ESI' ) ? 'Block' : 'Page',
-				LiteSpeed_Cache_Control::is_cacheable() ? 'generated' : 'uncached',
+				$cache_support,
 				date( 'Y-m-d H:i:s', time() + LITESPEED_TIME_OFFSET ),
 				self::PLUGIN_VERSION
 			) ;
 		}
 
 		// send Control header
-		if ( $control_header ) {
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) && $control_header ) {
 			@header( $control_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $control_header ) ;
@@ -607,7 +614,7 @@ class LiteSpeed_Cache
 				}
 			}
 		}
-		// send PURGE header
+		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( $purge_header ) {
 			@header( $purge_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
@@ -618,7 +625,7 @@ class LiteSpeed_Cache
 			}
 		}
 		// send Vary header
-		if ( $vary_header ) {
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) && $vary_header ) {
 			@header( $vary_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $vary_header ) ;
@@ -648,7 +655,7 @@ class LiteSpeed_Cache
 		}
 		else {
 			// Control header
-			if ( LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
+			if ( defined( 'LITESPEED_ON_IN_SETTING' ) && LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header ) ;
 				if ( defined( 'LSCWP_LOG' ) ) {
 					LiteSpeed_Cache_Log::debug( $tag_header ) ;

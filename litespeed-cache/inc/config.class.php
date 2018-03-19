@@ -229,6 +229,9 @@ class LiteSpeed_Cache_Config
 		}
 		else {
 			$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
+
+			// Check advanced_cache set
+			$this->_check_adv_cache( $options ) ;
 		}
 
 		$this->options = $options ;
@@ -238,12 +241,7 @@ class LiteSpeed_Cache_Config
 		if ( $this->options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON
 		//	 || ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) && $this->options[ LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ] ) todo: need to check when primary is off and network is on, if can manage
 		) {
-			defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
-		}
-
-		// Check advanced_cache set
-		if ( isset( $this->options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $this->options[ self::OPID_CHECK_ADVANCEDCACHE ] === false && ! defined( 'LSCACHE_ADV_CACHE' ) ) {
-			define( 'LSCACHE_ADV_CACHE', true ) ;
+			$this->_define_cache_on() ;
 		}
 
 		// Vary group settings
@@ -263,6 +261,35 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Define `LSCACHE_ADV_CACHE` based on options setting
+	 *
+	 * NOTE: this must be before `LITESPEED_ON` defination
+	 *
+	 * @since 2.1
+	 * @access private
+	 */
+	private function _check_adv_cache( $options )
+	{
+		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $options[ self::OPID_CHECK_ADVANCEDCACHE ] === false && ! defined( 'LSCACHE_ADV_CACHE' ) ) {
+			define( 'LSCACHE_ADV_CACHE', true ) ;
+		}
+	}
+
+	/**
+	 * Define `LITESPEED_ON`
+	 *
+	 * @since 2.1
+	 * @access private
+	 */
+	private function _define_cache_on()
+	{
+		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+
+		// Use this for cache enabled setting check
+		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
+	}
+
+	/**
 	 * For multisite installations, the single site options need to be updated with the network wide options.
 	 *
 	 * @since 1.0.13
@@ -272,6 +299,8 @@ class LiteSpeed_Cache_Config
 	private function construct_multisite_options()
 	{
 		$site_options = get_site_option( self::OPTION_NAME ) ;
+
+		$this->_check_adv_cache( $site_options ) ;
 
 		$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
@@ -287,7 +316,7 @@ class LiteSpeed_Cache_Config
 		// If don't have site options
 		if ( ! $site_options || ! is_array( $site_options ) || ! is_plugin_active_for_network( 'litespeed-cache/litespeed-cache.php' ) ) {
 			if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
-				defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+				$this->_define_cache_on() ;
 			}
 			return $options ;
 		}
@@ -307,7 +336,7 @@ class LiteSpeed_Cache_Config
 
 		// If use network setting
 		if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $site_options[ self::NETWORK_OPID_ENABLED ] ) {
-			defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+			$this->_define_cache_on() ;
 		}
 		// Set network eanble to on
 		if ( $site_options[ self::NETWORK_OPID_ENABLED ] ) {
@@ -1004,13 +1033,13 @@ class LiteSpeed_Cache_Config
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 				}
 				return ;
 			}
 			else {
 				// Network admin should make a wapper to avoid subblogs cache not work
-				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 			}
 
 			$options = $this->get_site_options() ;

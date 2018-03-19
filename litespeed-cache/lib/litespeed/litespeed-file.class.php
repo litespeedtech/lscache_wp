@@ -22,6 +22,22 @@ class Litespeed_File
 		// nothing to do here
 	}
 
+	/**
+	 *	Delete folder
+	 *
+	 * @since 2.1
+	 */
+	public static function rrmdir( $dir ) {
+
+		$files = array_diff( scandir( $dir ), array( '.', '..' ) ) ;
+
+		foreach ( $files as $file ) {
+			is_dir( "$dir/$file" ) ? self::rrmdir( "$dir/$file" ) : unlink( "$dir/$file" ) ;
+		}
+
+		return rmdir( $dir ) ;
+	}
+
 	public static function count_lines($filename)
 	{
 		if ( ! file_exists($filename) ) {
@@ -254,7 +270,7 @@ class Litespeed_File
 	 */
 	private static function _extract_from_markers( $filename, $marker )
 	{
-		$result = array () ;
+		$result = array() ;
 
 		if (!file_exists($filename) ) {
 			return $result ;

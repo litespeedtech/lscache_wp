@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Activation
 		}
 		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
 		LiteSpeed_Cache_Config::get_instance()->plugin_activation( $count ) ;
-		LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
+		// LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
 
 		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
 			set_transient( LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL ) ;
@@ -181,7 +181,7 @@ class LiteSpeed_Cache_Activation
 			if ( ! self::is_deactivate_last() ) {
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 				}
 				return ;
 			}

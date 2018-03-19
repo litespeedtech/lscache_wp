@@ -141,14 +141,6 @@ class LiteSpeed_Cache_Admin_Report
 			'active theme' => $active_theme,
 		) ;
 
-		$consts = array(
-			'WP_SITEURL',
-			'WP_HOME',
-		) ;
-		foreach ( $consts as $v ) {
-			$extras[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
-		}
-
 		$extras[ 'active plugins' ] = $active_plugins ;
 
 		if ( is_null($options) ) {
@@ -206,6 +198,25 @@ class LiteSpeed_Cache_Admin_Report
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 
+		$consts = array(
+			'WP_SITEURL',
+			'WP_HOME',
+			'WP_CONTENT_DIR',
+			'SHORTINIT',
+			'LSCWP_CONTENT_DIR',
+			'LSCWP_DIR',
+			'LITESPEED_TIME_OFFSET',
+			'LITESPEED_SERVER_TYPE',
+			'LITESPEED_CLI',
+			'LITESPEED_ALLOWED',
+			'LITESPEED_ON',
+			'LITESPEED_ON_IN_SETTING',
+			'LSCACHE_ADV_CACHE',
+		) ;
+		foreach ( $consts as $v ) {
+			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
+		}
+
 		$buf = $this->format_report_section('Server Variables', $server_vars) ;
 
 		$buf .= $this->format_report_section('Wordpress Specific Extras', $extras) ;
@@ -242,30 +253,29 @@ class LiteSpeed_Cache_Admin_Report
 	 * @param array $section An array of information to output
 	 * @return string The created report block.
 	 */
-	private function format_report_section($section_header, $section)
+	private function format_report_section( $section_header, $section )
 	{
 		$tab = '    ' ; // four spaces
-		$nl = "\n" ;
 
-		if ( empty($section) ) {
-			return 'No matching ' . $section_header . $nl . $nl ;
+		if ( empty( $section ) ) {
+			return 'No matching ' . $section_header . "\n\n" ;
 		}
 		$buf = $section_header ;
 
-		foreach ( $section as $key=>$val ) {
-			$buf .= $nl . $tab ;
-			if ( ! is_numeric($key) ) {
-				$buf .= $key . ' = ' ;
+		foreach ( $section as $k => $v ) {
+			$buf .= "\n" . $tab ;
+
+			if ( ! is_numeric( $k ) ) {
+				$buf .= $k . ' = ' ;
 			}
 
-			if ( ! is_string($val) ) {
-				$buf .= var_export($val, true) ;
+			if ( ! is_string( $v ) ) {
+				$v = var_export( $v, true ) ;
 			}
-			else {
-				$buf .= $val ;
-			}
+
+			$buf .= $v ;
 		}
-		return $buf . $nl . $nl ;
+		return $buf . "\n\n" ;
 	}
 
 	/**

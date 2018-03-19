@@ -8,6 +8,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 </h3>
 
+<?php $this->cache_disabled_warning() ; ?>
 
 <div class="litespeed-desc">
 	<p><?php echo __('With ESI (Edge Side Includes), pages may be served from cache for logged-in users.', 'litespeed-cache'); ?></p>

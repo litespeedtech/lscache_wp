@@ -1,8 +1,6 @@
 <?php
 if (!defined('WPINC')) die;
 
-LiteSpeed_Cache_Admin_Display::get_instance()->check_license();
-
 $menu_list = array(
 	'purge' => __('Purge', 'litespeed-cache'),
 	'db' => __('DB Optimizer', 'litespeed-cache'),
@@ -43,8 +41,6 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		}
 	?>
 	</h2>
-
-	<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
 
 	<div class="litespeed-body">
 	<?php

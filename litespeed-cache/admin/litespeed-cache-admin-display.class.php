@@ -65,9 +65,8 @@ class LiteSpeed_Cache_Admin_Display
 			$manage = 'manage_options' ;
 		}
 		if ( current_user_can($manage) ) {
-			if ( defined( 'LITESPEED_ON' ) ) {
-				add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
-			}
+			add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
+
 			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
 		}
 
@@ -343,21 +342,6 @@ class LiteSpeed_Cache_Admin_Display
 	public function add_help_tabs()
 	{
 		require_once LSCWP_DIR . 'admin/tpl/inc/help_tabs.php' ;
-	}
-
-	/**
-	 * Check to make sure that caching is enabled.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return mixed True if enabled, error message otherwise.
-	 */
-	public function check_license()
-	{
-		if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
-			self::add_error(LiteSpeed_Cache_Admin_Error::E_SERVER) ;
-			self::display_messages() ;
-		}
 	}
 
 	/**
@@ -663,6 +647,17 @@ class LiteSpeed_Cache_Admin_Display
 	public static function show_error_cookie()
 	{
 		require_once LSCWP_DIR . 'admin/tpl/inc/show_error_cookie.php' ;
+	}
+
+	/**
+	 * Display warning if lscache is disabled
+	 *
+	 * @since 2.1
+	 * @access public
+	 */
+	public function cache_disabled_warning()
+	{
+		include LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ;
 	}
 
 	/**

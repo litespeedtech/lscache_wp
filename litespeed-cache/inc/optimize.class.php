@@ -218,6 +218,38 @@ class LiteSpeed_Cache_Optimize
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
 		$file_type = substr( $match[ 1 ], strrpos( $match[ 1 ], '.' ) + 1 ) ;
+
+		$ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
+
+		// Load file from file based cache if not enabled lscache
+		if ( ! defined( 'LITESPEED_ON' ) ) {
+			LiteSpeed_Cache_Log::debug( '[Optimize] Not enabled lscache, using file based cache' ) ;
+
+			$static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[ 1 ] ;
+			if ( file_exists( $static_file ) && time() - filemtime( $static_file ) <= $ttl ) {
+				$content = Litespeed_File::read( $static_file ) ;
+
+				// Output header first
+				$headers = array() ;
+				$headers[ 'Content-Length' ] = strlen( $content ) ;
+
+				if ( $file_type === 'css' ) {
+					$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
+				}
+				else {
+					$headers[ 'Content-Type' ] = 'application/x-javascript' ;
+				}
+
+				foreach ( $headers as $k => $v ) {
+					header( $k . ': ' . $v ) ;
+					LiteSpeed_Cache_Log::debug( '[Optimize] HEADER ' . $k . ': ' . $v ) ;
+				}
+
+				echo $content ;
+				exit ;
+			}
+		}
+
 		$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
 		$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
@@ -227,14 +259,38 @@ class LiteSpeed_Cache_Optimize
 			exit ;
 		}
 
+		// Save to file if not enabled lscache
+		if ( ! defined( 'LITESPEED_ON' ) ) {
+			LiteSpeed_Cache_Log::debug( '[Optimize] Saved cache to file [path] ' . $static_file ) ;
+
+			Litespeed_File::save( $static_file, $content, true ) ;
+		}
+
 		LiteSpeed_Cache_Control::set_cacheable() ;
 		LiteSpeed_Cache_Control::set_public_forced( 'OPTM: min file ' . $match[ 1 ] ) ;
 		LiteSpeed_Cache_Control::set_no_vary() ;
-		LiteSpeed_Cache_Control::set_custom_ttl( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ) ;
+		LiteSpeed_Cache_Control::set_custom_ttl( $ttl ) ;
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
 
 		echo $content ;
 		exit ;
+	}
+
+	/**
+	 * Delete file-based cache folder
+	 *
+	 * @since  2.1
+	 * @access public
+	 */
+	public function rm_cache_folder()
+	{
+		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/css' ) ) {
+			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/css' ) ;
+		}
+
+		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/js' ) ) {
+			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/js' ) ;
+		}
 	}
 
 	/**

@@ -230,7 +230,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		else {
 			// Need to set cachePublicOn in case subblogs turn on cache manually
-			LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+			LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 		}
 
 		/**

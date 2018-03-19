@@ -1,8 +1,6 @@
 <?php
 if (!defined('WPINC')) die ;
 
-$this->check_license() ;
-
 $menu_list = array(
 	'general' => __('General', 'litespeed-cache'),
 	'cache' => __('Cache', 'litespeed-cache'),

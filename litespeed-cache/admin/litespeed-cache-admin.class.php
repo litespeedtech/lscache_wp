@@ -70,7 +70,7 @@ class LiteSpeed_Cache_Admin
 		// check for upgrade
 		// NOTE: upgrade checking needs to be before `register_setting` to avoid update_options() be checked by our filter
 		$this->config->plugin_upgrade() ;
-		if ( is_network_admin() && current_user_can('manage_network_options') ) {
+		if ( is_network_admin() && current_user_can( 'manage_network_options' ) ) {
 			$this->config->plugin_site_upgrade() ;
 		}
 
@@ -96,12 +96,12 @@ class LiteSpeed_Cache_Admin
 			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings')) ;
 		}
 
+		do_action( 'litspeed_after_admin_init' ) ;
+
 		// step out if plugin is not enabled
 		if ( ! defined( 'LITESPEED_ON' ) ) {
 			return ;
 		}
-
-		do_action( 'litspeed_after_admin_init' ) ;
 
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Admin
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
 				$options = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings() ;// todo: use wp network setting saving
-				LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report($options) ;
+				// LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report($options) ; // As we don't save env report, no need this anymore
 				break ;
 
 			default:

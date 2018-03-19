@@ -313,7 +313,7 @@ class LiteSpeed_Cache_Log
 			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
 		}
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'X-LSCACHE: ' . ( $server[ 'X-LSCACHE' ] ? 'true' : 'false' ) ;
+			$params[] = 'X-LSCACHE: ' . ( ! empty( $server[ 'X-LSCACHE' ] ) ? 'true' : 'false' ) ;
 		}
 		if( $server['LSCACHE_VARY_COOKIE'] ) {
 			$params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'] ;
