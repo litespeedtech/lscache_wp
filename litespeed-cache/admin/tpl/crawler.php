@@ -91,7 +91,7 @@ LiteSpeed_Cache_GUI::show_promo() ;
 			<div class="litespeed-callout-danger">
 				<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 				<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
-				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed infomation.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
+				<p><?php echo sprintf(__('See <a %s>Introduction for Enabling the Crawler</a> for detailed information.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:enabling_the_crawler" target="_blank"') ; ?></p>
 			</div>
 		<?php endif; ?>
 
