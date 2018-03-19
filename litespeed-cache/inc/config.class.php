@@ -1033,13 +1033,13 @@ class LiteSpeed_Cache_Config
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 				}
 				return ;
 			}
 			else {
 				// Network admin should make a wapper to avoid subblogs cache not work
-				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 			}
 
 			$options = $this->get_site_options() ;

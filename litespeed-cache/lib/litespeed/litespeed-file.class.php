@@ -270,7 +270,7 @@ class Litespeed_File
 	 */
 	private static function _extract_from_markers( $filename, $marker )
 	{
-		$result = array () ;
+		$result = array() ;
 
 		if (!file_exists($filename) ) {
 			return $result ;

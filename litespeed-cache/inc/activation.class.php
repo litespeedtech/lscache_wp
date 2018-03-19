@@ -181,7 +181,7 @@ class LiteSpeed_Cache_Activation
 			if ( ! self::is_deactivate_last() ) {
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_wrapper() ;
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 				}
 				return ;
 			}
