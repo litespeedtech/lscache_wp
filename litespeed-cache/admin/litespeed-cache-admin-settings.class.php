@@ -146,20 +146,19 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_options = array_merge( $this->_options, $new_options ) ;
 
 		// Try to update rewrite rules
-		if ( ! defined( 'LITESPEED_NEW_OFF' ) ) {
-			// Only update needs to get error, for clear rules, can ignore for now
-			$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options ) ;
-			if ( $res !== true ) {
-				if ( ! is_array( $res ) ) {
-					$this->_err[] = $res ;
-				}
-				else {
-					$this->_err = array_merge( $this->_err, $res ) ;
-				}
-			}
+		$disable_lscache_detail_rules = false ;
+		if ( defined( 'LITESPEED_NEW_OFF' ) ) {
+			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
+			$disable_lscache_detail_rules = true ;
 		}
-		else {
-			LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options, $disable_lscache_detail_rules ) ;
+		if ( $res !== true ) {
+			if ( ! is_array( $res ) ) {
+				$this->_err[] = $res ;
+			}
+			else {
+				$this->_err = array_merge( $this->_err, $res ) ;
+			}
 		}
 
 		/**
@@ -217,20 +216,20 @@ class LiteSpeed_Cache_Admin_Settings
 		$options = array_merge( $options, $new_options ) ;
 
 		// Update htaccess
-		if ( $network_enabled ) {
-			$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options ) ;
-			if ( $res !== true ) {
-				if ( ! is_array( $res ) ) {
-					$this->_err[] = $res ;
-				}
-				else {
-					$this->_err = array_merge( $this->_err, $res ) ;
-				}
-			}
-		}
-		else {
+		$disable_lscache_detail_rules = false ;
+		if ( ! $network_enabled ) {
+			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
 			// Need to set cachePublicOn in case subblogs turn on cache manually
-			LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
+			$disable_lscache_detail_rules = true ;
+		}
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache_detail_rules ) ;
+		if ( $res !== true ) {
+			if ( ! is_array( $res ) ) {
+				$this->_err[] = $res ;
+			}
+			else {
+				$this->_err = array_merge( $this->_err, $res ) ;
+			}
 		}
 
 		/**

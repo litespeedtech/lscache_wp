@@ -83,11 +83,11 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.0.13.1
 	 * @access public
-	 * @param $header
+	 * @param $status_header
 	 * @param $code
 	 * @return $eror_status
 	 */
-	public static function check_error_codes( $header, $code )
+	public static function check_error_codes( $status_header, $code )
 	{
 		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
 		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_500_TTL ) ;
@@ -107,7 +107,9 @@ class LiteSpeed_Cache_Tag
 		elseif ( $code > 400 ) {
 			self::$_error_status = $code ;
 		}
-		return self::$_error_status ;
+
+		// Give the default status_header back
+		return $status_header ;
 	}
 
 	/**

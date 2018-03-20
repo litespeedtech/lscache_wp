@@ -488,7 +488,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$ttl = $cfg[ $id ] ;
 		$rules = array(
 			self::EXPIRES_MODULE_START,
-			'<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
+			// '<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
 				'ExpiresActive on',
 				'ExpiresByType application/pdf A' . $ttl,
 				'ExpiresByType image/x-icon A' . $ttl,
@@ -520,7 +520,7 @@ class LiteSpeed_Cache_Admin_Rules
 				'ExpiresByType font/woff A' . $ttl,
 				'ExpiresByType font/woff2 A' . $ttl,
 				'',
-			'</FilesMatch>',
+			// '</FilesMatch>',
 			self::LS_MODULE_END,
 		) ;
 		return $rules ;
@@ -552,87 +552,119 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array $cfg  The settings to be used for rewrite rule
 	 * @return array      Rules array
 	 */
-	private function _generate_rules( $cfg )
+	private function _generate_rules( $cfg, $disable_lscache_detail_rules = false )
 	{
 		$new_rules = array() ;
 		$new_rules_nonls = array() ;
 		$new_rules_backend = array() ;
 		$new_rules_backend_nonls = array() ;
 
-		// mobile agents
-		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
-		if ( ! empty( $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] . ' [NC]' ;
-			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
-			$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
+		if ( ! $disable_lscache_detail_rules ) {
+			// mobile agents
+			$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
+			if ( ! empty( $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
+				$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] . ' [NC]' ;
+				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
+				$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
+				$new_rules[] = '' ;
+			}
 
-		// nocache cookie
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES ;
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $cfg[ $id ] ;
-			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
-			$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
-
-		// nocache user agents
-		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS ;
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] ;
-			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
-			$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
-
-		// caching php resource
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_RES ;
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
-			$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
-			$new_rules[] = $new_rules_backend[] = '' ;
-		}
-
-		// check login cookie
-		$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
-		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+			// nocache cookie
+			$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES ;
 			if ( ! empty( $cfg[ $id ] ) ) {
-				$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
-			}
-			else {
-				$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
+				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START ;
+				$new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $cfg[ $id ] ;
+				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
+				$new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END ;
+				$new_rules[] = '' ;
 			}
 
-			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
-			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
-				$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
+			// nocache user agents
+			$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS ;
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] ;
+				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
+				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
+				$new_rules[] = '' ;
 			}
-		}
-		// frontend and backend
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$env = 'Cache-Vary:' . $cfg[ $id ] ;
+
+			// caching php resource
+			$id = LiteSpeed_Cache_Config::OPID_CACHE_RES ;
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START ;
+				$new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]' ;
+				$new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END ;
+				$new_rules[] = $new_rules_backend[] = '' ;
+			}
+
+			// check login cookie
+			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-				$env = '"' . $env . '"' ;
-			}
-			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START ;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']' ;
-			$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
+				if ( ! empty( $cfg[ $id ] ) ) {
+					$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
+				}
+				else {
+					$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
+				}
 
-		// favicon
-		// frontend and backend
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
-			$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
-			$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END ;
-			$new_rules[] = '' ;
+				$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+				if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
+					$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
+				}
+			}
+			// frontend and backend
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$env = 'Cache-Vary:' . $cfg[ $id ] ;
+				if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+					$env = '"' . $env . '"' ;
+				}
+				$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_START ;
+				$new_rules[] = $new_rules_backend[] = 'RewriteRule .? - [E=' . $env . ']' ;
+				$new_rules[] = $new_rules_backend[] = self::MARKER_LOGIN_COOKIE . self::MARKER_END ;
+				$new_rules[] = '' ;
+			}
+
+			// favicon
+			// frontend and backend
+			$id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON ;
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START ;
+				$new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]' ;
+				$new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END ;
+				$new_rules[] = '' ;
+			}
+
+			// CORS font rules
+			$id = LiteSpeed_Cache_Config::OPID_CDN ;
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
+				$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
+				$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
+				$new_rules[] = '' ;
+			}
+
+			// webp support
+			$id = LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ;
+			if ( ! empty( $cfg[ $id ] ) ) {
+				$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
+				$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"' ;
+				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]' ;
+				$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
+				$new_rules[] = '' ;
+			}
+
+			// drop qs support
+			$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
+			if ( $cfg_info = get_option( $id ) ) {
+				$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
+				foreach ( explode( "\n", $cfg_info ) as $v ) {
+					$new_rules[] = 'CacheKeyModify -qs:' . $v ;
+				}
+				$new_rules[] = self::MARKER_DROPQS . self::MARKER_END ;
+				$new_rules[] = '' ;
+			}
 		}
 
 		// Browser cache
@@ -645,42 +677,13 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules_nonls[] = '' ;
 		}
 
-		// CORS font rules
-		$id = LiteSpeed_Cache_Config::OPID_CDN ;
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = self::MARKER_CORS . self::MARKER_START ;
-			$new_rules = array_merge( $new_rules, $this->_cors_rules() ) ;
-			$new_rules[] = self::MARKER_CORS . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
-
-		// webp support
-		$id = LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ;
-		if ( ! empty( $cfg[ $id ] ) ) {
-			$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
-			$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp"' ;
-			$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=%{ENV:LSCACHE_VARY_VALUE}+webp]' ;
-			$new_rules[] = self::MARKER_WEBP . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
-
-		// drop qs support
-		$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
-		if ( $cfg_info = get_option( $id ) ) {
-			$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
-			foreach ( explode( "\n", $cfg_info ) as $v ) {
-				$new_rules[] = 'CacheKeyModify -qs:' . $v ;
-			}
-			$new_rules[] = self::MARKER_DROPQS . self::MARKER_END ;
-			$new_rules[] = '' ;
-		}
 
 		// Add module wrapper for LiteSpeed rules
-		if ( $new_rules ) {
+		if ( $new_rules || $disable_lscache_detail_rules ) {
 			$new_rules = $this->_wrap_ls_module( $new_rules ) ;
 		}
 
-		if ( $new_rules_backend ) {
+		if ( $new_rules_backend || $disable_lscache_detail_rules ) {
 			$new_rules_backend = $this->_wrap_ls_module( $new_rules_backend ) ;
 		}
 
@@ -773,7 +776,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access public
 	 * @param array $cfg The rules that need to be set.
 	 */
-	public function update( $cfg )
+	public function update( $cfg, $disable_lscache_detail_rules = false )
 	{
 		if ( ! LiteSpeed_Cache_Admin_Rules::readable() ) {
 			return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
@@ -785,7 +788,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 		}
 
-		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg ) ;
+		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg, $disable_lscache_detail_rules ) ;
 
 		// Check frontend content
 		list( $rules, $rules_nonls ) = $this->_extract_rules() ;
@@ -909,18 +912,17 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @access public
+	 * @param  string  $clear_all	Deactivation will give true, so clear all rules, otherwise only clear lscache related rules.
 	 */
-	public function clear_rules( $clear_all = false )
+	public function clear_rules()
 	{
-		$rules = false ;
+		$this->_insert_wrapper( false ) ;// Use false to avoid do-not-edit msg
+		// Clear non ls rules
+		$this->_insert_wrapper( false, false, self::MARKER_NONLS ) ;
 
-		if ( $clear_all !== true ) {
-			$rules = $this->_wrap_ls_module() ;
-		}
-
-		$this->_insert_wrapper( $rules ) ;
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			$this->_insert_wrapper( $rules, 'backend' ) ;
+			$this->_insert_wrapper( false, 'backend' ) ;
+			$this->_insert_wrapper( false, 'backend', self::MARKER_NONLS ) ;
 		}
 	}
 
