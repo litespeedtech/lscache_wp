@@ -19,14 +19,17 @@ class LiteSpeed_Cache_CDN_Quic
 			if ( empty( $_POST[ 'email' ] ) ) {
 				exit( 'No email' ) ;
 			}
+
+			$_email = $_POST[ 'email' ] ;
+
 			// Get email status
-			$data = $this->_api( '/u/query', array( 'email' => $_POST[ 'email' ] ) ) ;
+			$data = $this->_api( '/u/query', array( 'email' => $_email ) ) ;
 			if ( empty( $data[ 'result' ] ) ) {
 				LiteSpeed_Cache_Log::debug( "QUIC: Query email failed" ) ;
+				var_dump($data);
 				exit( "QUIC: Query email failed" ) ;
 			}
 
-			$_email = $_POST[ 'email' ] ;
 
 			if ( $data[ 'result' ] == 'existing' ) {
 				$this->_tpl( 'quic.login', 50 ) ;
