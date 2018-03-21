@@ -1026,7 +1026,9 @@ class LiteSpeed_Cache_Config
 
 		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "plugin_activation update option = " . var_export( $res, true ) ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Config] plugin_activation update option = " . var_export( $res, true ) ) ;
+
+		$disable_lscache = false ;
 
 		if ( is_multisite() ) {
 
@@ -1037,26 +1039,23 @@ class LiteSpeed_Cache_Config
 				}
 				return ;
 			}
-			else {
-				// Network admin should make a wapper to avoid subblogs cache not work
-				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
-			}
 
 			$options = $this->get_site_options() ;
 
-			if ( $res == true || $options[ self::NETWORK_OPID_ENABLED ] == false ) {
-				return ;
+			if ( ! $options[ self::NETWORK_OPID_ENABLED ] ) {
+				// NOTE: Network admin still need to make a lscache wrapper to avoid subblogs cache not work
+				$disable_lscache = true ;
 			}
 
 		}
-		elseif ( $res == false && ! defined( 'LITESPEED_ON' ) ) {// todo: why do this
-			return ;
-		}
 		else {
 			$options = $this->get_options() ;
+			if ( ! $options[ self::OPID_ENABLED_RADIO ] ) {
+				$disable_lscache = true ;
+			}
 		}
 
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options ) ;
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache ) ;
 
         if ( $res !== true ) {
         	if ( ! is_array( $res ) ) {

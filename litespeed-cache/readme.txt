@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.1.1
+Stable tag: 2.1.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
