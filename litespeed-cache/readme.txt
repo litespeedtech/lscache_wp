@@ -249,6 +249,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.1.1.1 - Mar 21 2018 =
+* [BUGFIX] Fixed issue where activation failed to add rules to .htaccess.
+* [BUGFIX] Fixed issue where 304 header was blank on feed page refresh.
+
 = 2.1.1 - Mar 20 2018 =
 * [NEW FEATURE] <strong>Browser Cache</strong> Unlocked for non-LiteSpeed users.
 * [IMPROVEMENT] <strong>Image Optimization</strong> Fixed issue where images with bad postmeta value continued to show in not-yet-requested queue.
