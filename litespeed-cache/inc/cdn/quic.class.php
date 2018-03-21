@@ -11,7 +11,11 @@ class LiteSpeed_Cache_CDN_Quic
 {
 	private static $_instance ;
 
+	private $_api_key ;
+
 	const TYPE_REG = 'reg' ;
+
+	const DB_API_HASH = 'litespeed_cdn_quic_hash' ;
 
 	private function _show_user_guide()
 	{
@@ -23,19 +27,21 @@ class LiteSpeed_Cache_CDN_Quic
 			$_email = $_POST[ 'email' ] ;
 
 			// Get email status
-			$data = $this->_api( '/u/query', array( 'email' => $_email ) ) ;
-			if ( empty( $data[ 'result' ] ) ) {
-				LiteSpeed_Cache_Log::debug( "QUIC: Query email failed" ) ;
-				var_dump($data);
+			$response = $this->_api( '/u/email_status', array( 'email' => $_email ) ) ;
+			if ( empty( $response[ 'result' ] ) ) {
+
+				LiteSpeed_Cache_Log::debug( '[QUIC] Query email failed' ) ;
+
 				exit( "QUIC: Query email failed" ) ;
 			}
 
+			$data = array( 'email' => $_email ) ;
 
-			if ( $data[ 'result' ] == 'existing' ) {
-				$this->_tpl( 'quic.login', 50 ) ;
+			if ( $response[ 'result' ] == 'existing' ) {
+				$this->_tpl( 'quic.login', 50, $data ) ;
 			}
-			elseif ( $data[ 'result' ] == 'none' ) {
-				$this->_tpl( 'quic.register', 50 ) ;
+			elseif ( $response[ 'result' ] == 'none' ) {
+				$this->_tpl( 'quic.register', 50, $data ) ;
 			}
 			else {
 				exit( 'Unkown result' ) ;
@@ -49,39 +55,44 @@ class LiteSpeed_Cache_CDN_Quic
 		exit;
 	}
 
-	private function _tpl( $tpl, $_progress = false )
+	private function _tpl( $tpl, $_progress = false, $data = false )
 	{
 		require LSCWP_DIR . "admin/tpl/inc/modal.header.php" ;
 		require LSCWP_DIR . "admin/tpl/api/$tpl.php" ;
 		require LSCWP_DIR . "admin/tpl/inc/modal.footer.php" ;
 	}
 
-	private function _api( $uri, $data = false, $method = 'POST' )
+	private function _api( $uri, $data = false, $method = 'POST', $no_hash = false )
 	{
-		LiteSpeed_Cache_Log::debug( "QUIC: _api call" ) ;
+		LiteSpeed_Cache_Log::debug( '[QUIC] _api call' ) ;
+
+		$hash = 'no_hash' ;
+		if ( ! $no_hash ) {
+			$hash = Litespeed_String::rrand( 16 ) ;
+			// store hash
+			update_option( self::DB_API_HASH, $hash ) ;
+		}
 
 		$url = 'https://api.quic.cloud' . $uri ;
 
-		$header = array(
-			'Content-Type: application/json',
+		$param = array(
+			'auth_key'	=> $this->_api_key,
+			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
+			'hash'	=> $hash,
+			'data' => $data,
 		) ;
 
-		$ch = curl_init() ;
-		curl_setopt( $ch, CURLOPT_URL, $url ) ;
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method ) ;
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $header ) ;
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ) ;
-		if ( $data ) {
-			if ( is_array( $data ) ) {
-				$data = json_encode( $data ) ;
-			}
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, $data ) ;
+		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
+
+
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message() ;
+			LiteSpeed_Cache_Log::debug( '[QUIC] failed to post: ' . $error_message ) ;
+			return $error_message ;
 		}
-		$result = curl_exec( $ch ) ;
+		LiteSpeed_Cache_Log::debug( '[QUIC] _api call response: ' . $response[ 'body' ] ) ;
 
-		LiteSpeed_Cache_Log::debug( "QUIC: _api call result: " . $result ) ;
-
-		$json = json_decode( $result, true ) ;
+		$json = json_decode( $response[ 'body' ], true ) ;
 
 		return $json ;
 
@@ -95,7 +106,7 @@ class LiteSpeed_Cache_CDN_Quic
 	 */
 	public static function handler()
 	{
-		LiteSpeed_Cache_Log::debug( 'QUIC_CLOUD: init' ) ;
+		LiteSpeed_Cache_Log::debug( '[QUIC] init' ) ;
 		$instance = self::get_instance() ;
 
 		$type = LiteSpeed_Cache_Router::verify_type() ;
