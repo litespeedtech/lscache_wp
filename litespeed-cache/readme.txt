@@ -31,13 +31,12 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Database Cleaner and Optimizer
 * PageSpeed score optimization
 * OPcode Cache
-* HTTP/2 Push for CSS and JS
+* HTTP/2 Push for CSS and JS (on web servers that support it)
 * DNS Prefetch
 * Cloudflare API
 * Single Site and Multi Site (Network) support
 * Import/Export settings
 * Basic/Advanced setting view
-* HTTP/2 & HTTPS support right out of the box
 * Attractive, easy-to-understand interface
 * WebP image format support
 
@@ -53,7 +52,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli) commands
 * Simple API system for each cache integration
 * Exclude from cache by URI, Category, Tag, Cookie, User Agent
-* [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support out of the box (Not available in OpenLiteSpeed)
+* HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support (QUIC not available in OpenLiteSpeed)
 * ESI (Edge Side Includes) support (Not available in OpenLiteSpeed)
 
 NOTE: **LiteSpeed Exclusive Features** require the use of a LiteSpeed web server with cache module installed. **General Features** may be used by anyone with any web server.
