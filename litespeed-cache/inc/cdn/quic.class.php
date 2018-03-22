@@ -19,40 +19,109 @@ class LiteSpeed_Cache_CDN_Quic
 
 	private function _show_user_guide()
 	{
-		if ( ! empty( $_POST[ 'step' ] ) && $_POST[ 'step' ] == 2 ) {
+		if ( ! empty( $_POST[ 'step' ] ) ) {
 			if ( empty( $_POST[ 'email' ] ) ) {
 				exit( 'No email' ) ;
 			}
 
-			$_email = $_POST[ 'email' ] ;
-
-			// Get email status
-			$response = $this->_api( '/u/email_status', array( 'email' => $_email ) ) ;
-			if ( empty( $response[ 'result' ] ) ) {
-
-				LiteSpeed_Cache_Log::debug( '[QUIC] Query email failed' ) ;
-
-				exit( "QUIC: Query email failed" ) ;
+			if ( $_POST[ 'step' ] == 'register' ) {
+				$this->_register() ;
 			}
 
-			$data = array( 'email' => $_email ) ;
-
-			if ( $response[ 'result' ] == 'existing' ) {
-				$this->_tpl( 'quic.login', 50, $data ) ;
-			}
-			elseif ( $response[ 'result' ] == 'none' ) {
-				$this->_tpl( 'quic.register', 50, $data ) ;
-			}
-			else {
-				exit( 'Unkown result' ) ;
+			if ( $_POST[ 'step' ] == 'login' ) {
+				$this->_login() ;
 			}
 
-			exit ;
+			if ( $_POST[ 'step' ] == 'check_email' ) {
+				$this->_check_email() ;
+			}
 		}
 
 		// Show user panel welcome page
 		$this->_tpl( 'quic.user_welcome', 25 ) ;
 		exit;
+	}
+
+
+	private function _check_email()
+	{
+		$_email = $_POST[ 'email' ] ;
+
+		// Get email status
+		$response = $this->_api( '/u/email_status', array( 'email' => $_email ) ) ;
+		if ( empty( $response[ 'result' ] ) ) {
+
+			LiteSpeed_Cache_Log::debug( '[QUIC] Query email failed' ) ;
+
+			exit( "QUIC: Query email failed" ) ;
+		}
+
+		$data = array( 'email' => $_email ) ;
+
+		if ( $response[ 'result' ] == 'existing' ) {
+			$this->_tpl( 'quic.login', 50, $data ) ;
+		}
+		elseif ( $response[ 'result' ] == 'none' ) {
+			$this->_tpl( 'quic.register', 50, $data ) ;
+		}
+		else {
+			exit( 'Unkown result' ) ;
+		}
+
+		exit ;
+	}
+
+	private function _register()
+	{
+		$_email = $_POST[ 'email' ] ;
+
+		if ( empty( $_POST[ 'pswd' ] ) ) {
+			exit( 'No password' ) ;
+		}
+
+		// Register
+		$response = $this->_api( '/u/register', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
+		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
+
+			LiteSpeed_Cache_Log::debug( '[QUIC] Register failed' ) ;
+
+			exit( "QUIC: Register failed" ) ;
+		}
+
+		// todo: add domain?
+
+		exit ;
+
+	}
+
+	private function _login()
+	{
+		$_email = $_POST[ 'email' ] ;
+
+		if ( empty( $_POST[ 'pswd' ] ) ) {
+			exit( 'No password' ) ;
+		}
+
+		// Login
+		$response = $this->_api( '/u/login', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
+
+		$data = array( 'email' => $_email ) ;
+
+		// for login failed, redirect back to login page
+		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
+
+			LiteSpeed_Cache_Log::debug( '[QUIC] Login failed' ) ;
+
+			$data[ '_err' ] = $response[ 'result' ] ;
+
+			$this->_tpl( 'quic.login', 50, $data ) ;
+			exit ;
+		}
+
+		// Show domains list
+		$this->_show_domains() ;
+
+		exit ;
 	}
 
 	private function _tpl( $tpl, $_progress = false, $data = false )

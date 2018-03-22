@@ -2,7 +2,7 @@
 
 <form method="post" action="admin.php" id="litespeed_form_quic" class="litespeed-relative">
 	<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_CDN_QUIC ; ?>" />
-	<input type="hidden" name="step" value="2" />
+	<input type="hidden" name="step" value="check_email" />
 	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache::NONCE_NAME ) ; ?>
 
 	<div class="litespeed-row">

@@ -2,8 +2,18 @@
 
 <form method="post" action="admin.php" id="litespeed_form_quic" class="litespeed-relative">
 	<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_CDN_QUIC ; ?>" />
-	<input type="hidden" name="step" value="2" />
+	<input type="hidden" name="step" value="login" />
+	<input type="hidden" name="email" value="<?php echo $data[ 'email' ] ; ?>" />
 	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache::NONCE_NAME ) ; ?>
+
+	<?php if ( ! empty( $data[ '_err' ] ) ) : ?>
+	<div class="litespeed-callout-danger">
+		<h4><?php echo __( 'ERROR', 'litespeed-cache' ) ; ?>:</h4>
+		<ol>
+			<li><?php echo $data[ '_err' ] ; ?></li>
+		</ol>
+	</div>
+	<?php endif ; ?>
 
 	<div class="litespeed-row">
 		<h4><?php echo __( 'Email', 'litespeed-cache' ) ; ?>:</h4>
@@ -17,4 +27,5 @@
 
 	<input type="submit" class="button litespeed-btn-primary" value="<?php echo __( 'Login', 'litespeed-cache' ) ; ?>" />
 
+	<a href="javascript:;" onclick="window.history.back();" class="button litespeed-btn-default litespeed-right"><?php echo __( 'Back', 'litespeed-cache' ) ; ?></a>
 </form>
