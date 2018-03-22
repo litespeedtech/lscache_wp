@@ -331,7 +331,7 @@ class LiteSpeed_Cache_Vary
 			// Get admin bar set
 			// see @_get_admin_bar_pref()
 			$pref = get_user_option( 'show_admin_bar_front', $uid ) ;
-			LiteSpeed_Cache_Log::debug2( 'Vary: show_admin_bar_front: ' . $pref ) ;
+			LiteSpeed_Cache_Log::debug2( '[Vary] show_admin_bar_front: ' . $pref ) ;
 			$admin_bar = $pref === false || $pref === 'true' ;
 
 			if ( $admin_bar ) {
@@ -509,7 +509,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		if ( empty($tp_cookies) ) {
-			LiteSpeed_Cache_Log::debug2( 'Vary: no custimzed vary ' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Vary] no custimzed vary ' ) ;
 			return ;
 		}
 

@@ -379,7 +379,7 @@ class LiteSpeed_Cache_Config
 			return $this->options[$id] ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Invalid option ID ' . $id ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Cfg] Invalid option ID ' . $id ) ;
 
 		return NULL ;
 	}
@@ -469,7 +469,7 @@ class LiteSpeed_Cache_Config
 		}
 
 		if ( $group ) {
-			LiteSpeed_Cache_Log::debug2( 'Config: role in vary_group [group] ' . $group ) ;
+			LiteSpeed_Cache_Log::debug2( '[Cfg] role in vary_group [group] ' . $group ) ;
 		}
 
 		return $group ;
@@ -919,7 +919,7 @@ class LiteSpeed_Cache_Config
 				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
 			) ;
 			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
-			LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option adding CDN map" ) ;
+			LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option adding CDN map" ) ;
 		}
 
 		$this->options = self::option_diff( $default_options, $this->options ) ;
@@ -927,7 +927,7 @@ class LiteSpeed_Cache_Config
 		$res = $this->update_options() ;
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
-		LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option changed = $res" ) ;
+		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed = $res" ) ;
 
 		// Update img_optm table data for upgrading
 		LiteSpeed_Cache_Data::get_instance() ;
@@ -952,7 +952,7 @@ class LiteSpeed_Cache_Config
 
 		$res = update_site_option( self::OPTION_NAME, $options ) ;
 
-		LiteSpeed_Cache_Log::debug( "plugin_upgrade option changed = $res\n" ) ;
+		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed = $res\n" ) ;
 	}
 
 	/**
@@ -1026,7 +1026,7 @@ class LiteSpeed_Cache_Config
 
 		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Config] plugin_activation update option = " . var_export( $res, true ) ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
 
 		$disable_lscache = false ;
 

@@ -29,7 +29,7 @@ class LiteSpeed_Cache_Data
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( 'Data init' ) ;
+		LiteSpeed_Cache_Log::debug2( '[Data] init' ) ;
 		global $wpdb ;
 
 		$this->_charset_collate = $wpdb->get_charset_collate() ;

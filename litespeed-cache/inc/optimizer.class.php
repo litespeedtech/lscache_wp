@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Optimizer
 			}
 
 		} catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Log::debug( 'Error when serving from optimizer: ' . $e->getMessage() ) ;
+			LiteSpeed_Cache_Log::debug( '[Optmer] Error when serving from optimizer: ' . $e->getMessage() ) ;
 			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
 			return false ;
 		}
@@ -119,13 +119,13 @@ class LiteSpeed_Cache_Optimizer
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Optm:    Generated content' ) ;
+		LiteSpeed_Cache_Log::debug( '[Optmer]    Generated content' ) ;
 
 		$headers[ 'Content-Length' ] = strlen( $content ) ;
 
 		foreach ( $headers as $key => $val ) {
 			header( $key . ': ' . $val ) ;
-			LiteSpeed_Cache_Log::debug( 'HEADER ' . $key . ': ' . $val ) ;
+			LiteSpeed_Cache_Log::debug( '[Optmer] HEADER ' . $key . ': ' . $val ) ;
 		}
 
 		return $content ;
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			LiteSpeed_Cache_Log::debug( 'Optimizer: [real_path] ' . $real_path ) ;
+			LiteSpeed_Cache_Log::debug( '[Optmer] [real_path] ' . $real_path ) ;
 			$data = $this->_read( $real_path ) ;
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
