@@ -254,11 +254,6 @@ class LiteSpeed_Cache_Optimize
 
 		$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
 
-		if ( ! $content ) {
-			LiteSpeed_Cache_Control::set_nocache( 'Empty content from optimizer' ) ;
-			exit ;
-		}
-
 		// Save to file if not enabled lscache
 		if ( ! defined( 'LITESPEED_ON' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] Saved cache to file [path] ' . $static_file ) ;
