@@ -65,12 +65,16 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	public function serve( $filename, $concat_only )
 	{
-		// Search filename in db for src URLs
-		$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
-		if ( ! $urls || ! is_array( $urls ) ) {
-			return false;
+		if ( ! is_array( $filename ) ) {
+			// Search filename in db for src URLs
+			$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
+			if ( ! $urls || ! is_array( $urls ) ) {
+				return false;
+			}
 		}
-
+		else {
+			$urls = $filename ;
+		}
 
 		// Parse real file path
 		$real_files = array() ;
@@ -86,22 +90,18 @@ class LiteSpeed_Cache_Optimizer
 			return false;
 		}
 
-
 		set_error_handler( 'litespeed_exception_handler' ) ;
 
-		$headers = array() ;
 		$content = '' ;
-		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 ) ;
+		$file_type = substr( $urls[ 0 ], strrpos( $urls[ 0 ], '.' ) + 1 ) ;
 		try {
 			// Handle CSS
 			if ( $file_type === 'css' ) {
 				$content = $this->_serve_css( $real_files, $concat_only ) ;
-				$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
 			}
 			// Handle JS
 			else {
 				$content = $this->_serve_js( $real_files, $concat_only ) ;
-				$headers[ 'Content-Type' ] = 'application/x-javascript' ;
 			}
 
 		} catch ( ErrorException $e ) {
@@ -120,13 +120,6 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Optmer]    Generated content' ) ;
-
-		$headers[ 'Content-Length' ] = strlen( $content ) ;
-
-		foreach ( $headers as $key => $val ) {
-			header( $key . ': ' . $val ) ;
-			LiteSpeed_Cache_Log::debug( '[Optmer] HEADER ' . $key . ': ' . $val ) ;
-		}
 
 		return $content ;
 	}

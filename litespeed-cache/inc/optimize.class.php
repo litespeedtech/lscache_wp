@@ -34,6 +34,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_exc_jquery ;
 	private $cfg_ggfonts_async ;
 	private $cfg_optm_max_size ;
+	private $cfg_ttl ;
 
 	private $dns_prefetch ;
 
@@ -69,6 +70,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
 		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ;
 		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ) * 1000000 ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
 
 		$this->_static_request_check() ;
 
@@ -217,58 +219,68 @@ class LiteSpeed_Cache_Optimize
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
 
-		$file_type = substr( $match[ 1 ], strrpos( $match[ 1 ], '.' ) + 1 ) ;
+		$file_type = $match[ 2 ] ;
 
-		$ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
+		$static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[ 1 ] ;
 
-		// Load file from file based cache if not enabled lscache
-		if ( ! defined( 'LITESPEED_ON' ) ) {
-			LiteSpeed_Cache_Log::debug( '[Optm] Not enabled lscache, using file based cache' ) ;
+		$headers = array() ;
+		if ( $file_type === 'css' ) {
+			$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
+		}
+		else {
+			$headers[ 'Content-Type' ] = 'application/x-javascript' ;
+		}
 
-			$static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[ 1 ] ;
-			if ( file_exists( $static_file ) && time() - filemtime( $static_file ) <= $ttl ) {
-				$content = Litespeed_File::read( $static_file ) ;
+		// Even if hit PHP, still check if the file is valid to bypass minify process
+		if ( file_exists( $static_file ) && time() - filemtime( $static_file ) <= $this->cfg_ttl ) {
 
-				// Output header first
-				$headers = array() ;
-				$headers[ 'Content-Length' ] = strlen( $content ) ;
+			// Load file from file based cache if not expired
+			LiteSpeed_Cache_Log::debug( '[Optm] Static file available' ) ;
+			$content = Litespeed_File::read( $static_file ) ;
 
-				if ( $file_type === 'css' ) {
-					$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
-				}
-				else {
-					$headers[ 'Content-Type' ] = 'application/x-javascript' ;
-				}
+			// Output header first
+			$headers[ 'Content-Length' ] = strlen( $content ) ;
+			$this->_output_header( $headers ) ;
 
-				foreach ( $headers as $k => $v ) {
-					header( $k . ': ' . $v ) ;
-					LiteSpeed_Cache_Log::debug( '[Optm] HEADER ' . $k . ': ' . $v ) ;
-				}
-
-				echo $content ;
-				exit ;
-			}
+			echo $content ;
+			exit ;
 		}
 
 		$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
 		$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
 
-		// Save to file if not enabled lscache
-		if ( ! defined( 'LITESPEED_ON' ) ) {
-			LiteSpeed_Cache_Log::debug( '[Optm] Saved cache to file [path] ' . $static_file ) ;
+		// Output header first
+		$headers[ 'Content-Length' ] = strlen( $content ) ;
+		$this->_output_header( $headers ) ;
 
-			Litespeed_File::save( $static_file, $content, true ) ;
-		}
+		// Generate static file
+		Litespeed_File::save( $static_file, $content, true ) ;
+		LiteSpeed_Cache_Log::debug( '[Optm] Saved cache to file [path] ' . $static_file ) ;
 
 		LiteSpeed_Cache_Control::set_cacheable() ;
 		LiteSpeed_Cache_Control::set_public_forced( 'OPTM: min file ' . $match[ 1 ] ) ;
 		LiteSpeed_Cache_Control::set_no_vary() ;
-		LiteSpeed_Cache_Control::set_custom_ttl( $ttl ) ;
+		LiteSpeed_Cache_Control::set_custom_ttl( $this->cfg_ttl ) ;
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
 
 		echo $content ;
 		exit ;
+	}
+
+	/**
+	 * Output header info
+	 *
+	 * @since  2.2
+	 * @access public
+	 */
+	private function _output_header( $headers )
+	{
+		foreach ( $headers as $k => $v ) {
+			header( $k . ': ' . $v ) ;
+			LiteSpeed_Cache_Log::debug( '[Optm] HEADER ' . $k . ': ' . $v ) ;
+		}
+
 	}
 
 	/**
@@ -911,6 +923,21 @@ class LiteSpeed_Cache_Optimize
 		else {
 			// Short hash is safe now
 			LiteSpeed_Cache_Data::optm_save_src( $short . '.' . $file_type, $src ) ;
+		}
+
+		// Generate static files
+		$static_file = LSCWP_CONTENT_DIR . "/cache/$file_type/$filename.$file_type" ;
+		// Check if the file is valid to bypass minify process
+		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
+			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
+
+			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $src, $concat_only ) ;
+
+			// Generate static file
+			Litespeed_File::save( $static_file, $content, true ) ;
+
+			LiteSpeed_Cache_Log::debug( '[Optm] Saved static file [path] ' . $static_file ) ;
+
 		}
 
 		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;

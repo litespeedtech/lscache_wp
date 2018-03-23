@@ -527,6 +527,24 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Generate minify rules
+	 *
+	 * @since  2.2
+	 * @access private
+	 * @return array Rules set
+	 */
+	private function _minify_rules()
+	{
+		$rules = array(
+			self::LS_MODULE_REWRITE_START,
+				'RewriteCond ' . LSCWP_CONTENT_DIR . '/cache/$2/$1.$2 -f',
+				'RewriteRule min/(\w+)\.(css|js) ' . LSCWP_CONTENT_DIR . '/cache/$2/$1.$2 [L]',
+			self::LS_MODULE_END,
+		) ;
+		return $rules ;
+	}
+
+	/**
 	 * Generate CORS rules for fonts
 	 *
 	 * @since  1.5
@@ -677,6 +695,12 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules_nonls[] = '' ;
 		}
 
+		// CSS/JS static file rewrite
+		$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_MINIFY . self::MARKER_START ;
+		$new_rules_nonls = array_merge( $new_rules_nonls, $this->_minify_rules() ) ;
+		$new_rules_backend_nonls = array_merge( $new_rules_backend_nonls, $this->_minify_rules() ) ;
+		$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_MINIFY . self::MARKER_END ;
+		$new_rules_nonls[] = '' ;
 
 		// Add module wrapper for LiteSpeed rules
 		if ( $new_rules || $disable_lscache_detail_rules ) {

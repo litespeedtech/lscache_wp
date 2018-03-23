@@ -29,7 +29,7 @@ class LiteSpeed_Cache_Media
 	 */
 	private function __construct()
 	{
-		LiteSpeed_Cache_Log::debug2( '[Media] init' ) ;
+		LiteSpeed_Cache_Log::debug2( 'Media init' ) ;
 
 		$this->wp_upload_dir = wp_upload_dir() ;
 
