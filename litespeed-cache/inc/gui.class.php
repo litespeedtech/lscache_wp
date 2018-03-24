@@ -372,8 +372,16 @@ class LiteSpeed_Cache_GUI
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all',
-			'title'		=> __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ),
+			'title'		=> __( 'LSCache Purge All', 'litespeed-cache' ),
 			'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-purge-cssjs',
+			'title'		=> __( 'Purge CSS/JS Cache', 'litespeed-cache' ),
+			'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_CSSJS ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
