@@ -135,7 +135,7 @@ class LiteSpeed_Cache_Optimizer
 		$con = array() ;
 		foreach ( $files as $real_path ) {
 			LiteSpeed_Cache_Log::debug( '[Optmer] [real_path] ' . $real_path ) ;
-			$data = $this->_read( $real_path ) ;
+			$data = Litespeed_File::read( $real_path ) ;
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
 
@@ -162,7 +162,7 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			$data = $this->_read( $real_path ) ;
+			$data = Litespeed_File::read( $real_path ) ;
 
 			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
 				$data = JSMin\JSMin::minify( $data ) ;
@@ -198,21 +198,6 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		return false ;
-	}
-
-	/**
-	 * Read content and remove UTF-8 BOM if present
-	 *
-	 * @since  1.9
-	 * @access private
-	 */
-	private function _read( $file )
-	{
-		$content = file_get_contents( $file ) ;
-		if ( substr( $content, 0, 3 ) === "\xEF\xBB\xBF" ) {
-			$content = substr( $content, 3 ) ;
-		}
-		return $content ;
 	}
 
 	/**
