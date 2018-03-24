@@ -92,7 +92,11 @@ class Litespeed_File
 			return $res ;
 		}
 
-		return file_get_contents($filename) ;
+		$content = file_get_contents( $filename ) ;
+
+		$content = self::_remove_zero_space( $content ) ;
+
+		return $content ;
 	}
 
 	/**
@@ -115,12 +119,12 @@ class Litespeed_File
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
-	 * @param string $data
+	 * @param string $content
 	 * @param boolean $mkdir
 	 * @param boolean $append If the content needs to be appended
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true )
+	public static function save( $filename, $content, $mkdir = false, $append = false, $silence = true )
 	{
 		$error = false ;
 		$folder = dirname( $filename ) ;
@@ -160,12 +164,33 @@ class Litespeed_File
 			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 		}
 
-		$ret = file_put_contents( $filename, $data, $append ? FILE_APPEND : LOCK_EX ) ;
+		$content = self::_remove_zero_space( $content ) ;
+
+		$ret = file_put_contents( $filename, $content, $append ? FILE_APPEND : LOCK_EX ) ;
 		if ( $ret === false ) {
 			return $silence ? false : sprintf( __( 'Failed to write to %s.', 'litespeed-cache' ), $filename ) ;
 		}
 
 		return true ;
+	}
+
+	/**
+	 * Remove Unicode zero-width space <200b><200c>
+	 *
+	 * @since 2.2
+	 */
+	private static function _remove_zero_space( $content )
+	{
+		// Remove UTF-8 BOM if present
+		if ( substr( $content, 0, 3 ) === "\xEF\xBB\xBF" ) {
+			$content = substr( $content, 3 ) ;
+		}
+
+		$content = str_replace( "\xe2\x80\x8b", '', $content ) ;
+		$content = str_replace( "\xe2\x80\x8c", '', $content ) ;
+		$content = str_replace( "\xe2\x80\x8d", '', $content ) ;
+
+		return $content ;
 	}
 
 	/**
