@@ -185,18 +185,28 @@ class LiteSpeed_Cache_Optimize
 		if ( ( $this->cfg_css_async || $this->cfg_ggfonts_async ) && strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] start serving static file' ) ;
 
+			$file = LSCWP_DIR . 'js/css_async.min.js' ;
+
+			$content = Litespeed_File::read( $file ) ;
+
+			$static_file = LSCWP_CONTENT_DIR . '/cache/js/css_async.js' ;
+
+			// Save to cache folder to enable directly usage by .htacess
+			if ( ! file_exists( $static_file ) ) {
+				Litespeed_File::save( $static_file, $content, true ) ;
+				LiteSpeed_Cache_Log::debug( '[Optm] save css_async lib to ' . $static_file ) ;
+			}
+
 			LiteSpeed_Cache_Control::set_cacheable() ;
 			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: css async js' ) ;
 			LiteSpeed_Cache_Control::set_no_vary() ;
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_CSS_ASYNC' ) ;
 
-			$file = LSCWP_DIR . 'js/css_async.min.js' ;
-
-			header( 'Content-Length: ' . filesize( $file ) ) ;
+			header( 'Content-Length: ' . strlen( $content ) ) ;
 			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
 
-			echo file_get_contents( $file ) ;
+			echo $content ;
 			exit ;
 		}
 

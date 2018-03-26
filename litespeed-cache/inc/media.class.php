@@ -242,18 +242,28 @@ class LiteSpeed_Cache_Media
 		if ( strpos( $_SERVER[ 'REQUEST_URI' ], self::LAZY_LIB ) !== false ) {
 			LiteSpeed_Cache_Log::debug( '[Media] run lazyload lib' ) ;
 
+			$file = LSCWP_DIR . 'js/lazyload.min.js' ;
+
+			$content = Litespeed_File::read( $file ) ;
+
+			$static_file = LSCWP_CONTENT_DIR . '/cache/js/lazyload.js' ;
+
+			// Save to cache folder to enable directly usage by .htacess
+			if ( ! file_exists( $static_file ) ) {
+				Litespeed_File::save( $static_file, $content, true ) ;
+				LiteSpeed_Cache_Log::debug( '[Media] save lazyload lib to ' . $static_file ) ;
+			}
+
 			LiteSpeed_Cache_Control::set_cacheable() ;
 			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: lazyload js' ) ;
 			LiteSpeed_Cache_Control::set_no_vary() ;
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_LAZY' ) ;
 
-			$file = LSCWP_DIR . 'js/lazyload.min.js' ;
-
-			header( 'Content-Length: ' . filesize( $file ) ) ;
+			header( 'Content-Length: ' . strlen( $content ) ) ;
 			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
 
-			echo file_get_contents( $file ) ;
+			echo $content ;
 			exit ;
 		}
 	}

@@ -90,7 +90,7 @@ class LiteSpeed_Cache_Optimizer
 			return false;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Optmer]    urls : ', $urls ) ;
+		LiteSpeed_Cache_Log::debug2( '[Optmer]    urls : ', $urls ) ;
 
 		set_error_handler( 'litespeed_exception_handler' ) ;
 
