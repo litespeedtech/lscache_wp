@@ -232,31 +232,25 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Even if hit PHP, still check if the file is valid to bypass minify process
-		if ( file_exists( $static_file ) && time() - filemtime( $static_file ) <= $this->cfg_ttl ) {
+		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
+			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
+			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
+
+			// Generate static file
+			Litespeed_File::save( $static_file, $content, true ) ;
+			LiteSpeed_Cache_Log::debug( '[Optm] Saved cache to file [path] ' . $static_file ) ;
+
+		}
+		else {
 			// Load file from file based cache if not expired
 			LiteSpeed_Cache_Log::debug( '[Optm] Static file available' ) ;
 			$content = Litespeed_File::read( $static_file ) ;
-
-			// Output header first
-			$headers[ 'Content-Length' ] = strlen( $content ) ;
-			$this->_output_header( $headers ) ;
-
-			echo $content ;
-			exit ;
 		}
-
-		$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
-
-		$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
 
 		// Output header first
 		$headers[ 'Content-Length' ] = strlen( $content ) ;
 		$this->_output_header( $headers ) ;
-
-		// Generate static file
-		Litespeed_File::save( $static_file, $content, true ) ;
-		LiteSpeed_Cache_Log::debug( '[Optm] Saved cache to file [path] ' . $static_file ) ;
 
 		LiteSpeed_Cache_Control::set_cacheable() ;
 		LiteSpeed_Cache_Control::set_public_forced( 'OPTM: min file ' . $match[ 1 ] ) ;

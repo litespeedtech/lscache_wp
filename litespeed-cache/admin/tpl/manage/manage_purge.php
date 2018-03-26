@@ -48,11 +48,6 @@ $_panels = array(
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ALL,
 		'icon'	=> 'purge-all',
 		'title_cls'	=> 'litespeed-warning',
-		'cfm'	=>  is_multisite() && is_network_admin() ?
-					esc_html( __( 'This will purge everything for all blogs.', 'litespeed-cache' ) ) . ' ' .
-					esc_html( __( 'Are you sure you want to purge all?', 'litespeed-cache' ) )
-					:
-					esc_html( __( 'Are you sure you want to purge all?', 'litespeed-cache' ) )
 	),
 ) ;
 

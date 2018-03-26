@@ -90,10 +90,13 @@ class LiteSpeed_Cache_Optimizer
 			return false;
 		}
 
+		LiteSpeed_Cache_Log::debug( '[Optmer]    urls : ', $urls ) ;
+
 		set_error_handler( 'litespeed_exception_handler' ) ;
 
 		$content = '' ;
-		$file_type = substr( $urls[ 0 ], strrpos( $urls[ 0 ], '.' ) + 1 ) ;
+		$tmp = parse_url( $urls[ 0 ], PHP_URL_PATH ) ;
+		$file_type = substr( $tmp, strrpos( $tmp, '.' ) + 1 ) ;
 		try {
 			// Handle CSS
 			if ( $file_type === 'css' ) {
@@ -119,7 +122,7 @@ class LiteSpeed_Cache_Optimizer
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Optmer]    Generated content' ) ;
+		LiteSpeed_Cache_Log::debug( '[Optmer]    Generated content ' . $file_type ) ;
 
 		return $content ;
 	}
