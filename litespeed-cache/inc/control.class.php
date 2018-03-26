@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_NO_VARY ;
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> no-vary', 3 ) ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> no-vary', 3 ) ;
 	}
 
 	/**
@@ -127,7 +127,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_STALE ;
-		LiteSpeed_Cache_Log::debug('X Cache_control -> stale') ;
+		LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control -> stale') ;
 	}
 
 	/**
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> shared ' . $reason ) ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> shared ' . $reason ) ;
 	}
 
 	/**
@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> public forced ' . $reason ) ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> public forced ' . $reason ) ;
 	}
 
 	/**
@@ -218,7 +218,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> private ' . $reason ) ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> private ' . $reason ) ;
 	}
 
 	/**
@@ -241,7 +241,7 @@ class LiteSpeed_Cache_Control
 	public static function set_cacheable()
 	{
 		self::$_control |= self::BM_CACHEABLE ;
-		LiteSpeed_Cache_Log::debug( 'X Cache_control init on' ) ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control init on' ) ;
 	}
 
 	/**
@@ -257,7 +257,7 @@ class LiteSpeed_Cache_Control
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
-		LiteSpeed_Cache_Log::debug( 'X Cache_control -> no Cache ' . $reason, 2 ) ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control -> no Cache ' . $reason, 2 ) ;
 	}
 
 	/**
@@ -298,7 +298,7 @@ class LiteSpeed_Cache_Control
 	{
 		if ( is_numeric($ttl) ) {
 			self::$_custom_ttl = $ttl ;
-			LiteSpeed_Cache_Log::debug('X Cache_control TTL -> ' . $ttl) ;
+			LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control TTL -> ' . $ttl) ;
 		}
 	}
 
@@ -328,7 +328,7 @@ class LiteSpeed_Cache_Control
 				if ( $ttl < 0 ) {
 					$ttl += 86400 ;// add one day
 				}
-				LiteSpeed_Cache_Log::debug( 'X Cache_control TTL is limited to ' . $ttl ) ;
+				LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
 				return $ttl ;
 			}
 		}
@@ -374,8 +374,8 @@ class LiteSpeed_Cache_Control
 	public static function check_redirect( $location, $status )
 	{
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			LiteSpeed_Cache_Log::debug( "301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
-			LiteSpeed_Cache_Log::debug( "301 to $location" ) ;
+			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
+			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 to $location" ) ;
 
 			$to_check = array(
 				PHP_URL_SCHEME,
@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Control
 			foreach ( $to_check as $v ) {
 				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
 					$is_same_redirect = false ;
-					LiteSpeed_Cache_Log::debug( "301 different redirection" ) ;
+					LiteSpeed_Cache_Log::debug( "[Ctrl] 301 different redirection" ) ;
 					break ;
 				}
 			}
@@ -451,7 +451,7 @@ class LiteSpeed_Cache_Control
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
-			LiteSpeed_Cache_Log::debug( 'not cacheable before ctrl finalize' ) ;
+			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
 			return ;
 		}
 
@@ -476,7 +476,7 @@ class LiteSpeed_Cache_Control
 
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
-			LiteSpeed_Cache_Log::debug( 'not cacheable after api_control' ) ;
+			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable after api_control' ) ;
 			return ;
 		}
 
@@ -635,7 +635,7 @@ class LiteSpeed_Cache_Control
 	 */
 	private function _no_cache_for( $reason )
 	{
-		LiteSpeed_Cache_Log::debug('X Cache_control off - ' . $reason) ;
+		LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control off - ' . $reason) ;
 		return false ;
 	}
 
