@@ -376,10 +376,28 @@ class LiteSpeed_Cache_Control
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
 			LiteSpeed_Cache_Log::debug( "301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
 			LiteSpeed_Cache_Log::debug( "301 to $location" ) ;
-			if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], PHP_URL_PATH ) == parse_url( $location, PHP_URL_PATH ) ) {
+
+			$to_check = array(
+				PHP_URL_SCHEME,
+				PHP_URL_HOST,
+				PHP_URL_PATH,
+			) ;
+
+			$is_same_redirect = true ;
+
+			foreach ( $to_check as $v ) {
+				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
+					$is_same_redirect = false ;
+					LiteSpeed_Cache_Log::debug( "301 different redirection" ) ;
+					break ;
+				}
+			}
+
+			if ( $is_same_redirect ) {
 				self::set_nocache( '301 to same url' ) ;
 			}
 		}
+
 		return $location ;
 	}
 
