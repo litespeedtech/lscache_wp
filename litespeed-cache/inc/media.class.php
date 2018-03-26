@@ -327,20 +327,20 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _finalize()
 	{
-		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
-		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
-
-		if ( $cfg_img_lazy ) {
-			list( $src_list, $html_list ) = $this->_parse_img() ;
-			$html_list_ori = $html_list ;
-		}
-
 		/**
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
 		if ( $this->cfg_img_webp && $this->webp_support() ) {
 			$this->_replace_buffer_img_webp() ;
+		}
+
+		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
+		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
+
+		if ( $cfg_img_lazy ) {
+			list( $src_list, $html_list ) = $this->_parse_img() ;
+			$html_list_ori = $html_list ;
 		}
 
 		// image lazy load
