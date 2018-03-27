@@ -275,7 +275,7 @@ class LiteSpeed_Cache_Optimize
 	/**
 	 * Output header info
 	 *
-	 * @since  2.2
+	 * @since  2.1.2
 	 * @access public
 	 */
 	private function _output_header( $headers )

@@ -526,7 +526,7 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Generate minify rules
 	 *
-	 * @since  2.2
+	 * @since  2.1.2
 	 * @access private
 	 * @return array Rules set
 	 */

@@ -177,7 +177,7 @@ class Litespeed_File
 	/**
 	 * Remove Unicode zero-width space <200b><200c>
 	 *
-	 * @since 2.2
+	 * @since 2.1.2
 	 */
 	private static function _remove_zero_space( $content )
 	{

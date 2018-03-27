@@ -18,7 +18,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 == Requirements ==
 **General Features** may be used by anyone with any web server.
 
-**LiteSpeed Exclusive Features** require the use of [OpenLiteSpeed](http://openlitespeed.org) (free, open source) or [LiteSpeed Web Server Enterprise](https://www.litespeedtech.com/products/litespeed-web-server) with cache module installed. 
+**LiteSpeed Exclusive Features** require the use of [OpenLiteSpeed](http://openlitespeed.org) (free, open source) or [LiteSpeed Web Server Enterprise](https://www.litespeedtech.com/products/litespeed-web-server) with cache module installed.
 
 == Plugin Features ==
 
@@ -252,8 +252,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 2.2 - Mar 26 2018 =
+= 2.1.2 - Mar 28 2018 =
+* [IMPROVEMENT] Significantly improved CSS/JS minify loading process to reduce loading time. (@kokers)
 * [IMPROVEMENT] Set JS Minify result cacheable even it is empty. (@kokers)
+* [BUGFIX] Lazy load now can support webp. (@relle)
 
 = 2.1.1.1 - Mar 21 2018 =
 * [BUGFIX] Fixed issue where activation failed to add rules to .htaccess.

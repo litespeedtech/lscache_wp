@@ -163,8 +163,8 @@ LiteSpeed_Cache_GUI::show_promo() ;
 
 		<p>
 			<?php echo __('Images requested', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_requested_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_requested' ], 'image' ) ; ?></b>)
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ], 'image' ) ; ?></b>)
 		</p>
 		<p class="litespeed-desc">
 			<?php echo __( 'After LiteSpeed\'s Image Optimization Server finishes optimization, it will notify your site to pull the optimized images.', 'litespeed-cache' ) ; ?>
@@ -172,10 +172,10 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		</p>
 		<p>
 			<?php echo __('Images notified to pull', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_server_finished_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_server_finished' ], 'image' ) ; ?></b>)
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ], 'image' ) ; ?></b>)
 
-			<?php if ( $img_count[ 'total_server_finished' ] && ! $is_running ) : ?>
+			<?php if ( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ] && ! $is_running ) : ?>
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL ) ; ?>" class="litespeed-btn-success">
 					<?php echo __( 'Pull Images', 'litespeed-cache' ) ; ?>
 				</a>
@@ -191,23 +191,37 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		</p>
 		<p>
 			<?php echo __('Images optimized and pulled', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_pulled_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_pulled' ], 'image' ) ; ?></b>)
+			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ] ) ; ?></b>
+			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ], 'image' ) ; ?></b>)
 		</p>
-		<p>
-			<?php echo __('Images failed to optimize', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_err' ], 'image' ) ; ?></b>)
-		</p>
-		<p>
-			<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss_groups' ] ) ; ?></b>
-			(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_miss' ], 'image' ) ; ?></b>)
-		</p>
-		<p>
-			<?php echo __('Images with wrong meta', 'litespeed-cache') ; ?>:
-			<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_xmeta_groups' ] ) ; ?></b>
-		</p>
+
+		<div class="litespeed-desc litespeed-left20">
+			<p>
+				<?php echo __('Images failed to fetch', 'litespeed-cache') ; ?>:
+				<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ] ) ; ?></b>
+				(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ], 'image' ) ; ?></b>)
+			</p>
+			<p>
+				<?php echo __('Images failed to optimize', 'litespeed-cache') ; ?>:
+				<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ] ) ; ?></b>
+				(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ], 'image' ) ; ?></b>)
+			</p>
+			<p>
+				<?php echo __('Images failed with other errors', 'litespeed-cache') ; ?>:
+				<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ] ) ; ?></b>
+				(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ], 'image' ) ; ?></b>)
+			</p>
+			<p>
+				<?php echo __('Image files missing', 'litespeed-cache') ; ?>:
+				<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ] ) ; ?></b>
+				(<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ], 'image' ) ; ?></b>)
+			</p>
+			<p>
+				<?php echo __('Images with wrong meta', 'litespeed-cache') ; ?>:
+				<b><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA ] ) ; ?></b>
+			</p>
+		</div>
+
 		<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>
 
 		<hr />
@@ -258,17 +272,29 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		</span>
 
 		<br />
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_DESTROY ) ; ?>" class="litespeed-btn-danger">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ) ; ?>" class="litespeed-btn-warning">
+			<?php echo __( 'Clean Up Unfinished Data', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ) ; ?>
+			<font class="litespeed-warning">
+				<?php echo __('NOTE', 'litespeed-cache'); ?>:
+				<?php echo sprintf( __( 'If there are unfinished requests in progress, the requests\' credits will NOT be recovered.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
+			</font>
+		</span>
+
+		<br />
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY ) ; ?>" class="litespeed-btn-danger">
 			<?php echo __( 'Destroy All Optimization Data!', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
 			<?php echo __( 'Remove all previous image optimization requests/results, revert completed optimizations, and delete all optimization files.', 'litespeed-cache' ) ; ?>
 			<font class="litespeed-warning">
 				<?php echo __('NOTE', 'litespeed-cache'); ?>:
-				<?php echo sprintf( __( 'If there are unfinished requests in progress, the requests\' credits will NOT be recovered.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
+				<?php echo __( 'This will also reset the credit level.', 'litespeed-cache' ) ; ?>
 			</font>
-
 		</span>
+
 	<?php endif ; ?>
 
 
