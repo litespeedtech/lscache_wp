@@ -171,7 +171,15 @@ class LiteSpeed_Cache_Admin_Report
 			}
 		}
 
-		$options[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ] = get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
+		$item_options = array(
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING,
+			LiteSpeed_Cache_Config::ITEM_SETTING_MODE,
+		) ;
+
+		foreach ( $item_options as $v ) {
+			$options[ $v ] = get_option( $v ) ;
+		}
+
 
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
 		return $report ;
