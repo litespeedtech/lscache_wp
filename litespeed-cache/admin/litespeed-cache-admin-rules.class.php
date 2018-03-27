@@ -535,8 +535,9 @@ class LiteSpeed_Cache_Admin_Rules
 		$rules = array(
 			self::LS_MODULE_REWRITE_START,
 				self::REWRITE_ON,
-				'RewriteCond ' . LSCWP_CONTENT_DIR . '/cache/$2/$1.$2 -f',
-				'RewriteRule ^min/(\w+)\.(css|js) ' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 [L]',
+				'RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} ^(.*)/min/(\w+)\.(css|js)$',
+				'RewriteCond %1/' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 -f',
+				'RewriteRule min/(\w+)\.(css|js) ' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 [L]',
 			self::LS_MODULE_END,
 		) ;
 		return $rules ;
