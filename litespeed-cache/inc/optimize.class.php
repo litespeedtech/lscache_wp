@@ -908,11 +908,6 @@ class LiteSpeed_Cache_Optimize
 			$src = array( $src ) ;
 		}
 
-		// Remove QS to reduce duplication
-		foreach ( $src as $k => $v ) {
-			$src[ $k ] = preg_replace( '/\?.*/', '', $v ) ;
-		}
-
 		$src = array_values( $src ) ;
 
 		$hash = md5( serialize( $src ) ) ;
