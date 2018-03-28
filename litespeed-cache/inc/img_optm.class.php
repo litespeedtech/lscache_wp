@@ -1090,6 +1090,26 @@ class LiteSpeed_Cache_Img_Optm
 
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
 
+		// Push to LiteSpeed IAPI server and recover credit
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED ) ;
+
+		// confirm link will be displayed by Admin_API automatically
+		if ( is_array( $json ) && $json ) {
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] cmd result', $json ) ;
+		}
+
+		// If failed to run request to IAPI
+		if ( ! is_array( $json ) || empty( $json[ 'success' ] ) ) {
+
+			// For other errors that Admin_API didn't take
+			if ( ! is_array( $json ) && $json !== null ) {
+				LiteSpeed_Cache_Admin_Display::error( $json ) ;
+
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] err ', $json ) ;
+			}
+			return ;
+		}
+
 		// Clear local queue
 		$_status_to_clear = array(
 			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
@@ -1099,13 +1119,6 @@ class LiteSpeed_Cache_Img_Optm
 		$q = "DELETE FROM $this->_table_img_optm WHERE optm_status IN ( " . implode( ',', array_fill( 0, count( $_status_to_clear ), '%s' ) ) . " )" ;
 		$wpdb->query( $wpdb->prepare( $q, $_status_to_clear ) ) ;
 
-		// Push to LiteSpeed IAPI server and recover credit
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED ) ;
-
-		// confirm link will be displayed by Admin_API automatically
-		if ( is_array( $json ) && $json ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] cmd result', $json ) ;
-		}
 
 		$msg = __( 'Destroy unfinished data successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
