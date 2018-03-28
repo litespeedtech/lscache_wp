@@ -277,10 +277,6 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		</a>
 		<span class="litespeed-desc">
 			<?php echo __( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ) ; ?>
-			<font class="litespeed-warning">
-				<?php echo __('NOTE', 'litespeed-cache'); ?>:
-				<?php echo sprintf( __( 'If there are unfinished requests in progress, the requests\' credits will NOT be recovered.', 'litespeed-cache' ), 'jQuery', __( 'JS Combine', 'litespeed-cache' ) ) ; ?>
-			</font>
 		</span>
 
 		<br />

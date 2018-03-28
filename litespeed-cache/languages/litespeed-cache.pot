@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.1.1.1\n"
+"Project-Id-Version: LiteSpeed Cache 2.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-03-21 18:49:13+00:00\n"
+"POT-Creation-Date: 2018-03-28 15:43:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,19 +12,19 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin/admin-api.class.php:238
+#: admin/admin-api.class.php:239
 msgid "IAPI Error %s"
 msgstr ""
 
-#: admin/admin-api.class.php:261
+#: admin/admin-api.class.php:262
 msgid "Reset IAPI key successfully."
 msgstr ""
 
-#: admin/admin-api.class.php:317
+#: admin/admin-api.class.php:318
 msgid "Failed to communicate with LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:325 admin/admin-api.class.php:333
+#: admin/admin-api.class.php:326 admin/admin-api.class.php:334
 msgid "Message from LiteSpeed image server"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:934
-#: admin/tpl/image_optimization.php:150 admin/tpl/image_optimization.php:211
+#: admin/tpl/image_optimization.php:150 admin/tpl/image_optimization.php:225
 #: admin/tpl/manage/manage_cdn.php:60
 #: admin/tpl/setting/settings_advanced.php:10
 #: admin/tpl/setting/settings_advanced.php:36
@@ -393,13 +393,13 @@ msgstr ""
 msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:879
+#: admin/litespeed-cache-admin-rules.class.php:902
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:981
+#: admin/litespeed-cache-admin-rules.class.php:1004
 msgid "File Saved."
 msgstr ""
 
@@ -655,7 +655,7 @@ msgstr ""
 msgid "Sitemap Generation Blacklist"
 msgstr ""
 
-#: admin/tpl/crawler.php:250 admin/tpl/edit_htaccess.php:69
+#: admin/tpl/crawler.php:250 admin/tpl/edit_htaccess.php:70
 msgid "Save"
 msgstr ""
 
@@ -677,38 +677,32 @@ msgstr ""
 msgid "Clear Log"
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:31
+#: admin/tpl/edit_htaccess.php:32
 msgid "LiteSpeed Cache Edit .htaccess"
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:41
+#: admin/tpl/edit_htaccess.php:42
 msgid "WARNING: This page is meant for advanced users."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:43
+#: admin/tpl/edit_htaccess.php:44
 msgid "Any changes made to the .htaccess file may break the site."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:44
+#: admin/tpl/edit_htaccess.php:45
 msgid "Please consult the host/server admin before making any changes."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:49
+#: admin/tpl/edit_htaccess.php:50
 msgid "File editing is disabled in configuration."
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:59
+#: admin/tpl/edit_htaccess.php:60
 msgid "Current %s Contents"
 msgstr ""
 
-#: admin/tpl/edit_htaccess.php:61
+#: admin/tpl/edit_htaccess.php:62
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
-msgstr ""
-
-#: admin/tpl/edit_htaccess.php:63
-msgid ""
-"These are added by the LS Cache plugin and may cause problems if they are "
-"changed."
 msgstr ""
 
 #: admin/tpl/esi_widget_edit.php:30 admin/tpl/setting/settings_esi.php:37
@@ -771,7 +765,7 @@ msgstr ""
 msgid "Images pulled"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:32
+#: admin/tpl/image_optimization.php:32 admin/tpl/image_optimization.php:200
 msgid "Images failed to fetch"
 msgstr ""
 
@@ -895,79 +889,91 @@ msgstr ""
 msgid "Images optimized and pulled"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:198
+#: admin/tpl/image_optimization.php:205
 msgid "Images failed to optimize"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:203
+#: admin/tpl/image_optimization.php:210
+msgid "Images failed with other errors"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:215
 msgid "Image files missing"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:208
+#: admin/tpl/image_optimization.php:220
 msgid "Images with wrong meta"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:216
+#: admin/tpl/image_optimization.php:230
 msgid "Revert Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:219
+#: admin/tpl/image_optimization.php:233
 msgid ""
 "Switch all images in the media library back to their original unoptimized "
 "versions."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:225
+#: admin/tpl/image_optimization.php:239
 msgid "Undo Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:228
+#: admin/tpl/image_optimization.php:242
 msgid "Revert all optimized images back to their original versions."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:234
+#: admin/tpl/image_optimization.php:248
 msgid "Re-do Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:237
+#: admin/tpl/image_optimization.php:251
 msgid "Switch back to using optimized images."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:242
+#: admin/tpl/image_optimization.php:256
 msgid "Results can be checked in <a %s>Media Library</a>."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:246
+#: admin/tpl/image_optimization.php:260
 msgid "Send New Thumbnail Requests"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:249
+#: admin/tpl/image_optimization.php:263
 msgid ""
 "Scan for any new unoptimized image thumbnail sizes and resend necessary "
 "image optimization requests."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:254
+#: admin/tpl/image_optimization.php:268
 msgid "Reset IAPI Key"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:257
+#: admin/tpl/image_optimization.php:271
 msgid ""
 "The current IAPI key must be reset after changing home URL or domain before "
 "making any further optimization requests."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:262
+#: admin/tpl/image_optimization.php:276
+msgid "Clean Up Unfinished Data"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:279
+msgid "Remove all previous unfinished image optimization requests."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:284
 msgid "Destroy All Optimization Data!"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:265
+#: admin/tpl/image_optimization.php:287
 msgid ""
 "Remove all previous image optimization requests/results, revert completed "
 "optimizations, and delete all optimization files."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:267
+#: admin/tpl/image_optimization.php:289
 #: admin/tpl/setting/settings_advanced.php:50
 #: admin/tpl/setting/settings_cdn.php:97
 #: admin/tpl/setting/settings_crawler.php:22
@@ -989,16 +995,8 @@ msgstr ""
 msgid "NOTE"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:268
-msgid ""
-"If there are unfinished requests in progress, the requests' credits will NOT "
-"be recovered."
-msgstr ""
-
-#: admin/tpl/image_optimization.php:268
-#: admin/tpl/setting/settings_optimize.php:87
-#: admin/tpl/setting/settings_optimize.php:163
-msgid "JS Combine"
+#: admin/tpl/image_optimization.php:290
+msgid "This will also reset the credit level."
 msgstr ""
 
 #: admin/tpl/import_export.php:9
@@ -1044,7 +1042,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.1.1.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.1.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:341
 #: includes/litespeed-cache-gui.class.php:341
@@ -1406,7 +1404,8 @@ msgstr ""
 msgid "This will Purge Pages only"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:19
+#: admin/tpl/manage/manage_purge.php:19 inc/gui.class.php:383
+#: includes/litespeed-cache-gui.class.php:383
 msgid "Purge CSS/JS Cache"
 msgstr ""
 
@@ -1446,72 +1445,64 @@ msgstr ""
 msgid "Purge the cache entries created by this plugin"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:52
-msgid "This will purge everything for all blogs."
-msgstr ""
-
-#: admin/tpl/manage/manage_purge.php:53 admin/tpl/manage/manage_purge.php:55
-msgid "Are you sure you want to purge all?"
-msgstr ""
-
-#: admin/tpl/manage/manage_purge.php:61 inc/gui.class.php:394
-#: includes/litespeed-cache-gui.class.php:394
+#: admin/tpl/manage/manage_purge.php:56 inc/gui.class.php:402
+#: includes/litespeed-cache-gui.class.php:402
 msgid "Object Cache Purge All"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:62
+#: admin/tpl/manage/manage_purge.php:57
 msgid "Purge all the object caches"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:71 inc/gui.class.php:404
-#: includes/litespeed-cache-gui.class.php:404
+#: admin/tpl/manage/manage_purge.php:66 inc/gui.class.php:412
+#: includes/litespeed-cache-gui.class.php:412
 msgid "Opcode Cache Purge All"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:72
+#: admin/tpl/manage/manage_purge.php:67
 msgid "Reset the entire opcode cache"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:81
+#: admin/tpl/manage/manage_purge.php:76
 msgid "Empty Entire Cache"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:82
+#: admin/tpl/manage/manage_purge.php:77
 msgid ""
 "Clears all cache entries related to this site, <i>including other web "
 "applications</i>."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:83
+#: admin/tpl/manage/manage_purge.php:78
 msgid "This action should only be used if things are cached incorrectly."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:88
+#: admin/tpl/manage/manage_purge.php:83
 msgid "This will clear EVERYTHING inside the cache."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:89
+#: admin/tpl/manage/manage_purge.php:84
 msgid "This may cause heavy load on the server."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:90
+#: admin/tpl/manage/manage_purge.php:85
 msgid "If only the WordPress site should be purged, use purge all."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:98 admin/tpl/manage.php:5
+#: admin/tpl/manage/manage_purge.php:93 admin/tpl/manage.php:5
 #: admin/tpl/network_settings.php:7 admin/tpl/settings.php:7
 msgid "Purge"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:129
+#: admin/tpl/manage/manage_purge.php:124
 msgid "Purge By..."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:131
+#: admin/tpl/manage/manage_purge.php:126
 msgid "Select below for \"Purge by\" options."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:132
+#: admin/tpl/manage/manage_purge.php:127
 #: admin/tpl/setting/settings_cache.php:73
 #: admin/tpl/setting/settings_cache.php:90
 #: admin/tpl/setting/settings_cdn.php:116
@@ -1534,44 +1525,44 @@ msgstr ""
 msgid "One per line."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:159
+#: admin/tpl/manage/manage_purge.php:154
 msgid "Category"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:165
+#: admin/tpl/manage/manage_purge.php:160
 msgid "Post ID"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:171
+#: admin/tpl/manage/manage_purge.php:166
 msgid "Tag"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:177
+#: admin/tpl/manage/manage_purge.php:172
 msgid "URL"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:183
+#: admin/tpl/manage/manage_purge.php:178
 msgid ""
 "Purge pages by category name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:188
+#: admin/tpl/manage/manage_purge.php:183
 msgid "Purge pages by post ID."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:192
+#: admin/tpl/manage/manage_purge.php:187
 msgid "Purge pages by tag name - e.g. %2$s should be used for the URL %1$s."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:197
+#: admin/tpl/manage/manage_purge.php:192
 msgid "Purge pages by relative or full URL."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:198
+#: admin/tpl/manage/manage_purge.php:193
 msgid "e.g. Use %s or %s."
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:211
+#: admin/tpl/manage/manage_purge.php:206
 msgid "Purge List"
 msgstr ""
 
@@ -3187,6 +3178,11 @@ msgstr ""
 msgid "Minify inline JS code."
 msgstr ""
 
+#: admin/tpl/setting/settings_optimize.php:87
+#: admin/tpl/setting/settings_optimize.php:163
+msgid "JS Combine"
+msgstr ""
+
 #: admin/tpl/setting/settings_optimize.php:91
 msgid "Combine JS files."
 msgstr ""
@@ -3682,72 +3678,78 @@ msgstr ""
 msgid "More settings"
 msgstr ""
 
-#: inc/gui.class.php:333 inc/gui.class.php:375
-#: includes/litespeed-cache-gui.class.php:333
-#: includes/litespeed-cache-gui.class.php:375
+#: inc/gui.class.php:333 includes/litespeed-cache-gui.class.php:333
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: inc/gui.class.php:384 includes/litespeed-cache-gui.class.php:384
+#: inc/gui.class.php:375 includes/litespeed-cache-gui.class.php:375
+msgid "LSCache Purge All"
+msgstr ""
+
+#: inc/gui.class.php:392 includes/litespeed-cache-gui.class.php:392
 msgid "Cloudflare Purge All"
 msgstr ""
 
-#: inc/img_optm.class.php:77
+#: inc/img_optm.class.php:80
 msgid "Failed to communicate with LiteSpeed IAPI server"
 msgstr ""
 
-#: inc/img_optm.class.php:86
+#: inc/img_optm.class.php:89
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:135 inc/img_optm.class.php:1177
-#: inc/img_optm.class.php:1242
+#: inc/img_optm.class.php:138 inc/img_optm.class.php:1233
+#: inc/img_optm.class.php:1298
 msgid "No image found."
 msgstr ""
 
-#: inc/img_optm.class.php:163
+#: inc/img_optm.class.php:166
 msgid "Number of images in one image group (%s) exceeds the credit (%s)"
 msgstr ""
 
-#: inc/img_optm.class.php:191
+#: inc/img_optm.class.php:194
 msgid "Requested successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:211
+#: inc/img_optm.class.php:214
 msgid "Optimized successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:268
+#: inc/img_optm.class.php:271
 msgid "Pushed %1$s to LiteSpeed optimization server, accepted %2$s."
 msgstr ""
 
-#: inc/img_optm.class.php:620
+#: inc/img_optm.class.php:623
 msgid "Failed to push to LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:628
+#: inc/img_optm.class.php:631
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:1280
+#: inc/img_optm.class.php:1123
+msgid "Destroy unfinished data successfully."
+msgstr ""
+
+#: inc/img_optm.class.php:1336
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1504
+#: inc/img_optm.class.php:1564
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1510
+#: inc/img_optm.class.php:1570
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1526
+#: inc/img_optm.class.php:1586
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1533
+#: inc/img_optm.class.php:1593
 msgid "Switched to optimized file successfully."
 msgstr ""
 
@@ -3895,24 +3897,24 @@ msgstr ""
 msgid "Stopped due to load over limit"
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:131
+#: lib/litespeed/litespeed-file.class.php:135
 msgid "Folder does not exist: %s"
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:140
+#: lib/litespeed/litespeed-file.class.php:144
 msgid "Can not create folder: %1$s. Error: %2$s"
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:148
+#: lib/litespeed/litespeed-file.class.php:152
 msgid "Folder is not writable: %s."
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:155
-#: lib/litespeed/litespeed-file.class.php:160
+#: lib/litespeed/litespeed-file.class.php:159
+#: lib/litespeed/litespeed-file.class.php:164
 msgid "File %s is not writable."
 msgstr ""
 
-#: lib/litespeed/litespeed-file.class.php:165
+#: lib/litespeed/litespeed-file.class.php:171
 msgid "Failed to write to %s."
 msgstr ""
 

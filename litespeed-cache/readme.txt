@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.1.1.1
+Stable tag: 2.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -253,9 +253,16 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.1.2 - Mar 28 2018 =
-* [IMPROVEMENT] Significantly improved CSS/JS minify loading process to reduce loading time. (@kokers)
-* [IMPROVEMENT] Set JS Minify result cacheable even it is empty. (@kokers)
-* [BUGFIX] Lazy load now can support webp. (@relle)
+* [NEW] <strong>Image Optimization</strong> Clean Up Unfinished Data feature.
+* [IAPI] IAPI v2.1.2.
+* [IMPROVEMENT] <strong>CSS/JS Minify</strong> Reduced loading time significantly by improving CSS/JS minify loading process. (@kokers)
+* [IMPROVEMENT] <strong>CSS/JS Minify</strong> Cache empty JS Minify content. (@kokers)
+* [IMPROVEMENT] <strong>Cache</strong> Cache 301 redirect when scheme/host are same.
+* [BUGFIX] <strong>Media</strong> Lazy load now can support webp. (@relle)
+* [UPDATE] <strong>CSS/JS Optimize</strong> Serve static files for CSS async & lazy load JS library.
+* [UPDATE] <strong>Report</strong> Appended Basic/Advanced View setting to Report.
+* [UPDATE] <strong>CSS/JS Minify</strong> Removed zero-width space from CSS/JS content.
+* [GUI] Added Purge CSS/JS Cache link in Admin.
 
 = 2.1.1.1 - Mar 21 2018 =
 * [BUGFIX] Fixed issue where activation failed to add rules to .htaccess.
