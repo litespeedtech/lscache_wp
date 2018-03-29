@@ -16,6 +16,7 @@ class LiteSpeed_Cache_Control
 	const BM_PRIVATE = 2 ;
 	const BM_SHARED = 4 ;
 	const BM_NO_VARY = 8 ;
+	const BM_FORCED_CACHEABLE = 32 ;
 	const BM_PUBLIC_FORCED = 64 ;
 	const BM_STALE = 128 ;
 	const BM_NOTCACHEABLE = 256 ;
@@ -78,7 +79,7 @@ class LiteSpeed_Cache_Control
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
 		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
 		if ( $cache_res ) {
-			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;
+			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
 			$pattern = '!' . LSCWP_CONTENT_FOLDER . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
 			if ( preg_match( $pattern, $uri ) ) {
 				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
@@ -245,6 +246,18 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
+	 * This will disable non-cacheable BM
+	 *
+	 * @access public
+	 * @since 2.2
+	 */
+	public static function force_cacheable()
+	{
+		self::$_control |= self::BM_FORCED_CACHEABLE ;
+		LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable' ) ;
+	}
+
+	/**
 	 * Switch to nocacheable status
 	 *
 	 * @access public
@@ -273,6 +286,17 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
+	 * Check current force cacheable bit set
+	 *
+	 * @access public
+	 * @since 	2.2
+	 */
+	public static function is_forced_cacheable()
+	{
+		return self::$_control & self::BM_FORCED_CACHEABLE ;
+	}
+
+	/**
 	 * Check current cacheable status
 	 *
 	 * @access public
@@ -281,11 +305,13 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function is_cacheable()
 	{
+		// If its forced cacheable
+		if ( self::is_forced_cacheable() ) {
+			return true ;
+		}
+
 		return ! self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE ;
 	}
-
-
-
 
 	/**
 	 * Set a custom TTL to use with the request if needed.
@@ -448,6 +474,16 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function finalize()
 	{
+		// Check if URI is forced cache
+		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FORCE_CACHE_URI ) ;
+		if ( ! empty( $excludes ) ) {
+			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], explode( "\n", $excludes ) ) ;
+			if ( $result ) {
+				self::force_cacheable() ;
+				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
+			}
+		}
+
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
@@ -562,65 +598,64 @@ class LiteSpeed_Cache_Control
 		// Check private cache URI setting
 		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_URI_PRIV ) ;
 		if ( ! empty( $excludes ) ) {
-			$uri = esc_url( $_SERVER[ 'REQUEST_URI' ] ) ;
-			$result = LiteSpeed_Cache_Utility::str_hit_array( $uri, explode( "\n", $excludes ) ) ;
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], explode( "\n", $excludes ) ) ;
 			if ( $result ) {
 				self::set_private( 'Admin cfg Private Cached URI: ' . $result ) ;
 			}
 		}
 
-		// Check if URI is excluded from cache
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ) ;
-		if ( ! empty( $excludes ) ) {
-			$uri = esc_url( $_SERVER[ 'REQUEST_URI' ] ) ;
-			$result =  LiteSpeed_Cache_Utility::str_hit_array( $uri, explode( "\n", $excludes ) ) ;
-			if ( $result ) {
-				return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
-			}
-		}
+		if ( ! self::is_forced_cacheable() ) {
 
-		// Check QS excluded setting
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ) ;
-		if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
-			return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
-		}
-
-		$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT) ;
-		if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
-			return $this->_no_cache_for('Admin configured Category Do not cache.') ;
-		}
-
-		$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG) ;
-		if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
-			return $this->_no_cache_for('Admin configured Tag Do not cache.') ;
-		}
-
-		$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES) ;
-		if ( ! empty($excludes) && ! empty($_COOKIE) ) {
-			$exclude_list = explode('|', $excludes) ;
-
-			foreach( $_COOKIE as $key=>$val) {
-				if ( in_array($key, $exclude_list) ) {
-					return $this->_no_cache_for('Admin configured Cookie Do not cache.') ;
+			// Check if URI is excluded from cache
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ) ;
+			if ( ! empty( $excludes ) ) {
+				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], explode( "\n", $excludes ) ) ;
+				if ( $result ) {
+					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
 				}
 			}
-		}
 
-		$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS) ;
-		if ( ! empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
-			$pattern = '/' . $excludes . '/' ;
-			$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']) ;
-			if ( $nummatches ) {
-					return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
+			// Check QS excluded setting
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ) ;
+			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
+				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
+			}
+
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT) ;
+			if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
+				return $this->_no_cache_for('Admin configured Category Do not cache.') ;
+			}
+
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG) ;
+			if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
+				return $this->_no_cache_for('Admin configured Tag Do not cache.') ;
+			}
+
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES) ;
+			if ( ! empty($excludes) && ! empty($_COOKIE) ) {
+				$exclude_list = explode('|', $excludes) ;
+
+				foreach( $_COOKIE as $key=>$val) {
+					if ( in_array($key, $exclude_list) ) {
+						return $this->_no_cache_for('Admin configured Cookie Do not cache.') ;
+					}
+				}
+			}
+
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS) ;
+			if ( ! empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
+				$pattern = '/' . $excludes . '/' ;
+				$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']) ;
+				if ( $nummatches ) {
+						return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
+				}
+			}
+
+			// Check if is exclude roles ( Need to set Vary too )
+			if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
+				return $this->_no_cache_for( 'Role Excludes setting ' . $result ) ;
 			}
 		}
-
-		// Check if is exclude roles ( Need to set Vary too )
-		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
-			return $this->_no_cache_for( 'Role Excludes setting ' . $result ) ;
-		}
-
-
 
 		return true ;
 	}

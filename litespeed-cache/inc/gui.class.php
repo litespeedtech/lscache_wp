@@ -288,6 +288,13 @@ class LiteSpeed_Cache_GUI
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
+			'id'		=> 'litespeed-single-forced_cache',
+			'title'		=> __( 'Forced cacheable', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'forced_cache', false, true ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-noncache',
 			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
 			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'nocache', false, true ),

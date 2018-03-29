@@ -126,6 +126,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_DATE = 'D' ;
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
+	const OPID_FORCE_CACHE_URI = 'forced_cache_uri' ;
 	const OPID_EXCLUDES_URI = 'excludes_uri' ;
 	const OPID_EXCLUDES_QS = 'excludes_qs' ;
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
@@ -419,6 +420,10 @@ class LiteSpeed_Cache_Config
 		}
 
 		switch ( $type ) {
+			case 'forced_cache' :
+				$id = self::OPID_FORCE_CACHE_URI ;
+				break ;
+
 			case 'private' :
 				$id = self::OPID_CACHE_URI_PRIV ;
 				break ;
@@ -622,6 +627,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
+			self::OPID_FORCE_CACHE_URI => '',
 			self::OPID_EXCLUDES_URI => '',
 			self::OPID_EXCLUDES_QS => '',
 			self::OPID_EXCLUDES_CAT => '',

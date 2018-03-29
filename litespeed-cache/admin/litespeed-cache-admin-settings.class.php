@@ -469,6 +469,11 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_exclude()
 	{
+		$id = LiteSpeed_Cache_Config::OPID_FORCE_CACHE_URI ;
+		if ( isset( $this->_input[ $id ] ) ) {
+			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
+		}
+
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;

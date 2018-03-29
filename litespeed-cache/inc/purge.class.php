@@ -785,7 +785,7 @@ class LiteSpeed_Cache_Purge
 				)) ) {
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			if ( empty($blogs) ) {
-				LiteSpeed_Cache_Log::debug('build_purge_headers: blog list is empty') ;
+				LiteSpeed_Cache_Log::debug('[Purge] build_purge_headers: blog list is empty') ;
 				return '' ;
 			}
 			$tags = array() ;

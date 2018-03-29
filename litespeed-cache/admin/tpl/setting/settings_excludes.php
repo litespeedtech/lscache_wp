@@ -3,13 +3,31 @@ if ( ! defined( 'WPINC' ) ) die ;
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Do Not Cache Settings', 'litespeed-cache'); ?>
+	<?php echo __('Exclude Settings', 'litespeed-cache'); ?>
 	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:excludes" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 </h3>
 
 <?php $this->cache_disabled_warning() ; ?>
 
 <table><tbody>
+	<tr>
+		<th><?php echo __( 'Force Cache URIs', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_FORCE_CACHE_URI ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __('Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache'); ?>
+				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
+				<br />
+				<i>
+					<?php echo sprintf( __( 'To match the beginning, add %s to the beginning of the item.', 'litespeed-cache' ), '<code>^</code>' ) ; ?>
+					<?php echo sprintf( __( 'To do an exact match, add %s to the end of the URL.', 'litespeed-cache' ), '<code>$</code>' ) ; ?>
+					<?php echo __('One per line.', 'litespeed-cache'); ?>
+				</i>
+			</div>
+		</td>
+	</tr>
+
 	<tr>
 		<th><?php echo __( 'Do Not Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
