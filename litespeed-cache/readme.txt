@@ -253,6 +253,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.2 - Apr 2 2018 =
+* [REFACTOR] <strong>Purge</strong> Refactored Purge class.
+* [IMPROVEMENT] <strong>Cache</strong> Mobile cache compatibility with webp vary.
+* [UPDATE] <strong>Purge</strong> Moved purge_all to Purge class from core class.
 
 = 2.1.2 - Mar 28 2018 =
 * [NEW FEATURE] <strong>Image Optimization</strong> Clean Up Unfinished Data feature.

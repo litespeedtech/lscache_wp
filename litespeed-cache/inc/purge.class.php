@@ -310,6 +310,17 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
+	 * Called from cfg::frontend_save() to purge front page
+	 *
+	 * @since    2.2
+	 * @access   public
+	 */
+	public static function purge_front()
+	{
+		self::get_instance()->_purge_front() ;
+	}
+
+	/**
 	 * Purge frontend url
 	 *
 	 * @since 1.3

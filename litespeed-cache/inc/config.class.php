@@ -446,7 +446,7 @@ class LiteSpeed_Cache_Config
 		$instance->update_options( array( $id => $list ) ) ;
 
 		// Purge this page & redirect
-		LiteSpeed_Cache_Purge::frontend_purge() ;
+		LiteSpeed_Cache_Purge::purge_front() ;
 		exit() ;
 	}
 
