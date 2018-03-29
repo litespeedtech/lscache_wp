@@ -275,7 +275,7 @@ class LiteSpeed_Cache_GUI
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-single',
 			'title'		=> __( 'Purge this page', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_PURGE, false, false, true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_FRONT, false, true ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -331,7 +331,7 @@ class LiteSpeed_Cache_GUI
 			$wp_admin_bar->add_menu( array(
 				'id'    => 'litespeed-menu',
 				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '""></span>',
-				'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL ),
 				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 			) ) ;
 		}
@@ -372,16 +372,24 @@ class LiteSpeed_Cache_GUI
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-all',
-			'title'		=> __( 'LSCache Purge All', 'litespeed-cache' ),
-			'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_ALL ),
+			'title'		=> __( 'Purge All', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL ),
+			'meta'		=> array( 'tabindex' => '0' ),
+		) );
+
+		$wp_admin_bar->add_menu( array(
+			'parent'	=> 'litespeed-menu',
+			'id'		=> 'litespeed-lscache-purge-all',
+			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-cssjs',
-			'title'		=> __( 'Purge CSS/JS Cache', 'litespeed-cache' ),
-			'href'  	=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE_CSSJS ),
+			'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'CSS/JS Cache', 'litespeed-cache' ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CSSJS ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
@@ -389,7 +397,7 @@ class LiteSpeed_Cache_GUI
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',
-				'title'		=> __( 'Cloudflare Purge All', 'litespeed-cache' ),
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Cloudflare', 'litespeed-cache' ),
 				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_PURGE_ALL ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
@@ -399,8 +407,8 @@ class LiteSpeed_Cache_GUI
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-object',
-				'title'		=> __( 'Object Cache Purge All', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_OBJECT_PURGE_ALL ),
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Object Cache', 'litespeed-cache' ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OBJECT ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
@@ -409,8 +417,8 @@ class LiteSpeed_Cache_GUI
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-opcache',
-				'title'		=> __( 'Opcode Cache Purge All', 'litespeed-cache' ),
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_OPCACHE_PURGE_ALL ),
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Opcode Cache', 'litespeed-cache' ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OPCACHE ),
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}

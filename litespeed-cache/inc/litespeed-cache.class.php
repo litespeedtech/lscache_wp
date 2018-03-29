@@ -29,12 +29,7 @@ class LiteSpeed_Cache
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
-	const ACTION_PURGE_ERRORS = 'PURGE_ERRORS' ;
-	const ACTION_PURGE_PAGES = 'PURGE_PAGES' ;
-	const ACTION_PURGE_CSSJS = 'PURGE_CSSJS' ;
 	const ACTION_PURGE_BY = 'PURGE_BY' ;
-	const ACTION_PURGE_FRONT = 'PURGE_FRONT' ;
-	const ACTION_PURGE_ALL = 'PURGE_ALL' ;
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE' ;
 	const ACTION_QS_PURGE = 'PURGE' ;
 	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE' ;
@@ -50,7 +45,6 @@ class LiteSpeed_Cache
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
 	const ACTION_CDN_QUICCLOUD = 'cdn_quiccloud' ;
 
-	const ACTION_FRONT_PURGE = 'front-purge' ;
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
@@ -264,30 +258,8 @@ class LiteSpeed_Cache
 				$msg = __( 'Crawler blacklist is saved.', 'litespeed-cache' ) ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
-				LiteSpeed_Cache_Purge::purge_front() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-				LiteSpeed_Cache_Purge::purge_pages() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
-				LiteSpeed_Cache_Purge::purge_cssjs() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
-				LiteSpeed_Cache_Purge::purge_errors() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
 				LiteSpeed_Cache_Purge::purge_all() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge all caches.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
@@ -296,11 +268,6 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;
 				break;
-
-			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
-				// redirect inside
-				LiteSpeed_Cache_Purge::frontend_purge() ;
-				break ;
 
 			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
 				// redirect inside
