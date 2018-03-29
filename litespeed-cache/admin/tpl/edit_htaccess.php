@@ -7,7 +7,6 @@ $htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
 
 // Check if there is `ExpiresDefault` in .htaccess
 if ( defined( 'LITESPEED_ON' ) ) {
-	$htaccess_con = Litespeed_File::read( LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ) ;
 	if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
 		$is_dismissed = get_option( self::DISMISS_MSG ) ;
 		if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {

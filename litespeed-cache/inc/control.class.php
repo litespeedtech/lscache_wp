@@ -507,7 +507,7 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 
-		if ( isset($_SERVER['LSCACHE_VARY_VALUE']) && $_SERVER['LSCACHE_VARY_VALUE'] === 'ismobile' ) {
+		if ( isset($_SERVER['LSCACHE_VARY_VALUE']) && strpos( $_SERVER['LSCACHE_VARY_VALUE'], 'ismobile' ) !== false ) {
 			if ( ! wp_is_mobile() && ! self::is_mobile() ) {
 				self::set_nocache( 'is not mobile' ) ;
 				return ;

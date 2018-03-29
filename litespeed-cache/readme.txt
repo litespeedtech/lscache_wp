@@ -252,8 +252,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.2 - Apr 2 2018 =
+
 = 2.1.2 - Mar 28 2018 =
-* [NEW] <strong>Image Optimization</strong> Clean Up Unfinished Data feature.
+* [NEW FEATURE] <strong>Image Optimization</strong> Clean Up Unfinished Data feature.
 * [IAPI] IAPI v2.1.2.
 * [IMPROVEMENT] <strong>CSS/JS Minify</strong> Reduced loading time significantly by improving CSS/JS minify loading process. (@kokers)
 * [IMPROVEMENT] <strong>CSS/JS Minify</strong> Cache empty JS Minify content. (@kokers)
@@ -269,16 +271,16 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [BUGFIX] Fixed issue where 304 header was blank on feed page refresh.
 
 = 2.1.1 - Mar 20 2018 =
-* [NEW] <strong>Browser Cache</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Browser Cache</strong> Unlocked for non-LiteSpeed users.
 * [IMPROVEMENT] <strong>Image Optimization</strong> Fixed issue where images with bad postmeta value continued to show in not-yet-requested queue.
 
 = 2.1 - Mar 15 2018 =
-* [NEW] <strong>Image Optimization</strong> Unlocked for non-LiteSpeed users.
-* [NEW] <strong>Object Cache</strong> Unlocked for non-LiteSpeed users.
-* [NEW] <strong>Crawler</strong> Unlocked for non-LiteSpeed users.
-* [NEW] <strong>Database Cleaner and Optimizer</strong> Unlocked for non-LiteSpeed users.
-* [NEW] <strong>Lazy Load Images</strong> Unlocked for non-LiteSpeed users.
-* [NEW] <strong>CSS/JS/HTML Minify/Combine Optimize</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Image Optimization</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Object Cache</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Crawler</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Database Cleaner and Optimizer</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>Lazy Load Images</strong> Unlocked for non-LiteSpeed users.
+* [NEW FEATURE] <strong>CSS/JS/HTML Minify/Combine Optimize</strong> Unlocked for non-LiteSpeed users.
 * [IAPI] IAPI v2.0.
 * [IAPI] Increased max rows prefetch when client has additional credit.
 * [IMPROVEMENT] <strong>CDN</strong> Multiple domains may now be used.
@@ -290,7 +292,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [INTEGRATION] CDN compatibility with WPML multiple domains. (@egemensarica)
 
 = 2.0 - Mar 7 2018 =
-* [NEW] <strong>Image Optimization</strong> Added level up guidance.
+* [NEW FEATURE] <strong>Image Optimization</strong> Added level up guidance.
 * [REFACTOR] <strong>Image Optimization</strong> Refactored Image Optimization class.
 * [IAPI] <strong>Image Optimization</strong> New European Image Optimization server (EU2).
 * [IMPROVEMENT] <strong>Image Optimization</strong> Manual pull action continues pulling until complete.
@@ -314,15 +316,15 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [Hotfix] Removed empty crawler when no role simulation is set.
 
 = 1.9.1 - February 20 2018 =
-* [NEW] Role Simulation crawler.
-* [NEW] WebP multiple crawler.
-* [NEW] HTTP/2 support for crawler.
+* [NEW FEATURE] Role Simulation crawler.
+* [NEW FEATURE] WebP multiple crawler.
+* [NEW FEATURE] HTTP/2 support for crawler.
 * [BUGFIX] Fixed a js bug with the auto complete mobile user agents field when cache mobile is turned on.
 * [BUGFIX] Fixed a constant undefined warning after activation.
 * [GUI] Sitemap generation settings are no longer hidden when using a custom sitemap.
 
 = 1.9 - February 12 2018 =
-* [NEW] Inline CSS/JS Minify.
+* [NEW FEATURE] Inline CSS/JS Minify.
 * [IMPROVEMENT] Removed Composer vendor to thin the plugin folder.
 * [UPDATE] Tweaked H2 to H1 in Admin headings for accessibility. (@steverep)
 * [GUI] Added Mobile User Agents to basic view.
