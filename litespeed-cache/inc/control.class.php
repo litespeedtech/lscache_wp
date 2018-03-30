@@ -239,10 +239,14 @@ class LiteSpeed_Cache_Control
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function set_cacheable()
+	public static function set_cacheable( $reason = false )
 	{
 		self::$_control |= self::BM_CACHEABLE ;
-		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control init on' ) ;
+
+		if ( $reason ) {
+			$reason = ' [reason] ' . $reason ;
+		}
+		LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control init on' . $reason ) ;
 	}
 
 	/**
@@ -251,10 +255,14 @@ class LiteSpeed_Cache_Control
 	 * @access public
 	 * @since 2.2
 	 */
-	public static function force_cacheable()
+	public static function force_cacheable( $reason = false )
 	{
 		self::$_control |= self::BM_FORCED_CACHEABLE ;
-		LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable' ) ;
+
+		if ( $reason ) {
+			$reason = ' [reason] ' . $reason ;
+		}
+		LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable' . $reason ) ;
 	}
 
 	/**
