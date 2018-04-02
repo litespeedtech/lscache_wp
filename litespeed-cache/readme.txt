@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.1.2
+Stable tag: 2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -253,9 +253,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.2 - Apr 2 2018 =
+* [NEW FEATURE] <strong>Debug</strong> Disable All Features setting in Debug tab. (@monarobase)
+* [NEW FEATURE] <strong>Cache</strong> Force Cacheable URIs setting in Excludes tab.
+* [NEW FEATURE] <strong>Purge</strong> Purge all LSCache and other caches in one link.
 * [REFACTOR] <strong>Purge</strong> Refactored Purge class.
-* [IMPROVEMENT] <strong>Cache</strong> Mobile cache compatibility with webp vary.
+* [BUGFIX] Query strings in DoNotCacheURI setting now works.
+* [BUGFIX] <strong>Cache</strong> Mobile cache compatibility with WebP vary. (@Shivam #987121)
 * [UPDATE] <strong>Purge</strong> Moved purge_all to Purge class from core class.
+* [API] Set cacheable/Set force cacheable. (@Jacob)
 
 = 2.1.2 - Mar 28 2018 =
 * [NEW FEATURE] <strong>Image Optimization</strong> Clean Up Unfinished Data feature.
@@ -263,7 +268,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [IMPROVEMENT] <strong>CSS/JS Minify</strong> Reduced loading time significantly by improving CSS/JS minify loading process. (@kokers)
 * [IMPROVEMENT] <strong>CSS/JS Minify</strong> Cache empty JS Minify content. (@kokers)
 * [IMPROVEMENT] <strong>Cache</strong> Cache 301 redirect when scheme/host are same.
-* [BUGFIX] <strong>Media</strong> Lazy load now can support webp. (@relle)
+* [BUGFIX] <strong>Media</strong> Lazy load now can support WebP. (@relle)
 * [UPDATE] <strong>CSS/JS Optimize</strong> Serve static files for CSS async & lazy load JS library.
 * [UPDATE] <strong>Report</strong> Appended Basic/Advanced View setting to Report.
 * [UPDATE] <strong>CSS/JS Minify</strong> Removed zero-width space from CSS/JS content.
