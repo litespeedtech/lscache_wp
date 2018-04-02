@@ -129,6 +129,7 @@ class LiteSpeed_Cache_Router
 			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
 			if ( ! $frontend ) {
+				LiteSpeed_Cache_Log::debug( '[Router] No ABSPATH, generating from home option' ) ;
 				$frontend = parse_url( get_option( 'home' ) ) ;
 				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
 				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend ;

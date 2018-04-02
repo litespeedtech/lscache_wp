@@ -348,6 +348,10 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::redirect() ;
 			return ;
 		}
+
+		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+			exit ;
+		}
 	}
 
 	/**
