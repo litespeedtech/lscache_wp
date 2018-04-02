@@ -93,6 +93,10 @@ class LiteSpeed_Cache
 			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
+		if ( self::config( LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ) ) {
+			define( 'LITESPEED_DISABLE_ALL', true ) ;
+		}
+
 		/**
 		 * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
 		 * @since  1.9.1 Moved up
@@ -114,7 +118,7 @@ class LiteSpeed_Cache
 		// Check if there is a purge request in queue
 		if ( $purge_queue = get_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ) {
 			@header( $purge_queue ) ;
-			LiteSpeed_Cache_Log::debug( '[Boot] Purge Queue found&sent: ' . $purge_queue ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
 			delete_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ;
 		}
 
@@ -164,6 +168,11 @@ class LiteSpeed_Cache
 		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
 		// 	return ;
 		// }
+
+		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
+			LiteSpeed_Cache_Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
+			return ;
+		}
 
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
@@ -407,7 +416,7 @@ class LiteSpeed_Cache
 	 */
 	public static function footer_hook()
 	{
-		LiteSpeed_Cache_Log::debug( '[Boot] Footer hook called' ) ;
+		LiteSpeed_Cache_Log::debug( '[Core] Footer hook called' ) ;
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			define( 'LITESPEED_FOOTER_CALLED', true ) ;
 		}
@@ -422,22 +431,22 @@ class LiteSpeed_Cache
 	private function _check_is_html( $buffer = null )
 	{
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Boot] CHK html bypass: miss footer const' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
 			return ;
 		}
 
 		if ( defined( 'DOING_AJAX' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Boot] CHK html bypass: doing ajax' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing ajax' ) ;
 			return ;
 		}
 
 		if ( defined( 'DOING_CRON' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Boot] CHK html bypass: doing cron' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing cron' ) ;
 			return ;
 		}
 
 		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-			LiteSpeed_Cache_Log::debug2( '[Boot] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
 			return ;
 		}
 
@@ -456,11 +465,11 @@ class LiteSpeed_Cache
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
 
 		if ( ! $is_html ) {
-			LiteSpeed_Cache_Log::debug( '[Boot] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Boot] Footer check passed' ) ;
+		LiteSpeed_Cache_Log::debug( '[Core] Footer check passed' ) ;
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			define( 'LITESPEED_IS_HTML', true ) ;
@@ -548,7 +557,7 @@ class LiteSpeed_Cache
 		$running_info_showing = ( defined( 'LITESPEED_IS_HTML' ) && LITESPEED_IS_HTML ) || ( defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
-			LiteSpeed_Cache_Log::debug( '[Boot] ESI silence' ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
 		}
 
 		if ( $running_info_showing ) {

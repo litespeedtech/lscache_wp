@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public function validate_plugin_settings( $input )
 	{
-		LiteSpeed_Cache_Log::debug( 'Settings: validate_plugin_settings called' ) ;
+		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
 		$this->_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
 		if ( LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all() ) {
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$new_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::OPID_ESI_ENABLE ] ;
 
 			if ( $orig_esi_enabled !== $new_esi_enabled ) {
-				LiteSpeed_Cache_Purge::purge_all() ;
+				LiteSpeed_Cache_Purge::purge_all( 'ESI changed' ) ;
 			}
 		}
 
@@ -194,7 +194,7 @@ class LiteSpeed_Cache_Admin_Settings
 				}
 			}
 			else {
-				LiteSpeed_Cache_Purge::purge_all() ;
+				LiteSpeed_Cache_Purge::purge_all( 'Network enable changed' ) ;
 			}
 		}
 
@@ -202,7 +202,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$orig_primary = $options[ $id ] ;
 		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		if ( $orig_primary != $options[ $id ] ) {
-			LiteSpeed_Cache_Purge::purge_all() ;
+			LiteSpeed_Cache_Purge::purge_all( 'Network use_primary changed' ) ;
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
@@ -295,20 +295,22 @@ class LiteSpeed_Cache_Admin_Settings
 		/**
 		 * Check if object cache file existing or not
 		 */
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ;
-		if ( $new_options[ $id ] ) {
-			$all_options = array_merge( $new_options, $item_options ) ;
-			LiteSpeed_Cache_Log::debug( 'Settings: Update .object_cache.ini and flush object cache' ) ;
-			LiteSpeed_Cache_Object::get_instance()->update_file( true, $all_options ) ;
-			/**
-			 * Clear object cache
-			 */
-			LiteSpeed_Cache_Object::get_instance()->reconnect( $all_options ) ;
-		}
-		else {
-			if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
-				LiteSpeed_Cache_Log::debug( 'Settings: Remove .object_cache.ini' ) ;
-				LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
+		if ( ! defined( 'LITESPEED_DISABLE_OBJECT' ) ) {
+			$id = LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ;
+			if ( $new_options[ $id ] ) {
+				$all_options = array_merge( $new_options, $item_options ) ;
+				LiteSpeed_Cache_Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
+				LiteSpeed_Cache_Object::get_instance()->update_file( true, $all_options ) ;
+				/**
+				 * Clear object cache
+				 */
+				LiteSpeed_Cache_Object::get_instance()->reconnect( $all_options ) ;
+			}
+			else {
+				if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+					LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini' ) ;
+					LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
+				}
 			}
 		}
 
@@ -336,7 +338,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Purge when disabled
 		if ( ! $enabled ) {
-			LiteSpeed_Cache_Purge::purge_all() ;
+			LiteSpeed_Cache_Purge::purge_all( 'Not enabled' ) ;
 			! defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
 		}
 		else {
@@ -665,7 +667,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 			else {
 				$this->_options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ] = '' ;
-				LiteSpeed_Cache_Log::debug( 'Settings: Get zone failed, clean zone' ) ;
+				LiteSpeed_Cache_Log::debug( '[Settings] Get zone failed, clean zone' ) ;
 			}
 		}
 	}
@@ -805,16 +807,16 @@ class LiteSpeed_Cache_Admin_Settings
 		// 	if ( ! empty( $_FILES[ 'litespeed-file-favicon_' . $v ][ 'name' ] ) ) {
 		// 		$file = wp_handle_upload( $_FILES[ 'litespeed-file-favicon_' . $v ], array( 'action' => 'update' ) ) ;
 		// 		if ( ! empty( $file[ 'url' ] ) ) {
-		// 			LiteSpeed_Cache_Log::debug( 'Settings: Updated favicon [' . $v . '] ' . $file[ 'url' ] ) ;
+		// 			LiteSpeed_Cache_Log::debug( '[Settings] Updated favicon [' . $v . '] ' . $file[ 'url' ] ) ;
 
 		// 			$new_favicons[ $v ] = $file[ 'url' ] ;
 
 		// 		}
 		// 		elseif ( isset( $file[ 'error' ] ) ) {
-		// 			LiteSpeed_Cache_Log::debug( 'Settings: Failed to update favicon: [' . $v . '] ' . $file[ 'error' ] ) ;
+		// 			LiteSpeed_Cache_Log::debug( '[Settings] Failed to update favicon: [' . $v . '] ' . $file[ 'error' ] ) ;
 		// 		}
 		// 		else {
-		// 			LiteSpeed_Cache_Log::debug( 'Settings: Failed to update favicon: Unkown err [' . $v . ']' ) ;
+		// 			LiteSpeed_Cache_Log::debug( '[Settings] Failed to update favicon: Unkown err [' . $v . ']' ) ;
 		// 		}
 		// 	}
 		// }
@@ -868,6 +870,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$ids = array(
+			LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL,
 			LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
 			LiteSpeed_Cache_Config::OPID_HEARTBEAT,
 			LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE,
@@ -876,6 +879,13 @@ class LiteSpeed_Cache_Admin_Settings
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+		}
+
+		// Remove Object Cache
+		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ] ) {
+			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
+			LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
+			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
 		}
 
 		// Filters ignored
@@ -1171,13 +1181,13 @@ class LiteSpeed_Cache_Admin_Settings
 		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] = $ttl ;
 
 		if ( ! $current || $esi != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ) {
-			LiteSpeed_Cache_Purge::purge_all() ;
+			LiteSpeed_Cache_Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
 		}
 		elseif ( $ttl != 0 && $ttl != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ) {
 			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_WIDGET . $widget->id ) ;
 		}
 
-		LiteSpeed_Cache_Purge::purge_all() ;
+		LiteSpeed_Cache_Purge::purge_all( 'Wdiget saved' ) ;
 		return $instance ;
 	}
 

@@ -93,9 +93,9 @@ class LiteSpeed_Cache_Purge
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function purge_all()
+	public static function purge_all( $reason = false )
 	{
-		self::get_instance()->_purge_all() ;
+		self::get_instance()->_purge_all( $reason ) ;
 	}
 
 	/**
@@ -104,12 +104,17 @@ class LiteSpeed_Cache_Purge
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _purge_all()
+	private function _purge_all( $reason = false )
 	{
-		$this->_purge_all_lscache() ;
-		$this->_purge_all_cssjs() ;
+		$this->_purge_all_lscache( true ) ;
+		$this->_purge_all_cssjs( true ) ;
 		$this->_purge_all_object( true ) ;
 		$this->_purge_all_opcache( true ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Purge] Purge all' . ( $reason ? ' [Reason] ' . $reason : '' ), 3 ) ;
+
+		$msg = __( 'Purge all caches successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -121,7 +126,7 @@ class LiteSpeed_Cache_Purge
 	 * @since 2.2
 	 * @access public
 	 */
-	private function _purge_all_lscache()
+	private function _purge_all_lscache( $silence = false )
 	{
 		$this->_add( '*' ) ;
 
@@ -130,8 +135,10 @@ class LiteSpeed_Cache_Purge
 			LiteSpeed_Cache_Crawler::get_instance()->reset_pos() ;
 		}
 
-		$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		if ( ! $silence ) {
+			$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
 	}
 
 	/**
@@ -140,16 +147,17 @@ class LiteSpeed_Cache_Purge
 	 * @since    1.2.2
 	 * @access   private
 	 */
-	private function _purge_all_cssjs()
+	private function _purge_all_cssjs( $silence = false )
 	{
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
 
 		// For non-ls users
 		LiteSpeed_Cache_Optimize::get_instance()->rm_cache_folder() ;
 
-		$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
-
+		if ( ! $silence ) {
+			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
 	}
 
 	/**
@@ -158,12 +166,12 @@ class LiteSpeed_Cache_Purge
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _purge_all_opcache( $silence_err = false )
+	private function _purge_all_opcache( $silence = false )
 	{
 		if ( ! LiteSpeed_Cache_Router::opcache_enabled() ) {
 			LiteSpeed_Cache_Log::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' ) ;
 
-			if ( ! $silence_err ) {
+			if ( ! $silence ) {
 				$msg = __( 'Opcode cache is not enabled.', 'litespeed-cache' ) ;
 				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			}
@@ -175,8 +183,10 @@ class LiteSpeed_Cache_Purge
 		opcache_reset() ;
 		LiteSpeed_Cache_Log::debug( '[Purge] Reset opcode cache' ) ;
 
-		$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		if ( ! $silence ) {
+			$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
 
 		return true ;
 	}
@@ -187,12 +197,12 @@ class LiteSpeed_Cache_Purge
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _purge_all_object( $silence_err = false )
+	private function _purge_all_object( $silence = false )
 	{
 		if ( ! defined( 'LSCWP_OBJECT_CACHE' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Purge] Failed to flush object cache due to object cache not enabled' ) ;
 
-			if ( ! $silence_err ) {
+			if ( ! $silence ) {
 				$msg = __( 'Object cache is not enabled.', 'litespeed-cache' ) ;
 				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			}
@@ -202,8 +212,10 @@ class LiteSpeed_Cache_Purge
 		LiteSpeed_Cache_Object::get_instance()->flush() ;
 		LiteSpeed_Cache_Log::debug( '[Purge] Flushed object cache' ) ;
 
-		$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		if ( ! $silence ) {
+			$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
 
 		return true ;
 	}

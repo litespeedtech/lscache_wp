@@ -51,7 +51,7 @@ class LiteSpeed_Cache_Object
 	 */
 	private function __construct( $cfg = false )
 	{
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: init' ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] init' ) ;
 
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
 
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Object
 			}
 			$this->_cfg_enabled = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ] && class_exists( $this->_oc_driver ) && $this->_cfg_host ;
 
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: init with cfg result : ', $this->_cfg_enabled ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] init with cfg result : ', $this->_cfg_enabled ) ;
 		}
 		elseif ( class_exists( 'LiteSpeed_Cache' ) ) {
 			$this->_cfg_method = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ) ? true : false ;
@@ -174,14 +174,14 @@ class LiteSpeed_Cache_Object
 
 			// Update cls file
 			if ( ! file_exists( $wp_file ) || md5_file( $wp_file ) !== md5_file( $ori_file ) ) {
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: copying object-cache.php file to ' . $wp_file ) ;
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $wp_file ) ;
 				copy( $ori_file, $wp_file ) ;
 			}
 		}
 		else {
 			// To delete file
 			if ( file_exists( $wp_file ) ) {
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: removing ' . $wp_file ) ;
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $wp_file ) ;
 				unlink( $wp_file ) ;
 			}
 			file_exists( $this->_oc_data_file ) && unlink( $this->_oc_data_file ) ;
@@ -223,11 +223,11 @@ class LiteSpeed_Cache_Object
 	 */
 	public function reconnect( $cfg )
 	{
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Reconnecting' ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Reconnecting' ) ;
 		// error_log( 'Object: reconnect !' ) ;
 		if ( isset( $this->_conn ) ) {
 			// error_log( 'Object: Quiting existing connection!' ) ;
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Quiting existing connection' ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Quiting existing connection' ) ;
 			$this->flush() ;
 			$this->_conn = null ;
 			self::$_instance = null ;
@@ -258,7 +258,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] connecting to ' . $this->_cfg_host . ':' . $this->_cfg_port ) ;
 
 		$failed = false ;
 		/**
@@ -268,7 +268,7 @@ class LiteSpeed_Cache_Object
 		 * @see https://github.com/phpredis/phpredis/#example-1
 		 */
 		if ( $this->_oc_driver == 'Redis' ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Init ' . $this->_oc_driver . ' connection' ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
 
 			set_error_handler( 'litespeed_exception_handler' ) ;
 			try {
@@ -321,18 +321,18 @@ class LiteSpeed_Cache_Object
 		 * Connect to Memcached
 		 */
 		else {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Init ' . $this->_oc_driver . ' connection' ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
 			if ( $this->_cfg_persistent ) {
 				$this->_conn = new Memcached( $this->_get_mem_id() ) ;
 
 				// Check memcached persistent connection
 				if ( $this->_validate_mem_server() ) {
 					// error_log( 'Object: _validate_mem_server' ) ;
-					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Got persistent ' . $this->_oc_driver . ' connection' ) ;
+					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Got persistent ' . $this->_oc_driver . ' connection' ) ;
 					return true ;
 				}
 
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: No persistent ' . $this->_oc_driver . ' server list!' ) ;
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] No persistent ' . $this->_oc_driver . ' server list!' ) ;
 			}
 			else {
 				// error_log( 'Object: new memcached!' ) ;
@@ -357,14 +357,14 @@ class LiteSpeed_Cache_Object
 
 		// If failed to connect
 		if ( $failed ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: Failed to connect ' . $this->_oc_driver . ' server!' ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Failed to connect ' . $this->_oc_driver . ' server!' ) ;
 			$this->_conn = null ;
 			$this->_cfg_enabled = false ;
 			// error_log( 'Object: false!' ) ;
 			return false ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: Connected' ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] Connected' ) ;
 
 		return true ;
 	}
@@ -430,7 +430,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: get ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] get ' . $key ) ;
 
 		$res = $this->_conn->get( $key ) ;
 
@@ -457,7 +457,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: set ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] set ' . $key ) ;
 
 		// error_log( 'Object: set ' . $key ) ;
 
@@ -503,7 +503,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( 'Object: delete ' . $key ) ;
+		// defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] delete ' . $key ) ;
 
 		$res = $this->_conn->delete( $key ) ;
 
@@ -519,7 +519,7 @@ class LiteSpeed_Cache_Object
 	public function flush()
 	{
 		if ( ! $this->_cfg_enabled ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: bypass flushing' ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] bypass flushing' ) ;
 			return null ;
 		}
 
@@ -527,7 +527,7 @@ class LiteSpeed_Cache_Object
 			return null ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Object: flush!' ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] flush!' ) ;
 
 		if ( $this->_oc_driver == 'Redis' ) {
 			$res = $this->_conn->flushDb() ;

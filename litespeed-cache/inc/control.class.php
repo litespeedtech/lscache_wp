@@ -243,6 +243,10 @@ class LiteSpeed_Cache_Control
 	{
 		self::$_control |= self::BM_CACHEABLE ;
 
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
 		if ( $reason ) {
 			$reason = ' [reason] ' . $reason ;
 		}
