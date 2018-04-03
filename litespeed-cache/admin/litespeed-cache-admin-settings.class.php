@@ -885,6 +885,8 @@ class LiteSpeed_Cache_Admin_Settings
 		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ] ) {
 			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
 			LiteSpeed_Cache_Object::get_instance()->del_file() ;
+
+			// Set a const to avoid regenerating again
 			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
 		}
 

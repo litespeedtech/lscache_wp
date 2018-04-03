@@ -111,7 +111,15 @@ class LiteSpeed_Cache_Purge
 		$this->_purge_all_object( true ) ;
 		$this->_purge_all_opcache( true ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Purge] Purge all' . ( $reason ? ' [Reason] ' . $reason : '' ), 3 ) ;
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
+		if ( $reason ) {
+			$reason = "( $reason )" ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Purge] Purge all ' . $reason, 3 ) ;
 
 		$msg = __( 'Purge all caches successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;

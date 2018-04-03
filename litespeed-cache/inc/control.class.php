@@ -156,6 +156,11 @@ class LiteSpeed_Cache_Control
 		}
 		self::$_control |= self::BM_SHARED ;
 		self::set_private() ;
+
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
@@ -186,6 +191,11 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_PUBLIC_FORCED ;
+
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
@@ -216,6 +226,11 @@ class LiteSpeed_Cache_Control
 			return ;
 		}
 		self::$_control |= self::BM_PRIVATE ;
+
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
@@ -263,6 +278,10 @@ class LiteSpeed_Cache_Control
 	{
 		self::$_control |= self::BM_FORCED_CACHEABLE ;
 
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
 		if ( $reason ) {
 			$reason = ' [reason] ' . $reason ;
 		}
@@ -279,6 +298,11 @@ class LiteSpeed_Cache_Control
 	public static function set_nocache( $reason = false )
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
+
+		if ( ! is_string( $reason ) ) {
+			$reason = false ;
+		}
+
 		if ( $reason ) {
 			$reason = "( $reason )" ;
 		}
