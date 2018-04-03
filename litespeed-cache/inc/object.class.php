@@ -25,8 +25,6 @@ class LiteSpeed_Cache_Object
 	private static $_instance ;
 
 	private $_oc_data_file ;
-	private $_oc_wp_file ;
-	private $_oc_ori_file ;
 	private $_conn ;
 	private $_cfg_enabled ;
 	private $_cfg_method ;
@@ -56,8 +54,6 @@ class LiteSpeed_Cache_Object
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] init' ) ;
 
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
-		$this->_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
-		$this->_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
 
 		if ( $cfg ) {
 			$this->_cfg_method = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ] ? true : false ;
@@ -171,10 +167,14 @@ class LiteSpeed_Cache_Object
 			;
 		Litespeed_File::save( $this->_oc_data_file, $data ) ;
 
+		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used
+		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
+		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
+
 		// Update cls file
-		if ( ! file_exists( $this->_oc_wp_file ) || md5_file( $this->_oc_wp_file ) !== md5_file( $this->_oc_ori_file ) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $this->_oc_wp_file ) ;
-			copy( $this->_oc_ori_file, $this->_oc_wp_file ) ;
+		if ( ! file_exists( $_oc_wp_file ) || md5_file( $_oc_wp_file ) !== md5_file( $_oc_ori_file ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $_oc_wp_file ) ;
+			copy( $_oc_ori_file, $_oc_wp_file ) ;
 		}
 	}
 
@@ -186,10 +186,14 @@ class LiteSpeed_Cache_Object
 	 */
 	public function del_file()
 	{
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $this->_oc_wp_file ) ;
+		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used
+		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
+		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
 
-		if ( file_exists( $this->_oc_wp_file ) && md5_file( $this->_oc_wp_file ) === md5_file( $this->_oc_ori_file ) ) {
-			unlink( $this->_oc_wp_file ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $_oc_wp_file ) ;
+
+		if ( file_exists( $_oc_wp_file ) && md5_file( $_oc_wp_file ) === md5_file( $_oc_ori_file ) ) {
+			unlink( $_oc_wp_file ) ;
 		}
 
 		file_exists( $this->_oc_data_file ) && unlink( $this->_oc_data_file ) ;

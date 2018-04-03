@@ -253,9 +253,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.2.0.1 - Apr 3 2018 =
-* [HOTFIX] Object parameter will no longer cause warnings to be logged for Purge and Cache classes.
+* [HOTFIX] Object parameter will no longer cause warnings to be logged for Purge and Cache classes. (@kelltech @khrifat)
 * [UPDATE] Removed duplicated del_file func from Object Cache class.
-* [BUGFIX] CLI now can get success result.
+* [BUGFIX] CLI no longer shows 400 error upon successful result.
 
 = 2.2 - Apr 2 2018 =
 * [NEW FEATURE] <strong>Debug</strong> Disable All Features setting in Debug tab. (@monarobase)
