@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.4
-Stable tag: 2.2
+Stable tag: 2.2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -251,6 +251,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.0.1 - Apr 3 2018 =
+* [HOTFIX] Object parameter will no longer cause warnings to be logged for Purge and Cache classes.
+* [UPDATE] Removed duplicated del_file func from Object Cache class.
+* [BUGFIX] CLI now can get success result.
 
 = 2.2 - Apr 2 2018 =
 * [NEW FEATURE] <strong>Debug</strong> Disable All Features setting in Debug tab. (@monarobase)
