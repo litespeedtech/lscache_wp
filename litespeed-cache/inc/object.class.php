@@ -25,6 +25,8 @@ class LiteSpeed_Cache_Object
 	private static $_instance ;
 
 	private $_oc_data_file ;
+	private $_oc_wp_file ;
+	private $_oc_ori_file ;
 	private $_conn ;
 	private $_cfg_enabled ;
 	private $_cfg_method ;
@@ -54,6 +56,8 @@ class LiteSpeed_Cache_Object
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] init' ) ;
 
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
+		$this->_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
+		$this->_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
 
 		if ( $cfg ) {
 			$this->_cfg_method = $cfg[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ] ? true : false ;
@@ -148,43 +152,29 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8
 	 * @access public
 	 */
-	public function update_file( $keep, $options = false )
+	public function update_file( $options )
 	{
-		$wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
-		$ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
+		// Update data file
+		$data = "[object_cache]"
+			. "\nmethod = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ]
+			. "\nhost = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ]
+			. "\nport = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
+			. "\nlife = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ]
+			. "\nuser = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ] . "'"
+			. "\npswd = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] . "'"
+			. "\ndb = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ]
+			. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ? 1 : 0 )
+			. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ? 1 : 0 )
+			. "\ncache_transients = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ] ? 1 : 0 )
+			. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) )
+			. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) )
+			;
+		Litespeed_File::save( $this->_oc_data_file, $data ) ;
 
-		// To keep file
-		if ( $keep ) {
-			// Update data file
-			$data = "[object_cache]"
-				. "\nmethod = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ]
-				. "\nhost = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ]
-				. "\nport = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
-				. "\nlife = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_LIFE ]
-				. "\nuser = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_USER ] . "'"
-				. "\npswd = '" . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD ] . "'"
-				. "\ndb = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_DB_ID ]
-				. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PERSISTENT ] ? 1 : 0 )
-				. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ? 1 : 0 )
-				. "\ncache_transients = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ] ? 1 : 0 )
-				. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) )
-				. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) )
-				;
-			Litespeed_File::save( $this->_oc_data_file, $data ) ;
-
-			// Update cls file
-			if ( ! file_exists( $wp_file ) || md5_file( $wp_file ) !== md5_file( $ori_file ) ) {
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $wp_file ) ;
-				copy( $ori_file, $wp_file ) ;
-			}
-		}
-		else {
-			// To delete file
-			if ( file_exists( $wp_file ) ) {
-				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $wp_file ) ;
-				unlink( $wp_file ) ;
-			}
-			file_exists( $this->_oc_data_file ) && unlink( $this->_oc_data_file ) ;
+		// Update cls file
+		if ( ! file_exists( $this->_oc_wp_file ) || md5_file( $this->_oc_wp_file ) !== md5_file( $this->_oc_ori_file ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $this->_oc_wp_file ) ;
+			copy( $this->_oc_ori_file, $this->_oc_wp_file ) ;
 		}
 	}
 
@@ -196,11 +186,10 @@ class LiteSpeed_Cache_Object
 	 */
 	public function del_file()
 	{
-		$wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
-		$ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $this->_oc_wp_file ) ;
 
-		if ( file_exists( $wp_file ) && md5_file( $wp_file ) === md5_file( $ori_file ) ) {
-			unlink( $wp_file ) ;
+		if ( file_exists( $this->_oc_wp_file ) && md5_file( $this->_oc_wp_file ) === md5_file( $this->_oc_ori_file ) ) {
+			unlink( $this->_oc_wp_file ) ;
 		}
 
 		file_exists( $this->_oc_data_file ) && unlink( $this->_oc_data_file ) ;

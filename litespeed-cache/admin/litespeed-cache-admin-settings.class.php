@@ -300,7 +300,7 @@ class LiteSpeed_Cache_Admin_Settings
 			if ( $new_options[ $id ] ) {
 				$all_options = array_merge( $new_options, $item_options ) ;
 				LiteSpeed_Cache_Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
-				LiteSpeed_Cache_Object::get_instance()->update_file( true, $all_options ) ;
+				LiteSpeed_Cache_Object::get_instance()->update_file( $all_options ) ;
 				/**
 				 * Clear object cache
 				 */
@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Admin_Settings
 			else {
 				if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 					LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini' ) ;
-					LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
+					LiteSpeed_Cache_Object::get_instance()->del_file() ;
 				}
 			}
 		}
@@ -884,7 +884,7 @@ class LiteSpeed_Cache_Admin_Settings
 		// Remove Object Cache
 		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ] ) {
 			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
-			LiteSpeed_Cache_Object::get_instance()->update_file( false ) ;
+			LiteSpeed_Cache_Object::get_instance()->del_file() ;
 			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
 		}
 
