@@ -6,75 +6,75 @@ $_panels = array(
 	array(
 		'title'	=> __( 'Purge Front Page', 'litespeed-cache' ),
 		'desc'	=> __( 'This will Purge Front Page only', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_FRONT,
 		'icon'	=> 'purge-front',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_FRONTPAGE,
 	),
 	array(
 		'title'	=> __( 'Purge Pages', 'litespeed-cache' ),
 		'desc'	=> __( 'This will Purge Pages only', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_PAGES,
 		'icon'	=> 'purge-pages',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_PAGES,
 	),
 	array(
-		'title'	=> __( 'Purge CSS/JS Cache', 'litespeed-cache' ),
-		'desc'	=> __( 'This will purge all minified/combined CSS/JS entries only', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_CSSJS,
-		'icon'	=> 'purge-cssjs',
-	),
-	array(
-		'title'	=> __( 'Purge 403 Error', 'litespeed-cache' ),
-		'desc'	=> __( 'Purge error pages, including 403 pages', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,
+		'title'	=> sprintf( __( 'Purge %s Error', 'litespeed-cache' ), '403' ),
+		'desc'	=> sprintf( __( 'Purge error pages, including %s pages', 'litespeed-cache' ), '403' ),
 		'icon'	=> 'purge-403',
-		'append_url'	=> '403',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ERROR . '403',
 	),
 	array(
-		'title'	=> __( 'Purge 404 Error', 'litespeed-cache' ),
-		'desc'	=> __( 'Purge error pages, including 404 pages', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,
+		'title'	=> sprintf( __( 'Purge %s Error', 'litespeed-cache' ), '404' ),
+		'desc'	=> sprintf( __( 'Purge error pages, including %s pages', 'litespeed-cache' ), '404' ),
 		'icon'	=> 'purge-404',
-		'append_url'	=> '404',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ERROR . '404',
 	),
 	array(
+		'title'	=> sprintf( __( 'Purge %s Error', 'litespeed-cache' ), '403' ),
+		'desc'	=> sprintf( __( 'Purge error pages, including %s pages', 'litespeed-cache' ), '403' ),
 		'title'	=> __( 'Purge 500 Error', 'litespeed-cache' ),
 		'desc'	=> __( 'Purge error pages, including 500 pages', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ERRORS,
 		'icon'	=> 'purge-500',
-		'append_url'	=> '500',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ERROR . '500',
 	),
 	array(
-		'title'	=> __( 'Purge All', 'litespeed-cache' ),
-		'desc'	=> __( 'Purge the cache entries created by this plugin', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_ALL,
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - LSCache',
+		'desc'	=> __( 'Purge the litespeed cache entries created by this plugin', 'litespeed-cache' ),
 		'icon'	=> 'purge-all',
-		'title_cls'	=> 'litespeed-warning',
-		'cfm'	=>  is_multisite() && is_network_admin() ?
-					esc_html( __( 'This will purge everything for all blogs.', 'litespeed-cache' ) ) . ' ' .
-					esc_html( __( 'Are you sure you want to purge all?', 'litespeed-cache' ) )
-					:
-					esc_html( __( 'Are you sure you want to purge all?', 'litespeed-cache' ) )
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE,
+	),
+	array(
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'CSS/JS Cache', 'litespeed-cache' ),
+		'desc'	=> __( 'This will purge all minified/combined CSS/JS entries only', 'litespeed-cache' ),
+		'icon'	=> 'purge-cssjs',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CSSJS,
 	),
 ) ;
 
 if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 	$_panels[] = array(
-		'title'	=> __( 'Object Cache Purge All', 'litespeed-cache' ),
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Object Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'Purge all the object caches', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE,
 		'icon'	=> 'purge-object',
-		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_OBJECT_PURGE_ALL,
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OBJECT,
 	) ;
 }
 
 if ( LiteSpeed_Cache_Router::opcache_enabled() ) {
 	$_panels[] = array(
-		'title'	=> __( 'Opcode Cache Purge All', 'litespeed-cache' ),
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Opcode Cache', 'litespeed-cache' ),
 		'desc'	=> __( 'Reset the entire opcode cache', 'litespeed-cache' ),
-		'tag'	=> LiteSpeed_Cache::ACTION_PURGE,
 		'icon'	=> 'purge-opcache',
-		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_OPCACHE_PURGE_ALL,
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OPCACHE,
 	) ;
 }
+
+$_panels[] = array(
+	'title'	=> __( 'Purge All', 'litespeed-cache' ),
+	'desc'	=> __( 'Purge the cache entries created by this plugin', 'litespeed-cache' ),
+	'icon'	=> 'purge-all',
+	'title_cls'	=> 'litespeed-warning',
+	'newline'	=> true,
+	'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL,
+) ;
 
 if ( ! is_multisite() || is_network_admin() ) {
 	$_panels[] = array(
@@ -84,7 +84,6 @@ if ( ! is_multisite() || is_network_admin() ) {
 		'tag'	=> LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE,
 		'icon'	=> 'empty-cache',
 		'title_cls'	=> 'litespeed-danger',
-		'newline'	=> true,
 		'cfm'	=>  esc_html( __( 'This will clear EVERYTHING inside the cache.', 'litespeed-cache' ) ) . ' ' .
 					esc_html( __( 'This may cause heavy load on the server.', 'litespeed-cache' ) ) . ' ' .
 					esc_html( __( 'If only the WordPress site should be purged, use purge all.', 'litespeed-cache' ) )
@@ -100,13 +99,15 @@ if ( ! is_multisite() || is_network_admin() ) {
 <div class="litespeed-panel-wrapper">
 
 <?php foreach ( $_panels as $v ): ?>
+<?php $tag = ! empty( $v[ 'tag' ] ) ? $v[ 'tag' ] : LiteSpeed_Cache::ACTION_PURGE ; ?>
+<?php $append_url = ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ; ?>
 
 	<?php if ( ! empty( $v[ 'newline' ] ) ) : ?>
 		<div class='litespeed-col-br'></div>
 	<?php endif; ?>
 
 	<a 	class="litespeed-panel"
-		href="<?php echo LiteSpeed_Cache_Utility::build_url( $v[ 'tag' ], ! empty( $v[ 'append_url' ] ) ? $v[ 'append_url' ] : false ) ; ?>"
+		href="<?php echo LiteSpeed_Cache_Utility::build_url( $tag, $append_url ) ; ?>"
 		<?php if ( ! empty( $v[ 'cfm' ] ) ) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"' ; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">

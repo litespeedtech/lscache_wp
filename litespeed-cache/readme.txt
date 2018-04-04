@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
-Tested up to: 4.9.4
-Stable tag: 2.1.1
+Tested up to: 4.9.5
+Stable tag: 2.2.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -14,6 +14,11 @@ Speed up your page-load times. Get a faster site with high-performance page cach
 LiteSpeed Cache for WordPress (LSCWP) is an all-in-one site acceleration plugin, featuring an exclusive server-level cache and a collection of optimization features.
 
 LSCWP supports WordPress Multisite and is compatible with most popular plugins, including WooCommerce, bbPress, and Yoast SEO.
+
+== Requirements ==
+**General Features** may be used by anyone with any web server (LiteSpeed, Apache, NGiNX, etc.).
+
+**LiteSpeed Exclusive Features** require OpenLiteSpeed, commercial LiteSpeed products, or LiteSpeed-powered hosting.
 
 == Plugin Features ==
 
@@ -31,13 +36,12 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Database Cleaner and Optimizer
 * PageSpeed score optimization
 * OPcode Cache
-* HTTP/2 Push for CSS and JS
+* HTTP/2 Push for CSS and JS (on web servers that support it)
 * DNS Prefetch
 * Cloudflare API
 * Single Site and Multi Site (Network) support
 * Import/Export settings
 * Basic/Advanced setting view
-* HTTP/2 & HTTPS support right out of the box
 * Attractive, easy-to-understand interface
 * WebP image format support
 
@@ -53,10 +57,8 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli) commands
 * Simple API system for each cache integration
 * Exclude from cache by URI, Category, Tag, Cookie, User Agent
-* [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support out of the box (Not available in OpenLiteSpeed)
+* HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support (QUIC not available in OpenLiteSpeed)
 * ESI (Edge Side Includes) support (Not available in OpenLiteSpeed)
-
-NOTE: **LiteSpeed Exclusive Features** require the use of a LiteSpeed web server with cache module installed. **General Features** may be used by anyone with any web server.
 
 == Screenshots ==
 
@@ -249,6 +251,43 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.1 - Apr 11 2018 =
+* [NEW FEATURE] Included Directories setting in CDN tab. (@Dave)
+
+= 2.2.0.2 - Apr 3 2018 =
+* [HOTFIX] <strong>Object Cache</strong> Fixed the PHP warning caused by previous improvement to Object Cache.
+
+= 2.2.0.1 - Apr 3 2018 =
+* [HOTFIX] Object parameter will no longer cause warnings to be logged for Purge and Cache classes. (@kelltech @khrifat)
+* [UPDATE] Removed duplicated del_file func from Object Cache class.
+* [BUGFIX] `CLI` no longer shows 400 error upon successful result.
+
+= 2.2 - Apr 2 2018 =
+* [NEW FEATURE] <strong>Debug</strong> Disable All Features setting in Debug tab. (@monarobase)
+* [NEW FEATURE] <strong>Cache</strong> Force Cacheable URIs setting in Excludes tab.
+* [NEW FEATURE] <strong>Purge</strong> Purge all LSCache and other caches in one link.
+* [REFACTOR] <strong>Purge</strong> Refactored Purge class.
+* [BUGFIX] Query strings in DoNotCacheURI setting now works.
+* [BUGFIX] <strong>Cache</strong> Mobile cache compatibility with WebP vary. (@Shivam #987121)
+* [UPDATE] <strong>Purge</strong> Moved purge_all to Purge class from core class.
+* [API] Set cacheable/Set force cacheable. (@Jacob)
+
+= 2.1.2 - Mar 28 2018 =
+* [NEW FEATURE] <strong>Image Optimization</strong> Clean Up Unfinished Data feature.
+* [IAPI] IAPI v2.1.2.
+* [IMPROVEMENT] <strong>CSS/JS Minify</strong> Reduced loading time significantly by improving CSS/JS minify loading process. (@kokers)
+* [IMPROVEMENT] <strong>CSS/JS Minify</strong> Cache empty JS Minify content. (@kokers)
+* [IMPROVEMENT] <strong>Cache</strong> Cache 301 redirect when scheme/host are same.
+* [BUGFIX] <strong>Media</strong> Lazy load now can support WebP. (@relle)
+* [UPDATE] <strong>CSS/JS Optimize</strong> Serve static files for CSS async & lazy load JS library.
+* [UPDATE] <strong>Report</strong> Appended Basic/Advanced View setting to Report.
+* [UPDATE] <strong>CSS/JS Minify</strong> Removed zero-width space from CSS/JS content.
+* [GUI] Added Purge CSS/JS Cache link in Admin.
+
+= 2.1.1.1 - Mar 21 2018 =
+* [BUGFIX] Fixed issue where activation failed to add rules to .htaccess.
+* [BUGFIX] Fixed issue where 304 header was blank on feed page refresh.
 
 = 2.1.1 - Mar 20 2018 =
 * [NEW FEATURE] <strong>Browser Cache</strong> Unlocked for non-LiteSpeed users.

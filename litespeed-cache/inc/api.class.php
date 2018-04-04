@@ -115,6 +115,28 @@ class LiteSpeed_Cache_API
 	}
 
 	/**
+	 * Set cache status to cacheable ( By default cacheable status will be set when called WP hook `wp` )
+	 *
+	 * @since 2.2
+	 * @access public
+	 */
+	public static function set_cacheable( $reason )
+	{
+		LiteSpeed_Cache_Control::set_cacheable( $reason ) ;
+	}
+
+	/**
+	 * Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
+	 *
+	 * @since 2.2
+	 * @access public
+	 */
+	public static function set_force_cacheable( $reason )
+	{
+		LiteSpeed_Cache_Control::force_cacheable( $reason ) ;
+	}
+
+	/**
 	 * Get current not cacheable status
 	 *
 	 * @since 1.1.3

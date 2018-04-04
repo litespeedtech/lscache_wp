@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '2.1.1' ;
+	const PLUGIN_VERSION = '2.2.0.2' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -29,12 +29,7 @@ class LiteSpeed_Cache
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
-	const ACTION_PURGE_ERRORS = 'PURGE_ERRORS' ;
-	const ACTION_PURGE_PAGES = 'PURGE_PAGES' ;
-	const ACTION_PURGE_CSSJS = 'PURGE_CSSJS' ;
 	const ACTION_PURGE_BY = 'PURGE_BY' ;
-	const ACTION_PURGE_FRONT = 'PURGE_FRONT' ;
-	const ACTION_PURGE_ALL = 'PURGE_ALL' ;
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE' ;
 	const ACTION_QS_PURGE = 'PURGE' ;
 	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE' ;
@@ -50,7 +45,6 @@ class LiteSpeed_Cache
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
 
-	const ACTION_FRONT_PURGE = 'front-purge' ;
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
@@ -99,12 +93,9 @@ class LiteSpeed_Cache
 			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
-		/**
-		 * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
-		 * @since  1.9.1 Moved up
-		 */
-		define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
-		define( 'LSWCP_PLUGIN_URL', plugin_dir_url( dirname( __FILE__ ) ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
+		if ( self::config( LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ) ) {
+			define( 'LITESPEED_DISABLE_ALL', true ) ;
+		}
 
 		// Register plugin activate/deactivate/uninstall hooks
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
@@ -120,7 +111,7 @@ class LiteSpeed_Cache
 		// Check if there is a purge request in queue
 		if ( $purge_queue = get_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ) {
 			@header( $purge_queue ) ;
-			LiteSpeed_Cache_Log::debug( 'Purge Queue found&sent: ' . $purge_queue ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
 			delete_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ;
 		}
 
@@ -170,6 +161,11 @@ class LiteSpeed_Cache
 		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
 		// 	return ;
 		// }
+
+		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
+			LiteSpeed_Cache_Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
+			return ;
+		}
 
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
@@ -264,30 +260,8 @@ class LiteSpeed_Cache
 				$msg = __( 'Crawler blacklist is saved.', 'litespeed-cache' ) ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
-				LiteSpeed_Cache_Purge::purge_front() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-				LiteSpeed_Cache_Purge::purge_pages() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_CSSJS:
-				LiteSpeed_Cache_Purge::purge_cssjs() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
-				LiteSpeed_Cache_Purge::purge_errors() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' ) ;
-				break ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_QS_PURGE_ALL:
 				LiteSpeed_Cache_Purge::purge_all() ;
-				$msg = __( 'Notified LiteSpeed Web Server to purge all caches.', 'litespeed-cache' ) ;
 				break;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
@@ -296,11 +270,6 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;
 				break;
-
-			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
-				// redirect inside
-				LiteSpeed_Cache_Purge::frontend_purge() ;
-				break ;
 
 			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
 				// redirect inside
@@ -372,6 +341,10 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Admin::redirect() ;
 			return ;
 		}
+
+		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+			exit ;
+		}
 	}
 
 	/**
@@ -440,7 +413,7 @@ class LiteSpeed_Cache
 	 */
 	public static function footer_hook()
 	{
-		LiteSpeed_Cache_Log::debug( 'Footer hook called' ) ;
+		LiteSpeed_Cache_Log::debug( '[Core] Footer hook called' ) ;
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			define( 'LITESPEED_FOOTER_CALLED', true ) ;
 		}
@@ -455,22 +428,22 @@ class LiteSpeed_Cache
 	private function _check_is_html( $buffer = null )
 	{
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
-			LiteSpeed_Cache_Log::debug2( 'CHK html bypass: miss footer const' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
 			return ;
 		}
 
 		if ( defined( 'DOING_AJAX' ) ) {
-			LiteSpeed_Cache_Log::debug2( 'CHK html bypass: doing ajax' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing ajax' ) ;
 			return ;
 		}
 
 		if ( defined( 'DOING_CRON' ) ) {
-			LiteSpeed_Cache_Log::debug2( 'CHK html bypass: doing cron' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing cron' ) ;
 			return ;
 		}
 
 		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
-			LiteSpeed_Cache_Log::debug2( 'CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
+			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
 			return ;
 		}
 
@@ -489,11 +462,11 @@ class LiteSpeed_Cache
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
 
 		if ( ! $is_html ) {
-			LiteSpeed_Cache_Log::debug( 'Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Footer check passed' ) ;
+		LiteSpeed_Cache_Log::debug( '[Core] Footer check passed' ) ;
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			define( 'LITESPEED_IS_HTML', true ) ;
@@ -581,7 +554,7 @@ class LiteSpeed_Cache
 		$running_info_showing = ( defined( 'LITESPEED_IS_HTML' ) && LITESPEED_IS_HTML ) || ( defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
-			LiteSpeed_Cache_Log::debug( 'ESI silence' ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
 		}
 
 		if ( $running_info_showing ) {

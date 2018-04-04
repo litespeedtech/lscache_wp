@@ -240,7 +240,19 @@ class LiteSpeed_Cache_Media
 	{
 		// This request is for js/css_async.js
 		if ( strpos( $_SERVER[ 'REQUEST_URI' ], self::LAZY_LIB ) !== false ) {
-			LiteSpeed_Cache_Log::debug( 'Media run lazyload lib' ) ;
+			LiteSpeed_Cache_Log::debug( '[Media] run lazyload lib' ) ;
+
+			$file = LSCWP_DIR . 'js/lazyload.min.js' ;
+
+			$content = Litespeed_File::read( $file ) ;
+
+			$static_file = LSCWP_CONTENT_DIR . '/cache/js/lazyload.js' ;
+
+			// Save to cache folder to enable directly usage by .htacess
+			if ( ! file_exists( $static_file ) ) {
+				Litespeed_File::save( $static_file, $content, true ) ;
+				LiteSpeed_Cache_Log::debug( '[Media] save lazyload lib to ' . $static_file ) ;
+			}
 
 			LiteSpeed_Cache_Control::set_cacheable() ;
 			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: lazyload js' ) ;
@@ -248,12 +260,10 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
 			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_LAZY' ) ;
 
-			$file = LSCWP_DIR . 'js/lazyload.min.js' ;
-
-			header( 'Content-Length: ' . filesize( $file ) ) ;
+			header( 'Content-Length: ' . strlen( $content ) ) ;
 			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
 
-			echo file_get_contents( $file ) ;
+			echo $content ;
 			exit ;
 		}
 	}
@@ -291,16 +301,16 @@ class LiteSpeed_Cache_Media
 	public static function finalize( $content )
 	{
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
-			LiteSpeed_Cache_Log::debug2( 'Media bypass: NO_LAZY const' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] bypass: NO_LAZY const' ) ;
 			return $content ;
 		}
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
-			LiteSpeed_Cache_Log::debug2( 'Media bypass: Not frontend HTML type' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] bypass: Not frontend HTML type' ) ;
 			return $content ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Media finalize' ) ;
+		LiteSpeed_Cache_Log::debug( '[Media] finalize' ) ;
 
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
@@ -317,20 +327,20 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _finalize()
 	{
-		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
-		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
-
-		if ( $cfg_img_lazy ) {
-			list( $src_list, $html_list ) = $this->_parse_img() ;
-			$html_list_ori = $html_list ;
-		}
-
 		/**
 		 * Use webp for optimized images
 		 * @since 1.6.2
 		 */
 		if ( $this->cfg_img_webp && $this->webp_support() ) {
 			$this->_replace_buffer_img_webp() ;
+		}
+
+		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
+		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
+
+		if ( $cfg_img_lazy ) {
+			list( $src_list, $html_list ) = $this->_parse_img() ;
+			$html_list_ori = $html_list ;
 		}
 
 		// image lazy load
@@ -411,14 +421,14 @@ class LiteSpeed_Cache_Media
 			 * @since  1.6
 			 */
 			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
-				LiteSpeed_Cache_Log::debug2( 'Media bypassed base64 img' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] bypassed base64 img' ) ;
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug2( 'Media: found: ' . $attrs[ 'src' ] ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] found: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
-				LiteSpeed_Cache_Log::debug2( 'Media bypassed' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
 
@@ -427,7 +437,7 @@ class LiteSpeed_Cache_Media
 			 * @since  1.5
 			 */
 			if ( $excludes && LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
-				LiteSpeed_Cache_Log::debug2( 'Media: lazyload image exclude ' . $attrs[ 'src' ] ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] lazyload image exclude ' . $attrs[ 'src' ] ) ;
 				continue ;
 			}
 
@@ -463,10 +473,10 @@ class LiteSpeed_Cache_Media
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug2( 'Media found iframe: ' . $attrs[ 'src' ] ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
-				LiteSpeed_Cache_Log::debug2( 'Media bypassed' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
 
@@ -520,7 +530,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public function webp_attach_img_src( $img )
 	{
-		LiteSpeed_Cache_Log::debug2( 'Media changing attach src: ' . $img[0] ) ;
+		LiteSpeed_Cache_Log::debug2( '[Media] changing attach src: ' . $img[0] ) ;
 		if ( $img && $url = $this->_replace_webp( $img[ 0 ] ) ) {
 			$img[ 0 ] = $url ;
 		}
@@ -572,19 +582,19 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _replace_webp( $url )
 	{
-		LiteSpeed_Cache_Log::debug2( 'Media: webp replacing: ' . $url ) ;
+		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url ) ;
 		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
 			// check if has webp file
 			if ( LiteSpeed_Cache_Utility::is_internal_file( $url  . '.webp' ) ) {
 				$url .= '.webp' ;
 			}
 			else {
-				LiteSpeed_Cache_Log::debug2( 'Media: no WebP file, bypassed' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] no WebP file, bypassed' ) ;
 				return false ;
 			}
 		}
 		else {
-			LiteSpeed_Cache_Log::debug2( 'Media: no file, bypassed' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] no file, bypassed' ) ;
 			return false ;
 		}
 

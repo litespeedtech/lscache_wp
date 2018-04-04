@@ -129,6 +129,7 @@ class LiteSpeed_Cache_Router
 			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
 			if ( ! $frontend ) {
+				LiteSpeed_Cache_Log::debug( '[Router] No ABSPATH, generating from home option' ) ;
 				$frontend = parse_url( get_option( 'home' ) ) ;
 				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
 				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend ;
@@ -346,20 +347,9 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
-			case LiteSpeed_Cache::ACTION_PURGE_FRONT:
-			case LiteSpeed_Cache::ACTION_PURGE_PAGES:
-			case LiteSpeed_Cache::ACTION_PURGE_ERRORS:
-			case LiteSpeed_Cache::ACTION_PURGE_ALL:
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
-			case LiteSpeed_Cache::ACTION_FRONT_PURGE:
 			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
-					self::$_action = $action ;
-				}
-				return ;
-
-			case LiteSpeed_Cache::ACTION_PURGE_CSSJS: // will clear non-ls users file-based cache folder too
-				if ( $_can_network_option || $_can_option || self::is_ajax() ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -370,7 +360,7 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
-			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:
+			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:// todo: moved to purge.cls type action
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) ) {
 					self::$_action = $action ;
 				}

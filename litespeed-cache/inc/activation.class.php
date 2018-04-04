@@ -231,6 +231,8 @@ class LiteSpeed_Cache_Activation
 			return false ;
 		}
 
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Activation] Copying advanced_cache file' ) ;
+
 		copy( LSCWP_DIR . 'includes/advanced-cache.php', $adv_cache_path ) ;
 		include( $adv_cache_path ) ;
 		$ret = defined( 'LSCACHE_ADV_CACHE' ) ;

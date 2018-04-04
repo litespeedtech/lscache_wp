@@ -10,19 +10,29 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 	<tr>
+		<th><?php echo __( 'Disable All Features', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This will disable LSCache and all optimization features for debug purpose.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Debug Log', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<div class="litespeed-switch">
 				<?php echo $this->build_radio(
 					LiteSpeed_Cache_Config::OPID_DEBUG,
 					LiteSpeed_Cache_Config::VAL_OFF,
-					__( 'Off', 'litespeed-cache' )
+					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php echo $this->build_radio(
 					LiteSpeed_Cache_Config::OPID_DEBUG,
 					LiteSpeed_Cache_Config::VAL_ON,
-					__( 'On', 'litespeed-cache' )
+					__( 'ON', 'litespeed-cache' )
 				) ; ?>
 
 				<?php echo $this->build_radio(

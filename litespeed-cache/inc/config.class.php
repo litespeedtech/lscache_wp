@@ -95,6 +95,7 @@ class LiteSpeed_Cache_Config
 	// do NOT set default options for these three, it is used for admin.
 	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
 	const ID_NOCACHE_USERAGENTS = 'nocache_useragents' ;
+	const OPID_DEBUG_DISABLE_ALL = 'debug_disable_all' ;
 	const OPID_DEBUG = 'debug' ;
 	const OPID_ADMIN_IPS = 'admin_ips' ;
 	const OPID_DEBUG_LEVEL = 'debug_level' ;
@@ -126,6 +127,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_DATE = 'D' ;
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
+	const OPID_FORCE_CACHE_URI = 'forced_cache_uri' ;
 	const OPID_EXCLUDES_URI = 'excludes_uri' ;
 	const OPID_EXCLUDES_QS = 'excludes_qs' ;
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
@@ -161,6 +163,7 @@ class LiteSpeed_Cache_Config
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
+	const OPID_CDN_ORI_DIR = 'cdn_ori_dir' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
 	const OPID_CDN_QUIC = 'cdn_quic' ;
@@ -379,7 +382,7 @@ class LiteSpeed_Cache_Config
 			return $this->options[$id] ;
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Invalid option ID ' . $id ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Cfg] Invalid option ID ' . $id ) ;
 
 		return NULL ;
 	}
@@ -419,6 +422,10 @@ class LiteSpeed_Cache_Config
 		}
 
 		switch ( $type ) {
+			case 'forced_cache' :
+				$id = self::OPID_FORCE_CACHE_URI ;
+				break ;
+
 			case 'private' :
 				$id = self::OPID_CACHE_URI_PRIV ;
 				break ;
@@ -446,7 +453,7 @@ class LiteSpeed_Cache_Config
 		$instance->update_options( array( $id => $list ) ) ;
 
 		// Purge this page & redirect
-		LiteSpeed_Cache_Purge::frontend_purge() ;
+		LiteSpeed_Cache_Purge::purge_front() ;
 		exit() ;
 	}
 
@@ -469,7 +476,7 @@ class LiteSpeed_Cache_Config
 		}
 
 		if ( $group ) {
-			LiteSpeed_Cache_Log::debug2( 'Config: role in vary_group [group] ' . $group ) ;
+			LiteSpeed_Cache_Log::debug2( '[Cfg] role in vary_group [group] ' . $group ) ;
 		}
 
 		return $group ;
@@ -606,6 +613,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_LOGIN_COOKIE => '',
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::OPID_USE_HTTP_FOR_HTTPS_VARY => false,
+			self::OPID_DEBUG_DISABLE_ALL => false,
 			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_DEBUG_LEVEL => false,
@@ -622,6 +630,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
+			self::OPID_FORCE_CACHE_URI => '',
 			self::OPID_EXCLUDES_URI => '',
 			self::OPID_EXCLUDES_QS => '',
 			self::OPID_EXCLUDES_CAT => '',
@@ -657,6 +666,7 @@ class LiteSpeed_Cache_Config
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',
+			self::OPID_CDN_ORI_DIR 		=> LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ,
 			self::OPID_CDN_EXCLUDE 	=> '',
 			self::OPID_CDN_REMOTE_JQUERY 	=> false,
 			self::OPID_CDN_QUIC 	=> false,
@@ -919,7 +929,7 @@ class LiteSpeed_Cache_Config
 				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
 			) ;
 			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
-			LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option adding CDN map" ) ;
+			LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option adding CDN map" ) ;
 		}
 
 		$this->options = self::option_diff( $default_options, $this->options ) ;
@@ -927,7 +937,7 @@ class LiteSpeed_Cache_Config
 		$res = $this->update_options() ;
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
-		LiteSpeed_Cache_Log::debug( "Config: plugin_upgrade option changed = $res" ) ;
+		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed = $res" ) ;
 
 		// Update img_optm table data for upgrading
 		LiteSpeed_Cache_Data::get_instance() ;
@@ -952,7 +962,7 @@ class LiteSpeed_Cache_Config
 
 		$res = update_site_option( self::OPTION_NAME, $options ) ;
 
-		LiteSpeed_Cache_Log::debug( "plugin_upgrade option changed = $res\n" ) ;
+		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed = $res\n" ) ;
 	}
 
 	/**
@@ -1026,7 +1036,9 @@ class LiteSpeed_Cache_Config
 
 		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "plugin_activation update option = " . var_export( $res, true ) ) ;
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
+
+		$disable_lscache = false ;
 
 		if ( is_multisite() ) {
 
@@ -1037,26 +1049,23 @@ class LiteSpeed_Cache_Config
 				}
 				return ;
 			}
-			else {
-				// Network admin should make a wapper to avoid subblogs cache not work
-				LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
-			}
 
 			$options = $this->get_site_options() ;
 
-			if ( $res == true || $options[ self::NETWORK_OPID_ENABLED ] == false ) {
-				return ;
+			if ( ! $options[ self::NETWORK_OPID_ENABLED ] ) {
+				// NOTE: Network admin still need to make a lscache wrapper to avoid subblogs cache not work
+				$disable_lscache = true ;
 			}
 
 		}
-		elseif ( $res == false && ! defined( 'LITESPEED_ON' ) ) {// todo: why do this
-			return ;
-		}
 		else {
 			$options = $this->get_options() ;
+			if ( ! $options[ self::OPID_ENABLED_RADIO ] ) {
+				$disable_lscache = true ;
+			}
 		}
 
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options ) ;
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache ) ;
 
         if ( $res !== true ) {
         	if ( ! is_array( $res ) ) {

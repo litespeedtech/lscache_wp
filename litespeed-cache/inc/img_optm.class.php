@@ -16,7 +16,8 @@ class LiteSpeed_Cache_Img_Optm
 	const TYPE_SYNC_DATA = 'sync_data' ;
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
 	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan' ;
-	const TYPE_IMG_OPTIMIZE_DESTROY = 'img_optm_destroy' ;
+	const TYPE_IMG_OPTM_DESTROY = 'img_optm_destroy' ;
+	const TYPE_IMG_OPTM_DESTROY_UNFINISHED = 'img_optm_destroy-unfinished' ;
 	const TYPE_IMG_PULL = 'img_pull' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
@@ -32,6 +33,8 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
 	const DB_IMG_OPTIMIZE_STATUS_MISS = 'miss' ;
 	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
+	const DB_IMG_OPTIMIZE_STATUS_ERR_FETCH = 'err_fetch' ;
+	const DB_IMG_OPTIMIZE_STATUS_ERR_OPTM = 'err_optm' ;
 	const DB_IMG_OPTIMIZE_STATUS_XMETA = 'xmeta' ;
 	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
@@ -705,7 +708,13 @@ class LiteSpeed_Cache_Img_Optm
 			exit( json_encode( 'no/wrong server' ) ) ;
 		}
 
-		$_allowed_status = array( self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_STATUS_ERR, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ;
+		$_allowed_status = array(
+			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM,
+			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
+		) ;
 
 		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
@@ -1070,6 +1079,53 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
+	 * Destroy all unfinished queue locally and to LiteSpeed IAPI server
+	 *
+	 * @since 2.1.2
+	 * @access private
+	 */
+	private function _img_optimize_destroy_unfinished()
+	{
+		global $wpdb ;
+
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
+
+		// Push to LiteSpeed IAPI server and recover credit
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED ) ;
+
+		// confirm link will be displayed by Admin_API automatically
+		if ( is_array( $json ) && $json ) {
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] cmd result', $json ) ;
+		}
+
+		// If failed to run request to IAPI
+		if ( ! is_array( $json ) || empty( $json[ 'success' ] ) ) {
+
+			// For other errors that Admin_API didn't take
+			if ( ! is_array( $json ) && $json !== null ) {
+				LiteSpeed_Cache_Admin_Display::error( $json ) ;
+
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] err ', $json ) ;
+			}
+			return ;
+		}
+
+		// Clear local queue
+		$_status_to_clear = array(
+			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
+			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
+		) ;
+		$q = "DELETE FROM $this->_table_img_optm WHERE optm_status IN ( " . implode( ',', array_fill( 0, count( $_status_to_clear ), '%s' ) ) . " )" ;
+		$wpdb->query( $wpdb->prepare( $q, $_status_to_clear ) ) ;
+
+
+		$msg = __( 'Destroy unfinished data successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+	}
+
+	/**
 	 * Send destroy all requests cmd to LiteSpeed IAPI server and get the link to finish it ( avoid click by mistake )
 	 *
 	 * @since 1.6.7
@@ -1352,33 +1408,37 @@ class LiteSpeed_Cache_Img_Optm
 		// images count from img_optm table
 		$q_groups = "SELECT count(distinct post_id) FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$q = "SELECT count(*) FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$total_requested_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ;
-		$total_requested = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ;
-		$total_server_finished_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
-		$total_server_finished = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
-		$total_pulled_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
-		$total_pulled = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
-		$total_err_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ;
-		$total_err = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) ;
-		$total_miss_groups = $wpdb->get_var( $wpdb->prepare( $q_groups, self::DB_IMG_OPTIMIZE_STATUS_MISS ) ) ;
-		$total_miss = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_MISS ) ) ;
-		$total_xmeta_groups = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_XMETA ) ) ;
 
-		return array(
+		// The groups to check
+		$images_to_check = $groups_to_check = array(
+			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
+			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
+			self::DB_IMG_OPTIMIZE_STATUS_PULLED,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
+			self::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM,
+			self::DB_IMG_OPTIMIZE_STATUS_MISS,
+		) ;
+
+		// The images to check
+		$images_to_check[] = self::DB_IMG_OPTIMIZE_STATUS_XMETA ;
+
+		$count_list = array() ;
+
+		foreach ( $groups_to_check as $v ) {
+			$count_list[ 'group.' . $v ] = $wpdb->get_var( $wpdb->prepare( $q_groups, $v ) ) ;
+		}
+
+		foreach ( $images_to_check as $v ) {
+			$count_list[ 'img.' . $v ] = $wpdb->get_var( $wpdb->prepare( $q, $v ) ) ;
+		}
+
+		$data = array(
 			'total_img'	=> $total_img,
 			'total_not_requested'	=> $total_not_requested,
-			'total_requested_groups'	=> $total_requested_groups,
-			'total_requested'	=> $total_requested,
-			'total_err_groups'	=> $total_err_groups,
-			'total_err'	=> $total_err,
-			'total_miss_groups'	=> $total_miss_groups,
-			'total_miss'	=> $total_miss,
-			'total_server_finished_groups'	=> $total_server_finished_groups,
-			'total_server_finished'	=> $total_server_finished,
-			'total_pulled_groups'	=> $total_pulled_groups,
-			'total_pulled'	=> $total_pulled,
-			'total_xmeta_groups'	=> $total_xmeta_groups,
 		) ;
+
+		return array_merge( $data, $count_list ) ;
 	}
 
 	/**
@@ -1564,8 +1624,12 @@ class LiteSpeed_Cache_Img_Optm
 				$instance->_img_optimize_rescan() ;
 				break ;
 
-			case self::TYPE_IMG_OPTIMIZE_DESTROY :
+			case self::TYPE_IMG_OPTM_DESTROY :
 				$instance->_img_optimize_destroy() ;
+				break ;
+
+			case self::TYPE_IMG_OPTM_DESTROY_UNFINISHED :
+				$instance->_img_optimize_destroy_unfinished() ;
 				break ;
 
 			case self::TYPE_IMG_PULL :

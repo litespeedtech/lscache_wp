@@ -92,7 +92,11 @@ class Litespeed_File
 			return $res ;
 		}
 
-		return file_get_contents($filename) ;
+		$content = file_get_contents( $filename ) ;
+
+		$content = self::_remove_zero_space( $content ) ;
+
+		return $content ;
 	}
 
 	/**
@@ -160,12 +164,38 @@ class Litespeed_File
 			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 		}
 
+		$data = self::_remove_zero_space( $data ) ;
+
 		$ret = file_put_contents( $filename, $data, $append ? FILE_APPEND : LOCK_EX ) ;
 		if ( $ret === false ) {
 			return $silence ? false : sprintf( __( 'Failed to write to %s.', 'litespeed-cache' ), $filename ) ;
 		}
 
 		return true ;
+	}
+
+	/**
+	 * Remove Unicode zero-width space <200b><200c>
+	 *
+	 * @since 2.1.2
+	 */
+	private static function _remove_zero_space( $content )
+	{
+		if ( is_array( $content ) ) {
+			$content = array_map( 'self::_remove_zero_space', $content ) ;
+			return $content ;
+		}
+
+		// Remove UTF-8 BOM if present
+		if ( substr( $content, 0, 3 ) === "\xEF\xBB\xBF" ) {
+			$content = substr( $content, 3 ) ;
+		}
+
+		$content = str_replace( "\xe2\x80\x8b", '', $content ) ;
+		$content = str_replace( "\xe2\x80\x8c", '', $content ) ;
+		$content = str_replace( "\xe2\x80\x8d", '', $content ) ;
+
+		return $content ;
 	}
 
 	/**

@@ -24,14 +24,11 @@ class LiteSpeed_Cache_Admin_Rules
 	private $theme_htaccess_readable = false ;
 	private $theme_htaccess_writable = false ;
 
-	const RW_LOOKUP_BOTH = "CacheLookup on" ;
-	const RW_PRIV_BYPASS_POST_PURGE = "RewriteRule .* - [E=Cache-Control:no-autoflush]" ;
-	const RW_OPTM_NO_VARY = "RewriteRule min/\w+\.(css|js) - [E=cache-control:no-vary]" ;
-
 	const LS_MODULE_START = '<IfModule LiteSpeed>' ;
 	const EXPIRES_MODULE_START = '<IfModule mod_expires.c>' ;
 	const LS_MODULE_END = '</IfModule>' ;
 	const LS_MODULE_REWRITE_START = '<IfModule mod_rewrite.c>' ;
+	const REWRITE_ON = 'RewriteEngine on' ;
 	private static $LS_MODULE_REWRITE_ON ;
 	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##" ;
 	const MARKER = 'LSCACHE' ;
@@ -73,10 +70,10 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		self::$LS_MODULE_REWRITE_ON = array(
-			'RewriteEngine on',
-			self::RW_LOOKUP_BOTH,
-			self::RW_PRIV_BYPASS_POST_PURGE,
-			self::RW_OPTM_NO_VARY,
+			self::REWRITE_ON,
+			"CacheLookup on",
+			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
+			"RewriteRule ^min/\w+\.(css|js) - [E=cache-control:no-vary]",
 		) ;
 
 		// backend .htaccess privilege
@@ -527,6 +524,26 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
+	 * Generate minify rules
+	 *
+	 * @since  2.1.2
+	 * @access private
+	 * @return array Rules set
+	 */
+	private function _minify_rules()
+	{
+		$rules = array(
+			self::LS_MODULE_REWRITE_START,
+				self::REWRITE_ON,
+				'RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} ^(.*)/min/(\w+)\.(css|js)$',
+				'RewriteCond %1/' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 -f',
+				'RewriteRule min/(\w+)\.(css|js) ' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 [L]',
+			self::LS_MODULE_END,
+		) ;
+		return $rules ;
+	}
+
+	/**
 	 * Generate CORS rules for fonts
 	 *
 	 * @since  1.5
@@ -677,6 +694,12 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules_nonls[] = '' ;
 		}
 
+		// CSS/JS static file rewrite
+		$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_MINIFY . self::MARKER_START ;
+		$new_rules_nonls = array_merge( $new_rules_nonls, $this->_minify_rules() ) ;
+		$new_rules_backend_nonls = array_merge( $new_rules_backend_nonls, $this->_minify_rules() ) ;
+		$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_MINIFY . self::MARKER_END ;
+		$new_rules_nonls[] = '' ;
 
 		// Add module wrapper for LiteSpeed rules
 		if ( $new_rules || $disable_lscache_detail_rules ) {

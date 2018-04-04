@@ -65,12 +65,16 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	public function serve( $filename, $concat_only )
 	{
-		// Search filename in db for src URLs
-		$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
-		if ( ! $urls || ! is_array( $urls ) ) {
-			return false;
+		if ( ! is_array( $filename ) ) {
+			// Search filename in db for src URLs
+			$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
+			if ( ! $urls || ! is_array( $urls ) ) {
+				return false;
+			}
 		}
-
+		else {
+			$urls = $filename ;
+		}
 
 		// Parse real file path
 		$real_files = array() ;
@@ -86,26 +90,25 @@ class LiteSpeed_Cache_Optimizer
 			return false;
 		}
 
+		LiteSpeed_Cache_Log::debug2( '[Optmer]    urls : ', $urls ) ;
 
 		set_error_handler( 'litespeed_exception_handler' ) ;
 
-		$headers = array() ;
 		$content = '' ;
-		$file_type = substr( $filename, strrpos( $filename, '.' ) + 1 ) ;
+		$tmp = parse_url( $urls[ 0 ], PHP_URL_PATH ) ;
+		$file_type = substr( $tmp, strrpos( $tmp, '.' ) + 1 ) ;
 		try {
 			// Handle CSS
 			if ( $file_type === 'css' ) {
 				$content = $this->_serve_css( $real_files, $concat_only ) ;
-				$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
 			}
 			// Handle JS
 			else {
 				$content = $this->_serve_js( $real_files, $concat_only ) ;
-				$headers[ 'Content-Type' ] = 'application/x-javascript' ;
 			}
 
 		} catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Log::debug( 'Error when serving from optimizer: ' . $e->getMessage() ) ;
+			LiteSpeed_Cache_Log::debug( '[Optmer] Error when serving from optimizer: ' . $e->getMessage() ) ;
 			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
 			return false ;
 		}
@@ -119,14 +122,7 @@ class LiteSpeed_Cache_Optimizer
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Optm:    Generated content' ) ;
-
-		$headers[ 'Content-Length' ] = strlen( $content ) ;
-
-		foreach ( $headers as $key => $val ) {
-			header( $key . ': ' . $val ) ;
-			LiteSpeed_Cache_Log::debug( 'HEADER ' . $key . ': ' . $val ) ;
-		}
+		LiteSpeed_Cache_Log::debug( '[Optmer]    Generated content ' . $file_type ) ;
 
 		return $content ;
 	}
@@ -141,8 +137,8 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			LiteSpeed_Cache_Log::debug( 'Optimizer: [real_path] ' . $real_path ) ;
-			$data = $this->_read( $real_path ) ;
+			LiteSpeed_Cache_Log::debug( '[Optmer] [real_path] ' . $real_path ) ;
+			$data = Litespeed_File::read( $real_path ) ;
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
 
@@ -169,7 +165,7 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			$data = $this->_read( $real_path ) ;
+			$data = Litespeed_File::read( $real_path ) ;
 
 			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
 				$data = JSMin\JSMin::minify( $data ) ;
@@ -205,21 +201,6 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		return false ;
-	}
-
-	/**
-	 * Read content and remove UTF-8 BOM if present
-	 *
-	 * @since  1.9
-	 * @access private
-	 */
-	private function _read( $file )
-	{
-		$content = file_get_contents( $file ) ;
-		if ( substr( $content, 0, 3 ) === "\xEF\xBB\xBF" ) {
-			$content = substr( $content, 3 ) ;
-		}
-		return $content ;
 	}
 
 	/**
