@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
-Tested up to: 4.9.4
+Tested up to: 4.9.5
 Stable tag: 2.2.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -251,6 +251,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.1 - Apr 11 2018 =
+* [NEW FEATURE] Included Directories setting in CDN tab. (@Dave)
 
 = 2.2.0.2 - Apr 3 2018 =
 * [HOTFIX] <strong>Object Cache</strong> Fixed the PHP warning caused by previous improvement to Object Cache.
