@@ -122,13 +122,26 @@ if ( ! $cdn_mapping ) {
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Original URL', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Original URLs', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_ORI, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Separate multiple original URLs with a %s.', 'litespeed-cache' ), '<code>,</code>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Included Directories', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_CDN_ORI_DIR ; ?>
+			<?php $this->build_textarea( $id, 40 ) ; ?>
+			<?php $this->recommended( $id ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

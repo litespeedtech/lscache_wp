@@ -46,6 +46,8 @@ class LiteSpeed_Cache_Object
 	/**
 	 * Init
 	 *
+	 * NOTE: this class may be included without initialized LiteSpeed_Cache core
+	 *
 	 * @since  1.8
 	 * @access private
 	 */

@@ -163,6 +163,7 @@ class LiteSpeed_Cache_Config
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
+	const OPID_CDN_ORI_DIR = 'cdn_ori_dir' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
 	const OPID_CDN_QUIC = 'cdn_quic' ;
@@ -665,6 +666,7 @@ class LiteSpeed_Cache_Config
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',
+			self::OPID_CDN_ORI_DIR 		=> LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ,
 			self::OPID_CDN_EXCLUDE 	=> '',
 			self::OPID_CDN_REMOTE_JQUERY 	=> false,
 			self::OPID_CDN_QUIC 	=> false,

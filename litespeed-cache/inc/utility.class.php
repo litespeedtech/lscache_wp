@@ -154,6 +154,10 @@ class LiteSpeed_Cache_Utility
 	public static function str_hit_array( $needle, $haystack )
 	{
 		foreach( $haystack as $item ) {
+			if ( ! $item ) {
+				continue ;
+			}
+
 			if ( substr( $item, -1 ) === '$' ) {
 				// do exact match
 				if ( substr( $item, 0, -1 ) === $needle ) {

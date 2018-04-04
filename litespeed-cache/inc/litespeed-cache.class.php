@@ -97,13 +97,6 @@ class LiteSpeed_Cache
 			define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
-		/**
-		 * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
-		 * @since  1.9.1 Moved up
-		 */
-		define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
-		define( 'LSWCP_PLUGIN_URL', plugin_dir_url( dirname( __FILE__ ) ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
-
 		// Register plugin activate/deactivate/uninstall hooks
 		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
 		if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
