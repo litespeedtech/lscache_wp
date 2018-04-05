@@ -32,7 +32,8 @@ class LiteSpeed_Cache_Config
 	const ITEM_OBJECT_GLOBAL_GROUPS = 'litespeed-object_global_groups' ;
 	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'litespeed-object_non_persistent_groups' ;
 	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
-	const ITEM_ADV_PURGE_ALL_HOOKS = 'litespeed-adv-purge-all-hooks' ;
+	const ITEM_ADV_PURGE_ALL_HOOKS = 'litespeed-adv-purge_all_hooks' ;
+	const ITEM_CDN_ORI_DIR = 'litespeed-cdn-ori_dir' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
@@ -164,7 +165,6 @@ class LiteSpeed_Cache_Config
 
 	const OPID_CDN = 'cdn' ;
 	const OPID_CDN_ORI = 'cdn_ori' ;
-	const OPID_CDN_ORI_DIR = 'cdn_ori_dir' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
 	const OPID_CDN_QUIC = 'cdn_quic' ;
@@ -249,13 +249,13 @@ class LiteSpeed_Cache_Config
 		}
 
 		// Vary group settings
-		$this->vary_groups = (array) get_option( self::VARY_GROUP, array() ) ;
+		$this->vary_groups = $this->get_item( self::VARY_GROUP ) ;
 
 		// Exclude optimization role setting
-		$this->exclude_optimization_roles = get_option( self::EXCLUDE_OPTIMIZATION_ROLES, array() ) ;
+		$this->exclude_optimization_roles = $this->get_item( self::EXCLUDE_OPTIMIZATION_ROLES ) ;
 
 		// Exclude cache role setting
-		$this->exclude_cache_roles = get_option( self::EXCLUDE_CACHE_ROLES, array() ) ;
+		$this->exclude_cache_roles = $this->get_item( self::EXCLUDE_CACHE_ROLES ) ;
 
 		// Set security key if not initialized yet
 		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {
@@ -473,9 +473,8 @@ class LiteSpeed_Cache_Config
 		}
 
 		$instance = self::get_instance() ;
-		$list = $instance->get_option( $id ) ;
+		$list = $instance->get_item( $id ) ;
 
-		$list = explode( "\n", $list ) ;
 		$list[] = $_SERVER[ 'HTTP_REFERER' ] ;
 		$list = array_map( 'LiteSpeed_Cache_Utility::make_relative', $list ) ;// Remove domain
 		$list = array_unique( $list ) ;
@@ -698,7 +697,6 @@ class LiteSpeed_Cache_Config
 
 			self::OPID_CDN 			=> false,
 			self::OPID_CDN_ORI 		=> '',
-			self::OPID_CDN_ORI_DIR 		=> LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ,
 			self::OPID_CDN_EXCLUDE 	=> '',
 			self::OPID_CDN_REMOTE_JQUERY 	=> false,
 			self::OPID_CDN_QUIC 	=> false,
@@ -836,6 +834,9 @@ class LiteSpeed_Cache_Config
 
 			case self::ITEM_ADV_PURGE_ALL_HOOKS :
 				return "switch_theme\nwp_create_nav_menu\nwp_update_nav_menu\nwp_delete_nav_menu\ncreate_term\nedit_terms\ndelete_term\nadd_link\nedit_link\ndelete_link" ;
+
+			case self::ITEM_CDN_ORI_DIR :
+				return LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
 
 			default :
 				break ;

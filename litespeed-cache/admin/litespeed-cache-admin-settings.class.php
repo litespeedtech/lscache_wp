@@ -409,7 +409,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS, // Update Drop Query String @since 1.7
 		);
 		foreach ( $ids as $id ) {
-			update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+			$this->_save_item( $id ) ;
 		}
 
 	}
@@ -585,10 +585,16 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE,
-			LiteSpeed_Cache_Config::OPID_CDN_ORI_DIR,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
+		}
+
+		$ids = array(
+			LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR,
+		) ;
+		foreach ( $ids as $id ) {
+			$this->_save_item( $id ) ;
 		}
 
 		/**
@@ -698,8 +704,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update lazyload image excludes
 		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ;
-		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'uri' ) ) ;
-
+		$this->_save_item( $id, 'uri' ) ;
 	}
 
 	/**
@@ -760,18 +765,18 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update js deferred excludes
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ;
-		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'uri' ) ) ;
+		$this->_save_item( $id, 'uri' ) ;
 
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
+		$this->_save_item( $id ) ;
 
 		/**
 		 * DNS prefetch
 		 * @since 1.7.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ;
-		update_option( $id, LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'domain' ) ) ;
+		$this->_save_item( $id, 'domain' ) ;
 
 		/**
 		 * Combined file max size
@@ -802,7 +807,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
 		) ;
 		foreach ( $ids as $id ) {
-			update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+			$this->_save_item( $id ) ;
 		}
 
 		/**
@@ -904,7 +909,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS,
 		) ;
 		foreach ( $ids as $id ) {
-			update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+			$this->_save_item( $id ) ;
 		}
 	}
 
@@ -991,7 +996,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+		$this->_save_item( $id ) ;
 
 	}
 
@@ -1322,6 +1327,23 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		return LiteSpeed_Cache_Config::VAL_OFF ;
+	}
+
+	/**
+	 * To save item in options
+	 *
+	 * @since 2.2.1
+	 * @access private
+	 */
+	private function _save_item( $id, $sanitize_filter = false )
+	{
+		$val = '' ;
+
+		if ( ! empty( $this->_input[ $id ] ) ) {
+			$val = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
+		}
+
+		update_option( $id, $val ) ;
 	}
 
 	/**

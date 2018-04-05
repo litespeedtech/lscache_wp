@@ -254,6 +254,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.2.1 - Apr 11 2018 =
 * [NEW FEATURE] Included Directories setting in CDN tab. (@Dave)
+* [NEW FEATURE] Purge All Hooks setting in Advacned tab.
 
 = 2.2.0.2 - Apr 3 2018 =
 * [HOTFIX] <strong>Object Cache</strong> Fixed the PHP warning caused by previous improvement to Object Cache.

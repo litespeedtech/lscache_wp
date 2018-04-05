@@ -136,8 +136,8 @@ if ( ! $cdn_mapping ) {
 	<tr>
 		<th><?php echo __( 'Included Directories', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_CDN_ORI_DIR ; ?>
-			<?php $this->build_textarea( $id, 40 ) ; ?>
+			<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ; ?>
+			<?php $this->build_textarea2( $id, 40 ) ; ?>
 			<?php $this->recommended( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
