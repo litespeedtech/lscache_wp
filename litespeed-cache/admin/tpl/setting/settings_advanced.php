@@ -32,7 +32,7 @@ if (!defined('WPINC')) die;
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ; ?>
 			<?php $this->build_textarea2( $id, 50 ) ; ?>
-			<?php $this->recommended( $id ) ; ?>
+			<?php $this->recommended( $id, true ) ; ?>
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ) ; ?>
