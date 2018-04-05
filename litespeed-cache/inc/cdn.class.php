@@ -115,8 +115,7 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$this->_cfg_ori_dir = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_ORI_DIR ) ;
-		$this->_cfg_ori_dir = $this->_cfg_ori_dir ? explode( "\n", $this->_cfg_ori_dir ) : array() ;
+		$this->_cfg_ori_dir = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ) ;
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS ;
@@ -133,7 +132,7 @@ class LiteSpeed_Cache_CDN
 		$this->_cfg_url_ori = explode( ',', $this->_cfg_url_ori ) ;
 
 		$this->_cfg_cdn_exclude = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ) ;
-		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ;
+		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ;// todo: convert to cfg->get_item()
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset

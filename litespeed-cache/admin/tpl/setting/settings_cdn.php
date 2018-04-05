@@ -136,9 +136,9 @@ if ( ! $cdn_mapping ) {
 	<tr>
 		<th><?php echo __( 'Included Directories', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_CDN_ORI_DIR ; ?>
-			<?php $this->build_textarea( $id, 40 ) ; ?>
-			<?php $this->recommended( $id ) ; ?>
+			<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ; ?>
+			<?php $this->build_textarea2( $id, 40 ) ; ?>
+			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
 				<?php echo __('One per line.', 'litespeed-cache'); ?>
@@ -165,7 +165,7 @@ if ( ! $cdn_mapping ) {
 				<?php echo $this->build_radio(
 					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
 					LiteSpeed_Cache_Config::VAL_OFF,
-					__( 'Off', 'litespeed-cache' )
+					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php echo $this->build_radio(

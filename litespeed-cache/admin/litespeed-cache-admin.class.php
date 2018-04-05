@@ -41,12 +41,8 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = array(
-				'switch_theme',
-				'wp_create_nav_menu', 'wp_update_nav_menu', 'wp_delete_nav_menu',
-				'create_term', 'edit_terms', 'delete_term',
-				'add_link', 'edit_link', 'delete_link'
-			) ;
+			$purge_all_events = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ) ;
+
 			// purge all on upgrade
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ) ) {
 				$purge_all_events[] = 'upgrader_process_complete' ;

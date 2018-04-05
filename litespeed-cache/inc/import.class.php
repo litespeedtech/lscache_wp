@@ -28,26 +28,7 @@ class LiteSpeed_Cache_Import
 	{
 		LiteSpeed_Cache_Log::debug( 'Import init' ) ;
 
-		$this->_cfg_items = array(
-			LiteSpeed_Cache_Config::OPTION_NAME,
-			LiteSpeed_Cache_Config::VARY_GROUP,
-			LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES,
-			LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES,
-			LiteSpeed_Cache_Config::ITEM_OPTM_CSS,
-			LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC,
-			LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC,
-			LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL,
-			LiteSpeed_Cache_Config::ITEM_ENV_REF,
-			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING,
-			LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH,
-			LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS,
-			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS,
-			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS,
-			LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS,
-			LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
-			LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS,
-		) ;
+		$this->_cfg_items = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
 	}
 
 	/**

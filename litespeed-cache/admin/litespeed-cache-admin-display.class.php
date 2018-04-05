@@ -703,13 +703,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function build_textarea2( $id, $cols = false )
 	{
 		// Get default val for separate item
-		$default_val = $this->config->default_item( $id ) ;
-
-		$val = get_option( $id, $default_val ) ;
-
-		if ( is_array( $val ) ) {
-			$val = implode( "\n", $val ) ;
-		}
+		$val = $this->config->get_item( $id, true ) ;
 
 		$this->build_textarea( $id, $cols, $val ) ;
 	}
@@ -902,9 +896,18 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $id The setting tag
 	 */
-	public function recommended( $id )
+	public function recommended( $id, $is_item = false )
 	{
-		$val = isset($this->default_settings[$id]) ? $this->default_settings[$id] : '' ;
+		$val = '' ;
+		if ( ! $is_item ) {
+			if ( isset( $this->default_settings[ $id ] ) ) {
+				$val = $this->default_settings[ $id ] ;
+			}
+		}
+		else {
+			$val = $this->config->default_item( $id ) ;
+		}
+
 		if ( $val ) {
 			if ( ! is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
 				$val = "<textarea readonly rows='5' class='litespeed-left10'>$val</textarea>" ;
