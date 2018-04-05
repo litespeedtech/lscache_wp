@@ -165,7 +165,7 @@ if ( ! $cdn_mapping ) {
 				<?php echo $this->build_radio(
 					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
 					LiteSpeed_Cache_Config::VAL_OFF,
-					__( 'Off', 'litespeed-cache' )
+					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php echo $this->build_radio(
