@@ -798,6 +798,13 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 
+		$ids = array(
+			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
+		) ;
+		foreach ( $ids as $id ) {
+			update_option( $id, ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ) ;
+		}
+
 		/**
 		 * Added Favicon
 		 * @since  1.7.2

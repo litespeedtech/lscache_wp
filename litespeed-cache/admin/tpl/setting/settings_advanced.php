@@ -28,6 +28,21 @@ if (!defined('WPINC')) die;
 	?>
 
 	<tr>
+		<th><?php echo __( 'Purge All Hooks', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ; ?>
+			<?php $this->build_textarea2( $id, 50 ) ; ?>
+			<?php $this->recommended( $id ) ; ?>
+
+			<div class="litespeed-desc">
+				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#hooks_to_purge_all" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Improve HTTP/HTTPS Compatibility', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ; ?>

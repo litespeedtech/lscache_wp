@@ -32,6 +32,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_OBJECT_GLOBAL_GROUPS = 'litespeed-object_global_groups' ;
 	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'litespeed-object_non_persistent_groups' ;
 	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
+	const ITEM_ADV_PURGE_ALL_HOOKS = 'litespeed-adv-purge-all-hooks' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
@@ -261,6 +262,37 @@ class LiteSpeed_Cache_Config
 			$this->update_options( array( self::HASH => Litespeed_String::rrand( 32 ) ) ) ;
 		}
 
+	}
+
+	/**
+	 * Get the items in wp_options that need for backup
+	 *
+	 * @since 2.2.1
+	 * @access public
+	 */
+	public function stored_items()
+	{
+		return array(
+			self::OPTION_NAME,
+			self::VARY_GROUP,
+			self::EXCLUDE_OPTIMIZATION_ROLES,
+			self::EXCLUDE_CACHE_ROLES,
+			self::ITEM_OPTM_CSS,
+			self::ITEM_OPTM_JS_DEFER_EXC,
+			self::ITEM_MEDIA_LAZY_IMG_EXC,
+			self::ITEM_IMG_OPTM_NEED_PULL,
+			self::ITEM_ENV_REF,
+			self::ITEM_CACHE_DROP_QS,
+			self::ITEM_CDN_MAPPING,
+			self::ITEM_DNS_PREFETCH,
+			self::ITEM_CLOUDFLARE_STATUS,
+			self::ITEM_LOG_IGNORE_FILTERS,
+			self::ITEM_LOG_IGNORE_PART_FILTERS,
+			self::ITEM_OBJECT_GLOBAL_GROUPS,
+			self::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
+			self::ITEM_CRWL_AS_UIDS,
+			self::ITEM_ADV_PURGE_ALL_HOOKS,
+		) ;
 	}
 
 	/**
@@ -768,6 +800,26 @@ class LiteSpeed_Cache_Config
 	}
 
 	/**
+	 * Get item val
+	 *
+	 * @since 2.2.1
+	 * @access public
+	 */
+	public function get_item( $k, $return_string = false )
+	{
+		$val = get_option( $k, $this->default_item( $k ) ) ;
+
+		if ( ! $return_string && ! is_array( $val ) ) {
+			$val = $val ? explode( "\n", $val ) : array() ;
+		}
+		elseif ( $return_string && is_array( $val ) ) {
+			$val = implode( "\n", $val ) ;
+		}
+
+		return $val ;
+	}
+
+	/**
 	 * Get default item val
 	 *
 	 * @since 1.8
@@ -781,6 +833,9 @@ class LiteSpeed_Cache_Config
 
 			case self::ITEM_OBJECT_NON_PERSISTENT_GROUPS :
 				return "comment\ncounts\nplugins" ;
+
+			case self::ITEM_ADV_PURGE_ALL_HOOKS :
+				return "switch_theme\nwp_create_nav_menu\nwp_update_nav_menu\nwp_delete_nav_menu\ncreate_term\nedit_terms\ndelete_term\nadd_link\nedit_link\ndelete_link" ;
 
 			default :
 				break ;

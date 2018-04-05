@@ -703,13 +703,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function build_textarea2( $id, $cols = false )
 	{
 		// Get default val for separate item
-		$default_val = $this->config->default_item( $id ) ;
-
-		$val = get_option( $id, $default_val ) ;
-
-		if ( is_array( $val ) ) {
-			$val = implode( "\n", $val ) ;
-		}
+		$val = $this->config->get_item( $id, true ) ;
 
 		$this->build_textarea( $id, $cols, $val ) ;
 	}
