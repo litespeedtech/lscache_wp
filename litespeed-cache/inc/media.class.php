@@ -518,6 +518,22 @@ class LiteSpeed_Cache_Media
 			) ;
 			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
 		}
+
+		// Replace background-image
+		preg_match_all( '#background\-image:(\s*)url\((.*)\)#i', $this->content, $matches ) ;
+		foreach ( $matches[ 2 ] as $k => $url ) {
+			// Check if is a DATA-URI
+			if ( strpos( $url, 'data:image' ) !== false ) {
+				continue ;
+			}
+
+			if ( ! $url2 = $this->_replace_webp( $url ) ) {
+				continue ;
+			}
+
+			$html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 ) ;
+			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
+		}
 	}
 
 	/**
