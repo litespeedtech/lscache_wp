@@ -25,7 +25,7 @@
 		<input type="password" name="pswd" class="litespeed-regular-text" required />
 	</div>
 
-	<input type="submit" class="button litespeed-btn-primary" value="<?php echo __( 'Login', 'litespeed-cache' ) ; ?>" />
+	<input type="submit" class="button litespeed-btn-success" value="<?php echo __( 'Login', 'litespeed-cache' ) ; ?>" />
 
-	<a href="javascript:;" onclick="window.history.back();" class="button litespeed-btn-default litespeed-right"><?php echo __( 'Back', 'litespeed-cache' ) ; ?></a>
+	<a href="javascript:;" onclick="window.history.back();" class="button litespeed-btn-primary litespeed-right"><?php echo __( 'Back', 'litespeed-cache' ) ; ?></a>
 </form>

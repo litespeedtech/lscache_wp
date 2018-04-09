@@ -28,8 +28,8 @@
 	<input type="checkbox" class="form-check-input" id="exampleCheck1" required />
 	<label class="form-check-label" for="exampleCheck1">I agree to <a href="https://quic.cloud/agreement" target="_blank">QuicCloud's terms and conditions</a></label><br />
 
-	<input type="submit" class="button litespeed-btn-primary" value="<?php echo __( 'Register', 'litespeed-cache' ) ; ?>" />
+	<input type="submit" class="button litespeed-btn-success" value="<?php echo __( 'Register', 'litespeed-cache' ) ; ?>" />
 
-	<a href="javascript:;" onclick="window.history.back();" class="button litespeed-btn-default litespeed-right"><?php echo __( 'Back', 'litespeed-cache' ) ; ?></a>
+	<a href="javascript:;" onclick="window.history.back();" class="button litespeed-btn-primary litespeed-right"><?php echo __( 'Back', 'litespeed-cache' ) ; ?></a>
 
 </form>

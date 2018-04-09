@@ -10,6 +10,6 @@
 		<input type="text" name="email" value="<?php echo LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ) ; ?>" class="litespeed-regular-text litespeed-input-large" required placeholder="<?php echo __( 'Email', 'litespeed-cache' ) ; ?>" />
 	</div>
 
-	<input type="submit" class="button litespeed-btn-primary" value="<?php echo __( 'Next', 'litespeed-cache' ) ; ?>" />
+	<input type="submit" class="button litespeed-btn-success" value="<?php echo __( 'Next', 'litespeed-cache' ) ; ?>" />
 
 </form>
