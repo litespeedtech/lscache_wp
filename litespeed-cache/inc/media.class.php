@@ -520,7 +520,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		// Replace background-image
-		preg_match_all( '#background\-image:(\s*)url\((.*)\)#i', $this->content, $matches ) ;
+		preg_match_all( '#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches ) ;
 		foreach ( $matches[ 2 ] as $k => $url ) {
 			// Check if is a DATA-URI
 			if ( strpos( $url, 'data:image' ) !== false ) {
