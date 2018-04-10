@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.0.2
+Stable tag: 2.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -87,6 +87,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * [View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
 * [Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
 * [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
+* [LSCWP GitHub Repo](https://github.com/litespeedtech/lscache_wp).
 
 == Installation ==
 
@@ -252,9 +253,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 2.2.1 - Apr 11 2018 =
+= 2.2.1 - Apr 10 2018 =
 * [NEW FEATURE] Included Directories setting in CDN tab. (@Dave)
-* [NEW FEATURE] Purge All Hooks setting in Advacned tab.
+* [NEW FEATURE] Purge All Hooks setting in Advanced tab.
+* [UPDATE] Added background-image WebP replacement support. (@vengen)
+* [UPDATE] Show recommended values for textarea items in settings.
+* [UPDATE] Moved CSS/JS optimizer log to Advanced level.
+* [INTEGRATION] Added WebP support for Avada Fusion Sliders. (@vengen)
 
 = 2.2.0.2 - Apr 3 2018 =
 * [HOTFIX] <strong>Object Cache</strong> Fixed the PHP warning caused by previous improvement to Object Cache.
