@@ -470,20 +470,20 @@ class LiteSpeed_Cache_CDN
 	 */
 	public function rewrite( $url, $mapping_kind, $postfix = false )
 	{
-		LiteSpeed_Cache_Log::debug2( '[CDN] try rewriting ' . $url ) ;
+		LiteSpeed_Cache_Log::debug2( '[CDN] rewrite ' . $url ) ;
 		$url_parsed = parse_url( $url ) ;
 
 		// Only images under wp-cotnent/wp-includes can be replaced
 		$is_internal_folder = LiteSpeed_Cache_Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
 		if ( ! $is_internal_folder ) {
-			LiteSpeed_Cache_Log::debug2( '[CDN]    rewriting failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
+			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
 			return false ;
 		}
 
 		// Check if is external url
 		if ( ! empty( $url_parsed[ 'host' ] ) ) {
 			if ( ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
-				LiteSpeed_Cache_Log::debug2( '[CDN]    rewriting failed: host not internal' ) ;
+				LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: host not internal' ) ;
 				return false ;
 			}
 		}
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_CDN
 		if ( $this->_cfg_cdn_exclude ) {
 			$exclude = LiteSpeed_Cache_Utility::str_hit_array( $url, $this->_cfg_cdn_exclude ) ;
 			if ( $exclude ) {
-				LiteSpeed_Cache_Log::debug2( '[CDN]    Abort excludes ' . $exclude ) ;
+				LiteSpeed_Cache_Log::debug2( '[CDN] -abort excludes ' . $exclude ) ;
 				return false ;
 			}
 		}
@@ -499,14 +499,14 @@ class LiteSpeed_Cache_CDN
 		// Fill full url before replacement
 		if ( empty( $url_parsed[ 'host' ] ) ) {
 			$url = LiteSpeed_Cache_Utility::uri2url( $url ) ;
-			LiteSpeed_Cache_Log::debug2( '[CDN]    fill before rewritten: ' . $url ) ;
+			LiteSpeed_Cache_Log::debug2( '[CDN] -fill before rewritten: ' . $url ) ;
 
 			$url_parsed = parse_url( $url ) ;
 		}
 
 		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
 		if ( $scheme ) {
-			LiteSpeed_Cache_Log::debug2( '[CDN]    scheme from url: ' . $scheme ) ;
+			// LiteSpeed_Cache_Log::debug2( '[CDN] -scheme from url: ' . $scheme ) ;
 		}
 
 		// Find the mapping url to be replaced to
@@ -535,7 +535,7 @@ class LiteSpeed_Cache_CDN
 				$url = str_replace( $scheme . $v, $final_url, $url ) ;
 			}
 		}
-		LiteSpeed_Cache_Log::debug2( '[CDN]    after rewritten: ' . $url ) ;
+		LiteSpeed_Cache_Log::debug2( '[CDN] -rewritten: ' . $url ) ;
 
 		return $url ;
 	}

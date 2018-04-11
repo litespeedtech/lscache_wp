@@ -598,19 +598,19 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _replace_webp( $url )
 	{
-		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url ) ;
+		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
 		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
 			// check if has webp file
 			if ( LiteSpeed_Cache_Utility::is_internal_file( $url  . '.webp' ) ) {
 				$url .= '.webp' ;
 			}
 			else {
-				LiteSpeed_Cache_Log::debug2( '[Media] no WebP file, bypassed' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] -no WebP file, bypassed' ) ;
 				return false ;
 			}
 		}
 		else {
-			LiteSpeed_Cache_Log::debug2( '[Media] no file, bypassed' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] -no file, bypassed' ) ;
 			return false ;
 		}
 
