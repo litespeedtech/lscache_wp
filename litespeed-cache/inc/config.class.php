@@ -318,7 +318,7 @@ class LiteSpeed_Cache_Config
 	 */
 	private function _define_cache_on()
 	{
-		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+		defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
 
 		// Use this for cache enabled setting check
 		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
