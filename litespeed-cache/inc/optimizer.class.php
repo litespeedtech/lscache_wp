@@ -122,7 +122,7 @@ class LiteSpeed_Cache_Optimizer
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Optmer]    Generated content ' . $file_type ) ;
+		LiteSpeed_Cache_Log::debug2( '[Optmer]    Generated content ' . $file_type ) ;
 
 		return $content ;
 	}
@@ -137,7 +137,7 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
-			LiteSpeed_Cache_Log::debug( '[Optmer] [real_path] ' . $real_path ) ;
+			LiteSpeed_Cache_Log::debug2( '[Optmer] [real_path] ' . $real_path ) ;
 			$data = Litespeed_File::read( $real_path ) ;
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;

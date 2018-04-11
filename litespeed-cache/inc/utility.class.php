@@ -437,7 +437,7 @@ class LiteSpeed_Cache_Utility
 			// Check if is cdn path
 			// Do this to avoid user hardcoded src in tpl
 			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
-				LiteSpeed_Cache_Log::debug2( 'Utility: external' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Utility] external' ) ;
 				return false ;
 			}
 		}
@@ -484,7 +484,7 @@ class LiteSpeed_Cache_Utility
 
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
-			LiteSpeed_Cache_Log::debug2( 'Utility: file not exist: ' . $file_path_ori ) ;
+			LiteSpeed_Cache_Log::debug2( '[Utility] file not exist: ' . $file_path_ori ) ;
 			return false ;
 		}
 

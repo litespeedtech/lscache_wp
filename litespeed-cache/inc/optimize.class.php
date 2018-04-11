@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Optimize
 			return ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Optm] start minifying file' ) ;
+		LiteSpeed_Cache_Log::debug2( '[Optm] start minifying file' ) ;
 
 		// Proceed css/js file generation
 		define( 'LITESPEED_MIN_FILE', true ) ;
@@ -249,12 +249,12 @@ class LiteSpeed_Cache_Optimize
 
 			// Generate static file
 			Litespeed_File::save( $static_file, $content, true ) ;
-			LiteSpeed_Cache_Log::debug( '[Optm] Saved cache to file [path] ' . $static_file ) ;
+			LiteSpeed_Cache_Log::debug2( '[Optm] Saved cache to file [path] ' . $static_file ) ;
 
 		}
 		else {
 			// Load file from file based cache if not expired
-			LiteSpeed_Cache_Log::debug( '[Optm] Static file available' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Optm] Static file available' ) ;
 			$content = Litespeed_File::read( $static_file ) ;
 		}
 
@@ -941,7 +941,7 @@ class LiteSpeed_Cache_Optimize
 			// Generate static file
 			Litespeed_File::save( $static_file, $content, true ) ;
 
-			LiteSpeed_Cache_Log::debug( '[Optm] Saved static file [path] ' . $static_file ) ;
+			LiteSpeed_Cache_Log::debug2( '[Optm] Saved static file [path] ' . $static_file ) ;
 
 		}
 

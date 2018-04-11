@@ -518,6 +518,22 @@ class LiteSpeed_Cache_Media
 			) ;
 			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
 		}
+
+		// Replace background-image
+		preg_match_all( '#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches ) ;
+		foreach ( $matches[ 2 ] as $k => $url ) {
+			// Check if is a DATA-URI
+			if ( strpos( $url, 'data:image' ) !== false ) {
+				continue ;
+			}
+
+			if ( ! $url2 = $this->_replace_webp( $url ) ) {
+				continue ;
+			}
+
+			$html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 ) ;
+			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
+		}
 	}
 
 	/**
@@ -582,19 +598,19 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _replace_webp( $url )
 	{
-		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url ) ;
+		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
 		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
 			// check if has webp file
 			if ( LiteSpeed_Cache_Utility::is_internal_file( $url  . '.webp' ) ) {
 				$url .= '.webp' ;
 			}
 			else {
-				LiteSpeed_Cache_Log::debug2( '[Media] no WebP file, bypassed' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] -no WebP file, bypassed' ) ;
 				return false ;
 			}
 		}
 		else {
-			LiteSpeed_Cache_Log::debug2( '[Media] no file, bypassed' ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] -no file, bypassed' ) ;
 			return false ;
 		}
 
