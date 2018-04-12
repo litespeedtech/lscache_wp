@@ -31,7 +31,6 @@ $thirdparty_list = array(
 	'wpforo',
 	'avada',
 	'wp-postratings',
-	'login-with-ajax',
 ) ;
 
 foreach ($thirdparty_list as $val) {

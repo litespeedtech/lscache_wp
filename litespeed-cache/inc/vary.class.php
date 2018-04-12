@@ -33,6 +33,7 @@ class LiteSpeed_Cache_Vary
 				// If cache logged-in, then init cacheable to private
 				if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PRIV ) ) {
 					add_action( 'wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
+					add_action( 'wp_logout', array( $this, 'can_ajax_vary' ) ) ;
 
 					LiteSpeed_Cache_Control::init_cacheable() ;
 					LiteSpeed_Cache_Control::set_private( 'logged in user' ) ;
@@ -56,6 +57,7 @@ class LiteSpeed_Cache_Vary
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
 			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 ) ;
 			add_action( 'wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
+			add_action( 'wp_login', array( $this, 'can_ajax_vary' ) ) ;
 
 			LiteSpeed_Cache_Control::init_cacheable() ;
 
@@ -214,6 +216,17 @@ class LiteSpeed_Cache_Vary
 		LiteSpeed_Cache_Log::debug( '[Vary] remove_logged_in' ) ;
 		// Force update vary to remove login status
 		$this->_update_default_vary( -1 ) ;
+	}
+
+	/**
+	 * Allow vary can be changed for ajax calls
+	 *
+	 * @since 2.2.2
+	 * @access public
+	 */
+	public function can_ajax_vary()
+	{
+		add_filter( 'litespeed_ajax_vary', '__return_true' ) ;
 	}
 
 	/**
