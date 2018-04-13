@@ -499,24 +499,59 @@ class LiteSpeed_Cache_Media
 	 */
 	private function _replace_buffer_img_webp()
 	{
-		preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches ) ;
-		foreach ( $matches[ 3 ] as $k => $url ) {
-			// Check if is a DATA-URI
-			if ( strpos( $url, 'data:image' ) !== false ) {
+		// preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches ) ;
+		/**
+		 * Added custom element & attribute support
+		 * @since 2.2.2
+		 */
+		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ) ;
+
+		foreach ( $webp_ele_to_check as $v ) {
+			if ( ! $v || strpos( $v, '.' ) === false ) {
+				LiteSpeed_Cache_Log::debug2( '[Media] buffer_webp no . attribute ' . $v ) ;
 				continue ;
 			}
 
-			if ( ! $url2 = $this->_replace_webp( $url ) ) {
-				continue ;
+			LiteSpeed_Cache_Log::debug2( '[Media] buffer_webp attribute ' . $v ) ;
+
+			$v = explode( '.', $v ) ;
+			$attr = preg_quote( $v[ 1 ], '#' ) ;
+			if ( $v[ 0 ] ) {
+				$pattern = '#<' . preg_quote( $v[ 0 ], '#' ) . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU' ;
+			}
+			else {
+				$pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU' ;
 			}
 
-			$html_snippet = sprintf(
-				'<img %1$s src=%2$s %3$s>',
-				$matches[ 1 ][ $k ],
-				$matches[ 2 ][ $k ] . $url2 . $matches[ 4 ][ $k ],
-				$matches[ 5 ][ $k ]
-			) ;
-			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
+			preg_match_all( $pattern, $this->content, $matches ) ;
+
+			foreach ( $matches[ $v[ 0 ] ? 3 : 2 ] as $k2 => $url ) {
+				// Check if is a DATA-URI
+				if ( strpos( $url, 'data:image' ) !== false ) {
+					continue ;
+				}
+
+				if ( ! $url2 = $this->_replace_webp( $url ) ) {
+					continue ;
+				}
+
+				if ( $v[ 0 ] ) {
+					$html_snippet = sprintf(
+						'<' . $v[ 0 ] . '%1$s' . $v[ 1 ] . '=%2$s',
+						$matches[ 1 ][ $k2 ],
+						$matches[ 2 ][ $k2 ] . $url2 . $matches[ 2 ][ $k2 ]
+					) ;
+				}
+				else {
+					$html_snippet = sprintf(
+						' ' . $v[ 1 ] . '=%1$s',
+						$matches[ 1 ][ $k2 ] . $url2 . $matches[ 1 ][ $k2 ]
+					) ;
+				}
+
+				$this->content = str_replace( $matches[ 0 ][ $k2 ], $html_snippet, $this->content ) ;
+
+			}
 		}
 
 		// Replace background-image

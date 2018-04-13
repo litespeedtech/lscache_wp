@@ -705,6 +705,9 @@ class LiteSpeed_Cache_Admin_Settings
 		// Update lazyload image excludes
 		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ;
 		$this->_save_item( $id, 'uri' ) ;
+
+		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ;
+		$this->_save_item( $id ) ;
 	}
 
 	/**
