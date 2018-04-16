@@ -198,6 +198,13 @@ class LiteSpeed_Cache_Vary
 	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false )
 	{
 		LiteSpeed_Cache_Log::debug( '[Vary] add_logged_in' ) ;
+
+		/**
+		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 * @since  2.2.2
+		 */
+		$this->can_ajax_vary() ;
+
 		// If the cookie is lost somehow, set it
 		$this->_update_default_vary( $uid, $expire ) ;
 	}
@@ -212,8 +219,27 @@ class LiteSpeed_Cache_Vary
 	public function remove_logged_in()
 	{
 		LiteSpeed_Cache_Log::debug( '[Vary] remove_logged_in' ) ;
+
+		/**
+		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 * @since  2.2.2
+		 */
+		$this->can_ajax_vary() ;
+
 		// Force update vary to remove login status
 		$this->_update_default_vary( -1 ) ;
+	}
+
+	/**
+	 * Allow vary can be changed for ajax calls
+	 *
+	 * @since 2.2.2
+	 * @access public
+	 */
+	public function can_ajax_vary()
+	{
+		LiteSpeed_Cache_Log::debug( '[Vary] litespeed_ajax_vary -> true' ) ;
+		add_filter( 'litespeed_ajax_vary', '__return_true' ) ;
 	}
 
 	/**

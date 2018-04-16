@@ -34,6 +34,7 @@ class LiteSpeed_Cache_Config
 	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
 	const ITEM_ADV_PURGE_ALL_HOOKS = 'litespeed-adv-purge_all_hooks' ;
 	const ITEM_CDN_ORI_DIR = 'litespeed-cdn-ori_dir' ;
+	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'litespeed-media-webp_attribute' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
@@ -837,6 +838,9 @@ class LiteSpeed_Cache_Config
 
 			case self::ITEM_CDN_ORI_DIR :
 				return LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
+
+			case self::ITEM_MEDIA_WEBP_ATTRIBUTE :
+				return "img.src\ndiv.data-thumb\ndiv.data-large_image\nimg.retina_logo_url" ;
 
 			default :
 				break ;

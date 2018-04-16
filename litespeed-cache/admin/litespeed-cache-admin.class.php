@@ -49,6 +49,10 @@ class LiteSpeed_Cache_Admin
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
 			}
 			foreach ( $purge_all_events as $event ) {
+				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
+				if ( in_array( $event, array( 'update_option' ) ) ) {
+					continue ;
+				}
 				add_action( $event, 'LiteSpeed_Cache_Purge::purge_all' ) ;
 			}
 			// add_filter( 'upgrader_pre_download', 'LiteSpeed_Cache_Purge::filter_with_purge_all' ) ;

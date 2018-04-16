@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -87,7 +87,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * [View detailed documentation on our wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp).
 * [Read WordPress Wednesday tutorials on our blog](http://blog.litespeedtech.com/tag/wordpress-wednesday).
 * [Help translate LSCWP](https://translate.wordpress.org/projects/wp-plugins/litespeed-cache).
-* [LSCWP GitHub Repo](https://github.com/litespeedtech/lscache_wp).
+* [LSCWP GitHub repo](https://github.com/litespeedtech/lscache_wp).
 
 == Installation ==
 
@@ -249,9 +249,19 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
 * Login With Ajax
 * [Post Types Order 1.9.3.6+](https://wordpress.org/plugins/post-types-order/)
+* [BoomBox — Viral Magazine WordPress Theme](https://themeforest.net/item/boombox-viral-buzz-wordpress-theme/16596434?ref=PX-lab)
 
 
 == Changelog ==
+
+= 2.2.2 - Apr 16 2018 =
+* [NEW FEATURE] WebP Attribute To Replace setting in Media tab. (@vengen)
+* [IMPROVEMENT] Generate adv_cache file automatically when it is lost.
+* [IMPROVEMENT] Improved compatibility with ajax login. (@veganostomy)
+* [UPDATE] Added object cache lib check in case user downgrades LSCWP to non-object-cache versions.
+* [UPDATE] Avoided infinite loop when users enter invalid hook values in Purge All Hooks settings.
+* [UPDATE] Updated log format in media&cdn class.
+* [UPDATE] Added more items to Report.
 
 = 2.2.1 - Apr 10 2018 =
 * [NEW FEATURE] Included Directories setting in CDN tab. (@Dave)

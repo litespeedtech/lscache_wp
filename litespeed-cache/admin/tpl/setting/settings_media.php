@@ -84,6 +84,21 @@ if ( ! defined( 'WPINC' ) ) die ;
 	?>
 
 	<tr>
+		<th><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ; ?>
+			<?php $this->build_textarea2( $id, 40 ) ; ?>
+			<?php $this->recommended( $id, true ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify which element attributes will be replaced with WebP.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Only attributes listed here will be replaced.', 'litespeed-cache' ) ; ?>
+				<br /><?php echo sprintf( __( 'Use the format %1$s or %2$s (element is optional).', 'litespeed-cache' ), '<code>element.attribute</code>', '<code>.attribute</code>' ) ; ?>
+				<?php echo __('One per line.', 'litespeed-cache'); ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Only Request WebP', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ; ?>

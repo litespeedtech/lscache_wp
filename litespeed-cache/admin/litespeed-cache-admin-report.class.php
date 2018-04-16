@@ -182,6 +182,7 @@ class LiteSpeed_Cache_Admin_Report
 			LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS,
 			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
 			LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR,
+			LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE,
 		) ;
 
 		foreach ( $item_options as $v ) {
