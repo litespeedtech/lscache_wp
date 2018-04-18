@@ -437,7 +437,7 @@ class LiteSpeed_Cache_Utility
 			// Check if is cdn path
 			// Do this to avoid user hardcoded src in tpl
 			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
-				LiteSpeed_Cache_Log::debug2( '[Utility] external' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Util] external' ) ;
 				return false ;
 			}
 		}
@@ -484,14 +484,62 @@ class LiteSpeed_Cache_Utility
 
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Utility] file not exist: ' . $file_path_ori ) ;
+			LiteSpeed_Cache_Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
 			return false ;
 		}
 
 		return array( $file_path, filesize( $file_path ) ) ;
 	}
 
+	/**
+	 * Replace url in srcset to new value
+	 *
+	 * @since  2.2.3
+	 */
+	public static function srcset_replace( $content, $callback )
+	{
+		preg_match_all( '# srcset=([\'"])(.+)\g{1}#iU', $content, $matches ) ;
+		$srcset_ori = array() ;
+		$srcset_final = array() ;
+		foreach ( $matches[ 2 ] as $k => $urls_ori ) {
 
+			$urls_final = explode( ',', $urls_ori ) ;
+
+			$changed = false ;
+
+			foreach ( $urls_final as $k2 => $url_info ) {
+				list( $url, $size ) = explode( ' ', trim( $url_info ) ) ;
+
+				if ( ! $url2 = call_user_func( $callback, $url ) ) {
+					continue ;
+				}
+
+				$changed = true ;
+
+				$urls_final[ $k2 ] = str_replace( $url, $url2, $url_info ) ;
+
+				LiteSpeed_Cache_Log::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
+			}
+
+			if ( ! $changed ) {
+				continue ;
+			}
+
+			$urls_final = implode( ',', $urls_final ) ;
+
+			$srcset_ori[] = $matches[ 0 ][ $k ] ;
+
+			$srcset_final[] = str_replace( $urls_ori, $urls_final, $matches[ 0 ][ $k ] ) ;
+		}
+
+		if ( $srcset_ori ) {
+			$content = str_replace( $srcset_ori, $srcset_final, $content ) ;
+			LiteSpeed_Cache_Log::debug2( '[Util] - srcset replaced' ) ;
+		}
+
+		return $content ;
+
+	}
 
 
 

@@ -183,6 +183,7 @@ class LiteSpeed_Cache_Config
 	const OPID_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
 	const OPID_MEDIA_IMG_OPTM_CRON_OFF = 'media_img_optm_cron_off' ;
 	const OPID_MEDIA_IMG_WEBP = 'media_img_webp' ;
+	const OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET = 'media_img_webp_replace_srcset' ;
 	const OPID_MEDIA_IMG_WEBP_ONLY = 'media_img_webp_only' ;
 	const OPID_MEDIA_IMG_EXIF = 'media_img_exif' ;
 	const OPID_MEDIA_IMG_WEBP_LOSSLESS = 'media_img_webp_lossless' ;
@@ -715,6 +716,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_MEDIA_IFRAME_LAZY 	=> false,
 			self::OPID_MEDIA_IMG_OPTM_CRON_OFF 	=> false,
 			self::OPID_MEDIA_IMG_WEBP 	=> false,
+			self::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET 	=> false,
 			self::OPID_MEDIA_IMG_WEBP_ONLY 	=> false,
 			self::OPID_MEDIA_IMG_EXIF 	=> false,
 			self::OPID_MEDIA_IMG_WEBP_LOSSLESS 	=> false,

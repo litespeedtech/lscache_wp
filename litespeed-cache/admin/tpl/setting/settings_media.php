@@ -99,6 +99,17 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'WebP For Extra srcset', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Enable replacement of WebP in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Only Request WebP', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ; ?>

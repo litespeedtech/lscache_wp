@@ -421,11 +421,11 @@ class LiteSpeed_Cache_Media
 			 * @since  1.6
 			 */
 			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
-				LiteSpeed_Cache_Log::debug2( '[Media] bypassed base64 img' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Media] lazyload bypassed base64 img' ) ;
 				continue ;
 			}
 
-			LiteSpeed_Cache_Log::debug2( '[Media] found: ' . $attrs[ 'src' ] ) ;
+			LiteSpeed_Cache_Log::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] ) ;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
@@ -531,7 +531,7 @@ class LiteSpeed_Cache_Media
 					continue ;
 				}
 
-				if ( ! $url2 = $this->_replace_webp( $url ) ) {
+				if ( ! $url2 = $this->replace_webp( $url ) ) {
 					continue ;
 				}
 
@@ -554,6 +554,12 @@ class LiteSpeed_Cache_Media
 			}
 		}
 
+		// parse srcset
+		// todo: should apply this to cdn too
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET ) ) {
+			$this->content = LiteSpeed_Cache_Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
+		}
+
 		// Replace background-image
 		preg_match_all( '#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches ) ;
 		foreach ( $matches[ 2 ] as $k => $url ) {
@@ -562,7 +568,7 @@ class LiteSpeed_Cache_Media
 				continue ;
 			}
 
-			if ( ! $url2 = $this->_replace_webp( $url ) ) {
+			if ( ! $url2 = $this->replace_webp( $url ) ) {
 				continue ;
 			}
 
@@ -582,7 +588,7 @@ class LiteSpeed_Cache_Media
 	public function webp_attach_img_src( $img )
 	{
 		LiteSpeed_Cache_Log::debug2( '[Media] changing attach src: ' . $img[0] ) ;
-		if ( $img && $url = $this->_replace_webp( $img[ 0 ] ) ) {
+		if ( $img && $url = $this->replace_webp( $img[ 0 ] ) ) {
 			$img[ 0 ] = $url ;
 		}
 		return $img ;
@@ -598,7 +604,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public function webp_url( $url )
 	{
-		if ( $url && $url2 = $this->_replace_webp( $url ) ) {
+		if ( $url && $url2 = $this->replace_webp( $url ) ) {
 			$url = $url2 ;
 		}
 		return $url ;
@@ -616,7 +622,7 @@ class LiteSpeed_Cache_Media
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
-				if( ! $url = $this->_replace_webp( $data[ 'url' ] ) ) {
+				if( ! $url = $this->replace_webp( $data[ 'url' ] ) ) {
 					continue ;
 				}
 				$srcs[ $w ][ 'url' ] = $url ;
@@ -629,11 +635,17 @@ class LiteSpeed_Cache_Media
 	 * Replace internal image src to webp
 	 *
 	 * @since  1.6.2
-	 * @access private
+	 * @access public
 	 */
-	private function _replace_webp( $url )
+	public function replace_webp( $url )
 	{
 		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
+
+		if ( substr( $url, -5 ) == '.webp' ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] already webp' ) ;
+			return false ;
+		}
+
 		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
 			// check if has webp file
 			if ( LiteSpeed_Cache_Utility::is_internal_file( $url  . '.webp' ) ) {
@@ -648,6 +660,8 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Log::debug2( '[Media] -no file, bypassed' ) ;
 			return false ;
 		}
+
+		LiteSpeed_Cache_Log::debug2( '[Media] - replaced to: ' . $url ) ;
 
 		return $url ;
 	}
