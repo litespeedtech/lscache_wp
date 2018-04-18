@@ -740,7 +740,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_DOMAIN_IP => '',
 			self::CRWL_CUSTOM_SITEMAP => '',
 			self::CRWL_CRON_ACTIVE => false,
-			self::CRWL_HTTP2 => true,
+			self::CRWL_HTTP2 => false,
 				) ;
 
 		if ( LSWCP_ESI_SUPPORT ) {
