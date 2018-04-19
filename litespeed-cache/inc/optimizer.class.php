@@ -63,8 +63,8 @@ class LiteSpeed_Cache_Optimizer
 			return $content_final ;
 
 		} catch ( Exception $e ) {
-			LiteSpeed_Cache_Log::debug( '![Optmer] html_min failed: ' . $e->getMessage() ) ;
-			error_log( '! LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
+			LiteSpeed_Cache_Log::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
+			error_log( '****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
 			return $content ;
 		}
 	}
@@ -123,8 +123,8 @@ class LiteSpeed_Cache_Optimizer
 		// } catch ( Exception $e ) {
 		// 	$tmp = '[url] ' . implode( ', ', $urls ) . ' [err] ' . $e->getMessage() ;
 
-		// 	LiteSpeed_Cache_Log::debug( '![Optmer] serve err ' . $tmp ) ;
-		// 	error_log( '! LiteSpeed Optimizer serve err ' . $tmp ) ;
+		// 	LiteSpeed_Cache_Log::debug( '******[Optmer] serve err ' . $tmp ) ;
+		// 	error_log( '****** LiteSpeed Optimizer serve err ' . $tmp ) ;
 		// 	return false ;//todo: return ori data
 		// }
 		// restore_error_handler() ;
@@ -207,8 +207,8 @@ class LiteSpeed_Cache_Optimizer
 			return $obj->run( $data ) ;
 
 		} catch ( Exception $e ) {
-			LiteSpeed_Cache_Log::debug( '![Optmer] minify_css failed: ' . $e->getMessage() ) ;
-			error_log( '! LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;
+			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
+			error_log( '****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;
 			return $data ;
 		}
 	}
@@ -227,8 +227,8 @@ class LiteSpeed_Cache_Optimizer
 			$data = JSMin::minify( $data ) ;
 			return $data ;
 		} catch ( Exception $e ) {
-			LiteSpeed_Cache_Log::debug( '![Optmer] minify_js failed: ' . $e->getMessage() ) ;
-			error_log( '! LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
+			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
+			error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
 			return $data ;
 		}
 	}
