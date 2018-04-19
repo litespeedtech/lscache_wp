@@ -665,21 +665,7 @@ class LiteSpeed_Cache_Optimize
 
 		// HTML minify
 		if ( $this->cfg_html_minify ) {
-			$ori = $this->content ;
-
-			set_error_handler( 'litespeed_exception_handler' ) ;
-			try {
-				$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
-				$this->content .= "\n" . '<!-- Page optimized by LiteSpeed Cache on '.date('Y-m-d H:i:s').' -->' ;
-
-			} catch ( ErrorException $e ) {
-				LiteSpeed_Cache_Log::debug( '[Optm] Error when optimizing HTML: ' . $e->getMessage() ) ;
-				error_log( 'LiteSpeed Optimizer optimizing HTML Error: ' . $e->getMessage() ) ;
-				// If failed to minify HTML, restore original content
-				$this->content = $ori ;
-			}
-			restore_error_handler() ;
-
+			$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 		}
 
 		if ( $this->http2_headers ) {

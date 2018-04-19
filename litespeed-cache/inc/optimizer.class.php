@@ -49,11 +49,24 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		if ( $this->cfg_js_inline_minify ) {
-			$options[ 'jsMinifier' ] = 'JSMin\JSMin::minify' ;
+			$options[ 'jsMinifier' ] = 'JSMin::minify' ;
 		}
 
-		$obj = new Minify_HTML( $content, $options ) ;
-		return $obj->process() ;
+		/**
+		 * Added exception capture when minify
+		 * @since  2.2.3
+		 */
+		try {
+			$obj = new Minify_HTML( $content, $options ) ;
+			$content_final = $obj->process() ;
+			$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
+			return $content_final ;
+
+		} catch ( Exception $e ) {
+			LiteSpeed_Cache_Log::debug( '![Optmer] html_min failed: ' . $e->getMessage() ) ;
+			error_log( '! LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
+			return $content ;
+		}
 	}
 
 	/**
@@ -92,7 +105,7 @@ class LiteSpeed_Cache_Optimizer
 
 		LiteSpeed_Cache_Log::debug2( '[Optmer]    urls : ', $urls ) ;
 
-		set_error_handler( 'litespeed_exception_handler' ) ;
+		// set_error_handler( 'litespeed_exception_handler' ) ;
 
 		$content = '' ;
 		$tmp = parse_url( $urls[ 0 ], PHP_URL_PATH ) ;
@@ -107,9 +120,11 @@ class LiteSpeed_Cache_Optimizer
 				$content = $this->_serve_js( $real_files, $concat_only ) ;
 			}
 
-		} catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Log::debug( '[Optmer] Error when serving from optimizer: ' . $e->getMessage() ) ;
-			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
+		} catch ( Exception $e ) {
+			$tmp = '[url] ' . implode( ', ', $urls ) . ' [err] ' . $e->getMessage() ;
+
+			LiteSpeed_Cache_Log::debug( '![Optmer] serve err ' . $tmp ) ;
+			error_log( '! LiteSpeed Optimizer serve err ' . $tmp ) ;
 			return false ;
 		}
 		restore_error_handler() ;
@@ -168,7 +183,7 @@ class LiteSpeed_Cache_Optimizer
 			$data = Litespeed_File::read( $real_path ) ;
 
 			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-				$data = JSMin\JSMin::minify( $data ) ;
+				$data = JSMin::minify( $data ) ;
 			}
 			else {
 				$data = $this->_null_minifier( $data ) ;
