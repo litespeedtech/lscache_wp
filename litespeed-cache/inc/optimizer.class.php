@@ -221,8 +221,17 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  2.2.3
 	 * @access private
 	 */
-	public static function minify_js( $data )
+	public static function minify_js( $data, $js_type = '' )
 	{
+		// For inline JS optimize, need to check if it's js type
+		if ( $js_type ) {
+			preg_match( '#type=([\'"])(.+)\g{1}#isU', $js_type, $matches ) ;
+			if ( $matches && $matches[ 2 ] != 'text/javascript' ) {
+				LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ] ) ;
+				return $data ;
+			}
+		}
+
 		try {
 			$data = JSMin::minify( $data ) ;
 			return $data ;
