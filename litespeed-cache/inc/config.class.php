@@ -842,7 +842,11 @@ class LiteSpeed_Cache_Config
 				return LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
 
 			case self::ITEM_MEDIA_WEBP_ATTRIBUTE :
-				return "img.src\ndiv.data-thumb\ndiv.data-large_image\nimg.retina_logo_url" ;
+				return "img.src\n" .
+						"div.data-thumb\n" .
+						"img.data-src\n" .
+						"div.data-large_image\n" .
+						"img.retina_logo_url" ;
 
 			default :
 				break ;
