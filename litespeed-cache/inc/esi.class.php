@@ -180,7 +180,12 @@ class LiteSpeed_Cache_ESI
 			return false ;
 		}
 
-		$url = trailingslashit( wp_make_link_relative( home_url() ) ) . '?' . self::QS_ACTION . '=' . self::POSTTYPE . '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
+		$url = trailingslashit( wp_make_link_relative( home_url() ) ) . '?' . self::QS_ACTION . '=' . self::POSTTYPE ;
+		if ( ! empty( $control ) ) {
+			$url .= '&_control=' . $control ;
+		}
+		$url .= '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
+
 		$output = "<esi:include src='$url'" ;
 		if ( ! empty( $control ) ) {
 			$output .= " cache-control='$control'" ;
@@ -252,6 +257,22 @@ class LiteSpeed_Cache_ESI
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . $esi_id ) ;
 
 		// LiteSpeed_Cache_Log::debug(var_export($params, true ));
+
+		/**
+		 * Handle default cache control 'private,no-vary' for sub_esi_block() 	@ticket #923505
+		 *
+		 * @since  2.2.3
+		 */
+		if ( ! empty( $_GET[ '_control' ] ) ) {
+			$control = explode( ',', $_GET[ '_control' ] ) ;
+			if ( in_array( 'private', $control ) ) {
+				LiteSpeed_Cache_Control::set_private() ;
+			}
+
+			if ( in_array( 'no-vary', $control ) ) {
+				LiteSpeed_Cache_Control::set_no_vary() ;
+			}
+		}
 
 		do_action('litespeed_cache_load_esi_block-' . $esi_id, $params) ;
 	}

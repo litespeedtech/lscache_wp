@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Purge
 
 		LiteSpeed_Cache_Log::debug( '[Purge] Purge all ' . $reason, 3 ) ;
 
-		$msg = __( 'Purge all caches successfully.', 'litespeed-cache' ) ;
+		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
