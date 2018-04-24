@@ -482,6 +482,13 @@ class LiteSpeed_Cache_Utility
 			$file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
 		}
 
+		/**
+		 * Added this filter for those plugins which overwrite the filepath
+		 * @see #101091 plugin `Hide My WordPress`
+		 * @since 2.2.3
+		 */
+		$file_path_ori = apply_filters( 'litespeed_realpath', $file_path_ori ) ;
+
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
