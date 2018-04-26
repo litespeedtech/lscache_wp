@@ -108,7 +108,6 @@ class LiteSpeed_Cache_Admin_Settings
 			return $this->_options ;
 		}
 
-		$cron_changed = false ;
 		if ( defined( 'LITESPEED_CLI' ) ) {
 			$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
 			$cron_val = $this->_options[ $id ] ;
@@ -116,13 +115,9 @@ class LiteSpeed_Cache_Admin_Settings
 			// This has to be specified cos crawler cron activation is not set in admin setting page
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 			if ( $cron_val != $this->_options[ $id ] ) {
-				$cron_changed = true ;
+				// check if need to enable crawler cron
+				LiteSpeed_Cache_Task::update( $this->_options ) ;
 			}
-		}
-
-		// check if need to enable crawler cron
-		if ( defined( 'LITESPEED_ON_CHANGED' ) || $cron_changed ) {
-			LiteSpeed_Cache_Task::update( $this->_options ) ;
 		}
 
 		$this->_validate_thirdparty( ) ;
@@ -340,14 +335,6 @@ class LiteSpeed_Cache_Admin_Settings
 		if ( ! $enabled ) {
 			LiteSpeed_Cache_Purge::purge_all( 'Not enabled' ) ;
 			! defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
-		}
-		else {
-			! defined( 'LITESPEED_NEW_ON' ) && define( 'LITESPEED_NEW_ON', true ) ; // Latest status is on
-		}
-
-		// Status changed
-		if ( defined( 'LITESPEED_ON' ) xor $enabled ) {
-			define( 'LITESPEED_ON_CHANGED', true ) ;
 		}
 
 		// TTL check

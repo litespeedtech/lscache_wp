@@ -98,29 +98,34 @@ class LiteSpeed_Cache_Admin
 
 		do_action( 'litspeed_after_admin_init' ) ;
 
-		// step out if plugin is not enabled
-		if ( ! defined( 'LITESPEED_ON' ) ) {
-			return ;
+		// If setting is set to on, try to activate cache func
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {
+			// check if WP_CACHE is defined and true in the wp-config.php file.
+			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
+				$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
+				if ( $add_var !== true ) {
+					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;
+				}
+			}
+
+			// check management action
+			if ( defined('WP_CACHE') && WP_CACHE ) {
+				$this->check_advanced_cache() ;
+			}
+
+			// step out if adv_cache can't write
+			if ( ! defined( 'LITESPEED_ON' ) ) {
+				return ;
+			}
+
 		}
+
 
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
 		if ( LiteSpeed_Cache_Router::esi_enabled() ) {
 			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
 			add_filter( 'widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4 ) ;
-		}
-
-		// check if WP_CACHE is defined and true in the wp-config.php file.
-		if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
-			$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
-			if ( $add_var !== true ) {
-				LiteSpeed_Cache_Admin_Display::add_error($add_var) ;
-			}
-		}
-
-		// check management action
-		if ( defined('WP_CACHE') && WP_CACHE ) {
-			$this->check_advanced_cache() ;
 		}
 
 		if ( ! is_multisite() ) {
@@ -189,11 +194,11 @@ class LiteSpeed_Cache_Admin
 	private function check_advanced_cache()
 	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
-		if ( (defined('LSCACHE_ADV_CACHE') && LSCACHE_ADV_CACHE) || ! current_user_can($capability) ) {
-			if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE) ) {
+		if ( defined( 'LSCACHE_ADV_CACHE' ) || ! current_user_can( $capability ) ) {
+			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ) ) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
-				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
+				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter
 			}
 			return ;
 		}

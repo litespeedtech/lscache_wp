@@ -32,6 +32,31 @@ class LiteSpeed_Cache_Purge
 	const TYPE_PURGE_ERROR = 'purge_error' ;
 
 	/**
+	 * Initialize
+	 *
+	 * @since    2.2.3
+	 */
+	private function __construct()
+	{
+		//register purge actions
+		$purge_post_events = array(
+			'edit_post',
+			'save_post',
+			'deleted_post',
+			'trashed_post',
+			'delete_attachment',
+			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
+		) ;
+		foreach ( $purge_post_events as $event ) {
+			// this will purge all related tags
+			add_action( $event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2 ) ;
+		}
+
+		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
+
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.8

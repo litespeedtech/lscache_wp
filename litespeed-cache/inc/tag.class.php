@@ -10,7 +10,7 @@
  */
 class LiteSpeed_Cache_Tag
 {
-	// private static $_instance ;
+	private static $_instance ;
 
 	const TYPE_FEED = 'FD' ;
 	const TYPE_FRONTPAGE = 'F' ;
@@ -37,6 +37,18 @@ class LiteSpeed_Cache_Tag
 	private static $_tags = array() ;
 	private static $_tags_priv = array( 'tag_priv' ) ;
 	protected static $_error_status = false ;
+
+	/**
+	 * Initialize
+	 *
+	 * @since    2.2.3
+	 */
+	private function __construct()
+	{
+		// register recent posts widget tag before theme renders it to make it work
+		add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
+
+	}
 
 	/**
 	 * Check if the login page is cacheable.
@@ -370,17 +382,17 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Get the current instance object.
 	 *
-	 * @since 1.1.3
+	 * @since 2.2.3
 	 * @access public
 	 * @return Current class instance.
 	 */
-	// public static function get_instance()
-	// {
-	// 	if ( ! isset(self::$_instance) ) {
-	// 		self::$_instance = new self() ;
-	// 	}
+	public static function get_instance()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self() ;
+		}
 
-	// 	return self::$_instance ;
-	// }
+		return self::$_instance ;
+	}
 
 }
