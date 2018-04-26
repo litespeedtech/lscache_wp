@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -256,6 +256,20 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.3 - Apr 27 2018 =
+* [NEW FEATURE] WebP For Extra srcset setting in Media tab. (@vengen)
+* [REFACTOR] Removed redundant LS consts.
+* [REFACTOR] Refactored adv_cache generation flow.
+* [BUGFIX] Fixed issue where inline JS minify exception caused a blank page. (@oomskaap @kenb1978)
+* [UPDATE] Changed HTTP/2 Crawl default value to OFF.
+* [UPDATE] Added img.data-src to default WebP replacement value for WooCommerce WebP support.
+* [UPDATE] Detached crawler from LSCache LITESPEED_ON status.
+* [API] Improved ESI API to honor the cache control in ESI wrapper.
+* [API] Added LITESPEED_PURGE_SILENT const to bypass the notification when purging
+* [INTEGRATION] Fixed issue with nonce expiration when using ESI API. (@Dan #923505)
+* [INTEGRATION] Improved compatibility with Ninja Forms by bypassing non-javascript JS from inline JS minify.
+* [INTEGRATION] Added a hook for plugins that change the CSS/JS path e.g. Hide My WordPress.
 
 = 2.2.2 - Apr 16 2018 =
 * [NEW FEATURE] WebP Attribute To Replace setting in Media tab. (@vengen)
