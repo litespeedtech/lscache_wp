@@ -240,7 +240,7 @@ class LiteSpeed_Cache_Activation
 		$ret = defined( 'LSCACHE_ADV_CACHE' ) ;
 
 		// Try to enable `LITESPEED_ON`
-		$this->config->define_cache_on() ;
+		LiteSpeed_Cache_Config::get_instance()->define_cache_on() ;
 
 		return $ret ;
 	}
