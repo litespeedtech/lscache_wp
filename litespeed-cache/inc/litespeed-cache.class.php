@@ -19,7 +19,7 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '2.2.2' ;
+	const PLUGIN_VERSION = '2.2.3' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -158,7 +158,7 @@ class LiteSpeed_Cache
 
 		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
 
-		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) || ! LSCACHE_ADV_CACHE ) {
+		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) ) {
 		// 	return ;
 		// }
 
@@ -194,8 +194,10 @@ class LiteSpeed_Cache
 		// Hook cdn for attachements
 		LiteSpeed_Cache_CDN::get_instance() ;
 
-		// Load public hooks
-		$this->load_public_actions() ;
+		// Init Purge hooks
+		LiteSpeed_Cache_Purge::get_instance() ;
+
+		LiteSpeed_Cache_Tag::get_instance() ;
 
 		// load cron tasks
 		LiteSpeed_Cache_Task::get_instance() ;
@@ -358,38 +360,6 @@ class LiteSpeed_Cache
 	public function load_thirdparty()
 	{
 		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
-	}
-
-	/**
-	 * Register all of the hooks related to the all users
-	 * of the plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function load_public_actions()
-	{
-		//register purge actions
-		$purge_post_events = array(
-			'edit_post',
-			'save_post',
-			'deleted_post',
-			'trashed_post',
-			'delete_attachment',
-			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
-		) ;
-		foreach ( $purge_post_events as $event ) {
-			// this will purge all related tags
-			add_action( $event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2 ) ;
-		}
-
-		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
-
-		// register recent posts widget tag before theme renders it to make it work
-		add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
-
-		// 301 redirect hook
-		add_filter( 'wp_redirect', 'LiteSpeed_Cache_Control::check_redirect', 10, 2 ) ;
 	}
 
 	/**
@@ -578,7 +548,7 @@ class LiteSpeed_Cache
 		}
 
 		// send Control header
-		if ( defined( 'LITESPEED_ON_IN_SETTING' ) && $control_header ) {
+		if ( defined( 'LITESPEED_ON' ) && $control_header ) {
 			@header( $control_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $control_header ) ;
@@ -588,7 +558,7 @@ class LiteSpeed_Cache
 			}
 		}
 		// send PURGE header (Always send regardless of cache setting disabled/enabled)
-		if ( $purge_header ) {
+		if ( defined( 'LITESPEED_ON' ) && $purge_header ) {
 			@header( $purge_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $purge_header ) ;
@@ -598,7 +568,7 @@ class LiteSpeed_Cache
 			}
 		}
 		// send Vary header
-		if ( defined( 'LITESPEED_ON_IN_SETTING' ) && $vary_header ) {
+		if ( defined( 'LITESPEED_ON' ) && $vary_header ) {
 			@header( $vary_header ) ;
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $vary_header ) ;
@@ -628,7 +598,7 @@ class LiteSpeed_Cache
 		}
 		else {
 			// Control header
-			if ( defined( 'LITESPEED_ON_IN_SETTING' ) && LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
+			if ( defined( 'LITESPEED_ON' ) && LiteSpeed_Cache_Control::is_cacheable() && $tag_header ) {
 				@header( $tag_header ) ;
 				if ( defined( 'LSCWP_LOG' ) ) {
 					LiteSpeed_Cache_Log::debug( $tag_header ) ;

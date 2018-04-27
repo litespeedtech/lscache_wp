@@ -45,15 +45,28 @@ class LiteSpeed_Cache_Optimizer
 	{
 		$options = array() ;
 		if ( $this->cfg_css_inline_minify ) {
-			$options[ 'cssMinifier' ] = array( new CSSmin(), 'run' ) ;
+			$options[ 'cssMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_css' ;
 		}
 
 		if ( $this->cfg_js_inline_minify ) {
-			$options[ 'jsMinifier' ] = 'JSMin\JSMin::minify' ;
+			$options[ 'jsMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_js' ;
 		}
 
-		$obj = new Minify_HTML( $content, $options ) ;
-		return $obj->process() ;
+		/**
+		 * Added exception capture when minify
+		 * @since  2.2.3
+		 */
+		try {
+			$obj = new Minify_HTML( $content, $options ) ;
+			$content_final = $obj->process() ;
+			$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
+			return $content_final ;
+
+		} catch ( Exception $e ) {
+			LiteSpeed_Cache_Log::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
+			error_log( '****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
+			return $content ;
+		}
 	}
 
 	/**
@@ -92,27 +105,29 @@ class LiteSpeed_Cache_Optimizer
 
 		LiteSpeed_Cache_Log::debug2( '[Optmer]    urls : ', $urls ) ;
 
-		set_error_handler( 'litespeed_exception_handler' ) ;
+		// set_error_handler( 'litespeed_exception_handler' ) ;
 
 		$content = '' ;
 		$tmp = parse_url( $urls[ 0 ], PHP_URL_PATH ) ;
 		$file_type = substr( $tmp, strrpos( $tmp, '.' ) + 1 ) ;
-		try {
-			// Handle CSS
-			if ( $file_type === 'css' ) {
-				$content = $this->_serve_css( $real_files, $concat_only ) ;
-			}
-			// Handle JS
-			else {
-				$content = $this->_serve_js( $real_files, $concat_only ) ;
-			}
-
-		} catch ( ErrorException $e ) {
-			LiteSpeed_Cache_Log::debug( '[Optmer] Error when serving from optimizer: ' . $e->getMessage() ) ;
-			error_log( 'LiteSpeed Optimizer serving Error: ' . $e->getMessage() ) ;
-			return false ;
+		// try {
+		// Handle CSS
+		if ( $file_type === 'css' ) {
+			$content = $this->_serve_css( $real_files, $concat_only ) ;
 		}
-		restore_error_handler() ;
+		// Handle JS
+		else {
+			$content = $this->_serve_js( $real_files, $concat_only ) ;
+		}
+
+		// } catch ( Exception $e ) {
+		// 	$tmp = '[url] ' . implode( ', ', $urls ) . ' [err] ' . $e->getMessage() ;
+
+		// 	LiteSpeed_Cache_Log::debug( '******[Optmer] serve err ' . $tmp ) ;
+		// 	error_log( '****** LiteSpeed Optimizer serve err ' . $tmp ) ;
+		// 	return false ;//todo: return ori data
+		// }
+		// restore_error_handler() ;
 
 		/**
 		 * Clean comment when minify
@@ -143,8 +158,7 @@ class LiteSpeed_Cache_Optimizer
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
 
 			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-				$obj = new CSSmin() ;
-				$data = $obj->run( $data ) ;
+				$data = self::minify_css( $data ) ;
 			}
 
 			$data = Minify_CSS_UriRewriter::rewrite( $data, dirname( $real_path ) ) ;
@@ -168,7 +182,7 @@ class LiteSpeed_Cache_Optimizer
 			$data = Litespeed_File::read( $real_path ) ;
 
 			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-				$data = JSMin\JSMin::minify( $data ) ;
+				$data = self::minify_js( $data ) ;
 			}
 			else {
 				$data = $this->_null_minifier( $data ) ;
@@ -180,6 +194,59 @@ class LiteSpeed_Cache_Optimizer
 		return implode( "\n;", $con ) ;
 	}
 
+	/**
+	 * Minify CSS
+	 *
+	 * @since  2.2.3
+	 * @access private
+	 */
+	public static function minify_css( $data )
+	{
+		try {
+			$obj = new CSSmin() ;
+			return $obj->run( $data ) ;
+
+		} catch ( Exception $e ) {
+			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
+			error_log( '****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;
+			return $data ;
+		}
+	}
+
+	/**
+	 * Minify JS
+	 *
+	 * Added exception capture when minify
+	 *
+	 * @since  2.2.3
+	 * @access private
+	 */
+	public static function minify_js( $data, $js_type = '' )
+	{
+		// For inline JS optimize, need to check if it's js type
+		if ( $js_type ) {
+			preg_match( '#type=([\'"])(.+)\g{1}#isU', $js_type, $matches ) ;
+			if ( $matches && $matches[ 2 ] != 'text/javascript' ) {
+				LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ] ) ;
+				return $data ;
+			}
+		}
+
+		try {
+			$data = JSMin::minify( $data ) ;
+			return $data ;
+		} catch ( Exception $e ) {
+			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
+			error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
+			return $data ;
+		}
+	}
+
+	/**
+	 * Basic minifier
+	 *
+	 * @access private
+	 */
 	private function _null_minifier( $content )
 	{
 		$content = str_replace( "\r\n", "\n", $content ) ;

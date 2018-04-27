@@ -32,6 +32,31 @@ class LiteSpeed_Cache_Purge
 	const TYPE_PURGE_ERROR = 'purge_error' ;
 
 	/**
+	 * Initialize
+	 *
+	 * @since    2.2.3
+	 */
+	private function __construct()
+	{
+		//register purge actions
+		$purge_post_events = array(
+			'edit_post',
+			'save_post',
+			'deleted_post',
+			'trashed_post',
+			'delete_attachment',
+			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
+		) ;
+		foreach ( $purge_post_events as $event ) {
+			// this will purge all related tags
+			add_action( $event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2 ) ;
+		}
+
+		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
+
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.8
@@ -121,8 +146,8 @@ class LiteSpeed_Cache_Purge
 
 		LiteSpeed_Cache_Log::debug( '[Purge] Purge all ' . $reason, 3 ) ;
 
-		$msg = __( 'Purge all caches successfully.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		$msg = __( 'Purged all caches successfully.', 'litespeed-cache' ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -145,7 +170,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 	}
 
@@ -164,7 +189,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge CSS/JS entries.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 	}
 
@@ -193,7 +218,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( ! $silence ) {
 			$msg = __( 'Reset the entire opcode cache successfully.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 
 		return true ;
@@ -222,7 +247,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( ! $silence ) {
 			$msg = __( 'Purge all object caches successfully.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 
 		return true ;
@@ -374,7 +399,7 @@ class LiteSpeed_Cache_Purge
 		}
 
 		$msg = __( 'Notified LiteSpeed Web Server to purge the front page.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -388,7 +413,7 @@ class LiteSpeed_Cache_Purge
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_PAGES ) ;
 
 		$msg = __( 'Notified LiteSpeed Web Server to purge pages.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -408,7 +433,7 @@ class LiteSpeed_Cache_Purge
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_ERROR . $type ) ;
 
 		$msg = __( 'Notified LiteSpeed Web Server to purge error pages.', 'litespeed-cache' ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
 	/**
@@ -435,7 +460,7 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 
-		LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge category %s', 'litespeed-cache' ), $val ) ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge category %s', 'litespeed-cache' ), $val ) ) ;
 
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_ARCHIVE_TERM . $cat->term_id ) ;
 	}
@@ -462,7 +487,7 @@ class LiteSpeed_Cache_Purge
 			LiteSpeed_Cache_Admin_Display::add_error( LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val ) ;
 			return ;
 		}
-		LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge Post ID %s', 'litespeed-cache' ), $val ) ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge Post ID %s', 'litespeed-cache' ), $val ) ) ;
 
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_POST . $val ) ;
 	}
@@ -491,7 +516,7 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 
-		LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge tag %s', 'litespeed-cache' ), $val ) ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge tag %s', 'litespeed-cache' ), $val ) ) ;
 
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_ARCHIVE_TERM . $term->term_id ) ;
 	}
@@ -525,7 +550,7 @@ class LiteSpeed_Cache_Purge
 			return ;
 		}
 
-		LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) ) ;
+		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) ) ;
 
 		$this->_add( $hash ) ;
 		return ;

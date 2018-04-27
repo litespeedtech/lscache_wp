@@ -90,16 +90,6 @@ class LiteSpeed_Cache_Task
 			$is_active = LiteSpeed_Cache::config( $id ) ;
 		}
 
-		// If cron setting is on, check cache status
-		if ( $is_active ) {
-			if ( defined( 'LITESPEED_NEW_OFF' ) ) {
-				$is_active = false ;
-			}
-			elseif ( ! defined( 'LITESPEED_ON' ) && ! defined( 'LITESPEED_NEW_ON' ) ) {
-				$is_active = false ;
-			}
-		}
-
 		if ( ! $is_active ) {
 			self::clear() ;
 		}

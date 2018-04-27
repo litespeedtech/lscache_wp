@@ -183,6 +183,7 @@ class LiteSpeed_Cache_Config
 	const OPID_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
 	const OPID_MEDIA_IMG_OPTM_CRON_OFF = 'media_img_optm_cron_off' ;
 	const OPID_MEDIA_IMG_WEBP = 'media_img_webp' ;
+	const OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET = 'media_img_webp_replace_srcset' ;
 	const OPID_MEDIA_IMG_WEBP_ONLY = 'media_img_webp_only' ;
 	const OPID_MEDIA_IMG_EXIF = 'media_img_exif' ;
 	const OPID_MEDIA_IMG_WEBP_LOSSLESS = 'media_img_webp_lossless' ;
@@ -236,7 +237,7 @@ class LiteSpeed_Cache_Config
 			$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
 			// Check advanced_cache set
-			$this->_check_adv_cache( $options ) ;
+			$this->_define_adv_cache( $options ) ;
 		}
 
 		$this->options = $options ;
@@ -246,7 +247,7 @@ class LiteSpeed_Cache_Config
 		if ( $this->options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON
 		//	 || ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) && $this->options[ LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ] ) todo: need to check when primary is off and network is on, if can manage
 		) {
-			$this->_define_cache_on() ;
+			$this->define_cache_on() ;
 		}
 
 		// Vary group settings
@@ -304,10 +305,10 @@ class LiteSpeed_Cache_Config
 	 * @since 2.1
 	 * @access private
 	 */
-	private function _check_adv_cache( $options )
+	private function _define_adv_cache( $options )
 	{
-		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && $options[ self::OPID_CHECK_ADVANCEDCACHE ] === false && ! defined( 'LSCACHE_ADV_CACHE' ) ) {
-			define( 'LSCACHE_ADV_CACHE', true ) ;
+		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
+			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 	}
 
@@ -315,11 +316,11 @@ class LiteSpeed_Cache_Config
 	 * Define `LITESPEED_ON`
 	 *
 	 * @since 2.1
-	 * @access private
+	 * @access public
 	 */
-	private function _define_cache_on()
+	public function define_cache_on()
 	{
-		defined( 'LITESPEED_ALLOWED' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
 
 		// Use this for cache enabled setting check
 		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
@@ -336,7 +337,7 @@ class LiteSpeed_Cache_Config
 	{
 		$site_options = get_site_option( self::OPTION_NAME ) ;
 
-		$this->_check_adv_cache( $site_options ) ;
+		$this->_define_adv_cache( $site_options ) ;
 
 		$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
@@ -352,7 +353,7 @@ class LiteSpeed_Cache_Config
 		// If don't have site options
 		if ( ! $site_options || ! is_array( $site_options ) || ! is_plugin_active_for_network( 'litespeed-cache/litespeed-cache.php' ) ) {
 			if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
-				$this->_define_cache_on() ;
+				$this->define_cache_on() ;
 			}
 			return $options ;
 		}
@@ -372,7 +373,7 @@ class LiteSpeed_Cache_Config
 
 		// If use network setting
 		if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $site_options[ self::NETWORK_OPID_ENABLED ] ) {
-			$this->_define_cache_on() ;
+			$this->define_cache_on() ;
 		}
 		// Set network eanble to on
 		if ( $site_options[ self::NETWORK_OPID_ENABLED ] ) {
@@ -715,6 +716,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_MEDIA_IFRAME_LAZY 	=> false,
 			self::OPID_MEDIA_IMG_OPTM_CRON_OFF 	=> false,
 			self::OPID_MEDIA_IMG_WEBP 	=> false,
+			self::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET 	=> false,
 			self::OPID_MEDIA_IMG_WEBP_ONLY 	=> false,
 			self::OPID_MEDIA_IMG_EXIF 	=> false,
 			self::OPID_MEDIA_IMG_WEBP_LOSSLESS 	=> false,
@@ -738,7 +740,7 @@ class LiteSpeed_Cache_Config
 			self::CRWL_DOMAIN_IP => '',
 			self::CRWL_CUSTOM_SITEMAP => '',
 			self::CRWL_CRON_ACTIVE => false,
-			self::CRWL_HTTP2 => true,
+			self::CRWL_HTTP2 => false,
 				) ;
 
 		if ( LSWCP_ESI_SUPPORT ) {
@@ -840,7 +842,11 @@ class LiteSpeed_Cache_Config
 				return LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
 
 			case self::ITEM_MEDIA_WEBP_ATTRIBUTE :
-				return "img.src\ndiv.data-thumb\ndiv.data-large_image\nimg.retina_logo_url" ;
+				return "img.src\n" .
+						"div.data-thumb\n" .
+						"img.data-src\n" .
+						"div.data-large_image\n" .
+						"img.retina_logo_url" ;
 
 			default :
 				break ;

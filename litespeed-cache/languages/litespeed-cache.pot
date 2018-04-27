@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.2.2\n"
+"Project-Id-Version: LiteSpeed Cache 2.2.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-04-13 20:50:24+00:00\n"
+"POT-Creation-Date: 2018-04-26 19:48:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -130,6 +130,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_object.php:75
 #: admin/tpl/setting/settings_inc.cache_object.php:150
 #: admin/tpl/setting/settings_media.php:8
+#: admin/tpl/setting/settings_media.php:107
 #: admin/tpl/setting/settings_optimize.php:8
 #: admin/tpl/setting/settings_optimize.php:176
 #: admin/tpl/setting/settings_purge.php:8
@@ -419,74 +420,74 @@ msgstr ""
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:247
+#: admin/litespeed-cache-admin-settings.class.php:242
 msgid "Site options saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:355
-#: admin/litespeed-cache-admin-settings.class.php:1042
+#: admin/litespeed-cache-admin-settings.class.php:342
+#: admin/litespeed-cache-admin-settings.class.php:1030
 msgid "Default Public Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:356
+#: admin/litespeed-cache-admin-settings.class.php:343
 msgid "Default Private Cache"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:357
+#: admin/litespeed-cache-admin-settings.class.php:344
 msgid "Default Front Page"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:358
+#: admin/litespeed-cache-admin-settings.class.php:345
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:882
+#: admin/litespeed-cache-admin-settings.class.php:870
 #: admin/tpl/setting/settings_debug.php:88
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:965
+#: admin/litespeed-cache-admin-settings.class.php:953
 #: admin/tpl/setting/settings_crawler.php:13
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:966
+#: admin/litespeed-cache-admin-settings.class.php:954
 #: admin/tpl/setting/settings_crawler.php:37
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:967
+#: admin/litespeed-cache-admin-settings.class.php:955
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:968
+#: admin/litespeed-cache-admin-settings.class.php:956
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:969
+#: admin/litespeed-cache-admin-settings.class.php:957
 #: admin/tpl/setting/settings_crawler.php:73
 msgid "Threads"
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:206
+#: admin/litespeed-cache-admin.class.php:211
 msgid ""
 "For this scenario only, the network admin may uncheck \"Check Advanced Cache"
 "\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:208
+#: admin/litespeed-cache-admin.class.php:213
 msgid ""
 "For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:210
+#: admin/litespeed-cache-admin.class.php:215
 msgid ""
 "Please disable/deactivate any other Full Page Cache solutions that are "
 "currently being used."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:211
+#: admin/litespeed-cache-admin.class.php:216
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
@@ -1046,7 +1047,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.2)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.3)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:348
 #: includes/litespeed-cache-gui.class.php:348
@@ -3132,37 +3133,47 @@ msgid "Use the format %1$s or %2$s (element is optional)."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:102
-msgid "Only Request WebP"
+msgid "WebP For Extra srcset"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:106
+msgid ""
+"Enable replacement of WebP in %s elements that were generated outside of "
+"WordPress logic."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:113
+msgid "Only Request WebP"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:117
 msgid ""
 "Prevent images from being replaced with optimized versions when optimizing. "
 "WebP versions will still be generated."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:112
+#: admin/tpl/setting/settings_media.php:123
 msgid "Preserve EXIF data"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:116
+#: admin/tpl/setting/settings_media.php:127
 msgid ""
 "Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:117
+#: admin/tpl/setting/settings_media.php:128
 msgid "This will increase the size of optimized files."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:123
+#: admin/tpl/setting/settings_media.php:134
 msgid "WebP Lossless Compression"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:127
+#: admin/tpl/setting/settings_media.php:138
 msgid "Generate WebP images using lossless compression."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:128
+#: admin/tpl/setting/settings_media.php:139
 msgid "This can improve quality at the cost of larger images."
 msgstr ""
 
@@ -3820,15 +3831,15 @@ msgstr ""
 msgid "Imported setting file %s successfully."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:260 includes/litespeed-cache.class.php:260
+#: inc/litespeed-cache.class.php:262 includes/litespeed-cache.class.php:262
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:271 includes/litespeed-cache.class.php:271
+#: inc/litespeed-cache.class.php:273 includes/litespeed-cache.class.php:273
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:281 includes/litespeed-cache.class.php:281
+#: inc/litespeed-cache.class.php:283 includes/litespeed-cache.class.php:283
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
@@ -3860,67 +3871,67 @@ msgstr ""
 msgid "Original saved %s"
 msgstr ""
 
-#: inc/purge.class.php:124 includes/litespeed-cache-purge.class.php:124
-msgid "Purge all caches successfully."
+#: inc/purge.class.php:149 includes/litespeed-cache-purge.class.php:149
+msgid "Purged all caches successfully."
 msgstr ""
 
-#: inc/purge.class.php:147 includes/litespeed-cache-purge.class.php:147
+#: inc/purge.class.php:172 includes/litespeed-cache-purge.class.php:172
 msgid "Notified LiteSpeed Web Server to purge all LSCache entries."
 msgstr ""
 
-#: inc/purge.class.php:166 includes/litespeed-cache-purge.class.php:166
+#: inc/purge.class.php:191 includes/litespeed-cache-purge.class.php:191
 msgid "Notified LiteSpeed Web Server to purge CSS/JS entries."
 msgstr ""
 
-#: inc/purge.class.php:183 includes/litespeed-cache-purge.class.php:183
+#: inc/purge.class.php:208 includes/litespeed-cache-purge.class.php:208
 msgid "Opcode cache is not enabled."
 msgstr ""
 
-#: inc/purge.class.php:195 includes/litespeed-cache-purge.class.php:195
+#: inc/purge.class.php:220 includes/litespeed-cache-purge.class.php:220
 msgid "Reset the entire opcode cache successfully."
 msgstr ""
 
-#: inc/purge.class.php:214 includes/litespeed-cache-purge.class.php:214
+#: inc/purge.class.php:239 includes/litespeed-cache-purge.class.php:239
 msgid "Object cache is not enabled."
 msgstr ""
 
-#: inc/purge.class.php:224 includes/litespeed-cache-purge.class.php:224
+#: inc/purge.class.php:249 includes/litespeed-cache-purge.class.php:249
 msgid "Purge all object caches successfully."
 msgstr ""
 
-#: inc/purge.class.php:376 includes/litespeed-cache-purge.class.php:376
+#: inc/purge.class.php:401 includes/litespeed-cache-purge.class.php:401
 msgid "Notified LiteSpeed Web Server to purge the front page."
 msgstr ""
 
-#: inc/purge.class.php:390 includes/litespeed-cache-purge.class.php:390
+#: inc/purge.class.php:415 includes/litespeed-cache-purge.class.php:415
 msgid "Notified LiteSpeed Web Server to purge pages."
 msgstr ""
 
-#: inc/purge.class.php:410 includes/litespeed-cache-purge.class.php:410
+#: inc/purge.class.php:435 includes/litespeed-cache-purge.class.php:435
 msgid "Notified LiteSpeed Web Server to purge error pages."
 msgstr ""
 
-#: inc/purge.class.php:438 includes/litespeed-cache-purge.class.php:438
+#: inc/purge.class.php:463 includes/litespeed-cache-purge.class.php:463
 msgid "Purge category %s"
 msgstr ""
 
-#: inc/purge.class.php:465 includes/litespeed-cache-purge.class.php:465
+#: inc/purge.class.php:490 includes/litespeed-cache-purge.class.php:490
 msgid "Purge Post ID %s"
 msgstr ""
 
-#: inc/purge.class.php:494 includes/litespeed-cache-purge.class.php:494
+#: inc/purge.class.php:519 includes/litespeed-cache-purge.class.php:519
 msgid "Purge tag %s"
 msgstr ""
 
-#: inc/purge.class.php:528 includes/litespeed-cache-purge.class.php:528
+#: inc/purge.class.php:553 includes/litespeed-cache-purge.class.php:553
 msgid "Purge url %s"
 msgstr ""
 
-#: inc/task.class.php:155 includes/litespeed-cache-task.class.php:155
+#: inc/task.class.php:145 includes/litespeed-cache-task.class.php:145
 msgid "LiteSpeed Cache Custom Cron ImgOptm"
 msgstr ""
 
-#: inc/task.class.php:176 includes/litespeed-cache-task.class.php:176
+#: inc/task.class.php:166 includes/litespeed-cache-task.class.php:166
 msgid "LiteSpeed Cache Custom Cron Crawler"
 msgstr ""
 

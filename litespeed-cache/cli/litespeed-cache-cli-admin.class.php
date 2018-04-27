@@ -68,6 +68,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP,
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS,
@@ -178,6 +179,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP:
+			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF:
 			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS:
