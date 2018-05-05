@@ -1011,6 +1011,8 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	public function check_img()
 	{
+		global $wpdb ;
+
 		$pid = $_POST[ 'data' ] ;
 
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] Check image [ID] ' . $pid ) ;
