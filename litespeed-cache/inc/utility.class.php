@@ -430,7 +430,7 @@ class LiteSpeed_Cache_Utility
 	 * @access public
 	 * @return string|bool The real path of file OR false
 	 */
-	public static function is_internal_file( $url )
+	public static function is_internal_file( $url, $addition_postfix = false )
 	{
 		$url_parsed = parse_url( $url ) ;
 		if ( isset( $url_parsed[ 'host' ] ) && ! self::internal( $url_parsed[ 'host' ] ) ) {
@@ -480,6 +480,14 @@ class LiteSpeed_Cache_Utility
 		}
 		else {
 			$file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ] ;
+		}
+
+		/**
+		 * Added new file postfix to be check if passed in
+		 * @since 2.2.4
+		 */
+		if ( $addition_postfix ) {
+			$file_path_ori .= '.' . $addition_postfix ;
 		}
 
 		/**
