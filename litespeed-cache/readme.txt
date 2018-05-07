@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.3
+Stable tag: 2.2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -257,6 +257,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.2.4 - May 7 2018 =
+* [IMPROVEMENT] Improved compatibility with themes using the same js_min library. (#129093 @Darren)
+* [BUGFIX] Fixed a bug when checking image path for dynamic files. (@miladk)
+* [INTEGRATION] Compatibility with Universal Star Rating. (@miladk)
+
 = 2.2.3 - Apr 27 2018 =
 * [NEW FEATURE] WebP For Extra srcset setting in Media tab. (@vengen)
 * [REFACTOR] Removed redundant LS consts.
@@ -267,7 +272,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [UPDATE] Detached crawler from LSCache LITESPEED_ON status.
 * [API] Improved ESI API to honor the cache control in ESI wrapper.
 * [API] Added LITESPEED_PURGE_SILENT const to bypass the notification when purging
-* [INTEGRATION] Fixed issue with nonce expiration when using ESI API. (@Dan #923505)
+* [INTEGRATION] Fixed issue with nonce expiration when using ESI API. (#923505 @Dan)
 * [INTEGRATION] Improved compatibility with Ninja Forms by bypassing non-javascript JS from inline JS minify.
 * [INTEGRATION] Added a hook for plugins that change the CSS/JS path e.g. Hide My WordPress.
 
