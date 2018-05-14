@@ -257,6 +257,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.2.5 - May 14 2018 =
+* [IAPI] <strong>Image Optimization</strong> New Asian Image Optimization server (AS2).
 * [INTEGRATION] Removed wpForo 3rd party file. (@massimod)
 
 = 2.2.4 - May 7 2018 =
