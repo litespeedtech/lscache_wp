@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -243,7 +243,6 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [Better WP Minify](https://wordpress.org/plugins/bwp-minify/)
 * [WP Touch](https://wordpress.org/plugins/wptouch/)
 * [Theme My Login](https://wordpress.org/plugins/theme-my-login/)
-* [wpForo](https://wordpress.org/plugins/wpforo/)
 * [WPLister](https://www.wplab.com/plugins/wp-lister/)
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
@@ -256,6 +255,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.5 - May 14 2018 =
+* [INTEGRATION] Removed wpForo 3rd party file. (@massimod)
 
 = 2.2.4 - May 7 2018 =
 * [IMPROVEMENT] Improved compatibility with themes using the same js_min library. (#129093 @Darren)
