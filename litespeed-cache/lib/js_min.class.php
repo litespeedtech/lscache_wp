@@ -54,7 +54,11 @@
  * @license http://opensource.org/licenses/mit-license.php MIT License
  * @link http://code.google.com/p/jsmin-php/
  */
-class JSMin {
+
+namespace LiteSpeed_3rd_Lib\js_min ;
+
+class JSMin
+{
 	const ORD_LF            = 10;
 	const ORD_SPACE         = 32;
 	const ACTION_KEEP_A     = 1;

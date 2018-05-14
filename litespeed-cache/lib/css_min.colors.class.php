@@ -1,6 +1,6 @@
 <?php
 
-namespace tubalmartin\CssMin;
+namespace LiteSpeed_3rd_Lib\css_min ;
 
 class Colors
 {

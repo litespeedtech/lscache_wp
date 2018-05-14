@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Minify_CSS_UriRewriter
+ * Class UriRewriter
  * @package Minify
  */
 
@@ -10,7 +10,10 @@
  * @package Minify
  * @author Stephen Clay <steve@mrclay.org>
  */
-class Minify_CSS_UriRewriter
+
+namespace LiteSpeed_3rd_Lib\css_min ;
+
+class UriRewriter
 {
 
     /**
@@ -71,10 +74,10 @@ class Minify_CSS_UriRewriter
 
         // rewrite
         $pattern = '/@import\\s+([\'"])(.*?)[\'"]/';
-        $css = preg_replace_callback($pattern, array(self::$className, '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
 
         $pattern = '/url\\(\\s*([\'"](.*?)[\'"]|[^\\)\\s]+)\\s*\\)/';
-        $css = preg_replace_callback($pattern, array(self::$className, '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
 
         $css = self::_unOwlify($css);
 
@@ -100,10 +103,10 @@ class Minify_CSS_UriRewriter
 
         // append
         $pattern = '/@import\\s+([\'"])(.*?)[\'"]/';
-        $css = preg_replace_callback($pattern, array(self::$className, '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
 
         $pattern = '/url\\(\\s*([\'"](.*?)[\'"]|[^\\)\\s]+)\\s*\\)/';
-        $css = preg_replace_callback($pattern, array(self::$className, '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
 
         $css = self::_unOwlify($css);
 
@@ -116,7 +119,7 @@ class Minify_CSS_UriRewriter
      * Get a root relative URI from a file relative URI
      *
      * <code>
-     * Minify_CSS_UriRewriter::rewriteRelative(
+     * UriRewriter::rewriteRelative(
      *       '../img/hello.gif'
      *     , '/home/user/www/css'  // path of CSS file
      *     , '/home/user/www'      // doc root
@@ -124,7 +127,7 @@ class Minify_CSS_UriRewriter
      * // returns '/img/hello.gif'
      *
      * // example where static files are stored in a symlinked directory
-     * Minify_CSS_UriRewriter::rewriteRelative(
+     * UriRewriter::rewriteRelative(
      *       'hello.gif'
      *     , '/var/staticFiles/theme'
      *     , '/home/user/www'
@@ -201,14 +204,6 @@ class Minify_CSS_UriRewriter
 
         return $uri;
     }
-
-    /**
-     * Defines which class to call as part of callbacks, change this
-     * if you extend Minify_CSS_UriRewriter
-     *
-     * @var string
-     */
-    protected static $className = 'Minify_CSS_UriRewriter';
 
     /**
      * Get realpath with any trailing slash removed. If realpath() fails,

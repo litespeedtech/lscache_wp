@@ -648,7 +648,7 @@ class LiteSpeed_Cache_Media
 
 		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
 			// check if has webp file
-			if ( LiteSpeed_Cache_Utility::is_internal_file( $url  . '.webp' ) ) {
+			if ( LiteSpeed_Cache_Utility::is_internal_file( $url, 'webp' ) ) {
 				$url .= '.webp' ;
 			}
 			else {

@@ -16,6 +16,9 @@
  * @package Minify
  * @author Stephen Clay <steve@mrclay.org>
  */
+
+namespace LiteSpeed_3rd_Lib ;
+
 class Minify_HTML
 {
 	/**

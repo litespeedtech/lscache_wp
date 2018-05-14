@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.2.3\n"
+"Project-Id-Version: LiteSpeed Cache 2.2.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-04-26 19:48:18+00:00\n"
+"POT-Creation-Date: 2018-05-07 15:45:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1047,7 +1047,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.3)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:348
 #: includes/litespeed-cache-gui.class.php:348
@@ -3768,8 +3768,8 @@ msgstr ""
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:138 inc/img_optm.class.php:1233
-#: inc/img_optm.class.php:1298
+#: inc/img_optm.class.php:138 inc/img_optm.class.php:1235
+#: inc/img_optm.class.php:1300
 msgid "No image found."
 msgstr ""
 
@@ -3797,29 +3797,29 @@ msgstr ""
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:1123
+#: inc/img_optm.class.php:1125
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1336
+#: inc/img_optm.class.php:1338
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1564
+#: inc/img_optm.class.php:1566
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1570
+#: inc/img_optm.class.php:1572
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1586
+#: inc/img_optm.class.php:1588
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1593
+#: inc/img_optm.class.php:1595
 msgid "Switched to optimized file successfully."
 msgstr ""
 

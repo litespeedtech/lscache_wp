@@ -8,16 +8,6 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
-require_once LSCWP_DIR . 'lib/js_min.class.php' ;
-require_once LSCWP_DIR . 'lib/css_min.class.php' ;
-require_once LSCWP_DIR . 'lib/css_min.colors.class.php' ;
-require_once LSCWP_DIR . 'lib/css_min.utils.class.php' ;
-require_once LSCWP_DIR . 'lib/url_rewritter.class.php' ;
-
-use tubalmartin\CssMin\Minifier as CSSmin;
-use tubalmartin\CssMin\Colors as Colors;
-use tubalmartin\CssMin\Utils as Utils;
-
 
 class LiteSpeed_Cache_Optimizer
 {
@@ -57,7 +47,7 @@ class LiteSpeed_Cache_Optimizer
 		 * @since  2.2.3
 		 */
 		try {
-			$obj = new Minify_HTML( $content, $options ) ;
+			$obj = new LiteSpeed_3rd_Lib\Minify_HTML( $content, $options ) ;
 			$content_final = $obj->process() ;
 			$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
 			return $content_final ;
@@ -161,7 +151,7 @@ class LiteSpeed_Cache_Optimizer
 				$data = self::minify_css( $data ) ;
 			}
 
-			$data = Minify_CSS_UriRewriter::rewrite( $data, dirname( $real_path ) ) ;
+			$data = LiteSpeed_3rd_Lib\css_min\UriRewriter::rewrite( $data, dirname( $real_path ) ) ;
 
 			$con[] = $data ;
 		}
@@ -203,7 +193,7 @@ class LiteSpeed_Cache_Optimizer
 	public static function minify_css( $data )
 	{
 		try {
-			$obj = new CSSmin() ;
+			$obj = new LiteSpeed_3rd_Lib\css_min\Minifier() ;
 			return $obj->run( $data ) ;
 
 		} catch ( Exception $e ) {
@@ -233,7 +223,7 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		try {
-			$data = JSMin::minify( $data ) ;
+			$data = LiteSpeed_3rd_Lib\js_min\JSMin::minify( $data ) ;
 			return $data ;
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;

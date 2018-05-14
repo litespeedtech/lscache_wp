@@ -28,7 +28,6 @@ $thirdparty_list = array(
 	'wplister',
 	'wptouch',
 	'yith-wishlist',
-	'wpforo',
 	'avada',
 	'wp-postratings',
 ) ;
