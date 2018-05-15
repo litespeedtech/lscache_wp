@@ -760,7 +760,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
-		$this->_save_item( $id ) ;
+		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
 		/**
 		 * DNS prefetch
