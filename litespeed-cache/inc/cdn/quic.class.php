@@ -17,6 +17,60 @@ class LiteSpeed_Cache_CDN_Quic
 
 	const DB_API_HASH = 'litespeed_cdn_quic_hash' ;
 
+	/**
+	 * Notify CDN new config updated
+	 *
+	 * @access public
+	 */
+	public static function sync_config( $options )
+	{
+		if ( empty( $options[ LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY ] ) ) {
+			return false ;
+		}
+
+		// Security: Remove cf key in report
+		$secure_fields = array(
+			LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY,
+			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
+			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
+		) ;
+		foreach ( $secure_fields as $v ) {
+			if ( ! empty( $options[ $v ] ) ) {
+				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
+			}
+		}
+
+		// Also read data from items
+		$item_options = array(
+			LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES,
+			LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES,
+			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING,
+			LiteSpeed_Cache_Config::ITEM_SETTING_MODE,
+			LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC,
+			LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC,
+			LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS,
+			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
+			LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR,
+			LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE,
+		) ;
+
+		foreach ( $item_options as $v ) {
+			$options[ $v ] = get_option( $v ) ;
+		}
+
+		$instance = self::get_instance() ;
+
+		// Get site domain
+		$options[ '_domain' ] = home_url() ;
+
+		$res = $instance->_api( '/sync_config', $options ) ;
+		if ( $res != 'ok' ) {
+			LiteSpeed_Cache_Log::debug( '[QUIC] sync config failed [err] ' . $res ) ;
+		}
+		return $res ;
+	}
+
 	private function _show_user_guide()
 	{
 		if ( ! empty( $_POST[ 'step' ] ) ) {
@@ -145,10 +199,9 @@ class LiteSpeed_Cache_CDN_Quic
 		$url = 'https://api.quic.cloud' . $uri ;
 
 		$param = array(
-			'auth_key'	=> $this->_api_key,
-			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
-			'hash'	=> $hash,
-			'data' => $data,
+			'_v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
+			'_hash'	=> $hash,
+			'_data' => $data,
 		) ;
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;

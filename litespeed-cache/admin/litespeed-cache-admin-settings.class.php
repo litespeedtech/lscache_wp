@@ -120,7 +120,17 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		$this->_validate_thirdparty( ) ;
+		$this->_validate_thirdparty() ;
+
+		/**
+		 * Check if need to send cfg to CDN or not
+		 * @since 2.3
+		 */
+		$id = LiteSpeed_Cache_Config::OPID_CDN_QUIC ;
+		if ( $this->_options[ $id ] ) {
+			// Send to Quic CDN
+			LiteSpeed_Cache_CDN_Quic::sync_config( $this->_options ) ;
+		}
 
 		return $this->_options ;
 	}
