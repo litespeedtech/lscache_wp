@@ -30,7 +30,6 @@ class LiteSpeed_Cache_CDN_Quic
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		) ;
@@ -63,6 +62,32 @@ class LiteSpeed_Cache_CDN_Quic
 
 		// Get site domain
 		$options[ '_domain' ] = home_url() ;
+
+		// Add server env vars
+		$consts = array(
+			'WP_SITEURL',
+			'WP_HOME',
+			'WP_CONTENT_DIR',
+			'SHORTINIT',
+			'LSCWP_CONTENT_DIR',
+			'LSCWP_CONTENT_FOLDER',
+			'LSCWP_DIR',
+			'LITESPEED_TIME_OFFSET',
+			'LITESPEED_SERVER_TYPE',
+			'LITESPEED_CLI',
+			'LITESPEED_ALLOWED',
+			'LITESPEED_ON',
+			'LITESPEED_ON_IN_SETTING',
+			'LSCACHE_ADV_CACHE',
+		) ;
+		$server_vars = array() ;
+		foreach ( $consts as $v ) {
+			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
+		}
+		$options[ '_server' ] = $server_vars ;
+
+		// Append hooks
+		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_cache_api_vary', array() ) ;
 
 		$res = $instance->_api( '/sync_config', $options ) ;
 		if ( $res != 'ok' ) {
