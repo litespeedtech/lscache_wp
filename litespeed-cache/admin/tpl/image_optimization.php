@@ -8,6 +8,7 @@ $img_optm = LiteSpeed_Cache_Img_Optm::get_instance() ;
 
 $img_count = $img_optm->img_count() ;
 $optm_summary = $img_optm->summary_info() ;
+list( $storage_data, $rm_log ) = $img_optm->storage_data() ;
 
 list( $last_run, $is_running ) = $img_optm->cron_running( false ) ;
 
@@ -256,10 +257,10 @@ LiteSpeed_Cache_GUI::show_promo() ;
 			<?php echo sprintf( __( 'Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
 		</p>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success litespeed-hide">
 			<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
 		</a>
-		<span class="litespeed-desc">
+		<span class="litespeed-desc litespeed-hide">
 			<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>
 		</span>
 
@@ -290,6 +291,62 @@ LiteSpeed_Cache_GUI::show_promo() ;
 				<?php echo __( 'This will also reset the credit level.', 'litespeed-cache' ) ; ?>
 			</font>
 		</span>
+
+		<hr />
+
+		<h3 class="litespeed-title"><?php echo __('Storage Optimization', 'litespeed-cache') ; ?></h3>
+
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="litespeed-btn-success">
+			<?php echo __( 'Calculate Original Images Size', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'This will calculate the total size of backup original images which is already optimized.', 'litespeed-cache' ) ; ?>
+		</span>
+		<?php if ( $storage_data ) : ?>
+			<div class="litespeed-desc litespeed-left20">
+			<p>
+				<?php echo __( 'Last calculated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $storage_data[ 'date' ] ) . '</code>' ; ?>
+			</p>
+			<?php if ( $storage_data[ 'count' ] ) : ?>
+				<p>
+					<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $storage_data[ 'count' ] . '</code>' ; ?>
+				</p>
+				<p>
+					<?php echo __( 'Total', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::real_size( $storage_data[ 'sum' ] ) . '</code>' ; ?>
+				</p>
+			<?php else : ?>
+				<p>
+					<?php echo LiteSpeed_Cache_GUI::pie( 100, 30, true ) ; ?>
+				</p>
+			<?php endif ; ?>
+			</div>
+		<?php endif ; ?>
+
+		<br />
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to remove all backup images?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
+			<?php echo __( 'Remove Original Backup Images', 'litespeed-cache' ) ; ?>
+		</a>
+		<span class="litespeed-desc">
+			<?php echo __( 'This will delete the backed up orignal images which are optimized already.', 'litespeed-cache' ) ; ?>
+			<font class="litespeed-danger">
+				<?php echo __('NOTE', 'litespeed-cache'); ?>:
+				<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
+			</font>
+		</span>
+		<?php if ( $rm_log ) : ?>
+			<div class="litespeed-desc litespeed-left20">
+			<p>
+				<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $rm_log[ 'date' ] ) . '</code>' ; ?>
+			</p>
+			<p>
+				<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $rm_log[ 'count' ] . '</code>' ; ?>
+			</p>
+			<p>
+				<?php echo __( 'Saved', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::real_size( $rm_log[ 'sum' ] ) . '</code>' ; ?>
+			</p>
+			</div>
+		<?php endif ; ?>
+
 
 	<?php endif ; ?>
 
