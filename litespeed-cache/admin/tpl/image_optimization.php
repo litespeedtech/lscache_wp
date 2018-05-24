@@ -297,10 +297,10 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		<h3 class="litespeed-title"><?php echo __('Storage Optimization', 'litespeed-cache') ; ?></h3>
 
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="litespeed-btn-success">
-			<?php echo __( 'Calculate Original Images Size', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'This will calculate the total size of backup original images which is already optimized.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'A backup of each image is saved before it is optimized. This button will calculate the total amount of disk space used by these backups.', 'litespeed-cache' ) ; ?>
 		</span>
 		<?php if ( $storage_data ) : ?>
 			<div class="litespeed-desc litespeed-left20">
@@ -323,14 +323,15 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		<?php endif ; ?>
 
 		<br />
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure you want to remove all backup images?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
-			<?php echo __( 'Remove Original Backup Images', 'litespeed-cache' ) ; ?>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image bakcups?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
+			<?php echo __( 'Remove Original Image Backups', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'This will delete the backed up orignal images which are optimized already.', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'This will delete all of the backups of the original images.', 'litespeed-cache' ) ; ?>
 			<font class="litespeed-danger">
-				<?php echo __('NOTE', 'litespeed-cache'); ?>:
+				<?php echo __('WARNING', 'litespeed-cache'); ?>:
 				<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'You be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
 			</font>
 		</span>
 		<?php if ( $rm_log ) : ?>
