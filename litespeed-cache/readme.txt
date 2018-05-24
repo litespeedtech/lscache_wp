@@ -120,6 +120,16 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 The vast majority of plugins and themes are compatible with LSCache. [Our API](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api) is available for those that are not.
 
+== Privacy ==
+
+This plugin includes a Privacy blurb that you can add to your site's Privacy Policy via the WordPress Privacy settings.
+
+**For your own information:** LiteSpeed Cache for WordPress potentially stores a duplicate copy of every web page on display on your site. The pages are stored locally on the system where LiteSpeed server software is installed and are not transferred to or accessed by LiteSpeed employees in any way, except as necessary in providing routine technical support if you request it. All cache files are temporary, and may easily be purged before their natural expiration, if necessary, via a Purge All command. It is up to individual site administrators to come up with their own cache expiration rules.
+
+In addition to caching, our WordPress plugin has an Image Optimization feature. When optimization is requested, images are transmitted to a remote LiteSpeed server, processed, and then transmitted back for use on your site. LiteSpeed keeps copies of optimized images for 7 days (in case of network stability issues) and then permanently deletes them. Similarly, the WordPress plugin has a Reporting feature whereby a site owner can transmit an environment report to our server so that we may better provide technical support. Neither of these features collects any visitor data. Only server and site data is involved.
+
+Please see [LiteSpeed’s Privacy Policy](https://www.litespeedtech.com/company/privacy-policy) for our complete Privacy/GDPR statement.
+
 == Frequently Asked Questions ==
 
 = How do the Cache features of LSCache work? =
