@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.5
+Stable tag: 2.2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -265,6 +265,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.6 - May 24 2018 =
+* [NEW FEATURE] Original image backups can be removed now. (@borisov87 @JMCA2)
+* [BUGFIX] Role Excludes in Tuning tab can save now. (@pako69)
+* [UPDATE] Added privacy policy support.
 
 = 2.2.5 - May 14 2018 =
 * [IAPI] <strong>Image Optimization</strong> New Asian Image Optimization server (AS2).
