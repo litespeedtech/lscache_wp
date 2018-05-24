@@ -96,6 +96,12 @@ class LiteSpeed_Cache_Admin
 			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings')) ;
 		}
 
+		// Add privacy policy
+		// @since 2.2.6
+		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
+			wp_add_privacy_policy_content( LiteSpeed_Cache::PLUGIN_NAME, Litespeed_File::read( LSCWP_DIR . 'doc/privacy_policy.html' ) ) ;
+		}
+
 		do_action( 'litspeed_after_admin_init' ) ;
 
 		// If setting is set to on, try to activate cache func
