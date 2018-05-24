@@ -331,7 +331,7 @@ LiteSpeed_Cache_GUI::show_promo() ;
 			<font class="litespeed-danger">
 				<?php echo __('WARNING', 'litespeed-cache'); ?>:
 				<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'You be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
 			</font>
 		</span>
 		<?php if ( $rm_log ) : ?>
