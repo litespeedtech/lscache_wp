@@ -323,7 +323,7 @@ LiteSpeed_Cache_GUI::show_promo() ;
 		<?php endif ; ?>
 
 		<br />
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image backups?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image bakcups?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
 			<?php echo __( 'Remove Original Image Backups', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
