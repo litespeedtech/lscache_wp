@@ -269,7 +269,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 = 2.2.6 - May 24 2018 =
 * [NEW FEATURE] Original image backups can be removed now. (@borisov87 @JMCA2)
 * [BUGFIX] Role Excludes in Tuning tab can save now. (@pako69)
-* [UPDATE] Added privacy policy support.
+* [UPDATE] Added Privacy policy support.
 
 = 2.2.5 - May 14 2018 =
 * [IAPI] <strong>Image Optimization</strong> New Asian Image Optimization server (AS2).
