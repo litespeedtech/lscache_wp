@@ -101,7 +101,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Disable WordPress heartbeat to prevent AJAX calls from breaking debug logging. WARNING: Disabling this may cause WordPress tasks triggered by AJAX to stop working.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Disable WordPress heartbeat to prevent AJAX calls from breaking debug logging.', 'litespeed-cache' ) ; ?>
+				<font class="litespeed-warning"><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?>:
+					<?php echo __( 'Disabling this may cause WordPress tasks triggered by AJAX to stop working.', 'litespeed-cache' ) ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>
@@ -131,7 +134,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_LOG_FILTERS ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Log all WordPress filter hooks. WARNING: Enabling this option will cause log file size to grow quickly.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Log all WordPress filter hooks.', 'litespeed-cache' ) ; ?>
+				<font class="litespeed-warning"><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?>:
+					<?php echo __( 'Enabling this option will cause log file size to grow quickly.', 'litespeed-cache' ) ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>
