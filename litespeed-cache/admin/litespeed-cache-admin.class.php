@@ -99,7 +99,7 @@ class LiteSpeed_Cache_Admin
 		// Add privacy policy
 		// @since 2.2.6
 		if ( function_exists( 'wp_add_privacy_policy_content' ) ) {
-			wp_add_privacy_policy_content( LiteSpeed_Cache::PLUGIN_NAME, Litespeed_File::read( LSCWP_DIR . 'doc/privacy_policy.html' ) ) ;
+			wp_add_privacy_policy_content( LiteSpeed_Cache::PLUGIN_NAME, LiteSpeed_Cache_Doc::privacy_policy() ) ;
 		}
 
 		do_action( 'litspeed_after_admin_init' ) ;
