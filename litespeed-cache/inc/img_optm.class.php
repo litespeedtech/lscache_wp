@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Img_Optm
 			ORDER BY a.ID DESC
 			LIMIT %d
 			" ;
-		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_optimize_max_rows', 500 ) ) ;
+		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_optimize_max_rows', 3000 ) ) ;
 
 		$img_set = array() ;
 		$list = $wpdb->get_results( $q ) ;
