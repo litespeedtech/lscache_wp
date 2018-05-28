@@ -1757,7 +1757,12 @@ class LiteSpeed_Cache_Img_Optm
 				// Check if need to self redirect
 				if ( $result === 'to_be_continued' ) {
 					$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL ) ;
-					LiteSpeed_Cache_Admin::redirect( html_entity_decode( $link ) ) ;
+					// Add i to avoid browser too many redirected warning
+					$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
+					$i ++ ;
+					$url = html_entity_decode( $link ) . '&i=' . $i ;
+					exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
+					// LiteSpeed_Cache_Admin::redirect( $url ) ;
 				}
 				break ;
 
