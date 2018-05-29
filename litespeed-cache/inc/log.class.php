@@ -283,12 +283,16 @@ class LiteSpeed_Cache_Log
 			'HTTP_COOKIE' => '',
 			'X-LSCACHE' => '',
 			'LSCACHE_VARY_COOKIE' => '',
-			'LSCACHE_VARY_VALUE' => ''
+			'LSCACHE_VARY_VALUE' => '',
 		) ;
 		$server = array_merge( $servervars, $_SERVER ) ;
 		$params = array() ;
 
-		$param = sprintf( '%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
+		if ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] == 'on' ) {
+			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;
+		}
+
+		$param = sprintf( '------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ) {
