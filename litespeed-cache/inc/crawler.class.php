@@ -384,8 +384,6 @@ class LiteSpeed_Cache_Crawler
 		$crawler->set_base_url($this->_home_url) ;
 		$crawler->set_run_duration($options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
 
-		$crawler->set_http2( $options[ LiteSpeed_Cache_Config::CRWL_HTTP2 ] ) ;
-
 		/**
 		 * Limit delay to use server setting
 		 * @since 1.8.3
