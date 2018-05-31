@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.2.4\n"
+"Project-Id-Version: LiteSpeed Cache 2.2.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-05-07 15:45:38+00:00\n"
+"POT-Creation-Date: 2018-05-24 18:15:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -113,7 +113,7 @@ msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:937
-#: admin/tpl/image_optimization.php:150 admin/tpl/image_optimization.php:225
+#: admin/tpl/image_optimization.php:151 admin/tpl/image_optimization.php:226
 #: admin/tpl/manage/manage_cdn.php:60
 #: admin/tpl/setting/settings_advanced.php:10
 #: admin/tpl/setting/settings_advanced.php:39
@@ -469,25 +469,25 @@ msgstr ""
 msgid "Threads"
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:211
+#: admin/litespeed-cache-admin.class.php:217
 msgid ""
 "For this scenario only, the network admin may uncheck \"Check Advanced Cache"
 "\" in LiteSpeed Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:213
+#: admin/litespeed-cache-admin.class.php:219
 msgid ""
 "For this scenario only, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:215
+#: admin/litespeed-cache-admin.class.php:221
 msgid ""
 "Please disable/deactivate any other Full Page Cache solutions that are "
 "currently being used."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:216
+#: admin/litespeed-cache-admin.class.php:222
 msgid ""
 "LiteSpeed Cache does work with other cache solutions, but only their non-"
 "page caching offerings—such as minifying css/js files."
@@ -543,8 +543,8 @@ msgstr ""
 msgid "Disable"
 msgstr ""
 
-#: admin/tpl/crawler.php:92 admin/tpl/inc/check_cache_disabled.php:31
-#: admin/tpl/manage/manage_cdn.php:15
+#: admin/tpl/crawler.php:92 admin/tpl/image_optimization.php:332
+#: admin/tpl/inc/check_cache_disabled.php:31 admin/tpl/manage/manage_cdn.php:15
 #: admin/tpl/setting/settings_optimize.php:13 admin/tpl/settings.php:163
 msgid "WARNING"
 msgstr ""
@@ -750,235 +750,235 @@ msgstr ""
 msgid "A TTL of 0 indicates do not cache."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:16
+#: admin/tpl/image_optimization.php:17
 msgid "Level"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:20
+#: admin/tpl/image_optimization.php:21
 msgid "Credit"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:21
+#: admin/tpl/image_optimization.php:22
 msgid "Credit recovers with each successful pull."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:25
+#: admin/tpl/image_optimization.php:26
 msgid "Total Reduction"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:29
+#: admin/tpl/image_optimization.php:30
 msgid "Images pulled"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:32 admin/tpl/image_optimization.php:200
+#: admin/tpl/image_optimization.php:33 admin/tpl/image_optimization.php:201
 msgid "Images failed to fetch"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:35
+#: admin/tpl/image_optimization.php:36
 msgid "Images failed to notify"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:38
+#: admin/tpl/image_optimization.php:39
 msgid "Images failed to pull"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:41
+#: admin/tpl/image_optimization.php:42
 msgid "Last Request"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:52 admin/tpl/image_optimization.php:53
+#: admin/tpl/image_optimization.php:53 admin/tpl/image_optimization.php:54
 msgid "Click the %s button."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:52 admin/tpl/image_optimization.php:114
-#: admin/tpl/image_optimization.php:148
+#: admin/tpl/image_optimization.php:53 admin/tpl/image_optimization.php:115
+#: admin/tpl/image_optimization.php:149
 msgid "Update Status"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:53 admin/tpl/image_optimization.php:145
-#: admin/tpl/image_optimization.php:153
+#: admin/tpl/image_optimization.php:54 admin/tpl/image_optimization.php:146
+#: admin/tpl/image_optimization.php:154
 msgid "Send Optimization Request"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:54
+#: admin/tpl/image_optimization.php:55
 msgid "Click the %s button or wait for the cron job to finish the pull action."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:54 admin/tpl/image_optimization.php:180
+#: admin/tpl/image_optimization.php:55 admin/tpl/image_optimization.php:181
 msgid "Pull Images"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:55
+#: admin/tpl/image_optimization.php:56
 msgid "Repeat the above steps until you have leveled up."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:70
+#: admin/tpl/image_optimization.php:71
 msgid "LiteSpeed Cache Image Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:81
+#: admin/tpl/image_optimization.php:82
 msgid "How to Level Up"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:84
+#: admin/tpl/image_optimization.php:85
 msgid "Optimization Summary"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:117
+#: admin/tpl/image_optimization.php:118
 msgid ""
 "This will communicate with LiteSpeed's Image Optimization Server and "
 "retrieve the most recent status."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:122
+#: admin/tpl/image_optimization.php:123
 msgid "Image Information"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:131
+#: admin/tpl/image_optimization.php:132
 msgid "Images total"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:133
+#: admin/tpl/image_optimization.php:134
 msgid "What is a group?"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:136
+#: admin/tpl/image_optimization.php:137
 msgid "Images not yet requested"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:148
+#: admin/tpl/image_optimization.php:149
 msgid "Please press the %s button before sending a new request."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:156
+#: admin/tpl/image_optimization.php:157
 msgid ""
 "This will send the optimization request and the images to LiteSpeed's Image "
 "Optimization Server."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:157
+#: admin/tpl/image_optimization.php:158
 msgid "You can send at most %s images at once."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:165
+#: admin/tpl/image_optimization.php:166
 msgid "Images requested"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:170
+#: admin/tpl/image_optimization.php:171
 msgid ""
 "After LiteSpeed's Image Optimization Server finishes optimization, it will "
 "notify your site to pull the optimized images."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:171
+#: admin/tpl/image_optimization.php:172
 msgid "This process is automatic."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:174
+#: admin/tpl/image_optimization.php:175
 msgid "Images notified to pull"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:183
+#: admin/tpl/image_optimization.php:184
 msgid "Only press the button if the pull cron job is disabled."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:184
+#: admin/tpl/image_optimization.php:185
 msgid "Images will be pulled automatically if the cron job is running."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:188
+#: admin/tpl/image_optimization.php:189
 msgid "Last pull initiated by cron at %s."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:193
+#: admin/tpl/image_optimization.php:194
 msgid "Images optimized and pulled"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:205
+#: admin/tpl/image_optimization.php:206
 msgid "Images failed to optimize"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:210
+#: admin/tpl/image_optimization.php:211
 msgid "Images failed with other errors"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:215
+#: admin/tpl/image_optimization.php:216
 msgid "Image files missing"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:220
+#: admin/tpl/image_optimization.php:221
 msgid "Images with wrong meta"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:230
+#: admin/tpl/image_optimization.php:231
 msgid "Revert Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:233
+#: admin/tpl/image_optimization.php:234
 msgid ""
 "Switch all images in the media library back to their original unoptimized "
 "versions."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:239
+#: admin/tpl/image_optimization.php:240
 msgid "Undo Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:242
+#: admin/tpl/image_optimization.php:243
 msgid "Revert all optimized images back to their original versions."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:248
+#: admin/tpl/image_optimization.php:249
 msgid "Re-do Optimization"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:251
+#: admin/tpl/image_optimization.php:252
 msgid "Switch back to using optimized images."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:256
+#: admin/tpl/image_optimization.php:257
 msgid "Results can be checked in <a %s>Media Library</a>."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:260
+#: admin/tpl/image_optimization.php:261
 msgid "Send New Thumbnail Requests"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:263
+#: admin/tpl/image_optimization.php:264
 msgid ""
 "Scan for any new unoptimized image thumbnail sizes and resend necessary "
 "image optimization requests."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:268
+#: admin/tpl/image_optimization.php:269
 msgid "Reset IAPI Key"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:271
+#: admin/tpl/image_optimization.php:272
 msgid ""
 "The current IAPI key must be reset after changing home URL or domain before "
 "making any further optimization requests."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:276
+#: admin/tpl/image_optimization.php:277
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:279
+#: admin/tpl/image_optimization.php:280
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:284
+#: admin/tpl/image_optimization.php:285
 msgid "Destroy All Optimization Data!"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:287
+#: admin/tpl/image_optimization.php:288
 msgid ""
 "Remove all previous image optimization requests/results, revert completed "
 "optimizations, and delete all optimization files."
 msgstr ""
 
-#: admin/tpl/image_optimization.php:289
+#: admin/tpl/image_optimization.php:290
 #: admin/tpl/setting/settings_advanced.php:65
 #: admin/tpl/setting/settings_cdn.php:97
 #: admin/tpl/setting/settings_crawler.php:22
@@ -1000,8 +1000,62 @@ msgstr ""
 msgid "NOTE"
 msgstr ""
 
-#: admin/tpl/image_optimization.php:290
+#: admin/tpl/image_optimization.php:291
 msgid "This will also reset the credit level."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:297
+msgid "Storage Optimization"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:300
+msgid "Calculate Original Image Storage"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:303
+msgid ""
+"A backup of each image is saved before it is optimized. This button will "
+"calculate the total amount of disk space used by these backups."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:308
+msgid "Last calculated"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:312 admin/tpl/image_optimization.php:343
+msgid "Files"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:315
+msgid "Total"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:326
+msgid "Are you sure to remove all image bakcups?"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:327
+msgid "Remove Original Image Backups"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:330
+msgid "This will delete all of the backups of the original images."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:333
+msgid "This is irreversible."
+msgstr ""
+
+#: admin/tpl/image_optimization.php:334
+msgid "You be unable to Revert Optimization once the backups are deleted!"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:340
+msgid "Last ran"
+msgstr ""
+
+#: admin/tpl/image_optimization.php:346
+msgid "Saved"
 msgstr ""
 
 #: admin/tpl/import_export.php:9
@@ -1047,7 +1101,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.4)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.6)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:348
 #: includes/litespeed-cache-gui.class.php:348
@@ -3760,66 +3814,70 @@ msgstr ""
 msgid "LSCache"
 msgstr ""
 
-#: inc/img_optm.class.php:80
+#: inc/img_optm.class.php:84
 msgid "Failed to communicate with LiteSpeed IAPI server"
 msgstr ""
 
-#: inc/img_optm.class.php:89
+#: inc/img_optm.class.php:93
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:138 inc/img_optm.class.php:1235
-#: inc/img_optm.class.php:1300
+#: inc/img_optm.class.php:142 inc/img_optm.class.php:1239
+#: inc/img_optm.class.php:1304
 msgid "No image found."
 msgstr ""
 
-#: inc/img_optm.class.php:166
+#: inc/img_optm.class.php:170
 msgid "Number of images in one image group (%s) exceeds the credit (%s)"
 msgstr ""
 
-#: inc/img_optm.class.php:194
+#: inc/img_optm.class.php:198
 msgid "Requested successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:214
+#: inc/img_optm.class.php:218
 msgid "Optimized successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:271
+#: inc/img_optm.class.php:275
 msgid "Pushed %1$s to LiteSpeed optimization server, accepted %2$s."
 msgstr ""
 
-#: inc/img_optm.class.php:623
+#: inc/img_optm.class.php:627
 msgid "Failed to push to LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:631
+#: inc/img_optm.class.php:635
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:1125
+#: inc/img_optm.class.php:1129
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1338
+#: inc/img_optm.class.php:1342
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1566
+#: inc/img_optm.class.php:1449
+msgid "Removed %1$s images and saved %2$s successfully."
+msgstr ""
+
+#: inc/img_optm.class.php:1672
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1572
+#: inc/img_optm.class.php:1678
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1588
+#: inc/img_optm.class.php:1694
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1595
+#: inc/img_optm.class.php:1701
 msgid "Switched to optimized file successfully."
 msgstr ""
 
@@ -3935,7 +3993,15 @@ msgstr ""
 msgid "LiteSpeed Cache Custom Cron Crawler"
 msgstr ""
 
-#: inc/utility.class.php:66 includes/litespeed-cache-utility.class.php:66
+#: inc/utility.class.php:67 includes/litespeed-cache-utility.class.php:67
+msgid "just now"
+msgstr ""
+
+#: inc/utility.class.php:67 includes/litespeed-cache-utility.class.php:67
+msgid "right now"
+msgstr ""
+
+#: inc/utility.class.php:70 includes/litespeed-cache-utility.class.php:70
 msgid " %s ago"
 msgstr ""
 

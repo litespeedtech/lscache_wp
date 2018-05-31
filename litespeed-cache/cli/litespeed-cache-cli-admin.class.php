@@ -31,7 +31,6 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::CRWL_PAGES,
 			LiteSpeed_Cache_Config::CRWL_CATS,
 			LiteSpeed_Cache_Config::CRWL_TAGS,
-			LiteSpeed_Cache_Config::CRWL_HTTP2,
 			LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE,
 			LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL,
 			LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
@@ -147,7 +146,6 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::CRWL_PAGES:
 			case LiteSpeed_Cache_Config::CRWL_CATS:
 			case LiteSpeed_Cache_Config::CRWL_TAGS:
-			case LiteSpeed_Cache_Config::CRWL_HTTP2:
 			case LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE:
 			case LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL:
 			case LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL:

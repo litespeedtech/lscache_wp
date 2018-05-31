@@ -207,7 +207,6 @@ class LiteSpeed_Cache_Config
 	const CRWL_LOAD_LIMIT = 'crawler_load_limit' ;
 	const CRWL_DOMAIN_IP = 'crawler_domain_ip' ;
 	const CRWL_CUSTOM_SITEMAP = 'crawler_custom_sitemap' ;
-	const CRWL_HTTP2 = 'crawler_http2' ;
 
 	const CRWL_CRON_ACTIVE = 'crawler_cron_active' ;
 
@@ -740,7 +739,6 @@ class LiteSpeed_Cache_Config
 			self::CRWL_DOMAIN_IP => '',
 			self::CRWL_CUSTOM_SITEMAP => '',
 			self::CRWL_CRON_ACTIVE => false,
-			self::CRWL_HTTP2 => false,
 				) ;
 
 		if ( LSWCP_ESI_SUPPORT ) {

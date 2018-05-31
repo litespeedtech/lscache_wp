@@ -21,6 +21,8 @@ class LiteSpeed_Cache_Img_Optm
 	const TYPE_IMG_PULL = 'img_pull' ;
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
+	const TYPE_CALC_BKUP = 'calc_bkup' ;
+	const TYPE_RM_BKUP = 'rm_bkup' ;
 
 	const ITEM_IMG_OPTM_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
 
@@ -39,6 +41,8 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
 	const DB_IMG_OPTM_SUMMARY = 'litespeed_img_optm_summary' ;
+	const DB_IMG_OPTM_BK_SUMMARY = 'litespeed_img_optm_bk_summary' ;
+	const DB_IMG_OPTM_RMBK_SUMMARY = 'litespeed_img_optm_rmbk_summary' ;
 
 	private $wp_upload_dir ;
 	private $tmp_pid ;
@@ -130,7 +134,7 @@ class LiteSpeed_Cache_Img_Optm
 			ORDER BY a.ID DESC
 			LIMIT %d
 			" ;
-		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_optimize_max_rows', 500 ) ) ;
+		$q = $wpdb->prepare( $q, apply_filters( 'litespeed_img_optimize_max_rows', 3000 ) ) ;
 
 		$img_set = array() ;
 		$list = $wpdb->get_results( $q ) ;
@@ -1360,6 +1364,94 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
+	 * Calculate bkup original images storage
+	 *
+	 * @since 2.2.6
+	 * @access private
+	 */
+	private function _calc_bkup()
+	{
+		global $wpdb ;
+		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
+
+		$i = 0 ;
+		$total_size = 0 ;
+		foreach ( $list as $v ) {
+			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
+
+			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$bk_file = $local_filename . '.bk.' . $extension ;
+
+			// switch to ori
+			if ( ! file_exists( $bk_file ) ) {
+				continue ;
+			}
+
+			$i ++ ;
+			$total_size += filesize( $bk_file ) ;
+
+		}
+
+		$data = array(
+			'date' => time(),
+			'count' => $i,
+			'sum' => $total_size,
+		) ;
+		update_option( self::DB_IMG_OPTM_BK_SUMMARY, $data ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] _calc_bkup total: ' . $i . ' [size] ' . $total_size ) ;
+
+	}
+
+	/**
+	 * Delete bkup original images storage
+	 *
+	 * @since 2.2.6
+	 * @access private
+	 */
+	private function _rm_bkup()
+	{
+		global $wpdb ;
+		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
+
+		$i = 0 ;
+		$total_size = 0 ;
+		foreach ( $list as $v ) {
+			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
+
+			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$bk_file = $local_filename . '.bk.' . $extension ;
+
+			// switch to ori
+			if ( ! file_exists( $bk_file ) ) {
+				continue ;
+			}
+
+			$i ++ ;
+			$total_size += filesize( $bk_file ) ;
+
+			unlink( $bk_file ) ;
+		}
+
+		$data = array(
+			'date' => time(),
+			'count' => $i,
+			'sum' => $total_size,
+		) ;
+		update_option( self::DB_IMG_OPTM_RMBK_SUMMARY, $data ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] _rm_bkup total: ' . $i . ' [size] ' . $total_size ) ;
+
+		$msg = sprintf( __( 'Removed %1$s images and saved %2$s successfully.', 'litespeed-cache' ), $i, LiteSpeed_Cache_Utility::real_size( $total_size ) ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+	}
+
+	/**
 	 * Get optm summary
 	 *
 	 * @since 1.6.5
@@ -1373,6 +1465,20 @@ class LiteSpeed_Cache_Img_Optm
 			return $optm_summary ;
 		}
 		return ! empty( $optm_summary[ $field ] ) ? $optm_summary[ $field ] : 0 ;
+	}
+
+	/**
+	 * Get optm bkup usage summary
+	 *
+	 * @since 2.2.6
+	 * @access public
+	 */
+	public function storage_data()
+	{
+		$summary = get_option( self::DB_IMG_OPTM_BK_SUMMARY, array() ) ;
+		$rm_log = get_option( self::DB_IMG_OPTM_RMBK_SUMMARY, array() ) ;
+
+		return array( $summary, $rm_log ) ;
 	}
 
 	/**
@@ -1614,6 +1720,14 @@ class LiteSpeed_Cache_Img_Optm
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
+			case self::TYPE_CALC_BKUP :
+				$instance->_calc_bkup() ;
+				break ;
+
+			case self::TYPE_RM_BKUP :
+				$instance->_rm_bkup() ;
+				break ;
+
 			case self::TYPE_SYNC_DATA :
 				$instance->_sync_data() ;
 				break ;
@@ -1643,7 +1757,12 @@ class LiteSpeed_Cache_Img_Optm
 				// Check if need to self redirect
 				if ( $result === 'to_be_continued' ) {
 					$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL ) ;
-					LiteSpeed_Cache_Admin::redirect( html_entity_decode( $link ) ) ;
+					// Add i to avoid browser too many redirected warning
+					$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
+					$i ++ ;
+					$url = html_entity_decode( $link ) . '&i=' . $i ;
+					exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
+					// LiteSpeed_Cache_Admin::redirect( $url ) ;
 				}
 				break ;
 

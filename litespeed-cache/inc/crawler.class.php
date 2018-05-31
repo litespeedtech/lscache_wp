@@ -175,10 +175,18 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function parse_custom_sitemap($sitemap, $return_detail = true)
 	{
-		if ( ! file_get_contents($sitemap) ) {
+		/**
+		 * Read via wp func to avoid allow_url_fopen = off
+		 * @since  2.2.7
+		 */
+		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) ) ;
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message() ;
+			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
 			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ ;
 		}
-		$xml_object = simplexml_load_file($sitemap) ;
+
+		$xml_object = simplexml_load_string( $response[ 'body' ] ) ;
 		if ( ! $xml_object ) {
 			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE ;
 		}
@@ -383,8 +391,6 @@ class LiteSpeed_Cache_Crawler
 		}
 		$crawler->set_base_url($this->_home_url) ;
 		$crawler->set_run_duration($options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
-
-		$crawler->set_http2( $options[ LiteSpeed_Cache_Config::CRWL_HTTP2 ] ) ;
 
 		/**
 		 * Limit delay to use server setting

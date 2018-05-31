@@ -16,6 +16,9 @@ class LiteSpeed_Cache_Log
 	private static $log_path ;
 	private static $_prefix ;
 
+	private static $_ignore_filters ;
+	private static $_ignore_part_filters ;
+
 	const TYPE_CLEAR_LOG = 'clear_log' ;
 
 	/**
@@ -104,6 +107,9 @@ class LiteSpeed_Cache_Log
 
 		// Check if hook filters
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILTERS ) ) {
+			self::$_ignore_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS ) ;
+			self::$_ignore_part_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS ) ;
+
 			add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
 		}
 	}
@@ -117,16 +123,13 @@ class LiteSpeed_Cache_Log
 	public static function log_filters()
 	{
 		$action = current_filter() ;
-		if ( $ignore_filters = get_option( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS ) ) {
-			$ignore_filters = explode( "\n", $ignore_filters ) ;
-			if ( in_array( $action, $ignore_filters ) ) {
-				return ;
-			}
+
+		if ( self::$_ignore_filters && in_array( $action, self::$_ignore_filters ) ) {
+			return ;
 		}
 
-		if ( $ignore_part_filters = get_option( LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS ) ) {
-			$ignore_part_filters = explode( "\n", $ignore_part_filters ) ;
-			foreach ( $ignore_part_filters as $val ) {
+		if ( self::$_ignore_part_filters ) {
+			foreach ( self::$_ignore_part_filters as $val ) {
 				if ( stripos( $action, $val ) !== false ) {
 					return ;
 				}
@@ -280,12 +283,16 @@ class LiteSpeed_Cache_Log
 			'HTTP_COOKIE' => '',
 			'X-LSCACHE' => '',
 			'LSCACHE_VARY_COOKIE' => '',
-			'LSCACHE_VARY_VALUE' => ''
+			'LSCACHE_VARY_VALUE' => '',
 		) ;
 		$server = array_merge( $servervars, $_SERVER ) ;
 		$params = array() ;
 
-		$param = sprintf( '%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
+		if ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] == 'on' ) {
+			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;
+		}
+
+		$param = sprintf( '------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ) {

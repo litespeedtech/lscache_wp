@@ -63,6 +63,10 @@ class LiteSpeed_Cache_Utility
 			$res .= $seconds . 's' ;
 		}
 
+		if ( ! $res ) {
+			return $backward ? __( 'just now', 'litespeed-cache' ) : __( 'right now', 'litespeed-cache' ) ;
+		}
+
 		$res = $backward ? sprintf( __( ' %s ago', 'litespeed-cache' ), $res ) : $res ;
 
 		return $res ;

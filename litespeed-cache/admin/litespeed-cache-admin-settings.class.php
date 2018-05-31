@@ -770,7 +770,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
-		$this->_save_item( $id ) ;
+		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
 		/**
 		 * DNS prefetch
@@ -927,7 +927,6 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::CRWL_PAGES,
 			LiteSpeed_Cache_Config::CRWL_CATS,
 			LiteSpeed_Cache_Config::CRWL_TAGS,
-			LiteSpeed_Cache_Config::CRWL_HTTP2,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;

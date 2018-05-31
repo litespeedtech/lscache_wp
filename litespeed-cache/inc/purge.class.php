@@ -281,7 +281,7 @@ class LiteSpeed_Cache_Purge
 		}
 
 		$this->_pub_purge = array_merge( $this->_pub_purge, $tags ) ;
-		LiteSpeed_Cache_Log::debug( '[Purge] added ' . implode( ',', $tags ), 3 ) ;
+		LiteSpeed_Cache_Log::debug( '[Purge] added ' . implode( ',', $tags ), 8 ) ;
 
 		// Send purge header immediately
 		$curr_built = $this->_build() ;
