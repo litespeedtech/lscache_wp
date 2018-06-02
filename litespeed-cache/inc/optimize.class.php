@@ -16,6 +16,7 @@ class LiteSpeed_Cache_Optimize
 
 	const DIR_MIN = '/min' ;
 	const CSS_ASYNC_LIB = '/min/css_async.js' ;
+	const CSS_ASYNC_LIB_FILE = 'js/css_async.min.js' ;
 
 	private $content ;
 	private $http2_headers = array() ;
@@ -185,9 +186,7 @@ class LiteSpeed_Cache_Optimize
 		if ( ( $this->cfg_css_async || $this->cfg_ggfonts_async ) && strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] start serving static file' ) ;
 
-			$file = LSCWP_DIR . 'js/css_async.min.js' ;
-
-			$content = Litespeed_File::read( $file ) ;
+			$content = Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) ;
 
 			$static_file = LSCWP_CONTENT_DIR . '/cache/js/css_async.js' ;
 
@@ -636,9 +635,15 @@ class LiteSpeed_Cache_Optimize
 
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async || $this->cfg_ggfonts_async ) {
-			$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
-			$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
-			$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
+			// Inline css async lib
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE ) ) {
+				$this->html_head .= '<script type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) . '</script>' ;
+			}
+			else {
+				$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
+				$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
+				$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
+			}
 		}
 
 		if ( $this->cfg_ggfonts_async ) {
