@@ -91,7 +91,7 @@ class LiteSpeed_Cache_Optimize
 
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async ) {
-			add_action( 'wp_head', array( $this, 'prepend_critical_css' ), 1 ) ;
+			add_filter( 'litespeed_optm_html_head', 'LiteSpeed_Cache_CSS::prepend_critical_css', 1 ) ;
 		}
 
 		/**
@@ -153,24 +153,6 @@ class LiteSpeed_Cache_Optimize
 		remove_action( 'wp_print_styles', 'print_emoji_styles' ) ;
 		remove_action( 'admin_print_styles', 'print_emoji_styles' ) ;
 		remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' ) ;
-	}
-
-	/**
-	 * Output critical css
-	 *
-	 * @since  1.3
-	 * @access public
-	 * @return  string The static file content
-	 */
-	public function prepend_critical_css()
-	{
-
-		$rules = get_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ;
-		if ( ! $rules ) {
-			return ;
-		}
-
-		echo '<style id="litespeed-optm-css-rules">' . $rules . '</style>' ;
 	}
 
 	/**
@@ -338,6 +320,11 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+			return false ;
+		}
+
+		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Optm] bypassed due to login/reg page' ) ;
 			return false ;
 		}
 
@@ -1231,6 +1218,3 @@ class LiteSpeed_Cache_Optimize
 	}
 
 }
-
-
-

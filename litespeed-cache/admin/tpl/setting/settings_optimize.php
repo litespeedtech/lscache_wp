@@ -1,6 +1,8 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
+$last_critical_css_generated = LiteSpeed_Cache_CSS::get_instance()->last_generated() ;
+
 ?>
 
 <h3 class="litespeed-title-short">
@@ -138,6 +140,21 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>
 				</font>
 			</div>
+
+			<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CSS, LiteSpeed_Cache_CSS::TYPE_GENERATE_CRITICAL ) ; ?>" class="litespeed-btn-success">
+				<?php echo __( 'Automatically Generate Critical CSS', 'litespeed-cache' ) ; ?>
+			</a>
+
+			<?php if ( $last_critical_css_generated ) : ?>
+			<div class="litespeed-desc litespeed-left20">
+				<p>
+					<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'date' ] ) . '</code>' ; ?>
+				</p>
+				<p>
+					<?php echo __( 'Total critical CSS', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'count' ] . '</code>' ; ?>
+				</p>
+			</div>
+			<?php endif ; ?>
 		</td>
 	</tr>
 

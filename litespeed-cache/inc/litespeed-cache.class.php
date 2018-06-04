@@ -57,6 +57,7 @@ class LiteSpeed_Cache
 	const ACTION_IAPI = 'iapi' ;
 	const ACTION_CDN = 'cdn' ;
 	const ACTION_REPORT = 'report' ;
+	const ACTION_CSS = 'css' ;
 	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
 	const ACTION_SAPI_AGGRESSIVE_CALLBACK = 'sapi_aggressive_callback' ;
 
@@ -325,6 +326,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_IMPORT:
 				$msg = LiteSpeed_Cache_Import::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_CSS:
+				$msg = LiteSpeed_Cache_CSS::handler() ;
 				break ;
 
 			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:

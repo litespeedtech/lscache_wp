@@ -385,6 +385,8 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE:
 			case LiteSpeed_Cache::ACTION_CDN_QUICCLOUD:
 			case LiteSpeed_Cache::ACTION_IMPORT:
+			case LiteSpeed_Cache::ACTION_REPORT:
+			case LiteSpeed_Cache::ACTION_CSS:
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
@@ -392,12 +394,6 @@ class LiteSpeed_Cache_Router
 
 			case LiteSpeed_Cache::ACTION_LOG:
 				if ( $_can_network_option || $_can_option ) {
-					self::$_action = $action ;
-				}
-				return ;
-
-			case LiteSpeed_Cache::ACTION_REPORT:
-				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
 				return ;
