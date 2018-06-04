@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.2.6\n"
+"Project-Id-Version: LiteSpeed Cache 2.2.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-05-24 18:15:42+00:00\n"
+"POT-Creation-Date: 2018-06-04 14:18:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -425,7 +425,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:342
-#: admin/litespeed-cache-admin-settings.class.php:1030
+#: admin/litespeed-cache-admin-settings.class.php:1029
 msgid "Default Public Cache"
 msgstr ""
 
@@ -446,25 +446,25 @@ msgstr ""
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:953
+#: admin/litespeed-cache-admin-settings.class.php:952
 #: admin/tpl/setting/settings_crawler.php:13
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:954
+#: admin/litespeed-cache-admin-settings.class.php:953
 #: admin/tpl/setting/settings_crawler.php:37
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:955
+#: admin/litespeed-cache-admin-settings.class.php:954
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:956
+#: admin/litespeed-cache-admin-settings.class.php:955
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:957
+#: admin/litespeed-cache-admin-settings.class.php:956
 #: admin/tpl/setting/settings_crawler.php:73
 msgid "Threads"
 msgstr ""
@@ -545,6 +545,8 @@ msgstr ""
 
 #: admin/tpl/crawler.php:92 admin/tpl/image_optimization.php:332
 #: admin/tpl/inc/check_cache_disabled.php:31 admin/tpl/manage/manage_cdn.php:15
+#: admin/tpl/setting/settings_debug.php:105
+#: admin/tpl/setting/settings_debug.php:138
 #: admin/tpl/setting/settings_optimize.php:13 admin/tpl/settings.php:163
 msgid "WARNING"
 msgstr ""
@@ -1031,7 +1033,7 @@ msgid "Total"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:326
-msgid "Are you sure to remove all image bakcups?"
+msgid "Are you sure to remove all image backups?"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:327
@@ -1047,7 +1049,7 @@ msgid "This is irreversible."
 msgstr ""
 
 #: admin/tpl/image_optimization.php:334
-msgid "You be unable to Revert Optimization once the backups are deleted!"
+msgid "You will be unable to Revert Optimization once the backups are deleted!"
 msgstr ""
 
 #: admin/tpl/image_optimization.php:340
@@ -1101,7 +1103,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.6)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.2.7)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:348
 #: includes/litespeed-cache-gui.class.php:348
@@ -2230,91 +2232,69 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/setting/settings_crawler.php:139
-msgid "HTTP/2 Crawl"
-msgstr ""
-
-#: admin/tpl/setting/settings_crawler.php:143
-msgid "Crawl using the HTTP/2 protocal."
-msgstr ""
-
-#: admin/tpl/setting/settings_crawler.php:144
-msgid "Current curl HTTP/2 extension status"
-msgstr ""
-
-#: admin/tpl/setting/settings_crawler.php:146
-#: admin/tpl/setting/settings_inc.cache_object.php:4
-msgid "Enabled"
-msgstr ""
-
-#: admin/tpl/setting/settings_crawler.php:148
-#: admin/tpl/setting/settings_inc.cache_object.php:5
-msgid "Disabled"
-msgstr ""
-
-#: admin/tpl/setting/settings_crawler.php:155
-#: admin/tpl/setting/settings_crawler.php:248
+#: admin/tpl/setting/settings_crawler.php:232
 msgid "Custom Sitemap"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:160
+#: admin/tpl/setting/settings_crawler.php:144
 msgid ""
 "The crawler can use your Google XML Sitemap instead of its own. Enter the "
 "full URL to your sitemap here."
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:166
+#: admin/tpl/setting/settings_crawler.php:150
 msgid "Sitemap Generation"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:171
+#: admin/tpl/setting/settings_crawler.php:155
 msgid "Include Posts"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:178
+#: admin/tpl/setting/settings_crawler.php:162
 msgid "Include Pages"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:185
+#: admin/tpl/setting/settings_crawler.php:169
 msgid "Include Categories"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:192
+#: admin/tpl/setting/settings_crawler.php:176
 msgid "Include Tags"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:201
+#: admin/tpl/setting/settings_crawler.php:185
 msgid "Exclude Custom Post Types"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:206
+#: admin/tpl/setting/settings_crawler.php:190
 msgid "Exclude certain Custom Post Types in sitemap."
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:212
+#: admin/tpl/setting/settings_crawler.php:196
 msgid "Available Custom Post Type"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:220
+#: admin/tpl/setting/settings_crawler.php:204
 msgid "Order links by"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:226
+#: admin/tpl/setting/settings_crawler.php:210
 msgid "Date, descending (Default)"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:232
+#: admin/tpl/setting/settings_crawler.php:216
 msgid "Date, ascending"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:238
+#: admin/tpl/setting/settings_crawler.php:222
 msgid "Alphabetical, descending"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:244
+#: admin/tpl/setting/settings_crawler.php:228
 msgid "Alphabetical, ascending"
 msgstr ""
 
-#: admin/tpl/setting/settings_crawler.php:248
+#: admin/tpl/setting/settings_crawler.php:232
 msgid "These options will be invalid when using %s."
 msgstr ""
 
@@ -2398,54 +2378,60 @@ msgstr ""
 #: admin/tpl/setting/settings_debug.php:104
 msgid ""
 "Disable WordPress heartbeat to prevent AJAX calls from breaking debug "
-"logging. WARNING: Disabling this may cause WordPress tasks triggered by AJAX "
-"to stop working."
+"logging."
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:110
+#: admin/tpl/setting/settings_debug.php:106
+msgid ""
+"Disabling this may cause WordPress tasks triggered by AJAX to stop working."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:113
 msgid "Log Cookies"
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:114
+#: admin/tpl/setting/settings_debug.php:117
 msgid "Log request cookie values."
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:120
+#: admin/tpl/setting/settings_debug.php:123
 msgid "Collapse Query Strings"
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:124
+#: admin/tpl/setting/settings_debug.php:127
 msgid "Shorten query strings in the debug log to improve readability."
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:130
+#: admin/tpl/setting/settings_debug.php:133
 msgid "Log Filters"
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:134
-msgid ""
-"Log all WordPress filter hooks. WARNING: Enabling this option will cause log "
-"file size to grow quickly."
+#: admin/tpl/setting/settings_debug.php:137
+msgid "Log all WordPress filter hooks."
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:140
+#: admin/tpl/setting/settings_debug.php:139
+msgid "Enabling this option will cause log file size to grow quickly."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:146
 msgid "Exclude Filters"
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:144
+#: admin/tpl/setting/settings_debug.php:150
 msgid "Listed filters (one per line) will not be logged."
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:145
-#: admin/tpl/setting/settings_debug.php:156
+#: admin/tpl/setting/settings_debug.php:151
+#: admin/tpl/setting/settings_debug.php:162
 msgid "Recommended default value"
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:151
+#: admin/tpl/setting/settings_debug.php:157
 msgid "Exclude Part Filters"
 msgstr ""
 
-#: admin/tpl/setting/settings_debug.php:155
+#: admin/tpl/setting/settings_debug.php:161
 msgid "Filters containing these strings (one per line) will not be logged."
 msgstr ""
 
@@ -2802,6 +2788,14 @@ msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_mobile.php:67
 msgid "If %1$s is %2$s, then %3$s must be populated!"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:4
+msgid "Enabled"
+msgstr ""
+
+#: admin/tpl/setting/settings_inc.cache_object.php:5
+msgid "Disabled"
 msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_object.php:12
@@ -3759,23 +3753,34 @@ msgstr ""
 msgid "File created successfully: %s"
 msgstr ""
 
-#: inc/crawler.class.php:310 includes/litespeed-cache-crawler.class.php:310
+#: inc/crawler.class.php:318 includes/litespeed-cache-crawler.class.php:318
 msgid "Failed to send position reset notification: %s"
 msgstr ""
 
-#: inc/crawler.class.php:314 includes/litespeed-cache-crawler.class.php:314
+#: inc/crawler.class.php:322 includes/litespeed-cache-crawler.class.php:322
 msgid "Position reset notification sent successfully"
 msgstr ""
 
-#: inc/crawler.class.php:466 includes/litespeed-cache-crawler.class.php:466
+#: inc/crawler.class.php:472 includes/litespeed-cache-crawler.class.php:472
 #: lib/litespeed/litespeed-crawler.class.php:402
 msgid "Crawler %s reached end of sitemap file."
 msgstr ""
 
-#: inc/crawler.class.php:496 inc/crawler.class.php:500
-#: includes/litespeed-cache-crawler.class.php:496
-#: includes/litespeed-cache-crawler.class.php:500
+#: inc/crawler.class.php:502 inc/crawler.class.php:506
+#: includes/litespeed-cache-crawler.class.php:502
+#: includes/litespeed-cache-crawler.class.php:506
 msgid "Guest"
+msgstr ""
+
+#: inc/doc.cls.php:24
+msgid ""
+"This site utilizes caching in order to facilitate a faster response time and "
+"better user experience. Caching potentially stores a duplicate copy of every "
+"web page that is on display on this site. All cache files are temporary, and "
+"are never accessed by any third party, except as necessary to obtain "
+"technical support from the cache plugin vendor. Cache files expire on a "
+"schedule set by the site administrator, but may easily be purged by the "
+"admin before their natural expiration, if necessary."
 msgstr ""
 
 #: inc/gui.class.php:277 includes/litespeed-cache-gui.class.php:277
