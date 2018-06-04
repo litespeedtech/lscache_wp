@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -265,6 +265,15 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.2.7 - Jun 4 2018 =
+* [IMPROVEMENT] Improved redirection for manual image pull to avoid too many redirections warning.
+* [IAPI] Increased credit limit.
+* [BUGFIX] Fixed 503 error when enabling log filters in Debug tab. (#525206)
+* [UPDATE] Improve compatibility when using sitemap url on servers with allow_url_open off.
+* [UPDATE] Removed Crawler HTTP2 option due to causing no-cache blacklist issue for certain environments.
+* [UPDATE] Privacy policy can be now translated. (@Josemi)
+* [UPDATE] IAPI Increased default img request max to 3000.
 
 = 2.2.6 - May 24 2018 =
 * [NEW FEATURE] Original image backups can be removed now. (@borisov87 @JMCA2)
