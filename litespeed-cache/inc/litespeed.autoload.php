@@ -32,6 +32,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Control'			=> 'inc/control.class.php',
 			'LiteSpeed_Cache_Crawler'			=> 'inc/crawler.class.php',
 			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'inc/crawler-sitemap.class.php',
+			'LiteSpeed_Cache_CSS'				=> 'inc/css.cls.php',
 			'LiteSpeed_Cache_Data'				=> 'inc/data.class.php',
 			'LiteSpeed_Cache_Doc'				=> 'inc/doc.cls.php',
 			'LiteSpeed_Cache_ESI'				=> 'inc/esi.class.php',

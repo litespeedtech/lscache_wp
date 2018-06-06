@@ -66,7 +66,7 @@ class LiteSpeed_Cache_CSS
 		}
 
 		// Generate critical css
-		$url = 'https://ccss.api.litespeedtech.com/' ;
+		$url = 'http://ccss.api.litespeedtech.com' ;
 		LiteSpeed_Cache_Log::debug( '[CSS] posting to : ' . $url ) ;
 
 		$data = array(
