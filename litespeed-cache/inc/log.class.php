@@ -235,17 +235,20 @@ class LiteSpeed_Cache_Log
 		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {
 			$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 2 ) ;
 			for ( $i=1 ; $i <= $backtrace_limit + 1 ; $i++ ) {// the 0st item is push()
-				if ( empty( $trace[$i]['class'] ) ) {
-					break ;
+				if ( empty( $trace[ $i ][ 'class' ] ) ) {
+					$log = $trace[ $i ][ 'file' ] ;
 				}
-				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
-					continue ;
+				else {
+					if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
+						continue ;
+					}
+
+					$log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
 				}
-				$log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
 				if ( ! empty( $trace[$i-1]['line'] ) ) {
 					$log .= '@' . $trace[$i-1]['line'] ;
 				}
-				$msg .= " \ $log" ;
+				$msg .= " => $log" ;
 			}
 
 		}
