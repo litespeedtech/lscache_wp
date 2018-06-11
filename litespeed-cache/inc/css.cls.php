@@ -195,7 +195,7 @@ class LiteSpeed_Cache_CSS
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate critical css
-		$url = 'http://ccss.api.litespeedtech.com:9999' ;
+		$url = 'http://ccss.api.litespeedtech.com' ;
 
 		$data = array(
 			'home_url'	=> home_url(),
