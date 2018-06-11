@@ -64,27 +64,31 @@ class LiteSpeed_Cache_CSS
 		$ccss_file = $this->_which_css() ;
 
 		if ( file_exists( $ccss_file ) ) {
+			LiteSpeed_Cache_Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
 			return Litespeed_File::read( $ccss_file ) ;
 		}
 
 		// Check if is already in a request, bypass current one
 		$req_sum = get_option( self::DB_CSS_REQ_SUMMARY, array() ) ;
-		if ( $req_sum && ! empty( $req_sum[ 'last_request' ] ) && time() - $req_sum[ 'last_request' ] < 300 ) {
+		if ( $req_sum && ! empty( $req_sum[ 'curr_request' ] ) && time() - $req_sum[ 'curr_request' ] < 300 ) {
 			return false ;
 		}
 
 		// Update css request status
-		$req_sum[ 'last_request' ] = time() ;
+		$req_sum[ 'curr_request' ] = time() ;
 		update_option( self::DB_CSS_REQ_SUMMARY, $req_sum ) ;
 
 		// Generate critical css
 		$url = 'http://ccss.api.litespeedtech.com' ;
-		LiteSpeed_Cache_Log::debug( '[CSS] posting to : ' . $url ) ;
+
+		global $wp ;
 
 		$data = array(
 			'home_url' => home_url(),
-			'url'	=> $_SERVER[ 'REQUEST_URI' ],
+			'url'	=> home_url( $wp->request ),
 		) ;
+
+		LiteSpeed_Cache_Log::debug( '[CSS] posting to : ' . $url, $data ) ;
 
 		$param = array(
 			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
@@ -118,6 +122,16 @@ class LiteSpeed_Cache_CSS
 
 		// Write to file
 		Litespeed_File::save( $ccss_file, $json[ 'ccss' ], true ) ;
+
+		$req_sum[ 'last_spent' ] = time() - $req_sum[ 'curr_request' ] ;
+		$req_sum[ 'last_request' ] = $req_sum[ 'curr_request' ] ;
+		$req_sum[ 'curr_request' ] = 0 ;
+		update_option( self::DB_CSS_REQ_SUMMARY, $req_sum ) ;
+
+		LiteSpeed_Cache_Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
+
+		LiteSpeed_Cache_Log::debug2( '[CSS] ccss con: ' . $json[ 'ccss' ] ) ;
+
 		return $json[ 'ccss' ] ;
 	}
 
