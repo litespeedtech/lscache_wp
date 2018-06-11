@@ -17,21 +17,6 @@ class LiteSpeed_Cache_CSS
 
 	const DB_CSS_GENERATED_SUMMARY = 'litespeed-css-generated-summary' ;
 
-	const DB_CSS_REQ_SUMMARY = 'litespeed_css_req_summary' ;
-
-	/**
-	 * Read last time generated info
-	 *
-	 * @since  2.3
-	 * @access public
-	 */
-	public function last_generated()
-	{
-		$summary = get_option( self::DB_CSS_GENERATED_SUMMARY, array() ) ;
-
-		return $summary ;
-	}
-
 	/**
 	 * Output critical css
 	 *
@@ -39,11 +24,11 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3 Migrated from optimize.cls
 	 * @access public
 	 */
-	public static function prepend_critical_css( $html_head )
+	public static function prepend_ccss( $html_head )
 	{
 		// Get critical css for current page
 		// Note: need to consider mobile
-		$rules = self::get_instance()->_critical_css() ;
+		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
 		$rules .= get_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ;
@@ -54,14 +39,64 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
+	 * Check if there is a queue for cron or not
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public static function has_queue()
+	{
+		$req_summary = self::get_summary() ;
+		if ( ! empty( $req_summary[ 'queue' ] ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * Save ccss summary
+	 *
+	 * @since  2.3
+	 * @access private
+	 */
+	private function _save_summary( $data )
+	{
+		update_option( self::DB_CSS_GENERATED_SUMMARY, $data ) ;
+	}
+
+	/**
+	 * Read last time generated info
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public static function get_summary()
+	{
+		return get_option( self::DB_CSS_GENERATED_SUMMARY, array() ) ;
+	}
+
+	/**
+	 * Generate realpath of ccss
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public static function ccss_realpath( $ccss_type )
+	{
+		return LSCWP_CONTENT_DIR . "/cache/ccss/$ccss_type.css" ;
+	}
+
+	/**
 	 * The critical css content of the current page
 	 *
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _critical_css()
+	private function _ccss()
 	{
-		$ccss_file = $this->_which_css() ;
+		$ccss_type = $this->_which_css() ;
+		$ccss_file = self::ccss_realpath( $ccss_type ) ;
 
 		if ( file_exists( $ccss_file ) ) {
 			LiteSpeed_Cache_Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
@@ -69,23 +104,79 @@ class LiteSpeed_Cache_CSS
 		}
 
 		// Check if is already in a request, bypass current one
-		$req_sum = get_option( self::DB_CSS_REQ_SUMMARY, array() ) ;
-		if ( $req_sum && ! empty( $req_sum[ 'curr_request' ] ) && time() - $req_sum[ 'curr_request' ] < 300 ) {
+		$req_summary = self::get_summary() ;
+		if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 			return false ;
 		}
 
+		global $wp ;
+		$request_url = home_url( $wp->request ) ;
+
+		// If generate in backend, log it and bypass
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ) {
+			// Store it to prepare for cron
+			if ( empty( $req_summary[ 'queue' ] ) ) {
+				$req_summary[ 'queue' ] = array() ;
+			}
+			$req_summary[ 'queue' ][ $ccss_type ] = $request_url ;
+			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url ) ;
+
+			$this->_save_summary( $req_summary ) ;
+			return false ;
+		}
+
+		// generate on the fly
+		return $this->_generate_ccss( $request_url, $ccss_type ) ;
+	}
+
+	/**
+	 * Cron ccss generation
+	 *
+	 * @since  2.3
+	 * @access private
+	 */
+	public static function cron_ccss( $continue = false )
+	{
+		$req_summary = self::get_summary() ;
+		if ( empty( $req_summary[ 'queue' ] ) ) {
+			return ;
+		}
+
+		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
+			LiteSpeed_Cache_Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v ) ;
+
+			self::get_instance()->_generate_ccss( $v, $k ) ;
+
+			// only request first one
+			if ( ! $continue ) {
+				return ;
+			}
+		}
+	}
+
+	/**
+	 * Send to LiteSpeed CSS API to generate CSS
+	 *
+	 * @since  2.3
+	 * @access private
+	 */
+	private function _generate_ccss( $request_url, $ccss_type )
+	{
+		$req_summary = self::get_summary() ;
+
+		$ccss_file = self::ccss_realpath( $ccss_type ) ;
+
 		// Update css request status
-		$req_sum[ 'curr_request' ] = time() ;
-		update_option( self::DB_CSS_REQ_SUMMARY, $req_sum ) ;
+		$req_summary[ 'curr_request' ] = time() ;
+		$this->_save_summary( $req_summary ) ;
 
 		// Generate critical css
 		$url = 'http://ccss.api.litespeedtech.com' ;
 
-		global $wp ;
-
 		$data = array(
-			'home_url' => home_url(),
-			'url'	=> home_url( $wp->request ),
+			'home_url'	=> home_url(),
+			'url'		=> $request_url,
+			'ccss_type'	=> $ccss_type,
 		) ;
 
 		LiteSpeed_Cache_Log::debug( '[CSS] posting to : ' . $url, $data ) ;
@@ -123,10 +214,17 @@ class LiteSpeed_Cache_CSS
 		// Write to file
 		Litespeed_File::save( $ccss_file, $json[ 'ccss' ], true ) ;
 
-		$req_sum[ 'last_spent' ] = time() - $req_sum[ 'curr_request' ] ;
-		$req_sum[ 'last_request' ] = $req_sum[ 'curr_request' ] ;
-		$req_sum[ 'curr_request' ] = 0 ;
-		update_option( self::DB_CSS_REQ_SUMMARY, $req_sum ) ;
+		// Save summary data
+		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
+		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
+		$req_summary[ 'curr_request' ] = 0 ;
+		if ( empty( $req_summary[ 'ccss_type_history' ] ) ) {
+			$req_summary[ 'ccss_type_history' ] = array() ;
+		}
+		$req_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
+		unset( $req_summary[ 'queue' ][ $ccss_type ] ) ;
+
+		$this->_save_summary( $req_summary ) ;
 
 		LiteSpeed_Cache_Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 
@@ -163,18 +261,7 @@ class LiteSpeed_Cache_CSS
 			$css = 'tag' ;
 		}
 
-		return LSCWP_CONTENT_DIR . "/cache/ccss/$css.css" ;
-	}
-
-	/**
-	 * Send to LiteSpeed CSS API to generate CSS
-	 *
-	 * @since  2.3
-	 * @access private
-	 */
-	private function _generate_critical_css()
-	{
-		$url = 'https://ccss.api.litespeedtech.com' ;
+		return $css ;
 	}
 
 	/**
@@ -191,7 +278,7 @@ class LiteSpeed_Cache_CSS
 
 		switch ( $type ) {
 			case self::TYPE_GENERATE_CRITICAL :
-				$instance->_generate_critical_css() ;
+				self::cron_ccss( true ) ;
 				break ;
 
 			default:

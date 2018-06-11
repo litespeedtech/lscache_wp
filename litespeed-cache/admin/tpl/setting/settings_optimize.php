@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$last_critical_css_generated = LiteSpeed_Cache_CSS::get_instance()->last_generated() ;
+$last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 
 ?>
 
@@ -140,19 +140,35 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_instance()->last_generat
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>
 				</font>
 			</div>
+		</td>
+	</tr>
 
-			<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CSS, LiteSpeed_Cache_CSS::TYPE_GENERATE_CRITICAL ) ; ?>" class="litespeed-btn-success">
-				<?php echo __( 'Automatically Generate Critical CSS', 'litespeed-cache' ) ; ?>
-			</a>
+	<tr>
+		<th><?php echo __( 'Generate Critical CSS In Background', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'This will generate CSS in background. If generate critical CSS in frontend, page loading could be slow.', 'litespeed-cache' ) ; ?>
+			</div>
 
 			<?php if ( $last_critical_css_generated ) : ?>
 			<div class="litespeed-desc litespeed-left20">
+				<?php if ( ! empty( $last_critical_css_generated[ 'last_request' ] ) ) : ?>
 				<p>
-					<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'date' ] ) . '</code>' ; ?>
+					<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
 				</p>
 				<p>
-					<?php echo __( 'Total critical CSS', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'count' ] . '</code>' ; ?>
+					<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>' ; ?>
 				</p>
+				<?php endif ; ?>
+				<?php if ( ! empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
+				<div class="litespeed-callout-warning">
+					<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
+					<p>
+						<?php echo implode( '<br />', $last_critical_css_generated[ 'queue' ] ) ; ?>
+					</p>
+				</p>
+				<?php endif ; ?>
 			</div>
 			<?php endif ; ?>
 		</td>

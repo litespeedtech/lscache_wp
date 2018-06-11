@@ -91,7 +91,7 @@ class LiteSpeed_Cache_Optimize
 
 		// Check if there is any critical css rules setting
 		if ( $this->cfg_css_async ) {
-			add_filter( 'litespeed_optm_html_head', 'LiteSpeed_Cache_CSS::prepend_critical_css', 1 ) ;
+			add_filter( 'litespeed_optm_html_head', 'LiteSpeed_Cache_CSS::prepend_ccss', 1 ) ;
 		}
 
 		/**

@@ -53,6 +53,7 @@ class LiteSpeed_Cache_Cli_Admin
 			LiteSpeed_Cache_Config::OPID_OPTM_QS_RM,
 			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM,
 			LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC,
+			LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC,
 			LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE,
 			LiteSpeed_Cache_Config::OPT_OPTM_CSS_AUTO_CRITICAL,
 			LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER,
@@ -164,6 +165,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_OPTM_QS_RM:
 			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM:
 			case LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC:
+			case LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC:
 			case LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE:
 			case LiteSpeed_Cache_Config::OPT_OPTM_CSS_AUTO_CRITICAL:
 			case LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER:

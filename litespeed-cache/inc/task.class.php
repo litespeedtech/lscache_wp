@@ -15,8 +15,9 @@ class LiteSpeed_Cache_Task
 
 	const CRON_ACTION_HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
 	const CRON_ACTION_HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
+	const CRON_ACTION_HOOK_CCSS = 'litespeed_ccss_trigger' ;
 	const CRON_FITLER_CRAWLER = 'litespeed_crawl_filter' ;
-	const CRON_FITLER_IMGOPTM = 'litespeed_imgoptm_filter' ;
+	const CRON_FITLER = 'litespeed_filter' ;
 
 	/**
 	 * Init
@@ -45,6 +46,13 @@ class LiteSpeed_Cache_Task
 		}
 		else {
 			// wp_clear_scheduled_hook( self::CRON_ACTION_HOOK_IMGOPTM ) ;
+		}
+
+		// Register ccss generation
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) && LiteSpeed_Cache_CSS::has_queue() ) {
+			self::schedule_filter_ccss() ;
+
+			add_action( self::CRON_ACTION_HOOK_CCSS, 'LiteSpeed_Cache_CSS::cron_ccss' ) ;
 		}
 	}
 
@@ -104,12 +112,29 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function schedule_filter_imgoptm()
 	{
-		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter_imgoptm' ) ;
+		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
 
 		// Schedule event here to see if it can lost again or not
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......img optimization cron hook register......' ) ;
-			wp_schedule_event( time(), self::CRON_FITLER_IMGOPTM, self::CRON_ACTION_HOOK_IMGOPTM ) ;
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM ) ;
+		}
+	}
+
+	/**
+	 * Schedule cron ccss generation
+	 *
+	 * @since 2.3
+	 * @access public
+	 */
+	public static function schedule_filter_ccss()
+	{
+		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
+
+		// Schedule event here to see if it can lost again or not
+		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CCSS ) ) {
+			LiteSpeed_Cache_Log::debug( 'Cron log: ......ccss cron hook register......' ) ;
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_CCSS ) ;
 		}
 	}
 
@@ -137,12 +162,12 @@ class LiteSpeed_Cache_Task
 	 * @access public
 	 * @param array $schedules WP Hook
 	 */
-	public static function lscache_cron_filter_imgoptm( $schedules )
+	public static function lscache_cron_filter( $schedules )
 	{
-		if ( ! array_key_exists( self::CRON_FITLER_IMGOPTM, $schedules ) ) {
-			$schedules[ self::CRON_FITLER_IMGOPTM ] = array(
+		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
+			$schedules[ self::CRON_FITLER ] = array(
 				'interval' => 60,
-				'display'  => __( 'LiteSpeed Cache Custom Cron ImgOptm', 'litespeed-cache' ),
+				'display'  => __( 'LiteSpeed Cache Custom Cron Common', 'litespeed-cache' ),
 			) ;
 		}
 		return $schedules ;
