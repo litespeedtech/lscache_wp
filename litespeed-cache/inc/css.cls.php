@@ -88,6 +88,19 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
+	 * Delete file-based cache folder
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public function rm_cache_folder()
+	{
+		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/ccss' ) ) {
+			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ;
+		}
+	}
+
+	/**
 	 * The critical css content of the current page
 	 *
 	 * @since  2.3
@@ -171,7 +184,7 @@ class LiteSpeed_Cache_CSS
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate critical css
-		$url = 'http://ccss.api.litespeedtech.com' ;
+		$url = 'http://ccss.api.litespeedtech.com:9999' ;
 
 		$data = array(
 			'home_url'	=> home_url(),

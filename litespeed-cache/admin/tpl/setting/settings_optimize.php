@@ -154,20 +154,23 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<?php if ( $last_critical_css_generated ) : ?>
 			<div class="litespeed-desc litespeed-left20">
 				<?php if ( ! empty( $last_critical_css_generated[ 'last_request' ] ) ) : ?>
-				<p>
-					<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
-				</p>
-				<p>
-					<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>' ; ?>
-				</p>
+					<p>
+						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
+					</p>
+					<p>
+						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>' ; ?>
+					</p>
 				<?php endif ; ?>
 				<?php if ( ! empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
-				<div class="litespeed-callout-warning">
-					<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
-					<p>
-						<?php echo implode( '<br />', $last_critical_css_generated[ 'queue' ] ) ; ?>
+					<div class="litespeed-callout-warning">
+						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
+						<p>
+							<?php echo implode( '<br />', $last_critical_css_generated[ 'queue' ] ) ; ?>
+						</p>
 					</p>
-				</p>
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CSS, LiteSpeed_Cache_CSS::TYPE_GENERATE_CRITICAL ) ; ?>" class="litespeed-btn-success">
+						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
+					</a>
 				<?php endif ; ?>
 			</div>
 			<?php endif ; ?>

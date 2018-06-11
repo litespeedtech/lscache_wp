@@ -23,6 +23,7 @@ class LiteSpeed_Cache_Purge
 	const TYPE_PURGE_ALL = 'purge_all' ;
 	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache' ;
 	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs' ;
+	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss' ;
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object' ;
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache' ;
 
@@ -81,6 +82,10 @@ class LiteSpeed_Cache_Purge
 				$instance->_purge_all_cssjs() ;
 				break ;
 
+			case self::TYPE_PURGE_ALL_CCSS :
+				$instance->_purge_all_ccss() ;
+				break ;
+
 			case self::TYPE_PURGE_ALL_OBJECT :
 				$instance->_purge_all_object() ;
 				break ;
@@ -133,6 +138,7 @@ class LiteSpeed_Cache_Purge
 	{
 		$this->_purge_all_lscache( true ) ;
 		$this->_purge_all_cssjs( true ) ;
+		$this->_purge_all_ccss( true ) ;
 		$this->_purge_all_object( true ) ;
 		$this->_purge_all_opcache( true ) ;
 
@@ -170,6 +176,22 @@ class LiteSpeed_Cache_Purge
 
 		if ( ! $silence ) {
 			$msg = __( 'Notified LiteSpeed Web Server to purge all LSCache entries.', 'litespeed-cache' ) ;
+			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
+	}
+
+	/**
+	 * Delete all critical css
+	 *
+	 * @since    2.3
+	 * @access   private
+	 */
+	private function _purge_all_ccss( $silence = false )
+	{
+		LiteSpeed_Cache_CSS::get_instance()->rm_cache_folder() ;
+
+		if ( ! $silence ) {
+			$msg = __( 'Cleaned all critical CSS files.', 'litespeed-cache' ) ;
 			! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 	}

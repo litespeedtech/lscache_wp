@@ -67,6 +67,16 @@ if ( LiteSpeed_Cache_Router::opcache_enabled() ) {
 	) ;
 }
 
+if ( is_dir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ) {
+	$_panels[] = array(
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all generated critical CSS files', 'litespeed-cache' ),
+		'icon'	=> 'purge-cssjs',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CCSS,
+	) ;
+}
+
+
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),
 	'desc'	=> __( 'Purge the cache entries created by this plugin', 'litespeed-cache' ),
