@@ -236,7 +236,10 @@ class LiteSpeed_Cache_Log
 			$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 2 ) ;
 			for ( $i=1 ; $i <= $backtrace_limit + 1 ; $i++ ) {// the 0st item is push()
 				if ( empty( $trace[ $i ][ 'class' ] ) ) {
-					$log = $trace[ $i ][ 'file' ] ;
+					if ( empty( $trace[ $i ][ 'file' ] ) ) {
+						break ;
+					}
+					$log = "\n" . $trace[ $i ][ 'file' ] ;
 				}
 				else {
 					if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {

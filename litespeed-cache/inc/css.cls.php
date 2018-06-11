@@ -17,6 +17,8 @@ class LiteSpeed_Cache_CSS
 
 	const DB_CSS_GENERATED_SUMMARY = 'litespeed-css-generated-summary' ;
 
+	const DB_CSS_REQ_SUMMARY = 'litespeed_css_req_summary' ;
+
 	/**
 	 * Read last time generated info
 	 *
@@ -64,6 +66,16 @@ class LiteSpeed_Cache_CSS
 		if ( file_exists( $ccss_file ) ) {
 			return Litespeed_File::read( $ccss_file ) ;
 		}
+
+		// Check if is already in a request, bypass current one
+		$req_sum = get_option( self::DB_CSS_REQ_SUMMARY, array() ) ;
+		if ( $req_sum && ! empty( $req_sum[ 'last_request' ] ) && time() - $req_sum[ 'last_request' ] < 300 ) {
+			return false ;
+		}
+
+		// Update css request status
+		$req_sum[ 'last_request' ] = time() ;
+		update_option( self::DB_CSS_REQ_SUMMARY, $req_sum ) ;
 
 		// Generate critical css
 		$url = 'http://ccss.api.litespeedtech.com' ;
