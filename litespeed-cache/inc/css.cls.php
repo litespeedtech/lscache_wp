@@ -15,7 +15,7 @@ class LiteSpeed_Cache_CSS
 
 	const TYPE_GENERATE_CRITICAL = 'generate_critical' ;
 
-	const DB_CSS_GENERATED_SUMMARY = 'litespeed-css-generated-summary' ;
+	const DB_CCSS_SUMMARY = 'litespeed-ccss-summary' ;
 
 	/**
 	 * Output critical css
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _save_summary( $data )
 	{
-		update_option( self::DB_CSS_GENERATED_SUMMARY, $data ) ;
+		update_option( self::DB_CCSS_SUMMARY, $data ) ;
 	}
 
 	/**
@@ -84,7 +84,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	public static function get_summary()
 	{
-		return get_option( self::DB_CSS_GENERATED_SUMMARY, array() ) ;
+		return get_option( self::DB_CCSS_SUMMARY, array() ) ;
 	}
 
 	/**
