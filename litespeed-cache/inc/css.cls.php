@@ -55,6 +55,17 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
+	 * Check if there is a ccss cache folder
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public static function has_ccss_cache()
+	{
+		return is_dir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ;
+	}
+
+	/**
 	 * Save ccss summary
 	 *
 	 * @since  2.3

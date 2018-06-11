@@ -430,6 +430,15 @@ class LiteSpeed_Cache_GUI
 			) );
 		}
 
+		if ( LiteSpeed_Cache_CSS::has_ccss_cache() ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'	=> 'litespeed-menu',
+				'id'		=> 'litespeed-purge-ccss',
+				'title'		=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CCSS ),
+				'meta'		=> array( 'tabindex' => '0' ),
+			) );
+		}
 	}
 
 	/**

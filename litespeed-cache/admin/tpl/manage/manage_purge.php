@@ -67,7 +67,7 @@ if ( LiteSpeed_Cache_Router::opcache_enabled() ) {
 	) ;
 }
 
-if ( is_dir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ) {
+if ( LiteSpeed_Cache_CSS::has_ccss_cache() ) {
 	$_panels[] = array(
 		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Critical CSS', 'litespeed-cache' ),
 		'desc'	=> __( 'This will delete all generated critical CSS files', 'litespeed-cache' ),
