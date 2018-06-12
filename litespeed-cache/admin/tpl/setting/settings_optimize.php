@@ -148,7 +148,9 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'This will generate CSS in background. If generate critical CSS in frontend, page loading could be slow.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Automatically generate critical CSS in the background via a cron-based queue.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#generate_critical_css" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
 			</div>
 
 			<?php if ( $last_critical_css_generated ) : ?>
@@ -219,8 +221,8 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
 				<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
 			</div>
 		</td>
 	</tr>
