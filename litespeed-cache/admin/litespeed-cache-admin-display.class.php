@@ -671,7 +671,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  boolean $disabled If this input is disabled or not
 	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea( $id, $cols = false, $val = null, $disabled = false )
+	public function build_textarea( $id, $cols = false, $val = null, $disabled = false, $cls = '' )
 	{
 		if ( strpos( $id, '[' ) === false ) {
 			if ( $val === null ) {
@@ -688,7 +688,11 @@ class LiteSpeed_Cache_Admin_Display
 			$cols = 80 ;
 		}
 
-		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' rows='5' cols='$cols' $disabled>" . esc_textarea($val) . "</textarea>" ;
+		if ( $cls ) {
+			$cls = " class='$cls' " ;
+		}
+
+		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' rows='5' cols='$cols' $cls $disabled>" . esc_textarea($val) . "</textarea>" ;
 	}
 
 	/**
@@ -705,7 +709,7 @@ class LiteSpeed_Cache_Admin_Display
 		// Get default val for separate item
 		$val = $this->config->get_item( $id, true ) ;
 
-		$this->build_textarea( $id, $cols, $val ) ;
+		$this->build_textarea( $id, $cols, $val, false, 'litespeed-textarea-success' ) ;
 	}
 
 	/**

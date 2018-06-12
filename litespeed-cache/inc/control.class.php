@@ -514,9 +514,9 @@ class LiteSpeed_Cache_Control
 	public static function finalize()
 	{
 		// Check if URI is forced cache
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FORCE_CACHE_URI ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ;
 		if ( ! empty( $excludes ) ) {
-			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], explode( "\n", $excludes ) ) ;
+			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
 				self::force_cacheable() ;
 				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
@@ -635,9 +635,9 @@ class LiteSpeed_Cache_Control
 //		}
 
 		// Check private cache URI setting
-		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_URI_PRIV ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ) ;
 		if ( ! empty( $excludes ) ) {
-			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], explode( "\n", $excludes ) ) ;
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
 				self::set_private( 'Admin cfg Private Cached URI: ' . $result ) ;
 			}
@@ -646,9 +646,9 @@ class LiteSpeed_Cache_Control
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ) ;
+			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ;
 			if ( ! empty( $excludes ) ) {
-				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], explode( "\n", $excludes ) ) ;
+				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
 					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
 				}

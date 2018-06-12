@@ -387,10 +387,8 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_LOGIN ) ;
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_CACHE_URI_PRIV ;
-		if ( isset( $this->_input[ $id ]) ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
-		}
+		$id = LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ;
+		$this->_save_item( $id, 'relative' ) ;
 
 		$ids = array(
 			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS, // Update Drop Query String @since 1.7
@@ -458,15 +456,11 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_exclude()
 	{
-		$id = LiteSpeed_Cache_Config::OPID_FORCE_CACHE_URI ;
-		if ( isset( $this->_input[ $id ] ) ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
-		}
+		$id = LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ;
+		$this->_save_item( $id, 'relative' ) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_URI ;
-		if ( isset( $this->_input[ $id ] ) ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
-		}
+		$id = LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ;
+		$this->_save_item( $id, 'relative' ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ;
 		if ( isset( $this->_input[ $id ] ) ) {
@@ -752,10 +746,8 @@ class LiteSpeed_Cache_Admin_Settings
 		update_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, $this->_input[ LiteSpeed_Cache_Config::ITEM_OPTM_CSS ] ) ;
 
 		// prevent URI from optimization
-		$id = LiteSpeed_Cache_Config::OPID_OPTM_EXCLUDES ;
-		if ( isset( $this->_input[ $id ]) ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
-		}
+		$id = LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ;
+		$this->_save_item( $id, 'relative' ) ;
 
 		// Update js deferred excludes
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ;

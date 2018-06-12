@@ -306,13 +306,16 @@ class LiteSpeed_Cache_Utility
 	 * @param  bool $type String handler type
 	 * @return string
 	 */
-	public static function sanitize_lines( $content, $type = null )
+	public static function sanitize_lines( $arr, $type = null )
 	{
-		if ( ! $content ) {
-			return $content ;
+		if ( ! $arr ) {
+			return $arr ;
 		}
 
-		$arr = explode( "\n", $content ) ;
+		if ( ! is_array( $arr ) ) {
+			$arr = explode( "\n", $arr ) ;
+		}
+
 		$arr = array_map( 'trim', $arr ) ;
 		if ( $type === 'uri' ) {
 			$arr = array_map( 'LiteSpeed_Cache_Utility::url2uri', $arr ) ;

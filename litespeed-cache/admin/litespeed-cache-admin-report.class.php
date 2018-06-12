@@ -171,21 +171,12 @@ class LiteSpeed_Cache_Admin_Report
 			}
 		}
 
-		$item_options = array(
-			LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES,
-			LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES,
-			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING,
-			LiteSpeed_Cache_Config::ITEM_SETTING_MODE,
-			LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC,
-			LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC,
-			LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS,
-			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
-			LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR,
-			LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE,
-		) ;
-
+		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
 		foreach ( $item_options as $v ) {
+			// bypass main conf
+			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME ) {
+				continue ;
+			}
 			$options[ $v ] = get_option( $v ) ;
 		}
 

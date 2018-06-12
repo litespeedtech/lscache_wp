@@ -1648,6 +1648,10 @@ input.litespeed-input[type="file"]{
 
 /********************************* todo *******************************/
 
+.litespeed-body .litespeed-textarea-success {
+	border-color: #6699cc ;
+}
+
 /* input field */
 .litespeed-textarea {
 	width: 60% ;
@@ -1709,6 +1713,10 @@ input.litespeed-input[type="file"]{
 	margin-right: 8px;
 	font-size: 14px;
 	font-family: "Open Sans", Arial, sans-serif;
+}
+
+.litespeed-body textarea {
+	border-color: #69B1FF ;
 }
 
 .litespeed .litespeed-regular-text,

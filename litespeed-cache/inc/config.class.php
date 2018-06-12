@@ -35,6 +35,10 @@ class LiteSpeed_Cache_Config
 	const ITEM_ADV_PURGE_ALL_HOOKS = 'litespeed-adv-purge_all_hooks' ;
 	const ITEM_CDN_ORI_DIR = 'litespeed-cdn-ori_dir' ;
 	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'litespeed-media-webp_attribute' ;
+	const ITEM_FORCE_CACHE_URI = 'litespeed-forced_cache_uri' ;
+	const ITEM_CACHE_URI_PRIV = 'litespeed-cache_uri_priv' ;
+	const ITEM_OPTM_EXCLUDES = 'litespeed-optm_excludes' ;
+	const ITEM_EXCLUDES_URI = 'litespeed-excludes_uri' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
@@ -73,7 +77,6 @@ class LiteSpeed_Cache_Config
 	const OPID_CACHE_RES = 'cache_resources' ;
 	const OPID_CACHE_MOBILE = 'mobileview_enabled' ;
 	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
-	const OPID_CACHE_URI_PRIV = 'cache_uri_priv' ;
 	const OPID_CACHE_OBJECT = 'cache_object' ;
 	const OPID_CACHE_OBJECT_KIND = 'cache_object_kind' ;
 	const OPID_CACHE_OBJECT_HOST = 'cache_object_host' ;
@@ -130,8 +133,7 @@ class LiteSpeed_Cache_Config
 	const PURGE_DATE = 'D' ;
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
-	const OPID_FORCE_CACHE_URI = 'forced_cache_uri' ;
-	const OPID_EXCLUDES_URI = 'excludes_uri' ;
+
 	const OPID_EXCLUDES_QS = 'excludes_qs' ;
 	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
 	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
@@ -161,7 +163,6 @@ class LiteSpeed_Cache_Config
 	const OPT_OPTM_CSS_AUTO_CRITICAL = 'optm_css_auto_critical' ;
 	const OPID_OPTM_JS_DEFER = 'optm_js_defer' ;
 	const OPID_OPTM_EMOJI_RM = 'optm_emoji_rm' ;
-	const OPID_OPTM_EXCLUDES = 'optm_excludes' ;
 	const OPID_OPTM_EXC_JQUERY = 'optm_exclude_jquery' ;
 	const OPID_OPTM_GGFONTS_ASYNC = 'optm_ggfonts_async' ;
 	const OPID_OPTM_MAX_SIZE = 'optm_max_size' ;
@@ -296,6 +297,10 @@ class LiteSpeed_Cache_Config
 			self::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
 			self::ITEM_CRWL_AS_UIDS,
 			self::ITEM_ADV_PURGE_ALL_HOOKS,
+			self::ITEM_FORCE_CACHE_URI,
+			self::ITEM_CACHE_URI_PRIV,
+			self::ITEM_OPTM_EXCLUDES,
+			self::ITEM_EXCLUDES_URI,
 		) ;
 	}
 
@@ -459,20 +464,20 @@ class LiteSpeed_Cache_Config
 
 		switch ( $type ) {
 			case 'forced_cache' :
-				$id = self::OPID_FORCE_CACHE_URI ;
+				$id = self::ITEM_FORCE_CACHE_URI ;
 				break ;
 
 			case 'private' :
-				$id = self::OPID_CACHE_URI_PRIV ;
+				$id = self::ITEM_CACHE_URI_PRIV ;
 				break ;
 
 			case 'nonoptimize' :
-				$id = self::OPID_OPTM_EXCLUDES ;
+				$id = self::ITEM_OPTM_EXCLUDES ;
 				break ;
 
 			case 'nocache' :
 			default:
-				$id = self::OPID_EXCLUDES_URI ;
+				$id = self::ITEM_EXCLUDES_URI ;
 				break ;
 		}
 
@@ -480,12 +485,9 @@ class LiteSpeed_Cache_Config
 		$list = $instance->get_item( $id ) ;
 
 		$list[] = $_SERVER[ 'HTTP_REFERER' ] ;
-		$list = array_map( 'LiteSpeed_Cache_Utility::make_relative', $list ) ;// Remove domain
-		$list = array_unique( $list ) ;
-		$list = array_filter( $list ) ;
-		$list = implode( "\n", $list ) ;
+		$list = LiteSpeed_Cache_Utility::sanitize_lines( $list, 'relative' ) ;
 
-		$instance->update_options( array( $id => $list ) ) ;
+		update_option( $id, $list ) ;
 
 		// Purge this page & redirect
 		LiteSpeed_Cache_Purge::purge_front() ;
@@ -630,7 +632,6 @@ class LiteSpeed_Cache_Config
 			self::OPID_CACHE_RES => true,
 			self::OPID_CACHE_MOBILE => false,
 			self::ID_MOBILEVIEW_LIST => false,
-			self::OPID_CACHE_URI_PRIV => '',
 			self::OPID_CACHE_OBJECT => false,
 			self::OPID_CACHE_OBJECT_KIND => false,
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
@@ -665,8 +666,6 @@ class LiteSpeed_Cache_Config
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
-			self::OPID_FORCE_CACHE_URI => '',
-			self::OPID_EXCLUDES_URI => '',
 			self::OPID_EXCLUDES_QS => '',
 			self::OPID_EXCLUDES_CAT => '',
 			self::OPID_EXCLUDES_TAG => '',
@@ -696,7 +695,6 @@ class LiteSpeed_Cache_Config
 			self::OPT_OPTM_CSS_AUTO_CRITICAL => false,
 			self::OPID_OPTM_JS_DEFER => false,
 			self::OPID_OPTM_EMOJI_RM => false,
-			self::OPID_OPTM_EXCLUDES => '',
 			self::OPID_OPTM_EXC_JQUERY => true,
 			self::OPID_OPTM_GGFONTS_ASYNC => false,
 			self::OPID_OPTM_MAX_SIZE => 1.2,
@@ -1000,6 +998,23 @@ class LiteSpeed_Cache_Config
 			) ;
 			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
 			LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option adding CDN map" ) ;
+		}
+
+		/**
+		 * Move Exclude settings to separate item
+		 * @since  2.3
+		 */
+		if ( isset( $this->options[ 'forced_cache_uri' ] ) ) {
+			update_option( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI, $this->options[ 'forced_cache_uri' ] ) ;
+		}
+		if ( isset( $this->options[ 'cache_uri_priv' ] ) ) {
+			update_option( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV, $this->options[ 'cache_uri_priv' ] ) ;
+		}
+		if ( isset( $this->options[ 'optm_excludes' ] ) ) {
+			update_option( LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES, $this->options[ 'optm_excludes' ] ) ;
+		}
+		if ( isset( $this->options[ 'excludes_uri' ] ) ) {
+			update_option( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI, $this->options[ 'excludes_uri' ] ) ;
 		}
 
 		$this->options = self::option_diff( $default_options, $this->options ) ;

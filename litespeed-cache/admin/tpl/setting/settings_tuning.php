@@ -167,7 +167,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'URI Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_OPTM_EXCLUDES); ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any optimization of listed pages.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>

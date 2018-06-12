@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Force Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_FORCE_CACHE_URI ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache'); ?>
 				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
@@ -31,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Do Not Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_EXCLUDES_URI); ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will not be cached.', 'litespeed-cache'); ?>
 				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
