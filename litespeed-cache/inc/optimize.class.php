@@ -624,11 +624,11 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->cfg_css_async || $this->cfg_ggfonts_async ) {
 			// Inline css async lib
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE ) ) {
-				$this->html_head .= '<script type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) . '</script>' ;
+				$this->html_head .= '<script id="litespeed-css-async-lib" type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) . '</script>' ;
 			}
 			else {
 				$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
-				$this->html_head .= "<script src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
+				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
 				$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 			}
 		}
