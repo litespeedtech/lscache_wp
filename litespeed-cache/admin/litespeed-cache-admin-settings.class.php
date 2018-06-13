@@ -717,7 +717,6 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC,
 			LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC,
 			LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE,
-			LiteSpeed_Cache_Config::OPT_OPTM_CSS_AUTO_CRITICAL,
 			LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER,
 			LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM,
 			LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY,
