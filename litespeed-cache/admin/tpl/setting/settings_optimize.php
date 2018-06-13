@@ -133,8 +133,9 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Optimize CSS delivery. This will load Google Fonts asynchronously too.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'When this option is turned ON, it will also load Google Fonts asynchronously and ask the LiteSpeed CCSS server to generate critical CSS.', 'litespeed-cache' ) ; ?>
 				<br /><font class="litespeed-success">
 					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 2.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-06-12 21:23:28+00:00\n"
+"POT-Creation-Date: 2018-06-13 13:11:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -77,7 +77,7 @@ msgstr ""
 #: admin/tpl/setting/settings_debug.php:35
 #: admin/tpl/setting/settings_inc.cache_mobile.php:67
 #: admin/tpl/setting/settings_media.php:73
-#: admin/tpl/setting/settings_optimize.php:208
+#: admin/tpl/setting/settings_optimize.php:209
 #: admin/tpl/setting/settings_tuning.php:21
 #: admin/tpl/setting/settings_tuning.php:57
 msgid "ON"
@@ -88,7 +88,7 @@ msgstr ""
 #: admin/tpl/setting/settings_cdn.php:168
 #: admin/tpl/setting/settings_debug.php:29
 #: admin/tpl/setting/settings_inc.cache_object.php:149
-#: admin/tpl/setting/settings_optimize.php:152
+#: admin/tpl/setting/settings_optimize.php:153
 #: admin/tpl/setting/settings_tuning.php:18
 #: admin/tpl/setting/settings_tuning.php:54
 msgid "OFF"
@@ -100,7 +100,7 @@ msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:938
 #: admin/tpl/setting/settings_media.php:36
-#: admin/tpl/setting/settings_optimize.php:139
+#: admin/tpl/setting/settings_optimize.php:140
 #: admin/tpl/setting/settings_tuning.php:24
 #: admin/tpl/setting/settings_tuning.php:40
 #: admin/tpl/setting/settings_tuning.php:60
@@ -133,8 +133,8 @@ msgstr ""
 #: admin/tpl/setting/settings_media.php:8
 #: admin/tpl/setting/settings_media.php:107
 #: admin/tpl/setting/settings_optimize.php:10
-#: admin/tpl/setting/settings_optimize.php:153
-#: admin/tpl/setting/settings_optimize.php:225
+#: admin/tpl/setting/settings_optimize.php:154
+#: admin/tpl/setting/settings_optimize.php:226
 #: admin/tpl/setting/settings_purge.php:8
 #: admin/tpl/setting/settings_tuning.php:8
 msgid "Learn More"
@@ -427,7 +427,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:342
-#: admin/litespeed-cache-admin-settings.class.php:1024
+#: admin/litespeed-cache-admin-settings.class.php:1023
 msgid "Default Public Cache"
 msgstr ""
 
@@ -443,30 +443,30 @@ msgstr ""
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:865
+#: admin/litespeed-cache-admin-settings.class.php:864
 #: admin/tpl/setting/settings_debug.php:88
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:947
+#: admin/litespeed-cache-admin-settings.class.php:946
 #: admin/tpl/setting/settings_crawler.php:13
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:948
+#: admin/litespeed-cache-admin-settings.class.php:947
 #: admin/tpl/setting/settings_crawler.php:37
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:949
+#: admin/litespeed-cache-admin-settings.class.php:948
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:950
+#: admin/litespeed-cache-admin-settings.class.php:949
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:951
+#: admin/litespeed-cache-admin-settings.class.php:950
 #: admin/tpl/setting/settings_crawler.php:73
 msgid "Threads"
 msgstr ""
@@ -998,7 +998,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:22
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:21
 #: admin/tpl/setting/settings_inc.media_webp.php:12
-#: admin/tpl/setting/settings_optimize.php:210
+#: admin/tpl/setting/settings_optimize.php:211
 #: admin/tpl/setting/settings_tuning.php:20
 #: admin/tpl/setting/settings_tuning.php:56
 msgid "NOTE"
@@ -1602,7 +1602,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:34
 #: admin/tpl/setting/settings_media.php:96
-#: admin/tpl/setting/settings_optimize.php:224
+#: admin/tpl/setting/settings_optimize.php:225
 #: admin/tpl/setting/settings_purge.php:85
 #: admin/tpl/setting/settings_tuning.php:38
 #: admin/tpl/setting/settings_tuning.php:74
@@ -3127,7 +3127,7 @@ msgid "Filter %s is supported."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:38
-#: admin/tpl/setting/settings_optimize.php:140
+#: admin/tpl/setting/settings_optimize.php:141
 #: admin/tpl/setting/settings_tuning.php:42
 #: admin/tpl/setting/settings_tuning.php:78
 #: admin/tpl/setting/settings_tuning.php:150
@@ -3309,7 +3309,7 @@ msgid "Minify inline JS code."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:89
-#: admin/tpl/setting/settings_optimize.php:211
+#: admin/tpl/setting/settings_optimize.php:212
 msgid "JS Combine"
 msgstr ""
 
@@ -3351,12 +3351,12 @@ msgid "Load CSS Asynchronously"
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:136
-msgid "Optimize CSS delivery. This will load Google Fonts asynchronously too."
+msgid "Optimize CSS delivery."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:137
-#: admin/tpl/setting/settings_optimize.php:198
-#: admin/tpl/setting/settings_optimize.php:236
+#: admin/tpl/setting/settings_optimize.php:199
+#: admin/tpl/setting/settings_optimize.php:237
 #: admin/tpl/setting/settings_tuning.php:103
 #: admin/tpl/setting/settings_tuning.php:162
 msgid ""
@@ -3364,85 +3364,91 @@ msgid ""
 "PageSpeed."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:147
-msgid "Generate Critical CSS In Background"
+#: admin/tpl/setting/settings_optimize.php:138
+msgid ""
+"When this option is turned ON, it will also load Google Fonts asynchronously "
+"and ask the LiteSpeed CCSS server to generate critical CSS."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:151
-msgid ""
-"Automatically generate critical CSS in the background via a cron-based queue."
+#: admin/tpl/setting/settings_optimize.php:148
+msgid "Generate Critical CSS In Background"
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:152
 msgid ""
+"Automatically generate critical CSS in the background via a cron-based queue."
+msgstr ""
+
+#: admin/tpl/setting/settings_optimize.php:153
+msgid ""
 "If set to %s this is done in the foreground, which may slow down page load."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:160
+#: admin/tpl/setting/settings_optimize.php:161
 msgid "Last generated"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:163
+#: admin/tpl/setting/settings_optimize.php:164
 msgid "Last requested cost"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:168
+#: admin/tpl/setting/settings_optimize.php:169
 msgid "URL list in queue waiting for cron"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:174
+#: admin/tpl/setting/settings_optimize.php:175
 msgid "Run Queue Manually"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:183
+#: admin/tpl/setting/settings_optimize.php:184
 msgid "Inline CSS Async Lib"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:187
+#: admin/tpl/setting/settings_optimize.php:188
 msgid "This will inline the asynchronous CSS library to avoid render blocking."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:193
+#: admin/tpl/setting/settings_optimize.php:194
 msgid "Load JS Deferred"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:197
+#: admin/tpl/setting/settings_optimize.php:198
 msgid "Doing so can help reduce resource contention and improve performance."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:204
+#: admin/tpl/setting/settings_optimize.php:205
 msgid "Exclude JQuery"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:208
+#: admin/tpl/setting/settings_optimize.php:209
 msgid ""
 "Improve compatibility with inline JS by preventing jQuery optimization. "
 "(Recommended Setting: %s)"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:211
+#: admin/tpl/setting/settings_optimize.php:212
 msgid ""
 "If there is any JS error related to %1$s when enabled %2$s, please try this "
 "option."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:218
+#: admin/tpl/setting/settings_optimize.php:219
 msgid "DNS Prefetch"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:222
+#: admin/tpl/setting/settings_optimize.php:223
 msgid "Prefetching DNS can reduce latency for visiters."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:223
+#: admin/tpl/setting/settings_optimize.php:224
 msgid "For example"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:231
+#: admin/tpl/setting/settings_optimize.php:232
 msgid "Remove Comments"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:235
+#: admin/tpl/setting/settings_optimize.php:236
 msgid "Remove the comments inside of JS/CSS files when minifying."
 msgstr ""
 

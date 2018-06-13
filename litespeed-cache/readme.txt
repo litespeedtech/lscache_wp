@@ -267,8 +267,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 2.3 - Jun 14 2018 =
-* [NEW FEATURE] Automatic generate critical CSS. (@joeee @ivan_ivanov @3dseo)
+= 2.3 - Jun 13 2018 =
+* [NEW FEATURE] Automatically generate critical CSS. (@joeee @ivan_ivanov @3dseo)
+* [BUGFIX] "Mark this page as..." from dropdown menu will not reset settings anymore. (@cbratschi)
 
 = 2.2.7 - Jun 4 2018 =
 * [IMPROVEMENT] Improved redirection for manual image pull to avoid too many redirections warning.
