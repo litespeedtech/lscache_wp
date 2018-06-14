@@ -145,6 +145,16 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Generate Critical CSS', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Disabling this will not communicate with LiteSpeed CCSS server to generate critical CSS.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Generate Critical CSS In Background', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ; ?>

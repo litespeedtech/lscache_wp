@@ -119,6 +119,12 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _ccss()
 	{
+		// If don't need to generate CCSS, bypass
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ) {
+			LiteSpeed_Cache_Log::debug( '[CSS] bypassed ccss due to setting' ) ;
+			return '' ;
+		}
+
 		$ccss_type = $this->_which_css() ;
 		$ccss_file = self::ccss_realpath( $ccss_type ) ;
 
@@ -130,7 +136,7 @@ class LiteSpeed_Cache_CSS
 		// Check if is already in a request, bypass current one
 		$req_summary = self::get_summary() ;
 		if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
-			return false ;
+			return '' ;
 		}
 
 		global $wp ;
@@ -146,7 +152,7 @@ class LiteSpeed_Cache_CSS
 			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url ) ;
 
 			$this->_save_summary( $req_summary ) ;
-			return false ;
+			return '' ;
 		}
 
 		// generate on the fly

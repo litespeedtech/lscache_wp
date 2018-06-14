@@ -158,6 +158,7 @@ class LiteSpeed_Cache_Config
 	const OPID_OPTM_QS_RM = 'optm_qs_rm' ;
 	const OPID_OPTM_GGFONTS_RM = 'optm_ggfonts_rm' ;
 	const OPID_OPTM_CSS_ASYNC = 'optm_css_async' ;
+	const OPT_OPTM_CCSS_GEN = 'optm_ccss_gen' ;
 	const OPT_OPTM_CCSS_ASYNC = 'optm_ccss_async' ;
 	const OPT_OPTM_CSS_ASYNC_INLINE = 'optm_css_async_inline' ;
 	const OPID_OPTM_JS_DEFER = 'optm_js_defer' ;
@@ -689,6 +690,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_OPTM_QS_RM 	=> false,
 			self::OPID_OPTM_GGFONTS_RM => false,
 			self::OPID_OPTM_CSS_ASYNC => false,
+			self::OPT_OPTM_CCSS_GEN => false,
 			self::OPT_OPTM_CCSS_ASYNC => true,
 			self::OPT_OPTM_CSS_ASYNC_INLINE => true,
 			self::OPID_OPTM_JS_DEFER => false,
