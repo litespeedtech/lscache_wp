@@ -14,6 +14,7 @@
 class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
+
 	private static $_esi_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
@@ -22,6 +23,103 @@ class LiteSpeed_Cache_Router
 	private static $_action ;
 	private static $_is_admin_ip ;
 	private static $_frontend_path ;
+
+	/**
+	 * Check if can run optimize
+	 *
+	 * @since  1.3
+	 * @since  2.3.1 Relocated from cdn.cls
+	 * @access public
+	 */
+	public static function can_optm()
+	{
+		$can = true ;
+
+		if ( is_admin() ) {
+			$can = false ;
+		}
+
+		if ( is_feed() ) {
+			$can = false ;
+		}
+
+		if ( is_preview() ) {
+			$can = false ;
+		}
+
+		if ( self::is_ajax() ) {
+			$can = false ;
+		}
+
+		if ( self::_is_login_page() ) {
+			LiteSpeed_Cache_Log::debug( '[Router] Optm bypassed: login/reg page' ) ;
+			$can = false ;
+		}
+
+		$can_final = apply_filters( 'litespeed_can_optm', $can ) ;
+
+		if ( $can_final != $can ) {
+			LiteSpeed_Cache_Log::debug( '[Router] Optm bypassed: filter' ) ;
+		}
+
+		return $can_final ;
+	}
+
+	/**
+	 * Check if it can use CDN replacement
+	 *
+	 * @since  1.2.3
+	 * @since  2.3.1 Relocated from cdn.cls
+	 * @access public
+	 */
+	public static function can_cdn()
+	{
+		$can = true ;
+
+		if ( is_admin() ) {
+			$can = false ;
+		}
+
+		if ( is_feed() ) {
+			$can = false ;
+		}
+
+		if ( is_preview() ) {
+			$can = false ;
+		}
+
+		/**
+		 * Bypass login/reg page
+		 * @since  1.6
+		 */
+		if ( self::_is_login_page() ) {
+			LiteSpeed_Cache_Log::debug( '[Router] CDN bypassed: login/reg page' ) ;
+			$can = false ;
+		}
+
+		$can_final = apply_filters( 'litespeed_can_cdn', $can ) ;
+
+		if ( $can_final != $can ) {
+			LiteSpeed_Cache_Log::debug( '[Router] CDN bypassed: filter' ) ;
+		}
+
+		return $can_final ;
+	}
+
+	/**
+	 * Check if is login page or not
+	 *
+	 * @since  2.3.1
+	 * @access protected
+	 */
+	protected static function _is_login_page()
+	{
+		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
 
 	/**
 	 * Crawler simulate role

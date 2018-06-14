@@ -37,7 +37,7 @@ class LiteSpeed_Cache_CDN
 	{
 		LiteSpeed_Cache_Log::debug2( 'CDN init' ) ;
 
-		if ( ! $this->can_cdn() ) {
+		if ( ! LiteSpeed_Cache_Router::can_cdn() ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
@@ -233,38 +233,6 @@ class LiteSpeed_Cache_CDN
 
 		$instance->_finalize() ;
 		return $instance->content ;
-	}
-
-	/**
-	 * Check if it can use CDN replacement
-	 *
-	 * @since  1.2.3
-	 * @access public
-	 */
-	public function can_cdn()
-	{
-		if ( is_admin() ) {
-			return false ;
-		}
-
-		if ( is_feed() ) {
-			return false ;
-		}
-
-		if ( is_preview() ) {
-			return false ;
-		}
-
-		/**
-		 * Bypass login/reg page
-		 * @since  1.6
-		 */
-		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
-			LiteSpeed_Cache_Log::debug( 'CDN bypassed as is login/reg page' ) ;
-			return false ;
-		}
-
-		return true ;
 	}
 
 	/**

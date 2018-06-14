@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Optimize
 
 		$this->_static_request_check() ;
 
-		if ( ! $this->_can_optm() ) {
+		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
 			return ;
 		}
 
@@ -300,38 +300,6 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Check if can run optimize
-	 *
-	 * @since  1.3
-	 * @access private
-	 */
-	private function _can_optm()
-	{
-		if ( is_admin() ) {
-			return false ;
-		}
-
-		if ( is_feed() ) {
-			return false ;
-		}
-
-		if ( is_preview() ) {
-			return false ;
-		}
-
-		if ( LiteSpeed_Cache_Router::is_ajax() ) {
-			return false ;
-		}
-
-		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Optm] bypassed due to login/reg page' ) ;
-			return false ;
-		}
-
-		return true ;
-	}
-
-	/**
 	 * Run optimize process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
@@ -384,7 +352,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
-		if ( ! $this->_can_optm() ) {
+		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
 			return ;
 		}
