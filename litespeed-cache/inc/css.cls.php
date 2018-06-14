@@ -166,6 +166,13 @@ class LiteSpeed_Cache_CSS
 			return ;
 		}
 
+		// For cron, need to check request interval too
+		if ( ! $continue ) {
+			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+				return ;
+			}
+		}
+
 		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v ) ;
 
@@ -266,7 +273,10 @@ class LiteSpeed_Cache_CSS
 	private function _which_css()
 	{
 		$css = 'default' ;
-		if ( is_singular() ) {
+		if ( is_404() ) {
+			$css = '404' ;
+		}
+		elseif ( is_singular() ) {
 			$css = get_post_type() ;
 		}
 		elseif ( is_home() && get_option( 'show_on_front' ) == 'page' ) {
