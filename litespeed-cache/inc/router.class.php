@@ -76,7 +76,7 @@ class LiteSpeed_Cache_Router
 	{
 		$can = true ;
 
-		if ( is_admin() ) {
+		if ( is_admin() && ! self::is_ajax() ) {
 			$can = false ;
 		}
 
