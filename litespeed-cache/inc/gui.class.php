@@ -171,6 +171,8 @@ class LiteSpeed_Cache_GUI
 	{
 		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.slack.php" ;
+
+		include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 	}
 
 	/**

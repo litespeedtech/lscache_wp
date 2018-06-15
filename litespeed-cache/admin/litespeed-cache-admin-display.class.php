@@ -348,12 +348,12 @@ class LiteSpeed_Cache_Admin_Display
 	 * Builds the html for a single notice.
 	 *
 	 * @since 1.0.7
-	 * @access private
+	 * @access public
 	 * @param string $color The color to use for the notice.
 	 * @param string $str The notice message.
 	 * @return string The built notice html.
 	 */
-	private static function build_notice($color, $str)
+	public static function build_notice($color, $str)
 	{
 		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>' ;
 	}
