@@ -690,7 +690,7 @@ class LiteSpeed_Cache_Config
 			self::OPID_OPTM_QS_RM 	=> false,
 			self::OPID_OPTM_GGFONTS_RM => false,
 			self::OPID_OPTM_CSS_ASYNC => false,
-			self::OPT_OPTM_CCSS_GEN => false,
+			self::OPT_OPTM_CCSS_GEN => true,
 			self::OPT_OPTM_CCSS_ASYNC => true,
 			self::OPT_OPTM_CSS_ASYNC_INLINE => true,
 			self::OPID_OPTM_JS_DEFER => false,
