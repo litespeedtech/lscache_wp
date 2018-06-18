@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 2.3
+Stable tag: 2.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -29,7 +29,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Minify CSS, JavaScript, and HTML
 * Minify inline CSS/JS
 * Combine CSS/JS
-* Automatic generate Critical CSS
+* Automatically generate Critical CSS
 * Lazyload images/iframes
 * Multiple CDN support
 * Load CSS/JS Asynchronously
@@ -266,6 +266,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.3.1 - Jun 18 2018 =
+* [Improvement] New setting to disable Generate Critical CSS. (@cybmeta)
+* [Improvement] Added filter to can_cdn/can_optm check. (@Jacob)
+* [Update] *Critical CSS* Added 404 css. Limit cron interval.
+* [Update] AJAX will not bypass CDN anymore by default. (@Jacob)
+* [GUI] Show Disable All Features warning if it is on in Debug tab.
 
 = 2.3 - Jun 13 2018 =
 * [NEW FEATURE] Automatically generate critical CSS. (@joeee @ivan_ivanov @3dseo)

@@ -134,8 +134,8 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize CSS delivery.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'When this option is turned ON, it will also load Google Fonts asynchronously and ask the LiteSpeed CCSS server to generate critical CSS.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?><br />
+				<?php echo sprintf( __( 'When this option is turned %s, it will also load Google Fonts asynchronously.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ) ; ?>
 				<br /><font class="litespeed-success">
 					<?php echo __('API', 'litespeed-cache'); ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-async="1"</code>' ) ; ?>
@@ -149,7 +149,8 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Disabling this will not communicate with LiteSpeed CCSS server to generate critical CSS.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Leave this option %1$s to allow communication with LiteSpeed CCSS server. If set to %2$s, Critical CSS will not be generated.', 'litespeed-cache' ), '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>', '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?><br />
+				<?php echo sprintf( __( 'This option only works if %1$s is %2$s.', 'litespeed-cache' ), '<code>' . __( 'Load CSS Asynchronously', 'litespeed-cache' ) . '</code>', '<code>' . __( 'ON', 'litespeed-cache' ) . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
