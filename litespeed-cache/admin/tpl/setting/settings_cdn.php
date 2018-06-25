@@ -32,6 +32,7 @@ if ( ! $cdn_mapping ) {
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable Content Delivery Network use.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'If using Cloudflare, leave this setting %s and use Cloudflare API setting below.', 'litespeed-cache' ), '<code>' . __( 'OFF', 'litespeed-cache' ) . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
