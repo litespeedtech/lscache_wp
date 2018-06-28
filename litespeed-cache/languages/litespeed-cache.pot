@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.3.1\n"
+"Project-Id-Version: LiteSpeed Cache 2.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-06-18 13:56:03+00:00\n"
+"POT-Creation-Date: 2018-06-28 19:31:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,8 +29,8 @@ msgid "Message from LiteSpeed image server"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:151
-#: admin/tpl/setting/settings_cdn.php:217
-#: admin/tpl/setting/settings_cdn.php:260 inc/gui.class.php:358
+#: admin/tpl/setting/settings_cdn.php:218
+#: admin/tpl/setting/settings_cdn.php:261 inc/gui.class.php:358
 #: includes/litespeed-cache-gui.class.php:358
 msgid "Manage"
 msgstr ""
@@ -76,7 +76,6 @@ msgstr ""
 #: admin/litespeed-cache-admin-display.class.php:883
 #: admin/tpl/setting/settings_debug.php:35
 #: admin/tpl/setting/settings_inc.cache_mobile.php:67
-#: admin/tpl/setting/settings_media.php:73
 #: admin/tpl/setting/settings_optimize.php:138
 #: admin/tpl/setting/settings_optimize.php:152
 #: admin/tpl/setting/settings_optimize.php:153
@@ -88,7 +87,7 @@ msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:799
 #: admin/litespeed-cache-admin-display.class.php:887
-#: admin/tpl/setting/settings_cdn.php:168
+#: admin/tpl/setting/settings_cdn.php:35 admin/tpl/setting/settings_cdn.php:169
 #: admin/tpl/setting/settings_debug.php:29
 #: admin/tpl/setting/settings_inc.cache_object.php:149
 #: admin/tpl/setting/settings_optimize.php:152
@@ -135,7 +134,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_object.php:75
 #: admin/tpl/setting/settings_inc.cache_object.php:150
 #: admin/tpl/setting/settings_media.php:8
-#: admin/tpl/setting/settings_media.php:107
+#: admin/tpl/setting/settings_media.php:159
 #: admin/tpl/setting/settings_optimize.php:10
 #: admin/tpl/setting/settings_optimize.php:165
 #: admin/tpl/setting/settings_optimize.php:237
@@ -431,7 +430,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:342
-#: admin/litespeed-cache-admin-settings.class.php:1024
+#: admin/litespeed-cache-admin-settings.class.php:1026
 msgid "Default Public Cache"
 msgstr ""
 
@@ -447,30 +446,30 @@ msgstr ""
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:865
+#: admin/litespeed-cache-admin-settings.class.php:867
 #: admin/tpl/setting/settings_debug.php:88
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:947
+#: admin/litespeed-cache-admin-settings.class.php:949
 #: admin/tpl/setting/settings_crawler.php:13
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:948
+#: admin/litespeed-cache-admin-settings.class.php:950
 #: admin/tpl/setting/settings_crawler.php:37
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:949
+#: admin/litespeed-cache-admin-settings.class.php:951
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:950
+#: admin/litespeed-cache-admin-settings.class.php:952
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:951
+#: admin/litespeed-cache-admin-settings.class.php:953
 #: admin/tpl/setting/settings_crawler.php:73
 msgid "Threads"
 msgstr ""
@@ -553,7 +552,7 @@ msgstr ""
 #: admin/tpl/inc/check_cache_disabled.php:31 admin/tpl/manage/manage_cdn.php:15
 #: admin/tpl/setting/settings_debug.php:105
 #: admin/tpl/setting/settings_debug.php:138
-#: admin/tpl/setting/settings_optimize.php:15 admin/tpl/settings.php:163
+#: admin/tpl/setting/settings_optimize.php:15 admin/tpl/settings.php:161
 msgid "WARNING"
 msgstr ""
 
@@ -988,7 +987,7 @@ msgstr ""
 
 #: admin/tpl/image_optimization.php:290
 #: admin/tpl/setting/settings_advanced.php:65
-#: admin/tpl/setting/settings_cdn.php:97
+#: admin/tpl/setting/settings_cdn.php:98
 #: admin/tpl/setting/settings_crawler.php:22
 #: admin/tpl/setting/settings_crawler.php:95
 #: admin/tpl/setting/settings_crawler.php:100
@@ -1109,7 +1108,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.3.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:350
 #: includes/litespeed-cache-gui.class.php:350
@@ -1596,9 +1595,9 @@ msgstr ""
 #: admin/tpl/manage/manage_purge.php:143
 #: admin/tpl/setting/settings_cache.php:73
 #: admin/tpl/setting/settings_cache.php:90
-#: admin/tpl/setting/settings_cdn.php:116
-#: admin/tpl/setting/settings_cdn.php:144
-#: admin/tpl/setting/settings_cdn.php:156
+#: admin/tpl/setting/settings_cdn.php:117
+#: admin/tpl/setting/settings_cdn.php:145
+#: admin/tpl/setting/settings_cdn.php:157
 #: admin/tpl/setting/settings_crawler.php:132
 #: admin/tpl/setting/settings_excludes.php:25
 #: admin/tpl/setting/settings_excludes.php:43
@@ -1609,7 +1608,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_object.php:122
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:34
-#: admin/tpl/setting/settings_media.php:96
+#: admin/tpl/setting/settings_media.php:148
 #: admin/tpl/setting/settings_optimize.php:236
 #: admin/tpl/setting/settings_purge.php:85
 #: admin/tpl/setting/settings_tuning.php:38
@@ -1664,8 +1663,8 @@ msgstr ""
 msgid "DB Optimizer"
 msgstr ""
 
-#: admin/tpl/manage.php:10 admin/tpl/setting/settings_cdn.php:217
-#: admin/tpl/setting/settings_cdn.php:260 admin/tpl/settings.php:12
+#: admin/tpl/manage.php:10 admin/tpl/setting/settings_cdn.php:218
+#: admin/tpl/setting/settings_cdn.php:261 admin/tpl/settings.php:12
 msgid "CDN"
 msgstr ""
 
@@ -1958,178 +1957,184 @@ msgstr ""
 msgid "Enable Content Delivery Network use."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:40
+#: admin/tpl/setting/settings_cdn.php:35
+msgid ""
+"If using Cloudflare, leave this setting %s and use Cloudflare API setting "
+"below."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:41
 msgid "CDN Mapping"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:46
+#: admin/tpl/setting/settings_cdn.php:47
 msgid "CDN URL"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:55
+#: admin/tpl/setting/settings_cdn.php:56
 msgid "CDN URL to be used. For example, %s"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:61 admin/tpl/setting/settings_cdn.php:102
+#: admin/tpl/setting/settings_cdn.php:62 admin/tpl/setting/settings_cdn.php:103
 msgid "Include Images"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:68 admin/tpl/setting/settings_cdn.php:106
+#: admin/tpl/setting/settings_cdn.php:69 admin/tpl/setting/settings_cdn.php:107
 msgid "Include CSS"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:75 admin/tpl/setting/settings_cdn.php:110
+#: admin/tpl/setting/settings_cdn.php:76 admin/tpl/setting/settings_cdn.php:111
 msgid "Include JS"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:85 admin/tpl/setting/settings_cdn.php:114
+#: admin/tpl/setting/settings_cdn.php:86 admin/tpl/setting/settings_cdn.php:115
 msgid "Include File Types"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:98
+#: admin/tpl/setting/settings_cdn.php:99
 msgid ""
 "To randomize CDN hostname, define multiple hostnames for the same resources."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:103
+#: admin/tpl/setting/settings_cdn.php:104
 msgid ""
 "Serve all image files through the CDN. This will affect all attachments, "
 "HTML %s tags, and CSS %s attributes."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:107
+#: admin/tpl/setting/settings_cdn.php:108
 msgid ""
 "Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
 "files."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:111
+#: admin/tpl/setting/settings_cdn.php:112
 msgid ""
 "Serve all JavaScript files through the CDN. This will affect all enqueued WP "
 "JavaScript files."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:115
+#: admin/tpl/setting/settings_cdn.php:116
 msgid "Static file type links to be replaced by CDN links."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:117
+#: admin/tpl/setting/settings_cdn.php:118
 msgid "This will affect all tags containing attributes: %s %s %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:118
+#: admin/tpl/setting/settings_cdn.php:119
 msgid "Default value"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:125
+#: admin/tpl/setting/settings_cdn.php:126
 msgid "Original URLs"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:129
+#: admin/tpl/setting/settings_cdn.php:130
 msgid ""
 "Site URL to be served through the CDN. Beginning with %1$s. For example, "
 "%2$s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:130
+#: admin/tpl/setting/settings_cdn.php:131
 msgid ""
 "Wildcard %1$s supported (match zero or more characters). For example, to "
 "match %2$s and %3$s, use %4$s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:131
+#: admin/tpl/setting/settings_cdn.php:132
 msgid "Separate multiple original URLs with a %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:137
+#: admin/tpl/setting/settings_cdn.php:138
 msgid "Included Directories"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:143
+#: admin/tpl/setting/settings_cdn.php:144
 msgid "Only files within these directories will be pointed to the CDN."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:150
+#: admin/tpl/setting/settings_cdn.php:151
 msgid "Exclude Path"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:155
+#: admin/tpl/setting/settings_cdn.php:156
 msgid "Paths containing these strings will not be served from the CDN."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:162
+#: admin/tpl/setting/settings_cdn.php:163
 msgid "Load JQuery Remotely"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:184
+#: admin/tpl/setting/settings_cdn.php:185
 msgid ""
 "Improve page load time by loading jQuery from a remote CDN service instead "
 "of locally."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:190
+#: admin/tpl/setting/settings_cdn.php:191
 msgid "Quic Cloud API"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:194
-#: admin/tpl/setting/settings_cdn.php:259
+#: admin/tpl/setting/settings_cdn.php:195
+#: admin/tpl/setting/settings_cdn.php:260
 msgid "Use %s API functionality."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:217
-#: admin/tpl/setting/settings_cdn.php:260
+#: admin/tpl/setting/settings_cdn.php:218
+#: admin/tpl/setting/settings_cdn.php:261
 msgid "This can be managed from <a %2$s>%1$s</a>."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:221
-#: admin/tpl/setting/settings_cdn.php:264
+#: admin/tpl/setting/settings_cdn.php:222
+#: admin/tpl/setting/settings_cdn.php:265
 msgid "Email Address"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:225
-#: admin/tpl/setting/settings_cdn.php:268
+#: admin/tpl/setting/settings_cdn.php:226
+#: admin/tpl/setting/settings_cdn.php:269
 msgid "Your Email address on %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:230
+#: admin/tpl/setting/settings_cdn.php:231
 msgid "User API Key"
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:234
-#: admin/tpl/setting/settings_cdn.php:277
-msgid "Your API key is used to access %s APIs."
 msgstr ""
 
 #: admin/tpl/setting/settings_cdn.php:235
 #: admin/tpl/setting/settings_cdn.php:278
+msgid "Your API key is used to access %s APIs."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:236
+#: admin/tpl/setting/settings_cdn.php:279
 msgid "Get it from <a %1$s>%2$s</a>."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:240
+#: admin/tpl/setting/settings_cdn.php:241
 msgid "Site Domain"
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:246
-#: admin/tpl/setting/settings_cdn.php:291
-msgid "You can just type part of the domain."
 msgstr ""
 
 #: admin/tpl/setting/settings_cdn.php:247
 #: admin/tpl/setting/settings_cdn.php:292
+msgid "You can just type part of the domain."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:248
+#: admin/tpl/setting/settings_cdn.php:293
 msgid ""
 "Once saved, it will be matched with the current list and completed "
 "automatically."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:255
+#: admin/tpl/setting/settings_cdn.php:256
 msgid "Cloudflare API"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:273
+#: admin/tpl/setting/settings_cdn.php:274
 msgid "Global API Key"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:283
+#: admin/tpl/setting/settings_cdn.php:284
 msgid "Domain"
 msgstr ""
 
@@ -3171,74 +3176,90 @@ msgid "Load iframes only when they enter the viewport."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:69
-msgid "Disable Optimization Pull"
+msgid "Optimize New Images"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:73
-msgid ""
-"Set this option to %s to disable the cron job responsible for fetching "
-"optimized images from LiteSpeed's Image Server."
+msgid "Automatically request optimization for newly-uploaded images."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:87
-msgid "WebP Attribute To Replace"
+#: admin/tpl/setting/settings_media.php:79
+msgid "Optimization Cron"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:83
+msgid ""
+"Disabling this will stop the cron job responsible for fetching optimized "
+"images from LiteSpeed's Image Server."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:89
+msgid "Optimize Original Images"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:93
-msgid "Specify which element attributes will be replaced with WebP."
+msgid "Optimize images and save backups of the originals in the same folder."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:94
-msgid "Only attributes listed here will be replaced."
+#: admin/tpl/setting/settings_media.php:99
+msgid "Optimize WebP Versions"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:95
-msgid "Use the format %1$s or %2$s (element is optional)."
+#: admin/tpl/setting/settings_media.php:103
+msgid "Request WebP versions of original images when doing optimization."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:102
-msgid "WebP For Extra srcset"
-msgstr ""
-
-#: admin/tpl/setting/settings_media.php:106
-msgid ""
-"Enable replacement of WebP in %s elements that were generated outside of "
-"WordPress logic."
+#: admin/tpl/setting/settings_media.php:109
+msgid "Optimize Losslessly"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:113
-msgid "Only Request WebP"
+msgid "Optimize images using lossless compression."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:117
+#: admin/tpl/setting/settings_media.php:114
 msgid ""
-"Prevent images from being replaced with optimized versions when optimizing. "
-"WebP versions will still be generated."
+"This can improve quality but may result in larger images than lossy "
+"compression will."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:123
+#: admin/tpl/setting/settings_media.php:120
 msgid "Preserve EXIF data"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:127
+#: admin/tpl/setting/settings_media.php:124
 msgid ""
 "Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:128
+#: admin/tpl/setting/settings_media.php:125
 msgid "This will increase the size of optimized files."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:134
-msgid "WebP Lossless Compression"
-msgstr ""
-
-#: admin/tpl/setting/settings_media.php:138
-msgid "Generate WebP images using lossless compression."
-msgstr ""
-
 #: admin/tpl/setting/settings_media.php:139
-msgid "This can improve quality at the cost of larger images."
+msgid "WebP Attribute To Replace"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:145
+msgid "Specify which element attributes will be replaced with WebP."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:146
+msgid "Only attributes listed here will be replaced."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:147
+msgid "Use the format %1$s or %2$s (element is optional)."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:154
+msgid "WebP For Extra srcset"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:158
+msgid ""
+"Enable replacement of WebP in %s elements that were generated outside of "
+"WordPress logic."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:9
@@ -3749,29 +3770,29 @@ msgstr ""
 msgid "Compatibilities"
 msgstr ""
 
-#: admin/tpl/settings.php:127
+#: admin/tpl/settings.php:124
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/tpl/settings.php:133
-msgid "Basic View"
+#: admin/tpl/settings.php:150
+msgid "Hide Advanced Options"
 msgstr ""
 
-#: admin/tpl/settings.php:134
-msgid "Advanced View"
+#: admin/tpl/settings.php:152
+msgid "Show Advanced Options"
 msgstr ""
 
-#: admin/tpl/settings.php:165
+#: admin/tpl/settings.php:163
 msgid "The network admin selected use primary site configs for all subsites."
 msgstr ""
 
-#: admin/tpl/settings.php:166
+#: admin/tpl/settings.php:164
 msgid ""
 "The following options are selected, but are not editable in this settings "
 "page."
 msgstr ""
 
-#: admin/tpl/settings.php:188 admin/tpl/settings.php:191
+#: admin/tpl/settings.php:186 admin/tpl/settings.php:189
 msgid "Save Changes"
 msgstr ""
 
@@ -3901,8 +3922,8 @@ msgstr ""
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:142 inc/img_optm.class.php:1239
-#: inc/img_optm.class.php:1304
+#: inc/img_optm.class.php:142 inc/img_optm.class.php:1229
+#: inc/img_optm.class.php:1294
 msgid "No image found."
 msgstr ""
 
@@ -3922,41 +3943,41 @@ msgstr ""
 msgid "Pushed %1$s to LiteSpeed optimization server, accepted %2$s."
 msgstr ""
 
-#: inc/img_optm.class.php:627
+#: inc/img_optm.class.php:628
 msgid "Failed to push to LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:635
+#: inc/img_optm.class.php:636
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:1129
+#: inc/img_optm.class.php:1119
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1342
+#: inc/img_optm.class.php:1332
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1449
+#: inc/img_optm.class.php:1439
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1672
+#: inc/img_optm.class.php:1662
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1678
+#: inc/img_optm.class.php:1668
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1694
+#: inc/img_optm.class.php:1684
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1701
+#: inc/img_optm.class.php:1691
 msgid "Switched to optimized file successfully."
 msgstr ""
 
@@ -3980,31 +4001,31 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: inc/media.class.php:103
+#: inc/media.class.php:114
 msgid "LiteSpeed Optimization"
 msgstr ""
 
-#: inc/media.class.php:127
+#: inc/media.class.php:138
 msgid "Disable WebP"
 msgstr ""
 
-#: inc/media.class.php:132
+#: inc/media.class.php:143
 msgid "Enable WebP"
 msgstr ""
 
-#: inc/media.class.php:150
+#: inc/media.class.php:161
 msgid "Restore Original File"
 msgstr ""
 
-#: inc/media.class.php:155
+#: inc/media.class.php:166
 msgid "Switch To Optimized File"
 msgstr ""
 
-#: inc/media.class.php:169
+#: inc/media.class.php:180
 msgid "WebP saved %s"
 msgstr ""
 
-#: inc/media.class.php:178
+#: inc/media.class.php:189
 msgid "Original saved %s"
 msgstr ""
 

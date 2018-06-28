@@ -65,12 +65,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
-	<tr>
+	<tr class="litespeed-hide">
 		<th><?php echo __( 'Optimize New Images', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Automatically send new images optimization request when uploading images.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Automatically request optimization for newly-uploaded images.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -90,13 +90,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'After optimized successfully, the original images will be backed up under same folder.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Optimize images and save backups of the originals in the same folder.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Generate WebP Versions', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Optimize WebP Versions', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ; ?>
 			<div class="litespeed-desc">
@@ -106,12 +106,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lossless Compression', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Optimize Losslessly', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize images using lossless compression.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This can improve quality at the cost of larger images.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve quality but may result in larger images than lossy compression will.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
