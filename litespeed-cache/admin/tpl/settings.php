@@ -99,9 +99,6 @@ else {
 	$adv_mode = get_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE ) ;
 }
 
-$class_basic = $adv_mode ? '' : ' litespeed-setting-curr' ;
-$class_advanced = ! $adv_mode ? '' : ' litespeed-setting-curr' ;
-
 $hide_tabs = array() ;
 $_hide_in_basic_mode = '' ;
 
@@ -129,10 +126,6 @@ if ( ! $adv_mode ) {
 	<span class="litespeed-desc">
 		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
 	</span>
-	<span class="litespeed-desc">
-		<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-setting-basic <?php echo $class_basic ; ?>"><?php echo __( 'Basic View', 'litespeed-cache' ) ; ?></a>
-		<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-setting-advanced <?php echo $class_advanced ; ?>"><?php echo __( 'Advanced View', 'litespeed-cache' ) ; ?></a>
-	</span>
 	<hr class="wp-header-end">
 </div>
 <div class="litespeed-wrap">
@@ -153,6 +146,11 @@ if ( ! $adv_mode ) {
 			$i ++ ;
 		}
 	?>
+	<?php if ( $adv_mode ) : ?>
+		<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-tab litespeed-advanced-tab-hide litespeed-right"><?php echo __( 'Hide Advanced Options', 'litespeed-cache' ) ; ?></a>
+	<?php else : ?>
+		<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-tab litespeed-advanced-tab-show litespeed-right"><?php echo __( 'Show Advanced Options', 'litespeed-cache' ) ; ?></a>
+	<?php endif ; ?>
 	</h2>
 	<div class="litespeed-body">
 	<form method="post" action="options.php" id="litespeed_form_options" class="litespeed-relative">

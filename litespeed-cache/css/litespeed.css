@@ -26,6 +26,10 @@
 	display: inline-block;
 }
 
+.litespeed-default {
+	color: #a7a7a7!important;
+}
+
 .litespeed-success {
 	color: #73b38d!important;
 }
@@ -76,6 +80,11 @@
 	position: relative ;
 }
 
+.litespeed-wrap .litespeed-right,
+.litespeed-right {
+	float: right ;
+}
+
 .litespeed-h3{
 	font-family: "Open Sans", Arial, sans-serif;
 	line-height: 18px;
@@ -111,6 +120,52 @@ h3 .litespeed-learn-more {
 	font-weight: normal;
 	color:#7a919e;
 	margin-left: 30px;
+}
+
+/*show advanced options tab*/
+
+.litespeed-header .litespeed-advanced-tab-show {
+	background: #00CC99;
+	color: #DDF8F1 !important;
+	font-weight: 600;
+	border-right: 1px solid #00A37A;
+	border-left: 1px solid #00A37A;
+	border-top: 1px solid #00A37A;
+}
+
+.litespeed-header .litespeed-advanced-tab-show:hover,
+.litespeed-header .litespeed-advanced-tab-show:focus,
+.litespeed-header .litespeed-advanced-tab-show:focus:active {
+	background: #00A37A;
+	color: #FFFFFF !important;
+	font-weight: 600;
+	border-right: 1px solid #00A37A;
+	border-left: 1px solid #00A37A;
+	border-top: 1px solid #00A37A;
+	border-bottom: 1px solid #00A37A;
+}
+
+/*hide advanced options tab*/
+
+.litespeed-header .litespeed-advanced-tab-hide {
+	background: #99CCCC;
+	color: #FDFDFD !important;
+	font-weight: 600;
+	border-left: 1px solid #7AA3A3;
+	border-top: 1px solid #7AA3A3;
+	border-right: 1px solid #7AA3A3;
+}
+
+.litespeed-header .litespeed-advanced-tab-hide:hover,
+.litespeed-header .litespeed-advanced-tab-hide:focus,
+.litespeed-header .litespeed-advanced-tab-hide:focus:active {
+	background: #7AA3A3;
+	color: #FFFFFF !important;
+	font-weight: 600;
+	border-right: 1px solid #7AA3A3;
+	border-left: 1px solid #7AA3A3;
+	border-top: 1px solid #7AA3A3;
+	border-bottom: 1px solid #7AA3A3;
 }
 
 /********************************* logo *******************************/
