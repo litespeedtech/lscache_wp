@@ -66,11 +66,63 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Disable Optimization Pull', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Optimize New Images', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Set this option to %s to disable the cron job responsible for fetching optimized images from LiteSpeed\'s Image Server.', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
+				<?php echo __( 'Automatically send new images optimization request when uploading images.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Optimization Cron', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Disabling this will stop the cron job responsible for fetching optimized images from LiteSpeed\'s Image Server.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Optimize Original Images', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'After optimized successfully, the original images will be backed up under same folder.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Generate WebP Versions', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Request WebP versions of original images when doing optimization.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Lossless Compression', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Optimize images using lossless compression.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve quality at the cost of larger images.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Preserve EXIF data', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -101,42 +153,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'WebP For Extra srcset', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable replacement of WebP in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __( 'Only Request WebP', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Prevent images from being replaced with optimized versions when optimizing. WebP versions will still be generated.', 'litespeed-cache' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __( 'Preserve EXIF data', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr class="litespeed-hide">
-		<th><?php echo __( 'WebP Lossless Compression', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Generate WebP images using lossless compression.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'This can improve quality at the cost of larger images.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

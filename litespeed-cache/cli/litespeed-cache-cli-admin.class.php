@@ -11,70 +11,14 @@ class LiteSpeed_Cache_Cli_Admin
 
 	public function __construct()
 	{
-		self::$checkboxes = array(
-			LiteSpeed_Cache_Config::OPID_CACHE_PRIV,
-			LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER,
-			LiteSpeed_Cache_Config::OPID_CACHE_REST,
-			LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN,
-			LiteSpeed_Cache_Config::OPID_CACHE_MOBILE,
-			LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE,
-			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
-			LiteSpeed_Cache_Config::OPID_CACHE_RES,
-			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT,
-			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND,
+		// Build on/off options
+		self::$checkboxes = array() ;
+		foreach ( LiteSpeed_Cache_Config::get_instance()->get_default_options() as $k => $v ) {
+			if ( is_bool( $v ) ) {
+				self::$checkboxes[] = $k ;
+			}
+		}
 
-			LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE,
-			LiteSpeed_Cache_Config::OPID_ESI_ENABLE,
-			LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR,
-			LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM,
-			LiteSpeed_Cache_Config::CRWL_POSTS,
-			LiteSpeed_Cache_Config::CRWL_PAGES,
-			LiteSpeed_Cache_Config::CRWL_CATS,
-			LiteSpeed_Cache_Config::CRWL_TAGS,
-			LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE,
-			LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL,
-			LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
-			LiteSpeed_Cache_Config::OPID_HEARTBEAT,
-			LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE,
-			LiteSpeed_Cache_Config::OPID_COLLAPS_QS,
-			LiteSpeed_Cache_Config::OPID_LOG_FILTERS,
-
-			LiteSpeed_Cache_Config::OPID_CSS_MINIFY,
-			LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY,
-			LiteSpeed_Cache_Config::OPID_CSS_COMBINE,
-			LiteSpeed_Cache_Config::OPID_CSS_COMBINED_PRIORITY,
-			LiteSpeed_Cache_Config::OPID_CSS_HTTP2,
-			LiteSpeed_Cache_Config::OPID_JS_MINIFY,
-			LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY,
-			LiteSpeed_Cache_Config::OPID_JS_COMBINE,
-			LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY,
-			LiteSpeed_Cache_Config::OPID_JS_HTTP2,
-			LiteSpeed_Cache_Config::OPID_HTML_MINIFY,
-			LiteSpeed_Cache_Config::OPID_OPTM_QS_RM,
-			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM,
-			LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC,
-			LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN,
-			LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC,
-			LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE,
-			LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER,
-			LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM,
-			LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY,
-			LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC,
-			LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT,
-
-			LiteSpeed_Cache_Config::OPID_CDN,
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC,
-			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE,
-
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS,
-		) ;
 		self::$purges = array(
 			'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES => LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
 			'purge_' . LiteSpeed_Cache_Config::PURGE_FRONT_PAGE => LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
@@ -131,62 +75,7 @@ class LiteSpeed_Cache_Cli_Admin
 					$options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 				}
 				//fall through
-			case LiteSpeed_Cache_Config::OPID_CACHE_PRIV:
-			case LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER:
-			case LiteSpeed_Cache_Config::OPID_CACHE_REST:
-			case LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN:
-			case LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE:
-			case LiteSpeed_Cache_Config::OPID_CACHE_FAVICON:
-			case LiteSpeed_Cache_Config::OPID_CACHE_RES:
-			case LiteSpeed_Cache_Config::OPID_CACHE_OBJECT:
-			case LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND:
-
-			case LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE:
-			case LiteSpeed_Cache_Config::OPID_ESI_ENABLE:
-			case LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR:
-			case LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM:
-			case LiteSpeed_Cache_Config::CRWL_POSTS:
-			case LiteSpeed_Cache_Config::CRWL_PAGES:
-			case LiteSpeed_Cache_Config::CRWL_CATS:
-			case LiteSpeed_Cache_Config::CRWL_TAGS:
-			case LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE:
-			case LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL:
-			case LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL:
-			case LiteSpeed_Cache_Config::OPID_HEARTBEAT:
-			case LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE:
-			case LiteSpeed_Cache_Config::OPID_COLLAPS_QS:
-			case LiteSpeed_Cache_Config::OPID_LOG_FILTERS:
-
-			case LiteSpeed_Cache_Config::OPID_CSS_MINIFY:
-			case LiteSpeed_Cache_Config::OPID_CSS_COMBINE:
-			case LiteSpeed_Cache_Config::OPID_JS_MINIFY:
-			case LiteSpeed_Cache_Config::OPID_JS_COMBINE:
-			case LiteSpeed_Cache_Config::OPID_HTML_MINIFY:
-			case LiteSpeed_Cache_Config::OPID_OPTM_QS_RM:
-			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM:
-			case LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC:
-			case LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN:
-			case LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC:
-			case LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE:
-			case LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER:
-			case LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM:
-			case LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY:
-			case LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC:
-			case LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT:
-
-			case LiteSpeed_Cache_Config::OPID_CDN:
-			case LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE:
-
-			case LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK:
-
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF:
-			case LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS:
+			case in_array( $key, self::$checkboxes ) :
 				//checkbox
 				if ( $val === 'true' ) {
 					$options[$key] = LiteSpeed_Cache_Config::VAL_ON  ;

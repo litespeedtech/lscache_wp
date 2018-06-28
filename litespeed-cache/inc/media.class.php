@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Media
 		if ( $this->can_media() ) {
 			$this->_static_request_check() ;
 
-			$this->cfg_img_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
+			$this->cfg_img_webp = self::webp_enabled() ;
 
 			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
 			if ( $this->cfg_img_webp ) {
@@ -76,6 +76,17 @@ class LiteSpeed_Cache_Media
 		}
 
 		return true ;
+	}
+
+	/**
+	 * Check if enabled webp or not
+	 *
+	 * @since  2.4
+	 * @access public
+	 */
+	public static function webp_enabled()
+	{
+		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE ) ;
 	}
 
 	/**
@@ -556,7 +567,7 @@ class LiteSpeed_Cache_Media
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET ) ) {
 			$this->content = LiteSpeed_Cache_Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
 		}
 

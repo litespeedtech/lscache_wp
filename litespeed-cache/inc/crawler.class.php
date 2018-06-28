@@ -488,7 +488,7 @@ class LiteSpeed_Cache_Crawler
 		$roles = $roles ? explode( "\n", $roles ) : array() ;
 
 		// WebP on/off
-		$webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP ) ;
+		$webp = LiteSpeed_Cache_Media::webp_enabled() ;
 
 		if ( $count_only ) {
 			$count = count( $roles ) + 1 ;

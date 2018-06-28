@@ -39,7 +39,7 @@ class LiteSpeed_Cache_Task
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF ) && LiteSpeed_Cache_Img_Optm::check_need_pull() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON ) && LiteSpeed_Cache_Img_Optm::check_need_pull() ) {
 			self::schedule_filter_imgoptm() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMGOPTM, 'LiteSpeed_Cache_Img_Optm::pull_optimized_img' ) ;

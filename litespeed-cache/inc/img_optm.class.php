@@ -609,10 +609,11 @@ class LiteSpeed_Cache_Img_Optm
 	private function _push_img_in_queue_to_iapi()
 	{
 		$data = array(
-			'list' => $this->_img_in_queue,
-			'webp_only'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ),
-			'keep_exif'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF ),
-			'webp_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS ),
+			'list' 			=> $this->_img_in_queue,
+			'optm_ori'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF ) ? 1 : 0,
 		) ;
 
 		// Push to LiteSpeed IAPI server
@@ -747,7 +748,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6
 	 * @access private
 	 */
-	private function _pull_optimized_img()
+	private function _pull_optimized_img( $manual = false )
 	{
 		if ( $this->cron_running() ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] fetch cron is running' ) ;
@@ -762,10 +763,13 @@ class LiteSpeed_Cache_Img_Optm
 				WHERE a.root_id = 0 AND a.optm_status = %s ORDER BY a.id LIMIT 1" ;
 		$_q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
 
-		$webp_only = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY ) ;
+		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ;
+		$optm_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ;
 
-		// pull 10 images each time
-		for ( $i=0 ; $i < 10 ; $i++ ) {
+		// pull 1min images each time
+		$end_time = time() + ( $manual ? 120 : 60 ) ;
+
+		while ( time() < $end_time ) {
 			$row_img = $wpdb->get_row( $_q ) ;
 			if ( ! $row_img ) {
 				// No image
@@ -797,71 +801,25 @@ class LiteSpeed_Cache_Img_Optm
 				'src_md5' => $row_img->src_md5,
 			) ;
 			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server, true ) ;
-			if ( empty( $json[ 'webp' ] ) ) {
+
+			// Check if data interrupt or not
+			if ( empty( $json[ 'ok' ] ) ) {
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: ', $json ) ;
 				return ;
 			}
 
 			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $row_img->src ;
 
-			/**
-			 * Use wp orignal get func to avoid allow_url_open off issue
-			 * @since  1.6.5
-			 */
-			// Fetch webp image
-			$response = wp_remote_get( $json[ 'webp' ], array( 'timeout' => 15 ) ) ;
-			if ( is_wp_error( $response ) ) {
-				$error_message = $response->get_error_message() ;
-				LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
-				return ;
-			}
-
-			file_put_contents( $local_file . '.webp', $response[ 'body' ] ) ;
-
-			if ( ! file_exists( $local_file . '.webp' ) ) {
-				return ;
-			}
-
-			// Unknown issue
-			if ( md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img WebP: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
-
-				// update status to failed
-				$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
-				$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
-				// Update child images
-				$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE root_id = %d " ;
-				$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
-
-				// Notify server to update status
-				LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server, true ) ;
-
-				return ;// exit from running pull process
-			}
-
-			$ori_size = $row_img->src_filesize ?:  filesize( $local_file ) ;
-
-			// log webp file saved size summary
-			$webp_size = filesize( $local_file . '.webp' ) ;
-			$webp_saved = $ori_size - $webp_size ;
-			if ( $webp_saved > 0 ) {
-				$optm_info[ 'webp_total' ] += $ori_size ;
-				$optm_info[ 'webp_saved' ] += $webp_saved ;
-			}
-			else {
-				$webp_saved = 0 ;
-			}
-
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
-
-			// Fetch optimized image itself
+			// Save ori optm image
 			$target_size = 0 ;
 			$target_saved = 0 ;
-			if ( ! $webp_only && ! empty( $json[ 'target_file' ] ) ) {
-
-				// Fetch failed, unkown issue, return
-				// NOTE: if this failed more than 5 times, next time fetching webp will touch err limit on server side, whole image will be failed
-				$response = wp_remote_get( $json[ 'target_file' ], array( 'timeout' => 15 ) ) ;
+			if ( ! empty( $json[ 'ori' ] ) ) {
+				/**
+				 * Use wp orignal get func to avoid allow_url_open off issue
+				 * @since  1.6.5
+				 */
+				// Fetch
+				$response = wp_remote_get( $json[ 'ori' ], array( 'timeout' => 15 ) ) ;
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
 					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
@@ -869,9 +827,9 @@ class LiteSpeed_Cache_Img_Optm
 				}
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] ) ;
-				// Unknown issue
-				if ( md5_file( $local_file . '.tmp' ) !== $json[ 'target_md5' ] ) {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img iteself: file md5 dismatch, server md5: ' . $json[ 'target_md5' ] ) ;
+
+				if ( ! file_exists( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $json[ 'ori_md5' ] ) {
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $json[ 'ori_md5' ] ) ;
 
 					// update status to failed
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
@@ -886,17 +844,6 @@ class LiteSpeed_Cache_Img_Optm
 					return ; // exit from running pull process
 				}
 
-				// log webp file saved size summary
-				$target_size = filesize( $local_file . '.tmp' ) ;
-				$target_saved = $ori_size - $target_size ;
-				if ( $target_saved > 0 ) {
-					$optm_info[ 'ori_total' ] += $ori_size ;
-					$optm_info[ 'ori_saved' ] += $target_saved ;
-				}
-				else {
-					$target_saved = 0 ;
-				}
-
 				// Backup ori img
 				$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
 				$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
@@ -906,6 +853,49 @@ class LiteSpeed_Cache_Img_Optm
 				rename( $local_file . '.tmp', $local_file ) ;
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img: ' . $local_file ) ;
+
+				$optm_info[ 'ori_total' ] += $json[ 'src_size' ] ;
+				$optm_info[ 'ori_saved' ] += $json[ 'ori_reduced' ] ;
+				$target_size = filesize( $local_file ) ;
+				$target_saved = $json[ 'ori_reduced' ] ;
+			}
+
+			// Save webp image
+			$webp_size = 0 ;
+			$webp_saved = 0 ;
+			if ( ! empty( $json[ 'webp' ] ) ) {
+				// Fetch
+				$response = wp_remote_get( $json[ 'webp' ], array( 'timeout' => 15 ) ) ;
+				if ( is_wp_error( $response ) ) {
+					$error_message = $response->get_error_message() ;
+					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull webp image: ' . $error_message ) ;
+					return ;
+				}
+
+				file_put_contents( $local_file . '.webp', $response[ 'body' ] ) ;
+
+				if ( ! file_exists( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
+
+					// update status to failed
+					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
+					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
+					// Update child images
+					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE root_id = %d " ;
+					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
+
+					// Notify server to update status
+					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server, true ) ;
+
+					return ; // exit from running pull process
+				}
+
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
+
+				$optm_info[ 'webp_total' ] += $json[ 'src_size' ] ;
+				$optm_info[ 'webp_saved' ] += $json[ 'webp_reduced' ] ;
+				$webp_size = filesize( $local_file . '.webp' ) ;
+				$webp_saved = $json[ 'webp_reduced' ] ;
 			}
 
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id ) ;
@@ -914,7 +904,7 @@ class LiteSpeed_Cache_Img_Optm
 			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, target_saved = %d, webp_filesize = %d, webp_saved = %d WHERE id = %d " ;
 			$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $target_saved, $webp_size, $webp_saved, $row_img->id ) ) ) ;
 
-			// Update child images
+			// Update child images ( same md5 files )
 			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, target_saved = %d, webp_filesize = %d, webp_saved = %d WHERE root_id = %d " ;
 			$child_count = $wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $target_saved, $webp_size, $webp_saved, $row_img->id ) ) ) ;
 

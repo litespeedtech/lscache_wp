@@ -30,6 +30,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_CDN_Quiccloud'		=> 'inc/cdn/quiccloud.class.php',
 			'LiteSpeed_Cache_Config'			=> 'inc/config.class.php',
 			'LiteSpeed_Cache_Control'			=> 'inc/control.class.php',
+			'LiteSpeed_Cache_Const'				=> 'inc/const.cls.php',
 			'LiteSpeed_Cache_Crawler'			=> 'inc/crawler.class.php',
 			'LiteSpeed_Cache_Crawler_Sitemap'	=> 'inc/crawler-sitemap.class.php',
 			'LiteSpeed_Cache_CSS'				=> 'inc/css.cls.php',

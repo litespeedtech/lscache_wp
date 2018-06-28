@@ -671,11 +671,13 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_OPTM_CRON_OFF,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_REPLACE_SRCSET,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_ONLY,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_EXIF,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP_LOSSLESS,
+			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO,
+			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON,
+			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI,
+			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP,
+			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS,
+			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF,
+			LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -1013,7 +1015,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::OPID_CACHE_RES,
 			LiteSpeed_Cache_Config::OPID_CACHE_BROWSER,
-			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_WEBP,
+			LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE,
 		) ;
 		foreach ( $ids as $id ) {
 			$new_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
