@@ -965,6 +965,9 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, $pids_data_to_insert ) ) ;
 				}
 			}
+
+			// Recover credit
+			$this->_update_credit( '++' ) ;
 		}
 
 		// Update guidance
@@ -1348,6 +1351,9 @@ class LiteSpeed_Cache_Img_Optm
 	private function _update_credit( $credit )
 	{
 		$summary = get_option( self::DB_IMG_OPTM_SUMMARY, array() ) ;
+		if ( $credit === '++' ) {
+			$credit = $summary[ 'credit' ] + 1 ;
+		}
 		$summary[ 'credit' ] = $credit ;
 
 		update_option( self::DB_IMG_OPTM_SUMMARY, $summary ) ;
