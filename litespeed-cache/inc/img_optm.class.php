@@ -1636,6 +1636,8 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] batch switched images total: ' . $i ) ;
+		$msg = __( 'Switched images successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
 
 	}
 

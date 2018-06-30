@@ -236,7 +236,7 @@ LiteSpeed_Cache_GUI::show_promo() ;
 
 		<br />
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-danger">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-warning">
 			<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
@@ -245,7 +245,7 @@ LiteSpeed_Cache_GUI::show_promo() ;
 
 		<br />
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-warning">
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-success">
 			<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
 		</a>
 		<span class="litespeed-desc">
