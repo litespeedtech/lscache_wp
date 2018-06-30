@@ -273,6 +273,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [NEW FEATURE] <strong>Image Optimization</strong> Added Request WebP ON/OFF. (@JMCA2)
 * [IMPROVEMENT] <strong>Image Optimization</strong> Improved optimization tools to archive maximum compression and score.
 * [IMPROVEMENT] <strong>Image Optimization</strong> Improved speed of image pull.
+* [IMPROVEMENT] <strong>Image Optimization</strong> Automatically recover credit after pulled.
 * [REFACTOR] <strong>Config</strong> Separated configure const class.
 * [BUGFIX] <strong>Report</strong> Report can be sent successfully with emoji now. (@music47ell)
 * [IAPI] New Europe Image Optimization server (EU3/EU4).
