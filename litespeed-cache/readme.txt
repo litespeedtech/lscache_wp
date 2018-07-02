@@ -267,7 +267,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 2.4 - Jul 1 2018 =
+= 2.4 - Jul 2 2018 =
 * [NEW FEATURE] <strong>Image Optimization</strong> Added lossless optimization.
 * [NEW FEATURE] <strong>Image Optimization</strong> Added Request Orignal Images ON/OFF.
 * [NEW FEATURE] <strong>Image Optimization</strong> Added Request WebP ON/OFF. (@JMCA2)
