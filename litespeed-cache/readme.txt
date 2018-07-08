@@ -277,7 +277,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [REFACTOR] <strong>Config</strong> Separated configure const class.
 * [BUGFIX] <strong>Report</strong> Report can be sent successfully with emoji now. (@music47ell)
 * [IAPI] New Europe Image Optimization server (EU3/EU4).
-* [IAPI] New America Image Optimization server (US3/US4).
+* [IAPI] New America Image Optimization server (US3/US4/US5/US6).
 * [IAPI] New Asian Image Optimization server (AS3).
 * [IAPI] Refactored optimization process.
 * [IAPI] Increased credit limit.
