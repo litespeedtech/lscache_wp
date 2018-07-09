@@ -441,6 +441,11 @@ class LiteSpeed_Cache_CDN
 		LiteSpeed_Cache_Log::debug2( '[CDN] rewrite ' . $url ) ;
 		$url_parsed = parse_url( $url ) ;
 
+		if ( empty( $url_parsed[ 'path' ] ) ) {
+			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite bypassed: no path' ) ;
+			return false ;
+		}
+
 		// Only images under wp-cotnent/wp-includes can be replaced
 		$is_internal_folder = LiteSpeed_Cache_Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
 		if ( ! $is_internal_folder ) {
