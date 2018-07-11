@@ -267,6 +267,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.4.1 - Jul 16 2018 =
+* [IMPROVEMENT] <strong>Image Optimization</strong> Fetch 404 error will notify client as other errors.
+* [UPDATE] <strong>Image Optimization</strong> Set timeout seconds to avoid pulling timeout. (@Jose)
+
 = 2.4 - Jul 2 2018 =
 * [NEW FEATURE] <strong>Image Optimization</strong> Added lossless optimization.
 * [NEW FEATURE] <strong>Image Optimization</strong> Added Request Orignal Images ON/OFF.
@@ -286,10 +290,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>We strongly recommended that you re-optimize your image library to get a better compression result</strong>.
 
 = 2.3.1 - Jun 18 2018 =
-* [Improvement] New setting to disable Generate Critical CSS. (@cybmeta)
-* [Improvement] Added filter to can_cdn/can_optm check. (@Jacob)
-* [Update] *Critical CSS* Added 404 css. Limit cron interval.
-* [Update] AJAX will not bypass CDN anymore by default. (@Jacob)
+* [IMPROVEMENT] New setting to disable Generate Critical CSS. (@cybmeta)
+* [IMPROVEMENT] Added filter to can_cdn/can_optm check. (@Jacob)
+* [UPDATE] *Critical CSS* Added 404 css. Limit cron interval.
+* [UPDATE] AJAX will not bypass CDN anymore by default. (@Jacob)
 * [GUI] Show Disable All Features warning if it is on in Debug tab.
 
 = 2.3 - Jun 13 2018 =

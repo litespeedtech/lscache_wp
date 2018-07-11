@@ -769,6 +769,7 @@ class LiteSpeed_Cache_Img_Optm
 		// pull 1min images each time
 		$end_time = time() + ( $manual ? 120 : 60 ) ;
 
+		set_time_limit( $end_time + 20 ) ;
 		while ( time() < $end_time ) {
 			$row_img = $wpdb->get_row( $_q ) ;
 			if ( ! $row_img ) {
