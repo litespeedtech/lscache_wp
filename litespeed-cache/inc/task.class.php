@@ -15,6 +15,7 @@ class LiteSpeed_Cache_Task
 
 	const CRON_ACTION_HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
 	const CRON_ACTION_HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
+	const CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
 	const CRON_ACTION_HOOK_CCSS = 'litespeed_ccss_trigger' ;
 	const CRON_FITLER_CRAWLER = 'litespeed_crawl_filter' ;
 	const CRON_FITLER = 'litespeed_filter' ;
@@ -39,13 +40,17 @@ class LiteSpeed_Cache_Task
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON ) && LiteSpeed_Cache_Img_Optm::check_need_pull() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
-			add_action( self::CRON_ACTION_HOOK_IMGOPTM, 'LiteSpeed_Cache_Img_Optm::pull_optimized_img' ) ;
+			add_action( self::CRON_ACTION_HOOK_IMGOPTM, 'LiteSpeed_Cache_Img_Optm::cron_pull_optimized_img' ) ;
 		}
-		else {
-			// wp_clear_scheduled_hook( self::CRON_ACTION_HOOK_IMGOPTM ) ;
+
+		// Image optm auto request
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ) {
+			self::schedule_filter_imgoptm_auto_request() ;
+
+			add_action( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST, 'LiteSpeed_Cache_Img_Optm::cron_auto_request' ) ;
 		}
 
 		// Register ccss generation
@@ -102,6 +107,23 @@ class LiteSpeed_Cache_Task
 			self::clear() ;
 		}
 
+	}
+
+	/**
+	 * Schedule cron img optm auto request
+	 *
+	 * @since 2.4.1
+	 * @access public
+	 */
+	public static function schedule_filter_imgoptm_auto_request()
+	{
+		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
+
+		// Schedule event here to see if it can lost again or not
+		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ) {
+			LiteSpeed_Cache_Log::debug( 'Cron log: ......img optm auto request cron hook register......' ) ;
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST ) ;
+		}
 	}
 
 	/**

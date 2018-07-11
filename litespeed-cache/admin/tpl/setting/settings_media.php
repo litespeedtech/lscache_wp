@@ -65,12 +65,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
-	<tr class="litespeed-hide">
-		<th><?php echo __( 'Optimize New Images', 'litespeed-cache' ) ; ?></th>
+	<tr>
+		<th><?php echo __( 'Optimize Request Cron', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Automatically request optimization for newly-uploaded images.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Automatically request optimization in cron job.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Requests can only be sent when credits is recovered more than %s.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>

@@ -44,6 +44,8 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTM_BK_SUMMARY = 'litespeed_img_optm_bk_summary' ;
 	const DB_IMG_OPTM_RMBK_SUMMARY = 'litespeed_img_optm_rmbk_summary' ;
 
+	const NUM_THRESHOLD_AUTO_REQUEST = 2000 ;
+
 	private $wp_upload_dir ;
 	private $tmp_pid ;
 	private $tmp_path ;
@@ -730,16 +732,26 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Pull optimized img
+	 * Cron pull optimized img
 	 *
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function pull_optimized_img()
+	public static function cron_pull_optimized_img()
 	{
+		if ( ! defined( 'DOING_CRON' ) ) {
+			return ;
+		}
+
+		$tag = get_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ;
+
+		if ( ! $tag || $tag !== self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
+			return ;
+		}
+
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] Cron pull_optimized_img started' ) ;
-		$instance = self::get_instance() ;
-		$instance->_pull_optimized_img() ;
+
+		self::get_instance()->_pull_optimized_img() ;
 	}
 
 	/**
@@ -990,15 +1002,27 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Check if need to do a pull for optimized img
+	 * Auto send optm request
 	 *
-	 * @since  1.6
+	 * @since  2.4.1
 	 * @access public
 	 */
-	public static function check_need_pull()
+	public static function cron_auto_request()
 	{
-		$tag = get_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ;
-		return defined( 'DOING_CRON' ) && $tag && $tag === self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ;
+		if ( ! defined( 'DOING_CRON' ) ) {
+			return false ;
+		}
+
+		$instance = self::get_instance() ;
+
+		$credit = (int) $instance->summary_info( 'credit' ) ;
+		if ( $credit < self::NUM_THRESHOLD_AUTO_REQUEST ) {
+			return false ;
+		}
+
+		// No need to check last time request interval for now
+
+		$instance->_request_optm() ;
 	}
 
 	/**
