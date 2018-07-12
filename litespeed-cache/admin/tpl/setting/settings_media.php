@@ -66,7 +66,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimize Request Cron', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
@@ -92,6 +92,22 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize images and save backups of the originals in the same folder.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __( 'Remove Original Backups', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Automatically remove the original image backups after fetched optimized images.', 'litespeed-cache' ) ; ?>
+
+				<br /><font class="litespeed-danger">
+					<?php echo __('WARNING', 'litespeed-cache'); ?>:
+					<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
+					<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
+				</font>
 			</div>
 		</td>
 	</tr>

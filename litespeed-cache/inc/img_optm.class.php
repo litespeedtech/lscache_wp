@@ -775,6 +775,7 @@ class LiteSpeed_Cache_Img_Optm
 		$_q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
 
 		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ;
+		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP ) ;
 		$optm_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ;
 
 		// pull 1min images each time
@@ -864,7 +865,10 @@ class LiteSpeed_Cache_Img_Optm
 				// Backup ori img
 				$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
 				$bk_file = substr( $local_file, 0, -strlen( $extension ) ) . 'bk.' . $extension ;
-				rename( $local_file, $bk_file ) ;
+
+				if ( ! $rm_ori_bkup ) {
+					rename( $local_file, $bk_file ) ;
+				}
 
 				// Replace ori img
 				rename( $local_file . '.tmp', $local_file ) ;

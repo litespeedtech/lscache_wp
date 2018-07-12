@@ -674,6 +674,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO,
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON,
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI,
+			LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP,
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP,
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS,
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF,

@@ -183,6 +183,7 @@ class LiteSpeed_Cache_Const
 	const OPT_MEDIA_OPTM_AUTO = 'media_optm_auto' ;
 	const OPT_MEDIA_OPTM_CRON = 'media_optm_cron' ;
 	const OPT_MEDIA_OPTM_ORI = 'media_optm_ori' ;
+	const OPT_MEDIA_RM_ORI_BKUP = 'media_rm_ori_bkup' ;
 	const OPT_MEDIA_OPTM_WEBP = 'media_optm_webp' ;
 	const OPT_MEDIA_OPTM_LOSSLESS = 'media_optm_lossless' ;
 	const OPT_MEDIA_OPTM_EXIF = 'media_optm_exif' ;
@@ -458,6 +459,7 @@ class LiteSpeed_Cache_Const
 			self::OPT_MEDIA_OPTM_AUTO 		=> false,
 			self::OPT_MEDIA_OPTM_CRON 		=> true,
 			self::OPT_MEDIA_OPTM_ORI 		=> true,
+			self::OPT_MEDIA_RM_ORI_BKUP 	=> false,
 			self::OPT_MEDIA_OPTM_WEBP 		=> false,
 			self::OPT_MEDIA_OPTM_LOSSLESS 	=> false,
 			self::OPT_MEDIA_OPTM_EXIF 		=> false,
