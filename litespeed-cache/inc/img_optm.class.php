@@ -717,13 +717,12 @@ class LiteSpeed_Cache_Img_Optm
 
 		$_allowed_status = array(
 			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
-			self::DB_IMG_OPTIMIZE_STATUS_ERR,
-			self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
-			self::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM,
+			// self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
+			// self::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM,
 			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
 		) ;
 
-		if ( empty( $_POST[ 'status' ] ) || ! in_array( $_POST[ 'status' ], $_allowed_status ) ) {
+		if ( empty( $_POST[ 'status' ] ) || ( ! in_array( $_POST[ 'status' ], $_allowed_status ) && substr( $_POST[ 'status' ], 0, 3 ) != self::DB_IMG_OPTIMIZE_STATUS_ERR ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify exit: no/wrong status' ) ;
 			exit( json_encode( 'no/wrong status' ) ) ;
 		}
