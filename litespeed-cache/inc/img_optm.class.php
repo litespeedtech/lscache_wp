@@ -1380,6 +1380,10 @@ class LiteSpeed_Cache_Img_Optm
 		if ( $credit === '++' ) {
 			$credit = $summary[ 'credit' ] + 1 ;
 		}
+
+		$old = ! empty( $summary[ 'credit' ] ) ? $summary[ 'credit' ] : '-' ;
+		LiteSpeed_Cache_Log::debug( "[Img_Optm] Credit updated \t\t[Old] $old \t\t[New] $credit" ) ;
+
 		$summary[ 'credit' ] = $credit ;
 
 		update_option( self::DB_IMG_OPTM_SUMMARY, $summary ) ;
