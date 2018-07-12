@@ -820,6 +820,11 @@ class LiteSpeed_Cache_Img_Optm
 				return ;
 			}
 
+			// Recover credit
+			if ( $json[ 'credit' ] ) {
+				$this->_update_credit( $json[ 'credit' ] ) ;
+			}
+
 			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $row_img->src ;
 
 			// Save ori optm image
@@ -977,9 +982,6 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, $pids_data_to_insert ) ) ;
 				}
 			}
-
-			// Recover credit
-			$this->_update_credit( '++' ) ;
 		}
 
 		// Update guidance
