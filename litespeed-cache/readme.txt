@@ -2,7 +2,7 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
-Tested up to: 4.9.5
+Tested up to: 4.9.7
 Stable tag: 2.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -268,16 +268,22 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.4.1 - Jul 16 2018 =
-* [IMPROVEMENT] <strong>Image Optimization</strong> Fetch 404 error will notify client as other errors.
-* [UPDATE] <strong>Image Optimization</strong> Set timeout seconds to avoid pulling timeout. (@Jose)
+* [NEW FEATURE] <strong>Media</strong> Auto delete original backups after pulled. (@borisov87 @JMCA2)
+* [NEW FEATURE] <strong>Media</strong> Auto request image optimization. (@ericsondr)
+* [IMPROVEMENT] <strong>Media</strong> Fetch 404 error will notify client as other errors.
+* [UPDATE] <strong>Media</strong> Set timeout seconds to avoid pulling timeout. (@Jose)
+* [UPDATE] <strong>CDN</strong>Fixed the notice when no path is in url. (@sabitkamera)
+* [UPDATE] <strong>Media</strong> Auto correct credits when pulling.
+* [UPDATE] <strong>GUI</strong> Removed redundant double quote in gui.cls. (@DaveyJake)
+* [IAPI] Allow new error status notification from IAPI.
 
 = 2.4 - Jul 2 2018 =
-* [NEW FEATURE] <strong>Image Optimization</strong> Added lossless optimization.
-* [NEW FEATURE] <strong>Image Optimization</strong> Added Request Orignal Images ON/OFF.
-* [NEW FEATURE] <strong>Image Optimization</strong> Added Request WebP ON/OFF. (@JMCA2)
-* [IMPROVEMENT] <strong>Image Optimization</strong> Improved optimization tools to archive maximum compression and score.
-* [IMPROVEMENT] <strong>Image Optimization</strong> Improved speed of image pull.
-* [IMPROVEMENT] <strong>Image Optimization</strong> Automatically recover credit after pulled.
+* [NEW FEATURE] <strong>Media</strong> Added lossless optimization.
+* [NEW FEATURE] <strong>Media</strong> Added Request Orignal Images ON/OFF.
+* [NEW FEATURE] <strong>Media</strong> Added Request WebP ON/OFF. (@JMCA2)
+* [IMPROVEMENT] <strong>Media</strong> Improved optimization tools to archive maximum compression and score.
+* [IMPROVEMENT] <strong>Media</strong> Improved speed of image pull.
+* [IMPROVEMENT] <strong>Media</strong> Automatically recover credit after pulled.
 * [REFACTOR] <strong>Config</strong> Separated configure const class.
 * [BUGFIX] <strong>Report</strong> Report can be sent successfully with emoji now. (@music47ell)
 * [IAPI] New Europe Image Optimization server (EU3/EU4).
