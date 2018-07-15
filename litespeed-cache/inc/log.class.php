@@ -284,6 +284,7 @@ class LiteSpeed_Cache_Log
 
 		$servervars = array(
 			'Query String' => '',
+			'HTTP_ACCEPT' => '',
 			'HTTP_USER_AGENT' => '',
 			'HTTP_ACCEPT_ENCODING' => '',
 			'HTTP_COOKIE' => '',
@@ -317,6 +318,7 @@ class LiteSpeed_Cache_Log
 
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
 			$params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ] ;
+			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;
 			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
 		}
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ) {

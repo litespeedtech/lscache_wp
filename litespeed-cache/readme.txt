@@ -271,6 +271,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [NEW FEATURE] <strong>Media</strong> Auto delete original backups after pulled. (@borisov87 @JMCA2)
 * [NEW FEATURE] <strong>Media</strong> Auto request image optimization. (@ericsondr)
 * [IMPROVEMENT] <strong>Media</strong> Fetch 404 error will notify client as other errors.
+* [IMPROVEMENT] <strong>Media</strong> Supported WebP for PageSpeed Insights. (@LucasRolff)
 * [UPDATE] <strong>Media</strong> Set timeout seconds to avoid pulling timeout. (@Jose)
 * [UPDATE] <strong>CDN</strong>Fixed the notice when no path is in url. (@sabitkamera)
 * [UPDATE] <strong>Media</strong> Auto correct credits when pulling.

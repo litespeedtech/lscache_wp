@@ -233,11 +233,15 @@ class LiteSpeed_Cache_Media
 	 */
 	private function webp_support()
 	{
-		if ( empty( $_SERVER[ 'HTTP_ACCEPT' ] ) || strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) === false ) {
-			return false ;
+		if ( ! empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
+			return true ;
 		}
 
-		return true ;
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
+			return true ;
+		}
+
+		return false ;
 	}
 
 	/**
