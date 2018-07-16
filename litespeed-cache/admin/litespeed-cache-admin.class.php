@@ -13,7 +13,6 @@ class LiteSpeed_Cache_Admin
 	private static $_instance ;
 	private $config ;
 	private $display ;
-	private $main ;
 
 	/**
 	 * Initialize the class and set its properties.
