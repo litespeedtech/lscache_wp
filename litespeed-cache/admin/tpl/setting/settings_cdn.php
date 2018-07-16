@@ -187,14 +187,14 @@ if ( ! $cdn_mapping ) {
 		</td>
 	</tr>
 
-	<tr class="litespeed-hide">
+	<tr>
 		<th><?php echo __( 'Quic Cloud API', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_QUIC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Use %s API functionality.', 'litespeed-cache' ), 'Quic Cloud' ) ; ?>
 
-				<a id='litespeed_modal_href' href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_QUICCLOUD ) ; ?>">
+				<a id='litespeed_modal_href' href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_QUIC ) ; ?>">
 					<?php if ( ! empty( $_options[ LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ] ) ) : ?>
 						Login API
 					<?php else : ?>

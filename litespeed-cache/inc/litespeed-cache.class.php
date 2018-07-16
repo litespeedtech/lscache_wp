@@ -43,7 +43,7 @@ class LiteSpeed_Cache
 	const ACTION_DO_CRAWL = 'do-crawl' ;
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
-	const ACTION_CDN_QUICCLOUD = 'cdn_quiccloud' ;
+	const ACTION_CDN_QUIC = 'cdn_quic' ;
 
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
@@ -336,8 +336,8 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_CDN_Cloudflare::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CDN_QUICCLOUD:
-				$msg = LiteSpeed_Cache_CDN_Quiccloud::handler() ;
+			case LiteSpeed_Cache::ACTION_CDN_QUIC:
+				$msg = LiteSpeed_Cache_CDN_Quic::handler() ;
 				break ;
 
 			default:

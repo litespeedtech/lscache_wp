@@ -76,6 +76,10 @@
 	display: none !important;
 }
 
+.litespeed-right{
+	float:right!important;
+}
+
 .litespeed-relative {
 	position: relative ;
 }
