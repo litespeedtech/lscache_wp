@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Admin_Report
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY,
+			LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		) ;
@@ -206,24 +206,7 @@ class LiteSpeed_Cache_Admin_Report
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 
-		$consts = array(
-			'WP_SITEURL',
-			'WP_HOME',
-			'WP_CONTENT_DIR',
-			'SHORTINIT',
-			'LSCWP_CONTENT_DIR',
-			'LSCWP_DIR',
-			'LITESPEED_TIME_OFFSET',
-			'LITESPEED_SERVER_TYPE',
-			'LITESPEED_CLI',
-			'LITESPEED_ALLOWED',
-			'LITESPEED_ON',
-			'LITESPEED_ON_IN_SETTING',
-			'LSCACHE_ADV_CACHE',
-		) ;
-		foreach ( $consts as $v ) {
-			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
-		}
+		$server_vars = array_merge( $server_vars, LiteSpeed_Cache_Config::get_instance()->server_vars() ) ;
 
 		$buf = $this->format_report_section('Server Variables', $server_vars) ;
 

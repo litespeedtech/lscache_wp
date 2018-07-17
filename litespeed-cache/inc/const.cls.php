@@ -167,10 +167,9 @@ class LiteSpeed_Cache_Const
 	const OPID_CDN_ORI = 'cdn_ori' ;
 	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
 	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
-	const OPID_CDN_QUIC = 'cdn_quic' ;
-	const OPID_CDN_QUIC_EMAIL = 'cdn_quic_email' ;
-	const OPID_CDN_QUIC_KEY = 'cdn_quic_key' ;
-	const OPID_CDN_QUIC_SITE = 'cdn_quic_site' ;
+	const OPT_CDN_QUIC = 'cdn_quic' ;
+	const OPT_CDN_QUIC_EMAIL = 'cdn_quic_email' ;
+	const OPT_CDN_QUIC_KEY = 'cdn_quic_key' ;
 	const OPID_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
 	const OPID_CDN_CLOUDFLARE_EMAIL = 'cdn_cloudflare_email' ;
 	const OPID_CDN_CLOUDFLARE_KEY = 'cdn_cloudflare_key' ;
@@ -443,10 +442,9 @@ class LiteSpeed_Cache_Const
 			self::OPID_CDN_ORI 		=> '',
 			self::OPID_CDN_EXCLUDE 	=> '',
 			self::OPID_CDN_REMOTE_JQUERY 	=> false,
-			self::OPID_CDN_QUIC 	=> false,
-			self::OPID_CDN_QUIC_EMAIL 	=> '',
-			self::OPID_CDN_QUIC_KEY 	=> '',
-			self::OPID_CDN_QUIC_SITE 	=> '',
+			self::OPT_CDN_QUIC 		=> false,
+			self::OPT_CDN_QUIC_EMAIL 	=> '',
+			self::OPT_CDN_QUIC_KEY 		=> '',
 			self::OPID_CDN_CLOUDFLARE 	=> false,
 			self::OPID_CDN_CLOUDFLARE_EMAIL 	=> '',
 			self::OPID_CDN_CLOUDFLARE_KEY 	=> '',
@@ -504,6 +502,36 @@ class LiteSpeed_Cache_Const
 		return array_merge($default_options, $tp_options) ;
 	}
 
+	/**
+	 * Generate server vars
+	 *
+	 * @since 2.4.1
+	 */
+	public function server_vars()
+	{
+		$consts = array(
+			'WP_SITEURL',
+			'WP_HOME',
+			'WP_CONTENT_DIR',
+			'SHORTINIT',
+			'LSCWP_CONTENT_DIR',
+			'LSCWP_CONTENT_FOLDER',
+			'LSCWP_DIR',
+			'LITESPEED_TIME_OFFSET',
+			'LITESPEED_SERVER_TYPE',
+			'LITESPEED_CLI',
+			'LITESPEED_ALLOWED',
+			'LITESPEED_ON',
+			'LITESPEED_ON_IN_SETTING',
+			'LSCACHE_ADV_CACHE',
+		) ;
+		$server_vars = array() ;
+		foreach ( $consts as $v ) {
+			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
+		}
+
+		return $server_vars ;
+	}
 
 	/**
 	 * Gets the third party options.

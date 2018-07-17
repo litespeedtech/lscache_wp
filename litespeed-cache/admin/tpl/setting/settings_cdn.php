@@ -187,41 +187,31 @@ if ( ! $cdn_mapping ) {
 		</td>
 	</tr>
 
-	<tr>
+	<tr <?php if ( ! defined( 'LITESPEED_QUIC_CLOUD' ) ) echo 'class="litespeed-hide"' ; ?>>
 		<th><?php echo __( 'Quic Cloud API', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CDN_QUIC ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_CDN_QUIC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Use %s API functionality.', 'litespeed-cache' ), 'Quic Cloud' ) ; ?>
 
-				<a id='litespeed_modal_href' href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_QUIC ) ; ?>">
-					<?php if ( ! empty( $_options[ LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ] ) ) : ?>
-						Login API
-					<?php else : ?>
-						Free Register!
-					<?php endif ; ?>
-				</a>
+				<a id='litespeed_modal_href' href="https://quic.cloud" target="_blank">Quic.cloud</a>
 
-				<link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>css/iziModal.min.css">
-				<script type="text/javascript" src="<?php echo LSWCP_PLUGIN_URL ; ?>js/iziModal.min.js"></script>
-				<div id="litespeed_modal"></div>
+				<!-- <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>css/iziModal.min.css"> -->
+				<!-- <script type="text/javascript" src="<?php echo LSWCP_PLUGIN_URL ; ?>js/iziModal.min.js"></script> -->
+				<!-- <div id="litespeed_modal"></div> -->
 				<script type="text/javascript">
-					var litespeed_modal = jQuery("#litespeed_modal").iziModal({iframe: true});
-					jQuery("#litespeed_modal_href").click(function(event) {
-						event.preventDefault();
-						litespeed_modal.iziModal('open', event);
-					});;
+					// var litespeed_modal = jQuery("#litespeed_modal").iziModal({iframe: true});
+					// jQuery("#litespeed_modal_href").click(function(event) {
+					// 	event.preventDefault();
+					// 	litespeed_modal.iziModal('open', event);
+					// });;
 				</script>
-				<?php
-
-				?>
-				<?php echo sprintf( __( 'This can be managed from <a %2$s>%1$s</a>.', 'litespeed-cache' ), '<b>' . __( 'Manage', 'litespeed-cache' ) . '</b> -&gt; <b>' . __( 'CDN', 'litespeed-cache' ) . '</b>', 'href="admin.php?page=lscache-dash#cdn"' ) ; ?>
 			</div>
 			<div class="litespeed-block">
 				<div class='litespeed-col'>
 					<h4><?php echo __( 'Email Address', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ) ; ?>
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your Email address on %s.', 'litespeed-cache' ), 'Quic Cloud' ) ; ?>
 					</div>
@@ -230,24 +220,13 @@ if ( ! $cdn_mapping ) {
 				<div class='litespeed-col'>
 					<h4><?php echo __( 'User API Key', 'litespeed-cache' ) ; ?></h4>
 
-					<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY ) ; ?>
+					<?php $this->build_input( LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'Your API key is used to access %s APIs.', 'litespeed-cache' ), 'Quic Cloud' ) ; ?>
 						<?php echo sprintf( __( 'Get it from <a %1$s>%2$s</a>.', 'litespeed-cache' ), 'href="https://quic.cloud/dashboard" target="_blank"', 'Quic Cloud' ) ; ?>
 					</div>
 				</div>
 
-				<div class='litespeed-col'>
-					<h4><?php echo __( 'Site Domain', 'litespeed-cache' ) ; ?></h4>
-
-				<?php
-					$this->build_input( LiteSpeed_Cache_Config::OPID_CDN_QUIC_SITE ) ;
-				?>
-					<div class="litespeed-desc">
-						<?php echo __( 'You can just type part of the domain.', 'litespeed-cache' ) ; ?>
-						<?php echo __( 'Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache' ) ; ?>
-					</div>
-				</div>
 			</div>
 		</td>
 	</tr>

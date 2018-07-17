@@ -22,7 +22,7 @@
 
 	<div class="litespeed-row">
 		<h4><?php echo __( 'Password', 'litespeed-cache' ) ; ?> <?php echo __( 'Or', 'litespeed-cache' ) ; ?> <?php echo __( 'User API Key', 'litespeed-cache' ) ; ?> :</h4>
-		<input type="password" name="pswd_or_key" class="litespeed-regular-text" value="<?php echo LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY ) ; ?>" />
+		<input type="password" name="pswd_or_key" class="litespeed-regular-text" value="<?php echo LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY ) ; ?>" />
 	</div>
 
 	<input type="submit" class="button litespeed-btn-success" value="<?php echo __( 'Login', 'litespeed-cache' ) ; ?>" />

@@ -2,7 +2,7 @@
 /**
  * The quic.cloud class.
  *
- * @since      	2.0
+ * @since      	2.4.1
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
@@ -24,7 +24,7 @@ class LiteSpeed_Cache_CDN_Quic
 	 */
 	public static function sync_config( $options )
 	{
-		if ( empty( $options[ LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY ] ) ) {
+		if ( empty( $options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY ] ) ) {
 			return false ;
 		}
 
@@ -40,21 +40,12 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Also read data from items
-		$item_options = array(
-			LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES,
-			LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES,
-			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING,
-			LiteSpeed_Cache_Config::ITEM_SETTING_MODE,
-			LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC,
-			LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC,
-			LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS,
-			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
-			LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR,
-			LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE,
-		) ;
-
+		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
 		foreach ( $item_options as $v ) {
+			// bypass main conf
+			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME ) {
+				continue ;
+			}
 			$options[ $v ] = get_option( $v ) ;
 		}
 
@@ -64,27 +55,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$options[ '_domain' ] = home_url() ;
 
 		// Add server env vars
-		$consts = array(
-			'WP_SITEURL',
-			'WP_HOME',
-			'WP_CONTENT_DIR',
-			'SHORTINIT',
-			'LSCWP_CONTENT_DIR',
-			'LSCWP_CONTENT_FOLDER',
-			'LSCWP_DIR',
-			'LITESPEED_TIME_OFFSET',
-			'LITESPEED_SERVER_TYPE',
-			'LITESPEED_CLI',
-			'LITESPEED_ALLOWED',
-			'LITESPEED_ON',
-			'LITESPEED_ON_IN_SETTING',
-			'LSCACHE_ADV_CACHE',
-		) ;
-		$server_vars = array() ;
-		foreach ( $consts as $v ) {
-			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
-		}
-		$options[ '_server' ] = $server_vars ;
+		$options[ '_server' ] = LiteSpeed_Cache_Config::get_instance()->server_vars() ;
 
 		// Append hooks
 		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_cache_api_vary', array() ) ;
@@ -259,9 +230,6 @@ class LiteSpeed_Cache_CDN_Quic
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_REG :
-				$instance->_cloudflare_get_devmode() ;
-				break ;
 
 			default:
 				$instance->_show_user_guide() ;

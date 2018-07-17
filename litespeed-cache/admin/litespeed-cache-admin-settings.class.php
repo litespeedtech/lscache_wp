@@ -126,7 +126,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Check if need to send cfg to CDN or not
 		 * @since 2.3
 		 */
-		$id = LiteSpeed_Cache_Config::OPID_CDN_QUIC ;
+		$id = LiteSpeed_Cache_Config::OPT_CDN_QUIC ;
 		if ( $this->_options[ $id ] ) {
 			// Send to Quic CDN
 			LiteSpeed_Cache_CDN_Quic::sync_config( $this->_options ) ;
@@ -543,7 +543,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$cdn_cloudflare_changed = false ;
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_CDN,
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC,
+			LiteSpeed_Cache_Config::OPT_CDN_QUIC,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE,
 		) ;
 		foreach ( $ids as $id ) {
@@ -623,12 +623,11 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Quic API
-		 * @since  1.9.1
+		 * @since  2.4.1
 		 */
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC_EMAIL,
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC_KEY,
-			LiteSpeed_Cache_Config::OPID_CDN_QUIC_SITE,
+			LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL,
+			LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY,
 		) ;
 		foreach ( $ids as $id ) {
 			if ( $this->_options[ $id ] === $this->_input[ $id ] ) {
