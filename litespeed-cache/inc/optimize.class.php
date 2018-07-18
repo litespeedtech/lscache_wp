@@ -856,6 +856,9 @@ class LiteSpeed_Cache_Optimize
 
 		$src = array_values( $src ) ;
 
+		// Drop query strings
+		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
+
 		$hash = md5( serialize( $src ) ) ;
 
 		$short = substr( $hash, -5 ) ;
