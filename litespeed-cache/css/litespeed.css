@@ -1654,6 +1654,10 @@ g.litespeed-pie_info text{
 	transition: width .6s ease;
 }
 
+.litespeed-progress-bar-yellow {
+	background-color: #fbe100;
+}
+
 .litespeed-progress {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -1833,3 +1837,152 @@ input.litespeed-input-warning {
 }
 
 
+/* image optimize page */
+.litespeed-width-1-2 {
+	width: 45%;
+	padding: 20px;
+
+}
+.litespeed-width-7-10 {
+	width: 65%;
+	padding: 20px;
+}
+.litespeed-width-3-10 {
+	width: 25%;
+	padding: 20px;
+}
+
+.litespeed-column-java {
+	background: #339999;
+}
+
+.litespeed-text-shipgrey {
+	color: #535342;
+}
+
+.litespeed-text-right {
+	text-align: right;
+}
+
+.litespeed-text-center {
+	text-align: center;
+}
+
+.litespeed-align-center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.litespeed-contrast {
+	color: white;
+}
+
+.litespeed-wrap .litespeed-btn-xlarge {
+	line-height: 2.3em;
+	font-size: 2.3em  !important;
+	padding: .25em .75em .25em .75em;
+	border-radius: 52px;
+
+}
+
+.litespeed-empty-space-xlarge {
+	margin-top: 8em;
+}
+
+.litespeed-empty-space-large {
+	margin-top: 6em;
+}
+
+.litespeed-empty-space-medium {
+	margin-top: 3em;
+}
+
+.litespeed-empty-space-small {
+	margin-top: 2em;
+}
+
+.litespeed-empty-space-tiny {
+	margin-top: 1em;
+}
+
+.litespeed-hr-dotted {
+	border: 1px dotted #eeeeee;
+}
+
+.litespeed-flex-container {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	height: auto;
+}
+
+.litespeed-hr {
+	padding-bottom: 1em;
+	border-bottom: .5px solid #97CACA;
+}
+
+.litespeed-icon-vertical-middle {
+	vertical-align: middle;
+	display: inline-block;
+	margin:0px 10px 0px 10px;
+}
+
+@media screen and (max-width: 814px) {
+	.litespeed-width-7-10 {
+		width:100%;
+	}
+	.litespeed-width-3-10 {
+		width:100%;
+	}
+}
+
+.litespeed-column-java .litespeed-danger {
+	color: #c1c53a!important ;
+}
+
+.litespeed-column-java .litespeed-desc {
+	color: #bfbfbf;
+}
+
+.litespeed-column-java code {
+	color: #c2f5bf;
+	background-color: #238888 ;
+}
+.litespeed-column-java .litespeed-title {
+	color: white;
+}
+
+.litespeed-width-7-10 .litespeed-progress {
+    margin: 1em;
+}
+
+
+.litespeed-refresh:after{
+	content: "⟳";
+	width: 20px;
+	height: 20px;
+	color: #7ffbfb ;
+}
+
+.litespeed-refresh:hover:after,
+.litespeed-refresh:focus:after,
+.litespeed-refresh:focus:active:after {
+	color: #c2f5bf ;
+}
+
+.litespeed-width-3-10 .litespeed-title {
+	margin: 18px 0;
+}
+
+.litespeed-silence {
+	color: #9e9e9e;
+}
+
+.litespeed-column-java .litespeed-congratulate {
+	color: #c2f5bf;
+	font-size: 20px;
+}
+
+.litespeed-light-code .litespeed-silence code {
+	background-color: #f0f5fb ;
+}

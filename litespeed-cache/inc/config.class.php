@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 /**
  * The core plugin config class.
  *

@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTM_BK_SUMMARY = 'litespeed_img_optm_bk_summary' ;
 	const DB_IMG_OPTM_RMBK_SUMMARY = 'litespeed_img_optm_rmbk_summary' ;
 
-	const NUM_THRESHOLD_AUTO_REQUEST = 2000 ;
+	const NUM_THRESHOLD_AUTO_REQUEST = 1200 ;
 
 	private $wp_upload_dir ;
 	private $tmp_pid ;
@@ -94,14 +94,6 @@ class LiteSpeed_Cache_Img_Optm
 
 		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
-
-		// Update guidance
-		if ( ! empty( $json[ 'level' ] ) && $json[ 'level' ] > 1 ) {
-			$this->_update_guidance_pos( 'done' ) ;
-		}
-		elseif ( $this->get_guidance_pos() == 1 ) {
-			$this->_update_guidance_pos( 2 ) ;
-		}
 
 		LiteSpeed_Cache_Admin::redirect() ;
 
@@ -280,11 +272,6 @@ class LiteSpeed_Cache_Img_Optm
 		// Update credit info
 		if ( isset( $json[ 'credit' ] ) ) {
 			$this->_update_credit( $json[ 'credit' ] ) ;
-		}
-
-		// Update guidance
-		if ( $this->get_guidance_pos() == 2 ) {
-			$this->_update_guidance_pos( 3 ) ;
 		}
 
 	}
@@ -988,10 +975,8 @@ class LiteSpeed_Cache_Img_Optm
 			}
 		}
 
-		// Update guidance
-		if ( $this->get_guidance_pos() == 3 ) {
-			$this->_update_guidance_pos( 4 ) ;
-		}
+		// Try level up
+		$this->_try_level_up() ;
 
 		// Check if there is still task in queue
 		$q = "SELECT * FROM $this->_table_img_optm WHERE root_id = 0 AND optm_status = %s LIMIT 1" ;
@@ -1227,8 +1212,6 @@ class LiteSpeed_Cache_Img_Optm
 		// Clear credit info
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
 
-		$this->_update_guidance_pos( 1 ) ;
-
 		exit( 'ok' ) ;
 	}
 
@@ -1373,6 +1356,18 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
+	 * Try to level up
+	 *
+	 * @since 2.4.1
+	 * @access private
+	 */
+	private function _try_level_up()
+	{
+		$can_level_up = $optm_summary[ 'credit_recovered' ] > $next_level_data[ 0 ] ;
+
+	}
+
+	/**
 	 * Update client credit info
 	 *
 	 * @since 1.6.5
@@ -1381,12 +1376,25 @@ class LiteSpeed_Cache_Img_Optm
 	private function _update_credit( $credit )
 	{
 		$summary = get_option( self::DB_IMG_OPTM_SUMMARY, array() ) ;
+
+		if ( empty( $summary[ 'credit' ] ) ) {
+			$summary[ 'credit' ] = 0 ;
+		}
+
 		if ( $credit === '++' ) {
 			$credit = $summary[ 'credit' ] + 1 ;
 		}
 
-		$old = ! empty( $summary[ 'credit' ] ) ? $summary[ 'credit' ] : '-' ;
+		$old = $summary[ 'credit' ] ?: '-' ;
 		LiteSpeed_Cache_Log::debug( "[Img_Optm] Credit updated \t\t[Old] $old \t\t[New] $credit" ) ;
+
+		// Mark credit recovered
+		if ( $credit > $summary[ 'credit' ] ) {
+			if ( empty( $summary[ 'credit_recovered' ] ) ) {
+				$summary[ 'credit_recovered' ] = 0 ;
+			}
+			$summary[ 'credit_recovered' ] ++ ;
+		}
 
 		$summary[ 'credit' ] = $credit ;
 
@@ -1817,50 +1825,6 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		LiteSpeed_Cache_Admin::redirect() ;
-	}
-
-	/**
-	 * Get the current guidance step
-	 *
-	 * @since  2.0
-	 * @access public
-	 */
-	public function get_guidance_pos()
-	{
-		$guide_status = get_option( LiteSpeed_Cache_Config::ITEM_GUIDE ) ;
-
-		$current_step = 'done' ;
-		if ( ! $guide_status || empty( $guide_status[ 'img_optm' ] ) || $guide_status[ 'img_optm' ] !== 'done' ) {
-			$current_step = empty( $guide_status[ 'img_optm' ] ) ? 1 : $guide_status[ 'img_optm' ] ;
-		}
-
-		return $current_step ;
-	}
-
-	/**
-	 * Update current guidance step
-	 *
-	 * @since  2.0
-	 * @access private
-	 */
-	private function _update_guidance_pos( $pos )
-	{
-		$guide_status = get_option( LiteSpeed_Cache_Config::ITEM_GUIDE ) ;
-
-		if ( ! $guide_status ) {
-			$guide_status = array() ;
-		}
-
-		if ( ! empty( $guide_status[ 'img_optm' ] ) && $guide_status[ 'img_optm' ] == $pos ) {
-			LiteSpeed_Cache_Log::debug2( '[Img_Optm] _update_guidance_pos: bypassed due to same pos [step] ' . $pos ) ;
-			return ;
-		}
-
-		$guide_status[ 'img_optm' ] = $pos ;
-
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] _update_guidance_pos [step] ' . $pos ) ;
-
-		update_option( LiteSpeed_Cache_Config::ITEM_GUIDE, $guide_status ) ;
 	}
 
 	/**
