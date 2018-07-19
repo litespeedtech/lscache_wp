@@ -70,8 +70,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Automatically request optimization in cron job.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'Requests can only be sent when credits is recovered more than %s.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
+				<?php echo __( 'Automatically request optimization via cron job.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'Requests can only be sent when recovered credits is %s or more.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -101,7 +101,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Automatically remove the original image backups after fetched optimized images.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Automatically remove the original image backups after fetching optimized images.', 'litespeed-cache' ) ; ?>
 
 				<br /><font class="litespeed-danger">
 					<?php echo __('WARNING', 'litespeed-cache'); ?>:

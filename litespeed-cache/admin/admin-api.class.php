@@ -337,12 +337,12 @@ class LiteSpeed_Cache_Admin_API
 			unset( $json[ '_note' ] ) ;
 		}
 
-		if ( ! empty( $json[ '_succeed' ] ) ) {
-			LiteSpeed_Cache_Log::debug( '[IAPI] _succeed: ' . $json[ '_succeed' ] ) ;
-			$msg = __( 'Good news from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_succeed' ] ;
+		if ( ! empty( $json[ '_success' ] ) ) {
+			LiteSpeed_Cache_Log::debug( '[IAPI] _success: ' . $json[ '_success' ] ) ;
+			$msg = __( 'Good news from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_success' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
-			unset( $json[ '_succeed' ] ) ;
+			unset( $json[ '_success' ] ) ;
 		}
 
 		return $json ;

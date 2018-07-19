@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.7
-Stable tag: 2.4
+Stable tag: 2.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -267,16 +267,20 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 2.4.1 - Jul 16 2018 =
+= 2.4.1 - Jul 19 2018 =
+* [NEW FEATURE] <strong>Media</strong> Auto Level Up. Auto refill credit.
 * [NEW FEATURE] <strong>Media</strong> Auto delete original backups after pulled. (@borisov87 @JMCA2)
 * [NEW FEATURE] <strong>Media</strong> Auto request image optimization. (@ericsondr)
 * [IMPROVEMENT] <strong>Media</strong> Fetch 404 error will notify client as other errors.
-* [IMPROVEMENT] <strong>Media</strong> Supported WebP for PageSpeed Insights. (@LucasRolff)
+* [IMPROVEMENT] <strong>Media</strong> Support WebP for PageSpeed Insights. (@LucasRolff)
+* [BUGFIX] Fixed the issue that duplicated optimized CSS and caused rapid expansion of CSS cache folder.
+* [GUI] <strong>Media</strong> Refactored operation workflow and interface.
 * [UPDATE] <strong>Media</strong> Set timeout seconds to avoid pulling timeout. (@Jose)
-* [UPDATE] <strong>CDN</strong>Fixed the notice when no path is in url. (@sabitkamera)
+* [UPDATE] <strong>CDN</strong>Fixed the notice when no path is in URL. (@sabitkamera)
 * [UPDATE] <strong>Media</strong> Auto correct credits when pulling.
 * [UPDATE] <strong>GUI</strong> Removed redundant double quote in gui.cls. (@DaveyJake)
-* [IAPI] Allow new error status notification from IAPI.
+* [IAPI] IAPI v2.4.1.
+* [IAPI] Allow new error status notification and success message from IAPI.
 
 = 2.4 - Jul 2 2018 =
 * [NEW FEATURE] <strong>Media</strong> Added lossless optimization.
