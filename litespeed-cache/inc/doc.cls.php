@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The Doc class.
  *
@@ -8,6 +7,10 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
 
 class LiteSpeed_Cache_Doc
 {

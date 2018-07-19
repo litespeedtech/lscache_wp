@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
-
 /**
  * The core plugin config class.
  *
@@ -14,6 +10,11 @@ if ( ! defined( 'WPINC' ) ) {
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 {
 	private static $_instance ;

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The core plugin router class.
  *
@@ -7,10 +6,12 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
- * @package    	LiteSpeed_Cache
- * @subpackage 	LiteSpeed_Cache/inc
- * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 class LiteSpeed_Cache_Router
 {
 	private static $_instance ;

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin API class.
  *
@@ -9,6 +8,11 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 class LiteSpeed_Cache_API
 {
 	const VERSION =	LiteSpeed_Cache::PLUGIN_VERSION ;

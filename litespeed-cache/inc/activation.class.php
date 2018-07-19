@@ -8,6 +8,11 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 class LiteSpeed_Cache_Activation
 {
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;

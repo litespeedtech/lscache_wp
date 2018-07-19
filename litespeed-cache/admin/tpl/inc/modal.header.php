@@ -1,3 +1,9 @@
+<?php
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+?>
+
 <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>css/litespeed.css" />
 
 <div class="litespeed litespeed-modal">

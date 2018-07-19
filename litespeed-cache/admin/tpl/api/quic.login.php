@@ -1,3 +1,9 @@
+<?php
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+?>
+
 <h1 class="litespeed-title"><?php echo __('Quic Cloud User Panel', 'litespeed-cache') ; ?></h1>
 
 <form method="post" action="admin.php" id="litespeed_form_quic" class="litespeed-relative">

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The admin-panel specific functionality of the plugin.
  *
@@ -9,6 +8,11 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 class LiteSpeed_Cache_Admin_Display
 {
 	private static $_instance ;

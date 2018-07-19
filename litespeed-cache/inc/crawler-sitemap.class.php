@@ -10,6 +10,10 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
+
 class LiteSpeed_Cache_Crawler_Sitemap
 {
 	private static $_instance ;

@@ -2,12 +2,15 @@
 /**
  * The object cache class
  *
- *
  * @since      	1.8
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
 
 /**
  * Handle exception

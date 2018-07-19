@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The class to optimize image.
  *
@@ -8,6 +7,10 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+
+if ( ! defined( 'WPINC' ) ) {
+	die ;
+}
 
 class LiteSpeed_Cache_Img_Optm
 {
