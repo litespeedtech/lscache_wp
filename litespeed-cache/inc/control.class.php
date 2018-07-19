@@ -481,7 +481,8 @@ class LiteSpeed_Cache_Control
 	public static function output()
 	{
 		$esi_hdr = '' ;
-		if ( LSWCP_ESI_SUPPORT && LiteSpeed_Cache_ESI::has_esi() ) {
+		// Fix cli `uninstall --deactivate` fatal err
+		if ( LSWCP_ESI_SUPPORT && class_exists( 'LiteSpeed_Cache_ESI' ) && LiteSpeed_Cache_ESI::has_esi() ) {
 			$esi_hdr = ',esi=on' ;
 		}
 
