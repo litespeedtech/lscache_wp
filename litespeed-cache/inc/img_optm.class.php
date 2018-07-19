@@ -77,7 +77,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6.5
 	 * @access private
 	 */
-	private function _sync_data()
+	private function _sync_data( $try_level_up = false )
 	{
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA ) ;
 
@@ -92,11 +92,16 @@ class LiteSpeed_Cache_Img_Optm
 			update_option( self::DB_IMG_OPTM_SUMMARY, $json ) ;
 		}
 
+		// If this is for level up try, return data directly
+		if ( $try_level_up ) {
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] Try Level Up ~ !' ) ;
+			return $json ;
+		}
+
 		$msg = __( 'Communicated with LiteSpeed Image Optimization Server successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 		LiteSpeed_Cache_Admin::redirect() ;
-
 	}
 
 	/**
@@ -1363,8 +1368,32 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function _try_level_up()
 	{
-		$can_level_up = $optm_summary[ 'credit_recovered' ] > $next_level_data[ 0 ] ;
+		$optm_summary = $this->summary_info() ;
+		if ( empty( $optm_summary[ 'level' ] ) || empty( $optm_summary[ 'credit_recovered' ] ) || empty( $optm_summary[ '_level_data' ] ) ) {
+			return ;
+		}
 
+		// level beyond 5 should be triggered manually
+		if ( $optm_summary[ 'level' ] >= 5 ) {
+			return ;
+		}
+
+		$next_level = $optm_summary[ 'level' ] + 1 ;
+		$next_level_data = $optm_summary[ '_level_data' ][ $next_level ] ;
+
+		if ( $optm_summary[ 'credit_recovered' ] <= $next_level_data[ 0 ] ) {
+			return ;
+		}
+
+		// Now do level up magic
+		// Bless we can get more reviews to encourage me ~
+		$json = $this->_sync_data( true ) ;
+		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
+			LiteSpeed_Cache_Log::debug( "[Img_Optm] Upgraded to level $json[level] !" ) ;
+		}
+		else {
+			LiteSpeed_Cache_Log::debug( "[Img_Optm] Upgrade failed [old level data] " . var_export( $optm_summary, true ), $json ) ;
+		}
 	}
 
 	/**
