@@ -167,6 +167,10 @@ if ( ! defined( 'WPINC' ) ) {
 					</div>
 
 					<div class="litespeed-width-3-10">
+						<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ) ; ?>">
+							<?php echo __( 'Clean Up Unfinished Data', 'litespeed-cache' ) ; ?>
+						</a>
+
 					</div>
 
 				</div>
@@ -175,38 +179,62 @@ if ( ! defined( 'WPINC' ) ) {
 
 				<div class="litespeed-empty-space-small"></div>
 
-				<h3 class="litespeed-title"><?php echo __('Revert Optimization', 'litespeed-cache') ; ?></h3>
+				<h3 class="litespeed-title">
+					<?php echo __( 'Storage Optimization', 'litespeed-cache' ) ; ?>
+
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="litespeed-icon-vertical-middle litespeed-refresh" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
+					</a>
+
+				</h3>
+
+				<?php if ( $storage_data ) : ?>
+					<div class="">
+					<p>
+						<?php echo __( 'Last calculated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $storage_data[ 'date' ] ) . '</code>' ; ?>
+					</p>
+					<?php if ( $storage_data[ 'count' ] ) : ?>
+						<p>
+							<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $storage_data[ 'count' ] . '</code>' ; ?>
+						</p>
+						<p>
+							<?php echo __( 'Total', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::real_size( $storage_data[ 'sum' ] ) . '</code>' ; ?>
+						</p>
+					<?php endif ; ?>
+					</div>
+				<?php endif ; ?>
+
+				<br />
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image backups?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
+					<?php echo __( 'Remove Original Image Backups', 'litespeed-cache' ) ; ?>
+				</a>
+				<div class="litespeed-desc">
+					<?php echo __( 'This will delete all of the backups of the original images.', 'litespeed-cache' ) ; ?>
+					<div class="litespeed-danger">
+						<?php echo __('WARNING', 'litespeed-cache'); ?>:
+						<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
+						<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
+					</div>
+				</div>
+				<?php if ( $rm_log ) : ?>
+					<div class="">
+					<p>
+						<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $rm_log[ 'date' ] ) . '</code>' ; ?>
+					</p>
+					<p>
+						<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $rm_log[ 'count' ] . '</code>' ; ?>
+					</p>
+					<p>
+						<?php echo __( 'Saved', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::real_size( $rm_log[ 'sum' ] ) . '</code>' ; ?>
+					</p>
+					</div>
+				<?php endif ; ?>
 
 				<div class="litespeed-desc">
-					<?php echo __( 'Switch all images in the media library back to their original unoptimized versions.', 'litespeed-cache' ) ; ?>
+					<?php echo __( 'A backup of each image is saved before it is optimized.', 'litespeed-cache' ) ; ?>
+					<?php echo __( 'The refresh button will calculate the total amount of disk space used by these backups.', 'litespeed-cache' ) ; ?>
 				</div>
 
-				<div>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ) ; ?>">
-						<?php echo __( 'Clean Up Unfinished Data', 'litespeed-cache' ) ; ?>
-					</a>
 
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IAPI, LiteSpeed_Cache_Admin_API::TYPE_RESET_KEY ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'The current IAPI key must be reset after changing home URL or domain before making any further optimization requests.', 'litespeed-cache' ) ; ?>">
-						<?php echo __( 'Reset IAPI Key', 'litespeed-cache' ) ; ?>
-					</a>
-
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
-						<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
-					</a>
-
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-success" title="<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>">
-						<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
-					</a>
-
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success litespeed-hide" title="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
-						<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
-					</a>
-
-					<p>
-						<?php echo sprintf( __( 'Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
-					</p>
-
-				</div>
 			</div>
 		</div>
 	</div>
@@ -234,59 +262,35 @@ if ( ! defined( 'WPINC' ) ) {
 		</div>
 
 		<div class="litespeed-hr">
-			<h3 class="litespeed-title">
-				<?php echo __( 'Storage Optimization', 'litespeed-cache' ) ; ?>
+			<h3 class="litespeed-title"><?php echo __('Revert Optimization', 'litespeed-cache') ; ?></h3>
 
-				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="litespeed-icon-vertical-middle litespeed-refresh" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
+			<div class="litespeed-desc">
+				<?php echo __( 'Switch all images in the media library back to their original unoptimized versions.', 'litespeed-cache' ) ; ?>
+			</div>
+
+			<div>
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IAPI, LiteSpeed_Cache_Admin_API::TYPE_RESET_KEY ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'The current IAPI key must be reset after changing home URL or domain before making any further optimization requests.', 'litespeed-cache' ) ; ?>">
+					<?php echo __( 'Reset IAPI Key', 'litespeed-cache' ) ; ?>
 				</a>
 
-			</h3>
+				<br />
 
-			<?php if ( $storage_data ) : ?>
-				<div class="">
-				<p>
-					<?php echo __( 'Last calculated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $storage_data[ 'date' ] ) . '</code>' ; ?>
-				</p>
-				<?php if ( $storage_data[ 'count' ] ) : ?>
-					<p>
-						<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $storage_data[ 'count' ] . '</code>' ; ?>
-					</p>
-					<p>
-						<?php echo __( 'Total', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::real_size( $storage_data[ 'sum' ] ) . '</code>' ; ?>
-					</p>
-				<?php endif ; ?>
-				</div>
-			<?php endif ; ?>
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
+					<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
+				</a>
 
-			<br />
-			<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RM_BKUP ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to remove all image backups?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
-				<?php echo __( 'Remove Original Image Backups', 'litespeed-cache' ) ; ?>
-			</a>
-			<div class="litespeed-desc">
-				<?php echo __( 'This will delete all of the backups of the original images.', 'litespeed-cache' ) ; ?>
-				<div class="litespeed-danger">
-					<?php echo __('WARNING', 'litespeed-cache'); ?>:
-					<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
-					<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
-				</div>
-			</div>
-			<?php if ( $rm_log ) : ?>
-				<div class="">
-				<p>
-					<?php echo __( 'Last ran', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $rm_log[ 'date' ] ) . '</code>' ; ?>
-				</p>
-				<p>
-					<?php echo __( 'Files', 'litespeed-cache' ) . ': <code>' . $rm_log[ 'count' ] . '</code>' ; ?>
-				</p>
-				<p>
-					<?php echo __( 'Saved', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::real_size( $rm_log[ 'sum' ] ) . '</code>' ; ?>
-				</p>
-				</div>
-			<?php endif ; ?>
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-success" title="<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>">
+					<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
+				</a>
 
-			<div class="litespeed-desc">
-				<?php echo __( 'A backup of each image is saved before it is optimized.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'The refresh button will calculate the total amount of disk space used by these backups.', 'litespeed-cache' ) ; ?>
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE_RESCAN ) ; ?>" class="litespeed-btn-success litespeed-hide" title="<?php echo __( 'Scan for any new unoptimized image thumbnail sizes and resend necessary image optimization requests.', 'litespeed-cache' ) ; ?>">
+					<?php echo __( 'Send New Thumbnail Requests', 'litespeed-cache' ) ; ?>
+				</a>
+
+				<p>
+					<?php echo sprintf( __( 'Results can be checked in <a %s>Media Library</a>.', 'litespeed-cache' ), 'href="upload.php?mode=list"' ) ; ?>
+				</p>
+
 			</div>
 
 		</div>

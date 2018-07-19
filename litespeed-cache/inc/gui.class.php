@@ -86,7 +86,7 @@ class LiteSpeed_Cache_GUI
 	{
 		$percentage = '<text x="16.91549431" y="15.5">' . $percent . '%</text>' ;
 		if ( $percent == 100 && $finished_tick ) {
-			$percentage = '<text x="16.91549431" y="15.5" fill="#73b38d">&#x2713</text>' ;
+			$percentage = '<text x="16.91549431" y="15.5" class="litespeed-pie-done">&#x2713</text>' ;
 		}
 		return "
 		<svg class='litespeed-pie' viewbox='0 0 33.83098862 33.83098862' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>

@@ -1387,6 +1387,10 @@ g.litespeed-pie_info text{
 	font-size: 11px ;
 }
 
+g.litespeed-pie_info .litespeed-pie-done {
+	fill: #73b38d ;
+}
+
 
 /********************************* block and columns *******************************/
 .litespeed-block,
@@ -1953,14 +1957,17 @@ input.litespeed-input-warning {
 }
 
 .litespeed-width-7-10 .litespeed-progress {
-    margin: 1em;
+	margin: 1em;
 }
 
-
-.litespeed-refresh:after{
+.litespeed-refresh:after {
 	content: "⟳";
 	width: 20px;
 	height: 20px;
+	color: #40ad3a ;
+}
+
+.litespeed-column-java .litespeed-refresh:after{
 	color: #23ec17 ;
 }
 
@@ -1995,3 +2002,37 @@ input.litespeed-input-warning {
 .litespeed-column-java .litespeed-btn-danger:hover {
 	background: #f194a8 ;
 }
+
+.litespeed-column-java svg.litespeed-pie circle.litespeed-pie_bg {
+	stroke: #e8efe7;
+}
+
+.litespeed-column-java svg.litespeed-pie circle.litespeed-pie_circle {
+	stroke: #00BCD4;
+}
+
+.litespeed-column-java svg .litespeed-pie_info text {
+	fill: #F5FFEB;
+}
+
+.litespeed-column-java svg g.litespeed-pie_info .litespeed-pie-done {
+	fill: #a5ffa0;
+}
+
+.litespeed-column-java a {
+	color: #eaf8ff;
+}
+
+.litespeed-column-java a:hover {
+	color: #ffffff;
+}
+
+
+
+
+
+
+
+
+
+
