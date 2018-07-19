@@ -65,12 +65,23 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
+	 * Export settings
+	 *
+	 * @since  2.4.1
+	 * @return string All settings data
+	 */
+	public function export()
+	{
+		return $this->_export( true ) ;
+	}
+
+	/**
 	 * Export settings to file
 	 *
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _export()
+	private function _export( $only_data_return = false )
 	{
 
 		$data = array() ;
@@ -79,6 +90,10 @@ class LiteSpeed_Cache_Import
 		}
 
 		$data = base64_encode( serialize( $data ) ) ;
+
+		if ( $only_data_return ) {
+			return $data ;
+		}
 
 		$filename = $this->_generate_filename() ;
 
@@ -101,34 +116,55 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
+	 * Import settings
+	 *
+	 * @since  2.4.1
+	 */
+	public function import( $file )
+	{
+		return $this->_import( $file ) ;
+	}
+
+	/**
 	 * Import settings from file
 	 *
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _import()
+	private function _import( $file = false )
 	{
-		if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
-			LiteSpeed_Cache_Log::debug( 'Import: Failed to import, wront ls_file' ) ;
+		if ( ! $file ) {
+			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
+				LiteSpeed_Cache_Log::debug( 'Import: Failed to import, wront ls_file' ) ;
 
-			$msg = __( 'Import failed due to file error.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+				$msg = __( 'Import failed due to file error.', 'litespeed-cache' ) ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 
+				return false ;
+			}
+
+			// Update log
+			$log = get_option( self::DB_IMPORT_LOG, array() ) ;
+			if ( empty( $log[ 'import' ] ) ) {
+				$log[ 'import' ] = array() ;
+			}
+			$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
+			$log[ 'import' ][ 'time' ] = time() ;
+
+			update_option( self::DB_IMPORT_LOG, $log ) ;
+
+			$data = file_get_contents( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ;
+		}
+		else {
+			$data = file_get_contents( $file ) ;
+		}
+
+		try {
+			$data = unserialize( base64_decode( $data ) ) ;
+		} catch ( Exception $ex ) {
+			LiteSpeed_Cache_Log::debug( 'Import: Failed to parse serialized data' ) ;
 			return false ;
 		}
-
-		// Update log
-		$log = get_option( self::DB_IMPORT_LOG, array() ) ;
-		if ( empty( $log[ 'import' ] ) ) {
-			$log[ 'import' ] = array() ;
-		}
-		$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
-		$log[ 'import' ][ 'time' ] = time() ;
-
-		update_option( self::DB_IMPORT_LOG, $log ) ;
-
-		$data = file_get_contents( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ;
-		$data = unserialize( base64_decode( $data ) ) ;
 
 		if ( ! $data ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Failed to import, no data' ) ;
@@ -141,10 +177,16 @@ class LiteSpeed_Cache_Import
 			}
 		}
 
-		LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
 
-		$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
-		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		if ( ! $file ) {
+			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
+
+			$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
+			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+		}
+		else {
+			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $file ) ;
+		}
 
 		return true ;
 

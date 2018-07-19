@@ -191,13 +191,11 @@ class LiteSpeed_Cache_Cli_Admin
 	 */
 	public function export_options($args, $assoc_args)
 	{
-		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
-		$output = '' ;
 		if ( isset($assoc_args['filename']) ) {
 			$file = $assoc_args['filename'] ;
 		}
 		else {
-			$file = getcwd() . '/lscache_wp_options_' . date('d_m_Y-His') . '.txt' ;
+			$file = getcwd() . '/lscache_wp_options_' . date('d_m_Y-His') . '.data' ;
 		}
 
 		if ( ! is_writable(dirname($file)) ) {
@@ -205,13 +203,10 @@ class LiteSpeed_Cache_Cli_Admin
 			return ;
 		}
 
-		foreach ($options as $key => $val) {
-			$output .= sprintf("%s=%s\n", $key, $val) ;
-		}
-		$output .= "\n" ;
+		$data = LiteSpeed_Cache_Import::get_instance()->export() ;
 
-		if ( file_put_contents($file, $output) === false ) {
-			WP_CLI::error('Failed to create file.') ;
+		if ( file_put_contents( $file, $data ) === false ) {
+			WP_CLI::error( 'Failed to create file.' ) ;
 		}
 		else {
 			WP_CLI::success('Created file ' . $file) ;
@@ -243,21 +238,14 @@ class LiteSpeed_Cache_Cli_Admin
 		if ( ! file_exists($file) || ! is_readable($file) ) {
 			WP_CLI::error('File does not exist or is not readable.') ;
 		}
-		$content = file_get_contents($file) ;
-		preg_match_all("/^[^;][^=]+=[^=\n\r]*$/m", $content, $input) ;
-		$options = array() ;
-		$default = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-		foreach ($input[0] as $opt) {
-			$kv = explode('=', $opt) ;
-			$options[$kv[0]] = $kv[1] ;
+		$res = LiteSpeed_Cache_Import::get_instance()->import( $file ) ;
+
+		if ( ! $res ) {
+			WP_CLI::error( 'Failed to parse serialized data from file.' ) ;
 		}
 
-		$options = LiteSpeed_Cache_Config::option_diff($default, $options) ;
-
-		$options = LiteSpeed_Cache_Config::convert_options_to_input($options) ;
-
-		$this->_update_options($options) ;
+		WP_CLI::success( 'Options imported. [File] ' . $file ) ;
 	}
 
 	/**
@@ -269,6 +257,7 @@ class LiteSpeed_Cache_Cli_Admin
 	 */
 	private function _update_options($options)
 	{
+		WP_CLI::error('Disabled due to missing textarea values bug. Will fix in next release.') ;
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options) ;
 
 		global $wp_settings_errors ;
