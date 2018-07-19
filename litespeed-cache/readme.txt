@@ -273,7 +273,8 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [NEW FEATURE] <strong>Media</strong> Auto request image optimization. (@ericsondr)
 * [IMPROVEMENT] <strong>Media</strong> Fetch 404 error will notify client as other errors.
 * [IMPROVEMENT] <strong>Media</strong> Support WebP for PageSpeed Insights. (@LucasRolff)
-* [BUGFIX] Fixed the issue that duplicated optimized CSS and caused rapid expansion of CSS cache folder.
+* [BUGFIX] <strong>CLI</strong> Fixed the issue where CLI import/export caused certain textarea settings to be lost. (#767519)
+* [BUGFIX] <strong>CSS Optimize</strong> Fixed the issue that duplicated optimized CSS and caused rapid expansion of CSS cache folder.
 * [GUI] <strong>Media</strong> Refactored operation workflow and interface.
 * [UPDATE] <strong>Media</strong> Set timeout seconds to avoid pulling timeout. (@Jose)
 * [UPDATE] <strong>CDN</strong>Fixed the notice when no path is in URL. (@sabitkamera)
