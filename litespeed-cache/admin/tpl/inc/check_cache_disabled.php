@@ -1,26 +1,26 @@
-<?php
+<?php 
 if ( ! defined( 'WPINC' ) ) die ;
 
 $reasons = array() ;
 
 if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
 	$reasons[] = array(
-		'title' => __( 'LSCache Module is disabled.', 'litespeed-cache' ),
+		'title' => __( 'The LSCache Module is disabled at the server level.', 'litespeed-cache' ),
 		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation',
 	) ;
 }
 
 if ( ! defined( 'LITESPEED_ON_IN_SETTING' ) ) {
 	$reasons[] = array(
-		'title' => __( 'LiteSpeed cache is disabled in setting.', 'litespeed-cache' ) ,
+		'title' => __( 'LiteSpeed Cache is disabled in the plugin settings.', 'litespeed-cache' ) ,
 		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general#enable_litespeed_cache',
 	) ;
 }
 
 if ( ! $reasons && ! defined( 'LITESPEED_ON' ) ) {
 	$reasons[] = array(
-		'title' => __( 'LiteSpeed cache is disabled.', 'litespeed-cache' ) ,
-		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general#enable_litespeed_cache',
+		'title' => __( 'LiteSpeed Cache is disabled.', 'litespeed-cache' ) ,
+		'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:troubleshooting:lscache-is-disabled',
 	) ;
 }
 
@@ -31,7 +31,7 @@ if ( $reasons ) :
 		<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 
 		<p>
-			<?php echo __( 'The functionalities here can not work due to:', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'Caching functions on this page are currently unavailable!', 'litespeed-cache' ) ; ?>
 		</p>
 
 		<ul class="litespeed-list">
@@ -39,7 +39,7 @@ if ( $reasons ) :
 			<li>
 				<?php echo $v[ 'title' ] ; ?>
 
-				<a href="<?php echo $v[ 'link' ] ; ?>" target="_blank" class="litespeed-learn-more"><?php echo __( 'How to fix it?', 'litespeed-cache' ) ; ?></a>
+				<a href="<?php echo $v[ 'link' ] ; ?>" target="_blank" class="litespeed-learn-more"><?php echo __( 'Learn How to Fix It', 'litespeed-cache' ) ; ?></a>
 			</li>
 		<?php endforeach ; ?>
 		</ul>
