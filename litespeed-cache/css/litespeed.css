@@ -1961,13 +1961,13 @@ input.litespeed-input-warning {
 	content: "⟳";
 	width: 20px;
 	height: 20px;
-	color: #7ffbfb ;
+	color: #23ec17 ;
 }
 
 .litespeed-refresh:hover:after,
 .litespeed-refresh:focus:after,
 .litespeed-refresh:focus:active:after {
-	color: #c2f5bf ;
+	color: #7ffbfb ;
 }
 
 .litespeed-width-3-10 .litespeed-title {
@@ -1985,4 +1985,13 @@ input.litespeed-input-warning {
 
 .litespeed-light-code .litespeed-silence code {
 	background-color: #f0f5fb ;
+}
+
+.litespeed-column-java .litespeed-btn-danger {
+	color: #f194a8;
+	border-color: #f194a8 ;
+}
+
+.litespeed-column-java .litespeed-btn-danger:hover {
+	background: #f194a8 ;
 }
