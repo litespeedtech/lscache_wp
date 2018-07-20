@@ -86,8 +86,11 @@ class LiteSpeed_Cache_Img_Optm
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to post to LiteSpeed IAPI server ', $json ) ;
-			$msg = __( 'Failed to communicate with LiteSpeed IAPI server', 'litespeed-cache' ) . ': ' . $json ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
+			if ( $json ) {
+				$msg = __( 'Failed to communicate with LiteSpeed IAPI server', 'litespeed-cache' ) . ': ' . $json ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			}
 			return ;
 		}
 
@@ -622,8 +625,10 @@ class LiteSpeed_Cache_Img_Optm
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to post to LiteSpeed IAPI server ', $json ) ;
-			$msg = sprintf( __( 'Failed to push to LiteSpeed IAPI server: %s', 'litespeed-cache' ), $json ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			if ( $json ) {
+				$msg = sprintf( __( 'Failed to push to LiteSpeed IAPI server: %s', 'litespeed-cache' ), $json ) ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			}
 			return null ;
 		}
 
