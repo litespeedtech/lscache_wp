@@ -18,7 +18,7 @@ if ( empty( $optm_summary[ 'level' ] ) ) {
 </p>
 
 <?php
-if ( $optm_summary[ 'level' ] >= 5 || empty( $optm_summary[ '_level_data' ] ) ) {
+if ( $optm_summary[ 'level' ] >= 7 || empty( $optm_summary[ '_level_data' ] ) ) {
 	return ;
 }
 
