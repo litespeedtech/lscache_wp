@@ -218,13 +218,16 @@ class LiteSpeed_Cache_Admin
 		}
 
 		if ( is_multisite() && ( ! is_network_admin() || ! current_user_can('manage_network_options')) ) {
-			$third = __('For this scenario only, the network admin may uncheck "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache') ;
+			$third = __('If this is the case, the network admin may uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache') ;
 		}else {
-			$third = __('For this scenario only, please uncheck "Check Advanced Cache" in LiteSpeed Cache settings.', 'litespeed-cache') ;
+			$third = __('If this is the case, please uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache') ;
 		}
-		$msg = __('Please disable/deactivate any other Full Page Cache solutions that are currently being used.', 'litespeed-cache') . ' '
-			. __('LiteSpeed Cache does work with other cache solutions, but only their non-page caching offerings—such as minifying css/js files.', 'litespeed-cache') . ' '
-			. $third ;
+		$msg = __('LiteSpeed has detected another plugin using the "Advanced Cache" file.', 'litespeed-cache') . ' '
+			. __('LiteSpeed Cache does work with other optimization plugins, but only if functionality is not duplicated. Only one full-page cache may be activated.', 'litespeed-cache') . ' '
+			. $third
+			. ' <a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins" target="_blank">'
+				. __( 'Learn More', 'litespeed-cache' )
+			. '</a>' ;
 
 		$this->display->add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_YELLOW, $msg) ;
 	}
