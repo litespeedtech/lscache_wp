@@ -11,7 +11,7 @@ if ( ! defined( 'WPINC' ) ) {
 		<?php if ( $img_count[ 'total_not_requested' ] ) : ?>
 			<div class="litespeed-text-center">
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>" class="litespeed-btn-success litespeed-btn-large">
-					<?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
+					<span class="dashicons dashicons-admin-generic"> < <?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 				</a>
 
 			</div>
@@ -182,7 +182,7 @@ if ( ! defined( 'WPINC' ) ) {
 				<h3 class="litespeed-title">
 					<?php echo __( 'Storage Optimization', 'litespeed-cache' ) ; ?>
 
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="litespeed-icon-vertical-middle litespeed-refresh" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_CALC_BKUP ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Calculate Original Image Storage', 'litespeed-cache' ) ; ?>">
 					</a>
 
 				</h3>
@@ -247,7 +247,7 @@ if ( ! defined( 'WPINC' ) ) {
 		<div class="litespeed-hr">
 			<h3 class="litespeed-title">
 				<?php echo __( 'Optimization Summary', 'litespeed-cache' ) ; ?>
-				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="litespeed-icon-vertical-middle litespeed-refresh" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
+				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="dashicons dashicons-update litepseed-dash-icon-success" title="<?php echo __( 'Update Status', 'litespeed-cache' ) ; ?>">
 				</a>
 			</h3>
 			<p>
@@ -273,12 +273,12 @@ if ( ! defined( 'WPINC' ) ) {
 					<?php echo __( 'Reset IAPI Key', 'litespeed-cache' ) ; ?>
 				</a>
 
-				<br />
-
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_ORI ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'Revert all optimized images back to their original versions.', 'litespeed-cache' ) ; ?>">
 					<?php echo __( 'Undo Optimization', 'litespeed-cache' ) ; ?>
 				</a>
 
+				<br />
+				
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_BATCH_SWITCH_OPTM ) ; ?>" class="litespeed-btn-success" title="<?php echo __( 'Switch back to using optimized images.', 'litespeed-cache' ) ; ?>">
 					<?php echo __( 'Re-do Optimization', 'litespeed-cache' ) ; ?>
 				</a>
