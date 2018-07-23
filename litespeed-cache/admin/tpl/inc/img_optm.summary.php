@@ -11,7 +11,7 @@ if ( ! defined( 'WPINC' ) ) {
 		<?php if ( $img_count[ 'total_not_requested' ] ) : ?>
 			<div class="litespeed-text-center">
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE ) ; ?>" class="litespeed-btn-success litespeed-btn-large">
-					<span class="dashicons dashicons-admin-generic"> < <?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
+					<span class="dashicons dashicons-admin-generic"> </span> <?php echo __( 'Send Optimization Request', 'litespeed-cache' ) ; ?>
 				</a>
 
 			</div>
