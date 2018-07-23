@@ -587,6 +587,36 @@ class LiteSpeed_Cache_Img_Optm
 			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
 			'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
 			'src_filesize'	=> filesize( $real_file ),
+			/**
+			 * To use the filter `litespeed_img_optm_options_per_image`, do below:
+			 *
+			 * 		add_filter( 'litespeed_img_optm_options_per_image', function( $opt_val, $file ){
+			 * 			// To add optimize original image
+			 * 			if ( Your conditions ) {
+			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_ORI ;
+			 * 			}
+			 *
+			 * 			// To add optimize webp image
+			 * 			if ( Your conditions ) {
+			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_WEBP ;
+			 * 			}
+			 *
+			 * 			// To turn on lossless optimize for this image e.g. if filename contains `magzine`
+			 * 			if ( strpos( $file, 'magzine' ) !== false ) {
+			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_LOSSLESS ;
+			 * 			}
+			 *
+			 * 			// To set keep exif info for this image
+			 * 			if ( Your conditions ) {
+			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_EXIF ;
+			 * 			}
+			 *
+			 *			return $opt_val ;
+			 *   	} ) ;
+			 *
+			 * @since 2.4.2
+			 */
+			'optm_options'	=> apply_filters( 'litespeed_img_optm_options_per_image', 0, $meta_value[ 'file' ] ),
 		) ;
 		$md5 = md5_file( $real_file ) ;
 

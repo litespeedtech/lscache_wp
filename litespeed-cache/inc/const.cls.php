@@ -216,6 +216,11 @@ class LiteSpeed_Cache_Const
 	const CRWL_ALPHA_DESC = 'alpha_desc' ;
 	const CRWL_ALPHA_ASC = 'alpha_asc' ;
 
+	const IMG_OPTM_BM_ORI = 1 ;
+	const IMG_OPTM_BM_WEBP = 2 ;
+	const IMG_OPTM_BM_LOSSLESS = 4 ;
+	const IMG_OPTM_BM_EXIF = 8 ;
+
 	/**
 	 * Get the items in wp_options that need for backup
 	 *
