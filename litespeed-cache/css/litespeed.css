@@ -2123,14 +2123,14 @@ input.litespeed-input-warning {
 }
 
 .litespeed-column-java .litespeed-btn-danger {
-	color: #FFEADD;
-	border: 1px solid #FF6600;
+	color: #FFEADD !important;
+	border: 1px solid #FF6600 !important;
 	background: #FF6600;
 }
 
 .litespeed-column-java .litespeed-btn-danger:hover {
 	color: #FFFFFF;
-	border-color: 1px solid #FF9797;
+	border-color: 1px solid #FF9797 !important;
 	background: #FF3333;
 }
 
