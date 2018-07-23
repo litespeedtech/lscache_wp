@@ -342,8 +342,8 @@ class LiteSpeed_Cache_GUI
 		if ( defined( 'LITESPEED_ON' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'id'    => 'litespeed-menu',
-				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '"></span>',
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL ),
+				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE ),
 				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 			) ) ;
 		}
