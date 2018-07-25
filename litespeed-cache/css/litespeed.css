@@ -598,6 +598,7 @@ h3 .litespeed-learn-more {
 
 .litespeed .litespeed-btn-tiny,
 .litespeed-wrap .litespeed-btn-tiny,
+.litespeed-wrap [class*="litespeed-btn-"].litespeed-btn-tiny,
 .litespeed-btn-tiny {
 	padding: 1px 8px;
 	font-size: 13px;
@@ -1456,7 +1457,8 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 10px;
 }
 
-.litespeed-btn-danger[data-litespeed-cdn-mapping-del] {
+.litespeed .litespeed-btn-danger[data-litespeed-cdn-mapping-del],
+.litespeed-wrap .litespeed-btn-danger[data-litespeed-cdn-mapping-del] {
 	border-radius: 13px;
 	margin: 0 10px 0 0;
 	position: absolute;
