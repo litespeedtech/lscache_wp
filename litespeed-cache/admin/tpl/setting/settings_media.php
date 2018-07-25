@@ -66,7 +66,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
@@ -77,7 +77,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimization Cron', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Optimization Cron', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON ) ; ?>
 			<div class="litespeed-desc">
@@ -87,7 +87,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimize Original Images', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Optimize Original Images', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ; ?>
 			<div class="litespeed-desc">
@@ -97,7 +97,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Remove Original Backups', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Remove Original Backups', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP ) ; ?>
 			<div class="litespeed-desc">
@@ -113,7 +113,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimize WebP Versions', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Optimize WebP Versions', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ; ?>
 			<div class="litespeed-desc">
@@ -123,7 +123,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimize Losslessly', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Optimize Losslessly', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS ) ; ?>
 			<div class="litespeed-desc">
@@ -134,7 +134,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Preserve EXIF data', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Preserve EXIF data', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF ) ; ?>
 			<div class="litespeed-desc">
@@ -153,7 +153,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	?>
 
 	<tr>
-		<th><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ; ?>
 			<?php $this->build_textarea2( $id, 40 ) ; ?>
@@ -168,7 +168,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'WebP For Extra srcset', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'WebP For Extra srcset', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET ) ; ?>
 			<div class="litespeed-desc">

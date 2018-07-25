@@ -1783,7 +1783,7 @@ input.litespeed-input[type="file"]{
 .litespeed-wrap .litespeed-float-submit {
 	position: absolute;
 	right: 10px;
-	top: 0;
+	top: -20px;
 	margin-top: 0;
 }
 
@@ -2156,4 +2156,8 @@ input.litespeed-input-warning {
 
 .litespeed-column-java p {
 	color: #FFFFFF;
+}
+
+.litespeed-body tbody > tr > th.litespeed-padding-left {
+	padding-left: 3em;
 }
