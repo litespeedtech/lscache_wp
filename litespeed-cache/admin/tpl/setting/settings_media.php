@@ -66,7 +66,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
