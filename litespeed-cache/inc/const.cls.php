@@ -38,6 +38,7 @@ class LiteSpeed_Cache_Const
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
 	const ITEM_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
+	const ITEM_TIMESTAMP_PURGE_CSS = 'litespeed-timestamp-purge-css' ;
 
 	// Server variables
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
