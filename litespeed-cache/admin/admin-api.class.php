@@ -241,8 +241,11 @@ class LiteSpeed_Cache_Admin_API
 		// Check if get key&server correctly
 		if ( empty( $json[ 'auth_key' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] request key failed: ', $json ) ;
-			$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
+			if ( $json ) {
+				$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			}
 			return ;
 		}
 
@@ -348,6 +351,19 @@ class LiteSpeed_Cache_Admin_API
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 			unset( $json[ '_success' ] ) ;
+		}
+
+		// Upgrade is required
+		if ( ! empty( $json[ '_err_req_v' ] ) ) {
+			LiteSpeed_Cache_Log::debug( '[IAPI] _err_req_v: ' . $json[ '_err_req_v' ] ) ;
+			$msg = sprintf( __( '%s plugin version %s required for this action.', 'litespeed-cache' ), LiteSpeed_Cache::NAME, 'v' . $json[ '_err_req_v' ] . '+' ) ;
+
+			// Append upgrade link
+			$msg .= ' ' . LiteSpeed_Cache_GUI::plugin_upgrade_link( LiteSpeed_Cache::NAME, LiteSpeed_Cache::PLUGIN_NAME, $json[ '_err_req_v' ] ) ;
+
+			$msg .= $this->_parse_link( $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return null ;
 		}
 
 		return $json ;

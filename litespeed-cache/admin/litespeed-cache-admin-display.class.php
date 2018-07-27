@@ -493,7 +493,14 @@ class LiteSpeed_Cache_Admin_Display
 		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE) ;
 		if( is_array($messages) ) {
 			$messages = array_unique($messages) ;
+
+			$added_thickbox = false ;
 			foreach ($messages as $msg) {
+				// Added for popup links
+				if ( strpos( $msg, 'TB_iframe' ) && ! $added_thickbox ) {
+					add_thickbox();
+					$added_thickbox = true ;
+				}
 				echo $msg ;
 			}
 		}

@@ -342,8 +342,8 @@ class LiteSpeed_Cache_GUI
 		if ( defined( 'LITESPEED_ON' ) ) {
 			$wp_admin_bar->add_menu( array(
 				'id'    => 'litespeed-menu',
-				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . '"></span>',
-				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL ),
+				'title' => '<span class="ab-icon" title="' . __( 'LiteSpeed Cache Purge All', 'litespeed-cache' ) . ' - ' . __( 'LSCache', 'litespeed-cache' ) . '"></span>',
+				'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE ),
 				'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 			) ) ;
 		}
@@ -444,6 +444,57 @@ class LiteSpeed_Cache_GUI
 				'meta'		=> array( 'tabindex' => '0' ),
 			) );
 		}
+	}
+
+	/**
+	 * Generate install link
+	 *
+	 * @since  2.4.2
+	 * @access public
+	 */
+	public static function plugin_install_link( $title, $name, $v )
+	{
+		$url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=' . $name ), 'install-plugin_' . $name ) ;
+
+		$action = sprintf(
+			'<a href="%1$s" class="install-now" data-slug="%2$s" data-name="%3$s" aria-label="%4$s">%5$s</a>',
+			esc_url( $url ),
+			esc_attr( $name ),
+			esc_attr( $title ),
+			esc_attr( sprintf( __( 'Install %s' ), $title ) ),
+			__( 'Install Now' )
+		);
+
+		return $action ;
+
+		// $msg .= " <a href='$upgrade_link' class='litespeed-btn-success' target='_blank'>" . __( 'Click here to upgrade', 'litespeed-cache' ) . '</a>' ;
+
+	}
+
+	/**
+	 * Generate upgrade link
+	 *
+	 * @since  2.4.2
+	 * @access public
+	 */
+	public static function plugin_upgrade_link( $title, $name, $v )
+	{
+		$details_url = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $name . '&section=changelog&TB_iframe=true&width=600&height=800' );
+		$file = $name . '/' . $name . '.php' ;
+
+		$msg = sprintf( __( '<a href="%1$s" %2$s>View version %3$s details</a> or <a href="%4$s" %5$s target="_blank">update now</a>.' ),
+			esc_url( $details_url ),
+			sprintf( 'class="thickbox open-plugin-details-modal" aria-label="%s"',
+				esc_attr( sprintf( __( 'View %1$s version %2$s details' ), $title, $v ) )
+			),
+			$v,
+			wp_nonce_url( self_admin_url( 'update.php?action=upgrade-plugin&plugin=' ) . $file, 'upgrade-plugin_' . $file ),
+			sprintf( 'class="update-link" aria-label="%s"',
+				esc_attr( sprintf( __( 'Update %s now' ), $title ) )
+			)
+		);
+
+		return $msg ;
 	}
 
 	/**

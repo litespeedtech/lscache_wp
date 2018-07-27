@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-class LiteSpeed_Cache_API
+class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 {
 	const VERSION =	LiteSpeed_Cache::PLUGIN_VERSION ;
 
@@ -36,10 +36,6 @@ class LiteSpeed_Cache_API
 	const PARAM_NAME =				LiteSpeed_Cache_ESI::PARAM_NAME ;
 	const WIDGET_OPID_ESIENABLE =	LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
 	const WIDGET_OPID_TTL =			LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ;
-
-	const VAL_OFF	= LiteSpeed_Cache_Config::VAL_OFF ;
-	const VAL_ON	= LiteSpeed_Cache_Config::VAL_ON ;
-	const VAL_ON2	= LiteSpeed_Cache_Config::VAL_ON2 ;
 
 	/**
 	 * Start a to-be-removed html wrapper
@@ -159,7 +155,7 @@ class LiteSpeed_Cache_API
 	 */
 	public static function set_use_frontpage_ttl()
 	{
-		LiteSpeed_Cache_Control::set_custom_ttl(self::config(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL)) ;
+		LiteSpeed_Cache_Control::set_custom_ttl( self::config( self::OPID_FRONT_PAGE_TTL ) ) ;
 	}
 
 	/**

@@ -112,6 +112,14 @@ class LiteSpeed_Cache_CSS
 		if ( file_exists( LSCWP_CONTENT_DIR . '/cache/ccss' ) ) {
 			Litespeed_File::rrmdir( LSCWP_CONTENT_DIR . '/cache/ccss' ) ;
 		}
+
+		// Clear CCSS in queue too
+		$req_summary = self::get_summary() ;
+		$req_summary[ 'queue' ] = array() ;
+		$req_summary[ 'curr_request' ] = 0 ;
+		$this->_save_summary( $req_summary ) ;
+
+		LiteSpeed_Cache_Log::debug2( '[CSS] Cleared ccss queue' ) ;
 	}
 
 	/**

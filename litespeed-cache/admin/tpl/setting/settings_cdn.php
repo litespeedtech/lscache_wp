@@ -38,7 +38,7 @@ if ( ! $cdn_mapping ) {
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'CDN Mapping', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'CDN Mapping', 'litespeed-cache' ) ; ?></th>
 		<td>
 		<?php foreach ( $cdn_mapping as $v ) : ?>
 
@@ -123,7 +123,7 @@ if ( ! $cdn_mapping ) {
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Original URLs', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Original URLs', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_ORI, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
@@ -135,7 +135,7 @@ if ( ! $cdn_mapping ) {
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Included Directories', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Included Directories', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ; ?>
 			<?php $this->build_textarea2( $id, 40 ) ; ?>
@@ -148,7 +148,7 @@ if ( ! $cdn_mapping ) {
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Exclude Path', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Exclude Path', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ; ?>
 			<?php $this->build_textarea( $id ) ; ?>

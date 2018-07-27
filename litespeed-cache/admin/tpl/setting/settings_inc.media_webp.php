@@ -3,7 +3,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 ?>
 	<tr>
-		<th><?php echo __( 'Image WebP Replacement', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Image WebP Replacement', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE ) ; ?>
 			<div class="litespeed-desc">
@@ -15,4 +15,3 @@ if ( ! defined( 'WPINC' ) ) die ;
 			</div>
 		</td>
 	</tr>
-

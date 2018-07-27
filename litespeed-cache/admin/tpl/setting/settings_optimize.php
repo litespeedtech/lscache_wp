@@ -145,7 +145,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Generate Critical CSS', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Generate Critical CSS', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ; ?>
 			<div class="litespeed-desc">
@@ -156,7 +156,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Generate Critical CSS In Background', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Generate Critical CSS In Background', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ; ?>
 			<div class="litespeed-desc">
@@ -192,7 +192,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Inline CSS Async Lib', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Inline CSS Async Lib', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE ) ; ?>
 			<div class="litespeed-desc">

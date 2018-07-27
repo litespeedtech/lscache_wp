@@ -18,7 +18,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr <?php echo $_hide_in_basic_mode ; ?>>
-		<th><?php echo __( 'Browser Cache TTL', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Browser Cache TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ; ?>
 			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>

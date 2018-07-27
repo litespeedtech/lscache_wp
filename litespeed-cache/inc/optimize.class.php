@@ -862,7 +862,9 @@ class LiteSpeed_Cache_Optimize
 		// Drop query strings
 		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
 
-		$hash = md5( serialize( $src ) ) ;
+		$purge_timestamp = get_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS ) ?: '' ;
+
+		$hash = md5( serialize( $src ) . $purge_timestamp ) ;
 
 		$short = substr( $hash, -5 ) ;
 
