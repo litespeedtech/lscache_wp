@@ -106,7 +106,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 							<?php if ( ! empty( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ] ) ) : ?>
 							<p>
-								<?php echo __('Images failed to optimize', 'litespeed-cache') ; ?>:
+								<?php echo __('Images previously optimized', 'litespeed-cache') ; ?>:
 								<code>
 									<?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ] ) ; ?>
 									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ], 'image' ) ; ?>)
