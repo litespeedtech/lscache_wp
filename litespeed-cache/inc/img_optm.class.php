@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6
 	 * @access private
 	 */
-	private function _request_optm()
+	private function _request_optm( $silence_notice = false )
 	{
 		global $wpdb ;
 
@@ -144,8 +144,10 @@ class LiteSpeed_Cache_Img_Optm
 		$img_set = array() ;
 		$list = $wpdb->get_results( $q ) ;
 		if ( ! $list ) {
-			$msg = __( 'No image found.', 'litespeed-cache' ) ;
-			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			if ( ! $silence_notice ) {
+				$msg = __( 'No image found.', 'litespeed-cache' ) ;
+				LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+			}
 
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: no image found' ) ;
 			return ;
@@ -1055,7 +1057,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// No need to check last time request interval for now
 
-		$instance->_request_optm() ;
+		$instance->_request_optm( 'from cron' ) ;
 	}
 
 	/**

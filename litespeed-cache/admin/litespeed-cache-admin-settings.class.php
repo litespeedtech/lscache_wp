@@ -899,6 +899,9 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Remove Object Cache
 		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ] ) {
+			// Do a purge all (This is before oc file removal, can purge oc too)
+			LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
+
 			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
 			LiteSpeed_Cache_Object::get_instance()->del_file() ;
 
