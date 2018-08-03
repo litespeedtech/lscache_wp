@@ -1,6 +1,6 @@
 === LiteSpeed Cache  ===
 Contributors: LiteSpeedTech
-Tags: cache, caching, litespeed, optimize, http2, smush, compress, tinypng, object cache, redis, memcached, database cleaner
+Tags: cache, optimizer, speed, performance, pagespeed, image optimize, caching, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.7
 Stable tag: 2.4.1
