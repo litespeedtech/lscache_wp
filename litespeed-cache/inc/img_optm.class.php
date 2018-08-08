@@ -25,6 +25,7 @@ class LiteSpeed_Cache_Img_Optm
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
 	const TYPE_CALC_BKUP = 'calc_bkup' ;
+	const TYPE_RESET_ROW = 'reset_row' ;
 	const TYPE_RM_BKUP = 'rm_bkup' ;
 
 	const ITEM_IMG_OPTM_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
@@ -1817,6 +1818,58 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
+	 * Delete one optm data and recover original file
+	 *
+	 * @since 2.4.2
+	 * @access private
+	 */
+	private function _reset_row()
+	{
+		if ( empty( $_GET[ 'id' ] ) ) {
+			return ;
+		}
+
+		$pid = $_GET[ 'id' ] ;
+
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row [pid] ' . $pid ) ;
+
+		global $wpdb ;
+		$q = "SELECT * FROM $this->_table_img_optm WHERE post_id = %d" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $pid ) ) ) ;
+
+		foreach ( $list as $v ) {
+			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
+
+			file_exists( $local_file . '.webp' ) && unlink( $local_file . '.webp' ) ;
+			file_exists( $local_file . '.optm.webp' ) && unlink( $local_file . '.optm.webp' ) ;
+
+			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$bk_file = $local_filename . '.bk.' . $extension ;
+			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
+
+			if ( file_exists( $bk_file ) ) {
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file ) ;
+				unlink( $local_file ) ;
+				rename( $bk_file, $local_file ) ;
+			}
+			elseif ( file_exists( $bk_optm_file ) ) {
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file ) ;
+				unlink( $bk_optm_file ) ;
+			}
+		}
+
+		$q = "DELETE FROM $this->_table_img_optm WHERE post_id = %d" ;
+		$wpdb->query( $wpdb->prepare( $q, $pid ) ) ;
+
+		delete_post_meta( $pid, self::DB_IMG_OPTIMIZE_SIZE ) ;
+
+		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' ) ;
+
+		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
+	}
+
+	/**
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.0
@@ -1829,6 +1882,10 @@ class LiteSpeed_Cache_Img_Optm
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
+			case self::TYPE_RESET_ROW :
+				$instance->_reset_row() ;
+				break ;
+
 			case self::TYPE_CALC_BKUP :
 				$instance->_calc_bkup() ;
 				break ;
