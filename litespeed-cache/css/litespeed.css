@@ -2239,3 +2239,14 @@ input.litespeed-input-warning {
 	background: #FFF5E6;
 	box-shadow: 0 0 10px 1px #FF8C00;
 }
+.litespeed-media-p div>svg circle.litespeed-pie_bg {
+	stroke: #ecf2f9;
+}
+.litespeed-media-p div>svg circle.litespeed-pie_circle {
+	stroke: #9fbfdf;
+}
+.litespeed-media-p div>svg {
+	fill: #538cc6;
+	background: rgba(236,242,249,0.1);
+	border-radius: 50%;
+}

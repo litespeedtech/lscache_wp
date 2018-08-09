@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, wp-cache, litespeed, super cache, http2, total cache, optimize, object cache, redis, memcached, lazy load, database cleaner
 Requires at least: 4.0
-Tested up to: 4.9.7
-Stable tag: 2.4.1
+Tested up to: 4.9.8
+Stable tag: 2.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -266,6 +266,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.4.2 - Aug 15 2018 =
+* [IMPROVEMENT] <strong>Media</strong> Delete optimized WebP/Original image by item in Media Library. (@redgoodapple)
+* [UPDATE] <strong>Critical CSS</strong> CCSS server IP changed.
 
 = 2.4.1 - Jul 19 2018 =
 * [NEW FEATURE] <strong>Media</strong> Auto Level Up. Auto refill credit.
