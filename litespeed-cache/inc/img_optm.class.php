@@ -668,7 +668,7 @@ class LiteSpeed_Cache_Img_Optm
 		// Check data format
 		if ( empty( $json[ 'pids' ] ) || ! is_array( $json[ 'pids' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to parse data from LiteSpeed IAPI server ', $json[ 'pids' ] ) ;
-			$msg = sprintf( __( 'Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache' ), $json[ 'pids' ] ) ;
+			$msg = sprintf( __( 'Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache' ), var_export( $json[ 'pids' ], true ) ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return null ;
 		}
