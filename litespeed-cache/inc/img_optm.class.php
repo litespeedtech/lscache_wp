@@ -694,31 +694,177 @@ class LiteSpeed_Cache_Img_Optm
 
 		$pids = array_keys( $notified_data ) ;
 
-		$q = "SELECT * FROM $this->_table_img_optm WHERE post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%d' ) ) . " ) AND optm_status != %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( $pids, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ) ) ;
+		$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
+				FROM $this->_table_img_optm a
+				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
+				WHERE a.optm_status != %s AND a.post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%d' ) ) . " )" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_PULLED ), $pids ) ) ) ;
 
 		$need_pull = false ;
 		$last_log_pid = 0 ;
+		$postmeta_info = array() ;
+		$child_postmeta_info = array() ;
 
 		foreach ( $list as $v ) {
-			if ( ! in_array( $v->src_md5, $notified_data[ $v->post_id ] ) ) {
+			if ( ! array_key_exists( $v->src_md5, $notified_data[ $v->post_id ] ) ) {
 				// This image is not in notifcation
 				continue ;
 			}
 
-			// Save data
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, server = %s WHERE id = %d" ;
-			$wpdb->query( $wpdb->prepare( $q, array( $status, $server, $v->id ) ) ) ;
+			$json = $notified_data[ $v->post_id ][ $v->src_md5 ] ;
 
+			$server_info = array(
+				'server'	=> $server,
+			) ;
+
+			// Only need to update meta_info for pull notification, for other notifications, no need to modify meta_info
+			if ( ! empty( $json[ 'ori' ] ) || ! empty( $json[ 'webp' ] ) ) {
+				// Save server side ID to send taken notification after pulled
+				$server_info[ 'id' ] = $json[ 'id' ] ;
+
+				// Default optm info array
+				if ( empty( $postmeta_info[ $v->post_id ] ) ) {
+					$postmeta_info[ $v->post_id ] =  array(
+						'meta_id'	=> $v->b_meta_id,
+						'meta_info'	=> array(
+							'ori_total' => 0,
+							'ori_saved' => 0,
+							'webp_total' => 0,
+							'webp_saved' => 0,
+						),
+					) ;
+					// Init optm_info for the first one
+					if ( ! empty( $v->b_meta_id ) ) {
+						foreach ( unserialize( $v->b_optm_info ) as $k2 => $v2 ) {
+							$postmeta_info[ $v->post_id ][ 'meta_info' ][ $k2 ] += $v2 ;
+						}
+					}
+				}
+
+			}
+
+			$target_saved = 0 ;
+			if ( ! empty( $json[ 'ori' ] ) ) {
+				$server_info[ 'ori_md5' ] = $json[ 'ori_md5' ] ;
+				$server_info[ 'ori' ] = $json[ 'ori' ] ;
+
+				$target_saved = $json[ 'ori_reduced' ] ;
+
+				// Append meta info
+				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'ori_total' ] += $json[ 'src_size' ] ;
+				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'ori_saved' ] += $json[ 'ori_reduced' ] ;
+
+			}
+
+			$webp_saved = 0 ;
+			if ( ! empty( $json[ 'webp' ] ) ) {
+				$server_info[ 'webp_md5' ] = $json[ 'webp_md5' ] ;
+				$server_info[ 'webp' ] = $json[ 'webp' ] ;
+
+				$webp_saved = $json[ 'webp_reduced' ] ;
+
+				// Append meta info
+				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'webp_total' ] += $json[ 'src_size' ] ;
+				$postmeta_info[ $v->post_id ][ 'meta_info' ][ 'webp_saved' ] += $json[ 'webp_reduced' ] ;
+			}
+
+			// Update status and data
+			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_saved = %d, webp_saved = %d, server_info = %s WHERE id = %d " ;
+			$wpdb->query( $wpdb->prepare( $q, array( $status, $target_saved, $webp_saved, serialize( $server_info ), $v->id ) ) ) ;
+
+			// Update child images ( same md5 files )
+			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_saved = %d, webp_saved = %d WHERE root_id = %d " ;
+			$child_count = $wpdb->query( $wpdb->prepare( $q, array( $status, $target_saved, $webp_saved, $v->id ) ) ) ;
+
+			// Group child meta_info for later update
+			if ( ! empty( $json[ 'ori' ] ) || ! empty( $json[ 'webp' ] ) ) {
+				if ( $child_count ) {
+					$child_postmeta_info[ $v->id ] = $postmeta_info[ $v->post_id ][ 'meta_info' ] ;
+				}
+			}
+
+			// write log
 			$pid_log = $last_log_pid == $v->post_id ? '.' : $v->post_id ;
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify_img [status] ' . $status . " \t\t[pid] " . $pid_log . " \t\t[id] " . $v->id ) ;
 			$last_log_pid = $v->post_id ;
 
+			// set need_pull tag
 			if ( $status == self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
 				$need_pull = true ;
 			}
+
 		}
 
+		/**
+		 * Update size saved info
+		 * @since  1.6.5
+		 */
+		if ( $postmeta_info ) {
+			foreach ( $postmeta_info as $post_id => $optm_arr ) {
+				$optm_info = serialize( $optm_arr[ 'meta_info' ] ) ;
+
+				if ( ! empty( $optm_arr[ 'meta_id' ] ) ) {
+					$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d " ;
+					$wpdb->query( $wpdb->prepare( $q, array( $optm_info, $optm_arr[ 'meta_id' ] ) ) ) ;
+				}
+				else {
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] New size info [pid] ' . $post_id ) ;
+					$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )" ;
+					$wpdb->query( $wpdb->prepare( $q, array( $post_id, self::DB_IMG_OPTIMIZE_SIZE, $optm_info ) ) ) ;
+				}
+			}
+		}
+
+		// Update child postmeta data based on root_id
+		if ( $child_postmeta_info ) {
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] Proceed child images [total] ' . count( $child_postmeta_info ) ) ;
+
+			$root_id_list = array_keys( $child_postmeta_info ) ;
+
+			$q = "SELECT a.*, b.meta_id as b_meta_id
+				FROM $this->_table_img_optm a
+				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
+				WHERE a.root_id IN ( " . implode( ',', array_fill( 0, count( $root_id_list ), '%d' ) ) . " ) GROUP BY a.post_id" ;
+
+			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, $root_id_list ) ) ) ;
+
+			$pids_to_update = array() ;
+			$pids_data_to_insert = array() ;
+			foreach ( $tmp as $v ) {
+				$optm_info = $child_postmeta_info[ $v->root_id ] ;
+
+				if ( $v->b_meta_id ) {
+					$pids_to_update[] = $v->post_id ;
+				}
+				else {
+					$pids_data_to_insert[] = $v->post_id ;
+					$pids_data_to_insert[] = self::DB_IMG_OPTIMIZE_SIZE ;
+					$pids_data_to_insert[] = $optm_info ;
+				}
+			}
+
+			// Update these size_info
+			if ( $pids_to_update ) {
+				$pids_to_update = array_unique( $pids_to_update ) ;
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] Update child group size_info [total] ' . count( $pids_to_update ) ) ;
+
+				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids_to_update ), '%d' ) ) . " )" ;
+				$wpdb->query( $wpdb->prepare( $q, array_merge( array( $optm_info, self::DB_IMG_OPTIMIZE_SIZE ), $pids_to_update ) ) ) ;
+			}
+
+			// Insert these size_info
+			if ( $pids_data_to_insert ) {
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] Insert child group size_info [total] ' . ( count( $pids_data_to_insert ) / 3 ) ) ;
+
+				$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
+				// Add placeholder
+				$q .= $this->_chunk_placeholder( $pids_data_to_insert, 3 ) ;
+				$wpdb->query( $wpdb->prepare( $q, $pids_data_to_insert ) ) ;
+			}
+
+		}
+
+		// Mark need_pull tag for cron
 		if ( $need_pull ) {
 			update_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 		}
@@ -727,6 +873,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		echo json_encode( array( 'count' => count( $notified_data ) ) ) ;
 		exit() ;
+
 	}
 
 	/**
@@ -750,8 +897,6 @@ class LiteSpeed_Cache_Img_Optm
 
 		$_allowed_status = array(
 			self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED,
-			// self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
-			// self::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM,
 			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
 		) ;
 
@@ -811,8 +956,10 @@ class LiteSpeed_Cache_Img_Optm
 		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP ) ;
 		$optm_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ;
 
-		// pull 1min images each time
+		// pull 1 min images each time
 		$end_time = time() + ( $manual ? 120 : 60 ) ;
+
+		$server_list = array() ;
 
 		set_time_limit( $end_time + 20 ) ;
 		while ( time() < $end_time ) {
@@ -828,49 +975,57 @@ class LiteSpeed_Cache_Img_Optm
 			 */
 			$this->_update_cron_running() ;
 
-			// Default optm info array
-			$optm_info = array(
-				'ori_total' => 0,
-				'ori_saved' => 0,
-				'webp_total' => 0,
-				'webp_saved' => 0,
-			) ;
-			if ( ! empty( $row_img->b_meta_id ) ) {
-				$optm_info = array_merge( $optm_info, unserialize( $row_img->b_optm_info ) ) ;
-			}
+			/**
+			 * If no server_info, will fail to pull
+			 * This is only for v2.4.2- data
+			 * @see  https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade
+			 */
+			try{
+				if ( ! $row_img->server_info ) {
+					throw new Exception( 'No server info in this notification' ) ;
+				}
 
-			// send fetch request
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] Connecting IAPI server for [pid] ' . $row_img->post_id . ' [src_md5]' . $row_img->src_md5 ) ;
-			$server = $row_img->server ;
-			$data = array(
-				'pid' => $row_img->post_id,
-				'src_md5' => $row_img->src_md5,
-			) ;
-			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server, true ) ;
+				$server_info = unserialize( $row_img->server_info ) ;
+				$server = $server_info[ 'server' ] ;
 
-			// Check if data interrupt or not
-			if ( empty( $json[ 'ok' ] ) ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: ', $json ) ;
+			} catch( \Exception $ex ) {
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to unserialize server_info.' ) ;
+
+				$msg = sprintf(
+					__( 'LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend the pull notification this one time only. After that, the process will be automated.', 'litespeed-cache' ),
+					'v2.4.2',
+					LiteSpeed_Cache_GUI::img_optm_clean_up_unfinished()
+				) ;
+
+				$msg .= LiteSpeed_Cache_Doc::learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade' ) ;
+
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 				return ;
 			}
 
-			// Recover credit
-			if ( $json[ 'credit' ] ) {
-				$this->_update_credit( $json[ 'credit' ] ) ;
-			}
+
+			// send fetch request
+			// LiteSpeed_Cache_Log::debug( '[Img_Optm] Connecting IAPI server for [pid] ' . $row_img->post_id . ' [src_md5]' . $row_img->src_md5 ) ;
+			// $json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server, true ) ;
+
+			// Check if data interrupt or not
+			// if ( empty( $json[ 'ok' ] ) ) {
+			// 	LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: ', $json ) ;
+			// 	return ;
+			// }
 
 			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $row_img->src ;
 
 			// Save ori optm image
 			$target_size = 0 ;
-			$target_saved = 0 ;
-			if ( ! empty( $json[ 'ori' ] ) ) {
+
+			if ( ! empty( $server_info[ 'ori' ] ) ) {
 				/**
 				 * Use wp orignal get func to avoid allow_url_open off issue
 				 * @since  1.6.5
 				 */
-				// Fetch
-				$response = wp_remote_get( $json[ 'ori' ], array( 'timeout' => 15 ) ) ;
+				$response = wp_remote_get( $server_info[ 'ori' ], array( 'timeout' => 15 ) ) ;
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
 					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
@@ -879,8 +1034,8 @@ class LiteSpeed_Cache_Img_Optm
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] ) ;
 
-				if ( ! file_exists( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $json[ 'ori_md5' ] ) {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $json[ 'ori_md5' ] ) ;
+				if ( ! file_exists( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] ) ;
 
 					// update status to failed
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
@@ -890,7 +1045,7 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
 					// Notify server to update status
-					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server, true ) ;
+					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server_info[ 'server' ], true ) ;
 
 					return ; // exit from running pull process
 				}
@@ -908,18 +1063,16 @@ class LiteSpeed_Cache_Img_Optm
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img: ' . $local_file ) ;
 
-				$optm_info[ 'ori_total' ] += $json[ 'src_size' ] ;
-				$optm_info[ 'ori_saved' ] += $json[ 'ori_reduced' ] ;
 				$target_size = filesize( $local_file ) ;
-				$target_saved = $json[ 'ori_reduced' ] ;
 			}
 
 			// Save webp image
 			$webp_size = 0 ;
-			$webp_saved = 0 ;
-			if ( ! empty( $json[ 'webp' ] ) ) {
+
+			if ( ! empty( $server_info[ 'webp' ] ) ) {
+
 				// Fetch
-				$response = wp_remote_get( $json[ 'webp' ], array( 'timeout' => 15 ) ) ;
+				$response = wp_remote_get( $server_info[ 'webp' ], array( 'timeout' => 15 ) ) ;
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
 					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull webp image: ' . $error_message ) ;
@@ -928,8 +1081,8 @@ class LiteSpeed_Cache_Img_Optm
 
 				file_put_contents( $local_file . '.webp', $response[ 'body' ] ) ;
 
-				if ( ! file_exists( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $json[ 'webp_md5' ] ) {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $json[ 'webp_md5' ] ) ;
+				if ( ! file_exists( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] ) ;
 
 					// update status to failed
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d " ;
@@ -939,86 +1092,43 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
 					// Notify server to update status
-					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $data, $server, true ) ;
+					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server_info[ 'server' ], true ) ;
 
 					return ; // exit from running pull process
 				}
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
 
-				$optm_info[ 'webp_total' ] += $json[ 'src_size' ] ;
-				$optm_info[ 'webp_saved' ] += $json[ 'webp_reduced' ] ;
 				$webp_size = filesize( $local_file . '.webp' ) ;
-				$webp_saved = $json[ 'webp_reduced' ] ;
 			}
 
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id ) ;
 
 			// Update pulled status
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, target_saved = %d, webp_filesize = %d, webp_saved = %d WHERE id = %d " ;
-			$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $target_saved, $webp_size, $webp_saved, $row_img->id ) ) ) ;
+			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, webp_filesize = %d WHERE id = %d " ;
+			$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) ) ;
 
 			// Update child images ( same md5 files )
-			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, target_saved = %d, webp_filesize = %d, webp_saved = %d WHERE root_id = %d " ;
-			$child_count = $wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $target_saved, $webp_size, $webp_saved, $row_img->id ) ) ) ;
+			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_filesize = %d, webp_filesize = %d WHERE root_id = %d " ;
+			$child_count = $wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) ) ;
 
-			/**
-			 * Update size saved info
-			 * @since  1.6.5
-			 */
-			$optm_info = serialize( $optm_info ) ;
-			if ( ! empty( $row_img->b_meta_id ) ) {
-				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d " ;
-				$wpdb->query( $wpdb->prepare( $q, array( $optm_info, $row_img->b_meta_id ) ) ) ;
+			// Save server_list to notify taken
+			if ( ! is_array( $server_list[ $server_info[ 'server' ] ] ) ) {
+				$server_list[ $server_info[ 'server' ] ] = array() ;
 			}
-			else {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] New size info [pid] ' . $row_img->post_id ) ;
-				$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES ( %d, %s, %s )" ;
-				$wpdb->query( $wpdb->prepare( $q, array( $row_img->post_id, self::DB_IMG_OPTIMIZE_SIZE, $optm_info ) ) ) ;
-			}
+			$server_list[ $server_info[ 'server' ] ][] = $server_info[ 'id' ] ;
 
-			// Update size saved info of child images
-			if ( $child_count ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Proceed child images [total] ' . $child_count ) ;
+		}
 
-				$q = "SELECT a.*, b.meta_id as b_meta_id
-					FROM $this->_table_img_optm a
-					LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-					WHERE a.root_id = %d GROUP BY a.post_id" ;
-				$pids = array() ;
-				$tmp = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, $row_img->id ) ) ) ;
-				$pids_to_update = array() ;
-				$pids_data_to_insert = array() ;
-				foreach ( $tmp as $v ) {
-					if ( $v->b_meta_id ) {
-						$pids_to_update[] = $v->post_id ;
-					}
-					else {
-						$pids_data_to_insert[] = $v->post_id ;
-						$pids_data_to_insert[] = self::DB_IMG_OPTIMIZE_SIZE ;
-						$pids_data_to_insert[] = $optm_info ;
-					}
-				}
+		// Notify IAPI images taken
+		foreach ( $server_list as $server => $img_list ) {
+			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_IMG_TAKEN, $img_list, $server, true ) ;
+		}
 
-				// Update these size_info
-				if ( $pids_to_update ) {
-					$pids_to_update = array_unique( $pids_to_update ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Update child group size_info [total] ' . count( $pids_to_update ) ) ;
-
-					$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids_to_update ), '%d' ) ) . " )" ;
-					$wpdb->query( $wpdb->prepare( $q, array_merge( array( $optm_info, self::DB_IMG_OPTIMIZE_SIZE ), $pids_to_update ) ) ) ;
-				}
-
-				// Insert these size_info
-				if ( $pids_data_to_insert ) {
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Insert child group size_info [total] ' . ( count( $pids_data_to_insert ) / 3 ) ) ;
-
-					$q = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) VALUES " ;
-					// Add placeholder
-					$q .= $this->_chunk_placeholder( $pids_data_to_insert, 3 ) ;
-					$wpdb->query( $wpdb->prepare( $q, $pids_data_to_insert ) ) ;
-				}
-			}
+		// use latest credit from last server response
+		// Recover credit
+		if ( $json[ 'credit' ] ) {
+			$this->_update_credit( $json[ 'credit' ] ) ;
 		}
 
 		// Try level up

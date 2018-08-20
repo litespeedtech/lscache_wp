@@ -167,10 +167,7 @@ if ( ! defined( 'WPINC' ) ) {
 					</div>
 
 					<div class="litespeed-width-1-2">
-						<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTM_DESTROY_UNFINISHED ) ; ?>" class="litespeed-btn-warning" title="<?php echo __( 'Remove all previous unfinished image optimization requests.', 'litespeed-cache' ) ; ?>">
-							<span class="dashicons dashicons-editor-removeformatting"></span>&nbsp;<?php echo __( 'Clean Up Unfinished Data', 'litespeed-cache' ) ; ?>
-						</a>
-
+						<?php echo LiteSpeed_Cache_GUI::img_optm_clean_up_unfinished() ; ?>
 					</div>
 
 				</div>
