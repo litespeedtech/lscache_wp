@@ -1573,7 +1573,7 @@ class LiteSpeed_Cache_Img_Optm
 			if ( empty( $summary[ 'credit_recovered' ] ) ) {
 				$summary[ 'credit_recovered' ] = 0 ;
 			}
-			$summary[ 'credit_recovered' ] ++ ;
+			$summary[ 'credit_recovered' ] += $credit - $summary[ 'credit' ] ;
 		}
 
 		$summary[ 'credit' ] = $credit ;
