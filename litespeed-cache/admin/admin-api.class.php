@@ -330,6 +330,11 @@ class LiteSpeed_Cache_Admin_API
 			return null ;
 		}
 
+		if ( ! empty( $json[ '_503' ] ) ) {
+			LiteSpeed_Cache_Log::debug( '[IAPI] service 503 unavailable temporarily. ' . $json[ '_503' ] ) ;
+			return null ;
+		}
+
 		if ( ! empty( $json[ '_info' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] _info: ' . $json[ '_info' ] ) ;
 			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_info' ] ;
