@@ -156,47 +156,74 @@ class LiteSpeed_Cache_Data
 		}
 
 		// Table version only exists after all old data migrated
+		// Last modified is v2.4.2
 		$ver = get_option( $this->_tb_img_optm ) ;
-		if ( $ver && LiteSpeed_Cache_API::v( $ver ) ) {
+		if ( $ver && version_compare( $ver, '2.4.2', '>=' ) ) {
 			return ;
 		}
 
-		// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
-		$mids_to_del = array() ;
-		$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
-		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array( LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_DATA ) ) ) ;
-		if ( $meta_value_list ) {
-			$max_k = count( $meta_value_list ) - 1 ;
-			foreach ( $meta_value_list as $k => $v ) {
-				$md52src_list = unserialize( $v->meta_value ) ;
-				foreach ( $md52src_list as $md5 => $v2 ) {
-					$f = array(
-						'post_id'	=> $v->post_id,
-						'optm_status'		=> $v2[ 1 ],
-						'src'		=> $v2[ 0 ],
-						'srcpath_md5'		=> md5( $v2[ 0 ] ),
-						'src_md5'		=> $md5,
-						'server'		=> $v2[ 2 ],
-					) ;
-					$wpdb->replace( $this->_tb_img_optm, $f ) ;
-				}
-				$mids_to_del[] = $v->meta_id ;
+		/**
+		 * Convert old data from postmeta to img_optm table
+		 * @since  2.0
+		 */
+		if ( ! $ver || version_compare( $ver, '2.0', '<' ) ) {
+			// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
+			$mids_to_del = array() ;
+			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
+			$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array( LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_DATA ) ) ) ;
+			if ( $meta_value_list ) {
+				$max_k = count( $meta_value_list ) - 1 ;
+				foreach ( $meta_value_list as $k => $v ) {
+					$md52src_list = unserialize( $v->meta_value ) ;
+					foreach ( $md52src_list as $md5 => $v2 ) {
+						$f = array(
+							'post_id'	=> $v->post_id,
+							'optm_status'		=> $v2[ 1 ],
+							'src'		=> $v2[ 0 ],
+							'srcpath_md5'		=> md5( $v2[ 0 ] ),
+							'src_md5'		=> $md5,
+							'server'		=> $v2[ 2 ],
+						) ;
+						$wpdb->replace( $this->_tb_img_optm, $f ) ;
+					}
+					$mids_to_del[] = $v->meta_id ;
 
-				// Delete from postmeta
-				if ( count( $mids_to_del ) > 100 || $k == $max_k ) {
-					$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . " ) " ;
-					$wpdb->query( $wpdb->prepare( $q, $mids_to_del ) ) ;
+					// Delete from postmeta
+					if ( count( $mids_to_del ) > 100 || $k == $max_k ) {
+						$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . " ) " ;
+						$wpdb->query( $wpdb->prepare( $q, $mids_to_del ) ) ;
 
-					$mids_to_del = array() ;
+						$mids_to_del = array() ;
+					}
 				}
+
+				LiteSpeed_Cache_Log::debug( '[Data] img_optm inserted records: ' . $k ) ;
 			}
 
-			LiteSpeed_Cache_Log::debug( '[Data] img_optm inserted records: ' . $k ) ;
+			$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s" ;
+			$rows = $wpdb->query( $wpdb->prepare( $q, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS ) ) ;
+			LiteSpeed_Cache_Log::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
 		}
 
-		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s" ;
-		$rows = $wpdb->query( $wpdb->prepare( $q, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS ) ) ;
-		LiteSpeed_Cache_Log::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
+		/**
+		 * Add target_md5 field to table
+		 * @since  2.4.2
+		 */
+		if ( $ver && version_compare( $ver, '2.4.2', '<' ) && version_compare( $ver, '2.0', '>=' ) ) {// NOTE: For new users, need to bypass this section, thats why used the first cond
+			$sql = sprintf(
+				'ALTER TABLE `%1$s` ADD `server_info` text NOT NULL, DROP COLUMN `server`',
+				$this->_tb_img_optm
+			) ;
+
+			$res = $wpdb->query( $sql ) ;
+			if ( $res !== true ) {
+				LiteSpeed_Cache_Log::debug( '[Data] Warning: Alter table img_optm failed!', $sql ) ;
+			}
+			else {
+				LiteSpeed_Cache_Log::debug( '[Data] Successfully upgraded table img_optm.' ) ;
+			}
+
+		}
 
 		// Record tb version
 		update_option( $this->_tb_img_optm, LiteSpeed_Cache::PLUGIN_VERSION ) ;

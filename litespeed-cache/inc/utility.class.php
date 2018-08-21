@@ -348,7 +348,7 @@ class LiteSpeed_Cache_Utility
 	 * @param string $type The appending type to url
 	 * @return string The built url.
 	 */
-	public static function build_url( $action, $type = false, $is_ajax = false, $page = null )
+	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = null )
 	{
 		$prefix = '?' ;
 
@@ -400,7 +400,12 @@ class LiteSpeed_Cache_Utility
 			// Remove potential param `type` from url
 			$url = parse_url( htmlspecialchars_decode( $url ) ) ;
 			parse_str( $url[ 'query' ], $query ) ;
-			$url[ 'query' ] = http_build_query( array_merge( $query, LiteSpeed_Cache_Router::build_type( $type ) ) ) ;
+
+			$built_arr = array_merge( $query, LiteSpeed_Cache_Router::build_type( $type ) ) ;
+			if ( $append_arr ) {
+				$built_arr = array_merge( $built_arr, $append_arr ) ;
+			}
+			$url[ 'query' ] = http_build_query( $built_arr ) ;
 			self::compatibility() ;
 			$url = http_build_url( $url ) ;
 			$url = htmlspecialchars( $url ) ;

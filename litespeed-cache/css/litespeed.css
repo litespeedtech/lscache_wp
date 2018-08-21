@@ -35,7 +35,7 @@
 }
 
 .litespeed-warning {
-	color: #e59544!important;
+	color: #FF8C00!important;
 }
 
 .litespeed-danger {
@@ -44,6 +44,16 @@
 
 .litespeed-left10 {
 	margin-left: 10px;
+}
+
+.litespeed-right10 {
+	margin-right: 10px;
+}
+.litespeed-right20 {
+	margin-right: 20px;
+}
+.litespeed-right30 {
+	margin-right: 30px;
 }
 
 .litespeed-top10 {
@@ -598,7 +608,6 @@ h3 .litespeed-learn-more {
 
 .litespeed .litespeed-btn-tiny,
 .litespeed-wrap .litespeed-btn-tiny,
-.litespeed-wrap [class*="litespeed-btn-"].litespeed-btn-tiny,
 .litespeed-btn-tiny {
 	padding: 1px 8px;
 	font-size: 13px;
@@ -1457,8 +1466,7 @@ g.litespeed-pie_info .litespeed-pie-done {
 	margin-top: 10px;
 }
 
-.litespeed .litespeed-btn-danger[data-litespeed-cdn-mapping-del],
-.litespeed-wrap .litespeed-btn-danger[data-litespeed-cdn-mapping-del] {
+.litespeed-btn-danger[data-litespeed-cdn-mapping-del] {
 	border-radius: 13px;
 	margin: 0 10px 0 0;
 	position: absolute;
@@ -1883,8 +1891,28 @@ input.litespeed-input-warning {
 	color: #535342;
 }
 
+.litespeed-text-dimgray {
+ 	color: #666666;
+}
+
+.litespeed-text-whisper {
+ 	color: #E6E6E6;
+}
+
 .litespeed-text-malibu {
  	color: #5CBDDE;
+}
+
+.litespeed-text-morningglory {
+ 	color: #99CCCC;
+}
+
+.litespeed-text-fern {
+ 	color: #66CC66;
+}
+
+.litespeed-text-persiangreen {
+ 	color: #009999;
 }
 
 .litespeed-text-right {
@@ -2156,10 +2184,69 @@ input.litespeed-input-warning {
 	color: #7DE5E5;
 }
 
+.litespeed-dashicons-large {
+	font-size: 2em;
+}
+
+
 .litespeed-column-java p {
 	color: #FFFFFF;
 }
 
 .litespeed-body tbody > tr > th.litespeed-padding-left {
 	padding-left: 3em;
+}
+
+.litespeed-txt-small {
+	font-size: 12px;
+}
+
+.litespeed-txt-disabled .litespeed-text-dimgray{
+	color: #aaaaaa;
+}
+
+.litespeed-txt-disabled svg {
+	fill: #aaaaaa;
+}
+
+.litespeed-txt-disabled circle.litespeed-pie_circle {
+	stroke: #cccccc;
+}
+.litespeed-txt-disabled g.litespeed-pie_info  text {
+	color: #cccccc;
+}
+
+ a.litespeed-media-href svg:hover {
+	border-radius: 50%;
+	background: #F1FCFF;
+	fill:#5CCAD7;
+	box-shadow: 0 0 5px 1px #7DD5DF;
+	transition: all 0.2s ease-out;
+	transform: scale(1.05);
+}
+
+.litespeed-media-p a .dashicons-trash {
+	font-size: 2.25em;
+	vertical-align: middle;
+    display: inline;
+	border-radius: 50%;
+	line-height: 1.5em;
+}
+
+.litespeed-media-p a .dashicons-trash:hover {
+	transition: all .2s ease-out;
+	color: #FFA500 !important;
+	background: #FFF5E6;
+	box-shadow: 0 0 10px 1px #FF8C00;
+}
+.litespeed-media-p div>svg circle.litespeed-pie_bg {
+	stroke: #ecf2f9;
+}
+.litespeed-media-p div>svg circle.litespeed-pie_circle {
+	stroke: #9fbfdf;
+}
+.litespeed-media-p div>svg {
+	fill: #538cc6;
+	background: rgba(236,242,249,0.1);
+	border-radius: 50%;
 }

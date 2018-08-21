@@ -249,7 +249,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$instance = self::get_instance() ;
 		$list = $instance->get_item( $id ) ;
 
-		$list[] = $_SERVER[ 'HTTP_REFERER' ] ;
+		$list[] = $_SERVER[ 'HTTP_REFERER' ] . '$' ;
 		$list = LiteSpeed_Cache_Utility::sanitize_lines( $list, 'relative' ) ;
 
 		update_option( $id, $list ) ;

@@ -31,7 +31,8 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
-	const IAPI_ACTION_PULL_IMG = 'client_pull' ;
+	const IAPI_ACTION_PULL_IMG = 'client_pull' ; // Deprecated
+	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
 	const IAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
 	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
 	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
@@ -212,7 +213,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access public
 	 * @param  array $data
 	 */
-	public static function post( $action, $data = false, $server = false, $no_hash = false )
+	public static function post( $action, $data = false, $server = false, $no_hash = false, $silence_notice = false )
 	{
 		$instance = self::get_instance() ;
 
@@ -224,7 +225,7 @@ class LiteSpeed_Cache_Admin_API
 			$instance->_request_key() ;
 		}
 
-		return $instance->_post( $action, $data, $server, $no_hash ) ;
+		return $instance->_post( $action, $data, $server, $no_hash, $silence_notice ) ;
 	}
 
 	/**
@@ -278,7 +279,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @param  array $data
 	 */
-	private function _post( $action, $data = false, $server = false, $no_hash = false )
+	private function _post( $action, $data = false, $server = false, $no_hash = false, $silence_notice = false )
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
@@ -326,6 +327,16 @@ class LiteSpeed_Cache_Admin_API
 			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			return null ;
+		}
+
+		if ( ! empty( $json[ '_503' ] ) ) {
+			LiteSpeed_Cache_Log::debug( '[IAPI] service 503 unavailable temporarily. ' . $json[ '_503' ] ) ;
+			if ( ! $silence_notice ) {
+				$msg = __( 'We are working hard to improve your Image Optimization experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' ) ;
+				$msg .= ' ' . $json[ '_503' ] ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			}
 			return null ;
 		}
 

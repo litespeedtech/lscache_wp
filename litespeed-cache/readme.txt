@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: cache, optimizer, speed, performance, pagespeed, image optimize, caching, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 4.9.7
-Stable tag: 2.4.1
+Tested up to: 4.9.8
+Stable tag: 2.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -266,6 +266,12 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.4.2 - Aug 21 2018 =
+* [IAPI] <strong>Center Server IP Changed from 34.198.229.186 to 142.93.112.87</strong>.
+* [IMPROVEMENT] <strong>Media</strong> Delete optimized WebP/Original image by item in Media Library. (@redgoodapple)
+* [UPDATE] <strong>Critical CSS</strong> CCSS server IP changed.
+* [IAPI] IAPI v2.4.1.
 
 = 2.4.1 - Jul 19 2018 =
 * [NEW FEATURE] <strong>Media</strong> Auto Level Up. Auto refill credit.

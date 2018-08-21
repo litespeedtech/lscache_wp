@@ -19,7 +19,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 	private $_input ;
 	private $_options ;
-	private $_err ;
+	private $_err = array() ;
 
 	private $_max_int = 2147483647 ;
 
