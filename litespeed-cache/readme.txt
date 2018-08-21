@@ -268,10 +268,24 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.4.2 - Aug 21 2018 =
+* [IMPROVEMENT] <strong>Media</strong> Sped up Image Optimization process by replacing IAPI server pull communication.
+* [IMPROVEMENT] <strong>Media</strong> Ability to delete optimized WebP/original image by item in Media Library. (@redgoodapple)
+* [IMPROVEMENT] <strong>CSS Optimize</strong> Generate new optimized CSS name based on purge timestamp. Allows CSS cache to be cleared for visitors. (@bradbrownmagic)
+* [IMPROVEMENT] <strong>API</strong> added litespeed_img_optm_options_per_image. (@gintsg)
+* [UPDATE] Stopped showing "No Image Found" message when all images have finished optimization. (@knutsp)
+* [UPDATE] Improved a PHP warning when saving settings. (@sergialarconrecio)
+* [UPDATE] Changed backend adminbar icon default behavior from Purge All to Purge LSCache.
+* [UPDATE] Clearing CCSS cache will clear unfinished queue too.
+* [UPDATE] Added "$" exact match when adding URL by frontend adminbar dropdown menu, to avoid affecting any sub-URLs.
+* [UPDATE] Fixed IAPI error message showing array bug. (@thiomas)
+* [UPDATE] Debug Disable All will do a Purge All.
+* [UPDATE] <strong>Critical CSS server IP changed to 142.93.3.57</strong>.
+* [GUI] Showed plugin update link for IAPI version message.
+* [GUI] Bypassed null IAPI response message.
+* [GUI] Grouped related settings with indent.
+* [IAPI] Added 503 handler for IAPI response.
+* [IAPI] IAPI v2.4.2.
 * [IAPI] <strong>Center Server IP Changed from 34.198.229.186 to 142.93.112.87</strong>.
-* [IMPROVEMENT] <strong>Media</strong> Delete optimized WebP/Original image by item in Media Library. (@redgoodapple)
-* [UPDATE] <strong>Critical CSS</strong> CCSS server IP changed.
-* [IAPI] IAPI v2.4.1.
 
 = 2.4.1 - Jul 19 2018 =
 * [NEW FEATURE] <strong>Media</strong> Auto Level Up. Auto refill credit.
