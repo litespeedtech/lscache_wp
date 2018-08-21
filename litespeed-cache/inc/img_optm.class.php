@@ -232,7 +232,7 @@ class LiteSpeed_Cache_Img_Optm
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] prepared images to push: groups ' . $total_groups . ' images ' . $this->_img_total ) ;
 
 		// Push to LiteSpeed IAPI server
-		$json = $this->_push_img_in_queue_to_iapi() ;
+		$json = $this->_push_img_in_queue_to_iapi( $silence_notice ) ;
 		if ( $json === null ) {
 			return ;
 		}
@@ -639,7 +639,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _push_img_in_queue_to_iapi()
+	private function _push_img_in_queue_to_iapi( $silence_notice = false )
 	{
 		$data = array(
 			'list' 			=> $this->_img_in_queue,
@@ -650,7 +650,7 @@ class LiteSpeed_Cache_Img_Optm
 		) ;
 
 		// Push to LiteSpeed IAPI server
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ), false, false, $silence_notice ) ;
 
 		if ( $json === null ) {// admin_api will handle common err
 			return null ;

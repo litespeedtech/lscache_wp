@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access public
 	 * @param  array $data
 	 */
-	public static function post( $action, $data = false, $server = false, $no_hash = false )
+	public static function post( $action, $data = false, $server = false, $no_hash = false, $silence_notice = false )
 	{
 		$instance = self::get_instance() ;
 
@@ -225,7 +225,7 @@ class LiteSpeed_Cache_Admin_API
 			$instance->_request_key() ;
 		}
 
-		return $instance->_post( $action, $data, $server, $no_hash ) ;
+		return $instance->_post( $action, $data, $server, $no_hash, $silence_notice ) ;
 	}
 
 	/**
@@ -279,7 +279,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @param  array $data
 	 */
-	private function _post( $action, $data = false, $server = false, $no_hash = false )
+	private function _post( $action, $data = false, $server = false, $no_hash = false, $silence_notice = false )
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
@@ -332,6 +332,11 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( ! empty( $json[ '_503' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] service 503 unavailable temporarily. ' . $json[ '_503' ] ) ;
+			if ( ! $silence_notice ) {
+				$msg = __( 'We are working hard to improve your Image Optimization experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' ) ;
+				$msg .= ' ' . $json[ '_503' ] ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			}
 			return null ;
 		}
 
