@@ -67,6 +67,17 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
+	 * Check referer page to see if its from admin
+	 *
+	 * @since 2.4.2.1
+	 * @access public
+	 */
+	public static function from_admin()
+	{
+		return strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0 ;
+	}
+
+	/**
 	 * Check if it can use CDN replacement
 	 *
 	 * @since  1.2.3
@@ -77,8 +88,16 @@ class LiteSpeed_Cache_Router
 	{
 		$can = true ;
 
-		if ( is_admin() && ! self::is_ajax() ) {
-			$can = false ;
+		if ( is_admin() ) {
+			if ( ! self::is_ajax() ) {
+				LiteSpeed_Cache_Log::debug2( '[Router] CDN bypassed: is not ajax call' ) ;
+				$can = false ;
+			}
+
+			if ( self::from_admin() ) {
+				LiteSpeed_Cache_Log::debug2( '[Router] CDN bypassed: ajax call from admin' ) ;
+				$can = false ;
+			}
 		}
 
 		if ( is_feed() ) {
