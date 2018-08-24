@@ -149,12 +149,12 @@ class LiteSpeed_Cache_Admin_Display
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
 		if ( current_user_can($capability) ) {
 			// root menu
-			add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'lscache-dash') ;
+			add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'lscache-settings') ;
 
 			// sub menus
-			$this->add_submenu(__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage') ;
-
 			$this->add_submenu(__('Settings', 'litespeed-cache'), 'lscache-settings', 'show_menu_settings') ;
+
+			$this->add_submenu(__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage') ;
 
 			if ( ! is_multisite() || is_network_admin() ) {
 				$this->add_submenu(__('Edit .htaccess', 'litespeed-cache'), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess') ;
@@ -185,7 +185,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function add_submenu($menu_title, $menu_slug, $callback)
 	{
-		add_submenu_page('lscache-dash', $menu_title, $menu_title, 'manage_options', $menu_slug, array($this, $callback)) ;
+		add_submenu_page('lscache-settings', $menu_title, $menu_title, 'manage_options', $menu_slug, array($this, $callback)) ;
 	}
 
 	/**
