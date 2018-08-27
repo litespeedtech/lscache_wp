@@ -242,6 +242,7 @@ class LiteSpeed_Cache_Const
 			self::ITEM_ENV_REF,
 			self::ITEM_CACHE_DROP_QS,
 			self::ITEM_CDN_MAPPING,
+			self::ITEM_CDN_ORI_DIR,
 			self::ITEM_DNS_PREFETCH,
 			self::ITEM_CLOUDFLARE_STATUS,
 			self::ITEM_LOG_IGNORE_FILTERS,
@@ -254,6 +255,7 @@ class LiteSpeed_Cache_Const
 			self::ITEM_CACHE_URI_PRIV,
 			self::ITEM_OPTM_EXCLUDES,
 			self::ITEM_EXCLUDES_URI,
+			self::ITEM_MEDIA_WEBP_ATTRIBUTE,
 		) ;
 	}
 
