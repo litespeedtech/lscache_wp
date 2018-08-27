@@ -1932,21 +1932,25 @@ class LiteSpeed_Cache_Img_Optm
 	 * Delete one optm data and recover original file
 	 *
 	 * @since 2.4.2
-	 * @access private
+	 * @access public
 	 */
-	private function _reset_row()
+	public function reset_row( $post_id )
 	{
-		if ( empty( $_GET[ 'id' ] ) ) {
+		if ( ! $post_id ) {
 			return ;
 		}
 
-		$pid = $_GET[ 'id' ] ;
+		$size_meta = get_post_meta( $post_id, self::DB_IMG_OPTIMIZE_SIZE, true ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row [pid] ' . $pid ) ;
+		if ( ! $size_meta ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id ) ;
 
 		global $wpdb ;
 		$q = "SELECT * FROM $this->_table_img_optm WHERE post_id = %d" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $pid ) ) ) ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $post_id ) ) ) ;
 
 		foreach ( $list as $v ) {
 			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
@@ -1971,9 +1975,9 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		$q = "DELETE FROM $this->_table_img_optm WHERE post_id = %d" ;
-		$wpdb->query( $wpdb->prepare( $q, $pid ) ) ;
+		$wpdb->query( $wpdb->prepare( $q, $post_id ) ) ;
 
-		delete_post_meta( $pid, self::DB_IMG_OPTIMIZE_SIZE ) ;
+		delete_post_meta( $post_id, self::DB_IMG_OPTIMIZE_SIZE ) ;
 
 		$msg = __( 'Reset the optimized data successfully.', 'litespeed-cache' ) ;
 
@@ -1994,7 +1998,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		switch ( $type ) {
 			case self::TYPE_RESET_ROW :
-				$instance->_reset_row() ;
+				$instance->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false ) ;
 				break ;
 
 			case self::TYPE_CALC_BKUP :

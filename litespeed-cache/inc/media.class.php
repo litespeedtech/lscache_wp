@@ -103,7 +103,22 @@ class LiteSpeed_Cache_Media
 		if ( get_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ) {
 			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
 			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+
+			// Hook to attachment delete action
+			add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
 		}
+	}
+
+	/**
+	 * Media delete action hook
+	 *
+	 * @since 2.4.3
+	 * @access public
+	 */
+	public function delete_attachment( $post_id )
+	{
+		LiteSpeed_Cache_Log::debug( '[Media] delete_attachment [pid] ' . $post_id ) ;
+		LiteSpeed_Cache_Img_Optm::get_instance()->reset_row( $post_id ) ;
 	}
 
 	/**
