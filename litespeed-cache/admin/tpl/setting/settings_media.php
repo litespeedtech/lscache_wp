@@ -66,6 +66,18 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<tr>
+		<th><?php echo __( 'Inline Lazy Load Images Library', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZYJS_INLINE ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Include the lazy load image Javascript library inline.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#inline_lazy_load_images_library" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ; ?>
