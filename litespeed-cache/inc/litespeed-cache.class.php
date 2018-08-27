@@ -25,7 +25,7 @@ class LiteSpeed_Cache
 
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '2.4.2' ;
+	const PLUGIN_VERSION = '2.4.3' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 

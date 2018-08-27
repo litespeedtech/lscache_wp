@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -266,6 +266,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.4.3 - Aug 27 2018 =
+* [NEW] <strong>Media</strong>Ability to inline image lazyload JS library. (@Music47ell)
+* [IMPROVEMENT] <strong>Media</strong>Deleting images will now clear related optimization file & info too.
+* [IMPROVEMENT] <strong>Media</strong>Non-image postfix data will now be bypassed before sending image optimization request.
+* [BUGFIX] <strong>CDN</strong>CDN URL will no longer be replaced during admin ajax call. (@pankaj)
+* [BUGFIX] <strong>CLI</strong>WPCLI can now save options without incorrectly clearing textarea items. (@Shon)
+* [GUI] Moved Settings above Manage on the main menu.
 
 = 2.4.2 - Aug 21 2018 =
 * [IMPROVEMENT] <strong>Media</strong> Sped up Image Optimization process by replacing IAPI server pull communication.
