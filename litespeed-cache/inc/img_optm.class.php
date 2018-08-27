@@ -570,7 +570,8 @@ class LiteSpeed_Cache_Img_Optm
 
 		// check file exists or not
 		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $meta_value[ 'file' ] ;
-		if ( ! file_exists( $real_file ) ) {
+		$ext = pathinfo( $real_file, PATHINFO_EXTENSION ) ;
+		if ( ! file_exists( $real_file ) || ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ) ) ) {
 			$this->_missed_img_in_queue[] = array(
 				'pid'	=> $this->tmp_pid,
 				'src'	=> $meta_value[ 'file' ],
