@@ -1046,7 +1046,7 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
 					// Notify server to update status
-					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server_info[ 'server' ], true ) ;
+					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server, true ) ;
 
 					return ; // exit from running pull process
 				}
@@ -1093,7 +1093,7 @@ class LiteSpeed_Cache_Img_Optm
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
 					// Notify server to update status
-					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server_info[ 'server' ], true ) ;
+					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server, true ) ;
 
 					return ; // exit from running pull process
 				}
@@ -1114,10 +1114,10 @@ class LiteSpeed_Cache_Img_Optm
 			$child_count = $wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $webp_size, $row_img->id ) ) ) ;
 
 			// Save server_list to notify taken
-			if ( ! is_array( $server_list[ $server_info[ 'server' ] ] ) ) {
-				$server_list[ $server_info[ 'server' ] ] = array() ;
+			if ( empty( $server_list[ $server ] ) ) {
+				$server_list[ $server ] = array() ;
 			}
-			$server_list[ $server_info[ 'server' ] ][] = $server_info[ 'id' ] ;
+			$server_list[ $server ][] = $server_info[ 'id' ] ;
 
 		}
 
