@@ -445,18 +445,21 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$dkeys = array_keys($default_options) ;
 		$keys = array_keys($options) ;
 		$newkeys = array_diff($dkeys, $keys) ;
-		$log = '' ;//todo: useless
 		if ( ! empty($newkeys) ) {
 			foreach ( $newkeys as $newkey ) {
 				$options[$newkey] = $default_options[$newkey]  ;
-				$log .= ' Added ' . $newkey . ' = ' . $default_options[$newkey]  ;
+
+				$log = '[Added] ' . $newkey . ' = ' . $default_options[$newkey]  ;
+				LiteSpeed_Cache_Log::debug( "[Cfg] option_diff $log" ) ;
 			}
 		}
 		$retiredkeys = array_diff($keys, $dkeys)  ;
 		if ( ! empty($retiredkeys) ) {
 			foreach ( $retiredkeys as $retired ) {
 				unset($options[$retired])  ;
-				$log .= 'Removed ' . $retired  ;
+
+				$log = '[Removed] ' . $retired  ;
+				LiteSpeed_Cache_Log::debug( "[Cfg] option_diff $log" ) ;
 			}
 		}
 		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
@@ -515,10 +518,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		$this->options = self::option_diff( $default_options, $this->options ) ;
 
-		$res = $this->update_options() ;
+		$this->update_options() ;
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
-		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed = $res" ) ;
+
+		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed" ) ;
 
 		// Update img_optm table data for upgrading
 		LiteSpeed_Cache_Data::get_instance() ;
