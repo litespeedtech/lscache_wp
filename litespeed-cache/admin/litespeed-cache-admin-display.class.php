@@ -467,8 +467,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function add_notice($color, $msg)
 	{
-		// Bypass adding for CLI
-		if ( defined( 'LITESPEED_CLI' ) ) {
+		// Bypass adding for CLI or cron
+		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
 			return ;
 		}
 
