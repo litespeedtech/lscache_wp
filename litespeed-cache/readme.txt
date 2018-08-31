@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -267,12 +267,20 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.4.4 - Aug 31 2018 =
+* [NEW] <strong>CLI</strong> CLI can now support image optimization. (@Shon)
+* [IMPROVEMENT] <strong>GUI</strong> Cron/CLI will not create admin message anymore.
+* [UPDATE] <strong>Media</strong> Fixed a PHP notice that appeared when pulling optimized images.
+* [UPDATE] Fixed a PHP notice when detecting origin of ajax call. (@iosoft)
+* [DEBUG] Debug log can now log referer URL.
+* [DEBUG] Changes to options will now be logged.
+
 = 2.4.3 - Aug 27 2018 =
-* [NEW] <strong>Media</strong>Ability to inline image lazyload JS library. (@Music47ell)
-* [IMPROVEMENT] <strong>Media</strong>Deleting images will now clear related optimization file & info too.
-* [IMPROVEMENT] <strong>Media</strong>Non-image postfix data will now be bypassed before sending image optimization request.
-* [BUGFIX] <strong>CDN</strong>CDN URL will no longer be replaced during admin ajax call. (@pankaj)
-* [BUGFIX] <strong>CLI</strong>WPCLI can now save options without incorrectly clearing textarea items. (@Shon)
+* [NEW] <strong>Media</strong> Ability to inline image lazyload JS library. (@Music47ell)
+* [IMPROVEMENT] <strong>Media</strong> Deleting images will now clear related optimization file & info too.
+* [IMPROVEMENT] <strong>Media</strong> Non-image postfix data will now be bypassed before sending image optimization request.
+* [BUGFIX] <strong>CDN</strong> CDN URL will no longer be replaced during admin ajax call. (@pankaj)
+* [BUGFIX] <strong>CLI</strong> WPCLI can now save options without incorrectly clearing textarea items. (@Shon)
 * [GUI] Moved Settings above Manage on the main menu.
 
 = 2.4.2 - Aug 21 2018 =

@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.4.3\n"
+"Project-Id-Version: LiteSpeed Cache 2.4.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-08-27 18:37:30+00:00\n"
+"POT-Creation-Date: 2018-08-31 15:56:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,26 +20,30 @@ msgstr ""
 msgid "Reset IAPI key successfully."
 msgstr ""
 
-#: admin/admin-api.class.php:327
+#: admin/admin-api.class.php:324
+msgid "Failed to post via WordPress"
+msgstr ""
+
+#: admin/admin-api.class.php:332
 msgid "Failed to communicate with LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:336
+#: admin/admin-api.class.php:341
 msgid ""
 "We are working hard to improve your Image Optimization experience. The "
 "service will be unavailable while we work. We apologize for any "
 "inconvenience."
 msgstr ""
 
-#: admin/admin-api.class.php:345 admin/admin-api.class.php:353
+#: admin/admin-api.class.php:350 admin/admin-api.class.php:358
 msgid "Message from LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:361
+#: admin/admin-api.class.php:366
 msgid "Good news from LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:370
+#: admin/admin-api.class.php:375
 msgid "%s plugin version %s required for this action."
 msgstr ""
 
@@ -86,8 +90,8 @@ msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:809
-#: admin/litespeed-cache-admin-display.class.php:894
+#: admin/litespeed-cache-admin-display.class.php:814
+#: admin/litespeed-cache-admin-display.class.php:899
 #: admin/tpl/setting/settings_debug.php:35
 #: admin/tpl/setting/settings_inc.cache_mobile.php:67
 #: admin/tpl/setting/settings_optimize.php:138
@@ -99,8 +103,8 @@ msgstr ""
 msgid "ON"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:810
-#: admin/litespeed-cache-admin-display.class.php:898
+#: admin/litespeed-cache-admin-display.class.php:815
+#: admin/litespeed-cache-admin-display.class.php:903
 #: admin/tpl/setting/settings_cdn.php:35 admin/tpl/setting/settings_cdn.php:169
 #: admin/tpl/setting/settings_debug.php:29
 #: admin/tpl/setting/settings_inc.cache_object.php:149
@@ -111,11 +115,11 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:933
+#: admin/litespeed-cache-admin-display.class.php:938
 msgid "Recommended value: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:949
+#: admin/litespeed-cache-admin-display.class.php:954
 #: admin/tpl/setting/settings_media.php:36
 #: admin/tpl/setting/settings_optimize.php:140
 #: admin/tpl/setting/settings_tuning.php:24
@@ -126,11 +130,11 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:950
+#: admin/litespeed-cache-admin-display.class.php:955
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:952
+#: admin/litespeed-cache-admin-display.class.php:957
 #: admin/litespeed-cache-admin.class.php:229
 #: admin/tpl/inc/img_optm.initialize.php:29
 #: admin/tpl/inc/img_optm.summary.php:165 admin/tpl/manage/manage_cdn.php:60
@@ -160,19 +164,19 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:967
+#: admin/litespeed-cache-admin-display.class.php:972
 msgid "%s groups"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:970
+#: admin/litespeed-cache-admin-display.class.php:975
 msgid "%s images"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:980
+#: admin/litespeed-cache-admin-display.class.php:985
 msgid "%s group"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:983
+#: admin/litespeed-cache-admin-display.class.php:988
 msgid "%s image"
 msgstr ""
 
@@ -865,7 +869,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.4.3)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.4.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:353
 #: includes/litespeed-cache-gui.class.php:353
@@ -4016,85 +4020,77 @@ msgstr ""
 msgid "Update %s now"
 msgstr ""
 
-#: inc/img_optm.class.php:92
-msgid "Failed to communicate with LiteSpeed IAPI server"
-msgstr ""
-
-#: inc/img_optm.class.php:108
+#: inc/img_optm.class.php:113
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:149 inc/img_optm.class.php:1402
-#: inc/img_optm.class.php:1467
+#: inc/img_optm.class.php:166 inc/img_optm.class.php:1467
+#: inc/img_optm.class.php:1532
 msgid "No image found."
 msgstr ""
 
-#: inc/img_optm.class.php:178
+#: inc/img_optm.class.php:194
 msgid "Number of images in one image group (%s) exceeds the credit (%s)"
 msgstr ""
 
-#: inc/img_optm.class.php:206
+#: inc/img_optm.class.php:222
 msgid "Requested successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:226
+#: inc/img_optm.class.php:242
 msgid "Optimized successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:283
+#: inc/img_optm.class.php:299
 msgid "Pushed %1$s to LiteSpeed optimization server, accepted %2$s."
 msgstr ""
 
-#: inc/img_optm.class.php:663
-msgid "Failed to push to LiteSpeed IAPI server: %s"
-msgstr ""
-
-#: inc/img_optm.class.php:672
+#: inc/img_optm.class.php:686
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:996
+#: inc/img_optm.class.php:1030
 msgid ""
 "LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend "
 "the pull notification this one time only. After that, the process will be "
 "automated."
 msgstr ""
 
-#: inc/img_optm.class.php:1294
+#: inc/img_optm.class.php:1357
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1505
+#: inc/img_optm.class.php:1570
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1668
+#: inc/img_optm.class.php:1735
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1862
+#: inc/img_optm.class.php:1929
 msgid "Switched images successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1893
+#: inc/img_optm.class.php:1960
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1899
+#: inc/img_optm.class.php:1966
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1915
+#: inc/img_optm.class.php:1982
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1922
+#: inc/img_optm.class.php:1989
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1982
+#: inc/img_optm.class.php:2049
 msgid "Reset the optimized data successfully."
 msgstr ""
 
