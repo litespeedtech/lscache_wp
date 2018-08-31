@@ -77,6 +77,7 @@ if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
 		WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
 		WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
+		WP_CLI::add_command( 'lscache-iapi', 'LiteSpeed_Cache_CLI_IAPI' ) ;
 	}
 }
 
