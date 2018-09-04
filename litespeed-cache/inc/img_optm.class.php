@@ -1692,6 +1692,17 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
+	 * Remove backups for CLI usage
+	 *
+	 * @since  2.5
+	 * @access public
+	 */
+	public function rm_bkup()
+	{
+		return $this->_rm_bkup() ;
+	}
+
+	/**
 	 * Delete bkup original images storage
 	 *
 	 * @since 2.2.6
@@ -1735,6 +1746,7 @@ class LiteSpeed_Cache_Img_Optm
 		$msg = sprintf( __( 'Removed %1$s images and saved %2$s successfully.', 'litespeed-cache' ), $i, LiteSpeed_Cache_Utility::real_size( $total_size ) ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
+		return $msg ;
 	}
 
 	/**

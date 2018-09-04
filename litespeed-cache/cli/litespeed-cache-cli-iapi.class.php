@@ -179,5 +179,22 @@ class LiteSpeed_Cache_CLI_IAPI
 		$this->status() ;
 	}
 
+	/**
+	 * Remove original image backups
+	 *
+	 * ## OPTIONS
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Remove original image backups
+	 *     $ wp lscache-iapi rm_bkup
+	 *
+	 */
+	public function rm_bkup()
+	{
+		$msg = $this->_img_optm_instance->rm_bkup() ;
+		WP_CLI::success( $msg ) ;
+	}
+
 
 }
