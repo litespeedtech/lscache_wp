@@ -103,7 +103,22 @@ class LiteSpeed_Cache_Media
 		if ( get_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ) {
 			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
 			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+
+			// Hook to attachment delete action
+			add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
 		}
+	}
+
+	/**
+	 * Media delete action hook
+	 *
+	 * @since 2.4.3
+	 * @access public
+	 */
+	public function delete_attachment( $post_id )
+	{
+		LiteSpeed_Cache_Log::debug( '[Media] delete_attachment [pid] ' . $post_id ) ;
+		LiteSpeed_Cache_Img_Optm::get_instance()->reset_row( $post_id ) ;
 	}
 
 	/**
@@ -289,9 +304,7 @@ eot;
 		if ( strpos( $_SERVER[ 'REQUEST_URI' ], self::LAZY_LIB ) !== false ) {
 			LiteSpeed_Cache_Log::debug( '[Media] run lazyload lib' ) ;
 
-			$file = LSCWP_DIR . 'js/lazyload.min.js' ;
-
-			$content = Litespeed_File::read( $file ) ;
+			$content = $this->_get_lazyload_lib_content() ;
 
 			$static_file = LSCWP_CONTENT_DIR . '/cache/js/lazyload.js' ;
 
@@ -313,6 +326,19 @@ eot;
 			echo $content ;
 			exit ;
 		}
+	}
+
+	/**
+	 * Read lazyload js lib content
+	 *
+	 * @since  2.4.3
+	 * @access private
+	 */
+	private function _get_lazyload_lib_content()
+	{
+		$file = LSCWP_DIR . 'js/lazyload.min.js' ;
+
+		return Litespeed_File::read( $file ) ;
 	}
 
 	/**
@@ -428,8 +454,14 @@ eot;
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_img_lazy || $cfg_iframe_lazy ) {
-			$lazy_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::LAZY_LIB ) ;
-			$this->content = str_replace( '</body>', '<script src="' . $lazy_lib_url . '"></script></body>', $this->content ) ;
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZYJS_INLINE ) ) {
+				$lazy_lib = '<script type="text/javascript">' . $this->_get_lazyload_lib_content() . '</script>' ;
+			} else {
+				$lazy_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::LAZY_LIB ) ;
+				$lazy_lib = '<script src="' . $lazy_lib_url . '"></script>' ;
+			}
+
+			$this->content = str_replace( '</body>', $lazy_lib . '</body>', $this->content ) ;
 		}
 	}
 

@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access public
 	 * @param  array $data
 	 */
-	public static function post( $action, $data = false, $server = false, $no_hash = false, $silence_notice = false )
+	public static function post( $action, $data = false, $server = false, $no_hash = false )
 	{
 		$instance = self::get_instance() ;
 
@@ -225,7 +225,7 @@ class LiteSpeed_Cache_Admin_API
 			$instance->_request_key() ;
 		}
 
-		return $instance->_post( $action, $data, $server, $no_hash, $silence_notice ) ;
+		return $instance->_post( $action, $data, $server, $no_hash ) ;
 	}
 
 	/**
@@ -278,8 +278,9 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  1.6
 	 * @access private
 	 * @param  array $data
+	 * @return  string | array Must return an error msg string or json array
 	 */
-	private function _post( $action, $data = false, $server = false, $no_hash = false, $silence_notice = false )
+	private function _post( $action, $data = false, $server = false, $no_hash = false )
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
@@ -319,6 +320,10 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] failed to decode post json: ' . $response[ 'body' ] ) ;
+
+			$msg = __( 'Failed to post via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return $response[ 'body' ] ;
 		}
 
@@ -327,17 +332,17 @@ class LiteSpeed_Cache_Admin_API
 			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-			return null ;
+			return $json[ '_err' ] ;
 		}
 
 		if ( ! empty( $json[ '_503' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] service 503 unavailable temporarily. ' . $json[ '_503' ] ) ;
-			if ( ! $silence_notice ) {
-				$msg = __( 'We are working hard to improve your Image Optimization experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' ) ;
-				$msg .= ' ' . $json[ '_503' ] ;
-				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-			}
-			return null ;
+
+			$msg = __( 'We are working hard to improve your Image Optimization experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' ) ;
+			$msg .= ' ' . $json[ '_503' ] ;
+			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
+			return $json[ '_503' ] ;
 		}
 
 		if ( ! empty( $json[ '_info' ] ) ) {
@@ -370,11 +375,11 @@ class LiteSpeed_Cache_Admin_API
 			$msg = sprintf( __( '%s plugin version %s required for this action.', 'litespeed-cache' ), LiteSpeed_Cache::NAME, 'v' . $json[ '_err_req_v' ] . '+' ) ;
 
 			// Append upgrade link
-			$msg .= ' ' . LiteSpeed_Cache_GUI::plugin_upgrade_link( LiteSpeed_Cache::NAME, LiteSpeed_Cache::PLUGIN_NAME, $json[ '_err_req_v' ] ) ;
+			$msg2 = ' ' . LiteSpeed_Cache_GUI::plugin_upgrade_link( LiteSpeed_Cache::NAME, LiteSpeed_Cache::PLUGIN_NAME, $json[ '_err_req_v' ] ) ;
 
-			$msg .= $this->_parse_link( $json ) ;
-			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-			return null ;
+			$msg2 .= $this->_parse_link( $json ) ;
+			LiteSpeed_Cache_Admin_Display::error( $msg . $msg2 ) ;
+			return $msg ;
 		}
 
 		return $json ;

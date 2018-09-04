@@ -321,6 +321,10 @@ class LiteSpeed_Cache_Log
 			$params[] = 'Query String: ' . $qs ;
 		}
 
+		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			$params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ] ;
+		}
+
 		if ( defined( 'LSCWP_LOG_MORE' ) ) {
 			$params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ] ;
 			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;

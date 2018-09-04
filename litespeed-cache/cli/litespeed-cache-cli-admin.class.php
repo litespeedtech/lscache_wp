@@ -55,6 +55,12 @@ class LiteSpeed_Cache_Cli_Admin
 		$val = $args[1] ;
 
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		// Get items
+		$cfg_items = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
+		foreach ( $cfg_items as $v ) {
+			$options[ $v ] = get_option( $v ) ;
+		}
+
 
 		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key])) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
@@ -257,7 +263,6 @@ class LiteSpeed_Cache_Cli_Admin
 	 */
 	private function _update_options($options)
 	{
-		WP_CLI::error('Disabled due to missing textarea values bug. Will fix in next release.') ;
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options) ;
 
 		global $wp_settings_errors ;

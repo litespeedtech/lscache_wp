@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.4.2\n"
+"Project-Id-Version: LiteSpeed Cache 2.4.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-08-21 19:46:00+00:00\n"
+"POT-Creation-Date: 2018-08-31 15:56:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,39 +20,43 @@ msgstr ""
 msgid "Reset IAPI key successfully."
 msgstr ""
 
-#: admin/admin-api.class.php:327
+#: admin/admin-api.class.php:324
+msgid "Failed to post via WordPress"
+msgstr ""
+
+#: admin/admin-api.class.php:332
 msgid "Failed to communicate with LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:336
+#: admin/admin-api.class.php:341
 msgid ""
 "We are working hard to improve your Image Optimization experience. The "
 "service will be unavailable while we work. We apologize for any "
 "inconvenience."
 msgstr ""
 
-#: admin/admin-api.class.php:345 admin/admin-api.class.php:353
+#: admin/admin-api.class.php:350 admin/admin-api.class.php:358
 msgid "Message from LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:361
+#: admin/admin-api.class.php:366
 msgid "Good news from LiteSpeed image server"
 msgstr ""
 
-#: admin/admin-api.class.php:370
+#: admin/admin-api.class.php:375
 msgid "%s plugin version %s required for this action."
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:155
-#: admin/tpl/setting/settings_cdn.php:240 inc/gui.class.php:361
-#: includes/litespeed-cache-gui.class.php:361
-msgid "Manage"
-msgstr ""
-
-#: admin/litespeed-cache-admin-display.class.php:157
 #: admin/litespeed-cache-admin-display.class.php:246 inc/gui.class.php:369
 #: includes/litespeed-cache-gui.class.php:369
 msgid "Settings"
+msgstr ""
+
+#: admin/litespeed-cache-admin-display.class.php:157
+#: admin/tpl/setting/settings_cdn.php:240 inc/gui.class.php:361
+#: includes/litespeed-cache-gui.class.php:361
+msgid "Manage"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:160
@@ -86,8 +90,8 @@ msgid ""
 "It is recommended that LiteSpeed Cache be purged after updating a plugin."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:809
-#: admin/litespeed-cache-admin-display.class.php:894
+#: admin/litespeed-cache-admin-display.class.php:814
+#: admin/litespeed-cache-admin-display.class.php:899
 #: admin/tpl/setting/settings_debug.php:35
 #: admin/tpl/setting/settings_inc.cache_mobile.php:67
 #: admin/tpl/setting/settings_optimize.php:138
@@ -99,8 +103,8 @@ msgstr ""
 msgid "ON"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:810
-#: admin/litespeed-cache-admin-display.class.php:898
+#: admin/litespeed-cache-admin-display.class.php:815
+#: admin/litespeed-cache-admin-display.class.php:903
 #: admin/tpl/setting/settings_cdn.php:35 admin/tpl/setting/settings_cdn.php:169
 #: admin/tpl/setting/settings_debug.php:29
 #: admin/tpl/setting/settings_inc.cache_object.php:149
@@ -111,11 +115,11 @@ msgstr ""
 msgid "OFF"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:933
+#: admin/litespeed-cache-admin-display.class.php:938
 msgid "Recommended value: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:949
+#: admin/litespeed-cache-admin-display.class.php:954
 #: admin/tpl/setting/settings_media.php:36
 #: admin/tpl/setting/settings_optimize.php:140
 #: admin/tpl/setting/settings_tuning.php:24
@@ -126,11 +130,11 @@ msgstr ""
 msgid "API"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:950
+#: admin/litespeed-cache-admin-display.class.php:955
 msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:952
+#: admin/litespeed-cache-admin-display.class.php:957
 #: admin/litespeed-cache-admin.class.php:229
 #: admin/tpl/inc/img_optm.initialize.php:29
 #: admin/tpl/inc/img_optm.summary.php:165 admin/tpl/manage/manage_cdn.php:60
@@ -150,7 +154,8 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_object.php:150
 #: admin/tpl/setting/settings_inc.check_adv_file.php:18
 #: admin/tpl/setting/settings_media.php:8
-#: admin/tpl/setting/settings_media.php:176
+#: admin/tpl/setting/settings_media.php:75
+#: admin/tpl/setting/settings_media.php:188
 #: admin/tpl/setting/settings_optimize.php:10
 #: admin/tpl/setting/settings_optimize.php:165
 #: admin/tpl/setting/settings_optimize.php:237
@@ -159,19 +164,19 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:967
+#: admin/litespeed-cache-admin-display.class.php:972
 msgid "%s groups"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:970
+#: admin/litespeed-cache-admin-display.class.php:975
 msgid "%s images"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:980
+#: admin/litespeed-cache-admin-display.class.php:985
 msgid "%s group"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:983
+#: admin/litespeed-cache-admin-display.class.php:988
 msgid "%s image"
 msgstr ""
 
@@ -446,7 +451,7 @@ msgid "Site options saved."
 msgstr ""
 
 #: admin/litespeed-cache-admin-settings.class.php:357
-#: admin/litespeed-cache-admin-settings.class.php:1044
+#: admin/litespeed-cache-admin-settings.class.php:1045
 msgid "Default Public Cache"
 msgstr ""
 
@@ -462,30 +467,30 @@ msgstr ""
 msgid "Feed"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:882
+#: admin/litespeed-cache-admin-settings.class.php:883
 #: admin/tpl/setting/settings_debug.php:88
 msgid "Log File Size Limit"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:967
+#: admin/litespeed-cache-admin-settings.class.php:968
 #: admin/tpl/setting/settings_crawler.php:13
 msgid "Delay"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:968
+#: admin/litespeed-cache-admin-settings.class.php:969
 #: admin/tpl/setting/settings_crawler.php:37
 msgid "Run Duration"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:969
+#: admin/litespeed-cache-admin-settings.class.php:970
 msgid "Cron Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:970
+#: admin/litespeed-cache-admin-settings.class.php:971
 msgid "Whole Interval"
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:971
+#: admin/litespeed-cache-admin-settings.class.php:972
 #: admin/tpl/setting/settings_crawler.php:73
 msgid "Threads"
 msgstr ""
@@ -611,7 +616,7 @@ msgstr ""
 #: admin/tpl/inc/img_optm.summary.php:210 admin/tpl/manage/manage_cdn.php:15
 #: admin/tpl/setting/settings_debug.php:105
 #: admin/tpl/setting/settings_debug.php:138
-#: admin/tpl/setting/settings_media.php:107
+#: admin/tpl/setting/settings_media.php:119
 #: admin/tpl/setting/settings_optimize.php:15 admin/tpl/settings.php:161
 msgid "WARNING"
 msgstr ""
@@ -864,7 +869,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.4.2)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.4.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:353
 #: includes/litespeed-cache-gui.class.php:353
@@ -1155,12 +1160,12 @@ msgid "This will delete all of the backups of the original images."
 msgstr ""
 
 #: admin/tpl/inc/img_optm.summary.php:211
-#: admin/tpl/setting/settings_media.php:108
+#: admin/tpl/setting/settings_media.php:120
 msgid "This is irreversible."
 msgstr ""
 
 #: admin/tpl/inc/img_optm.summary.php:212
-#: admin/tpl/setting/settings_media.php:109
+#: admin/tpl/setting/settings_media.php:121
 msgid "You will be unable to Revert Optimization once the backups are deleted!"
 msgstr ""
 
@@ -1669,7 +1674,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.cache_object.php:122
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:34
-#: admin/tpl/setting/settings_media.php:165
+#: admin/tpl/setting/settings_media.php:177
 #: admin/tpl/setting/settings_optimize.php:236
 #: admin/tpl/setting/settings_purge.php:85
 #: admin/tpl/setting/settings_tuning.php:38
@@ -3222,101 +3227,120 @@ msgid "Load iframes only when they enter the viewport."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:69
-msgid "Optimize Automatically"
+msgid "Inline Lazy Load Images Library"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:73
-msgid "Automatically request optimization via cron job."
+msgid "Include the lazy load image Javascript library inline."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:74
+#: admin/tpl/setting/settings_optimize.php:137
+#: admin/tpl/setting/settings_optimize.php:210
+#: admin/tpl/setting/settings_optimize.php:248
+#: admin/tpl/setting/settings_tuning.php:103
+#: admin/tpl/setting/settings_tuning.php:162
+msgid ""
+"This can improve your speed score in services like Pingdom, GTmetrix and "
+"PageSpeed."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:81
+msgid "Optimize Automatically"
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:85
+msgid "Automatically request optimization via cron job."
+msgstr ""
+
+#: admin/tpl/setting/settings_media.php:86
 msgid "Requests can only be sent when recovered credits is %s or more."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:80
+#: admin/tpl/setting/settings_media.php:92
 msgid "Optimization Cron"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:84
+#: admin/tpl/setting/settings_media.php:96
 msgid ""
 "Disabling this will stop the cron job responsible for fetching optimized "
 "images from LiteSpeed's Image Server."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:90
+#: admin/tpl/setting/settings_media.php:102
 msgid "Optimize Original Images"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:94
+#: admin/tpl/setting/settings_media.php:106
 msgid "Optimize images and save backups of the originals in the same folder."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:100
+#: admin/tpl/setting/settings_media.php:112
 msgid "Remove Original Backups"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:104
+#: admin/tpl/setting/settings_media.php:116
 msgid ""
 "Automatically remove the original image backups after fetching optimized "
 "images."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:116
+#: admin/tpl/setting/settings_media.php:128
 msgid "Optimize WebP Versions"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:120
+#: admin/tpl/setting/settings_media.php:132
 msgid "Request WebP versions of original images when doing optimization."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:126
+#: admin/tpl/setting/settings_media.php:138
 msgid "Optimize Losslessly"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:130
+#: admin/tpl/setting/settings_media.php:142
 msgid "Optimize images using lossless compression."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:131
+#: admin/tpl/setting/settings_media.php:143
 msgid ""
 "This can improve quality but may result in larger images than lossy "
 "compression will."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:137
+#: admin/tpl/setting/settings_media.php:149
 msgid "Preserve EXIF data"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:141
+#: admin/tpl/setting/settings_media.php:153
 msgid ""
 "Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:142
+#: admin/tpl/setting/settings_media.php:154
 msgid "This will increase the size of optimized files."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:156
+#: admin/tpl/setting/settings_media.php:168
 msgid "WebP Attribute To Replace"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:162
+#: admin/tpl/setting/settings_media.php:174
 msgid "Specify which element attributes will be replaced with WebP."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:163
+#: admin/tpl/setting/settings_media.php:175
 msgid "Only attributes listed here will be replaced."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:164
+#: admin/tpl/setting/settings_media.php:176
 msgid "Use the format %1$s or %2$s (element is optional)."
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:171
+#: admin/tpl/setting/settings_media.php:183
 msgid "WebP For Extra srcset"
 msgstr ""
 
-#: admin/tpl/setting/settings_media.php:175
+#: admin/tpl/setting/settings_media.php:187
 msgid ""
 "Enable replacement of WebP in %s elements that were generated outside of "
 "WordPress logic."
@@ -3438,16 +3462,6 @@ msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:136
 msgid "Optimize CSS delivery."
-msgstr ""
-
-#: admin/tpl/setting/settings_optimize.php:137
-#: admin/tpl/setting/settings_optimize.php:210
-#: admin/tpl/setting/settings_optimize.php:248
-#: admin/tpl/setting/settings_tuning.php:103
-#: admin/tpl/setting/settings_tuning.php:162
-msgid ""
-"This can improve your speed score in services like Pingdom, GTmetrix and "
-"PageSpeed."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:138
@@ -4006,85 +4020,77 @@ msgstr ""
 msgid "Update %s now"
 msgstr ""
 
-#: inc/img_optm.class.php:92
-msgid "Failed to communicate with LiteSpeed IAPI server"
-msgstr ""
-
-#: inc/img_optm.class.php:108
+#: inc/img_optm.class.php:113
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:149 inc/img_optm.class.php:1401
-#: inc/img_optm.class.php:1466
+#: inc/img_optm.class.php:166 inc/img_optm.class.php:1467
+#: inc/img_optm.class.php:1532
 msgid "No image found."
 msgstr ""
 
-#: inc/img_optm.class.php:178
+#: inc/img_optm.class.php:194
 msgid "Number of images in one image group (%s) exceeds the credit (%s)"
 msgstr ""
 
-#: inc/img_optm.class.php:206
+#: inc/img_optm.class.php:222
 msgid "Requested successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:226
+#: inc/img_optm.class.php:242
 msgid "Optimized successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:283
+#: inc/img_optm.class.php:299
 msgid "Pushed %1$s to LiteSpeed optimization server, accepted %2$s."
 msgstr ""
 
-#: inc/img_optm.class.php:662
-msgid "Failed to push to LiteSpeed IAPI server: %s"
-msgstr ""
-
-#: inc/img_optm.class.php:671
+#: inc/img_optm.class.php:686
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:995
+#: inc/img_optm.class.php:1030
 msgid ""
 "LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend "
 "the pull notification this one time only. After that, the process will be "
 "automated."
 msgstr ""
 
-#: inc/img_optm.class.php:1293
+#: inc/img_optm.class.php:1357
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1504
+#: inc/img_optm.class.php:1570
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1667
+#: inc/img_optm.class.php:1735
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1861
+#: inc/img_optm.class.php:1929
 msgid "Switched images successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1892
+#: inc/img_optm.class.php:1960
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1898
+#: inc/img_optm.class.php:1966
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1914
+#: inc/img_optm.class.php:1982
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1921
+#: inc/img_optm.class.php:1989
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1977
+#: inc/img_optm.class.php:2049
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -4108,35 +4114,35 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: inc/media.class.php:117
+#: inc/media.class.php:132
 msgid "LiteSpeed Optimization"
 msgstr ""
 
-#: inc/media.class.php:143
+#: inc/media.class.php:158
 msgid "WebP saved %s"
 msgstr ""
 
-#: inc/media.class.php:150
+#: inc/media.class.php:165
 msgid "Click to Disable WebP"
 msgstr ""
 
-#: inc/media.class.php:155
+#: inc/media.class.php:170
 msgid "Click to Enable WebP"
 msgstr ""
 
-#: inc/media.class.php:176
+#: inc/media.class.php:191
 msgid "Original saved %s"
 msgstr ""
 
-#: inc/media.class.php:187
+#: inc/media.class.php:202
 msgid "Click to Restore Original File"
 msgstr ""
 
-#: inc/media.class.php:192
+#: inc/media.class.php:207
 msgid "Click to Switch To Optimized File"
 msgstr ""
 
-#: inc/media.class.php:211
+#: inc/media.class.php:226
 msgid "Reset"
 msgstr ""
 
@@ -4351,7 +4357,7 @@ msgid ""
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "WordPress plugin to connect to LSCache on LiteSpeed Web Server."
+msgid "High-performance page caching and site optimization from LiteSpeed"
 msgstr ""
 
 #. Author of the plugin/theme

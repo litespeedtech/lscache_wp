@@ -180,6 +180,7 @@ class LiteSpeed_Cache_Const
 	const OPID_MEDIA_IMG_LAZY = 'media_img_lazy' ;
 	const OPID_MEDIA_IMG_LAZY_PLACEHOLDER = 'media_img_lazy_placeholder' ;
 	const OPID_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
+	const OPID_MEDIA_IMG_LAZYJS_INLINE = 'media_img_lazyjs_inline' ;
 	const OPT_MEDIA_OPTM_AUTO = 'media_optm_auto' ;
 	const OPT_MEDIA_OPTM_CRON = 'media_optm_cron' ;
 	const OPT_MEDIA_OPTM_ORI = 'media_optm_ori' ;
@@ -242,6 +243,7 @@ class LiteSpeed_Cache_Const
 			self::ITEM_ENV_REF,
 			self::ITEM_CACHE_DROP_QS,
 			self::ITEM_CDN_MAPPING,
+			self::ITEM_CDN_ORI_DIR,
 			self::ITEM_DNS_PREFETCH,
 			self::ITEM_CLOUDFLARE_STATUS,
 			self::ITEM_LOG_IGNORE_FILTERS,
@@ -254,6 +256,7 @@ class LiteSpeed_Cache_Const
 			self::ITEM_CACHE_URI_PRIV,
 			self::ITEM_OPTM_EXCLUDES,
 			self::ITEM_EXCLUDES_URI,
+			self::ITEM_MEDIA_WEBP_ATTRIBUTE,
 		) ;
 	}
 
@@ -457,9 +460,10 @@ class LiteSpeed_Cache_Const
 			self::OPID_CDN_CLOUDFLARE_NAME 	=> '',
 			self::OPID_CDN_CLOUDFLARE_ZONE 	=> '',
 
-			self::OPID_MEDIA_IMG_LAZY 	=> false,
+			self::OPID_MEDIA_IMG_LAZY 				=> false,
 			self::OPID_MEDIA_IMG_LAZY_PLACEHOLDER 	=> '',
-			self::OPID_MEDIA_IFRAME_LAZY 	=> false,
+			self::OPID_MEDIA_IFRAME_LAZY 			=> false,
+			self::OPID_MEDIA_IMG_LAZYJS_INLINE 		=> false,
 			self::OPT_MEDIA_OPTM_AUTO 		=> false,
 			self::OPT_MEDIA_OPTM_CRON 		=> true,
 			self::OPT_MEDIA_OPTM_ORI 		=> true,

@@ -467,6 +467,11 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function add_notice($color, $msg)
 	{
+		// Bypass adding for CLI or cron
+		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
+			return ;
+		}
+
 		$messages = (array)get_transient(self::TRANSIENT_LITESPEED_MESSAGE) ;
 		if( ! $messages ) {
 			$messages = array() ;

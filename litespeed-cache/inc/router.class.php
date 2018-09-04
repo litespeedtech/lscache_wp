@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function from_admin()
 	{
-		return strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0 ;
+		return ! empty( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0 ;
 	}
 
 	/**
