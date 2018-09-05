@@ -27,7 +27,7 @@ if (!LiteSpeed_Cache_Admin_Display::get_instance()->show_compatibility_tab()) re
 	cache:!1,
 	success:function(data) {
 		if(data) {
-			jQuery(\'#postviews_lscwp\').html(data+\' views\');
+			jQuery('#postviews_lscwp').html(data+' views');
 		}
 	}
 });</pre>

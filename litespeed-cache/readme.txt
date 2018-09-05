@@ -267,6 +267,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.5 - Sep 6 2018 =
+* [IMPROVEMENT] <strong>CLI</strong> CLI can now do Remove Original Image Backups. (@Shon)
+* [IAPI] Fixed a bug that caused failure to receive optimize/fetch error images notification. (@LucasRolff)
+
 = 2.4.4 - Aug 31 2018 =
 * [NEW] <strong>CLI</strong> CLI can now support image optimization. (@Shon)
 * [IMPROVEMENT] <strong>GUI</strong> Cron/CLI will not create admin message anymore.
