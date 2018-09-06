@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.4.4
+Stable tag: 2.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -268,8 +268,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.5 - Sep 6 2018 =
-* [IMPROVEMENT] <strong>CLI</strong> CLI can now do Remove Original Image Backups. (@Shon)
-* [IAPI] Fixed a bug that caused failure to receive optimize/fetch error images notification. (@LucasRolff)
+* [IMPROVEMENT] <strong>CLI</strong> CLI can now execute Remove Original Image Backups. (@Shon)
+* [UPDATE] Fixed issue where WP-PostViews documentation contained extra slashes. (#545638)
+* [UPDATE] Check LITESPEED_SERVER_TYPE for more accurate LSCache Disabled messaging.
+* [IAPI] Fixed a bug where optimize/fetch error notification was not being received. (@LucasRolff)
 
 = 2.4.4 - Aug 31 2018 =
 * [NEW] <strong>CLI</strong> CLI can now support image optimization. (@Shon)
