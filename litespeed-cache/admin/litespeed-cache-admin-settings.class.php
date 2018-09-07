@@ -701,8 +701,13 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
+		$ids = array(
+			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER,
+			LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_COLOR,
+		) ;
+		foreach ( $ids as $id ) {
+			$this->_options[ $id ] = $this->_input[ $id ] ;
+		}
 
 		// Update lazyload image excludes
 		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ;

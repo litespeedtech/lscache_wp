@@ -27,6 +27,7 @@ class LiteSpeed_Cache_Media
 
 	private $_cfg_img_webp ;
 	private $_cfg_placeholder_resp ;
+	private $_cfg_placeholder_resp_color ;
 	private $_cfg_placeholder_resp_async ;
 	private $_placeholder_resp_dict = array() ;
 	private $_ph_queue = array() ;
@@ -74,6 +75,11 @@ class LiteSpeed_Cache_Media
 
 		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP ) ;
 		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_cfg_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		// Encode the color
+		if ( $this->_cfg_placeholder_resp_color ) {
+			$this->_cfg_placeholder_resp_color = base64_encode( $this->_cfg_placeholder_resp_color ) ;
+		}
 
 	}
 
@@ -484,12 +490,15 @@ eot;
 
 		// Check if its already in dict or not
 		if ( ! empty( $this->_placeholder_resp_dict[ $size ] ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder already in dict [size] ' . $size ) ;
+
 			return $this->_placeholder_resp_dict[ $size ] ;
 		}
 
 		// Need to generate the responsive placeholder
-		$placeholder_realpath = $this->placeholder_realpath( $size ) ;
+		$placeholder_realpath = $this->_placeholder_realpath( $size ) ;
 		if ( file_exists( $placeholder_realpath ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file exists [size] ' . $size ) ;
 			$this->_placeholder_resp_dict[ $size ] = Litespeed_File::read( $placeholder_realpath ) ;
 
 			return $this->_placeholder_resp_dict[ $size ] ;
@@ -499,6 +508,7 @@ eot;
 
 		// Prevent repeated requests
 		if ( in_array( $size, $this->_ph_queue ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to in queue [size] ' . $size ) ;
 			return false ;
 		}
 		$this->_ph_queue[] = $size ;
@@ -509,6 +519,7 @@ eot;
 		if ( ! $this->_cfg_placeholder_resp_async ) {
 			// If requested recently, bypass
 			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+				LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to interval limit [size] ' . $size ) ;
 				return false ;
 			}
 			// Generate immediately
@@ -522,6 +533,8 @@ eot;
 			$req_summary[ 'queue' ] = array() ;
 		}
 		if ( in_array( $size, $req_summary[ 'queue' ] ) ) {
+			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder already in queue [size] ' . $size ) ;
+
 			return false ;
 		}
 
@@ -874,11 +887,11 @@ eot;
 	 * Generate realpath of placeholder file
 	 *
 	 * @since  2.5.1
-	 * @access public
+	 * @access private
 	 */
-	public static function placeholder_realpath( $size )
+	private function _placeholder_realpath( $size )
 	{
-		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size" ;
+		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size." . md5( $this->_cfg_placeholder_resp_color ) ;
 	}
 
 	/**
@@ -944,14 +957,14 @@ eot;
 	{
 		$req_summary = self::get_summary() ;
 
-		$file = self::placeholder_realpath( $size ) ;
+		$file = $this->_placeholder_realpath( $size ) ;
 
 		// Update request status
 		$req_summary[ 'curr_request' ] = time() ;
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate placeholder
-		$url = 'https://wp.api.litespeedtech.com/placeholder/' . $size . '?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&color=' ;
+		$url = 'https://wp.api.litespeedtech.com/placeholder/' . $size . '?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&c=' . $this->_cfg_placeholder_resp_color ;
 
 		LiteSpeed_Cache_Log::debug( '[Media] posting to : ' . $url ) ;
 

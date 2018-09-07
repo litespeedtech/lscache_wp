@@ -68,6 +68,18 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
+		<th class="litespeed-padding-left"><?php echo __( 'Responsive Placeholder Background Color', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_COLOR ; ?>
+			<?php $this->build_input( $id, false, null, null, '', 'color' ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Specify the placeholder color you want to use.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Generate Reponsive Placeholder In Background', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) ; ?>
