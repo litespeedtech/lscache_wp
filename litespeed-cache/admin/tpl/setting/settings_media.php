@@ -1,6 +1,8 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
+$last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
+
 ?>
 
 <h3 class="litespeed-title-short">
@@ -51,6 +53,55 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<br /><?php echo sprintf( __( 'By default a gray image placeholder %s will be used.', 'litespeed-cache' ), '<code>data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'For example, %s can be used for a transparent placeholder.', 'litespeed-cache' ), '<code>data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7</code>' ) ; ?>
 			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left"><?php echo __( 'Responsive Placeholder', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __( 'Responsive image placeholders can help to reduce layout reshuffle when images are loaded.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'This will generate the placeholder with same dimensions as the image if it has the width and height attributes.', 'litespeed-cache' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left"><?php echo __( 'Generate Reponsive Placeholder In Background', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo sprintf( __( 'Automatically generate %s in the background via a cron-based queue.', 'litespeed-cache' ), __( 'Responsive Placeholder', 'litespeed-cache' ) ) ; ?>
+				<?php echo sprintf(
+					__( 'If set to %1$s, before the placeholder is localized, the %2$s configuration will be used.', 'litespeed-cache' ),
+					'<code>' . __('ON', 'litespeed-cache') . '</code>',
+					__( 'Lazy Load Image Placeholder', 'litespeed-cache' )
+				) ; ?>
+				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ) ; ?>
+				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
+			</div>
+
+			<?php if ( $last_responsive_placeholder_generated ) : ?>
+			<div class="litespeed-desc litespeed-left20">
+				<?php if ( ! empty( $last_responsive_placeholder_generated[ 'last_request' ] ) ) : ?>
+					<p>
+						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_responsive_placeholder_generated[ 'last_request' ] ) . '</code>' ; ?>
+					</p>
+				<?php endif ; ?>
+				<?php if ( ! empty( $last_responsive_placeholder_generated[ 'queue' ] ) ) : ?>
+					<div class="litespeed-callout-warning">
+						<h4><?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
+						<p>
+							<?php echo implode( '<br />', $last_responsive_placeholder_generated[ 'queue' ] ) ; ?>
+						</p>
+					</p>
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_GENERATE_PLACEHOLDER ) ; ?>" class="litespeed-btn-success">
+						<?php echo __( 'Run Queue Manually', 'litespeed-cache' ) ; ?>
+					</a>
+				<?php endif ; ?>
+			</div>
+			<?php endif ; ?>
 		</td>
 	</tr>
 

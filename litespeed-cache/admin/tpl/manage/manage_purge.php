@@ -76,6 +76,15 @@ if ( LiteSpeed_Cache_CSS::has_ccss_cache() ) {
 	) ;
 }
 
+if ( LiteSpeed_Cache_Media::has_placehoder_cache() ) {
+	$_panels[] = array(
+		'title'	=> __( 'Purge All', 'litespeed-cache' ) . ' - ' . __( 'Placeholder Cache', 'litespeed-cache' ),
+		'desc'	=> __( 'This will delete all generated image placeholder files', 'litespeed-cache' ),
+		'icon'	=> 'purge-cssjs',
+		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_PLACEHOLDER,
+	) ;
+}
+
 
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),

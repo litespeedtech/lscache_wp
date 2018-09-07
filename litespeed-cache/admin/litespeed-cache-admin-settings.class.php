@@ -684,6 +684,8 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY,
+			LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP,
+			LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY,
 			LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZYJS_INLINE,
 			LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO,

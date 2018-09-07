@@ -18,6 +18,7 @@ class LiteSpeed_Cache_Task
 	const CRON_ACTION_HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
 	const CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
 	const CRON_ACTION_HOOK_CCSS = 'litespeed_ccss_trigger' ;
+	const CRON_ACTION_HOOK_IMG_PLACEHOLDER = 'litespeed_img_placeholder_trigger' ;
 	const CRON_FITLER_CRAWLER = 'litespeed_crawl_filter' ;
 	const CRON_FITLER = 'litespeed_filter' ;
 
@@ -59,6 +60,13 @@ class LiteSpeed_Cache_Task
 			self::schedule_filter_ccss() ;
 
 			add_action( self::CRON_ACTION_HOOK_CCSS, 'LiteSpeed_Cache_CSS::cron_ccss' ) ;
+		}
+
+		// Register image placeholder generation
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) && LiteSpeed_Cache_Media::has_queue() ) {
+			self::schedule_filter_placeholder() ;
+
+			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Media::cron_placeholder' ) ;
 		}
 	}
 
@@ -158,6 +166,23 @@ class LiteSpeed_Cache_Task
 		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_CCSS ) ) {
 			LiteSpeed_Cache_Log::debug( 'Cron log: ......ccss cron hook register......' ) ;
 			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_CCSS ) ;
+		}
+	}
+
+	/**
+	 * Schedule cron image placeholder generation
+	 *
+	 * @since 2.5.1
+	 * @access public
+	 */
+	public static function schedule_filter_placeholder()
+	{
+		add_filter( 'cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter' ) ;
+
+		// Schedule event here to see if it can lost again or not
+		if( ! wp_next_scheduled( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ) {
+			LiteSpeed_Cache_Log::debug( 'Cron log: ......image placeholder cron hook register......' ) ;
+			wp_schedule_event( time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMG_PLACEHOLDER ) ;
 		}
 	}
 
