@@ -94,9 +94,9 @@ class LiteSpeed_Cache_CSS
 	 * Generate realpath of ccss
 	 *
 	 * @since  2.3
-	 * @access public
+	 * @access private
 	 */
-	public static function ccss_realpath( $ccss_type )
+	private function _ccss_realpath( $ccss_type )
 	{
 		return LSCWP_CONTENT_DIR . "/cache/ccss/$ccss_type.css" ;
 	}
@@ -137,7 +137,7 @@ class LiteSpeed_Cache_CSS
 		}
 
 		$ccss_type = $this->_which_css() ;
-		$ccss_file = self::ccss_realpath( $ccss_type ) ;
+		$ccss_file = $this->_ccss_realpath( $ccss_type ) ;
 
 		if ( file_exists( $ccss_file ) ) {
 			LiteSpeed_Cache_Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
@@ -212,7 +212,7 @@ class LiteSpeed_Cache_CSS
 	{
 		$req_summary = self::get_summary() ;
 
-		$ccss_file = self::ccss_realpath( $ccss_type ) ;
+		$ccss_file = $this->_ccss_realpath( $ccss_type ) ;
 
 		// Update css request status
 		$req_summary[ 'curr_request' ] = time() ;
