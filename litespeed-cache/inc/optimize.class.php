@@ -942,6 +942,12 @@ class LiteSpeed_Cache_Optimize
 				continue ;
 			}
 
+			$url_parsed = parse_url( $attrs[ 'src' ], PHP_URL_PATH ) ;
+			if ( substr( $url_parsed, -3 ) !== '.js' ) {
+				LiteSpeed_Cache_Log::debug2( '[Optm] _parse_js bypassed due to not js file ' . $url_parsed ) ;
+				continue ;
+			}
+
 			// to avoid multiple replacement
 			if ( in_array( $match[ 0 ], $html_list ) ) {
 				continue ;
