@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.5
+Stable tag: 2.5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -267,17 +267,19 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
-= 2.5.1 - Sep 12 2018 =
-* Changed CSS::ccss_realpath func scope to private.
+= 2.5.1 - Sep 11 2018 =
+* 🆕 Responsive placeholder. (@szmigieldesign)
+* Changed CSS::ccss_realpath function scope to private.
+* <strong>BUGFIX</strong> Detected JS filetype before optimizing to avoid PHP source conflict. (@closte #50)
 
 = 2.5 - Sep 6 2018 =
-* 🔆 <strong>CLI</strong> CLI can now execute Remove Original Image Backups. (@Shon)
-* 😊 Fixed issue where WP-PostViews documentation contained extra slashes. (#545638)
-* 😊 Check LITESPEED_SERVER_TYPE for more accurate LSCache Disabled messaging.
-* 🛰️ <strong>IAPI</strong> Fixed a bug where optimize/fetch error notification was not being received. (@LucasRolff)
+* [IMPROVEMENT] <strong>CLI</strong> can now execute Remove Original Image Backups. (@Shon)
+* [UPDATE] Fixed issue where WP-PostViews documentation contained extra slashes. (#545638)
+* [UPDATE] Check LITESPEED_SERVER_TYPE for more accurate LSCache Disabled messaging.
+* [IAPI] Fixed a bug where optimize/fetch error notification was not being received. (@LucasRolff)
 
 = 2.4.4 - Aug 31 2018 =
-* [NEW] <strong>CLI</strong> CLI can now support image optimization. (@Shon)
+* [NEW] <strong>CLI</strong> can now support image optimization. (@Shon)
 * [IMPROVEMENT] <strong>GUI</strong> Cron/CLI will not create admin message anymore.
 * [UPDATE] <strong>Media</strong> Fixed a PHP notice that appeared when pulling optimized images.
 * [UPDATE] Fixed a PHP notice when detecting origin of ajax call. (@iosoft)
