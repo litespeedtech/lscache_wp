@@ -18,6 +18,7 @@ class LiteSpeed_Cache_Vary
 
 	private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
 	private static $_vary_cookies = array() ; // vary header only!
+	private static $_default_vary_val = array() ;
 
 	/**
 	 * Adds the actions used for setting up cookies on log in/out.
@@ -205,7 +206,7 @@ class LiteSpeed_Cache_Vary
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
 		 * @since  2.2.2
 		 */
-		$this->can_ajax_vary() ;
+		self::can_ajax_vary() ;
 
 		// If the cookie is lost somehow, set it
 		$this->_update_default_vary( $uid, $expire ) ;
@@ -226,7 +227,7 @@ class LiteSpeed_Cache_Vary
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
 		 * @since  2.2.2
 		 */
-		$this->can_ajax_vary() ;
+		self::can_ajax_vary() ;
 
 		// Force update vary to remove login status
 		$this->_update_default_vary( -1 ) ;
@@ -236,9 +237,10 @@ class LiteSpeed_Cache_Vary
 	 * Allow vary can be changed for ajax calls
 	 *
 	 * @since 2.2.2
+	 * @since 2.6 Changed to static
 	 * @access public
 	 */
-	public function can_ajax_vary()
+	public static function can_ajax_vary()
 	{
 		LiteSpeed_Cache_Log::debug( '[Vary] litespeed_ajax_vary -> true' ) ;
 		add_filter( 'litespeed_ajax_vary', '__return_true' ) ;
@@ -336,7 +338,7 @@ class LiteSpeed_Cache_Vary
 	 */
 	public function finalize_default_vary( $uid = false )
 	{
-		$vary = array() ;
+		$vary = self::$_default_vary_val ;
 
 		if ( ! $uid ) {
 			$uid = LiteSpeed_Cache_Router::get_uid() ;
@@ -547,6 +549,7 @@ class LiteSpeed_Cache_Vary
 
 	/**
 	 * Adds vary to the list of vary cookies for the current page.
+	 * This is to add a new vary cookie
 	 *
 	 * @since 1.0.13
 	 * @access public
@@ -559,6 +562,17 @@ class LiteSpeed_Cache_Vary
 		}
 
 		self::$_vary_cookies = array_merge(self::$_vary_cookies, $vary) ;
+	}
+
+	/**
+	 * Append child value to default vary
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function append( $name, $val )
+	{
+		self::$_default_vary_val[ $name ] = $val ;
 	}
 
 	/**

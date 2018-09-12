@@ -203,7 +203,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Add vary
+	 * Add a new vary cookie
 	 *
 	 * @since 1.1.3
 	 * @access public
@@ -211,6 +211,33 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	public static function vary_add($vary)
 	{
 		LiteSpeed_Cache_Vary::add($vary) ;
+	}
+
+	/**
+	 * Alter default vary cookie value
+	 *
+	 * Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function vary( $k, $v, $default = null )
+	{
+		if ( $v === $default ) {
+			return ;
+		}
+		LiteSpeed_Cache_Vary::append( $k, $v ) ;
+	}
+
+	/**
+	 * Force finalize vary even if its in an AJAX call
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function force_vary()
+	{
+		LiteSpeed_Cache_Vary::can_ajax_vary() ;
 	}
 
 	/**
