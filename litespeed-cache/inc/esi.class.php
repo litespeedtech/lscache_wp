@@ -521,6 +521,9 @@ class LiteSpeed_Cache_ESI
 
 		LiteSpeed_Cache_Log::debug( '[ESI] load_nonce_block [action] ' . $action ) ;
 
+		// set nonce TTL to half day
+		LiteSpeed_Cache_Control::set_custom_ttl( 43200 ) ;
+
 		echo wp_create_nonce( $action ) ;
 	}
 
