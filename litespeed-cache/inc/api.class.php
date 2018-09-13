@@ -476,12 +476,28 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * @access public
 	 * @param string $control Cache control tag
 	 */
-	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false )
+	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 	{
 		if ( $control === 'default' ) {
 			$control = 'private,no-vary' ;
 		}
-		return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $silence ) ;
+		return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_val ) ;
+	}
+
+	/**
+	 * Easiest way to replace WP nonce to an ESI widget
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function nonce( $action = -1, $defence_for_html_filter = true )
+	{
+		if ( ! self::esi_enabled() ) {
+			return wp_create_nonce( $action ) ;
+		}
+
+		// Replace it to ESI
+		return self::esi_url( 'lscwp_nonce_esi', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true ) ;
 	}
 
 	/**

@@ -21,6 +21,7 @@ class LiteSpeed_Cache_ESI
 
 	private static $has_esi = false ;
 	private $esi_args = null ;
+	private $_esi_preserve_list = array() ;
 
 	const QS_ACTION = 'lsesi' ;
 	const POSTTYPE = 'lswcp' ;
@@ -118,6 +119,8 @@ class LiteSpeed_Cache_ESI
 		add_action('litespeed_cache_load_esi_block-widget', array($this, 'load_widget_block')) ;
 		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
 		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
+
+		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
 	}
 
 	/**
@@ -162,9 +165,12 @@ class LiteSpeed_Cache_ESI
 	 * @param array $params The esi parameters.
 	 * @param string $control The cache control attribute if any.
 	 * @param bool $silence If generate wrapper comment or not
-	 * @return bool|string    False on error, the output otherwise.
+	 * @param bool $preserved 	If this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered.
+	 * @param bool $svar  		If store the value in memory or not, in memory wil be faster
+	 * @param bool $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
+	 * @return bool|string    	False on error, the output otherwise.
 	 */
-	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false )
+	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 	{
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
@@ -194,6 +200,9 @@ class LiteSpeed_Cache_ESI
 		if ( ! empty( $control ) ) {
 			$output .= " cache-control='$control'" ;
 		}
+		if ( $svar ) {
+			$output .= " as-var='1'" ;
+		}
 		$output .= " />" ;
 
 		if ( ! $silence ) {
@@ -201,8 +210,20 @@ class LiteSpeed_Cache_ESI
 		}
 
 		LiteSpeed_Cache_Log::debug( "ESI: \t\t[block ID] $block_id \t\t\t[wrapper] $wrapper \t\t\t[Control] $control" ) ;
+		LiteSpeed_Cache_Log::debug2( $output ) ;
 
 		self::set_has_esi() ;
+
+		// Convert to string to avoid html chars filter when using
+		// Will reverse the buffer when output in self::finalize()
+		if ( $preserved ) {
+			$hash = md5( $output ) ;
+			self::get_instance()->_esi_preserve_list[ $hash ] = $output ;
+			LiteSpeed_Cache_Log::debug( "[ESI] Preserved to $hash" ) ;
+
+			return $hash ;
+		}
+
 		return $output ;
 	}
 
@@ -489,6 +510,21 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
+	 * Generate nonce for certain action
+	 *
+	 * @access public
+	 * @since 2.6
+	 */
+	public function load_nonce_block( $params )
+	{
+		$action = $params[ 'action' ] ;
+
+		LiteSpeed_Cache_Log::debug( '[ESI] load_nonce_block [action] ' . $action ) ;
+
+		echo wp_create_nonce( $action ) ;
+	}
+
+	/**
 	 * Hooked to the comment_form_defaults filter.
 	 * Stores the default comment form settings.
 	 * If sub_comment_form_block is triggered, the output buffer is cleared and an esi block is added. The remaining comment form is also buffered and cleared.
@@ -566,6 +602,30 @@ class LiteSpeed_Cache_ESI
 	public function comment_form_sub_clean()
 	{
 		echo LiteSpeed_Cache_GUI::clean_wrapper_end() ;
+	}
+
+	/**
+	 * Replace preseved blocks
+	 *
+	 * @since  2.6
+	 * @access public
+	 */
+	public static function finalize( $buffer )
+	{
+		$instance = self::get_instance() ;
+
+		// Bypass if no preserved list to be replaced
+		if ( ! $instance->_esi_preserve_list ) {
+			return $buffer ;
+		}
+
+		$keys = array_keys( $instance->_esi_preserve_list ) ;
+
+		LiteSpeed_Cache_Log::debug( '[ESI] replacing preserved blocks', $keys ) ;
+
+		$buffer = str_replace( $keys , $instance->_esi_preserve_list, $buffer ) ;
+
+		return $buffer ;
 	}
 
 	/**

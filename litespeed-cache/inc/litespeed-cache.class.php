@@ -468,6 +468,9 @@ class LiteSpeed_Cache
 	{
 		$this->_check_is_html( $buffer ) ;
 
+		// Replace ESI preserved list
+		$buffer = LiteSpeed_Cache_ESI::finalize( $buffer ) ;
+
 		// Image lazy load check
 		$buffer = LiteSpeed_Cache_Media::finalize( $buffer ) ;
 
