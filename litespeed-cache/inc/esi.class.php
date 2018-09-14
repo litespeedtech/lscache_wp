@@ -48,6 +48,9 @@ class LiteSpeed_Cache_ESI
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
 
+		// This defination is along with LiteSpeed_Cache_API::nonce() func
+		! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;
+
 		/**
 		 * Recover REQUEST_URI
 		 * @since  1.8.1
@@ -523,6 +526,10 @@ class LiteSpeed_Cache_ESI
 
 		// set nonce TTL to half day
 		LiteSpeed_Cache_Control::set_custom_ttl( 43200 ) ;
+
+		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
+			LiteSpeed_Cache_Control::set_private() ;
+		}
 
 		echo wp_create_nonce( $action ) ;
 	}
