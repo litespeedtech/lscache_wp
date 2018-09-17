@@ -573,8 +573,9 @@ class LiteSpeed_Cache_Admin_Settings
 			foreach ( $ori_list as $k => $v ) {
 				$tmp = parse_url( $v ) ;
 				if ( ! empty( $tmp[ 'scheme' ] ) ) {
-					$ori_list[ $k ] = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
+					$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
 				}
+				$ori_list[ $k ] = trim( $v ) ;
 			}
 			$this->_options[ $id ] = implode( ',', $ori_list ) ;
 		}
