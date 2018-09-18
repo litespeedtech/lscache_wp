@@ -575,17 +575,17 @@ class LiteSpeed_Cache_CDN
 
 		// load wp's jq version
 		global $wp_scripts ;
-		if ( isset( $wp_scripts->registered[ 'jquery' ]->ver ) ) {
-			$v = $wp_scripts->registered[ 'jquery' ]->ver ;
+		if ( isset( $wp_scripts->registered[ 'jquery-core' ]->ver ) ) {
+			$v = $wp_scripts->registered[ 'jquery-core' ]->ver ;
 		}
 
 		$src = $this->_cfg_cdn_remote_jquery === LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;
 
 		LiteSpeed_Cache_Log::debug2( '[CDN] load_jquery_remotely: ' . $src ) ;
 
-		wp_deregister_script( 'jquery' ) ;
+		wp_deregister_script( 'jquery-core' ) ;
 
-		wp_register_script( 'jquery', $src, false, $v ) ;
+		wp_register_script( 'jquery-core', $src, false, $v ) ;
 	}
 
 	/**
