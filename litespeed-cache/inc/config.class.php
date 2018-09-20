@@ -67,6 +67,42 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$this->update_options( array( self::HASH => Litespeed_String::rrand( 32 ) ) ) ;
 		}
 
+		// Hook to options
+		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
+
+	}
+
+	/**
+	 * Give an API to change all options val
+	 * All hooks need to be added before `after_setup_theme`
+	 *
+	 * @since  2.6
+	 * @access public
+	 */
+	public function hook_options()
+	{
+		foreach ( $this->options as $k => $v ) {
+			$new_v = apply_filters( "litespeed_option_$k", $v ) ;
+
+			if ( $new_v !== $v ) {
+				LiteSpeed_Cache_Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
+				$this->options[ $k ] = $new_v ;
+			}
+		}
+	}
+
+	/**
+	 * Force an option to a certain value
+	 *
+	 * @since  2.6
+	 * @access public
+	 */
+	public function force_option( $k, $v )
+	{
+		if ( array_key_exists( $k, $this->options ) ) {
+			LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
+			$this->options[ $k ] = $v ;
+		}
 	}
 
 	/**

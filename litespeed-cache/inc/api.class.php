@@ -38,6 +38,18 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	const WIDGET_OPID_TTL =			LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ;
 
 	/**
+	 * Force to set an option
+	 * Note: it will only affect the AFTER usage of that option
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function force_option( $k, $v )
+	{
+		LiteSpeed_Cache_Config::get_instance()->force_option( $k, $v ) ;
+	}
+
+	/**
 	 * Start a to-be-removed html wrapper
 	 *
 	 * @since 1.4
