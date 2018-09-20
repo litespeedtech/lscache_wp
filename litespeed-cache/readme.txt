@@ -119,7 +119,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 == Third Party Compatibility ==
 
-The vast majority of plugins and themes are compatible with LSCache. [Our API](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api) is available for those that are not.
+The vast majority of plugins and themes are compatible with LSCache. [Our API](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api) is available for those that are not. Use the API to customize smart purging, customize cache rules, create cache varies, and make WP nonce cacheable, among other things.
 
 == Privacy ==
 
@@ -201,6 +201,10 @@ Please see [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/li
 = Are my images optimized? =
 
 Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to **LiteSpeed Cache > Image Optimization**.
+
+= How do I make a WP nonce cacheable in my third-party plugin? =
+
+Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached for 12 hours, regardless of the TTL of the page it is on. Learn more on [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api#nonce_issues).
 
 = How do I get WP-PostViews to display an updating view count? =
 
