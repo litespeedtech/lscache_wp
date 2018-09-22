@@ -623,17 +623,13 @@ class LiteSpeed_Cache_Admin_Rules
 
 			// check login cookie
 			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
-			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
 				if ( ! empty( $cfg[ $id ] ) ) {
-					$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
+					$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
 				}
 				else {
-					$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
-				}
-
-				$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
-				if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
-					$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
+					$cfg[ $id ] = implode( ',', $tp_cookies ) ;
 				}
 			}
 			// frontend and backend

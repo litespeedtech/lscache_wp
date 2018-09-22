@@ -473,28 +473,6 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Gets vary cookies that are already added for the current page.
-	 *
-	 * @since 1.0.13
-	 * @access private
-	 * @return array An array of all vary cookies currently added.
-	 */
-	private function _format_vary_cookies()
-	{
-		if ( empty(self::$_vary_cookies) ) {
-			return false ;
-		}
-		$cookies = array_filter(array_unique(self::$_vary_cookies)) ;
-		if ( empty($cookies) ) {
-			return false ;
-		}
-		foreach ($cookies as $key => $val) {
-			$cookies[$key] = 'cookie=' . $val ;
-		}
-		return $cookies ;
-	}
-
-	/**
 	 * Builds the vary header.
 	 *
 	 * Currently, this only checks post passwords.
@@ -545,6 +523,28 @@ class LiteSpeed_Cache_Vary
 
 		return self::X_HEADER . ': ' . implode(',', $tp_cookies) ;
 
+	}
+
+	/**
+	 * Gets vary cookies that are already added for the current page.
+	 *
+	 * @since 1.0.13
+	 * @access private
+	 * @return array An array of all vary cookies currently added.
+	 */
+	private function _format_vary_cookies()
+	{
+		if ( empty(self::$_vary_cookies) ) {
+			return false ;
+		}
+		$cookies = array_filter(array_unique(self::$_vary_cookies)) ;
+		if ( empty($cookies) ) {
+			return false ;
+		}
+		foreach ($cookies as $key => $val) {
+			$cookies[$key] = 'cookie=' . $val ;
+		}
+		return $cookies ;
 	}
 
 	/**
