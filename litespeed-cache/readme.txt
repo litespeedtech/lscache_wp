@@ -277,7 +277,6 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.6 - Sep 22 2018 =
 * <strong>Vary</strong>: Moved `litespeed_cache_api_vary` hook outside of OLS condition for .htaccess generation.
-* <strong>3rd</strong>: Added compatibility for Aelia CurrencySwitcher plugin.
 * <strong>CDN</strong>: Trim spaces in original URL of CDN setting.
 * <strong>API</strong>: New filter `litespeed_option_` to change all options dynamically.
 * <strong>API</strong>: New `LiteSpeed_Cache_API::force_option()` to change all options dynamically.
