@@ -534,6 +534,9 @@ class LiteSpeed_Cache_Vary
 	 */
 	private function _format_vary_cookies()
 	{
+		// To add new varys, use hook `API::hook_vary_add()` before here
+		do_action( 'litespeed_vary_add' ) ;
+
 		if ( empty(self::$_vary_cookies) ) {
 			return false ;
 		}
@@ -560,6 +563,8 @@ class LiteSpeed_Cache_Vary
 		if ( ! is_array($vary) ) {
 			$vary = array($vary) ;
 		}
+
+		LiteSpeed_Cache_Log::debug( '[Vary] Add new vary ', $vary ) ;
 
 		self::$_vary_cookies = array_merge(self::$_vary_cookies, $vary) ;
 	}
