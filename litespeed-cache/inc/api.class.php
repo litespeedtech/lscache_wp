@@ -383,6 +383,17 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
+	 * Hook new vary cookies to vary finialization
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function hook_vary_add( $hook )
+	{
+		add_action( 'litespeed_vary_add', $hook ) ;
+	}
+
+	/**
 	 * Hook purge tags appending to purge
 	 *
 	 * @since 1.1.3
