@@ -30,7 +30,6 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_css_combine ;
 	private $cfg_js_minify ;
 	private $cfg_js_combine ;
-	private $cfg_html_minify ;
 	private $cfg_css_async ;
 	private $cfg_js_defer ;
 	private $cfg_js_defer_exc = false ;
@@ -61,20 +60,9 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function __construct()
 	{
-		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_HTTP2 ) ;
-		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_HTTP2 ) ;
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
-		$this->cfg_html_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ;
 		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ;
 		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ;
 		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ;
-		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
-		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ;
-		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ) * 1000000 ;
-		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
 
 		$this->_static_request_check() ;
 
@@ -167,8 +155,14 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _static_request_check()
 	{
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
+
 		// This request is for js/css_async.js
-		if ( ( $this->cfg_css_async || $this->cfg_ggfonts_async ) && strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
+		if ( strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] start serving static file' ) ;
 
 			$content = Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) ;
@@ -355,6 +349,17 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
+		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_HTTP2 ) ;
+		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_HTTP2 ) ;
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
+		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
+		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
+		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ) * 1000000 ;
+
 		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
 			return ;
@@ -627,7 +632,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// HTML minify
-		if ( $this->cfg_html_minify ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ) {
 			$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 		}
 

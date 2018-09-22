@@ -152,6 +152,7 @@ class LiteSpeed_Cache
 		/**
 		 * Added hook before init
 		 * @since  1.6.6
+		 * @since  2.6 	Added filter to all config values in LiteSpeed_Cache_Config
 		 */
 		do_action( 'litespeed_init' ) ;
 
