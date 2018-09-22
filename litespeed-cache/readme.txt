@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.5.1
+Stable tag: 2.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -204,7 +204,11 @@ Not automatically. LSCWP v1.6+ can optimize your images by request. Navigate to 
 
 = How do I make a WP nonce cacheable in my third-party plugin? =
 
-Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached for 12 hours, regardless of the TTL of the page it is on. Learn more on [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api#nonce_issues).
+Our API includes a function that uses ESI to "punch a hole" in a cached page for a nonce. This allows the nonce to be cached for 12 hours, regardless of the TTL of the page it is on.
+
+Quick start: replace `wp_create_nonce( 'example' )` with `method_exists( 'LiteSpeed_Cache_API', 'nonce' ) ? LiteSpeed_Cache_API::nonce( 'example' ) : wp_create_nonce( 'example' )`.
+
+Learn more on [our API wiki](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:api#nonce_issues).
 
 = How do I get WP-PostViews to display an updating view count? =
 
@@ -271,10 +275,25 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.6 - Sep 22 2018 =
+* <strong>Vary</strong>: Moved `litespeed_cache_api_vary` hook outside of OLS condition for .htaccess generation.
+* <strong>3rd</strong>: Added compatibility for Aelia CurrencySwitcher plugin.
+* <strong>CDN</strong>: Trim spaces in original URL of CDN setting.
+* <strong>API</strong>: New filter `litespeed_option_` to change all options dynamically.
+* <strong>API</strong>: New `LiteSpeed_Cache_API::force_option()` to change all options dynamically.
+* <strong>API</strong>: New `LiteSpeed_Cache_API::vary()` to set default vary directly for easier compaitiblity with WPML WooCommerce Multilingual.
+* <strong>API</strong>: New `LiteSpeed_Cache_API::nonce()` to safely and easily allow caching of wp-nonce.
+* <strong>API</strong>: New `LiteSpeed_Cache_API::hook_vary_add()` to add new vary.
+* <strong>Optm</strong>: Changed HTML/JS/CSS optimization options assignment position from constructor to `finalize()`.
+* <strong>Doc</strong>: Added nonce to FAQ and mentioned nonce in 3rd Party Compatibility section.
+* <strong>GUI</strong>: Moved inline minify to under html minify due to the dependency.
+* <strong>3rd</strong>: Cached Aelia CurrencySwitcher by default.
+* 🐞: Fixed issue where enabling remote JQuery caused missing jquery-migrate library error.
+
 = 2.5.1 - Sep 11 2018 =
 * 🆕 Responsive placeholder. (@szmigieldesign)
 * Changed CSS::ccss_realpath function scope to private.
-* <strong>BUGFIX</strong> Detected JS filetype before optimizing to avoid PHP source conflict. (@closte #50)
+* 🐞 Detected JS filetype before optimizing to avoid PHP source conflict. (@closte #50)
 
 = 2.5 - Sep 6 2018 =
 * [IMPROVEMENT] <strong>CLI</strong> can now execute Remove Original Image Backups. (@Shon)
