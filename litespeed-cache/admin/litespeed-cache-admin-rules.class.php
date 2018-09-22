@@ -623,6 +623,17 @@ class LiteSpeed_Cache_Admin_Rules
 
 			// check login cookie
 			$id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ;
+
+			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
+			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+				if ( ! empty( $cfg[ $id ] ) ) {
+					$cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH ;
+				}
+				else {
+					$cfg[ $id ] = 'wp-postpass_' . COOKIEHASH ;
+				}
+			}
+
 			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
 			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
 				if ( ! empty( $cfg[ $id ] ) ) {
