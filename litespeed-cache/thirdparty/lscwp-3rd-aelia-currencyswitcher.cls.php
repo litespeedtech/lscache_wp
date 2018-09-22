@@ -4,6 +4,7 @@
  * The Third Party integration with the Aelia CurrencySwitcher plugin.
  *
  * @since		1.0.13
+ * @since  		2.6 	Removed hook_vary as OLS supports vary header already
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
@@ -33,8 +34,8 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 	public static function detect()
 	{
 		if ( defined('WOOCOMMERCE_VERSION') && isset($GLOBALS['woocommerce-aelia-currencyswitcher']) && is_object($GLOBALS['woocommerce-aelia-currencyswitcher']) ) {
-			LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies') ;
-			LiteSpeed_Cache_API::hook_vary('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::get_vary') ;
+			// Not all pages need to add vary, so need to use this API to set conditions
+			LiteSpeed_Cache_API::hook_vary_add( 'LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies' ) ;
 		}
 	}
 
@@ -56,34 +57,6 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 			return ;
 		}
 
-		if ( isset($_COOKIE) && ! empty($_COOKIE) ) {
-			foreach (self::$_cookies as $cookie) {
-				if ( ! empty($_COOKIE[$cookie]) ) {
-					LiteSpeed_Cache_API::vary_add(self::$_cookies) ;
-					return ;
-				}
-			}
-		}
-
-		LiteSpeed_Cache_API::set_nocache() ;
-	}
-
-	/**
-	 * Hooked to the litespeed_cache_get_vary filter.
-	 *
-	 * If Aelia Currency Switcher is enabled, will need to add their cookies
-	 * to the vary array.
-	 *
-	 * @since 1.0.14
-	 * @access public
-	 * @param array $vary_arr The current list of vary cookies.
-	 * @return array The updated list of vary cookies.
-	 */
-	public static function get_vary($vary_arr)
-	{
-		if ( ! is_array($vary_arr) ) {
-			return $vary_arr ;
-		}
-		return array_merge($vary_arr, self::$_cookies) ;
+		LiteSpeed_Cache_API::vary_add( self::$_cookies ) ;
 	}
 }
