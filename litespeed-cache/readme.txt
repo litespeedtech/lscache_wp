@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.6
+Stable tag: 2.6.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -274,6 +274,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.6.0.1 - Sep 24 2018 =
+* 🔥🐞: Fixed an issue in responsive placeholder generation where redundant history data was being saved and using a lot of space.
 
 = 2.6 - Sep 22 2018 =
 * <strong>Vary</strong>: Moved `litespeed_cache_api_vary` hook outside of OLS condition for .htaccess generation.
