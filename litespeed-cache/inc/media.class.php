@@ -909,6 +909,7 @@ eot;
 		// Clear placeholder in queue too
 		$req_summary = self::get_summary() ;
 		$req_summary[ 'queue' ] = array() ;
+		$req_summary[ 'history' ] = array() ;
 		$req_summary[ 'curr_request' ] = 0 ;
 		$this->_save_summary( $req_summary ) ;
 
@@ -994,7 +995,10 @@ eot;
 		if ( empty( $req_summary[ 'history' ] ) ) {
 			$req_summary[ 'history' ] = array() ;
 		}
-		$req_summary[ 'history' ][] = $size ;
+		if ( ! in_array( $size, $req_summary[ 'history' ] ) ) {
+			$req_summary[ 'history' ][] = $size ;
+		}
+
 		unset( $req_summary[ 'queue' ][ array_search( $size, $req_summary[ 'queue' ] ) ] ) ;
 
 		$this->_save_summary( $req_summary ) ;
