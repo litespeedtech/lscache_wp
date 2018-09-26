@@ -907,11 +907,7 @@ eot;
 		}
 
 		// Clear placeholder in queue too
-		$req_summary = self::get_summary() ;
-		$req_summary[ 'queue' ] = array() ;
-		$req_summary[ 'history' ] = array() ;
-		$req_summary[ 'curr_request' ] = 0 ;
-		$this->_save_summary( $req_summary ) ;
+		$this->_save_summary( array() ) ;
 
 		LiteSpeed_Cache_Log::debug2( '[Media] Cleared placeholder queue' ) ;
 	}
@@ -992,13 +988,6 @@ eot;
 		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'curr_request' ] = 0 ;
-		if ( empty( $req_summary[ 'history' ] ) ) {
-			$req_summary[ 'history' ] = array() ;
-		}
-		if ( ! in_array( $size, $req_summary[ 'history' ] ) ) {
-			$req_summary[ 'history' ][] = $size ;
-		}
-
 		unset( $req_summary[ 'queue' ][ array_search( $size, $req_summary[ 'queue' ] ) ] ) ;
 
 		$this->_save_summary( $req_summary ) ;
