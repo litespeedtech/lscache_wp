@@ -63,6 +63,10 @@ class LiteSpeed_Cache_Admin_Rules
 	private function __construct()
 	{
 		$this->path_set() ;
+		// Filter for frontend&backend htaccess path
+		$this->frontend_htaccess = apply_filters( 'litespeed_frontend_htaccess', $this->frontend_htaccess ) ;
+		$this->backend_htaccess = apply_filters( 'litespeed_backend_htaccess', $this->backend_htaccess ) ;
+
 		clearstatcache() ;
 
 		// frontend .htaccess privilege
