@@ -192,6 +192,28 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	</tr>
 
 	<tr>
+		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache Post Typs', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __('These post types will be stored in separate critical CSS files.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, if each page has different style, use %s to separate them to avoid using same critical CSS.', 'litespeed-cache' ), '<code>page</code>' ) ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache URIs', 'litespeed-cache' ) ; ?></th>
+		<td>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ; ?>
+			<div class="litespeed-desc">
+				<?php echo __('Paths containing these strings will use separate critical CSS files.', 'litespeed-cache'); ?>
+				<?php $this->_uri_usage_example() ; ?>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Inline CSS Async Lib', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE ) ; ?>

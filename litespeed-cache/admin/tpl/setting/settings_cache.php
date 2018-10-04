@@ -64,14 +64,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('URI Paths containing these strings will NOT be cached as public.', 'litespeed-cache'); ?>
-				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
-				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
-				<br />
-				<i>
-					<?php echo sprintf( __( 'To match the beginning, add %s to the beginning of the item.', 'litespeed-cache' ), '<code>^</code>' ) ; ?>
-					<?php echo sprintf( __( 'To do an exact match, add %s to the end of the URL.', 'litespeed-cache' ), '<code>$</code>' ) ; ?>
-					<?php echo __('One per line.', 'litespeed-cache'); ?>
-				</i>
+				<?php $this->_uri_usage_example() ; ?>
 			</div>
 		</td>
 	</tr>

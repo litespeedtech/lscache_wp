@@ -34,6 +34,8 @@ class LiteSpeed_Cache_Const
 	const ITEM_CACHE_URI_PRIV = 'litespeed-cache_uri_priv' ;
 	const ITEM_OPTM_EXCLUDES = 'litespeed-optm_excludes' ;
 	const ITEM_EXCLUDES_URI = 'litespeed-excludes_uri' ;
+	const ITEM_OPTM_CCSS_SEPARATE_POSTTYPE = 'litespeed-optm-ccss-separate_posttype' ;
+	const ITEM_OPTM_CCSS_SEPARATE_URI = 'litespeed-optm-css-separate_uri' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
@@ -260,6 +262,8 @@ class LiteSpeed_Cache_Const
 			self::ITEM_OPTM_EXCLUDES,
 			self::ITEM_EXCLUDES_URI,
 			self::ITEM_MEDIA_WEBP_ATTRIBUTE,
+			self::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE,
+			self::ITEM_OPTM_CCSS_SEPARATE_URI,
 		) ;
 	}
 

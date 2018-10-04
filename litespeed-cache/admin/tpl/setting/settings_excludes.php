@@ -16,14 +16,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache'); ?>
-				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
-				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
-				<br />
-				<i>
-					<?php echo sprintf( __( 'To match the beginning, add %s to the beginning of the item.', 'litespeed-cache' ), '<code>^</code>' ) ; ?>
-					<?php echo sprintf( __( 'To do an exact match, add %s to the end of the URL.', 'litespeed-cache' ), '<code>$</code>' ) ; ?>
-					<?php echo __('One per line.', 'litespeed-cache'); ?>
-				</i>
+				<?php $this->_uri_usage_example() ; ?>
 			</div>
 		</td>
 	</tr>
@@ -34,14 +27,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will not be cached.', 'litespeed-cache'); ?>
-				<?php echo __('The URLs will be compared to the REQUEST_URI server variable.', 'litespeed-cache'); ?>
-				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
-				<br />
-				<i>
-					<?php echo sprintf( __( 'To match the beginning, add %s to the beginning of the item.', 'litespeed-cache' ), '<code>^</code>' ) ; ?>
-					<?php echo sprintf( __( 'To do an exact match, add %s to the end of the URL.', 'litespeed-cache' ), '<code>$</code>' ) ; ?>
-					<?php echo __('One per line.', 'litespeed-cache'); ?>
-				</i>
+				<?php $this->_uri_usage_example() ; ?>
 			</div>
 		</td>
 	</tr>

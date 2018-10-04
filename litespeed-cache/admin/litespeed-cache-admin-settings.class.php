@@ -796,6 +796,16 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
+
+		/**
+		 * Separate CCSS File Types & URI
+		 * @since 2.6.1
+		 */
+		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ;
+		$this->_save_item( $id ) ;
+		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ;
+		$this->_save_item( $id, 'uri' ) ;
+
 	}
 
 	/**

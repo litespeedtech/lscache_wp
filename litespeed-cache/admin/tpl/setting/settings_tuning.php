@@ -170,9 +170,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any optimization of listed pages.', 'litespeed-cache' ) ; ?>
-				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php echo sprintf( __( 'For example, for %s, %s can be used here.', 'litespeed-cache' ), '<code>/mypath/mypage?aa=bb</code>', '<code>mypage?aa=</code>' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php $this->_uri_usage_example() ; ?>
 			</div>
 		</td>
 	</tr>

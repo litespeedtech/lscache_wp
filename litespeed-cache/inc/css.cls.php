@@ -312,6 +312,24 @@ class LiteSpeed_Cache_CSS
 			$css = 'tag' ;
 		}
 
+		// Check if in separate css type option
+		$separate_posttypes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ) ;
+		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
+			LiteSpeed_Cache_Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
+
+			return $css . '-' . md5( $_SERVER[ 'REQUEST_URI' ] ) ;
+		}
+
+		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ;
+		if ( ! empty( $separate_uri ) ) {
+			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
+			if ( $result ) {
+				LiteSpeed_Cache_Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
+
+				return $css . '-' . md5( $_SERVER[ 'REQUEST_URI' ] ) ;
+			}
+		}
+
 		return $css ;
 	}
 
