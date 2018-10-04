@@ -192,12 +192,13 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache Post Typs', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache Post Types', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('These post types will be stored in separate critical CSS files.', 'litespeed-cache'); ?>
-				<?php echo sprintf( __( 'For example, if each page has different style, use %s to separate them to avoid using same critical CSS.', 'litespeed-cache' ), '<code>page</code>' ) ; ?>
+				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
+				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ) ; ?>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#separate_ccss_cache_post_types' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -207,7 +208,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('Paths containing these strings will use separate critical CSS files.', 'litespeed-cache'); ?>
+				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
 			</div>
 		</td>
@@ -256,7 +257,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
 				<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch' ) ; ?>
 			</div>
 		</td>
 	</tr>

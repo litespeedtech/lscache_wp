@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.6.0.1
+Stable tag: 2.6.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -275,6 +275,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.6.1 - Oct 4 2018 =
+* 🌱 Ability to generate separate Critical CSS Cache for Post Types & URIs.
+* <strong>API</strong>: Filter `litespeed_frontend_htaccess` for frontend htaccess path.
+* <strong>Media</strong>: Removed responsive placeholder generation history to save space.
+
 = 2.6.0.1 - Sep 24 2018 =
 * 🔥🐞: Fixed an issue in responsive placeholder generation where redundant history data was being saved and using a lot of space.
 
@@ -293,7 +298,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🐞: Fixed issue where enabling remote JQuery caused missing jquery-migrate library error.
 
 = 2.5.1 - Sep 11 2018 =
-* 🆕 Responsive placeholder. (@szmigieldesign)
+* 🌱 Responsive placeholder. (@szmigieldesign)
 * Changed CSS::ccss_realpath function scope to private.
 * 🐞 Detected JS filetype before optimizing to avoid PHP source conflict. (@closte #50)
 
