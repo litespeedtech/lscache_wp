@@ -514,7 +514,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	public function plugin_upgrade()
 	{
 		$default_options = $this->get_default_options() ;
-        $site_options = get_site_option( self::OPTION_NAME ) ;
+        $site_options = $this->get_site_options();
         
         // Skip count check if Use Primary Site Configurations is on
 		if (
