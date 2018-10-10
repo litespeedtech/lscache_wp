@@ -514,8 +514,16 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	public function plugin_upgrade()
 	{
 		$default_options = $this->get_default_options() ;
-
-		if ( $this->options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] && count( $default_options ) == count( $this->options ) ) {
+        $site_options = $this->get_site_options();
+        
+        // Skip count check if Use Primary Site Configurations is on
+		if (
+			$this->options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] &&
+			(
+				!empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ||
+				count( $default_options ) == count( $this->options )
+			)
+		) {
 			return ;
 		}
 
