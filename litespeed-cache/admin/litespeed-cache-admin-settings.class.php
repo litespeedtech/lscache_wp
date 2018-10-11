@@ -34,21 +34,6 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Display err msg for ttl
-	 *
-	 * @since  2.0
-	 * @access private
-	 */
-	private function _show_ttl_err( $desc, $min, $max )
-	{
-		if ( ! $max ) {
-			return sprintf( __( '%1$s must be an integer larger than %2$d', 'litespeed-cache' ), $desc, $min ) ;
-		}
-
-		return sprintf( __( '%1$s must be an integer between %2$d and %3$d', 'litespeed-cache' ), $desc, $min, $max ) ;
-	}
-
-	/**
 	 * Callback function that will validate any changes made in the settings page.
 	 *
 	 * NOTE: Anytime that validate_plugin_settings is called, `convert_options_to_input` must be done first if not from option page
@@ -354,26 +339,21 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// TTL check
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_PUBLIC_TTL 		=> array( __( 'Default Public Cache', 'litespeed-cache' ), 30, $this->_max_int ),
-			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL	 	=> array( __( 'Default Private Cache', 'litespeed-cache' ), 60, 3600 ),
-			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL 	=> array( __( 'Default Front Page', 'litespeed-cache' ), 30, $this->_max_int ),
-			LiteSpeed_Cache_Config::OPID_FEED_TTL		 	=> array( __( 'Feed', 'litespeed-cache' ), 0, $this->_max_int, 30 ),
-			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array( '404', 0, $this->_max_int, 30 ),
-			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array( '403', 0, $this->_max_int, 30 ),
-			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array( '500', 0, $this->_max_int, 30 ),
+			LiteSpeed_Cache_Config::OPID_PUBLIC_TTL 		=> array( 30, 	null ),
+			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL	 	=> array( 60, 	3600 ),
+			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL 	=> array( 30, 	null ),
+			LiteSpeed_Cache_Config::OPID_FEED_TTL		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array( 0, 	null, 30 ),
 		) ;
 		foreach ( $ids as $id => $v ) {
-			list( $desc, $min, $max ) = $v ;
-			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
-				$this->_err[] = $this->_show_ttl_err( $desc, $min, $max ) ;
-			}
-			else {
-				if ( ! empty( $v[ 3 ] ) && $this->_input[ $id ] < $v[ 3 ] ) {
-					$this->_options[ $id ] = 0 ;
-				}
-				else {
-					$this->_options[ $id ] = $this->_input[ $id ] ;
-				}
+			list( $min, $max ) = $v ;
+
+			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, $min, $max ) ;
+
+			if ( ! empty( $v[ 2 ] ) && $this->_options[ $id ] < $v[ 2 ] ) {
+				$this->_options[ $id ] = 0 ;
 			}
 		}
 
@@ -763,10 +743,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ;
-		if ( ! $this->_check_ttl( $this->_input, $id, 3600 ) ) {
-			$this->_input[ $id ] = 3600 ;
-		}
-		$this->_options[ $id ] = $this->_input[ $id ] ;
+		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3600 ) ;
 
 		// Update critical css
 		update_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, $this->_input[ LiteSpeed_Cache_Config::ITEM_OPTM_CSS ] ) ;
@@ -897,12 +874,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ;
-		if ( ! $this->_check_ttl( $this->_input, $id, 3, 3000 ) ) {
-			$this->_err[] = $this->_show_ttl_err( __( 'Log File Size Limit', 'litespeed-cache' ), 3, 3000 ) ;
-		}
-		else {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-		}
+		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3, 3000 ) ;
 
 		$ids = array(
 			LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL,
@@ -983,20 +955,16 @@ class LiteSpeed_Cache_Admin_Settings
 			$usleep_max = null ;
 		}
 		$ids = array(
-			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( __( 'Delay', 'litespeed-cache' ), $usleep_min, $usleep_max ),
-			LiteSpeed_Cache_Config::CRWL_RUN_DURATION 	=> array( __( 'Run Duration', 'litespeed-cache' ), 0, $this->_max_int ),
-			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL 	=> array( __( 'Cron Interval', 'litespeed-cache' ), 60, $this->_max_int ),
-			LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL => array( __( 'Whole Interval', 'litespeed-cache' ), 0, $this->_max_int ),
-			LiteSpeed_Cache_Config::CRWL_THREADS 		=> array( __( 'Threads', 'litespeed-cache' ), 1, 16 ),
+			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( $usleep_min, $usleep_max ),
+			LiteSpeed_Cache_Config::CRWL_RUN_DURATION 	=> array( 0,	null ),
+			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL 	=> array( 60,	null ),
+			LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL => array( 0,	null ),
+			LiteSpeed_Cache_Config::CRWL_THREADS 		=> array( 1,	16 ),
 		) ;
 		foreach ( $ids as $id => $v ) {
-			list( $desc, $min, $max ) = $v ;
-			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
-				$this->_err[] = $this->_show_ttl_err( $desc, $min, $max ) ;
-			}
-			else {
-				$this->_options[ $id ] = $this->_input[ $id ] ;
-			}
+			list( $min, $max ) = $v ;
+
+			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, $min, $max ) ;
 		}
 
 
@@ -1059,19 +1027,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// TTL check
-		$ids = array(
-			LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL 		=> array( __( 'Default Public Cache', 'litespeed-cache' ), 30, $this->_max_int ),
-		) ;
-		foreach ( $ids as $id => $v ) {
-			list( $desc, $min, $max ) = $v ;
-			if ( ! $this->_check_ttl( $this->_input, $id, $min, $max ) ) {
-				$this->_err[] = $this->_show_ttl_err( $desc, $min, $max ) ;
-			}
-			else {
-				$new_options[ $id ] = $this->_input[ $id ] ;
-			}
-		}
-
+		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ;
+		$new_options[ $id ] = $this->_check_ttl( $this->_input, $id, 30 ) ;
 
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
@@ -1268,6 +1225,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Helper function to validate TTL settings. Will check if it's set, is an integer, and is greater than 0 and less than INT_MAX.
 	 *
 	 * @since 1.0.12
+	 * @since 2.6.2 Automatically correct number
 	 * @access private
 	 * @param array $input Input array
 	 * @param string $id Option ID
@@ -1277,24 +1235,25 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _check_ttl( $input, $id, $min = false, $max = null )
 	{
-		if ( ! isset( $input[ $id ] ) ) {
-			return false ;
+		$v = isset( $input[ $id ] ) ? (int) $input[ $id ] : 0 ;
+
+		if ( $min && $v < $min ) {
+			return $min ;
 		}
 
-		$val = $input[ $id ] ;
-
-		$ival = intval( $val ) ;
-		$sval = strval( $val ) ;
-
-		if( $min && $ival < $min ) {
-			return false ;
+		if ( $v < 0 ) {
+			return 0 ;
 		}
 
 		if ( $max === null ) {
 			$max = $this->_max_int ;
 		}
 
-		return ctype_digit( $sval ) && $ival >= 0 && $ival <= $max ;
+		if ( $v > $max ) {
+			return $max ;
+		}
+
+		return $v ;
 	}
 
 	/**
