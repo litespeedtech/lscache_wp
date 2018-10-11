@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.6.1\n"
+"Project-Id-Version: LiteSpeed Cache 2.6.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-10-04 18:56:42+00:00\n"
+"POT-Creation-Date: 2018-10-11 19:29:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -476,65 +476,12 @@ msgstr ""
 msgid "File Saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:45
-msgid "%1$s must be an integer larger than %2$d"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:48
-msgid "%1$s must be an integer between %2$d and %3$d"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:67
+#: admin/litespeed-cache-admin-settings.class.php:52
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:257
+#: admin/litespeed-cache-admin-settings.class.php:242
 msgid "Site options saved."
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:357
-#: admin/litespeed-cache-admin-settings.class.php:1063
-msgid "Default Public Cache"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:358
-msgid "Default Private Cache"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:359
-msgid "Default Front Page"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:360
-msgid "Feed"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:901
-#: admin/tpl/setting/settings_debug.php:88
-msgid "Log File Size Limit"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:986
-#: admin/tpl/setting/settings_crawler.php:13
-msgid "Delay"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:987
-#: admin/tpl/setting/settings_crawler.php:37
-msgid "Run Duration"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:988
-msgid "Cron Interval"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:989
-msgid "Whole Interval"
-msgstr ""
-
-#: admin/litespeed-cache-admin-settings.class.php:990
-#: admin/tpl/setting/settings_crawler.php:73
-msgid "Threads"
 msgstr ""
 
 #: admin/litespeed-cache-admin.class.php:221
@@ -911,7 +858,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:353
 #: includes/litespeed-cache-gui.class.php:353
@@ -2237,6 +2184,10 @@ msgstr ""
 msgid "Crawler Settings"
 msgstr ""
 
+#: admin/tpl/setting/settings_crawler.php:13
+msgid "Delay"
+msgstr ""
+
 #: admin/tpl/setting/settings_crawler.php:16
 msgid "microseconds"
 msgstr ""
@@ -2248,6 +2199,10 @@ msgstr ""
 
 #: admin/tpl/setting/settings_crawler.php:23
 msgid "Server allowed min value"
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:37
+msgid "Run Duration"
 msgstr ""
 
 #: admin/tpl/setting/settings_crawler.php:42
@@ -2272,6 +2227,10 @@ msgstr ""
 msgid ""
 "Specify how long in seconds before the crawler should initiate crawling the "
 "entire sitemap again."
+msgstr ""
+
+#: admin/tpl/setting/settings_crawler.php:73
+msgid "Threads"
 msgstr ""
 
 #: admin/tpl/setting/settings_crawler.php:78
@@ -2441,6 +2400,10 @@ msgstr ""
 
 #: admin/tpl/setting/settings_debug.php:82
 msgid "Advanced level will log more details."
+msgstr ""
+
+#: admin/tpl/setting/settings_debug.php:88
+msgid "Log File Size Limit"
 msgstr ""
 
 #: admin/tpl/setting/settings_debug.php:91
