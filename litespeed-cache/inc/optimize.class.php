@@ -291,7 +291,7 @@ class LiteSpeed_Cache_Optimize
 	public function remove_query_strings( $src )
 	{
 		if ( strpos( $src, 'ver=' ) !== false ) {
-			$src = preg_replace( '#[&\?]+(ver=([\w\-\.]+))#i', '', $src ) ;
+			$src = preg_replace( '#[&\?]+(ver=([^&]+))#i', '', $src ) ;
 		}
 		return $src ;
 	}
