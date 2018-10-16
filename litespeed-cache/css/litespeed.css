@@ -1797,6 +1797,12 @@ input.litespeed-input[type="file"]{
 	margin-top: 0;
 }
 
+.litespeed-wrap .litespeed-float-resetbtn {
+	position: absolute;
+	right: 10px;
+	bottom: 20px;
+}
+
 .litespeed input,
 .litespeed-body input,
 .litespeed-body textarea {

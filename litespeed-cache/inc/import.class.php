@@ -17,9 +17,11 @@ class LiteSpeed_Cache_Import
 	private static $_instance ;
 
 	private $_cfg_items ;
+	private $__cfg ;
 
 	const TYPE_IMPORT = 'import' ;
 	const TYPE_EXPORT = 'export' ;
+	const TYPE_RESET = 'reset' ;
 
 	const DB_IMPORT_LOG = 'litespeed_import_log' ;
 
@@ -33,7 +35,9 @@ class LiteSpeed_Cache_Import
 	{
 		LiteSpeed_Cache_Log::debug( 'Import init' ) ;
 
-		$this->_cfg_items = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+
+		$this->_cfg_items = $this->__cfg->stored_items() ;
 	}
 
 	/**
@@ -55,6 +59,10 @@ class LiteSpeed_Cache_Import
 
 			case self::TYPE_EXPORT :
 				$instance->_export() ;
+				break ;
+
+			case self::TYPE_RESET :
+				$instance->_reset() ;
 				break ;
 
 			default:
@@ -183,35 +191,65 @@ class LiteSpeed_Cache_Import
 		global $wp_settings_errors ;
 		if ( ! empty( $wp_settings_errors ) ) {
 			foreach ( $wp_settings_errors as $err ) {
+				LiteSpeed_Cache_Admin_Display::error( $err[ 'message' ] ) ;
 				LiteSpeed_Cache_Log::debug( '[Import] err ' . $err[ 'message' ] ) ;
 			}
+			return false ;
 		}
 
 		if ( ! $file ) {
-			if ( ! empty( $wp_settings_errors ) ) {
-				foreach ( $wp_settings_errors as $err ) {
-					LiteSpeed_Cache_Admin_Display::error( $err[ 'message' ] ) ;
-				}
-				return false ;
-			}
-
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
 
 			$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 		else {
-			if ( ! empty( $wp_settings_errors ) ) {
-				return false ;
-			}
-
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $file ) ;
 		}
 
-		$ret = LiteSpeed_Cache_Config::get_instance()->update_options( $output ) ;
+		$ret = $this->__cfg->update_options( $output ) ;
 
 		return true ;
 
+	}
+
+	/**
+	 * Reset all settings
+	 *
+	 * @since  2.6.3
+	 */
+	public function reset()
+	{
+		return $this->_reset() ;
+	}
+
+	/**
+	 * Reset all configs to default values.
+	 *
+	 * @since  2.6.3
+	 * @access private
+	 */
+	private function _reset()
+	{
+		$options = $this->__cfg->get_default_options() ;
+		// Get items
+		$cfg_items = $this->__cfg->stored_items() ;
+		foreach ( $cfg_items as $v ) {
+			$options[ $v ] = $this->__cfg->default_item( $v ) ;
+		}
+
+		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
+
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
+
+		$ret = $this->__cfg->update_options( $output ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Import] Reset successfully.' ) ;
+
+		$msg = __( 'Reset successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
+		return true ;
 	}
 
 	/**

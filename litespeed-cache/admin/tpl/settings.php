@@ -190,6 +190,9 @@ if ( ! $adv_mode ) {
 	}
 
 	?>
+
+	<a href="admin.php?page=lscache-import" class="litespeed-float-resetbtn"><?php echo __( 'Reset Settings', 'litespeed-cache' ) ; ?></a>
+
 	</form>
 	</div>
 </div>

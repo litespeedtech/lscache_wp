@@ -55,5 +55,15 @@ $log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
 			<?php echo __( 'This will import settings from a file and override all current LiteSpeed Cache settings.', 'litespeed-cache' ) ; ?>
 		</div>
 
+		<h3 class="litespeed-title"><?php echo __('Reset Settings', 'litespeed-cache') ; ?></h3>
+
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
+			<?php echo __( 'Reset', 'litespeed-cache' ) ; ?>
+		</a>
+
+		<div class="litespeed-desc">
+			<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?>
+		</div>
+
 	</div>
 </div>

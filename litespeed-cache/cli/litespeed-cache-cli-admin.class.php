@@ -255,6 +255,26 @@ class LiteSpeed_Cache_Cli_Admin
 	}
 
 	/**
+	 * Reset all options to default.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Reset all options
+	 *     $ wp lscache-admin reset_options
+	 *
+	 */
+	public function reset_options()
+	{
+		$res = LiteSpeed_Cache_Import::get_instance()->reset( $file ) ;
+
+		if ( ! $res ) {
+			WP_CLI::error( 'Failed to reset options.' ) ;
+		}
+
+		WP_CLI::success( 'Options reset.' ) ;
+	}
+
+	/**
 	 * Update options
 	 *
 	 * @access private

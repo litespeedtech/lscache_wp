@@ -295,6 +295,12 @@ class LiteSpeed_Cache_Const
 						"div.data-large_image\n" .
 						"img.retina_logo_url" ;
 
+			case self::ITEM_LOG_IGNORE_FILTERS :
+				return "gettext\ngettext_with_context\nget_the_terms\nget_term" ;
+
+			case self::ITEM_LOG_IGNORE_PART_FILTERS :
+				return "i18n\nlocale\nsettings\noption" ;
+
 			default :
 				break ;
 		}
