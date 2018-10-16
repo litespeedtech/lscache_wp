@@ -171,22 +171,44 @@ class LiteSpeed_Cache_Import
 			return false ;
 		}
 
+		$options = $data[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
 		foreach ( $this->_cfg_items as $v ) {
-			if ( ! empty( $data[ $v ] ) ) {
-				update_option( $v, $data[ $v ] ) ;
+			$options[ $v ] = $data[ $v ] ;
+		}
+
+		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
+
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
+
+		global $wp_settings_errors ;
+		if ( ! empty( $wp_settings_errors ) ) {
+			foreach ( $wp_settings_errors as $err ) {
+				LiteSpeed_Cache_Log::debug( '[Import] err ' . $err[ 'message' ] ) ;
 			}
 		}
 
-
 		if ( ! $file ) {
+			if ( ! empty( $wp_settings_errors ) ) {
+				foreach ( $wp_settings_errors as $err ) {
+					LiteSpeed_Cache_Admin_Display::error( $err[ 'message' ] ) ;
+				}
+				return false ;
+			}
+
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
 
 			$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
 		else {
+			if ( ! empty( $wp_settings_errors ) ) {
+				return false ;
+			}
+
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $file ) ;
 		}
+
+		$ret = LiteSpeed_Cache_Config::get_instance()->update_options( $output ) ;
 
 		return true ;
 
