@@ -1234,6 +1234,7 @@ class LiteSpeed_Cache_Img_Optm
 		$data = array() ;
 
 		$data[ 'img_count' ] = $this->img_count() ;
+		$data[ 'optm_summary' ] = $this->summary_info() ;
 
 		$data[ '_wp_attached_file' ] = get_post_meta( $pid, '_wp_attached_file', true ) ;
 		$data[ '_wp_attachment_metadata' ] = get_post_meta( $pid, '_wp_attachment_metadata', true ) ;
