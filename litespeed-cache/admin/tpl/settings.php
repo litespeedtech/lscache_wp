@@ -132,16 +132,40 @@ if ( ! $adv_mode ) {
 	<h2 class="litespeed-header">
 	<?php
 		$i = 1 ;
+		$accesskey_set = array() ;
 		foreach ($menu_list as $tab => $val){
 			if ( in_array( $tab, $hide_tabs ) ) {
 				continue ;
 			}
-			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+
+			$accesskey = '' ;
+			if ( $i <= 9 ) {
+				$accesskey = "litespeed-accesskey='$i'" ;
+			}
+			else {
+				$tmp = strtoupper( substr( $val, 0, 1 ) ) ;
+				if ( ! in_array( $tmp, $accesskey_set ) ) {
+					$accesskey_set[] = $tmp ;
+					$accesskey = "litespeed-accesskey='$tmp'" ;
+				}
+			}
+
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;
 		}
 		foreach ($tp_tabs as $val){
-			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+			$accesskey = '' ;
+			if ( $i <= 9 ) {
+				$accesskey = "litespeed-accesskey='$i'" ;
+			}
+			else {
+				$tmp = strtoupper( substr( $val[ 'title' ], 0, 1 ) ) ;
+				if ( ! in_array( $tmp, $accesskey_set ) ) {
+					$accesskey_set[] = $tmp ;
+					$accesskey = "litespeed-accesskey='$tmp'" ;
+				}
+			}
+
 			echo "<a class='litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
 			$i ++ ;
 		}
