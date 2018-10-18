@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.6.2\n"
+"Project-Id-Version: LiteSpeed Cache 2.6.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-10-11 19:29:29+00:00\n"
+"POT-Creation-Date: 2018-10-18 15:29:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -606,7 +606,7 @@ msgstr ""
 #: admin/tpl/setting/settings_debug.php:105
 #: admin/tpl/setting/settings_debug.php:138
 #: admin/tpl/setting/settings_media.php:182
-#: admin/tpl/setting/settings_optimize.php:15 admin/tpl/settings.php:161
+#: admin/tpl/setting/settings_optimize.php:15 admin/tpl/settings.php:185
 msgid "WARNING"
 msgstr ""
 
@@ -854,11 +854,27 @@ msgid ""
 "Cache settings."
 msgstr ""
 
+#: admin/tpl/import_export.php:58 admin/tpl/settings.php:218
+msgid "Reset All Settings"
+msgstr ""
+
+#: admin/tpl/import_export.php:60
+msgid "Are you sure to reset all settings to default settings?"
+msgstr ""
+
+#: admin/tpl/import_export.php:61 inc/media.class.php:243
+msgid "Reset"
+msgstr ""
+
+#: admin/tpl/import_export.php:65
+msgid "This will reset all settings to default settings."
+msgstr ""
+
 #: admin/tpl/inc/admin_footer.php:6
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.2)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.3)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:353
 #: includes/litespeed-cache-gui.class.php:353
@@ -3890,25 +3906,25 @@ msgstr ""
 msgid "LiteSpeed Cache Settings"
 msgstr ""
 
-#: admin/tpl/settings.php:150
+#: admin/tpl/settings.php:174
 msgid "Hide Advanced Options"
 msgstr ""
 
-#: admin/tpl/settings.php:152
+#: admin/tpl/settings.php:176
 msgid "Show Advanced Options"
 msgstr ""
 
-#: admin/tpl/settings.php:163
+#: admin/tpl/settings.php:187
 msgid "The network admin selected use primary site configs for all subsites."
 msgstr ""
 
-#: admin/tpl/settings.php:164
+#: admin/tpl/settings.php:188
 msgid ""
 "The following options are selected, but are not editable in this settings "
 "page."
 msgstr ""
 
-#: admin/tpl/settings.php:186 admin/tpl/settings.php:189
+#: admin/tpl/settings.php:210 admin/tpl/settings.php:213
 msgid "Save Changes"
 msgstr ""
 
@@ -4066,8 +4082,8 @@ msgstr ""
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:166 inc/img_optm.class.php:1467
-#: inc/img_optm.class.php:1532
+#: inc/img_optm.class.php:166 inc/img_optm.class.php:1468
+#: inc/img_optm.class.php:1533
 msgid "No image found."
 msgstr ""
 
@@ -4098,50 +4114,54 @@ msgid ""
 "automated."
 msgstr ""
 
-#: inc/img_optm.class.php:1357
+#: inc/img_optm.class.php:1358
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1570
+#: inc/img_optm.class.php:1571
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1746
+#: inc/img_optm.class.php:1747
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1941
+#: inc/img_optm.class.php:1942
 msgid "Switched images successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1972
+#: inc/img_optm.class.php:1973
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1978
+#: inc/img_optm.class.php:1979
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1994
+#: inc/img_optm.class.php:1995
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:2001
+#: inc/img_optm.class.php:2002
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:2061
+#: inc/img_optm.class.php:2062
 msgid "Reset the optimized data successfully."
 msgstr ""
 
-#: inc/import.class.php:140
+#: inc/import.class.php:148
 msgid "Import failed due to file error."
 msgstr ""
 
-#: inc/import.class.php:184
+#: inc/import.class.php:203
 msgid "Imported setting file %s successfully."
+msgstr ""
+
+#: inc/import.class.php:249
+msgid "Reset successfully."
 msgstr ""
 
 #: inc/litespeed-cache.class.php:270 includes/litespeed-cache.class.php:270
@@ -4182,10 +4202,6 @@ msgstr ""
 
 #: inc/media.class.php:224
 msgid "Click to Switch To Optimized File"
-msgstr ""
-
-#: inc/media.class.php:243
-msgid "Reset"
 msgstr ""
 
 #: inc/purge.class.php:163 includes/litespeed-cache-purge.class.php:163

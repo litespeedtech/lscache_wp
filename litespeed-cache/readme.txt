@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -275,13 +275,22 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.6.3 - Oct 18 2018 =
+* 🌱: Added the ability to Reset All Options.
+* 🌱<strong>CLI</strong>: Added new `lscache-admin reset_options` command.
+* <strong>GUI</strong>: Added shortcuts for more of the Settings tabs.
+* <strong>Media</strong>: Updated Lazy Load JS library to the most recent version.
+* There is no longer any need to explicitly Save Settings upon Import.
+* Remove Query String now will remove *all* query strings in JS/CSS static files.
+* <strong>IAPI</strong>: Added summary info to debug log.
+
 = 2.6.2 - Oct 11 2018 =
 * <strong>Setting</strong>: Automatically correct invalid numeric values in configuration settings upon submit.
 * 🐞<strong>Media</strong>: Fixed the issue where iframe lazy load was broken by latest Chrome release. (@ofmarconi)
 * 🐞: Fixed an issue with Multisite where subsites failed to purge when only primary site has WooCommerce . (@kierancalv)
 
 = 2.6.1 - Oct 4 2018 =
-* 🌱 Ability to generate separate Critical CSS Cache for Post Types & URIs.
+* 🌱: Ability to generate separate Critical CSS Cache for Post Types & URIs.
 * <strong>API</strong>: Filter `litespeed_frontend_htaccess` for frontend htaccess path.
 * <strong>Media</strong>: Removed responsive placeholder generation history to save space.
 
