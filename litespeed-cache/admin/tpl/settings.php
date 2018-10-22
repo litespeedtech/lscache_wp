@@ -143,7 +143,7 @@ if ( ! $adv_mode ) {
 				$accesskey = "litespeed-accesskey='$i'" ;
 			}
 			else {
-				$tmp = strtoupper( substr( $val, 0, 1 ) ) ;
+				$tmp = strtoupper( substr( $tab, 0, 1 ) ) ;
 				if ( ! in_array( $tmp, $accesskey_set ) ) {
 					$accesskey_set[] = $tmp ;
 					$accesskey = "litespeed-accesskey='$tmp'" ;
@@ -159,7 +159,7 @@ if ( ! $adv_mode ) {
 				$accesskey = "litespeed-accesskey='$i'" ;
 			}
 			else {
-				$tmp = strtoupper( substr( $val[ 'title' ], 0, 1 ) ) ;
+				$tmp = strtoupper( substr( $val[ 'slug' ], 0, 1 ) ) ;
 				if ( ! in_array( $tmp, $accesskey_set ) ) {
 					$accesskey_set[] = $tmp ;
 					$accesskey = "litespeed-accesskey='$tmp'" ;
