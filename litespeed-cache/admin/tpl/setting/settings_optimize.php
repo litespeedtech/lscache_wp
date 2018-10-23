@@ -179,7 +179,12 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 					<div class="litespeed-callout-warning">
 						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
 						<p>
-							<?php echo implode( '<br />', $last_critical_css_generated[ 'queue' ] ) ; ?>
+						<?php foreach ( $last_critical_css_generated[ 'queue' ] as $k => $v ) : ?>
+							<?php if ( ! is_array( $v ) ) continue ; ?>
+							<?php echo $v[ 'url' ] ; ?>
+							<?php if ( $v[ 'is_mobile' ] ) echo ' <span title="mobile">📱</span>' ; ?>
+							<br />
+						<?php endforeach ; ?>
 						</p>
 					</p>
 					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CSS, LiteSpeed_Cache_CSS::TYPE_GENERATE_CRITICAL ) ; ?>" class="litespeed-btn-success">

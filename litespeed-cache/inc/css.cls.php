@@ -159,15 +159,30 @@ class LiteSpeed_Cache_CSS
 			if ( empty( $req_summary[ 'queue' ] ) ) {
 				$req_summary[ 'queue' ] = array() ;
 			}
-			$req_summary[ 'queue' ][ $ccss_type ] = $request_url ;
-			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url ) ;
+			$req_summary[ 'queue' ][ $ccss_type ] = array(
+				'url'			=> $request_url,
+				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
+				'is_mobile'		=> $this->_separate_mobile_ccss(),
+			) ;// Current UA will be used to request
+			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
 			$this->_save_summary( $req_summary ) ;
 			return '' ;
 		}
 
 		// generate on the fly
-		return $this->_generate_ccss( $request_url, $ccss_type ) ;
+		return $this->_generate_ccss( $request_url, $ccss_type, $_SERVER[ 'HTTP_USER_AGENT' ], $this->_separate_mobile_ccss() ) ;
+	}
+
+	/**
+	 * Check if need to separate ccss for mobile
+	 *
+	 * @since  2.6.4
+	 * @access private
+	 */
+	private function _separate_mobile_ccss()
+	{
+		return wp_is_mobile() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ) ;
 	}
 
 	/**
@@ -191,9 +206,14 @@ class LiteSpeed_Cache_CSS
 		}
 
 		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
-			LiteSpeed_Cache_Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v ) ;
+			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
+				LiteSpeed_Cache_Log::debug( '[CSS] previous v2.6.4- data' ) ;
+				return ;
+			}
 
-			self::get_instance()->_generate_ccss( $v, $k ) ;
+			LiteSpeed_Cache_Log::debug( '[CSS] cron job [type] ' . $k . ' [url] ' . $v[ 'url' ] . ( $v[ 'is_mobile' ] ? ' 📱 ' : '' ) . ' [UA] ' . $v[ 'user_agent' ] ) ;
+
+			self::get_instance()->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;
 
 			// only request first one
 			if ( ! $continue ) {
@@ -208,7 +228,7 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate_ccss( $request_url, $ccss_type )
+	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile )
 	{
 		$req_summary = self::get_summary() ;
 
@@ -225,6 +245,8 @@ class LiteSpeed_Cache_CSS
 			'home_url'	=> home_url(),
 			'url'		=> $request_url,
 			'ccss_type'	=> $ccss_type,
+			'user_agent'	=> $user_agent,
+			'is_mobile'	=> $is_mobile ? 1 : 0,
 		) ;
 
 		LiteSpeed_Cache_Log::debug( '[CSS] posting to : ' . $url, $data ) ;
@@ -312,12 +334,13 @@ class LiteSpeed_Cache_CSS
 			$css = 'tag' ;
 		}
 
+		$unique = false ;
+
 		// Check if in separate css type option
 		$separate_posttypes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
-
-			return $css . '-' . md5( $_SERVER[ 'REQUEST_URI' ] ) ;
+			$unique = true ;
 		}
 
 		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ;
@@ -325,9 +348,16 @@ class LiteSpeed_Cache_CSS
 			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {
 				LiteSpeed_Cache_Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
-
-				return $css . '-' . md5( $_SERVER[ 'REQUEST_URI' ] ) ;
+				$unique = true ;
 			}
+		}
+
+		if ( $unique ) {
+			$css .= '-' . md5( $_SERVER[ 'REQUEST_URI' ] ) ;
+		}
+
+		if ( $this->_separate_mobile_ccss() ) {
+			$css .= '.mobile' ;
 		}
 
 		return $css ;
