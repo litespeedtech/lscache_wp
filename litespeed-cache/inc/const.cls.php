@@ -325,7 +325,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_CACHE_MOBILE => 0, // todo: why not false
-			self::ID_MOBILEVIEW_LIST => false,
+			self::ID_MOBILEVIEW_LIST => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
 			self::OPID_CACHE_OBJECT => false,
 			self::OPID_CACHE_OBJECT_KIND => false,
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
@@ -391,7 +391,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
 			self::OPID_CACHE_MOBILE => false,
-			self::ID_MOBILEVIEW_LIST => false,
+			self::ID_MOBILEVIEW_LIST => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
 			self::OPID_CACHE_OBJECT => false,
 			self::OPID_CACHE_OBJECT_KIND => false,
 			self::OPID_CACHE_OBJECT_HOST => 'localhost',
