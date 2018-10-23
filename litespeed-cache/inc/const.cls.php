@@ -509,12 +509,34 @@ class LiteSpeed_Cache_Const
 			self::CRWL_DOMAIN_IP => '',
 			self::CRWL_CUSTOM_SITEMAP => '',
 			self::CRWL_CRON_ACTIVE => false,
-				) ;
+		) ;
 
 		if ( LSWCP_ESI_SUPPORT ) {
 			$default_options[self::OPID_ESI_ENABLE] = false ;
 			$default_options[self::OPID_ESI_CACHE_ADMBAR] = true ;
 			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
+		}
+
+		// Load default.ini
+		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
+			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini' ) ;
+			foreach ( $default_options as $k => $v ) {
+				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
+					continue ;
+				}
+
+				// Parse value in ini file
+				$ini_v = $default_ini_cfg[ $k ] ;
+				if ( is_bool( $v ) ) { // Keep value type constantly
+					$ini_v = (bool) $default_ini_cfg[ $k ] ;
+				}
+
+				if ( $ini_v == $v ) {
+					continue ;
+				}
+
+				$default_options[ $k ] = $ini_v ;
+			}
 		}
 
 		if ( ! $include_thirdparty ) {
