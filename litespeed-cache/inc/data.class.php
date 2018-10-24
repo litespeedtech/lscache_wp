@@ -37,8 +37,8 @@ class LiteSpeed_Cache_Data
 
 		$this->_charset_collate = $wpdb->get_charset_collate() ;
 
-		$this->_tb_optm = $wpdb->base_prefix . self::TB_OPTIMIZER ;
-		$this->_tb_img_optm = $wpdb->base_prefix . self::TB_IMG_OPTM ;
+		$this->_tb_optm = $wpdb->prefix . self::TB_OPTIMIZER ;
+		$this->_tb_img_optm = $wpdb->prefix . self::TB_IMG_OPTM ;
 
 		$this->_create_tb_img_optm() ;
 		$this->_create_tb_html_optm() ;
@@ -52,7 +52,8 @@ class LiteSpeed_Cache_Data
 	 */
 	public static function get_tb_img_optm()
 	{
-		return self::get_instance()->_tb_img_optm ;
+		global $wpdb ;
+		return $wpdb->prefix . self::TB_OPTIMIZER ;
 	}
 
 	/**
@@ -63,7 +64,8 @@ class LiteSpeed_Cache_Data
 	 */
 	public static function get_optm_table()
 	{
-		return self::get_instance()->_tb_optm ;
+		global $wpdb ;
+		return $wpdb->prefix . self::TB_OPTIMIZER ;
 	}
 
 	/**
