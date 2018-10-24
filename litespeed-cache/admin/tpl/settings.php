@@ -207,10 +207,10 @@ if ( ! $adv_mode ) {
 	echo "<div class='litespeed-top20'></div>" ;
 
 	if ( $this->get_disable_all() ) {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit', true, array('disabled' => true)) ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit', true, array('disabled' => true)) ;
 	}
 	else {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-primary', 'litespeed-submit') ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit') ;
 	}
 
 	?>

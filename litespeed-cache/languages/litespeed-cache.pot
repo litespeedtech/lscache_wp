@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.6.3\n"
+"Project-Id-Version: LiteSpeed Cache 2.6.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-10-18 15:29:31+00:00\n"
+"POT-Creation-Date: 2018-10-24 16:24:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -98,7 +98,7 @@ msgstr ""
 #: admin/tpl/setting/settings_optimize.php:138
 #: admin/tpl/setting/settings_optimize.php:152
 #: admin/tpl/setting/settings_optimize.php:153
-#: admin/tpl/setting/settings_optimize.php:243
+#: admin/tpl/setting/settings_optimize.php:248
 #: admin/tpl/setting/settings_tuning.php:21
 #: admin/tpl/setting/settings_tuning.php:57
 msgid "ON"
@@ -198,7 +198,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
 #: admin/tpl/setting/settings_media.php:36
 #: admin/tpl/setting/settings_media.php:240
-#: admin/tpl/setting/settings_optimize.php:259
+#: admin/tpl/setting/settings_optimize.php:264
 #: admin/tpl/setting/settings_purge.php:85
 #: admin/tpl/setting/settings_tuning.php:38
 #: admin/tpl/setting/settings_tuning.php:74
@@ -874,7 +874,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.3)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:353
 #: includes/litespeed-cache-gui.class.php:353
@@ -1292,7 +1292,7 @@ msgstr ""
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:22
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:21
 #: admin/tpl/setting/settings_inc.media_webp.php:12
-#: admin/tpl/setting/settings_optimize.php:245
+#: admin/tpl/setting/settings_optimize.php:250
 #: admin/tpl/setting/settings_tuning.php:20
 #: admin/tpl/setting/settings_tuning.php:56
 msgid "NOTE"
@@ -3258,7 +3258,7 @@ msgid "Size list in queue waiting for cron"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:112
-#: admin/tpl/setting/settings_optimize.php:186
+#: admin/tpl/setting/settings_optimize.php:191
 msgid "Run Queue Manually"
 msgstr ""
 
@@ -3280,8 +3280,8 @@ msgstr ""
 
 #: admin/tpl/setting/settings_media.php:137
 #: admin/tpl/setting/settings_optimize.php:137
-#: admin/tpl/setting/settings_optimize.php:233
-#: admin/tpl/setting/settings_optimize.php:271
+#: admin/tpl/setting/settings_optimize.php:238
+#: admin/tpl/setting/settings_optimize.php:276
 #: admin/tpl/setting/settings_tuning.php:103
 #: admin/tpl/setting/settings_tuning.php:162
 msgid ""
@@ -3446,7 +3446,7 @@ msgid "Minify JS files."
 msgstr ""
 
 #: admin/tpl/setting/settings_optimize.php:69
-#: admin/tpl/setting/settings_optimize.php:246
+#: admin/tpl/setting/settings_optimize.php:251
 msgid "JS Combine"
 msgstr ""
 
@@ -3544,82 +3544,82 @@ msgstr ""
 msgid "URL list in queue waiting for cron"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:195
+#: admin/tpl/setting/settings_optimize.php:200
 msgid "Separate CCSS Cache Post Types"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:199
+#: admin/tpl/setting/settings_optimize.php:204
 msgid ""
 "List post types where each item of that type should have its own CCSS "
 "generated."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:200
+#: admin/tpl/setting/settings_optimize.php:205
 msgid ""
 "For example, if every Page on the site has different formatting, enter %s in "
 "the box. Separate critical CSS files will be stored for every Page on the "
 "site."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:207
+#: admin/tpl/setting/settings_optimize.php:212
 msgid "Separate CCSS Cache URIs"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:211
+#: admin/tpl/setting/settings_optimize.php:216
 msgid ""
 "Separate critical CSS files will be generated for paths containing these "
 "strings."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:218
+#: admin/tpl/setting/settings_optimize.php:223
 msgid "Inline CSS Async Lib"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:222
+#: admin/tpl/setting/settings_optimize.php:227
 msgid "This will inline the asynchronous CSS library to avoid render blocking."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:228
+#: admin/tpl/setting/settings_optimize.php:233
 msgid "Load JS Deferred"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:232
+#: admin/tpl/setting/settings_optimize.php:237
 msgid "Doing so can help reduce resource contention and improve performance."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:239
+#: admin/tpl/setting/settings_optimize.php:244
 msgid "Exclude JQuery"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:243
+#: admin/tpl/setting/settings_optimize.php:248
 msgid ""
 "Improve compatibility with inline JS by preventing jQuery optimization. "
 "(Recommended Setting: %s)"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:246
+#: admin/tpl/setting/settings_optimize.php:251
 msgid ""
 "If there is any JS error related to %1$s when enabled %2$s, please turn on "
 "this option."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:253
+#: admin/tpl/setting/settings_optimize.php:258
 msgid "DNS Prefetch"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:257
+#: admin/tpl/setting/settings_optimize.php:262
 msgid "Prefetching DNS can reduce latency for visiters."
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:258
+#: admin/tpl/setting/settings_optimize.php:263
 msgid "For example"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:266
+#: admin/tpl/setting/settings_optimize.php:271
 msgid "Remove Comments"
 msgstr ""
 
-#: admin/tpl/setting/settings_optimize.php:270
+#: admin/tpl/setting/settings_optimize.php:275
 msgid "Remove the comments inside of JS/CSS files when minifying."
 msgstr ""
 

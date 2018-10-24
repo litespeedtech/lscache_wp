@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.6.3
+Stable tag: 2.6.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -275,8 +275,16 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.6.4 - Oct 24 2018 =
+* 🌱: Ability to create custom default config options per hosting company.
+* 🌱: Ability to generate mobile Critical CSS.
+* 🐞<strong>Media</strong>: Fixed a bug where Network sites could incorrectly override optimized images.
+* 🐞<strong>CDN</strong>: Fixed a bug where image URLs containing backslashes were matched.
+* <strong>Cache</strong>: Added default Mobile UA config setting.
+* <strong>GUI</strong>: Fixed unknown shortcut characters for non-English languages Setting tabs.
+
 = 2.6.3 - Oct 18 2018 =
-* 🌱: Added the ability to Reset All Options.
+* 🌱: Ability to Reset All Options.
 * 🌱<strong>CLI</strong>: Added new `lscache-admin reset_options` command.
 * <strong>GUI</strong>: Added shortcuts for more of the Settings tabs.
 * <strong>Media</strong>: Updated Lazy Load JS library to the most recent version.
