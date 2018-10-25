@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.6.4
+Stable tag: 2.6.4.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -274,6 +274,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.6.4.1 - Oct 25 2018 =
+* 🔥🐞<strong>Media</strong>: Fixed a bug where the wrong table was used in the Image Optimization process.
 
 = 2.6.4 - Oct 24 2018 =
 * 🌱: Ability to create custom default config options per hosting company.
