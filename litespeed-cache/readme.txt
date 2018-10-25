@@ -277,7 +277,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.6.4.1 - Oct 25 2018 =
 * 🔥🐞<strong>Media</strong>: Fixed a bug where the wrong table was used in the Image Optimization process.
-* [IAPI] IAPI v2.6.4.1.
+* <strong>IAPI</strong>: IAPI v2.6.4.1.
 
 = 2.6.4 - Oct 24 2018 =
 * 🌱: Ability to create custom default config options per hosting company.
