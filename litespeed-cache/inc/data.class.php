@@ -53,7 +53,7 @@ class LiteSpeed_Cache_Data
 	public static function get_tb_img_optm()
 	{
 		global $wpdb ;
-		return $wpdb->prefix . self::TB_OPTIMIZER ;
+		return $wpdb->prefix . self::TB_IMG_OPTM ;
 	}
 
 	/**
