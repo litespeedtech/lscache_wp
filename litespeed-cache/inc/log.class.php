@@ -40,62 +40,36 @@ class LiteSpeed_Cache_Log
 		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && $_SERVER[ 'HTTP_USER_AGENT' ] === Litespeed_Crawler::FAST_USER_AGENT ) {
 			self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log' ;
 		}
-		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
-			define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
-		}
+
+		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', get_current_blog_id() ) ;
 
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL ) ) {
-			define( 'LSCWP_LOG_MORE', true ) ;
+			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true ) ;
 		}
 
-		$this->_init_request() ;
-		define( 'LSCWP_LOG', true ) ;
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Log Purge headers separately
 	 *
-	 * @since  1.6.6
+	 * @since 2.7
 	 * @access public
 	 */
-	public static function handler()
+	public static function log_purge( $purge_header )
 	{
-		$instance = self::get_instance() ;
-
-		$type = LiteSpeed_Cache_Router::verify_type() ;
-
-		switch ( $type ) {
-			case self::TYPE_CLEAR_LOG :
-				$instance->_clear_log() ;
-				break ;
-
-			default:
-				break ;
+		// Check if debug is ON
+		if ( ! defined( 'LSCWP_LOG' ) && ! defined( 'LSCWP_LOG_BYPASS_NOTADMIN' ) ) {
+			return ;
 		}
 
-		LiteSpeed_Cache_Admin::redirect() ;
-	}
+		$purge_file = LSCWP_CONTENT_DIR . '/debug.purge.log' ;
 
-	/**
-	 * Clear log file
-	 *
-	 * @since 1.6.6
-	 * @access private
-	 */
-	private function _clear_log()
-	{
-		Litespeed_File::save( self::$log_path, '' ) ;
-	}
+		self::get_instance()->_init_request( $purge_file ) ;
 
-	/**
-	 * Heartbeat control
-	 *
-	 * @since 1.1.5
-	 * @access public
-	 */
-	public static function disable_heartbeat()
-	{
-		wp_deregister_script( 'heartbeat' ) ;
+		$msg = $purge_header . self::_backtrace_info( 6 ) ;
+
+		Litespeed_File::append( $purge_file, self::format_message( $msg ) ) ;
+
 	}
 
 	/**
@@ -106,8 +80,18 @@ class LiteSpeed_Cache_Log
 	 */
 	public static function init()
 	{
+		$debug = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG ) ;
+		if ( $debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
+			if ( ! LiteSpeed_Cache_Router::is_admin_ip() ) {
+				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true ) ;
+				return ;
+			}
+		}
+
 		if ( ! defined( 'LSCWP_LOG' ) ) {// If not initialized, do it now
-			self::get_instance() ;
+			self::get_instance()->_init_request() ;
+			define( 'LSCWP_LOG', true ) ;
+
 		}
 
 		// Check if hook filters
@@ -117,6 +101,97 @@ class LiteSpeed_Cache_Log
 
 			add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
 		}
+	}
+
+	/**
+	 * Create the initial log messages with the request parameters.
+	 *
+	 * @since 1.0.12
+	 * @access private
+	 */
+	private function _init_request( $log_file = null )
+	{
+		if ( ! $log_file ) {
+			$log_file = self::$log_path ;
+		}
+
+		// Check log file size
+		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ) ;
+		if ( file_exists( $log_file ) && filesize( $log_file ) > $log_file_size * 1000000 ) {
+			Litespeed_File::save( $log_file, '' ) ;
+		}
+
+		// For more than 2s's requests, add more break
+		if ( file_exists( $log_file ) && time() - filemtime( $log_file ) > 2 ) {
+			Litespeed_File::append( $log_file, "\n\n\n\n" ) ;
+		}
+
+		if ( PHP_SAPI == 'cli' ) {
+			return ;
+		}
+
+		$servervars = array(
+			'Query String' => '',
+			'HTTP_ACCEPT' => '',
+			'HTTP_USER_AGENT' => '',
+			'HTTP_ACCEPT_ENCODING' => '',
+			'HTTP_COOKIE' => '',
+			'X-LSCACHE' => '',
+			'LSCACHE_VARY_COOKIE' => '',
+			'LSCACHE_VARY_VALUE' => '',
+		) ;
+		$server = array_merge( $servervars, $_SERVER ) ;
+		$params = array() ;
+
+		if ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] == 'on' ) {
+			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;
+		}
+
+		$param = sprintf( '------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
+
+		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ) {
+			if ( strlen( $qs ) > 53 ) {
+				$qs = substr( $qs, 0, 53 ) . '...' ;
+			}
+			if ( $qs ) {
+				$param .= ' ? ' . $qs ;
+			}
+			$params[] = $param ;
+		}
+		else {
+			$params[] = $param ;
+			$params[] = 'Query String: ' . $qs ;
+		}
+
+		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			$params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ] ;
+		}
+
+		if ( defined( 'LSCWP_LOG_MORE' ) ) {
+			$params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ] ;
+			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;
+			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
+		}
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ) {
+			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'] ;
+		}
+		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
+			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
+		}
+		if ( defined( 'LSCWP_LOG_MORE' ) ) {
+			$params[] = 'X-LSCACHE: ' . ( ! empty( $server[ 'X-LSCACHE' ] ) ? 'true' : 'false' ) ;
+		}
+		if( $server['LSCACHE_VARY_COOKIE'] ) {
+			$params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'] ;
+		}
+		if( $server['LSCACHE_VARY_VALUE'] ) {
+			$params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'] ;
+		}
+
+		$request = array_map( 'self::format_message', $params ) ;
+
+		Litespeed_File::append( $log_file, $request ) ;
 	}
 
 	/**
@@ -238,117 +313,90 @@ class LiteSpeed_Cache_Log
 	{
 		// backtrace handler
 		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {
-			$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 2 ) ;
-			for ( $i=1 ; $i <= $backtrace_limit + 1 ; $i++ ) {// the 0st item is push()
-				if ( empty( $trace[ $i ][ 'class' ] ) ) {
-					if ( empty( $trace[ $i ][ 'file' ] ) ) {
-						break ;
-					}
-					$log = "\n" . $trace[ $i ][ 'file' ] ;
-				}
-				else {
-					if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
-						continue ;
-					}
-
-					$log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
-				}
-				if ( ! empty( $trace[$i-1]['line'] ) ) {
-					$log .= '@' . $trace[$i-1]['line'] ;
-				}
-				$msg .= " => $log" ;
-			}
-
+			$msg .= self::_backtrace_info( $backtrace_limit ) ;
 		}
 
 		Litespeed_File::append( self::$log_path, self::format_message( $msg ) ) ;
 	}
 
 	/**
-	 * Create the initial log messages with the request parameters.
+	 * Backtrace info
 	 *
-	 * @since 1.0.12
+	 * @since 2.7
+	 */
+	private static function _backtrace_info( $backtrace_limit )
+	{
+		$msg = '' ;
+
+		$trace = version_compare( PHP_VERSION, '5.4.0', '<' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 3 ) ;
+		for ( $i=2 ; $i <= $backtrace_limit + 2 ; $i++ ) {// 0st => _backtrace_info(), 1st => push()
+			if ( empty( $trace[ $i ][ 'class' ] ) ) {
+				if ( empty( $trace[ $i ][ 'file' ] ) ) {
+					break ;
+				}
+				$log = "\n" . $trace[ $i ][ 'file' ] ;
+			}
+			else {
+				if ( $trace[$i]['class'] == 'LiteSpeed_Cache_Log' ) {
+					continue ;
+				}
+
+				$log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
+			}
+			if ( ! empty( $trace[$i-1]['line'] ) ) {
+				$log .= '@' . $trace[$i-1]['line'] ;
+			}
+			$msg .= " => $log" ;
+		}
+
+		return $msg ;
+	}
+
+	/**
+	 * Clear log file
+	 *
+	 * @since 1.6.6
 	 * @access private
 	 */
-	private function _init_request()
+	private function _clear_log()
 	{
-		// Check log file size
-		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE ) ;
-		if ( file_exists( self::$log_path ) && filesize( self::$log_path ) > $log_file_size*1000000 ) {
-			Litespeed_File::save( self::$log_path, '' ) ;
+		Litespeed_File::save( self::$log_path, '' ) ;
+		Litespeed_File::save( LSCWP_CONTENT_DIR . '/debug.purge.log', '' ) ;
+	}
+
+	/**
+	 * Heartbeat control
+	 *
+	 * @since 1.1.5
+	 * @access public
+	 */
+	public static function disable_heartbeat()
+	{
+		wp_deregister_script( 'heartbeat' ) ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  1.6.6
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_CLEAR_LOG :
+				$instance->_clear_log() ;
+				break ;
+
+			default:
+				break ;
 		}
 
-		// For more than 2s's requests, add more break
-		if ( file_exists( self::$log_path ) && time() - filemtime( self::$log_path ) > 2 ) {
-			Litespeed_File::append( self::$log_path, "\n\n\n\n" ) ;
-		}
-
-		if ( PHP_SAPI == 'cli' ) {
-			return ;
-		}
-
-		$servervars = array(
-			'Query String' => '',
-			'HTTP_ACCEPT' => '',
-			'HTTP_USER_AGENT' => '',
-			'HTTP_ACCEPT_ENCODING' => '',
-			'HTTP_COOKIE' => '',
-			'X-LSCACHE' => '',
-			'LSCACHE_VARY_COOKIE' => '',
-			'LSCACHE_VARY_VALUE' => '',
-		) ;
-		$server = array_merge( $servervars, $_SERVER ) ;
-		$params = array() ;
-
-		if ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] == 'on' ) {
-			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;
-		}
-
-		$param = sprintf( '------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
-
-		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_COLLAPS_QS ) ) {
-			if ( strlen( $qs ) > 53 ) {
-				$qs = substr( $qs, 0, 53 ) . '...' ;
-			}
-			if ( $qs ) {
-				$param .= ' ? ' . $qs ;
-			}
-			$params[] = $param ;
-		}
-		else {
-			$params[] = $param ;
-			$params[] = 'Query String: ' . $qs ;
-		}
-
-		if ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
-			$params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ] ;
-		}
-
-		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ] ;
-			$params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;
-			$params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
-		}
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE ) ) {
-			$params[] = 'Cookie: ' . $server['HTTP_COOKIE'] ;
-		}
-		if ( isset( $_COOKIE[ '_lscache_vary' ] ) ) {
-			$params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
-		}
-		if ( defined( 'LSCWP_LOG_MORE' ) ) {
-			$params[] = 'X-LSCACHE: ' . ( ! empty( $server[ 'X-LSCACHE' ] ) ? 'true' : 'false' ) ;
-		}
-		if( $server['LSCACHE_VARY_COOKIE'] ) {
-			$params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'] ;
-		}
-		if( $server['LSCACHE_VARY_VALUE'] ) {
-			$params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'] ;
-		}
-
-		$request = array_map( 'self::format_message', $params ) ;
-
-		Litespeed_File::append( self::$log_path, $request ) ;
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**

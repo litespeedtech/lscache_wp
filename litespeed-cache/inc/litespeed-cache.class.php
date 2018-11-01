@@ -91,7 +91,7 @@ class LiteSpeed_Cache
 
 		// Check if debug is on
 		$should_debug = intval( self::config( LiteSpeed_Cache_Config::OPID_DEBUG ) ) ;
-		if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || ( $should_debug == LiteSpeed_Cache_Config::VAL_ON2 && LiteSpeed_Cache_Router::is_admin_ip() ) ) {
+		if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || $should_debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
 			LiteSpeed_Cache_Log::init() ;
 		}
 
@@ -575,6 +575,8 @@ class LiteSpeed_Cache
 		// send PURGE header (Always send regardless of cache setting disabled/enabled)
 		if ( defined( 'LITESPEED_ON' ) && $purge_header ) {
 			@header( $purge_header ) ;
+			LiteSpeed_Cache_Log::log_purge( $purge_header ) ;
+
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $purge_header ) ;
 				if ( $running_info_showing ) {
