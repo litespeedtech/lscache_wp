@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.6.4.1
+Stable tag: 2.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -248,6 +248,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = What are the known compatible plugins and themes? =
 
+* [WPML](https://wpml.org/)
 * [bbPress](https://wordpress.org/plugins/bbpress/)
 * [WooCommerce](https://wordpress.org/plugins/woocommerce/)
 * [Contact Form 7](https://wordpress.org/plugins/contact-form-7/)
@@ -274,6 +275,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.7 - Nov 2 2018 =
+* 🌱: Separate Purge log for better debugging.
+* <strong>3rd</strong>: Now fully compatible with WPML.
+* <strong>IAPI</strong>: Sped up Image Optimization workflow.
+* <strong>GUI</strong>: Current IP now shows in Debug settings.
+* <strong>GUI</strong>: Space separated placeholder queue list for better look.
 
 = 2.6.4.1 - Oct 25 2018 =
 * 🔥🐞<strong>Media</strong>: Fixed a bug where the wrong table was used in the Image Optimization process.
