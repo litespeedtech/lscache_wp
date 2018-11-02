@@ -282,6 +282,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>IAPI</strong>: Sped up Image Optimization workflow.
 * <strong>GUI</strong>: Current IP now shows in Debug settings.
 * <strong>GUI</strong>: Space separated placeholder queue list for better look.
+* <strong>EU3 server IP Changed to 165.227.131.98</strong>.
 
 = 2.6.4.1 - Oct 25 2018 =
 * 🔥🐞<strong>Media</strong>: Fixed a bug where the wrong table was used in the Image Optimization process.
