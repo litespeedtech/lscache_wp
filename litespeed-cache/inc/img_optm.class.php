@@ -1251,7 +1251,7 @@ class LiteSpeed_Cache_Img_Optm
 					'src'	=> $v->src,
 					'srcpath_md5'	=> $v->srcpath_md5,
 					'src_md5'	=> $v->src_md5,
-					'server'	=> $v->server,
+					'server_info'	=> $v->server_info,
 				) ;
 			}
 		}
