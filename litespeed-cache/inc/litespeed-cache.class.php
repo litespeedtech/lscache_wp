@@ -104,14 +104,18 @@ class LiteSpeed_Cache
 			define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
-		// Register plugin activate/deactivate/uninstall hooks
-		// NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
-		if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
-			$plugin_file = LSCWP_DIR . 'litespeed-cache.php' ;
-			register_activation_hook( $plugin_file, array( 'LiteSpeed_Cache_Activation', 'register_activation' ) ) ;
-			register_deactivation_hook( $plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' ) ) ;
-			register_uninstall_hook( $plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache' ) ;
-		}
+		/**
+		 * Register plugin activate/deactivate/uninstall hooks
+		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
+		 *
+		 * @since  2.7.1	Disabled admin&CLI check to make frontend able to enable cache too
+		 */
+		// if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
+		$plugin_file = LSCWP_DIR . 'litespeed-cache.php' ;
+		register_activation_hook( $plugin_file, array( 'LiteSpeed_Cache_Activation', 'register_activation' ) ) ;
+		register_deactivation_hook( $plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' ) ) ;
+		register_uninstall_hook( $plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache' ) ;
+		// }
 
 		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
 
