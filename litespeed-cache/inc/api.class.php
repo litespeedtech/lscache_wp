@@ -215,14 +215,43 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
+	 * Hook new vary cookies to vary finialization
+	 *
+	 * @since 2.6
+	 * @access public
+	 */
+	public static function hook_vary_add( $hook )
+	{
+		add_action( 'litespeed_vary_add', $hook ) ;
+	}
+
+	/**
 	 * Add a new vary cookie
 	 *
 	 * @since 1.1.3
+	 * @since  2.7.1 Changed to filter hook instead of `LiteSpeed_Cache_Vary::add()`
 	 * @access public
 	 */
-	public static function vary_add($vary)
+	public static function vary_add( $vary, $priority = 10 )
 	{
-		LiteSpeed_Cache_Vary::add($vary) ;
+		add_filter( 'litespeed_vary_cookies', function( $cookies ) use( $vary ) {
+			if ( ! is_array( $vary ) ) {
+				$vary = array( $vary ) ;
+			}
+			$cookies = array_merge( $cookies, $vary ) ;
+			return $cookies ;
+		}, $priority ) ;
+	}
+
+	/**
+	 * Hook vary cookies to vary finialization
+	 *
+	 * @since 2.7.1
+	 * @access public
+	 */
+	public static function filter_vary_cookies( $hook, $priority = 10 )
+	{
+		add_filter( 'litespeed_vary_cookies', $hook, $priority ) ;
 	}
 
 	/**
@@ -242,6 +271,17 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
+	 * Hook vary tags to default vary finialization
+	 *
+	 * @since 1.7.2
+	 * @access public
+	 */
+	public static function hook_vary_finalize( $hook )
+	{
+		add_filter( 'litespeed_vary', $hook ) ;
+	}
+
+	/**
 	 * Force finalize vary even if its in an AJAX call
 	 *
 	 * @since 2.6
@@ -250,6 +290,20 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	public static function force_vary()
 	{
 		LiteSpeed_Cache_Vary::can_ajax_vary() ;
+	}
+
+	/**
+	 * Hook vary appending to vary
+	 *
+	 * NOTE: This will add vary to rewrite rule
+	 *
+	 * @since 1.1.3
+	 * @since  2.7.1 This didn't work in 2.7- due to used add_action not filter
+	 * @access public
+	 */
+	public static function hook_vary( $hook )
+	{
+		add_filter( 'litespeed_cache_api_vary', $hook ) ;
 	}
 
 	/**
@@ -356,41 +410,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	public static function hook_tag($hook)
 	{
 		add_action('litespeed_cache_api_tag', $hook) ;
-	}
-
-	/**
-	 * Hook vary appending to vary
-	 *
-	 * NOTE: This will add vary to rewrite rule
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function hook_vary($hook)
-	{
-		add_action('litespeed_cache_api_vary', $hook) ;
-	}
-
-	/**
-	 * Hook vary tags to vary finialization
-	 *
-	 * @since 1.7.2
-	 * @access public
-	 */
-	public static function hook_vary_finalize( $hook )
-	{
-		add_filter( 'litespeed_vary', $hook ) ;
-	}
-
-	/**
-	 * Hook new vary cookies to vary finialization
-	 *
-	 * @since 2.6
-	 * @access public
-	 */
-	public static function hook_vary_add( $hook )
-	{
-		add_action( 'litespeed_vary_add', $hook ) ;
 	}
 
 	/**

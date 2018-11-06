@@ -534,19 +534,32 @@ class LiteSpeed_Cache_Vary
 	 */
 	private function _format_vary_cookies()
 	{
-		// To add new varys, use hook `API::hook_vary_add()` before here
+		/**
+		 * To add new varys, use hook `API::filter_vary_cookies()` before here
+		 */
 		do_action( 'litespeed_vary_add' ) ;
 
-		if ( empty(self::$_vary_cookies) ) {
-			return false ;
+		/**
+		 * Give a filter to manipulate vary
+		 * @since 2.7.1
+		 */
+		$cookies = apply_filters( 'litespeed_vary_cookies', self::$_vary_cookies ) ;
+		if ( $cookies !== self::$_vary_cookies ) {
+			LiteSpeed_Cache_Log::debug( '[Vary] vary changed by filter [Old] ' . var_export( self::$_vary_cookies, true ) . ' [New] ' . var_export( $cookies, true )  ) ;
 		}
-		$cookies = array_filter(array_unique(self::$_vary_cookies)) ;
+
+		if ( ! empty( $cookies ) ) {
+			$cookies = array_filter( array_unique( $cookies ) ) ;
+		}
+
 		if ( empty($cookies) ) {
 			return false ;
 		}
+
 		foreach ($cookies as $key => $val) {
 			$cookies[$key] = 'cookie=' . $val ;
 		}
+
 		return $cookies ;
 	}
 
@@ -555,16 +568,17 @@ class LiteSpeed_Cache_Vary
 	 * This is to add a new vary cookie
 	 *
 	 * @since 1.0.13
+	 * @deprecated 2.7.1 Use filter `litespeed_vary_cookies` instead.
 	 * @access public
 	 * @param mixed $vary A string or array of vary cookies to add to the current list.
 	 */
-	public static function add($vary)
+	public static function add( $vary )
 	{
-		if ( ! is_array($vary) ) {
-			$vary = array($vary) ;
+		if ( ! is_array( $vary ) ) {
+			$vary = array( $vary ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Vary] Add new vary ', $vary ) ;
+		error_log( 'Deprecated since LSCWP 2.7.1! [Vary] Add new vary ' . var_export( $vary, true ) ) ;
 
 		self::$_vary_cookies = array_merge(self::$_vary_cookies, $vary) ;
 	}
