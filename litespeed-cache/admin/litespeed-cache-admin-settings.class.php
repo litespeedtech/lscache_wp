@@ -217,6 +217,7 @@ class LiteSpeed_Cache_Admin_Settings
 			// Need to set cachePublicOn in case subblogs turn on cache manually
 			$disable_lscache_detail_rules = true ;
 		}
+		// NOTE: Network admin still need to make a lscache wrapper to avoid subblogs cache not work
 		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache_detail_rules ) ;
 		if ( $res !== true ) {
 			if ( ! is_array( $res ) ) {

@@ -663,11 +663,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 		$errors = array() ;
 
+		// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
 		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
-
-		$disable_lscache = false ;
 
 		if ( is_multisite() ) {
 
@@ -679,29 +678,19 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				return ;
 			}
 
+			// All rewrite&OC related options are in site, so only need this options
 			$options = $this->get_site_options() ;
-
-			if ( ! $options[ self::NETWORK_OPID_ENABLED ] ) {
-				// NOTE: Network admin still need to make a lscache wrapper to avoid subblogs cache not work
-				$disable_lscache = true ;
-			}
-
 		}
 		else {
 			$options = $this->get_options() ;
-			if ( ! $options[ self::OPID_ENABLED_RADIO ] ) {
-				$disable_lscache = true ;
-			}
 		}
 
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache ) ;
-
-        if ( $res !== true ) {
-        	if ( ! is_array( $res ) ) {
-        		exit( $res ) ;
-        	}
-			exit( implode( "\n", $res ) ) ;
-        }
+		/**
+		 * Go through all settings to generate .htaccess/object cache file.
+		 * @since 2.7.1
+		 */
+		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
 
 	}
 
