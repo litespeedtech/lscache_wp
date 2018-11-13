@@ -43,8 +43,13 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $input The configuration selected by the admin when clicking save.
 	 * @return array The updated configuration options.
 	 */
-	public function validate_plugin_settings( $input )
+	public function validate_plugin_settings( $input, $revert_options_to_input = false )
 	{
+		// Revert options to initial input
+		if ( $revert_options_to_input ) {
+			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
+		}
+
 		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
 		$this->_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
@@ -133,8 +138,41 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_singlesite()
 	{
+		/**
+		 * Handle files:
+		 * 		1) wp-config.php;
+		 * 		2) adv-cache.php;
+		 * 		3) object-cache.php;
+		 * 		4) .htaccess;
+		 */
+
+		/* 1) wp-config.php; */
+		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO ;
+		if ( $this->_options[ $id ] ) {// todo: If not enabled, may need to remove cache var?
+			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
+			if ( $ret !== true ) {
+				$this->_err[] = $ret ;
+			}
+		}
+
+		/* 2) adv-cache.php; */
+
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
 		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+		if ( $this->_options[ $id ] ) {
+			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
+		}
+
+		/* 3) object-cache.php; */
+
+		/**
+		 * Validate Object Cache
+		 * @since 1.8
+		 */
+		$new_options = $this->_validate_object_cache() ;
+		$this->_options = array_merge( $this->_options, $new_options ) ;
+
+		/* 4) .htaccess; */
 
 		// Parse rewrite rule settings
 		$new_options = $this->_validate_rewrite_settings() ;
@@ -156,13 +194,6 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		/**
-		 * Validate Object Cache
-		 * @since 1.8
-		 */
-		$new_options = $this->_validate_object_cache() ;
-		$this->_options = array_merge( $this->_options, $new_options ) ;
-
 	}
 
 	/**
@@ -171,8 +202,13 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function validate_network_settings( $input )
+	public function validate_network_settings( $input, $revert_options_to_input = false )
 	{
+		// Revert options to initial input
+		if ( $revert_options_to_input ) {
+			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
+		}
+
 		$input = array_map( 'LiteSpeed_Cache_Admin::cleanup_text', $input ) ;
 		$this->_input = $input ;
 
@@ -187,7 +223,8 @@ class LiteSpeed_Cache_Admin_Settings
 		 * 		4) .htaccess;
 		 */
 
-		// 1) wp-config.php;
+		/* 1) wp-config.php; */
+
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ;
 		$network_enabled = self::parse_onoff( $this->_input, $id ) ;
 		if ( $network_enabled ) {
@@ -202,21 +239,24 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$options[ $id ] = $network_enabled ;
 
-		// 2) adv-cache.php;
-
-
-		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
-		$orig_primary = $options[ $id ] ;
-		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		if ( $orig_primary != $options[ $id ] ) {
-			LiteSpeed_Cache_Purge::purge_all( 'Network use_primary changed' ) ;
-		}
-
-		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
-		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+		/* 2) adv-cache.php; */
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
 		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+		if ( $options[ $id ] ) {
+			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
+		}
+
+		/* 3) object-cache.php; */
+
+		/**
+		 * Validate Object Cache
+		 * @since 1.8
+		 */
+		$new_options = $this->_validate_object_cache() ;
+		$options = array_merge( $options, $new_options ) ;
+
+		/* 4) .htaccess; */
 
 		// Parse rewrite settings from input
 		$new_options = $this->_validate_rewrite_settings() ;
@@ -240,12 +280,15 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		/**
-		 * Validate Object Cache
-		 * @since 1.8
-		 */
-		$new_options = $this->_validate_object_cache() ;
-		$options = array_merge( $options, $new_options ) ;
+		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
+		$orig_primary = $options[ $id ] ;
+		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+		if ( $orig_primary != $options[ $id ] ) {
+			LiteSpeed_Cache_Purge::purge_all( 'Network use_primary changed' ) ;
+		}
+
+		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
+		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 
 		if ( ! empty( $this->_err ) ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $this->_err ) ;
@@ -254,7 +297,6 @@ class LiteSpeed_Cache_Admin_Settings
 
 		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __( 'Site options saved.', 'litespeed-cache' ) ) ;
 		update_site_option( LiteSpeed_Cache_Config::OPTION_NAME, $options ) ;
-		return $options ;
 	}
 
 	/**
@@ -296,8 +338,7 @@ class LiteSpeed_Cache_Admin_Settings
 		);
 		$item_options = array() ;
 		foreach ( $ids as $id ) {
-			$item_options[ $id ] = ! empty( $this->_input[ $id ] ) ? LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) : '' ;
-			update_option( $id, $item_options[ $id ] ) ;
+			$item_options[ $id ] = $this->_save_item( $id ) ;
 		}
 
 		/**
@@ -1340,6 +1381,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		update_option( $id, $val ) ;
+
+		return $val ;
 	}
 
 	/**

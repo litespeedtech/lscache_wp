@@ -184,9 +184,7 @@ class LiteSpeed_Cache_Import
 			$options[ $v ] = $data[ $v ] ;
 		}
 
-		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
-
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
 
 		global $wp_settings_errors ;
 		if ( ! empty( $wp_settings_errors ) ) {
@@ -237,9 +235,7 @@ class LiteSpeed_Cache_Import
 			$options[ $v ] = $this->__cfg->default_item( $v ) ;
 		}
 
-		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
-
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
 
 		$ret = $this->__cfg->update_options( $output ) ;
 

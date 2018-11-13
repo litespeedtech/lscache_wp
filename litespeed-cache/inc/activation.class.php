@@ -55,15 +55,10 @@ class LiteSpeed_Cache_Activation
 		 * 		3) object-cache.php;
 		 * 		4) .htaccess;
 		 */
-		LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ; // 1) wp-config.php;
-		self::try_copy_advanced_cache() ;// 2) adv-cache.php;
 
-		// 3) object-cache.php;
+		/* Network file handler */
 
-		// 4) .htaccess;
 		if ( is_multisite() ) {
-			// All .htaccess & OC related options are in site, so only need these options
-			$options = $__cfg->get_site_options() ;
 
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
@@ -73,28 +68,36 @@ class LiteSpeed_Cache_Activation
 				return ;
 			}
 
+			// All .htaccess & OC related options are in site, so only need these options
+			$options = $__cfg->get_site_options() ;
 
-			$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
-			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options ) ;
+			$ids = array(
+				LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS,
+				LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
+			);
+			foreach ( $ids as $id ) {
+				$options[ $id ] = $__cfg->get_item( $id ) ;
+			}
 
+			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;
 			return ;
 		}
+
+		/* Single site file handler */
 
 		$options = $__cfg->get_options() ;
 
 		// Add items
 		$cfg_items = $__cfg->stored_items() ;
 		foreach ( $cfg_items as $v ) {
-			$options[ $v ] = $__cfg->default_item( $v ) ;
+			$options[ $v ] = $__cfg->get_item( $v ) ;
 		}
 
-
 		/**
-		 * Go through all settings to generate .htaccess/object cache file.
+		 * Go through all settings to generate related files
 		 * @since 2.7.1
 		 */
-		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
+		LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
 
 		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
 			set_transient( LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL ) ;
