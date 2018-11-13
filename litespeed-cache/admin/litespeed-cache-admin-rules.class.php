@@ -438,8 +438,14 @@ class LiteSpeed_Cache_Admin_Rules
 		if( substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=' ) {//todo: use regex
 			return false ;
 		}
+		
+		$rule_cookie = substr( $rule, strlen( 'RewriteRule .? - [E=' ), -1 ) ;
 
-		return substr($rule, strlen('RewriteRule .? - [E='), -1) ;//todo:user trim('"')
+		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+			return trim( $rule_cookie, '"' ) ;
+		}
+		
+		return $rule_cookie ;
 	}
 
 	/**
