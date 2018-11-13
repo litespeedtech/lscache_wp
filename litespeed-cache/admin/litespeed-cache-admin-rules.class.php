@@ -439,7 +439,11 @@ class LiteSpeed_Cache_Admin_Rules
 			return false ;
 		}
 
-		return substr($rule, strlen('RewriteRule .? - [E='), -1) ;//todo:user trim('"')
+		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+			return substr($rule, strlen('RewriteRule .? - [E="'), -2) ;
+		}
+
+		return substr($rule, strlen('RewriteRule .? - [E='), -1) ;
 	}
 
 	/**
