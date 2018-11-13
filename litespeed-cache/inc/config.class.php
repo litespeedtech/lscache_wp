@@ -464,6 +464,33 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 		}
 
+		// Convert CDN settings
+		$mapping_fields = array(
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
+			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE
+		) ;
+		$cdn_mapping = array() ;
+		if ( isset( $options[ self::ITEM_CDN_MAPPING ] ) && is_array( $options[ self::ITEM_CDN_MAPPING ] ) ) {
+			foreach ( $options[ self::ITEM_CDN_MAPPING ] as $k => $v ) {
+				foreach ( $mapping_fields as $v2 ) {
+					if ( empty( $cdn_mapping[ $v2 ] ) ) {
+						$cdn_mapping[ $v2 ] = array() ;
+					}
+					$cdn_mapping[ $v2 ][ $k ] = $v[ $v2 ] ;
+				}
+			}
+		}
+		if ( empty( $cdn_mapping ) ) {
+			// At least it has one item same as in setting page
+			foreach ( $mapping_fields as $v2 ) {
+				$cdn_mapping[ $v2 ] = array( 0 => false ) ;
+			}
+		}
+		$options[ self::ITEM_CDN_MAPPING ] = $cdn_mapping ;
+
 		return $options ;
 	}
 
@@ -661,36 +688,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function plugin_activation( $count )
 	{
-		$errors = array() ;
 
-		// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
-		$res = add_option( self::OPTION_NAME, $this->get_default_options() ) ;
-
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
-
-		if ( is_multisite() ) {
-
-			if ( ! is_network_admin() ) {
-				if ( $count === 1 ) {
-					// Only itself is activated, set .htaccess with only CacheLookUp
-					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
-				}
-				return ;
-			}
-
-			// All rewrite&OC related options are in site, so only need this options
-			$options = $this->get_site_options() ;
-		}
-		else {
-			$options = $this->get_options() ;
-		}
-
-		/**
-		 * Go through all settings to generate .htaccess/object cache file.
-		 * @since 2.7.1
-		 */
-		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
 
 	}
 
