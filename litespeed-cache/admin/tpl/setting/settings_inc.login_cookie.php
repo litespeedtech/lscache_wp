@@ -30,10 +30,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 					. ' ' . __('The cache needs to distinguish who is logged into which WordPress site in order to cache correctly.', 'litespeed-cache')
 				. '</p>';
 
-            $cookie_offset = 0;
-			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
-				$cookie_offset = 1;
-			}
+            $cookie_offset = 0 ;
+            if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+                $cookie_offset = 1 ;
+            }
 
 			$cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie();
 			if ( $cookie_rule && substr($cookie_rule, 0, 11 + $cookie_offset) !== 'Cache-Vary:' ){
