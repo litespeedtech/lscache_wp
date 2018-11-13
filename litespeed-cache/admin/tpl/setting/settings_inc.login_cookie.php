@@ -30,8 +30,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 					. ' ' . __('The cache needs to distinguish who is logged into which WordPress site in order to cache correctly.', 'litespeed-cache')
 				. '</p>';
 
+            $cookie_offset = 0;
+			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
+				$cookie_offset = 1;
+			}
+
 			$cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie();
-			if ( $cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:' ){
+			if ( $cookie_rule && substr($cookie_rule, 0, 11 + $cookie_offset) !== 'Cache-Vary:' ){
 				echo '<div class="litespeed-callout-danger">'
 						. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
 					. '</div>';
@@ -45,7 +50,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 						. '</div>';
 				}
 				else{
-					$cookie_rule = substr($cookie_rule, 11);
+					$cookie_rule = substr($cookie_rule, 11 + $cookie_offset);
 					$cookie_arr = explode(',', $cookie_rule);
 					if(!in_array($_options[$id], $cookie_arr)) {
 						echo '<div class="litespeed-callout-warning">' .
