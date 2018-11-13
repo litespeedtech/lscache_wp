@@ -233,8 +233,7 @@ class LiteSpeed_Cache_Import
 	{
 		$options = $this->__cfg->get_default_options() ;
 		// Get items
-		$cfg_items = $this->__cfg->stored_items() ;
-		foreach ( $cfg_items as $v ) {
+		foreach ( $this->_cfg_items as $v ) {
 			$options[ $v ] = $this->__cfg->default_item( $v ) ;
 		}
 

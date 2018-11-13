@@ -31,9 +31,6 @@ class LiteSpeed_Cache_Activation
 		$count = 0 ;
 		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() ) ;
 
-		self::try_copy_advanced_cache() ;
-		LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
-
 		if ( is_multisite() ) {
 			$count = self::get_network_count() ;
 			if ( $count !== false ) {
@@ -41,9 +38,63 @@ class LiteSpeed_Cache_Activation
 				set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
 			}
 		}
+
 		do_action( 'litespeed_cache_api_load_thirdparty' ) ;
-		LiteSpeed_Cache_Config::get_instance()->plugin_activation( $count ) ;
-		// LiteSpeed_Cache_Admin_Report::get_instance()->generate_environment_report() ;
+
+		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
+
+		// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
+		$res = add_option( self::OPTION_NAME, $__cfg->get_default_options() ) ;
+
+		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
+
+		/**
+		 * Handle files:
+		 * 		1) wp-config.php;
+		 * 		2) adv-cache.php;
+		 * 		3) object-cache.php;
+		 * 		4) .htaccess;
+		 */
+		LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ; // 1) wp-config.php;
+		self::try_copy_advanced_cache() ;// 2) adv-cache.php;
+
+		// 3) object-cache.php;
+
+		// 4) .htaccess;
+		if ( is_multisite() ) {
+			// All .htaccess & OC related options are in site, so only need these options
+			$options = $__cfg->get_site_options() ;
+
+			if ( ! is_network_admin() ) {
+				if ( $count === 1 ) {
+					// Only itself is activated, set .htaccess with only CacheLookUp
+					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
+				}
+				return ;
+			}
+
+
+			$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
+			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options ) ;
+
+			return ;
+		}
+
+		$options = $__cfg->get_options() ;
+
+		// Add items
+		$cfg_items = $__cfg->stored_items() ;
+		foreach ( $cfg_items as $v ) {
+			$options[ $v ] = $__cfg->default_item( $v ) ;
+		}
+
+
+		/**
+		 * Go through all settings to generate .htaccess/object cache file.
+		 * @since 2.7.1
+		 */
+		$options = LiteSpeed_Cache_Config::convert_options_to_input( $options ) ;
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options ) ;
 
 		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
 			set_transient( LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL ) ;

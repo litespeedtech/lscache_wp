@@ -171,27 +171,39 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function validate_network_settings()
+	public function validate_network_settings( $input )
 	{
-		$input = array_map( 'LiteSpeed_Cache_Admin::cleanup_text', $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;
+		$input = array_map( 'LiteSpeed_Cache_Admin::cleanup_text', $input ) ;
 		$this->_input = $input ;
 
 		$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
 
+
+		/**
+		 * Handle files:
+		 * 		1) wp-config.php;
+		 * 		2) adv-cache.php;
+		 * 		3) object-cache.php;
+		 * 		4) .htaccess;
+		 */
+
+		// 1) wp-config.php;
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ;
 		$network_enabled = self::parse_onoff( $this->_input, $id ) ;
-		if ( $options[ $id ] != $network_enabled ) {
-			$options[ $id ] = $network_enabled ;
-			if ( $network_enabled ) {
-				$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
-				if ( $ret !== true ) {
-					$this->_err[] = $ret ;
-				}
-			}
-			else {
-				LiteSpeed_Cache_Purge::purge_all( 'Network enable changed' ) ;
+		if ( $network_enabled ) {
+			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
+			if ( $ret !== true ) {
+				$this->_err[] = $ret ;
 			}
 		}
+		elseif ( $options[ $id ] != $network_enabled ) {
+			LiteSpeed_Cache_Purge::purge_all( 'Network enable changed' ) ;
+		}
+
+		$options[ $id ] = $network_enabled ;
+
+		// 2) adv-cache.php;
+
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
 		$orig_primary = $options[ $id ] ;
