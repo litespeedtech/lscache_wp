@@ -474,12 +474,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		) ;
 		$cdn_mapping = array() ;
 		if ( isset( $options[ self::ITEM_CDN_MAPPING ] ) && is_array( $options[ self::ITEM_CDN_MAPPING ] ) ) {
-			foreach ( $options[ self::ITEM_CDN_MAPPING ] as $k => $v ) {
+			foreach ( $options[ self::ITEM_CDN_MAPPING ] as $k => $v ) {// $k is numeric
 				foreach ( $mapping_fields as $v2 ) {
 					if ( empty( $cdn_mapping[ $v2 ] ) ) {
 						$cdn_mapping[ $v2 ] = array() ;
 					}
-					$cdn_mapping[ $v2 ][ $k ] = $v[ $v2 ] ;
+					$cdn_mapping[ $v2 ][ $k ] = ! empty( $v[ $v2 ] ) ? $v[ $v2 ] : false ;
 				}
 			}
 		}

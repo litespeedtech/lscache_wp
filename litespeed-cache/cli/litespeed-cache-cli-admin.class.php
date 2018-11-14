@@ -51,6 +51,9 @@ class LiteSpeed_Cache_Cli_Admin
 	 */
 	public function set_option($args, $assoc_args)
 	{
+		/**
+		 * Note: If the value is multiple dimensions like cdn_mapping, need to specially handle it both here and in default.ini
+		 */
 		$key = $args[0] ;
 		$val = $args[1] ;
 
@@ -61,8 +64,13 @@ class LiteSpeed_Cache_Cli_Admin
 			$options[ $v ] = get_option( $v ) ;
 		}
 
-
-		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key])) ) {
+		/**
+		 * For CDN mapping, allow:
+		 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
+		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
+		 * @since  2.7.1
+		 */
+		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
 		}
@@ -84,7 +92,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case in_array( $key, self::$checkboxes ) :
 				//checkbox
 				if ( $val === 'true' ) {
-					$options[$key] = LiteSpeed_Cache_Config::VAL_ON  ;
+					$options[$key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
 				elseif ( $val === 'false' ) {
 					unset($options[$key]) ;
@@ -101,6 +109,27 @@ class LiteSpeed_Cache_Cli_Admin
 					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
 				$options[$key] = $val ;
+				break ;
+
+			/**
+			 * Special handler for cdn mapping settings
+			 *
+			 * $options is already converted to input format
+			 */
+			case strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) === 0 :
+
+				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
+
+				// Handle switch value
+				if ( in_array( $child_key[ 1 ], array(
+						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
+						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
+						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
+				) ) ) {
+					$val = $val === 'true' ? LiteSpeed_Cache_Config::VAL_ON : LiteSpeed_Cache_Config::VAL_OFF ;
+				}
+
+				$options[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
 				break ;
 
 			default:
@@ -296,12 +325,12 @@ class LiteSpeed_Cache_Cli_Admin
 
 		$ret = LiteSpeed_Cache_Config::get_instance()->update_options($output) ;
 
-		if ( $ret ) {
-			WP_CLI::success('Options updated. Please purge the cache. New options: ' . var_export($output, true)) ;
-		}
-		else {
-			WP_CLI::error('No options updated.') ;
-		}
+		WP_CLI::success('Options/Terms updated. Please purge the cache. New options: ' . var_export($options, true)) ;
+		// if ( $ret ) {
+		// }
+		// else {
+		// 	WP_CLI::error('No options updated.') ;
+		// }
 	}
 }
 
