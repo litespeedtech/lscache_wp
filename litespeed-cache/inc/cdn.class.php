@@ -30,6 +30,8 @@ class LiteSpeed_Cache_CDN
 
 	private $cdn_mapping_hosts = array() ;
 
+	private $__cfg ;// cfg instance
+
 	/**
 	 * Init
 	 *
@@ -65,8 +67,10 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+
 		$this->_cfg_url_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_ORI ) ;
-		$cfg_cdn_url = get_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array() ) ;
+		$cfg_cdn_url = $this->__cfg->get_item( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
@@ -118,7 +122,7 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$this->_cfg_ori_dir = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ) ;
+		$this->_cfg_ori_dir = $this->__cfg->get_item( LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ) ;
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS ;

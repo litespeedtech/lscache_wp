@@ -488,8 +488,7 @@ class LiteSpeed_Cache_Crawler
 	public function list_crawlers( $count_only = false )
 	{
 		// Get roles set
-		$roles = get_option( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
-		$roles = $roles ? explode( "\n", $roles ) : array() ;
+		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
 
 		// WebP on/off
 		$webp = LiteSpeed_Cache_Media::webp_enabled() ;

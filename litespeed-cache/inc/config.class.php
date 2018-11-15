@@ -397,7 +397,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function get_item( $k, $return_string = false )
 	{
-		$val = get_option( $k, $this->default_item( $k ) ) ;
+		$val = get_option( $k ) ;
+		// Separately call default_item() to improve performance
+		if ( ! $val ) {
+			$val = $this->default_item( $k ) ;
+		}
 
 		if ( ! $return_string && ! is_array( $val ) ) {
 			$val = $val ? explode( "\n", $val ) : array() ;

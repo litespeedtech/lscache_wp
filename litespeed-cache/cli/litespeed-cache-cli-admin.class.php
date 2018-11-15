@@ -57,11 +57,13 @@ class LiteSpeed_Cache_Cli_Admin
 		$key = $args[0] ;
 		$val = $args[1] ;
 
-		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
+
+		$options = $__cfg->get_options() ;
 		// Get items
-		$cfg_items = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
+		$cfg_items = $__cfg->stored_items() ;
 		foreach ( $cfg_items as $v ) {
-			$options[ $v ] = get_option( $v ) ;
+			$options[ $v ] = $__cfg->get_item( $v ) ;
 		}
 
 		/**
@@ -115,6 +117,9 @@ class LiteSpeed_Cache_Cli_Admin
 			 * Special handler for cdn mapping settings
 			 *
 			 * $options is already converted to input format
+			 *
+			 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
+			 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
 			 */
 			case strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) === 0 :
 
