@@ -559,11 +559,9 @@ eot;
 		/**
 		 * Exclude list
 		 * @since 1.5
+		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', get_option( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ) ;
-		if ( $excludes ) {
-			$excludes = explode( "\n", $excludes ) ;
-		}
+		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;

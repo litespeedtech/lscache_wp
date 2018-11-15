@@ -90,10 +90,7 @@ class LiteSpeed_Cache_Optimize
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer ) {
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', get_option( LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ) ) ;
-			if ( $this->cfg_js_defer_exc ) {
-				$this->cfg_js_defer_exc = explode( "\n", $this->cfg_js_defer_exc ) ;
-			}
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ) ) ;
 		}
 
 		/**
@@ -650,7 +647,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _dns_prefetch_init()
 	{
-		$this->dns_prefetch = get_option( LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ) ;
+		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ) ;
 		if ( ! $this->dns_prefetch ) {
 			return ;
 		}
@@ -675,7 +672,7 @@ class LiteSpeed_Cache_Optimize
 			return $urls ;
 		}
 
-		foreach ( explode( "\n", $this->dns_prefetch ) as $v ) {
+		foreach ( $this->dns_prefetch as $v ) {
 			if ( $v ) {
 				$urls[] = $v ;
 			}
@@ -692,7 +689,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function dns_prefetch_output()
 	{
-		foreach ( explode( "\n", $this->dns_prefetch ) as $v ) {
+		foreach ( $this->dns_prefetch as $v ) {
 			if ( $v ) {
 				$this->html_head .= "<link rel='dns-prefetch' href='$v' />" ;
 			}
