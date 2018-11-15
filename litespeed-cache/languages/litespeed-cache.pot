@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.6.4.1\n"
+"Project-Id-Version: LiteSpeed Cache 2.7.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-11-01 21:26:55+00:00\n"
+"POT-Creation-Date: 2018-11-15 16:41:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -54,7 +54,7 @@ msgid "Settings"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:157
-#: admin/tpl/setting/settings_cdn.php:240 inc/gui.class.php:361
+#: admin/tpl/setting/settings_cdn.php:230 inc/gui.class.php:361
 #: includes/litespeed-cache-gui.class.php:361
 msgid "Manage"
 msgstr ""
@@ -106,7 +106,7 @@ msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:815
 #: admin/litespeed-cache-admin-display.class.php:903
-#: admin/tpl/setting/settings_cdn.php:35 admin/tpl/setting/settings_cdn.php:169
+#: admin/tpl/setting/settings_cdn.php:25 admin/tpl/setting/settings_cdn.php:159
 #: admin/tpl/setting/settings_debug.php:29
 #: admin/tpl/setting/settings_inc.cache_object.php:149
 #: admin/tpl/setting/settings_media.php:93
@@ -137,7 +137,7 @@ msgid "Server variable(s) %s available to override this setting."
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:968
-#: admin/litespeed-cache-admin.class.php:229
+#: admin/litespeed-cache-admin.class.php:228
 #: admin/tpl/inc/check_cache_disabled.php:49
 #: admin/tpl/inc/img_optm.initialize.php:29
 #: admin/tpl/inc/img_optm.summary.php:165 admin/tpl/manage/manage_cdn.php:60
@@ -147,7 +147,7 @@ msgstr ""
 #: admin/tpl/setting/settings_advanced.php:63
 #: admin/tpl/setting/settings_cache.php:7
 #: admin/tpl/setting/settings_cache.php:79
-#: admin/tpl/setting/settings_cdn.php:25
+#: admin/tpl/setting/settings_cdn.php:15
 #: admin/tpl/setting/settings_crawler.php:8
 #: admin/tpl/setting/settings_debug.php:8 admin/tpl/setting/settings_esi.php:8
 #: admin/tpl/setting/settings_excludes.php:7
@@ -186,9 +186,9 @@ msgstr ""
 #: admin/litespeed-cache-admin-display.class.php:984
 #: admin/tpl/manage/manage_purge.php:152
 #: admin/tpl/setting/settings_cache.php:83
-#: admin/tpl/setting/settings_cdn.php:117
-#: admin/tpl/setting/settings_cdn.php:145
-#: admin/tpl/setting/settings_cdn.php:157
+#: admin/tpl/setting/settings_cdn.php:107
+#: admin/tpl/setting/settings_cdn.php:135
+#: admin/tpl/setting/settings_cdn.php:147
 #: admin/tpl/setting/settings_crawler.php:132
 #: admin/tpl/setting/settings_excludes.php:43
 #: admin/tpl/setting/settings_excludes.php:66
@@ -466,42 +466,42 @@ msgstr ""
 msgid "Failed to push to LiteSpeed server: %s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:919
+#: admin/litespeed-cache-admin-rules.class.php:925
 msgid ""
 "<p>Please add/replace the following codes into the beginning of %1$s:</p> "
 "%2$s"
 msgstr ""
 
-#: admin/litespeed-cache-admin-rules.class.php:1021
+#: admin/litespeed-cache-admin-rules.class.php:1027
 msgid "File Saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:52
+#: admin/litespeed-cache-admin-settings.class.php:57
 msgid "'Use primary site settings' set by Network Administrator."
 msgstr ""
 
-#: admin/litespeed-cache-admin-settings.class.php:242
+#: admin/litespeed-cache-admin-settings.class.php:298
 msgid "Site options saved."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:221
+#: admin/litespeed-cache-admin.class.php:220
 msgid ""
 "If this is the case, the network admin may uncheck \"Check Advanced Cache\" "
 "in LiteSpeed Cache Advanced settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:223
+#: admin/litespeed-cache-admin.class.php:222
 msgid ""
 "If this is the case, please uncheck \"Check Advanced Cache\" in LiteSpeed "
 "Cache Advanced settings."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:225
+#: admin/litespeed-cache-admin.class.php:224
 msgid ""
 "LiteSpeed has detected another plugin using the \"Advanced Cache\" file."
 msgstr ""
 
-#: admin/litespeed-cache-admin.class.php:226
+#: admin/litespeed-cache-admin.class.php:225
 msgid ""
 "LiteSpeed Cache does work with other optimization plugins, but only if "
 "functionality is not duplicated. Only one full-page cache may be activated."
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Or"
 msgstr ""
 
-#: admin/tpl/api/quic.login.php:30 admin/tpl/setting/settings_cdn.php:221
+#: admin/tpl/api/quic.login.php:30 admin/tpl/setting/settings_cdn.php:211
 msgid "User API Key"
 msgstr ""
 
@@ -874,7 +874,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.6.4.1)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.7.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:353
 #: includes/litespeed-cache-gui.class.php:353
@@ -1278,7 +1278,7 @@ msgstr ""
 
 #: admin/tpl/inc/img_optm.summary.php:306
 #: admin/tpl/setting/settings_advanced.php:65
-#: admin/tpl/setting/settings_cdn.php:98
+#: admin/tpl/setting/settings_cdn.php:88
 #: admin/tpl/setting/settings_crawler.php:22
 #: admin/tpl/setting/settings_crawler.php:95
 #: admin/tpl/setting/settings_crawler.php:100
@@ -1723,7 +1723,7 @@ msgstr ""
 msgid "DB Optimizer"
 msgstr ""
 
-#: admin/tpl/manage.php:10 admin/tpl/setting/settings_cdn.php:240
+#: admin/tpl/manage.php:10 admin/tpl/setting/settings_cdn.php:230
 #: admin/tpl/settings.php:12
 msgid "CDN"
 msgstr ""
@@ -1980,183 +1980,183 @@ msgstr ""
 msgid "For example, to drop parameters beginning with %s, %s can be used here."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:24
+#: admin/tpl/setting/settings_cdn.php:14
 msgid "CDN Settings"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:30
+#: admin/tpl/setting/settings_cdn.php:20
 msgid "Enable CDN"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:34
+#: admin/tpl/setting/settings_cdn.php:24
 msgid "Enable Content Delivery Network use."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:35
+#: admin/tpl/setting/settings_cdn.php:25
 msgid ""
 "If using Cloudflare, leave this setting %s and use Cloudflare API setting "
 "below."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:41
+#: admin/tpl/setting/settings_cdn.php:31
 msgid "CDN Mapping"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:47
+#: admin/tpl/setting/settings_cdn.php:37
 msgid "CDN URL"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:56
+#: admin/tpl/setting/settings_cdn.php:46
 msgid "CDN URL to be used. For example, %s"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:62 admin/tpl/setting/settings_cdn.php:103
+#: admin/tpl/setting/settings_cdn.php:52 admin/tpl/setting/settings_cdn.php:93
 msgid "Include Images"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:69 admin/tpl/setting/settings_cdn.php:107
+#: admin/tpl/setting/settings_cdn.php:59 admin/tpl/setting/settings_cdn.php:97
 msgid "Include CSS"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:76 admin/tpl/setting/settings_cdn.php:111
+#: admin/tpl/setting/settings_cdn.php:66 admin/tpl/setting/settings_cdn.php:101
 msgid "Include JS"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:86 admin/tpl/setting/settings_cdn.php:115
+#: admin/tpl/setting/settings_cdn.php:76 admin/tpl/setting/settings_cdn.php:105
 msgid "Include File Types"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:99
+#: admin/tpl/setting/settings_cdn.php:89
 msgid ""
 "To randomize CDN hostname, define multiple hostnames for the same resources."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:104
+#: admin/tpl/setting/settings_cdn.php:94
 msgid ""
 "Serve all image files through the CDN. This will affect all attachments, "
 "HTML %s tags, and CSS %s attributes."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:108
+#: admin/tpl/setting/settings_cdn.php:98
 msgid ""
 "Serve all CSS files through the CDN. This will affect all enqueued WP CSS "
 "files."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:112
+#: admin/tpl/setting/settings_cdn.php:102
 msgid ""
 "Serve all JavaScript files through the CDN. This will affect all enqueued WP "
 "JavaScript files."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:116
+#: admin/tpl/setting/settings_cdn.php:106
 msgid "Static file type links to be replaced by CDN links."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:118
+#: admin/tpl/setting/settings_cdn.php:108
 msgid "This will affect all tags containing attributes: %s %s %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:119
+#: admin/tpl/setting/settings_cdn.php:109
 msgid "Default value"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:126
+#: admin/tpl/setting/settings_cdn.php:116
 msgid "Original URLs"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:130
+#: admin/tpl/setting/settings_cdn.php:120
 msgid ""
 "Site URL to be served through the CDN. Beginning with %1$s. For example, "
 "%2$s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:131
+#: admin/tpl/setting/settings_cdn.php:121
 msgid ""
 "Wildcard %1$s supported (match zero or more characters). For example, to "
 "match %2$s and %3$s, use %4$s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:132
+#: admin/tpl/setting/settings_cdn.php:122
 msgid "Separate multiple original URLs with a %s."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:138
+#: admin/tpl/setting/settings_cdn.php:128
 msgid "Included Directories"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:144
+#: admin/tpl/setting/settings_cdn.php:134
 msgid "Only files within these directories will be pointed to the CDN."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:151
+#: admin/tpl/setting/settings_cdn.php:141
 msgid "Exclude Path"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:156
+#: admin/tpl/setting/settings_cdn.php:146
 msgid "Paths containing these strings will not be served from the CDN."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:163
+#: admin/tpl/setting/settings_cdn.php:153
 msgid "Load JQuery Remotely"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:185
+#: admin/tpl/setting/settings_cdn.php:175
 msgid ""
 "Improve page load time by loading jQuery from a remote CDN service instead "
 "of locally."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:191
+#: admin/tpl/setting/settings_cdn.php:181
 msgid "Quic Cloud API"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:195
-#: admin/tpl/setting/settings_cdn.php:239
+#: admin/tpl/setting/settings_cdn.php:185
+#: admin/tpl/setting/settings_cdn.php:229
 msgid "Use %s API functionality."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:212
-#: admin/tpl/setting/settings_cdn.php:244
+#: admin/tpl/setting/settings_cdn.php:202
+#: admin/tpl/setting/settings_cdn.php:234
 msgid "Email Address"
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:206
+#: admin/tpl/setting/settings_cdn.php:238
+msgid "Your Email address on %s."
+msgstr ""
+
+#: admin/tpl/setting/settings_cdn.php:215
+#: admin/tpl/setting/settings_cdn.php:247
+msgid "Your API key is used to access %s APIs."
 msgstr ""
 
 #: admin/tpl/setting/settings_cdn.php:216
 #: admin/tpl/setting/settings_cdn.php:248
-msgid "Your Email address on %s."
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:225
-#: admin/tpl/setting/settings_cdn.php:257
-msgid "Your API key is used to access %s APIs."
-msgstr ""
-
-#: admin/tpl/setting/settings_cdn.php:226
-#: admin/tpl/setting/settings_cdn.php:258
 msgid "Get it from <a %1$s>%2$s</a>."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:235
+#: admin/tpl/setting/settings_cdn.php:225
 msgid "Cloudflare API"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:240
+#: admin/tpl/setting/settings_cdn.php:230
 msgid "This can be managed from <a %2$s>%1$s</a>."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:253
+#: admin/tpl/setting/settings_cdn.php:243
 msgid "Global API Key"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:263
+#: admin/tpl/setting/settings_cdn.php:253
 msgid "Domain"
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:271
+#: admin/tpl/setting/settings_cdn.php:261
 msgid "You can just type part of the domain."
 msgstr ""
 
-#: admin/tpl/setting/settings_cdn.php:272
+#: admin/tpl/setting/settings_cdn.php:262
 msgid ""
 "Once saved, it will be matched with the current list and completed "
 "automatically."
@@ -3997,9 +3997,9 @@ msgstr ""
 msgid "Crawler %s reached end of sitemap file."
 msgstr ""
 
-#: inc/crawler.class.php:506 inc/crawler.class.php:510
-#: includes/litespeed-cache-crawler.class.php:506
-#: includes/litespeed-cache-crawler.class.php:510
+#: inc/crawler.class.php:505 inc/crawler.class.php:509
+#: includes/litespeed-cache-crawler.class.php:505
+#: includes/litespeed-cache-crawler.class.php:509
 msgid "Guest"
 msgstr ""
 
@@ -4160,23 +4160,23 @@ msgstr ""
 msgid "Import failed due to file error."
 msgstr ""
 
-#: inc/import.class.php:203
+#: inc/import.class.php:201
 msgid "Imported setting file %s successfully."
 msgstr ""
 
-#: inc/import.class.php:249
+#: inc/import.class.php:244
 msgid "Reset successfully."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:270 includes/litespeed-cache.class.php:270
+#: inc/litespeed-cache.class.php:274 includes/litespeed-cache.class.php:274
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:281 includes/litespeed-cache.class.php:281
+#: inc/litespeed-cache.class.php:285 includes/litespeed-cache.class.php:285
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:291 includes/litespeed-cache.class.php:291
+#: inc/litespeed-cache.class.php:295 includes/litespeed-cache.class.php:295
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
