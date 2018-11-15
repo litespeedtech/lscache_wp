@@ -1434,6 +1434,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// Clear credit info
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
+		delete_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ;
 
 		exit( 'ok' ) ;
 	}
