@@ -30,5 +30,7 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.auto_upgrade.php' ; ?>
+
 </tbody></table>
 

@@ -37,7 +37,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$options = $this->construct_multisite_options() ;
 		}
 		else {
-			$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
+			$options = get_option( self::OPTION_NAME ) ;
+			if ( ! $options ) {
+				$options = $this->get_default_options() ;
+			}
 
 			// Check advanced_cache set
 			$this->_define_adv_cache( $options ) ;
@@ -147,7 +150,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		$this->_define_adv_cache( $site_options ) ;
 
-		$options = get_option( self::OPTION_NAME, $this->get_default_options() ) ;
+		$options = get_option( self::OPTION_NAME ) ;
+		if ( ! $options ) {
+			$options = $this->get_default_options() ;
+		}
 
 		/**
 		 * In case this is called outside the admin page

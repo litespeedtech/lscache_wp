@@ -194,6 +194,13 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
+		/**
+		 * Keep self up-to-date
+		 * @since  2.7.2
+		 */
+		$id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ;
+		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+
 	}
 
 	/**
@@ -288,6 +295,9 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ;
+		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
+
+		$id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ;
 		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 
 		if ( ! empty( $this->_err ) ) {

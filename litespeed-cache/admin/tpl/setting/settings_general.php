@@ -146,5 +146,9 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
+	<?php if ( ! is_multisite() ) : ?>
+		<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.auto_upgrade.php'; ?>
+	<?php endif ; ?>
+
 </tbody></table>
 

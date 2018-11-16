@@ -160,6 +160,9 @@ class LiteSpeed_Cache
 		 */
 		do_action( 'litespeed_init' ) ;
 
+		// in `after_setup_theme`, before `init` hook
+		$this->_auto_update() ;
+
 		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
@@ -225,6 +228,27 @@ class LiteSpeed_Cache
 		// Load frontend GUI
 		LiteSpeed_Cache_GUI::get_instance() ;
 
+	}
+
+	/**
+	 * Handle auto update
+	 *
+	 * @since 2.7.2
+	 * @access private
+	 */
+	private function _auto_update()
+	{
+		if ( ! self::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
+			return ;
+		}
+
+		add_filter( 'auto_update_plugin', function( $update, $item ) {
+				if ( $item->slug == 'litespeed-cache' ) {
+					return true ;
+				}
+
+				return $update; // Else, use the normal API response to decide whether to update or not
+			}, 10, 2 ) ;
 	}
 
 	/**
