@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -275,6 +275,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.7.2 - Nov 19 2018 =
+* 🌱: Auto Upgrade feature.
+* <strong>CDN</strong>: Bypass CDN for cron to avoid WP jQuery deregister warning.
 
 = 2.7.1 - Nov 15 2018 =
 * 🌱<strong>CLI</strong>: Ability to set CDN mapping by `set_option litespeed-cache-cdn_mapping[url][0] https://url`.

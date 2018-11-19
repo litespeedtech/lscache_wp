@@ -8,7 +8,7 @@ if (!defined('WPINC')) die;
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'When enabled, our plugin will be automatically up-to-date when a new version released.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Turn this option ON to have LiteSpeed Cache updated automatically, whenever a new version is released. If OFF, update manually as usual.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
