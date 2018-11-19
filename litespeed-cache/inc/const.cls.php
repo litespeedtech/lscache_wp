@@ -366,7 +366,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::NETWORK_OPID_ENABLED => false,
 			self::NETWORK_OPID_USE_PRIMARY => false,
-			self::OPT_AUTO_UPGRADE => true,
+			self::OPT_AUTO_UPGRADE => false,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
@@ -427,7 +427,7 @@ class LiteSpeed_Cache_Const
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::OPID_ENABLED_RADIO => $default_radio,
-			self::OPT_AUTO_UPGRADE => true,
+			self::OPT_AUTO_UPGRADE => false,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_PRIV => true,
 			self::OPID_CACHE_COMMENTER => true,
