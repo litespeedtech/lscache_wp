@@ -109,6 +109,14 @@ class LiteSpeed_Cache_Router
 		}
 
 		/**
+		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`
+		 * @since  2.7.2
+		 */
+		if ( defined( 'DOING_CRON' ) ) {
+			$can = false ;
+		}
+
+		/**
 		 * Bypass login/reg page
 		 * @since  1.6
 		 */
