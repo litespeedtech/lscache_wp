@@ -25,7 +25,7 @@ class LiteSpeed_Cache
 
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '2.7.1' ;
+	const PLUGIN_VERSION = '2.7.2' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -244,6 +244,18 @@ class LiteSpeed_Cache
 
 		add_filter( 'auto_update_plugin', function( $update, $item ) {
 				if ( $item->slug == 'litespeed-cache' ) {
+					// Check latest stable version allowed to upgrade
+					$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
+					$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+					if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
+						return false ;
+					}
+					$auto_v = $response[ 'body' ] ;
+
+					if ( empty( $item->new_version ) || $auto_v !== $item->new_version ) {
+						return false ;
+					}
+
 					return true ;
 				}
 
