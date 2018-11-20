@@ -77,6 +77,17 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 			return ;
 		}
 
+		if ( isset($_POST['task_list']) ) {
+			$task_list = str_replace( '\\', '', $_POST[ 'task_list' ] );
+			$task_list = json_decode( $task_list, true ) ;
+			$id = $task_list[0]['query']['id'];
+
+			if ( isset($id) ) {
+				LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $id ) ;
+				return ;
+			}
+		}
+
 		if ( isset($_POST['id']) ) {
 			$id = $_POST['id'] ;
 		}
