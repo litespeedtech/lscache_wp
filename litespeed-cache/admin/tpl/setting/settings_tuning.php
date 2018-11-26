@@ -112,6 +112,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Use Web Font Loader library to load Google Fonts asynchronously while leave other CSS intact.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will also add a preconnect to Google for faster Google Fonts downloading.', 'litespeed-cache' ) ; ?>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning:google-fonts' ) ; ?>
 			</div>
 		</td>
 	</tr>
