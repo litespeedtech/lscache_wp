@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.7.2
+Stable tag: 2.7.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -276,6 +276,14 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 == Changelog ==
 
+= 2.7.3 - Nov 26 2018 =
+* <strong>Optm</strong>: Improved page render speed with Web Font Loader JS library for Load Google Fonts Asynchronously.
+* <strong>Optm</strong>: Directly used JS library files in plugin folder instead of short links `/min/`.
+* <strong>Optm</strong>: Handled exceptions in JS optimization when meeting badly formatted JS.
+* <strong>3rd</strong>: Added Adobe Lightroom support for NextGen Gallery.
+* <strong>3rd</strong>: Improved Postman app support for POST JSON requests.
+* <strong>IAPI</strong>: <strong>US3 server IP changed to 68.183.60.185</strong>.
+
 = 2.7.2 - Nov 19 2018 =
 * 🌱: Auto Upgrade feature.
 * <strong>CDN</strong>: Bypass CDN for cron to avoid WP jQuery deregister warning.
@@ -300,7 +308,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>IAPI</strong>: Sped up Image Optimization workflow.
 * <strong>GUI</strong>: Current IP now shows in Debug settings.
 * <strong>GUI</strong>: Space separated placeholder queue list for better look.
-* <strong>EU3 server IP Changed to 165.227.131.98</strong>.
+* <strong>IAPI</strong>: <strong>EU3 server IP changed to 165.227.131.98</strong>.
 
 = 2.6.4.1 - Oct 25 2018 =
 * 🔥🐞<strong>Media</strong>: Fixed a bug where the wrong table was used in the Image Optimization process.
