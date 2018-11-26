@@ -210,7 +210,7 @@ class JSMin
 						}
 						if ($this->isEOF($this->a)) {
 							$byte = $this->inputIndex - 1;
-							throw new Exception(
+							throw new \Exception(
 								"JSMin: Unterminated String at byte {$byte}: {$str}");
 						}
 						$str .= $this->a;
@@ -247,7 +247,7 @@ class JSMin
 									$pattern .= $this->a;
 								}
 								if ($this->isEOF($this->a)) {
-									throw new Exception(
+									throw new \Exception(
 										"JSMin: Unterminated set in RegExp at byte "
 											. $this->inputIndex .": {$pattern}");
 								}
@@ -262,7 +262,7 @@ class JSMin
 							$pattern .= $this->a;
 						} elseif ($this->isEOF($this->a)) {
 							$byte = $this->inputIndex - 1;
-							throw new Exception(
+							throw new \Exception(
 								"JSMin: Unterminated RegExp at byte {$byte}: {$pattern}");
 						}
 						$this->output .= $this->a;
@@ -424,7 +424,7 @@ class JSMin
 					return;
 				}
 			} elseif ($get === null) {
-				throw new Exception(
+				throw new \Exception(
 					"JSMin: Unterminated comment at byte {$this->inputIndex}: /*{$comment}");
 			}
 			$comment .= $get;
