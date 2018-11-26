@@ -33,6 +33,7 @@ class LiteSpeed_Cache_Img_Optm
 	const DB_IMG_OPTIMIZE_DESTROY = 'litespeed-optimize-destroy' ;
 	const DB_IMG_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
 	const DB_IMG_OPTIMIZE_STATUS = 'litespeed-optimize-status' ;
+	const DB_IMG_OPTIMIZE_STATUS_PREPARE = 'prepare' ;
 	const DB_IMG_OPTIMIZE_STATUS_REQUESTED = 'requested' ;
 	const DB_IMG_OPTIMIZE_STATUS_NOTIFIED = 'notified' ;
 	const DB_IMG_OPTIMIZE_STATUS_PULLED = 'pulled' ;
