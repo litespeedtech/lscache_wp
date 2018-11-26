@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Media
 {
 	private static $_instance ;
 
-	const LAZY_LIB = '/min/lazyload.js' ;
+	const LIB_FILE_IMG_LAZYLOAD = 'js/lazyload.min.js' ;
 
 	const TYPE_GENERATE_PLACEHOLDER = 'generate_placeholder' ;
 	const DB_PLACEHOLDER_SUMMARY = 'litespeed-media-placeholder-summary' ;
@@ -45,8 +45,6 @@ class LiteSpeed_Cache_Media
 		$this->wp_upload_dir = wp_upload_dir() ;
 
 		if ( $this->can_media() ) {
-			$this->_static_request_check() ;
-
 			$this->_cfg_img_webp = self::webp_enabled() ;
 
 			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
@@ -309,56 +307,6 @@ eot;
 	}
 
 	/**
-	 * Check if the request is for static file
-	 *
-	 * @since  1.4
-	 * @access private
-	 * @return  string The static file content
-	 */
-	private function _static_request_check()
-	{
-		// This request is for js/css_async.js
-		if ( strpos( $_SERVER[ 'REQUEST_URI' ], self::LAZY_LIB ) !== false ) {
-			LiteSpeed_Cache_Log::debug( '[Media] run lazyload lib' ) ;
-
-			$content = $this->_get_lazyload_lib_content() ;
-
-			$static_file = LSCWP_CONTENT_DIR . '/cache/js/lazyload.js' ;
-
-			// Save to cache folder to enable directly usage by .htacess
-			if ( ! file_exists( $static_file ) ) {
-				Litespeed_File::save( $static_file, $content, true ) ;
-				LiteSpeed_Cache_Log::debug( '[Media] save lazyload lib to ' . $static_file ) ;
-			}
-
-			LiteSpeed_Cache_Control::set_cacheable() ;
-			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: lazyload js' ) ;
-			LiteSpeed_Cache_Control::set_no_vary() ;
-			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
-			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_LAZY' ) ;
-
-			header( 'Content-Length: ' . strlen( $content ) ) ;
-			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
-
-			echo $content ;
-			exit ;
-		}
-	}
-
-	/**
-	 * Read lazyload js lib content
-	 *
-	 * @since  2.4.3
-	 * @access private
-	 */
-	private function _get_lazyload_lib_content()
-	{
-		$file = LSCWP_DIR . 'js/lazyload.min.js' ;
-
-		return Litespeed_File::read( $file ) ;
-	}
-
-	/**
 	 * Run lazy load process
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
@@ -462,9 +410,9 @@ eot;
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_img_lazy || $cfg_iframe_lazy ) {
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZYJS_INLINE ) ) {
-				$lazy_lib = '<script type="text/javascript">' . $this->_get_lazyload_lib_content() . '</script>' ;
+				$lazy_lib = '<script type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>' ;
 			} else {
-				$lazy_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::LAZY_LIB ) ;
+				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD ;
 				$lazy_lib = '<script src="' . $lazy_lib_url . '"></script>' ;
 			}
 

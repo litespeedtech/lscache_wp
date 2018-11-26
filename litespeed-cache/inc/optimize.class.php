@@ -18,8 +18,8 @@ class LiteSpeed_Cache_Optimize
 	private static $_instance ;
 
 	const DIR_MIN = '/min' ;
-	const CSS_ASYNC_LIB = '/min/css_async.js' ;
-	const CSS_ASYNC_LIB_FILE = 'js/css_async.min.js' ;
+	const LIB_FILE_CSS_ASYNC = 'js/css_async.min.js' ;
+	const LIB_FILE_WEBFONTLOADER = 'js/webfontloader.min.js' ;
 
 	private $content ;
 	private $http2_headers = array() ;
@@ -158,33 +158,6 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
 		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
 		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
-
-		// This request is for js/css_async.js
-		if ( strpos( $_SERVER[ 'REQUEST_URI' ], self::CSS_ASYNC_LIB ) !== false ) {
-			LiteSpeed_Cache_Log::debug( '[Optm] start serving static file' ) ;
-
-			$content = Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) ;
-
-			$static_file = LSCWP_CONTENT_DIR . '/cache/js/css_async.js' ;
-
-			// Save to cache folder to enable directly usage by .htacess
-			if ( ! file_exists( $static_file ) ) {
-				Litespeed_File::save( $static_file, $content, true ) ;
-				LiteSpeed_Cache_Log::debug( '[Optm] save css_async lib to ' . $static_file ) ;
-			}
-
-			LiteSpeed_Cache_Control::set_cacheable() ;
-			LiteSpeed_Cache_Control::set_public_forced( 'OPTM: css async js' ) ;
-			LiteSpeed_Cache_Control::set_no_vary() ;
-			LiteSpeed_Cache_Control::set_custom_ttl( 8640000 ) ;
-			LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_MIN . '_CSS_ASYNC' ) ;
-
-			header( 'Content-Length: ' . strlen( $content ) ) ;
-			header( 'Content-Type: application/x-javascript; charset=utf-8' ) ;
-
-			echo $content ;
-			exit ;
-		}
 
 		// If not turn on min files
 		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
@@ -577,10 +550,10 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE ) ) {
-				$this->html_head .= '<script id="litespeed-css-async-lib" type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::CSS_ASYNC_LIB_FILE ) . '</script>' ;
+				$this->html_head .= '<script id="litespeed-css-async-lib" type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>' ;
 			}
 			else {
-				$css_async_lib_url = LiteSpeed_Cache_Utility::get_permalink_url( self::CSS_ASYNC_LIB ) ;
+				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC ;
 				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
 				$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 			}
@@ -674,7 +647,7 @@ class LiteSpeed_Cache_Optimize
 		$html .= ']}};</script>' ;
 
 		// https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js
-		$webfont_lib_url = LSWCP_PLUGIN_URL . 'js/webfontloader.min.js' ;
+		$webfont_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_WEBFONTLOADER ;
 
 		$html .= '<script id="litespeed-webfont-lib" src="' . $webfont_lib_url . '" async></script>' ;
 		$this->append_http2( $webfont_lib_url, 'js' ) ; // async lib will be http/2 pushed always
