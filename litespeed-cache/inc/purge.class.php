@@ -951,9 +951,6 @@ class LiteSpeed_Cache_Purge
 			}
 		}
 
-		// Set back to original post as $post_id might affecting the global $post value
-		$post = $original_post ;
-
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
 			//LiteSpeed_Cache_Log::debug('purge by post, check tax = ' . var_export($taxonomies, true)) ;
@@ -1015,6 +1012,9 @@ class LiteSpeed_Cache_Purge
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_YEAR) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_ARCHIVE_DATE . date('Y', $date) ;
 		}
+
+		// Set back to original post as $post_id might affecting the global $post value
+		$post = $original_post ;
 
 		return array_unique($purge_tags) ;
 	}
