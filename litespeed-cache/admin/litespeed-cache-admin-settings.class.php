@@ -216,8 +216,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
 		}
 
-		$input = array_map( 'LiteSpeed_Cache_Admin::cleanup_text', $input ) ;
-		$this->_input = $input ;
+		$this->_input = LiteSpeed_Cache_Admin::cleanup_text( $input ) ;
 
 		$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
 
