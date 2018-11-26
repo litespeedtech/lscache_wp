@@ -927,6 +927,7 @@ class LiteSpeed_Cache_Purge
 
 		// for archive of categories|tags|custom tax
 		global $post ;
+		$original_post = $post ;
 		$post = get_post($post_id) ;
 		$post_type = $post->post_type ;
 
@@ -949,6 +950,9 @@ class LiteSpeed_Cache_Purge
 				LiteSpeed_Cache_Log::debug('--------purge_tags next is: '.$next_post->ID) ;
 			}
 		}
+
+		// Set back to original post as $post_id might affecting the global $post value
+		$post = $original_post ;
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
