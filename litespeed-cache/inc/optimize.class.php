@@ -635,8 +635,6 @@ class LiteSpeed_Cache_Optimize
 
 		LiteSpeed_Cache_Log::debug( '[Optm] google fonts async found: ', $this->_ggfonts_urls ) ;
 
-		$webfont_lib_url = 'https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js' ;//tmp
-
 		$html = '<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />' ;
 
 		/**
@@ -675,8 +673,11 @@ class LiteSpeed_Cache_Optimize
 
 		$html .= ']}};</script>' ;
 
+		// https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js
+		$webfont_lib_url = LSWCP_PLUGIN_URL . 'js/webfontloader.min.js' ;
+
 		$html .= '<script id="litespeed-webfont-lib" src="' . $webfont_lib_url . '" async></script>' ;
-		// $this->append_http2( $webfont_lib_url, 'js' ) ; // async lib will be http/2 pushed always
+		$this->append_http2( $webfont_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 
 		// Put this in the very beginning for preconnect
 		$this->html_head = $html . $this->html_head ;
