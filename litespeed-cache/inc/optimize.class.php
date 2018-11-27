@@ -261,9 +261,14 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function remove_query_strings( $src )
 	{
-        if ( strpos( $src, '.js?' ) !== false || strpos( $src, '.css?' ) !== false ) {
-            $src = preg_replace( '/\?.*/', '', $src ) ;
-        }
+		if ( strpos( $src, '_litespeed_rm_qs=0' ) ) {
+			return $src ;
+		}
+
+		if ( strpos( $src, '.js?' ) !== false || strpos( $src, '.css?' ) !== false ) {
+			$src = preg_replace( '/\?.*/', '', $src ) ;
+		}
+
 		return $src ;
 	}
 
