@@ -136,6 +136,70 @@ if ( !defined('WPINC') ) die;
 	</tr>
 
 	<tr>
+		<th><?php echo __('Cookie Simulation', 'litespeed-cache'); ?></th>
+		<td>
+			<?php $id = LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ; ?>
+			<div id="cookie_crawler">
+				<div class="litespeed-block" v-for="( item, key ) in items">
+					<div class='litespeed-col-auto'>
+						<h4><?php echo __( 'Cookie Name', 'litespeed-cache' ) ; ?></h4>
+					</div>
+					<div class='litespeed-col-auto'>
+						<input type="text" v-model="item.name" name="litespeed-cache-conf[<?php echo $id ; ?>][name][]" class="litespeed-regular-text" style="margin-top:1.33em;" >
+					</div>
+					<div class='litespeed-col-auto'>
+						<h4><?php echo __( 'Cookie Values', 'litespeed-cache' ) ; ?></h4>
+					</div>
+					<div class='litespeed-col-auto'>
+						<textarea v-model="item.vals" rows="5" cols="40" name="litespeed-cache-conf[litespeed-cache-crawler_cookie][vals][]" placeholder="<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>"></textarea>
+					</div>
+					<div class='litespeed-col-auto'>
+						<button type="button" class="litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>
+					</div>
+				</div>
+
+				<button type="button" @click='add_row' class="litespeed-btn-success litespeed-btn-tiny">+</button>
+			</div>
+
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+			<script type="text/javascript">
+				var cookie_crawler = new Vue( {
+					el: '#cookie_crawler',
+					data: {
+						counter: 0,
+						items : [
+							<?php
+							// Build the cookie crawler Vue data
+							$cookies = $this->config->get_item( $id ) ;
+							/**
+							 * Data Src Structure: [ nameA => vals, nameB => vals ]
+							 */
+							$list = array() ;
+							foreach ( $cookies as $k => $v ) {
+								$list[] = "{ name: '$k', vals: `$v` }" ;// $v contains line break
+							}
+							echo implode( ',', $list ) ;
+							?>
+						]
+					},
+					methods: {
+						add_row() {
+							this.items.push( {
+								id: ++ this.counter
+							} ) ;
+						}
+					}
+				} ) ;
+			</script>
+
+			<div class="litespeed-desc">
+				<?php echo __('To crawl with addtional cookies.', 'litespeed-cache'); ?>
+			</div>
+
+		</td>
+	</tr>
+
+	<tr>
 		<th><?php echo __('Custom Sitemap', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ; ?>
