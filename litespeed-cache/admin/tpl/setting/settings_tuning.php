@@ -101,9 +101,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Remove query strings from static resources.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
+				<br /><font class="litespeed-warning">
+					<?php echo __('NOTE', 'litespeed-cache'); ?>:
+					<?php echo __( 'Google reCAPTCHA will be bypassed automatically.', 'litespeed-cache' ) ; ?>
+				</font>
 				<br /><font class="litespeed-success">
 					<?php echo __('API', 'litespeed-cache'); ?>:
-					<?php echo sprintf( __( 'Append %s to the resources to bypass this action.', 'litespeed-cache' ), '<code>_litespeed_rm_qs=0</code>' ) ; ?>
+					<?php echo sprintf( __( 'Append query string %s to the resources to bypass this action.', 'litespeed-cache' ), '<code>&_litespeed_rm_qs=0</code>' ) ; ?>
 				</font>
 			</div>
 		</td>

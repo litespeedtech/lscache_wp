@@ -261,7 +261,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function remove_query_strings( $src )
 	{
-		if ( strpos( $src, '_litespeed_rm_qs=0' ) ) {
+		if ( strpos( $src, '_litespeed_rm_qs=0' ) || strpos( $src, '/recaptcha' ) ) {
 			return $src ;
 		}
 
