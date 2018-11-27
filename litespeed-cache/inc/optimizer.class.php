@@ -230,7 +230,7 @@ class LiteSpeed_Cache_Optimizer
 			return $data ;
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
-			error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
+			// error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
 			return $data ;
 		}
 	}
