@@ -17,6 +17,7 @@ class Litespeed_Crawler
 	private $_threads_limit = 3 ;
 	private $_load_limit = 1 ;
 	private $_domain_ip = '' ;
+	private $_ua = '' ;
 
 	private $_curl_headers = array() ;
 	private $_cookies = array() ;
@@ -42,6 +43,17 @@ class Litespeed_Crawler
 	{
 		$this->_sitemap_file = $sitemap_file ;
 		$this->_meta_file = $this->_sitemap_file . '.meta' ;
+	}
+
+	/**
+	 * Set User Agent
+	 *
+	 * @since  2.8
+	 * @access public
+	 */
+	public function set_ua( $ua )
+	{
+		$this->_ua = $ua ;
 	}
 
 	/**
@@ -537,10 +549,9 @@ class Litespeed_Crawler
 	 *
 	 * @since  1.1.0
 	 * @access private
-	 * @param    string $ua as user-agent
 	 * @return   options array
 	 */
-	private function _get_curl_options($ua = '')
+	private function _get_curl_options()
 	{
 		$referer = null ;
 		if ( isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI']) ) {
@@ -575,10 +586,10 @@ class Litespeed_Crawler
 		// else {
 		// }
 
-		if ( ! $ua ) {
-			$ua = self::FAST_USER_AGENT ;
+		if ( strpos( $this->_ua, self::FAST_USER_AGENT ) !== 0 ) {
+			$this->_ua = self::FAST_USER_AGENT . ' ' . $this->_ua ;
 		}
-		$options[CURLOPT_USERAGENT] = $ua ;
+		$options[CURLOPT_USERAGENT] = $this->_ua ;
 
 		if ( $this->_domain_ip && $this->_baseUrl ) {
 			$parsed_url = parse_url($this->_baseUrl) ;

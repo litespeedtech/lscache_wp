@@ -182,6 +182,9 @@ LiteSpeed_Cache_GUI::show_promo() ;
 						<?php if ( $v[ 'webp' ] ) {
 							echo ' - WebP' ;
 						} ?>
+						<?php if ( $v[ 'mobile' ] ) {
+							echo ' - <font title="Mobile">📱</font>' ;
+						} ?>
 					</td>
 					<td><?php echo $recurrence ; ?></td>
 					<td><?php echo "Size: $meta[list_size]" ; ?></td>

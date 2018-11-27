@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Log
 	private function __construct()
 	{
 		self::$log_path = LSCWP_CONTENT_DIR . '/debug.log' ;
-		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && $_SERVER[ 'HTTP_USER_AGENT' ] === Litespeed_Crawler::FAST_USER_AGENT ) {
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT ) === 0 ) {
 			self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log' ;
 		}
 

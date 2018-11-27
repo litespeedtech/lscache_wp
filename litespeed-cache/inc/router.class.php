@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Router
 		LiteSpeed_Cache_Log::debug( '[Router] starting crawler role validation' ) ;
 
 		// Check if is from crawler
-		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || $_SERVER[ 'HTTP_USER_AGENT' ] !== Litespeed_Crawler::FAST_USER_AGENT ) {
+		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT ) !== 0 ) {
 			LiteSpeed_Cache_Log::debug( '[Router] user agent not match' ) ;
 			return ;
 		}
