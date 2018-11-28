@@ -934,7 +934,9 @@ eot;
 		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'curr_request' ] = 0 ;
-		unset( $req_summary[ 'queue' ][ array_search( $size, $req_summary[ 'queue' ] ) ] ) ;
+		if ( ! empty( $req_summary[ 'queue' ] ) && in_array( $size, $req_summary[ 'queue' ] ) ) {
+			unset( $req_summary[ 'queue' ][ array_search( $size, $req_summary[ 'queue' ] ) ] ) ;
+		}
 
 		$this->_save_summary( $req_summary ) ;
 
