@@ -661,7 +661,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 			$cdn_mapping[] = $this_mapping ;
 		}
-		update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, $cdn_mapping ) ;
+		update_option( $id, $cdn_mapping ) ;
 
 		/**
 		 * Load jQuery from cdn
@@ -1052,6 +1052,21 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ;
 		$this->_save_item( $id ) ;
+
+		/**
+		 * Save cookie crawler
+		 * @since 2.8
+		 */
+		$id = LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ;
+		$cookie_crawlers = array() ;
+		foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
+			if ( ! $v ) {
+				continue ;
+			}
+
+			$cookie_crawlers[ $v ] = $this->_input[ $id ][ 'vals' ][ $k ] ;
+		}
+		update_option( $id, $cookie_crawlers ) ;
 
 	}
 
