@@ -1400,7 +1400,7 @@ class LiteSpeed_Cache_Img_Optm
 		$request_time = get_option( self::DB_IMG_OPTIMIZE_DESTROY ) ;
 		if ( time() - $request_time > 300 ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] terminate DESTROY process due to timeout' ) ;
-			exit( 'Destroy callback timeout ( 300 seconds )' ) ;
+			exit( 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
 		}
 
 		// Start deleting files
