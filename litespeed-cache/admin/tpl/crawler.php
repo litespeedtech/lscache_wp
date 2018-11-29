@@ -178,13 +178,7 @@ LiteSpeed_Cache_GUI::show_promo() ;
 					?>
 					</td>
 					<td>
-						<?php echo ucfirst( $v[ 'role_title' ] ) ; ?>
-						<?php if ( $v[ 'webp' ] ) {
-							echo ' - WebP' ;
-						} ?>
-						<?php if ( $v[ 'mobile' ] ) {
-							echo ' - <font title="Mobile">📱</font>' ;
-						} ?>
+						<?php echo $v[ 'title' ] ; ?>
 					</td>
 					<td><?php echo $recurrence ; ?></td>
 					<td><?php echo "Size: $meta[list_size]" ; ?></td>

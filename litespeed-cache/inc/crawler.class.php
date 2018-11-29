@@ -433,6 +433,8 @@ class LiteSpeed_Cache_Crawler
 			$curr_crawler_pos = 0 ;
 		}
 		$current_crawler = $crawlers[ $curr_crawler_pos ] ;
+
+		$cookies = array() ;
 		/**
 		 * Set role simulation
 		 * @since 1.9.1
@@ -442,13 +444,26 @@ class LiteSpeed_Cache_Crawler
 			$vary_inst = LiteSpeed_Cache_Vary::get_instance() ;
 			$vary_name = $vary_inst->get_vary_name() ;
 			$vary_val = $vary_inst->finalize_default_vary( $current_crawler[ 'uid' ] ) ;
-			$cookies = array(
-				$vary_name => $vary_val,
-				'litespeed_role' => $current_crawler[ 'uid' ],
-			) ;
+			$cookies[ $vary_name ] = $vary_val ;
+			$cookies[ 'litespeed_role' ] = $current_crawler[ 'uid' ] ;
+		}
 
+		/**
+		 * Check cookie crawler
+		 * @since  2.8
+		 */
+		foreach ( $current_crawler as $k => $v ) {
+			if ( strpos( $k, 'cookie:') !== 0 ) {
+				continue ;
+			}
+
+			$cookies[ substr( $k, 7 ) ] = $v ;
+		}
+
+		if ( $cookies ) {
 			$crawler->set_cookies( $cookies ) ;
 		}
+
 		/**
 		 * Set WebP simulation
 		 * @since  1.9.1
@@ -497,42 +512,34 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function list_crawlers( $count_only = false )
 	{
-		// Get roles set
-		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
+		/**
+		 * Data structure:
+		 * 	[
+		 * 		tagA => [
+		 * 			valueA => titleA,
+		 * 			valueB => titleB
+		 * 			...
+		 * 		],
+		 * 		...
+		 * 	]
+		 */
+		$crawler_factors = array() ;
+
+		// Add default Guest crawler
+		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) ) ;
 
 		// WebP on/off
-		$webp = LiteSpeed_Cache_Media::webp_enabled() ;
+		if ( LiteSpeed_Cache_Media::webp_enabled() ) {
+			$crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' ) ;
+		}
 
 		// Mobile crawler
-		$mobile = $this->_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ;
-
-		if ( $count_only ) {
-			$count = count( $roles ) + 1 ;
-			if ( $webp ) {
-				$count *= 2 ;
-			}
-			if ( $mobile ) {
-				$count *= 2 ;
-			}
-			return $count ;
+		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
+			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' ) ;
 		}
 
-		$crawler_list = array(
-			array( 'uid' => 0, 'role_title' => __( 'Guest', 'litespeed-cache' ), 'webp' => 0, 'mobile' => 0 ),
-		) ;
-
-		if ( $webp ) {
-			$crawler_list[] = array( 'uid' => 0, 'role_title' => __( 'Guest', 'litespeed-cache' ), 'webp' => 1, 'mobile' => 0 ) ;
-		}
-
-		if ( $mobile ) {
-			$crawler_list[] = array( 'uid' => 0, 'role_title' => __( 'Guest', 'litespeed-cache' ), 'webp' => 0, 'mobile' => 1 ) ;
-		}
-
-		if ( $webp && $mobile ) {
-			$crawler_list[] = array( 'uid' => 0, 'role_title' => __( 'Guest', 'litespeed-cache' ), 'webp' => 1, 'mobile' => 1 ) ;
-		}
-
+		// Get roles set
+		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
 		// List all roles
 		foreach ( $roles as $v ) {
 			$role_title = '' ;
@@ -544,24 +551,73 @@ class LiteSpeed_Cache_Crawler
 			if ( ! $role_title ) {
 				continue ;
 			}
-			$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 0, 'mobile' => 0 ) ;
 
-			if ( $webp ) {
-				$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 1, 'mobile' => 0 ) ;
+			$crawler_factors[ 'uid' ][ $v ] = ucfirst( $role_title ) ;
+		}
+
+		// Cookie crawler
+		$cookie_crawlers = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ) ;
+		foreach ( $cookie_crawlers as $k => $v ) {
+
+			$this_cookie_key = 'cookie:' . $k ;
+
+			$crawler_factors[ $this_cookie_key ] = array() ;
+
+			foreach ( explode( "\n", $v ) as $v2 ) {
+				$v2 = trim( $v2 ) ;
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = "<font title='Cookie'>🍪</font>$k=$v2" ;
 			}
+		}
 
-			if ( $mobile ) {
-				$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 0, 'mobile' => 1 ) ;
+		// Crossing generate the crawler list
+		$crawler_list = $this->_recursive_build_crawler( $crawler_factors ) ;
+
+		if ( $count_only ) {
+			return count( $crawler_list ) ;
+		}
+
+		return $crawler_list ;
+	}
+
+
+	/**
+	 * Build a crawler list recursively
+	 *
+	 * @since 2.8
+	 * @access private
+	 */
+	private function _recursive_build_crawler( $crawler_factors, $group = array(), $i = 0 )
+	{
+		$current_factor = array_keys( $crawler_factors )[ $i ] ;
+
+		$if_touch_end = $i + 1 >= count( $crawler_factors ) ;
+
+		$final_list = array() ;
+
+		foreach ( $crawler_factors[ $current_factor ] as $k => $v ) {
+
+			// Don't alter $group bcos of loop usage
+			$item = $group ;
+			$item[ 'title' ] = ! empty( $group[ 'title' ] ) ? $group[ 'title' ] : '' ;
+			if ( $v ) {
+				if ( $item[ 'title' ] ) {
+					$item[ 'title' ] .= ' - ' ;
+				}
+				$item[ 'title' ] .= $v ;
 			}
+			$item[ $current_factor ] = $k ;
 
-			if ( $webp && $mobile ) {
-				$crawler_list[] = array( 'uid' => $v, 'role_title' => $role_title, 'webp' => 1, 'mobile' => 1 ) ;
+			if ( $if_touch_end ) {
+				$final_list[] = $item ;
+			}
+			else {
+				// Inception: next layer
+				$final_list = array_merge( $final_list, $this->_recursive_build_crawler( $crawler_factors, $item, $i + 1 ) ) ;
 			}
 
 		}
 
-		return $crawler_list ;
-
+		return $final_list ;
 	}
 
 	/**
