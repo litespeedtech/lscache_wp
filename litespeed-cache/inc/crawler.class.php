@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Crawler
 		}
 		$content = $_POST[ self::CRWL_BLACKLIST ] ;
 		$content = array_map( 'trim', explode( "\n", $content ) ) ;// remove space
-		$content = implode( "\n", array_filter( $content ) ) ;
+		$content = implode( "\n", array_unique( array_filter( $content ) ) ) ;
 
 		// save blacklist file
 		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
@@ -139,6 +139,7 @@ class LiteSpeed_Cache_Crawler
 		$ori_list = array_merge( $ori_list, $list ) ;
 		$ori_list = array_map( 'trim', $ori_list ) ;
 		$ori_list = array_filter( $ori_list ) ;
+		$ori_list = array_unique( $ori_list ) ;
 		$content = implode( "\n", $ori_list ) ;
 
 		// save blacklist
@@ -270,6 +271,7 @@ class LiteSpeed_Cache_Crawler
 					}
 				}
 			}
+			$urls = array_unique( $urls ) ;
 		}
 		else {
 			$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;
@@ -439,7 +441,7 @@ class LiteSpeed_Cache_Crawler
 		 * Set role simulation
 		 * @since 1.9.1
 		 */
-		if ( $current_crawler[ 'uid' ] ) {
+		if ( ! empty( $current_crawler[ 'uid' ] ) ) {
 			// Get role simulation vary name
 			$vary_inst = LiteSpeed_Cache_Vary::get_instance() ;
 			$vary_name = $vary_inst->get_vary_name() ;
@@ -468,7 +470,7 @@ class LiteSpeed_Cache_Crawler
 		 * Set WebP simulation
 		 * @since  1.9.1
 		 */
-		if ( $current_crawler[ 'webp' ] ) {
+		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
 			$crawler->set_headers( array( 'Accept: image/webp,*/*' ) ) ;
 		}
 
@@ -476,7 +478,7 @@ class LiteSpeed_Cache_Crawler
 		 * Set mobile crawler
 		 * @since  2.8
 		 */
-		if ( $current_crawler[ 'mobile' ] ) {
+		if ( ! empty( $current_crawler[ 'mobile' ] ) ) {
 			$crawler->set_ua( 'Mobile' ) ;
 		}
 
