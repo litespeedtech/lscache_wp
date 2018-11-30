@@ -963,9 +963,17 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since  2.6.1
 	 * @access public
 	 */
-	public function learn_more( $link )
+	public function learn_more( $link, $title = false, $class = false )
 	{
-		echo ' <a href="' . $link . '" target="_blank">' . __( 'Learn More', 'litespeed-cache' ) . '</a>' ;
+		if ( $class ) {
+			$class = " class='$class' " ;
+		}
+
+		if ( ! $title ) {
+			$title = __( 'Learn More', 'litespeed-cache' ) ;
+		}
+
+		echo " <a href='$link' target='_blank' $class>$title</a>" ;
 	}
 
 	/**

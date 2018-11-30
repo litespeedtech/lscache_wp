@@ -5,7 +5,7 @@ if ( !defined('WPINC') ) die;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Crawler Settings', 'litespeed-cache'); ?>
-	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table><tbody>
@@ -194,6 +194,7 @@ if ( !defined('WPINC') ) die;
 
 			<div class="litespeed-desc">
 				<?php echo __('To crawl with addtional cookies.', 'litespeed-cache'); ?>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler#cookie_crawler' ) ; ?>
 			</div>
 
 		</td>

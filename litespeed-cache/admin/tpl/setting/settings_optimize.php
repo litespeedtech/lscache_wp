@@ -7,7 +7,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Optimization Settings', 'litespeed-cache'); ?>
-	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <?php if ( ! LiteSpeed_Cache_Data::optm_available() ) : ?>
@@ -162,7 +162,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically generate critical CSS in the background via a cron-based queue.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#generate_critical_css" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#generate_critical_css' ) ; ?>
 			</div>
 
 			<?php if ( $last_critical_css_generated ) : ?>

@@ -5,7 +5,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('ESI Settings', 'litespeed-cache'); ?>
-	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <?php $this->cache_disabled_warning() ; ?>
@@ -18,10 +18,17 @@ if ( ! defined( 'WPINC' ) ) die ;
 		'href="https://blog.litespeedtech.com/2017/08/30/wpw-private-cache-vs-public-cache/" target="_blank"'
 		) ; ?>
 	</p>
-	<p><?php echo sprintf(
-		__( '<a %s>ESI sample for developers</a>.', 'litespeed-cache' ),
-		'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample" target="_blank"'
-		) ; ?></p>
+	<p>
+		<?php echo sprintf(
+			__( 'By replacing shortcode from %1$s to %2$s, you can easily convert one shortcode to an ESI block.', 'litespeed-cache' ),
+			'<code>[shortcodeA att1="val1" att2="val2"]</code>',
+			'<code>[esi shortcodeA att1="val1" att2="val2"]</code>'
+		) ; ?>
+		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode' ) ; ?>
+	</p>
+	<p>
+		<?php $this->learn_more( 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
+	</p>
 </div>
 
 <div class="litespeed-relative">

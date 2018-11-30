@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			</div>
 			<p>
 				<i><?php echo __( 'You may need to uncheck this option if you are using multiple optimization plugins.', 'litespeed-cache' ) ; ?></i>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:customizations:multi-cache-plugins' ) ; ?>
 			</p>
 
 		</td>

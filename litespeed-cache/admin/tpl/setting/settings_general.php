@@ -5,7 +5,7 @@ if (!defined('WPINC')) die;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('General', 'litespeed-cache'); ?>
-	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <?php $this->cache_disabled_warning() ; ?>

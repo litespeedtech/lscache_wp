@@ -7,7 +7,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Media Settings', 'litespeed-cache'); ?>
-	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <table><tbody>
@@ -91,7 +91,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 					__( 'Lazy Load Image Placeholder', 'litespeed-cache' )
 				) ; ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder" target="_blank"><?php echo __( 'Learn More', 'litespeed-cache' ) ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder' ) ; ?>
 			</div>
 
 			<?php if ( $last_responsive_placeholder_generated ) : ?>
@@ -135,7 +135,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Include the lazy load image Javascript library inline.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#inline_lazy_load_images_library" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#inline_lazy_load_images_library' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -248,7 +248,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable replacement of WebP in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset' ) ; ?>
 			</div>
 		</td>
 	</tr>

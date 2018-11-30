@@ -7,7 +7,7 @@ if (!defined('WPINC')) die;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('Advanced Settings', 'litespeed-cache'); ?>
-	<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <div class="litespeed-callout-danger">
@@ -36,8 +36,7 @@ if (!defined('WPINC')) die;
 
 			<div class="litespeed-desc">
 				<?php echo __( 'A Purge All will be executed when WordPress runs these hooks.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#hooks_to_purge_all" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
-
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#hooks_to_purge_all' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -48,8 +47,7 @@ if (!defined('WPINC')) die;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable this option if you are using both HTTP and HTTPS in the same domain and are noticing cache irregularities.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#improve_http_https_compatibility" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
-
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#improve_http_https_compatibility' ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -60,7 +58,7 @@ if (!defined('WPINC')) die;
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'When a vistor hovers over a page link, preload that page. This will speed up the visit to that link.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click' ) ; ?>
 				<br /><font class="litespeed-danger">
 					<?php echo __('NOTE', 'litespeed-cache'); ?>:
 					<?php echo __('This will generate extra requests to the server, which will increase server load.', 'litespeed-cache'); ?>
