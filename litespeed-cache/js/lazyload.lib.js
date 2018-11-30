@@ -116,12 +116,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	};
 
 	var detectWebp = function detectWebp() {
-		var webpString = "image/webp";
-		var canvas = document.createElement("canvas");
+		// var webpString = "image/webp";
+		// var canvas = document.createElement("canvas");
 
-		if (canvas.getContext && canvas.getContext("2d")) {
-			return canvas.toDataURL(webpString).indexOf('data:' + webpString) === 0;
-		}
+		// if (canvas.getContext && canvas.getContext("2d")) {
+		// 	return canvas.toDataURL(webpString).indexOf('data:' + webpString) === 0;
+		// }
 
 		return false;
 	};
