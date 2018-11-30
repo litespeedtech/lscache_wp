@@ -38,7 +38,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 <div class="litespeed-wrap">
 	<div class="litespeed-body">
 		<div class="litespeed-callout-danger">
-			<h4><?php echo __('WARNING: This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
+			<h4>🚨 <?php echo __('This page is meant for advanced users.', 'litespeed-cache'); ?></h4>
 			<p>
 				<?php echo __('Any changes made to the .htaccess file may break the site.', 'litespeed-cache'); ?>
 				<?php echo __('Please consult the host/server admin before making any changes.', 'litespeed-cache'); ?>

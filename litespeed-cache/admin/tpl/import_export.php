@@ -62,6 +62,7 @@ $log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
 		</a>
 
 		<div class="litespeed-desc">
+			🚨
 			<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?>
 		</div>
 

@@ -19,7 +19,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 				<?php echo __( 'Load images only when they enter the viewport.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('Tip', 'litespeed-cache'); ?>:
+					💡:
 					<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media:lazy-load-style" target="_blank"><?php echo __('Adding Style to Your Lazy-Loaded Images', 'litespeed-cache') ; ?></a>
 				</font>
 			</div>
@@ -179,7 +179,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 				<?php echo __( 'Automatically remove the original image backups after fetching optimized images.', 'litespeed-cache' ) ; ?>
 
 				<br /><font class="litespeed-danger">
-					<?php echo __('WARNING', 'litespeed-cache'); ?>:
+					🚨
 					<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
 					<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
 				</font>

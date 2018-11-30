@@ -14,7 +14,7 @@ if (!defined('WPINC')) die;
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>
 				<?php echo __('A site built with responsive design does not need to check this.', 'litespeed-cache'); ?>
 				<br /><font class="litespeed-warning">
-					<?php echo __( 'NOTE', 'litespeed-cache' ) ; ?>:
+					⚠️
 					<?php echo __( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) ; ?>
 				</font>
 			</div>
@@ -63,7 +63,7 @@ if (!defined('WPINC')) die;
 				<br />
 					<?php echo sprintf( __( 'The default list WordPress uses is %s', 'litespeed-cache' ), "<code>$wp_default_mobile</code>" ) ; ?>
 				<br /><font class="litespeed-warning">
-					<?php echo __( 'NOTE', 'litespeed-cache' ) ; ?>:
+					⚠️
 					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ) ; ?>
 				</font>
 			</div>

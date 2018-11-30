@@ -194,7 +194,7 @@ if ( !defined('WPINC') ) die;
 
 			<div class="litespeed-desc">
 				<?php echo __('To crawl with addtional cookies.', 'litespeed-cache'); ?>
-				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler#cookie_crawler' ) ; ?>
+				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler#cookie_simulation' ) ; ?>
 			</div>
 
 		</td>

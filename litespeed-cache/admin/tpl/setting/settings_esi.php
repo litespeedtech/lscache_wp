@@ -13,14 +13,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 <div class="litespeed-desc">
 	<p><?php echo __('With ESI (Edge Side Includes), pages may be served from cache for logged-in users.', 'litespeed-cache'); ?></p>
 	<p><?php echo __('ESI allows you to designate parts of your dynamic page as separate fragments that are then assembled together to make the whole page. In other words, ESI lets you “punch holes” in a page, and then fill those holes with content that may be cached privately, cached publicly with its own TTL, or not cached at all.', 'litespeed-cache'); ?>
-		<?php echo sprintf(
-		__( 'Learn more about public cache vs. private cache <a %s>on our blog</a>.', 'litespeed-cache' ),
-		'href="https://blog.litespeedtech.com/2017/08/30/wpw-private-cache-vs-public-cache/" target="_blank"'
-		) ; ?>
+		<?php $this->learn_more( 'https://blog.litespeedtech.com/2017/08/30/wpw-private-cache-vs-public-cache/', __( 'WpW: Private Cache vs. Public Cache', 'litespeed-cache' ) ) ; ?>
 	</p>
 	<p>
+		💡:
+		<?php echo __( 'You can turn shortcodes into ESI blocks.', 'litespeed-cache' ) ; ?>
 		<?php echo sprintf(
-			__( 'By replacing shortcode from %1$s to %2$s, you can easily convert one shortcode to an ESI block.', 'litespeed-cache' ),
+			__( 'Replace %1$s with %2$s.', 'litespeed-cache' ),
 			'<code>[shortcodeA att1="val1" att2="val2"]</code>',
 			'<code>[esi shortcodeA att1="val1" att2="val2"]</code>'
 		) ; ?>

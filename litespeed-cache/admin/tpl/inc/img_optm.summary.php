@@ -207,7 +207,7 @@ if ( ! defined( 'WPINC' ) ) {
 				<div class="litespeed-desc">
 					<?php echo __( 'This will delete all of the backups of the original images.', 'litespeed-cache' ) ; ?>
 					<div class="litespeed-danger">
-						<?php echo __('WARNING', 'litespeed-cache'); ?>:
+						🚨
 						<?php echo __( 'This is irreversible.', 'litespeed-cache' ) ; ?>
 						<?php echo __( 'You will be unable to Revert Optimization once the backups are deleted!', 'litespeed-cache' ) ; ?>
 					</div>
@@ -303,7 +303,7 @@ if ( ! defined( 'WPINC' ) ) {
 			<div class="litespeed-desc">
 				<?php echo __( 'Remove all previous image optimization requests/results, revert completed optimizations, and delete all optimization files.', 'litespeed-cache' ) ; ?>
 				<div class="litespeed-warning">
-					<?php echo __('NOTE', 'litespeed-cache'); ?>:
+					⚠️
 					<?php echo __( 'This will also reset the credit level.', 'litespeed-cache' ) ; ?>
 				</div>
 			</div>

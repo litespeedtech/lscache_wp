@@ -19,7 +19,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<?php echo __('One per line.', 'litespeed-cache'); ?>
 				</i>
 				<br /><font class="litespeed-warning">
-					<?php echo __('NOTE', 'litespeed-cache'); ?>:
+					⚠️
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
 				</font>
 			</div>
