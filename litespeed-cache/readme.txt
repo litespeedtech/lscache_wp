@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.7.3
+Stable tag: 2.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -275,6 +275,22 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.8 - Nov 30 2018 =
+* 🌱: ESI shortcodes.
+* 🌱: Mobile crawler.
+* 🌱: Cookie crawler.
+* <strong>API</strong>: Can now add `_litespeed_rm_qs=0` to bypass Remove Query Strings.
+* <strong>Optm</strong>: Removed error log when minify JS failed.
+* 🐞<strong>Core</strong>: Fixed a bug that caused network activation PHP warning.
+* <strong>Media</strong>: Removed canvas checking for WebP to support TOR. (@odeskumair)
+* <strong>Media</strong>: Eliminated potential image placeholder PHP warning.
+* <strong>3rd</strong>: Bypassed Google recaptcha from Remove Query Strings for better compatibility.
+* <strong>IAPI</strong>: Showed destroy timeout details.
+* <strong>Debug</strong>: Moved Google Fonts log to advanced level.
+* <strong>GUI</strong>: Replaced all Learn More links for functions.
+* <strong>GUI</strong>: Cosmetic updates including Emoji.
+* 🕷️: Removed duplicated data in sitemap and blacklist.
 
 = 2.7.3 - Nov 26 2018 =
 * <strong>Optm</strong>: Improved page render speed with Web Font Loader JS library for Load Google Fonts Asynchronously.
