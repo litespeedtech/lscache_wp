@@ -581,8 +581,13 @@ class LiteSpeed_Cache_ESI
 	{
 		unset( $params[ self::PARAM_BLOCK_ID ] ) ;
 
-		if ( ! empty( $params[ 'ttl' ] ) ) {
-			LiteSpeed_Cache_Control::set_custom_ttl( $params[ 'ttl' ] ) ;
+		if ( isset( $params[ 'ttl' ] ) ) {
+			if ( ! $params[ 'ttl' ] ) {
+				LiteSpeed_Cache_Control::set_nocache( 'ESI shortcode att ttl=0' ) ;
+			}
+			else {
+				LiteSpeed_Cache_Control::set_custom_ttl( $params[ 'ttl' ] ) ;
+			}
 			unset( $params[ 'ttl' ] ) ;
 		}
 

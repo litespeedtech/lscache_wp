@@ -193,7 +193,7 @@ if ( !defined('WPINC') ) die;
 			</script>
 
 			<div class="litespeed-desc">
-				<?php echo __('To crawl with addtional cookies.', 'litespeed-cache'); ?>
+				<?php echo __('To crawl for a particular cookie, enter the cookie name, and the values you wish to crawl for. Values should be one per line, and can include a blank line. There will be one crawler created per cookie value, per simulated role.', 'litespeed-cache'); ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:crawler#cookie_simulation' ) ; ?>
 			</div>
 
