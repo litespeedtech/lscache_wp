@@ -65,10 +65,15 @@ class LiteSpeed_Cache_ESI
 
 		/**
 		 * Shortcode ESI
-		 * To use it, just change the origianl shortcode as below (cache attribute is optional, default to 'public,no-vary'):
+		 *
+		 * To use it, just change the origianl shortcode as below:
 		 * 		old: [someshortcode aa='bb']
-		 * 		new: [esi someshortcode aa='bb' cache='private,no-vary']
-		 * @since  2.8
+		 * 		new: [esi someshortcode aa='bb' cache='private,no-vary' ttl='600']
+		 *
+		 * 	1. `cache` attribute is optional, default to 'public,no-vary'.
+		 * 	2. `ttl` attribute is optional, default is your public TTL setting.
+		 *
+		 * @since  2.8`
 		 */
 		add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
 	}
@@ -575,6 +580,11 @@ class LiteSpeed_Cache_ESI
 	public function load_esi_shortcode( $params )
 	{
 		unset( $params[ self::PARAM_BLOCK_ID ] ) ;
+
+		if ( ! empty( $params[ 'ttl' ] ) ) {
+			LiteSpeed_Cache_Control::set_custom_ttl( $params[ 'ttl' ] ) ;
+			unset( $params[ 'ttl' ] ) ;
+		}
 
 		// Replace to original shortcode
 		$shortcode = $params[ 0 ] ;
