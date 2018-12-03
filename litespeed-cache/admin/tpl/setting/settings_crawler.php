@@ -151,7 +151,7 @@ if ( !defined('WPINC') ) die;
 						<h4><?php echo __( 'Cookie Values', 'litespeed-cache' ) ; ?></h4>
 					</div>
 					<div class='litespeed-col-auto'>
-						<textarea v-model="item.vals" rows="5" cols="40" name="litespeed-cache-conf[<?php echo $id ; ?>][vals][]" placeholder="<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>"></textarea>
+						<textarea v-model="item.vals" rows="5" cols="40" class="litespeed-textarea-success" name="litespeed-cache-conf[<?php echo $id ; ?>][vals][]" placeholder="<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>"></textarea>
 					</div>
 					<div class='litespeed-col-auto'>
 						<button type="button" class="litespeed-btn-danger litespeed-btn-tiny" @click="$delete( items, key )">X</button>
