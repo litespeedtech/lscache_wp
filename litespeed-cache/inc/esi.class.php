@@ -73,9 +73,12 @@ class LiteSpeed_Cache_ESI
 		 * 	1. `cache` attribute is optional, default to 'public,no-vary'.
 		 * 	2. `ttl` attribute is optional, default is your public TTL setting.
 		 *
-		 * @since  2.8`
+		 * @since  2.8
+		 * @since  2.8.1 Check is_admin for Elementor compatibility #726013
 		 */
-		add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
+		if ( ! is_admin() ) {
+			add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
+		}
 	}
 
 	/**
