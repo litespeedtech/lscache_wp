@@ -1070,7 +1070,7 @@ class LiteSpeed_Cache_Img_Optm
 
 				file_put_contents( $local_file . '.tmp', $response[ 'body' ] ) ;
 
-				if ( ! file_exists( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
+				if ( ! file_exists( $local_file . '.tmp' ) || ! filesize( $local_file . '.tmp' ) || md5_file( $local_file . '.tmp' ) !== $server_info[ 'ori_md5' ] ) {
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ] ) ;
 
 					// update status to failed
@@ -1119,7 +1119,7 @@ class LiteSpeed_Cache_Img_Optm
 
 				file_put_contents( $local_file . '.webp', $response[ 'body' ] ) ;
 
-				if ( ! file_exists( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
+				if ( ! file_exists( $local_file . '.webp' ) || ! filesize( $local_file . '.webp' ) || md5_file( $local_file . '.webp' ) !== $server_info[ 'webp_md5' ] ) {
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ] ) ;
 
 					// update status to failed
