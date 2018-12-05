@@ -17,8 +17,10 @@ class LiteSpeed_Cache_Admin_API
 	private static $_instance ;
 
 	private $_iapi_key ;
+	private $_iapi_cloud ;
 
 	const DB_API_KEY = 'litespeed_api_key' ;
+	const DB_API_CLOUD = 'litespeed_api_cloud' ;
 	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
 
 	// For each request, send a callback to confirm
@@ -29,6 +31,7 @@ class LiteSpeed_Cache_Admin_API
 	const TYPE_RESET_KEY = 'reset_key' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
+	const IAPI_ACTION_LIST_CLOUDS = 'list_clouds' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const IAPI_ACTION_PULL_IMG = 'client_pull' ; // Deprecated
@@ -47,6 +50,7 @@ class LiteSpeed_Cache_Admin_API
 	private function __construct()
 	{
 		$this->_iapi_key = get_option( self::DB_API_KEY ) ?: '' ;
+		$this->_iapi_cloud = get_option( self::DB_API_CLOUD ) ?: '' ;
 	}
 
 	/**
@@ -225,6 +229,14 @@ class LiteSpeed_Cache_Admin_API
 			$instance->_request_key() ;
 		}
 
+		/**
+		 * All requests must have closet cloud server too
+		 * @since  2.9
+		 */
+		if ( ! $instance->_iapi_cloud ) {
+			$instance->_detect_cloud() ;
+		}
+
 		return $instance->_post( $action, $data, $server, $no_hash ) ;
 	}
 
@@ -258,6 +270,43 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
+	 * ping clouds from LiteSpeed
+	 *
+	 * @since  2.9
+	 * @access private
+	 */
+	private function _detect_cloud()
+	{
+		// Send request to LiteSpeed
+		$json = $this->_post( self::IAPI_ACTION_LIST_CLOUDS, home_url(), false, true ) ;
+
+		// Check if get list correctly
+		if ( empty( $json[ 'list' ] ) ) {
+			LiteSpeed_Cache_Log::debug( '[IAPI] request cloud list failed: ', $json ) ;
+
+			if ( $json ) {
+				$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
+				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+			}
+			return ;
+		}
+
+		// Ping closest cloud
+		$speed_list = array() ;
+		foreach ( $json[ 'list' ] as $v ) {
+			$speed_list[ $v ] = LiteSpeed_Cache_Utility::ping( $v ) ;
+		}
+		$closest = array_search( min( $speed_list ), $speed_list ) ;
+
+		LiteSpeed_Cache_Log::debug( '[IAPI] Found closest cloud ' . $closest ) ;
+
+		// store data into option locally
+		update_option( self::DB_API_CLOUD, $closest ) ;
+
+		$this->_iapi_cloud = $closest ;
+	}
+
+	/**
 	 * delete key
 	 *
 	 * @since  1.7.2
@@ -266,7 +315,8 @@ class LiteSpeed_Cache_Admin_API
 	private function _reset_key()
 	{
 		delete_option( self::DB_API_KEY ) ;
-		LiteSpeed_Cache_Log::debug( '[IAPI] delete auth_key' ) ;
+		delete_option( self::DB_API_CLOUD ) ;
+		LiteSpeed_Cache_Log::debug( '[IAPI] delete auth_key & closest cloud' ) ;
 
 		$msg = __( 'Reset IAPI key successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
