@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.8
+Stable tag: 2.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -275,6 +275,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.8.1 - Dec 5 2018 =
+* 🐞🕷️: Fixed an activation warning related to cookie crawler. (@kacper3355 @rastel72)
+* 🐞<strong>Media</strong>: Replace safely by checking if pulled images is empty or not first. (@Monarobase)
+* <strong>3rd</strong>: Shortcode ESI compatibility with Elementor.
 
 = 2.8 - Nov 30 2018 =
 * 🌱: ESI shortcodes.
