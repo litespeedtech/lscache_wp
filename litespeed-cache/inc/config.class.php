@@ -501,6 +501,22 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 		$options[ self::ITEM_CDN_MAPPING ] = $cdn_mapping ;
 
+		/**
+		 * Convert Cookie Simulation in Crawler settings
+		 * @since 2.8.1 Fixed warning and lost cfg when deactivate->reactivate in v2.8
+		 */
+		$id = self::ITEM_CRWL_COOKIES ;
+		$crawler_cookies = array() ;
+		if ( isset( $options[ $id ] ) && is_array( $options[ $id ] ) ) {
+			$i = 0 ;
+			foreach ( $options[ $id ] as $k => $v ) {
+				$crawler_cookies[ 'name' ][ $i ] = $k ;
+				$crawler_cookies[ 'vals' ][ $i ] = $v ;
+				$i ++ ;
+			}
+		}
+		$options[ $id ] = $crawler_cookies ;
+
 		return $options ;
 	}
 

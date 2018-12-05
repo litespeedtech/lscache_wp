@@ -1059,12 +1059,14 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ;
 		$cookie_crawlers = array() ;
-		foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
-			if ( ! $v ) {
-				continue ;
-			}
+		if ( ! empty( $this->_input[ $id ][ 'name' ] ) ) {
+			foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
+				if ( ! $v ) {
+					continue ;
+				}
 
-			$cookie_crawlers[ $v ] = $this->_input[ $id ][ 'vals' ][ $k ] ;
+				$cookie_crawlers[ $v ] = $this->_input[ $id ][ 'vals' ][ $k ] ;
+			}
 		}
 		update_option( $id, $cookie_crawlers ) ;
 
