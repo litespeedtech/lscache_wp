@@ -18,7 +18,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 == Requirements ==
 **General Features** may be used by anyone with any web server (LiteSpeed, Apache, NGiNX, etc.).
 
-**LiteSpeed Exclusive Features** require OpenLiteSpeed, commercial LiteSpeed products, or LiteSpeed-powered hosting.
+**LiteSpeed Exclusive Features** require OpenLiteSpeed, commercial LiteSpeed products, or LiteSpeed-powered hosting. [Why?](https://wordpress.org/plugins/litespeed-cache/#why%20do%20the%20cache%20features%20require%20litespeed%20server%3F)
 
 == Plugin Features ==
 
@@ -34,7 +34,6 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Multiple CDN support
 * Load CSS/JS Asynchronously
 * Browser Cache
-* Smart preload crawler with support for SEO-friendly sitemap
 * Database Cleaner and Optimizer
 * PageSpeed score optimization
 * OPcode Cache
@@ -58,11 +57,16 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Ability to schedule purge for specified URLs
 * WooCommerce and bbPress support
 * [WordPress CLI](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#wordpress_cli) commands
-* Simple API system for each cache integration
+* API system for easy cache integration
 * Exclude from cache by URI, Category, Tag, Cookie, User Agent
-* HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support (QUIC not available in OpenLiteSpeed)
-* ESI (Edge Side Includes) support (Not available in OpenLiteSpeed)
+* Smart preload crawler with support for SEO-friendly sitemap
+* Multiple crawlers for cache varies
+* HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support<sup>*</sup>
+* ESI (Edge Side Includes) support<sup>*</sup>
+* Widgets and Shortcodes as ESI blocks<sup>*</sup>
 
+<sup>*</sup> Feature not available in OpenLiteSpeed
+ 
 == Screenshots ==
 
 1. Plugin Benchmarks
@@ -133,8 +137,8 @@ Please see [LiteSpeed’s Privacy Policy](https://www.litespeedtech.com/company/
 
 == Frequently Asked Questions ==
 
-= How do the Cache features of LSCache work? =
-This plugin communicates with your LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site.
+= Why do the cache features require LiteSpeed Server? =
+This plugin communicates with your LiteSpeed Web Server and its built-in page cache (LSCache) to deliver superior performance to your WordPress site. The plugin's cache features indicate to the server that a page is cacheable and for how long, or they invalidate particular cached pages using tags.
 
 LSCache is a server-level cache, so it's faster than PHP-level caches. [Compare with other PHP-based caches](https://www.litespeedtech.com/benchmarks/wordpress).
 
