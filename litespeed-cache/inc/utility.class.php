@@ -14,6 +14,31 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Get ping speed
+	 *
+	 * @since  2.9
+	 */
+	public static function ping( $domain )
+	{
+		$domain = parse_url( $domain, PHP_URL_HOST ) ;
+		$starttime	= microtime( true ) ;
+		$file		= fsockopen( $domain, 80, $errno, $errstr, 10 ) ;
+		$stoptime	= microtime( true ) ;
+		$status		= 0 ;
+
+		if ( ! $file ) $status = 99999 ;// Site is down
+		else {
+			fclose( $file ) ;
+			$status = ( $stoptime - $starttime ) * 1000 ;
+			$status = floor( $status ) ;
+		}
+
+		LiteSpeed_Cache_Log::debug( "[Util] ping [Domain] $domain \t[Speed] $status" ) ;
+
+		return $status ;
+	}
+
+	/**
 	 * Set seconds/timestamp to readable format
 	 *
 	 * @since  1.6.5
