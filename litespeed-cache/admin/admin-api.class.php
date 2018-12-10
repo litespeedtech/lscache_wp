@@ -296,7 +296,13 @@ class LiteSpeed_Cache_Admin_API
 		foreach ( $json[ 'list' ] as $v ) {
 			$speed_list[ $v ] = LiteSpeed_Cache_Utility::ping( $v ) ;
 		}
-		$closest = array_search( min( $speed_list ), $speed_list ) ;
+		$min = min( $speed_list ) ;
+
+		if ( $min == 99999 ) {
+			LiteSpeed_Cache_Log::debug( '[IAPI] failed to ping all clouds' ) ;
+			return ;
+		}
+		$closest = array_search( $min, $speed_list ) ;
 
 		LiteSpeed_Cache_Log::debug( '[IAPI] Found closest cloud ' . $closest ) ;
 
@@ -327,7 +333,6 @@ class LiteSpeed_Cache_Admin_API
 	 *
 	 * @since  1.6
 	 * @access private
-	 * @param  array $data
 	 * @return  string | array Must return an error msg string or json array
 	 */
 	private function _post( $action, $data = false, $server = false, $no_hash = false )
@@ -342,6 +347,9 @@ class LiteSpeed_Cache_Admin_API
 		if ( $server == false ) {
 			$server = 'https://wp.api.litespeedtech.com' ;
 		}
+		elseif ( $server === true ) {
+			$server = $this->_iapi_cloud ;
+		}
 
 		$url = $server . '/' . $action ;
 
@@ -349,6 +357,7 @@ class LiteSpeed_Cache_Admin_API
 
 		$param = array(
 			'auth_key'	=> $this->_iapi_key,
+			'cloud'	=> $this->_iapi_cloud,
 			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
 			'hash'	=> $hash,
 			'data' => $data,

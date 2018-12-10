@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function _sync_data( $try_level_up = false )
 	{
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA, false, true ) ;
 
 		if ( ! is_array( $json ) ) {
 			return ;
@@ -674,7 +674,7 @@ class LiteSpeed_Cache_Img_Optm
 		) ;
 
 		// Push to LiteSpeed IAPI server
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ), false, false ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_OPTIMIZE, LiteSpeed_Cache_Utility::arr2str( $data ), true, false ) ;
 
 		// admin_api will handle common err
 		if ( ! is_array( $json ) ) {
@@ -1322,7 +1322,7 @@ class LiteSpeed_Cache_Img_Optm
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] sending DESTROY_UNFINISHED cmd to LiteSpeed IAPI' ) ;
 
 		// Push to LiteSpeed IAPI server and recover credit
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY_UNFINISHED, false, true ) ;
 
 		// confirm link will be displayed by Admin_API automatically
 		if ( is_array( $json ) ) {
@@ -1377,7 +1377,7 @@ class LiteSpeed_Cache_Img_Optm
 		update_option( self::DB_IMG_OPTIMIZE_DESTROY, time() ) ;
 
 		// Push to LiteSpeed IAPI server
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_REQUEST_DESTROY, false, true ) ;
 
 		// confirm link will be displayed by Admin_API automatically
 		if ( is_array( $json ) && $json ) {
