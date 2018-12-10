@@ -245,6 +245,8 @@ class LiteSpeed_Cache_Tag
 	{
 		$tags = array() ;
 
+		$tags[] = LiteSpeed_Cache_Utility::page_type() ;
+
 		$tags[] = self::build_uri_tag() ;
 
 		if ( is_front_page() ) {
