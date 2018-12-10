@@ -7,7 +7,7 @@ Stable tag: 2.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Speed up your page-load times. Get a faster site with high-performance page caching from LiteSpeed Cache. Easy to set up. Easy to use.
+All-in-one unbeatable acceleration & PageSpeed maximization: caching, image/CSS/JS optimization...
 
 == Description ==
 
