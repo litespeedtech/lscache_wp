@@ -311,28 +311,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _which_css()
 	{
-		$css = 'default' ;
-		if ( is_404() ) {
-			$css = '404' ;
-		}
-		elseif ( is_singular() ) {
-			$css = get_post_type() ;
-		}
-		elseif ( is_home() && get_option( 'show_on_front' ) == 'page' ) {
-			$css = 'home' ;
-		}
-		elseif ( is_front_page() ) {
-			$css = 'front' ;
-		}
-		elseif ( is_tax() ) {
-			$css = get_queried_object()->taxonomy ;
-		}
-		elseif ( is_category() ) {
-			$css = 'category' ;
-		}
-		elseif ( is_tag() ) {
-			$css = 'tag' ;
-		}
+		$css = LiteSpeed_Cache_Utility::page_type() ;
 
 		$unique = false ;
 
