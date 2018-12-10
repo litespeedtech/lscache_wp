@@ -7,7 +7,7 @@ Stable tag: 2.8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-All-in-one unbeatable acceleration & PageSpeed maximization: caching, image/CSS/JS optimization...
+All-in-one unbeatable acceleration & PageSpeed improvement: caching, image/CSS/JS optimization...
 
 == Description ==
 
