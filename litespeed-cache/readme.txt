@@ -63,7 +63,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Multiple crawlers for cache varies
 * HTTP/2 & [QUIC](https://blog.litespeedtech.com/2017/07/11/litespeed-announces-quic-support/) support<sup>*</sup>
 * ESI (Edge Side Includes) support<sup>*</sup>
-* Widgets and Shortcodes as ESI blocks<sup>*</sup>
+* Widgets and [Shortcodes](https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode) as ESI blocks<sup>*</sup>
 
 <sup>*</sup> Feature not available in OpenLiteSpeed
  
