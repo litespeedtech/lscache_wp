@@ -67,8 +67,8 @@ class LiteSpeed_Cache
 	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
 	const ACTION_SAPI_AGGRESSIVE_CALLBACK = 'sapi_aggressive_callback' ;
 
-	const WHM_TRANSIENT = 'lscwp_whm_install' ;
-	const WHM_TRANSIENT_VAL = 'whm_install' ;
+	const WHM_MSG = 'lscwp_whm_install' ;
+	const WHM_MSG_VAL = 'whm_install' ;
 
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug' ;
 

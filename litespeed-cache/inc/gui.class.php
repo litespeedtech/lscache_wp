@@ -161,7 +161,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function has_whm_msg()
 	{
-		return get_transient( LiteSpeed_Cache::WHM_TRANSIENT ) == LiteSpeed_Cache::WHM_TRANSIENT_VAL ;
+		return get_option( LiteSpeed_Cache::WHM_MSG ) == LiteSpeed_Cache::WHM_MSG_VAL ;
 	}
 
 	/**
@@ -175,6 +175,8 @@ class LiteSpeed_Cache_GUI
 		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
 		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.slack.php" ;
 
+		// include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.new_version.php" ;
+
 		include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 	}
 
@@ -185,7 +187,7 @@ class LiteSpeed_Cache_GUI
 	 * @access public
 	 */
 	public static function should_show_promo( $banner = false )
-	{
+	{//return true;
 		// Only show one promo at one time
 		if ( defined( 'LITESPEED_PROMO_SHOWN' ) ) {
 			return false ;

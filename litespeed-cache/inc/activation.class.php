@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Activation
 		LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
 
 		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
-			set_transient( LiteSpeed_Cache::WHM_TRANSIENT, LiteSpeed_Cache::WHM_TRANSIENT_VAL ) ;
+			update_option( LiteSpeed_Cache::WHM_MSG, LiteSpeed_Cache::WHM_MSG_VAL ) ;
 		}
 
 		// Register crawler cron task
@@ -305,14 +305,14 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
-	 * Delete whm transient msg tag
+	 * Delete whm msg tag
 	 *
 	 * @since 1.1.1
 	 * @access public
 	 */
 	public static function dismiss_whm()
 	{
-		delete_transient( LiteSpeed_Cache::WHM_TRANSIENT ) ;
+		delete_option( LiteSpeed_Cache::WHM_MSG ) ;
 	}
 
 

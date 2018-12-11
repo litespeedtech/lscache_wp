@@ -23,7 +23,7 @@ if ( ! LiteSpeed_Cache_GUI::should_show_promo() ) {
 		</p>
 
 		<p>
-			<?php echo __( 'This plugin is created with love by LiteSpeed. Your rating is the simplest way to support us. We really appreciate it!', 'litespeed-cache' ) ; ?>
+			<?php echo __( 'This plugin is created with ❤️ by LiteSpeed. Your rating is the simplest way to support us. We really appreciate it!', 'litespeed-cache' ) ; ?>
 		</p>
 
 		<a class="litespeed-btn-success litespeed-btn-xs" href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" target="_blank"><?php echo __( 'Sure I\'d love to!', 'litespeed-cache' ) ; ?></a>
