@@ -21,7 +21,7 @@ class LiteSpeed_Cache_Admin_Display
 	const NOTICE_GREEN = 'notice notice-success' ;
 	const NOTICE_RED = 'notice notice-error' ;
 	const NOTICE_YELLOW = 'notice notice-warning' ;
-	const TRANSIENT_LITESPEED_MESSAGE = 'litespeed_messages' ;
+	const LITESPEED_MSG = 'litespeed_messages' ;
 
 	const PURGEBY_CAT = '0' ;
 	const PURGEBY_PID = '1' ;
@@ -71,7 +71,8 @@ class LiteSpeed_Cache_Admin_Display
 		if ( current_user_can($manage) ) {
 			add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
 
-			add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
+			// add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
+			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) ) ;
 		}
 
 		/**
@@ -220,7 +221,7 @@ class LiteSpeed_Cache_Admin_Display
 			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url ;
 		}
 
-		if ( LiteSpeed_Cache_GUI::has_promo_msg() || LiteSpeed_Cache_GUI::has_promo_msg( 'slack' ) ) {
+		if ( LiteSpeed_Cache_GUI::show_promo( true ) ) {
 			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
@@ -472,7 +473,7 @@ class LiteSpeed_Cache_Admin_Display
 			return ;
 		}
 
-		$messages = (array)get_transient(self::TRANSIENT_LITESPEED_MESSAGE) ;
+		$messages = (array)get_option( self::LITESPEED_MSG ) ;
 		if( ! $messages ) {
 			$messages = array() ;
 		}
@@ -484,7 +485,7 @@ class LiteSpeed_Cache_Admin_Display
 		else {
 			$messages[] = self::build_notice($color, $msg) ;
 		}
-		set_transient(self::TRANSIENT_LITESPEED_MESSAGE, $messages, 86400) ;
+		update_option( self::LITESPEED_MSG, $messages ) ;
 	}
 
 	/**
@@ -495,7 +496,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function display_messages()
 	{
-		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE) ;
+		// One time msg
+		$messages = get_option( self::LITESPEED_MSG ) ;
 		if( is_array($messages) ) {
 			$messages = array_unique($messages) ;
 
@@ -509,22 +511,14 @@ class LiteSpeed_Cache_Admin_Display
 				echo $msg ;
 			}
 		}
-		delete_transient(self::TRANSIENT_LITESPEED_MESSAGE) ;
-	}
+		delete_option( self::LITESPEED_MSG ) ;
 
-	/**
-	 * Check if has new messages
-	 *
-	 * @since 1.1.0
-	 * @access public
-	 */
-	public function check_messages()
-	{
-		$messages = get_transient(self::TRANSIENT_LITESPEED_MESSAGE) ;
-		if( ! $messages ) {
-			return ;
-		}
-		add_action(is_network_admin() ? 'network_admin_notices' : 'admin_notices', array($this, 'display_messages')) ;
+		/**
+		 * Check promo msg first
+		 * @since 2.8.2
+		 */
+		LiteSpeed_Cache_GUI::show_promo() ;
+
 	}
 
 	/**
@@ -544,6 +538,16 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Set current page a litespeed page
+	 *
+	 * @since  2.8.2
+	 */
+	private function _set_litespeed_page()
+	{
+		define( 'IS_LITESPEED_PAGE', true ) ;
+	}
+
+	/**
 	 * Displays the cache management page.
 	 *
 	 * @since 1.0.0
@@ -551,6 +555,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_manage()
 	{
+		$this->_set_litespeed_page() ;
+
 		require_once LSCWP_DIR . 'admin/tpl/manage.php' ;
 	}
 
@@ -562,6 +568,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_settings()
 	{
+		$this->_set_litespeed_page() ;
+
 		if ( is_network_admin() ) {
 			require_once LSCWP_DIR . 'admin/tpl/network_settings.php' ;
 		}
@@ -584,6 +592,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_edit_htaccess()
 	{
+		$this->_set_litespeed_page() ;
+
 		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php' ;
 	}
 
@@ -595,6 +605,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_report()
 	{
+		$this->_set_litespeed_page() ;
+
 		require_once LSCWP_DIR . 'admin/tpl/report.php' ;
 	}
 
@@ -606,6 +618,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_import_export()
 	{
+		$this->_set_litespeed_page() ;
+
 		require_once LSCWP_DIR . 'admin/tpl/import_export.php' ;
 	}
 
@@ -617,6 +631,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_crawler()
 	{
+		$this->_set_litespeed_page() ;
+
 		require_once LSCWP_DIR . 'admin/tpl/crawler.php' ;
 	}
 
@@ -628,6 +644,8 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_optimization()
 	{
+		$this->_set_litespeed_page() ;
+
 		require_once LSCWP_DIR . 'admin/tpl/image_optimization.php' ;
 	}
 

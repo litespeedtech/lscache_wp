@@ -1,10 +1,5 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
-
-if ( ! LiteSpeed_Cache_GUI::should_show_promo() ) {
-	return ;
-}
-
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo">
 	<div class="litespeed-banner-promo-logo"></div>
@@ -26,8 +21,12 @@ if ( ! LiteSpeed_Cache_GUI::should_show_promo() ) {
 			<?php echo __( 'This plugin is created with ❤️ by LiteSpeed. Your rating is the simplest way to support us. We really appreciate it!', 'litespeed-cache' ) ; ?>
 		</p>
 
-		<a class="litespeed-btn-success litespeed-btn-xs" href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" target="_blank"><?php echo __( 'Sure I\'d love to!', 'litespeed-cache' ) ; ?></a>
-		<button type="button" class="litespeed-btn-primary litespeed-btn-xs" id="litespeed-promo-done"><?php echo __( 'I\'ve already left a review', 'litespeed-cache' ) ; ?></button>
-		<button type="button" class="litespeed-btn-warning litespeed-btn-xs" id="litespeed-promo-later"><?php echo __( 'Maybe later', 'litespeed-cache' ) ; ?></button>
+		<a class="litespeed-btn-success litespeed-btn-xs" href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" target="_blank">
+			👍
+			<?php echo __( 'Sure I\'d love to!', 'litespeed-cache' ) ; ?>
+			⭐⭐⭐⭐⭐
+		</a>
+		<button type="button" class="litespeed-btn-primary litespeed-btn-xs" id="litespeed-promo-done">👌 <?php echo __( 'I\'ve already left a review', 'litespeed-cache' ) ; ?></button>
+		<button type="button" class="litespeed-btn-warning litespeed-btn-xs" id="litespeed-promo-later">❤️ <?php echo __( 'Maybe later', 'litespeed-cache' ) ; ?></button>
 	</div>
 </div>

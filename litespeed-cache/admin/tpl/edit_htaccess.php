@@ -2,7 +2,15 @@
 if (!defined('WPINC')) die;
 
 $readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
-$content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
+
+$content = null ;
+try {
+	$content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
+} catch( \Exception $e ) {
+	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
+}
+
+
 $htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
 
 // Check if there is `ExpiresDefault` in .htaccess
@@ -48,10 +56,7 @@ if ( defined( 'LITESPEED_ON' ) ) {
 		<?php if (defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT): ?>
 		<div class="litespeed-h3"><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></div>
 
-		<?php elseif($content === false): ?>
-		<div class="litespeed-h3"><?php $this->display_messages(); ?></div>
-
-		<?php else: ?>
+		<?php elseif( $content !== null ) : ?>
 
 		<form method="post" action="admin.php?page=<?php echo LiteSpeed_Cache::PAGE_EDIT_HTACCESS; ?>">
 			<?php $this->form_action(LiteSpeed_Cache::ACTION_SAVE_HTACCESS); ?>

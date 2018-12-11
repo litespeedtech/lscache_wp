@@ -19,7 +19,6 @@ else {
 	$finished_percentage = 0 ;
 }
 
-LiteSpeed_Cache_GUI::show_promo() ;
 ?>
 
 <div class="wrap">

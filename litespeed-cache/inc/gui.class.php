@@ -124,8 +124,8 @@ class LiteSpeed_Cache_GUI
 					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo slack' ) ;
 				}
 				else {
-					// Update welcome banner
-					update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() ) ;
+					// Update welcome banner to 10 days after
+					update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() + 864000 ) ;
 
 					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo welcome' ) ;
 				}
@@ -170,73 +170,60 @@ class LiteSpeed_Cache_GUI
 	 * @since 2.1
 	 * @access public
 	 */
-	public static function show_promo()
+	public static function show_promo( $check_only = false )
 	{
-		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.php" ;
-		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.slack.php" ;
-
-		// include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.new_version.php" ;
-
-		include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
-	}
-
-	/**
-	 * Detect if need to display promo banner or not
-	 *
-	 * @since 2.1
-	 * @access public
-	 */
-	public static function should_show_promo( $banner = false )
-	{//return true;
-		// Only show one promo at one time
-		if ( defined( 'LITESPEED_PROMO_SHOWN' ) ) {
-			return false ;
+		if ( defined( 'IS_LITESPEED_PAGE' ) ) {
+			include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 		}
 
-		if ( ! self::has_promo_msg( $banner ) ) {
-			return false ;
+		// array( file_tag => days )
+		$promo_list = array(
+			'banner_promo.new_version'	=> array( 1, false ),
+			'banner_promo'				=> array( 2, false ),
+			'banner_promo.slack'		=> array( 3, true ),
+		) ;
+
+		foreach ( $promo_list as $promo_tag => $v ) {
+			list( $delay_days, $litespeed_page_only ) = $v ;
+
+			if ( $litespeed_page_only && ! defined( 'IS_LITESPEED_PAGE' ) ) {
+				continue ;
+			}
+
+			$option_name = 'litespeed-' . $promo_tag ;
+
+			$promo_timestamp = get_option( $option_name ) ;
+
+			// first time check
+			if ( ! $promo_timestamp ) {
+				update_option( $option_name, time() + 86400 * $delay_days ) ;
+				continue ;
+			}
+
+			// was ticked as done
+			if ( $promo_timestamp == 'done' ) {
+				continue ;
+			}
+
+			// Not reach the dateline yet
+			if ( time() < $promo_timestamp ) {
+				continue ;
+			}
+
+			if ( $check_only ) {
+				return true ;
+			}
+
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
+
+			include_once LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
+
+			// Only contain one
+			break ;
+
 		}
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $banner ) ;
-
-		! defined( 'LITESPEED_PROMO_SHOWN' ) && define( 'LITESPEED_PROMO_SHOWN', true ) ;
-
-		return true ;
-	}
-
-	/**
-	 * Check if has promotion notice
-	 *
-	 * @since 1.3.2
-	 * @access public
-	 * @return boolean
-	 */
-	public static function has_promo_msg( $banner = false )
-	{
-		// How many days delayed to show the banner
-		$delay_days = 2 ;
-		if ( $banner == 'slack' ) {
-			$delay_days = 3 ;
-		}
-
-		$option_name = 'litespeed-banner-promo' ;
-		if ( $banner ) {
-			$option_name .= '-' . $banner ;
-		}
-
-		$promo = get_option( $option_name ) ;
-		if ( ! $promo ) {
-			update_option( $option_name, time() - 86400 * ( 10 - $delay_days ) ) ;
-			return false ;
-		}
-		if ( $promo == 'done' ) {
-			return false ;
-		}
-		if ( $promo && time() - $promo < 864000 ) {
-			return false ;
-		}
-
-		return true ;
+		return false ;
 	}
 
 	/**

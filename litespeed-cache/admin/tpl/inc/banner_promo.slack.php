@@ -1,10 +1,5 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
-
-if ( ! LiteSpeed_Cache_GUI::should_show_promo( 'slack' ) ) {
-	return ;
-}
-
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full is-dismissible" id="litespeed-banner-promo-slack">
 	<div class="litespeed-banner-promo-logo"></div>
