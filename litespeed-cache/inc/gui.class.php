@@ -165,6 +165,30 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Set current page a litespeed page
+	 *
+	 * @since  2.8.2
+	 */
+	private static function _is_litespeed_page()
+	{
+		if ( ! empty( $_GET[ 'page' ] ) && in_array( $_GET[ 'page' ],
+			array(
+				'lscache-settings',
+				'lscache-dash',
+				LiteSpeed_Cache::PAGE_EDIT_HTACCESS,
+				'lscache-optimization',
+				'lscache-crawler',
+				'lscache-import',
+				'lscache-report',
+			) )
+		) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
 	 * Display promo banner
 	 *
 	 * @since 2.1
@@ -172,11 +196,13 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function show_promo( $check_only = false )
 	{
-		if ( defined( 'IS_LITESPEED_PAGE' ) ) {
+		$is_litespeed_page = self::_is_litespeed_page() ;
+
+		if ( $is_litespeed_page ) {
 			include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 		}
 
-		// array( file_tag => days )
+		// [ file_tag => [ days, litespeed_only ], ... ]
 		$promo_list = array(
 			'banner_promo.new_version'	=> array( 1, false ),
 			'banner_promo'				=> array( 2, false ),
@@ -186,7 +212,7 @@ class LiteSpeed_Cache_GUI
 		foreach ( $promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
 
-			if ( $litespeed_page_only && ! defined( 'IS_LITESPEED_PAGE' ) ) {
+			if ( $litespeed_page_only && ! $is_litespeed_page ) {
 				continue ;
 			}
 

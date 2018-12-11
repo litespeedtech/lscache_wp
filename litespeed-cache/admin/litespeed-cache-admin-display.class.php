@@ -538,16 +538,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Set current page a litespeed page
-	 *
-	 * @since  2.8.2
-	 */
-	private function _set_litespeed_page()
-	{
-		define( 'IS_LITESPEED_PAGE', true ) ;
-	}
-
-	/**
 	 * Displays the cache management page.
 	 *
 	 * @since 1.0.0
@@ -555,8 +545,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_manage()
 	{
-		$this->_set_litespeed_page() ;
-
 		require_once LSCWP_DIR . 'admin/tpl/manage.php' ;
 	}
 
@@ -568,8 +556,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_settings()
 	{
-		$this->_set_litespeed_page() ;
-
 		if ( is_network_admin() ) {
 			require_once LSCWP_DIR . 'admin/tpl/network_settings.php' ;
 		}
@@ -592,8 +578,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_edit_htaccess()
 	{
-		$this->_set_litespeed_page() ;
-
 		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php' ;
 	}
 
@@ -605,8 +589,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_report()
 	{
-		$this->_set_litespeed_page() ;
-
 		require_once LSCWP_DIR . 'admin/tpl/report.php' ;
 	}
 
@@ -618,8 +600,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_import_export()
 	{
-		$this->_set_litespeed_page() ;
-
 		require_once LSCWP_DIR . 'admin/tpl/import_export.php' ;
 	}
 
@@ -631,8 +611,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_crawler()
 	{
-		$this->_set_litespeed_page() ;
-
 		require_once LSCWP_DIR . 'admin/tpl/crawler.php' ;
 	}
 
@@ -644,8 +622,6 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_optimization()
 	{
-		$this->_set_litespeed_page() ;
-
 		require_once LSCWP_DIR . 'admin/tpl/image_optimization.php' ;
 	}
 

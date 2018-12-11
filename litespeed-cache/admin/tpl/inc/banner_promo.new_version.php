@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php echo __( 'New release v2.9 is available now.', 'litespeed-cache' ) ; ?>
 		</p>
 
-		<a class="litespeed-btn-success litespeed-btn-xs" href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" target="_blank"><?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?></a>
-		<button type="button" class="litespeed-btn-primary litespeed-btn-xs" id="litespeed-promo-done"><?php echo __( 'Turn On Auto Upgrade', 'litespeed-cache' ) ; ?></button>
+		<a class="litespeed-btn-success litespeed-btn-xs" href="https://wordpress.org/support/plugin/litespeed-cache/reviews/?filter=5#new-post" target="_blank">⬆️ <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?></a>
+		<button type="button" class="litespeed-btn-primary litespeed-btn-xs" id="litespeed-promo-done">♻️ <?php echo __( 'Turn On Auto Upgrade', 'litespeed-cache' ) ; ?></button>
 	</div>
 </div>
