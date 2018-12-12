@@ -530,9 +530,13 @@ class LiteSpeed_Cache_Router
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DISMISS:
-				if ( self::is_ajax() ) {
-					self::$_action = $action ;
-				}
+				/**
+				 * Non ajax call can dismiss too
+				 * @since  2.8.2
+				 */
+				// if ( self::is_ajax() ) {
+				self::$_action = $action ;
+				// }
 				return ;
 
 			default:

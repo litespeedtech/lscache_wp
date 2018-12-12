@@ -19,6 +19,14 @@ class LiteSpeed_Cache_GUI
 
 	private static $_clean_counter = 0 ;
 
+	// [ file_tag => [ days, litespeed_only ], ... ]
+	private static $_promo_list = array(
+		'banner_promo.new_version'	=> array( 1, false ),
+		'banner_promo'				=> array( 2, false ),
+		'banner_promo.slack'		=> array( 3, true ),
+	) ;
+
+
 	const TYPE_DISMISS_WHM = 'whm' ;
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault' ;
 	const TYPE_DISMISS_PROMO = 'promo' ;
@@ -116,18 +124,27 @@ class LiteSpeed_Cache_GUI
 				break ;
 
 			case self::TYPE_DISMISS_PROMO :
+				if ( empty( $_GET[ 'promo_tag' ] ) ) {
+					break ;
+				}
 
-				if ( ! empty( $_GET[ 'slack' ] ) ) {
-					// Update slack
-					update_option( 'litespeed-banner-promo-slack', 'done' ) ;
+				$promo_tag = $_GET[ 'promo_tag' ] ;
 
-					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo slack' ) ;
+				if ( empty( self::$_promo_list[ $promo_tag ] ) ) {
+					break ;
+				}
+
+				$option_name = 'litespeed-' . $promo_tag ;
+
+				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
+
+				// Forever dismiss
+				if ( ! empty( $_GET[ 'done' ] ) ) {
+					update_option( $option_name, 'done' ) ;
 				}
 				else {
-					// Update welcome banner to 10 days after
-					update_option( 'litespeed-banner-promo', ! empty( $_GET[ 'done' ] ) ? 'done' : time() + 864000 ) ;
-
-					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo welcome' ) ;
+					// Update welcome banner to 30 days after
+					update_option( $option_name, time() + 86400 * 30 ) ;
 				}
 
 				break ;
@@ -136,8 +153,13 @@ class LiteSpeed_Cache_GUI
 				break ;
 		}
 
-		// All dismiss actions are considered as ajax call, so just exit
-		exit( json_encode( array( 'success' => 1 ) ) ) ;
+		if ( LiteSpeed_Cache_Router::is_ajax() ) {
+			// All dismiss actions are considered as ajax call, so just exit
+			exit( json_encode( array( 'success' => 1 ) ) ) ;
+		}
+
+		// Plain click link, redirect to referral url
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**
@@ -202,14 +224,7 @@ class LiteSpeed_Cache_GUI
 			include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 		}
 
-		// [ file_tag => [ days, litespeed_only ], ... ]
-		$promo_list = array(
-			'banner_promo.new_version'	=> array( 1, false ),
-			'banner_promo'				=> array( 2, false ),
-			'banner_promo.slack'		=> array( 3, true ),
-		) ;
-
-		foreach ( $promo_list as $promo_tag => $v ) {
+		foreach ( self::$_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
 
 			if ( $litespeed_page_only && ! $is_litespeed_page ) {
@@ -237,7 +252,7 @@ class LiteSpeed_Cache_GUI
 			}
 
 			if ( $check_only ) {
-				return true ;
+				return $promo_tag ;
 			}
 
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
