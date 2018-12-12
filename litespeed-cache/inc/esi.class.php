@@ -177,6 +177,10 @@ class LiteSpeed_Cache_ESI
 	{
 		do_action('litespeed_cache_is_not_esi_template') ;
 
+		if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
+			return ;
+		}
+
 		if ( LiteSpeed_Cache_Router::is_ajax() ) {
 			return ;
 		}
