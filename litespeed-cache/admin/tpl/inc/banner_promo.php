@@ -29,6 +29,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<button type="button" class="litespeed-btn-primary litespeed-btn-xs" id="litespeed-promo-done">👌 <?php echo __( 'I\'ve already left a review', 'litespeed-cache' ) ; ?></button>
 		<button type="button" class="litespeed-btn-warning litespeed-btn-xs" id="litespeed-promo-later">❤️ <?php echo __( 'Maybe later', 'litespeed-cache' ) ; ?></button>
 
-		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, 'promo_tag=banner_promo' ) ; ?>
+		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo' ) ) ; ?>
 	</div>
 </div>

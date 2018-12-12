@@ -223,7 +223,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$promo_tag = LiteSpeed_Cache_GUI::show_promo( true ) ;
 		if ( $promo_tag ) {
-			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, 'promo_tag=' . $promo_tag ) ;
+			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 
