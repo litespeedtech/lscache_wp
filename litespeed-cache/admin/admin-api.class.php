@@ -40,6 +40,7 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
 	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
+	const IAPI_ACTION_PLACEHOLDER = 'placeholder' ;
 
 	/**
 	 * Init
@@ -211,11 +212,31 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Post data to LiteSpeed image server
+	 * Get data from LiteSpeed cloud server
+	 *
+	 * @since  2.8.2
+	 * @access public
+	 */
+	public static function get( $action, $data = array(), $server = false )
+	{
+		$instance = self::get_instance() ;
+
+		/**
+		 * All requests must have closet cloud server too
+		 * @since  2.8.2
+		 */
+		if ( ! $instance->_iapi_cloud ) {
+			$instance->_detect_cloud() ;
+		}
+
+		return $instance->_get( $action, $data, $server ) ;
+	}
+
+	/**
+	 * Post data to LiteSpeed cloud server
 	 *
 	 * @since  1.6
 	 * @access public
-	 * @param  array $data
 	 */
 	public static function post( $action, $data = false, $server = false, $no_hash = false )
 	{
@@ -231,7 +252,7 @@ class LiteSpeed_Cache_Admin_API
 
 		/**
 		 * All requests must have closet cloud server too
-		 * @since  2.9
+		 * @since  2.8.2
 		 */
 		if ( ! $instance->_iapi_cloud ) {
 			$instance->_detect_cloud() ;
@@ -242,6 +263,8 @@ class LiteSpeed_Cache_Admin_API
 
 	/**
 	 * request key from LiteSpeed
+	 *
+	 * This needs callback validation, so don't use for generic services which don't need security
 	 *
 	 * @since  1.5
 	 * @access private
@@ -329,7 +352,46 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Post data to LiteSpeed image server
+	 * Get data from LiteSpeed cloud server
+	 *
+	 * @since  2.8.2
+	 * @access private
+	 */
+	private function _get( $action, $data = false, $server = false )
+	{
+
+		if ( $server == false ) {
+			$server = 'https://wp.api.litespeedtech.com' ;
+		}
+		elseif ( $server === true ) {
+			$server = $this->_iapi_cloud ;
+		}
+
+		$url = $server . '/' . $action ;
+
+		if ( $data ) {
+			$url .= '?' . http_build_query( $data ) ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[IAPI] getting from : ' . $url ) ;
+
+		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+
+		// Parse response data
+		if ( is_wp_error( $response ) ) {
+			$error_message = $response->get_error_message() ;
+			LiteSpeed_Cache_Log::debug( '[IAPI] failed to get: ' . $error_message ) ;
+			return false ;
+		}
+
+		$data = $response[ 'body' ] ;
+
+		return $data ;
+
+	}
+
+	/**
+	 * Post data to LiteSpeed cloud server
 	 *
 	 * @since  1.6
 	 * @access private
