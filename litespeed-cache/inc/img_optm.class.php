@@ -1080,9 +1080,6 @@ class LiteSpeed_Cache_Img_Optm
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE root_id = %d " ;
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
 
-					// Notify server to update status
-					$res = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server, true ) ;
-
 					return 'Md5 dismatch' ; // exit from running pull process
 				}
 
@@ -1128,9 +1125,6 @@ class LiteSpeed_Cache_Img_Optm
 					// Update child images
 					$q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE root_id = %d " ;
 					$wpdb->query( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_FAILED, $row_img->id ) ) ) ;
-
-					// Notify server to update status
-					LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG_FAILED, $server_info, $server, true ) ;
 
 					return 'WebP md5 dismatch' ; // exit from running pull process
 				}

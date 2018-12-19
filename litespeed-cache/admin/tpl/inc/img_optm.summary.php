@@ -159,11 +159,6 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 								</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $optm_summary[ 'pull_failed' ] ) ) : ?>
-								<p>
-									<?php echo __( 'Images failed to pull', 'litespeed-cache' ) ; ?>: <code><?php echo $optm_summary[ 'pull_failed' ] ; ?></code>
-								</p>
-							<?php endif ; ?>
 						</div>
 
 						<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>

@@ -36,7 +36,6 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
 	const IAPI_ACTION_PULL_IMG = 'client_pull' ; // Deprecated
 	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
-	const IAPI_ACTION_PULL_IMG_FAILED = 'client_pull_failed' ;
 	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
 	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
