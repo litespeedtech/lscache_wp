@@ -1040,17 +1040,6 @@ class LiteSpeed_Cache_Img_Optm
 				return ;
 			}
 
-
-			// send fetch request
-			// LiteSpeed_Cache_Log::debug( '[Img_Optm] Connecting IAPI server for [pid] ' . $row_img->post_id . ' [src_md5]' . $row_img->src_md5 ) ;
-			// $json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PULL_IMG, $data, $server, true ) ;
-
-			// Check if data interrupt or not
-			// if ( empty( $json[ 'ok' ] ) ) {
-			// 	LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to pull optimized img: ', $json ) ;
-			// 	return ;
-			// }
-
 			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $row_img->src ;
 
 			// Save ori optm image

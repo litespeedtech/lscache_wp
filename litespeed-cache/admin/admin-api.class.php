@@ -34,7 +34,6 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_LIST_CLOUDS = 'list_clouds' ;
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
-	const IAPI_ACTION_PULL_IMG = 'client_pull' ; // Deprecated
 	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
 	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
 	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
