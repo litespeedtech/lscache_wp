@@ -57,7 +57,7 @@ class LiteSpeed_Cache_Admin_Report
 			'env' => $report_con,
 		) ;
 
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ) ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ), false, true ) ;
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;

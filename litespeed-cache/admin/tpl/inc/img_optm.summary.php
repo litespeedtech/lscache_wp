@@ -20,11 +20,11 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 			<div class="litespeed-empty-space-small"></div>
 
 			<div class="litespeed-desc">
+				<?php if ( $closet_server ) : ?>
+					<font title="<?php echo $closet_server ; ?>">☁️</font>
+				<?php endif ; ?>
 				<?php echo __( 'This will send the optimization request and the images to LiteSpeed\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'You can send at most %s images at once.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
-				<?php if ( $closet_server ) : ?>
-					<br /><?php echo __( 'Your closest cloud server is:', 'litespeed-cache' ) . '<code>' . $closet_server . '</code>' ; ?>
-				<?php endif ; ?>
 			</div>
 		<?php endif ; ?>
 
