@@ -243,19 +243,19 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		/**
-		 * All requests must have api_key first
-		 * @since  1.6.5
-		 */
-		if ( ! $instance->_iapi_key ) {
-			$instance->_request_key() ;
-		}
-
-		/**
 		 * All requests must have closet cloud server too
 		 * @since  2.8.2
 		 */
 		if ( ! $instance->_iapi_cloud ) {
 			$instance->_detect_cloud() ;
+		}
+
+		/**
+		 * All requests must have api_key first
+		 * @since  1.6.5
+		 */
+		if ( ! $instance->_iapi_key ) {
+			$instance->_request_key() ;
 		}
 
 		return $instance->_post( $action, $data, $server, $no_hash ) ;
@@ -271,8 +271,10 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function _request_key()
 	{
+		LiteSpeed_Cache_Log::debug( '[IAPI] req auth_key' ) ;
+
 		// Send request to LiteSpeed
-		$json = $this->_post( self::IAPI_ACTION_REQUEST_KEY, home_url() ) ;
+		$json = $this->_post( self::IAPI_ACTION_REQUEST_KEY, home_url(), true ) ;
 
 		// Check if get key&server correctly
 		if ( empty( $json[ 'auth_key' ] ) ) {
@@ -333,6 +335,9 @@ class LiteSpeed_Cache_Admin_API
 		update_option( self::DB_API_CLOUD, $closest ) ;
 
 		$this->_iapi_cloud = $closest ;
+
+		// sync API key
+		$this->_request_key() ;
 	}
 
 	/**
