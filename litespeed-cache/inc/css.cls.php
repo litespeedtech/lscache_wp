@@ -239,8 +239,6 @@ class LiteSpeed_Cache_CSS
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate critical css
-		$url = 'http://ccss.api.litespeedtech.com' ;
-
 		$data = array(
 			'home_url'	=> home_url(),
 			'url'		=> $request_url,
@@ -249,32 +247,9 @@ class LiteSpeed_Cache_CSS
 			'is_mobile'	=> $is_mobile ? 1 : 0,
 		) ;
 
-		LiteSpeed_Cache_Log::debug( '[CSS] posting to : ' . $url, $data ) ;
+		LiteSpeed_Cache_Log::debug( '[CSS] Generating: ', $data ) ;
 
-		$param = array(
-			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
-			'data' => $data,
-		) ;
-
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
-
-		// Parse response data
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( '[CSS] failed to post: ' . $error_message ) ;
-			return false ;
-		}
-
-		$json = json_decode( $response[ 'body' ], true ) ;
-		if ( ! is_array( $json ) ) {
-			LiteSpeed_Cache_Log::debug( '[CSS] failed to decode post json: ' . $response[ 'body' ] ) ;
-			return false ;
-		}
-
-		if ( ! empty( $json[ '_err' ] ) ) {
-			LiteSpeed_Cache_Log::debug( '[CSS] _err: ' . $json[ '_err' ] ) ;
-			return false ;
-		}
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_CCSS, $data, true, false ) ;
 
 		if ( empty( $json[ 'ccss' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] empty ccss ' ) ;

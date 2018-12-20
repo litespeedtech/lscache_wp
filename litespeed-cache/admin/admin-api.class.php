@@ -39,6 +39,7 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
 	const IAPI_ACTION_PLACEHOLDER = 'placeholder' ;
+	const IAPI_ACTION_CCSS = 'ccss' ;
 
 	/**
 	 * Init
