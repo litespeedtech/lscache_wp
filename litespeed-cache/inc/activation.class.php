@@ -79,6 +79,11 @@ class LiteSpeed_Cache_Activation
 				$options[ $id ] = $__cfg->get_item( $id ) ;
 			}
 
+			if ( ! empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ]) ) {
+				$options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] =
+					addslashes( $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] );
+			}
+
 			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;
 			return ;
 		}
