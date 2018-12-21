@@ -1246,11 +1246,11 @@ ul.litespeed-shell-body {
 	padding: 0px;
 }
 
-.litespeed-banner-promo-logo{
-	background-image: url("../img/lscwp-logo_256x256.png") ;
+.litespeed-banner-promo-logo {
+	background-image: url(../img/lscwp-logo_90x90.png);
 	background-size: contain;
-	width: 150px;
-	height: 150px;
+	width: 90px;
+	height: 90px;
 	margin: 5px;
 	background-repeat: no-repeat;
 	display: inline-block;
@@ -1258,11 +1258,11 @@ ul.litespeed-shell-body {
 
 .litespeed-banner-promo-full .litespeed-banner-promo-logo {
 	margin: 0px;
-	width: 170px;
+	width: 90px;
 }
 
 .litespeed-banner-promo-content{
-	margin-left: 20px;
+	margin-left: 25px;
 }
 
 .litespeed-banner-promo-full .litespeed-banner-promo-content {
@@ -1273,6 +1273,11 @@ ul.litespeed-shell-body {
 	font-weight: 600;
 	color:#538ac6;
 	margin-top: 10px;
+}
+
+.litespeed-banner-title {
+	font-size: 1.3em;
+	margin: .5em 0;
 }
 
 .litespeed-banner-promo-slacklogo{
@@ -1898,27 +1903,27 @@ input.litespeed-input-warning {
 }
 
 .litespeed-text-dimgray {
- 	color: #666666;
+	color: #666666;
 }
 
 .litespeed-text-whisper {
- 	color: #E6E6E6;
+	color: #E6E6E6;
 }
 
 .litespeed-text-malibu {
- 	color: #5CBDDE;
+	color: #5CBDDE;
 }
 
 .litespeed-text-morningglory {
- 	color: #99CCCC;
+	color: #99CCCC;
 }
 
 .litespeed-text-fern {
- 	color: #66CC66;
+	color: #66CC66;
 }
 
 .litespeed-text-persiangreen {
- 	color: #009999;
+	color: #009999;
 }
 
 .litespeed-text-right {
@@ -2234,7 +2239,7 @@ input.litespeed-input-warning {
 .litespeed-media-p a .dashicons-trash {
 	font-size: 2.25em;
 	vertical-align: middle;
-    display: inline;
+	display: inline;
 	border-radius: 50%;
 	line-height: 1.5em;
 }

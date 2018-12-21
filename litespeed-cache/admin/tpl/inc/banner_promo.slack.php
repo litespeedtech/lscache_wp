@@ -5,7 +5,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<div class="litespeed-banner-promo-logo"></div>
 
 	<div class="litespeed-banner-promo-content">
-		<h1><?php echo __( 'Welcome to LiteSpeed', 'litespeed-cache' ) ; ?></h1>
+		<h3><?php echo __( 'Welcome to LiteSpeed', 'litespeed-cache' ) ; ?></h3>
 
 		<div class="litespeed-banner-promo">
 
