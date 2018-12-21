@@ -1238,7 +1238,7 @@ ul.litespeed-shell-body {
 .litespeed-banner-promo,
 .litespeed-banner-promo-full{
 	display: flex;
-	padding: 10px;
+	padding: 0px;
 }
 
 .litespeed-banner-promo-full{
@@ -1250,8 +1250,6 @@ ul.litespeed-shell-body {
 	background-image: url(../img/lscwp-logo_90x90.png);
 	background-size: contain;
 	width: 90px;
-	height: 90px;
-	margin: 5px;
 	background-repeat: no-repeat;
 	display: inline-block;
 }
@@ -1266,7 +1264,7 @@ ul.litespeed-shell-body {
 }
 
 .litespeed-banner-promo-full .litespeed-banner-promo-content {
-	width: 100%;
+	width: 85%;
 }
 
 .litespeed-banner-promo-content h1{
@@ -1277,7 +1275,7 @@ ul.litespeed-shell-body {
 
 .litespeed-banner-title {
 	font-size: 1.3em;
-	margin: .5em 0;
+	margin: 8px 0px 5px 0px;
 }
 
 .litespeed-banner-promo-slacklogo{
@@ -1307,8 +1305,9 @@ ul.litespeed-shell-body {
 }
 
 .litespeed-banner-promo-slack-line2{
-	font-size: 18px;
+	font-size: 15px;
 	margin: 0px;
+	line-height: .75em;
 }
 
 .litespeed-banner-promo-slack-link{
@@ -1316,7 +1315,7 @@ ul.litespeed-shell-body {
 }
 
 a.litespeed-btn-xs.litespeed-banner-promo-slack-btn{
-	margin:0px 50px 0px 50px;
+	margin:0px 5px;
 }
 
 /********************************* admin -> media lib icon *******************************/
@@ -2260,4 +2259,55 @@ input.litespeed-input-warning {
 	fill: #538cc6;
 	background: rgba(236,242,249,0.1);
 	border-radius: 50%;
+}
+
+.litespeed-banner-description-padding-right-15 {
+	padding-right: 15px;
+}
+.litespeed-banner-description {
+	display: inline-flex;
+	flex-wrap: wrap;
+}
+.litespeed-banner-desciption-content {
+	margin: 0px;
+	line-height: 1.25em;
+	padding: 0px !important;
+}
+
+.litespeed-banner-button-link {
+    white-space: nowrap;
+	margin: 0px;
+    line-height: 1.5em;
+	padding-bottom: 5px;
+}
+
+
+.litespeed-notice-dismiss {
+	position: absolute;
+	right: 25px;
+	border: none;
+	margin: 0;
+	padding: 10px;
+	background: none;
+	color: #72777c;
+	cursor: pointer;
+}
+
+.litespeed-notice-dismiss:before {
+    /* background: none; */
+    color: #FF3366;
+    content: "Dismiss X";
+    display: block;
+    /* font: normal 16px/20px dashicons; */
+    /* speak: none; */
+    height: 20px;
+    text-align: center;
+    /* width: 20px; */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 600;
+}
+
+.litespeed-notice-dismiss:hover:before, .litespeed-notice-dismiss:active:before, .litespeed-notice-dismiss:focus:before {
+    color: #CC2929;
 }

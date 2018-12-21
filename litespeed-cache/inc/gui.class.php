@@ -23,7 +23,7 @@ class LiteSpeed_Cache_GUI
 	private static $_promo_list = array(
 		'banner_promo.new_version'	=> array( 1, false ),
 		'banner_promo'				=> array( 2, false ),
-		'banner_promo.slack'		=> array( 3, true ),
+		'banner_promo.slack'		=> array( 3, false ),
 	) ;
 
 
@@ -189,7 +189,7 @@ class LiteSpeed_Cache_GUI
 	/**
 	 * Set current page a litespeed page
 	 *
-	 * @since  2.8.2
+	 * @since  2.9
 	 */
 	private static function _is_litespeed_page()
 	{
@@ -260,7 +260,7 @@ class LiteSpeed_Cache_GUI
 			include_once LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
 
 			// Only contain one
-			break ;
+			// break ;
 
 		}
 
