@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode' ) ; ?>
 	</p>
 	<p>
-		<?php $this->learn_more( 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
+		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:esi_sample', __( 'ESI sample for developers', 'litespeed-cache' ) ) ; ?>
 	</p>
 </div>
 

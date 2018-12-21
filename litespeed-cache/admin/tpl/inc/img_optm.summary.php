@@ -3,6 +3,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
+$closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 ?>
 
 	<div class="litespeed-width-7-10">
@@ -19,6 +20,9 @@ if ( ! defined( 'WPINC' ) ) {
 			<div class="litespeed-empty-space-small"></div>
 
 			<div class="litespeed-desc">
+				<?php if ( $closet_server ) : ?>
+					<font title="<?php echo $closet_server ; ?>">☁️</font>
+				<?php endif ; ?>
 				<?php echo __( 'This will send the optimization request and the images to LiteSpeed\'s Image Optimization Server.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'You can send at most %s images at once.', 'litespeed-cache' ), '<code>' . $optm_summary[ 'credit' ] . '</code>' ) ; ?>
 			</div>
@@ -155,11 +159,6 @@ if ( ! defined( 'WPINC' ) ) {
 								</p>
 							<?php endif ; ?>
 
-							<?php if ( ! empty( $optm_summary[ 'pull_failed' ] ) ) : ?>
-								<p>
-									<?php echo __( 'Images failed to pull', 'litespeed-cache' ) ; ?>: <code><?php echo $optm_summary[ 'pull_failed' ] ; ?></code>
-								</p>
-							<?php endif ; ?>
 						</div>
 
 						<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a></p>

@@ -249,6 +249,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Only when need to add error msg, this function is used, otherwise use file_get_contents directly
 	 *
 	 * @since 1.0.4
+	 * @since  2.9 Used exception for failed reading
 	 * @access public
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
@@ -261,14 +262,12 @@ class LiteSpeed_Cache_Admin_Rules
 			return "\n" ;
 		}
 		if ( ! self::readable($kind) || ! self::writable($kind) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_RW) ;
-			return false ;
+			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_RW ) ) ;
 		}
 
 		$content = file_get_contents($path) ;
 		if ( $content === false ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_GET) ;
-			return false ;
+			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_GET ) ) ;
 		}
 
 		// Remove ^M characters.
@@ -298,29 +297,23 @@ class LiteSpeed_Cache_Admin_Rules
 		$path = $this->htaccess_path($kind) ;
 
 		if ( ! self::readable($kind) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_R) ;
-			return false ;
+			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ) ;
 		}
 
 		if ( ! self::writable($kind) ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_W) ;
-			return false ;
+			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ) ) ;
 		}
 
 		//failed to backup, not good.
 		if ( $backup && $this->htaccess_backup($kind) === false ) {
-			 LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU) ;
-			 return false ;
+			 throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_BU ) ) ;
 		}
 
 		// File put contents will truncate by default. Will create file if doesn't exist.
 		$ret = file_put_contents($path, $content, LOCK_EX) ;
 		if ( $ret === false ) {
-			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_SAVE) ;
-			return false ;
+			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_SAVE ) ) ;
 		}
-
-		return true ;
 	}
 
 	/**
@@ -438,13 +431,13 @@ class LiteSpeed_Cache_Admin_Rules
 		if( substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=' ) {//todo: use regex
 			return false ;
 		}
-		
+
 		$rule_cookie = substr( $rule, strlen( 'RewriteRule .? - [E=' ), -1 ) ;
 
 		if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
 			return trim( $rule_cookie, '"' ) ;
 		}
-		
+
 		return $rule_cookie ;
 	}
 
@@ -1016,22 +1009,25 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Only admin can do this
 	 *
 	 * @since 1.0.4
+	 * @since  2.9 Used exception when saving
 	 * @access public
 	 */
 	public function htaccess_editor_save()
 	{
-		if ( isset($_POST[self::EDITOR_TEXTAREA_NAME]) ) {
-			$content = LiteSpeed_Cache_Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]) ;
-			$msg = $this->htaccess_save($content) ;
-			if ( $msg === true ) {
-				$msg = __('File Saved.', 'litespeed-cache') ;
-				$color = LiteSpeed_Cache_Admin_Display::NOTICE_GREEN ;
-			}
-			else {
-				$color = LiteSpeed_Cache_Admin_Display::NOTICE_RED ;
-			}
-			LiteSpeed_Cache_Admin_Display::add_notice($color, $msg) ;
+		if ( ! isset( $_POST[ self::EDITOR_TEXTAREA_NAME ] ) ) {
+			return ;
 		}
+
+		$content = LiteSpeed_Cache_Admin::cleanup_text($_POST[self::EDITOR_TEXTAREA_NAME]) ;
+
+		try {
+			$this->htaccess_save($content) ;
+		} catch( \Exception $e ) {
+			LiteSpeed_Cache_Admin_Display::error( $e->getMessage() ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Admin_Display::succeed( __( 'File Saved.', 'litespeed-cache' ) ) ;
 
 	}
 

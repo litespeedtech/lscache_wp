@@ -10,7 +10,6 @@ if ( ! is_network_admin() ) {
 	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
 }
 
-LiteSpeed_Cache_GUI::show_promo() ;
 ?>
 
 <div class="wrap">

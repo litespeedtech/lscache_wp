@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 4.9.8
-Stable tag: 2.8.1
+Stable tag: 2.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -66,7 +66,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 * Widgets and Shortcodes as ESI blocks<sup>*</sup>
 
 <sup>*</sup> Feature not available in OpenLiteSpeed
- 
+
 == Screenshots ==
 
 1. Plugin Benchmarks
@@ -279,6 +279,22 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9 - Dec 31 2018 =
+* 🌱: New EU/AS clouds for faster CCSS generation.
+* 🌱: New EU/AS clouds for faster responsive placeholder generation.
+* 🌱: New EU/AS clouds for faster image optimization handling.
+* <strong>Purge</strong>: Added post type to Purge tags.
+* <strong>Purge</strong>: Redefined CCSS page types.
+* <strong>Core</strong>: Used Exception for .htaccess r/w.
+* <strong>IAPI</strong>: <strong>New cloud servers added. Please update your firewall list by [IAPI IP List](https://wp.api.litespeedtech.com/ips).</strong>
+* <strong>GUI</strong>: Refactored promotion banner logic.
+* <strong>GUI</strong>: Removed page optimized comment when meet ESI silence.
+* <strong>GUI</strong>: WHM transient changed to option instead of transient when storing.
+* <strong>GUI</strong>: Appened more descriptions to CDN filetype setting.
+* <strong>IAPI</strong>: Removed taken_failed/client_pull(duplicated) status.
+* <strong>Debug</strong>: Environment report won't generate hash for validation anymore.
+* <strong>3rd</strong>: Non cacheable pages won't punch ESI anymore for Divi compatibility.
 
 = 2.8.1 - Dec 5 2018 =
 * 🐞🕷️: Fixed an activation warning related to cookie crawler. (@kacper3355 @rastel72)

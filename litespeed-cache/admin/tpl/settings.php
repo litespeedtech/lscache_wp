@@ -85,8 +85,6 @@ foreach ( $wp_roles->roles as $k => $v ) {
 }
 ksort( $roles ) ;
 
-LiteSpeed_Cache_GUI::show_promo() ;
-
 /**
  * Switch basic/advanced mode
  * @since  1.8.2

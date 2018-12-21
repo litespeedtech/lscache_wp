@@ -907,20 +907,13 @@ eot;
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate placeholder
-		$url = 'https://wp.api.litespeedtech.com/placeholder/' . $size . '?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&c=' . $this->_cfg_placeholder_resp_color ;
+		$req_data = array(
+			'size'	=> $size,
+			'color'	=> $this->_cfg_placeholder_resp_color,
+		) ;
+		$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
 
-		LiteSpeed_Cache_Log::debug( '[Media] posting to : ' . $url ) ;
-
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
-
-		// Parse response data
-		if ( is_wp_error( $response ) ) {
-			$error_message = $response->get_error_message() ;
-			LiteSpeed_Cache_Log::debug( '[Media] failed to post: ' . $error_message ) ;
-			return false ;
-		}
-
-		$data = $response[ 'body' ] ;
+		LiteSpeed_Cache_Log::debug( '[Media] _generate_placeholder ' ) ;
 
 		if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
 			LiteSpeed_Cache_Log::debug( '[Media] failed to decode response: ' . $data ) ;

@@ -52,7 +52,9 @@ class LiteSpeed_Cache_Optimizer
 		try {
 			$obj = new LiteSpeed_3rd_Lib\Minify_HTML( $content, $options ) ;
 			$content_final = $obj->process() ;
-			$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
+			if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
+				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
+			}
 			return $content_final ;
 
 		} catch ( Exception $e ) {
