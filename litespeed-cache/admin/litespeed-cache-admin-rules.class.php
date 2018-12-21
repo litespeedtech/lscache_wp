@@ -249,7 +249,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Only when need to add error msg, this function is used, otherwise use file_get_contents directly
 	 *
 	 * @since 1.0.4
-	 * @since  2.8.2 Used exception for failed reading
+	 * @since  2.9 Used exception for failed reading
 	 * @access public
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
@@ -1009,7 +1009,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Only admin can do this
 	 *
 	 * @since 1.0.4
-	 * @since  2.8.2 Used exception when saving
+	 * @since  2.9 Used exception when saving
 	 * @access public
 	 */
 	public function htaccess_editor_save()

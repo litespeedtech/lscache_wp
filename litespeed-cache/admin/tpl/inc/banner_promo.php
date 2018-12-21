@@ -6,10 +6,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 	<div class="litespeed-banner-promo-content">
 
-		<h2><?php echo __( 'Welcome to LiteSpeed', 'litespeed-cache' ) ; ?></h2>
+		<h2><?php echo __( 'Thank You for Using the LiteSpeed Cache for WordPress Plugin!', 'litespeed-cache' ) ; ?></h2>
 
 		<p>
-			<?php echo __( 'Thank you for using LiteSpeed.', 'litespeed-cache' ) ; ?>
 			<?php echo sprintf(
 				__( 'If you have any questions, please do not hesitate to let us know in <a %s>our support forum</a> or by <a %s>submitting a ticket with us</a>.', 'litespeed-cache' ),
 				'href="https://wordpress.org/support/plugin/litespeed-cache" target="_blank"',

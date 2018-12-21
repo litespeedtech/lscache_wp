@@ -516,7 +516,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		/**
 		 * Check promo msg first
-		 * @since 2.8.2
+		 * @since 2.9
 		 */
 		LiteSpeed_Cache_GUI::show_promo() ;
 

@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_API
 	/**
 	 * Get data from LiteSpeed cloud server
 	 *
-	 * @since  2.8.2
+	 * @since  2.9
 	 * @access public
 	 */
 	public static function get( $action, $data = array(), $server = false )
@@ -222,7 +222,7 @@ class LiteSpeed_Cache_Admin_API
 
 		/**
 		 * All requests must have closet cloud server too
-		 * @since  2.8.2
+		 * @since  2.9
 		 */
 		if ( ! $instance->_iapi_cloud ) {
 			$instance->_detect_cloud() ;
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Admin_API
 
 		/**
 		 * All requests must have closet cloud server too
-		 * @since  2.8.2
+		 * @since  2.9
 		 */
 		if ( ! $instance->_iapi_cloud ) {
 			$instance->_detect_cloud() ;
@@ -358,7 +358,7 @@ class LiteSpeed_Cache_Admin_API
 	/**
 	 * Get data from LiteSpeed cloud server
 	 *
-	 * @since  2.8.2
+	 * @since  2.9
 	 * @access private
 	 */
 	private function _get( $action, $data = false, $server = false )
