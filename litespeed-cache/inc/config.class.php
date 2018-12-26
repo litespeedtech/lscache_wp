@@ -19,6 +19,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 {
 	private static $_instance ;
 
+	const TYPE_SET = 'set' ;
+
 	protected $options ;
 	protected $vary_groups ;
 	protected $exclude_optimization_roles ;
@@ -716,6 +718,79 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 
 
+	}
+
+	/**
+	 * Set one config value directly
+	 *
+	 * @since  2.9
+	 * @access private
+	 */
+	private function _set_cfg()
+	{
+		if ( empty( $_GET[ self::TYPE_SET ] ) || ! is_array( $_GET[ self::TYPE_SET ] ) ) {
+			return ;
+		}
+
+		$cfg = $cfg_v = false ;
+		foreach ( $_GET[ self::TYPE_SET ] as $k => $v ) {
+			if ( ! isset( $this->options[ $k ] ) ) {
+				continue ;
+			}
+
+			if ( is_bool( $this->options[ $k ] ) ) {
+				$v = (bool) $v ;
+			}
+
+			$cfg = $k ;
+			$cfg_v = $v ;
+			break ;// only allow one
+		}
+
+		if ( ! $cfg ) {
+			return ;
+		}
+
+		$options = $this->options ;
+		// Get items
+		foreach ( $this->stored_items() as $v ) {
+			$options[ $v ] = $this->get_item( $v ) ;
+		}
+
+		// Change value
+		$options[ $cfg ] = $cfg_v ;
+
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
+		$this->update_options( $output ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Cfg] Changed cfg ' . $cfg . ' to ' . var_export( $cfg_v, true ) ) ;
+
+		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;
+		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_SET :
+				$instance->_set_cfg() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
 	}
 
 	/**

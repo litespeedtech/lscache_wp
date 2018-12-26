@@ -47,29 +47,44 @@
 }
 
 .litespeed-left10 {
-	margin-left: 10px;
+	margin-left: 10px !important;
 }
-
+.litespeed-left20 {
+	margin-left: 20px !important;
+}
 .litespeed-right10 {
-	margin-right: 10px;
+	margin-right: 10px !important;
 }
 .litespeed-right20 {
-	margin-right: 20px;
+	margin-right: 20px !important;
 }
 .litespeed-right30 {
-	margin-right: 30px;
+	margin-right: 30px !important;
 }
-
+.litespeed-right50 {
+	margin-right: 50px !important;
+}
 .litespeed-top10 {
-	margin-top: 10px;
+	margin-top: 10px !important;
 }
-
+.litespeed-top15 {
+	margin-top: 15px !important;
+}
 .litespeed-top20 {
-	margin-top: 20px;
+	margin-top: 20px !important;
 }
 
 .litespeed-top30 {
-	margin-top: 30px;
+	margin-top: 30px !important;
+}
+
+.litespeed-margin-y5 {
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+}
+.litespeed-margin-x5 {
+	margin-left: 5px !important;
+	margin-right: 5px !important;
 }
 
 .litespeed-wrap .litespeed-left20,
@@ -1277,7 +1292,7 @@ ul.litespeed-shell-body {
 }
 
 .litespeed-banner-promo-full .litespeed-banner-promo-content {
-	width: 85%;
+	width: 75%;
 }
 
 .litespeed-banner-promo-content h1{
@@ -1911,6 +1926,10 @@ input.litespeed-input-warning {
 	padding: 20px;
 
 }
+.litespeed-width-1-3 {
+	width: 30%;
+	padding: 25px;
+}
 .litespeed-width-7-10 {
 	width: 65%;
 	padding: 20px;
@@ -1921,39 +1940,39 @@ input.litespeed-input-warning {
 }
 
 .litespeed-column-java {
-	background: #5CADAD;
+	background: #5CADAD !important;
 }
 
 .litespeed-text-shipgrey {
-	color: #535342;
+	color: #535342 !important;
 }
 
 .litespeed-text-dimgray {
-	color: #666666;
+	color: #666666 !important;
 }
 
 .litespeed-text-grey {
-	color: #999999;
+	color: #999999 !important;
 }
 
 .litespeed-text-whisper {
-	color: #E6E6E6;
+	color: #E6E6E6 !important;
 }
 
 .litespeed-text-malibu {
-	color: #5CBDDE;
+	color: #5CBDDE !important;
 }
 
 .litespeed-text-morningglory {
-	color: #99CCCC;
+	color: #99CCCC !important;
 }
 
 .litespeed-text-fern {
-	color: #66CC66;
+	color: #66CC66 !important;
 }
 
 .litespeed-text-persiangreen {
-	color: #009999;
+	color: #009999 !important;
 }
 
 .litespeed-text-right {
@@ -2319,6 +2338,10 @@ input.litespeed-input-warning {
 
 .litespeed-row-flex {
 	display: inline-flex;
+
+}
+.litespeed-flex-wrap {
+	flex-wrap: wrap;
 }
 
 .litespeed-padding-space {
@@ -2326,15 +2349,19 @@ input.litespeed-input-warning {
 }
 
 .litespeed-margin-bottom-remove {
-	margin-bottom: 0px;
+	margin-bottom: 0px !important;
 }
 .litespeed-margin-top-remove {
-	margin-top: 0px;
+	margin-top: 0px !important;
+}
+.litespeed-margin-left-remove {
+	margin-left: 0px !important;
 }
 .litespeed-margin-y-remove {
-	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
 }
+
 
 .litespeed-banner-button-link {
     white-space: nowrap;

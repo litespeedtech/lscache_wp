@@ -1,11 +1,15 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
+/**
+ * NOTE: Only show for single site
+ */
+
 ?>
 <div class="litespeed-wrap notice notice-success litespeed-banner-promo-full">
 	<div class="litespeed-banner-promo-logo"></div>
 
 	<div class="litespeed-banner-promo-content">
-		<h3 class="litespeed-banner-title"><?php echo __( 'New Version Available!', 'litespeed-cache' ) ; ?></h3>
+		<h3 class="litespeed-banner-title litespeed-top15"><?php echo __( 'New Version Available!', 'litespeed-cache' ) ; ?></h3>
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
 				<p class="litespeed-banner-desciption-content">
@@ -19,11 +23,15 @@ if ( ! defined( 'WPINC' ) ) die ;
 						 <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?>
 					</a>
 				</div>
-				<div class="litespeed-banner-description-padding-right-15" id="litespeed-promo-done">
-					<div class="litespeed-btn-success litespeed-btn-mini">
+				<div class="litespeed-banner-description-padding-right-15">
+					<?php
+						$cfg = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE . ']' => 1 ) ;
+						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CFG, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
+					?>
+					<a href="<?php echo $url ; ?>" class="litespeed-btn-success litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>
 						<?php echo __( 'Turn On Auto Upgrade', 'litespeed-cache' ) ; ?>
-					</div>
+					</a>
 				</div>
 			</div>
 		</div>
