@@ -1797,9 +1797,22 @@ input.litespeed-input[type="file"]{
 	margin-top: 0;
 }
 
+.litespeed-wrap .litespeed-float-submit-rtl {
+	position: absolute;
+	left: 10px;
+	top: -20px;
+	margin-top: 0;
+}
+
 .litespeed-wrap .litespeed-float-resetbtn {
 	position: absolute;
 	right: 10px;
+	bottom: 20px;
+}
+
+.litespeed-wrap .litespeed-float-resetbtn-rtl {
+	position: absolute;
+	left: 10px;
 	bottom: 20px;
 }
 

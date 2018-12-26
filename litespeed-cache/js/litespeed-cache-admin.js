@@ -142,7 +142,12 @@ var _litespeed_dots ;
 
 		/** Lets copy one more submit button **/
 		if ( $( '#litespeed_form_options' ).length > 0 ) {
-			$( '#litespeed_form_options [type="submit"]' ).clone().addClass( 'litespeed-float-submit' ).prependTo( '#litespeed_form_options' ) ;
+			var rtl = $('#litespeed_form_options [type="submit"]').attr('data-rtl');
+			var addClassName = 'litespeed-float-submit';
+
+			if (rtl == 1) addClassName += '-rtl';
+
+			$('#litespeed_form_options [type="submit"]').clone().addClass( addClassName ).prependTo( '#litespeed_form_options' ) ;
 		}
 
 		/** Promo banner **/
