@@ -14,6 +14,25 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Check latest version
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function version_check()
+	{
+		// Check latest stable version allowed to upgrade
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
+
+		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
+			return false ;
+		}
+
+		return $response[ 'body' ] ;
+	}
+
+	/**
 	 * Get current page type
 	 *
 	 * @since  2.9
@@ -262,30 +281,52 @@ class LiteSpeed_Cache_Utility
 	 * @param array $haystack
 	 * @return bool|string False if not found, otherwise return the matched string in haystack.
 	 */
-	public static function str_hit_array( $needle, $haystack )
+	public static function str_hit_array( $needle, $haystack, $has_ttl = false )
 	{
+		$hit = false ;
+		$this_ttl = 0 ;
 		foreach( $haystack as $item ) {
 			if ( ! $item ) {
 				continue ;
 			}
 
+			if ( $has_ttl ) {
+				$this_ttl = 0 ;
+				$item = explode( ' ', $item ) ;
+				if ( ! empty( $item[ 1 ] ) ) {
+					$this_ttl = $item[ 1 ] ;
+				}
+				$item = $item[ 0 ] ;
+			}
+
 			if ( substr( $item, -1 ) === '$' ) {
 				// do exact match
 				if ( substr( $item, 0, -1 ) === $needle ) {
-					return $item ;
+					$hit = $item ;
+					break ;
 				}
 			}
 			elseif ( substr( $item, 0, 1 ) === '^' ) {
 				// match beginning
 				if ( substr( $item, 1 ) === substr( $needle, 0, strlen( $item ) - 1 ) ) {
-					return $item ;
+					$hit = $item ;
+					break ;
 				}
 			}
 			else {
 				if ( strpos( $needle, $item ) !== false ) {
-					return $item ;
+					$hit = $item ;
+					break ;
 				}
 			}
+		}
+
+		if ( $hit ) {
+			if ( $has_ttl ) {
+				return array( $hit, $this_ttl ) ;
+			}
+
+			return $hit ;
 		}
 
 		return false ;

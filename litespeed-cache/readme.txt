@@ -285,10 +285,13 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * 🌱: New EU/AS clouds for faster image optimization handling.
 * 🌱: New EU/AS clouds for faster CCSS generation.
 * 🌱: New EU/AS clouds for faster responsive placeholder generation.
+* 🌱<strong>Conf</strong>: Able to set a single option by links.
+* 🌱<strong>Cache</strong>: Force Cache URIs supports custom TTL now.
 * <strong>Purge</strong>: Added post type to Purge tags.
 * <strong>Purge</strong>: Redefined CCSS page types.
 * <strong>Core</strong>: Used Exception for .htaccess r/w.
 * <strong>IAPI</strong>: <strong>New cloud servers added. Please update your firewall list by [IAPI IP List](https://wp.api.litespeedtech.com/ips).</strong>
+* <strong>Optm</strong>: Trimmed BOM when detecting if the page is HTML or not.
 * <strong>GUI</strong>: Added PageSpeed Score comparision into promotion banner.
 * <strong>GUI</strong>: Refactored promotion banner logic.
 * <strong>GUI</strong>: Removed page optimized comment when meet ESI silence.

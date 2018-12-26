@@ -522,10 +522,13 @@ class LiteSpeed_Cache_Control
 		// Check if URI is forced cache
 		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ;
 		if ( ! empty( $excludes ) ) {
-			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::force_cacheable() ;
 				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
+				if ( $this_ttl ) {
+					self::set_custom_ttl( $this_ttl ) ;
+				}
 			}
 		}
 
