@@ -281,9 +281,10 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.9 - Dec 31 2018 =
+* 🌱<strong>Media</strong>: Lazy Load Image Classname Excludes. (@thinkmedia)
+* 🌱: New EU/AS clouds for faster image optimization handling.
 * 🌱: New EU/AS clouds for faster CCSS generation.
 * 🌱: New EU/AS clouds for faster responsive placeholder generation.
-* 🌱: New EU/AS clouds for faster image optimization handling.
 * <strong>Purge</strong>: Added post type to Purge tags.
 * <strong>Purge</strong>: Redefined CCSS page types.
 * <strong>Core</strong>: Used Exception for .htaccess r/w.

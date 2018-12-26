@@ -511,6 +511,8 @@ eot;
 		 */
 		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ) ;
 
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_CLS_EXC ) ) ;
+
 		$src_list = array() ;
 		$html_list = array() ;
 		$placeholder_list = array() ;
@@ -537,6 +539,11 @@ eot;
 
 			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
+				continue ;
+			}
+
+			if ( ! empty( $attrs[ 'class' ] ) && $hit = LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
+				LiteSpeed_Cache_Log::debug2( '[Media] lazyload image cls excludes [hit] ' . $hit ) ;
 				continue ;
 			}
 
