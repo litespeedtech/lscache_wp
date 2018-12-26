@@ -187,14 +187,24 @@ class LiteSpeed_Cache
 		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;
 
 		/**
-		 * Check lazy lib request in the very beginning
-		 * @since 1.4
-		 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
+		 * Check if is non optm simulator
+		 * @since  2.9
 		 */
-		LiteSpeed_Cache_Media::get_instance() ;
+		if ( ! empty( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm' ) {
+			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
+		}
 
-		// Check minify file request in the very beginning
-		LiteSpeed_Cache_Optimize::get_instance() ;
+		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+			/**
+			 * Check lazy lib request in the very beginning
+			 * @since 1.4
+			 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
+			 */
+			LiteSpeed_Cache_Media::get_instance() ;
+
+			// Check minify file request in the very beginning
+			LiteSpeed_Cache_Optimize::get_instance() ;
+		}
 
 		/**
 		 * Register vary filter
@@ -206,16 +216,20 @@ class LiteSpeed_Cache
 		// 2. Init cacheable status
 		LiteSpeed_Cache_Vary::get_instance() ;
 
-		// Hook cdn for attachements
-		LiteSpeed_Cache_CDN::get_instance() ;
+		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+			// Hook cdn for attachements
+			LiteSpeed_Cache_CDN::get_instance() ;
+		}
 
 		// Init Purge hooks
 		LiteSpeed_Cache_Purge::get_instance() ;
 
 		LiteSpeed_Cache_Tag::get_instance() ;
 
-		// load cron tasks
-		LiteSpeed_Cache_Task::get_instance() ;
+		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+			// load cron tasks
+			LiteSpeed_Cache_Task::get_instance() ;
+		}
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 ) ;
@@ -512,8 +526,10 @@ class LiteSpeed_Cache
 		// Replace ESI preserved list
 		$buffer = LiteSpeed_Cache_ESI::finalize( $buffer ) ;
 
-		// Image lazy load check
-		$buffer = LiteSpeed_Cache_Media::finalize( $buffer ) ;
+		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+			// Image lazy load check
+			$buffer = LiteSpeed_Cache_Media::finalize( $buffer ) ;
+		}
 
 		/**
 		 * Clean wrapper mainly for esi block
@@ -522,9 +538,11 @@ class LiteSpeed_Cache
 		 */
 		$buffer = LiteSpeed_Cache_GUI::finalize( $buffer ) ;
 
-		$buffer = LiteSpeed_Cache_Optimize::finalize( $buffer ) ;
+		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+			$buffer = LiteSpeed_Cache_Optimize::finalize( $buffer ) ;
 
-		$buffer = LiteSpeed_Cache_CDN::finalize( $buffer ) ;
+			$buffer = LiteSpeed_Cache_CDN::finalize( $buffer ) ;
+		}
 
 		$this->send_headers( true ) ;
 

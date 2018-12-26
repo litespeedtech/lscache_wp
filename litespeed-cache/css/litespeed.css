@@ -30,6 +30,10 @@
 	color: #a7a7a7!important;
 }
 
+.litespeed-primary {
+	color: #3366CC!important;
+}
+
 .litespeed-success {
 	color: #73b38d!important;
 }
@@ -615,6 +619,14 @@ h3 .litespeed-learn-more {
 	border-radius: 2px;
 	min-width: 14px ;
 }
+
+.litespeed-wrap .litespeed-btn-mini {
+	padding: 2px 5px !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	margin: 5px !important;
+}
+
 
 /********************************* switch *******************************/
 .litespeed-switch {
@@ -1257,6 +1269,7 @@ ul.litespeed-shell-body {
 .litespeed-banner-promo-full .litespeed-banner-promo-logo {
 	margin: 0px;
 	width: 90px;
+	height: 90px;
 }
 
 .litespeed-banner-promo-content{
@@ -1375,6 +1388,8 @@ p.litespeed-txt-disabled {
 	margin: 5px;
 }
 
+
+
 circle.litespeed-pie_bg {
 	stroke: #efefef;
 	stroke-width: 2;
@@ -1397,6 +1412,18 @@ circle.litespeed-pie_circle {
 	cx: 16.91549431;
 	cy: 16.91549431;
 	r: 15.91549431;
+}
+
+.litespeed-pie-success circle.litespeed-pie_circle {
+	stroke: #178239;
+}
+
+.litespeed-pie-warning circle.litespeed-pie_circle {
+	stroke: #e67700;
+}
+
+.litespeed-pie-danger circle.litespeed-pie_circle {
+	stroke: #c7221f;
 }
 
 g.litespeed-pie_info text{
@@ -1905,6 +1932,10 @@ input.litespeed-input-warning {
 	color: #666666;
 }
 
+.litespeed-text-grey {
+	color: #999999;
+}
+
 .litespeed-text-whisper {
 	color: #E6E6E6;
 }
@@ -1931,6 +1962,18 @@ input.litespeed-input-warning {
 
 .litespeed-text-center {
 	text-align: center;
+}
+.litespeed-text-bold {
+	font-weight: 600;
+}
+
+.litespeed-text-lead {
+	font-size: 16px;
+}
+
+.litespeed-text-small {
+	font-size: 12px;
+    line-height: 14px;
 }
 
 .litespeed-align-center {
@@ -2274,6 +2317,25 @@ input.litespeed-input-warning {
 	padding: 0px !important;
 }
 
+.litespeed-row-flex {
+	display: inline-flex;
+}
+
+.litespeed-padding-space {
+	padding: 5px 10px;
+}
+
+.litespeed-margin-bottom-remove {
+	margin-bottom: 0px;
+}
+.litespeed-margin-top-remove {
+	margin-top: 0px;
+}
+.litespeed-margin-y-remove {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
 .litespeed-banner-button-link {
     white-space: nowrap;
 	margin: 0px;
@@ -2282,32 +2344,24 @@ input.litespeed-input-warning {
 }
 
 
-.litespeed-notice-dismiss {
+
+.litespeed-notice-dismiss{
 	position: absolute;
 	right: 25px;
 	border: none;
 	margin: 0;
 	padding: 10px;
 	background: none;
-	color: #72777c;
 	cursor: pointer;
-}
-
-.litespeed-notice-dismiss:before {
-    /* background: none; */
     color: #FF3366;
-    content: "Dismiss X";
     display: block;
-    /* font: normal 16px/20px dashicons; */
-    /* speak: none; */
     height: 20px;
     text-align: center;
-    /* width: 20px; */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 600;
 }
 
-.litespeed-notice-dismiss:hover:before, .litespeed-notice-dismiss:active:before, .litespeed-notice-dismiss:focus:before {
+.litespeed-notice-dismiss:hover, .litespeed-notice-dismiss:active, .litespeed-notice-dismiss:focus {
     color: #CC2929;
 }

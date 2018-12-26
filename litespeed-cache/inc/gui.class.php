@@ -90,14 +90,16 @@ class LiteSpeed_Cache_GUI
 	 *
 	 * @since 1.6.6
 	 */
-	public static function pie( $percent, $width = 50, $finished_tick = false )
+	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false )
 	{
-		$percentage = '<text x="16.91549431" y="15.5">' . $percent . '%</text>' ;
+		$percentage = '<text x="16.91549431" y="15.5">' . $percent . ( $without_percentage ? '' : '%' ) . '</text>' ;
+
 		if ( $percent == 100 && $finished_tick ) {
 			$percentage = '<text x="16.91549431" y="15.5" class="litespeed-pie-done">&#x2713</text>' ;
 		}
+
 		return "
-		<svg class='litespeed-pie' viewbox='0 0 33.83098862 33.83098862' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>
+		<svg class='litespeed-pie $append_cls' viewbox='0 0 33.83098862 33.83098862' width='$width' height='$width' xmlns='http://www.w3.org/2000/svg'>
 			<circle class='litespeed-pie_bg' />
 			<circle class='litespeed-pie_circle' stroke-dasharray='$percent,100' />
 			<g class='litespeed-pie_info'>$percentage</g>
@@ -126,7 +128,7 @@ class LiteSpeed_Cache_GUI
 			case self::TYPE_DISMISS_PROMO :
 				if ( empty( $_GET[ 'promo_tag' ] ) ) {
 					break ;
-				}
+				}exit('dismiss will be done');
 
 				$promo_tag = $_GET[ 'promo_tag' ] ;
 
@@ -265,6 +267,12 @@ class LiteSpeed_Cache_GUI
 		}
 
 		return false ;
+	}
+
+	private function _improvement_info()
+	{
+		$info = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PROMO, false, true, true ) ;
+
 	}
 
 	/**

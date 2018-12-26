@@ -288,6 +288,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>Purge</strong>: Redefined CCSS page types.
 * <strong>Core</strong>: Used Exception for .htaccess r/w.
 * <strong>IAPI</strong>: <strong>New cloud servers added. Please update your firewall list by [IAPI IP List](https://wp.api.litespeedtech.com/ips).</strong>
+* <strong>GUI</strong>: Added PageSpeed Score comparision into promotion banner.
 * <strong>GUI</strong>: Refactored promotion banner logic.
 * <strong>GUI</strong>: Removed page optimized comment when meet ESI silence.
 * <strong>GUI</strong>: WHM transient changed to option instead of transient when storing.
@@ -295,6 +296,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>IAPI</strong>: Removed taken_failed/client_pull(duplicated) status.
 * <strong>Debug</strong>: Environment report won't generate hash for validation anymore.
 * <strong>3rd</strong>: Non cacheable pages won't punch ESI anymore for Divi compatibility.
+* 🐞<strong>Network</strong>: Added slashes for mobile rules when activating plugin.
 
 = 2.8.1 - Dec 5 2018 =
 * 🐞🕷️: Fixed an activation warning related to cookie crawler. (@kacper3355 @rastel72)

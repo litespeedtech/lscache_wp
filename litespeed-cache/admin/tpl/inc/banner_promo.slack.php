@@ -25,6 +25,11 @@ if ( ! defined( 'WPINC' ) ) die ;
                 </div>
             </div>
     </div>
-    <?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo.slack' ) ) ; ?>
-    <div class="litespeed-notice-dismiss"><span class="screen-reader-text"><a href="<?php echo $dismiss_url ; ?>">Dismiss this notice.</a></span></div>
+    <div>
+        <?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo.slack' ) ) ; ?>
+            <span class="screen-reader-text">Dismiss this notice.</span>
+                <a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">
+                    Dismiss
+                </a>
+    </div>
 </div>

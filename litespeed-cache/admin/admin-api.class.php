@@ -40,6 +40,7 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
 	const IAPI_ACTION_PLACEHOLDER = 'placeholder' ;
 	const IAPI_ACTION_CCSS = 'ccss' ;
+	const IAPI_ACTION_PROMO = 'promo' ;
 
 	/**
 	 * Init
