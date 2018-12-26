@@ -94,7 +94,7 @@ class Litespeed_File
 
 		$content = file_get_contents( $filename ) ;
 
-		$content = self::_remove_zero_space( $content ) ;
+		$content = self::remove_zero_space( $content ) ;
 
 		return $content ;
 	}
@@ -164,7 +164,7 @@ class Litespeed_File
 			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 		}
 
-		$data = self::_remove_zero_space( $data ) ;
+		$data = self::remove_zero_space( $data ) ;
 
 		$ret = file_put_contents( $filename, $data, $append ? FILE_APPEND : LOCK_EX ) ;
 		if ( $ret === false ) {
@@ -178,11 +178,12 @@ class Litespeed_File
 	 * Remove Unicode zero-width space <200b><200c>
 	 *
 	 * @since 2.1.2
+	 * @since 2.9 changed to public
 	 */
-	private static function _remove_zero_space( $content )
+	public static function remove_zero_space( $content )
 	{
 		if ( is_array( $content ) ) {
-			$content = array_map( 'self::_remove_zero_space', $content ) ;
+			$content = array_map( 'self::remove_zero_space', $content ) ;
 			return $content ;
 		}
 

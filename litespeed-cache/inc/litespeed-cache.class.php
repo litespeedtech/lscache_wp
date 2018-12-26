@@ -50,6 +50,7 @@ class LiteSpeed_Cache
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
+	const ACTION_CFG = 'cfg' ;
 
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
@@ -401,6 +402,10 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_CDN_Quic::handler() ;
 				break ;
 
+			case LiteSpeed_Cache::ACTION_CFG:
+				$msg = LiteSpeed_Cache_Config::handler() ;
+				break ;
+
 			default:
 				break ;
 		}
@@ -495,6 +500,9 @@ class LiteSpeed_Cache
 			$buffer = preg_replace( '|<!--.*?-->|s', '', $buffer ) ;
 		}
 		$buffer = trim( $buffer ) ;
+
+		$buffer = Litespeed_File::remove_zero_space( $buffer ) ;
+
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
 
 		if ( ! $is_html ) {
