@@ -333,18 +333,27 @@ class LiteSpeed_Cache_Activation
 	private function _upgrade()
 	{
 		$plugin = LiteSpeed_Cache::PLUGIN_FILE ;
-		$plugin = 'accelerated-mobile-pages/accelerated-mobile-pages.php' ;
 
 		/**
 		 * @see wp-admin/update.php
 		 */
-		include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-		include_once( ABSPATH . 'wp-admin/includes/misc.php' );
-		$upgrader = new Plugin_Upgrader( new Plugin_Upgrader_Skin() );
-		$result = $upgrader->upgrade($plugin);
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' ;
+		include_once ABSPATH . 'wp-admin/includes/file.php' ;
+		include_once ABSPATH . 'wp-admin/includes/misc.php' ;
+
+		try {
+			ob_start() ;
+			$upgrader = new \Plugin_Upgrader( new \WP_Ajax_Upgrader_Skin() ) ;
+			$result = $upgrader->upgrade( $plugin ) ;
+			ob_end_clean() ;
+		} catch ( \Exception $e ) {
+			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+			return ;
+		}
 
 		if ( is_wp_error( $result ) ) {
-			exit('err');
+			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+			return ;
 		}
 
 		LiteSpeed_Cache_Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) ) ;
