@@ -15,6 +15,10 @@ if ( ! defined( 'WPINC' ) ) {
 
 class LiteSpeed_Cache_Activation
 {
+	private static $_instance ;
+
+	const TYPE_UPGRADE = 'upgrade' ;
+
 	const NETWORK_TRANSIENT_COUNT = 'lscwp_network_count' ;
 
 	/**
@@ -320,5 +324,70 @@ class LiteSpeed_Cache_Activation
 		delete_option( LiteSpeed_Cache::WHM_MSG ) ;
 	}
 
+	/**
+	 * Upgrade LSCWP
+	 *
+	 * @since 2.9
+	 * @access private
+	 */
+	private function _upgrade()
+	{
+		$plugin = LiteSpeed_Cache::PLUGIN_FILE ;
+		$plugin = 'accelerated-mobile-pages/accelerated-mobile-pages.php' ;
+
+		/**
+		 * @see wp-admin/update.php
+		 */
+		include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+		include_once( ABSPATH . 'wp-admin/includes/misc.php' );
+		$upgrader = new Plugin_Upgrader( new Plugin_Upgrader_Skin() );
+		$result = $upgrader->upgrade($plugin);
+
+		if ( is_wp_error( $result ) ) {
+			exit('err');
+		}
+
+		LiteSpeed_Cache_Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) ) ;
+	}
+
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_UPGRADE :
+				$instance->_upgrade() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 2.9
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self() ;
+		}
+
+		return self::$_instance ;
+	}
 
 }

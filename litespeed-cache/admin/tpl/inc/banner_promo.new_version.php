@@ -8,6 +8,15 @@ if ( is_multisite() ) {
 	return ;
 }
 
+if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
+	return ;
+}
+
+$current = get_site_transient( 'update_plugins' ) ;
+if ( ! isset( $current->response[ LiteSpeed_Cache::PLUGIN_FILE ] ) ) {
+	return ;
+}
+
 $last_check = empty( $_summary[ 'new_version.last_check' ] ) ? 0 : $_summary[ 'new_version.last_check' ] ;
 // Check once in a half day
 if ( time() - $last_check > 43200 || ! isset( $_summary[ 'new_version.v' ] ) ) {
@@ -42,12 +51,13 @@ if ( $check_only ) {
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
 				<p class="litespeed-banner-desciption-content">
-					<?php echo __( 'New release v2.9 is available now.', 'litespeed-cache' ) ; ?>
+					<?php echo sprintf( __( 'New release %s is available now.', 'litespeed-cache' ), 'v' . $_summary[ 'new_version.v' ] ) ; ?>
 				</p>
 			</div>
 			<div class="litespeed-row-flex litespeed-banner-description">
 				<div class="litespeed-banner-description-padding-right-15">
-					<a href="" class="litespeed-btn-success litespeed-btn-mini">
+					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_ACTIVATION, LiteSpeed_Cache_Activation::TYPE_UPGRADE ) ; ?>
+					<a href="<?php echo $url ; ?>" class="litespeed-btn-success litespeed-btn-mini">
 						<i class="dashicons dashicons-image-rotate">&nbsp;</i>
 						 <?php echo __( 'Upgrade', 'litespeed-cache' ) ; ?>
 					</a>

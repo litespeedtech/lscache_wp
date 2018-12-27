@@ -25,7 +25,8 @@ class LiteSpeed_Cache
 
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
-	const PLUGIN_VERSION = '2.9' ;
+	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
+	const PLUGIN_VERSION = '2.7' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -51,6 +52,7 @@ class LiteSpeed_Cache
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
 	const ACTION_CFG = 'cfg' ;
+	const ACTION_ACTIVATION = 'activate' ;
 
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
@@ -396,6 +398,10 @@ class LiteSpeed_Cache
 
 			case LiteSpeed_Cache::ACTION_CFG:
 				$msg = LiteSpeed_Cache_Config::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_ACTIVATION:
+				$msg = LiteSpeed_Cache_Activation::handler() ;
 				break ;
 
 			default:
