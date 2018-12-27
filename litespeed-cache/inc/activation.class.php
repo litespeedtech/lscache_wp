@@ -346,7 +346,7 @@ class LiteSpeed_Cache_Activation
 			$skin = new \WP_Ajax_Upgrader_Skin() ;
 			$upgrader = new \Plugin_Upgrader( $skin ) ;
 			$result = $upgrader->upgrade( $plugin ) ;
-			if ( ! is_plugin_active( $plugin ) ) {
+			if ( ! is_plugin_active( $plugin ) ) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
 				activate_plugin( $plugin ) ;
 			}
 			ob_end_clean() ;
@@ -354,8 +354,6 @@ class LiteSpeed_Cache_Activation
 			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
 			return ;
 		}
-
-		error_log( var_export( $skin->get_error_messages(), true )) ;
 
 		if ( is_wp_error( $result ) ) {
 			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
