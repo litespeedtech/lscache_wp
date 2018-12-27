@@ -34,7 +34,7 @@ class LiteSpeed_Cache_CSS
 		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
-		$rules .= get_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS ) ;
+		$rules .= LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, true ) ;
 
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
 
