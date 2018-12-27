@@ -303,6 +303,12 @@ h3 .litespeed-learn-more {
 	padding-right: 20px;
 }
 
+.litespeed-text-jumbo {
+	font-size: 3em !important;
+}
+.litespeed-text-large {
+	font-size: .75em !important;
+}
 /********************************* nav tabs *******************************/
 .litespeed-wrap {
 	margin: 10px 20px 0 2px;
@@ -1444,11 +1450,24 @@ circle.litespeed-pie_circle {
 g.litespeed-pie_info text{
 	alignment-baseline: central;
 	text-anchor: middle;
-	font-size: 11px ;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.litespeed-pie-success g.litespeed-pie_info text{
+	fill: #178239;
+}
+
+.litespeed-pie-warning g.litespeed-pie_info text{
+	fill: #e67700;
+}
+
+.litespeed-pie-danger g.litespeed-pie_info text{
+	fill: #c7221f;
 }
 
 g.litespeed-pie_info .litespeed-pie-done {
-	fill: #73b38d ;
+	fill: #73b38d;
 }
 
 
@@ -1994,7 +2013,9 @@ input.litespeed-input-warning {
 	font-size: 12px;
     line-height: 14px;
 }
-
+.litespeed-text-thin {
+	font-weight: 100;
+}
 .litespeed-align-center {
 	margin-left: auto;
 	margin-right: auto;
@@ -2347,7 +2368,9 @@ input.litespeed-input-warning {
 .litespeed-padding-space {
 	padding: 5px 10px;
 }
-
+.litespeed-margin-bottom20 {
+	margin-bottom: 20px;
+}
 .litespeed-margin-bottom-remove {
 	margin-bottom: 0px !important;
 }
@@ -2380,13 +2403,14 @@ input.litespeed-input-warning {
 	padding: 10px;
 	background: none;
 	cursor: pointer;
-    color: #FF3366;
+    color: #888888;
     display: block;
     height: 20px;
     text-align: center;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 600;
+	text-decoration: none;
 }
 
 .litespeed-notice-dismiss:hover, .litespeed-notice-dismiss:active, .litespeed-notice-dismiss:focus {

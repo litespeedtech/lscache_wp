@@ -31,6 +31,8 @@ class LiteSpeed_Cache_GUI
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault' ;
 	const TYPE_DISMISS_PROMO = 'promo' ;
 
+	const GUI_SUMMARY = 'litespeed-gui-summary' ;
+
 	/**
 	 * Init
 	 *
@@ -109,6 +111,28 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Read summary
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function get_summary()
+	{
+		return get_option( self::GUI_SUMMARY, array() ) ;
+	}
+
+	/**
+	 * Save summary
+	 *
+	 * @since  2.9
+	 * @access private
+	 */
+	private function _save_summary( $data )
+	{
+		update_option( self::GUI_SUMMARY, $data ) ;
+	}
+
+	/**
 	 * Dismiss banner
 	 *
 	 * @since 1.0
@@ -128,7 +152,8 @@ class LiteSpeed_Cache_GUI
 			case self::TYPE_DISMISS_PROMO :
 				if ( empty( $_GET[ 'promo_tag' ] ) ) {
 					break ;
-				}exit('dismiss will be done');
+				}
+exit('dismiss will be done');
 
 				$promo_tag = $_GET[ 'promo_tag' ] ;
 
@@ -136,18 +161,20 @@ class LiteSpeed_Cache_GUI
 					break ;
 				}
 
-				$option_name = 'litespeed-' . $promo_tag ;
+				$summary = self::get_summary() ;
 
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
 				// Forever dismiss
 				if ( ! empty( $_GET[ 'done' ] ) ) {
-					update_option( $option_name, 'done' ) ;
+					$summary[ $promo_tag ] = 'done' ;
 				}
 				else {
 					// Update welcome banner to 30 days after
-					update_option( $option_name, time() + 86400 * 30 ) ;
+					$summary[ $promo_tag ] = time() + 86400 * 30 ;
 				}
+
+				self::get_instance()->_save_summary( $summary ) ;
 
 				break ;
 
@@ -222,9 +249,11 @@ class LiteSpeed_Cache_GUI
 	{
 		$is_litespeed_page = self::_is_litespeed_page() ;
 
-		if ( $is_litespeed_page ) {
+		if ( $is_litespeed_page && ! $check_only ) {
 			include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 		}
+
+		$_summary = self::get_summary() ;
 
 		foreach ( self::$_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
@@ -233,15 +262,15 @@ class LiteSpeed_Cache_GUI
 				continue ;
 			}
 
-			$option_name = 'litespeed-' . $promo_tag ;
-
-			$promo_timestamp = get_option( $option_name ) ;
-
 			// first time check
-			if ( ! $promo_timestamp ) {
-				update_option( $option_name, time() + 86400 * $delay_days ) ;
+			if ( empty( $_summary[ $promo_tag ] ) ) {
+				$_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
+				self::get_instance()->_save_summary( $_summary ) ;
+
 				continue ;
 			}
+
+			$promo_timestamp = $_summary[ $promo_tag ] ;
 
 			// was ticked as done
 			if ( $promo_timestamp == 'done' ) {
@@ -253,18 +282,26 @@ class LiteSpeed_Cache_GUI
 				continue ;
 			}
 
+			// try to load, if can pass, will define `LITESPEED_DID_PROMO`
+			include LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
+
+			// If not defined, means it didn't pass the display workflow in tpl.
+			if ( ! defined( 'LITESPEED_DID_PROMO' ) ) {
+				continue ;
+			}
+
 			if ( $check_only ) {
 				return $promo_tag ;
 			}
 
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
 
-			include_once LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
-
 			// Only contain one
 			// break ;
 
 		}
+
+
 
 		return false ;
 	}

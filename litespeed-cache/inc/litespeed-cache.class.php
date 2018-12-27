@@ -259,19 +259,11 @@ class LiteSpeed_Cache
 
 		add_filter( 'auto_update_plugin', function( $update, $item ) {
 				if ( $item->slug == 'litespeed-cache' ) {
-					// Check latest stable version allowed to upgrade
-					$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
-					$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
-					if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
-						return false ;
-					}
-					$auto_v = $response[ 'body' ] ;
+					$auto_v = LiteSpeed_Cache_Utility::version_check() ;
 
-					if ( empty( $item->new_version ) || $auto_v !== $item->new_version ) {
-						return false ;
+					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
+						return true ;
 					}
-
-					return true ;
 				}
 
 				return $update; // Else, use the normal API response to decide whether to update or not
