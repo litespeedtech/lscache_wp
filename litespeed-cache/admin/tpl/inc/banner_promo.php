@@ -4,13 +4,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 $last_check = empty( $_summary[ 'score.last_check' ] ) ? 0 : $_summary[ 'score.last_check' ] ;
 // Check once per 10 days
 if ( time() - $last_check > 864000 ) {
-	$_summary[ 'score.last_check' ] = time() ;
-	self::get_instance()->_save_summary( $_summary ) ;
-
-	$score = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 60 ) ;
-	$_summary[ 'score.data' ] = $score ;
-	self::get_instance()->_save_summary( $_summary ) ;
-	LiteSpeed_Cache_Log::debug( '[GUI] Saved score ', $score ) ;
+	LiteSpeed_Cache_Utility::score_check() ;
 	// After detect, don't show, just return and show next time
 	return ;
 }
@@ -24,9 +18,9 @@ $_score = $_summary[ 'score.data' ] ;
 if ( empty( $_score[ 'speed_before_cache' ] ) || empty( $_score[ 'speed_after_cache' ] )  || empty( $_score[ 'score_before_optm' ] )  || empty( $_score[ 'score_after_optm' ] ) ) {
 	return ;
 }
-LiteSpeed_Cache_Log::debug( '[GUI] can show promo score ' ) ;
+
 // If speed is not reduced half or score is larger
-if ( $_score[ 'speed_before_cache' ] < $_score[ 'speed_after_cache' ] * 2 || $_score[ 'score_before_optm' ] <= $_score[ 'score_after_optm' ] ) {
+if ( $_score[ 'speed_before_cache' ] < $_score[ 'speed_after_cache' ] * 2 || $_score[ 'score_before_optm' ] >= $_score[ 'score_after_optm' ] ) {
 	return ;
 }
 
@@ -37,7 +31,7 @@ if ( $check_only ) {
 	return ;
 }
 
-// Format nums
+// Format loading time
 $speed_before_cache = $_score[ 'speed_before_cache' ] / 1000 ;
 if ( $speed_before_cache < 0.01 ) {
 	$speed_before_cache = 0.01 ;
@@ -52,9 +46,22 @@ else {
 	$speed_after_cache = number_format( $speed_after_cache, 2 ) ;
 }
 
-$speed_improved = $_score[ 'speed_after_cache' ] / $_score[ 'speed_before_cache' ] ;
+$speed_improved = ( $_score[ 'speed_before_cache' ] - $_score[ 'speed_after_cache' ] ) * 100 / $_score[ 'speed_before_cache' ] ;
+if ( $speed_improved > 99 ) {
+	$speed_improved = number_format( $speed_improved, 2 ) ;
+}
+else {
+	$speed_improved = number_format( $speed_improved ) ;
+}
 
-// todo: Done is done, dismiss should not be saved as done
+// Format PageSpeed Score
+$score_improved = ( $_score[ 'score_after_optm' ] - $_score[ 'score_before_optm' ] ) * 100 / $_score[ 'score_after_optm' ] ;
+if ( $score_improved > 99 ) {
+	$score_improved = number_format( $score_improved, 2 ) ;
+}
+else {
+	$score_improved = number_format( $score_improved ) ;
+}
 
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full">
@@ -96,7 +103,7 @@ $speed_improved = $_score[ 'speed_after_cache' ] / $_score[ 'speed_before_cache'
 									</p>
 								</div>
 									<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
-										50<span class="litespeed-text-large">%</span>
+										<?php echo $speed_improved ; ?><span class="litespeed-text-large">%</span>
 									</div>
 							</div>
 						</div>
@@ -114,7 +121,7 @@ $speed_improved = $_score[ 'speed_after_cache' ] / $_score[ 'speed_before_cache'
 									</h3>
 								</div>
 									<div style="margin-top:-5px;">
-										<?php echo LiteSpeed_Cache_GUI::pie( 45, 45, false, true, 'litespeed-pie-warning' ) ; ?>
+										<?php echo LiteSpeed_Cache_GUI::pie( $_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_before_optm' ] ) ) ; ?>
 									</div>
 							</div>
 							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -124,7 +131,7 @@ $speed_improved = $_score[ 'speed_after_cache' ] / $_score[ 'speed_before_cache'
 									</h3>
 								</div>
 									<div style="margin-top:-5px;">
-										<?php echo LiteSpeed_Cache_GUI::pie( 51, 45, false, true, 'litespeed-pie-success' ) ; ?>
+										<?php echo LiteSpeed_Cache_GUI::pie( $_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_after_optm' ] ) ) ; ?>
 									</div>
 							</div>
 							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -134,7 +141,7 @@ $speed_improved = $_score[ 'speed_after_cache' ] / $_score[ 'speed_before_cache'
 									</p>
 								</div>
 									<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
-										75<span class="litespeed-text-large">%</span>
+										<?php echo $score_improved ; ?><span class="litespeed-text-large">%</span>
 									</div>
 							</div>
 						</div>

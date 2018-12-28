@@ -113,12 +113,36 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Get classname of PageSpeed Score
+	 *
+	 * Scale:
+	 * 	90-100 (fast)
+	 * 	50-89 (average)
+	 * 	0-49 (slow)
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public function get_cls_of_pagescore( $score )
+	{
+		if ( $score >= 90 ) {
+			return 'success' ;
+		}
+
+		if ( $score >= 50 ) {
+			return 'warning' ;
+		}
+
+		return 'danger' ;
+	}
+
+	/**
 	 * Read summary
 	 *
 	 * @since  2.9
-	 * @access private
+	 * @access public
 	 */
-	private function _get_summary()
+	public function get_summary()
 	{
 		return get_option( self::GUI_SUMMARY, array() ) ;
 	}
@@ -127,9 +151,9 @@ class LiteSpeed_Cache_GUI
 	 * Save summary
 	 *
 	 * @since  2.9
-	 * @access private
+	 * @access public
 	 */
-	private function _save_summary( $data )
+	public function save_summary( $data )
 	{
 		update_option( self::GUI_SUMMARY, $data ) ;
 	}
@@ -163,7 +187,7 @@ class LiteSpeed_Cache_GUI
 					break ;
 				}
 
-				$summary = $_instance->_get_summary() ;
+				$summary = $_instance->get_summary() ;
 
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
@@ -180,7 +204,7 @@ class LiteSpeed_Cache_GUI
 					$summary[ $promo_tag ] = time() + 86400 * 30 ;
 				}
 
-				$_instance->_save_summary( $summary ) ;
+				$_instance->save_summary( $summary ) ;
 
 				break ;
 
@@ -259,7 +283,7 @@ class LiteSpeed_Cache_GUI
 			include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 		}
 
-		$_summary = $this->_get_summary() ;
+		$_summary = $this->get_summary() ;
 
 		foreach ( $this->_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
@@ -271,7 +295,7 @@ class LiteSpeed_Cache_GUI
 			// first time check
 			if ( empty( $_summary[ $promo_tag ] ) ) {
 				$_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
-				$this->_save_summary( $_summary ) ;
+				$this->save_summary( $_summary ) ;
 
 				continue ;
 			}

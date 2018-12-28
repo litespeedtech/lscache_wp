@@ -14,6 +14,28 @@ class LiteSpeed_Cache_Utility
 {
 
 	/**
+	 * Check page score
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function score_check()
+	{
+		$_gui = LiteSpeed_Cache_GUI::get_instance() ;
+
+		$_summary = $_gui->get_summary() ;
+
+		$_summary[ 'score.last_check' ] = time() ;
+		$_gui->save_summary( $_summary ) ;
+
+		$score = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 60 ) ;
+		$_summary[ 'score.data' ] = $score ;
+		$_gui->save_summary( $_summary ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Util] Saved page score ', $score ) ;
+	}
+
+	/**
 	 * Check latest version
 	 *
 	 * @since  2.9

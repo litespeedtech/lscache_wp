@@ -21,12 +21,12 @@ $last_check = empty( $_summary[ 'new_version.last_check' ] ) ? 0 : $_summary[ 'n
 // Check once in a half day
 if ( time() - $last_check > 43200 ) {
 	$_summary[ 'new_version.last_check' ] = time() ;
-	$this->_save_summary( $_summary ) ;
+	$this->save_summary( $_summary ) ;
 
 	// Detect version
 	$auto_v = LiteSpeed_Cache_Utility::version_check() ;
 	$_summary[ 'new_version.v' ] = $auto_v ;
-	$this->_save_summary( $_summary ) ;
+	$this->save_summary( $_summary ) ;
 	// After detect, don't show, just return and show next time
 	return ;
 }
