@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.0.2
-Stable tag: 2.7
+Stable tag: 2.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -302,7 +302,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>Debug</strong>: Environment report won't generate hash for validation anymore.
 * <strong>3rd</strong>: Non cacheable pages won't punch ESI anymore for Divi compatibility.
 * 🐞<strong>Network</strong>: Added slashes for mobile rules when activating plugin.
-* 🐞<strong>CCSS</strong>: Eliminated a PHP notice when appending CCS.
+* 🐞<strong>CCSS</strong>: Eliminated a PHP notice when appending CCSS.
 
 = 2.8.1 - Dec 5 2018 =
 * 🐞🕷️: Fixed an activation warning related to cookie crawler. (@kacper3355 @rastel72)
