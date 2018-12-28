@@ -328,7 +328,7 @@ class LiteSpeed_Cache_GUI
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Show promo ' . $promo_tag ) ;
 
 			// Only contain one
-			// break ;
+			break ;
 
 		}
 
