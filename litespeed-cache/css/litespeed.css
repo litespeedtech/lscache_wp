@@ -2011,7 +2011,7 @@ input.litespeed-input-warning {
 
 .litespeed-text-small {
 	font-size: 12px;
-    line-height: 14px;
+	line-height: 14px;
 }
 .litespeed-text-thin {
 	font-weight: 100;
@@ -2387,9 +2387,9 @@ input.litespeed-input-warning {
 
 
 .litespeed-banner-button-link {
-    white-space: nowrap;
+	white-space: nowrap;
 	margin: 0px;
-    line-height: 1.5em;
+	line-height: 1.5em;
 	padding-bottom: 5px;
 }
 
@@ -2403,16 +2403,16 @@ input.litespeed-input-warning {
 	padding: 10px;
 	background: none;
 	cursor: pointer;
-    color: #888888;
-    display: block;
-    height: 20px;
-    text-align: center;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-weight: 600;
+	color: #888888;
+	display: block;
+	height: 20px;
+	text-align: center;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-weight: 600;
 	text-decoration: none;
 }
 
 .litespeed-notice-dismiss:hover, .litespeed-notice-dismiss:active, .litespeed-notice-dismiss:focus {
-    color: #CC2929;
+	color: #CC2929;
 }
