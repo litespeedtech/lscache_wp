@@ -53,6 +53,7 @@ class LiteSpeed_Cache
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
 	const ACTION_CFG = 'cfg' ;
 	const ACTION_ACTIVATION = 'activate' ;
+	const ACTION_UTIL = 'util' ;
 
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
@@ -396,12 +397,16 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_CDN_Quic::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CFG:
+			case LiteSpeed_Cache::ACTION_CFG :
 				$msg = LiteSpeed_Cache_Config::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_ACTIVATION:
+			case LiteSpeed_Cache::ACTION_ACTIVATION :
 				$msg = LiteSpeed_Cache_Activation::handler() ;
+				break ;
+
+			case LiteSpeed_Cache::ACTION_UTIL :
+				$msg = LiteSpeed_Cache_Utility::handler() ;
 				break ;
 
 			default:

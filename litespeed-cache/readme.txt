@@ -297,6 +297,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>GUI</strong>: Removed page optimized comment when meet ESI silence.
 * <strong>GUI</strong>: WHM transient changed to option instead of transient when storing.
 * <strong>GUI</strong>: Appened more descriptions to CDN filetype setting.
+* <strong>IAPI</strong>: Messages will not duplicate anymore in certain cases.
 * <strong>IAPI</strong>: Removed taken_failed/client_pull(duplicated) status.
 * <strong>Debug</strong>: Environment report won't generate hash for validation anymore.
 * <strong>3rd</strong>: Non cacheable pages won't punch ESI anymore for Divi compatibility.

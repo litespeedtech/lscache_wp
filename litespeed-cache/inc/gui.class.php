@@ -336,6 +336,22 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
+	 * Enqueue ajax call for score updating
+	 *
+	 * @since 2.9
+	 * @access private
+	 */
+	private function _enqueue_score_req_ajax()
+	{
+		$_summary = $this->get_summary() ;
+
+		$_summary[ 'score.last_check' ] = time() ;
+		$this->save_summary( $_summary ) ;
+
+		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.ajax.php" ;
+	}
+
+	/**
 	 * Load frontend public script
 	 *
 	 * @since  1.8.2

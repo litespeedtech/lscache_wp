@@ -4,7 +4,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 $last_check = empty( $_summary[ 'score.last_check' ] ) ? 0 : $_summary[ 'score.last_check' ] ;
 // Check once per 10 days
 if ( time() - $last_check > 864000 ) {
-	LiteSpeed_Cache_Utility::score_check() ;
+	// Generate the ajax code to check score in separate request
+	$this->_enqueue_score_req_ajax() ;
 	// After detect, don't show, just return and show next time
 	return ;
 }

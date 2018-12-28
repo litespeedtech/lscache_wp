@@ -12,14 +12,18 @@ if ( ! defined( 'WPINC' ) ) {
 
 class LiteSpeed_Cache_Utility
 {
+	private static $_instance ;
+
+	const TYPE_SCORE_CHK = 'score_chk' ;
+
 
 	/**
 	 * Check page score
 	 *
 	 * @since  2.9
-	 * @access public
+	 * @access private
 	 */
-	public static function score_check()
+	private function _score_check()
 	{
 		$_gui = LiteSpeed_Cache_GUI::get_instance() ;
 
@@ -28,11 +32,13 @@ class LiteSpeed_Cache_Utility
 		$_summary[ 'score.last_check' ] = time() ;
 		$_gui->save_summary( $_summary ) ;
 
-		$score = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 60 ) ;
+		$score = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 600 ) ;
 		$_summary[ 'score.data' ] = $score ;
 		$_gui->save_summary( $_summary ) ;
 
 		LiteSpeed_Cache_Log::debug( '[Util] Saved page score ', $score ) ;
+
+		exit() ;
 	}
 
 	/**
@@ -741,7 +747,43 @@ class LiteSpeed_Cache_Utility
 
 
 
+	/**
+	 * Handle all request actions from main cls
+	 *
+	 * @since  2.9
+	 * @access public
+	 */
+	public static function handler()
+	{
+		$instance = self::get_instance() ;
+
+		$type = LiteSpeed_Cache_Router::verify_type() ;
+
+		switch ( $type ) {
+			case self::TYPE_SCORE_CHK :
+				$instance->_score_check() ;
+				break ;
+
+			default:
+				break ;
+		}
+
+		LiteSpeed_Cache_Admin::redirect() ;
+	}
+
+	/**
+	 * Get the current instance object.
+	 *
+	 * @since 2.9
+	 * @access public
+	 * @return Current class instance.
+	 */
+	public static function get_instance()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self() ;
+		}
+
+		return self::$_instance ;
+	}
 }
-
-
-
