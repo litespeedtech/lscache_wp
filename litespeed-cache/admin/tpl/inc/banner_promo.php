@@ -111,6 +111,7 @@ else {
 
 			</div>
 
+			<?php if ( $_score[ 'score_before_optm' ] < $_score[ 'score_after_optm' ] ) : ?>
 			<div class="litespeed-margin-bottom20">
 				<h2 class="litespeed-text-grey litespeed-margin-bottom-remove litespeed-top10">PageSpeed Score</h2>
 				<hr class="litespeed-margin-bottom-remove" />
@@ -148,6 +149,8 @@ else {
 				</div>
 
 			</div>
+			<?php endif ; ?>
+
 		</div>
 
 		<div class="litespeed-row-flex litespeed-flex-wrap litespeed-margin-y5">
