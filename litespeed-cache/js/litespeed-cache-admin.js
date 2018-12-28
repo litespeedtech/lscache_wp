@@ -147,11 +147,11 @@ var _litespeed_dots ;
 
 		/** Promo banner **/
 		$( '#litespeed-promo-done' ).click( function( event ) {
-			$( '.litespeed-banner-promo' ).slideUp() ;
+			$( '.litespeed-banner-promo-full' ).slideUp() ;
 			$.get( litespeed_data.ajax_url_promo + '&done=1' ) ;
 		} ) ;
 		$( '#litespeed-promo-later' ).click( function( event ) {
-			$( '.litespeed-banner-promo' ).slideUp() ;
+			$( '.litespeed-banner-promo-full' ).slideUp() ;
 			$.get( litespeed_data.ajax_url_promo ) ;
 		} ) ;
 
