@@ -1144,6 +1144,7 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		// Notify IAPI images taken
+		$json = false ;
 		foreach ( $server_list as $server => $img_list ) {
 			$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_IMG_TAKEN, $img_list, $server, true ) ;
 		}
