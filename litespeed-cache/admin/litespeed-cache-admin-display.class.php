@@ -471,6 +471,16 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		// Bypass adding for CLI or cron
 		if ( defined( 'LITESPEED_CLI' ) || defined( 'DOING_CRON' ) ) {
+			// WP CLI will show the info directly
+			if ( defined( 'WP_CLI' ) && WP_CLI ) {
+				$msg = strip_tags( $msg ) ;
+				if ( $color == self::NOTICE_RED ) {
+					WP_CLI::error( $msg ) ;
+				}
+				else {
+					WP_CLI::success( $msg ) ;
+				}
+			}
 			return ;
 		}
 

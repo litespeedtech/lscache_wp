@@ -450,7 +450,7 @@ class LiteSpeed_Cache_Admin_API
 			$msg = __( 'Failed to post via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 
-			return $response[ 'body' ] ;
+			return false ;
 		}
 
 		if ( ! empty( $json[ '_err' ] ) ) {
@@ -458,7 +458,7 @@ class LiteSpeed_Cache_Admin_API
 			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
-			return $json[ '_err' ] ;
+			return false ;
 		}
 
 		if ( ! empty( $json[ '_503' ] ) ) {
@@ -468,7 +468,7 @@ class LiteSpeed_Cache_Admin_API
 			$msg .= ' ' . $json[ '_503' ] ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 
-			return $json[ '_503' ] ;
+			return false ;
 		}
 
 		if ( ! empty( $json[ '_info' ] ) ) {
@@ -505,7 +505,7 @@ class LiteSpeed_Cache_Admin_API
 
 			$msg2 .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg . $msg2 ) ;
-			return $msg ;
+			return false ;
 		}
 
 		return $json ;
