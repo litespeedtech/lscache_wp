@@ -1,12 +1,60 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
+$last_check = empty( $_summary[ 'score.last_check' ] ) ? 0 : $_summary[ 'score.last_check' ] ;
+// Check once per 10 days
+if ( time() - $last_check > 864000 ) {
+	$_summary[ 'score.last_check' ] = time() ;
+	self::get_instance()->_save_summary( $_summary ) ;
 
-! defined( 'LITESPEED_DID_PROMO' ) && define( 'LITESPEED_DID_PROMO', true ) ;
+	$score = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 60 ) ;
+	$_summary[ 'score.data' ] = $score ;
+	self::get_instance()->_save_summary( $_summary ) ;
+	LiteSpeed_Cache_Log::debug( '[GUI] Saved score ', $score ) ;
+	// After detect, don't show, just return and show next time
+	return ;
+}
+
+if ( ! isset( $_summary[ 'score.data' ] ) ) {
+	return ;
+}
+
+$_score = $_summary[ 'score.data' ] ;
+
+if ( empty( $_score[ 'speed_before_cache' ] ) || empty( $_score[ 'speed_after_cache' ] )  || empty( $_score[ 'score_before_optm' ] )  || empty( $_score[ 'score_after_optm' ] ) ) {
+	return ;
+}
+LiteSpeed_Cache_Log::debug( '[GUI] can show promo score ' ) ;
+// If speed is not reduced half or score is larger
+if ( $_score[ 'speed_before_cache' ] < $_score[ 'speed_after_cache' ] * 2 || $_score[ 'score_before_optm' ] <= $_score[ 'score_after_optm' ] ) {
+	return ;
+}
+
+//********** Can show now **********//
+$this->_promo_true = true ;
 
 if ( $check_only ) {
 	return ;
 }
+
+// Format nums
+$speed_before_cache = $_score[ 'speed_before_cache' ] / 1000 ;
+if ( $speed_before_cache < 0.01 ) {
+	$speed_before_cache = 0.01 ;
+}
+$speed_before_cache = number_format( $speed_before_cache, 2 ) ;
+
+$speed_after_cache = $_score[ 'speed_after_cache' ] / 1000 ;
+if ( $speed_after_cache < 0.01 ) {
+	$speed_after_cache = number_format( $speed_after_cache, 3 ) ;
+}
+else {
+	$speed_after_cache = number_format( $speed_after_cache, 2 ) ;
+}
+
+$speed_improved = $_score[ 'speed_after_cache' ] / $_score[ 'speed_before_cache' ] ;
+
+// todo: Done is done, dismiss should not be saved as done
 
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full">
@@ -27,7 +75,7 @@ if ( $check_only ) {
 									</p>
 								</div>
 									<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-grey">
-										1.5<span class="litespeed-text-large">s</span>
+										<?php echo $speed_before_cache ; ?><span class="litespeed-text-large">s</span>
 									</div>
 
 							</div>
@@ -38,7 +86,7 @@ if ( $check_only ) {
 									</p>
 								</div>
 									<div class="litespeed-top10 litespeed-text-jumbo litespeed-success">
-										0.05<span class="litespeed-text-large">s</span>
+										<?php echo $speed_after_cache ; ?><span class="litespeed-text-large">s</span>
 									</div>
 							</div>
 							<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -121,11 +169,9 @@ if ( $check_only ) {
 		</div>
 
 		<div>
-	        <?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo' ) ) ; ?>
-	            <span class="screen-reader-text">Dismiss this notice.</span>
-	                <a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">
-	                    X
-	                </a>
-	    </div>
+			<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo', 'later' => 1 ) ) ; ?>
+			<span class="screen-reader-text">Dismiss this notice.</span>
+			<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
+		</div>
 
 </div>

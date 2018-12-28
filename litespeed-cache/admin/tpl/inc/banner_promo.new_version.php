@@ -1,9 +1,9 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
+
 /**
  * NOTE: Only show for single site
  */
-
 if ( is_multisite() ) {
 	return ;
 }
@@ -19,13 +19,19 @@ if ( ! isset( $current->response[ LiteSpeed_Cache::PLUGIN_FILE ] ) ) {
 
 $last_check = empty( $_summary[ 'new_version.last_check' ] ) ? 0 : $_summary[ 'new_version.last_check' ] ;
 // Check once in a half day
-if ( time() - $last_check > 43200 || ! isset( $_summary[ 'new_version.v' ] ) ) {
+if ( time() - $last_check > 43200 ) {
+	$_summary[ 'new_version.last_check' ] = time() ;
+	$this->_save_summary( $_summary ) ;
+
 	// Detect version
 	$auto_v = LiteSpeed_Cache_Utility::version_check() ;
-	$_summary[ 'new_version.last_check' ] = time() ;
 	$_summary[ 'new_version.v' ] = $auto_v ;
-	self::get_instance()->_save_summary( $_summary ) ;
+	$this->_save_summary( $_summary ) ;
 	// After detect, don't show, just return and show next time
+	return ;
+}
+
+if ( ! isset( $_summary[ 'new_version.v' ] ) ) {
 	return ;
 }
 
@@ -36,7 +42,7 @@ if ( LiteSpeed_Cache_API::v( $_summary[ 'new_version.v' ] ) ) {
 
 //********** Can show now **********//
 
-! defined( 'LITESPEED_DID_PROMO' ) && define( 'LITESPEED_DID_PROMO', true ) ;
+$this->_promo_true = true ;
 
 if ( $check_only ) {
 	return ;

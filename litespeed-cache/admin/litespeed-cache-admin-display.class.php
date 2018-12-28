@@ -221,7 +221,7 @@ class LiteSpeed_Cache_Admin_Display
 			$localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url ;
 		}
 
-		$promo_tag = LiteSpeed_Cache_GUI::show_promo( true ) ;
+		$promo_tag = LiteSpeed_Cache_GUI::get_instance()->show_promo( true ) ;
 		if ( $promo_tag ) {
 			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
@@ -518,7 +518,7 @@ class LiteSpeed_Cache_Admin_Display
 		 * Check promo msg first
 		 * @since 2.9
 		 */
-		LiteSpeed_Cache_GUI::show_promo() ;
+		LiteSpeed_Cache_GUI::get_instance()->show_promo() ;
 
 	}
 

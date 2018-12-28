@@ -19,11 +19,13 @@ class LiteSpeed_Cache_GUI
 
 	private static $_clean_counter = 0 ;
 
+	private $_promo_true ;
+
 	// [ file_tag => [ days, litespeed_only ], ... ]
-	private static $_promo_list = array(
+	private $_promo_list = array(
 		'banner_promo.new_version'	=> array( 1, false ),
-		'banner_promo'				=> array( 2, false ),
-		'banner_promo.slack'		=> array( 3, false ),
+		'banner_promo'				=> array( 5, false ),
+		// 'banner_promo.slack'		=> array( 3, false ),
 	) ;
 
 
@@ -114,9 +116,9 @@ class LiteSpeed_Cache_GUI
 	 * Read summary
 	 *
 	 * @since  2.9
-	 * @access public
+	 * @access private
 	 */
-	public static function get_summary()
+	private function _get_summary()
 	{
 		return get_option( self::GUI_SUMMARY, array() ) ;
 	}
@@ -140,6 +142,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function dismiss()
 	{
+		$_instance = self::get_instance() ;
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
 			case self::TYPE_DISMISS_WHM :
 				LiteSpeed_Cache_Activation::dismiss_whm() ;
@@ -153,15 +156,14 @@ class LiteSpeed_Cache_GUI
 				if ( empty( $_GET[ 'promo_tag' ] ) ) {
 					break ;
 				}
-exit('dismiss will be done');
 
 				$promo_tag = $_GET[ 'promo_tag' ] ;
 
-				if ( empty( self::$_promo_list[ $promo_tag ] ) ) {
+				if ( empty( $_instance->_promo_list[ $promo_tag ] ) ) {
 					break ;
 				}
 
-				$summary = self::get_summary() ;
+				$summary = $_instance->_get_summary() ;
 
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
@@ -169,12 +171,16 @@ exit('dismiss will be done');
 				if ( ! empty( $_GET[ 'done' ] ) ) {
 					$summary[ $promo_tag ] = 'done' ;
 				}
+				elseif ( ! empty( $_GET[ 'later' ] ) ) {
+					// Delay the banner to half year later
+					$summary[ $promo_tag ] = time() + 86400 * 180 ;
+				}
 				else {
 					// Update welcome banner to 30 days after
 					$summary[ $promo_tag ] = time() + 86400 * 30 ;
 				}
 
-				self::get_instance()->_save_summary( $summary ) ;
+				$_instance->_save_summary( $summary ) ;
 
 				break ;
 
@@ -220,7 +226,7 @@ exit('dismiss will be done');
 	 *
 	 * @since  2.9
 	 */
-	private static function _is_litespeed_page()
+	private function _is_litespeed_page()
 	{
 		if ( ! empty( $_GET[ 'page' ] ) && in_array( $_GET[ 'page' ],
 			array(
@@ -245,17 +251,17 @@ exit('dismiss will be done');
 	 * @since 2.1
 	 * @access public
 	 */
-	public static function show_promo( $check_only = false )
+	public function show_promo( $check_only = false )
 	{
-		$is_litespeed_page = self::_is_litespeed_page() ;
+		$is_litespeed_page = $this->_is_litespeed_page() ;
 
 		if ( $is_litespeed_page && ! $check_only ) {
 			include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 		}
 
-		$_summary = self::get_summary() ;
+		$_summary = $this->_get_summary() ;
 
-		foreach ( self::$_promo_list as $promo_tag => $v ) {
+		foreach ( $this->_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
 
 			if ( $litespeed_page_only && ! $is_litespeed_page ) {
@@ -265,7 +271,7 @@ exit('dismiss will be done');
 			// first time check
 			if ( empty( $_summary[ $promo_tag ] ) ) {
 				$_summary[ $promo_tag ] = time() + 86400 * $delay_days ;
-				self::get_instance()->_save_summary( $_summary ) ;
+				$this->_save_summary( $_summary ) ;
 
 				continue ;
 			}
@@ -282,11 +288,12 @@ exit('dismiss will be done');
 				continue ;
 			}
 
-			// try to load, if can pass, will define `LITESPEED_DID_PROMO`
+			// try to load, if can pass, will set $this->_promo_true = true
+			$this->_promo_true = false ;
 			include LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
 
 			// If not defined, means it didn't pass the display workflow in tpl.
-			if ( ! defined( 'LITESPEED_DID_PROMO' ) ) {
+			if ( ! $this->_promo_true ) {
 				continue ;
 			}
 
@@ -301,15 +308,7 @@ exit('dismiss will be done');
 
 		}
 
-
-
 		return false ;
-	}
-
-	private function _improvement_info()
-	{
-		$info = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PROMO, false, true, true ) ;
-
 	}
 
 	/**

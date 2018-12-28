@@ -40,7 +40,7 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
 	const IAPI_ACTION_PLACEHOLDER = 'placeholder' ;
 	const IAPI_ACTION_CCSS = 'ccss' ;
-	const IAPI_ACTION_PROMO = 'promo' ;
+	const IAPI_ACTION_PAGESCORE = 'pagescore' ;
 
 	/**
 	 * Init
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function post( $action, $data = false, $server = false, $no_hash = false )
+	public static function post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
 	{
 		$instance = self::get_instance() ;
 
@@ -258,7 +258,7 @@ class LiteSpeed_Cache_Admin_API
 			$instance->_request_key() ;
 		}
 
-		return $instance->_post( $action, $data, $server, $no_hash ) ;
+		return $instance->_post( $action, $data, $server, $no_hash, $time_out ) ;
 	}
 
 	/**
@@ -402,7 +402,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @return  string | array Must return an error msg string or json array
 	 */
-	private function _post( $action, $data = false, $server = false, $no_hash = false )
+	private function _post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
@@ -433,7 +433,7 @@ class LiteSpeed_Cache_Admin_API
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
 		 * @since 1.6.4
 		 */
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
+		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) ) ;
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
