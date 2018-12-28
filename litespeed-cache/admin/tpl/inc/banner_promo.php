@@ -21,7 +21,7 @@ if ( empty( $_score[ 'speed_before_cache' ] ) || empty( $_score[ 'speed_after_ca
 }
 
 // If speed is not reduced half or score is larger
-if ( $_score[ 'speed_before_cache' ] < $_score[ 'speed_after_cache' ] * 2 || $_score[ 'score_before_optm' ] >= $_score[ 'score_after_optm' ] ) {
+if ( $_score[ 'speed_before_cache' ] < $_score[ 'speed_after_cache' ] * 2 || $_score[ 'score_before_optm' ] > $_score[ 'score_after_optm' ] ) {
 	return ;
 }
 
