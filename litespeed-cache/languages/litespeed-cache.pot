@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LiteSpeed Cache 2.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-12-28 21:49:27+00:00\n"
+"POT-Creation-Date: 2018-12-31 14:22:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -170,9 +170,9 @@ msgstr ""
 #: admin/tpl/setting/settings_cdn.php:151
 #: admin/tpl/setting/settings_crawler.php:132
 #: admin/tpl/setting/settings_crawler.php:154
-#: admin/tpl/setting/settings_excludes.php:44
-#: admin/tpl/setting/settings_excludes.php:67
-#: admin/tpl/setting/settings_excludes.php:105
+#: admin/tpl/setting/settings_excludes.php:45
+#: admin/tpl/setting/settings_excludes.php:68
+#: admin/tpl/setting/settings_excludes.php:106
 #: admin/tpl/setting/settings_inc.cache_object.php:114
 #: admin/tpl/setting/settings_inc.cache_object.php:122
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:19
@@ -2000,8 +2000,8 @@ msgstr ""
 #: admin/tpl/setting/settings_crawler.php:22
 #: admin/tpl/setting/settings_crawler.php:95
 #: admin/tpl/setting/settings_crawler.php:100
-#: admin/tpl/setting/settings_excludes.php:71
-#: admin/tpl/setting/settings_excludes.php:109
+#: admin/tpl/setting/settings_excludes.php:72
+#: admin/tpl/setting/settings_excludes.php:110
 msgid "NOTE"
 msgstr ""
 
@@ -2594,81 +2594,86 @@ msgstr ""
 
 #: admin/tpl/setting/settings_excludes.php:20
 msgid ""
-"Custom TTL is supported with a space separated in the line before the end."
+"To define a custom TTL for a URI, add a space followed by the TTL value to "
+"the end of the URI."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:26
+#: admin/tpl/setting/settings_excludes.php:21
+msgid "For example, %1$s defines a TTL of %2$s seconds for %3$s."
+msgstr ""
+
+#: admin/tpl/setting/settings_excludes.php:27
 msgid "Do Not Cache URIs"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:30
+#: admin/tpl/setting/settings_excludes.php:31
 msgid "Paths containing these strings will not be cached."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:37
+#: admin/tpl/setting/settings_excludes.php:38
 msgid "Do Not Cache Query Strings"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:41
+#: admin/tpl/setting/settings_excludes.php:42
 msgid "Query string containing these parameters will not be cached."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:42
+#: admin/tpl/setting/settings_excludes.php:43
 msgid "For example, for %s, %s and %s can be used here."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:51
+#: admin/tpl/setting/settings_excludes.php:52
 msgid "Do Not Cache Categories"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:64
+#: admin/tpl/setting/settings_excludes.php:65
 msgid "All categories are cached by default."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:65
-#: admin/tpl/setting/settings_excludes.php:103
+#: admin/tpl/setting/settings_excludes.php:66
+#: admin/tpl/setting/settings_excludes.php:104
 #: admin/tpl/setting/settings_inc.exclude_cookies.php:16
 #: admin/tpl/setting/settings_inc.exclude_useragent.php:15
 msgid "To prevent %s from being cached, enter it here."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:65
+#: admin/tpl/setting/settings_excludes.php:66
 msgid "categories"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:73
+#: admin/tpl/setting/settings_excludes.php:74
 msgid ""
 "If the category slug is not found, the category will be removed from the "
 "list on save."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:74
-#: admin/tpl/setting/settings_excludes.php:112
+#: admin/tpl/setting/settings_excludes.php:75
+#: admin/tpl/setting/settings_excludes.php:113
 msgid "To exclude %1$s, insert %2$s."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:82
+#: admin/tpl/setting/settings_excludes.php:83
 msgid "Do Not Cache Tags"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:102
+#: admin/tpl/setting/settings_excludes.php:103
 msgid "All tags are cached by default."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:103
+#: admin/tpl/setting/settings_excludes.php:104
 msgid "tags"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:111
+#: admin/tpl/setting/settings_excludes.php:112
 msgid ""
 "If the tag slug is not found, the tag will be removed from the list on save."
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:132
+#: admin/tpl/setting/settings_excludes.php:133
 msgid "Do Not Cache Roles"
 msgstr ""
 
-#: admin/tpl/setting/settings_excludes.php:138
+#: admin/tpl/setting/settings_excludes.php:139
 msgid "Selected roles will be excluded from cache."
 msgstr ""
 
@@ -3205,11 +3210,11 @@ msgid "Elements with attribute %s in html code will be excluded."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:47
-msgid "Lazy Load Image Classname Excludes"
+msgid "Lazy Load Image Class Name Excludes"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:51
-msgid "Images containing these classnames will not be lazy loaded."
+msgid "Images containing these class names will not be lazy loaded."
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:52

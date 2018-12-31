@@ -282,25 +282,25 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.9 - Dec 31 2018 =
 * 🌱<strong>Media</strong>: Lazy Load Image Classname Excludes. (@thinkmedia)
-* 🌱: New EU/AS clouds for faster image optimization handling.
-* 🌱: New EU/AS clouds for faster CCSS generation.
-* 🌱: New EU/AS clouds for faster responsive placeholder generation.
-* 🌱<strong>Conf</strong>: Able to set a single option by links.
-* 🌱<strong>Cache</strong>: Force Cache URIs supports custom TTL now.
+* 🌱: New EU/AS cloud servers for faster image optimization handling.
+* 🌱: New EU/AS cloud servers for faster CCSS generation.
+* 🌱: New EU/AS cloud servers for faster responsive placeholder generation.
+* 🌱<strong>Conf</strong>: Ability to set single options via link.
+* 🌱<strong>Cache</strong>: Ability to add custom TTLs to Force Cache URIs.
 * <strong>Purge</strong>: Added post type to Purge tags.
 * <strong>Purge</strong>: Redefined CCSS page types.
-* <strong>Core</strong>: Used Exception for .htaccess r/w.
-* <strong>IAPI</strong>: <strong>New cloud servers added. Please update your firewall list by [IAPI IP List](https://wp.api.litespeedtech.com/ips).</strong>
-* <strong>Optm</strong>: Trimmed BOM when detecting if the page is HTML or not.
-* <strong>GUI</strong>: Added PageSpeed Score comparision into promotion banner.
+* <strong>Core</strong>: Using Exception for .htaccess R/W.
+* <strong>IAPI</strong>: <strong>New cloud servers added. Please whitelist the new [IAPI IP List](https://wp.api.litespeedtech.com/ips).</strong>
+* <strong>Optm</strong>: Trim BOM when detecting if the page is HTML.
+* <strong>GUI</strong>: Added PageSpeed Score comparison into promotion banner.
 * <strong>GUI</strong>: Refactored promotion banner logic.
-* <strong>GUI</strong>: Removed page optimized comment when meet ESI silence.
+* <strong>GUI</strong>: Removed page optimized comment when ESI Silence is requested.
 * <strong>GUI</strong>: WHM transient changed to option instead of transient when storing.
-* <strong>GUI</strong>: Appened more descriptions to CDN filetype setting.
-* <strong>IAPI</strong>: Messages will not duplicate anymore in certain cases.
+* <strong>GUI</strong>: Appending more descriptions to CDN filetype setting.
+* <strong>IAPI</strong>: Removed duplicate messages.
 * <strong>IAPI</strong>: Removed taken_failed/client_pull(duplicated) status.
-* <strong>Debug</strong>: Environment report won't generate hash for validation anymore.
-* <strong>3rd</strong>: Non cacheable pages won't punch ESI anymore for Divi compatibility.
+* <strong>Debug</strong>: Environment report no longer generates hash for validation.
+* <strong>3rd</strong>: Non-cacheable pages no longer punch ESI holes for Divi compatibility.
 * 🐞<strong>Network</strong>: Added slashes for mobile rules when activating plugin.
 * 🐞<strong>CCSS</strong>: Eliminated a PHP notice when appending CCSS.
 

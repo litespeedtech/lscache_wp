@@ -17,7 +17,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
-				<br /><?php echo __('Custom TTL is supported with a space separated in the line before the end.', 'litespeed-cache'); ?>
+				<br /><?php echo __( 'To define a custom TTL for a URI, add a space followed by the TTL value to the end of the URI.', 'litespeed-cache' ) ; ?>
+				<?php echo sprintf( __( 'For example, %1$s defines a TTL of %2$s seconds for %3$s.', 'litespeed-cache' ), '<code>/mypath/mypage 300</code>', 300, '<code>/mypath/mypage</code>' ) ; ?>
 			</div>
 		</td>
 	</tr>
