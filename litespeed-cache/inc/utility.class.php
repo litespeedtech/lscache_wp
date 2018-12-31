@@ -148,7 +148,9 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function ping( $domain )
 	{
-		$domain = parse_url( $domain, PHP_URL_HOST ) ;
+		if ( strpos( $domain, ':' ) ) {
+			$domain = parse_url( $domain, PHP_URL_HOST ) ;
+		}
 		$starttime	= microtime( true ) ;
 		$file		= fsockopen( $domain, 80, $errno, $errstr, 10 ) ;
 		$stoptime	= microtime( true ) ;
