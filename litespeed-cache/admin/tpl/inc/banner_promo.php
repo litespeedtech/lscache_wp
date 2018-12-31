@@ -122,7 +122,7 @@ else {
 								Before
 							</p>
 						</div>
-						<div style="margin-top:-5px;">
+						<div class="litespeed-promo-score" style="margin-top:-5px;">
 							<?php echo LiteSpeed_Cache_GUI::pie( $_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_before_optm' ] ) ) ; ?>
 						</div>
 					</div>
@@ -132,7 +132,7 @@ else {
 								After
 							</p>
 						</div>
-						<div style="margin-top:-5px;">
+						<div class="litespeed-promo-score" style="margin-top:-5px;">
 							<?php echo LiteSpeed_Cache_GUI::pie( $_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore( $_score[ 'score_after_optm' ] ) ) ; ?>
 						</div>
 					</div>

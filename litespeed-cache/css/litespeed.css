@@ -510,7 +510,6 @@ h3 .litespeed-learn-more {
 	margin: 15px 5px;
 	text-align: center;
 	background: #fff;
-	min-width: 155px;
 	cursor: pointer;
 	text-decoration: none;
 	display: inline-block;
@@ -1450,6 +1449,10 @@ circle.litespeed-pie_circle {
 g.litespeed-pie_info text{
 	alignment-baseline: central;
 	text-anchor: middle;
+	font-size: 11px;
+}
+
+.litespeed-promo-score g.litespeed-pie_info text{
 	font-size: 14px;
 	font-weight: 600;
 }
@@ -1537,17 +1540,12 @@ g.litespeed-pie_info .litespeed-pie-done {
 	position: absolute;
 	right:10px;
 	top:0;
-	background: #cc3d6a;
+	/*background: #cc3d6a;*/
 	color: #fff;
 	padding: 1px 8px;
 	font-size: 13px;
 	line-height: 1.5;
 	min-width: 14px;
-}
-
-#litespeed-cdn-mapping-add {
-	background: #36b0b0;
-	color: #fff;
 }
 
 .litespeed-cdn-mapping-inc {
@@ -2047,20 +2045,7 @@ input.litespeed-input-warning {
 	box-shadow: 0 0 0 1px rgba(54, 176, 176, 0.25);
 }
 
-.litespeed [class*="litespeed-btn-"], .litespeed-wrap [class*="litespeed-btn-"], [class*="litespeed-btn-"] {
-	padding: 5px 10px;
-	font-size: 14px;
-	font-weight: 400;
-	border-radius: 3px;
-	margin: 15px 5px;
-	text-align: center;
-	background: #fff;
-	min-width: 155px;
-	cursor: pointer;
-	text-decoration: none;
-	display: inline-block;
-	height: initial;
-}
+
 
 .litespeed-empty-space-xlarge {
 	margin-top: 8em;
