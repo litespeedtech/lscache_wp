@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Admin_Report
 
 		if ( ! is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
-			$msg = sprintf( __( 'Failed to push to LiteSpeed server: %s', 'litespeed-cache' ), $json ) ;
+			$msg = __( 'Failed to push to LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
