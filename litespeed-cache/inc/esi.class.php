@@ -230,6 +230,8 @@ class LiteSpeed_Cache_ESI
 		}
 
 		$params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id, $params) ;
+		$params = apply_filters('esi_comment_add_slash-' . $block_id, $params) ;
+
 		$control = apply_filters('litespeed_cache_sub_esi_control-' . $block_id, $control) ;
 		if ( !is_array($params) || !is_string($control) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "Sub esi hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
@@ -542,7 +544,18 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_comment_form_block($params)
 	{
-		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
+		ob_start();
+		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		if ( $params['addslashes'] ) {
+			LiteSpeed_Cache_Log::debug( '[ESI] load_comment_form_block addslashes ' ) ;
+			$output = addslashes( $output, '"' ) ;
+			$output = str_replace( '/', '\/', $output ) ;
+		}
+
+		echo $output;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
