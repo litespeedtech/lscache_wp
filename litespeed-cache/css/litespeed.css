@@ -1860,10 +1860,20 @@ input.litespeed-input[type="file"]{
 	margin-top: 0;
 }
 
+.rtl .litespeed-wrap .litespeed-float-submit {
+	left: 10px;
+	right: unset;
+}
+
 .litespeed-wrap .litespeed-float-resetbtn {
 	position: absolute;
 	right: 10px;
 	bottom: 20px;
+}
+
+.rtl .litespeed-wrap .litespeed-float-resetbtn {
+	left: 10px;
+	right: unset;
 }
 
 .litespeed input,
