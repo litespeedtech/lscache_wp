@@ -58,7 +58,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		endif ;
 	?>
 
-	<tr <?php echo $_hide_in_basic_mode ; ?>>
+	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Private Cached URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ) ; ?>
@@ -69,7 +69,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
-	<tr <?php echo $_hide_in_basic_mode ; ?>>
+	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Drop Query String', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS, 40 ) ; ?>

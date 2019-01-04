@@ -7,6 +7,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<?php echo __('Tuning Settings', 'litespeed-cache'); ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning', false, 'litespeed-learn-more' ) ; ?>
 </h3>
+
 <table><tbody>
 
 	<tr>

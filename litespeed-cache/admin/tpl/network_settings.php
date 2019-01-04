@@ -13,8 +13,6 @@ $menuArr = array(
 global $_options;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 
-$_hide_in_basic_mode = '' ;
-
 ?>
 
 <div class="wrap">

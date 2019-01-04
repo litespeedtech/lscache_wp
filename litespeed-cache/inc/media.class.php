@@ -558,8 +558,8 @@ eot;
 
 			/**
 			 * Excldues invalid image src from buddypress avatar crop
-			 * @see  https://wordpress.org/support/topic/lazy-load-breaking-buddypress-upload-avatar-feature/#post-11040512
-			 * @since  2.9.1
+			 * @see  https://wordpress.org/support/topic/lazy-load-breaking-buddypress-upload-avatar-feature
+			 * @since  3.0
 			 */
 			if ( strpos( $attrs[ 'src' ], '{' ) !== false ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] image src has {} ' . $attrs[ 'src' ] ) ;

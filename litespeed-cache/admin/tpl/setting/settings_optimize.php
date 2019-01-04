@@ -22,7 +22,6 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<p><?php echo __( 'Please test thoroughly when enabling any option in this list. After changing Minify/Combine settings, please do a Purge All action.', 'litespeed-cache' ) ; ?></p>
 </div>
 
-
 <table><tbody>
 	<tr>
 		<th><?php echo __( 'CSS Minify', 'litespeed-cache' ) ; ?></th>

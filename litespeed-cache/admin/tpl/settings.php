@@ -2,24 +2,22 @@
 if (!defined('WPINC')) die ;
 
 $menu_list = array(
-	'general' => __('General', 'litespeed-cache'),
-	'cache' => __('Cache', 'litespeed-cache'),
-	'purge' => __('Purge', 'litespeed-cache'),
-	'excludes' => __('Excludes', 'litespeed-cache'),
-	'optimize' => __('Optimize', 'litespeed-cache'),
-	'tuning' => __('Tuning', 'litespeed-cache'),
-	'media' => __('Media', 'litespeed-cache'),
-	'cdn' => __('CDN', 'litespeed-cache'),
-	'esi' => __('ESI', 'litespeed-cache'),
-	'advanced' => __('Advanced', 'litespeed-cache'),
-	'debug' => __('Debug', 'litespeed-cache'),
+	'general' => __( 'General', 'litespeed-cache' ),
+	'cache' => __( 'Cache', 'litespeed-cache' ),
+	'purge' => __( 'Purge', 'litespeed-cache' ),
+	'excludes' => __( 'Excludes', 'litespeed-cache' ),
+	'optimize' => __( 'Optimize', 'litespeed-cache' ),
+	'tuning' => __( 'Tuning', 'litespeed-cache' ),
+	'media' => __( 'Media', 'litespeed-cache' ),
+	'cdn' => __( 'CDN', 'litespeed-cache' ),
+	'esi' => __( 'ESI', 'litespeed-cache' ),
+	'advanced' => __( 'Advanced', 'litespeed-cache' ),
+	'debug' => __( 'Debug', 'litespeed-cache' ),
 ) ;
 
-if ($this->show_compatibility_tab()){
-	$menu_list['compatibilities'] = __('Compatibilities', 'litespeed-cache') ;
+if ( $this->show_compatibility_tab() ) {
+	$menu_list[ 'compatibilities' ] = __( 'Compatibilities', 'litespeed-cache' ) ;
 }
-
-$menu_list['crawler'] = __('Crawler', 'litespeed-cache') ;
 
 global $_options ;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
@@ -109,7 +107,6 @@ if ( ! $adv_mode ) {
 		'esi',
 		'advanced',
 		'debug',
-		'crawler',
 	) ;
 
 	$_hide_in_basic_mode = 'class="litespeed-hide"' ;
@@ -178,17 +175,9 @@ if ( ! $adv_mode ) {
 	<form method="post" action="options.php" id="litespeed_form_options" class="litespeed-relative">
 		<!--input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" /-->
 
-	<?php if ($this->get_disable_all()): ?>
-		<div class="litespeed-callout-danger">
-			<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
-			<p>
-				<?php echo __('The network admin selected use primary site configs for all subsites.', 'litespeed-cache') ; ?>
-				<?php echo __('The following options are selected, but are not editable in this settings page.', 'litespeed-cache') ; ?>
-			</p>
-		</div>
-	<?php endif ; ?>
-
 	<?php
+	require LSCWP_DIR . "admin/tpl/inc/check_if_network_disable_all.php" ;
+
 	settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
 
 	// include all tpl for faster UE

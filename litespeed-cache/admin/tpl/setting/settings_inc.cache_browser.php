@@ -2,7 +2,7 @@
 if ( ! defined( 'WPINC' ) ) die ;
 
 ?>
-	<tr <?php echo $_hide_in_basic_mode ; ?>>
+	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Browser Cache', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_BROWSER ) ; ?>
@@ -17,7 +17,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		</td>
 	</tr>
 
-	<tr <?php echo $_hide_in_basic_mode ; ?>>
+	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th class="litespeed-padding-left"><?php echo __( 'Browser Cache TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ; ?>

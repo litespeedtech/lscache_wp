@@ -9,7 +9,10 @@
  */
 class LiteSpeed_Cache_Const
 {
+	// This is redundant since v3.0
+	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf' ;
+
 	const VARY_GROUP = 'litespeed-cache-vary-group' ;
 	const EXCLUDE_OPTIMIZATION_ROLES = 'litespeed-cache-exclude-optimization-roles' ;
 	const EXCLUDE_CACHE_ROLES = 'litespeed-cache-exclude-cache-roles' ;
@@ -602,6 +605,11 @@ class LiteSpeed_Cache_Const
 			return $default_options ;
 		}
 		return array_merge($default_options, $tp_options) ;
+	}
+
+	public function conf_name( $cfg )
+	{
+		return 'litespeed.' . $cfg ;
 	}
 
 	/**

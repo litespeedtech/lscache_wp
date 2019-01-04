@@ -16,7 +16,7 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Admin
 {
 	private static $_instance ;
-	private $config ;
+	private $__cfg ;// cfg instance
 	private $display ;
 
 	/**
@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Admin
 		// Also register menu
 		$this->display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 
-		$this->config = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
 		// initialize admin actions
 		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ) ;
+			$purge_all_events = $this->__cfg->get_item( LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ) ;
 
 			// purge all on upgrade
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ) ) {
@@ -72,10 +72,16 @@ class LiteSpeed_Cache_Admin
 	public function admin_init()
 	{
 		// check for upgrade
-		// NOTE: upgrade checking needs to be before `register_setting` to avoid update_options() be checked by our filter
-		$this->config->plugin_upgrade() ;
+		// NOTE: upgrade checking needs to be before `register_setting` to avoid update_options() being checked by our filter
+		/**
+		 * Won't do here anymore as auto upgrade is called in frontend.
+		 * Will do when initializing conf in the very beginning
+		 * @since  3.0
+		 */
+		// $this->__cfg->plugin_upgrade() ;
+
 		if ( is_network_admin() && current_user_can( 'manage_network_options' ) ) {
-			$this->config->plugin_site_upgrade() ;
+			$this->__cfg->plugin_site_upgrade() ;
 		}
 
 		load_plugin_textdomain(LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/languages/') ;
@@ -97,7 +103,10 @@ class LiteSpeed_Cache_Admin
 		// NOTE: cli will call `validate_plugin_settings` manually. Cron activation doesn't need to validate
 		global $pagenow ;
 		if ( ! is_network_admin() && $pagenow === 'options.php' ) {
-			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings')) ;
+			$__admin_setting = LiteSpeed_Cache_Admin_Settings::get_instance() ;
+			foreach ( $this->__cfg->get_default_options() as $k => $v ) {
+				register_setting( LiteSpeed_Cache_Config::OPTION_NAME, $this->__cfg->cfg_name( $k ), array( $__admin_setting, 'validate_plugin_settings' ) ) ;
+			}
 		}
 
 		// Add privacy policy
@@ -149,7 +158,7 @@ class LiteSpeed_Cache_Admin
 			}
 			if ( get_current_blog_id() !== BLOG_ID_CURRENT_SITE ) {
 				$use_primary = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
-				$site_options = $this->config->get_site_options() ;
+				$site_options = $this->__cfg->get_site_options() ;
 				if ( isset($site_options[$use_primary]) && $site_options[$use_primary] ) {
 					$this->display->set_disable_all() ;
 				}

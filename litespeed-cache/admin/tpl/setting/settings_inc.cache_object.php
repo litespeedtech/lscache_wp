@@ -24,7 +24,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACH
 ?>
 
 
-	<tr <?php echo $_hide_in_basic_mode ; ?>>
+	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Object Cache', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $this->build_switch( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ) ; ?>
