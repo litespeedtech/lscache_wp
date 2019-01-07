@@ -22,6 +22,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	const TYPE_SET = 'set' ;
 
 	protected $_options = array() ;
+	private $_site_options = array() ;
 	protected $_default_options = array() ;
 	protected $vary_groups ;
 	protected $exclude_optimization_roles ;
@@ -39,25 +40,29 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_default_options = $this->get_default_options() ;
 
 		// Check if conf exists or not. If not, create them in DB (won't change version if is converting v2.9- data)
-		$this->_conf_validate() ;
+		// Conf may be stale, upgrade later
+		$this->_conf_db_init() ;
+
+		// Load options first, network sites can override this later
+		$this->_load_options() ;
+
+		/**
+		 * Check if there is any conf upgrade or not
+		 * @since  3.0
+		 */xx
+		$this->_conf_upgrade() ;
 
 		if ( is_multisite() ) {
 			$options = $this->_construct_multisite_options() ;
 		}
 		else {
-			$options = $this->_load_options() ;
+
 
 			// Check advanced_cache set
-			$this->_define_adv_cache( $options ) ;
+			$this->_define_adv_cache( $this->_options ) ;
 		}
 
-		$this->_options = $options ;
-xx
-		/**
-		 * Check if there is any conf upgrade
-		 * @since  3.0
-		 */
-		$this->_conf_upgrade() ;
+
 
 		$this->purge_options = explode('.', $options[ self::OPID_PURGE_BY_POST ] ) ;
 
@@ -90,24 +95,22 @@ xx
 	/**
 	 * Load all latest options from DB
 	 *
+	 * Already load the lacking options with default values, won't insert them into DB. Inserting will be done on setting saving.
+	 *
 	 * @since  3.0
 	 * @access private
 	 */
 	private function _load_options( $blog_id = null )
 	{
-		$options = array() ;
-
 		// No need to consider items yet as they won't be gotten directly from $this->_options but used in $this->get_item()
 		foreach ( $this->_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
-				$options[ $k ] = get_blog_option( $blog_id, $this->conf_name( $k ), $v ) ;
+				$this->_options[ $k ] = get_blog_option( $blog_id, $this->conf_name( $k ), $v ) ;
 			}
 			else {
-				$options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
+				$this->_options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
 			}
 		}
-
-		return $options ;
 	}
 
 	/**
@@ -181,9 +184,9 @@ xx
 	 */
 	private function _construct_multisite_options()
 	{
-		$site_options = $this->get_site_options() ;
+		$this->get_site_options() ;
 
-		$this->_define_adv_cache( $site_options ) ;
+		$this->_define_adv_cache( $this->_site_options ) ;
 
 		$options = $this->_load_options() ;
 
@@ -205,7 +208,7 @@ xx
 		}
 
 		// If network set to use primary setting
-		if ( ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+		if ( ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
 
 			// save temparary cron setting
 			$CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
@@ -219,20 +222,20 @@ xx
 		}
 
 		// If use network setting
-		if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $site_options[ self::NETWORK_OPID_ENABLED ] ) {
+		if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
 			$this->define_cache_on() ;
 		}
 		// Set network eanble to on
-		if ( $site_options[ self::NETWORK_OPID_ENABLED ] ) {
+		if ( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
 			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
 		}
 
 		// These two are not for single blog options
-		unset( $site_options[ self::NETWORK_OPID_ENABLED ] ) ;
-		unset( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+		unset( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) ;
+		unset( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
 
 		// Append site options to single blog options
-		$options = array_merge( $options, $site_options ) ;
+		$options = array_merge( $options, $this->_site_options ) ;
 
 		return $options ;
 	}
@@ -469,16 +472,25 @@ xx
 		if ( ! is_multisite() ) {
 			return null ;
 		}
+
+		if ( $this->_site_options ) {
+			return $this->_site_options ;
+		}
+
+		// Get site options
 		$site_options = get_site_option( self::OPTION_NAME ) ;
 
 		if ( isset( $site_options ) && is_array( $site_options ) ) {
-			return $site_options ;
+			$this->_site_options = $site_options ;
+			return $this->_site_options ;
 		}
 
 		$default_site_options = $this->get_default_site_options() ;
 		add_site_option( self::OPTION_NAME, $default_site_options ) ;
 
-		return $default_site_options ;
+		$this->_site_options = $default_site_options ;
+
+		return $this->_site_options ;
 	}
 
 
@@ -602,17 +614,19 @@ xx
 	 */
 	private function _conf_upgrade()
 	{
-		// Skip count check if Use Primary Site Configurations is on
-		if ( $this->_options[ self::OPID_VERSION ] == $this->_default_options[ self::OPID_VERSION ] && ! is_main_site() && ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
-			return ;
+		if ( $this->_options[ self::OPID_VERSION ] == $this->_default_options[ self::OPID_VERSION ] ) ) {
+			// Skip count check if `Use Primary Site Configurations` is on
+			if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+				return ;
+			}
 		}
-
-		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
 
 		// Update version to v3.0
 		update_option( $this->conf_name( self::OPID_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 		LiteSpeed_Cache_Log::debug( '[Conf] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+
+		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		LiteSpeed_Cache_Purge::purge_all() ;
 
 
 		$previous_options = self::option_diff( $this->_default_options, $previous_options ) ;
@@ -623,12 +637,34 @@ xx
 	}
 
 	/**
-	 * Move all options in litespeed-cache-conf to separate records
+	 * Upgrade network options when the plugin is upgraded.
+	 *
+	 * @since 1.0.11
+	 * @access public
+	 */
+	public function plugin_site_upgrade()
+	{
+		$default_options = $this->get_default_site_options() ;
+		$options = $this->get_site_options() ;
+
+		if ( $options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] && count( $default_options ) == count( $options ) ) {
+			return ;
+		}
+
+		$options = self::option_diff( $default_options, $options ) ;
+
+		$res = update_site_option( self::OPTION_NAME, $options ) ;
+
+		LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option changed = $res\n" ) ;
+	}
+
+	/**
+	 * Move all options in litespeed-cache-conf from v2.9- to separate records
 	 *
 	 * @since  3.0
 	 * @access private
 	 */
-	private function _conf_validate()
+	private function _conf_db_init()
 	{
 		$v = get_option( $this->conf_name( self::OPID_VERSION ) ) ;
 
@@ -712,28 +748,6 @@ xx
 		// Update img_optm table data for upgrading
 		// NOTE: no new change since v3.0 yet
 		LiteSpeed_Cache_Data::get_instance() ;
-	}
-
-	/**
-	 * Upgrade network options when the plugin is upgraded.
-	 *
-	 * @since 1.0.11
-	 * @access public
-	 */
-	public function plugin_site_upgrade()
-	{
-		$default_options = $this->get_default_site_options() ;
-		$options = $this->get_site_options() ;
-
-		if ( $options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] && count( $default_options ) == count( $options ) ) {
-			return ;
-		}
-
-		$options = self::option_diff( $default_options, $options ) ;
-
-		$res = update_site_option( self::OPTION_NAME, $options ) ;
-
-		LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option changed = $res\n" ) ;
 	}
 
 	/**

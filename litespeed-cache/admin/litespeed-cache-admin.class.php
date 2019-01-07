@@ -16,7 +16,7 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Admin
 {
 	private static $_instance ;
-	private $__cfg ;// cfg instance
+	private $__conf ;// cfg instance
 	private $display ;
 
 	/**
@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Admin
 		// Also register menu
 		$this->display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__conf = LiteSpeed_Cache_Config::get_instance() ;
 
 		// initialize admin actions
 		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = $this->__cfg->get_item( LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ) ;
+			$purge_all_events = $this->__conf->get_item( LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ) ;
 
 			// purge all on upgrade
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ) ) {
@@ -78,10 +78,10 @@ class LiteSpeed_Cache_Admin
 		 * Will do when initializing conf in the very beginning
 		 * @since  3.0
 		 */
-		// $this->__cfg->plugin_upgrade() ;
+		// $this->__conf->plugin_upgrade() ;
 
 		if ( is_network_admin() && current_user_can( 'manage_network_options' ) ) {
-			$this->__cfg->plugin_site_upgrade() ;
+			$this->__conf->plugin_site_upgrade() ;xx
 		}
 
 		load_plugin_textdomain(LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/languages/') ;
@@ -104,8 +104,8 @@ class LiteSpeed_Cache_Admin
 		global $pagenow ;
 		if ( ! is_network_admin() && $pagenow === 'options.php' ) {
 			$__admin_setting = LiteSpeed_Cache_Admin_Settings::get_instance() ;
-			foreach ( $this->__cfg->get_default_options() as $k => $v ) {
-				register_setting( LiteSpeed_Cache_Config::OPTION_NAME, $this->__cfg->cfg_name( $k ), array( $__admin_setting, 'validate_plugin_settings' ) ) ;
+			foreach ( $this->__conf->get_default_options() as $k => $v ) {
+				register_setting( LiteSpeed_Cache_Config::OPTION_NAME, $this->__conf->cfg_name( $k ), array( $__admin_setting, 'validate_plugin_settings' ) ) ;
 			}
 		}
 
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Admin
 			}
 			if ( get_current_blog_id() !== BLOG_ID_CURRENT_SITE ) {
 				$use_primary = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
-				$site_options = $this->__cfg->get_site_options() ;
+				$site_options = $this->__conf->get_site_options() ;xx
 				if ( isset($site_options[$use_primary]) && $site_options[$use_primary] ) {
 					$this->display->set_disable_all() ;
 				}
