@@ -585,7 +585,7 @@ class LiteSpeed_Cache_Utility
 			$url[ 'query' ] = http_build_query( $built_arr ) ;
 			self::compatibility() ;
 			$url = http_build_url( $url ) ;
-			$url = htmlspecialchars( $url ) ;
+			$url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' ) ;
 		}
 
 		return $url ;
