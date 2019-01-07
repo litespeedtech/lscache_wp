@@ -30,7 +30,7 @@ $thirdparty_list = array(
 	'yith-wishlist',
 	'avada',
 	'wp-postratings',
-	'lscwp-3rd-divi-theme-builder',
+	'divi-theme-builder',
 ) ;
 
 foreach ($thirdparty_list as $val) {
