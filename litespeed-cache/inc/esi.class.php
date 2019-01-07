@@ -542,7 +542,18 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_comment_form_block($params)
 	{
+		ob_start() ;
 		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
+		$output = ob_get_contents() ;
+		ob_end_clean() ;
+
+		if ( $params[ 'is_json' ] ) {
+			$output = json_encode( $output ) ;
+			$output = ltrim( $output, '"' ) ;
+			$output = rtrim( $output, '"' ) ;
+		}
+
+		echo $output ;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
