@@ -609,7 +609,7 @@ class LiteSpeed_Cache_Const
 
 	public function conf_name( $cfg )
 	{
-		return 'litespeed.' . $cfg ;
+		return 'litespeed.conf.' . $cfg ;
 	}
 
 	/**
