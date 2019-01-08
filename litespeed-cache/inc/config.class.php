@@ -21,9 +21,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 	const TYPE_SET = 'set' ;
 
-	protected $_options = array() ;
+	private $_options = array() ;
 	private $_site_options = array() ;
-	protected $_default_options = array() ;
+	private $_default_options = array() ;
+
 	protected $vary_groups ;
 	protected $exclude_optimization_roles ;
 	protected $exclude_cache_roles ;
@@ -47,24 +48,23 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_load_options() ;
 
 		/**
-		 * Check if there is any conf upgrade or not
+		 * Check if needs to upgrade conf version or not
 		 * @since  3.0
-		 */xx
+		 */
 		$this->_conf_upgrade() ;
 
+		// Override conf if is network subsites and chose `Use Primary Config`
 		if ( is_multisite() ) {
-			$options = $this->_construct_multisite_options() ;
+			$this->_construct_multisite_options() ;
 		}
 		else {
-
-
 			// Check advanced_cache set
 			$this->_define_adv_cache( $this->_options ) ;
 		}
+xx
 
 
-
-		$this->purge_options = explode('.', $options[ self::OPID_PURGE_BY_POST ] ) ;
+		$this->purge_options = explode('.', $this->_options[ self::OPID_PURGE_BY_POST ] ) ;
 
 		// Init global const cache on set
 		if ( $this->_options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON
@@ -111,68 +111,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				$this->_options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
 			}
 		}
-	}
-
-	/**
-	 * Give an API to change all options val
-	 * All hooks need to be added before `after_setup_theme`
-	 *
-	 * @since  2.6
-	 * @access public
-	 */
-	public function hook_options()
-	{
-		foreach ( $this->_options as $k => $v ) {
-			$new_v = apply_filters( "litespeed_option_$k", $v ) ;
-
-			if ( $new_v !== $v ) {
-				LiteSpeed_Cache_Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
-				$this->_options[ $k ] = $new_v ;
-			}
-		}
-	}
-
-	/**
-	 * Force an option to a certain value
-	 *
-	 * @since  2.6
-	 * @access public
-	 */
-	public function force_option( $k, $v )
-	{
-		if ( array_key_exists( $k, $this->_options ) ) {
-			LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
-			$this->_options[ $k ] = $v ;
-		}
-	}
-
-	/**
-	 * Define `LSCACHE_ADV_CACHE` based on options setting
-	 *
-	 * NOTE: this must be before `LITESPEED_ON` defination
-	 *
-	 * @since 2.1
-	 * @access private
-	 */
-	private function _define_adv_cache( $options )
-	{
-		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
-			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
-		}
-	}
-
-	/**
-	 * Define `LITESPEED_ON`
-	 *
-	 * @since 2.1
-	 * @access public
-	 */
-	public function define_cache_on()
-	{
-		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
-
-		// Use this for cache enabled setting check
-		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
 	}
 
 	/**
@@ -238,6 +176,68 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$options = array_merge( $options, $this->_site_options ) ;
 
 		return $options ;
+	}
+
+	/**
+	 * Give an API to change all options val
+	 * All hooks need to be added before `after_setup_theme`
+	 *
+	 * @since  2.6
+	 * @access public
+	 */
+	public function hook_options()
+	{
+		foreach ( $this->_options as $k => $v ) {
+			$new_v = apply_filters( "litespeed_option_$k", $v ) ;
+
+			if ( $new_v !== $v ) {
+				LiteSpeed_Cache_Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
+				$this->_options[ $k ] = $new_v ;
+			}
+		}
+	}
+
+	/**
+	 * Force an option to a certain value
+	 *
+	 * @since  2.6
+	 * @access public
+	 */
+	public function force_option( $k, $v )
+	{
+		if ( array_key_exists( $k, $this->_options ) ) {
+			LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
+			$this->_options[ $k ] = $v ;
+		}
+	}
+
+	/**
+	 * Define `LSCACHE_ADV_CACHE` based on options setting
+	 *
+	 * NOTE: this must be before `LITESPEED_ON` defination
+	 *
+	 * @since 2.1
+	 * @access private
+	 */
+	private function _define_adv_cache( $options )
+	{
+		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
+			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
+		}
+	}
+
+	/**
+	 * Define `LITESPEED_ON`
+	 *
+	 * @since 2.1
+	 * @access public
+	 */
+	public function define_cache_on()
+	{
+		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+
+		// Use this for cache enabled setting check
+		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
 	}
 
 	/**
@@ -615,11 +615,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	private function _conf_upgrade()
 	{
 		if ( $this->_options[ self::OPID_VERSION ] == $this->_default_options[ self::OPID_VERSION ] ) ) {
-			// Skip count check if `Use Primary Site Configurations` is on
-			if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
-				return ;
-			}
+			return ;
 		}
+
+		// Skip count check if `Use Primary Site Configurations` is on
+		// Depricated since v3.0 as network primary site didn't override the subsites conf yet
+		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+		// 	return ;
+		// }
 
 		// Update version to v3.0
 		update_option( $this->conf_name( self::OPID_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
@@ -627,13 +630,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
-
-
-		$previous_options = self::option_diff( $this->_default_options, $previous_options ) ;
-
-		$this->update_options() ;
-
-		LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option changed" ) ;
 	}
 
 	/**
