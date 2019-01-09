@@ -196,6 +196,9 @@ class LiteSpeed_Cache_Optimize
 
 			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
 
+			// Add filter
+			$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $match[ 1 ] ) ;
+
 			// Generate static file
 			Litespeed_File::save( $static_file, $content, true ) ;
 			LiteSpeed_Cache_Log::debug2( '[Optm] Saved cache to file [path] ' . $static_file ) ;
