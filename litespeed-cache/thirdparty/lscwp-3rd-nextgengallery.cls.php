@@ -72,8 +72,8 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function update_image()
 	{
-		if ( isset( $_GET['gallery_id'] ) ) {
-			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_GET['gallery_id'] ) ;
+		if ( isset( $_REQUEST[ 'gallery_id' ] ) ) {
+			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ] ) ;
 			return ;
 		}
 
@@ -168,6 +168,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function update_gallery($gid)
 	{
+		// New version input will be an object with gid value
+		if ( is_object( $gid ) && ! empty( $gid->gid ) ) {
+			$gid = $gid->gid ;
+		}
+
 		LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $gid) ;
 	}
 
