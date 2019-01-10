@@ -77,6 +77,12 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 			return ;
 		}
 
+		// Handling Add Gallery / Images > IMPORT FROM MEDIA LIBRARY
+		if ( isset( $_POST['gallery_id'] ) ) {
+			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_POST['gallery_id'] ) ;
+			return ;
+		}
+
 		if ( isset( $_POST[ 'task_list' ] ) ) {
 			$task_list = str_replace( '\\', '', $_POST[ 'task_list' ] ) ;
 			$task_list = json_decode( $task_list, true ) ;
@@ -168,6 +174,12 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function update_gallery($gid)
 	{
+		// New version input will be an object with gid value
+		if ( is_object( $gid ) && ! empty( $gid->gid ) ) {
+			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $gid->gid ) ;
+			return ;
+		}
+		
 		LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $gid) ;
 	}
 
