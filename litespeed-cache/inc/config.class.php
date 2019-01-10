@@ -54,13 +54,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_conf_upgrade() ;
 
 		// Override conf if is network subsites and chose `Use Primary Config`
-		if ( is_multisite() ) {
-			$this->_construct_multisite_options() ;
-		}
-		else {
-			// Check advanced_cache set
-			$this->_define_adv_cache( $this->_options ) ;
-		}
+		$this->_try_load_site_options() ;
+
+		// Check advanced_cache set
+		$this->_define_adv_cache() ;
 xx
 
 
@@ -120,47 +117,32 @@ xx
 	 * @access private
 	 * @return array The updated options.
 	 */
-	private function _construct_multisite_options()
+	private function _try_load_site_options()
 	{
+		if ( ! $this->_if_need_site_options() ) {
+			return ;
+		}
+
 		$this->get_site_options() ;
 
-		$this->_define_adv_cache( $this->_site_options ) ;
-
-		$options = $this->_load_options() ;
-
-		/**
-		 * In case this is called outside the admin page
-		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
-		 * @since  2.0
-		 */
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
-		}
-
-		// If is not activated on network, it will not have site options
-		if ( ! is_plugin_active_for_network( LiteSpeed_Cache::PLUGIN_FILE ) ) {
-			if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
-				$this->define_cache_on() ;
-			}
-			return $options ;
-		}
+		// $this->_define_adv_cache( $this->_site_options ) ;
 
 		// If network set to use primary setting
 		if ( ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
 
-			// save temparary cron setting
-			$CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
+			// save temparary cron setting as cron settings are per site
+			$CRWL_CRON_ACTIVE = $this->_options[ self::CRWL_CRON_ACTIVE ] ;
 
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
-			$options = $this->_load_options( BLOG_ID_CURRENT_SITE ) ;
+			$this->_options = $this->_load_options( BLOG_ID_CURRENT_SITE ) ;
 
 			// crawler cron activation is separated
-			$options[ self::CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
+			$this->_options[ self::CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
 		}
 
 		// If use network setting
-		if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
+		if ( $this->_options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
 			$this->define_cache_on() ;
 		}
 		// Set network eanble to on
@@ -173,9 +155,42 @@ xx
 		unset( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
 
 		// Append site options to single blog options
-		$options = array_merge( $options, $this->_site_options ) ;
+		$this->_options = array_merge( $options, $this->_site_options ) ;
 
 		return $options ;
+	}
+
+	/**
+	 * Check if needs to load site_options for network sites
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _if_need_site_options()
+	{
+		if ( ! is_multisite() ) {
+			return false ;
+		}
+
+		// Check if needs to use site_options or not
+
+		/**
+		 * In case this is called outside the admin page
+		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
+		 * @since  2.0
+		 */
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+		}
+		// If is not activated on network, it will not have site options
+		if ( ! is_plugin_active_for_network( LiteSpeed_Cache::PLUGIN_FILE ) ) {
+			if ( $this->_options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
+				$this->define_cache_on() ;xx
+			}
+			return false ;
+		}
+
+		return true ;
 	}
 
 	/**
@@ -219,9 +234,9 @@ xx
 	 * @since 2.1
 	 * @access private
 	 */
-	private function _define_adv_cache( $options )
+	private function _define_adv_cache()
 	{
-		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
+		if ( isset( $this->_options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $this->_options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
 			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 	}
@@ -619,7 +634,7 @@ xx
 		}
 
 		// Skip count check if `Use Primary Site Configurations` is on
-		// Depricated since v3.0 as network primary site didn't override the subsites conf yet
+		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
 		// 	return ;
 		// }
