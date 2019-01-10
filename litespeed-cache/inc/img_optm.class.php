@@ -902,7 +902,7 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		$notified_data = unserialize( base64_decode( $_POST[ 'data' ] ) ) ;
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] notify exit: no notified data' ) ;
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
 			exit( json_encode( 'no notified data' ) ) ;
 		}
 
