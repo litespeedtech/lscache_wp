@@ -70,8 +70,10 @@ class LiteSpeed_Cache_Const
 	const LOG_LEVEL_INFO = 3 ;
 	const LOG_LEVEL_DEBUG = 4 ;
 	const OPID_VERSION = 'version' ;
-	const OPID_ENABLED_RADIO = 'radio_select' ;
+	const _CACHE = '_cache' ;// cache on setting
 
+	const OPID_ENABLED_RADIO = 'radio_select' ;// Stale setting in v2.9-
+	const OPT_CACHE = 'cache' ;
 	const OPT_AUTO_UPGRADE = 'auto_upgrade' ;
 	const OPID_CACHE_PRIV = 'cache_priv' ;
 	const OPID_CACHE_COMMENTER = 'cache_commenter' ;
@@ -433,7 +435,7 @@ class LiteSpeed_Cache_Const
 
 		$default_options = array(
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::OPID_ENABLED_RADIO => $default_radio,
+			self::OPT_CACHE => $default_radio,
 			self::OPT_AUTO_UPGRADE => false,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_PRIV => true,

@@ -155,9 +155,9 @@ class LiteSpeed_Cache_Admin_Report
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = get_blog_option($blog_id, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
-					if ( isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO]) ) {
-						$options['blog ' . $blog_id . ' radio select'] = $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO] ;
+					$opts = LiteSpeed_Cache_Config::get_instance()->load_options( $blog_id, false ) ;
+					if ( isset($opts[ LiteSpeed_Cache_Config::OPT_CACHE ]) ) {
+						$options['blog ' . $blog_id . ' radio select'] = $opts[ LiteSpeed_Cache_Config::OPT_CACHE ] ;
 					}
 				}
 			}

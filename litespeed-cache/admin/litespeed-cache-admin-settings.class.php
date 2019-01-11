@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 
 		/* 1) wp-config.php; */
-		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO ;
+		$id = LiteSpeed_Cache_Config::OPT_CACHE ;
 		if ( $this->_options[ $id ] ) {// todo: If not enabled, may need to remove cache var?
 			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
 			if ( $ret !== true ) {
@@ -385,7 +385,7 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_general()
 	{
 		// Cache enabled setting
-		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO ;
+		$id = LiteSpeed_Cache_Config::OPT_CACHE ;
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
 
 		$enabled = $this->_options[ $id ] ;

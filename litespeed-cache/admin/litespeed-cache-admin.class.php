@@ -118,8 +118,9 @@ class LiteSpeed_Cache_Admin
 		do_action( 'litspeed_after_admin_init' ) ;
 
 		// If setting is set to on, try to activate cache func
-		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {xx
 			// check if WP_CACHE is defined and true in the wp-config.php file.
+			// This is not required by our cache func, so leave it to trigger by admin
 			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
 				$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 				if ( $add_var !== true ) {

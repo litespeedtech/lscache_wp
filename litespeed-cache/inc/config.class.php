@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_conf_db_init() ;
 
 		// Load options first, network sites can override this later
-		$this->_load_options() ;
+		$this->load_options() ;
 
 		/**
 		 * Check if needs to upgrade conf version or not
@@ -56,19 +56,21 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
 
-		// Check advanced_cache set
+		// Check advanced_cache set (compabible for both network and single site)
 		$this->_define_adv_cache() ;
-xx
+
+		// Init global const cache on set
+		if ( $this->_options[ self::OPT_CACHE ] === self::VAL_ON ) {
+			$this->_options[ self::_CACHE ] = true ;
+		}
+
+		// Set cache on
+		if ( $this->_options[ self::_CACHE ] ) {
+			$this->define_cache_on() ;xx
+		}
 
 
 		$this->purge_options = explode('.', $this->_options[ self::OPID_PURGE_BY_POST ] ) ;
-
-		// Init global const cache on set
-		if ( $this->_options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON
-		//	 || ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) && $this->_options[ LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ] ) todo: need to check when primary is off and network is on, if can manage
-		) {
-			$this->define_cache_on() ;
-		}
 
 		// Vary group settings
 		$this->vary_groups = $this->get_item( self::VARY_GROUP ) ;
@@ -95,19 +97,26 @@ xx
 	 * Already load the lacking options with default values, won't insert them into DB. Inserting will be done on setting saving.
 	 *
 	 * @since  3.0
-	 * @access private
+	 * @access public
 	 */
-	private function _load_options( $blog_id = null )
+	public function load_options( $blog_id = null, $replace_into_options = true )
 	{
+		$options = array() ;
 		// No need to consider items yet as they won't be gotten directly from $this->_options but used in $this->get_item()
 		foreach ( $this->_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
-				$this->_options[ $k ] = get_blog_option( $blog_id, $this->conf_name( $k ), $v ) ;
+				$options[ $k ] = get_blog_option( $blog_id, $this->conf_name( $k ), $v ) ;
 			}
 			else {
-				$this->_options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
+				$options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
 			}
 		}
+
+		if ( $replace_into_options ) {
+			$this->_options = $options ;
+		}
+
+		return $options ;
 	}
 
 	/**
@@ -135,15 +144,15 @@ xx
 
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
-			$this->_options = $this->_load_options( BLOG_ID_CURRENT_SITE ) ;
+			$this->_options = $this->load_options( BLOG_ID_CURRENT_SITE ) ;
 
 			// crawler cron activation is separated
 			$this->_options[ self::CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
 		}
 
 		// If use network setting
-		if ( $this->_options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
-			$this->define_cache_on() ;
+		if ( $this->_options[ self::OPT_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
+			$this->_options[ self::_CACHE ] = true ;
 		}
 		// Set network eanble to on
 		if ( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
@@ -151,13 +160,15 @@ xx
 		}
 
 		// These two are not for single blog options
-		unset( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) ;
-		unset( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+		// unset( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) ;
+		// unset( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
 
 		// Append site options to single blog options
-		$this->_options = array_merge( $options, $this->_site_options ) ;
-
-		return $options ;
+		foreach ( $this->_default_options as $k => $v ) {
+			if ( isset( $this->_site_options[ $k ] ) ) {
+				$this->_options[ $k ] = $this->_site_options[ $k ] ;
+			}
+		}
 	}
 
 	/**
@@ -184,8 +195,8 @@ xx
 		}
 		// If is not activated on network, it will not have site options
 		if ( ! is_plugin_active_for_network( LiteSpeed_Cache::PLUGIN_FILE ) ) {
-			if ( $this->_options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
-				$this->define_cache_on() ;xx
+			if ( $this->_options[ self::OPT_CACHE ] === self::VAL_ON2 ) { // Default to cache on
+				$this->_options[ self::_CACHE ] = true ;
 			}
 			return false ;
 		}
@@ -280,9 +291,6 @@ xx
 		if ( isset( $this->_options[ $id ] ) ) {
 			return $this->_options[ $id ] ;
 		}
-
-		// read the option from db
-
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
 
@@ -693,6 +701,11 @@ xx
 
 		foreach ( $this->_default_options as $k => $v ) {
 			$v2 = isset( $previous_options[ $k ] ) ? $previous_options[ $k ] : $v ;
+
+			// Convert previous OPID_ENABLED_RADIO to new OPT_CACHE
+			if ( $k == self::OPT_CACHE ) {
+				$v2 = isset( $previous_options[ self::OPID_ENABLED_RADIO ] ) ? $previous_options[ self::OPID_ENABLED_RADIO ] : $v ;
+			}
 
 			// If the option existed, bypass updating
 			add_option( $this->conf_name( $k ), $v2 ) ;
