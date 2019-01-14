@@ -71,7 +71,7 @@ if ( $check_only ) {
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
 						$cfg = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE . ']' => 1 ) ;
-						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CFG, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
+						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
 					?>
 					<a href="<?php echo $url ; ?>" class="litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>

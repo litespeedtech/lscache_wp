@@ -66,9 +66,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Set cache on
 		if ( $this->_options[ self::_CACHE ] ) {
-			$this->define_cache_on() ;xx
+			$this->define_cache_on() ;
 		}
-
 
 		$this->purge_options = explode('.', $this->_options[ self::OPID_PURGE_BY_POST ] ) ;
 
@@ -80,11 +79,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Exclude cache role setting
 		$this->exclude_cache_roles = $this->get_item( self::EXCLUDE_CACHE_ROLES ) ;
-
-		// Set security key if not initialized yet
-		if ( isset( $this->_options[ self::HASH ] ) && empty( $this->_options[ self::HASH ] ) ) {
-			$this->update_options( array( self::HASH => Litespeed_String::rrand( 32 ) ) ) ;
-		}
 
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
@@ -110,6 +104,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			else {
 				$options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
 			}
+		}
+
+		// Set security key if not initialized yet
+		$k = self::HASH ;
+		if ( isset( $options[ $k ] ) && empty( $options[ $k ] ) ) {
+			$options[ $k ] = Litespeed_String::rrand( 32 ) ;
+			update_option( $this->conf_name( $k ), $options[ $k ] ) ;
 		}
 
 		if ( $replace_into_options ) {
@@ -307,7 +308,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param array $new_cfg The new settings to update, which will be update $this->_options too.
 	 * @return array The result of update.
 	 */
-	public function update_options( $new_cfg = array() )
+	public function update_options( $new_cfg = array() )xx
 	{
 		if ( ! empty( $new_cfg ) ) {
 			$this->_options = array_merge( $this->_options, $new_cfg ) ;
@@ -316,51 +317,18 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Save frontend url to private cached uri/no cache uri
+	 * Save textarea items
 	 *
-	 * @since 1.3
+	 * @since 3.0
 	 * @access public
 	 */
-	public static function frontend_save()
+	public function save_item( $id, $val, $sanitize_filter = false )
 	{
-		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
-			exit( 'no referer' ) ;
+		if ( $val ) {
+			$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $sanitize_filter ) ;
 		}
 
-		if ( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
-			exit( 'no type' ) ;
-		}
-
-		switch ( $type ) {
-			case 'forced_cache' :
-				$id = self::ITEM_FORCE_CACHE_URI ;
-				break ;
-
-			case 'private' :
-				$id = self::ITEM_CACHE_URI_PRIV ;
-				break ;
-
-			case 'nonoptimize' :
-				$id = self::ITEM_OPTM_EXCLUDES ;
-				break ;
-
-			case 'nocache' :
-			default:
-				$id = self::ITEM_EXCLUDES_URI ;
-				break ;
-		}
-
-		$instance = self::get_instance() ;
-		$list = $instance->get_item( $id ) ;
-
-		$list[] = $_SERVER[ 'HTTP_REFERER' ] . '$' ;
-		$list = LiteSpeed_Cache_Utility::sanitize_lines( $list, 'relative' ) ;
-
-		update_option( $id, $list ) ;
-
-		// Purge this page & redirect
-		LiteSpeed_Cache_Purge::purge_front() ;
-		exit() ;
+		update_option( $id, $val ) ;
 	}
 
 	/**
@@ -717,8 +685,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $previous_options ) {
 			$this->_conf_upgrade_stale( $previous_options ) ;
 
+			update_option( '_' . self::OPTION_NAME, $previous_options ) ;
+
 			delete_option( self::OPTION_NAME ) ;
-			LiteSpeed_Cache_Log::debug( '[Conf] Deleted previous option item' ) ;
+
+			LiteSpeed_Cache_Log::debug( '[Conf] Deleted&Backup previous option item' ) ;
 		}
 
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
@@ -892,6 +863,53 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+	}
+
+	/**
+	 * Save frontend url to private cached uri/no cache uri
+	 *
+	 * @since 1.3
+	 * @access public
+	 */
+	public static function frontend_save() todo combine with _set_conf()
+	{
+		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
+			exit( 'no referer' ) ;
+		}
+
+		if ( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
+			exit( 'no type' ) ;
+		}
+
+		switch ( $type ) {
+			case 'forced_cache' :
+				$id = self::ITEM_FORCE_CACHE_URI ;
+				break ;
+
+			case 'private' :
+				$id = self::ITEM_CACHE_URI_PRIV ;
+				break ;
+
+			case 'nonoptimize' :
+				$id = self::ITEM_OPTM_EXCLUDES ;
+				break ;
+
+			case 'nocache' :
+			default:
+				$id = self::ITEM_EXCLUDES_URI ;
+				break ;
+		}
+
+		$instance = self::get_instance() ;
+		$list = $instance->get_item( $id ) ;
+
+		$list[] = $_SERVER[ 'HTTP_REFERER' ] . '$' ;
+
+		$instance->save_item( $id, $list, 'relative' ) ;
+
+		// Purge this page & redirect
+		LiteSpeed_Cache_Purge::purge_front() ;
+		exit() ;
 	}
 
 	/**

@@ -51,7 +51,7 @@ class LiteSpeed_Cache
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
-	const ACTION_CFG = 'cfg' ;
+	const ACTION_CONF = 'conf' ;
 	const ACTION_ACTIVATION = 'activate' ;
 	const ACTION_UTIL = 'util' ;
 
@@ -397,7 +397,7 @@ class LiteSpeed_Cache
 				$msg = LiteSpeed_Cache_CDN_Quic::handler() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_CFG :
+			case LiteSpeed_Cache::ACTION_CONF :
 				$msg = LiteSpeed_Cache_Config::handler() ;
 				break ;
 

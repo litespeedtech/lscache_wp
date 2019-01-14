@@ -513,7 +513,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_IMPORT:
 			case LiteSpeed_Cache::ACTION_REPORT:
 			case LiteSpeed_Cache::ACTION_CSS:
-			case LiteSpeed_Cache::ACTION_CFG:
+			case LiteSpeed_Cache::ACTION_CONF:
 			case LiteSpeed_Cache::ACTION_ACTIVATION:
 			case LiteSpeed_Cache::ACTION_UTIL:
 				if ( $_can_option && ! $_is_network_admin ) {

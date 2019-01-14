@@ -21,6 +21,8 @@ class LiteSpeed_Cache_Admin_Settings
 	private $_options ;
 	private $_err = array() ;
 
+	private $__conf ;
+
 	private $_max_int = 2147483647 ;
 
 	/**
@@ -31,6 +33,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function __construct()
 	{
+		$this->__conf = LiteSpeed_Cache_Config::get_instance() ;
 	}
 
 	/**
@@ -51,7 +54,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
-		$this->_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		$this->_options = $this->__conf->get_options() ;
 
 		if ( LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all() ) {
 			add_settings_error( LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, __( '\'Use primary site settings\' set by Network Administrator.', 'litespeed-cache' ) ) ;
@@ -218,7 +221,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$this->_input = LiteSpeed_Cache_Admin::cleanup_text( $input ) ;
 
-		$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
+		$options = $this->__conf->get_site_options() ;
 
 
 		/**
@@ -1165,7 +1168,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_thirdparty()
 	{
-		$tp_default_options = LiteSpeed_Cache_Config::get_instance()->get_thirdparty_options() ;
+		$tp_default_options = $this->__conf->get_thirdparty_options() ;
 		if ( empty( $tp_default_options ) ) {
 			return ;
 		}
@@ -1401,13 +1404,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _save_item( $id, $sanitize_filter = false )
 	{
-		$val = '' ;
+		$val = ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : '' ;
 
-		if ( ! empty( $this->_input[ $id ] ) ) {
-			$val = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
-		}
-
-		update_option( $id, $val ) ;
+		$this->__conf->save_item( $id, $val, $sanitize_filter ) ;
 
 		return $val ;
 	}
