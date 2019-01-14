@@ -134,6 +134,9 @@ class LiteSpeed_Cache_Optimizer
 
 		LiteSpeed_Cache_Log::debug2( '[Optmer]    Generated content ' . $file_type ) ;
 
+		// Add filter
+		$content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $urls ) ;
+
 		return $content ;
 	}
 
