@@ -289,6 +289,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * <strong>ESI</strong>: Supported JSON format comment format in ESI with `is_json` parameter.
 * <strong>API</strong>: Added filters to CCSS/CSS/JS content. (@lhoucine)
 * <strong>3rd</strong>: Improved comment compatibility with Elegant Divi Builder.
+* <strong>IAPI</strong>: New Europe Image Optimization server (EU5). <strong>Please whitelist the new [IAPI IP List](https://wp.api.litespeedtech.com/ips).</strong>
 * <strong>GUI</strong>: No longer show banners when `Disable All` in `Debug` is ON. (@rabbitwordpress)
 * <strong>GUI</strong>: Fixed button style for RTL languages.
 * <strong>GUI</strong>: Removed unnecessary translation in report.
