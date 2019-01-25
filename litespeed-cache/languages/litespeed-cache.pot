@@ -1,14 +1,14 @@
-# Copyright (C) 2018 LiteSpeed Cache
+# Copyright (C) 2019 LiteSpeed Cache
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2018-12-31 14:22:12+00:00\n"
+"POT-Creation-Date: 2019-01-25 20:13:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -48,14 +48,14 @@ msgid "%s plugin version %s required for this action."
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:156
-#: admin/litespeed-cache-admin-display.class.php:248 inc/gui.class.php:483
-#: includes/litespeed-cache-gui.class.php:483
+#: admin/litespeed-cache-admin-display.class.php:248 inc/gui.class.php:488
+#: includes/litespeed-cache-gui.class.php:488
 msgid "Settings"
 msgstr ""
 
 #: admin/litespeed-cache-admin-display.class.php:158
-#: admin/tpl/setting/settings_cdn.php:234 inc/gui.class.php:475
-#: includes/litespeed-cache-gui.class.php:475
+#: admin/tpl/setting/settings_cdn.php:234 inc/gui.class.php:480
+#: includes/litespeed-cache-gui.class.php:480
 msgid "Manage"
 msgstr ""
 
@@ -63,8 +63,8 @@ msgstr ""
 msgid "Edit .htaccess"
 msgstr ""
 
-#: admin/litespeed-cache-admin-display.class.php:165 inc/gui.class.php:492
-#: includes/litespeed-cache-gui.class.php:492
+#: admin/litespeed-cache-admin-display.class.php:165 inc/gui.class.php:497
+#: includes/litespeed-cache-gui.class.php:497
 msgid "Image Optimization"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgid "Clean all CSS/JS optimizer data successfully."
 msgstr ""
 
 #: admin/litespeed-cache-admin-report.class.php:64
-msgid "Failed to push to LiteSpeed server: %s"
+msgid "Failed to push to LiteSpeed server"
 msgstr ""
 
 #: admin/litespeed-cache-admin-rules.class.php:918
@@ -852,10 +852,10 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:467
-#: includes/litespeed-cache-gui.class.php:467
+#: admin/tpl/inc/admin_footer.php:6 inc/gui.class.php:472
+#: includes/litespeed-cache-gui.class.php:472
 msgid "LiteSpeed Cache"
 msgstr ""
 
@@ -959,7 +959,7 @@ msgstr ""
 msgid "Caching functions on this page are currently unavailable!"
 msgstr ""
 
-#: admin/tpl/inc/disabled_all.php:8 admin/tpl/setting/settings_debug.php:13
+#: admin/tpl/inc/disabled_all.php:4 admin/tpl/setting/settings_debug.php:13
 msgid "Disable All Features"
 msgstr ""
 
@@ -1350,8 +1350,8 @@ msgid ""
 "dismissed. (<a %3$s>Learn More</a>)"
 msgstr ""
 
-#: admin/tpl/manage/manage_cdn.php:11 inc/gui.class.php:526
-#: includes/litespeed-cache-gui.class.php:526
+#: admin/tpl/manage/manage_cdn.php:11 inc/gui.class.php:531
+#: includes/litespeed-cache-gui.class.php:531
 msgid "Cloudflare"
 msgstr ""
 
@@ -1540,17 +1540,17 @@ msgstr ""
 #: admin/tpl/manage/manage_purge.php:39 admin/tpl/manage/manage_purge.php:45
 #: admin/tpl/manage/manage_purge.php:54 admin/tpl/manage/manage_purge.php:63
 #: admin/tpl/manage/manage_purge.php:72 admin/tpl/manage/manage_purge.php:81
-#: admin/tpl/manage/manage_purge.php:90 inc/gui.class.php:501
-#: inc/gui.class.php:509 inc/gui.class.php:517 inc/gui.class.php:526
-#: inc/gui.class.php:536 inc/gui.class.php:546 inc/gui.class.php:556
-#: inc/gui.class.php:566 includes/litespeed-cache-gui.class.php:501
-#: includes/litespeed-cache-gui.class.php:509
-#: includes/litespeed-cache-gui.class.php:517
-#: includes/litespeed-cache-gui.class.php:526
-#: includes/litespeed-cache-gui.class.php:536
-#: includes/litespeed-cache-gui.class.php:546
-#: includes/litespeed-cache-gui.class.php:556
-#: includes/litespeed-cache-gui.class.php:566
+#: admin/tpl/manage/manage_purge.php:90 inc/gui.class.php:506
+#: inc/gui.class.php:514 inc/gui.class.php:522 inc/gui.class.php:531
+#: inc/gui.class.php:541 inc/gui.class.php:551 inc/gui.class.php:561
+#: inc/gui.class.php:571 includes/litespeed-cache-gui.class.php:506
+#: includes/litespeed-cache-gui.class.php:514
+#: includes/litespeed-cache-gui.class.php:522
+#: includes/litespeed-cache-gui.class.php:531
+#: includes/litespeed-cache-gui.class.php:541
+#: includes/litespeed-cache-gui.class.php:551
+#: includes/litespeed-cache-gui.class.php:561
+#: includes/litespeed-cache-gui.class.php:571
 msgid "Purge All"
 msgstr ""
 
@@ -1558,8 +1558,8 @@ msgstr ""
 msgid "Purge the litespeed cache entries created by this plugin"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:45 inc/gui.class.php:517
-#: includes/litespeed-cache-gui.class.php:517
+#: admin/tpl/manage/manage_purge.php:45 inc/gui.class.php:522
+#: includes/litespeed-cache-gui.class.php:522
 msgid "CSS/JS Cache"
 msgstr ""
 
@@ -1568,8 +1568,8 @@ msgid "This will purge all minified/combined CSS/JS entries only"
 msgstr ""
 
 #: admin/tpl/manage/manage_purge.php:54
-#: admin/tpl/setting/settings_inc.cache_object.php:28 inc/gui.class.php:536
-#: includes/litespeed-cache-gui.class.php:536
+#: admin/tpl/setting/settings_inc.cache_object.php:28 inc/gui.class.php:541
+#: includes/litespeed-cache-gui.class.php:541
 msgid "Object Cache"
 msgstr ""
 
@@ -1577,8 +1577,8 @@ msgstr ""
 msgid "Purge all the object caches"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:63 inc/gui.class.php:546
-#: includes/litespeed-cache-gui.class.php:546
+#: admin/tpl/manage/manage_purge.php:63 inc/gui.class.php:551
+#: includes/litespeed-cache-gui.class.php:551
 msgid "Opcode Cache"
 msgstr ""
 
@@ -1586,8 +1586,8 @@ msgstr ""
 msgid "Reset the entire opcode cache"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:72 inc/gui.class.php:556
-#: includes/litespeed-cache-gui.class.php:556
+#: admin/tpl/manage/manage_purge.php:72 inc/gui.class.php:561
+#: includes/litespeed-cache-gui.class.php:561
 msgid "Critical CSS"
 msgstr ""
 
@@ -1595,8 +1595,8 @@ msgstr ""
 msgid "This will delete all generated critical CSS files"
 msgstr ""
 
-#: admin/tpl/manage/manage_purge.php:81 inc/gui.class.php:566
-#: includes/litespeed-cache-gui.class.php:566
+#: admin/tpl/manage/manage_purge.php:81 inc/gui.class.php:571
+#: includes/litespeed-cache-gui.class.php:571
 msgid "Placeholder Cache"
 msgstr ""
 
@@ -4074,71 +4074,71 @@ msgid ""
 "admin before their natural expiration, if necessary."
 msgstr ""
 
-#: inc/gui.class.php:396 includes/litespeed-cache-gui.class.php:396
+#: inc/gui.class.php:401 includes/litespeed-cache-gui.class.php:401
 msgid "Purge this page"
 msgstr ""
 
-#: inc/gui.class.php:404 includes/litespeed-cache-gui.class.php:404
+#: inc/gui.class.php:409 includes/litespeed-cache-gui.class.php:409
 msgid "Mark this page as "
 msgstr ""
 
-#: inc/gui.class.php:411 includes/litespeed-cache-gui.class.php:411
+#: inc/gui.class.php:416 includes/litespeed-cache-gui.class.php:416
 msgid "Forced cacheable"
 msgstr ""
 
-#: inc/gui.class.php:418 includes/litespeed-cache-gui.class.php:418
+#: inc/gui.class.php:423 includes/litespeed-cache-gui.class.php:423
 msgid "Non cacheable"
 msgstr ""
 
-#: inc/gui.class.php:425 includes/litespeed-cache-gui.class.php:425
+#: inc/gui.class.php:430 includes/litespeed-cache-gui.class.php:430
 msgid "Private cache"
 msgstr ""
 
-#: inc/gui.class.php:432 includes/litespeed-cache-gui.class.php:432
+#: inc/gui.class.php:437 includes/litespeed-cache-gui.class.php:437
 msgid "No optimization"
 msgstr ""
 
-#: inc/gui.class.php:439 includes/litespeed-cache-gui.class.php:439
+#: inc/gui.class.php:444 includes/litespeed-cache-gui.class.php:444
 msgid "More settings"
 msgstr ""
 
-#: inc/gui.class.php:459 includes/litespeed-cache-gui.class.php:459
+#: inc/gui.class.php:464 includes/litespeed-cache-gui.class.php:464
 msgid "LiteSpeed Cache Purge All"
 msgstr ""
 
-#: inc/gui.class.php:459 inc/gui.class.php:509
-#: includes/litespeed-cache-gui.class.php:459
-#: includes/litespeed-cache-gui.class.php:509
+#: inc/gui.class.php:464 inc/gui.class.php:514
+#: includes/litespeed-cache-gui.class.php:464
+#: includes/litespeed-cache-gui.class.php:514
 msgid "LSCache"
 msgstr ""
 
-#: inc/gui.class.php:584 includes/litespeed-cache-gui.class.php:584
+#: inc/gui.class.php:589 includes/litespeed-cache-gui.class.php:589
 msgid "Remove all previous unfinished image optimization requests."
 msgstr ""
 
-#: inc/gui.class.php:585 includes/litespeed-cache-gui.class.php:585
+#: inc/gui.class.php:590 includes/litespeed-cache-gui.class.php:590
 msgid "Clean Up Unfinished Data"
 msgstr ""
 
-#: inc/gui.class.php:604 includes/litespeed-cache-gui.class.php:604
+#: inc/gui.class.php:609 includes/litespeed-cache-gui.class.php:609
 msgid "Install %s"
 msgstr ""
 
-#: inc/gui.class.php:605 includes/litespeed-cache-gui.class.php:605
+#: inc/gui.class.php:610 includes/litespeed-cache-gui.class.php:610
 msgid "Install Now"
 msgstr ""
 
-#: inc/gui.class.php:625 includes/litespeed-cache-gui.class.php:625
+#: inc/gui.class.php:630 includes/litespeed-cache-gui.class.php:630
 msgid ""
 "<a href=\"%1$s\" %2$s>View version %3$s details</a> or <a href=\"%4$s\" %5$s "
 "target=\"_blank\">update now</a>."
 msgstr ""
 
-#: inc/gui.class.php:628 includes/litespeed-cache-gui.class.php:628
+#: inc/gui.class.php:633 includes/litespeed-cache-gui.class.php:633
 msgid "View %1$s version %2$s details"
 msgstr ""
 
-#: inc/gui.class.php:633 includes/litespeed-cache-gui.class.php:633
+#: inc/gui.class.php:638 includes/litespeed-cache-gui.class.php:638
 msgid "Update %s now"
 msgstr ""
 
@@ -4340,15 +4340,15 @@ msgstr ""
 msgid "LiteSpeed Cache Custom Cron Crawler"
 msgstr ""
 
-#: inc/utility.class.php:221 includes/litespeed-cache-utility.class.php:221
+#: inc/utility.class.php:223 includes/litespeed-cache-utility.class.php:223
 msgid "just now"
 msgstr ""
 
-#: inc/utility.class.php:221 includes/litespeed-cache-utility.class.php:221
+#: inc/utility.class.php:223 includes/litespeed-cache-utility.class.php:223
 msgid "right now"
 msgstr ""
 
-#: inc/utility.class.php:224 includes/litespeed-cache-utility.class.php:224
+#: inc/utility.class.php:226 includes/litespeed-cache-utility.class.php:226
 msgid " %s ago"
 msgstr ""
 
