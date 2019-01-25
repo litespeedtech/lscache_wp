@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Img_Optm
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
-			return [ 'ok' => $msg ] ;
+			return array( 'ok' => $msg ) ;
 		}
 
 		// Filtered from existing data
@@ -242,7 +242,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'Optimized successfully.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
-			return [ 'ok' => $msg ] ;
+			return array( 'ok' => $msg ) ;
 		}
 
 		$total_groups = count( $this->_img_in_queue ) ;
@@ -305,7 +305,7 @@ class LiteSpeed_Cache_Img_Optm
 			$this->_update_credit( $json[ 'credit' ] ) ;
 		}
 
-		return [ 'ok' => $msg ] ;
+		return array( 'ok' => $msg ) ;
 
 	}
 
@@ -1163,7 +1163,7 @@ class LiteSpeed_Cache_Img_Optm
 		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
 		if ( $tmp ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Task in queue, to be continued...' ) ;
-			return [ 'ok' => 'to_be_continued' ] ;
+			return array( 'ok' => 'to_be_continued' ) ;
 		}
 
 		// If all pulled, update tag to done
@@ -1175,7 +1175,7 @@ class LiteSpeed_Cache_Img_Optm
 			$tried_level_up = "[Msg] $tried_level_up" ;
 		}
 
-		return [ 'ok' => "Pulled [ori] $total_pulled_ori [WebP] $total_pulled_webp [cost] {$time_cost}s $tried_level_up" ] ;
+		return array( 'ok' => "Pulled [ori] $total_pulled_ori [WebP] $total_pulled_webp [cost] {$time_cost}s $tried_level_up" ) ;
 	}
 
 	/**

@@ -223,7 +223,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Send to LiteSpeed CSS API to generate CSS
+	 * Send to LiteSpeed CCSS API to generate CCSS
 	 *
 	 * @since  2.3
 	 * @access private
@@ -256,8 +256,11 @@ class LiteSpeed_Cache_CSS
 			return false ;
 		}
 
+		// Add filters
+		$ccss = apply_filters( 'litespeed_ccss', $json[ 'ccss' ], $ccss_type ) ;
+
 		// Write to file
-		Litespeed_File::save( $ccss_file, $json[ 'ccss' ], true ) ;
+		Litespeed_File::save( $ccss_file, $ccss, true ) ;
 
 		// Save summary data
 		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
@@ -273,9 +276,9 @@ class LiteSpeed_Cache_CSS
 
 		LiteSpeed_Cache_Log::debug( '[CSS] saved ccss ' . $ccss_file ) ;
 
-		LiteSpeed_Cache_Log::debug2( '[CSS] ccss con: ' . $json[ 'ccss' ] ) ;
+		LiteSpeed_Cache_Log::debug2( '[CSS] ccss con: ' . $ccss ) ;
 
-		return $json[ 'ccss' ] ;
+		return $ccss ;
 	}
 
 	/**

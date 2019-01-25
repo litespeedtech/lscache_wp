@@ -590,7 +590,8 @@ class LiteSpeed_Cache_Crawler
 	 */
 	private function _recursive_build_crawler( $crawler_factors, $group = array(), $i = 0 )
 	{
-		$current_factor = array_keys( $crawler_factors )[ $i ] ;
+		$current_factor = array_keys( $crawler_factors ) ;
+		$current_factor = $current_factor[ $i ] ;
 
 		$if_touch_end = $i + 1 >= count( $crawler_factors ) ;
 

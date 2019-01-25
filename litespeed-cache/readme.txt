@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.0.2
-Stable tag: 2.9
+Tested up to: 5.0.3
+Stable tag: 2.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -271,6 +271,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [WP-PostRatings](https://wordpress.org/plugins/wp-postratings/)
 * [Avada 5.1 RC1+](https://avada.theme-fusion.com/)
 * [Elegant Themes Divi 3.0.67+](https://www.elegantthemes.com/gallery/divi/)
+* [Elegant Divi Builder] (https://www.elegantthemes.com/plugins/divi-builder/)
 * [Caldera Forms](https://wordpress.org/plugins/caldera-forms/) 1.5.6.2+
 * Login With Ajax
 * [Ninja Forms](https://wordpress.org/plugins/ninja-forms/)
@@ -279,6 +280,20 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.1 - Jan 25 2019 =
+* <strong>Compatibility</strong>: Fixed fatal error for PHP 5.3.
+* <strong>Compatibility</strong>: Fixed PHP warning in htmlspecialchars when building URLs. (@souljahn2)
+* <strong>Media</strong>: Excluded invalid image src from lazyload. (@andrew55)
+* <strong>Optm</strong>: Improved URL compatibility when detecting closest cloud server.
+* <strong>ESI</strong>: Supported JSON format comment format in ESI with `is_json` parameter.
+* <strong>API</strong>: Added filters to CCSS/CSS/JS content. (@lhoucine)
+* <strong>3rd</strong>: Improved comment compatibility with Elegant Divi Builder.
+* <strong>GUI</strong>: No longer show banners when `Disable All` in `Debug` is ON. (@rabbitwordpress)
+* <strong>GUI</strong>: Fixed button style for RTL languages.
+* <strong>GUI</strong>: Removed unnecessary translation in report.
+* <strong>GUI</strong>: Updated readme wiki links.
+* <strong>GUI</strong>: Fixed pie styles in image optimization page.
 
 = 2.9 - Dec 31 2018 =
 * 🌱<strong>Media</strong>: Lazy Load Image Classname Excludes. (@thinkmedia)
