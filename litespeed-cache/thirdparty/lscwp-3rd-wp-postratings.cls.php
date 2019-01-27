@@ -29,7 +29,7 @@ class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 	}
 
 	/**
-	 * Purges the cache
+	 * Purges the cache.
 	 *
 	 * @since 1.1.1
 	 */

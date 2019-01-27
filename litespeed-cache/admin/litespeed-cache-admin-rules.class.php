@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get if htaccess file is readable
+	 * Get if htaccess file is readable.
 	 *
 	 * @since 1.1.0
 	 * @return string
@@ -117,7 +117,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get if htaccess file is writable
+	 * Get if htaccess file is writable.
 	 *
 	 * @since 1.1.0
 	 * @return string
@@ -133,7 +133,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get frontend htaccess path
+	 * Get frontend htaccess path.
 	 *
 	 * @since 1.1.0
 	 * @return string
@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get backend htaccess path
+	 * Get backend htaccess path.
 	 *
 	 * @since 1.1.0
 	 * @return string
@@ -216,7 +216,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get corresponding htaccess path
+	 * Get corresponding htaccess path.
 	 *
 	 * @since 1.1.0
 	 * @param  string $kind Frontend or backend
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Admin_Rules
 	/**
 	 * Get the content of the rules file.
 	 * If can't read, will add error msg to dashboard
-	 * Only when need to add error msg, this function is used, otherwise use file_get_contents directly
+	 * Only when need to add error msg, this function is used, otherwise use file_get_contents directly.
 	 *
 	 * @since 1.0.4
 	 * @since  2.9 Used exception for failed reading
@@ -387,7 +387,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get mobile view rule from htaccess file
+	 * Get mobile view rule from htaccess file.
 	 *
 	 * @since 1.1.0
 	 * @return string Mobile Agents value
@@ -435,7 +435,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get rewrite rules based on tags
+	 * Get rewrite rules based on tags.
 	 * @param  string $cond The tag to be used
 	 * @param  string $kind Frontend or backend .htaccess file
 	 * @return mixed       Rules
@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Generate browser cache rules
+	 * Generate browser cache rules.
 	 *
 	 * @since  1.3
 	 * @return array Rules set
@@ -478,7 +478,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private function _browser_cache_rules( $cfg )
 	{
 		/**
-		 * Add ttl setting
+		 * Add ttl setting.
 		 * @since 1.6.3
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ;
@@ -524,7 +524,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Generate minify rules
+	 * Generate minify rules.
 	 *
 	 * @since  2.1.2
 	 * @return array Rules set
@@ -543,7 +543,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Generate CORS rules for fonts
+	 * Generate CORS rules for fonts.
 	 *
 	 * @since  1.5
 	 * @return array Rules set
@@ -560,7 +560,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Generate rewrite rules based on settings
+	 * Generate rewrite rules based on settings.
 	 *
 	 * @since  1.3
 	 * @param  array $cfg  The settings to be used for rewrite rule
@@ -719,7 +719,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Add LitSpeed module wrapper with rewrite on
+	 * Add LitSpeed module wrapper with rewrite on.
 	 *
 	 * @since  2.1.1
 	 */
@@ -735,7 +735,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Insert LitSpeed module wrapper with rewrite on
+	 * Insert LitSpeed module wrapper with rewrite on.
 	 *
 	 * @since  2.1.1
 	 */
@@ -746,7 +746,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * wrap rules with module on info
+	 * wrap rules with module on info.
 	 *
 	 * @since  1.1.5
 	 * @param  array  $rules
@@ -769,7 +769,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Write to htaccess with rules
+	 * Write to htaccess with rules.
 	 *
 	 * @since  1.1.0
 	 * @param  array $rules
@@ -795,7 +795,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Update rewrite rules based on setting
+	 * Update rewrite rules based on setting.
 	 *
 	 * @since 1.3
 	 * @param array $cfg the rules that need to be set
@@ -869,7 +869,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Get existing rewrite rules
+	 * Get existing rewrite rules.
 	 *
 	 * @since  1.3
 	 * @param  string $kind Frontend or backend .htaccess file
@@ -890,7 +890,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Output the msg with rules plain data for manual insert
+	 * Output the msg with rules plain data for manual insert.
 	 *
 	 * @since  1.1.5
 	 * @param  string  $file
@@ -906,7 +906,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Generate rules plain data for manual insert
+	 * Generate rules plain data for manual insert.
 	 *
 	 * @since  1.1.5
 	 * @param  array  $rules
@@ -949,7 +949,7 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Only used to clear old rules when upgrade to v1.1.0
+	 * Only used to clear old rules when upgrade to v1.1.0.
 	 */
 	public function deprecated_clear_rules()
 	{
@@ -989,7 +989,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 	/**
 	 * Parses the .htaccess buffer when the admin saves changes in the edit .htaccess page.
-	 * Only admin can do this
+	 * Only admin can do this.
 	 *
 	 * @since 1.0.4
 	 * @since  2.9 Used exception when saving

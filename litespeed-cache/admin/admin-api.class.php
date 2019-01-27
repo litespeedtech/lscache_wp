@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin API
+ * Admin API.
  *
  * @since      1.5
  * @package    LiteSpeed_Cache
@@ -43,7 +43,7 @@ class LiteSpeed_Cache_Admin_API
 	const IAPI_ACTION_PAGESCORE = 'pagescore' ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.5
 	 */
@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.7.2
 	 */
@@ -77,7 +77,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Handle aggressive callback requests from LiteSpeed image server
+	 * Handle aggressive callback requests from LiteSpeed image server.
 	 *
 	 * @since  1.6
 	 * @since  1.6.7 Added destroy callback
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Validate litespeed api server IP
+	 * Validate litespeed api server IP.
 	 *
 	 * @since  1.6.5
 	 */
@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Handle passive callback requests from LiteSpeed image server
+	 * Handle passive callback requests from LiteSpeed image server.
 	 *
 	 * @since  1.6
 	 */
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * request key callback from LiteSpeed
+	 * request key callback from LiteSpeed.
 	 *
 	 * @since  1.5
 	 */
@@ -154,7 +154,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Check if is valid callback from litespeed passive request
+	 * Check if is valid callback from litespeed passive request.
 	 *
 	 * @since  1.5
 	 * @return bool True if correct
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Check if is valid callback from litespeed aggressive request
+	 * Check if is valid callback from litespeed aggressive request.
 	 *
 	 * @since  1.6
 	 * @return bool True if correct
@@ -204,7 +204,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Get data from LiteSpeed cloud server
+	 * Get data from LiteSpeed cloud server.
 	 *
 	 * @since  2.9
 	 */
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		/**
-		 * All requests must have closet cloud server too
+		 * All requests must have closet cloud server too.
 		 * @since  2.9
 		 */
 		if ( ! $instance->_iapi_cloud ) {
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Post data to LiteSpeed cloud server
+	 * Post data to LiteSpeed cloud server.
 	 *
 	 * @since  1.6
 	 */
@@ -233,7 +233,7 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		/**
-		 * All requests must have closet cloud server too
+		 * All requests must have closet cloud server too.
 		 * @since  2.9
 		 */
 		if ( ! $instance->_iapi_cloud ) {
@@ -241,7 +241,7 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		/**
-		 * All requests must have api_key first
+		 * All requests must have api_key first.
 		 * @since  1.6.5
 		 */
 		if ( ! $instance->_iapi_key ) {
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * request key from LiteSpeed
+	 * request key from LiteSpeed.
 	 *
 	 * This needs callback validation, so don't use for generic services which don't need security
 	 *
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * ping clouds from LiteSpeed
+	 * ping clouds from LiteSpeed.
 	 *
 	 * @since  2.9
 	 */
@@ -329,7 +329,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * delete key
+	 * delete key.
 	 *
 	 * @since  1.7.2
 	 */
@@ -344,7 +344,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Get data from LiteSpeed cloud server
+	 * Get data from LiteSpeed cloud server.
 	 *
 	 * @since  2.9
 	 */
@@ -382,7 +382,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Post data to LiteSpeed cloud server
+	 * Post data to LiteSpeed cloud server.
 	 *
 	 * @since  1.6
 	 * @return  string | array Must return an error msg string or json array
@@ -415,7 +415,7 @@ class LiteSpeed_Cache_Admin_API
 			'data' => $data,
 		) ;
 		/**
-		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
+		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation.
 		 * @since 1.6.4
 		 */
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) ) ;
@@ -497,7 +497,7 @@ class LiteSpeed_Cache_Admin_API
 	}
 
 	/**
-	 * Parse _links from json
+	 * Parse _links from json.
 	 *
 	 * @since  1.6.5
 	 * @since  1.6.7 Self clean the parameter

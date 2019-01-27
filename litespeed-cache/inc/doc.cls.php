@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Doc
 	// private static $_instance ;
 
 	/**
-	 * Privacy policy
+	 * Privacy policy.
 	 *
 	 * @since 2.2.7
 	 */
@@ -28,7 +28,7 @@ class LiteSpeed_Cache_Doc
 
 
 	/**
-	 * Learn more link
+	 * Learn more link.
 	 *
 	 * @since  2.4.2
 	 */

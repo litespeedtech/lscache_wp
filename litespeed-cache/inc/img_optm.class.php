@@ -63,7 +63,7 @@ class LiteSpeed_Cache_Img_Optm
 	private $_cron_ran = false ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  2.0
 	 */
@@ -76,7 +76,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Sync data from litespeed IAPI server for CLI usage
+	 * Sync data from litespeed IAPI server for CLI usage.
 	 *
 	 * @since  2.4.4
 	 */
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Sync data from litespeed IAPI server
+	 * Sync data from litespeed IAPI server.
 	 *
 	 * @since  1.6.5
 	 */
@@ -117,7 +117,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Request optm to litespeed IAPI server for CLI usage
+	 * Request optm to litespeed IAPI server for CLI usage.
 	 *
 	 * @since  2.4.4
 	 */
@@ -127,7 +127,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Push raw img to LiteSpeed IAPI server
+	 * Push raw img to LiteSpeed IAPI server.
 	 *
 	 * @since 1.6
 	 */
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Img_Optm
 			}
 
 			/**
-			 * Only send 500 images one time
+			 * Only send 500 images one time.
 			 * @since 1.6.3
 			 * @since 1.6.5 use credit limit
 			 */
@@ -194,7 +194,7 @@ class LiteSpeed_Cache_Img_Optm
 				break ;
 			}
 			/**
-			 * Check if need to test run ( new user only allow 1 group at first time)
+			 * Check if need to test run ( new user only allow 1 group at first time).
 			 * @since 1.6.6.1
 			 */
 			if ( $this->_img_total && ! $credit_recovered ) {
@@ -226,7 +226,7 @@ class LiteSpeed_Cache_Img_Optm
 		$this->_filter_existing_src() ;
 
 		/**
-		 * Filter same src in $this->_img_in_queue
+		 * Filter same src in $this->_img_in_queue.
 		 *
 		 * 1. Save them to tmp array $this->_img_duplicated_in_queue
 		 * 2. Remove them from $this->_img_in_queue
@@ -305,7 +305,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Insert data into table img_optm
+	 * Insert data into table img_optm.
 	 *
 	 * @since 2.0
 	 */
@@ -329,7 +329,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Get all root img data by srcpath_md5
+	 * Get all root img data by srcpath_md5.
 	 *
 	 * @since 2.0
 	 */
@@ -359,7 +359,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Save failed to parse meta info
+	 * Save failed to parse meta info.
 	 *
 	 * @since 2.1.1
 	 */
@@ -374,7 +374,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Handle existing same src path images
+	 * Handle existing same src path images.
 	 *
 	 * @since 2.0
 	 */
@@ -486,7 +486,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Filter duplicated src in $this->_img_in_queue
+	 * Filter duplicated src in $this->_img_in_queue.
 	 *
 	 * @since 2.0
 	 */
@@ -526,7 +526,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Generate placeholder for an array to query
+	 * Generate placeholder for an array to query.
 	 *
 	 * @since 2.0
 	 */
@@ -541,7 +541,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Saved non-existed images into img_optm
+	 * Saved non-existed images into img_optm.
 	 *
 	 * @since 2.0
 	 */
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Add a new img to queue which will be pushed to LiteSpeed
+	 * Add a new img to queue which will be pushed to LiteSpeed.
 	 *
 	 * @since 1.6
 	 */
@@ -602,7 +602,7 @@ class LiteSpeed_Cache_Img_Optm
 			'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
 			'src_filesize'	=> filesize( $real_file ),
 			/**
-			 * To use the filter `litespeed_img_optm_options_per_image`, do below:
+			 * To use the filter `litespeed_img_optm_options_per_image`, do below:.
 			 *
 			 * 		add_filter( 'litespeed_img_optm_options_per_image', function( $opt_val, $file ){
 			 * 			// To add optimize original image
@@ -645,7 +645,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Push img to LiteSpeed IAPI server
+	 * Push img to LiteSpeed IAPI server.
 	 *
 	 * @since 1.6.7
 	 */
@@ -682,7 +682,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * LiteSpeed Child server notify Client img status changed
+	 * LiteSpeed Child server notify Client img status changed.
 	 *
 	 * @since  1.6
 	 * @since  1.6.5 Added err/request status free switch
@@ -797,7 +797,7 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		/**
-		 * Update size saved info
+		 * Update size saved info.
 		 * @since  1.6.5
 		 */
 		if ( $postmeta_info ) {
@@ -878,7 +878,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * parse LiteSpeed IAPI server data
+	 * parse LiteSpeed IAPI server data.
 	 *
 	 * @since  1.6.5
 	 */
@@ -909,7 +909,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Cron pull optimized img
+	 * Cron pull optimized img.
 	 *
 	 * @since  1.6
 	 */
@@ -931,7 +931,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Pull optm data from litespeed IAPI server for CLI usage
+	 * Pull optm data from litespeed IAPI server for CLI usage.
 	 *
 	 * @since  2.4.4
 	 */
@@ -945,7 +945,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Pull optimized img
+	 * Pull optimized img.
 	 *
 	 * @since  1.6
 	 */
@@ -987,14 +987,14 @@ class LiteSpeed_Cache_Img_Optm
 			}
 
 			/**
-			 * Update cron timestamp to avoid duplicated running
+			 * Update cron timestamp to avoid duplicated running.
 			 * @since  1.6.2
 			 */
 			$this->_update_cron_running() ;
 
 			/**
 			 * If no server_info, will fail to pull
-			 * This is only for v2.4.2- data
+			 * This is only for v2.4.2- data.
 			 * @see  https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade
 			 */
 			try{
@@ -1028,7 +1028,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			if ( ! empty( $server_info[ 'ori' ] ) ) {
 				/**
-				 * Use wp orignal get func to avoid allow_url_open off issue
+				 * Use wp orignal get func to avoid allow_url_open off issue.
 				 * @since  1.6.5
 				 */
 				$response = wp_remote_get( $server_info[ 'ori' ], array( 'timeout' => 15 ) ) ;
@@ -1160,7 +1160,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Auto send optm request
+	 * Auto send optm request.
 	 *
 	 * @since  2.4.1
 	 */
@@ -1183,7 +1183,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Show an image's optm status
+	 * Show an image's optm status.
 	 *
 	 * @since  1.6.5
 	 */
@@ -1226,7 +1226,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Parse wp's meta value
+	 * Parse wp's meta value.
 	 *
 	 * @since 1.6.7
 	 */
@@ -1259,7 +1259,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Clean up unfinished data for CLI usage
+	 * Clean up unfinished data for CLI usage.
 	 *
 	 * @since  2.4.4
 	 */
@@ -1271,7 +1271,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Destroy all unfinished queue locally and to LiteSpeed IAPI server
+	 * Destroy all unfinished queue locally and to LiteSpeed IAPI server.
 	 *
 	 * @since 2.1.2
 	 */
@@ -1324,7 +1324,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Send destroy all requests cmd to LiteSpeed IAPI server and get the link to finish it ( avoid click by mistake )
+	 * Send destroy all requests cmd to LiteSpeed IAPI server and get the link to finish it ( avoid click by mistake ).
 	 *
 	 * @since 1.6.7
 	 */
@@ -1346,7 +1346,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Callback from LiteSpeed IAPI server to destroy all optm data
+	 * Callback from LiteSpeed IAPI server to destroy all optm data.
 	 *
 	 * @since 1.6.7
 	 */
@@ -1399,7 +1399,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Resend requested img to LiteSpeed IAPI server
+	 * Resend requested img to LiteSpeed IAPI server.
 	 *
 	 * @since 1.6.7
 	 */
@@ -1538,7 +1538,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Try to level up
+	 * Try to level up.
 	 *
 	 * @since 2.4.1
 	 */
@@ -1575,7 +1575,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Update client credit info
+	 * Update client credit info.
 	 *
 	 * @since 1.6.5
 	 */
@@ -1608,7 +1608,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Calculate bkup original images storage
+	 * Calculate bkup original images storage.
 	 *
 	 * @since 2.2.6
 	 */
@@ -1649,7 +1649,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Remove backups for CLI usage
+	 * Remove backups for CLI usage.
 	 *
 	 * @since  2.5
 	 */
@@ -1659,7 +1659,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Delete bkup original images storage
+	 * Delete bkup original images storage.
 	 *
 	 * @since 2.2.6
 	 */
@@ -1705,7 +1705,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Get optm summary
+	 * Get optm summary.
 	 *
 	 * @since 1.6.5
 	 */
@@ -1720,7 +1720,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Get optm bkup usage summary
+	 * Get optm bkup usage summary.
 	 *
 	 * @since 2.2.6
 	 */
@@ -1733,7 +1733,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Count images
+	 * Count images.
 	 *
 	 * @since 1.6
 	 */
@@ -1800,7 +1800,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Check if fetch cron is running
+	 * Check if fetch cron is running.
 	 *
 	 * @since  1.6.2
 	 */
@@ -1818,7 +1818,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Update fetch cron timestamp tag
+	 * Update fetch cron timestamp tag.
 	 *
 	 * @since  1.6.2
 	 */
@@ -1843,7 +1843,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Batch switch images to ori/optm version
+	 * Batch switch images to ori/optm version.
 	 *
 	 * @since  1.6.2
 	 */
@@ -1893,7 +1893,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Switch image between original one and optimized one
+	 * Switch image between original one and optimized one.
 	 *
 	 * @since 1.6.2
 	 */
@@ -1956,7 +1956,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Delete one optm data and recover original file
+	 * Delete one optm data and recover original file.
 	 *
 	 * @since 2.4.2
 	 */
@@ -2011,7 +2011,7 @@ class LiteSpeed_Cache_Img_Optm
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.0
 	 */
@@ -2073,7 +2073,7 @@ class LiteSpeed_Cache_Img_Optm
 				break ;
 
 			/**
-			 * Batch switch
+			 * Batch switch.
 			 * @since 1.6.3
 			 */
 			case self::TYPE_IMG_BATCH_SWITCH_ORI :

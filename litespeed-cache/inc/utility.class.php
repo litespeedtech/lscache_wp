@@ -18,7 +18,7 @@ class LiteSpeed_Cache_Utility
 
 
 	/**
-	 * Check page score
+	 * Check page score.
 	 *
 	 * @since  2.9
 	 */
@@ -41,7 +41,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Check latest version
+	 * Check latest version.
 	 *
 	 * @since  2.9
 	 */
@@ -59,7 +59,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Get current page type
+	 * Get current page type.
 	 *
 	 * @since  2.9
 	 */
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Get ping speed
+	 * Get ping speed.
 	 *
 	 * @since  2.9
 	 */
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Set seconds/timestamp to readable format
+	 * Set seconds/timestamp to readable format.
 	 *
 	 * @since  1.6.5
 	 */
@@ -227,7 +227,7 @@ class LiteSpeed_Cache_Utility
 
 
 	/**
-	 * Convert array to string
+	 * Convert array to string.
 	 *
 	 * @since  1.6
 	 * @return string
@@ -242,7 +242,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Get human readable size
+	 * Get human readable size.
 	 *
 	 * @since  1.6
 	 * @return string
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Parse attributes from string
+	 * Parse attributes from string.
 	 *
 	 * @since  1.2.2
 	 * @since  1.4 Moved from optimize to utility
@@ -283,7 +283,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Get url based on permalink setting
+	 * Get url based on permalink setting.
 	 *
 	 * @since  1.3
 	 * @return string
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Check if an array has a string
+	 * Check if an array has a string.
 	 *
 	 * Support $ exact match
 	 *
@@ -355,7 +355,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Improve compatibility to PHP old versions
+	 * Improve compatibility to PHP old versions.
 	 *
 	 * @since  1.2.2
 	 *
@@ -366,7 +366,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Convert URI to URL
+	 * Convert URI to URL.
 	 *
 	 * @since  1.3
 	 * @param  string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
@@ -386,7 +386,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Convert URL to URI
+	 * Convert URL to URI.
 	 *
 	 * @since  1.2.2
 	 * @since  1.6.2.1 Added 2nd param keep_qs
@@ -405,7 +405,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Make URL to be relative
+	 * Make URL to be relative.
 	 *
 	 * NOTE: for subfolder home_url, will keep subfolder part (strip nothing but scheme and host)
 	 *
@@ -423,7 +423,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Convert URL to domain only
+	 * Convert URL to domain only.
 	 *
 	 * @since  1.7.1
 	 */
@@ -442,7 +442,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Generate domain const
+	 * Generate domain const.
 	 *
 	 * This will generate http://www.example.com even there is a subfolder in home_url setting
 	 *
@@ -465,7 +465,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Array map one textarea to sanitize the url
+	 * Array map one textarea to sanitize the url.
 	 *
 	 * @since  1.3
 	 * @param  string $content
@@ -579,7 +579,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Check if the host is the internal host
+	 * Check if the host is the internal host.
 	 *
 	 * @since  1.2.3
 	 *
@@ -600,7 +600,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Check if an URL is a internal existing file
+	 * Check if an URL is a internal existing file.
 	 *
 	 * @since  1.2.2
 	 * @since  1.6.2 Moved here from optm.cls due to usage of media.cls
@@ -639,7 +639,7 @@ class LiteSpeed_Cache_Utility
 
 		// Parse file path
 		/**
-		 * Trying to fix pure /.htaccess rewrite to /wordpress case
+		 * Trying to fix pure /.htaccess rewrite to /wordpress case.
 		 *
 		 * Add `define( 'LITESPEED_WP_REALPATH', '/wordpress' ) ;` in wp-config.php in this case
 		 *
@@ -659,7 +659,7 @@ class LiteSpeed_Cache_Utility
 		}
 
 		/**
-		 * Added new file postfix to be check if passed in
+		 * Added new file postfix to be check if passed in.
 		 * @since 2.2.4
 		 */
 		if ( $addition_postfix ) {
@@ -667,7 +667,7 @@ class LiteSpeed_Cache_Utility
 		}
 
 		/**
-		 * Added this filter for those plugins which overwrite the filepath
+		 * Added this filter for those plugins which overwrite the filepath.
 		 * @see #101091 plugin `Hide My WordPress`
 		 * @since 2.2.3
 		 */
@@ -683,7 +683,7 @@ class LiteSpeed_Cache_Utility
 	}
 
 	/**
-	 * Replace url in srcset to new value
+	 * Replace url in srcset to new value.
 	 *
 	 * @since  2.2.3
 	 */
@@ -736,7 +736,7 @@ class LiteSpeed_Cache_Utility
 
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.9
 	 */

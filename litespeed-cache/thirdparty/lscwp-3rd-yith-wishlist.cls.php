@@ -41,7 +41,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	}
 
 	/**
-	 * Purge ESI yith cache when add/remove items
+	 * Purge ESI yith cache when add/remove items.
 	 *
 	 * @since 1.2.0
 	 */

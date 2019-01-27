@@ -172,7 +172,7 @@ if ( !defined('WPINC') ) die;
 								// Build the cookie crawler Vue data
 								$cookies = $this->config->get_item( $id ) ;
 								/**
-								 * Data Src Structure: [ nameA => vals, nameB => vals ]
+								 * Data Src Structure: [ nameA => vals, nameB => vals ].
 								 */
 								$list = array() ;
 								foreach ( $cookies as $k => $v ) {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Deprecated Class for API backward compatibility to v1.1.2.2
+ * Deprecated Class for API backward compatibility to v1.1.2.2.
  */
 class LiteSpeed_Cache_Tags
 {

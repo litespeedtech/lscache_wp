@@ -1,6 +1,6 @@
 <?php
 /**
- * LiteSpeed Object Cache Library
+ * LiteSpeed Object Cache Library.
  *
  * @since  1.8
  */
@@ -70,7 +70,7 @@ function wp_cache_replace( $key, $data, $group = '', $expire = 0 )
 }
 
 /**
- * Increment numeric cache item's value
+ * Increment numeric cache item's value.
  *
  * @since 1.8
  */
@@ -190,7 +190,7 @@ class WP_Object_Cache
 	private $blog_prefix ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.8
 	 */
@@ -202,14 +202,14 @@ class WP_Object_Cache
 		$this->blog_prefix = $this->multisite ? get_current_blog_id() . ':' : '' ;
 
 		/**
-		 * Fix multiple instance using same oc issue
+		 * Fix multiple instance using same oc issue.
 		 * @since  1.8.2
 		 */
 		! defined( 'LSOC_PREFIX' ) && define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) ) ;
 	}
 
 	/**
-	 * Output debug info
+	 * Output debug info.
 	 *
 	 * @since  1.8
 	 */
@@ -226,7 +226,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Get from cache
+	 * Get from cache.
 	 *
 	 * @since  1.8
 	 */
@@ -289,7 +289,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Set to cache
+	 * Set to cache.
 	 *
 	 * @since  1.8
 	 */
@@ -392,7 +392,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Delete cache
+	 * Delete cache.
 	 *
 	 * @since 1.8
 	 */
@@ -418,7 +418,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Clear all cached data
+	 * Clear all cached data.
 	 *
 	 * @since 1.8
 	 */
@@ -434,7 +434,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Add global groups
+	 * Add global groups.
 	 *
 	 * @since 1.8
 	 */
@@ -444,7 +444,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Add non persistent groups
+	 * Add non persistent groups.
 	 *
 	 * @since 1.8
 	 */
@@ -454,7 +454,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Get the final key
+	 * Get the final key.
 	 *
 	 * @since 1.8
 	 */
@@ -480,7 +480,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Get transient from wp table
+	 * Get transient from wp table.
 	 *
 	 * @since 1.8.3
 	 * @see `wp-includes/option.php` function `get_transient`/`set_site_transient`
@@ -534,7 +534,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Set transient to WP table
+	 * Set transient to WP table.
 	 *
 	 * @since 1.8.3
 	 * @see `wp-includes/option.php` function `set_transient`/`set_site_transient`
@@ -595,7 +595,7 @@ class WP_Object_Cache
 	}
 
 	/**
-	 * Delete transient from WP table
+	 * Delete transient from WP table.
 	 *
 	 * @since 1.8.3
 	 * @see `wp-includes/option.php` function `delete_transient`/`delete_site_transient`

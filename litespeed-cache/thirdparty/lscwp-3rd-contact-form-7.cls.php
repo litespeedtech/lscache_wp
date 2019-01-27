@@ -28,7 +28,7 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
 	}
 
 	/**
-	 * Disable vary change for refill to avoid auto-logout issue
+	 * Disable vary change for refill to avoid auto-logout issue.
 	 *
 	 * @since 1.6.4
 	 */

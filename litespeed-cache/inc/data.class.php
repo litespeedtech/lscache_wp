@@ -25,7 +25,7 @@ class LiteSpeed_Cache_Data
 	private $_tb_img_optm ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.3.1
 	 */
@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Get img_optm table name
+	 * Get img_optm table name.
 	 *
 	 * @since  2.0
 	 */
@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Get optimizer table
+	 * Get optimizer table.
 	 *
 	 * @since  1.4
 	 */
@@ -66,7 +66,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Check if optimizer table exists or not
+	 * Check if optimizer table exists or not.
 	 *
 	 * @since  1.3.1.1
 	 */
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Get data structure of one table
+	 * Get data structure of one table.
 	 *
 	 * @since  2.0
 	 */
@@ -88,7 +88,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Drop table img_optm
+	 * Drop table img_optm.
 	 *
 	 * @since  2.0
 	 */
@@ -109,7 +109,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Create img optm table and sync data from wp_postmeta
+	 * Create img optm table and sync data from wp_postmeta.
 	 *
 	 * @since  2.0
 	 */
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Data
 		}
 
 		/**
-		 * Convert old data from postmeta to img_optm table
+		 * Convert old data from postmeta to img_optm table.
 		 * @since  2.0
 		 */
 		if ( ! $ver || version_compare( $ver, '2.0', '<' ) ) {
@@ -201,7 +201,7 @@ class LiteSpeed_Cache_Data
 		}
 
 		/**
-		 * Add target_md5 field to table
+		 * Add target_md5 field to table.
 		 * @since  2.4.2
 		 */
 		if ( $ver && version_compare( $ver, '2.4.2', '<' ) && version_compare( $ver, '2.0', '>=' ) ) {// NOTE: For new users, need to bypass this section, thats why used the first cond
@@ -225,7 +225,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Create optimizer table
+	 * Create optimizer table.
 	 *
 	 * @since  1.3.1
 	 */
@@ -280,7 +280,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * save optimizer src to db
+	 * save optimizer src to db.
 	 *
 	 * @since  1.3.1
 	 */
@@ -307,7 +307,7 @@ class LiteSpeed_Cache_Data
 	}
 
 	/**
-	 * Get src set from hash in optimizer
+	 * Get src set from hash in optimizer.
 	 *
 	 * @since  1.3.1
 	 */

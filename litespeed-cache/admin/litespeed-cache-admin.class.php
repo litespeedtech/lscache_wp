@@ -21,7 +21,7 @@ class LiteSpeed_Cache_Admin
 
 	/**
 	 * Initialize the class and set its properties.
-	 * Run in hook `after_setup_theme` when is_admin()
+	 * Run in hook `after_setup_theme` when is_admin().
 	 *
 	 * @since    1.0.0
 	 */
@@ -165,7 +165,7 @@ class LiteSpeed_Cache_Admin
 	}
 
 	/**
-	 * Run litespeed admin actions
+	 * Run litespeed admin actions.
 	 *
 	 * @since 1.1.0
 	 */

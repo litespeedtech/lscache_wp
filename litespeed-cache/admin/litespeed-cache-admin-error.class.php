@@ -1,6 +1,6 @@
 <?php
 /**
- * The admin errors
+ * The admin errors.
  *
  *
  * @since      1.0.15

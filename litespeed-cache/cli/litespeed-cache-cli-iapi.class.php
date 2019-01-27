@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LiteSpeed Cache Image Optm Interface
+ * LiteSpeed Cache Image Optm Interface.
  */
 class LiteSpeed_Cache_CLI_IAPI
 {
@@ -15,7 +15,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	}
 
 	/**
-	 * Sync data from IAPI server
+	 * Sync data from IAPI server.
 	 *
 	 * ## OPTIONS
 	 *
@@ -50,7 +50,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	}
 
 	/**
-	 * Send image optimization request to IAPI server
+	 * Send image optimization request to IAPI server.
 	 *
 	 * ## OPTIONS
 	 *
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	}
 
 	/**
-	 * Pull optimized images from IAPI server
+	 * Pull optimized images from IAPI server.
 	 *
 	 * ## OPTIONS
 	 *
@@ -96,7 +96,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	}
 
 	/**
-	 * Show optimization status based on local data
+	 * Show optimization status based on local data.
 	 *
 	 * ## OPTIONS
 	 *
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	}
 
 	/**
-	 * Show optimization status based on local data
+	 * Show optimization status based on local data.
 	 *
 	 * ## OPTIONS
 	 *
@@ -159,7 +159,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
 
 	/**
-	 * Clean up unfinished image data from IAPI server
+	 * Clean up unfinished image data from IAPI server.
 	 *
 	 * ## OPTIONS
 	 *
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	}
 
 	/**
-	 * Remove original image backups
+	 * Remove original image backups.
 	 *
 	 * ## OPTIONS
 	 *

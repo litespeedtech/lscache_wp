@@ -83,7 +83,7 @@ class Minifier
     }
 
     /**
-     * Parses & minifies the given input CSS string
+     * Parses & minifies the given input CSS string.
      * @param string $css
      * @return string
      */
@@ -133,7 +133,7 @@ class Minifier
     }
 
     /**
-     * Sets the memory limit for this script
+     * Sets the memory limit for this script.
      * @param int|string $limit
      */
     public function setMemoryLimit($limit)
@@ -142,7 +142,7 @@ class Minifier
     }
 
     /**
-     * Sets the maximum execution time for this script
+     * Sets the maximum execution time for this script.
      * @param int|string $seconds
      */
     public function setMaxExecutionTime($seconds)
@@ -151,7 +151,7 @@ class Minifier
     }
 
     /**
-     * Sets the PCRE backtrack limit for this script
+     * Sets the PCRE backtrack limit for this script.
      * @param int $limit
      */
     public function setPcreBacktrackLimit($limit)
@@ -160,7 +160,7 @@ class Minifier
     }
 
     /**
-     * Sets the PCRE recursion limit for this script
+     * Sets the PCRE recursion limit for this script.
      * @param int $limit
      */
     public function setPcreRecursionLimit($limit)
@@ -169,7 +169,7 @@ class Minifier
     }
 
     /**
-     * Builds regular expressions needed for shortening zero values
+     * Builds regular expressions needed for shortening zero values.
      */
     private function setShortenZeroValuesRegexes()
     {
@@ -203,7 +203,7 @@ class Minifier
     }
 
     /**
-     * Resets properties whose value may change between runs
+     * Resets properties whose value may change between runs.
      */
     private function resetRunProperties()
     {
@@ -213,7 +213,7 @@ class Minifier
     }
 
     /**
-     * Tries to configure PHP to use at least the suggested minimum settings
+     * Tries to configure PHP to use at least the suggested minimum settings.
      */
     private function doRaisePhpLimits()
     {
@@ -247,7 +247,7 @@ class Minifier
     }
 
     /**
-     * Registers a preserved token
+     * Registers a preserved token.
      * @param string $token
      * @return string The token ID string
      */
@@ -259,7 +259,7 @@ class Minifier
     }
 
     /**
-     * Registers a candidate comment token
+     * Registers a candidate comment token.
      * @param string $comment
      * @return string The comment token ID string
      */
@@ -271,7 +271,7 @@ class Minifier
     }
 
     /**
-     * Registers a rule body token
+     * Registers a rule body token.
      * @param string $body the minified rule body
      * @return string The rule body token ID string
      */
@@ -287,7 +287,7 @@ class Minifier
     }
 
     /**
-     * Parses & minifies the given input CSS string
+     * Parses & minifies the given input CSS string.
      * @param string $css
      * @return string
      */
@@ -421,7 +421,7 @@ class Minifier
     }
 
     /**
-     * Preserves old IE Matrix string definition
+     * Preserves old IE Matrix string definition.
      * @param array $matches
      * @return string
      */
@@ -431,7 +431,7 @@ class Minifier
     }
 
     /**
-     * Preserves strings found
+     * Preserves strings found.
      * @param array $matches
      * @return string
      */
@@ -840,7 +840,7 @@ class Minifier
 
     /**
      * Shortens all named colors with a shorter HEX counterpart for a set of safe properties
-     * e.g. white -> #fff
+     * e.g. white -> #fff.
      * @param array $matches
      * @return string
      */
@@ -850,7 +850,7 @@ class Minifier
     }
 
     /**
-     * Makes a string lowercase
+     * Makes a string lowercase.
      * @param array $matches
      * @return string
      */

@@ -110,7 +110,7 @@ class LiteSpeed_Cache
 
 		/**
 		 * Register plugin activate/deactivate/uninstall hooks
-		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow
+		 * NOTE: this can't be moved under after_setup_theme, otherwise activation will be bypassed somehow.
 		 *
 		 * @since  2.7.1	Disabled admin&CLI check to make frontend able to enable cache too
 		 */
@@ -131,13 +131,13 @@ class LiteSpeed_Cache
 		}
 
 		/**
-		 * Added hook before init
+		 * Added hook before init.
 		 * @since  1.6.6
 		 */
 		do_action( 'litespeed_before_init' ) ;
 
 		/**
-		 * Preload ESI functionality for ESI request uri recovery
+		 * Preload ESI functionality for ESI request uri recovery.
 		 * @since 1.8.1
 		 */
 		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
@@ -157,7 +157,7 @@ class LiteSpeed_Cache
 	public function init()
 	{
 		/**
-		 * Added hook before init
+		 * Added hook before init.
 		 * @since  1.6.6
 		 * @since  2.6 	Added filter to all config values in LiteSpeed_Cache_Config
 		 */
@@ -190,7 +190,7 @@ class LiteSpeed_Cache
 		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;
 
 		/**
-		 * Check if is non optm simulator
+		 * Check if is non optm simulator.
 		 * @since  2.9
 		 */
 		if ( ! empty( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm' ) {
@@ -199,7 +199,7 @@ class LiteSpeed_Cache
 
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			/**
-			 * Check lazy lib request in the very beginning
+			 * Check lazy lib request in the very beginning.
 			 * @since 1.4
 			 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
 			 */
@@ -210,7 +210,7 @@ class LiteSpeed_Cache
 		}
 
 		/**
-		 * Register vary filter
+		 * Register vary filter.
 		 * @since  1.6.2
 		 */
 		LiteSpeed_Cache_Control::get_instance() ;
@@ -248,7 +248,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Handle auto update
+	 * Handle auto update.
 	 *
 	 * @since 2.7.2
 	 */
@@ -272,7 +272,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Run frontend actions
+	 * Run frontend actions.
 	 *
 	 * @since 1.1.0
 	 */
@@ -433,7 +433,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * A shortcut to get the LiteSpeed_Cache_Config config value
+	 * A shortcut to get the LiteSpeed_Cache_Config config value.
 	 *
 	 * @since 1.0.0
 	 * @param string $opt_id an option ID if getting an option
@@ -445,7 +445,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Mark wp_footer called
+	 * Mark wp_footer called.
 	 *
 	 * @since 1.3
 	 */
@@ -458,7 +458,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Tigger coment info display hook
+	 * Tigger coment info display hook.
 	 *
 	 * @since 1.3
 	 */
@@ -514,7 +514,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * For compatibility with those plugins have 'Bad' logic that forced all buffer output even it is NOT their buffer :(
+	 * For compatibility with those plugins have 'Bad' logic that forced all buffer output even it is NOT their buffer :(.
 	 *
 	 * Usually this is called after send_headers() if following orignal WP process
 	 *
@@ -536,7 +536,7 @@ class LiteSpeed_Cache
 
 		/**
 		 * Clean wrapper mainly for esi block
-		 * NOTE: this needs to be before optimizer to avoid wrapper being removed
+		 * NOTE: this needs to be before optimizer to avoid wrapper being removed.
 		 * @since 1.4
 		 */
 		$buffer = LiteSpeed_Cache_GUI::finalize( $buffer ) ;
@@ -698,7 +698,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Deprecated calls for backward compatibility to v1.1.2.2
+	 * Deprecated calls for backward compatibility to v1.1.2.2.
 	 */
 	public function purge_post( $id )
 	{
@@ -706,7 +706,7 @@ class LiteSpeed_Cache
 	}
 
 	/**
-	 * Deprecated calls for backward compatibility to v1.1.2.2
+	 * Deprecated calls for backward compatibility to v1.1.2.2.
 	 */
 	public function purge_all()
 	{

@@ -1,6 +1,6 @@
 <?php
 /**
- * The Crawler Sitemap Class
+ * The Crawler Sitemap Class.
  *
  *
  * @since      	1.1.0
@@ -22,7 +22,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	protected $_urls = array() ;
 
 	/**
-	 * Instantiate the class
+	 * Instantiate the class.
 	 *
 	 * @since 1.1.0
 	 */
@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	}
 
 	/**
-	 * Generate all urls
+	 * Generate all urls.
 	 *
 	 * @since 1.1.0
 	 */

@@ -24,7 +24,7 @@ class LiteSpeed_Cache_Admin_Settings
 	private $_max_int = 2147483647 ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.3
 	 */
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_validate_thirdparty() ;
 
 		/**
-		 * Check if need to send cfg to CDN or not
+		 * Check if need to send cfg to CDN or not.
 		 * @since 2.3
 		 */
 		$id = LiteSpeed_Cache_Config::OPT_CDN_QUIC ;
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * 		1) wp-config.php;
 		 * 		2) adv-cache.php;
 		 * 		3) object-cache.php;
-		 * 		4) .htaccess;
+		 * 		4) .htaccess;.
 		 */
 
 		/* 1) wp-config.php; */
@@ -163,7 +163,7 @@ class LiteSpeed_Cache_Admin_Settings
 		/* 3) object-cache.php; */
 
 		/**
-		 * Validate Object Cache
+		 * Validate Object Cache.
 		 * @since 1.8
 		 */
 		$new_options = $this->_validate_object_cache() ;
@@ -192,7 +192,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		/**
-		 * Keep self up-to-date
+		 * Keep self up-to-date.
 		 * @since  2.7.2
 		 */
 		$id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ;
@@ -222,7 +222,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * 		1) wp-config.php;
 		 * 		2) adv-cache.php;
 		 * 		3) object-cache.php;
-		 * 		4) .htaccess;
+		 * 		4) .htaccess;.
 		 */
 
 		/* 1) wp-config.php; */
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_Admin_Settings
 		/* 3) object-cache.php; */
 
 		/**
-		 * Validate Object Cache
+		 * Validate Object Cache.
 		 * @since 1.8
 		 */
 		$new_options = $this->_validate_object_cache() ;
@@ -346,7 +346,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		/**
-		 * Check if object cache file existing or not
+		 * Check if object cache file existing or not.
 		 */
 		if ( ! defined( 'LITESPEED_DISABLE_OBJECT' ) ) {
 			$id = LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ;
@@ -355,7 +355,7 @@ class LiteSpeed_Cache_Admin_Settings
 				LiteSpeed_Cache_Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
 				LiteSpeed_Cache_Object::get_instance()->update_file( $all_options ) ;
 				/**
-				 * Clear object cache
+				 * Clear object cache.
 				 */
 				LiteSpeed_Cache_Object::get_instance()->reconnect( $all_options ) ;
 			}
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		/**
-		 * Update Role Excludes
+		 * Update Role Excludes.
 		 * @since 1.6.2
 		 */
 		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
@@ -628,7 +628,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		/**
-		 * Handle multiple CDN setting
+		 * Handle multiple CDN setting.
 		 * @since 1.7
 		 */
 		$cdn_mapping = array() ;
@@ -654,14 +654,14 @@ class LiteSpeed_Cache_Admin_Settings
 		update_option( $id, $cdn_mapping ) ;
 
 		/**
-		 * Load jQuery from cdn
+		 * Load jQuery from cdn.
 		 * @since 1.5
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ;
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
 
 		/**
-		 * Quic API
+		 * Quic API.
 		 * @since  2.4.1
 		 */
 		$ids = array(
@@ -676,7 +676,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		/**
-		 * CLoudflare API
+		 * CLoudflare API.
 		 * @since  1.7.2
 		 */
 		$ids = array(
@@ -816,21 +816,21 @@ class LiteSpeed_Cache_Admin_Settings
 		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
 		/**
-		 * DNS prefetch
+		 * DNS prefetch.
 		 * @since 1.7.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ;
 		$this->_save_item( $id, 'domain' ) ;
 
 		/**
-		 * Combined file max size
+		 * Combined file max size.
 		 * @since 1.7.1
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
 		/**
-		 * Separate CCSS File Types & URI
+		 * Separate CCSS File Types & URI.
 		 * @since 2.6.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ;
@@ -841,7 +841,7 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Validate advanced setting
+	 * Validate advanced setting.
 	 *
 	 * @since 1.7.1
 	 */
@@ -864,7 +864,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		/**
-		 * Added Favicon
+		 * Added Favicon.
 		 * @since  1.7.2
 		 */
 		// $fav_file_arr = array( 'frontend', 'backend' ) ;
@@ -1043,7 +1043,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_save_item( $id ) ;
 
 		/**
-		 * Save cookie crawler
+		 * Save cookie crawler.
 		 * @since 2.8
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ;
@@ -1073,7 +1073,7 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Validates settings related to rewrite rules
+	 * Validates settings related to rewrite rules.
 	 *
 	 * @since 1.3
 	 * @return  array New options related to rewrite rule
@@ -1315,7 +1315,7 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Filter the value for checkbox via input and id (enabled/disabled)
+	 * Filter the value for checkbox via input and id (enabled/disabled).
 	 *
 	 * @since  1.1.6
 	 * @param int $input The whole input array
@@ -1328,7 +1328,7 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Filter the value for checkbox (enabled/disabled)
+	 * Filter the value for checkbox (enabled/disabled).
 	 *
 	 * @since  1.1.0
 	 * @param int $val The checkbox value
@@ -1346,7 +1346,7 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * Filter the value for radio (enabled/disabled/notset)
+	 * Filter the value for radio (enabled/disabled/notset).
 	 *
 	 * @since  1.1.0
 	 * @param int $val The radio value
@@ -1368,7 +1368,7 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * To save item in options
+	 * To save item in options.
 	 *
 	 * @since 2.2.1
 	 */

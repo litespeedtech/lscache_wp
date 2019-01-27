@@ -1,6 +1,6 @@
 <?php
 /**
- * The plugin bootstrap file
+ * The plugin bootstrap file.
  *
  * This file is read by WordPress to generate the plugin information in the plugin
  * admin area. This file also includes all of the dependencies used by the plugin,
@@ -54,7 +54,7 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
- * This also needs to be before cfg.cls init because default cdn_included_dir needs `LSCWP_CONTENT_FOLDER`
+ * This also needs to be before cfg.cls init because default cdn_included_dir needs `LSCWP_CONTENT_FOLDER`.
  * @since  1.9.1 Moved up
  * @since  2.2.1 Moved up from core.cls
  */
@@ -162,7 +162,7 @@ if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
 }
 
 /**
- * Handle exception
+ * Handle exception.
  */
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )

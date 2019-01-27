@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LiteSpeed Cache Purge Interface
+ * LiteSpeed Cache Purge Interface.
  */
 class LiteSpeed_Cache_Cli_Purge
 {
@@ -240,7 +240,7 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 	/**
-	 * Purges cache tags for a WordPress tag
+	 * Purges cache tags for a WordPress tag.
 	 *
 	 * ## OPTIONS
 	 *
@@ -259,7 +259,7 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 	/**
-	 * Purges cache tags for a WordPress category
+	 * Purges cache tags for a WordPress category.
 	 *
 	 * ## OPTIONS
 	 *
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Cli_Purge
 	}
 
 	/**
-	 * Purges cache tags for a WordPress Post/Product
+	 * Purges cache tags for a WordPress Post/Product.
 	 *
 	 * @alias product
 	 *

@@ -71,7 +71,7 @@ else {
 }
 
 /**
- * Generate rules for setting usage
+ * Generate rules for setting usage.
  * @since 1.6.2
  */
 global $wp_roles ;
@@ -86,7 +86,7 @@ foreach ( $wp_roles->roles as $k => $v ) {
 ksort( $roles ) ;
 
 /**
- * Switch basic/advanced mode
+ * Switch basic/advanced mode.
  * @since  1.8.2
  */
 if ( ! empty( $_GET[ 'mode' ] ) ) {

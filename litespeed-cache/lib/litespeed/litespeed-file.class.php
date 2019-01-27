@@ -1,7 +1,7 @@
 <?php
 /**
 * LiteSpeed File Operator Library Class
-* Append/Replace content to a file
+* Append/Replace content to a file.
 *
 * @since 1.1.0
 */
@@ -23,7 +23,7 @@ class Litespeed_File
 	}
 
 	/**
-	 *	Delete folder
+	 *	Delete folder.
 	 *
 	 * @since 2.1
 	 */
@@ -50,7 +50,7 @@ class Litespeed_File
 	}
 
 	/**
-	 * Read data from file
+	 * Read data from file.
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
@@ -100,7 +100,7 @@ class Litespeed_File
 	}
 
 	/**
-	 * Append data to file
+	 * Append data to file.
 	 *
 	 * @since 1.1.5
 	 * @param string $filename
@@ -114,7 +114,7 @@ class Litespeed_File
 	}
 
 	/**
-	 * Save data to file
+	 * Save data to file.
 	 *
 	 * @since 1.1.0
 	 * @param string $filename
@@ -174,7 +174,7 @@ class Litespeed_File
 	}
 
 	/**
-	 * Remove Unicode zero-width space <200b><200c>
+	 * Remove Unicode zero-width space <200b><200c>.
 	 *
 	 * @since 2.1.2
 	 * @since 2.9 changed to public
@@ -225,7 +225,7 @@ class Litespeed_File
 	}
 
 	/**
-	 * Return wrapped block data with marker
+	 * Return wrapped block data with marker.
 	 *
 	 * @param string $insertion
 	 * @param string $marker
@@ -248,7 +248,7 @@ class Litespeed_File
 	}
 
 	/**
-	 * Touch block data from file, return with marker
+	 * Touch block data from file, return with marker.
 	 *
 	 * @param string $filename
 	 * @param string $marker

@@ -1,6 +1,6 @@
 <?php
 /**
-* LiteSpeed String Operator Library Class
+* LiteSpeed String Operator Library Class.
 *
 * @since 1.3
 */
@@ -9,7 +9,7 @@ class Litespeed_String
 {
 
 	/**
-	 * Generate random string
+	 * Generate random string.
 	 *
 	 * @since  1.3
 	 * @param  int  $len  	 Length of string

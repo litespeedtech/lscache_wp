@@ -1,6 +1,6 @@
 <?php
 /**
- * The plugin vary class to manage X-LiteSpeed-Vary
+ * The plugin vary class to manage X-LiteSpeed-Vary.
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Vary
 		add_action('set_comment_cookies', array( $this, 'append_commenter' ) ) ;
 
 		/**
-		 * Don't change for REST call because they don't carry on user info usually
+		 * Don't change for REST call because they don't carry on user info usually.
 		 * @since 1.6.7
 		 */
 		add_action( 'rest_api_init', function(){
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Check if default vary has a value
+	 * Check if default vary has a value.
 	 *
 	 * @since 1.1.3
 	 */
@@ -190,7 +190,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Append user status with logged in
+	 * Append user status with logged in.
 	 *
 	 * @since 1.1.3
 	 * @since 1.6.2 Removed static referral
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Vary
 		LiteSpeed_Cache_Log::debug( '[Vary] add_logged_in' ) ;
 
 		/**
-		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable.
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary() ;
@@ -210,7 +210,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Remove user logged in status
+	 * Remove user logged in status.
 	 *
 	 * @since 1.1.3
 	 * @since 1.6.2 Removed static referral
@@ -220,7 +220,7 @@ class LiteSpeed_Cache_Vary
 		LiteSpeed_Cache_Log::debug( '[Vary] remove_logged_in' ) ;
 
 		/**
-		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
+		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable.
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary() ;
@@ -230,7 +230,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Allow vary can be changed for ajax calls
+	 * Allow vary can be changed for ajax calls.
 	 *
 	 * @since 2.2.2
 	 * @since 2.6 Changed to static
@@ -242,7 +242,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Check if can change default vary
+	 * Check if can change default vary.
 	 *
 	 * @since 1.6.2
 	 */
@@ -250,7 +250,7 @@ class LiteSpeed_Cache_Vary
 	{
 		// Don't change for ajax due to ajax not sending webp header
 		/**
-		 * Added `litespeed_ajax_vary` hook for 3rd party to set vary when doing ajax call ( Login With Ajax )
+		 * Added `litespeed_ajax_vary` hook for 3rd party to set vary when doing ajax call ( Login With Ajax ).
 		 * @since  1.6.6
 		 */
 		if ( LiteSpeed_Cache_Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
@@ -259,7 +259,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		/**
-		 * POST request can set vary to fix #820789 login "loop" guest cache issue
+		 * POST request can set vary to fix #820789 login "loop" guest cache issue.
 		 * @since 1.6.5
 		 */
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
@@ -276,7 +276,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Update default vary
+	 * Update default vary.
 	 *
 	 * @since 1.6.2
 	 * @since  1.6.6.1 Add ran check to make it only run once ( No run multiple times due to login process doesn't have valid uid from router::get_uid )
@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Get vary name
+	 * Get vary name.
 	 *
 	 * @since 1.9.1
 	 */
@@ -319,7 +319,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Finalize default vary
+	 * Finalize default vary.
 	 *
 	 *  Get user vary tag based on admin_bar & role
 	 *
@@ -368,7 +368,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		/**
-		 * Add filter
+		 * Add filter.
 		 * @since 1.6 Added for Role Excludes for optimization cls
 		 * @since 1.6.2 Hooked to webp
 		 */
@@ -394,7 +394,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Append user status with commenter
+	 * Append user status with commenter.
 	 *
 	 * This is ONLY used when submit a comment
 	 *
@@ -406,7 +406,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Correct user status with commenter
+	 * Correct user status with commenter.
 	 *
 	 * @since 1.1.3
 	 * @param  bool $from_redirect If the request is from redirect page or not
@@ -425,7 +425,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Remove user commenter status
+	 * Remove user commenter status.
 	 *
 	 * @since 1.1.3
 	 */
@@ -442,7 +442,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Generate relative path for cookie
+	 * Generate relative path for cookie.
 	 *
 	 * @since 1.1.3
 	 * @param  bool $from_redirect If the request is from redirect page or not
@@ -481,7 +481,7 @@ class LiteSpeed_Cache_Vary
 		$this->_update_default_vary() ;
 
 		/**
-		 * Non caccheable page can still set vary ( for logged in process )
+		 * Non caccheable page can still set vary ( for logged in process ).
 		 * @since  1.6.6.1
 		 */
 		// if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
@@ -520,12 +520,12 @@ class LiteSpeed_Cache_Vary
 	private function _format_vary_cookies()
 	{
 		/**
-		 * To add new varys, use hook `API::filter_vary_cookies()` before here
+		 * To add new varys, use hook `API::filter_vary_cookies()` before here.
 		 */
 		do_action( 'litespeed_vary_add' ) ;
 
 		/**
-		 * Give a filter to manipulate vary
+		 * Give a filter to manipulate vary.
 		 * @since 2.7.1
 		 */
 		$cookies = apply_filters( 'litespeed_vary_cookies', self::$_vary_cookies ) ;
@@ -550,7 +550,7 @@ class LiteSpeed_Cache_Vary
 
 	/**
 	 * Adds vary to the list of vary cookies for the current page.
-	 * This is to add a new vary cookie
+	 * This is to add a new vary cookie.
 	 *
 	 * @since 1.0.13
 	 * @deprecated 2.7.1 Use filter `litespeed_vary_cookies` instead.
@@ -568,7 +568,7 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
-	 * Append child value to default vary
+	 * Append child value to default vary.
 	 *
 	 * @since 2.6
 	 */
@@ -594,7 +594,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		/**
-		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
+		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site.
 		 * @since 1.7
 		 */
 		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ? false : is_ssl() ;

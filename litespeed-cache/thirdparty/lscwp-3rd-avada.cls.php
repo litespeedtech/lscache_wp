@@ -31,7 +31,7 @@ class LiteSpeed_Cache_ThirdParty_Avada
 	}
 
 	/**
-	 * Purges the cache
+	 * Purges the cache.
 	 *
 	 * @since 1.1.0
 	 */

@@ -26,7 +26,7 @@ class LiteSpeed_Cache_Router
 	private static $_frontend_path ;
 
 	/**
-	 * Check if can run optimize
+	 * Check if can run optimize.
 	 *
 	 * @since  1.3
 	 * @since  2.3.1 Relocated from cdn.cls
@@ -66,7 +66,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check referer page to see if its from admin
+	 * Check referer page to see if its from admin.
 	 *
 	 * @since 2.4.2.1
 	 */
@@ -76,7 +76,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if it can use CDN replacement
+	 * Check if it can use CDN replacement.
 	 *
 	 * @since  1.2.3
 	 * @since  2.3.1 Relocated from cdn.cls
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Router
 		}
 
 		/**
-		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`
+		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`.
 		 * @since  2.7.2
 		 */
 		if ( defined( 'DOING_CRON' ) ) {
@@ -114,7 +114,7 @@ class LiteSpeed_Cache_Router
 		}
 
 		/**
-		 * Bypass login/reg page
+		 * Bypass login/reg page.
 		 * @since  1.6
 		 */
 		if ( self::_is_login_page() ) {
@@ -132,7 +132,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if is login page or not
+	 * Check if is login page or not.
 	 *
 	 * @since  2.3.1
 	 */
@@ -146,7 +146,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Crawler simulate role
+	 * Crawler simulate role.
 	 *
 	 * @since  1.9.1
 	 */
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Get user id
+	 * Get user id.
 	 *
 	 * @since  1.6.2
 	 */
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Get user role
+	 * Get user role.
 	 *
 	 * @since  1.6.2
 	 */
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Get frontend path
+	 * Get frontend path.
 	 *
 	 * @since 1.2.2
 	 * @return bool
@@ -262,7 +262,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if ESI is enabled or not
+	 * Check if ESI is enabled or not.
 	 *
 	 * @since 1.2.0
 	 * @return bool
@@ -276,7 +276,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if crawler is enabled on server level
+	 * Check if crawler is enabled on server level.
 	 *
 	 * @since 1.1.1
 	 * @return bool
@@ -301,7 +301,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check action
+	 * Check action.
 	 *
 	 * @since 1.1.0
 	 * @return string
@@ -320,7 +320,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if is logged in
+	 * Check if is logged in.
 	 *
 	 * @since 1.1.3
 	 * @return bool
@@ -334,7 +334,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if is ajax call
+	 * Check if is ajax call.
 	 *
 	 * @since 1.1.0
 	 * @return bool
@@ -348,7 +348,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if is admin ip
+	 * Check if is admin ip.
 	 *
 	 * @since 1.1.0
 	 * @return bool
@@ -364,7 +364,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Create type value for url
+	 * Create type value for url.
 	 *
 	 * @since 1.6
 	 */
@@ -374,7 +374,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Get type value
+	 * Get type value.
 	 *
 	 * @since 1.6
 	 */
@@ -391,7 +391,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check privilege and nonce for the action
+	 * Check privilege and nonce for the action.
 	 *
 	 * @since 1.1.0
 	 */
@@ -519,7 +519,7 @@ class LiteSpeed_Cache_Router
 
 			case LiteSpeed_Cache::ACTION_DISMISS:
 				/**
-				 * Non ajax call can dismiss too
+				 * Non ajax call can dismiss too.
 				 * @since  2.9
 				 */
 				// if ( self::is_ajax() ) {
@@ -535,7 +535,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Verify sapi passive callback
+	 * Verify sapi passive callback.
 	 *
 	 * @since 1.5
 	 * @param  string $action
@@ -554,7 +554,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Verify sapi aggressive callback
+	 * Verify sapi aggressive callback.
 	 *
 	 * @since 1.6
 	 * @param  string $action
@@ -573,7 +573,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Verify nonce
+	 * Verify nonce.
 	 *
 	 * @since 1.1.0
 	 * @param  string $action
@@ -590,7 +590,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if the ip is in the range
+	 * Check if the ip is in the range.
 	 *
 	 * @since 1.1.0
 	 * @param  string $ip_list IP list
@@ -618,7 +618,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Get client ip
+	 * Get client ip.
 	 *
 	 * @since 1.1.0
 	 * @since  1.6.5 changed to public
@@ -644,7 +644,7 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Check if opcode cache is enabled
+	 * Check if opcode cache is enabled.
 	 *
 	 * @since  1.8.2
 	 */

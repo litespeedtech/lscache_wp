@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LiteSpeed Cache Admin Interface
+ * LiteSpeed Cache Admin Interface.
  */
 class LiteSpeed_Cache_Cli_Admin
 {
@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Cli_Admin
 	public function set_option($args, $assoc_args)
 	{
 		/**
-		 * Note: If the value is multiple dimensions like cdn_mapping, need to specially handle it both here and in default.ini
+		 * Note: If the value is multiple dimensions like cdn_mapping, need to specially handle it both here and in default.ini.
 		 */
 		$key = $args[0] ;
 		$val = $args[1] ;
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Cli_Admin
 		/**
 		 * For CDN mapping, allow:
 		 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
-		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
+		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`.
 		 * @since  2.7.1
 		 */
 		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
@@ -114,7 +114,7 @@ class LiteSpeed_Cache_Cli_Admin
 				break ;
 
 			/**
-			 * Special handler for cdn mapping settings
+			 * Special handler for cdn mapping settings.
 			 *
 			 * $options is already converted to input format
 			 *
@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Cli_Admin
 	}
 
 	/**
-	 * Update options
+	 * Update options.
 	 *
 	 * @since 1.1.0
 	 * @param array $options The options array to store

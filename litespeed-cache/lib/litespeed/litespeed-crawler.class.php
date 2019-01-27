@@ -1,6 +1,6 @@
 <?php
 /**
-* LiteSpeed Crawler Class
+* LiteSpeed Crawler Class.
 *
 * @since 1.1.0
 */
@@ -33,7 +33,7 @@ class Litespeed_Crawler
 	const FAST_USER_AGENT = 'lscache_runner' ;
 
 	/**
-	 * Set load limit
+	 * Set load limit.
 	 *
 	 * @since  1.1.0
 	 * @param  string $sitemap_file Sitemap file location
@@ -45,7 +45,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set User Agent
+	 * Set User Agent.
 	 *
 	 * @since  2.8
 	 */
@@ -55,7 +55,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set http/2 option for curl request
+	 * Set http/2 option for curl request.
 	 *
 	 * @since  2.0
 	 */
@@ -65,7 +65,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set headers for curl request
+	 * Set headers for curl request.
 	 *
 	 * @since  1.9.1
 	 */
@@ -75,7 +75,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set cookies for curl request
+	 * Set cookies for curl request.
 	 *
 	 * @since  1.9.1
 	 */
@@ -85,7 +85,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set domain ip
+	 * Set domain ip.
 	 *
 	 * @since  1.1.1
 	 * @param  string $val The domain's direct ip
@@ -96,7 +96,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set domain url
+	 * Set domain url.
 	 *
 	 * @since  1.1.0
 	 * @param  string $val The prefix url
@@ -107,7 +107,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set run delay
+	 * Set run delay.
 	 *
 	 * @since  1.1.0
 	 * @param  int $val Delay microseconds
@@ -118,7 +118,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set load limit
+	 * Set load limit.
 	 *
 	 * @since  1.1.0
 	 * @param  int $val Run duration in seconds
@@ -129,7 +129,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set load limit
+	 * Set load limit.
 	 *
 	 * @since  1.1.0
 	 * @param  int $val Threads limit in a time
@@ -140,7 +140,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Set load limit
+	 * Set load limit.
 	 *
 	 * @since  1.1.0
 	 * @param  int $val Server load limit to be checked before crawling
@@ -151,7 +151,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Get if last crawler touched end
+	 * Get if last crawler touched end.
 	 *
 	 * @since  1.1.0
 	 * @return bool|int		False or last ended time
@@ -166,7 +166,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Refresh list_size in meta
+	 * Refresh list_size in meta.
 	 *
 	 * @since  1.1.0
 	 * @return bool True if succeeded, false otherwise
@@ -182,7 +182,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Create reset pos file
+	 * Create reset pos file.
 	 *
 	 * @since  1.1.0
 	 * @return mixed True or error message
@@ -193,7 +193,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Start crawler
+	 * Start crawler.
 	 *
 	 * @since  1.1.0
 	 * @return string|bool crawled result
@@ -249,7 +249,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Check returned curl header to find if the status is 200 ok or not
+	 * Check returned curl header to find if the status is 200 ok or not.
 	 *
 	 * @since  2.0
 	 */
@@ -276,7 +276,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Run crawler
+	 * Run crawler.
 	 *
 	 * @since  1.1.0
 	 * @param  array $curlOptions Curl options
@@ -360,7 +360,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Mark running status
+	 * Mark running status.
 	 *
 	 * @since  1.1.0
 	 */
@@ -384,7 +384,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Terminate crawling
+	 * Terminate crawling.
 	 *
 	 * @since  1.1.0
 	 * @param  string $end_reason The reason to terminate
@@ -411,7 +411,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Return crawler result
+	 * Return crawler result.
 	 *
 	 * @since  1.1.0
 	 * @param  string $end_reason Reason to end
@@ -428,7 +428,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Adjust threads dynamically
+	 * Adjust threads dynamically.
 	 *
 	 * @since  1.1.0
 	 */
@@ -481,7 +481,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Send multi curl requests
+	 * Send multi curl requests.
 	 *
 	 * @since  1.1.0
 	 * @param  array $urls    The url lists to send to
@@ -523,7 +523,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Get curl_options
+	 * Get curl_options.
 	 *
 	 * @since  1.1.0
 	 * @return   options array
@@ -551,7 +551,7 @@ class Litespeed_Crawler
 		$options[CURLOPT_HTTPHEADER][] = "Cache-Control: max-age=0" ;
 
 		/**
-		 * Try to enable http2 connection (only available since PHP7+)
+		 * Try to enable http2 connection (only available since PHP7+).
 		 * @since  1.9.1
 		 * @since  2.2.7 Commented due to cause no-cache issue
 		 */
@@ -588,7 +588,7 @@ class Litespeed_Crawler
 		}
 
 		/**
-		 * Append hash to cookie for validation
+		 * Append hash to cookie for validation.
 		 * @since  1.9.1
 		 */
 		$hash = Litespeed_String::rrand( 6 ) ;
@@ -605,7 +605,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Save existing meta
+	 * Save existing meta.
 	 *
 	 * @since  1.1.0
 	 * @return mixed True or error message
@@ -619,7 +619,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Read existing meta
+	 * Read existing meta.
 	 *
 	 * @since  1.1.0
 	 * @return mixed True or error message
@@ -649,7 +649,7 @@ class Litespeed_Crawler
 	}
 
 	/**
-	 * Get defaut meta to avoid missing key warning
+	 * Get defaut meta to avoid missing key warning.
 	 *
 	 * @since  1.9.1
 	 */

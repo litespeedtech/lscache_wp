@@ -23,7 +23,7 @@ class LiteSpeed_Cache_Task
 	const CRON_FITLER = 'litespeed_filter' ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.6
 	 */
@@ -70,7 +70,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Enable/Disable cron task
+	 * Enable/Disable cron task.
 	 *
 	 * @since 1.1.0
 	 */
@@ -94,7 +94,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Update cron status
+	 * Update cron status.
 	 *
 	 * @since 1.1.0
 	 * @param array $options The options to check if cron should be enabled
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Schedule cron img optm auto request
+	 * Schedule cron img optm auto request.
 	 *
 	 * @since 2.4.1
 	 */
@@ -132,7 +132,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Schedule cron img optimization
+	 * Schedule cron img optimization.
 	 *
 	 * @since 1.6.1
 	 */
@@ -148,7 +148,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Schedule cron ccss generation
+	 * Schedule cron ccss generation.
 	 *
 	 * @since 2.3
 	 */
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Schedule cron image placeholder generation
+	 * Schedule cron image placeholder generation.
 	 *
 	 * @since 2.5.1
 	 */
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Schedule cron crawler
+	 * Schedule cron crawler.
 	 *
 	 * @since 1.1.0
 	 */
@@ -196,7 +196,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Register cron interval imgoptm
+	 * Register cron interval imgoptm.
 	 *
 	 * @since 1.6.1
 	 * @param array $schedules WP Hook
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Register cron interval
+	 * Register cron interval.
 	 *
 	 * @since 1.1.0
 	 * @param array $schedules WP Hook
@@ -233,7 +233,7 @@ class LiteSpeed_Cache_Task
 	}
 
 	/**
-	 * Clear cron
+	 * Clear cron.
 	 *
 	 * @since 1.1.0
 	 */

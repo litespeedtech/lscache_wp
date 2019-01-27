@@ -1,6 +1,6 @@
 <?php
 /**
- * The plugin cache-control class for X-Litespeed-Cache-Control
+ * The plugin cache-control class for X-Litespeed-Cache-Control.
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
@@ -33,14 +33,14 @@ class LiteSpeed_Cache_Control
 	private static $_mobile = false ;
 
 	/**
-	 * Init cache control
+	 * Init cache control.
 	 *
 	 * @since  1.6.2
 	 */
 	private function __construct()
 	{
 		/**
-		 * Add vary filter for Role Excludes
+		 * Add vary filter for Role Excludes.
 		 * @since  1.6.2
 		 */
 		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
@@ -50,7 +50,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Exclude role from optimization filter
+	 * Exclude role from optimization filter.
 	 *
 	 * @since  1.6.2
 	 */
@@ -65,7 +65,7 @@ class LiteSpeed_Cache_Control
 
 	/**
 	 * 1. Initialize cacheable status for `wp` hook
-	 * 2. Hook error page tags for cacheable pages
+	 * 2. Hook error page tags for cacheable pages.
 	 *
 	 * @since 1.1.3
 	 */
@@ -96,7 +96,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Set no vary setting
+	 * Set no vary setting.
 	 *
 	 * @since 1.1.3
 	 */
@@ -110,7 +110,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Get no vary setting
+	 * Get no vary setting.
 	 *
 	 * @since 1.1.3
 	 */
@@ -120,7 +120,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Set stale
+	 * Set stale.
 	 *
 	 * @since 1.1.3
 	 */
@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Get stale
+	 * Get stale.
 	 *
 	 * @since 1.1.3
 	 */
@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Set cache control to shared private
+	 * Set cache control to shared private.
 	 *
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check if is shared private
+	 * Check if is shared private.
 	 *
 	 * @since 1.1.3
 	 */
@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Set cache control to forced public
+	 * Set cache control to forced public.
 	 *
 	 * @since 1.7.1
 	 * @param string $reason The reason to no cache
@@ -201,7 +201,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check if is public forced
+	 * Check if is public forced.
 	 *
 	 * @since 1.7.1
 	 */
@@ -211,7 +211,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Set cache control to private
+	 * Set cache control to private.
 	 *
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check if is private
+	 * Check if is private.
 	 *
 	 * @since 1.1.3
 	 */
@@ -244,7 +244,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Initialize cacheable status in `wp` hook, if not call this, by default it will be non-cacheable
+	 * Initialize cacheable status in `wp` hook, if not call this, by default it will be non-cacheable.
 	 *
 	 * @since 1.1.3
 	 */
@@ -263,7 +263,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * This will disable non-cacheable BM
+	 * This will disable non-cacheable BM.
 	 *
 	 * @since 2.2
 	 */
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Switch to nocacheable status
+	 * Switch to nocacheable status.
 	 *
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
@@ -302,7 +302,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check current notcacheable bit set
+	 * Check current notcacheable bit set.
 	 *
 	 * @since 1.1.3
 	 * @return bool true if notcacheable bit is set, otherwise false
@@ -313,7 +313,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check current force cacheable bit set
+	 * Check current force cacheable bit set.
 	 *
 	 * @since 	2.2
 	 */
@@ -323,7 +323,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check current cacheable status
+	 * Check current cacheable status.
 	 *
 	 * @since 1.1.3
 	 * @return bool true if is still cacheable, otherwise false
@@ -415,7 +415,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check if need to set no cache status for redirection or not
+	 * Check if need to set no cache status for redirection or not.
 	 *
 	 * @since 1.1.3
 	 */
@@ -489,7 +489,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Generate all `control` tags before output
+	 * Generate all `control` tags before output.
 	 *
 	 * @since 1.1.3
 	 */
@@ -697,7 +697,7 @@ class LiteSpeed_Cache_Control
 	}
 
 	/**
-	 * Check if current request has qs excluded setting
+	 * Check if current request has qs excluded setting.
 	 *
 	 * @since  1.3
 	 * @param  array  $excludes QS excludes setting

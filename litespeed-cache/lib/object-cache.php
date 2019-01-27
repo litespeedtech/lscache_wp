@@ -1,6 +1,6 @@
 <?php
 /**
- * LiteSpeed Object Cache
+ * LiteSpeed Object Cache.
  *
  * @since  1.8
  */

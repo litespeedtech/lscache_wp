@@ -1,6 +1,6 @@
 <?php
 /**
- * Class LiteSpeed_Cache_Config
+ * Class LiteSpeed_Cache_Config.
  *
  * @package LiteSpeed_Cache_Config
  */
@@ -11,7 +11,7 @@
 class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
-	 * Function to invoke a Private method
+	 * Function to invoke a Private method.
 	 */
 	protected static function invokeMethod($className, $methodName, array $parameters = array()) 
 	{
@@ -28,7 +28,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
     }
 
     /**
-     * Function for instance
+     * Function for instance.
      */
     public static function get_instance(){
 		$instance = new LiteSpeed_Cache_Config();
@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
     }
 
     /**
-     * Function for configurations
+     * Function for configurations.
      */
     public static function converttoArray($object){
     	
@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
   	}
 
 	/**
-	 * Test case for enqueue style LiteSpeed_Cache_Config::__construct
+	 * Test case for enqueue style LiteSpeed_Cache_Config::__construct.
 	 */
 	public function test_construct()
 	{
@@ -63,7 +63,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::construct_multisite_options
+	 * test case for LiteSpeed_Cache_Config::construct_multisite_options.
 	 * @return array the updated options
 	 */
 	public function test_construct_multisite_options()
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_options
+	 * test case for LiteSpeed_Cache_Config::get_options.
 	 * @return array the updated options
 	 */
 	public function test_get_options() 
@@ -83,7 +83,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_option
+	 * test case for LiteSpeed_Cache_Config::get_option.
 	 * @param string $id configuration ID
 	 * @return mixed selected option if set, NULL if not
 	 */
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_purge_options
+	 * test case for LiteSpeed_Cache_Config::get_purge_options.
 	 * @return array the list of purge options
 	 */
 	public function test_get_purge_options() 
@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::purge_by_post
+	 * test case for LiteSpeed_Cache_Config::purge_by_post.
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
 	 * @return bool true if the post type should be purged, false otherwise
 	 */
@@ -118,7 +118,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_default_options
+	 * test case for LiteSpeed_Cache_Config::get_default_options.
 	 * @param bool $include_thirdparty whether to include the thirdparty options
 	 * @return array an array of the default options
 	 */
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_default_site_options
+	 * test case for LiteSpeed_Cache_Config::get_default_site_options.
 	 * @return array an array of the default options
 	 */
 	public function test_get_default_site_options()
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_rule_reset_options
+	 * test case for LiteSpeed_Cache_Config::get_rule_reset_options.
 	 * @return array the list of options to reset
 	 */
 	public function test_get_rule_reset_options()
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_site_options
+	 * test case for LiteSpeed_Cache_Config::get_site_options.
 	 * @return array returns the current site options
 	 */
 	public function test_get_site_options()
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::get_thirdparty_options
+	 * test case for LiteSpeed_Cache_Config::get_thirdparty_options.
 	 * @param array $options Optional. The default options to compare against.
 	 * @return mixed boolean on failure, array of keys on success
 	 */
@@ -187,7 +187,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::wp_cache_var_setter
+	 * test case for LiteSpeed_Cache_Config::wp_cache_var_setter.
 	 * @param bool $enable true if enabling, false if disabling
 	 * @return bool true if the variable is the correct value, false if something went wrong
 	 */
@@ -199,7 +199,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * test case for LiteSpeed_Cache_Config::is_caching_allowed
+	 * test case for LiteSpeed_Cache_Config::is_caching_allowed.
 	 * @return bool true if enabled, false otherwise
 	 */
 	public function test_is_caching_allowed()

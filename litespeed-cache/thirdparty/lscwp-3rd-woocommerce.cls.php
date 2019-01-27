@@ -52,7 +52,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Add hooks to woo actions
+	 * Add hooks to woo actions.
 	 *
 	 * @since  1.6.3
 	 */
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 			/**
 			 * Only when cart is not empty, give it an ESI with private cache
-			 * Call when template_include to make sure woo cart is initialized
+			 * Call when template_include to make sure woo cart is initialized.
 			 * @since  1.7.2
 			 */
 			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
@@ -125,7 +125,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Purge esi private tag
+	 * Purge esi private tag.
 	 *
 	 * @since  1.6.3
 	 */
@@ -137,7 +137,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Check if need to give an ESI block for cart
+	 * Check if need to give an ESI block for cart.
 	 *
 	 * @since  1.7.2
 	 */
@@ -153,7 +153,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Keep vary on if cart is not empty
+	 * Keep vary on if cart is not empty.
 	 *
 	 * @since  1.7.2
 	 */
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Check if vary need to be on based on cart
+	 * Check if vary need to be on based on cart.
 	 *
 	 * @since  1.7.2
 	 */
@@ -439,7 +439,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	}
 
 	/**
-	 * Check and set shop front page ttl
+	 * Check and set shop front page ttl.
 	 *
 	 * @since 1.1.3
 	 * @since 1.6.3 Removed static
@@ -525,7 +525,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		/**
-		 * Avoid possible 500 issue
+		 * Avoid possible 500 issue.
 		 * @since 1.6.2.1
 		 */
 		if ( ! function_exists( 'WC' ) ) {
@@ -553,7 +553,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 					return ;
 				}
 				/**
-				 * From woo/inc/class-wc-cache-helper.php:prevent_caching()
+				 * From woo/inc/class-wc-cache-helper.php:prevent_caching().
 				 * @since  1.4
 				 */
 				$page_ids = array_filter( array( wc_get_page_id( 'cart' ), wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ) );
@@ -567,7 +567,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 					if ( $this->cache_cart ) {
 						LiteSpeed_Cache_API::set_cache_private() ;
 						/**
-						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary
+						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary.
 						 * @since 1.6.6.1
 						 */
 						// LiteSpeed_Cache_API::set_cache_no_vary() ;
@@ -755,7 +755,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	/**
 	 * Hooked to the litespeed_cache_add_config_tab filter.
 	 * Adds the integration configuration options (currently, to determine
-	 * purge rules)
+	 * purge rules).
 	 *
 	 * @since 1.6.3 Removed static
 	 * @param array $tabs third party tabs added

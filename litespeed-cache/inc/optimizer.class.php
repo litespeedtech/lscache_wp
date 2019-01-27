@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Optimizer
 	private static $_instance ;
 
 	/**
-	 * Init optimizer
+	 * Init optimizer.
 	 *
 	 * @since  1.9
 	 */
@@ -28,7 +28,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Run HTML minify process and return final content
+	 * Run HTML minify process and return final content.
 	 *
 	 * @since  1.9
 	 */
@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		/**
-		 * Added exception capture when minify
+		 * Added exception capture when minify.
 		 * @since  2.2.3
 		 */
 		try {
@@ -63,7 +63,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Run minify process and return final content
+	 * Run minify process and return final content.
 	 *
 	 * @since  1.9
 	 * @return string The final content
@@ -122,7 +122,7 @@ class LiteSpeed_Cache_Optimizer
 		// restore_error_handler() ;
 
 		/**
-		 * Clean comment when minify
+		 * Clean comment when minify.
 		 * @since  1.7.1
 		 */
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
@@ -138,7 +138,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Serve css with/without minify
+	 * Serve css with/without minify.
 	 *
 	 * @since  1.9
 	 */
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Serve JS with/without minify
+	 * Serve JS with/without minify.
 	 *
 	 * @since  1.9
 	 */
@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Minify CSS
+	 * Minify CSS.
 	 *
 	 * @since  2.2.3
 	 */
@@ -206,7 +206,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Minify JS
+	 * Minify JS.
 	 *
 	 * Added exception capture when minify
 	 *
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Basic minifier
+	 * Basic minifier.
 	 *
 	 */
 	private function _null_minifier( $content )
@@ -245,7 +245,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Check if the file is already min file
+	 * Check if the file is already min file.
 	 *
 	 * @since  1.9
 	 */
@@ -260,7 +260,7 @@ class LiteSpeed_Cache_Optimizer
 	}
 
 	/**
-	 * Remove comment when minify
+	 * Remove comment when minify.
 	 *
 	 * @since  1.7.1
 	 * @since  1.9 Moved here from optiize.cls

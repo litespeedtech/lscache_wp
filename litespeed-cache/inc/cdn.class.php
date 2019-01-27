@@ -33,7 +33,7 @@ class LiteSpeed_Cache_CDN
 	private $__cfg ;// cfg instance
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.2.3
 	 */
@@ -50,7 +50,7 @@ class LiteSpeed_Cache_CDN
 
 		/**
 		 * Remotely load jQuery
-		 * This is separate from CDN on/off
+		 * This is separate from CDN on/off.
 		 * @since 1.5
 		 */
 		$this->_cfg_cdn_remote_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ) ;
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Associate all filetypes with url
+	 * Associate all filetypes with url.
 	 *
 	 * @since  2.0
 	 */
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.7.2
 	 */
@@ -202,7 +202,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * If include css/js in CDN
+	 * If include css/js in CDN.
 	 *
 	 * @since  1.6.2.1
 	 * @return bool true if included in CDN
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_CDN
 
 	/**
 	 * Run CDN process
-	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
+	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore.
 	 *
 	 * @since  1.2.3
 	 * @return  string The content that is after optimization
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Replace CDN url
+	 * Replace CDN url.
 	 *
 	 * @since  1.2.3
 	 */
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Parse all file types
+	 * Parse all file types.
 	 *
 	 * @since  1.2.3
 	 */
@@ -299,7 +299,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Parse all images
+	 * Parse all images.
 	 *
 	 * @since  1.2.3
 	 */
@@ -327,7 +327,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Parse and replace all inline styles containing url()
+	 * Parse and replace all inline styles containing url().
 	 *
 	 * @since  1.2.3
 	 */
@@ -336,7 +336,7 @@ class LiteSpeed_Cache_CDN
 		// preg_match_all( '/url\s*\(\s*(?!["\']?data:)(?![\'|\"]?[\#|\%|])([^)]+)\s*\)([^;},\s]*)/i', $this->content, $matches ) ;
 
 		/**
-		 * Excludes `\` from URL matching
+		 * Excludes `\` from URL matching.
 		 * @see  #959152 - Wordpress LSCache CDN Mapping causing malformed URLS
 		 * @see  #685485
 		 * @since 3.0
@@ -354,7 +354,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Hook to wp_get_attachment_image_src
+	 * Hook to wp_get_attachment_image_src.
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
@@ -370,7 +370,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Try to rewrite one URL with CDN
+	 * Try to rewrite one URL with CDN.
 	 *
 	 * @since  1.7
 	 */
@@ -383,7 +383,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Try to rewrite one URL with CDN
+	 * Try to rewrite one URL with CDN.
 	 *
 	 * @since  1.7
 	 */
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Try to rewrite one URL with CDN
+	 * Try to rewrite one URL with CDN.
 	 *
 	 * @since  1.7
 	 */
@@ -409,7 +409,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Hook to replace WP responsive images
+	 * Hook to replace WP responsive images.
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
@@ -430,7 +430,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Replace URL to CDN URL
+	 * Replace URL to CDN URL.
 	 *
 	 * @since  1.2.3
 	 * @param  string $url
@@ -514,7 +514,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Check if is orignal URL of CDN or not
+	 * Check if is orignal URL of CDN or not.
 	 *
 	 * @since  2.1
 	 */
@@ -542,7 +542,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Check if the host is the CDN internal host
+	 * Check if the host is the CDN internal host.
 	 *
 	 * @since  1.2.3
 	 *
@@ -559,7 +559,7 @@ class LiteSpeed_Cache_CDN
 	}
 
 	/**
-	 * Remote load jQuery remotely
+	 * Remote load jQuery remotely.
 	 *
 	 * @since  1.5
 	 */

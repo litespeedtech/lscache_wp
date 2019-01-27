@@ -21,7 +21,7 @@ class LiteSpeed_Cache_CSS
 	const DB_CCSS_SUMMARY = 'litespeed-ccss-summary' ;
 
 	/**
-	 * Output critical css
+	 * Output critical css.
 	 *
 	 * @since  1.3
 	 * @since  2.3 Migrated from optimize.cls
@@ -41,7 +41,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Check if there is a queue for cron or not
+	 * Check if there is a queue for cron or not.
 	 *
 	 * @since  2.3
 	 */
@@ -56,7 +56,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Check if there is a ccss cache folder
+	 * Check if there is a ccss cache folder.
 	 *
 	 * @since  2.3
 	 */
@@ -66,7 +66,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Save ccss summary
+	 * Save ccss summary.
 	 *
 	 * @since  2.3
 	 */
@@ -76,7 +76,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Read last time generated info
+	 * Read last time generated info.
 	 *
 	 * @since  2.3
 	 */
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Generate realpath of ccss
+	 * Generate realpath of ccss.
 	 *
 	 * @since  2.3
 	 */
@@ -96,7 +96,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Delete file-based cache folder
+	 * Delete file-based cache folder.
 	 *
 	 * @since  2.3
 	 */
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * The critical css content of the current page
+	 * The critical css content of the current page.
 	 *
 	 * @since  2.3
 	 */
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Check if need to separate ccss for mobile
+	 * Check if need to separate ccss for mobile.
 	 *
 	 * @since  2.6.4
 	 */
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Cron ccss generation
+	 * Cron ccss generation.
 	 *
 	 * @since  2.3
 	 */
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Send to LiteSpeed CCSS API to generate CCSS
+	 * Send to LiteSpeed CCSS API to generate CCSS.
 	 *
 	 * @since  2.3
 	 */
@@ -271,7 +271,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * The critical css file for current page
+	 * The critical css file for current page.
 	 *
 	 * @since  2.3
 	 */
@@ -309,7 +309,7 @@ class LiteSpeed_Cache_CSS
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.3
 	 */

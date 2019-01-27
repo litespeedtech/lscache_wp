@@ -26,7 +26,7 @@ class LiteSpeed_Cache_Import
 	const DB_IMPORT_LOG = 'litespeed_import_log' ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.8.2
 	 */
@@ -40,7 +40,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.8.2
 	 */
@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Export settings
+	 * Export settings.
 	 *
 	 * @since  2.4.1
 	 * @return string All settings data
@@ -82,7 +82,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Export settings to file
+	 * Export settings to file.
 	 *
 	 * @since  1.8.2
 	 */
@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Import settings
+	 * Import settings.
 	 *
 	 * @since  2.4.1
 	 */
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Import settings from file
+	 * Import settings from file.
 	 *
 	 * @since  1.8.2
 	 */
@@ -208,7 +208,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Reset all settings
+	 * Reset all settings.
 	 *
 	 * @since  2.6.3
 	 */
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Import
 	}
 
 	/**
-	 * Generate the filename to export
+	 * Generate the filename to export.
 	 *
 	 * @since  1.8.2
 	 */

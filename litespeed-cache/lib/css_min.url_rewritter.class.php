@@ -1,11 +1,11 @@
 <?php
 /**
- * Class UriRewriter
+ * Class UriRewriter.
  * @package Minify
  */
 
 /**
- * Rewrite file-relative URIs as root-relative in CSS files
+ * Rewrite file-relative URIs as root-relative in CSS files.
  *
  * @package Minify
  * @author Stephen Clay <steve@mrclay.org>
@@ -17,14 +17,14 @@ class UriRewriter
 {
 
     /**
-     * rewrite() and rewriteRelative() append debugging information here
+     * rewrite() and rewriteRelative() append debugging information here.
      *
      * @var string
      */
     public static $debugText = '';
 
     /**
-     * In CSS content, rewrite file relative URIs as root relative
+     * In CSS content, rewrite file relative URIs as root relative.
      *
      * @param string $css
      *
@@ -85,7 +85,7 @@ class UriRewriter
     }
 
     /**
-     * In CSS content, prepend a path to relative URIs
+     * In CSS content, prepend a path to relative URIs.
      *
      * @param string $css
      *
@@ -116,7 +116,7 @@ class UriRewriter
     }
 
     /**
-     * Get a root relative URI from a file relative URI
+     * Get a root relative URI from a file relative URI.
      *
      * <code>
      * UriRewriter::rewriteRelative(
@@ -188,7 +188,7 @@ class UriRewriter
     }
 
     /**
-     * Remove instances of "./" and "../" where possible from a root-relative URI
+     * Remove instances of "./" and "../" where possible from a root-relative URI.
      *
      * @param string $uri
      *
@@ -224,14 +224,14 @@ class UriRewriter
     }
 
     /**
-     * Directory of this stylesheet
+     * Directory of this stylesheet.
      *
      * @var string
      */
     private static $_currentDir = '';
 
     /**
-     * DOC_ROOT
+     * DOC_ROOT.
      *
      * @var string
      */
@@ -239,14 +239,14 @@ class UriRewriter
 
     /**
      * directory replacements to map symlink targets back to their
-     * source (within the document root) E.g. '/var/www/symlink' => '/var/realpath'
+     * source (within the document root) E.g. '/var/www/symlink' => '/var/realpath'.
      *
      * @var array
      */
     private static $_symlinks = array();
 
     /**
-     * Path to prepend
+     * Path to prepend.
      *
      * @var string
      */
@@ -321,7 +321,7 @@ class UriRewriter
     }
 
     /**
-     * Mungs some inline SVG URL declarations so they won't be touched
+     * Mungs some inline SVG URL declarations so they won't be touched.
      *
      * @see https://github.com/mrclay/minify/issues/517
      * @see _unOwlify
@@ -337,7 +337,7 @@ class UriRewriter
     }
 
     /**
-     * Undo work of _owlify
+     * Undo work of _owlify.
      *
      * @see _owlifySvgPaths
      *

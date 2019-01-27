@@ -36,7 +36,7 @@ class LiteSpeed_Cache_GUI
 	const GUI_SUMMARY = 'litespeed-gui-summary' ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.3
 	 */
@@ -50,7 +50,7 @@ class LiteSpeed_Cache_GUI
 			}
 
 			/**
-			 * Turn on instant click
+			 * Turn on instant click.
 			 * @since  1.8.2
 			 */
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK ) ) {
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Display the favicon
+	 * Display the favicon.
 	 *
 	 * @since 1.7.2
 	 */
@@ -89,7 +89,7 @@ class LiteSpeed_Cache_GUI
 	// }
 
 	/**
-	 * Display a pie
+	 * Display a pie.
 	 *
 	 * @since 1.6.6
 	 */
@@ -112,7 +112,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Get classname of PageSpeed Score
+	 * Get classname of PageSpeed Score.
 	 *
 	 * Scale:
 	 * 	90-100 (fast)
@@ -135,7 +135,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Read summary
+	 * Read summary.
 	 *
 	 * @since  2.9
 	 */
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Save summary
+	 * Save summary.
 	 *
 	 * @since  2.9
 	 */
@@ -155,7 +155,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Dismiss banner
+	 * Dismiss banner.
 	 *
 	 * @since 1.0
 	 */
@@ -217,7 +217,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Check if has rule conflict notice
+	 * Check if has rule conflict notice.
 	 *
 	 * @since 1.1.5
 	 * @return bool
@@ -228,7 +228,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Check if has whm notice
+	 * Check if has whm notice.
 	 *
 	 * @since 1.1.1
 	 * @return bool
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Set current page a litespeed page
+	 * Set current page a litespeed page.
 	 *
 	 * @since  2.9
 	 */
@@ -263,7 +263,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Display promo banner
+	 * Display promo banner.
 	 *
 	 * @since 2.1
 	 */
@@ -333,7 +333,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Enqueue ajax call for score updating
+	 * Enqueue ajax call for score updating.
 	 *
 	 * @since 2.9
 	 */
@@ -348,7 +348,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Load frontend public script
+	 * Load frontend public script.
 	 *
 	 * @since  1.8.2
 	 */
@@ -358,7 +358,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Load frontend menu shortcut
+	 * Load frontend menu shortcut.
 	 *
 	 * @since  1.3
 	 */
@@ -368,7 +368,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Load frontend menu shortcut
+	 * Load frontend menu shortcut.
 	 *
 	 * @since  1.3
 	 */
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Clear unfinished data
+	 * Clear unfinished data.
 	 *
 	 * @since  2.4.2
 	 */
@@ -578,7 +578,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Generate install link
+	 * Generate install link.
 	 *
 	 * @since  2.4.2
 	 */
@@ -602,7 +602,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Generate upgrade link
+	 * Generate upgrade link.
 	 *
 	 * @since  2.4.2
 	 */
@@ -627,7 +627,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Finalize buffer by GUI class
+	 * Finalize buffer by GUI class.
 	 *
 	 * @since  1.6
 	 */
@@ -638,7 +638,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Clean wrapper from buffer
+	 * Clean wrapper from buffer.
 	 *
 	 * @since  1.4
 	 * @since  1.6 converted to private with adding prefix _
@@ -679,7 +679,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Display a to-be-removed html wrapper
+	 * Display a to-be-removed html wrapper.
 	 *
 	 * @since  1.4
 	 */
@@ -694,7 +694,7 @@ class LiteSpeed_Cache_GUI
 	}
 
 	/**
-	 * Display a to-be-removed html wrapper
+	 * Display a to-be-removed html wrapper.
 	 *
 	 * @since  1.4
 	 */

@@ -18,7 +18,7 @@ class LiteSpeed_Cache_CDN_Quic
 	const DB_API_HASH = 'litespeed_cdn_quic_hash' ;
 
 	/**
-	 * Notify CDN new config updated
+	 * Notify CDN new config updated.
 	 *
 	 */
 	public static function sync_config( $options )
@@ -216,7 +216,7 @@ class LiteSpeed_Cache_CDN_Quic
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.0
 	 */

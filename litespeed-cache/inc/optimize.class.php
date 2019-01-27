@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Optimize
 	private $minify_options ;
 
 	/**
-	 * Init optimizer
+	 * Init optimizer.
 	 *
 	 * @since  1.2.2
 	 */
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		/**
-		 * Exclude js from deferred setting
+		 * Exclude js from deferred setting.
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer ) {
@@ -94,13 +94,13 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		/**
-		 * Add vary filter for Role Excludes
+		 * Add vary filter for Role Excludes.
 		 * @since  1.6
 		 */
 		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
 
 		/**
-		 * Prefetch DNS
+		 * Prefetch DNS.
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init() ;
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Exclude role from optimization filter
+	 * Exclude role from optimization filter.
 	 *
 	 * @since  1.6
 	 */
@@ -122,7 +122,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Remove emoji from WP
+	 * Remove emoji from WP.
 	 *
 	 * @since  1.4
 	 */
@@ -133,7 +133,7 @@ class LiteSpeed_Cache_Optimize
 		remove_filter( 'the_content_feed' , 'wp_staticize_emoji' ) ;
 		remove_filter( 'comment_text_rss' , 'wp_staticize_emoji' ) ;
 		/**
-		 * Added for better result
+		 * Added for better result.
 		 * @since  1.6.2.1
 		 */
 		remove_action( 'wp_print_styles', 'print_emoji_styles' ) ;
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Check if the request is for static file
+	 * Check if the request is for static file.
 	 *
 	 * @since  1.2.2
 	 * @return  string The static file content
@@ -218,7 +218,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Output header info
+	 * Output header info.
 	 *
 	 * @since  2.1.2
 	 */
@@ -232,7 +232,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Delete file-based cache folder
+	 * Delete file-based cache folder.
 	 *
 	 * @since  2.1
 	 */
@@ -248,7 +248,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Remove QS
+	 * Remove QS.
 	 *
 	 * @since  1.3
 	 */
@@ -267,7 +267,7 @@ class LiteSpeed_Cache_Optimize
 
 	/**
 	 * Run optimize process
-	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
+	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore.
 	 *
 	 * @since  1.2.2
 	 * @return  string The content that is after optimization
@@ -310,7 +310,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Optimize css src
+	 * Optimize css src.
 	 *
 	 * @since  1.2.2
 	 */
@@ -472,7 +472,7 @@ class LiteSpeed_Cache_Optimize
 					}
 
 					/**
-					 * Enqueue combined file first
+					 * Enqueue combined file first.
 					 * @since  1.6
 					 */
 					if ( $enqueue_first ) {
@@ -557,7 +557,7 @@ class LiteSpeed_Cache_Optimize
 
 		/**
 		 * Handle google fonts async
-		 * This will result in a JS snippet in head, so need to put it in the end to avoid being replaced by JS parser
+		 * This will result in a JS snippet in head, so need to put it in the end to avoid being replaced by JS parser.
 		 */
 		$this->_async_ggfonts() ;
 
@@ -591,7 +591,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Google font async
+	 * Google font async.
 	 *
 	 * @since 2.7.3
 	 */
@@ -606,7 +606,7 @@ class LiteSpeed_Cache_Optimize
 		$html = '<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />' ;
 
 		/**
-		 * Append fonts
+		 * Append fonts.
 		 *
 		 * Could be multiple fonts
 		 *
@@ -653,7 +653,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Prefetch DNS
+	 * Prefetch DNS.
 	 *
 	 * @since 1.7.1
 	 */
@@ -673,7 +673,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Prefetch DNS hook for WP
+	 * Prefetch DNS hook for WP.
 	 *
 	 * @since 1.7.1
 	 */
@@ -693,7 +693,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Prefetch DNS
+	 * Prefetch DNS.
 	 *
 	 * @since 1.7.1
 	 */
@@ -707,7 +707,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Limit combined filesize when build hash url
+	 * Limit combined filesize when build hash url.
 	 *
 	 * @since  1.3
 	 */
@@ -743,7 +743,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Run minify with src queue list
+	 * Run minify with src queue list.
 	 *
 	 * @since  1.2.2
 	 */
@@ -777,7 +777,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Check that links are internal or external
+	 * Check that links are internal or external.
 	 *
 	 * @since  1.2.2
 	 * @return array Array(Ignored raw html, src needed to be handled list, filesize for param 2nd )
@@ -803,7 +803,7 @@ class LiteSpeed_Cache_Optimize
 			LiteSpeed_Cache_Log::debug2( '[Optm] ' . $src ) ;
 
 			/**
-			 * Excluded links won't be done any optm
+			 * Excluded links won't be done any optm.
 			 * @since 1.7
 			 */
 			// if ( $excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array( $src, $excludes ) ) {
@@ -829,7 +829,7 @@ class LiteSpeed_Cache_Optimize
 
 			/**
 			 * Check if exclude jQuery or not
-			 * Exclude from minify/combine
+			 * Exclude from minify/combine.
 			 * @since  1.5
 			 */
 			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
@@ -850,7 +850,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Generate full URL path with hash for a list of src
+	 * Generate full URL path with hash for a list of src.
 	 *
 	 * @since  1.2.2
 	 * @return string The final URL
@@ -913,7 +913,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Parse js src
+	 * Parse js src.
 	 *
 	 * @since  1.2.2
 	 * @return array  All the src & related raw html list
@@ -977,7 +977,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Parse css src and remove to-be-removed css
+	 * Parse css src and remove to-be-removed css.
 	 *
 	 * @since  1.2.2
 	 * @return array  All the src & related raw html list
@@ -1040,7 +1040,7 @@ class LiteSpeed_Cache_Optimize
 					$this->content = str_replace( $match[ 0 ], '', $this->content ) ;
 
 					/**
-					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
+					 * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later.
 					 * @since  2.7.3
 					 */
 					if ( $this->cfg_ggfonts_async ) {
@@ -1064,7 +1064,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Replace css to async loaded css
+	 * Replace css to async loaded css.
 	 *
 	 * @since  1.3
 	 * @param  array $html_list Orignal css array
@@ -1094,7 +1094,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Add defer to js
+	 * Add defer to js.
 	 *
 	 * @since  1.3
 	 */
@@ -1117,7 +1117,7 @@ class LiteSpeed_Cache_Optimize
 			}
 
 			/**
-			 * Parse src for excluding js from setting
+			 * Parse src for excluding js from setting.
 			 * @since 1.5
 			 */
 			if ( $this->cfg_js_defer_exc || $this->cfg_exc_jquery ) {
@@ -1139,7 +1139,7 @@ class LiteSpeed_Cache_Optimize
 			}
 
 			/**
-			 * Exclude js from setting
+			 * Exclude js from setting.
 			 * @since 1.5
 			 */
 			if ( $this->cfg_js_defer_exc && LiteSpeed_Cache_Utility::str_hit_array( $src, $this->cfg_js_defer_exc ) ) {
@@ -1148,7 +1148,7 @@ class LiteSpeed_Cache_Optimize
 			}
 
 			/**
-			 * Check if exclude jQuery
+			 * Check if exclude jQuery.
 			 * @since  1.5
 			 */
 			if ( $this->cfg_exc_jquery && $this->_is_jquery( $src ) ) {
@@ -1163,7 +1163,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Check if is jq lib
+	 * Check if is jq lib.
 	 *
 	 * @since  1.5
 	 */
@@ -1173,7 +1173,7 @@ class LiteSpeed_Cache_Optimize
 	}
 
 	/**
-	 * Append to HTTP2 header
+	 * Append to HTTP2 header.
 	 *
 	 * @since  1.2.2
 	 */
@@ -1184,7 +1184,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		/**
-		 * For CDN enabled ones, bypass http/2 push
+		 * For CDN enabled ones, bypass http/2 push.
 		 * @since  1.6.2.1
 		 */
 		if ( LiteSpeed_Cache_CDN::inc_type( $file_type ) ) {
@@ -1192,7 +1192,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		/**
-		 * Keep QS for constance by set 2nd param to true
+		 * Keep QS for constance by set 2nd param to true.
 		 * @since  1.6.2.1
 		 */
 		$uri = LiteSpeed_Cache_Utility::url2uri( $url, true ) ;

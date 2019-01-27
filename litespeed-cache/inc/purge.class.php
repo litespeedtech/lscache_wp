@@ -1,6 +1,6 @@
 <?php
 /**
- * The plugin purge class for X-LiteSpeed-Purge
+ * The plugin purge class for X-LiteSpeed-Purge.
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Purge
 	const TYPE_PURGE_ERROR = 'purge_error' ;
 
 	/**
-	 * Initialize
+	 * Initialize.
 	 *
 	 * @since    2.2.3
 	 */
@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.8
 	 */
@@ -124,7 +124,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Shortcut to purge all lscache
+	 * Shortcut to purge all lscache.
 	 *
 	 * @since 1.0.0
 	 */
@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Purge all caches (lscache/op/oc)
+	 * Purge all caches (lscache/op/oc).
 	 *
 	 * @since 2.2
 	 */
@@ -185,7 +185,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Delete all critical css
+	 * Delete all critical css.
 	 *
 	 * @since    2.3
 	 */
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Delete all placeholder images
+	 * Delete all placeholder images.
 	 *
 	 * @since    2.5.1
 	 */
@@ -235,7 +235,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Purge opcode cache
+	 * Purge opcode cache.
 	 *
 	 * @since  1.8.2
 	 */
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Purge object cache
+	 * Purge object cache.
 	 *
 	 * @since  1.8
 	 */
@@ -304,7 +304,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Add tags to purge
+	 * Add tags to purge.
 	 *
 	 * @since 2.2
 	 */
@@ -346,7 +346,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Add tags to private purge
+	 * Add tags to private purge.
 	 *
 	 * @since 2.2
 	 */
@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Called from cfg::frontend_save() to purge front page
+	 * Called from cfg::frontend_save() to purge front page.
 	 *
 	 * @since    2.2
 	 */
@@ -398,7 +398,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Purge frontend url
+	 * Purge frontend url.
 	 *
 	 * @since 1.3
 	 * @since 2.2 Renamed from `frontend_purge`; Access changed from public
@@ -718,7 +718,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Generate all purge tags before output
+	 * Generate all purge tags before output.
 	 *
 	 * @since 1.1.3
 	 */
@@ -814,7 +814,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Append prefix to an array of purge headers
+	 * Append prefix to an array of purge headers.
 	 *
 	 * @since 1.1.0
 	 * @param array $purge_tags the purge tags to apply the prefix to
@@ -985,7 +985,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * The dummy filter for purge all
+	 * The dummy filter for purge all.
 	 *
 	 * @since 1.1.5
 	 * @param string $val The filter value

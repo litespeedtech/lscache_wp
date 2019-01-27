@@ -1,6 +1,6 @@
 <?php
 /**
- * The core consts for config
+ * The core consts for config.
  *
  * @since      	2.4
  * @package    	LiteSpeed_Cache
@@ -232,7 +232,7 @@ class LiteSpeed_Cache_Const
 	const IMG_OPTM_BM_EXIF = 8 ;
 
 	/**
-	 * Get the items in wp_options that need for backup
+	 * Get the items in wp_options that need for backup.
 	 *
 	 * @since 2.2.1
 	 */
@@ -272,14 +272,14 @@ class LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get default item val
+	 * Get default item val.
 	 *
 	 * @since 1.8
 	 */
 	public function default_item( $item )
 	{
 		/**
-		 * Allow terms default value
+		 * Allow terms default value.
 		 * @since  2.7.1
 		 */
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
@@ -288,7 +288,7 @@ class LiteSpeed_Cache_Const
 			if ( ! empty( $default_ini_cfg[ $item ] ) ) {
 
 				/**
-				 * Special handler for CDN_mapping
+				 * Special handler for CDN_mapping.
 				 *
 				 * format in .ini:
 				 * 		[litespeed-cache-cdn_mapping]
@@ -356,7 +356,7 @@ class LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Gets the default network options
+	 * Gets the default network options.
 	 *
 	 * @since 1.0.11
 	 * @return array an array of the default options
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Gets the default single site options
+	 * Gets the default single site options.
 	 *
 	 * @since 1.0.0
 	 * @param bool $include_thirdparty whether to include the thirdparty options
@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Generate server vars
+	 * Generate server vars.
 	 *
 	 * @since 2.4.1
 	 */

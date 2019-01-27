@@ -1,6 +1,6 @@
 <?php
 /**
- * The report class
+ * The report class.
  *
  *
  * @since      1.1.0
@@ -20,7 +20,7 @@ class LiteSpeed_Cache_Admin_Report
 	const TYPE_SEND_REPORT = 'send_report' ;
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.6.5
 	 */
@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Admin_Report
 	}
 
 	/**
-	 * post env report number to ls center server
+	 * post env report number to ls center server.
 	 *
 	 * @since  1.6.5
 	 */
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Admin_Report
 	}
 
 	/**
-	 * Get env report number from db
+	 * Get env report number from db.
 	 *
 	 * @since  1.6.4
 	 * @return array
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Admin_Report
 	}
 
 	/**
-	 * Builds the environment report buffer with the given parameters
+	 * Builds the environment report buffer with the given parameters.
 	 *
 	 * @param array $server - server variables
 	 * @param array $options - cms options

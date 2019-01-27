@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Media
 	private $_ph_queue = array() ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * @since  1.4
 	 */
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_Media
 			// Due to ajax call doesn't send correct accept header, have to limit webp to HTML only
 			if ( $this->_cfg_img_webp ) {
 				/**
-				 * Add vary filter
+				 * Add vary filter.
 				 * @since  1.6.2
 				 */
 				// Moved to htaccess
@@ -81,7 +81,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Check if it can use Media frontend
+	 * Check if it can use Media frontend.
 	 *
 	 * @since  1.6.2
 	 */
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Check if enabled webp or not
+	 * Check if enabled webp or not.
 	 *
 	 * @since  2.4
 	 */
@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Register admin menu
+	 * Register admin menu.
 	 *
 	 * @since 1.6.3
 	 */
@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Media delete action hook
+	 * Media delete action hook.
 	 *
 	 * @since 2.4.3
 	 */
@@ -132,7 +132,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Media Admin Menu -> Image Optimization Column Title
+	 * Media Admin Menu -> Image Optimization Column Title.
 	 *
 	 * @since 1.6.3
 	 */
@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
-	 * Media Admin Menu -> Image Optimization Column
+	 * Media Admin Menu -> Image Optimization Column.
 	 *
 	 * @since 1.6.2
 	 */
@@ -250,7 +250,7 @@ eot;
 	}
 
 	/**
-	 * Get wp size info
+	 * Get wp size info.
 	 *
 	 * NOTE: this is not used because it has to be after admin_init
 	 *
@@ -280,7 +280,7 @@ eot;
 
 
 	/**
-	 * Exclude role from optimization filter
+	 * Exclude role from optimization filter.
 	 *
 	 * @since  1.6.2
 	 */
@@ -299,7 +299,7 @@ eot;
 
 	/**
 	 * Run lazy load process
-	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
+	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore.
 	 *
 	 * Only do for main page. Do NOT do for esi or dynamic content.
 	 *
@@ -328,14 +328,14 @@ eot;
 	}
 
 	/**
-	 * Run lazyload replacement for images in buffer
+	 * Run lazyload replacement for images in buffer.
 	 *
 	 * @since  1.4
 	 */
 	private function _finalize()
 	{
 		/**
-		 * Use webp for optimized images
+		 * Use webp for optimized images.
 		 * @since 1.6.2
 		 */
 		if ( $this->_cfg_img_webp && $this->webp_support() ) {
@@ -410,7 +410,7 @@ eot;
 	}
 
 	/**
-	 * Generate responsive placeholder
+	 * Generate responsive placeholder.
 	 *
 	 * @since  2.5.1
 	 */
@@ -484,7 +484,7 @@ eot;
 	}
 
 	/**
-	 * Parse img src
+	 * Parse img src.
 	 *
 	 * @since  1.4
 	 * @return array  All the src & related raw html list
@@ -492,7 +492,7 @@ eot;
 	private function _parse_img()
 	{
 		/**
-		 * Exclude list
+		 * Exclude list.
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
@@ -514,7 +514,7 @@ eot;
 			}
 
 			/**
-			 * Add src validation to bypass base64 img src
+			 * Add src validation to bypass base64 img src.
 			 * @since  1.6
 			 */
 			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
@@ -535,7 +535,7 @@ eot;
 			}
 
 			/**
-			 * Exclude from lazyload by setting
+			 * Exclude from lazyload by setting.
 			 * @since  1.5
 			 */
 			if ( $excludes && LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
@@ -544,7 +544,7 @@ eot;
 			}
 
 			/**
-			 * Excldues invalid image src from buddypress avatar crop
+			 * Excldues invalid image src from buddypress avatar crop.
 			 * @see  https://wordpress.org/support/topic/lazy-load-breaking-buddypress-upload-avatar-feature/#post-11040512
 			 * @since  2.9.1
 			 */
@@ -572,7 +572,7 @@ eot;
 	}
 
 	/**
-	 * Parse iframe src
+	 * Parse iframe src.
 	 *
 	 * @since  1.4
 	 * @return array  All the src & related raw html list
@@ -609,7 +609,7 @@ eot;
 	}
 
 	/**
-	 * Replace image src to webp
+	 * Replace image src to webp.
 	 *
 	 * @since  1.6.2
 	 */
@@ -617,7 +617,7 @@ eot;
 	{
 		// preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches ) ;
 		/**
-		 * Added custom element & attribute support
+		 * Added custom element & attribute support.
 		 * @since 2.2.2
 		 */
 		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ) ;
@@ -694,7 +694,7 @@ eot;
 	}
 
 	/**
-	 * Hook to wp_get_attachment_image_src
+	 * Hook to wp_get_attachment_image_src.
 	 *
 	 * @since  1.6.2
 	 * @param  array $img The URL of the attachment image src, the width, the height
@@ -710,7 +710,7 @@ eot;
 	}
 
 	/**
-	 * Try to replace img url
+	 * Try to replace img url.
 	 *
 	 * @since  1.6.2
 	 * @param  string $url
@@ -725,7 +725,7 @@ eot;
 	}
 
 	/**
-	 * Hook to replace WP responsive images
+	 * Hook to replace WP responsive images.
 	 *
 	 * @since  1.6.2
 	 * @param  array $srcs
@@ -745,7 +745,7 @@ eot;
 	}
 
 	/**
-	 * Replace internal image src to webp
+	 * Replace internal image src to webp.
 	 *
 	 * @since  1.6.2
 	 */
@@ -779,7 +779,7 @@ eot;
 	}
 
 	/**
-	 * Check if there is a queue for cron or not
+	 * Check if there is a queue for cron or not.
 	 *
 	 * @since  2.5.1
 	 */
@@ -794,7 +794,7 @@ eot;
 	}
 
 	/**
-	 * Check if there is a placeholder cache folder
+	 * Check if there is a placeholder cache folder.
 	 *
 	 * @since  2.5.1
 	 */
@@ -804,7 +804,7 @@ eot;
 	}
 
 	/**
-	 * Save image placeholder summary
+	 * Save image placeholder summary.
 	 *
 	 * @since  2.5.1
 	 */
@@ -814,7 +814,7 @@ eot;
 	}
 
 	/**
-	 * Read last time generated info
+	 * Read last time generated info.
 	 *
 	 * @since  2.5.1
 	 */
@@ -824,7 +824,7 @@ eot;
 	}
 
 	/**
-	 * Generate realpath of placeholder file
+	 * Generate realpath of placeholder file.
 	 *
 	 * @since  2.5.1
 	 */
@@ -834,7 +834,7 @@ eot;
 	}
 
 	/**
-	 * Delete file-based cache folder
+	 * Delete file-based cache folder.
 	 *
 	 * @since  2.5.1
 	 */
@@ -851,7 +851,7 @@ eot;
 	}
 
 	/**
-	 * Cron placeholder generation
+	 * Cron placeholder generation.
 	 *
 	 * @since  2.5.1
 	 */
@@ -882,7 +882,7 @@ eot;
 	}
 
 	/**
-	 * Send to LiteSpeed API to generate placeholder
+	 * Send to LiteSpeed API to generate placeholder.
 	 *
 	 * @since  2.5.1
 	 */
@@ -931,7 +931,7 @@ eot;
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.5.1
 	 */

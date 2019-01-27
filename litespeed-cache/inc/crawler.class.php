@@ -1,6 +1,6 @@
 <?php
 /**
- * The crawler class
+ * The crawler class.
  *
  *
  * @since      	1.1.0
@@ -25,7 +25,7 @@ class LiteSpeed_Cache_Crawler
 	private $_options ;
 
 	/**
-	 * Initialize crawler, assign sitemap path
+	 * Initialize crawler, assign sitemap path.
 	 *
 	 * @since    1.1.0
 	 */
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Return crawler meta file
+	 * Return crawler meta file.
 	 *
 	 * @since    1.1.0
 	 * @return string Json data file path
@@ -64,7 +64,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Return blacklist content
+	 * Return blacklist content.
 	 *
 	 * @since    1.1.0
 	 * @return string
@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Return blacklist count
+	 * Return blacklist count.
 	 *
 	 * @since    1.1.0
 	 * @return string
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Save blacklist to file
+	 * Save blacklist to file.
 	 *
 	 * @since    1.1.0
 	 * @return bool If saved successfully
@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Append urls to current list
+	 * Append urls to current list.
 	 *
 	 * @since    1.1.0
 	 * @param  array $list The url list needs to be appended
@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Generate sitemap
+	 * Generate sitemap.
 	 *
 	 * @since    1.1.0
 	 */
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Parse custom sitemap and return urls
+	 * Parse custom sitemap and return urls.
 	 *
 	 * @since    1.1.1
 	 * @param  string  $sitemap       The url set map address
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Crawler
 	public function parse_custom_sitemap($sitemap, $return_detail = true)
 	{
 		/**
-		 * Read via wp func to avoid allow_url_fopen = off
+		 * Read via wp func to avoid allow_url_fopen = off.
 		 * @since  2.2.7
 		 */
 		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) ) ;
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Generate the sitemap
+	 * Generate the sitemap.
 	 *
 	 * @since    1.1.0
 	 * @return string|true
@@ -286,7 +286,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Get sitemap file info
+	 * Get sitemap file info.
 	 *
 	 * @since 1.1.0
 	 */
@@ -302,7 +302,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Create reset pos file
+	 * Create reset pos file.
 	 *
 	 * @since    1.1.0
 	 * @return mixed True or error message
@@ -325,7 +325,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Proceed crawling
+	 * Proceed crawling.
 	 *
 	 * @since    1.1.0
 	 * @param bool $force If ignore whole crawling interval
@@ -343,7 +343,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Receive meta info from crawler
+	 * Receive meta info from crawler.
 	 *
 	 * @since    1.9.1
 	 */
@@ -354,7 +354,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Crawling start
+	 * Crawling start.
 	 *
 	 * @since    1.1.0
 	 * @param bool $force If ignore whole crawling interval
@@ -387,7 +387,7 @@ class LiteSpeed_Cache_Crawler
 		$crawler->set_run_duration($this->_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
 
 		/**
-		 * Limit delay to use server setting
+		 * Limit delay to use server setting.
 		 * @since 1.8.3
 		 */
 		$usleep = $this->_options[ LiteSpeed_Cache_Config::CRWL_USLEEP ] ;
@@ -424,7 +424,7 @@ class LiteSpeed_Cache_Crawler
 
 		$cookies = array() ;
 		/**
-		 * Set role simulation
+		 * Set role simulation.
 		 * @since 1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'uid' ] ) ) {
@@ -437,7 +437,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		/**
-		 * Check cookie crawler
+		 * Check cookie crawler.
 		 * @since  2.8
 		 */
 		foreach ( $current_crawler as $k => $v ) {
@@ -453,7 +453,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		/**
-		 * Set WebP simulation
+		 * Set WebP simulation.
 		 * @since  1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
@@ -461,7 +461,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		/**
-		 * Set mobile crawler
+		 * Set mobile crawler.
 		 * @since  2.8
 		 */
 		if ( ! empty( $current_crawler[ 'mobile' ] ) ) {
@@ -493,7 +493,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * List all crawlers
+	 * List all crawlers.
 	 *
 	 * @since    1.9.1
 	 */
@@ -508,7 +508,7 @@ class LiteSpeed_Cache_Crawler
 		 * 			...
 		 * 		],
 		 * 		...
-		 * 	]
+		 * 	].
 		 */
 		$crawler_factors = array() ;
 
@@ -568,7 +568,7 @@ class LiteSpeed_Cache_Crawler
 
 
 	/**
-	 * Build a crawler list recursively
+	 * Build a crawler list recursively.
 	 *
 	 * @since 2.8
 	 */
@@ -608,7 +608,7 @@ class LiteSpeed_Cache_Crawler
 	}
 
 	/**
-	 * Output info and exit
+	 * Output info and exit.
 	 *
 	 * @since    1.1.0
 	 * @param  string $error Error info

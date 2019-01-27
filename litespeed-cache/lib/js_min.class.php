@@ -97,7 +97,7 @@ class JSMin
 	}
 
 	/**
-	 * Perform minification, return result
+	 * Perform minification, return result.
 	 *
 	 * @return string
 	 */
@@ -378,7 +378,7 @@ class JSMin
 	}
 
 	/**
-	 * Consume a single line comment from input (possibly retaining it)
+	 * Consume a single line comment from input (possibly retaining it).
 	 */
 	protected function consumeSingleLineComment()
 	{
@@ -397,7 +397,7 @@ class JSMin
 	}
 
 	/**
-	 * Consume a multiple line comment from input (possibly retaining it)
+	 * Consume a multiple line comment from input (possibly retaining it).
 	 *
 	 * @throws UnterminatedCommentException
 	 */

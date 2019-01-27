@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		/**
-		 * In case this is called outside the admin page
+		 * In case this is called outside the admin page.
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Load LiteSpeed assets
+	 * Load LiteSpeed assets.
 	 *
 	 * @since    1.1.0
 	 * @param  array $hook WP hook
@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Output litespeed form info
+	 * Output litespeed form info.
 	 *
 	 * @since    1.1.0
 	 * @param  string $action
@@ -317,7 +317,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * If show compatibility tab in settings
+	 * If show compatibility tab in settings.
 	 * @since 1.1.0
 	 * @return bool True if shows
 	 */
@@ -350,7 +350,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Get the error description
+	 * Get the error description.
 	 *
 	 * @since 1.1.0
 	 * @param  init $err_code
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display info notice
+	 * Display info notice.
 	 *
 	 * @since 1.6.5
 	 */
@@ -406,7 +406,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display note notice
+	 * Display note notice.
 	 *
 	 * @since 1.6.5
 	 */
@@ -416,7 +416,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display success notice
+	 * Display success notice.
 	 *
 	 * @since 1.6
 	 */
@@ -426,7 +426,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display error notice
+	 * Display error notice.
 	 *
 	 * @since 1.6
 	 */
@@ -479,7 +479,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display notices and errors in dashboard
+	 * Display notices and errors in dashboard.
 	 *
 	 * @since 1.1.0
 	 */
@@ -503,7 +503,7 @@ class LiteSpeed_Cache_Admin_Display
 		delete_option( self::LITESPEED_MSG ) ;
 
 		/**
-		 * Check promo msg first
+		 * Check promo msg first.
 		 * @since 2.9
 		 */
 		LiteSpeed_Cache_GUI::get_instance()->show_promo() ;
@@ -638,7 +638,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display warning if lscache is disabled
+	 * Display warning if lscache is disabled.
 	 *
 	 * @since 2.1
 	 */
@@ -648,7 +648,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a textarea
+	 * Build a textarea.
 	 *
 	 * @since 1.1.0
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
@@ -682,7 +682,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a textarea based on separate stored option data
+	 * Build a textarea based on separate stored option data.
 	 *
 	 * @since 1.5
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
@@ -698,7 +698,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a text input field
+	 * Build a text input field.
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
@@ -734,7 +734,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a checkbox html snippet
+	 * Build a checkbox html snippet.
 	 *
 	 * @since 1.1.0
 	 * @param  string $id
@@ -758,7 +758,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a toggle checkbox html snippet
+	 * Build a toggle checkbox html snippet.
 	 *
 	 * @since 1.7
 	 */
@@ -800,7 +800,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a switch div html snippet
+	 * Build a switch div html snippet.
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 removed param $disable
@@ -827,7 +827,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a radio input html codes and output
+	 * Build a radio input html codes and output.
 	 *
 	 * @since 1.1.0
 	 * @param  string $id
@@ -875,7 +875,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display default value
+	 * Display default value.
 	 *
 	 * @since  1.1.1
 	 * @param  string $id The setting tag
@@ -904,7 +904,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display API environment variable support
+	 * Display API environment variable support.
 	 *
 	 * @since  1.8.3
 	 */
@@ -921,7 +921,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display learn more link
+	 * Display learn more link.
 	 *
 	 * @since  2.6.1
 	 */
@@ -939,7 +939,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Display URI setting example
+	 * Display URI setting example.
 	 *
 	 * @since  2.6.1
 	 */
@@ -955,7 +955,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Return groups string
+	 * Return groups string.
 	 *
 	 * @since  2.0
 	 */
@@ -988,7 +988,7 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Return guidance html
+	 * Return guidance html.
 	 *
 	 * @since  2.0
 	 */

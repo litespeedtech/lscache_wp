@@ -1,11 +1,11 @@
 <?php
 /**
- * Class Minify_HTML
+ * Class Minify_HTML.
  * @package Minify
  */
 
 /**
- * Compress HTML
+ * Compress HTML.
  *
  * This is a heavy regex-based removal of whitespace, unnecessary comments and
  * tokens. IE conditional comments are preserved. There are also options to have
@@ -27,7 +27,7 @@ class Minify_HTML
 	protected $_jsCleanComments = true;
 
 	/**
-	 * "Minify" an HTML page
+	 * "Minify" an HTML page.
 	 *
 	 * @param string $html
 	 *
@@ -52,7 +52,7 @@ class Minify_HTML
 	}
 
 	/**
-	 * Create a minifier object
+	 * Create a minifier object.
 	 *
 	 * @param string $html
 	 *
@@ -87,7 +87,7 @@ class Minify_HTML
 	}
 
 	/**
-	 * Minify the markeup given in the constructor
+	 * Minify the markeup given in the constructor.
 	 *
 	 * @return string
 	 */
@@ -237,7 +237,7 @@ class Minify_HTML
 
 		// minify
 		/**
-		 * Added 2nd param by LiteSpeed
+		 * Added 2nd param by LiteSpeed.
 		 *
 		 * @since  2.2.3
 		 */

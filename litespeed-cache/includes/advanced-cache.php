@@ -1,7 +1,7 @@
 <?php
 
 /**
- * LiteSpeed Cache Plugin
+ * LiteSpeed Cache Plugin.
  */
 if (!defined('ABSPATH')) {
     die();

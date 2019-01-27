@@ -1,6 +1,6 @@
 <?php
 /**
- * The plugin cache-tag class for X-LiteSpeed-Tag
+ * The plugin cache-tag class for X-LiteSpeed-Tag.
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
@@ -41,7 +41,7 @@ class LiteSpeed_Cache_Tag
 	protected static $_error_status = false ;
 
 	/**
-	 * Initialize
+	 * Initialize.
 	 *
 	 * @since    2.2.3
 	 */
@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Tag
 	}
 
 	/**
-	 * Return tags for Admin QS
+	 * Return tags for Admin QS.
 	 *
 	 * @since 1.1.3
 	 */
@@ -321,7 +321,7 @@ class LiteSpeed_Cache_Tag
 	}
 
 	/**
-	 * Generate all cache tags before output
+	 * Generate all cache tags before output.
 	 *
 	 * @since 1.1.3
 	 */
@@ -342,7 +342,7 @@ class LiteSpeed_Cache_Tag
 
 	/**
 	 * Sets up the Cache Tags header.
-	 * ONLY need to run this if is cacheable
+	 * ONLY need to run this if is cacheable.
 	 *
 	 * @since 1.1.3
 	 * @return string empty string if empty, otherwise the cache tags header

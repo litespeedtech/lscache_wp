@@ -37,7 +37,7 @@ class LiteSpeed_Cache_ESI
 	const WIDGET_OPID_TTL = 'widget_ttl' ;
 
 	/**
-	 * Constructor of ESI
+	 * Constructor of ESI.
 	 *
 	 * @since    1.2.0
 	 */
@@ -51,7 +51,7 @@ class LiteSpeed_Cache_ESI
 		! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;
 
 		/**
-		 * Recover REQUEST_URI
+		 * Recover REQUEST_URI.
 		 * @since  1.8.1
 		 */
 		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
@@ -63,7 +63,7 @@ class LiteSpeed_Cache_ESI
 		}
 
 		/**
-		 * Shortcode ESI
+		 * Shortcode ESI.
 		 *
 		 * To use it, just change the origianl shortcode as below:
 		 * 		old: [someshortcode aa='bb']
@@ -81,7 +81,7 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
-	 * Shortcode ESI
+	 * Shortcode ESI.
 	 *
 	 * @since 2.8
 	 */
@@ -267,7 +267,7 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
-	 * Parses the request parameters on an ESI request
+	 * Parses the request parameters on an ESI request.
 	 *
 	 * @since 1.1.3
 	 */
@@ -321,7 +321,7 @@ class LiteSpeed_Cache_ESI
 		// LiteSpeed_Cache_Log::debug(var_export($params, true ));
 
 		/**
-		 * Handle default cache control 'private,no-vary' for sub_esi_block() 	@ticket #923505
+		 * Handle default cache control 'private,no-vary' for sub_esi_block() 	@ticket #923505.
 		 *
 		 * @since  2.2.3
 		 */
@@ -551,7 +551,7 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
-	 * Generate nonce for certain action
+	 * Generate nonce for certain action.
 	 *
 	 * @since 2.6
 	 */
@@ -572,7 +572,7 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
-	 * Show original shortcode
+	 * Show original shortcode.
 	 *
 	 * @since 2.8
 	 */
@@ -685,7 +685,7 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
-	 * Replace preseved blocks
+	 * Replace preseved blocks.
 	 *
 	 * @since  2.6
 	 */

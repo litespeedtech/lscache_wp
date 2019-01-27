@@ -1,6 +1,6 @@
 <?php
 /**
- * The object cache class
+ * The object cache class.
  *
  * @since      	1.8
  * @package    	LiteSpeed_Cache
@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Handle exception
+ * Handle exception.
  */
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
@@ -47,7 +47,7 @@ class LiteSpeed_Cache_Object
 	private $_non_persistent_groups ;
 
 	/**
-	 * Init
+	 * Init.
 	 *
 	 * NOTE: this class may be included without initialized LiteSpeed_Cache core
 	 *
@@ -125,7 +125,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Get `Store Transients` setting value
+	 * Get `Store Transients` setting value.
 	 *
 	 * @since  1.8.3
 	 */
@@ -135,7 +135,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Check if the group belongs to transients or not
+	 * Check if the group belongs to transients or not.
 	 *
 	 * @since  1.8.3
 	 */
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Maintain WP object cache file
+	 * Maintain WP object cache file.
 	 *
 	 * @since  1.8
 	 */
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Remove object cache file
+	 * Remove object cache file.
 	 *
 	 * @since  1.8.2
 	 */
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Try to build connection
+	 * Try to build connection.
 	 *
 	 * @since  1.8
 	 */
@@ -210,7 +210,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Force to connect with this setting
+	 * Force to connect with this setting.
 	 * @return [type] [description]
 	 */
 	public function reconnect( $cfg )
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Connect to Memcached/Redis server
+	 * Connect to Memcached/Redis server.
 	 *
 	 * @since  1.8
 	 */
@@ -253,7 +253,7 @@ class LiteSpeed_Cache_Object
 
 		$failed = false ;
 		/**
-		 * Connect to Redis
+		 * Connect to Redis.
 		 *
 		 * @since  1.8.1
 		 * @see https://github.com/phpredis/phpredis/#example-1
@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Object
 
 		}
 		/**
-		 * Connect to Memcached
+		 * Connect to Memcached.
 		 */
 		else {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Init ' . $this->_oc_driver . ' connection' ) ;
@@ -333,7 +333,7 @@ class LiteSpeed_Cache_Object
 			$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port ) ;
 
 			/**
-			 * Add SASL auth
+			 * Add SASL auth.
 			 * @since  1.8.1
 			 */
 			if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $this->_conn, 'setSaslAuthData' ) && ini_get( 'memcached.use_sasl' ) ) {
@@ -361,7 +361,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Check if the connected memcached host is the one in cfg
+	 * Check if the connected memcached host is the one in cfg.
 	 *
 	 * @since  1.8
 	 */
@@ -385,7 +385,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Get memcached unique id to be used for connecting
+	 * Get memcached unique id to be used for connecting.
 	 *
 	 * @since  1.8
 	 */
@@ -400,7 +400,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Get cache
+	 * Get cache.
 	 *
 	 * @since  1.8
 	 */
@@ -426,7 +426,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Set cache
+	 * Set cache.
 	 *
 	 * @since  1.8
 	 */
@@ -461,7 +461,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Check if can cache or not
+	 * Check if can cache or not.
 	 *
 	 * @since  1.8
 	 */
@@ -474,7 +474,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Delete cache
+	 * Delete cache.
 	 *
 	 * @since  1.8
 	 */
@@ -496,7 +496,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Clear all cache
+	 * Clear all cache.
 	 *
 	 * @since  1.8
 	 */
@@ -525,7 +525,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Add global groups
+	 * Add global groups.
 	 *
 	 * @since 1.8
 	 */
@@ -540,7 +540,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Check if is in global groups or not
+	 * Check if is in global groups or not.
 	 *
 	 * @since 1.8
 	 */
@@ -550,7 +550,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Add non persistent groups
+	 * Add non persistent groups.
 	 *
 	 * @since 1.8
 	 */
@@ -565,7 +565,7 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Check if is in non persistent groups or not
+	 * Check if is in non persistent groups or not.
 	 *
 	 * @since 1.8
 	 */

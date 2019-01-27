@@ -1,6 +1,6 @@
 <?php
 /**
- * ONLY for WHM plugin old version backward compatibility @Aug/2/2017
+ * ONLY for WHM plugin old version backward compatibility @Aug/2/2017.
  */
 
 

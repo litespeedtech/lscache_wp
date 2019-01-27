@@ -19,7 +19,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	const TYPE_SET_DEVMODE_OFF = 'set_devmode_off' ;
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.7.2
 	 */
@@ -51,7 +51,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	}
 
 	/**
-	 * Get Cloudflare development mode
+	 * Get Cloudflare development mode.
 	 *
 	 * @since  1.7.2
 	 */
@@ -82,7 +82,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	}
 
 	/**
-	 * Set Cloudflare development mode
+	 * Set Cloudflare development mode.
 	 *
 	 * @since  1.7.2
 	 */
@@ -114,7 +114,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	}
 
 	/**
-	 * Purge Cloudflare cache
+	 * Purge Cloudflare cache.
 	 *
 	 * @since  1.7.2
 	 */
@@ -146,7 +146,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	}
 
 	/**
-	 * Get current Cloudflare zone from cfg
+	 * Get current Cloudflare zone from cfg.
 	 *
 	 * @since  1.7.2
 	 */
@@ -163,7 +163,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	}
 
 	/**
-	 * Get Cloudflare zone settings
+	 * Get Cloudflare zone settings.
 	 *
 	 * @since  1.7.2
 	 */
@@ -208,7 +208,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	}
 
 	/**
-	 * Cloudflare API
+	 * Cloudflare API.
 	 *
 	 * @since  1.7.2
 	 */

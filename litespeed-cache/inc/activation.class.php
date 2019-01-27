@@ -56,7 +56,7 @@ class LiteSpeed_Cache_Activation
 		 * 		1) wp-config.php;
 		 * 		2) adv-cache.php;
 		 * 		3) object-cache.php;
-		 * 		4) .htaccess;
+		 * 		4) .htaccess;.
 		 */
 
 		/* Network file handler */
@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Activation
 		}
 
 		/**
-		 * Go through all settings to generate related files
+		 * Go through all settings to generate related files.
 		 * @since 2.7.1
 		 */
 		LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
-	 * Uninstall plugin
+	 * Uninstall plugin.
 	 * @since 1.1.0
 	 */
 	public static function uninstall_litespeed_cache()
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Activation
 		}
 
 		/**
-		 * In case this is called outside the admin page
+		 * In case this is called outside the admin page.
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Activation
 		}
 
 		/**
-		 * Remove object cache file if is us
+		 * Remove object cache file if is us.
 		 * @since  1.8.2
 		 */
 		LiteSpeed_Cache_Object::get_instance()->del_file() ;
@@ -308,7 +308,7 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
-	 * Delete whm msg tag
+	 * Delete whm msg tag.
 	 *
 	 * @since 1.1.1
 	 */
@@ -318,7 +318,7 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
-	 * Upgrade LSCWP
+	 * Upgrade LSCWP.
 	 *
 	 * @since 2.9
 	 */
@@ -356,7 +356,7 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.9
 	 */

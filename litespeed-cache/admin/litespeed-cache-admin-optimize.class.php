@@ -1,6 +1,6 @@
 <?php
 /**
- * The admin optimize tool
+ * The admin optimize tool.
  *
  *
  * @since      1.2.1
@@ -18,7 +18,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
 
 	/**
-	 * Generate operation URL
+	 * Generate operation URL.
 	 *
 	 * @since  1.2.1
 	 * @param  string $type The type to proceed
@@ -31,7 +31,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	}
 
 	/**
-	 * Run DB Cleaner
+	 * Run DB Cleaner.
 	 *
 	 * @since  1.2.1
 	 */
@@ -60,7 +60,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	}
 
 	/**
-	 * Clean/Optimize WP tables
+	 * Clean/Optimize WP tables.
 	 *
 	 * @since  1.2.1
 	 * @param  string $type The type to clean
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	}
 
 	/**
-	 * Clean/Optimize WP tables
+	 * Clean/Optimize WP tables.
 	 *
 	 * @since  1.2.1
 	 * @param  string $type The type to clean

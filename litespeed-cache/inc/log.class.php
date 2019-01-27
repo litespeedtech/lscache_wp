@@ -27,7 +27,7 @@ class LiteSpeed_Cache_Log
 	const TYPE_CLEAR_LOG = 'clear_log' ;
 
 	/**
-	 * Log class Constructor
+	 * Log class Constructor.
 	 *
 	 * NOTE: in this process, until last step ( define const LSCWP_LOG = true ), any usage to WP filter will not be logged to prevent infinite loop with log_filters()
 	 *
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Log Purge headers separately
+	 * Log Purge headers separately.
 	 *
 	 * @since 2.7
 	 */
@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Enable debug log
+	 * Enable debug log.
 	 *
 	 * @since 1.1.0
 	 */
@@ -191,7 +191,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Log all filters and action hooks
+	 * Log all filters and action hooks.
 	 *
 	 * @since 1.1.5
 	 */
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Backtrace info
+	 * Backtrace info.
 	 *
 	 * @since 2.7
 	 */
@@ -344,7 +344,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Clear log file
+	 * Clear log file.
 	 *
 	 * @since 1.6.6
 	 */
@@ -355,7 +355,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Heartbeat control
+	 * Heartbeat control.
 	 *
 	 * @since 1.1.5
 	 */
@@ -365,7 +365,7 @@ class LiteSpeed_Cache_Log
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  1.6.6
 	 */

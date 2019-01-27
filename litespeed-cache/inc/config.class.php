@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 	/**
 	 * Give an API to change all options val
-	 * All hooks need to be added before `after_setup_theme`
+	 * All hooks need to be added before `after_setup_theme`.
 	 *
 	 * @since  2.6
 	 */
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Force an option to a certain value
+	 * Force an option to a certain value.
 	 *
 	 * @since  2.6
 	 */
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Define `LSCACHE_ADV_CACHE` based on options setting
+	 * Define `LSCACHE_ADV_CACHE` based on options setting.
 	 *
 	 * NOTE: this must be before `LITESPEED_ON` defination
 	 *
@@ -122,7 +122,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Define `LITESPEED_ON`
+	 * Define `LITESPEED_ON`.
 	 *
 	 * @since 2.1
 	 */
@@ -152,7 +152,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		/**
-		 * In case this is called outside the admin page
+		 * In case this is called outside the admin page.
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -247,7 +247,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Save frontend url to private cached uri/no cache uri
+	 * Save frontend url to private cached uri/no cache uri.
 	 *
 	 * @since 1.3
 	 */
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Check if one user role is in vary group settings
+	 * Check if one user role is in vary group settings.
 	 *
 	 * @since 1.2.0
 	 * @param  string $role The user role
@@ -318,7 +318,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Check if one user role is in exclude optimization group settings
+	 * Check if one user role is in exclude optimization group settings.
 	 *
 	 * @since 1.6
 	 * @param  string $role The user role
@@ -339,7 +339,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Check if one user role is in exclude cache group settings
+	 * Check if one user role is in exclude cache group settings.
 	 *
 	 * @since 1.6.2
 	 * @param  string $role The user role
@@ -383,7 +383,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get item val
+	 * Get item val.
 	 *
 	 * @since 2.2.1
 	 */
@@ -486,7 +486,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$options[ self::ITEM_CDN_MAPPING ] = $cdn_mapping ;
 
 		/**
-		 * Convert Cookie Simulation in Crawler settings
+		 * Convert Cookie Simulation in Crawler settings.
 		 * @since 2.8.1 Fixed warning and lost cfg when deactivate->reactivate in v2.8
 		 */
 		$id = self::ITEM_CRWL_COOKIES ;
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		/**
-		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
+		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7.
 		 * @since 1.7
 		 */
 		if ( isset( $this->options[ 'cdn_url' ] ) ) {
@@ -579,7 +579,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		/**
-		 * Move Exclude settings to separate item
+		 * Move Exclude settings to separate item.
 		 * @since  2.3
 		 */
 		if ( isset( $this->options[ 'forced_cache_uri' ] ) ) {
@@ -698,7 +698,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set one config value directly
+	 * Set one config value directly.
 	 *
 	 * @since  2.9
 	 */
@@ -746,7 +746,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Handle all request actions from main cls
+	 * Handle all request actions from main cls.
 	 *
 	 * @since  2.9
 	 */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class  LiteSpeed_Cache_Admin
+ * Class  LiteSpeed_Cache_Admin.
  *
  * @package LiteSpeed_Cache_Admin
  */
@@ -10,7 +10,7 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-ca
 class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 
 	/**
-	 * Function to invoke a Private method
+	 * Function to invoke a Private method.
 	 */
 	protected static function invokeMethod($className, $methodName, array $parameters = array()) 
     {
@@ -28,7 +28,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     }
 
     /**
-     * Function for configurations
+     * Function for configurations.
      */
     public static function get_instance(){
     	$plugin_name = "litespeed-cache";
@@ -48,7 +48,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
   	}
 
 	/**
-	 * Test case for enqueue style LiteSpeed_Cache_Admin::__construct
+	 * Test case for enqueue style LiteSpeed_Cache_Admin::__construct.
 	 */
 	public function test_construct()
 	{
@@ -80,7 +80,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::build_lscwpctrl_url
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::build_lscwpctrl_url.
 	 * @param string $val the LSCWP_CTRL action to do in the url
 	 * @param string $nonce the nonce to use
 	 * @return string the built url
@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_enabled
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_enabled.
 	 * @param array $input the input configurations
 	 * @param array $options returns the up to date options array
 	 * @return bool true if enabled, false otherwise
@@ -111,7 +111,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_tag_prefix
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_tag_prefix.
 	 * @param array $input the configurations selected by the admin when
 	 *     clicking save
 	 * @param array $options the current configuration options
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_ttl
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_ttl.
 	 * @param array $input Input array
 	 * @param string $id Option ID
 	 * @return bool true if valid, false otherwise
@@ -143,7 +143,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_plugin_settings
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_plugin_settings.
 	 * @param array $input the configurations selected by the admin when
 	 *     clicking save
 	 * @return array the updated configuration options
@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::add_plugin_links
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::add_plugin_links.
 	 * @param array $links previously added links from other plugins
 	 * @return array links array with the litespeed cache one appended
 	 */
@@ -170,7 +170,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::cleanup_text
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::cleanup_text.
 	 * @param string $input the input string to clean
 	 * @return string the cleaned up input
 	 */
@@ -183,7 +183,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::parse_checkbox
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::parse_checkbox.
 	 * @param string $id the id of the checkbox value
 	 * @param array $input the input array
 	 * @param array $options the config options array
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::add_update_text
+	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::add_update_text.
 	 * @param string $translations
 	 * @param string $text
 	 * @return string

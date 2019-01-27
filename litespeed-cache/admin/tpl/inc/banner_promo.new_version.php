@@ -2,7 +2,7 @@
 if ( ! defined( 'WPINC' ) ) die ;
 
 /**
- * NOTE: Only show for single site
+ * NOTE: Only show for single site.
  */
 if ( is_multisite() ) {
 	return ;

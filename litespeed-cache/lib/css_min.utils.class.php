@@ -17,7 +17,7 @@ class Utils
     }
 
     /**
-     * Clamps a RGB color number outside the sRGB color space
+     * Clamps a RGB color number outside the sRGB color space.
      * @param int|float $n the number to clamp
      * @return int|float
      */
@@ -27,7 +27,7 @@ class Utils
     }
 
     /**
-     * Converts a HSL color into a RGB color
+     * Converts a HSL color into a RGB color.
      * @param array $hslValues
      * @return array
      */
@@ -56,7 +56,7 @@ class Utils
     }
 
     /**
-     * Tests and selects the correct formula for each RGB color channel
+     * Tests and selects the correct formula for each RGB color channel.
      * @param $v1
      * @param $v2
      * @param $vh
@@ -82,7 +82,7 @@ class Utils
     }
 
     /**
-     * Convert strings like "64M" or "30" to int values
+     * Convert strings like "64M" or "30" to int values.
      * @param mixed $size
      * @return int
      */
@@ -107,7 +107,7 @@ class Utils
     }
 
     /**
-     * Converts a string containing and RGB percentage value into a RGB integer value i.e. '90%' -> 229.5
+     * Converts a string containing and RGB percentage value into a RGB integer value i.e. '90%' -> 229.5.
      * @param $rgbPercentage
      * @return int
      */
@@ -121,7 +121,7 @@ class Utils
     }
 
     /**
-     * Converts a RGB color into a HEX color
+     * Converts a RGB color into a HEX color.
      * @param array $rgbColors
      * @return array
      */
@@ -138,7 +138,7 @@ class Utils
     }
 
     /**
-     * Rounds a number to its closest integer
+     * Rounds a number to its closest integer.
      * @param $n
      * @return int
      */

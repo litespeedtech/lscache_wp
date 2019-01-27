@@ -1,6 +1,6 @@
 <?php
 /**
- * Auto registration for LiteSpeed classes
+ * Auto registration for LiteSpeed classes.
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
@@ -83,7 +83,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 spl_autoload_register('_litespeed_autoload');
 
 /**
- * Load vendor loader
+ * Load vendor loader.
  *
  * @since  1.2.2
  */

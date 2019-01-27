@@ -39,7 +39,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 
 	/**
 	 * Force to set an option
-	 * Note: it will only affect the AFTER usage of that option
+	 * Note: it will only affect the AFTER usage of that option.
 	 *
 	 * @since 2.6
 	 */
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Start a to-be-removed html wrapper
+	 * Start a to-be-removed html wrapper.
 	 *
 	 * @since 1.4
 	 */
@@ -59,7 +59,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * End a to-be-removed html wrapper
+	 * End a to-be-removed html wrapper.
 	 *
 	 * @since 1.4
 	 */
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Compare version
+	 * Compare version.
 	 *
 	 * @since 1.3
 	 */
@@ -79,7 +79,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set mobile
+	 * Set mobile.
 	 *
 	 * @since 1.1.3
 	 */
@@ -89,7 +89,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache status to not cacheable
+	 * Set cache status to not cacheable.
 	 *
 	 * @since 1.1.3
 	 */
@@ -99,7 +99,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache status to no vary
+	 * Set cache status to no vary.
 	 *
 	 * @since 1.2.0
 	 */
@@ -109,7 +109,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache status to not cacheable
+	 * Set cache status to not cacheable.
 	 *
 	 * @since 1.1.3
 	 */
@@ -119,7 +119,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache status to cacheable ( By default cacheable status will be set when called WP hook `wp` )
+	 * Set cache status to cacheable ( By default cacheable status will be set when called WP hook `wp` ).
 	 *
 	 * @since 2.2
 	 */
@@ -129,7 +129,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
+	 * Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions ).
 	 *
 	 * @since 2.2
 	 */
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get current not cacheable status
+	 * Get current not cacheable status.
 	 *
 	 * @since 1.1.3
 	 */
@@ -149,7 +149,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache control ttl to use frontpage ttl
+	 * Set cache control ttl to use frontpage ttl.
 	 *
 	 * @since 1.1.3
 	 */
@@ -159,7 +159,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Set cache control ttl
+	 * Set cache control ttl.
 	 *
 	 * @since 1.1.5
 	 */
@@ -169,7 +169,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get current cache control ttl
+	 * Get current cache control ttl.
 	 *
 	 * @since 1.1.5
 	 */
@@ -179,7 +179,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Add public tag to cache
+	 * Add public tag to cache.
 	 *
 	 * @since 1.1.3
 	 */
@@ -189,7 +189,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Add public tag to cache
+	 * Add public tag to cache.
 	 *
 	 * @since 1.6.3
 	 */
@@ -199,7 +199,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook new vary cookies to vary finialization
+	 * Hook new vary cookies to vary finialization.
 	 *
 	 * @since 2.6
 	 */
@@ -209,7 +209,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Add a new vary cookie
+	 * Add a new vary cookie.
 	 *
 	 * @since 1.1.3
 	 * @since  2.7.1 Changed to filter hook instead of `LiteSpeed_Cache_Vary::add()`
@@ -226,7 +226,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook vary cookies to vary finialization
+	 * Hook vary cookies to vary finialization.
 	 *
 	 * @since 2.7.1
 	 */
@@ -236,7 +236,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Alter default vary cookie value
+	 * Alter default vary cookie value.
 	 *
 	 * Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
 	 *
@@ -251,7 +251,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook vary tags to default vary finialization
+	 * Hook vary tags to default vary finialization.
 	 *
 	 * @since 1.7.2
 	 */
@@ -261,7 +261,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Force finalize vary even if its in an AJAX call
+	 * Force finalize vary even if its in an AJAX call.
 	 *
 	 * @since 2.6
 	 */
@@ -271,7 +271,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook vary appending to vary
+	 * Hook vary appending to vary.
 	 *
 	 * NOTE: This will add vary to rewrite rule
 	 *
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Purge all action
+	 * Purge all action.
 	 *
 	 * @since 1.1.3
 	 */
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Purge all private
+	 * Purge all private.
 	 *
 	 * @since 1.6.3
 	 */
@@ -304,7 +304,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Purge private tag
+	 * Purge private tag.
 	 *
 	 * @since 1.6.3
 	 */
@@ -314,7 +314,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Purge single action
+	 * Purge single action.
 	 *
 	 * @since 1.3
 	 * @param  int $pid The ID of a post
@@ -325,7 +325,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Add purge tags
+	 * Add purge tags.
 	 *
 	 * @since 1.1.3
 	 */
@@ -335,7 +335,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Build a switch div html snippet
+	 * Build a switch div html snippet.
 	 *
 	 * @since 1.1.3
 	 * @param  string $id
@@ -347,7 +347,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Filter the value for checkbox via input and id (enabled/disabled)
+	 * Filter the value for checkbox via input and id (enabled/disabled).
 	 *
 	 * @since  1.1.6
 	 * @param int $input The whole input array
@@ -361,7 +361,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 
 
 	/**
-	 * Hook cacheable check to cache control
+	 * Hook cacheable check to cache control.
 	 *
 	 * @since 1.1.3
 	 */
@@ -371,7 +371,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook tag appending to tag
+	 * Hook tag appending to tag.
 	 *
 	 * @since 1.1.3
 	 */
@@ -381,7 +381,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook purge tags appending to purge
+	 * Hook purge tags appending to purge.
 	 *
 	 * @since 1.1.3
 	 */
@@ -391,7 +391,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook purge post action to purge
+	 * Hook purge post action to purge.
 	 *
 	 * @since 1.1.3
 	 */
@@ -401,7 +401,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook not ESI template
+	 * Hook not ESI template.
 	 *
 	 * @since 1.1.3
 	 */
@@ -411,7 +411,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook ESI template block
+	 * Hook ESI template block.
 	 *
 	 * @since 1.1.3
 	 */
@@ -421,7 +421,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook ESI params
+	 * Hook ESI params.
 	 *
 	 * @since 1.1.3
 	 */
@@ -431,7 +431,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook setting tab
+	 * Hook setting tab.
 	 *
 	 * @since 1.1.3
 	 */
@@ -441,7 +441,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook setting saving
+	 * Hook setting saving.
 	 *
 	 * @since 1.1.3
 	 */
@@ -451,7 +451,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook widget default settings value
+	 * Hook widget default settings value.
 	 *
 	 * @since 1.1.3
 	 */
@@ -461,7 +461,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook get options value
+	 * Hook get options value.
 	 *
 	 * @since 1.1.3
 	 */
@@ -471,7 +471,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Generate ESI block url
+	 * Generate ESI block url.
 	 *
 	 * @since 1.1.3
 	 * @param string $control Cache control tag
@@ -485,7 +485,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Easiest way to replace WP nonce to an ESI widget
+	 * Easiest way to replace WP nonce to an ESI widget.
 	 *
 	 * @since 2.6
 	 */
@@ -500,7 +500,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Log debug info
+	 * Log debug info.
 	 *
 	 * @since 1.1.3
 	 */
@@ -510,7 +510,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Log debug info ( advanced mode )
+	 * Log debug info ( advanced mode ).
 	 *
 	 * @since 1.6.6.1
 	 */
@@ -520,7 +520,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get ESI enable setting value
+	 * Get ESI enable setting value.
 	 *
 	 * @since 1.2.0
 	 */
@@ -530,7 +530,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get cache enable setting value
+	 * Get cache enable setting value.
 	 *
 	 * @since 1.3
 	 */
@@ -540,7 +540,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Get cfg setting value
+	 * Get cfg setting value.
 	 *
 	 * @since 1.1.3
 	 */
@@ -550,7 +550,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * register 3rd party detect hooks
+	 * register 3rd party detect hooks.
 	 *
 	 * @since 1.1.3
 	 */
@@ -560,7 +560,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Hook to litespeed init
+	 * Hook to litespeed init.
 	 *
 	 * @since 1.6.6
 	 */

@@ -1,6 +1,6 @@
 <?php
 /**
- * LiteSpeed PHP compatibility functions for lower PHP version
+ * LiteSpeed PHP compatibility functions for lower PHP version.
  *
  * @since      1.1.3
  * @package    LiteSpeed_Cache
@@ -15,7 +15,7 @@ if ( ! defined('WPINC') ) {
 
 
 /**
- * http_build_url() compatibility
+ * http_build_url() compatibility.
  *
  */
 if ( ! function_exists('http_build_url') ) {
