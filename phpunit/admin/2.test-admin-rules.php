@@ -63,7 +63,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Rules::is_subdir.
 	 *
-	 * @return Boolean
+	 * @return boolean
 	 */
 	/*public function test_is_subdir()
 	{
@@ -217,7 +217,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_backup.
 	 *
-	 * @param String $path The .htaccess file path.
+	 * @param string $path The .htaccess file path.
 	 *
 	 * @return bool true on success, else false on failure
 	 */

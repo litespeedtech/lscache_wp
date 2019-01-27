@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::check_license.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_check_license()
 	{
@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_paragraph.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_paragraph()
 	{
@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_list.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_list()
 	{
@@ -115,7 +115,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_notice.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_notice()
 	{
@@ -129,7 +129,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_tip.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_tip()
 	{
@@ -143,7 +143,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_button.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_button()
 	{
@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_expand_collapse.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_expand_collapse()
 	{
@@ -189,7 +189,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::display_notices.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_display_notices()
 	{
@@ -223,7 +223,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_manage.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_menu_manage()
 	{
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_settings.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_menu_settings()
 	{
@@ -253,7 +253,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_network_settings.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_menu_network_settings()
 	{
@@ -268,7 +268,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_edit_htaccess.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_menu_edit_htaccess()
 	{
@@ -283,7 +283,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_info.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_menu_info()
 	{
@@ -298,7 +298,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_report.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_menu_report()
 	{
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_general.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_general()
 	{
@@ -325,7 +325,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_specific.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_specific()
 	{
@@ -338,7 +338,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_purge.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_purge()
 	{
@@ -351,7 +351,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_excludes.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_excludes()
 	{
@@ -367,7 +367,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_advanced.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_advanced()
 	{
@@ -383,7 +383,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_test.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_test()
 	{
@@ -399,7 +399,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_compatibilities.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_settings_compatibilities()
 	{
@@ -413,7 +413,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_mobile_view.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_setting_mobile_view()
 	{
@@ -530,7 +530,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_compatibility_wp_postviews.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_build_compatibility_wp_postviews()
 	{
@@ -543,7 +543,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_compatibility.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_info_compatibility()
 	{
@@ -556,7 +556,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_admin_ip.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_info_admin_ip()
 	{
@@ -569,7 +569,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_common_rewrite.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_info_common_rewrite()
 	{
@@ -582,7 +582,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_faqs.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_info_faqs()
 	{
@@ -595,7 +595,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_display_installed.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_display_installed()
 	{
@@ -608,7 +608,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_error_cookie.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_show_error_cookie()
 	{
@@ -640,7 +640,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_group_end.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_input_group_end()
 	{
@@ -817,7 +817,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_collapsible_start.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_input_collapsible_start()
 	{
@@ -830,7 +830,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_collapsible_end.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_input_collapsible_end()
 	{
@@ -843,7 +843,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_collapsible.
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function test_input_field_collapsible()
 	{

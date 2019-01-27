@@ -1282,7 +1282,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.9
 	 *
-	 * @param String $rule input rewrite rule
+	 * @param string $rule input rewrite rule
 	 *
 	 * @return bool true for valid rules, false otherwise
 	 */
