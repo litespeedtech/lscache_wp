@@ -31,16 +31,16 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_PURGE_ALL :
+			case self::TYPE_PURGE_ALL:
 				$instance->_purge_all() ;
 				break ;
 
-			case self::TYPE_GET_DEVMODE :
+			case self::TYPE_GET_DEVMODE:
 				$instance->_get_devmode() ;
 				break ;
 
-			case self::TYPE_SET_DEVMODE_ON :
-			case self::TYPE_SET_DEVMODE_OFF :
+			case self::TYPE_SET_DEVMODE_ON:
+			case self::TYPE_SET_DEVMODE_OFF:
 				$instance->_set_devmode( $type ) ;
 				break ;
 

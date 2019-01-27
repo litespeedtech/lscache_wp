@@ -762,7 +762,7 @@ class LiteSpeed_Cache_Utility
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_SCORE_CHK :
+			case self::TYPE_SCORE_CHK:
 				$instance->_score_check() ;
 				break ;
 

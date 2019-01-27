@@ -22,35 +22,35 @@ class Litespeed_String
 		mt_srand( ( double ) microtime() * 1000000 ) ;
 
 		switch( $type ) {
-			case 0 :
+			case 0:
 				$charlist = '012' ;
 				break ;
 
-			case 1 :
+			case 1:
 				$charlist = '0123456789' ;
 				break ;
 
-			case 2 :
+			case 2:
 				$charlist = 'abcdefghijklmnopqrstuvwxyz' ;
 				break ;
 
-			case 3 :
+			case 3:
 				$charlist = '0123456789abcdefghijklmnopqrstuvwxyz' ;
 				break ;
 
-			case 4 :
+			case 4:
 				$charlist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
 				break ;
 
-			case 5 :
+			case 5:
 				$charlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
 				break ;
 
-			case 6 :
+			case 6:
 				$charlist = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
 				break ;
 
-			case 7 :
+			case 7:
 				$charlist = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
 				break ;
 

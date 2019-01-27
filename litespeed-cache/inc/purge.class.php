@@ -73,47 +73,47 @@ class LiteSpeed_Cache_Purge
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_PURGE_ALL :
+			case self::TYPE_PURGE_ALL:
 				$instance->_purge_all() ;
 				break ;
 
-			case self::TYPE_PURGE_ALL_LSCACHE :
+			case self::TYPE_PURGE_ALL_LSCACHE:
 				$instance->_purge_all_lscache() ;
 				break ;
 
-			case self::TYPE_PURGE_ALL_CSSJS :
+			case self::TYPE_PURGE_ALL_CSSJS:
 				$instance->_purge_all_cssjs() ;
 				break ;
 
-			case self::TYPE_PURGE_ALL_CCSS :
+			case self::TYPE_PURGE_ALL_CCSS:
 				$instance->_purge_all_ccss() ;
 				break ;
 
-			case self::TYPE_PURGE_ALL_PLACEHOLDER :
+			case self::TYPE_PURGE_ALL_PLACEHOLDER:
 				$instance->_purge_all_placeholder() ;
 				break ;
 
-			case self::TYPE_PURGE_ALL_OBJECT :
+			case self::TYPE_PURGE_ALL_OBJECT:
 				$instance->_purge_all_object() ;
 				break ;
 
-			case self::TYPE_PURGE_ALL_OPCACHE :
+			case self::TYPE_PURGE_ALL_OPCACHE:
 				$instance->_purge_all_opcache() ;
 				break ;
 
-			case self::TYPE_PURGE_FRONT :
+			case self::TYPE_PURGE_FRONT:
 				$instance->_purge_front() ;
 				break ;
 
-			case self::TYPE_PURGE_FRONTPAGE :
+			case self::TYPE_PURGE_FRONTPAGE:
 				$instance->_purge_frontpage() ;
 				break ;
 
-			case self::TYPE_PURGE_PAGES :
+			case self::TYPE_PURGE_PAGES:
 				$instance->_purge_pages() ;
 				break ;
 
-			case strpos( $type, self::TYPE_PURGE_ERROR ) === 0 :
+			case strpos( $type, self::TYPE_PURGE_ERROR ) === 0:
 				$instance->_purge_error( substr( $type, strlen( self::TYPE_PURGE_ERROR ) ) ) ;
 				break ;
 

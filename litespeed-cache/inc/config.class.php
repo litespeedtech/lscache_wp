@@ -272,19 +272,19 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		switch ( $type ) {
-			case 'forced_cache' :
+			case 'forced_cache':
 				$id = self::ITEM_FORCE_CACHE_URI ;
 				break ;
 
-			case 'private' :
+			case 'private':
 				$id = self::ITEM_CACHE_URI_PRIV ;
 				break ;
 
-			case 'nonoptimize' :
+			case 'nonoptimize':
 				$id = self::ITEM_OPTM_EXCLUDES ;
 				break ;
 
-			case 'nocache' :
+			case 'nocache':
 			default:
 				$id = self::ITEM_EXCLUDES_URI ;
 				break ;
@@ -782,7 +782,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_SET :
+			case self::TYPE_SET:
 				$instance->_set_cfg() ;
 				break ;
 

@@ -53,15 +53,15 @@ class LiteSpeed_Cache_Import
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_IMPORT :
+			case self::TYPE_IMPORT:
 				$instance->_import() ;
 				break ;
 
-			case self::TYPE_EXPORT :
+			case self::TYPE_EXPORT:
 				$instance->_export() ;
 				break ;
 
-			case self::TYPE_RESET :
+			case self::TYPE_RESET:
 				$instance->_reset() ;
 				break ;
 

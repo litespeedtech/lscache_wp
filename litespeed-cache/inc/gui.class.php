@@ -168,15 +168,15 @@ class LiteSpeed_Cache_GUI
 	{
 		$_instance = self::get_instance() ;
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_DISMISS_WHM :
+			case self::TYPE_DISMISS_WHM:
 				LiteSpeed_Cache_Activation::dismiss_whm() ;
 				break ;
 
-			case self::TYPE_DISMISS_EXPIRESDEFAULT :
+			case self::TYPE_DISMISS_EXPIRESDEFAULT:
 				update_option( LiteSpeed_Cache_Admin_Display::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
 				break ;
 
-			case self::TYPE_DISMISS_PROMO :
+			case self::TYPE_DISMISS_PROMO:
 				if ( empty( $_GET[ 'promo_tag' ] ) ) {
 					break ;
 				}

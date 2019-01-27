@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Log
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_CLEAR_LOG :
+			case self::TYPE_CLEAR_LOG:
 				$instance->_clear_log() ;
 				break ;
 

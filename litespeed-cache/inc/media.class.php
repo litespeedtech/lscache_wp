@@ -970,7 +970,7 @@ eot;
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_GENERATE_PLACEHOLDER :
+			case self::TYPE_GENERATE_PLACEHOLDER:
 				self::cron_placeholder( true ) ;
 				break ;
 

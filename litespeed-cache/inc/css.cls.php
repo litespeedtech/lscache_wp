@@ -333,7 +333,7 @@ class LiteSpeed_Cache_CSS
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_GENERATE_CRITICAL :
+			case self::TYPE_GENERATE_CRITICAL:
 				self::cron_ccss( true ) ;
 				break ;
 

@@ -67,7 +67,7 @@ class LiteSpeed_Cache_Admin_API
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_RESET_KEY :
+			case self::TYPE_RESET_KEY:
 				$instance->_reset_key() ;
 				break ;
 
@@ -90,16 +90,16 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_NOTIFY_IMG :
+			case self::TYPE_NOTIFY_IMG:
 				LiteSpeed_Cache_Img_Optm::get_instance()->notify_img() ;
 				break ;
 
-			case self::TYPE_CHECK_IMG :
+			case self::TYPE_CHECK_IMG:
 				$instance->validate_lsserver() ;
 				LiteSpeed_Cache_Img_Optm::get_instance()->check_img() ;
 				break ;
 
-			case self::TYPE_IMG_DESTROY_CALLBACK :
+			case self::TYPE_IMG_DESTROY_CALLBACK:
 				LiteSpeed_Cache_Img_Optm::get_instance()->img_optimize_destroy_callback() ;
 				break ;
 
@@ -135,7 +135,7 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		switch ( LiteSpeed_Cache_Router::verify_type() ) {
-			case self::TYPE_REQUEST_CALLBACK :
+			case self::TYPE_REQUEST_CALLBACK:
 				$instance->_request_callback() ;
 				break ;
 

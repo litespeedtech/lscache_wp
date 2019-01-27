@@ -527,8 +527,8 @@ class LiteSpeed_Cache_Router
 				}
 				return ;
 
-			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK :
-			case LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK :
+			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK:
+			case LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK:
 				self::$_action = $action ;
 				return ;
 

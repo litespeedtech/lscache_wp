@@ -1008,10 +1008,10 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		if ( $num > 1 ) {
 			switch ( $kind ) {
-				case 'group' :
+				case 'group':
 					return sprintf( __( '%s groups', 'litespeed-cache' ), $num ) ;
 
-				case 'image' :
+				case 'image':
 					return sprintf( __( '%s images', 'litespeed-cache' ), $num ) ;
 
 				default:
@@ -1021,10 +1021,10 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		switch ( $kind ) {
-			case 'group' :
+			case 'group':
 				return sprintf( __( '%s group', 'litespeed-cache' ), $num ) ;
 
-			case 'image' :
+			case 'image':
 				return sprintf( __( '%s image', 'litespeed-cache' ), $num ) ;
 
 			default:

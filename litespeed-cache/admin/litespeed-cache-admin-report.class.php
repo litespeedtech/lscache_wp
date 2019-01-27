@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Admin_Report
 
 		switch ( $type ) {
 
-			case self::TYPE_SEND_REPORT :
+			case self::TYPE_SEND_REPORT:
 				$instance->_post_env() ;
 				break ;
 

@@ -325,32 +325,32 @@ class LiteSpeed_Cache_Const
 		}
 
 		switch ( $item ) {
-			case self::ITEM_OBJECT_GLOBAL_GROUPS :
+			case self::ITEM_OBJECT_GLOBAL_GROUPS:
 				return "users\nuserlogins\nusermeta\nuser_meta\nsite-transient\nsite-options\nsite-lookup\nblog-lookup\nblog-details\nrss\nglobal-posts\nblog-id-cache" ;
 
-			case self::ITEM_OBJECT_NON_PERSISTENT_GROUPS :
+			case self::ITEM_OBJECT_NON_PERSISTENT_GROUPS:
 				return "comment\ncounts\nplugins" ;
 
-			case self::ITEM_ADV_PURGE_ALL_HOOKS :
+			case self::ITEM_ADV_PURGE_ALL_HOOKS:
 				return "switch_theme\nwp_create_nav_menu\nwp_update_nav_menu\nwp_delete_nav_menu\ncreate_term\nedit_terms\ndelete_term\nadd_link\nedit_link\ndelete_link" ;
 
-			case self::ITEM_CDN_ORI_DIR :
+			case self::ITEM_CDN_ORI_DIR:
 				return LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
 
-			case self::ITEM_MEDIA_WEBP_ATTRIBUTE :
+			case self::ITEM_MEDIA_WEBP_ATTRIBUTE:
 				return "img.src\n" .
 						"div.data-thumb\n" .
 						"img.data-src\n" .
 						"div.data-large_image\n" .
 						"img.retina_logo_url" ;
 
-			case self::ITEM_LOG_IGNORE_FILTERS :
+			case self::ITEM_LOG_IGNORE_FILTERS:
 				return "gettext\ngettext_with_context\nget_the_terms\nget_term" ;
 
-			case self::ITEM_LOG_IGNORE_PART_FILTERS :
+			case self::ITEM_LOG_IGNORE_PART_FILTERS:
 				return "i18n\nlocale\nsettings\noption" ;
 
-			default :
+			default:
 				break ;
 		}
 

@@ -2063,39 +2063,39 @@ class LiteSpeed_Cache_Img_Optm
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_RESET_ROW :
+			case self::TYPE_RESET_ROW:
 				$instance->reset_row( ! empty( $_GET[ 'id' ] ) ? $_GET[ 'id' ] : false ) ;
 				break ;
 
-			case self::TYPE_CALC_BKUP :
+			case self::TYPE_CALC_BKUP:
 				$instance->_calc_bkup() ;
 				break ;
 
-			case self::TYPE_RM_BKUP :
+			case self::TYPE_RM_BKUP:
 				$instance->_rm_bkup() ;
 				break ;
 
-			case self::TYPE_SYNC_DATA :
+			case self::TYPE_SYNC_DATA:
 				$instance->_sync_data() ;
 				break ;
 
-			case self::TYPE_IMG_OPTIMIZE :
+			case self::TYPE_IMG_OPTIMIZE:
 				$instance->_request_optm() ;
 				break ;
 
-			case self::TYPE_IMG_OPTIMIZE_RESCAN :
+			case self::TYPE_IMG_OPTIMIZE_RESCAN:
 				$instance->_img_optimize_rescan() ;
 				break ;
 
-			case self::TYPE_IMG_OPTM_DESTROY :
+			case self::TYPE_IMG_OPTM_DESTROY:
 				$instance->_img_optimize_destroy() ;
 				break ;
 
-			case self::TYPE_IMG_OPTM_DESTROY_UNFINISHED :
+			case self::TYPE_IMG_OPTM_DESTROY_UNFINISHED:
 				$instance->_img_optimize_destroy_unfinished() ;
 				break ;
 
-			case self::TYPE_IMG_PULL :
+			case self::TYPE_IMG_PULL:
 				LiteSpeed_Cache_Log::debug( 'ImgOptm: Manually running Cron pull_optimized_img' ) ;
 				$result = $instance->_pull_optimized_img( true ) ;
 				// Manually running needs to roll back timestamp for next running
@@ -2117,13 +2117,13 @@ class LiteSpeed_Cache_Img_Optm
 			 * Batch switch
 			 * @since 1.6.3
 			 */
-			case self::TYPE_IMG_BATCH_SWITCH_ORI :
-			case self::TYPE_IMG_BATCH_SWITCH_OPTM :
+			case self::TYPE_IMG_BATCH_SWITCH_ORI:
+			case self::TYPE_IMG_BATCH_SWITCH_OPTM:
 				$instance->_batch_switch( $type ) ;
 				break ;
 
-			case substr( $type, 0, 4 ) === 'webp' :
-			case substr( $type, 0, 4 ) === 'orig' :
+			case substr( $type, 0, 4 ) === 'webp':
+			case substr( $type, 0, 4 ) === 'orig':
 				$instance->_switch_optm_file( $type ) ;
 				break ;
 

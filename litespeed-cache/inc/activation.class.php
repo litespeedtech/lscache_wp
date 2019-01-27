@@ -376,7 +376,7 @@ class LiteSpeed_Cache_Activation
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-			case self::TYPE_UPGRADE :
+			case self::TYPE_UPGRADE:
 				$instance->_upgrade() ;
 				break ;
 

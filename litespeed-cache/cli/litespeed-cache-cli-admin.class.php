@@ -91,7 +91,7 @@ class LiteSpeed_Cache_Cli_Admin
 					$options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 				}
 				//fall through
-			case in_array( $key, self::$checkboxes ) :
+			case in_array( $key, self::$checkboxes ):
 				//checkbox
 				if ( $val === 'true' ) {
 					$options[$key] = LiteSpeed_Cache_Config::VAL_ON ;
@@ -121,7 +121,7 @@ class LiteSpeed_Cache_Cli_Admin
 			 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
 			 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
 			 */
-			case strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) === 0 :
+			case strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) === 0:
 
 				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
 
