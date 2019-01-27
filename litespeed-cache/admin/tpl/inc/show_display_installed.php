@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('WPINC')) die;
 
 $buf = '<h3>'. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache'). '</h3>' . ' '

@@ -1,4 +1,5 @@
 <?php
+
 if ( ! defined( 'WPINC' ) ) die ;
 
 $err = __( 'Disable All Features', 'litespeed-cache' ) ;
