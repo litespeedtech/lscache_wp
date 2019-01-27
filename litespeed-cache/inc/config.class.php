@@ -197,8 +197,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// These two are not for single blog options
-		unset( $site_options[ self::NETWORK_OPID_ENABLED ] ) ;
-		unset( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+		unset( $site_options[ self::NETWORK_OPID_ENABLED ] , $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+		 
 
 		// Append site options to single blog options
 		$options = array_merge( $options, $site_options ) ;
