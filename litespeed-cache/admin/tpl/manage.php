@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 $menu_list = array(
     'purge' => __('Purge', 'litespeed-cache'),
@@ -17,8 +19,7 @@ if (! is_network_admin()) {
 		<?php
             if (is_network_admin()) {
                 echo __('LiteSpeed Cache Network Management', 'litespeed-cache');
-            }
-            else {
+            } else {
                 echo __('LiteSpeed Cache Management', 'litespeed-cache');
             }
         ?>
@@ -33,7 +34,7 @@ if (! is_network_admin()) {
 	<h2 class="litespeed-header">
 	<?php
         $i = 1;
-        foreach ($menu_list as $tab => $val){
+        foreach ($menu_list as $tab => $val) {
             $accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
             echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
             $i ++;

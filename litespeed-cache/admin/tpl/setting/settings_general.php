@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 ?>
 
@@ -19,7 +21,7 @@ if (!defined('WPINC')) die;
                 //IF multisite: Add 'Use Network Admin' option,
                 //ELSE: Change 'Enable LiteSpeed Cache' selection to 'Enabled' if the 'Use Network Admin' option was previously selected.
                 //		Selection will not actually be changed unless settings are saved.
-                if(!is_multisite() && intval($_options[$id]) === 2){
+                if (!is_multisite() && intval($_options[$id]) === 2) {
                     $_options[$id] = 1;
                 }
             ?>
@@ -37,7 +39,7 @@ if (!defined('WPINC')) die;
                 ); ?>
 
 				<?php
-                    if (is_multisite()){
+                    if (is_multisite()) {
                         echo $this->build_radio(
                             $id,
                             LiteSpeed_Cache_Config::VAL_ON2,

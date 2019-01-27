@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 ?>
 
@@ -33,7 +35,6 @@ if (!defined('WPINC')) die;
 
                     // if enabled, check the setting in file
                     if (defined('LITESPEED_ON')) {
-
                         $mobile_agents = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_mobile_agents();
                         if ($mobile_agents !== $_options[$id]) {
                             echo '<div class="litespeed-callout-danger">'

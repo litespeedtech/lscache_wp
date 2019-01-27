@@ -7,30 +7,31 @@
 require_once plugin_dir_path(dirname(__FILE__)) . '/admin/class-litespeed-cache-admin-display.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/admin/class-litespeed-cache-admin-rules.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/admin/class-litespeed-cache-admin.php';
-class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
+class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase
+{
 
     /**
      * Function to invoke a Private method
      */
-    protected static function invokeMethod($className, $methodName, array $parameters = array()) 
+    protected static function invokeMethod($className, $methodName, array $parameters = array())
     {
+        $reflectionClass = new ReflectionClass($className);
+        $method = $reflectionClass->getMethod($methodName);
+        $method->setAccessible(true);
 
-         $reflectionClass = new ReflectionClass($className);
-         $method = $reflectionClass->getMethod($methodName);
-         $method->setAccessible(true);
-
-         if(count($parameters) > 0){
-             $instance = self::get_instance();
+        if (count($parameters) > 0) {
+            $instance = self::get_instance();
             return $method->invokeArgs($instance, $parameters);
-         }else{
+        } else {
             return $method;
-         }
+        }
     }
 
     /**
      * Function for configurations
      */
-    public static function get_instance(){
+    public static function get_instance()
+    {
         $plugin_name = "litespeed-cache";
         $version = "v1.0.14.1";
         $instance = new LiteSpeed_Cache_Admin($plugin_name, $version);
@@ -41,8 +42,11 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     /**
      * Function to check if the passed parameter is String or not.
      */
-    protected static function isString($string) {
-        if(!is_string($string)) return false;
+    protected static function isString($string)
+    {
+        if (!is_string($string)) {
+            return false;
+        }
 
         return true;
     }
@@ -91,7 +95,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $nounce = '';
         $msg = LiteSpeed_Cache_Admin::build_lscwpctrl_url($val, $nounce);
         $bool = self::isString($msg);
-          $this->assertTrue($bool);		
+        $this->assertTrue($bool);
     }
 
     /**
@@ -108,7 +112,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $options = $object->get_options();
         $parameters = array($input, &$options);
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_enabled', $parameters);
-          $this->assertFalse($bool);		
+        $this->assertFalse($bool);
     }
 
     /**
@@ -126,7 +130,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $options = $object->get_options();
         $parameters = array($input, &$options);
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_tag_prefix', $parameters);
-          $this->assertTrue($bool);		
+        $this->assertTrue($bool);
     }
 
     /**
@@ -142,7 +146,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $id = '';
         $parameters = array($input, $id);
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_ttl', $parameters);
-          $this->assertFalse($bool);		
+        $this->assertFalse($bool);
     }
 
     /**
@@ -157,7 +161,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $input = '';
         $instance = self::get_instance();
         $array = $instance->validate_plugin_settings($input);
-          $this->assertNotEmpty($array);		
+        $this->assertNotEmpty($array);
     }
 
     /**
@@ -171,7 +175,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $links = array();
         $instance = self::get_instance();
         $array = $instance->add_plugin_links($links);
-          $this->assertNotEmpty($array);		
+        $this->assertNotEmpty($array);
     }
 
     /**
@@ -184,8 +188,8 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     {
         $input = '';
         $msg = LiteSpeed_Cache_Admin::cleanup_text($input);
-          $bool = self::isString($msg);
-          $this->assertTrue($bool);	
+        $bool = self::isString($msg);
+        $this->assertTrue($bool);
     }
 
     /**
@@ -203,7 +207,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $object = LiteSpeed_Cache::config();
         $options = $object->get_options();
         $bool = LiteSpeed_Cache_Admin::parse_checkbox($id, $input, $options);
-          $this->assertFalse($bool);	
+        $this->assertFalse($bool);
     }
 
     /**
@@ -219,8 +223,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
         $text = '';
         $instance = self::get_instance();
         $msg = $instance->add_update_text($translations, $text);
-          $bool = self::isString($msg);
-          $this->assertTrue($bool);		
+        $bool = self::isString($msg);
+        $this->assertTrue($bool);
     }
-
 }

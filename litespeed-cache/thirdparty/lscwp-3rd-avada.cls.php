@@ -41,6 +41,5 @@ class LiteSpeed_Cache_ThirdParty_Avada
     {
         LiteSpeed_Cache_API::purge_all();
     }
-
 }
 

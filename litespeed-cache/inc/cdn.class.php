@@ -158,7 +158,6 @@ class LiteSpeed_Cache_CDN
         if (! empty($this->_cfg_cdn_mapping[LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS])) {
             add_filter('script_loader_src', array( $this, 'url_js' ), 999);
         }
-
     }
 
     /**
@@ -172,12 +171,10 @@ class LiteSpeed_Cache_CDN
         // If filetype to url is one to many, make url be an array
         if (empty($this->_cfg_cdn_mapping[$filetype])) {
             $this->_cfg_cdn_mapping[$filetype] = $url;
-        }
-        elseif (is_array($this->_cfg_cdn_mapping[$filetype])) {
+        } elseif (is_array($this->_cfg_cdn_mapping[$filetype])) {
             // Append url to filetype
             $this->_cfg_cdn_mapping[$filetype][] = $url;
-        }
-        else {
+        } else {
             // Convert _cfg_cdn_mapping from string to array
             $this->_cfg_cdn_mapping[$filetype] = array( $this->_cfg_cdn_mapping[$filetype], $url );
         }
@@ -266,7 +263,6 @@ class LiteSpeed_Cache_CDN
         if (! empty($this->_cfg_cdn_mapping[LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE])) {
             $this->_replace_file_types();
         }
-
     }
 
     /**
@@ -295,7 +291,7 @@ class LiteSpeed_Cache_CDN
 
             LiteSpeed_Cache_Log::debug2('CDN matched file_type ' . $postfix . ' : ' . $url);
 
-            if(! $url2 = $this->rewrite($url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE, $postfix)) {
+            if (! $url2 = $this->rewrite($url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE, $postfix)) {
                 continue;
             }
 
@@ -433,7 +429,7 @@ class LiteSpeed_Cache_CDN
     {
         if ($srcs) {
             foreach ($srcs as $w => $data) {
-                if(! $url = $this->rewrite($data['url'], LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG)) {
+                if (! $url = $this->rewrite($data['url'], LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG)) {
                     continue;
                 }
                 $srcs[$w]['url'] = $url;
@@ -502,8 +498,7 @@ class LiteSpeed_Cache_CDN
         }
         if ($mapping_kind !== LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE) {
             $final_url = $this->_cfg_cdn_mapping[$mapping_kind];
-        }
-        else {
+        } else {
             // select from file type
             $final_url = $this->_cfg_cdn_mapping[$postfix];
         }
@@ -517,8 +512,7 @@ class LiteSpeed_Cache_CDN
         foreach ($this->_cfg_url_ori as $v) {
             if (strpos($v, '*') !== false) {
                 $url = preg_replace('#' . $scheme . $v . '#iU', $final_url, $url);
-            }
-            else {
+            } else {
                 $url = str_replace($scheme . $v, $final_url, $url);
             }
         }
@@ -542,11 +536,10 @@ class LiteSpeed_Cache_CDN
         foreach ($this->_cfg_url_ori as $v) {
             $needle = $scheme . $v;
             if (strpos($v, '*') !== false) {
-                if(preg_match('#' . $needle . '#iU', $url)) {
+                if (preg_match('#' . $needle . '#iU', $url)) {
                     return true;
                 }
-            }
-            else {
+            } else {
                 if (strpos($url, $needle) === 0) {
                     return true;
                 }
@@ -614,5 +607,4 @@ class LiteSpeed_Cache_CDN
 
         return self::$_instance;
     }
-
 }

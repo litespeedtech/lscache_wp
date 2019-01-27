@@ -134,9 +134,8 @@ class LiteSpeed_Cache_Data
         // Check if table exists first
         if ($wpdb->get_var("SHOW TABLES LIKE '$this->_tb_img_optm'")) {
             LiteSpeed_Cache_Log::debug2('[Data] Existed');
-            // return ;
-        }
-        else {
+        // return ;
+        } else {
             LiteSpeed_Cache_Log::debug('[Data] Creating img_optm table');
 
             $sql = sprintf(
@@ -154,7 +153,6 @@ class LiteSpeed_Cache_Data
             if (defined('LSCWP_OBJECT_CACHE')) {
                 LiteSpeed_Cache_Object::get_instance()->flush();
             }
-
         }
 
         // Table version only exists after all old data migrated
@@ -220,11 +218,9 @@ class LiteSpeed_Cache_Data
             $res = $wpdb->query($sql);
             if ($res !== true) {
                 LiteSpeed_Cache_Log::debug('[Data] Warning: Alter table img_optm failed!', $sql);
-            }
-            else {
+            } else {
                 LiteSpeed_Cache_Log::debug('[Data] Successfully upgraded table img_optm.');
             }
-
         }
 
         // Record tb version
@@ -284,7 +280,6 @@ class LiteSpeed_Cache_Data
 
         // Record tb version
         update_option($this->_tb_optm, LiteSpeed_Cache::PLUGIN_VERSION);
-
     }
 
     /**
@@ -355,5 +350,4 @@ class LiteSpeed_Cache_Data
 
         return self::$_instance;
     }
-
 }

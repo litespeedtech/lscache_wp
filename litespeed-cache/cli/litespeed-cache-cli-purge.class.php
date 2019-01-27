@@ -29,8 +29,7 @@ class LiteSpeed_Cache_Cli_Purge
             foreach ($sites as $site) {
                 $buf .= WP_CLI::colorize('%Y' . $site['domain'] . $site['path'] . ':%n ID ' . $site['blog_id']) . "\n";
             }
-        }
-        else {
+        } else {
             $sites = get_sites();
             foreach ($sites as $site) {
                 $buf .= WP_CLI::colorize('%Y' . $site->domain . $site->path . ':%n ID ' . $site->blog_id) . "\n";
@@ -79,8 +78,7 @@ class LiteSpeed_Cache_Cli_Purge
     {
         if (is_multisite()) {
             $action = LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE;
-        }
-        else {
+        } else {
             $action = LiteSpeed_Cache::ACTION_QS_PURGE_ALL;
         }
 
@@ -88,8 +86,7 @@ class LiteSpeed_Cache_Cli_Purge
 
         if ($purge_ret->success) {
             WP_CLI::success(__('Purged All!', 'litespeed-cache'));
-        }
-        else {
+        } else {
             WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
         }
     }
@@ -133,8 +130,7 @@ class LiteSpeed_Cache_Cli_Purge
         $purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_QS_PURGE_ALL);
         if ($purge_ret->success) {
             WP_CLI::success(__('Purged the blog!', 'litespeed-cache'));
-        }
-        else {
+        } else {
             WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
         }
     }
@@ -170,8 +166,7 @@ class LiteSpeed_Cache_Cli_Purge
                 WP_CLI::error('Multisite url passed in is invalid.');
                 return;
             }
-        }
-        else {
+        } else {
             $deconstructed_site = wp_parse_url(get_home_url());
             if ($deconstructed['host'] !== $deconstructed_site['host']) {
                 WP_CLI::error('Single site url passed in is invalid.');
@@ -184,8 +179,7 @@ class LiteSpeed_Cache_Cli_Purge
         $purge_ret = WP_CLI\Utils\http_request('GET', $url, $data);
         if ($purge_ret->success) {
             WP_CLI::success(__('Purged the url!', 'litespeed-cache'));
-        }
-        else {
+        } else {
             WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
         }
     }
@@ -208,10 +202,10 @@ class LiteSpeed_Cache_Cli_Purge
                 continue;
             }
             $term = $callback($val);
-            if (! empty($term)) {WP_CLI::line($term->name);
+            if (! empty($term)) {
+                WP_CLI::line($term->name);
                 $filtered[] = in_array($callback, array( 'get_tag', 'get_category' )) ? $term->name : $val;
-            }
-            else {
+            } else {
                 WP_CLI::debug('[LSCACHE] Skip val, not a valid term. ' . $val);
             }
         }
@@ -233,11 +227,9 @@ class LiteSpeed_Cache_Cli_Purge
         $purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_PURGE_BY, $data);
         if ($purge_ret->success) {
             WP_CLI::success(__('Purged the tags!', 'litespeed-cache'));
-        }
-        else {
+        } else {
             WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code);
         }
-
     }
 
     /**
@@ -298,5 +290,4 @@ class LiteSpeed_Cache_Cli_Purge
     {
         $this->_purgeby_helper($args, LiteSpeed_Cache_Admin_Display::PURGEBY_PID, 'get_post');
     }
-
 }

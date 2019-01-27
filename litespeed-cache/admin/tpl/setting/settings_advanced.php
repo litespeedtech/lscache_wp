@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 // $current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
 

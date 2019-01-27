@@ -1,7 +1,11 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
-if (!LiteSpeed_Cache_Admin_Display::get_instance()->show_compatibility_tab()) return;
+if (!LiteSpeed_Cache_Admin_Display::get_instance()->show_compatibility_tab()) {
+    return;
+}
 ?>
 
 <h3 class="litespeed-title"><?php echo __('Compatibility with WP-PostViews', 'litespeed-cache'); ?></h3>

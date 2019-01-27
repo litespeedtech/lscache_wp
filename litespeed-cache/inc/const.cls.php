@@ -423,8 +423,7 @@ class LiteSpeed_Cache_Const
         //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
         if (is_multisite()) {
             $default_radio = 2;
-        }
-        else {
+        } else {
             $default_radio = 1;
         }
 
@@ -590,7 +589,6 @@ class LiteSpeed_Cache_Const
             }
 
             // Handle items in $this->default_item()
-
         }
 
         if (! $include_thirdparty) {
@@ -655,5 +653,4 @@ class LiteSpeed_Cache_Const
         }
         return array_diff_key($tp_options, $options);
     }
-
 }

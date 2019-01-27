@@ -42,7 +42,6 @@ class LiteSpeed_Cache_CLI_IAPI
         }
 
         if ($json['level'] > $optm_summary['level']) {
-
             LiteSpeed_Cache_Log::debug("[Img_Optm] Upgraded to level $json[level] !");
 
             WP_CLI::success('Upgraded to level ' . $json['level']);
@@ -66,8 +65,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
         if (! is_array($msg)) {
             WP_CLI::error($msg);
-        }
-        else {
+        } else {
             WP_CLI::success($msg['ok']);
         }
     }
@@ -89,8 +87,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
         if (! is_array($msg)) {
             WP_CLI::error($msg);
-        }
-        else {
+        } else {
             WP_CLI::success($msg['ok']);
         }
     }
@@ -195,6 +192,4 @@ class LiteSpeed_Cache_CLI_IAPI
         $msg = $this->_img_optm_instance->rm_bkup();
         WP_CLI::success($msg);
     }
-
-
 }

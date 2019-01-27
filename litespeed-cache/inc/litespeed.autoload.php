@@ -74,7 +74,7 @@ if (!function_exists('_litespeed_autoload')) {
             'LiteSpeed_3rd_Lib\css_min\UriRewriter' => 'lib/css_min.url_rewritter.class.php',
             'LiteSpeed_3rd_Lib\js_min\JSMin' 		=> 'lib/js_min.class.php',
         );
-        if(array_key_exists($cls, $class2fileArr) && file_exists(LSCWP_DIR . $class2fileArr[$cls])) {
+        if (array_key_exists($cls, $class2fileArr) && file_exists(LSCWP_DIR . $class2fileArr[$cls])) {
             require_once LSCWP_DIR . $class2fileArr[$cls];
         }
     }

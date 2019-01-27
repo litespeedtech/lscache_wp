@@ -29,14 +29,12 @@ $lib_file = $lscwp_dir . 'inc/object.lib.php';
 if (! $lscwp_dir || ! file_exists($data_file) || ! file_exists($lib_file)) {
     if (! is_admin()) { // Bypass object cache for frontend
         require_once ABSPATH . WPINC . '/cache.php';
-    }
-    else {
+    } else {
         $err = 'Can NOT find LSCWP path for object cache initialization in ' . __FILE__;
         error_log($err);
         echo $err;
     }
-}
-else {
+} else {
     // Init object cache & LSCWP
     require_once $lib_file;
 }

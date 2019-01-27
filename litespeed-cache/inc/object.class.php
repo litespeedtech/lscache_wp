@@ -80,8 +80,7 @@ class LiteSpeed_Cache_Object
             $this->_cfg_enabled = $cfg[LiteSpeed_Cache_Config::OPID_CACHE_OBJECT] && class_exists($this->_oc_driver) && $this->_cfg_host;
 
             defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('[Object] init with cfg result : ', $this->_cfg_enabled);
-        }
-        elseif (class_exists('LiteSpeed_Cache')) {
+        } elseif (class_exists('LiteSpeed_Cache')) {
             $this->_cfg_method = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND) ? true : false;
             $this->_cfg_host = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST);
             $this->_cfg_port = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT);
@@ -99,8 +98,7 @@ class LiteSpeed_Cache_Object
                 $this->_oc_driver = 'Redis';
             }
             $this->_cfg_enabled = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_OBJECT) && class_exists($this->_oc_driver) && $this->_cfg_host;
-        }
-        elseif (file_exists($this->_oc_data_file)) { // Get cfg from oc_data_file
+        } elseif (file_exists($this->_oc_data_file)) { // Get cfg from oc_data_file
             $cfg = parse_ini_file($this->_oc_data_file, true);
             $this->_cfg_method = ! empty($cfg['object_cache']['method']) ? $cfg['object_cache']['method'] : false;
             $this->_cfg_host = $cfg['object_cache']['host'];
@@ -119,8 +117,7 @@ class LiteSpeed_Cache_Object
                 $this->_oc_driver = 'Redis';
             }
             $this->_cfg_enabled = class_exists($this->_oc_driver) && $this->_cfg_host;
-        }
-        else {
+        } else {
             $this->_cfg_enabled = false;
         }
     }
@@ -236,7 +233,6 @@ class LiteSpeed_Cache_Object
         if (isset(self::$_instance->_conn)) {
             self::$_instance->flush();
         }
-
     }
 
     /**
@@ -271,21 +267,18 @@ class LiteSpeed_Cache_Object
             set_error_handler('litespeed_exception_handler');
             try {
                 $this->_conn = new Redis();
-                 // error_log( 'Object: _connect Redis' ) ;
+                // error_log( 'Object: _connect Redis' ) ;
 
                 if ($this->_cfg_persistent) {
                     if ($this->_cfg_port) {
                         $this->_conn->pconnect($this->_cfg_host, $this->_cfg_port);
-                    }
-                    else {
+                    } else {
                         $this->_conn->pconnect($this->_cfg_host);
                     }
-                }
-                else {
+                } else {
                     if ($this->_cfg_port) {
                         $this->_conn->connect($this->_cfg_host, $this->_cfg_port);
-                    }
-                    else {
+                    } else {
                         $this->_conn->connect($this->_cfg_host);
                     }
                 }
@@ -303,17 +296,14 @@ class LiteSpeed_Cache_Object
                 if ($res != '+PONG') {
                     $failed = true;
                 }
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 error_log($e->getMessage());
                 $failed = true;
-            }
-            catch (ErrorException $e) {
+            } catch (ErrorException $e) {
                 error_log($e->getMessage());
                 $failed = true;
             }
             restore_error_handler();
-
         }
         /**
          * Connect to Memcached
@@ -331,8 +321,7 @@ class LiteSpeed_Cache_Object
                 }
 
                 defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('[Object] No persistent ' . $this->_oc_driver . ' server list!');
-            }
-            else {
+            } else {
                 // error_log( 'Object: new memcached!' ) ;
                 $this->_conn = new Memcached;
             }
@@ -424,7 +413,7 @@ class LiteSpeed_Cache_Object
             return null;
         }
 
-        if(! $this->_connect()) {
+        if (! $this->_connect()) {
             return null;
         }
 
@@ -451,7 +440,7 @@ class LiteSpeed_Cache_Object
             return null;
         }
 
-        if(! $this->_connect()) {
+        if (! $this->_connect()) {
             return null;
         }
 
@@ -463,8 +452,7 @@ class LiteSpeed_Cache_Object
 
         if ($this->_oc_driver == 'Redis') {
             $res = $this->_conn->setEx($key, $ttl, $data);
-        }
-        else {
+        } else {
             $res = $this->_conn->set($key, $data, $ttl);
         }
 
@@ -497,7 +485,7 @@ class LiteSpeed_Cache_Object
             return null;
         }
 
-        if(! $this->_connect()) {
+        if (! $this->_connect()) {
             return null;
         }
 
@@ -521,7 +509,7 @@ class LiteSpeed_Cache_Object
             return null;
         }
 
-        if(! $this->_connect()) {
+        if (! $this->_connect()) {
             return null;
         }
 
@@ -529,8 +517,7 @@ class LiteSpeed_Cache_Object
 
         if ($this->_oc_driver == 'Redis') {
             $res = $this->_conn->flushDb();
-        }
-        else {
+        } else {
             $res = $this->_conn->flush();
             $this->_conn->resetServerList();
         }

@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $lang_enabled = '<font class="litespeed-success">' . __('Enabled', 'litespeed-cache') . '</font>';
 $lang_disabled = '<font class="litespeed-warning">' . __('Disabled', 'litespeed-cache') . '</font>';
@@ -10,11 +12,9 @@ $redis_enabled = class_exists('Redis') ? $lang_enabled : $lang_disabled;
 $mem_conn = LiteSpeed_Cache_Object::get_instance()->test_connection();
 if ($mem_conn === null) {
     $mem_conn_desc = '<font class="litespeed-desc">' . __('Not Available', 'litespeed-cache') . '</font>';
-}
-elseif ($mem_conn) {
+} elseif ($mem_conn) {
     $mem_conn_desc = '<font class="litespeed-success">' . __('Passed', 'litespeed-cache') . '</font>';
-}
-else {
+} else {
     $mem_conn_desc = '<font class="litespeed-warning">' . __('Failed', 'litespeed-cache') . '</font>';
 }
 

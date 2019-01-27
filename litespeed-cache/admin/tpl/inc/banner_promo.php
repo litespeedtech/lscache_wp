@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $last_check = empty($_summary['score.last_check']) ? 0 : $_summary['score.last_check'];
 // Check once per 10 days
@@ -42,16 +44,14 @@ $speed_before_cache = number_format($speed_before_cache, 2);
 $speed_after_cache = $_score['speed_after_cache'] / 1000;
 if ($speed_after_cache < 0.01) {
     $speed_after_cache = number_format($speed_after_cache, 3);
-}
-else {
+} else {
     $speed_after_cache = number_format($speed_after_cache, 2);
 }
 
 $speed_improved = ($_score['speed_before_cache'] - $_score['speed_after_cache']) * 100 / $_score['speed_before_cache'];
 if ($speed_improved > 99) {
     $speed_improved = number_format($speed_improved, 2);
-}
-else {
+} else {
     $speed_improved = number_format($speed_improved);
 }
 
@@ -59,8 +59,7 @@ else {
 $score_improved = ($_score['score_after_optm'] - $_score['score_before_optm']) * 100 / $_score['score_after_optm'];
 if ($score_improved > 99) {
     $score_improved = number_format($score_improved, 2);
-}
-else {
+} else {
     $score_improved = number_format($score_improved);
 }
 

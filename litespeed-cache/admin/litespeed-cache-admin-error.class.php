@@ -80,7 +80,7 @@ class LiteSpeed_Cache_Admin_Error
             return false;
         }
 
-        switch ($err_code){
+        switch ($err_code) {
             case self::E_PHP_VER:
                 return '<strong>'
                     . __('The installed PHP version is too old for the LiteSpeed Cache Plugin.', 'litespeed-cache')

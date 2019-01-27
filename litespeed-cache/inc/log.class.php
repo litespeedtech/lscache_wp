@@ -46,7 +46,6 @@ class LiteSpeed_Cache_Log
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL)) {
             ! defined('LSCWP_LOG_MORE') && define('LSCWP_LOG_MORE', true);
         }
-
     }
 
     /**
@@ -69,7 +68,6 @@ class LiteSpeed_Cache_Log
         $msg = $purge_header . self::_backtrace_info(6);
 
         Litespeed_File::append($purge_file, self::format_message($msg));
-
     }
 
     /**
@@ -91,7 +89,6 @@ class LiteSpeed_Cache_Log
         if (! defined('LSCWP_LOG')) {// If not initialized, do it now
             self::get_instance()->_init_request();
             define('LSCWP_LOG', true);
-
         }
 
         // Check if hook filters
@@ -158,8 +155,7 @@ class LiteSpeed_Cache_Log
                 $param .= ' ? ' . $qs;
             }
             $params[] = $param;
-        }
-        else {
+        } else {
             $params[] = $param;
             $params[] = 'Query String: ' . $qs;
         }
@@ -182,10 +178,10 @@ class LiteSpeed_Cache_Log
         if (defined('LSCWP_LOG_MORE')) {
             $params[] = 'X-LSCACHE: ' . (! empty($server['X-LSCACHE']) ? 'true' : 'false');
         }
-        if($server['LSCACHE_VARY_COOKIE']) {
+        if ($server['LSCACHE_VARY_COOKIE']) {
             $params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'];
         }
-        if($server['LSCACHE_VARY_VALUE']) {
+        if ($server['LSCACHE_VARY_VALUE']) {
             $params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'];
         }
 
@@ -240,12 +236,10 @@ class LiteSpeed_Cache_Log
                 $addr = '=CLI=';
                 if (isset($_SERVER['USER'])) {
                     $addr .= $_SERVER['USER'];
-                }
-                elseif ($_SERVER['HTTP_X_FORWARDED_FOR']) {
+                } elseif ($_SERVER['HTTP_X_FORWARDED_FOR']) {
                     $addr .= $_SERVER['HTTP_X_FORWARDED_FOR'];
                 }
-            }
-            else {
+            } else {
                 $addr = $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'];
             }
 
@@ -335,8 +329,7 @@ class LiteSpeed_Cache_Log
                     break;
                 }
                 $log = "\n" . $trace[$i]['file'];
-            }
-            else {
+            } else {
                 if ($trace[$i]['class'] == 'LiteSpeed_Cache_Log') {
                     continue;
                 }

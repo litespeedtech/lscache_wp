@@ -72,45 +72,33 @@ class LiteSpeed_Cache_Utility
 
         if ($wp_query->is_page) {
             $page_type = is_front_page() ? 'front' : 'page';
-        }
-        elseif ($wp_query->is_home) {
+        } elseif ($wp_query->is_home) {
             $page_type = 'home';
-        }
-        elseif ($wp_query->is_single) {
+        } elseif ($wp_query->is_single) {
             // $page_type = $wp_query->is_attachment ? 'attachment' : 'single' ;
             $page_type = get_post_type();
-        }
-        elseif ($wp_query->is_category) {
+        } elseif ($wp_query->is_category) {
             $page_type = 'category';
-        }
-        elseif ($wp_query->is_tag) {
+        } elseif ($wp_query->is_tag) {
             $page_type = 'tag';
-        }
-        elseif ($wp_query->is_tax) {
+        } elseif ($wp_query->is_tax) {
             $page_type = 'tax';
             $page_type = get_queried_object()->taxonomy;
-        }
-        elseif ($wp_query->is_archive) {
+        } elseif ($wp_query->is_archive) {
             if ($wp_query->is_day) {
                 $page_type = 'day';
-            }
-            elseif ($wp_query->is_month) {
+            } elseif ($wp_query->is_month) {
                 $page_type = 'month';
-            }
-            elseif ($wp_query->is_year) {
+            } elseif ($wp_query->is_year) {
                 $page_type = 'year';
-            }
-            elseif ($wp_query->is_author) {
+            } elseif ($wp_query->is_author) {
                 $page_type = 'author';
-            }
-            else {
+            } else {
                 $page_type = 'archive';
             }
-        }
-        elseif ($wp_query->is_search) {
+        } elseif ($wp_query->is_search) {
             $page_type = 'search';
-        }
-        elseif ($wp_query->is_404) {
+        } elseif ($wp_query->is_404) {
             $page_type = '404';
         }
 
@@ -156,7 +144,9 @@ class LiteSpeed_Cache_Utility
         $stoptime	= microtime(true);
         $status		= 0;
 
-        if (! $file) $status = 99999;// Site is down
+        if (! $file) {
+            $status = 99999;
+        }// Site is down
         else {
             fclose($file);
             $status = ($stoptime - $starttime) * 1000;
@@ -176,14 +166,12 @@ class LiteSpeed_Cache_Utility
      */
     public static function readable_time($seconds_or_timestamp, $timeout = 3600, $backward = true)
     {
-
         if (strlen($seconds_or_timestamp) == 10) {
             $seconds = time() - $seconds_or_timestamp;
             if ($seconds > $timeout) {
                 return date('m/d/Y H:i:s', $seconds_or_timestamp + LITESPEED_TIME_OFFSET);
             }
-        }
-        else {
+        } else {
             $seconds = $seconds_or_timestamp;
         }
 
@@ -256,14 +244,11 @@ class LiteSpeed_Cache_Utility
     {
         if ($filesize >= 1073741824) {
             $filesize = round($filesize / 1073741824 * 100) / 100 . 'G';
-        }
-        elseif ($filesize >= 1048576) {
+        } elseif ($filesize >= 1048576) {
             $filesize = round($filesize / 1048576 * 100) / 100 . 'M';
-        }
-        elseif ($filesize >= 1024) {
+        } elseif ($filesize >= 1024) {
             $filesize = round($filesize / 1024 * 100) / 100 . 'K';
-        }
-        else {
+        } else {
             $filesize = $filesize . 'B';
         }
         return $filesize;
@@ -315,7 +300,7 @@ class LiteSpeed_Cache_Utility
     {
         $hit = false;
         $this_ttl = 0;
-        foreach($haystack as $item) {
+        foreach ($haystack as $item) {
             if (! $item) {
                 continue;
             }
@@ -335,15 +320,13 @@ class LiteSpeed_Cache_Utility
                     $hit = $item;
                     break;
                 }
-            }
-            elseif (substr($item, 0, 1) === '^') {
+            } elseif (substr($item, 0, 1) === '^') {
                 // match beginning
                 if (substr($item, 1) === substr($needle, 0, strlen($item) - 1)) {
                     $hit = $item;
                     break;
                 }
-            }
-            else {
+            } else {
                 if (strpos($needle, $item) !== false) {
                     $hit = $item;
                     break;
@@ -386,8 +369,7 @@ class LiteSpeed_Cache_Utility
         if (substr($uri, 0, 1) === '/') {
             self::domain_const();
             $url = LSCWP_DOMAIN . $uri;
-        }
-        else {
+        } else {
             $url = home_url('/') . $uri;
         }
 
@@ -534,15 +516,13 @@ class LiteSpeed_Cache_Utility
                 // If use admin url
                 if ($page === true) {
                     $page = 'admin.php';
-                }
-                else {
+                } else {
                     if (strpos($page, '?') !== false) {
                         $prefix = '&';
                     }
                 }
                 $combined = $page . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action;
-            }
-            else {
+            } else {
                 // Current page rebuild URL
                 $params = $_GET;
 
@@ -560,15 +540,13 @@ class LiteSpeed_Cache_Utility
                 global $pagenow;
                 $combined = $pagenow . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action;
             }
-        }
-        else {
+        } else {
             $combined = 'admin-ajax.php?action=litespeed_ajax&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action;
         }
 
         if (is_network_admin()) {
             $prenonce = network_admin_url($combined);
-        }
-        else {
+        } else {
             $prenonce = admin_url($combined);
         }
         $url = wp_nonce_url($prenonce, $action, LiteSpeed_Cache::NONCE_NAME);
@@ -602,8 +580,7 @@ class LiteSpeed_Cache_Utility
         if (! defined('LITESPEED_FRONTEND_HOST')) {
             if (defined('WP_HOME')) {
                 $home_host = WP_HOME;// Also think of `WP_SITEURL`
-            }
-            else {
+            } else {
                 $home_host = get_option('home');
             }
             define('LITESPEED_FRONTEND_HOST', parse_url($home_host, PHP_URL_HOST));
@@ -663,12 +640,10 @@ class LiteSpeed_Cache_Utility
         if (substr($url_parsed['path'], 0, 1) === '/') {
             if (defined('LITESPEED_WP_REALPATH')) {
                 $file_path_ori = $_SERVER['DOCUMENT_ROOT'] . LITESPEED_WP_REALPATH . $url_parsed['path'];
-            }
-            else {
+            } else {
                 $file_path_ori = $_SERVER['DOCUMENT_ROOT'] . $url_parsed['path'];
             }
-        }
-        else {
+        } else {
             $file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed['path'];
         }
 
@@ -707,7 +682,6 @@ class LiteSpeed_Cache_Utility
         $srcset_ori = array();
         $srcset_final = array();
         foreach ($matches[2] as $k => $urls_ori) {
-
             $urls_final = explode(',', $urls_ori);
 
             $changed = false;
@@ -743,7 +717,6 @@ class LiteSpeed_Cache_Utility
         }
 
         return $content;
-
     }
 
 

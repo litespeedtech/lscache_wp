@@ -188,8 +188,7 @@ class LiteSpeed_Cache_Admin_Settings
         if ($res !== true) {
             if (! is_array($res)) {
                 $this->_err[] = $res;
-            }
-            else {
+            } else {
                 $this->_err = array_merge($this->_err, $res);
             }
         }
@@ -200,7 +199,6 @@ class LiteSpeed_Cache_Admin_Settings
          */
         $id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE;
         $this->_options[$id] = self::parse_onoff($this->_input, $id);
-
     }
 
     /**
@@ -238,8 +236,7 @@ class LiteSpeed_Cache_Admin_Settings
             if ($ret !== true) {
                 $this->_err[] = $ret;
             }
-        }
-        elseif ($options[$id] != $network_enabled) {
+        } elseif ($options[$id] != $network_enabled) {
             LiteSpeed_Cache_Purge::purge_all('Network enable changed');
         }
 
@@ -280,8 +277,7 @@ class LiteSpeed_Cache_Admin_Settings
         if ($res !== true) {
             if (! is_array($res)) {
                 $this->_err[] = $res;
-            }
-            else {
+            } else {
                 $this->_err = array_merge($this->_err, $res);
             }
         }
@@ -363,8 +359,7 @@ class LiteSpeed_Cache_Admin_Settings
                  * Clear object cache
                  */
                 LiteSpeed_Cache_Object::get_instance()->reconnect($all_options);
-            }
-            else {
+            } else {
                 if (defined('LSCWP_OBJECT_CACHE')) {
                     LiteSpeed_Cache_Log::debug('[Settings] Remove .object_cache.ini');
                     LiteSpeed_Cache_Object::get_instance()->del_file();
@@ -373,7 +368,6 @@ class LiteSpeed_Cache_Admin_Settings
         }
 
         return $new_options;
-
     }
 
     /**
@@ -390,7 +384,7 @@ class LiteSpeed_Cache_Admin_Settings
 
         $enabled = $this->_options[$id];
         // Use network setting
-        if($enabled === LiteSpeed_Cache_Config::VAL_ON2) {
+        if ($enabled === LiteSpeed_Cache_Config::VAL_ON2) {
             $enabled = is_multisite() ? defined('LITESPEED_NETWORK_ON') : true; // Default to true
         }
 
@@ -419,7 +413,6 @@ class LiteSpeed_Cache_Admin_Settings
                 $this->_options[$id] = 0;
             }
         }
-
     }
 
     /**
@@ -441,7 +434,7 @@ class LiteSpeed_Cache_Admin_Settings
 
         $id = LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN;
         $this->_options[$id] = self::parse_onoff($this->_input, $id);
-        if(! $this->_options[$id]) {
+        if (! $this->_options[$id]) {
             LiteSpeed_Cache_Purge::add(LiteSpeed_Cache_Tag::TYPE_LOGIN);
         }
 
@@ -454,7 +447,6 @@ class LiteSpeed_Cache_Admin_Settings
         foreach ($ids as $id) {
             $this->_save_item($id);
         }
-
     }
 
     /**
@@ -538,8 +530,7 @@ class LiteSpeed_Cache_Admin_Settings
                 $cat_id = get_cat_ID($cat_name);
                 if ($cat_id == 0) {
                     $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_CAT, $cat_name);
-                }
-                else {
+                } else {
                     $cat_ids[] = $cat_id;
                 }
             }
@@ -561,8 +552,7 @@ class LiteSpeed_Cache_Admin_Settings
                 $term = get_term_by('name', $tag_name, 'post_tag');
                 if ($term == 0) {
                     $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_TAG, $tag_name);
-                }
-                else {
+                } else {
                     $tag_ids[] = $term->term_id;
                 }
             }
@@ -577,7 +567,6 @@ class LiteSpeed_Cache_Admin_Settings
          */
         $id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES;
         update_option($id, ! empty($this->_input[$id]) ? $this->_input[$id] : array());
-
     }
 
     /**
@@ -606,7 +595,6 @@ class LiteSpeed_Cache_Admin_Settings
             if ($id == LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE) {
                 $cdn_cloudflare_changed = true;
             }
-
         }
 
         $id = LiteSpeed_Cache_Config::OPID_CDN_ORI;
@@ -710,8 +698,7 @@ class LiteSpeed_Cache_Admin_Settings
                 $this->_options[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE] = $zone['id'];
 
                 LiteSpeed_Cache_Log::debug("Settings: Get zone successfully \t\t[ID] $zone[id]");
-            }
-            else {
+            } else {
                 $this->_options[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE] = '';
                 LiteSpeed_Cache_Log::debug('[Settings] Get zone failed, clean zone');
             }
@@ -849,7 +836,6 @@ class LiteSpeed_Cache_Admin_Settings
         $this->_save_item($id);
         $id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI;
         $this->_save_item($id, 'uri');
-
     }
 
     /**
@@ -931,8 +917,7 @@ class LiteSpeed_Cache_Admin_Settings
 
             if ($has_err) {
                 $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_ADMIN_IP_INV);
-            }
-            else {
+            } else {
                 $this->_options[$id] = $admin_ips;
             }
         }
@@ -1004,7 +989,7 @@ class LiteSpeed_Cache_Admin_Settings
         }
 
         $id = LiteSpeed_Cache_Config::CRWL_ORDER_LINKS;
-        if(! isset($this->_input[$id]) || ! in_array($this->_input[$id], array(
+        if (! isset($this->_input[$id]) || ! in_array($this->_input[$id], array(
             LiteSpeed_Cache_Config::CRWL_DATE_DESC,
             LiteSpeed_Cache_Config::CRWL_DATE_ASC,
             LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
@@ -1041,16 +1026,14 @@ class LiteSpeed_Cache_Admin_Settings
         $id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP;
         if (! empty($this->_input[$id]) && ! WP_Http::is_ip_address($this->_input[$id])) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_SITE_IP, $this->_input[$id]);
-        }
-        else {
+        } else {
             $this->_options[$id] = $this->_input[$id];
         }
 
         $id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP;
         if (! empty($this->_input[$id]) && ($err = $this->_validate_custom_sitemap($this->_input[$id])) !== true) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error($err, $this->_input[$id]);
-        }
-        else {
+        } else {
             $this->_options[$id] = $this->_input[$id];
         }
 
@@ -1073,7 +1056,6 @@ class LiteSpeed_Cache_Admin_Settings
             }
         }
         update_option($id, $cookie_crawlers);
-
     }
 
     /**
@@ -1118,11 +1100,9 @@ class LiteSpeed_Cache_Admin_Settings
         $id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
         if (! $this->_input[$id] &&  $new_options[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, 'EMPTY' ));
-        }
-        elseif ($this->_input[$id] && ! $this->_syntax_checker($this->_input[$id])) {
+        } elseif ($this->_input[$id] && ! $this->_syntax_checker($this->_input[$id])) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html($this->_input[$id]) ));
-        }
-        else {
+        } else {
             $new_options[$id] = $this->_input[$id];
         }
 
@@ -1131,8 +1111,7 @@ class LiteSpeed_Cache_Admin_Settings
         $this->_input[$id] = preg_replace("/[\r\n]+/", '|', $this->_input[$id]);
         if ($this->_input[$id] && ! $this->_syntax_checker($this->_input[$id])) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html($this->_input[$id]) ));
-        }
-        else {
+        } else {
             $new_options[$id] = $this->_input[$id];
         }
 
@@ -1140,8 +1119,7 @@ class LiteSpeed_Cache_Admin_Settings
         $id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
         if ($this->_input[$id] && ! $this->_syntax_checker($this->_input[$id])) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html($this->_input[$id]) ));
-        }
-        else {
+        } else {
             $new_options[$id] = $this->_input[$id];
         }
 
@@ -1149,8 +1127,7 @@ class LiteSpeed_Cache_Admin_Settings
         $id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
         if ($this->_input[$id] && preg_match('#[^\w\-]#', $this->_input[$id])) {
             $this->_err[] = LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html($this->_input[$id]));
-        }
-        else {
+        } else {
             $new_options[$id] = $this->_input[$id];
         }
 
@@ -1259,8 +1236,7 @@ class LiteSpeed_Cache_Admin_Settings
 
         if (! $current || $esi != $current[LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE]) {
             LiteSpeed_Cache_Purge::purge_all('Wdiget ESI_enable changed');
-        }
-        elseif ($ttl != 0 && $ttl != $current[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL]) {
+        } elseif ($ttl != 0 && $ttl != $current[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL]) {
             LiteSpeed_Cache_Purge::add(LiteSpeed_Cache_Tag::TYPE_WIDGET . $widget->id);
         }
 
@@ -1363,7 +1339,7 @@ class LiteSpeed_Cache_Admin_Settings
     {
         $val = intval($val);
 
-        if($val === LiteSpeed_Cache_Config::VAL_ON) {
+        if ($val === LiteSpeed_Cache_Config::VAL_ON) {
             return true;
         }
 
@@ -1382,11 +1358,11 @@ class LiteSpeed_Cache_Admin_Settings
     {
         $val = intval($val);
 
-        if($val === LiteSpeed_Cache_Config::VAL_ON) {
+        if ($val === LiteSpeed_Cache_Config::VAL_ON) {
             return LiteSpeed_Cache_Config::VAL_ON;
         }
 
-        if($val === LiteSpeed_Cache_Config::VAL_ON2) {
+        if ($val === LiteSpeed_Cache_Config::VAL_ON2) {
             return LiteSpeed_Cache_Config::VAL_ON2;
         }
 

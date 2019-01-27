@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $reasons = array();
 

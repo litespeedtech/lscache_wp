@@ -37,8 +37,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
     {
         if (is_multisite()) {
             $options = $this->construct_multisite_options();
-        }
-        else {
+        } else {
             $options = get_option(self::OPTION_NAME);
             if (! $options) {
                 $options = $this->get_default_options();
@@ -74,7 +73,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
         // Hook to options
         add_action('litespeed_init', array( $this, 'hook_options' ));
-
     }
 
     /**
@@ -316,8 +314,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
         $group = 0;
         if (array_key_exists($role, $this->vary_groups)) {
             $group = $this->vary_groups[$role];
-        }
-        elseif ($role === 'administrator') {
+        } elseif ($role === 'administrator') {
             $group = 99;
         }
 
@@ -413,8 +410,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
         if (! $return_string && ! is_array($val)) {
             $val = $val ? explode("\n", $val) : array();
-        }
-        elseif ($return_string && is_array($val)) {
+        } elseif ($return_string && is_array($val)) {
             $val = implode("\n", $val);
         }
 
@@ -463,8 +459,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
         foreach ($options as $key => $val) {
             if ($val === true) {
                 $options[$key] = self::VAL_ON;
-            }
-            elseif ($val === false) {
+            } elseif ($val === false) {
                 $options[$key] = self::VAL_OFF;
             }
         }
@@ -666,9 +661,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
             if (defined('WP_CACHE') && WP_CACHE) {
                 return true;
             }
-        }
-        elseif (! defined('WP_CACHE') || (defined('WP_CACHE') && ! WP_CACHE)) {
-                return true;
+        } elseif (! defined('WP_CACHE') || (defined('WP_CACHE') && ! WP_CACHE)) {
+            return true;
         }
 
         $file = ABSPATH . 'wp-config.php';
@@ -698,8 +692,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
                     return LiteSpeed_Cache_Admin_Error::E_CONF_FIND;
                 }
             }
-        }
-        else {
+        } else {
             $new_file_content = preg_replace('/define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', false);", $file_content);
         }
 
@@ -716,8 +709,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
      */
     public function plugin_activation($count)
     {
-
-
     }
 
     /**

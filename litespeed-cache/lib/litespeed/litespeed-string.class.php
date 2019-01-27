@@ -21,7 +21,7 @@ class Litespeed_String
     {
         mt_srand(( double ) microtime() * 1000000);
 
-        switch($type) {
+        switch ($type) {
             case 0 :
                 $charlist = '012';
                 break;
@@ -59,12 +59,10 @@ class Litespeed_String
         $str = '';
 
         $max = strlen($charlist) - 1;
-        for($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; $i++) {
             $str .= $charlist[mt_rand(0, $max)];
         }
 
         return $str;
     }
-
-
 }

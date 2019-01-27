@@ -359,5 +359,4 @@ class LiteSpeed_Cache_CSS
 
         return self::$_instance;
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_UTIL, LiteSpeed_Cache_Utility::TYPE_SCORE_CHK, true);
 $url = htmlspecialchars_decode($url);

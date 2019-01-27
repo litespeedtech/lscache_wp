@@ -100,7 +100,6 @@ class LiteSpeed_Cache_CDN_Quic
         // Get email status
         $response = $this->_api('/u/email_status', array( 'email' => $_email ));
         if (empty($response['result'])) {
-
             LiteSpeed_Cache_Log::debug('[QUIC] Query email failed');
 
             exit("QUIC: Query email failed");
@@ -110,11 +109,9 @@ class LiteSpeed_Cache_CDN_Quic
 
         if ($response['result'] == 'existing') {
             $this->_tpl('quic.login', 50, $data);
-        }
-        elseif ($response['result'] == 'none') {
+        } elseif ($response['result'] == 'none') {
             $this->_tpl('quic.register', 50, $data);
-        }
-        else {
+        } else {
             exit('Unkown result');
         }
 
@@ -132,7 +129,6 @@ class LiteSpeed_Cache_CDN_Quic
         // Register
         $response = $this->_api('/u/register', array( 'email' => $_email, 'pswd' => $_POST['pswd'] ));
         if (empty($response['result']) || $response['result'] !== 'success') {
-
             LiteSpeed_Cache_Log::debug('[QUIC] Register failed');
 
             exit("QUIC: Register failed");
@@ -141,7 +137,6 @@ class LiteSpeed_Cache_CDN_Quic
         // todo: add domain?
 
         exit;
-
     }
 
     private function _login()
@@ -159,7 +154,6 @@ class LiteSpeed_Cache_CDN_Quic
 
         // for login failed, redirect back to login page
         if (empty($response['result']) || $response['result'] !== 'success') {
-
             LiteSpeed_Cache_Log::debug('[QUIC] Login failed');
 
             $data['_err'] = $response['result'];
@@ -213,7 +207,6 @@ class LiteSpeed_Cache_CDN_Quic
         $json = json_decode($response['body'], true);
 
         return $json;
-
     }
 
     /**

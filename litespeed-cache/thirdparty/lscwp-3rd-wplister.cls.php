@@ -30,5 +30,4 @@ class LiteSpeed_Cache_ThirdParty_WPLister
             add_action('wplister_inventory_status_changed', array( LiteSpeed_Cache_ThirdParty_WooCommerce::get_instance(), 'backend_purge' ));
         }
     }
-
 }

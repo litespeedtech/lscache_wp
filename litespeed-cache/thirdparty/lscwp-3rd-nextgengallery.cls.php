@@ -89,14 +89,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 
         if (isset($_POST['id'])) {
             $id = $_POST['id'];
-        }
-        elseif (isset($_POST['image'])) {
+        } elseif (isset($_POST['image'])) {
             $id = $_POST['image'];
-        }
-        elseif (isset($_GET['pid'])) {
+        } elseif (isset($_GET['pid'])) {
             $id = $_GET['pid'];
-        }
-        else {
+        } else {
             error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.');
             return;
         }

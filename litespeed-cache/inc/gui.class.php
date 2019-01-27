@@ -109,7 +109,6 @@ class LiteSpeed_Cache_GUI
 			<g class='litespeed-pie_info'>$percentage</g>
 		</svg>
 		";
-
     }
 
     /**
@@ -194,12 +193,10 @@ class LiteSpeed_Cache_GUI
                 // Forever dismiss
                 if (! empty($_GET['done'])) {
                     $summary[$promo_tag] = 'done';
-                }
-                elseif (! empty($_GET['later'])) {
+                } elseif (! empty($_GET['later'])) {
                     // Delay the banner to half year later
                     $summary[$promo_tag] = time() + 86400 * 180;
-                }
-                else {
+                } else {
                     // Update welcome banner to 30 days after
                     $summary[$promo_tag] = time() + 86400 * 30;
                 }
@@ -334,7 +331,6 @@ class LiteSpeed_Cache_GUI
 
             // Only contain one
             break;
-
         }
 
         return false;
@@ -465,8 +461,7 @@ class LiteSpeed_Cache_GUI
                 'href'		=> LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_LSCACHE),
                 'meta'  => array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
             ));
-        }
-        else {
+        } else {
             $wp_admin_bar->add_menu(array(
                 'id'    => 'litespeed-menu',
                 'title' => '<span class="ab-icon" title="' . __('LiteSpeed Cache', 'litespeed-cache') . '"></span>',
@@ -613,7 +608,6 @@ class LiteSpeed_Cache_GUI
         return $action;
 
         // $msg .= " <a href='$upgrade_link' class='litespeed-btn-success' target='_blank'>" . __( 'Click here to upgrade', 'litespeed-cache' ) . '</a>' ;
-
     }
 
     /**
@@ -742,7 +736,6 @@ class LiteSpeed_Cache_GUI
 
         return self::$_instance;
     }
-
 }
 
 

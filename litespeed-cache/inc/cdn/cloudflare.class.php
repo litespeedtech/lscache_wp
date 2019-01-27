@@ -80,7 +80,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
         // update status
         update_option(LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, $curr_status);
-
     }
 
     /**
@@ -113,7 +112,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
             $msg = sprintf(__('Notified Cloudflare to set development mode to %s successfully.', 'litespeed-cache'), strtoupper($new_val));
             LiteSpeed_Cache_Admin_Display::succeed($msg);
         }
-
     }
 
     /**
@@ -230,8 +228,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
             LiteSpeed_Cache_Log::debug2('[Cloudflare] _cloudflare_call use param token');
             $header[] = 'X-Auth-Email: ' . $token[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL];
             $header[] = 'X-Auth-Key: ' . $token[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY];
-        }
-        else {
+        } else {
             $header[] = 'X-Auth-Email: ' . LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL);
             $header[] = 'X-Auth-Key: ' . LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY);
         }
@@ -285,5 +282,4 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
         return self::$_instance;
     }
-
 }

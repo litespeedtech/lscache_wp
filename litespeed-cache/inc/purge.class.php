@@ -57,7 +57,6 @@ class LiteSpeed_Cache_Purge
         }
 
         add_action('wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds');
-
     }
 
     /**
@@ -337,12 +336,10 @@ class LiteSpeed_Cache_Purge
             // Can't send, already has output, need to save and wait for next run
             update_option(self::PURGE_QUEUE, $curr_built);
             LiteSpeed_Cache_Log::debug('[Purge] Output existed, queue stored: ' . $curr_built);
-        }
-        else {
+        } else {
             @header($curr_built);
             LiteSpeed_Cache_Log::debug($curr_built);
         }
-
     }
 
     /**
@@ -530,8 +527,7 @@ class LiteSpeed_Cache_Purge
         if (! is_numeric($val)) {
             LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_NUM, $val);
             return;
-        }
-        elseif (get_post_status($val) !== 'publish') {
+        } elseif (get_post_status($val) !== 'publish') {
             LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_PID_DNE, $val);
             return;
         }
@@ -625,7 +621,7 @@ class LiteSpeed_Cache_Purge
         }
         $list_buf = str_replace(",", "\n", $list_buf);// for cli
         $list = explode("\n", $list_buf);
-        switch($sel) {
+        switch ($sel) {
             case LiteSpeed_Cache_Admin_Display::PURGEBY_CAT:
                 $cb = 'purgeby_cat_cb';
                 break;
@@ -674,8 +670,7 @@ class LiteSpeed_Cache_Purge
         }
         if (in_array('*', $purge_tags)) {
             $instance->_purge_all_lscache();
-        }
-        else {
+        } else {
             $instance->_add($purge_tags);
             if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_REST)) {
                 $instance->_add(LiteSpeed_Cache_Tag::TYPE_REST);
@@ -758,8 +753,7 @@ class LiteSpeed_Cache_Purge
         // Make sure header output only run once
         if (! defined('LITESPEED_DID_' . __FUNCTION__)) {
             define('LITESPEED_DID_' . __FUNCTION__, true);
-        }
-        else {
+        } else {
             return;
         }
 
@@ -886,8 +880,7 @@ class LiteSpeed_Cache_Purge
                 $tags[] = LSWCP_TAG_PREFIX . $blog_id . '_';
             }
             return $tags;
-        }
-        else {
+        } else {
             return array(LSWCP_TAG_PREFIX . $curr_bid . '_');
         }
     }
@@ -938,14 +931,14 @@ class LiteSpeed_Cache_Purge
         }
 
         // get adjacent posts id as related post tag
-        if($post_type == 'post'){
+        if ($post_type == 'post') {
             $prev_post = get_previous_post();
             $next_post = get_next_post();
-            if(! empty($prev_post->ID)) {
+            if (! empty($prev_post->ID)) {
                 $purge_tags[] = LiteSpeed_Cache_Tag::TYPE_POST . $prev_post->ID;
                 LiteSpeed_Cache_Log::debug('--------purge_tags prev is: '.$prev_post->ID);
             }
-            if(! empty($next_post->ID)) {
+            if (! empty($next_post->ID)) {
                 $purge_tags[] = LiteSpeed_Cache_Tag::TYPE_POST . $next_post->ID;
                 LiteSpeed_Cache_Log::debug('--------purge_tags next is: '.$next_post->ID);
             }

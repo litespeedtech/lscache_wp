@@ -171,7 +171,7 @@ class LiteSpeed_Cache
             add_action('init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1);
         }
 
-        if(is_admin()) {
+        if (is_admin()) {
             LiteSpeed_Cache_Admin::get_instance();
         }
 
@@ -245,7 +245,6 @@ class LiteSpeed_Cache
 
         // Load frontend GUI
         LiteSpeed_Cache_GUI::get_instance();
-
     }
 
     /**
@@ -261,16 +260,16 @@ class LiteSpeed_Cache
         }
 
         add_filter('auto_update_plugin', function($update, $item) {
-                if ($item->slug == 'litespeed-cache') {
-                    $auto_v = LiteSpeed_Cache_Utility::version_check();
+            if ($item->slug == 'litespeed-cache') {
+                $auto_v = LiteSpeed_Cache_Utility::version_check();
 
-                    if ($auto_v && ! empty($item->new_version) && $auto_v === $item->new_version) {
-                        return true;
-                    }
+                if ($auto_v && ! empty($item->new_version) && $auto_v === $item->new_version) {
+                    return true;
                 }
+            }
 
-                return $update; // Else, use the normal API response to decide whether to update or not
-            }, 10, 2);
+            return $update; // Else, use the normal API response to decide whether to update or not
+        }, 10, 2);
     }
 
     /**
@@ -580,8 +579,7 @@ class LiteSpeed_Cache
         // Make sure header output only run once
         if (! defined('LITESPEED_DID_' . __FUNCTION__)) {
             define('LITESPEED_DID_' . __FUNCTION__, true);
-        }
-        else {
+        } else {
             return;
         }
 
@@ -681,8 +679,7 @@ class LiteSpeed_Cache
             }
             @header($debug_header);
             LiteSpeed_Cache_Log::debug($debug_header);
-        }
-        else {
+        } else {
             // Control header
             if (defined('LITESPEED_ON') && LiteSpeed_Cache_Control::is_cacheable() && $tag_header) {
                 @header($tag_header);
@@ -703,7 +700,6 @@ class LiteSpeed_Cache
         if ($is_forced) {
             LiteSpeed_Cache_Log::debug('--forced--');
         }
-
     }
 
     /**
@@ -737,5 +733,4 @@ class LiteSpeed_Cache
 
         return self::$_instance;
     }
-
 }

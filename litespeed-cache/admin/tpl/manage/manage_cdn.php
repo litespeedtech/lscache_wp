@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $cf_on = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE);
 $cf_domain = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME) ?: '-';
@@ -41,11 +43,9 @@ $curr_status = get_option(LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array(
             $expired_at = date('m/d/Y H:i:s', $curr_status['devmode_expired'] + LITESPEED_TIME_OFFSET);
             $curr_status['devmode'] = 'OFF';
             echo sprintf(__('Current status is %1$s since %2$s.', 'litespeed-cache'), '<code>' . strtoupper($curr_status['devmode']) . '</code>', '<code>' . $expired_at . '</code>');
-        }
-        else {
+        } else {
             $expired_at = $curr_status['devmode_expired'] - time();
-            $expired_at = LiteSpeed_Cache_Utility::readable_time($expired_at, 3600 * 3, false);
-        ?>
+            $expired_at = LiteSpeed_Cache_Utility::readable_time($expired_at, 3600 * 3, false); ?>
 			<?php echo sprintf(__('Current status is %s.', 'litespeed-cache'), '<code>' . strtoupper($curr_status['devmode']) . '</code>'); ?>
 			<?php echo sprintf(__('Development mode will be automatically turned off in %s.', 'litespeed-cache'), '<code>' . $expired_at . '</code>'); ?>
 			<?php

@@ -27,8 +27,8 @@ class Litespeed_File
      *
      * @since 2.1
      */
-    public static function rrmdir($dir) {
-
+    public static function rrmdir($dir)
+    {
         $files = array_diff(scandir($dir), array( '.', '..' ));
 
         foreach ($files as $file) {
@@ -77,8 +77,7 @@ class Litespeed_File
                     $res[] = rtrim($file->current(), "\n");
                     $file->next();
                 }
-            }
-            else{
+            } else {
                 for ($i=0; $i < $lines; $i++) {
                     if ($file->eof()) {
                         break;
@@ -139,8 +138,7 @@ class Litespeed_File
 
             try {
                 mkdir($folder, 0755, true);
-            }
-            catch (ErrorException $ex) {
+            } catch (ErrorException $ex) {
                 return $silence ? false : sprintf(__('Can not create folder: %1$s. Error: %2$s', 'litespeed-cache'), $folder, $ex->getMessage());
             }
 
@@ -154,13 +152,11 @@ class Litespeed_File
             set_error_handler('litespeed_exception_handler');
             try {
                 touch($filename);
-            }
-            catch (ErrorException $ex){
+            } catch (ErrorException $ex) {
                 return $silence ? false : sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename);
             }
             restore_error_handler();
-        }
-        elseif (! is_writeable($filename)) {
+        } elseif (! is_writeable($filename)) {
             return $silence ? false : sprintf(__('File %s is not writable.', 'litespeed-cache'), $filename);
         }
 
@@ -257,13 +253,13 @@ class Litespeed_File
      */
     public static function touch_marker_data($filename, $marker = false)
     {
-        if(! $marker) {
+        if (! $marker) {
             $marker = self::MARKER;
         }
 
         $result = self::_extract_from_markers($filename, $marker);
 
-        if(! $result) {
+        if (! $result) {
             return false;
         }
 
@@ -286,7 +282,7 @@ class Litespeed_File
      */
     public static function extract_from_markers($filename, $marker = false)
     {
-        if(! $marker) {
+        if (! $marker) {
             $marker = self::MARKER;
         }
         return self::_extract_from_markers($filename, $marker);
@@ -347,13 +343,11 @@ class Litespeed_File
             set_error_handler("litespeed_exception_handler");
             try {
                 touch($filename);
-            }
-            catch (ErrorException $ex){
+            } catch (ErrorException $ex) {
                 return false;
             }
             restore_error_handler();
-        }
-        elseif (! is_writeable($filename)) {
+        } elseif (! is_writeable($filename)) {
             return false;
         }
 
@@ -384,19 +378,16 @@ class Litespeed_File
             if (! $found_marker && false !== strpos($line, $start_marker)) {
                 $found_marker = true;
                 continue;
-            }
-            elseif (! $found_end_marker && false !== strpos($line, $end_marker)) {
+            } elseif (! $found_end_marker && false !== strpos($line, $end_marker)) {
                 $found_end_marker = true;
                 continue;
             }
 
             if (! $found_marker) {
                 $pre_lines[] = $line;
-            }
-            elseif ($found_marker && $found_end_marker) {
+            } elseif ($found_marker && $found_end_marker) {
                 $post_lines[] = $line;
-            }
-            else {
+            } else {
                 $existing_lines[] = $line;
             }
         }
@@ -410,7 +401,7 @@ class Litespeed_File
         }
 
         // Check if need to prepend data if not exist
-        if($prepend && ! $post_lines) {
+        if ($prepend && ! $post_lines) {
             // Generate the new file data
             $new_file_data = implode("\n", array_merge(
                 array( $start_marker ),
@@ -418,9 +409,7 @@ class Litespeed_File
                 array( $end_marker ),
                 $pre_lines
             ));
-
-        }
-        else {
+        } else {
             // Generate the new file data
             $new_file_data = implode("\n", array_merge(
                 $pre_lines,

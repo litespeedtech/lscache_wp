@@ -39,7 +39,7 @@ class LiteSpeed_Cache_Admin_Optimize
      */
     public static function run_db_clean()
     {
-        if(! $type = LiteSpeed_Cache_Router::verify_type()) {
+        if (! $type = LiteSpeed_Cache_Router::verify_type()) {
             return;
         }
 
@@ -52,13 +52,11 @@ class LiteSpeed_Cache_Admin_Optimize
                 $res = self::db_clean($type);
                 restore_current_blog();
             }
-        }
-        else {
+        } else {
             $res = self::db_clean($type);
         }
 
         return $res;
-
     }
 
     /**
@@ -196,6 +194,5 @@ class LiteSpeed_Cache_Admin_Optimize
                 return __('Clean all CSS/JS optimizer data successfully.', 'litespeed-cache');
 
         }
-
     }
 }

@@ -31,8 +31,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
     {
         if (is_multisite()) {
             $this->home_url = get_home_url(get_current_blog_id());
-        }
-        else{
+        } else {
             $this->home_url = get_home_url();
         }
     }
@@ -105,7 +104,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
             $query = "SELECT ID, post_date FROM ".$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy;
             $results = $wpdb->get_results($query);
 
-            foreach ($results as $result){
+            foreach ($results as $result) {
                 $slug = str_replace($this->home_url, '', get_permalink($result->ID));
                 if (! in_array($slug, $blacklist)) {
                     $this->_urls[] = $slug;
@@ -119,7 +118,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
             if ($cats && is_array($cats) && count($cats) > 0) {
                 foreach ($cats as $cat) {
                     $slug = str_replace($this->home_url, '', get_category_link($cat->term_id));
-                    if (! in_array($slug, $blacklist)){
+                    if (! in_array($slug, $blacklist)) {
                         $this->_urls[] = $slug;//var_dump($slug);exit;//todo: check permalink
                     }
                 }

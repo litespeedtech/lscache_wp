@@ -137,7 +137,7 @@ class JSMin
                 if ($this->b === ' ') {
                     $command = self::ACTION_DELETE_A_B;
 
-                    // in case of mbstring.func_overload & 2, must check for null b,
+                // in case of mbstring.func_overload & 2, must check for null b,
                     // otherwise mb_strpos will give WARNING
                 } elseif ($this->b === null
                           || (false === strpos('{[(+-!~', $this->b)
@@ -200,7 +200,7 @@ class JSMin
                 $this->a = $this->b;
                 if ($this->a === "'" || $this->a === '"') { // string literal
                     $str = $this->a; // in case needed for exception
-                    for(;;) {
+                    for (;;) {
                         $this->output .= $this->a;
                         $this->lastByteOut = $this->a;
 
@@ -230,11 +230,11 @@ class JSMin
                 if ($this->b === '/' && $this->isRegexpLiteral()) {
                     $this->output .= $this->a . $this->b;
                     $pattern = '/'; // keep entire pattern in case we need to report it in the exception
-                    for(;;) {
+                    for (;;) {
                         $this->a = $this->get();
                         $pattern .= $this->a;
                         if ($this->a === '[') {
-                            for(;;) {
+                            for (;;) {
                                 $this->output .= $this->a;
                                 $this->a = $this->get();
                                 $pattern .= $this->a;
@@ -405,7 +405,7 @@ class JSMin
     {
         $this->get();
         $comment = '';
-        for(;;) {
+        for (;;) {
             $get = $this->get();
             if ($get === '*') {
                 if ($this->peek() === '/') { // end of comment reached
@@ -417,9 +417,11 @@ class JSMin
                             $this->keptComment = "\n";
                         }
                         $this->keptComment .= "/*!" . substr($comment, 1) . "*/\n";
-                    } else if (preg_match('/^@(?:cc_on|if|elif|else|end)\\b/', $comment)) {
-                        // IE conditional
-                        $this->keptComment .= "/*{$comment}*/";
+                    } else {
+                        if (preg_match('/^@(?:cc_on|if|elif|else|end)\\b/', $comment)) {
+                            // IE conditional
+                            $this->keptComment .= "/*{$comment}*/";
+                        }
                     }
                     return;
                 }

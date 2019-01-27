@@ -197,7 +197,6 @@ class LiteSpeed_Cache_ESI
         if (! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary()) {
             add_filter('comment_form_defaults', array( $this, 'register_comment_form_actions' ));
         }
-
     }
 
     /**
@@ -314,7 +313,7 @@ class LiteSpeed_Cache_ESI
         $esi_id = $params[self::PARAM_BLOCK_ID];
         if (defined('LSCWP_LOG')) {
             $logInfo = '------- ESI ------- ';
-            if(! empty($params[self::PARAM_NAME])) {
+            if (! empty($params[self::PARAM_NAME])) {
                 $logInfo .= ' Name: ' . $params[self::PARAM_NAME] . ' ----- ';
             }
             $logInfo .= $esi_id . ' -------';
@@ -349,9 +348,9 @@ class LiteSpeed_Cache_ESI
         do_action('litespeed_cache_load_esi_block-' . $esi_id, $params);
     }
 
-// BEGIN helper functions
-// The *_sub_* functions are helpers for the sub_* functions.
-// The *_load_* functions are helpers for the load_* functions.
+    // BEGIN helper functions
+    // The *_sub_* functions are helpers for the sub_* functions.
+    // The *_load_* functions are helpers for the load_* functions.
 
     /**
      * Get the configuration option for the current widget.
@@ -371,8 +370,7 @@ class LiteSpeed_Cache_ESI
 
         if ($widget->updated) {
             $settings = get_option($widget->option_name);
-        }
-        else {
+        } else {
             $settings = $widget->get_settings();
         }
 
@@ -417,7 +415,7 @@ class LiteSpeed_Cache_ESI
         return $options;
     }
 
-// END helper functions.
+    // END helper functions.
 
     /**
      * Hooked to the widget_display_callback filter.
@@ -499,8 +497,7 @@ class LiteSpeed_Cache_ESI
         defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('ESI widget render: name ' . $params[self::PARAM_NAME] . ', id ' . $params[self::PARAM_ID] . ', ttl ' . $ttl);
         if ($ttl == 0) {
             LiteSpeed_Cache_Control::set_nocache('ESI Widget time to live set to 0');
-        }
-        else {
+        } else {
             LiteSpeed_Cache_Control::set_custom_ttl($ttl);
 
             if ($option[self::WIDGET_OPID_ESIENABLE] === LiteSpeed_Cache_Config::VAL_ON2) {
@@ -523,8 +520,7 @@ class LiteSpeed_Cache_ESI
         wp_admin_bar_render();
         if (! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR)) {
             LiteSpeed_Cache_Control::set_nocache('build-in set to not cacheable');
-        }
-        else {
+        } else {
             LiteSpeed_Cache_Control::set_private();
             LiteSpeed_Cache_Control::set_no_vary();
         }
@@ -557,8 +553,7 @@ class LiteSpeed_Cache_ESI
 
         if (! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM)) {
             LiteSpeed_Cache_Control::set_nocache('build-in set to not cacheable');
-        }
-        else {
+        } else {
             // by default comment form is public
             if (LiteSpeed_Cache_Vary::has_vary()) {
                 LiteSpeed_Cache_Control::set_private();
@@ -602,8 +597,7 @@ class LiteSpeed_Cache_ESI
         if (isset($params['ttl'])) {
             if (! $params['ttl']) {
                 LiteSpeed_Cache_Control::set_nocache('ESI shortcode att ttl=0');
-            }
-            else {
+            } else {
                 LiteSpeed_Cache_Control::set_custom_ttl($params['ttl']);
             }
             unset($params['ttl']);
@@ -669,14 +663,12 @@ class LiteSpeed_Cache_ESI
         foreach ($args as $k => $v) {
             if (! isset($this->esi_args[$k])) {
                 $esi_args[$k] = $v;
-            }
-            elseif (is_array($v)) {
+            } elseif (is_array($v)) {
                 $diff = array_diff_assoc($v, $this->esi_args[$k]);
                 if (! empty($diff)) {
                     $esi_args[$k] = $diff;
                 }
-            }
-            elseif ($v !== $this->esi_args[$k]) {
+            } elseif ($v !== $this->esi_args[$k]) {
                 $esi_args[$k] = $v;
             }
         }

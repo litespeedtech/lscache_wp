@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 // $widget, $return, $instance
 
 $options = LiteSpeed_Cache_ESI::widget_load_get_options($widget);
@@ -14,8 +16,7 @@ if (empty($options)) {
 if (empty($options)) {
     $esi = LiteSpeed_Cache_Config::VAL_OFF;
     $ttl = '28800';
-}
-else {
+} else {
     $esi = $options[LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE];
     $ttl = $options[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL];
 }

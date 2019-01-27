@@ -83,10 +83,9 @@ class LiteSpeed_Cache_Admin
         $this->proceed_admin_action();
 
         // Terminate if user doesn't have the access to settings
-        if(is_network_admin()) {
+        if (is_network_admin()) {
             $capability = 'manage_network_options';
-        }
-        else {
+        } else {
             $capability = 'manage_options';
         }
         if (! current_user_can($capability)) {
@@ -127,7 +126,6 @@ class LiteSpeed_Cache_Admin
             if (! defined('LITESPEED_ON')) {
                 return;
             }
-
         }
 
 
@@ -139,11 +137,10 @@ class LiteSpeed_Cache_Admin
         }
 
         if (! is_multisite()) {
-            if(! current_user_can('manage_options')){
+            if (! current_user_can('manage_options')) {
                 return;
             }
-        }
-        elseif (! is_network_admin()) {
+        } elseif (! is_network_admin()) {
             if (! current_user_can('manage_options')) {
                 return;
             }
@@ -155,8 +152,7 @@ class LiteSpeed_Cache_Admin
                 }
             }
             return;
-        }
-        elseif (! current_user_can('manage_network_options')) {
+        } elseif (! current_user_can('manage_network_options')) {
             return;
         }
 
@@ -188,7 +184,6 @@ class LiteSpeed_Cache_Admin
             default:
                 break;
         }
-
     }
 
     /**
@@ -218,7 +213,7 @@ class LiteSpeed_Cache_Admin
 
         if (is_multisite() && (! is_network_admin() || ! current_user_can('manage_network_options'))) {
             $third = __('If this is the case, the network admin may uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache');
-        }else {
+        } else {
             $third = __('If this is the case, please uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache');
         }
         $msg = __('LiteSpeed has detected another plugin using the "Advanced Cache" file.', 'litespeed-cache') . ' '
@@ -274,8 +269,7 @@ class LiteSpeed_Cache_Admin
             }
             if (is_network_admin()) {
                 $url = network_admin_url($pagenow . $qs);
-            }
-            else {
+            } else {
                 $url = admin_url($pagenow . $qs);
             }
         }

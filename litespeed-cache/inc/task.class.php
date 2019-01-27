@@ -107,15 +107,13 @@ class LiteSpeed_Cache_Task
         $id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE;
         if ($options && isset($options[$id])) {
             $is_active = $options[$id];
-        }
-        else {
+        } else {
             $is_active = LiteSpeed_Cache::config($id);
         }
 
         if (! $is_active) {
             self::clear();
         }
-
     }
 
     /**
@@ -129,7 +127,7 @@ class LiteSpeed_Cache_Task
         add_filter('cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter');
 
         // Schedule event here to see if it can lost again or not
-        if(! wp_next_scheduled(self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST)) {
+        if (! wp_next_scheduled(self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST)) {
             LiteSpeed_Cache_Log::debug('Cron log: ......img optm auto request cron hook register......');
             wp_schedule_event(time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST);
         }
@@ -146,7 +144,7 @@ class LiteSpeed_Cache_Task
         add_filter('cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter');
 
         // Schedule event here to see if it can lost again or not
-        if(! wp_next_scheduled(self::CRON_ACTION_HOOK_IMGOPTM)) {
+        if (! wp_next_scheduled(self::CRON_ACTION_HOOK_IMGOPTM)) {
             LiteSpeed_Cache_Log::debug('Cron log: ......img optimization cron hook register......');
             wp_schedule_event(time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMGOPTM);
         }
@@ -163,7 +161,7 @@ class LiteSpeed_Cache_Task
         add_filter('cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter');
 
         // Schedule event here to see if it can lost again or not
-        if(! wp_next_scheduled(self::CRON_ACTION_HOOK_CCSS)) {
+        if (! wp_next_scheduled(self::CRON_ACTION_HOOK_CCSS)) {
             LiteSpeed_Cache_Log::debug('Cron log: ......ccss cron hook register......');
             wp_schedule_event(time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_CCSS);
         }
@@ -180,7 +178,7 @@ class LiteSpeed_Cache_Task
         add_filter('cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter');
 
         // Schedule event here to see if it can lost again or not
-        if(! wp_next_scheduled(self::CRON_ACTION_HOOK_IMG_PLACEHOLDER)) {
+        if (! wp_next_scheduled(self::CRON_ACTION_HOOK_IMG_PLACEHOLDER)) {
             LiteSpeed_Cache_Log::debug('Cron log: ......image placeholder cron hook register......');
             wp_schedule_event(time(), self::CRON_FITLER, self::CRON_ACTION_HOOK_IMG_PLACEHOLDER);
         }
@@ -197,7 +195,7 @@ class LiteSpeed_Cache_Task
         add_filter('cron_schedules', 'LiteSpeed_Cache_Task::lscache_cron_filter_crawler');
 
         // Schedule event here to see if it can lost again or not
-        if(! wp_next_scheduled(self::CRON_ACTION_HOOK_CRAWLER)) {
+        if (! wp_next_scheduled(self::CRON_ACTION_HOOK_CRAWLER)) {
             LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron hook register......');
             wp_schedule_event(time(), self::CRON_FITLER_CRAWLER, self::CRON_ACTION_HOOK_CRAWLER);
         }
@@ -270,5 +268,4 @@ class LiteSpeed_Cache_Task
 
         return self::$_instance;
     }
-
 }

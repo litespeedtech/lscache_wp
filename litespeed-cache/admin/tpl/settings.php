@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 $menu_list = array(
     'general' => __('General', 'litespeed-cache'),
@@ -15,7 +17,7 @@ $menu_list = array(
     'debug' => __('Debug', 'litespeed-cache'),
 );
 
-if ($this->show_compatibility_tab()){
+if ($this->show_compatibility_tab()) {
     $menu_list['compatibilities'] = __('Compatibilities', 'litespeed-cache');
 }
 
@@ -65,8 +67,7 @@ if (!empty($tp_tabs) && is_array($tp_tabs)) {
             continue;
         }
     }
-}
-else {
+} else {
     $tp_tabs = array();
 }
 
@@ -92,8 +93,7 @@ ksort($roles);
 if (! empty($_GET['mode'])) {
     $adv_mode = $_GET['mode'] == 'advanced' ? true : false;
     update_option(LiteSpeed_Cache_Config::ITEM_SETTING_MODE, $adv_mode);
-}
-else {
+} else {
     $adv_mode = get_option(LiteSpeed_Cache_Config::ITEM_SETTING_MODE);
 }
 
@@ -131,7 +131,7 @@ if (! $adv_mode) {
 	<?php
         $i = 1;
         $accesskey_set = array();
-        foreach ($menu_list as $tab => $val){
+        foreach ($menu_list as $tab => $val) {
             if (in_array($tab, $hide_tabs)) {
                 continue;
             }
@@ -139,8 +139,7 @@ if (! $adv_mode) {
             $accesskey = '';
             if ($i <= 9) {
                 $accesskey = "litespeed-accesskey='$i'";
-            }
-            else {
+            } else {
                 $tmp = strtoupper(substr($tab, 0, 1));
                 if (! in_array($tmp, $accesskey_set)) {
                     $accesskey_set[] = $tmp;
@@ -151,12 +150,11 @@ if (! $adv_mode) {
             echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
             $i ++;
         }
-        foreach ($tp_tabs as $val){
+        foreach ($tp_tabs as $val) {
             $accesskey = '';
             if ($i <= 9) {
                 $accesskey = "litespeed-accesskey='$i'";
-            }
-            else {
+            } else {
                 $tmp = strtoupper(substr($val['slug'], 0, 1));
                 if (! in_array($tmp, $accesskey_set)) {
                     $accesskey_set[] = $tmp;
@@ -206,8 +204,7 @@ if (! $adv_mode) {
 
     if ($this->get_disable_all()) {
         submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit', true, array('disabled' => true));
-    }
-    else {
+    } else {
         submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit');
     }
 

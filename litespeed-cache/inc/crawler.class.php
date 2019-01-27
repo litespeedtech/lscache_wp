@@ -37,8 +37,7 @@ class LiteSpeed_Cache_Crawler
             $blogID = get_current_blog_id();
             $this->_sitemap_file = $sitemapPath . '/crawlermap-' . $blogID . '.data';
             $this->_home_url = get_home_url($blogID);
-        }
-        else{
+        } else {
             $this->_sitemap_file = $sitemapPath . '/crawlermap.data';
             $this->_home_url = get_home_url();
         }
@@ -111,8 +110,7 @@ class LiteSpeed_Cache_Crawler
         $ret = Litespeed_File::save($this->_blacklist_file, $content, true, false, false);
         if ($ret !== true) {
             LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret);
-        }
-        else {
+        } else {
             $msg = sprintf(
                 __('File saved successfully: %s', 'litespeed-cache'),
                 $this->_blacklist_file
@@ -163,8 +161,7 @@ class LiteSpeed_Cache_Crawler
         $ret = $this->_generate_sitemap();
         if ($ret !== true) {
             LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret);
-        }
-        else {
+        } else {
             $msg = sprintf(
                 __('File created successfully: %s', 'litespeed-cache'),
                 $this->_sitemap_file
@@ -215,8 +212,7 @@ class LiteSpeed_Cache_Crawler
                 if (is_array($urls) && !empty($urls)) {
                     $_urls = array_merge($_urls, $urls);
                 }
-            }
-            else {
+            } else {
                 // parse multiple sitemaps
                 foreach ($xml_array['sitemap'] as $val) {
                     $val = (array)$val;
@@ -228,16 +224,14 @@ class LiteSpeed_Cache_Crawler
                     }
                 }
             }
-        }
-        elseif (!empty($xml_array['url'])) {// parse url set
+        } elseif (!empty($xml_array['url'])) {// parse url set
             if (is_object($xml_array['url'])) {
                 $xml_array['url'] = (array)$xml_array['url'];
             }
             // if only 1 element
             if (!empty($xml_array['url']['loc'])) {
                 $_urls[] = $xml_array['url']['loc'];
-            }
-            else {
+            } else {
                 foreach ($xml_array['url'] as $val) {
                     $val = (array)$val;
                     if (!empty($val['loc'])) {
@@ -272,8 +266,7 @@ class LiteSpeed_Cache_Crawler
                 }
             }
             $urls = array_unique($urls);
-        }
-        else {
+        } else {
             $urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data();
         }
 
@@ -327,8 +320,7 @@ class LiteSpeed_Cache_Crawler
             $log .= "Error: $ret";
             $msg = sprintf(__('Failed to send position reset notification: %s', 'litespeed-cache'), $ret);
             LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg);
-        }
-        else {
+        } else {
             $msg = __('Position reset notification sent successfully', 'litespeed-cache');
             // LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg) ;
         }
@@ -414,8 +406,7 @@ class LiteSpeed_Cache_Crawler
         $server_load_limit = $this->_options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT];
         if (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE])) {
             $server_load_limit = $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE];
-        }
-        elseif (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT]) && $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT] < $server_load_limit) {
+        } elseif (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT]) && $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT] < $server_load_limit) {
             $server_load_limit = $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT];
         }
         $crawler->set_load_limit($server_load_limit);
@@ -497,8 +488,7 @@ class LiteSpeed_Cache_Crawler
         if ($ret['error'] !== false) {
             LiteSpeed_Cache_Log::debug('Crawler: ' . $ret['error']);
             return $this->output($ret['error']);
-        }
-        else {
+        } else {
             $msg = 'Crawler #' . ($curr_crawler_pos + 1) . ' reached end of sitemap file.';
             $msg_t = sprintf(__('Crawler %s reached end of sitemap file.', 'litespeed-cache'), '#' . ($curr_crawler_pos + 1));
             LiteSpeed_Cache_Log::debug('Crawler: ' . $msg);
@@ -560,7 +550,6 @@ class LiteSpeed_Cache_Crawler
         // Cookie crawler
         $cookie_crawlers = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES);
         foreach ($cookie_crawlers as $k => $v) {
-
             $this_cookie_key = 'cookie:' . $k;
 
             $crawler_factors[$this_cookie_key] = array();
@@ -612,12 +601,10 @@ class LiteSpeed_Cache_Crawler
 
             if ($if_touch_end) {
                 $final_list[] = $item;
-            }
-            else {
+            } else {
                 // Inception: next layer
                 $final_list = array_merge($final_list, $this->_recursive_build_crawler($crawler_factors, $item, $i + 1));
             }
-
         }
 
         return $final_list;
@@ -634,9 +621,8 @@ class LiteSpeed_Cache_Crawler
     {
         if (defined('DOING_CRON')) {
             echo $msg;
-            // exit();
-        }
-        else {
+        // exit();
+        } else {
             echo "<script>alert('" . htmlspecialchars($msg) . "');</script>";
             // exit;
         }

@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $home_url = home_url('/');
 $parsed = parse_url($home_url);
@@ -181,7 +183,9 @@ $cdn_mapping = $this->config->get_item(LiteSpeed_Cache_Config::ITEM_CDN_MAPPING)
 		</td>
 	</tr>
 
-	<tr <?php if (! defined('LITESPEED_QUIC_CLOUD')) echo 'class="litespeed-hide"'; ?>>
+	<tr <?php if (! defined('LITESPEED_QUIC_CLOUD')) {
+                    echo 'class="litespeed-hide"';
+                } ?>>
 		<th><?php echo __('Quic Cloud API', 'litespeed-cache'); ?></th>
 		<td>
 			<?php $this->build_switch(LiteSpeed_Cache_Config::OPT_CDN_QUIC); ?>

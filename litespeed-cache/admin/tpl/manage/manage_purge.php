@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 
 $_panels = array(
@@ -127,13 +129,17 @@ if (! is_multisite() || is_network_admin()) {
 
 	<a 	class="litespeed-panel"
 		href="<?php echo LiteSpeed_Cache_Utility::build_url($tag, $append_url); ?>"
-		<?php if (! empty($v['cfm'])) echo 'data-litespeed-cfm="' . $v['cfm'] . '"'; ?>
+		<?php if (! empty($v['cfm'])) {
+    echo 'data-litespeed-cfm="' . $v['cfm'] . '"';
+} ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">
 			<span class="litespeed-panel-icon-<?php echo $v['icon']; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<div class="litespeed-h3 <?php if (! empty($v['title_cls'])) echo $v['title_cls']; ?>">
+			<div class="litespeed-h3 <?php if (! empty($v['title_cls'])) {
+    echo $v['title_cls'];
+} ?>">
 				<?php echo $v['title']; ?>
 			</div>
 			<span class="litespeed-panel-para"><?php echo $v['desc']; ?></span>
@@ -155,10 +161,10 @@ if (! is_multisite() || is_network_admin()) {
 	<?php
         $purgeby_option = false;
         $_option_field = LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT;
-        if(!empty($_REQUEST[$_option_field])){
+        if (!empty($_REQUEST[$_option_field])) {
             $purgeby_option = $_REQUEST[$_option_field];
         }
-        if(!in_array($purgeby_option, array(
+        if (!in_array($purgeby_option, array(
             LiteSpeed_Cache_Admin_Display::PURGEBY_CAT,
             LiteSpeed_Cache_Admin_Display::PURGEBY_PID,
             LiteSpeed_Cache_Admin_Display::PURGEBY_TAG,
@@ -174,45 +180,61 @@ if (! is_multisite() || is_network_admin()) {
 			<div class="litespeed-switch litespeed-mini">
 				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_CAT;?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_category"
-					value="<?php echo $val; ?>" <?php if($purgeby_option == $val) echo 'checked'; ?>
+					value="<?php echo $val; ?>" <?php if ($purgeby_option == $val) {
+        echo 'checked';
+    } ?>
 				/>
 				<label for="purgeby_option_category"><?php echo __('Category', 'litespeed-cache'); ?></label>
 
 				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_PID;?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_postid"
-					value="<?php echo $val; ?>" <?php if($purgeby_option == $val) echo 'checked'; ?>
+					value="<?php echo $val; ?>" <?php if ($purgeby_option == $val) {
+        echo 'checked';
+    } ?>
 				/>
 				<label for="purgeby_option_postid"><?php echo __('Post ID', 'litespeed-cache'); ?></label>
 
 				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_TAG;?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_tag"
-					value="<?php echo $val; ?>" <?php if($purgeby_option == $val) echo 'checked'; ?>
+					value="<?php echo $val; ?>" <?php if ($purgeby_option == $val) {
+        echo 'checked';
+    } ?>
 				/>
 				<label for="purgeby_option_tag"><?php echo __('Tag', 'litespeed-cache'); ?></label>
 
 				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_URL;?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_url"
-					value="<?php echo $val; ?>" <?php if($purgeby_option == $val) echo 'checked'; ?>
+					value="<?php echo $val; ?>" <?php if ($purgeby_option == $val) {
+        echo 'checked';
+    } ?>
 				/>
 				<label for="purgeby_option_url"><?php echo __('URL', 'litespeed-cache'); ?></label>
 			</div>
 
 			<div class="litespeed-cache-purgeby-text">
-				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_CAT) echo 'litespeed-hide'; ?>"
+				<div class="<?php if ($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_CAT) {
+        echo 'litespeed-hide';
+    } ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_CAT; ?>">
 					<?php echo sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
                         '<code>http://example.com/category/category-name/</code>', '<code>category-name</code>'); ?>
 				</div>
-				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_PID) echo 'litespeed-hide'; ?>"
+				<div class="<?php if ($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_PID) {
+                            echo 'litespeed-hide';
+                        } ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_PID; ?>">
 					<?php echo __("Purge pages by post ID.", "litespeed-cache"); ?>
 				</div>
-				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_TAG) echo 'litespeed-hide'; ?>"
+				<div class="<?php if ($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_TAG) {
+                            echo 'litespeed-hide';
+                        } ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_TAG; ?>">
 					<?php echo sprintf(__('Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
                         '<code>http://example.com/tag/tag-name/</code>', '<code>tag-name</code>'); ?>
 				</div>
-				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_URL) echo 'litespeed-hide'; ?>"
+				<div class="<?php if ($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_URL) {
+                            echo 'litespeed-hide';
+                        } ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_URL; ?>">
 					<?php echo __('Purge pages by relative or full URL.', 'litespeed-cache'); ?>
 					<?php echo sprintf(__('e.g. Use %s or %s.', 'litespeed-cache'),

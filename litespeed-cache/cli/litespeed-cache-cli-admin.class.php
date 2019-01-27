@@ -5,7 +5,6 @@
  */
 class LiteSpeed_Cache_Cli_Admin
 {
-
     private static $checkboxes;
     private static $purges;
 
@@ -95,11 +94,9 @@ class LiteSpeed_Cache_Cli_Admin
                 //checkbox
                 if ($val === 'true') {
                     $options[$key] = LiteSpeed_Cache_Config::VAL_ON;
-                }
-                elseif ($val === 'false') {
+                } elseif ($val === 'false') {
                     unset($options[$key]);
-                }
-                else {
+                } else {
                     WP_CLI::error('Checkbox value must be true or false.');
                     return;
                 }
@@ -142,16 +139,13 @@ class LiteSpeed_Cache_Cli_Admin
                     if ($val === 'true') {
                         WP_CLI::line('key is ' . $key . ', val is ' . $val);
                         $options[$key] = LiteSpeed_Cache_Config::VAL_ON;
-                    }
-                    elseif ($val === 'false') {
+                    } elseif ($val === 'false') {
                         unset($options[$key]);
-                    }
-                    else {
+                    } else {
                         WP_CLI::error('Purge checkbox value must be true or false.');
                         return;
                     }
-                }
-                else {
+                } else {
                     // Everything else, just set the value
                     $options[$key] = $val;
                 }
@@ -184,16 +178,14 @@ class LiteSpeed_Cache_Cli_Admin
         $buf = WP_CLI::colorize("%CThe list of options:%n\n");
         WP_CLI::line($buf);
 
-        foreach($options as $key => $value) {
+        foreach ($options as $key => $value) {
             if (in_array($key, self::$checkboxes)) {
                 if ($value) {
                     $value = 'true';
-                }
-                else {
+                } else {
                     $value = 'false';
                 }
-            }
-            elseif ($value === '') {
+            } elseif ($value === '') {
                 $value = "''";
             }
             $option_out[] = array('key' => $key, 'value' => $value);
@@ -233,8 +225,7 @@ class LiteSpeed_Cache_Cli_Admin
     {
         if (isset($assoc_args['filename'])) {
             $file = $assoc_args['filename'];
-        }
-        else {
+        } else {
             $file = getcwd() . '/lscache_wp_options_' . date('d_m_Y-His') . '.data';
         }
 
@@ -247,8 +238,7 @@ class LiteSpeed_Cache_Cli_Admin
 
         if (file_put_contents($file, $data) === false) {
             WP_CLI::error('Failed to create file.');
-        }
-        else {
+        } else {
             WP_CLI::success('Created file ' . $file);
         }
     }

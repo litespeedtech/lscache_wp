@@ -8,29 +8,31 @@
 /**
  * Class LiteSpeed_Cache_Config test case.
  */
-class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
+class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase
+{
 
     /**
      * Function to invoke a Private method
      */
-    protected static function invokeMethod($className, $methodName, array $parameters = array()) 
+    protected static function invokeMethod($className, $methodName, array $parameters = array())
     {
-         $reflectionClass = new ReflectionClass($className);
-         $method = $reflectionClass->getMethod($methodName);
-         $method->setAccessible(true);
+        $reflectionClass = new ReflectionClass($className);
+        $method = $reflectionClass->getMethod($methodName);
+        $method->setAccessible(true);
 
-         if(count($parameters) > 0){
-             $instance = self::get_instance();
+        if (count($parameters) > 0) {
+            $instance = self::get_instance();
             return $method->invokeArgs($instance, $parameters);
-         }else{
+        } else {
             return $method;
-         }
+        }
     }
 
-     /**
-     * Function for instance
-     */
-    public static function get_instance(){
+    /**
+    * Function for instance
+    */
+    public static function get_instance()
+    {
         $instance = new LiteSpeed_Cache_Config();
         return $instance;
     }
@@ -38,17 +40,22 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
     /**
      * Function for configurations
      */
-    public static function converttoArray($object){
-
-        if(is_object($object)) $array = (array) $object;
+    public static function converttoArray($object)
+    {
+        if (is_object($object)) {
+            $array = (array) $object;
+        }
         return $array;
     }
 
     /**
      * Function to check if the passed parameter is String or not.
      */
-    protected static function isString($string) {
-        if(!is_string($string)) return false;
+    protected static function isString($string)
+    {
+        if (!is_string($string)) {
+            return false;
+        }
 
         return true;
     }
@@ -78,7 +85,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
      * @access public
      * @return array The updated options.
      */
-    public function test_get_options() 
+    public function test_get_options()
     {
         $array = self::get_instance()->get_options();
         $this->assertNotEmpty($array);
@@ -90,7 +97,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
      * @param string $id Configuration ID.
      * @return mixed Selected option if set, NULL if not.
      */
-    public function test_get_option() 
+    public function test_get_option()
     {
         $id = '';
         $null = self::get_instance()->get_option($id);
@@ -102,7 +109,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
      * @access public
      * @return array The list of purge options.
      */
-    public function test_get_purge_options() 
+    public function test_get_purge_options()
     {
         $array = self::get_instance()->get_purge_options();
         $this->assertNotEmpty($array);
@@ -114,7 +121,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
      * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
      * @return boolean True if the post type should be purged, false otherwise.
      */
-    public function test_purge_by_post() 
+    public function test_purge_by_post()
     {
         $flag = '';
         $bool = self::get_instance()->purge_by_post($flag);
@@ -168,9 +175,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
         $array = self::get_instance()->get_site_options();
         if (!is_multisite()) {
             $this->assertNull($array);
-        }
-        else
-        {
+        } else {
             $this->assertNotEmpty($array);
         }
     }
@@ -185,11 +190,9 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
         $object = LiteSpeed_Cache::config();
         $options = $object->get_options();
         $array = self::get_instance()->get_thirdparty_options($options);
-        if(is_array($array)){
+        if (is_array($array)) {
             $this->assertNotEmpty($array);
-        }
-        else
-        {
+        } else {
             $this->assertFalse($array);
         }
     }

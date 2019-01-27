@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
         $screen = get_current_screen();
         $screen->add_help_tab(array(

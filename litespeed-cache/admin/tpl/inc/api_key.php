@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 $api_key = get_option(LiteSpeed_Cache_Admin_API::DB_API_KEY);
 

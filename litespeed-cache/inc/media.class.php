@@ -78,7 +78,6 @@ class LiteSpeed_Cache_Media
         if ($this->_cfg_placeholder_resp_color) {
             $this->_cfg_placeholder_resp_color = base64_encode($this->_cfg_placeholder_resp_color);
         }
-
     }
 
     /**
@@ -179,8 +178,7 @@ class LiteSpeed_Cache_Media
             if (file_exists($local_file . '.webp')) {
                 $desc = __('Click to Disable WebP', 'litespeed-cache');
                 $cls_webp = 'litespeed-txt-webp';
-            }
-            elseif (file_exists($local_file . '.optm.webp')) {
+            } elseif (file_exists($local_file . '.optm.webp')) {
                 $cls .= '-disabled';
                 $desc = __('Click to Enable WebP', 'litespeed-cache');
                 $cls_webp = 'litespeed-txt-disabled';
@@ -190,8 +188,7 @@ class LiteSpeed_Cache_Media
 
             if ($desc) {
                 $info_webp .= sprintf('<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_webp, $desc, $pie_webp);
-            }
-            else {
+            } else {
                 $info_webp .= sprintf('<div title="%1$s">%2$s</div>', $txt_webp, $pie_webp);
             }
 
@@ -216,8 +213,7 @@ class LiteSpeed_Cache_Media
             if (file_exists($bk_file)) {
                 $desc = __('Click to Restore Original File', 'litespeed-cache');
                 $cls_ori = 'litespeed-txt-ori';
-            }
-            elseif (file_exists($bk_optm_file)) {
+            } elseif (file_exists($bk_optm_file)) {
                 $cls .= '-disabled';
                 $desc = __('Click to Switch To Optimized File', 'litespeed-cache');
                 $cls_ori = 'litespeed-txt-disabled';
@@ -227,8 +223,7 @@ class LiteSpeed_Cache_Media
 
             if ($desc) {
                 $info_ori .= sprintf('<div><a href="%1$s" class="litespeed-media-href" title="%2$s' . "\n\n" . '%3$s">%4$s</a></div>', $link, $txt_ori, $desc, $pie_ori);
-            }
-            else {
+            } else {
                 $info_ori .= sprintf('<div title="%1$s">%2$s</div>', $txt_ori, $pie_ori);
             }
 
@@ -253,7 +248,6 @@ class LiteSpeed_Cache_Media
 				$del_row
 			</div>
 eot;
-
     }
 
     /**
@@ -265,7 +259,8 @@ eot;
      * @access private
      * @return array $sizes Data for all currently-registered image sizes.
      */
-    private function get_image_sizes() {
+    private function get_image_sizes()
+    {
         global $_wp_additional_image_sizes;
         $sizes = array();
 
@@ -363,7 +358,6 @@ eot;
 
         // image lazy load
         if ($cfg_img_lazy) {
-
             $default_placeholder = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER) ?: LITESPEED_PLACEHOLDER;
 
             foreach ($html_list as $k => $v) {
@@ -492,7 +486,6 @@ eot;
 
         $this->_save_summary($req_summary);
         return false;
-
     }
 
     /**
@@ -649,8 +642,7 @@ eot;
             $attr = preg_quote($v[1], '#');
             if ($v[0]) {
                 $pattern = '#<' . preg_quote($v[0], '#') . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
-            }
-            else {
+            } else {
                 $pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU';
             }
 
@@ -672,8 +664,7 @@ eot;
                         $matches[1][$k2],
                         $matches[2][$k2] . $url2 . $matches[2][$k2]
                     );
-                }
-                else {
+                } else {
                     $html_snippet = sprintf(
                         ' ' . $v[1] . '=%1$s',
                         $matches[1][$k2] . $url2 . $matches[1][$k2]
@@ -681,7 +672,6 @@ eot;
                 }
 
                 $this->content = str_replace($matches[0][$k2], $html_snippet, $this->content);
-
             }
         }
 
@@ -753,7 +743,7 @@ eot;
     {
         if ($srcs) {
             foreach ($srcs as $w => $data) {
-                if(! $url = $this->replace_webp($data['url'])) {
+                if (! $url = $this->replace_webp($data['url'])) {
                     continue;
                 }
                 $srcs[$w]['url'] = $url;
@@ -781,13 +771,11 @@ eot;
             // check if has webp file
             if (LiteSpeed_Cache_Utility::is_internal_file($url, 'webp')) {
                 $url .= '.webp';
-            }
-            else {
+            } else {
                 LiteSpeed_Cache_Log::debug2('[Media] -no WebP file, bypassed');
                 return false;
             }
-        }
-        else {
+        } else {
             LiteSpeed_Cache_Log::debug2('[Media] -no file, bypassed');
             return false;
         }
@@ -996,5 +984,4 @@ eot;
 
         return self::$_instance;
     }
-
 }

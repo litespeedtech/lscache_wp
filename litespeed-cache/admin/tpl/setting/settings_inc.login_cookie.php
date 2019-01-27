@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 ?>
 
@@ -31,29 +33,26 @@ if (! defined('WPINC')) die;
                 . '</p>';
 
             $cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie();
-            if ($cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:'){
+            if ($cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:') {
                 echo '<div class="litespeed-callout-danger">'
                         . sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
                     . '</div>';
             }
 
-            if (defined('LITESPEED_ON') && $_options[$id]){
-
-                if (!$cookie_rule){
+            if (defined('LITESPEED_ON') && $_options[$id]) {
+                if (!$cookie_rule) {
                     echo '<div class="litespeed-callout-danger">'
                             . sprintf(__('Error getting current rules from %s: %s', 'litespeed-cache'), '.htaccess', LiteSpeed_Cache_Admin_Rules::MARKER_LOGIN_COOKIE)
                         . '</div>';
-                }
-                else{
+                } else {
                     $cookie_rule = substr($cookie_rule, 11);
                     $cookie_arr = explode(',', $cookie_rule);
-                    if(!in_array($_options[$id], $cookie_arr)) {
+                    if (!in_array($_options[$id], $cookie_arr)) {
                         echo '<div class="litespeed-callout-warning">' .
                                 __('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache') .
                             '</div>';
                     }
                 }
-
             }
 
         ?>

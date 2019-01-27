@@ -41,6 +41,5 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
             add_filter('litespeed_can_change_vary', '__return_false');
         }
     }
-
 }
 

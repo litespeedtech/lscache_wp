@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary();
 

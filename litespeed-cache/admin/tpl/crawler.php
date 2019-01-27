@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options();
 
@@ -49,14 +51,13 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled';
 
 <?php
     $seconds = $_options[LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL];
-    if($seconds > 0):
+    if ($seconds > 0):
         $recurrence = '';
         $hours = (int)floor($seconds / 3600);
         if ($hours) {
             if ($hours > 1) {
                 $recurrence .= sprintf(__('%d hours', 'litespeed-cache'), $hours);
-            }
-            else {
+            } else {
                 $recurrence .= sprintf(__('%d hour', 'litespeed-cache'), $hours);
             }
         }
@@ -65,8 +66,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled';
             $recurrence .= ' ';
             if ($minutes > 1) {
                 $recurrence .= sprintf(__('%d minutes', 'litespeed-cache'), $minutes);
-            }
-            else {
+            } else {
                 $recurrence .= sprintf(__('%d minute', 'litespeed-cache'), $minutes);
             }
         }
@@ -77,7 +77,9 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled';
 			<span class="litespeed-switch-drag litespeed-cron-onoff-btn">
 				<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
 					data-url="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, false, true); ?>"
-					<?php if($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl()) echo "checked"; ?>
+					<?php if ($_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl()) {
+            echo "checked";
+        } ?>
 					<?php echo $disabled; ?>
 				/>
 				<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">

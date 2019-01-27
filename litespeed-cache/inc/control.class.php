@@ -408,7 +408,7 @@ class LiteSpeed_Cache_Control
             return LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_PRIVATE_TTL);
         }
 
-        if (is_front_page()){
+        if (is_front_page()) {
             return LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL);
         }
 
@@ -495,11 +495,9 @@ class LiteSpeed_Cache_Control
 
         if (self::is_shared()) {
             $hdr .= 'shared,private';
-        }
-        elseif (self::is_private()) {
+        } elseif (self::is_private()) {
             $hdr .= 'private';
-        }
-        else {
+        } else {
             $hdr .= 'public';
         }
 
@@ -596,12 +594,10 @@ class LiteSpeed_Cache_Control
                 self::set_nocache('is not mobile');
                 return;
             }
-        }
-        elseif (wp_is_mobile() || self::is_mobile()) {
+        } elseif (wp_is_mobile() || self::is_mobile()) {
             self::set_nocache('is mobile');
             return;
         }
-
     }
 
     /**
@@ -615,7 +611,7 @@ class LiteSpeed_Cache_Control
     {
         // logged_in users already excluded, no hook added
 
-        if(! empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) {
+        if (! empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) {
             return $this->_no_cache_for('Query String Action');
         }
 
@@ -639,9 +635,9 @@ class LiteSpeed_Cache_Control
             return $this->_no_cache_for('search');
         }
 
-//		if ( !defined('WP_USE_THEMES') || !WP_USE_THEMES ) {
-//			return $this->_no_cache_for('no theme used') ;
-//		}
+        //		if ( !defined('WP_USE_THEMES') || !WP_USE_THEMES ) {
+        //			return $this->_no_cache_for('no theme used') ;
+        //		}
 
         // Check private cache URI setting
         $excludes = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV);
@@ -683,7 +679,7 @@ class LiteSpeed_Cache_Control
             if (! empty($excludes) && ! empty($_COOKIE)) {
                 $exclude_list = explode('|', $excludes);
 
-                foreach($_COOKIE as $key=>$val) {
+                foreach ($_COOKIE as $key=>$val) {
                     if (in_array($key, $exclude_list)) {
                         return $this->_no_cache_for('Admin configured Cookie Do not cache.');
                     }
@@ -695,7 +691,7 @@ class LiteSpeed_Cache_Control
                 $pattern = '/' . $excludes . '/';
                 $nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
                 if ($nummatches) {
-                        return $this->_no_cache_for('Admin configured User Agent Do not cache.');
+                    return $this->_no_cache_for('Admin configured User Agent Do not cache.');
                 }
             }
 

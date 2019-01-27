@@ -72,7 +72,6 @@ class LiteSpeed_Cache_Admin_Report
         );
 
         update_option(LiteSpeed_Cache_Config::ITEM_ENV_REF, $data);
-
     }
 
     /**
@@ -123,16 +122,14 @@ class LiteSpeed_Cache_Admin_Report
             if (! empty($active_plugins)) {
                 $active_plugins = array_keys($active_plugins);
             }
-        }
-        else {
+        } else {
             $active_plugins = get_option('active_plugins');
         }
 
         if (function_exists('wp_get_theme')) {
             $theme_obj = wp_get_theme();
             $active_theme = $theme_obj->get('Name');
-        }
-        else {
+        } else {
             $active_theme = get_current_theme();
         }
 

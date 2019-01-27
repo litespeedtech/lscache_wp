@@ -19,17 +19,39 @@ if (! defined('WPINC')) {
  *
  */
 if (! function_exists('http_build_url')) {
-    if (! defined('HTTP_URL_REPLACE')) 			define('HTTP_URL_REPLACE', 1);              // Replace every part of the first URL when there's one of the second URL
-    if (! defined('HTTP_URL_JOIN_PATH')) 		define('HTTP_URL_JOIN_PATH', 2);            // Join relative paths
-    if (! defined('HTTP_URL_JOIN_QUERY')) 		define('HTTP_URL_JOIN_QUERY', 4);           // Join query strings
-    if (! defined('HTTP_URL_STRIP_USER')) 		define('HTTP_URL_STRIP_USER', 8);           // Strip any user authentication information
-    if (! defined('HTTP_URL_STRIP_PASS')) 		define('HTTP_URL_STRIP_PASS', 16);          // Strip any password authentication information
-    if (! defined('HTTP_URL_STRIP_AUTH')) 		define('HTTP_URL_STRIP_AUTH', 32);          // Strip any authentication information
-    if (! defined('HTTP_URL_STRIP_PORT')) 		define('HTTP_URL_STRIP_PORT', 64);          // Strip explicit port numbers
-    if (! defined('HTTP_URL_STRIP_PATH')) 		define('HTTP_URL_STRIP_PATH', 128);         // Strip complete path
-    if (! defined('HTTP_URL_STRIP_QUERY')) 		define('HTTP_URL_STRIP_QUERY', 256);        // Strip query string
-    if (! defined('HTTP_URL_STRIP_FRAGMENT')) 	define('HTTP_URL_STRIP_FRAGMENT', 512);     // Strip any fragments (#identifier)
-    if (! defined('HTTP_URL_STRIP_ALL')) 		define('HTTP_URL_STRIP_ALL', 1024);         // Strip anything but scheme and host
+    if (! defined('HTTP_URL_REPLACE')) {
+        define('HTTP_URL_REPLACE', 1);
+    }              // Replace every part of the first URL when there's one of the second URL
+    if (! defined('HTTP_URL_JOIN_PATH')) {
+        define('HTTP_URL_JOIN_PATH', 2);
+    }            // Join relative paths
+    if (! defined('HTTP_URL_JOIN_QUERY')) {
+        define('HTTP_URL_JOIN_QUERY', 4);
+    }           // Join query strings
+    if (! defined('HTTP_URL_STRIP_USER')) {
+        define('HTTP_URL_STRIP_USER', 8);
+    }           // Strip any user authentication information
+    if (! defined('HTTP_URL_STRIP_PASS')) {
+        define('HTTP_URL_STRIP_PASS', 16);
+    }          // Strip any password authentication information
+    if (! defined('HTTP_URL_STRIP_AUTH')) {
+        define('HTTP_URL_STRIP_AUTH', 32);
+    }          // Strip any authentication information
+    if (! defined('HTTP_URL_STRIP_PORT')) {
+        define('HTTP_URL_STRIP_PORT', 64);
+    }          // Strip explicit port numbers
+    if (! defined('HTTP_URL_STRIP_PATH')) {
+        define('HTTP_URL_STRIP_PATH', 128);
+    }         // Strip complete path
+    if (! defined('HTTP_URL_STRIP_QUERY')) {
+        define('HTTP_URL_STRIP_QUERY', 256);
+    }        // Strip query string
+    if (! defined('HTTP_URL_STRIP_FRAGMENT')) {
+        define('HTTP_URL_STRIP_FRAGMENT', 512);
+    }     // Strip any fragments (#identifier)
+    if (! defined('HTTP_URL_STRIP_ALL')) {
+        define('HTTP_URL_STRIP_ALL', 1024);
+    }         // Strip anything but scheme and host
 
     // Build an URL
     // The parts of the second URL will be merged into the first according to the flags argument.
@@ -52,9 +74,11 @@ if (! function_exists('http_build_url')) {
             $flags |= HTTP_URL_STRIP_FRAGMENT;
         }
         // HTTP_URL_STRIP_AUTH becomes HTTP_URL_STRIP_USER and HTTP_URL_STRIP_PASS
-        else if ($flags & HTTP_URL_STRIP_AUTH) {
-            $flags |= HTTP_URL_STRIP_USER;
-            $flags |= HTTP_URL_STRIP_PASS;
+        else {
+            if ($flags & HTTP_URL_STRIP_AUTH) {
+                $flags |= HTTP_URL_STRIP_USER;
+                $flags |= HTTP_URL_STRIP_PASS;
+            }
         }
 
         // Parse the original URL
@@ -77,14 +101,12 @@ if (! function_exists('http_build_url')) {
                     $parse_url[$key] = $parts[$key];
                 }
             }
-        }
-        else {
+        } else {
             // Join the original URL path with the new path
             if (isset($parts['path']) && ($flags & HTTP_URL_JOIN_PATH)) {
                 if (isset($parse_url['path'])) {
                     $parse_url['path'] = rtrim(str_replace(basename($parse_url['path']), '', $parse_url['path']), '/') . '/' . ltrim($parts['path'], '/');
-                }
-                else {
+                } else {
                     $parse_url['path'] = $parts['path'];
                 }
             }
@@ -93,8 +115,7 @@ if (! function_exists('http_build_url')) {
             if (isset($parts['query']) && ($flags & HTTP_URL_JOIN_QUERY)) {
                 if (isset($parse_url['query'])) {
                     $parse_url['query'] .= '&' . $parts['query'];
-                }
-                else {
+                } else {
                     $parse_url['query'] = $parts['query'];
                 }
             }

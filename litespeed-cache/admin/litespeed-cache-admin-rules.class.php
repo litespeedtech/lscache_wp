@@ -89,8 +89,7 @@ class LiteSpeed_Cache_Admin_Rules
         if ($this->frontend_htaccess === $this->backend_htaccess) {
             $this->backend_htaccess_readable = $this->frontend_htaccess_readable;
             $this->backend_htaccess_writable = $this->frontend_htaccess_writable;
-        }
-        else{
+        } else {
             $test_permissions = file_exists($this->backend_htaccess) ? $this->backend_htaccess : dirname($this->backend_htaccess);
             if (is_readable($test_permissions)) {
                 $this->backend_htaccess_readable = true;
@@ -109,10 +108,10 @@ class LiteSpeed_Cache_Admin_Rules
      */
     public static function readable($kind = 'frontend')
     {
-        if($kind === 'frontend') {
+        if ($kind === 'frontend') {
             return self::get_instance()->frontend_htaccess_readable;
         }
-        if($kind === 'backend') {
+        if ($kind === 'backend') {
             return self::get_instance()->backend_htaccess_readable;
         }
     }
@@ -125,10 +124,10 @@ class LiteSpeed_Cache_Admin_Rules
      */
     public static function writable($kind = 'frontend')
     {
-        if($kind === 'frontend') {
+        if ($kind === 'frontend') {
             return self::get_instance()->frontend_htaccess_writable;
         }
-        if($kind === 'backend') {
+        if ($kind === 'backend') {
             return self::get_instance()->backend_htaccess_writable;
         }
     }
@@ -258,7 +257,7 @@ class LiteSpeed_Cache_Admin_Rules
     {
         $path = $this->htaccess_path($kind);
 
-        if(! $path || ! file_exists($path)) {
+        if (! $path || ! file_exists($path)) {
             return "\n";
         }
         if (! self::readable($kind) || ! self::writable($kind)) {
@@ -306,7 +305,7 @@ class LiteSpeed_Cache_Admin_Rules
 
         //failed to backup, not good.
         if ($backup && $this->htaccess_backup($kind) === false) {
-             throw new Exception(LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU));
+            throw new Exception(LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_HTA_BU));
         }
 
         // File put contents will truncate by default. Will create file if doesn't exist.
@@ -401,7 +400,7 @@ class LiteSpeed_Cache_Admin_Rules
     public function get_rewrite_rule_mobile_agents()
     {
         $rules = $this->_get_rule_by(self::MARKER_MOBILE);
-        if(! isset($rules[0])) {
+        if (! isset($rules[0])) {
             LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER_MOBILE);
             return false;
         }
@@ -428,7 +427,7 @@ class LiteSpeed_Cache_Admin_Rules
     public function get_rewrite_rule_login_cookie($kind = 'frontend')
     {
         $rule = $this->_get_rule_by(self::MARKER_LOGIN_COOKIE, $kind);
-        if(substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=') {//todo: use regex
+        if (substr($rule, 0, strlen('RewriteRule .? - [E=')) !== 'RewriteRule .? - [E=') {//todo: use regex
             return false;
         }
 
@@ -456,21 +455,21 @@ class LiteSpeed_Cache_Admin_Rules
         }
 
         $rules = Litespeed_File::extract_from_markers($path, self::MARKER);
-        if(! in_array($cond . self::MARKER_START, $rules) || ! in_array($cond . self::MARKER_END, $rules)) {
+        if (! in_array($cond . self::MARKER_START, $rules) || ! in_array($cond . self::MARKER_END, $rules)) {
             return false;
         }
 
         $key_start = array_search($cond . self::MARKER_START, $rules);
         $key_end = array_search($cond . self::MARKER_END, $rules);
-        if($key_start === false || $key_end === false) {
+        if ($key_start === false || $key_end === false) {
             return false;
         }
 
         $results = array_slice($rules, $key_start+1, $key_end-$key_start-1);
-        if(! $results) {
+        if (! $results) {
             return false;
         }
-        if(count($results) == 1) {
+        if (count($results) == 1) {
             return trim($results[0]);
         }
         return array_filter($results);
@@ -631,8 +630,7 @@ class LiteSpeed_Cache_Admin_Rules
             if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
                 if (! empty($cfg[$id])) {
                     $cfg[$id] .= ',wp-postpass_' . COOKIEHASH;
-                }
-                else {
+                } else {
                     $cfg[$id] = 'wp-postpass_' . COOKIEHASH;
                 }
             }
@@ -641,8 +639,7 @@ class LiteSpeed_Cache_Admin_Rules
             if (! empty($tp_cookies) && is_array($tp_cookies)) {
                 if (! empty($cfg[$id])) {
                     $cfg[$id] .= ',' . implode(',', $tp_cookies);
-                }
-                else {
+                } else {
                     $cfg[$id] = implode(',', $tp_cookies);
                 }
             }
@@ -977,7 +974,7 @@ class LiteSpeed_Cache_Admin_Rules
             return;
         }
         $content = file_get_contents($this->frontend_htaccess);
-        if(! $content) {
+        if (! $content) {
             return;
         }
 
@@ -995,7 +992,7 @@ class LiteSpeed_Cache_Admin_Rules
             return;
         }
         $content = file_get_contents($this->backend_htaccess);
-        if(! $content) {
+        if (! $content) {
             return;
         }
 
@@ -1022,13 +1019,12 @@ class LiteSpeed_Cache_Admin_Rules
 
         try {
             $this->htaccess_save($content);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             LiteSpeed_Cache_Admin_Display::error($e->getMessage());
             return;
         }
 
         LiteSpeed_Cache_Admin_Display::succeed(__('File Saved.', 'litespeed-cache'));
-
     }
 
     /**

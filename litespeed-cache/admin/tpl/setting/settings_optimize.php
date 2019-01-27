@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary();
 
@@ -180,9 +182,13 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary();
 						<h4><?php echo __('URL list in queue waiting for cron','litespeed-cache'); ?></h4>
 						<p>
 						<?php foreach ($last_critical_css_generated['queue'] as $k => $v) : ?>
-							<?php if (! is_array($v)) continue; ?>
+							<?php if (! is_array($v)) {
+    continue;
+} ?>
 							<?php echo $v['url']; ?>
-							<?php if ($v['is_mobile']) echo ' <span title="mobile">📱</span>'; ?>
+							<?php if ($v['is_mobile']) {
+    echo ' <span title="mobile">📱</span>';
+} ?>
 							<br />
 						<?php endforeach; ?>
 						</p>

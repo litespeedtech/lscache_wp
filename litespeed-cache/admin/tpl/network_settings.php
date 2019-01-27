@@ -1,5 +1,7 @@
 <?php
-if (!defined('WPINC')) die;
+if (!defined('WPINC')) {
+    die;
+}
 
 $menuArr = array(
     'general' => __('General', 'litespeed-cache'),
@@ -31,7 +33,7 @@ $_hide_in_basic_mode = '';
 	<h2 class="litespeed-header">
 	<?php
         $i = 1;
-        foreach ($menuArr as $tab => $val){
+        foreach ($menuArr as $tab => $val) {
             $accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
             echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
             $i ++;

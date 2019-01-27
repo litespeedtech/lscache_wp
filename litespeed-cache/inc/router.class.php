@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Router
      */
     public function is_crawler_role_simulation()
     {
-        if(is_admin()) {
+        if (is_admin()) {
             return;
         }
 
@@ -302,7 +302,6 @@ class LiteSpeed_Cache_Router
             if (defined('LITESPEED_CLI')) {
                 self::$_can_crawl = true;
             }
-
         }
 
         return self::$_can_crawl;
@@ -323,7 +322,6 @@ class LiteSpeed_Cache_Router
             if (self::$_action) {
                 defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('[Router] LSCWP_CTRL verified: ' . var_export(self::$_action, true));
             }
-
         }
         return self::$_action;
     }
@@ -546,7 +544,6 @@ class LiteSpeed_Cache_Router
                 LiteSpeed_Cache_Log::debug('[Router] LSCWP_CTRL match falied: ' . $action);
                 return;
         }
-
     }
 
     /**
@@ -601,8 +598,7 @@ class LiteSpeed_Cache_Router
     {
         if (! isset($_REQUEST[LiteSpeed_Cache::NONCE_NAME]) || ! wp_verify_nonce($_REQUEST[LiteSpeed_Cache::NONCE_NAME], $action)) {
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }

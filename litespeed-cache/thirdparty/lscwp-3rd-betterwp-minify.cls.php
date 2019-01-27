@@ -68,5 +68,4 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
         remove_action('check_admin_referer', 'LiteSpeed_Cache_ThirdParty_Better_WP_Minify::flush');
         remove_action('bwp_option_action_before_submit_button', 'LiteSpeed_Cache_ThirdParty_Better_WP_Minify::clear_flush');
     }
-
 }

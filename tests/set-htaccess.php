@@ -1,7 +1,7 @@
 <?php
 
-class Set_Htaccess {
-
+class Set_Htaccess
+{
     public function __construct()
     {
         $this->test_suite();
@@ -9,7 +9,6 @@ class Set_Htaccess {
 
     public function test_block($install, $access, $abspath)
     {
-
         error_log('Begin test with install ' . $install
             . ', access ' . $access . ', abspath ' . $abspath);
         /**
@@ -25,13 +24,11 @@ class Set_Htaccess {
             if ($install_part === false) {
                 $install_part = '';
             }
-        }
-        elseif ($install_part !== false) {
+        } elseif ($install_part !== false) {
             // Install is longer than access
             $access_part = '';
             $install_part = rtrim($install_part, '/');
-        }
-        else {
+        } else {
             // they are equal - no need to find paths.
             $trimmed = rtrim($abspath, '/');
             return array($trimmed, $trimmed, $trimmed);
@@ -146,7 +143,6 @@ class Set_Htaccess {
             }
         }
     }
-
 };
 
 

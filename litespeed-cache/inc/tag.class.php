@@ -49,7 +49,6 @@ class LiteSpeed_Cache_Tag
     {
         // register recent posts widget tag before theme renders it to make it work
         add_filter('widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts');
-
     }
 
     /**
@@ -108,17 +107,14 @@ class LiteSpeed_Cache_Tag
         if ($code == 403) {
             if ($ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable()) {
                 LiteSpeed_Cache_Control::set_nocache('403 TTL is less than 30s');
-            }
-            else {
+            } else {
                 self::$_error_status = $code;
             }
-        }
-        elseif ($code >= 500 && $code < 600) {
+        } elseif ($code >= 500 && $code < 600) {
             if ($ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable()) {
                 LiteSpeed_Cache_Control::set_nocache('TTL is less than 30s');
             }
-        }
-        elseif ($code > 400) {
+        } elseif ($code > 400) {
             self::$_error_status = $code;
         }
 
@@ -251,8 +247,7 @@ class LiteSpeed_Cache_Tag
 
         if (is_front_page()) {
             $tags[] = self::TYPE_FRONTPAGE;
-        }
-        elseif (is_home()) {
+        } elseif (is_home()) {
             $tags[] = self::TYPE_HOME;
         }
 
@@ -266,39 +261,32 @@ class LiteSpeed_Cache_Tag
             //An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
             if (is_category() || is_tag() || is_tax()) {
                 $tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id;
-            }
-            elseif (is_post_type_archive()) {
+            } elseif (is_post_type_archive()) {
                 global $wp_query;
                 $post_type = $wp_query->get('post_type');
                 $tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type;
-            }
-            elseif (is_author()) {
+            } elseif (is_author()) {
                 $tags[] = self::TYPE_AUTHOR . $queried_obj_id;
-            }
-            elseif (is_date()) {
+            } elseif (is_date()) {
                 global $post;
                 $date = $post->post_date;
                 $date = strtotime($date);
                 if (is_day()) {
                     $tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date);
-                }
-                elseif (is_month()) {
+                } elseif (is_month()) {
                     $tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date);
-                }
-                elseif (is_year()) {
+                } elseif (is_year()) {
                     $tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date);
                 }
             }
-        }
-        elseif (is_singular()) {
+        } elseif (is_singular()) {
             //$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
             $tags[] = self::TYPE_POST . $queried_obj_id;
 
             if (is_page()) {
                 $tags[] = self::TYPE_PAGES;
             }
-        }
-        elseif (is_feed()) {
+        } elseif (is_feed()) {
             $tags[] = self::TYPE_FEED;
         }
 
@@ -324,7 +312,6 @@ class LiteSpeed_Cache_Tag
                     $tags[] = self::TYPE_PAGES;
                 }
             }
-
         }
 
         return $tags;
@@ -398,5 +385,4 @@ class LiteSpeed_Cache_Tag
 
         return self::$_instance;
     }
-
 }

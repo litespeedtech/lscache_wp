@@ -11,9 +11,9 @@ $WP_DIR = $argv[2];
 /*
 * If plugin is in cache list, echo its name and current status.
 */
-function cachedetect($plugin,$value){
-
-$cache_list = array(
+function cachedetect($plugin,$value)
+{
+    $cache_list = array(
     "LiteSpeed Cache",
     "Gator Cache",
     "SG CachePress",
@@ -23,33 +23,27 @@ $cache_list = array(
     "ZenCache",
 );
 
-$name = $plugin['Name'];
+    $name = $plugin['Name'];
 
-if(in_array($name,$cache_list)){
-    if (is_plugin_active($value)){
-        echo "$name - Enabled\n";
+    if (in_array($name,$cache_list)) {
+        if (is_plugin_active($value)) {
+            echo "$name - Enabled\n";
+        } else {
+            echo "$name - Disabled\n";
+        }
     }
-    else{
-        echo "$name - Disabled\n";
-    }
-}
 }
 
 if ($action == "status") {
     $plugins = get_plugins();
     array_walk($plugins,"cachedetect");
-            }
-
-elseif ($action == "enable") {
+} elseif ($action == "enable") {
     if (! activate_plugin(PLUGIN_NAME, '', false, false) == null) {
         printf("\nLSCWP not enabled for %s \n\n", $WP_DIR);
         return false;
     }
     return true;
-}
-
-elseif ($action == "disable") {
-
+} elseif ($action == "disable") {
     global $wpdb;
 
     $sql = "SELECT option_value

@@ -1,5 +1,7 @@
 <?php
-if (! defined('WPINC')) die;
+if (! defined('WPINC')) {
+    die;
+}
 
 // Update table data for upgrading
 LiteSpeed_Cache_Data::get_instance();
@@ -14,8 +16,7 @@ list($last_run, $is_running) = $img_optm->cron_running(false);
 
 if (! empty($img_count['total_img'])) {
     $finished_percentage = 100 - floor($img_count['total_not_requested'] * 100 / $img_count['total_img']);
-}
-else {
+} else {
     $finished_percentage = 0;
 }
 

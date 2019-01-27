@@ -18,18 +18,22 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 
     public static function detect()
     {
-        if (! defined('ET_CORE')) return;
+        if (! defined('ET_CORE')) {
+            return;
+        }
 
         add_action('et_fb_before_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_on');
         add_action('et_fb_after_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_off');
         add_filter('litespeed_cache_sub_esi_params-comment-form', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::esi_comment_add_slash');
     }
 
-    public static function js_comment_box_on() {
+    public static function js_comment_box_on()
+    {
         self::$js_comment_box = true;
     }
 
-    public static function js_comment_box_off() {
+    public static function js_comment_box_off()
+    {
         self::$js_comment_box = false;
     }
 

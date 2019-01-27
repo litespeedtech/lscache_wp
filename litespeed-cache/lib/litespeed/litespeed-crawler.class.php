@@ -241,14 +241,12 @@ class Litespeed_Crawler
         $maxTime = (int) ini_get('max_execution_time');
         if ($maxTime == 0) {
             $maxTime = 300; // hardlimit
-        }
-        else {
+        } else {
             $maxTime -= 5;
         }
         if ($maxTime >= $this->_run_duration) {
             $maxTime = $this->_run_duration;
-        }
-        elseif (ini_set('max_execution_time', $this->_run_duration + 15) !== false) {
+        } elseif (ini_set('max_execution_time', $this->_run_duration + 15) !== false) {
             $maxTime = $this->_run_duration;
         }
         $this->_max_run_time = $maxTime + time();
@@ -444,7 +442,6 @@ class Litespeed_Crawler
             'blacklist'	=> $this->_blacklist,
             'crawled'	=> $this->_meta['last_crawled'],
         );
-
     }
 
     /**
@@ -462,18 +459,15 @@ class Litespeed_Crawler
             // init
             if ($curload > $this->_load_limit) {
                 $curthreads = 0;
-            }
-            elseif ($curload >= ($this->_load_limit - 1)) {
+            } elseif ($curload >= ($this->_load_limit - 1)) {
                 $curthreads = 1;
-            }
-            else {
+            } else {
                 $curthreads = intval($this->_load_limit - $curload);
                 if ($curthreads > $this->_threads_limit) {
                     $curthreads = $this->_threads_limit;
                 }
             }
-        }
-        else {
+        } else {
             // adjust
             $curthreads = $this->_cur_threads;
             if ($curload >= $this->_load_limit + 1) {
@@ -481,13 +475,11 @@ class Litespeed_Crawler
                 if ($curthreads >= 1) {
                     $curthreads --;
                 }
-            }
-            elseif ($curload >= $this->_load_limit) {
+            } elseif ($curload >= $this->_load_limit) {
                 if ($curthreads > 1) {// if already 1, keep
                     $curthreads --;
                 }
-            }
-            elseif (($curload + 1) < $this->_load_limit) {
+            } elseif (($curload + 1) < $this->_load_limit) {
                 if ($curthreads < $this->_threads_limit) {
                     $curthreads ++;
                 }
@@ -701,5 +693,4 @@ class Litespeed_Crawler
             'last_crawler_total_cost'	=> 0,
         );
     }
-
 }

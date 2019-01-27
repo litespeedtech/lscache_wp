@@ -33,6 +33,5 @@ class LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter
             LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $_POST['post_id']);
         }
     }
-
 }
 
