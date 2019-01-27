@@ -75,7 +75,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 *
 	 *     # Purge Everything associated with the WordPress install.
 	 *     $ wp lscache-purge all
-	 *
 	 */
 	public function all( $args, $assoc_args )
 	{
@@ -108,7 +107,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 *
 	 *     # In a multisite install, purge only the shop.example.com cache (stored as blog id 2).
 	 *     $ wp lscache-purge blog 2
-	 *
 	 */
 	public function blog($args, $assoc_args)
 	{
@@ -153,7 +151,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 *
 	 *     # Purge the front page.
 	 *     $ wp lscache-purge url https://mysite.com/
-	 *
 	 */
 	public function url($args, $assoc_args)
 	{
@@ -254,7 +251,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 *
 	 *     # Purge the tag ids 1, 3, and 5
 	 *     $ wp lscache-purge tag 1 3 5
-	 *
 	 */
 	public function tag($args, $assoc_args)
 	{
@@ -273,7 +269,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 *
 	 *     # Purge the category ids 1, 3, and 5
 	 *     $ wp lscache-purge category 1 3 5
-	 *
 	 */
 	public function category($args, $assoc_args)
 	{
@@ -294,7 +289,6 @@ class LiteSpeed_Cache_Cli_Purge
 	 *
 	 *     # Purge the post ids 1, 3, and 5
 	 *     $ wp lscache-purge post_id 1 3 5
-	 *
 	 */
 	public function post_id($args, $assoc_args)
 	{

@@ -23,7 +23,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Sync or initialize image optimization service
 	 *     $ wp lscache-iapi sync
-	 *
 	 */
 	public function sync()
 	{
@@ -58,7 +57,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Send image optimization request
 	 *     $ wp lscache-iapi push
-	 *
 	 */
 	public function push()
 	{
@@ -81,7 +79,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Pull images back from IAPI
 	 *     $ wp lscache-iapi pull
-	 *
 	 */
 	public function pull()
 	{
@@ -104,7 +101,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Show optimization status
 	 *     $ wp lscache-iapi status
-	 *
 	 */
 	public function status()
 	{
@@ -150,7 +146,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Show optimization status
 	 *     $ wp lscache-iapi s
-	 *
 	 */
 	public function s()
 	{
@@ -167,7 +162,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Clean up unfinished requests
 	 *     $ wp lscache-iapi clean
-	 *
 	 */
 	public function clean()
 	{
@@ -188,7 +182,6 @@ class LiteSpeed_Cache_CLI_IAPI
 	 *
 	 *     # Remove original image backups
 	 *     $ wp lscache-iapi rm_bkup
-	 *
 	 */
 	public function rm_bkup()
 	{

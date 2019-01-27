@@ -47,7 +47,6 @@ class LiteSpeed_Cache_Cli_Admin
 	 *
 	 *     # Set to not cache the login page
 	 *     $ wp lscache-admin set_option cache_login false
-	 *
 	 */
 	public function set_option($args, $assoc_args)
 	{
@@ -171,7 +170,6 @@ class LiteSpeed_Cache_Cli_Admin
 	 *
 	 *     # Get all options
 	 *     $ wp lscache-admin get_options
-	 *
 	 */
 	public function get_options($args, $assoc_args)
 	{
@@ -228,7 +226,6 @@ class LiteSpeed_Cache_Cli_Admin
 	 *
 	 *     # Export options to a file.
 	 *     $ wp lscache-admin export_options
-	 *
 	 */
 	public function export_options($args, $assoc_args)
 	{
@@ -271,7 +268,6 @@ class LiteSpeed_Cache_Cli_Admin
 	 *
 	 *     # Import options from CURRENTDIR/options.txt
 	 *     $ wp lscache-admin import_options options.txt
-	 *
 	 */
 	public function import_options($args, $assoc_args)
 	{
@@ -296,7 +292,6 @@ class LiteSpeed_Cache_Cli_Admin
 	 *
 	 *     # Reset all options
 	 *     $ wp lscache-admin reset_options
-	 *
 	 */
 	public function reset_options()
 	{

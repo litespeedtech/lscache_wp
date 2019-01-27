@@ -18,7 +18,6 @@ if ( ! defined('WPINC') ) {
 
 /**
  * http_build_url() compatibility.
- *
  */
 if ( ! function_exists('http_build_url') ) {
 	if ( ! defined( 'HTTP_URL_REPLACE' ) ) 			define('HTTP_URL_REPLACE', 1);              // Replace every part of the first URL when there's one of the second URL

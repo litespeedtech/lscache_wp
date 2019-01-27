@@ -15,6 +15,5 @@ define('LSCACHE_ADV_CACHE', true);
  * Setting the WP_CACHE global variable requires that an advanced-cache.php file exists.
  * This variable can help to increase compatibility as other plugins can check it to determine whether or not a cache is currently being used.
  * It can also help to avoid conflicts with other full page caches such as W3 Total Cache, etc.
- *
  */
 return;

@@ -21,7 +21,6 @@ class LiteSpeed_Cache_CDN_Quic
 
 	/**
 	 * Notify CDN new config updated.
-	 *
 	 */
 	public static function sync_config( $options )
 	{

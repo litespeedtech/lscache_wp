@@ -20,7 +20,6 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 	 * Detects if Better Theme My Login is active.
 	 *
 	 * @since 1.0.15
-	 *
 	 */
 	public static function detect()
 	{

@@ -240,7 +240,6 @@ class LiteSpeed_Cache_Optimizer
 
 	/**
 	 * Basic minifier.
-	 *
 	 */
 	private function _null_minifier( $content )
 	{

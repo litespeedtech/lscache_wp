@@ -20,7 +20,6 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 * Detects if Better WP Minify is active.
 	 *
 	 * @since 1.0.12
-	 *
 	 */
 	public static function detect()
 	{

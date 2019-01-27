@@ -557,7 +557,6 @@ class LiteSpeed_Cache_CDN
 	 * Check if the host is the CDN internal host.
 	 *
 	 * @since  1.2.3
-	 *
 	 */
 	public static function internal( $host )
 	{

@@ -20,7 +20,6 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
 	 * Detects if is active.
 	 *
 	 * @since 1.6.4
-	 *
 	 */
 	public static function detect()
 	{

@@ -365,7 +365,6 @@ class LiteSpeed_Cache_Utility
 	 * Improve compatibility to PHP old versions.
 	 *
 	 * @since  1.2.2
-	 *
 	 */
 	public static function compatibility()
 	{
@@ -596,7 +595,6 @@ class LiteSpeed_Cache_Utility
 	 * Check if the host is the internal host.
 	 *
 	 * @since  1.2.3
-	 *
 	 */
 	public static function internal( $host )
 	{
