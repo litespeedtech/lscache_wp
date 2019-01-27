@@ -514,7 +514,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			foreach ( $options[ $id ] as $k => $v ) {
 				$crawler_cookies[ 'name' ][ $i ] = $k ;
 				$crawler_cookies[ 'vals' ][ $i ] = $v ;
-				$i ++ ;
+				++$i  ;
 			}
 		}
 		$options[ $id ] = $crawler_cookies ;

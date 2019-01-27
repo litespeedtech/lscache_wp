@@ -341,7 +341,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ( file_exists($path . $bak) ) {
 			$bak = sprintf("_lscachebak_%02d", $i) ;
 			while (file_exists($path . $bak)) {
-				$i++ ;
+				++$i ;
 				$bak = sprintf("_lscachebak_%02d", $i) ;
 			}
 		}

@@ -513,7 +513,7 @@ class LiteSpeed_Cache_Img_Optm
 						'info'	=> $v,
 					) ;
 
-					$total_img_duplicated ++ ;
+					++$total_img_duplicated  ;
 
 					unset( $this->_img_in_queue[ $pid ][ $md5 ] ) ;
 
@@ -526,7 +526,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			if ( empty( $this->_img_in_queue[ $pid ] ) ) {
 				unset( $this->_img_in_queue[ $pid ] ) ;
-				$total_pid_unset ++ ;
+				++$total_pid_unset  ;
 			}
 		}
 
@@ -651,7 +651,7 @@ class LiteSpeed_Cache_Img_Optm
 			$this->_img_in_queue[ $this->tmp_pid ] = array() ;
 		}
 		$this->_img_in_queue[ $this->tmp_pid ][ $md5 ] = $img_info ;
-		$this->_img_total ++ ;
+		++$this->_img_total  ;
 
 		// Build existing data checking array
 		$this->_img_srcpath_md5_array[] = $img_info[ 'srcpath_md5' ] ;
@@ -1087,7 +1087,7 @@ class LiteSpeed_Cache_Img_Optm
 
 				$target_size = filesize( $local_file ) ;
 
-				$total_pulled_ori ++ ;
+				++$total_pulled_ori  ;
 			}
 
 			// Save webp image
@@ -1122,7 +1122,7 @@ class LiteSpeed_Cache_Img_Optm
 
 				$webp_size = filesize( $local_file . '.webp' ) ;
 
-				$total_pulled_webp ++ ;
+				++$total_pulled_webp  ;
 			}
 
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] Update _table_img_optm record [id] ' . $row_img->id ) ;
@@ -1662,7 +1662,7 @@ class LiteSpeed_Cache_Img_Optm
 				continue ;
 			}
 
-			$i ++ ;
+			++$i  ;
 			$total_size += filesize( $bk_file ) ;
 
 		}
@@ -1715,7 +1715,7 @@ class LiteSpeed_Cache_Img_Optm
 				continue ;
 			}
 
-			$i ++ ;
+			++$i  ;
 			$total_size += filesize( $bk_file ) ;
 
 			unlink( $bk_file ) ;
@@ -1906,7 +1906,7 @@ class LiteSpeed_Cache_Img_Optm
 					continue ;
 				}
 
-				$i ++ ;
+				++$i  ;
 
 				rename( $local_file, $bk_optm_file ) ;
 				rename( $bk_file, $local_file ) ;
@@ -1917,7 +1917,7 @@ class LiteSpeed_Cache_Img_Optm
 					continue ;
 				}
 
-				$i ++ ;
+				++$i  ;
 
 				rename( $local_file, $bk_file ) ;
 				rename( $bk_optm_file, $local_file ) ;
@@ -2106,7 +2106,7 @@ class LiteSpeed_Cache_Img_Optm
 					$link = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL ) ;
 					// Add i to avoid browser too many redirected warning
 					$i = ! empty( $_GET[ 'i' ] ) ? $_GET[ 'i' ] : 0 ;
-					$i ++ ;
+					++$i  ;
 					$url = html_entity_decode( $link ) . '&i=' . $i ;
 					exit( "<meta http-equiv='refresh' content='0;url=$url'>" ) ;
 					// LiteSpeed_Cache_Admin::redirect( $url ) ;

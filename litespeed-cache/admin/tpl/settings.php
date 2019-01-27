@@ -149,7 +149,7 @@ if ( ! $adv_mode ) {
 			}
 
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
-			$i ++ ;
+			++$i  ;
 		}
 		foreach ($tp_tabs as $val){
 			$accesskey = '' ;
@@ -165,7 +165,7 @@ if ( ! $adv_mode ) {
 			}
 
 			echo "<a class='litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
-			$i ++ ;
+			++$i  ;
 		}
 	?>
 	<?php if ( $adv_mode ) : ?>

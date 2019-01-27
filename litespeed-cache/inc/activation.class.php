@@ -184,7 +184,7 @@ class LiteSpeed_Cache_Activation
 			$bid = is_object( $site ) && property_exists( $site, 'blog_id' ) ? $site->blog_id : $site ;
 			$plugins = get_blog_option( $bid , 'active_plugins', $default ) ;
 			if ( in_array( LSCWP_BASENAME, $plugins, true ) ) {
-				$count++ ;
+				++$count ;
 			}
 		}
 
@@ -198,7 +198,7 @@ class LiteSpeed_Cache_Activation
 		}
 
 		if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
-			$count++ ;
+			++$count ;
 		}
 		return $count ;
 	}
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Activation
 		}
 		if ( $count !== 1 ) {
 			// Not deactivating the last one.
-			$count-- ;
+			--$count ;
 			set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
 			return false ;
 		}

@@ -244,7 +244,7 @@ class WP_Object_Cache
 		if ( array_key_exists( $final_key, $this->_cache ) && ! $force ) {
 			$found = true ;
 			$cache_val = $this->_cache[ $final_key ] ;
-			$this->count_hit_incall ++ ;
+			++$this->count_hit_incall  ;
 		}
 		elseif ( ! array_key_exists( $final_key, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
 			$v = $this->_object_cache->get( $final_key ) ;
@@ -255,7 +255,7 @@ class WP_Object_Cache
 
 			// To be compatible with false val
 			if ( is_array( $v ) && array_key_exists( 'data', $v ) ) {
-				$this->count_hit ++ ;
+				++$this->count_hit  ;
 				$found = true ;
 				$found_in_oc = true ;
 				$cache_val = $v[ 'data' ] ;
@@ -263,11 +263,11 @@ class WP_Object_Cache
 			else { // Can't find key, cache it to 404
 // error_log("oc: add404\t\t\t[key] " . $final_key ) ;
 				$this->_cache_404[ $final_key ] = 1 ;
-				$this->count_miss ++ ;
+				++$this->count_miss  ;
 			}
 		}
 		else {
-			$this->count_miss_incall ++ ;
+			++$this->count_miss_incall  ;
 		}
 
 		if ( is_object( $cache_val ) ) {
@@ -286,7 +286,7 @@ class WP_Object_Cache
 			$this->_cache[ $final_key ] = $cache_val ;
 		}
 
-		$this->cache_total ++ ;
+		++$this->cache_total  ;
 
 		return $cache_val ;
 	}
@@ -314,7 +314,7 @@ class WP_Object_Cache
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
 			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
-			$this->count_set ++ ;
+			++$this->count_set  ;
 		}
 
 		if ( $this->_object_cache->store_transients( $group ) ) {

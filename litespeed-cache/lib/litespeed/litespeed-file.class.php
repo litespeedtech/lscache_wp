@@ -79,7 +79,7 @@ class Litespeed_File
 				}
 			}
 			else{
-				for ( $i=0 ; $i < $lines ; $i++ ) {
+				for ( $i=0 ; $i < $lines ; ++$i ) {
 					if ( $file->eof() ) {
 						break ;
 					}

@@ -740,7 +740,7 @@ class LiteSpeed_Cache_Optimize
 
 			if ( $total > $this->cfg_optm_max_size ) { // If larger than 1M, separate them
 				$total = 0;
-				$i ++ ;
+				++$i  ;
 			}
 		}
 		if ( count( $src_arr ) > 1 ) {

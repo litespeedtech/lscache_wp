@@ -412,7 +412,7 @@ class Litespeed_Crawler
 	{
 		if ( $end_reason === true ) { // Current crawler is fully done
 			$end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_meta['curr_crawler'] + 1 ) ) ;
-			$this->_meta[ 'curr_crawler' ]++ ; // Jump to next cralwer
+			++$this->_meta[ 'curr_crawler' ] ; // Jump to next cralwer
 			$this->_meta[ 'last_pos' ] = 0 ;// reset last position
 			$this->_meta[ 'last_crawler_total_cost' ] = time() - $this->_meta[ 'curr_crawler_beginning_time' ] ;
 			$count_crawlers = LiteSpeed_Cache_Crawler::get_instance()->list_crawlers( true ) ;
@@ -479,17 +479,17 @@ class Litespeed_Crawler
 			if ( $curload >= $this->_load_limit + 1 ) {
 				sleep(5) ;  // sleep 5 secs
 				if ( $curthreads >= 1 ) {
-					$curthreads -- ;
+					--$curthreads  ;
 				}
 			}
 			elseif ( $curload >= $this->_load_limit ) {
 				if ( $curthreads > 1 ) {// if already 1, keep
-					$curthreads -- ;
+					--$curthreads  ;
 				}
 			}
 			elseif ( ($curload + 1) < $this->_load_limit ) {
 				if ( $curthreads < $this->_threads_limit ) {
-					$curthreads ++ ;
+					++$curthreads  ;
 				}
 			}
 		}

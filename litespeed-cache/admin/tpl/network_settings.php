@@ -34,7 +34,7 @@ $_hide_in_basic_mode = '' ;
 		foreach ($menuArr as $tab => $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
-			$i ++ ;
+			++$i  ;
 		}
 	?>
 	</h2>

@@ -670,7 +670,7 @@ class LiteSpeed_Cache_GUI
 
 		LiteSpeed_Cache_Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
 
-		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
+		for ( $i = 1 ; $i <= self::$_clean_counter ; ++$i  ) {
 			// If miss beginning
 			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
 			if ( $start === false ) {
@@ -705,7 +705,7 @@ class LiteSpeed_Cache_GUI
 	public static function clean_wrapper_begin( $counter = false )
 	{
 		if ( $counter === false ) {
-			self::$_clean_counter ++ ;
+			++self::$_clean_counter  ;
 			$counter = self::$_clean_counter ;
 			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter begin" ) ;
 		}
