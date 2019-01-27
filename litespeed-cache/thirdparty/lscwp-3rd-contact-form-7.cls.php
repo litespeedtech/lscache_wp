@@ -42,4 +42,3 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
 		}
 	}
 }
-

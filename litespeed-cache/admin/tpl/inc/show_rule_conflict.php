@@ -10,4 +10,3 @@ $err = sprintf( __( 'Unexpected cache rule %2$s found in %1$s file. This rule ma
 
 // other plugin left cache expired rules in .htaccess which will cause conflicts
 echo self::build_notice( self::NOTICE_YELLOW . ' lscwp-notice-ruleconflict', $err ) ;
-

@@ -24,4 +24,3 @@ if (!defined('WPINC')) die;
 //				'<p><a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache" rel="noopener noreferrer" target="_blank">' . __('LSCache Documentation', 'litespeed-cache') . '</a></p>' .
 			'<p><a href="https://wordpress.org/support/plugin/litespeed-cache" rel="noopener noreferrer" target="_blank">' . __('Support Forum', 'litespeed-cache') . '</a></p>'
 		);
-

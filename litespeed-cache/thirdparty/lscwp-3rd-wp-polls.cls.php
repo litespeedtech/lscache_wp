@@ -21,4 +21,3 @@ class LiteSpeed_Cache_ThirdParty_Wp_Polls
 		LiteSpeed_Cache_API::set_nocache() ;
 	}
 }
-

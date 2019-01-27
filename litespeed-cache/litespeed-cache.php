@@ -171,4 +171,3 @@ if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
 	}
 }
-

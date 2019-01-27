@@ -46,4 +46,3 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 		}
 	}
 }
-

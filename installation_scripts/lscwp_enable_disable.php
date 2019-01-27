@@ -83,4 +83,3 @@ elseif ( $action == "disable" ) {
 		die($WP_DIR . " - Unable to disable LSCWP with query error: " . mysql_error() . "\nIf possible, LSWCP will still be removed\n\n") ;
 	}
 }
-

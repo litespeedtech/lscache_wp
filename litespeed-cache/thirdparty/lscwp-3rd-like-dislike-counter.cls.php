@@ -34,4 +34,3 @@ class LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter
 		}
 	}
 }
-

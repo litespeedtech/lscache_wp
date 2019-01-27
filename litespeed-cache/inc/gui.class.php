@@ -748,4 +748,3 @@ class LiteSpeed_Cache_GUI
 		return self::$_instance ;
 	}
 }
-

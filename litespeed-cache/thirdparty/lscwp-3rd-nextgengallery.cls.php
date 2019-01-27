@@ -232,4 +232,3 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		return $render_parms ;
 	}
 }
-

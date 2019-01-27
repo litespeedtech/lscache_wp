@@ -84,4 +84,3 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 		}
 	}
 }
-

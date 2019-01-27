@@ -1098,4 +1098,3 @@ class LiteSpeed_Cache_Admin_Rules
 		return self::$_instance ;
 	}
 }
-

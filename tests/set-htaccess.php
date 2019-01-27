@@ -147,4 +147,3 @@ class Set_Htaccess {
 		}
 	}
 };
-

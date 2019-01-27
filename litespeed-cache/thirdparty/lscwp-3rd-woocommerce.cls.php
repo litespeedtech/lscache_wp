@@ -980,4 +980,3 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		return self::$_instance ;
 	}
 }
-

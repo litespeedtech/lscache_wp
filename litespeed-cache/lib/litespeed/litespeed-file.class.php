@@ -450,4 +450,3 @@ class Litespeed_File
 		return (bool) $bytes ;
 	}
 }
-
