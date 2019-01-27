@@ -351,7 +351,7 @@ class Minifier
                 $matchIndex = $matches[0][1];
                 $css = substr_replace($css, "\n", $matchIndex + 1, 0);
                 $offset = $matchIndex + 2 + $this->linebreakPosition;
-                $l += 1;
+                ++$l;
                 if ($offset > $l) {
                     break;
                 }

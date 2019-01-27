@@ -329,7 +329,7 @@ class JSMin
 			// getc(stdin)
 			if ($this->inputIndex < $this->inputLength) {
 				$c = $this->input[$this->inputIndex];
-				$this->inputIndex += 1;
+				++$this->inputIndex;
 			} else {
 				$c = null;
 			}
