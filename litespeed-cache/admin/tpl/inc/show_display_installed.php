@@ -1,7 +1,6 @@
 <?php
 if (!defined('WPINC')) die;
 
-
 $buf = '<h3>'. __('LiteSpeed Cache plugin is installed!', 'litespeed-cache'). '</h3>' . ' '
 	. __('This message indicates that the plugin was installed by the server admin.', 'litespeed-cache') . ' '
 	. __('The LiteSpeed Cache plugin is used to cache pages - a simple way to improve the performance of the site.', 'litespeed-cache') . ' '

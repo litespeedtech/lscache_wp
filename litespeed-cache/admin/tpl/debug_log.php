@@ -1,7 +1,6 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-
 ?>
 
 <div class="wrap">

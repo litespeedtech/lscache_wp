@@ -177,7 +177,6 @@ class LiteSpeed_Cache_Img_Optm
 		$_credit = (int) $this->summary_info( 'credit' ) ;
 		$credit_recovered = (int) $this->summary_info( 'credit_recovered' ) ;
 
-
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] preparing images to push' ) ;
 
 		// Get images

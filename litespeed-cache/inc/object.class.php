@@ -22,7 +22,6 @@ if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 	}
 }
 
-
 class LiteSpeed_Cache_Object
 {
 	private static $_instance ;

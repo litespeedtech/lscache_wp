@@ -24,7 +24,6 @@ $menu_list['crawler'] = __('Crawler', 'litespeed-cache') ;
 global $_options ;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-
 /**
  * This hook allows third party plugins to create litespeed cache
  * specific configuration.

@@ -10,7 +10,6 @@ try {
 	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
 }
 
-
 $htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
 
 // Check if there is `ExpiresDefault` in .htaccess
@@ -30,7 +29,6 @@ if ( defined( 'LITESPEED_ON' ) ) {
 	// 	update_option( self::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
 	// }
 }
-
 
 ?>
 

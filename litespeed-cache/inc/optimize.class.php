@@ -331,7 +331,6 @@ class LiteSpeed_Cache_Optimize
 			return $content ;
 		}
 
-
 		LiteSpeed_Cache_Log::debug( '[Optm] start' ) ;
 
 		$instance = self::get_instance() ;
@@ -573,7 +572,6 @@ class LiteSpeed_Cache_Optimize
 			// Replace async js
 			$this->content = str_replace( $html_list, $html_list2, $this->content ) ;
 		}
-
 
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {

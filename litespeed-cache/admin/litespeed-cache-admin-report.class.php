@@ -184,7 +184,6 @@ class LiteSpeed_Cache_Admin_Report
 			$options[ $v ] = get_option( $v ) ;
 		}
 
-
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
 		return $report ;
 	}

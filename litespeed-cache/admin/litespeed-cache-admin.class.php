@@ -132,7 +132,6 @@ class LiteSpeed_Cache_Admin
 
 		}
 
-
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
 		if ( LiteSpeed_Cache_Router::esi_enabled() ) {

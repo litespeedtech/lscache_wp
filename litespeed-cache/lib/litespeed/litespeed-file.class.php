@@ -431,7 +431,6 @@ class Litespeed_File
 			) ) ;
 		}
 
-
 		// Write to the start of the file, and truncate it to that length
 		fseek($fp, 0) ;
 		$bytes = fwrite($fp, $new_file_data) ;
@@ -445,5 +444,4 @@ class Litespeed_File
 		return (bool) $bytes ;
 	}
 }
-
 

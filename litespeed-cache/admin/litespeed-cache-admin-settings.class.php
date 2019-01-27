@@ -222,7 +222,6 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
 
-
 		/**
 		 * Handle files:
 		 * 		1) wp-config.php;
@@ -1035,7 +1034,6 @@ class LiteSpeed_Cache_Admin_Settings
 
 			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, $min, $max ) ;
 		}
-
 
 		$id = LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;

@@ -6,4 +6,3 @@ if ( ! defined('ABSPATH') ) {
 
 LiteSpeed_Cache_ESI::load_esi_block() ;
 
-

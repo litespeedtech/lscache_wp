@@ -321,4 +321,3 @@ class LiteSpeed_Cache_Optimizer
 	}
 }
 
-

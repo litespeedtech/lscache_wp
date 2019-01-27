@@ -720,7 +720,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	public function plugin_activation( $count )
 	{
 
-
 	}
 
 	/**

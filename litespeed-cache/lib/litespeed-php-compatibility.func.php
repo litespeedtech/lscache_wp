@@ -12,8 +12,6 @@ if ( ! defined('WPINC') ) {
 	die ;
 }
 
-
-
 /**
  * http_build_url() compatibility
  *

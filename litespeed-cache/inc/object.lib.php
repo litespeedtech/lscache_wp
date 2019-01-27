@@ -169,8 +169,6 @@ function wp_cache_close()
 	return true ;
 }
 
-
-
 class WP_Object_Cache
 {
 	private static $_instance ;

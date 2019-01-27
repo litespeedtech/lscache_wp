@@ -201,7 +201,6 @@ class LiteSpeed_Cache_CDN_Quic
 
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
 
-
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[QUIC] failed to post: ' . $error_message ) ;

@@ -1,7 +1,6 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-
 $_panels = array(
 	array(
 		'title'	=> __( 'Purge Front Page', 'litespeed-cache' ),
@@ -84,7 +83,6 @@ if ( LiteSpeed_Cache_Media::has_placehoder_cache() ) {
 		'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_PLACEHOLDER,
 	) ;
 }
-
 
 $_panels[] = array(
 	'title'	=> __( 'Purge All', 'litespeed-cache' ),
