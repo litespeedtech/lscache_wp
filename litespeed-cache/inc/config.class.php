@@ -163,7 +163,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * @since  2.0
 		 */
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
 		// If don't have site options

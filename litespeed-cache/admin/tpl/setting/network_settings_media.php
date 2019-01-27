@@ -5,6 +5,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 
-	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php'; ?>
 
 </tbody></table>

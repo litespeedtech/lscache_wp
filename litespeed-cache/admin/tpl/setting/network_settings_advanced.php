@@ -5,9 +5,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 
-	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ; ?>
-	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ; ?>
-	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.check_adv_file.php' ; ?>
-	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.login_cookie.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php'; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php'; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.check_adv_file.php'; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.login_cookie.php'; ?>
 
 </tbody></table>

@@ -1,7 +1,7 @@
 <?php
 
-include "wp-config.php" ;
-include_once "wp-admin/includes/plugin.php" ;
+include "wp-config.php";
+include_once "wp-admin/includes/plugin.php";
 
 const PLUGIN_NAME = "litespeed-cache/litespeed-cache.php" ;
 

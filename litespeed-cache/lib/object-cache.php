@@ -28,7 +28,7 @@ $lib_file = $lscwp_dir . 'inc/object.lib.php' ;
 // Can't find LSCWP location, terminate object cache process
 if ( ! $lscwp_dir || ! file_exists( $data_file ) || ! file_exists( $lib_file ) ) {
 	if ( ! is_admin() ) { // Bypass object cache for frontend
-		require_once ABSPATH . WPINC . '/cache.php' ;
+		require_once ABSPATH . WPINC . '/cache.php';
 	}
 	else {
 		$err = 'Can NOT find LSCWP path for object cache initialization in ' . __FILE__ ;
@@ -38,5 +38,5 @@ if ( ! $lscwp_dir || ! file_exists( $data_file ) || ! file_exists( $lib_file ) )
 }
 else {
 	// Init object cache & LSCWP
-	require_once $lib_file ;
+	require_once $lib_file;
 }

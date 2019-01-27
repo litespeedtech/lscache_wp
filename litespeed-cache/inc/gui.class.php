@@ -282,7 +282,7 @@ class LiteSpeed_Cache_GUI
 		// Bypass showing info banner if disabled all in debug
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
 			if ( $is_litespeed_page && ! $check_only ) {
-				include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
+				include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php";
 			}
 
 			return false ;
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_GUI
 		$_summary[ 'score.last_check' ] = time() ;
 		$this->save_summary( $_summary ) ;
 
-		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.ajax.php" ;
+		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.ajax.php";
 	}
 
 	/**

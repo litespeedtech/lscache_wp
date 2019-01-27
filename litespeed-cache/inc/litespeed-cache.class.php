@@ -101,7 +101,7 @@ class LiteSpeed_Cache
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.
-			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
+			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php';
 		}
 
 		if ( self::config( LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ) ) {

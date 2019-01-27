@@ -43,7 +43,7 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 				<?php echo __( 'Current Stage Status', 'litespeed-cache' ) ; ?>
 			</h2>
 			<div class="litespeed-empty-space-medium"></div>
-			<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.level_info.php" ; ?>
+			<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.level_info.php"; ?>
 
 			<hr class="litespeed-hr-dotted">
 
@@ -237,7 +237,7 @@ $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;
 
 	<div class="litespeed-width-3-10 litespeed-column-java litespeed-contrast" style="display: flex; flex-direction: column;">
 		<div class="litespeed-hr">
-			<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.percentage_summary.php" ; ?>
+			<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.percentage_summary.php"; ?>
 		</div>
 
 		<div class="litespeed-hr">

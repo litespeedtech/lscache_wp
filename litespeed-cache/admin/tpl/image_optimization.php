@@ -35,9 +35,9 @@ else {
 	<div class="litespeed-body">
 		<div class="litespeed-flex-container">
 			<?php if ( ! $optm_summary ) : ?>
-				<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.initialize.php" ; ?>
+				<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.initialize.php"; ?>
 			<?php else : ?>
-				<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.summary.php" ; ?>
+				<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.summary.php"; ?>
 			<?php endif ; ?>
 		</div>
 	</div>

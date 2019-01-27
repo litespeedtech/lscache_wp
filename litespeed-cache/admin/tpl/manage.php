@@ -47,7 +47,7 @@ if ( ! is_network_admin() ) {
 		// include all tpl for faster UE
 		foreach ($menu_list as $tab => $val) {
 			echo "<div data-litespeed-layout='$tab'>" ;
-			require LSCWP_DIR . "admin/tpl/manage/manage_$tab.php" ;
+			require LSCWP_DIR . "admin/tpl/manage/manage_$tab.php";
 			echo "</div>" ;
 		}
 

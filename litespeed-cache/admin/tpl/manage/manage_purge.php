@@ -111,7 +111,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 ?>
 
-<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php"; ?>
 
 <h3 class="litespeed-title"><?php echo __('Purge', 'litespeed-cache'); ?></h3>
 

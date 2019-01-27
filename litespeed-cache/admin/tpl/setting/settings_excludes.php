@@ -123,7 +123,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
 
 			// User Agent
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php';
 
 		endif ;
 	?>

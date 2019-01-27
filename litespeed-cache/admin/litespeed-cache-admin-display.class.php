@@ -81,7 +81,7 @@ class LiteSpeed_Cache_Admin_Display
 		 * @since  2.0
 		 */
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
 		// add menus ( Also check for mu-plugins)
@@ -299,7 +299,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function admin_footer_text($footer_text)
 	{
-		require_once LSCWP_DIR . 'admin/tpl/inc/admin_footer.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/admin_footer.php';
 
 		return $footer_text ;
 	}
@@ -347,7 +347,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function add_help_tabs()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/inc/help_tabs.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/help_tabs.php';
 	}
 
 	/**
@@ -545,7 +545,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_widget_edit($widget, $return, $instance)
 	{
-		require LSCWP_DIR . 'admin/tpl/esi_widget_edit.php' ;
+		require LSCWP_DIR . 'admin/tpl/esi_widget_edit.php';
 	}
 
 	/**
@@ -556,7 +556,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_manage()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/manage.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/manage.php';
 	}
 
 	/**
@@ -568,13 +568,13 @@ class LiteSpeed_Cache_Admin_Display
 	public function show_menu_settings()
 	{
 		if ( is_network_admin() ) {
-			require_once LSCWP_DIR . 'admin/tpl/network_settings.php' ;
+			require_once LSCWP_DIR . 'admin/tpl/network_settings.php';
 		}
 		else {
 			if ( $_GET['page'] != 'litespeedcache' ) {// ls settings msg need to display manually
 				settings_errors() ;
 			}
-			require_once LSCWP_DIR . 'admin/tpl/settings.php' ;
+			require_once LSCWP_DIR . 'admin/tpl/settings.php';
 		}
 	}
 
@@ -589,7 +589,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_menu_edit_htaccess()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/edit_htaccess.php';
 	}
 
 	/**
@@ -600,7 +600,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_report()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/report.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/report.php';
 	}
 
 	/**
@@ -611,7 +611,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_import_export()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/import_export.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/import_export.php';
 	}
 
 	/**
@@ -622,7 +622,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_crawler()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/crawler.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/crawler.php';
 	}
 
 	/**
@@ -633,7 +633,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_optimization()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/image_optimization.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/image_optimization.php';
 	}
 
 	/**
@@ -644,7 +644,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_debug_log()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/debug_log.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/debug_log.php';
 	}
 
 	/**
@@ -656,7 +656,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function show_display_installed()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/inc/show_display_installed.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/show_display_installed.php';
 	}
 
 	/**
@@ -667,7 +667,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function show_error_cookie()
 	{
-		require_once LSCWP_DIR . 'admin/tpl/inc/show_error_cookie.php' ;
+		require_once LSCWP_DIR . 'admin/tpl/inc/show_error_cookie.php';
 	}
 
 	/**
@@ -678,7 +678,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function cache_disabled_warning()
 	{
-		include LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ;
+		include LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php";
 	}
 
 	/**

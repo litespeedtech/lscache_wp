@@ -19,11 +19,11 @@ if (!defined('WPINC')) die;
 
 	<?php
 		if ( ! is_multisite() ) :
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php';
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php';
 
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.check_adv_file.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.login_cookie.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.check_adv_file.php';
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.login_cookie.php';
 		endif ;
 	?>
 

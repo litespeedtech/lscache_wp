@@ -194,7 +194,7 @@ class LiteSpeed_Cache_Activation
 		 * @since  2.0
 		 */
 		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
 		}
 
 		if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
@@ -303,7 +303,7 @@ class LiteSpeed_Cache_Activation
 
 		copy( LSCWP_DIR . 'includes/advanced-cache.php', $adv_cache_path ) ;
 
-		include $adv_cache_path ;
+		include $adv_cache_path;
 
 		$ret = defined( 'LSCACHE_ADV_CACHE' ) ;
 
@@ -337,9 +337,9 @@ class LiteSpeed_Cache_Activation
 		/**
 		 * @see wp-admin/update.php
 		 */
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' ;
-		include_once ABSPATH . 'wp-admin/includes/file.php' ;
-		include_once ABSPATH . 'wp-admin/includes/misc.php' ;
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+		include_once ABSPATH . 'wp-admin/includes/file.php';
+		include_once ABSPATH . 'wp-admin/includes/misc.php';
 
 		try {
 			ob_start() ;

@@ -5,6 +5,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <table><tbody>
 
-	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.purge_on_upgrade.php' ; ?>
+	<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.purge_on_upgrade.php'; ?>
 
 </tbody></table>

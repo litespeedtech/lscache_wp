@@ -33,7 +33,7 @@ $env_ref = $_report->get_env_ref() ;
 			<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
 		</span>
 
-		<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
+		<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php"; ?>
 
 		<h3 class="litespeed-title"><?php echo __('Report Summary', 'litespeed-cache') ; ?></h3>
 		<div class="litespeed-desc">

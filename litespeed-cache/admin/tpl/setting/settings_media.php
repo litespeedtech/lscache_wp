@@ -234,7 +234,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<?php
 		if ( ! is_multisite() ) :
 			// webp
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ;
+			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php';
 
 		endif ;
 	?>

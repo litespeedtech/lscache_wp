@@ -176,9 +176,9 @@ class LiteSpeed_Cache_CDN_Quic
 
 	private function _tpl( $tpl, $_progress = false, $data = false )
 	{
-		require LSCWP_DIR . "admin/tpl/inc/modal.header.php" ;
-		require LSCWP_DIR . "admin/tpl/api/$tpl.php" ;
-		require LSCWP_DIR . "admin/tpl/inc/modal.footer.php" ;
+		require LSCWP_DIR . "admin/tpl/inc/modal.header.php";
+		require LSCWP_DIR . "admin/tpl/api/$tpl.php";
+		require LSCWP_DIR . "admin/tpl/inc/modal.footer.php";
 	}
 
 	private function _api( $uri, $data = false, $method = 'POST', $no_hash = false )
