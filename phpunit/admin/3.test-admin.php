@@ -28,8 +28,8 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     }
 
     /**
-	 * Function for configurations
-	 */
+     * Function for configurations
+     */
     public static function get_instance(){
     	$plugin_name = "litespeed-cache";
 		$version = "v1.0.14.1";
@@ -39,15 +39,15 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     }
 
     /**
-	 * Function to check if the passed parameter is String or not.
-	 */
+     * Function to check if the passed parameter is String or not.
+     */
     protected static function isString($string) {
     	if(!is_string($string)) return false;
     		
     	return true;
   	}
 
-  	/**
+	/**
 	 * Test case for enqueue style LiteSpeed_Cache_Admin::__construct
 	 */
 	public function test_construct()
@@ -79,7 +79,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$this->assertEquals( 10, $plugin_action_links );
 	}
 
-  	/**
+	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::build_lscwpctrl_url
 	 * @param string $val the LSCWP_CTRL action to do in the url
 	 * @param string $nonce the nonce to use

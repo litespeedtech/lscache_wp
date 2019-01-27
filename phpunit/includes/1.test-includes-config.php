@@ -27,17 +27,17 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
          }
     }
 
-     /**
-	 * Function for instance
-	 */
+    /**
+     * Function for instance
+     */
     public static function get_instance(){
 		$instance = new LiteSpeed_Cache_Config();
 		return $instance;
     }
 
     /**
-	 * Function for configurations
-	 */
+     * Function for configurations
+     */
     public static function converttoArray($object){
     	
     	if(is_object($object)) $array = (array) $object;
@@ -45,15 +45,15 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
     }
 
     /**
-	 * Function to check if the passed parameter is String or not.
-	 */
+     * Function to check if the passed parameter is String or not.
+     */
     protected static function isString($string) {
     	if(!is_string($string)) return false;
     		
     	return true;
   	}
 
-  	/**
+	/**
 	 * Test case for enqueue style LiteSpeed_Cache_Config::__construct
 	 */
 	public function test_construct()
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_site_options
 	 * @access public
-	  * @return array returns the current site options
+	 * @return array returns the current site options
 	 */
 	public function test_get_site_options()
 	{

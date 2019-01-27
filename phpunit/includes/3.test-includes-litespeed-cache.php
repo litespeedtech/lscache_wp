@@ -12,7 +12,7 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-ca
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
 class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
-	/**
+    /**
      * Function to invoke a Private method
      */
     protected static function invokeMethod($className, $methodName, array $parameters = array()) 
@@ -103,7 +103,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         }
     }*/
 
-     /**
+    /**
      * Test case for  LiteSpeed_Cache::get_network_count
      * @access private
      * @return mixed the count on success, false on failure
@@ -345,10 +345,10 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::prefix_apply
-      * @access private
-      * @staticvar string $prefix The prefix to use for each tag.
-      * @param string $tag the tag to prefix
-      * @return string the amended tag
+     * @access private
+     * @staticvar string $prefix The prefix to use for each tag.
+     * @param string $tag the tag to prefix
+     * @return string the amended tag
      */
     public function test_prefix_apply()
     {
@@ -501,7 +501,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         }       
     }
 
-     /**
+    /**
      * Test case for  LiteSpeed_Cache::esi_admin_bar_render
      * @echo string ESI.
      */

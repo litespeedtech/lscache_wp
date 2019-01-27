@@ -28,15 +28,15 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
     }
 
     /**
-	 * Function to check if the passed parameter is String or not.
-	 */
+     * Function to check if the passed parameter is String or not.
+     */
     protected static function isString($string) {
     	if(!is_string($string)) return false;
     		
     	return true;
   	}
 
-  	/**
+	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Display::admin_footer_text
 	 * @param  string $footer_text
 	 * @return string
@@ -70,7 +70,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 		$this->assertNull($null);
 	}
 
-  	/**
+	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::check_license
 	 * @return String
 	 */

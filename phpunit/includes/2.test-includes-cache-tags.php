@@ -11,9 +11,9 @@
 class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
 
-     /**
-	 * Function for instance
-	 */
+    /**
+     * Function for instance
+     */
     public static function get_instance(){
 		$instance = new LiteSpeed_Cache_Tags();
 		return $instance;
@@ -68,7 +68,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
         }
     }
 
-     /**
+    /**
      * test case for LiteSpeed_Cache_Config::get_vary_cookies
      * @access public
      * @param mixed $tag a string or array of cache tags to add to the current list
@@ -92,7 +92,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
         }
     }
 
-     /**
+    /**
      * test case for LiteSpeed_Cache_Config::is_noncacheable
      * @access public
      * @return boolean true if the current page was deemed non-cacheable,

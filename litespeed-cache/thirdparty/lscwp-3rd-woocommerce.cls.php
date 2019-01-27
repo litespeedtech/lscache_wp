@@ -536,7 +536,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.0.5
 	 * @since 1.6.3 Removed static
 	 * @access public
-     * @param string $esi_id 		the ESI block id if a request is an ESI request
+	 * @param string $esi_id 		the ESI block id if a request is an ESI request
 	 * @return boolean           	true if cacheable, false if not
 	 */
 	public function set_control($esi_id)

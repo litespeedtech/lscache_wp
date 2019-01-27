@@ -28,15 +28,15 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
     }
 
     /**
-	 * Function to check if the passed parameter is String or not.
-	 */
+     * Function to check if the passed parameter is String or not.
+     */
     protected static function isString($string) {
     	if(!is_string($string)) return false;
     		
     	return true;
   	}
 
-  	/**
+	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_home_path
 	 * @return string
 	 */
@@ -199,7 +199,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_backup
- 	 * @param String $path The .htaccess file path.
+	 * @param String $path The .htaccess file path.
 	 * @return boolean true on success, else false on failure
 	 */
 	public function h_test_file_backup()
@@ -487,7 +487,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::clear_rules
-	  * @param string $wrapper a wrapper to a specific rule to match
+	 * @param string $wrapper a wrapper to a specific rule to match
 	 */
 	public function test_clear_rules()
 	{
