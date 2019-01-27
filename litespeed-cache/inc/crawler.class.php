@@ -122,7 +122,7 @@ class LiteSpeed_Cache_Crawler
 	 * Append urls to current list.
 	 *
 	 * @since    1.1.0
-	 * @param  array $list The url list needs to be appended
+	 * @param array $list The url list needs to be appended
 	 */
 	public function append_blacklist( $list )
 	{
@@ -170,9 +170,9 @@ class LiteSpeed_Cache_Crawler
 	 * Parse custom sitemap and return urls.
 	 *
 	 * @since    1.1.1
-	 * @param  string  $sitemap       The url set map address
-	 * @param  bool $return_detail If return url list
-	 * @return bollean|array          Url list or if is a sitemap
+	 * @param string $sitemap The url set map address
+	 * @param bool $return_detail If return url list
+	 * @return bollean|array Url list or if is a sitemap
 	 */
 	public function parse_custom_sitemap($sitemap, $return_detail = true)
 	{
@@ -611,7 +611,7 @@ class LiteSpeed_Cache_Crawler
 	 * Output info and exit.
 	 *
 	 * @since    1.1.0
-	 * @param  string $error Error info
+	 * @param string $error Error info
 	 */
 	protected function output($msg)
 	{

@@ -385,7 +385,7 @@ class LiteSpeed_Cache_Admin_API
 	 * Post data to LiteSpeed cloud server.
 	 *
 	 * @since  1.6
-	 * @return  string | array Must return an error msg string or json array
+	 * @return string | array Must return an error msg string or json array
 	 */
 	private function _post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
 	{

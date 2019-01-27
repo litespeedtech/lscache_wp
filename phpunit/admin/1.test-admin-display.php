@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Display::admin_footer_text.
-	 * @param  string $footer_text
+	 * @param string $footer_text
 	 * @return string
 	 */
 	public function test_admin_footer_text()

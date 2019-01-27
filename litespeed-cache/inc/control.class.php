@@ -700,7 +700,7 @@ class LiteSpeed_Cache_Control
 	 * Check if current request has qs excluded setting.
 	 *
 	 * @since  1.3
-	 * @param  array  $excludes QS excludes setting
+	 * @param array $excludes QS excludes setting
 	 * @return bool|string False if not excluded, otherwise the hit qs list
 	 */
 	private function _is_qs_excluded( $excludes )

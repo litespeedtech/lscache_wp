@@ -818,7 +818,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.0
 	 * @param array $purge_tags the purge tags to apply the prefix to
-	 * @param  bool $is_private if is private tags or not
+	 * @param bool $is_private if is private tags or not
 	 * @return array the array of built purge tags
 	 */
 	private function _append_prefix( $purge_tags, $is_private = false )
@@ -989,7 +989,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.5
 	 * @param string $val The filter value
-	 * @return string     The filter value
+	 * @return string The filter value
 	 */
 	public static function filter_with_purge_all( $val )
 	{

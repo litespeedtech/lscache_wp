@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Admin_Report
 	 *
 	 * @since 1.0.12
 	 * @param mixed $options Array of options to output. If null, will skip
-	 * the options section.
+	 *                       the options section.
 	 * @return string the built report
 	 */
 	public function generate_environment_report($options = null)

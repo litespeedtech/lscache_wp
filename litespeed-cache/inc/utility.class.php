@@ -269,8 +269,8 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.2.2
 	 * @since  1.4 Moved from optimize to utility
-	 * @param  string $str
-	 * @return array  All the attributes
+	 * @param string $str
+	 * @return array All the attributes
 	 */
 	public static function parse_attr( $str )
 	{
@@ -369,8 +369,8 @@ class LiteSpeed_Cache_Utility
 	 * Convert URI to URL.
 	 *
 	 * @since  1.3
-	 * @param  string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
-	 * @return  string http://www.example.com/subfolder/xx/xx.html
+	 * @param string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
+	 * @return string http://www.example.com/subfolder/xx/xx.html
 	 */
 	public static function uri2url( $uri )
 	{
@@ -409,8 +409,8 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * NOTE: for subfolder home_url, will keep subfolder part (strip nothing but scheme and host)
 	 *
-	 * @param  string $url
-	 * @return string      Relative URL, start with /
+	 * @param string $url
+	 * @return string Relative URL, start with /
 	 */
 	public static function make_relative( $url )
 	{
@@ -468,8 +468,8 @@ class LiteSpeed_Cache_Utility
 	 * Array map one textarea to sanitize the url.
 	 *
 	 * @since  1.3
-	 * @param  string $content
-	 * @param  bool $type String handler type
+	 * @param string $content
+	 * @param bool $type String handler type
 	 * @return string
 	 */
 	public static function sanitize_lines( $arr, $type = null )

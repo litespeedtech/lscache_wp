@@ -298,7 +298,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::build_vary_headers.
      * @global $post
      * @return mixed false if the user has the postpass cookie. Empty string
-     * if the post is not password protected. Vary header otherwise.
+     *               if the post is not password protected. Vary header otherwise.
      */
     public function test_build_vary_headers()
     {
@@ -318,7 +318,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param bool $showhdr whether the show header command was selected
      * @param bool $stale whether to make the purge headers stale
      * @return int the integer corresponding to the selected
-     * cache control value
+     *             cache control value
      */
     public function test_validate_mode()
     {

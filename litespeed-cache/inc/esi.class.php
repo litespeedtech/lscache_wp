@@ -204,10 +204,10 @@ class LiteSpeed_Cache_ESI
 	 * @param array $params the esi parameters
 	 * @param string $control the cache control attribute if any
 	 * @param bool $silence If generate wrapper comment or not
-	 * @param bool $preserved 	if this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered
-	 * @param bool $svar  		If store the value in memory or not, in memory wil be faster
-	 * @param bool $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
-	 * @return bool|string    	false on error, the output otherwise
+	 * @param bool $preserved if this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered
+	 * @param bool $svar If store the value in memory or not, in memory wil be faster
+	 * @param bool $inline_val If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
+	 * @return bool|string false on error, the output otherwise
 	 */
 	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 	{

@@ -304,7 +304,7 @@ eot;
 	 * Only do for main page. Do NOT do for esi or dynamic content.
 	 *
 	 * @since  1.4
-	 * @return  string The buffer
+	 * @return string The buffer
 	 */
 	public static function finalize( $content )
 	{
@@ -487,7 +487,7 @@ eot;
 	 * Parse img src.
 	 *
 	 * @since  1.4
-	 * @return array  All the src & related raw html list
+	 * @return array All the src & related raw html list
 	 */
 	private function _parse_img()
 	{
@@ -575,7 +575,7 @@ eot;
 	 * Parse iframe src.
 	 *
 	 * @since  1.4
-	 * @return array  All the src & related raw html list
+	 * @return array All the src & related raw html list
 	 */
 	private function _parse_iframe()
 	{
@@ -697,7 +697,7 @@ eot;
 	 * Hook to wp_get_attachment_image_src.
 	 *
 	 * @since  1.6.2
-	 * @param  array $img The URL of the attachment image src, the width, the height
+	 * @param array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
 	public function webp_attach_img_src( $img )
@@ -713,7 +713,7 @@ eot;
 	 * Try to replace img url.
 	 *
 	 * @since  1.6.2
-	 * @param  string $url
+	 * @param string $url
 	 * @return string
 	 */
 	public function webp_url( $url )
@@ -728,7 +728,7 @@ eot;
 	 * Hook to replace WP responsive images.
 	 *
 	 * @since  1.6.2
-	 * @param  array $srcs
+	 * @param array $srcs
 	 * @return array
 	 */
 	public function webp_srcset( $srcs )

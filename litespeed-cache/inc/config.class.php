@@ -297,8 +297,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in vary group settings.
 	 *
 	 * @since 1.2.0
-	 * @param  string $role The user role
-	 * @return int       The set value if already set
+	 * @param string $role The user role
+	 * @return int The set value if already set
 	 */
 	public function in_vary_group( $role )
 	{
@@ -321,8 +321,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in exclude optimization group settings.
 	 *
 	 * @since 1.6
-	 * @param  string $role The user role
-	 * @return int       The set value if already set
+	 * @param string $role The user role
+	 * @return int The set value if already set
 	 */
 	public function in_exclude_optimization_roles( $role = null )
 	{
@@ -342,8 +342,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in exclude cache group settings.
 	 *
 	 * @since 1.6.2
-	 * @param  string $role The user role
-	 * @return int       The set value if already set
+	 * @param string $role The user role
+	 * @return int The set value if already set
 	 */
 	public function in_exclude_cache_roles( $role = null )
 	{

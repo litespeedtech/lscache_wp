@@ -92,7 +92,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
     /**
      * test case for LiteSpeed_Cache_Config::is_noncacheable.
      * @return bool true if the current page was deemed non-cacheable,
-     * false otherwise
+     *              false otherwise
      */
     public function test_is_noncacheable() 
     {
@@ -115,7 +115,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
     /**
      * test case for LiteSpeed_Cache_Config::is_mobile.
      * @return bool true if the current page was deemed mobile,
-     * false otherwise
+     *              false otherwise
      */
     public function test_is_mobile() 
     {

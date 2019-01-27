@@ -219,8 +219,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Get corresponding htaccess path.
 	 *
 	 * @since 1.1.0
-	 * @param  string $kind Frontend or backend
-	 * @return string       Path
+	 * @param string $kind Frontend or backend
+	 * @return string Path
 	 */
 	public function htaccess_path($kind = 'frontend')
 	{
@@ -436,9 +436,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 	/**
 	 * Get rewrite rules based on tags.
-	 * @param  string $cond The tag to be used
-	 * @param  string $kind Frontend or backend .htaccess file
-	 * @return mixed       Rules
+	 * @param string $cond The tag to be used
+	 * @param string $kind Frontend or backend .htaccess file
+	 * @return mixed Rules
 	 */
 	private function _get_rule_by($cond, $kind = 'frontend')
 	{
@@ -563,8 +563,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Generate rewrite rules based on settings.
 	 *
 	 * @since  1.3
-	 * @param  array $cfg  The settings to be used for rewrite rule
-	 * @return array      Rules array
+	 * @param array $cfg The settings to be used for rewrite rule
+	 * @return array Rules array
 	 */
 	private function _generate_rules( $cfg, $disable_lscache_detail_rules = false )
 	{
@@ -749,8 +749,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * wrap rules with module on info.
 	 *
 	 * @since  1.1.5
-	 * @param  array  $rules
-	 * @return array        wrapped rules with module info
+	 * @param array $rules
+	 * @return array wrapped rules with module info
 	 */
 	private function _wrap_do_no_edit( $rules )
 	{
@@ -772,8 +772,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Write to htaccess with rules.
 	 *
 	 * @since  1.1.0
-	 * @param  array $rules
-	 * @param  string $kind  which htaccess
+	 * @param array $rules
+	 * @param string $kind which htaccess
 	 */
 	private function _insert_wrapper( $rules = array(), $kind = false, $marker = false )
 	{
@@ -872,8 +872,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Get existing rewrite rules.
 	 *
 	 * @since  1.3
-	 * @param  string $kind Frontend or backend .htaccess file
-	 * @return bool|array       False if failed to read, rules array otherwise
+	 * @param string $kind Frontend or backend .htaccess file
+	 * @return bool|array False if failed to read, rules array otherwise
 	 */
 	private function _extract_rules( $kind = 'frontend' )
 	{
@@ -893,9 +893,9 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Output the msg with rules plain data for manual insert.
 	 *
 	 * @since  1.1.5
-	 * @param  string  $file
-	 * @param  array  $rules
-	 * @return string        final msg to output
+	 * @param string $file
+	 * @param array $rules
+	 * @return string final msg to output
 	 */
 	private function _rewrite_codes_msg( $file, $rules, $marker = false )
 	{
@@ -909,8 +909,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Generate rules plain data for manual insert.
 	 *
 	 * @since  1.1.5
-	 * @param  array  $rules
-	 * @return array        final rules data for htaccess
+	 * @param array $rules
+	 * @return array final rules data for htaccess
 	 */
 	private function _wrap_rules_with_marker( $rules, $marker = false )
 	{
@@ -934,7 +934,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Clear the rules file of any changes added by the plugin specifically.
 	 *
 	 * @since 1.0.4
-	 * @param  string  $clear_all	deactivation will give true, so clear all rules, otherwise only clear lscache related rules
+	 * @param string $clear_all deactivation will give true, so clear all rules, otherwise only clear lscache related rules
 	 */
 	public function clear_rules()
 	{

@@ -1076,7 +1076,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates settings related to rewrite rules.
 	 *
 	 * @since 1.3
-	 * @return  array New options related to rewrite rule
+	 * @return array New options related to rewrite rule
 	 */
 	private function _validate_rewrite_settings()
 	{

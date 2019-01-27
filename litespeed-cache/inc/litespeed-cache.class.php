@@ -519,7 +519,7 @@ class LiteSpeed_Cache
 	 * Usually this is called after send_headers() if following orignal WP process
 	 *
 	 * @since 1.1.5
-	 * @param  string $buffer
+	 * @param string $buffer
 	 * @return string
 	 */
 	public function send_headers_force( $buffer )

@@ -205,10 +205,10 @@ class Litespeed_File
 	 * Replaces existing marked info. Retains surrounding
 	 * data. Creates file if none exists.
 	 *
-	 * @param string       $filename  filename to alter
-	 * @param string       $marker    the marker to alter
+	 * @param string $filename filename to alter
+	 * @param string $marker the marker to alter
 	 * @param array|string $insertion the new content to insert
-	 * @param bool 	       $prepend prepend insertion if not exist
+	 * @param bool $prepend prepend insertion if not exist
 	 * @return bool true on write success, false on failure
 	 */
 	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false)
@@ -331,10 +331,10 @@ class Litespeed_File
 	 * Replaces existing marked info. Retains surrounding
 	 * data. Creates file if none exists.
 	 *
-	 * @param string       $filename  filename to alter
-	 * @param string       $marker    the marker to alter
+	 * @param string $filename filename to alter
+	 * @param string $marker the marker to alter
 	 * @param array|string $insertion the new content to insert
-	 * @param bool 	       $prepend prepend insertion if not exist
+	 * @param bool $prepend prepend insertion if not exist
 	 * @return bool true on write success, false on failure
 	 */
 	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)

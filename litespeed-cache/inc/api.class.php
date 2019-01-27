@@ -317,7 +317,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Purge single action.
 	 *
 	 * @since 1.3
-	 * @param  int $pid The ID of a post
+	 * @param int $pid The ID of a post
 	 */
 	public static function purge_post( $pid )
 	{
@@ -338,8 +338,8 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Build a switch div html snippet.
 	 *
 	 * @since 1.1.3
-	 * @param  string $id
-	 * @param  bool $return   Return the html or echo it
+	 * @param string $id
+	 * @param bool $return Return the html or echo it
 	 */
 	public static function build_switch( $id, $checked = null, $return = false )
 	{

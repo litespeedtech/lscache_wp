@@ -113,7 +113,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_tag_prefix.
 	 * @param array $input the configurations selected by the admin when
-	 *     clicking save
+	 *                     clicking save
 	 * @param array $options the current configuration options
 	 * @return mixed true on success, error message otherwise
 	 */
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_plugin_settings.
 	 * @param array $input the configurations selected by the admin when
-	 *     clicking save
+	 *                     clicking save
 	 * @return array the updated configuration options
 	 */
 	public function test_validate_plugin_settings()

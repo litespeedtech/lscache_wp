@@ -227,7 +227,7 @@ class LiteSpeed_Cache_CDN
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore.
 	 *
 	 * @since  1.2.3
-	 * @return  string The content that is after optimization
+	 * @return string The content that is after optimization
 	 */
 	public static function finalize( $content )
 	{
@@ -358,7 +358,7 @@ class LiteSpeed_Cache_CDN
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
-	 * @param  array $img The URL of the attachment image src, the width, the height
+	 * @param array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
 	public function attach_img_src( $img )
@@ -413,7 +413,7 @@ class LiteSpeed_Cache_CDN
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
-	 * @param  array $srcs
+	 * @param array $srcs
 	 * @return array
 	 */
 	public function srcset( $srcs )
@@ -433,8 +433,8 @@ class LiteSpeed_Cache_CDN
 	 * Replace URL to CDN URL.
 	 *
 	 * @since  1.2.3
-	 * @param  string $url
-	 * @return string        Replaced URL
+	 * @param string $url
+	 * @return string Replaced URL
 	 */
 	public function rewrite( $url, $mapping_kind, $postfix = false )
 	{

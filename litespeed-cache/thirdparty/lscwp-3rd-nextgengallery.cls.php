@@ -49,7 +49,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an image is added, need to purge all pages that displays its gallery.
 	 *
 	 * @since	1.0.5
-	 * @param	string	$image	the image object added
+	 * @param string $image the image object added
 	 */
 	public static function add_image($image)
 	{
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When a gallery is updated, need to purge all pages that display the gallery.
 	 *
 	 * @since 1.0.5
-	 * @param	int		$gid	the gallery id of the gallery updated
+	 * @param int $gid the gallery id of the gallery updated
 	 */
 	public static function update_gallery($gid)
 	{
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an album is updated, need to purge all pages that display the album.
 	 *
 	 * @since 1.0.5
-	 * @param	int		$aid	the album id of the album updated
+	 * @param int $aid the album id of the album updated
 	 */
 	public static function update_album($aid)
 	{

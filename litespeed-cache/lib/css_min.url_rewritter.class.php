@@ -31,17 +31,17 @@ class UriRewriter
      * @param string $currentDir the directory of the current CSS file
      *
      * @param string $docRoot the document root of the web site in which
-     * the CSS file resides (default = $_SERVER['DOCUMENT_ROOT'])
+     *                        the CSS file resides (default = $_SERVER['DOCUMENT_ROOT'])
      *
      * @param array $symlinks (default = array()) If the CSS file is stored in
-     * a symlink-ed directory, provide an array of link paths to
-     * target paths, where the link paths are within the document root. Because
-     * paths need to be normalized for this to work, use "//" to substitute
-     * the doc root in the link paths (the array keys). E.g.:
-     * <code>
-     * array('//symlink' => '/real/target/path') // unix
-     * array('//static' => 'D:\\staticStorage')  // Windows
-     * </code>
+     *                        a symlink-ed directory, provide an array of link paths to
+     *                        target paths, where the link paths are within the document root. Because
+     *                        paths need to be normalized for this to work, use "//" to substitute
+     *                        the doc root in the link paths (the array keys). E.g.:
+     *                        <code>
+     *                        array('//symlink' => '/real/target/path') // unix
+     *                        array('//static' => 'D:\\staticStorage')  // Windows
+     *                        </code>
      *
      * @return string
      */
@@ -143,13 +143,13 @@ class UriRewriter
      * @param string $realDocRoot realpath of the site document root
      *
      * @param array $symlinks (default = array()) If the file is stored in
-     * a symlink-ed directory, provide an array of link paths to
-     * real target paths, where the link paths "appear" to be within the document
-     * root. E.g.:
-     * <code>
-     * array('/home/foo/www/not/real/path' => '/real/target/path') // unix
-     * array('C:\\htdocs\\not\\real' => 'D:\\real\\target\\path')  // Windows
-     * </code>
+     *                        a symlink-ed directory, provide an array of link paths to
+     *                        real target paths, where the link paths "appear" to be within the document
+     *                        root. E.g.:
+     *                        <code>
+     *                        array('/home/foo/www/not/real/path' => '/real/target/path') // unix
+     *                        array('C:\\htdocs\\not\\real' => 'D:\\real\\target\\path')  // Windows
+     *                        </code>
      *
      * @return string
      */

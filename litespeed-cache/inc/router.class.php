@@ -538,7 +538,7 @@ class LiteSpeed_Cache_Router
 	 * Verify sapi passive callback.
 	 *
 	 * @since 1.5
-	 * @param  string $action
+	 * @param string $action
 	 * @return bool
 	 */
 	private function _verify_sapi_passive( $action )
@@ -557,7 +557,7 @@ class LiteSpeed_Cache_Router
 	 * Verify sapi aggressive callback.
 	 *
 	 * @since 1.6
-	 * @param  string $action
+	 * @param string $action
 	 * @return bool
 	 */
 	private function _verify_sapi_aggressive( $action )
@@ -576,7 +576,7 @@ class LiteSpeed_Cache_Router
 	 * Verify nonce.
 	 *
 	 * @since 1.1.0
-	 * @param  string $action
+	 * @param string $action
 	 * @return bool
 	 */
 	private function verify_nonce( $action )
@@ -593,7 +593,7 @@ class LiteSpeed_Cache_Router
 	 * Check if the ip is in the range.
 	 *
 	 * @since 1.1.0
-	 * @param  string $ip_list IP list
+	 * @param string $ip_list IP list
 	 * @return bool
 	 */
 	private function ip_access( $ip_list )

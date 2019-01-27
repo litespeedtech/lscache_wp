@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Optimize
 	 * Check if the request is for static file.
 	 *
 	 * @since  1.2.2
-	 * @return  string The static file content
+	 * @return string The static file content
 	 */
 	private function _static_request_check()
 	{
@@ -270,7 +270,7 @@ class LiteSpeed_Cache_Optimize
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore.
 	 *
 	 * @since  1.2.2
-	 * @return  string The content that is after optimization
+	 * @return string The content that is after optimization
 	 */
 	public static function finalize( $content )
 	{
@@ -916,7 +916,7 @@ class LiteSpeed_Cache_Optimize
 	 * Parse js src.
 	 *
 	 * @since  1.2.2
-	 * @return array  All the src & related raw html list
+	 * @return array All the src & related raw html list
 	 */
 	private function _parse_js()
 	{
@@ -980,7 +980,7 @@ class LiteSpeed_Cache_Optimize
 	 * Parse css src and remove to-be-removed css.
 	 *
 	 * @since  1.2.2
-	 * @return array  All the src & related raw html list
+	 * @return array All the src & related raw html list
 	 */
 	private function _handle_css()
 	{
@@ -1067,8 +1067,8 @@ class LiteSpeed_Cache_Optimize
 	 * Replace css to async loaded css.
 	 *
 	 * @since  1.3
-	 * @param  array $html_list Orignal css array
-	 * @return array            (array)css_async_list
+	 * @param array $html_list Orignal css array
+	 * @return array (array)css_async_list
 	 */
 	private function _async_css_list( $html_list )
 	{

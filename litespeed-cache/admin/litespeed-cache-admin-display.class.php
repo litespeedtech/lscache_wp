@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Load LiteSpeed assets.
 	 *
 	 * @since    1.1.0
-	 * @param  array $hook WP hook
+	 * @param array $hook WP hook
 	 */
 	public function load_assets($hook)
 	{
@@ -124,7 +124,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Output litespeed form info.
 	 *
 	 * @since    1.1.0
-	 * @param  string $action
+	 * @param string $action
 	 */
 	public function form_action( $action, $type = false )
 	{
@@ -283,7 +283,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Change the admin footer text on LiteSpeed Cache admin pages.
 	 *
 	 * @since  1.0.13
-	 * @param  string $footer_text
+	 * @param string $footer_text
 	 * @return string
 	 */
 	public function admin_footer_text($footer_text)
@@ -353,8 +353,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * Get the error description.
 	 *
 	 * @since 1.1.0
-	 * @param  init $err_code
-	 * @param  mixed $args
+	 * @param init $err_code
+	 * @param mixed $args
 	 * @return mixed String or false
 	 */
 	public static function get_error($err_code, $args = null)
@@ -384,7 +384,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @param int $err_code the error code to retrieve
 	 * @param mixed $args null if no arguments, an array if multiple arguments,
-	 * else a single argument
+	 *                    else a single argument
 	 */
 	public static function add_error($err_code, $args = null)
 	{
@@ -442,9 +442,9 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.7
 	 * @param string $color one of the available constants provided by this
-	 *     class
+	 *                      class
 	 * @param mixed $msg may be a string for a single message or an array for
-	 *     multiple
+	 *                   multiple
 	 */
 	public static function add_notice($color, $msg)
 	{
@@ -652,10 +652,10 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
-	 * @param  string $id
-	 * @param  string $val Value of input
-	 * @param  bool $disabled If this input is disabled or not
-	 * @param  int $cols The width of textarea
+	 * @param string $id
+	 * @param string $val Value of input
+	 * @param bool $disabled If this input is disabled or not
+	 * @param int $cols The width of textarea
 	 */
 	public function build_textarea( $id, $cols = false, $val = null, $disabled = false, $cls = '' )
 	{
@@ -686,8 +686,8 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.5
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
-	 * @param  string $id
-	 * @param  int $cols The width of textarea
+	 * @param string $id
+	 * @param int $cols The width of textarea
 	 */
 	public function build_textarea2( $id, $cols = false )
 	{
@@ -702,13 +702,13 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
-	 * @param  string $id
-	 * @param  string $style     Appending styles
-	 * @param  bool $readonly If is readonly
-	 * @param  string $id_attr   ID for this field
-	 * @param  string $val       Field value
-	 * @param  string $attrs     Additional attributes
-	 * @param  string $type      Input type
+	 * @param string $id
+	 * @param string $style Appending styles
+	 * @param bool $readonly If is readonly
+	 * @param string $id_attr ID for this field
+	 * @param string $val Field value
+	 * @param string $attrs Additional attributes
+	 * @param string $type Input type
 	 */
 	public function build_input( $id, $style = false, $val = null, $id_attr = null, $attrs = '', $type = 'text', $readonly = false )
 	{
@@ -737,9 +737,9 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a checkbox html snippet.
 	 *
 	 * @since 1.1.0
-	 * @param  string $id
-	 * @param  string $title
-	 * @param  bool $checked
+	 * @param string $id
+	 * @param string $title
+	 * @param bool $checked
 	 */
 	public function build_checkbox($id, $title, $checked, $value = 1 )
 	{
@@ -804,10 +804,10 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 removed param $disable
-	 * @param  string $id
-	 * @param  bool $return   Return the html or echo it
-	 * @param  bool $checked  If the value is on
-	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
+	 * @param string $id
+	 * @param bool $return Return the html or echo it
+	 * @param bool $checked If the value is on
+	 * @param string $id_attr ID for this field, set to true if want to use a not specified unique value
 	 */
 	public function build_switch($id, $checked = null, $return = false, $id_attr = null)
 	{
@@ -830,11 +830,11 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a radio input html codes and output.
 	 *
 	 * @since 1.1.0
-	 * @param  string $id
-	 * @param  string $val     Default value of this input
-	 * @param  string $txt     Title of this input
-	 * @param  bool $checked   If checked or not
-	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
+	 * @param string $id
+	 * @param string $val Default value of this input
+	 * @param string $txt Title of this input
+	 * @param bool $checked If checked or not
+	 * @param string $id_attr ID for this field, set to true if want to use a not specified unique value
 	 */
 	public function build_radio($id, $val, $txt = null, $checked = null, $id_attr = null)
 	{
@@ -878,7 +878,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display default value.
 	 *
 	 * @since  1.1.1
-	 * @param  string $id The setting tag
+	 * @param string $id The setting tag
 	 */
 	public function recommended( $id, $is_item = false )
 	{

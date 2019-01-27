@@ -144,11 +144,11 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_get_ifmodule_block.
 	 * @param string $content the content to search
 	 * @param int $off_begin Will be set to the beginning offset. Starts
-	 * just after the opening <IfModule>.
+	 *                       just after the opening <IfModule>.
 	 * @param int $off_end Will be set to the ending offset. Starts just
-	 * before the closing </IfModule>.
+	 *                     before the closing </IfModule>.
 	 * @return bool|string False if not found, True if found. Error message if
-	 * it failed.
+	 *                     it failed.
 	 */
 	public function test_file_get_ifmodule_block()
 	{
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_split.
 	 * @param string $content The content to search
 	 * @param string $buf the portion before and including the beginning of
-	 * the section
+	 *                    the section
 	 * @param string $after the content after the relevant section
 	 * @return mixed false on failure, the haystack on success
 	 */
@@ -320,7 +320,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
-	 *	original content sans favicon on success
+	 *               original content sans favicon on success
 	 */
 	public function test_set_favicon()
 	{
@@ -341,7 +341,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
-	 *	original content sans favicon on success
+	 *               original content sans favicon on success
 	 */
 	public function test_set_cache_resource()
 	{
@@ -378,7 +378,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
-	 *	original content sans favicon on success
+	 *               original content sans favicon on success
 	 */
 	public function test_check_rewrite()
 	{
@@ -412,7 +412,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $buf the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
-	 *	original content sans login cookie on success
+	 *               original content sans login cookie on success
 	 */
 	public function test_set_subdir_cookie()
 	{

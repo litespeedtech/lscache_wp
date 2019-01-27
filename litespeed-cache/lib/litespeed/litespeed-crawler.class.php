@@ -36,7 +36,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
-	 * @param  string $sitemap_file Sitemap file location
+	 * @param string $sitemap_file Sitemap file location
 	 */
 	public function __construct($sitemap_file)
 	{
@@ -88,7 +88,7 @@ class Litespeed_Crawler
 	 * Set domain ip.
 	 *
 	 * @since  1.1.1
-	 * @param  string $val The domain's direct ip
+	 * @param string $val The domain's direct ip
 	 */
 	public function set_domain_ip($val)
 	{
@@ -99,7 +99,7 @@ class Litespeed_Crawler
 	 * Set domain url.
 	 *
 	 * @since  1.1.0
-	 * @param  string $val The prefix url
+	 * @param string $val The prefix url
 	 */
 	public function set_base_url($val)
 	{
@@ -110,7 +110,7 @@ class Litespeed_Crawler
 	 * Set run delay.
 	 *
 	 * @since  1.1.0
-	 * @param  int $val Delay microseconds
+	 * @param int $val Delay microseconds
 	 */
 	public function set_run_delay($val)
 	{
@@ -121,7 +121,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
-	 * @param  int $val Run duration in seconds
+	 * @param int $val Run duration in seconds
 	 */
 	public function set_run_duration($val)
 	{
@@ -132,7 +132,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
-	 * @param  int $val Threads limit in a time
+	 * @param int $val Threads limit in a time
 	 */
 	public function set_threads_limit($val)
 	{
@@ -143,7 +143,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
-	 * @param  int $val Server load limit to be checked before crawling
+	 * @param int $val Server load limit to be checked before crawling
 	 */
 	public function set_load_limit($val)
 	{
@@ -154,7 +154,7 @@ class Litespeed_Crawler
 	 * Get if last crawler touched end.
 	 *
 	 * @since  1.1.0
-	 * @return bool|int		False or last ended time
+	 * @return bool|int False or last ended time
 	 */
 	public function get_done_status()
 	{
@@ -279,8 +279,8 @@ class Litespeed_Crawler
 	 * Run crawler.
 	 *
 	 * @since  1.1.0
-	 * @param  array $curlOptions Curl options
-	 * @return array              array('error', 'blacklist')
+	 * @param array $curlOptions Curl options
+	 * @return array array('error', 'blacklist')
 	 */
 	private function _do_running($curlOptions)
 	{
@@ -387,7 +387,7 @@ class Litespeed_Crawler
 	 * Terminate crawling.
 	 *
 	 * @since  1.1.0
-	 * @param  string $end_reason The reason to terminate
+	 * @param string $end_reason The reason to terminate
 	 */
 	protected function _terminate_running($end_reason)
 	{
@@ -414,8 +414,8 @@ class Litespeed_Crawler
 	 * Return crawler result.
 	 *
 	 * @since  1.1.0
-	 * @param  string $end_reason Reason to end
-	 * @return array             The results of returning
+	 * @param string $end_reason Reason to end
+	 * @return array The results of returning
 	 */
 	protected function _return($end_reason)
 	{
@@ -484,9 +484,9 @@ class Litespeed_Crawler
 	 * Send multi curl requests.
 	 *
 	 * @since  1.1.0
-	 * @param  array $urls    The url lists to send to
-	 * @param  array $options Curl options
-	 * @return array          Curl results
+	 * @param array $urls The url lists to send to
+	 * @param array $options Curl options
+	 * @return array Curl results
 	 */
 	protected function _multi_request($urls, $options)
 	{
@@ -526,7 +526,7 @@ class Litespeed_Crawler
 	 * Get curl_options.
 	 *
 	 * @since  1.1.0
-	 * @return   options array
+	 * @return options array
 	 */
 	private function _get_curl_options()
 	{
