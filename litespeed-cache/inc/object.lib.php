@@ -178,13 +178,19 @@ class WP_Object_Cache
 	private $_object_cache ;
 
 	private $_cache = array() ;
+
 	private $_cache_404 = array() ;
 
 	private $cache_total = 0 ;
+
 	private $count_hit_incall = 0 ;
+
 	private $count_hit = 0 ;
+
 	private $count_miss_incall = 0 ;
+
 	private $count_miss = 0 ;
+
 	private $count_set = 0 ;
 
 	private $blog_prefix ;

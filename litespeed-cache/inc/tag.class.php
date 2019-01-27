@@ -15,29 +15,49 @@ class LiteSpeed_Cache_Tag
 	private static $_instance ;
 
 	const TYPE_FEED = 'FD' ;
+
 	const TYPE_FRONTPAGE = 'F' ;
+
 	const TYPE_HOME = 'H' ;
+
 	const TYPE_PAGES = 'PGS' ;
+
 	const TYPE_PAGES_WITH_RECENT_POSTS = 'PGSRP' ;
+
 	const TYPE_ERROR = 'ERR.' ;
+
 	const TYPE_POST = 'Po.' ; // Post. Cannot use P, reserved for litemage.
+
 	const TYPE_ARCHIVE_POSTTYPE = 'PT.' ;
+
 	const TYPE_ARCHIVE_TERM = 'T.' ; //for is_category|is_tag|is_tax
+
 	const TYPE_AUTHOR = 'A.' ;
+
 	const TYPE_ARCHIVE_DATE = 'D.' ;
+
 	const TYPE_BLOG = 'B.' ;
+
 	const TYPE_LOGIN = 'L' ;
+
 	const TYPE_URL = 'URL.' ;
+
 	const TYPE_WIDGET = 'W.' ;
+
 	const TYPE_ESI = 'ESI.' ;
+
 	const TYPE_REST = 'REST' ;
+
 	const TYPE_LIST = 'LIST' ;
+
 	const TYPE_MIN = 'MIN' ;
 
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
 	private static $_tags = array() ;
+
 	private static $_tags_priv = array( 'tag_priv' ) ;
+
 	protected static $_error_status = false ;
 
 	/**
@@ -398,5 +418,4 @@ class LiteSpeed_Cache_Tag
 
 		return self::$_instance ;
 	}
-
 }

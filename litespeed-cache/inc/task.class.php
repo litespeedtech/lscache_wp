@@ -15,11 +15,17 @@ class LiteSpeed_Cache_Task
 	private static $_instance ;
 
 	const CRON_ACTION_HOOK_CRAWLER = 'litespeed_crawl_trigger' ;
+
 	const CRON_ACTION_HOOK_IMGOPTM = 'litespeed_imgoptm_trigger' ;
+
 	const CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST = 'litespeed_imgoptm_auto_request_trigger' ;
+
 	const CRON_ACTION_HOOK_CCSS = 'litespeed_ccss_trigger' ;
+
 	const CRON_ACTION_HOOK_IMG_PLACEHOLDER = 'litespeed_img_placeholder_trigger' ;
+
 	const CRON_FITLER_CRAWLER = 'litespeed_crawl_filter' ;
+
 	const CRON_FITLER = 'litespeed_filter' ;
 
 	/**
@@ -254,7 +260,6 @@ class LiteSpeed_Cache_Task
 		wp_clear_scheduled_hook( self::CRON_ACTION_HOOK_CRAWLER ) ;
 	}
 
-
 	/**
 	 * Get the current instance object.
 	 *
@@ -270,5 +275,4 @@ class LiteSpeed_Cache_Task
 
 		return self::$_instance ;
 	}
-
 }

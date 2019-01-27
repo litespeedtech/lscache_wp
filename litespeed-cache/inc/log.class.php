@@ -18,10 +18,13 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Log
 {
 	private static $_instance ;
+
 	private static $log_path ;
+
 	private static $_prefix ;
 
 	private static $_ignore_filters ;
+
 	private static $_ignore_part_filters ;
 
 	const TYPE_CLEAR_LOG = 'clear_log' ;

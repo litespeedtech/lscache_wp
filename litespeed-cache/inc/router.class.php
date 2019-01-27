@@ -17,12 +17,19 @@ class LiteSpeed_Cache_Router
 	private static $_instance ;
 
 	private static $_esi_enabled ;
+
 	private static $_is_ajax ;
+
 	private static $_is_logged_in ;
+
 	private static $_can_crawl ;
+
 	private static $_ip ;
+
 	private static $_action ;
+
 	private static $_is_admin_ip ;
+
 	private static $_frontend_path ;
 
 	/**

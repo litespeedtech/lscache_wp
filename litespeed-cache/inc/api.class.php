@@ -18,23 +18,39 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	const VERSION =	LiteSpeed_Cache::PLUGIN_VERSION ;
 
 	const TYPE_FEED =						LiteSpeed_Cache_Tag::TYPE_FEED ;
+
 	const TYPE_FRONTPAGE =					LiteSpeed_Cache_Tag::TYPE_FRONTPAGE ;
+
 	const TYPE_HOME =						LiteSpeed_Cache_Tag::TYPE_HOME ;
+
 	const TYPE_PAGES =						LiteSpeed_Cache_Tag::TYPE_PAGES ;
+
 	const TYPE_PAGES_WITH_RECENT_POSTS =	LiteSpeed_Cache_Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
+
 	const TYPE_ERROR =						LiteSpeed_Cache_Tag::TYPE_ERROR ;
+
 	const TYPE_POST =						LiteSpeed_Cache_Tag::TYPE_POST ;
+
 	const TYPE_ARCHIVE_POSTTYPE =			LiteSpeed_Cache_Tag::TYPE_ARCHIVE_POSTTYPE ;
+
 	const TYPE_ARCHIVE_TERM =				LiteSpeed_Cache_Tag::TYPE_ARCHIVE_TERM ;
+
 	const TYPE_AUTHOR =						LiteSpeed_Cache_Tag::TYPE_AUTHOR ;
+
 	const TYPE_ARCHIVE_DATE =				LiteSpeed_Cache_Tag::TYPE_ARCHIVE_DATE ;
+
 	const TYPE_BLOG =						LiteSpeed_Cache_Tag::TYPE_BLOG ;
+
 	const TYPE_LOGIN =						LiteSpeed_Cache_Tag::TYPE_LOGIN ;
+
 	const TYPE_URL =						LiteSpeed_Cache_Tag::TYPE_URL ;
+
 	const TYPE_WIDGET =						LiteSpeed_Cache_Tag::TYPE_WIDGET ;
 
 	const PARAM_NAME =				LiteSpeed_Cache_ESI::PARAM_NAME ;
+
 	const WIDGET_OPID_ESIENABLE =	LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
+
 	const WIDGET_OPID_TTL =			LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ;
 
 	/**
@@ -389,7 +405,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 		return LiteSpeed_Cache_Admin_Settings::parse_onoff( $input, $id ) ;
 	}
 
-
 	/**
 	 * Hook cacheable check to cache control
 	 *
@@ -618,5 +633,4 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	{
 		add_action('litespeed_init', $hook) ;
 	}
-
 }

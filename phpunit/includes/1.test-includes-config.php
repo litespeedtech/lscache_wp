@@ -9,7 +9,6 @@
  * Class LiteSpeed_Cache_Config test case.
  */
 class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
-
 	/**
 	 * Function to invoke a Private method
 	 */
@@ -121,7 +120,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 		$this->assertFalse($bool);
 	}
 
-
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_default_options
 	 * @access protected
@@ -193,7 +191,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 			$this->assertFalse($array);
 		}
 	}
-
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::wp_cache_var_setter

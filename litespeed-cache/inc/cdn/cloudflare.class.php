@@ -14,8 +14,11 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	private static $_instance ;
 
 	const TYPE_PURGE_ALL = 'purge_all' ;
+
 	const TYPE_GET_DEVMODE = 'get_devmode' ;
+
 	const TYPE_SET_DEVMODE_ON = 'set_devmode_on' ;
+
 	const TYPE_SET_DEVMODE_OFF = 'set_devmode_off' ;
 
 	/**
@@ -285,5 +288,4 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
 		return self::$_instance ;
 	}
-
 }

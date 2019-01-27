@@ -20,36 +20,65 @@ class LiteSpeed_Cache_Admin_Rules
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor' ;
 
 	private $frontend_htaccess = null ;
+
 	private $backend_htaccess = null ;
+
 	private $theme_htaccess = null ;// Not used yet
+
 	private $frontend_htaccess_readable = false ;
+
 	private $frontend_htaccess_writable = false ;
+
 	private $backend_htaccess_readable = false ;
+
 	private $backend_htaccess_writable = false ;
+
 	private $theme_htaccess_readable = false ;
+
 	private $theme_htaccess_writable = false ;
 
 	const LS_MODULE_START = '<IfModule LiteSpeed>' ;
+
 	const EXPIRES_MODULE_START = '<IfModule mod_expires.c>' ;
+
 	const LS_MODULE_END = '</IfModule>' ;
+
 	const LS_MODULE_REWRITE_START = '<IfModule mod_rewrite.c>' ;
+
 	const REWRITE_ON = 'RewriteEngine on' ;
+
 	private static $LS_MODULE_REWRITE_ON ;
+
 	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##" ;
+
 	const MARKER = 'LSCACHE' ;
+
 	const MARKER_NONLS = 'NON_LSCACHE' ;
+
 	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE' ;
+
 	const MARKER_MOBILE = '### marker MOBILE' ;
+
 	const MARKER_NOCACHE_COOKIES = '### marker NOCACHE COOKIES' ;
+
 	const MARKER_NOCACHE_USER_AGENTS = '### marker NOCACHE USER AGENTS' ;
+
 	const MARKER_CACHE_RESOURCE = '### marker CACHE RESOURCE' ;
+
 	const MARKER_FAVICON = '### marker FAVICON' ;
+
 	const MARKER_BROWSER_CACHE = '### marker BROWSER CACHE' ;
+
 	const MARKER_MINIFY = '### marker MINIFY' ;
+
 	const MARKER_CORS = '### marker CORS' ;
+
 	const MARKER_WEBP = '### marker WEBP' ;
+
 	const MARKER_DROPQS = '### marker DROPQS' ;
+
 	const MARKER_START = ' start ###' ;
+
 	const MARKER_END = ' end ###' ;
 
 	const RW_PATTERN_RES = '/.*/[^/]*(responsive|css|js|dynamic|loader|fonts)\.php' ;

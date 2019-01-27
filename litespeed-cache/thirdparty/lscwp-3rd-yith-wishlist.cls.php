@@ -17,7 +17,9 @@ LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Yith_Wishlist') ;
 class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 {
 	const ESI_PARAM_ATTS = 'yith_wcwl_atts' ;
+
 	const ESI_PARAM_POSTID = 'yith_wcwl_post_id' ;
+
 	private static $atts = null ; // Not currently used. Depends on how YITH adds attributes
 
 	/**
@@ -109,5 +111,4 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 		LiteSpeed_Cache_API::set_cache_private();
 		LiteSpeed_Cache_API::set_cache_no_vary();
 	}
-
 }

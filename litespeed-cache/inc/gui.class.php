@@ -28,9 +28,10 @@ class LiteSpeed_Cache_GUI
 		// 'banner_promo.slack'		=> array( 3, false ),
 	) ;
 
-
 	const TYPE_DISMISS_WHM = 'whm' ;
+
 	const TYPE_DISMISS_EXPIRESDEFAULT = 'ExpiresDefault' ;
+
 	const TYPE_DISMISS_PROMO = 'promo' ;
 
 	const GUI_SUMMARY = 'litespeed-gui-summary' ;
@@ -742,7 +743,6 @@ class LiteSpeed_Cache_GUI
 
 		return self::$_instance ;
 	}
-
 }
 
 

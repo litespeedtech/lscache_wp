@@ -16,7 +16,9 @@ add_action('load_nextgen_gallery_modules', 'LiteSpeed_Cache_ThirdParty_NextGenGa
 class LiteSpeed_Cache_ThirdParty_NextGenGallery
 {
 	const CACHETAG_ALBUMS = 'NGG_A.' ;
+
 	const CACHETAG_GALLERIES = 'NGG_G.' ;
+
 	const CACHETAG_TAGS = 'NGG_T.' ;
 
 	/**

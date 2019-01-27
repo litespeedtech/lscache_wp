@@ -181,9 +181,13 @@ class Minify_HTML
 	}
 
 	protected $_isXhtml = null;
+
 	protected $_replacementHash = null;
+
 	protected $_placeholders = array();
+
 	protected $_cssMinifier = null;
+
 	protected $_jsMinifier = null;
 
 	protected function _removePreCB($m)

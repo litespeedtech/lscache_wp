@@ -8,7 +8,6 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-ca
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin.php';
 class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
-
 	/**
 	 * Function to invoke a Private method
 	 */
@@ -125,7 +124,6 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
       	$this->assertNotNull($null);				
 	}
 
-
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_get
 	 * @param string $content Returns the content of the file or an error description.
@@ -157,8 +155,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$off_end = '';
 		$bool = LiteSpeed_Cache_Admin_Rules::get_instance()->file_get_ifmodule_block( $content, $off_begin, $off_end);
       	$this->assertNotNull($bool);						
-	}
-	
+	}	
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_split
@@ -229,7 +226,6 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
       	$this->assertNotNull($bool);						
 	}
 
-
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_common_rule
 	 * @param string $content The original content in the .htaccess file.
@@ -254,7 +250,6 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_common_rule', $parameters);
       	$this->assertNotNull($bool);						
 	}
-
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_common_rule
@@ -332,7 +327,6 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_favicon', $parameters);
       	$this->assertNotNull($bool);						
 	}
-
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_cache_resource

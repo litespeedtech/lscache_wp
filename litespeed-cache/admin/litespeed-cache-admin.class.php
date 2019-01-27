@@ -16,7 +16,9 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Admin
 {
 	private static $_instance ;
+
 	private $config ;
+
 	private $display ;
 
 	/**

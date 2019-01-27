@@ -8,7 +8,6 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-ca
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin.php';
 class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
-
 	/**
 	 * Function to invoke a Private method
 	 */
@@ -222,5 +221,4 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
       	$bool = self::isString($msg);
       	$this->assertTrue($bool);		
 	}
-
 }

@@ -92,7 +92,6 @@ class LiteSpeed_Cache_CDN_Quic
 		exit;
 	}
 
-
 	private function _check_email()
 	{
 		$_email = $_POST[ 'email' ] ;

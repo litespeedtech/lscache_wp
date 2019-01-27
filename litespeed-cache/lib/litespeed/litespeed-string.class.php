@@ -7,7 +7,6 @@
 
 class Litespeed_String
 {
-
 	/**
 	 * Generate random string
 	 *
@@ -65,6 +64,4 @@ class Litespeed_String
 
 		return $str ;
 	}
-
-
 }

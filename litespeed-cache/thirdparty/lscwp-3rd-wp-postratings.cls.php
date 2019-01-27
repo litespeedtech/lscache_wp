@@ -15,7 +15,6 @@ LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_WP_PostRatings') ;
 
 class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 {
-
 	/**
 	 * Detects if plugin is installed.
 	 *
@@ -39,5 +38,4 @@ class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 	{
 		LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $post_id) ;
 	}
-
 }

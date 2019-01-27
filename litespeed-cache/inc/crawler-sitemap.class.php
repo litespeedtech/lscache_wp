@@ -17,6 +17,7 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Crawler_Sitemap
 {
 	private static $_instance ;
+
 	private $home_url ;// Used to simplify urls
 
 	protected $_urls = array() ;

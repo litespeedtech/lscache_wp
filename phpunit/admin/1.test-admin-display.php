@@ -8,7 +8,6 @@
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-display.php';
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
 class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
-
 	/**
 	 * Function to invoke a Private method
 	 */
@@ -305,7 +304,6 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
     	
 	}
 
-
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_specific
 	 * @return String
@@ -386,7 +384,6 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
       	$this->assertFalse($bool);		
     	
 	}
-
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_mobile_view
@@ -625,7 +622,6 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
       	$this->assertTrue($bool);		
     	
 	}
-
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_checkbox

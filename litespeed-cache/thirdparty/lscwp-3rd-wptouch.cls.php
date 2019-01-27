@@ -42,6 +42,5 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 			LiteSpeed_Cache_API::set_mobile() ;
 		}
 	}
-
 }
 

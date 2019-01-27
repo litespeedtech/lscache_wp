@@ -25,42 +25,64 @@ namespace LiteSpeed_3rd_Lib\css_min ;
 class Minifier
 {
     const QUERY_FRACTION = '_CSSMIN_QF_';
+
     const COMMENT_TOKEN = '_CSSMIN_CMT_%d_';
+
     const COMMENT_TOKEN_START = '_CSSMIN_CMT_';
+
     const RULE_BODY_TOKEN = '_CSSMIN_RBT_%d_';
+
     const PRESERVED_TOKEN = '_CSSMIN_PTK_%d_';
 
     // Token lists
     private $comments = array();
+
     private $ruleBodies = array();
+
     private $preservedTokens = array();
 
     // Output options
     private $keepImportantComments = true;
+
     private $keepSourceMapComment = false;
+
     private $linebreakPosition = 0;
 
     // PHP ini limits
     private $raisePhpLimits;
+
     private $memoryLimit;
+
     private $maxExecutionTime = 60; // 1 min
+
     private $pcreBacktrackLimit;
+
     private $pcreRecursionLimit;
 
     // Color maps
     private $hexToNamedColorsMap;
+
     private $namedToHexColorsMap;
 
     // Regexes
     private $numRegex;
+
     private $charsetRegex = '/@charset [^;]+;/Si';
+
     private $importRegex = '/@import [^;]+;/Si';
+
     private $namespaceRegex = '/@namespace [^;]+;/Si';
+
     private $namedToHexColorsRegex;
+
     private $shortenOneZeroesRegex;
+
     private $shortenTwoZeroesRegex;
+
     private $shortenThreeZeroesRegex;
+
     private $shortenFourZeroesRegex;
+
     private $unitsGroupRegex = '(?:ch|cm|em|ex|gd|in|mm|px|pt|pc|q|rem|vh|vmax|vmin|vw|%)';
 
     /**

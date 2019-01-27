@@ -22,9 +22,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	const TYPE_SET = 'set' ;
 
 	protected $options ;
+
 	protected $vary_groups ;
+
 	protected $exclude_optimization_roles ;
+
 	protected $exclude_cache_roles ;
+
 	protected $purge_options ;
 
 	/**
@@ -446,7 +450,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		return $default_site_options ;
 	}
-
 
 	/**
 	 * Helper function to convert the options to replicate the input format.

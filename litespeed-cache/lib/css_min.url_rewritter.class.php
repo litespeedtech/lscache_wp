@@ -15,7 +15,6 @@ namespace LiteSpeed_3rd_Lib\css_min ;
 
 class UriRewriter
 {
-
     /**
      * rewrite() and rewriteRelative() append debugging information here
      *

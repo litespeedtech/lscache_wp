@@ -20,20 +20,29 @@ class LiteSpeed_Cache_ESI
 	private static $_instance ;
 
 	private static $has_esi = false ;
+
 	private $esi_args = null ;
+
 	private $_esi_preserve_list = array() ;
 
 	const QS_ACTION = 'lsesi' ;
+
 	const POSTTYPE = 'lswcp' ;
+
 	const QS_PARAMS = 'esi' ;
 
 	const PARAM_ARGS = 'args' ;
+
 	const PARAM_BLOCK_ID = 'block_id' ;
+
 	const PARAM_ID = 'id' ;
+
 	const PARAM_INSTANCE = 'instance' ;
+
 	const PARAM_NAME = 'name' ;
 
 	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable' ;
+
 	const WIDGET_OPID_TTL = 'widget_ttl' ;
 
 	/**
@@ -531,7 +540,6 @@ class LiteSpeed_Cache_ESI
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI: adminbar ref: ' . $_SERVER[ 'REQUEST_URI' ] ) ;
 	}
-
 
 	/**
 	 * Parses the esi input parameters and generates the comment form for esi display.

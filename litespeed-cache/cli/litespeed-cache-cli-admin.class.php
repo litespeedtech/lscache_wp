@@ -5,8 +5,8 @@
  */
 class LiteSpeed_Cache_Cli_Admin
 {
-
 	private static $checkboxes ;
+
 	private static $purges ;
 
 	public function __construct()

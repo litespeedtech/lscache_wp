@@ -45,6 +45,5 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 			LiteSpeed_Cache_API::set_nocache() ;
 		}
 	}
-
 }
 

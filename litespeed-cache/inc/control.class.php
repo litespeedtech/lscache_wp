@@ -18,18 +18,27 @@ class LiteSpeed_Cache_Control
 	private static $_instance ;
 
 	const BM_CACHEABLE = 1 ;
+
 	const BM_PRIVATE = 2 ;
+
 	const BM_SHARED = 4 ;
+
 	const BM_NO_VARY = 8 ;
+
 	const BM_FORCED_CACHEABLE = 32 ;
+
 	const BM_PUBLIC_FORCED = 64 ;
+
 	const BM_STALE = 128 ;
+
 	const BM_NOTCACHEABLE = 256 ;
 
 	const X_HEADER = 'X-LiteSpeed-Cache-Control' ;
 
 	protected static $_control = 0 ;
+
 	protected static $_custom_ttl = 0 ;
+
 	private static $_mobile = false ;
 
 	/**

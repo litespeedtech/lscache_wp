@@ -17,10 +17,13 @@ class LiteSpeed_Cache_Import
 	private static $_instance ;
 
 	private $_cfg_items ;
+
 	private $__cfg ;
 
 	const TYPE_IMPORT = 'import' ;
+
 	const TYPE_EXPORT = 'export' ;
+
 	const TYPE_RESET = 'reset' ;
 
 	const DB_IMPORT_LOG = 'litespeed_import_log' ;

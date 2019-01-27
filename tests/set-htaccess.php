@@ -1,7 +1,6 @@
 <?php
 
 class Set_Htaccess {
-
 	public function __construct()
 	{
 		$this->test_suite();
@@ -146,7 +145,6 @@ class Set_Htaccess {
 			}
 		}
 	}
-
 };
 
 

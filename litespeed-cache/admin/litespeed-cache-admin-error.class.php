@@ -18,34 +18,55 @@ class LiteSpeed_Cache_Admin_Error
 	private static $_instance ;
 
 	const NOTICE_BLUE = 'notice notice-info' ;
+
 	const NOTICE_GREEN = 'notice notice-success' ;
+
 	const NOTICE_RED = 'notice notice-error' ;
+
 	const NOTICE_YELLOW = 'notice notice-warning' ;
+
 	const E_PHP_VER = 1000 ;
+
 	const E_WP_VER = 1010 ;
 
 	const E_PURGE_FORM = 2000 ;
+
 	const E_PURGEBY_EMPTY = 2010 ;
+
 	const E_PURGEBY_BAD = 2020 ;
+
 	const E_PURGEBY_CAT_INV = 2030 ;
+
 	const E_PURGEBY_TAG_INV = 2040 ;
+
 	const E_PURGEBY_URL_BAD = 2050 ;
 
 	const E_PURGEBY_PID_NUM = 2500 ;
+
 	const E_PURGEBY_PID_DNE = 2510 ;
+
 	const E_PURGEBY_URL_INV = 2520 ;
+
 	const E_PURGEBY_CAT_DNE = 2530 ;
+
 	const E_PURGEBY_TAG_DNE = 2540 ;
 
 	const E_SETTING_ADMIN_IP_INV = 3000 ;
+
 	const E_SETTING_TEST_IP_INV = 3010 ;
+
 	const E_SETTING_SITE_IP = 3020 ;
+
 	const E_SETTING_CUSTOM_SITEMAP_READ = 3030 ;
+
 	const E_SETTING_CUSTOM_SITEMAP_PARSE = 3031 ;
 
 	const E_SETTING_CAT = 3510 ;
+
 	const E_SETTING_TAG = 3520 ;
+
 	const E_SETTING_LC = 3530 ; // login cookie setting
+
 	const E_SETTING_REWRITE = 3540 ;
 
 	const E_LC_HTA = 4000 ; // login cookie .htaccess not correct
@@ -55,15 +76,25 @@ class LiteSpeed_Cache_Admin_Error
 	const E_LC_MISMATCH = 5000 ; // login cookie mismatch
 
 	const E_CONF = 9000 ; // general config failed to write.
+
 	const E_HTA_BU = 9010 ; // backup
+
 	const E_HTA_PUT = 9020 ; // failed to put
+
 	const E_HTA_GET = 9030 ; // failed to get
+
 	const E_HTA_RW = 9040 ; // read write
+
 	const E_HTA_R = 9041 ; // read
+
 	const E_HTA_W = 9042 ; // write
+
 	const E_HTA_ORDER = 9050 ; // prefix found after suffix
+
 	const E_HTA_SAVE = 9060 ;
+
 	const E_CONF_WRITE = 9070 ;
+
 	const E_CONF_FIND = 9080 ;
 
 	/**

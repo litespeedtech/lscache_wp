@@ -17,7 +17,9 @@ class LiteSpeed_Cache_Vary
 	const X_HEADER = 'X-LiteSpeed-Vary' ;
 
 	private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
+
 	private static $_vary_cookies = array() ; // vary header only!
+
 	private static $_default_vary_val = array() ;
 
 	/**

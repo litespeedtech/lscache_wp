@@ -16,7 +16,6 @@ class LiteSpeed_Cache_Utility
 
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
-
 	/**
 	 * Check page score
 	 *
@@ -227,7 +226,6 @@ class LiteSpeed_Cache_Utility
 
 		return $res ;
 	}
-
 
 	/**
 	 * Convert array to string
@@ -745,9 +743,6 @@ class LiteSpeed_Cache_Utility
 		return $content ;
 
 	}
-
-
-
 
 	/**
 	 * Handle all request actions from main cls

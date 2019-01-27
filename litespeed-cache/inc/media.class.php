@@ -20,16 +20,23 @@ class LiteSpeed_Cache_Media
 	const LIB_FILE_IMG_LAZYLOAD = 'js/lazyload.min.js' ;
 
 	const TYPE_GENERATE_PLACEHOLDER = 'generate_placeholder' ;
+
 	const DB_PLACEHOLDER_SUMMARY = 'litespeed-media-placeholder-summary' ;
 
 	private $content ;
+
 	private $wp_upload_dir ;
 
 	private $_cfg_img_webp ;
+
 	private $_cfg_placeholder_resp ;
+
 	private $_cfg_placeholder_resp_color ;
+
 	private $_cfg_placeholder_resp_async ;
+
 	private $_placeholder_resp_dict = array() ;
+
 	private $_ph_queue = array() ;
 
 	/**
@@ -285,7 +292,6 @@ eot;
 
 		return $sizes ;
 	}
-
 
 	/**
 	 * Exclude role from optimization filter
@@ -996,5 +1002,4 @@ eot;
 
 		return self::$_instance ;
 	}
-
 }

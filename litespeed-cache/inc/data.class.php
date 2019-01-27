@@ -18,10 +18,13 @@ class LiteSpeed_Cache_Data
 	private static $_instance ;
 
 	const TB_OPTIMIZER = 'litespeed_optimizer' ;
+
 	const TB_IMG_OPTM = 'litespeed_img_optm' ;
 
 	private $_charset_collate ;
+
 	private $_tb_optm ;
+
 	private $_tb_img_optm ;
 
 	/**
@@ -298,6 +301,7 @@ class LiteSpeed_Cache_Data
 		$instance = self::get_instance() ;
 		return $instance->_optm_save_src( $filename, $src ) ;
 	}
+
 	private function _optm_save_src( $filename, $src )
 	{
 		global $wpdb ;
@@ -326,6 +330,7 @@ class LiteSpeed_Cache_Data
 		$instance = self::get_instance() ;
 		return $instance->_optm_hash2src( $filename ) ;
 	}
+
 	private function _optm_hash2src( $filename )
 	{
 		global $wpdb ;
@@ -355,5 +360,4 @@ class LiteSpeed_Cache_Data
 
 		return self::$_instance ;
 	}
-
 }

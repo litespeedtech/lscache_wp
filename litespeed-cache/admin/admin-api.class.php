@@ -17,29 +17,46 @@ class LiteSpeed_Cache_Admin_API
 	private static $_instance ;
 
 	private $_iapi_key ;
+
 	private $_iapi_cloud ;
 
 	const DB_API_KEY = 'litespeed_api_key' ;
+
 	const DB_API_CLOUD = 'litespeed_api_cloud' ;
+
 	const DB_API_KEY_HASH = 'litespeed_api_key_hash' ;
 
 	// For each request, send a callback to confirm
 	const TYPE_REQUEST_CALLBACK = 'request_callback' ;
+
 	const TYPE_NOTIFY_IMG = 'notify_img' ;
+
 	const TYPE_CHECK_IMG = 'check_img' ;
+
 	const TYPE_IMG_DESTROY_CALLBACK = 'imgoptm_destroy' ;
+
 	const TYPE_RESET_KEY = 'reset_key' ;
 
 	const IAPI_ACTION_REQUEST_KEY = 'request_key' ;
+
 	const IAPI_ACTION_LIST_CLOUDS = 'list_clouds' ;
+
 	const IAPI_ACTION_MEDIA_SYNC_DATA = 'media_sync_data' ;
+
 	const IAPI_ACTION_REQUEST_OPTIMIZE = 'request_optimize' ;
+
 	const IAPI_ACTION_IMG_TAKEN = 'client_img_taken' ;
+
 	const IAPI_ACTION_REQUEST_DESTROY = 'imgoptm_destroy' ;
+
 	const IAPI_ACTION_REQUEST_DESTROY_UNFINISHED = 'imgoptm_destroy_unfinished' ;
+
 	const IAPI_ACTION_ENV_REPORT = 'env_report' ;
+
 	const IAPI_ACTION_PLACEHOLDER = 'placeholder' ;
+
 	const IAPI_ACTION_CCSS = 'ccss' ;
+
 	const IAPI_ACTION_PAGESCORE = 'pagescore' ;
 
 	/**

@@ -319,7 +319,6 @@ class LiteSpeed_Cache_Optimizer
 
 		return self::$_instance ;
 	}
-
 }
 
 

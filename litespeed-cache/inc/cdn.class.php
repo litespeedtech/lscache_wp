@@ -22,10 +22,15 @@ class LiteSpeed_Cache_CDN
 	private $content ;
 
 	private $_cfg_cdn ;
+
 	private $_cfg_url_ori ;
+
 	private $_cfg_ori_dir ;
+
 	private $_cfg_cdn_mapping = array() ;
+
 	private $_cfg_cdn_exclude ;
+
 	private $_cfg_cdn_remote_jquery ;
 
 	private $cdn_mapping_hosts = array() ;
@@ -614,5 +619,4 @@ class LiteSpeed_Cache_CDN
 
 		return self::$_instance ;
 	}
-
 }

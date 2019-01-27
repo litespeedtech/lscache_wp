@@ -18,22 +18,35 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	private static $_instance ;
 
 	const CACHETAG_SHOP = 'WC_S' ;
+
 	const CACHETAG_TERM = 'WC_T.' ;
+
 	const OPTION_UPDATE_INTERVAL = 'wc_update_interval' ;
+
 	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl' ;
+
 	const OPTION_WOO_CACHE_CART = 'woo_cache_cart' ;
+
 	const OPT_PQS_CS = 0 ; // flush product on quantity + stock change, categories on stock change
+
 	const OPT_PS_CS = 1 ; // flush product and categories on stock change
+
 	const OPT_PS_CN = 2 ; // flush product on stock change, categories no flush
+
 	const OPT_PQS_CQS = 3 ; // flush product and categories on quantity + stock change
 
 	const ESI_PARAM_ARGS = 'wc_args' ;
+
 	const ESI_PARAM_POSTID = 'wc_post_id' ;
+
 	const ESI_PARAM_NAME = 'wc_name' ;
+
 	const ESI_PARAM_PATH = 'wc_path' ;
+
 	const ESI_PARAM_LOCATED = 'wc_located' ;
 
 	private $cache_cart ;
+
 	private $esi_eanbled ;
 
 	/**

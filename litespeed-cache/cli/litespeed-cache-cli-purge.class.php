@@ -298,5 +298,4 @@ class LiteSpeed_Cache_Cli_Purge
 	{
 		$this->_purgeby_helper($args, LiteSpeed_Cache_Admin_Display::PURGEBY_PID, 'get_post') ;
 	}
-
 }

@@ -9,8 +9,6 @@
  * Class LiteSpeed_Cache_Config test case.
  */
 class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
-
-
      /**
 	 * Function for instance
 	 */
@@ -18,7 +16,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 		$instance = new LiteSpeed_Cache_Tags();
 		return $instance;
     }
-
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_cache_tags
@@ -162,5 +159,4 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
           $this->assertFalse($bool);
         }
     }
-
 }

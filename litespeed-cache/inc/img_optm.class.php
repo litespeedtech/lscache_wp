@@ -17,49 +17,83 @@ class LiteSpeed_Cache_Img_Optm
 	private static $_instance ;
 
 	const TYPE_SYNC_DATA = 'sync_data' ;
+
 	const TYPE_IMG_OPTIMIZE = 'img_optm' ;
+
 	const TYPE_IMG_OPTIMIZE_RESCAN = 'img_optm_rescan' ;
+
 	const TYPE_IMG_OPTM_DESTROY = 'img_optm_destroy' ;
+
 	const TYPE_IMG_OPTM_DESTROY_UNFINISHED = 'img_optm_destroy-unfinished' ;
+
 	const TYPE_IMG_PULL = 'img_pull' ;
+
 	const TYPE_IMG_BATCH_SWITCH_ORI = 'img_optm_batch_switch_ori' ;
+
 	const TYPE_IMG_BATCH_SWITCH_OPTM = 'img_optm_batch_switch_optm' ;
+
 	const TYPE_CALC_BKUP = 'calc_bkup' ;
+
 	const TYPE_RESET_ROW = 'reset_row' ;
+
 	const TYPE_RM_BKUP = 'rm_bkup' ;
 
 	const ITEM_IMG_OPTM_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
 
 	const DB_IMG_OPTIMIZE_DESTROY = 'litespeed-optimize-destroy' ;
+
 	const DB_IMG_OPTIMIZE_DATA = 'litespeed-optimize-data' ;
+
 	const DB_IMG_OPTIMIZE_STATUS = 'litespeed-optimize-status' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_PREPARE = 'prepare' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_REQUESTED = 'requested' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_NOTIFIED = 'notified' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_PULLED = 'pulled' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_FAILED = 'failed' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_MISS = 'miss' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_ERR = 'err' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_ERR_FETCH = 'err_fetch' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_ERR_OPTM = 'err_optm' ;
+
 	const DB_IMG_OPTIMIZE_STATUS_XMETA = 'xmeta' ;
+
 	const DB_IMG_OPTIMIZE_SIZE = 'litespeed-optimize-size' ;
 
 	const DB_IMG_OPTM_SUMMARY = 'litespeed_img_optm_summary' ;
+
 	const DB_IMG_OPTM_BK_SUMMARY = 'litespeed_img_optm_bk_summary' ;
+
 	const DB_IMG_OPTM_RMBK_SUMMARY = 'litespeed_img_optm_rmbk_summary' ;
 
 	const NUM_THRESHOLD_AUTO_REQUEST = 1200 ;
 
 	private $wp_upload_dir ;
+
 	private $tmp_pid ;
+
 	private $tmp_path ;
+
 	private $_img_in_queue = array() ;
+
 	private $_img_duplicated_in_queue = array() ;
+
 	private $_missed_img_in_queue = array() ;
+
 	private $_img_srcpath_md5_array = array() ;
+
 	private $_img_total = 0 ;
+
 	private $_table_img_optm ;
+
 	private $_cron_ran = false ;
 
 	/**
@@ -2149,5 +2183,4 @@ class LiteSpeed_Cache_Img_Optm
 
 		return self::$_instance ;
 	}
-
 }

@@ -28,22 +28,35 @@ class LiteSpeed_Cache_Object
 	private static $_instance ;
 
 	private $_oc_data_file ;
+
 	private $_conn ;
+
 	private $_cfg_enabled ;
+
 	private $_cfg_method ;
+
 	private $_cfg_host ;
+
 	private $_cfg_port ;
+
 	private $_cfg_persistent ;
+
 	private $_cfg_admin ;
+
 	private $_cfg_transients ;
+
 	private $_cfg_db ;
+
 	private $_cfg_user ;
+
 	private $_cfg_pswd ;
+
 	private $_default_life = 360 ;
 
 	private $_oc_driver = 'Memcached' ; // Redis or Memcached
 
 	private $_global_groups ;
+
 	private $_non_persistent_groups ;
 
 	/**

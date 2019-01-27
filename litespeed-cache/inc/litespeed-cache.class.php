@@ -24,54 +24,91 @@ class LiteSpeed_Cache
 	private static $_instance ;
 
 	const NAME = 'LiteSpeed Cache' ;
+
 	const PLUGIN_NAME = 'litespeed-cache' ;
+
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
+
 	const PLUGIN_VERSION = '2.9.1' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
 	const NONCE_NAME = 'LSCWP_NONCE' ;
+
 	const ACTION_KEY = 'LSCWP_CTRL' ;
+
 	const ACTION_DISMISS = 'dismiss' ;
+
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
+
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
+
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
+
 	const ACTION_PURGE_BY = 'PURGE_BY' ;
+
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE' ;
+
 	const ACTION_QS_PURGE = 'PURGE' ;
+
 	const ACTION_QS_PURGE_SINGLE = 'PURGESINGLE' ;
+
 	const ACTION_QS_SHOW_HEADERS = 'SHOWHEADERS' ;
+
 	const ACTION_QS_PURGE_ALL = 'purge_all' ;
+
 	const ACTION_QS_PURGE_EMPTYCACHE = 'empty_all' ;
+
 	const ACTION_QS_NOCACHE = 'NOCACHE' ;
+
 	const ACTION_CRAWLER_GENERATE_FILE = 'crawler-generate-file' ;
+
 	const ACTION_CRAWLER_RESET_POS = 'crawler-reset-pos' ;
+
 	const ACTION_CRAWLER_CRON_ENABLE = 'crawler-cron-enable' ;
+
 	const ACTION_DO_CRAWL = 'do-crawl' ;
+
 	const ACTION_BLACKLIST_SAVE = 'blacklist-save' ;
+
 	const ACTION_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
+
 	const ACTION_CDN_QUIC = 'cdn_quic' ;
+
 	const ACTION_CFG = 'cfg' ;
+
 	const ACTION_ACTIVATION = 'activate' ;
+
 	const ACTION_UTIL = 'util' ;
 
 	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
 
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
+
 	const ACTION_LOG = 'log' ;
 
 	const ACTION_IMPORT = 'import' ;
+
 	const ACTION_PURGE = 'purge' ;
+
 	const ACTION_MEDIA = 'media' ;
+
 	const ACTION_IMG_OPTM = 'img_optm' ;
+
 	const ACTION_IAPI = 'iapi' ;
+
 	const ACTION_CDN = 'cdn' ;
+
 	const ACTION_REPORT = 'report' ;
+
 	const ACTION_CSS = 'css' ;
+
 	const ACTION_SAPI_PASSIVE_CALLBACK = 'sapi_passive_callback' ;
+
 	const ACTION_SAPI_AGGRESSIVE_CALLBACK = 'sapi_aggressive_callback' ;
 
 	const WHM_MSG = 'lscwp_whm_install' ;
+
 	const WHM_MSG_VAL = 'whm_install' ;
 
 	const HEADER_DEBUG = 'X-LiteSpeed-Debug' ;
@@ -737,5 +774,4 @@ class LiteSpeed_Cache
 
 		return self::$_instance ;
 	}
-
 }

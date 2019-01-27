@@ -157,7 +157,6 @@ class LiteSpeed_Cache_CLI_IAPI
 		$this->status() ;
 	}
 
-
 	/**
 	 * Clean up unfinished image data from IAPI server
 	 *
@@ -195,6 +194,4 @@ class LiteSpeed_Cache_CLI_IAPI
 		$msg = $this->_img_optm_instance->rm_bkup() ;
 		WP_CLI::success( $msg ) ;
 	}
-
-
 }

@@ -402,5 +402,4 @@ class LiteSpeed_Cache_Activation
 
 		return self::$_instance ;
 	}
-
 }

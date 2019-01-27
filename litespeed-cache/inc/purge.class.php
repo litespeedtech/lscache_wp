@@ -14,25 +14,39 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Purge
 {
 	private static $_instance ;
+
 	protected $_pub_purge = array() ;
+
 	protected $_priv_purge = array() ;
+
 	protected $_purge_related = false ;
+
 	protected $_purge_single = false ;
 
 	const X_HEADER = 'X-LiteSpeed-Purge' ;
+
 	const PURGE_QUEUE = 'litespeed-cache-purge-queue' ;
 
 	const TYPE_PURGE_ALL = 'purge_all' ;
+
 	const TYPE_PURGE_ALL_LSCACHE = 'purge_all_lscache' ;
+
 	const TYPE_PURGE_ALL_CSSJS = 'purge_all_cssjs' ;
+
 	const TYPE_PURGE_ALL_CCSS = 'purge_all_ccss' ;
+
 	const TYPE_PURGE_ALL_PLACEHOLDER = 'purge_all_placeholder' ;
+
 	const TYPE_PURGE_ALL_OBJECT = 'purge_all_object' ;
+
 	const TYPE_PURGE_ALL_OPCACHE = 'purge_all_opcache' ;
 
 	const TYPE_PURGE_FRONT = 'purge_front' ;
+
 	const TYPE_PURGE_FRONTPAGE = 'purge_frontpage' ;
+
 	const TYPE_PURGE_PAGES = 'purge_pages' ;
+
 	const TYPE_PURGE_ERROR = 'purge_error' ;
 
 	/**

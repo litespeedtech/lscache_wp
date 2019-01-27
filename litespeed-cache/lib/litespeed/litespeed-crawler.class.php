@@ -9,27 +9,43 @@ LiteSpeed_Cache_Utility::compatibility() ;
 class Litespeed_Crawler
 {
 	private $_baseUrl ;
+
 	private $_sitemap_file ;
+
 	private $_meta_file ;
+
 	private $_http2 = true ;
+
 	private $_run_delay = 500 ;//microseconds
+
 	private $_run_duration = 200 ;//seconds
+
 	private $_threads_limit = 3 ;
+
 	private $_load_limit = 1 ;
+
 	private $_domain_ip = '' ;
+
 	private $_ua = '' ;
 
 	private $_curl_headers = array() ;
+
 	private $_cookies = array() ;
 
 	protected $_blacklist ;
+
 	protected $_meta ;
+
 	protected $_max_run_time ;
+
 	protected $_cur_thread_time ;
+
 	protected $_cur_threads = -1 ;
 
 	const CHUNKS = 10000 ;
+
 	const USER_AGENT = 'lscache_walker' ;
+
 	const FAST_USER_AGENT = 'lscache_runner' ;
 
 	/**
@@ -701,5 +717,4 @@ class Litespeed_Crawler
 			'last_crawler_total_cost'	=> 0,
 		) ;
 	}
-
 }

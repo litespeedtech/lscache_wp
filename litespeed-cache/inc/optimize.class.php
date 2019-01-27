@@ -18,39 +18,63 @@ class LiteSpeed_Cache_Optimize
 	private static $_instance ;
 
 	const DIR_MIN = '/min' ;
+
 	const LIB_FILE_CSS_ASYNC = 'js/css_async.min.js' ;
+
 	const LIB_FILE_WEBFONTLOADER = 'js/webfontloader.min.js' ;
 
 	private $content ;
+
 	private $http2_headers = array() ;
 
 	private $cfg_http2_css ;
+
 	private $cfg_http2_js ;
+
 	private $cfg_css_minify ;
+
 	private $cfg_css_combine ;
+
 	private $cfg_js_minify ;
+
 	private $cfg_js_combine ;
+
 	private $cfg_css_async ;
+
 	private $cfg_js_defer ;
+
 	private $cfg_js_defer_exc = false ;
+
 	private $cfg_qs_rm ;
+
 	private $cfg_exc_jquery ;
+
 	private $cfg_ggfonts_async ;
+
 	private $cfg_optm_max_size ;
+
 	private $cfg_ttl ;
+
 	private $cfg_ggfonts_rm ;
 
 	private $dns_prefetch ;
+
 	private $_ggfonts_urls = array() ;
 
 	private $html_foot = '' ; // The html info append to <body>
+
 	private $html_head = '' ; // The html info prepend to <body>
 
 	private $minify_cache ;
+
 	private $minify_minify ;
+
 	private $minify_env ;
+
 	private $minify_sourceFactory ;
+
 	private $minify_controller ;
+
 	private $minify_options ;
 
 	/**
@@ -1242,5 +1266,4 @@ class LiteSpeed_Cache_Optimize
 
 		return self::$_instance ;
 	}
-
 }

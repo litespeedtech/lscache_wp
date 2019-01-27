@@ -17,9 +17,13 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Crawler
 {
 	private static $_instance;
+
 	private $_sitemap_file ;
+
 	private $_blacklist_file ;
+
 	private $_home_url ;
+
 	const CRWL_BLACKLIST = 'crawler_blacklist' ;
 
 	private $_options ;
@@ -580,7 +584,6 @@ class LiteSpeed_Cache_Crawler
 
 		return $crawler_list ;
 	}
-
 
 	/**
 	 * Build a crawler list recursively

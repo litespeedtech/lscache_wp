@@ -18,26 +18,39 @@ class LiteSpeed_Cache_Admin_Display
 	private static $_instance ;
 
 	const NOTICE_BLUE = 'notice notice-info' ;
+
 	const NOTICE_GREEN = 'notice notice-success' ;
+
 	const NOTICE_RED = 'notice notice-error' ;
+
 	const NOTICE_YELLOW = 'notice notice-warning' ;
+
 	const LITESPEED_MSG = 'litespeed_messages' ;
 
 	const PURGEBY_CAT = '0' ;
+
 	const PURGEBY_PID = '1' ;
+
 	const PURGEBY_TAG = '2' ;
+
 	const PURGEBY_URL = '3' ;
 
 	const PURGEBYOPT_SELECT = 'purgeby' ;
+
 	const PURGEBYOPT_LIST = 'purgebylist' ;
 
 	const DISMISS_MSG = 'litespeed-cache-dismiss' ;
+
 	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
+
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
 	private $config ;
+
 	private $messages = array() ;
+
 	private $disable_all = false ;
+
 	private $default_settings = array() ;
 
 	/**
@@ -137,7 +150,6 @@ class LiteSpeed_Cache_Admin_Display
 		}
 		wp_nonce_field($action, LiteSpeed_Cache::NONCE_NAME) ;
 	}
-
 
 	/**
 	 * Register the admin menu display.
