@@ -45,8 +45,10 @@ class LiteSpeed_Cache_Cli_Purge
 	 * to perform.
 	 *
 	 * @since 1.0.14
+	 *
 	 * @param string $action The action to perform
 	 * @param array $extra any extra parameters needed to be sent
+	 *
 	 * @return mixed the http request return
 	 */
 	private function _send_request($action, $extra = array())
@@ -194,6 +196,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 * Helper function for purging by ids.
 	 *
 	 * @since 1.0.15
+	 *
 	 * @param array $args the id list to parse
 	 * @param string $select The purge by kind
 	 * @param function(int $id) $callback The callback function to check the id

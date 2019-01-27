@@ -4,8 +4,10 @@
  * The Third Party integration with the bbPress plugin.
  *
  * @since		1.0.5
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {
@@ -53,6 +55,7 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 * any/all ancestor pages.
 	 *
 	 * @since 1.0.5
+	 *
 	 * @param int $post_id the post id of the page being purged
 	 */
 	public static function on_purge($post_id)

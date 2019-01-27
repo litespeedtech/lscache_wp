@@ -36,6 +36,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param string $sitemap_file Sitemap file location
 	 */
 	public function __construct($sitemap_file)
@@ -88,6 +89,7 @@ class Litespeed_Crawler
 	 * Set domain ip.
 	 *
 	 * @since  1.1.1
+	 *
 	 * @param string $val The domain's direct ip
 	 */
 	public function set_domain_ip($val)
@@ -99,6 +101,7 @@ class Litespeed_Crawler
 	 * Set domain url.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param string $val The prefix url
 	 */
 	public function set_base_url($val)
@@ -110,6 +113,7 @@ class Litespeed_Crawler
 	 * Set run delay.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param int $val Delay microseconds
 	 */
 	public function set_run_delay($val)
@@ -121,6 +125,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param int $val Run duration in seconds
 	 */
 	public function set_run_duration($val)
@@ -132,6 +137,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param int $val Threads limit in a time
 	 */
 	public function set_threads_limit($val)
@@ -143,6 +149,7 @@ class Litespeed_Crawler
 	 * Set load limit.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param int $val Server load limit to be checked before crawling
 	 */
 	public function set_load_limit($val)
@@ -154,6 +161,7 @@ class Litespeed_Crawler
 	 * Get if last crawler touched end.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return bool|int False or last ended time
 	 */
 	public function get_done_status()
@@ -169,6 +177,7 @@ class Litespeed_Crawler
 	 * Refresh list_size in meta.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return bool True if succeeded, false otherwise
 	 */
 	public function refresh_list_size()
@@ -185,6 +194,7 @@ class Litespeed_Crawler
 	 * Create reset pos file.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -196,6 +206,7 @@ class Litespeed_Crawler
 	 * Start crawler.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return string|bool crawled result
 	 */
 	public function engine_start()
@@ -279,7 +290,9 @@ class Litespeed_Crawler
 	 * Run crawler.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param array $curlOptions Curl options
+	 *
 	 * @return array array('error', 'blacklist')
 	 */
 	private function _do_running($curlOptions)
@@ -387,6 +400,7 @@ class Litespeed_Crawler
 	 * Terminate crawling.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param string $end_reason The reason to terminate
 	 */
 	protected function _terminate_running($end_reason)
@@ -414,7 +428,9 @@ class Litespeed_Crawler
 	 * Return crawler result.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param string $end_reason Reason to end
+	 *
 	 * @return array The results of returning
 	 */
 	protected function _return($end_reason)
@@ -484,8 +500,10 @@ class Litespeed_Crawler
 	 * Send multi curl requests.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param array $urls The url lists to send to
 	 * @param array $options Curl options
+	 *
 	 * @return array Curl results
 	 */
 	protected function _multi_request($urls, $options)
@@ -526,6 +544,7 @@ class Litespeed_Crawler
 	 * Get curl_options.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return options array
 	 */
 	private function _get_curl_options()
@@ -552,6 +571,7 @@ class Litespeed_Crawler
 
 		/**
 		 * Try to enable http2 connection (only available since PHP7+).
+		 *
 		 * @since  1.9.1
 		 * @since  2.2.7 Commented due to cause no-cache issue
 		 */
@@ -589,6 +609,7 @@ class Litespeed_Crawler
 
 		/**
 		 * Append hash to cookie for validation.
+		 *
 		 * @since  1.9.1
 		 */
 		$hash = Litespeed_String::rrand( 6 ) ;
@@ -608,6 +629,7 @@ class Litespeed_Crawler
 	 * Save existing meta.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return mixed True or error message
 	 */
 	public function save_meta()
@@ -622,6 +644,7 @@ class Litespeed_Crawler
 	 * Read existing meta.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return mixed True or error message
 	 */
 	public function read_meta()

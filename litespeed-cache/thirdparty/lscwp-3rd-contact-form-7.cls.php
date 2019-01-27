@@ -3,8 +3,10 @@
  * The Third Party integration with Contact Form 7.
  *
  * @since		1.6.4
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {

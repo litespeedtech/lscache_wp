@@ -3,8 +3,10 @@
  * The optimize4 class.
  *
  * @since      	1.9
+ *
  * @package  	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -45,6 +47,7 @@ class LiteSpeed_Cache_Optimizer
 
 		/**
 		 * Added exception capture when minify.
+		 *
 		 * @since  2.2.3
 		 */
 		try {
@@ -66,6 +69,7 @@ class LiteSpeed_Cache_Optimizer
 	 * Run minify process and return final content.
 	 *
 	 * @since  1.9
+	 *
 	 * @return string The final content
 	 */
 	public function serve( $filename, $concat_only )
@@ -123,6 +127,7 @@ class LiteSpeed_Cache_Optimizer
 
 		/**
 		 * Clean comment when minify.
+		 *
 		 * @since  1.7.1
 		 */
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
@@ -298,6 +303,7 @@ class LiteSpeed_Cache_Optimizer
 	 * Get the current instance object.
 	 *
 	 * @since 1.9
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -4,8 +4,10 @@
  *
  *
  * @since      1.1.0
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -38,7 +40,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * NOTE: Anytime that validate_plugin_settings is called, `convert_options_to_input` must be done first if not from option page
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $input the configuration selected by the admin when clicking save
+	 *
 	 * @return array the updated configuration options
 	 */
 	public function validate_plugin_settings( $input, $revert_options_to_input = false )
@@ -117,6 +121,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Check if need to send cfg to CDN or not.
+		 *
 		 * @since 2.3
 		 */
 		$id = LiteSpeed_Cache_Config::OPT_CDN_QUIC ;
@@ -164,6 +169,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Validate Object Cache.
+		 *
 		 * @since 1.8
 		 */
 		$new_options = $this->_validate_object_cache() ;
@@ -193,6 +199,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Keep self up-to-date.
+		 *
 		 * @since  2.7.2
 		 */
 		$id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ;
@@ -253,6 +260,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Validate Object Cache.
+		 *
 		 * @since 1.8
 		 */
 		$new_options = $this->_validate_object_cache() ;
@@ -564,6 +572,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Update Role Excludes.
+		 *
 		 * @since 1.6.2
 		 */
 		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
@@ -629,6 +638,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Handle multiple CDN setting.
+		 *
 		 * @since 1.7
 		 */
 		$cdn_mapping = array() ;
@@ -655,6 +665,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Load jQuery from cdn.
+		 *
 		 * @since 1.5
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ;
@@ -662,6 +673,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Quic API.
+		 *
 		 * @since  2.4.1
 		 */
 		$ids = array(
@@ -677,6 +689,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * CLoudflare API.
+		 *
 		 * @since  1.7.2
 		 */
 		$ids = array(
@@ -817,6 +830,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * DNS prefetch.
+		 *
 		 * @since 1.7.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ;
@@ -824,6 +838,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Combined file max size.
+		 *
 		 * @since 1.7.1
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ;
@@ -831,6 +846,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Separate CCSS File Types & URI.
+		 *
 		 * @since 2.6.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ;
@@ -865,6 +881,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Added Favicon.
+		 *
 		 * @since  1.7.2
 		 */
 		// $fav_file_arr = array( 'frontend', 'backend' ) ;
@@ -1044,6 +1061,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/**
 		 * Save cookie crawler.
+		 *
 		 * @since 2.8
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ;
@@ -1065,6 +1083,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the custom sitemap settings.
 	 *
 	 * @since 1.1.1
+	 *
 	 * @param string $url The sitemap url
 	 */
 	private function _validate_custom_sitemap( $url )
@@ -1076,6 +1095,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates settings related to rewrite rules.
 	 *
 	 * @since 1.3
+	 *
 	 * @return array New options related to rewrite rule
 	 */
 	private function _validate_rewrite_settings()
@@ -1188,7 +1208,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * This will only hook if there was a problem when saving the widget.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $location the location string
+	 *
 	 * @return string the updated location string
 	 */
 	public static function widget_save_err( $location )
@@ -1201,10 +1223,12 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validate the LiteSpeed Cache settings on edit widget save.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param array $instance the new settings
 	 * @param array $new_instance
 	 * @param array $old_instance the original settings
 	 * @param WP_Widget $widget The widget
+	 *
 	 * @return mixed updated settings on success, false on error
 	 */
 	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget )
@@ -1258,7 +1282,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Invalid character (NOT \w, -, \, |, \s, /, ., +, *, (, ))
 	 *
 	 * @since 1.0.9
+	 *
 	 * @param String $rule input rewrite rule
+	 *
 	 * @return bool true for valid rules, false otherwise
 	 */
 	private function _syntax_checker( $rule )
@@ -1285,10 +1311,12 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.12
 	 * @since 2.6.2 Automatically correct number
+	 *
 	 * @param array $input Input array
 	 * @param string $id Option ID
 	 * @param number $min Minimum number
 	 * @param number $max Maximum number
+	 *
 	 * @return bool true if valid, false otherwise
 	 */
 	private function _check_ttl( $input, $id, $min = false, $max = null )
@@ -1318,8 +1346,10 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for checkbox via input and id (enabled/disabled).
 	 *
 	 * @since  1.1.6
+	 *
 	 * @param int $input The whole input array
 	 * @param string $id The ID of the option
+	 *
 	 * @return bool Filtered value
 	 */
 	public static function parse_onoff( $input, $id )
@@ -1331,7 +1361,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for checkbox (enabled/disabled).
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param int $val The checkbox value
+	 *
 	 * @return bool Filtered value
 	 */
 	public static function is_checked( $val )
@@ -1349,7 +1381,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for radio (enabled/disabled/notset).
 	 *
 	 * @since  1.1.0
+	 *
 	 * @param int $val The radio value
+	 *
 	 * @return int Filtered value
 	 */
 	public static function is_checked_radio( $val )
@@ -1389,6 +1423,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -3,8 +3,10 @@
  * LiteSpeed PHP compatibility functions for lower PHP version.
  *
  * @since      1.1.3
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/lib
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 

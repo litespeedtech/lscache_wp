@@ -5,8 +5,10 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -52,6 +54,7 @@ class LiteSpeed_Cache_Crawler
 	 * Return crawler meta file.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @return string Json data file path
 	 */
 	public function get_crawler_json_path()
@@ -67,6 +70,7 @@ class LiteSpeed_Cache_Crawler
 	 * Return blacklist content.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @return string
 	 */
 	public function get_blacklist()
@@ -78,6 +82,7 @@ class LiteSpeed_Cache_Crawler
 	 * Return blacklist count.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @return string
 	 */
 	public function count_blacklist()
@@ -89,6 +94,7 @@ class LiteSpeed_Cache_Crawler
 	 * Save blacklist to file.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @return bool If saved successfully
 	 */
 	public function save_blacklist()
@@ -122,6 +128,7 @@ class LiteSpeed_Cache_Crawler
 	 * Append urls to current list.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @param array $list The url list needs to be appended
 	 */
 	public function append_blacklist( $list )
@@ -170,14 +177,17 @@ class LiteSpeed_Cache_Crawler
 	 * Parse custom sitemap and return urls.
 	 *
 	 * @since    1.1.1
+	 *
 	 * @param string $sitemap The url set map address
 	 * @param bool $return_detail If return url list
+	 *
 	 * @return bollean|array Url list or if is a sitemap
 	 */
 	public function parse_custom_sitemap($sitemap, $return_detail = true)
 	{
 		/**
 		 * Read via wp func to avoid allow_url_fopen = off.
+		 *
 		 * @since  2.2.7
 		 */
 		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) ) ;
@@ -246,6 +256,7 @@ class LiteSpeed_Cache_Crawler
 	 * Generate the sitemap.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @return string|true
 	 */
 	protected function _generate_sitemap()
@@ -305,6 +316,7 @@ class LiteSpeed_Cache_Crawler
 	 * Create reset pos file.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -328,6 +340,7 @@ class LiteSpeed_Cache_Crawler
 	 * Proceed crawling.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @param bool $force If ignore whole crawling interval
 	 */
 	public static function crawl_data($force = false)
@@ -357,6 +370,7 @@ class LiteSpeed_Cache_Crawler
 	 * Crawling start.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @param bool $force If ignore whole crawling interval
 	 */
 	protected function _crawl_data($force)
@@ -388,6 +402,7 @@ class LiteSpeed_Cache_Crawler
 
 		/**
 		 * Limit delay to use server setting.
+		 *
 		 * @since 1.8.3
 		 */
 		$usleep = $this->_options[ LiteSpeed_Cache_Config::CRWL_USLEEP ] ;
@@ -425,6 +440,7 @@ class LiteSpeed_Cache_Crawler
 		$cookies = array() ;
 		/**
 		 * Set role simulation.
+		 *
 		 * @since 1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'uid' ] ) ) {
@@ -438,6 +454,7 @@ class LiteSpeed_Cache_Crawler
 
 		/**
 		 * Check cookie crawler.
+		 *
 		 * @since  2.8
 		 */
 		foreach ( $current_crawler as $k => $v ) {
@@ -454,6 +471,7 @@ class LiteSpeed_Cache_Crawler
 
 		/**
 		 * Set WebP simulation.
+		 *
 		 * @since  1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
@@ -462,6 +480,7 @@ class LiteSpeed_Cache_Crawler
 
 		/**
 		 * Set mobile crawler.
+		 *
 		 * @since  2.8
 		 */
 		if ( ! empty( $current_crawler[ 'mobile' ] ) ) {
@@ -611,6 +630,7 @@ class LiteSpeed_Cache_Crawler
 	 * Output info and exit.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @param string $error Error info
 	 */
 	protected function output($msg)
@@ -629,6 +649,7 @@ class LiteSpeed_Cache_Crawler
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

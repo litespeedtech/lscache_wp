@@ -4,8 +4,10 @@
  *
  * @since      	1.1.3
  * @since  		1.4 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -317,6 +319,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Purge single action.
 	 *
 	 * @since 1.3
+	 *
 	 * @param int $pid The ID of a post
 	 */
 	public static function purge_post( $pid )
@@ -338,6 +341,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Build a switch div html snippet.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $id
 	 * @param bool $return Return the html or echo it
 	 */
@@ -350,8 +354,10 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Filter the value for checkbox via input and id (enabled/disabled).
 	 *
 	 * @since  1.1.6
+	 *
 	 * @param int $input The whole input array
 	 * @param string $id The ID of the option
+	 *
 	 * @return bool Filtered value
 	 */
 	public static function parse_onoff( $input, $id )
@@ -474,6 +480,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Generate ESI block url.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $control Cache control tag
 	 */
 	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )

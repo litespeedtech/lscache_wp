@@ -3,8 +3,10 @@
  * The optimize css class.
  *
  * @since      	2.3
+ *
  * @package  	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -335,6 +337,7 @@ class LiteSpeed_Cache_CSS
 	 * Get the current instance object.
 	 *
 	 * @since 2.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

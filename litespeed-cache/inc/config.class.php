@@ -6,8 +6,10 @@
  *
  * @since      	1.0.0
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -138,6 +140,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * For multisite installations, the single site options need to be updated with the network wide options.
 	 *
 	 * @since 1.0.13
+	 *
 	 * @return array the updated options
 	 */
 	private function construct_multisite_options()
@@ -153,6 +156,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		/**
 		 * In case this is called outside the admin page.
+		 *
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -204,6 +208,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the list of configured options for the blog.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array the list of configured options
 	 */
 	public function get_options()
@@ -215,7 +220,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the selected configuration option.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $id configuration ID
+	 *
 	 * @return mixed selected option if set, NULL if not
 	 */
 	public function get_option( $id )
@@ -235,7 +242,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * NOTE: No validation here. Do validate before use this function with LiteSpeed_Cache_Admin_Settings->validate_plugin_settings().
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param array $new_cfg the new settings to update, which will be update $this->options too
+	 *
 	 * @return array the result of update
 	 */
 	public function update_options( $new_cfg = array() )
@@ -297,7 +306,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in vary group settings.
 	 *
 	 * @since 1.2.0
+	 *
 	 * @param string $role The user role
+	 *
 	 * @return int The set value if already set
 	 */
 	public function in_vary_group( $role )
@@ -321,7 +332,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in exclude optimization group settings.
 	 *
 	 * @since 1.6
+	 *
 	 * @param string $role The user role
+	 *
 	 * @return int The set value if already set
 	 */
 	public function in_exclude_optimization_roles( $role = null )
@@ -342,7 +355,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in exclude cache group settings.
 	 *
 	 * @since 1.6.2
+	 *
 	 * @param string $role The user role
+	 *
 	 * @return int The set value if already set
 	 */
 	public function in_exclude_cache_roles( $role = null )
@@ -363,6 +378,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the configured purge options.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array the list of purge options
 	 */
 	public function get_purge_options()
@@ -374,7 +390,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if the flag type of posts should be purged on updates.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
+	 *
 	 * @return bool true if the post type should be purged, false otherwise
 	 */
 	public function purge_by_post( $flag )
@@ -411,6 +429,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * If the site wide options are not set yet, set it to default.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return array returns the current site options
 	 */
 	public function get_site_options()
@@ -437,7 +456,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * The only difference is the checkboxes.
 	 *
 	 * @since 1.0.15
+	 *
 	 * @param array $options the options array to port to input format
+	 *
 	 * @return array $options the options array with input format
 	 */
 	public static function convert_options_to_input($options)
@@ -487,6 +508,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		/**
 		 * Convert Cookie Simulation in Crawler settings.
+		 *
 		 * @since 2.8.1 Fixed warning and lost cfg when deactivate->reactivate in v2.8
 		 */
 		$id = self::ITEM_CRWL_COOKIES ;
@@ -508,8 +530,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the difference between the current options and the default options.
 	 *
 	 * @since 1.0.11
+	 *
 	 * @param array $default_options the default options
 	 * @param array $options the current options
+	 *
 	 * @return array new options
 	 */
 	public static function option_diff($default_options, $options)
@@ -564,6 +588,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7.
+		 *
 		 * @since 1.7
 		 */
 		if ( isset( $this->options[ 'cdn_url' ] ) ) {
@@ -580,6 +605,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		/**
 		 * Move Exclude settings to separate item.
+		 *
 		 * @since  2.3
 		 */
 		if ( isset( $this->options[ 'forced_cache_uri' ] ) ) {
@@ -635,7 +661,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Vice versa for disabling.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param bool $enable true if enabling, false if disabling
+	 *
 	 * @return bool true if the variable is the correct value, false if something went wrong
 	 */
 	public static function wp_cache_var_setter( $enable )
@@ -689,6 +717,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * On plugin activation, load the default options.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $count the count of blogs active in multisite
 	 */
 	public function plugin_activation( $count )
@@ -772,6 +801,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

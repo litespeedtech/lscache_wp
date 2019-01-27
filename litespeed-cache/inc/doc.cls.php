@@ -3,8 +3,10 @@
  * The Doc class.
  *
  * @since     	2.2.7
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 

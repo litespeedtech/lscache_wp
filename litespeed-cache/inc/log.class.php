@@ -6,8 +6,10 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -218,7 +220,9 @@ class LiteSpeed_Cache_Log
 	 * Formats the log message with a consistent prefix.
 	 *
 	 * @since 1.0.12
+	 *
 	 * @param string $msg the log message to write
+	 *
 	 * @return string the formatted log message
 	 */
 	private static function format_message( $msg )
@@ -255,6 +259,7 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.1.3
 	 * @since 1.6 Added array dump as 2nd param
+	 *
 	 * @param string $msg the debug message
 	 * @param int|array $backtrace_limit Backtrace depth, Or the array to dump
 	 */
@@ -282,6 +287,7 @@ class LiteSpeed_Cache_Log
 	 * Direct call to log an advanced debug message.
 	 *
 	 * @since 1.2.0
+	 *
 	 * @param string $msg the debug message
 	 * @param int $backtrace_limit backtrace depth
 	 */
@@ -297,6 +303,7 @@ class LiteSpeed_Cache_Log
 	 * Logs a debug message.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $msg the debug message
 	 * @param int $backtrace_limit backtrace depth
 	 */
@@ -391,6 +398,7 @@ class LiteSpeed_Cache_Log
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -4,8 +4,10 @@
  * The Third Party integration with the Avada plugin.
  *
  * @since		1.1.0
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if (!defined('ABSPATH')) {

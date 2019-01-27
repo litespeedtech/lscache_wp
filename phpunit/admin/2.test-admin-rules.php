@@ -38,6 +38,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_home_path.
+	 *
 	 * @return string
 	 */
 	public function test_get_home_path()
@@ -49,6 +50,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_site_path.
+	 *
 	 * @return string
 	 */
 	public function test_get_site_path()
@@ -60,6 +62,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Rules::is_subdir.
+	 *
 	 * @return Boolean
 	 */
 	/*public function test_is_subdir()
@@ -71,6 +74,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::is_file_able.
+	 *
 	 * @return string
 	 */
 	public function test_is_file_able()
@@ -82,8 +86,10 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::build_wrappers.
+	 *
 	 * @param string $wrapper the common rule wrapper
 	 * @param string $end returns the ending wrapper
+	 *
 	 * @return string returns the opening wrapper
 	 */
 	public function test_build_wrappers()
@@ -98,9 +104,11 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::path_search.
+	 *
 	 * @param string $stop_path the last directory level to search
 	 * @param string $start_path the first directory level to search
 	 * @param string $file the file to search for
+	 *
 	 * @return string The deepest path where the file exists,
 	 */
 	public function test_path_search()
@@ -116,6 +124,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::path_set.
+	 *
 	 * @return null,
 	 */
 	public function test_path_set()
@@ -128,8 +137,10 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_get.
+	 *
 	 * @param string $content returns the content of the file or an error description
 	 * @param string $path the path to get the content from
+	 *
 	 * @return bool true if succeeded, false otherwise
 	 */
 	public function test_file_get()
@@ -142,11 +153,13 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_get_ifmodule_block.
+	 *
 	 * @param string $content the content to search
 	 * @param int $off_begin Will be set to the beginning offset. Starts
 	 *                       just after the opening <IfModule>.
 	 * @param int $off_end Will be set to the ending offset. Starts just
 	 *                     before the closing </IfModule>.
+	 *
 	 * @return bool|string False if not found, True if found. Error message if
 	 *                     it failed.
 	 */
@@ -162,10 +175,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_split.
+	 *
 	 * @param string $content The content to search
 	 * @param string $buf the portion before and including the beginning of
 	 *                    the section
 	 * @param string $after the content after the relevant section
+	 *
 	 * @return mixed false on failure, the haystack on success
 	 */
 	public function test_file_split()
@@ -180,10 +195,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_combine.
+	 *
 	 * @param string $beginning the portion that includes the edits
 	 * @param string $haystack the source section from the original file
 	 * @param string $after the content after the relevant section
 	 * @param string $path if path is set, use path, else use home path
+	 *
 	 * @return mixed true on success, else error message on failure
 	 */
 	public function test_file_combine()
@@ -199,7 +216,9 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_backup.
+	 *
 	 * @param String $path The .htaccess file path.
+	 *
 	 * @return bool true on success, else false on failure
 	 */
 	public function h_test_file_backup()
@@ -212,10 +231,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_save.
+	 *
 	 * @param string $content the new content to put into the rules file
 	 * @param bool $cleanup true to strip extra slashes, false otherwise
 	 * @param string $path the file path to edit
 	 * @param bool $backup whether to create backups or not
+	 *
 	 * @return mixed true on success, else error message on failure
 	 */
 	public function test_file_save()
@@ -232,6 +253,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_common_rule.
+	 *
 	 * @param string $content The original content in the .htaccess file.
 	 * @param string $output returns the added rule if success
 	 * @param string $wrapper the wrapper that surrounds the rule
@@ -239,6 +261,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $match the rewrite rule to match against the condition
 	 * @param string $env the environment change to do if the rule matches
 	 * @param string $flag the flags to use with the rewrite condition
+	 *
 	 * @return mixed explained above
 	 */
 	public function test_set_common_rule()
@@ -258,9 +281,11 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_common_rule.
+	 *
 	 * @param string $wrapper the wrapper to look for
 	 * @param string $cond the condition to look for
 	 * @param string $match returns the rewrite rule on success, error message on failure
+	 *
 	 * @return bool true on success, false otherwise
 	 */
 	public function test_get_common_rule()
@@ -274,12 +299,14 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_rewrite_rule.
+	 *
 	 * @param string $content The original content in the .htaccess file.
 	 * @param string $output returns the added rule if success
 	 * @param string $wrapper the wrapper that surrounds the rule
 	 * @param string $match the rewrite rule to match against
 	 * @param string $sub the substitute for the rule match
 	 * @param string $env the environment change to do if the rule matches
+	 *
 	 * @return mixed explained above
 	 */
 	public function test_set_rewrite_rule()
@@ -297,10 +324,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_rewrite_rule.
+	 *
 	 * @param string $wrapper the wrapper to look for
 	 * @param string $match returns the rewrite rule on success, error message on failure
 	 * @param string $sub returns the substitute on success, error message on failure
 	 * @param string $env returns the environment on success, error message on failure
+	 *
 	 * @return bool true on success, false otherwise
 	 */
 	public function test_get_rewrite_rule()
@@ -315,10 +344,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_favicon.
+	 *
 	 * @param string $haystack The original content in the .htaccess file.
 	 * @param bool $action whether to add or remove the rule
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
+	 *
 	 * @return mixed false on failure/do not update,
 	 *               original content sans favicon on success
 	 */
@@ -336,10 +367,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_cache_resource.
+	 *
 	 * @param string $haystack The original content in the .htaccess file.
 	 * @param bool $set whether to add or remove the rule
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
+	 *
 	 * @return mixed false on failure/do not update,
 	 *               original content sans favicon on success
 	 */
@@ -356,9 +389,11 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::check_input.
+	 *
 	 * @param array $options The current options
 	 * @param array $input The input
 	 * @param array $errors errors array to add error messages to
+	 *
 	 * @return mixed false if there is an error, diff array otherwise
 	 */
 	public function test_check_input()
@@ -373,10 +408,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::check_rewrite.
+	 *
 	 * @param string $haystack The original content in the .htaccess file.
 	 * @param bool $set whether to add or remove the rule
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
+	 *
 	 * @return mixed false on failure/do not update,
 	 *               original content sans favicon on success
 	 */
@@ -390,9 +427,11 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::parse_ret.
+	 *
 	 * @param mixed $ret the return value from the called function
 	 * @param string $haystack where to start the next search
 	 * @param string $errors errors array in case of error
+	 *
 	 * @return bool false on function failure, true otherwise
 	 */
 	public function test_parse_ret()
@@ -407,10 +446,12 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_subdir_cookie.
+	 *
 	 * @param array $diff The rules that need to be set
 	 * @param string $haystack The original content in the .htaccess file.
 	 * @param string $buf the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
+	 *
 	 * @return mixed false on failure/do not update,
 	 *               original content sans login cookie on success
 	 */
@@ -427,6 +468,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_on_upgrade.
+	 *
 	 * @param string $wrapper A wrapper to a specific rule
 	 * @param string $match the match to set the rewrite rule to search for
 	 * @param string $sub the substitution to set the rewrite rule to replace with
@@ -447,6 +489,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::parse_existing_login_cookie.
+	 *
 	 * @param string $wrapper A wrapper to a specific rule
 	 * @param string $match the match to set the rewrite rule to search for
 	 * @param string $sub the substitution to set the rewrite rule to replace with
@@ -463,6 +506,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::scan_upgrade.
+	 *
 	 * @return string the login cookie if found, empty string otherwise
 	 */
 	public function test_scan_upgrade()
@@ -473,8 +517,10 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::validate_common_rewrites.
+	 *
 	 * @param array $diff the rules that need to be set
 	 * @param array $errors returns error messages added if failed
+	 *
 	 * @return mixed returns updated options array on success, false otherwise
 	 */
 	public function test_validate_common_rewrites()
@@ -487,6 +533,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::clear_rules.
+	 *
 	 * @param string $wrapper a wrapper to a specific rule to match
 	 */
 	public function test_clear_rules()

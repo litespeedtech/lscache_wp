@@ -107,6 +107,7 @@ class LiteSpeed_Cache_Router
 
 		/**
 		 * Bypass cron to avoid deregister jq notice `Do not deregister the <code>jquery-core</code> script in the administration area.`.
+		 *
 		 * @since  2.7.2
 		 */
 		if ( defined( 'DOING_CRON' ) ) {
@@ -115,6 +116,7 @@ class LiteSpeed_Cache_Router
 
 		/**
 		 * Bypass login/reg page.
+		 *
 		 * @since  1.6
 		 */
 		if ( self::_is_login_page() ) {
@@ -241,6 +243,7 @@ class LiteSpeed_Cache_Router
 	 * Get frontend path.
 	 *
 	 * @since 1.2.2
+	 *
 	 * @return bool
 	 */
 	public static function frontend_path()
@@ -265,6 +268,7 @@ class LiteSpeed_Cache_Router
 	 * Check if ESI is enabled or not.
 	 *
 	 * @since 1.2.0
+	 *
 	 * @return bool
 	 */
 	public static function esi_enabled()
@@ -279,6 +283,7 @@ class LiteSpeed_Cache_Router
 	 * Check if crawler is enabled on server level.
 	 *
 	 * @since 1.1.1
+	 *
 	 * @return bool
 	 */
 	public static function can_crawl()
@@ -304,6 +309,7 @@ class LiteSpeed_Cache_Router
 	 * Check action.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return string
 	 */
 	public static function get_action()
@@ -323,6 +329,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is logged in.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return bool
 	 */
 	public static function is_logged_in()
@@ -337,6 +344,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is ajax call.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return bool
 	 */
 	public static function is_ajax()
@@ -351,6 +359,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is admin ip.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return bool
 	 */
 	public static function is_admin_ip()
@@ -520,6 +529,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_DISMISS:
 				/**
 				 * Non ajax call can dismiss too.
+				 *
 				 * @since  2.9
 				 */
 				// if ( self::is_ajax() ) {
@@ -538,7 +548,9 @@ class LiteSpeed_Cache_Router
 	 * Verify sapi passive callback.
 	 *
 	 * @since 1.5
+	 *
 	 * @param string $action
+	 *
 	 * @return bool
 	 */
 	private function _verify_sapi_passive( $action )
@@ -557,7 +569,9 @@ class LiteSpeed_Cache_Router
 	 * Verify sapi aggressive callback.
 	 *
 	 * @since 1.6
+	 *
 	 * @param string $action
+	 *
 	 * @return bool
 	 */
 	private function _verify_sapi_aggressive( $action )
@@ -576,7 +590,9 @@ class LiteSpeed_Cache_Router
 	 * Verify nonce.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $action
+	 *
 	 * @return bool
 	 */
 	private function verify_nonce( $action )
@@ -593,7 +609,9 @@ class LiteSpeed_Cache_Router
 	 * Check if the ip is in the range.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $ip_list IP list
+	 *
 	 * @return bool
 	 */
 	private function ip_access( $ip_list )
@@ -622,6 +640,7 @@ class LiteSpeed_Cache_Router
 	 *
 	 * @since 1.1.0
 	 * @since  1.6.5 changed to public
+	 *
 	 * @return string
 	 */
 	public static function get_ip()
@@ -657,6 +676,7 @@ class LiteSpeed_Cache_Router
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

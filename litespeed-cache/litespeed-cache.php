@@ -9,6 +9,7 @@
  *
  * @see              https://www.litespeedtech.com
  * @since             1.0.0
+ *
  * @package           LiteSpeed_Cache
  *
  * @wordpress-plugin
@@ -55,6 +56,7 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
  * This also needs to be before cfg.cls init because default cdn_included_dir needs `LSCWP_CONTENT_FOLDER`.
+ *
  * @since  1.9.1 Moved up
  * @since  2.2.1 Moved up from core.cls
  */
@@ -152,6 +154,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
  * a purge tag using this function.
  *
  * @since 1.0.1
+ *
  * @param int $id the post id to purge
  */
 if ( ! function_exists( 'litespeed_purge_single_post' ) ) {

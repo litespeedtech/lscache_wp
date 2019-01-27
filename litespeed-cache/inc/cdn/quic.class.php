@@ -3,8 +3,10 @@
  * The quic.cloud class.
  *
  * @since      	2.4.1
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_CDN_Quic
@@ -241,6 +243,7 @@ class LiteSpeed_Cache_CDN_Quic
 	 * Get the current instance object.
 	 *
 	 * @since 1.8
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

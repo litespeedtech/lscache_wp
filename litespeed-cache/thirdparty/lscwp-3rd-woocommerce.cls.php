@@ -4,8 +4,10 @@
  *
  * @since         1.0.5
  * @since  1.6.6 Added function_exists check for compatibility
+ *
  * @package       LiteSpeed_Cache
  * @subpackage    LiteSpeed_Cache/thirdparty
+ *
  * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {
@@ -87,6 +89,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			/**
 			 * Only when cart is not empty, give it an ESI with private cache
 			 * Call when template_include to make sure woo cart is initialized.
+			 *
 			 * @since  1.7.2
 			 */
 			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
@@ -229,7 +232,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @global type $post Needed for post id
+	 *
 	 * @param type $template_name
 	 * @param type $template_path
 	 * @param type $located
@@ -285,7 +290,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $args the arguments used to build the related products section
+	 *
 	 * @return array the unchanged arguments
 	 */
 	public function add_related_tags($args)
@@ -306,6 +313,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param type $template_name
 	 */
 	public function end_template($template_name)
@@ -347,8 +355,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @global type $post
 	 * @global type $wp_query
+	 *
 	 * @param type $params
 	 */
 	public function load_add_to_cart_form_block($params)
@@ -367,6 +377,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $params Widget parameter array
 	 */
 	public function register_post_view($params)
@@ -397,7 +408,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $params the current ESI parameters
+	 *
 	 * @return array the updated esi parameters
 	 */
 	public function add_post_id($params)
@@ -417,8 +430,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $options the current default widget options
 	 * @param type $widget the current widget to configure
+	 *
 	 * @return array the updated default widget options
 	 */
 	public function wc_widget_default($options, $widget)
@@ -515,7 +530,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.5
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param string $esi_id the ESI block id if a request is an ESI request
+	 *
 	 * @return bool true if cacheable, false if not
 	 */
 	public function set_control($esi_id)
@@ -526,6 +543,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		/**
 		 * Avoid possible 500 issue.
+		 *
 		 * @since 1.6.2.1
 		 */
 		if ( ! function_exists( 'WC' ) ) {
@@ -554,6 +572,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				}
 				/**
 				 * From woo/inc/class-wc-cache-helper.php:prevent_caching().
+				 *
 				 * @since  1.4
 				 */
 				$page_ids = array_filter( array( wc_get_page_id( 'cart' ), wc_get_page_id( 'checkout' ), wc_get_page_id( 'myaccount' ) ) );
@@ -568,6 +587,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						LiteSpeed_Cache_API::set_cache_private() ;
 						/**
 						 * no rewrite rule to set no vary, so can't set no_vary otherwise it will always miss as can't match vary.
+						 *
 						 * @since 1.6.6.1
 						 */
 						// LiteSpeed_Cache_API::set_cache_no_vary() ;
@@ -624,6 +644,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param WC_Product $product
 	 */
 	public function purge_product($product)
@@ -653,6 +674,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param int $post_id object ID
 	 * @param array $term_ids an array of term taxonomy IDs
 	 */
@@ -675,6 +697,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param int $post_id Post id that is about to be purged
 	 */
 	public function backend_purge($post_id)
@@ -711,6 +734,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param $unused
 	 * @param int $comment_approved whether the comment is approved or not
 	 * @param array $commentdata information about the comment
@@ -737,7 +761,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * This will return the option names needed as well as the default options.
 	 *
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $configs
+	 *
 	 * @return array
 	 */
 	public function get_config($configs)
@@ -758,9 +784,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * purge rules).
 	 *
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $tabs third party tabs added
 	 * @param array $options current options used
 	 * @param string $option_group the option group to surround the option id
+	 *
 	 * @return mixed false on failure, updated tabs otherwise
 	 */
 	public function add_config($tabs, $options, $option_group)
@@ -856,8 +884,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * the options array accordingly.
 	 *
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param array $options the saved options array
 	 * @param array $input the input options array
+	 *
 	 * @return mixed false on failure, updated $options otherwise
 	 */
 	public function save_config($options, $input)
@@ -892,7 +922,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.10
 	 * @since 1.6.3 Removed static
+	 *
 	 * @param int $product_id The product id
+	 *
 	 * @return array an array of category ids
 	 */
 	private function get_cats($product_id)
@@ -917,6 +949,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Get the current instance object.
 	 *
 	 * @since 1.6.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

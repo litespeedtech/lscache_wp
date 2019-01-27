@@ -10,8 +10,10 @@
  *
  * @since      	1.0.0
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -132,12 +134,14 @@ class LiteSpeed_Cache
 
 		/**
 		 * Added hook before init.
+		 *
 		 * @since  1.6.6
 		 */
 		do_action( 'litespeed_before_init' ) ;
 
 		/**
 		 * Preload ESI functionality for ESI request uri recovery.
+		 *
 		 * @since 1.8.1
 		 */
 		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
@@ -158,6 +162,7 @@ class LiteSpeed_Cache
 	{
 		/**
 		 * Added hook before init.
+		 *
 		 * @since  1.6.6
 		 * @since  2.6 	Added filter to all config values in LiteSpeed_Cache_Config
 		 */
@@ -191,6 +196,7 @@ class LiteSpeed_Cache
 
 		/**
 		 * Check if is non optm simulator.
+		 *
 		 * @since  2.9
 		 */
 		if ( ! empty( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm' ) {
@@ -200,6 +206,7 @@ class LiteSpeed_Cache
 		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			/**
 			 * Check lazy lib request in the very beginning.
+			 *
 			 * @since 1.4
 			 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
 			 */
@@ -211,6 +218,7 @@ class LiteSpeed_Cache
 
 		/**
 		 * Register vary filter.
+		 *
 		 * @since  1.6.2
 		 */
 		LiteSpeed_Cache_Control::get_instance() ;
@@ -436,7 +444,9 @@ class LiteSpeed_Cache
 	 * A shortcut to get the LiteSpeed_Cache_Config config value.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $opt_id an option ID if getting an option
+	 *
 	 * @return the option value
 	 */
 	public static function config( $opt_id )
@@ -519,7 +529,9 @@ class LiteSpeed_Cache
 	 * Usually this is called after send_headers() if following orignal WP process
 	 *
 	 * @since 1.1.5
+	 *
 	 * @param string $buffer
+	 *
 	 * @return string
 	 */
 	public function send_headers_force( $buffer )
@@ -537,6 +549,7 @@ class LiteSpeed_Cache
 		/**
 		 * Clean wrapper mainly for esi block
 		 * NOTE: this needs to be before optimizer to avoid wrapper being removed.
+		 *
 		 * @since 1.4
 		 */
 		$buffer = LiteSpeed_Cache_GUI::finalize( $buffer ) ;
@@ -564,6 +577,7 @@ class LiteSpeed_Cache
 	 * This will send out all LiteSpeed Cache related response headers needed for the post.
 	 *
 	 * @since 1.0.5
+	 *
 	 * @param bool $is_forced If the header is sent following our normal finalizing logic
 	 */
 	public function send_headers( $is_forced = false )
@@ -717,6 +731,7 @@ class LiteSpeed_Cache
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -75,6 +75,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * Don't change for REST call because they don't carry on user info usually.
+		 *
 		 * @since 1.6.7
 		 */
 		add_action( 'rest_api_init', function(){
@@ -134,8 +135,11 @@ class LiteSpeed_Cache_Vary
 	 * Normal user is defined as not a logged in user and not a commenter.
 	 *
 	 * @since 1.0.4
+	 *
 	 * @global type $post
+	 *
 	 * @param array $comments The current comments to output
+	 *
 	 * @return array the comments to output
 	 */
 	public function check_commenter( $comments )
@@ -201,6 +205,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable.
+		 *
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary() ;
@@ -221,6 +226,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * NOTE: Run before `$this->_update_default_vary()` to make vary changeable.
+		 *
 		 * @since  2.2.2
 		 */
 		self::can_ajax_vary() ;
@@ -251,6 +257,7 @@ class LiteSpeed_Cache_Vary
 		// Don't change for ajax due to ajax not sending webp header
 		/**
 		 * Added `litespeed_ajax_vary` hook for 3rd party to set vary when doing ajax call ( Login With Ajax ).
+		 *
 		 * @since  1.6.6
 		 */
 		if ( LiteSpeed_Cache_Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
@@ -260,6 +267,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue.
+		 *
 		 * @since 1.6.5
 		 */
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
@@ -369,6 +377,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * Add filter.
+		 *
 		 * @since 1.6 Added for Role Excludes for optimization cls
 		 * @since 1.6.2 Hooked to webp
 		 */
@@ -409,6 +418,7 @@ class LiteSpeed_Cache_Vary
 	 * Correct user status with commenter.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param bool $from_redirect If the request is from redirect page or not
 	 */
 	private function add_commenter( $from_redirect = false )
@@ -445,6 +455,7 @@ class LiteSpeed_Cache_Vary
 	 * Generate relative path for cookie.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param bool $from_redirect If the request is from redirect page or not
 	 */
 	private static function _relative_path( $from_redirect = false )
@@ -465,7 +476,9 @@ class LiteSpeed_Cache_Vary
 	 * Currently, this only checks post passwords.
 	 *
 	 * @since 1.0.13
+	 *
 	 * @global $post
+	 *
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 *               if the post is not password protected. Vary header otherwise.
 	 */
@@ -482,6 +495,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * Non caccheable page can still set vary ( for logged in process ).
+		 *
 		 * @since  1.6.6.1
 		 */
 		// if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
@@ -515,6 +529,7 @@ class LiteSpeed_Cache_Vary
 	 * Gets vary cookies that are already added for the current page.
 	 *
 	 * @since 1.0.13
+	 *
 	 * @return array an array of all vary cookies currently added
 	 */
 	private function _format_vary_cookies()
@@ -526,6 +541,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * Give a filter to manipulate vary.
+		 *
 		 * @since 2.7.1
 		 */
 		$cookies = apply_filters( 'litespeed_vary_cookies', self::$_vary_cookies ) ;
@@ -554,6 +570,7 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.0.13
 	 * @deprecated 2.7.1 Use filter `litespeed_vary_cookies` instead.
+	 *
 	 * @param mixed $vary a string or array of vary cookies to add to the current list
 	 */
 	public static function add( $vary )
@@ -583,6 +600,7 @@ class LiteSpeed_Cache_Vary
 	 * If vary cookie changed, must set non cacheable.
 	 *
 	 * @since 1.0.4
+	 *
 	 * @param int $val the value to update
 	 * @param int $expire expire time
 	 * @param bool $path False if use wp root path as cookie path
@@ -595,6 +613,7 @@ class LiteSpeed_Cache_Vary
 
 		/**
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site.
+		 *
 		 * @since 1.7
 		 */
 		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ? false : is_ssl() ;
@@ -606,6 +625,7 @@ class LiteSpeed_Cache_Vary
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -4,8 +4,10 @@
  *
  *
  * @since      1.1.0
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -77,6 +79,7 @@ class LiteSpeed_Cache_Admin_Report
 	 * Get env report number from db.
 	 *
 	 * @since  1.6.4
+	 *
 	 * @return array
 	 */
 	public function get_env_ref()
@@ -100,8 +103,10 @@ class LiteSpeed_Cache_Admin_Report
 	 * Will write to the environment report file.
 	 *
 	 * @since 1.0.12
+	 *
 	 * @param mixed $options Array of options to output. If null, will skip
 	 *                       the options section.
+	 *
 	 * @return string the built report
 	 */
 	public function generate_environment_report($options = null)
@@ -192,6 +197,7 @@ class LiteSpeed_Cache_Admin_Report
 	 * @param array $options - cms options
 	 * @param array $extras - cms specific attributes
 	 * @param array $htaccess_paths - htaccess paths to check
+	 *
 	 * @return string the Environment Report buffer
 	 */
 	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array())
@@ -238,8 +244,10 @@ class LiteSpeed_Cache_Admin_Report
 	 * and an array for the section parameters.
 	 *
 	 * @since 1.0.12
+	 *
 	 * @param string $section_header The section heading
 	 * @param array $section An array of information to output
+	 *
 	 * @return string the created report block
 	 */
 	private function format_report_section( $section_header, $section )
@@ -271,6 +279,7 @@ class LiteSpeed_Cache_Admin_Report
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

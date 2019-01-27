@@ -4,8 +4,10 @@
  *
  *
  * @since      1.0.0
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -233,7 +235,9 @@ class LiteSpeed_Cache_Admin
 	 * Clean up the input string of any extra slashes/spaces.
 	 *
 	 * @since 1.0.4
+	 *
 	 * @param string $input the input string to clean
+	 *
 	 * @return string the cleaned up input
 	 */
 	public static function cleanup_text( $input )
@@ -250,6 +254,7 @@ class LiteSpeed_Cache_Admin
 	 * without the nonce and action in the query string.
 	 *
 	 * @since 1.0.12
+	 *
 	 * @global string $pagenow
 	 */
 	public static function redirect( $url = false )
@@ -284,6 +289,7 @@ class LiteSpeed_Cache_Admin
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

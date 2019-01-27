@@ -6,8 +6,10 @@
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -52,6 +54,7 @@ class LiteSpeed_Cache_ESI
 
 		/**
 		 * Recover REQUEST_URI.
+		 *
 		 * @since  1.8.1
 		 */
 		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
@@ -107,6 +110,7 @@ class LiteSpeed_Cache_ESI
 	 * header.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return string esi On header if request has esi, empty string otherwise
 	 */
 	public static function has_esi()
@@ -129,7 +133,9 @@ class LiteSpeed_Cache_ESI
 	 * Selects the esi template file when the post type is a LiteSpeed ESI page.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $template the template path filtered
+	 *
 	 * @return string the new template path
 	 */
 	public static function esi_template($template)
@@ -199,6 +205,7 @@ class LiteSpeed_Cache_ESI
 	 * The block_id parameter should contain alphanumeric and '-_' only.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $block_id the id to use to display the correct esi block
 	 * @param string $wrapper the wrapper for the esi comments
 	 * @param array $params the esi parameters
@@ -207,6 +214,7 @@ class LiteSpeed_Cache_ESI
 	 * @param bool $preserved if this ESI block is used in any filter, need to temporarily convert it to a string to avoid the HTML tag being removed/filtered
 	 * @param bool $svar If store the value in memory or not, in memory wil be faster
 	 * @param bool $inline_val If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
+	 *
 	 * @return bool|string false on error, the output otherwise
 	 */
 	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
@@ -347,7 +355,9 @@ class LiteSpeed_Cache_ESI
 	 * Get the configuration option for the current widget.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param WP_Widget $widget the widget to get the options for
+	 *
 	 * @return mixed null if not found, an array of the options otherwise
 	 */
 	public static function widget_load_get_options($widget)
@@ -382,8 +392,10 @@ class LiteSpeed_Cache_ESI
 	 * Loads the default options for default WordPress widgets.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param array $options the current options selected
 	 * @param WP_Widget $widget the widget to be configured
+	 *
 	 * @return array the updated options
 	 */
 	public static function widget_default_options($options, $widget)
@@ -413,9 +425,11 @@ class LiteSpeed_Cache_ESI
 	 * will set up the esi request and cancel the widget display.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param array $instance parameter used to build the widget
 	 * @param WP_Widget $widget the widget to build
 	 * @param array $args parameter used to build the widget
+	 *
 	 * @return mixed return false if display through esi, instance otherwise
 	 */
 	public function sub_widget_block( array $instance, WP_Widget $widget, array $args )
@@ -449,6 +463,7 @@ class LiteSpeed_Cache_ESI
 	 * Sets up the ESI request for the admin bar.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @global type $wp_admin_bar
 	 */
 	public function sub_admin_bar_block()
@@ -471,7 +486,9 @@ class LiteSpeed_Cache_ESI
 	 * Parses the esi input parameters and generates the widget for esi display.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @global $wp_widget_factory
+	 *
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
 	public function load_widget_block( $params )
@@ -521,6 +538,7 @@ class LiteSpeed_Cache_ESI
 	 * Parses the esi input parameters and generates the comment form for esi display.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param array $params Input parameters needed to correctly display comment form
 	 */
 	public function load_comment_form_block($params)
@@ -614,7 +632,9 @@ class LiteSpeed_Cache_ESI
 	 * Else there is no need to make the comment form ESI.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param array $defaults the default comment form settings
+	 *
 	 * @return array the default comment form settings
 	 */
 	public function register_comment_form_actions( $defaults )
@@ -631,9 +651,12 @@ class LiteSpeed_Cache_ESI
 	 * This method will compare the used comment form args against the default args. The difference will be passed to the esi request.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @global type $post
+	 *
 	 * @param $unused
 	 * @param array $args the used comment form args
+	 *
 	 * @return unused
 	 */
 	public function sub_comment_form_block( $unused, $args )
@@ -711,6 +734,7 @@ class LiteSpeed_Cache_ESI
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

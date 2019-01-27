@@ -4,8 +4,10 @@
  *
  * @since      	1.3
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -51,6 +53,7 @@ class LiteSpeed_Cache_GUI
 
 			/**
 			 * Turn on instant click.
+			 *
 			 * @since  1.8.2
 			 */
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK ) ) {
@@ -220,6 +223,7 @@ class LiteSpeed_Cache_GUI
 	 * Check if has rule conflict notice.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @return bool
 	 */
 	public static function has_msg_ruleconflict()
@@ -231,6 +235,7 @@ class LiteSpeed_Cache_GUI
 	 * Check if has whm notice.
 	 *
 	 * @since 1.1.1
+	 *
 	 * @return bool
 	 */
 	public static function has_whm_msg()
@@ -439,6 +444,7 @@ class LiteSpeed_Cache_GUI
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
 	 * @global WP_Admin_Bar $wp_admin_bar
+	 *
 	 * @since 1.7.2 Moved from admin_display.cls to gui.cls; Renamed from `add_quick_purge` to `backend_shortcut`
 	 */
 	public function backend_shortcut()
@@ -711,6 +717,7 @@ class LiteSpeed_Cache_GUI
 	 * Get the current instance object.
 	 *
 	 * @since 1.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

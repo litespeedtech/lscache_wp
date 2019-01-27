@@ -38,7 +38,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Display::admin_footer_text.
+	 *
 	 * @param string $footer_text
+	 *
 	 * @return string
 	 */
 	public function test_admin_footer_text()
@@ -71,6 +73,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::check_license.
+	 *
 	 * @return String
 	 */
 	public function test_check_license()
@@ -83,6 +86,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_paragraph.
+	 *
 	 * @return String
 	 */
 	public function test_build_paragraph()
@@ -96,6 +100,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_list.
+	 *
 	 * @return String
 	 */
 	public function test_build_list()
@@ -109,6 +114,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_notice.
+	 *
 	 * @return String
 	 */
 	public function test_build_notice()
@@ -122,6 +128,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_tip.
+	 *
 	 * @return String
 	 */
 	public function test_build_tip()
@@ -135,6 +142,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_button.
+	 *
 	 * @return String
 	 */
 	public function test_build_button()
@@ -148,6 +156,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_expand_collapse.
+	 *
 	 * @return String
 	 */
 	public function test_build_expand_collapse()
@@ -179,6 +188,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::display_notices.
+	 *
 	 * @return String
 	 */
 	public function test_display_notices()
@@ -212,6 +222,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_manage.
+	 *
 	 * @return String
 	 */
 	public function test_show_menu_manage()
@@ -226,6 +237,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_settings.
+	 *
 	 * @return String
 	 */
 	public function test_show_menu_settings()
@@ -240,6 +252,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_network_settings.
+	 *
 	 * @return String
 	 */
 	public function test_show_menu_network_settings()
@@ -254,6 +267,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_edit_htaccess.
+	 *
 	 * @return String
 	 */
 	public function test_show_menu_edit_htaccess()
@@ -268,6 +282,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_info.
+	 *
 	 * @return String
 	 */
 	public function test_show_menu_info()
@@ -282,6 +297,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_report.
+	 *
 	 * @return String
 	 */
 	public function test_show_menu_report()
@@ -294,6 +310,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_general.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_general()
@@ -307,6 +324,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_specific.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_specific()
@@ -319,6 +337,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_purge.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_purge()
@@ -331,6 +350,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_excludes.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_excludes()
@@ -346,6 +366,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_advanced.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_advanced()
@@ -361,6 +382,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_test.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_test()
@@ -376,6 +398,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_compatibilities.
+	 *
 	 * @return String
 	 */
 	public function test_show_settings_compatibilities()
@@ -389,6 +412,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_mobile_view.
+	 *
 	 * @return String
 	 */
 	public function test_build_setting_mobile_view()
@@ -405,9 +429,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_exclude_cookies.
+	 *
 	 * @param array $options the currently configured options
 	 * @param string $cookie_title returns the cookie title string
 	 * @param string $cookie_desc returns the cookie description string
+	 *
 	 * @return string Returns the cookie text area on success, error message on
 	 */
 	public function test_build_setting_exclude_cookies()
@@ -425,9 +451,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_exclude_useragent.
+	 *
 	 * @param array $options the currently configured options
 	 * @param string $ua_title returns the user agent title string
 	 * @param string $ua_desc returns the user agent description string
+	 *
 	 * @return string Returns the user agent text field on success,
 	 */
 	public function test_build_setting_exclude_useragent()
@@ -445,9 +473,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_login_cookie.
+	 *
 	 * @param array $options the currently configured options
 	 * @param string $cookie_title returns the cookie title string
 	 * @param string $cookie_desc returns the cookie description string
+	 *
 	 * @return string Returns the cookie text field on success,
 	 */
 	public function test_build_setting_login_cookie()
@@ -465,7 +495,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_purge_on_upgrade.
+	 *
 	 * @param array $options the currently configured options
+	 *
 	 * @return string the html for caching favicon configurations
 	 */
 	public function test_build_setting_purge_on_upgrade()
@@ -480,7 +512,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_cache_favicon.
+	 *
 	 * @param array $options the currently configured options
+	 *
 	 * @return string the html for caching favicon configurations
 	 */
 	public function test_build_setting_cache_favicon()
@@ -495,6 +529,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_compatibility_wp_postviews.
+	 *
 	 * @return String
 	 */
 	public function test_build_compatibility_wp_postviews()
@@ -507,6 +542,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_compatibility.
+	 *
 	 * @return String
 	 */
 	public function test_show_info_compatibility()
@@ -519,6 +555,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_admin_ip.
+	 *
 	 * @return String
 	 */
 	public function test_show_info_admin_ip()
@@ -531,6 +568,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_common_rewrite.
+	 *
 	 * @return String
 	 */
 	public function test_show_info_common_rewrite()
@@ -543,6 +581,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_faqs.
+	 *
 	 * @return String
 	 */
 	public function test_show_info_faqs()
@@ -555,6 +594,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_display_installed.
+	 *
 	 * @return String
 	 */
 	public function test_show_display_installed()
@@ -567,6 +607,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_error_cookie.
+	 *
 	 * @return String
 	 */
 	public function test_show_error_cookie()
@@ -579,8 +620,10 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_group_start.
+	 *
 	 * @param string $title the title of the configuration group
 	 * @param string $description the description of the configuration group
+	 *
 	 * @return string the start configuration option table html
 	 */
 	public function test_input_group_start()
@@ -596,6 +639,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_group_end.
+	 *
 	 * @return String
 	 */
 	public function test_input_group_end()
@@ -608,9 +652,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::display_config_row.
+	 *
 	 * @param string $label the option name
 	 * @param string $input_field the option html
 	 * @param string $notes the description to display under the option html
+	 *
 	 * @return string the config row html
 	 */
 	public function test_display_config_row()
@@ -628,12 +674,14 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_checkbox.
+	 *
 	 * @param string $id the option ID for the field
 	 * @param string $value the value for the field
 	 * @param mixed $checked_value the current value
 	 * @param string $label the label to display
 	 * @param string $on_click the action to do on click
 	 * @param bool $disabled true for disabled check box, false otherwise
+	 *
 	 * @return string the check box html
 	 */
 	public function test_input_field_checkbox()
@@ -652,9 +700,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_radio.
+	 *
 	 * @param string $id the option ID for the field
 	 * @param array $radiooptions the options available for selection
 	 * @param string $checked_value the currently selected option
+	 *
 	 * @return string the select field html
 	 */
 	public function test_input_field_radio()
@@ -672,9 +722,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_select.
+	 *
 	 * @param string $id the option ID for the field
 	 * @param array $seloptions the options available for selection
 	 * @param string $selected_value the currently selected option
+	 *
 	 * @return string the select field html
 	 */
 	public function test_input_field_select()
@@ -691,12 +743,14 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_text.
+	 *
 	 * @param string $id the option ID for the field
 	 * @param string $value the value for the field
 	 * @param string $size the length to display
 	 * @param string $style the class to format the display
 	 * @param string $after the units to display after the text field
 	 * @param bool $readonly true for read only text fields, false otherwise
+	 *
 	 * @return string the input text html
 	 */
 	public function test_input_field_text()
@@ -716,12 +770,14 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_textarea.
+	 *
 	 * @param string $id the option ID for the field
 	 * @param string $value the value for the field
 	 * @param string $rows number of rows to display
 	 * @param string $cols number of columns to display
 	 * @param string $style the class to format the display
 	 * @param bool $readonly true for read only text areas, false otherwise
+	 *
 	 * @return string the textarea html
 	 */
 	public function test_input_field_textarea()
@@ -741,8 +797,10 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_hidden.
+	 *
 	 * @param string $id the option ID for the field
 	 * @param string $value the value for the field
+	 *
 	 * @return string the hidden field html
 	 */
 	public function test_input_field_hidden()
@@ -758,6 +816,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_collapsible_start.
+	 *
 	 * @return String
 	 */
 	public function test_input_collapsible_start()
@@ -770,6 +829,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_collapsible_end.
+	 *
 	 * @return String
 	 */
 	public function test_input_collapsible_end()
@@ -782,6 +842,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_collapsible.
+	 *
 	 * @return String
 	 */
 	public function test_input_field_collapsible()

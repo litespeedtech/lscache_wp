@@ -70,6 +70,7 @@ class LiteSpeed_Cache_Cli_Admin
 		 * For CDN mapping, allow:
 		 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
 		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`.
+		 *
 		 * @since  2.7.1
 		 */
 		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
@@ -312,6 +313,7 @@ class LiteSpeed_Cache_Cli_Admin
 	 * Update options.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param array $options The options array to store
 	 */
 	private function _update_options($options)

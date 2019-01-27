@@ -4,8 +4,10 @@
  *
  * @since      	1.1.3
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -41,6 +43,7 @@ class LiteSpeed_Cache_Control
 	{
 		/**
 		 * Add vary filter for Role Excludes.
+		 *
 		 * @since  1.6.2
 		 */
 		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
@@ -147,6 +150,7 @@ class LiteSpeed_Cache_Control
 	 * Set cache control to shared private.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $reason The reason to no cache
 	 */
 	public static function set_shared( $reason = false )
@@ -181,6 +185,7 @@ class LiteSpeed_Cache_Control
 	 * Set cache control to forced public.
 	 *
 	 * @since 1.7.1
+	 *
 	 * @param string $reason The reason to no cache
 	 */
 	public static function set_public_forced( $reason = false )
@@ -214,6 +219,7 @@ class LiteSpeed_Cache_Control
 	 * Set cache control to private.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $reason The reason to no cache
 	 */
 	public static function set_private( $reason = false )
@@ -285,6 +291,7 @@ class LiteSpeed_Cache_Control
 	 * Switch to nocacheable status.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param string $reason The reason to no cache
 	 */
 	public static function set_nocache( $reason = false )
@@ -305,6 +312,7 @@ class LiteSpeed_Cache_Control
 	 * Check current notcacheable bit set.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return bool true if notcacheable bit is set, otherwise false
 	 */
 	public static function isset_notcacheable()
@@ -326,6 +334,7 @@ class LiteSpeed_Cache_Control
 	 * Check current cacheable status.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return bool true if is still cacheable, otherwise false
 	 */
 	public static function is_cacheable()
@@ -342,6 +351,7 @@ class LiteSpeed_Cache_Control
 	 * Set a custom TTL to use with the request if needed.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
 	 */
 	public static function set_custom_ttl($ttl)
@@ -356,6 +366,7 @@ class LiteSpeed_Cache_Control
 	 * Generate final TTL.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return int $ttl an integer to use as the TTL
 	 */
 	public static function get_ttl()
@@ -453,6 +464,7 @@ class LiteSpeed_Cache_Control
 	 * Sets up the Cache Control header.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return string empty string if empty, otherwise the cache control header
 	 */
 	public static function output()
@@ -584,6 +596,7 @@ class LiteSpeed_Cache_Control
 	 * Check if a page is cacheable based on litespeed setting.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return bool true if cacheable, false otherwise
 	 */
 	private function _setting_cacheable()
@@ -687,7 +700,9 @@ class LiteSpeed_Cache_Control
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param string $reason an explanation for why the page is not cacheable
+	 *
 	 * @return bool return false
 	 */
 	private function _no_cache_for( $reason )
@@ -700,7 +715,9 @@ class LiteSpeed_Cache_Control
 	 * Check if current request has qs excluded setting.
 	 *
 	 * @since  1.3
+	 *
 	 * @param array $excludes QS excludes setting
+	 *
 	 * @return bool|string False if not excluded, otherwise the hit qs list
 	 */
 	private function _is_qs_excluded( $excludes )
@@ -737,6 +754,7 @@ class LiteSpeed_Cache_Control
 	 * Get the current instance object.
 	 *
 	 * @since 1.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

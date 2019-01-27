@@ -230,6 +230,7 @@ class LiteSpeed_Cache_Utility
 	 * Convert array to string.
 	 *
 	 * @since  1.6
+	 *
 	 * @return string
 	 */
 	public static function arr2str( $arr )
@@ -245,6 +246,7 @@ class LiteSpeed_Cache_Utility
 	 * Get human readable size.
 	 *
 	 * @since  1.6
+	 *
 	 * @return string
 	 */
 	public static function real_size( $filesize )
@@ -269,7 +271,9 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.2.2
 	 * @since  1.4 Moved from optimize to utility
+	 *
 	 * @param string $str
+	 *
 	 * @return array All the attributes
 	 */
 	public static function parse_attr( $str )
@@ -286,6 +290,7 @@ class LiteSpeed_Cache_Utility
 	 * Get url based on permalink setting.
 	 *
 	 * @since  1.3
+	 *
 	 * @return string
 	 */
 	public static function get_permalink_url( $relative_url )
@@ -299,8 +304,10 @@ class LiteSpeed_Cache_Utility
 	 * Support $ exact match
 	 *
 	 * @since 1.3
+	 *
 	 * @param string $needle The string to search with
 	 * @param array $haystack
+	 *
 	 * @return bool|string false if not found, otherwise return the matched string in haystack
 	 */
 	public static function str_hit_array( $needle, $haystack, $has_ttl = false )
@@ -369,7 +376,9 @@ class LiteSpeed_Cache_Utility
 	 * Convert URI to URL.
 	 *
 	 * @since  1.3
+	 *
 	 * @param string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
+	 *
 	 * @return string http://www.example.com/subfolder/xx/xx.html
 	 */
 	public static function uri2url( $uri )
@@ -410,6 +419,7 @@ class LiteSpeed_Cache_Utility
 	 * NOTE: for subfolder home_url, will keep subfolder part (strip nothing but scheme and host)
 	 *
 	 * @param string $url
+	 *
 	 * @return string Relative URL, start with /
 	 */
 	public static function make_relative( $url )
@@ -468,8 +478,10 @@ class LiteSpeed_Cache_Utility
 	 * Array map one textarea to sanitize the url.
 	 *
 	 * @since  1.3
+	 *
 	 * @param string $content
 	 * @param bool $type String handler type
+	 *
 	 * @return string
 	 */
 	public static function sanitize_lines( $arr, $type = null )
@@ -507,9 +519,11 @@ class LiteSpeed_Cache_Utility
 	 * Assumes user capabilities are already checked.
 	 *
 	 * @since  1.6 Changed order of 2nd&3rd param, changed 3rd param `append_str` to 2nd `type`
+	 *
 	 * @param string $action the LSCWP_CTRL action to do in the url
 	 * @param string $is_ajax if is AJAX call or not
 	 * @param string $type The appending type to url
+	 *
 	 * @return string the built url
 	 */
 	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = null )
@@ -604,6 +618,7 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.2.2
 	 * @since  1.6.2 Moved here from optm.cls due to usage of media.cls
+	 *
 	 * @return string|bool The real path of file OR false
 	 */
 	public static function is_internal_file( $url, $addition_postfix = false )
@@ -644,6 +659,7 @@ class LiteSpeed_Cache_Utility
 		 * Add `define( 'LITESPEED_WP_REALPATH', '/wordpress' ) ;` in wp-config.php in this case
 		 *
 		 * @internal #611001 - Combine & Minify not working?
+		 *
 		 * @since  1.6.3
 		 */
 		if ( substr( $url_parsed[ 'path' ], 0, 1 ) === '/' ) {
@@ -660,6 +676,7 @@ class LiteSpeed_Cache_Utility
 
 		/**
 		 * Added new file postfix to be check if passed in.
+		 *
 		 * @since 2.2.4
 		 */
 		if ( $addition_postfix ) {
@@ -668,6 +685,7 @@ class LiteSpeed_Cache_Utility
 
 		/**
 		 * Added this filter for those plugins which overwrite the filepath.
+		 *
 		 * @see #101091 plugin `Hide My WordPress`
 		 * @since 2.2.3
 		 */
@@ -762,6 +780,7 @@ class LiteSpeed_Cache_Utility
 	 * Get the current instance object.
 	 *
 	 * @since 2.9
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

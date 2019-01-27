@@ -4,8 +4,10 @@
  * The Third Party integration with the WP-Polls plugin.
  *
  * @since		1.0.7
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {

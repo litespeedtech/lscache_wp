@@ -4,8 +4,10 @@
  * The Third Party integration with the YITH WooCommerce Wishlist plugin.
  *
  * @since		1.1.0
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {
@@ -73,7 +75,9 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * block.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param $template unused
+	 *
 	 * @return string the html for future callbacks to filter
 	 */
 	public static function sub_add_to_wishlist( $template )
@@ -92,7 +96,9 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * This will load the add to wishlist button html for output.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @global $post, $wp_query
+	 *
 	 * @param array $params the input ESI parameters
 	 */
 	public static function load_add_to_wishlist($params)

@@ -147,8 +147,8 @@ function wp_cache_add_non_persistent_groups( $groups )
  * This changes the blog id used to create keys in blog specific groups.
  *
  * @since 1.8
- *
  * @see WP_Object_Cache::switch_to_blog()
+ *
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
  * @param int $blog_id site ID
@@ -203,6 +203,7 @@ class WP_Object_Cache
 
 		/**
 		 * Fix multiple instance using same oc issue.
+		 *
 		 * @since  1.8.2
 		 */
 		! defined( 'LSOC_PREFIX' ) && define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) ) ;
@@ -626,6 +627,7 @@ class WP_Object_Cache
 	 * Get the current instance object.
 	 *
 	 * @since 1.8
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -3,8 +3,10 @@
  * Admin API.
  *
  * @since      1.5
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -157,6 +159,7 @@ class LiteSpeed_Cache_Admin_API
 	 * Check if is valid callback from litespeed passive request.
 	 *
 	 * @since  1.5
+	 *
 	 * @return bool True if correct
 	 */
 	public static function sapi_valiate_passive_callback()
@@ -180,6 +183,7 @@ class LiteSpeed_Cache_Admin_API
 	 * Check if is valid callback from litespeed aggressive request.
 	 *
 	 * @since  1.6
+	 *
 	 * @return bool True if correct
 	 */
 	public static function sapi_validate_aggressive_callback()
@@ -214,6 +218,7 @@ class LiteSpeed_Cache_Admin_API
 
 		/**
 		 * All requests must have closet cloud server too.
+		 *
 		 * @since  2.9
 		 */
 		if ( ! $instance->_iapi_cloud ) {
@@ -234,6 +239,7 @@ class LiteSpeed_Cache_Admin_API
 
 		/**
 		 * All requests must have closet cloud server too.
+		 *
 		 * @since  2.9
 		 */
 		if ( ! $instance->_iapi_cloud ) {
@@ -242,6 +248,7 @@ class LiteSpeed_Cache_Admin_API
 
 		/**
 		 * All requests must have api_key first.
+		 *
 		 * @since  1.6.5
 		 */
 		if ( ! $instance->_iapi_key ) {
@@ -385,6 +392,7 @@ class LiteSpeed_Cache_Admin_API
 	 * Post data to LiteSpeed cloud server.
 	 *
 	 * @since  1.6
+	 *
 	 * @return string | array Must return an error msg string or json array
 	 */
 	private function _post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
@@ -416,6 +424,7 @@ class LiteSpeed_Cache_Admin_API
 		) ;
 		/**
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation.
+		 *
 		 * @since 1.6.4
 		 */
 		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) ) ;
@@ -521,6 +530,7 @@ class LiteSpeed_Cache_Admin_API
 	 * Get the current instance object.
 	 *
 	 * @since 1.5
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

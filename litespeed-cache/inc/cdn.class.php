@@ -4,8 +4,10 @@
  *
  * @since      	1.2.3
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -51,6 +53,7 @@ class LiteSpeed_Cache_CDN
 		/**
 		 * Remotely load jQuery
 		 * This is separate from CDN on/off.
+		 *
 		 * @since 1.5
 		 */
 		$this->_cfg_cdn_remote_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ) ;
@@ -205,6 +208,7 @@ class LiteSpeed_Cache_CDN
 	 * If include css/js in CDN.
 	 *
 	 * @since  1.6.2.1
+	 *
 	 * @return bool true if included in CDN
 	 */
 	public static function inc_type( $type )
@@ -227,6 +231,7 @@ class LiteSpeed_Cache_CDN
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore.
 	 *
 	 * @since  1.2.3
+	 *
 	 * @return string The content that is after optimization
 	 */
 	public static function finalize( $content )
@@ -337,6 +342,7 @@ class LiteSpeed_Cache_CDN
 
 		/**
 		 * Excludes `\` from URL matching.
+		 *
 		 * @see  #959152 - Wordpress LSCache CDN Mapping causing malformed URLS
 		 * @see  #685485
 		 * @since 3.0
@@ -358,7 +364,9 @@ class LiteSpeed_Cache_CDN
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
+	 *
 	 * @param array $img The URL of the attachment image src, the width, the height
+	 *
 	 * @return array
 	 */
 	public function attach_img_src( $img )
@@ -413,7 +421,9 @@ class LiteSpeed_Cache_CDN
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
+	 *
 	 * @param array $srcs
+	 *
 	 * @return array
 	 */
 	public function srcset( $srcs )
@@ -433,7 +443,9 @@ class LiteSpeed_Cache_CDN
 	 * Replace URL to CDN URL.
 	 *
 	 * @since  1.2.3
+	 *
 	 * @param string $url
+	 *
 	 * @return string Replaced URL
 	 */
 	public function rewrite( $url, $mapping_kind, $postfix = false )
@@ -587,6 +599,7 @@ class LiteSpeed_Cache_CDN
 	 * Get the current instance object.
 	 *
 	 * @since 1.2.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

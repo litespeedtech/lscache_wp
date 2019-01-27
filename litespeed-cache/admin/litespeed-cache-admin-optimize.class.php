@@ -4,8 +4,10 @@
  *
  *
  * @since      1.2.1
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -21,7 +23,9 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Generate operation URL.
 	 *
 	 * @since  1.2.1
+	 *
 	 * @param string $type The type to proceed
+	 *
 	 * @return string The final URL
 	 */
 	public static function generate_url( $type )
@@ -63,8 +67,10 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Clean/Optimize WP tables.
 	 *
 	 * @since  1.2.1
+	 *
 	 * @param string $type The type to clean
 	 * @param bool $ignore_multisite If ignore multisite check
+	 *
 	 * @return int The rows that will be affected
 	 */
 	public static function db_count( $type, $ignore_multisite = false )
@@ -131,6 +137,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Clean/Optimize WP tables.
 	 *
 	 * @since  1.2.1
+	 *
 	 * @param string $type The type to clean
 	 */
 	public static function db_clean( $type )

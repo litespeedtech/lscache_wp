@@ -3,8 +3,10 @@
  * The core consts for config.
  *
  * @since      	2.4
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 class LiteSpeed_Cache_Const
@@ -280,6 +282,7 @@ class LiteSpeed_Cache_Const
 	{
 		/**
 		 * Allow terms default value.
+		 *
 		 * @since  2.7.1
 		 */
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
@@ -359,6 +362,7 @@ class LiteSpeed_Cache_Const
 	 * Gets the default network options.
 	 *
 	 * @since 1.0.11
+	 *
 	 * @return array an array of the default options
 	 */
 	protected function get_default_site_options()
@@ -399,7 +403,9 @@ class LiteSpeed_Cache_Const
 	 * Gets the default single site options.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param bool $include_thirdparty whether to include the thirdparty options
+	 *
 	 * @return array an array of the default options
 	 */
 	public function get_default_options($include_thirdparty = true)
@@ -636,7 +642,9 @@ class LiteSpeed_Cache_Const
 	 * Will also strip the options that are actually normal options.
 	 *
 	 * @since 1.0.9
+	 *
 	 * @param array $options Optional. The default options to compare against.
+	 *
 	 * @return mixed boolean on failure, array of keys on success
 	 */
 	public function get_thirdparty_options($options = null)

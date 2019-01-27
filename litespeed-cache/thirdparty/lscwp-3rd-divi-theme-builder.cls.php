@@ -3,8 +3,10 @@
  * The Third Party integration with DIVI Theme.
  *
  * @since		2.9.0
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined( 'ABSPATH' ) ) {

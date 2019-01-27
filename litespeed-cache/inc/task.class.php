@@ -97,6 +97,7 @@ class LiteSpeed_Cache_Task
 	 * Update cron status.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param array $options The options to check if cron should be enabled
 	 */
 	public static function update( $options = false )
@@ -199,6 +200,7 @@ class LiteSpeed_Cache_Task
 	 * Register cron interval imgoptm.
 	 *
 	 * @since 1.6.1
+	 *
 	 * @param array $schedules WP Hook
 	 */
 	public static function lscache_cron_filter( $schedules )
@@ -216,6 +218,7 @@ class LiteSpeed_Cache_Task
 	 * Register cron interval.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param array $schedules WP Hook
 	 */
 	public static function lscache_cron_filter_crawler( $schedules )
@@ -248,6 +251,7 @@ class LiteSpeed_Cache_Task
 	 * Get the current instance object.
 	 *
 	 * @since 1.6
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

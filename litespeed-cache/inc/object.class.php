@@ -3,8 +3,10 @@
  * The object cache class.
  *
  * @since      	1.8
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -211,6 +213,7 @@ class LiteSpeed_Cache_Object
 
 	/**
 	 * Force to connect with this setting.
+	 *
 	 * @return [type] [description]
 	 */
 	public function reconnect( $cfg )
@@ -334,6 +337,7 @@ class LiteSpeed_Cache_Object
 
 			/**
 			 * Add SASL auth.
+			 *
 			 * @since  1.8.1
 			 */
 			if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $this->_conn, 'setSaslAuthData' ) && ini_get( 'memcached.use_sasl' ) ) {
@@ -578,6 +582,7 @@ class LiteSpeed_Cache_Object
 	 * Get the current instance object.
 	 *
 	 * @since 1.8
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

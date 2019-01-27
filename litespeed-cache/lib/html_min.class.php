@@ -1,6 +1,7 @@
 <?php
 /**
  * Class Minify_HTML.
+ *
  * @package Minify
  */
 
@@ -14,6 +15,7 @@
  * A test suite is available.
  *
  * @package Minify
+ *
  * @author Stephen Clay <steve@mrclay.org>
  */
 
@@ -30,7 +32,6 @@ class Minify_HTML
 	 * "Minify" an HTML page.
 	 *
 	 * @param string $html
-	 *
 	 * @param array $options
 	 *
 	 * 'cssMinifier' : (optional) callback function to process content of STYLE
@@ -55,7 +56,6 @@ class Minify_HTML
 	 * Create a minifier object.
 	 *
 	 * @param string $html
-	 *
 	 * @param array $options
 	 *
 	 * 'cssMinifier' : (optional) callback function to process content of STYLE

@@ -3,8 +3,10 @@
  * The class to optimize image.
  *
  * @since 		2.0
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -178,6 +180,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			/**
 			 * Only send 500 images one time.
+			 *
 			 * @since 1.6.3
 			 * @since 1.6.5 use credit limit
 			 */
@@ -195,6 +198,7 @@ class LiteSpeed_Cache_Img_Optm
 			}
 			/**
 			 * Check if need to test run ( new user only allow 1 group at first time).
+			 *
 			 * @since 1.6.6.1
 			 */
 			if ( $this->_img_total && ! $credit_recovered ) {
@@ -798,6 +802,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		/**
 		 * Update size saved info.
+		 *
 		 * @since  1.6.5
 		 */
 		if ( $postmeta_info ) {
@@ -988,6 +993,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			/**
 			 * Update cron timestamp to avoid duplicated running.
+			 *
 			 * @since  1.6.2
 			 */
 			$this->_update_cron_running() ;
@@ -995,6 +1001,7 @@ class LiteSpeed_Cache_Img_Optm
 			/**
 			 * If no server_info, will fail to pull
 			 * This is only for v2.4.2- data.
+			 *
 			 * @see  https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade
 			 */
 			try{
@@ -1029,6 +1036,7 @@ class LiteSpeed_Cache_Img_Optm
 			if ( ! empty( $server_info[ 'ori' ] ) ) {
 				/**
 				 * Use wp orignal get func to avoid allow_url_open off issue.
+				 *
 				 * @since  1.6.5
 				 */
 				$response = wp_remote_get( $server_info[ 'ori' ], array( 'timeout' => 15 ) ) ;
@@ -2074,6 +2082,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			/**
 			 * Batch switch.
+			 *
 			 * @since 1.6.3
 			 */
 			case self::TYPE_IMG_BATCH_SWITCH_ORI :
@@ -2097,6 +2106,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * Get the current instance object.
 	 *
 	 * @since 2.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

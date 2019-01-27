@@ -296,6 +296,7 @@ class LiteSpeed_Cache_Purge
 	 * Adds new public purge tags to the array of purge tags for the request.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param mixed $tags tags to add to the list
 	 */
 	public static function add( $tags )
@@ -338,6 +339,7 @@ class LiteSpeed_Cache_Purge
 	 * Adds new private purge tags to the array of purge tags for the request.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param mixed $tags tags to add to the list
 	 */
 	public static function add_private( $tags )
@@ -468,6 +470,7 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
 	 * @since 1.0.7
+	 *
 	 * @param string $value the category slug
 	 * @param string $key unused
 	 */
@@ -496,6 +499,7 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected post IDs.
 	 *
 	 * @since 1.0.7
+	 *
 	 * @param string $value the post ID
 	 * @param string $key unused
 	 */
@@ -522,6 +526,7 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
 	 *
 	 * @since 1.0.7
+	 *
 	 * @param string $value the tag slug
 	 * @param string $key unused
 	 */
@@ -550,6 +555,7 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected urls.
 	 *
 	 * @since 1.0.7
+	 *
 	 * @param string $value a url to purge
 	 * @param string $key unused
 	 */
@@ -630,6 +636,7 @@ class LiteSpeed_Cache_Purge
 	 * as well.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $id the post id to purge
 	 */
 	public static function purge_post( $id )
@@ -664,6 +671,7 @@ class LiteSpeed_Cache_Purge
 	 * If no widget id is passed in, the method will attempt to find the widget id.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param type $widget_id the id of the widget to purge
 	 */
 	public static function purge_widget($widget_id = null)
@@ -683,6 +691,7 @@ class LiteSpeed_Cache_Purge
 	 * Purges the comment widget when the count is updated.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @global type $wp_widget_factory
 	 */
 	public static function purge_comment_widget()
@@ -764,6 +773,7 @@ class LiteSpeed_Cache_Purge
 	 * This will collect all site wide purge tags as well as third party plugin defined purge tags.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return string the built purge header
 	 */
 	public static function output()
@@ -779,6 +789,7 @@ class LiteSpeed_Cache_Purge
 	 * Build the current purge headers.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @return string the built purge header
 	 */
 	private function _build()
@@ -817,8 +828,10 @@ class LiteSpeed_Cache_Purge
 	 * Append prefix to an array of purge headers.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param array $purge_tags the purge tags to apply the prefix to
 	 * @param bool $is_private if is private tags or not
+	 *
 	 * @return array the array of built purge tags
 	 */
 	private function _append_prefix( $purge_tags, $is_private = false )
@@ -867,7 +880,9 @@ class LiteSpeed_Cache_Purge
 	 * any third party plugin specific post tags.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param int $post_id the id of the post about to be purged
+	 *
 	 * @return array the list of purge tags correlated with the post
 	 */
 	private function _get_purge_tags_by_post( $post_id )
@@ -988,7 +1003,9 @@ class LiteSpeed_Cache_Purge
 	 * The dummy filter for purge all.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @param string $val The filter value
+	 *
 	 * @return string The filter value
 	 */
 	public static function filter_with_purge_all( $val )
@@ -1001,6 +1018,7 @@ class LiteSpeed_Cache_Purge
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

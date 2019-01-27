@@ -3,8 +3,10 @@
  * The import/export class.
  *
  * @since      	1.8.2
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -74,6 +76,7 @@ class LiteSpeed_Cache_Import
 	 * Export settings.
 	 *
 	 * @since  2.4.1
+	 *
 	 * @return string All settings data
 	 */
 	public function export()
@@ -271,6 +274,7 @@ class LiteSpeed_Cache_Import
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

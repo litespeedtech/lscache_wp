@@ -5,8 +5,10 @@
  *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache_Crawler_Sitemap
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -144,6 +146,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

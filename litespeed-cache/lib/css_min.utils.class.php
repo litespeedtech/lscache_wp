@@ -6,9 +6,11 @@ class Utils
 {
     /**
      * Clamps a number between a minimum and a maximum value.
+     *
      * @param int|float $n the number to clamp
      * @param int|float $min the lower end number allowed
      * @param int|float $max the higher end number allowed
+     *
      * @return int|float
      */
     public static function clampNumber($n, $min, $max)
@@ -18,7 +20,9 @@ class Utils
 
     /**
      * Clamps a RGB color number outside the sRGB color space.
+     *
      * @param int|float $n the number to clamp
+     *
      * @return int|float
      */
     public static function clampNumberSrgb($n)
@@ -28,7 +32,9 @@ class Utils
 
     /**
      * Converts a HSL color into a RGB color.
+     *
      * @param array $hslValues
+     *
      * @return array
      */
     public static function hslToRgb($hslValues)
@@ -57,9 +63,11 @@ class Utils
 
     /**
      * Tests and selects the correct formula for each RGB color channel.
+     *
      * @param $v1
      * @param $v2
      * @param $vh
+     *
      * @return mixed
      */
     public static function hueToRgb($v1, $v2, $vh)
@@ -83,7 +91,9 @@ class Utils
 
     /**
      * Convert strings like "64M" or "30" to int values.
+     *
      * @param mixed $size
+     *
      * @return int
      */
     public static function normalizeInt($size)
@@ -108,7 +118,9 @@ class Utils
 
     /**
      * Converts a string containing and RGB percentage value into a RGB integer value i.e. '90%' -> 229.5.
+     *
      * @param $rgbPercentage
+     *
      * @return int
      */
     public static function rgbPercentageToRgbInteger($rgbPercentage)
@@ -122,7 +134,9 @@ class Utils
 
     /**
      * Converts a RGB color into a HEX color.
+     *
      * @param array $rgbColors
+     *
      * @return array
      */
     public static function rgbToHex($rgbColors)
@@ -139,7 +153,9 @@ class Utils
 
     /**
      * Rounds a number to its closest integer.
+     *
      * @param $n
+     *
      * @return int
      */
     public static function roundNumber($n)

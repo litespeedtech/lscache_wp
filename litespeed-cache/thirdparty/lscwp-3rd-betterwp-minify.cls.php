@@ -3,8 +3,10 @@
  * The Third Party integration with the Better WP Minify plugin.
  *
  * @since		1.0.12
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {

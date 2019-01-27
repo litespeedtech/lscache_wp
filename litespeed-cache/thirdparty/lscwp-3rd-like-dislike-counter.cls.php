@@ -4,8 +4,10 @@
  * The Third Party integration with the Like Dislike Counter plugin.
  *
  * @since		1.0.7
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {

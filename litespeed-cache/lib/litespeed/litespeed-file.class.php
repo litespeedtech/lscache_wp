@@ -53,6 +53,7 @@ class Litespeed_File
 	 * Read data from file.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $filename
 	 * @param int $start_line
 	 * @param int $lines
@@ -103,6 +104,7 @@ class Litespeed_File
 	 * Append data to file.
 	 *
 	 * @since 1.1.5
+	 *
 	 * @param string $filename
 	 * @param string $data
 	 * @param bool $mkdir
@@ -117,6 +119,7 @@ class Litespeed_File
 	 * Save data to file.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $filename
 	 * @param string $data
 	 * @param bool $mkdir
@@ -209,6 +212,7 @@ class Litespeed_File
 	 * @param string $marker the marker to alter
 	 * @param array|string $insertion the new content to insert
 	 * @param bool $prepend prepend insertion if not exist
+	 *
 	 * @return bool true on write success, false on failure
 	 */
 	public static function insert_with_markers($filename, $insertion = false, $marker = false, $prepend = false)
@@ -229,6 +233,7 @@ class Litespeed_File
 	 *
 	 * @param string $insertion
 	 * @param string $marker
+	 *
 	 * @return string The block data
 	 */
 	public static function wrap_marker_data($insertion, $marker = false)
@@ -252,6 +257,7 @@ class Litespeed_File
 	 *
 	 * @param string $filename
 	 * @param string $marker
+	 *
 	 * @return string The current block data
 	 */
 	public static function touch_marker_data($filename, $marker = false)
@@ -281,6 +287,7 @@ class Litespeed_File
 	 *
 	 * @param string $filename
 	 * @param string $marker
+	 *
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
 	public static function extract_from_markers($filename, $marker = false)
@@ -296,6 +303,7 @@ class Litespeed_File
 	 *
 	 * @param string $filename
 	 * @param string $marker
+	 *
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
 	private static function _extract_from_markers( $filename, $marker )
@@ -335,6 +343,7 @@ class Litespeed_File
 	 * @param string $marker the marker to alter
 	 * @param array|string $insertion the new content to insert
 	 * @param bool $prepend prepend insertion if not exist
+	 *
 	 * @return bool true on write success, false on failure
 	 */
 	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)

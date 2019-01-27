@@ -84,7 +84,9 @@ class Minifier
 
     /**
      * Parses & minifies the given input CSS string.
+     *
      * @param string $css
+     *
      * @return string
      */
     public function run($css = '')
@@ -105,6 +107,7 @@ class Minifier
     /**
      * Sets whether to keep or remove sourcemap special comment.
      * Sourcemap comments are removed by default.
+     *
      * @param bool $keepSourceMapComment
      */
     public function keepSourceMapComment($keepSourceMapComment = true)
@@ -115,6 +118,7 @@ class Minifier
     /**
      * Sets whether to keep or remove important comments.
      * Important comments outside of a declaration block are kept by default.
+     *
      * @param bool $removeImportantComments
      */
     public function removeImportantComments($removeImportantComments = true)
@@ -125,6 +129,7 @@ class Minifier
     /**
      * Sets the approximate column after which long lines will be splitted in the output
      * with a linebreak.
+     *
      * @param int $position
      */
     public function setLineBreakPosition($position)
@@ -134,6 +139,7 @@ class Minifier
 
     /**
      * Sets the memory limit for this script.
+     *
      * @param int|string $limit
      */
     public function setMemoryLimit($limit)
@@ -143,6 +149,7 @@ class Minifier
 
     /**
      * Sets the maximum execution time for this script.
+     *
      * @param int|string $seconds
      */
     public function setMaxExecutionTime($seconds)
@@ -152,6 +159,7 @@ class Minifier
 
     /**
      * Sets the PCRE backtrack limit for this script.
+     *
      * @param int $limit
      */
     public function setPcreBacktrackLimit($limit)
@@ -161,6 +169,7 @@ class Minifier
 
     /**
      * Sets the PCRE recursion limit for this script.
+     *
      * @param int $limit
      */
     public function setPcreRecursionLimit($limit)
@@ -248,7 +257,9 @@ class Minifier
 
     /**
      * Registers a preserved token.
+     *
      * @param string $token
+     *
      * @return string The token ID string
      */
     private function registerPreservedToken($token)
@@ -260,7 +271,9 @@ class Minifier
 
     /**
      * Registers a candidate comment token.
+     *
      * @param string $comment
+     *
      * @return string The comment token ID string
      */
     private function registerCommentToken($comment)
@@ -272,7 +285,9 @@ class Minifier
 
     /**
      * Registers a rule body token.
+     *
      * @param string $body the minified rule body
+     *
      * @return string The rule body token ID string
      */
     private function registerRuleBodyToken($body)
@@ -288,7 +303,9 @@ class Minifier
 
     /**
      * Parses & minifies the given input CSS string.
+     *
      * @param string $css
+     *
      * @return string
      */
     private function minify($css)
@@ -366,7 +383,9 @@ class Minifier
     /**
      * Searches & replaces all data urls with tokens before we start compressing,
      * to avoid performance issues running some of the subsequent regexes against large string chunks.
+     *
      * @param string $css
+     *
      * @return string
      */
     private function processDataUrls($css)
@@ -412,7 +431,9 @@ class Minifier
 
     /**
      * Registers all comments found as candidates to be preserved.
+     *
      * @param array $matches
+     *
      * @return string
      */
     private function processCommentsCallback($matches)
@@ -422,7 +443,9 @@ class Minifier
 
     /**
      * Preserves old IE Matrix string definition.
+     *
      * @param array $matches
+     *
      * @return string
      */
     private function processOldIeSpecificMatrixDefinitionCallback($matches)
@@ -432,7 +455,9 @@ class Minifier
 
     /**
      * Preserves strings found.
+     *
      * @param array $matches
+     *
      * @return string
      */
     private function processStringsCallback($matches)
@@ -455,7 +480,9 @@ class Minifier
 
     /**
      * Preserves or removes comments found.
+     *
      * @param string $css
+     *
      * @return string
      */
     private function processComments($css)
@@ -500,7 +527,9 @@ class Minifier
 
     /**
      * Finds, minifies & preserves all rule bodies.
+     *
      * @param string $css the whole stylesheet
+     *
      * @return string
      */
     private function processRuleBodies($css)
@@ -533,7 +562,9 @@ class Minifier
 
     /**
      * Compresses non-group rule bodies.
+     *
      * @param string $body The rule body without curly braces
+     *
      * @return string
      */
     private function processRuleBody($body)
@@ -692,7 +723,9 @@ class Minifier
 
     /**
      * Compresses At-rules and selectors.
+     *
      * @param string $css the whole stylesheet with rule bodies tokenized
+     *
      * @return string
      */
     private function processAtRulesAndSelectors($css)
@@ -791,7 +824,9 @@ class Minifier
 
     /**
      * Converts hsl() & rgb() colors to HEX format.
+     *
      * @param $matches
+     *
      * @return string
      */
     private function shortenHslAndRgbToHexCallback($matches)
@@ -817,7 +852,9 @@ class Minifier
 
     /**
      * Compresses HEX color values of the form #AABBCC to #ABC or short color name.
+     *
      * @param $matches
+     *
      * @return string
      */
     private function shortenHexColorsCallback($matches)
@@ -841,7 +878,9 @@ class Minifier
     /**
      * Shortens all named colors with a shorter HEX counterpart for a set of safe properties
      * e.g. white -> #fff.
+     *
      * @param array $matches
+     *
      * @return string
      */
     private function shortenNamedColorsCallback($matches)
@@ -851,7 +890,9 @@ class Minifier
 
     /**
      * Makes a string lowercase.
+     *
      * @param array $matches
+     *
      * @return string
      */
     private function strtolowerCallback($matches)

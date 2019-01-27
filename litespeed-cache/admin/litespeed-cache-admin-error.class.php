@@ -4,8 +4,10 @@
  *
  *
  * @since      1.0.15
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -70,7 +72,9 @@ class LiteSpeed_Cache_Admin_Error
 	 * Get the error message by code.
 	 *
 	 * @since 1.0.15
+	 *
 	 * @param int $err_code the error code to retrieve
+	 *
 	 * @return string the error message if matching, else an empty string
 	 */
 	public function convert_code_to_error($err_code)
@@ -234,6 +238,7 @@ class LiteSpeed_Cache_Admin_Error
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

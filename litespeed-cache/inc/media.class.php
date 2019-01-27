@@ -4,8 +4,10 @@
  *
  * @since 		1.4
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -50,6 +52,7 @@ class LiteSpeed_Cache_Media
 			if ( $this->_cfg_img_webp ) {
 				/**
 				 * Add vary filter.
+				 *
 				 * @since  1.6.2
 				 */
 				// Moved to htaccess
@@ -255,6 +258,7 @@ eot;
 	 * NOTE: this is not used because it has to be after admin_init
 	 *
 	 * @since 1.6.2
+	 *
 	 * @return array $sizes data for all currently-registered image sizes
 	 */
 	private function get_image_sizes() {
@@ -304,6 +308,7 @@ eot;
 	 * Only do for main page. Do NOT do for esi or dynamic content.
 	 *
 	 * @since  1.4
+	 *
 	 * @return string The buffer
 	 */
 	public static function finalize( $content )
@@ -336,6 +341,7 @@ eot;
 	{
 		/**
 		 * Use webp for optimized images.
+		 *
 		 * @since 1.6.2
 		 */
 		if ( $this->_cfg_img_webp && $this->webp_support() ) {
@@ -487,12 +493,14 @@ eot;
 	 * Parse img src.
 	 *
 	 * @since  1.4
+	 *
 	 * @return array All the src & related raw html list
 	 */
 	private function _parse_img()
 	{
 		/**
 		 * Exclude list.
+		 *
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
@@ -515,6 +523,7 @@ eot;
 
 			/**
 			 * Add src validation to bypass base64 img src.
+			 *
 			 * @since  1.6
 			 */
 			if ( strpos( $attrs[ 'src' ], 'base64' ) !== false || substr( $attrs[ 'src' ], 0, 5 ) === 'data:' ) {
@@ -536,6 +545,7 @@ eot;
 
 			/**
 			 * Exclude from lazyload by setting.
+			 *
 			 * @since  1.5
 			 */
 			if ( $excludes && LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'src' ], $excludes ) ) {
@@ -545,6 +555,7 @@ eot;
 
 			/**
 			 * Excldues invalid image src from buddypress avatar crop.
+			 *
 			 * @see  https://wordpress.org/support/topic/lazy-load-breaking-buddypress-upload-avatar-feature/#post-11040512
 			 * @since  2.9.1
 			 */
@@ -575,6 +586,7 @@ eot;
 	 * Parse iframe src.
 	 *
 	 * @since  1.4
+	 *
 	 * @return array All the src & related raw html list
 	 */
 	private function _parse_iframe()
@@ -618,6 +630,7 @@ eot;
 		// preg_match_all( '#<img([^>]+?)src=([\'"\\\]*)([^\'"\s\\\>]+)([\'"\\\]*)([^>]*)>#i', $this->content, $matches ) ;
 		/**
 		 * Added custom element & attribute support.
+		 *
 		 * @since 2.2.2
 		 */
 		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ) ;
@@ -697,7 +710,9 @@ eot;
 	 * Hook to wp_get_attachment_image_src.
 	 *
 	 * @since  1.6.2
+	 *
 	 * @param array $img The URL of the attachment image src, the width, the height
+	 *
 	 * @return array
 	 */
 	public function webp_attach_img_src( $img )
@@ -713,7 +728,9 @@ eot;
 	 * Try to replace img url.
 	 *
 	 * @since  1.6.2
+	 *
 	 * @param string $url
+	 *
 	 * @return string
 	 */
 	public function webp_url( $url )
@@ -728,7 +745,9 @@ eot;
 	 * Hook to replace WP responsive images.
 	 *
 	 * @since  1.6.2
+	 *
 	 * @param array $srcs
+	 *
 	 * @return array
 	 */
 	public function webp_srcset( $srcs )
@@ -957,6 +976,7 @@ eot;
 	 * Get the current instance object.
 	 *
 	 * @since 1.4
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

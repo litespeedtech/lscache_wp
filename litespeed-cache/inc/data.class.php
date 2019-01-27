@@ -4,8 +4,10 @@
  *
  * @since      	1.3.1
  * @since  		1.5 Moved into /inc
+ *
  * @package    	LiteSpeed_Cache
  * @subpackage 	LiteSpeed_Cache/inc
+ *
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -159,6 +161,7 @@ class LiteSpeed_Cache_Data
 
 		/**
 		 * Convert old data from postmeta to img_optm table.
+		 *
 		 * @since  2.0
 		 */
 		if ( ! $ver || version_compare( $ver, '2.0', '<' ) ) {
@@ -202,6 +205,7 @@ class LiteSpeed_Cache_Data
 
 		/**
 		 * Add target_md5 field to table.
+		 *
 		 * @since  2.4.2
 		 */
 		if ( $ver && version_compare( $ver, '2.4.2', '<' ) && version_compare( $ver, '2.0', '>=' ) ) {// NOTE: For new users, need to bypass this section, thats why used the first cond
@@ -334,6 +338,7 @@ class LiteSpeed_Cache_Data
 	 * Get the current instance object.
 	 *
 	 * @since 1.3.1
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

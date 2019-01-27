@@ -1,6 +1,7 @@
 <?php
 /**
  * Class UriRewriter.
+ *
  * @package Minify
  */
 
@@ -8,6 +9,7 @@
  * Rewrite file-relative URIs as root-relative in CSS files.
  *
  * @package Minify
+ *
  * @author Stephen Clay <steve@mrclay.org>
  */
 
@@ -27,12 +29,9 @@ class UriRewriter
      * In CSS content, rewrite file relative URIs as root relative.
      *
      * @param string $css
-     *
      * @param string $currentDir the directory of the current CSS file
-     *
      * @param string $docRoot the document root of the web site in which
      *                        the CSS file resides (default = $_SERVER['DOCUMENT_ROOT'])
-     *
      * @param array $symlinks (default = array()) If the CSS file is stored in
      *                        a symlink-ed directory, provide an array of link paths to
      *                        target paths, where the link paths are within the document root. Because
@@ -88,7 +87,6 @@ class UriRewriter
      * In CSS content, prepend a path to relative URIs.
      *
      * @param string $css
-     *
      * @param string $path the path to prepend
      *
      * @return string
@@ -137,11 +135,8 @@ class UriRewriter
      * </code>
      *
      * @param string $uri file relative URI
-     *
      * @param string $realCurrentDir realpath of the current file's directory
-     *
      * @param string $realDocRoot realpath of the site document root
-     *
      * @param array $symlinks (default = array()) If the file is stored in
      *                        a symlink-ed directory, provide an array of link paths to
      *                        real target paths, where the link paths "appear" to be within the document
@@ -327,6 +322,7 @@ class UriRewriter
      * @see _unOwlify
      *
      * @param string $css
+     *
      * @return string
      */
     private static function _owlifySvgPaths($css)
@@ -342,6 +338,7 @@ class UriRewriter
      * @see _owlifySvgPaths
      *
      * @param string $css
+     *
      * @return string
      */
     private static function _unOwlify($css)

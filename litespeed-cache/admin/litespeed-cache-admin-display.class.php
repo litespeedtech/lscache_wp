@@ -4,8 +4,10 @@
  *
  *
  * @since      1.0.0
+ *
  * @package    LiteSpeed_Cache
  * @subpackage LiteSpeed_Cache/admin
+ *
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
@@ -76,6 +78,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		/**
 		 * In case this is called outside the admin page.
+		 *
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
@@ -101,6 +104,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Load LiteSpeed assets.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @param array $hook WP hook
 	 */
 	public function load_assets($hook)
@@ -124,6 +128,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Output litespeed form info.
 	 *
 	 * @since    1.1.0
+	 *
 	 * @param string $action
 	 */
 	public function form_action( $action, $type = false )
@@ -175,6 +180,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Helper function to set up a submenu page.
 	 *
 	 * @since 1.0.4
+	 *
 	 * @param string $menu_title the title that appears on the menu
 	 * @param string $menu_slug the slug of the page
 	 * @param string $callback the callback to call if selected
@@ -231,7 +237,9 @@ class LiteSpeed_Cache_Admin_Display
 	 * Callback that adds LiteSpeed Cache's action links.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @param array $links previously added links from other plugins
+	 *
 	 * @return array links array with the litespeed cache one appended
 	 */
 	public function add_plugin_links($links)
@@ -246,8 +254,10 @@ class LiteSpeed_Cache_Admin_Display
 	 * Add text to recommend updating upon update success.
 	 *
 	 * @since 1.0.8.1
+	 *
 	 * @param string $translations
 	 * @param string $text
+	 *
 	 * @return string
 	 */
 	public function add_update_text($translations, $text)
@@ -283,7 +293,9 @@ class LiteSpeed_Cache_Admin_Display
 	 * Change the admin footer text on LiteSpeed Cache admin pages.
 	 *
 	 * @since  1.0.13
+	 *
 	 * @param string $footer_text
+	 *
 	 * @return string
 	 */
 	public function admin_footer_text($footer_text)
@@ -299,6 +311,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Currently used for 'use primary subsite settings'
 	 *
 	 * @since 1.0.13
+	 *
 	 * @return bool true to disable all settings, false otherwise
 	 */
 	public function get_disable_all()
@@ -318,7 +331,9 @@ class LiteSpeed_Cache_Admin_Display
 
 	/**
 	 * If show compatibility tab in settings.
+	 *
 	 * @since 1.1.0
+	 *
 	 * @return bool True if shows
 	 */
 	public function show_compatibility_tab()
@@ -340,8 +355,10 @@ class LiteSpeed_Cache_Admin_Display
 	 * Builds the html for a single notice.
 	 *
 	 * @since 1.0.7
+	 *
 	 * @param string $color the color to use for the notice
 	 * @param string $str the notice message
+	 *
 	 * @return string the built notice html
 	 */
 	public static function build_notice($color, $str)
@@ -353,8 +370,10 @@ class LiteSpeed_Cache_Admin_Display
 	 * Get the error description.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param init $err_code
 	 * @param mixed $args
+	 *
 	 * @return mixed String or false
 	 */
 	public static function get_error($err_code, $args = null)
@@ -382,6 +401,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * and append it to the list of outgoing errors.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param int $err_code the error code to retrieve
 	 * @param mixed $args null if no arguments, an array if multiple arguments,
 	 *                    else a single argument
@@ -441,6 +461,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * method will add the action to display notices.
 	 *
 	 * @since 1.0.7
+	 *
 	 * @param string $color one of the available constants provided by this
 	 *                      class
 	 * @param mixed $msg may be a string for a single message or an array for
@@ -504,6 +525,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		/**
 		 * Check promo msg first.
+		 *
 		 * @since 2.9
 		 */
 		LiteSpeed_Cache_GUI::get_instance()->show_promo() ;
@@ -516,6 +538,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * This will append the esi on/off selector and ttl text.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param type $widget
 	 * @param type $return
 	 * @param type $instance
@@ -652,6 +675,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
+	 *
 	 * @param string $id
 	 * @param string $val Value of input
 	 * @param bool $disabled If this input is disabled or not
@@ -686,6 +710,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.5
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
+	 *
 	 * @param string $id
 	 * @param int $cols The width of textarea
 	 */
@@ -702,6 +727,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
+	 *
 	 * @param string $id
 	 * @param string $style Appending styles
 	 * @param bool $readonly If is readonly
@@ -737,6 +763,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a checkbox html snippet.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $id
 	 * @param string $title
 	 * @param bool $checked
@@ -804,6 +831,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 removed param $disable
+	 *
 	 * @param string $id
 	 * @param bool $return Return the html or echo it
 	 * @param bool $checked If the value is on
@@ -830,6 +858,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a radio input html codes and output.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @param string $id
 	 * @param string $val Default value of this input
 	 * @param string $txt Title of this input
@@ -878,6 +907,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display default value.
 	 *
 	 * @since  1.1.1
+	 *
 	 * @param string $id The setting tag
 	 */
 	public function recommended( $id, $is_item = false )
@@ -1023,6 +1053,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()

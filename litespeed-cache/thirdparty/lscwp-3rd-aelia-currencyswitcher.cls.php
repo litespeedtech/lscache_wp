@@ -5,8 +5,10 @@
  *
  * @since		1.0.13
  * @since  		2.6 	Removed hook_vary as OLS supports vary header already
+ *
  * @package		LiteSpeed_Cache
  * @subpackage	LiteSpeed_Cache/thirdparty
+ *
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if ( ! defined('ABSPATH') ) {
@@ -28,6 +30,7 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 	 * Detects if WooCommerce is installed.
 	 *
 	 * @since 1.0.13
+	 *
 	 * @global $GLOBALS;
 	 */
 	public static function detect()

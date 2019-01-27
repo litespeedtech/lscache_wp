@@ -95,8 +95,10 @@ class LiteSpeed_Cache_Tag
 	 * Check if the page returns 403 and 500 errors.
 	 *
 	 * @since 1.0.13.1
+	 *
 	 * @param $status_header
 	 * @param $code
+	 *
 	 * @return $eror_status
 	 */
 	public static function check_error_codes( $status_header, $code )
@@ -139,6 +141,7 @@ class LiteSpeed_Cache_Tag
 	 * of the plugin.
 	 *
 	 * @since    1.0.15
+	 *
 	 * @param array $params [wordpress params for widget_posts_args]
 	 */
 	public static function add_widget_recent_posts( $params )
@@ -151,6 +154,7 @@ class LiteSpeed_Cache_Tag
 	 * Adds cache tags to the list of cache tags for the current page.
 	 *
 	 * @since 1.0.5
+	 *
 	 * @param mixed $tags a string or array of cache tags to add to the current list
 	 */
 	public static function add( $tags )
@@ -166,6 +170,7 @@ class LiteSpeed_Cache_Tag
 	 * Adds private cache tags to the list of cache tags for the current page.
 	 *
 	 * @since 1.6.3
+	 *
 	 * @param mixed $tags a string or array of cache tags to add to the current list
 	 */
 	public static function add_private( $tags )
@@ -191,8 +196,10 @@ class LiteSpeed_Cache_Tag
 	 * Will get a hash of the URI. Removes query string and appends a '/' if it is missing.
 	 *
 	 * @since 1.0.12
+	 *
 	 * @param string $uri the uri to get the hash of
 	 * @param bool $ori Return the original url or not
+	 *
 	 * @return bool|string false on input error, hash otherwise
 	 */
 	public static function get_uri_tag( $uri, $ori = false )
@@ -215,6 +222,7 @@ class LiteSpeed_Cache_Tag
 	 * Get the unique tag based on self url.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @param bool $ori Return the original url or not
 	 */
 	public static function build_uri_tag( $ori = false )
@@ -229,6 +237,7 @@ class LiteSpeed_Cache_Tag
 	 * any third party plugin specific cache tags.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return array the list of cache tags to set
 	 */
 	private static function _build_type_tags()
@@ -345,6 +354,7 @@ class LiteSpeed_Cache_Tag
 	 * ONLY need to run this if is cacheable.
 	 *
 	 * @since 1.1.3
+	 *
 	 * @return string empty string if empty, otherwise the cache tags header
 	 */
 	public static function output()
@@ -375,6 +385,7 @@ class LiteSpeed_Cache_Tag
 	 * Get the current instance object.
 	 *
 	 * @since 2.2.3
+	 *
 	 * @return Current class instance
 	 */
 	public static function get_instance()
