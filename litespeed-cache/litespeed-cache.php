@@ -40,7 +40,7 @@
 
  */
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -48,9 +48,9 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 	return ;
 }
 
-! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
-! defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/' or MU
-! defined( 'LSCWP_BASENAME' ) && define( 'LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php' ) ;//LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
+!defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
+!defined( 'LSCWP_DIR' ) && define( 'LSCWP_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/' or MU
+!defined( 'LSCWP_BASENAME' ) && define( 'LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php' ) ;//LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
@@ -61,17 +61,17 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
 define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
 define( 'LSWCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
-! defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
+!defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
 
 // Placeholder for lazyload img
-! defined( 'LITESPEED_PLACEHOLDER' ) && define( 'LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=' ) ;
+!defined( 'LITESPEED_PLACEHOLDER' ) && define( 'LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=' ) ;
 
 // Auto register LiteSpeed classes
 require_once LSCWP_DIR . 'inc/litespeed.autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
-	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
+	!defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
@@ -82,7 +82,7 @@ if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
 }
 
 // Server type
-if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
+if ( !defined( 'LITESPEED_SERVER_TYPE' ) ) {
 	if ( isset( $_SERVER['HTTP_X_LSCACHE'] ) && $_SERVER['HTTP_X_LSCACHE'] ) {
 		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC' ) ;
 	}
@@ -98,16 +98,16 @@ if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 }
 
 // Checks if caching is allowed via server variable
-if ( ! empty ( $_SERVER['X-LSCACHE'] ) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined( 'LITESPEED_CLI' ) ) {
-	! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
+if ( !empty ( $_SERVER['X-LSCACHE'] ) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined( 'LITESPEED_CLI' ) ) {
+	!defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
 }
 
 // ESI const defination
-if ( ! defined( 'LSWCP_ESI_SUPPORT' ) ) {
+if ( !defined( 'LSWCP_ESI_SUPPORT' ) ) {
 	define( 'LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false ) ;
 }
 
-if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
+if ( !defined( 'LSWCP_TAG_PREFIX' ) ) {
 	define( 'LSWCP_TAG_PREFIX', substr( md5( LSCWP_DIR ), -3 ) ) ;
 }
 
@@ -120,7 +120,7 @@ if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
  *
  * @since    1.0.0
  */
-if ( ! function_exists( 'run_litespeed_cache' ) ) {
+if ( !function_exists( 'run_litespeed_cache' ) ) {
 	function run_litespeed_cache()
 	{
 		$version_supported = true ;
@@ -155,7 +155,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
  * @access public
  * @param integer $id The post id to purge.
  */
-if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
+if ( !function_exists( 'litespeed_purge_single_post' ) ) {
 	function litespeed_purge_single_post( $id )
 	{
 		LiteSpeed_Cache_Purge::purge_post( $id ) ;
@@ -165,7 +165,7 @@ if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
 /**
  * Handle exception
  */
-if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+if ( !function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
 	{
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;

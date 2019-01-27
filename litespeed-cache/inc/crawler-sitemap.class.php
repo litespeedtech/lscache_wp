@@ -10,7 +10,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$post_type_array = array_merge($post_type_array, $cptArr) ;
 		}
 
-		if ( ! empty($post_type_array) ) {
+		if ( !empty($post_type_array) ) {
 			$post_type = implode("','", $post_type_array) ;
 
 			LiteSpeed_Cache_Log::debug("Crawler sitemap log: post_type is '$post_type'") ;
@@ -107,7 +107,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 			foreach ( $results as $result ){
 				$slug = str_replace($this->home_url, '', get_permalink($result->ID)) ;
-				if ( ! in_array($slug, $blacklist) ) {
+				if ( !in_array($slug, $blacklist) ) {
 					$this->_urls[] = $slug ;
 				}
 			}
@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
 					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
-					if ( ! in_array($slug, $blacklist) ){
+					if ( !in_array($slug, $blacklist) ){
 						$this->_urls[] = $slug ;//var_dump($slug);exit;//todo: check permalink
 					}
 				}
@@ -132,7 +132,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
 					$slug = str_replace($this->home_url, '', get_tag_link($tag->term_id)) ;
-					if ( ! in_array($slug, $blacklist) ) {
+					if ( !in_array($slug, $blacklist) ) {
 						$this->_urls[] = $slug ;
 					}
 				}
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

@@ -6,7 +6,7 @@
  * @since  		1.5 Moved into /inc
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -63,14 +63,14 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function check_login_cacheable()
 	{
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ) ) {
+		if ( !LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ) ) {
 			return ;
 		}
 		if ( LiteSpeed_Cache_Control::isset_notcacheable() ) {
 			return ;
 		}
 
-		if ( ! empty( $_GET ) ) {
+		if ( !empty( $_GET ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'has GET request' ) ;
 			return ;
 		}
@@ -160,7 +160,7 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function add( $tags )
 	{
-		if ( ! is_array( $tags ) ) {
+		if ( !is_array( $tags ) ) {
 			$tags = array( $tags ) ;
 		}
 
@@ -176,7 +176,7 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function add_private( $tags )
 	{
-		if ( ! is_array( $tags ) ) {
+		if ( !is_array( $tags ) ) {
 			$tags = array( $tags ) ;
 		}
 
@@ -306,7 +306,7 @@ class LiteSpeed_Cache_Tag
 		if ( defined( 'REST_REQUEST' ) ) {
 			$tags[] = self::TYPE_REST ;
 
-			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
+			$path = !empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
 			if ( $path ) {
 				// posts collections tag
 				if ( substr( $path, -6 ) == '/posts' ) {
@@ -315,7 +315,7 @@ class LiteSpeed_Cache_Tag
 
 				// single post tag
 				global $post;
-				if ( ! empty( $post->ID ) && substr( $path, - strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
+				if ( !empty( $post->ID ) && substr( $path, -strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
 					$tags[] = self::TYPE_POST . $post->ID ;
 				}
 
@@ -341,7 +341,7 @@ class LiteSpeed_Cache_Tag
 		// run 3rdparty hooks to tag
 		do_action( 'litespeed_cache_api_tag' ) ;
 		// generate wp tags
-		if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
+		if ( !defined( 'LSCACHE_IS_ESI' ) ) {
 			$type_tags = self::_build_type_tags() ;
 			self::$_tags = array_merge( self::$_tags, $type_tags ) ;
 		}
@@ -392,7 +392,7 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

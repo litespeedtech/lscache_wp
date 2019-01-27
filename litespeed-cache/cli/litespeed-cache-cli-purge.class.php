@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	public function network_list($args, $assoc_args)
 	{
-		if ( ! is_multisite() ) {
+		if ( !is_multisite() ) {
 			WP_CLI::error('This is not a multisite installation!') ;
 
 			return ;
@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Cli_Purge
 			LiteSpeed_Cache::ACTION_KEY => $action,
 			LiteSpeed_Cache::NONCE_NAME => wp_create_nonce($action),
 		) ;
-		if ( ! empty($extra) ) {
+		if ( !empty($extra) ) {
 			$data = array_merge($data, $extra) ;
 		}
 
@@ -110,12 +110,12 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	public function blog($args, $assoc_args)
 	{
-		if ( ! is_multisite() ) {
+		if ( !is_multisite() ) {
 			WP_CLI::error('Not a multisite installation.') ;
 			return ;
 		}
 		$blogid = $args[0] ;
-		if ( ! is_numeric($blogid) ) {
+		if ( !is_numeric($blogid) ) {
 			$error = WP_CLI::colorize('%RError: invalid blog id entered.%n') ;
 			WP_CLI::line($error) ;
 			$this->network_list($args, $assoc_args) ;
@@ -203,12 +203,12 @@ class LiteSpeed_Cache_Cli_Purge
 	{
 		$filtered = array() ;
 		foreach ($args as $val) {
-			if ( ! ctype_digit($val) ) {
+			if ( !ctype_digit($val) ) {
 				WP_CLI::debug('[LSCACHE] Skip val, not a number. ' . $val) ;
 				continue ;
 			}
 			$term = $callback($val) ;
-			if ( ! empty($term) ) {WP_CLI::line($term->name);
+			if ( !empty($term) ) {WP_CLI::line($term->name);
 				$filtered[] = in_array( $callback, array( 'get_tag', 'get_category' ) ) ? $term->name : $val ;
 			}
 			else {

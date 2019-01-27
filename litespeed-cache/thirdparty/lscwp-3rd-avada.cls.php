@@ -23,7 +23,7 @@ class LiteSpeed_Cache_ThirdParty_Avada
 	 */
 	public static function detect()
 	{
-		if ( ! defined('AVADA_VERSION') ) {
+		if ( !defined('AVADA_VERSION') ) {
 			return ;
 		}
 

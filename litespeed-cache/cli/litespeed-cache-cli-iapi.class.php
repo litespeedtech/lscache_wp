@@ -31,7 +31,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
 		$json = $this->_img_optm_instance->sync_data() ;
 
-		if ( ! $json || empty( $json[ 'level' ] ) ) {
+		if ( !$json || empty( $json[ 'level' ] ) ) {
 			return ;
 		}
 
@@ -64,7 +64,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	{
 		$msg = $this->_img_optm_instance->request_optm() ;
 
-		if ( ! is_array( $msg ) ) {
+		if ( !is_array( $msg ) ) {
 			WP_CLI::error( $msg ) ;
 		}
 		else {
@@ -87,7 +87,7 @@ class LiteSpeed_Cache_CLI_IAPI
 	{
 		$msg = $this->_img_optm_instance->pull_img() ;
 
-		if ( ! is_array( $msg ) ) {
+		if ( !is_array( $msg ) ) {
 			WP_CLI::error( $msg ) ;
 		}
 		else {
@@ -111,17 +111,17 @@ class LiteSpeed_Cache_CLI_IAPI
 		$summary = $this->_img_optm_instance->summary_info() ;
 		$img_count = $this->_img_optm_instance->img_count() ;
 
-		if ( ! empty( $summary[ '_level_data' ] ) ) {
+		if ( !empty( $summary[ '_level_data' ] ) ) {
 			unset( $summary[ '_level_data' ] ) ;
 		}
 
 		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
-			if ( ! empty( $summary[ $v ] ) ) {
+			if ( !empty( $summary[ $v ] ) ) {
 				$summary[ $v ] = LiteSpeed_Cache_Utility::real_size( $summary[ $v ] ) ;
 			}
 		}
 
-		if ( ! empty( $summary[ 'last_requested' ] ) ) {
+		if ( !empty( $summary[ 'last_requested' ] ) ) {
 			$summary[ 'last_requested' ] = date( 'm/d/y H:i:s', $summary[ 'last_requested' ] ) ;
 		}
 

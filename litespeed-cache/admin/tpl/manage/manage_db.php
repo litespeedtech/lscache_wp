@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 
 $_panels = array(
 	'all' => array(
@@ -54,7 +54,7 @@ $total = 0 ;
 foreach ( $_panels as $tag => $v ) {
 	if ( $tag != 'all' ) {
 		$_panels[ $tag ][ 'count' ] = LiteSpeed_Cache_Admin_Optimize::db_count( $tag ) ;
-		if ( ! in_array( $tag, array( 'all_cssjs', 'optimize_tables' ) ) ) {
+		if ( !in_array( $tag, array( 'all_cssjs', 'optimize_tables' ) ) ) {
 			$total += $_panels[ $tag ][ 'count' ] ;
 		}
 	}
@@ -76,7 +76,7 @@ $_panels[ 'all' ][ 'count' ] = $total ;
 			<span class="litespeed-panel-icon-<?php echo $tag ; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<div class="litespeed-h3 <?php if ( ! empty( $v[ 'title_cls' ] ) ) echo $v[ 'title_cls' ] ; ?>">
+			<div class="litespeed-h3 <?php if ( !empty( $v[ 'title_cls' ] ) ) echo $v[ 'title_cls' ] ; ?>">
 				<?php echo $v[ 'title' ] ; ?>
 				<span class="litespeed-panel-counter<?php if ( $v[ 'count' ] > 0 && empty( $v[ 'dismiss_count_icon' ] ) ) echo '-red' ; ?>">(<?php echo $v[ 'count' ] ; ?>)</span>
 			</div>

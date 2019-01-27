@@ -8,7 +8,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Import
 	 */
 	private function _import( $file = false )
 	{
-		if ( ! $file ) {
+		if ( !$file ) {
 			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {
 				LiteSpeed_Cache_Log::debug( 'Import: Failed to import, wront ls_file' ) ;
 
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Import
 			return false ;
 		}
 
-		if ( ! $data ) {
+		if ( !$data ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Failed to import, no data' ) ;
 			return false ;
 		}
@@ -187,7 +187,7 @@ class LiteSpeed_Cache_Import
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
 
 		global $wp_settings_errors ;
-		if ( ! empty( $wp_settings_errors ) ) {
+		if ( !empty( $wp_settings_errors ) ) {
 			foreach ( $wp_settings_errors as $err ) {
 				LiteSpeed_Cache_Admin_Display::error( $err[ 'message' ] ) ;
 				LiteSpeed_Cache_Log::debug( '[Import] err ' . $err[ 'message' ] ) ;
@@ -195,7 +195,7 @@ class LiteSpeed_Cache_Import
 			return false ;
 		}
 
-		if ( ! $file ) {
+		if ( !$file ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Imported ' . $_FILES[ 'ls_file' ][ 'name' ] ) ;
 
 			$msg = sprintf( __( 'Imported setting file %s successfully.', 'litespeed-cache' ), $_FILES[ 'ls_file' ][ 'name' ] ) ;
@@ -258,11 +258,11 @@ class LiteSpeed_Cache_Import
 		// Generate filename
 		$parsed_home = parse_url( get_home_url() ) ;
 		$filename = 'LSCWP_cfg-' ;
-		if ( ! empty( $parsed_home[ 'host' ] ) ) {
+		if ( !empty( $parsed_home[ 'host' ] ) ) {
 			$filename .= $parsed_home[ 'host' ] . '_' ;
 		}
 
-		if ( ! empty( $parsed_home[ 'path' ] ) ) {
+		if ( !empty( $parsed_home[ 'path' ] ) ) {
 			$filename .= $parsed_home[ 'path' ] . '_' ;
 		}
 
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Import
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

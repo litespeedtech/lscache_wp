@@ -72,7 +72,7 @@ class LiteSpeed_Cache_Cli_Admin
 		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
 		 * @since  2.7.1
 		 */
-		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
+		if ( !isset($options) || ( !isset($options[$key]) && !isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
 		}
@@ -107,7 +107,7 @@ class LiteSpeed_Cache_Cli_Admin
 
 			case LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST:
 				$enable_key = LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ;
-				if ( ! isset($options[$enable_key]) || ! $options[$enable_key] ) {
+				if ( !isset($options[$enable_key]) || !$options[$enable_key] ) {
 					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
 				$options[$key] = $val ;
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Cli_Admin
 			$file = getcwd() . '/lscache_wp_options_' . date('d_m_Y-His') . '.data' ;
 		}
 
-		if ( ! is_writable(dirname($file)) ) {
+		if ( !is_writable(dirname($file)) ) {
 			WP_CLI::error('Directory not writable.') ;
 			return ;
 		}
@@ -275,13 +275,13 @@ class LiteSpeed_Cache_Cli_Admin
 	public function import_options($args, $assoc_args)
 	{
 		$file = $args[0] ;
-		if ( ! file_exists($file) || ! is_readable($file) ) {
+		if ( !file_exists($file) || !is_readable($file) ) {
 			WP_CLI::error('File does not exist or is not readable.') ;
 		}
 
 		$res = LiteSpeed_Cache_Import::get_instance()->import( $file ) ;
 
-		if ( ! $res ) {
+		if ( !$res ) {
 			WP_CLI::error( 'Failed to parse serialized data from file.' ) ;
 		}
 
@@ -301,7 +301,7 @@ class LiteSpeed_Cache_Cli_Admin
 	{
 		$res = LiteSpeed_Cache_Import::get_instance()->reset( $file ) ;
 
-		if ( ! $res ) {
+		if ( !$res ) {
 			WP_CLI::error( 'Failed to reset options.' ) ;
 		}
 
@@ -321,7 +321,7 @@ class LiteSpeed_Cache_Cli_Admin
 
 		global $wp_settings_errors ;
 
-		if ( ! empty($wp_settings_errors) ) {
+		if ( !empty($wp_settings_errors) ) {
 			foreach ($wp_settings_errors as $err) {
 				WP_CLI::error($err['message']) ;
 			}

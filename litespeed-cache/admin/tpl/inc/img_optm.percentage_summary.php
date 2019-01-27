@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -22,7 +22,7 @@ if ( ! defined( 'WPINC' ) ) {
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:image-groups" target="_blank" class="litespeed-desc litespeed-left20" title="<?php echo __( 'What is a group?', 'litespeed-cache') ; ?>">?</a>
 		</p>
 		<p>
-			<?php if ( ! empty( $img_count[ 'total_not_requested' ] ) ) : ?>
+			<?php if ( !empty( $img_count[ 'total_not_requested' ] ) ) : ?>
 				<?php echo __('Images not yet requested', 'litespeed-cache') ; ?>:
 				<code><?php echo LiteSpeed_Cache_Admin_Display::print_plural( $img_count[ 'total_not_requested' ] ) ; ?></code>
 			<?php else : ?>

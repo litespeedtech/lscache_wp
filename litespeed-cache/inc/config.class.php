@@ -11,7 +11,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -40,7 +40,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 		else {
 			$options = get_option( self::OPTION_NAME ) ;
-			if ( ! $options ) {
+			if ( !$options ) {
 				$options = $this->get_default_options() ;
 			}
 
@@ -120,8 +120,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _define_adv_cache( $options )
 	{
-		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
-			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
+		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && !$options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
+			!defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 	}
 
@@ -133,10 +133,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function define_cache_on()
 	{
-		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
+		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && !defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
 
 		// Use this for cache enabled setting check
-		! defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
+		!defined( 'LITESPEED_ON_IN_SETTING' ) && define( 'LITESPEED_ON_IN_SETTING', true ) ;
 	}
 
 	/**
@@ -153,7 +153,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_define_adv_cache( $site_options ) ;
 
 		$options = get_option( self::OPTION_NAME ) ;
-		if ( ! $options ) {
+		if ( !$options ) {
 			$options = $this->get_default_options() ;
 		}
 
@@ -162,12 +162,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		if ( !function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
 		}
 
 		// If don't have site options
-		if ( ! $site_options || ! is_array( $site_options ) || ! is_plugin_active_for_network( 'litespeed-cache/litespeed-cache.php' ) ) {
+		if ( !$site_options || !is_array( $site_options ) || !is_plugin_active_for_network( 'litespeed-cache/litespeed-cache.php' ) ) {
 			if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
 				$this->define_cache_on() ;
 			}
@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// If network set to use primary setting
-		if ( ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+		if ( !empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
 
 			// save temparary cron setting
 			$CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
@@ -193,7 +193,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 		// Set network eanble to on
 		if ( $site_options[ self::NETWORK_OPID_ENABLED ] ) {
-			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
+			!defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
 		}
 
 		// These two are not for single blog options
@@ -249,7 +249,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function update_options( $new_cfg = array() )
 	{
-		if ( ! empty( $new_cfg ) ) {
+		if ( !empty( $new_cfg ) ) {
 			$this->options = array_merge( $this->options, $new_cfg ) ;
 		}
 		return update_option( self::OPTION_NAME, $this->options ) ;
@@ -267,7 +267,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			exit( 'no referer' ) ;
 		}
 
-		if ( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
+		if ( !$type = LiteSpeed_Cache_Router::verify_type() ) {
 			exit( 'no type' ) ;
 		}
 
@@ -343,7 +343,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$role = LiteSpeed_Cache_Router::get_role() ;
 		}
 
-		if ( ! $role ) {
+		if ( !$role ) {
 			return false ;
 		}
 
@@ -365,7 +365,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$role = LiteSpeed_Cache_Router::get_role() ;
 		}
 
-		if ( ! $role ) {
+		if ( !$role ) {
 			return false ;
 		}
 
@@ -407,11 +407,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 		$val = get_option( $k ) ;
 		// Separately call default_item() to improve performance
-		if ( ! $val ) {
+		if ( !$val ) {
 			$val = $this->default_item( $k ) ;
 		}
 
-		if ( ! $return_string && ! is_array( $val ) ) {
+		if ( !$return_string && !is_array( $val ) ) {
 			$val = $val ? explode( "\n", $val ) : array() ;
 		}
 		elseif ( $return_string && is_array( $val ) ) {
@@ -432,7 +432,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function get_site_options()
 	{
-		if ( ! is_multisite() ) {
+		if ( !is_multisite() ) {
 			return null ;
 		}
 		$site_options = get_site_option( self::OPTION_NAME ) ;
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 					if ( empty( $cdn_mapping[ $v2 ] ) ) {
 						$cdn_mapping[ $v2 ] = array() ;
 					}
-					$cdn_mapping[ $v2 ][ $k ] = ! empty( $v[ $v2 ] ) ? $v[ $v2 ] : false ;
+					$cdn_mapping[ $v2 ][ $k ] = !empty( $v[ $v2 ] ) ? $v[ $v2 ] : false ;
 				}
 			}
 		}
@@ -514,7 +514,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			foreach ( $options[ $id ] as $k => $v ) {
 				$crawler_cookies[ 'name' ][ $i ] = $k ;
 				$crawler_cookies[ 'vals' ][ $i ] = $v ;
-				$i ++ ;
+				$i++ ;
 			}
 		}
 		$options[ $id ] = $crawler_cookies ;
@@ -536,7 +536,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$dkeys = array_keys($default_options) ;
 		$keys = array_keys($options) ;
 		$newkeys = array_diff($dkeys, $keys) ;
-		if ( ! empty($newkeys) ) {
+		if ( !empty($newkeys) ) {
 			foreach ( $newkeys as $newkey ) {
 				$options[$newkey] = $default_options[$newkey]  ;
 
@@ -545,7 +545,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 		}
 		$retiredkeys = array_diff($keys, $dkeys)  ;
-		if ( ! empty($retiredkeys) ) {
+		if ( !empty($retiredkeys) ) {
 			foreach ( $retiredkeys as $retired ) {
 				unset($options[$retired])  ;
 
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if (
 			$this->options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] &&
 			(
-				( ! is_main_site() && ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) ||
+				( !is_main_site() && !empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) ||
 				count( $default_options ) == count( $this->options )
 			)
 		) {
@@ -667,15 +667,15 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				return true ;
 			}
 		}
-		elseif ( ! defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && ! WP_CACHE ) ) {
+		elseif ( !defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && !WP_CACHE ) ) {
 				return true ;
 		}
 
 		$file = ABSPATH . 'wp-config.php' ;
 
-		if ( ! is_writeable( $file ) ) {
+		if ( !is_writeable( $file ) ) {
 			$file = dirname( ABSPATH ) . '/wp-config.php' ; // todo: is the path correct?
-			if ( ! is_writeable( $file ) ) {
+			if ( !is_writeable( $file ) ) {
 				error_log( 'wp-config file not writable for \'WP_CACHE\'' ) ;
 				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE ;
 			}
@@ -728,13 +728,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _set_cfg()
 	{
-		if ( empty( $_GET[ self::TYPE_SET ] ) || ! is_array( $_GET[ self::TYPE_SET ] ) ) {
+		if ( empty( $_GET[ self::TYPE_SET ] ) || !is_array( $_GET[ self::TYPE_SET ] ) ) {
 			return ;
 		}
 
 		$cfg = $cfg_v = false ;
 		foreach ( $_GET[ self::TYPE_SET ] as $k => $v ) {
-			if ( ! isset( $this->options[ $k ] ) ) {
+			if ( !isset( $this->options[ $k ] ) ) {
 				continue ;
 			}
 
@@ -747,7 +747,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			break ;// only allow one
 		}
 
-		if ( ! $cfg ) {
+		if ( !$cfg ) {
 			return ;
 		}
 
@@ -802,7 +802,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

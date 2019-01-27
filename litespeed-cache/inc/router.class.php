@@ -8,7 +8,7 @@
  * @since  		1.5 Moved into /inc
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function from_admin()
 	{
-		return ! empty( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0 ;
+		return !empty( $_SERVER[ 'HTTP_REFERER' ] ) && strpos( $_SERVER[ 'HTTP_REFERER' ], get_admin_url() ) === 0 ;
 	}
 
 	/**
@@ -89,7 +89,7 @@ class LiteSpeed_Cache_Router
 		$can = true ;
 
 		if ( is_admin() ) {
-			if ( ! self::is_ajax() ) {
+			if ( !self::is_ajax() ) {
 				LiteSpeed_Cache_Log::debug2( '[Router] CDN bypassed: is not ajax call' ) ;
 				$can = false ;
 			}
@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Router
 
 		// Hash validation
 		$hash = get_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH ) ;
-		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
+		if ( !$hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
 			LiteSpeed_Cache_Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
 			return ;
 		}
@@ -232,7 +232,7 @@ class LiteSpeed_Cache_Router
 		}
 		LiteSpeed_Cache_Log::debug( '[Router] get_role: ' . $role ) ;
 
-		if ( ! $role ) {
+		if ( !$role ) {
 			// Guest user
 			LiteSpeed_Cache_Log::debug( '[Router] role: guest' ) ;
 		}
@@ -251,13 +251,13 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function frontend_path()
 	{
-		if ( ! isset( self::$_frontend_path ) ) {
+		if ( !isset( self::$_frontend_path ) ) {
 			$frontend = rtrim( ABSPATH, '/' ) ; // /home/user/public_html/frontend
 			// get home path failed. Trac ticket #37668 (e.g. frontend:/blog backend:/wordpress)
-			if ( ! $frontend ) {
+			if ( !$frontend ) {
 				LiteSpeed_Cache_Log::debug( '[Router] No ABSPATH, generating from home option' ) ;
 				$frontend = parse_url( get_option( 'home' ) ) ;
-				$frontend = ! empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
+				$frontend = !empty( $frontend[ 'path' ] ) ? $frontend[ 'path' ] : '' ;
 				$frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend ;
 			}
 			$frontend = realpath( $frontend ) ;
@@ -276,7 +276,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function esi_enabled()
 	{
-		if ( ! isset( self::$_esi_enabled ) ) {
+		if ( !isset( self::$_esi_enabled ) ) {
 			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
 		}
 		return self::$_esi_enabled ;
@@ -291,7 +291,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function can_crawl()
 	{
-		if ( ! isset( self::$_can_crawl ) ) {
+		if ( !isset( self::$_can_crawl ) ) {
 			self::$_can_crawl = true ;
 
 			if ( isset( $_SERVER['X-LSCACHE'] ) && strpos( $_SERVER['X-LSCACHE'], 'crawler' ) === false ) {
@@ -317,7 +317,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function get_action()
 	{
-		if ( ! isset( self::$_action ) ) {
+		if ( !isset( self::$_action ) ) {
             self::$_action = false;
 			self::get_instance()->verify_action() ;
 			if ( self::$_action ) {
@@ -337,7 +337,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function is_logged_in()
 	{
-		if ( ! isset( self::$_is_logged_in ) ) {
+		if ( !isset( self::$_is_logged_in ) ) {
 			self::$_is_logged_in = is_user_logged_in() ;
 		}
 		return self::$_is_logged_in ;
@@ -352,7 +352,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function is_ajax()
 	{
-		if ( ! isset( self::$_is_ajax ) ) {
+		if ( !isset( self::$_is_ajax ) ) {
 			self::$_is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ;
 		}
 		return self::$_is_ajax ;
@@ -367,7 +367,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function is_admin_ip()
 	{
-		if ( ! isset( self::$_is_admin_ip ) ) {
+		if ( !isset( self::$_is_admin_ip ) ) {
 			$ips = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADMIN_IPS ) ;
 
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
@@ -422,15 +422,15 @@ class LiteSpeed_Cache_Router
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
 		// Validate requests nonce (from admin logged in page or cli)
-		if ( ! $this->verify_nonce( $action ) && ! $this->_verify_sapi_passive( $action ) && ! $this->_verify_sapi_aggressive( $action ) ) {
+		if ( !$this->verify_nonce( $action ) && !$this->_verify_sapi_passive( $action ) && !$this->_verify_sapi_aggressive( $action ) ) {
 			// check if it is from admin ip
-			if ( ! $this->is_admin_ip() ) {
+			if ( !$this->is_admin_ip() ) {
 				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
 				return ;
 			}
 
 			// check if it is public action
-			if ( ! in_array( $action, array(
+			if ( !in_array( $action, array(
 					LiteSpeed_Cache::ACTION_QS_NOCACHE,
 					LiteSpeed_Cache::ACTION_QS_PURGE,
 					LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE,
@@ -457,7 +457,7 @@ class LiteSpeed_Cache_Router
 		switch ( $action ) {
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
-				if ( ( ! $_is_multisite && $_can_option ) || $_can_network_option ) {
+				if ( ( !$_is_multisite && $_can_option ) || $_can_network_option ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -483,7 +483,7 @@ class LiteSpeed_Cache_Router
 				return ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:// todo: moved to purge.cls type action
-				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) ) {
+				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || ( !$_is_multisite && $_can_option ) ) ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -516,7 +516,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CFG:
 			case LiteSpeed_Cache::ACTION_ACTIVATION:
 			case LiteSpeed_Cache::ACTION_UTIL:
-				if ( $_can_option && ! $_is_network_admin ) {
+				if ( $_can_option && !$_is_network_admin ) {
 					self::$_action = $action ;
 				}
 				return ;
@@ -599,7 +599,7 @@ class LiteSpeed_Cache_Router
 	 */
 	private function verify_nonce( $action )
 	{
-		if ( ! isset( $_REQUEST[LiteSpeed_Cache::NONCE_NAME] ) || ! wp_verify_nonce( $_REQUEST[LiteSpeed_Cache::NONCE_NAME], $action ) ) {
+		if ( !isset( $_REQUEST[LiteSpeed_Cache::NONCE_NAME] ) || !wp_verify_nonce( $_REQUEST[LiteSpeed_Cache::NONCE_NAME], $action ) ) {
 			return false ;
 		}
 		else{
@@ -617,15 +617,15 @@ class LiteSpeed_Cache_Router
 	 */
 	private function ip_access( $ip_list )
 	{
-		if ( ! $ip_list ) {
+		if ( !$ip_list ) {
 			return false ;
 		}
-		if ( ! isset( self::$_ip ) ) {
+		if ( !isset( self::$_ip ) ) {
 			self::$_ip = $this->get_ip() ;
 		}
 		// $uip = explode('.', $_ip) ;
 		// if(empty($uip) || count($uip) != 4) Return false ;
-		if ( ! is_array( $ip_list ) ) {
+		if ( !is_array( $ip_list ) ) {
 			$ip_list = explode( "\n", $ip_list ) ;
 		}
 		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip)) ;
@@ -649,15 +649,15 @@ class LiteSpeed_Cache_Router
 		$_ip = '' ;
 		if ( function_exists( 'apache_request_headers' ) ) {
 			$apache_headers = apache_request_headers() ;
-			$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false ;
-			if ( ! $_ip ) {
-				$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false ;
+			$_ip = !empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false ;
+			if ( !$_ip ) {
+				$_ip = !empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false ;
 				$_ip = explode( ", ", $_ip ) ;
 				$_ip = array_shift( $_ip ) ;
 			}
 
-			if ( ! $_ip ) {
-				$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false ;
+			if ( !$_ip ) {
+				$_ip = !empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false ;
 			}
 		}
 		return $_ip ;
@@ -683,7 +683,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

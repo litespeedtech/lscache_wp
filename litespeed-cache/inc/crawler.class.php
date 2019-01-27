@@ -10,7 +10,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -58,7 +58,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function get_crawler_json_path()
 	{
-		if ( ! file_exists($this->_sitemap_file . '.meta') ) {
+		if ( !file_exists($this->_sitemap_file . '.meta') ) {
 			return false ;
 		}
 		$metaUrl = implode('/', array_slice(explode('/', $this->_sitemap_file . '.meta'), -5)) ;
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function save_blacklist()
 	{
-		if ( ! isset( $_POST[ self::CRWL_BLACKLIST ] ) ) {
+		if ( !isset( $_POST[ self::CRWL_BLACKLIST ] ) ) {
 			$msg = __( 'Can not find any form data for blacklist', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg ) ;
 			return false ;
@@ -196,10 +196,10 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		$xml_object = simplexml_load_string( $response[ 'body' ] ) ;
-		if ( ! $xml_object ) {
+		if ( !$xml_object ) {
 			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE ;
 		}
-		if ( ! $return_detail ) {
+		if ( !$return_detail ) {
 			return true ;
 		}
 		// start parsing
@@ -264,7 +264,7 @@ class LiteSpeed_Cache_Crawler
 			$sitemap_urls = $this->parse_custom_sitemap( $sitemap ) ;
 			$urls = array() ;
 			$offset = strlen( $this->_home_url ) ;
-			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
+			if ( is_array( $sitemap_urls ) && !empty( $sitemap_urls ) ) {
 				foreach ( $sitemap_urls as $val ) {
 					if ( stripos( $val, $this->_home_url ) === 0 ) {
 						$urls[] = substr( $val, $offset ) ;
@@ -302,7 +302,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public function sitemap_time()
 	{
-		if ( ! file_exists($this->_sitemap_file) ) {
+		if ( !file_exists($this->_sitemap_file) ) {
 			return false ;
 		}
 
@@ -344,7 +344,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public static function crawl_data($force = false)
 	{
-		if ( ! LiteSpeed_Cache_Router::can_crawl() ) {
+		if ( !LiteSpeed_Cache_Router::can_crawl() ) {
 			LiteSpeed_Cache_Log::debug('Crawler: ......crawler is NOT allowed by the server admin......') ;
 			return false;
 		}
@@ -377,7 +377,7 @@ class LiteSpeed_Cache_Crawler
 	{
 		LiteSpeed_Cache_Log::debug('Crawler: ......crawler started......') ;
 		// for the first time running
-		if ( ! file_exists($this->_sitemap_file) ) {
+		if ( !file_exists($this->_sitemap_file) ) {
 			$ret = $this->_generate_sitemap() ;
 			if ( $ret !== true ) {
 				LiteSpeed_Cache_Log::debug('Crawler: ' . $ret) ;
@@ -389,7 +389,7 @@ class LiteSpeed_Cache_Crawler
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $this->_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL] ) {
+			if ( !$force && time() - $last_fnished_at < $this->_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL] ) {
 				LiteSpeed_Cache_Log::debug('Crawler: Cron abort: cache warmed already.') ;
 				// if not reach whole crawling interval, exit
 				return;
@@ -405,17 +405,17 @@ class LiteSpeed_Cache_Crawler
 		 * @since 1.8.3
 		 */
 		$usleep = $this->_options[ LiteSpeed_Cache_Config::CRWL_USLEEP ] ;
-		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] > $usleep ) {
+		if ( !empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] > $usleep ) {
 			$usleep = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
 		}
 		$crawler->set_run_delay( $usleep ) ;
 		$crawler->set_threads_limit( $this->_options[ LiteSpeed_Cache_Config::CRWL_THREADS ] ) ;
 
 		$server_load_limit = $this->_options[ LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT ] ;
-		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
+		if ( !empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
 			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
 		}
-		elseif ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
+		elseif ( !empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit ) {
 			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ;
 		}
 		$crawler->set_load_limit( $server_load_limit ) ;
@@ -441,7 +441,7 @@ class LiteSpeed_Cache_Crawler
 		 * Set role simulation
 		 * @since 1.9.1
 		 */
-		if ( ! empty( $current_crawler[ 'uid' ] ) ) {
+		if ( !empty( $current_crawler[ 'uid' ] ) ) {
 			// Get role simulation vary name
 			$vary_inst = LiteSpeed_Cache_Vary::get_instance() ;
 			$vary_name = $vary_inst->get_vary_name() ;
@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Crawler
 		 * Set WebP simulation
 		 * @since  1.9.1
 		 */
-		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
+		if ( !empty( $current_crawler[ 'webp' ] ) ) {
 			$crawler->set_headers( array( 'Accept: image/webp,*/*' ) ) ;
 		}
 
@@ -478,7 +478,7 @@ class LiteSpeed_Cache_Crawler
 		 * Set mobile crawler
 		 * @since  2.8
 		 */
-		if ( ! empty( $current_crawler[ 'mobile' ] ) ) {
+		if ( !empty( $current_crawler[ 'mobile' ] ) ) {
 			$crawler->set_ua( 'Mobile' ) ;
 		}
 
@@ -489,7 +489,7 @@ class LiteSpeed_Cache_Crawler
 			$this->append_blacklist($ret['blacklist']) ;
 		}
 
-		if ( ! empty($ret['crawled']) ) {
+		if ( !empty($ret['crawled']) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler: Last crawled ' . $ret[ 'crawled' ] . ' item(s)' ) ;
 		}
 
@@ -550,7 +550,7 @@ class LiteSpeed_Cache_Crawler
 				$tmp = array_values( $udata->roles ) ;
 				$role_title = array_shift( $tmp ) ;
 			}
-			if ( ! $role_title ) {
+			if ( !$role_title ) {
 				continue ;
 			}
 
@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Crawler
 
 			// Don't alter $group bcos of loop usage
 			$item = $group ;
-			$item[ 'title' ] = ! empty( $group[ 'title' ] ) ? $group[ 'title' ] : '' ;
+			$item[ 'title' ] = !empty( $group[ 'title' ] ) ? $group[ 'title' ] : '' ;
 			if ( $v ) {
 				if ( $item[ 'title' ] ) {
 					$item[ 'title' ] .= ' - ' ;
@@ -651,7 +651,7 @@ class LiteSpeed_Cache_Crawler
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

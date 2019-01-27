@@ -9,7 +9,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -59,7 +59,7 @@ class LiteSpeed_Cache_Admin_Report
 
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ), false, true ) ;
 
-		if ( ! is_array( $json ) ) {
+		if ( !is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
 			$msg = __( 'Failed to push to LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
@@ -67,7 +67,7 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		$data = array(
-			'num'	=> ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
+			'num'	=> !empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
 			'dateline'	=> time(),
 		) ;
 
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Admin_Report
 	{
 		$info = get_option( LiteSpeed_Cache_Config::ITEM_ENV_REF ) ;
 
-		if ( ! is_array( $info ) ) {
+		if ( !is_array( $info ) ) {
 			return array(
 				'num'	=> '-',
 				'dateline'	=> '-',
@@ -120,7 +120,7 @@ class LiteSpeed_Cache_Admin_Report
 
 		if ( is_multisite() ) {
 			$active_plugins = get_site_option('active_sitewide_plugins') ;
-			if ( ! empty($active_plugins) ) {
+			if ( !empty($active_plugins) ) {
 				$active_plugins = array_keys($active_plugins) ;
 			}
 		}
@@ -151,9 +151,9 @@ class LiteSpeed_Cache_Admin_Report
 			$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 		}
 
-		if ( ! is_null($options) && is_multisite() ) {
+		if ( !is_null($options) && is_multisite() ) {
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
-			if ( ! empty($blogs) ) {
+			if ( !empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
 					$opts = get_blog_option($blog_id, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
 					if ( isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO]) ) {
@@ -170,7 +170,7 @@ class LiteSpeed_Cache_Admin_Report
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
-			if ( ! empty( $options[ $v ] ) ) {
+			if ( !empty( $options[ $v ] ) ) {
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
 			}
 		}
@@ -223,7 +223,7 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		foreach ( $htaccess_paths as $path ) {
-			if ( ! file_exists($path) || ! is_readable($path) ) {
+			if ( !file_exists($path) || !is_readable($path) ) {
 				$buf .= $path . " does not exist or is not readable.\n" ;
 				continue ;
 			}
@@ -260,11 +260,11 @@ class LiteSpeed_Cache_Admin_Report
 		foreach ( $section as $k => $v ) {
 			$buf .= "\n" . $tab ;
 
-			if ( ! is_numeric( $k ) ) {
+			if ( !is_numeric( $k ) ) {
 				$buf .= $k . ' = ' ;
 			}
 
-			if ( ! is_string( $v ) ) {
+			if ( !is_string( $v ) ) {
 				$v = var_export( $v, true ) ;
 			}
 
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Admin_Report
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

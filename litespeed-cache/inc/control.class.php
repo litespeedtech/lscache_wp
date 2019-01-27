@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -58,7 +58,7 @@ class LiteSpeed_Cache_Control
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
-		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
+		if ( !LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
 			return $varys ;
 		}
 		$varys[ 'role_exclude_cache' ] = 1 ;
@@ -165,7 +165,7 @@ class LiteSpeed_Cache_Control
 		self::$_control |= self::BM_SHARED ;
 		self::set_private() ;
 
-		if ( ! is_string( $reason ) ) {
+		if ( !is_string( $reason ) ) {
 			$reason = false ;
 		}
 
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Control
 		}
 		self::$_control |= self::BM_PUBLIC_FORCED ;
 
-		if ( ! is_string( $reason ) ) {
+		if ( !is_string( $reason ) ) {
 			$reason = false ;
 		}
 
@@ -235,7 +235,7 @@ class LiteSpeed_Cache_Control
 		}
 		self::$_control |= self::BM_PRIVATE ;
 
-		if ( ! is_string( $reason ) ) {
+		if ( !is_string( $reason ) ) {
 			$reason = false ;
 		}
 
@@ -253,7 +253,7 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function is_private()
 	{
-		return self::$_control & self::BM_PRIVATE && ! self::is_public_forced() ;
+		return self::$_control & self::BM_PRIVATE && !self::is_public_forced() ;
 	}
 
 	/**
@@ -266,7 +266,7 @@ class LiteSpeed_Cache_Control
 	{
 		self::$_control |= self::BM_CACHEABLE ;
 
-		if ( ! is_string( $reason ) ) {
+		if ( !is_string( $reason ) ) {
 			$reason = false ;
 		}
 
@@ -286,7 +286,7 @@ class LiteSpeed_Cache_Control
 	{
 		self::$_control |= self::BM_FORCED_CACHEABLE ;
 
-		if ( ! is_string( $reason ) ) {
+		if ( !is_string( $reason ) ) {
 			$reason = false ;
 		}
 
@@ -307,7 +307,7 @@ class LiteSpeed_Cache_Control
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
 
-		if ( ! is_string( $reason ) ) {
+		if ( !is_string( $reason ) ) {
 			$reason = false ;
 		}
 
@@ -354,7 +354,7 @@ class LiteSpeed_Cache_Control
 			return true ;
 		}
 
-		return ! self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE ;
+		return !self::isset_notcacheable() && self::$_control & self::BM_CACHEABLE ;
 	}
 
 	/**
@@ -443,7 +443,7 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function check_redirect( $location, $status )
 	{
-		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
+		if ( !empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
 			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
 			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 to $location" ) ;
 
@@ -488,7 +488,7 @@ class LiteSpeed_Cache_Control
 
 		$hdr = self::X_HEADER . ': ' ;
 
-		if ( ! self::is_cacheable() ) {
+		if ( !self::is_cacheable() ) {
 			$hdr .= 'no-cache' . $esi_hdr ;
 			return $hdr ;
 		}
@@ -521,7 +521,7 @@ class LiteSpeed_Cache_Control
 	{
 		// Check if URI is forced cache
 		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ;
-		if ( ! empty( $excludes ) ) {
+		if ( !empty( $excludes ) ) {
 			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::force_cacheable() ;
@@ -534,7 +534,7 @@ class LiteSpeed_Cache_Control
 
 		// if is not cacheable, terminate check
 		// Even no need to run 3rd party hook
-		if ( ! self::is_cacheable() ) {
+		if ( !self::is_cacheable() ) {
 			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
 			return ;
 		}
@@ -559,7 +559,7 @@ class LiteSpeed_Cache_Control
 		do_action('litespeed_cache_api_control', $esi_id) ;
 
 		// if is not cacheable, terminate check
-		if ( ! self::is_cacheable() ) {
+		if ( !self::is_cacheable() ) {
 			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable after api_control' ) ;
 			return ;
 		}
@@ -570,21 +570,21 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check litespeed setting to set cacheable status
-		if ( ! $instance->_setting_cacheable() ) {
+		if ( !$instance->_setting_cacheable() ) {
 			self::set_nocache() ;
 			return ;
 		}
 
 		// If user has password cookie, do not cache (moved from vary)
 		global $post ;
-		if ( ! empty($post->post_password) && isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
+		if ( !empty($post->post_password) && isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
 			// If user has password cookie, do not cache
 			self::set_nocache('pswd cookie') ;
 			return ;
 		}
 
 		// The following check to the end is ONLY for mobile
-		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE) ) {
+		if ( !LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE) ) {
 			if ( self::is_mobile() ) {
 				self::set_nocache('mobile') ;
 			}
@@ -592,7 +592,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		if ( isset($_SERVER['LSCACHE_VARY_VALUE']) && strpos( $_SERVER['LSCACHE_VARY_VALUE'], 'ismobile' ) !== false ) {
-			if ( ! wp_is_mobile() && ! self::is_mobile() ) {
+			if ( !wp_is_mobile() && !self::is_mobile() ) {
 				self::set_nocache( 'is not mobile' ) ;
 				return ;
 			}
@@ -615,7 +615,7 @@ class LiteSpeed_Cache_Control
 	{
 		// logged_in users already excluded, no hook added
 
-		if( ! empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
+		if( !empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
 			return $this->_no_cache_for( 'Query String Action' ) ;
 		}
 
@@ -645,18 +645,18 @@ class LiteSpeed_Cache_Control
 
 		// Check private cache URI setting
 		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ) ;
-		if ( ! empty( $excludes ) ) {
+		if ( !empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
 				self::set_private( 'Admin cfg Private Cached URI: ' . $result ) ;
 			}
 		}
 
-		if ( ! self::is_forced_cacheable() ) {
+		if ( !self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
 			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ;
-			if ( ! empty( $excludes ) ) {
+			if ( !empty( $excludes ) ) {
 				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
 					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
@@ -665,22 +665,22 @@ class LiteSpeed_Cache_Control
 
 			// Check QS excluded setting
 			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ) ;
-			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
+			if ( !empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 
 			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT) ;
-			if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
+			if ( !empty($excludes) && has_category(explode(',', $excludes)) ) {
 				return $this->_no_cache_for('Admin configured Category Do not cache.') ;
 			}
 
 			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG) ;
-			if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
+			if ( !empty($excludes) && has_tag(explode(',', $excludes)) ) {
 				return $this->_no_cache_for('Admin configured Tag Do not cache.') ;
 			}
 
 			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES) ;
-			if ( ! empty($excludes) && ! empty($_COOKIE) ) {
+			if ( !empty($excludes) && !empty($_COOKIE) ) {
 				$exclude_list = explode('|', $excludes) ;
 
 				foreach( $_COOKIE as $key=>$val) {
@@ -691,7 +691,7 @@ class LiteSpeed_Cache_Control
 			}
 
 			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS) ;
-			if ( ! empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
+			if ( !empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
 				$pattern = '/' . $excludes . '/' ;
 				$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']) ;
 				if ( $nummatches ) {
@@ -732,7 +732,7 @@ class LiteSpeed_Cache_Control
 	 */
 	private function _is_qs_excluded( $excludes )
 	{
-		if ( ! empty( $_GET ) && $intersect = array_intersect( array_keys( $_GET ), $excludes ) ) {
+		if ( !empty( $_GET ) && $intersect = array_intersect( array_keys( $_GET ), $excludes ) ) {
 			return implode( ',', $intersect ) ;
 		}
 		return false ;
@@ -771,7 +771,7 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

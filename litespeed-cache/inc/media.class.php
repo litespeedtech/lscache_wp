@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Media
 
 		// WebP info
 		$info_webp = '' ;
-		if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
+		if ( $size_meta && !empty ( $size_meta[ 'webp_saved' ] ) ) {
 			$percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
 			$pie_webp = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
 			$txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $size_meta[ 'webp_saved' ] ) ) ;
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Media
 
 		// Original image info
 		$info_ori = '' ;
-		if ( $size_meta && ! empty ( $size_meta[ 'ori_saved' ] ) ) {
+		if ( $size_meta && !empty ( $size_meta[ 'ori_saved' ] ) ) {
 			$percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] ) ;
 			$pie_ori = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
 			$txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $size_meta[ 'ori_saved' ] ) ) ;
@@ -295,11 +295,11 @@ eot;
 	 */
 	private function webp_support()
 	{
-		if ( ! empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
+		if ( !empty( $_SERVER[ 'HTTP_ACCEPT' ] ) && strpos( $_SERVER[ 'HTTP_ACCEPT' ], 'image/webp' ) !== false ) {
 			return true ;
 		}
 
-		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
+		if ( !empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed' ) !== false ) {
 			return true ;
 		}
 
@@ -323,7 +323,7 @@ eot;
 			return $content ;
 		}
 
-		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
+		if ( !defined( 'LITESPEED_IS_HTML' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] bypass: Not frontend HTML type' ) ;
 			return $content ;
 		}
@@ -428,16 +428,16 @@ eot;
 	 */
 	private function _placeholder( $size )
 	{
-		if ( ! $size ) {
+		if ( !$size ) {
 			return false ;
 		}
 
-		if ( ! $this->_cfg_placeholder_resp ) {
+		if ( !$this->_cfg_placeholder_resp ) {
 			return false ;
 		}
 
 		// Check if its already in dict or not
-		if ( ! empty( $this->_placeholder_resp_dict[ $size ] ) ) {
+		if ( !empty( $this->_placeholder_resp_dict[ $size ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder already in dict [size] ' . $size ) ;
 
 			return $this->_placeholder_resp_dict[ $size ] ;
@@ -464,9 +464,9 @@ eot;
 		$req_summary = self::get_summary() ;
 
 		// Send request to generate placeholder
-		if ( ! $this->_cfg_placeholder_resp_async ) {
+		if ( !$this->_cfg_placeholder_resp_async ) {
 			// If requested recently, bypass
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+			if ( $req_summary && !empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to interval limit [size] ' . $size ) ;
 				return false ;
 			}
@@ -537,12 +537,12 @@ eot;
 
 			LiteSpeed_Cache_Log::debug2( '[Media] lazyload found: ' . $attrs[ 'src' ] ) ;
 
-			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) || ! empty( $attrs[ 'data-srcset' ] ) ) {
+			if ( !empty( $attrs[ 'data-no-lazy' ] ) || !empty( $attrs[ 'data-lazyloaded' ] ) || !empty( $attrs[ 'data-src' ] ) || !empty( $attrs[ 'data-srcset' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
 
-			if ( ! empty( $attrs[ 'class' ] ) && $hit = LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
+			if ( !empty( $attrs[ 'class' ] ) && $hit = LiteSpeed_Cache_Utility::str_hit_array( $attrs[ 'class' ], $cls_excludes ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] lazyload image cls excludes [hit] ' . $hit ) ;
 				continue ;
 			}
@@ -572,7 +572,7 @@ eot;
 			}
 
 			$placeholder = false ;
-			if ( ! empty( $attrs[ 'width' ] ) && ! empty( $attrs[ 'height' ] ) ) {
+			if ( !empty( $attrs[ 'width' ] ) && !empty( $attrs[ 'height' ] ) ) {
 				$placeholder = $attrs[ 'width' ] . 'x' . $attrs[ 'height' ] ;
 			}
 
@@ -606,7 +606,7 @@ eot;
 
 			LiteSpeed_Cache_Log::debug2( '[Media] found iframe: ' . $attrs[ 'src' ] ) ;
 
-			if ( ! empty( $attrs[ 'data-no-lazy' ] ) || ! empty( $attrs[ 'data-lazyloaded' ] ) || ! empty( $attrs[ 'data-src' ] ) ) {
+			if ( !empty( $attrs[ 'data-no-lazy' ] ) || !empty( $attrs[ 'data-lazyloaded' ] ) || !empty( $attrs[ 'data-src' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] bypassed' ) ;
 				continue ;
 			}
@@ -638,7 +638,7 @@ eot;
 		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ) ;
 
 		foreach ( $webp_ele_to_check as $v ) {
-			if ( ! $v || strpos( $v, '.' ) === false ) {
+			if ( !$v || strpos( $v, '.' ) === false ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] buffer_webp no . attribute ' . $v ) ;
 				continue ;
 			}
@@ -662,7 +662,7 @@ eot;
 					continue ;
 				}
 
-				if ( ! $url2 = $this->replace_webp( $url ) ) {
+				if ( !$url2 = $this->replace_webp( $url ) ) {
 					continue ;
 				}
 
@@ -699,7 +699,7 @@ eot;
 				continue ;
 			}
 
-			if ( ! $url2 = $this->replace_webp( $url ) ) {
+			if ( !$url2 = $this->replace_webp( $url ) ) {
 				continue ;
 			}
 
@@ -753,7 +753,7 @@ eot;
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
-				if( ! $url = $this->replace_webp( $data[ 'url' ] ) ) {
+				if( !$url = $this->replace_webp( $data[ 'url' ] ) ) {
 					continue ;
 				}
 				$srcs[ $w ][ 'url' ] = $url ;
@@ -806,7 +806,7 @@ eot;
 	public static function has_queue()
 	{
 		$req_summary = self::get_summary() ;
-		if ( ! empty( $req_summary[ 'queue' ] ) ) {
+		if ( !empty( $req_summary[ 'queue' ] ) ) {
 			return true ;
 		}
 
@@ -889,8 +889,8 @@ eot;
 		}
 
 		// For cron, need to check request interval too
-		if ( ! $continue ) {
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+		if ( !$continue ) {
+			if ( $req_summary && !empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 				return ;
 			}
 		}
@@ -901,7 +901,7 @@ eot;
 			self::get_instance()->_generate_placeholder( $v ) ;
 
 			// only request first one
-			if ( ! $continue ) {
+			if ( !$continue ) {
 				return ;
 			}
 		}
@@ -944,7 +944,7 @@ eot;
 		$req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'curr_request' ] = 0 ;
-		if ( ! empty( $req_summary[ 'queue' ] ) && in_array( $size, $req_summary[ 'queue' ] ) ) {
+		if ( !empty( $req_summary[ 'queue' ] ) && in_array( $size, $req_summary[ 'queue' ] ) ) {
 			unset( $req_summary[ 'queue' ][ array_search( $size, $req_summary[ 'queue' ] ) ] ) ;
 		}
 
@@ -990,7 +990,7 @@ eot;
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

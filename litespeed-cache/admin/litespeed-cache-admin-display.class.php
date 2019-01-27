@@ -9,7 +9,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_Admin_Display
 	private function __construct()
 	{
 		// load assets
-		if( ! empty($_GET['page']) &&
+		if( !empty($_GET['page']) &&
 				(substr($_GET['page'], 0, 8) == 'lscache-' || $_GET['page'] == 'litespeedcache') ) {
 			add_action('admin_enqueue_scripts', array($this, 'load_assets')) ;
 		}
@@ -80,7 +80,7 @@ class LiteSpeed_Cache_Admin_Display
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		if ( !function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
 		}
 
@@ -157,11 +157,11 @@ class LiteSpeed_Cache_Admin_Display
 
 			$this->add_submenu(__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage') ;
 
-			if ( ! is_multisite() || is_network_admin() ) {
+			if ( !is_multisite() || is_network_admin() ) {
 				$this->add_submenu(__('Edit .htaccess', 'litespeed-cache'), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess') ;
 			}
 
-			if ( ! is_network_admin() ) {
+			if ( !is_network_admin() ) {
 				$this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
 				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
 				$this->add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
@@ -379,7 +379,7 @@ class LiteSpeed_Cache_Admin_Display
 			return false ;
 		}
 		$error = 'ERROR ' . $err_code . ': ' . $error ;
-		if ( ! is_null($args) ) {
+		if ( !is_null($args) ) {
 			if ( is_array($args) ) {
 				$error = vsprintf($error, $args) ;
 			}
@@ -405,7 +405,7 @@ class LiteSpeed_Cache_Admin_Display
 	public static function add_error($err_code, $args = null)
 	{
 		$error = self::get_error($err_code, $args) ;
-		if( ! $error ) {
+		if( !$error ) {
 			return false ;
 		}
 		self::add_notice(self::NOTICE_RED, $error) ;
@@ -485,7 +485,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		$messages = (array)get_option( self::LITESPEED_MSG ) ;
-		if( ! $messages ) {
+		if( !$messages ) {
 			$messages = array() ;
 		}
 		if ( is_array($msg) ) {
@@ -515,7 +515,7 @@ class LiteSpeed_Cache_Admin_Display
 			$added_thickbox = false ;
 			foreach ($messages as $msg) {
 				// Added for popup links
-				if ( strpos( $msg, 'TB_iframe' ) && ! $added_thickbox ) {
+				if ( strpos( $msg, 'TB_iframe' ) && !$added_thickbox ) {
 					add_thickbox();
 					$added_thickbox = true ;
 				}
@@ -705,7 +705,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$disabled = $disabled ? ' disabled ' : '' ;
 
-		if ( ! $cols ) {
+		if ( !$cols ) {
 			$cols = 80 ;
 		}
 
@@ -924,7 +924,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function recommended( $id, $is_item = false )
 	{
 		$val = '' ;
-		if ( ! $is_item ) {
+		if ( !$is_item ) {
 			if ( isset( $this->default_settings[ $id ] ) ) {
 				$val = $this->default_settings[ $id ] ;
 			}
@@ -934,7 +934,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $val ) {
-			if ( ! is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
+			if ( !is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
 				$val = "<textarea readonly rows='5' class='litespeed-left10'>$val</textarea>" ;
 			}
 			else {
@@ -974,7 +974,7 @@ class LiteSpeed_Cache_Admin_Display
 			$class = " class='$class' " ;
 		}
 
-		if ( ! $title ) {
+		if ( !$title ) {
 			$title = __( 'Learn More', 'litespeed-cache' ) ;
 		}
 
@@ -1074,7 +1074,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

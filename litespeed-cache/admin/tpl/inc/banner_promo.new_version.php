@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 
 /**
  * NOTE: Only show for single site
@@ -13,7 +13,7 @@ if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
 }
 
 $current = get_site_transient( 'update_plugins' ) ;
-if ( ! isset( $current->response[ LiteSpeed_Cache::PLUGIN_FILE ] ) ) {
+if ( !isset( $current->response[ LiteSpeed_Cache::PLUGIN_FILE ] ) ) {
 	return ;
 }
 
@@ -31,7 +31,7 @@ if ( time() - $last_check > 43200 ) {
 	return ;
 }
 
-if ( ! isset( $_summary[ 'new_version.v' ] ) ) {
+if ( !isset( $_summary[ 'new_version.v' ] ) ) {
 	return ;
 }
 

@@ -8,7 +8,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -50,7 +50,7 @@ class LiteSpeed_Cache_CSS
 	public static function has_queue()
 	{
 		$req_summary = self::get_summary() ;
-		if ( ! empty( $req_summary[ 'queue' ] ) ) {
+		if ( !empty( $req_summary[ 'queue' ] ) ) {
 			return true ;
 		}
 
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_CSS
 	private function _ccss()
 	{
 		// If don't need to generate CCSS, bypass
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ) {
+		if ( !LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] bypassed ccss due to setting' ) ;
 			return '' ;
 		}
@@ -146,7 +146,7 @@ class LiteSpeed_Cache_CSS
 
 		// Check if is already in a request, bypass current one
 		$req_summary = self::get_summary() ;
-		if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+		if ( $req_summary && !empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 			return '' ;
 		}
 
@@ -199,14 +199,14 @@ class LiteSpeed_Cache_CSS
 		}
 
 		// For cron, need to check request interval too
-		if ( ! $continue ) {
-			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
+		if ( !$continue ) {
+			if ( $req_summary && !empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 				return ;
 			}
 		}
 
 		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
-			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
+			if ( !is_array( $v ) ) {// Backward compatibility for v2.6.4-
 				LiteSpeed_Cache_Log::debug( '[CSS] previous v2.6.4- data' ) ;
 				return ;
 			}
@@ -216,7 +216,7 @@ class LiteSpeed_Cache_CSS
 			self::get_instance()->_generate_ccss( $v[ 'url' ], $k, $v[ 'user_agent' ], $v[ 'is_mobile' ] ) ;
 
 			// only request first one
-			if ( ! $continue ) {
+			if ( !$continue ) {
 				return ;
 			}
 		}
@@ -295,13 +295,13 @@ class LiteSpeed_Cache_CSS
 
 		// Check if in separate css type option
 		$separate_posttypes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ) ;
-		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
+		if ( !empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
 		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ;
-		if ( ! empty( $separate_uri ) ) {
+		if ( !empty( $separate_uri ) ) {
 			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {
 				LiteSpeed_Cache_Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

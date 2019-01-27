@@ -15,7 +15,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -140,7 +140,7 @@ class LiteSpeed_Cache
 		 * Preload ESI functionality for ESI request uri recovery
 		 * @since 1.8.1
 		 */
-		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
+		if ( !LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
 			LiteSpeed_Cache_ESI::get_instance() ;
 		}
 	}
@@ -167,7 +167,7 @@ class LiteSpeed_Cache
 		// in `after_setup_theme`, before `init` hook
 		$this->_auto_update() ;
 
-		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
+		if ( !self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
 
@@ -194,11 +194,11 @@ class LiteSpeed_Cache
 		 * Check if is non optm simulator
 		 * @since  2.9
 		 */
-		if ( ! empty( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm' ) {
-			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
+		if ( !empty( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm' ) {
+			!defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+		if ( !defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			/**
 			 * Check lazy lib request in the very beginning
 			 * @since 1.4
@@ -220,7 +220,7 @@ class LiteSpeed_Cache
 		// 2. Init cacheable status
 		LiteSpeed_Cache_Vary::get_instance() ;
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+		if ( !defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Hook cdn for attachements
 			LiteSpeed_Cache_CDN::get_instance() ;
 		}
@@ -230,7 +230,7 @@ class LiteSpeed_Cache
 
 		LiteSpeed_Cache_Tag::get_instance() ;
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+		if ( !defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// load cron tasks
 			LiteSpeed_Cache_Task::get_instance() ;
 		}
@@ -256,7 +256,7 @@ class LiteSpeed_Cache
 	 */
 	private function _auto_update()
 	{
-		if ( ! self::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
+		if ( !self::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
 			return ;
 		}
 
@@ -264,7 +264,7 @@ class LiteSpeed_Cache
 				if ( $item->slug == 'litespeed-cache' ) {
 					$auto_v = LiteSpeed_Cache_Utility::version_check() ;
 
-					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
+					if ( $auto_v && !empty( $item->new_version ) && $auto_v === $item->new_version ) {
 						return true ;
 					}
 				}
@@ -412,7 +412,7 @@ class LiteSpeed_Cache
 			default:
 				break ;
 		}
-		if ( $msg && ! LiteSpeed_Cache_Router::is_ajax() ) {
+		if ( $msg && !LiteSpeed_Cache_Router::is_ajax() ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
 			LiteSpeed_Cache_Admin::redirect() ;
 			return ;
@@ -458,7 +458,7 @@ class LiteSpeed_Cache
 	public static function footer_hook()
 	{
 		LiteSpeed_Cache_Log::debug( '[Core] Footer hook called' ) ;
-		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
+		if ( !defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			define( 'LITESPEED_FOOTER_CALLED', true ) ;
 		}
 	}
@@ -471,7 +471,7 @@ class LiteSpeed_Cache
 	 */
 	private function _check_is_html( $buffer = null )
 	{
-		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
+		if ( !defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
 			return ;
 		}
@@ -508,14 +508,14 @@ class LiteSpeed_Cache
 
 		$is_html = stripos( $buffer, '<html' ) === 0 || stripos( $buffer, '<!DOCTYPE' ) === 0 ;
 
-		if ( ! $is_html ) {
+		if ( !$is_html ) {
 			LiteSpeed_Cache_Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
 			return ;
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Core] Footer check passed' ) ;
 
-		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
+		if ( !defined( 'LITESPEED_IS_HTML' ) ) {
 			define( 'LITESPEED_IS_HTML', true ) ;
 		}
 	}
@@ -537,7 +537,7 @@ class LiteSpeed_Cache
 		// Replace ESI preserved list
 		$buffer = LiteSpeed_Cache_ESI::finalize( $buffer ) ;
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+		if ( !defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			// Image lazy load check
 			$buffer = LiteSpeed_Cache_Media::finalize( $buffer ) ;
 		}
@@ -549,7 +549,7 @@ class LiteSpeed_Cache
 		 */
 		$buffer = LiteSpeed_Cache_GUI::finalize( $buffer ) ;
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+		if ( !defined( 'LITESPEED_BYPASS_OPTM' ) ) {
 			$buffer = LiteSpeed_Cache_Optimize::finalize( $buffer ) ;
 
 			$buffer = LiteSpeed_Cache_CDN::finalize( $buffer ) ;
@@ -578,7 +578,7 @@ class LiteSpeed_Cache
 	public function send_headers( $is_forced = false )
 	{
 		// Make sure header output only run once
-		if ( ! defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
+		if ( !defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
 			define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 		}
 		else {
@@ -594,7 +594,7 @@ class LiteSpeed_Cache
 
 		// If is not cacheable but Admin QS is `purge` or `purgesingle`, `tag` still needs to be generated
 		$tag_header = LiteSpeed_Cache_Tag::output() ;
-		if ( LiteSpeed_Cache_Control::is_cacheable() && ! $tag_header ) {
+		if ( LiteSpeed_Cache_Control::is_cacheable() && !$tag_header ) {
 			LiteSpeed_Cache_Control::set_nocache( 'empty tag header' ) ;
 		}
 
@@ -613,7 +613,7 @@ class LiteSpeed_Cache
 
 		if ( $running_info_showing ) {
 			// Give one more break to avoid ff crash
-			if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
+			if ( !defined( 'LSCACHE_IS_ESI' ) ) {
 				$this->footer_comment .= "\n" ;
 			}
 
@@ -731,7 +731,7 @@ class LiteSpeed_Cache
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

@@ -6,7 +6,7 @@ $menu_list = array(
 	'db' => __('DB Optimizer', 'litespeed-cache'),
 ) ;
 
-if ( ! is_network_admin() ) {
+if ( !is_network_admin() ) {
 	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
 }
 
@@ -36,7 +36,7 @@ if ( ! is_network_admin() ) {
 		foreach ($menu_list as $tab => $val){
 			$accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
-			$i ++ ;
+			$i++ ;
 		}
 	?>
 	</h2>

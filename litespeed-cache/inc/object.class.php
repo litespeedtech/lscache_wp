@@ -8,14 +8,14 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
 /**
  * Handle exception
  */
-if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+if ( !function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
 	{
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
@@ -102,18 +102,18 @@ class LiteSpeed_Cache_Object
 		}
 		elseif ( file_exists( $this->_oc_data_file ) ) { // Get cfg from oc_data_file
 			$cfg = parse_ini_file( $this->_oc_data_file, true ) ;
-			$this->_cfg_method = ! empty( $cfg[ 'object_cache' ][ 'method' ] ) ? $cfg[ 'object_cache' ][ 'method' ] : false ;
+			$this->_cfg_method = !empty( $cfg[ 'object_cache' ][ 'method' ] ) ? $cfg[ 'object_cache' ][ 'method' ] : false ;
 			$this->_cfg_host = $cfg[ 'object_cache' ][ 'host' ] ;
 			$this->_cfg_port = $cfg[ 'object_cache' ][ 'port' ] ;
-			$this->_cfg_life = ! empty( $cfg[ 'object_cache' ][ 'life' ] ) ? $cfg[ 'object_cache' ][ 'life' ] : $this->_default_life ;
-			$this->_cfg_persistent = ! empty( $cfg[ 'object_cache' ][ 'persistent' ] ) ? $cfg[ 'object_cache' ][ 'persistent' ] : false ;
-			$this->_cfg_admin = ! empty( $cfg[ 'object_cache' ][ 'cache_admin' ] ) ? $cfg[ 'object_cache' ][ 'cache_admin' ] : false ;
-			$this->_cfg_transients = ! empty( $cfg[ 'object_cache' ][ 'cache_transients' ] ) ? $cfg[ 'object_cache' ][ 'cache_transients' ] : false ;
-			$this->_cfg_db = ! empty( $cfg[ 'object_cache' ][ 'db' ] ) ? $cfg[ 'object_cache' ][ 'db' ] : 0 ;
-			$this->_cfg_user = ! empty( $cfg[ 'object_cache' ][ 'user' ] ) ? $cfg[ 'object_cache' ][ 'user' ] : '' ;
-			$this->_cfg_pswd = ! empty( $cfg[ 'object_cache' ][ 'pswd' ] ) ? $cfg[ 'object_cache' ][ 'pswd' ] : '' ;
-			$this->_global_groups = ! empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : array() ;
-			$this->_non_persistent_groups = ! empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : array() ;
+			$this->_cfg_life = !empty( $cfg[ 'object_cache' ][ 'life' ] ) ? $cfg[ 'object_cache' ][ 'life' ] : $this->_default_life ;
+			$this->_cfg_persistent = !empty( $cfg[ 'object_cache' ][ 'persistent' ] ) ? $cfg[ 'object_cache' ][ 'persistent' ] : false ;
+			$this->_cfg_admin = !empty( $cfg[ 'object_cache' ][ 'cache_admin' ] ) ? $cfg[ 'object_cache' ][ 'cache_admin' ] : false ;
+			$this->_cfg_transients = !empty( $cfg[ 'object_cache' ][ 'cache_transients' ] ) ? $cfg[ 'object_cache' ][ 'cache_transients' ] : false ;
+			$this->_cfg_db = !empty( $cfg[ 'object_cache' ][ 'db' ] ) ? $cfg[ 'object_cache' ][ 'db' ] : 0 ;
+			$this->_cfg_user = !empty( $cfg[ 'object_cache' ][ 'user' ] ) ? $cfg[ 'object_cache' ][ 'user' ] : '' ;
+			$this->_cfg_pswd = !empty( $cfg[ 'object_cache' ][ 'pswd' ] ) ? $cfg[ 'object_cache' ][ 'pswd' ] : '' ;
+			$this->_global_groups = !empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : array() ;
+			$this->_non_persistent_groups = !empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : array() ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Object
 		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
 
 		// Update cls file
-		if ( ! file_exists( $_oc_wp_file ) || md5_file( $_oc_wp_file ) !== md5_file( $_oc_ori_file ) ) {
+		if ( !file_exists( $_oc_wp_file ) || md5_file( $_oc_wp_file ) !== md5_file( $_oc_ori_file ) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $_oc_wp_file ) ;
 			copy( $_oc_ori_file, $_oc_wp_file ) ;
 		}
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_Object
 			return true ;
 		}
 
-		if ( ! class_exists( $this->_oc_driver ) || ! $this->_cfg_host ) {
+		if ( !class_exists( $this->_oc_driver ) || !$this->_cfg_host ) {
 			return null ;
 		}
 
@@ -348,7 +348,7 @@ class LiteSpeed_Cache_Object
 			}
 
 			// Check connection
-			if ( ! $this->_validate_mem_server() ) {
+			if ( !$this->_validate_mem_server() ) {
 				$failed = true ;
 			}
 		}
@@ -416,15 +416,15 @@ class LiteSpeed_Cache_Object
 	 */
 	public function get( $key )
 	{
-		if ( ! $this->_cfg_enabled ) {
+		if ( !$this->_cfg_enabled ) {
 			return null ;
 		}
 
-		if ( ! $this->_can_cache() ) {
+		if ( !$this->_can_cache() ) {
 			return null ;
 		}
 
-		if( ! $this->_connect() ) {
+		if( !$this->_connect() ) {
 			return null ;
 		}
 
@@ -443,15 +443,15 @@ class LiteSpeed_Cache_Object
 	 */
 	public function set( $key, $data, $expire )
 	{
-		if ( ! $this->_cfg_enabled ) {
+		if ( !$this->_cfg_enabled ) {
 			return null ;
 		}
 
-		if ( ! $this->_can_cache() ) {
+		if ( !$this->_can_cache() ) {
 			return null ;
 		}
 
-		if( ! $this->_connect() ) {
+		if( !$this->_connect() ) {
 			return null ;
 		}
 
@@ -479,7 +479,7 @@ class LiteSpeed_Cache_Object
 	 */
 	private function _can_cache()
 	{
-		if ( ! $this->_cfg_admin && defined( 'WP_ADMIN' ) ) {
+		if ( !$this->_cfg_admin && defined( 'WP_ADMIN' ) ) {
 			return false ;
 		}
 		return true ;
@@ -493,11 +493,11 @@ class LiteSpeed_Cache_Object
 	 */
 	public function delete( $key )
 	{
-		if ( ! $this->_cfg_enabled ) {
+		if ( !$this->_cfg_enabled ) {
 			return null ;
 		}
 
-		if( ! $this->_connect() ) {
+		if( !$this->_connect() ) {
 			return null ;
 		}
 
@@ -516,12 +516,12 @@ class LiteSpeed_Cache_Object
 	 */
 	public function flush()
 	{
-		if ( ! $this->_cfg_enabled ) {
+		if ( !$this->_cfg_enabled ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] bypass flushing' ) ;
 			return null ;
 		}
 
-		if( ! $this->_connect() ) {
+		if( !$this->_connect() ) {
 			return null ;
 		}
 
@@ -546,7 +546,7 @@ class LiteSpeed_Cache_Object
 	 */
 	public function add_global_groups( $groups )
 	{
-		if ( ! is_array( $groups ) ) {
+		if ( !is_array( $groups ) ) {
 			$groups = array( $groups ) ;
 		}
 
@@ -573,7 +573,7 @@ class LiteSpeed_Cache_Object
 	 */
 	public function add_non_persistent_groups( $groups )
 	{
-		if ( ! is_array( $groups ) ) {
+		if ( !is_array( $groups ) ) {
 			$groups = array( $groups ) ;
 		}
 
@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Object
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

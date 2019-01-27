@@ -86,7 +86,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 				</label>
 			</span>
 		</h3>
-		<?php if ( ! LiteSpeed_Cache_Router::can_crawl() ): ?>
+		<?php if ( !LiteSpeed_Cache_Router::can_crawl() ): ?>
 			<div class="litespeed-callout-danger">
 				<h4><?php echo __('WARNING', 'litespeed-cache'); ?></h4>
 				<p><?php echo __('The crawler feature is not enabled on the LiteSpeed server. Please consult your server admin.', 'litespeed-cache'); ?></p>
@@ -101,7 +101,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<?php echo LiteSpeed_Cache_Utility::readable_time( $meta[ 'this_full_beginning_time' ] ) ; ?>
 		</p>
 
-			<?php if ( ! $is_running ) : ?>
+			<?php if ( !$is_running ) : ?>
 		<p>
 			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ) ; ?>:</b>
 			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]) ; ?>

@@ -89,7 +89,7 @@ ksort( $roles ) ;
  * Switch basic/advanced mode
  * @since  1.8.2
  */
-if ( ! empty( $_GET[ 'mode' ] ) ) {
+if ( !empty( $_GET[ 'mode' ] ) ) {
 	$adv_mode = $_GET[ 'mode' ] == 'advanced' ? true : false ;
 	update_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE, $adv_mode ) ;
 }
@@ -100,7 +100,7 @@ else {
 $hide_tabs = array() ;
 $_hide_in_basic_mode = '' ;
 
-if ( ! $adv_mode ) {
+if ( !$adv_mode ) {
 	$hide_tabs = array(
 		'optimize',
 		'tuning',
@@ -142,14 +142,14 @@ if ( ! $adv_mode ) {
 			}
 			else {
 				$tmp = strtoupper( substr( $tab, 0, 1 ) ) ;
-				if ( ! in_array( $tmp, $accesskey_set ) ) {
+				if ( !in_array( $tmp, $accesskey_set ) ) {
 					$accesskey_set[] = $tmp ;
 					$accesskey = "litespeed-accesskey='$tmp'" ;
 				}
 			}
 
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
-			$i ++ ;
+			$i++ ;
 		}
 		foreach ($tp_tabs as $val){
 			$accesskey = '' ;
@@ -158,14 +158,14 @@ if ( ! $adv_mode ) {
 			}
 			else {
 				$tmp = strtoupper( substr( $val[ 'slug' ], 0, 1 ) ) ;
-				if ( ! in_array( $tmp, $accesskey_set ) ) {
+				if ( !in_array( $tmp, $accesskey_set ) ) {
 					$accesskey_set[] = $tmp ;
 					$accesskey = "litespeed-accesskey='$tmp'" ;
 				}
 			}
 
 			echo "<a class='litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
-			$i ++ ;
+			$i++ ;
 		}
 	?>
 	<?php if ( $adv_mode ) : ?>

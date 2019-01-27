@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 ?>
@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 	<input type="hidden" name="email" value="<?php echo $data[ 'email' ] ; ?>" />
 	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache::NONCE_NAME ) ; ?>
 
-	<?php if ( ! empty( $data[ '_err' ] ) ) : ?>
+	<?php if ( !empty( $data[ '_err' ] ) ) : ?>
 	<div class="litespeed-callout-danger">
 		<h4><?php echo __( 'ERROR', 'litespeed-cache' ) ; ?>:</h4>
 		<ol>

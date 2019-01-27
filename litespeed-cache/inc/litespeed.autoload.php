@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined('WPINC') ) {
+if ( !defined('WPINC') ) {
 	die ;
 }
 

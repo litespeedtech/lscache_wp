@@ -9,7 +9,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -89,14 +89,14 @@ class LiteSpeed_Cache_Admin
 		else {
 			$capability = 'manage_options' ;
 		}
-		if ( ! current_user_can($capability) ) {
+		if ( !current_user_can($capability) ) {
 			return ;
 		}
 
 		// Save setting from admin settings page
 		// NOTE: cli will call `validate_plugin_settings` manually. Cron activation doesn't need to validate
 		global $pagenow ;
-		if ( ! is_network_admin() && $pagenow === 'options.php' ) {
+		if ( !is_network_admin() && $pagenow === 'options.php' ) {
 			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings')) ;
 		}
 
@@ -111,7 +111,7 @@ class LiteSpeed_Cache_Admin
 		// If setting is set to on, try to activate cache func
 		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {
 			// check if WP_CACHE is defined and true in the wp-config.php file.
-			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
+			if ( !defined('WP_CACHE') || !WP_CACHE ) {
 				$add_var = LiteSpeed_Cache_Config::wp_cache_var_setter(true) ;
 				if ( $add_var !== true ) {
 					LiteSpeed_Cache_Admin_Display::add_error($add_var) ;
@@ -124,7 +124,7 @@ class LiteSpeed_Cache_Admin
 			}
 
 			// step out if adv_cache can't write
-			if ( ! defined( 'LITESPEED_ON' ) ) {
+			if ( !defined( 'LITESPEED_ON' ) ) {
 				return ;
 			}
 
@@ -138,13 +138,13 @@ class LiteSpeed_Cache_Admin
 			add_filter( 'widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4 ) ;
 		}
 
-		if ( ! is_multisite() ) {
-			if( ! current_user_can('manage_options') ){
+		if ( !is_multisite() ) {
+			if( !current_user_can('manage_options') ){
 				return ;
 			}
 		}
-		elseif ( ! is_network_admin() ) {
-			if ( ! current_user_can('manage_options') ) {
+		elseif ( !is_network_admin() ) {
+			if ( !current_user_can('manage_options') ) {
 				return ;
 			}
 			if ( get_current_blog_id() !== BLOG_ID_CURRENT_SITE ) {
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Admin
 			}
 			return ;
 		}
-		elseif ( ! current_user_can('manage_network_options') ) {
+		elseif ( !current_user_can('manage_network_options') ) {
 			return ;
 		}
 
@@ -203,8 +203,8 @@ class LiteSpeed_Cache_Admin
 	private function check_advanced_cache()
 	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
-		if ( defined( 'LSCACHE_ADV_CACHE' ) || ! current_user_can( $capability ) ) {
-			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ) ) {
+		if ( defined( 'LSCACHE_ADV_CACHE' ) || !current_user_can( $capability ) ) {
+			if ( !LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ) ) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
 				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter
@@ -216,7 +216,7 @@ class LiteSpeed_Cache_Admin
 			return ;
 		}
 
-		if ( is_multisite() && ( ! is_network_admin() || ! current_user_can('manage_network_options')) ) {
+		if ( is_multisite() && ( !is_network_admin() || !current_user_can('manage_network_options')) ) {
 			$third = __('If this is the case, the network admin may uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache') ;
 		}else {
 			$third = __('If this is the case, please uncheck "Check Advanced Cache" in LiteSpeed Cache Advanced settings.', 'litespeed-cache') ;
@@ -260,15 +260,15 @@ class LiteSpeed_Cache_Admin
 	{
 		global $pagenow ;
 		$qs = '' ;
-		if ( ! $url ) {
-			if ( ! empty( $_GET ) ) {
+		if ( !$url ) {
+			if ( !empty( $_GET ) ) {
 				if ( isset( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
 					unset( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) ;
 				}
 				if ( isset( $_GET[ LiteSpeed_Cache::NONCE_NAME ] ) ) {
 					unset( $_GET[ LiteSpeed_Cache::NONCE_NAME ] ) ;
 				}
-				if ( ! empty( $_GET ) ) {
+				if ( !empty( $_GET ) ) {
 					$qs = '?' . http_build_query( $_GET ) ;
 				}
 			}
@@ -293,7 +293,7 @@ class LiteSpeed_Cache_Admin
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

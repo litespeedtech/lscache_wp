@@ -7,7 +7,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	die() ;
 }
 LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder' ) ;
@@ -18,7 +18,7 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 
 	public static function detect()
 	{
-		if ( ! defined( 'ET_CORE' ) ) return ;
+		if ( !defined( 'ET_CORE' ) ) return ;
         
 		add_action( 'et_fb_before_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_on' ) ;
 		add_action( 'et_fb_after_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_off' ) ;

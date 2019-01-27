@@ -6,7 +6,7 @@
 * @since 1.1.0
 */
 
-if ( ! function_exists( 'litespeed_exception_handler' ) ) {
+if ( !function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
 	{
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
@@ -40,7 +40,7 @@ class Litespeed_File
 
 	public static function count_lines($filename)
 	{
-		if ( ! file_exists($filename) ) {
+		if ( !file_exists($filename) ) {
 			return 0 ;
 		}
 
@@ -59,11 +59,11 @@ class Litespeed_File
 	 */
 	public static function read($filename, $start_line = null, $lines = null)
 	{
-		if ( ! file_exists($filename) ) {
+		if ( !file_exists($filename) ) {
 			return '' ;
 		}
 
-		if ( ! is_readable($filename) ) {
+		if ( !is_readable($filename) ) {
 			return false ;
 		}
 
@@ -73,7 +73,7 @@ class Litespeed_File
 			$file->seek($start_line) ;
 
 			if ( $lines === null) {
-				while ( ! $file->eof() ) {
+				while ( !$file->eof() ) {
 					$res[] = rtrim($file->current(), "\n") ;
 					$file->next() ;
 				}
@@ -130,8 +130,8 @@ class Litespeed_File
 		$folder = dirname( $filename ) ;
 
 		// mkdir if folder does not exist
-		if ( ! file_exists( $folder ) ) {
-			if ( ! $mkdir ) {
+		if ( !file_exists( $folder ) ) {
+			if ( !$mkdir ) {
 				return $silence ? false : sprintf( __( 'Folder does not exist: %s', 'litespeed-cache' ), $folder ) ;
 			}
 
@@ -147,8 +147,8 @@ class Litespeed_File
 			restore_error_handler() ;
 		}
 
-		if ( ! file_exists( $filename ) ) {
-			if ( ! is_writable( $folder ) ) {
+		if ( !file_exists( $filename ) ) {
+			if ( !is_writable( $folder ) ) {
 				return $silence ? false : sprintf( __( 'Folder is not writable: %s.', 'litespeed-cache' ), $folder ) ;
 			}
 			set_error_handler( 'litespeed_exception_handler' ) ;
@@ -160,7 +160,7 @@ class Litespeed_File
 			}
 			restore_error_handler() ;
 		}
-		elseif ( ! is_writeable( $filename ) ) {
+		elseif ( !is_writeable( $filename ) ) {
 			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 		}
 
@@ -234,7 +234,7 @@ class Litespeed_File
 	 */
 	public static function wrap_marker_data($insertion, $marker = false)
 	{
-		if ( ! $marker ) {
+		if ( !$marker ) {
 			$marker = self::MARKER ;
 		}
 		$start_marker = "# BEGIN {$marker}" ;
@@ -257,13 +257,13 @@ class Litespeed_File
 	 */
 	public static function touch_marker_data($filename, $marker = false)
 	{
-		if( ! $marker ) {
+		if( !$marker ) {
 			$marker = self::MARKER ;
 		}
 
 		$result = self::_extract_from_markers($filename, $marker) ;
 
-		if( ! $result ) {
+		if( !$result ) {
 			return false ;
 		}
 
@@ -286,7 +286,7 @@ class Litespeed_File
 	 */
 	public static function extract_from_markers($filename, $marker = false)
 	{
-		if( ! $marker ) {
+		if( !$marker ) {
 			$marker = self::MARKER ;
 		}
 		return self::_extract_from_markers($filename, $marker) ;
@@ -340,8 +340,8 @@ class Litespeed_File
 	 */
 	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)
 	{
-		if ( ! file_exists($filename) ) {
-			if ( ! is_writable( dirname($filename) ) ) {
+		if ( !file_exists($filename) ) {
+			if ( !is_writable( dirname($filename) ) ) {
 				return false ;
 			}
 			set_error_handler("litespeed_exception_handler") ;
@@ -353,11 +353,11 @@ class Litespeed_File
 			}
 			restore_error_handler() ;
 		}
-		elseif ( ! is_writeable($filename) ) {
+		elseif ( !is_writeable($filename) ) {
 			return false ;
 		}
 
-		if ( ! is_array($insertion) ) {
+		if ( !is_array($insertion) ) {
 			$insertion = explode( "\n", $insertion ) ;
 		}
 
@@ -365,7 +365,7 @@ class Litespeed_File
 		$end_marker   = "# END {$marker}" ;
 
 		$fp = fopen($filename, 'r+' ) ;
-		if ( ! $fp ) {
+		if ( !$fp ) {
 			return false ;
 		}
 
@@ -373,7 +373,7 @@ class Litespeed_File
 		flock( $fp, LOCK_EX ) ;
 
 		$lines = array() ;
-		while ( ! feof($fp) ) {
+		while ( !feof($fp) ) {
 			$lines[] = rtrim(fgets($fp), "\r\n" ) ;
 		}
 
@@ -381,16 +381,16 @@ class Litespeed_File
 		$pre_lines = $post_lines = $existing_lines = array() ;
 		$found_marker = $found_end_marker = false ;
 		foreach ( $lines as $line ) {
-			if ( ! $found_marker && false !== strpos($line, $start_marker) ) {
+			if ( !$found_marker && false !== strpos($line, $start_marker) ) {
 				$found_marker = true ;
 				continue ;
 			}
-			elseif ( ! $found_end_marker && false !== strpos($line, $end_marker) ) {
+			elseif ( !$found_end_marker && false !== strpos($line, $end_marker) ) {
 				$found_end_marker = true ;
 				continue ;
 			}
 
-			if ( ! $found_marker ) {
+			if ( !$found_marker ) {
 				$pre_lines[] = $line ;
 			}
 			elseif ( $found_marker && $found_end_marker ) {
@@ -410,7 +410,7 @@ class Litespeed_File
 		}
 
 		// Check if need to prepend data if not exist
-		if( $prepend && ! $post_lines ) {
+		if( $prepend && !$post_lines ) {
 			// Generate the new file data
 			$new_file_data = implode( "\n", array_merge(
 				array( $start_marker ),

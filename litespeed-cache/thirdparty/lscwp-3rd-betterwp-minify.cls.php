@@ -7,7 +7,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if ( !defined('ABSPATH') ) {
     die() ;
 }
 LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Better_WP_Minify') ;
@@ -39,7 +39,7 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 */
 	public static function maybe_flush()
 	{
-		if ( ! empty($_POST) && (isset($_POST['flush_cache']) || isset($_POST['save_flush'])) && ! BWP_MINIFY::is_normal_admin() ) {
+		if ( !empty($_POST) && (isset($_POST['flush_cache']) || isset($_POST['save_flush'])) && !BWP_MINIFY::is_normal_admin() ) {
 			add_action('check_admin_referer', 'LiteSpeed_Cache_ThirdParty_Better_WP_Minify::flush') ;
 			add_action('bwp_option_action_before_submit_button', 'LiteSpeed_Cache_ThirdParty_Better_WP_Minify::clear_flush') ;
 		}

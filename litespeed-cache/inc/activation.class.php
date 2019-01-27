@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Activation
 	public static function register_activation()
 	{
 		$count = 0 ;
-		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() ) ;
+		!defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() ) ;
 
 		if ( is_multisite() ) {
 			$count = self::get_network_count() ;
@@ -64,7 +64,7 @@ class LiteSpeed_Cache_Activation
 
 		if ( is_multisite() ) {
 
-			if ( ! is_network_admin() ) {
+			if ( !is_network_admin() ) {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
 					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
@@ -83,7 +83,7 @@ class LiteSpeed_Cache_Activation
 				$options[ $id ] = $__cfg->get_item( $id ) ;
 			}
 
-			if ( ! empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ]) ) {
+			if ( !empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ]) ) {
 				$options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] =
 					addslashes( $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] );
 			}
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Activation
 		global $wp_version ;
 		if ( version_compare( $wp_version, '4.6', '<' ) ) {
 			$blogs = wp_get_sites( $args ) ;
-			if ( ! empty( $blogs ) ) {
+			if ( !empty( $blogs ) ) {
 				foreach ( $blogs as $key => $blog ) {
 					$blogs[ $key ] = $blog[ 'blog_id' ] ;
 				}
@@ -193,7 +193,7 @@ class LiteSpeed_Cache_Activation
 		 * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
 		 * @since  2.0
 		 */
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+		if ( !function_exists( 'is_plugin_active_for_network' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
 		}
 
@@ -240,13 +240,13 @@ class LiteSpeed_Cache_Activation
 	{
 		LiteSpeed_Cache_Task::clear() ;
 
-		! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
+		!defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
 
 		LiteSpeed_Cache_Purge::purge_all() ;
 
 		if ( is_multisite() ) {
 
-			if ( ! self::is_deactivate_last() ) {
+			if ( !self::is_deactivate_last() ) {
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
 					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
@@ -275,7 +275,7 @@ class LiteSpeed_Cache_Activation
 		 */
 		LiteSpeed_Cache_Object::get_instance()->del_file() ;
 
-		if ( ! LiteSpeed_Cache_Config::wp_cache_var_setter( false ) ) {
+		if ( !LiteSpeed_Cache_Config::wp_cache_var_setter( false ) ) {
 			error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
 		}
 
@@ -295,7 +295,7 @@ class LiteSpeed_Cache_Activation
 	public static function try_copy_advanced_cache()
 	{
 		$adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php' ;
-		if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || ! is_writable( $adv_cache_path ) ) ) {
+		if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || !is_writable( $adv_cache_path ) ) ) {
 			return false ;
 		}
 
@@ -346,7 +346,7 @@ class LiteSpeed_Cache_Activation
 			$skin = new \WP_Ajax_Upgrader_Skin() ;
 			$upgrader = new \Plugin_Upgrader( $skin ) ;
 			$result = $upgrader->upgrade( $plugin ) ;
-			if ( ! is_plugin_active( $plugin ) ) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
+			if ( !is_plugin_active( $plugin ) ) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
 				activate_plugin( $plugin ) ;
 			}
 			ob_end_clean() ;
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Activation
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 
