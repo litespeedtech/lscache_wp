@@ -484,7 +484,7 @@ class LiteSpeed_Cache_Admin_Display
 			return ;
 		}
 
-		$messages = (array)get_option( self::LITESPEED_MSG ) ;
+		$messages = (array) get_option( self::LITESPEED_MSG ) ;
 		if( ! $messages ) {
 			$messages = array() ;
 		}
@@ -883,7 +883,7 @@ class LiteSpeed_Cache_Admin_Display
 				global $_options ;
 				$to_be_checked = null ;
 				if ( isset( $_options[ $id ] ) ) {
-					$to_be_checked = is_int( $val ) ? (int)$_options[ $id ] : $_options[ $id ] ;
+					$to_be_checked = is_int( $val ) ? (int) $_options[ $id ] : $_options[ $id ] ;
 				}
 
 				$checked = $to_be_checked === $val ? true : false ;

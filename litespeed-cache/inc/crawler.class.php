@@ -205,10 +205,10 @@ class LiteSpeed_Cache_Crawler
 		// start parsing
 		$_urls = array() ;
 
-		$xml_array = (array)$xml_object ;
+		$xml_array = (array) $xml_object ;
 		if ( !empty($xml_array['sitemap']) ) {// parse sitemap set
 			if ( is_object($xml_array['sitemap']) ) {
-				$xml_array['sitemap'] = (array)$xml_array['sitemap'] ;
+				$xml_array['sitemap'] = (array) $xml_array['sitemap'] ;
 			}
 			if ( !empty($xml_array['sitemap']['loc']) ) {// is single sitemap
 				$urls = $this->parse_custom_sitemap($xml_array['sitemap']['loc']) ;
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Crawler
 			else {
 				// parse multiple sitemaps
 				foreach ($xml_array['sitemap'] as $val) {
-					$val = (array)$val ;
+					$val = (array) $val ;
 					if ( !empty($val['loc']) ) {
 						$urls = $this->parse_custom_sitemap($val['loc']) ;// recursive parse sitemap
 						if ( is_array($urls) && !empty($urls) ) {
@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Crawler
 		}
 		elseif ( !empty($xml_array['url']) ) {// parse url set
 			if ( is_object($xml_array['url']) ) {
-				$xml_array['url'] = (array)$xml_array['url'] ;
+				$xml_array['url'] = (array) $xml_array['url'] ;
 			}
 			// if only 1 element
 			if ( !empty($xml_array['url']['loc']) ) {
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Crawler
 			}
 			else {
 				foreach ($xml_array['url'] as $val) {
-					$val = (array)$val ;
+					$val = (array) $val ;
 					if ( !empty($val['loc']) ) {
 						$_urls[] = $val['loc'] ;
 					}

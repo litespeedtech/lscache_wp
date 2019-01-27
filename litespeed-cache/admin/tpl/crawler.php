@@ -51,7 +51,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 	$seconds = $_options[LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL] ;
 	if($seconds > 0):
 		$recurrence = '' ;
-		$hours = (int)floor($seconds / 3600) ;
+		$hours = (int) floor($seconds / 3600) ;
 		if ( $hours ) {
 			if ( $hours > 1) {
 				$recurrence .= sprintf(__('%d hours', 'litespeed-cache'), $hours);
@@ -60,7 +60,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 				$recurrence .= sprintf(__('%d hour', 'litespeed-cache'), $hours);
 			}
 		}
-		$minutes = (int)floor( ($seconds % 3600 ) / 60 ) ;
+		$minutes = (int) floor( ($seconds % 3600 ) / 60 ) ;
 		if ( $minutes ) {
 			$recurrence .= ' ' ;
 			if ( $minutes > 1) {

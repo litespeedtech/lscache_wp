@@ -73,7 +73,7 @@ class Minify_HTML
 	{
 		$this->_html = str_replace("\r\n", "\n", trim($html));
 		if (isset($options['xhtml'])) {
-			$this->_isXhtml = (bool)$options['xhtml'];
+			$this->_isXhtml = (bool) $options['xhtml'];
 		}
 		if (isset($options['cssMinifier'])) {
 			$this->_cssMinifier = $options['cssMinifier'];
@@ -82,7 +82,7 @@ class Minify_HTML
 			$this->_jsMinifier = $options['jsMinifier'];
 		}
 		if (isset($options['jsCleanComments'])) {
-			$this->_jsCleanComments = (bool)$options['jsCleanComments'];
+			$this->_jsCleanComments = (bool) $options['jsCleanComments'];
 		}
 	}
 
