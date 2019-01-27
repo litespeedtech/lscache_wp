@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Activation
 		 * 		4) .htaccess;.
 		 */
 
-		/* Network file handler */
+		// Network file handler
 
 		if ( is_multisite() ) {
 
@@ -93,7 +93,7 @@ class LiteSpeed_Cache_Activation
 			return ;
 		}
 
-		/* Single site file handler */
+		// Single site file handler
 
 		$options = $__cfg->get_options() ;
 

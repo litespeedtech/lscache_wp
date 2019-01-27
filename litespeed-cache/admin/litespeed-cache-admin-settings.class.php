@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * 		4) .htaccess;.
 		 */
 
-		/* 1) wp-config.php; */
+		// 1) wp-config.php;
 		$id = LiteSpeed_Cache_Config::OPID_ENABLED_RADIO ;
 		if ( $this->_options[ $id ] ) {// todo: If not enabled, may need to remove cache var?
 			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		/* 2) adv-cache.php; */
+		// 2) adv-cache.php;
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
 		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
 		}
 
-		/* 3) object-cache.php; */
+		// 3) object-cache.php;
 
 		/**
 		 * Validate Object Cache.
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$new_options = $this->_validate_object_cache() ;
 		$this->_options = array_merge( $this->_options, $new_options ) ;
 
-		/* 4) .htaccess; */
+		// 4) .htaccess;
 
 		// Parse rewrite rule settings
 		$new_options = $this->_validate_rewrite_settings() ;
@@ -231,7 +231,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * 		4) .htaccess;.
 		 */
 
-		/* 1) wp-config.php; */
+		// 1) wp-config.php;
 
 		$id = LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ;
 		$network_enabled = self::parse_onoff( $this->_input, $id ) ;
@@ -247,7 +247,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$options[ $id ] = $network_enabled ;
 
-		/* 2) adv-cache.php; */
+		// 2) adv-cache.php;
 
 		$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ;
 		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -255,7 +255,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
 		}
 
-		/* 3) object-cache.php; */
+		// 3) object-cache.php;
 
 		/**
 		 * Validate Object Cache.
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$new_options = $this->_validate_object_cache() ;
 		$options = array_merge( $options, $new_options ) ;
 
-		/* 4) .htaccess; */
+		// 4) .htaccess;
 
 		// Parse rewrite settings from input
 		$new_options = $this->_validate_rewrite_settings() ;

@@ -439,7 +439,7 @@ class LiteSpeed_Cache_Router
 			$_is_public_action = true ;
 		}
 
-		/* Now it is a valid action, lets log and check the permission */
+		// Now it is a valid action, lets log and check the permission
 		LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL: ' . $action ) ;
 
 		// OK, as we want to do something magic, lets check if its allowed

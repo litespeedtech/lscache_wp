@@ -83,7 +83,7 @@ class LiteSpeed_Cache_Vary
 			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
 		} ) ;
 
-		/* Below to the end is only for cookie name setting check */
+		// Below to the end is only for cookie name setting check
 		// Get specific cookie name
 		$db_cookie = false ;
 		if ( is_multisite() ) {
