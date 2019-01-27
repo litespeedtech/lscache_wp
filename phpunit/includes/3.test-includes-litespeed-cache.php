@@ -34,7 +34,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Function for configurations
      */
     public static function converttoArray($object){
-        
+
         if(is_object($object)) $array = (array) $object;
 
         return $array;
@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     protected static function isString($string) {
         if(!is_string($string)) return false;
-            
+
         return true;
     }
 
@@ -411,7 +411,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_get_uri_hash()
     {
-        
+
         $uri = '';
         $parameters = array($uri);
         $string = self::invokeMethod('LiteSpeed_Cache', 'get_uri_hash', $parameters);
@@ -434,7 +434,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_format_report_section()
     {
-        
+
         $section_header = '';
         $section = array();
         $parameters = array($section_header, $section);
@@ -459,7 +459,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_build_environment_report()
     {
-        
+
         $server = array();
         $object = LiteSpeed_Cache::config();
         $options = $object->get_options();
@@ -532,7 +532,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             $wp_footer = has_action( 'wp_footer', array( $instance,'check_admin_bar' ) );
             $this->assertFalse( $wp_footer );
         }
-               
+
     }
 
     /**
@@ -587,7 +587,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             $storefront_sidebar = has_action( 'storefront_sidebar', array( $instance,'check_sidebar' ) );
             $this->assertFalse( $storefront_sidebar );
         }
-               
+
     }
 
     /**
@@ -617,7 +617,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
                 $this->assertFalse($bool);
             }       
         }
-               
+
     }
 
     /**
@@ -647,7 +647,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
                 $this->assertFalse($bool);
             }       
         }
-               
+
     }
 
     /**
@@ -679,7 +679,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
                 $this->assertFalse($bool);
             }       
         }
-               
+
     }
 
     /**

@@ -32,7 +32,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
      */
     protected static function isString($string) {
         if(!is_string($string)) return false;
-            
+
         return true;
     }
 
@@ -120,7 +120,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
      */
     public function test_path_set()
     {
-        
+
         $null = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','path_set');
           $this->assertNotNull($null);				
     }
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
         $bool = LiteSpeed_Cache_Admin_Rules::get_instance()->file_get_ifmodule_block( $content, $off_begin, $off_end);
           $this->assertNotNull($bool);						
     }
-    
+
 
     /**
      * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_split

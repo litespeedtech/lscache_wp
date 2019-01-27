@@ -14,7 +14,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
      */
     protected static function invokeMethod($className, $methodName, array $parameters = array()) 
     {
-        
+
          $reflectionClass = new ReflectionClass($className);
          $method = $reflectionClass->getMethod($methodName);
          $method->setAccessible(true);
@@ -43,7 +43,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
      */
     protected static function isString($string) {
         if(!is_string($string)) return false;
-            
+
         return true;
     }
 
@@ -53,7 +53,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     public function test_construct()
     {
         $instance = self::get_instance();
-        
+
         //send priority by default 10
         $enqueue_scripts = has_action( 'admin_enqueue_scripts', array( $instance,'enqueue_scripts' ) );
         $this->assertEquals( 10, $enqueue_scripts );

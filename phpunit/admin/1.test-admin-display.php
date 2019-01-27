@@ -32,7 +32,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
      */
     protected static function isString($string) {
         if(!is_string($string)) return false;
-            
+
         return true;
     }
 
@@ -88,11 +88,11 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
      */
     public function test_build_paragraph()
     {
-        
+
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->build_paragraph();
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->build_list($items, true, '');
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -118,7 +118,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_notice', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_tip', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_button', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_expand_collapse', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -189,7 +189,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $out = ob_get_clean();
         $bool = self::isString($out);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -208,7 +208,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
          }
 
          $this->assertTrue(TRUE);			
-        
+
     }
 
     /**
@@ -222,7 +222,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $out = ob_get_clean();
           $bool = self::isString($out);
           $this->assertTrue($bool);				
-        
+
     }
 
     /**
@@ -236,7 +236,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $out = ob_get_clean();
         $bool = self::isString($out);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -250,7 +250,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $out = ob_get_clean();
         $bool = self::isString($out);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -264,7 +264,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $out = ob_get_clean();
         $bool = self::isString($out);
           $this->assertTrue($bool);
-        
+
     }
 
     /**
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $out = ob_get_clean();
         $bool = self::isString($out);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -290,7 +290,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_menu_report');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -302,7 +302,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_general');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
 
@@ -315,7 +315,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_specific');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -327,7 +327,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_purge');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -342,7 +342,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_excludes', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -357,7 +357,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_advanced', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -372,7 +372,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_test', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -384,7 +384,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_compatibilities');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
 
@@ -401,7 +401,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_setting_mobile_view', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -421,7 +421,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_setting_mobile_view', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -441,7 +441,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_setting_exclude_useragent', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -461,7 +461,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_setting_login_cookie', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -476,7 +476,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_setting_purge_on_upgrade', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_setting_cache_favicon', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -503,7 +503,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_compatibility_wp_postviews');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -515,7 +515,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_compatibility');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -527,7 +527,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_admin_ip');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -539,7 +539,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_common_rewrite');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -551,7 +551,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_faqs');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_display_installed');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_error_cookie');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -592,7 +592,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_group_start', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -604,7 +604,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_group_end');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -623,7 +623,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','display_config_row', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
 
@@ -648,7 +648,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_checkbox', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -668,7 +668,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_radio', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -687,7 +687,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_select', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -712,7 +712,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_text', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -737,7 +737,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_textarea', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -754,7 +754,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_hidden', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 
     /**
@@ -766,7 +766,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_collapsible_start');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -778,7 +778,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_collapsible_end');
         $bool = self::isString($msg);
           $this->assertFalse($bool);		
-        
+
     }
 
     /**
@@ -791,6 +791,6 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_collapsible', $parameters);
         $bool = self::isString($msg);
           $this->assertTrue($bool);		
-        
+
     }
 }
