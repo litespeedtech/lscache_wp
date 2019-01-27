@@ -725,7 +725,7 @@ class LiteSpeed_Cache_ESI
 
 		LiteSpeed_Cache_Log::debug( '[ESI] replacing preserved blocks', $keys ) ;
 
-		$buffer = str_replace( $keys , $instance->_esi_preserve_list, $buffer ) ;
+		$buffer = str_replace( $keys, $instance->_esi_preserve_list, $buffer ) ;
 
 		return $buffer ;
 	}

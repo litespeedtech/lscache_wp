@@ -258,7 +258,7 @@ if ( !defined('WPINC') ) die;
 
 				<div class='litespeed-col-auto'>
 					<div class="litespeed-callout-warning">
-						<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
+						<h4><?php echo __('Available Custom Post Type', 'litespeed-cache'); ?></h4>
 						<p>
 							<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>
 						</p>

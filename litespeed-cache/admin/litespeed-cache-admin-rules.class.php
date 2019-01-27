@@ -915,7 +915,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function _rewrite_codes_msg( $file, $rules, $marker = false )
 	{
-		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s' , 'litespeed-cache' ),
+		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s', 'litespeed-cache' ),
 				$file,
 				'<textarea style="width:100%;" rows="10" readonly>' . htmlspecialchars( $this->_wrap_rules_with_marker( $rules, $marker ) ) . '</textarea>'
 			) ;

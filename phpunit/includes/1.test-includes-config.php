@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 */
 	public function test_construct_multisite_options()
 	{
-		$array = self::invokeMethod('LiteSpeed_Cache_Config','construct_multisite_options');
+		$array = self::invokeMethod('LiteSpeed_Cache_Config', 'construct_multisite_options');
 		$this->assertNotEmpty($array);
 	}
 
@@ -132,7 +132,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	{
 		$include_thirdparty = true;
 		$parameters = array($include_thirdparty);
-		$array = self::invokeMethod('LiteSpeed_Cache_Config','get_default_options', $parameters);
+		$array = self::invokeMethod('LiteSpeed_Cache_Config', 'get_default_options', $parameters);
 		$this->assertNotEmpty($array);
 	}
 
@@ -143,7 +143,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 */
 	public function test_get_default_site_options()
 	{
-		$array = self::invokeMethod('LiteSpeed_Cache_Config','get_default_site_options');
+		$array = self::invokeMethod('LiteSpeed_Cache_Config', 'get_default_site_options');
 		$this->assertNotEmpty($array);
 	}
 

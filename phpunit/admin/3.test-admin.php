@@ -107,7 +107,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
 		$parameters = array($input, &$options);
-        $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_enabled', $parameters);
+        $bool = self::invokeMethod('LiteSpeed_Cache_Admin', 'validate_enabled', $parameters);
       	$this->assertFalse($bool);		
 	}
 
@@ -125,7 +125,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
 		$parameters = array($input, &$options);
-        $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_tag_prefix', $parameters);
+        $bool = self::invokeMethod('LiteSpeed_Cache_Admin', 'validate_tag_prefix', $parameters);
       	$this->assertTrue($bool);		
 	}
 
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$input = array();
 		$id = '';
 		$parameters = array($input, $id);
-        $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_ttl', $parameters);
+        $bool = self::invokeMethod('LiteSpeed_Cache_Admin', 'validate_ttl', $parameters);
       	$this->assertFalse($bool);		
 	}
 

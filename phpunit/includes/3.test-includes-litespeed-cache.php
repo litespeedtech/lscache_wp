@@ -340,7 +340,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $stale = true;
         $parameters = array(&$showhdr, &$stale);
         $int = self::invokeMethod('LiteSpeed_Cache', 'validate_mode', $parameters);
-        $this->assertInternalType('int',$int);
+        $this->assertInternalType('int', $int);
     }
 
     /**
@@ -634,7 +634,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         if(method_exists($instance, 'is_esi_cart')){
             $init = has_action( 'init', 'storefront_cart_link_fragment' );
             $this->assertFalse( $init );
-            $init = has_action( 'init','storefront_header_cart' );
+            $init = has_action( 'init', 'storefront_header_cart' );
             $this->assertFalse( $init );
             $init = has_action( 'init', array( $instance,'send_esi' ) );
             $this->assertFalse( $init );

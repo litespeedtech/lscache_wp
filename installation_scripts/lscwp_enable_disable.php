@@ -11,7 +11,7 @@ $WP_DIR = $argv[2] ;
 /*
 * If plugin is in cache list, echo its name and current status.
 */
-function cachedetect($plugin,$value){
+function cachedetect($plugin, $value){
 
 $cache_list = array(
 "LiteSpeed Cache",
@@ -25,7 +25,7 @@ $cache_list = array(
 
 $name = $plugin['Name'];
 
-if(in_array($name,$cache_list)){
+if(in_array($name, $cache_list)){
 	if (is_plugin_active($value)){
 		echo "$name - Enabled\n";
 	}
@@ -37,7 +37,7 @@ if(in_array($name,$cache_list)){
 
 if ( $action == "status"  ) {
 	$plugins = get_plugins();
-	array_walk($plugins,"cachedetect");
+	array_walk($plugins, "cachedetect");
 			}
 
 elseif ( $action == "enable" ) {
@@ -57,7 +57,7 @@ elseif ( $action == "disable" ) {
 		WHERE option_name = 'active_plugins'
 		" ;
 
-	$active = $wpdb->get_row($sql,ARRAY_A);
+	$active = $wpdb->get_row($sql, ARRAY_A);
 	if ( $active == false ) {
 		die($WP_DIR . " - Query failed: " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
 	}

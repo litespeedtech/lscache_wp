@@ -115,7 +115,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 				<?php endif ; ?>
 				<?php if ( ! empty( $last_responsive_placeholder_generated[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout-warning">
-						<h4><?php echo __( 'Size list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
+						<h4><?php echo __( 'Size list in queue waiting for cron', 'litespeed-cache' ) ; ?></h4>
 						<p>
 							<?php echo implode( ' ', $last_responsive_placeholder_generated[ 'queue' ] ) ; ?>
 						</p>
