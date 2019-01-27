@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Admin
 
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;// todo: use wp network setting saving
+				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ; // todo: use wp network setting saving
 				break ;
 
 			default:
@@ -207,7 +207,7 @@ class LiteSpeed_Cache_Admin
 			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ) ) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
-				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter
+				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ; // not sure why do this but doesn't matter
 			}
 			return ;
 		}

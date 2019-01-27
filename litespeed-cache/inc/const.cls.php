@@ -13,7 +13,7 @@ class LiteSpeed_Cache_Const
 	const VARY_GROUP = 'litespeed-cache-vary-group' ;
 	const EXCLUDE_OPTIMIZATION_ROLES = 'litespeed-cache-exclude-optimization-roles' ;
 	const EXCLUDE_CACHE_ROLES = 'litespeed-cache-exclude-cache-roles' ;
-	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
+	const ITEM_OPTM_CSS = 'litespeed-optm-css' ; // separate critical css that should be stored in option table
 	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_EXC = 'litespeed-media-lazy-img-excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'litespeed-media-lazy-img-cls-excludes' ;

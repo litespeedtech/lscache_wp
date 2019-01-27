@@ -163,7 +163,7 @@ class LiteSpeed_Cache_CSS
 				'url'			=> $request_url,
 				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 				'is_mobile'		=> $this->_separate_mobile_ccss(),
-			) ;// Current UA will be used to request
+			) ; // Current UA will be used to request
 			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
 			$this->_save_summary( $req_summary ) ;

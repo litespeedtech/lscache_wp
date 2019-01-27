@@ -176,7 +176,7 @@ if ( !defined('WPINC') ) die;
 								 */
 								$list = array() ;
 								foreach ( $cookies as $k => $v ) {
-									$list[] = "{ name: '$k', vals: `$v` }" ;// $v contains line break
+									$list[] = "{ name: '$k', vals: `$v` }" ; // $v contains line break
 								}
 								echo implode( ',', $list ) ;
 							?>

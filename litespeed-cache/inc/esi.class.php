@@ -641,7 +641,7 @@ class LiteSpeed_Cache_ESI
 	{
 		$this->esi_args = $defaults ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
+		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ; // Needs to get param from this hook and generate esi block
 		return $defaults ;
 	}
 

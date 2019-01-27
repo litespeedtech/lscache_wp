@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Control
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
 		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
 		if ( $cache_res ) {
-			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
+			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ; // todo: check if need esc_url()
 			$pattern = '!' . LSCWP_CONTENT_FOLDER . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
 			if ( preg_match( $pattern, $uri ) ) {
 				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Control
 				$scheduled_time = strtotime( $timed_urls_time ) ;
 				$ttl = $scheduled_time - time() ;
 				if ( $ttl < 0 ) {
-					$ttl += 86400 ;// add one day
+					$ttl += 86400 ; // add one day
 				}
 				LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
 				return $ttl ;

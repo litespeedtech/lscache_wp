@@ -12,8 +12,8 @@ class Litespeed_Crawler
 	private $_sitemap_file ;
 	private $_meta_file ;
 	private $_http2 = true ;
-	private $_run_delay = 500 ;//microseconds
-	private $_run_duration = 200 ;//seconds
+	private $_run_delay = 500 ; //microseconds
+	private $_run_duration = 200 ; //seconds
 	private $_threads_limit = 3 ;
 	private $_load_limit = 1 ;
 	private $_domain_ip = '' ;
@@ -217,7 +217,7 @@ class Litespeed_Crawler
 	{
 		$this->read_meta() ;
 		if ( ! isset( $this->_meta ) ) {
-			return $this->_return( sprintf(__('Cannot read meta file: %s', 'litespeed-cache'), $this->_meta_file) ) ;// NOTE: deprecated due to default_meta usage
+			return $this->_return( sprintf(__('Cannot read meta file: %s', 'litespeed-cache'), $this->_meta_file) ) ; // NOTE: deprecated due to default_meta usage
 		}
 
 		// check if is running
@@ -385,7 +385,7 @@ class Litespeed_Crawler
 	protected function _prepare_running()
 	{
 		$this->_meta['is_running'] = time() ;
-		$this->_meta['done'] = 0 ;// reset done status
+		$this->_meta['done'] = 0 ; // reset done status
 		$this->_meta['last_status'] = 'prepare running' ;
 		$this->_meta['last_crawled'] = 0 ;
 
@@ -413,13 +413,13 @@ class Litespeed_Crawler
 		if ( $end_reason === true ) { // Current crawler is fully done
 			$end_reason = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $this->_meta['curr_crawler'] + 1 ) ) ;
 			$this->_meta[ 'curr_crawler' ]++ ; // Jump to next cralwer
-			$this->_meta[ 'last_pos' ] = 0 ;// reset last position
+			$this->_meta[ 'last_pos' ] = 0 ; // reset last position
 			$this->_meta[ 'last_crawler_total_cost' ] = time() - $this->_meta[ 'curr_crawler_beginning_time' ] ;
 			$count_crawlers = LiteSpeed_Cache_Crawler::get_instance()->list_crawlers( true ) ;
 			if ( $this->_meta[ 'curr_crawler' ] >= $count_crawlers ) {
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: _terminate_running Touched end, whole crawled. Reload crawler!' ) ;
 				$this->_meta[ 'curr_crawler' ] = 0 ;
-				$this->_meta['done'] = 'touchedEnd' ;// log done status
+				$this->_meta['done'] = 'touchedEnd' ; // log done status
 				$this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'] ;
 			}
 		}

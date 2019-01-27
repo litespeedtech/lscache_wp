@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Img_Optm
 // var_dump($existing_img_list);
 		// Handle existing same src data
 		$existing_img_optm = array() ;
-		$size_to_store = array() ;// pulled images need to update `wp_postmeta` size info
+		$size_to_store = array() ; // pulled images need to update `wp_postmeta` size info
 		foreach ( $this->_img_in_queue as $pid => $img_list ) {
 			$changed = false ;
 			foreach ( $img_list as $md5 => $v ) {

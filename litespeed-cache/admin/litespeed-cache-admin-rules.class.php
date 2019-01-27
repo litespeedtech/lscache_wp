@@ -21,7 +21,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 	private $frontend_htaccess = null ;
 	private $backend_htaccess = null ;
-	private $theme_htaccess = null ;// Not used yet
+	private $theme_htaccess = null ; // Not used yet
 	private $frontend_htaccess_readable = false ;
 	private $frontend_htaccess_writable = false ;
 	private $backend_htaccess_readable = false ;
@@ -191,7 +191,7 @@ class LiteSpeed_Cache_Admin_Rules
 	private function path_set()
 	{
 		$frontend = LiteSpeed_Cache_Router::frontend_path() ;
-		$frontend_htaccess_search = $this->htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
+		$frontend_htaccess_search = $this->htaccess_search( $frontend ) ; // The existing .htaccess path to be used for frontend .htaccess
 		$this->frontend_htaccess = ( $frontend_htaccess_search ?: $frontend ) . '/.htaccess' ;
 
 		$backend = realpath( ABSPATH ) ; // /home/user/public_html/backend/
@@ -955,7 +955,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	public function clear_rules()
 	{
-		$this->_insert_wrapper( false ) ;// Use false to avoid do-not-edit msg
+		$this->_insert_wrapper( false ) ; // Use false to avoid do-not-edit msg
 		// Clear non ls rules
 		$this->_insert_wrapper( false, false, self::MARKER_NONLS ) ;
 

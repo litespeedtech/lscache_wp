@@ -364,7 +364,7 @@ class LiteSpeed_Cache_Optimize
 
 					$snippet = '' ;
 					foreach ( $urls as $url ) {
-						$snippet .= "<link data-optimized='2' rel='stylesheet' href='$url' />" ;// use 2 as combined
+						$snippet .= "<link data-optimized='2' rel='stylesheet' href='$url' />" ; // use 2 as combined
 					}
 
 					// Handle css async load
@@ -397,7 +397,7 @@ class LiteSpeed_Cache_Optimize
 					}
 
 					// Move all css to top
-					$this->content = str_replace( $html_list, '', $this->content ) ;// todo: need to keep position for certain files
+					$this->content = str_replace( $html_list, '', $this->content ) ; // todo: need to keep position for certain files
 
 					// Add to HTTP2
 					foreach ( $urls as $url ) {
@@ -559,7 +559,7 @@ class LiteSpeed_Cache_Optimize
 			}
 			else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC ;
-				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
+				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ; // Don't exclude it from defer for now
 				$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 			}
 		}

@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Crawler
 			return false ;
 		}
 		$content = $_POST[ self::CRWL_BLACKLIST ] ;
-		$content = array_map( 'trim', explode( "\n", $content ) ) ;// remove space
+		$content = array_map( 'trim', explode( "\n", $content ) ) ; // remove space
 		$content = implode( "\n", array_unique( array_filter( $content ) ) ) ;
 
 		// save blacklist file
@@ -221,7 +221,7 @@ class LiteSpeed_Cache_Crawler
 				foreach ($xml_array['sitemap'] as $val) {
 					$val = (array)$val ;
 					if ( !empty($val['loc']) ) {
-						$urls = $this->parse_custom_sitemap($val['loc']) ;// recursive parse sitemap
+						$urls = $this->parse_custom_sitemap($val['loc']) ; // recursive parse sitemap
 						if ( is_array($urls) && !empty($urls) ) {
 							$_urls = array_merge($_urls, $urls) ;
 						}

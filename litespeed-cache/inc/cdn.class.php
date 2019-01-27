@@ -30,7 +30,7 @@ class LiteSpeed_Cache_CDN
 
 	private $cdn_mapping_hosts = array() ;
 
-	private $__cfg ;// cfg instance
+	private $__cfg ; // cfg instance
 
 	/**
 	 * Init
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_CDN
 		$this->_cfg_url_ori = explode( ',', $this->_cfg_url_ori ) ;
 
 		$this->_cfg_cdn_exclude = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ) ;
-		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ;// todo: convert to cfg->get_item()
+		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ; // todo: convert to cfg->get_item()
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
@@ -570,7 +570,7 @@ class LiteSpeed_Cache_CDN
 
 		$instance = self::get_instance() ;
 
-		return in_array( $host, $instance->cdn_mapping_hosts ) ;// todo: can add $this->_is_ori_url() check in future
+		return in_array( $host, $instance->cdn_mapping_hosts ) ; // todo: can add $this->_is_ori_url() check in future
 	}
 
 	/**

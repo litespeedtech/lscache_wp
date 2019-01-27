@@ -17,7 +17,7 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Crawler_Sitemap
 {
 	private static $_instance ;
-	private $home_url ;// Used to simplify urls
+	private $home_url ; // Used to simplify urls
 
 	protected $_urls = array() ;
 
@@ -120,7 +120,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 				foreach ( $cats as $cat ) {
 					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
 					if ( ! in_array($slug, $blacklist) ){
-						$this->_urls[] = $slug ;//var_dump($slug);exit;//todo: check permalink
+						$this->_urls[] = $slug ; //var_dump($slug);exit;//todo: check permalink
 					}
 				}
 			}

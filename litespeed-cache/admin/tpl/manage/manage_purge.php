@@ -172,25 +172,25 @@ if ( ! is_multisite() || is_network_admin() ) {
 		<?php $this->form_action(LiteSpeed_Cache::ACTION_PURGE_BY); ?>
 		<div class="litespeed-row">
 			<div class="litespeed-switch litespeed-mini">
-				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_CAT;?>
+				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_CAT; ?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_category"
 					value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 				/>
 				<label for="purgeby_option_category"><?php echo __('Category', 'litespeed-cache'); ?></label>
 
-				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_PID;?>
+				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_PID; ?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_postid"
 					value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 				/>
 				<label for="purgeby_option_postid"><?php echo __('Post ID', 'litespeed-cache'); ?></label>
 
-				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_TAG;?>
+				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_TAG; ?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_tag"
 					value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 				/>
 				<label for="purgeby_option_tag"><?php echo __('Tag', 'litespeed-cache'); ?></label>
 
-				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_URL;?>
+				<?php $val = LiteSpeed_Cache_Admin_Display::PURGEBY_URL; ?>
 				<input type="radio" name="<?php echo $_option_field; ?>" id="purgeby_option_url"
 					value="<?php echo $val; ?>" <?php if( $purgeby_option == $val ) echo 'checked'; ?>
 				/>

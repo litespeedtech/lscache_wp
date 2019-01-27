@@ -618,7 +618,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->options = self::option_diff( $default_options, $this->options ) ;
 
 		$this->update_options() ;
-		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		define( 'LSWCP_EMPTYCACHE', true ) ; // clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 
 		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed" ) ;
@@ -744,7 +744,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 			$cfg = $k ;
 			$cfg_v = $v ;
-			break ;// only allow one
+			break ; // only allow one
 		}
 
 		if ( ! $cfg ) {

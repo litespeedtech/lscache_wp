@@ -310,7 +310,7 @@ class LiteSpeed_Cache_Tag
 			if ( $path ) {
 				// posts collections tag
 				if ( substr( $path, -6 ) == '/posts' ) {
-					$tags[] = self::TYPE_LIST ;// Not used for purge yet
+					$tags[] = self::TYPE_LIST ; // Not used for purge yet
 				}
 
 				// single post tag

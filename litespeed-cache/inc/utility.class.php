@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Utility
 		$stoptime	= microtime( true ) ;
 		$status		= 0 ;
 
-		if ( ! $file ) $status = 99999 ;// Site is down
+		if ( ! $file ) $status = 99999 ; // Site is down
 		else {
 			fclose( $file ) ;
 			$status = ( $stoptime - $starttime ) * 1000 ;
@@ -499,10 +499,10 @@ class LiteSpeed_Cache_Utility
 			$arr = array_map( 'LiteSpeed_Cache_Utility::url2uri', $arr ) ;
 		}
 		if ( $type === 'relative' ) {
-			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
+			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ; // Remove domain
 		}
 		if ( $type === 'domain' ) {
-			$arr = array_map( 'LiteSpeed_Cache_Utility::parse_domain', $arr ) ;// Only keep domain
+			$arr = array_map( 'LiteSpeed_Cache_Utility::parse_domain', $arr ) ; // Only keep domain
 		}
 		$arr = array_map( 'trim', $arr ) ;
 		$arr = array_unique( $arr ) ;
@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Utility
 	{
 		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
 			if ( defined( 'WP_HOME' ) ) {
-				$home_host = WP_HOME ;// Also think of `WP_SITEURL`
+				$home_host = WP_HOME ; // Also think of `WP_SITEURL`
 			}
 			else {
 				$home_host = get_option( 'home' ) ;
