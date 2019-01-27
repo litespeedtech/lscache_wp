@@ -1005,11 +1005,11 @@ class LiteSpeed_Cache_Admin_Settings
 
         $id = LiteSpeed_Cache_Config::CRWL_ORDER_LINKS ;
         if( ! isset( $this->_input[ $id ] ) || ! in_array( $this->_input[ $id ], array(
-                LiteSpeed_Cache_Config::CRWL_DATE_DESC,
-                LiteSpeed_Cache_Config::CRWL_DATE_ASC,
-                LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
-                LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
-            ) )
+            LiteSpeed_Cache_Config::CRWL_DATE_DESC,
+            LiteSpeed_Cache_Config::CRWL_DATE_ASC,
+            LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
+            LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
+        ) )
         ) {
             $this->_input[ $id ] = LiteSpeed_Cache_Config::CRWL_DATE_DESC ;
         }

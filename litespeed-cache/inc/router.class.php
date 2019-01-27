@@ -431,13 +431,13 @@ class LiteSpeed_Cache_Router
 
             // check if it is public action
             if ( ! in_array( $action, array(
-                    LiteSpeed_Cache::ACTION_QS_NOCACHE,
-                    LiteSpeed_Cache::ACTION_QS_PURGE,
-                    LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE,
-                    LiteSpeed_Cache::ACTION_QS_SHOW_HEADERS,
-                    LiteSpeed_Cache::ACTION_QS_PURGE_ALL,
-                    LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
-                    ) ) ) {
+                LiteSpeed_Cache::ACTION_QS_NOCACHE,
+                LiteSpeed_Cache::ACTION_QS_PURGE,
+                LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE,
+                LiteSpeed_Cache::ACTION_QS_SHOW_HEADERS,
+                LiteSpeed_Cache::ACTION_QS_PURGE_ALL,
+                LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
+            ) ) ) {
                 LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
                 return ;
             }

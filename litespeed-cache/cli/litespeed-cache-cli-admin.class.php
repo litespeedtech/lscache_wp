@@ -127,9 +127,9 @@ class LiteSpeed_Cache_Cli_Admin
 
                 // Handle switch value
                 if ( in_array( $child_key[ 1 ], array(
-                        LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
-                        LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
-                        LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
+                    LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
+                    LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
+                    LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
                 ) ) ) {
                     $val = $val === 'true' ? LiteSpeed_Cache_Config::VAL_ON : LiteSpeed_Cache_Config::VAL_OFF ;
                 }
