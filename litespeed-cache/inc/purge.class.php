@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Purge
 		! defined( 'LITESPEED_PURGE_SILENT' ) && LiteSpeed_Cache_Admin_Display::succeed( sprintf( __( 'Purge url %s', 'litespeed-cache' ), $val ) ) ;
 
 		$this->_add( $hash ) ;
-		return ;
+		 
 	}
 
 	/**
