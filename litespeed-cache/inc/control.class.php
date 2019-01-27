@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Control
 		 * Add vary filter for Role Excludes
 		 * @since  1.6.2
 		 */
-		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+		add_filter( 'litespeed_vary', [ $this, 'vary_add_role_exclude' ] ) ;
 
 		// 301 redirect hook
 		add_filter( 'wp_redirect', 'LiteSpeed_Cache_Control::check_redirect', 10, 2 ) ;
@@ -447,11 +447,11 @@ class LiteSpeed_Cache_Control
 			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
 			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 to $location" ) ;
 
-			$to_check = array(
+			$to_check = [
 				PHP_URL_SCHEME,
 				PHP_URL_HOST,
 				PHP_URL_PATH,
-			) ;
+			] ;
 
 			$is_same_redirect = true ;
 

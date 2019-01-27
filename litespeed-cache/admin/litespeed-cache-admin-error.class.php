@@ -90,7 +90,7 @@ class LiteSpeed_Cache_Admin_Error
 					. sprintf(__('The currently installed version is PHP %s, which is out-dated and insecure.', 'litespeed-cache'), PHP_VERSION)
 					. ' '
 					. sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
-						array('a' => array('href' => array()))), 'plugins.php?plugin_status=active') ;
+						['a' => ['href' => []]]), 'plugins.php?plugin_status=active') ;
 
 			case self::E_WP_VER:
 				return '<strong>'
@@ -99,7 +99,7 @@ class LiteSpeed_Cache_Admin_Error
 					. sprintf(__('The LiteSpeed Cache Plugin requires at least WordPress %s.', 'litespeed-cache'), '3.3')
 					. ' '
 					. sprintf(wp_kses(__('Please upgrade or go to <a href="%s">active plugins</a> and deactivate the LiteSpeed Cache plugin to hide this message.', 'litespeed-cache'),
-						array('a' => array('href' => array()))), 'plugins.php?plugin_status=active') ;
+						['a' => ['href' => []]]), 'plugins.php?plugin_status=active') ;
 
 			// Admin action errors.
 			case self::E_PURGE_FORM:

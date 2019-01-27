@@ -12,7 +12,7 @@ if (!defined('WPINC')) die;
 
 <?php
 $purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options();
-$optionArr = array(
+$optionArr = [
 	LiteSpeed_Cache_Config::PURGE_ALL_PAGES => __('All pages', 'litespeed-cache'),
 	LiteSpeed_Cache_Config::PURGE_FRONT_PAGE => __('Front page', 'litespeed-cache'),
 	LiteSpeed_Cache_Config::PURGE_HOME_PAGE => __('Home page', 'litespeed-cache'),
@@ -28,15 +28,15 @@ $optionArr = array(
 	LiteSpeed_Cache_Config::PURGE_DATE => __('Daily archive', 'litespeed-cache'),
 
 	LiteSpeed_Cache_Config::PURGE_TERM => __('Term archive (include category, tag, and tax)', 'litespeed-cache'),
-);
+];
 
 // break line at these ids
-$breakArr = array(
+$breakArr = [
 	LiteSpeed_Cache_Config::PURGE_PAGES,
 	LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS,
 	LiteSpeed_Cache_Config::PURGE_POST_TYPE,
 	LiteSpeed_Cache_Config::PURGE_DATE,
-);
+];
 
 ?>
 

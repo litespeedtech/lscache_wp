@@ -74,7 +74,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		}
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
 
-		$curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array() ) ;
+		$curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, [] ) ;
 		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
 		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
 
@@ -100,7 +100,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
 		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
 		$new_val = $type == self::TYPE_SET_DEVMODE_ON ? 'on' : 'off' ;
-		$data = array( 'value' => $new_val ) ;
+		$data = [ 'value' => $new_val ] ;
 		$res = $this->_cloudflare_call( $url, 'PATCH', $data ) ;
 
 		if ( ! $res ) {
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		}
 
 		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache' ;
-		$data = array( 'purge_everything' => true ) ;
+		$data = [ 'purge_everything' => true ] ;
 
 		$res = $this->_cloudflare_call( $url, 'DELETE', $data ) ;
 
@@ -223,9 +223,9 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	{
 		LiteSpeed_Cache_Log::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" ) ;
 
-		$header = array(
+		$header = [
 			'Content-Type: application/json',
-		) ;
+		] ;
 		if ( $token ) {
 			LiteSpeed_Cache_Log::debug2( '[Cloudflare] _cloudflare_call use param token' ) ;
 			$header[] = 'X-Auth-Email: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ] ;

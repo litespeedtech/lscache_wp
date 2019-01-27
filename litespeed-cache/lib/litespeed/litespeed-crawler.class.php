@@ -19,8 +19,8 @@ class Litespeed_Crawler
 	private $_domain_ip = '' ;
 	private $_ua = '' ;
 
-	private $_curl_headers = array() ;
-	private $_cookies = array() ;
+	private $_curl_headers = [] ;
+	private $_cookies = [] ;
 
 	protected $_blacklist ;
 	protected $_meta ;
@@ -275,12 +275,12 @@ class Litespeed_Crawler
 			return false ;
 		}
 
-		$_http_status_ok_list = array(
+		$_http_status_ok_list = [
 			'HTTP/1.1 200 OK',
 			'HTTP/1.1 201 Created',
 			'HTTP/2 200',
 			'HTTP/2 201',
-		) ;
+		] ;
 
 		foreach ( $_http_status_ok_list as $http_status ) {
 			if ( stripos( $headers, $http_status ) !== false ) {
@@ -439,11 +439,11 @@ class Litespeed_Crawler
 	 */
 	protected function _return($end_reason)
 	{
-		return array(
+		return [
 			'error'		=> $end_reason === true ? false : $end_reason,
 			'blacklist'	=> $this->_blacklist,
 			'crawled'	=> $this->_meta['last_crawled'],
-		) ;
+		] ;
 
 	}
 
@@ -513,7 +513,7 @@ class Litespeed_Crawler
 	protected function _multi_request($urls, $options)
 	{
 		$mh = curl_multi_init() ;
-		$curls = array() ;
+		$curls = [] ;
 		foreach ($urls as $i => $url) {
 			$curls[$i] = curl_init() ;
 			curl_setopt($curls[$i], CURLOPT_URL, $this->_baseUrl . $url) ;
@@ -531,7 +531,7 @@ class Litespeed_Crawler
 		} while ($last_start_time > 0) ;
 
 		// curl done
-		$ret = array() ;
+		$ret = [] ;
 		foreach ($urls as $i => $url) {
 			$thisCurl = $curls[$i] ;
 			$ret[] = curl_multi_getcontent($thisCurl) ;
@@ -558,7 +558,7 @@ class Litespeed_Crawler
 			$referer = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ;
 		}
 
-		$options = array(
+		$options = [
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_HEADER => true,
 			CURLOPT_CUSTOMREQUEST => 'GET',
@@ -570,7 +570,7 @@ class Litespeed_Crawler
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_NOBODY => false,
 			CURLOPT_HTTPHEADER => $this->_curl_headers,
-		) ;
+		] ;
 		$options[CURLOPT_HTTPHEADER][] = "Cache-Control: max-age=0" ;
 
 		/**
@@ -618,7 +618,7 @@ class Litespeed_Crawler
 		update_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH, $hash ) ;
 		$this->_cookies[ 'litespeed_hash' ] = $hash ;
 
-		$cookies = array() ;
+		$cookies = [] ;
 		foreach ( $this->_cookies as $k => $v ) {
 			$cookies[] = "$k=" . urlencode( $v ) ;
 		}
@@ -665,7 +665,7 @@ class Litespeed_Crawler
 		}
 
 		if ( ! $meta ) {
-			$meta = array() ;
+			$meta = [] ;
 		}
 
 		$this->_meta = array_merge( $this->_default_meta(), $meta ) ;
@@ -681,7 +681,7 @@ class Litespeed_Crawler
 	 */
 	private function _default_meta()
 	{
-		return array(
+		return [
 			'list_size'			=> Litespeed_File::count_lines($this->_sitemap_file),
 			'last_update_time'	=> 0,
 			'curr_crawler'		=> 0,
@@ -699,7 +699,7 @@ class Litespeed_Crawler
 			'this_full_beginning_time'	=> 0,
 			'last_full_time_cost'		=> 0,
 			'last_crawler_total_cost'	=> 0,
-		) ;
+		] ;
 	}
 
 }

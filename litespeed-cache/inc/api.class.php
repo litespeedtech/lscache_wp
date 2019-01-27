@@ -236,7 +236,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	{
 		add_filter( 'litespeed_vary_cookies', function( $cookies ) use( $vary ) {
 			if ( ! is_array( $vary ) ) {
-				$vary = array( $vary ) ;
+				$vary = [ $vary ] ;
 			}
 			$cookies = array_merge( $cookies, $vary ) ;
 			return $cookies ;
@@ -518,7 +518,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * @access public
 	 * @param string $control Cache control tag
 	 */
-	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+	public static function esi_url( $block_id, $wrapper, $params = [], $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 	{
 		if ( $control === 'default' ) {
 			$control = 'private,no-vary' ;
@@ -539,7 +539,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 		}
 
 		// Replace it to ESI
-		return self::esi_url( 'lscwp_nonce_esi', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true ) ;
+		return self::esi_url( 'lscwp_nonce_esi', 'LSCWP Nonce ESI ' . $action, [ 'action' => $action ], '', true, $defence_for_html_filter, true ) ;
 	}
 
 	/**

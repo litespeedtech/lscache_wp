@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Log
 			return ;
 		}
 
-		$servervars = array(
+		$servervars = [
 			'Query String' => '',
 			'HTTP_ACCEPT' => '',
 			'HTTP_USER_AGENT' => '',
@@ -139,9 +139,9 @@ class LiteSpeed_Cache_Log
 			'X-LSCACHE' => '',
 			'LSCACHE_VARY_COOKIE' => '',
 			'LSCACHE_VARY_VALUE' => '',
-		) ;
+		] ;
 		$server = array_merge( $servervars, $_SERVER ) ;
-		$params = array() ;
+		$params = [] ;
 
 		if ( isset( $_SERVER[ 'HTTPS' ] ) && $_SERVER[ 'HTTPS' ] == 'on' ) {
 			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;

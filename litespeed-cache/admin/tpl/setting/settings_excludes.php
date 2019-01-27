@@ -89,7 +89,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				if ($ids != '') {
 					$id_list = explode(',', $ids);
 					$tags_list = array_map('get_tag', $id_list);
-					$tag_names = array();
+					$tag_names = [];
 					foreach ($tags_list as $tag) {
 						$tag_names[] = $tag->name;
 					}

@@ -13,7 +13,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	/**
 	 * Function to invoke a Private method
 	 */
-	protected static function invokeMethod($className, $methodName, array $parameters = array()) 
+	protected static function invokeMethod($className, $methodName, array $parameters = []) 
 	{
          $reflectionClass = new ReflectionClass($className);
          $method = $reflectionClass->getMethod($methodName);
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	public function test_get_default_options()
 	{
 		$include_thirdparty = true;
-		$parameters = array($include_thirdparty);
+		$parameters = [$include_thirdparty];
 		$array = self::invokeMethod('LiteSpeed_Cache_Config','get_default_options', $parameters);
 		$this->assertNotEmpty($array);
 	}

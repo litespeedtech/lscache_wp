@@ -12,14 +12,14 @@ class LiteSpeed_Cache_Cli_Admin
 	public function __construct()
 	{
 		// Build on/off options
-		self::$checkboxes = array() ;
+		self::$checkboxes = [] ;
 		foreach ( LiteSpeed_Cache_Config::get_instance()->get_default_options() as $k => $v ) {
 			if ( is_bool( $v ) ) {
 				self::$checkboxes[] = $k ;
 			}
 		}
 
-		self::$purges = array(
+		self::$purges = [
 			'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES => LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
 			'purge_' . LiteSpeed_Cache_Config::PURGE_FRONT_PAGE => LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
 			'purge_' . LiteSpeed_Cache_Config::PURGE_HOME_PAGE => LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
@@ -29,7 +29,7 @@ class LiteSpeed_Cache_Cli_Admin
 			'purge_' . LiteSpeed_Cache_Config::PURGE_DATE => LiteSpeed_Cache_Config::PURGE_DATE,
 			'purge_' . LiteSpeed_Cache_Config::PURGE_TERM => LiteSpeed_Cache_Config::PURGE_TERM,
 			'purge_' . LiteSpeed_Cache_Config::PURGE_POST_TYPE => LiteSpeed_Cache_Config::PURGE_POST_TYPE,
-		) ;
+		] ;
 	}
 
 	/**
@@ -126,11 +126,11 @@ class LiteSpeed_Cache_Cli_Admin
 				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
 
 				// Handle switch value
-				if ( in_array( $child_key[ 1 ], array(
+				if ( in_array( $child_key[ 1 ], [
 						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
 						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
 						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
-				) ) ) {
+				] ) ) {
 					$val = $val === 'true' ? LiteSpeed_Cache_Config::VAL_ON : LiteSpeed_Cache_Config::VAL_OFF ;
 				}
 
@@ -177,9 +177,9 @@ class LiteSpeed_Cache_Cli_Admin
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 		$purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options() ;
 		unset($options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST]) ;
-		$option_out = array() ;
+		$option_out = [] ;
 		$purge_diff = array_diff(self::$purges, $purge_options) ;
-		$purge_out = array() ;
+		$purge_out = [] ;
 
 		$buf = WP_CLI::colorize("%CThe list of options:%n\n") ;
 		WP_CLI::line($buf) ;
@@ -196,22 +196,22 @@ class LiteSpeed_Cache_Cli_Admin
 			elseif ( $value === '' ) {
 				$value = "''" ;
 			}
-			$option_out[] = array('key' => $key, 'value' => $value) ;
+			$option_out[] = ['key' => $key, 'value' => $value] ;
 		}
 
 		foreach ($purge_options as $opt_name) {
-			$purge_out[] = array('key' => 'purge_' . $opt_name, 'value' => 'true') ;
+			$purge_out[] = ['key' => 'purge_' . $opt_name, 'value' => 'true'] ;
 		}
 
 		foreach ($purge_diff as $opt_name) {
-			$purge_out[] = array('key' => 'purge_' . $opt_name, 'value' => 'false') ;
+			$purge_out[] = ['key' => 'purge_' . $opt_name, 'value' => 'false'] ;
 		}
 
-		WP_CLI\Utils\format_items('table', $option_out, array('key', 'value')) ;
+		WP_CLI\Utils\format_items('table', $option_out, ['key', 'value']) ;
 
 		$buf = WP_CLI::colorize("%CThe list of PURGE ON POST UPDATE options:%n\n") ;
 		WP_CLI::line($buf) ;
-		WP_CLI\Utils\format_items('table', $purge_out, array('key', 'value')) ;
+		WP_CLI\Utils\format_items('table', $purge_out, ['key', 'value']) ;
 	}
 
 	/**

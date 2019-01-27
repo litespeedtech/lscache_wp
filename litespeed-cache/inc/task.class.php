@@ -87,11 +87,11 @@ class LiteSpeed_Cache_Task
 		LiteSpeed_Cache_Log::debug( 'Crawler log: Crawler is ' . ( $is_enabled ? 'enabled' : 'disabled' ) ) ;
 
 		// update config
-		LiteSpeed_Cache_Config::get_instance()->update_options( array( $id => $is_enabled ) ) ;
+		LiteSpeed_Cache_Config::get_instance()->update_options( [ $id => $is_enabled ] ) ;
 
 		self::update() ;
 
-		echo json_encode( array( 'enable' => $is_enabled ) ) ;
+		echo json_encode( [ 'enable' => $is_enabled ] ) ;
 		wp_die() ;
 	}
 
@@ -213,10 +213,10 @@ class LiteSpeed_Cache_Task
 	public static function lscache_cron_filter( $schedules )
 	{
 		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
-			$schedules[ self::CRON_FITLER ] = array(
+			$schedules[ self::CRON_FITLER ] = [
 				'interval' => 60,
 				'display'  => __( 'LiteSpeed Cache Custom Cron Common', 'litespeed-cache' ),
-			) ;
+			] ;
 		}
 		return $schedules ;
 	}
@@ -234,10 +234,10 @@ class LiteSpeed_Cache_Task
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::CRON_FITLER_CRAWLER, $schedules ) ) {
 			// 	LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
-			$schedules[ self::CRON_FITLER_CRAWLER ] = array(
+			$schedules[ self::CRON_FITLER_CRAWLER ] = [
 				'interval' => $interval,
 				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
-			) ;
+			] ;
 		}
 		return $schedules ;
 	}

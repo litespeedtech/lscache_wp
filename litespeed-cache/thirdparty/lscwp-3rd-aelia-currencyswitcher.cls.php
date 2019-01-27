@@ -17,12 +17,12 @@ LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 
 class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 {
-	private static $_cookies = array(
+	private static $_cookies = [
 		'aelia_cs_selected_currency',
 		'aelia_customer_country',
 		'aelia_customer_state',
 		'aelia_tax_exempt',
-	) ;
+	] ;
 
 	/**
 	 * Detects if WooCommerce is installed.

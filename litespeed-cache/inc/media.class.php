@@ -29,8 +29,8 @@ class LiteSpeed_Cache_Media
 	private $_cfg_placeholder_resp ;
 	private $_cfg_placeholder_resp_color ;
 	private $_cfg_placeholder_resp_async ;
-	private $_placeholder_resp_dict = array() ;
-	private $_ph_queue = array() ;
+	private $_placeholder_resp_dict = [] ;
+	private $_ph_queue = [] ;
 
 	/**
 	 * Init
@@ -60,7 +60,7 @@ class LiteSpeed_Cache_Media
 				if ( $this->webp_support() ) {
 					// Hook to srcset
 					if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-						add_filter( 'wp_calculate_image_srcset', array( $this, 'webp_srcset' ), 988 ) ;
+						add_filter( 'wp_calculate_image_srcset', [ $this, 'webp_srcset' ], 988 ) ;
 					}
 					// Hook to mime icon
 					// add_filter( 'wp_get_attachment_image_src', array( $this, 'webp_attach_img_src' ), 988 ) ;// todo: need to check why not
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Media
 			}
 		}
 
-		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
+		add_action( 'litspeed_after_admin_init', [ $this, 'after_admin_init' ] ) ;
 
 		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP ) ;
 		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
@@ -116,11 +116,11 @@ class LiteSpeed_Cache_Media
 	public function after_admin_init()
 	{
 		if ( get_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ) {
-			add_filter( 'manage_media_columns', array( $this, 'media_row_title' ) ) ;
-			add_filter( 'manage_media_custom_column', array( $this, 'media_row_actions' ), 10, 2 ) ;
+			add_filter( 'manage_media_columns', [ $this, 'media_row_title' ] ) ;
+			add_filter( 'manage_media_custom_column', [ $this, 'media_row_actions' ], 10, 2 ) ;
 
 			// Hook to attachment delete action
-			add_action( 'delete_attachment', array( $this, 'delete_attachment' ) ) ;
+			add_action( 'delete_attachment', [ $this, 'delete_attachment' ] ) ;
 		}
 	}
 
@@ -240,7 +240,7 @@ class LiteSpeed_Cache_Media
 		if ( $size_meta ) {
 			$del_row = '<div><div class="litespeed-text-dimgray litespeed-text-center">' . __( 'Reset', 'litespeed-cache' ) . '</div>' ;
 			$del_row .= sprintf( '<div class="litespeed-media-p"><a href="%1$s" class="">%2$s</a></div>',
-				LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RESET_ROW, false, null, array( 'id' => $post_id ) ),
+				LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_RESET_ROW, false, null, [ 'id' => $post_id ] ),
 				'<span class="dashicons dashicons-trash dashicons-large litespeed-warning litespeed-dashicons-large"></span>'
 			) ;
 			$del_row .= '</div>' ;
@@ -267,19 +267,19 @@ eot;
 	 */
 	private function get_image_sizes() {
 		global $_wp_additional_image_sizes ;
-		$sizes = array();
+		$sizes = [];
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
+			if ( in_array( $_size, [ 'thumbnail', 'medium', 'medium_large', 'large' ] ) ) {
 				$sizes[ $_size ][ 'width' ] = get_option( $_size . '_size_w' ) ;
 				$sizes[ $_size ][ 'height' ] = get_option( $_size . '_size_h' ) ;
 				$sizes[ $_size ][ 'crop' ] = (bool) get_option( $_size . '_crop' ) ;
 			} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
-				$sizes[ $_size ] = array(
+				$sizes[ $_size ] = [
 					'width' => $_wp_additional_image_sizes[ $_size ][ 'width' ],
 					'height' => $_wp_additional_image_sizes[ $_size ][ 'height' ],
 					'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ]
-				) ;
+				] ;
 			}
 		}
 
@@ -378,7 +378,7 @@ eot;
 				}
 
 				$snippet = '<noscript>' . $v . '</noscript>' ;
-				$v = str_replace( array( ' src=', ' srcset=', ' sizes=' ), array( ' data-src=', ' data-srcset=', ' data-sizes=' ), $v ) ;
+				$v = str_replace( [ ' src=', ' srcset=', ' sizes=' ], [ ' data-src=', ' data-srcset=', ' data-sizes=' ], $v ) ;
 				$v = str_replace( '<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . $this_placeholder . '" ', $v ) ;
 				$snippet = $v . $snippet ;
 
@@ -478,7 +478,7 @@ eot;
 
 		// Store it to prepare for cron
 		if ( empty( $req_summary[ 'queue' ] ) ) {
-			$req_summary[ 'queue' ] = array() ;
+			$req_summary[ 'queue' ] = [] ;
 		}
 		if ( in_array( $size, $req_summary[ 'queue' ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder already in queue [size] ' . $size ) ;
@@ -513,9 +513,9 @@ eot;
 
 		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_CLS_EXC ) ) ;
 
-		$src_list = array() ;
-		$html_list = array() ;
-		$placeholder_list = array() ;
+		$src_list = [] ;
+		$html_list = [] ;
+		$placeholder_list = [] ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
 		preg_match_all( '#<img \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER ) ;
@@ -581,7 +581,7 @@ eot;
 			$placeholder_list[] = $placeholder ;
 		}
 
-		return array( $src_list, $html_list, $placeholder_list ) ;
+		return [ $src_list, $html_list, $placeholder_list ] ;
 	}
 
 	/**
@@ -593,7 +593,7 @@ eot;
 	 */
 	private function _parse_iframe()
 	{
-		$html_list = array() ;
+		$html_list = [] ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
 		preg_match_all( '#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER ) ;
@@ -688,7 +688,7 @@ eot;
 		// parse srcset
 		// todo: should apply this to cdn too
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET ) ) {
-			$this->content = LiteSpeed_Cache_Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
+			$this->content = LiteSpeed_Cache_Utility::srcset_replace( $this->content, [ $this, 'replace_webp' ] ) ;
 		}
 
 		// Replace background-image
@@ -843,7 +843,7 @@ eot;
 	 */
 	public static function get_summary()
 	{
-		return get_option( self::DB_PLACEHOLDER_SUMMARY, array() ) ;
+		return get_option( self::DB_PLACEHOLDER_SUMMARY, [] ) ;
 	}
 
 	/**
@@ -870,7 +870,7 @@ eot;
 		}
 
 		// Clear placeholder in queue too
-		$this->_save_summary( array() ) ;
+		$this->_save_summary( [] ) ;
 
 		LiteSpeed_Cache_Log::debug2( '[Media] Cleared placeholder queue' ) ;
 	}
@@ -924,10 +924,10 @@ eot;
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate placeholder
-		$req_data = array(
+		$req_data = [
 			'size'	=> $size,
 			'color'	=> $this->_cfg_placeholder_resp_color,
-		) ;
+		] ;
 		$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
 
 		LiteSpeed_Cache_Log::debug( '[Media] _generate_placeholder ' ) ;

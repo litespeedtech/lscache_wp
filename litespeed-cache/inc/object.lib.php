@@ -177,8 +177,8 @@ class WP_Object_Cache
 
 	private $_object_cache ;
 
-	private $_cache = array() ;
-	private $_cache_404 = array() ;
+	private $_cache = [] ;
+	private $_cache_404 = [] ;
 
 	private $cache_total = 0 ;
 	private $count_hit_incall = 0 ;
@@ -313,7 +313,7 @@ class WP_Object_Cache
 		}
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
+			$this->_object_cache->set( $final_key, serialize( [ 'data' => $data ] ), $expire ) ;
 			$this->count_set ++ ;
 		}
 
@@ -433,8 +433,8 @@ class WP_Object_Cache
 	 */
 	public function flush()
 	{
-		$this->_cache = array() ;
-		$this->_cache_404 = array() ;
+		$this->_cache = [] ;
+		$this->_cache_404 = [] ;
 // error_log("oc: flush " ) ;
 
 		$this->_object_cache->flush() ;
@@ -523,7 +523,7 @@ class WP_Object_Cache
 		}
 		elseif ( $group == 'site-transient' ) {
 			/**** Ori WP func start ****/
-			$no_timeout = array('update_core', 'update_plugins', 'update_themes');
+			$no_timeout = ['update_core', 'update_plugins', 'update_themes'];
 			$transient_option = '_site_transient_' . $transient;
 			if ( ! in_array( $transient, $no_timeout ) ) {
 				$transient_timeout = '_site_transient_timeout_' . $transient;

@@ -38,9 +38,9 @@ if ( ! function_exists('http_build_url') ) {
 	// @param   mixed           Same as the first argument
 	// @param   int             A bitmask of binary or'ed HTTP_URL constants (Optional)HTTP_URL_REPLACE is the default
 	// @param   array           If set, it will be filled with the parts of the composed url like parse_url() would return
-	function http_build_url($url, $parts = array(), $flags = HTTP_URL_REPLACE, &$new_url = false)
+	function http_build_url($url, $parts = [], $flags = HTTP_URL_REPLACE, &$new_url = false)
 	{
-		$keys = array('user','pass','port','path','query','fragment');
+		$keys = ['user','pass','port','path','query','fragment'];
 
 		// HTTP_URL_STRIP_ALL becomes all the HTTP_URL_STRIP_Xs
 		if ( $flags & HTTP_URL_STRIP_ALL ) {

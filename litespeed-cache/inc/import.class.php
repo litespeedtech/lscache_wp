@@ -92,7 +92,7 @@ class LiteSpeed_Cache_Import
 	private function _export( $only_data_return = false )
 	{
 
-		$data = array() ;
+		$data = [] ;
 		foreach ( $this->_cfg_items as $v ) {
 			$data[ $v ] = get_option( $v ) ;// Here doesn't need the default_item value so no need to call `LiteSpeed_Cache_Config::get_instance()->get_item()`
 		}
@@ -106,9 +106,9 @@ class LiteSpeed_Cache_Import
 		$filename = $this->_generate_filename() ;
 
 		// Update log
-		$log = get_option( self::DB_IMPORT_LOG, array() ) ;
+		$log = get_option( self::DB_IMPORT_LOG, [] ) ;
 		if ( empty( $log[ 'export' ] ) ) {
-			$log[ 'export' ] = array() ;
+			$log[ 'export' ] = [] ;
 		}
 		$log[ 'export' ][ 'file' ] = $filename ;
 		$log[ 'export' ][ 'time' ] = time() ;
@@ -152,9 +152,9 @@ class LiteSpeed_Cache_Import
 			}
 
 			// Update log
-			$log = get_option( self::DB_IMPORT_LOG, array() ) ;
+			$log = get_option( self::DB_IMPORT_LOG, [] ) ;
 			if ( empty( $log[ 'import' ] ) ) {
-				$log[ 'import' ] = array() ;
+				$log[ 'import' ] = [] ;
 			}
 			$log[ 'import' ][ 'file' ] = $_FILES[ 'ls_file' ][ 'name' ] ;
 			$log[ 'import' ][ 'time' ] = time() ;

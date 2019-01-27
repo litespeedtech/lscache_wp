@@ -36,9 +36,9 @@ class LiteSpeed_Cache_Admin_Display
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
 	private $config ;
-	private $messages = array() ;
+	private $messages = [] ;
 	private $disable_all = false ;
-	private $default_settings = array() ;
+	private $default_settings = [] ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -51,13 +51,13 @@ class LiteSpeed_Cache_Admin_Display
 		// load assets
 		if( ! empty($_GET['page']) &&
 				(substr($_GET['page'], 0, 8) == 'lscache-' || $_GET['page'] == 'litespeedcache') ) {
-			add_action('admin_enqueue_scripts', array($this, 'load_assets')) ;
+			add_action('admin_enqueue_scripts', [$this, 'load_assets']) ;
 		}
 
 		// main css
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_style')) ;
+		add_action('admin_enqueue_scripts', [$this, 'enqueue_style']) ;
 		// Main js
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts')) ;
+		add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']) ;
 
 		$is_network_admin = is_network_admin() ;
 
@@ -69,10 +69,10 @@ class LiteSpeed_Cache_Admin_Display
 			$manage = 'manage_options' ;
 		}
 		if ( current_user_can($manage) ) {
-			add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
+			add_action( 'wp_before_admin_bar_render', [ LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ] ) ;
 
 			// add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
-			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) ) ;
+			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', [ $this, 'display_messages' ] ) ;
 		}
 
 		/**
@@ -86,10 +86,10 @@ class LiteSpeed_Cache_Admin_Display
 
 		// add menus ( Also check for mu-plugins)
 		if ( $is_network_admin && ( is_plugin_active_for_network( LSCWP_BASENAME ) || defined( 'LSCWP_MU_PLUGIN' ) ) ) {
-			add_action('network_admin_menu', array($this, 'register_admin_menu')) ;
+			add_action('network_admin_menu', [$this, 'register_admin_menu']) ;
 		}
 		else {
-			add_action('admin_menu', array($this, 'register_admin_menu')) ;
+			add_action('admin_menu', [$this, 'register_admin_menu']) ;
 		}
 
 		$this->config = LiteSpeed_Cache_Config::get_instance() ;
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Admin_Display
 	public function load_assets($hook)
 	{
 		// Admin footer
-		add_filter('admin_footer_text', array($this, 'admin_footer_text'), 1) ;
+		add_filter('admin_footer_text', [$this, 'admin_footer_text'], 1) ;
 
 		if( defined( 'LITESPEED_ON' ) ) {
 			// Help tab
@@ -116,8 +116,8 @@ class LiteSpeed_Cache_Admin_Display
 
 			global $pagenow ;
 			if ( $pagenow === 'plugins.php' ) {//todo: check if work
-				add_action('wp_default_scripts', array($this, 'set_update_text'), 0) ;
-				add_action('wp_default_scripts', array($this, 'unset_update_text'), 20) ;
+				add_action('wp_default_scripts', [$this, 'set_update_text'], 0) ;
+				add_action('wp_default_scripts', [$this, 'unset_update_text'], 20) ;
 			}
 		}
 	}
@@ -171,7 +171,7 @@ class LiteSpeed_Cache_Admin_Display
 			defined( 'LSCWP_LOG' ) && $this->add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
 
 			// sub menus under options
-			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_settings')) ;
+			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', [$this, 'show_menu_settings']) ;
 		}
 	}
 
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function add_submenu($menu_title, $menu_slug, $callback)
 	{
-		add_submenu_page('lscache-settings', $menu_title, $menu_title, 'manage_options', $menu_slug, array($this, $callback)) ;
+		add_submenu_page('lscache-settings', $menu_title, $menu_title, 'manage_options', $menu_slug, [$this, $callback]) ;
 	}
 
 	/**
@@ -197,7 +197,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_style()
 	{
-		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
+		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'css/litespeed.css', [], LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
 	}
 
 	/**
@@ -208,9 +208,9 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_scripts()
 	{
-		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
+		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', [], LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
 
-		$localize_data = array() ;
+		$localize_data = [] ;
 		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
 			$ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_WHM, true ) ;
 			$localize_data[ 'ajax_url_dismiss_whm' ] = $ajax_url_dismiss_whm ;
@@ -223,7 +223,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$promo_tag = LiteSpeed_Cache_GUI::get_instance()->show_promo( true ) ;
 		if ( $promo_tag ) {
-			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) ) ;
+			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, [ 'promo_tag' => $promo_tag ] ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 
@@ -276,7 +276,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function set_update_text()
 	{
-		add_filter('gettext', array($this, 'add_update_text'), 10, 2) ;
+		add_filter('gettext', [$this, 'add_update_text'], 10, 2) ;
 	}
 
 	/**
@@ -287,7 +287,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function unset_update_text()
 	{
-		remove_filter('gettext', array($this, 'add_update_text')) ;
+		remove_filter('gettext', [$this, 'add_update_text']) ;
 	}
 
 	/**
@@ -486,7 +486,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$messages = (array)get_option( self::LITESPEED_MSG ) ;
 		if( ! $messages ) {
-			$messages = array() ;
+			$messages = [] ;
 		}
 		if ( is_array($msg) ) {
 			foreach ($msg as $str) {
@@ -783,7 +783,7 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$checked = $checked ? ' checked ' : '' ;
 
-		$label_id = str_replace( array( '[', ']' ), '_', $id ) ;
+		$label_id = str_replace( [ '[', ']' ], '_', $id ) ;
 
 		if ( $value !== 1 ) {
 			$label_id .= '_' . $value ;
@@ -893,7 +893,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $id_attr === null ) {
-			$id_attr = is_int($val) ? "conf_" . str_replace( array( '[', ']' ), '_', $id ) . "_$val" : md5($val) ;
+			$id_attr = is_int($val) ? "conf_" . str_replace( [ '[', ']' ], '_', $id ) . "_$val" : md5($val) ;
 		}
 		elseif ( $id_attr === true ) {
 			$id_attr = md5($val) ;

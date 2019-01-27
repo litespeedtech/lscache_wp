@@ -28,7 +28,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 	public function test_get_cache_tags() 
 	{
         $instance  = self::get_instance();
-        $tags = array();
+        $tags = [];
 
         if(method_exists($instance, 'add_cache_tag')){
             $instance->add_cache_tag($tags);
@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
     public function test_get_purge_tags() 
     {
         $instance  = self::get_instance();
-        $tags = array();
+        $tags = [];
 
         if(method_exists($instance, 'add_purge_tag')){
             $instance->add_purge_tag($tags);
@@ -76,7 +76,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
     public function test_get_vary_cookies() 
     {
         $instance  = self::get_instance();
-        $cookie = array();
+        $cookie = [];
 
         if(method_exists($instance, 'add_vary_cookie')){
             $instance->add_vary_cookie($cookie);

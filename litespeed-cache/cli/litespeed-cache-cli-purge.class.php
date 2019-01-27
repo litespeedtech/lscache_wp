@@ -49,12 +49,12 @@ class LiteSpeed_Cache_Cli_Purge
 	 * @param array $extra Any extra parameters needed to be sent.
 	 * @return mixed The http request return.
 	 */
-	private function _send_request($action, $extra = array())
+	private function _send_request($action, $extra = [])
 	{
-		$data = array(
+		$data = [
 			LiteSpeed_Cache::ACTION_KEY => $action,
 			LiteSpeed_Cache::NONCE_NAME => wp_create_nonce($action),
-		) ;
+		] ;
 		if ( ! empty($extra) ) {
 			$data = array_merge($data, $extra) ;
 		}
@@ -155,9 +155,9 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	public function url($args, $assoc_args)
 	{
-		$data = array(
+		$data = [
 			LiteSpeed_Cache::ACTION_KEY => LiteSpeed_Cache::ACTION_QS_PURGE,
-		) ;
+		] ;
 		$url = $args[0] ;
 		$deconstructed = wp_parse_url($url) ;
 		if ( empty($deconstructed) ) {
@@ -201,7 +201,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 */
 	private function _purgeby_helper($args, $select, $callback)
 	{
-		$filtered = array() ;
+		$filtered = [] ;
 		foreach ($args as $val) {
 			if ( ! ctype_digit($val) ) {
 				WP_CLI::debug('[LSCACHE] Skip val, not a number. ' . $val) ;
@@ -209,7 +209,7 @@ class LiteSpeed_Cache_Cli_Purge
 			}
 			$term = $callback($val) ;
 			if ( ! empty($term) ) {WP_CLI::line($term->name);
-				$filtered[] = in_array( $callback, array( 'get_tag', 'get_category' ) ) ? $term->name : $val ;
+				$filtered[] = in_array( $callback, [ 'get_tag', 'get_category' ] ) ? $term->name : $val ;
 			}
 			else {
 				WP_CLI::debug('[LSCACHE] Skip val, not a valid term. ' . $val) ;
@@ -225,10 +225,10 @@ class LiteSpeed_Cache_Cli_Purge
 
 		WP_CLI::line('Will purge the following cache tags: ' . $str) ;
 
-		$data = array(
+		$data = [
 			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT	=> $select,
 			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST		=> $str,
-		) ;
+		] ;
 
 		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_PURGE_BY, $data) ;
 		if ( $purge_ret->success ) {

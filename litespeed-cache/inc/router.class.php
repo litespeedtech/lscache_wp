@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Router
 	 */
 	protected static function _is_login_page()
 	{
-		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
+		if ( in_array( $GLOBALS[ 'pagenow' ], [ 'wp-login.php', 'wp-register.php' ], true ) ) {
 			return true ;
 		}
 
@@ -383,7 +383,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function build_type( $val )
 	{
-		return array( 'type' => $val ) ;
+		return [ 'type' => $val ] ;
 	}
 
 	/**
@@ -430,14 +430,14 @@ class LiteSpeed_Cache_Router
 			}
 
 			// check if it is public action
-			if ( ! in_array( $action, array(
+			if ( ! in_array( $action, [
 					LiteSpeed_Cache::ACTION_QS_NOCACHE,
 					LiteSpeed_Cache::ACTION_QS_PURGE,
 					LiteSpeed_Cache::ACTION_QS_PURGE_SINGLE,
 					LiteSpeed_Cache::ACTION_QS_SHOW_HEADERS,
 					LiteSpeed_Cache::ACTION_QS_PURGE_ALL,
 					LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
-					) ) ) {
+					] ) ) {
 				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
 				return ;
 			}

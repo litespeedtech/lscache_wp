@@ -174,7 +174,7 @@ if ( !defined('WPINC') ) die;
 								/**
 								 * Data Src Structure: [ nameA => vals, nameB => vals ]
 								 */
-								$list = array() ;
+								$list = [] ;
 								foreach ( $cookies as $k => $v ) {
 									$list[] = "{ name: '$k', vals: `$v` }" ;// $v contains line break
 								}
@@ -260,7 +260,7 @@ if ( !defined('WPINC') ) die;
 					<div class="litespeed-callout-warning">
 						<h4><?php echo __('Available Custom Post Type','litespeed-cache'); ?></h4>
 						<p>
-							<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), array('post', 'page'))); ?>
+							<?php echo implode('<br />', array_diff(get_post_types( '', 'names' ), ['post', 'page'])); ?>
 						</p>
 					</div>
 				</div>

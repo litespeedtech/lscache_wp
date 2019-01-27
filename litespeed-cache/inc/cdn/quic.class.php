@@ -29,10 +29,10 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Security: Remove cf key in report
-		$secure_fields = array(
+		$secure_fields = [
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
-		) ;
+		] ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
@@ -58,7 +58,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$options[ '_server' ] = LiteSpeed_Cache_Config::get_instance()->server_vars() ;
 
 		// Append hooks
-		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+		$options[ '_tp_cookies' ] = apply_filters( 'litespeed_cache_api_vary', [] ) ;
 
 		$res = $instance->_api( '/sync_config', $options ) ;
 		if ( $res != 'ok' ) {
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$_email = $_POST[ 'email' ] ;
 
 		// Get email status
-		$response = $this->_api( '/u/email_status', array( 'email' => $_email ) ) ;
+		$response = $this->_api( '/u/email_status', [ 'email' => $_email ] ) ;
 		if ( empty( $response[ 'result' ] ) ) {
 
 			LiteSpeed_Cache_Log::debug( '[QUIC] Query email failed' ) ;
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_CDN_Quic
 			exit( "QUIC: Query email failed" ) ;
 		}
 
-		$data = array( 'email' => $_email ) ;
+		$data = [ 'email' => $_email ] ;
 
 		if ( $response[ 'result' ] == 'existing' ) {
 			$this->_tpl( 'quic.login', 50, $data ) ;
@@ -130,7 +130,7 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Register
-		$response = $this->_api( '/u/register', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
+		$response = $this->_api( '/u/register', [ 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ] ) ;
 		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
 
 			LiteSpeed_Cache_Log::debug( '[QUIC] Register failed' ) ;
@@ -153,9 +153,9 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Login
-		$response = $this->_api( '/u/login', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
+		$response = $this->_api( '/u/login', [ 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ] ) ;
 
-		$data = array( 'email' => $_email ) ;
+		$data = [ 'email' => $_email ] ;
 
 		// for login failed, redirect back to login page
 		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
@@ -194,13 +194,13 @@ class LiteSpeed_Cache_CDN_Quic
 
 		$url = 'https://api.quic.cloud' . $uri ;
 
-		$param = array(
+		$param = [
 			'_v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
 			'_hash'	=> $hash,
 			'_data' => $data,
-		) ;
+		] ;
 
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
+		$response = wp_remote_post( $url, [ 'body' => $param, 'timeout' => 15 ] ) ;
 
 
 		if ( is_wp_error( $response ) ) {

@@ -4,10 +4,10 @@ if ( !defined('WPINC') ) die;
 
 $options = LiteSpeed_Cache_ESI::widget_load_get_options( $widget ) ;
 if ( empty( $options ) ) {
-	$options = array(
+	$options = [
 		LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE => LiteSpeed_Cache_Config::VAL_OFF,
 		LiteSpeed_Cache_ESI::WIDGET_OPID_TTL => '28800'
-	) ;
+	] ;
 	$options = apply_filters( 'litespeed_cache_widget_default_options', $options, $widget ) ;
 }
 

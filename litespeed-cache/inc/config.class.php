@@ -69,11 +69,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Set security key if not initialized yet
 		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {
-			$this->update_options( array( self::HASH => Litespeed_String::rrand( 32 ) ) ) ;
+			$this->update_options( [ self::HASH => Litespeed_String::rrand( 32 ) ] ) ;
 		}
 
 		// Hook to options
-		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
+		add_action( 'litespeed_init', [ $this, 'hook_options' ] ) ;
 
 	}
 
@@ -181,7 +181,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
 
 			// Get the primary site settings
-			$options = get_blog_option( BLOG_ID_CURRENT_SITE, LiteSpeed_Cache_Config::OPTION_NAME, array() ) ;
+			$options = get_blog_option( BLOG_ID_CURRENT_SITE, LiteSpeed_Cache_Config::OPTION_NAME, [] ) ;
 
 			// crawler cron activation is separated
 			$options[ self::CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
@@ -247,7 +247,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param array $new_cfg The new settings to update, which will be update $this->options too.
 	 * @return array The result of update.
 	 */
-	public function update_options( $new_cfg = array() )
+	public function update_options( $new_cfg = [] )
 	{
 		if ( ! empty( $new_cfg ) ) {
 			$this->options = array_merge( $this->options, $new_cfg ) ;
@@ -412,7 +412,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		if ( ! $return_string && ! is_array( $val ) ) {
-			$val = $val ? explode( "\n", $val ) : array() ;
+			$val = $val ? explode( "\n", $val ) : [] ;
 		}
 		elseif ( $return_string && is_array( $val ) ) {
 			$val = implode( "\n", $val ) ;
@@ -477,19 +477,19 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// Convert CDN settings
-		$mapping_fields = array(
+		$mapping_fields = [
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL,
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE
-		) ;
-		$cdn_mapping = array() ;
+		] ;
+		$cdn_mapping = [] ;
 		if ( isset( $options[ self::ITEM_CDN_MAPPING ] ) && is_array( $options[ self::ITEM_CDN_MAPPING ] ) ) {
 			foreach ( $options[ self::ITEM_CDN_MAPPING ] as $k => $v ) {// $k is numeric
 				foreach ( $mapping_fields as $v2 ) {
 					if ( empty( $cdn_mapping[ $v2 ] ) ) {
-						$cdn_mapping[ $v2 ] = array() ;
+						$cdn_mapping[ $v2 ] = [] ;
 					}
 					$cdn_mapping[ $v2 ][ $k ] = ! empty( $v[ $v2 ] ) ? $v[ $v2 ] : false ;
 				}
@@ -498,7 +498,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( empty( $cdn_mapping ) ) {
 			// At least it has one item same as in setting page
 			foreach ( $mapping_fields as $v2 ) {
-				$cdn_mapping[ $v2 ] = array( 0 => false ) ;
+				$cdn_mapping[ $v2 ] = [ 0 => false ] ;
 			}
 		}
 		$options[ self::ITEM_CDN_MAPPING ] = $cdn_mapping ;
@@ -508,7 +508,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * @since 2.8.1 Fixed warning and lost cfg when deactivate->reactivate in v2.8
 		 */
 		$id = self::ITEM_CRWL_COOKIES ;
-		$crawler_cookies = array() ;
+		$crawler_cookies = [] ;
 		if ( isset( $options[ $id ] ) && is_array( $options[ $id ] ) ) {
 			$i = 0 ;
 			foreach ( $options[ $id ] as $k => $v ) {
@@ -587,14 +587,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * @since 1.7
 		 */
 		if ( isset( $this->options[ 'cdn_url' ] ) ) {
-			$cdn_mapping = array(
+			$cdn_mapping = [
 				self::ITEM_CDN_MAPPING_URL 		=> $this->options[ 'cdn_url' ],
 				self::ITEM_CDN_MAPPING_INC_IMG 	=> $this->options[ 'cdn_inc_img' ],
 				self::ITEM_CDN_MAPPING_INC_CSS 	=> $this->options[ 'cdn_inc_css' ],
 				self::ITEM_CDN_MAPPING_INC_JS 	=> $this->options[ 'cdn_inc_js' ],
 				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
-			) ;
-			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
+			] ;
+			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, [ $cdn_mapping ] ) ;
 			LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option adding CDN map" ) ;
 		}
 

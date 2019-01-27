@@ -17,8 +17,8 @@ class LiteSpeed_Cache_Vary
 	const X_HEADER = 'X-LiteSpeed-Vary' ;
 
 	private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
-	private static $_vary_cookies = array() ; // vary header only!
-	private static $_default_vary_val = array() ;
+	private static $_vary_cookies = [] ; // vary header only!
+	private static $_default_vary_val = [] ;
 
 	/**
 	 * Adds the actions used for setting up cookies on log in/out.
@@ -52,12 +52,12 @@ class LiteSpeed_Cache_Vary
 			}
 
 			// register logout hook to clear login status
-			add_action( 'clear_auth_cookie', array( $this, 'remove_logged_in' ) ) ;
+			add_action( 'clear_auth_cookie', [ $this, 'remove_logged_in' ] ) ;
 
 		}
 		else {
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
-			add_action( 'set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4 ) ;
+			add_action( 'set_logged_in_cookie', [ $this, 'add_logged_in' ], 10, 4 ) ;
 			add_action( 'wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
 
 			LiteSpeed_Cache_Control::init_cacheable() ;
@@ -68,10 +68,10 @@ class LiteSpeed_Cache_Vary
 		}
 
 		// Add comment list ESI
-		add_filter('comments_array', array( $this, 'check_commenter' ) ) ;
+		add_filter('comments_array', [ $this, 'check_commenter' ] ) ;
 
 		// Set vary cookie for commenter.
-		add_action('set_comment_cookies', array( $this, 'append_commenter' ) ) ;
+		add_action('set_comment_cookies', [ $this, 'append_commenter' ] ) ;
 
 		/**
 		 * Don't change for REST call because they don't carry on user info usually
@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Vary
 		}
 
 		ksort( $vary ) ;
-		$res = array() ;
+		$res = [] ;
 		foreach ( $vary as $key => $val ) {
 			$res[] = $key . ':' . $val ;
 		}
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Vary
 	public static function add( $vary )
 	{
 		if ( ! is_array( $vary ) ) {
-			$vary = array( $vary ) ;
+			$vary = [ $vary ] ;
 		}
 
 		error_log( 'Deprecated since LSCWP 2.7.1! [Vary] Add new vary ' . var_export( $vary, true ) ) ;

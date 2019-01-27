@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-$log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
+$log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, [] ) ;
 ?>
 
 <div class="wrap">

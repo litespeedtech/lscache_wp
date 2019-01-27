@@ -19,7 +19,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	private static $_instance ;
 	private $home_url ;// Used to simplify urls
 
-	protected $_urls = array() ;
+	protected $_urls = [] ;
 
 	/**
 	 * Instantiate the class
@@ -43,7 +43,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function generate_data($blacklist = array())
+	public function generate_data($blacklist = [])
 	{
 		global $wpdb ;
 
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 				break ;
 		}
 
-		$post_type_array = array() ;
+		$post_type_array = [] ;
 		if ( isset($show_pages) && $show_pages == 1 ) {
 			$post_type_array[] = 'page' ;
 		}
@@ -92,7 +92,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$excludeCptArr = explode(',', $options[$id]) ;
 			$excludeCptArr = array_map('trim', $excludeCptArr) ;
 			$cptArr = get_post_types() ;
-			$cptArr = array_diff($cptArr, array('post', 'page')) ;
+			$cptArr = array_diff($cptArr, ['post', 'page']) ;
 			$cptArr = array_diff($cptArr, $excludeCptArr) ;
 			$post_type_array = array_merge($post_type_array, $cptArr) ;
 		}
@@ -115,7 +115,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		//Generate Categories Link if option checked
 		if ( isset($show_cats) && $show_cats == 1 ) {
-			$cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false)) ;
+			$cats = get_terms("category", ["hide_empty"=>true, "hierarchical"=>false]) ;
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
 					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		//Generate tags Link if option checked
 		if ( isset($show_tags) && $show_tags == 1 ) {
-			$tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false)) ;
+			$tags = get_terms("post_tag", ["hide_empty"=>true, "hierarchical"=>false]) ;
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
 					$slug = str_replace($this->home_url, '', get_tag_link($tag->term_id)) ;

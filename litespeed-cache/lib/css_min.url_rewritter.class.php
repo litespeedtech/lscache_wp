@@ -45,13 +45,13 @@ class UriRewriter
      *
      * @return string
      */
-    public static function rewrite($css, $currentDir, $docRoot = null, $symlinks = array())
+    public static function rewrite($css, $currentDir, $docRoot = null, $symlinks = [])
     {
         self::$_docRoot = self::_realpath(
             $docRoot ? $docRoot : $_SERVER['DOCUMENT_ROOT']
         );
         self::$_currentDir = self::_realpath($currentDir);
-        self::$_symlinks = array();
+        self::$_symlinks = [];
 
         // normalize symlinks in order to map to link
         foreach ($symlinks as $link => $target) {
@@ -74,10 +74,10 @@ class UriRewriter
 
         // rewrite
         $pattern = '/@import\\s+([\'"])(.*?)[\'"]/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, ['LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'], $css);
 
         $pattern = '/url\\(\\s*([\'"](.*?)[\'"]|[^\\)\\s]+)\\s*\\)/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, ['LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'], $css);
 
         $css = self::_unOwlify($css);
 
@@ -103,10 +103,10 @@ class UriRewriter
 
         // append
         $pattern = '/@import\\s+([\'"])(.*?)[\'"]/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, ['LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'], $css);
 
         $pattern = '/url\\(\\s*([\'"](.*?)[\'"]|[^\\)\\s]+)\\s*\\)/';
-        $css = preg_replace_callback($pattern, array('LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'), $css);
+        $css = preg_replace_callback($pattern, ['LiteSpeed_3rd_Lib\css_min\UriRewriter', '_processUriCB'], $css);
 
         $css = self::_unOwlify($css);
 
@@ -153,7 +153,7 @@ class UriRewriter
      *
      * @return string
      */
-    public static function rewriteRelative($uri, $realCurrentDir, $realDocRoot, $symlinks = array())
+    public static function rewriteRelative($uri, $realCurrentDir, $realDocRoot, $symlinks = [])
     {
         // prepend path with current dir separator (OS-independent)
         $path = strtr($realCurrentDir, '/', DIRECTORY_SEPARATOR);
@@ -243,7 +243,7 @@ class UriRewriter
      *
      * @var array
      */
-    private static $_symlinks = array();
+    private static $_symlinks = [];
 
     /**
      * Path to prepend

@@ -116,12 +116,12 @@ class LiteSpeed_Cache
 		 */
 		// if( is_admin() || defined( 'LITESPEED_CLI' ) ) {
 		$plugin_file = LSCWP_DIR . 'litespeed-cache.php' ;
-		register_activation_hook( $plugin_file, array( 'LiteSpeed_Cache_Activation', 'register_activation' ) ) ;
-		register_deactivation_hook( $plugin_file, array('LiteSpeed_Cache_Activation', 'register_deactivation' ) ) ;
+		register_activation_hook( $plugin_file, [ 'LiteSpeed_Cache_Activation', 'register_activation' ] ) ;
+		register_deactivation_hook( $plugin_file, ['LiteSpeed_Cache_Activation', 'register_deactivation' ] ) ;
 		register_uninstall_hook( $plugin_file, 'LiteSpeed_Cache_Activation::uninstall_litespeed_cache' ) ;
 		// }
 
-		add_action( 'after_setup_theme', array( $this, 'init' ) ) ;
+		add_action( 'after_setup_theme', [ $this, 'init' ] ) ;
 
 		// Check if there is a purge request in queue
 		if ( $purge_queue = get_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ) {
@@ -186,8 +186,8 @@ class LiteSpeed_Cache
 			return ;
 		}
 
-		ob_start( array( $this, 'send_headers_force' ) ) ;
-		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
+		ob_start( [ $this, 'send_headers_force' ] ) ;
+		add_action( 'shutdown', [ $this, 'send_headers' ], 0 ) ;
 		add_action( 'wp_footer', 'LiteSpeed_Cache::footer_hook' ) ;
 
 		/**
@@ -236,7 +236,7 @@ class LiteSpeed_Cache
 		}
 
 		// Load 3rd party hooks
-		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 ) ;
+		add_action( 'wp_loaded', [ $this, 'load_thirdparty' ], 2 ) ;
 
 		// load litespeed actions
 		if ( $action = LiteSpeed_Cache_Router::get_action() ) {

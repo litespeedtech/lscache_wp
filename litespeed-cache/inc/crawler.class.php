@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Crawler
 		 * Read via wp func to avoid allow_url_fopen = off
 		 * @since  2.2.7
 		 */
-		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) ) ;
+		$response = wp_remote_get( $sitemap, [ 'timeout' => 15 ] ) ;
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Crawler
 			return true ;
 		}
 		// start parsing
-		$_urls = array() ;
+		$_urls = [] ;
 
 		$xml_array = (array)$xml_object ;
 		if ( !empty($xml_array['sitemap']) ) {// parse sitemap set
@@ -262,7 +262,7 @@ class LiteSpeed_Cache_Crawler
 		// use custom sitemap
 		if ( $sitemap = $this->_options[ LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ] ) {
 			$sitemap_urls = $this->parse_custom_sitemap( $sitemap ) ;
-			$urls = array() ;
+			$urls = [] ;
 			$offset = strlen( $this->_home_url ) ;
 			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
 				foreach ( $sitemap_urls as $val ) {
@@ -436,7 +436,7 @@ class LiteSpeed_Cache_Crawler
 		}
 		$current_crawler = $crawlers[ $curr_crawler_pos ] ;
 
-		$cookies = array() ;
+		$cookies = [] ;
 		/**
 		 * Set role simulation
 		 * @since 1.9.1
@@ -471,7 +471,7 @@ class LiteSpeed_Cache_Crawler
 		 * @since  1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
-			$crawler->set_headers( array( 'Accept: image/webp,*/*' ) ) ;
+			$crawler->set_headers( [ 'Accept: image/webp,*/*' ] ) ;
 		}
 
 		/**
@@ -525,19 +525,19 @@ class LiteSpeed_Cache_Crawler
 		 * 		...
 		 * 	]
 		 */
-		$crawler_factors = array() ;
+		$crawler_factors = [] ;
 
 		// Add default Guest crawler
-		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) ) ;
+		$crawler_factors[ 'uid' ] = [ 0 => __( 'Guest', 'litespeed-cache' ) ] ;
 
 		// WebP on/off
 		if ( LiteSpeed_Cache_Media::webp_enabled() ) {
-			$crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' ) ;
+			$crawler_factors[ 'webp' ] = [ 0 => '', 1 => 'WebP' ] ;
 		}
 
 		// Mobile crawler
 		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
-			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' ) ;
+			$crawler_factors[ 'mobile' ] = [ 0 => '', 1 => '<font title="Mobile">📱</font>' ] ;
 		}
 
 		// Get roles set
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Crawler
 
 			$this_cookie_key = 'cookie:' . $k ;
 
-			$crawler_factors[ $this_cookie_key ] = array() ;
+			$crawler_factors[ $this_cookie_key ] = [] ;
 
 			foreach ( explode( "\n", $v ) as $v2 ) {
 				$v2 = trim( $v2 ) ;
@@ -588,14 +588,14 @@ class LiteSpeed_Cache_Crawler
 	 * @since 2.8
 	 * @access private
 	 */
-	private function _recursive_build_crawler( $crawler_factors, $group = array(), $i = 0 )
+	private function _recursive_build_crawler( $crawler_factors, $group = [], $i = 0 )
 	{
 		$current_factor = array_keys( $crawler_factors ) ;
 		$current_factor = $current_factor[ $i ] ;
 
 		$if_touch_end = $i + 1 >= count( $crawler_factors ) ;
 
-		$final_list = array() ;
+		$final_list = [] ;
 
 		foreach ( $crawler_factors[ $current_factor ] as $k => $v ) {
 

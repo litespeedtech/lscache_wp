@@ -75,10 +75,10 @@ class LiteSpeed_Cache_Activation
 			// All .htaccess & OC related options are in site, so only need these options
 			$options = $__cfg->get_site_options() ;
 
-			$ids = array(
+			$ids = [
 				LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS,
 				LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
-			);
+			];
 			foreach ( $ids as $id ) {
 				$options[ $id ] = $__cfg->get_item( $id ) ;
 			}
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Activation
 	 * @param array $args Arguments to pass into get_sites/wp_get_sites.
 	 * @return array The array of blog ids.
 	 */
-	public static function get_network_ids( $args = array() )
+	public static function get_network_ids( $args = [] )
 	{
 		global $wp_version ;
 		if ( version_compare( $wp_version, '4.6', '<' ) ) {
@@ -172,10 +172,10 @@ class LiteSpeed_Cache_Activation
 			return intval( $count ) ;
 		}
 		// need to update
-		$default = array() ;
+		$default = [] ;
 		$count = 0 ;
 
-		$sites = self::get_network_ids( array( 'deleted' => 0 ) ) ;
+		$sites = self::get_network_ids( [ 'deleted' => 0 ] ) ;
 		if ( empty( $sites ) ) {
 			return false ;
 		}

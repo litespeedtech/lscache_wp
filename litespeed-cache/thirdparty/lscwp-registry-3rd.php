@@ -15,7 +15,7 @@ if ( ! defined('ABSPATH') ) {
     die() ;
 }
 
-$thirdparty_list = array(
+$thirdparty_list = [
 	'aelia-currencyswitcher',
 	'autoptimize',
 	'bbpress',
@@ -31,7 +31,7 @@ $thirdparty_list = array(
 	'avada',
 	'wp-postratings',
 	'divi-theme-builder',
-) ;
+] ;
 
 foreach ($thirdparty_list as $val) {
 	include_once(LSCWP_DIR . 'thirdparty/lscwp-3rd-' . $val . '.cls.php') ;

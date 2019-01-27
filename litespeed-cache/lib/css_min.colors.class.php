@@ -7,7 +7,7 @@ class Colors
     public static function getHexToNamedMap()
     {
         // Hex colors longer than named counterpart
-        return array(
+        return [
             '#f0ffff' => 'azure',
             '#f5f5dc' => 'beige',
             '#ffe4c4' => 'bisque',
@@ -40,13 +40,13 @@ class Colors
             '#ff6347' => 'tomato',
             '#ee82ee' => 'violet',
             '#f5deb3' => 'wheat'
-        );
+        ];
     }
 
     public static function getNamedToHexMap()
     {
         // Named colors longer than hex counterpart
-        return array(
+        return [
             'aliceblue' => '#f0f8ff',
             'antiquewhite' => '#faebd7',
             'aquamarine' => '#7fffd4',
@@ -150,6 +150,6 @@ class Colors
             'whitesmoke' => '#f5f5f5',
             'yellow' => '#ff0',
             'yellowgreen' => '#9acd32'
-        );
+        ];
     }
 }

@@ -13,7 +13,7 @@ $WP_DIR = $argv[2] ;
 */
 function cachedetect($plugin,$value){
 
-$cache_list = array(
+$cache_list = [
 "LiteSpeed Cache",
 "Gator Cache",
 "SG CachePress",
@@ -21,7 +21,7 @@ $cache_list = array(
 "WP Fastest Cache",
 "WP Super Cache",
 "ZenCache"
-);
+];
 
 $name = $plugin['Name'];
 

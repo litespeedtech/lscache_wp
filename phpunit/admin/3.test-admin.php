@@ -12,7 +12,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Function to invoke a Private method
 	 */
-	protected static function invokeMethod($className, $methodName, array $parameters = array()) 
+	protected static function invokeMethod($className, $methodName, array $parameters = []) 
     {
     	
          $reflectionClass = new ReflectionClass($className);
@@ -55,27 +55,27 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$instance = self::get_instance();
 		
 		//send priority by default 10
-		$enqueue_scripts = has_action( 'admin_enqueue_scripts', array( $instance,'enqueue_scripts' ) );
+		$enqueue_scripts = has_action( 'admin_enqueue_scripts', [ $instance,'enqueue_scripts' ] );
 		$this->assertEquals( 10, $enqueue_scripts );
 
 		//send priority by default 10
-		$enqueue_style = has_action( 'admin_print_styles-settings_page_litespeedcache', array( $instance,'enqueue_style' ) );
+		$enqueue_style = has_action( 'admin_print_styles-settings_page_litespeedcache', [ $instance,'enqueue_style' ] );
 		$this->assertEquals( 10, $enqueue_style );
 
 		//should return false as its not in network mode
-		$network_admin_menu = has_action( 'network_admin_menu', array( $instance,'register_admin_menu' ) );
+		$network_admin_menu = has_action( 'network_admin_menu', [ $instance,'register_admin_menu' ] );
 		$this->assertFalse($network_admin_menu);
 
 		//send priority by default 10
-		$admin_menu = has_action( 'admin_menu', array( $instance,'register_admin_menu' ));
+		$admin_menu = has_action( 'admin_menu', [ $instance,'register_admin_menu' ]);
 		$this->assertEquals( 10, $admin_menu );
 
 		//send priority by default 10
-		$admin_init = has_action( 'admin_init', array( $instance,'admin_init' ));
+		$admin_init = has_action( 'admin_init', [ $instance,'admin_init' ]);
 		$this->assertEquals( 10, $admin_init );
 
 		//send priority by default 10
-		$plugin_action_links = has_filter( 'plugin_action_links_root/tests/wp-content/plugins/litespeed-cache/litespeed-cache.php', array( $instance,'add_plugin_links' ));
+		$plugin_action_links = has_filter( 'plugin_action_links_root/tests/wp-content/plugins/litespeed-cache/litespeed-cache.php', [ $instance,'add_plugin_links' ]);
 		$this->assertEquals( 10, $plugin_action_links );
 	}
 
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$input = '';
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
-		$parameters = array($input, &$options);
+		$parameters = [$input, &$options];
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_enabled', $parameters);
       	$this->assertFalse($bool);		
 	}
@@ -124,7 +124,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		$input = '';
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
-		$parameters = array($input, &$options);
+		$parameters = [$input, &$options];
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_tag_prefix', $parameters);
       	$this->assertTrue($bool);		
 	}
@@ -138,9 +138,9 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 */
 	public function test_validate_ttl()
 	{
-		$input = array();
+		$input = [];
 		$id = '';
-		$parameters = array($input, $id);
+		$parameters = [$input, $id];
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin','validate_ttl', $parameters);
       	$this->assertFalse($bool);		
 	}
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 */
 	public function test_add_plugin_links()
 	{
-		$links = array();
+		$links = [];
 		$instance = self::get_instance();
         $array = $instance->add_plugin_links($links);
       	$this->assertNotEmpty($array);		
@@ -199,7 +199,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	public function test_parse_checkbox()
 	{
 		$id = '';
-		$input = array();
+		$input = [];
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
         $bool = LiteSpeed_Cache_Admin::parse_checkbox($id, $input, $options);

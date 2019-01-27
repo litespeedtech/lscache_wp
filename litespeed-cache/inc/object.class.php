@@ -112,8 +112,8 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_db = ! empty( $cfg[ 'object_cache' ][ 'db' ] ) ? $cfg[ 'object_cache' ][ 'db' ] : 0 ;
 			$this->_cfg_user = ! empty( $cfg[ 'object_cache' ][ 'user' ] ) ? $cfg[ 'object_cache' ][ 'user' ] : '' ;
 			$this->_cfg_pswd = ! empty( $cfg[ 'object_cache' ][ 'pswd' ] ) ? $cfg[ 'object_cache' ][ 'pswd' ] : '' ;
-			$this->_global_groups = ! empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : array() ;
-			$this->_non_persistent_groups = ! empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : array() ;
+			$this->_global_groups = ! empty( $cfg[ 'object_cache' ][ 'global_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'global_groups' ] ) : [] ;
+			$this->_non_persistent_groups = ! empty( $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) ? explode( ',', $cfg[ 'object_cache' ][ 'non_persistent_groups' ] ) : [] ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Object
 	 */
 	private function _is_transients_group( $group )
 	{
-		return in_array( $group, array( 'transient', 'site-transient' ) ) ;
+		return in_array( $group, [ 'transient', 'site-transient' ] ) ;
 	}
 
 	/**
@@ -547,7 +547,7 @@ class LiteSpeed_Cache_Object
 	public function add_global_groups( $groups )
 	{
 		if ( ! is_array( $groups ) ) {
-			$groups = array( $groups ) ;
+			$groups = [ $groups ] ;
 		}
 
 		$this->_global_groups = array_merge( $this->_global_groups, $groups ) ;
@@ -574,7 +574,7 @@ class LiteSpeed_Cache_Object
 	public function add_non_persistent_groups( $groups )
 	{
 		if ( ! is_array( $groups ) ) {
-			$groups = array( $groups ) ;
+			$groups = [ $groups ] ;
 		}
 
 		$this->_non_persistent_groups = array_merge( $this->_non_persistent_groups, $groups ) ;

@@ -87,7 +87,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	public static function get_summary()
 	{
-		return get_option( self::DB_CCSS_SUMMARY, array() ) ;
+		return get_option( self::DB_CCSS_SUMMARY, [] ) ;
 	}
 
 	/**
@@ -115,7 +115,7 @@ class LiteSpeed_Cache_CSS
 
 		// Clear CCSS in queue too
 		$req_summary = self::get_summary() ;
-		$req_summary[ 'queue' ] = array() ;
+		$req_summary[ 'queue' ] = [] ;
 		$req_summary[ 'curr_request' ] = 0 ;
 		$this->_save_summary( $req_summary ) ;
 
@@ -157,13 +157,13 @@ class LiteSpeed_Cache_CSS
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
 			if ( empty( $req_summary[ 'queue' ] ) ) {
-				$req_summary[ 'queue' ] = array() ;
+				$req_summary[ 'queue' ] = [] ;
 			}
-			$req_summary[ 'queue' ][ $ccss_type ] = array(
+			$req_summary[ 'queue' ][ $ccss_type ] = [
 				'url'			=> $request_url,
 				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
 				'is_mobile'		=> $this->_separate_mobile_ccss(),
-			) ;// Current UA will be used to request
+			] ;// Current UA will be used to request
 			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
 			$this->_save_summary( $req_summary ) ;
@@ -239,13 +239,13 @@ class LiteSpeed_Cache_CSS
 		$this->_save_summary( $req_summary ) ;
 
 		// Generate critical css
-		$data = array(
+		$data = [
 			'home_url'	=> home_url(),
 			'url'		=> $request_url,
 			'ccss_type'	=> $ccss_type,
 			'user_agent'	=> $user_agent,
 			'is_mobile'	=> $is_mobile ? 1 : 0,
-		) ;
+		] ;
 
 		LiteSpeed_Cache_Log::debug( '[CSS] Generating: ', $data ) ;
 
@@ -267,7 +267,7 @@ class LiteSpeed_Cache_CSS
 		$req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ] ;
 		$req_summary[ 'curr_request' ] = 0 ;
 		if ( empty( $req_summary[ 'ccss_type_history' ] ) ) {
-			$req_summary[ 'ccss_type_history' ] = array() ;
+			$req_summary[ 'ccss_type_history' ] = [] ;
 		}
 		$req_summary[ 'ccss_type_history' ][ $ccss_type ] = $request_url ;
 		unset( $req_summary[ 'queue' ][ $ccss_type ] ) ;

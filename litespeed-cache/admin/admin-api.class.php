@@ -217,7 +217,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function get( $action, $data = array(), $server = false )
+	public static function get( $action, $data = [], $server = false )
 	{
 		$instance = self::get_instance() ;
 
@@ -317,7 +317,7 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		// Ping closest cloud
-		$speed_list = array() ;
+		$speed_list = [] ;
 		foreach ( $json[ 'list' ] as $v ) {
 			$speed_list[ $v ] = LiteSpeed_Cache_Utility::ping( $v ) ;
 		}
@@ -380,7 +380,7 @@ class LiteSpeed_Cache_Admin_API
 
 		LiteSpeed_Cache_Log::debug( '[IAPI] getting from : ' . $url ) ;
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+		$response = wp_remote_get( $url, [ 'timeout' => 15 ] ) ;
 
 		// Parse response data
 		if ( is_wp_error( $response ) ) {
@@ -422,18 +422,18 @@ class LiteSpeed_Cache_Admin_API
 
 		LiteSpeed_Cache_Log::debug( '[IAPI] posting to : ' . $url ) ;
 
-		$param = array(
+		$param = [
 			'auth_key'	=> $this->_iapi_key,
 			'cloud'	=> $this->_iapi_cloud,
 			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
 			'hash'	=> $hash,
 			'data' => $data,
-		) ;
+		] ;
 		/**
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
 		 * @since 1.6.4
 		 */
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) ) ;
+		$response = wp_remote_post( $url, [ 'body' => $param, 'timeout' => $time_out ?: 15 ] ) ;
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;

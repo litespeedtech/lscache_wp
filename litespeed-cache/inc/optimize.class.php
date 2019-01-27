@@ -22,7 +22,7 @@ class LiteSpeed_Cache_Optimize
 	const LIB_FILE_WEBFONTLOADER = 'js/webfontloader.min.js' ;
 
 	private $content ;
-	private $http2_headers = array() ;
+	private $http2_headers = [] ;
 
 	private $cfg_http2_css ;
 	private $cfg_http2_js ;
@@ -41,7 +41,7 @@ class LiteSpeed_Cache_Optimize
 	private $cfg_ggfonts_rm ;
 
 	private $dns_prefetch ;
-	private $_ggfonts_urls = array() ;
+	private $_ggfonts_urls = [] ;
 
 	private $html_foot = '' ; // The html info append to <body>
 	private $html_head = '' ; // The html info prepend to <body>
@@ -73,12 +73,12 @@ class LiteSpeed_Cache_Optimize
 
 		// To remove emoji from WP
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ) {
-			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
+			add_action( 'init', [ $this, 'emoji_rm' ] ) ;
 		}
 
 		if ( $this->cfg_qs_rm ) {
-			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
-			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			add_filter( 'style_loader_src', [ $this, 'remove_query_strings' ], 999 ) ;
+			add_filter( 'script_loader_src', [ $this, 'remove_query_strings' ], 999 ) ;
 		}
 
 		// Check if there is any critical css rules setting
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Optimize
 		 * Add vary filter for Role Excludes
 		 * @since  1.6
 		 */
-		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+		add_filter( 'litespeed_vary', [ $this, 'vary_add_role_exclude' ] ) ;
 
 		/**
 		 * Prefetch DNS
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Optimize
 
 		$static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[ 1 ] ;
 
-		$headers = array() ;
+		$headers = [] ;
 		if ( $file_type === 'css' ) {
 			$headers[ 'Content-Type' ] = 'text/css; charset=utf-8' ;
 		}
@@ -445,10 +445,10 @@ class LiteSpeed_Cache_Optimize
 					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY ) ;
 
 					// separate head/foot js/raw html
-					$head_js = array() ;
-					$head_ignored_html = array() ;
-					$foot_js = array() ;
-					$foot_ignored_html = array() ;
+					$head_js = [] ;
+					$head_ignored_html = [] ;
+					$foot_js = [] ;
+					$foot_ignored_html = [] ;
 					foreach ( $src_queue_list as $k => $src ) {
 						if ( in_array( $src, $head_src_list ) ) {
 							$head_js[ $k ] = $src ;
@@ -627,7 +627,7 @@ class LiteSpeed_Cache_Optimize
 		 */
 		$html .='<script type="text/javascript">WebFontConfig={google:{families:[' ;
 
-		$families = array() ;
+		$families = [] ;
 		foreach ( $this->_ggfonts_urls as $v ) {
 			$qs = wp_specialchars_decode( $v ) ;
 			$qs = urldecode( $qs ) ;
@@ -676,10 +676,10 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		if ( function_exists( 'wp_resource_hints' ) ) {
-			add_filter( 'wp_resource_hints', array( $this, 'dns_prefetch_filter' ), 10, 2 ) ;
+			add_filter( 'wp_resource_hints', [ $this, 'dns_prefetch_filter' ], 10, 2 ) ;
 		}
 		else {
-			add_action( 'litespeed_optm', array( $this, 'dns_prefetch_output' ) ) ;
+			add_action( 'litespeed_optm', [ $this, 'dns_prefetch_output' ] ) ;
 		}
 	}
 
@@ -729,10 +729,10 @@ class LiteSpeed_Cache_Optimize
 	{
 		$total = 0 ;
 		$i = 0 ;
-		$src_arr = array() ;
+		$src_arr = [] ;
 		foreach ( $src_queue_list as $k => $v ) {
 
-			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = array() ;
+			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = [] ;
 
 			$src_arr[ $i ][] = $v ;
 
@@ -748,7 +748,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// group build
-		$hashed_arr = array() ;
+		$hashed_arr = [] ;
 		foreach ( $src_arr as $v ) {
 			$hashed_arr[] = $this->_build_hash_url( $v, $file_type ) ;
 		}
@@ -810,9 +810,9 @@ class LiteSpeed_Cache_Optimize
 		// 	$excludes = explode( "\n", $excludes ) ;
 		// }
 
-		$ignored_html = array() ;
-		$src_queue_list = array() ;
-		$file_size_list = array() ;
+		$ignored_html = [] ;
+		$src_queue_list = [] ;
+		$file_size_list = [] ;
 
 		// Analyse links
 		foreach ( $src_list as $key => $src ) {
@@ -862,7 +862,7 @@ class LiteSpeed_Cache_Optimize
 			$file_size_list[ $key ] = $file_info[ 1 ] ;
 		}
 
-		return array( $ignored_html, $src_queue_list, $file_size_list ) ;
+		return [ $ignored_html, $src_queue_list, $file_size_list ] ;
 	}
 
 	/**
@@ -879,13 +879,13 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		if ( ! is_array( $src ) ) {
-			$src = array( $src ) ;
+			$src = [ $src ] ;
 		}
 
 		$src = array_values( $src ) ;
 
 		// Drop query strings
-		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
+		$src = array_map( [ $this, 'remove_query_strings' ], $src ) ;
 
 		$purge_timestamp = get_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS ) ?: '' ;
 
@@ -943,9 +943,9 @@ class LiteSpeed_Cache_Optimize
 			$excludes = explode( "\n", $excludes ) ;
 		}
 
-		$src_list = array() ;
-		$html_list = array() ;
-		$head_src_list = array() ;
+		$src_list = [] ;
+		$html_list = [] ;
+		$head_src_list = [] ;
 
 		$content = preg_replace( '#<!--.*-->#sU', '', $this->content ) ;
 		preg_match_all( '#<script \s*([^>]+)>\s*</script>|</head>#isU', $content, $matches, PREG_SET_ORDER ) ;
@@ -991,7 +991,7 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
-		return array( $src_list, $html_list, $head_src_list ) ;
+		return [ $src_list, $html_list, $head_src_list ] ;
 	}
 
 	/**
@@ -1008,10 +1008,10 @@ class LiteSpeed_Cache_Optimize
 			$excludes = explode( "\n", $excludes ) ;
 		}
 
-		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() ) ;
+		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', [] ) ;
 
-		$src_list = array() ;
-		$html_list = array() ;
+		$src_list = [] ;
+		$html_list = [] ;
 
 		// $dom = new PHPHtmlParser\Dom ;
 		// $dom->load( $content ) ;return $val;
@@ -1079,7 +1079,7 @@ class LiteSpeed_Cache_Optimize
 			$html_list[] = $match[ 0 ] ;
 		}
 
-		return array( $src_list, $html_list ) ;
+		return [ $src_list, $html_list ] ;
 	}
 
 	/**

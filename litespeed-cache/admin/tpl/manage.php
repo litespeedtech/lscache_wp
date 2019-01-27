@@ -1,10 +1,10 @@
 <?php
 if (!defined('WPINC')) die;
 
-$menu_list = array(
+$menu_list = [
 	'purge' => __('Purge', 'litespeed-cache'),
 	'db' => __('DB Optimizer', 'litespeed-cache'),
-) ;
+] ;
 
 if ( ! is_network_admin() ) {
 	$menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;

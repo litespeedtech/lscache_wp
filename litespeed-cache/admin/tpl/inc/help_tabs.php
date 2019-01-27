@@ -2,7 +2,7 @@
 if (!defined('WPINC')) die;
 
 		$screen = get_current_screen();
-		$screen->add_help_tab(array(
+		$screen->add_help_tab([
 			'id'      => 'lsc-overview',
 			'title'   => __('Overview', 'litespeed-cache'),
 			'content' => '<p>'
@@ -10,7 +10,7 @@ if (!defined('WPINC')) die;
 				. __('This plugin communicates with LiteSpeed Web Server to let it know which pages are cacheable and when to purge them.', 'litespeed-cache')
 				. '</p><p>' . __('A LiteSpeed server (OLS, LSWS, WebADC) and its LSCache module must be installed and enabled.', 'litespeed-cache')
 				. '</p>',
-		));
+		]);
 
 //		$screen->add_help_tab(array(
 //			'id'      => 'lst-purgerules',

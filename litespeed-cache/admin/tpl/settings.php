@@ -1,7 +1,7 @@
 <?php
 if (!defined('WPINC')) die ;
 
-$menu_list = array(
+$menu_list = [
 	'general' => __('General', 'litespeed-cache'),
 	'cache' => __('Cache', 'litespeed-cache'),
 	'purge' => __('Purge', 'litespeed-cache'),
@@ -13,7 +13,7 @@ $menu_list = array(
 	'esi' => __('ESI', 'litespeed-cache'),
 	'advanced' => __('Advanced', 'litespeed-cache'),
 	'debug' => __('Debug', 'litespeed-cache'),
-) ;
+] ;
 
 if ($this->show_compatibility_tab()){
 	$menu_list['compatibilities'] = __('Compatibilities', 'litespeed-cache') ;
@@ -47,7 +47,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
  * @return mixed An array of third party configs else false on failure.
  */
 $tp_tabs = apply_filters('litespeed_cache_add_config_tab',
-	array(),
+	[],
 	$_options,
 	LiteSpeed_Cache_Config::OPTION_NAME,
 	$this->get_disable_all()
@@ -67,7 +67,7 @@ if ( !empty($tp_tabs) && is_array($tp_tabs) ) {
 	}
 }
 else {
-	$tp_tabs = array() ;
+	$tp_tabs = [] ;
 }
 
 /**
@@ -79,7 +79,7 @@ if ( !isset( $wp_roles ) ) {
 	$wp_roles = new WP_Roles() ;
 }
 
-$roles = array() ;
+$roles = [] ;
 foreach ( $wp_roles->roles as $k => $v ) {
 	$roles[ $k ] = $v[ 'name' ] ;
 }
@@ -97,11 +97,11 @@ else {
 	$adv_mode = get_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE ) ;
 }
 
-$hide_tabs = array() ;
+$hide_tabs = [] ;
 $_hide_in_basic_mode = '' ;
 
 if ( ! $adv_mode ) {
-	$hide_tabs = array(
+	$hide_tabs = [
 		'optimize',
 		'tuning',
 		'media',
@@ -110,7 +110,7 @@ if ( ! $adv_mode ) {
 		'advanced',
 		'debug',
 		'crawler',
-	) ;
+	] ;
 
 	$_hide_in_basic_mode = 'class="litespeed-hide"' ;
 }
@@ -130,7 +130,7 @@ if ( ! $adv_mode ) {
 	<h2 class="litespeed-header">
 	<?php
 		$i = 1 ;
-		$accesskey_set = array() ;
+		$accesskey_set = [] ;
 		foreach ($menu_list as $tab => $val){
 			if ( in_array( $tab, $hide_tabs ) ) {
 				continue ;
@@ -205,7 +205,7 @@ if ( ! $adv_mode ) {
 	echo "<div class='litespeed-top20'></div>" ;
 
 	if ( $this->get_disable_all() ) {
-		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit', true, array('disabled' => true)) ;
+		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit', true, ['disabled' => true]) ;
 	}
 	else {
 		submit_button(__('Save Changes', 'litespeed-cache'), 'litespeed-btn-success', 'litespeed-submit') ;

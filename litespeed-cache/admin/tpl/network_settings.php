@@ -1,14 +1,14 @@
 <?php
 if (!defined('WPINC')) die;
 
-$menuArr = array(
+$menuArr = [
 	'general' => __('General', 'litespeed-cache'),
 	'cache' => __('Cache', 'litespeed-cache'),
 	'purge' => __('Purge', 'litespeed-cache'),
 	'excludes' => __('Excludes', 'litespeed-cache'),
 	'media' => __('Media', 'litespeed-cache'),
 	'advanced' => __('Advanced', 'litespeed-cache'),
-);
+];
 
 global $_options;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();

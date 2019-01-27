@@ -21,7 +21,7 @@ class LiteSpeed_Cache_ESI
 
 	private static $has_esi = false ;
 	private $esi_args = null ;
-	private $_esi_preserve_list = array() ;
+	private $_esi_preserve_list = [] ;
 
 	const QS_ACTION = 'lsesi' ;
 	const POSTTYPE = 'lswcp' ;
@@ -77,7 +77,7 @@ class LiteSpeed_Cache_ESI
 		 * @since  2.8.1 Check is_admin for Elementor compatibility #726013
 		 */
 		if ( ! is_admin() ) {
-			add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
+			add_shortcode( 'esi', [ $this, 'shortcode' ] ) ;
 		}
 	}
 
@@ -158,12 +158,12 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function register_esi_actions()
 	{
-		add_action('litespeed_cache_load_esi_block-widget', array($this, 'load_widget_block')) ;
-		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
-		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
+		add_action('litespeed_cache_load_esi_block-widget', [$this, 'load_widget_block']) ;
+		add_action('litespeed_cache_load_esi_block-admin-bar', [$this, 'load_admin_bar_block']) ;
+		add_action('litespeed_cache_load_esi_block-comment-form', [$this, 'load_comment_form_block']) ;
 
-		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
-		add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
+		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', [ $this, 'load_nonce_block' ] ) ;
+		add_action('litespeed_cache_load_esi_block-esi', [ $this, 'load_esi_shortcode' ] ) ;
 	}
 
 	/**
@@ -185,17 +185,17 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
+		add_filter('widget_display_callback', [$this, 'sub_widget_block'], 0, 3) ;
 
 		// Add admin_bar esi
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
 			remove_action('wp_footer', 'wp_admin_bar_render', 1000) ;
-			add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000) ;
+			add_action('wp_footer', [$this, 'sub_admin_bar_block'], 1000) ;
 		}
 
 		// Add comment forum esi for logged-in user or commenter
 		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
-			add_filter( 'comment_form_defaults', array( $this, 'register_comment_form_actions' ) ) ;
+			add_filter( 'comment_form_defaults', [ $this, 'register_comment_form_actions' ] ) ;
 		}
 
 	}
@@ -217,7 +217,7 @@ class LiteSpeed_Cache_ESI
 	 * @param bool $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
 	 * @return bool|string    	False on error, the output otherwise.
 	 */
-	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+	public static function sub_esi_block( $block_id, $wrapper, $params = [], $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
 	{
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
@@ -446,12 +446,12 @@ class LiteSpeed_Cache_ESI
 
 		$esi_private = $options[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ? 'private,' : '' ;
 
-		$params = array(
+		$params = [
 			self::PARAM_NAME => $name,
 			self::PARAM_ID => $widget->id,
 			self::PARAM_INSTANCE => $instance,
 			self::PARAM_ARGS => $args
-		) ;
+		] ;
 
 		echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
 		return false ;
@@ -474,9 +474,9 @@ class LiteSpeed_Cache_ESI
 		}
 
 		// To make each admin bar ESI request different for `Edit` button different link
-		$params = array(
+		$params = [
 			'ref' => $_SERVER[ 'REQUEST_URI' ],
-		) ;
+		] ;
 
 		echo self::sub_esi_block( 'admin-bar', 'adminbar', $params ) ;
 	}
@@ -611,7 +611,7 @@ class LiteSpeed_Cache_ESI
 
 		// Replace to original shortcode
 		$shortcode = $params[ 0 ] ;
-		$atts_ori = array() ;
+		$atts_ori = [] ;
 		foreach ( $params as $k => $v ) {
 			if ( $k === 0 ) {
 				continue ;
@@ -641,7 +641,7 @@ class LiteSpeed_Cache_ESI
 	{
 		$this->esi_args = $defaults ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
+		add_filter( 'comment_form_submit_button', [ $this, 'sub_comment_form_block' ], 1000, 2 ) ;// Needs to get param from this hook and generate esi block
 		return $defaults ;
 	}
 
@@ -663,7 +663,7 @@ class LiteSpeed_Cache_ESI
 			LiteSpeed_Cache_Log::debug( 'comment form args empty?' ) ;
 			return $unused ;
 		}
-		$esi_args = array() ;
+		$esi_args = [] ;
 
 		// compare current args with default ones
 		foreach ( $args as $k => $v ) {
@@ -683,14 +683,14 @@ class LiteSpeed_Cache_ESI
 
 		echo LiteSpeed_Cache_GUI::clean_wrapper_end() ;
 		global $post ;
-		$params = array(
+		$params = [
 			self::PARAM_ID => $post->ID,
 			self::PARAM_ARGS => $esi_args,
-		) ;
+		] ;
 
 		echo self::sub_esi_block( 'comment-form', 'comment form', $params ) ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-		add_action( 'comment_form_after', array( $this, 'comment_form_sub_clean' ) ) ;
+		add_action( 'comment_form_after', [ $this, 'comment_form_sub_clean' ] ) ;
 		return $unused ;
 	}
 

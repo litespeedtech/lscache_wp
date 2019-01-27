@@ -39,9 +39,9 @@ class LiteSpeed_Cache_Admin
 		$this->config = LiteSpeed_Cache_Config::get_instance() ;
 
 		// initialize admin actions
-		add_action( 'admin_init', array( $this, 'admin_init' ) ) ;
+		add_action( 'admin_init', [ $this, 'admin_init' ] ) ;
 		// add link to plugin list page
-		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, array( $this->display, 'add_plugin_links' ) ) ;
+		add_filter( 'plugin_action_links_' . LSCWP_BASENAME, [ $this->display, 'add_plugin_links' ] ) ;
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Admin
 			}
 			foreach ( $purge_all_events as $event ) {
 				// Don't allow hook to update_option bcos purge_all will cause infinite loop of update_option
-				if ( in_array( $event, array( 'update_option' ) ) ) {
+				if ( in_array( $event, [ 'update_option' ] ) ) {
 					continue ;
 				}
 				add_action( $event, 'LiteSpeed_Cache_Purge::purge_all' ) ;
@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Admin
 		// NOTE: cli will call `validate_plugin_settings` manually. Cron activation doesn't need to validate
 		global $pagenow ;
 		if ( ! is_network_admin() && $pagenow === 'options.php' ) {
-			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, array(LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings')) ;
+			register_setting(LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, [LiteSpeed_Cache_Admin_Settings::get_instance(), 'validate_plugin_settings']) ;
 		}
 
 		// Add privacy policy
@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Admin
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
 		if ( LiteSpeed_Cache_Router::esi_enabled() ) {
-			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
+			add_action( 'in_widget_form', [ $this->display, 'show_widget_edit' ], 100, 3 ) ;
 			add_filter( 'widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4 ) ;
 		}
 

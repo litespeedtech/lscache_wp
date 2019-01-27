@@ -36,7 +36,7 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	public function html_min( $content )
 	{
-		$options = array() ;
+		$options = [] ;
 		if ( $this->cfg_css_inline_minify ) {
 			$options[ 'cssMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_css' ;
 		}
@@ -85,7 +85,7 @@ class LiteSpeed_Cache_Optimizer
 		}
 
 		// Parse real file path
-		$real_files = array() ;
+		$real_files = [] ;
 		foreach ( $urls as $url ) {
 			$real_file = LiteSpeed_Cache_Utility::is_internal_file( $url ) ;
 			if ( ! $real_file ) {
@@ -148,7 +148,7 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	private function _serve_css( $files, $concat_only = false )
 	{
-		$con = array() ;
+		$con = [] ;
 		foreach ( $files as $real_path ) {
 			LiteSpeed_Cache_Log::debug2( '[Optmer] [real_path] ' . $real_path ) ;
 			$data = Litespeed_File::read( $real_path ) ;
@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	private function _serve_js( $files, $concat_only )
 	{
-		$con = array() ;
+		$con = [] ;
 		foreach ( $files as $real_path ) {
 			$data = Litespeed_File::read( $real_path ) ;
 
@@ -277,23 +277,23 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	private function _remove_comment( $content, $type )
 	{
-		$_from = array(
+		$_from = [
 			'|\/\*.*\*\/|U',
 			'|\/\*.*\*\/|sU',
 			"|\n+|",
 			// "|;+\n*;+|",
 			// "|\n+;|",
 			// "|;\n+|"
-		) ;
+		] ;
 
-		$_to = array(
+		$_to = [
 			'',
 			"\n",
 			"\n",
 			// ';',
 			// ';',
 			// ';',
-		) ;
+		] ;
 
 		$content = preg_replace( $_from, $_to, $content ) ;
 		if ( $type == 'css' ) {

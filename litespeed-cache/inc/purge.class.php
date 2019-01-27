@@ -14,8 +14,8 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Purge
 {
 	private static $_instance ;
-	protected $_pub_purge = array() ;
-	protected $_priv_purge = array() ;
+	protected $_pub_purge = [] ;
+	protected $_priv_purge = [] ;
 	protected $_purge_related = false ;
 	protected $_purge_single = false ;
 
@@ -43,14 +43,14 @@ class LiteSpeed_Cache_Purge
 	private function __construct()
 	{
 		//register purge actions
-		$purge_post_events = array(
+		$purge_post_events = [
 			'edit_post',
 			'save_post',
 			'deleted_post',
 			'trashed_post',
 			'delete_attachment',
 			// 'clean_post_cache', // This will disable wc's not purge product when stock status not change setting
-		) ;
+		] ;
 		foreach ( $purge_post_events as $event ) {
 			// this will purge all related tags
 			add_action( $event, 'LiteSpeed_Cache_Purge::purge_post', 10, 2 ) ;
@@ -322,7 +322,7 @@ class LiteSpeed_Cache_Purge
 	private function _add( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = [ $tags ] ;
 		}
 		if ( ! array_diff( $tags, $this->_pub_purge ) ) {
 			return ;
@@ -366,7 +366,7 @@ class LiteSpeed_Cache_Purge
 	private function _add_private( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = [ $tags ] ;
 		}
 		if ( ! array_diff( $tags, $this->_priv_purge ) ) {
 			return ;
@@ -474,7 +474,7 @@ class LiteSpeed_Cache_Purge
 	{
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_ERROR ) ;
 
-		if ( ! $type || ! in_array( $type, array( '403', '404', '500' ) ) ) {
+		if ( ! $type || ! in_array( $type, [ '403', '404', '500' ] ) ) {
 			return ;
 		}
 
@@ -642,7 +642,7 @@ class LiteSpeed_Cache_Purge
 				LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD) ;
 				return ;
 		}
-		array_walk( $list, array( $this, $cb ) ) ;
+		array_walk( $list, [ $this, $cb ] ) ;
 
 		// for redirection
 		$_GET[ LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT ] = $sel ;
@@ -662,7 +662,7 @@ class LiteSpeed_Cache_Purge
 	{
 		$post_id = intval($id) ;
 		// ignore the status we don't care
-		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private', 'draft' )) ) {
+		if ( ! in_array(get_post_status($post_id), [ 'publish', 'trash', 'private', 'draft' ]) ) {
 			return ;
 		}
 
@@ -860,7 +860,7 @@ class LiteSpeed_Cache_Purge
 		$curr_bid = get_current_blog_id() ;
 
 		if ( ! in_array('*', $purge_tags) ) {
-			$tags = array() ;
+			$tags = [] ;
 			foreach ($purge_tags as $val) {
 				$tags[] = LSWCP_TAG_PREFIX . $curr_bid . '_' . $val ;
 			}
@@ -868,7 +868,7 @@ class LiteSpeed_Cache_Purge
 		}
 
 		if ( defined('LSWCP_EMPTYCACHE') || $is_private ) {
-			return array('*') ;
+			return ['*'] ;
 		}
 
 		// Would only use multisite and network admin except is_network_admin
@@ -881,14 +881,14 @@ class LiteSpeed_Cache_Purge
 				LiteSpeed_Cache_Log::debug('[Purge] build_purge_headers: blog list is empty') ;
 				return '' ;
 			}
-			$tags = array() ;
+			$tags = [] ;
 			foreach ($blogs as $blog_id) {
 				$tags[] = LSWCP_TAG_PREFIX . $blog_id . '_' ;
 			}
 			return $tags ;
 		}
 		else {
-			return array(LSWCP_TAG_PREFIX . $curr_bid . '_') ;
+			return [LSWCP_TAG_PREFIX . $curr_bid . '_'] ;
 		}
 	}
 
@@ -910,12 +910,12 @@ class LiteSpeed_Cache_Purge
 		// If this is a valid post we want to purge the post, the home page and any associated tags & cats
 		// If not, purge everything on the site.
 
-		$purge_tags = array() ;
+		$purge_tags = [] ;
 		$config = LiteSpeed_Cache_Config::get_instance() ;
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES) ) {
 			// ignore the rest if purge all
-			return array( '*' ) ;
+			return [ '*' ] ;
 		}
 
 		// now do API hook action for post purge

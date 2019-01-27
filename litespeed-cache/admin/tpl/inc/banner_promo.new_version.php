@@ -70,7 +70,7 @@ if ( $check_only ) {
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
-						$cfg = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE . ']' => 1 ) ;
+						$cfg = [ LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE . ']' => 1 ] ;
 						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CFG, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
 					?>
 					<a href="<?php echo $url ; ?>" class="litespeed-btn-primary litespeed-btn-mini">
@@ -79,7 +79,7 @@ if ( $check_only ) {
 					</a>
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
-					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo.new_version' ) ) ; ?>
+					<?php $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, [ 'promo_tag' => 'banner_promo.new_version' ] ) ; ?>
 					<a href="<?php echo $url ; ?>" class="litespeed-btn-warning litespeed-btn-mini">
 						 <?php echo __( 'Maybe Later', 'litespeed-cache' ) ; ?>
 					</a>
@@ -89,7 +89,7 @@ if ( $check_only ) {
 	</div>
 
 	<div>
-		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo.new_version', 'later' => 1 ) ) ; ?>
+		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, [ 'promo_tag' => 'banner_promo.new_version', 'later' => 1 ] ) ; ?>
 		<span class="screen-reader-text">Dismiss this notice.</span>
 		<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
 	</div>

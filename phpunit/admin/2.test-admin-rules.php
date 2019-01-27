@@ -12,7 +12,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Function to invoke a Private method
 	 */
-	protected static function invokeMethod($className, $methodName, array $parameters = array()) 
+	protected static function invokeMethod($className, $methodName, array $parameters = []) 
 
     {
          $reflectionClass = new ReflectionClass($className);
@@ -90,7 +90,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	{
 		$wrapper = 'Test Wrapper';
 		$end = '>';
-		$parameters = array($wrapper, &$end);
+		$parameters = [$wrapper, &$end];
 		$msg = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','build_wrappers', $parameters);
       	$bool = self::isString($msg);
       	$this->assertTrue($bool);				
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$stop_path = '';
 		$start_path = '';
 		$file = '';
-		$parameters = array($stop_path, $start_path, $file);
+		$parameters = [$stop_path, $start_path, $file];
 		$msg = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','path_search', $parameters);
       	$bool = self::isString($msg);
       	$this->assertTrue($bool);				
@@ -173,7 +173,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$content = '';
 		$buf = '';
 		$after = '';
-		$parameters = array($content, &$buf, &$after);
+		$parameters = [$content, &$buf, &$after];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','file_split', $parameters);
       	$this->assertNull($bool);						
 	}
@@ -192,7 +192,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$haystack = '';
 		$after = '';
 		$path = '';
-		$parameters = array($beginning, $haystack, $after, $path);
+		$parameters = [$beginning, $haystack, $after, $path];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','file_combine', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -205,7 +205,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	public function h_test_file_backup()
 	{
 		$path = '/root/tests/readme.html';
-		$parameters = array($path);
+		$parameters = [$path];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','file_backup', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -224,7 +224,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$cleanup = false;
 		$path = '/root/tests/readme.html';
 		$backup = false;
-		$parameters = array($content, $cleanup, $path, $backup);
+		$parameters = [$content, $cleanup, $path, $backup];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','file_save', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -250,7 +250,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$match = '';
 		$env = '';
 		$flag = '';
-		$parameters = array($content, &$output, $wrapper, $cond, $match, $env, $flag);
+		$parameters = [$content, &$output, $wrapper, $cond, $match, $env, $flag];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_common_rule', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -290,7 +290,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$match = '';
 		$sub = '';
 		$env = '';
-		$parameters = array($content, &$output, $wrapper, $match, $sub, $env);
+		$parameters = [$content, &$output, $wrapper, $match, $sub, $env];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_rewrite_rule', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -328,7 +328,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$action = true;
 		$output = '';
 		$errors = '';
-		$parameters = array($haystack, $action, &$output, &$errors);
+		$parameters = [$haystack, $action, &$output, &$errors];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_favicon', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -349,7 +349,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$set = true;
 		$output = '';
 		$errors = '';
-		$parameters = array($haystack, $set, &$output, &$errors);
+		$parameters = [$haystack, $set, &$output, &$errors];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_cache_resource', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -365,8 +365,8 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
-		$input = array();
-		$errors = array();
+		$input = [];
+		$errors = [];
 		$bool = LiteSpeed_Cache_Admin_Rules::get_instance()->check_input( $options, $input, $errors);
       	$this->assertNotNull($bool);						
 	}
@@ -383,7 +383,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	public function test_check_rewrite()
 	{
 		$rules = '';
-		$parameters = array($rules);
+		$parameters = [$rules];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','check_rewrite', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -400,7 +400,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$ret = '';
 		$haystack = '';
 		$errors = '';
-		$parameters = array($ret, &$haystack, &$errors);
+		$parameters = [$ret, &$haystack, &$errors];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','parse_ret', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -420,7 +420,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$haystack = '';
 		$buf = '';
 		$errors = '';
-		$parameters = array($diff, &$haystack, &$buf, &$errors);
+		$parameters = [$diff, &$haystack, &$buf, &$errors];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_subdir_cookie', $parameters);
       	$this->assertNotNull($bool);						
 	}
@@ -440,7 +440,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 		$sub = '';
 		$flag = '';
 		$content = '';
-		$parameters = array($wrapper, $match, $sub, $flag, &$content);
+		$parameters = [$wrapper, $match, $sub, $flag, &$content];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','set_on_upgrade', $parameters);
       	$this->assertNull($bool);						
 	}
@@ -456,7 +456,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	public function test_parse_existing_login_cookie()
 	{
 		$content = '';
-		$parameters = array(&$content);
+		$parameters = [&$content];
 		$bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','parse_existing_login_cookie', $parameters);
       	$this->assertNotNull($bool);						
 	}

@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Const
 	 */
 	public function stored_items()
 	{
-		return array(
+		return [
 			self::OPTION_NAME,
 			self::VARY_GROUP,
 			self::EXCLUDE_OPTIMIZATION_ROLES,
@@ -269,7 +269,7 @@ class LiteSpeed_Cache_Const
 			self::ITEM_MEDIA_WEBP_ATTRIBUTE,
 			self::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE,
 			self::ITEM_OPTM_CCSS_SEPARATE_URI,
-		) ;
+		] ;
 	}
 
 	/**
@@ -301,16 +301,16 @@ class LiteSpeed_Cache_Const
 				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
 				 */
 				if ( $item == self::ITEM_CDN_MAPPING ) {
-					$mapping_fields = array(
+					$mapping_fields = [
 						self::ITEM_CDN_MAPPING_URL,
 						self::ITEM_CDN_MAPPING_INC_IMG,
 						self::ITEM_CDN_MAPPING_INC_CSS,
 						self::ITEM_CDN_MAPPING_INC_JS,
 						self::ITEM_CDN_MAPPING_FILETYPE
-					) ;
-					$cdn_mapping = array() ;
+					] ;
+					$cdn_mapping = [] ;
 					foreach ( $default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
-						$this_row = array() ;
+						$this_row = [] ;
 						foreach ( $mapping_fields as $v2 ) {
 							$this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;
 						}
@@ -366,7 +366,7 @@ class LiteSpeed_Cache_Const
 	 */
 	protected function get_default_site_options()
 	{
-		$default_site_options = array(
+		$default_site_options = [
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::NETWORK_OPID_ENABLED => false,
 			self::NETWORK_OPID_USE_PRIMARY => false,
@@ -394,7 +394,7 @@ class LiteSpeed_Cache_Const
 			self::ID_NOCACHE_COOKIES => '',
 			self::ID_NOCACHE_USERAGENTS => '',
 			self::OPT_MEDIA_WEBP_REPLACE => false,
-		) ;
+		] ;
 		return $default_site_options ;
 	}
 
@@ -408,7 +408,7 @@ class LiteSpeed_Cache_Const
 	 */
 	public function get_default_options($include_thirdparty = true)
 	{
-		$default_purge_options = array(
+		$default_purge_options = [
 			self::PURGE_FRONT_PAGE,
 			self::PURGE_HOME_PAGE,
 			self::PURGE_PAGES,
@@ -417,7 +417,7 @@ class LiteSpeed_Cache_Const
 			self::PURGE_MONTH,
 			self::PURGE_TERM,
 			self::PURGE_POST_TYPE,
-		) ;
+		] ;
 		sort($default_purge_options) ;
 
 		//For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
@@ -428,7 +428,7 @@ class LiteSpeed_Cache_Const
 			$default_radio = 1 ;
 		}
 
-		$default_options = array(
+		$default_options = [
 			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::OPID_ENABLED_RADIO => $default_radio,
 			self::OPT_AUTO_UPGRADE => false,
@@ -560,7 +560,7 @@ class LiteSpeed_Cache_Const
 			self::CRWL_DOMAIN_IP => '',
 			self::CRWL_CUSTOM_SITEMAP => '',
 			self::CRWL_CRON_ACTIVE => false,
-		) ;
+		] ;
 
 		if ( LSWCP_ESI_SUPPORT ) {
 			$default_options[self::OPID_ESI_ENABLE] = false ;
@@ -611,7 +611,7 @@ class LiteSpeed_Cache_Const
 	 */
 	public function server_vars()
 	{
-		$consts = array(
+		$consts = [
 			'WP_SITEURL',
 			'WP_HOME',
 			'WP_CONTENT_DIR',
@@ -626,8 +626,8 @@ class LiteSpeed_Cache_Const
 			'LITESPEED_ON',
 			'LITESPEED_ON_IN_SETTING',
 			'LSCACHE_ADV_CACHE',
-		) ;
-		$server_vars = array() ;
+		] ;
+		$server_vars = [] ;
 		foreach ( $consts as $v ) {
 			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
 		}
@@ -646,7 +646,7 @@ class LiteSpeed_Cache_Const
 	 */
 	public function get_thirdparty_options($options = null)
 	{
-		$tp_options = apply_filters('litespeed_cache_get_options', array()) ;
+		$tp_options = apply_filters('litespeed_cache_get_options', []) ;
 		if ( empty($tp_options) ) {
 			return false ;
 		}

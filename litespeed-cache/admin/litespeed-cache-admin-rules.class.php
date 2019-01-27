@@ -78,12 +78,12 @@ class LiteSpeed_Cache_Admin_Rules
 			$this->frontend_htaccess_writable = true ;
 		}
 
-		self::$LS_MODULE_REWRITE_ON = array(
+		self::$LS_MODULE_REWRITE_ON = [
 			self::REWRITE_ON,
 			"CacheLookup on",
 			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
 			"RewriteRule ^min/\w+\.(css|js) - [E=cache-control:no-vary]",
-		) ;
+		] ;
 
 		// backend .htaccess privilege
 		if ( $this->frontend_htaccess === $this->backend_htaccess ) {
@@ -407,7 +407,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 		$rule = trim($rules[0]) ;
 		$pattern = '/RewriteCond\s%{HTTP_USER_AGENT}\s+([^[\n]*)\s+[[]*/' ;
-		$matches = array() ;
+		$matches = [] ;
 		$num_matches = preg_match($pattern, $rule, $matches) ;
 		if ( $num_matches === false ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match') ;
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_Admin_Rules
 		 */
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL ;
 		$ttl = $cfg[ $id ] ;
-		$rules = array(
+		$rules = [
 			self::EXPIRES_MODULE_START,
 			// '<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
 				'ExpiresActive on',
@@ -527,7 +527,7 @@ class LiteSpeed_Cache_Admin_Rules
 				'',
 			// '</FilesMatch>',
 			self::LS_MODULE_END,
-		) ;
+		] ;
 		return $rules ;
 	}
 
@@ -540,14 +540,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function _minify_rules()
 	{
-		$rules = array(
+		$rules = [
 			self::LS_MODULE_REWRITE_START,
 				self::REWRITE_ON,
 				'RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} ^(.*)/min/(\w+)\.(css|js)$',
 				'RewriteCond %1/' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 -f',
 				'RewriteRule min/(\w+)\.(css|js) ' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 [L]',
 			self::LS_MODULE_END,
-		) ;
+		] ;
 		return $rules ;
 	}
 
@@ -560,13 +560,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function _cors_rules()
 	{
-		return array(
+		return [
 			'<FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font\.css)$">',
 				'<IfModule mod_headers.c>',
 					'Header set Access-Control-Allow-Origin "*"',
 				'</IfModule>',
 			'</FilesMatch>',
-		) ;
+		] ;
 	}
 
 	/**
@@ -579,10 +579,10 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function _generate_rules( $cfg, $disable_lscache_detail_rules = false )
 	{
-		$new_rules = array() ;
-		$new_rules_nonls = array() ;
-		$new_rules_backend = array() ;
-		$new_rules_backend_nonls = array() ;
+		$new_rules = [] ;
+		$new_rules_nonls = [] ;
+		$new_rules_backend = [] ;
+		$new_rules_backend_nonls = [] ;
 
 		if ( ! $disable_lscache_detail_rules ) {
 			// mobile agents
@@ -637,7 +637,7 @@ class LiteSpeed_Cache_Admin_Rules
 				}
 			}
 
-			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', array() ) ;
+			$tp_cookies = apply_filters( 'litespeed_cache_api_vary', [] ) ;
 			if ( ! empty( $tp_cookies ) && is_array( $tp_cookies ) ) {
 				if ( ! empty( $cfg[ $id ] ) ) {
 					$cfg[ $id ] .= ',' . implode( ',', $tp_cookies ) ;
@@ -726,7 +726,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules_backend = $this->_wrap_ls_module( $new_rules_backend ) ;
 		}
 
-		return array( $new_rules, $new_rules_backend, $new_rules_nonls, $new_rules_backend_nonls ) ;
+		return [ $new_rules, $new_rules_backend, $new_rules_nonls, $new_rules_backend_nonls ] ;
 	}
 
 	/**
@@ -735,14 +735,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since  2.1.1
 	 * @access private
 	 */
-	private function _wrap_ls_module( $rules = array() )
+	private function _wrap_ls_module( $rules = [] )
 	{
 		return array_merge(
-			array( self::LS_MODULE_START ),
+			[ self::LS_MODULE_START ],
 			self::$LS_MODULE_REWRITE_ON,
-			array( '' ),
+			[ '' ],
 			$rules,
-			array( self::LS_MODULE_END )
+			[ self::LS_MODULE_END ]
 		) ;
 	}
 
@@ -773,9 +773,9 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$rules = array_merge(
-			array( self::LS_MODULE_DONOTEDIT ),
+			[ self::LS_MODULE_DONOTEDIT ],
 			$rules,
-			array( self::LS_MODULE_DONOTEDIT )
+			[ self::LS_MODULE_DONOTEDIT ]
 		) ;
 
 		return $rules ;
@@ -789,7 +789,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array $rules
 	 * @param  string $kind  which htaccess
 	 */
-	private function _insert_wrapper( $rules = array(), $kind = false, $marker = false )
+	private function _insert_wrapper( $rules = [], $kind = false, $marker = false )
 	{
 		if ( $kind === false ) {
 			$kind = 'frontend' ;
@@ -839,7 +839,7 @@ class LiteSpeed_Cache_Admin_Rules
 			if ( ! $this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ) {
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
-				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				return [ LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ] ;
 			}
 		}
 
@@ -850,7 +850,7 @@ class LiteSpeed_Cache_Admin_Rules
 			if ( ! $this->_insert_wrapper( $frontend_rules ) ) {
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
-				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				return [ LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ] ;
 			}
 		}
 
@@ -864,7 +864,7 @@ class LiteSpeed_Cache_Admin_Rules
 				if ( ! $this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
-					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+					return [ LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ] ;
 				}
 			}
 
@@ -875,7 +875,7 @@ class LiteSpeed_Cache_Admin_Rules
 				if ( ! $this->_insert_wrapper( $backend_rules, 'backend' ) ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
-					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+					return [ LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ] ;
 				}
 			}
 		}
@@ -902,7 +902,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
 		$rules_nonls = Litespeed_File::extract_from_markers( $path, self::MARKER_NONLS ) ;
 
-		return array( $rules, $rules_nonls ) ;
+		return [ $rules, $rules_nonls ] ;
 	}
 
 	/**
@@ -938,9 +938,9 @@ class LiteSpeed_Cache_Admin_Rules
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 		$new_file_data = implode( "\n", array_merge(
-			array( $start_marker ),
+			[ $start_marker ],
 			$this->_wrap_do_no_edit($rules),
-			array( $end_marker )
+			[ $end_marker ]
 		) ) ;
 
 		return $new_file_data ;

@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Utility
 		// Check latest stable version allowed to upgrade
 		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+		$response = wp_remote_get( $url, [ 'timeout' => 15 ] ) ;
 		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
 			return false ;
 		}
@@ -280,7 +280,7 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function parse_attr( $str )
 	{
-		$attrs = array() ;
+		$attrs = [] ;
 		preg_match_all( '#([\w-]+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER ) ;
 		foreach ( $matches as $match ) {
 			$attrs[ $match[ 1 ] ] = trim( $match[ 2 ] ) ;
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_Utility
 
 		if ( $hit ) {
 			if ( $has_ttl ) {
-				return array( $hit, $this_ttl ) ;
+				return [ $hit, $this_ttl ] ;
 			}
 
 			return $hit ;
@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Utility
 		$home_url = get_home_url( is_multisite() ? get_current_blog_id() : null ) ;
 
 		self::compatibility() ;
-		$domain = http_build_url( $home_url, array(), HTTP_URL_STRIP_ALL ) ;
+		$domain = http_build_url( $home_url, [], HTTP_URL_STRIP_ALL ) ;
 
 		define( 'LSCWP_DOMAIN', $domain ) ;
 	}
@@ -693,7 +693,7 @@ class LiteSpeed_Cache_Utility
 			return false ;
 		}
 
-		return array( $file_path, filesize( $file_path ) ) ;
+		return [ $file_path, filesize( $file_path ) ] ;
 	}
 
 	/**
@@ -704,8 +704,8 @@ class LiteSpeed_Cache_Utility
 	public static function srcset_replace( $content, $callback )
 	{
 		preg_match_all( '# srcset=([\'"])(.+)\g{1}#iU', $content, $matches ) ;
-		$srcset_ori = array() ;
-		$srcset_final = array() ;
+		$srcset_ori = [] ;
+		$srcset_final = [] ;
 		foreach ( $matches[ 2 ] as $k => $urls_ori ) {
 
 			$urls_final = explode( ',', $urls_ori ) ;

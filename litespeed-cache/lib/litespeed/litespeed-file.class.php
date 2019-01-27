@@ -29,7 +29,7 @@ class Litespeed_File
 	 */
 	public static function rrmdir( $dir ) {
 
-		$files = array_diff( scandir( $dir ), array( '.', '..' ) ) ;
+		$files = array_diff( scandir( $dir ), [ '.', '..' ] ) ;
 
 		foreach ( $files as $file ) {
 			is_dir( "$dir/$file" ) ? self::rrmdir( "$dir/$file" ) : unlink( "$dir/$file" ) ;
@@ -68,7 +68,7 @@ class Litespeed_File
 		}
 
 		if ( $start_line !== null ) {
-			$res = array() ;
+			$res = [] ;
 			$file = new SplFileObject($filename) ;
 			$file->seek($start_line) ;
 
@@ -219,7 +219,7 @@ class Litespeed_File
 		}
 
 		if ( !$insertion ) {
-			$insertion = array() ;
+			$insertion = [] ;
 		}
 
 		return self::_insert_with_markers($filename, $marker, $insertion, $prepend) ;
@@ -241,9 +241,9 @@ class Litespeed_File
 		$end_marker   = "# END {$marker}" ;
 
 		$new_data = implode( "\n", array_merge(
-			array( $start_marker ),
+			[ $start_marker ],
 			$insertion,
-			array( $end_marker )
+			[ $end_marker ]
 		) ) ;
 		return $new_data ;
 	}
@@ -270,9 +270,9 @@ class Litespeed_File
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 		$new_data = implode( "\n", array_merge(
-			array( $start_marker ),
+			[ $start_marker ],
 			$result,
-			array( $end_marker )
+			[ $end_marker ]
 		) ) ;
 		return $new_data ;
 	}
@@ -301,7 +301,7 @@ class Litespeed_File
 	 */
 	private static function _extract_from_markers( $filename, $marker )
 	{
-		$result = array() ;
+		$result = [] ;
 
 		if (!file_exists($filename) ) {
 			return $result ;
@@ -372,13 +372,13 @@ class Litespeed_File
 		// Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.
 		flock( $fp, LOCK_EX ) ;
 
-		$lines = array() ;
+		$lines = [] ;
 		while ( ! feof($fp) ) {
 			$lines[] = rtrim(fgets($fp), "\r\n" ) ;
 		}
 
 		// Split out the existing file into the preceding lines, and those that appear after the marker
-		$pre_lines = $post_lines = $existing_lines = array() ;
+		$pre_lines = $post_lines = $existing_lines = [] ;
 		$found_marker = $found_end_marker = false ;
 		foreach ( $lines as $line ) {
 			if ( ! $found_marker && false !== strpos($line, $start_marker) ) {
@@ -413,9 +413,9 @@ class Litespeed_File
 		if( $prepend && ! $post_lines ) {
 			// Generate the new file data
 			$new_file_data = implode( "\n", array_merge(
-				array( $start_marker ),
+				[ $start_marker ],
 				$insertion,
-				array( $end_marker ),
+				[ $end_marker ],
 				$pre_lines
 			) ) ;
 
@@ -424,9 +424,9 @@ class Litespeed_File
 			// Generate the new file data
 			$new_file_data = implode( "\n", array_merge(
 				$pre_lines,
-				array( $start_marker ),
+				[ $start_marker ],
 				$insertion,
-				array( $end_marker ),
+				[ $end_marker ],
 				$post_lines
 			) ) ;
 		}

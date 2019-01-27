@@ -36,8 +36,8 @@ class LiteSpeed_Cache_Tag
 
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
-	private static $_tags = array() ;
-	private static $_tags_priv = array( 'tag_priv' ) ;
+	private static $_tags = [] ;
+	private static $_tags_priv = [ 'tag_priv' ] ;
 	protected static $_error_status = false ;
 
 	/**
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Tag
 	public static function add( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = [ $tags ] ;
 		}
 
 		self::$_tags = array_merge( self::$_tags, $tags ) ;
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Tag
 	public static function add_private( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = [ $tags ] ;
 		}
 
 		self::$_tags_priv = array_merge( self::$_tags_priv, $tags ) ;
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Tag
 	 */
 	private static function _build_type_tags()
 	{
-		$tags = array() ;
+		$tags = [] ;
 
 		$tags[] = LiteSpeed_Cache_Utility::page_type() ;
 
@@ -363,7 +363,7 @@ class LiteSpeed_Cache_Tag
 	{
 		self::_finalize() ;
 
-		$prefix_tags = array() ;
+		$prefix_tags = [] ;
 		$prefix = LSWCP_TAG_PREFIX . get_current_blog_id() . '_' ;
 
 		// If is_private and has private tags, append them first, then specify prefix to `public` for public tags

@@ -53,9 +53,9 @@ class LiteSpeed_Cache_Admin_Report
 	private function _post_env()
 	{
 		$report_con = $this->generate_environment_report() ;
-		$data = array(
+		$data = [
 			'env' => $report_con,
-		) ;
+		] ;
 
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_ENV_REPORT, LiteSpeed_Cache_Utility::arr2str( $data ), false, true ) ;
 
@@ -66,10 +66,10 @@ class LiteSpeed_Cache_Admin_Report
 			return ;
 		}
 
-		$data = array(
+		$data = [
 			'num'	=> ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
 			'dateline'	=> time(),
-		) ;
+		] ;
 
 		update_option( LiteSpeed_Cache_Config::ITEM_ENV_REF, $data ) ;
 
@@ -87,10 +87,10 @@ class LiteSpeed_Cache_Admin_Report
 		$info = get_option( LiteSpeed_Cache_Config::ITEM_ENV_REF ) ;
 
 		if ( ! is_array( $info ) ) {
-			return array(
+			return [
 				'num'	=> '-',
 				'dateline'	=> '-',
-			) ;
+			] ;
 		}
 
 		$info[ 'dateline' ] = date( 'm/d/Y H:i:s', $info[ 'dateline' ] ) ;
@@ -113,7 +113,7 @@ class LiteSpeed_Cache_Admin_Report
 		global $wp_version, $_SERVER ;
 		$frontend_htaccess = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
 		$backend_htaccess = LiteSpeed_Cache_Admin_Rules::get_backend_htaccess() ;
-		$paths = array($frontend_htaccess) ;
+		$paths = [$frontend_htaccess] ;
 		if ( $frontend_htaccess != $backend_htaccess ) {
 			$paths[] = $backend_htaccess ;
 		}
@@ -136,14 +136,14 @@ class LiteSpeed_Cache_Admin_Report
 			$active_theme = get_current_theme() ;
 		}
 
-		$extras = array(
+		$extras = [
 			'wordpress version' => $wp_version,
 			'siteurl' => get_option( 'siteurl' ),
 			'home' => get_option( 'home' ),
 			'home_url' => home_url(),
 			'locale' => get_locale(),
 			'active theme' => $active_theme,
-		) ;
+		] ;
 
 		$extras[ 'active plugins' ] = $active_plugins ;
 
@@ -155,7 +155,7 @@ class LiteSpeed_Cache_Admin_Report
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = get_blog_option($blog_id, LiteSpeed_Cache_Config::OPTION_NAME, array()) ;
+					$opts = get_blog_option($blog_id, LiteSpeed_Cache_Config::OPTION_NAME, []) ;
 					if ( isset($opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO]) ) {
 						$options['blog ' . $blog_id . ' radio select'] = $opts[LiteSpeed_Cache_Config::OPID_ENABLED_RADIO] ;
 					}
@@ -164,11 +164,11 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		// Security: Remove cf key in report
-		$secure_fields = array(
+		$secure_fields = [
 			LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY,
 			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
-		) ;
+		] ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
@@ -199,14 +199,14 @@ class LiteSpeed_Cache_Admin_Report
 	 * @param array $htaccess_paths - htaccess paths to check.
 	 * @return string The Environment Report buffer.
 	 */
-	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array())
+	private function build_environment_report($server, $options, $extras = [], $htaccess_paths = [])
 	{
-		$server_keys = array(
+		$server_keys = [
 			'DOCUMENT_ROOT'=>'',
 			'SERVER_SOFTWARE'=>'',
 			'X-LSCACHE'=>'',
 			'HTTP_X_LSCACHE'=>''
-		) ;
+		] ;
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;
 

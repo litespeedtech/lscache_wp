@@ -44,7 +44,7 @@ class Minify_HTML
 	 *
 	 * @return string
 	 */
-	public static function minify($html, $options = array())
+	public static function minify($html, $options = [])
 	{
 		$min = new self($html, $options);
 
@@ -69,7 +69,7 @@ class Minify_HTML
 	 * 'xhtml' : (optional boolean) should content be treated as XHTML1.0? If
 	 * unset, minify will sniff for an XHTML doctype.
 	 */
-	public function __construct($html, $options = array())
+	public function __construct($html, $options = [])
 	{
 		$this->_html = str_replace("\r\n", "\n", trim($html));
 		if (isset($options['xhtml'])) {
@@ -98,35 +98,35 @@ class Minify_HTML
 		}
 
 		$this->_replacementHash = 'MINIFYHTML' . md5($_SERVER['REQUEST_TIME']);
-		$this->_placeholders = array();
+		$this->_placeholders = [];
 
 		// replace SCRIPTs (and minify) with placeholders
 		$this->_html = preg_replace_callback(
 			'/(\\s*)<script(\\b[^>]*?>)([\\s\\S]*?)<\\/script>(\\s*)/i'
-			,array($this, '_removeScriptCB')
+			,[$this, '_removeScriptCB']
 			,$this->_html);
 
 		// replace STYLEs (and minify) with placeholders
 		$this->_html = preg_replace_callback(
 			'/\\s*<style(\\b[^>]*>)([\\s\\S]*?)<\\/style>\\s*/i'
-			,array($this, '_removeStyleCB')
+			,[$this, '_removeStyleCB']
 			,$this->_html);
 
 		// remove HTML comments (not containing IE conditional comments).
 		$this->_html = preg_replace_callback(
 			'/<!--([\\s\\S]*?)-->/'
-			,array($this, '_commentCB')
+			,[$this, '_commentCB']
 			,$this->_html);
 
 		// replace PREs with placeholders
 		$this->_html = preg_replace_callback('/\\s*<pre(\\b[^>]*?>[\\s\\S]*?<\\/pre>)\\s*/i'
-			,array($this, '_removePreCB')
+			,[$this, '_removePreCB']
 			,$this->_html);
 
 		// replace TEXTAREAs with placeholders
 		$this->_html = preg_replace_callback(
 			'/\\s*<textarea(\\b[^>]*?>[\\s\\S]*?<\\/textarea>)\\s*/i'
-			,array($this, '_removeTextareaCB')
+			,[$this, '_removeTextareaCB']
 			,$this->_html);
 
 		// trim each line.
@@ -182,7 +182,7 @@ class Minify_HTML
 
 	protected $_isXhtml = null;
 	protected $_replacementHash = null;
-	protected $_placeholders = array();
+	protected $_placeholders = [];
 	protected $_cssMinifier = null;
 	protected $_jsMinifier = null;
 
@@ -257,7 +257,7 @@ class Minify_HTML
 	protected function _removeCdata($str)
 	{
 		return (false !== strpos($str, '<![CDATA['))
-			? str_replace(array('<![CDATA[', ']]>'), '', $str)
+			? str_replace(['<![CDATA[', ']]>'], '', $str)
 			: $str;
 	}
 
