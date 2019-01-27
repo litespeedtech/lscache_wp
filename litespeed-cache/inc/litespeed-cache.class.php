@@ -94,7 +94,7 @@ class LiteSpeed_Cache
 		LiteSpeed_Cache_Config::get_instance() ;
 
 		// Check if debug is on
-		$should_debug = intval( self::config( LiteSpeed_Cache_Config::OPID_DEBUG ) ) ;
+		$should_debug = (int) ( self::config( LiteSpeed_Cache_Config::OPID_DEBUG ) ) ;
 		if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || $should_debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
 			LiteSpeed_Cache_Log::init() ;
 		}

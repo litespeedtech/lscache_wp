@@ -1244,7 +1244,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$esi = self::is_checked_radio( $esistr ) ;
-		$ttl = intval( $ttlstr ) ;
+		$ttl = (int) $ttlstr ;
 
 		if ( $ttl != 0 && $ttl < 30 ) {
 			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
@@ -1361,7 +1361,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public static function is_checked( $val )
 	{
-		$val = intval( $val ) ;
+		$val = (int) $val ;
 
 		if( $val === LiteSpeed_Cache_Config::VAL_ON ) {
 			return true ;
@@ -1380,7 +1380,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public static function is_checked_radio( $val )
 	{
-		$val = intval( $val ) ;
+		$val = (int) $val ;
 
 		if( $val === LiteSpeed_Cache_Config::VAL_ON ) {
 			return LiteSpeed_Cache_Config::VAL_ON ;

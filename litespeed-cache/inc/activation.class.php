@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Activation
 		if ( is_multisite() ) {
 			$count = self::get_network_count() ;
 			if ( $count !== false ) {
-				$count = intval( $count ) + 1 ;
+				$count = (int) $count + 1 ;
 				set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
 			}
 		}
@@ -169,7 +169,7 @@ class LiteSpeed_Cache_Activation
 	{
 		$count = get_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
 		if ( $count !== false ) {
-			return intval( $count ) ;
+			return (int) $count ;
 		}
 		// need to update
 		$default = array() ;

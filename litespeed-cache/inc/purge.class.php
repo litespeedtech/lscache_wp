@@ -660,7 +660,7 @@ class LiteSpeed_Cache_Purge
 	 */
 	public static function purge_post( $id )
 	{
-		$post_id = intval($id) ;
+		$post_id = (int) $id ;
 		// ignore the status we don't care
 		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private', 'draft' )) ) {
 			return ;

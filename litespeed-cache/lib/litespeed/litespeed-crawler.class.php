@@ -467,7 +467,7 @@ class Litespeed_Crawler
 				$curthreads = 1 ;
 			}
 			else {
-				$curthreads = intval($this->_load_limit - $curload) ;
+				$curthreads = (int) ($this->_load_limit - $curload) ;
 				if ( $curthreads > $this->_threads_limit ) {
 					$curthreads = $this->_threads_limit ;
 				}

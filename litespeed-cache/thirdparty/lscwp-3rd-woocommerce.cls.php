@@ -897,7 +897,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				case self::OPT_PS_CS:
 				case self::OPT_PS_CN:
 				case self::OPT_PQS_CQS:
-					$options[self::OPTION_UPDATE_INTERVAL] = intval($update_val_in) ;
+					$options[self::OPTION_UPDATE_INTERVAL] = (int) $update_val_in ;
 					break ;
 				default:
 					// add error message?
