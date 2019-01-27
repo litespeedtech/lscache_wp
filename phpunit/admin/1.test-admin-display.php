@@ -62,7 +62,6 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test case to check Set to disable all settings LiteSpeed_Cache_Admin_Display::set_disable_all
-	 * @return NULL
 	 */
 	public function test_set_disable_all()
 	{

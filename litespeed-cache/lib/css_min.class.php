@@ -214,7 +214,6 @@ class Minifier
 
     /**
      * Tries to configure PHP to use at least the suggested minimum settings
-     * @return void
      */
     private function doRaisePhpLimits()
     {
