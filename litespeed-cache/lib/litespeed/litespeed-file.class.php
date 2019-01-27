@@ -344,7 +344,7 @@ class Litespeed_File
 			if ( ! is_writable( dirname($filename) ) ) {
 				return false ;
 			}
-			set_error_handler("litespeed_exception_handler") ;
+			set_error_handler('litespeed_exception_handler') ;
 			try {
 				touch($filename) ;
 			}

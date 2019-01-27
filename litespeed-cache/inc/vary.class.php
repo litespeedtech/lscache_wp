@@ -268,7 +268,7 @@ class LiteSpeed_Cache_Vary
 		 * POST request can set vary to fix #820789 login "loop" guest cache issue
 		 * @since 1.6.5
 		 */
-		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
+		if ( $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
 			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to method not get/post' ) ;
 			return false ;
 		}
@@ -295,7 +295,7 @@ class LiteSpeed_Cache_Vary
 			define( 'LITESPEED_DID_' . __FUNCTION__, true ) ;
 		}
 		else {
-			LiteSpeed_Cache_Log::debug2( "[Vary] _update_default_vary bypassed due to run already" ) ;
+			LiteSpeed_Cache_Log::debug2( '[Vary] _update_default_vary bypassed due to run already' ) ;
 			return ;
 		}
 

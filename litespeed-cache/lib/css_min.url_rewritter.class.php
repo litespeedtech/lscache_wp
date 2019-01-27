@@ -61,10 +61,10 @@ class UriRewriter
             self::$_symlinks[$link] = self::_realpath($target);
         }
 
-        self::$debugText .= "docRoot    : " . self::$_docRoot . "\n"
-                          . "currentDir : " . self::$_currentDir . "\n";
+        self::$debugText .= 'docRoot    : ' . self::$_docRoot . "\n"
+                          . 'currentDir : ' . self::$_currentDir . "\n";
         if (self::$_symlinks) {
-            self::$debugText .= "symlinks : " . var_export(self::$_symlinks, 1) . "\n";
+            self::$debugText .= 'symlinks : ' . var_export(self::$_symlinks, 1) . "\n";
         }
         self::$debugText .= "\n";
 

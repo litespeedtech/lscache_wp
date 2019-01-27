@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Control
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
 		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
 		if ( $cache_res ) {
-			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
+			$uri = esc_url( $_SERVER['REQUEST_URI'] ) ;// todo: check if need esc_url()
 			$pattern = '!' . LSCWP_CONTENT_FOLDER . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
 			if ( preg_match( $pattern, $uri ) ) {
 				add_action( 'wp_loaded', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_Control
 	public static function check_redirect( $location, $status )
 	{
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
-			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
+			LiteSpeed_Cache_Log::debug( '[Ctrl] 301 from ' . $_SERVER[ 'SCRIPT_URI' ] ) ;
 			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 to $location" ) ;
 
 			$to_check = array(
@@ -458,7 +458,7 @@ class LiteSpeed_Cache_Control
 			foreach ( $to_check as $v ) {
 				if ( parse_url( $_SERVER[ 'SCRIPT_URI' ], $v ) != parse_url( $location, $v ) ) {
 					$is_same_redirect = false ;
-					LiteSpeed_Cache_Log::debug( "[Ctrl] 301 different redirection" ) ;
+					LiteSpeed_Cache_Log::debug( '[Ctrl] 301 different redirection' ) ;
 					break ;
 				}
 			}
@@ -619,8 +619,8 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for( 'Query String Action' ) ;
 		}
 
-		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' ) {
-			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
+		if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
+			return $this->_no_cache_for('not GET method:' . $_SERVER['REQUEST_METHOD']) ;
 		}
 
 		if ( is_feed() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FEED_TTL ) == 0 ) {

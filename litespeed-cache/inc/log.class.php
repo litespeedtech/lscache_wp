@@ -250,7 +250,7 @@ class LiteSpeed_Cache_Log
 			}
 
 			// Generate a unique string per request
-			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, Litespeed_String::rrand( 3 ) ) ;
+			self::$_prefix = sprintf( ' [%s %s %s] ', $addr, LSCWP_LOG_TAG, Litespeed_String::rrand( 3 ) ) ;
 		}
 		list( $usec, $sec ) = explode(' ', microtime() ) ;
 		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n" ;

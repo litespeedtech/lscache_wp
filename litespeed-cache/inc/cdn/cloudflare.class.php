@@ -252,7 +252,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		$json = json_decode( $result, true ) ;
 
 		if ( $json && $json[ 'success' ] && $json[ 'result' ] ) {
-			LiteSpeed_Cache_Log::debug( "[Cloudflare] _cloudflare_call called successfully" ) ;
+			LiteSpeed_Cache_Log::debug( '[Cloudflare] _cloudflare_call called successfully' ) ;
 			if ( $show_msg ) {
 				$msg = __( 'Communicated with Cloudflare successfully.', 'litespeed-cache' ) ;
 				LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;

@@ -316,7 +316,7 @@ class Litespeed_Crawler
 				// check result headers
 				foreach ( $urls as $i => $url ) {
 					// check response
-					if ( stripos($rets[$i], "HTTP/1.1 428 Precondition Required") !== false ) {
+					if ( stripos($rets[$i], 'HTTP/1.1 428 Precondition Required') !== false ) {
 						return __('Stopped: crawler disabled by the server admin', 'litespeed-cache') ;
 					}
 
@@ -571,7 +571,7 @@ class Litespeed_Crawler
 			CURLOPT_NOBODY => false,
 			CURLOPT_HTTPHEADER => $this->_curl_headers,
 		) ;
-		$options[CURLOPT_HTTPHEADER][] = "Cache-Control: max-age=0" ;
+		$options[CURLOPT_HTTPHEADER][] = 'Cache-Control: max-age=0' ;
 
 		/**
 		 * Try to enable http2 connection (only available since PHP7+)
@@ -596,7 +596,7 @@ class Litespeed_Crawler
 
 			if ( !empty($parsed_url['host']) ) {
 				// assign domain for curl
-				$options[CURLOPT_HTTPHEADER][] = "Host: " . $parsed_url['host'] ;
+				$options[CURLOPT_HTTPHEADER][] = 'Host: ' . $parsed_url['host'] ;
 				// replace domain with direct ip
 				$parsed_url['host'] = $this->_domain_ip ;
 				$this->_baseUrl = http_build_url($parsed_url) ;

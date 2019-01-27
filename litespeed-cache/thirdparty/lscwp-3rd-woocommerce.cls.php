@@ -621,7 +621,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return ;
 		}
 
-		$uri = esc_url($_SERVER["REQUEST_URI"]) ;
+		$uri = esc_url($_SERVER['REQUEST_URI']) ;
 		$uri_len = strlen($uri) ;
 		if ( $uri_len < 5 ) {
 			return ;
@@ -632,7 +632,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return ;
 		}
 
-		$qs = sanitize_text_field($_SERVER["QUERY_STRING"]) ;
+		$qs = sanitize_text_field($_SERVER['QUERY_STRING']) ;
 		$qs_len = strlen($qs) ;
 		if ( ! empty($qs) && $qs_len >= 12 && strpos( $qs, 'add-to-cart=' ) === 0 ) {
 			LiteSpeed_Cache_API::set_nocache() ;
@@ -838,16 +838,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 							</td>
 						</tr>
 						<tr>
-							<th>" . __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . "</th>
+							<th>" . __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . '</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch(self::OPTION_SHOP_FRONT_TTL, null, true) . "
+								' . LiteSpeed_Cache_API::build_switch(self::OPTION_SHOP_FRONT_TTL, null, true) . "
 								<div class='litespeed-desc'>$ttl_desc</div>
 							</td>
 						</tr>
 						<tr>
-							<th>" . __('Privately Cache Cart', 'litespeed-cache') . "</th>
+							<th>" . __('Privately Cache Cart', 'litespeed-cache') . '</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch( self::OPTION_WOO_CACHE_CART, null, true ) . "
+								' . LiteSpeed_Cache_API::build_switch( self::OPTION_WOO_CACHE_CART, null, true ) . "
 								<div class='litespeed-desc'>"
 								 	. __( 'Privately cache cart when not empty.', 'litespeed-cache' ) . "
 								 </div>
@@ -855,14 +855,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						</tr>
 					</tbody></table>
 					<div class='litespeed-callout-warning'>
-						<h4>" . __('Note', 'litespeed-cache') . ":</h4>
+						<h4>" . __('Note', 'litespeed-cache') . ':</h4>
 						<i>
-							" . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . "
-							" . sprintf(__('To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"' ) . "
+							' . __('After verifying that the cache works in general, please test the cart.', 'litespeed-cache') . '
+							' . sprintf(__('To test the cart, visit the <a %s>FAQ</a>.', 'litespeed-cache'), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"' ) . '
 						</i>
 					</div>
 
-					" ;
+					' ;
 
 		$tab = array(
 			'title'   => $_title,
@@ -931,7 +931,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( isset($woocom) && version_compare($woocom->version, '2.5.0', '>=') && function_exists( 'wc_get_product_cat_ids' ) ) {
 			return wc_get_product_cat_ids($product_id) ;
 		}
-		$product_cats = wp_get_post_terms($product_id, 'product_cat', array("fields" => "ids")) ;
+		$product_cats = wp_get_post_terms($product_id, 'product_cat', array('fields' => 'ids')) ;
 		foreach ( $product_cats as $product_cat ) {
 			$product_cats = array_merge($product_cats, get_ancestors($product_cat, 'product_cat')) ;
 		}

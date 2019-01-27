@@ -111,7 +111,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 
 ?>
 
-<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+<?php include_once LSCWP_DIR . 'admin/tpl/inc/check_cache_disabled.php' ; ?>
 
 <h3 class="litespeed-title"><?php echo __('Purge', 'litespeed-cache'); ?></h3>
 
@@ -200,16 +200,16 @@ if ( ! is_multisite() || is_network_admin() ) {
 			<div class="litespeed-cache-purgeby-text">
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_CAT) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_CAT; ?>">
-					<?php echo sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
+					<?php echo sprintf(__('Purge pages by category name - e.g. %2$s should be used for the URL %1$s.', 'litespeed-cache'),
 						'<code>http://example.com/category/category-name/</code>', '<code>category-name</code>'); ?>
 				</div>
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_PID) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_PID; ?>">
-					<?php echo __("Purge pages by post ID.", "litespeed-cache"); ?>
+					<?php echo __('Purge pages by post ID.', 'litespeed-cache'); ?>
 				</div>
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_TAG) echo 'litespeed-hide'; ?>"
 					data-purgeby="<?php echo LiteSpeed_Cache_Admin_Display::PURGEBY_TAG; ?>">
-					<?php echo sprintf(__('Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', "litespeed-cache"),
+					<?php echo sprintf(__('Purge pages by tag name - e.g. %2$s should be used for the URL %1$s.', 'litespeed-cache'),
 						'<code>http://example.com/tag/tag-name/</code>', '<code>tag-name</code>'); ?>
 				</div>
 				<div class="<?php if($purgeby_option != LiteSpeed_Cache_Admin_Display::PURGEBY_URL) echo 'litespeed-hide'; ?>"

@@ -623,7 +623,7 @@ class LiteSpeed_Cache_Purge
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_EMPTY) ;
 			return ;
 		}
-		$list_buf = str_replace(",", "\n", $list_buf) ;// for cli
+		$list_buf = str_replace(',', "\n", $list_buf) ;// for cli
 		$list = explode("\n", $list_buf) ;
 		switch($sel) {
 			case LiteSpeed_Cache_Admin_Display::PURGEBY_CAT:

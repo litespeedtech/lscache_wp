@@ -678,7 +678,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function cache_disabled_warning()
 	{
-		include LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ;
+		include LSCWP_DIR . 'admin/tpl/inc/check_cache_disabled.php' ;
 	}
 
 	/**
@@ -713,7 +713,7 @@ class LiteSpeed_Cache_Admin_Display
 			$cls = " class='$cls' " ;
 		}
 
-		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' rows='5' cols='$cols' $cls $disabled>" . esc_textarea($val) . "</textarea>" ;
+		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' rows='5' cols='$cols' $cls $disabled>" . esc_textarea($val) . '</textarea>' ;
 	}
 
 	/**
@@ -893,7 +893,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $id_attr === null ) {
-			$id_attr = is_int($val) ? "conf_" . str_replace( array( '[', ']' ), '_', $id ) . "_$val" : md5($val) ;
+			$id_attr = is_int($val) ? 'conf_' . str_replace( array( '[', ']' ), '_', $id ) . "_$val" : md5($val) ;
 		}
 		elseif ( $id_attr === true ) {
 			$id_attr = md5($val) ;

@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Optimize
 					if ( $head_js ) {
 						$urls = $this->_limit_size_build_hash_url( $head_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -505,7 +505,7 @@ class LiteSpeed_Cache_Optimize
 					if ( $foot_js ) {
 						$urls = $this->_limit_size_build_hash_url( $foot_js, $file_size_list, 'js' ) ;
 						foreach ( $urls as $url ) {
-							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;
+							$snippet .= "<script data-optimized='1' src='$url' " . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;
 
 							// Add to HTTP2
 							$this->append_http2( $url, 'js' ) ;
@@ -559,7 +559,7 @@ class LiteSpeed_Cache_Optimize
 			}
 			else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC ;
-				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . "></script>" ;// Don't exclude it from defer for now
+				$this->html_head .= "<script id='litespeed-css-async-lib' src='" . $css_async_lib_url . "' " . ( $this->cfg_js_defer ? 'defer' : '' ) . '></script>' ;// Don't exclude it from defer for now
 				$this->append_http2( $css_async_lib_url, 'js' ) ; // async lib will be http/2 pushed always
 			}
 		}

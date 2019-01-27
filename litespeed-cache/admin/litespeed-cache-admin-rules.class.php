@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Admin_Rules
 	const LS_MODULE_REWRITE_START = '<IfModule mod_rewrite.c>' ;
 	const REWRITE_ON = 'RewriteEngine on' ;
 	private static $LS_MODULE_REWRITE_ON ;
-	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##" ;
+	const LS_MODULE_DONOTEDIT = '## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##' ;
 	const MARKER = 'LSCACHE' ;
 	const MARKER_NONLS = 'NON_LSCACHE' ;
 	const MARKER_LOGIN_COOKIE = '### marker LOGIN COOKIE' ;
@@ -80,8 +80,8 @@ class LiteSpeed_Cache_Admin_Rules
 
 		self::$LS_MODULE_REWRITE_ON = array(
 			self::REWRITE_ON,
-			"CacheLookup on",
-			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
+			'CacheLookup on',
+			'RewriteRule .* - [E=Cache-Control:no-autoflush]',
 			"RewriteRule ^min/\w+\.(css|js) - [E=cache-control:no-vary]",
 		) ;
 
@@ -271,7 +271,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		// Remove ^M characters.
-		$content = str_ireplace("\x0D", "", $content) ;
+		$content = str_ireplace("\x0D", '', $content) ;
 		return $content ;
 	}
 
@@ -339,10 +339,10 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		if ( file_exists($path . $bak) ) {
-			$bak = sprintf("_lscachebak_%02d", $i) ;
+			$bak = sprintf('_lscachebak_%02d', $i) ;
 			while (file_exists($path . $bak)) {
 				$i++ ;
-				$bak = sprintf("_lscachebak_%02d", $i) ;
+				$bak = sprintf('_lscachebak_%02d', $i) ;
 			}
 		}
 

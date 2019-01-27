@@ -282,7 +282,7 @@ class LiteSpeed_Cache_GUI
 		// Bypass showing info banner if disabled all in debug
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
 			if ( $is_litespeed_page && ! $check_only ) {
-				include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
+				include_once LSCWP_DIR . 'admin/tpl/inc/disabled_all.php' ;
 			}
 
 			return false ;
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_GUI
 		$_summary[ 'score.last_check' ] = time() ;
 		$this->save_summary( $_summary ) ;
 
-		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.ajax.php" ;
+		include_once LSCWP_DIR . 'admin/tpl/inc/banner_promo.ajax.php' ;
 	}
 
 	/**
@@ -664,11 +664,11 @@ class LiteSpeed_Cache_GUI
 	private function _clean_wrapper( $buffer )
 	{
 		if ( self::$_clean_counter < 1 ) {
-			LiteSpeed_Cache_Log::debug2( "GUI bypassed by no counter" ) ;
+			LiteSpeed_Cache_Log::debug2( 'GUI bypassed by no counter' ) ;
 			return $buffer ;
 		}
 
-		LiteSpeed_Cache_Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
+		LiteSpeed_Cache_Log::debug2( 'GUI start cleaning counter ' . self::$_clean_counter ) ;
 
 		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
 			// If miss beginning

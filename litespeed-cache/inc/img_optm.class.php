@@ -348,7 +348,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		$srcpath_md5_to_search = array_unique( $srcpath_md5_to_search ) ;
 
-		$q = "SELECT * FROM $this->_table_img_optm WHERE root_id=0 AND srcpath_md5 IN ( " . implode( ',', array_fill( 0, count( $srcpath_md5_to_search ), '%s' ) ) . " )" ;
+		$q = "SELECT * FROM $this->_table_img_optm WHERE root_id=0 AND srcpath_md5 IN ( " . implode( ',', array_fill( 0, count( $srcpath_md5_to_search ), '%s' ) ) . ' )' ;
 		$tmp = $wpdb->get_results( $wpdb->prepare( $q, $srcpath_md5_to_search ) ) ;
 		foreach ( $tmp as $v ) {
 			$existing_img_list[ $v->srcpath_md5 ] = array(
@@ -450,7 +450,7 @@ class LiteSpeed_Cache_Img_Optm
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Existing size info root pids', $pids ) ;
 
 			// NOTE: Separate this query while not using LEFT JOIN in SELECT * FROM $this->_table_img_optm in previous query to lower db load
-			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%s' ) ) . " )" ;
+			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%s' ) ) . ' )' ;
 			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_SIZE ), $pids ) ) ) ;
 			$existing_sizes = array() ;
 			foreach ( $tmp as $v ) {
@@ -459,7 +459,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			// Get existing new data
 			$size_to_store_pids = array_keys( $size_to_store ) ;
-			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $size_to_store_pids ), '%s' ) ) . " )" ;
+			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $size_to_store_pids ), '%s' ) ) . ' )' ;
 			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_SIZE ), $size_to_store_pids ) ) ) ;
 			$q_to_update = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d" ;
 			$size_to_update_pids = array() ;
@@ -713,7 +713,7 @@ class LiteSpeed_Cache_Img_Optm
 		$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
 				FROM $this->_table_img_optm a
 				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-				WHERE a.optm_status != %s AND a.post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%d' ) ) . " )" ;
+				WHERE a.optm_status != %s AND a.post_id IN ( " . implode( ',', array_fill( 0, count( $pids ), '%d' ) ) . ' )' ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array_merge( array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_PULLED ), $pids ) ) ) ;
 
 		$need_pull = false ;
@@ -840,7 +840,7 @@ class LiteSpeed_Cache_Img_Optm
 			$q = "SELECT a.*, b.meta_id as b_meta_id
 				FROM $this->_table_img_optm a
 				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-				WHERE a.root_id IN ( " . implode( ',', array_fill( 0, count( $root_id_list ), '%d' ) ) . " ) GROUP BY a.post_id" ;
+				WHERE a.root_id IN ( " . implode( ',', array_fill( 0, count( $root_id_list ), '%d' ) ) . ' ) GROUP BY a.post_id' ;
 
 			$tmp = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, $root_id_list ) ) ) ;
 
@@ -864,7 +864,7 @@ class LiteSpeed_Cache_Img_Optm
 				$pids_to_update = array_unique( $pids_to_update ) ;
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Update child group size_info [total] ' . count( $pids_to_update ) ) ;
 
-				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids_to_update ), '%d' ) ) . " )" ;
+				$q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_key = %s AND post_id IN ( " . implode( ',', array_fill( 0, count( $pids_to_update ), '%d' ) ) . ' )' ;
 				$wpdb->query( $wpdb->prepare( $q, array_merge( array( $optm_info, self::DB_IMG_OPTIMIZE_SIZE ), $pids_to_update ) ) ) ;
 			}
 
@@ -1334,7 +1334,7 @@ class LiteSpeed_Cache_Img_Optm
 			self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
 			self::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH,
 		) ;
-		$q = "DELETE FROM $this->_table_img_optm WHERE optm_status IN ( " . implode( ',', array_fill( 0, count( $_status_to_clear ), '%s' ) ) . " )" ;
+		$q = "DELETE FROM $this->_table_img_optm WHERE optm_status IN ( " . implode( ',', array_fill( 0, count( $_status_to_clear ), '%s' ) ) . ' )' ;
 		$wpdb->query( $wpdb->prepare( $q, $_status_to_clear ) ) ;
 
 		// Recover credit
@@ -1598,7 +1598,7 @@ class LiteSpeed_Cache_Img_Optm
 			return $msg ;
 		}
 		else {
-			LiteSpeed_Cache_Log::debug( "[Img_Optm] Upgrade failed [old level data] " . var_export( $optm_summary, true ), $json ) ;
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] Upgrade failed [old level data] ' . var_export( $optm_summary, true ), $json ) ;
 		}
 	}
 

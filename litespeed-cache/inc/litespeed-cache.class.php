@@ -637,7 +637,7 @@ class LiteSpeed_Cache
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $control_header ) ;
 				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $control_header . " -->" ;
+					$this->footer_comment .= "\n<!-- " . $control_header . ' -->' ;
 				}
 			}
 		}
@@ -649,7 +649,7 @@ class LiteSpeed_Cache
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $purge_header ) ;
 				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $purge_header . " -->" ;
+					$this->footer_comment .= "\n<!-- " . $purge_header . ' -->' ;
 				}
 			}
 		}
@@ -659,7 +659,7 @@ class LiteSpeed_Cache
 			if ( defined( 'LSCWP_LOG' ) ) {
 				LiteSpeed_Cache_Log::debug( $vary_header ) ;
 				if ( $running_info_showing ) {
-					$this->footer_comment .= "\n<!-- " . $vary_header . " -->" ;
+					$this->footer_comment .= "\n<!-- " . $vary_header . ' -->' ;
 				}
 			}
 		}
@@ -689,7 +689,7 @@ class LiteSpeed_Cache
 				if ( defined( 'LSCWP_LOG' ) ) {
 					LiteSpeed_Cache_Log::debug( $tag_header ) ;
 					if ( $running_info_showing ) {
-						$this->footer_comment .= "\n<!-- " . $tag_header . " -->" ;
+						$this->footer_comment .= "\n<!-- " . $tag_header . ' -->' ;
 					}
 				}
 			}
@@ -697,7 +697,7 @@ class LiteSpeed_Cache
 
 		// Object cache comment
 		if ( $running_info_showing && defined( 'LSCWP_LOG' ) && defined( 'LSCWP_OBJECT_CACHE' ) && method_exists( 'WP_Object_Cache', 'debug' ) ) {
-			$this->footer_comment .= "\n<!-- Object Cache " . WP_Object_Cache::get_instance()->debug() . " -->" ;
+			$this->footer_comment .= "\n<!-- Object Cache " . WP_Object_Cache::get_instance()->debug() . ' -->' ;
 		}
 
 		if ( $is_forced ) {

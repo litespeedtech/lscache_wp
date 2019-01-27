@@ -55,8 +55,8 @@ if (!defined('WPINC')) die;
 
 			<div class="litespeed-desc">
 				<i>
-					<?php echo sprintf( __( 'SYNTAX: Each entry should be separated with a bar, %s.', 'litespeed-cache'), "<code>|</code>" ) ; ?>
-					<?php echo sprintf( __( 'Any spaces should be escaped with a backslash before the space, %s.', 'litespeed-cache' ), "<code>\\</code>" ) ; ?>
+					<?php echo sprintf( __( 'SYNTAX: Each entry should be separated with a bar, %s.', 'litespeed-cache'), '<code>|</code>' ) ; ?>
+					<?php echo sprintf( __( 'Any spaces should be escaped with a backslash before the space, %s.', 'litespeed-cache' ), '<code>\\</code>' ) ; ?>
 				</i>
 				<br />
 					<?php echo sprintf( __( 'The default list WordPress uses is %s', 'litespeed-cache' ), "<code>$wp_default_mobile</code>" ) ; ?>

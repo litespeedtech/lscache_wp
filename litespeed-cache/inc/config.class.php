@@ -595,7 +595,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
 			) ;
 			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
-			LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option adding CDN map" ) ;
+			LiteSpeed_Cache_Log::debug( '[Cfg] plugin_upgrade option adding CDN map' ) ;
 		}
 
 		/**
@@ -621,7 +621,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 
-		LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option changed" ) ;
+		LiteSpeed_Cache_Log::debug( '[Cfg] plugin_upgrade option changed' ) ;
 
 		// Update img_optm table data for upgrading
 		LiteSpeed_Cache_Data::get_instance() ;

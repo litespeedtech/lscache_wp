@@ -279,7 +279,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_no_cache_for()
     {
-        $reason = "for test reason";
+        $reason = 'for test reason';
         $parameters = array($reason);
         $bool = self::invokeMethod('LiteSpeed_Cache', 'no_cache_for', $parameters);
         $this->assertFalse( $bool );

@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Object
 	public function update_file( $options )
 	{
 		// Update data file
-		$data = "[object_cache]"
+		$data = '[object_cache]'
 			. "\nmethod = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ]
 			. "\nhost = " . $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_HOST ]
 			. "\nport = " . (int) $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PORT ]
