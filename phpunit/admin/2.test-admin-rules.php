@@ -4,9 +4,9 @@
  *
  * @package LiteSpeed_Cache_Admin_Rules
  */
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-display.php';
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin.php';
+require_once plugin_dir_path( __DIR__ ) . '/admin/class-litespeed-cache-admin-display.php';
+require_once plugin_dir_path( __DIR__ ) . '/admin/class-litespeed-cache-admin-rules.php';
+require_once plugin_dir_path( __DIR__ ) . '/admin/class-litespeed-cache-admin.php';
 class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 
 	/**

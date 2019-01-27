@@ -8,8 +8,8 @@
 /**
  * Class LiteSpeed_Cache test case.
  */
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-display.php';
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
+require_once plugin_dir_path( __DIR__ ) . '/admin/class-litespeed-cache-admin-display.php';
+require_once plugin_dir_path( __DIR__ ) . '/admin/class-litespeed-cache-admin-rules.php';
 class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
 	/**
