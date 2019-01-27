@@ -765,7 +765,7 @@ class Minifier
             $css = preg_replace($this->charsetRegex, '', $css);
         }
 
-        // @import handling
+        /** @import handling */
         $css = preg_replace_callback($this->importRegex, function ($matches) use (&$imports) {
             // Keep all @import at-rules found for later
             $imports .= $matches[0];
@@ -773,7 +773,7 @@ class Minifier
             return '';
         }, $css);
 
-        // @namespace handling
+        /** @namespace handling */
         $css = preg_replace_callback($this->namespaceRegex, function ($matches) use (&$namespaces) {
             // Keep all @namespace at-rules found for later
             $namespaces .= $matches[0];

@@ -31,13 +31,15 @@ if ( ! function_exists('http_build_url') ) {
 	if ( ! defined( 'HTTP_URL_STRIP_FRAGMENT' ) ) 	define('HTTP_URL_STRIP_FRAGMENT', 512);     // Strip any fragments (#identifier)
 	if ( ! defined( 'HTTP_URL_STRIP_ALL' ) ) 		define('HTTP_URL_STRIP_ALL', 1024);         // Strip anything but scheme and host
 
-	// Build an URL
-	// The parts of the second URL will be merged into the first according to the flags argument.
-	//
-	// @param   mixed           (Part(s) of) an URL in form of a string or associative array like parse_url() returns
-	// @param   mixed           Same as the first argument
-	// @param   int             A bitmask of binary or'ed HTTP_URL constants (Optional)HTTP_URL_REPLACE is the default
-	// @param   array           If set, it will be filled with the parts of the composed url like parse_url() would return
+	/**
+	 * Build an URL
+	 * The parts of the second URL will be merged into the first according to the flags argument.
+	 *
+	 * @param   mixed           (Part(s) of) an URL in form of a string or associative array like parse_url() returns
+	 * @param   mixed           Same as the first argument
+	 * @param   int             A bitmask of binary or'ed HTTP_URL constants (Optional)HTTP_URL_REPLACE is the default
+	 * @param   array           If set, it will be filled with the parts of the composed url like parse_url() would return
+	 */
 	function http_build_url($url, $parts = array(), $flags = HTTP_URL_REPLACE, &$new_url = false)
 	{
 		$keys = array('user','pass','port','path','query','fragment');
