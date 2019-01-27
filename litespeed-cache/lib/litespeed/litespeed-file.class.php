@@ -364,7 +364,7 @@ class Litespeed_File
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 
-		$fp = fopen($filename, 'r+' ) ;
+		$fp = fopen($filename, 'r+b' ) ;
 		if ( ! $fp ) {
 			return false ;
 		}
