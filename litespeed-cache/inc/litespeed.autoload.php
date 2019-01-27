@@ -90,6 +90,6 @@ spl_autoload_register('_litespeed_autoload');
 if ( !function_exists('litespeed_load_vendor') ) {
 	function litespeed_load_vendor()
 	{
-		require_once LSCWP_DIR.'lib/vendor/autoload.php';
+		require_once LSCWP_DIR . 'lib/vendor/autoload.php';
 	}
 }

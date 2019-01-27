@@ -439,7 +439,7 @@ class LiteSpeed_Cache_ESI
 		}
 		$options = $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
 		if ( ! isset( $options ) || ! $options[ self::WIDGET_OPID_ESIENABLE ] ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI 0 ' . $name . ': ' . ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
 
 			return $instance ;
 		}
