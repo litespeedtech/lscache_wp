@@ -107,7 +107,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Config::purge_by_post
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
-	 * @return boolean true if the post type should be purged, false otherwise
+	 * @return bool true if the post type should be purged, false otherwise
 	 */
 	public function test_purge_by_post() 
 	{
@@ -188,8 +188,8 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::wp_cache_var_setter
-	 * @param boolean $enable true if enabling, false if disabling
-	 * @return boolean true if the variable is the correct value, false if something went wrong
+	 * @param bool $enable true if enabling, false if disabling
+	 * @return bool true if the variable is the correct value, false if something went wrong
 	 */
 	public function test_wp_cache_var_setter()
 	{
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::is_caching_allowed
-	 * @return boolean true if enabled, false otherwise
+	 * @return bool true if enabled, false otherwise
 	 */
 	public function test_is_caching_allowed()
 	{

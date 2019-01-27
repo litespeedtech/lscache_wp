@@ -339,7 +339,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.1.3
 	 * @param  string $id
-	 * @param  boolean $return   Return the html or echo it
+	 * @param  bool $return   Return the html or echo it
 	 */
 	public static function build_switch( $id, $checked = null, $return = false )
 	{

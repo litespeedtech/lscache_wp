@@ -43,7 +43,7 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
  * @param array $tabs an array of third party configuration
  * @param array $options the current configuration options
  * @param string $option_group the option group to use for options
- * @param boolean $disableall whether to disable the settings or not
+ * @param bool $disableall whether to disable the settings or not
  * @return mixed an array of third party configs else false on failure
  */
 $tp_tabs = apply_filters('litespeed_cache_add_config_tab',

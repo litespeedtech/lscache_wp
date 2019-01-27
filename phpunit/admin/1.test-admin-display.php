@@ -633,7 +633,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param mixed $checked_value the current value
 	 * @param string $label the label to display
 	 * @param string $on_click the action to do on click
-	 * @param boolean $disabled true for disabled check box, false otherwise
+	 * @param bool $disabled true for disabled check box, false otherwise
 	 * @return string the check box html
 	 */
 	public function test_input_field_checkbox()
@@ -696,7 +696,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $size the length to display
 	 * @param string $style the class to format the display
 	 * @param string $after the units to display after the text field
-	 * @param boolean $readonly true for read only text fields, false otherwise
+	 * @param bool $readonly true for read only text fields, false otherwise
 	 * @return string the input text html
 	 */
 	public function test_input_field_text()
@@ -721,7 +721,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $rows number of rows to display
 	 * @param string $cols number of columns to display
 	 * @param string $style the class to format the display
-	 * @param boolean $readonly true for read only text areas, false otherwise
+	 * @param bool $readonly true for read only text areas, false otherwise
 	 * @return string the textarea html
 	 */
 	public function test_input_field_textarea()

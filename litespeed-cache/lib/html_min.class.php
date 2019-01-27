@@ -22,7 +22,7 @@ namespace LiteSpeed_3rd_Lib ;
 class Minify_HTML
 {
 	/**
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $_jsCleanComments = true;
 

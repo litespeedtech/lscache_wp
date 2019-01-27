@@ -105,8 +105,8 @@ class Litespeed_File
 	 * @since 1.1.5
 	 * @param string $filename
 	 * @param string $data
-	 * @param boolean $mkdir
-	 * @param boolean $silence Used to avoid WP's functions are used
+	 * @param bool $mkdir
+	 * @param bool $silence Used to avoid WP's functions are used
 	 */
 	public static function append( $filename, $data, $mkdir = false, $silence = true )
 	{
@@ -119,9 +119,9 @@ class Litespeed_File
 	 * @since 1.1.0
 	 * @param string $filename
 	 * @param string $data
-	 * @param boolean $mkdir
-	 * @param boolean $append If the content needs to be appended
-	 * @param boolean $silence Used to avoid WP's functions are used
+	 * @param bool $mkdir
+	 * @param bool $append If the content needs to be appended
+	 * @param bool $silence Used to avoid WP's functions are used
 	 */
 	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true )
 	{

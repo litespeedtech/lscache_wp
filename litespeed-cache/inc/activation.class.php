@@ -284,7 +284,7 @@ class LiteSpeed_Cache_Activation
 	 * Try to copy our advanced-cache.php file to the wordpress directory.
 	 *
 	 * @since 1.0.11
-	 * @return boolean true on success, false on failure
+	 * @return bool true on success, false on failure
 	 */
 	public static function try_copy_advanced_cache()
 	{

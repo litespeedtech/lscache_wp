@@ -171,7 +171,7 @@ class LiteSpeed_Cache_Crawler
 	 *
 	 * @since    1.1.1
 	 * @param  string  $sitemap       The url set map address
-	 * @param  boolean $return_detail If return url list
+	 * @param  bool $return_detail If return url list
 	 * @return bollean|array          Url list or if is a sitemap
 	 */
 	public function parse_custom_sitemap($sitemap, $return_detail = true)

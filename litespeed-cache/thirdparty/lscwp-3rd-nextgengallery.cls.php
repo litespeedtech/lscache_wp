@@ -121,7 +121,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * @since 1.0.8
 	 * @param array $images unused
 	 * @param array $old_gallery_ids source gallery ids for the images
-	 * @param integer $new_gallery_id destination gallery id
+	 * @param int $new_gallery_id destination gallery id
 	 */
 	public static function move_image($images, $old_gallery_ids, $new_gallery_id)
 	{
@@ -136,7 +136,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 *
 	 * @param array $image_pid_map unused
 	 * @param array $old_gallery_ids unused
-	 * @param integer $new_gallery_id destination gallery id
+	 * @param int $new_gallery_id destination gallery id
 	 */
 	public static function copy_image($image_pid_map, $old_gallery_ids, $new_gallery_id)
 	{
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When a gallery is updated, need to purge all pages that display the gallery.
 	 *
 	 * @since 1.0.5
-	 * @param	integer		$gid	the gallery id of the gallery updated
+	 * @param	int		$gid	the gallery id of the gallery updated
 	 */
 	public static function update_gallery($gid)
 	{
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an album is updated, need to purge all pages that display the album.
 	 *
 	 * @since 1.0.5
-	 * @param	integer		$aid	the album id of the album updated
+	 * @param	int		$aid	the album id of the album updated
 	 */
 	public static function update_album($aid)
 	{

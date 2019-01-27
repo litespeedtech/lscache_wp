@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_get
 	 * @param string $content returns the content of the file or an error description
 	 * @param string $path the path to get the content from
-	 * @return boolean true if succeeded, false otherwise
+	 * @return bool true if succeeded, false otherwise
 	 */
 	public function test_file_get()
 	{
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_backup
 	 * @param String $path The .htaccess file path.
-	 * @return boolean true on success, else false on failure
+	 * @return bool true on success, else false on failure
 	 */
 	public function h_test_file_backup()
 	{
@@ -213,9 +213,9 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::file_save
 	 * @param string $content the new content to put into the rules file
-	 * @param boolean $cleanup true to strip extra slashes, false otherwise
+	 * @param bool $cleanup true to strip extra slashes, false otherwise
 	 * @param string $path the file path to edit
-	 * @param boolean $backup whether to create backups or not
+	 * @param bool $backup whether to create backups or not
 	 * @return mixed true on success, else error message on failure
 	 */
 	public function test_file_save()
@@ -261,7 +261,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $wrapper the wrapper to look for
 	 * @param string $cond the condition to look for
 	 * @param string $match returns the rewrite rule on success, error message on failure
-	 * @return boolean true on success, false otherwise
+	 * @return bool true on success, false otherwise
 	 */
 	public function test_get_common_rule()
 	{
@@ -301,7 +301,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $match returns the rewrite rule on success, error message on failure
 	 * @param string $sub returns the substitute on success, error message on failure
 	 * @param string $env returns the environment on success, error message on failure
-	 * @return boolean true on success, false otherwise
+	 * @return bool true on success, false otherwise
 	 */
 	public function test_get_rewrite_rule()
 	{
@@ -316,7 +316,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_favicon
 	 * @param string $haystack The original content in the .htaccess file.
-	 * @param boolean $action whether to add or remove the rule
+	 * @param bool $action whether to add or remove the rule
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
@@ -337,7 +337,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::set_cache_resource
 	 * @param string $haystack The original content in the .htaccess file.
-	 * @param boolean $set whether to add or remove the rule
+	 * @param bool $set whether to add or remove the rule
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
@@ -374,7 +374,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::check_rewrite
 	 * @param string $haystack The original content in the .htaccess file.
-	 * @param boolean $set whether to add or remove the rule
+	 * @param bool $set whether to add or remove the rule
 	 * @param string $output the current output buffer for the HOME PATH file
 	 * @param array $errors errors array to add error messages to
 	 * @return mixed false on failure/do not update,
@@ -393,7 +393,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param mixed $ret the return value from the called function
 	 * @param string $haystack where to start the next search
 	 * @param string $errors errors array in case of error
-	 * @return boolean false on function failure, true otherwise
+	 * @return bool false on function failure, true otherwise
 	 */
 	public function test_parse_ret()
 	{

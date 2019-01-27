@@ -564,7 +564,7 @@ class LiteSpeed_Cache
 	 * This will send out all LiteSpeed Cache related response headers needed for the post.
 	 *
 	 * @since 1.0.5
-	 * @param boolean $is_forced If the header is sent following our normal finalizing logic
+	 * @param bool $is_forced If the header is sent following our normal finalizing logic
 	 */
 	public function send_headers( $is_forced = false )
 	{

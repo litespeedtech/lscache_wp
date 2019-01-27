@@ -192,7 +192,7 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.0.12
 	 * @param string $uri the uri to get the hash of
-	 * @param boolean $ori Return the original url or not
+	 * @param bool $ori Return the original url or not
 	 * @return bool|string false on input error, hash otherwise
 	 */
 	public static function get_uri_tag( $uri, $ori = false )
@@ -215,7 +215,7 @@ class LiteSpeed_Cache_Tag
 	 * Get the unique tag based on self url.
 	 *
 	 * @since 1.1.3
-	 * @param boolean $ori Return the original url or not
+	 * @param bool $ori Return the original url or not
 	 */
 	public static function build_uri_tag( $ori = false )
 	{

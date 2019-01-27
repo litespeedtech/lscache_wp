@@ -146,7 +146,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::try_copy_advanced_cache
-     * @return boolean true on success, false on failure
+     * @return bool true on success, false on failure
      */
     public function test_try_copy_advanced_cache()
     {
@@ -162,7 +162,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::setup_cookies
-     * @return boolean true if cookies are bad, false otherwise
+     * @return bool true if cookies are bad, false otherwise
      */
     public function test_setup_cookies()
     {
@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::check_user_logged_in
-     * @return boolean true if logged in, false otherwise
+     * @return bool true if logged in, false otherwise
      */
     public function test_check_user_logged_in()
     {
@@ -194,7 +194,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::check_cookies
-     * @return boolean True if do not cache for commenters and user is a commenter. False otherwise.
+     * @return bool True if do not cache for commenters and user is a commenter. False otherwise.
      */
     public function test_check_cookies()
     {
@@ -211,7 +211,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::is_uri_excluded
      * @param array $excludes_list List of excluded URIs
-     * @return boolean true if excluded, false otherwise
+     * @return bool true if excluded, false otherwise
      */
     public function test_is_uri_excluded()
     {
@@ -229,7 +229,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_cacheable
-     * @return boolean true if cacheable, false otherwise
+     * @return bool true if cacheable, false otherwise
      */
     public function test_is_cacheable()
     {
@@ -264,7 +264,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::no_cache_for
      * @param string $reason an explanation for why the page is not cacheable
-     * @return boolean return false
+     * @return bool return false
      */
     public function test_no_cache_for()
     {
@@ -276,7 +276,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::build_purge_headers
-     * @param boolean $stale whether to add header as a stale header or not
+     * @param bool $stale whether to add header as a stale header or not
      * @return string The purge header
      */
     public function test_build_purge_headers()
@@ -315,9 +315,9 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::validate_mode
-     * @param boolean $showhdr whether the show header command was selected
-     * @param boolean $stale whether to make the purge headers stale
-     * @return integer the integer corresponding to the selected
+     * @param bool $showhdr whether the show header command was selected
+     * @param bool $stale whether to make the purge headers stale
+     * @return int the integer corresponding to the selected
      * cache control value
      */
     public function test_validate_mode()
@@ -368,7 +368,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::get_purge_tags
-     * @param integer $post_id the id of the post about to be purged
+     * @param int $post_id the id of the post about to be purged
      * @return array the list of purge tags correlated with the post
      */
     public function test_get_purge_tags()
@@ -573,7 +573,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_admin_bar
-     * @return boolean
+     * @return bool
      */
     public function test_is_esi_admin_bar()
     { 
@@ -603,7 +603,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_cart
-     * @return boolean
+     * @return bool
      */
     public function test_is_esi_cart()
     { 
@@ -633,7 +633,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_sidebar
-     * @return boolean
+     * @return bool
      */
     public function test_is_esi_sidebar()
     { 
@@ -665,7 +665,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_sidebar
-     * @return boolean
+     * @return bool
      */
     public function test_check_esi_page()
     { 

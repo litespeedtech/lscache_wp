@@ -53,7 +53,7 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 * any/all ancestor pages.
 	 *
 	 * @since 1.0.5
-	 * @param integer $post_id the post id of the page being purged
+	 * @param int $post_id the post id of the page being purged
 	 */
 	public static function on_purge($post_id)
 	{

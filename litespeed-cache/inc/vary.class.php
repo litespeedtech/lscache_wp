@@ -409,7 +409,7 @@ class LiteSpeed_Cache_Vary
 	 * Correct user status with commenter
 	 *
 	 * @since 1.1.3
-	 * @param  boolean $from_redirect If the request is from redirect page or not
+	 * @param  bool $from_redirect If the request is from redirect page or not
 	 */
 	private function add_commenter( $from_redirect = false )
 	{
@@ -445,7 +445,7 @@ class LiteSpeed_Cache_Vary
 	 * Generate relative path for cookie
 	 *
 	 * @since 1.1.3
-	 * @param  boolean $from_redirect If the request is from redirect page or not
+	 * @param  bool $from_redirect If the request is from redirect page or not
 	 */
 	private static function _relative_path( $from_redirect = false )
 	{
@@ -583,9 +583,9 @@ class LiteSpeed_Cache_Vary
 	 * If vary cookie changed, must set non cacheable.
 	 *
 	 * @since 1.0.4
-	 * @param integer $val the value to update
-	 * @param integer $expire expire time
-	 * @param boolean $path False if use wp root path as cookie path
+	 * @param int $val the value to update
+	 * @param int $expire expire time
+	 * @param bool $path False if use wp root path as cookie path
 	 */
 	private static function _cookie($val = false, $expire = false, $path = false)
 	{

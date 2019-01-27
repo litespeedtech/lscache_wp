@@ -248,7 +248,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @since  2.9 Used exception for failed reading
 	 * @param string $path the path to get the content from
-	 * @return boolean true if succeeded, false otherwise
+	 * @return bool true if succeeded, false otherwise
 	 */
 	public function htaccess_read($kind = 'frontend')
 	{
@@ -284,8 +284,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.12 - Introduce $backup parameter and make function public
 	 * @param string $content the new content to put into the rules file
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
-	 * @param boolean $backup whether to create backups or not
-	 * @return boolean true on success, else false
+	 * @param bool $backup whether to create backups or not
+	 * @return bool true on success, else false
 	 */
 	public function htaccess_save($content, $kind = 'frontend', $backup = true)
 	{
@@ -320,7 +320,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.10
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
-	 * @return boolean true on success, else false on failure
+	 * @return bool true on success, else false on failure
 	 */
 	private function htaccess_backup($kind = 'frontend')
 	{

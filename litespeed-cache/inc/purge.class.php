@@ -630,7 +630,7 @@ class LiteSpeed_Cache_Purge
 	 * as well.
 	 *
 	 * @since 1.0.0
-	 * @param integer $id the post id to purge
+	 * @param int $id the post id to purge
 	 */
 	public static function purge_post( $id )
 	{
@@ -818,7 +818,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.0
 	 * @param array $purge_tags the purge tags to apply the prefix to
-	 * @param  boolean $is_private if is private tags or not
+	 * @param  bool $is_private if is private tags or not
 	 * @return array the array of built purge tags
 	 */
 	private function _append_prefix( $purge_tags, $is_private = false )
@@ -867,7 +867,7 @@ class LiteSpeed_Cache_Purge
 	 * any third party plugin specific post tags.
 	 *
 	 * @since 1.0.0
-	 * @param integer $post_id the id of the post about to be purged
+	 * @param int $post_id the id of the post about to be purged
 	 * @return array the list of purge tags correlated with the post
 	 */
 	private function _get_purge_tags_by_post( $post_id )

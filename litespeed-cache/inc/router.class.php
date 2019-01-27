@@ -241,7 +241,7 @@ class LiteSpeed_Cache_Router
 	 * Get frontend path
 	 *
 	 * @since 1.2.2
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function frontend_path()
 	{
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Router
 	 * Check if ESI is enabled or not
 	 *
 	 * @since 1.2.0
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function esi_enabled()
 	{
@@ -279,7 +279,7 @@ class LiteSpeed_Cache_Router
 	 * Check if crawler is enabled on server level
 	 *
 	 * @since 1.1.1
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function can_crawl()
 	{
@@ -323,7 +323,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is logged in
 	 *
 	 * @since 1.1.3
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function is_logged_in()
 	{
@@ -337,7 +337,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is ajax call
 	 *
 	 * @since 1.1.0
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function is_ajax()
 	{
@@ -351,7 +351,7 @@ class LiteSpeed_Cache_Router
 	 * Check if is admin ip
 	 *
 	 * @since 1.1.0
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function is_admin_ip()
 	{

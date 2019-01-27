@@ -654,7 +654,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
 	 * @param  string $id
 	 * @param  string $val Value of input
-	 * @param  boolean $disabled If this input is disabled or not
+	 * @param  bool $disabled If this input is disabled or not
 	 * @param  int $cols The width of textarea
 	 */
 	public function build_textarea( $id, $cols = false, $val = null, $disabled = false, $cls = '' )
@@ -704,7 +704,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
 	 * @param  string $id
 	 * @param  string $style     Appending styles
-	 * @param  boolean $readonly If is readonly
+	 * @param  bool $readonly If is readonly
 	 * @param  string $id_attr   ID for this field
 	 * @param  string $val       Field value
 	 * @param  string $attrs     Additional attributes
@@ -805,8 +805,8 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.1.0
 	 * @since 1.7 removed param $disable
 	 * @param  string $id
-	 * @param  boolean $return   Return the html or echo it
-	 * @param  boolean $checked  If the value is on
+	 * @param  bool $return   Return the html or echo it
+	 * @param  bool $checked  If the value is on
 	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
 	 */
 	public function build_switch($id, $checked = null, $return = false, $id_attr = null)

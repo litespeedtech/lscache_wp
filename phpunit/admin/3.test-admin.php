@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_enabled
 	 * @param array $input the input configurations
 	 * @param array $options returns the up to date options array
-	 * @return boolean true if enabled, false otherwise
+	 * @return bool true if enabled, false otherwise
 	 */
 	public function test_validate_enabled()
 	{
@@ -187,7 +187,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param string $id the id of the checkbox value
 	 * @param array $input the input array
 	 * @param array $options the config options array
-	 * @return boolean true if checked, false otherwise
+	 * @return bool true if checked, false otherwise
 	 */
 	public function test_parse_checkbox()
 	{

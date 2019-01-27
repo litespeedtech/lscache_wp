@@ -220,7 +220,7 @@ class LiteSpeed_Cache_GUI
 	 * Check if has rule conflict notice
 	 *
 	 * @since 1.1.5
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function has_msg_ruleconflict()
 	{
@@ -231,7 +231,7 @@ class LiteSpeed_Cache_GUI
 	 * Check if has whm notice
 	 *
 	 * @since 1.1.1
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function has_whm_msg()
 	{

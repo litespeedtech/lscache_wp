@@ -375,7 +375,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
-	 * @return boolean true if the post type should be purged, false otherwise
+	 * @return bool true if the post type should be purged, false otherwise
 	 */
 	public function purge_by_post( $flag )
 	{
@@ -635,8 +635,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Vice versa for disabling.
 	 *
 	 * @since 1.0.0
-	 * @param boolean $enable true if enabling, false if disabling
-	 * @return boolean true if the variable is the correct value, false if something went wrong
+	 * @param bool $enable true if enabling, false if disabling
+	 * @return bool true if the variable is the correct value, false if something went wrong
 	 */
 	public static function wp_cache_var_setter( $enable )
 	{

@@ -169,7 +169,7 @@ class Litespeed_Crawler
 	 * Refresh list_size in meta
 	 *
 	 * @since  1.1.0
-	 * @return boolean True if succeeded, false otherwise
+	 * @return bool True if succeeded, false otherwise
 	 */
 	public function refresh_list_size()
 	{

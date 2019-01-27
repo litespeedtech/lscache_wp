@@ -584,7 +584,7 @@ class LiteSpeed_Cache_Control
 	 * Check if a page is cacheable based on litespeed setting.
 	 *
 	 * @since 1.0.0
-	 * @return boolean true if cacheable, false otherwise
+	 * @return bool true if cacheable, false otherwise
 	 */
 	private function _setting_cacheable()
 	{
@@ -688,7 +688,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since 1.0.0
 	 * @param string $reason an explanation for why the page is not cacheable
-	 * @return boolean return false
+	 * @return bool return false
 	 */
 	private function _no_cache_for( $reason )
 	{
@@ -701,7 +701,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since  1.3
 	 * @param  array  $excludes QS excludes setting
-	 * @return boolean|string False if not excluded, otherwise the hit qs list
+	 * @return bool|string False if not excluded, otherwise the hit qs list
 	 */
 	private function _is_qs_excluded( $excludes )
 	{
@@ -714,7 +714,7 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Gets whether any plugins determined that the current page is mobile.
 	 *
-	 * @return boolean true if the current page was deemed mobile, false otherwise
+	 * @return bool true if the current page was deemed mobile, false otherwise
 	 */
 	public static function is_mobile()
 	{

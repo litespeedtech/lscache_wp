@@ -91,7 +91,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::is_noncacheable
-     * @return boolean true if the current page was deemed non-cacheable,
+     * @return bool true if the current page was deemed non-cacheable,
      * false otherwise
      */
     public function test_is_noncacheable() 
@@ -114,7 +114,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::is_mobile
-     * @return boolean true if the current page was deemed mobile,
+     * @return bool true if the current page was deemed mobile,
      * false otherwise
      */
     public function test_is_mobile() 
@@ -137,7 +137,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::get_use_frontpage_ttl
-     * @return boolean true if use front page TTL, false otherwise
+     * @return bool true if use front page TTL, false otherwise
      */
     public function test_get_use_frontpage_ttl() 
     {
