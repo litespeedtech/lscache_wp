@@ -1,9 +1,9 @@
 <?php
 /**
-* LiteSpeed String Operator Library Class.
-*
-* @since 1.3
-*/
+ * LiteSpeed String Operator Library Class.
+ *
+ * @since 1.3
+ */
 
 class Litespeed_String
 {

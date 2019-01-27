@@ -1,10 +1,10 @@
 <?php
 /**
-* LiteSpeed File Operator Library Class
-* Append/Replace content to a file.
-*
-* @since 1.1.0
-*/
+ * LiteSpeed File Operator Library Class
+ * Append/Replace content to a file.
+ *
+ * @since 1.1.0
+ */
 
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
 	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )

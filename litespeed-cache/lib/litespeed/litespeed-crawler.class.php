@@ -1,9 +1,9 @@
 <?php
 /**
-* LiteSpeed Crawler Class.
-*
-* @since 1.1.0
-*/
+ * LiteSpeed Crawler Class.
+ *
+ * @since 1.1.0
+ */
 LiteSpeed_Cache_Utility::compatibility() ;
 
 class Litespeed_Crawler
