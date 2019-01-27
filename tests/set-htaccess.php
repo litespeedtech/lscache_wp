@@ -1,6 +1,7 @@
 <?php
 
-class Set_Htaccess {
+class Set_Htaccess
+{
 
 	public function __construct()
 	{

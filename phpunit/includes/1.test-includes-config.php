@@ -8,7 +8,8 @@
 /**
  * Class LiteSpeed_Cache_Config test case.
  */
-class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
+class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase
+{
 
 	/**
 	 * Function to invoke a Private method
