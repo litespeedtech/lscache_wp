@@ -58,7 +58,7 @@ class LiteSpeed_Cache_Media
 				// Moved to htaccess
 				// add_filter( 'litespeed_vary', array( $this, 'vary_add' ) ) ;
 
-				//
+				
 				if ( $this->webp_support() ) {
 					// Hook to srcset
 					if ( function_exists( 'wp_calculate_image_srcset' ) ) {
