@@ -611,7 +611,7 @@ class LiteSpeed_Cache_Img_Optm
             'src'	=> $meta_value[ 'file' ], // not needed in LiteSpeed sapi, just leave for local storage after post
             'width'	=> $meta_value[ 'width' ],
             'height'	=> $meta_value[ 'height' ],
-            'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
+            'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '',
             'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
             'src_filesize'	=> filesize( $real_file ),
             /**
