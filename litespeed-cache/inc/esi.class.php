@@ -20,7 +20,7 @@ class LiteSpeed_Cache_ESI
 	private static $_instance ;
 
 	private static $has_esi = false ;
-	private $esi_args = null ;
+	private $esi_args ;
 	private $_esi_preserve_list = array() ;
 
 	const QS_ACTION = 'lsesi' ;

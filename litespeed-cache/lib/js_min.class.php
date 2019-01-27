@@ -70,7 +70,7 @@ class JSMin
 	protected $input       = '';
 	protected $inputIndex  = 0;
 	protected $inputLength = 0;
-	protected $lookAhead   = null;
+	protected $lookAhead;
 	protected $output      = '';
 	protected $lastByteOut  = '';
 	protected $keptComment = '';
