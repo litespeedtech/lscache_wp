@@ -177,6 +177,7 @@ class LiteSpeed_Cache_Router
 		// Check if is from crawler
 		if ( empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) || strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT ) !== 0 ) {
 			LiteSpeed_Cache_Log::debug( '[Router] user agent not match' ) ;
+
 			return ;
 		}
 
@@ -184,6 +185,7 @@ class LiteSpeed_Cache_Router
 		$hash = get_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH ) ;
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
 			LiteSpeed_Cache_Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
+
 			return ;
 		}
 
@@ -271,6 +273,7 @@ class LiteSpeed_Cache_Router
 
 			self::$_frontend_path = $frontend ;
 		}
+
 		return self::$_frontend_path ;
 	}
 
@@ -286,6 +289,7 @@ class LiteSpeed_Cache_Router
 		if ( ! isset( self::$_esi_enabled ) ) {
 			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_ENABLE ) ;
 		}
+
 		return self::$_esi_enabled ;
 	}
 
@@ -332,6 +336,7 @@ class LiteSpeed_Cache_Router
 			}
 
 		}
+
 		return self::$_action ;
 	}
 
@@ -347,6 +352,7 @@ class LiteSpeed_Cache_Router
 		if ( ! isset( self::$_is_logged_in ) ) {
 			self::$_is_logged_in = is_user_logged_in() ;
 		}
+
 		return self::$_is_logged_in ;
 	}
 
@@ -362,6 +368,7 @@ class LiteSpeed_Cache_Router
 		if ( ! isset( self::$_is_ajax ) ) {
 			self::$_is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ;
 		}
+
 		return self::$_is_ajax ;
 	}
 
@@ -379,6 +386,7 @@ class LiteSpeed_Cache_Router
 
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
 		}
+
 		return self::$_is_admin_ip ;
 	}
 
@@ -403,6 +411,7 @@ class LiteSpeed_Cache_Router
 	{
 		if ( empty( $_REQUEST[ 'type' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[Router] no type', 2 ) ;
+
 			return false ;
 		}
 
@@ -421,6 +430,7 @@ class LiteSpeed_Cache_Router
 	{
 		if ( empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
+
 			return ;
 		}
 
@@ -433,6 +443,7 @@ class LiteSpeed_Cache_Router
 			// check if it is from admin ip
 			if ( ! $this->is_admin_ip() ) {
 				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP: ' . $action ) ;
+
 				return ;
 			}
 
@@ -446,6 +457,7 @@ class LiteSpeed_Cache_Router
 					LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE,
 					) ) ) {
 				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL query string - did not match admin IP Actions: ' . $action ) ;
+
 				return ;
 			}
 
@@ -467,6 +479,7 @@ class LiteSpeed_Cache_Router
 				if ( ( ! $_is_multisite && $_can_option ) || $_can_network_option ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			// Save network settings
@@ -474,6 +487,7 @@ class LiteSpeed_Cache_Router
 				if ( $_can_network_option ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
@@ -481,18 +495,21 @@ class LiteSpeed_Cache_Router
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || $_can_option || self::is_ajax() ) ) {//here may need more security
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DB_OPTIMIZE:
 				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_EMPTYCACHE:// todo: moved to purge.cls type action
 				if ( defined( 'LITESPEED_ON' ) && ( $_can_network_option || ( ! $_is_multisite && $_can_option ) ) ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_QS_NOCACHE:
@@ -504,6 +521,7 @@ class LiteSpeed_Cache_Router
 				if ( defined( 'LITESPEED_ON' ) && ( $_is_public_action || self::is_ajax() ) ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_CRAWLER_GENERATE_FILE:
@@ -526,17 +544,20 @@ class LiteSpeed_Cache_Router
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_LOG:
 				if ( $_can_network_option || $_can_option ) {
 					self::$_action = $action ;
 				}
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK :
 			case LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK :
 				self::$_action = $action ;
+
 				return ;
 
 			case LiteSpeed_Cache::ACTION_DISMISS:
@@ -551,6 +572,7 @@ class LiteSpeed_Cache_Router
 
 			default:
 				LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL match falied: ' . $action ) ;
+
 				return ;
 		}
 
@@ -593,6 +615,7 @@ class LiteSpeed_Cache_Router
 
 			exit( 'wrong aggressive callback' ) ;
 		}
+
 		return false ;
 	}
 
@@ -667,6 +690,7 @@ class LiteSpeed_Cache_Router
 				$_ip = ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false ;
 			}
 		}
+
 		return $_ip ;
 	}
 

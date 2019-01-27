@@ -97,6 +97,7 @@ class JSMin
 	public static function minify($js)
 	{
 		$jsmin = new JSMin($js);
+
 		return $jsmin->min();
 	}
 
@@ -170,6 +171,7 @@ class JSMin
 		if ($mbIntEnc !== null) {
 			mb_internal_encoding($mbIntEnc);
 		}
+
 		return $this->output;
 	}
 
@@ -352,6 +354,7 @@ class JSMin
 		if ($c === "\r") {
 			return "\n";
 		}
+
 		return ' ';
 	}
 
@@ -374,6 +377,7 @@ class JSMin
 	protected function peek()
 	{
 		$this->lookAhead = $this->get();
+
 		return $this->lookAhead;
 	}
 
@@ -403,6 +407,7 @@ class JSMin
 				if (preg_match('/^\\/@(?:cc_on|if|elif|else|end)\\b/', $comment)) {
 					$this->keptComment .= "/{$comment}";
 				}
+
 				return;
 			}
 		}
@@ -433,6 +438,7 @@ class JSMin
 						// IE conditional
 						$this->keptComment .= "/*{$comment}*/";
 					}
+
 					return;
 				}
 			} elseif ($get === null) {
@@ -463,6 +469,7 @@ class JSMin
 					break;
 			}
 		}
+
 		return $get;
 	}
 }

@@ -224,6 +224,7 @@ class LiteSpeed_Cache_Task
 				'display'  => __( 'LiteSpeed Cache Custom Cron Common', 'litespeed-cache' ),
 			) ;
 		}
+
 		return $schedules ;
 	}
 
@@ -245,6 +246,7 @@ class LiteSpeed_Cache_Task
 				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
 			) ;
 		}
+
 		return $schedules ;
 	}
 

@@ -652,6 +652,7 @@ class LiteSpeed_Cache_GUI
 	public static function finalize( $buffer )
 	{
 		$instance = self::get_instance() ;
+
 		return $instance->_clean_wrapper( $buffer ) ;
 	}
 
@@ -666,6 +667,7 @@ class LiteSpeed_Cache_GUI
 	{
 		if ( self::$_clean_counter < 1 ) {
 			LiteSpeed_Cache_Log::debug2( "GUI bypassed by no counter" ) ;
+
 			return $buffer ;
 		}
 
@@ -710,6 +712,7 @@ class LiteSpeed_Cache_GUI
 			$counter = self::$_clean_counter ;
 			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter begin" ) ;
 		}
+
 		return '<!-- LiteSpeed To Be Removed begin ' . $counter . ' -->' ;
 	}
 
@@ -725,6 +728,7 @@ class LiteSpeed_Cache_GUI
 			$counter = self::$_clean_counter ;
 			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter end" ) ;
 		}
+
 		return '<!-- LiteSpeed To Be Removed end ' . $counter . ' -->' ;
 	}
 

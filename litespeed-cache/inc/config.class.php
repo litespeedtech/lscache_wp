@@ -175,6 +175,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			if ( $options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON2 ) { // Default to cache on
 				$this->define_cache_on() ;
 			}
+
 			return $options ;
 		}
 
@@ -256,6 +257,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( ! empty( $new_cfg ) ) {
 			$this->options = array_merge( $this->options, $new_cfg ) ;
 		}
+
 		return update_option( self::OPTION_NAME, $this->options ) ;
 	}
 
@@ -680,6 +682,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$file = dirname( ABSPATH ) . '/wp-config.php' ; // todo: is the path correct?
 			if ( ! is_writeable( $file ) ) {
 				error_log( 'wp-config file not writable for \'WP_CACHE\'' ) ;
+
 				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE ;
 			}
 		}
@@ -698,6 +701,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 				if ( $count == 0 ) {
 					error_log( 'wp-config file did not find a place to insert define.' ) ;
+
 					return LiteSpeed_Cache_Admin_Error::E_CONF_FIND ;
 				}
 			}
@@ -707,6 +711,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		file_put_contents( $file, $new_file_content ) ;
+
 		return true ;
 	}
 

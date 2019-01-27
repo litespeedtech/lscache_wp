@@ -23,6 +23,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
          if(count($parameters) > 0){
             $instance = LiteSpeed_Cache::plugin();
+
             return $method->invokeArgs($instance, $parameters);
          }else{
             return $method;

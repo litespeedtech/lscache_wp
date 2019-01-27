@@ -144,6 +144,7 @@ class LiteSpeed_Cache_Optimize
 			return $varys ;
 		}
 		$varys[ 'role_exclude_optm' ] = 1 ;
+
 		return $varys ;
 	}
 
@@ -312,6 +313,7 @@ class LiteSpeed_Cache_Optimize
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: Not frontend HTML type' ) ;
+
 			return $content ;
 		}
 
@@ -321,6 +323,7 @@ class LiteSpeed_Cache_Optimize
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
 				LiteSpeed_Cache_Log::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result ) ;
+
 				return $content ;
 			}
 		}
@@ -328,6 +331,7 @@ class LiteSpeed_Cache_Optimize
 		// Check if is exclude optm roles ( Need to set Vary too )
 		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result ) ;
+
 			return $content ;
 		}
 
@@ -337,6 +341,7 @@ class LiteSpeed_Cache_Optimize
 		$instance->content = $content ;
 
 		$instance->_optimize() ;
+
 		return $instance->content ;
 	}
 
@@ -362,6 +367,7 @@ class LiteSpeed_Cache_Optimize
 
 		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
+
 			return ;
 		}
 
@@ -1132,6 +1138,7 @@ class LiteSpeed_Cache_Optimize
 			$v .= '<noscript>' . $ori . '</noscript>' ;
 			$html_list[ $k ] = $v ;
 		}
+
 		return $html_list ;
 	}
 

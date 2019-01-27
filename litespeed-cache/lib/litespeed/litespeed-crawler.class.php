@@ -190,6 +190,7 @@ class Litespeed_Crawler
 		if ( $this->_meta['done'] === 'touchedEnd' ) {
 			return $this->_meta['last_full_time_cost'] + $this->_meta['this_full_beginning_time'] ;
 		}
+
 		return false ;
 	}
 
@@ -371,6 +372,7 @@ class Litespeed_Crawler
 						// reset done status
 						$this->_meta['done'] = 0 ;
 						$this->_meta['this_full_beginning_time'] = 0 ;
+
 						return __('Stopped due to reset meta position', 'litespeed-cache') ;
 					}
 				}
@@ -655,6 +657,7 @@ class Litespeed_Crawler
 		$this->_meta[ 'meta_save_time' ] = time() ;
 
 		$ret = Litespeed_File::save( $this->_meta_file, json_encode( $this->_meta ), false, false, false ) ;
+
 		return $ret ;
 	}
 

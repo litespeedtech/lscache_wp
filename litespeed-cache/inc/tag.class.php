@@ -92,6 +92,7 @@ class LiteSpeed_Cache_Tag
 
 		if ( ! empty( $_GET ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'has GET request' ) ;
+
 			return ;
 		}
 
@@ -168,6 +169,7 @@ class LiteSpeed_Cache_Tag
 	public static function add_widget_recent_posts( $params )
 	{
 		self::add( self::TYPE_PAGES_WITH_RECENT_POSTS ) ;
+
 		return $params ;
 	}
 

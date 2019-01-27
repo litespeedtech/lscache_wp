@@ -255,6 +255,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 				$vary = array( $vary ) ;
 			}
 			$cookies = array_merge( $cookies, $vary ) ;
+
 			return $cookies ;
 		}, $priority ) ;
 	}
@@ -538,6 +539,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 		if ( $control === 'default' ) {
 			$control = 'private,no-vary' ;
 		}
+
 		return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_val ) ;
 	}
 

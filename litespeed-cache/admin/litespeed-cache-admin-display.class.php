@@ -399,6 +399,7 @@ class LiteSpeed_Cache_Admin_Display
 				$error = sprintf($error, $args) ;
 			}
 		}
+
 		return $error ;
 	}
 
@@ -493,6 +494,7 @@ class LiteSpeed_Cache_Admin_Display
 					WP_CLI::success( $msg ) ;
 				}
 			}
+
 			return ;
 		}
 

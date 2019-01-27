@@ -63,6 +63,7 @@ class LiteSpeed_Cache_Cli_Purge
 		WP_CLI::debug('url is ' . $url) ;
 
 		$out = WP_CLI\Utils\http_request('GET', $url, $data) ;
+
 		return $out ;
 	}
 
@@ -112,6 +113,7 @@ class LiteSpeed_Cache_Cli_Purge
 	{
 		if ( ! is_multisite() ) {
 			WP_CLI::error('Not a multisite installation.') ;
+
 			return ;
 		}
 		$blogid = $args[0] ;
@@ -119,6 +121,7 @@ class LiteSpeed_Cache_Cli_Purge
 			$error = WP_CLI::colorize('%RError: invalid blog id entered.%n') ;
 			WP_CLI::line($error) ;
 			$this->network_list($args, $assoc_args) ;
+
 			return ;
 		}
 		$site = get_blog_details($blogid) ;
@@ -126,6 +129,7 @@ class LiteSpeed_Cache_Cli_Purge
 			$error = WP_CLI::colorize('%RError: invalid blog id entered.%n') ;
 			WP_CLI::line($error) ;
 			$this->network_list($args, $assoc_args) ;
+
 			return ;
 		}
 		switch_to_blog($blogid) ;
@@ -162,12 +166,14 @@ class LiteSpeed_Cache_Cli_Purge
 		$deconstructed = wp_parse_url($url) ;
 		if ( empty($deconstructed) ) {
 			WP_CLI::error('url passed in is invalid.') ;
+
 			return ;
 		}
 
 		if ( is_multisite() ) {
 			if ( get_blog_id_from_url($deconstructed['host'], '/') === 0 ) {
 				WP_CLI::error('Multisite url passed in is invalid.') ;
+
 				return ;
 			}
 		}
@@ -175,6 +181,7 @@ class LiteSpeed_Cache_Cli_Purge
 			$deconstructed_site = wp_parse_url( get_home_url() ) ;
 			if ( $deconstructed['host'] !== $deconstructed_site['host'] ) {
 				WP_CLI::error('Single site url passed in is invalid.') ;
+
 				return ;
 			}
 		}
@@ -218,6 +225,7 @@ class LiteSpeed_Cache_Cli_Purge
 
 		if ( empty($filtered) ) {
 			WP_CLI::error('Arguments must be integer ids.') ;
+
 			return ;
 		}
 

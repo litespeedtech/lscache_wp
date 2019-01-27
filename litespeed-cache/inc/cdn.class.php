@@ -51,6 +51,7 @@ class LiteSpeed_Cache_CDN
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
+
 			return ;
 		}
 
@@ -69,6 +70,7 @@ class LiteSpeed_Cache_CDN
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
+
 			return ;
 		}
 
@@ -124,6 +126,7 @@ class LiteSpeed_Cache_CDN
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
+
 			return ;
 		}
 
@@ -244,6 +247,7 @@ class LiteSpeed_Cache_CDN
 		$instance->content = $content ;
 
 		$instance->_finalize() ;
+
 		return $instance->content ;
 	}
 
@@ -257,6 +261,7 @@ class LiteSpeed_Cache_CDN
 	{
 		if ( defined( self::BYPASS ) ) {
 			LiteSpeed_Cache_Log::debug2( 'CDN bypass' ) ;
+
 			return ;
 		}
 
@@ -380,6 +385,7 @@ class LiteSpeed_Cache_CDN
 		if ( $img && $url = $this->rewrite( $img[ 0 ], LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 			$img[ 0 ] = $url ;
 		}
+
 		return $img ;
 	}
 
@@ -394,6 +400,7 @@ class LiteSpeed_Cache_CDN
 		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 			$url = $url2 ;
 		}
+
 		return $url ;
 	}
 
@@ -408,6 +415,7 @@ class LiteSpeed_Cache_CDN
 		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ) ) {
 			$url = $url2 ;
 		}
+
 		return $url ;
 	}
 
@@ -422,6 +430,7 @@ class LiteSpeed_Cache_CDN
 		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ) ) {
 			$url = $url2 ;
 		}
+
 		return $url ;
 	}
 
@@ -444,6 +453,7 @@ class LiteSpeed_Cache_CDN
 				$srcs[ $w ][ 'url' ] = $url ;
 			}
 		}
+
 		return $srcs ;
 	}
 
@@ -462,6 +472,7 @@ class LiteSpeed_Cache_CDN
 
 		if ( empty( $url_parsed[ 'path' ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite bypassed: no path' ) ;
+
 			return false ;
 		}
 
@@ -469,6 +480,7 @@ class LiteSpeed_Cache_CDN
 		$is_internal_folder = LiteSpeed_Cache_Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
 		if ( ! $is_internal_folder ) {
 			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
+
 			return false ;
 		}
 
@@ -476,6 +488,7 @@ class LiteSpeed_Cache_CDN
 		if ( ! empty( $url_parsed[ 'host' ] ) ) {
 			if ( ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
 				LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: host not internal' ) ;
+
 				return false ;
 			}
 		}
@@ -484,6 +497,7 @@ class LiteSpeed_Cache_CDN
 			$exclude = LiteSpeed_Cache_Utility::str_hit_array( $url, $this->_cfg_cdn_exclude ) ;
 			if ( $exclude ) {
 				LiteSpeed_Cache_Log::debug2( '[CDN] -abort excludes ' . $exclude ) ;
+
 				return false ;
 			}
 		}

@@ -76,6 +76,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	{
 		if ( isset( $_REQUEST[ 'gallery_id' ] ) ) {
 			LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ] ) ;
+
 			return ;
 		}
 
@@ -85,6 +86,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 
 			if ( ! empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
 				LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ] ) ;
+
 				return ;
 			}
 		}
@@ -100,6 +102,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 		}
 		else {
 			error_log('LiteSpeed_Cache hit ngg_ajax_image_save with no post image id.') ;
+
 			return ;
 		}
 		$image = C_Image_Mapper::get_instance()->find($id) ;

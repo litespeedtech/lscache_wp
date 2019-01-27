@@ -155,6 +155,7 @@ class LiteSpeed_Cache_Admin
 					$this->display->set_disable_all() ;
 				}
 			}
+
 			return ;
 		}
 		elseif ( ! current_user_can('manage_network_options') ) {
@@ -210,6 +211,7 @@ class LiteSpeed_Cache_Admin
 				// Result does not matter.
 				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter
 			}
+
 			return ;
 		}
 

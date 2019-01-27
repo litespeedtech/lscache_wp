@@ -133,6 +133,7 @@ class LiteSpeed_Cache_CSS
 		// If don't need to generate CCSS, bypass
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] bypassed ccss due to setting' ) ;
+
 			return '' ;
 		}
 
@@ -141,6 +142,7 @@ class LiteSpeed_Cache_CSS
 
 		if ( file_exists( $ccss_file ) ) {
 			LiteSpeed_Cache_Log::debug2( '[CSS] existing ccss ' . $ccss_file ) ;
+
 			return Litespeed_File::read( $ccss_file ) ;
 		}
 
@@ -167,6 +169,7 @@ class LiteSpeed_Cache_CSS
 			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
 			$this->_save_summary( $req_summary ) ;
+
 			return '' ;
 		}
 
@@ -208,6 +211,7 @@ class LiteSpeed_Cache_CSS
 		foreach ( $req_summary[ 'queue' ] as $k => $v ) {
 			if ( ! is_array( $v ) ) {// Backward compatibility for v2.6.4-
 				LiteSpeed_Cache_Log::debug( '[CSS] previous v2.6.4- data' ) ;
+
 				return ;
 			}
 
@@ -253,6 +257,7 @@ class LiteSpeed_Cache_CSS
 
 		if ( empty( $json[ 'ccss' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] empty ccss ' ) ;
+
 			return false ;
 		}
 

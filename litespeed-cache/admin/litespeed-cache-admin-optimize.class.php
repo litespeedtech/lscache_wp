@@ -28,6 +28,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	public static function generate_url( $type )
 	{
 		$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $type ) ;
+
 		return $url ;
 	}
 
@@ -77,6 +78,7 @@ class LiteSpeed_Cache_Admin_Optimize
 			foreach ( self::$_types as $val ) {
 				$num += self::db_count( $val ) ;
 			}
+
 			return $num ;
 		}
 
@@ -89,6 +91,7 @@ class LiteSpeed_Cache_Admin_Optimize
 					$num += self::db_count( $type, true ) ;
 					restore_current_blog() ;
 				}
+
 				return $num ;
 			}
 		}
@@ -143,6 +146,7 @@ class LiteSpeed_Cache_Admin_Optimize
 			foreach ( self::$_types as $val ) {
 				self::db_clean( $val ) ;
 			}
+
 			return __( 'Clean all successfully.', 'litespeed-cache' ) ;
 		}
 
@@ -150,34 +154,42 @@ class LiteSpeed_Cache_Admin_Optimize
 		switch ( $type ) {
 			case 'revision':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'" ) ;
+
 				return __( 'Clean post revisions successfully.', 'litespeed-cache' ) ;
 
 			case 'auto_draft':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'" ) ;
+
 				return __( 'Clean auto drafts successfully.', 'litespeed-cache' ) ;
 
 			case 'trash_post':
 				$wpdb->query( "DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'" ) ;
+
 				return __( 'Clean trashed posts and pages successfully.', 'litespeed-cache' ) ;
 
 			case 'spam_comment':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'" ) ;
+
 				return __( 'Clean spam comments successfully.', 'litespeed-cache' ) ;
 
 			case 'trash_comment':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'" ) ;
+
 				return __( 'Clean trashed comments successfully.', 'litespeed-cache' ) ;
 
 			case 'trackback-pingback':
 				$wpdb->query( "DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'" ) ;
+
 				return __( 'Clean trackbacks and pingbacks successfully.', 'litespeed-cache' ) ;
 
 			case 'expired_transient':
 				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time() ) ;
+
 				return __( 'Clean expired transients successfully.', 'litespeed-cache' ) ;
 
 			case 'all_transients':
 				$wpdb->query( "DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'" ) ;
+
 				return __( 'Clean all transients successfully.', 'litespeed-cache' ) ;
 
 			case 'optimize_tables':
@@ -188,11 +200,13 @@ class LiteSpeed_Cache_Admin_Optimize
 						$wpdb->query( 'OPTIMIZE TABLE ' . $row->table_name ) ;
 					}
 				}
+
 				return __( 'Optimized all tables.', 'litespeed-cache' ) ;
 
 			case 'all_cssjs' :
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$wpdb->query( "TRUNCATE `" . LiteSpeed_Cache_Data::get_optm_table() . "`" ) ;
+
 				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' ) ;
 
 		}

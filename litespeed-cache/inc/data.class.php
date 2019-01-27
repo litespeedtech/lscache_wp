@@ -56,6 +56,7 @@ class LiteSpeed_Cache_Data
 	public static function get_tb_img_optm()
 	{
 		global $wpdb ;
+
 		return $wpdb->prefix . self::TB_IMG_OPTM ;
 	}
 
@@ -68,6 +69,7 @@ class LiteSpeed_Cache_Data
 	public static function get_optm_table()
 	{
 		global $wpdb ;
+
 		return $wpdb->prefix . self::TB_OPTIMIZER ;
 	}
 
@@ -81,6 +83,7 @@ class LiteSpeed_Cache_Data
 	{
 		global $wpdb ;
 		$instance = self::get_instance() ;
+
 		return $wpdb->get_var( "SHOW TABLES LIKE '$instance->_tb_optm'" ) ;
 	}
 
@@ -254,6 +257,7 @@ class LiteSpeed_Cache_Data
 		// Check if table exists first
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_optm'" ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
+
 			return ;
 		}
 
@@ -299,6 +303,7 @@ class LiteSpeed_Cache_Data
 	public static function optm_save_src( $filename, $src )
 	{
 		$instance = self::get_instance() ;
+
 		return $instance->_optm_save_src( $filename, $src ) ;
 	}
 
@@ -328,6 +333,7 @@ class LiteSpeed_Cache_Data
 	public static function optm_hash2src( $filename )
 	{
 		$instance = self::get_instance() ;
+
 		return $instance->_optm_hash2src( $filename ) ;
 	}
 

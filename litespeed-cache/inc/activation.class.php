@@ -69,6 +69,7 @@ class LiteSpeed_Cache_Activation
 					// Only itself is activated, set .htaccess with only CacheLookUp
 					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 				}
+
 				return ;
 			}
 
@@ -89,6 +90,7 @@ class LiteSpeed_Cache_Activation
 			}
 
 			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;
+
 			return ;
 		}
 
@@ -155,6 +157,7 @@ class LiteSpeed_Cache_Activation
 			$args[ 'fields' ] = 'ids' ;
 			$blogs = get_sites( $args ) ;
 		}
+
 		return $blogs ;
 	}
 
@@ -200,6 +203,7 @@ class LiteSpeed_Cache_Activation
 		if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
 			$count++ ;
 		}
+
 		return $count ;
 	}
 
@@ -221,10 +225,12 @@ class LiteSpeed_Cache_Activation
 			// Not deactivating the last one.
 			$count-- ;
 			set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
+
 			return false ;
 		}
 
 		delete_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
+
 		return true ;
 	}
 
@@ -251,6 +257,7 @@ class LiteSpeed_Cache_Activation
 					// Still other activated subsite left, set .htaccess with only CacheLookUp
 					LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
 				}
+
 				return ;
 			}
 		}
@@ -352,11 +359,13 @@ class LiteSpeed_Cache_Activation
 			ob_end_clean() ;
 		} catch ( \Exception $e ) {
 			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+
 			return ;
 		}
 
 		if ( is_wp_error( $result ) ) {
 			LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+
 			return ;
 		}
 

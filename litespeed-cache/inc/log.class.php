@@ -87,6 +87,7 @@ class LiteSpeed_Cache_Log
 		if ( $debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
 			if ( ! LiteSpeed_Cache_Router::is_admin_ip() ) {
 				define( 'LSCWP_LOG_BYPASS_NOTADMIN', true ) ;
+
 				return ;
 			}
 		}
@@ -256,6 +257,7 @@ class LiteSpeed_Cache_Log
 			self::$_prefix = sprintf( " [%s %s %s] ", $addr, LSCWP_LOG_TAG, Litespeed_String::rrand( 3 ) ) ;
 		}
 		list( $usec, $sec ) = explode(' ', microtime() ) ;
+
 		return date( 'm/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET ) . substr( $usec, 1, 4 ) . self::$_prefix . $msg . "\n" ;
 	}
 
@@ -278,10 +280,12 @@ class LiteSpeed_Cache_Log
 			if ( ! is_numeric( $backtrace_limit ) ) {
 				$msg .= ' --- ' . var_export( $backtrace_limit, true ) ;
 				self::push( $msg ) ;
+
 				return ;
 			}
 
 			self::push( $msg, $backtrace_limit + 1 ) ;
+
 			return ;
 		}
 

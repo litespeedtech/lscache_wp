@@ -20,6 +20,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
          if(count($parameters) > 0){
          	$instance = LiteSpeed_Cache_Admin_Display::get_instance();
+
             return $method->invokeArgs($instance, $parameters);
          }else{
             return $method;

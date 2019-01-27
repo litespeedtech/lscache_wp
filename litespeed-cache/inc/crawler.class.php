@@ -66,6 +66,7 @@ class LiteSpeed_Cache_Crawler
 			return false ;
 		}
 		$metaUrl = implode('/', array_slice(explode('/', $this->_sitemap_file . '.meta'), -5)) ;
+
 		return $this->_home_url . '/' . $metaUrl ;
 	}
 
@@ -105,6 +106,7 @@ class LiteSpeed_Cache_Crawler
 		if ( ! isset( $_POST[ self::CRWL_BLACKLIST ] ) ) {
 			$msg = __( 'Can not find any form data for blacklist', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg ) ;
+
 			return false ;
 		}
 		$content = $_POST[ self::CRWL_BLACKLIST ] ;
@@ -150,6 +152,7 @@ class LiteSpeed_Cache_Crawler
 		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
 		if ( $ret !== true ) {
 			LiteSpeed_Cache_Log::debug( 'Crawler: append blacklist failed: ' . $ret ) ;
+
 			return false ;
 		}
 
@@ -196,6 +199,7 @@ class LiteSpeed_Cache_Crawler
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
+
 			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ ;
 		}
 
@@ -350,11 +354,13 @@ class LiteSpeed_Cache_Crawler
 	{
 		if ( ! LiteSpeed_Cache_Router::can_crawl() ) {
 			LiteSpeed_Cache_Log::debug('Crawler: ......crawler is NOT allowed by the server admin......') ;
+
 			return false;
 		}
 		if ( $force ) {
 			LiteSpeed_Cache_Log::debug('Crawler: ......crawler manually ran......') ;
 		}
+
 		return self::get_instance()->_crawl_data($force) ;
 	}
 
@@ -367,6 +373,7 @@ class LiteSpeed_Cache_Crawler
 	public function read_meta()
 	{
 		$crawler = new Litespeed_Crawler( $this->_sitemap_file ) ;
+
 		return $crawler->read_meta() ;
 	}
 
@@ -385,6 +392,7 @@ class LiteSpeed_Cache_Crawler
 			$ret = $this->_generate_sitemap() ;
 			if ( $ret !== true ) {
 				LiteSpeed_Cache_Log::debug('Crawler: ' . $ret) ;
+
 				return $this->output($ret) ;
 			}
 		}
@@ -500,12 +508,14 @@ class LiteSpeed_Cache_Crawler
 		// return error
 		if ( $ret['error'] !== false ) {
 			LiteSpeed_Cache_Log::debug('Crawler: ' . $ret['error']) ;
+
 			return $this->output($ret['error']) ;
 		}
 		else {
 			$msg = 'Crawler #' . ( $curr_crawler_pos + 1 ) . ' reached end of sitemap file.' ;
 			$msg_t = sprintf( __( 'Crawler %s reached end of sitemap file.', 'litespeed-cache' ), '#' . ( $curr_crawler_pos + 1 ) )  ;
 			LiteSpeed_Cache_Log::debug('Crawler: ' . $msg) ;
+
 			return $this->output($msg_t) ;
 		}
 	}

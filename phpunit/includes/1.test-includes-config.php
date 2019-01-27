@@ -20,6 +20,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
          if(count($parameters) > 0){
          	$instance = self::get_instance();
+
             return $method->invokeArgs($instance, $parameters);
          }else{
             return $method;
@@ -31,6 +32,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 */
     public static function get_instance(){
 		$instance = new LiteSpeed_Cache_Config();
+
 		return $instance;
     }
 
@@ -40,6 +42,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
     public static function converttoArray($object){
     	
     	if(is_object($object)) $array = (array) $object;
+
     	return $array;
     }
 

@@ -326,11 +326,13 @@ eot;
 	{
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] bypass: NO_LAZY const' ) ;
+
 			return $content ;
 		}
 
 		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] bypass: Not frontend HTML type' ) ;
+
 			return $content ;
 		}
 
@@ -340,6 +342,7 @@ eot;
 		$instance->content = $content ;
 
 		$instance->_finalize() ;
+
 		return $instance->content ;
 	}
 
@@ -463,6 +466,7 @@ eot;
 		// Prevent repeated requests
 		if ( in_array( $size, $this->_ph_queue ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to in queue [size] ' . $size ) ;
+
 			return false ;
 		}
 		$this->_ph_queue[] = $size ;
@@ -474,6 +478,7 @@ eot;
 			// If requested recently, bypass
 			if ( $req_summary && ! empty( $req_summary[ 'curr_request' ] ) && time() - $req_summary[ 'curr_request' ] < 300 ) {
 				LiteSpeed_Cache_Log::debug2( '[Media] Resp placeholder file bypass generating due to interval limit [size] ' . $size ) ;
+
 				return false ;
 			}
 			// Generate immediately
@@ -497,6 +502,7 @@ eot;
 		LiteSpeed_Cache_Log::debug( '[Media] Added placeholder queue [size] ' . $size ) ;
 
 		$this->_save_summary( $req_summary ) ;
+
 		return false ;
 
 	}
@@ -728,6 +734,7 @@ eot;
 		if ( $img && $url = $this->replace_webp( $img[ 0 ] ) ) {
 			$img[ 0 ] = $url ;
 		}
+
 		return $img ;
 	}
 
@@ -744,6 +751,7 @@ eot;
 		if ( $url && $url2 = $this->replace_webp( $url ) ) {
 			$url = $url2 ;
 		}
+
 		return $url ;
 	}
 
@@ -765,6 +773,7 @@ eot;
 				$srcs[ $w ][ 'url' ] = $url ;
 			}
 		}
+
 		return $srcs ;
 	}
 
@@ -780,6 +789,7 @@ eot;
 
 		if ( substr( $url, -5 ) == '.webp' ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] already webp' ) ;
+
 			return false ;
 		}
 
@@ -790,11 +800,13 @@ eot;
 			}
 			else {
 				LiteSpeed_Cache_Log::debug2( '[Media] -no WebP file, bypassed' ) ;
+
 				return false ;
 			}
 		}
 		else {
 			LiteSpeed_Cache_Log::debug2( '[Media] -no file, bypassed' ) ;
+
 			return false ;
 		}
 
@@ -940,6 +952,7 @@ eot;
 
 		if ( strpos( $data, 'data:image/png;base64,' ) !== 0 ) {
 			LiteSpeed_Cache_Log::debug( '[Media] failed to decode response: ' . $data ) ;
+
 			return false ;
 		}
 

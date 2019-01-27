@@ -103,8 +103,10 @@ class LiteSpeed_Cache_Vary
 					LiteSpeed_Cache_Admin_Display::show_error_cookie() ;
 				}
 				LiteSpeed_Cache_Control::set_nocache('vary cookie setting error') ;
+
 				return ;
 			}
+
 			return ;
 		}
 		// If db setting does not exist, skip checking db value
@@ -117,6 +119,7 @@ class LiteSpeed_Cache_Vary
 
 		if ( in_array($db_cookie, $vary_arr) ) {
 			self::$_vary_name = $db_cookie ;
+
 			return ;
 		}
 
@@ -190,6 +193,7 @@ class LiteSpeed_Cache_Vary
 		if ( empty( $_COOKIE[ self::$_vary_name ] ) ) {
 			return false ;
 		}
+
 		return $_COOKIE[ self::$_vary_name ] ;
 	}
 
@@ -263,6 +267,7 @@ class LiteSpeed_Cache_Vary
 		 */
 		if ( LiteSpeed_Cache_Router::is_ajax() && ! apply_filters( 'litespeed_ajax_vary', false ) ) {
 			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to ajax call' ) ;
+
 			return false ;
 		}
 
@@ -272,11 +277,13 @@ class LiteSpeed_Cache_Vary
 		 */
 		if ( $_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST' ) {
 			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to method not get/post' ) ;
+
 			return false ;
 		}
 
 		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
 			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
+
 			return false ;
 		}
 
@@ -298,6 +305,7 @@ class LiteSpeed_Cache_Vary
 		}
 		else {
 			LiteSpeed_Cache_Log::debug2( "[Vary] _update_default_vary bypassed due to run already" ) ;
+
 			return ;
 		}
 
@@ -471,6 +479,7 @@ class LiteSpeed_Cache_Vary
 			$path = ! empty( $path[ 'path' ] ) ? $path[ 'path' ] : false ;
 			LiteSpeed_Cache_Log::debug( '[Vary] Cookie Vary path: ' . $path ) ;
 		}
+
 		return $path ;
 	}
 
@@ -512,6 +521,7 @@ class LiteSpeed_Cache_Vary
 				LiteSpeed_Cache_Log::debug( '[Vary] finalize bypassed due to password protected vary ' ) ;
 				// If user has password cookie, do not cache
 				LiteSpeed_Cache_Control::set_nocache('password protected vary') ;
+
 				return ;
 			}
 
@@ -520,6 +530,7 @@ class LiteSpeed_Cache_Vary
 
 		if ( empty($tp_cookies) ) {
 			LiteSpeed_Cache_Log::debug2( '[Vary] no custimzed vary ' ) ;
+
 			return ;
 		}
 

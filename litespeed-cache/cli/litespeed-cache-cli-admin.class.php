@@ -74,6 +74,7 @@ class LiteSpeed_Cache_Cli_Admin
 		 */
 		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
+
 			return ;
 		}
 
@@ -83,6 +84,7 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::OPID_VERSION:
 				//do not allow
 				WP_CLI::error('This option is not available for setting.') ;
+
 				return ;
 
 			case LiteSpeed_Cache_Config::OPID_CACHE_MOBILE:
@@ -101,6 +103,7 @@ class LiteSpeed_Cache_Cli_Admin
 				}
 				else {
 					WP_CLI::error('Checkbox value must be true or false.') ;
+
 					return ;
 				}
 				break ;
@@ -148,6 +151,7 @@ class LiteSpeed_Cache_Cli_Admin
 					}
 					else {
 						WP_CLI::error('Purge checkbox value must be true or false.') ;
+
 						return ;
 					}
 				}
@@ -240,6 +244,7 @@ class LiteSpeed_Cache_Cli_Admin
 
 		if ( ! is_writable(dirname($file)) ) {
 			WP_CLI::error('Directory not writable.') ;
+
 			return ;
 		}
 
@@ -325,6 +330,7 @@ class LiteSpeed_Cache_Cli_Admin
 			foreach ($wp_settings_errors as $err) {
 				WP_CLI::error($err['message']) ;
 			}
+
 			return ;
 		}
 

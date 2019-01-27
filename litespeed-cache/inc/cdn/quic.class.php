@@ -64,6 +64,7 @@ class LiteSpeed_Cache_CDN_Quic
 		if ( $res != 'ok' ) {
 			LiteSpeed_Cache_Log::debug( '[QUIC] sync config failed [err] ' . $res ) ;
 		}
+
 		return $res ;
 	}
 
@@ -204,6 +205,7 @@ class LiteSpeed_Cache_CDN_Quic
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[QUIC] failed to post: ' . $error_message ) ;
+
 			return $error_message ;
 		}
 		LiteSpeed_Cache_Log::debug( '[QUIC] _api call response: ' . $response[ 'body' ] ) ;

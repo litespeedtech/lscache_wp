@@ -55,11 +55,13 @@ class LiteSpeed_Cache_Optimizer
 			if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
 				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
 			}
+
 			return $content_final ;
 
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
 			error_log( '****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
+
 			return $content ;
 		}
 	}
@@ -202,11 +204,13 @@ class LiteSpeed_Cache_Optimizer
 	{
 		try {
 			$obj = new LiteSpeed_3rd_Lib\css_min\Minifier() ;
+
 			return $obj->run( $data ) ;
 
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
 			error_log( '****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;
+
 			return $data ;
 		}
 	}
@@ -226,12 +230,14 @@ class LiteSpeed_Cache_Optimizer
 			preg_match( '#type=([\'"])(.+)\g{1}#isU', $js_type, $matches ) ;
 			if ( $matches && $matches[ 2 ] != 'text/javascript' ) {
 				LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ] ) ;
+
 				return $data ;
 			}
 		}
 
 		try {
 			$data = LiteSpeed_3rd_Lib\js_min\JSMin::minify( $data ) ;
+
 			return $data ;
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
@@ -301,6 +307,7 @@ class LiteSpeed_Cache_Optimizer
 			$content = preg_replace( "| */ *|", '/', $content ) ;
 		}
 		$content = trim( $content ) ;
+
 		return $content ;
 	}
 

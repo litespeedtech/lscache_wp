@@ -46,6 +46,7 @@ class Litespeed_File
 
 		$file = new SplFileObject($filename) ;
 		$file->seek(PHP_INT_MAX) ;
+
 		return $file->key() + 1 ;
 	}
 
@@ -89,6 +90,7 @@ class Litespeed_File
 			}
 
 			unset($file) ;
+
 			return $res ;
 		}
 
@@ -184,6 +186,7 @@ class Litespeed_File
 	{
 		if ( is_array( $content ) ) {
 			$content = array_map( 'self::remove_zero_space', $content ) ;
+
 			return $content ;
 		}
 
@@ -245,6 +248,7 @@ class Litespeed_File
 			$insertion,
 			array( $end_marker )
 		) ) ;
+
 		return $new_data ;
 	}
 
@@ -274,6 +278,7 @@ class Litespeed_File
 			$result,
 			array( $end_marker )
 		) ) ;
+
 		return $new_data ;
 	}
 
@@ -289,6 +294,7 @@ class Litespeed_File
 		if( ! $marker ) {
 			$marker = self::MARKER ;
 		}
+
 		return self::_extract_from_markers($filename, $marker) ;
 	}
 

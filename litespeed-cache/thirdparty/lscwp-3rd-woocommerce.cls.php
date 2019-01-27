@@ -181,6 +181,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			LiteSpeed_Cache_API::debug( 'API: 3rd woo added vary due to cart not empty' ) ;
 			$vary[ 'woo_cart' ] = 1 ;
 		}
+
 		return $vary ;
 	}
 
@@ -204,6 +205,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( is_null( $woocom->cart ) ) {
 			return false ;
 		}
+
 		return $woocom->cart->get_cart_contents_count() > 0 ;
 	}
 
@@ -265,8 +267,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				add_filter('woocommerce_related_products_args', array( $this, 'add_related_tags' ) ) ;
 				add_action('woocommerce_after_template_part', array( $this, 'end_template' ), 999) ;
 			}
+
 			return ;
 		}
+
 		return ;
 		global $post ;
 		$params = array(
@@ -321,6 +325,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		foreach ( $related_posts as $related ) {
 			LiteSpeed_Cache_API::tag_add(LiteSpeed_Cache_API::TYPE_POST . $related) ;
 		}
+
 		return $args ;
 	}
 
@@ -436,6 +441,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return $params ;
 		}
 		$params[self::ESI_PARAM_POSTID] = get_the_ID() ;
+
 		return $params ;
 	}
 
@@ -466,6 +472,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			$options[LiteSpeed_Cache_API::WIDGET_OPID_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON ;
 			$options[LiteSpeed_Cache_API::WIDGET_OPID_TTL] = 86400 ;
 		}
+
 		return $options ;
 	}
 
@@ -578,6 +585,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			if ( version_compare( $woocom->version, '3.2.0', '<' ) && defined('DONOTCACHEPAGE') && DONOTCACHEPAGE ) {
 				LiteSpeed_Cache_API::debug('3rd party woocommerce not cache by constant') ;
 				LiteSpeed_Cache_API::set_nocache() ;
+
 				return ;
 			}
 			elseif ( version_compare($woocom->version, '2.1.0', '>=') ) {
@@ -628,9 +636,11 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				if ( $err ) {
 					LiteSpeed_Cache_API::debug('3rd party woocommerce not cache due to ' . $err) ;
 					LiteSpeed_Cache_API::set_nocache() ;
+
 					return ;
 				}
 			}
+
 			return ;
 		}
 
@@ -642,6 +652,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		if ( in_array($uri, array('cart/', 'checkout/', 'my-account/', 'addons/', 'logout/', 'lost-password/', 'product/')) ) {
 			LiteSpeed_Cache_API::set_nocache() ;
+
 			return ;
 		}
 
@@ -649,6 +660,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		$qs_len = strlen($qs) ;
 		if ( ! empty($qs) && $qs_len >= 12 && strpos( $qs, 'add-to-cart=' ) === 0 ) {
 			LiteSpeed_Cache_API::set_nocache() ;
+
 			return ;
 		}
 	}

@@ -71,6 +71,7 @@ class LiteSpeed_Cache_Control
 			return $varys ;
 		}
 		$varys[ 'role_exclude_cache' ] = 1 ;
+
 		return $varys ;
 	}
 
@@ -408,6 +409,7 @@ class LiteSpeed_Cache_Control
 					$ttl += 86400 ;// add one day
 				}
 				LiteSpeed_Cache_Log::debug( '[Ctrl] X Cache_control TTL is limited to ' . $ttl ) ;
+
 				return $ttl ;
 			}
 		}
@@ -433,6 +435,7 @@ class LiteSpeed_Cache_Control
 
 		if ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
 			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
+
 			return $ttl_403 ;
 		}
 
@@ -499,6 +502,7 @@ class LiteSpeed_Cache_Control
 
 		if ( ! self::is_cacheable() ) {
 			$hdr .= 'no-cache' . $esi_hdr ;
+
 			return $hdr ;
 		}
 
@@ -517,6 +521,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		$hdr .= ',max-age=' . self::get_ttl() . $esi_hdr ;
+
 		return $hdr ;
 	}
 
@@ -545,11 +550,13 @@ class LiteSpeed_Cache_Control
 		// Even no need to run 3rd party hook
 		if ( ! self::is_cacheable() ) {
 			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable before ctrl finalize' ) ;
+
 			return ;
 		}
 
 		if ( defined('LSCACHE_NO_CACHE') && LSCACHE_NO_CACHE ) {
 			self::set_nocache('LSCACHE_NO_CACHE constant defined') ;
+
 			return ;
 		}
 
@@ -570,17 +577,20 @@ class LiteSpeed_Cache_Control
 		// if is not cacheable, terminate check
 		if ( ! self::is_cacheable() ) {
 			LiteSpeed_Cache_Log::debug( '[Ctrl] not cacheable after api_control' ) ;
+
 			return ;
 		}
 
 		if ( is_preview() ) {
 			self::set_nocache( 'preview page' ) ;
+
 			return ;
 		}
 
 		// Check litespeed setting to set cacheable status
 		if ( ! $instance->_setting_cacheable() ) {
 			self::set_nocache() ;
+
 			return ;
 		}
 
@@ -589,6 +599,7 @@ class LiteSpeed_Cache_Control
 		if ( ! empty($post->post_password) && isset($_COOKIE['wp-postpass_' . COOKIEHASH]) ) {
 			// If user has password cookie, do not cache
 			self::set_nocache('pswd cookie') ;
+
 			return ;
 		}
 
@@ -597,17 +608,20 @@ class LiteSpeed_Cache_Control
 			if ( self::is_mobile() ) {
 				self::set_nocache('mobile') ;
 			}
+
 			return ;
 		}
 
 		if ( isset($_SERVER['LSCACHE_VARY_VALUE']) && strpos( $_SERVER['LSCACHE_VARY_VALUE'], 'ismobile' ) !== false ) {
 			if ( ! wp_is_mobile() && ! self::is_mobile() ) {
 				self::set_nocache( 'is not mobile' ) ;
+
 				return ;
 			}
 		}
 		elseif ( wp_is_mobile() || self::is_mobile() ) {
 			self::set_nocache( 'is mobile' ) ;
+
 			return ;
 		}
 
@@ -728,6 +742,7 @@ class LiteSpeed_Cache_Control
 	private function _no_cache_for( $reason )
 	{
 		LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control off - ' . $reason) ;
+
 		return false ;
 	}
 
@@ -744,6 +759,7 @@ class LiteSpeed_Cache_Control
 		if ( ! empty( $_GET ) && $intersect = array_intersect( array_keys( $_GET ), $excludes ) ) {
 			return implode( ',', $intersect ) ;
 		}
+
 		return false ;
 	}
 

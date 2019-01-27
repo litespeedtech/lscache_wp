@@ -220,6 +220,7 @@ class LiteSpeed_Cache
 
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
+
 			return ;
 		}
 
@@ -452,6 +453,7 @@ class LiteSpeed_Cache
 		if ( $msg && ! LiteSpeed_Cache_Router::is_ajax() ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, $msg ) ;
 			LiteSpeed_Cache_Admin::redirect() ;
+
 			return ;
 		}
 
@@ -510,21 +512,25 @@ class LiteSpeed_Cache
 	{
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
+
 			return ;
 		}
 
 		if ( defined( 'DOING_AJAX' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing ajax' ) ;
+
 			return ;
 		}
 
 		if ( defined( 'DOING_CRON' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: doing cron' ) ;
+
 			return ;
 		}
 
 		if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'GET' ) {
 			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ] ) ;
+
 			return ;
 		}
 
@@ -547,6 +553,7 @@ class LiteSpeed_Cache
 
 		if ( ! $is_html ) {
 			LiteSpeed_Cache_Log::debug( '[Core] Footer check failed: ' . ob_get_level() . '-' . substr( $buffer, 0, 100 ) ) ;
+
 			return ;
 		}
 

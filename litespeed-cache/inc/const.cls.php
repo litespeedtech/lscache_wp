@@ -570,6 +570,7 @@ class LiteSpeed_Cache_Const
 			self::ID_NOCACHE_USERAGENTS => '',
 			self::OPT_MEDIA_WEBP_REPLACE => false,
 		) ;
+
 		return $default_site_options ;
 	}
 
@@ -776,6 +777,7 @@ class LiteSpeed_Cache_Const
 		if ( ! isset($tp_options) || ! is_array($tp_options) ) {
 			return $default_options ;
 		}
+
 		return array_merge($default_options, $tp_options) ;
 	}
 
@@ -828,6 +830,7 @@ class LiteSpeed_Cache_Const
 		if ( ! isset($options) ) {
 			$options = $this->get_default_options(false) ;
 		}
+
 		return array_diff_key($tp_options, $options) ;
 	}
 }

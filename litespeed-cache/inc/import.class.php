@@ -174,11 +174,13 @@ class LiteSpeed_Cache_Import
 			$data = unserialize( base64_decode( $data ) ) ;
 		} catch ( Exception $ex ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Failed to parse serialized data' ) ;
+
 			return false ;
 		}
 
 		if ( ! $data ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Failed to import, no data' ) ;
+
 			return false ;
 		}
 
@@ -195,6 +197,7 @@ class LiteSpeed_Cache_Import
 				LiteSpeed_Cache_Admin_Display::error( $err[ 'message' ] ) ;
 				LiteSpeed_Cache_Log::debug( '[Import] err ' . $err[ 'message' ] ) ;
 			}
+
 			return false ;
 		}
 

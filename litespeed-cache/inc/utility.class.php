@@ -264,6 +264,7 @@ class LiteSpeed_Cache_Utility
 		else {
 			$filesize = $filesize . 'B' ;
 		}
+
 		return $filesize ;
 	}
 
@@ -283,6 +284,7 @@ class LiteSpeed_Cache_Utility
 		foreach ( $matches as $match ) {
 			$attrs[ $match[ 1 ] ] = trim( $match[ 2 ] ) ;
 		}
+
 		return $attrs ;
 	}
 
@@ -427,6 +429,7 @@ class LiteSpeed_Cache_Utility
 		if ( strpos( $url, LSCWP_DOMAIN ) === 0 ) {
 			$url = substr( $url, strlen( LSCWP_DOMAIN ) ) ;
 		}
+
 		return trim( $url ) ;
 	}
 
@@ -508,6 +511,7 @@ class LiteSpeed_Cache_Utility
 		if ( $type === 'array' ) {
 			return $arr ;
 		}
+
 		return implode( "\n", $arr ) ;
 	}
 
@@ -626,6 +630,7 @@ class LiteSpeed_Cache_Utility
 			// Do this to avoid user hardcoded src in tpl
 			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Util] external' ) ;
+
 				return false ;
 			}
 		}
@@ -688,6 +693,7 @@ class LiteSpeed_Cache_Utility
 		$file_path = realpath( $file_path_ori ) ;
 		if ( ! is_file( $file_path ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
+
 			return false ;
 		}
 

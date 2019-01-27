@@ -33,6 +33,7 @@ class Set_Htaccess {
 		else {
 			// they are equal - no need to find paths.
 			$trimmed = rtrim($abspath, '/');
+
 			return array($trimmed, $trimmed, $trimmed);
 		}
 

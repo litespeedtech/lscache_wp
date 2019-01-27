@@ -339,6 +339,7 @@ class LiteSpeed_Cache_Object
 				if ( $this->_validate_mem_server() ) {
 					// error_log( 'Object: _validate_mem_server' ) ;
 					defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Got persistent ' . $this->_oc_driver . ' connection' ) ;
+
 					return true ;
 				}
 
@@ -494,6 +495,7 @@ class LiteSpeed_Cache_Object
 		if ( ! $this->_cfg_admin && defined( 'WP_ADMIN' ) ) {
 			return false ;
 		}
+
 		return true ;
 	}
 
@@ -530,6 +532,7 @@ class LiteSpeed_Cache_Object
 	{
 		if ( ! $this->_cfg_enabled ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] bypass flushing' ) ;
+
 			return null ;
 		}
 

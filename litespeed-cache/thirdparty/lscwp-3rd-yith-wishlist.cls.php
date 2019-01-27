@@ -89,6 +89,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 			self::ESI_PARAM_POSTID => $post->ID
 		) ;
 		echo LiteSpeed_Cache_API::esi_url( 'yith-wcwl-add', 'YITH ADD TO WISHLIST', $params ) ;
+
 		return '' ;
 	}
 

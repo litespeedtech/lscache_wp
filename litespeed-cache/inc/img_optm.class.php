@@ -142,6 +142,7 @@ class LiteSpeed_Cache_Img_Optm
 		// If this is for level up try, return data directly
 		if ( $try_level_up ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Try Level Up ~ !' ) ;
+
 			return $json ;
 		}
 
@@ -201,6 +202,7 @@ class LiteSpeed_Cache_Img_Optm
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: no image found' ) ;
+
 			return $msg ;
 		}
 
@@ -257,6 +259,7 @@ class LiteSpeed_Cache_Img_Optm
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] optimize bypass: empty _img_in_queue' ) ;
+
 			return array( 'ok' => $msg ) ;
 		}
 
@@ -275,6 +278,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'Optimized successfully.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
 			return array( 'ok' => $msg ) ;
 		}
 
@@ -617,6 +621,7 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value ) ;
+
 			return ;
 		}
 
@@ -634,6 +639,7 @@ class LiteSpeed_Cache_Img_Optm
 				'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
 			) ;
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $real_file ) ;
+
 			return ;
 		}
 
@@ -719,6 +725,7 @@ class LiteSpeed_Cache_Img_Optm
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to parse data from LiteSpeed IAPI server ', $json[ 'pids' ] ) ;
 			$msg = sprintf( __( 'Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache' ), var_export( $json[ 'pids' ], true ) ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return $json ;
 		}
 
@@ -1006,6 +1013,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( $this->cron_running() ) {
 			$msg = '[Img_Optm] fetch cron is running' ;
 			LiteSpeed_Cache_Log::debug( $msg ) ;
+
 			return $msg ;
 		}
 
@@ -1087,6 +1095,7 @@ class LiteSpeed_Cache_Img_Optm
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
 					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull image: ' . $error_message ) ;
+
 					return ;
 				}
 
@@ -1133,6 +1142,7 @@ class LiteSpeed_Cache_Img_Optm
 				if ( is_wp_error( $response ) ) {
 					$error_message = $response->get_error_message() ;
 					LiteSpeed_Cache_Log::debug( 'IAPI failed to pull webp image: ' . $error_message ) ;
+
 					return ;
 				}
 
@@ -1196,6 +1206,7 @@ class LiteSpeed_Cache_Img_Optm
 		$tmp = $wpdb->get_row( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
 		if ( $tmp ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] Task in queue, to be continued...' ) ;
+
 			return array( 'ok' => 'to_be_continued' ) ;
 		}
 
@@ -1289,11 +1300,13 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		if ( ! $v->meta_value ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to no meta_value: pid ' . $v->post_id ) ;
+
 			return false ;
 		}
 
 		if ( function_exists( 'is_serialized' ) && ! is_serialized( $v->meta_value ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to wrong meta_value: pid ' . $v->post_id ) ;
+
 			return false ;
 		}
 
@@ -1302,11 +1315,13 @@ class LiteSpeed_Cache_Img_Optm
 		}
 		catch ( \Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to meta_value not json: pid ' . $v->post_id ) ;
+
 			return false ;
 		}
 
 		if ( empty( $meta_value[ 'file' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to no ori file: pid ' . $v->post_id ) ;
+
 			return false ;
 		}
 
@@ -1486,6 +1501,7 @@ class LiteSpeed_Cache_Img_Optm
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] resend request bypassed: no image found' ) ;
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return ;
 		}
 
@@ -1551,6 +1567,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( empty( $this->_img_in_queue ) ) {
 			$msg = __( 'No image found.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
+
 			return ;
 		}
 
@@ -1628,6 +1645,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
 			$msg = "Upgraded to level $json[level] !" ;
 			LiteSpeed_Cache_Log::debug( "[Img_Optm] $msg" ) ;
+
 			return $msg ;
 		}
 		else {
@@ -1782,6 +1800,7 @@ class LiteSpeed_Cache_Img_Optm
 		if ( ! $field ) {
 			return $optm_summary ;
 		}
+
 		return ! empty( $optm_summary[ $field ] ) ? $optm_summary[ $field ] : 0 ;
 	}
 

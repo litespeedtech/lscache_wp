@@ -226,6 +226,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$backend = realpath( ABSPATH ) ; // /home/user/public_html/backend/
 		if ( $frontend == $backend ) {
 			$this->backend_htaccess = $this->frontend_htaccess ;
+
 			return ;
 		}
 
@@ -234,6 +235,7 @@ class LiteSpeed_Cache_Admin_Rules
 		// Found affected .htaccess
 		if ( $backend_htaccess_search ) {
 			$this->backend_htaccess = $backend_htaccess_search . '/.htaccess' ;
+
 			return ;
 		}
 
@@ -241,6 +243,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ( stripos( $backend, $frontend . '/' ) === 0 ) {
 			// backend use frontend htaccess
 			$this->backend_htaccess = $this->frontend_htaccess ;
+
 			return ;
 		}
 
@@ -269,6 +272,7 @@ class LiteSpeed_Cache_Admin_Rules
 				$path = $this->frontend_htaccess ;
 				break ;
 		}
+
 		return $path ;
 	}
 
@@ -301,6 +305,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// Remove ^M characters.
 		$content = str_ireplace("\x0D", "", $content) ;
+
 		return $content ;
 	}
 
@@ -377,6 +382,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		if ( $i <= 10 || ! class_exists('ZipArchive') ) {
 			$ret = copy($path, $path . $bak) ;
+
 			return $ret ;
 		}
 
@@ -393,6 +399,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if ( $res !== true ) {
 			error_log('Warning: Failed to archive wordpress backups in ' . $dir) ;
 			$ret = copy($path, $path . $bak) ;
+
 			return $ret ;
 		}
 
@@ -402,6 +409,7 @@ class LiteSpeed_Cache_Admin_Rules
 				error_log('Warning: Failed to archive backup file ' . $val) ;
 				$zip->close() ;
 				$ret = copy($path, $path . $bak) ;
+
 				return $ret ;
 			}
 		}
@@ -409,6 +417,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$ret = $zip->close() ;
 		if ( ! $ret ) {
 			error_log('Warning: Failed to close archive.') ;
+
 			return $ret ;
 		}
 		$bak = '_lscachebak_01' ;
@@ -418,6 +427,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$ret = copy($path, $path . $bak) ;
+
 		return $ret ;
 	}
 
@@ -432,6 +442,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$rules = $this->_get_rule_by(self::MARKER_MOBILE) ;
 		if( ! isset($rules[0]) ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, self::MARKER_MOBILE) ;
+
 			return false ;
 		}
 		$rule = trim($rules[0]) ;
@@ -440,9 +451,11 @@ class LiteSpeed_Cache_Admin_Rules
 		$num_matches = preg_match($pattern, $rule, $matches) ;
 		if ( $num_matches === false ) {
 			LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_HTA_DNF, 'a match') ;
+
 			return false ;
 		}
 		$match = trim($matches[1]) ;
+
 		return $match ;
 	}
 
@@ -502,6 +515,7 @@ class LiteSpeed_Cache_Admin_Rules
 		if( count($results) == 1 ) {
 			return trim($results[0]) ;
 		}
+
 		return array_filter($results) ;
 	}
 
@@ -557,6 +571,7 @@ class LiteSpeed_Cache_Admin_Rules
 			// '</FilesMatch>',
 			self::LS_MODULE_END,
 		) ;
+
 		return $rules ;
 	}
 
@@ -577,6 +592,7 @@ class LiteSpeed_Cache_Admin_Rules
 				'RewriteRule min/(\w+)\.(css|js) ' . basename( LSCWP_CONTENT_DIR ) . '/cache/$2/$1.$2 [L]',
 			self::LS_MODULE_END,
 		) ;
+
 		return $rules ;
 	}
 
@@ -784,6 +800,7 @@ class LiteSpeed_Cache_Admin_Rules
 	public function insert_ls_wrapper()
 	{
 		$rules = $this->_wrap_ls_module() ;
+
 		return $this->_insert_wrapper( $rules ) ;
 	}
 
@@ -868,6 +885,7 @@ class LiteSpeed_Cache_Admin_Rules
 			if ( ! $this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ) {
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
+
 				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
 			}
 		}
@@ -879,6 +897,7 @@ class LiteSpeed_Cache_Admin_Rules
 			if ( ! $this->_insert_wrapper( $frontend_rules ) ) {
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
+
 				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
 			}
 		}
@@ -893,6 +912,7 @@ class LiteSpeed_Cache_Admin_Rules
 				if ( ! $this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
+
 					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
 				}
 			}
@@ -904,6 +924,7 @@ class LiteSpeed_Cache_Admin_Rules
 				if ( ! $this->_insert_wrapper( $backend_rules, 'backend' ) ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
+
 					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
 				}
 			}
@@ -1053,6 +1074,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$this->htaccess_save($content) ;
 		} catch( \Exception $e ) {
 			LiteSpeed_Cache_Admin_Display::error( $e->getMessage() ) ;
+
 			return ;
 		}
 

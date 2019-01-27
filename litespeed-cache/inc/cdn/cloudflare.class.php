@@ -133,6 +133,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		if ( ! $cf_on ) {
 			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return ;
 		}
 
@@ -164,6 +165,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		if ( ! $zone ) {
 			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return false ;
 		}
 
@@ -187,6 +189,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 			$zones = $this->_cloudflare_call( $url . '&name=' . $kw, 'GET', false, $options, false ) ;
 			if ( $zones ) {
 				LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone exact matched' ) ;
+
 				return $zones[ 0 ] ;
 			}
 		}
@@ -196,23 +199,27 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
 		if ( ! $zones ) {
 			LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone no zone' ) ;
+
 			return false ;
 		}
 
 		if ( ! $kw ) {
 			LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone no set name, use first one by default' ) ;
+
 			return $zones[ 0 ] ;
 		}
 
 		foreach ( $zones as $v ) {
 			if ( strpos( $v[ 'name' ], $kw ) !== false ) {
 				LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ] ) ;
+
 				return $v ;
 			}
 		}
 
 		// Can't match current name, return default one
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone failed match name, use first one by default' ) ;
+
 		return $zones[ 0 ] ;
 	}
 

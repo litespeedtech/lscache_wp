@@ -103,6 +103,7 @@ class Utils
                     return (int) $size * 1073741824;
             }
         }
+
         return (int) $size;
     }
 

@@ -278,6 +278,7 @@ class Minifier
     {
         $tokenId = sprintf(self::PRESERVED_TOKEN, count($this->preservedTokens));
         $this->preservedTokens[$tokenId] = $token;
+
         return $tokenId;
     }
 
@@ -290,6 +291,7 @@ class Minifier
     {
         $tokenId = sprintf(self::COMMENT_TOKEN, count($this->comments));
         $this->comments[$tokenId] = $comment;
+
         return $tokenId;
     }
 
@@ -306,6 +308,7 @@ class Minifier
 
         $tokenId = sprintf(self::RULE_BODY_TOKEN, count($this->ruleBodies));
         $this->ruleBodies[$tokenId] = $body;
+
         return $tokenId;
     }
 

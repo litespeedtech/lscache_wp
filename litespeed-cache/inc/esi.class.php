@@ -100,6 +100,7 @@ class LiteSpeed_Cache_ESI
 	{
 		if ( empty( $atts[ 0 ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[ESI] ===shortcode wrong format', $atts ) ;
+
 			return 'Wrong shortcode esi format' ;
 		}
 
@@ -155,6 +156,7 @@ class LiteSpeed_Cache_ESI
 			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
 		}
 		self::get_instance()->register_not_esi_actions() ;
+
 		return $template ;
 	}
 
@@ -423,6 +425,7 @@ class LiteSpeed_Cache_ESI
 			default :
 				break ;
 		}
+
 		return $options ;
 	}
 
@@ -463,6 +466,7 @@ class LiteSpeed_Cache_ESI
 		) ;
 
 		echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
+
 		return false ;
 	}
 
@@ -669,6 +673,7 @@ class LiteSpeed_Cache_ESI
 	{
 		if ( empty( $args ) || empty( $this->esi_args ) ) {
 			LiteSpeed_Cache_Log::debug( 'comment form args empty?' ) ;
+
 			return $unused ;
 		}
 		$esi_args = array() ;
@@ -699,6 +704,7 @@ class LiteSpeed_Cache_ESI
 		echo self::sub_esi_block( 'comment-form', 'comment form', $params ) ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
 		add_action( 'comment_form_after', array( $this, 'comment_form_sub_clean' ) ) ;
+
 		return $unused ;
 	}
 

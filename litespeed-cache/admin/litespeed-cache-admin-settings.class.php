@@ -302,6 +302,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		if ( ! empty( $this->_err ) ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $this->_err ) ;
+
 			return ;
 		}
 
@@ -1240,6 +1241,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
 			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
+
 			return false ;
 		}
 
@@ -1248,6 +1250,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		if ( $ttl != 0 && $ttl < 30 ) {
 			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
+
 			return false ; // invalid ttl.
 		}
 
@@ -1265,6 +1268,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		LiteSpeed_Cache_Purge::purge_all( 'Wdiget saved' ) ;
+
 		return $instance ;
 	}
 

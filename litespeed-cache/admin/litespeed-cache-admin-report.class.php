@@ -63,6 +63,7 @@ class LiteSpeed_Cache_Admin_Report
 			LiteSpeed_Cache_Log::debug( 'Env: Failed to post to LiteSpeed server ', $json ) ;
 			$msg = __( 'Failed to push to LiteSpeed server', 'litespeed-cache' ) . ': ' . $json ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return ;
 		}
 
@@ -185,6 +186,7 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		$report = $this->build_environment_report($_SERVER, $options, $extras, $paths) ;
+
 		return $report ;
 	}
 
@@ -234,6 +236,7 @@ class LiteSpeed_Cache_Admin_Report
 			}
 			$buf .= $path . " contents:\n" . $content . "\n\n" ;
 		}
+
 		return $buf ;
 	}
 
@@ -269,6 +272,7 @@ class LiteSpeed_Cache_Admin_Report
 
 			$buf .= $v ;
 		}
+
 		return $buf . "\n\n" ;
 	}
 

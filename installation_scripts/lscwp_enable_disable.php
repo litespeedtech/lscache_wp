@@ -43,8 +43,10 @@ if ( $action == "status"  ) {
 elseif ( $action == "enable" ) {
 	if ( ! activate_plugin(PLUGIN_NAME, '', false, false) == null ) {
 		printf("\nLSCWP not enabled for %s \n\n", $WP_DIR) ;
+
 		return false;
 	}
+
 	return true;
 }
 

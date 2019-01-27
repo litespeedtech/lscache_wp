@@ -187,6 +187,7 @@ class LiteSpeed_Cache_Admin_API
 	{
 		if ( empty( $_REQUEST[ 'hash' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] __callback bypassed passive check' ) ;
+
 			return false ;
 		}
 		$instance = self::get_instance() ;
@@ -214,17 +215,20 @@ class LiteSpeed_Cache_Admin_API
 		// don't have auth_key yet
 		if ( ! $instance->_iapi_key ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive check failed: No init key' ) ;
+
 			return false ;
 		}
 
 		// Once client has auth_key, each time when callback to check, need to carry on this key
 		if ( empty( $_REQUEST[ 'auth_key' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive check failed: lack of auth_key' ) ;
+
 			return false ;
 		}
 
 		$res = md5( $instance->_iapi_key ) === $_REQUEST[ 'auth_key' ] ;
 		LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive auth_key check: ' . ( $res ? 'passed' : 'failed' ) ) ;
+
 		return $res ;
 	}
 
@@ -301,6 +305,7 @@ class LiteSpeed_Cache_Admin_API
 				$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
 				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			}
+
 			return ;
 		}
 
@@ -330,6 +335,7 @@ class LiteSpeed_Cache_Admin_API
 				$msg = sprintf( __( 'IAPI Error %s', 'litespeed-cache' ), $json ) ;
 				LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			}
+
 			return ;
 		}
 
@@ -342,6 +348,7 @@ class LiteSpeed_Cache_Admin_API
 
 		if ( $min == 99999 ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] failed to ping all clouds' ) ;
+
 			return ;
 		}
 		$closest = array_search( $min, $speed_list ) ;
@@ -403,6 +410,7 @@ class LiteSpeed_Cache_Admin_API
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[IAPI] failed to get: ' . $error_message ) ;
+
 			return false ;
 		}
 
@@ -455,6 +463,7 @@ class LiteSpeed_Cache_Admin_API
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[IAPI] failed to post: ' . $error_message ) ;
+
 			return $error_message ;
 		}
 
@@ -475,6 +484,7 @@ class LiteSpeed_Cache_Admin_API
 			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
+
 			return false ;
 		}
 
@@ -522,6 +532,7 @@ class LiteSpeed_Cache_Admin_API
 
 			$msg2 .= $this->_parse_link( $json ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg . $msg2 ) ;
+
 			return false ;
 		}
 
