@@ -5,7 +5,7 @@
  * @since  1.8
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -206,7 +206,7 @@ class WP_Object_Cache
 		 * Fix multiple instance using same oc issue
 		 * @since  1.8.2
 		 */
-		! defined( 'LSOC_PREFIX' ) && define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) ) ;
+		!defined( 'LSOC_PREFIX' ) && define( 'LSOC_PREFIX', substr( md5( __FILE__ ), -5 ) ) ;
 	}
 
 	/**
@@ -241,12 +241,12 @@ class WP_Object_Cache
 		$found = false ;
 		$found_in_oc = false ;
 		$cache_val = false ;
-		if ( array_key_exists( $final_key, $this->_cache ) && ! $force ) {
+		if ( array_key_exists( $final_key, $this->_cache ) && !$force ) {
 			$found = true ;
 			$cache_val = $this->_cache[ $final_key ] ;
-			$this->count_hit_incall ++ ;
+			$this->count_hit_incall++ ;
 		}
-		elseif ( ! array_key_exists( $final_key, $this->_cache_404 ) && ! $this->_object_cache->is_non_persistent( $group ) ) {
+		elseif ( !array_key_exists( $final_key, $this->_cache_404 ) && !$this->_object_cache->is_non_persistent( $group ) ) {
 			$v = $this->_object_cache->get( $final_key ) ;
 
 			if ( $v !== null ) {
@@ -255,7 +255,7 @@ class WP_Object_Cache
 
 			// To be compatible with false val
 			if ( is_array( $v ) && array_key_exists( 'data', $v ) ) {
-				$this->count_hit ++ ;
+				$this->count_hit++ ;
 				$found = true ;
 				$found_in_oc = true ;
 				$cache_val = $v[ 'data' ] ;
@@ -263,11 +263,11 @@ class WP_Object_Cache
 			else { // Can't find key, cache it to 404
 // error_log("oc: add404\t\t\t[key] " . $final_key ) ;
 				$this->_cache_404[ $final_key ] = 1 ;
-				$this->count_miss ++ ;
+				$this->count_miss++ ;
 			}
 		}
 		else {
-			$this->count_miss_incall ++ ;
+			$this->count_miss_incall++ ;
 		}
 
 		if ( is_object( $cache_val ) ) {
@@ -275,7 +275,7 @@ class WP_Object_Cache
 		}
 
 		// If not found but has `Store Transients` cfg on, still need to follow WP's get_transient() logic
-		if ( ! $found && $this->_object_cache->store_transients( $group ) ) {
+		if ( !$found && $this->_object_cache->store_transients( $group ) ) {
 			$cache_val = $this->_transient_get( $key, $group ) ;
 			if ( $cache_val ) {
 				$found = true ; // $found not used for now (v1.8.3)
@@ -286,7 +286,7 @@ class WP_Object_Cache
 			$this->_cache[ $final_key ] = $cache_val ;
 		}
 
-		$this->cache_total ++ ;
+		$this->cache_total++ ;
 
 		return $cache_val ;
 	}
@@ -312,9 +312,9 @@ class WP_Object_Cache
 			unset( $this->_cache_404[ $final_key ] ) ;
 		}
 
-		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
+		if ( !$this->_object_cache->is_non_persistent( $group ) ) {
 			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
-			$this->count_set ++ ;
+			$this->count_set++ ;
 		}
 
 		if ( $this->_object_cache->store_transients( $group ) ) {
@@ -355,7 +355,7 @@ class WP_Object_Cache
 	{
 		$final_key = $this->_key( $key, $group ) ;
 
-		if ( ! array_key_exists( $final_key, $this->_cache ) ) {
+		if ( !array_key_exists( $final_key, $this->_cache ) ) {
 			return false ;
 		}
 
@@ -376,7 +376,7 @@ class WP_Object_Cache
 			return false ;
 		}
 
-		if ( ! is_numeric( $cache_val ) ) {
+		if ( !is_numeric( $cache_val ) ) {
 			$cache_val = 0 ;
 		}
 
@@ -503,7 +503,7 @@ class WP_Object_Cache
 		if ( $group == 'transient' ) {
 			/**** Ori WP func start ****/
 			$transient_option = '_transient_' . $transient;
-			if ( ! wp_installing() ) {
+			if ( !wp_installing() ) {
 				// If option is not in alloptions, it is not autoloaded and thus has a timeout
 				$alloptions = wp_load_alloptions();
 				if ( !isset( $alloptions[$transient_option] ) ) {
@@ -517,7 +517,7 @@ class WP_Object_Cache
 				}
 			}
 
-			if ( ! isset( $value ) )
+			if ( !isset( $value ) )
 				$value = get_option( $transient_option );
 			/**** Ori WP func end ****/
 		}
@@ -525,7 +525,7 @@ class WP_Object_Cache
 			/**** Ori WP func start ****/
 			$no_timeout = array('update_core', 'update_plugins', 'update_themes');
 			$transient_option = '_site_transient_' . $transient;
-			if ( ! in_array( $transient, $no_timeout ) ) {
+			if ( !in_array( $transient, $no_timeout ) ) {
 				$transient_timeout = '_site_transient_timeout_' . $transient;
 				$timeout = get_site_option( $transient_timeout );
 				if ( false !== $timeout && $timeout < time() ) {
@@ -535,7 +535,7 @@ class WP_Object_Cache
 				}
 			}
 
-			if ( ! isset( $value ) )
+			if ( !isset( $value ) )
 				$value = get_site_option( $transient_option );
 			/**** Ori WP func end ****/
 		}
@@ -646,7 +646,7 @@ class WP_Object_Cache
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

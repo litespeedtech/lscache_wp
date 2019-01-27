@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 
 ?>
 
@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 
 <div class="litespeed-relative">
 
-<?php if ( ! LSWCP_ESI_SUPPORT ) : ?>
+<?php if ( !LSWCP_ESI_SUPPORT ) : ?>
 	<div class="litespeed-ent-notice">
 		<div class="litespeed-ent-notice-desc"><?php echo __('Available in LiteSpeed Enterprise version', 'litespeed-cache'); ?></div>
 	</div>

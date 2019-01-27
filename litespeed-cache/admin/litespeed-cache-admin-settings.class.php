@@ -9,7 +9,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -81,7 +81,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$this->_validate_crawler() ; // Network setup doesn't run validate_plugin_settings
 
-		if ( ! is_multisite() ) {
+		if ( !is_multisite() ) {
 			$this->_validate_singlesite() ;
 		}
 
@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		if ( ! empty( $this->_err ) ) {
+		if ( !empty( $this->_err ) ) {
 			add_settings_error( LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, implode( '<br />', $this->_err ) ) ;
 
 			return $this->_options ;
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options, $disable_lscache_detail_rules ) ;
 		if ( $res !== true ) {
-			if ( ! is_array( $res ) ) {
+			if ( !is_array( $res ) ) {
 				$this->_err[] = $res ;
 			}
 			else {
@@ -270,7 +270,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update htaccess
 		$disable_lscache_detail_rules = false ;
-		if ( ! $network_enabled ) {
+		if ( !$network_enabled ) {
 			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
 			// Need to set cachePublicOn in case subblogs turn on cache manually
 			$disable_lscache_detail_rules = true ;
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Admin_Settings
 		// NOTE: Network admin still need to make a lscache wrapper to avoid subblogs cache not work
 		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache_detail_rules ) ;
 		if ( $res !== true ) {
-			if ( ! is_array( $res ) ) {
+			if ( !is_array( $res ) ) {
 				$this->_err[] = $res ;
 			}
 			else {
@@ -299,7 +299,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ;
 		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 
-		if ( ! empty( $this->_err ) ) {
+		if ( !empty( $this->_err ) ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $this->_err ) ;
 			return ;
 		}
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_Admin_Settings
 		/**
 		 * Check if object cache file existing or not
 		 */
-		if ( ! defined( 'LITESPEED_DISABLE_OBJECT' ) ) {
+		if ( !defined( 'LITESPEED_DISABLE_OBJECT' ) ) {
 			$id = LiteSpeed_Cache_Config::OPID_CACHE_OBJECT ;
 			if ( $new_options[ $id ] ) {
 				$all_options = array_merge( $new_options, $item_options ) ;
@@ -395,9 +395,9 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Purge when disabled
-		if ( ! $enabled ) {
+		if ( !$enabled ) {
 			LiteSpeed_Cache_Purge::purge_all( 'Not enabled' ) ;
-			! defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
+			!defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
 		}
 
 		// TTL check
@@ -415,7 +415,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, $min, $max ) ;
 
-			if ( ! empty( $v[ 2 ] ) && $this->_options[ $id ] < $v[ 2 ] ) {
+			if ( !empty( $v[ 2 ] ) && $this->_options[ $id ] < $v[ 2 ] ) {
 				$this->_options[ $id ] = 0 ;
 			}
 		}
@@ -441,7 +441,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$id = LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ;
 		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		if( ! $this->_options[ $id ] ) {
+		if( !$this->_options[ $id ] ) {
 			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_LOGIN ) ;
 		}
 
@@ -543,7 +543,7 @@ class LiteSpeed_Cache_Admin_Settings
 					$cat_ids[] = $cat_id ;
 				}
 			}
-			if ( ! empty( $cat_ids ) ) {
+			if ( !empty( $cat_ids ) ) {
 				$this->_options[ $id ] = implode( ',', $cat_ids ) ;
 			}
 		}
@@ -566,7 +566,7 @@ class LiteSpeed_Cache_Admin_Settings
 					$tag_ids[] = $term->term_id ;
 				}
 			}
-			if ( ! empty( $tag_ids ) ) {
+			if ( !empty( $tag_ids ) ) {
 				$this->_options[ $id ] = implode( ',', $tag_ids ) ;
 			}
 		}
@@ -576,7 +576,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * @since 1.6.2
 		 */
 		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
+		update_option( $id, !empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
 	}
 
@@ -615,7 +615,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$ori_list = explode( ',', $this->_options[ $id ] ) ;
 			foreach ( $ori_list as $k => $v ) {
 				$tmp = parse_url( $v ) ;
-				if ( ! empty( $tmp[ 'scheme' ] ) ) {
+				if ( !empty( $tmp[ 'scheme' ] ) ) {
 					$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
 				}
 				$ori_list[ $k ] = trim( $v ) ;
@@ -653,7 +653,7 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $this->_input[ $id ][ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] as $k => $v ) {
 			$this_mapping = array() ;
 			foreach ( $mapping_fields as $f ) {
-				$this_mapping[ $f ] = ! empty( $this->_input[ $id ][ $f ][ $k ] ) ? $this->_input[ $id ][ $f ][ $k ] : false ;
+				$this_mapping[ $f ] = !empty( $this->_input[ $id ][ $f ][ $k ] ) ? $this->_input[ $id ][ $f ][ $k ] : false ;
 				if ( $f === LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ) {
 					$this_mapping[ $f ] = LiteSpeed_Cache_Utility::sanitize_lines( $this_mapping[ $f ] ) ;
 				}
@@ -825,7 +825,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
+		update_option( $id, !empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
 
 		/**
 		 * DNS prefetch
@@ -921,7 +921,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$has_err = false ;
 			if ( $admin_ips ) {
 				foreach ( $admin_ips as $ip ) {
-					if ( ! WP_Http::is_ip_address( $ip ) ) {
+					if ( !WP_Http::is_ip_address( $ip ) ) {
 						$has_err = true ;
 						break ;
 					}
@@ -1004,7 +1004,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_ORDER_LINKS ;
-		if( ! isset( $this->_input[ $id ] ) || ! in_array( $this->_input[ $id ], array(
+		if( !isset( $this->_input[ $id ] ) || !in_array( $this->_input[ $id ], array(
 				LiteSpeed_Cache_Config::CRWL_DATE_DESC,
 				LiteSpeed_Cache_Config::CRWL_DATE_ASC,
 				LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
@@ -1017,7 +1017,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$usleep_min = 0 ;
 		$usleep_max = 30000 ;
-		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) ) {
+		if ( !empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) ) {
 			$usleep_min = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
 			$usleep_max = null ;
 		}
@@ -1039,7 +1039,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
 		$id = LiteSpeed_Cache_Config::CRWL_DOMAIN_IP ;
-		if ( ! empty( $this->_input[ $id ] ) && ! WP_Http::is_ip_address( $this->_input[ $id ] ) ) {
+		if ( !empty( $this->_input[ $id ] ) && !WP_Http::is_ip_address( $this->_input[ $id ] ) ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_SITE_IP, $this->_input[ $id ] ) ;
 		}
 		else {
@@ -1047,7 +1047,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ;
-		if ( ! empty( $this->_input[ $id ] ) && ( $err = $this->_validate_custom_sitemap( $this->_input[ $id ] ) ) !== true ) {
+		if ( !empty( $this->_input[ $id ] ) && ( $err = $this->_validate_custom_sitemap( $this->_input[ $id ] ) ) !== true ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( $err, $this->_input[ $id ] ) ;
 		}
 		else {
@@ -1063,9 +1063,9 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ;
 		$cookie_crawlers = array() ;
-		if ( ! empty( $this->_input[ $id ][ 'name' ] ) ) {
+		if ( !empty( $this->_input[ $id ][ 'name' ] ) ) {
 			foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
-				if ( ! $v ) {
+				if ( !$v ) {
 					continue ;
 				}
 
@@ -1116,10 +1116,10 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
-		if ( ! $this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
+		if ( !$this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, 'EMPTY' ) ) ;
 		}
-		elseif ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
+		elseif ( $this->_input[ $id ] && !$this->_syntax_checker( $this->_input[ $id ] ) ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
 		}
 		else {
@@ -1129,7 +1129,7 @@ class LiteSpeed_Cache_Admin_Settings
 		// No cache cookie settings
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES ;
 		$this->_input[ $id ] = preg_replace( "/[\r\n]+/", '|', $this->_input[ $id ] ) ;
-		if ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
+		if ( $this->_input[ $id ] && !$this->_syntax_checker( $this->_input[ $id ] ) ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
 		}
 		else {
@@ -1138,7 +1138,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// No cache user agent settings
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS ;
-		if ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
+		if ( $this->_input[ $id ] && !$this->_syntax_checker( $this->_input[ $id ] ) ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
 		}
 		else {
@@ -1176,7 +1176,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$tp_options = apply_filters( 'litespeed_cache_save_options', array_intersect_key( $this->_options, $tp_default_options ), $tp_input ) ;
-		if ( ! empty( $tp_options ) && is_array( $tp_options ) ) {
+		if ( !empty( $tp_options ) && is_array( $tp_options ) ) {
 			$this->_options = array_merge( $this->_options, $tp_options ) ;
 		}
 	}
@@ -1233,12 +1233,12 @@ class LiteSpeed_Cache_Admin_Settings
 		if ( empty( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
 			return $instance ;
 		}
-		$current = ! empty( $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : false ;
+		$current = !empty( $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : false ;
 		$input = $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
 		$esistr = $input[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
 		$ttlstr = $input[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
 
-		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
+		if ( !is_numeric( $ttlstr ) || !is_numeric( $esistr ) ) {
 			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
 			return false ;
 		}
@@ -1257,7 +1257,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] = $esi ;
 		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] = $ttl ;
 
-		if ( ! $current || $esi != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ) {
+		if ( !$current || $esi != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ) {
 			LiteSpeed_Cache_Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
 		}
 		elseif ( $ttl != 0 && $ttl != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ) {
@@ -1403,7 +1403,7 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$val = '' ;
 
-		if ( ! empty( $this->_input[ $id ] ) ) {
+		if ( !empty( $this->_input[ $id ] ) ) {
 			$val = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
 		}
 
@@ -1421,7 +1421,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

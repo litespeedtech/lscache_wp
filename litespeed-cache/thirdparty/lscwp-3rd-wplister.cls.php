@@ -7,7 +7,7 @@
  * @subpackage    LiteSpeed_Cache/thirdparty
  * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if ( !defined('ABSPATH') ) {
 	die() ;
 }
 

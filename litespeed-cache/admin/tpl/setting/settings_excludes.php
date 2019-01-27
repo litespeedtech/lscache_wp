@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 ?>
 
 <h3 class="litespeed-title-short">
@@ -118,7 +118,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<?php
-		if ( ! is_multisite() ) :
+		if ( !is_multisite() ) :
 			// Cookie
 			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
 

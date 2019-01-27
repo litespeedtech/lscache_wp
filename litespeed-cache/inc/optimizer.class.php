@@ -8,7 +8,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Optimizer
 		try {
 			$obj = new LiteSpeed_3rd_Lib\Minify_HTML( $content, $options ) ;
 			$content_final = $obj->process() ;
-			if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
+			if ( !defined( 'LSCACHE_ESI_SILENCE' ) ) {
 				$content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
 			}
 			return $content_final ;
@@ -73,10 +73,10 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	public function serve( $filename, $concat_only )
 	{
-		if ( ! is_array( $filename ) ) {
+		if ( !is_array( $filename ) ) {
 			// Search filename in db for src URLs
 			$urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
-			if ( ! $urls || ! is_array( $urls ) ) {
+			if ( !$urls || !is_array( $urls ) ) {
 				return false;
 			}
 		}
@@ -88,13 +88,13 @@ class LiteSpeed_Cache_Optimizer
 		$real_files = array() ;
 		foreach ( $urls as $url ) {
 			$real_file = LiteSpeed_Cache_Utility::is_internal_file( $url ) ;
-			if ( ! $real_file ) {
+			if ( !$real_file ) {
 				continue ;
 			}
 			$real_files[] = $real_file[ 0 ] ;
 		}
 
-		if ( ! $real_files ) {
+		if ( !$real_files ) {
 			return false;
 		}
 
@@ -155,7 +155,7 @@ class LiteSpeed_Cache_Optimizer
 
 			$data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
 
-			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
+			if ( !$concat_only && !$this->_is_min( $real_path ) ) {
 				$data = self::minify_css( $data ) ;
 			}
 
@@ -179,7 +179,7 @@ class LiteSpeed_Cache_Optimizer
 		foreach ( $files as $real_path ) {
 			$data = Litespeed_File::read( $real_path ) ;
 
-			if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
+			if ( !$concat_only && !$this->_is_min( $real_path ) ) {
 				$data = self::minify_js( $data ) ;
 			}
 			else {
@@ -313,7 +313,7 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

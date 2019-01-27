@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -42,8 +42,8 @@ class LiteSpeed_Cache_CDN
 	{
 		LiteSpeed_Cache_Log::debug2( 'CDN init' ) ;
 
-		if ( ! LiteSpeed_Cache_Router::can_cdn() ) {
-			if ( ! defined( self::BYPASS ) ) {
+		if ( !LiteSpeed_Cache_Router::can_cdn() ) {
+			if ( !defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
 			return ;
@@ -60,8 +60,8 @@ class LiteSpeed_Cache_CDN
 		}
 
 		$this->_cfg_cdn = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN ) ;
-		if ( ! $this->_cfg_cdn ) {
-			if ( ! defined( self::BYPASS ) ) {
+		if ( !$this->_cfg_cdn ) {
+			if ( !defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
 			return ;
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_CDN
 			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS
 		) ;
 		foreach ( $cfg_cdn_url as $v ) {
-			if ( ! $v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] ) {
+			if ( !$v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] ) {
 				continue ;
 			}
 			$this_url = $v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] ;
@@ -91,7 +91,7 @@ class LiteSpeed_Cache_CDN
 					// If filetype to url is one to many, make url be an array
 					$this->_append_cdn_mapping( $to_check, $this_url ) ;
 
-					if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
+					if ( !in_array( $this_host, $this->cdn_mapping_hosts ) ) {
 						$this->cdn_mapping_hosts[] = $this_host ;
 					}
 				}
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_CDN
 						// If filetype to url is one to many, make url be an array
 						$this->_append_cdn_mapping( $v2, $this_url ) ;
 
-						if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
+						if ( !in_array( $this_host, $this->cdn_mapping_hosts ) ) {
 							$this->cdn_mapping_hosts[] = $this_host ;
 						}
 					}
@@ -115,8 +115,8 @@ class LiteSpeed_Cache_CDN
 			}
 		}
 
-		if ( ! $this->_cfg_url_ori || ! $this->_cfg_cdn_mapping ) {
-			if ( ! defined( self::BYPASS ) ) {
+		if ( !$this->_cfg_url_ori || !$this->_cfg_cdn_mapping ) {
+			if ( !defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
 			}
 			return ;
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_CDN
 		$this->_cfg_cdn_exclude = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ) ;
 		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ;// todo: convert to cfg->get_item()
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
+		if ( !empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
 			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
 				add_filter( 'wp_calculate_image_srcset', array( $this, 'srcset' ), 999 ) ;
@@ -151,11 +151,11 @@ class LiteSpeed_Cache_CDN
 			add_filter( 'wp_get_attachment_url', array( $this, 'url_img' ), 999 ) ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ] ) ) {
+		if ( !empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ] ) ) {
 			add_filter( 'style_loader_src', array( $this, 'url_css' ), 999 ) ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ] ) ) {
+		if ( !empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ] ) ) {
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
 		}
 
@@ -214,11 +214,11 @@ class LiteSpeed_Cache_CDN
 	{
 		$instance = self::get_instance() ;
 
-		if ( $type == 'css' && ! empty( $instance->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ] ) ) {
+		if ( $type == 'css' && !empty( $instance->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ] ) ) {
 			return true ;
 		}
 
-		if ( $type == 'js' && ! empty( $instance->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ] ) ) {
+		if ( $type == 'js' && !empty( $instance->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ] ) ) {
 			return true ;
 		}
 
@@ -258,12 +258,12 @@ class LiteSpeed_Cache_CDN
 		LiteSpeed_Cache_Log::debug( 'CDN _finalize' ) ;
 
 		// Start replacing img src
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
+		if ( !empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
 			$this->_replace_img() ;
 			$this->_replace_inline_css() ;
 		}
 
-		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ] ) ) {
+		if ( !empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ] ) ) {
 			$this->_replace_file_types() ;
 		}
 
@@ -289,13 +289,13 @@ class LiteSpeed_Cache_CDN
 				continue ;
 			}
 			$postfix = substr( $url_parsed[ 'path' ], strrpos( $url_parsed[ 'path' ], '.' ) ) ;
-			if ( ! in_array( $postfix, $filetypes ) ) {
+			if ( !in_array( $postfix, $filetypes ) ) {
 				continue ;
 			}
 
 			LiteSpeed_Cache_Log::debug2( 'CDN matched file_type ' . $postfix . ' : ' . $url ) ;
 
-			if( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE, $postfix ) ) {
+			if( !$url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE, $postfix ) ) {
 				continue ;
 			}
 
@@ -319,7 +319,7 @@ class LiteSpeed_Cache_CDN
 				continue ;
 			}
 
-			if ( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
+			if ( !$url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 				continue ;
 			}
 
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_CDN
 		foreach ( $matches[ 1 ] as $k => $url ) {
 			$url = str_replace( array( ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ), '', $url ) ;
 
-			if ( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
+			if ( !$url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 				continue ;
 			}
 			$attr = str_replace( $matches[ 1 ][ $k ], $url2, $matches[ 0 ][ $k ] ) ;
@@ -433,7 +433,7 @@ class LiteSpeed_Cache_CDN
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
-				if( ! $url = $this->rewrite( $data[ 'url' ], LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
+				if( !$url = $this->rewrite( $data[ 'url' ], LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 					continue ;
 				}
 				$srcs[ $w ][ 'url' ] = $url ;
@@ -462,14 +462,14 @@ class LiteSpeed_Cache_CDN
 
 		// Only images under wp-cotnent/wp-includes can be replaced
 		$is_internal_folder = LiteSpeed_Cache_Utility::str_hit_array( $url_parsed[ 'path' ], $this->_cfg_ori_dir ) ;
-		if ( ! $is_internal_folder ) {
+		if ( !$is_internal_folder ) {
 			LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: path not match: ' . LSCWP_CONTENT_FOLDER ) ;
 			return false ;
 		}
 
 		// Check if is external url
-		if ( ! empty( $url_parsed[ 'host' ] ) ) {
-			if ( ! LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) && ! $this->_is_ori_url( $url ) ) {
+		if ( !empty( $url_parsed[ 'host' ] ) ) {
+			if ( !LiteSpeed_Cache_Utility::internal( $url_parsed[ 'host' ] ) && !$this->_is_ori_url( $url ) ) {
 				LiteSpeed_Cache_Log::debug2( '[CDN] -rewrite failed: host not internal' ) ;
 				return false ;
 			}
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_CDN
 			$url_parsed = parse_url( $url ) ;
 		}
 
-		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
+		$scheme = !empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
 		if ( $scheme ) {
 			// LiteSpeed_Cache_Log::debug2( '[CDN] -scheme from url: ' . $scheme ) ;
 		}
@@ -537,7 +537,7 @@ class LiteSpeed_Cache_CDN
 	{
 		$url_parsed = parse_url( $url ) ;
 
-		$scheme = ! empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
+		$scheme = !empty( $url_parsed[ 'scheme' ] ) ? $url_parsed[ 'scheme' ] . ':' : '' ;
 
 		foreach ( $this->_cfg_url_ori as $v ) {
 			$needle = $scheme . $v ;
@@ -608,7 +608,7 @@ class LiteSpeed_Cache_CDN
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

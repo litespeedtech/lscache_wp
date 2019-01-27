@@ -34,7 +34,7 @@ class LiteSpeed_Cache_CDN_Quic
 			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
-			if ( ! empty( $options[ $v ] ) ) {
+			if ( !empty( $options[ $v ] ) ) {
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
 			}
 		}
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_CDN_Quic
 
 	private function _show_user_guide()
 	{
-		if ( ! empty( $_POST[ 'step' ] ) ) {
+		if ( !empty( $_POST[ 'step' ] ) ) {
 			if ( empty( $_POST[ 'email' ] ) ) {
 				exit( 'No email' ) ;
 			}
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_CDN_Quic
 		LiteSpeed_Cache_Log::debug( '[QUIC] _api call' ) ;
 
 		$hash = 'no_hash' ;
-		if ( ! $no_hash ) {
+		if ( !$no_hash ) {
 			$hash = Litespeed_String::rrand( 16 ) ;
 			// store hash
 			update_option( self::DB_API_HASH, $hash ) ;
@@ -248,7 +248,7 @@ class LiteSpeed_Cache_CDN_Quic
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

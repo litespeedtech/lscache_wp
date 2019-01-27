@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 ?>
 <div class="litespeed-wrap notice notice-info litespeed-banner-promo-full" id="litespeed-banner-promo-slack">
 	<div class="litespeed-banner-promo-logo"></div>

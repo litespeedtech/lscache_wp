@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -67,7 +67,7 @@ class LiteSpeed_Cache_Optimize
 
 		$this->_static_request_check() ;
 
-		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
+		if ( !LiteSpeed_Cache_Router::can_optm() ) {
 			return ;
 		}
 
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
-		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+		if ( !LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
 			return $varys ;
 		}
 		$varys[ 'role_exclude_optm' ] = 1 ;
@@ -160,7 +160,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
 
 		// If not turn on min files
-		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
+		if ( !$this->cfg_css_minify && !$this->cfg_css_combine && !$this->cfg_js_minify && !$this->cfg_js_combine ) {
 			return ;
 		}
 
@@ -169,7 +169,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// try to match `http://home_url/min/xx.css
-		if ( ! preg_match( '#' . self::DIR_MIN . '/(\w+\.(css|js))#U', $_SERVER[ 'REQUEST_URI' ], $match ) ) {
+		if ( !preg_match( '#' . self::DIR_MIN . '/(\w+\.(css|js))#U', $_SERVER[ 'REQUEST_URI' ], $match ) ) {
 			return ;
 		}
 
@@ -191,8 +191,8 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Even if hit PHP, still check if the file is valid to bypass minify process
-		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
+		if ( !file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
+			$concat_only = !( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
 			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
 
@@ -286,14 +286,14 @@ class LiteSpeed_Cache_Optimize
 			return $content ;
 		}
 
-		if ( ! defined( 'LITESPEED_IS_HTML' ) ) {
+		if ( !defined( 'LITESPEED_IS_HTML' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: Not frontend HTML type' ) ;
 			return $content ;
 		}
 
 		// Check if hit URI excludes
 		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ) ;
-		if ( ! empty( $excludes ) ) {
+		if ( !empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
 				LiteSpeed_Cache_Log::debug( '[Optm] bypass: hit URI Excludes setting: ' . $result ) ;
@@ -337,7 +337,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ) * 1000000 ;
 		$this->cfg_ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ;
 
-		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
+		if ( !LiteSpeed_Cache_Router::can_optm() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
 			return ;
 		}
@@ -420,7 +420,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Handle css lazy load if not handled async loaded yet
-		if ( $this->cfg_css_async && ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
+		if ( $this->cfg_css_async && !$this->cfg_css_minify && !$this->cfg_css_combine ) {
 			// async html
 			$html_list_async = $this->_async_css_list( $html_list ) ;
 
@@ -542,7 +542,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Handle js defer if not handled defer yet
-		if ( $this->cfg_js_defer && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
+		if ( $this->cfg_js_defer && !$this->cfg_js_minify && !$this->cfg_js_combine ) {
 			// defer html
 			$html_list2 = $this->_js_defer( $html_list ) ;
 
@@ -607,7 +607,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _async_ggfonts()
 	{
-		if ( ! $this->cfg_ggfonts_async || ! $this->_ggfonts_urls ) {
+		if ( !$this->cfg_ggfonts_async || !$this->_ggfonts_urls ) {
 			return ;
 		}
 
@@ -671,7 +671,7 @@ class LiteSpeed_Cache_Optimize
 	private function _dns_prefetch_init()
 	{
 		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ) ;
-		if ( ! $this->dns_prefetch ) {
+		if ( !$this->dns_prefetch ) {
 			return ;
 		}
 
@@ -740,7 +740,7 @@ class LiteSpeed_Cache_Optimize
 
 			if ( $total > $this->cfg_optm_max_size ) { // If larger than 1M, separate them
 				$total = 0;
-				$i ++ ;
+				$i++ ;
 			}
 		}
 		if ( count( $src_arr ) > 1 ) {
@@ -837,7 +837,7 @@ class LiteSpeed_Cache_Optimize
 
 			// Check if is external URL
 			$url_parsed = parse_url( $src ) ;
-			if ( ! $file_info = LiteSpeed_Cache_Utility::is_internal_file( $src ) ) {
+			if ( !$file_info = LiteSpeed_Cache_Utility::is_internal_file( $src ) ) {
 				$ignored_html[ $src ] = $html_list[ $key ] ;
 				LiteSpeed_Cache_Log::debug2( '[Optm]    Abort external/non-exist' ) ;
 				continue ;
@@ -874,11 +874,11 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _build_hash_url( $src, $file_type = 'css' )
 	{
-		if ( ! $src ) {
+		if ( !$src ) {
 			return false ;
 		}
 
-		if ( ! is_array( $src ) ) {
+		if ( !is_array( $src ) ) {
 			$src = array( $src ) ;
 		}
 
@@ -912,8 +912,8 @@ class LiteSpeed_Cache_Optimize
 		// Generate static files
 		$static_file = LSCWP_CONTENT_DIR . "/cache/$file_type/$filename.$file_type" ;
 		// Check if the file is valid to bypass minify process
-		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
+		if ( !file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
+			$concat_only = !( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
 
 			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $src, $concat_only ) ;
 
@@ -960,7 +960,7 @@ class LiteSpeed_Cache_Optimize
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
-			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+			if ( !empty( $attrs[ 'data-no-optimize' ] ) ) {
 				continue ;
 			}
 			if ( empty( $attrs[ 'src' ] ) ) {
@@ -1028,10 +1028,10 @@ class LiteSpeed_Cache_Optimize
 			if ( isset( $attrs[ 'data-optimized' ] ) ) {
 				continue ;
 			}
-			if ( ! empty( $attrs[ 'data-no-optimize' ] ) ) {
+			if ( !empty( $attrs[ 'data-no-optimize' ] ) ) {
 				continue ;
 			}
-			if ( ! empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
+			if ( !empty( $attrs[ 'media' ] ) && strpos( $attrs[ 'media' ], 'print' ) !== false ) {
 				continue ;
 			}
 			if ( empty( $attrs[ 'href' ] ) ) {
@@ -1202,7 +1202,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function append_http2( $url, $file_type = 'css' )
 	{
-		if ( ! ( $file_type === 'css' ? $this->cfg_http2_css : $this->cfg_http2_js ) ) {
+		if ( !( $file_type === 'css' ? $this->cfg_http2_css : $this->cfg_http2_js ) ) {
 			return ;
 		}
 
@@ -1220,7 +1220,7 @@ class LiteSpeed_Cache_Optimize
 		 */
 		$uri = LiteSpeed_Cache_Utility::url2uri( $url, true ) ;
 
-		if ( ! $uri ) {
+		if ( !$uri ) {
 			return ;
 		}
 
@@ -1236,7 +1236,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset(self::$_instance) ) {
+		if ( !isset(self::$_instance) ) {
 			self::$_instance = new self() ;
 		}
 

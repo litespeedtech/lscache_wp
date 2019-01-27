@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 
 $last_check = empty( $_summary[ 'score.last_check' ] ) ? 0 : $_summary[ 'score.last_check' ] ;
 // Check once per 10 days
@@ -10,7 +10,7 @@ if ( time() - $last_check > 864000 ) {
 	return ;
 }
 
-if ( ! isset( $_summary[ 'score.data' ] ) ) {
+if ( !isset( $_summary[ 'score.data' ] ) ) {
 	return ;
 }
 

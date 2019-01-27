@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function not_cacheable()
 	{
-		return ! LiteSpeed_Cache_Control::is_cacheable() ;
+		return !LiteSpeed_Cache_Control::is_cacheable() ;
 	}
 
 	/**
@@ -235,7 +235,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	public static function vary_add( $vary, $priority = 10 )
 	{
 		add_filter( 'litespeed_vary_cookies', function( $cookies ) use( $vary ) {
-			if ( ! is_array( $vary ) ) {
+			if ( !is_array( $vary ) ) {
 				$vary = array( $vary ) ;
 			}
 			$cookies = array_merge( $cookies, $vary ) ;
@@ -534,7 +534,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function nonce( $action = -1, $defence_for_html_filter = true )
 	{
-		if ( ! self::esi_enabled() ) {
+		if ( !self::esi_enabled() ) {
 			return wp_create_nonce( $action ) ;
 		}
 

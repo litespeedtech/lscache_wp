@@ -8,7 +8,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if ( !defined('ABSPATH') ) {
     die() ;
 }
 add_action('load_nextgen_gallery_modules', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::detect') ;
@@ -55,7 +55,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 */
 	public static function add_image($image)
 	{
-		if ( ! $image || ! method_exists( $image, 'get_gallery' ) ) {
+		if ( !$image || !method_exists( $image, 'get_gallery' ) ) {
 			return ;
 		}
 		$gallery = $image->get_gallery() ;
@@ -81,7 +81,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 			$task_list = str_replace( '\\', '', $_POST[ 'task_list' ] ) ;
 			$task_list = json_decode( $task_list, true ) ;
 
-			if ( ! empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
+			if ( !empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
 				LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ] ) ;
 				return ;
 			}
@@ -169,7 +169,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	public static function update_gallery($gid)
 	{
 		// New version input will be an object with gid value
-		if ( is_object( $gid ) && ! empty( $gid->gid ) ) {
+		if ( is_object( $gid ) && !empty( $gid->gid ) ) {
 			$gid = $gid->gid ;
 		}
 

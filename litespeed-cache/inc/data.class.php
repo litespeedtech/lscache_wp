@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Data
 	{
 		global $wpdb ;
 
-		if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
+		if ( !$wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
 			return ;
 		}
 
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Data
 		 * Convert old data from postmeta to img_optm table
 		 * @since  2.0
 		 */
-		if ( ! $ver || version_compare( $ver, '2.0', '<' ) ) {
+		if ( !$ver || version_compare( $ver, '2.0', '<' ) ) {
 			// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
 			$mids_to_del = array() ;
 			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
@@ -307,7 +307,7 @@ class LiteSpeed_Cache_Data
 			'hash_name'	=> $filename,
 			'src'		=> $src,
 			'dateline'	=> time(),
-			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
+			'refer' 	=> !empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
 		) ;
 
 		$res = $wpdb->replace( $this->_tb_optm, $f ) ;
@@ -349,7 +349,7 @@ class LiteSpeed_Cache_Data
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

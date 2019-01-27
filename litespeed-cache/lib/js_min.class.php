@@ -130,7 +130,7 @@ class JSMin
 						&& ($this->b === $this->lastByteOut)) {
 					// Don't delete this space. If we do, the addition/subtraction
 					// could be parsed as a post-increment
-				} elseif (! $this->isAlphaNum($this->b)) {
+				} elseif (!$this->isAlphaNum($this->b)) {
 					$command = self::ACTION_DELETE_A;
 				}
 			} elseif ($this->a === "\n") {
@@ -141,10 +141,10 @@ class JSMin
 					// otherwise mb_strpos will give WARNING
 				} elseif ($this->b === null
 						  || (false === strpos('{[(+-!~', $this->b)
-							  && ! $this->isAlphaNum($this->b))) {
+							  && !$this->isAlphaNum($this->b))) {
 					$command = self::ACTION_DELETE_A;
 				}
-			} elseif (! $this->isAlphaNum($this->a)) {
+			} elseif (!$this->isAlphaNum($this->a)) {
 				if ($this->b === ' '
 					|| ($this->b === "\n"
 						&& (false === strpos('}])+-"\'', $this->a)))) {

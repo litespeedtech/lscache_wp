@@ -9,7 +9,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if ( !defined('ABSPATH') ) {
 	die() ;
 }
 
@@ -53,7 +53,7 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
 		}
 
 		// NOTE: is_cart and is_checkout should also be checked, but will be checked by woocommerce anyway.
-		if ( ! is_woocommerce() ) {
+		if ( !is_woocommerce() ) {
 			return ;
 		}
 

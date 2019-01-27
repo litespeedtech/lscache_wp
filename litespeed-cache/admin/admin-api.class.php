@@ -8,7 +8,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -195,7 +195,7 @@ class LiteSpeed_Cache_Admin_API
 		$instance = self::get_instance() ;
 
 		// don't have auth_key yet
-		if ( ! $instance->_iapi_key ) {
+		if ( !$instance->_iapi_key ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] __callback aggressive check failed: No init key' ) ;
 			return false ;
 		}
@@ -225,7 +225,7 @@ class LiteSpeed_Cache_Admin_API
 		 * All requests must have closet cloud server too
 		 * @since  2.9
 		 */
-		if ( ! $instance->_iapi_cloud ) {
+		if ( !$instance->_iapi_cloud ) {
 			$instance->_detect_cloud() ;
 		}
 
@@ -246,7 +246,7 @@ class LiteSpeed_Cache_Admin_API
 		 * All requests must have closet cloud server too
 		 * @since  2.9
 		 */
-		if ( ! $instance->_iapi_cloud ) {
+		if ( !$instance->_iapi_cloud ) {
 			$instance->_detect_cloud() ;
 		}
 
@@ -254,7 +254,7 @@ class LiteSpeed_Cache_Admin_API
 		 * All requests must have api_key first
 		 * @since  1.6.5
 		 */
-		if ( ! $instance->_iapi_key ) {
+		if ( !$instance->_iapi_key ) {
 			$instance->_request_key() ;
 		}
 
@@ -405,7 +405,7 @@ class LiteSpeed_Cache_Admin_API
 	private function _post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
 	{
 		$hash = 'no_hash' ;
-		if ( ! $no_hash ) {
+		if ( !$no_hash ) {
 			$hash = Litespeed_String::rrand( 16 ) ;
 			// store hash
 			update_option( self::DB_API_KEY_HASH, $hash ) ;
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_Admin_API
 		// parse data from server
 		$json = json_decode( $response[ 'body' ], true ) ;
 
-		if ( ! is_array( $json ) ) {
+		if ( !is_array( $json ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] failed to decode post json: ' . $response[ 'body' ] ) ;
 
 			$msg = __( 'Failed to post via WordPress', 'litespeed-cache' ) . ': ' . $response[ 'body' ] ;
@@ -453,7 +453,7 @@ class LiteSpeed_Cache_Admin_API
 			return false ;
 		}
 
-		if ( ! empty( $json[ '_err' ] ) ) {
+		if ( !empty( $json[ '_err' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] _err: ' . $json[ '_err' ] ) ;
 			$msg = __( 'Failed to communicate with LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_err' ] ;
 			$msg .= $this->_parse_link( $json ) ;
@@ -461,7 +461,7 @@ class LiteSpeed_Cache_Admin_API
 			return false ;
 		}
 
-		if ( ! empty( $json[ '_503' ] ) ) {
+		if ( !empty( $json[ '_503' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] service 503 unavailable temporarily. ' . $json[ '_503' ] ) ;
 
 			$msg = __( 'We are working hard to improve your Image Optimization experience. The service will be unavailable while we work. We apologize for any inconvenience.', 'litespeed-cache' ) ;
@@ -471,7 +471,7 @@ class LiteSpeed_Cache_Admin_API
 			return false ;
 		}
 
-		if ( ! empty( $json[ '_info' ] ) ) {
+		if ( !empty( $json[ '_info' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] _info: ' . $json[ '_info' ] ) ;
 			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_info' ] ;
 			$msg .= $this->_parse_link( $json ) ;
@@ -479,7 +479,7 @@ class LiteSpeed_Cache_Admin_API
 			unset( $json[ '_info' ] ) ;
 		}
 
-		if ( ! empty( $json[ '_note' ] ) ) {
+		if ( !empty( $json[ '_note' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] _note: ' . $json[ '_note' ] ) ;
 			$msg = __( 'Message from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_note' ] ;
 			$msg .= $this->_parse_link( $json ) ;
@@ -487,7 +487,7 @@ class LiteSpeed_Cache_Admin_API
 			unset( $json[ '_note' ] ) ;
 		}
 
-		if ( ! empty( $json[ '_success' ] ) ) {
+		if ( !empty( $json[ '_success' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] _success: ' . $json[ '_success' ] ) ;
 			$msg = __( 'Good news from LiteSpeed image server', 'litespeed-cache' ) . ': ' . $json[ '_success' ] ;
 			$msg .= $this->_parse_link( $json ) ;
@@ -496,7 +496,7 @@ class LiteSpeed_Cache_Admin_API
 		}
 
 		// Upgrade is required
-		if ( ! empty( $json[ '_err_req_v' ] ) ) {
+		if ( !empty( $json[ '_err_req_v' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[IAPI] _err_req_v: ' . $json[ '_err_req_v' ] ) ;
 			$msg = sprintf( __( '%s plugin version %s required for this action.', 'litespeed-cache' ), LiteSpeed_Cache::NAME, 'v' . $json[ '_err_req_v' ] . '+' ) ;
 
@@ -522,9 +522,9 @@ class LiteSpeed_Cache_Admin_API
 	{
 		$msg = '' ;
 
-		if ( ! empty( $json[ '_links' ] ) ) {
+		if ( !empty( $json[ '_links' ] ) ) {
 			foreach ( $json[ '_links' ] as $v ) {
-				$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], ! empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
+				$msg .= ' ' . sprintf( '<a href="%s" class="%s" target="_blank">%s</a>', $v[ 'link' ], !empty( $v[ 'cls' ] ) ? $v[ 'cls' ] : '', $v[ 'title' ] ) ;
 			}
 
 			unset( $json[ '_links' ] ) ;
@@ -542,7 +542,7 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

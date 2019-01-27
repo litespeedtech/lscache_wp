@@ -18,7 +18,7 @@ if (!defined('WPINC')) die;
 <table><tbody>
 
 	<?php
-		if ( ! is_multisite() ) :
+		if ( !is_multisite() ) :
 			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_object.php' ;
 			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_browser.php' ;
 

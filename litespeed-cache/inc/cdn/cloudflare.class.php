@@ -62,14 +62,14 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _get_devmode' ) ;
 
 		$zone = $this->_zone() ;
-		if ( ! $zone ) {
+		if ( !$zone ) {
 			return ;
 		}
 
 		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
 		$res = $this->_cloudflare_call( $url, 'GET', false, false, $show_msg ) ;
 
-		if ( ! $res ) {
+		if ( !$res ) {
 			return ;
 		}
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
@@ -94,7 +94,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _set_devmode' ) ;
 
 		$zone = $this->_zone() ;
-		if ( ! $zone ) {
+		if ( !$zone ) {
 			return ;
 		}
 
@@ -103,7 +103,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		$data = array( 'value' => $new_val ) ;
 		$res = $this->_cloudflare_call( $url, 'PATCH', $data ) ;
 
-		if ( ! $res ) {
+		if ( !$res ) {
 			return ;
 		}
 
@@ -127,14 +127,14 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _purge_all' ) ;
 
 		$cf_on = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ;
-		if ( ! $cf_on ) {
+		if ( !$cf_on ) {
 			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return ;
 		}
 
 		$zone = $this->_zone() ;
-		if ( ! $zone ) {
+		if ( !$zone ) {
 			return ;
 		}
 
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	private function _zone()
 	{
 		$zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
-		if ( ! $zone ) {
+		if ( !$zone ) {
 			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
 			return false ;
@@ -191,12 +191,12 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		// Can't find, try to get default one
 		$zones = $this->_cloudflare_call( $url, 'GET', false, $options, false ) ;
 
-		if ( ! $zones ) {
+		if ( !$zones ) {
 			LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone no zone' ) ;
 			return false ;
 		}
 
-		if ( ! $kw ) {
+		if ( !$kw ) {
 			LiteSpeed_Cache_Log::debug( '[Cloudflare] fetch_zone no set name, use first one by default' ) ;
 			return $zones[ 0 ] ;
 		}
@@ -279,7 +279,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

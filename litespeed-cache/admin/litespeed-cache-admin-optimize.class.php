@@ -9,7 +9,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -39,7 +39,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 */
 	public static function run_db_clean()
 	{
-		if( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
+		if( !$type = LiteSpeed_Cache_Router::verify_type() ) {
 			return ;
 		}
 
@@ -80,7 +80,7 @@ class LiteSpeed_Cache_Admin_Optimize
 			return $num ;
 		}
 
-		if ( ! $ignore_multisite ) {
+		if ( !$ignore_multisite ) {
 			if ( is_multisite() && is_network_admin() ) {
 				$num = 0 ;
 				$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;

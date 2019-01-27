@@ -6,7 +6,7 @@
  * @since  		1.5 Moved into /inc
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -53,7 +53,7 @@ class LiteSpeed_Cache_Utility
 		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
-		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
+		if ( !is_array( $response ) || empty( $response[ 'body' ] ) ) {
 			return false ;
 		}
 
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Utility
 		$stoptime	= microtime( true ) ;
 		$status		= 0 ;
 
-		if ( ! $file ) $status = 99999 ;// Site is down
+		if ( !$file ) $status = 99999 ;// Site is down
 		else {
 			fclose( $file ) ;
 			$status = ( $stoptime - $starttime ) * 1000 ;
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Utility
 			$res .= $seconds . 's' ;
 		}
 
-		if ( ! $res ) {
+		if ( !$res ) {
 			return $backward ? __( 'just now', 'litespeed-cache' ) : __( 'right now', 'litespeed-cache' ) ;
 		}
 
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function arr2str( $arr )
 	{
-		if ( ! is_array( $arr ) ) {
+		if ( !is_array( $arr ) ) {
 			return $arr ;
 		}
 
@@ -316,14 +316,14 @@ class LiteSpeed_Cache_Utility
 		$hit = false ;
 		$this_ttl = 0 ;
 		foreach( $haystack as $item ) {
-			if ( ! $item ) {
+			if ( !$item ) {
 				continue ;
 			}
 
 			if ( $has_ttl ) {
 				$this_ttl = 0 ;
 				$item = explode( ' ', $item ) ;
-				if ( ! empty( $item[ 1 ] ) ) {
+				if ( !empty( $item[ 1 ] ) ) {
 					$this_ttl = $item[ 1 ] ;
 				}
 				$item = $item[ 0 ] ;
@@ -407,7 +407,7 @@ class LiteSpeed_Cache_Utility
 		$uri = @parse_url( $url, PHP_URL_PATH ) ;
 		$qs = @parse_url( $url, PHP_URL_QUERY ) ;
 
-		if ( ! $keep_qs || ! $qs ) {
+		if ( !$keep_qs || !$qs ) {
 			return $uri ;
 		}
 
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_Utility
 			return '' ;
 		}
 
-		if ( ! empty( $url[ 'scheme' ] ) ) {
+		if ( !empty( $url[ 'scheme' ] ) ) {
 			return $url[ 'scheme' ] . '://' . $url[ 'host' ] ;
 		}
 
@@ -486,11 +486,11 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function sanitize_lines( $arr, $type = null )
 	{
-		if ( ! $arr ) {
+		if ( !$arr ) {
 			return $arr ;
 		}
 
-		if ( ! is_array( $arr ) ) {
+		if ( !is_array( $arr ) ) {
 			$arr = explode( "\n", $arr ) ;
 		}
 
@@ -529,7 +529,7 @@ class LiteSpeed_Cache_Utility
 	{
 		$prefix = '?' ;
 
-		if ( ! $is_ajax ) {
+		if ( !$is_ajax ) {
 			if ( $page ) {
 				// If use admin url
 				if ( $page === true ) {
@@ -546,14 +546,14 @@ class LiteSpeed_Cache_Utility
 				// Current page rebuild URL
 				$params = $_GET ;
 
-				if ( ! empty( $params ) ) {
+				if ( !empty( $params ) ) {
 					if ( isset( $params[ 'LSCWP_CTRL' ] ) ) {
 						unset( $params[ 'LSCWP_CTRL' ] ) ;
 					}
 					if ( isset( $params[ '_wpnonce' ] ) ) {
 						unset( $params[ '_wpnonce' ] ) ;
 					}
-					if ( ! empty( $params ) ) {
+					if ( !empty( $params ) ) {
 						$prefix .= http_build_query( $params ) . '&' ;
 					}
 				}
@@ -599,7 +599,7 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function internal( $host )
 	{
-		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
+		if ( !defined( 'LITESPEED_FRONTEND_HOST' ) ) {
 			if ( defined( 'WP_HOME' ) ) {
 				$home_host = WP_HOME ;// Also think of `WP_SITEURL`
 			}
@@ -623,10 +623,10 @@ class LiteSpeed_Cache_Utility
 	public static function is_internal_file( $url, $addition_postfix = false )
 	{
 		$url_parsed = parse_url( $url ) ;
-		if ( isset( $url_parsed[ 'host' ] ) && ! self::internal( $url_parsed[ 'host' ] ) ) {
+		if ( isset( $url_parsed[ 'host' ] ) && !self::internal( $url_parsed[ 'host' ] ) ) {
 			// Check if is cdn path
 			// Do this to avoid user hardcoded src in tpl
-			if ( ! LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
+			if ( !LiteSpeed_Cache_CDN::internal( $url_parsed[ 'host' ] ) ) {
 				LiteSpeed_Cache_Log::debug2( '[Util] external' ) ;
 				return false ;
 			}
@@ -688,7 +688,7 @@ class LiteSpeed_Cache_Utility
 		$file_path_ori = apply_filters( 'litespeed_realpath', $file_path_ori ) ;
 
 		$file_path = realpath( $file_path_ori ) ;
-		if ( ! is_file( $file_path ) ) {
+		if ( !is_file( $file_path ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Util] file not exist: ' . $file_path_ori ) ;
 			return false ;
 		}
@@ -715,7 +715,7 @@ class LiteSpeed_Cache_Utility
 			foreach ( $urls_final as $k2 => $url_info ) {
 				list( $url, $size ) = explode( ' ', trim( $url_info ) ) ;
 
-				if ( ! $url2 = call_user_func( $callback, $url ) ) {
+				if ( !$url2 = call_user_func( $callback, $url ) ) {
 					continue ;
 				}
 
@@ -726,7 +726,7 @@ class LiteSpeed_Cache_Utility
 				LiteSpeed_Cache_Log::debug2( '[Util] - srcset replaced to ' . $url2 . ' ' . $size ) ;
 			}
 
-			if ( ! $changed ) {
+			if ( !$changed ) {
 				continue ;
 			}
 
@@ -782,7 +782,7 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die ;
 }
 
@@ -43,7 +43,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	private function __construct()
 	{
-		if ( ! is_admin() ) {
+		if ( !is_admin() ) {
 			LiteSpeed_Cache_Log::debug( 'GUI init' ) ;
 			if ( is_admin_bar_showing() && current_user_can( 'manage_options' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style' ) ) ;
@@ -192,10 +192,10 @@ class LiteSpeed_Cache_GUI
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Dismiss promo ' . $promo_tag ) ;
 
 				// Forever dismiss
-				if ( ! empty( $_GET[ 'done' ] ) ) {
+				if ( !empty( $_GET[ 'done' ] ) ) {
 					$summary[ $promo_tag ] = 'done' ;
 				}
-				elseif ( ! empty( $_GET[ 'later' ] ) ) {
+				elseif ( !empty( $_GET[ 'later' ] ) ) {
 					// Delay the banner to half year later
 					$summary[ $promo_tag ] = time() + 86400 * 180 ;
 				}
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	private function _is_litespeed_page()
 	{
-		if ( ! empty( $_GET[ 'page' ] ) && in_array( $_GET[ 'page' ],
+		if ( !empty( $_GET[ 'page' ] ) && in_array( $_GET[ 'page' ],
 			array(
 				'lscache-settings',
 				'lscache-dash',
@@ -281,7 +281,7 @@ class LiteSpeed_Cache_GUI
 
 		// Bypass showing info banner if disabled all in debug
 		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
-			if ( $is_litespeed_page && ! $check_only ) {
+			if ( $is_litespeed_page && !$check_only ) {
 				include_once LSCWP_DIR . "admin/tpl/inc/disabled_all.php" ;
 			}
 
@@ -293,7 +293,7 @@ class LiteSpeed_Cache_GUI
 		foreach ( $this->_promo_list as $promo_tag => $v ) {
 			list( $delay_days, $litespeed_page_only ) = $v ;
 
-			if ( $litespeed_page_only && ! $is_litespeed_page ) {
+			if ( $litespeed_page_only && !$is_litespeed_page ) {
 				continue ;
 			}
 
@@ -322,7 +322,7 @@ class LiteSpeed_Cache_GUI
 			include LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
 
 			// If not defined, means it didn't pass the display workflow in tpl.
-			if ( ! $this->_promo_true ) {
+			if ( !$this->_promo_true ) {
 				continue ;
 			}
 
@@ -490,7 +490,7 @@ class LiteSpeed_Cache_GUI
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( ! is_network_admin() ) {
+		if ( !is_network_admin() ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-bar-imgoptm',
@@ -670,7 +670,7 @@ class LiteSpeed_Cache_GUI
 
 		LiteSpeed_Cache_Log::debug2( "GUI start cleaning counter " . self::$_clean_counter ) ;
 
-		for ( $i = 1 ; $i <= self::$_clean_counter ; $i ++ ) {
+		for ( $i = 1 ; $i <= self::$_clean_counter ; $i++ ) {
 			// If miss beginning
 			$start = strpos( $buffer, self::clean_wrapper_begin( $i ) ) ;
 			if ( $start === false ) {
@@ -705,7 +705,7 @@ class LiteSpeed_Cache_GUI
 	public static function clean_wrapper_begin( $counter = false )
 	{
 		if ( $counter === false ) {
-			self::$_clean_counter ++ ;
+			self::$_clean_counter++ ;
 			$counter = self::$_clean_counter ;
 			LiteSpeed_Cache_Log::debug( "GUI clean wrapper $counter begin" ) ;
 		}
@@ -736,7 +736,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public static function get_instance()
 	{
-		if ( ! isset( self::$_instance ) ) {
+		if ( !isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
 

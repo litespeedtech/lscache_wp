@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 
 $cf_on = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ;
 $cf_domain = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ) ?: '-' ;
@@ -10,7 +10,7 @@ $curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array
 ?>
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>
 
-<?php if ( ! $cf_on ) : ?>
+<?php if ( !$cf_on ) : ?>
 <div class="litespeed-callout-danger">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 	<p>
@@ -63,7 +63,7 @@ $curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array
 
 <p>
 	<b><?php echo __( 'Cloudflare Cache', 'litespeed-cache' ) ; ?>:</b>
-	<?php if ( ! $cf_on ) : ?>
+	<?php if ( !$cf_on ) : ?>
 		<a href="#" class="litespeed-btn-default disabled">
 	<?php else : ?>
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CDN_CLOUDFLARE, LiteSpeed_Cache_CDN_Cloudflare::TYPE_PURGE_ALL ) ; ?>" class="litespeed-btn-danger">

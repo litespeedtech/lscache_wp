@@ -8,7 +8,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if ( !defined('ABSPATH') ) {
     die() ;
 }
 
@@ -28,7 +28,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 */
 	public static function detect()
 	{
-		if ( ! defined('WOOCOMMERCE_VERSION') || ! defined('YITH_WCWL') ) {
+		if ( !defined('WOOCOMMERCE_VERSION') || !defined('YITH_WCWL') ) {
 			return ;
 		}
 		if ( LiteSpeed_Cache_API::esi_enabled() ) {

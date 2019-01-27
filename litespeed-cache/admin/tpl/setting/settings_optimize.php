@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 
 $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 
@@ -10,7 +10,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
-<?php if ( ! LiteSpeed_Cache_Data::optm_available() ) : ?>
+<?php if ( !LiteSpeed_Cache_Data::optm_available() ) : ?>
 <div class="litespeed-callout-danger">
 	<h4><?php echo __( 'WARNING', 'litespeed-cache' ) ; ?></h4>
 	<p><?php echo sprintf( __( 'Failed to create Optimizer table. Please follow <a %s>Table Creation guidance from LiteSpeed Wiki</a> to finish setup.', 'litespeed-cache' ), 'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:installation" target="_blank"' ) ; ?></p>
@@ -167,7 +167,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 
 			<?php if ( $last_critical_css_generated ) : ?>
 			<div class="litespeed-desc litespeed-left20">
-				<?php if ( ! empty( $last_critical_css_generated[ 'last_request' ] ) ) : ?>
+				<?php if ( !empty( $last_critical_css_generated[ 'last_request' ] ) ) : ?>
 					<p>
 						<?php echo __( 'Last generated', 'litespeed-cache' ) . ': <code>' . LiteSpeed_Cache_Utility::readable_time( $last_critical_css_generated[ 'last_request' ] ) . '</code>' ; ?>
 					</p>
@@ -175,12 +175,12 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 						<?php echo __( 'Last requested cost', 'litespeed-cache' ) . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>' ; ?>
 					</p>
 				<?php endif ; ?>
-				<?php if ( ! empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
+				<?php if ( !empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout-warning">
 						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
 						<p>
 						<?php foreach ( $last_critical_css_generated[ 'queue' ] as $k => $v ) : ?>
-							<?php if ( ! is_array( $v ) ) continue ; ?>
+							<?php if ( !is_array( $v ) ) continue ; ?>
 							<?php echo $v[ 'url' ] ; ?>
 							<?php if ( $v[ 'is_mobile' ] ) echo ' <span title="mobile">📱</span>' ; ?>
 							<br />

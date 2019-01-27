@@ -216,7 +216,7 @@ class Litespeed_Crawler
 	public function engine_start()
 	{
 		$this->read_meta() ;
-		if ( ! isset( $this->_meta ) ) {
+		if ( !isset( $this->_meta ) ) {
 			return $this->_return( sprintf(__('Cannot read meta file: %s', 'litespeed-cache'), $this->_meta_file) ) ;// NOTE: deprecated due to default_meta usage
 		}
 
@@ -320,7 +320,7 @@ class Litespeed_Crawler
 						return __('Stopped: crawler disabled by the server admin', 'litespeed-cache') ;
 					}
 
-					if ( ! $this->_status_ok_and_cached( $rets[ $i ] ) ) {
+					if ( !$this->_status_ok_and_cached( $rets[ $i ] ) ) {
 						// Only default visitor crawler needs to add blacklist
 						if ( $this->_meta[ 'curr_crawler' ] == 0 ) {
 							$this->_blacklist[] = $url ;
@@ -479,17 +479,17 @@ class Litespeed_Crawler
 			if ( $curload >= $this->_load_limit + 1 ) {
 				sleep(5) ;  // sleep 5 secs
 				if ( $curthreads >= 1 ) {
-					$curthreads -- ;
+					$curthreads-- ;
 				}
 			}
 			elseif ( $curload >= $this->_load_limit ) {
 				if ( $curthreads > 1 ) {// if already 1, keep
-					$curthreads -- ;
+					$curthreads-- ;
 				}
 			}
 			elseif ( ($curload + 1) < $this->_load_limit ) {
 				if ( $curthreads < $this->_threads_limit ) {
-					$curthreads ++ ;
+					$curthreads++ ;
 				}
 			}
 		}
@@ -656,7 +656,7 @@ class Litespeed_Crawler
 
 		if ( $meta && $meta = json_decode( $meta, true ) ) {
 			// check if sitemap changed since last time
-			if ( ! isset($meta['file_time']) || $meta['file_time'] < filemtime($this->_sitemap_file) ) {
+			if ( !isset($meta['file_time']) || $meta['file_time'] < filemtime($this->_sitemap_file) ) {
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: Sitemap timestamp changed, reset crawler' ) ;
 				$meta['file_time'] = filemtime($this->_sitemap_file) ;
 				$meta['last_pos'] = 0 ;
@@ -664,7 +664,7 @@ class Litespeed_Crawler
 			}
 		}
 
-		if ( ! $meta ) {
+		if ( !$meta ) {
 			$meta = array() ;
 		}
 

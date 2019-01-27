@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if ( !defined( 'WPINC' ) ) die ;
 ?>
 <h3 class="litespeed-title"><?php echo __( 'Advanced Network', 'litespeed-cache' ) ; ?></h3>
 
