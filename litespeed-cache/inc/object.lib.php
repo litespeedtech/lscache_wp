@@ -313,7 +313,7 @@ class WP_Object_Cache
 		}
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
+			$this->_object_cache->set( $final_key, serialize( array('data' => $data) ), $expire ) ;
 			$this->count_set ++ ;
 		}
 

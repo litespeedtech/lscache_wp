@@ -77,7 +77,7 @@ class LiteSpeed_Cache_ESI
 		 * @since  2.8.1 Check is_admin for Elementor compatibility #726013
 		 */
 		if ( ! is_admin() ) {
-			add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
+			add_shortcode( 'esi', array($this, 'shortcode') ) ;
 		}
 	}
 
@@ -162,8 +162,8 @@ class LiteSpeed_Cache_ESI
 		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
 		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
 
-		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
-		add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
+		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array($this, 'load_nonce_block') ) ;
+		add_action('litespeed_cache_load_esi_block-esi', array($this, 'load_esi_shortcode') ) ;
 	}
 
 	/**
@@ -195,7 +195,7 @@ class LiteSpeed_Cache_ESI
 
 		// Add comment forum esi for logged-in user or commenter
 		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
-			add_filter( 'comment_form_defaults', array( $this, 'register_comment_form_actions' ) ) ;
+			add_filter( 'comment_form_defaults', array($this, 'register_comment_form_actions') ) ;
 		}
 
 	}
@@ -641,7 +641,7 @@ class LiteSpeed_Cache_ESI
 	{
 		$this->esi_args = $defaults ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-		add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
+		add_filter( 'comment_form_submit_button', array($this, 'sub_comment_form_block'), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
 		return $defaults ;
 	}
 
@@ -690,7 +690,7 @@ class LiteSpeed_Cache_ESI
 
 		echo self::sub_esi_block( 'comment-form', 'comment form', $params ) ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-		add_action( 'comment_form_after', array( $this, 'comment_form_sub_clean' ) ) ;
+		add_action( 'comment_form_after', array($this, 'comment_form_sub_clean') ) ;
 		return $unused ;
 	}
 

@@ -115,7 +115,7 @@ class LiteSpeed_Cache_CLI_IAPI
 			unset( $summary[ '_level_data' ] ) ;
 		}
 
-		foreach ( array( 'reduced', 'reduced_webp' ) as $v ) {
+		foreach ( array('reduced', 'reduced_webp') as $v ) {
 			if ( ! empty( $summary[ $v ] ) ) {
 				$summary[ $v ] = LiteSpeed_Cache_Utility::real_size( $summary[ $v ] ) ;
 			}
@@ -127,18 +127,18 @@ class LiteSpeed_Cache_CLI_IAPI
 
 		$list = array() ;
 		foreach ( $summary as $k => $v ) {
-			$list[] = array( 'key' => $k, 'value' => $v ) ;
+			$list[] = array('key' => $k, 'value' => $v) ;
 		}
 
 		$list2 = array() ;
 		foreach ( $img_count as $k => $v ) {
-			$list2[] = array( 'key' => $k, 'value' => $v ) ;
+			$list2[] = array('key' => $k, 'value' => $v) ;
 		}
 
-		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'value' ) ) ;
+		WP_CLI\Utils\format_items( 'table', $list, array('key', 'value') ) ;
 
 		WP_CLI::line( WP_CLI::colorize( "%CImages in database summary:%n" ) ) ;
-		WP_CLI\Utils\format_items( 'table', $list2, array( 'key', 'value' ) ) ;
+		WP_CLI\Utils\format_items( 'table', $list2, array('key', 'value') ) ;
 	}
 
 	/**

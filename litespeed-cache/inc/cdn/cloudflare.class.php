@@ -100,7 +100,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
 		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/settings/development_mode' ;
 		$new_val = $type == self::TYPE_SET_DEVMODE_ON ? 'on' : 'off' ;
-		$data = array( 'value' => $new_val ) ;
+		$data = array('value' => $new_val) ;
 		$res = $this->_cloudflare_call( $url, 'PATCH', $data ) ;
 
 		if ( ! $res ) {
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		}
 
 		$url = 'https://api.cloudflare.com/client/v4/zones/' . $zone . '/purge_cache' ;
-		$data = array( 'purge_everything' => true ) ;
+		$data = array('purge_everything' => true) ;
 
 		$res = $this->_cloudflare_call( $url, 'DELETE', $data ) ;
 

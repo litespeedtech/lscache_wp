@@ -188,7 +188,7 @@ class LiteSpeed_Cache_Crawler
 		 * Read via wp func to avoid allow_url_fopen = off
 		 * @since  2.2.7
 		 */
-		$response = wp_remote_get( $sitemap, array( 'timeout' => 15 ) ) ;
+		$response = wp_remote_get( $sitemap, array('timeout' => 15) ) ;
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
@@ -471,7 +471,7 @@ class LiteSpeed_Cache_Crawler
 		 * @since  1.9.1
 		 */
 		if ( ! empty( $current_crawler[ 'webp' ] ) ) {
-			$crawler->set_headers( array( 'Accept: image/webp,*/*' ) ) ;
+			$crawler->set_headers( array('Accept: image/webp,*/*') ) ;
 		}
 
 		/**
@@ -528,16 +528,16 @@ class LiteSpeed_Cache_Crawler
 		$crawler_factors = array() ;
 
 		// Add default Guest crawler
-		$crawler_factors[ 'uid' ] = array( 0 => __( 'Guest', 'litespeed-cache' ) ) ;
+		$crawler_factors[ 'uid' ] = array(0 => __( 'Guest', 'litespeed-cache' )) ;
 
 		// WebP on/off
 		if ( LiteSpeed_Cache_Media::webp_enabled() ) {
-			$crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' ) ;
+			$crawler_factors[ 'webp' ] = array(0 => '', 1 => 'WebP') ;
 		}
 
 		// Mobile crawler
 		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
-			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' ) ;
+			$crawler_factors[ 'mobile' ] = array(0 => '', 1 => '<font title="Mobile">📱</font>') ;
 		}
 
 		// Get roles set

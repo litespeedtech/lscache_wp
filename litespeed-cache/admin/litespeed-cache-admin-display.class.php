@@ -69,10 +69,10 @@ class LiteSpeed_Cache_Admin_Display
 			$manage = 'manage_options' ;
 		}
 		if ( current_user_can($manage) ) {
-			add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
+			add_action( 'wp_before_admin_bar_render', array(LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut') ) ;
 
 			// add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
-			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) ) ;
+			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', array($this, 'display_messages') ) ;
 		}
 
 		/**
@@ -223,7 +223,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$promo_tag = LiteSpeed_Cache_GUI::get_instance()->show_promo( true ) ;
 		if ( $promo_tag ) {
-			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ) ) ;
+			$ajax_url_promo = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array('promo_tag' => $promo_tag) ) ;
 			$localize_data[ 'ajax_url_promo' ] = $ajax_url_promo ;
 		}
 
@@ -783,7 +783,7 @@ class LiteSpeed_Cache_Admin_Display
 	{
 		$checked = $checked ? ' checked ' : '' ;
 
-		$label_id = str_replace( array( '[', ']' ), '_', $id ) ;
+		$label_id = str_replace( array('[', ']'), '_', $id ) ;
 
 		if ( $value !== 1 ) {
 			$label_id .= '_' . $value ;
@@ -893,7 +893,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $id_attr === null ) {
-			$id_attr = is_int($val) ? "conf_" . str_replace( array( '[', ']' ), '_', $id ) . "_$val" : md5($val) ;
+			$id_attr = is_int($val) ? "conf_" . str_replace( array('[', ']'), '_', $id ) . "_$val" : md5($val) ;
 		}
 		elseif ( $id_attr === true ) {
 			$id_attr = md5($val) ;

@@ -98,7 +98,7 @@ class LiteSpeed_Cache_CDN_Quic
 		$_email = $_POST[ 'email' ] ;
 
 		// Get email status
-		$response = $this->_api( '/u/email_status', array( 'email' => $_email ) ) ;
+		$response = $this->_api( '/u/email_status', array('email' => $_email) ) ;
 		if ( empty( $response[ 'result' ] ) ) {
 
 			LiteSpeed_Cache_Log::debug( '[QUIC] Query email failed' ) ;
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_CDN_Quic
 			exit( "QUIC: Query email failed" ) ;
 		}
 
-		$data = array( 'email' => $_email ) ;
+		$data = array('email' => $_email) ;
 
 		if ( $response[ 'result' ] == 'existing' ) {
 			$this->_tpl( 'quic.login', 50, $data ) ;
@@ -130,7 +130,7 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Register
-		$response = $this->_api( '/u/register', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
+		$response = $this->_api( '/u/register', array('email' => $_email, 'pswd' => $_POST[ 'pswd' ]) ) ;
 		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
 
 			LiteSpeed_Cache_Log::debug( '[QUIC] Register failed' ) ;
@@ -153,9 +153,9 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Login
-		$response = $this->_api( '/u/login', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ) ) ;
+		$response = $this->_api( '/u/login', array('email' => $_email, 'pswd' => $_POST[ 'pswd' ]) ) ;
 
-		$data = array( 'email' => $_email ) ;
+		$data = array('email' => $_email) ;
 
 		// for login failed, redirect back to login page
 		if ( empty( $response[ 'result' ] ) || $response[ 'result' ] !== 'success' ) {
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_CDN_Quic
 			'_data' => $data,
 		) ;
 
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => 15 ) ) ;
+		$response = wp_remote_post( $url, array('body' => $param, 'timeout' => 15) ) ;
 
 
 		if ( is_wp_error( $response ) ) {

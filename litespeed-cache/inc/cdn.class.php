@@ -56,7 +56,7 @@ class LiteSpeed_Cache_CDN
 		 */
 		$this->_cfg_cdn_remote_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
-			add_action( 'init', array( $this, 'load_jquery_remotely' ) ) ;
+			add_action( 'init', array($this, 'load_jquery_remotely') ) ;
 		}
 
 		$this->_cfg_cdn = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN ) ;
@@ -144,19 +144,19 @@ class LiteSpeed_Cache_CDN
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset
 			if ( function_exists( 'wp_calculate_image_srcset' ) ) {
-				add_filter( 'wp_calculate_image_srcset', array( $this, 'srcset' ), 999 ) ;
+				add_filter( 'wp_calculate_image_srcset', array($this, 'srcset'), 999 ) ;
 			}
 			// Hook to mime icon
-			add_filter( 'wp_get_attachment_image_src', array( $this, 'attach_img_src' ), 999 ) ;
-			add_filter( 'wp_get_attachment_url', array( $this, 'url_img' ), 999 ) ;
+			add_filter( 'wp_get_attachment_image_src', array($this, 'attach_img_src'), 999 ) ;
+			add_filter( 'wp_get_attachment_url', array($this, 'url_img'), 999 ) ;
 		}
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ] ) ) {
-			add_filter( 'style_loader_src', array( $this, 'url_css' ), 999 ) ;
+			add_filter( 'style_loader_src', array($this, 'url_css'), 999 ) ;
 		}
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ] ) ) {
-			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
+			add_filter( 'script_loader_src', array($this, 'url_js'), 999 ) ;
 		}
 
 	}
@@ -179,7 +179,7 @@ class LiteSpeed_Cache_CDN
 		}
 		else {
 			// Convert _cfg_cdn_mapping from string to array
-			$this->_cfg_cdn_mapping[ $filetype ] = array( $this->_cfg_cdn_mapping[ $filetype ], $url ) ;
+			$this->_cfg_cdn_mapping[ $filetype ] = array($this->_cfg_cdn_mapping[ $filetype ], $url) ;
 		}
 	}
 
@@ -351,7 +351,7 @@ class LiteSpeed_Cache_CDN
 		 */
 		preg_match_all( '#url\((?![\'"]?data)[\'"]?([^\)\'"\\\]+)[\'"]?\)#i', $this->content, $matches ) ;
 		foreach ( $matches[ 1 ] as $k => $url ) {
-			$url = str_replace( array( ' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;' ), '', $url ) ;
+			$url = str_replace( array(' ', '\t', '\n', '\r', '\0', '\x0B', '"', "'", '&quot;', '&#039;'), '', $url ) ;
 
 			if ( ! $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 				continue ;

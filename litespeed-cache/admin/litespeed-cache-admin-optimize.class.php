@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 class LiteSpeed_Cache_Admin_Optimize
 {
-	private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
+	private static $_types = array('revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients') ;
 
 	/**
 	 * Generate operation URL

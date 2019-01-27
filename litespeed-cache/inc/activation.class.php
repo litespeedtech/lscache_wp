@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Activation
 		$default = array() ;
 		$count = 0 ;
 
-		$sites = self::get_network_ids( array( 'deleted' => 0 ) ) ;
+		$sites = self::get_network_ids( array('deleted' => 0) ) ;
 		if ( empty( $sites ) ) {
 			return false ;
 		}

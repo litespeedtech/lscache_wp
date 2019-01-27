@@ -87,11 +87,11 @@ class LiteSpeed_Cache_Task
 		LiteSpeed_Cache_Log::debug( 'Crawler log: Crawler is ' . ( $is_enabled ? 'enabled' : 'disabled' ) ) ;
 
 		// update config
-		LiteSpeed_Cache_Config::get_instance()->update_options( array( $id => $is_enabled ) ) ;
+		LiteSpeed_Cache_Config::get_instance()->update_options( array($id => $is_enabled) ) ;
 
 		self::update() ;
 
-		echo json_encode( array( 'enable' => $is_enabled ) ) ;
+		echo json_encode( array('enable' => $is_enabled) ) ;
 		wp_die() ;
 	}
 

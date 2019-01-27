@@ -726,7 +726,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$new_rules_backend = $this->_wrap_ls_module( $new_rules_backend ) ;
 		}
 
-		return array( $new_rules, $new_rules_backend, $new_rules_nonls, $new_rules_backend_nonls ) ;
+		return array($new_rules, $new_rules_backend, $new_rules_nonls, $new_rules_backend_nonls) ;
 	}
 
 	/**
@@ -738,11 +738,11 @@ class LiteSpeed_Cache_Admin_Rules
 	private function _wrap_ls_module( $rules = array() )
 	{
 		return array_merge(
-			array( self::LS_MODULE_START ),
+			array(self::LS_MODULE_START),
 			self::$LS_MODULE_REWRITE_ON,
-			array( '' ),
+			array(''),
 			$rules,
-			array( self::LS_MODULE_END )
+			array(self::LS_MODULE_END)
 		) ;
 	}
 
@@ -773,9 +773,9 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$rules = array_merge(
-			array( self::LS_MODULE_DONOTEDIT ),
+			array(self::LS_MODULE_DONOTEDIT),
 			$rules,
-			array( self::LS_MODULE_DONOTEDIT )
+			array(self::LS_MODULE_DONOTEDIT)
 		) ;
 
 		return $rules ;
@@ -839,7 +839,7 @@ class LiteSpeed_Cache_Admin_Rules
 			if ( ! $this->_insert_wrapper( $frontend_rules_nonls, false, self::MARKER_NONLS ) ) {
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules_nonls, self::MARKER_NONLS ) ;
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
-				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				return array(LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes) ;
 			}
 		}
 
@@ -850,7 +850,7 @@ class LiteSpeed_Cache_Admin_Rules
 			if ( ! $this->_insert_wrapper( $frontend_rules ) ) {
 				LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 				$manual_guide_codes = $this->_rewrite_codes_msg( $this->frontend_htaccess, $frontend_rules ) ;
-				return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+				return array(LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes) ;
 			}
 		}
 
@@ -864,7 +864,7 @@ class LiteSpeed_Cache_Admin_Rules
 				if ( ! $this->_insert_wrapper( $backend_rules_nonls, 'backend', self::MARKER_NONLS ) ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules_nonls, self::MARKER_NONLS ) ;
-					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+					return array(LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes) ;
 				}
 			}
 
@@ -875,7 +875,7 @@ class LiteSpeed_Cache_Admin_Rules
 				if ( ! $this->_insert_wrapper( $backend_rules, 'backend' ) ) {
 					LiteSpeed_Cache_Log::debug( '[Rules] Update Failed' ) ;
 					$manual_guide_codes = $this->_rewrite_codes_msg( $this->backend_htaccess, $backend_rules ) ;
-					return array( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes ) ;
+					return array(LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ), $manual_guide_codes) ;
 				}
 			}
 		}
@@ -902,7 +902,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$rules = Litespeed_File::extract_from_markers( $path, self::MARKER ) ;
 		$rules_nonls = Litespeed_File::extract_from_markers( $path, self::MARKER_NONLS ) ;
 
-		return array( $rules, $rules_nonls ) ;
+		return array($rules, $rules_nonls) ;
 	}
 
 	/**
@@ -938,9 +938,9 @@ class LiteSpeed_Cache_Admin_Rules
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 		$new_file_data = implode( "\n", array_merge(
-			array( $start_marker ),
+			array($start_marker),
 			$this->_wrap_do_no_edit($rules),
-			array( $end_marker )
+			array($end_marker)
 		) ) ;
 
 		return $new_file_data ;

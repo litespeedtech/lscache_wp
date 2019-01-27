@@ -322,7 +322,7 @@ class LiteSpeed_Cache_Purge
 	private function _add( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = array($tags) ;
 		}
 		if ( ! array_diff( $tags, $this->_pub_purge ) ) {
 			return ;
@@ -366,7 +366,7 @@ class LiteSpeed_Cache_Purge
 	private function _add_private( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = array($tags) ;
 		}
 		if ( ! array_diff( $tags, $this->_priv_purge ) ) {
 			return ;
@@ -474,7 +474,7 @@ class LiteSpeed_Cache_Purge
 	{
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_ERROR ) ;
 
-		if ( ! $type || ! in_array( $type, array( '403', '404', '500' ) ) ) {
+		if ( ! $type || ! in_array( $type, array('403', '404', '500') ) ) {
 			return ;
 		}
 
@@ -642,7 +642,7 @@ class LiteSpeed_Cache_Purge
 				LiteSpeed_Cache_Admin_Display::add_error(LiteSpeed_Cache_Admin_Error::E_PURGEBY_BAD) ;
 				return ;
 		}
-		array_walk( $list, array( $this, $cb ) ) ;
+		array_walk( $list, array($this, $cb) ) ;
 
 		// for redirection
 		$_GET[ LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT ] = $sel ;
@@ -662,7 +662,7 @@ class LiteSpeed_Cache_Purge
 	{
 		$post_id = intval($id) ;
 		// ignore the status we don't care
-		if ( ! in_array(get_post_status($post_id), array( 'publish', 'trash', 'private', 'draft' )) ) {
+		if ( ! in_array(get_post_status($post_id), array('publish', 'trash', 'private', 'draft')) ) {
 			return ;
 		}
 
@@ -915,7 +915,7 @@ class LiteSpeed_Cache_Purge
 
 		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES) ) {
 			// ignore the rest if purge all
-			return array( '*' ) ;
+			return array('*') ;
 		}
 
 		// now do API hook action for post purge

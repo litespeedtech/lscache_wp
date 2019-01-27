@@ -390,7 +390,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_get_purge_tags()
     {
-        $post_id = $this->factory->post->create( array( 'post_title' => 'Test Post' ) );
+        $post_id = $this->factory->post->create( array('post_title' => 'Test Post') );
 
         $parameters = array($post_id);
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_purge_tags', $parameters);
@@ -529,7 +529,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
         if(method_exists($instance, 'check_admin_bar')){
-            $wp_footer = has_action( 'wp_footer', array( $instance,'check_admin_bar' ) );
+            $wp_footer = has_action( 'wp_footer', array($instance,'check_admin_bar') );
             $this->assertFalse( $wp_footer );
         }
                
@@ -582,9 +582,9 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
         if(method_exists($instance, 'add_actions_esi')){
-            $storefront_header = has_action( 'storefront_header', array( $instance,'check_storefront_cart' ) );
+            $storefront_header = has_action( 'storefront_header', array($instance,'check_storefront_cart') );
             $this->assertFalse( $storefront_header );
-            $storefront_sidebar = has_action( 'storefront_sidebar', array( $instance,'check_sidebar' ) );
+            $storefront_sidebar = has_action( 'storefront_sidebar', array($instance,'check_sidebar') );
             $this->assertFalse( $storefront_sidebar );
         }
                
@@ -606,7 +606,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             $this->assertFalse( $init );
             $init = has_action( 'init', 'wp_admin_bar_render' );
             $this->assertFalse( $init );
-            $init = has_action( 'init', array( $instance,'send_esi' ) );
+            $init = has_action( 'init', array($instance,'send_esi') );
             $this->assertFalse( $init );
             $bool = self::invokeMethod('LiteSpeed_Cache', 'is_esi_admin_bar', $parameters);
             if($bool){
@@ -636,7 +636,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             $this->assertFalse( $init );
             $init = has_action( 'init','storefront_header_cart' );
             $this->assertFalse( $init );
-            $init = has_action( 'init', array( $instance,'send_esi' ) );
+            $init = has_action( 'init', array($instance,'send_esi') );
             $this->assertFalse( $init );
             $bool = self::invokeMethod('LiteSpeed_Cache', 'is_esi_cart', $parameters);
             if($bool){
@@ -664,11 +664,11 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         if(method_exists($instance, 'is_esi_sidebar')){
             $widgets_init = has_action( 'widgets_init', 'storefront_widgets_init' );
             $this->assertFalse( $widgets_init );
-            $wp_loaded = has_action( 'wp_loaded', array( $instance,'load_sidebar_widgets' ) );
+            $wp_loaded = has_action( 'wp_loaded', array($instance,'load_sidebar_widgets') );
             $this->assertFalse( $wp_loaded );
             $wp_loaded = has_action( 'wp_loaded', 'storefront_get_sidebar' );
             $this->assertFalse( $wp_loaded );
-            $wp_loaded = has_action( 'wp_loaded', array( $instance,'send_esi' ) );
+            $wp_loaded = has_action( 'wp_loaded', array($instance,'send_esi') );
             $this->assertFalse( $wp_loaded );
             $bool = self::invokeMethod('LiteSpeed_Cache', 'is_esi_sidebar', $parameters);
             if($bool){

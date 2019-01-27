@@ -73,12 +73,12 @@ class LiteSpeed_Cache_Optimize
 
 		// To remove emoji from WP
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ) {
-			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
+			add_action( 'init', array($this, 'emoji_rm') ) ;
 		}
 
 		if ( $this->cfg_qs_rm ) {
-			add_filter( 'style_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
-			add_filter( 'script_loader_src', array( $this, 'remove_query_strings' ), 999 ) ;
+			add_filter( 'style_loader_src', array($this, 'remove_query_strings'), 999 ) ;
+			add_filter( 'script_loader_src', array($this, 'remove_query_strings'), 999 ) ;
 		}
 
 		// Check if there is any critical css rules setting
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Optimize
 		 * Add vary filter for Role Excludes
 		 * @since  1.6
 		 */
-		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+		add_filter( 'litespeed_vary', array($this, 'vary_add_role_exclude') ) ;
 
 		/**
 		 * Prefetch DNS
@@ -676,10 +676,10 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		if ( function_exists( 'wp_resource_hints' ) ) {
-			add_filter( 'wp_resource_hints', array( $this, 'dns_prefetch_filter' ), 10, 2 ) ;
+			add_filter( 'wp_resource_hints', array($this, 'dns_prefetch_filter'), 10, 2 ) ;
 		}
 		else {
-			add_action( 'litespeed_optm', array( $this, 'dns_prefetch_output' ) ) ;
+			add_action( 'litespeed_optm', array($this, 'dns_prefetch_output') ) ;
 		}
 	}
 
@@ -862,7 +862,7 @@ class LiteSpeed_Cache_Optimize
 			$file_size_list[ $key ] = $file_info[ 1 ] ;
 		}
 
-		return array( $ignored_html, $src_queue_list, $file_size_list ) ;
+		return array($ignored_html, $src_queue_list, $file_size_list) ;
 	}
 
 	/**
@@ -879,13 +879,13 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		if ( ! is_array( $src ) ) {
-			$src = array( $src ) ;
+			$src = array($src) ;
 		}
 
 		$src = array_values( $src ) ;
 
 		// Drop query strings
-		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
+		$src = array_map( array($this, 'remove_query_strings'), $src ) ;
 
 		$purge_timestamp = get_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS ) ?: '' ;
 
@@ -991,7 +991,7 @@ class LiteSpeed_Cache_Optimize
 			}
 		}
 
-		return array( $src_list, $html_list, $head_src_list ) ;
+		return array($src_list, $html_list, $head_src_list) ;
 	}
 
 	/**
@@ -1079,7 +1079,7 @@ class LiteSpeed_Cache_Optimize
 			$html_list[] = $match[ 0 ] ;
 		}
 
-		return array( $src_list, $html_list ) ;
+		return array($src_list, $html_list) ;
 	}
 
 	/**

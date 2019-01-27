@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Router
 	 */
 	protected static function _is_login_page()
 	{
-		if ( in_array( $GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true ) ) {
+		if ( in_array( $GLOBALS[ 'pagenow' ], array('wp-login.php', 'wp-register.php'), true ) ) {
 			return true ;
 		}
 
@@ -383,7 +383,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function build_type( $val )
 	{
-		return array( 'type' => $val ) ;
+		return array('type' => $val) ;
 	}
 
 	/**

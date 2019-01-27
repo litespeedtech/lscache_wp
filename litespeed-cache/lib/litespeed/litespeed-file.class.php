@@ -29,7 +29,7 @@ class Litespeed_File
 	 */
 	public static function rrmdir( $dir ) {
 
-		$files = array_diff( scandir( $dir ), array( '.', '..' ) ) ;
+		$files = array_diff( scandir( $dir ), array('.', '..') ) ;
 
 		foreach ( $files as $file ) {
 			is_dir( "$dir/$file" ) ? self::rrmdir( "$dir/$file" ) : unlink( "$dir/$file" ) ;
@@ -241,9 +241,9 @@ class Litespeed_File
 		$end_marker   = "# END {$marker}" ;
 
 		$new_data = implode( "\n", array_merge(
-			array( $start_marker ),
+			array($start_marker),
 			$insertion,
-			array( $end_marker )
+			array($end_marker)
 		) ) ;
 		return $new_data ;
 	}
@@ -270,9 +270,9 @@ class Litespeed_File
 		$start_marker = "# BEGIN {$marker}" ;
 		$end_marker   = "# END {$marker}" ;
 		$new_data = implode( "\n", array_merge(
-			array( $start_marker ),
+			array($start_marker),
 			$result,
-			array( $end_marker )
+			array($end_marker)
 		) ) ;
 		return $new_data ;
 	}
@@ -413,9 +413,9 @@ class Litespeed_File
 		if( $prepend && ! $post_lines ) {
 			// Generate the new file data
 			$new_file_data = implode( "\n", array_merge(
-				array( $start_marker ),
+				array($start_marker),
 				$insertion,
-				array( $end_marker ),
+				array($end_marker),
 				$pre_lines
 			) ) ;
 
@@ -424,9 +424,9 @@ class Litespeed_File
 			// Generate the new file data
 			$new_file_data = implode( "\n", array_merge(
 				$pre_lines,
-				array( $start_marker ),
+				array($start_marker),
 				$insertion,
-				array( $end_marker ),
+				array($end_marker),
 				$post_lines
 			) ) ;
 		}

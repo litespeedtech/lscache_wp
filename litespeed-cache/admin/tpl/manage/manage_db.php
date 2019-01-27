@@ -54,7 +54,7 @@ $total = 0 ;
 foreach ( $_panels as $tag => $v ) {
 	if ( $tag != 'all' ) {
 		$_panels[ $tag ][ 'count' ] = LiteSpeed_Cache_Admin_Optimize::db_count( $tag ) ;
-		if ( ! in_array( $tag, array( 'all_cssjs', 'optimize_tables' ) ) ) {
+		if ( ! in_array( $tag, array('all_cssjs', 'optimize_tables') ) ) {
 			$total += $_panels[ $tag ][ 'count' ] ;
 		}
 	}

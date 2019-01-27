@@ -69,11 +69,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Set security key if not initialized yet
 		if ( isset( $this->options[ self::HASH ] ) && empty( $this->options[ self::HASH ] ) ) {
-			$this->update_options( array( self::HASH => Litespeed_String::rrand( 32 ) ) ) ;
+			$this->update_options( array(self::HASH => Litespeed_String::rrand( 32 )) ) ;
 		}
 
 		// Hook to options
-		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
+		add_action( 'litespeed_init', array($this, 'hook_options') ) ;
 
 	}
 
@@ -498,7 +498,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( empty( $cdn_mapping ) ) {
 			// At least it has one item same as in setting page
 			foreach ( $mapping_fields as $v2 ) {
-				$cdn_mapping[ $v2 ] = array( 0 => false ) ;
+				$cdn_mapping[ $v2 ] = array(0 => false) ;
 			}
 		}
 		$options[ self::ITEM_CDN_MAPPING ] = $cdn_mapping ;
@@ -594,7 +594,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				self::ITEM_CDN_MAPPING_INC_JS 	=> $this->options[ 'cdn_inc_js' ],
 				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
 			) ;
-			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
+			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array($cdn_mapping) ) ;
 			LiteSpeed_Cache_Log::debug( "[Cfg] plugin_upgrade option adding CDN map" ) ;
 		}
 

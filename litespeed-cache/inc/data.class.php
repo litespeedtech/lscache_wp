@@ -172,7 +172,7 @@ class LiteSpeed_Cache_Data
 			// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
 			$mids_to_del = array() ;
 			$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
-			$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array( LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_DATA ) ) ) ;
+			$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array(LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_DATA) ) ) ;
 			if ( $meta_value_list ) {
 				$max_k = count( $meta_value_list ) - 1 ;
 				foreach ( $meta_value_list as $k => $v ) {

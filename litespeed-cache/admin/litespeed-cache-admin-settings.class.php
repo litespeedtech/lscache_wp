@@ -402,13 +402,13 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// TTL check
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_PUBLIC_TTL 		=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL	 	=> array( 60, 	3600 ),
-			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL 	=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::OPID_FEED_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_PUBLIC_TTL 		=> array(30, 	null),
+			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL	 	=> array(60, 	3600),
+			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL 	=> array(30, 	null),
+			LiteSpeed_Cache_Config::OPID_FEED_TTL		 	=> array(0, 	null, 30),
+			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array(0, 	null, 30),
+			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array(0, 	null, 30),
+			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array(0, 	null, 30),
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $min, $max ) = $v ;
@@ -999,7 +999,7 @@ class LiteSpeed_Cache_Admin_Settings
 		if ( isset( $this->_input[ $id ] ) ) {
 			$arr = array_map( 'trim', explode( "\n", $this->_input[ $id ] ) ) ;
 			$arr = array_filter( $arr ) ;
-			$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
+			$ori = array_diff( get_post_types( '', 'names' ), array('post', 'page') ) ;
 			$this->_options[ $id ] = implode( "\n", array_intersect( $arr, $ori ) ) ;
 		}
 
@@ -1022,11 +1022,11 @@ class LiteSpeed_Cache_Admin_Settings
 			$usleep_max = null ;
 		}
 		$ids = array(
-			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( $usleep_min, $usleep_max ),
-			LiteSpeed_Cache_Config::CRWL_RUN_DURATION 	=> array( 0,	null ),
-			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL 	=> array( 60,	null ),
-			LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL => array( 0,	null ),
-			LiteSpeed_Cache_Config::CRWL_THREADS 		=> array( 1,	16 ),
+			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array($usleep_min, $usleep_max),
+			LiteSpeed_Cache_Config::CRWL_RUN_DURATION 	=> array(0,	null),
+			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL 	=> array(60,	null),
+			LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL => array(0,	null),
+			LiteSpeed_Cache_Config::CRWL_THREADS 		=> array(1,	16),
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $min, $max ) = $v ;
@@ -1117,10 +1117,10 @@ class LiteSpeed_Cache_Admin_Settings
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
 		if ( ! $this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, 'EMPTY' ) ) ;
+			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, 'EMPTY') ) ;
 		}
 		elseif ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
+			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html( $this->_input[ $id ] )) ) ;
 		}
 		else {
 			$new_options[ $id ] = $this->_input[ $id ] ;
@@ -1130,7 +1130,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES ;
 		$this->_input[ $id ] = preg_replace( "/[\r\n]+/", '|', $this->_input[ $id ] ) ;
 		if ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
+			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html( $this->_input[ $id ] )) ) ;
 		}
 		else {
 			$new_options[ $id ] = $this->_input[ $id ] ;
@@ -1139,7 +1139,7 @@ class LiteSpeed_Cache_Admin_Settings
 		// No cache user agent settings
 		$id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS ;
 		if ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
+			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array($id, esc_html( $this->_input[ $id ] )) ) ;
 		}
 		else {
 			$new_options[ $id ] = $this->_input[ $id ] ;

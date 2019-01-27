@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Tag
 	const X_HEADER = 'X-LiteSpeed-Tag' ;
 
 	private static $_tags = array() ;
-	private static $_tags_priv = array( 'tag_priv' ) ;
+	private static $_tags_priv = array('tag_priv') ;
 	protected static $_error_status = false ;
 
 	/**
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Tag
 	public static function add( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = array($tags) ;
 		}
 
 		self::$_tags = array_merge( self::$_tags, $tags ) ;
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_Tag
 	public static function add_private( $tags )
 	{
 		if ( ! is_array( $tags ) ) {
-			$tags = array( $tags ) ;
+			$tags = array($tags) ;
 		}
 
 		self::$_tags_priv = array_merge( self::$_tags_priv, $tags ) ;

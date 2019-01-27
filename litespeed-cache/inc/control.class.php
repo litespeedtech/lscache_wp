@@ -44,7 +44,7 @@ class LiteSpeed_Cache_Control
 		 * Add vary filter for Role Excludes
 		 * @since  1.6.2
 		 */
-		add_filter( 'litespeed_vary', array( $this, 'vary_add_role_exclude' ) ) ;
+		add_filter( 'litespeed_vary', array($this, 'vary_add_role_exclude') ) ;
 
 		// 301 redirect hook
 		add_filter( 'wp_redirect', 'LiteSpeed_Cache_Control::check_redirect', 10, 2 ) ;

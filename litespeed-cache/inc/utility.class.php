@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Utility
 		// Check latest stable version allowed to upgrade
 		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+		$response = wp_remote_get( $url, array('timeout' => 15) ) ;
 		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
 			return false ;
 		}
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_Utility
 
 		if ( $hit ) {
 			if ( $has_ttl ) {
-				return array( $hit, $this_ttl ) ;
+				return array($hit, $this_ttl) ;
 			}
 
 			return $hit ;
@@ -693,7 +693,7 @@ class LiteSpeed_Cache_Utility
 			return false ;
 		}
 
-		return array( $file_path, filesize( $file_path ) ) ;
+		return array($file_path, filesize( $file_path )) ;
 	}
 
 	/**

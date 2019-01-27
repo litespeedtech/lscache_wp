@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Object
 	 */
 	private function _is_transients_group( $group )
 	{
-		return in_array( $group, array( 'transient', 'site-transient' ) ) ;
+		return in_array( $group, array('transient', 'site-transient') ) ;
 	}
 
 	/**
@@ -547,7 +547,7 @@ class LiteSpeed_Cache_Object
 	public function add_global_groups( $groups )
 	{
 		if ( ! is_array( $groups ) ) {
-			$groups = array( $groups ) ;
+			$groups = array($groups) ;
 		}
 
 		$this->_global_groups = array_merge( $this->_global_groups, $groups ) ;
@@ -574,7 +574,7 @@ class LiteSpeed_Cache_Object
 	public function add_non_persistent_groups( $groups )
 	{
 		if ( ! is_array( $groups ) ) {
-			$groups = array( $groups ) ;
+			$groups = array($groups) ;
 		}
 
 		$this->_non_persistent_groups = array_merge( $this->_non_persistent_groups, $groups ) ;

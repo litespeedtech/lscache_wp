@@ -380,7 +380,7 @@ class LiteSpeed_Cache_Admin_API
 
 		LiteSpeed_Cache_Log::debug( '[IAPI] getting from : ' . $url ) ;
 
-		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
+		$response = wp_remote_get( $url, array('timeout' => 15) ) ;
 
 		// Parse response data
 		if ( is_wp_error( $response ) ) {
@@ -433,7 +433,7 @@ class LiteSpeed_Cache_Admin_API
 		 * Extended timeout to avoid cUrl 28 timeout issue as we need callback validation
 		 * @since 1.6.4
 		 */
-		$response = wp_remote_post( $url, array( 'body' => $param, 'timeout' => $time_out ?: 15 ) ) ;
+		$response = wp_remote_post( $url, array('body' => $param, 'timeout' => $time_out ?: 15) ) ;
 
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
