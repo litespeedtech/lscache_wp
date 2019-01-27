@@ -2,7 +2,6 @@
 /**
  * The admin errors.
  *
- *
  * @since      1.0.15
  *
  * @package    LiteSpeed_Cache

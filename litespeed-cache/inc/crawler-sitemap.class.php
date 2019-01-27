@@ -2,7 +2,6 @@
 /**
  * The Crawler Sitemap Class.
  *
- *
  * @since      	1.1.0
  * @since  		1.5 Moved into /inc
  *

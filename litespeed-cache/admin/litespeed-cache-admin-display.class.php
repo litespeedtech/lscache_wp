@@ -2,7 +2,6 @@
 /**
  * The admin-panel specific functionality of the plugin.
  *
- *
  * @since      1.0.0
  *
  * @package    LiteSpeed_Cache

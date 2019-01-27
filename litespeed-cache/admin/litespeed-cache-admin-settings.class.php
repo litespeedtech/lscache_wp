@@ -2,7 +2,6 @@
 /**
  * The admin settings handler of the plugin.
  *
- *
  * @since      1.1.0
  *
  * @package    LiteSpeed_Cache

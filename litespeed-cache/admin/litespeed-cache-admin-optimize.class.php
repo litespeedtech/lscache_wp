@@ -2,7 +2,6 @@
 /**
  * The admin optimize tool.
  *
- *
  * @since      1.2.1
  *
  * @package    LiteSpeed_Cache
