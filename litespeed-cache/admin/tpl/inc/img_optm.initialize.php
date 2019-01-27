@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -9,17 +9,17 @@ if ( ! defined( 'WPINC' ) ) {
 		<div class="litespeed-empty-space-large"></div>
 			<div class="litespeed-text-center">
 				<div>
-					<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_SYNC_DATA ) ; ?>" class="litespeed-text-malibu litespeed-btn-success litespeed-btn-large">
+					<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_SYNC_DATA) ; ?>" class="litespeed-text-malibu litespeed-btn-success litespeed-btn-large">
 						<span class="dashicons dashicons-performance">
 						</span>&nbsp;
-						<?php echo __( 'Initialize Optimization', 'litespeed-cache' ) ; ?>
+						<?php echo __('Initialize Optimization', 'litespeed-cache') ; ?>
 					</a>
 				</div>
 			</div>
 		<div class="litespeed-empty-space-medium"></div>
 		<div>
 			<h2 Class="litespeed-title">
-				<?php echo __( 'Notes', 'litespeed-cache' ) ; ?>:
+				<?php echo __('Notes', 'litespeed-cache') ; ?>:
 			</h2>
 
 			<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.communicate_notify.php" ; ?>

@@ -7,7 +7,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 
@@ -24,7 +24,7 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
     public static function detect()
     {
         global $wptouch_pro ;
-        if ( isset($wptouch_pro) ) {
+        if (isset($wptouch_pro)) {
             LiteSpeed_Cache_API::hook_control('LiteSpeed_Cache_ThirdParty_WpTouch::set_control') ;
         }
     }
@@ -38,7 +38,7 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
     public static function set_control()
     {
         global $wptouch_pro ;
-        if ( $wptouch_pro->is_mobile_device ) {
+        if ($wptouch_pro->is_mobile_device) {
             LiteSpeed_Cache_API::set_mobile() ;
         }
     }

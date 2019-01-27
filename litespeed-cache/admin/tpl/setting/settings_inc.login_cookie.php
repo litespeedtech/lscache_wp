@@ -1,14 +1,14 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if (! defined('WPINC')) die ;
 
 ?>
 
 	<tr>
-		<th><?php echo __( 'Login Cookie', 'litespeed-cache' ) ; ?></th>
+		<th><?php echo __('Login Cookie', 'litespeed-cache') ; ?></th>
 		<td>
 		<?php
             $id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-            $this->build_input( $id ) ;
+            $this->build_input($id) ;
 
             echo '<p>' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
                 . ' ' . __('No spaces and case sensitive.', 'litespeed-cache')
@@ -31,13 +31,13 @@ if ( ! defined( 'WPINC' ) ) die ;
                 . '</p>';
 
             $cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie();
-            if ( $cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:' ){
+            if ($cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:'){
                 echo '<div class="litespeed-callout-danger">'
                         . sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
                     . '</div>';
             }
 
-            if ( defined( 'LITESPEED_ON' ) && $_options[$id] ){
+            if (defined('LITESPEED_ON') && $_options[$id]){
 
                 if (!$cookie_rule){
                     echo '<div class="litespeed-callout-danger">'
@@ -49,7 +49,7 @@ if ( ! defined( 'WPINC' ) ) die ;
                     $cookie_arr = explode(',', $cookie_rule);
                     if(!in_array($_options[$id], $cookie_arr)) {
                         echo '<div class="litespeed-callout-warning">' .
-                                __( 'WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache' ) .
+                                __('WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache') .
                             '</div>';
                     }
                 }

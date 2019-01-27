@@ -8,7 +8,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -24,8 +24,8 @@ class LiteSpeed_Cache_Optimizer
      */
     private function __construct()
     {
-        $this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY ) ;
-        $this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY ) ;
+        $this->cfg_css_inline_minify = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY) ;
+        $this->cfg_js_inline_minify = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY) ;
     }
 
     /**
@@ -34,14 +34,14 @@ class LiteSpeed_Cache_Optimizer
      * @since  1.9
      * @access public
      */
-    public function html_min( $content )
+    public function html_min($content)
     {
         $options = array() ;
-        if ( $this->cfg_css_inline_minify ) {
+        if ($this->cfg_css_inline_minify) {
             $options[ 'cssMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_css' ;
         }
 
-        if ( $this->cfg_js_inline_minify ) {
+        if ($this->cfg_js_inline_minify) {
             $options[ 'jsMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_js' ;
         }
 
@@ -50,16 +50,16 @@ class LiteSpeed_Cache_Optimizer
          * @since  2.2.3
          */
         try {
-            $obj = new LiteSpeed_3rd_Lib\Minify_HTML( $content, $options ) ;
+            $obj = new LiteSpeed_3rd_Lib\Minify_HTML($content, $options) ;
             $content_final = $obj->process() ;
-            if ( ! defined( 'LSCACHE_ESI_SILENCE' ) ) {
+            if (! defined('LSCACHE_ESI_SILENCE')) {
                 $content_final .= "\n" . '<!-- Page optimized by LiteSpeed Cache @' . date('Y-m-d H:i:s') . ' -->' ;
             }
             return $content_final ;
 
-        } catch ( Exception $e ) {
-            LiteSpeed_Cache_Log::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
-            error_log( '****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
+        } catch (Exception $e) {
+            LiteSpeed_Cache_Log::debug('******[Optmer] html_min failed: ' . $e->getMessage()) ;
+            error_log('****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage()) ;
             return $content ;
         }
     }
@@ -71,12 +71,12 @@ class LiteSpeed_Cache_Optimizer
      * @access public
      * @return string The final content
      */
-    public function serve( $filename, $concat_only )
+    public function serve($filename, $concat_only)
     {
-        if ( ! is_array( $filename ) ) {
+        if (! is_array($filename)) {
             // Search filename in db for src URLs
-            $urls = LiteSpeed_Cache_Data::optm_hash2src( $filename ) ;
-            if ( ! $urls || ! is_array( $urls ) ) {
+            $urls = LiteSpeed_Cache_Data::optm_hash2src($filename) ;
+            if (! $urls || ! is_array($urls)) {
                 return false;
             }
         }
@@ -86,33 +86,33 @@ class LiteSpeed_Cache_Optimizer
 
         // Parse real file path
         $real_files = array() ;
-        foreach ( $urls as $url ) {
-            $real_file = LiteSpeed_Cache_Utility::is_internal_file( $url ) ;
-            if ( ! $real_file ) {
+        foreach ($urls as $url) {
+            $real_file = LiteSpeed_Cache_Utility::is_internal_file($url) ;
+            if (! $real_file) {
                 continue ;
             }
             $real_files[] = $real_file[ 0 ] ;
         }
 
-        if ( ! $real_files ) {
+        if (! $real_files) {
             return false;
         }
 
-        LiteSpeed_Cache_Log::debug2( '[Optmer]    urls : ', $urls ) ;
+        LiteSpeed_Cache_Log::debug2('[Optmer]    urls : ', $urls) ;
 
         // set_error_handler( 'litespeed_exception_handler' ) ;
 
         $content = '' ;
-        $tmp = parse_url( $urls[ 0 ], PHP_URL_PATH ) ;
-        $file_type = substr( $tmp, strrpos( $tmp, '.' ) + 1 ) ;
+        $tmp = parse_url($urls[ 0 ], PHP_URL_PATH) ;
+        $file_type = substr($tmp, strrpos($tmp, '.') + 1) ;
         // try {
         // Handle CSS
-        if ( $file_type === 'css' ) {
-            $content = $this->_serve_css( $real_files, $concat_only ) ;
+        if ($file_type === 'css') {
+            $content = $this->_serve_css($real_files, $concat_only) ;
         }
         // Handle JS
         else {
-            $content = $this->_serve_js( $real_files, $concat_only ) ;
+            $content = $this->_serve_js($real_files, $concat_only) ;
         }
 
         // } catch ( Exception $e ) {
@@ -128,14 +128,14 @@ class LiteSpeed_Cache_Optimizer
          * Clean comment when minify
          * @since  1.7.1
          */
-        if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
-            $content = $this->_remove_comment( $content, $file_type ) ;
+        if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT)) {
+            $content = $this->_remove_comment($content, $file_type) ;
         }
 
-        LiteSpeed_Cache_Log::debug2( '[Optmer]    Generated content ' . $file_type ) ;
+        LiteSpeed_Cache_Log::debug2('[Optmer]    Generated content ' . $file_type) ;
 
         // Add filter
-        $content = apply_filters( 'litespeed_optm_cssjs', $content, $file_type, $urls ) ;
+        $content = apply_filters('litespeed_optm_cssjs', $content, $file_type, $urls) ;
 
         return $content ;
     }
@@ -146,25 +146,25 @@ class LiteSpeed_Cache_Optimizer
      * @since  1.9
      * @access private
      */
-    private function _serve_css( $files, $concat_only = false )
+    private function _serve_css($files, $concat_only = false)
     {
         $con = array() ;
-        foreach ( $files as $real_path ) {
-            LiteSpeed_Cache_Log::debug2( '[Optmer] [real_path] ' . $real_path ) ;
-            $data = Litespeed_File::read( $real_path ) ;
+        foreach ($files as $real_path) {
+            LiteSpeed_Cache_Log::debug2('[Optmer] [real_path] ' . $real_path) ;
+            $data = Litespeed_File::read($real_path) ;
 
-            $data = preg_replace( '/@charset[^;]+;\\s*/', '', $data ) ;
+            $data = preg_replace('/@charset[^;]+;\\s*/', '', $data) ;
 
-            if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-                $data = self::minify_css( $data ) ;
+            if (! $concat_only && ! $this->_is_min($real_path)) {
+                $data = self::minify_css($data) ;
             }
 
-            $data = LiteSpeed_3rd_Lib\css_min\UriRewriter::rewrite( $data, dirname( $real_path ) ) ;
+            $data = LiteSpeed_3rd_Lib\css_min\UriRewriter::rewrite($data, dirname($real_path)) ;
 
             $con[] = $data ;
         }
 
-        return implode( '', $con ) ;
+        return implode('', $con) ;
     }
 
     /**
@@ -173,23 +173,23 @@ class LiteSpeed_Cache_Optimizer
      * @since  1.9
      * @access private
      */
-    private function _serve_js( $files, $concat_only )
+    private function _serve_js($files, $concat_only)
     {
         $con = array() ;
-        foreach ( $files as $real_path ) {
-            $data = Litespeed_File::read( $real_path ) ;
+        foreach ($files as $real_path) {
+            $data = Litespeed_File::read($real_path) ;
 
-            if ( ! $concat_only && ! $this->_is_min( $real_path ) ) {
-                $data = self::minify_js( $data ) ;
+            if (! $concat_only && ! $this->_is_min($real_path)) {
+                $data = self::minify_js($data) ;
             }
             else {
-                $data = $this->_null_minifier( $data ) ;
+                $data = $this->_null_minifier($data) ;
             }
 
             $con[] = $data ;
         }
 
-        return implode( "\n;", $con ) ;
+        return implode("\n;", $con) ;
     }
 
     /**
@@ -198,15 +198,15 @@ class LiteSpeed_Cache_Optimizer
      * @since  2.2.3
      * @access private
      */
-    public static function minify_css( $data )
+    public static function minify_css($data)
     {
         try {
             $obj = new LiteSpeed_3rd_Lib\css_min\Minifier() ;
-            return $obj->run( $data ) ;
+            return $obj->run($data) ;
 
-        } catch ( Exception $e ) {
-            LiteSpeed_Cache_Log::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
-            error_log( '****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;
+        } catch (Exception $e) {
+            LiteSpeed_Cache_Log::debug('******[Optmer] minify_css failed: ' . $e->getMessage()) ;
+            error_log('****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage()) ;
             return $data ;
         }
     }
@@ -219,22 +219,22 @@ class LiteSpeed_Cache_Optimizer
      * @since  2.2.3
      * @access private
      */
-    public static function minify_js( $data, $js_type = '' )
+    public static function minify_js($data, $js_type = '')
     {
         // For inline JS optimize, need to check if it's js type
-        if ( $js_type ) {
-            preg_match( '#type=([\'"])(.+)\g{1}#isU', $js_type, $matches ) ;
-            if ( $matches && $matches[ 2 ] != 'text/javascript' ) {
-                LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ] ) ;
+        if ($js_type) {
+            preg_match('#type=([\'"])(.+)\g{1}#isU', $js_type, $matches) ;
+            if ($matches && $matches[ 2 ] != 'text/javascript') {
+                LiteSpeed_Cache_Log::debug('******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ]) ;
                 return $data ;
             }
         }
 
         try {
-            $data = LiteSpeed_3rd_Lib\js_min\JSMin::minify( $data ) ;
+            $data = LiteSpeed_3rd_Lib\js_min\JSMin::minify($data) ;
             return $data ;
-        } catch ( Exception $e ) {
-            LiteSpeed_Cache_Log::debug( '******[Optmer] minify_js failed: ' . $e->getMessage() ) ;
+        } catch (Exception $e) {
+            LiteSpeed_Cache_Log::debug('******[Optmer] minify_js failed: ' . $e->getMessage()) ;
             // error_log( '****** LiteSpeed Optimizer minify_js failed: ' . $e->getMessage() ) ;
             return $data ;
         }
@@ -245,11 +245,11 @@ class LiteSpeed_Cache_Optimizer
      *
      * @access private
      */
-    private function _null_minifier( $content )
+    private function _null_minifier($content)
     {
-        $content = str_replace( "\r\n", "\n", $content ) ;
+        $content = str_replace("\r\n", "\n", $content) ;
 
-        return trim( $content ) ;
+        return trim($content) ;
     }
 
     /**
@@ -258,10 +258,10 @@ class LiteSpeed_Cache_Optimizer
      * @since  1.9
      * @access private
      */
-    private function _is_min( $filename )
+    private function _is_min($filename)
     {
-        $basename = basename( $filename ) ;
-        if ( preg_match( '|[-\.]min\.(?:[a-zA-Z]+)$|i', $basename ) ) {
+        $basename = basename($filename) ;
+        if (preg_match('|[-\.]min\.(?:[a-zA-Z]+)$|i', $basename)) {
             return true ;
         }
 
@@ -275,7 +275,7 @@ class LiteSpeed_Cache_Optimizer
      * @since  1.9 Moved here from optiize.cls
      * @access private
      */
-    private function _remove_comment( $content, $type )
+    private function _remove_comment($content, $type)
     {
         $_from = array(
             '|\/\*.*\*\/|U',
@@ -295,12 +295,12 @@ class LiteSpeed_Cache_Optimizer
             // ';',
         ) ;
 
-        $content = preg_replace( $_from, $_to, $content ) ;
-        if ( $type == 'css' ) {
-            $content = preg_replace( "|: *|", ':', $content ) ;
-            $content = preg_replace( "| */ *|", '/', $content ) ;
+        $content = preg_replace($_from, $_to, $content) ;
+        if ($type == 'css') {
+            $content = preg_replace("|: *|", ':', $content) ;
+            $content = preg_replace("| */ *|", '/', $content) ;
         }
-        $content = trim( $content ) ;
+        $content = trim($content) ;
         return $content ;
     }
 
@@ -313,7 +313,7 @@ class LiteSpeed_Cache_Optimizer
      */
     public static function get_instance()
     {
-        if ( ! isset(self::$_instance) ) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self() ;
         }
 

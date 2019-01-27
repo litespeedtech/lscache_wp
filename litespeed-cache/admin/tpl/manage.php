@@ -6,8 +6,8 @@ $menu_list = array(
     'db' => __('DB Optimizer', 'litespeed-cache'),
 ) ;
 
-if ( ! is_network_admin() ) {
-    $menu_list[ 'cdn' ] = __( 'CDN', 'litespeed-cache' ) ;
+if (! is_network_admin()) {
+    $menu_list[ 'cdn' ] = __('CDN', 'litespeed-cache') ;
 }
 
 ?>
@@ -15,7 +15,7 @@ if ( ! is_network_admin() ) {
 <div class="wrap">
 	<h1 class="litespeed-h1">
 		<?php
-            if ( is_network_admin() ) {
+            if (is_network_admin()) {
                 echo __('LiteSpeed Cache Network Management', 'litespeed-cache');
             }
             else {

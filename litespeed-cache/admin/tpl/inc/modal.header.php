@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 ?>
@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 <div class="litespeed litespeed-modal">
 
-	<?php if ( $_progress ) : ?>
+	<?php if ($_progress) : ?>
 	<div class="litespeed-progress">
 		<div class="litespeed-progress-bar" role="progressbar" style="width: <?php echo $_progress ; ?>%" aria-valuenow="<?php echo $_progress ; ?>" aria-valuemin="0" aria-valuemax="100"></div>
 	</div>

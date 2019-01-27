@@ -9,7 +9,7 @@
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -76,7 +76,7 @@ class LiteSpeed_Cache_Admin_Error
      */
     public function convert_code_to_error($err_code)
     {
-        if ( ! is_numeric($err_code) ) {
+        if (! is_numeric($err_code)) {
             return false ;
         }
 
@@ -240,7 +240,7 @@ class LiteSpeed_Cache_Admin_Error
      */
     public static function get_instance()
     {
-        if ( ! isset(self::$_instance) ) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self() ;
         }
 

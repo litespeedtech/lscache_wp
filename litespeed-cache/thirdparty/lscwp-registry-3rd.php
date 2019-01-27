@@ -11,7 +11,7 @@
  * a common place for plugin authors to append their file to.
  *
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 

@@ -26,11 +26,11 @@ $env_ref = $_report->get_env_ref() ;
 		<p><?php echo __('Report number', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'num' ] ; ?></b></p>
 		<p><?php echo __('Report date', 'litespeed-cache') ; ?>: <b><?php echo $env_ref[ 'dateline' ] ; ?></b></p>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_REPORT, LiteSpeed_Cache_Admin_Report::TYPE_SEND_REPORT ) ; ?>" class="litespeed-btn-warning">
-			<?php echo __( 'Send To LiteSpeed', 'litespeed-cache' ) ; ?>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_REPORT, LiteSpeed_Cache_Admin_Report::TYPE_SEND_REPORT) ; ?>" class="litespeed-btn-warning">
+			<?php echo __('Send To LiteSpeed', 'litespeed-cache') ; ?>
 		</a>
 		<span class="litespeed-desc">
-			<?php echo __( 'Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache' ) ; ?>
+			<?php echo __('Send this report to LiteSpeed. Refer to this report number when posting in the WordPress support forum.', 'litespeed-cache') ; ?>
 		</span>
 
 		<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>

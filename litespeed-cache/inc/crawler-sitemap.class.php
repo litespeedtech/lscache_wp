@@ -10,7 +10,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -29,8 +29,8 @@ class LiteSpeed_Cache_Crawler_Sitemap
      */
     private function __construct()
     {
-        if ( is_multisite() ) {
-            $this->home_url = get_home_url( get_current_blog_id() ) ;
+        if (is_multisite()) {
+            $this->home_url = get_home_url(get_current_blog_id()) ;
         }
         else{
             $this->home_url = get_home_url() ;
@@ -59,7 +59,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
         $show_tags = $options[LiteSpeed_Cache_Config::CRWL_TAGS] ;
 
-        switch ( $optionOrderBy ) {
+        switch ($optionOrderBy) {
             case 'date_asc':
                 $orderBy = " ORDER BY post_date ASC" ;
                 break ;
@@ -79,16 +79,16 @@ class LiteSpeed_Cache_Crawler_Sitemap
         }
 
         $post_type_array = array() ;
-        if ( isset($show_pages) && $show_pages == 1 ) {
+        if (isset($show_pages) && $show_pages == 1) {
             $post_type_array[] = 'page' ;
         }
 
-        if ( isset($show_posts) && $show_posts == 1 ) {
+        if (isset($show_posts) && $show_posts == 1) {
             $post_type_array[] = 'post' ;
         }
 
         $id = LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT ;
-        if ( isset($options[$id]) ) {
+        if (isset($options[$id])) {
             $excludeCptArr = explode(',', $options[$id]) ;
             $excludeCptArr = array_map('trim', $excludeCptArr) ;
             $cptArr = get_post_types() ;
@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
             $post_type_array = array_merge($post_type_array, $cptArr) ;
         }
 
-        if ( ! empty($post_type_array) ) {
+        if (! empty($post_type_array)) {
             $post_type = implode("','", $post_type_array) ;
 
             LiteSpeed_Cache_Log::debug("Crawler sitemap log: post_type is '$post_type'") ;
@@ -105,21 +105,21 @@ class LiteSpeed_Cache_Crawler_Sitemap
             $query = "SELECT ID, post_date FROM ".$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy ;
             $results = $wpdb->get_results($query) ;
 
-            foreach ( $results as $result ){
+            foreach ($results as $result){
                 $slug = str_replace($this->home_url, '', get_permalink($result->ID)) ;
-                if ( ! in_array($slug, $blacklist) ) {
+                if (! in_array($slug, $blacklist)) {
                     $this->_urls[] = $slug ;
                 }
             }
         }
 
         //Generate Categories Link if option checked
-        if ( isset($show_cats) && $show_cats == 1 ) {
+        if (isset($show_cats) && $show_cats == 1) {
             $cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false)) ;
-            if ( $cats && is_array($cats) && count($cats) > 0 ) {
-                foreach ( $cats as $cat ) {
+            if ($cats && is_array($cats) && count($cats) > 0) {
+                foreach ($cats as $cat) {
                     $slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
-                    if ( ! in_array($slug, $blacklist) ){
+                    if (! in_array($slug, $blacklist)){
                         $this->_urls[] = $slug ;//var_dump($slug);exit;//todo: check permalink
                     }
                 }
@@ -127,12 +127,12 @@ class LiteSpeed_Cache_Crawler_Sitemap
         }
 
         //Generate tags Link if option checked
-        if ( isset($show_tags) && $show_tags == 1 ) {
+        if (isset($show_tags) && $show_tags == 1) {
             $tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false)) ;
-            if ( $tags && is_array($tags) && count($tags) > 0 ) {
-                foreach ( $tags as $tag ) {
+            if ($tags && is_array($tags) && count($tags) > 0) {
+                foreach ($tags as $tag) {
                     $slug = str_replace($this->home_url, '', get_tag_link($tag->term_id)) ;
-                    if ( ! in_array($slug, $blacklist) ) {
+                    if (! in_array($slug, $blacklist)) {
                         $this->_urls[] = $slug ;
                     }
                 }
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
      */
     public static function get_instance()
     {
-        if ( ! isset(self::$_instance) ) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self() ;
         }
 

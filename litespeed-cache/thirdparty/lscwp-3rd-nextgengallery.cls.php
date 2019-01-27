@@ -8,7 +8,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 add_action('load_nextgen_gallery_modules', 'LiteSpeed_Cache_ThirdParty_NextGenGallery::detect') ;
@@ -55,11 +55,11 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
      */
     public static function add_image($image)
     {
-        if ( ! $image || ! method_exists( $image, 'get_gallery' ) ) {
+        if (! $image || ! method_exists($image, 'get_gallery')) {
             return ;
         }
         $gallery = $image->get_gallery() ;
-        if ( $gallery && $gallery->pageid ) {
+        if ($gallery && $gallery->pageid) {
             LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $gallery->pageid) ;
         }
     }
@@ -72,28 +72,28 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
      */
     public static function update_image()
     {
-        if ( isset( $_REQUEST[ 'gallery_id' ] ) ) {
-            LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ] ) ;
+        if (isset($_REQUEST[ 'gallery_id' ])) {
+            LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ]) ;
             return ;
         }
 
-        if ( isset( $_POST[ 'task_list' ] ) ) {
-            $task_list = str_replace( '\\', '', $_POST[ 'task_list' ] ) ;
-            $task_list = json_decode( $task_list, true ) ;
+        if (isset($_POST[ 'task_list' ])) {
+            $task_list = str_replace('\\', '', $_POST[ 'task_list' ]) ;
+            $task_list = json_decode($task_list, true) ;
 
-            if ( ! empty( $task_list[ 0 ][ 'query' ][ 'id' ] ) ) {
-                LiteSpeed_Cache_API::purge( self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ] ) ;
+            if (! empty($task_list[ 0 ][ 'query' ][ 'id' ])) {
+                LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ]) ;
                 return ;
             }
         }
 
-        if ( isset($_POST['id']) ) {
+        if (isset($_POST['id'])) {
             $id = $_POST['id'] ;
         }
-        elseif ( isset($_POST['image']) ) {
+        elseif (isset($_POST['image'])) {
             $id = $_POST['image'] ;
         }
-        elseif ( isset($_GET['pid']) ) {
+        elseif (isset($_GET['pid'])) {
             $id = $_GET['pid'] ;
         }
         else {
@@ -101,7 +101,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
             return ;
         }
         $image = C_Image_Mapper::get_instance()->find($id) ;
-        if ( $image ) {
+        if ($image) {
             LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $image->galleryid) ;
         }
     }
@@ -114,7 +114,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
      */
     public static function delete_image()
     {
-        if ( isset($_GET['gid']) ) {
+        if (isset($_GET['gid'])) {
             LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $_GET['gid']) ;
         }
     }
@@ -169,7 +169,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
     public static function update_gallery($gid)
     {
         // New version input will be an object with gid value
-        if ( is_object( $gid ) && ! empty( $gid->gid ) ) {
+        if (is_object($gid) && ! empty($gid->gid)) {
             $gid = $gid->gid ;
         }
 
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
     public static function add_container($render_parms)
     {
         // Check if null. If it is null, can't continue.
-        if ( is_null($render_parms) ) {
+        if (is_null($render_parms)) {
             return null ;
         }
         $src = $render_parms[0]->source ;

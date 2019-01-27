@@ -8,8 +8,8 @@
 /**
  * Class LiteSpeed_Cache test case.
  */
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-display.php';
-require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
+require_once plugin_dir_path(dirname(__FILE__)) . '/admin/class-litespeed-cache-admin-display.php';
+require_once plugin_dir_path(dirname(__FILE__)) . '/admin/class-litespeed-cache-admin-rules.php';
 class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
@@ -268,7 +268,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $code = $OPID_404_TTL;
         $parameters = array($header, $code);
         $msg = self::invokeMethod('LiteSpeed_Cache', 'check_error_codes', $parameters);
-        $this->assertEquals( $OPID_404_TTL, $msg);
+        $this->assertEquals($OPID_404_TTL, $msg);
     }
 
     /**
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $reason = "for test reason";
         $parameters = array($reason);
         $bool = self::invokeMethod('LiteSpeed_Cache', 'no_cache_for', $parameters);
-        $this->assertFalse( $bool );
+        $this->assertFalse($bool);
     }
 
     /**
@@ -296,7 +296,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $stale = true;
         $parameters = array($stale);
         $string = self::invokeMethod('LiteSpeed_Cache', 'build_purge_headers', $parameters);
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -316,7 +316,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     public function test_build_vary_headers()
     {
         $string = self::invokeMethod('LiteSpeed_Cache', 'build_vary_headers');
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -355,7 +355,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $tag = 'test-tag';
         $parameters = array($tag);
         $string = self::invokeMethod('LiteSpeed_Cache', 'prefix_apply', $parameters);
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -390,7 +390,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_get_purge_tags()
     {
-        $post_id = $this->factory->post->create( array( 'post_title' => 'Test Post' ) );
+        $post_id = $this->factory->post->create(array( 'post_title' => 'Test Post' ));
 
         $parameters = array($post_id);
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_purge_tags', $parameters);
@@ -415,7 +415,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $uri = '';
         $parameters = array($uri);
         $string = self::invokeMethod('LiteSpeed_Cache', 'get_uri_hash', $parameters);
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -439,7 +439,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $section = array();
         $parameters = array($section_header, $section);
         $string = self::invokeMethod('LiteSpeed_Cache', 'format_report_section', $parameters);
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -467,7 +467,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $htaccess_paths = array();
         $parameters = array($server, $options, $extras, $htaccess_paths);
         $string = self::invokeMethod('LiteSpeed_Cache', 'build_environment_report', $parameters);
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $options = $object->get_options();
         $parameters = array($options);
         $string = self::invokeMethod('LiteSpeed_Cache', 'generate_environment_report', $parameters);
-        $bool = self::isString( $string );
+        $bool = self::isString($string);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -510,7 +510,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'esi_admin_bar_render');
         $out = ob_get_clean();
-        $bool = self::isString( $out );
+        $bool = self::isString($out);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -529,8 +529,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
         if(method_exists($instance, 'check_admin_bar')){
-            $wp_footer = has_action( 'wp_footer', array( $instance,'check_admin_bar' ) );
-            $this->assertFalse( $wp_footer );
+            $wp_footer = has_action('wp_footer', array( $instance,'check_admin_bar' ));
+            $this->assertFalse($wp_footer);
         }
 
     }
@@ -544,7 +544,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'check_storefront_cart');
         $out = ob_get_clean();
-        $bool = self::isString( $out );
+        $bool = self::isString($out);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -563,7 +563,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'check_sidebar');
         $out = ob_get_clean();
-        $bool = self::isString( $out );
+        $bool = self::isString($out);
         if($bool){
             $this->assertTrue($bool);
         }
@@ -582,10 +582,10 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
         if(method_exists($instance, 'add_actions_esi')){
-            $storefront_header = has_action( 'storefront_header', array( $instance,'check_storefront_cart' ) );
-            $this->assertFalse( $storefront_header );
-            $storefront_sidebar = has_action( 'storefront_sidebar', array( $instance,'check_sidebar' ) );
-            $this->assertFalse( $storefront_sidebar );
+            $storefront_header = has_action('storefront_header', array( $instance,'check_storefront_cart' ));
+            $this->assertFalse($storefront_header);
+            $storefront_sidebar = has_action('storefront_sidebar', array( $instance,'check_sidebar' ));
+            $this->assertFalse($storefront_sidebar);
         }
 
     }
@@ -602,12 +602,12 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $parameters = array($uri, $urilen);
         //send priority by 1000
         if(method_exists($instance, 'is_esi_admin_bar')){
-            $init = has_action( 'init', '_wp_admin_bar_init' );
-            $this->assertFalse( $init );
-            $init = has_action( 'init', 'wp_admin_bar_render' );
-            $this->assertFalse( $init );
-            $init = has_action( 'init', array( $instance,'send_esi' ) );
-            $this->assertFalse( $init );
+            $init = has_action('init', '_wp_admin_bar_init');
+            $this->assertFalse($init);
+            $init = has_action('init', 'wp_admin_bar_render');
+            $this->assertFalse($init);
+            $init = has_action('init', array( $instance,'send_esi' ));
+            $this->assertFalse($init);
             $bool = self::invokeMethod('LiteSpeed_Cache', 'is_esi_admin_bar', $parameters);
             if($bool){
                 $this->assertTrue($bool);
@@ -632,12 +632,12 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $parameters = array($uri, $urilen);
         //send priority by 1000
         if(method_exists($instance, 'is_esi_cart')){
-            $init = has_action( 'init', 'storefront_cart_link_fragment' );
-            $this->assertFalse( $init );
-            $init = has_action( 'init','storefront_header_cart' );
-            $this->assertFalse( $init );
-            $init = has_action( 'init', array( $instance,'send_esi' ) );
-            $this->assertFalse( $init );
+            $init = has_action('init', 'storefront_cart_link_fragment');
+            $this->assertFalse($init);
+            $init = has_action('init','storefront_header_cart');
+            $this->assertFalse($init);
+            $init = has_action('init', array( $instance,'send_esi' ));
+            $this->assertFalse($init);
             $bool = self::invokeMethod('LiteSpeed_Cache', 'is_esi_cart', $parameters);
             if($bool){
                 $this->assertTrue($bool);
@@ -662,14 +662,14 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $parameters = array($uri, $urilen);
         //send priority by 1000
         if(method_exists($instance, 'is_esi_sidebar')){
-            $widgets_init = has_action( 'widgets_init', 'storefront_widgets_init' );
-            $this->assertFalse( $widgets_init );
-            $wp_loaded = has_action( 'wp_loaded', array( $instance,'load_sidebar_widgets' ) );
-            $this->assertFalse( $wp_loaded );
-            $wp_loaded = has_action( 'wp_loaded', 'storefront_get_sidebar' );
-            $this->assertFalse( $wp_loaded );
-            $wp_loaded = has_action( 'wp_loaded', array( $instance,'send_esi' ) );
-            $this->assertFalse( $wp_loaded );
+            $widgets_init = has_action('widgets_init', 'storefront_widgets_init');
+            $this->assertFalse($widgets_init);
+            $wp_loaded = has_action('wp_loaded', array( $instance,'load_sidebar_widgets' ));
+            $this->assertFalse($wp_loaded);
+            $wp_loaded = has_action('wp_loaded', 'storefront_get_sidebar');
+            $this->assertFalse($wp_loaded);
+            $wp_loaded = has_action('wp_loaded', array( $instance,'send_esi' ));
+            $this->assertFalse($wp_loaded);
             $bool = self::invokeMethod('LiteSpeed_Cache', 'is_esi_sidebar', $parameters);
             if($bool){
                 $this->assertTrue($bool);

@@ -8,7 +8,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 add_filter('wp_polls_display_pollvote', 'LiteSpeed_Cache_ThirdParty_Wp_Polls::set_control') ;

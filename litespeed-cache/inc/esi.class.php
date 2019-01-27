@@ -11,7 +11,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -44,21 +44,21 @@ class LiteSpeed_Cache_ESI
      */
     private function __construct()
     {
-        add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
-        add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
-        add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
+        add_action('template_include', 'LiteSpeed_Cache_ESI::esi_template', 100) ;
+        add_action('load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget') ;
+        add_action('wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget') ;
 
         // This defination is along with LiteSpeed_Cache_API::nonce() func
-        ! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;
+        ! defined('LSCWP_NONCE') && define('LSCWP_NONCE', true) ;
 
         /**
          * Recover REQUEST_URI
          * @since  1.8.1
          */
-        if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
-            define( 'LSCACHE_IS_ESI', true ) ;
+        if (! empty($_GET[ self::QS_ACTION ]) && $_GET[ self::QS_ACTION ] == self::POSTTYPE) {
+            define('LSCACHE_IS_ESI', true) ;
 
-            if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) ) {
+            if (! empty($_SERVER[ 'ESI_REFERER' ])) {
                 $_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
             }
         }
@@ -76,8 +76,8 @@ class LiteSpeed_Cache_ESI
          * @since  2.8
          * @since  2.8.1 Check is_admin for Elementor compatibility #726013
          */
-        if ( ! is_admin() ) {
-            add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
+        if (! is_admin()) {
+            add_shortcode('esi', array( $this, 'shortcode' )) ;
         }
     }
 
@@ -87,21 +87,21 @@ class LiteSpeed_Cache_ESI
      * @since 2.8
      * @access public
      */
-    public function shortcode( $atts )
+    public function shortcode($atts)
     {
-        if ( empty( $atts[ 0 ] ) ) {
-            LiteSpeed_Cache_Log::debug( '[ESI] ===shortcode wrong format', $atts ) ;
+        if (empty($atts[ 0 ])) {
+            LiteSpeed_Cache_Log::debug('[ESI] ===shortcode wrong format', $atts) ;
             return 'Wrong shortcode esi format' ;
         }
 
         $cache = 'public,no-vary' ;
-        if ( ! empty( $atts[ 'cache' ] ) ) {
+        if (! empty($atts[ 'cache' ])) {
             $cache = $atts[ 'cache' ] ;
-            unset( $atts[ 'cache' ] ) ;
+            unset($atts[ 'cache' ]) ;
         }
 
         // Show ESI link
-        return self::sub_esi_block( 'esi', 'esi-shortcode', $atts, $cache ) ;
+        return self::sub_esi_block('esi', 'esi-shortcode', $atts, $cache) ;
     }
 
     /**
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_ESI
     public static function esi_template($template)
     {
         // Check if is an ESI request
-        if ( defined( 'LSCACHE_IS_ESI' ) ) {
+        if (defined('LSCACHE_IS_ESI')) {
             self::get_instance()->register_esi_actions() ;
 
             return LSCWP_DIR . 'tpl/esi.tpl.php' ;
@@ -162,8 +162,8 @@ class LiteSpeed_Cache_ESI
         add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
         add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
 
-        add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
-        add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
+        add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' )) ;
+        add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' )) ;
     }
 
     /**
@@ -177,25 +177,25 @@ class LiteSpeed_Cache_ESI
     {
         do_action('litespeed_cache_is_not_esi_template') ;
 
-        if ( ! LiteSpeed_Cache_Control::is_cacheable() ) {
+        if (! LiteSpeed_Cache_Control::is_cacheable()) {
             return ;
         }
 
-        if ( LiteSpeed_Cache_Router::is_ajax() ) {
+        if (LiteSpeed_Cache_Router::is_ajax()) {
             return ;
         }
 
         add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
 
         // Add admin_bar esi
-        if ( LiteSpeed_Cache_Router::is_logged_in() ) {
+        if (LiteSpeed_Cache_Router::is_logged_in()) {
             remove_action('wp_footer', 'wp_admin_bar_render', 1000) ;
             add_action('wp_footer', array($this, 'sub_admin_bar_block'), 1000) ;
         }
 
         // Add comment forum esi for logged-in user or commenter
-        if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
-            add_filter( 'comment_form_defaults', array( $this, 'register_comment_form_actions' ) ) ;
+        if (! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary()) {
+            add_filter('comment_form_defaults', array( $this, 'register_comment_form_actions' )) ;
         }
 
     }
@@ -217,56 +217,56 @@ class LiteSpeed_Cache_ESI
      * @param bool $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
      * @return bool|string    	False on error, the output otherwise.
      */
-    public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+    public static function sub_esi_block($block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false)
     {
-        if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
+        if (empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id)) {
             return false ;
         }
 
         $params[ self::PARAM_BLOCK_ID ] = $block_id ;
-        if ( $silence ) {
+        if ($silence) {
             // Don't add comment to esi block ( orignal for nonce used in tag property data-nonce='esi_block' )
             $params[ '_ls_silence' ] = true ;
         }
 
         $params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id, $params) ;
         $control = apply_filters('litespeed_cache_sub_esi_control-' . $block_id, $control) ;
-        if ( !is_array($params) || !is_string($control) ) {
-            defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "Sub esi hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
+        if (!is_array($params) || !is_string($control)) {
+            defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug("Sub esi hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true)) ;
 
             return false ;
         }
 
-        $url = trailingslashit( wp_make_link_relative( home_url() ) ) . '?' . self::QS_ACTION . '=' . self::POSTTYPE ;
-        if ( ! empty( $control ) ) {
+        $url = trailingslashit(wp_make_link_relative(home_url())) . '?' . self::QS_ACTION . '=' . self::POSTTYPE ;
+        if (! empty($control)) {
             $url .= '&_control=' . $control ;
         }
         $url .= '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
 
         $output = "<esi:include src='$url'" ;
-        if ( ! empty( $control ) ) {
+        if (! empty($control)) {
             $output .= " cache-control='$control'" ;
         }
-        if ( $svar ) {
+        if ($svar) {
             $output .= " as-var='1'" ;
         }
         $output .= " />" ;
 
-        if ( ! $silence ) {
+        if (! $silence) {
             $output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->" ;
         }
 
-        LiteSpeed_Cache_Log::debug( "ESI: \t\t[block ID] $block_id \t\t\t[wrapper] $wrapper \t\t\t[Control] $control" ) ;
-        LiteSpeed_Cache_Log::debug2( $output ) ;
+        LiteSpeed_Cache_Log::debug("ESI: \t\t[block ID] $block_id \t\t\t[wrapper] $wrapper \t\t\t[Control] $control") ;
+        LiteSpeed_Cache_Log::debug2($output) ;
 
         self::set_has_esi() ;
 
         // Convert to string to avoid html chars filter when using
         // Will reverse the buffer when output in self::finalize()
-        if ( $preserved ) {
-            $hash = md5( $output ) ;
+        if ($preserved) {
+            $hash = md5($output) ;
             self::get_instance()->_esi_preserve_list[ $hash ] = $output ;
-            LiteSpeed_Cache_Log::debug( "[ESI] Preserved to $hash" ) ;
+            LiteSpeed_Cache_Log::debug("[ESI] Preserved to $hash") ;
 
             return $hash ;
         }
@@ -282,17 +282,17 @@ class LiteSpeed_Cache_ESI
      */
     public static function parse_esi_param()
     {
-        if ( ! isset($_REQUEST[self::QS_PARAMS]) ) {
+        if (! isset($_REQUEST[self::QS_PARAMS])) {
             return false ;
         }
         $req_params = $_REQUEST[self::QS_PARAMS] ;
         $unencrypted = base64_decode($req_params) ;
-        if ( $unencrypted === false ) {
+        if ($unencrypted === false) {
             return false ;
         }
         $unencoded = urldecode($unencrypted) ;
         $params = unserialize($unencoded) ;
-        if ( $params === false || ! isset($params[self::PARAM_BLOCK_ID]) ) {
+        if ($params === false || ! isset($params[self::PARAM_BLOCK_ID])) {
             return false ;
         }
 
@@ -308,25 +308,25 @@ class LiteSpeed_Cache_ESI
     public static function load_esi_block()
     {
         $params = self::parse_esi_param() ;
-        if ( $params === false ) {
+        if ($params === false) {
             return ;
         }
         $esi_id = $params[ self::PARAM_BLOCK_ID ] ;
-        if ( defined( 'LSCWP_LOG' ) ) {
+        if (defined('LSCWP_LOG')) {
             $logInfo = '------- ESI ------- ' ;
-            if( ! empty( $params[ self::PARAM_NAME ] ) ) {
+            if(! empty($params[ self::PARAM_NAME ])) {
                 $logInfo .= ' Name: ' . $params[ self::PARAM_NAME ] . ' ----- ' ;
             }
             $logInfo .= $esi_id . ' -------' ;
-            LiteSpeed_Cache_Log::debug( $logInfo ) ;
+            LiteSpeed_Cache_Log::debug($logInfo) ;
         }
 
-        if ( ! empty( $params[ '_ls_silence' ] ) ) {
-            define( 'LSCACHE_ESI_SILENCE', true ) ;
+        if (! empty($params[ '_ls_silence' ])) {
+            define('LSCACHE_ESI_SILENCE', true) ;
         }
 
-        LiteSpeed_Cache_Tag::add( rtrim( LiteSpeed_Cache_Tag::TYPE_ESI, '.' ) ) ;
-        LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . $esi_id ) ;
+        LiteSpeed_Cache_Tag::add(rtrim(LiteSpeed_Cache_Tag::TYPE_ESI, '.')) ;
+        LiteSpeed_Cache_Tag::add(LiteSpeed_Cache_Tag::TYPE_ESI . $esi_id) ;
 
         // LiteSpeed_Cache_Log::debug(var_export($params, true ));
 
@@ -335,13 +335,13 @@ class LiteSpeed_Cache_ESI
          *
          * @since  2.2.3
          */
-        if ( ! empty( $_GET[ '_control' ] ) ) {
-            $control = explode( ',', $_GET[ '_control' ] ) ;
-            if ( in_array( 'private', $control ) ) {
+        if (! empty($_GET[ '_control' ])) {
+            $control = explode(',', $_GET[ '_control' ]) ;
+            if (in_array('private', $control)) {
                 LiteSpeed_Cache_Control::set_private() ;
             }
 
-            if ( in_array( 'no-vary', $control ) ) {
+            if (in_array('no-vary', $control)) {
                 LiteSpeed_Cache_Control::set_no_vary() ;
             }
         }
@@ -365,24 +365,24 @@ class LiteSpeed_Cache_ESI
     {
         add_filter('litespeed_cache_widget_default_options', 'LiteSpeed_Cache_ESI::widget_default_options', 10, 2) ;
 
-        if ( ! is_numeric($widget->number) ) {
+        if (! is_numeric($widget->number)) {
             return null ;
         }
 
-        if ( $widget->updated ) {
+        if ($widget->updated) {
             $settings = get_option($widget->option_name) ;
         }
         else {
             $settings = $widget->get_settings() ;
         }
 
-        if ( ! isset($settings) ) {
+        if (! isset($settings)) {
             return null ;
         }
 
         $instance = $settings[$widget->number] ;
 
-        if ( ! isset($instance) || ! isset($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
+        if (! isset($instance) || ! isset($instance[LiteSpeed_Cache_Config::OPTION_NAME])) {
             return null;
         }
 
@@ -400,7 +400,7 @@ class LiteSpeed_Cache_ESI
      */
     public static function widget_default_options($options, $widget)
     {
-        if ( ! is_array($options) ) {
+        if (! is_array($options)) {
             return $options ;
         }
 
@@ -431,15 +431,15 @@ class LiteSpeed_Cache_ESI
      * @param array $args Parameter used to build the widget.
      * @return mixed Return false if display through esi, instance otherwise.
      */
-    public function sub_widget_block( array $instance, WP_Widget $widget, array $args )
+    public function sub_widget_block(array $instance, WP_Widget $widget, array $args)
     {
-        $name = get_class( $widget ) ;
-        if ( ! isset( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
+        $name = get_class($widget) ;
+        if (! isset($instance[ LiteSpeed_Cache_Config::OPTION_NAME ])) {
             return $instance ;
         }
         $options = $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
-        if ( ! isset( $options ) || ! $options[ self::WIDGET_OPID_ESIENABLE ] ) {
-            defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
+        if (! isset($options) || ! $options[ self::WIDGET_OPID_ESIENABLE ]) {
+            defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('ESI 0 ' . $name . ': '. (! isset($options) ? 'not set' : 'set off')) ;
 
             return $instance ;
         }
@@ -453,7 +453,7 @@ class LiteSpeed_Cache_ESI
             self::PARAM_ARGS => $args,
         ) ;
 
-        echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;
+        echo self::sub_esi_block('widget', 'widget ' . $name, $params, $esi_private . 'no-vary') ;
         return false ;
     }
 
@@ -469,7 +469,7 @@ class LiteSpeed_Cache_ESI
     {
         global $wp_admin_bar ;
 
-        if ( ! is_admin_bar_showing() || ! is_object($wp_admin_bar) ) {
+        if (! is_admin_bar_showing() || ! is_object($wp_admin_bar)) {
             return ;
         }
 
@@ -478,7 +478,7 @@ class LiteSpeed_Cache_ESI
             'ref' => $_SERVER[ 'REQUEST_URI' ],
         ) ;
 
-        echo self::sub_esi_block( 'admin-bar', 'adminbar', $params ) ;
+        echo self::sub_esi_block('admin-bar', 'adminbar', $params) ;
     }
 
     /**
@@ -489,27 +489,27 @@ class LiteSpeed_Cache_ESI
      * @global $wp_widget_factory
      * @param array $params Input parameters needed to correctly display widget
      */
-    public function load_widget_block( $params )
+    public function load_widget_block($params)
     {
         global $wp_widget_factory ;
         $widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
-        $option = self::widget_load_get_options( $widget ) ;
+        $option = self::widget_load_get_options($widget) ;
         // Since we only reach here via esi, safe to assume setting exists.
         $ttl = $option[ self::WIDGET_OPID_TTL ] ;
-        defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
-        if ( $ttl == 0 ) {
-            LiteSpeed_Cache_Control::set_nocache( 'ESI Widget time to live set to 0' ) ;
+        defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl) ;
+        if ($ttl == 0) {
+            LiteSpeed_Cache_Control::set_nocache('ESI Widget time to live set to 0') ;
         }
         else {
-            LiteSpeed_Cache_Control::set_custom_ttl( $ttl ) ;
+            LiteSpeed_Cache_Control::set_custom_ttl($ttl) ;
 
-            if ( $option[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ) {
+            if ($option[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2) {
                 LiteSpeed_Cache_Control::set_private() ;
             }
             LiteSpeed_Cache_Control::set_no_vary() ;
-            LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_WIDGET . $params[ self::PARAM_ID ] ) ;
+            LiteSpeed_Cache_Tag::add(LiteSpeed_Cache_Tag::TYPE_WIDGET . $params[ self::PARAM_ID ]) ;
         }
-        the_widget( $params[ self::PARAM_NAME ], $params[ self::PARAM_INSTANCE ], $params[ self::PARAM_ARGS ] ) ;
+        the_widget($params[ self::PARAM_NAME ], $params[ self::PARAM_INSTANCE ], $params[ self::PARAM_ARGS ]) ;
     }
 
     /**
@@ -521,15 +521,15 @@ class LiteSpeed_Cache_ESI
     public function load_admin_bar_block()
     {
         wp_admin_bar_render() ;
-        if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ) ) {
-            LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
+        if (! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR)) {
+            LiteSpeed_Cache_Control::set_nocache('build-in set to not cacheable') ;
         }
         else {
             LiteSpeed_Cache_Control::set_private() ;
             LiteSpeed_Cache_Control::set_no_vary() ;
         }
 
-        defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI: adminbar ref: ' . $_SERVER[ 'REQUEST_URI' ] ) ;
+        defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('ESI: adminbar ref: ' . $_SERVER[ 'REQUEST_URI' ]) ;
     }
 
 
@@ -543,24 +543,24 @@ class LiteSpeed_Cache_ESI
     public function load_comment_form_block($params)
     {
         ob_start() ;
-        comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
+        comment_form($params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ]) ;
         $output = ob_get_contents() ;
         ob_end_clean() ;
 
-        if ( $params[ 'is_json' ] ) {
-            $output = json_encode( $output ) ;
-            $output = ltrim( $output, '"' ) ;
-            $output = rtrim( $output, '"' ) ;
+        if ($params[ 'is_json' ]) {
+            $output = json_encode($output) ;
+            $output = ltrim($output, '"') ;
+            $output = rtrim($output, '"') ;
         }
 
         echo $output ;
 
-        if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
-            LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
+        if (! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM)) {
+            LiteSpeed_Cache_Control::set_nocache('build-in set to not cacheable') ;
         }
         else {
             // by default comment form is public
-            if ( LiteSpeed_Cache_Vary::has_vary() ) {
+            if (LiteSpeed_Cache_Vary::has_vary()) {
                 LiteSpeed_Cache_Control::set_private() ;
                 LiteSpeed_Cache_Control::set_no_vary() ;
             }
@@ -573,20 +573,20 @@ class LiteSpeed_Cache_ESI
      * @access public
      * @since 2.6
      */
-    public function load_nonce_block( $params )
+    public function load_nonce_block($params)
     {
         $action = $params[ 'action' ] ;
 
-        LiteSpeed_Cache_Log::debug( '[ESI] load_nonce_block [action] ' . $action ) ;
+        LiteSpeed_Cache_Log::debug('[ESI] load_nonce_block [action] ' . $action) ;
 
         // set nonce TTL to half day
-        LiteSpeed_Cache_Control::set_custom_ttl( 43200 ) ;
+        LiteSpeed_Cache_Control::set_custom_ttl(43200) ;
 
-        if ( LiteSpeed_Cache_Router::is_logged_in() ) {
+        if (LiteSpeed_Cache_Router::is_logged_in()) {
             LiteSpeed_Cache_Control::set_private() ;
         }
 
-        echo wp_create_nonce( $action ) ;
+        echo wp_create_nonce($action) ;
     }
 
     /**
@@ -595,35 +595,35 @@ class LiteSpeed_Cache_ESI
      * @access public
      * @since 2.8
      */
-    public function load_esi_shortcode( $params )
+    public function load_esi_shortcode($params)
     {
-        unset( $params[ self::PARAM_BLOCK_ID ] ) ;
+        unset($params[ self::PARAM_BLOCK_ID ]) ;
 
-        if ( isset( $params[ 'ttl' ] ) ) {
-            if ( ! $params[ 'ttl' ] ) {
-                LiteSpeed_Cache_Control::set_nocache( 'ESI shortcode att ttl=0' ) ;
+        if (isset($params[ 'ttl' ])) {
+            if (! $params[ 'ttl' ]) {
+                LiteSpeed_Cache_Control::set_nocache('ESI shortcode att ttl=0') ;
             }
             else {
-                LiteSpeed_Cache_Control::set_custom_ttl( $params[ 'ttl' ] ) ;
+                LiteSpeed_Cache_Control::set_custom_ttl($params[ 'ttl' ]) ;
             }
-            unset( $params[ 'ttl' ] ) ;
+            unset($params[ 'ttl' ]) ;
         }
 
         // Replace to original shortcode
         $shortcode = $params[ 0 ] ;
         $atts_ori = array() ;
-        foreach ( $params as $k => $v ) {
-            if ( $k === 0 ) {
+        foreach ($params as $k => $v) {
+            if ($k === 0) {
                 continue ;
             }
 
-            $atts_ori[] = is_string( $k ) ? "$k='" . addslashes( $v ) . "'" : $v ;
+            $atts_ori[] = is_string($k) ? "$k='" . addslashes($v) . "'" : $v ;
         }
 
-        LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . "esi.$shortcode" ) ;
+        LiteSpeed_Cache_Tag::add(LiteSpeed_Cache_Tag::TYPE_ESI . "esi.$shortcode") ;
 
         // Output original shortcode final content
-        echo do_shortcode( "[$shortcode " . implode( ' ', $atts_ori ) . " ]" ) ;
+        echo do_shortcode("[$shortcode " . implode(' ', $atts_ori) . " ]") ;
     }
 
     /**
@@ -637,11 +637,11 @@ class LiteSpeed_Cache_ESI
      * @param array $defaults The default comment form settings.
      * @return array The default comment form settings.
      */
-    public function register_comment_form_actions( $defaults )
+    public function register_comment_form_actions($defaults)
     {
         $this->esi_args = $defaults ;
         echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-        add_filter( 'comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2 ) ;// Needs to get param from this hook and generate esi block
+        add_filter('comment_form_submit_button', array( $this, 'sub_comment_form_block' ), 1000, 2) ;// Needs to get param from this hook and generate esi block
         return $defaults ;
     }
 
@@ -657,26 +657,26 @@ class LiteSpeed_Cache_ESI
      * @param array $args The used comment form args.
      * @return unused.
      */
-    public function sub_comment_form_block( $unused, $args )
+    public function sub_comment_form_block($unused, $args)
     {
-        if ( empty( $args ) || empty( $this->esi_args ) ) {
-            LiteSpeed_Cache_Log::debug( 'comment form args empty?' ) ;
+        if (empty($args) || empty($this->esi_args)) {
+            LiteSpeed_Cache_Log::debug('comment form args empty?') ;
             return $unused ;
         }
         $esi_args = array() ;
 
         // compare current args with default ones
-        foreach ( $args as $k => $v ) {
-            if ( ! isset( $this->esi_args[ $k ] ) ) {
+        foreach ($args as $k => $v) {
+            if (! isset($this->esi_args[ $k ])) {
                 $esi_args[ $k ] = $v ;
             }
-            elseif ( is_array( $v ) ) {
-                $diff = array_diff_assoc( $v, $this->esi_args[ $k ] ) ;
-                if ( ! empty( $diff ) ) {
+            elseif (is_array($v)) {
+                $diff = array_diff_assoc($v, $this->esi_args[ $k ]) ;
+                if (! empty($diff)) {
                     $esi_args[ $k ] = $diff ;
                 }
             }
-            elseif ( $v !== $this->esi_args[ $k ] ) {
+            elseif ($v !== $this->esi_args[ $k ]) {
                 $esi_args[ $k ] = $v ;
             }
         }
@@ -688,9 +688,9 @@ class LiteSpeed_Cache_ESI
             self::PARAM_ARGS => $esi_args,
         ) ;
 
-        echo self::sub_esi_block( 'comment-form', 'comment form', $params ) ;
+        echo self::sub_esi_block('comment-form', 'comment form', $params) ;
         echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
-        add_action( 'comment_form_after', array( $this, 'comment_form_sub_clean' ) ) ;
+        add_action('comment_form_after', array( $this, 'comment_form_sub_clean' )) ;
         return $unused ;
     }
 
@@ -712,20 +712,20 @@ class LiteSpeed_Cache_ESI
      * @since  2.6
      * @access public
      */
-    public static function finalize( $buffer )
+    public static function finalize($buffer)
     {
         $instance = self::get_instance() ;
 
         // Bypass if no preserved list to be replaced
-        if ( ! $instance->_esi_preserve_list ) {
+        if (! $instance->_esi_preserve_list) {
             return $buffer ;
         }
 
-        $keys = array_keys( $instance->_esi_preserve_list ) ;
+        $keys = array_keys($instance->_esi_preserve_list) ;
 
-        LiteSpeed_Cache_Log::debug( '[ESI] replacing preserved blocks', $keys ) ;
+        LiteSpeed_Cache_Log::debug('[ESI] replacing preserved blocks', $keys) ;
 
-        $buffer = str_replace( $keys , $instance->_esi_preserve_list, $buffer ) ;
+        $buffer = str_replace($keys , $instance->_esi_preserve_list, $buffer) ;
 
         return $buffer ;
     }
@@ -739,7 +739,7 @@ class LiteSpeed_Cache_ESI
      */
     public static function get_instance()
     {
-        if ( ! isset(self::$_instance) ) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self() ;
         }
 

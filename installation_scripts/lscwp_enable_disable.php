@@ -35,20 +35,20 @@ if(in_array($name,$cache_list)){
 }
 }
 
-if ( $action == "status"  ) {
+if ($action == "status") {
     $plugins = get_plugins();
     array_walk($plugins,"cachedetect");
             }
 
-elseif ( $action == "enable" ) {
-    if ( ! activate_plugin(PLUGIN_NAME, '', false, false) == null ) {
+elseif ($action == "enable") {
+    if (! activate_plugin(PLUGIN_NAME, '', false, false) == null) {
         printf("\nLSCWP not enabled for %s \n\n", $WP_DIR) ;
         return false;
     }
     return true;
 }
 
-elseif ( $action == "disable" ) {
+elseif ($action == "disable") {
 
     global $wpdb;
 
@@ -58,14 +58,14 @@ elseif ( $action == "disable" ) {
 		" ;
 
     $active = $wpdb->get_row($sql,ARRAY_A);
-    if ( $active == false ) {
+    if ($active == false) {
         die($WP_DIR . " - Query failed: " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
     }
 
     $plugins = unserialize($active["option_value"]) ;
 
-    foreach ( $plugins as $pkey => $pval ) {
-        if ( $pval == PLUGIN_NAME ) {
+    foreach ($plugins as $pkey => $pval) {
+        if ($pval == PLUGIN_NAME) {
             unset($plugins[$pkey]) ;
         }
     }
@@ -77,7 +77,7 @@ elseif ( $action == "disable" ) {
 
     $disable = $wpdb->query($sql);
 
-    if ( $disable == false ) {
+    if ($disable == false) {
         die($WP_DIR . " - Unable to disable LSCWP with query error: " . mysql_error() . "\nIf possible, LSWCP will still be removed\n\n") ;
     }
 }

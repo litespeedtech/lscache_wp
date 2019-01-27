@@ -8,7 +8,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Autoptimize') ;
@@ -23,7 +23,7 @@ class LiteSpeed_Cache_ThirdParty_Autoptimize
      */
     public static function detect()
     {
-        if ( defined('AUTOPTIMIZE_PLUGIN_DIR') ) {
+        if (defined('AUTOPTIMIZE_PLUGIN_DIR')) {
             LiteSpeed_Cache_API::hook_purge('LiteSpeed_Cache_ThirdParty_Autoptimize::purge') ;
         }
     }
@@ -36,7 +36,7 @@ class LiteSpeed_Cache_ThirdParty_Autoptimize
      */
     public static function purge()
     {
-        if ( defined('AUTOPTIMIZE_PURGE') || has_action('shutdown', 'autoptimize_do_cachepurged_action', 11) ) {
+        if (defined('AUTOPTIMIZE_PURGE') || has_action('shutdown', 'autoptimize_do_cachepurged_action', 11)) {
             LiteSpeed_Cache_API::purge_all() ;
         }
     }

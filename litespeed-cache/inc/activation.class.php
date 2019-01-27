@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -33,24 +33,24 @@ class LiteSpeed_Cache_Activation
     public static function register_activation()
     {
         $count = 0 ;
-        ! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id() ) ;
+        ! defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', 'Activate_' . get_current_blog_id()) ;
 
-        if ( is_multisite() ) {
+        if (is_multisite()) {
             $count = self::get_network_count() ;
-            if ( $count !== false ) {
-                $count = intval( $count ) + 1 ;
-                set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
+            if ($count !== false) {
+                $count = intval($count) + 1 ;
+                set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS) ;
             }
         }
 
-        do_action( 'litespeed_cache_api_load_thirdparty' ) ;
+        do_action('litespeed_cache_api_load_thirdparty') ;
 
         $__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
         // Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
-        $res = add_option( LiteSpeed_Cache_Config::OPTION_NAME, $__cfg->get_default_options() ) ;
+        $res = add_option(LiteSpeed_Cache_Config::OPTION_NAME, $__cfg->get_default_options()) ;
 
-        defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
+        defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug("[Cfg] plugin_activation update option = " . var_export($res, true)) ;
 
         /**
          * Handle files:
@@ -62,10 +62,10 @@ class LiteSpeed_Cache_Activation
 
         /* Network file handler */
 
-        if ( is_multisite() ) {
+        if (is_multisite()) {
 
-            if ( ! is_network_admin() ) {
-                if ( $count === 1 ) {
+            if (! is_network_admin()) {
+                if ($count === 1) {
                     // Only itself is activated, set .htaccess with only CacheLookUp
                     LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
                 }
@@ -79,16 +79,16 @@ class LiteSpeed_Cache_Activation
                 LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS,
                 LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
             );
-            foreach ( $ids as $id ) {
-                $options[ $id ] = $__cfg->get_item( $id ) ;
+            foreach ($ids as $id) {
+                $options[ $id ] = $__cfg->get_item($id) ;
             }
 
-            if ( ! empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ]) ) {
+            if (! empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ])) {
                 $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] =
-                    addslashes( $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] );
+                    addslashes($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ]);
             }
 
-            LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;
+            LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings($options, true) ;
             return ;
         }
 
@@ -98,18 +98,18 @@ class LiteSpeed_Cache_Activation
 
         // Add items
         $cfg_items = $__cfg->stored_items() ;
-        foreach ( $cfg_items as $v ) {
-            $options[ $v ] = $__cfg->get_item( $v ) ;
+        foreach ($cfg_items as $v) {
+            $options[ $v ] = $__cfg->get_item($v) ;
         }
 
         /**
          * Go through all settings to generate related files
          * @since 2.7.1
          */
-        LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
+        LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings($options, true) ;
 
-        if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
-            update_option( LiteSpeed_Cache::WHM_MSG, LiteSpeed_Cache::WHM_MSG_VAL ) ;
+        if (defined('LSCWP_PLUGIN_NAME')) {
+            update_option(LiteSpeed_Cache::WHM_MSG, LiteSpeed_Cache::WHM_MSG_VAL) ;
         }
 
         // Register crawler cron task
@@ -124,9 +124,9 @@ class LiteSpeed_Cache_Activation
     {
         LiteSpeed_Cache_Task::clear() ;
         LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules() ;
-        delete_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
-        if ( is_multisite() ) {
-            delete_site_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
+        delete_option(LiteSpeed_Cache_Config::OPTION_NAME) ;
+        if (is_multisite()) {
+            delete_site_option(LiteSpeed_Cache_Config::OPTION_NAME) ;
         }
     }
 
@@ -140,20 +140,20 @@ class LiteSpeed_Cache_Activation
      * @param array $args Arguments to pass into get_sites/wp_get_sites.
      * @return array The array of blog ids.
      */
-    public static function get_network_ids( $args = array() )
+    public static function get_network_ids($args = array())
     {
         global $wp_version ;
-        if ( version_compare( $wp_version, '4.6', '<' ) ) {
-            $blogs = wp_get_sites( $args ) ;
-            if ( ! empty( $blogs ) ) {
-                foreach ( $blogs as $key => $blog ) {
+        if (version_compare($wp_version, '4.6', '<')) {
+            $blogs = wp_get_sites($args) ;
+            if (! empty($blogs)) {
+                foreach ($blogs as $key => $blog) {
                     $blogs[ $key ] = $blog[ 'blog_id' ] ;
                 }
             }
         }
         else {
             $args[ 'fields' ] = 'ids' ;
-            $blogs = get_sites( $args ) ;
+            $blogs = get_sites($args) ;
         }
         return $blogs ;
     }
@@ -167,23 +167,23 @@ class LiteSpeed_Cache_Activation
      */
     private static function get_network_count()
     {
-        $count = get_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
-        if ( $count !== false ) {
-            return intval( $count ) ;
+        $count = get_site_transient(self::NETWORK_TRANSIENT_COUNT) ;
+        if ($count !== false) {
+            return intval($count) ;
         }
         // need to update
         $default = array() ;
         $count = 0 ;
 
-        $sites = self::get_network_ids( array( 'deleted' => 0 ) ) ;
-        if ( empty( $sites ) ) {
+        $sites = self::get_network_ids(array( 'deleted' => 0 )) ;
+        if (empty($sites)) {
             return false ;
         }
 
-        foreach ( $sites as $site ) {
-            $bid = is_object( $site ) && property_exists( $site, 'blog_id' ) ? $site->blog_id : $site ;
-            $plugins = get_blog_option( $bid , 'active_plugins', $default ) ;
-            if ( in_array( LSCWP_BASENAME, $plugins, true ) ) {
+        foreach ($sites as $site) {
+            $bid = is_object($site) && property_exists($site, 'blog_id') ? $site->blog_id : $site ;
+            $plugins = get_blog_option($bid , 'active_plugins', $default) ;
+            if (in_array(LSCWP_BASENAME, $plugins, true)) {
                 $count++ ;
             }
         }
@@ -193,11 +193,11 @@ class LiteSpeed_Cache_Activation
          * @see  https://codex.wordpress.org/Function_Reference/is_plugin_active_for_network
          * @since  2.0
          */
-        if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-            require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;
+        if (! function_exists('is_plugin_active_for_network')) {
+            require_once(ABSPATH . '/wp-admin/includes/plugin.php') ;
         }
 
-        if ( is_plugin_active_for_network( LSCWP_BASENAME ) ) {
+        if (is_plugin_active_for_network(LSCWP_BASENAME)) {
             $count++ ;
         }
         return $count ;
@@ -214,17 +214,17 @@ class LiteSpeed_Cache_Activation
     private static function is_deactivate_last()
     {
         $count = self::get_network_count() ;
-        if ( $count === false ) {
+        if ($count === false) {
             return false ;
         }
-        if ( $count !== 1 ) {
+        if ($count !== 1) {
             // Not deactivating the last one.
             $count-- ;
-            set_site_transient( self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS ) ;
+            set_site_transient(self::NETWORK_TRANSIENT_COUNT, $count, DAY_IN_SECONDS) ;
             return false ;
         }
 
-        delete_site_transient( self::NETWORK_TRANSIENT_COUNT ) ;
+        delete_site_transient(self::NETWORK_TRANSIENT_COUNT) ;
         return true ;
     }
 
@@ -240,14 +240,14 @@ class LiteSpeed_Cache_Activation
     {
         LiteSpeed_Cache_Task::clear() ;
 
-        ! defined( 'LSCWP_LOG_TAG' ) && define( 'LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id() ) ;
+        ! defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', 'Deactivate_' . get_current_blog_id()) ;
 
         LiteSpeed_Cache_Purge::purge_all() ;
 
-        if ( is_multisite() ) {
+        if (is_multisite()) {
 
-            if ( ! self::is_deactivate_last() ) {
-                if ( is_network_admin() ) {
+            if (! self::is_deactivate_last()) {
+                if (is_network_admin()) {
                     // Still other activated subsite left, set .htaccess with only CacheLookUp
                     LiteSpeed_Cache_Admin_Rules::get_instance()->insert_ls_wrapper() ;
                 }
@@ -257,16 +257,16 @@ class LiteSpeed_Cache_Activation
 
         $adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php' ;
         // this file can be generated by other cache plugin like w3tc, we only delete our own file
-        if ( file_exists( $adv_cache_path ) && is_writable( $adv_cache_path ) ) {
-            if ( strpos( file_get_contents( $adv_cache_path ), 'LSCACHE_ADV_CACHE' ) !== false ) {
-                unlink( $adv_cache_path ) ;
+        if (file_exists($adv_cache_path) && is_writable($adv_cache_path)) {
+            if (strpos(file_get_contents($adv_cache_path), 'LSCACHE_ADV_CACHE') !== false) {
+                unlink($adv_cache_path) ;
             }
             else {
-                error_log(' Keep advanced-cache.php as it belongs to other plugins' ) ;
+                error_log(' Keep advanced-cache.php as it belongs to other plugins') ;
             }
         }
         else {
-            error_log( 'Failed to remove advanced-cache.php, file does not exist or is not writable!' ) ;
+            error_log('Failed to remove advanced-cache.php, file does not exist or is not writable!') ;
         }
 
         /**
@@ -275,7 +275,7 @@ class LiteSpeed_Cache_Activation
          */
         LiteSpeed_Cache_Object::get_instance()->del_file() ;
 
-        if ( ! LiteSpeed_Cache_Config::wp_cache_var_setter( false ) ) {
+        if (! LiteSpeed_Cache_Config::wp_cache_var_setter(false)) {
             error_log('In wp-config.php: WP_CACHE could not be set to false during deactivation!')  ;
         }
 
@@ -295,17 +295,17 @@ class LiteSpeed_Cache_Activation
     public static function try_copy_advanced_cache()
     {
         $adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php' ;
-        if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || ! is_writable( $adv_cache_path ) ) ) {
+        if (file_exists($adv_cache_path) && (filesize($adv_cache_path) !== 0 || ! is_writable($adv_cache_path))) {
             return false ;
         }
 
-        defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Activation] Copying advanced_cache file' ) ;
+        defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('[Activation] Copying advanced_cache file') ;
 
-        copy( LSCWP_DIR . 'includes/advanced-cache.php', $adv_cache_path ) ;
+        copy(LSCWP_DIR . 'includes/advanced-cache.php', $adv_cache_path) ;
 
         include $adv_cache_path ;
 
-        $ret = defined( 'LSCACHE_ADV_CACHE' ) ;
+        $ret = defined('LSCACHE_ADV_CACHE') ;
 
         // Try to enable `LITESPEED_ON`
         LiteSpeed_Cache_Config::get_instance()->define_cache_on() ;
@@ -321,7 +321,7 @@ class LiteSpeed_Cache_Activation
      */
     public static function dismiss_whm()
     {
-        delete_option( LiteSpeed_Cache::WHM_MSG ) ;
+        delete_option(LiteSpeed_Cache::WHM_MSG) ;
     }
 
     /**
@@ -344,23 +344,23 @@ class LiteSpeed_Cache_Activation
         try {
             ob_start() ;
             $skin = new \WP_Ajax_Upgrader_Skin() ;
-            $upgrader = new \Plugin_Upgrader( $skin ) ;
-            $result = $upgrader->upgrade( $plugin ) ;
-            if ( ! is_plugin_active( $plugin ) ) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
-                activate_plugin( $plugin ) ;
+            $upgrader = new \Plugin_Upgrader($skin) ;
+            $result = $upgrader->upgrade($plugin) ;
+            if (! is_plugin_active($plugin)) {// todo: upgrade should reactivate the plugin again by WP. Need to check why disabled after upgraded.
+                activate_plugin($plugin) ;
             }
             ob_end_clean() ;
-        } catch ( \Exception $e ) {
-            LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+        } catch (\Exception $e) {
+            LiteSpeed_Cache_Admin_Display::error(__('Failed to upgrade.', 'litespeed-cache')) ;
             return ;
         }
 
-        if ( is_wp_error( $result ) ) {
-            LiteSpeed_Cache_Admin_Display::error( __( 'Failed to upgrade.', 'litespeed-cache' ) ) ;
+        if (is_wp_error($result)) {
+            LiteSpeed_Cache_Admin_Display::error(__('Failed to upgrade.', 'litespeed-cache')) ;
             return ;
         }
 
-        LiteSpeed_Cache_Admin_Display::succeed( __( 'Upgraded successfully.', 'litespeed-cache' ) ) ;
+        LiteSpeed_Cache_Admin_Display::succeed(__('Upgraded successfully.', 'litespeed-cache')) ;
     }
 
     /**
@@ -375,7 +375,7 @@ class LiteSpeed_Cache_Activation
 
         $type = LiteSpeed_Cache_Router::verify_type() ;
 
-        switch ( $type ) {
+        switch ($type) {
             case self::TYPE_UPGRADE :
                 $instance->_upgrade() ;
                 break ;
@@ -396,7 +396,7 @@ class LiteSpeed_Cache_Activation
      */
     public static function get_instance()
     {
-        if ( ! isset( self::$_instance ) ) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self() ;
         }
 

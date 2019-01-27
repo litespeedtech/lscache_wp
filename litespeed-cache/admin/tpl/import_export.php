@@ -1,7 +1,7 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+if (! defined('WPINC')) die ;
 
-$log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
+$log = get_option(LiteSpeed_Cache_Import::DB_IMPORT_LOG, array()) ;
 ?>
 
 <div class="wrap">
@@ -18,24 +18,24 @@ $log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
 	<div class="litespeed-body">
 		<h3 class="litespeed-title"><?php echo __('Export Settings', 'litespeed-cache') ; ?></h3>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_EXPORT ) ; ?>" class="litespeed-btn-success">
-			<?php echo __( 'Export', 'litespeed-cache' ) ; ?>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_EXPORT) ; ?>" class="litespeed-btn-success">
+			<?php echo __('Export', 'litespeed-cache') ; ?>
 		</a>
 
-		<?php if ( ! empty( $log[ 'export' ] ) ) : ?>
+		<?php if (! empty($log[ 'export' ])) : ?>
 		<div class="litespeed-desc">
-			<?php echo __( 'Last exported', 'litespeed-cache' ) ; ?>: <code><?php echo $log[ 'export' ][ 'file' ] ; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time( $log[ 'export' ][ 'time' ]) ; ?>
+			<?php echo __('Last exported', 'litespeed-cache') ; ?>: <code><?php echo $log[ 'export' ][ 'file' ] ; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time($log[ 'export' ][ 'time' ]) ; ?>
 		</div>
 		<?php endif ; ?>
 
 		<div class="litespeed-desc">
-			<?php echo __( 'This will export all current LiteSpeed Cache settings and save as a file.', 'litespeed-cache' ) ; ?>
+			<?php echo __('This will export all current LiteSpeed Cache settings and save as a file.', 'litespeed-cache') ; ?>
 		</div>
 
 		<h3 class="litespeed-title"><?php echo __('Import Settings', 'litespeed-cache') ; ?></h3>
 
 		<form method="post" action="admin.php?page=lscache-import" id="litespeed_form_import" enctype="multipart/form-data" class="">
-			<?php $this->form_action( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_IMPORT ) ; ?>
+			<?php $this->form_action(LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_IMPORT) ; ?>
 
 			<div class="litespeed-div litespeed-left20">
 				<input type="file" name="ls_file" class="litespeed-input" />
@@ -45,25 +45,25 @@ $log = get_option( LiteSpeed_Cache_Import::DB_IMPORT_LOG, array() ) ;
 			</div>
 		</form>
 
-		<?php if ( ! empty( $log[ 'import' ] ) ) : ?>
+		<?php if (! empty($log[ 'import' ])) : ?>
 		<div class="litespeed-desc">
-			<?php echo __( 'Last imported', 'litespeed-cache' ) ; ?>: <code><?php echo $log[ 'import' ][ 'file' ] ; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time( $log[ 'import' ][ 'time' ]) ; ?>
+			<?php echo __('Last imported', 'litespeed-cache') ; ?>: <code><?php echo $log[ 'import' ][ 'file' ] ; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time($log[ 'import' ][ 'time' ]) ; ?>
 		</div>
 		<?php endif ; ?>
 
 		<div class="litespeed-desc">
-			<?php echo __( 'This will import settings from a file and override all current LiteSpeed Cache settings.', 'litespeed-cache' ) ; ?>
+			<?php echo __('This will import settings from a file and override all current LiteSpeed Cache settings.', 'litespeed-cache') ; ?>
 		</div>
 
 		<h3 class="litespeed-title"><?php echo __('Reset All Settings', 'litespeed-cache') ; ?></h3>
 
-		<a href="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET ) ; ?>" data-litespeed-cfm="<?php echo __( 'Are you sure to reset all settings to default settings?', 'litespeed-cache' ) ; ?>" class="litespeed-btn-danger">
-			<?php echo __( 'Reset', 'litespeed-cache' ) ; ?>
+		<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMPORT, LiteSpeed_Cache_Import::TYPE_RESET) ; ?>" data-litespeed-cfm="<?php echo __('Are you sure to reset all settings to default settings?', 'litespeed-cache') ; ?>" class="litespeed-btn-danger">
+			<?php echo __('Reset', 'litespeed-cache') ; ?>
 		</a>
 
 		<div class="litespeed-desc">
 			🚨
-			<?php echo __( 'This will reset all settings to default settings.', 'litespeed-cache' ) ; ?>
+			<?php echo __('This will reset all settings to default settings.', 'litespeed-cache') ; ?>
 		</div>
 
 	</div>

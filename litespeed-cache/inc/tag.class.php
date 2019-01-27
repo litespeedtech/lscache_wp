@@ -6,7 +6,7 @@
  * @since  		1.5 Moved into /inc
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -48,7 +48,7 @@ class LiteSpeed_Cache_Tag
     private function __construct()
     {
         // register recent posts widget tag before theme renders it to make it work
-        add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
+        add_filter('widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts') ;
 
     }
 
@@ -63,31 +63,31 @@ class LiteSpeed_Cache_Tag
      */
     public static function check_login_cacheable()
     {
-        if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN ) ) {
+        if (! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_PAGE_LOGIN)) {
             return ;
         }
-        if ( LiteSpeed_Cache_Control::isset_notcacheable() ) {
+        if (LiteSpeed_Cache_Control::isset_notcacheable()) {
             return ;
         }
 
-        if ( ! empty( $_GET ) ) {
-            LiteSpeed_Cache_Control::set_nocache( 'has GET request' ) ;
+        if (! empty($_GET)) {
+            LiteSpeed_Cache_Control::set_nocache('has GET request') ;
             return ;
         }
 
         LiteSpeed_Cache_Control::set_cacheable() ;
 
-        self::add( self::TYPE_LOGIN ) ;
+        self::add(self::TYPE_LOGIN) ;
 
         // we need to send lsc-cookie manually to make it be sent to all other users when is cacheable
         $list = headers_list() ;
-        if ( empty( $list ) ) {
+        if (empty($list)) {
             return ;
         }
-        foreach ( $list as $hdr ) {
-            if ( strncasecmp( $hdr, 'set-cookie:', 11 ) == 0 ) {
-                $cookie = substr( $hdr, 12 ) ;
-                @header( 'lsc-cookie: ' . $cookie, false ) ;
+        foreach ($list as $hdr) {
+            if (strncasecmp($hdr, 'set-cookie:', 11) == 0) {
+                $cookie = substr($hdr, 12) ;
+                @header('lsc-cookie: ' . $cookie, false) ;
             }
         }
     }
@@ -101,24 +101,24 @@ class LiteSpeed_Cache_Tag
      * @param $code
      * @return $eror_status
      */
-    public static function check_error_codes( $status_header, $code )
+    public static function check_error_codes($status_header, $code)
     {
-        $ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
-        $ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_500_TTL ) ;
-        if ( $code == 403 ) {
-            if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-                LiteSpeed_Cache_Control::set_nocache( '403 TTL is less than 30s' ) ;
+        $ttl_403 = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_403_TTL) ;
+        $ttl_500 = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_500_TTL) ;
+        if ($code == 403) {
+            if ($ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable()) {
+                LiteSpeed_Cache_Control::set_nocache('403 TTL is less than 30s') ;
             }
             else {
                 self::$_error_status = $code ;
             }
         }
-        elseif ( $code >= 500 && $code < 600 ) {
-            if ( $ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-                LiteSpeed_Cache_Control::set_nocache( 'TTL is less than 30s' ) ;
+        elseif ($code >= 500 && $code < 600) {
+            if ($ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable()) {
+                LiteSpeed_Cache_Control::set_nocache('TTL is less than 30s') ;
             }
         }
-        elseif ( $code > 400 ) {
+        elseif ($code > 400) {
             self::$_error_status = $code ;
         }
 
@@ -145,9 +145,9 @@ class LiteSpeed_Cache_Tag
      * @access   public
      * @param array $params [wordpress params for widget_posts_args]
      */
-    public static function add_widget_recent_posts( $params )
+    public static function add_widget_recent_posts($params)
     {
-        self::add( self::TYPE_PAGES_WITH_RECENT_POSTS ) ;
+        self::add(self::TYPE_PAGES_WITH_RECENT_POSTS) ;
         return $params ;
     }
 
@@ -158,13 +158,13 @@ class LiteSpeed_Cache_Tag
      * @access public
      * @param mixed $tags A string or array of cache tags to add to the current list.
      */
-    public static function add( $tags )
+    public static function add($tags)
     {
-        if ( ! is_array( $tags ) ) {
+        if (! is_array($tags)) {
             $tags = array( $tags ) ;
         }
 
-        self::$_tags = array_merge( self::$_tags, $tags ) ;
+        self::$_tags = array_merge(self::$_tags, $tags) ;
     }
 
     /**
@@ -174,13 +174,13 @@ class LiteSpeed_Cache_Tag
      * @access public
      * @param mixed $tags A string or array of cache tags to add to the current list.
      */
-    public static function add_private( $tags )
+    public static function add_private($tags)
     {
-        if ( ! is_array( $tags ) ) {
+        if (! is_array($tags)) {
             $tags = array( $tags ) ;
         }
 
-        self::$_tags_priv = array_merge( self::$_tags_priv, $tags ) ;
+        self::$_tags_priv = array_merge(self::$_tags_priv, $tags) ;
     }
 
     /**
@@ -203,20 +203,20 @@ class LiteSpeed_Cache_Tag
      * @param boolean $ori Return the original url or not
      * @return bool|string False on input error, hash otherwise.
      */
-    public static function get_uri_tag( $uri, $ori = false )
+    public static function get_uri_tag($uri, $ori = false)
     {
-        $no_qs = strtok( $uri, '?' ) ;
-        if ( empty( $no_qs ) ) {
+        $no_qs = strtok($uri, '?') ;
+        if (empty($no_qs)) {
             return false ;
         }
-        $slashed = trailingslashit( $no_qs ) ;
+        $slashed = trailingslashit($no_qs) ;
 
         // If only needs uri tag
-        if ( $ori ) {
+        if ($ori) {
             return $slashed ;
         }
         // return self::TYPE_URL . ( $slashed ) ;
-        return self::TYPE_URL . md5( $slashed ) ;
+        return self::TYPE_URL . md5($slashed) ;
     }
 
     /**
@@ -226,9 +226,9 @@ class LiteSpeed_Cache_Tag
      * @access public
      * @param boolean $ori Return the original url or not
      */
-    public static function build_uri_tag( $ori = false )
+    public static function build_uri_tag($ori = false)
     {
-        return self::get_uri_tag( urldecode( $_SERVER['REQUEST_URI'] ), $ori ) ;
+        return self::get_uri_tag(urldecode($_SERVER['REQUEST_URI']), $ori) ;
     }
 
     /**
@@ -249,78 +249,78 @@ class LiteSpeed_Cache_Tag
 
         $tags[] = self::build_uri_tag() ;
 
-        if ( is_front_page() ) {
+        if (is_front_page()) {
             $tags[] = self::TYPE_FRONTPAGE ;
         }
-        elseif ( is_home() ) {
+        elseif (is_home()) {
             $tags[] = self::TYPE_HOME ;
         }
 
         $err = self::get_error_code() ;
-        if ( $err !== false ) {
+        if ($err !== false) {
             $tags[] = self::TYPE_ERROR . $err ;
         }
 
         $queried_obj_id = get_queried_object_id() ;
-        if ( is_archive() ) {
+        if (is_archive()) {
             //An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.
-            if ( is_category() || is_tag() || is_tax() ) {
+            if (is_category() || is_tag() || is_tax()) {
                 $tags[] = self::TYPE_ARCHIVE_TERM . $queried_obj_id ;
             }
-            elseif ( is_post_type_archive() ) {
+            elseif (is_post_type_archive()) {
                 global $wp_query ;
-                $post_type = $wp_query->get( 'post_type' ) ;
+                $post_type = $wp_query->get('post_type') ;
                 $tags[] = self::TYPE_ARCHIVE_POSTTYPE . $post_type ;
             }
-            elseif ( is_author() ) {
+            elseif (is_author()) {
                 $tags[] = self::TYPE_AUTHOR . $queried_obj_id ;
             }
-            elseif ( is_date() ) {
+            elseif (is_date()) {
                 global $post ;
                 $date = $post->post_date ;
-                $date = strtotime( $date ) ;
-                if ( is_day() ) {
-                    $tags[] = self::TYPE_ARCHIVE_DATE . date( 'Ymd', $date ) ;
+                $date = strtotime($date) ;
+                if (is_day()) {
+                    $tags[] = self::TYPE_ARCHIVE_DATE . date('Ymd', $date) ;
                 }
-                elseif ( is_month() ) {
-                    $tags[] = self::TYPE_ARCHIVE_DATE . date( 'Ym', $date ) ;
+                elseif (is_month()) {
+                    $tags[] = self::TYPE_ARCHIVE_DATE . date('Ym', $date) ;
                 }
-                elseif ( is_year() ) {
-                    $tags[] = self::TYPE_ARCHIVE_DATE . date( 'Y', $date ) ;
+                elseif (is_year()) {
+                    $tags[] = self::TYPE_ARCHIVE_DATE . date('Y', $date) ;
                 }
             }
         }
-        elseif ( is_singular() ) {
+        elseif (is_singular()) {
             //$this->is_singular = $this->is_single || $this->is_page || $this->is_attachment;
             $tags[] = self::TYPE_POST . $queried_obj_id ;
 
-            if ( is_page() ) {
+            if (is_page()) {
                 $tags[] = self::TYPE_PAGES ;
             }
         }
-        elseif ( is_feed() ) {
+        elseif (is_feed()) {
             $tags[] = self::TYPE_FEED ;
         }
 
         // Check REST API
-        if ( defined( 'REST_REQUEST' ) ) {
+        if (defined('REST_REQUEST')) {
             $tags[] = self::TYPE_REST ;
 
-            $path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
-            if ( $path ) {
+            $path = ! empty($_SERVER[ 'SCRIPT_URL' ]) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
+            if ($path) {
                 // posts collections tag
-                if ( substr( $path, -6 ) == '/posts' ) {
+                if (substr($path, -6) == '/posts') {
                     $tags[] = self::TYPE_LIST ;// Not used for purge yet
                 }
 
                 // single post tag
                 global $post;
-                if ( ! empty( $post->ID ) && substr( $path, - strlen( $post->ID ) - 1 ) === '/' . $post->ID ) {
+                if (! empty($post->ID) && substr($path, - strlen($post->ID) - 1) === '/' . $post->ID) {
                     $tags[] = self::TYPE_POST . $post->ID ;
                 }
 
                 // pages collections & single page tag
-                if ( stripos( $path, '/pages' ) !== false ) {
+                if (stripos($path, '/pages') !== false) {
                     $tags[] = self::TYPE_PAGES ;
                 }
             }
@@ -339,16 +339,16 @@ class LiteSpeed_Cache_Tag
     private static function _finalize()
     {
         // run 3rdparty hooks to tag
-        do_action( 'litespeed_cache_api_tag' ) ;
+        do_action('litespeed_cache_api_tag') ;
         // generate wp tags
-        if ( ! defined( 'LSCACHE_IS_ESI' ) ) {
+        if (! defined('LSCACHE_IS_ESI')) {
             $type_tags = self::_build_type_tags() ;
-            self::$_tags = array_merge( self::$_tags, $type_tags ) ;
+            self::$_tags = array_merge(self::$_tags, $type_tags) ;
         }
         // append blog main tag
         self::$_tags[] = '' ;
         // removed duplicates
-        self::$_tags = array_unique( self::$_tags ) ;
+        self::$_tags = array_unique(self::$_tags) ;
     }
 
     /**
@@ -367,18 +367,18 @@ class LiteSpeed_Cache_Tag
         $prefix = LSWCP_TAG_PREFIX . get_current_blog_id() . '_' ;
 
         // If is_private and has private tags, append them first, then specify prefix to `public` for public tags
-        if ( LiteSpeed_Cache_Control::is_private() ) {
-            foreach ( self::$_tags_priv as $priv_tag ) {
+        if (LiteSpeed_Cache_Control::is_private()) {
+            foreach (self::$_tags_priv as $priv_tag) {
                 $prefix_tags[] = $prefix . $priv_tag ;
             }
             $prefix = 'public:' . $prefix ;
         }
 
-        foreach ( self::$_tags as $tag ) {
+        foreach (self::$_tags as $tag) {
             $prefix_tags[] = $prefix . $tag ;
         }
 
-        $hdr = self::X_HEADER . ': ' . implode( ',', $prefix_tags ) ;
+        $hdr = self::X_HEADER . ': ' . implode(',', $prefix_tags) ;
 
         return $hdr ;
     }
@@ -392,7 +392,7 @@ class LiteSpeed_Cache_Tag
      */
     public static function get_instance()
     {
-        if ( ! isset( self::$_instance ) ) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self() ;
         }
 

@@ -6,7 +6,7 @@ $readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
 $content = null ;
 try {
     $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
-} catch( \Exception $e ) {
+} catch(\Exception $e) {
     echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
 }
 
@@ -14,13 +14,13 @@ try {
 $htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
 
 // Check if there is `ExpiresDefault` in .htaccess
-if ( defined( 'LITESPEED_ON' ) ) {
-    if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
-        $is_dismissed = get_option( self::DISMISS_MSG ) ;
-        if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {
+if (defined('LITESPEED_ON')) {
+    if ($content && stripos($content, "\nExpiresDefault") !== false) {
+        $is_dismissed = get_option(self::DISMISS_MSG) ;
+        if ($is_dismissed !== self::RULECONFLICT_DISMISSED) {
             // Need to add a notice for browser cache compatibility
-            if ( $is_dismissed !== self::RULECONFLICT_ON ) {
-                update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
+            if ($is_dismissed !== self::RULECONFLICT_ON) {
+                update_option(self::DISMISS_MSG, self::RULECONFLICT_ON) ;
             }
             require_once LSCWP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
         }
@@ -56,14 +56,14 @@ if ( defined( 'LITESPEED_ON' ) ) {
 		<?php if (defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT): ?>
 		<div class="litespeed-h3"><?php echo __('File editing is disabled in configuration.', 'litespeed-cache'); ?></div>
 
-		<?php elseif( $content !== null ) : ?>
+		<?php elseif($content !== null) : ?>
 
 		<form method="post" action="admin.php?page=<?php echo LiteSpeed_Cache::PAGE_EDIT_HTACCESS; ?>">
 			<?php $this->form_action(LiteSpeed_Cache::ACTION_SAVE_HTACCESS); ?>
 
 			<div class="litespeed-title"><?php echo sprintf(__('Current %s Contents', 'litespeed-cache'), '.htaccess'); ?></div>
 
-			<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . LiteSpeed_Cache_Admin_Rules::LS_MODULE_DONOTEDIT . '</code>' ); ?></span></p>
+			<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . LiteSpeed_Cache_Admin_Rules::LS_MODULE_DONOTEDIT . '</code>'); ?></span></p>
 
 			<h4><?php echo $htaccess_path ; ?></h4>
 

@@ -8,7 +8,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 
@@ -28,16 +28,16 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
      */
     public static function detect()
     {
-        if ( ! defined('WOOCOMMERCE_VERSION') || ! defined('YITH_WCWL') ) {
+        if (! defined('WOOCOMMERCE_VERSION') || ! defined('YITH_WCWL')) {
             return ;
         }
-        if ( LiteSpeed_Cache_API::esi_enabled() ) {
+        if (LiteSpeed_Cache_API::esi_enabled()) {
             LiteSpeed_Cache_API::hook_tpl_not_esi('LiteSpeed_Cache_ThirdParty_Yith_Wishlist::is_not_esi') ;
             LiteSpeed_Cache_API::hook_tpl_esi('yith-wcwl-add', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::load_add_to_wishlist') ;
 
             // hook to add/delete wishlist
-            add_action( 'yith_wcwl_added_to_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge' ) ;
-            add_action( 'yith_wcwl_removed_from_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge' ) ;
+            add_action('yith_wcwl_added_to_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge') ;
+            add_action('yith_wcwl_removed_from_wishlist', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::purge') ;
         }
     }
 
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
      */
     public static function purge()
     {
-        LiteSpeed_Cache_API::purge( LiteSpeed_Cache_Tag::TYPE_ESI . 'yith-wcwl-add' ) ;
+        LiteSpeed_Cache_API::purge(LiteSpeed_Cache_Tag::TYPE_ESI . 'yith-wcwl-add') ;
     }
 
     /**
@@ -80,13 +80,13 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
      * @param $template unused
      * @return string The html for future callbacks to filter.
      */
-    public static function sub_add_to_wishlist( $template )
+    public static function sub_add_to_wishlist($template)
     {
         global $post ;
         $params = array(
             self::ESI_PARAM_POSTID => $post->ID,
         ) ;
-        echo LiteSpeed_Cache_API::esi_url( 'yith-wcwl-add', 'YITH ADD TO WISHLIST', $params ) ;
+        echo LiteSpeed_Cache_API::esi_url('yith-wcwl-add', 'YITH ADD TO WISHLIST', $params) ;
         return '' ;
     }
 

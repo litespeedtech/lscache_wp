@@ -5,7 +5,7 @@ if (!defined('WPINC')) die;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('General', 'litespeed-cache'); ?>
-	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general', false, 'litespeed-learn-more' ) ; ?>
+	<?php $this->learn_more('https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general', false, 'litespeed-learn-more') ; ?>
 </h3>
 
 <?php $this->cache_disabled_warning() ; ?>
@@ -37,7 +37,7 @@ if (!defined('WPINC')) die;
                 ); ?>
 
 				<?php
-                    if ( is_multisite() ){
+                    if (is_multisite()){
                         echo $this->build_radio(
                             $id,
                             LiteSpeed_Cache_Config::VAL_ON2,
@@ -51,7 +51,7 @@ if (!defined('WPINC')) die;
                     'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:configuration" target="_blank"'); ?>
 
 				<strong><?php echo __('NOTICE', 'litespeed-cache'); ?>: </strong><?php echo __('When disabling the cache, all cached entries for this blog will be purged.', 'litespeed-cache'); ?>
-				<?php if ( is_multisite() ): ?>
+				<?php if (is_multisite()): ?>
 				<br><?php echo __('The network admin setting can be overridden here.', 'litespeed-cache'); ?>
 				<?php endif; ?>
 			</div>
@@ -76,7 +76,7 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache' ), 60, 3600 ) ; ?>
+				<?php echo sprintf(__('Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache'), 60, 3600) ; ?>
 				<?php $this->recommended($id) ; ?>
 			</div>
 		</td>
@@ -146,7 +146,7 @@ if (!defined('WPINC')) die;
 		</td>
 	</tr>
 
-	<?php if ( ! is_multisite() ) : ?>
+	<?php if (! is_multisite()) : ?>
 		<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.auto_upgrade.php'; ?>
 	<?php endif ; ?>
 

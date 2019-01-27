@@ -9,7 +9,7 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (! defined('WPINC')) {
     die ;
 }
 
@@ -44,9 +44,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.6
      * @access public
      */
-    public static function force_option( $k, $v )
+    public static function force_option($k, $v)
     {
-        LiteSpeed_Cache_Config::get_instance()->force_option( $k, $v ) ;
+        LiteSpeed_Cache_Config::get_instance()->force_option($k, $v) ;
     }
 
     /**
@@ -55,9 +55,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.4
      * @access public
      */
-    public static function clean_wrapper_begin( $counter = false )
+    public static function clean_wrapper_begin($counter = false)
     {
-        return LiteSpeed_Cache_GUI::clean_wrapper_begin( $counter ) ;
+        return LiteSpeed_Cache_GUI::clean_wrapper_begin($counter) ;
     }
 
     /**
@@ -66,9 +66,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.4
      * @access public
      */
-    public static function clean_wrapper_end( $counter = false )
+    public static function clean_wrapper_end($counter = false)
     {
-        return LiteSpeed_Cache_GUI::clean_wrapper_end( $counter ) ;
+        return LiteSpeed_Cache_GUI::clean_wrapper_end($counter) ;
     }
 
     /**
@@ -77,9 +77,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.3
      * @access public
      */
-    public static function v( $v )
+    public static function v($v)
     {
-        return version_compare( self::VERSION, $v, '>=' ) ;
+        return version_compare(self::VERSION, $v, '>=') ;
     }
 
     /**
@@ -121,9 +121,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.1.3
      * @access public
      */
-    public static function set_nocache( $reason = false )
+    public static function set_nocache($reason = false)
     {
-        LiteSpeed_Cache_Control::set_nocache( $reason ?: 'api' ) ;
+        LiteSpeed_Cache_Control::set_nocache($reason ?: 'api') ;
     }
 
     /**
@@ -132,9 +132,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.2
      * @access public
      */
-    public static function set_cacheable( $reason )
+    public static function set_cacheable($reason)
     {
-        LiteSpeed_Cache_Control::set_cacheable( $reason ) ;
+        LiteSpeed_Cache_Control::set_cacheable($reason) ;
     }
 
     /**
@@ -143,9 +143,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.2
      * @access public
      */
-    public static function set_force_cacheable( $reason )
+    public static function set_force_cacheable($reason)
     {
-        LiteSpeed_Cache_Control::force_cacheable( $reason ) ;
+        LiteSpeed_Cache_Control::force_cacheable($reason) ;
     }
 
     /**
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      */
     public static function set_use_frontpage_ttl()
     {
-        LiteSpeed_Cache_Control::set_custom_ttl( self::config( self::OPID_FRONT_PAGE_TTL ) ) ;
+        LiteSpeed_Cache_Control::set_custom_ttl(self::config(self::OPID_FRONT_PAGE_TTL)) ;
     }
 
     /**
@@ -176,9 +176,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.1.5
      * @access public
      */
-    public static function set_ttl( $val )
+    public static function set_ttl($val)
     {
-        LiteSpeed_Cache_Control::set_custom_ttl( $val ) ;
+        LiteSpeed_Cache_Control::set_custom_ttl($val) ;
     }
 
     /**
@@ -209,9 +209,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.6.3
      * @access public
      */
-    public static function add_private( $tags )
+    public static function add_private($tags)
     {
-        LiteSpeed_Cache_Tag::add_private( $tags ) ;
+        LiteSpeed_Cache_Tag::add_private($tags) ;
     }
 
     /**
@@ -220,9 +220,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.6
      * @access public
      */
-    public static function hook_vary_add( $hook )
+    public static function hook_vary_add($hook)
     {
-        add_action( 'litespeed_vary_add', $hook ) ;
+        add_action('litespeed_vary_add', $hook) ;
     }
 
     /**
@@ -232,15 +232,15 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since  2.7.1 Changed to filter hook instead of `LiteSpeed_Cache_Vary::add()`
      * @access public
      */
-    public static function vary_add( $vary, $priority = 10 )
+    public static function vary_add($vary, $priority = 10)
     {
-        add_filter( 'litespeed_vary_cookies', function( $cookies ) use( $vary ) {
-            if ( ! is_array( $vary ) ) {
+        add_filter('litespeed_vary_cookies', function($cookies) use($vary) {
+            if (! is_array($vary)) {
                 $vary = array( $vary ) ;
             }
-            $cookies = array_merge( $cookies, $vary ) ;
+            $cookies = array_merge($cookies, $vary) ;
             return $cookies ;
-        }, $priority ) ;
+        }, $priority) ;
     }
 
     /**
@@ -249,9 +249,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.7.1
      * @access public
      */
-    public static function filter_vary_cookies( $hook, $priority = 10 )
+    public static function filter_vary_cookies($hook, $priority = 10)
     {
-        add_filter( 'litespeed_vary_cookies', $hook, $priority ) ;
+        add_filter('litespeed_vary_cookies', $hook, $priority) ;
     }
 
     /**
@@ -262,12 +262,12 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.6
      * @access public
      */
-    public static function vary( $k, $v, $default = null )
+    public static function vary($k, $v, $default = null)
     {
-        if ( $v === $default ) {
+        if ($v === $default) {
             return ;
         }
-        LiteSpeed_Cache_Vary::append( $k, $v ) ;
+        LiteSpeed_Cache_Vary::append($k, $v) ;
     }
 
     /**
@@ -276,9 +276,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.7.2
      * @access public
      */
-    public static function hook_vary_finalize( $hook )
+    public static function hook_vary_finalize($hook)
     {
-        add_filter( 'litespeed_vary', $hook ) ;
+        add_filter('litespeed_vary', $hook) ;
     }
 
     /**
@@ -301,9 +301,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since  2.7.1 This didn't work in 2.7- due to used add_action not filter
      * @access public
      */
-    public static function hook_vary( $hook )
+    public static function hook_vary($hook)
     {
-        add_filter( 'litespeed_cache_api_vary', $hook ) ;
+        add_filter('litespeed_cache_api_vary', $hook) ;
     }
 
     /**
@@ -325,7 +325,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      */
     public static function purge_private_all()
     {
-        LiteSpeed_Cache_Purge::add_private( '*' ) ;
+        LiteSpeed_Cache_Purge::add_private('*') ;
     }
 
     /**
@@ -334,9 +334,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.6.3
      * @access public
      */
-    public static function purge_private( $tags )
+    public static function purge_private($tags)
     {
-        LiteSpeed_Cache_Purge::add_private( $tags ) ;
+        LiteSpeed_Cache_Purge::add_private($tags) ;
     }
 
     /**
@@ -346,9 +346,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @access public
      * @param  int $pid The ID of a post
      */
-    public static function purge_post( $pid )
+    public static function purge_post($pid)
     {
-        LiteSpeed_Cache_Purge::purge_post( $pid ) ;
+        LiteSpeed_Cache_Purge::purge_post($pid) ;
     }
 
     /**
@@ -370,9 +370,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @param  string $id
      * @param  boolean $return   Return the html or echo it
      */
-    public static function build_switch( $id, $checked = null, $return = false )
+    public static function build_switch($id, $checked = null, $return = false)
     {
-        return LiteSpeed_Cache_Admin_Display::get_instance()->build_switch( $id, $checked, $return ) ;
+        return LiteSpeed_Cache_Admin_Display::get_instance()->build_switch($id, $checked, $return) ;
     }
 
     /**
@@ -384,9 +384,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @param string $id The ID of the option
      * @return bool Filtered value
      */
-    public static function parse_onoff( $input, $id )
+    public static function parse_onoff($input, $id)
     {
-        return LiteSpeed_Cache_Admin_Settings::parse_onoff( $input, $id ) ;
+        return LiteSpeed_Cache_Admin_Settings::parse_onoff($input, $id) ;
     }
 
 
@@ -518,12 +518,12 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @access public
      * @param string $control Cache control tag
      */
-    public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+    public static function esi_url($block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false)
     {
-        if ( $control === 'default' ) {
+        if ($control === 'default') {
             $control = 'private,no-vary' ;
         }
-        return LiteSpeed_Cache_ESI::sub_esi_block( $block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_val ) ;
+        return LiteSpeed_Cache_ESI::sub_esi_block($block_id, $wrapper, $params, $control, $silence, $preserved, $svar, $inline_val) ;
     }
 
     /**
@@ -532,14 +532,14 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 2.6
      * @access public
      */
-    public static function nonce( $action = -1, $defence_for_html_filter = true )
+    public static function nonce($action = -1, $defence_for_html_filter = true)
     {
-        if ( ! self::esi_enabled() ) {
-            return wp_create_nonce( $action ) ;
+        if (! self::esi_enabled()) {
+            return wp_create_nonce($action) ;
         }
 
         // Replace it to ESI
-        return self::esi_url( 'lscwp_nonce_esi', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true ) ;
+        return self::esi_url('lscwp_nonce_esi', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true) ;
     }
 
     /**
@@ -548,9 +548,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.1.3
      * @access public
      */
-    public static function debug( $info, $backtrace_limit = false )
+    public static function debug($info, $backtrace_limit = false)
     {
-        LiteSpeed_Cache_Log::debug( $info, $backtrace_limit ) ;
+        LiteSpeed_Cache_Log::debug($info, $backtrace_limit) ;
     }
 
     /**
@@ -559,9 +559,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.6.6.1
      * @access public
      */
-    public static function debug2( $info, $backtrace_limit = false )
+    public static function debug2($info, $backtrace_limit = false)
     {
-        LiteSpeed_Cache_Log::debug2( $info, $backtrace_limit ) ;
+        LiteSpeed_Cache_Log::debug2($info, $backtrace_limit) ;
     }
 
     /**
@@ -583,7 +583,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      */
     public static function cache_enabled()
     {
-        return defined( 'LITESPEED_ON' ) ;
+        return defined('LITESPEED_ON') ;
     }
 
     /**
@@ -614,7 +614,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
      * @since 1.6.6
      * @access public
      */
-    public static function hook_init( $hook )
+    public static function hook_init($hook)
     {
         add_action('litespeed_init', $hook) ;
     }

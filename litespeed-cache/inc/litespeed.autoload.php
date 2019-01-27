@@ -9,11 +9,11 @@
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
 
-if ( ! defined('WPINC') ) {
+if (! defined('WPINC')) {
     die ;
 }
 
-if ( !function_exists('_litespeed_autoload') ) {
+if (!function_exists('_litespeed_autoload')) {
     function _litespeed_autoload($cls)
     {
         $class2fileArr = array(
@@ -74,7 +74,7 @@ if ( !function_exists('_litespeed_autoload') ) {
             'LiteSpeed_3rd_Lib\css_min\UriRewriter' => 'lib/css_min.url_rewritter.class.php',
             'LiteSpeed_3rd_Lib\js_min\JSMin' 		=> 'lib/js_min.class.php',
         );
-        if( array_key_exists($cls, $class2fileArr) && file_exists(LSCWP_DIR . $class2fileArr[$cls]) ) {
+        if(array_key_exists($cls, $class2fileArr) && file_exists(LSCWP_DIR . $class2fileArr[$cls])) {
             require_once LSCWP_DIR . $class2fileArr[$cls];
         }
     }
@@ -87,7 +87,7 @@ spl_autoload_register('_litespeed_autoload');
  *
  * @since  1.2.2
  */
-if ( !function_exists('litespeed_load_vendor') ) {
+if (!function_exists('litespeed_load_vendor')) {
     function litespeed_load_vendor()
     {
         require_once LSCWP_DIR.'lib/vendor/autoload.php';

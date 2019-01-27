@@ -9,7 +9,7 @@
  * @subpackage	LiteSpeed_Cache/thirdparty
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 
@@ -33,9 +33,9 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
      */
     public static function detect()
     {
-        if ( defined('WOOCOMMERCE_VERSION') && isset($GLOBALS['woocommerce-aelia-currencyswitcher']) && is_object($GLOBALS['woocommerce-aelia-currencyswitcher']) ) {
+        if (defined('WOOCOMMERCE_VERSION') && isset($GLOBALS['woocommerce-aelia-currencyswitcher']) && is_object($GLOBALS['woocommerce-aelia-currencyswitcher'])) {
             // Not all pages need to add vary, so need to use this API to set conditions
-            LiteSpeed_Cache_API::hook_vary_add( 'LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies' ) ;
+            LiteSpeed_Cache_API::hook_vary_add('LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher::check_cookies') ;
         }
     }
 
@@ -48,15 +48,15 @@ class LiteSpeed_Cache_ThirdParty_Aelia_CurrencySwitcher
      */
     public static function check_cookies()
     {
-        if ( LiteSpeed_Cache_API::not_cacheable() ) {
+        if (LiteSpeed_Cache_API::not_cacheable()) {
             return ;
         }
 
         // NOTE: is_cart and is_checkout should also be checked, but will be checked by woocommerce anyway.
-        if ( ! is_woocommerce() ) {
+        if (! is_woocommerce()) {
             return ;
         }
 
-        LiteSpeed_Cache_API::vary_add( self::$_cookies ) ;
+        LiteSpeed_Cache_API::vary_add(self::$_cookies) ;
     }
 }

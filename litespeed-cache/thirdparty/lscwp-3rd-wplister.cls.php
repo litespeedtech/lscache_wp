@@ -7,7 +7,7 @@
  * @subpackage    LiteSpeed_Cache/thirdparty
  * @author        LiteSpeed Technologies <info@litespeedtech.com>
  */
-if ( ! defined('ABSPATH') ) {
+if (! defined('ABSPATH')) {
     die() ;
 }
 
@@ -23,11 +23,11 @@ class LiteSpeed_Cache_ThirdParty_WPLister
      */
     public static function detect()
     {
-        if ( defined('WOOCOMMERCE_VERSION') && defined('WPLISTER_VERSION') ) {
+        if (defined('WOOCOMMERCE_VERSION') && defined('WPLISTER_VERSION')) {
             // User reported this will sync correctly.
-            add_action('wplister_revise_inventory_status', array( LiteSpeed_Cache_ThirdParty_WooCommerce::get_instance(), 'backend_purge' ) ) ;
+            add_action('wplister_revise_inventory_status', array( LiteSpeed_Cache_ThirdParty_WooCommerce::get_instance(), 'backend_purge' )) ;
             // Added as a safety measure for WPLister Pro only.
-            add_action('wplister_inventory_status_changed', array( LiteSpeed_Cache_ThirdParty_WooCommerce::get_instance(), 'backend_purge' ) ) ;
+            add_action('wplister_inventory_status_changed', array( LiteSpeed_Cache_ThirdParty_WooCommerce::get_instance(), 'backend_purge' )) ;
         }
     }
 

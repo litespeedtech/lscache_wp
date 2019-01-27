@@ -278,16 +278,16 @@ class LiteSpeed_Cache_Const
      * @since 1.8
      * @access public
      */
-    public function default_item( $item )
+    public function default_item($item)
     {
         /**
          * Allow terms default value
          * @since  2.7.1
          */
-        if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-            $default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
+        if (file_exists(LSCWP_DIR . 'data/const.default.ini')) {
+            $default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.default.ini', true) ;
 
-            if ( ! empty( $default_ini_cfg[ $item ] ) ) {
+            if (! empty($default_ini_cfg[ $item ])) {
 
                 /**
                  * Special handler for CDN_mapping
@@ -300,7 +300,7 @@ class LiteSpeed_Cache_Const
                  * format out:
                  * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
                  */
-                if ( $item == self::ITEM_CDN_MAPPING ) {
+                if ($item == self::ITEM_CDN_MAPPING) {
                     $mapping_fields = array(
                         self::ITEM_CDN_MAPPING_URL,
                         self::ITEM_CDN_MAPPING_INC_IMG,
@@ -309,10 +309,10 @@ class LiteSpeed_Cache_Const
                         self::ITEM_CDN_MAPPING_FILETYPE,
                     ) ;
                     $cdn_mapping = array() ;
-                    foreach ( $default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
+                    foreach ($default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v) {// $k is numeric
                         $this_row = array() ;
-                        foreach ( $mapping_fields as $v2 ) {
-                            $this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;
+                        foreach ($mapping_fields as $v2) {
+                            $this_row[ $v2 ] = ! empty($default_ini_cfg[ $item ][ $v2 ][ $k ]) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;
                         }
                         $cdn_mapping[ $k ] = $this_row ;
                     }
@@ -324,7 +324,7 @@ class LiteSpeed_Cache_Const
             }
         }
 
-        switch ( $item ) {
+        switch ($item) {
             case self::ITEM_OBJECT_GLOBAL_GROUPS :
                 return "users\nuserlogins\nusermeta\nuser_meta\nsite-transient\nsite-options\nsite-lookup\nblog-lookup\nblog-details\nrss\nglobal-posts\nblog-id-cache" ;
 
@@ -421,7 +421,7 @@ class LiteSpeed_Cache_Const
         sort($default_purge_options) ;
 
         //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
-        if ( is_multisite() ) {
+        if (is_multisite()) {
             $default_radio = 2 ;
         }
         else {
@@ -562,27 +562,27 @@ class LiteSpeed_Cache_Const
             self::CRWL_CRON_ACTIVE => false,
         ) ;
 
-        if ( LSWCP_ESI_SUPPORT ) {
+        if (LSWCP_ESI_SUPPORT) {
             $default_options[self::OPID_ESI_ENABLE] = false ;
             $default_options[self::OPID_ESI_CACHE_ADMBAR] = true ;
             $default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
         }
 
         // Load default.ini
-        if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-            $default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
-            foreach ( $default_options as $k => $v ) {
-                if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
+        if (file_exists(LSCWP_DIR . 'data/const.default.ini')) {
+            $default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.default.ini', true) ;
+            foreach ($default_options as $k => $v) {
+                if (! array_key_exists($k, $default_ini_cfg)) {
                     continue ;
                 }
 
                 // Parse value in ini file
                 $ini_v = $default_ini_cfg[ $k ] ;
-                if ( is_bool( $v ) ) { // Keep value type constantly
+                if (is_bool($v)) { // Keep value type constantly
                     $ini_v = (bool) $default_ini_cfg[ $k ] ;
                 }
 
-                if ( $ini_v == $v ) {
+                if ($ini_v == $v) {
                     continue ;
                 }
 
@@ -593,12 +593,12 @@ class LiteSpeed_Cache_Const
 
         }
 
-        if ( ! $include_thirdparty ) {
+        if (! $include_thirdparty) {
             return $default_options ;
         }
 
         $tp_options = $this->get_thirdparty_options($default_options) ;
-        if ( ! isset($tp_options) || ! is_array($tp_options) ) {
+        if (! isset($tp_options) || ! is_array($tp_options)) {
             return $default_options ;
         }
         return array_merge($default_options, $tp_options) ;
@@ -628,8 +628,8 @@ class LiteSpeed_Cache_Const
             'LSCACHE_ADV_CACHE',
         ) ;
         $server_vars = array() ;
-        foreach ( $consts as $v ) {
-            $server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
+        foreach ($consts as $v) {
+            $server_vars[ $v ] = defined($v) ? constant($v) : NULL ;
         }
 
         return $server_vars ;
@@ -647,10 +647,10 @@ class LiteSpeed_Cache_Const
     public function get_thirdparty_options($options = null)
     {
         $tp_options = apply_filters('litespeed_cache_get_options', array()) ;
-        if ( empty($tp_options) ) {
+        if (empty($tp_options)) {
             return false ;
         }
-        if ( ! isset($options) ) {
+        if (! isset($options)) {
             $options = $this->get_default_options(false) ;
         }
         return array_diff_key($tp_options, $options) ;
