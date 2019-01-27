@@ -334,7 +334,7 @@ class LiteSpeed_Cache_Object
 			}
 			else {
 				// error_log( 'Object: new memcached!' ) ;
-				$this->_conn = new Memcached ;
+				$this->_conn = new Memcached() ;
 			}
 
 			$this->_conn->addServer( $this->_cfg_host, (int) $this->_cfg_port ) ;
