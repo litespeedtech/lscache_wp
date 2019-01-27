@@ -40,7 +40,7 @@ if ( ! function_exists('http_build_url') ) {
 	// @param   array           If set, it will be filled with the parts of the composed url like parse_url() would return
 	function http_build_url($url, $parts = array(), $flags = HTTP_URL_REPLACE, &$new_url = false)
 	{
-		$keys = array('user','pass','port','path','query','fragment');
+		$keys = array('user', 'pass', 'port', 'path', 'query', 'fragment');
 
 		// HTTP_URL_STRIP_ALL becomes all the HTTP_URL_STRIP_Xs
 		if ( $flags & HTTP_URL_STRIP_ALL ) {

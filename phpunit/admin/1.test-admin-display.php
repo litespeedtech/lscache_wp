@@ -114,7 +114,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 */
 	public function test_build_notice()
 	{
-		$parameters = array('Yellow','Hi this is a test message');
+		$parameters = array('Yellow', 'Hi this is a test message');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_notice', $parameters);
 		$bool = self::isString($msg);
       	$this->assertTrue($bool);		
@@ -127,7 +127,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 */
 	public function test_build_tip()
 	{
-		$parameters = array('This is tooltip message','','','');
+		$parameters = array('This is tooltip message', '', '', '');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_tip', $parameters);
 		$bool = self::isString($msg);
       	$this->assertTrue($bool);		
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 */
 	public function test_build_button()
 	{
-		$parameters = array('','Button Text','','');
+		$parameters = array('', 'Button Text', '', '');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_button', $parameters);
 		$bool = self::isString($msg);
       	$this->assertTrue($bool);		
@@ -787,7 +787,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 */
 	public function test_input_field_collapsible()
 	{
-		$parameters = array('header'=>'','desc'=>'', 'example'=>'');
+		$parameters = array('header'=>'', 'desc'=>'', 'example'=>'');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_collapsible', $parameters);
 		$bool = self::isString($msg);
       	$this->assertTrue($bool);		
