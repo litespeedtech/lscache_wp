@@ -80,7 +80,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * @param $template unused
 	 * @return string The html for future callbacks to filter.
 	 */
-	public static function sub_add_to_wishlist( $template )
+	public static function sub_add_to_wishlist($template)
 	{
 		global $post ;
 		$params = array(

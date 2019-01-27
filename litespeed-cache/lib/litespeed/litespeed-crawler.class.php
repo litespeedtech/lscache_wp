@@ -51,7 +51,7 @@ class Litespeed_Crawler
 	 * @since  2.8
 	 * @access public
 	 */
-	public function set_ua( $ua )
+	public function set_ua($ua)
 	{
 		$this->_ua = $ua ;
 	}
@@ -62,7 +62,7 @@ class Litespeed_Crawler
 	 * @since  2.0
 	 * @access public
 	 */
-	public function set_http2( $is_enabled )
+	public function set_http2($is_enabled)
 	{
 		$this->_http2 = $is_enabled ;
 	}
@@ -73,7 +73,7 @@ class Litespeed_Crawler
 	 * @since  1.9.1
 	 * @access public
 	 */
-	public function set_headers( $headers )
+	public function set_headers($headers)
 	{
 		$this->_curl_headers = $headers ;
 	}
@@ -84,7 +84,7 @@ class Litespeed_Crawler
 	 * @since  1.9.1
 	 * @access public
 	 */
-	public function set_cookies( $cookies )
+	public function set_cookies($cookies)
 	{
 		$this->_cookies = $cookies ;
 	}
@@ -269,7 +269,7 @@ class Litespeed_Crawler
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _status_ok_and_cached( $headers )
+	private function _status_ok_and_cached($headers)
 	{
 		if ( stripos( $headers, 'X-Litespeed-Cache-Control: no-cache' ) !== false ) {
 			return false ;

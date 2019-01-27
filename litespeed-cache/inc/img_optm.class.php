@@ -93,7 +93,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6.5
 	 * @access private
 	 */
-	private function _sync_data( $try_level_up = false )
+	private function _sync_data($try_level_up = false)
 	{
 		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_MEDIA_SYNC_DATA, false, true ) ;
 
@@ -315,7 +315,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, srcpath_md5, src_md5, src_filesize' )
+	private function _insert_img_optm($data, $fields = 'post_id, optm_status, src, srcpath_md5, src_md5, src_filesize')
 	{
 		if ( empty( $data ) ) {
 			return ;
@@ -340,7 +340,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _select_img_by_root_srcpath( $srcpath_md5_to_search )
+	private function _select_img_by_root_srcpath($srcpath_md5_to_search)
 	{
 		global $wpdb ;
 
@@ -371,7 +371,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 2.1.1
 	 * @access private
 	 */
-	private function _mark_wrong_meta_src( $pid )
+	private function _mark_wrong_meta_src($pid)
 	{
 		$data = array(
 			$pid,
@@ -541,10 +541,10 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 2.0
 	 * @access private
 	 */
-	private function _chunk_placeholder( $data, $division )
+	private function _chunk_placeholder($data, $division)
 	{
 		$q = implode( ',', array_map(
-			function( $el ) { return '(' . implode( ',', $el ) . ')' ; },
+			function ($el) { return '(' . implode( ',', $el ) . ')' ; },
 			array_chunk( array_fill( 0, count( $data ), '%s' ), $division )
 		) ) ;
 
@@ -580,7 +580,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6
 	 * @access private
 	 */
-	private function _img_queue( $meta_value, $ori_file = false )
+	private function _img_queue($meta_value, $ori_file = false)
 	{
 		if ( empty( $meta_value[ 'file' ] ) || empty( $meta_value[ 'width' ] ) || empty( $meta_value[ 'height' ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value ) ;
@@ -968,7 +968,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6
 	 * @access private
 	 */
-	private function _pull_optimized_img( $manual = false )
+	private function _pull_optimized_img($manual = false)
 	{
 		if ( $this->cron_running() ) {
 			$msg = '[Img_Optm] fetch cron is running' ;
@@ -1252,7 +1252,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6.7
 	 * @access private
 	 */
-	private function _parse_wp_meta_value( $v )
+	private function _parse_wp_meta_value($v)
 	{
 		if ( ! $v->meta_value ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to no meta_value: pid ' . $v->post_id ) ;
@@ -1608,7 +1608,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6.5
 	 * @access private
 	 */
-	private function _update_credit( $credit )
+	private function _update_credit($credit)
 	{
 		$summary = get_option( self::DB_IMG_OPTM_SUMMARY, array() ) ;
 
@@ -1742,7 +1742,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public function summary_info( $field = false )
+	public function summary_info($field = false)
 	{
 		$optm_summary = get_option( self::DB_IMG_OPTM_SUMMARY, array() ) ;
 
@@ -1840,7 +1840,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function cron_running( $bool_res = true )
+	public function cron_running($bool_res = true)
 	{
 		$last_run = get_option( self::ITEM_IMG_OPTM_CRON_RUN ) ;
 
@@ -1859,7 +1859,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6.2
 	 * @access private
 	 */
-	private function _update_cron_running( $done = false )
+	private function _update_cron_running($done = false)
 	{
 		$ts = time() ;
 
@@ -1885,7 +1885,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since  1.6.2
 	 * @access private
 	 */
-	private function _batch_switch( $type )
+	private function _batch_switch($type)
 	{
 		global $wpdb ;
 		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
@@ -1936,7 +1936,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 1.6.2
 	 * @access private
 	 */
-	private function _switch_optm_file( $type )
+	private function _switch_optm_file($type)
 	{
 		$pid = substr( $type, 4 ) ;
 		$switch_type = substr( $type, 0, 4 ) ;
@@ -2000,7 +2000,7 @@ class LiteSpeed_Cache_Img_Optm
 	 * @since 2.4.2
 	 * @access public
 	 */
-	public function reset_row( $post_id )
+	public function reset_row($post_id)
 	{
 		if ( ! $post_id ) {
 			return ;

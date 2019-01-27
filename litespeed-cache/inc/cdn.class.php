@@ -167,7 +167,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _append_cdn_mapping( $filetype, $url )
+	private function _append_cdn_mapping($filetype, $url)
 	{
 		// If filetype to url is one to many, make url be an array
 		if ( empty( $this->_cfg_cdn_mapping[ $filetype ] ) ) {
@@ -210,7 +210,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.6.2.1
 	 * @return bool true if included in CDN
 	 */
-	public static function inc_type( $type )
+	public static function inc_type($type)
 	{
 		$instance = self::get_instance() ;
 
@@ -233,7 +233,7 @@ class LiteSpeed_Cache_CDN
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public static function finalize( $content )
+	public static function finalize($content)
 	{
 		$instance = self::get_instance() ;
 		$instance->content = $content ;
@@ -370,7 +370,7 @@ class LiteSpeed_Cache_CDN
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
-	public function attach_img_src( $img )
+	public function attach_img_src($img)
 	{
 		if ( $img && $url = $this->rewrite( $img[ 0 ], LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 			$img[ 0 ] = $url ;
@@ -384,7 +384,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_img( $url )
+	public function url_img($url)
 	{
 		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ) ) {
 			$url = $url2 ;
@@ -398,7 +398,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_css( $url )
+	public function url_css($url)
 	{
 		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ) ) {
 			$url = $url2 ;
@@ -412,7 +412,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.7
 	 * @access public
 	 */
-	public function url_js( $url )
+	public function url_js($url)
 	{
 		if ( $url && $url2 = $this->rewrite( $url, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ) ) {
 			$url = $url2 ;
@@ -429,7 +429,7 @@ class LiteSpeed_Cache_CDN
 	 * @param  array $srcs
 	 * @return array
 	 */
-	public function srcset( $srcs )
+	public function srcset($srcs)
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
@@ -450,7 +450,7 @@ class LiteSpeed_Cache_CDN
 	 * @param  string $url
 	 * @return string        Replaced URL
 	 */
-	public function rewrite( $url, $mapping_kind, $postfix = false )
+	public function rewrite($url, $mapping_kind, $postfix = false)
 	{
 		LiteSpeed_Cache_Log::debug2( '[CDN] rewrite ' . $url ) ;
 		$url_parsed = parse_url( $url ) ;
@@ -533,7 +533,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  2.1
 	 * @access private
 	 */
-	private function _is_ori_url( $url )
+	private function _is_ori_url($url)
 	{
 		$url_parsed = parse_url( $url ) ;
 
@@ -562,7 +562,7 @@ class LiteSpeed_Cache_CDN
 	 * @since  1.2.3
 	 *
 	 */
-	public static function internal( $host )
+	public static function internal($host)
 	{
 		if ( defined( self::BYPASS ) ) {
 			return false ;

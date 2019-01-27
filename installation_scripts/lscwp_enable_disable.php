@@ -11,7 +11,7 @@ $WP_DIR = $argv[2] ;
 /*
 * If plugin is in cache list, echo its name and current status.
 */
-function cachedetect($plugin,$value){
+function cachedetect($plugin,$value) {
 
 $cache_list = array(
 "LiteSpeed Cache",

@@ -217,7 +217,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function get( $action, $data = array(), $server = false )
+	public static function get($action, $data = array(), $server = false)
 	{
 		$instance = self::get_instance() ;
 
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
+	public static function post($action, $data = false, $server = false, $no_hash = false, $time_out = false)
 	{
 		$instance = self::get_instance() ;
 
@@ -362,7 +362,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  2.9
 	 * @access private
 	 */
-	private function _get( $action, $data = false, $server = false )
+	private function _get($action, $data = false, $server = false)
 	{
 
 		if ( $server == false ) {
@@ -402,7 +402,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @access private
 	 * @return  string | array Must return an error msg string or json array
 	 */
-	private function _post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
+	private function _post($action, $data = false, $server = false, $no_hash = false, $time_out = false)
 	{
 		$hash = 'no_hash' ;
 		if ( ! $no_hash ) {
@@ -518,7 +518,7 @@ class LiteSpeed_Cache_Admin_API
 	 * @since  1.6.7 Self clean the parameter
 	 * @access private
 	 */
-	private function _parse_link( &$json )
+	private function _parse_link(&$json)
 	{
 		$msg = '' ;
 

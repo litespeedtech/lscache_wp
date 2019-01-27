@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Crawler
 	 * @access public
 	 * @param  array $list The url list needs to be appended
 	 */
-	public function append_blacklist( $list )
+	public function append_blacklist($list)
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler: append blacklist ' . count( $list ) ) ;
 
@@ -512,7 +512,7 @@ class LiteSpeed_Cache_Crawler
 	 * @since    1.9.1
 	 * @access   public
 	 */
-	public function list_crawlers( $count_only = false )
+	public function list_crawlers($count_only = false)
 	{
 		/**
 		 * Data structure:
@@ -588,7 +588,7 @@ class LiteSpeed_Cache_Crawler
 	 * @since 2.8
 	 * @access private
 	 */
-	private function _recursive_build_crawler( $crawler_factors, $group = array(), $i = 0 )
+	private function _recursive_build_crawler($crawler_factors, $group = array(), $i = 0)
 	{
 		$current_factor = array_keys( $crawler_factors ) ;
 		$current_factor = $current_factor[ $i ] ;

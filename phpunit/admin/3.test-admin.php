@@ -30,7 +30,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
     /**
 	 * Function for configurations
 	 */
-    public static function get_instance(){
+    public static function get_instance() {
     	$plugin_name = "litespeed-cache";
 		$version = "v1.0.14.1";
 		$instance = new LiteSpeed_Cache_Admin($plugin_name, $version);

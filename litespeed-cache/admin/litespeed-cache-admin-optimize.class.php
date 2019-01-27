@@ -25,7 +25,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * @param  string $type The type to proceed
 	 * @return  string The final URL
 	 */
-	public static function generate_url( $type )
+	public static function generate_url($type)
 	{
 		$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $type ) ;
 		return $url ;
@@ -70,7 +70,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * @param  bool $ignore_multisite If ignore multisite check
 	 * @return  int The rows that will be affected
 	 */
-	public static function db_count( $type, $ignore_multisite = false )
+	public static function db_count($type, $ignore_multisite = false)
 	{
 		if ( $type === 'all' ) {
 			$num = 0 ;
@@ -137,7 +137,7 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * @access public
 	 * @param  string $type The type to clean
 	 */
-	public static function db_clean( $type )
+	public static function db_clean($type)
 	{
 		if ( $type === 'all' ) {
 			foreach ( self::$_types as $val ) {

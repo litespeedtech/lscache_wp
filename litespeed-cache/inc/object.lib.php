@@ -26,7 +26,7 @@ function wp_cache_init()
  *
  * @since 1.8
  */
-function wp_cache_get( $key, $group = '', $force = false, &$found = null )
+function wp_cache_get($key, $group = '', $force = false, &$found = null)
 {
 	global $wp_object_cache ;
 
@@ -38,7 +38,7 @@ function wp_cache_get( $key, $group = '', $force = false, &$found = null )
  *
  * @since 1.8
  */
-function wp_cache_set( $key, $data, $group = '', $expire = 0 )
+function wp_cache_set($key, $data, $group = '', $expire = 0)
 {
 	global $wp_object_cache ;
 
@@ -50,7 +50,7 @@ function wp_cache_set( $key, $data, $group = '', $expire = 0 )
  *
  * @since 1.8
  */
-function wp_cache_add( $key, $data, $group = '', $expire = 0 )
+function wp_cache_add($key, $data, $group = '', $expire = 0)
 {
 	global $wp_object_cache ;
 
@@ -62,7 +62,7 @@ function wp_cache_add( $key, $data, $group = '', $expire = 0 )
  *
  * @since 1.8
  */
-function wp_cache_replace( $key, $data, $group = '', $expire = 0 )
+function wp_cache_replace($key, $data, $group = '', $expire = 0)
 {
 	global $wp_object_cache ;
 
@@ -74,7 +74,7 @@ function wp_cache_replace( $key, $data, $group = '', $expire = 0 )
  *
  * @since 1.8
  */
-function wp_cache_incr( $key, $offset = 1, $group = '' )
+function wp_cache_incr($key, $offset = 1, $group = '')
 {
 	global $wp_object_cache ;
 
@@ -86,7 +86,7 @@ function wp_cache_incr( $key, $offset = 1, $group = '' )
  *
  * @since 1.8
  */
-function wp_cache_decr( $key, $offset = 1, $group = '' )
+function wp_cache_decr($key, $offset = 1, $group = '')
 {
 	global $wp_object_cache ;
 
@@ -98,7 +98,7 @@ function wp_cache_decr( $key, $offset = 1, $group = '' )
  *
  * @since 1.8
  */
-function wp_cache_delete( $key, $group = '' )
+function wp_cache_delete($key, $group = '')
 {
 	global $wp_object_cache ;
 
@@ -122,7 +122,7 @@ function wp_cache_flush()
  *
  * @since 1.8
  */
-function wp_cache_add_global_groups( $groups )
+function wp_cache_add_global_groups($groups)
 {
 	global $wp_object_cache ;
 
@@ -134,7 +134,7 @@ function wp_cache_add_global_groups( $groups )
  *
  * @since 1.8
  */
-function wp_cache_add_non_persistent_groups( $groups )
+function wp_cache_add_non_persistent_groups($groups)
 {
 	global $wp_object_cache ;
 
@@ -153,7 +153,7 @@ function wp_cache_add_non_persistent_groups( $groups )
  *
  * @param int $blog_id Site ID.
  */
-function wp_cache_switch_to_blog( $blog_id ) {
+function wp_cache_switch_to_blog($blog_id) {
 	global $wp_object_cache ;
 
 	$wp_object_cache->switch_to_blog( $blog_id ) ;
@@ -233,7 +233,7 @@ class WP_Object_Cache
 	 * @since  1.8
 	 * @access public
 	 */
-	public function get( $key, $group = 'default', $force = false, &$found = null )
+	public function get($key, $group = 'default', $force = false, &$found = null)
 	{
 		$final_key = $this->_key( $key, $group ) ;
 // error_log('');
@@ -297,7 +297,7 @@ class WP_Object_Cache
 	 * @since  1.8
 	 * @access public
 	 */
-	public function set( $key, $data, $group = 'default', $expire = 0 )
+	public function set($key, $data, $group = 'default', $expire = 0)
 	{
 		$final_key = $this->_key( $key, $group ) ;
 
@@ -330,7 +330,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add( $key, $data, $group = 'default', $expire = 0 )
+	public function add($key, $data, $group = 'default', $expire = 0)
 	{
 		if ( wp_suspend_cache_addition() ) {
 			return false ;
@@ -351,7 +351,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access public
 	 */
-	public function replace( $key, $data, $group = 'default', $expire = 0 )
+	public function replace($key, $data, $group = 'default', $expire = 0)
 	{
 		$final_key = $this->_key( $key, $group ) ;
 
@@ -368,7 +368,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access public
 	 */
-	public function incr_desr( $key, $offset = 1, $group = 'default', $incr = true )
+	public function incr_desr($key, $offset = 1, $group = 'default', $incr = true)
 	{
 		$cache_val = $this->get( $key, $group ) ;
 
@@ -404,7 +404,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access public
 	 */
-	public function delete( $key, $group = 'default' )
+	public function delete($key, $group = 'default')
 	{
 
 		$final_key = $this->_key( $key, $group ) ;
@@ -448,7 +448,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add_global_groups( $groups )
+	public function add_global_groups($groups)
 	{
 		$this->_object_cache->add_global_groups( $groups ) ;
 	}
@@ -459,7 +459,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add_non_persistent_groups( $groups )
+	public function add_non_persistent_groups($groups)
 	{
 		$this->_object_cache->add_non_persistent_groups( $groups ) ;
 	}
@@ -470,7 +470,7 @@ class WP_Object_Cache
 	 * @since 1.8
 	 * @access private
 	 */
-	private function _key( $key, $group = 'default' )
+	private function _key($key, $group = 'default')
 	{
 		$prefix = $this->_object_cache->is_global( $group ) ? '' : $this->blog_prefix ;
 
@@ -486,7 +486,7 @@ class WP_Object_Cache
 	 *
 	 * @param int $blog_id Blog ID.
 	 */
-	public function switch_to_blog( $blog_id ) {
+	public function switch_to_blog($blog_id) {
 		$blog_id = (int) $blog_id ;
 		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '' ;
 	}
@@ -498,7 +498,7 @@ class WP_Object_Cache
 	 * @access private
 	 * @see `wp-includes/option.php` function `get_transient`/`set_site_transient`
 	 */
-	private function _transient_get( $transient, $group )
+	private function _transient_get($transient, $group)
 	{
 		if ( $group == 'transient' ) {
 			/**** Ori WP func start ****/
@@ -553,7 +553,7 @@ class WP_Object_Cache
 	 * @access private
 	 * @see `wp-includes/option.php` function `set_transient`/`set_site_transient`
 	 */
-	private function _transient_set( $transient, $value, $group, $expiration )
+	private function _transient_set($transient, $value, $group, $expiration)
 	{
 		if ( $group == 'transient' ) {
 			/**** Ori WP func start ****/
@@ -615,7 +615,7 @@ class WP_Object_Cache
 	 * @access private
 	 * @see `wp-includes/option.php` function `delete_transient`/`delete_site_transient`
 	 */
-	private function _transient_del( $transient, $group )
+	private function _transient_del($transient, $group)
 	{
 		if ( $group == 'transient' ) {
 			/**** Ori WP func start ****/

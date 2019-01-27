@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Tag
 	 * @param $code
 	 * @return $eror_status
 	 */
-	public static function check_error_codes( $status_header, $code )
+	public static function check_error_codes($status_header, $code)
 	{
 		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
 		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_500_TTL ) ;
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Tag
 	 * @access   public
 	 * @param array $params [wordpress params for widget_posts_args]
 	 */
-	public static function add_widget_recent_posts( $params )
+	public static function add_widget_recent_posts($params)
 	{
 		self::add( self::TYPE_PAGES_WITH_RECENT_POSTS ) ;
 		return $params ;
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Tag
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add( $tags )
+	public static function add($tags)
 	{
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags ) ;
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Tag
 	 * @access public
 	 * @param mixed $tags A string or array of cache tags to add to the current list.
 	 */
-	public static function add_private( $tags )
+	public static function add_private($tags)
 	{
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags ) ;
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Tag
 	 * @param boolean $ori Return the original url or not
 	 * @return bool|string False on input error, hash otherwise.
 	 */
-	public static function get_uri_tag( $uri, $ori = false )
+	public static function get_uri_tag($uri, $ori = false)
 	{
 		$no_qs = strtok( $uri, '?' ) ;
 		if ( empty( $no_qs ) ) {
@@ -226,7 +226,7 @@ class LiteSpeed_Cache_Tag
 	 * @access public
 	 * @param boolean $ori Return the original url or not
 	 */
-	public static function build_uri_tag( $ori = false )
+	public static function build_uri_tag($ori = false)
 	{
 		return self::get_uri_tag( urldecode( $_SERVER['REQUEST_URI'] ), $ori ) ;
 	}

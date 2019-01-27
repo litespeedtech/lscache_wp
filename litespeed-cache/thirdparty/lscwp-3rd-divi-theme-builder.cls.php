@@ -33,7 +33,7 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 		self::$js_comment_box = false ;
 	}
 
-	public static function esi_comment_add_slash( $params )
+	public static function esi_comment_add_slash($params)
 	{
 		if ( self::$js_comment_box ) {
 			$params[ 'is_json' ] = 1 ;

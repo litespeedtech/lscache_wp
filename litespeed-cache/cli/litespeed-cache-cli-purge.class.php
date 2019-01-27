@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Cli_Purge
 	 *     $ wp lscache-purge all
 	 *
 	 */
-	public function all( $args, $assoc_args )
+	public function all($args, $assoc_args)
 	{
 		if ( is_multisite() ) {
 			$action = LiteSpeed_Cache::ACTION_QS_PURGE_EMPTYCACHE ;

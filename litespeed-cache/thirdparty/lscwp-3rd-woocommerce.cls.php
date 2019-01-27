@@ -145,7 +145,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function check_if_need_esi( $template )
+	public function check_if_need_esi($template)
 	{
 		if (  $this->vary_needed() ) {
 			LiteSpeed_Cache_API::debug( 'API: 3rd woo added ESI' ) ;
@@ -162,7 +162,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function vary_maintain( $vary )
+	public function vary_maintain($vary)
 	{
 		if ( $this->vary_needed() ) {
 			LiteSpeed_Cache_API::debug( 'API: 3rd woo added vary due to cart not empty' ) ;

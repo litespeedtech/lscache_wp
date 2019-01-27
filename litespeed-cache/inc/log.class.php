@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Log
 	 * @since 2.7
 	 * @access public
 	 */
-	public static function log_purge( $purge_header )
+	public static function log_purge($purge_header)
 	{
 		// Check if debug is ON
 		if ( ! defined( 'LSCWP_LOG' ) && ! defined( 'LSCWP_LOG_BYPASS_NOTADMIN' ) ) {
@@ -109,7 +109,7 @@ class LiteSpeed_Cache_Log
 	 * @since 1.0.12
 	 * @access private
 	 */
-	private function _init_request( $log_file = null )
+	private function _init_request($log_file = null)
 	{
 		if ( ! $log_file ) {
 			$log_file = self::$log_path ;
@@ -227,7 +227,7 @@ class LiteSpeed_Cache_Log
 	 * @param string $msg The log message to write.
 	 * @return string The formatted log message.
 	 */
-	private static function format_message( $msg )
+	private static function format_message($msg)
 	{
 		// If call here without calling get_enabled() first, improve compatibility
 		if ( ! defined( 'LSCWP_LOG_TAG' ) ) {
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Log
 	 * @param string $msg The debug message.
 	 * @param int|array $backtrace_limit Backtrace depth, Or the array to dump
 	 */
-	public static function debug( $msg, $backtrace_limit = false )
+	public static function debug($msg, $backtrace_limit = false)
 	{
 		if ( ! defined( 'LSCWP_LOG' ) ) {
 			return ;
@@ -293,7 +293,7 @@ class LiteSpeed_Cache_Log
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	public static function debug2( $msg, $backtrace_limit = false )
+	public static function debug2($msg, $backtrace_limit = false)
 	{
 		if ( ! defined( 'LSCWP_LOG_MORE' ) ) {
 			return ;
@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Log
 	 * @param string $msg The debug message.
 	 * @param int $backtrace_limit Backtrace depth.
 	 */
-	private static function push( $msg, $backtrace_limit = false )
+	private static function push($msg, $backtrace_limit = false)
 	{
 		// backtrace handler
 		if ( defined( 'LSCWP_LOG_MORE' ) && $backtrace_limit !== false ) {
@@ -324,7 +324,7 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 2.7
 	 */
-	private static function _backtrace_info( $backtrace_limit )
+	private static function _backtrace_info($backtrace_limit)
 	{
 		$msg = '' ;
 

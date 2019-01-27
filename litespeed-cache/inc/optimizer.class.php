@@ -34,7 +34,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  1.9
 	 * @access public
 	 */
-	public function html_min( $content )
+	public function html_min($content)
 	{
 		$options = array() ;
 		if ( $this->cfg_css_inline_minify ) {
@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @access public
 	 * @return string The final content
 	 */
-	public function serve( $filename, $concat_only )
+	public function serve($filename, $concat_only)
 	{
 		if ( ! is_array( $filename ) ) {
 			// Search filename in db for src URLs
@@ -146,7 +146,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  1.9
 	 * @access private
 	 */
-	private function _serve_css( $files, $concat_only = false )
+	private function _serve_css($files, $concat_only = false)
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
@@ -173,7 +173,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  1.9
 	 * @access private
 	 */
-	private function _serve_js( $files, $concat_only )
+	private function _serve_js($files, $concat_only)
 	{
 		$con = array() ;
 		foreach ( $files as $real_path ) {
@@ -198,7 +198,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  2.2.3
 	 * @access private
 	 */
-	public static function minify_css( $data )
+	public static function minify_css($data)
 	{
 		try {
 			$obj = new LiteSpeed_3rd_Lib\css_min\Minifier() ;
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  2.2.3
 	 * @access private
 	 */
-	public static function minify_js( $data, $js_type = '' )
+	public static function minify_js($data, $js_type = '')
 	{
 		// For inline JS optimize, need to check if it's js type
 		if ( $js_type ) {
@@ -245,7 +245,7 @@ class LiteSpeed_Cache_Optimizer
 	 *
 	 * @access private
 	 */
-	private function _null_minifier( $content )
+	private function _null_minifier($content)
 	{
 		$content = str_replace( "\r\n", "\n", $content ) ;
 
@@ -258,7 +258,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  1.9
 	 * @access private
 	 */
-	private function _is_min( $filename )
+	private function _is_min($filename)
 	{
 		$basename = basename( $filename ) ;
 		if ( preg_match( '|[-\.]min\.(?:[a-zA-Z]+)$|i', $basename ) ) {
@@ -275,7 +275,7 @@ class LiteSpeed_Cache_Optimizer
 	 * @since  1.9 Moved here from optiize.cls
 	 * @access private
 	 */
-	private function _remove_comment( $content, $type )
+	private function _remove_comment($content, $type)
 	{
 		$_from = array(
 			'|\/\*.*\*\/|U',

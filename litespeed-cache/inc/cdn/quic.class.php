@@ -22,7 +22,7 @@ class LiteSpeed_Cache_CDN_Quic
 	 *
 	 * @access public
 	 */
-	public static function sync_config( $options )
+	public static function sync_config($options)
 	{
 		if ( empty( $options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY ] ) ) {
 			return false ;
@@ -174,14 +174,14 @@ class LiteSpeed_Cache_CDN_Quic
 		exit ;
 	}
 
-	private function _tpl( $tpl, $_progress = false, $data = false )
+	private function _tpl($tpl, $_progress = false, $data = false)
 	{
 		require LSCWP_DIR . "admin/tpl/inc/modal.header.php" ;
 		require LSCWP_DIR . "admin/tpl/api/$tpl.php" ;
 		require LSCWP_DIR . "admin/tpl/inc/modal.footer.php" ;
 	}
 
-	private function _api( $uri, $data = false, $method = 'POST', $no_hash = false )
+	private function _api($uri, $data = false, $method = 'POST', $no_hash = false)
 	{
 		LiteSpeed_Cache_Log::debug( '[QUIC] _api call' ) ;
 

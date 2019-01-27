@@ -16,7 +16,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Handle exception
  */
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	function litespeed_exception_handler($errno, $errstr, $errfile, $errline)
 	{
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
 	}
@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8
 	 * @access private
 	 */
-	private function __construct( $cfg = false )
+	private function __construct($cfg = false)
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug2( '[Object] init' ) ;
 
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8.3
 	 * @access public
 	 */
-	public function store_transients( $group )
+	public function store_transients($group)
 	{
 		return $this->_cfg_transients && $this->_is_transients_group( $group ) ;
 	}
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8.3
 	 * @access private
 	 */
-	private function _is_transients_group( $group )
+	private function _is_transients_group($group)
 	{
 		return in_array( $group, array( 'transient', 'site-transient' ) ) ;
 	}
@@ -153,7 +153,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8
 	 * @access public
 	 */
-	public function update_file( $options )
+	public function update_file($options)
 	{
 		// Update data file
 		$data = "[object_cache]"
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Object
 	 * Force to connect with this setting
 	 * @return [type] [description]
 	 */
-	public function reconnect( $cfg )
+	public function reconnect($cfg)
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Reconnecting' ) ;
 		// error_log( 'Object: reconnect !' ) ;
@@ -414,7 +414,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8
 	 * @access public
 	 */
-	public function get( $key )
+	public function get($key)
 	{
 		if ( ! $this->_cfg_enabled ) {
 			return null ;
@@ -441,7 +441,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8
 	 * @access public
 	 */
-	public function set( $key, $data, $expire )
+	public function set($key, $data, $expire)
 	{
 		if ( ! $this->_cfg_enabled ) {
 			return null ;
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_Object
 	 * @since  1.8
 	 * @access public
 	 */
-	public function delete( $key )
+	public function delete($key)
 	{
 		if ( ! $this->_cfg_enabled ) {
 			return null ;
@@ -544,7 +544,7 @@ class LiteSpeed_Cache_Object
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add_global_groups( $groups )
+	public function add_global_groups($groups)
 	{
 		if ( ! is_array( $groups ) ) {
 			$groups = array( $groups ) ;
@@ -560,7 +560,7 @@ class LiteSpeed_Cache_Object
 	 * @since 1.8
 	 * @access public
 	 */
-	public function is_global( $group )
+	public function is_global($group)
 	{
 		return in_array( $group, $this->_global_groups ) ;
 	}
@@ -571,7 +571,7 @@ class LiteSpeed_Cache_Object
 	 * @since 1.8
 	 * @access public
 	 */
-	public function add_non_persistent_groups( $groups )
+	public function add_non_persistent_groups($groups)
 	{
 		if ( ! is_array( $groups ) ) {
 			$groups = array( $groups ) ;
@@ -587,7 +587,7 @@ class LiteSpeed_Cache_Object
 	 * @since 1.8
 	 * @access public
 	 */
-	public function is_non_persistent( $group )
+	public function is_non_persistent($group)
 	{
 		return in_array( $group, $this->_non_persistent_groups ) ;
 	}

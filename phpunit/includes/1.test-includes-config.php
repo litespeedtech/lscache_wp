@@ -30,7 +30,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
      /**
 	 * Function for instance
 	 */
-    public static function get_instance(){
+    public static function get_instance() {
 		$instance = new LiteSpeed_Cache_Config();
 		return $instance;
     }
@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
     /**
 	 * Function for configurations
 	 */
-    public static function converttoArray($object){
+    public static function converttoArray($object) {
     	
     	if(is_object($object)) $array = (array) $object;
     	return $array;

@@ -87,7 +87,7 @@ class LiteSpeed_Cache_ESI
 	 * @since 2.8
 	 * @access public
 	 */
-	public function shortcode( $atts )
+	public function shortcode($atts)
 	{
 		if ( empty( $atts[ 0 ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[ESI] ===shortcode wrong format', $atts ) ;
@@ -217,7 +217,7 @@ class LiteSpeed_Cache_ESI
 	 * @param bool $inline_val 	If show the current value for current request( this can avoid multiple esi requests in first time cache generating process ) -- Not used yet
 	 * @return bool|string    	False on error, the output otherwise.
 	 */
-	public static function sub_esi_block( $block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false )
+	public static function sub_esi_block($block_id, $wrapper, $params = array(), $control = 'private,no-vary', $silence = false, $preserved = false, $svar = false, $inline_val = false)
 	{
 		if ( empty($block_id) || ! is_array($params) || preg_match('/[^\w-]/', $block_id) ) {
 			return false ;
@@ -431,7 +431,7 @@ class LiteSpeed_Cache_ESI
 	 * @param array $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
-	public function sub_widget_block( array $instance, WP_Widget $widget, array $args )
+	public function sub_widget_block(array $instance, WP_Widget $widget, array $args)
 	{
 		$name = get_class( $widget ) ;
 		if ( ! isset( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
@@ -489,7 +489,7 @@ class LiteSpeed_Cache_ESI
 	 * @global $wp_widget_factory
 	 * @param array $params Input parameters needed to correctly display widget
 	 */
-	public function load_widget_block( $params )
+	public function load_widget_block($params)
 	{
 		global $wp_widget_factory ;
 		$widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
@@ -573,7 +573,7 @@ class LiteSpeed_Cache_ESI
 	 * @access public
 	 * @since 2.6
 	 */
-	public function load_nonce_block( $params )
+	public function load_nonce_block($params)
 	{
 		$action = $params[ 'action' ] ;
 
@@ -595,7 +595,7 @@ class LiteSpeed_Cache_ESI
 	 * @access public
 	 * @since 2.8
 	 */
-	public function load_esi_shortcode( $params )
+	public function load_esi_shortcode($params)
 	{
 		unset( $params[ self::PARAM_BLOCK_ID ] ) ;
 
@@ -637,7 +637,7 @@ class LiteSpeed_Cache_ESI
 	 * @param array $defaults The default comment form settings.
 	 * @return array The default comment form settings.
 	 */
-	public function register_comment_form_actions( $defaults )
+	public function register_comment_form_actions($defaults)
 	{
 		$this->esi_args = $defaults ;
 		echo LiteSpeed_Cache_GUI::clean_wrapper_begin() ;
@@ -657,7 +657,7 @@ class LiteSpeed_Cache_ESI
 	 * @param array $args The used comment form args.
 	 * @return unused.
 	 */
-	public function sub_comment_form_block( $unused, $args )
+	public function sub_comment_form_block($unused, $args)
 	{
 		if ( empty( $args ) || empty( $this->esi_args ) ) {
 			LiteSpeed_Cache_Log::debug( 'comment form args empty?' ) ;
@@ -712,7 +712,7 @@ class LiteSpeed_Cache_ESI
 	 * @since  2.6
 	 * @access public
 	 */
-	public static function finalize( $buffer )
+	public static function finalize($buffer)
 	{
 		$instance = self::get_instance() ;
 

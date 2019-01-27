@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Data
 	 * @since  2.0
 	 * @access private
 	 */
-	private function _get_data_structure( $tb )
+	private function _get_data_structure($tb)
 	{
 		return Litespeed_File::read( LSCWP_DIR . 'inc/data_structure/' . $tb . '.sql' ) ;
 	}
@@ -293,12 +293,12 @@ class LiteSpeed_Cache_Data
 	 * @since  1.3.1
 	 * @access public
 	 */
-	public static function optm_save_src( $filename, $src )
+	public static function optm_save_src($filename, $src)
 	{
 		$instance = self::get_instance() ;
 		return $instance->_optm_save_src( $filename, $src ) ;
 	}
-	private function _optm_save_src( $filename, $src )
+	private function _optm_save_src($filename, $src)
 	{
 		global $wpdb ;
 
@@ -321,12 +321,12 @@ class LiteSpeed_Cache_Data
 	 * @since  1.3.1
 	 * @access public
 	 */
-	public static function optm_hash2src( $filename )
+	public static function optm_hash2src($filename)
 	{
 		$instance = self::get_instance() ;
 		return $instance->_optm_hash2src( $filename ) ;
 	}
-	private function _optm_hash2src( $filename )
+	private function _optm_hash2src($filename)
 	{
 		global $wpdb ;
 

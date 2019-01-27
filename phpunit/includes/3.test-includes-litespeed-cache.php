@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Function for configurations
      */
-    public static function converttoArray($object){
+    public static function converttoArray($object) {
         
         if(is_object($object)) $array = (array) $object;
 

@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Const
 	 * @since 1.8
 	 * @access public
 	 */
-	public function default_item( $item )
+	public function default_item($item)
 	{
 		/**
 		 * Allow terms default value

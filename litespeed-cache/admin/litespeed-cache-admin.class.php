@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Admin
 	 * @param string $input The input string to clean.
 	 * @return string The cleaned up input.
 	 */
-	public static function cleanup_text( $input )
+	public static function cleanup_text($input)
 	{
 		if ( is_array( $input ) ) {
 			return array_map( 'LiteSpeed_Cache_Admin::cleanup_text', $input ) ;
@@ -256,7 +256,7 @@ class LiteSpeed_Cache_Admin
 	 * @access public
 	 * @global string $pagenow
 	 */
-	public static function redirect( $url = false )
+	public static function redirect($url = false)
 	{
 		global $pagenow ;
 		$qs = '' ;

@@ -77,7 +77,7 @@ class LiteSpeed_Cache_Vary
 		 * Don't change for REST call because they don't carry on user info usually
 		 * @since 1.6.7
 		 */
-		add_action( 'rest_api_init', function(){
+		add_action( 'rest_api_init', function () {
 			LiteSpeed_Cache_Log::debug( '[Vary] Rest API init disabled vary change' ) ;
 			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
 		} ) ;
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_Vary
 	 * @param array $comments The current comments to output
 	 * @return array The comments to output.
 	 */
-	public function check_commenter( $comments )
+	public function check_commenter($comments)
 	{
 		$pending = false ;
 		foreach ( $comments as $comment ) {
@@ -198,7 +198,7 @@ class LiteSpeed_Cache_Vary
 	 * @since 1.6.2 Removed static referral
 	 * @access public
 	 */
-	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false )
+	public function add_logged_in($logged_in_cookie = false, $expire = false, $expiration = false, $uid = false)
 	{
 		LiteSpeed_Cache_Log::debug( '[Vary] add_logged_in' ) ;
 
@@ -288,7 +288,7 @@ class LiteSpeed_Cache_Vary
 	 * @since  1.6.6.1 Add ran check to make it only run once ( No run multiple times due to login process doesn't have valid uid from router::get_uid )
 	 * @access private
 	 */
-	private function _update_default_vary( $uid = false, $expire = false )
+	private function _update_default_vary($uid = false, $expire = false)
 	{
 		// Make sure header output only run once
 		if ( ! defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
@@ -336,7 +336,7 @@ class LiteSpeed_Cache_Vary
 	 * @since 1.6.2
 	 * @access public
 	 */
-	public function finalize_default_vary( $uid = false )
+	public function finalize_default_vary($uid = false)
 	{
 		$vary = self::$_default_vary_val ;
 
@@ -422,7 +422,7 @@ class LiteSpeed_Cache_Vary
 	 * @access private
 	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
-	private function add_commenter( $from_redirect = false )
+	private function add_commenter($from_redirect = false)
 	{
 		// If the cookie is lost somehow, set it
 		if ( self::has_vary() !== 'commenter' ) {
@@ -460,7 +460,7 @@ class LiteSpeed_Cache_Vary
 	 * @access private
 	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
-	private static function _relative_path( $from_redirect = false )
+	private static function _relative_path($from_redirect = false)
 	{
 		$path = false ;
 		$tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL' ;
@@ -572,7 +572,7 @@ class LiteSpeed_Cache_Vary
 	 * @access public
 	 * @param mixed $vary A string or array of vary cookies to add to the current list.
 	 */
-	public static function add( $vary )
+	public static function add($vary)
 	{
 		if ( ! is_array( $vary ) ) {
 			$vary = array( $vary ) ;
@@ -589,7 +589,7 @@ class LiteSpeed_Cache_Vary
 	 * @since 2.6
 	 * @access public
 	 */
-	public static function append( $name, $val )
+	public static function append($name, $val)
 	{
 		self::$_default_vary_val[ $name ] = $val ;
 	}

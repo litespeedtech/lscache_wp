@@ -43,7 +43,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param array $input The configuration selected by the admin when clicking save.
 	 * @return array The updated configuration options.
 	 */
-	public function validate_plugin_settings( $input, $revert_options_to_input = false )
+	public function validate_plugin_settings($input, $revert_options_to_input = false)
 	{
 		// Revert options to initial input
 		if ( $revert_options_to_input ) {
@@ -209,7 +209,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @since 1.0.4
 	 * @access public
 	 */
-	public function validate_network_settings( $input, $revert_options_to_input = false )
+	public function validate_network_settings($input, $revert_options_to_input = false)
 	{
 		// Revert options to initial input
 		if ( $revert_options_to_input ) {
@@ -1083,7 +1083,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @access private
 	 * @param string $url The sitemap url
 	 */
-	private function _validate_custom_sitemap( $url )
+	private function _validate_custom_sitemap($url)
 	{
 		return LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $url, false ) ;
 	}
@@ -1211,7 +1211,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param string $location The location string.
 	 * @return string the updated location string.
 	 */
-	public static function widget_save_err( $location )
+	public static function widget_save_err($location)
 	{
 		return str_replace( '?message=0', '?error=0', $location ) ;
 	}
@@ -1228,7 +1228,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param WP_Widget $widget The widget
 	 * @return mixed Updated settings on success, false on error.
 	 */
-	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget )
+	public static function validate_widget_save($instance, $new_instance, $old_instance, $widget)
 	{
 		if ( empty( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
 			return $instance ;
@@ -1283,7 +1283,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param String $rule Input rewrite rule.
 	 * @return bool True for valid rules, false otherwise.
 	 */
-	private function _syntax_checker( $rule )
+	private function _syntax_checker($rule)
 	{
 		$escaped = str_replace( '@', '\@', $rule ) ;
 
@@ -1314,7 +1314,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param number $max Maximum number
 	 * @return bool True if valid, false otherwise.
 	 */
-	private function _check_ttl( $input, $id, $min = false, $max = null )
+	private function _check_ttl($input, $id, $min = false, $max = null)
 	{
 		$v = isset( $input[ $id ] ) ? (int) $input[ $id ] : 0 ;
 
@@ -1346,7 +1346,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param string $id The ID of the option
 	 * @return bool Filtered value
 	 */
-	public static function parse_onoff( $input, $id )
+	public static function parse_onoff($input, $id)
 	{
 		return isset( $input[ $id ] ) && self::is_checked( $input[ $id ] ) ;
 	}
@@ -1359,7 +1359,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param int $val The checkbox value
 	 * @return bool Filtered value
 	 */
-	public static function is_checked( $val )
+	public static function is_checked($val)
 	{
 		$val = intval( $val ) ;
 
@@ -1378,7 +1378,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param int $val The radio value
 	 * @return int Filtered value
 	 */
-	public static function is_checked_radio( $val )
+	public static function is_checked_radio($val)
 	{
 		$val = intval( $val ) ;
 
@@ -1399,7 +1399,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @since 2.2.1
 	 * @access private
 	 */
-	private function _save_item( $id, $sanitize_filter = false )
+	private function _save_item($id, $sanitize_filter = false)
 	{
 		$val = '' ;
 

@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since  2.6
 	 * @access public
 	 */
-	public function force_option( $k, $v )
+	public function force_option($k, $v)
 	{
 		if ( array_key_exists( $k, $this->options ) ) {
 			LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
@@ -118,7 +118,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since 2.1
 	 * @access private
 	 */
-	private function _define_adv_cache( $options )
+	private function _define_adv_cache($options)
 	{
 		if ( isset( $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
 			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
@@ -226,7 +226,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param string $id Configuration ID.
 	 * @return mixed Selected option if set, NULL if not.
 	 */
-	public function get_option( $id )
+	public function get_option($id)
 	{
 		if ( isset( $this->options[$id] ) ) {
 			return $this->options[$id] ;
@@ -247,7 +247,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param array $new_cfg The new settings to update, which will be update $this->options too.
 	 * @return array The result of update.
 	 */
-	public function update_options( $new_cfg = array() )
+	public function update_options($new_cfg = array())
 	{
 		if ( ! empty( $new_cfg ) ) {
 			$this->options = array_merge( $this->options, $new_cfg ) ;
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_vary_group( $role )
+	public function in_vary_group($role)
 	{
 		$group = 0 ;
 		if ( array_key_exists( $role, $this->vary_groups ) ) {
@@ -336,7 +336,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_exclude_optimization_roles( $role = null )
+	public function in_exclude_optimization_roles($role = null)
 	{
 		// Get user role
 		if ( $role === null ) {
@@ -358,7 +358,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
-	public function in_exclude_cache_roles( $role = null )
+	public function in_exclude_cache_roles($role = null)
 	{
 		// Get user role
 		if ( $role === null ) {
@@ -392,7 +392,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
 	 * @return boolean True if the post type should be purged, false otherwise.
 	 */
-	public function purge_by_post( $flag )
+	public function purge_by_post($flag)
 	{
 		return in_array( $flag, $this->purge_options ) ;
 	}
@@ -403,7 +403,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since 2.2.1
 	 * @access public
 	 */
-	public function get_item( $k, $return_string = false )
+	public function get_item($k, $return_string = false)
 	{
 		$val = get_option( $k ) ;
 		// Separately call default_item() to improve performance
@@ -660,7 +660,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @param boolean $enable True if enabling, false if disabling.
 	 * @return boolean True if the variable is the correct value, false if something went wrong.
 	 */
-	public static function wp_cache_var_setter( $enable )
+	public static function wp_cache_var_setter($enable)
 	{
 		if ( $enable ) {
 			if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
@@ -714,7 +714,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @access public
 	 * @param int $count The count of blogs active in multisite.
 	 */
-	public function plugin_activation( $count )
+	public function plugin_activation($count)
 	{
 
 

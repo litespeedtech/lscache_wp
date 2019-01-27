@@ -56,7 +56,7 @@ class LiteSpeed_Cache_Control
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function vary_add_role_exclude( $varys )
+	public function vary_add_role_exclude($varys)
 	{
 		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
 			return $varys ;
@@ -157,7 +157,7 @@ class LiteSpeed_Cache_Control
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_shared( $reason = false )
+	public static function set_shared($reason = false)
 	{
 		if ( self::is_shared() ) {
 			return ;
@@ -193,7 +193,7 @@ class LiteSpeed_Cache_Control
 	 * @since 1.7.1
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_public_forced( $reason = false )
+	public static function set_public_forced($reason = false)
 	{
 		if ( self::is_public_forced() ) {
 			return ;
@@ -228,7 +228,7 @@ class LiteSpeed_Cache_Control
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_private( $reason = false )
+	public static function set_private($reason = false)
 	{
 		if ( self::is_private() ) {
 			return ;
@@ -262,7 +262,7 @@ class LiteSpeed_Cache_Control
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function set_cacheable( $reason = false )
+	public static function set_cacheable($reason = false)
 	{
 		self::$_control |= self::BM_CACHEABLE ;
 
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Control
 	 * @access public
 	 * @since 2.2
 	 */
-	public static function force_cacheable( $reason = false )
+	public static function force_cacheable($reason = false)
 	{
 		self::$_control |= self::BM_FORCED_CACHEABLE ;
 
@@ -303,7 +303,7 @@ class LiteSpeed_Cache_Control
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
-	public static function set_nocache( $reason = false )
+	public static function set_nocache($reason = false)
 	{
 		self::$_control |= self::BM_NOTCACHEABLE ;
 
@@ -441,7 +441,7 @@ class LiteSpeed_Cache_Control
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public static function check_redirect( $location, $status )
+	public static function check_redirect($location, $status)
 	{
 		if ( ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ) { // dont check $status == '301' anymore
 			LiteSpeed_Cache_Log::debug( "[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ] ) ;
@@ -716,7 +716,7 @@ class LiteSpeed_Cache_Control
 	 * @param string $reason An explanation for why the page is not cacheable.
 	 * @return boolean Return false.
 	 */
-	private function _no_cache_for( $reason )
+	private function _no_cache_for($reason)
 	{
 		LiteSpeed_Cache_Log::debug('[Ctrl] X Cache_control off - ' . $reason) ;
 		return false ;
@@ -730,7 +730,7 @@ class LiteSpeed_Cache_Control
 	 * @param  array  $excludes QS excludes setting
 	 * @return boolean|string False if not excluded, otherwise the hit qs list
 	 */
-	private function _is_qs_excluded( $excludes )
+	private function _is_qs_excluded($excludes)
 	{
 		if ( ! empty( $_GET ) && $intersect = array_intersect( array_keys( $_GET ), $excludes ) ) {
 			return implode( ',', $intersect ) ;

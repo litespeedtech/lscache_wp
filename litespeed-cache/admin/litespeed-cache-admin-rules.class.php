@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $start_path The first directory level to search.
 	 * @return string The deepest path where .htaccess exists, False if not.
 	 */
-	private function htaccess_search( $start_path )
+	private function htaccess_search($start_path)
 	{
 		while ( ! file_exists( $start_path . '/.htaccess' ) ) {
 			if ( $start_path === '/' || ! $start_path ) {
@@ -483,7 +483,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access private
 	 * @return array Rules set
 	 */
-	private function _browser_cache_rules( $cfg )
+	private function _browser_cache_rules($cfg)
 	{
 		/**
 		 * Add ttl setting
@@ -577,7 +577,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array $cfg  The settings to be used for rewrite rule
 	 * @return array      Rules array
 	 */
-	private function _generate_rules( $cfg, $disable_lscache_detail_rules = false )
+	private function _generate_rules($cfg, $disable_lscache_detail_rules = false)
 	{
 		$new_rules = array() ;
 		$new_rules_nonls = array() ;
@@ -735,7 +735,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since  2.1.1
 	 * @access private
 	 */
-	private function _wrap_ls_module( $rules = array() )
+	private function _wrap_ls_module($rules = array())
 	{
 		return array_merge(
 			array( self::LS_MODULE_START ),
@@ -765,7 +765,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array  $rules
 	 * @return array        wrapped rules with module info
 	 */
-	private function _wrap_do_no_edit( $rules )
+	private function _wrap_do_no_edit($rules)
 	{
 		// When to clear rules, don't need DONOTEDIT msg
 		if ( $rules === false || ! is_array( $rules ) ) {
@@ -789,7 +789,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array $rules
 	 * @param  string $kind  which htaccess
 	 */
-	private function _insert_wrapper( $rules = array(), $kind = false, $marker = false )
+	private function _insert_wrapper($rules = array(), $kind = false, $marker = false)
 	{
 		if ( $kind === false ) {
 			$kind = 'frontend' ;
@@ -815,7 +815,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @access public
 	 * @param array $cfg The rules that need to be set.
 	 */
-	public function update( $cfg, $disable_lscache_detail_rules = false )
+	public function update($cfg, $disable_lscache_detail_rules = false)
 	{
 		if ( ! LiteSpeed_Cache_Admin_Rules::readable() ) {
 			return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
@@ -891,7 +891,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  string $kind Frontend or backend .htaccess file
 	 * @return bool|array       False if failed to read, rules array otherwise
 	 */
-	private function _extract_rules( $kind = 'frontend' )
+	private function _extract_rules($kind = 'frontend')
 	{
 		clearstatcache() ;
 		$path = $this->htaccess_path( $kind ) ;
@@ -913,7 +913,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array  $rules
 	 * @return string        final msg to output
 	 */
-	private function _rewrite_codes_msg( $file, $rules, $marker = false )
+	private function _rewrite_codes_msg($file, $rules, $marker = false)
 	{
 		return sprintf( __( '<p>Please add/replace the following codes into the beginning of %1$s:</p> %2$s' , 'litespeed-cache' ),
 				$file,
@@ -928,7 +928,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array  $rules
 	 * @return array        final rules data for htaccess
 	 */
-	private function _wrap_rules_with_marker( $rules, $marker = false )
+	private function _wrap_rules_with_marker($rules, $marker = false)
 	{
 		// Default marker is LiteSpeed marker `LSCACHE`
 		if ( $marker === false ) {

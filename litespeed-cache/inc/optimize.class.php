@@ -114,7 +114,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.6
 	 * @access public
 	 */
-	public function vary_add_role_exclude( $varys )
+	public function vary_add_role_exclude($varys)
 	{
 		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
 			return $varys ;
@@ -227,7 +227,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  2.1.2
 	 * @access public
 	 */
-	private function _output_header( $headers )
+	private function _output_header($headers)
 	{
 		foreach ( $headers as $k => $v ) {
 			header( $k . ': ' . $v ) ;
@@ -259,7 +259,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.3
 	 * @access public
 	 */
-	public function remove_query_strings( $src )
+	public function remove_query_strings($src)
 	{
 		if ( strpos( $src, '_litespeed_rm_qs=0' ) || strpos( $src, '/recaptcha' ) ) {
 			return $src ;
@@ -280,7 +280,7 @@ class LiteSpeed_Cache_Optimize
 	 * @access public
 	 * @return  string The content that is after optimization
 	 */
-	public static function finalize( $content )
+	public static function finalize($content)
 	{
 		if ( defined( 'LITESPEED_MIN_FILE' ) ) {// Must have this to avoid css/js from optimization again ( But can be removed as mini file doesn't have LITESPEED_IS_HTML, keep for efficiency)
 			return $content ;
@@ -689,7 +689,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since 1.7.1
 	 * @access public
 	 */
-	public function dns_prefetch_filter( $urls, $relation_type )
+	public function dns_prefetch_filter($urls, $relation_type)
 	{
 		if ( $relation_type !== 'dns-prefetch' ) {
 			return $urls ;
@@ -725,7 +725,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.3
 	 * @access private
 	 */
-	private function _limit_size_build_hash_url( $src_queue_list, $file_size_list, $file_type = 'css' )
+	private function _limit_size_build_hash_url($src_queue_list, $file_size_list, $file_type = 'css')
 	{
 		$total = 0 ;
 		$i = 0 ;
@@ -762,7 +762,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' )
+	private function _src_queue_handler($src_queue_list, $html_list, $file_type = 'css')
 	{
 		$html_list_ori = $html_list ;
 
@@ -798,7 +798,7 @@ class LiteSpeed_Cache_Optimize
 	 * @access private
 	 * @return array Array(Ignored raw html, src needed to be handled list, filesize for param 2nd )
 	 */
-	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
+	private function _analyse_links($src_list, $html_list, $file_type = 'css')
 	{
 		// if ( $file_type == 'css' ) {
 		// 	$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
@@ -872,7 +872,7 @@ class LiteSpeed_Cache_Optimize
 	 * @access private
 	 * @return string The final URL
 	 */
-	private function _build_hash_url( $src, $file_type = 'css' )
+	private function _build_hash_url($src, $file_type = 'css')
 	{
 		if ( ! $src ) {
 			return false ;
@@ -1090,7 +1090,7 @@ class LiteSpeed_Cache_Optimize
 	 * @param  array $html_list Orignal css array
 	 * @return array            (array)css_async_list
 	 */
-	private function _async_css_list( $html_list )
+	private function _async_css_list($html_list)
 	{
 		foreach ( $html_list as $k => $ori ) {
 			if ( strpos( $ori, 'data-asynced' ) !== false ) {
@@ -1119,7 +1119,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.3
 	 * @access private
 	 */
-	private function _js_defer( $html_list )
+	private function _js_defer($html_list)
 	{
 		foreach ( $html_list as $k => $v ) {
 			if ( strpos( $v, 'async' ) !== false ) {
@@ -1189,7 +1189,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.5
 	 * @access private
 	 */
-	private function _is_jquery( $src )
+	private function _is_jquery($src)
 	{
 		return stripos( $src, 'jquery.js' ) !== false || stripos( $src, 'jquery.min.js' ) !== false ;
 	}
@@ -1200,7 +1200,7 @@ class LiteSpeed_Cache_Optimize
 	 * @since  1.2.2
 	 * @access private
 	 */
-	private function append_http2( $url, $file_type = 'css' )
+	private function append_http2($url, $file_type = 'css')
 	{
 		if ( ! ( $file_type === 'css' ? $this->cfg_http2_css : $this->cfg_http2_js ) ) {
 			return ;

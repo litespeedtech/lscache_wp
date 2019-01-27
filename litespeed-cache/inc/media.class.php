@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Media
 	 * @since 2.4.3
 	 * @access public
 	 */
-	public function delete_attachment( $post_id )
+	public function delete_attachment($post_id)
 	{
 		LiteSpeed_Cache_Log::debug( '[Media] delete_attachment [pid] ' . $post_id ) ;
 		LiteSpeed_Cache_Img_Optm::get_instance()->reset_row( $post_id ) ;
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Media
 	 * @since 1.6.3
 	 * @access public
 	 */
-	public function media_row_title( $posts_columns )
+	public function media_row_title($posts_columns)
 	{
 		$posts_columns[ 'imgoptm' ] = __( 'LiteSpeed Optimization', 'litespeed-cache' ) ;
 
@@ -155,7 +155,7 @@ class LiteSpeed_Cache_Media
 	 * @since 1.6.2
 	 * @access public
 	 */
-	public function media_row_actions( $column_name, $post_id )
+	public function media_row_actions($column_name, $post_id)
 	{
 		if ( $column_name !== 'imgoptm' ) {
 			return ;
@@ -316,7 +316,7 @@ eot;
 	 * @access public
 	 * @return  string The buffer
 	 */
-	public static function finalize( $content )
+	public static function finalize($content)
 	{
 		if ( defined( 'LITESPEED_NO_LAZY' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Media] bypass: NO_LAZY const' ) ;
@@ -426,7 +426,7 @@ eot;
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _placeholder( $size )
+	private function _placeholder($size)
 	{
 		if ( ! $size ) {
 			return false ;
@@ -716,7 +716,7 @@ eot;
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
-	public function webp_attach_img_src( $img )
+	public function webp_attach_img_src($img)
 	{
 		LiteSpeed_Cache_Log::debug2( '[Media] changing attach src: ' . $img[0] ) ;
 		if ( $img && $url = $this->replace_webp( $img[ 0 ] ) ) {
@@ -733,7 +733,7 @@ eot;
 	 * @param  string $url
 	 * @return string
 	 */
-	public function webp_url( $url )
+	public function webp_url($url)
 	{
 		if ( $url && $url2 = $this->replace_webp( $url ) ) {
 			$url = $url2 ;
@@ -749,7 +749,7 @@ eot;
 	 * @param  array $srcs
 	 * @return array
 	 */
-	public function webp_srcset( $srcs )
+	public function webp_srcset($srcs)
 	{
 		if ( $srcs ) {
 			foreach ( $srcs as $w => $data ) {
@@ -768,7 +768,7 @@ eot;
 	 * @since  1.6.2
 	 * @access public
 	 */
-	public function replace_webp( $url )
+	public function replace_webp($url)
 	{
 		LiteSpeed_Cache_Log::debug2( '[Media] webp replacing: ' . $url, 4 ) ;
 
@@ -830,7 +830,7 @@ eot;
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _save_summary( $data )
+	private function _save_summary($data)
 	{
 		update_option( self::DB_PLACEHOLDER_SUMMARY, $data ) ;
 	}
@@ -852,7 +852,7 @@ eot;
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _placeholder_realpath( $size )
+	private function _placeholder_realpath($size)
 	{
 		return LSCWP_CONTENT_DIR . "/cache/placeholder/$size." . md5( $this->_cfg_placeholder_resp_color ) ;
 	}
@@ -881,7 +881,7 @@ eot;
 	 * @since  2.5.1
 	 * @access public
 	 */
-	public static function cron_placeholder( $continue = false )
+	public static function cron_placeholder($continue = false)
 	{
 		$req_summary = self::get_summary() ;
 		if ( empty( $req_summary[ 'queue' ] ) ) {
@@ -913,7 +913,7 @@ eot;
 	 * @since  2.5.1
 	 * @access private
 	 */
-	private function _generate_placeholder( $size )
+	private function _generate_placeholder($size)
 	{
 		$req_summary = self::get_summary() ;
 

@@ -129,7 +129,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $action
 	 */
-	public function form_action( $action, $type = false )
+	public function form_action($action, $type = false)
 	{
 		echo '<input type="hidden" name="' . LiteSpeed_Cache::ACTION_KEY . '" value="' . $action . '" />' ;
 		if ( $type ) {
@@ -417,7 +417,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function info( $msg )
+	public static function info($msg)
 	{
 		self::add_notice( self::NOTICE_BLUE, $msg ) ;
 	}
@@ -428,7 +428,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.6.5
 	 * @access public
 	 */
-	public static function note( $msg )
+	public static function note($msg)
 	{
 		self::add_notice( self::NOTICE_YELLOW, $msg ) ;
 	}
@@ -439,7 +439,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function succeed( $msg )
+	public static function succeed($msg)
 	{
 		self::add_notice( self::NOTICE_GREEN, $msg ) ;
 	}
@@ -450,7 +450,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function error( $msg )
+	public static function error($msg)
 	{
 		self::add_notice( self::NOTICE_RED, $msg ) ;
 	}
@@ -692,7 +692,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  boolean $disabled If this input is disabled or not
 	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea( $id, $cols = false, $val = null, $disabled = false, $cls = '' )
+	public function build_textarea($id, $cols = false, $val = null, $disabled = false, $cls = '')
 	{
 		if ( strpos( $id, '[' ) === false ) {
 			if ( $val === null ) {
@@ -725,7 +725,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $id
 	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea2( $id, $cols = false )
+	public function build_textarea2($id, $cols = false)
 	{
 		// Get default val for separate item
 		$val = $this->config->get_item( $id, true ) ;
@@ -747,7 +747,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $attrs     Additional attributes
 	 * @param  string $type      Input type
 	 */
-	public function build_input( $id, $style = false, $val = null, $id_attr = null, $attrs = '', $type = 'text', $readonly = false )
+	public function build_input($id, $style = false, $val = null, $id_attr = null, $attrs = '', $type = 'text', $readonly = false)
 	{
 		if ( strpos( $id, '[' ) === false ) {
 			if ( $val === null ) {
@@ -779,7 +779,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $title
 	 * @param  bool $checked
 	 */
-	public function build_checkbox($id, $title, $checked, $value = 1 )
+	public function build_checkbox($id, $title, $checked, $value = 1)
 	{
 		$checked = $checked ? ' checked ' : '' ;
 
@@ -800,7 +800,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.7
 	 */
-	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null )
+	public function build_toggle($id, $checked = null, $title_on = null, $title_off = null)
 	{
 		if ( strpos( $id, '[' ) === false ) {
 			if ( $checked === null ) {
@@ -921,7 +921,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $id The setting tag
 	 */
-	public function recommended( $id, $is_item = false )
+	public function recommended($id, $is_item = false)
 	{
 		$val = '' ;
 		if ( ! $is_item ) {
@@ -968,7 +968,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since  2.6.1
 	 * @access public
 	 */
-	public function learn_more( $link, $title = false, $class = false )
+	public function learn_more($link, $title = false, $class = false)
 	{
 		if ( $class ) {
 			$class = " class='$class' " ;
@@ -1004,7 +1004,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since  2.0
 	 * @access public
 	 */
-	public static function print_plural( $num, $kind = 'group' )
+	public static function print_plural($num, $kind = 'group')
 	{
 		if ( $num > 1 ) {
 			switch ( $kind ) {
@@ -1038,7 +1038,7 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since  2.0
 	 * @access public
 	 */
-	public static function guidance( $title, $steps, $current_step )
+	public static function guidance($title, $steps, $current_step)
 	{
 		if ( $current_step === 'done' ) {
 			$current_step = count( $steps ) + 1 ;

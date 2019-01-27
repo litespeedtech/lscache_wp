@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Activation
 	 * @param array $args Arguments to pass into get_sites/wp_get_sites.
 	 * @return array The array of blog ids.
 	 */
-	public static function get_network_ids( $args = array() )
+	public static function get_network_ids($args = array())
 	{
 		global $wp_version ;
 		if ( version_compare( $wp_version, '4.6', '<' ) ) {

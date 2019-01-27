@@ -130,7 +130,7 @@ class LiteSpeed_Cache_Purge
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public static function purge_all( $reason = false )
+	public static function purge_all($reason = false)
 	{
 		self::get_instance()->_purge_all( $reason ) ;
 	}
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Purge
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _purge_all( $reason = false )
+	private function _purge_all($reason = false)
 	{
 		$this->_purge_all_lscache( true ) ;
 		$this->_purge_all_cssjs( true ) ;
@@ -173,7 +173,7 @@ class LiteSpeed_Cache_Purge
 	 * @since 2.2
 	 * @access public
 	 */
-	private function _purge_all_lscache( $silence = false )
+	private function _purge_all_lscache($silence = false)
 	{
 		$this->_add( '*' ) ;
 
@@ -194,7 +194,7 @@ class LiteSpeed_Cache_Purge
 	 * @since    2.3
 	 * @access   private
 	 */
-	private function _purge_all_ccss( $silence = false )
+	private function _purge_all_ccss($silence = false)
 	{
 		LiteSpeed_Cache_CSS::get_instance()->rm_cache_folder() ;
 
@@ -210,7 +210,7 @@ class LiteSpeed_Cache_Purge
 	 * @since    2.5.1
 	 * @access   private
 	 */
-	private function _purge_all_placeholder( $silence = false )
+	private function _purge_all_placeholder($silence = false)
 	{
 		LiteSpeed_Cache_Media::get_instance()->rm_cache_folder() ;
 
@@ -226,7 +226,7 @@ class LiteSpeed_Cache_Purge
 	 * @since    1.2.2
 	 * @access   private
 	 */
-	private function _purge_all_cssjs( $silence = false )
+	private function _purge_all_cssjs($silence = false)
 	{
 		update_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS, time() ) ;
 
@@ -247,7 +247,7 @@ class LiteSpeed_Cache_Purge
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _purge_all_opcache( $silence = false )
+	private function _purge_all_opcache($silence = false)
 	{
 		if ( ! LiteSpeed_Cache_Router::opcache_enabled() ) {
 			LiteSpeed_Cache_Log::debug( '[Purge] Failed to reset opcode cache due to opcache not enabled' ) ;
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Purge
 	 * @since  1.8
 	 * @access private
 	 */
-	private function _purge_all_object( $silence = false )
+	private function _purge_all_object($silence = false)
 	{
 		if ( ! defined( 'LSCWP_OBJECT_CACHE' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Purge] Failed to flush object cache due to object cache not enabled' ) ;
@@ -308,7 +308,7 @@ class LiteSpeed_Cache_Purge
 	 * @access public
 	 * @param mixed $tags Tags to add to the list.
 	 */
-	public static function add( $tags )
+	public static function add($tags)
 	{
 		self::get_instance()->_add( $tags ) ;
 	}
@@ -319,7 +319,7 @@ class LiteSpeed_Cache_Purge
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _add( $tags )
+	private function _add($tags)
 	{
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags ) ;
@@ -352,7 +352,7 @@ class LiteSpeed_Cache_Purge
 	 * @access public
 	 * @param mixed $tags Tags to add to the list.
 	 */
-	public static function add_private( $tags )
+	public static function add_private($tags)
 	{
 		self::get_instance()->_add_private( $tags ) ;
 	}
@@ -363,7 +363,7 @@ class LiteSpeed_Cache_Purge
 	 * @since 2.2
 	 * @access private
 	 */
-	private function _add_private( $tags )
+	private function _add_private($tags)
 	{
 		if ( ! is_array( $tags ) ) {
 			$tags = array( $tags ) ;
@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Purge
 	 * @since    1.0.14
 	 * @access   private
 	 */
-	private function _purge_error( $type = false )
+	private function _purge_error($type = false)
 	{
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_ERROR ) ;
 
@@ -492,7 +492,7 @@ class LiteSpeed_Cache_Purge
 	 * @param string $value The category slug.
 	 * @param string $key Unused.
 	 */
-	public function purgeby_cat_cb( $value, $key )
+	public function purgeby_cat_cb($value, $key)
 	{
 		$val = trim( $value ) ;
 		if ( empty( $val ) ) {
@@ -521,7 +521,7 @@ class LiteSpeed_Cache_Purge
 	 * @param string $value The post ID.
 	 * @param string $key Unused.
 	 */
-	public function purgeby_pid_cb( $value, $key )
+	public function purgeby_pid_cb($value, $key)
 	{
 		$val = trim( $value ) ;
 		if ( empty( $val ) ) {
@@ -548,7 +548,7 @@ class LiteSpeed_Cache_Purge
 	 * @param string $value The tag slug.
 	 * @param string $key Unused.
 	 */
-	public function purgeby_tag_cb( $value, $key )
+	public function purgeby_tag_cb($value, $key)
 	{
 		$val = trim( $value ) ;
 		if ( empty( $val ) ) {
@@ -577,7 +577,7 @@ class LiteSpeed_Cache_Purge
 	 * @param string $value A url to purge.
 	 * @param string $key Unused.
 	 */
-	public function purgeby_url_cb( $value, $key = false )
+	public function purgeby_url_cb($value, $key = false)
 	{
 		$val = trim( $value ) ;
 		if ( empty( $val ) ) {
@@ -658,7 +658,7 @@ class LiteSpeed_Cache_Purge
 	 * @access public
 	 * @param integer $id The post id to purge.
 	 */
-	public static function purge_post( $id )
+	public static function purge_post($id)
 	{
 		$post_id = intval($id) ;
 		// ignore the status we don't care
@@ -855,7 +855,7 @@ class LiteSpeed_Cache_Purge
 	 * @param  boolean $is_private If is private tags or not.
 	 * @return array The array of built purge tags.
 	 */
-	private function _append_prefix( $purge_tags, $is_private = false )
+	private function _append_prefix($purge_tags, $is_private = false)
 	{
 		$curr_bid = get_current_blog_id() ;
 
@@ -905,7 +905,7 @@ class LiteSpeed_Cache_Purge
 	 * @param integer $post_id The id of the post about to be purged.
 	 * @return array The list of purge tags correlated with the post.
 	 */
-	private function _get_purge_tags_by_post( $post_id )
+	private function _get_purge_tags_by_post($post_id)
 	{
 		// If this is a valid post we want to purge the post, the home page and any associated tags & cats
 		// If not, purge everything on the site.
@@ -1027,7 +1027,7 @@ class LiteSpeed_Cache_Purge
 	 * @param string $val The filter value
 	 * @return string     The filter value
 	 */
-	public static function filter_with_purge_all( $val )
+	public static function filter_with_purge_all($val)
 	{
 		self::purge_all() ;
 		return $val ;

@@ -248,7 +248,7 @@ class LiteSpeed_Cache_Admin_Report
 	 * @param array $section An array of information to output
 	 * @return string The created report block.
 	 */
-	private function format_report_section( $section_header, $section )
+	private function format_report_section($section_header, $section)
 	{
 		$tab = '    ' ; // four spaces
 

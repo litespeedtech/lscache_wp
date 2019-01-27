@@ -94,7 +94,7 @@ class LiteSpeed_Cache_GUI
 	 *
 	 * @since 1.6.6
 	 */
-	public static function pie( $percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false )
+	public static function pie($percent, $width = 50, $finished_tick = false, $without_percentage = false, $append_cls = false)
 	{
 		$percentage = '<text x="16.91549431" y="15.5">' . $percent . ( $without_percentage ? '' : '%' ) . '</text>' ;
 
@@ -123,7 +123,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  2.9
 	 * @access public
 	 */
-	public function get_cls_of_pagescore( $score )
+	public function get_cls_of_pagescore($score)
 	{
 		if ( $score >= 90 ) {
 			return 'success' ;
@@ -153,7 +153,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  2.9
 	 * @access public
 	 */
-	public function save_summary( $data )
+	public function save_summary($data)
 	{
 		update_option( self::GUI_SUMMARY, $data ) ;
 	}
@@ -275,7 +275,7 @@ class LiteSpeed_Cache_GUI
 	 * @since 2.1
 	 * @access public
 	 */
-	public function show_promo( $check_only = false )
+	public function show_promo($check_only = false)
 	{
 		$is_litespeed_page = $this->_is_litespeed_page() ;
 
@@ -597,7 +597,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function plugin_install_link( $title, $name, $v )
+	public static function plugin_install_link($title, $name, $v)
 	{
 		$url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=' . $name ), 'install-plugin_' . $name ) ;
 
@@ -622,7 +622,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function plugin_upgrade_link( $title, $name, $v )
+	public static function plugin_upgrade_link($title, $name, $v)
 	{
 		$details_url = self_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $name . '&section=changelog&TB_iframe=true&width=600&height=800' );
 		$file = $name . '/' . $name . '.php' ;
@@ -648,7 +648,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  1.6
 	 * @access public
 	 */
-	public static function finalize( $buffer )
+	public static function finalize($buffer)
 	{
 		$instance = self::get_instance() ;
 		return $instance->_clean_wrapper( $buffer ) ;
@@ -661,7 +661,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  1.6 converted to private with adding prefix _
 	 * @access private
 	 */
-	private function _clean_wrapper( $buffer )
+	private function _clean_wrapper($buffer)
 	{
 		if ( self::$_clean_counter < 1 ) {
 			LiteSpeed_Cache_Log::debug2( "GUI bypassed by no counter" ) ;
@@ -702,7 +702,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  1.4
 	 * @access public
 	 */
-	public static function clean_wrapper_begin( $counter = false )
+	public static function clean_wrapper_begin($counter = false)
 	{
 		if ( $counter === false ) {
 			self::$_clean_counter ++ ;
@@ -718,7 +718,7 @@ class LiteSpeed_Cache_GUI
 	 * @since  1.4
 	 * @access public
 	 */
-	public static function clean_wrapper_end( $counter = false )
+	public static function clean_wrapper_end($counter = false)
 	{
 		if ( $counter === false ) {
 			$counter = self::$_clean_counter ;

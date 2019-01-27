@@ -212,7 +212,7 @@ class LiteSpeed_Cache_Router
 	 *
 	 * @since  1.6.2
 	 */
-	public static function get_role( $uid = null )
+	public static function get_role($uid = null)
 	{
 		if ( defined( 'LITESPEED_WP_ROLE' ) ) {
 			return LITESPEED_WP_ROLE ;
@@ -381,7 +381,7 @@ class LiteSpeed_Cache_Router
 	 * @since 1.6
 	 * @access public
 	 */
-	public static function build_type( $val )
+	public static function build_type($val)
 	{
 		return array( 'type' => $val ) ;
 	}
@@ -557,7 +557,7 @@ class LiteSpeed_Cache_Router
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function _verify_sapi_passive( $action )
+	private function _verify_sapi_passive($action)
 	{
 		if ( $action === LiteSpeed_Cache::ACTION_SAPI_PASSIVE_CALLBACK ) {
 			if ( LiteSpeed_Cache_Admin_API::sapi_valiate_passive_callback() ) {
@@ -577,7 +577,7 @@ class LiteSpeed_Cache_Router
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function _verify_sapi_aggressive( $action )
+	private function _verify_sapi_aggressive($action)
 	{
 		if ( $action === LiteSpeed_Cache::ACTION_SAPI_AGGRESSIVE_CALLBACK ) {
 			if ( LiteSpeed_Cache_Admin_API::sapi_validate_aggressive_callback() ) {
@@ -597,7 +597,7 @@ class LiteSpeed_Cache_Router
 	 * @param  string $action
 	 * @return bool
 	 */
-	private function verify_nonce( $action )
+	private function verify_nonce($action)
 	{
 		if ( ! isset( $_REQUEST[LiteSpeed_Cache::NONCE_NAME] ) || ! wp_verify_nonce( $_REQUEST[LiteSpeed_Cache::NONCE_NAME], $action ) ) {
 			return false ;
@@ -615,7 +615,7 @@ class LiteSpeed_Cache_Router
 	 * @param  string $ip_list IP list
 	 * @return bool
 	 */
-	private function ip_access( $ip_list )
+	private function ip_access($ip_list)
 	{
 		if ( ! $ip_list ) {
 			return false ;

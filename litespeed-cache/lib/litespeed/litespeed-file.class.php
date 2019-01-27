@@ -7,7 +7,7 @@
 */
 
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	function litespeed_exception_handler($errno, $errstr, $errfile, $errline)
 	{
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
 	}
@@ -27,7 +27,7 @@ class Litespeed_File
 	 *
 	 * @since 2.1
 	 */
-	public static function rrmdir( $dir ) {
+	public static function rrmdir($dir) {
 
 		$files = array_diff( scandir( $dir ), array( '.', '..' ) ) ;
 
@@ -109,7 +109,7 @@ class Litespeed_File
 	 * @param boolean $mkdir
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function append( $filename, $data, $mkdir = false, $silence = true )
+	public static function append($filename, $data, $mkdir = false, $silence = true)
 	{
 		return self::save( $filename, $data, $mkdir, true, $silence ) ;
 	}
@@ -124,7 +124,7 @@ class Litespeed_File
 	 * @param boolean $append If the content needs to be appended
 	 * @param boolean $silence Used to avoid WP's functions are used
 	 */
-	public static function save( $filename, $data, $mkdir = false, $append = false, $silence = true )
+	public static function save($filename, $data, $mkdir = false, $append = false, $silence = true)
 	{
 		$error = false ;
 		$folder = dirname( $filename ) ;
@@ -180,7 +180,7 @@ class Litespeed_File
 	 * @since 2.1.2
 	 * @since 2.9 changed to public
 	 */
-	public static function remove_zero_space( $content )
+	public static function remove_zero_space($content)
 	{
 		if ( is_array( $content ) ) {
 			$content = array_map( 'self::remove_zero_space', $content ) ;
@@ -299,7 +299,7 @@ class Litespeed_File
 	 * @param string $marker
 	 * @return array An array of strings from a file (.htaccess ) from between BEGIN and END markers.
 	 */
-	private static function _extract_from_markers( $filename, $marker )
+	private static function _extract_from_markers($filename, $marker)
 	{
 		$result = array() ;
 
@@ -338,7 +338,7 @@ class Litespeed_File
 	 * @param bool 	       $prepend Prepend insertion if not exist.
 	 * @return bool True on write success, false on failure.
 	 */
-	private static function _insert_with_markers( $filename, $marker, $insertion, $prepend = false)
+	private static function _insert_with_markers($filename, $marker, $insertion, $prepend = false)
 	{
 		if ( ! file_exists($filename) ) {
 			if ( ! is_writable( dirname($filename) ) ) {

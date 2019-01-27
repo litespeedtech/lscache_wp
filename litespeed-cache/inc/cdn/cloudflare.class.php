@@ -57,7 +57,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _get_devmode( $show_msg = true )
+	private function _get_devmode($show_msg = true)
 	{
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _get_devmode' ) ;
 
@@ -89,7 +89,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _set_devmode( $type )
+	private function _set_devmode($type)
 	{
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _set_devmode' ) ;
 
@@ -173,7 +173,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * @since  1.7.2
 	 * @access public
 	 */
-	public function fetch_zone( $options )
+	public function fetch_zone($options)
 	{
 		$kw = $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] ;
 
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * @since  1.7.2
 	 * @access private
 	 */
-	private function _cloudflare_call( $url, $method = 'GET', $data = false, $token = false, $show_msg = true )
+	private function _cloudflare_call($url, $method = 'GET', $data = false, $token = false, $show_msg = true)
 	{
 		LiteSpeed_Cache_Log::debug( "[Cloudflare] _cloudflare_call \t\t[URL] $url" ) ;
 

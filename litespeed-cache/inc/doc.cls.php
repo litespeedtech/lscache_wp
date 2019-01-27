@@ -34,7 +34,7 @@ class LiteSpeed_Cache_Doc
 	 * @since  2.4.2
 	 * @access public
 	 */
-	public static function learn_more( $url )
+	public static function learn_more($url)
 	{
 		return ' <a href="' . $url . '" target="_blank" class="litespeed-learn-more">' . __( 'Learn More', 'litespeed-cache' ) . '</a>' ;
 	}

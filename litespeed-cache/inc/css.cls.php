@@ -27,7 +27,7 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3 Migrated from optimize.cls
 	 * @access public
 	 */
-	public static function prepend_ccss( $html_head )
+	public static function prepend_ccss($html_head)
 	{
 		// Get critical css for current page
 		// Note: need to consider mobile
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _save_summary( $data )
+	private function _save_summary($data)
 	{
 		update_option( self::DB_CCSS_SUMMARY, $data ) ;
 	}
@@ -96,7 +96,7 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _ccss_realpath( $ccss_type )
+	private function _ccss_realpath($ccss_type)
 	{
 		return LSCWP_CONTENT_DIR . "/cache/ccss/$ccss_type.css" ;
 	}
@@ -191,7 +191,7 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3
 	 * @access private
 	 */
-	public static function cron_ccss( $continue = false )
+	public static function cron_ccss($continue = false)
 	{
 		$req_summary = self::get_summary() ;
 		if ( empty( $req_summary[ 'queue' ] ) ) {
@@ -228,7 +228,7 @@ class LiteSpeed_Cache_CSS
 	 * @since  2.3
 	 * @access private
 	 */
-	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile )
+	private function _generate_ccss($request_url, $ccss_type, $user_agent, $is_mobile)
 	{
 		$req_summary = self::get_summary() ;
 

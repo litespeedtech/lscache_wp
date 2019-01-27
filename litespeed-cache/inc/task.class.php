@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Task
 	 * @access public
 	 * @param array $options The options to check if cron should be enabled
 	 */
-	public static function update( $options = false )
+	public static function update($options = false)
 	{
 		$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
 		if ( $options && isset( $options[ $id ] ) ) {
@@ -210,7 +210,7 @@ class LiteSpeed_Cache_Task
 	 * @access public
 	 * @param array $schedules WP Hook
 	 */
-	public static function lscache_cron_filter( $schedules )
+	public static function lscache_cron_filter($schedules)
 	{
 		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
 			$schedules[ self::CRON_FITLER ] = array(
@@ -228,7 +228,7 @@ class LiteSpeed_Cache_Task
 	 * @access public
 	 * @param array $schedules WP Hook
 	 */
-	public static function lscache_cron_filter_crawler( $schedules )
+	public static function lscache_cron_filter_crawler($schedules)
 	{
 		$interval = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;

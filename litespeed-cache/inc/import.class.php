@@ -89,7 +89,7 @@ class LiteSpeed_Cache_Import
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _export( $only_data_return = false )
+	private function _export($only_data_return = false)
 	{
 
 		$data = array() ;
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Import
 	 *
 	 * @since  2.4.1
 	 */
-	public function import( $file )
+	public function import($file)
 	{
 		return $this->_import( $file ) ;
 	}
@@ -139,7 +139,7 @@ class LiteSpeed_Cache_Import
 	 * @since  1.8.2
 	 * @access private
 	 */
-	private function _import( $file = false )
+	private function _import($file = false)
 	{
 		if ( ! $file ) {
 			if ( empty( $_FILES[ 'ls_file' ][ 'name' ] ) || substr( $_FILES[ 'ls_file' ][ 'name' ], -5 ) != '.data' || empty( $_FILES[ 'ls_file' ][ 'tmp_name' ] ) ) {

@@ -146,7 +146,7 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  2.9
 	 */
-	public static function ping( $domain )
+	public static function ping($domain)
 	{
 		if ( strpos( $domain, ':' ) ) {
 			$domain = parse_url( $domain, PHP_URL_HOST ) ;
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Utility
 	 * @since  1.6.5
 	 * @access public
 	 */
-	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $backward = true )
+	public static function readable_time($seconds_or_timestamp, $timeout = 3600, $backward = true)
 	{
 
 		if ( strlen( $seconds_or_timestamp ) == 10 ) {
@@ -236,7 +236,7 @@ class LiteSpeed_Cache_Utility
 	 * @access public
 	 * @return string
 	 */
-	public static function arr2str( $arr )
+	public static function arr2str($arr)
 	{
 		if ( ! is_array( $arr ) ) {
 			return $arr ;
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_Utility
 	 * @access public
 	 * @return string
 	 */
-	public static function real_size( $filesize )
+	public static function real_size($filesize)
 	{
 		if ( $filesize >= 1073741824 ) {
 			$filesize = round( $filesize / 1073741824 * 100 ) / 100 . 'G' ;
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Utility
 	 * @param  string $str
 	 * @return array  All the attributes
 	 */
-	public static function parse_attr( $str )
+	public static function parse_attr($str)
 	{
 		$attrs = array() ;
 		preg_match_all( '#([\w-]+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER ) ;
@@ -295,7 +295,7 @@ class LiteSpeed_Cache_Utility
 	 * @access public
 	 * @return string
 	 */
-	public static function get_permalink_url( $relative_url )
+	public static function get_permalink_url($relative_url)
 	{
 		return $GLOBALS[ 'wp_rewrite' ]->using_permalinks() ? home_url( $relative_url ) : home_url() . '/?' . $relative_url ;
 	}
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Utility
 	 * @param array $haystack
 	 * @return bool|string False if not found, otherwise return the matched string in haystack.
 	 */
-	public static function str_hit_array( $needle, $haystack, $has_ttl = false )
+	public static function str_hit_array($needle, $haystack, $has_ttl = false)
 	{
 		$hit = false ;
 		$this_ttl = 0 ;
@@ -381,7 +381,7 @@ class LiteSpeed_Cache_Utility
 	 * @param  string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
 	 * @return  string http://www.example.com/subfolder/xx/xx.html
 	 */
-	public static function uri2url( $uri )
+	public static function uri2url($uri)
 	{
 		if ( substr( $uri, 0, 1 ) === '/' ) {
 			self::domain_const() ;
@@ -401,7 +401,7 @@ class LiteSpeed_Cache_Utility
 	 * @since  1.6.2.1 Added 2nd param keep_qs
 	 * @access public
 	 */
-	public static function url2uri( $url, $keep_qs = false )
+	public static function url2uri($url, $keep_qs = false)
 	{
 		$url = trim( $url ) ;
 		$uri = @parse_url( $url, PHP_URL_PATH ) ;
@@ -422,7 +422,7 @@ class LiteSpeed_Cache_Utility
 	 * @param  string $url
 	 * @return string      Relative URL, start with /
 	 */
-	public static function make_relative( $url )
+	public static function make_relative($url)
 	{
 		// replace home_url if the url is full url
 		self::domain_const() ;
@@ -437,7 +437,7 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.7.1
 	 */
-	public static function parse_domain( $url )
+	public static function parse_domain($url)
 	{
 		$url = @parse_url( $url ) ;
 		if ( empty( $url[ 'host' ] ) ) {
@@ -484,7 +484,7 @@ class LiteSpeed_Cache_Utility
 	 * @param  bool $type String handler type
 	 * @return string
 	 */
-	public static function sanitize_lines( $arr, $type = null )
+	public static function sanitize_lines($arr, $type = null)
 	{
 		if ( ! $arr ) {
 			return $arr ;
@@ -525,7 +525,7 @@ class LiteSpeed_Cache_Utility
 	 * @param string $type The appending type to url
 	 * @return string The built url.
 	 */
-	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = null )
+	public static function build_url($action, $type = false, $is_ajax = false, $page = null, $append_arr = null)
 	{
 		$prefix = '?' ;
 
@@ -597,7 +597,7 @@ class LiteSpeed_Cache_Utility
 	 * @since  1.2.3
 	 *
 	 */
-	public static function internal( $host )
+	public static function internal($host)
 	{
 		if ( ! defined( 'LITESPEED_FRONTEND_HOST' ) ) {
 			if ( defined( 'WP_HOME' ) ) {
@@ -620,7 +620,7 @@ class LiteSpeed_Cache_Utility
 	 * @access public
 	 * @return string|bool The real path of file OR false
 	 */
-	public static function is_internal_file( $url, $addition_postfix = false )
+	public static function is_internal_file($url, $addition_postfix = false)
 	{
 		$url_parsed = parse_url( $url ) ;
 		if ( isset( $url_parsed[ 'host' ] ) && ! self::internal( $url_parsed[ 'host' ] ) ) {
@@ -701,7 +701,7 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  2.2.3
 	 */
-	public static function srcset_replace( $content, $callback )
+	public static function srcset_replace($content, $callback)
 	{
 		preg_match_all( '# srcset=([\'"])(.+)\g{1}#iU', $content, $matches ) ;
 		$srcset_ori = array() ;

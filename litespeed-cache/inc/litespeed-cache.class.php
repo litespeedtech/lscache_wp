@@ -260,7 +260,7 @@ class LiteSpeed_Cache
 			return ;
 		}
 
-		add_filter( 'auto_update_plugin', function( $update, $item ) {
+		add_filter( 'auto_update_plugin', function ($update, $item) {
 				if ( $item->slug == 'litespeed-cache' ) {
 					$auto_v = LiteSpeed_Cache_Utility::version_check() ;
 
@@ -279,7 +279,7 @@ class LiteSpeed_Cache
 	 * @since 1.1.0
 	 * @access public
 	 */
-	public function proceed_action( $action )
+	public function proceed_action($action)
 	{
 		$msg = false ;
 		// handle actions
@@ -444,7 +444,7 @@ class LiteSpeed_Cache
 	 * @param string $opt_id An option ID if getting an option.
 	 * @return the option value
 	 */
-	public static function config( $opt_id )
+	public static function config($opt_id)
 	{
 		return LiteSpeed_Cache_Config::get_instance()->get_option( $opt_id ) ;
 	}
@@ -469,7 +469,7 @@ class LiteSpeed_Cache
 	 * @since 1.3
 	 * @access private
 	 */
-	private function _check_is_html( $buffer = null )
+	private function _check_is_html($buffer = null)
 	{
 		if ( ! defined( 'LITESPEED_FOOTER_CALLED' ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Core] CHK html bypass: miss footer const' ) ;
@@ -530,7 +530,7 @@ class LiteSpeed_Cache
 	 * @param  string $buffer
 	 * @return string
 	 */
-	public function send_headers_force( $buffer )
+	public function send_headers_force($buffer)
 	{
 		$this->_check_is_html( $buffer ) ;
 
@@ -575,7 +575,7 @@ class LiteSpeed_Cache
 	 * @access public
 	 * @param boolean $is_forced If the header is sent following our normal finalizing logic
 	 */
-	public function send_headers( $is_forced = false )
+	public function send_headers($is_forced = false)
 	{
 		// Make sure header output only run once
 		if ( ! defined( 'LITESPEED_DID_' . __FUNCTION__ ) ) {
@@ -709,7 +709,7 @@ class LiteSpeed_Cache
 	/**
 	 * Deprecated calls for backward compatibility to v1.1.2.2
 	 */
-	public function purge_post( $id )
+	public function purge_post($id)
 	{
 		litespeed_purge_single_post( $id ) ;
 	}

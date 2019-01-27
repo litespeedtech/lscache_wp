@@ -17,7 +17,7 @@ class Litespeed_String
 	 * @param  int  $type    1-Number 2-LowerChar 4-UpperChar
 	 * @return string
 	 */
-	public static function rrand( $len, $type = 7 )
+	public static function rrand($len, $type = 7)
 	{
 		mt_srand( ( double ) microtime() * 1000000 ) ;
 

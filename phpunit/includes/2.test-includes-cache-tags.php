@@ -14,7 +14,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      /**
 	 * Function for instance
 	 */
-    public static function get_instance(){
+    public static function get_instance() {
 		$instance = new LiteSpeed_Cache_Tags();
 		return $instance;
     }

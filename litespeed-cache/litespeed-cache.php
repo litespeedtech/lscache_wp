@@ -156,7 +156,7 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
  * @param integer $id The post id to purge.
  */
 if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
-	function litespeed_purge_single_post( $id )
+	function litespeed_purge_single_post($id)
 	{
 		LiteSpeed_Cache_Purge::purge_post( $id ) ;
 	}
@@ -166,7 +166,7 @@ if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
  * Handle exception
  */
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+	function litespeed_exception_handler($errno, $errstr, $errfile, $errline)
 	{
 		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
 	}
