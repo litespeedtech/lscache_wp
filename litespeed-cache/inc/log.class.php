@@ -32,7 +32,6 @@ class LiteSpeed_Cache_Log
 	 * NOTE: in this process, until last step ( define const LSCWP_LOG = true ), any usage to WP filter will not be logged to prevent infinite loop with log_filters()
 	 *
 	 * @since 1.1.2
-	 * @access public
 	 */
 	private function __construct()
 	{
@@ -53,7 +52,6 @@ class LiteSpeed_Cache_Log
 	 * Log Purge headers separately
 	 *
 	 * @since 2.7
-	 * @access public
 	 */
 	public static function log_purge( $purge_header )
 	{
@@ -76,7 +74,6 @@ class LiteSpeed_Cache_Log
 	 * Enable debug log
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function init()
 	{
@@ -107,7 +104,6 @@ class LiteSpeed_Cache_Log
 	 * Create the initial log messages with the request parameters.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _init_request( $log_file = null )
 	{
@@ -198,7 +194,6 @@ class LiteSpeed_Cache_Log
 	 * Log all filters and action hooks
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 */
 	public static function log_filters()
 	{
@@ -223,7 +218,6 @@ class LiteSpeed_Cache_Log
 	 * Formats the log message with a consistent prefix.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 * @param string $msg the log message to write
 	 * @return string the formatted log message
 	 */
@@ -261,7 +255,6 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.1.3
 	 * @since 1.6 Added array dump as 2nd param
-	 * @access public
 	 * @param string $msg the debug message
 	 * @param int|array $backtrace_limit Backtrace depth, Or the array to dump
 	 */
@@ -289,7 +282,6 @@ class LiteSpeed_Cache_Log
 	 * Direct call to log an advanced debug message.
 	 *
 	 * @since 1.2.0
-	 * @access public
 	 * @param string $msg the debug message
 	 * @param int $backtrace_limit backtrace depth
 	 */
@@ -305,7 +297,6 @@ class LiteSpeed_Cache_Log
 	 * Logs a debug message.
 	 *
 	 * @since 1.1.0
-	 * @access private
 	 * @param string $msg the debug message
 	 * @param int $backtrace_limit backtrace depth
 	 */
@@ -356,7 +347,6 @@ class LiteSpeed_Cache_Log
 	 * Clear log file
 	 *
 	 * @since 1.6.6
-	 * @access private
 	 */
 	private function _clear_log()
 	{
@@ -368,7 +358,6 @@ class LiteSpeed_Cache_Log
 	 * Heartbeat control
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 */
 	public static function disable_heartbeat()
 	{
@@ -379,7 +368,6 @@ class LiteSpeed_Cache_Log
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.6.6
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -403,7 +391,6 @@ class LiteSpeed_Cache_Log
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

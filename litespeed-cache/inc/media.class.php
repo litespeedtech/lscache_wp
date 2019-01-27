@@ -36,7 +36,6 @@ class LiteSpeed_Cache_Media
 	 * Init
 	 *
 	 * @since  1.4
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -85,7 +84,6 @@ class LiteSpeed_Cache_Media
 	 * Check if it can use Media frontend
 	 *
 	 * @since  1.6.2
-	 * @access private
 	 */
 	private function can_media()
 	{
@@ -100,7 +98,6 @@ class LiteSpeed_Cache_Media
 	 * Check if enabled webp or not
 	 *
 	 * @since  2.4
-	 * @access public
 	 */
 	public static function webp_enabled()
 	{
@@ -111,7 +108,6 @@ class LiteSpeed_Cache_Media
 	 * Register admin menu
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 */
 	public function after_admin_init()
 	{
@@ -128,7 +124,6 @@ class LiteSpeed_Cache_Media
 	 * Media delete action hook
 	 *
 	 * @since 2.4.3
-	 * @access public
 	 */
 	public function delete_attachment( $post_id )
 	{
@@ -140,7 +135,6 @@ class LiteSpeed_Cache_Media
 	 * Media Admin Menu -> Image Optimization Column Title
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 */
 	public function media_row_title( $posts_columns )
 	{
@@ -153,7 +147,6 @@ class LiteSpeed_Cache_Media
 	 * Media Admin Menu -> Image Optimization Column
 	 *
 	 * @since 1.6.2
-	 * @access public
 	 */
 	public function media_row_actions( $column_name, $post_id )
 	{
@@ -262,7 +255,6 @@ eot;
 	 * NOTE: this is not used because it has to be after admin_init
 	 *
 	 * @since 1.6.2
-	 * @access private
 	 * @return array $sizes data for all currently-registered image sizes
 	 */
 	private function get_image_sizes() {
@@ -291,7 +283,6 @@ eot;
 	 * Exclude role from optimization filter
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 */
 	private function webp_support()
 	{
@@ -313,7 +304,6 @@ eot;
 	 * Only do for main page. Do NOT do for esi or dynamic content.
 	 *
 	 * @since  1.4
-	 * @access public
 	 * @return  string The buffer
 	 */
 	public static function finalize( $content )
@@ -341,7 +331,6 @@ eot;
 	 * Run lazyload replacement for images in buffer
 	 *
 	 * @since  1.4
-	 * @access private
 	 */
 	private function _finalize()
 	{
@@ -424,7 +413,6 @@ eot;
 	 * Generate responsive placeholder
 	 *
 	 * @since  2.5.1
-	 * @access private
 	 */
 	private function _placeholder( $size )
 	{
@@ -499,7 +487,6 @@ eot;
 	 * Parse img src
 	 *
 	 * @since  1.4
-	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
 	private function _parse_img()
@@ -588,7 +575,6 @@ eot;
 	 * Parse iframe src
 	 *
 	 * @since  1.4
-	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
 	private function _parse_iframe()
@@ -626,7 +612,6 @@ eot;
 	 * Replace image src to webp
 	 *
 	 * @since  1.6.2
-	 * @access private
 	 */
 	private function _replace_buffer_img_webp()
 	{
@@ -712,7 +697,6 @@ eot;
 	 * Hook to wp_get_attachment_image_src
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
@@ -729,7 +713,6 @@ eot;
 	 * Try to replace img url
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 * @param  string $url
 	 * @return string
 	 */
@@ -745,7 +728,6 @@ eot;
 	 * Hook to replace WP responsive images
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 * @param  array $srcs
 	 * @return array
 	 */
@@ -766,7 +748,6 @@ eot;
 	 * Replace internal image src to webp
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 */
 	public function replace_webp( $url )
 	{
@@ -801,7 +782,6 @@ eot;
 	 * Check if there is a queue for cron or not
 	 *
 	 * @since  2.5.1
-	 * @access public
 	 */
 	public static function has_queue()
 	{
@@ -817,7 +797,6 @@ eot;
 	 * Check if there is a placeholder cache folder
 	 *
 	 * @since  2.5.1
-	 * @access public
 	 */
 	public static function has_placehoder_cache()
 	{
@@ -828,7 +807,6 @@ eot;
 	 * Save image placeholder summary
 	 *
 	 * @since  2.5.1
-	 * @access private
 	 */
 	private function _save_summary( $data )
 	{
@@ -839,7 +817,6 @@ eot;
 	 * Read last time generated info
 	 *
 	 * @since  2.5.1
-	 * @access public
 	 */
 	public static function get_summary()
 	{
@@ -850,7 +827,6 @@ eot;
 	 * Generate realpath of placeholder file
 	 *
 	 * @since  2.5.1
-	 * @access private
 	 */
 	private function _placeholder_realpath( $size )
 	{
@@ -861,7 +837,6 @@ eot;
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.5.1
-	 * @access public
 	 */
 	public function rm_cache_folder()
 	{
@@ -879,7 +854,6 @@ eot;
 	 * Cron placeholder generation
 	 *
 	 * @since  2.5.1
-	 * @access public
 	 */
 	public static function cron_placeholder( $continue = false )
 	{
@@ -911,7 +885,6 @@ eot;
 	 * Send to LiteSpeed API to generate placeholder
 	 *
 	 * @since  2.5.1
-	 * @access private
 	 */
 	private function _generate_placeholder( $size )
 	{
@@ -961,7 +934,6 @@ eot;
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.5.1
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -985,7 +957,6 @@ eot;
 	 * Get the current instance object.
 	 *
 	 * @since 1.4
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

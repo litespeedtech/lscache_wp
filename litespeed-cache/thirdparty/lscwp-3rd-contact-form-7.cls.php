@@ -18,7 +18,6 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
 	 * Detects if is active.
 	 *
 	 * @since 1.6.4
-	 * @access public
 	 *
 	 */
 	public static function detect()
@@ -32,7 +31,6 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
 	 * Disable vary change for refill to avoid auto-logout issue
 	 *
 	 * @since 1.6.4
-	 * @access public
 	 */
 	public static function disable_vary_change()
 	{

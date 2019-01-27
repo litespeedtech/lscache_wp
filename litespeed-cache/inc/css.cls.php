@@ -25,7 +25,6 @@ class LiteSpeed_Cache_CSS
 	 *
 	 * @since  1.3
 	 * @since  2.3 Migrated from optimize.cls
-	 * @access public
 	 */
 	public static function prepend_ccss( $html_head )
 	{
@@ -45,7 +44,6 @@ class LiteSpeed_Cache_CSS
 	 * Check if there is a queue for cron or not
 	 *
 	 * @since  2.3
-	 * @access public
 	 */
 	public static function has_queue()
 	{
@@ -61,7 +59,6 @@ class LiteSpeed_Cache_CSS
 	 * Check if there is a ccss cache folder
 	 *
 	 * @since  2.3
-	 * @access public
 	 */
 	public static function has_ccss_cache()
 	{
@@ -72,7 +69,6 @@ class LiteSpeed_Cache_CSS
 	 * Save ccss summary
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	private function _save_summary( $data )
 	{
@@ -83,7 +79,6 @@ class LiteSpeed_Cache_CSS
 	 * Read last time generated info
 	 *
 	 * @since  2.3
-	 * @access public
 	 */
 	public static function get_summary()
 	{
@@ -94,7 +89,6 @@ class LiteSpeed_Cache_CSS
 	 * Generate realpath of ccss
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	private function _ccss_realpath( $ccss_type )
 	{
@@ -105,7 +99,6 @@ class LiteSpeed_Cache_CSS
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.3
-	 * @access public
 	 */
 	public function rm_cache_folder()
 	{
@@ -126,7 +119,6 @@ class LiteSpeed_Cache_CSS
 	 * The critical css content of the current page
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	private function _ccss()
 	{
@@ -178,7 +170,6 @@ class LiteSpeed_Cache_CSS
 	 * Check if need to separate ccss for mobile
 	 *
 	 * @since  2.6.4
-	 * @access private
 	 */
 	private function _separate_mobile_ccss()
 	{
@@ -189,7 +180,6 @@ class LiteSpeed_Cache_CSS
 	 * Cron ccss generation
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	public static function cron_ccss( $continue = false )
 	{
@@ -226,7 +216,6 @@ class LiteSpeed_Cache_CSS
 	 * Send to LiteSpeed CCSS API to generate CCSS
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	private function _generate_ccss( $request_url, $ccss_type, $user_agent, $is_mobile )
 	{
@@ -285,7 +274,6 @@ class LiteSpeed_Cache_CSS
 	 * The critical css file for current page
 	 *
 	 * @since  2.3
-	 * @access private
 	 */
 	private function _which_css()
 	{
@@ -324,7 +312,6 @@ class LiteSpeed_Cache_CSS
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.3
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -348,7 +335,6 @@ class LiteSpeed_Cache_CSS
 	 * Get the current instance object.
 	 *
 	 * @since 2.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

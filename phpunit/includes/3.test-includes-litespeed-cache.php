@@ -85,7 +85,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::get_network_ids 
      * Should be test in multiside mode
-     * @access private
      * @param array $args arguments to pass into get_sites/wp_get_sites
      * @return array the array of blog ids
      */
@@ -105,7 +104,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::get_network_count
-     * @access private
      * @return mixed the count on success, false on failure
      */
     public function test_get_network_count()
@@ -122,7 +120,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_deactivate_last
-     * @access private
      * @return bool true if yes, false otherwise
      */
     public function test_is_deactivate_last()
@@ -139,7 +136,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::get_config
-     * @access public
      * @return LiteSpeed_Cache_Config the configurations for the accessed page
      */
     public function test_get_config()
@@ -150,7 +146,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::try_copy_advanced_cache
-     * @access public
      * @return boolean true on success, false on failure
      */
     public function test_try_copy_advanced_cache()
@@ -167,7 +162,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::setup_cookies
-     * @access private
      * @return boolean true if cookies are bad, false otherwise
      */
     public function test_setup_cookies()
@@ -200,7 +194,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::check_cookies
-     * @access private
      * @return boolean True if do not cache for commenters and user is a commenter. False otherwise.
      */
     public function test_check_cookies()
@@ -217,7 +210,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_uri_excluded
-     * @access private
      * @param array $excludes_list List of excluded URIs
      * @return boolean true if excluded, false otherwise
      */
@@ -237,7 +229,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_cacheable
-     * @access private
      * @return boolean true if cacheable, false otherwise
      */
     public function test_is_cacheable()
@@ -254,7 +245,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::check_error_codes
-     * @access public
      * @param $header, $code
      * @return $eeror_status
      */
@@ -273,7 +263,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::no_cache_for
-     * @access private
      * @param string $reason an explanation for why the page is not cacheable
      * @return boolean return false
      */
@@ -287,7 +276,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::build_purge_headers
-     * @access private
      * @param boolean $stale whether to add header as a stale header or not
      * @return string The purge header
      */
@@ -308,7 +296,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::build_vary_headers
-     * @access private
      * @global $post
      * @return mixed false if the user has the postpass cookie. Empty string
      * if the post is not password protected. Vary header otherwise.
@@ -328,7 +315,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::validate_mode
-     * @access private
      * @param boolean $showhdr whether the show header command was selected
      * @param boolean $stale whether to make the purge headers stale
      * @return integer the integer corresponding to the selected
@@ -345,7 +331,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::prefix_apply
-     * @access private
      * @staticvar string $prefix The prefix to use for each tag.
      * @param string $tag the tag to prefix
      * @return string the amended tag
@@ -367,7 +352,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::get_cache_tags
-     * @access private
      * @return array the list of cache tags to set
      */
     public function test_get_cache_tags()
@@ -384,7 +368,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::get_purge_tags
-     * @access private
      * @param integer $post_id the id of the post about to be purged
      * @return array the list of purge tags correlated with the post
      */
@@ -405,7 +388,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::get_uri_hash
-     * @access private
      * @param string $uri the uri to get the hash of
      * @return bool|string false on input error, hash otherwise
      */
@@ -427,7 +409,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::format_report_section
-     * @access private
      * @param string $section_header The section heading
      * @param array $section An array of information to output
      * @return string the created report block

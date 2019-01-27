@@ -153,7 +153,6 @@ class LiteSpeed_Cache
 	 * NOTE: WP user doesn't init yet
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function init()
 	{
@@ -252,7 +251,6 @@ class LiteSpeed_Cache
 	 * Handle auto update
 	 *
 	 * @since 2.7.2
-	 * @access private
 	 */
 	private function _auto_update()
 	{
@@ -277,7 +275,6 @@ class LiteSpeed_Cache
 	 * Run frontend actions
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public function proceed_action( $action )
 	{
@@ -429,7 +426,6 @@ class LiteSpeed_Cache
 	 * The detect action is used by third party plugin integration classes to determine if they should add the rest of their hooks.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 */
 	public function load_thirdparty()
 	{
@@ -440,7 +436,6 @@ class LiteSpeed_Cache
 	 * A shortcut to get the LiteSpeed_Cache_Config config value
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param string $opt_id an option ID if getting an option
 	 * @return the option value
 	 */
@@ -453,7 +448,6 @@ class LiteSpeed_Cache
 	 * Mark wp_footer called
 	 *
 	 * @since 1.3
-	 * @access public
 	 */
 	public static function footer_hook()
 	{
@@ -467,7 +461,6 @@ class LiteSpeed_Cache
 	 * Tigger coment info display hook
 	 *
 	 * @since 1.3
-	 * @access private
 	 */
 	private function _check_is_html( $buffer = null )
 	{
@@ -526,7 +519,6 @@ class LiteSpeed_Cache
 	 * Usually this is called after send_headers() if following orignal WP process
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 * @param  string $buffer
 	 * @return string
 	 */
@@ -572,7 +564,6 @@ class LiteSpeed_Cache
 	 * This will send out all LiteSpeed Cache related response headers needed for the post.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 * @param boolean $is_forced If the header is sent following our normal finalizing logic
 	 */
 	public function send_headers( $is_forced = false )
@@ -726,7 +717,6 @@ class LiteSpeed_Cache
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

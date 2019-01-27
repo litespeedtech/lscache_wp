@@ -19,7 +19,6 @@ class LiteSpeed_Cache_ThirdParty_WPLister
 	 * Detects if WooCommerce and WPLister are installed.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function detect()
 	{

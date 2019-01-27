@@ -28,7 +28,6 @@ class LiteSpeed_Cache_Data
 	 * Init
 	 *
 	 * @since  1.3.1
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -48,7 +47,6 @@ class LiteSpeed_Cache_Data
 	 * Get img_optm table name
 	 *
 	 * @since  2.0
-	 * @access public
 	 */
 	public static function get_tb_img_optm()
 	{
@@ -60,7 +58,6 @@ class LiteSpeed_Cache_Data
 	 * Get optimizer table
 	 *
 	 * @since  1.4
-	 * @access public
 	 */
 	public static function get_optm_table()
 	{
@@ -72,7 +69,6 @@ class LiteSpeed_Cache_Data
 	 * Check if optimizer table exists or not
 	 *
 	 * @since  1.3.1.1
-	 * @access public
 	 */
 	public static function optm_available()
 	{
@@ -85,7 +81,6 @@ class LiteSpeed_Cache_Data
 	 * Get data structure of one table
 	 *
 	 * @since  2.0
-	 * @access private
 	 */
 	private function _get_data_structure( $tb )
 	{
@@ -96,7 +91,6 @@ class LiteSpeed_Cache_Data
 	 * Drop table img_optm
 	 *
 	 * @since  2.0
-	 * @access private
 	 */
 	public function delete_tb_img_optm()
 	{
@@ -118,7 +112,6 @@ class LiteSpeed_Cache_Data
 	 * Create img optm table and sync data from wp_postmeta
 	 *
 	 * @since  2.0
-	 * @access private
 	 */
 	private function _create_tb_img_optm()
 	{
@@ -235,7 +228,6 @@ class LiteSpeed_Cache_Data
 	 * Create optimizer table
 	 *
 	 * @since  1.3.1
-	 * @access private
 	 */
 	private function _create_tb_html_optm()
 	{
@@ -291,7 +283,6 @@ class LiteSpeed_Cache_Data
 	 * save optimizer src to db
 	 *
 	 * @since  1.3.1
-	 * @access public
 	 */
 	public static function optm_save_src( $filename, $src )
 	{
@@ -319,7 +310,6 @@ class LiteSpeed_Cache_Data
 	 * Get src set from hash in optimizer
 	 *
 	 * @since  1.3.1
-	 * @access public
 	 */
 	public static function optm_hash2src( $filename )
 	{
@@ -344,7 +334,6 @@ class LiteSpeed_Cache_Data
 	 * Get the current instance object.
 	 *
 	 * @since 1.3.1
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

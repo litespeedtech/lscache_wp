@@ -40,7 +40,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Detects if WooCommerce is installed.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 */
 	public static function detect()
 	{
@@ -56,7 +55,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Add hooks to woo actions
 	 *
 	 * @since  1.6.3
-	 * @access public
 	 */
 	public function add_hooks()
 	{
@@ -130,7 +128,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Purge esi private tag
 	 *
 	 * @since  1.6.3
-	 * @access public
 	 */
 	public function purge_esi()
 	{
@@ -143,7 +140,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Check if need to give an ESI block for cart
 	 *
 	 * @since  1.7.2
-	 * @access public
 	 */
 	public function check_if_need_esi( $template )
 	{
@@ -160,7 +156,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Keep vary on if cart is not empty
 	 *
 	 * @since  1.7.2
-	 * @access public
 	 */
 	public function vary_maintain( $vary )
 	{
@@ -175,7 +170,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Check if vary need to be on based on cart
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function vary_needed()
 	{
@@ -201,7 +195,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 */
 	public function set_block_template()
 	{
@@ -217,7 +210,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 */
 	public function set_swap_header_cart()
 	{
@@ -237,7 +229,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @global type $post Needed for post id
 	 * @param type $template_name
 	 * @param type $template_path
@@ -276,7 +267,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 */
 	public function end_form($template_name = '')
 	{
@@ -295,7 +285,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param array $args the arguments used to build the related products section
 	 * @return array the unchanged arguments
 	 */
@@ -317,7 +306,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param type $template_name
 	 */
 	public function end_template($template_name)
@@ -334,7 +322,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 */
 	public function esi_cart_header()
 	{
@@ -347,7 +334,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 */
 	public function load_cart_header()
 	{
@@ -361,7 +347,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @global type $post
 	 * @global type $wp_query
 	 * @param type $params
@@ -382,7 +367,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param array $params Widget parameter array
 	 */
 	public function register_post_view($params)
@@ -413,7 +397,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param array $params the current ESI parameters
 	 * @return array the updated esi parameters
 	 */
@@ -434,7 +417,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param array $options the current default widget options
 	 * @param type $widget the current widget to configure
 	 * @return array the updated default widget options
@@ -461,7 +443,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.3
 	 * @since 1.6.3 Removed static
-	 * @access private
 	 */
 	private function set_ttl()
 	{
@@ -477,7 +458,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 */
 	public function set_tag()
 	{
@@ -535,7 +515,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.5
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param string $esi_id 		the ESI block id if a request is an ESI request
 	 * @return boolean           	true if cacheable, false if not
 	 */
@@ -645,7 +624,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param WC_Product $product
 	 */
 	public function purge_product($product)
@@ -675,7 +653,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param int $post_id object ID
 	 * @param array $term_ids an array of term taxonomy IDs
 	 */
@@ -698,7 +675,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param int $post_id Post id that is about to be purged
 	 */
 	public function backend_purge($post_id)
@@ -735,7 +711,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
-	 * @access public
 	 * @param $unused
 	 * @param integer $comment_approved whether the comment is approved or not
 	 * @param array $commentdata information about the comment
@@ -917,7 +892,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.0.10
 	 * @since 1.6.3 Removed static
-	 * @access private
 	 * @param int $product_id The product id
 	 * @return array an array of category ids
 	 */
@@ -943,7 +917,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * Get the current instance object.
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -31,7 +31,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Initialize the class and set its properties.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -82,7 +81,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * All hooks need to be added before `after_setup_theme`
 	 *
 	 * @since  2.6
-	 * @access public
 	 */
 	public function hook_options()
 	{
@@ -100,7 +98,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Force an option to a certain value
 	 *
 	 * @since  2.6
-	 * @access public
 	 */
 	public function force_option( $k, $v )
 	{
@@ -116,7 +113,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * NOTE: this must be before `LITESPEED_ON` defination
 	 *
 	 * @since 2.1
-	 * @access private
 	 */
 	private function _define_adv_cache( $options )
 	{
@@ -129,7 +125,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Define `LITESPEED_ON`
 	 *
 	 * @since 2.1
-	 * @access public
 	 */
 	public function define_cache_on()
 	{
@@ -143,7 +138,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * For multisite installations, the single site options need to be updated with the network wide options.
 	 *
 	 * @since 1.0.13
-	 * @access private
 	 * @return array the updated options
 	 */
 	private function construct_multisite_options()
@@ -210,7 +204,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the list of configured options for the blog.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @return array the list of configured options
 	 */
 	public function get_options()
@@ -222,7 +215,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the selected configuration option.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param string $id configuration ID
 	 * @return mixed selected option if set, NULL if not
 	 */
@@ -243,7 +235,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * NOTE: No validation here. Do validate before use this function with LiteSpeed_Cache_Admin_Settings->validate_plugin_settings().
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param array $new_cfg the new settings to update, which will be update $this->options too
 	 * @return array the result of update
 	 */
@@ -259,7 +250,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Save frontend url to private cached uri/no cache uri
 	 *
 	 * @since 1.3
-	 * @access public
 	 */
 	public static function frontend_save()
 	{
@@ -307,7 +297,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in vary group settings
 	 *
 	 * @since 1.2.0
-	 * @access public
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
@@ -332,7 +321,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in exclude optimization group settings
 	 *
 	 * @since 1.6
-	 * @access public
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
@@ -354,7 +342,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if one user role is in exclude cache group settings
 	 *
 	 * @since 1.6.2
-	 * @access public
 	 * @param  string $role The user role
 	 * @return int       The set value if already set
 	 */
@@ -376,7 +363,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the configured purge options.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @return array the list of purge options
 	 */
 	public function get_purge_options()
@@ -388,7 +374,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Check if the flag type of posts should be purged on updates.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
 	 * @return boolean true if the post type should be purged, false otherwise
 	 */
@@ -401,7 +386,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get item val
 	 *
 	 * @since 2.2.1
-	 * @access public
 	 */
 	public function get_item( $k, $return_string = false )
 	{
@@ -427,7 +411,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * If the site wide options are not set yet, set it to default.
 	 *
 	 * @since 1.0.2
-	 * @access public
 	 * @return array returns the current site options
 	 */
 	public function get_site_options()
@@ -454,7 +437,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * The only difference is the checkboxes.
 	 *
 	 * @since 1.0.15
-	 * @access public
 	 * @param array $options the options array to port to input format
 	 * @return array $options the options array with input format
 	 */
@@ -526,7 +508,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the difference between the current options and the default options.
 	 *
 	 * @since 1.0.11
-	 * @access public
 	 * @param array $default_options the default options
 	 * @param array $options the current options
 	 * @return array new options
@@ -564,7 +545,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * This is used only when upgrading the plugin versions.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function plugin_upgrade()
 	{
@@ -631,7 +611,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Upgrade network options when the plugin is upgraded.
 	 *
 	 * @since 1.0.11
-	 * @access public
 	 */
 	public function plugin_site_upgrade()
 	{
@@ -656,7 +635,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Vice versa for disabling.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param boolean $enable true if enabling, false if disabling
 	 * @return boolean true if the variable is the correct value, false if something went wrong
 	 */
@@ -711,7 +689,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * On plugin activation, load the default options.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param int $count the count of blogs active in multisite
 	 */
 	public function plugin_activation( $count )
@@ -724,7 +701,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Set one config value directly
 	 *
 	 * @since  2.9
-	 * @access private
 	 */
 	private function _set_cfg()
 	{
@@ -773,7 +749,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -797,7 +772,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

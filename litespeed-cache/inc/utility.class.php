@@ -21,7 +21,6 @@ class LiteSpeed_Cache_Utility
 	 * Check page score
 	 *
 	 * @since  2.9
-	 * @access private
 	 */
 	private function _score_check()
 	{
@@ -45,7 +44,6 @@ class LiteSpeed_Cache_Utility
 	 * Check latest version
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public static function version_check()
 	{
@@ -172,7 +170,6 @@ class LiteSpeed_Cache_Utility
 	 * Set seconds/timestamp to readable format
 	 *
 	 * @since  1.6.5
-	 * @access public
 	 */
 	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $backward = true )
 	{
@@ -233,7 +230,6 @@ class LiteSpeed_Cache_Utility
 	 * Convert array to string
 	 *
 	 * @since  1.6
-	 * @access public
 	 * @return string
 	 */
 	public static function arr2str( $arr )
@@ -249,7 +245,6 @@ class LiteSpeed_Cache_Utility
 	 * Get human readable size
 	 *
 	 * @since  1.6
-	 * @access public
 	 * @return string
 	 */
 	public static function real_size( $filesize )
@@ -274,7 +269,6 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.2.2
 	 * @since  1.4 Moved from optimize to utility
-	 * @access private
 	 * @param  string $str
 	 * @return array  All the attributes
 	 */
@@ -292,7 +286,6 @@ class LiteSpeed_Cache_Utility
 	 * Get url based on permalink setting
 	 *
 	 * @since  1.3
-	 * @access public
 	 * @return string
 	 */
 	public static function get_permalink_url( $relative_url )
@@ -306,7 +299,6 @@ class LiteSpeed_Cache_Utility
 	 * Support $ exact match
 	 *
 	 * @since 1.3
-	 * @access private
 	 * @param string $needle The string to search with
 	 * @param array $haystack
 	 * @return bool|string false if not found, otherwise return the matched string in haystack
@@ -377,7 +369,6 @@ class LiteSpeed_Cache_Utility
 	 * Convert URI to URL
 	 *
 	 * @since  1.3
-	 * @access public
 	 * @param  string $uri `xx/xx.html` or `/subfolder/xx/xx.html`
 	 * @return  string http://www.example.com/subfolder/xx/xx.html
 	 */
@@ -399,7 +390,6 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.2.2
 	 * @since  1.6.2.1 Added 2nd param keep_qs
-	 * @access public
 	 */
 	public static function url2uri( $url, $keep_qs = false )
 	{
@@ -459,7 +449,6 @@ class LiteSpeed_Cache_Utility
 	 * Const LSCWP_DOMAIN has NO trailing /
 	 *
 	 * @since  1.3
-	 * @access public
 	 */
 	public static function domain_const()
 	{
@@ -479,7 +468,6 @@ class LiteSpeed_Cache_Utility
 	 * Array map one textarea to sanitize the url
 	 *
 	 * @since  1.3
-	 * @access public
 	 * @param  string $content
 	 * @param  bool $type String handler type
 	 * @return string
@@ -519,7 +507,6 @@ class LiteSpeed_Cache_Utility
 	 * Assumes user capabilities are already checked.
 	 *
 	 * @since  1.6 Changed order of 2nd&3rd param, changed 3rd param `append_str` to 2nd `type`
-	 * @access public
 	 * @param string $action the LSCWP_CTRL action to do in the url
 	 * @param string $is_ajax if is AJAX call or not
 	 * @param string $type The appending type to url
@@ -617,7 +604,6 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.2.2
 	 * @since  1.6.2 Moved here from optm.cls due to usage of media.cls
-	 * @access public
 	 * @return string|bool The real path of file OR false
 	 */
 	public static function is_internal_file( $url, $addition_postfix = false )
@@ -753,7 +739,6 @@ class LiteSpeed_Cache_Utility
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -777,7 +762,6 @@ class LiteSpeed_Cache_Utility
 	 * Get the current instance object.
 	 *
 	 * @since 2.9
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

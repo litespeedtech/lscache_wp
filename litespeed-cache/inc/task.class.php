@@ -26,7 +26,6 @@ class LiteSpeed_Cache_Task
 	 * Init
 	 *
 	 * @since  1.6
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -74,7 +73,6 @@ class LiteSpeed_Cache_Task
 	 * Enable/Disable cron task
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function enable()
 	{
@@ -99,7 +97,6 @@ class LiteSpeed_Cache_Task
 	 * Update cron status
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @param array $options The options to check if cron should be enabled
 	 */
 	public static function update( $options = false )
@@ -122,7 +119,6 @@ class LiteSpeed_Cache_Task
 	 * Schedule cron img optm auto request
 	 *
 	 * @since 2.4.1
-	 * @access public
 	 */
 	public static function schedule_filter_imgoptm_auto_request()
 	{
@@ -139,7 +135,6 @@ class LiteSpeed_Cache_Task
 	 * Schedule cron img optimization
 	 *
 	 * @since 1.6.1
-	 * @access public
 	 */
 	public static function schedule_filter_imgoptm()
 	{
@@ -156,7 +151,6 @@ class LiteSpeed_Cache_Task
 	 * Schedule cron ccss generation
 	 *
 	 * @since 2.3
-	 * @access public
 	 */
 	public static function schedule_filter_ccss()
 	{
@@ -173,7 +167,6 @@ class LiteSpeed_Cache_Task
 	 * Schedule cron image placeholder generation
 	 *
 	 * @since 2.5.1
-	 * @access public
 	 */
 	public static function schedule_filter_placeholder()
 	{
@@ -190,7 +183,6 @@ class LiteSpeed_Cache_Task
 	 * Schedule cron crawler
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function schedule_filter_crawler()
 	{
@@ -207,7 +199,6 @@ class LiteSpeed_Cache_Task
 	 * Register cron interval imgoptm
 	 *
 	 * @since 1.6.1
-	 * @access public
 	 * @param array $schedules WP Hook
 	 */
 	public static function lscache_cron_filter( $schedules )
@@ -225,7 +216,6 @@ class LiteSpeed_Cache_Task
 	 * Register cron interval
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @param array $schedules WP Hook
 	 */
 	public static function lscache_cron_filter_crawler( $schedules )
@@ -246,7 +236,6 @@ class LiteSpeed_Cache_Task
 	 * Clear cron
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function clear()
 	{
@@ -259,7 +248,6 @@ class LiteSpeed_Cache_Task
 	 * Get the current instance object.
 	 *
 	 * @since 1.6
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

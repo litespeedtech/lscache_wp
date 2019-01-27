@@ -152,7 +152,6 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
  * a purge tag using this function.
  *
  * @since 1.0.1
- * @access public
  * @param integer $id the post id to purge
  */
 if ( ! function_exists( 'litespeed_purge_single_post' ) ) {

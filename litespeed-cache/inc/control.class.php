@@ -36,7 +36,6 @@ class LiteSpeed_Cache_Control
 	 * Init cache control
 	 *
 	 * @since  1.6.2
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -54,7 +53,6 @@ class LiteSpeed_Cache_Control
 	 * Exclude role from optimization filter
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
@@ -70,7 +68,6 @@ class LiteSpeed_Cache_Control
 	 * 2. Hook error page tags for cacheable pages
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function init_cacheable()
 	{
@@ -101,7 +98,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Set no vary setting
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function set_no_vary()
@@ -116,7 +112,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Get no vary setting
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function is_no_vary()
@@ -127,7 +122,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Set stale
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function set_stale()
@@ -142,7 +136,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Get stale
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function is_stale()
@@ -153,7 +146,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Set cache control to shared private
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
@@ -178,7 +170,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check if is shared private
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function is_shared()
@@ -189,7 +180,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Set cache control to forced public
 	 *
-	 * @access public
 	 * @since 1.7.1
 	 * @param string $reason The reason to no cache
 	 */
@@ -213,7 +203,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check if is public forced
 	 *
-	 * @access public
 	 * @since 1.7.1
 	 */
 	public static function is_public_forced()
@@ -224,7 +213,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Set cache control to private
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
@@ -248,7 +236,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check if is private
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function is_private()
@@ -259,7 +246,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Initialize cacheable status in `wp` hook, if not call this, by default it will be non-cacheable
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function set_cacheable( $reason = false )
@@ -279,7 +265,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * This will disable non-cacheable BM
 	 *
-	 * @access public
 	 * @since 2.2
 	 */
 	public static function force_cacheable( $reason = false )
@@ -299,7 +284,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Switch to nocacheable status
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @param string $reason The reason to no cache
 	 */
@@ -320,7 +304,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check current notcacheable bit set
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @return bool true if notcacheable bit is set, otherwise false
 	 */
@@ -332,7 +315,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check current force cacheable bit set
 	 *
-	 * @access public
 	 * @since 	2.2
 	 */
 	public static function is_forced_cacheable()
@@ -343,7 +325,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check current cacheable status
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @return bool true if is still cacheable, otherwise false
 	 */
@@ -360,7 +341,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Set a custom TTL to use with the request if needed.
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @param mixed $ttl An integer or string to use as the TTL. Must be numeric.
 	 */
@@ -375,7 +355,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Generate final TTL.
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @return int $ttl an integer to use as the TTL
 	 */
@@ -438,7 +417,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Check if need to set no cache status for redirection or not
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function check_redirect( $location, $status )
@@ -475,7 +453,6 @@ class LiteSpeed_Cache_Control
 	 * Sets up the Cache Control header.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @return string empty string if empty, otherwise the cache control header
 	 */
 	public static function output()
@@ -514,7 +491,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Generate all `control` tags before output
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function finalize()
@@ -608,7 +584,6 @@ class LiteSpeed_Cache_Control
 	 * Check if a page is cacheable based on litespeed setting.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @return boolean true if cacheable, false otherwise
 	 */
 	private function _setting_cacheable()
@@ -712,7 +687,6 @@ class LiteSpeed_Cache_Control
 	 * Write a debug message for if a page is not cacheable.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @param string $reason an explanation for why the page is not cacheable
 	 * @return boolean return false
 	 */
@@ -726,7 +700,6 @@ class LiteSpeed_Cache_Control
 	 * Check if current request has qs excluded setting
 	 *
 	 * @since  1.3
-	 * @access private
 	 * @param  array  $excludes QS excludes setting
 	 * @return boolean|string False if not excluded, otherwise the hit qs list
 	 */
@@ -741,7 +714,6 @@ class LiteSpeed_Cache_Control
 	/**
 	 * Gets whether any plugins determined that the current page is mobile.
 	 *
-	 * @access public
 	 * @return boolean true if the current page was deemed mobile, false otherwise
 	 */
 	public static function is_mobile()
@@ -755,7 +727,6 @@ class LiteSpeed_Cache_Control
 	 * Must be called before the shutdown hook point.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 */
 	public static function set_mobile()
 	{
@@ -766,7 +737,6 @@ class LiteSpeed_Cache_Control
 	 * Get the current instance object.
 	 *
 	 * @since 1.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

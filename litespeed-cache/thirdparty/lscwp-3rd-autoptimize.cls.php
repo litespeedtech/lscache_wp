@@ -19,7 +19,6 @@ class LiteSpeed_Cache_ThirdParty_Autoptimize
 	 * Detects if Autoptimize is active.
 	 *
 	 *@since 1.0.12
-	 *@access public
 	 */
 	public static function detect()
 	{
@@ -32,7 +31,6 @@ class LiteSpeed_Cache_ThirdParty_Autoptimize
 	 * Purges the cache when Autoptimize's cache is purged.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public static function purge()
 	{

@@ -42,7 +42,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Note: it will only affect the AFTER usage of that option
 	 *
 	 * @since 2.6
-	 * @access public
 	 */
 	public static function force_option( $k, $v )
 	{
@@ -53,7 +52,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Start a to-be-removed html wrapper
 	 *
 	 * @since 1.4
-	 * @access public
 	 */
 	public static function clean_wrapper_begin( $counter = false )
 	{
@@ -64,7 +62,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * End a to-be-removed html wrapper
 	 *
 	 * @since 1.4
-	 * @access public
 	 */
 	public static function clean_wrapper_end( $counter = false )
 	{
@@ -75,7 +72,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Compare version
 	 *
 	 * @since 1.3
-	 * @access public
 	 */
 	public static function v( $v )
 	{
@@ -86,7 +82,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set mobile
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function set_mobile()
 	{
@@ -97,7 +92,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache status to not cacheable
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function set_cache_private()
 	{
@@ -108,7 +102,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache status to no vary
 	 *
 	 * @since 1.2.0
-	 * @access public
 	 */
 	public static function set_cache_no_vary()
 	{
@@ -119,7 +112,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache status to not cacheable
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function set_nocache( $reason = false )
 	{
@@ -130,7 +122,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache status to cacheable ( By default cacheable status will be set when called WP hook `wp` )
 	 *
 	 * @since 2.2
-	 * @access public
 	 */
 	public static function set_cacheable( $reason )
 	{
@@ -141,7 +132,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache status to force cacheable ( Will ignore most kinds of non-cacheable conditions )
 	 *
 	 * @since 2.2
-	 * @access public
 	 */
 	public static function set_force_cacheable( $reason )
 	{
@@ -152,7 +142,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Get current not cacheable status
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function not_cacheable()
 	{
@@ -163,7 +152,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache control ttl to use frontpage ttl
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function set_use_frontpage_ttl()
 	{
@@ -174,7 +162,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Set cache control ttl
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 */
 	public static function set_ttl( $val )
 	{
@@ -185,7 +172,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Get current cache control ttl
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 */
 	public static function get_ttl()
 	{
@@ -196,7 +182,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Add public tag to cache
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function tag_add($tags)
 	{
@@ -207,7 +192,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Add public tag to cache
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 */
 	public static function add_private( $tags )
 	{
@@ -218,7 +202,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook new vary cookies to vary finialization
 	 *
 	 * @since 2.6
-	 * @access public
 	 */
 	public static function hook_vary_add( $hook )
 	{
@@ -230,7 +213,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.1.3
 	 * @since  2.7.1 Changed to filter hook instead of `LiteSpeed_Cache_Vary::add()`
-	 * @access public
 	 */
 	public static function vary_add( $vary, $priority = 10 )
 	{
@@ -247,7 +229,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook vary cookies to vary finialization
 	 *
 	 * @since 2.7.1
-	 * @access public
 	 */
 	public static function filter_vary_cookies( $hook, $priority = 10 )
 	{
@@ -260,7 +241,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Default vary cookie is an array before finalization, after that it will be combined to a string and store as default vary cookie name
 	 *
 	 * @since 2.6
-	 * @access public
 	 */
 	public static function vary( $k, $v, $default = null )
 	{
@@ -274,7 +254,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook vary tags to default vary finialization
 	 *
 	 * @since 1.7.2
-	 * @access public
 	 */
 	public static function hook_vary_finalize( $hook )
 	{
@@ -285,7 +264,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Force finalize vary even if its in an AJAX call
 	 *
 	 * @since 2.6
-	 * @access public
 	 */
 	public static function force_vary()
 	{
@@ -299,7 +277,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.1.3
 	 * @since  2.7.1 This didn't work in 2.7- due to used add_action not filter
-	 * @access public
 	 */
 	public static function hook_vary( $hook )
 	{
@@ -310,7 +287,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Purge all action
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function purge_all()
 	{
@@ -321,7 +297,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Purge all private
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 */
 	public static function purge_private_all()
 	{
@@ -332,7 +307,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Purge private tag
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 */
 	public static function purge_private( $tags )
 	{
@@ -343,7 +317,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Purge single action
 	 *
 	 * @since 1.3
-	 * @access public
 	 * @param  int $pid The ID of a post
 	 */
 	public static function purge_post( $pid )
@@ -355,7 +328,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Add purge tags
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function purge($tags)
 	{
@@ -366,7 +338,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Build a switch div html snippet
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param  string $id
 	 * @param  boolean $return   Return the html or echo it
 	 */
@@ -379,7 +350,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Filter the value for checkbox via input and id (enabled/disabled)
 	 *
 	 * @since  1.1.6
-	 * @access public
 	 * @param int $input The whole input array
 	 * @param string $id The ID of the option
 	 * @return bool Filtered value
@@ -394,7 +364,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook cacheable check to cache control
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_control($hook)
 	{
@@ -405,7 +374,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook tag appending to tag
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_tag($hook)
 	{
@@ -416,7 +384,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook purge tags appending to purge
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_purge($hook)
 	{
@@ -427,7 +394,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook purge post action to purge
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_purge_post($hook)
 	{
@@ -438,7 +404,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook not ESI template
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_tpl_not_esi($hook)
 	{
@@ -449,7 +414,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook ESI template block
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_tpl_esi($block, $hook)
 	{
@@ -460,7 +424,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook ESI params
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_esi_param($block, $hook)
 	{
@@ -471,7 +434,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook setting tab
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_setting_tab($hook, $priority = 10, $args = 1)
 	{
@@ -482,7 +444,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook setting saving
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_setting_save($hook, $priority = 10, $args = 1)
 	{
@@ -493,7 +454,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook widget default settings value
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_widget_default_options($hook, $priority = 10, $args = 1)
 	{
@@ -504,7 +464,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook get options value
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function hook_get_options($hook)
 	{
@@ -515,7 +474,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Generate ESI block url
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param string $control Cache control tag
 	 */
 	public static function esi_url( $block_id, $wrapper, $params = array(), $control = 'default', $silence = false, $preserved = false, $svar = false, $inline_val = false )
@@ -530,7 +488,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Easiest way to replace WP nonce to an ESI widget
 	 *
 	 * @since 2.6
-	 * @access public
 	 */
 	public static function nonce( $action = -1, $defence_for_html_filter = true )
 	{
@@ -546,7 +503,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Log debug info
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function debug( $info, $backtrace_limit = false )
 	{
@@ -557,7 +513,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Log debug info ( advanced mode )
 	 *
 	 * @since 1.6.6.1
-	 * @access public
 	 */
 	public static function debug2( $info, $backtrace_limit = false )
 	{
@@ -568,7 +523,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Get ESI enable setting value
 	 *
 	 * @since 1.2.0
-	 * @access public
 	 */
 	public static function esi_enabled()
 	{
@@ -579,7 +533,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Get cache enable setting value
 	 *
 	 * @since 1.3
-	 * @access public
 	 */
 	public static function cache_enabled()
 	{
@@ -590,7 +543,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Get cfg setting value
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function config($id)
 	{
@@ -601,7 +553,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * register 3rd party detect hooks
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function register($cls)
 	{
@@ -612,7 +563,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Hook to litespeed init
 	 *
 	 * @since 1.6.6
-	 * @access public
 	 */
 	public static function hook_init( $hook )
 	{

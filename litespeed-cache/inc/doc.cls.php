@@ -20,7 +20,6 @@ class LiteSpeed_Cache_Doc
 	 * Privacy policy
 	 *
 	 * @since 2.2.7
-	 * @access public
 	 */
 	public static function privacy_policy()
 	{
@@ -32,7 +31,6 @@ class LiteSpeed_Cache_Doc
 	 * Learn more link
 	 *
 	 * @since  2.4.2
-	 * @access public
 	 */
 	public static function learn_more( $url )
 	{

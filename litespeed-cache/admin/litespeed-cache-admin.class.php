@@ -67,7 +67,6 @@ class LiteSpeed_Cache_Admin
 	 * Callback that initializes the admin options for LiteSpeed Cache.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function admin_init()
 	{
@@ -198,7 +197,6 @@ class LiteSpeed_Cache_Admin
 	 * If it is not ours and the config is set to check, output an error.
 	 *
 	 * @since 1.0.11
-	 * @access private
 	 */
 	private function check_advanced_cache()
 	{
@@ -235,7 +233,6 @@ class LiteSpeed_Cache_Admin
 	 * Clean up the input string of any extra slashes/spaces.
 	 *
 	 * @since 1.0.4
-	 * @access public
 	 * @param string $input the input string to clean
 	 * @return string the cleaned up input
 	 */
@@ -253,7 +250,6 @@ class LiteSpeed_Cache_Admin
 	 * without the nonce and action in the query string.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 * @global string $pagenow
 	 */
 	public static function redirect( $url = false )
@@ -288,7 +284,6 @@ class LiteSpeed_Cache_Admin
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

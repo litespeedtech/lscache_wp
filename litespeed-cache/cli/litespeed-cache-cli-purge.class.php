@@ -193,7 +193,6 @@ class LiteSpeed_Cache_Cli_Purge
 	/**
 	 * Helper function for purging by ids.
 	 *
-	 * @access private
 	 * @since 1.0.15
 	 * @param array $args the id list to parse
 	 * @param string $select The purge by kind

@@ -64,7 +64,6 @@ class LiteSpeed_Cache_Purge
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -128,7 +127,6 @@ class LiteSpeed_Cache_Purge
 	 * Shortcut to purge all lscache
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public static function purge_all( $reason = false )
 	{
@@ -139,7 +137,6 @@ class LiteSpeed_Cache_Purge
 	 * Purge all caches (lscache/op/oc)
 	 *
 	 * @since 2.2
-	 * @access private
 	 */
 	private function _purge_all( $reason = false )
 	{
@@ -171,7 +168,6 @@ class LiteSpeed_Cache_Purge
 	 * it will only purge all posts associated with that site.
 	 *
 	 * @since 2.2
-	 * @access public
 	 */
 	private function _purge_all_lscache( $silence = false )
 	{
@@ -192,7 +188,6 @@ class LiteSpeed_Cache_Purge
 	 * Delete all critical css
 	 *
 	 * @since    2.3
-	 * @access   private
 	 */
 	private function _purge_all_ccss( $silence = false )
 	{
@@ -208,7 +203,6 @@ class LiteSpeed_Cache_Purge
 	 * Delete all placeholder images
 	 *
 	 * @since    2.5.1
-	 * @access   private
 	 */
 	private function _purge_all_placeholder( $silence = false )
 	{
@@ -224,7 +218,6 @@ class LiteSpeed_Cache_Purge
 	 * Alerts LiteSpeed Web Server to purge pages.
 	 *
 	 * @since    1.2.2
-	 * @access   private
 	 */
 	private function _purge_all_cssjs( $silence = false )
 	{
@@ -245,7 +238,6 @@ class LiteSpeed_Cache_Purge
 	 * Purge opcode cache
 	 *
 	 * @since  1.8.2
-	 * @access private
 	 */
 	private function _purge_all_opcache( $silence = false )
 	{
@@ -276,7 +268,6 @@ class LiteSpeed_Cache_Purge
 	 * Purge object cache
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function _purge_all_object( $silence = false )
 	{
@@ -305,7 +296,6 @@ class LiteSpeed_Cache_Purge
 	 * Adds new public purge tags to the array of purge tags for the request.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param mixed $tags tags to add to the list
 	 */
 	public static function add( $tags )
@@ -317,7 +307,6 @@ class LiteSpeed_Cache_Purge
 	 * Add tags to purge
 	 *
 	 * @since 2.2
-	 * @access private
 	 */
 	private function _add( $tags )
 	{
@@ -349,7 +338,6 @@ class LiteSpeed_Cache_Purge
 	 * Adds new private purge tags to the array of purge tags for the request.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param mixed $tags tags to add to the list
 	 */
 	public static function add_private( $tags )
@@ -361,7 +349,6 @@ class LiteSpeed_Cache_Purge
 	 * Add tags to private purge
 	 *
 	 * @since 2.2
-	 * @access private
 	 */
 	private function _add_private( $tags )
 	{
@@ -384,7 +371,6 @@ class LiteSpeed_Cache_Purge
 	 * Activate `purge related tags` for Admin QS.
 	 *
 	 * @since    1.1.3
-	 * @access   public
 	 */
 	public static function set_purge_related()
 	{
@@ -395,7 +381,6 @@ class LiteSpeed_Cache_Purge
 	 * Activate `purge single url tag` for Admin QS.
 	 *
 	 * @since    1.1.3
-	 * @access   public
 	 */
 	public static function set_purge_single()
 	{
@@ -406,7 +391,6 @@ class LiteSpeed_Cache_Purge
 	 * Called from cfg::frontend_save() to purge front page
 	 *
 	 * @since    2.2
-	 * @access   public
 	 */
 	public static function purge_front()
 	{
@@ -418,7 +402,6 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.3
 	 * @since 2.2 Renamed from `frontend_purge`; Access changed from public
-	 * @access private
 	 */
 	private function _purge_front()
 	{
@@ -437,7 +420,6 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since    1.0.3
 	 * @since  	 2.2 	Access changed from public to private, renamed from `_purge_front`
-	 * @access   private
 	 */
 	private function _purge_frontpage()
 	{
@@ -454,7 +436,6 @@ class LiteSpeed_Cache_Purge
 	 * Alerts LiteSpeed Web Server to purge pages.
 	 *
 	 * @since    1.0.15
-	 * @access   private
 	 */
 	private function _purge_pages()
 	{
@@ -468,7 +449,6 @@ class LiteSpeed_Cache_Purge
 	 * Alerts LiteSpeed Web Server to purge error pages.
 	 *
 	 * @since    1.0.14
-	 * @access   private
 	 */
 	private function _purge_error( $type = false )
 	{
@@ -488,7 +468,6 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected category pages.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 * @param string $value the category slug
 	 * @param string $key unused
 	 */
@@ -517,7 +496,6 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected post IDs.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 * @param string $value the post ID
 	 * @param string $key unused
 	 */
@@ -544,7 +522,6 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected tag pages.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 * @param string $value the tag slug
 	 * @param string $key unused
 	 */
@@ -573,7 +550,6 @@ class LiteSpeed_Cache_Purge
 	 * Callback to add purge tags if admin selects to purge selected urls.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 * @param string $value a url to purge
 	 * @param string $key unused
 	 */
@@ -609,7 +585,6 @@ class LiteSpeed_Cache_Purge
 	 * look at the post arguments to determine how and what to purge.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 */
 	public function purge_list()
 	{
@@ -655,7 +630,6 @@ class LiteSpeed_Cache_Purge
 	 * as well.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param integer $id the post id to purge
 	 */
 	public static function purge_post( $id )
@@ -690,7 +664,6 @@ class LiteSpeed_Cache_Purge
 	 * If no widget id is passed in, the method will attempt to find the widget id.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param type $widget_id the id of the widget to purge
 	 */
 	public static function purge_widget($widget_id = null)
@@ -709,7 +682,6 @@ class LiteSpeed_Cache_Purge
 	 * Hooked to the wp_update_comment_count action.
 	 * Purges the comment widget when the count is updated.
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 * @global type $wp_widget_factory
 	 */
@@ -727,7 +699,6 @@ class LiteSpeed_Cache_Purge
 	 * Purges feeds on comment count update.
 	 *
 	 * @since 1.0.9
-	 * @access public
 	 */
 	public static function purge_feeds()
 	{
@@ -739,7 +710,6 @@ class LiteSpeed_Cache_Purge
 	/**
 	 * Purges all private cache entries when the user logs out.
 	 *
-	 * @access public
 	 * @since 1.1.3
 	 */
 	public static function purge_on_logout()
@@ -750,7 +720,6 @@ class LiteSpeed_Cache_Purge
 	/**
 	 * Generate all purge tags before output
 	 *
-	 * @access private
 	 * @since 1.1.3
 	 */
 	private function _finalize()
@@ -795,7 +764,6 @@ class LiteSpeed_Cache_Purge
 	 * This will collect all site wide purge tags as well as third party plugin defined purge tags.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return string the built purge header
 	 */
 	public static function output()
@@ -811,7 +779,6 @@ class LiteSpeed_Cache_Purge
 	 * Build the current purge headers.
 	 *
 	 * @since 1.1.5
-	 * @access private
 	 * @return string the built purge header
 	 */
 	private function _build()
@@ -850,7 +817,6 @@ class LiteSpeed_Cache_Purge
 	 * Append prefix to an array of purge headers
 	 *
 	 * @since 1.1.0
-	 * @access private
 	 * @param array $purge_tags the purge tags to apply the prefix to
 	 * @param  boolean $is_private if is private tags or not
 	 * @return array the array of built purge tags
@@ -901,7 +867,6 @@ class LiteSpeed_Cache_Purge
 	 * any third party plugin specific post tags.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @param integer $post_id the id of the post about to be purged
 	 * @return array the list of purge tags correlated with the post
 	 */
@@ -1023,7 +988,6 @@ class LiteSpeed_Cache_Purge
 	 * The dummy filter for purge all
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 * @param string $val The filter value
 	 * @return string     The filter value
 	 */
@@ -1037,7 +1001,6 @@ class LiteSpeed_Cache_Purge
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

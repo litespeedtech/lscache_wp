@@ -22,7 +22,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_cache_tags
-	 * @access public
 	 * @return array the updated options
 	 */
 	public function test_get_cache_tags() 
@@ -46,7 +45,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::get_purge_tags
-     * @access public
      * @param mixed $tag a string or array of cache tags to add to the current list
      */
     public function test_get_purge_tags() 
@@ -70,7 +68,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::get_vary_cookies
-     * @access public
      * @param mixed $tag a string or array of cache tags to add to the current list
      */
     public function test_get_vary_cookies() 
@@ -94,7 +91,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::is_noncacheable
-     * @access public
      * @return boolean true if the current page was deemed non-cacheable,
      * false otherwise
      */
@@ -118,7 +114,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::is_mobile
-     * @access public
      * @return boolean true if the current page was deemed mobile,
      * false otherwise
      */
@@ -142,7 +137,6 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
     /**
      * test case for LiteSpeed_Cache_Config::get_use_frontpage_ttl
-     * @access public
      * @return boolean true if use front page TTL, false otherwise
      */
     public function test_get_use_frontpage_ttl() 

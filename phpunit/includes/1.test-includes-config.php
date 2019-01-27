@@ -64,7 +64,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::construct_multisite_options
-	 * @access private
 	 * @return array the updated options
 	 */
 	public function test_construct_multisite_options()
@@ -75,7 +74,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_options
-	 * @access public
 	 * @return array the updated options
 	 */
 	public function test_get_options() 
@@ -86,7 +84,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_option
-	 * @access public
 	 * @param string $id configuration ID
 	 * @return mixed selected option if set, NULL if not
 	 */
@@ -99,7 +96,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_purge_options
-	 * @access public
 	 * @return array the list of purge options
 	 */
 	public function test_get_purge_options() 
@@ -110,7 +106,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::purge_by_post
-	 * @access public
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
 	 * @return boolean true if the post type should be purged, false otherwise
 	 */
@@ -124,7 +119,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_default_options
-	 * @access protected
 	 * @param bool $include_thirdparty whether to include the thirdparty options
 	 * @return array an array of the default options
 	 */
@@ -138,7 +132,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_default_site_options
-	 * @access protected
 	 * @return array an array of the default options
 	 */
 	public function test_get_default_site_options()
@@ -149,7 +142,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_rule_reset_options
-	 * @access public
 	 * @return array the list of options to reset
 	 */
 	public function test_get_rule_reset_options()
@@ -160,7 +152,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::get_site_options
-	 * @access public
 	 * @return array returns the current site options
 	 */
 	public function test_get_site_options()
@@ -197,7 +188,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::wp_cache_var_setter
-	 * @access public
 	 * @param boolean $enable true if enabling, false if disabling
 	 * @return boolean true if the variable is the correct value, false if something went wrong
 	 */
@@ -210,7 +200,6 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Config::is_caching_allowed
-	 * @access public
 	 * @return boolean true if enabled, false otherwise
 	 */
 	public function test_is_caching_allowed()

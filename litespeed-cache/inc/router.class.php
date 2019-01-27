@@ -30,7 +30,6 @@ class LiteSpeed_Cache_Router
 	 *
 	 * @since  1.3
 	 * @since  2.3.1 Relocated from cdn.cls
-	 * @access public
 	 */
 	public static function can_optm()
 	{
@@ -70,7 +69,6 @@ class LiteSpeed_Cache_Router
 	 * Check referer page to see if its from admin
 	 *
 	 * @since 2.4.2.1
-	 * @access public
 	 */
 	public static function from_admin()
 	{
@@ -82,7 +80,6 @@ class LiteSpeed_Cache_Router
 	 *
 	 * @since  1.2.3
 	 * @since  2.3.1 Relocated from cdn.cls
-	 * @access public
 	 */
 	public static function can_cdn()
 	{
@@ -138,7 +135,6 @@ class LiteSpeed_Cache_Router
 	 * Check if is login page or not
 	 *
 	 * @since  2.3.1
-	 * @access protected
 	 */
 	protected static function _is_login_page()
 	{
@@ -153,7 +149,6 @@ class LiteSpeed_Cache_Router
 	 * Crawler simulate role
 	 *
 	 * @since  1.9.1
-	 * @access public
 	 */
 	public function is_crawler_role_simulation()
 	{
@@ -246,7 +241,6 @@ class LiteSpeed_Cache_Router
 	 * Get frontend path
 	 *
 	 * @since 1.2.2
-	 * @access public
 	 * @return boolean
 	 */
 	public static function frontend_path()
@@ -271,7 +265,6 @@ class LiteSpeed_Cache_Router
 	 * Check if ESI is enabled or not
 	 *
 	 * @since 1.2.0
-	 * @access public
 	 * @return boolean
 	 */
 	public static function esi_enabled()
@@ -286,7 +279,6 @@ class LiteSpeed_Cache_Router
 	 * Check if crawler is enabled on server level
 	 *
 	 * @since 1.1.1
-	 * @access public
 	 * @return boolean
 	 */
 	public static function can_crawl()
@@ -312,7 +304,6 @@ class LiteSpeed_Cache_Router
 	 * Check action
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return string
 	 */
 	public static function get_action()
@@ -332,7 +323,6 @@ class LiteSpeed_Cache_Router
 	 * Check if is logged in
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @return boolean
 	 */
 	public static function is_logged_in()
@@ -347,7 +337,6 @@ class LiteSpeed_Cache_Router
 	 * Check if is ajax call
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return boolean
 	 */
 	public static function is_ajax()
@@ -362,7 +351,6 @@ class LiteSpeed_Cache_Router
 	 * Check if is admin ip
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return boolean
 	 */
 	public static function is_admin_ip()
@@ -379,7 +367,6 @@ class LiteSpeed_Cache_Router
 	 * Create type value for url
 	 *
 	 * @since 1.6
-	 * @access public
 	 */
 	public static function build_type( $val )
 	{
@@ -390,7 +377,6 @@ class LiteSpeed_Cache_Router
 	 * Get type value
 	 *
 	 * @since 1.6
-	 * @access public
 	 */
 	public static function verify_type()
 	{
@@ -408,7 +394,6 @@ class LiteSpeed_Cache_Router
 	 * Check privilege and nonce for the action
 	 *
 	 * @since 1.1.0
-	 * @access private
 	 */
 	private function verify_action()
 	{
@@ -553,7 +538,6 @@ class LiteSpeed_Cache_Router
 	 * Verify sapi passive callback
 	 *
 	 * @since 1.5
-	 * @access private
 	 * @param  string $action
 	 * @return bool
 	 */
@@ -573,7 +557,6 @@ class LiteSpeed_Cache_Router
 	 * Verify sapi aggressive callback
 	 *
 	 * @since 1.6
-	 * @access private
 	 * @param  string $action
 	 * @return bool
 	 */
@@ -593,7 +576,6 @@ class LiteSpeed_Cache_Router
 	 * Verify nonce
 	 *
 	 * @since 1.1.0
-	 * @access private
 	 * @param  string $action
 	 * @return bool
 	 */
@@ -611,7 +593,6 @@ class LiteSpeed_Cache_Router
 	 * Check if the ip is in the range
 	 *
 	 * @since 1.1.0
-	 * @access private
 	 * @param  string $ip_list IP list
 	 * @return bool
 	 */
@@ -641,7 +622,6 @@ class LiteSpeed_Cache_Router
 	 *
 	 * @since 1.1.0
 	 * @since  1.6.5 changed to public
-	 * @access public
 	 * @return string
 	 */
 	public static function get_ip()
@@ -667,7 +647,6 @@ class LiteSpeed_Cache_Router
 	 * Check if opcode cache is enabled
 	 *
 	 * @since  1.8.2
-	 * @access public
 	 */
 	public static function opcache_enabled()
 	{
@@ -678,7 +657,6 @@ class LiteSpeed_Cache_Router
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -44,7 +44,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   private
 	 */
 	private function __construct()
 	{
@@ -102,7 +101,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Load LiteSpeed assets
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @param  array $hook WP hook
 	 */
 	public function load_assets($hook)
@@ -126,7 +124,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Output litespeed form info
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @param  string $action
 	 */
 	public function form_action( $action, $type = false )
@@ -143,7 +140,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Register the admin menu display.
 	 *
 	 * @since    1.0.0
-	 * @access public
 	 */
 	public function register_admin_menu()
 	{
@@ -179,7 +175,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Helper function to set up a submenu page.
 	 *
 	 * @since 1.0.4
-	 * @access private
 	 * @param string $menu_title the title that appears on the menu
 	 * @param string $menu_slug the slug of the page
 	 * @param string $callback the callback to call if selected
@@ -193,7 +188,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.14
-	 * @access public
 	 */
 	public function enqueue_style()
 	{
@@ -204,7 +198,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
-	 * @access public
 	 */
 	public function enqueue_scripts()
 	{
@@ -238,7 +231,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Callback that adds LiteSpeed Cache's action links.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param array $links previously added links from other plugins
 	 * @return array links array with the litespeed cache one appended
 	 */
@@ -254,7 +246,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Add text to recommend updating upon update success.
 	 *
 	 * @since 1.0.8.1
-	 * @access public
 	 * @param string $translations
 	 * @param string $text
 	 * @return string
@@ -272,7 +263,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Add the filter to update plugin update text.
 	 *
 	 * @since 1.0.8.1
-	 * @access public
 	 */
 	public function set_update_text()
 	{
@@ -283,7 +273,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Remove the filter to update plugin update text.
 	 *
 	 * @since 1.0.8.1
-	 * @access public
 	 */
 	public function unset_update_text()
 	{
@@ -310,7 +299,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Currently used for 'use primary subsite settings'
 	 *
 	 * @since 1.0.13
-	 * @access public
 	 * @return bool true to disable all settings, false otherwise
 	 */
 	public function get_disable_all()
@@ -322,7 +310,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Set to disable all settings.
 	 *
 	 * @since 1.0.13
-	 * @access public
 	 */
 	public function set_disable_all()
 	{
@@ -343,7 +330,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Displays the help tab in the admin pages.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function add_help_tabs()
 	{
@@ -354,7 +340,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Builds the html for a single notice.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 * @param string $color the color to use for the notice
 	 * @param string $str the notice message
 	 * @return string the built notice html
@@ -396,7 +381,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * This function will get the error message by error code and arguments
 	 * and append it to the list of outgoing errors.
 	 *
-	 * @access public
 	 * @since 1.1.0
 	 * @param int $err_code the error code to retrieve
 	 * @param mixed $args null if no arguments, an array if multiple arguments,
@@ -415,7 +399,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display info notice
 	 *
 	 * @since 1.6.5
-	 * @access public
 	 */
 	public static function info( $msg )
 	{
@@ -426,7 +409,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display note notice
 	 *
 	 * @since 1.6.5
-	 * @access public
 	 */
 	public static function note( $msg )
 	{
@@ -437,7 +419,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display success notice
 	 *
 	 * @since 1.6
-	 * @access public
 	 */
 	public static function succeed( $msg )
 	{
@@ -448,7 +429,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display error notice
 	 *
 	 * @since 1.6
-	 * @access public
 	 */
 	public static function error( $msg )
 	{
@@ -461,7 +441,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * method will add the action to display notices.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 * @param string $color one of the available constants provided by this
 	 *     class
 	 * @param mixed $msg may be a string for a single message or an array for
@@ -503,7 +482,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display notices and errors in dashboard
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public function display_messages()
 	{
@@ -537,7 +515,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Appends LiteSpeed Cache settings to the widget edit settings screen.
 	 * This will append the esi on/off selector and ttl text.
 	 *
-	 * @access public
 	 * @since 1.1.0
 	 * @param type $widget
 	 * @param type $return
@@ -552,7 +529,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Displays the cache management page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function show_menu_manage()
 	{
@@ -563,7 +539,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Outputs the LiteSpeed Cache settings page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function show_menu_settings()
 	{
@@ -585,7 +560,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * If it fails, it will echo the error message.
 	 *
 	 * @since 1.0.4
-	 * @access public
 	 */
 	public function show_menu_edit_htaccess()
 	{
@@ -596,7 +570,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Outputs the html for the Environment Report page.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public function show_report()
 	{
@@ -607,7 +580,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Outputs the html for the Import/Export page.
 	 *
 	 * @since 1.8.2
-	 * @access public
 	 */
 	public function show_import_export()
 	{
@@ -618,7 +590,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Outputs the crawler operation page.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public function show_crawler()
 	{
@@ -629,7 +600,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Outputs the optimization operation page.
 	 *
 	 * @since 1.6
-	 * @access public
 	 */
 	public function show_optimization()
 	{
@@ -640,7 +610,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Outputs the debug log.
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 */
 	public function show_debug_log()
 	{
@@ -652,7 +621,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * via the WHM plugin.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public function show_display_installed()
 	{
@@ -663,7 +631,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display error cookie msg.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public static function show_error_cookie()
 	{
@@ -674,7 +641,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display warning if lscache is disabled
 	 *
 	 * @since 2.1
-	 * @access public
 	 */
 	public function cache_disabled_warning()
 	{
@@ -686,7 +652,6 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
-	 * @access public
 	 * @param  string $id
 	 * @param  string $val Value of input
 	 * @param  boolean $disabled If this input is disabled or not
@@ -721,7 +686,6 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.5
 	 * @since  1.7 Changed cols param order to be the 2nd from 4th
-	 * @access public
 	 * @param  string $id
 	 * @param  int $cols The width of textarea
 	 */
@@ -738,7 +702,6 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
-	 * @access public
 	 * @param  string $id
 	 * @param  string $style     Appending styles
 	 * @param  boolean $readonly If is readonly
@@ -774,7 +737,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a checkbox html snippet
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @param  string $id
 	 * @param  string $title
 	 * @param  bool $checked
@@ -842,7 +804,6 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @since 1.7 removed param $disable
-	 * @access public
 	 * @param  string $id
 	 * @param  boolean $return   Return the html or echo it
 	 * @param  boolean $checked  If the value is on
@@ -869,7 +830,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a radio input html codes and output
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @param  string $id
 	 * @param  string $val     Default value of this input
 	 * @param  string $txt     Title of this input
@@ -918,7 +878,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display default value
 	 *
 	 * @since  1.1.1
-	 * @access public
 	 * @param  string $id The setting tag
 	 */
 	public function recommended( $id, $is_item = false )
@@ -948,7 +907,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display API environment variable support
 	 *
 	 * @since  1.8.3
-	 * @access private
 	 */
 	private function _api_env_var()
 	{
@@ -966,7 +924,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display learn more link
 	 *
 	 * @since  2.6.1
-	 * @access public
 	 */
 	public function learn_more( $link, $title = false, $class = false )
 	{
@@ -985,7 +942,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Display URI setting example
 	 *
 	 * @since  2.6.1
-	 * @access private
 	 */
 	private function _uri_usage_example()
 	{
@@ -1002,7 +958,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Return groups string
 	 *
 	 * @since  2.0
-	 * @access public
 	 */
 	public static function print_plural( $num, $kind = 'group' )
 	{
@@ -1036,7 +991,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Return guidance html
 	 *
 	 * @since  2.0
-	 * @access public
 	 */
 	public static function guidance( $title, $steps, $current_step )
 	{
@@ -1069,7 +1023,6 @@ class LiteSpeed_Cache_Admin_Display
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -27,7 +27,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Init
 	 *
 	 * @since  1.3
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -39,7 +38,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * NOTE: Anytime that validate_plugin_settings is called, `convert_options_to_input` must be done first if not from option page
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param array $input the configuration selected by the admin when clicking save
 	 * @return array the updated configuration options
 	 */
@@ -134,7 +132,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the single site specific settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_singlesite()
 	{
@@ -207,7 +204,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Parses any changes made by the network admin on the network settings.
 	 *
 	 * @since 1.0.4
-	 * @access public
 	 */
 	public function validate_network_settings( $input, $revert_options_to_input = false )
 	{
@@ -312,7 +308,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates object cache settings.
 	 *
 	 * @since 1.8
-	 * @access private
 	 */
 	private function _validate_object_cache()
 	{
@@ -380,7 +375,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the general settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_general()
 	{
@@ -426,7 +420,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the cache control settings.
 	 *
 	 * @since 1.1.6
-	 * @access private
 	 */
 	private function _validate_cache()
 	{
@@ -461,7 +454,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the purge settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_purge()
 	{
@@ -510,7 +502,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the exclude settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_exclude()
 	{
@@ -584,7 +575,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the CDN settings.
 	 *
 	 * @since 1.2.2
-	 * @access private
 	 */
 	private function _validate_cdn()
 	{
@@ -722,7 +712,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the media settings.
 	 *
 	 * @since 1.4
-	 * @access private
 	 */
 	private function _validate_media()
 	{
@@ -769,7 +758,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the optimize settings.
 	 *
 	 * @since 1.2.2
-	 * @access private
 	 */
 	private function _validate_optimize()
 	{
@@ -856,7 +844,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validate advanced setting
 	 *
 	 * @since 1.7.1
-	 * @access private
 	 */
 	private function _validate_adv()
 	{
@@ -910,7 +897,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the debug settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_debug()
 	{
@@ -981,7 +967,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the crawler settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_crawler()
 	{
@@ -1080,7 +1065,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the custom sitemap settings.
 	 *
 	 * @since 1.1.1
-	 * @access private
 	 * @param string $url The sitemap url
 	 */
 	private function _validate_custom_sitemap( $url )
@@ -1092,7 +1076,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates settings related to rewrite rules
 	 *
 	 * @since 1.3
-	 * @access private
 	 * @return  array New options related to rewrite rule
 	 */
 	private function _validate_rewrite_settings()
@@ -1161,7 +1144,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the third party settings.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 */
 	private function _validate_thirdparty()
 	{
@@ -1185,7 +1167,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validates the esi settings.
 	 *
 	 * @since 1.1.3
-	 * @access private
 	 */
 	private function _validate_esi()
 	{
@@ -1207,7 +1188,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * This will only hook if there was a problem when saving the widget.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param string $location the location string
 	 * @return string the updated location string
 	 */
@@ -1221,7 +1201,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Validate the LiteSpeed Cache settings on edit widget save.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param array $instance the new settings
 	 * @param array $new_instance
 	 * @param array $old_instance the original settings
@@ -1279,7 +1258,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Invalid character (NOT \w, -, \, |, \s, /, ., +, *, (, ))
 	 *
 	 * @since 1.0.9
-	 * @access private
 	 * @param String $rule input rewrite rule
 	 * @return bool true for valid rules, false otherwise
 	 */
@@ -1307,7 +1285,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.12
 	 * @since 2.6.2 Automatically correct number
-	 * @access private
 	 * @param array $input Input array
 	 * @param string $id Option ID
 	 * @param number $min Minimum number
@@ -1341,7 +1318,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for checkbox via input and id (enabled/disabled)
 	 *
 	 * @since  1.1.6
-	 * @access public
 	 * @param int $input The whole input array
 	 * @param string $id The ID of the option
 	 * @return bool Filtered value
@@ -1355,7 +1331,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for checkbox (enabled/disabled)
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param int $val The checkbox value
 	 * @return bool Filtered value
 	 */
@@ -1374,7 +1349,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Filter the value for radio (enabled/disabled/notset)
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param int $val The radio value
 	 * @return int Filtered value
 	 */
@@ -1397,7 +1371,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * To save item in options
 	 *
 	 * @since 2.2.1
-	 * @access private
 	 */
 	private function _save_item( $id, $sanitize_filter = false )
 	{
@@ -1416,7 +1389,6 @@ class LiteSpeed_Cache_Admin_Settings
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

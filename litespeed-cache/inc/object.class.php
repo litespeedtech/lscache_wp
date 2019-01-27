@@ -52,7 +52,6 @@ class LiteSpeed_Cache_Object
 	 * NOTE: this class may be included without initialized LiteSpeed_Cache core
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function __construct( $cfg = false )
 	{
@@ -129,7 +128,6 @@ class LiteSpeed_Cache_Object
 	 * Get `Store Transients` setting value
 	 *
 	 * @since  1.8.3
-	 * @access public
 	 */
 	public function store_transients( $group )
 	{
@@ -140,7 +138,6 @@ class LiteSpeed_Cache_Object
 	 * Check if the group belongs to transients or not
 	 *
 	 * @since  1.8.3
-	 * @access private
 	 */
 	private function _is_transients_group( $group )
 	{
@@ -151,7 +148,6 @@ class LiteSpeed_Cache_Object
 	 * Maintain WP object cache file
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function update_file( $options )
 	{
@@ -187,7 +183,6 @@ class LiteSpeed_Cache_Object
 	 * Remove object cache file
 	 *
 	 * @since  1.8.2
-	 * @access public
 	 */
 	public function del_file()
 	{
@@ -208,7 +203,6 @@ class LiteSpeed_Cache_Object
 	 * Try to build connection
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function test_connection()
 	{
@@ -243,7 +237,6 @@ class LiteSpeed_Cache_Object
 	 * Connect to Memcached/Redis server
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function _connect()
 	{
@@ -371,7 +364,6 @@ class LiteSpeed_Cache_Object
 	 * Check if the connected memcached host is the one in cfg
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function _validate_mem_server()
 	{
@@ -396,7 +388,6 @@ class LiteSpeed_Cache_Object
 	 * Get memcached unique id to be used for connecting
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function _get_mem_id()
 	{
@@ -412,7 +403,6 @@ class LiteSpeed_Cache_Object
 	 * Get cache
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function get( $key )
 	{
@@ -439,7 +429,6 @@ class LiteSpeed_Cache_Object
 	 * Set cache
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function set( $key, $data, $expire )
 	{
@@ -475,7 +464,6 @@ class LiteSpeed_Cache_Object
 	 * Check if can cache or not
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function _can_cache()
 	{
@@ -489,7 +477,6 @@ class LiteSpeed_Cache_Object
 	 * Delete cache
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function delete( $key )
 	{
@@ -512,7 +499,6 @@ class LiteSpeed_Cache_Object
 	 * Clear all cache
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function flush()
 	{
@@ -542,7 +528,6 @@ class LiteSpeed_Cache_Object
 	 * Add global groups
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function add_global_groups( $groups )
 	{
@@ -558,7 +543,6 @@ class LiteSpeed_Cache_Object
 	 * Check if is in global groups or not
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function is_global( $group )
 	{
@@ -569,7 +553,6 @@ class LiteSpeed_Cache_Object
 	 * Add non persistent groups
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function add_non_persistent_groups( $groups )
 	{
@@ -585,7 +568,6 @@ class LiteSpeed_Cache_Object
 	 * Check if is in non persistent groups or not
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function is_non_persistent( $group )
 	{
@@ -596,7 +578,6 @@ class LiteSpeed_Cache_Object
 	 * Get the current instance object.
 	 *
 	 * @since 1.8
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

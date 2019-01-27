@@ -46,7 +46,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Init
 	 *
 	 * @since  1.5
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -58,7 +57,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.7.2
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -83,7 +81,6 @@ class LiteSpeed_Cache_Admin_API
 	 *
 	 * @since  1.6
 	 * @since  1.6.7 Added destroy callback
-	 * @access public
 	 */
 	public static function sapi_aggressive_callback()
 	{
@@ -114,7 +111,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Validate litespeed api server IP
 	 *
 	 * @since  1.6.5
-	 * @access public
 	 */
 	public function validate_lsserver()
 	{
@@ -128,7 +124,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Handle passive callback requests from LiteSpeed image server
 	 *
 	 * @since  1.6
-	 * @access public
 	 */
 	public static function sapi_passive_callback()
 	{
@@ -150,7 +145,6 @@ class LiteSpeed_Cache_Admin_API
 	 * request key callback from LiteSpeed
 	 *
 	 * @since  1.5
-	 * @access private
 	 */
 	private function _request_callback()
 	{
@@ -163,7 +157,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Check if is valid callback from litespeed passive request
 	 *
 	 * @since  1.5
-	 * @access public
 	 * @return bool True if correct
 	 */
 	public static function sapi_valiate_passive_callback()
@@ -187,7 +180,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Check if is valid callback from litespeed aggressive request
 	 *
 	 * @since  1.6
-	 * @access public
 	 * @return bool True if correct
 	 */
 	public static function sapi_validate_aggressive_callback()
@@ -215,7 +207,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Get data from LiteSpeed cloud server
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public static function get( $action, $data = array(), $server = false )
 	{
@@ -236,7 +227,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Post data to LiteSpeed cloud server
 	 *
 	 * @since  1.6
-	 * @access public
 	 */
 	public static function post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
 	{
@@ -267,7 +257,6 @@ class LiteSpeed_Cache_Admin_API
 	 * This needs callback validation, so don't use for generic services which don't need security
 	 *
 	 * @since  1.5
-	 * @access private
 	 */
 	private function _request_key()
 	{
@@ -298,7 +287,6 @@ class LiteSpeed_Cache_Admin_API
 	 * ping clouds from LiteSpeed
 	 *
 	 * @since  2.9
-	 * @access private
 	 */
 	private function _detect_cloud()
 	{
@@ -344,7 +332,6 @@ class LiteSpeed_Cache_Admin_API
 	 * delete key
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function _reset_key()
 	{
@@ -360,7 +347,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Get data from LiteSpeed cloud server
 	 *
 	 * @since  2.9
-	 * @access private
 	 */
 	private function _get( $action, $data = false, $server = false )
 	{
@@ -399,7 +385,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Post data to LiteSpeed cloud server
 	 *
 	 * @since  1.6
-	 * @access private
 	 * @return  string | array Must return an error msg string or json array
 	 */
 	private function _post( $action, $data = false, $server = false, $no_hash = false, $time_out = false )
@@ -516,7 +501,6 @@ class LiteSpeed_Cache_Admin_API
 	 *
 	 * @since  1.6.5
 	 * @since  1.6.7 Self clean the parameter
-	 * @access private
 	 */
 	private function _parse_link( &$json )
 	{
@@ -537,7 +521,6 @@ class LiteSpeed_Cache_Admin_API
 	 * Get the current instance object.
 	 *
 	 * @since 1.5
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

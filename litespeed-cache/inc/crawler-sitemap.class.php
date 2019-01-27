@@ -25,7 +25,6 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	 * Instantiate the class
 	 *
 	 * @since 1.1.0
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -41,7 +40,6 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	 * Generate all urls
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public function generate_data($blacklist = array())
 	{
@@ -146,7 +144,6 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -18,7 +18,6 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 	 * Detects if Better Theme My Login is active.
 	 *
 	 * @since 1.0.15
-	 * @access public
 	 *
 	 */
 	public static function detect()
@@ -31,7 +30,6 @@ class LiteSpeed_Cache_ThirdParty_Theme_My_Login
 	/**
 	 * This filter is used to let the cache know if a page is cacheable.
 	 *
-	 * @access public
 	 * @since 1.0.15
 	 */
 	public static function set_control()

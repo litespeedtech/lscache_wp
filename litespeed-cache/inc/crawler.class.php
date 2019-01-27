@@ -28,7 +28,6 @@ class LiteSpeed_Cache_Crawler
 	 * Initialize crawler, assign sitemap path
 	 *
 	 * @since    1.1.0
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -53,7 +52,6 @@ class LiteSpeed_Cache_Crawler
 	 * Return crawler meta file
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @return string Json data file path
 	 */
 	public function get_crawler_json_path()
@@ -69,7 +67,6 @@ class LiteSpeed_Cache_Crawler
 	 * Return blacklist content
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @return string
 	 */
 	public function get_blacklist()
@@ -81,7 +78,6 @@ class LiteSpeed_Cache_Crawler
 	 * Return blacklist count
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @return string
 	 */
 	public function count_blacklist()
@@ -93,7 +89,6 @@ class LiteSpeed_Cache_Crawler
 	 * Save blacklist to file
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @return bool If saved successfully
 	 */
 	public function save_blacklist()
@@ -127,7 +122,6 @@ class LiteSpeed_Cache_Crawler
 	 * Append urls to current list
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @param  array $list The url list needs to be appended
 	 */
 	public function append_blacklist( $list )
@@ -156,7 +150,6 @@ class LiteSpeed_Cache_Crawler
 	 * Generate sitemap
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 */
 	public function generate_sitemap()
 	{
@@ -177,7 +170,6 @@ class LiteSpeed_Cache_Crawler
 	 * Parse custom sitemap and return urls
 	 *
 	 * @since    1.1.1
-	 * @access public
 	 * @param  string  $sitemap       The url set map address
 	 * @param  boolean $return_detail If return url list
 	 * @return bollean|array          Url list or if is a sitemap
@@ -254,7 +246,6 @@ class LiteSpeed_Cache_Crawler
 	 * Generate the sitemap
 	 *
 	 * @since    1.1.0
-	 * @access protected
 	 * @return string|true
 	 */
 	protected function _generate_sitemap()
@@ -298,7 +289,6 @@ class LiteSpeed_Cache_Crawler
 	 * Get sitemap file info
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public function sitemap_time()
 	{
@@ -315,7 +305,6 @@ class LiteSpeed_Cache_Crawler
 	 * Create reset pos file
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -339,7 +328,6 @@ class LiteSpeed_Cache_Crawler
 	 * Proceed crawling
 	 *
 	 * @since    1.1.0
-	 * @access public
 	 * @param bool $force If ignore whole crawling interval
 	 */
 	public static function crawl_data($force = false)
@@ -358,7 +346,6 @@ class LiteSpeed_Cache_Crawler
 	 * Receive meta info from crawler
 	 *
 	 * @since    1.9.1
-	 * @access   public
 	 */
 	public function read_meta()
 	{
@@ -370,7 +357,6 @@ class LiteSpeed_Cache_Crawler
 	 * Crawling start
 	 *
 	 * @since    1.1.0
-	 * @access   protected
 	 * @param bool $force If ignore whole crawling interval
 	 */
 	protected function _crawl_data($force)
@@ -510,7 +496,6 @@ class LiteSpeed_Cache_Crawler
 	 * List all crawlers
 	 *
 	 * @since    1.9.1
-	 * @access   public
 	 */
 	public function list_crawlers( $count_only = false )
 	{
@@ -586,7 +571,6 @@ class LiteSpeed_Cache_Crawler
 	 * Build a crawler list recursively
 	 *
 	 * @since 2.8
-	 * @access private
 	 */
 	private function _recursive_build_crawler( $crawler_factors, $group = array(), $i = 0 )
 	{
@@ -627,7 +611,6 @@ class LiteSpeed_Cache_Crawler
 	 * Output info and exit
 	 *
 	 * @since    1.1.0
-	 * @access protected
 	 * @param  string $error Error info
 	 */
 	protected function output($msg)
@@ -646,7 +629,6 @@ class LiteSpeed_Cache_Crawler
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

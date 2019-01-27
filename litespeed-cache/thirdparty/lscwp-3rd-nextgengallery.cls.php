@@ -25,7 +25,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * If this action is triggered, assume NextGen Gallery is used.
 	 *
 	 * @since	1.0.5
-	 * @access	public
 	 */
 	public static function detect()
 	{
@@ -50,7 +49,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an image is added, need to purge all pages that displays its gallery.
 	 *
 	 * @since	1.0.5
-	 * @access	public
 	 * @param	string	$image	the image object added
 	 */
 	public static function add_image($image)
@@ -68,7 +66,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an image is updated, need to purge all pages that displays its gallery.
 	 *
 	 * @since 1.0.5
-	 * @access	public
 	 */
 	public static function update_image()
 	{
@@ -110,7 +107,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an image is deleted, need to purge all pages that displays its gallery.
 	 *
 	 * @since 1.0.5
-	 * @access	public
 	 */
 	public static function delete_image()
 	{
@@ -123,7 +119,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an image is moved, need to purge all old galleries and the new gallery.
 	 *
 	 * @since 1.0.8
-	 * @access	public
 	 * @param array $images unused
 	 * @param array $old_gallery_ids source gallery ids for the images
 	 * @param integer $new_gallery_id destination gallery id
@@ -163,7 +158,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When a gallery is updated, need to purge all pages that display the gallery.
 	 *
 	 * @since 1.0.5
-	 * @access  public
 	 * @param	integer		$gid	the gallery id of the gallery updated
 	 */
 	public static function update_gallery($gid)
@@ -180,7 +174,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * When an album is updated, need to purge all pages that display the album.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 * @param	integer		$aid	the album id of the album updated
 	 */
 	public static function update_album($aid)
@@ -193,7 +186,6 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	 * it needs to be tagged appropriately.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 * @param object $render_parms parameters used to render the associated part of the page
 	 * @return mixed null if passed in null, $render_parms otherwise
 	 */

@@ -19,7 +19,6 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 * Detect if bbPress is installed and if the page is a bbPress page.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 */
 	public static function detect()
 	{
@@ -34,7 +33,6 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	/**
 	 * This filter is used to let the cache know if a page is cacheable.
 	 *
-	 * @access public
 	 * @since 1.2.0
 	 */
 	public static function set_control()
@@ -55,7 +53,6 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 * any/all ancestor pages.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 * @param integer $post_id the post id of the page being purged
 	 */
 	public static function on_purge($post_id)

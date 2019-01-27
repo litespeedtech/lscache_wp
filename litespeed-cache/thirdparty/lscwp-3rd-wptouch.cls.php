@@ -19,7 +19,6 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 	 * Detects if WPTouch is installed.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 */
 	public static function detect()
 	{
@@ -33,7 +32,6 @@ class LiteSpeed_Cache_ThirdParty_WpTouch
 	 * Check if the device is mobile. If so, set mobile.
 	 *
 	 * @since 1.0.7
-	 * @access public
 	 */
 	public static function set_control()
 	{

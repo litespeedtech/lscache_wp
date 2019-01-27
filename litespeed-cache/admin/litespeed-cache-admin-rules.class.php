@@ -58,7 +58,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.7
-	 * @access   private
 	 */
 	private function __construct()
 	{
@@ -163,7 +162,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * If can't find, return false
 	 *
 	 * @since 1.0.11
-	 * @access private
 	 * @param string $start_path the first directory level to search
 	 * @return string The deepest path where .htaccess exists, False if not.
 	 */
@@ -186,7 +184,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Set the path class variables.
 	 *
 	 * @since 1.0.11
-	 * @access private
 	 */
 	private function path_set()
 	{
@@ -250,7 +247,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @since  2.9 Used exception for failed reading
-	 * @access public
 	 * @param string $path the path to get the content from
 	 * @return boolean true if succeeded, false otherwise
 	 */
@@ -286,7 +282,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @since 1.0.12 - Introduce $backup parameter and make function public
-	 * @access public
 	 * @param string $content the new content to put into the rules file
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
 	 * @param boolean $backup whether to create backups or not
@@ -324,7 +319,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * If a zip already exists, overwrite it.
 	 *
 	 * @since 1.0.10
-	 * @access private
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
 	 * @return boolean true on success, else false on failure
 	 */
@@ -421,7 +415,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Parse rewrites rule from the .htaccess file.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @param string $kind The kind of htaccess to search in
 	 * @return array
 	 */
@@ -480,7 +473,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Generate browser cache rules
 	 *
 	 * @since  1.3
-	 * @access private
 	 * @return array Rules set
 	 */
 	private function _browser_cache_rules( $cfg )
@@ -535,7 +527,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Generate minify rules
 	 *
 	 * @since  2.1.2
-	 * @access private
 	 * @return array Rules set
 	 */
 	private function _minify_rules()
@@ -555,7 +546,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Generate CORS rules for fonts
 	 *
 	 * @since  1.5
-	 * @access private
 	 * @return array Rules set
 	 */
 	private function _cors_rules()
@@ -573,7 +563,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Generate rewrite rules based on settings
 	 *
 	 * @since  1.3
-	 * @access private
 	 * @param  array $cfg  The settings to be used for rewrite rule
 	 * @return array      Rules array
 	 */
@@ -733,7 +722,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Add LitSpeed module wrapper with rewrite on
 	 *
 	 * @since  2.1.1
-	 * @access private
 	 */
 	private function _wrap_ls_module( $rules = array() )
 	{
@@ -750,7 +738,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Insert LitSpeed module wrapper with rewrite on
 	 *
 	 * @since  2.1.1
-	 * @access public
 	 */
 	public function insert_ls_wrapper()
 	{
@@ -785,7 +772,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Write to htaccess with rules
 	 *
 	 * @since  1.1.0
-	 * @access private
 	 * @param  array $rules
 	 * @param  string $kind  which htaccess
 	 */
@@ -812,7 +798,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Update rewrite rules based on setting
 	 *
 	 * @since 1.3
-	 * @access public
 	 * @param array $cfg the rules that need to be set
 	 */
 	public function update( $cfg, $disable_lscache_detail_rules = false )
@@ -887,7 +872,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Get existing rewrite rules
 	 *
 	 * @since  1.3
-	 * @access private
 	 * @param  string $kind Frontend or backend .htaccess file
 	 * @return bool|array       False if failed to read, rules array otherwise
 	 */
@@ -950,7 +934,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Clear the rules file of any changes added by the plugin specifically.
 	 *
 	 * @since 1.0.4
-	 * @access public
 	 * @param  string  $clear_all	deactivation will give true, so clear all rules, otherwise only clear lscache related rules
 	 */
 	public function clear_rules()
@@ -1010,7 +993,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @since  2.9 Used exception when saving
-	 * @access public
 	 */
 	public function htaccess_editor_save()
 	{
@@ -1035,7 +1017,6 @@ class LiteSpeed_Cache_Admin_Rules
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

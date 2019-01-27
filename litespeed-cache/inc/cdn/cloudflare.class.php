@@ -22,7 +22,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.7.2
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -55,7 +54,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Get Cloudflare development mode
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function _get_devmode( $show_msg = true )
 	{
@@ -87,7 +85,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Set Cloudflare development mode
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function _set_devmode( $type )
 	{
@@ -120,7 +117,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Purge Cloudflare cache
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function _purge_all()
 	{
@@ -153,7 +149,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Get current Cloudflare zone from cfg
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function _zone()
 	{
@@ -171,7 +166,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Get Cloudflare zone settings
 	 *
 	 * @since  1.7.2
-	 * @access public
 	 */
 	public function fetch_zone( $options )
 	{
@@ -217,7 +211,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Cloudflare API
 	 *
 	 * @since  1.7.2
-	 * @access private
 	 */
 	private function _cloudflare_call( $url, $method = 'GET', $data = false, $token = false, $show_msg = true )
 	{
@@ -274,7 +267,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 * Get the current instance object.
 	 *
 	 * @since 1.2.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

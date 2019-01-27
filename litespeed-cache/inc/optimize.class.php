@@ -57,7 +57,6 @@ class LiteSpeed_Cache_Optimize
 	 * Init optimizer
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -112,7 +111,6 @@ class LiteSpeed_Cache_Optimize
 	 * Exclude role from optimization filter
 	 *
 	 * @since  1.6
-	 * @access public
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
@@ -127,7 +125,6 @@ class LiteSpeed_Cache_Optimize
 	 * Remove emoji from WP
 	 *
 	 * @since  1.4
-	 * @access public
 	 */
 	public function emoji_rm()
 	{
@@ -148,7 +145,6 @@ class LiteSpeed_Cache_Optimize
 	 * Check if the request is for static file
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 * @return  string The static file content
 	 */
 	private function _static_request_check()
@@ -225,7 +221,6 @@ class LiteSpeed_Cache_Optimize
 	 * Output header info
 	 *
 	 * @since  2.1.2
-	 * @access public
 	 */
 	private function _output_header( $headers )
 	{
@@ -240,7 +235,6 @@ class LiteSpeed_Cache_Optimize
 	 * Delete file-based cache folder
 	 *
 	 * @since  2.1
-	 * @access public
 	 */
 	public function rm_cache_folder()
 	{
@@ -257,7 +251,6 @@ class LiteSpeed_Cache_Optimize
 	 * Remove QS
 	 *
 	 * @since  1.3
-	 * @access public
 	 */
 	public function remove_query_strings( $src )
 	{
@@ -277,7 +270,6 @@ class LiteSpeed_Cache_Optimize
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
 	 * @since  1.2.2
-	 * @access public
 	 * @return  string The content that is after optimization
 	 */
 	public static function finalize( $content )
@@ -321,7 +313,6 @@ class LiteSpeed_Cache_Optimize
 	 * Optimize css src
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 */
 	private function _optimize()
 	{
@@ -603,7 +594,6 @@ class LiteSpeed_Cache_Optimize
 	 * Google font async
 	 *
 	 * @since 2.7.3
-	 * @access private
 	 */
 	private function _async_ggfonts()
 	{
@@ -666,7 +656,6 @@ class LiteSpeed_Cache_Optimize
 	 * Prefetch DNS
 	 *
 	 * @since 1.7.1
-	 * @access private
 	 */
 	private function _dns_prefetch_init()
 	{
@@ -687,7 +676,6 @@ class LiteSpeed_Cache_Optimize
 	 * Prefetch DNS hook for WP
 	 *
 	 * @since 1.7.1
-	 * @access public
 	 */
 	public function dns_prefetch_filter( $urls, $relation_type )
 	{
@@ -708,7 +696,6 @@ class LiteSpeed_Cache_Optimize
 	 * Prefetch DNS
 	 *
 	 * @since 1.7.1
-	 * @access public
 	 */
 	public function dns_prefetch_output()
 	{
@@ -723,7 +710,6 @@ class LiteSpeed_Cache_Optimize
 	 * Limit combined filesize when build hash url
 	 *
 	 * @since  1.3
-	 * @access private
 	 */
 	private function _limit_size_build_hash_url( $src_queue_list, $file_size_list, $file_type = 'css' )
 	{
@@ -760,7 +746,6 @@ class LiteSpeed_Cache_Optimize
 	 * Run minify with src queue list
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 */
 	private function _src_queue_handler( $src_queue_list, $html_list, $file_type = 'css' )
 	{
@@ -795,7 +780,6 @@ class LiteSpeed_Cache_Optimize
 	 * Check that links are internal or external
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 * @return array Array(Ignored raw html, src needed to be handled list, filesize for param 2nd )
 	 */
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
@@ -869,7 +853,6 @@ class LiteSpeed_Cache_Optimize
 	 * Generate full URL path with hash for a list of src
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 * @return string The final URL
 	 */
 	private function _build_hash_url( $src, $file_type = 'css' )
@@ -933,7 +916,6 @@ class LiteSpeed_Cache_Optimize
 	 * Parse js src
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
 	private function _parse_js()
@@ -998,7 +980,6 @@ class LiteSpeed_Cache_Optimize
 	 * Parse css src and remove to-be-removed css
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 * @return array  All the src & related raw html list
 	 */
 	private function _handle_css()
@@ -1086,7 +1067,6 @@ class LiteSpeed_Cache_Optimize
 	 * Replace css to async loaded css
 	 *
 	 * @since  1.3
-	 * @access private
 	 * @param  array $html_list Orignal css array
 	 * @return array            (array)css_async_list
 	 */
@@ -1117,7 +1097,6 @@ class LiteSpeed_Cache_Optimize
 	 * Add defer to js
 	 *
 	 * @since  1.3
-	 * @access private
 	 */
 	private function _js_defer( $html_list )
 	{
@@ -1187,7 +1166,6 @@ class LiteSpeed_Cache_Optimize
 	 * Check if is jq lib
 	 *
 	 * @since  1.5
-	 * @access private
 	 */
 	private function _is_jquery( $src )
 	{
@@ -1198,7 +1176,6 @@ class LiteSpeed_Cache_Optimize
 	 * Append to HTTP2 header
 	 *
 	 * @since  1.2.2
-	 * @access private
 	 */
 	private function append_http2( $url, $file_type = 'css' )
 	{
@@ -1231,7 +1208,6 @@ class LiteSpeed_Cache_Optimize
 	 * Get the current instance object.
 	 *
 	 * @since 1.2.2
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

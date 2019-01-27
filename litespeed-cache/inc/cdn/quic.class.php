@@ -20,7 +20,6 @@ class LiteSpeed_Cache_CDN_Quic
 	/**
 	 * Notify CDN new config updated
 	 *
-	 * @access public
 	 */
 	public static function sync_config( $options )
 	{
@@ -220,7 +219,6 @@ class LiteSpeed_Cache_CDN_Quic
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.0
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -243,7 +241,6 @@ class LiteSpeed_Cache_CDN_Quic
 	 * Get the current instance object.
 	 *
 	 * @since 1.8
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

@@ -193,7 +193,6 @@ class WP_Object_Cache
 	 * Init
 	 *
 	 * @since  1.8
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -213,7 +212,6 @@ class WP_Object_Cache
 	 * Output debug info
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function debug()
 	{
@@ -231,7 +229,6 @@ class WP_Object_Cache
 	 * Get from cache
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function get( $key, $group = 'default', $force = false, &$found = null )
 	{
@@ -295,7 +292,6 @@ class WP_Object_Cache
 	 * Set to cache
 	 *
 	 * @since  1.8
-	 * @access public
 	 */
 	public function set( $key, $data, $group = 'default', $expire = 0 )
 	{
@@ -328,7 +324,6 @@ class WP_Object_Cache
 	 * Adds data to the cache if it doesn't already exist.
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function add( $key, $data, $group = 'default', $expire = 0 )
 	{
@@ -349,7 +344,6 @@ class WP_Object_Cache
 	 * Replace cache if the cache key exists.
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function replace( $key, $data, $group = 'default', $expire = 0 )
 	{
@@ -366,7 +360,6 @@ class WP_Object_Cache
 	 * Increments numeric cache item's value.
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function incr_desr( $key, $offset = 1, $group = 'default', $incr = true )
 	{
@@ -402,7 +395,6 @@ class WP_Object_Cache
 	 * Delete cache
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function delete( $key, $group = 'default' )
 	{
@@ -429,7 +421,6 @@ class WP_Object_Cache
 	 * Clear all cached data
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function flush()
 	{
@@ -446,7 +437,6 @@ class WP_Object_Cache
 	 * Add global groups
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function add_global_groups( $groups )
 	{
@@ -457,7 +447,6 @@ class WP_Object_Cache
 	 * Add non persistent groups
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function add_non_persistent_groups( $groups )
 	{
@@ -468,7 +457,6 @@ class WP_Object_Cache
 	 * Get the final key
 	 *
 	 * @since 1.8
-	 * @access private
 	 */
 	private function _key( $key, $group = 'default' )
 	{
@@ -495,7 +483,6 @@ class WP_Object_Cache
 	 * Get transient from wp table
 	 *
 	 * @since 1.8.3
-	 * @access private
 	 * @see `wp-includes/option.php` function `get_transient`/`set_site_transient`
 	 */
 	private function _transient_get( $transient, $group )
@@ -550,7 +537,6 @@ class WP_Object_Cache
 	 * Set transient to WP table
 	 *
 	 * @since 1.8.3
-	 * @access private
 	 * @see `wp-includes/option.php` function `set_transient`/`set_site_transient`
 	 */
 	private function _transient_set( $transient, $value, $group, $expiration )
@@ -612,7 +598,6 @@ class WP_Object_Cache
 	 * Delete transient from WP table
 	 *
 	 * @since 1.8.3
-	 * @access private
 	 * @see `wp-includes/option.php` function `delete_transient`/`delete_site_transient`
 	 */
 	private function _transient_del( $transient, $group )
@@ -641,7 +626,6 @@ class WP_Object_Cache
 	 * Get the current instance object.
 	 *
 	 * @since 1.8
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

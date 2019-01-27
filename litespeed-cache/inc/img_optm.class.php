@@ -66,7 +66,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Init
 	 *
 	 * @since  2.0
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -80,7 +79,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Sync data from litespeed IAPI server for CLI usage
 	 *
 	 * @since  2.4.4
-	 * @access public
 	 */
 	public function sync_data()
 	{
@@ -91,7 +89,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Sync data from litespeed IAPI server
 	 *
 	 * @since  1.6.5
-	 * @access private
 	 */
 	private function _sync_data( $try_level_up = false )
 	{
@@ -123,7 +120,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Request optm to litespeed IAPI server for CLI usage
 	 *
 	 * @since  2.4.4
-	 * @access public
 	 */
 	public function request_optm()
 	{
@@ -134,7 +130,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Push raw img to LiteSpeed IAPI server
 	 *
 	 * @since 1.6
-	 * @access private
 	 */
 	private function _request_optm()
 	{
@@ -313,7 +308,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Insert data into table img_optm
 	 *
 	 * @since 2.0
-	 * @access private
 	 */
 	private function _insert_img_optm( $data, $fields = 'post_id, optm_status, src, srcpath_md5, src_md5, src_filesize' )
 	{
@@ -338,7 +332,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Get all root img data by srcpath_md5
 	 *
 	 * @since 2.0
-	 * @access private
 	 */
 	private function _select_img_by_root_srcpath( $srcpath_md5_to_search )
 	{
@@ -369,7 +362,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Save failed to parse meta info
 	 *
 	 * @since 2.1.1
-	 * @access private
 	 */
 	private function _mark_wrong_meta_src( $pid )
 	{
@@ -385,7 +377,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Handle existing same src path images
 	 *
 	 * @since 2.0
-	 * @access private
 	 */
 	private function _filter_existing_src()
 	{
@@ -498,7 +489,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Filter duplicated src in $this->_img_in_queue
 	 *
 	 * @since 2.0
-	 * @access private
 	 */
 	private function _filter_duplicated_src()
 	{
@@ -539,7 +529,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Generate placeholder for an array to query
 	 *
 	 * @since 2.0
-	 * @access private
 	 */
 	private function _chunk_placeholder( $data, $division )
 	{
@@ -555,7 +544,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Saved non-existed images into img_optm
 	 *
 	 * @since 2.0
-	 * @access private
 	 */
 	private function _save_missed_into_img_optm()
 	{
@@ -578,7 +566,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Add a new img to queue which will be pushed to LiteSpeed
 	 *
 	 * @since 1.6
-	 * @access private
 	 */
 	private function _img_queue( $meta_value, $ori_file = false )
 	{
@@ -661,7 +648,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Push img to LiteSpeed IAPI server
 	 *
 	 * @since 1.6.7
-	 * @access private
 	 */
 	private function _push_img_in_queue_to_iapi()
 	{
@@ -700,7 +686,6 @@ class LiteSpeed_Cache_Img_Optm
 	 *
 	 * @since  1.6
 	 * @since  1.6.5 Added err/request status free switch
-	 * @access public
 	 */
 	public function notify_img()
 	{
@@ -896,7 +881,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * parse LiteSpeed IAPI server data
 	 *
 	 * @since  1.6.5
-	 * @access public
 	 */
 	private function _parse_notify_data()
 	{
@@ -928,7 +912,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Cron pull optimized img
 	 *
 	 * @since  1.6
-	 * @access public
 	 */
 	public static function cron_pull_optimized_img()
 	{
@@ -951,7 +934,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Pull optm data from litespeed IAPI server for CLI usage
 	 *
 	 * @since  2.4.4
-	 * @access public
 	 */
 	public function pull_img()
 	{
@@ -966,7 +948,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Pull optimized img
 	 *
 	 * @since  1.6
-	 * @access private
 	 */
 	private function _pull_optimized_img( $manual = false )
 	{
@@ -1182,7 +1163,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Auto send optm request
 	 *
 	 * @since  2.4.1
-	 * @access public
 	 */
 	public static function cron_auto_request()
 	{
@@ -1206,7 +1186,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Show an image's optm status
 	 *
 	 * @since  1.6.5
-	 * @access public
 	 */
 	public function check_img()
 	{
@@ -1250,7 +1229,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Parse wp's meta value
 	 *
 	 * @since 1.6.7
-	 * @access private
 	 */
 	private function _parse_wp_meta_value( $v )
 	{
@@ -1284,7 +1262,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Clean up unfinished data for CLI usage
 	 *
 	 * @since  2.4.4
-	 * @access public
 	 */
 	public function destroy_unfinished()
 	{
@@ -1297,7 +1274,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Destroy all unfinished queue locally and to LiteSpeed IAPI server
 	 *
 	 * @since 2.1.2
-	 * @access private
 	 */
 	private function _img_optimize_destroy_unfinished()
 	{
@@ -1351,7 +1327,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Send destroy all requests cmd to LiteSpeed IAPI server and get the link to finish it ( avoid click by mistake )
 	 *
 	 * @since 1.6.7
-	 * @access private
 	 */
 	private function _img_optimize_destroy()
 	{
@@ -1374,7 +1349,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Callback from LiteSpeed IAPI server to destroy all optm data
 	 *
 	 * @since 1.6.7
-	 * @access private
 	 */
 	public function img_optimize_destroy_callback()
 	{
@@ -1428,7 +1402,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Resend requested img to LiteSpeed IAPI server
 	 *
 	 * @since 1.6.7
-	 * @access private
 	 */
 	private function _img_optimize_rescan()
 	{return;
@@ -1568,7 +1541,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Try to level up
 	 *
 	 * @since 2.4.1
-	 * @access private
 	 */
 	private function _try_level_up()
 	{
@@ -1606,7 +1578,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Update client credit info
 	 *
 	 * @since 1.6.5
-	 * @access private
 	 */
 	private function _update_credit( $credit )
 	{
@@ -1640,7 +1611,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Calculate bkup original images storage
 	 *
 	 * @since 2.2.6
-	 * @access private
 	 */
 	private function _calc_bkup()
 	{
@@ -1682,7 +1652,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Remove backups for CLI usage
 	 *
 	 * @since  2.5
-	 * @access public
 	 */
 	public function rm_bkup()
 	{
@@ -1693,7 +1662,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Delete bkup original images storage
 	 *
 	 * @since 2.2.6
-	 * @access private
 	 */
 	private function _rm_bkup()
 	{
@@ -1740,7 +1708,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Get optm summary
 	 *
 	 * @since 1.6.5
-	 * @access public
 	 */
 	public function summary_info( $field = false )
 	{
@@ -1756,7 +1723,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Get optm bkup usage summary
 	 *
 	 * @since 2.2.6
-	 * @access public
 	 */
 	public function storage_data()
 	{
@@ -1770,7 +1736,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Count images
 	 *
 	 * @since 1.6
-	 * @access public
 	 */
 	public function img_count()
 	{
@@ -1838,7 +1803,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Check if fetch cron is running
 	 *
 	 * @since  1.6.2
-	 * @access public
 	 */
 	public function cron_running( $bool_res = true )
 	{
@@ -1857,7 +1821,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Update fetch cron timestamp tag
 	 *
 	 * @since  1.6.2
-	 * @access private
 	 */
 	private function _update_cron_running( $done = false )
 	{
@@ -1883,7 +1846,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Batch switch images to ori/optm version
 	 *
 	 * @since  1.6.2
-	 * @access private
 	 */
 	private function _batch_switch( $type )
 	{
@@ -1934,7 +1896,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Switch image between original one and optimized one
 	 *
 	 * @since 1.6.2
-	 * @access private
 	 */
 	private function _switch_optm_file( $type )
 	{
@@ -1998,7 +1959,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Delete one optm data and recover original file
 	 *
 	 * @since 2.4.2
-	 * @access public
 	 */
 	public function reset_row( $post_id )
 	{
@@ -2054,7 +2014,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.0
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -2138,7 +2097,6 @@ class LiteSpeed_Cache_Img_Optm
 	 * Get the current instance object.
 	 *
 	 * @since 2.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

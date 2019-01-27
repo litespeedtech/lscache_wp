@@ -20,7 +20,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Init optimizer
 	 *
 	 * @since  1.9
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -32,7 +31,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Run HTML minify process and return final content
 	 *
 	 * @since  1.9
-	 * @access public
 	 */
 	public function html_min( $content )
 	{
@@ -68,7 +66,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Run minify process and return final content
 	 *
 	 * @since  1.9
-	 * @access public
 	 * @return string The final content
 	 */
 	public function serve( $filename, $concat_only )
@@ -144,7 +141,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Serve css with/without minify
 	 *
 	 * @since  1.9
-	 * @access private
 	 */
 	private function _serve_css( $files, $concat_only = false )
 	{
@@ -171,7 +167,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Serve JS with/without minify
 	 *
 	 * @since  1.9
-	 * @access private
 	 */
 	private function _serve_js( $files, $concat_only )
 	{
@@ -196,7 +191,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Minify CSS
 	 *
 	 * @since  2.2.3
-	 * @access private
 	 */
 	public static function minify_css( $data )
 	{
@@ -217,7 +211,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Added exception capture when minify
 	 *
 	 * @since  2.2.3
-	 * @access private
 	 */
 	public static function minify_js( $data, $js_type = '' )
 	{
@@ -243,7 +236,6 @@ class LiteSpeed_Cache_Optimizer
 	/**
 	 * Basic minifier
 	 *
-	 * @access private
 	 */
 	private function _null_minifier( $content )
 	{
@@ -256,7 +248,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Check if the file is already min file
 	 *
 	 * @since  1.9
-	 * @access private
 	 */
 	private function _is_min( $filename )
 	{
@@ -273,7 +264,6 @@ class LiteSpeed_Cache_Optimizer
 	 *
 	 * @since  1.7.1
 	 * @since  1.9 Moved here from optiize.cls
-	 * @access private
 	 */
 	private function _remove_comment( $content, $type )
 	{
@@ -308,7 +298,6 @@ class LiteSpeed_Cache_Optimizer
 	 * Get the current instance object.
 	 *
 	 * @since 1.9
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

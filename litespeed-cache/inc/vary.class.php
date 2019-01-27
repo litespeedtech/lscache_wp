@@ -134,7 +134,6 @@ class LiteSpeed_Cache_Vary
 	 * Normal user is defined as not a logged in user and not a commenter.
 	 *
 	 * @since 1.0.4
-	 * @access public
 	 * @global type $post
 	 * @param array $comments The current comments to output
 	 * @return array the comments to output
@@ -181,7 +180,6 @@ class LiteSpeed_Cache_Vary
 	 * Check if default vary has a value
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function has_vary()
 	{
@@ -196,7 +194,6 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.1.3
 	 * @since 1.6.2 Removed static referral
-	 * @access public
 	 */
 	public function add_logged_in( $logged_in_cookie = false, $expire = false, $expiration = false, $uid = false )
 	{
@@ -217,7 +214,6 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.1.3
 	 * @since 1.6.2 Removed static referral
-	 * @access public
 	 */
 	public function remove_logged_in()
 	{
@@ -238,7 +234,6 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 2.2.2
 	 * @since 2.6 Changed to static
-	 * @access public
 	 */
 	public static function can_ajax_vary()
 	{
@@ -250,7 +245,6 @@ class LiteSpeed_Cache_Vary
 	 * Check if can change default vary
 	 *
 	 * @since 1.6.2
-	 * @access private
 	 */
 	private function can_change_vary()
 	{
@@ -286,7 +280,6 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.6.2
 	 * @since  1.6.6.1 Add ran check to make it only run once ( No run multiple times due to login process doesn't have valid uid from router::get_uid )
-	 * @access private
 	 */
 	private function _update_default_vary( $uid = false, $expire = false )
 	{
@@ -319,7 +312,6 @@ class LiteSpeed_Cache_Vary
 	 * Get vary name
 	 *
 	 * @since 1.9.1
-	 * @access public
 	 */
 	public function get_vary_name()
 	{
@@ -334,7 +326,6 @@ class LiteSpeed_Cache_Vary
 	 * NOTE: Login process will also call this because it does not call wp hook as normal page loading
 	 *
 	 * @since 1.6.2
-	 * @access public
 	 */
 	public function finalize_default_vary( $uid = false )
 	{
@@ -408,7 +399,6 @@ class LiteSpeed_Cache_Vary
 	 * This is ONLY used when submit a comment
 	 *
 	 * @since 1.1.6
-	 * @access public
 	 */
 	public function append_commenter()
 	{
@@ -419,7 +409,6 @@ class LiteSpeed_Cache_Vary
 	 * Correct user status with commenter
 	 *
 	 * @since 1.1.3
-	 * @access private
 	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
 	private function add_commenter( $from_redirect = false )
@@ -439,7 +428,6 @@ class LiteSpeed_Cache_Vary
 	 * Remove user commenter status
 	 *
 	 * @since 1.1.3
-	 * @access private
 	 */
 	private function remove_commenter()
 	{
@@ -457,7 +445,6 @@ class LiteSpeed_Cache_Vary
 	 * Generate relative path for cookie
 	 *
 	 * @since 1.1.3
-	 * @access private
 	 * @param  boolean $from_redirect If the request is from redirect page or not
 	 */
 	private static function _relative_path( $from_redirect = false )
@@ -478,7 +465,6 @@ class LiteSpeed_Cache_Vary
 	 * Currently, this only checks post passwords.
 	 *
 	 * @since 1.0.13
-	 * @access public
 	 * @global $post
 	 * @return mixed false if the user has the postpass cookie. Empty string
 	 * if the post is not password protected. Vary header otherwise.
@@ -529,7 +515,6 @@ class LiteSpeed_Cache_Vary
 	 * Gets vary cookies that are already added for the current page.
 	 *
 	 * @since 1.0.13
-	 * @access private
 	 * @return array an array of all vary cookies currently added
 	 */
 	private function _format_vary_cookies()
@@ -569,7 +554,6 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.0.13
 	 * @deprecated 2.7.1 Use filter `litespeed_vary_cookies` instead.
-	 * @access public
 	 * @param mixed $vary a string or array of vary cookies to add to the current list
 	 */
 	public static function add( $vary )
@@ -587,7 +571,6 @@ class LiteSpeed_Cache_Vary
 	 * Append child value to default vary
 	 *
 	 * @since 2.6
-	 * @access public
 	 */
 	public static function append( $name, $val )
 	{
@@ -600,7 +583,6 @@ class LiteSpeed_Cache_Vary
 	 * If vary cookie changed, must set non cacheable.
 	 *
 	 * @since 1.0.4
-	 * @access private
 	 * @param integer $val the value to update
 	 * @param integer $expire expire time
 	 * @param boolean $path False if use wp root path as cookie path
@@ -624,7 +606,6 @@ class LiteSpeed_Cache_Vary
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

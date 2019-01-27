@@ -19,7 +19,6 @@ class LiteSpeed_Cache_ThirdParty_Avada
 	 * Detects if Avada is installed.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function detect()
 	{
@@ -35,7 +34,6 @@ class LiteSpeed_Cache_ThirdParty_Avada
 	 * Purges the cache
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function flush()
 	{

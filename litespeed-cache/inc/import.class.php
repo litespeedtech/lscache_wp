@@ -29,7 +29,6 @@ class LiteSpeed_Cache_Import
 	 * Init
 	 *
 	 * @since  1.8.2
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -44,7 +43,6 @@ class LiteSpeed_Cache_Import
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.8.2
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -87,7 +85,6 @@ class LiteSpeed_Cache_Import
 	 * Export settings to file
 	 *
 	 * @since  1.8.2
-	 * @access private
 	 */
 	private function _export( $only_data_return = false )
 	{
@@ -137,7 +134,6 @@ class LiteSpeed_Cache_Import
 	 * Import settings from file
 	 *
 	 * @since  1.8.2
-	 * @access private
 	 */
 	private function _import( $file = false )
 	{
@@ -225,7 +221,6 @@ class LiteSpeed_Cache_Import
 	 * Reset all configs to default values.
 	 *
 	 * @since  2.6.3
-	 * @access private
 	 */
 	private function _reset()
 	{
@@ -251,7 +246,6 @@ class LiteSpeed_Cache_Import
 	 * Generate the filename to export
 	 *
 	 * @since  1.8.2
-	 * @access private
 	 */
 	private function _generate_filename()
 	{
@@ -277,7 +271,6 @@ class LiteSpeed_Cache_Import
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

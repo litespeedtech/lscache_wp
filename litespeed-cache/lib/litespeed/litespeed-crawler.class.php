@@ -36,7 +36,6 @@ class Litespeed_Crawler
 	 * Set load limit
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param  string $sitemap_file Sitemap file location
 	 */
 	public function __construct($sitemap_file)
@@ -49,7 +48,6 @@ class Litespeed_Crawler
 	 * Set User Agent
 	 *
 	 * @since  2.8
-	 * @access public
 	 */
 	public function set_ua( $ua )
 	{
@@ -60,7 +58,6 @@ class Litespeed_Crawler
 	 * Set http/2 option for curl request
 	 *
 	 * @since  2.0
-	 * @access public
 	 */
 	public function set_http2( $is_enabled )
 	{
@@ -71,7 +68,6 @@ class Litespeed_Crawler
 	 * Set headers for curl request
 	 *
 	 * @since  1.9.1
-	 * @access public
 	 */
 	public function set_headers( $headers )
 	{
@@ -82,7 +78,6 @@ class Litespeed_Crawler
 	 * Set cookies for curl request
 	 *
 	 * @since  1.9.1
-	 * @access public
 	 */
 	public function set_cookies( $cookies )
 	{
@@ -93,7 +88,6 @@ class Litespeed_Crawler
 	 * Set domain ip
 	 *
 	 * @since  1.1.1
-	 * @access public
 	 * @param  string $val The domain's direct ip
 	 */
 	public function set_domain_ip($val)
@@ -105,7 +99,6 @@ class Litespeed_Crawler
 	 * Set domain url
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param  string $val The prefix url
 	 */
 	public function set_base_url($val)
@@ -117,7 +110,6 @@ class Litespeed_Crawler
 	 * Set run delay
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param  int $val Delay microseconds
 	 */
 	public function set_run_delay($val)
@@ -129,7 +121,6 @@ class Litespeed_Crawler
 	 * Set load limit
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param  int $val Run duration in seconds
 	 */
 	public function set_run_duration($val)
@@ -141,7 +132,6 @@ class Litespeed_Crawler
 	 * Set load limit
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param  int $val Threads limit in a time
 	 */
 	public function set_threads_limit($val)
@@ -153,7 +143,6 @@ class Litespeed_Crawler
 	 * Set load limit
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @param  int $val Server load limit to be checked before crawling
 	 */
 	public function set_load_limit($val)
@@ -165,7 +154,6 @@ class Litespeed_Crawler
 	 * Get if last crawler touched end
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @return bool|int		False or last ended time
 	 */
 	public function get_done_status()
@@ -181,7 +169,6 @@ class Litespeed_Crawler
 	 * Refresh list_size in meta
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @return boolean True if succeeded, false otherwise
 	 */
 	public function refresh_list_size()
@@ -198,7 +185,6 @@ class Litespeed_Crawler
 	 * Create reset pos file
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function reset_pos()
@@ -210,7 +196,6 @@ class Litespeed_Crawler
 	 * Start crawler
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @return string|bool crawled result
 	 */
 	public function engine_start()
@@ -267,7 +252,6 @@ class Litespeed_Crawler
 	 * Check returned curl header to find if the status is 200 ok or not
 	 *
 	 * @since  2.0
-	 * @access private
 	 */
 	private function _status_ok_and_cached( $headers )
 	{
@@ -295,7 +279,6 @@ class Litespeed_Crawler
 	 * Run crawler
 	 *
 	 * @since  1.1.0
-	 * @access private
 	 * @param  array $curlOptions Curl options
 	 * @return array              array('error', 'blacklist')
 	 */
@@ -380,7 +363,6 @@ class Litespeed_Crawler
 	 * Mark running status
 	 *
 	 * @since  1.1.0
-	 * @access protected
 	 */
 	protected function _prepare_running()
 	{
@@ -405,7 +387,6 @@ class Litespeed_Crawler
 	 * Terminate crawling
 	 *
 	 * @since  1.1.0
-	 * @access protected
 	 * @param  string $end_reason The reason to terminate
 	 */
 	protected function _terminate_running($end_reason)
@@ -433,7 +414,6 @@ class Litespeed_Crawler
 	 * Return crawler result
 	 *
 	 * @since  1.1.0
-	 * @access protected
 	 * @param  string $end_reason Reason to end
 	 * @return array             The results of returning
 	 */
@@ -451,7 +431,6 @@ class Litespeed_Crawler
 	 * Adjust threads dynamically
 	 *
 	 * @since  1.1.0
-	 * @access protected
 	 */
 	protected function _adjust_current_threads()
 	{
@@ -505,7 +484,6 @@ class Litespeed_Crawler
 	 * Send multi curl requests
 	 *
 	 * @since  1.1.0
-	 * @access protected
 	 * @param  array $urls    The url lists to send to
 	 * @param  array $options Curl options
 	 * @return array          Curl results
@@ -548,7 +526,6 @@ class Litespeed_Crawler
 	 * Get curl_options
 	 *
 	 * @since  1.1.0
-	 * @access private
 	 * @return   options array
 	 */
 	private function _get_curl_options()
@@ -631,7 +608,6 @@ class Litespeed_Crawler
 	 * Save existing meta
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function save_meta()
@@ -646,7 +622,6 @@ class Litespeed_Crawler
 	 * Read existing meta
 	 *
 	 * @since  1.1.0
-	 * @access public
 	 * @return mixed True or error message
 	 */
 	public function read_meta()
@@ -677,7 +652,6 @@ class Litespeed_Crawler
 	 * Get defaut meta to avoid missing key warning
 	 *
 	 * @since  1.9.1
-	 * @access private
 	 */
 	private function _default_meta()
 	{

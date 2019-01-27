@@ -24,7 +24,6 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * Detects if YITH WooCommerce Wishlist and WooCommerce are installed.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function detect()
 	{
@@ -45,7 +44,6 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * Purge ESI yith cache when add/remove items
 	 *
 	 * @since 1.2.0
-	 * @access public
 	 */
 	public static function purge()
 	{
@@ -59,7 +57,6 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * filter to replace it as an esi block.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 */
 	public static function is_not_esi()
 	{
@@ -76,7 +73,6 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * block.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @param $template unused
 	 * @return string the html for future callbacks to filter
 	 */
@@ -96,7 +92,6 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * This will load the add to wishlist button html for output.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @global $post, $wp_query
 	 * @param array $params the input ESI parameters
 	 */

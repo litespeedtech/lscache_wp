@@ -21,7 +21,6 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Generate operation URL
 	 *
 	 * @since  1.2.1
-	 * @access public
 	 * @param  string $type The type to proceed
 	 * @return  string The final URL
 	 */
@@ -35,7 +34,6 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Run DB Cleaner
 	 *
 	 * @since  1.2.1
-	 * @access public
 	 */
 	public static function run_db_clean()
 	{
@@ -65,7 +63,6 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Clean/Optimize WP tables
 	 *
 	 * @since  1.2.1
-	 * @access public
 	 * @param  string $type The type to clean
 	 * @param  bool $ignore_multisite If ignore multisite check
 	 * @return  int The rows that will be affected
@@ -134,7 +131,6 @@ class LiteSpeed_Cache_Admin_Optimize
 	 * Clean/Optimize WP tables
 	 *
 	 * @since  1.2.1
-	 * @access public
 	 * @param  string $type The type to clean
 	 */
 	public static function db_clean( $type )

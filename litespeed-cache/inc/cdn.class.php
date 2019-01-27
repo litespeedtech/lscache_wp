@@ -36,7 +36,6 @@ class LiteSpeed_Cache_CDN
 	 * Init
 	 *
 	 * @since  1.2.3
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -165,7 +164,6 @@ class LiteSpeed_Cache_CDN
 	 * Associate all filetypes with url
 	 *
 	 * @since  2.0
-	 * @access private
 	 */
 	private function _append_cdn_mapping( $filetype, $url )
 	{
@@ -187,7 +185,6 @@ class LiteSpeed_Cache_CDN
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.7.2
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -230,7 +227,6 @@ class LiteSpeed_Cache_CDN
 	 * NOTE: As this is after cache finalized, can NOT set any cache control anymore
 	 *
 	 * @since  1.2.3
-	 * @access public
 	 * @return  string The content that is after optimization
 	 */
 	public static function finalize( $content )
@@ -246,7 +242,6 @@ class LiteSpeed_Cache_CDN
 	 * Replace CDN url
 	 *
 	 * @since  1.2.3
-	 * @access private
 	 */
 	private function _finalize()
 	{
@@ -273,7 +268,6 @@ class LiteSpeed_Cache_CDN
 	 * Parse all file types
 	 *
 	 * @since  1.2.3
-	 * @access private
 	 */
 	private function _replace_file_types()
 	{
@@ -308,7 +302,6 @@ class LiteSpeed_Cache_CDN
 	 * Parse all images
 	 *
 	 * @since  1.2.3
-	 * @access private
 	 */
 	private function _replace_img()
 	{
@@ -337,7 +330,6 @@ class LiteSpeed_Cache_CDN
 	 * Parse and replace all inline styles containing url()
 	 *
 	 * @since  1.2.3
-	 * @access private
 	 */
 	private function _replace_inline_css()
 	{
@@ -366,7 +358,6 @@ class LiteSpeed_Cache_CDN
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
-	 * @access public
 	 * @param  array $img The URL of the attachment image src, the width, the height
 	 * @return array
 	 */
@@ -382,7 +373,6 @@ class LiteSpeed_Cache_CDN
 	 * Try to rewrite one URL with CDN
 	 *
 	 * @since  1.7
-	 * @access public
 	 */
 	public function url_img( $url )
 	{
@@ -396,7 +386,6 @@ class LiteSpeed_Cache_CDN
 	 * Try to rewrite one URL with CDN
 	 *
 	 * @since  1.7
-	 * @access public
 	 */
 	public function url_css( $url )
 	{
@@ -410,7 +399,6 @@ class LiteSpeed_Cache_CDN
 	 * Try to rewrite one URL with CDN
 	 *
 	 * @since  1.7
-	 * @access public
 	 */
 	public function url_js( $url )
 	{
@@ -425,7 +413,6 @@ class LiteSpeed_Cache_CDN
 	 *
 	 * @since  1.2.3
 	 * @since  1.7 Removed static from function
-	 * @access public
 	 * @param  array $srcs
 	 * @return array
 	 */
@@ -446,7 +433,6 @@ class LiteSpeed_Cache_CDN
 	 * Replace URL to CDN URL
 	 *
 	 * @since  1.2.3
-	 * @access public
 	 * @param  string $url
 	 * @return string        Replaced URL
 	 */
@@ -531,7 +517,6 @@ class LiteSpeed_Cache_CDN
 	 * Check if is orignal URL of CDN or not
 	 *
 	 * @since  2.1
-	 * @access private
 	 */
 	private function _is_ori_url( $url )
 	{
@@ -577,7 +562,6 @@ class LiteSpeed_Cache_CDN
 	 * Remote load jQuery remotely
 	 *
 	 * @since  1.5
-	 * @access public
 	 */
 	public function load_jquery_remotely()
 	{
@@ -603,7 +587,6 @@ class LiteSpeed_Cache_CDN
 	 * Get the current instance object.
 	 *
 	 * @since 1.2.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

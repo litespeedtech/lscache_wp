@@ -20,7 +20,6 @@ class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 	 * Detects if plugin is installed.
 	 *
 	 * @since 1.1.1
-	 * @access public
 	 */
 	public static function detect()
 	{
@@ -33,7 +32,6 @@ class LiteSpeed_Cache_ThirdParty_WP_PostRatings
 	 * Purges the cache
 	 *
 	 * @since 1.1.1
-	 * @access public
 	 */
 	public static function flush($uid, $post_id, $post_ratings_score)
 	{

@@ -103,7 +103,6 @@ class Litespeed_File
 	 * Append data to file
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 * @param string $filename
 	 * @param string $data
 	 * @param boolean $mkdir

@@ -28,7 +28,6 @@ class LiteSpeed_Cache_Activation
 	 * the plugin will not activate.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public static function register_activation()
 	{
@@ -136,7 +135,6 @@ class LiteSpeed_Cache_Activation
 	 * Will use wp_get_sites for WP versions less than 4.6
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 * @param array $args arguments to pass into get_sites/wp_get_sites
 	 * @return array the array of blog ids
 	 */
@@ -162,7 +160,6 @@ class LiteSpeed_Cache_Activation
 	 * Gets the count of active litespeed cache plugins on multisite.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 * @return mixed the count on success, false on failure
 	 */
 	private static function get_network_count()
@@ -208,7 +205,6 @@ class LiteSpeed_Cache_Activation
 	 * network?
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 * @return bool true if yes, false otherwise
 	 */
 	private static function is_deactivate_last()
@@ -234,7 +230,6 @@ class LiteSpeed_Cache_Activation
 	 * Initializes all clean up functionalities.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public static function register_deactivation()
 	{
@@ -289,7 +284,6 @@ class LiteSpeed_Cache_Activation
 	 * Try to copy our advanced-cache.php file to the wordpress directory.
 	 *
 	 * @since 1.0.11
-	 * @access public
 	 * @return boolean true on success, false on failure
 	 */
 	public static function try_copy_advanced_cache()
@@ -317,7 +311,6 @@ class LiteSpeed_Cache_Activation
 	 * Delete whm msg tag
 	 *
 	 * @since 1.1.1
-	 * @access public
 	 */
 	public static function dismiss_whm()
 	{
@@ -328,7 +321,6 @@ class LiteSpeed_Cache_Activation
 	 * Upgrade LSCWP
 	 *
 	 * @since 2.9
-	 * @access private
 	 */
 	private function _upgrade()
 	{
@@ -367,7 +359,6 @@ class LiteSpeed_Cache_Activation
 	 * Handle all request actions from main cls
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -391,7 +382,6 @@ class LiteSpeed_Cache_Activation
 	 * Get the current instance object.
 	 *
 	 * @since 2.9
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

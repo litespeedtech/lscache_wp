@@ -18,7 +18,6 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 * Detects if Better WP Minify is active.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 *
 	 */
 	public static function detect()
@@ -35,7 +34,6 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 * Will register functions to purge the cache if needed.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public static function maybe_flush()
 	{
@@ -49,7 +47,6 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 * Purges the cache when Better WP Minify needs to purge.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public static function flush()
 	{
@@ -61,7 +58,6 @@ class LiteSpeed_Cache_ThirdParty_Better_WP_Minify
 	 * Clears the flush cache callbacks.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 */
 	public static function clear_flush()
 	{

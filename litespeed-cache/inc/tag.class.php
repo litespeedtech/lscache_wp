@@ -59,7 +59,6 @@ class LiteSpeed_Cache_Tag
 	 * NOTE: This is checked separately because login page doesn't go through WP logic.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public static function check_login_cacheable()
 	{
@@ -96,7 +95,6 @@ class LiteSpeed_Cache_Tag
 	 * Check if the page returns 403 and 500 errors.
 	 *
 	 * @since 1.0.13.1
-	 * @access public
 	 * @param $status_header
 	 * @param $code
 	 * @return $eror_status
@@ -130,7 +128,6 @@ class LiteSpeed_Cache_Tag
 	 * Get error code.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function get_error_code()
 	{
@@ -142,7 +139,6 @@ class LiteSpeed_Cache_Tag
 	 * of the plugin.
 	 *
 	 * @since    1.0.15
-	 * @access   public
 	 * @param array $params [wordpress params for widget_posts_args]
 	 */
 	public static function add_widget_recent_posts( $params )
@@ -155,7 +151,6 @@ class LiteSpeed_Cache_Tag
 	 * Adds cache tags to the list of cache tags for the current page.
 	 *
 	 * @since 1.0.5
-	 * @access public
 	 * @param mixed $tags a string or array of cache tags to add to the current list
 	 */
 	public static function add( $tags )
@@ -171,7 +166,6 @@ class LiteSpeed_Cache_Tag
 	 * Adds private cache tags to the list of cache tags for the current page.
 	 *
 	 * @since 1.6.3
-	 * @access public
 	 * @param mixed $tags a string or array of cache tags to add to the current list
 	 */
 	public static function add_private( $tags )
@@ -187,7 +181,6 @@ class LiteSpeed_Cache_Tag
 	 * Return tags for Admin QS
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 */
 	public static function output_tags()
 	{
@@ -198,7 +191,6 @@ class LiteSpeed_Cache_Tag
 	 * Will get a hash of the URI. Removes query string and appends a '/' if it is missing.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 * @param string $uri the uri to get the hash of
 	 * @param boolean $ori Return the original url or not
 	 * @return bool|string false on input error, hash otherwise
@@ -223,7 +215,6 @@ class LiteSpeed_Cache_Tag
 	 * Get the unique tag based on self url.
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @param boolean $ori Return the original url or not
 	 */
 	public static function build_uri_tag( $ori = false )
@@ -238,7 +229,6 @@ class LiteSpeed_Cache_Tag
 	 * any third party plugin specific cache tags.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @return array the list of cache tags to set
 	 */
 	private static function _build_type_tags()
@@ -333,7 +323,6 @@ class LiteSpeed_Cache_Tag
 	/**
 	 * Generate all cache tags before output
 	 *
-	 * @access private
 	 * @since 1.1.3
 	 */
 	private static function _finalize()
@@ -356,7 +345,6 @@ class LiteSpeed_Cache_Tag
 	 * ONLY need to run this if is cacheable
 	 *
 	 * @since 1.1.3
-	 * @access public
 	 * @return string empty string if empty, otherwise the cache tags header
 	 */
 	public static function output()
@@ -387,7 +375,6 @@ class LiteSpeed_Cache_Tag
 	 * Get the current instance object.
 	 *
 	 * @since 2.2.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

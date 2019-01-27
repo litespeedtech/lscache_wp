@@ -23,7 +23,6 @@ class LiteSpeed_Cache_Admin_Report
 	 * Handle all request actions from main cls
 	 *
 	 * @since  1.6.5
-	 * @access public
 	 */
 	public static function handler()
 	{
@@ -48,7 +47,6 @@ class LiteSpeed_Cache_Admin_Report
 	 * post env report number to ls center server
 	 *
 	 * @since  1.6.5
-	 * @access private
 	 */
 	private function _post_env()
 	{
@@ -79,7 +77,6 @@ class LiteSpeed_Cache_Admin_Report
 	 * Get env report number from db
 	 *
 	 * @since  1.6.4
-	 * @access public
 	 * @return array
 	 */
 	public function get_env_ref()
@@ -103,7 +100,6 @@ class LiteSpeed_Cache_Admin_Report
 	 * Will write to the environment report file.
 	 *
 	 * @since 1.0.12
-	 * @access public
 	 * @param mixed $options Array of options to output. If null, will skip
 	 * the options section.
 	 * @return string the built report
@@ -192,7 +188,6 @@ class LiteSpeed_Cache_Admin_Report
 	/**
 	 * Builds the environment report buffer with the given parameters
 	 *
-	 * @access private
 	 * @param array $server - server variables
 	 * @param array $options - cms options
 	 * @param array $extras - cms specific attributes
@@ -243,7 +238,6 @@ class LiteSpeed_Cache_Admin_Report
 	 * and an array for the section parameters.
 	 *
 	 * @since 1.0.12
-	 * @access private
 	 * @param string $section_header The section heading
 	 * @param array $section An array of information to output
 	 * @return string the created report block
@@ -277,7 +271,6 @@ class LiteSpeed_Cache_Admin_Report
 	 * Get the current instance object.
 	 *
 	 * @since 1.1.0
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

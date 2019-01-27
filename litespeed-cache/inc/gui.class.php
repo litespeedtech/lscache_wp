@@ -39,7 +39,6 @@ class LiteSpeed_Cache_GUI
 	 * Init
 	 *
 	 * @since  1.3
-	 * @access private
 	 */
 	private function __construct()
 	{
@@ -121,7 +120,6 @@ class LiteSpeed_Cache_GUI
 	 * 	0-49 (slow)
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public function get_cls_of_pagescore( $score )
 	{
@@ -140,7 +138,6 @@ class LiteSpeed_Cache_GUI
 	 * Read summary
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public function get_summary()
 	{
@@ -151,7 +148,6 @@ class LiteSpeed_Cache_GUI
 	 * Save summary
 	 *
 	 * @since  2.9
-	 * @access public
 	 */
 	public function save_summary( $data )
 	{
@@ -162,7 +158,6 @@ class LiteSpeed_Cache_GUI
 	 * Dismiss banner
 	 *
 	 * @since 1.0
-	 * @access public
 	 */
 	public static function dismiss()
 	{
@@ -225,7 +220,6 @@ class LiteSpeed_Cache_GUI
 	 * Check if has rule conflict notice
 	 *
 	 * @since 1.1.5
-	 * @access public
 	 * @return boolean
 	 */
 	public static function has_msg_ruleconflict()
@@ -237,7 +231,6 @@ class LiteSpeed_Cache_GUI
 	 * Check if has whm notice
 	 *
 	 * @since 1.1.1
-	 * @access public
 	 * @return boolean
 	 */
 	public static function has_whm_msg()
@@ -273,7 +266,6 @@ class LiteSpeed_Cache_GUI
 	 * Display promo banner
 	 *
 	 * @since 2.1
-	 * @access public
 	 */
 	public function show_promo( $check_only = false )
 	{
@@ -344,7 +336,6 @@ class LiteSpeed_Cache_GUI
 	 * Enqueue ajax call for score updating
 	 *
 	 * @since 2.9
-	 * @access private
 	 */
 	private function _enqueue_score_req_ajax()
 	{
@@ -360,7 +351,6 @@ class LiteSpeed_Cache_GUI
 	 * Load frontend public script
 	 *
 	 * @since  1.8.2
-	 * @access public
 	 */
 	public function frontend_enqueue_style_public()
 	{
@@ -371,7 +361,6 @@ class LiteSpeed_Cache_GUI
 	 * Load frontend menu shortcut
 	 *
 	 * @since  1.3
-	 * @access public
 	 */
 	public function frontend_enqueue_style()
 	{
@@ -382,7 +371,6 @@ class LiteSpeed_Cache_GUI
 	 * Load frontend menu shortcut
 	 *
 	 * @since  1.3
-	 * @access public
 	 */
 	public function frontend_shortcut()
 	{
@@ -450,7 +438,6 @@ class LiteSpeed_Cache_GUI
 	 * Hooked to wp_before_admin_bar_render.
 	 * Adds a link to the admin bar so users can quickly purge all.
 	 *
-	 * @access public
 	 * @global WP_Admin_Bar $wp_admin_bar
 	 * @since 1.7.2 Moved from admin_display.cls to gui.cls; Renamed from `add_quick_purge` to `backend_shortcut`
 	 */
@@ -579,7 +566,6 @@ class LiteSpeed_Cache_GUI
 	 * Clear unfinished data
 	 *
 	 * @since  2.4.2
-	 * @access public
 	 */
 	public static function img_optm_clean_up_unfinished()
 	{
@@ -595,7 +581,6 @@ class LiteSpeed_Cache_GUI
 	 * Generate install link
 	 *
 	 * @since  2.4.2
-	 * @access public
 	 */
 	public static function plugin_install_link( $title, $name, $v )
 	{
@@ -620,7 +605,6 @@ class LiteSpeed_Cache_GUI
 	 * Generate upgrade link
 	 *
 	 * @since  2.4.2
-	 * @access public
 	 */
 	public static function plugin_upgrade_link( $title, $name, $v )
 	{
@@ -646,7 +630,6 @@ class LiteSpeed_Cache_GUI
 	 * Finalize buffer by GUI class
 	 *
 	 * @since  1.6
-	 * @access public
 	 */
 	public static function finalize( $buffer )
 	{
@@ -659,7 +642,6 @@ class LiteSpeed_Cache_GUI
 	 *
 	 * @since  1.4
 	 * @since  1.6 converted to private with adding prefix _
-	 * @access private
 	 */
 	private function _clean_wrapper( $buffer )
 	{
@@ -700,7 +682,6 @@ class LiteSpeed_Cache_GUI
 	 * Display a to-be-removed html wrapper
 	 *
 	 * @since  1.4
-	 * @access public
 	 */
 	public static function clean_wrapper_begin( $counter = false )
 	{
@@ -716,7 +697,6 @@ class LiteSpeed_Cache_GUI
 	 * Display a to-be-removed html wrapper
 	 *
 	 * @since  1.4
-	 * @access public
 	 */
 	public static function clean_wrapper_end( $counter = false )
 	{
@@ -731,7 +711,6 @@ class LiteSpeed_Cache_GUI
 	 * Get the current instance object.
 	 *
 	 * @since 1.3
-	 * @access public
 	 * @return Current class instance
 	 */
 	public static function get_instance()

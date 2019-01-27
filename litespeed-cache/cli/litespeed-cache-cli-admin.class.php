@@ -311,7 +311,6 @@ class LiteSpeed_Cache_Cli_Admin
 	/**
 	 * Update options
 	 *
-	 * @access private
 	 * @since 1.1.0
 	 * @param array $options The options array to store
 	 */

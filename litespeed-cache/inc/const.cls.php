@@ -235,7 +235,6 @@ class LiteSpeed_Cache_Const
 	 * Get the items in wp_options that need for backup
 	 *
 	 * @since 2.2.1
-	 * @access public
 	 */
 	public function stored_items()
 	{
@@ -276,7 +275,6 @@ class LiteSpeed_Cache_Const
 	 * Get default item val
 	 *
 	 * @since 1.8
-	 * @access public
 	 */
 	public function default_item( $item )
 	{
@@ -361,7 +359,6 @@ class LiteSpeed_Cache_Const
 	 * Gets the default network options
 	 *
 	 * @since 1.0.11
-	 * @access protected
 	 * @return array an array of the default options
 	 */
 	protected function get_default_site_options()
@@ -402,7 +399,6 @@ class LiteSpeed_Cache_Const
 	 * Gets the default single site options
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @param bool $include_thirdparty whether to include the thirdparty options
 	 * @return array an array of the default options
 	 */
@@ -639,7 +635,6 @@ class LiteSpeed_Cache_Const
 	 * Gets the third party options.
 	 * Will also strip the options that are actually normal options.
 	 *
-	 * @access public
 	 * @since 1.0.9
 	 * @param array $options Optional. The default options to compare against.
 	 * @return mixed boolean on failure, array of keys on success
