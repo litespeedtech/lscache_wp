@@ -248,7 +248,6 @@ class LiteSpeed_Cache_Object
 		if ( isset( self::$_instance->_conn ) ) {
 			self::$_instance->flush() ;
 		}
-
 	}
 
 	/**
@@ -325,7 +324,6 @@ class LiteSpeed_Cache_Object
 				$failed = true ;
 			}
 			restore_error_handler() ;
-
 		}
 		/**
 		 * Connect to Memcached

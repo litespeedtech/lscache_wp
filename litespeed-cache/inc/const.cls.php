@@ -463,7 +463,6 @@ class LiteSpeed_Cache_Const
 			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
 
 			if ( ! empty( $default_ini_cfg[ $item ] ) ) {
-
 				/**
 				 * Special handler for CDN_mapping
 				 *
@@ -766,7 +765,6 @@ class LiteSpeed_Cache_Const
 			}
 
 			// Handle items in $this->default_item()
-
 		}
 
 		if ( ! $include_thirdparty ) {

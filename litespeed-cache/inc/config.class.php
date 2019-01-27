@@ -78,7 +78,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
-
 	}
 
 	/**
@@ -181,7 +180,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// If network set to use primary setting
 		if ( ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
-
 			// save temparary cron setting
 			$CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
 
@@ -724,7 +722,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function plugin_activation( $count )
 	{
-
 	}
 
 	/**

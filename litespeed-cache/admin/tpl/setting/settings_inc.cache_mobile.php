@@ -30,10 +30,8 @@ if (!defined('WPINC')) die;
 
 				// if set, use value as input value
 				if ( $_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
-
 					// if enabled, check the setting in file
 					if ( defined( 'LITESPEED_ON' ) ) {
-
 						$mobile_agents = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_mobile_agents() ;
 						if ( $mobile_agents !== $_options[ $id ] ) {
 							echo '<div class="litespeed-callout-danger">'

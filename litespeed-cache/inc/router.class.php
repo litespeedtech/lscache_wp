@@ -313,7 +313,6 @@ class LiteSpeed_Cache_Router
 			if ( defined( 'LITESPEED_CLI' ) ) {
 				self::$_can_crawl = true ;
 			}
-
 		}
 
 		return self::$_can_crawl ;
@@ -334,7 +333,6 @@ class LiteSpeed_Cache_Router
 			if ( self::$_action ) {
 				defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Router] LSCWP_CTRL verified: ' . var_export( self::$_action, true ) ) ;
 			}
-
 		}
 
 		return self::$_action ;
@@ -575,7 +573,6 @@ class LiteSpeed_Cache_Router
 
 				return ;
 		}
-
 	}
 
 	/**

@@ -574,7 +574,6 @@ class LiteSpeed_Cache_Crawler
 		// Cookie crawler
 		$cookie_crawlers = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ) ;
 		foreach ( $cookie_crawlers as $k => $v ) {
-
 			$this_cookie_key = 'cookie:' . $k ;
 
 			$crawler_factors[ $this_cookie_key ] = array() ;
@@ -611,7 +610,6 @@ class LiteSpeed_Cache_Crawler
 		$final_list = array() ;
 
 		foreach ( $crawler_factors[ $current_factor ] as $k => $v ) {
-
 			// Don't alter $group bcos of loop usage
 			$item = $group ;
 			$item[ 'title' ] = ! empty( $group[ 'title' ] ) ? $group[ 'title' ] : '' ;
@@ -630,7 +628,6 @@ class LiteSpeed_Cache_Crawler
 				// Inception: next layer
 				$final_list = array_merge( $final_list, $this->_recursive_build_crawler( $crawler_factors, $item, $i + 1 ) ) ;
 			}
-
 		}
 
 		return $final_list ;

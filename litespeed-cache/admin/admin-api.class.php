@@ -388,7 +388,6 @@ class LiteSpeed_Cache_Admin_API
 	 */
 	private function _get( $action, $data = false, $server = false )
 	{
-
 		if ( $server == false ) {
 			$server = 'https://wp.api.litespeedtech.com' ;
 		}
@@ -417,7 +416,6 @@ class LiteSpeed_Cache_Admin_API
 		$data = $response[ 'body' ] ;
 
 		return $data ;
-
 	}
 
 	/**

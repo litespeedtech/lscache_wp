@@ -8,7 +8,6 @@ class Set_Htaccess {
 
 	public function test_block($install, $access, $abspath)
 	{
-
 		error_log('Begin test with install ' . $install
 			. ', access ' . $access . ', abspath ' . $abspath);
 		/**

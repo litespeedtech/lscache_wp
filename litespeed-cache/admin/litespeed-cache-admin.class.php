@@ -129,7 +129,6 @@ class LiteSpeed_Cache_Admin
 			if ( ! defined( 'LITESPEED_ON' ) ) {
 				return ;
 			}
-
 		}
 
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
@@ -176,7 +175,6 @@ class LiteSpeed_Cache_Admin
 	{
 		// handle actions
 		switch (LiteSpeed_Cache_Router::get_action()) {
-
 			// Save htaccess
 			case LiteSpeed_Cache::ACTION_SAVE_HTACCESS:
 				LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_editor_save() ;
@@ -190,7 +188,6 @@ class LiteSpeed_Cache_Admin
 			default:
 				break ;
 		}
-
 	}
 
 	/**

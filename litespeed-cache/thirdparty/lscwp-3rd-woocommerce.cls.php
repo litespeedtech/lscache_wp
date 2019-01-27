@@ -62,7 +62,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		self::get_instance()->add_hooks() ;
-
 	}
 
 	/**
@@ -106,7 +105,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			 */
 			add_action( 'template_include', array( $this, 'check_if_need_esi' ) ) ;
 			LiteSpeed_Cache_API::hook_vary_finalize( array( $this, 'vary_maintain' ) ) ;
-
 		}
 
 		if ( is_admin() ) {
@@ -136,7 +134,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -149,7 +146,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	{
 		LiteSpeed_Cache_API::debug( '3rd woo purge ESI in action: ' . current_filter() ) ;
 		LiteSpeed_Cache_API::purge_private( LiteSpeed_Cache_Tag::TYPE_ESI . 'storefront-cart-header' ) ;
-
 	}
 
 	/**
@@ -166,7 +162,6 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 
 		return $template ;
-
 	}
 
 	/**

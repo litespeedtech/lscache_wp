@@ -59,7 +59,6 @@ class LiteSpeed_Cache_Admin_Optimize
 		}
 
 		return $res ;
-
 	}
 
 	/**
@@ -208,8 +207,6 @@ class LiteSpeed_Cache_Admin_Optimize
 				$wpdb->query( "TRUNCATE `" . LiteSpeed_Cache_Data::get_optm_table() . "`" ) ;
 
 				return __( 'Clean all CSS/JS optimizer data successfully.', 'litespeed-cache' ) ;
-
 		}
-
 	}
 }

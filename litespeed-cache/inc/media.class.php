@@ -85,7 +85,6 @@ class LiteSpeed_Cache_Media
 		if ( $this->_cfg_placeholder_resp_color ) {
 			$this->_cfg_placeholder_resp_color = base64_encode( $this->_cfg_placeholder_resp_color ) ;
 		}
-
 	}
 
 	/**
@@ -260,7 +259,6 @@ class LiteSpeed_Cache_Media
 				$del_row
 			</div>
 eot;
-
 	}
 
 	/**
@@ -372,7 +370,6 @@ eot;
 
 		// image lazy load
 		if ( $cfg_img_lazy ) {
-
 			$default_placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 
 			foreach ( $html_list as $k => $v ) {
@@ -504,7 +501,6 @@ eot;
 		$this->_save_summary( $req_summary ) ;
 
 		return false ;
-
 	}
 
 	/**
@@ -693,7 +689,6 @@ eot;
 				}
 
 				$this->content = str_replace( $matches[ 0 ][ $k2 ], $html_snippet, $this->content ) ;
-
 			}
 		}
 

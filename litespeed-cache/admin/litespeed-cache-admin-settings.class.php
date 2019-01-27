@@ -202,7 +202,6 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ;
 		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-
 	}
 
 	/**
@@ -375,7 +374,6 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		return $new_options ;
-
 	}
 
 	/**
@@ -421,7 +419,6 @@ class LiteSpeed_Cache_Admin_Settings
 				$this->_options[ $id ] = 0 ;
 			}
 		}
-
 	}
 
 	/**
@@ -456,7 +453,6 @@ class LiteSpeed_Cache_Admin_Settings
 		foreach ( $ids as $id ) {
 			$this->_save_item( $id ) ;
 		}
-
 	}
 
 	/**
@@ -579,7 +575,6 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
 		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
-
 	}
 
 	/**
@@ -608,7 +603,6 @@ class LiteSpeed_Cache_Admin_Settings
 			if ( $id == LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) {
 				$cdn_cloudflare_changed = true ;
 			}
-
 		}
 
 		$id = LiteSpeed_Cache_Config::OPID_CDN_ORI ;
@@ -851,7 +845,6 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_save_item( $id ) ;
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ;
 		$this->_save_item( $id, 'uri' ) ;
-
 	}
 
 	/**
@@ -1074,7 +1067,6 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 		update_option( $id, $cookie_crawlers ) ;
-
 	}
 
 	/**

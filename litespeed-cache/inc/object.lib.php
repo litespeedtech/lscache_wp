@@ -410,7 +410,6 @@ class WP_Object_Cache
 	 */
 	public function delete( $key, $group = 'default' )
 	{
-
 		$final_key = $this->_key( $key, $group ) ;
 
 		if ( $this->_object_cache->store_transients( $group ) ) {

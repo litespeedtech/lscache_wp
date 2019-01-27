@@ -55,7 +55,6 @@ class LiteSpeed_Cache_Vary
 
 			// register logout hook to clear login status
 			add_action( 'clear_auth_cookie', array( $this, 'remove_logged_in' ) ) ;
-
 		}
 		else {
 			// Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
@@ -66,7 +65,6 @@ class LiteSpeed_Cache_Vary
 
 			// Check `login page` cacheable setting because they don't go through main WP logic
 			add_action( 'login_init', 'LiteSpeed_Cache_Tag::check_login_cacheable', 5 ) ;
-
 		}
 
 		// Add comment list ESI
@@ -378,12 +376,10 @@ class LiteSpeed_Cache_Vary
 				$vary[ 'admin_bar' ] = 1 ;
 				LiteSpeed_Cache_Log::debug2( '[Vary] admin bar : true' ) ;
 			}
-
 		}
 		else {
 			// Guest user
 			LiteSpeed_Cache_Log::debug( '[Vary] role id: failed, guest' ) ;
-
 		}
 
 		/**
@@ -409,7 +405,6 @@ class LiteSpeed_Cache_Vary
 		}
 		// Encrypt in production
 		return md5( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::HASH ) . $res ) ;
-
 	}
 
 	/**
@@ -497,7 +492,6 @@ class LiteSpeed_Cache_Vary
 	public static function finalize()
 	{
 		return self::get_instance()->_finalize() ;
-
 	}
 
 	private function _finalize()
@@ -535,7 +529,6 @@ class LiteSpeed_Cache_Vary
 		}
 
 		return self::X_HEADER . ': ' . implode(',', $tp_cookies) ;
-
 	}
 
 	/**

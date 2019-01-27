@@ -83,7 +83,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
 		// update status
 		update_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, $curr_status ) ;
-
 	}
 
 	/**
@@ -116,7 +115,6 @@ class LiteSpeed_Cache_CDN_Cloudflare
 			$msg = sprintf( __( 'Notified Cloudflare to set development mode to %s successfully.', 'litespeed-cache' ), strtoupper( $new_val ) ) ;
 			LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 		}
-
 	}
 
 	/**

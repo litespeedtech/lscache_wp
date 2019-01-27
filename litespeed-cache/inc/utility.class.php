@@ -175,7 +175,6 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function readable_time( $seconds_or_timestamp, $timeout = 3600, $backward = true )
 	{
-
 		if ( strlen( $seconds_or_timestamp ) == 10 ) {
 			$seconds = time() - $seconds_or_timestamp ;
 			if ( $seconds > $timeout ) {
@@ -711,7 +710,6 @@ class LiteSpeed_Cache_Utility
 		$srcset_ori = array() ;
 		$srcset_final = array() ;
 		foreach ( $matches[ 2 ] as $k => $urls_ori ) {
-
 			$urls_final = explode( ',', $urls_ori ) ;
 
 			$changed = false ;
@@ -747,7 +745,6 @@ class LiteSpeed_Cache_Utility
 		}
 
 		return $content ;
-
 	}
 
 	/**

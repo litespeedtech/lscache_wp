@@ -32,7 +32,6 @@ class LiteSpeed_Cache_Admin_Report
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-
 			case self::TYPE_SEND_REPORT :
 				$instance->_post_env() ;
 				break ;
@@ -73,7 +72,6 @@ class LiteSpeed_Cache_Admin_Report
 		) ;
 
 		update_option( LiteSpeed_Cache_Config::ITEM_ENV_REF, $data ) ;
-
 	}
 
 	/**

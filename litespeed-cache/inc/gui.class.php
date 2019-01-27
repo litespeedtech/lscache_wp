@@ -110,7 +110,6 @@ class LiteSpeed_Cache_GUI
 			<g class='litespeed-pie_info'>$percentage</g>
 		</svg>
 		";
-
 	}
 
 	/**
@@ -335,7 +334,6 @@ class LiteSpeed_Cache_GUI
 
 			// Only contain one
 			break ;
-
 		}
 
 		return false ;
@@ -614,7 +612,6 @@ class LiteSpeed_Cache_GUI
 		return $action ;
 
 		// $msg .= " <a href='$upgrade_link' class='litespeed-btn-success' target='_blank'>" . __( 'Click here to upgrade', 'litespeed-cache' ) . '</a>' ;
-
 	}
 
 	/**

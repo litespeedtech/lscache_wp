@@ -283,7 +283,6 @@ class LiteSpeed_Cache
 
 		// Load frontend GUI
 		LiteSpeed_Cache_GUI::get_instance() ;
-
 	}
 
 	/**
@@ -747,7 +746,6 @@ class LiteSpeed_Cache
 		if ( $is_forced ) {
 			LiteSpeed_Cache_Log::debug( '--forced--' ) ;
 		}
-
 	}
 
 	/**

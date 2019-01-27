@@ -94,7 +94,6 @@ class LiteSpeed_Cache_Import
 	 */
 	private function _export( $only_data_return = false )
 	{
-
 		$data = array() ;
 		foreach ( $this->_cfg_items as $v ) {
 			$data[ $v ] = get_option( $v ) ;// Here doesn't need the default_item value so no need to call `LiteSpeed_Cache_Config::get_instance()->get_item()`
@@ -214,7 +213,6 @@ class LiteSpeed_Cache_Import
 		$ret = $this->__cfg->update_options( $output ) ;
 
 		return true ;
-
 	}
 
 	/**

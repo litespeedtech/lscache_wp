@@ -160,7 +160,6 @@ class LiteSpeed_Cache_Data
 			if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
 				LiteSpeed_Cache_Object::get_instance()->flush() ;
 			}
-
 		}
 
 		// Table version only exists after all old data migrated
@@ -230,7 +229,6 @@ class LiteSpeed_Cache_Data
 			else {
 				LiteSpeed_Cache_Log::debug( '[Data] Successfully upgraded table img_optm.' ) ;
 			}
-
 		}
 
 		// Record tb version
@@ -291,7 +289,6 @@ class LiteSpeed_Cache_Data
 
 		// Record tb version
 		update_option( $this->_tb_optm, LiteSpeed_Cache::PLUGIN_VERSION ) ;
-
 	}
 
 	/**

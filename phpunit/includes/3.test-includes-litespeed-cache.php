@@ -34,7 +34,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Function for configurations
      */
     public static function converttoArray($object){
-        
         if(is_object($object)) $array = (array) $object;
 
         return $array;
@@ -58,7 +57,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     {
         $opt_id = '';
         $array = LiteSpeed_Cache::config($opt_id);
-        $this->assertNotEmpty($array);       
+        $this->assertNotEmpty($array);
     }
 
     /**
@@ -145,7 +144,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     public function test_get_config()
     {
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_config');
-        $this->assertNotEmpty($array);       
+        $this->assertNotEmpty($array);
     }
 
     /**
@@ -162,7 +161,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -179,7 +178,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -195,7 +194,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -212,7 +211,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -232,7 +231,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -249,7 +248,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -303,7 +302,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -323,7 +322,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -362,7 +361,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -379,7 +378,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertEmpty($array);
-        }       
+        }
     }
 
     /**
@@ -400,7 +399,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertEmpty($array);
-        }       
+        }
     }
 
     /**
@@ -411,7 +410,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_get_uri_hash()
     {
-        
         $uri = '';
         $parameters = array($uri);
         $string = self::invokeMethod('LiteSpeed_Cache', 'get_uri_hash', $parameters);
@@ -422,7 +420,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -434,7 +432,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_format_report_section()
     {
-        
         $section_header = '';
         $section = array();
         $parameters = array($section_header, $section);
@@ -446,7 +443,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -459,7 +456,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      */
     public function test_build_environment_report()
     {
-        
         $server = array();
         $object = LiteSpeed_Cache::config();
         $options = $object->get_options();
@@ -474,7 +470,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -486,7 +482,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return string The Environment Report buffer.
      */
     public function test_generate_environment_report()
-    { 
+    {
         $object = LiteSpeed_Cache::config();
         $options = $object->get_options();
         $parameters = array($options);
@@ -498,7 +494,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
      /**
@@ -506,7 +502,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @echo string ESI.
      */
     public function test_esi_admin_bar_render()
-    { 
+    {
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'esi_admin_bar_render');
         $out = ob_get_clean();
@@ -517,7 +513,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -525,14 +521,13 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @echo string ESI.
      */
     public function test_check_admin_bar()
-    { 
+    {
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
         if(method_exists($instance, 'check_admin_bar')){
             $wp_footer = has_action( 'wp_footer', array( $instance,'check_admin_bar' ) );
             $this->assertFalse( $wp_footer );
         }
-               
     }
 
     /**
@@ -540,7 +535,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @echo string StoreFront Cart.
      */
     public function test_check_storefront_cart()
-    { 
+    {
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'check_storefront_cart');
         $out = ob_get_clean();
@@ -551,7 +546,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -559,7 +554,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @echo string check_sidebar.
      */
     public function test_check_sidebar()
-    { 
+    {
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'check_sidebar');
         $out = ob_get_clean();
@@ -570,7 +565,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         else
         {
             $this->assertFalse($bool);
-        }       
+        }
     }
 
     /**
@@ -578,7 +573,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @echo string ESI.
      */
     public function test_add_actions_esi()
-    { 
+    {
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
         if(method_exists($instance, 'add_actions_esi')){
@@ -587,7 +582,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             $storefront_sidebar = has_action( 'storefront_sidebar', array( $instance,'check_sidebar' ) );
             $this->assertFalse( $storefront_sidebar );
         }
-               
     }
 
     /**
@@ -595,7 +589,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return boolean.
      */
     public function test_is_esi_admin_bar()
-    { 
+    {
         $instance = LiteSpeed_Cache::plugin();
         $uri = '';
         $urilen = '';
@@ -615,9 +609,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             else
             {
                 $this->assertFalse($bool);
-            }       
+            }
         }
-               
     }
 
     /**
@@ -625,7 +618,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return boolean.
      */
     public function test_is_esi_cart()
-    { 
+    {
         $instance = LiteSpeed_Cache::plugin();
         $uri = '';
         $urilen = '';
@@ -645,9 +638,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             else
             {
                 $this->assertFalse($bool);
-            }       
+            }
         }
-               
     }
 
     /**
@@ -655,7 +647,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return boolean.
      */
     public function test_is_esi_sidebar()
-    { 
+    {
         $instance = LiteSpeed_Cache::plugin();
         $uri = '';
         $urilen = '';
@@ -677,9 +669,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             else
             {
                 $this->assertFalse($bool);
-            }       
+            }
         }
-               
     }
 
     /**
@@ -687,7 +678,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return boolean.
      */
     public function test_check_esi_page()
-    { 
+    {
          $bool = self::invokeMethod('LiteSpeed_Cache', 'check_esi_page');
             if($bool){
                 $this->assertTrue(TRUE);
@@ -695,6 +686,6 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
             else
             {
                 $this->assertFalse($bool);
-            }       
+            }
     }
 }

@@ -42,7 +42,6 @@ class LiteSpeed_Cache_CLI_IAPI
 		}
 
 		if ( $json[ 'level' ] > $optm_summary[ 'level' ] ) {
-
 			LiteSpeed_Cache_Log::debug( "[Img_Optm] Upgraded to level $json[level] !" ) ;
 
 			WP_CLI::success('Upgraded to level ' . $json[ 'level' ] ) ;

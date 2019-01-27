@@ -624,7 +624,6 @@ class LiteSpeed_Cache_Control
 
 			return ;
 		}
-
 	}
 
 	/**
@@ -676,7 +675,6 @@ class LiteSpeed_Cache_Control
 		}
 
 		if ( ! self::is_forced_cacheable() ) {
-
 			// Check if URI is excluded from cache
 			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ;
 			if ( ! empty( $excludes ) ) {

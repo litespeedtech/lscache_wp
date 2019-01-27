@@ -63,7 +63,6 @@ class LiteSpeed_Cache_Activation
 		/* Network file handler */
 
 		if ( is_multisite() ) {
-
 			if ( ! is_network_admin() ) {
 				if ( $count === 1 ) {
 					// Only itself is activated, set .htaccess with only CacheLookUp
@@ -251,7 +250,6 @@ class LiteSpeed_Cache_Activation
 		LiteSpeed_Cache_Purge::purge_all() ;
 
 		if ( is_multisite() ) {
-
 			if ( ! self::is_deactivate_last() ) {
 				if ( is_network_admin() ) {
 					// Still other activated subsite left, set .htaccess with only CacheLookUp

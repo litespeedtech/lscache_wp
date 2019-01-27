@@ -49,7 +49,6 @@ class LiteSpeed_Cache_Log
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL ) ) {
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true ) ;
 		}
-
 	}
 
 	/**
@@ -72,7 +71,6 @@ class LiteSpeed_Cache_Log
 		$msg = $purge_header . self::_backtrace_info( 6 ) ;
 
 		Litespeed_File::append( $purge_file, self::format_message( $msg ) ) ;
-
 	}
 
 	/**
@@ -95,7 +93,6 @@ class LiteSpeed_Cache_Log
 		if ( ! defined( 'LSCWP_LOG' ) ) {// If not initialized, do it now
 			self::get_instance()->_init_request() ;
 			define( 'LSCWP_LOG', true ) ;
-
 		}
 
 		// Check if hook filters

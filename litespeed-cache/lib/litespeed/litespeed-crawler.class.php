@@ -462,7 +462,6 @@ class Litespeed_Crawler
 			'blacklist'	=> $this->_blacklist,
 			'crawled'	=> $this->_meta['last_crawled'],
 		) ;
-
 	}
 
 	/**

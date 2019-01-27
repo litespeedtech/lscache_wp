@@ -47,7 +47,6 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 		if ( is_bbpress() && LiteSpeed_Cache_Router::is_logged_in() ) {
 			LiteSpeed_Cache_API::set_nocache( 'bbpress cant cache loggedin' ) ;
 		}
-
 	}
 
 	/**

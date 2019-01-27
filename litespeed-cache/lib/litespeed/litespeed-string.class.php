@@ -52,7 +52,6 @@ class Litespeed_String
 			case 7 :
 				$charlist = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
 				break ;
-
 		}
 
 		$str = '' ;

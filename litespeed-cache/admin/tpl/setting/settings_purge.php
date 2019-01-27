@@ -60,7 +60,6 @@ $breakArr = array(
 			<div class="litespeed-top20">
 			<?php
 				foreach ($optionArr as $id => $title){
-
 					$this->build_checkbox("purge_$id", $title, in_array($id, $purge_options));
 
 					if ( in_array($id, $breakArr) ){

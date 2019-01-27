@@ -166,7 +166,6 @@ class LiteSpeed_Cache_CDN
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ] ) ) {
 			add_filter( 'script_loader_src', array( $this, 'url_js' ), 999 ) ;
 		}
-
 	}
 
 	/**
@@ -204,7 +203,6 @@ class LiteSpeed_Cache_CDN
 		$type = LiteSpeed_Cache_Router::verify_type() ;
 
 		switch ( $type ) {
-
 			default:
 				break ;
 		}
@@ -276,7 +274,6 @@ class LiteSpeed_Cache_CDN
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE ] ) ) {
 			$this->_replace_file_types() ;
 		}
-
 	}
 
 	/**

@@ -57,7 +57,6 @@ class LiteSpeed_Cache_Optimizer
 			}
 
 			return $content_final ;
-
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] html_min failed: ' . $e->getMessage() ) ;
 			error_log( '****** LiteSpeed Optimizer html_min failed: ' . $e->getMessage() ) ;
@@ -206,7 +205,6 @@ class LiteSpeed_Cache_Optimizer
 			$obj = new LiteSpeed_3rd_Lib\css_min\Minifier() ;
 
 			return $obj->run( $data ) ;
-
 		} catch ( Exception $e ) {
 			LiteSpeed_Cache_Log::debug( '******[Optmer] minify_css failed: ' . $e->getMessage() ) ;
 			error_log( '****** LiteSpeed Optimizer minify_css failed: ' . $e->getMessage() ) ;

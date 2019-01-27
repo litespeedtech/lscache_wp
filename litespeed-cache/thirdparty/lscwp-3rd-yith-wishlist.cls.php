@@ -66,7 +66,6 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	public static function is_not_esi()
 	{
 		add_filter('yith_wcwl_add_to_wishlisth_button_html', 'LiteSpeed_Cache_ThirdParty_Yith_Wishlist::sub_add_to_wishlist', 999) ;
-
 	}
 
 	/**

@@ -38,7 +38,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 			}
 
 			if ( defined( 'LITESPEED_ON' ) && $_options[$id] ){
-
 				if (!$cookie_rule){
 					echo '<div class="litespeed-callout-danger">'
 							. sprintf(__('Error getting current rules from %s: %s', 'litespeed-cache'), '.htaccess', LiteSpeed_Cache_Admin_Rules::MARKER_LOGIN_COOKIE)
@@ -53,7 +52,6 @@ if ( ! defined( 'WPINC' ) ) die ;
 							'</div>';
 					}
 				}
-
 			}
 
 		?>

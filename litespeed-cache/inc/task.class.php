@@ -121,7 +121,6 @@ class LiteSpeed_Cache_Task
 		if ( ! $is_active ) {
 			self::clear() ;
 		}
-
 	}
 
 	/**

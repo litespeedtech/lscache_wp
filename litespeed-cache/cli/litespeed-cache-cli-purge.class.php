@@ -245,7 +245,6 @@ class LiteSpeed_Cache_Cli_Purge
 		else {
 			WP_CLI::error('Something went wrong! Got ' . $purge_ret->status_code) ;
 		}
-
 	}
 
 	/**

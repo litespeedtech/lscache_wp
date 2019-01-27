@@ -543,7 +543,6 @@ class LiteSpeed_Cache_Admin_Display
 		 * @since 2.9
 		 */
 		LiteSpeed_Cache_GUI::get_instance()->show_promo() ;
-
 	}
 
 	/**
@@ -1031,7 +1030,6 @@ class LiteSpeed_Cache_Admin_Display
 				default:
 					return $num ;
 			}
-
 		}
 
 		switch ( $kind ) {

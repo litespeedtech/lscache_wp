@@ -1079,7 +1079,6 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		LiteSpeed_Cache_Admin_Display::succeed( __( 'File Saved.', 'litespeed-cache' ) ) ;
-
 	}
 
 	/**

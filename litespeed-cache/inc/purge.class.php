@@ -71,7 +71,6 @@ class LiteSpeed_Cache_Purge
 		}
 
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_feeds' ) ;
-
 	}
 
 	/**
@@ -356,7 +355,6 @@ class LiteSpeed_Cache_Purge
 			@header( $curr_built ) ;
 			LiteSpeed_Cache_Log::debug( $curr_built ) ;
 		}
-
 	}
 
 	/**

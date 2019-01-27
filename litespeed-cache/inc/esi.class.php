@@ -208,7 +208,6 @@ class LiteSpeed_Cache_ESI
 		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Vary::has_vary() ) {
 			add_filter( 'comment_form_defaults', array( $this, 'register_comment_form_actions' ) ) ;
 		}
-
 	}
 
 	/**

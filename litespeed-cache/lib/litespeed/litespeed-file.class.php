@@ -28,7 +28,6 @@ class Litespeed_File
 	 * @since 2.1
 	 */
 	public static function rrmdir( $dir ) {
-
 		$files = array_diff( scandir( $dir ), array( '.', '..' ) ) ;
 
 		foreach ( $files as $file ) {
@@ -424,7 +423,6 @@ class Litespeed_File
 				array( $end_marker ),
 				$pre_lines
 			) ) ;
-
 		}
 		else {
 			// Generate the new file data

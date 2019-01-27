@@ -12,7 +12,6 @@ $WP_DIR = $argv[2] ;
 * If plugin is in cache list, echo its name and current status.
 */
 function cachedetect($plugin,$value){
-
 $cache_list = array(
 "LiteSpeed Cache",
 "Gator Cache",
@@ -51,7 +50,6 @@ elseif ( $action == "enable" ) {
 }
 
 elseif ( $action == "disable" ) {
-
 	global $wpdb;
 
 	$sql = "SELECT option_value

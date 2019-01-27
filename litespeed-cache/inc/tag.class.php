@@ -69,7 +69,6 @@ class LiteSpeed_Cache_Tag
 	{
 		// register recent posts widget tag before theme renders it to make it work
 		add_filter( 'widget_posts_args', 'LiteSpeed_Cache_Tag::add_widget_recent_posts' ) ;
-
 	}
 
 	/**
@@ -346,7 +345,6 @@ class LiteSpeed_Cache_Tag
 					$tags[] = self::TYPE_PAGES ;
 				}
 			}
-
 		}
 
 		return $tags ;

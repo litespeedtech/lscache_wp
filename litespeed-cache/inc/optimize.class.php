@@ -129,7 +129,6 @@ class LiteSpeed_Cache_Optimize
 		 * @since 1.7.1
 		 */
 		$this->_dns_prefetch_init() ;
-
 	}
 
 	/**
@@ -224,7 +223,6 @@ class LiteSpeed_Cache_Optimize
 			// Generate static file
 			Litespeed_File::save( $static_file, $content, true ) ;
 			LiteSpeed_Cache_Log::debug2( '[Optm] Saved cache to file [path] ' . $static_file ) ;
-
 		}
 		else {
 			// Load file from file based cache if not expired
@@ -258,7 +256,6 @@ class LiteSpeed_Cache_Optimize
 			header( $k . ': ' . $v ) ;
 			LiteSpeed_Cache_Log::debug( '[Optm] HEADER ' . $k . ': ' . $v ) ;
 		}
-
 	}
 
 	/**
@@ -380,7 +377,6 @@ class LiteSpeed_Cache_Optimize
 
 		// css optimizer
 		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css ) {
-
 			if ( $src_list ) {
 				// Analyze local file
 				list( $ignored_html, $src_queue_list, $file_size_list ) = $this->_analyse_links( $src_list, $html_list ) ;
@@ -413,7 +409,6 @@ class LiteSpeed_Cache_Optimize
 						else {
 							$this->html_head .= implode( '', $ignored_html_async ) . $snippet ;
 						}
-
 					}
 					else {
 						// enqueue combined file first
@@ -432,7 +427,6 @@ class LiteSpeed_Cache_Optimize
 					foreach ( $urls as $url ) {
 						$this->append_http2( $url ) ;
 					}
-
 				}
 				// Only minify
 				elseif ( $this->cfg_css_minify ) {
@@ -455,7 +449,6 @@ class LiteSpeed_Cache_Optimize
 
 			// Replace async css
 			$this->content = str_replace( $html_list, $html_list_async, $this->content ) ;
-
 		}
 
 		// Parse js from buffer as needed
@@ -465,7 +458,6 @@ class LiteSpeed_Cache_Optimize
 
 		// js optimizer
 		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js ) {
-
 			if ( $src_list ) {
 				list( $ignored_html, $src_queue_list, $file_size_list ) = $this->_analyse_links( $src_list, $html_list, 'js' ) ;
 
@@ -554,7 +546,6 @@ class LiteSpeed_Cache_Optimize
 
 					// Will move all js to top/bottom
 					$this->content = str_replace( $html_list, '', $this->content ) ;
-
 				}
 				// Only minify
 				elseif ( $this->cfg_js_minify ) {
@@ -624,7 +615,6 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->http2_headers ) {
 			@header( 'Link: ' . implode( ',', $this->http2_headers ), false ) ;
 		}
-
 	}
 
 	/**
@@ -672,7 +662,6 @@ class LiteSpeed_Cache_Optimize
 			foreach ( array_filter( explode( '|', $qs[ 'family' ] ) ) as $v2 ) {
 				$families[] = $v2 . $subset ;
 			}
-
 		}
 
 		$html .= "'" . implode( "','", $families ) . "'" ;
@@ -687,7 +676,6 @@ class LiteSpeed_Cache_Optimize
 
 		// Put this in the very beginning for preconnect
 		$this->html_head = $html . $this->html_head ;
-
 	}
 
 	/**
@@ -759,7 +747,6 @@ class LiteSpeed_Cache_Optimize
 		$i = 0 ;
 		$src_arr = array() ;
 		foreach ( $src_queue_list as $k => $v ) {
-
 			empty( $src_arr[ $i ] ) && $src_arr[ $i ] = array() ;
 
 			$src_arr[ $i ][] = $v ;
@@ -949,7 +936,6 @@ class LiteSpeed_Cache_Optimize
 			Litespeed_File::save( $static_file, $content, true ) ;
 
 			LiteSpeed_Cache_Log::debug2( '[Optm] Saved static file [path] ' . $static_file ) ;
-
 		}
 
 		$file_to_save = self::DIR_MIN . '/' . $filename . '.' . $file_type ;
