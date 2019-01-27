@@ -489,7 +489,7 @@ class WP_Object_Cache
 	private function _transient_get( $transient, $group )
 	{
 		if ( $group == 'transient' ) {
-			/**** Ori WP func start ****/
+			/* Ori WP func start */
 			$transient_option = '_transient_' . $transient;
 			if ( ! wp_installing() ) {
 				// If option is not in alloptions, it is not autoloaded and thus has a timeout
@@ -507,10 +507,10 @@ class WP_Object_Cache
 
 			if ( ! isset( $value ) )
 				$value = get_option( $transient_option );
-			/**** Ori WP func end ****/
+			/* Ori WP func end */
 		}
 		elseif ( $group == 'site-transient' ) {
-			/**** Ori WP func start ****/
+			/* Ori WP func start */
 			$no_timeout = array('update_core', 'update_plugins', 'update_themes');
 			$transient_option = '_site_transient_' . $transient;
 			if ( ! in_array( $transient, $no_timeout ) ) {
@@ -525,7 +525,7 @@ class WP_Object_Cache
 
 			if ( ! isset( $value ) )
 				$value = get_site_option( $transient_option );
-			/**** Ori WP func end ****/
+			/* Ori WP func end */
 		}
 		else {
 			$value = false ;
@@ -543,7 +543,7 @@ class WP_Object_Cache
 	private function _transient_set( $transient, $value, $group, $expiration )
 	{
 		if ( $group == 'transient' ) {
-			/**** Ori WP func start ****/
+			/* Ori WP func start */
 			$transient_timeout = '_transient_timeout_' . $transient;
 			$transient_option = '_transient_' . $transient;
 			if ( false === get_option( $transient_option ) ) {
@@ -571,10 +571,10 @@ class WP_Object_Cache
 					$result = update_option( $transient_option, $value );
 				}
 			}
-			/**** Ori WP func end ****/
+			/* Ori WP func end */
 		}
 		elseif ( $group == 'site-transient' ) {
-			/**** Ori WP func start ****/
+			/* Ori WP func start */
 			$transient_timeout = '_site_transient_timeout_' . $transient;
 			$option = '_site_transient_' . $transient;
 			if ( false === get_site_option( $option ) ) {
@@ -586,7 +586,7 @@ class WP_Object_Cache
 					update_site_option( $transient_timeout, time() + $expiration );
 				$result = update_site_option( $option, $value );
 			}
-			/**** Ori WP func end ****/
+			/* Ori WP func end */
 		}
 		else {
 			$result = null ;
@@ -604,22 +604,22 @@ class WP_Object_Cache
 	private function _transient_del( $transient, $group )
 	{
 		if ( $group == 'transient' ) {
-			/**** Ori WP func start ****/
+			/* Ori WP func start */
 			$option_timeout = '_transient_timeout_' . $transient;
 			$option = '_transient_' . $transient;
 			$result = delete_option( $option );
 			if ( $result )
 				delete_option( $option_timeout );
-			/**** Ori WP func end ****/
+			/* Ori WP func end */
 		}
 		elseif ( $group == 'site-transient' ) {
-			/**** Ori WP func start ****/
+			/* Ori WP func start */
 			$option_timeout = '_site_transient_timeout_' . $transient;
 			$option = '_site_transient_' . $transient;
 			$result = delete_site_option( $option );
 			if ( $result )
 				delete_site_option( $option_timeout );
-			/**** Ori WP func end ****/
+			/* Ori WP func end */
 		}
 	}
 
