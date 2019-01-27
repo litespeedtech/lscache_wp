@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
         }
 
         // If network set to use primary setting
-        if ( ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+        if ( ! empty( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
 
             // save temparary cron setting
             $CRWL_CRON_ACTIVE = $options[ self::CRWL_CRON_ACTIVE ] ;
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
         if (
             $this->options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] &&
             (
-                ( ! is_main_site() && ! empty ( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) ||
+                ( ! is_main_site() && ! empty( $site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) ||
                 count( $default_options ) == count( $this->options )
             )
         ) {

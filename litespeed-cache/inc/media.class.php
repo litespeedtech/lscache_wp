@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Media
 
         // WebP info
         $info_webp = '' ;
-        if ( $size_meta && ! empty ( $size_meta[ 'webp_saved' ] ) ) {
+        if ( $size_meta && ! empty( $size_meta[ 'webp_saved' ] ) ) {
             $percent = ceil( $size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ] ) ;
             $pie_webp = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
             $txt_webp = sprintf( __( 'WebP saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $size_meta[ 'webp_saved' ] ) ) ;
@@ -200,7 +200,7 @@ class LiteSpeed_Cache_Media
 
         // Original image info
         $info_ori = '' ;
-        if ( $size_meta && ! empty ( $size_meta[ 'ori_saved' ] ) ) {
+        if ( $size_meta && ! empty( $size_meta[ 'ori_saved' ] ) ) {
             $percent = ceil( $size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ] ) ;
             $pie_ori = LiteSpeed_Cache_GUI::pie( $percent, 30 ) ;
             $txt_ori = sprintf( __( 'Original saved %s', 'litespeed-cache' ), LiteSpeed_Cache_Utility::real_size( $size_meta[ 'ori_saved' ] ) ) ;
