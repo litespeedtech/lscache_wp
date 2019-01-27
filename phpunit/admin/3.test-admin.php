@@ -50,7 +50,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
   	/**
 	 * Test case for enqueue style LiteSpeed_Cache_Admin::__construct
 	 */
-	public function test_construct()
+	public function testConstruct()
 	{
 		$instance = self::get_instance();
 		
@@ -85,7 +85,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param string $nonce The nonce to use.
 	 * @return string The built url.
 	 */
-	public function test_build_lscwpctrl_url()
+	public function testBuildLscwpctrlUrl()
 	{
 		$val = '';
 		$nounce = '';
@@ -101,7 +101,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param array $options Returns the up to date options array.
 	 * @return boolean True if enabled, false otherwise.
 	 */
-	public function test_validate_enabled()
+	public function testValidateEnabled()
 	{
 		$input = '';
 		$object = LiteSpeed_Cache::config();
@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param array $options The current configuration options.
 	 * @return mixed True on success, error message otherwise.
 	 */
-	public function test_validate_tag_prefix()
+	public function testValidateTagPrefix()
 	{
 		$input = '';
 		$object = LiteSpeed_Cache::config();
@@ -136,7 +136,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param string $id Option ID
 	 * @return bool True if valid, false otherwise.
 	 */
-	public function test_validate_ttl()
+	public function testValidateTtl()
 	{
 		$input = array();
 		$id = '';
@@ -152,7 +152,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 *     clicking save.
 	 * @return array The updated configuration options.
 	 */
-	public function test_validate_plugin_settings()
+	public function testValidatePluginSettings()
 	{
 		$input = '';
 		$instance = self::get_instance();
@@ -166,7 +166,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param array $links Previously added links from other plugins.
 	 * @return array Links array with the litespeed cache one appended.
 	 */
-	public function test_add_plugin_links()
+	public function testAddPluginLinks()
 	{
 		$links = array();
 		$instance = self::get_instance();
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param string $input The input string to clean.
 	 * @return string The cleaned up input.
 	 */
-	public function test_cleanup_text()
+	public function testCleanupText()
 	{
 		$input = '';
         $msg = LiteSpeed_Cache_Admin::cleanup_text($input);
@@ -196,7 +196,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param array $options The config options array.
 	 * @return boolean True if checked, false otherwise.
 	 */
-	public function test_parse_checkbox()
+	public function testParseCheckbox()
 	{
 		$id = '';
 		$input = array();
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @param string $text
 	 * @return string
 	 */
-	public function test_add_update_text()
+	public function testAddUpdateText()
 	{
 		$translations = '';
 		$text = '';

@@ -56,7 +56,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
   	/**
 	 * Test case for enqueue style LiteSpeed_Cache_Config::__construct
 	 */
-	public function test_construct()
+	public function testConstruct()
 	{
 		$instance = self::get_instance();
 		$this->assertTrue( TRUE );
@@ -67,7 +67,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access private
 	 * @return array The updated options.
 	 */
-	public function test_construct_multisite_options()
+	public function testConstructMultisiteOptions()
 	{
 		$array = self::invokeMethod('LiteSpeed_Cache_Config','construct_multisite_options');
 		$this->assertNotEmpty($array);
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access public
 	 * @return array The updated options.
 	 */
-	public function test_get_options() 
+	public function testGetOptions() 
 	{
 		$array = self::get_instance()->get_options();
 		$this->assertNotEmpty($array);
@@ -90,7 +90,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @param string $id Configuration ID.
 	 * @return mixed Selected option if set, NULL if not.
 	 */
-	public function test_get_option() 
+	public function testGetOption() 
 	{
 		$id = '';
 		$null = self::get_instance()->get_option($id);
@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access public
 	 * @return array The list of purge options.
 	 */
-	public function test_get_purge_options() 
+	public function testGetPurgeOptions() 
 	{
 		$array = self::get_instance()->get_purge_options();
 		$this->assertNotEmpty($array);
@@ -114,7 +114,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
 	 * @return boolean True if the post type should be purged, false otherwise.
 	 */
-	public function test_purge_by_post() 
+	public function testPurgeByPost() 
 	{
 		$flag = '';
 		$bool = self::get_instance()->purge_by_post($flag);
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @param bool $include_thirdparty Whether to include the thirdparty options.
 	 * @return array An array of the default options.
 	 */
-	public function test_get_default_options()
+	public function testGetDefaultOptions()
 	{
 		$include_thirdparty = true;
 		$parameters = array($include_thirdparty);
@@ -141,7 +141,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access protected
 	 * @return array An array of the default options.
 	 */
-	public function test_get_default_site_options()
+	public function testGetDefaultSiteOptions()
 	{
 		$array = self::invokeMethod('LiteSpeed_Cache_Config','get_default_site_options');
 		$this->assertNotEmpty($array);
@@ -152,7 +152,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access public
 	 * @return array The list of options to reset.
 	 */
-	public function test_get_rule_reset_options()
+	public function testGetRuleResetOptions()
 	{
 		$array = self::get_instance()->get_rule_reset_options();
 		$this->assertNotEmpty($array);
@@ -163,7 +163,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access public
 	  * @return array Returns the current site options.
 	 */
-	public function test_get_site_options()
+	public function testGetSiteOptions()
 	{
 		$array = self::get_instance()->get_site_options();
 		if (!is_multisite()) {
@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @param array $options Optional. The default options to compare against.
 	 * @return mixed boolean on failure, array of keys on success.
 	 */
-	public function test_get_thirdparty_options()
+	public function testGetThirdpartyOptions()
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
@@ -201,7 +201,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @param boolean $enable True if enabling, false if disabling.
 	 * @return boolean True if the variable is the correct value, false if something went wrong.
 	 */
-	public function test_wp_cache_var_setter()
+	public function testWpCacheVarSetter()
 	{
 		$enable = true;
 		$bool = self::get_instance()->wp_cache_var_setter($enable);
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	 * @access public
 	 * @return boolean True if enabled, false otherwise.
 	 */
-	public function test_is_caching_allowed()
+	public function testIsCachingAllowed()
 	{
 		$bool = self::get_instance()->is_caching_allowed();
 		$this->assertFalse($bool);

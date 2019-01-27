@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param string $opt_id An option ID if getting an option.
      * @return LiteSpeed_Cache_Config The configurations for the accessed page.
      */
-    public function test_config()
+    public function testConfig()
     {
         $opt_id = '';
         $array = LiteSpeed_Cache::config($opt_id);
@@ -66,7 +66,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param string $mesg The log message to write.
      * @return string The formatted log message.
      */
-    public function test_format_message()
+    public function testFormatMessage()
     {
         $msg = '';
         $parameters = array($msg);
@@ -108,7 +108,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @return mixed The count on success, false on failure.
      */
-    public function test_get_network_count()
+    public function testGetNetworkCount()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'get_network_count');
         if($bool){
@@ -125,7 +125,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @return bool True if yes, false otherwise.
      */
-    public function test_is_deactivate_last()
+    public function testIsDeactivateLast()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'is_deactivate_last');
         if($bool){
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access public
      * @return LiteSpeed_Cache_Config The configurations for the accessed page.
      */
-    public function test_get_config()
+    public function testGetConfig()
     {
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_config');
         $this->assertNotEmpty($array);       
@@ -153,7 +153,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access public
      * @return boolean True on success, false on failure.
      */
-    public function test_try_copy_advanced_cache()
+    public function testTryCopyAdvancedCache()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'try_copy_advanced_cache');
          if($bool){
@@ -170,7 +170,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @return boolean True if cookies are bad, false otherwise.
      */
-    public function test_setup_cookies()
+    public function testSetupCookies()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'setup_cookies');
          if($bool){
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::check_user_logged_in
      * @return boolean True if logged in, false otherwise.
      */
-    public function test_check_user_logged_in()
+    public function testCheckUserLoggedIn()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'check_user_logged_in');
          if($bool){
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @return boolean True if do not cache for commenters and user is a commenter. False otherwise.
      */
-    public function test_check_cookies()
+    public function testCheckCookies()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'check_cookies');
          if($bool){
@@ -221,7 +221,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param array $excludes_list List of excluded URIs
      * @return boolean True if excluded, false otherwise.
      */
-    public function test_is_uri_excluded()
+    public function testIsUriExcluded()
     {
         $excludes_list = array();
         $parameters = array($excludes_list);   
@@ -240,7 +240,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @return boolean True if cacheable, false otherwise.
      */
-    public function test_is_cacheable()
+    public function testIsCacheable()
     {
         $bool = self::invokeMethod('LiteSpeed_Cache', 'is_cacheable');
          if($bool){
@@ -258,7 +258,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param $header, $code.
      * @return $eeror_status.
      */
-    public function test_check_error_codes()
+    public function testCheckErrorCodes()
     {
         $OPID_403_TTL = '403_ttl';
         $OPID_404_TTL = '404_ttl';
@@ -277,7 +277,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param string $reason An explanation for why the page is not cacheable.
      * @return boolean Return false.
      */
-    public function test_no_cache_for()
+    public function testNoCacheFor()
     {
         $reason = "for test reason";
         $parameters = array($reason);
@@ -291,7 +291,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param boolean $stale Whether to add header as a stale header or not.
      * @return string The purge header
      */
-    public function test_build_purge_headers()
+    public function testBuildPurgeHeaders()
     {
         $stale = true;
         $parameters = array($stale);
@@ -313,7 +313,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return mixed false if the user has the postpass cookie. Empty string
      * if the post is not password protected. Vary header otherwise.
      */
-    public function test_build_vary_headers()
+    public function testBuildVaryHeaders()
     {
         $string = self::invokeMethod('LiteSpeed_Cache', 'build_vary_headers');
         $bool = self::isString( $string );
@@ -334,7 +334,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @return integer The integer corresponding to the selected
      * cache control value.
      */
-    public function test_validate_mode()
+    public function testValidateMode()
     {
         $showhdr = true;
         $stale = true;
@@ -350,7 +350,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
       * @param string $tag The tag to prefix.
       * @return string The amended tag.
      */
-    public function test_prefix_apply()
+    public function testPrefixApply()
     {
         $tag = 'test-tag';
         $parameters = array($tag);
@@ -370,7 +370,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @return array The list of cache tags to set.
      */
-    public function test_get_cache_tags()
+    public function testGetCacheTags()
     {
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_cache_tags');
         if(count($array)>0){
@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param integer $post_id The id of the post about to be purged.
      * @return array The list of purge tags correlated with the post.
      */
-    public function test_get_purge_tags()
+    public function testGetPurgeTags()
     {
         $post_id = $this->factory->post->create( array( 'post_title' => 'Test Post' ) );
 
@@ -409,7 +409,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param string $uri The uri to get the hash of.
      * @return bool|string False on input error, hash otherwise.
      */
-    public function test_get_uri_hash()
+    public function testGetUriHash()
     {
         
         $uri = '';
@@ -432,7 +432,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param array $section An array of information to output
      * @return string The created report block.
      */
-    public function test_format_report_section()
+    public function testFormatReportSection()
     {
         
         $section_header = '';
@@ -457,7 +457,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param array $htaccess_paths - htaccess paths to check.
      * @return string The Environment Report buffer.
      */
-    public function test_build_environment_report()
+    public function testBuildEnvironmentReport()
     {
         
         $server = array();
@@ -485,7 +485,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param array $htaccess_paths - htaccess paths to check.
      * @return string The Environment Report buffer.
      */
-    public function test_generate_environment_report()
+    public function testGenerateEnvironmentReport()
     { 
         $object = LiteSpeed_Cache::config();
         $options = $object->get_options();
@@ -505,7 +505,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::esi_admin_bar_render
      * @echo string ESI.
      */
-    public function test_esi_admin_bar_render()
+    public function testEsiAdminBarRender()
     { 
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'esi_admin_bar_render');
@@ -524,7 +524,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::check_admin_bar
      * @echo string ESI.
      */
-    public function test_check_admin_bar()
+    public function testCheckAdminBar()
     { 
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
@@ -539,7 +539,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::check_storefront_cart
      * @echo string StoreFront Cart.
      */
-    public function test_check_storefront_cart()
+    public function testCheckStorefrontCart()
     { 
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'check_storefront_cart');
@@ -558,7 +558,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::check_sidebar
      * @echo string check_sidebar.
      */
-    public function test_check_sidebar()
+    public function testCheckSidebar()
     { 
         ob_start();
         $string = self::invokeMethod('LiteSpeed_Cache', 'check_sidebar');
@@ -577,7 +577,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::add_actions_esi
      * @echo string ESI.
      */
-    public function test_add_actions_esi()
+    public function testAddActionsEsi()
     { 
         $instance = LiteSpeed_Cache::plugin();
         //send priority by 1000
@@ -594,7 +594,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::is_esi_admin_bar
      * @return boolean.
      */
-    public function test_is_esi_admin_bar()
+    public function testIsEsiAdminBar()
     { 
         $instance = LiteSpeed_Cache::plugin();
         $uri = '';
@@ -624,7 +624,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::is_esi_cart
      * @return boolean.
      */
-    public function test_is_esi_cart()
+    public function testIsEsiCart()
     { 
         $instance = LiteSpeed_Cache::plugin();
         $uri = '';
@@ -654,7 +654,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::is_esi_sidebar
      * @return boolean.
      */
-    public function test_is_esi_sidebar()
+    public function testIsEsiSidebar()
     { 
         $instance = LiteSpeed_Cache::plugin();
         $uri = '';
@@ -686,7 +686,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::is_esi_sidebar
      * @return boolean.
      */
-    public function test_check_esi_page()
+    public function testCheckEsiPage()
     { 
          $bool = self::invokeMethod('LiteSpeed_Cache', 'check_esi_page');
             if($bool){

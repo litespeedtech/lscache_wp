@@ -25,7 +25,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 	 * @access public
 	 * @return array The updated options.
 	 */
-	public function test_get_cache_tags() 
+	public function testGetCacheTags() 
 	{
         $instance  = self::get_instance();
         $tags = array();
@@ -49,7 +49,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      * @access public
      * @param mixed $tag A string or array of cache tags to add to the current list.
      */
-    public function test_get_purge_tags() 
+    public function testGetPurgeTags() 
     {
         $instance  = self::get_instance();
         $tags = array();
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      * @access public
      * @param mixed $tag A string or array of cache tags to add to the current list.
      */
-    public function test_get_vary_cookies() 
+    public function testGetVaryCookies() 
     {
         $instance  = self::get_instance();
         $cookie = array();
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      * @return boolean True if the current page was deemed non-cacheable,
      * false otherwise.
      */
-    public function test_is_noncacheable() 
+    public function testIsNoncacheable() 
     {
         $instance  = self::get_instance();
 
@@ -122,7 +122,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      * @return boolean True if the current page was deemed mobile,
      * false otherwise.
      */
-    public function test_is_mobile() 
+    public function testIsMobile() 
     {
         $instance  = self::get_instance();
 
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      * @access public
      * @return boolean True if use front page TTL, false otherwise.
      */
-    public function test_get_use_frontpage_ttl() 
+    public function testGetUseFrontpageTtl() 
     {
         $instance  = self::get_instance();
 

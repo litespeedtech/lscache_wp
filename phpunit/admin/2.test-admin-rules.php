@@ -40,7 +40,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_home_path
 	 * @return string
 	 */
-	public function test_get_home_path()
+	public function testGetHomePath()
 	{
 		$msg = LiteSpeed_Cache_Admin_Rules::get_instance()->get_home_path();
 		$bool = self::isString($msg);
@@ -51,7 +51,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::get_site_path
 	 * @return string
 	 */
-	public function test_get_site_path()
+	public function testGetSitePath()
 	{
 		$msg = LiteSpeed_Cache_Admin_Rules::get_instance()->get_site_path();
 		$bool = self::isString($msg);
@@ -73,7 +73,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::is_file_able
 	 * @return string
 	 */
-	public function test_is_file_able()
+	public function testIsFileAble()
 	{
 		$path = '/root/tests/wp-content/plugins/';
 		$bool = LiteSpeed_Cache_Admin_Rules::get_instance()->is_file_able(3, $path);
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $end Returns the ending wrapper.
 	 * @return string Returns the opening wrapper.
 	 */
-	public function test_build_wrappers()
+	public function testBuildWrappers()
 	{
 		$wrapper = 'Test Wrapper';
 		$end = '>';
@@ -103,7 +103,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $file The file to search for.
 	 * @return string The deepest path where the file exists,
 	 */
-	public function test_path_search()
+	public function testPathSearch()
 	{
 		$stop_path = '';
 		$start_path = '';
@@ -118,7 +118,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::path_set
 	 * @return null,
 	 */
-	public function test_path_set()
+	public function testPathSet()
 	{
 		
 		$null = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','path_set');
@@ -132,7 +132,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public function test_file_get()
+	public function testFileGet()
 	{
 		$content = '';
 		$path = '';
@@ -150,7 +150,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @return bool|string False if not found, True if found. Error message if
 	 * it failed.
 	 */
-	public function test_file_get_ifmodule_block()
+	public function testFileGetIfmoduleBlock()
 	{
 		$content = '';
 		$off_begin = '';
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $after The content after the relevant section.
 	 * @return mixed False on failure, the haystack on success.
 	 */
-	public function test_file_split()
+	public function testFileSplit()
 	{
 		$content = '';
 		$buf = '';
@@ -186,7 +186,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $path If path is set, use path, else use home path.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	public function test_file_combine()
+	public function testFileCombine()
 	{
 		$beginning = '';
 		$haystack = '';
@@ -218,7 +218,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param boolean $backup Whether to create backups or not.
 	 * @return mixed true on success, else error message on failure.
 	 */
-	public function test_file_save()
+	public function testFileSave()
 	{
 		$content = "Some sample content";
 		$cleanup = false;
@@ -241,7 +241,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $flag The flags to use with the rewrite condition.
 	 * @return mixed Explained above.
 	 */
-	public function test_set_common_rule()
+	public function testSetCommonRule()
 	{
 		$content = "Some sample content";
 		$output = '';
@@ -263,7 +263,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $match Returns the rewrite rule on success, error message on failure.
 	 * @return boolean True on success, false otherwise.
 	 */
-	public function test_get_common_rule()
+	public function testGetCommonRule()
 	{
 		$wrapper = "Some sample content";
 		$cond = '';
@@ -282,7 +282,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $env The environment change to do if the rule matches.
 	 * @return mixed Explained above.
 	 */
-	public function test_set_rewrite_rule()
+	public function testSetRewriteRule()
 	{
 		$content = "Some sample content";
 		$output = '';
@@ -303,7 +303,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $env Returns the environment on success, error message on failure.
 	 * @return boolean True on success, false otherwise.
 	 */
-	public function test_get_rewrite_rule()
+	public function testGetRewriteRule()
 	{
 		$wrapper = "Some sample content";
 		$match = '';
@@ -322,7 +322,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @return mixed False on failure/do not update,
 	 *	original content sans favicon on success.
 	 */
-	public function test_set_favicon()
+	public function testSetFavicon()
 	{
 		$haystack = '';
 		$action = true;
@@ -343,7 +343,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @return mixed False on failure/do not update,
 	 *	original content sans favicon on success.
 	 */
-	public function test_set_cache_resource()
+	public function testSetCacheResource()
 	{
 		$haystack = '';
 		$set = true;
@@ -361,7 +361,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param array $errors Errors array to add error messages to.
 	 * @return mixed False if there is an error, diff array otherwise.
 	 */
-	public function test_check_input()
+	public function testCheckInput()
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
@@ -380,7 +380,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @return mixed False on failure/do not update,
 	 *	original content sans favicon on success.
 	 */
-	public function test_check_rewrite()
+	public function testCheckRewrite()
 	{
 		$rules = '';
 		$parameters = array($rules);
@@ -395,7 +395,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $errors Errors array in case of error.
 	 * @return boolean False on function failure, true otherwise.
 	 */
-	public function test_parse_ret()
+	public function testParseRet()
 	{
 		$ret = '';
 		$haystack = '';
@@ -414,7 +414,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @return mixed False on failure/do not update,
 	 *	original content sans login cookie on success.
 	 */
-	public function test_set_subdir_cookie()
+	public function testSetSubdirCookie()
 	{
 		$diff = '';
 		$haystack = '';
@@ -433,7 +433,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $flag The flag the rewrite rule should set.
 	 * @param string $content The original content/new content after replacement.
 	 */
-	public function test_set_on_upgrade()
+	public function testSetOnUpgrade()
 	{
 		$wrapper = '';
 		$match = '';
@@ -453,7 +453,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param string $flag The flag the rewrite rule should set.
 	 * @param string $content The original content/new content after replacement.
 	 */
-	public function test_parse_existing_login_cookie()
+	public function testParseExistingLoginCookie()
 	{
 		$content = '';
 		$parameters = array(&$content);
@@ -465,7 +465,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::scan_upgrade
 	 * @return string The login cookie if found, empty string otherwise.
 	 */
-	public function test_scan_upgrade()
+	public function testScanUpgrade()
 	{
 		$bool = LiteSpeed_Cache_Admin_Rules::get_instance()->scan_upgrade();
       	$this->assertNotNull($bool);						
@@ -477,7 +477,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * @param array $errors Returns error messages added if failed.
 	 * @return mixed Returns updated options array on success, false otherwise.
 	 */
-	public function test_validate_common_rewrites()
+	public function testValidateCommonRewrites()
 	{
 		$diff = '';
 		$errors = '';
@@ -489,7 +489,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin_Rules::clear_rules
 	  * @param string $wrapper A wrapper to a specific rule to match.
 	 */
-	public function test_clear_rules()
+	public function testClearRules()
 	{
 		$wrapper = '';
 		$bool = LiteSpeed_Cache_Admin_Rules::get_instance()->clear_rules($wrapper);

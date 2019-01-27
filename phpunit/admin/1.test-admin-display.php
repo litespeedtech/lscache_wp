@@ -41,7 +41,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param  string $footer_text
 	 * @return string
 	 */
-	public function test_admin_footer_text()
+	public function testAdminFooterText()
 	{
 		$footer_text = '';
 		$msg = LiteSpeed_Cache_Admin_Display::get_instance()->admin_footer_text($footer_text);
@@ -54,7 +54,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 *
 	 *  bool True to disable all settings, false otherwise.
 	 */
-	public function test_get_disable_all()
+	public function testGetDisableAll()
 	{
 		$bool = LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all();
 		$this->assertFalse($bool);
@@ -64,7 +64,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * Test case to check Set to disable all settings LiteSpeed_Cache_Admin_Display::set_disable_all
 	 * @return NULL
 	 */
-	public function test_set_disable_all()
+	public function testSetDisableAll()
 	{
 		$null = LiteSpeed_Cache_Admin_Display::get_instance()->set_disable_all();
 		$this->assertNull($null);
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::check_license
 	 * @return String
 	 */
-	public function test_check_license()
+	public function testCheckLicense()
 	{
 		$config = LiteSpeed_Cache::config();
 		$msg = LiteSpeed_Cache_Admin_Display::get_instance()->check_license($config);
@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_paragraph
 	 * @return String
 	 */
-	public function test_build_paragraph()
+	public function testBuildParagraph()
 	{
 		
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->build_paragraph();
@@ -99,7 +99,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_list
 	 * @return String
 	 */
-	public function test_build_list()
+	public function testBuildList()
 	{
 		$items = array('Item1', 'Item 2');
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->build_list($items, true, '');
@@ -112,7 +112,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_notice
 	 * @return String
 	 */
-	public function test_build_notice()
+	public function testBuildNotice()
 	{
 		$parameters = array('Yellow','Hi this is a test message');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_notice', $parameters);
@@ -125,7 +125,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_tip
 	 * @return String
 	 */
-	public function test_build_tip()
+	public function testBuildTip()
 	{
 		$parameters = array('This is tooltip message','','','');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_tip', $parameters);
@@ -138,7 +138,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_button
 	 * @return String
 	 */
-	public function test_build_button()
+	public function testBuildButton()
 	{
 		$parameters = array('','Button Text','','');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_button', $parameters);
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_expand_collapse
 	 * @return String
 	 */
-	public function test_build_expand_collapse()
+	public function testBuildExpandCollapse()
 	{
 		$parameters = array(true);
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_expand_collapse', $parameters);
@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::add_notice
 	 * try Catch as nothing is returned..
 	 */
-	public function test_add_notice()
+	public function testAddNotice()
 	{
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->add_notice('Blue','Add Notice Message');
 		try {
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::display_notices
 	 * @return String
 	 */
-	public function test_display_notices()
+	public function testDisplayNotices()
 	{
 		ob_start();
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->display_notices();
@@ -195,7 +195,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_select
 	 */
-	public function test_show_menu_select()
+	public function testShowMenuSelect()
 	{
 
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->show_menu_select();
@@ -215,7 +215,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_manage
 	 * @return String
 	 */
-	public function test_show_menu_manage()
+	public function testShowMenuManage()
 	{
 		ob_start();
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->show_menu_manage();
@@ -229,7 +229,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_settings
 	 * @return String
 	 */
-	public function test_show_menu_settings()
+	public function testShowMenuSettings()
 	{
 		ob_start();
         $msg = LiteSpeed_Cache_Admin_Display::get_instance()->show_menu_settings();
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_network_settings
 	 * @return String
 	 */
-	public function test_show_menu_network_settings()
+	public function testShowMenuNetworkSettings()
 	{
 		ob_start();
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_menu_network_settings');
@@ -257,7 +257,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_edit_htaccess
 	 * @return String
 	 */
-	public function test_show_menu_edit_htaccess()
+	public function testShowMenuEditHtaccess()
 	{
 		ob_start();
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_menu_edit_htaccess');
@@ -271,7 +271,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_info
 	 * @return String
 	 */
-	public function test_show_menu_info()
+	public function testShowMenuInfo()
 	{
 		ob_start();
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_menu_info');
@@ -285,7 +285,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_menu_report
 	 * @return String
 	 */
-	public function test_show_menu_report()
+	public function testShowMenuReport()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_menu_report');
 		$bool = self::isString($msg);
@@ -297,7 +297,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_general
 	 * @return String
 	 */
-	public function test_show_settings_general()
+	public function testShowSettingsGeneral()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_general');
 		$bool = self::isString($msg);
@@ -310,7 +310,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_specific
 	 * @return String
 	 */
-	public function test_show_settings_specific()
+	public function testShowSettingsSpecific()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_specific');
 		$bool = self::isString($msg);
@@ -322,7 +322,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_purge
 	 * @return String
 	 */
-	public function test_show_settings_purge()
+	public function testShowSettingsPurge()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_purge');
 		$bool = self::isString($msg);
@@ -334,7 +334,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_excludes
 	 * @return String
 	 */
-	public function test_show_settings_excludes()
+	public function testShowSettingsExcludes()
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
@@ -349,7 +349,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_advanced
 	 * @return String
 	 */
-	public function test_show_settings_advanced()
+	public function testShowSettingsAdvanced()
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
@@ -364,7 +364,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_test
 	 * @return String
 	 */
-	public function test_show_settings_test()
+	public function testShowSettingsTest()
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
@@ -379,7 +379,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_settings_compatibilities
 	 * @return String
 	 */
-	public function test_show_settings_compatibilities()
+	public function testShowSettingsCompatibilities()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_settings_compatibilities');
 		$bool = self::isString($msg);
@@ -392,7 +392,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_mobile_view
 	 * @return String
 	 */
-	public function test_build_setting_mobile_view()
+	public function testBuildSettingMobileView()
 	{
 
 		$object = LiteSpeed_Cache::config();
@@ -411,7 +411,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $cookie_desc Returns the cookie description string.
 	 * @return string Returns the cookie text area on success, error message on
 	 */
-	public function test_build_setting_exclude_cookies()
+	public function testBuildSettingExcludeCookies()
 	{
 		$object = LiteSpeed_Cache::config();
 		$cookie_title = '';
@@ -431,7 +431,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $ua_desc Returns the user agent description string.
 	 * @return string Returns the user agent text field on success,
 	 */
-	public function test_build_setting_exclude_useragent()
+	public function testBuildSettingExcludeUseragent()
 	{
 		$object = LiteSpeed_Cache::config();
 		$ua_title = '';
@@ -451,7 +451,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $cookie_desc Returns the cookie description string.
 	 * @return string Returns the cookie text field on success,
 	 */
-	public function test_build_setting_login_cookie()
+	public function testBuildSettingLoginCookie()
 	{
 		$object = LiteSpeed_Cache::config();
 		$options = $object->get_options();
@@ -469,7 +469,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param array $options The currently configured options.
 	 * @return string The html for caching favicon configurations.
 	 */
-	public function test_build_setting_purge_on_upgrade()
+	public function testBuildSettingPurgeOnUpgrade()
 	{
 		$object = LiteSpeed_Cache::config();
 		$parameters = $object->get_options();
@@ -484,7 +484,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param array $options The currently configured options.
 	 * @return string The html for caching favicon configurations.
 	 */
-	public function test_build_setting_cache_favicon()
+	public function testBuildSettingCacheFavicon()
 	{
 		$object = LiteSpeed_Cache::config();
 		$parameters = $object->get_options();
@@ -498,7 +498,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::build_compatibility_wp_postviews
 	 * @return String
 	 */
-	public function test_build_compatibility_wp_postviews()
+	public function testBuildCompatibilityWpPostviews()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','build_compatibility_wp_postviews');
 		$bool = self::isString($msg);
@@ -510,7 +510,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_compatibility
 	 * @return String
 	 */
-	public function test_show_info_compatibility()
+	public function testShowInfoCompatibility()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_compatibility');
 		$bool = self::isString($msg);
@@ -522,7 +522,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_admin_ip
 	 * @return String
 	 */
-	public function test_show_info_admin_ip()
+	public function testShowInfoAdminIp()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_admin_ip');
 		$bool = self::isString($msg);
@@ -534,7 +534,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_common_rewrite
 	 * @return String
 	 */
-	public function test_show_info_common_rewrite()
+	public function testShowInfoCommonRewrite()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_common_rewrite');
 		$bool = self::isString($msg);
@@ -546,7 +546,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_info_faqs
 	 * @return String
 	 */
-	public function test_show_info_faqs()
+	public function testShowInfoFaqs()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_info_faqs');
 		$bool = self::isString($msg);
@@ -558,7 +558,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_display_installed
 	 * @return String
 	 */
-	public function test_show_display_installed()
+	public function testShowDisplayInstalled()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_display_installed');
 		$bool = self::isString($msg);
@@ -570,7 +570,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::show_error_cookie
 	 * @return String
 	 */
-	public function test_show_error_cookie()
+	public function testShowErrorCookie()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','show_error_cookie');
 		$bool = self::isString($msg);
@@ -584,7 +584,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $description The description of the configuration group.
 	 * @return string The start configuration option table html.
 	 */
-	public function test_input_group_start()
+	public function testInputGroupStart()
 	{
 		$title = "test-title";
 		$description = "test-desc";
@@ -599,7 +599,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::input_group_end
 	 * @return String
 	 */
-	public function test_input_group_end()
+	public function testInputGroupEnd()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_group_end');
 		$bool = self::isString($msg);
@@ -614,7 +614,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $notes The description to display under the option html.
 	 * @return string The config row html.
 	 */
-	public function test_display_config_row()
+	public function testDisplayConfigRow()
 	{
 		$label = '';
 		$input_field = '';
@@ -637,7 +637,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param boolean $disabled True for disabled check box, false otherwise.
 	 * @return string The check box html.
 	 */
-	public function test_input_field_checkbox()
+	public function testInputFieldCheckbox()
 	{
 		$id = '';
 		$checked_value = '';
@@ -658,7 +658,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $checked_value The currently selected option.
 	 * @return string The select field html.
 	 */
-	public function test_input_field_radio()
+	public function testInputFieldRadio()
 	{
 		$id = '';
 		$radiooptions = array();
@@ -678,7 +678,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $selected_value The currently selected option.
 	 * @return string The select field html.
 	 */
-	public function test_input_field_select()
+	public function testInputFieldSelect()
 	{
 		$id = '';
 		$seloptions = array();
@@ -700,7 +700,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param boolean $readonly True for read only text fields, false otherwise.
 	 * @return string The input text html.
 	 */
-	public function test_input_field_text()
+	public function testInputFieldText()
 	{
 		$id = '';
 		$value = '';
@@ -725,7 +725,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param boolean $readonly True for read only text areas, false otherwise.
 	 * @return string The textarea html.
 	 */
-	public function test_input_field_textarea()
+	public function testInputFieldTextarea()
 	{
 		$id = '';
 		$value = '';
@@ -746,7 +746,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * @param string $value The value for the field.
 	 * @return string The hidden field html.
 	 */
-	public function test_input_field_hidden()
+	public function testInputFieldHidden()
 	{
 		$id = '';
 		$value = '';
@@ -761,7 +761,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::input_collapsible_start
 	 * @return String
 	 */
-	public function test_input_collapsible_start()
+	public function testInputCollapsibleStart()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_collapsible_start');
 		$bool = self::isString($msg);
@@ -773,7 +773,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::input_collapsible_end
 	 * @return String
 	 */
-	public function test_input_collapsible_end()
+	public function testInputCollapsibleEnd()
 	{
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_collapsible_end');
 		$bool = self::isString($msg);
@@ -785,7 +785,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_collapsible
 	 * @return String
 	 */
-	public function test_input_field_collapsible()
+	public function testInputFieldCollapsible()
 	{
 		$parameters = array('header'=>'','desc'=>'', 'example'=>'');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_collapsible', $parameters);
