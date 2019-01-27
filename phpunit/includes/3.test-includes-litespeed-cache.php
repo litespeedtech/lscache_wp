@@ -268,7 +268,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
         $code = $OPID_404_TTL;
         $parameters = array($header, $code);
         $msg = self::invokeMethod('LiteSpeed_Cache', 'check_error_codes', $parameters);
-        $this->assertEquals( $OPID_404_TTL, $msg);
+        $this->assertSame( $OPID_404_TTL, $msg);
     }
 
     /**

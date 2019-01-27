@@ -56,11 +56,11 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 		
 		//send priority by default 10
 		$enqueue_scripts = has_action( 'admin_enqueue_scripts', array( $instance,'enqueue_scripts' ) );
-		$this->assertEquals( 10, $enqueue_scripts );
+		$this->assertSame( 10, $enqueue_scripts );
 
 		//send priority by default 10
 		$enqueue_style = has_action( 'admin_print_styles-settings_page_litespeedcache', array( $instance,'enqueue_style' ) );
-		$this->assertEquals( 10, $enqueue_style );
+		$this->assertSame( 10, $enqueue_style );
 
 		//should return false as its not in network mode
 		$network_admin_menu = has_action( 'network_admin_menu', array( $instance,'register_admin_menu' ) );
@@ -68,15 +68,15 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 
 		//send priority by default 10
 		$admin_menu = has_action( 'admin_menu', array( $instance,'register_admin_menu' ));
-		$this->assertEquals( 10, $admin_menu );
+		$this->assertSame( 10, $admin_menu );
 
 		//send priority by default 10
 		$admin_init = has_action( 'admin_init', array( $instance,'admin_init' ));
-		$this->assertEquals( 10, $admin_init );
+		$this->assertSame( 10, $admin_init );
 
 		//send priority by default 10
 		$plugin_action_links = has_filter( 'plugin_action_links_root/tests/wp-content/plugins/litespeed-cache/litespeed-cache.php', array( $instance,'add_plugin_links' ));
-		$this->assertEquals( 10, $plugin_action_links );
+		$this->assertSame( 10, $plugin_action_links );
 	}
 
   	/**
