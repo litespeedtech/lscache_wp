@@ -9,7 +9,7 @@
  * @author		LiteSpeed Technologies <info@litespeedtech.com>
  */
 if (! defined('ABSPATH')) {
-    die() ;
+    die();
 }
 
 /**
@@ -19,7 +19,7 @@ if (! defined('ABSPATH')) {
  * This solution works for now, but is not the optimal way of handling this.
  */
 if (function_exists('ldclite_get_version') && $_POST && isset($_POST['up_type'])) {
-    LiteSpeed_Cache_API::hook_purge('LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter::purge') ;
+    LiteSpeed_Cache_API::hook_purge('LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter::purge');
 }
 
 class LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter
@@ -30,7 +30,7 @@ class LiteSpeed_Cache_ThirdParty_Like_Dislike_Counter
     public static function purge()
     {
         if (isset($_POST['post_id'])) {
-            LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $_POST['post_id']) ;
+            LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $_POST['post_id']);
         }
     }
 

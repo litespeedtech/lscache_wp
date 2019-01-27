@@ -4,10 +4,10 @@ if (!defined('WPINC')) die;
 $menu_list = array(
     'purge' => __('Purge', 'litespeed-cache'),
     'db' => __('DB Optimizer', 'litespeed-cache'),
-) ;
+);
 
 if (! is_network_admin()) {
-    $menu_list[ 'cdn' ] = __('CDN', 'litespeed-cache') ;
+    $menu_list[ 'cdn' ] = __('CDN', 'litespeed-cache');
 }
 
 ?>
@@ -24,7 +24,7 @@ if (! is_network_admin()) {
         ?>
 	</h1>
 	<span class="litespeed-desc">
-		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION ; ?>
+		v<?php echo LiteSpeed_Cache::PLUGIN_VERSION; ?>
 	</span>
 	<hr class="wp-header-end">
 </div>
@@ -32,11 +32,11 @@ if (! is_network_admin()) {
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">
 	<?php
-        $i = 1 ;
+        $i = 1;
         foreach ($menu_list as $tab => $val){
-            $accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
-            echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
-            $i ++ ;
+            $accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
+            echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
+            $i ++;
         }
     ?>
 	</h2>
@@ -46,9 +46,9 @@ if (! is_network_admin()) {
 
         // include all tpl for faster UE
         foreach ($menu_list as $tab => $val) {
-            echo "<div data-litespeed-layout='$tab'>" ;
-            require LSCWP_DIR . "admin/tpl/manage/manage_$tab.php" ;
-            echo "</div>" ;
+            echo "<div data-litespeed-layout='$tab'>";
+            require LSCWP_DIR . "admin/tpl/manage/manage_$tab.php";
+            echo "</div>";
         }
 
     ?>

@@ -10,7 +10,7 @@
  */
 
 if (! defined('WPINC')) {
-    die ;
+    die;
 }
 
 if (!function_exists('_litespeed_autoload')) {

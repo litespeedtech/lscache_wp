@@ -5,10 +5,10 @@ if (!defined('WPINC')) die;
 
 <h3 class="litespeed-title-short">
 	<?php echo __('General', 'litespeed-cache'); ?>
-	<?php $this->learn_more('https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general', false, 'litespeed-learn-more') ; ?>
+	<?php $this->learn_more('https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:general', false, 'litespeed-learn-more'); ?>
 </h3>
 
-<?php $this->cache_disabled_warning() ; ?>
+<?php $this->cache_disabled_warning(); ?>
 
 <table><tbody>
 	<tr>
@@ -61,11 +61,11 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Public Cache TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, public pages are cached. Minimum is 30 seconds.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
@@ -73,11 +73,11 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Private Cache TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_PRIVATE_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf(__('Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache'), 60, 3600) ; ?>
-				<?php $this->recommended($id) ; ?>
+				<?php echo sprintf(__('Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache'), 60, 3600); ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
@@ -85,11 +85,11 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Front Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, the front page is cached. Minimum is 30 seconds.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
@@ -97,12 +97,12 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Feed TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_FEED_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_FEED_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'); ?>
 				<?php echo __('If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
@@ -110,12 +110,12 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 404 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_404_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_404_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'); ?>
 				<?php echo __('If this is set to a number less than 30, 404 pages will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
@@ -123,12 +123,12 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 403 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_403_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_403_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 403 pages are cached.', 'litespeed-cache'); ?>
 				<?php echo __('If this is set to a number less than 30, 403 pages will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
@@ -136,19 +136,19 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 500 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_500_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::OPID_500_TTL; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 500 pages are cached.', 'litespeed-cache'); ?>
 				<?php echo __('If this is set to a number less than 30, 500 pages will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended($id); ?>
 			</div>
 		</td>
 	</tr>
 
 	<?php if (! is_multisite()) : ?>
 		<?php require LSCWP_DIR . 'admin/tpl/setting/settings_inc.auto_upgrade.php'; ?>
-	<?php endif ; ?>
+	<?php endif; ?>
 
 </tbody></table>
 

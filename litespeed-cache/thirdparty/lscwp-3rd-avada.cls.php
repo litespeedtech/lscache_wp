@@ -11,7 +11,7 @@
 if (!defined('ABSPATH')) {
     die();
 }
-LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Avada') ;
+LiteSpeed_Cache_API::register('LiteSpeed_Cache_ThirdParty_Avada');
 
 class LiteSpeed_Cache_ThirdParty_Avada
 {
@@ -24,11 +24,11 @@ class LiteSpeed_Cache_ThirdParty_Avada
     public static function detect()
     {
         if (! defined('AVADA_VERSION')) {
-            return ;
+            return;
         }
 
-        add_action('update_option_avada_dynamic_css_posts', 'LiteSpeed_Cache_ThirdParty_Avada::flush') ;
-        add_action('update_option_fusion_options', 'LiteSpeed_Cache_ThirdParty_Avada::flush') ;
+        add_action('update_option_avada_dynamic_css_posts', 'LiteSpeed_Cache_ThirdParty_Avada::flush');
+        add_action('update_option_fusion_options', 'LiteSpeed_Cache_ThirdParty_Avada::flush');
     }
 
     /**
@@ -39,7 +39,7 @@ class LiteSpeed_Cache_ThirdParty_Avada
      */
     public static function flush()
     {
-        LiteSpeed_Cache_API::purge_all() ;
+        LiteSpeed_Cache_API::purge_all();
     }
 
 }

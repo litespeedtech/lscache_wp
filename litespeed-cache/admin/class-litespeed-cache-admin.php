@@ -4,4 +4,4 @@
  */
 
 
-require_once dirname(__FILE__) . '/litespeed-cache-admin.class.php' ;
+require_once dirname(__FILE__) . '/litespeed-cache-admin.class.php';

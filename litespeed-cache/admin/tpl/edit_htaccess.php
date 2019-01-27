@@ -3,26 +3,26 @@ if (!defined('WPINC')) die;
 
 $readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
 
-$content = null ;
+$content = null;
 try {
     $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 } catch(\Exception $e) {
-    echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
+    echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>';
 }
 
 
-$htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
+$htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess();
 
 // Check if there is `ExpiresDefault` in .htaccess
 if (defined('LITESPEED_ON')) {
     if ($content && stripos($content, "\nExpiresDefault") !== false) {
-        $is_dismissed = get_option(self::DISMISS_MSG) ;
+        $is_dismissed = get_option(self::DISMISS_MSG);
         if ($is_dismissed !== self::RULECONFLICT_DISMISSED) {
             // Need to add a notice for browser cache compatibility
             if ($is_dismissed !== self::RULECONFLICT_ON) {
-                update_option(self::DISMISS_MSG, self::RULECONFLICT_ON) ;
+                update_option(self::DISMISS_MSG, self::RULECONFLICT_ON);
             }
-            require_once LSCWP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
+            require_once LSCWP_DIR . 'admin/tpl/inc/show_rule_conflict.php';
         }
     }
     // don't dismiss the msg automatically
@@ -65,7 +65,7 @@ if (defined('LITESPEED_ON')) {
 
 			<p><span class="attention"><?php echo sprintf(__('DO NOT EDIT ANYTHING WITHIN %s', 'litespeed-cache'), '<code>' . LiteSpeed_Cache_Admin_Rules::LS_MODULE_DONOTEDIT . '</code>'); ?></span></p>
 
-			<h4><?php echo $htaccess_path ; ?></h4>
+			<h4><?php echo $htaccess_path; ?></h4>
 
 			<textarea name="<?php echo LiteSpeed_Cache_Admin_Rules::EDITOR_TEXTAREA_NAME; ?>" wrap="off" rows="50" class="litespeed-input-long"
 				<?php echo $readonly; ?>

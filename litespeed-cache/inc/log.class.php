@@ -12,19 +12,19 @@
  */
 
 if (! defined('WPINC')) {
-    die ;
+    die;
 }
 
 class LiteSpeed_Cache_Log
 {
-    private static $_instance ;
-    private static $log_path ;
-    private static $_prefix ;
+    private static $_instance;
+    private static $log_path;
+    private static $_prefix;
 
-    private static $_ignore_filters ;
-    private static $_ignore_part_filters ;
+    private static $_ignore_filters;
+    private static $_ignore_part_filters;
 
-    const TYPE_CLEAR_LOG = 'clear_log' ;
+    const TYPE_CLEAR_LOG = 'clear_log';
 
     /**
      * Log class Constructor
@@ -36,15 +36,15 @@ class LiteSpeed_Cache_Log
      */
     private function __construct()
     {
-        self::$log_path = LSCWP_CONTENT_DIR . '/debug.log' ;
+        self::$log_path = LSCWP_CONTENT_DIR . '/debug.log';
         if (! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT) === 0) {
-            self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log' ;
+            self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log';
         }
 
-        ! defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', get_current_blog_id()) ;
+        ! defined('LSCWP_LOG_TAG') && define('LSCWP_LOG_TAG', get_current_blog_id());
 
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL)) {
-            ! defined('LSCWP_LOG_MORE') && define('LSCWP_LOG_MORE', true) ;
+            ! defined('LSCWP_LOG_MORE') && define('LSCWP_LOG_MORE', true);
         }
 
     }
@@ -59,16 +59,16 @@ class LiteSpeed_Cache_Log
     {
         // Check if debug is ON
         if (! defined('LSCWP_LOG') && ! defined('LSCWP_LOG_BYPASS_NOTADMIN')) {
-            return ;
+            return;
         }
 
-        $purge_file = LSCWP_CONTENT_DIR . '/debug.purge.log' ;
+        $purge_file = LSCWP_CONTENT_DIR . '/debug.purge.log';
 
-        self::get_instance()->_init_request($purge_file) ;
+        self::get_instance()->_init_request($purge_file);
 
-        $msg = $purge_header . self::_backtrace_info(6) ;
+        $msg = $purge_header . self::_backtrace_info(6);
 
-        Litespeed_File::append($purge_file, self::format_message($msg)) ;
+        Litespeed_File::append($purge_file, self::format_message($msg));
 
     }
 
@@ -80,26 +80,26 @@ class LiteSpeed_Cache_Log
      */
     public static function init()
     {
-        $debug = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG) ;
+        $debug = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG);
         if ($debug == LiteSpeed_Cache_Config::VAL_ON2) {
             if (! LiteSpeed_Cache_Router::is_admin_ip()) {
-                define('LSCWP_LOG_BYPASS_NOTADMIN', true) ;
-                return ;
+                define('LSCWP_LOG_BYPASS_NOTADMIN', true);
+                return;
             }
         }
 
         if (! defined('LSCWP_LOG')) {// If not initialized, do it now
-            self::get_instance()->_init_request() ;
-            define('LSCWP_LOG', true) ;
+            self::get_instance()->_init_request();
+            define('LSCWP_LOG', true);
 
         }
 
         // Check if hook filters
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOG_FILTERS)) {
-            self::$_ignore_filters = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS) ;
-            self::$_ignore_part_filters = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS) ;
+            self::$_ignore_filters = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS);
+            self::$_ignore_part_filters = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS);
 
-            add_action('all', 'LiteSpeed_Cache_Log::log_filters') ;
+            add_action('all', 'LiteSpeed_Cache_Log::log_filters');
         }
     }
 
@@ -112,22 +112,22 @@ class LiteSpeed_Cache_Log
     private function _init_request($log_file = null)
     {
         if (! $log_file) {
-            $log_file = self::$log_path ;
+            $log_file = self::$log_path;
         }
 
         // Check log file size
-        $log_file_size = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE) ;
+        $log_file_size = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOG_FILE_SIZE);
         if (file_exists($log_file) && filesize($log_file) > $log_file_size * 1000000) {
-            Litespeed_File::save($log_file, '') ;
+            Litespeed_File::save($log_file, '');
         }
 
         // For more than 2s's requests, add more break
         if (file_exists($log_file) && time() - filemtime($log_file) > 2) {
-            Litespeed_File::append($log_file, "\n\n\n\n") ;
+            Litespeed_File::append($log_file, "\n\n\n\n");
         }
 
         if (PHP_SAPI == 'cli') {
-            return ;
+            return;
         }
 
         $servervars = array(
@@ -139,59 +139,59 @@ class LiteSpeed_Cache_Log
             'X-LSCACHE' => '',
             'LSCACHE_VARY_COOKIE' => '',
             'LSCACHE_VARY_VALUE' => '',
-        ) ;
-        $server = array_merge($servervars, $_SERVER) ;
-        $params = array() ;
+        );
+        $server = array_merge($servervars, $_SERVER);
+        $params = array();
 
         if (isset($_SERVER[ 'HTTPS' ]) && $_SERVER[ 'HTTPS' ] == 'on') {
-            $server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;
+            $server['SERVER_PROTOCOL'] .= ' (HTTPS) ';
         }
 
-        $param = sprintf('------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?')) ;
+        $param = sprintf('------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok($server['REQUEST_URI'], '?'));
 
-        $qs = ! empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '' ;
+        $qs = ! empty($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_COLLAPS_QS)) {
             if (strlen($qs) > 53) {
-                $qs = substr($qs, 0, 53) . '...' ;
+                $qs = substr($qs, 0, 53) . '...';
             }
             if ($qs) {
-                $param .= ' ? ' . $qs ;
+                $param .= ' ? ' . $qs;
             }
-            $params[] = $param ;
+            $params[] = $param;
         }
         else {
-            $params[] = $param ;
-            $params[] = 'Query String: ' . $qs ;
+            $params[] = $param;
+            $params[] = 'Query String: ' . $qs;
         }
 
         if (! empty($_SERVER[ 'HTTP_REFERER' ])) {
-            $params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ] ;
+            $params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ];
         }
 
         if (defined('LSCWP_LOG_MORE')) {
-            $params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ] ;
-            $params[] = 'Accept: ' . $server['HTTP_ACCEPT'] ;
-            $params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'] ;
+            $params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ];
+            $params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
+            $params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
         }
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE)) {
-            $params[] = 'Cookie: ' . $server['HTTP_COOKIE'] ;
+            $params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
         }
         if (isset($_COOKIE[ '_lscache_vary' ])) {
-            $params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ] ;
+            $params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ];
         }
         if (defined('LSCWP_LOG_MORE')) {
-            $params[] = 'X-LSCACHE: ' . (! empty($server[ 'X-LSCACHE' ]) ? 'true' : 'false') ;
+            $params[] = 'X-LSCACHE: ' . (! empty($server[ 'X-LSCACHE' ]) ? 'true' : 'false');
         }
         if($server['LSCACHE_VARY_COOKIE']) {
-            $params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'] ;
+            $params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'];
         }
         if($server['LSCACHE_VARY_VALUE']) {
-            $params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'] ;
+            $params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'];
         }
 
-        $request = array_map('self::format_message', $params) ;
+        $request = array_map('self::format_message', $params);
 
-        Litespeed_File::append($log_file, $request) ;
+        Litespeed_File::append($log_file, $request);
     }
 
     /**
@@ -202,21 +202,21 @@ class LiteSpeed_Cache_Log
      */
     public static function log_filters()
     {
-        $action = current_filter() ;
+        $action = current_filter();
 
         if (self::$_ignore_filters && in_array($action, self::$_ignore_filters)) {
-            return ;
+            return;
         }
 
         if (self::$_ignore_part_filters) {
             foreach (self::$_ignore_part_filters as $val) {
                 if (stripos($action, $val) !== false) {
-                    return ;
+                    return;
                 }
             }
         }
 
-        self::debug("===log filter: $action") ;
+        self::debug("===log filter: $action");
     }
 
     /**
@@ -231,29 +231,29 @@ class LiteSpeed_Cache_Log
     {
         // If call here without calling get_enabled() first, improve compatibility
         if (! defined('LSCWP_LOG_TAG')) {
-            return $msg . "\n" ;
+            return $msg . "\n";
         }
 
         if (! isset(self::$_prefix)) {
             // address
             if (PHP_SAPI == 'cli') {
-                $addr = '=CLI=' ;
+                $addr = '=CLI=';
                 if (isset($_SERVER[ 'USER' ])) {
-                    $addr .= $_SERVER[ 'USER' ] ;
+                    $addr .= $_SERVER[ 'USER' ];
                 }
                 elseif ($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) {
-                    $addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] ;
+                    $addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
                 }
             }
             else {
-                $addr = $_SERVER[ 'REMOTE_ADDR' ] . ':' . $_SERVER[ 'REMOTE_PORT' ] ;
+                $addr = $_SERVER[ 'REMOTE_ADDR' ] . ':' . $_SERVER[ 'REMOTE_PORT' ];
             }
 
             // Generate a unique string per request
-            self::$_prefix = sprintf(" [%s %s %s] ", $addr, LSCWP_LOG_TAG, Litespeed_String::rrand(3)) ;
+            self::$_prefix = sprintf(" [%s %s %s] ", $addr, LSCWP_LOG_TAG, Litespeed_String::rrand(3));
         }
-        list($usec, $sec) = explode(' ', microtime()) ;
-        return date('m/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET) . substr($usec, 1, 4) . self::$_prefix . $msg . "\n" ;
+        list($usec, $sec) = explode(' ', microtime());
+        return date('m/d/y H:i:s', $sec + LITESPEED_TIME_OFFSET) . substr($usec, 1, 4) . self::$_prefix . $msg . "\n";
     }
 
     /**
@@ -268,21 +268,21 @@ class LiteSpeed_Cache_Log
     public static function debug($msg, $backtrace_limit = false)
     {
         if (! defined('LSCWP_LOG')) {
-            return ;
+            return;
         }
 
         if ($backtrace_limit !== false) {
             if (! is_numeric($backtrace_limit)) {
-                $msg .= ' --- ' . var_export($backtrace_limit, true) ;
-                self::push($msg) ;
-                return ;
+                $msg .= ' --- ' . var_export($backtrace_limit, true);
+                self::push($msg);
+                return;
             }
 
-            self::push($msg, $backtrace_limit + 1) ;
-            return ;
+            self::push($msg, $backtrace_limit + 1);
+            return;
         }
 
-        self::push($msg) ;
+        self::push($msg);
     }
 
     /**
@@ -296,9 +296,9 @@ class LiteSpeed_Cache_Log
     public static function debug2($msg, $backtrace_limit = false)
     {
         if (! defined('LSCWP_LOG_MORE')) {
-            return ;
+            return;
         }
-        self::debug($msg, $backtrace_limit) ;
+        self::debug($msg, $backtrace_limit);
     }
 
     /**
@@ -313,10 +313,10 @@ class LiteSpeed_Cache_Log
     {
         // backtrace handler
         if (defined('LSCWP_LOG_MORE') && $backtrace_limit !== false) {
-            $msg .= self::_backtrace_info($backtrace_limit) ;
+            $msg .= self::_backtrace_info($backtrace_limit);
         }
 
-        Litespeed_File::append(self::$log_path, self::format_message($msg)) ;
+        Litespeed_File::append(self::$log_path, self::format_message($msg));
     }
 
     /**
@@ -326,30 +326,30 @@ class LiteSpeed_Cache_Log
      */
     private static function _backtrace_info($backtrace_limit)
     {
-        $msg = '' ;
+        $msg = '';
 
-        $trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) : debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 3) ;
-        for ($i=2 ; $i <= $backtrace_limit + 2 ; $i++) {// 0st => _backtrace_info(), 1st => push()
+        $trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) : debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 3);
+        for ($i=2; $i <= $backtrace_limit + 2; $i++) {// 0st => _backtrace_info(), 1st => push()
             if (empty($trace[ $i ][ 'class' ])) {
                 if (empty($trace[ $i ][ 'file' ])) {
-                    break ;
+                    break;
                 }
-                $log = "\n" . $trace[ $i ][ 'file' ] ;
+                $log = "\n" . $trace[ $i ][ 'file' ];
             }
             else {
                 if ($trace[$i]['class'] == 'LiteSpeed_Cache_Log') {
-                    continue ;
+                    continue;
                 }
 
-                $log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()' ;
+                $log = str_replace('LiteSpeed_Cache', 'LSC', $trace[$i]['class']) . $trace[$i]['type'] . $trace[$i]['function'] . '()';
             }
             if (! empty($trace[$i-1]['line'])) {
-                $log .= '@' . $trace[$i-1]['line'] ;
+                $log .= '@' . $trace[$i-1]['line'];
             }
-            $msg .= " => $log" ;
+            $msg .= " => $log";
         }
 
-        return $msg ;
+        return $msg;
     }
 
     /**
@@ -360,8 +360,8 @@ class LiteSpeed_Cache_Log
      */
     private function _clear_log()
     {
-        Litespeed_File::save(self::$log_path, '') ;
-        Litespeed_File::save(LSCWP_CONTENT_DIR . '/debug.purge.log', '') ;
+        Litespeed_File::save(self::$log_path, '');
+        Litespeed_File::save(LSCWP_CONTENT_DIR . '/debug.purge.log', '');
     }
 
     /**
@@ -372,7 +372,7 @@ class LiteSpeed_Cache_Log
      */
     public static function disable_heartbeat()
     {
-        wp_deregister_script('heartbeat') ;
+        wp_deregister_script('heartbeat');
     }
 
     /**
@@ -383,20 +383,20 @@ class LiteSpeed_Cache_Log
      */
     public static function handler()
     {
-        $instance = self::get_instance() ;
+        $instance = self::get_instance();
 
-        $type = LiteSpeed_Cache_Router::verify_type() ;
+        $type = LiteSpeed_Cache_Router::verify_type();
 
         switch ($type) {
             case self::TYPE_CLEAR_LOG :
-                $instance->_clear_log() ;
-                break ;
+                $instance->_clear_log();
+                break;
 
             default:
-                break ;
+                break;
         }
 
-        LiteSpeed_Cache_Admin::redirect() ;
+        LiteSpeed_Cache_Admin::redirect();
     }
 
     /**
@@ -409,9 +409,9 @@ class LiteSpeed_Cache_Log
     public static function get_instance()
     {
         if (! isset(self::$_instance)) {
-            self::$_instance = new self() ;
+            self::$_instance = new self();
         }
 
-        return self::$_instance ;
+        return self::$_instance;
     }
 }

@@ -55,7 +55,7 @@
  * @link http://code.google.com/p/jsmin-php/
  */
 
-namespace LiteSpeed_3rd_Lib\js_min ;
+namespace LiteSpeed_3rd_Lib\js_min;
 
 class JSMin
 {

@@ -10,12 +10,12 @@
  */
 
 if (! defined('WPINC')) {
-    die ;
+    die;
 }
 
 class LiteSpeed_Cache_Admin_Optimize
 {
-    private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
+    private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' );
 
     /**
      * Generate operation URL
@@ -27,8 +27,8 @@ class LiteSpeed_Cache_Admin_Optimize
      */
     public static function generate_url($type)
     {
-        $url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $type) ;
-        return $url ;
+        $url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DB_OPTIMIZE, $type);
+        return $url;
     }
 
     /**
@@ -40,24 +40,24 @@ class LiteSpeed_Cache_Admin_Optimize
     public static function run_db_clean()
     {
         if(! $type = LiteSpeed_Cache_Router::verify_type()) {
-            return ;
+            return;
         }
 
-        $res = '' ;
+        $res = '';
 
         if (is_multisite() && is_network_admin()) {
-            $blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
+            $blogs = LiteSpeed_Cache_Activation::get_network_ids();
             foreach ($blogs as $blog_id) {
-                switch_to_blog($blog_id) ;
-                $res = self::db_clean($type) ;
-                restore_current_blog() ;
+                switch_to_blog($blog_id);
+                $res = self::db_clean($type);
+                restore_current_blog();
             }
         }
         else {
-            $res = self::db_clean($type) ;
+            $res = self::db_clean($type);
         }
 
-        return $res ;
+        return $res;
 
     }
 
@@ -73,61 +73,61 @@ class LiteSpeed_Cache_Admin_Optimize
     public static function db_count($type, $ignore_multisite = false)
     {
         if ($type === 'all') {
-            $num = 0 ;
+            $num = 0;
             foreach (self::$_types as $val) {
-                $num += self::db_count($val) ;
+                $num += self::db_count($val);
             }
-            return $num ;
+            return $num;
         }
 
         if (! $ignore_multisite) {
             if (is_multisite() && is_network_admin()) {
-                $num = 0 ;
-                $blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
+                $num = 0;
+                $blogs = LiteSpeed_Cache_Activation::get_network_ids();
                 foreach ($blogs as $blog_id) {
-                    switch_to_blog($blog_id) ;
-                    $num += self::db_count($type, true) ;
-                    restore_current_blog() ;
+                    switch_to_blog($blog_id);
+                    $num += self::db_count($type, true);
+                    restore_current_blog();
                 }
-                return $num ;
+                return $num;
             }
         }
 
-        global $wpdb ;
+        global $wpdb;
 
         switch ($type) {
             case 'revision':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_type = 'revision'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_type = 'revision'");
 
             case 'auto_draft':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'auto-draft'");
 
             case 'trash_post':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'trash'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->posts` WHERE post_status = 'trash'");
 
             case 'spam_comment':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'spam'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'spam'");
 
             case 'trash_comment':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'trash'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_approved = 'trash'");
 
             case 'trackback-pingback':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'");
 
             case 'expired_transient':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time()) ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time());
 
             case 'all_transients':
-                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'");
 
             case 'optimize_tables':
-                return $wpdb->get_var("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0");
 
             case 'all_cssjs' :
-                return $wpdb->get_var("SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::get_optm_table() . "`") ;
+                return $wpdb->get_var("SELECT COUNT(*) FROM `" . LiteSpeed_Cache_Data::get_optm_table() . "`");
         }
 
-        return '-' ;
+        return '-';
     }
 
     /**
@@ -141,59 +141,59 @@ class LiteSpeed_Cache_Admin_Optimize
     {
         if ($type === 'all') {
             foreach (self::$_types as $val) {
-                self::db_clean($val) ;
+                self::db_clean($val);
             }
-            return __('Clean all successfully.', 'litespeed-cache') ;
+            return __('Clean all successfully.', 'litespeed-cache');
         }
 
-        global $wpdb ;
+        global $wpdb;
         switch ($type) {
             case 'revision':
-                $wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'") ;
-                return __('Clean post revisions successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_type = 'revision'");
+                return __('Clean post revisions successfully.', 'litespeed-cache');
 
             case 'auto_draft':
-                $wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'") ;
-                return __('Clean auto drafts successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_status = 'auto-draft'");
+                return __('Clean auto drafts successfully.', 'litespeed-cache');
 
             case 'trash_post':
-                $wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'") ;
-                return __('Clean trashed posts and pages successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->posts` WHERE post_status = 'trash'");
+                return __('Clean trashed posts and pages successfully.', 'litespeed-cache');
 
             case 'spam_comment':
-                $wpdb->query("DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'") ;
-                return __('Clean spam comments successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->comments` WHERE comment_approved = 'spam'");
+                return __('Clean spam comments successfully.', 'litespeed-cache');
 
             case 'trash_comment':
-                $wpdb->query("DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'") ;
-                return __('Clean trashed comments successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->comments` WHERE comment_approved = 'trash'");
+                return __('Clean trashed comments successfully.', 'litespeed-cache');
 
             case 'trackback-pingback':
-                $wpdb->query("DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'") ;
-                return __('Clean trackbacks and pingbacks successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->comments` WHERE comment_type = 'trackback' OR comment_type = 'pingback'");
+                return __('Clean trackbacks and pingbacks successfully.', 'litespeed-cache');
 
             case 'expired_transient':
-                $wpdb->query("DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time()) ;
-                return __('Clean expired transients successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->options` WHERE option_name LIKE '_transient_timeout%' AND option_value < " . time());
+                return __('Clean expired transients successfully.', 'litespeed-cache');
 
             case 'all_transients':
-                $wpdb->query("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'") ;
-                return __('Clean all transients successfully.', 'litespeed-cache') ;
+                $wpdb->query("DELETE FROM `$wpdb->options` WHERE option_name LIKE '%_transient_%'");
+                return __('Clean all transients successfully.', 'litespeed-cache');
 
             case 'optimize_tables':
-                $sql = "SELECT table_name, data_free FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0" ;
-                $result = $wpdb->get_results($sql) ;
+                $sql = "SELECT table_name, data_free FROM information_schema.tables WHERE table_schema = '" . DB_NAME . "' and Engine <> 'InnoDB' and data_free > 0";
+                $result = $wpdb->get_results($sql);
                 if ($result) {
                     foreach ($result as $row) {
-                        $wpdb->query('OPTIMIZE TABLE ' . $row->table_name) ;
+                        $wpdb->query('OPTIMIZE TABLE ' . $row->table_name);
                     }
                 }
-                return __('Optimized all tables.', 'litespeed-cache') ;
+                return __('Optimized all tables.', 'litespeed-cache');
 
             case 'all_cssjs' :
-                LiteSpeed_Cache_Purge::purge_all() ;
-                $wpdb->query("TRUNCATE `" . LiteSpeed_Cache_Data::get_optm_table() . "`") ;
-                return __('Clean all CSS/JS optimizer data successfully.', 'litespeed-cache') ;
+                LiteSpeed_Cache_Purge::purge_all();
+                $wpdb->query("TRUNCATE `" . LiteSpeed_Cache_Data::get_optm_table() . "`");
+                return __('Clean all CSS/JS optimizer data successfully.', 'litespeed-cache');
 
         }
 

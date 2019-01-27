@@ -17,7 +17,7 @@
  * @author Stephen Clay <steve@mrclay.org>
  */
 
-namespace LiteSpeed_3rd_Lib ;
+namespace LiteSpeed_3rd_Lib;
 
 class Minify_HTML
 {
@@ -242,10 +242,10 @@ class Minify_HTML
          * @since  2.2.3
          */
         if ($this->_jsMinifier) {
-            $js = call_user_func($this->_jsMinifier, $js, trim($m[ 2 ])) ;
+            $js = call_user_func($this->_jsMinifier, $js, trim($m[ 2 ]));
         }
         else {
-            $js = trim($js) ;
+            $js = trim($js);
         }
 
         return $this->_reservePlace($this->_needsCdata($js)

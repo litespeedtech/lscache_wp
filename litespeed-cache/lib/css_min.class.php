@@ -20,7 +20,7 @@
  * by Yahoo! Inc. under the BSD (revised) open source license.
  */
 
-namespace LiteSpeed_3rd_Lib\css_min ;
+namespace LiteSpeed_3rd_Lib\css_min;
 
 class Minifier
 {

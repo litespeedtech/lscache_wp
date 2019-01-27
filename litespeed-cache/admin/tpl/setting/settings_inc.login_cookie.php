@@ -1,14 +1,14 @@
 <?php
-if (! defined('WPINC')) die ;
+if (! defined('WPINC')) die;
 
 ?>
 
 	<tr>
-		<th><?php echo __('Login Cookie', 'litespeed-cache') ; ?></th>
+		<th><?php echo __('Login Cookie', 'litespeed-cache'); ?></th>
 		<td>
 		<?php
             $id = LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE;
-            $this->build_input($id) ;
+            $this->build_input($id);
 
             echo '<p>' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
                 . ' ' . __('No spaces and case sensitive.', 'litespeed-cache')

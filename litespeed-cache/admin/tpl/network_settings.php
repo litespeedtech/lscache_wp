@@ -13,7 +13,7 @@ $menuArr = array(
 global $_options;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
 
-$_hide_in_basic_mode = '' ;
+$_hide_in_basic_mode = '';
 
 ?>
 
@@ -30,11 +30,11 @@ $_hide_in_basic_mode = '' ;
 <div class="litespeed-wrap">
 	<h2 class="litespeed-header">
 	<?php
-        $i = 1 ;
+        $i = 1;
         foreach ($menuArr as $tab => $val){
-            $accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '' ;
+            $accesskey = $i <= 9 ? "litespeed-accesskey='$i'" : '';
             echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>";
-            $i ++ ;
+            $i ++;
         }
     ?>
 	</h2>
@@ -46,7 +46,7 @@ $_hide_in_basic_mode = '' ;
     // include all tpl for faster UE
     foreach ($menuArr as $tab => $val) {
         echo "<div data-litespeed-layout='$tab'>";
-        require LSCWP_DIR . "admin/tpl/setting/network_settings_$tab.php" ;
+        require LSCWP_DIR . "admin/tpl/setting/network_settings_$tab.php";
         echo "</div>";
     }
 

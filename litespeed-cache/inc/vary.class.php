@@ -7,18 +7,18 @@
  */
 
 if (! defined('WPINC')) {
-    die ;
+    die;
 }
 
 class LiteSpeed_Cache_Vary
 {
-    private static $_instance ;
+    private static $_instance;
 
-    const X_HEADER = 'X-LiteSpeed-Vary' ;
+    const X_HEADER = 'X-LiteSpeed-Vary';
 
-    private static $_vary_name = '_lscache_vary' ; // this default vary cookie is used for logged in status check
-    private static $_vary_cookies = array() ; // vary header only!
-    private static $_default_vary_val = array() ;
+    private static $_vary_name = '_lscache_vary'; // this default vary cookie is used for logged in status check
+    private static $_vary_cookies = array(); // vary header only!
+    private static $_default_vary_val = array();
 
     /**
      * Adds the actions used for setting up cookies on log in/out.
@@ -35,62 +35,62 @@ class LiteSpeed_Cache_Vary
             if (! LiteSpeed_Cache_Router::esi_enabled()) {
                 // If cache logged-in, then init cacheable to private
                 if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_PRIV)) {
-                    add_action('wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout') ;
+                    add_action('wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout');
 
-                    LiteSpeed_Cache_Control::init_cacheable() ;
-                    LiteSpeed_Cache_Control::set_private('logged in user') ;
+                    LiteSpeed_Cache_Control::init_cacheable();
+                    LiteSpeed_Cache_Control::set_private('logged in user');
                 }
                 // No cache for logged-in user
                 else {
-                    LiteSpeed_Cache_Control::set_nocache('logged in user') ;
+                    LiteSpeed_Cache_Control::set_nocache('logged in user');
                 }
             }
             // ESI is on, can be public cache
             else {
                 // Need to make sure vary is using group id
-                LiteSpeed_Cache_Control::init_cacheable() ;
+                LiteSpeed_Cache_Control::init_cacheable();
             }
 
             // register logout hook to clear login status
-            add_action('clear_auth_cookie', array( $this, 'remove_logged_in' )) ;
+            add_action('clear_auth_cookie', array( $this, 'remove_logged_in' ));
 
         }
         else {
             // Set vary cookie for logging in user, otherwise the user will hit public with vary=0 (guest version)
-            add_action('set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4) ;
-            add_action('wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout') ;
+            add_action('set_logged_in_cookie', array( $this, 'add_logged_in' ), 10, 4);
+            add_action('wp_login', 'LiteSpeed_Cache_Purge::purge_on_logout');
 
-            LiteSpeed_Cache_Control::init_cacheable() ;
+            LiteSpeed_Cache_Control::init_cacheable();
 
             // Check `login page` cacheable setting because they don't go through main WP logic
-            add_action('login_init', 'LiteSpeed_Cache_Tag::check_login_cacheable', 5) ;
+            add_action('login_init', 'LiteSpeed_Cache_Tag::check_login_cacheable', 5);
 
         }
 
         // Add comment list ESI
-        add_filter('comments_array', array( $this, 'check_commenter' )) ;
+        add_filter('comments_array', array( $this, 'check_commenter' ));
 
         // Set vary cookie for commenter.
-        add_action('set_comment_cookies', array( $this, 'append_commenter' )) ;
+        add_action('set_comment_cookies', array( $this, 'append_commenter' ));
 
         /**
          * Don't change for REST call because they don't carry on user info usually
          * @since 1.6.7
          */
         add_action('rest_api_init', function(){
-            LiteSpeed_Cache_Log::debug('[Vary] Rest API init disabled vary change') ;
-            add_filter('litespeed_can_change_vary', '__return_false') ;
-        }) ;
+            LiteSpeed_Cache_Log::debug('[Vary] Rest API init disabled vary change');
+            add_filter('litespeed_can_change_vary', '__return_false');
+        });
 
         /******** Below to the end is only for cookie name setting check ********/
         // Get specific cookie name
-        $db_cookie = false ;
+        $db_cookie = false;
         if (is_multisite()) {
-            $options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
-            $db_cookie = $options[ LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ] ;
+            $options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
+            $db_cookie = $options[ LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ];
         }
         else {
-            $db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE) ;
+            $db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
         }
 
         // If no vary set in rewrite rule
@@ -98,30 +98,30 @@ class LiteSpeed_Cache_Vary
             if ($db_cookie) {
                 // Display cookie error msg to admin
                 if (is_multisite() ? is_network_admin() : is_admin()) {
-                    LiteSpeed_Cache_Admin_Display::show_error_cookie() ;
+                    LiteSpeed_Cache_Admin_Display::show_error_cookie();
                 }
-                LiteSpeed_Cache_Control::set_nocache('vary cookie setting error') ;
-                return ;
+                LiteSpeed_Cache_Control::set_nocache('vary cookie setting error');
+                return;
             }
-            return ;
+            return;
         }
         // If db setting does not exist, skip checking db value
         if (! $db_cookie) {
-            return ;
+            return;
         }
 
         // beyond this point, need to make sure db vary setting is in $_SERVER env.
-        $vary_arr = explode(',', $_SERVER['LSCACHE_VARY_COOKIE']) ;
+        $vary_arr = explode(',', $_SERVER['LSCACHE_VARY_COOKIE']);
 
         if (in_array($db_cookie, $vary_arr)) {
-            self::$_vary_name = $db_cookie ;
-            return ;
+            self::$_vary_name = $db_cookie;
+            return;
         }
 
         if (is_multisite() ? is_network_admin() : is_admin()) {
-            LiteSpeed_Cache_Admin_Display::show_error_cookie() ;
+            LiteSpeed_Cache_Admin_Display::show_error_cookie();
         }
-        LiteSpeed_Cache_Control::set_nocache('vary cookie setting lost error') ;
+        LiteSpeed_Cache_Control::set_nocache('vary cookie setting lost error');
     }
 
     /**
@@ -141,40 +141,40 @@ class LiteSpeed_Cache_Vary
      */
     public function check_commenter($comments)
     {
-        $pending = false ;
+        $pending = false;
         foreach ($comments as $comment) {
             if (! $comment->comment_approved) {// current user has pending comment
-                $pending = true ;
-                break ;
+                $pending = true;
+                break;
             }
         }
 
         // No pending comments, don't need to add private cache
         if (! $pending) {
-            $this->remove_commenter() ;
+            $this->remove_commenter();
 
             // Remove commenter prefilled info if exists, for public cache
             foreach($_COOKIE as $cookie_name => $cookie_value) {
                 if (strlen($cookie_name) >= 15 && strpos($cookie_name, 'comment_author_') === 0) {
-                    unset($_COOKIE[ $cookie_name ]) ;
+                    unset($_COOKIE[ $cookie_name ]);
                 }
             }
 
-            return $comments ;
+            return $comments;
         }
 
         // Current user/visitor has pending comments
         // set vary=2 for next time vary lookup
-        $this->add_commenter() ;
+        $this->add_commenter();
 
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER)) {
-            LiteSpeed_Cache_Control::set_private('existing commenter') ;
+            LiteSpeed_Cache_Control::set_private('existing commenter');
         }
         else {
-            LiteSpeed_Cache_Control::set_nocache('existing commenter') ;
+            LiteSpeed_Cache_Control::set_nocache('existing commenter');
         }
 
-        return $comments ;
+        return $comments;
     }
 
     /**
@@ -186,9 +186,9 @@ class LiteSpeed_Cache_Vary
     public static function has_vary()
     {
         if (empty($_COOKIE[ self::$_vary_name ])) {
-            return false ;
+            return false;
         }
-        return $_COOKIE[ self::$_vary_name ] ;
+        return $_COOKIE[ self::$_vary_name ];
     }
 
     /**
@@ -200,16 +200,16 @@ class LiteSpeed_Cache_Vary
      */
     public function add_logged_in($logged_in_cookie = false, $expire = false, $expiration = false, $uid = false)
     {
-        LiteSpeed_Cache_Log::debug('[Vary] add_logged_in') ;
+        LiteSpeed_Cache_Log::debug('[Vary] add_logged_in');
 
         /**
          * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
          * @since  2.2.2
          */
-        self::can_ajax_vary() ;
+        self::can_ajax_vary();
 
         // If the cookie is lost somehow, set it
-        $this->_update_default_vary($uid, $expire) ;
+        $this->_update_default_vary($uid, $expire);
     }
 
     /**
@@ -221,16 +221,16 @@ class LiteSpeed_Cache_Vary
      */
     public function remove_logged_in()
     {
-        LiteSpeed_Cache_Log::debug('[Vary] remove_logged_in') ;
+        LiteSpeed_Cache_Log::debug('[Vary] remove_logged_in');
 
         /**
          * NOTE: Run before `$this->_update_default_vary()` to make vary changeable
          * @since  2.2.2
          */
-        self::can_ajax_vary() ;
+        self::can_ajax_vary();
 
         // Force update vary to remove login status
-        $this->_update_default_vary(-1) ;
+        $this->_update_default_vary(-1);
     }
 
     /**
@@ -242,8 +242,8 @@ class LiteSpeed_Cache_Vary
      */
     public static function can_ajax_vary()
     {
-        LiteSpeed_Cache_Log::debug('[Vary] litespeed_ajax_vary -> true') ;
-        add_filter('litespeed_ajax_vary', '__return_true') ;
+        LiteSpeed_Cache_Log::debug('[Vary] litespeed_ajax_vary -> true');
+        add_filter('litespeed_ajax_vary', '__return_true');
     }
 
     /**
@@ -260,8 +260,8 @@ class LiteSpeed_Cache_Vary
          * @since  1.6.6
          */
         if (LiteSpeed_Cache_Router::is_ajax() && ! apply_filters('litespeed_ajax_vary', false)) {
-            LiteSpeed_Cache_Log::debug('[Vary] can_change_vary bypassed due to ajax call') ;
-            return false ;
+            LiteSpeed_Cache_Log::debug('[Vary] can_change_vary bypassed due to ajax call');
+            return false;
         }
 
         /**
@@ -269,16 +269,16 @@ class LiteSpeed_Cache_Vary
          * @since 1.6.5
          */
         if ($_SERVER["REQUEST_METHOD"] !== 'GET' && $_SERVER["REQUEST_METHOD"] !== 'POST') {
-            LiteSpeed_Cache_Log::debug('[Vary] can_change_vary bypassed due to method not get/post') ;
-            return false ;
+            LiteSpeed_Cache_Log::debug('[Vary] can_change_vary bypassed due to method not get/post');
+            return false;
         }
 
         if (! apply_filters('litespeed_can_change_vary', true)) {
-            LiteSpeed_Cache_Log::debug('[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook') ;
-            return false ;
+            LiteSpeed_Cache_Log::debug('[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook');
+            return false;
         }
 
-        return true ;
+        return true;
     }
 
     /**
@@ -292,26 +292,26 @@ class LiteSpeed_Cache_Vary
     {
         // Make sure header output only run once
         if (! defined('LITESPEED_DID_' . __FUNCTION__)) {
-            define('LITESPEED_DID_' . __FUNCTION__, true) ;
+            define('LITESPEED_DID_' . __FUNCTION__, true);
         }
         else {
-            LiteSpeed_Cache_Log::debug2("[Vary] _update_default_vary bypassed due to run already") ;
-            return ;
+            LiteSpeed_Cache_Log::debug2("[Vary] _update_default_vary bypassed due to run already");
+            return;
         }
 
         // If the cookie is lost somehow, set it
-        $vary = $this->finalize_default_vary($uid) ;
-        $current_vary = self::has_vary() ;
+        $vary = $this->finalize_default_vary($uid);
+        $current_vary = self::has_vary();
         if ($current_vary !== $vary && $current_vary !== 'commenter' && $this->can_change_vary()) {
             // $_COOKIE[ self::$_vary_name ] = $vary ; // not needed
 
             // save it
             if (! $expire) {
-                $expire = time() + 2 * DAY_IN_SECONDS ;
+                $expire = time() + 2 * DAY_IN_SECONDS;
             }
-            self::_cookie($vary, $expire) ;
-            LiteSpeed_Cache_Log::debug("[Vary] set_cookie ---> $vary") ;
-            LiteSpeed_Cache_Control::set_nocache('changing default vary' . " $current_vary => $vary") ;
+            self::_cookie($vary, $expire);
+            LiteSpeed_Cache_Log::debug("[Vary] set_cookie ---> $vary");
+            LiteSpeed_Cache_Control::set_nocache('changing default vary' . " $current_vary => $vary");
         }
     }
 
@@ -323,7 +323,7 @@ class LiteSpeed_Cache_Vary
      */
     public function get_vary_name()
     {
-        return self::$_vary_name ;
+        return self::$_vary_name;
     }
 
     /**
@@ -338,41 +338,41 @@ class LiteSpeed_Cache_Vary
      */
     public function finalize_default_vary($uid = false)
     {
-        $vary = self::$_default_vary_val ;
+        $vary = self::$_default_vary_val;
 
         if (! $uid) {
-            $uid = LiteSpeed_Cache_Router::get_uid() ;
+            $uid = LiteSpeed_Cache_Router::get_uid();
         }
         else {
-            LiteSpeed_Cache_Log::debug('[Vary] uid: ' . $uid) ;
+            LiteSpeed_Cache_Log::debug('[Vary] uid: ' . $uid);
         }
 
         // get user's group id
-        $role = LiteSpeed_Cache_Router::get_role($uid) ;
+        $role = LiteSpeed_Cache_Router::get_role($uid);
 
         if ($uid > 0 && $role) {
-            $vary[ 'logged-in' ] = 1 ;
+            $vary[ 'logged-in' ] = 1;
 
             // parse role group from settings
             if ($role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group($role)) {
-                $vary[ 'role' ] = $role_group ;
+                $vary[ 'role' ] = $role_group;
             }
 
             // Get admin bar set
             // see @_get_admin_bar_pref()
-            $pref = get_user_option('show_admin_bar_front', $uid) ;
-            LiteSpeed_Cache_Log::debug2('[Vary] show_admin_bar_front: ' . $pref) ;
-            $admin_bar = $pref === false || $pref === 'true' ;
+            $pref = get_user_option('show_admin_bar_front', $uid);
+            LiteSpeed_Cache_Log::debug2('[Vary] show_admin_bar_front: ' . $pref);
+            $admin_bar = $pref === false || $pref === 'true';
 
             if ($admin_bar) {
-                $vary[ 'admin_bar' ] = 1 ;
-                LiteSpeed_Cache_Log::debug2('[Vary] admin bar : true') ;
+                $vary[ 'admin_bar' ] = 1;
+                LiteSpeed_Cache_Log::debug2('[Vary] admin bar : true');
             }
 
         }
         else {
             // Guest user
-            LiteSpeed_Cache_Log::debug('[Vary] role id: failed, guest') ;
+            LiteSpeed_Cache_Log::debug('[Vary] role id: failed, guest');
 
         }
 
@@ -381,24 +381,24 @@ class LiteSpeed_Cache_Vary
          * @since 1.6 Added for Role Excludes for optimization cls
          * @since 1.6.2 Hooked to webp
          */
-        $vary = apply_filters('litespeed_vary', $vary) ;
+        $vary = apply_filters('litespeed_vary', $vary);
 
         if (! $vary) {
-            return false ;
+            return false;
         }
 
-        ksort($vary) ;
-        $res = array() ;
+        ksort($vary);
+        $res = array();
         foreach ($vary as $key => $val) {
-            $res[] = $key . ':' . $val ;
+            $res[] = $key . ':' . $val;
         }
 
-        $res = implode(';', $res) ;
+        $res = implode(';', $res);
         if (defined('LSCWP_LOG')) {
-            return $res ;
+            return $res;
         }
         // Encrypt in production
-        return md5(LiteSpeed_Cache::config(LiteSpeed_Cache_Config::HASH) . $res) ;
+        return md5(LiteSpeed_Cache::config(LiteSpeed_Cache_Config::HASH) . $res);
 
     }
 
@@ -412,7 +412,7 @@ class LiteSpeed_Cache_Vary
      */
     public function append_commenter()
     {
-        $this->add_commenter(true) ;
+        $this->add_commenter(true);
     }
 
     /**
@@ -430,8 +430,8 @@ class LiteSpeed_Cache_Vary
 
             // save it
             // only set commenter status for current domain path
-            self::_cookie('commenter', time() + apply_filters('comment_cookie_lifetime', 30000000), self::_relative_path($from_redirect)) ;
-            LiteSpeed_Cache_Control::set_nocache('adding commenter status') ;
+            self::_cookie('commenter', time() + apply_filters('comment_cookie_lifetime', 30000000), self::_relative_path($from_redirect));
+            LiteSpeed_Cache_Control::set_nocache('adding commenter status');
         }
     }
 
@@ -448,8 +448,8 @@ class LiteSpeed_Cache_Vary
             // unset( $_COOKIE[ self::$_vary_name ] ) ; // not needed
 
             // save it
-            self::_cookie(false, false, self::_relative_path()) ;
-            LiteSpeed_Cache_Control::set_nocache('removing commenter status') ;
+            self::_cookie(false, false, self::_relative_path());
+            LiteSpeed_Cache_Control::set_nocache('removing commenter status');
         }
     }
 
@@ -462,14 +462,14 @@ class LiteSpeed_Cache_Vary
      */
     private static function _relative_path($from_redirect = false)
     {
-        $path = false ;
-        $tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL' ;
+        $path = false;
+        $tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL';
         if (! empty($_SERVER[ $tag ])) {
-            $path = parse_url($_SERVER[ $tag ]) ;
-            $path = ! empty($path[ 'path' ]) ? $path[ 'path' ] : false ;
-            LiteSpeed_Cache_Log::debug('[Vary] Cookie Vary path: ' . $path) ;
+            $path = parse_url($_SERVER[ $tag ]);
+            $path = ! empty($path[ 'path' ]) ? $path[ 'path' ] : false;
+            LiteSpeed_Cache_Log::debug('[Vary] Cookie Vary path: ' . $path);
         }
-        return $path ;
+        return $path;
     }
 
     /**
@@ -485,14 +485,14 @@ class LiteSpeed_Cache_Vary
      */
     public static function finalize()
     {
-        return self::get_instance()->_finalize() ;
+        return self::get_instance()->_finalize();
 
     }
 
     private function _finalize()
     {
         // Finalize default vary
-        $this->_update_default_vary() ;
+        $this->_update_default_vary();
 
         /**
          * Non caccheable page can still set vary ( for logged in process )
@@ -503,25 +503,25 @@ class LiteSpeed_Cache_Vary
         // 	return false;
         // }
 
-        $tp_cookies = $this->_format_vary_cookies() ;
-        global $post ;
+        $tp_cookies = $this->_format_vary_cookies();
+        global $post;
         if (! empty($post->post_password)) {
             if (isset($_COOKIE['wp-postpass_' . COOKIEHASH])) {
-                LiteSpeed_Cache_Log::debug('[Vary] finalize bypassed due to password protected vary ') ;
+                LiteSpeed_Cache_Log::debug('[Vary] finalize bypassed due to password protected vary ');
                 // If user has password cookie, do not cache
-                LiteSpeed_Cache_Control::set_nocache('password protected vary') ;
-                return ;
+                LiteSpeed_Cache_Control::set_nocache('password protected vary');
+                return;
             }
 
-            $tp_cookies[] = 'cookie=wp-postpass_' . COOKIEHASH ;
+            $tp_cookies[] = 'cookie=wp-postpass_' . COOKIEHASH;
         }
 
         if (empty($tp_cookies)) {
-            LiteSpeed_Cache_Log::debug2('[Vary] no custimzed vary ') ;
-            return ;
+            LiteSpeed_Cache_Log::debug2('[Vary] no custimzed vary ');
+            return;
         }
 
-        return self::X_HEADER . ': ' . implode(',', $tp_cookies) ;
+        return self::X_HEADER . ': ' . implode(',', $tp_cookies);
 
     }
 
@@ -537,30 +537,30 @@ class LiteSpeed_Cache_Vary
         /**
          * To add new varys, use hook `API::filter_vary_cookies()` before here
          */
-        do_action('litespeed_vary_add') ;
+        do_action('litespeed_vary_add');
 
         /**
          * Give a filter to manipulate vary
          * @since 2.7.1
          */
-        $cookies = apply_filters('litespeed_vary_cookies', self::$_vary_cookies) ;
+        $cookies = apply_filters('litespeed_vary_cookies', self::$_vary_cookies);
         if ($cookies !== self::$_vary_cookies) {
-            LiteSpeed_Cache_Log::debug('[Vary] vary changed by filter [Old] ' . var_export(self::$_vary_cookies, true) . ' [New] ' . var_export($cookies, true)) ;
+            LiteSpeed_Cache_Log::debug('[Vary] vary changed by filter [Old] ' . var_export(self::$_vary_cookies, true) . ' [New] ' . var_export($cookies, true));
         }
 
         if (! empty($cookies)) {
-            $cookies = array_filter(array_unique($cookies)) ;
+            $cookies = array_filter(array_unique($cookies));
         }
 
         if (empty($cookies)) {
-            return false ;
+            return false;
         }
 
         foreach ($cookies as $key => $val) {
-            $cookies[$key] = 'cookie=' . $val ;
+            $cookies[$key] = 'cookie=' . $val;
         }
 
-        return $cookies ;
+        return $cookies;
     }
 
     /**
@@ -575,12 +575,12 @@ class LiteSpeed_Cache_Vary
     public static function add($vary)
     {
         if (! is_array($vary)) {
-            $vary = array( $vary ) ;
+            $vary = array( $vary );
         }
 
-        error_log('Deprecated since LSCWP 2.7.1! [Vary] Add new vary ' . var_export($vary, true)) ;
+        error_log('Deprecated since LSCWP 2.7.1! [Vary] Add new vary ' . var_export($vary, true));
 
-        self::$_vary_cookies = array_merge(self::$_vary_cookies, $vary) ;
+        self::$_vary_cookies = array_merge(self::$_vary_cookies, $vary);
     }
 
     /**
@@ -591,7 +591,7 @@ class LiteSpeed_Cache_Vary
      */
     public static function append($name, $val)
     {
-        self::$_default_vary_val[ $name ] = $val ;
+        self::$_default_vary_val[ $name ] = $val;
     }
 
     /**
@@ -608,16 +608,16 @@ class LiteSpeed_Cache_Vary
     private static function _cookie($val = false, $expire = false, $path = false)
     {
         if (! $val) {
-            $expire = 1 ;
+            $expire = 1;
         }
 
         /**
          * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
          * @since 1.7
          */
-        $is_ssl = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY) ? false : is_ssl() ;
+        $is_ssl = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY) ? false : is_ssl();
 
-        setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true) ;
+        setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true);
     }
 
     /**
@@ -630,9 +630,9 @@ class LiteSpeed_Cache_Vary
     public static function get_instance()
     {
         if (! isset(self::$_instance)) {
-            self::$_instance = new self() ;
+            self::$_instance = new self();
         }
 
-        return self::$_instance ;
+        return self::$_instance;
     }
 }

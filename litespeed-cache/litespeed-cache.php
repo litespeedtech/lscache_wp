@@ -41,16 +41,16 @@
  */
 // If this file is called directly, abort.
 if (! defined('WPINC')) {
-    die ;
+    die;
 }
 
 if (class_exists('LiteSpeed_Cache') || defined('LSCWP_DIR')) {
-    return ;
+    return;
 }
 
-! defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR) ;
-! defined('LSCWP_DIR') && define('LSCWP_DIR', dirname(__FILE__) . '/') ;// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/' or MU
-! defined('LSCWP_BASENAME') && define('LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php') ;//LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
+! defined('LSCWP_CONTENT_DIR') && define('LSCWP_CONTENT_DIR', WP_CONTENT_DIR);
+! defined('LSCWP_DIR') && define('LSCWP_DIR', dirname(__FILE__) . '/');// Full absolute path '/usr/local/lsws/***/wp-content/plugins/litespeed-cache/' or MU
+! defined('LSCWP_BASENAME') && define('LSCWP_BASENAME', 'litespeed-cache/litespeed-cache.php');//LSCWP_BASENAME='litespeed-cache/litespeed-cache.php'
 
 /**
  * This needs to be before activation because admin-rules.class.php need const `LSCWP_CONTENT_FOLDER`
@@ -58,57 +58,57 @@ if (class_exists('LiteSpeed_Cache') || defined('LSCWP_DIR')) {
  * @since  1.9.1 Moved up
  * @since  2.2.1 Moved up from core.cls
  */
-define('LSCWP_CONTENT_FOLDER', str_replace(home_url('/'), '', WP_CONTENT_URL)) ; // `wp-content`
-define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__)) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
+define('LSCWP_CONTENT_FOLDER', str_replace(home_url('/'), '', WP_CONTENT_URL)); // `wp-content`
+define('LSWCP_PLUGIN_URL', plugin_dir_url(__FILE__));// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
-! defined('LITESPEED_TIME_OFFSET') && define('LITESPEED_TIME_OFFSET', get_option('gmt_offset') * 60 * 60) ;
+! defined('LITESPEED_TIME_OFFSET') && define('LITESPEED_TIME_OFFSET', get_option('gmt_offset') * 60 * 60);
 
 // Placeholder for lazyload img
-! defined('LITESPEED_PLACEHOLDER') && define('LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=') ;
+! defined('LITESPEED_PLACEHOLDER') && define('LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=');
 
 // Auto register LiteSpeed classes
-require_once LSCWP_DIR . 'inc/litespeed.autoload.php' ;
+require_once LSCWP_DIR . 'inc/litespeed.autoload.php';
 
 // Define CLI
 if ((defined('WP_CLI') && WP_CLI) || PHP_SAPI == 'cli') {
-    ! defined('LITESPEED_CLI') &&  define('LITESPEED_CLI', true) ;
+    ! defined('LITESPEED_CLI') &&  define('LITESPEED_CLI', true);
 
     // Register CLI cmd
     if (method_exists('WP_CLI', 'add_command')) {
-        WP_CLI::add_command('lscache-admin', 'LiteSpeed_Cache_Cli_Admin') ;
-        WP_CLI::add_command('lscache-purge', 'LiteSpeed_Cache_Cli_Purge') ;
-        WP_CLI::add_command('lscache-iapi', 'LiteSpeed_Cache_CLI_IAPI') ;
+        WP_CLI::add_command('lscache-admin', 'LiteSpeed_Cache_Cli_Admin');
+        WP_CLI::add_command('lscache-purge', 'LiteSpeed_Cache_Cli_Purge');
+        WP_CLI::add_command('lscache-iapi', 'LiteSpeed_Cache_CLI_IAPI');
     }
 }
 
 // Server type
 if (! defined('LITESPEED_SERVER_TYPE')) {
     if (isset($_SERVER['HTTP_X_LSCACHE']) && $_SERVER['HTTP_X_LSCACHE']) {
-        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC') ;
+        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC');
     }
     elseif (isset($_SERVER['LSWS_EDITION']) && strpos($_SERVER['LSWS_EDITION'], 'Openlitespeed') === 0) {
-        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS') ;
+        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS');
     }
     elseif (isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed') {
-        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT') ;
+        define('LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT');
     }
     else {
-        define('LITESPEED_SERVER_TYPE', 'NONE') ;
+        define('LITESPEED_SERVER_TYPE', 'NONE');
     }
 }
 
 // Checks if caching is allowed via server variable
 if (! empty($_SERVER['X-LSCACHE']) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined('LITESPEED_CLI')) {
-    ! defined('LITESPEED_ALLOWED') &&  define('LITESPEED_ALLOWED', true) ;
+    ! defined('LITESPEED_ALLOWED') &&  define('LITESPEED_ALLOWED', true);
 }
 
 // ESI const defination
 if (! defined('LSWCP_ESI_SUPPORT')) {
-    define('LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false) ;
+    define('LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false);
 }
 
 if (! defined('LSWCP_TAG_PREFIX')) {
-    define('LSWCP_TAG_PREFIX', substr(md5(LSCWP_DIR), -3)) ;
+    define('LSWCP_TAG_PREFIX', substr(md5(LSCWP_DIR), -3));
 }
 
 /**
@@ -123,26 +123,26 @@ if (! defined('LSWCP_TAG_PREFIX')) {
 if (! function_exists('run_litespeed_cache')) {
     function run_litespeed_cache()
     {
-        $version_supported = true ;
+        $version_supported = true;
 
         //Check minimum PHP requirements, which is 5.3 at the moment.
         if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-            error_log(LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_PHP_VER)) ;
-            $version_supported = false ;
+            error_log(LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_PHP_VER));
+            $version_supported = false;
         }
 
         //Check minimum WP requirements, which is 4.0 at the moment.
         if (version_compare($GLOBALS['wp_version'], '4.0', '<')) {
-            error_log(LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_WP_VER)) ;
-            $version_supported = false ;
+            error_log(LiteSpeed_Cache_Admin_Display::get_error(LiteSpeed_Cache_Admin_Error::E_WP_VER));
+            $version_supported = false;
         }
 
         if ($version_supported) {
-            LiteSpeed_Cache::get_instance() ;
+            LiteSpeed_Cache::get_instance();
         }
     }
 
-    run_litespeed_cache() ;
+    run_litespeed_cache();
 }
 
 /**
@@ -158,7 +158,7 @@ if (! function_exists('run_litespeed_cache')) {
 if (! function_exists('litespeed_purge_single_post')) {
     function litespeed_purge_single_post($id)
     {
-        LiteSpeed_Cache_Purge::purge_post($id) ;
+        LiteSpeed_Cache_Purge::purge_post($id);
     }
 }
 
@@ -168,7 +168,7 @@ if (! function_exists('litespeed_purge_single_post')) {
 if (! function_exists('litespeed_exception_handler')) {
     function litespeed_exception_handler($errno, $errstr, $errfile, $errline)
     {
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 }
 

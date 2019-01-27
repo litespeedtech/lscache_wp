@@ -1,5 +1,5 @@
 <?php
-if (! defined('WPINC')) die ;
+if (! defined('WPINC')) die;
 
 
 $_panels = array(
@@ -47,7 +47,7 @@ $_panels = array(
         'icon'	=> 'purge-cssjs',
         'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CSSJS,
     ),
-) ;
+);
 
 if (defined('LSCWP_OBJECT_CACHE')) {
     $_panels[] = array(
@@ -55,7 +55,7 @@ if (defined('LSCWP_OBJECT_CACHE')) {
         'desc'	=> __('Purge all the object caches', 'litespeed-cache'),
         'icon'	=> 'purge-object',
         'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OBJECT,
-    ) ;
+    );
 }
 
 if (LiteSpeed_Cache_Router::opcache_enabled()) {
@@ -64,7 +64,7 @@ if (LiteSpeed_Cache_Router::opcache_enabled()) {
         'desc'	=> __('Reset the entire opcode cache', 'litespeed-cache'),
         'icon'	=> 'purge-opcache',
         'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_OPCACHE,
-    ) ;
+    );
 }
 
 if (LiteSpeed_Cache_CSS::has_ccss_cache()) {
@@ -73,7 +73,7 @@ if (LiteSpeed_Cache_CSS::has_ccss_cache()) {
         'desc'	=> __('This will delete all generated critical CSS files', 'litespeed-cache'),
         'icon'	=> 'purge-cssjs',
         'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_CCSS,
-    ) ;
+    );
 }
 
 if (LiteSpeed_Cache_Media::has_placehoder_cache()) {
@@ -82,7 +82,7 @@ if (LiteSpeed_Cache_Media::has_placehoder_cache()) {
         'desc'	=> __('This will delete all generated image placeholder files', 'litespeed-cache'),
         'icon'	=> 'purge-cssjs',
         'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL_PLACEHOLDER,
-    ) ;
+    );
 }
 
 
@@ -93,7 +93,7 @@ $_panels[] = array(
     'title_cls'	=> 'litespeed-warning',
     'newline'	=> true,
     'append_url'	=> LiteSpeed_Cache_Purge::TYPE_PURGE_ALL,
-) ;
+);
 
 if (! is_multisite() || is_network_admin()) {
     $_panels[] = array(
@@ -106,37 +106,37 @@ if (! is_multisite() || is_network_admin()) {
         'cfm'	=>  esc_html(__('This will clear EVERYTHING inside the cache.', 'litespeed-cache')) . ' ' .
                     esc_html(__('This may cause heavy load on the server.', 'litespeed-cache')) . ' ' .
                     esc_html(__('If only the WordPress site should be purged, use purge all.', 'litespeed-cache')),
-    ) ;
+    );
 }
 
 ?>
 
-<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php" ; ?>
+<?php include_once LSCWP_DIR . "admin/tpl/inc/check_cache_disabled.php"; ?>
 
 <h3 class="litespeed-title"><?php echo __('Purge', 'litespeed-cache'); ?></h3>
 
 <div class="litespeed-panel-wrapper">
 
 <?php foreach ($_panels as $v): ?>
-<?php $tag = ! empty($v[ 'tag' ]) ? $v[ 'tag' ] : LiteSpeed_Cache::ACTION_PURGE ; ?>
-<?php $append_url = ! empty($v[ 'append_url' ]) ? $v[ 'append_url' ] : false ; ?>
+<?php $tag = ! empty($v[ 'tag' ]) ? $v[ 'tag' ] : LiteSpeed_Cache::ACTION_PURGE; ?>
+<?php $append_url = ! empty($v[ 'append_url' ]) ? $v[ 'append_url' ] : false; ?>
 
 	<?php if (! empty($v[ 'newline' ])) : ?>
 		<div class='litespeed-col-br'></div>
 	<?php endif; ?>
 
 	<a 	class="litespeed-panel"
-		href="<?php echo LiteSpeed_Cache_Utility::build_url($tag, $append_url) ; ?>"
-		<?php if (! empty($v[ 'cfm' ])) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"' ; ?>
+		href="<?php echo LiteSpeed_Cache_Utility::build_url($tag, $append_url); ?>"
+		<?php if (! empty($v[ 'cfm' ])) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"'; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">
-			<span class="litespeed-panel-icon-<?php echo $v[ 'icon' ] ; ?>"></span>
+			<span class="litespeed-panel-icon-<?php echo $v[ 'icon' ]; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<div class="litespeed-h3 <?php if (! empty($v[ 'title_cls' ])) echo $v[ 'title_cls' ] ; ?>">
-				<?php echo $v[ 'title' ] ; ?>
+			<div class="litespeed-h3 <?php if (! empty($v[ 'title_cls' ])) echo $v[ 'title_cls' ]; ?>">
+				<?php echo $v[ 'title' ]; ?>
 			</div>
-			<span class="litespeed-panel-para"><?php echo $v[ 'desc' ] ; ?></span>
+			<span class="litespeed-panel-para"><?php echo $v[ 'desc' ]; ?></span>
 		</section>
 	</a>
 
@@ -149,7 +149,7 @@ if (! is_multisite() || is_network_admin()) {
 	<div class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></div>
 	<div class="litespeed-desc">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
-		<?php echo __('One per line.', 'litespeed-cache') ; ?>
+		<?php echo __('One per line.', 'litespeed-cache'); ?>
 	</div>
 
 	<?php
