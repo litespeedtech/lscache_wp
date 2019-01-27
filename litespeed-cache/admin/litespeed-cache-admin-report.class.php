@@ -147,11 +147,11 @@ class LiteSpeed_Cache_Admin_Report
 
 		$extras[ 'active plugins' ] = $active_plugins ;
 
-		if ( is_null($options) ) {
+		if ( null === $options ) {
 			$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 		}
 
-		if ( ! is_null($options) && is_multisite() ) {
+		if ( null !== $options && is_multisite() ) {
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {

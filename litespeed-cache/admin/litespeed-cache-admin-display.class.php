@@ -379,7 +379,7 @@ class LiteSpeed_Cache_Admin_Display
 			return false ;
 		}
 		$error = 'ERROR ' . $err_code . ': ' . $error ;
-		if ( ! is_null($args) ) {
+		if ( null !== $args ) {
 			if ( is_array($args) ) {
 				$error = vsprintf($error, $args) ;
 			}

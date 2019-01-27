@@ -188,7 +188,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return false ;
 		}
 
-		if ( is_null( $woocom->cart ) ) {
+		if ( null === $woocom->cart ) {
 			return false ;
 		}
 		return $woocom->cart->get_cart_contents_count() > 0 ;
@@ -581,7 +581,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 				if ( isset( $_GET['download_file'] ) || isset( $_GET['add-to-cart'] ) || is_page( $page_ids ) ) {
 					$err = 'woo non cacheable pages' ;
 				}
-				elseif ( is_null($woocom->cart) ) {
+				elseif ( null === $woocom->cart ) {
 					$err = 'null cart' ;
 				}
 				elseif ( ! $this->esi_eanbled && $woocom->cart->get_cart_contents_count() !== 0 ) {
@@ -651,7 +651,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	public function purge_product($product)
 	{
 		$config = LiteSpeed_Cache_API::config(self::OPTION_UPDATE_INTERVAL) ;
-		if ( is_null($config) ) {
+		if ( null === $config ) {
 			$config = self::OPT_PQS_CS ;
 		}
 
@@ -752,7 +752,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		global $wp_widget_factory ;
 		$recent_reviews = $wp_widget_factory->widgets['WC_Widget_Recent_Reviews'] ;
-		if ( ! is_null($recent_reviews) ) {
+		if ( null !== $recent_reviews ) {
 			LiteSpeed_Cache_API::tag_add(LiteSpeed_Cache_API::TYPE_WIDGET . $recent_reviews->id) ;
 		}
 	}

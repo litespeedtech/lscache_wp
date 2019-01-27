@@ -695,9 +695,9 @@ class LiteSpeed_Cache_Purge
 	 */
 	public static function purge_widget($widget_id = null)
 	{
-		if ( is_null($widget_id) ) {
+		if ( null === $widget_id ) {
 			$widget_id = $_POST['widget-id'] ;
-			if ( is_null($widget_id) ) {
+			if ( null === $widget_id ) {
 				return ;
 			}
 		}
@@ -717,7 +717,7 @@ class LiteSpeed_Cache_Purge
 	{
 		global $wp_widget_factory ;
 		$recent_comments = $wp_widget_factory->widgets['WP_Widget_Recent_Comments'] ;
-		if ( !is_null($recent_comments) ) {
+		if ( null !== $recent_comments ) {
 			self::add(LiteSpeed_Cache_Tag::TYPE_WIDGET . $recent_comments->id) ;
 			self::add_private(LiteSpeed_Cache_Tag::TYPE_WIDGET . $recent_comments->id) ;
 		}
@@ -933,7 +933,7 @@ class LiteSpeed_Cache_Purge
 
 		global $wp_widget_factory ;
 		$recent_posts = $wp_widget_factory->widgets['WP_Widget_Recent_Posts'] ;
-		if ( ! is_null($recent_posts) ) {
+		if ( null !== $recent_posts ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_WIDGET . $recent_posts->id ;
 		}
 

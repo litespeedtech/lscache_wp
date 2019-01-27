@@ -200,7 +200,7 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
 	public static function add_container($render_parms)
 	{
 		// Check if null. If it is null, can't continue.
-		if ( is_null($render_parms) ) {
+		if ( null === $render_parms ) {
 			return null ;
 		}
 		$src = $render_parms[0]->source ;
