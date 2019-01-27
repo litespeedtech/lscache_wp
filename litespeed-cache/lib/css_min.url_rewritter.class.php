@@ -323,7 +323,7 @@ class UriRewriter
     /**
      * Mungs some inline SVG URL declarations so they won't be touched
      *
-     * @link https://github.com/mrclay/minify/issues/517
+     * @see https://github.com/mrclay/minify/issues/517
      * @see _unOwlify
      *
      * @param string $css
