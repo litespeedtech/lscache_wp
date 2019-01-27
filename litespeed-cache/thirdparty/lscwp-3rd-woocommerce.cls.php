@@ -261,7 +261,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
             self::ESI_PARAM_NAME => $template_name,
             self::ESI_PARAM_POSTID => $post->ID,
             self::ESI_PARAM_PATH => $template_path,
-            self::ESI_PARAM_LOCATED => $located
+            self::ESI_PARAM_LOCATED => $located,
         ) ;
         add_action('woocommerce_after_add_to_cart_form', array( $this, 'end_form' ) ) ;
         add_action('woocommerce_after_template_part', array( $this, 'end_form' ), 999) ;

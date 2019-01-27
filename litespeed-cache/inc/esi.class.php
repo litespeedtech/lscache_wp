@@ -450,7 +450,7 @@ class LiteSpeed_Cache_ESI
             self::PARAM_NAME => $name,
             self::PARAM_ID => $widget->id,
             self::PARAM_INSTANCE => $instance,
-            self::PARAM_ARGS => $args
+            self::PARAM_ARGS => $args,
         ) ;
 
         echo self::sub_esi_block( 'widget', 'widget ' . $name, $params, $esi_private . 'no-vary' ) ;

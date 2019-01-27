@@ -75,7 +75,7 @@ class LiteSpeed_Cache_CDN
         $mapping_to_check = array(
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
-            LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS
+            LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
         ) ;
         foreach ( $cfg_cdn_url as $v ) {
             if ( ! $v[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] ) {

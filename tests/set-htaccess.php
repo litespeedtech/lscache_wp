@@ -102,7 +102,7 @@ class Set_Htaccess {
             array($diff_cat, $diff, $diff_cat),
             array($diff_site, $diff_cat_site, $diff),
             array($diff2_site, $diff_cat_site, $diff2),
-            array($diff_cat_site, $diff2_site, $diff_cat)
+            array($diff_cat_site, $diff2_site, $diff_cat),
         );
 
         $res = array(
@@ -129,7 +129,7 @@ class Set_Htaccess {
             array($diff_cat, $diff, $diff),
             array($diff, $diff_cat, $diff),
             array($diff2, $diff_cat, $root),
-            array($diff_cat, $diff2, $root)
+            array($diff_cat, $diff2, $root),
         );
 
         foreach ($tests as $key=>$test) {

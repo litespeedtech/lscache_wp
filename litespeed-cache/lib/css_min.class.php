@@ -188,7 +188,7 @@ class Minifier
             'column-(?:gap|width)',
             'margin(?:-(?:top|left|bottom|right))?',
             'outline-width',
-            'padding(?:-(?:top|left|bottom|right))?'
+            'padding(?:-(?:top|left|bottom|right))?',
         );
 
         // First zero regex
@@ -222,7 +222,7 @@ class Minifier
             'memory_limit' => $this->memoryLimit,
             'max_execution_time' => $this->maxExecutionTime,
             'pcre.backtrack_limit' => $this->pcreBacktrackLimit,
-            'pcre.recursion_limit' =>  $this->pcreRecursionLimit
+            'pcre.recursion_limit' =>  $this->pcreRecursionLimit,
         );
 
         // If current settings are higher respect them.
@@ -633,13 +633,13 @@ class Minifier
                 $this->shortenOneZeroesRegex,
                 $this->shortenTwoZeroesRegex,
                 $this->shortenThreeZeroesRegex,
-                $this->shortenFourZeroesRegex
+                $this->shortenFourZeroesRegex,
             ),
             array(
                 '$1$2:0',
                 '$1$2:$3 0',
                 '$1$2:$3 $4 0',
-                '$1$2:$3 $4 $5 0'
+                '$1$2:$3 $4 $5 0',
             ),
             $body
         );
@@ -651,7 +651,7 @@ class Minifier
         $body = preg_replace(
             array(
                 '/(margin|padding|border-(?:width|radius)):('.$this->numRegex.')(?: \2)+( !|;|$)/Si',
-                '/(border-(?:style|color)):([#a-z0-9]+)(?: \2)+( !|;|$)/Si'
+                '/(border-(?:style|color)):([#a-z0-9]+)(?: \2)+( !|;|$)/Si',
             ),
             '$1:$2$3',
             $body
@@ -660,7 +660,7 @@ class Minifier
             array(
                 '/(margin|padding|border-(?:width|radius)):'.
                 '('.$this->numRegex.') ('.$this->numRegex.') \2 \3( !|;|$)/Si',
-                '/(border-(?:style|color)):([#a-z0-9]+) ([#a-z0-9]+) \2 \3( !|;|$)/Si'
+                '/(border-(?:style|color)):([#a-z0-9]+) ([#a-z0-9]+) \2 \3( !|;|$)/Si',
             ),
             '$1:$2 $3$4',
             $body
@@ -669,7 +669,7 @@ class Minifier
             array(
                 '/(margin|padding|border-(?:width|radius)):'.
                 '('.$this->numRegex.') ('.$this->numRegex.') ('.$this->numRegex.') \3( !|;|$)/Si',
-                '/(border-(?:style|color)):([#a-z0-9]+) ([#a-z0-9]+) ([#a-z0-9]+) \3( !|;|$)/Si'
+                '/(border-(?:style|color)):([#a-z0-9]+) ([#a-z0-9]+) ([#a-z0-9]+) \3( !|;|$)/Si',
             ),
             '$1:$2 $3 $4$5',
             $body

@@ -306,7 +306,7 @@ class LiteSpeed_Cache_Const
                         self::ITEM_CDN_MAPPING_INC_IMG,
                         self::ITEM_CDN_MAPPING_INC_CSS,
                         self::ITEM_CDN_MAPPING_INC_JS,
-                        self::ITEM_CDN_MAPPING_FILETYPE
+                        self::ITEM_CDN_MAPPING_FILETYPE,
                     ) ;
                     $cdn_mapping = array() ;
                     foreach ( $default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric

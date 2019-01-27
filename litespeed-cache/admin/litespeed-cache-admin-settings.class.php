@@ -647,7 +647,7 @@ class LiteSpeed_Cache_Admin_Settings
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
-            LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE
+            LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE,
         ) ;
         $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ;
         foreach ( $this->_input[ $id ][ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ] as $k => $v ) {

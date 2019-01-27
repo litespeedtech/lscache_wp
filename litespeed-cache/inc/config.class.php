@@ -482,7 +482,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
             LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
-            LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE
+            LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE,
         ) ;
         $cdn_mapping = array() ;
         if ( isset( $options[ self::ITEM_CDN_MAPPING ] ) && is_array( $options[ self::ITEM_CDN_MAPPING ] ) ) {

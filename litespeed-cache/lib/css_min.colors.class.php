@@ -39,7 +39,7 @@ class Colors
             '#008080' => 'teal',
             '#ff6347' => 'tomato',
             '#ee82ee' => 'violet',
-            '#f5deb3' => 'wheat'
+            '#f5deb3' => 'wheat',
         );
     }
 
@@ -149,7 +149,7 @@ class Colors
             'white' => '#fff',
             'whitesmoke' => '#f5f5f5',
             'yellow' => '#ff0',
-            'yellowgreen' => '#9acd32'
+            'yellowgreen' => '#9acd32',
         );
     }
 }

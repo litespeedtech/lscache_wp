@@ -278,7 +278,7 @@ eot;
                 $sizes[ $_size ] = array(
                     'width' => $_wp_additional_image_sizes[ $_size ][ 'width' ],
                     'height' => $_wp_additional_image_sizes[ $_size ][ 'height' ],
-                    'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ]
+                    'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ],
                 ) ;
             }
         }

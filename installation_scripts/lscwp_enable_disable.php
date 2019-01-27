@@ -20,7 +20,7 @@ $cache_list = array(
     "W3 Total Cache",
     "WP Fastest Cache",
     "WP Super Cache",
-    "ZenCache"
+    "ZenCache",
 );
 
 $name = $plugin['Name'];
