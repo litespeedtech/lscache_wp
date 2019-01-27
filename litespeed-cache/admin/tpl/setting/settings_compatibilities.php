@@ -12,9 +12,9 @@ if (!LiteSpeed_Cache_Admin_Display::get_instance()->show_compatibility_tab()) re
 	<li>
 		<p><?php echo __('Replace the following calls in the active theme\'s template files with a div or span with a unique ID.', 'litespeed-cache'); ?></p>
 		<p><?php echo sprintf(__('e.g. Replace <br> <pre>%1$s</pre> with<br> <pre>%2$s</pre>', 'litespeed-cache'),
-				htmlspecialchars('<?php if(function_exists(\'the_views\' )) { the_views(); } ?>'),
-				htmlspecialchars('<div id="postviews_lscwp" > </div>')
-			); ?>
+                htmlspecialchars('<?php if(function_exists(\'the_views\' )) { the_views(); } ?>'),
+                htmlspecialchars('<div id="postviews_lscwp" > </div>')
+            ); ?>
 		</p>
 	</li>
 	<li>

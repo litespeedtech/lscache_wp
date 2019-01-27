@@ -19,10 +19,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 		💡:
 		<?php echo __( 'You can turn shortcodes into ESI blocks.', 'litespeed-cache' ) ; ?>
 		<?php echo sprintf(
-			__( 'Replace %1$s with %2$s.', 'litespeed-cache' ),
-			'<code>[shortcodeA att1="val1" att2="val2"]</code>',
-			'<code>[esi shortcodeA att1="val1" att2="val2"]</code>'
-		) ; ?>
+            __( 'Replace %1$s with %2$s.', 'litespeed-cache' ),
+            '<code>[shortcodeA att1="val1" att2="val2"]</code>',
+            '<code>[esi shortcodeA att1="val1" att2="val2"]</code>'
+        ) ; ?>
 		<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:esi:shortcode' ) ; ?>
 	</p>
 	<p>

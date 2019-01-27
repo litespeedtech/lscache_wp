@@ -39,9 +39,9 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING
 					</h4>
 
 					<?php
-						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ;
-						$this->build_input( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 'litespeed-input-long', $v[ $id ] ) ;
-					?>
+                        $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL ;
+                        $this->build_input( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", 'litespeed-input-long', $v[ $id ] ) ;
+                    ?>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'CDN URL to be used. For example, %s', 'litespeed-cache' ), '<code>' . $cdn_url . '</code>' ) ; ?>
 					</div>
@@ -51,23 +51,23 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include Images', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ;
-						$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
-					?>
+                        $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG ;
+                        $this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
+                    ?>
 					</div>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include CSS', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ;
-						$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
-					?>
+                        $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS ;
+                        $this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
+                    ?>
 					</div>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include JS', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ;
-						$this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
-					?>
+                        $id = LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS ;
+                        $this->build_toggle( "[" . LiteSpeed_Cache_Config::ITEM_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
+                    ?>
 					</div>
 				</div>
 
@@ -158,22 +158,22 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING
 		<td>
 			<div class="litespeed-switch">
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
-					LiteSpeed_Cache_Config::VAL_OFF,
-					__( 'OFF', 'litespeed-cache' )
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
+                    LiteSpeed_Cache_Config::VAL_OFF,
+                    __( 'OFF', 'litespeed-cache' )
+                ) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
-					LiteSpeed_Cache_Config::VAL_ON,
-					'Google'
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
+                    LiteSpeed_Cache_Config::VAL_ON,
+                    'Google'
+                ) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
-					LiteSpeed_Cache_Config::VAL_ON2,
-					'Cdnjs'
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY,
+                    LiteSpeed_Cache_Config::VAL_ON2,
+                    'Cdnjs'
+                ) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Improve page load time by loading jQuery from a remote CDN service instead of locally.', 'litespeed-cache' ) ; ?>
@@ -257,10 +257,10 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING
 					<h4><?php echo __( 'Domain', 'litespeed-cache' ) ; ?></h4>
 
 				<?php
-					$cf_zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
-					$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
-					$this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME, $cls ) ;
-				?>
+                    $cf_zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
+                    $cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
+                    $this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME, $cls ) ;
+                ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'You can just type part of the domain.', 'litespeed-cache' ) ; ?>
 						<?php echo __( 'Once saved, it will be matched with the current list and completed automatically.', 'litespeed-cache' ) ; ?>

@@ -88,7 +88,7 @@ if ( !defined('WPINC') ) die;
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'The maximum average server load allowed while crawling. The number of crawler threads in use will be actively reduced until average server load falls under this limit. If this cannot be achieved with a single thread, the current crawler run will be terminated.', 'litespeed-cache' ) ;
-				?>
+                ?>
 
 				<?php if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) : ?>
 					<font class="litespeed-warning">
@@ -169,17 +169,17 @@ if ( !defined('WPINC') ) die;
 						counter: 0,
 						items : [
 							<?php
-								// Build the cookie crawler Vue data
-								$cookies = $this->config->get_item( $id ) ;
-								/**
-								 * Data Src Structure: [ nameA => vals, nameB => vals ]
-								 */
-								$list = array() ;
-								foreach ( $cookies as $k => $v ) {
-									$list[] = "{ name: '$k', vals: `$v` }" ;// $v contains line break
-								}
-								echo implode( ',', $list ) ;
-							?>
+                                // Build the cookie crawler Vue data
+                                $cookies = $this->config->get_item( $id ) ;
+                                /**
+                                 * Data Src Structure: [ nameA => vals, nameB => vals ]
+                                 */
+                                $list = array() ;
+                                foreach ( $cookies as $k => $v ) {
+                                    $list[] = "{ name: '$k', vals: `$v` }" ;// $v contains line break
+                                }
+                                echo implode( ',', $list ) ;
+                            ?>
 						]
 					},
 					methods: {
@@ -219,29 +219,29 @@ if ( !defined('WPINC') ) die;
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Posts', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_POSTS ) ;
-					?>
+                        $this->build_toggle( LiteSpeed_Cache_Config::CRWL_POSTS ) ;
+                    ?>
 					</div>
 
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Pages', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_PAGES ) ;
-					?>
+                        $this->build_toggle( LiteSpeed_Cache_Config::CRWL_PAGES ) ;
+                    ?>
 					</div>
 
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Categories', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_CATS ) ;
-					?>
+                        $this->build_toggle( LiteSpeed_Cache_Config::CRWL_CATS ) ;
+                    ?>
 					</div>
 
 					<div class="litespeed-row">
 						<div class="litespeed-col-inc"><?php echo __( 'Include Tags', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$this->build_toggle( LiteSpeed_Cache_Config::CRWL_TAGS ) ;
-					?>
+                        $this->build_toggle( LiteSpeed_Cache_Config::CRWL_TAGS ) ;
+                    ?>
 					</div>
 
 				</div>
@@ -270,28 +270,28 @@ if ( !defined('WPINC') ) die;
 
 					<div class="litespeed-switch">
 						<?php echo $this->build_radio(
-							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-							LiteSpeed_Cache_Config::CRWL_DATE_DESC,
-							__('Date, descending (Default)', 'litespeed-cache')
-						); ?>
+                            LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+                            LiteSpeed_Cache_Config::CRWL_DATE_DESC,
+                            __('Date, descending (Default)', 'litespeed-cache')
+                        ); ?>
 
 						<?php echo $this->build_radio(
-							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-							LiteSpeed_Cache_Config::CRWL_DATE_ASC,
-							__('Date, ascending', 'litespeed-cache')
-						); ?>
+                            LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+                            LiteSpeed_Cache_Config::CRWL_DATE_ASC,
+                            __('Date, ascending', 'litespeed-cache')
+                        ); ?>
 
 						<?php echo $this->build_radio(
-							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-							LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
-							__('Alphabetical, descending', 'litespeed-cache')
-						); ?>
+                            LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+                            LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
+                            __('Alphabetical, descending', 'litespeed-cache')
+                        ); ?>
 
 						<?php echo $this->build_radio(
-							LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
-							LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
-							__('Alphabetical, ascending', 'litespeed-cache')
-						); ?>
+                            LiteSpeed_Cache_Config::CRWL_ORDER_LINKS,
+                            LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
+                            __('Alphabetical, ascending', 'litespeed-cache')
+                        ); ?>
 					</div>
 					<div class="litespeed-desc">
 						<?php echo sprintf( __( 'These options will be invalid when using %s.', 'litespeed-cache' ), '<code>' . __( 'Custom Sitemap', 'litespeed-cache' ) . '</code>' ) ; ?>

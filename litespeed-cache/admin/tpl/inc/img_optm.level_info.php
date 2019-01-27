@@ -1,10 +1,10 @@
 <?php
 if ( ! defined( 'WPINC' ) ) {
-	die ;
+    die ;
 }
 
 if ( empty( $optm_summary[ 'level' ] ) ) {
-	return ;
+    return ;
 }
 ?>
 
@@ -14,7 +14,7 @@ if ( empty( $optm_summary[ 'level' ] ) ) {
 
 <?php
 if ( $optm_summary[ 'level' ] >= 5 || empty( $optm_summary[ '_level_data' ] ) ) {
-	return ;
+    return ;
 }
 
 $next_level = $optm_summary[ 'level' ] + 1 ;

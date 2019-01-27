@@ -4,20 +4,20 @@ if ( !defined('WPINC') ) die;
 
 $options = LiteSpeed_Cache_ESI::widget_load_get_options( $widget ) ;
 if ( empty( $options ) ) {
-	$options = array(
-		LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE => LiteSpeed_Cache_Config::VAL_OFF,
-		LiteSpeed_Cache_ESI::WIDGET_OPID_TTL => '28800'
-	) ;
-	$options = apply_filters( 'litespeed_cache_widget_default_options', $options, $widget ) ;
+    $options = array(
+        LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE => LiteSpeed_Cache_Config::VAL_OFF,
+        LiteSpeed_Cache_ESI::WIDGET_OPID_TTL => '28800'
+    ) ;
+    $options = apply_filters( 'litespeed_cache_widget_default_options', $options, $widget ) ;
 }
 
 if ( empty( $options ) ) {
-	$esi = LiteSpeed_Cache_Config::VAL_OFF ;
-	$ttl = '28800' ;
+    $esi = LiteSpeed_Cache_Config::VAL_OFF ;
+    $ttl = '28800' ;
 }
 else {
-	$esi = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
-	$ttl = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
+    $esi = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
+    $ttl = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
 }
 
 $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
@@ -32,32 +32,32 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 	<div class="litespeed-inline">
 		<div class="litespeed-switch litespeed-mini">
 		<?php
-			$id = LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
+            $id = LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
 
-			echo $this->build_radio(
-				$id,
-				LiteSpeed_Cache_Config::VAL_ON,
-				__( 'Public', 'litespeed-cache' ),
-				$esi === LiteSpeed_Cache_Config::VAL_ON,
-				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON
-			);
+            echo $this->build_radio(
+                $id,
+                LiteSpeed_Cache_Config::VAL_ON,
+                __( 'Public', 'litespeed-cache' ),
+                $esi === LiteSpeed_Cache_Config::VAL_ON,
+                'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON
+            );
 
-			echo $this->build_radio(
-				$id,
-				LiteSpeed_Cache_Config::VAL_ON2,
-				__( 'Private', 'litespeed-cache' ),
-				$esi === LiteSpeed_Cache_Config::VAL_ON2,
-				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON2
-			);
+            echo $this->build_radio(
+                $id,
+                LiteSpeed_Cache_Config::VAL_ON2,
+                __( 'Private', 'litespeed-cache' ),
+                $esi === LiteSpeed_Cache_Config::VAL_ON2,
+                'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON2
+            );
 
-			echo $this->build_radio(
-				$id,
-				LiteSpeed_Cache_Config::VAL_OFF,
-				__( 'Disable', 'litespeed-cache' ),
-				$esi === LiteSpeed_Cache_Config::VAL_OFF,
-				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_OFF
-			);
-		?>
+            echo $this->build_radio(
+                $id,
+                LiteSpeed_Cache_Config::VAL_OFF,
+                __( 'Disable', 'litespeed-cache' ),
+                $esi === LiteSpeed_Cache_Config::VAL_OFF,
+                'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_OFF
+            );
+        ?>
 
 		</div>
 	</div>

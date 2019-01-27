@@ -51,12 +51,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 	</tr>
 
 	<?php
-		if ( ! is_multisite() ) :
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_favicon.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_resources.php' ;
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_mobile.php' ;
-		endif ;
-	?>
+        if ( ! is_multisite() ) :
+            require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_favicon.php' ;
+            require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_resources.php' ;
+            require LSCWP_DIR . 'admin/tpl/setting/settings_inc.cache_mobile.php' ;
+        endif ;
+    ?>
 
 	<tr <?php echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Private Cached URIs', 'litespeed-cache' ) ; ?></th>

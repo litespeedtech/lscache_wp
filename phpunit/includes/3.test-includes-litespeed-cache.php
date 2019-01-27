@@ -12,7 +12,7 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-ca
 require_once plugin_dir_path( dirname( __FILE__ ) ) . '/admin/class-litespeed-cache-admin-rules.php';
 class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
-	/**
+    /**
      * Function to invoke a Private method
      */
     protected static function invokeMethod($className, $methodName, array $parameters = array()) 

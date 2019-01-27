@@ -12,37 +12,37 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 
 
      /**
-	 * Function for instance
-	 */
+     * Function for instance
+     */
     public static function get_instance(){
-		$instance = new LiteSpeed_Cache_Tags();
-		return $instance;
+        $instance = new LiteSpeed_Cache_Tags();
+        return $instance;
     }
 
 
-	/**
-	 * test case for LiteSpeed_Cache_Config::get_cache_tags
-	 * @access public
-	 * @return array The updated options.
-	 */
-	public function test_get_cache_tags() 
-	{
+    /**
+     * test case for LiteSpeed_Cache_Config::get_cache_tags
+     * @access public
+     * @return array The updated options.
+     */
+    public function test_get_cache_tags() 
+    {
         $instance  = self::get_instance();
         $tags = array();
 
         if(method_exists($instance, 'add_cache_tag')){
             $instance->add_cache_tag($tags);
         }
-		$array = $instance->get_cache_tags();
+        $array = $instance->get_cache_tags();
 
         if(count($array) > 0){
-		  $this->assertNotEmpty($array);
+          $this->assertNotEmpty($array);
         }
         else
         {
           $this->assertEmpty($array);
         }
-	}
+    }
 
     /**
      * test case for LiteSpeed_Cache_Config::get_purge_tags

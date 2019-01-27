@@ -98,10 +98,10 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Automatically generate %s in the background via a cron-based queue.', 'litespeed-cache' ), __( 'Responsive Placeholder', 'litespeed-cache' ) ) ; ?>
 				<?php echo sprintf(
-					__( 'If set to %1$s, before the placeholder is localized, the %2$s configuration will be used.', 'litespeed-cache' ),
-					'<code>' . __('ON', 'litespeed-cache') . '</code>',
-					__( 'Lazy Load Image Placeholder', 'litespeed-cache' )
-				) ; ?>
+                    __( 'If set to %1$s, before the placeholder is localized, the %2$s configuration will be used.', 'litespeed-cache' ),
+                    '<code>' . __('ON', 'litespeed-cache') . '</code>',
+                    __( 'Lazy Load Image Placeholder', 'litespeed-cache' )
+                ) ; ?>
 				<?php echo sprintf( __( 'If set to %s this is done in the foreground, which may slow down page load.', 'litespeed-cache' ), '<code>' . __('OFF', 'litespeed-cache') . '</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#generate_responsive_placeholder' ) ; ?>
 			</div>
@@ -232,12 +232,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<?php
-		if ( ! is_multisite() ) :
-			// webp
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ;
+        if ( ! is_multisite() ) :
+            // webp
+            require LSCWP_DIR . 'admin/tpl/setting/settings_inc.media_webp.php' ;
 
-		endif ;
-	?>
+        endif ;
+    ?>
 
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>

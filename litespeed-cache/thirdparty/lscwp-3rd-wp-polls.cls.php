@@ -16,9 +16,9 @@ add_filter('wp_polls_display_pollresult', 'LiteSpeed_Cache_ThirdParty_Wp_Polls::
 
 class LiteSpeed_Cache_ThirdParty_Wp_Polls
 {
-	public static function set_control()
-	{
-		LiteSpeed_Cache_API::set_nocache() ;
-	}
+    public static function set_control()
+    {
+        LiteSpeed_Cache_API::set_nocache() ;
+    }
 }
 

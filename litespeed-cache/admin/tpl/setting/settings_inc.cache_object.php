@@ -9,13 +9,13 @@ $redis_enabled = class_exists( 'Redis' ) ? $lang_enabled : $lang_disabled ;
 
 $mem_conn = LiteSpeed_Cache_Object::get_instance()->test_connection() ;
 if ( $mem_conn === null ) {
-	$mem_conn_desc = '<font class="litespeed-desc">' . __( 'Not Available', 'litespeed-cache' ) . '</font>' ;
+    $mem_conn_desc = '<font class="litespeed-desc">' . __( 'Not Available', 'litespeed-cache' ) . '</font>' ;
 }
 elseif ( $mem_conn ) {
-	$mem_conn_desc = '<font class="litespeed-success">' . __( 'Passed', 'litespeed-cache' ) . '</font>' ;
+    $mem_conn_desc = '<font class="litespeed-success">' . __( 'Passed', 'litespeed-cache' ) . '</font>' ;
 }
 else {
-	$mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
+    $mem_conn_desc = '<font class="litespeed-warning">' . __( 'Failed', 'litespeed-cache' ) . '</font>' ;
 }
 
 $hide_mem_options = ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_KIND ) ? '' : ' litespeed-hide' ;

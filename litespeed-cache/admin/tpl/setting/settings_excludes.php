@@ -52,15 +52,15 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Categories', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
-				$excludes_buf = '';
-				$cat_ids = $_options[$id];
-				if ($cat_ids != '') {
-					$id_list = explode(',', $cat_ids);
-					$excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
-				}
-				$this->build_textarea($id, false, $excludes_buf);
-			?>
+                $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT;
+                $excludes_buf = '';
+                $cat_ids = $_options[$id];
+                if ($cat_ids != '') {
+                    $id_list = explode(',', $cat_ids);
+                    $excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
+                }
+                $this->build_textarea($id, false, $excludes_buf);
+            ?>
 			<div class="litespeed-desc">
 				<b><?php echo __('All categories are cached by default.', 'litespeed-cache'); ?></b>
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'categories', 'litespeed-cache') ) ; ?>
@@ -73,7 +73,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<ol>
 					<li><?php echo __('If the category slug is not found, the category will be removed from the list on save.', 'litespeed-cache'); ?></li>
 					<li><?php echo sprintf(__('To exclude %1$s, insert %2$s.', 'litespeed-cache'),
-							'<code>http://www.example.com/category/category-slug/</code>', '<code>category-slug</code>'); ?></li>
+                            '<code>http://www.example.com/category/category-slug/</code>', '<code>category-slug</code>'); ?></li>
 				</ol>
 			</div>
 		</td>
@@ -83,22 +83,22 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Tags', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
-				$excludes_buf = '';
-				$ids = $_options[$id];
-				if ($ids != '') {
-					$id_list = explode(',', $ids);
-					$tags_list = array_map('get_tag', $id_list);
-					$tag_names = array();
-					foreach ($tags_list as $tag) {
-						$tag_names[] = $tag->name;
-					}
-					if (!empty($tag_names)) {
-						$excludes_buf = implode("\n", $tag_names);
-					}
-				}
-				$this->build_textarea($id, false, $excludes_buf);
-			?>
+                $id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG;
+                $excludes_buf = '';
+                $ids = $_options[$id];
+                if ($ids != '') {
+                    $id_list = explode(',', $ids);
+                    $tags_list = array_map('get_tag', $id_list);
+                    $tag_names = array();
+                    foreach ($tags_list as $tag) {
+                        $tag_names[] = $tag->name;
+                    }
+                    if (!empty($tag_names)) {
+                        $excludes_buf = implode("\n", $tag_names);
+                    }
+                }
+                $this->build_textarea($id, false, $excludes_buf);
+            ?>
 			<div class="litespeed-desc">
 				<b><?php echo __('All tags are cached by default.', 'litespeed-cache'); ?></b>
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'tags', 'litespeed-cache') ) ; ?>
@@ -111,22 +111,22 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<ol>
 					<li><?php echo __('If the tag slug is not found, the tag will be removed from the list on save.', 'litespeed-cache'); ?></li>
 					<li><?php echo sprintf(__('To exclude %1$s, insert %2$s.', 'litespeed-cache'),
-							'<code>http://www.example.com/tag/category/tag-slug/</code>', '<code>tag-slug</code>'); ?></li>
+                            '<code>http://www.example.com/tag/category/tag-slug/</code>', '<code>tag-slug</code>'); ?></li>
 				</ol>
 			</div>
 		</td>
 	</tr>
 
 	<?php
-		if ( ! is_multisite() ) :
-			// Cookie
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
+        if ( ! is_multisite() ) :
+            // Cookie
+            require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_cookies.php' ;
 
-			// User Agent
-			require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php' ;
+            // User Agent
+            require LSCWP_DIR . 'admin/tpl/setting/settings_inc.exclude_useragent.php' ;
 
-		endif ;
-	?>
+        endif ;
+    ?>
 
 
 	<tr>

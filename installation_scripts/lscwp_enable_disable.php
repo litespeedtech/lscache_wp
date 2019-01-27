@@ -26,59 +26,59 @@ $cache_list = array(
 $name = $plugin['Name'];
 
 if(in_array($name,$cache_list)){
-	if (is_plugin_active($value)){
-		echo "$name - Enabled\n";
-	}
-	else{
-		echo "$name - Disabled\n";
-	}
+    if (is_plugin_active($value)){
+        echo "$name - Enabled\n";
+    }
+    else{
+        echo "$name - Disabled\n";
+    }
 }
 }
 
 if ( $action == "status"  ) {
-	$plugins = get_plugins();
-	array_walk($plugins,"cachedetect");
-			}
+    $plugins = get_plugins();
+    array_walk($plugins,"cachedetect");
+            }
 
 elseif ( $action == "enable" ) {
-	if ( ! activate_plugin(PLUGIN_NAME, '', false, false) == null ) {
-		printf("\nLSCWP not enabled for %s \n\n", $WP_DIR) ;
-		return false;
-	}
-	return true;
+    if ( ! activate_plugin(PLUGIN_NAME, '', false, false) == null ) {
+        printf("\nLSCWP not enabled for %s \n\n", $WP_DIR) ;
+        return false;
+    }
+    return true;
 }
 
 elseif ( $action == "disable" ) {
 
-	global $wpdb;
+    global $wpdb;
 
-	$sql = "SELECT option_value
+    $sql = "SELECT option_value
 		FROM " . $table_prefix . "options
 		WHERE option_name = 'active_plugins'
 		" ;
 
-	$active = $wpdb->get_row($sql,ARRAY_A);
-	if ( $active == false ) {
-		die($WP_DIR . " - Query failed: " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
-	}
+    $active = $wpdb->get_row($sql,ARRAY_A);
+    if ( $active == false ) {
+        die($WP_DIR . " - Query failed: " . mysql_error() . "\nIf possible, LSCWP will still be removed\n\n") ;
+    }
 
-	$plugins = unserialize($active["option_value"]) ;
+    $plugins = unserialize($active["option_value"]) ;
 
-	foreach ( $plugins as $pkey => $pval ) {
-		if ( $pval == PLUGIN_NAME ) {
-			unset($plugins[$pkey]) ;
-		}
-	}
+    foreach ( $plugins as $pkey => $pval ) {
+        if ( $pval == PLUGIN_NAME ) {
+            unset($plugins[$pkey]) ;
+        }
+    }
 
-	$sql = "UPDATE " . $table_prefix . "options
+    $sql = "UPDATE " . $table_prefix . "options
 	SET option_value = '" . serialize($plugins) . "'
 	WHERE option_name = 'active_plugins'
 	" ;
 
-	$disable = $wpdb->query($sql);
+    $disable = $wpdb->query($sql);
 
-	if ( $disable == false ) {
-		die($WP_DIR . " - Unable to disable LSCWP with query error: " . mysql_error() . "\nIf possible, LSWCP will still be removed\n\n") ;
-	}
+    if ( $disable == false ) {
+        die($WP_DIR . " - Unable to disable LSCWP with query error: " . mysql_error() . "\nIf possible, LSWCP will still be removed\n\n") ;
+    }
 }
 

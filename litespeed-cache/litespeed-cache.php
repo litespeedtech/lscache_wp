@@ -41,11 +41,11 @@
  */
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-	die ;
+    die ;
 }
 
 if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
-	return ;
+    return ;
 }
 
 ! defined( 'LSCWP_CONTENT_DIR' ) && define( 'LSCWP_CONTENT_DIR', WP_CONTENT_DIR ) ;
@@ -71,44 +71,44 @@ require_once LSCWP_DIR . 'inc/litespeed.autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
-	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
+    ! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
 
-	// Register CLI cmd
-	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
-		WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
-		WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
-		WP_CLI::add_command( 'lscache-iapi', 'LiteSpeed_Cache_CLI_IAPI' ) ;
-	}
+    // Register CLI cmd
+    if ( method_exists( 'WP_CLI', 'add_command' ) ) {
+        WP_CLI::add_command( 'lscache-admin', 'LiteSpeed_Cache_Cli_Admin' ) ;
+        WP_CLI::add_command( 'lscache-purge', 'LiteSpeed_Cache_Cli_Purge' ) ;
+        WP_CLI::add_command( 'lscache-iapi', 'LiteSpeed_Cache_CLI_IAPI' ) ;
+    }
 }
 
 // Server type
 if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
-	if ( isset( $_SERVER['HTTP_X_LSCACHE'] ) && $_SERVER['HTTP_X_LSCACHE'] ) {
-		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC' ) ;
-	}
-	elseif ( isset( $_SERVER['LSWS_EDITION'] ) && strpos( $_SERVER['LSWS_EDITION'], 'Openlitespeed' ) === 0 ) {
-		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS' ) ;
-	}
-	elseif ( isset( $_SERVER['SERVER_SOFTWARE'] ) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed' ) {
-		define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT' ) ;
-	}
-	else {
-		define( 'LITESPEED_SERVER_TYPE', 'NONE' ) ;
-	}
+    if ( isset( $_SERVER['HTTP_X_LSCACHE'] ) && $_SERVER['HTTP_X_LSCACHE'] ) {
+        define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ADC' ) ;
+    }
+    elseif ( isset( $_SERVER['LSWS_EDITION'] ) && strpos( $_SERVER['LSWS_EDITION'], 'Openlitespeed' ) === 0 ) {
+        define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_OLS' ) ;
+    }
+    elseif ( isset( $_SERVER['SERVER_SOFTWARE'] ) && $_SERVER['SERVER_SOFTWARE'] == 'LiteSpeed' ) {
+        define( 'LITESPEED_SERVER_TYPE', 'LITESPEED_SERVER_ENT' ) ;
+    }
+    else {
+        define( 'LITESPEED_SERVER_TYPE', 'NONE' ) ;
+    }
 }
 
 // Checks if caching is allowed via server variable
 if ( ! empty ( $_SERVER['X-LSCACHE'] ) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined( 'LITESPEED_CLI' ) ) {
-	! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
+    ! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
 }
 
 // ESI const defination
 if ( ! defined( 'LSWCP_ESI_SUPPORT' ) ) {
-	define( 'LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false ) ;
+    define( 'LSWCP_ESI_SUPPORT', LITESPEED_SERVER_TYPE !== 'LITESPEED_SERVER_OLS' ? true : false ) ;
 }
 
 if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
-	define( 'LSWCP_TAG_PREFIX', substr( md5( LSCWP_DIR ), -3 ) ) ;
+    define( 'LSWCP_TAG_PREFIX', substr( md5( LSCWP_DIR ), -3 ) ) ;
 }
 
 /**
@@ -121,28 +121,28 @@ if ( ! defined( 'LSWCP_TAG_PREFIX' ) ) {
  * @since    1.0.0
  */
 if ( ! function_exists( 'run_litespeed_cache' ) ) {
-	function run_litespeed_cache()
-	{
-		$version_supported = true ;
+    function run_litespeed_cache()
+    {
+        $version_supported = true ;
 
-		//Check minimum PHP requirements, which is 5.3 at the moment.
-		if ( version_compare( PHP_VERSION, '5.3.0', '<' ) ) {
-			error_log( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_PHP_VER ) ) ;
-			$version_supported = false ;
-		}
+        //Check minimum PHP requirements, which is 5.3 at the moment.
+        if ( version_compare( PHP_VERSION, '5.3.0', '<' ) ) {
+            error_log( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_PHP_VER ) ) ;
+            $version_supported = false ;
+        }
 
-		//Check minimum WP requirements, which is 4.0 at the moment.
-		if ( version_compare( $GLOBALS['wp_version'], '4.0', '<' ) ) {
-			error_log( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_WP_VER ) ) ;
-			$version_supported = false ;
-		}
+        //Check minimum WP requirements, which is 4.0 at the moment.
+        if ( version_compare( $GLOBALS['wp_version'], '4.0', '<' ) ) {
+            error_log( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_WP_VER ) ) ;
+            $version_supported = false ;
+        }
 
-		if ( $version_supported ) {
-			LiteSpeed_Cache::get_instance() ;
-		}
-	}
+        if ( $version_supported ) {
+            LiteSpeed_Cache::get_instance() ;
+        }
+    }
 
-	run_litespeed_cache() ;
+    run_litespeed_cache() ;
 }
 
 /**
@@ -156,19 +156,19 @@ if ( ! function_exists( 'run_litespeed_cache' ) ) {
  * @param integer $id The post id to purge.
  */
 if ( ! function_exists( 'litespeed_purge_single_post' ) ) {
-	function litespeed_purge_single_post( $id )
-	{
-		LiteSpeed_Cache_Purge::purge_post( $id ) ;
-	}
+    function litespeed_purge_single_post( $id )
+    {
+        LiteSpeed_Cache_Purge::purge_post( $id ) ;
+    }
 }
 
 /**
  * Handle exception
  */
 if ( ! function_exists( 'litespeed_exception_handler' ) ) {
-	function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
-	{
-		throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
-	}
+    function litespeed_exception_handler( $errno, $errstr, $errfile, $errline )
+    {
+        throw new ErrorException($errstr, 0, $errno, $errfile, $errline) ;
+    }
 }
 

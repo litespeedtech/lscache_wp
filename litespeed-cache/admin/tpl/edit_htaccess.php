@@ -5,9 +5,9 @@ $readonly = LiteSpeed_Cache_Admin_Rules::writable() ? '' : 'readonly';
 
 $content = null ;
 try {
-	$content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
+    $content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 } catch( \Exception $e ) {
-	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
+    echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
 }
 
 
@@ -15,20 +15,20 @@ $htaccess_path = LiteSpeed_Cache_Admin_Rules::get_frontend_htaccess() ;
 
 // Check if there is `ExpiresDefault` in .htaccess
 if ( defined( 'LITESPEED_ON' ) ) {
-	if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
-		$is_dismissed = get_option( self::DISMISS_MSG ) ;
-		if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {
-			// Need to add a notice for browser cache compatibility
-			if ( $is_dismissed !== self::RULECONFLICT_ON ) {
-				update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
-			}
-			require_once LSCWP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
-		}
-	}
-	// don't dismiss the msg automatically
-	// elseif ( $is_dismissed === LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ) {
-	// 	update_option( self::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
-	// }
+    if ( $content && stripos( $content, "\nExpiresDefault" ) !== false ) {
+        $is_dismissed = get_option( self::DISMISS_MSG ) ;
+        if ( $is_dismissed !== self::RULECONFLICT_DISMISSED ) {
+            // Need to add a notice for browser cache compatibility
+            if ( $is_dismissed !== self::RULECONFLICT_ON ) {
+                update_option( self::DISMISS_MSG, self::RULECONFLICT_ON ) ;
+            }
+            require_once LSCWP_DIR . 'admin/tpl/inc/show_rule_conflict.php' ;
+        }
+    }
+    // don't dismiss the msg automatically
+    // elseif ( $is_dismissed === LiteSpeed_Cache_Admin_Display::RULECONFLICT_ON ) {
+    // 	update_option( self::DISMISS_MSG, LiteSpeed_Cache_Admin_Display::RULECONFLICT_DISMISSED ) ;
+    // }
 }
 
 

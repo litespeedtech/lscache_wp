@@ -5,39 +5,39 @@ if ( ! defined( 'WPINC' ) ) die ;
  * NOTE: Only show for single site
  */
 if ( is_multisite() ) {
-	return ;
+    return ;
 }
 
 if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
-	return ;
+    return ;
 }
 
 $current = get_site_transient( 'update_plugins' ) ;
 if ( ! isset( $current->response[ LiteSpeed_Cache::PLUGIN_FILE ] ) ) {
-	return ;
+    return ;
 }
 
 $last_check = empty( $_summary[ 'new_version.last_check' ] ) ? 0 : $_summary[ 'new_version.last_check' ] ;
 // Check once in a half day
 if ( time() - $last_check > 43200 ) {
-	$_summary[ 'new_version.last_check' ] = time() ;
-	$this->save_summary( $_summary ) ;
+    $_summary[ 'new_version.last_check' ] = time() ;
+    $this->save_summary( $_summary ) ;
 
-	// Detect version
-	$auto_v = LiteSpeed_Cache_Utility::version_check() ;
-	$_summary[ 'new_version.v' ] = $auto_v ;
-	$this->save_summary( $_summary ) ;
-	// After detect, don't show, just return and show next time
-	return ;
+    // Detect version
+    $auto_v = LiteSpeed_Cache_Utility::version_check() ;
+    $_summary[ 'new_version.v' ] = $auto_v ;
+    $this->save_summary( $_summary ) ;
+    // After detect, don't show, just return and show next time
+    return ;
 }
 
 if ( ! isset( $_summary[ 'new_version.v' ] ) ) {
-	return ;
+    return ;
 }
 
 // Check if current version is newer than auto_v or not
 if ( LiteSpeed_Cache_API::v( $_summary[ 'new_version.v' ] ) ) {
-	return ;
+    return ;
 }
 
 //********** Can show now **********//
@@ -45,7 +45,7 @@ if ( LiteSpeed_Cache_API::v( $_summary[ 'new_version.v' ] ) ) {
 $this->_promo_true = true ;
 
 if ( $check_only ) {
-	return ;
+    return ;
 }
 
 ?>
@@ -70,9 +70,9 @@ if ( $check_only ) {
 				</div>
 				<div class="litespeed-banner-description-padding-right-15">
 					<?php
-						$cfg = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE . ']' => 1 ) ;
-						$url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CFG, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
-					?>
+                        $cfg = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE . ']' => 1 ) ;
+                        $url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CFG, LiteSpeed_Cache_Config::TYPE_SET, false, null, $cfg ) ;
+                    ?>
 					<a href="<?php echo $url ; ?>" class="litespeed-btn-primary litespeed-btn-mini">
 						<i class="dashicons dashicons-update">&nbsp;</i>
 						<?php echo __( 'Turn On Auto Upgrade', 'litespeed-cache' ) ; ?>

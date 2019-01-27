@@ -24,22 +24,22 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<div class="litespeed-switch">
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_DEBUG,
-					LiteSpeed_Cache_Config::VAL_OFF,
-					__( 'OFF', 'litespeed-cache' )
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_DEBUG,
+                    LiteSpeed_Cache_Config::VAL_OFF,
+                    __( 'OFF', 'litespeed-cache' )
+                ) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_DEBUG,
-					LiteSpeed_Cache_Config::VAL_ON,
-					__( 'ON', 'litespeed-cache' )
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_DEBUG,
+                    LiteSpeed_Cache_Config::VAL_ON,
+                    __( 'ON', 'litespeed-cache' )
+                ) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_DEBUG,
-					LiteSpeed_Cache_Config::VAL_ON2,
-					__( 'Admin IP only', 'litespeed-cache' )
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_DEBUG,
+                    LiteSpeed_Cache_Config::VAL_ON2,
+                    __( 'Admin IP only', 'litespeed-cache' )
+                ) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Outputs to WordPress debug log.', 'litespeed-cache' ) ; ?>
@@ -59,9 +59,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Your IP', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Cache_Router::get_ip() ; ?></code>
 				<br />
 				<?php $this->learn_more(
-					'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
-					__( 'More information about the available commands can be found here.', 'litespeed-cache' )
-				) ; ?>
+                    'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
+                    __( 'More information about the available commands can be found here.', 'litespeed-cache' )
+                ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -71,16 +71,16 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<div class="litespeed-switch">
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
-					LiteSpeed_Cache_Config::VAL_OFF,
-					__( 'Basic', 'litespeed-cache' )
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
+                    LiteSpeed_Cache_Config::VAL_OFF,
+                    __( 'Basic', 'litespeed-cache' )
+                ) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
-					LiteSpeed_Cache_Config::VAL_ON,
-					__( 'Advanced', 'litespeed-cache' )
-				) ; ?>
+                    LiteSpeed_Cache_Config::OPID_DEBUG_LEVEL,
+                    LiteSpeed_Cache_Config::VAL_ON,
+                    __( 'Advanced', 'litespeed-cache' )
+                ) ; ?>
 			</div>
 			<div class="litespeed-desc">
 				<?php echo __( 'Advanced level will log more details.', 'litespeed-cache' ) ; ?>

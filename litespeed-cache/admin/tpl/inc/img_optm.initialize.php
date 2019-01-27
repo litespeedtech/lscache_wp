@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'WPINC' ) ) {
-	die ;
+    die ;
 }
 
 ?>

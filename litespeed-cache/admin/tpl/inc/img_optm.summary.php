@@ -1,6 +1,6 @@
 <?php
 if ( ! defined( 'WPINC' ) ) {
-	die ;
+    die ;
 }
 
 $closet_server = get_option( LiteSpeed_Cache_Admin_API::DB_API_CLOUD ) ;

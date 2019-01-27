@@ -16,23 +16,23 @@ if ( ! defined('ABSPATH') ) {
 }
 
 $thirdparty_list = array(
-	'aelia-currencyswitcher',
-	'autoptimize',
-	'bbpress',
-	'betterwp-minify',
-	'contact-form-7',
-	'nextgengallery',
-	'theme-my-login',
-	'woocommerce',
-	'wp-polls',
-	'wplister',
-	'wptouch',
-	'yith-wishlist',
-	'avada',
-	'wp-postratings',
-	'divi-theme-builder',
+    'aelia-currencyswitcher',
+    'autoptimize',
+    'bbpress',
+    'betterwp-minify',
+    'contact-form-7',
+    'nextgengallery',
+    'theme-my-login',
+    'woocommerce',
+    'wp-polls',
+    'wplister',
+    'wptouch',
+    'yith-wishlist',
+    'avada',
+    'wp-postratings',
+    'divi-theme-builder',
 ) ;
 
 foreach ($thirdparty_list as $val) {
-	include_once(LSCWP_DIR . 'thirdparty/lscwp-3rd-' . $val . '.cls.php') ;
+    include_once(LSCWP_DIR . 'thirdparty/lscwp-3rd-' . $val . '.cls.php') ;
 }
