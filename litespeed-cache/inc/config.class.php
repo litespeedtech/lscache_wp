@@ -673,9 +673,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		$file = ABSPATH . 'wp-config.php' ;
 
-		if ( ! is_writeable( $file ) ) {
+		if ( ! is_writable( $file ) ) {
 			$file = dirname( ABSPATH ) . '/wp-config.php' ; // todo: is the path correct?
-			if ( ! is_writeable( $file ) ) {
+			if ( ! is_writable( $file ) ) {
 				error_log( 'wp-config file not writable for \'WP_CACHE\'' ) ;
 				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE ;
 			}
