@@ -629,7 +629,7 @@ class LiteSpeed_Cache_Const
 		) ;
 		$server_vars = array() ;
 		foreach ( $consts as $v ) {
-			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : NULL ;
+			$server_vars[ $v ] = defined( $v ) ? constant( $v ) : null ;
 		}
 
 		return $server_vars ;

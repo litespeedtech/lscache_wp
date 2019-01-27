@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Cfg] Invalid option ID ' . $id ) ;
 
-		return NULL ;
+		return null ;
 	}
 
 	/**

@@ -59,7 +59,7 @@ class LiteSpeed_Cache_Config_Test extends WP_UnitTestCase {
 	public function test_construct()
 	{
 		$instance = self::get_instance();
-		$this->assertTrue( TRUE );
+		$this->assertTrue( true );
 	}
 
 	/**
