@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Admin_Report
 	 * @access public
 	 * @param mixed $options Array of options to output. If null, will skip
 	 * the options section.
-	 * @return string The built report.
+	 * @return string the built report
 	 */
 	public function generate_environment_report($options = null)
 	{
@@ -196,8 +196,8 @@ class LiteSpeed_Cache_Admin_Report
 	 * @param array $server - server variables
 	 * @param array $options - cms options
 	 * @param array $extras - cms specific attributes
-	 * @param array $htaccess_paths - htaccess paths to check.
-	 * @return string The Environment Report buffer.
+	 * @param array $htaccess_paths - htaccess paths to check
+	 * @return string the Environment Report buffer
 	 */
 	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array())
 	{
@@ -246,7 +246,7 @@ class LiteSpeed_Cache_Admin_Report
 	 * @access private
 	 * @param string $section_header The section heading
 	 * @param array $section An array of information to output
-	 * @return string The created report block.
+	 * @return string the created report block
 	 */
 	private function format_report_section( $section_header, $section )
 	{
@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Admin_Report
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

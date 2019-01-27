@@ -244,7 +244,7 @@ class LiteSpeed_Cache_CDN_Quic
 	 *
 	 * @since 1.8
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

@@ -441,7 +441,7 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param string $opt_id An option ID if getting an option.
+	 * @param string $opt_id an option ID if getting an option
 	 * @return the option value
 	 */
 	public static function config( $opt_id )
@@ -727,7 +727,7 @@ class LiteSpeed_Cache
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

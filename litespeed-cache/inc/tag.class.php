@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.0.5
 	 * @access public
-	 * @param mixed $tags A string or array of cache tags to add to the current list.
+	 * @param mixed $tags a string or array of cache tags to add to the current list
 	 */
 	public static function add( $tags )
 	{
@@ -172,7 +172,7 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.6.3
 	 * @access public
-	 * @param mixed $tags A string or array of cache tags to add to the current list.
+	 * @param mixed $tags a string or array of cache tags to add to the current list
 	 */
 	public static function add_private( $tags )
 	{
@@ -199,9 +199,9 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.0.12
 	 * @access public
-	 * @param string $uri The uri to get the hash of.
+	 * @param string $uri the uri to get the hash of
 	 * @param boolean $ori Return the original url or not
-	 * @return bool|string False on input error, hash otherwise.
+	 * @return bool|string false on input error, hash otherwise
 	 */
 	public static function get_uri_tag( $uri, $ori = false )
 	{
@@ -239,7 +239,7 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @return array The list of cache tags to set.
+	 * @return array the list of cache tags to set
 	 */
 	private static function _build_type_tags()
 	{
@@ -357,7 +357,7 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @return string empty string if empty, otherwise the cache tags header.
+	 * @return string empty string if empty, otherwise the cache tags header
 	 */
 	public static function output()
 	{
@@ -388,7 +388,7 @@ class LiteSpeed_Cache_Tag
 	 *
 	 * @since 2.2.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

@@ -28,10 +28,10 @@ class UriRewriter
      *
      * @param string $css
      *
-     * @param string $currentDir The directory of the current CSS file.
+     * @param string $currentDir the directory of the current CSS file
      *
-     * @param string $docRoot The document root of the web site in which
-     * the CSS file resides (default = $_SERVER['DOCUMENT_ROOT']).
+     * @param string $docRoot the document root of the web site in which
+     * the CSS file resides (default = $_SERVER['DOCUMENT_ROOT'])
      *
      * @param array $symlinks (default = array()) If the CSS file is stored in
      * a symlink-ed directory, provide an array of link paths to
@@ -89,7 +89,7 @@ class UriRewriter
      *
      * @param string $css
      *
-     * @param string $path The path to prepend.
+     * @param string $path the path to prepend
      *
      * @return string
      */
@@ -138,9 +138,9 @@ class UriRewriter
      *
      * @param string $uri file relative URI
      *
-     * @param string $realCurrentDir realpath of the current file's directory.
+     * @param string $realCurrentDir realpath of the current file's directory
      *
-     * @param string $realDocRoot realpath of the site document root.
+     * @param string $realDocRoot realpath of the site document root
      *
      * @param array $symlinks (default = array()) If the file is stored in
      * a symlink-ed directory, provide an array of link paths to

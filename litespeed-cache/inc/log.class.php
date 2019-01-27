@@ -224,8 +224,8 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.0.12
 	 * @access private
-	 * @param string $msg The log message to write.
-	 * @return string The formatted log message.
+	 * @param string $msg the log message to write
+	 * @return string the formatted log message
 	 */
 	private static function format_message( $msg )
 	{
@@ -262,7 +262,7 @@ class LiteSpeed_Cache_Log
 	 * @since 1.1.3
 	 * @since 1.6 Added array dump as 2nd param
 	 * @access public
-	 * @param string $msg The debug message.
+	 * @param string $msg the debug message
 	 * @param int|array $backtrace_limit Backtrace depth, Or the array to dump
 	 */
 	public static function debug( $msg, $backtrace_limit = false )
@@ -290,8 +290,8 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.2.0
 	 * @access public
-	 * @param string $msg The debug message.
-	 * @param int $backtrace_limit Backtrace depth.
+	 * @param string $msg the debug message
+	 * @param int $backtrace_limit backtrace depth
 	 */
 	public static function debug2( $msg, $backtrace_limit = false )
 	{
@@ -306,8 +306,8 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.1.0
 	 * @access private
-	 * @param string $msg The debug message.
-	 * @param int $backtrace_limit Backtrace depth.
+	 * @param string $msg the debug message
+	 * @param int $backtrace_limit backtrace depth
 	 */
 	private static function push( $msg, $backtrace_limit = false )
 	{
@@ -404,7 +404,7 @@ class LiteSpeed_Cache_Log
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

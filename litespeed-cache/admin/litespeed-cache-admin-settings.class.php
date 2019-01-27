@@ -40,8 +40,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param array $input The configuration selected by the admin when clicking save.
-	 * @return array The updated configuration options.
+	 * @param array $input the configuration selected by the admin when clicking save
+	 * @return array the updated configuration options
 	 */
 	public function validate_plugin_settings( $input, $revert_options_to_input = false )
 	{
@@ -1208,8 +1208,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param string $location The location string.
-	 * @return string the updated location string.
+	 * @param string $location the location string
+	 * @return string the updated location string
 	 */
 	public static function widget_save_err( $location )
 	{
@@ -1222,11 +1222,11 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $instance The new settings.
+	 * @param array $instance the new settings
 	 * @param array $new_instance
-	 * @param array $old_instance The original settings.
+	 * @param array $old_instance the original settings
 	 * @param WP_Widget $widget The widget
-	 * @return mixed Updated settings on success, false on error.
+	 * @return mixed updated settings on success, false on error
 	 */
 	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget )
 	{
@@ -1280,8 +1280,8 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.9
 	 * @access private
-	 * @param String $rule Input rewrite rule.
-	 * @return bool True for valid rules, false otherwise.
+	 * @param String $rule input rewrite rule
+	 * @return bool true for valid rules, false otherwise
 	 */
 	private function _syntax_checker( $rule )
 	{
@@ -1312,7 +1312,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @param string $id Option ID
 	 * @param number $min Minimum number
 	 * @param number $max Maximum number
-	 * @return bool True if valid, false otherwise.
+	 * @return bool true if valid, false otherwise
 	 */
 	private function _check_ttl( $input, $id, $min = false, $max = null )
 	{
@@ -1417,7 +1417,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

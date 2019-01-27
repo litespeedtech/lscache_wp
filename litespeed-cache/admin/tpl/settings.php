@@ -40,11 +40,11 @@ $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
  *
  * @see TODO: add option save filter.
  * @since 1.0.9
- * @param array $tabs An array of third party configuration.
- * @param array $options The current configuration options.
- * @param string $option_group The option group to use for options.
- * @param boolean $disableall Whether to disable the settings or not.
- * @return mixed An array of third party configs else false on failure.
+ * @param array $tabs an array of third party configuration
+ * @param array $options the current configuration options
+ * @param string $option_group the option group to use for options
+ * @param boolean $disableall whether to disable the settings or not
+ * @return mixed an array of third party configs else false on failure
  */
 $tp_tabs = apply_filters('litespeed_cache_add_config_tab',
 	array(),

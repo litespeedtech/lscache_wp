@@ -180,9 +180,9 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @param string $menu_title The title that appears on the menu.
-	 * @param string $menu_slug The slug of the page.
-	 * @param string $callback The callback to call if selected.
+	 * @param string $menu_title the title that appears on the menu
+	 * @param string $menu_slug the slug of the page
+	 * @param string $callback the callback to call if selected
 	 */
 	private function add_submenu($menu_title, $menu_slug, $callback)
 	{
@@ -239,8 +239,8 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param array $links Previously added links from other plugins.
-	 * @return array Links array with the litespeed cache one appended.
+	 * @param array $links previously added links from other plugins
+	 * @return array links array with the litespeed cache one appended
 	 */
 	public function add_plugin_links($links)
 	{
@@ -311,7 +311,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.13
 	 * @access public
-	 * @return bool True to disable all settings, false otherwise.
+	 * @return bool true to disable all settings, false otherwise
 	 */
 	public function get_disable_all()
 	{
@@ -355,9 +355,9 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $color The color to use for the notice.
-	 * @param string $str The notice message.
-	 * @return string The built notice html.
+	 * @param string $color the color to use for the notice
+	 * @param string $str the notice message
+	 * @return string the built notice html
 	 */
 	public static function build_notice($color, $str)
 	{
@@ -398,9 +398,9 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @access public
 	 * @since 1.1.0
-	 * @param int $err_code The error code to retrieve.
-	 * @param mixed $args Null if no arguments, an array if multiple arguments,
-	 * else a single argument.
+	 * @param int $err_code the error code to retrieve
+	 * @param mixed $args null if no arguments, an array if multiple arguments,
+	 * else a single argument
 	 */
 	public static function add_error($err_code, $args = null)
 	{
@@ -462,10 +462,10 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $color One of the available constants provided by this
-	 *     class.
-	 * @param mixed $msg May be a string for a single message or an array for
-	 *     multiple.
+	 * @param string $color one of the available constants provided by this
+	 *     class
+	 * @param mixed $msg may be a string for a single message or an array for
+	 *     multiple
 	 */
 	public static function add_notice($color, $msg)
 	{
@@ -1070,7 +1070,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

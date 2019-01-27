@@ -2139,7 +2139,7 @@ class LiteSpeed_Cache_Img_Optm
 	 *
 	 * @since 2.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

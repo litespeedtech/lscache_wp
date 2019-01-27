@@ -137,8 +137,8 @@ class LiteSpeed_Cache_Activation
 	 *
 	 * @since 1.0.12
 	 * @access public
-	 * @param array $args Arguments to pass into get_sites/wp_get_sites.
-	 * @return array The array of blog ids.
+	 * @param array $args arguments to pass into get_sites/wp_get_sites
+	 * @return array the array of blog ids
 	 */
 	public static function get_network_ids( $args = array() )
 	{
@@ -163,7 +163,7 @@ class LiteSpeed_Cache_Activation
 	 *
 	 * @since 1.0.12
 	 * @access private
-	 * @return mixed The count on success, false on failure.
+	 * @return mixed the count on success, false on failure
 	 */
 	private static function get_network_count()
 	{
@@ -209,7 +209,7 @@ class LiteSpeed_Cache_Activation
 	 *
 	 * @since 1.0.12
 	 * @access private
-	 * @return bool True if yes, false otherwise.
+	 * @return bool true if yes, false otherwise
 	 */
 	private static function is_deactivate_last()
 	{
@@ -290,7 +290,7 @@ class LiteSpeed_Cache_Activation
 	 *
 	 * @since 1.0.11
 	 * @access public
-	 * @return boolean True on success, false on failure.
+	 * @return boolean true on success, false on failure
 	 */
 	public static function try_copy_advanced_cache()
 	{
@@ -392,7 +392,7 @@ class LiteSpeed_Cache_Activation
 	 *
 	 * @since 2.9
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

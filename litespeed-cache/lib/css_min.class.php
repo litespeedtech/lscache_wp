@@ -501,7 +501,7 @@ class Minifier
 
     /**
      * Finds, minifies & preserves all rule bodies.
-     * @param string $css the whole stylesheet.
+     * @param string $css the whole stylesheet
      * @return string
      */
     private function processRuleBodies($css)
@@ -693,7 +693,7 @@ class Minifier
 
     /**
      * Compresses At-rules and selectors.
-     * @param string $css the whole stylesheet with rule bodies tokenized.
+     * @param string $css the whole stylesheet with rule bodies tokenized
      * @return string
      */
     private function processAtRulesAndSelectors($css)

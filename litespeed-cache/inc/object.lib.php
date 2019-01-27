@@ -151,7 +151,7 @@ function wp_cache_add_non_persistent_groups( $groups )
  * @see WP_Object_Cache::switch_to_blog()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
- * @param int $blog_id Site ID.
+ * @param int $blog_id site ID
  */
 function wp_cache_switch_to_blog( $blog_id ) {
 	global $wp_object_cache ;
@@ -484,7 +484,7 @@ class WP_Object_Cache
 	 *
 	 * @since 1.8
 	 *
-	 * @param int $blog_id Blog ID.
+	 * @param int $blog_id blog ID
 	 */
 	public function switch_to_blog( $blog_id ) {
 		$blog_id = (int) $blog_id ;
@@ -642,7 +642,7 @@ class WP_Object_Cache
 	 *
 	 * @since 1.8
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

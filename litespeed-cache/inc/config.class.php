@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.13
 	 * @access private
-	 * @return array The updated options.
+	 * @return array the updated options
 	 */
 	private function construct_multisite_options()
 	{
@@ -211,7 +211,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @return array The list of configured options.
+	 * @return array the list of configured options
 	 */
 	public function get_options()
 	{
@@ -223,8 +223,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param string $id Configuration ID.
-	 * @return mixed Selected option if set, NULL if not.
+	 * @param string $id configuration ID
+	 * @return mixed selected option if set, NULL if not
 	 */
 	public function get_option( $id )
 	{
@@ -244,8 +244,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param array $new_cfg The new settings to update, which will be update $this->options too.
-	 * @return array The result of update.
+	 * @param array $new_cfg the new settings to update, which will be update $this->options too
+	 * @return array the result of update
 	 */
 	public function update_options( $new_cfg = array() )
 	{
@@ -377,7 +377,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @return array The list of purge options.
+	 * @return array the list of purge options
 	 */
 	public function get_purge_options()
 	{
@@ -390,7 +390,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since 1.0.0
 	 * @access public
 	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
-	 * @return boolean True if the post type should be purged, false otherwise.
+	 * @return boolean true if the post type should be purged, false otherwise
 	 */
 	public function purge_by_post( $flag )
 	{
@@ -428,7 +428,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.2
 	 * @access public
-	 * @return array Returns the current site options.
+	 * @return array returns the current site options
 	 */
 	public function get_site_options()
 	{
@@ -455,8 +455,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.15
 	 * @access public
-	 * @param array $options The options array to port to input format.
-	 * @return array $options The options array with input format.
+	 * @param array $options the options array to port to input format
+	 * @return array $options the options array with input format
 	 */
 	public static function convert_options_to_input($options)
 	{
@@ -527,9 +527,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.11
 	 * @access public
-	 * @param array $default_options The default options.
-	 * @param array $options The current options.
-	 * @return array New options.
+	 * @param array $default_options the default options
+	 * @param array $options the current options
+	 * @return array new options
 	 */
 	public static function option_diff($default_options, $options)
 	{
@@ -657,8 +657,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param boolean $enable True if enabling, false if disabling.
-	 * @return boolean True if the variable is the correct value, false if something went wrong.
+	 * @param boolean $enable true if enabling, false if disabling
+	 * @return boolean true if the variable is the correct value, false if something went wrong
 	 */
 	public static function wp_cache_var_setter( $enable )
 	{
@@ -712,7 +712,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param int $count The count of blogs active in multisite.
+	 * @param int $count the count of blogs active in multisite
 	 */
 	public function plugin_activation( $count )
 	{
@@ -798,7 +798,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

@@ -164,7 +164,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.11
 	 * @access private
-	 * @param string $start_path The first directory level to search.
+	 * @param string $start_path the first directory level to search
 	 * @return string The deepest path where .htaccess exists, False if not.
 	 */
 	private function htaccess_search( $start_path )
@@ -251,8 +251,8 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @since  2.9 Used exception for failed reading
 	 * @access public
-	 * @param string $path The path to get the content from.
-	 * @return boolean True if succeeded, false otherwise.
+	 * @param string $path the path to get the content from
+	 * @return boolean true if succeeded, false otherwise
 	 */
 	public function htaccess_read($kind = 'frontend')
 	{
@@ -287,10 +287,10 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.4
 	 * @since 1.0.12 - Introduce $backup parameter and make function public
 	 * @access public
-	 * @param string $content The new content to put into the rules file.
+	 * @param string $content the new content to put into the rules file
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
-	 * @param boolean $backup Whether to create backups or not.
-	 * @return boolean true on success, else false.
+	 * @param boolean $backup whether to create backups or not
+	 * @return boolean true on success, else false
 	 */
 	public function htaccess_save($content, $kind = 'frontend', $backup = true)
 	{
@@ -326,7 +326,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.10
 	 * @access private
 	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
-	 * @return boolean True on success, else false on failure.
+	 * @return boolean true on success, else false on failure
 	 */
 	private function htaccess_backup($kind = 'frontend')
 	{
@@ -813,7 +813,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.3
 	 * @access public
-	 * @param array $cfg The rules that need to be set.
+	 * @param array $cfg the rules that need to be set
 	 */
 	public function update( $cfg, $disable_lscache_detail_rules = false )
 	{
@@ -951,7 +951,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.0.4
 	 * @access public
-	 * @param  string  $clear_all	Deactivation will give true, so clear all rules, otherwise only clear lscache related rules.
+	 * @param  string  $clear_all	deactivation will give true, so clear all rules, otherwise only clear lscache related rules
 	 */
 	public function clear_rules()
 	{
@@ -1036,7 +1036,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

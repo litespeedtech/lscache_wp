@@ -78,7 +78,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * @since 1.1.0
 	 * @access public
 	 * @param $template unused
-	 * @return string The html for future callbacks to filter.
+	 * @return string the html for future callbacks to filter
 	 */
 	public static function sub_add_to_wishlist( $template )
 	{
@@ -98,7 +98,7 @@ class LiteSpeed_Cache_ThirdParty_Yith_Wishlist
 	 * @since 1.1.0
 	 * @access public
 	 * @global $post, $wp_query
-	 * @param array $params The input ESI parameters.
+	 * @param array $params the input ESI parameters
 	 */
 	public static function load_add_to_wishlist($params)
 	{

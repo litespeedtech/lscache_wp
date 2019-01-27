@@ -538,7 +538,7 @@ class LiteSpeed_Cache_Admin_API
 	 *
 	 * @since 1.5
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

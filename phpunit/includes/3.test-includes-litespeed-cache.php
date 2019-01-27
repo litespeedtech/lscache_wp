@@ -51,8 +51,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::config
-     * @param string $opt_id An option ID if getting an option.
-     * @return LiteSpeed_Cache_Config The configurations for the accessed page.
+     * @param string $opt_id an option ID if getting an option
+     * @return LiteSpeed_Cache_Config the configurations for the accessed page
      */
     public function test_config()
     {
@@ -63,8 +63,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::format_message
-     * @param string $mesg The log message to write.
-     * @return string The formatted log message.
+     * @param string $mesg the log message to write
+     * @return string the formatted log message
      */
     public function test_format_message()
     {
@@ -86,8 +86,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::get_network_ids 
      * Should be test in multiside mode
      * @access private
-     * @param array $args Arguments to pass into get_sites/wp_get_sites.
-     * @return array The array of blog ids.
+     * @param array $args arguments to pass into get_sites/wp_get_sites
+     * @return array the array of blog ids
      */
     /*public function test_get_network_ids()
     {
@@ -106,7 +106,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      /**
      * Test case for  LiteSpeed_Cache::get_network_count
      * @access private
-     * @return mixed The count on success, false on failure.
+     * @return mixed the count on success, false on failure
      */
     public function test_get_network_count()
     {
@@ -123,7 +123,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::is_deactivate_last
      * @access private
-     * @return bool True if yes, false otherwise.
+     * @return bool true if yes, false otherwise
      */
     public function test_is_deactivate_last()
     {
@@ -140,7 +140,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::get_config
      * @access public
-     * @return LiteSpeed_Cache_Config The configurations for the accessed page.
+     * @return LiteSpeed_Cache_Config the configurations for the accessed page
      */
     public function test_get_config()
     {
@@ -151,7 +151,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::try_copy_advanced_cache
      * @access public
-     * @return boolean True on success, false on failure.
+     * @return boolean true on success, false on failure
      */
     public function test_try_copy_advanced_cache()
     {
@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::setup_cookies
      * @access private
-     * @return boolean True if cookies are bad, false otherwise.
+     * @return boolean true if cookies are bad, false otherwise
      */
     public function test_setup_cookies()
     {
@@ -184,7 +184,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::check_user_logged_in
-     * @return boolean True if logged in, false otherwise.
+     * @return boolean true if logged in, false otherwise
      */
     public function test_check_user_logged_in()
     {
@@ -219,7 +219,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::is_uri_excluded
      * @access private
      * @param array $excludes_list List of excluded URIs
-     * @return boolean True if excluded, false otherwise.
+     * @return boolean true if excluded, false otherwise
      */
     public function test_is_uri_excluded()
     {
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::is_cacheable
      * @access private
-     * @return boolean True if cacheable, false otherwise.
+     * @return boolean true if cacheable, false otherwise
      */
     public function test_is_cacheable()
     {
@@ -255,8 +255,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::check_error_codes
      * @access public
-     * @param $header, $code.
-     * @return $eeror_status.
+     * @param $header, $code
+     * @return $eeror_status
      */
     public function test_check_error_codes()
     {
@@ -274,8 +274,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::no_cache_for
      * @access private
-     * @param string $reason An explanation for why the page is not cacheable.
-     * @return boolean Return false.
+     * @param string $reason an explanation for why the page is not cacheable
+     * @return boolean return false
      */
     public function test_no_cache_for()
     {
@@ -288,7 +288,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::build_purge_headers
      * @access private
-     * @param boolean $stale Whether to add header as a stale header or not.
+     * @param boolean $stale whether to add header as a stale header or not
      * @return string The purge header
      */
     public function test_build_purge_headers()
@@ -329,10 +329,10 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::validate_mode
      * @access private
-     * @param boolean $showhdr Whether the show header command was selected.
-     * @param boolean $stale Whether to make the purge headers stale.
-     * @return integer The integer corresponding to the selected
-     * cache control value.
+     * @param boolean $showhdr whether the show header command was selected
+     * @param boolean $stale whether to make the purge headers stale
+     * @return integer the integer corresponding to the selected
+     * cache control value
      */
     public function test_validate_mode()
     {
@@ -347,8 +347,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * Test case for  LiteSpeed_Cache::prefix_apply
       * @access private
       * @staticvar string $prefix The prefix to use for each tag.
-      * @param string $tag The tag to prefix.
-      * @return string The amended tag.
+      * @param string $tag the tag to prefix
+      * @return string the amended tag
      */
     public function test_prefix_apply()
     {
@@ -368,7 +368,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::get_cache_tags
      * @access private
-     * @return array The list of cache tags to set.
+     * @return array the list of cache tags to set
      */
     public function test_get_cache_tags()
     {
@@ -385,8 +385,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::get_purge_tags
      * @access private
-     * @param integer $post_id The id of the post about to be purged.
-     * @return array The list of purge tags correlated with the post.
+     * @param integer $post_id the id of the post about to be purged
+     * @return array the list of purge tags correlated with the post
      */
     public function test_get_purge_tags()
     {
@@ -406,8 +406,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     /**
      * Test case for  LiteSpeed_Cache::get_uri_hash
      * @access private
-     * @param string $uri The uri to get the hash of.
-     * @return bool|string False on input error, hash otherwise.
+     * @param string $uri the uri to get the hash of
+     * @return bool|string false on input error, hash otherwise
      */
     public function test_get_uri_hash()
     {
@@ -430,7 +430,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @access private
      * @param string $section_header The section heading
      * @param array $section An array of information to output
-     * @return string The created report block.
+     * @return string the created report block
      */
     public function test_format_report_section()
     {
@@ -454,8 +454,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param array $server - server variables
      * @param array $options - cms options
      * @param array $extras - cms specific attributes
-     * @param array $htaccess_paths - htaccess paths to check.
-     * @return string The Environment Report buffer.
+     * @param array $htaccess_paths - htaccess paths to check
+     * @return string the Environment Report buffer
      */
     public function test_build_environment_report()
     {
@@ -482,8 +482,8 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
      * @param array $server - server variables
      * @param array $options - cms options
      * @param array $extras - cms specific attributes
-     * @param array $htaccess_paths - htaccess paths to check.
-     * @return string The Environment Report buffer.
+     * @param array $htaccess_paths - htaccess paths to check
+     * @return string the Environment Report buffer
      */
     public function test_generate_environment_report()
     { 
@@ -592,7 +592,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_admin_bar
-     * @return boolean.
+     * @return boolean
      */
     public function test_is_esi_admin_bar()
     { 
@@ -622,7 +622,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_cart
-     * @return boolean.
+     * @return boolean
      */
     public function test_is_esi_cart()
     { 
@@ -652,7 +652,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_sidebar
-     * @return boolean.
+     * @return boolean
      */
     public function test_is_esi_sidebar()
     { 
@@ -684,7 +684,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
     /**
      * Test case for  LiteSpeed_Cache::is_esi_sidebar
-     * @return boolean.
+     * @return boolean
      */
     public function test_check_esi_page()
     { 

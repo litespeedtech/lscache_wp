@@ -56,7 +56,7 @@ class LiteSpeed_Cache_ThirdParty_BBPress
 	 *
 	 * @since 1.0.5
 	 * @access public
-	 * @param integer $post_id The post id of the page being purged.
+	 * @param integer $post_id the post id of the page being purged
 	 */
 	public static function on_purge($post_id)
 	{

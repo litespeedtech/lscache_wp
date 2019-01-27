@@ -732,7 +732,7 @@ class LiteSpeed_Cache_GUI
 	 *
 	 * @since 1.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

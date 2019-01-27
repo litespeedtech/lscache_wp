@@ -406,9 +406,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_exclude_cookies
-	 * @param array $options The currently configured options.
-	 * @param string $cookie_title Returns the cookie title string.
-	 * @param string $cookie_desc Returns the cookie description string.
+	 * @param array $options the currently configured options
+	 * @param string $cookie_title returns the cookie title string
+	 * @param string $cookie_desc returns the cookie description string
 	 * @return string Returns the cookie text area on success, error message on
 	 */
 	public function test_build_setting_exclude_cookies()
@@ -426,9 +426,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_exclude_useragent
-	 * @param array $options The currently configured options.
-	 * @param string $ua_title Returns the user agent title string.
-	 * @param string $ua_desc Returns the user agent description string.
+	 * @param array $options the currently configured options
+	 * @param string $ua_title returns the user agent title string
+	 * @param string $ua_desc returns the user agent description string
 	 * @return string Returns the user agent text field on success,
 	 */
 	public function test_build_setting_exclude_useragent()
@@ -446,9 +446,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_login_cookie
-	 * @param array $options The currently configured options.
-	 * @param string $cookie_title Returns the cookie title string.
-	 * @param string $cookie_desc Returns the cookie description string.
+	 * @param array $options the currently configured options
+	 * @param string $cookie_title returns the cookie title string
+	 * @param string $cookie_desc returns the cookie description string
 	 * @return string Returns the cookie text field on success,
 	 */
 	public function test_build_setting_login_cookie()
@@ -466,8 +466,8 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_purge_on_upgrade
-	 * @param array $options The currently configured options.
-	 * @return string The html for caching favicon configurations.
+	 * @param array $options the currently configured options
+	 * @return string the html for caching favicon configurations
 	 */
 	public function test_build_setting_purge_on_upgrade()
 	{
@@ -481,8 +481,8 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::build_setting_cache_favicon
-	 * @param array $options The currently configured options.
-	 * @return string The html for caching favicon configurations.
+	 * @param array $options the currently configured options
+	 * @return string the html for caching favicon configurations
 	 */
 	public function test_build_setting_cache_favicon()
 	{
@@ -580,9 +580,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_group_start
-	 * @param string $title The title of the configuration group.
-	 * @param string $description The description of the configuration group.
-	 * @return string The start configuration option table html.
+	 * @param string $title the title of the configuration group
+	 * @param string $description the description of the configuration group
+	 * @return string the start configuration option table html
 	 */
 	public function test_input_group_start()
 	{
@@ -609,10 +609,10 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::display_config_row
-	 * @param string $label The option name.
-	 * @param string $input_field The option html.
-	 * @param string $notes The description to display under the option html.
-	 * @return string The config row html.
+	 * @param string $label the option name
+	 * @param string $input_field the option html
+	 * @param string $notes the description to display under the option html
+	 * @return string the config row html
 	 */
 	public function test_display_config_row()
 	{
@@ -629,13 +629,13 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_checkbox
-	 * @param string $id The option ID for the field.
-	 * @param string $value The value for the field.
-	 * @param mixed $checked_value The current value.
-	 * @param string $label The label to display.
-	 * @param string $on_click The action to do on click.
-	 * @param boolean $disabled True for disabled check box, false otherwise.
-	 * @return string The check box html.
+	 * @param string $id the option ID for the field
+	 * @param string $value the value for the field
+	 * @param mixed $checked_value the current value
+	 * @param string $label the label to display
+	 * @param string $on_click the action to do on click
+	 * @param boolean $disabled true for disabled check box, false otherwise
+	 * @return string the check box html
 	 */
 	public function test_input_field_checkbox()
 	{
@@ -653,10 +653,10 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_radio
-	 * @param string $id The option ID for the field.
-	 * @param array $radiooptions The options available for selection.
-	 * @param string $checked_value The currently selected option.
-	 * @return string The select field html.
+	 * @param string $id the option ID for the field
+	 * @param array $radiooptions the options available for selection
+	 * @param string $checked_value the currently selected option
+	 * @return string the select field html
 	 */
 	public function test_input_field_radio()
 	{
@@ -673,10 +673,10 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_select
-	 * @param string $id The option ID for the field.
-	 * @param array $seloptions The options available for selection.
-	 * @param string $selected_value The currently selected option.
-	 * @return string The select field html.
+	 * @param string $id the option ID for the field
+	 * @param array $seloptions the options available for selection
+	 * @param string $selected_value the currently selected option
+	 * @return string the select field html
 	 */
 	public function test_input_field_select()
 	{
@@ -692,13 +692,13 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_text
-	 * @param string $id The option ID for the field.
-	 * @param string $value The value for the field.
-	 * @param string $size The length to display.
-	 * @param string $style The class to format the display.
-	 * @param string $after The units to display after the text field.
-	 * @param boolean $readonly True for read only text fields, false otherwise.
-	 * @return string The input text html.
+	 * @param string $id the option ID for the field
+	 * @param string $value the value for the field
+	 * @param string $size the length to display
+	 * @param string $style the class to format the display
+	 * @param string $after the units to display after the text field
+	 * @param boolean $readonly true for read only text fields, false otherwise
+	 * @return string the input text html
 	 */
 	public function test_input_field_text()
 	{
@@ -717,13 +717,13 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_textarea
-	 * @param string $id The option ID for the field.
-	 * @param string $value The value for the field.
-	 * @param string $rows Number of rows to display.
-	 * @param string $cols Number of columns to display.
-	 * @param string $style The class to format the display.
-	 * @param boolean $readonly True for read only text areas, false otherwise.
-	 * @return string The textarea html.
+	 * @param string $id the option ID for the field
+	 * @param string $value the value for the field
+	 * @param string $rows number of rows to display
+	 * @param string $cols number of columns to display
+	 * @param string $style the class to format the display
+	 * @param boolean $readonly true for read only text areas, false otherwise
+	 * @return string the textarea html
 	 */
 	public function test_input_field_textarea()
 	{
@@ -742,9 +742,9 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 
 	/**
 	 * test case for LiteSpeed_Cache_Admin_Display::input_field_hidden
-	 * @param string $id The option ID for the field.
-	 * @param string $value The value for the field.
-	 * @return string The hidden field html.
+	 * @param string $id the option ID for the field
+	 * @param string $value the value for the field
+	 * @return string the hidden field html
 	 */
 	public function test_input_field_hidden()
 	{

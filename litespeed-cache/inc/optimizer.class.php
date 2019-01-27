@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Optimizer
 	 *
 	 * @since 1.9
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

@@ -278,7 +278,7 @@ class LiteSpeed_Cache_Import
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

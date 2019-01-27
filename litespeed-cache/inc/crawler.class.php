@@ -647,7 +647,7 @@ class LiteSpeed_Cache_Crawler
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

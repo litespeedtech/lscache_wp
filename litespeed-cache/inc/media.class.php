@@ -263,7 +263,7 @@ eot;
 	 *
 	 * @since 1.6.2
 	 * @access private
-	 * @return array $sizes Data for all currently-registered image sizes.
+	 * @return array $sizes data for all currently-registered image sizes
 	 */
 	private function get_image_sizes() {
 		global $_wp_additional_image_sizes ;
@@ -986,7 +986,7 @@ eot;
 	 *
 	 * @since 1.4
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

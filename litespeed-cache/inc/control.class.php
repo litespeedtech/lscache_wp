@@ -322,7 +322,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.1.3
-	 * @return bool True if notcacheable bit is set, otherwise false.
+	 * @return bool true if notcacheable bit is set, otherwise false
 	 */
 	public static function isset_notcacheable()
 	{
@@ -345,7 +345,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.1.3
-	 * @return bool True if is still cacheable, otherwise false.
+	 * @return bool true if is still cacheable, otherwise false
 	 */
 	public static function is_cacheable()
 	{
@@ -377,7 +377,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @access public
 	 * @since 1.1.3
-	 * @return int $ttl An integer to use as the TTL.
+	 * @return int $ttl an integer to use as the TTL
 	 */
 	public static function get_ttl()
 	{
@@ -476,7 +476,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @return string empty string if empty, otherwise the cache control header.
+	 * @return string empty string if empty, otherwise the cache control header
 	 */
 	public static function output()
 	{
@@ -609,7 +609,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @return boolean True if cacheable, false otherwise.
+	 * @return boolean true if cacheable, false otherwise
 	 */
 	private function _setting_cacheable()
 	{
@@ -713,8 +713,8 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @param string $reason An explanation for why the page is not cacheable.
-	 * @return boolean Return false.
+	 * @param string $reason an explanation for why the page is not cacheable
+	 * @return boolean return false
 	 */
 	private function _no_cache_for( $reason )
 	{
@@ -742,7 +742,7 @@ class LiteSpeed_Cache_Control
 	 * Gets whether any plugins determined that the current page is mobile.
 	 *
 	 * @access public
-	 * @return boolean True if the current page was deemed mobile, false otherwise.
+	 * @return boolean true if the current page was deemed mobile, false otherwise
 	 */
 	public static function is_mobile()
 	{
@@ -767,7 +767,7 @@ class LiteSpeed_Cache_Control
 	 *
 	 * @since 1.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

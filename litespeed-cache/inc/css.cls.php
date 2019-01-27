@@ -349,7 +349,7 @@ class LiteSpeed_Cache_CSS
 	 *
 	 * @since 2.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

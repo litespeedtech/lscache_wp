@@ -597,7 +597,7 @@ class LiteSpeed_Cache_Object
 	 *
 	 * @since 1.8
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

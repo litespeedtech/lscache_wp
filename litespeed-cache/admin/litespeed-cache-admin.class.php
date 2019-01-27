@@ -236,8 +236,8 @@ class LiteSpeed_Cache_Admin
 	 *
 	 * @since 1.0.4
 	 * @access public
-	 * @param string $input The input string to clean.
-	 * @return string The cleaned up input.
+	 * @param string $input the input string to clean
+	 * @return string the cleaned up input
 	 */
 	public static function cleanup_text( $input )
 	{
@@ -289,7 +289,7 @@ class LiteSpeed_Cache_Admin
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

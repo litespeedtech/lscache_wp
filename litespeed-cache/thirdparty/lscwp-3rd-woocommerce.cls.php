@@ -296,8 +296,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param array $args The arguments used to build the related products section.
-	 * @return array The unchanged arguments.
+	 * @param array $args the arguments used to build the related products section
+	 * @return array the unchanged arguments
 	 */
 	public function add_related_tags($args)
 	{
@@ -414,8 +414,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param array $params The current ESI parameters.
-	 * @return array The updated esi parameters.
+	 * @param array $params the current ESI parameters
+	 * @return array the updated esi parameters
 	 */
 	public function add_post_id($params)
 	{
@@ -435,9 +435,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.1.0
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param array $options The current default widget options.
-	 * @param type $widget The current widget to configure.
-	 * @return array The updated default widget options.
+	 * @param array $options the current default widget options
+	 * @param type $widget the current widget to configure
+	 * @return array the updated default widget options
 	 */
 	public function wc_widget_default($options, $widget)
 	{
@@ -536,8 +536,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.0.5
 	 * @since 1.6.3 Removed static
 	 * @access public
-     * @param string $esi_id 		The ESI block id if a request is an ESI request.
-	 * @return boolean           	True if cacheable, false if not.
+     * @param string $esi_id 		the ESI block id if a request is an ESI request
+	 * @return boolean           	true if cacheable, false if not
 	 */
 	public function set_control($esi_id)
 	{
@@ -676,8 +676,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.0.9
 	 * @since 1.6.3 Removed static
 	 * @access public
-	 * @param int $post_id Object ID.
-	 * @param array $term_ids An array of term taxonomy IDs.
+	 * @param int $post_id object ID
+	 * @param array $term_ids an array of term taxonomy IDs
 	 */
 	public function delete_rel($post_id, $term_ids)
 	{
@@ -737,8 +737,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.6.3 Removed static
 	 * @access public
 	 * @param $unused
-	 * @param integer $comment_approved Whether the comment is approved or not.
-	 * @param array $commentdata Information about the comment.
+	 * @param integer $comment_approved whether the comment is approved or not
+	 * @param array $commentdata information about the comment
 	 */
 	public function add_review($unused, $comment_approved, $commentdata)
 	{
@@ -783,10 +783,10 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * purge rules)
 	 *
 	 * @since 1.6.3 Removed static
-	 * @param array $tabs Third party tabs added.
-	 * @param array $options Current options used.
-	 * @param string $option_group The option group to surround the option id.
-	 * @return mixed False on failure, updated tabs otherwise.
+	 * @param array $tabs third party tabs added
+	 * @param array $options current options used
+	 * @param string $option_group the option group to surround the option id
+	 * @return mixed false on failure, updated tabs otherwise
 	 */
 	public function add_config($tabs, $options, $option_group)
 	{
@@ -881,9 +881,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * the options array accordingly.
 	 *
 	 * @since 1.6.3 Removed static
-	 * @param array $options The saved options array.
-	 * @param array $input The input options array.
-	 * @return mixed false on failure, updated $options otherwise.
+	 * @param array $options the saved options array
+	 * @param array $input the input options array
+	 * @return mixed false on failure, updated $options otherwise
 	 */
 	public function save_config($options, $input)
 	{
@@ -919,7 +919,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @since 1.6.3 Removed static
 	 * @access private
 	 * @param int $product_id The product id
-	 * @return array An array of category ids.
+	 * @return array an array of category ids
 	 */
 	private function get_cats($product_id)
 	{
@@ -944,7 +944,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 *
 	 * @since 1.6.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

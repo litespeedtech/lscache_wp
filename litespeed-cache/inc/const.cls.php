@@ -362,7 +362,7 @@ class LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.11
 	 * @access protected
-	 * @return array An array of the default options.
+	 * @return array an array of the default options
 	 */
 	protected function get_default_site_options()
 	{
@@ -403,8 +403,8 @@ class LiteSpeed_Cache_Const
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param bool $include_thirdparty Whether to include the thirdparty options.
-	 * @return array An array of the default options.
+	 * @param bool $include_thirdparty whether to include the thirdparty options
+	 * @return array an array of the default options
 	 */
 	public function get_default_options($include_thirdparty = true)
 	{
@@ -642,7 +642,7 @@ class LiteSpeed_Cache_Const
 	 * @access public
 	 * @since 1.0.9
 	 * @param array $options Optional. The default options to compare against.
-	 * @return mixed boolean on failure, array of keys on success.
+	 * @return mixed boolean on failure, array of keys on success
 	 */
 	public function get_thirdparty_options($options = null)
 	{

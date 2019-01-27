@@ -306,7 +306,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param mixed $tags Tags to add to the list.
+	 * @param mixed $tags tags to add to the list
 	 */
 	public static function add( $tags )
 	{
@@ -350,7 +350,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param mixed $tags Tags to add to the list.
+	 * @param mixed $tags tags to add to the list
 	 */
 	public static function add_private( $tags )
 	{
@@ -489,8 +489,8 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value The category slug.
-	 * @param string $key Unused.
+	 * @param string $value the category slug
+	 * @param string $key unused
 	 */
 	public function purgeby_cat_cb( $value, $key )
 	{
@@ -518,8 +518,8 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value The post ID.
-	 * @param string $key Unused.
+	 * @param string $value the post ID
+	 * @param string $key unused
 	 */
 	public function purgeby_pid_cb( $value, $key )
 	{
@@ -545,8 +545,8 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value The tag slug.
-	 * @param string $key Unused.
+	 * @param string $value the tag slug
+	 * @param string $key unused
 	 */
 	public function purgeby_tag_cb( $value, $key )
 	{
@@ -574,8 +574,8 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.0.7
 	 * @access public
-	 * @param string $value A url to purge.
-	 * @param string $key Unused.
+	 * @param string $value a url to purge
+	 * @param string $key unused
 	 */
 	public function purgeby_url_cb( $value, $key = false )
 	{
@@ -656,7 +656,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param integer $id The post id to purge.
+	 * @param integer $id the post id to purge
 	 */
 	public static function purge_post( $id )
 	{
@@ -691,7 +691,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @param type $widget_id The id of the widget to purge.
+	 * @param type $widget_id the id of the widget to purge
 	 */
 	public static function purge_widget($widget_id = null)
 	{
@@ -851,9 +851,9 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.0
 	 * @access private
-	 * @param array $purge_tags The purge tags to apply the prefix to.
-	 * @param  boolean $is_private If is private tags or not.
-	 * @return array The array of built purge tags.
+	 * @param array $purge_tags the purge tags to apply the prefix to
+	 * @param  boolean $is_private if is private tags or not
+	 * @return array the array of built purge tags
 	 */
 	private function _append_prefix( $purge_tags, $is_private = false )
 	{
@@ -902,8 +902,8 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @param integer $post_id The id of the post about to be purged.
-	 * @return array The list of purge tags correlated with the post.
+	 * @param integer $post_id the id of the post about to be purged
+	 * @return array the list of purge tags correlated with the post
 	 */
 	private function _get_purge_tags_by_post( $post_id )
 	{
@@ -1038,7 +1038,7 @@ class LiteSpeed_Cache_Purge
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

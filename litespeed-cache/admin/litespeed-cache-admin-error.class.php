@@ -71,8 +71,8 @@ class LiteSpeed_Cache_Admin_Error
 	 *
 	 * @since 1.0.15
 	 * @access public
-	 * @param int $err_code The error code to retrieve.
-	 * @return string The error message if matching, else an empty string.
+	 * @param int $err_code the error code to retrieve
+	 * @return string the error message if matching, else an empty string
 	 */
 	public function convert_code_to_error($err_code)
 	{
@@ -236,7 +236,7 @@ class LiteSpeed_Cache_Admin_Error
 	 *
 	 * @since 1.1.0
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

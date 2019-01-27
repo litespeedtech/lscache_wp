@@ -309,7 +309,7 @@ class LiteSpeed_Cache_Utility
 	 * @access private
 	 * @param string $needle The string to search with
 	 * @param array $haystack
-	 * @return bool|string False if not found, otherwise return the matched string in haystack.
+	 * @return bool|string false if not found, otherwise return the matched string in haystack
 	 */
 	public static function str_hit_array( $needle, $haystack, $has_ttl = false )
 	{
@@ -520,10 +520,10 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since  1.6 Changed order of 2nd&3rd param, changed 3rd param `append_str` to 2nd `type`
 	 * @access public
-	 * @param string $action The LSCWP_CTRL action to do in the url.
+	 * @param string $action the LSCWP_CTRL action to do in the url
 	 * @param string $is_ajax if is AJAX call or not
 	 * @param string $type The appending type to url
-	 * @return string The built url.
+	 * @return string the built url
 	 */
 	public static function build_url( $action, $type = false, $is_ajax = false, $page = null, $append_arr = null )
 	{
@@ -778,7 +778,7 @@ class LiteSpeed_Cache_Utility
 	 *
 	 * @since 2.9
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

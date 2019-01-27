@@ -81,9 +81,9 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 
   	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::build_lscwpctrl_url
-	 * @param string $val The LSCWP_CTRL action to do in the url.
-	 * @param string $nonce The nonce to use.
-	 * @return string The built url.
+	 * @param string $val the LSCWP_CTRL action to do in the url
+	 * @param string $nonce the nonce to use
+	 * @return string the built url
 	 */
 	public function test_build_lscwpctrl_url()
 	{
@@ -97,9 +97,9 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_enabled
 	 * @access private
-	 * @param array $input The input configurations.
-	 * @param array $options Returns the up to date options array.
-	 * @return boolean True if enabled, false otherwise.
+	 * @param array $input the input configurations
+	 * @param array $options returns the up to date options array
+	 * @return boolean true if enabled, false otherwise
 	 */
 	public function test_validate_enabled()
 	{
@@ -114,10 +114,10 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_tag_prefix
 	 * @access private
-	 * @param array $input The configurations selected by the admin when
-	 *     clicking save.
-	 * @param array $options The current configuration options.
-	 * @return mixed True on success, error message otherwise.
+	 * @param array $input the configurations selected by the admin when
+	 *     clicking save
+	 * @param array $options the current configuration options
+	 * @return mixed true on success, error message otherwise
 	 */
 	public function test_validate_tag_prefix()
 	{
@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	 * @access private
 	 * @param array $input Input array
 	 * @param string $id Option ID
-	 * @return bool True if valid, false otherwise.
+	 * @return bool true if valid, false otherwise
 	 */
 	public function test_validate_ttl()
 	{
@@ -148,9 +148,9 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::validate_plugin_settings
 	 * @access private
-	 * @param array $input The configurations selected by the admin when
-	 *     clicking save.
-	 * @return array The updated configuration options.
+	 * @param array $input the configurations selected by the admin when
+	 *     clicking save
+	 * @return array the updated configuration options
 	 */
 	public function test_validate_plugin_settings()
 	{
@@ -163,8 +163,8 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::add_plugin_links
 	 * @access public
-	 * @param array $links Previously added links from other plugins.
-	 * @return array Links array with the litespeed cache one appended.
+	 * @param array $links previously added links from other plugins
+	 * @return array links array with the litespeed cache one appended
 	 */
 	public function test_add_plugin_links()
 	{
@@ -177,8 +177,8 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::cleanup_text
 	 * @access public
-	 * @param string $input The input string to clean.
-	 * @return string The cleaned up input.
+	 * @param string $input the input string to clean
+	 * @return string the cleaned up input
 	 */
 	public function test_cleanup_text()
 	{
@@ -191,10 +191,10 @@ class LiteSpeed_Cache_Admin_Test extends WP_UnitTestCase {
 	/**
 	 * Test case for Change the admin footer text on LiteSpeed Cache admin pages LiteSpeed_Cache_Admin::parse_checkbox
 	 * @access public
-	 * @param string $id The id of the checkbox value.
-	 * @param array $input The input array.
-	 * @param array $options The config options array.
-	 * @return boolean True if checked, false otherwise.
+	 * @param string $id the id of the checkbox value
+	 * @param array $input the input array
+	 * @param array $options the config options array
+	 * @return boolean true if checked, false otherwise
 	 */
 	public function test_parse_checkbox()
 	{

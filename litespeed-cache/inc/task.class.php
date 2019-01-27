@@ -260,7 +260,7 @@ class LiteSpeed_Cache_Task
 	 *
 	 * @since 1.6
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{

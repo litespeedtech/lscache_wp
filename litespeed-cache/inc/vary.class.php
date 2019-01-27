@@ -137,7 +137,7 @@ class LiteSpeed_Cache_Vary
 	 * @access public
 	 * @global type $post
 	 * @param array $comments The current comments to output
-	 * @return array The comments to output.
+	 * @return array the comments to output
 	 */
 	public function check_commenter( $comments )
 	{
@@ -530,7 +530,7 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.0.13
 	 * @access private
-	 * @return array An array of all vary cookies currently added.
+	 * @return array an array of all vary cookies currently added
 	 */
 	private function _format_vary_cookies()
 	{
@@ -570,7 +570,7 @@ class LiteSpeed_Cache_Vary
 	 * @since 1.0.13
 	 * @deprecated 2.7.1 Use filter `litespeed_vary_cookies` instead.
 	 * @access public
-	 * @param mixed $vary A string or array of vary cookies to add to the current list.
+	 * @param mixed $vary a string or array of vary cookies to add to the current list
 	 */
 	public static function add( $vary )
 	{
@@ -601,8 +601,8 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.0.4
 	 * @access private
-	 * @param integer $val The value to update.
-	 * @param integer $expire Expire time.
+	 * @param integer $val the value to update
+	 * @param integer $expire expire time
 	 * @param boolean $path False if use wp root path as cookie path
 	 */
 	private static function _cookie($val = false, $expire = false, $path = false)
@@ -625,7 +625,7 @@ class LiteSpeed_Cache_Vary
 	 *
 	 * @since 1.1.3
 	 * @access public
-	 * @return Current class instance.
+	 * @return Current class instance
 	 */
 	public static function get_instance()
 	{
