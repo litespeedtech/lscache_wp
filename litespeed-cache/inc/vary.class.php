@@ -77,7 +77,7 @@ class LiteSpeed_Cache_Vary
 		 * Don't change for REST call because they don't carry on user info usually
 		 * @since 1.6.7
 		 */
-		add_action( 'rest_api_init', function(){
+		add_action( 'rest_api_init', static function(){
 			LiteSpeed_Cache_Log::debug( '[Vary] Rest API init disabled vary change' ) ;
 			add_filter( 'litespeed_can_change_vary', '__return_false' ) ;
 		} ) ;

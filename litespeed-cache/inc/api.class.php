@@ -234,7 +234,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function vary_add( $vary, $priority = 10 )
 	{
-		add_filter( 'litespeed_vary_cookies', function( $cookies ) use( $vary ) {
+		add_filter( 'litespeed_vary_cookies', static function( $cookies ) use( $vary ) {
 			if ( ! is_array( $vary ) ) {
 				$vary = array( $vary ) ;
 			}

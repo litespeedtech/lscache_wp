@@ -609,7 +609,7 @@ class Minifier
         $body = preg_replace('/([ :,(])\+(\.?\d+)/S', '$1$2', $body);
 
         // shorten ms to s
-        $body = preg_replace_callback('/([ :,(])(-?)(\d{3,})ms/Si', function ($matches) {
+        $body = preg_replace_callback('/([ :,(])(-?)(\d{3,})ms/Si', static function ($matches) {
             return $matches[1] . $matches[2] . ((int) $matches[3] / 1000) .'s';
         }, $body);
 
@@ -712,7 +712,7 @@ class Minifier
         $css = preg_replace('/::(before|after|first-(?:line|letter))(\{|,)/Si', ':$1$2', $css);
 
         // Retain space for special IE6 cases
-        $css = preg_replace_callback('/:first-(line|letter)(\{|,)/Si', function ($matches) {
+        $css = preg_replace_callback('/:first-(line|letter)(\{|,)/Si', static function ($matches) {
             return ':first-'. strtolower($matches[1]) .' '. $matches[2];
         }, $css);
 
@@ -766,7 +766,7 @@ class Minifier
         }
 
         // @import handling
-        $css = preg_replace_callback($this->importRegex, function ($matches) use (&$imports) {
+        $css = preg_replace_callback($this->importRegex, static function ($matches) use (&$imports) {
             // Keep all @import at-rules found for later
             $imports .= $matches[0];
             // Delete all @import at-rules
@@ -774,7 +774,7 @@ class Minifier
         }, $css);
 
         // @namespace handling
-        $css = preg_replace_callback($this->namespaceRegex, function ($matches) use (&$namespaces) {
+        $css = preg_replace_callback($this->namespaceRegex, static function ($matches) use (&$namespaces) {
             // Keep all @namespace at-rules found for later
             $namespaces .= $matches[0];
             // Delete all @namespace at-rules

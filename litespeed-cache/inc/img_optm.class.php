@@ -544,7 +544,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _chunk_placeholder( $data, $division )
 	{
 		$q = implode( ',', array_map(
-			function( $el ) { return '(' . implode( ',', $el ) . ')' ; },
+			static function( $el ) { return '(' . implode( ',', $el ) . ')' ; },
 			array_chunk( array_fill( 0, count( $data ), '%s' ), $division )
 		) ) ;
 
