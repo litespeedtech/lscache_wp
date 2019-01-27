@@ -213,18 +213,18 @@ class LiteSpeed_Cache_Admin_Display
         $localize_data = array();
         if (LiteSpeed_Cache_GUI::has_whm_msg()) {
             $ajax_url_dismiss_whm = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_WHM, true);
-            $localize_data[ 'ajax_url_dismiss_whm' ] = $ajax_url_dismiss_whm;
+            $localize_data['ajax_url_dismiss_whm'] = $ajax_url_dismiss_whm;
         }
 
         if (LiteSpeed_Cache_GUI::has_msg_ruleconflict()) {
             $ajax_url = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_EXPIRESDEFAULT, true);
-            $localize_data[ 'ajax_url_dismiss_ruleconflict' ] = $ajax_url;
+            $localize_data['ajax_url_dismiss_ruleconflict'] = $ajax_url;
         }
 
         $promo_tag = LiteSpeed_Cache_GUI::get_instance()->show_promo(true);
         if ($promo_tag) {
             $ajax_url_promo = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, true, null, array( 'promo_tag' => $promo_tag ));
-            $localize_data[ 'ajax_url_promo' ] = $ajax_url_promo;
+            $localize_data['ajax_url_promo'] = $ajax_url_promo;
         }
 
         if ($localize_data) {
@@ -752,7 +752,7 @@ class LiteSpeed_Cache_Admin_Display
         if (strpos($id, '[') === false) {
             if ($val === null) {
                 global $_options;
-                $val = $_options[ $id ];
+                $val = $_options[$id];
             }
 
             $id = "[$id]";
@@ -806,8 +806,8 @@ class LiteSpeed_Cache_Admin_Display
             if ($checked === null) {
                 global $_options;
                 $to_be_checked = null;
-                if (isset($_options[ $id ])) {
-                    $to_be_checked = $_options[ $id ];
+                if (isset($_options[$id])) {
+                    $to_be_checked = $_options[$id];
                 }
                 $checked = $to_be_checked ? true : false;
             }
@@ -882,8 +882,8 @@ class LiteSpeed_Cache_Admin_Display
             if ($checked === null) {
                 global $_options;
                 $to_be_checked = null;
-                if (isset($_options[ $id ])) {
-                    $to_be_checked = is_int($val) ? (int)$_options[ $id ] : $_options[ $id ];
+                if (isset($_options[$id])) {
+                    $to_be_checked = is_int($val) ? (int)$_options[$id] : $_options[$id];
                 }
 
                 $checked = $to_be_checked === $val ? true : false;
@@ -925,8 +925,8 @@ class LiteSpeed_Cache_Admin_Display
     {
         $val = '';
         if (! $is_item) {
-            if (isset($this->default_settings[ $id ])) {
-                $val = $this->default_settings[ $id ];
+            if (isset($this->default_settings[$id])) {
+                $val = $this->default_settings[$id];
             }
         }
         else {

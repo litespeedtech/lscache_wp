@@ -72,17 +72,17 @@ class LiteSpeed_Cache_ThirdParty_NextGenGallery
      */
     public static function update_image()
     {
-        if (isset($_REQUEST[ 'gallery_id' ])) {
-            LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $_REQUEST[ 'gallery_id' ]);
+        if (isset($_REQUEST['gallery_id'])) {
+            LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $_REQUEST['gallery_id']);
             return;
         }
 
-        if (isset($_POST[ 'task_list' ])) {
-            $task_list = str_replace('\\', '', $_POST[ 'task_list' ]);
+        if (isset($_POST['task_list'])) {
+            $task_list = str_replace('\\', '', $_POST['task_list']);
             $task_list = json_decode($task_list, true);
 
-            if (! empty($task_list[ 0 ][ 'query' ][ 'id' ])) {
-                LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $task_list[ 0 ][ 'query' ][ 'id' ]);
+            if (! empty($task_list[0]['query']['id'])) {
+                LiteSpeed_Cache_API::purge(self::CACHETAG_GALLERIES . $task_list[0]['query']['id']);
                 return;
             }
         }

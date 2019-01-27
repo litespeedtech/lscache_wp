@@ -182,7 +182,7 @@ class LiteSpeed_Cache_Admin
 
             // Save network settings
             case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-                LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings($_POST[ LiteSpeed_Cache_Config::OPTION_NAME ]);// todo: use wp network setting saving
+                LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings($_POST[LiteSpeed_Cache_Config::OPTION_NAME]);// todo: use wp network setting saving
                 break;
 
             default:
@@ -262,11 +262,11 @@ class LiteSpeed_Cache_Admin
         $qs = '';
         if (! $url) {
             if (! empty($_GET)) {
-                if (isset($_GET[ LiteSpeed_Cache::ACTION_KEY ])) {
-                    unset($_GET[ LiteSpeed_Cache::ACTION_KEY ]);
+                if (isset($_GET[LiteSpeed_Cache::ACTION_KEY])) {
+                    unset($_GET[LiteSpeed_Cache::ACTION_KEY]);
                 }
-                if (isset($_GET[ LiteSpeed_Cache::NONCE_NAME ])) {
-                    unset($_GET[ LiteSpeed_Cache::NONCE_NAME ]);
+                if (isset($_GET[LiteSpeed_Cache::NONCE_NAME])) {
+                    unset($_GET[LiteSpeed_Cache::NONCE_NAME]);
                 }
                 if (! empty($_GET)) {
                     $qs = '?' . http_build_query($_GET);

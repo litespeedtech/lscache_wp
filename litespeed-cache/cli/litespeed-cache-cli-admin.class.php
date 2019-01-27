@@ -63,7 +63,7 @@ class LiteSpeed_Cache_Cli_Admin
         // Get items
         $cfg_items = $__cfg->stored_items();
         foreach ($cfg_items as $v) {
-            $options[ $v ] = $__cfg->get_item($v);
+            $options[$v] = $__cfg->get_item($v);
         }
 
         /**
@@ -87,8 +87,8 @@ class LiteSpeed_Cache_Cli_Admin
 
             case LiteSpeed_Cache_Config::OPID_CACHE_MOBILE:
                 // set list then do checkbox
-                if ($val === 'true' && empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ])) {
-                    $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
+                if ($val === 'true' && empty($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST])) {
+                    $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
                 }
                 //fall through
             case in_array($key, self::$checkboxes) :
@@ -126,7 +126,7 @@ class LiteSpeed_Cache_Cli_Admin
                 preg_match('|\[(\w+)\]\[(\d*)\]|U', $key, $child_key);
 
                 // Handle switch value
-                if (in_array($child_key[ 1 ], array(
+                if (in_array($child_key[1], array(
                     LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
                     LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
                     LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
@@ -134,7 +134,7 @@ class LiteSpeed_Cache_Cli_Admin
                     $val = $val === 'true' ? LiteSpeed_Cache_Config::VAL_ON : LiteSpeed_Cache_Config::VAL_OFF;
                 }
 
-                $options[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val;
+                $options[LiteSpeed_Cache_Config::ITEM_CDN_MAPPING][$child_key[1]][$child_key[2]] = $val;
                 break;
 
             default:

@@ -10,11 +10,11 @@ $sitemap_time = $_crawler_instance->sitemap_time();
 $crawler_list = $_crawler_instance->list_crawlers();
 
 $meta = $_crawler_instance->read_meta();
-if ($meta[ 'curr_crawler' ] >= count($crawler_list)) {
-    $meta[ 'curr_crawler' ] = 0;
+if ($meta['curr_crawler'] >= count($crawler_list)) {
+    $meta['curr_crawler'] = 0;
 }
 
-$is_running = time() - $meta[ 'is_running' ] <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION];
+$is_running = time() - $meta['is_running'] <= $_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION];
 
 $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled';
 
@@ -95,58 +95,58 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled';
 		<?php endif; ?>
 
 
-		<?php if ($meta[ 'this_full_beginning_time' ]) : ?>
+		<?php if ($meta['this_full_beginning_time']) : ?>
 		<p>
 			<b><?php echo __('Current sitemap crawl started at', 'litespeed-cache'); ?>:</b>
-			<?php echo LiteSpeed_Cache_Utility::readable_time($meta[ 'this_full_beginning_time' ]); ?>
+			<?php echo LiteSpeed_Cache_Utility::readable_time($meta['this_full_beginning_time']); ?>
 		</p>
 
 			<?php if (! $is_running) : ?>
 		<p>
 			<b><?php echo __('The next complete sitemap crawl will start at', 'litespeed-cache'); ?>:</b>
-			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]); ?>
+			<?php echo date('m/d/Y H:i:s',$meta['this_full_beginning_time'] + LITESPEED_TIME_OFFSET + $meta['last_full_time_cost'] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]); ?>
 			<?php endif; ?>
 		</p>
 
 		<?php endif; ?>
-		<?php if ($meta[ 'last_full_time_cost' ]) : ?>
+		<?php if ($meta['last_full_time_cost']) : ?>
 		<p>
 			<b><?php echo __('Last complete run time for all crawlers', 'litespeed-cache'); ?>:</b>
-			<?php echo sprintf(__('%d seconds', 'litespeed-cache'), $meta[ 'last_full_time_cost' ]); ?>
+			<?php echo sprintf(__('%d seconds', 'litespeed-cache'), $meta['last_full_time_cost']); ?>
 		</p>
 		<?php endif; ?>
 
-		<?php if ($meta[ 'last_crawler_total_cost' ]) : ?>
+		<?php if ($meta['last_crawler_total_cost']) : ?>
 		<p>
 			<b><?php echo __('Run time for previous crawler', 'litespeed-cache'); ?>:</b>
-			<?php echo sprintf(__('%d seconds', 'litespeed-cache'), $meta[ 'last_crawler_total_cost' ]); ?>
+			<?php echo sprintf(__('%d seconds', 'litespeed-cache'), $meta['last_crawler_total_cost']); ?>
 		</p>
 		<?php endif; ?>
 
-		<?php if ($meta[ 'curr_crawler_beginning_time' ]) : ?>
+		<?php if ($meta['curr_crawler_beginning_time']) : ?>
 		<p>
 			<b><?php echo __('Current crawler started at', 'litespeed-cache'); ?>:</b>
-			<?php echo LiteSpeed_Cache_Utility::readable_time($meta[ 'curr_crawler_beginning_time' ]); ?>
+			<?php echo LiteSpeed_Cache_Utility::readable_time($meta['curr_crawler_beginning_time']); ?>
 		</p>
 		<?php endif; ?>
 
-		<?php if ($meta[ 'last_start_time' ]) : ?>
+		<?php if ($meta['last_start_time']) : ?>
 		<p class='litespeed-desc'>
 			<b><?php echo __('Last interval', 'litespeed-cache'); ?>:</b>
-			<?php echo LiteSpeed_Cache_Utility::readable_time($meta[ 'last_start_time' ]); ?>
+			<?php echo LiteSpeed_Cache_Utility::readable_time($meta['last_start_time']); ?>
 		</p>
 		<?php endif; ?>
 
-		<?php if ($meta[ 'end_reason' ]) : ?>
+		<?php if ($meta['end_reason']) : ?>
 		<p class='litespeed-desc'>
 			<b><?php echo __('Ended reason', 'litespeed-cache'); ?>:</b>
-			<?php echo $meta[ 'end_reason' ]; ?>
+			<?php echo $meta['end_reason']; ?>
 		</p>
 		<?php endif; ?>
 
-		<?php if ($meta[ 'last_crawled' ]) : ?>
+		<?php if ($meta['last_crawled']) : ?>
 		<p class='litespeed-desc'>
-			<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $meta[ 'last_crawled' ]); ?>
+			<?php echo sprintf(__('<b>Last crawled:</b> %s item(s)', 'litespeed-cache'), $meta['last_crawled']); ?>
 		</p>
 		<?php endif; ?>
 
@@ -171,20 +171,20 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled';
 					<td>
 					<?php
                         echo $i + 1;
-                        if ($i == $meta[ 'curr_crawler' ]) {
+                        if ($i == $meta['curr_crawler']) {
                             echo "<img class='litespeed-crawler-curr' src='" . LSWCP_PLUGIN_URL . "img/Litespeed.icon.svg' />";
                         }
                     ?>
 					</td>
 					<td>
-						<?php echo $v[ 'title' ]; ?>
+						<?php echo $v['title']; ?>
 					</td>
 					<td><?php echo $recurrence; ?></td>
 					<td><?php echo "Size: $meta[list_size]"; ?></td>
 					<td>
 					<?php
-                        if ($i == $meta[ 'curr_crawler' ]) {
-                            echo "Position: " . ($meta[ 'last_pos' ] + 1);
+                        if ($i == $meta['curr_crawler']) {
+                            echo "Position: " . ($meta['last_pos'] + 1);
                             if ($is_running) {
                                 echo " <span class='litespeed-label-success'>" . __('running', 'litespeed-cache') . "</span>";
                             }

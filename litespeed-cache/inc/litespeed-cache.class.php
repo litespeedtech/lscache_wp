@@ -194,7 +194,7 @@ class LiteSpeed_Cache
          * Check if is non optm simulator
          * @since  2.9
          */
-        if (! empty($_GET[ LiteSpeed_Cache::ACTION_KEY ]) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm') {
+        if (! empty($_GET[LiteSpeed_Cache::ACTION_KEY]) && $_GET[LiteSpeed_Cache::ACTION_KEY] == 'before_optm') {
             ! defined('LITESPEED_BYPASS_OPTM') && define('LITESPEED_BYPASS_OPTM', true);
         }
 
@@ -486,8 +486,8 @@ class LiteSpeed_Cache
             return;
         }
 
-        if ($_SERVER[ 'REQUEST_METHOD' ] !== 'GET') {
-            LiteSpeed_Cache_Log::debug2('[Core] CHK html bypass: not get method ' . $_SERVER[ 'REQUEST_METHOD' ]);
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            LiteSpeed_Cache_Log::debug2('[Core] CHK html bypass: not get method ' . $_SERVER['REQUEST_METHOD']);
             return;
         }
 

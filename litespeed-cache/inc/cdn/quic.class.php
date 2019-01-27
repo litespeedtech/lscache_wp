@@ -24,7 +24,7 @@ class LiteSpeed_Cache_CDN_Quic
      */
     public static function sync_config($options)
     {
-        if (empty($options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL ]) || empty($options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY ])) {
+        if (empty($options[LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL]) || empty($options[LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY])) {
             return false;
         }
 
@@ -34,8 +34,8 @@ class LiteSpeed_Cache_CDN_Quic
             LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
         );
         foreach ($secure_fields as $v) {
-            if (! empty($options[ $v ])) {
-                $options[ $v ] = str_repeat('*', strlen($options[ $v ]));
+            if (! empty($options[$v])) {
+                $options[$v] = str_repeat('*', strlen($options[$v]));
             }
         }
 
@@ -46,19 +46,19 @@ class LiteSpeed_Cache_CDN_Quic
             if ($v == LiteSpeed_Cache_Config::OPTION_NAME) {
                 continue;
             }
-            $options[ $v ] = get_option($v);
+            $options[$v] = get_option($v);
         }
 
         $instance = self::get_instance();
 
         // Get site domain
-        $options[ '_domain' ] = home_url();
+        $options['_domain'] = home_url();
 
         // Add server env vars
-        $options[ '_server' ] = LiteSpeed_Cache_Config::get_instance()->server_vars();
+        $options['_server'] = LiteSpeed_Cache_Config::get_instance()->server_vars();
 
         // Append hooks
-        $options[ '_tp_cookies' ] = apply_filters('litespeed_cache_api_vary', array());
+        $options['_tp_cookies'] = apply_filters('litespeed_cache_api_vary', array());
 
         $res = $instance->_api('/sync_config', $options);
         if ($res != 'ok') {
@@ -69,20 +69,20 @@ class LiteSpeed_Cache_CDN_Quic
 
     private function _show_user_guide()
     {
-        if (! empty($_POST[ 'step' ])) {
-            if (empty($_POST[ 'email' ])) {
+        if (! empty($_POST['step'])) {
+            if (empty($_POST['email'])) {
                 exit('No email');
             }
 
-            if ($_POST[ 'step' ] == 'register') {
+            if ($_POST['step'] == 'register') {
                 $this->_register();
             }
 
-            if ($_POST[ 'step' ] == 'login') {
+            if ($_POST['step'] == 'login') {
                 $this->_login();
             }
 
-            if ($_POST[ 'step' ] == 'check_email') {
+            if ($_POST['step'] == 'check_email') {
                 $this->_check_email();
             }
         }
@@ -95,11 +95,11 @@ class LiteSpeed_Cache_CDN_Quic
 
     private function _check_email()
     {
-        $_email = $_POST[ 'email' ];
+        $_email = $_POST['email'];
 
         // Get email status
         $response = $this->_api('/u/email_status', array( 'email' => $_email ));
-        if (empty($response[ 'result' ])) {
+        if (empty($response['result'])) {
 
             LiteSpeed_Cache_Log::debug('[QUIC] Query email failed');
 
@@ -108,10 +108,10 @@ class LiteSpeed_Cache_CDN_Quic
 
         $data = array( 'email' => $_email );
 
-        if ($response[ 'result' ] == 'existing') {
+        if ($response['result'] == 'existing') {
             $this->_tpl('quic.login', 50, $data);
         }
-        elseif ($response[ 'result' ] == 'none') {
+        elseif ($response['result'] == 'none') {
             $this->_tpl('quic.register', 50, $data);
         }
         else {
@@ -123,15 +123,15 @@ class LiteSpeed_Cache_CDN_Quic
 
     private function _register()
     {
-        $_email = $_POST[ 'email' ];
+        $_email = $_POST['email'];
 
-        if (empty($_POST[ 'pswd' ])) {
+        if (empty($_POST['pswd'])) {
             exit('No password');
         }
 
         // Register
-        $response = $this->_api('/u/register', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ));
-        if (empty($response[ 'result' ]) || $response[ 'result' ] !== 'success') {
+        $response = $this->_api('/u/register', array( 'email' => $_email, 'pswd' => $_POST['pswd'] ));
+        if (empty($response['result']) || $response['result'] !== 'success') {
 
             LiteSpeed_Cache_Log::debug('[QUIC] Register failed');
 
@@ -146,23 +146,23 @@ class LiteSpeed_Cache_CDN_Quic
 
     private function _login()
     {
-        $_email = $_POST[ 'email' ];
+        $_email = $_POST['email'];
 
-        if (empty($_POST[ 'pswd' ])) {
+        if (empty($_POST['pswd'])) {
             exit('No password');
         }
 
         // Login
-        $response = $this->_api('/u/login', array( 'email' => $_email, 'pswd' => $_POST[ 'pswd' ] ));
+        $response = $this->_api('/u/login', array( 'email' => $_email, 'pswd' => $_POST['pswd'] ));
 
         $data = array( 'email' => $_email );
 
         // for login failed, redirect back to login page
-        if (empty($response[ 'result' ]) || $response[ 'result' ] !== 'success') {
+        if (empty($response['result']) || $response['result'] !== 'success') {
 
             LiteSpeed_Cache_Log::debug('[QUIC] Login failed');
 
-            $data[ '_err' ] = $response[ 'result' ];
+            $data['_err'] = $response['result'];
 
             $this->_tpl('quic.login', 50, $data);
             exit;
@@ -208,9 +208,9 @@ class LiteSpeed_Cache_CDN_Quic
             LiteSpeed_Cache_Log::debug('[QUIC] failed to post: ' . $error_message);
             return $error_message;
         }
-        LiteSpeed_Cache_Log::debug('[QUIC] _api call response: ' . $response[ 'body' ]);
+        LiteSpeed_Cache_Log::debug('[QUIC] _api call response: ' . $response['body']);
 
-        $json = json_decode($response[ 'body' ], true);
+        $json = json_decode($response['body'], true);
 
         return $json;
 

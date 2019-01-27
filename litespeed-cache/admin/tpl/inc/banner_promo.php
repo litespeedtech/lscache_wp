@@ -1,7 +1,7 @@
 <?php
 if (! defined('WPINC')) die;
 
-$last_check = empty($_summary[ 'score.last_check' ]) ? 0 : $_summary[ 'score.last_check' ];
+$last_check = empty($_summary['score.last_check']) ? 0 : $_summary['score.last_check'];
 // Check once per 10 days
 if (time() - $last_check > 864000) {
     // Generate the ajax code to check score in separate request
@@ -10,18 +10,18 @@ if (time() - $last_check > 864000) {
     return;
 }
 
-if (! isset($_summary[ 'score.data' ])) {
+if (! isset($_summary['score.data'])) {
     return;
 }
 
-$_score = $_summary[ 'score.data' ];
+$_score = $_summary['score.data'];
 
-if (empty($_score[ 'speed_before_cache' ]) || empty($_score[ 'speed_after_cache' ])  || empty($_score[ 'score_before_optm' ])  || empty($_score[ 'score_after_optm' ])) {
+if (empty($_score['speed_before_cache']) || empty($_score['speed_after_cache'])  || empty($_score['score_before_optm'])  || empty($_score['score_after_optm'])) {
     return;
 }
 
 // If speed is not reduced half or score is larger
-if ($_score[ 'speed_before_cache' ] < $_score[ 'speed_after_cache' ] * 2 || $_score[ 'score_before_optm' ] > $_score[ 'score_after_optm' ]) {
+if ($_score['speed_before_cache'] < $_score['speed_after_cache'] * 2 || $_score['score_before_optm'] > $_score['score_after_optm']) {
     return;
 }
 
@@ -33,13 +33,13 @@ if ($check_only) {
 }
 
 // Format loading time
-$speed_before_cache = $_score[ 'speed_before_cache' ] / 1000;
+$speed_before_cache = $_score['speed_before_cache'] / 1000;
 if ($speed_before_cache < 0.01) {
     $speed_before_cache = 0.01;
 }
 $speed_before_cache = number_format($speed_before_cache, 2);
 
-$speed_after_cache = $_score[ 'speed_after_cache' ] / 1000;
+$speed_after_cache = $_score['speed_after_cache'] / 1000;
 if ($speed_after_cache < 0.01) {
     $speed_after_cache = number_format($speed_after_cache, 3);
 }
@@ -47,7 +47,7 @@ else {
     $speed_after_cache = number_format($speed_after_cache, 2);
 }
 
-$speed_improved = ($_score[ 'speed_before_cache' ] - $_score[ 'speed_after_cache' ]) * 100 / $_score[ 'speed_before_cache' ];
+$speed_improved = ($_score['speed_before_cache'] - $_score['speed_after_cache']) * 100 / $_score['speed_before_cache'];
 if ($speed_improved > 99) {
     $speed_improved = number_format($speed_improved, 2);
 }
@@ -56,7 +56,7 @@ else {
 }
 
 // Format PageSpeed Score
-$score_improved = ($_score[ 'score_after_optm' ] - $_score[ 'score_before_optm' ]) * 100 / $_score[ 'score_after_optm' ];
+$score_improved = ($_score['score_after_optm'] - $_score['score_before_optm']) * 100 / $_score['score_after_optm'];
 if ($score_improved > 99) {
     $score_improved = number_format($score_improved, 2);
 }
@@ -111,7 +111,7 @@ else {
 
 			</div>
 
-			<?php if ($_score[ 'score_before_optm' ] < $_score[ 'score_after_optm' ]) : ?>
+			<?php if ($_score['score_before_optm'] < $_score['score_after_optm']) : ?>
 			<div class="litespeed-margin-bottom20">
 				<h2 class="litespeed-text-grey litespeed-margin-bottom-remove litespeed-top10">PageSpeed Score</h2>
 				<hr class="litespeed-margin-bottom-remove" />
@@ -123,7 +123,7 @@ else {
 							</p>
 						</div>
 						<div class="litespeed-promo-score" style="margin-top:-5px;">
-							<?php echo LiteSpeed_Cache_GUI::pie($_score[ 'score_before_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore($_score[ 'score_before_optm' ])); ?>
+							<?php echo LiteSpeed_Cache_GUI::pie($_score['score_before_optm'], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore($_score['score_before_optm'])); ?>
 						</div>
 					</div>
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
@@ -133,7 +133,7 @@ else {
 							</p>
 						</div>
 						<div class="litespeed-promo-score" style="margin-top:-5px;">
-							<?php echo LiteSpeed_Cache_GUI::pie($_score[ 'score_after_optm' ], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore($_score[ 'score_after_optm' ])); ?>
+							<?php echo LiteSpeed_Cache_GUI::pie($_score['score_after_optm'], 45, false, true, 'litespeed-pie-' . $this->get_cls_of_pagescore($_score['score_after_optm'])); ?>
 						</div>
 					</div>
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">

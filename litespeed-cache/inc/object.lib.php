@@ -243,7 +243,7 @@ class WP_Object_Cache
         $cache_val = false;
         if (array_key_exists($final_key, $this->_cache) && ! $force) {
             $found = true;
-            $cache_val = $this->_cache[ $final_key ];
+            $cache_val = $this->_cache[$final_key];
             $this->count_hit_incall ++;
         }
         elseif (! array_key_exists($final_key, $this->_cache_404) && ! $this->_object_cache->is_non_persistent($group)) {
@@ -258,11 +258,11 @@ class WP_Object_Cache
                 $this->count_hit ++;
                 $found = true;
                 $found_in_oc = true;
-                $cache_val = $v[ 'data' ];
+                $cache_val = $v['data'];
             }
             else { // Can't find key, cache it to 404
 // error_log("oc: add404\t\t\t[key] " . $final_key ) ;
-                $this->_cache_404[ $final_key ] = 1;
+                $this->_cache_404[$final_key] = 1;
                 $this->count_miss ++;
             }
         }
@@ -283,7 +283,7 @@ class WP_Object_Cache
         }
 
         if ($found_in_oc) {
-            $this->_cache[ $final_key ] = $cache_val;
+            $this->_cache[$final_key] = $cache_val;
         }
 
         $this->cache_total ++;
@@ -305,11 +305,11 @@ class WP_Object_Cache
             $data = clone $data;
         }
 // error_log("oc: set \t\t\t[key] " . $final_key ) ;
-        $this->_cache[ $final_key ] = $data;
+        $this->_cache[$final_key] = $data;
 
         if(array_key_exists($final_key, $this->_cache_404)) {
 // error_log("oc: unset404\t\t\t[key] " . $final_key ) ;
-            unset($this->_cache_404[ $final_key ]);
+            unset($this->_cache_404[$final_key]);
         }
 
         if (! $this->_object_cache->is_non_persistent($group)) {
@@ -414,7 +414,7 @@ class WP_Object_Cache
         }
 
         if (array_key_exists($final_key, $this->_cache)) {
-            unset($this->_cache[ $final_key ]);
+            unset($this->_cache[$final_key]);
         }
 // error_log("oc: delete \t\t\t[key] " . $final_key ) ;
 

@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Log
     private function __construct()
     {
         self::$log_path = LSCWP_CONTENT_DIR . '/debug.log';
-        if (! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT) === 0) {
+        if (! empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], Litespeed_Crawler::FAST_USER_AGENT) === 0) {
             self::$log_path = LSCWP_CONTENT_DIR . '/crawler.log';
         }
 
@@ -143,7 +143,7 @@ class LiteSpeed_Cache_Log
         $server = array_merge($servervars, $_SERVER);
         $params = array();
 
-        if (isset($_SERVER[ 'HTTPS' ]) && $_SERVER[ 'HTTPS' ] == 'on') {
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
             $server['SERVER_PROTOCOL'] .= ' (HTTPS) ';
         }
 
@@ -164,23 +164,23 @@ class LiteSpeed_Cache_Log
             $params[] = 'Query String: ' . $qs;
         }
 
-        if (! empty($_SERVER[ 'HTTP_REFERER' ])) {
-            $params[] = 'HTTP_REFERER: ' . $server[ 'HTTP_REFERER' ];
+        if (! empty($_SERVER['HTTP_REFERER'])) {
+            $params[] = 'HTTP_REFERER: ' . $server['HTTP_REFERER'];
         }
 
         if (defined('LSCWP_LOG_MORE')) {
-            $params[] = 'User Agent: ' . $server[ 'HTTP_USER_AGENT' ];
+            $params[] = 'User Agent: ' . $server['HTTP_USER_AGENT'];
             $params[] = 'Accept: ' . $server['HTTP_ACCEPT'];
             $params[] = 'Accept Encoding: ' . $server['HTTP_ACCEPT_ENCODING'];
         }
         if (LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_DEBUG_COOKIE)) {
             $params[] = 'Cookie: ' . $server['HTTP_COOKIE'];
         }
-        if (isset($_COOKIE[ '_lscache_vary' ])) {
-            $params[] = 'Cookie _lscache_vary: ' . $_COOKIE[ '_lscache_vary' ];
+        if (isset($_COOKIE['_lscache_vary'])) {
+            $params[] = 'Cookie _lscache_vary: ' . $_COOKIE['_lscache_vary'];
         }
         if (defined('LSCWP_LOG_MORE')) {
-            $params[] = 'X-LSCACHE: ' . (! empty($server[ 'X-LSCACHE' ]) ? 'true' : 'false');
+            $params[] = 'X-LSCACHE: ' . (! empty($server['X-LSCACHE']) ? 'true' : 'false');
         }
         if($server['LSCACHE_VARY_COOKIE']) {
             $params[] = 'LSCACHE_VARY_COOKIE: ' . $server['LSCACHE_VARY_COOKIE'];
@@ -238,15 +238,15 @@ class LiteSpeed_Cache_Log
             // address
             if (PHP_SAPI == 'cli') {
                 $addr = '=CLI=';
-                if (isset($_SERVER[ 'USER' ])) {
-                    $addr .= $_SERVER[ 'USER' ];
+                if (isset($_SERVER['USER'])) {
+                    $addr .= $_SERVER['USER'];
                 }
-                elseif ($_SERVER[ 'HTTP_X_FORWARDED_FOR' ]) {
-                    $addr .= $_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
+                elseif ($_SERVER['HTTP_X_FORWARDED_FOR']) {
+                    $addr .= $_SERVER['HTTP_X_FORWARDED_FOR'];
                 }
             }
             else {
-                $addr = $_SERVER[ 'REMOTE_ADDR' ] . ':' . $_SERVER[ 'REMOTE_PORT' ];
+                $addr = $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'];
             }
 
             // Generate a unique string per request
@@ -330,11 +330,11 @@ class LiteSpeed_Cache_Log
 
         $trace = version_compare(PHP_VERSION, '5.4.0', '<') ? debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) : debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $backtrace_limit + 3);
         for ($i=2; $i <= $backtrace_limit + 2; $i++) {// 0st => _backtrace_info(), 1st => push()
-            if (empty($trace[ $i ][ 'class' ])) {
-                if (empty($trace[ $i ][ 'file' ])) {
+            if (empty($trace[$i]['class'])) {
+                if (empty($trace[$i]['file'])) {
                     break;
                 }
-                $log = "\n" . $trace[ $i ][ 'file' ];
+                $log = "\n" . $trace[$i]['file'];
             }
             else {
                 if ($trace[$i]['class'] == 'LiteSpeed_Cache_Log') {

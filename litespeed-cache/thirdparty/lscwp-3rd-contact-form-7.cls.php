@@ -36,7 +36,7 @@ class LiteSpeed_Cache_ThirdParty_Contact_Form_7
      */
     public static function disable_vary_change()
     {
-        if (strpos($_SERVER[ 'REQUEST_URI' ], '/wp-json/contact-form-7') !== false) {
+        if (strpos($_SERVER['REQUEST_URI'], '/wp-json/contact-form-7') !== false) {
             LiteSpeed_Cache_API::debug('3rd cf7 set no change vary');
             add_filter('litespeed_can_change_vary', '__return_false');
         }

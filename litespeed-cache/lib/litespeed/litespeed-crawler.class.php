@@ -320,9 +320,9 @@ class Litespeed_Crawler
                         return __('Stopped: crawler disabled by the server admin', 'litespeed-cache');
                     }
 
-                    if (! $this->_status_ok_and_cached($rets[ $i ])) {
+                    if (! $this->_status_ok_and_cached($rets[$i])) {
                         // Only default visitor crawler needs to add blacklist
-                        if ($this->_meta[ 'curr_crawler' ] == 0) {
+                        if ($this->_meta['curr_crawler'] == 0) {
                             $this->_blacklist[] = $url;
                         }
                     }
@@ -391,7 +391,7 @@ class Litespeed_Crawler
 
         // Current crawler starttime mark
         if ($this->_meta['last_pos'] == 0) {
-            $this->_meta[ 'curr_crawler_beginning_time' ] = time();
+            $this->_meta['curr_crawler_beginning_time'] = time();
         }
 
         if ($this->_meta['curr_crawler'] == 0 && $this->_meta['last_pos'] == 0) {
@@ -412,13 +412,13 @@ class Litespeed_Crawler
     {
         if ($end_reason === true) { // Current crawler is fully done
             $end_reason = sprintf(__('Crawler %s reached end of sitemap file.', 'litespeed-cache'), '#' . ($this->_meta['curr_crawler'] + 1));
-            $this->_meta[ 'curr_crawler' ]++; // Jump to next cralwer
-            $this->_meta[ 'last_pos' ] = 0;// reset last position
-            $this->_meta[ 'last_crawler_total_cost' ] = time() - $this->_meta[ 'curr_crawler_beginning_time' ];
+            $this->_meta['curr_crawler']++; // Jump to next cralwer
+            $this->_meta['last_pos'] = 0;// reset last position
+            $this->_meta['last_crawler_total_cost'] = time() - $this->_meta['curr_crawler_beginning_time'];
             $count_crawlers = LiteSpeed_Cache_Crawler::get_instance()->list_crawlers(true);
-            if ($this->_meta[ 'curr_crawler' ] >= $count_crawlers) {
+            if ($this->_meta['curr_crawler'] >= $count_crawlers) {
                 defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('Crawler Lib: _terminate_running Touched end, whole crawled. Reload crawler!');
-                $this->_meta[ 'curr_crawler' ] = 0;
+                $this->_meta['curr_crawler'] = 0;
                 $this->_meta['done'] = 'touchedEnd';// log done status
                 $this->_meta['last_full_time_cost'] = time() - $this->_meta['this_full_beginning_time'];
             }
@@ -578,7 +578,7 @@ class Litespeed_Crawler
          * @since  1.9.1
          * @since  2.2.7 Commented due to cause no-cache issue
          */
-        $options[ CURL_HTTP_VERSION_1_1 ] = 1;
+        $options[CURL_HTTP_VERSION_1_1] = 1;
         // if ( defined( 'CURL_HTTP_VERSION_2' ) && $this->_http2 ) {
         // 	defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: Enabled HTTP2' ) ;
         // 	$options[ CURL_HTTP_VERSION_2 ] = 1 ;
@@ -616,13 +616,13 @@ class Litespeed_Crawler
          */
         $hash = Litespeed_String::rrand(6);
         update_option(LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH, $hash);
-        $this->_cookies[ 'litespeed_hash' ] = $hash;
+        $this->_cookies['litespeed_hash'] = $hash;
 
         $cookies = array();
         foreach ($this->_cookies as $k => $v) {
             $cookies[] = "$k=" . urlencode($v);
         }
-        $options[ CURLOPT_COOKIE ] = implode('; ', $cookies);
+        $options[CURLOPT_COOKIE] = implode('; ', $cookies);
 
         return $options;
     }
@@ -636,7 +636,7 @@ class Litespeed_Crawler
      */
     public function save_meta()
     {
-        $this->_meta[ 'meta_save_time' ] = time();
+        $this->_meta['meta_save_time'] = time();
 
         $ret = Litespeed_File::save($this->_meta_file, json_encode($this->_meta), false, false, false);
         return $ret;

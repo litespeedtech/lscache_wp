@@ -177,13 +177,13 @@ class LiteSpeed_Cache_GUI
                 break;
 
             case self::TYPE_DISMISS_PROMO :
-                if (empty($_GET[ 'promo_tag' ])) {
+                if (empty($_GET['promo_tag'])) {
                     break;
                 }
 
-                $promo_tag = $_GET[ 'promo_tag' ];
+                $promo_tag = $_GET['promo_tag'];
 
-                if (empty($_instance->_promo_list[ $promo_tag ])) {
+                if (empty($_instance->_promo_list[$promo_tag])) {
                     break;
                 }
 
@@ -192,16 +192,16 @@ class LiteSpeed_Cache_GUI
                 defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('[GUI] Dismiss promo ' . $promo_tag);
 
                 // Forever dismiss
-                if (! empty($_GET[ 'done' ])) {
-                    $summary[ $promo_tag ] = 'done';
+                if (! empty($_GET['done'])) {
+                    $summary[$promo_tag] = 'done';
                 }
-                elseif (! empty($_GET[ 'later' ])) {
+                elseif (! empty($_GET['later'])) {
                     // Delay the banner to half year later
-                    $summary[ $promo_tag ] = time() + 86400 * 180;
+                    $summary[$promo_tag] = time() + 86400 * 180;
                 }
                 else {
                     // Update welcome banner to 30 days after
-                    $summary[ $promo_tag ] = time() + 86400 * 30;
+                    $summary[$promo_tag] = time() + 86400 * 30;
                 }
 
                 $_instance->save_summary($summary);
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_GUI
      */
     private function _is_litespeed_page()
     {
-        if (! empty($_GET[ 'page' ]) && in_array($_GET[ 'page' ],
+        if (! empty($_GET['page']) && in_array($_GET['page'],
             array(
                 'lscache-settings',
                 'lscache-dash',
@@ -298,14 +298,14 @@ class LiteSpeed_Cache_GUI
             }
 
             // first time check
-            if (empty($_summary[ $promo_tag ])) {
-                $_summary[ $promo_tag ] = time() + 86400 * $delay_days;
+            if (empty($_summary[$promo_tag])) {
+                $_summary[$promo_tag] = time() + 86400 * $delay_days;
                 $this->save_summary($_summary);
 
                 continue;
             }
 
-            $promo_timestamp = $_summary[ $promo_tag ];
+            $promo_timestamp = $_summary[$promo_tag];
 
             // was ticked as done
             if ($promo_timestamp == 'done') {
@@ -350,7 +350,7 @@ class LiteSpeed_Cache_GUI
     {
         $_summary = $this->get_summary();
 
-        $_summary[ 'score.last_check' ] = time();
+        $_summary['score.last_check'] = time();
         $this->save_summary($_summary);
 
         include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.ajax.php";

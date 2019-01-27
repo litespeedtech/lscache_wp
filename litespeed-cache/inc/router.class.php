@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Router
      */
     public static function from_admin()
     {
-        return ! empty($_SERVER[ 'HTTP_REFERER' ]) && strpos($_SERVER[ 'HTTP_REFERER' ], get_admin_url()) === 0;
+        return ! empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], get_admin_url()) === 0;
     }
 
     /**
@@ -142,7 +142,7 @@ class LiteSpeed_Cache_Router
      */
     protected static function _is_login_page()
     {
-        if (in_array($GLOBALS[ 'pagenow' ], array( 'wp-login.php', 'wp-register.php' ), true)) {
+        if (in_array($GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ), true)) {
             return true;
         }
 
@@ -161,26 +161,26 @@ class LiteSpeed_Cache_Router
             return;
         }
 
-        if (empty($_COOKIE[ 'litespeed_role' ]) || empty($_COOKIE[ 'litespeed_hash' ])) {
+        if (empty($_COOKIE['litespeed_role']) || empty($_COOKIE['litespeed_hash'])) {
             return;
         }
 
         LiteSpeed_Cache_Log::debug('[Router] starting crawler role validation');
 
         // Check if is from crawler
-        if (empty($_SERVER[ 'HTTP_USER_AGENT' ]) || strpos($_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT) !== 0) {
+        if (empty($_SERVER['HTTP_USER_AGENT']) || strpos($_SERVER['HTTP_USER_AGENT'], Litespeed_Crawler::FAST_USER_AGENT) !== 0) {
             LiteSpeed_Cache_Log::debug('[Router] user agent not match');
             return;
         }
 
         // Hash validation
         $hash = get_option(LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH);
-        if (! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash) {
-            LiteSpeed_Cache_Log::debug('[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash);
+        if (! $hash || $_COOKIE['litespeed_hash'] != $hash) {
+            LiteSpeed_Cache_Log::debug('[Router] crawler hash not match ' . $_COOKIE['litespeed_hash'] . ' != ' . $hash);
             return;
         }
 
-        $role_uid = $_COOKIE[ 'litespeed_role' ];
+        $role_uid = $_COOKIE['litespeed_role'];
         LiteSpeed_Cache_Log::debug('[Router] role simulate litespeed_role uid ' . $role_uid);
 
         wp_set_current_user($role_uid);
@@ -257,8 +257,8 @@ class LiteSpeed_Cache_Router
             if (! $frontend) {
                 LiteSpeed_Cache_Log::debug('[Router] No ABSPATH, generating from home option');
                 $frontend = parse_url(get_option('home'));
-                $frontend = ! empty($frontend[ 'path' ]) ? $frontend[ 'path' ] : '';
-                $frontend = $_SERVER[ 'DOCUMENT_ROOT' ] . $frontend;
+                $frontend = ! empty($frontend['path']) ? $frontend['path'] : '';
+                $frontend = $_SERVER['DOCUMENT_ROOT'] . $frontend;
             }
             $frontend = realpath($frontend);
 
@@ -394,14 +394,14 @@ class LiteSpeed_Cache_Router
      */
     public static function verify_type()
     {
-        if (empty($_REQUEST[ 'type' ])) {
+        if (empty($_REQUEST['type'])) {
             LiteSpeed_Cache_Log::debug('[Router] no type', 2);
             return false;
         }
 
-        LiteSpeed_Cache_Log::debug('[Router] parsed type: ' . $_REQUEST[ 'type' ], 2);
+        LiteSpeed_Cache_Log::debug('[Router] parsed type: ' . $_REQUEST['type'], 2);
 
-        return $_REQUEST[ 'type' ];
+        return $_REQUEST['type'];
     }
 
     /**
@@ -412,12 +412,12 @@ class LiteSpeed_Cache_Router
      */
     private function verify_action()
     {
-        if (empty($_REQUEST[ LiteSpeed_Cache::ACTION_KEY ])) {
+        if (empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) {
             LiteSpeed_Cache_Log::debug2('[Router] LSCWP_CTRL bypassed empty');
             return;
         }
 
-        $action = $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ];
+        $action = $_REQUEST[LiteSpeed_Cache::ACTION_KEY];
         $_is_public_action = false;
 
         // Each action must have a valid nonce unless its from admin ip and is public action

@@ -16,8 +16,8 @@ if (empty($options)) {
     $ttl = '28800';
 }
 else {
-    $esi = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ];
-    $ttl = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ];
+    $esi = $options[LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE];
+    $ttl = $options[LiteSpeed_Cache_ESI::WIDGET_OPID_TTL];
 }
 
 $display = LiteSpeed_Cache_Admin_Display::get_instance();

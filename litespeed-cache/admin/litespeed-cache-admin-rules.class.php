@@ -173,7 +173,7 @@ class LiteSpeed_Cache_Admin_Rules
             if ($start_path === '/' || ! $start_path) {
                 return false;
             }
-            if (! empty($_SERVER[ 'DOCUMENT_ROOT' ]) && $start_path === $_SERVER[ 'DOCUMENT_ROOT' ]) {
+            if (! empty($_SERVER['DOCUMENT_ROOT']) && $start_path === $_SERVER['DOCUMENT_ROOT']) {
                 return false;
             }
             $start_path = dirname($start_path);
@@ -490,7 +490,7 @@ class LiteSpeed_Cache_Admin_Rules
          * @since 1.6.3
          */
         $id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER_TTL;
-        $ttl = $cfg[ $id ];
+        $ttl = $cfg[$id];
         $rules = array(
             self::EXPIRES_MODULE_START,
             // '<FilesMatch "\.(pdf|ico|svg|xml|jpg|jpeg|png|gif|webp|ogg|mp4|webm|js|css|woff|woff2|ttf|eot)(\.gz)?$">',
@@ -587,9 +587,9 @@ class LiteSpeed_Cache_Admin_Rules
         if (! $disable_lscache_detail_rules) {
             // mobile agents
             $id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST;
-            if (! empty($cfg[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ]) && ! empty($cfg[ $id ])) {
+            if (! empty($cfg[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]) && ! empty($cfg[$id])) {
                 $new_rules[] = self::MARKER_MOBILE . self::MARKER_START;
-                $new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] . ' [NC]';
+                $new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[$id] . ' [NC]';
                 $new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]';
                 $new_rules[] = self::MARKER_MOBILE . self::MARKER_END;
                 $new_rules[] = '';
@@ -597,9 +597,9 @@ class LiteSpeed_Cache_Admin_Rules
 
             // nocache cookie
             $id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
-            if (! empty($cfg[ $id ])) {
+            if (! empty($cfg[$id])) {
                 $new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_START;
-                $new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $cfg[ $id ];
+                $new_rules[] = 'RewriteCond %{HTTP_COOKIE} ' . $cfg[$id];
                 $new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
                 $new_rules[] = self::MARKER_NOCACHE_COOKIES . self::MARKER_END;
                 $new_rules[] = '';
@@ -607,9 +607,9 @@ class LiteSpeed_Cache_Admin_Rules
 
             // nocache user agents
             $id = LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS;
-            if (! empty($cfg[ $id ])) {
+            if (! empty($cfg[$id])) {
                 $new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START;
-                $new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ];
+                $new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[$id];
                 $new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]';
                 $new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END;
                 $new_rules[] = '';
@@ -617,7 +617,7 @@ class LiteSpeed_Cache_Admin_Rules
 
             // caching php resource
             $id = LiteSpeed_Cache_Config::OPID_CACHE_RES;
-            if (! empty($cfg[ $id ])) {
+            if (! empty($cfg[$id])) {
                 $new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_START;
                 $new_rules[] = $new_rules_backend[] = 'RewriteRule ' . LSCWP_CONTENT_FOLDER . self::RW_PATTERN_RES . ' - [E=cache-control:max-age=3600]';
                 $new_rules[] = $new_rules_backend[] = self::MARKER_CACHE_RESOURCE . self::MARKER_END;
@@ -629,26 +629,26 @@ class LiteSpeed_Cache_Admin_Rules
 
             // Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
             if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
-                if (! empty($cfg[ $id ])) {
-                    $cfg[ $id ] .= ',wp-postpass_' . COOKIEHASH;
+                if (! empty($cfg[$id])) {
+                    $cfg[$id] .= ',wp-postpass_' . COOKIEHASH;
                 }
                 else {
-                    $cfg[ $id ] = 'wp-postpass_' . COOKIEHASH;
+                    $cfg[$id] = 'wp-postpass_' . COOKIEHASH;
                 }
             }
 
             $tp_cookies = apply_filters('litespeed_cache_api_vary', array());
             if (! empty($tp_cookies) && is_array($tp_cookies)) {
-                if (! empty($cfg[ $id ])) {
-                    $cfg[ $id ] .= ',' . implode(',', $tp_cookies);
+                if (! empty($cfg[$id])) {
+                    $cfg[$id] .= ',' . implode(',', $tp_cookies);
                 }
                 else {
-                    $cfg[ $id ] = implode(',', $tp_cookies);
+                    $cfg[$id] = implode(',', $tp_cookies);
                 }
             }
             // frontend and backend
-            if (! empty($cfg[ $id ])) {
-                $env = 'Cache-Vary:' . $cfg[ $id ];
+            if (! empty($cfg[$id])) {
+                $env = 'Cache-Vary:' . $cfg[$id];
                 if (LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS') {
                     $env = '"' . $env . '"';
                 }
@@ -661,7 +661,7 @@ class LiteSpeed_Cache_Admin_Rules
             // favicon
             // frontend and backend
             $id = LiteSpeed_Cache_Config::OPID_CACHE_FAVICON;
-            if (! empty($cfg[ $id ])) {
+            if (! empty($cfg[$id])) {
                 $new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_START;
                 $new_rules[] = $new_rules_backend[] = 'RewriteRule favicon\.ico$ - [E=cache-control:max-age=86400]';
                 $new_rules[] = $new_rules_backend[] = self::MARKER_FAVICON . self::MARKER_END;
@@ -670,7 +670,7 @@ class LiteSpeed_Cache_Admin_Rules
 
             // CORS font rules
             $id = LiteSpeed_Cache_Config::OPID_CDN;
-            if (! empty($cfg[ $id ])) {
+            if (! empty($cfg[$id])) {
                 $new_rules[] = self::MARKER_CORS . self::MARKER_START;
                 $new_rules = array_merge($new_rules, $this->_cors_rules());
                 $new_rules[] = self::MARKER_CORS . self::MARKER_END;
@@ -679,7 +679,7 @@ class LiteSpeed_Cache_Admin_Rules
 
             // webp support
             $id = LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE;
-            if (! empty($cfg[ $id ])) {
+            if (! empty($cfg[$id])) {
                 $new_rules[] = self::MARKER_WEBP . self::MARKER_START;
                 $new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]';
                 $new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} "Page Speed"';
@@ -702,7 +702,7 @@ class LiteSpeed_Cache_Admin_Rules
 
         // Browser cache
         $id = LiteSpeed_Cache_Config::OPID_CACHE_BROWSER;
-        if (! empty($cfg[ $id ])) {
+        if (! empty($cfg[$id])) {
             $new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_START;
             $new_rules_nonls = array_merge($new_rules_nonls, $this->_browser_cache_rules($cfg));
             $new_rules_backend_nonls = array_merge($new_rules_backend_nonls, $this->_browser_cache_rules($cfg));
@@ -1014,7 +1014,7 @@ class LiteSpeed_Cache_Admin_Rules
      */
     public function htaccess_editor_save()
     {
-        if (! isset($_POST[ self::EDITOR_TEXTAREA_NAME ])) {
+        if (! isset($_POST[self::EDITOR_TEXTAREA_NAME])) {
             return;
         }
 

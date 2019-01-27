@@ -80,12 +80,12 @@ class LiteSpeed_Cache_Activation
                 LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
             );
             foreach ($ids as $id) {
-                $options[ $id ] = $__cfg->get_item($id);
+                $options[$id] = $__cfg->get_item($id);
             }
 
-            if (! empty($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ])) {
-                $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] =
-                    addslashes($options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ]);
+            if (! empty($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST])) {
+                $options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST] =
+                    addslashes($options[LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST]);
             }
 
             LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings($options, true);
@@ -99,7 +99,7 @@ class LiteSpeed_Cache_Activation
         // Add items
         $cfg_items = $__cfg->stored_items();
         foreach ($cfg_items as $v) {
-            $options[ $v ] = $__cfg->get_item($v);
+            $options[$v] = $__cfg->get_item($v);
         }
 
         /**
@@ -147,12 +147,12 @@ class LiteSpeed_Cache_Activation
             $blogs = wp_get_sites($args);
             if (! empty($blogs)) {
                 foreach ($blogs as $key => $blog) {
-                    $blogs[ $key ] = $blog[ 'blog_id' ];
+                    $blogs[$key] = $blog['blog_id'];
                 }
             }
         }
         else {
-            $args[ 'fields' ] = 'ids';
+            $args['fields'] = 'ids';
             $blogs = get_sites($args);
         }
         return $blogs;

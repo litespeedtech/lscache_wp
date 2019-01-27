@@ -75,8 +75,8 @@ class LiteSpeed_Cache_CDN_Cloudflare
         LiteSpeed_Cache_Log::debug('[Cloudflare] _get_devmode result ', $res);
 
         $curr_status = get_option(LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array());
-        $curr_status[ 'devmode' ] = $res[ 'value' ];
-        $curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time();
+        $curr_status['devmode'] = $res['value'];
+        $curr_status['devmode_expired'] = $res['time_remaining'] + time();
 
         // update status
         update_option(LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, $curr_status);
@@ -175,7 +175,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
      */
     public function fetch_zone($options)
     {
-        $kw = $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ];
+        $kw = $options[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME];
 
         $url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all';
 
@@ -184,7 +184,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
             $zones = $this->_cloudflare_call($url . '&name=' . $kw, 'GET', false, $options, false);
             if ($zones) {
                 LiteSpeed_Cache_Log::debug('[Cloudflare] fetch_zone exact matched');
-                return $zones[ 0 ];
+                return $zones[0];
             }
         }
 
@@ -198,19 +198,19 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
         if (! $kw) {
             LiteSpeed_Cache_Log::debug('[Cloudflare] fetch_zone no set name, use first one by default');
-            return $zones[ 0 ];
+            return $zones[0];
         }
 
         foreach ($zones as $v) {
-            if (strpos($v[ 'name' ], $kw) !== false) {
-                LiteSpeed_Cache_Log::debug('[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v[ 'name' ]);
+            if (strpos($v['name'], $kw) !== false) {
+                LiteSpeed_Cache_Log::debug('[Cloudflare] fetch_zone matched ' . $kw . ' [name] ' . $v['name']);
                 return $v;
             }
         }
 
         // Can't match current name, return default one
         LiteSpeed_Cache_Log::debug('[Cloudflare] fetch_zone failed match name, use first one by default');
-        return $zones[ 0 ];
+        return $zones[0];
     }
 
     /**
@@ -228,8 +228,8 @@ class LiteSpeed_Cache_CDN_Cloudflare
         );
         if ($token) {
             LiteSpeed_Cache_Log::debug2('[Cloudflare] _cloudflare_call use param token');
-            $header[] = 'X-Auth-Email: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ];
-            $header[] = 'X-Auth-Key: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ];
+            $header[] = 'X-Auth-Email: ' . $token[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL];
+            $header[] = 'X-Auth-Key: ' . $token[LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY];
         }
         else {
             $header[] = 'X-Auth-Email: ' . LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL);
@@ -251,14 +251,14 @@ class LiteSpeed_Cache_CDN_Cloudflare
 
         $json = json_decode($result, true);
 
-        if ($json && $json[ 'success' ] && $json[ 'result' ]) {
+        if ($json && $json['success'] && $json['result']) {
             LiteSpeed_Cache_Log::debug("[Cloudflare] _cloudflare_call called successfully");
             if ($show_msg) {
                 $msg = __('Communicated with Cloudflare successfully.', 'litespeed-cache');
                 LiteSpeed_Cache_Admin_Display::succeed($msg);
             }
 
-            return $json[ 'result' ];
+            return $json['result'];
         }
 
         LiteSpeed_Cache_Log::debug("[Cloudflare] _cloudflare_call called failed: $result");

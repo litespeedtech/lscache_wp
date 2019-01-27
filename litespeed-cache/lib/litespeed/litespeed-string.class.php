@@ -60,7 +60,7 @@ class Litespeed_String
 
         $max = strlen($charlist) - 1;
         for($i = 0; $i < $len; $i++) {
-            $str .= $charlist[ mt_rand(0, $max) ];
+            $str .= $charlist[mt_rand(0, $max)];
         }
 
         return $str;

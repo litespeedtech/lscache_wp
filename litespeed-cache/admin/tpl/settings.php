@@ -81,7 +81,7 @@ if (!isset($wp_roles)) {
 
 $roles = array();
 foreach ($wp_roles->roles as $k => $v) {
-    $roles[ $k ] = $v[ 'name' ];
+    $roles[$k] = $v['name'];
 }
 ksort($roles);
 
@@ -89,8 +89,8 @@ ksort($roles);
  * Switch basic/advanced mode
  * @since  1.8.2
  */
-if (! empty($_GET[ 'mode' ])) {
-    $adv_mode = $_GET[ 'mode' ] == 'advanced' ? true : false;
+if (! empty($_GET['mode'])) {
+    $adv_mode = $_GET['mode'] == 'advanced' ? true : false;
     update_option(LiteSpeed_Cache_Config::ITEM_SETTING_MODE, $adv_mode);
 }
 else {
@@ -157,7 +157,7 @@ if (! $adv_mode) {
                 $accesskey = "litespeed-accesskey='$i'";
             }
             else {
-                $tmp = strtoupper(substr($val[ 'slug' ], 0, 1));
+                $tmp = strtoupper(substr($val['slug'], 0, 1));
                 if (! in_array($tmp, $accesskey_set)) {
                     $accesskey_set[] = $tmp;
                     $accesskey = "litespeed-accesskey='$tmp'";

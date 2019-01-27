@@ -29,23 +29,23 @@ if (!defined('WPINC')) die;
                 $wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi';
 
                 // if set, use value as input value
-                if ($_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ]) {
+                if ($_options[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]) {
 
                     // if enabled, check the setting in file
                     if (defined('LITESPEED_ON')) {
 
                         $mobile_agents = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_mobile_agents();
-                        if ($mobile_agents !== $_options[ $id ]) {
+                        if ($mobile_agents !== $_options[$id]) {
                             echo '<div class="litespeed-callout-danger">'
                                     . __('Htaccess did not match configuration option.', 'litespeed-cache')
                                     . ' ' . __('Please re-enter the mobile view setting.', 'litespeed-cache')
-                                    . ' ' . sprintf(__('List in WordPress database is: %s', 'litespeed-cache'), '<b>' . $_options[ $id ] . '</b>')
+                                    . ' ' . sprintf(__('List in WordPress database is: %s', 'litespeed-cache'), '<b>' . $_options[$id] . '</b>')
                                 . '</div>';
                         }
                     }
                 }
 
-                $this->build_input($id, 'litespeed-input-long', null, 'litespeed-mobileview-rules', '', 'text', ! $_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ]);
+                $this->build_input($id, 'litespeed-input-long', null, 'litespeed-mobileview-rules', '', 'text', ! $_options[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]);
             ?>
 
 			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"

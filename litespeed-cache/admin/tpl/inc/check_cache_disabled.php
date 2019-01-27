@@ -44,9 +44,9 @@ if ($reasons) :
 		<ul class="litespeed-list">
 		<?php foreach ($reasons as $v) : ?>
 			<li>
-				<?php echo $v[ 'title' ]; ?>
+				<?php echo $v['title']; ?>
 
-				<a href="<?php echo $v[ 'link' ]; ?>" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
+				<a href="<?php echo $v['link']; ?>" target="_blank" class="litespeed-learn-more"><?php echo __('Learn More', 'litespeed-cache'); ?></a>
 			</li>
 		<?php endforeach; ?>
 		</ul>

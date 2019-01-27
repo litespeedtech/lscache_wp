@@ -166,7 +166,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
     {
         if ($this->vary_needed()) {
             LiteSpeed_Cache_API::debug('API: 3rd woo added vary due to cart not empty');
-            $vary[ 'woo_cart' ] = 1;
+            $vary['woo_cart'] = 1;
         }
         return $vary;
     }
@@ -905,8 +905,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
             }
         }
 
-        $options[ self::OPTION_SHOP_FRONT_TTL ] = LiteSpeed_Cache_API::parse_onoff($input, self::OPTION_SHOP_FRONT_TTL);
-        $options[ self::OPTION_WOO_CACHE_CART ] = LiteSpeed_Cache_API::parse_onoff($input, self::OPTION_WOO_CACHE_CART);
+        $options[self::OPTION_SHOP_FRONT_TTL] = LiteSpeed_Cache_API::parse_onoff($input, self::OPTION_SHOP_FRONT_TTL);
+        $options[self::OPTION_WOO_CACHE_CART] = LiteSpeed_Cache_API::parse_onoff($input, self::OPTION_WOO_CACHE_CART);
 
         return $options;
     }

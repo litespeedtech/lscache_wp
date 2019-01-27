@@ -119,7 +119,7 @@ class LiteSpeed_Cache_Optimize
         if (! LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles()) {
             return $varys;
         }
-        $varys[ 'role_exclude_optm' ] = 1;
+        $varys['role_exclude_optm'] = 1;
         return $varys;
     }
 
@@ -164,12 +164,12 @@ class LiteSpeed_Cache_Optimize
             return;
         }
 
-        if (empty($_SERVER[ 'REQUEST_URI' ]) || strpos($_SERVER[ 'REQUEST_URI' ], self::DIR_MIN . '/') === false) {
+        if (empty($_SERVER['REQUEST_URI']) || strpos($_SERVER['REQUEST_URI'], self::DIR_MIN . '/') === false) {
             return;
         }
 
         // try to match `http://home_url/min/xx.css
-        if (! preg_match('#' . self::DIR_MIN . '/(\w+\.(css|js))#U', $_SERVER[ 'REQUEST_URI' ], $match)) {
+        if (! preg_match('#' . self::DIR_MIN . '/(\w+\.(css|js))#U', $_SERVER['REQUEST_URI'], $match)) {
             return;
         }
 
@@ -178,23 +178,23 @@ class LiteSpeed_Cache_Optimize
         // Proceed css/js file generation
         define('LITESPEED_MIN_FILE', true);
 
-        $file_type = $match[ 2 ];
+        $file_type = $match[2];
 
-        $static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[ 1 ];
+        $static_file = LSCWP_CONTENT_DIR . '/cache/' . $file_type . '/' . $match[1];
 
         $headers = array();
         if ($file_type === 'css') {
-            $headers[ 'Content-Type' ] = 'text/css; charset=utf-8';
+            $headers['Content-Type'] = 'text/css; charset=utf-8';
         }
         else {
-            $headers[ 'Content-Type' ] = 'application/x-javascript';
+            $headers['Content-Type'] = 'application/x-javascript';
         }
 
         // Even if hit PHP, still check if the file is valid to bypass minify process
         if (! file_exists($static_file) || time() - filemtime($static_file) > $this->cfg_ttl) {
             $concat_only = ! ($file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify);
 
-            $content = LiteSpeed_Cache_Optimizer::get_instance()->serve($match[ 1 ], $concat_only);
+            $content = LiteSpeed_Cache_Optimizer::get_instance()->serve($match[1], $concat_only);
 
             // Generate static file
             Litespeed_File::save($static_file, $content, true);
@@ -208,11 +208,11 @@ class LiteSpeed_Cache_Optimize
         }
 
         // Output header first
-        $headers[ 'Content-Length' ] = strlen($content);
+        $headers['Content-Length'] = strlen($content);
         $this->_output_header($headers);
 
         LiteSpeed_Cache_Control::set_cacheable();
-        LiteSpeed_Cache_Control::set_public_forced('OPTM: min file ' . $match[ 1 ]);
+        LiteSpeed_Cache_Control::set_public_forced('OPTM: min file ' . $match[1]);
         LiteSpeed_Cache_Control::set_no_vary();
         LiteSpeed_Cache_Control::set_custom_ttl($this->cfg_ttl);
         LiteSpeed_Cache_Tag::add(LiteSpeed_Cache_Tag::TYPE_MIN);
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_Optimize
         // Check if hit URI excludes
         $excludes = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES);
         if (! empty($excludes)) {
-            $result = LiteSpeed_Cache_Utility::str_hit_array($_SERVER[ 'REQUEST_URI' ], $excludes);
+            $result = LiteSpeed_Cache_Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
             if ($result) {
                 LiteSpeed_Cache_Log::debug('[Optm] bypass: hit URI Excludes setting: ' . $result);
                 return $content;
@@ -451,15 +451,15 @@ class LiteSpeed_Cache_Optimize
                     $foot_ignored_html = array();
                     foreach ($src_queue_list as $k => $src) {
                         if (in_array($src, $head_src_list)) {
-                            $head_js[ $k ] = $src;
+                            $head_js[$k] = $src;
                         }
                         else {
-                            $foot_js[ $k ] = $src;
+                            $foot_js[$k] = $src;
                         }
                     }
                     foreach ($ignored_html as $src => $html) {
                         if (in_array($src, $head_src_list)) {
-                            $head_ignored_html[ $src ] = $html;
+                            $head_ignored_html[$src] = $html;
                         }
                         else {
                             $foot_ignored_html[] = $html;
@@ -491,7 +491,7 @@ class LiteSpeed_Cache_Optimize
                             if ($this->_is_jquery($src)) {
                                 // jQuery should be always the first one
                                 $this->html_head .= $html;
-                                unset($head_ignored_html[ $src ]);
+                                unset($head_ignored_html[$src]);
                                 break;
                             }
                         }
@@ -634,14 +634,14 @@ class LiteSpeed_Cache_Optimize
             $qs = parse_url($qs, PHP_URL_QUERY);
             parse_str($qs, $qs);
 
-            if (empty($qs[ 'family' ])) {
+            if (empty($qs['family'])) {
                 LiteSpeed_Cache_Log::debug('[Optm] ERR ggfonts failed to find family: ' . $v);
                 continue;
             }
 
-            $subset = empty($qs[ 'subset' ]) ? '' : ':' . $qs[ 'subset' ];
+            $subset = empty($qs['subset']) ? '' : ':' . $qs['subset'];
 
-            foreach (array_filter(explode('|', $qs[ 'family' ])) as $v2) {
+            foreach (array_filter(explode('|', $qs['family'])) as $v2) {
                 $families[] = $v2 . $subset;
             }
 
@@ -732,11 +732,11 @@ class LiteSpeed_Cache_Optimize
         $src_arr = array();
         foreach ($src_queue_list as $k => $v) {
 
-            empty($src_arr[ $i ]) && $src_arr[ $i ] = array();
+            empty($src_arr[$i]) && $src_arr[$i] = array();
 
-            $src_arr[ $i ][] = $v;
+            $src_arr[$i][] = $v;
 
-            $total += $file_size_list[ $k ];
+            $total += $file_size_list[$k];
 
             if ($total > $this->cfg_optm_max_size) { // If larger than 1M, separate them
                 $total = 0;
@@ -769,10 +769,10 @@ class LiteSpeed_Cache_Optimize
         $tag = $file_type === 'css' ? 'link' : 'script';
         foreach ($src_queue_list as $key => $src) {
             $url = $this->_build_hash_url($src, $file_type);
-            $snippet = str_replace($src, $url, $html_list[ $key ]);
+            $snippet = str_replace($src, $url, $html_list[$key]);
             $snippet = str_replace("<$tag ", "<$tag data-optimized='1' ", $snippet);
 
-            $html_list[ $key ] = $snippet;
+            $html_list[$key] = $snippet;
 
             // Add to HTTP2
             $this->append_http2($url, $file_type);
@@ -829,8 +829,8 @@ class LiteSpeed_Cache_Optimize
             // }
 
             // Check if has no-optimize attr
-            if (strpos($html_list[ $key ], 'data-no-optimize') !== false) {
-                $ignored_html[] = $html_list[ $key ];
+            if (strpos($html_list[$key], 'data-no-optimize') !== false) {
+                $ignored_html[] = $html_list[$key];
                 LiteSpeed_Cache_Log::debug2('[Optm]    Abort excludes: attr data-no-optimize');
                 continue;
             }
@@ -838,7 +838,7 @@ class LiteSpeed_Cache_Optimize
             // Check if is external URL
             $url_parsed = parse_url($src);
             if (! $file_info = LiteSpeed_Cache_Utility::is_internal_file($src)) {
-                $ignored_html[ $src ] = $html_list[ $key ];
+                $ignored_html[$src] = $html_list[$key];
                 LiteSpeed_Cache_Log::debug2('[Optm]    Abort external/non-exist');
                 continue;
             }
@@ -849,7 +849,7 @@ class LiteSpeed_Cache_Optimize
              * @since  1.5
              */
             if ($this->cfg_exc_jquery && $this->_is_jquery($src)) {
-                $ignored_html[ $src ] = $html_list[ $key ];
+                $ignored_html[$src] = $html_list[$key];
                 LiteSpeed_Cache_Log::debug2('[Optm]    Abort jQuery by setting');
 
                 // Add to HTTP2 as its ignored but still internal src
@@ -858,8 +858,8 @@ class LiteSpeed_Cache_Optimize
                 continue;
             }
 
-            $src_queue_list[ $key ] = $src;
-            $file_size_list[ $key ] = $file_info[ 1 ];
+            $src_queue_list[$key] = $src;
+            $file_size_list[$key] = $file_info[1];
         }
 
         return array( $ignored_html, $src_queue_list, $file_size_list );
@@ -951,43 +951,43 @@ class LiteSpeed_Cache_Optimize
         preg_match_all('#<script \s*([^>]+)>\s*</script>|</head>#isU', $content, $matches, PREG_SET_ORDER);
         $is_head = true;
         foreach ($matches as $match) {
-            if ($match[ 0 ] === '</head>') {
+            if ($match[0] === '</head>') {
                 $is_head = false;
                 continue;
             }
-            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[ 1 ]);
+            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[1]);
 
-            if (isset($attrs[ 'data-optimized' ])) {
+            if (isset($attrs['data-optimized'])) {
                 continue;
             }
-            if (! empty($attrs[ 'data-no-optimize' ])) {
+            if (! empty($attrs['data-no-optimize'])) {
                 continue;
             }
-            if (empty($attrs[ 'src' ])) {
+            if (empty($attrs['src'])) {
                 continue;
             }
 
-            $url_parsed = parse_url($attrs[ 'src' ], PHP_URL_PATH);
+            $url_parsed = parse_url($attrs['src'], PHP_URL_PATH);
             if (substr($url_parsed, -3) !== '.js') {
                 LiteSpeed_Cache_Log::debug2('[Optm] _parse_js bypassed due to not js file ' . $url_parsed);
                 continue;
             }
 
             // to avoid multiple replacement
-            if (in_array($match[ 0 ], $html_list)) {
+            if (in_array($match[0], $html_list)) {
                 continue;
             }
 // todo @v2.0: allow defer even exclude from optm
-            if ($excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array($attrs[ 'src' ], $excludes)) {
+            if ($excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array($attrs['src'], $excludes)) {
                 LiteSpeed_Cache_Log::debug2('[Optm] _parse_js bypassed exclude ' . $exclude);
                 continue;
             }
 
-            $src_list[] = $attrs[ 'src' ];
-            $html_list[] = $match[ 0 ];
+            $src_list[] = $attrs['src'];
+            $html_list[] = $match[0];
 
             if ($is_head) {
-                $head_src_list[] = $attrs[ 'src' ];
+                $head_src_list[] = $attrs['src'];
             }
         }
 
@@ -1020,50 +1020,50 @@ class LiteSpeed_Cache_Optimize
         $content = preg_replace('#<!--.*-->#sU', '', $this->content);
         preg_match_all('#<link \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
-            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[ 1 ]);
+            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[1]);
 
-            if (empty($attrs[ 'rel' ]) || $attrs[ 'rel' ] !== 'stylesheet') {
+            if (empty($attrs['rel']) || $attrs['rel'] !== 'stylesheet') {
                 continue;
             }
-            if (isset($attrs[ 'data-optimized' ])) {
+            if (isset($attrs['data-optimized'])) {
                 continue;
             }
-            if (! empty($attrs[ 'data-no-optimize' ])) {
+            if (! empty($attrs['data-no-optimize'])) {
                 continue;
             }
-            if (! empty($attrs[ 'media' ]) && strpos($attrs[ 'media' ], 'print') !== false) {
+            if (! empty($attrs['media']) && strpos($attrs['media'], 'print') !== false) {
                 continue;
             }
-            if (empty($attrs[ 'href' ])) {
+            if (empty($attrs['href'])) {
                 continue;
             }
 
-            if ($excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array($attrs[ 'href' ], $excludes)) {
+            if ($excludes && $exclude = LiteSpeed_Cache_Utility::str_hit_array($attrs['href'], $excludes)) {
                 LiteSpeed_Cache_Log::debug2('[Optm] _handle_css bypassed exclude ' . $exclude);
                 continue;
             }
 
             // Check if need to remove this css
-            if ($css_to_be_removed && LiteSpeed_Cache_Utility::str_hit_array($attrs[ 'href' ], $css_to_be_removed)) {
-                LiteSpeed_Cache_Log::debug('[Optm] rm css snippet ' . $attrs[ 'href' ]);
+            if ($css_to_be_removed && LiteSpeed_Cache_Utility::str_hit_array($attrs['href'], $css_to_be_removed)) {
+                LiteSpeed_Cache_Log::debug('[Optm] rm css snippet ' . $attrs['href']);
                 // Delete this css snippet from orig html
-                $this->content = str_replace($match[ 0 ], '', $this->content);
+                $this->content = str_replace($match[0], '', $this->content);
 
                 continue;
             }
 
             // Check Google fonts hit
             if ($this->cfg_ggfonts_rm || $this->cfg_ggfonts_async) {
-                if (strpos($attrs[ 'href' ], 'fonts.googleapis.com') !== false) {
-                    LiteSpeed_Cache_Log::debug2('[Optm] rm css snippet [Google fonts] ' . $attrs[ 'href' ]);
-                    $this->content = str_replace($match[ 0 ], '', $this->content);
+                if (strpos($attrs['href'], 'fonts.googleapis.com') !== false) {
+                    LiteSpeed_Cache_Log::debug2('[Optm] rm css snippet [Google fonts] ' . $attrs['href']);
+                    $this->content = str_replace($match[0], '', $this->content);
 
                     /**
                      * For async gg fonts, will add webfont into head, hence remove it from buffer and store the matches to use later
                      * @since  2.7.3
                      */
                     if ($this->cfg_ggfonts_async) {
-                        $this->_ggfonts_urls[] = $attrs[ 'href' ];
+                        $this->_ggfonts_urls[] = $attrs['href'];
                     }
 
                     continue;
@@ -1071,12 +1071,12 @@ class LiteSpeed_Cache_Optimize
             }
 
             // to avoid multiple replacement
-            if (in_array($match[ 0 ], $html_list)) {
+            if (in_array($match[0], $html_list)) {
                 continue;
             }
 
-            $src_list[] = $attrs[ 'href' ];
-            $html_list[] = $match[ 0 ];
+            $src_list[] = $attrs['href'];
+            $html_list[] = $match[0];
         }
 
         return array( $src_list, $html_list );
@@ -1108,7 +1108,7 @@ class LiteSpeed_Cache_Optimize
             $v = str_replace('<link', "<link data-asynced='1' as='style' onload='this.rel=\"stylesheet\"' ", $v);
             // Append to noscript content
             $v .= '<noscript>' . $ori . '</noscript>';
-            $html_list[ $k ] = $v;
+            $html_list[$k] = $v;
         }
         return $html_list;
     }
@@ -1144,19 +1144,19 @@ class LiteSpeed_Cache_Optimize
             if ($this->cfg_js_defer_exc || $this->cfg_exc_jquery) {
                 // parse js src
                 preg_match('#<script \s*([^>]+)>#isU', $v, $matches);
-                if (empty($matches[ 1 ])) {
+                if (empty($matches[1])) {
                     LiteSpeed_Cache_Log::debug('[Optm] js defer parse html failed: ' . $v);
                     continue;
                 }
 
-                $attrs = LiteSpeed_Cache_Utility::parse_attr($matches[ 1 ]);
+                $attrs = LiteSpeed_Cache_Utility::parse_attr($matches[1]);
 
-                if (empty($attrs[ 'src' ])) {
-                    LiteSpeed_Cache_Log::debug('[Optm] js defer parse src failed: ' . $matches[ 1 ]);
+                if (empty($attrs['src'])) {
+                    LiteSpeed_Cache_Log::debug('[Optm] js defer parse src failed: ' . $matches[1]);
                     continue;
                 }
 
-                $src = $attrs[ 'src' ];
+                $src = $attrs['src'];
             }
 
             /**
@@ -1177,7 +1177,7 @@ class LiteSpeed_Cache_Optimize
                 continue;
             }
 
-            $html_list[ $k ] = str_replace('></script>', ' defer data-deferred="1"></script>', $v);
+            $html_list[$k] = str_replace('></script>', ' defer data-deferred="1"></script>', $v);
         }
 
         return $html_list;

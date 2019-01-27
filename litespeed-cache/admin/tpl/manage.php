@@ -7,7 +7,7 @@ $menu_list = array(
 );
 
 if (! is_network_admin()) {
-    $menu_list[ 'cdn' ] = __('CDN', 'litespeed-cache');
+    $menu_list['cdn'] = __('CDN', 'litespeed-cache');
 }
 
 ?>

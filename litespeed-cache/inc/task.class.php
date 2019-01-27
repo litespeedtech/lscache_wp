@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Task
     public static function update($options = false)
     {
         $id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE;
-        if ($options && isset($options[ $id ])) {
+        if ($options && isset($options[$id])) {
             $is_active = $options[$id];
         }
         else {
@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Task
     public static function lscache_cron_filter($schedules)
     {
         if (! array_key_exists(self::CRON_FITLER, $schedules)) {
-            $schedules[ self::CRON_FITLER ] = array(
+            $schedules[self::CRON_FITLER] = array(
                 'interval' => 60,
                 'display'  => __('LiteSpeed Cache Custom Cron Common', 'litespeed-cache'),
             );
@@ -234,7 +234,7 @@ class LiteSpeed_Cache_Task
         // $wp_schedules = wp_get_schedules() ;
         if (! array_key_exists(self::CRON_FITLER_CRAWLER, $schedules)) {
             // 	LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
-            $schedules[ self::CRON_FITLER_CRAWLER ] = array(
+            $schedules[self::CRON_FITLER_CRAWLER] = array(
                 'interval' => $interval,
                 'display'  => __('LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache'),
             );

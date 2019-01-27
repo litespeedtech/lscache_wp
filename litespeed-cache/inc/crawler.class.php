@@ -98,12 +98,12 @@ class LiteSpeed_Cache_Crawler
      */
     public function save_blacklist()
     {
-        if (! isset($_POST[ self::CRWL_BLACKLIST ])) {
+        if (! isset($_POST[self::CRWL_BLACKLIST])) {
             $msg = __('Can not find any form data for blacklist', 'litespeed-cache');
             LiteSpeed_Cache_Admin_Display::add_notice(LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg);
             return false;
         }
-        $content = $_POST[ self::CRWL_BLACKLIST ];
+        $content = $_POST[self::CRWL_BLACKLIST];
         $content = array_map('trim', explode("\n", $content));// remove space
         $content = implode("\n", array_unique(array_filter($content)));
 
@@ -195,7 +195,7 @@ class LiteSpeed_Cache_Crawler
             return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ;
         }
 
-        $xml_object = simplexml_load_string($response[ 'body' ]);
+        $xml_object = simplexml_load_string($response['body']);
         if (! $xml_object) {
             return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE;
         }
@@ -260,7 +260,7 @@ class LiteSpeed_Cache_Crawler
     protected function _generate_sitemap()
     {
         // use custom sitemap
-        if ($sitemap = $this->_options[ LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ]) {
+        if ($sitemap = $this->_options[LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP]) {
             $sitemap_urls = $this->parse_custom_sitemap($sitemap);
             $urls = array();
             $offset = strlen($this->_home_url);
@@ -404,19 +404,19 @@ class LiteSpeed_Cache_Crawler
          * Limit delay to use server setting
          * @since 1.8.3
          */
-        $usleep = $this->_options[ LiteSpeed_Cache_Config::CRWL_USLEEP ];
-        if (! empty($_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ]) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] > $usleep) {
-            $usleep = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ];
+        $usleep = $this->_options[LiteSpeed_Cache_Config::CRWL_USLEEP];
+        if (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP]) && $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP] > $usleep) {
+            $usleep = $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP];
         }
         $crawler->set_run_delay($usleep);
-        $crawler->set_threads_limit($this->_options[ LiteSpeed_Cache_Config::CRWL_THREADS ]);
+        $crawler->set_threads_limit($this->_options[LiteSpeed_Cache_Config::CRWL_THREADS]);
 
-        $server_load_limit = $this->_options[ LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT ];
-        if (! empty($_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ])) {
-            $server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ];
+        $server_load_limit = $this->_options[LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT];
+        if (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE])) {
+            $server_load_limit = $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE];
         }
-        elseif (! empty($_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ]) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] < $server_load_limit) {
-            $server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ];
+        elseif (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT]) && $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT] < $server_load_limit) {
+            $server_load_limit = $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT];
         }
         $crawler->set_load_limit($server_load_limit);
         if ($this->_options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP]) {
@@ -425,29 +425,29 @@ class LiteSpeed_Cache_Crawler
 
         // Get current crawler
         $meta = $crawler->read_meta();
-        $curr_crawler_pos = $meta[ 'curr_crawler' ];
+        $curr_crawler_pos = $meta['curr_crawler'];
 
         // Generate all crawlers
         $crawlers = $this->list_crawlers();
 
         // In case crawlers are all done but not reload, reload it
-        if (empty($crawlers[ $curr_crawler_pos ])) {
+        if (empty($crawlers[$curr_crawler_pos])) {
             $curr_crawler_pos = 0;
         }
-        $current_crawler = $crawlers[ $curr_crawler_pos ];
+        $current_crawler = $crawlers[$curr_crawler_pos];
 
         $cookies = array();
         /**
          * Set role simulation
          * @since 1.9.1
          */
-        if (! empty($current_crawler[ 'uid' ])) {
+        if (! empty($current_crawler['uid'])) {
             // Get role simulation vary name
             $vary_inst = LiteSpeed_Cache_Vary::get_instance();
             $vary_name = $vary_inst->get_vary_name();
-            $vary_val = $vary_inst->finalize_default_vary($current_crawler[ 'uid' ]);
-            $cookies[ $vary_name ] = $vary_val;
-            $cookies[ 'litespeed_role' ] = $current_crawler[ 'uid' ];
+            $vary_val = $vary_inst->finalize_default_vary($current_crawler['uid']);
+            $cookies[$vary_name] = $vary_val;
+            $cookies['litespeed_role'] = $current_crawler['uid'];
         }
 
         /**
@@ -459,7 +459,7 @@ class LiteSpeed_Cache_Crawler
                 continue;
             }
 
-            $cookies[ substr($k, 7) ] = $v;
+            $cookies[substr($k, 7)] = $v;
         }
 
         if ($cookies) {
@@ -470,7 +470,7 @@ class LiteSpeed_Cache_Crawler
          * Set WebP simulation
          * @since  1.9.1
          */
-        if (! empty($current_crawler[ 'webp' ])) {
+        if (! empty($current_crawler['webp'])) {
             $crawler->set_headers(array( 'Accept: image/webp,*/*' ));
         }
 
@@ -478,7 +478,7 @@ class LiteSpeed_Cache_Crawler
          * Set mobile crawler
          * @since  2.8
          */
-        if (! empty($current_crawler[ 'mobile' ])) {
+        if (! empty($current_crawler['mobile'])) {
             $crawler->set_ua('Mobile');
         }
 
@@ -490,7 +490,7 @@ class LiteSpeed_Cache_Crawler
         }
 
         if (! empty($ret['crawled'])) {
-            defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('Crawler: Last crawled ' . $ret[ 'crawled' ] . ' item(s)');
+            defined('LSCWP_LOG') && LiteSpeed_Cache_Log::debug('Crawler: Last crawled ' . $ret['crawled'] . ' item(s)');
         }
 
         // return error
@@ -528,16 +528,16 @@ class LiteSpeed_Cache_Crawler
         $crawler_factors = array();
 
         // Add default Guest crawler
-        $crawler_factors[ 'uid' ] = array( 0 => __('Guest', 'litespeed-cache') );
+        $crawler_factors['uid'] = array( 0 => __('Guest', 'litespeed-cache') );
 
         // WebP on/off
         if (LiteSpeed_Cache_Media::webp_enabled()) {
-            $crawler_factors[ 'webp' ] = array( 0 => '', 1 => 'WebP' );
+            $crawler_factors['webp'] = array( 0 => '', 1 => 'WebP' );
         }
 
         // Mobile crawler
-        if ($this->_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ]) {
-            $crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' );
+        if ($this->_options[LiteSpeed_Cache_Config::OPID_CACHE_MOBILE]) {
+            $crawler_factors['mobile'] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' );
         }
 
         // Get roles set
@@ -554,7 +554,7 @@ class LiteSpeed_Cache_Crawler
                 continue;
             }
 
-            $crawler_factors[ 'uid' ][ $v ] = ucfirst($role_title);
+            $crawler_factors['uid'][$v] = ucfirst($role_title);
         }
 
         // Cookie crawler
@@ -563,11 +563,11 @@ class LiteSpeed_Cache_Crawler
 
             $this_cookie_key = 'cookie:' . $k;
 
-            $crawler_factors[ $this_cookie_key ] = array();
+            $crawler_factors[$this_cookie_key] = array();
 
             foreach (explode("\n", $v) as $v2) {
                 $v2 = trim($v2);
-                $crawler_factors[ $this_cookie_key ][ $v2 ] = "<font title='Cookie'>🍪</font>$k=$v2";
+                $crawler_factors[$this_cookie_key][$v2] = "<font title='Cookie'>🍪</font>$k=$v2";
             }
         }
 
@@ -591,24 +591,24 @@ class LiteSpeed_Cache_Crawler
     private function _recursive_build_crawler($crawler_factors, $group = array(), $i = 0)
     {
         $current_factor = array_keys($crawler_factors);
-        $current_factor = $current_factor[ $i ];
+        $current_factor = $current_factor[$i];
 
         $if_touch_end = $i + 1 >= count($crawler_factors);
 
         $final_list = array();
 
-        foreach ($crawler_factors[ $current_factor ] as $k => $v) {
+        foreach ($crawler_factors[$current_factor] as $k => $v) {
 
             // Don't alter $group bcos of loop usage
             $item = $group;
-            $item[ 'title' ] = ! empty($group[ 'title' ]) ? $group[ 'title' ] : '';
+            $item['title'] = ! empty($group['title']) ? $group['title'] : '';
             if ($v) {
-                if ($item[ 'title' ]) {
-                    $item[ 'title' ] .= ' - ';
+                if ($item['title']) {
+                    $item['title'] .= ' - ';
                 }
-                $item[ 'title' ] .= $v;
+                $item['title'] .= $v;
             }
-            $item[ $current_factor ] = $k;
+            $item[$current_factor] = $k;
 
             if ($if_touch_end) {
                 $final_list[] = $item;

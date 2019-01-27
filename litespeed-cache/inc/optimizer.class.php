@@ -38,11 +38,11 @@ class LiteSpeed_Cache_Optimizer
     {
         $options = array();
         if ($this->cfg_css_inline_minify) {
-            $options[ 'cssMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_css';
+            $options['cssMinifier'] = 'LiteSpeed_Cache_Optimizer::minify_css';
         }
 
         if ($this->cfg_js_inline_minify) {
-            $options[ 'jsMinifier' ] = 'LiteSpeed_Cache_Optimizer::minify_js';
+            $options['jsMinifier'] = 'LiteSpeed_Cache_Optimizer::minify_js';
         }
 
         /**
@@ -91,7 +91,7 @@ class LiteSpeed_Cache_Optimizer
             if (! $real_file) {
                 continue;
             }
-            $real_files[] = $real_file[ 0 ];
+            $real_files[] = $real_file[0];
         }
 
         if (! $real_files) {
@@ -103,7 +103,7 @@ class LiteSpeed_Cache_Optimizer
         // set_error_handler( 'litespeed_exception_handler' ) ;
 
         $content = '';
-        $tmp = parse_url($urls[ 0 ], PHP_URL_PATH);
+        $tmp = parse_url($urls[0], PHP_URL_PATH);
         $file_type = substr($tmp, strrpos($tmp, '.') + 1);
         // try {
         // Handle CSS
@@ -224,8 +224,8 @@ class LiteSpeed_Cache_Optimizer
         // For inline JS optimize, need to check if it's js type
         if ($js_type) {
             preg_match('#type=([\'"])(.+)\g{1}#isU', $js_type, $matches);
-            if ($matches && $matches[ 2 ] != 'text/javascript') {
-                LiteSpeed_Cache_Log::debug('******[Optmer] minify_js bypass due to type: ' . $matches[ 2 ]);
+            if ($matches && $matches[2] != 'text/javascript') {
+                LiteSpeed_Cache_Log::debug('******[Optmer] minify_js bypass due to type: ' . $matches[2]);
                 return $data;
             }
         }

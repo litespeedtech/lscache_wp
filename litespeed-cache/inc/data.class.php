@@ -180,11 +180,11 @@ class LiteSpeed_Cache_Data
                     foreach ($md52src_list as $md5 => $v2) {
                         $f = array(
                             'post_id'	=> $v->post_id,
-                            'optm_status'		=> $v2[ 1 ],
-                            'src'		=> $v2[ 0 ],
-                            'srcpath_md5'		=> md5($v2[ 0 ]),
+                            'optm_status'		=> $v2[1],
+                            'src'		=> $v2[0],
+                            'srcpath_md5'		=> md5($v2[0]),
                             'src_md5'		=> $md5,
-                            'server'		=> $v2[ 2 ],
+                            'server'		=> $v2[2],
                         );
                         $wpdb->replace($this->_tb_img_optm, $f);
                     }
@@ -307,7 +307,7 @@ class LiteSpeed_Cache_Data
             'hash_name'	=> $filename,
             'src'		=> $src,
             'dateline'	=> time(),
-            'refer' 	=> ! empty($_SERVER[ 'SCRIPT_URI' ]) ? $_SERVER[ 'SCRIPT_URI' ] : '',
+            'refer' 	=> ! empty($_SERVER['SCRIPT_URI']) ? $_SERVER['SCRIPT_URI'] : '',
         );
 
         $res = $wpdb->replace($this->_tb_optm, $f);

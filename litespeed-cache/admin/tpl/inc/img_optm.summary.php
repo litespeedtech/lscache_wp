@@ -9,7 +9,7 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 	<div class="litespeed-width-7-10">
 		<div class="litespeed-empty-space-small"></div>
 
-		<?php if ($img_count[ 'total_not_requested' ]) : ?>
+		<?php if ($img_count['total_not_requested']) : ?>
 			<div class="litespeed-text-center">
 				<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_OPTIMIZE); ?>" class="litespeed-btn-success litespeed-btn-large">
 					<span class="dashicons dashicons-images-alt2"></span>&nbsp;<?php echo __('Send Optimization Request', 'litespeed-cache'); ?>
@@ -24,11 +24,11 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 					<font title="<?php echo $closet_server; ?>">☁️</font>
 				<?php endif; ?>
 				<?php echo __('This will send the optimization request and the images to LiteSpeed\'s Image Optimization Server.', 'litespeed-cache'); ?>
-				<?php echo sprintf(__('You can send at most %s images at once.', 'litespeed-cache'), '<code>' . $optm_summary[ 'credit' ] . '</code>'); ?>
+				<?php echo sprintf(__('You can send at most %s images at once.', 'litespeed-cache'), '<code>' . $optm_summary['credit'] . '</code>'); ?>
 			</div>
 		<?php endif; ?>
 
-		<?php if ($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ] && ! $is_running) : ?>
+		<?php if ($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED] && ! $is_running) : ?>
 		<div>
 			<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL); ?>" class="litespeed-btn-success" title="<?php echo __('Only press the button if the pull cron job is disabled.', 'litespeed-cache'); ?> <?php echo __('Images will be pulled automatically if the cron job is running.', 'litespeed-cache'); ?>">
 				<?php echo __('Pull Images', 'litespeed-cache'); ?>
@@ -51,12 +51,12 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 
 			<div class="litespeed-light-code">
 
-				<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ])) : ?>
+				<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED])) : ?>
 				<p class="litespeed-success">
 					<?php echo __('Images requested', 'litespeed-cache'); ?>:
 					<code>
-						<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ]); ?>
-						(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED ], 'image'); ?>)
+						<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED]); ?>
+						(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_REQUESTED], 'image'); ?>)
 					</code>
 				</p>
 				<p class="litespeed-desc">
@@ -65,12 +65,12 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 				</p>
 				<?php endif; ?>
 
-				<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ])) : ?>
+				<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED])) : ?>
 					<p class="litespeed-success">
 						<?php echo __('Images notified to pull', 'litespeed-cache'); ?>:
 						<code>
-							<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ]); ?>
-							(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ], 'image'); ?>)
+							<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED]); ?>
+							(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_NOTIFIED], 'image'); ?>)
 						</code>
 
 					</p>
@@ -87,75 +87,75 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 
 					<div class="litespeed-width-1-2">
 
-						<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ])) : ?>
+						<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED])) : ?>
 						<p class="litespeed-success">
 							<?php echo __('Images optimized and pulled', 'litespeed-cache'); ?>:
 							<code>
-								<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ]); ?>
-								(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED ], 'image'); ?>)
+								<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED]); ?>
+								(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_PULLED], 'image'); ?>)
 							</code>
 						</p>
 						<?php endif; ?>
 
 						<div class="litespeed-silence">
-							<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ])) : ?>
+							<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH])) : ?>
 							<p>
 								<?php echo __('Images failed to fetch', 'litespeed-cache'); ?>:
 								<code>
-									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ]); ?>
-									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH ], 'image'); ?>)
+									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH]); ?>
+									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_FETCH], 'image'); ?>)
 								</code>
 							</p>
 							<?php endif; ?>
 
-							<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ])) : ?>
+							<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM])) : ?>
 							<p>
 								<?php echo __('Images previously optimized', 'litespeed-cache'); ?>:
 								<code>
-									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ]); ?>
-									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM ], 'image'); ?>)
+									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM]); ?>
+									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR_OPTM], 'image'); ?>)
 								</code>
 							</p>
 							<?php endif; ?>
 
-							<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ])) : ?>
+							<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR])) : ?>
 							<p>
 								<?php echo __('Images failed with other errors', 'litespeed-cache'); ?>:
 								<code>
-									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ]); ?>
-									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR ], 'image'); ?>)
+									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR]); ?>
+									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_ERR], 'image'); ?>)
 								</code>
 							</p>
 							<?php endif; ?>
 
-							<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ])) : ?>
+							<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS])) : ?>
 							<p>
 								<?php echo __('Image files missing', 'litespeed-cache'); ?>:
 								<code>
-									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ]); ?>
-									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS ], 'image'); ?>)
+									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS]); ?>
+									(<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_MISS], 'image'); ?>)
 								</code>
 							</p>
 							<?php endif; ?>
 
-							<?php if (! empty($img_count[ 'group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA ])) : ?>
+							<?php if (! empty($img_count['group.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA])) : ?>
 							<p>
 								<?php echo __('Images with wrong meta', 'litespeed-cache'); ?>:
 								<code>
-									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count[ 'img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA ]); ?>
+									<?php echo LiteSpeed_Cache_Admin_Display::print_plural($img_count['img.' . LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS_XMETA]); ?>
 								</code>
 							</p>
 							<?php endif; ?>
 
-							<?php if (! empty($optm_summary[ 'fetch_failed' ])) : ?>
+							<?php if (! empty($optm_summary['fetch_failed'])) : ?>
 								<p>
-									<?php echo __('Images failed to fetch', 'litespeed-cache'); ?>: <code><?php echo $optm_summary[ 'fetch_failed' ]; ?></code>
+									<?php echo __('Images failed to fetch', 'litespeed-cache'); ?>: <code><?php echo $optm_summary['fetch_failed']; ?></code>
 								</p>
 							<?php endif; ?>
 
-							<?php if (! empty($optm_summary[ 'notify_failed' ])) : ?>
+							<?php if (! empty($optm_summary['notify_failed'])) : ?>
 								<p>
-									<?php echo __('Images failed to notify', 'litespeed-cache'); ?>: <code><?php echo $optm_summary[ 'notify_failed' ]; ?></code>
+									<?php echo __('Images failed to notify', 'litespeed-cache'); ?>: <code><?php echo $optm_summary['notify_failed']; ?></code>
 								</p>
 							<?php endif; ?>
 
@@ -186,14 +186,14 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 				<?php if ($storage_data) : ?>
 					<div class="">
 					<p>
-						<?php echo __('Last calculated', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($storage_data[ 'date' ]) . '</code>'; ?>
+						<?php echo __('Last calculated', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($storage_data['date']) . '</code>'; ?>
 					</p>
-					<?php if ($storage_data[ 'count' ]) : ?>
+					<?php if ($storage_data['count']) : ?>
 						<p>
-							<?php echo __('Files', 'litespeed-cache') . ': <code>' . $storage_data[ 'count' ] . '</code>'; ?>
+							<?php echo __('Files', 'litespeed-cache') . ': <code>' . $storage_data['count'] . '</code>'; ?>
 						</p>
 						<p>
-							<?php echo __('Total', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::real_size($storage_data[ 'sum' ]) . '</code>'; ?>
+							<?php echo __('Total', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::real_size($storage_data['sum']) . '</code>'; ?>
 						</p>
 					<?php endif; ?>
 					</div>
@@ -214,13 +214,13 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 				<?php if ($rm_log) : ?>
 					<div class="">
 					<p>
-						<?php echo __('Last ran', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($rm_log[ 'date' ]) . '</code>'; ?>
+						<?php echo __('Last ran', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($rm_log['date']) . '</code>'; ?>
 					</p>
 					<p>
-						<?php echo __('Files', 'litespeed-cache') . ': <code>' . $rm_log[ 'count' ] . '</code>'; ?>
+						<?php echo __('Files', 'litespeed-cache') . ': <code>' . $rm_log['count'] . '</code>'; ?>
 					</p>
 					<p>
-						<?php echo __('Saved', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::real_size($rm_log[ 'sum' ]) . '</code>'; ?>
+						<?php echo __('Saved', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::real_size($rm_log['sum']) . '</code>'; ?>
 					</p>
 					</div>
 				<?php endif; ?>
@@ -247,13 +247,13 @@ $closet_server = get_option(LiteSpeed_Cache_Admin_API::DB_API_CLOUD);
 				</a>
 			</h3>
 			<p>
-				<?php echo __('Total Reduction', 'litespeed-cache'); ?>: <code><?php echo LiteSpeed_Cache_Utility::real_size($optm_summary[ 'reduced' ]); ?></code>
+				<?php echo __('Total Reduction', 'litespeed-cache'); ?>: <code><?php echo LiteSpeed_Cache_Utility::real_size($optm_summary['reduced']); ?></code>
 			</p>
 			<p>
-				<?php echo __('Images Pulled', 'litespeed-cache'); ?>: <code><?php echo $optm_summary[ 'img_taken' ]; ?></code>
+				<?php echo __('Images Pulled', 'litespeed-cache'); ?>: <code><?php echo $optm_summary['img_taken']; ?></code>
 			</p>
 			<p>
-				<?php echo __('Last Request', 'litespeed-cache'); ?>: <code><?php echo LiteSpeed_Cache_Utility::readable_time($optm_summary[ 'last_requested' ]); ?></code>
+				<?php echo __('Last Request', 'litespeed-cache'); ?>: <code><?php echo LiteSpeed_Cache_Utility::readable_time($optm_summary['last_requested']); ?></code>
 			</p>
 		</div>
 

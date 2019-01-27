@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Vary
         $db_cookie = false;
         if (is_multisite()) {
             $options = LiteSpeed_Cache_Config::get_instance()->get_site_options();
-            $db_cookie = $options[ LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ];
+            $db_cookie = $options[LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE];
         }
         else {
             $db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE);
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Vary
             // Remove commenter prefilled info if exists, for public cache
             foreach($_COOKIE as $cookie_name => $cookie_value) {
                 if (strlen($cookie_name) >= 15 && strpos($cookie_name, 'comment_author_') === 0) {
-                    unset($_COOKIE[ $cookie_name ]);
+                    unset($_COOKIE[$cookie_name]);
                 }
             }
 
@@ -185,10 +185,10 @@ class LiteSpeed_Cache_Vary
      */
     public static function has_vary()
     {
-        if (empty($_COOKIE[ self::$_vary_name ])) {
+        if (empty($_COOKIE[self::$_vary_name])) {
             return false;
         }
-        return $_COOKIE[ self::$_vary_name ];
+        return $_COOKIE[self::$_vary_name];
     }
 
     /**
@@ -351,11 +351,11 @@ class LiteSpeed_Cache_Vary
         $role = LiteSpeed_Cache_Router::get_role($uid);
 
         if ($uid > 0 && $role) {
-            $vary[ 'logged-in' ] = 1;
+            $vary['logged-in'] = 1;
 
             // parse role group from settings
             if ($role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group($role)) {
-                $vary[ 'role' ] = $role_group;
+                $vary['role'] = $role_group;
             }
 
             // Get admin bar set
@@ -365,7 +365,7 @@ class LiteSpeed_Cache_Vary
             $admin_bar = $pref === false || $pref === 'true';
 
             if ($admin_bar) {
-                $vary[ 'admin_bar' ] = 1;
+                $vary['admin_bar'] = 1;
                 LiteSpeed_Cache_Log::debug2('[Vary] admin bar : true');
             }
 
@@ -464,9 +464,9 @@ class LiteSpeed_Cache_Vary
     {
         $path = false;
         $tag = $from_redirect ? 'HTTP_REFERER' : 'SCRIPT_URL';
-        if (! empty($_SERVER[ $tag ])) {
-            $path = parse_url($_SERVER[ $tag ]);
-            $path = ! empty($path[ 'path' ]) ? $path[ 'path' ] : false;
+        if (! empty($_SERVER[$tag])) {
+            $path = parse_url($_SERVER[$tag]);
+            $path = ! empty($path['path']) ? $path['path'] : false;
             LiteSpeed_Cache_Log::debug('[Vary] Cookie Vary path: ' . $path);
         }
         return $path;
@@ -591,7 +591,7 @@ class LiteSpeed_Cache_Vary
      */
     public static function append($name, $val)
     {
-        self::$_default_vary_val[ $name ] = $val;
+        self::$_default_vary_val[$name] = $val;
     }
 
     /**

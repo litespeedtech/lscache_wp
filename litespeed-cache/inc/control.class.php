@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Control
         if (! LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles()) {
             return $varys;
         }
-        $varys[ 'role_exclude_cache' ] = 1;
+        $varys['role_exclude_cache'] = 1;
         return $varys;
     }
 
@@ -443,8 +443,8 @@ class LiteSpeed_Cache_Control
      */
     public static function check_redirect($location, $status)
     {
-        if (! empty($_SERVER[ 'SCRIPT_URI' ])) { // dont check $status == '301' anymore
-            LiteSpeed_Cache_Log::debug("[Ctrl] 301 from " . $_SERVER[ 'SCRIPT_URI' ]);
+        if (! empty($_SERVER['SCRIPT_URI'])) { // dont check $status == '301' anymore
+            LiteSpeed_Cache_Log::debug("[Ctrl] 301 from " . $_SERVER['SCRIPT_URI']);
             LiteSpeed_Cache_Log::debug("[Ctrl] 301 to $location");
 
             $to_check = array(
@@ -456,7 +456,7 @@ class LiteSpeed_Cache_Control
             $is_same_redirect = true;
 
             foreach ($to_check as $v) {
-                if (parse_url($_SERVER[ 'SCRIPT_URI' ], $v) != parse_url($location, $v)) {
+                if (parse_url($_SERVER['SCRIPT_URI'], $v) != parse_url($location, $v)) {
                     $is_same_redirect = false;
                     LiteSpeed_Cache_Log::debug("[Ctrl] 301 different redirection");
                     break;
@@ -522,7 +522,7 @@ class LiteSpeed_Cache_Control
         // Check if URI is forced cache
         $excludes = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI);
         if (! empty($excludes)) {
-            list($result, $this_ttl) =  LiteSpeed_Cache_Utility::str_hit_array($_SERVER[ 'REQUEST_URI' ], $excludes, true);
+            list($result, $this_ttl) =  LiteSpeed_Cache_Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes, true);
             if ($result) {
                 self::force_cacheable();
                 LiteSpeed_Cache_Log::debug('[Ctrl] Forced cacheable due to setting: ' . $result);
@@ -615,7 +615,7 @@ class LiteSpeed_Cache_Control
     {
         // logged_in users already excluded, no hook added
 
-        if(! empty($_REQUEST[ LiteSpeed_Cache::ACTION_KEY ])) {
+        if(! empty($_REQUEST[LiteSpeed_Cache::ACTION_KEY])) {
             return $this->_no_cache_for('Query String Action');
         }
 
@@ -646,7 +646,7 @@ class LiteSpeed_Cache_Control
         // Check private cache URI setting
         $excludes = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV);
         if (! empty($excludes)) {
-            $result = LiteSpeed_Cache_Utility::str_hit_array($_SERVER[ 'REQUEST_URI' ], $excludes);
+            $result = LiteSpeed_Cache_Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
             if ($result) {
                 self::set_private('Admin cfg Private Cached URI: ' . $result);
             }
@@ -657,7 +657,7 @@ class LiteSpeed_Cache_Control
             // Check if URI is excluded from cache
             $excludes = LiteSpeed_Cache_Config::get_instance()->get_item(LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI);
             if (! empty($excludes)) {
-                $result =  LiteSpeed_Cache_Utility::str_hit_array($_SERVER[ 'REQUEST_URI' ], $excludes);
+                $result =  LiteSpeed_Cache_Utility::str_hit_array($_SERVER['REQUEST_URI'], $excludes);
                 if ($result) {
                     return $this->_no_cache_for('Admin configured URI Do not cache: ' . $result);
                 }

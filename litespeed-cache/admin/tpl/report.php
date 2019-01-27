@@ -23,8 +23,8 @@ $env_ref = $_report->get_env_ref();
 
 		<h3 class="litespeed-title"><?php echo __('LiteSpeed Report Number', 'litespeed-cache'); ?></h3>
 
-		<p><?php echo __('Report number', 'litespeed-cache'); ?>: <b><?php echo $env_ref[ 'num' ]; ?></b></p>
-		<p><?php echo __('Report date', 'litespeed-cache'); ?>: <b><?php echo $env_ref[ 'dateline' ]; ?></b></p>
+		<p><?php echo __('Report number', 'litespeed-cache'); ?>: <b><?php echo $env_ref['num']; ?></b></p>
+		<p><?php echo __('Report date', 'litespeed-cache'); ?>: <b><?php echo $env_ref['dateline']; ?></b></p>
 
 		<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_REPORT, LiteSpeed_Cache_Admin_Report::TYPE_SEND_REPORT); ?>" class="litespeed-btn-warning">
 			<?php echo __('Send To LiteSpeed', 'litespeed-cache'); ?>

@@ -22,9 +22,9 @@ $log = get_option(LiteSpeed_Cache_Import::DB_IMPORT_LOG, array());
 			<?php echo __('Export', 'litespeed-cache'); ?>
 		</a>
 
-		<?php if (! empty($log[ 'export' ])) : ?>
+		<?php if (! empty($log['export'])) : ?>
 		<div class="litespeed-desc">
-			<?php echo __('Last exported', 'litespeed-cache'); ?>: <code><?php echo $log[ 'export' ][ 'file' ]; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time($log[ 'export' ][ 'time' ]); ?>
+			<?php echo __('Last exported', 'litespeed-cache'); ?>: <code><?php echo $log['export']['file']; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time($log['export']['time']); ?>
 		</div>
 		<?php endif; ?>
 
@@ -45,9 +45,9 @@ $log = get_option(LiteSpeed_Cache_Import::DB_IMPORT_LOG, array());
 			</div>
 		</form>
 
-		<?php if (! empty($log[ 'import' ])) : ?>
+		<?php if (! empty($log['import'])) : ?>
 		<div class="litespeed-desc">
-			<?php echo __('Last imported', 'litespeed-cache'); ?>: <code><?php echo $log[ 'import' ][ 'file' ]; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time($log[ 'import' ][ 'time' ]); ?>
+			<?php echo __('Last imported', 'litespeed-cache'); ?>: <code><?php echo $log['import']['file']; ?></code> <?php echo LiteSpeed_Cache_Utility::readable_time($log['import']['time']); ?>
 		</div>
 		<?php endif; ?>
 

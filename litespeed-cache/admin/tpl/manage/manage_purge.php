@@ -118,25 +118,25 @@ if (! is_multisite() || is_network_admin()) {
 <div class="litespeed-panel-wrapper">
 
 <?php foreach ($_panels as $v): ?>
-<?php $tag = ! empty($v[ 'tag' ]) ? $v[ 'tag' ] : LiteSpeed_Cache::ACTION_PURGE; ?>
-<?php $append_url = ! empty($v[ 'append_url' ]) ? $v[ 'append_url' ] : false; ?>
+<?php $tag = ! empty($v['tag']) ? $v['tag'] : LiteSpeed_Cache::ACTION_PURGE; ?>
+<?php $append_url = ! empty($v['append_url']) ? $v['append_url'] : false; ?>
 
-	<?php if (! empty($v[ 'newline' ])) : ?>
+	<?php if (! empty($v['newline'])) : ?>
 		<div class='litespeed-col-br'></div>
 	<?php endif; ?>
 
 	<a 	class="litespeed-panel"
 		href="<?php echo LiteSpeed_Cache_Utility::build_url($tag, $append_url); ?>"
-		<?php if (! empty($v[ 'cfm' ])) echo 'data-litespeed-cfm="' . $v[ 'cfm' ] . '"'; ?>
+		<?php if (! empty($v['cfm'])) echo 'data-litespeed-cfm="' . $v['cfm'] . '"'; ?>
 	>
 		<section class="litespeed-panel-wrapper-icon">
-			<span class="litespeed-panel-icon-<?php echo $v[ 'icon' ]; ?>"></span>
+			<span class="litespeed-panel-icon-<?php echo $v['icon']; ?>"></span>
 		</section>
 		<section class="litespeed-panel-content">
-			<div class="litespeed-h3 <?php if (! empty($v[ 'title_cls' ])) echo $v[ 'title_cls' ]; ?>">
-				<?php echo $v[ 'title' ]; ?>
+			<div class="litespeed-h3 <?php if (! empty($v['title_cls'])) echo $v['title_cls']; ?>">
+				<?php echo $v['title']; ?>
 			</div>
-			<span class="litespeed-panel-para"><?php echo $v[ 'desc' ]; ?></span>
+			<span class="litespeed-panel-para"><?php echo $v['desc']; ?></span>
 		</section>
 	</a>
 

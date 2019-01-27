@@ -167,22 +167,22 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary();
 
 			<?php if ($last_critical_css_generated) : ?>
 			<div class="litespeed-desc litespeed-left20">
-				<?php if (! empty($last_critical_css_generated[ 'last_request' ])) : ?>
+				<?php if (! empty($last_critical_css_generated['last_request'])) : ?>
 					<p>
-						<?php echo __('Last generated', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($last_critical_css_generated[ 'last_request' ]) . '</code>'; ?>
+						<?php echo __('Last generated', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($last_critical_css_generated['last_request']) . '</code>'; ?>
 					</p>
 					<p>
-						<?php echo __('Last requested cost', 'litespeed-cache') . ': <code>' . $last_critical_css_generated[ 'last_spent' ] . 's</code>'; ?>
+						<?php echo __('Last requested cost', 'litespeed-cache') . ': <code>' . $last_critical_css_generated['last_spent'] . 's</code>'; ?>
 					</p>
 				<?php endif; ?>
-				<?php if (! empty($last_critical_css_generated[ 'queue' ])) : ?>
+				<?php if (! empty($last_critical_css_generated['queue'])) : ?>
 					<div class="litespeed-callout-warning">
 						<h4><?php echo __('URL list in queue waiting for cron','litespeed-cache'); ?></h4>
 						<p>
-						<?php foreach ($last_critical_css_generated[ 'queue' ] as $k => $v) : ?>
+						<?php foreach ($last_critical_css_generated['queue'] as $k => $v) : ?>
 							<?php if (! is_array($v)) continue; ?>
-							<?php echo $v[ 'url' ]; ?>
-							<?php if ($v[ 'is_mobile' ]) echo ' <span title="mobile">📱</span>'; ?>
+							<?php echo $v['url']; ?>
+							<?php if ($v['is_mobile']) echo ' <span title="mobile">📱</span>'; ?>
 							<br />
 						<?php endforeach; ?>
 						</p>

@@ -422,13 +422,13 @@ class LiteSpeed_Cache_Purge
      */
     private function _purge_front()
     {
-        if (empty($_SERVER[ 'HTTP_REFERER' ])) {
+        if (empty($_SERVER['HTTP_REFERER'])) {
             exit('no referer');
         }
 
-        $this->purgeby_url_cb($_SERVER[ 'HTTP_REFERER' ]);
+        $this->purgeby_url_cb($_SERVER['HTTP_REFERER']);
 
-        wp_redirect($_SERVER[ 'HTTP_REFERER' ]);
+        wp_redirect($_SERVER['HTTP_REFERER']);
         exit();
     }
 
@@ -645,7 +645,7 @@ class LiteSpeed_Cache_Purge
         array_walk($list, array( $this, $cb ));
 
         // for redirection
-        $_GET[ LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT ] = $sel;
+        $_GET[LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT] = $sel;
     }
 
     /**

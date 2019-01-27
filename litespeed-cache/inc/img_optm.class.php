@@ -187,8 +187,8 @@ class LiteSpeed_Cache_Img_Optm
              * @since 1.6.5 use credit limit
              */
             $num_will_incease = 1;
-            if (! empty($meta_value[ 'sizes' ])) {
-                $num_will_incease += count($meta_value[ 'sizes' ]);
+            if (! empty($meta_value['sizes'])) {
+                $num_will_incease += count($meta_value['sizes']);
             }
             if ($this->_img_total + $num_will_incease > $_credit) {
                 if (! $this->_img_total) {
@@ -209,10 +209,10 @@ class LiteSpeed_Cache_Img_Optm
 
             // push orig image to queue
             $this->tmp_pid = $v->post_id;
-            $this->tmp_path = pathinfo($meta_value[ 'file' ], PATHINFO_DIRNAME) . '/';
+            $this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
             $this->_img_queue($meta_value, true);
-            if (! empty($meta_value[ 'sizes' ])) {
-                array_map(array( $this, '_img_queue' ), $meta_value[ 'sizes' ]);
+            if (! empty($meta_value['sizes'])) {
+                array_map(array( $this, '_img_queue' ), $meta_value['sizes']);
             }
         }
 
@@ -253,17 +253,17 @@ class LiteSpeed_Cache_Img_Optm
         if (! is_array($json)) {
             return $json;
         }
-        $pids = $json[ 'pids' ];
+        $pids = $json['pids'];
 
         $data_to_add = array();
         foreach ($pids as $pid) {
-            foreach ($this->_img_in_queue[ $pid ] as $md5 => $src_data) {
+            foreach ($this->_img_in_queue[$pid] as $md5 => $src_data) {
                 $data_to_add[] = $pid;
                 $data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS_REQUESTED;
-                $data_to_add[] = $src_data[ 'src' ];
-                $data_to_add[] = $src_data[ 'srcpath_md5' ];
+                $data_to_add[] = $src_data['src'];
+                $data_to_add[] = $src_data['srcpath_md5'];
                 $data_to_add[] = $md5;
-                $data_to_add[] = $src_data[ 'src_filesize' ];
+                $data_to_add[] = $src_data['src_filesize'];
             }
         }
         $this->_insert_img_optm($data_to_add);
@@ -273,27 +273,27 @@ class LiteSpeed_Cache_Img_Optm
             // Generate root_id from inserted ones
             $srcpath_md5_to_search = array();
             foreach ($this->_img_duplicated_in_queue as $v) {
-                $srcpath_md5_to_search[] = $v[ 'info' ][ 'srcpath_md5' ];
+                $srcpath_md5_to_search[] = $v['info']['srcpath_md5'];
             }
             $existing_img_list = $this->_select_img_by_root_srcpath($srcpath_md5_to_search);
 
             $data_to_add = array();
             foreach ($this->_img_duplicated_in_queue as $v) {
-                $existing_info = $existing_img_list[ $v[ 'info' ][ 'srcpath_md5' ] ];
+                $existing_info = $existing_img_list[$v['info']['srcpath_md5']];
 
-                $data_to_add[] = $v[ 'pid' ];
-                $data_to_add[] = $existing_info[ 'status' ];
-                $data_to_add[] = $existing_info[ 'src' ];
-                $data_to_add[] = $existing_info[ 'srcpath_md5' ];
-                $data_to_add[] = $existing_info[ 'src_md5' ];
-                $data_to_add[] = $existing_info[ 'src_filesize' ];
-                $data_to_add[] = $existing_info[ 'id' ];
+                $data_to_add[] = $v['pid'];
+                $data_to_add[] = $existing_info['status'];
+                $data_to_add[] = $existing_info['src'];
+                $data_to_add[] = $existing_info['srcpath_md5'];
+                $data_to_add[] = $existing_info['src_md5'];
+                $data_to_add[] = $existing_info['src_filesize'];
+                $data_to_add[] = $existing_info['id'];
             }
             $this->_insert_img_optm($data_to_add, 'post_id, optm_status, src, srcpath_md5, src_md5, src_filesize, root_id');
         }
 
         $accepted_groups = count($pids);
-        $accepted_imgs = $json[ 'total' ];
+        $accepted_imgs = $json['total'];
 
         $placeholder1 = LiteSpeed_Cache_Admin_Display::print_plural($total_groups) . ' (' . LiteSpeed_Cache_Admin_Display::print_plural($this->_img_total, 'image') . ')';
         $placeholder2 = LiteSpeed_Cache_Admin_Display::print_plural($accepted_groups) . ' (' . LiteSpeed_Cache_Admin_Display::print_plural($accepted_imgs, 'image') . ')';
@@ -301,8 +301,8 @@ class LiteSpeed_Cache_Img_Optm
         LiteSpeed_Cache_Admin_Display::succeed($msg);
 
         // Update credit info
-        if (isset($json[ 'credit' ])) {
-            $this->_update_credit($json[ 'credit' ]);
+        if (isset($json['credit'])) {
+            $this->_update_credit($json['credit']);
         }
 
         return array( 'ok' => $msg );
@@ -351,7 +351,7 @@ class LiteSpeed_Cache_Img_Optm
         $q = "SELECT * FROM $this->_table_img_optm WHERE root_id=0 AND srcpath_md5 IN ( " . implode(',', array_fill(0, count($srcpath_md5_to_search), '%s')) . " )";
         $tmp = $wpdb->get_results($wpdb->prepare($q, $srcpath_md5_to_search));
         foreach ($tmp as $v) {
-            $existing_img_list[ $v->srcpath_md5 ] = array(
+            $existing_img_list[$v->srcpath_md5] = array(
                 'id'		=> $v->id,
                 'status'	=> $v->optm_status,
                 'pid'		=> $v->post_id,
@@ -400,36 +400,36 @@ class LiteSpeed_Cache_Img_Optm
         foreach ($this->_img_in_queue as $pid => $img_list) {
             $changed = false;
             foreach ($img_list as $md5 => $v) {
-                if (array_key_exists($v[ 'srcpath_md5' ], $existing_img_list)) {
-                    $existing_info = $existing_img_list[ $v[ 'srcpath_md5' ] ];
+                if (array_key_exists($v['srcpath_md5'], $existing_img_list)) {
+                    $existing_info = $existing_img_list[$v['srcpath_md5']];
 
                     // Insert into img_optm table directly
                     $existing_img_optm[] = $pid;
-                    $existing_img_optm[] = $existing_info[ 'status' ];
-                    $existing_img_optm[] = $existing_info[ 'src' ];
-                    $existing_img_optm[] = $existing_info[ 'srcpath_md5' ];
-                    $existing_img_optm[] = $existing_info[ 'src_md5' ];
-                    $existing_img_optm[] = $existing_info[ 'src_filesize' ];
-                    $existing_img_optm[] = $existing_info[ 'id' ];
+                    $existing_img_optm[] = $existing_info['status'];
+                    $existing_img_optm[] = $existing_info['src'];
+                    $existing_img_optm[] = $existing_info['srcpath_md5'];
+                    $existing_img_optm[] = $existing_info['src_md5'];
+                    $existing_img_optm[] = $existing_info['src_filesize'];
+                    $existing_img_optm[] = $existing_info['id'];
 
                     // Bypass IAPI posting by removing from img_in_queue
-                    unset($this->_img_in_queue[ $pid ][ $md5 ]);
+                    unset($this->_img_in_queue[$pid][$md5]);
 
                     // Size info exists. Prepare size info for `wp_postmeta`
                     // Only pulled images have size_info
-                    if ($existing_info[ 'status' ] == self::DB_IMG_OPTIMIZE_STATUS_PULLED) {
-                        $size_to_store[ $pid ] = $existing_info[ 'pid' ];
+                    if ($existing_info['status'] == self::DB_IMG_OPTIMIZE_STATUS_PULLED) {
+                        $size_to_store[$pid] = $existing_info['pid'];
                     }
 
-                    LiteSpeed_Cache_Log::debug('[Img_Optm] Existing pulled [pid] ' . $pid . " \t\t\t[status] " . $existing_info[ 'status' ] . " \t\t\t[src] " . $v[ 'src' ]);
+                    LiteSpeed_Cache_Log::debug('[Img_Optm] Existing pulled [pid] ' . $pid . " \t\t\t[status] " . $existing_info['status'] . " \t\t\t[src] " . $v['src']);
 
                     $changed = true;
                 }
             }
 
             if ($changed) {
-                if (empty($this->_img_in_queue[ $pid ])) {
-                    unset($this->_img_in_queue[ $pid ]);
+                if (empty($this->_img_in_queue[$pid])) {
+                    unset($this->_img_in_queue[$pid]);
                 }
             }
 
@@ -454,7 +454,7 @@ class LiteSpeed_Cache_Img_Optm
             $tmp = $wpdb->get_results($wpdb->prepare($q, array_merge(array( self::DB_IMG_OPTIMIZE_SIZE ), $pids)));
             $existing_sizes = array();
             foreach ($tmp as $v) {
-                $existing_sizes[ $v->post_id ] = $v->meta_value;
+                $existing_sizes[$v->post_id] = $v->meta_value;
             }
 
             // Get existing new data
@@ -465,9 +465,9 @@ class LiteSpeed_Cache_Img_Optm
             $size_to_update_pids = array();
             foreach ($tmp as $v) {
                 $size_to_update_pids[] = $v->post_id;
-                $from_pid = $size_to_store[ $v->post_id ];
+                $from_pid = $size_to_store[$v->post_id];
                 // Update existing data ( Replaced with existing size info wholly )
-                $wpdb->query($wpdb->prepare($q_to_update, array( $existing_sizes[ $from_pid ], $v->meta_id )));
+                $wpdb->query($wpdb->prepare($q_to_update, array( $existing_sizes[$from_pid], $v->meta_id )));
 
                 LiteSpeed_Cache_Log::debug('[Img_Optm] Updated optm_size info [pid] ' . $v->post_id . " \t\t\t[from_pid] " . $from_pid);
             }
@@ -479,7 +479,7 @@ class LiteSpeed_Cache_Img_Optm
             foreach ($size_to_insert_pids as $pid) {
                 $data[] = $pid;
                 $data[] = self::DB_IMG_OPTIMIZE_SIZE;
-                $data[] = $existing_sizes[ $size_to_store[ $pid ] ];
+                $data[] = $existing_sizes[$size_to_store[$pid]];
             }
 
             // Add placeholder
@@ -507,7 +507,7 @@ class LiteSpeed_Cache_Img_Optm
         $total_pid_unset = 0;
         foreach ($this->_img_in_queue as $pid => $img_list) {
             foreach ($img_list as $md5 => $v) {
-                if (in_array($v[ 'srcpath_md5' ], $srcpath_md5_list)) {
+                if (in_array($v['srcpath_md5'], $srcpath_md5_list)) {
                     $this->_img_duplicated_in_queue[] = array(
                         'pid'	=> $pid,
                         'info'	=> $v,
@@ -515,17 +515,17 @@ class LiteSpeed_Cache_Img_Optm
 
                     $total_img_duplicated ++;
 
-                    unset($this->_img_in_queue[ $pid ][ $md5 ]);
+                    unset($this->_img_in_queue[$pid][$md5]);
 
                     continue;
                 }
 
-                $srcpath_md5_list[ $pid . '.' . $md5 ] = $v[ 'srcpath_md5' ];
+                $srcpath_md5_list[$pid . '.' . $md5] = $v['srcpath_md5'];
 
             }
 
-            if (empty($this->_img_in_queue[ $pid ])) {
-                unset($this->_img_in_queue[ $pid ]);
+            if (empty($this->_img_in_queue[$pid])) {
+                unset($this->_img_in_queue[$pid]);
                 $total_pid_unset ++;
             }
         }
@@ -566,10 +566,10 @@ class LiteSpeed_Cache_Img_Optm
 
         $data_to_add = array();
         foreach ($this->_missed_img_in_queue as $src_data) {
-            $data_to_add[] = $src_data[ 'pid' ];
+            $data_to_add[] = $src_data['pid'];
             $data_to_add[] = self::DB_IMG_OPTIMIZE_STATUS_MISS;
-            $data_to_add[] = $src_data[ 'src' ];
-            $data_to_add[] = $src_data[ 'srcpath_md5' ];
+            $data_to_add[] = $src_data['src'];
+            $data_to_add[] = $src_data['srcpath_md5'];
         }
         $this->_insert_img_optm($data_to_add, 'post_id, optm_status, src, srcpath_md5');
     }
@@ -582,23 +582,23 @@ class LiteSpeed_Cache_Img_Optm
      */
     private function _img_queue($meta_value, $ori_file = false)
     {
-        if (empty($meta_value[ 'file' ]) || empty($meta_value[ 'width' ]) || empty($meta_value[ 'height' ])) {
+        if (empty($meta_value['file']) || empty($meta_value['width']) || empty($meta_value['height'])) {
             LiteSpeed_Cache_Log::debug2('[Img_Optm] bypass image due to lack of file/w/h: pid ' . $this->tmp_pid, $meta_value);
             return;
         }
 
         if (! $ori_file) {
-            $meta_value[ 'file' ] = $this->tmp_path . $meta_value[ 'file' ];
+            $meta_value['file'] = $this->tmp_path . $meta_value['file'];
         }
 
         // check file exists or not
-        $real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $meta_value[ 'file' ];
+        $real_file = $this->wp_upload_dir['basedir'] . '/' . $meta_value['file'];
         $ext = pathinfo($real_file, PATHINFO_EXTENSION);
         if (! file_exists($real_file) || ! in_array($ext, array( 'jpg', 'jpeg', 'png' ))) {
             $this->_missed_img_in_queue[] = array(
                 'pid'	=> $this->tmp_pid,
-                'src'	=> $meta_value[ 'file' ],
-                'srcpath_md5'	=> md5($meta_value[ 'file' ]),
+                'src'	=> $meta_value['file'],
+                'srcpath_md5'	=> md5($meta_value['file']),
             );
             LiteSpeed_Cache_Log::debug2('[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $real_file);
             return;
@@ -607,12 +607,12 @@ class LiteSpeed_Cache_Img_Optm
         LiteSpeed_Cache_Log::debug2('[Img_Optm] adding image: pid ' . $this->tmp_pid);
 
         $img_info = array(
-            'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
-            'src'	=> $meta_value[ 'file' ], // not needed in LiteSpeed sapi, just leave for local storage after post
-            'width'	=> $meta_value[ 'width' ],
-            'height'	=> $meta_value[ 'height' ],
-            'mime_type'	=> ! empty($meta_value[ 'mime-type' ]) ? $meta_value[ 'mime-type' ] : '',
-            'srcpath_md5'	=> md5($meta_value[ 'file' ]),
+            'url'	=> $this->wp_upload_dir['baseurl'] . '/' . $meta_value['file'],
+            'src'	=> $meta_value['file'], // not needed in LiteSpeed sapi, just leave for local storage after post
+            'width'	=> $meta_value['width'],
+            'height'	=> $meta_value['height'],
+            'mime_type'	=> ! empty($meta_value['mime-type']) ? $meta_value['mime-type'] : '',
+            'srcpath_md5'	=> md5($meta_value['file']),
             'src_filesize'	=> filesize($real_file),
             /**
              * To use the filter `litespeed_img_optm_options_per_image`, do below:
@@ -643,18 +643,18 @@ class LiteSpeed_Cache_Img_Optm
              *
              * @since 2.4.2
              */
-            'optm_options'	=> apply_filters('litespeed_img_optm_options_per_image', 0, $meta_value[ 'file' ]),
+            'optm_options'	=> apply_filters('litespeed_img_optm_options_per_image', 0, $meta_value['file']),
         );
         $md5 = md5_file($real_file);
 
-        if (empty($this->_img_in_queue[ $this->tmp_pid ])) {
-            $this->_img_in_queue[ $this->tmp_pid ] = array();
+        if (empty($this->_img_in_queue[$this->tmp_pid])) {
+            $this->_img_in_queue[$this->tmp_pid] = array();
         }
-        $this->_img_in_queue[ $this->tmp_pid ][ $md5 ] = $img_info;
+        $this->_img_in_queue[$this->tmp_pid][$md5] = $img_info;
         $this->_img_total ++;
 
         // Build existing data checking array
-        $this->_img_srcpath_md5_array[] = $img_info[ 'srcpath_md5' ];
+        $this->_img_srcpath_md5_array[] = $img_info['srcpath_md5'];
     }
 
     /**
@@ -682,14 +682,14 @@ class LiteSpeed_Cache_Img_Optm
         }
 
         // Check data format
-        if (empty($json[ 'pids' ]) || ! is_array($json[ 'pids' ])) {
-            LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to parse data from LiteSpeed IAPI server ', $json[ 'pids' ]);
-            $msg = sprintf(__('Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache'), var_export($json[ 'pids' ], true));
+        if (empty($json['pids']) || ! is_array($json['pids'])) {
+            LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to parse data from LiteSpeed IAPI server ', $json['pids']);
+            $msg = sprintf(__('Failed to parse data from LiteSpeed IAPI server: %s', 'litespeed-cache'), var_export($json['pids'], true));
             LiteSpeed_Cache_Admin_Display::error($msg);
             return $json;
         }
 
-        LiteSpeed_Cache_Log::debug('[Img_Optm] Returned data from LiteSpeed IAPI server count: ' . count($json[ 'pids' ]));
+        LiteSpeed_Cache_Log::debug('[Img_Optm] Returned data from LiteSpeed IAPI server count: ' . count($json['pids']));
 
         return $json;
 
@@ -722,25 +722,25 @@ class LiteSpeed_Cache_Img_Optm
         $child_postmeta_info = array();
 
         foreach ($list as $v) {
-            if (! array_key_exists($v->src_md5, $notified_data[ $v->post_id ])) {
+            if (! array_key_exists($v->src_md5, $notified_data[$v->post_id])) {
                 // This image is not in notifcation
                 continue;
             }
 
-            $json = $notified_data[ $v->post_id ][ $v->src_md5 ];
+            $json = $notified_data[$v->post_id][$v->src_md5];
 
             $server_info = array(
                 'server'	=> $server,
             );
 
             // Only need to update meta_info for pull notification, for other notifications, no need to modify meta_info
-            if (! empty($json[ 'ori' ]) || ! empty($json[ 'webp' ])) {
+            if (! empty($json['ori']) || ! empty($json['webp'])) {
                 // Save server side ID to send taken notification after pulled
-                $server_info[ 'id' ] = $json[ 'id' ];
+                $server_info['id'] = $json['id'];
 
                 // Default optm info array
-                if (empty($postmeta_info[ $v->post_id ])) {
-                    $postmeta_info[ $v->post_id ] =  array(
+                if (empty($postmeta_info[$v->post_id])) {
+                    $postmeta_info[$v->post_id] =  array(
                         'meta_id'	=> $v->b_meta_id,
                         'meta_info'	=> array(
                             'ori_total' => 0,
@@ -752,7 +752,7 @@ class LiteSpeed_Cache_Img_Optm
                     // Init optm_info for the first one
                     if (! empty($v->b_meta_id)) {
                         foreach (unserialize($v->b_optm_info) as $k2 => $v2) {
-                            $postmeta_info[ $v->post_id ][ 'meta_info' ][ $k2 ] += $v2;
+                            $postmeta_info[$v->post_id]['meta_info'][$k2] += $v2;
                         }
                     }
                 }
@@ -760,28 +760,28 @@ class LiteSpeed_Cache_Img_Optm
             }
 
             $target_saved = 0;
-            if (! empty($json[ 'ori' ])) {
-                $server_info[ 'ori_md5' ] = $json[ 'ori_md5' ];
-                $server_info[ 'ori' ] = $json[ 'ori' ];
+            if (! empty($json['ori'])) {
+                $server_info['ori_md5'] = $json['ori_md5'];
+                $server_info['ori'] = $json['ori'];
 
-                $target_saved = $json[ 'ori_reduced' ];
+                $target_saved = $json['ori_reduced'];
 
                 // Append meta info
-                $postmeta_info[ $v->post_id ][ 'meta_info' ][ 'ori_total' ] += $json[ 'src_size' ];
-                $postmeta_info[ $v->post_id ][ 'meta_info' ][ 'ori_saved' ] += $json[ 'ori_reduced' ];
+                $postmeta_info[$v->post_id]['meta_info']['ori_total'] += $json['src_size'];
+                $postmeta_info[$v->post_id]['meta_info']['ori_saved'] += $json['ori_reduced'];
 
             }
 
             $webp_saved = 0;
-            if (! empty($json[ 'webp' ])) {
-                $server_info[ 'webp_md5' ] = $json[ 'webp_md5' ];
-                $server_info[ 'webp' ] = $json[ 'webp' ];
+            if (! empty($json['webp'])) {
+                $server_info['webp_md5'] = $json['webp_md5'];
+                $server_info['webp'] = $json['webp'];
 
-                $webp_saved = $json[ 'webp_reduced' ];
+                $webp_saved = $json['webp_reduced'];
 
                 // Append meta info
-                $postmeta_info[ $v->post_id ][ 'meta_info' ][ 'webp_total' ] += $json[ 'src_size' ];
-                $postmeta_info[ $v->post_id ][ 'meta_info' ][ 'webp_saved' ] += $json[ 'webp_reduced' ];
+                $postmeta_info[$v->post_id]['meta_info']['webp_total'] += $json['src_size'];
+                $postmeta_info[$v->post_id]['meta_info']['webp_saved'] += $json['webp_reduced'];
             }
 
             // Update status and data
@@ -793,9 +793,9 @@ class LiteSpeed_Cache_Img_Optm
             $child_count = $wpdb->query($wpdb->prepare($q, array( $status, $target_saved, $webp_saved, $v->id )));
 
             // Group child meta_info for later update
-            if (! empty($json[ 'ori' ]) || ! empty($json[ 'webp' ])) {
+            if (! empty($json['ori']) || ! empty($json['webp'])) {
                 if ($child_count) {
-                    $child_postmeta_info[ $v->id ] = $postmeta_info[ $v->post_id ][ 'meta_info' ];
+                    $child_postmeta_info[$v->id] = $postmeta_info[$v->post_id]['meta_info'];
                 }
             }
 
@@ -817,11 +817,11 @@ class LiteSpeed_Cache_Img_Optm
          */
         if ($postmeta_info) {
             foreach ($postmeta_info as $post_id => $optm_arr) {
-                $optm_info = serialize($optm_arr[ 'meta_info' ]);
+                $optm_info = serialize($optm_arr['meta_info']);
 
-                if (! empty($optm_arr[ 'meta_id' ])) {
+                if (! empty($optm_arr['meta_id'])) {
                     $q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d ";
-                    $wpdb->query($wpdb->prepare($q, array( $optm_info, $optm_arr[ 'meta_id' ] )));
+                    $wpdb->query($wpdb->prepare($q, array( $optm_info, $optm_arr['meta_id'] )));
                 }
                 else {
                     LiteSpeed_Cache_Log::debug('[Img_Optm] New size info [pid] ' . $post_id);
@@ -847,7 +847,7 @@ class LiteSpeed_Cache_Img_Optm
             $pids_to_update = array();
             $pids_data_to_insert = array();
             foreach ($tmp as $v) {
-                $optm_info = $child_postmeta_info[ $v->root_id ];
+                $optm_info = $child_postmeta_info[$v->root_id];
 
                 if ($v->b_meta_id) {
                     $pids_to_update[] = $v->post_id;
@@ -900,13 +900,13 @@ class LiteSpeed_Cache_Img_Optm
      */
     private function _parse_notify_data()
     {
-        $notified_data = unserialize(base64_decode($_POST[ 'data' ]));
+        $notified_data = unserialize(base64_decode($_POST['data']));
         if (empty($notified_data) || ! is_array($notified_data)) {
             LiteSpeed_Cache_Log::debug('[Img_Optm] ❌ notify exit: no notified data');
             exit(json_encode('no notified data'));
         }
 
-        if (empty($_POST[ 'server' ]) || substr($_POST[ 'server' ], -21) !== 'api.litespeedtech.com') {
+        if (empty($_POST['server']) || substr($_POST['server'], -21) !== 'api.litespeedtech.com') {
             LiteSpeed_Cache_Log::debug('[Img_Optm] notify exit: no/wrong server');
             exit(json_encode('no/wrong server'));
         }
@@ -916,12 +916,12 @@ class LiteSpeed_Cache_Img_Optm
             self::DB_IMG_OPTIMIZE_STATUS_REQUESTED,
         );
 
-        if (empty($_POST[ 'status' ]) || (! in_array($_POST[ 'status' ], $_allowed_status) && substr($_POST[ 'status' ], 0, 3) != self::DB_IMG_OPTIMIZE_STATUS_ERR)) {
+        if (empty($_POST['status']) || (! in_array($_POST['status'], $_allowed_status) && substr($_POST['status'], 0, 3) != self::DB_IMG_OPTIMIZE_STATUS_ERR)) {
             LiteSpeed_Cache_Log::debug('[Img_Optm] notify exit: no/wrong status');
             exit(json_encode('no/wrong status'));
         }
 
-        return array( $notified_data, $_POST[ 'server' ], $_POST[ 'status' ] );
+        return array( $notified_data, $_POST['server'], $_POST['status'] );
     }
 
     /**
@@ -1022,7 +1022,7 @@ class LiteSpeed_Cache_Img_Optm
                 }
 
                 $server_info = unserialize($row_img->server_info);
-                $server = $server_info[ 'server' ];
+                $server = $server_info['server'];
 
             } catch(\Exception $ex) {
                 LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to unserialize server_info.');
@@ -1040,27 +1040,27 @@ class LiteSpeed_Cache_Img_Optm
                 return;
             }
 
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $row_img->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $row_img->src;
 
             // Save ori optm image
             $target_size = 0;
 
-            if (! empty($server_info[ 'ori' ])) {
+            if (! empty($server_info['ori'])) {
                 /**
                  * Use wp orignal get func to avoid allow_url_open off issue
                  * @since  1.6.5
                  */
-                $response = wp_remote_get($server_info[ 'ori' ], array( 'timeout' => 15 ));
+                $response = wp_remote_get($server_info['ori'], array( 'timeout' => 15 ));
                 if (is_wp_error($response)) {
                     $error_message = $response->get_error_message();
                     LiteSpeed_Cache_Log::debug('IAPI failed to pull image: ' . $error_message);
                     return;
                 }
 
-                file_put_contents($local_file . '.tmp', $response[ 'body' ]);
+                file_put_contents($local_file . '.tmp', $response['body']);
 
-                if (! file_exists($local_file . '.tmp') || ! filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info[ 'ori_md5' ]) {
-                    LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info[ 'ori_md5' ]);
+                if (! file_exists($local_file . '.tmp') || ! filesize($local_file . '.tmp') || md5_file($local_file . '.tmp') !== $server_info['ori_md5']) {
+                    LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to pull optimized img: file md5 dismatch, server md5: ' . $server_info['ori_md5']);
 
                     // update status to failed
                     $q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d ";
@@ -1093,20 +1093,20 @@ class LiteSpeed_Cache_Img_Optm
             // Save webp image
             $webp_size = 0;
 
-            if (! empty($server_info[ 'webp' ])) {
+            if (! empty($server_info['webp'])) {
 
                 // Fetch
-                $response = wp_remote_get($server_info[ 'webp' ], array( 'timeout' => 15 ));
+                $response = wp_remote_get($server_info['webp'], array( 'timeout' => 15 ));
                 if (is_wp_error($response)) {
                     $error_message = $response->get_error_message();
                     LiteSpeed_Cache_Log::debug('IAPI failed to pull webp image: ' . $error_message);
                     return;
                 }
 
-                file_put_contents($local_file . '.webp', $response[ 'body' ]);
+                file_put_contents($local_file . '.webp', $response['body']);
 
-                if (! file_exists($local_file . '.webp') || ! filesize($local_file . '.webp') || md5_file($local_file . '.webp') !== $server_info[ 'webp_md5' ]) {
-                    LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info[ 'webp_md5' ]);
+                if (! file_exists($local_file . '.webp') || ! filesize($local_file . '.webp') || md5_file($local_file . '.webp') !== $server_info['webp_md5']) {
+                    LiteSpeed_Cache_Log::debug('[Img_Optm] Failed to pull optimized webp img: file md5 dismatch, server md5: ' . $server_info['webp_md5']);
 
                     // update status to failed
                     $q = "UPDATE $this->_table_img_optm SET optm_status = %s WHERE id = %d ";
@@ -1136,10 +1136,10 @@ class LiteSpeed_Cache_Img_Optm
             $child_count = $wpdb->query($wpdb->prepare($q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $target_size, $webp_size, $row_img->id )));
 
             // Save server_list to notify taken
-            if (empty($server_list[ $server ])) {
-                $server_list[ $server ] = array();
+            if (empty($server_list[$server])) {
+                $server_list[$server] = array();
             }
-            $server_list[ $server ][] = $server_info[ 'id' ];
+            $server_list[$server][] = $server_info['id'];
 
         }
 
@@ -1151,8 +1151,8 @@ class LiteSpeed_Cache_Img_Optm
 
         // use latest credit from last server response
         // Recover credit
-        if (is_array($json) && isset($json[ 'credit' ])) {
-            $this->_update_credit($json[ 'credit' ]);
+        if (is_array($json) && isset($json['credit'])) {
+            $this->_update_credit($json['credit']);
         }
 
         // Try level up
@@ -1212,17 +1212,17 @@ class LiteSpeed_Cache_Img_Optm
     {
         global $wpdb;
 
-        $pid = $_POST[ 'data' ];
+        $pid = $_POST['data'];
 
         LiteSpeed_Cache_Log::debug('[Img_Optm] Check image [ID] ' . $pid);
 
         $data = array();
 
-        $data[ 'img_count' ] = $this->img_count();
-        $data[ 'optm_summary' ] = $this->summary_info();
+        $data['img_count'] = $this->img_count();
+        $data['optm_summary'] = $this->summary_info();
 
-        $data[ '_wp_attached_file' ] = get_post_meta($pid, '_wp_attached_file', true);
-        $data[ '_wp_attachment_metadata' ] = get_post_meta($pid, '_wp_attachment_metadata', true);
+        $data['_wp_attached_file'] = get_post_meta($pid, '_wp_attached_file', true);
+        $data['_wp_attachment_metadata'] = get_post_meta($pid, '_wp_attachment_metadata', true);
 
         // Get img_optm data
         $q = "SELECT * FROM $this->_table_img_optm WHERE post_id = %d";
@@ -1240,7 +1240,7 @@ class LiteSpeed_Cache_Img_Optm
                 );
             }
         }
-        $data[ 'img_data' ] = $img_data;
+        $data['img_data'] = $img_data;
 
         echo json_encode($data);
         exit;
@@ -1272,7 +1272,7 @@ class LiteSpeed_Cache_Img_Optm
             return false;
         }
 
-        if (empty($meta_value[ 'file' ])) {
+        if (empty($meta_value['file'])) {
             LiteSpeed_Cache_Log::debug('[Img_Optm] bypassed parsing meta due to no ori file: pid ' . $v->post_id);
             return false;
         }
@@ -1314,7 +1314,7 @@ class LiteSpeed_Cache_Img_Optm
         }
 
         // If failed to run request to IAPI
-        if (! is_array($json) || empty($json[ 'success' ])) {
+        if (! is_array($json) || empty($json['success'])) {
 
             // For other errors that Admin_API didn't take
             if (! is_array($json)) {
@@ -1391,7 +1391,7 @@ class LiteSpeed_Cache_Img_Optm
         $q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s";
         $list = $wpdb->get_results($wpdb->prepare($q, self::DB_IMG_OPTIMIZE_STATUS_PULLED));
         foreach ($list as $v) {
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $v->src;
 
             // del webp
             file_exists($local_file . '.webp') && unlink($local_file . '.webp');
@@ -1466,21 +1466,21 @@ class LiteSpeed_Cache_Img_Optm
             if (! $meta_value) {
                 continue;
             }
-            if (empty($meta_value[ 'sizes' ])) {
+            if (empty($meta_value['sizes'])) {
                 continue;
             }
 
-            $optm_data_pid2mid_list[ $v->post_id ] = array( 'status_mid' => $v->bmeta_id, 'data_mid' => $v->cmeta_id );
+            $optm_data_pid2mid_list[$v->post_id] = array( 'status_mid' => $v->bmeta_id, 'data_mid' => $v->cmeta_id );
 
             // prepare for pushing
             $this->tmp_pid = $v->post_id;
-            $this->tmp_path = pathinfo($meta_value[ 'file' ], PATHINFO_DIRNAME) . '/';
+            $this->tmp_path = pathinfo($meta_value['file'], PATHINFO_DIRNAME) . '/';
 
             // ls optimized meta
-            $optm_meta = $optm_data_list[ $v->post_id ] = unserialize($v->cmeta_value);
+            $optm_meta = $optm_data_list[$v->post_id] = unserialize($v->cmeta_value);
             $optm_list = array();
             foreach ($optm_meta as $md5 => $optm_row) {
-                $optm_list[] = $optm_row[ 0 ];
+                $optm_list[] = $optm_row[0];
                 // only do for requested/notified img
                 // if ( ! in_array( $optm_row[ 1 ], array( self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED ) ) ) {
                 // 	continue ;
@@ -1489,8 +1489,8 @@ class LiteSpeed_Cache_Img_Optm
 
             // check if there is new files from wp meta
             $img_queue = array();
-            foreach ($meta_value[ 'sizes' ] as $v2) {
-                $curr_file = $this->tmp_path . $v2[ 'file' ];
+            foreach ($meta_value['sizes'] as $v2) {
+                $curr_file = $this->tmp_path . $v2['file'];
 
                 // new child file OR not finished yet
                 if (! in_array($curr_file, $optm_list)) {
@@ -1530,16 +1530,16 @@ class LiteSpeed_Cache_Img_Optm
             return $json;
         }
         // Returned data is the requested and notifed images
-        $pids = $json[ 'pids' ];
+        $pids = $json['pids'];
 
         $q = "UPDATE $wpdb->postmeta SET meta_value = %s WHERE meta_id = %d";
 
         // Update data
         foreach ($pids as $pid) {
-            $md52src_list = $optm_data_list[ $pid ];
+            $md52src_list = $optm_data_list[$pid];
 
-            foreach ($this->_img_in_queue[ $pid ] as $md5 => $src_data) {
-                $md52src_list[ $md5 ] = array( $src_data[ 'src' ], self::DB_IMG_OPTIMIZE_STATUS_REQUESTED );
+            foreach ($this->_img_in_queue[$pid] as $md5 => $src_data) {
+                $md52src_list[$md5] = array( $src_data['src'], self::DB_IMG_OPTIMIZE_STATUS_REQUESTED );
             }
 
             $new_status = $this->_get_status_by_meta_data($md52src_list, self::DB_IMG_OPTIMIZE_STATUS_REQUESTED);
@@ -1547,19 +1547,19 @@ class LiteSpeed_Cache_Img_Optm
             $md52src_list = serialize($md52src_list);
 
             // Store data
-            $wpdb->query($wpdb->prepare($q, array( $new_status, $optm_data_pid2mid_list[ $pid ][ 'status_mid' ] )));
-            $wpdb->query($wpdb->prepare($q, array( $md52src_list, $optm_data_pid2mid_list[ $pid ][ 'data_mid' ] )));
+            $wpdb->query($wpdb->prepare($q, array( $new_status, $optm_data_pid2mid_list[$pid]['status_mid'] )));
+            $wpdb->query($wpdb->prepare($q, array( $md52src_list, $optm_data_pid2mid_list[$pid]['data_mid'] )));
         }
 
         $accepted_groups = count($pids);
-        $accepted_imgs = $json[ 'total' ];
+        $accepted_imgs = $json['total'];
 
         $msg = sprintf(__('Pushed %1$s groups with %2$s images to LiteSpeed optimization server, accepted %3$s groups with %4$s images.', 'litespeed-cache'), $total_groups, $this->_img_total, $accepted_groups, $accepted_imgs);
         LiteSpeed_Cache_Admin_Display::succeed($msg);
 
         // Update credit info
-        if (isset($json[ 'credit' ])) {
-            $this->_update_credit($json[ 'credit' ]);
+        if (isset($json['credit'])) {
+            $this->_update_credit($json['credit']);
         }
 
     }
@@ -1573,26 +1573,26 @@ class LiteSpeed_Cache_Img_Optm
     private function _try_level_up()
     {
         $optm_summary = $this->summary_info();
-        if (empty($optm_summary[ 'level' ]) || empty($optm_summary[ 'credit_recovered' ]) || empty($optm_summary[ '_level_data' ])) {
+        if (empty($optm_summary['level']) || empty($optm_summary['credit_recovered']) || empty($optm_summary['_level_data'])) {
             return;
         }
 
         // level beyond 5 should be triggered manually
-        if ($optm_summary[ 'level' ] >= 5) {
+        if ($optm_summary['level'] >= 5) {
             return;
         }
 
-        $next_level = $optm_summary[ 'level' ] + 1;
-        $next_level_data = $optm_summary[ '_level_data' ][ $next_level ];
+        $next_level = $optm_summary['level'] + 1;
+        $next_level_data = $optm_summary['_level_data'][$next_level];
 
-        if ($optm_summary[ 'credit_recovered' ] <= $next_level_data[ 0 ]) {
+        if ($optm_summary['credit_recovered'] <= $next_level_data[0]) {
             return;
         }
 
         // Now do level up magic
         // Bless we can get more reviews to encourage me ~
         $json = $this->_sync_data(true);
-        if ($json[ 'level' ] > $optm_summary[ 'level' ]) {
+        if ($json['level'] > $optm_summary['level']) {
             $msg = "Upgraded to level $json[level] !";
             LiteSpeed_Cache_Log::debug("[Img_Optm] $msg");
             return $msg;
@@ -1612,26 +1612,26 @@ class LiteSpeed_Cache_Img_Optm
     {
         $summary = get_option(self::DB_IMG_OPTM_SUMMARY, array());
 
-        if (empty($summary[ 'credit' ])) {
-            $summary[ 'credit' ] = 0;
+        if (empty($summary['credit'])) {
+            $summary['credit'] = 0;
         }
 
         if ($credit === '++') {
-            $credit = $summary[ 'credit' ] + 1;
+            $credit = $summary['credit'] + 1;
         }
 
-        $old = $summary[ 'credit' ] ?: '-';
+        $old = $summary['credit'] ?: '-';
         LiteSpeed_Cache_Log::debug("[Img_Optm] Credit updated \t\t[Old] $old \t\t[New] $credit");
 
         // Mark credit recovered
-        if ($credit > $summary[ 'credit' ]) {
-            if (empty($summary[ 'credit_recovered' ])) {
-                $summary[ 'credit_recovered' ] = 0;
+        if ($credit > $summary['credit']) {
+            if (empty($summary['credit_recovered'])) {
+                $summary['credit_recovered'] = 0;
             }
-            $summary[ 'credit_recovered' ] += $credit - $summary[ 'credit' ];
+            $summary['credit_recovered'] += $credit - $summary['credit'];
         }
 
-        $summary[ 'credit' ] = $credit;
+        $summary['credit'] = $credit;
 
         update_option(self::DB_IMG_OPTM_SUMMARY, $summary);
     }
@@ -1651,7 +1651,7 @@ class LiteSpeed_Cache_Img_Optm
         $i = 0;
         $total_size = 0;
         foreach ($list as $v) {
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $v->src;
 
             $extension = pathinfo($local_file, PATHINFO_EXTENSION);
             $local_filename = substr($local_file, 0, - strlen($extension) - 1);
@@ -1704,7 +1704,7 @@ class LiteSpeed_Cache_Img_Optm
         $i = 0;
         $total_size = 0;
         foreach ($list as $v) {
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $v->src;
 
             $extension = pathinfo($local_file, PATHINFO_EXTENSION);
             $local_filename = substr($local_file, 0, - strlen($extension) - 1);
@@ -1749,7 +1749,7 @@ class LiteSpeed_Cache_Img_Optm
         if (! $field) {
             return $optm_summary;
         }
-        return ! empty($optm_summary[ $field ]) ? $optm_summary[ $field ] : 0;
+        return ! empty($optm_summary[$field]) ? $optm_summary[$field] : 0;
     }
 
     /**
@@ -1819,11 +1819,11 @@ class LiteSpeed_Cache_Img_Optm
         $count_list = array();
 
         foreach ($groups_to_check as $v) {
-            $count_list[ 'group.' . $v ] = $wpdb->get_var($wpdb->prepare($q_groups, $v));
+            $count_list['group.' . $v] = $wpdb->get_var($wpdb->prepare($q_groups, $v));
         }
 
         foreach ($images_to_check as $v) {
-            $count_list[ 'img.' . $v ] = $wpdb->get_var($wpdb->prepare($q, $v));
+            $count_list['img.' . $v] = $wpdb->get_var($wpdb->prepare($q, $v));
         }
 
         $data = array(
@@ -1893,7 +1893,7 @@ class LiteSpeed_Cache_Img_Optm
 
         $i = 0;
         foreach ($list as $v) {
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $v->src;
 
             $extension = pathinfo($local_file, PATHINFO_EXTENSION);
             $local_filename = substr($local_file, 0, - strlen($extension) - 1);
@@ -1948,7 +1948,7 @@ class LiteSpeed_Cache_Img_Optm
         $msg = 'Unknown Msg';
 
         foreach ($list as $v) {
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $v->src;
 
             // to switch webp file
             if ($switch_type === 'webp') {
@@ -2019,7 +2019,7 @@ class LiteSpeed_Cache_Img_Optm
         $list = $wpdb->get_results($wpdb->prepare($q, array( $post_id )));
 
         foreach ($list as $v) {
-            $local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src;
+            $local_file = $this->wp_upload_dir['basedir'] . '/' . $v->src;
 
             file_exists($local_file . '.webp') && unlink($local_file . '.webp');
             file_exists($local_file . '.optm.webp') && unlink($local_file . '.optm.webp');
@@ -2064,7 +2064,7 @@ class LiteSpeed_Cache_Img_Optm
 
         switch ($type) {
             case self::TYPE_RESET_ROW :
-                $instance->reset_row(! empty($_GET[ 'id' ]) ? $_GET[ 'id' ] : false);
+                $instance->reset_row(! empty($_GET['id']) ? $_GET['id'] : false);
                 break;
 
             case self::TYPE_CALC_BKUP :
@@ -2102,10 +2102,10 @@ class LiteSpeed_Cache_Img_Optm
                 $instance->_update_cron_running(true);
 
                 // Check if need to self redirect
-                if (is_array($result) && $result[ 'ok' ] === 'to_be_continued') {
+                if (is_array($result) && $result['ok'] === 'to_be_continued') {
                     $link = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMG_OPTM, LiteSpeed_Cache_Img_Optm::TYPE_IMG_PULL);
                     // Add i to avoid browser too many redirected warning
-                    $i = ! empty($_GET[ 'i' ]) ? $_GET[ 'i' ] : 0;
+                    $i = ! empty($_GET['i']) ? $_GET['i'] : 0;
                     $i ++;
                     $url = html_entity_decode($link) . '&i=' . $i;
                     exit("<meta http-equiv='refresh' content='0;url=$url'>");

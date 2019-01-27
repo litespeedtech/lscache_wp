@@ -29,11 +29,11 @@ class LiteSpeed_Cache_Utility
 
         $_summary = $_gui->get_summary();
 
-        $_summary[ 'score.last_check' ] = time();
+        $_summary['score.last_check'] = time();
         $_gui->save_summary($_summary);
 
         $score = LiteSpeed_Cache_Admin_API::post(LiteSpeed_Cache_Admin_API::IAPI_ACTION_PAGESCORE, false, true, true, 600);
-        $_summary[ 'score.data' ] = $score;
+        $_summary['score.data'] = $score;
         $_gui->save_summary($_summary);
 
         LiteSpeed_Cache_Log::debug('[Util] Saved page score ', $score);
@@ -53,11 +53,11 @@ class LiteSpeed_Cache_Utility
         $url = 'https://wp.api.litespeedtech.com/auto_upgrade_v';
 
         $response = wp_remote_get($url, array( 'timeout' => 15 ));
-        if (! is_array($response) || empty($response[ 'body' ])) {
+        if (! is_array($response) || empty($response['body'])) {
             return false;
         }
 
-        return $response[ 'body' ];
+        return $response['body'];
     }
 
     /**
@@ -283,7 +283,7 @@ class LiteSpeed_Cache_Utility
         $attrs = array();
         preg_match_all('#([\w-]+)=["\']([^"\']*)["\']#isU', $str, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
-            $attrs[ $match[ 1 ] ] = trim($match[ 2 ]);
+            $attrs[$match[1]] = trim($match[2]);
         }
         return $attrs;
     }
@@ -297,7 +297,7 @@ class LiteSpeed_Cache_Utility
      */
     public static function get_permalink_url($relative_url)
     {
-        return $GLOBALS[ 'wp_rewrite' ]->using_permalinks() ? home_url($relative_url) : home_url() . '/?' . $relative_url;
+        return $GLOBALS['wp_rewrite']->using_permalinks() ? home_url($relative_url) : home_url() . '/?' . $relative_url;
     }
 
     /**
@@ -323,10 +323,10 @@ class LiteSpeed_Cache_Utility
             if ($has_ttl) {
                 $this_ttl = 0;
                 $item = explode(' ', $item);
-                if (! empty($item[ 1 ])) {
-                    $this_ttl = $item[ 1 ];
+                if (! empty($item[1])) {
+                    $this_ttl = $item[1];
                 }
-                $item = $item[ 0 ];
+                $item = $item[0];
             }
 
             if (substr($item, -1) === '$') {
@@ -440,15 +440,15 @@ class LiteSpeed_Cache_Utility
     public static function parse_domain($url)
     {
         $url = @parse_url($url);
-        if (empty($url[ 'host' ])) {
+        if (empty($url['host'])) {
             return '';
         }
 
-        if (! empty($url[ 'scheme' ])) {
-            return $url[ 'scheme' ] . '://' . $url[ 'host' ];
+        if (! empty($url['scheme'])) {
+            return $url['scheme'] . '://' . $url['host'];
         }
 
-        return '//' . $url[ 'host' ];
+        return '//' . $url['host'];
     }
 
     /**
@@ -547,11 +547,11 @@ class LiteSpeed_Cache_Utility
                 $params = $_GET;
 
                 if (! empty($params)) {
-                    if (isset($params[ 'LSCWP_CTRL' ])) {
-                        unset($params[ 'LSCWP_CTRL' ]);
+                    if (isset($params['LSCWP_CTRL'])) {
+                        unset($params['LSCWP_CTRL']);
                     }
-                    if (isset($params[ '_wpnonce' ])) {
-                        unset($params[ '_wpnonce' ]);
+                    if (isset($params['_wpnonce'])) {
+                        unset($params['_wpnonce']);
                     }
                     if (! empty($params)) {
                         $prefix .= http_build_query($params) . '&';
@@ -576,13 +576,13 @@ class LiteSpeed_Cache_Utility
         if ($type) {
             // Remove potential param `type` from url
             $url = parse_url(htmlspecialchars_decode($url));
-            parse_str($url[ 'query' ], $query);
+            parse_str($url['query'], $query);
 
             $built_arr = array_merge($query, LiteSpeed_Cache_Router::build_type($type));
             if ($append_arr) {
                 $built_arr = array_merge($built_arr, $append_arr);
             }
-            $url[ 'query' ] = http_build_query($built_arr);
+            $url['query'] = http_build_query($built_arr);
             self::compatibility();
             $url = http_build_url($url);
             $url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
@@ -623,16 +623,16 @@ class LiteSpeed_Cache_Utility
     public static function is_internal_file($url, $addition_postfix = false)
     {
         $url_parsed = parse_url($url);
-        if (isset($url_parsed[ 'host' ]) && ! self::internal($url_parsed[ 'host' ])) {
+        if (isset($url_parsed['host']) && ! self::internal($url_parsed['host'])) {
             // Check if is cdn path
             // Do this to avoid user hardcoded src in tpl
-            if (! LiteSpeed_Cache_CDN::internal($url_parsed[ 'host' ])) {
+            if (! LiteSpeed_Cache_CDN::internal($url_parsed['host'])) {
                 LiteSpeed_Cache_Log::debug2('[Util] external');
                 return false;
             }
         }
 
-        if (empty($url_parsed[ 'path' ])) {
+        if (empty($url_parsed['path'])) {
             return false;
         }
 
@@ -640,7 +640,7 @@ class LiteSpeed_Cache_Utility
         if (is_multisite() && defined('PATH_CURRENT_SITE')) {
             $pattern = '#^' . PATH_CURRENT_SITE . '([_0-9a-zA-Z-]+/)(wp-(content|admin|includes))#U';
             $replacement = PATH_CURRENT_SITE . '$2';
-            $url_parsed[ 'path' ] = preg_replace($pattern, $replacement, $url_parsed[ 'path' ]);
+            $url_parsed['path'] = preg_replace($pattern, $replacement, $url_parsed['path']);
             // $current_blog = (int) get_current_blog_id() ;
             // $main_blog_id = (int) get_network()->site_id ;
             // if ( $current_blog === $main_blog_id ) {
@@ -660,16 +660,16 @@ class LiteSpeed_Cache_Utility
          * @internal #611001 - Combine & Minify not working?
          * @since  1.6.3
          */
-        if (substr($url_parsed[ 'path' ], 0, 1) === '/') {
+        if (substr($url_parsed['path'], 0, 1) === '/') {
             if (defined('LITESPEED_WP_REALPATH')) {
-                $file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . LITESPEED_WP_REALPATH . $url_parsed[ 'path' ];
+                $file_path_ori = $_SERVER['DOCUMENT_ROOT'] . LITESPEED_WP_REALPATH . $url_parsed['path'];
             }
             else {
-                $file_path_ori = $_SERVER[ 'DOCUMENT_ROOT' ] . $url_parsed[ 'path' ];
+                $file_path_ori = $_SERVER['DOCUMENT_ROOT'] . $url_parsed['path'];
             }
         }
         else {
-            $file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed[ 'path' ];
+            $file_path_ori = LiteSpeed_Cache_Router::frontend_path() . '/' . $url_parsed['path'];
         }
 
         /**
@@ -706,7 +706,7 @@ class LiteSpeed_Cache_Utility
         preg_match_all('# srcset=([\'"])(.+)\g{1}#iU', $content, $matches);
         $srcset_ori = array();
         $srcset_final = array();
-        foreach ($matches[ 2 ] as $k => $urls_ori) {
+        foreach ($matches[2] as $k => $urls_ori) {
 
             $urls_final = explode(',', $urls_ori);
 
@@ -721,7 +721,7 @@ class LiteSpeed_Cache_Utility
 
                 $changed = true;
 
-                $urls_final[ $k2 ] = str_replace($url, $url2, $url_info);
+                $urls_final[$k2] = str_replace($url, $url2, $url_info);
 
                 LiteSpeed_Cache_Log::debug2('[Util] - srcset replaced to ' . $url2 . ' ' . $size);
             }
@@ -732,9 +732,9 @@ class LiteSpeed_Cache_Utility
 
             $urls_final = implode(',', $urls_final);
 
-            $srcset_ori[] = $matches[ 0 ][ $k ];
+            $srcset_ori[] = $matches[0][$k];
 
-            $srcset_final[] = str_replace($urls_ori, $urls_final, $matches[ 0 ][ $k ]);
+            $srcset_final[] = str_replace($urls_ori, $urls_final, $matches[0][$k]);
         }
 
         if ($srcset_ori) {

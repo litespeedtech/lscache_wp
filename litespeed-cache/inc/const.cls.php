@@ -287,7 +287,7 @@ class LiteSpeed_Cache_Const
         if (file_exists(LSCWP_DIR . 'data/const.default.ini')) {
             $default_ini_cfg = parse_ini_file(LSCWP_DIR . 'data/const.default.ini', true);
 
-            if (! empty($default_ini_cfg[ $item ])) {
+            if (! empty($default_ini_cfg[$item])) {
 
                 /**
                  * Special handler for CDN_mapping
@@ -309,18 +309,18 @@ class LiteSpeed_Cache_Const
                         self::ITEM_CDN_MAPPING_FILETYPE,
                     );
                     $cdn_mapping = array();
-                    foreach ($default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v) {// $k is numeric
+                    foreach ($default_ini_cfg[$item][self::ITEM_CDN_MAPPING_URL] as $k => $v) {// $k is numeric
                         $this_row = array();
                         foreach ($mapping_fields as $v2) {
-                            $this_row[ $v2 ] = ! empty($default_ini_cfg[ $item ][ $v2 ][ $k ]) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false;
+                            $this_row[$v2] = ! empty($default_ini_cfg[$item][$v2][$k]) ? $default_ini_cfg[$item][$v2][$k] : false;
                         }
-                        $cdn_mapping[ $k ] = $this_row;
+                        $cdn_mapping[$k] = $this_row;
                     }
 
                     return $cdn_mapping;
                 }
 
-                return $default_ini_cfg[ $item ];
+                return $default_ini_cfg[$item];
             }
         }
 
@@ -577,16 +577,16 @@ class LiteSpeed_Cache_Const
                 }
 
                 // Parse value in ini file
-                $ini_v = $default_ini_cfg[ $k ];
+                $ini_v = $default_ini_cfg[$k];
                 if (is_bool($v)) { // Keep value type constantly
-                    $ini_v = (bool) $default_ini_cfg[ $k ];
+                    $ini_v = (bool) $default_ini_cfg[$k];
                 }
 
                 if ($ini_v == $v) {
                     continue;
                 }
 
-                $default_options[ $k ] = $ini_v;
+                $default_options[$k] = $ini_v;
             }
 
             // Handle items in $this->default_item()
@@ -629,7 +629,7 @@ class LiteSpeed_Cache_Const
         );
         $server_vars = array();
         foreach ($consts as $v) {
-            $server_vars[ $v ] = defined($v) ? constant($v) : NULL;
+            $server_vars[$v] = defined($v) ? constant($v) : NULL;
         }
 
         return $server_vars;

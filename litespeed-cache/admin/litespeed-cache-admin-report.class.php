@@ -67,7 +67,7 @@ class LiteSpeed_Cache_Admin_Report
         }
 
         $data = array(
-            'num'	=> ! empty($json[ 'num' ]) ? $json[ 'num' ] : '--',
+            'num'	=> ! empty($json['num']) ? $json['num'] : '--',
             'dateline'	=> time(),
         );
 
@@ -93,7 +93,7 @@ class LiteSpeed_Cache_Admin_Report
             );
         }
 
-        $info[ 'dateline' ] = date('m/d/Y H:i:s', $info[ 'dateline' ]);
+        $info['dateline'] = date('m/d/Y H:i:s', $info['dateline']);
 
         return $info;
     }
@@ -145,7 +145,7 @@ class LiteSpeed_Cache_Admin_Report
             'active theme' => $active_theme,
         );
 
-        $extras[ 'active plugins' ] = $active_plugins;
+        $extras['active plugins'] = $active_plugins;
 
         if (is_null($options)) {
             $options = LiteSpeed_Cache_Config::get_instance()->get_options();
@@ -170,8 +170,8 @@ class LiteSpeed_Cache_Admin_Report
             LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
         );
         foreach ($secure_fields as $v) {
-            if (! empty($options[ $v ])) {
-                $options[ $v ] = str_repeat('*', strlen($options[ $v ]));
+            if (! empty($options[$v])) {
+                $options[$v] = str_repeat('*', strlen($options[$v]));
             }
         }
 
@@ -181,7 +181,7 @@ class LiteSpeed_Cache_Admin_Report
             if ($v == LiteSpeed_Cache_Config::OPTION_NAME) {
                 continue;
             }
-            $options[ $v ] = get_option($v);
+            $options[$v] = get_option($v);
         }
 
 

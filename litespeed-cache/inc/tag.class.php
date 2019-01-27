@@ -306,7 +306,7 @@ class LiteSpeed_Cache_Tag
         if (defined('REST_REQUEST')) {
             $tags[] = self::TYPE_REST;
 
-            $path = ! empty($_SERVER[ 'SCRIPT_URL' ]) ? $_SERVER[ 'SCRIPT_URL' ] : false;
+            $path = ! empty($_SERVER['SCRIPT_URL']) ? $_SERVER['SCRIPT_URL'] : false;
             if ($path) {
                 // posts collections tag
                 if (substr($path, -6) == '/posts') {

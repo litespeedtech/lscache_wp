@@ -242,7 +242,7 @@ class Minify_HTML
          * @since  2.2.3
          */
         if ($this->_jsMinifier) {
-            $js = call_user_func($this->_jsMinifier, $js, trim($m[ 2 ]));
+            $js = call_user_func($this->_jsMinifier, $js, trim($m[2]));
         }
         else {
             $js = trim($js);

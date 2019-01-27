@@ -36,8 +36,8 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
     public static function esi_comment_add_slash($params)
     {
         if (self::$js_comment_box) {
-            $params[ 'is_json' ] = 1;
-            $params[ '_ls_silence' ] = 1;
+            $params['is_json'] = 1;
+            $params['_ls_silence'] = 1;
         }
 
         return $params;

@@ -108,16 +108,16 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary();
 
 			<?php if ($last_responsive_placeholder_generated) : ?>
 			<div class="litespeed-desc litespeed-left20">
-				<?php if (! empty($last_responsive_placeholder_generated[ 'last_request' ])) : ?>
+				<?php if (! empty($last_responsive_placeholder_generated['last_request'])) : ?>
 					<p>
-						<?php echo __('Last generated', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($last_responsive_placeholder_generated[ 'last_request' ]) . '</code>'; ?>
+						<?php echo __('Last generated', 'litespeed-cache') . ': <code>' . LiteSpeed_Cache_Utility::readable_time($last_responsive_placeholder_generated['last_request']) . '</code>'; ?>
 					</p>
 				<?php endif; ?>
-				<?php if (! empty($last_responsive_placeholder_generated[ 'queue' ])) : ?>
+				<?php if (! empty($last_responsive_placeholder_generated['queue'])) : ?>
 					<div class="litespeed-callout-warning">
 						<h4><?php echo __('Size list in queue waiting for cron','litespeed-cache'); ?></h4>
 						<p>
-							<?php echo implode(' ', $last_responsive_placeholder_generated[ 'queue' ]); ?>
+							<?php echo implode(' ', $last_responsive_placeholder_generated['queue']); ?>
 						</p>
 					</p>
 					<a href="<?php echo LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_MEDIA, LiteSpeed_Cache_Media::TYPE_GENERATE_PLACEHOLDER); ?>" class="litespeed-btn-success">

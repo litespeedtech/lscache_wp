@@ -17,10 +17,10 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo __('Specify time in microseconds for the delay between requests during a crawl.', 'litespeed-cache'); ?>
 
-				<?php if (! empty($_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ])) : ?>
+				<?php if (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP])) : ?>
 					<font class="litespeed-warning">
 						<?php echo __('NOTE', 'litespeed-cache'); ?>:
-						<?php echo __('Server allowed min value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ]; ?></code>
+						<?php echo __('Server allowed min value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP]; ?></code>
 					</font>
 				<?php else : ?>
 					<?php $this->recommended($id); ?>
@@ -90,15 +90,15 @@ if (!defined('WPINC')) die;
 				<?php echo __('The maximum average server load allowed while crawling. The number of crawler threads in use will be actively reduced until average server load falls under this limit. If this cannot be achieved with a single thread, the current crawler run will be terminated.', 'litespeed-cache');
                 ?>
 
-				<?php if (! empty($_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ])) : ?>
+				<?php if (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE])) : ?>
 					<font class="litespeed-warning">
 						<?php echo __('NOTE', 'litespeed-cache'); ?>:
-						<?php echo __('Server enforced value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ]; ?></code>
+						<?php echo __('Server enforced value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE]; ?></code>
 					</font>
-				<?php elseif (! empty($_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ])) : ?>
+				<?php elseif (! empty($_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT])) : ?>
 					<font class="litespeed-warning">
 						<?php echo __('NOTE', 'litespeed-cache'); ?>:
-						<?php echo __('Server allowed max value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ]; ?></code>
+						<?php echo __('Server allowed max value', 'litespeed-cache'); ?>: <code><?php echo $_SERVER[LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT]; ?></code>
 					</font>
 				<?php else : ?>
 					<?php $this->recommended($id); ?>

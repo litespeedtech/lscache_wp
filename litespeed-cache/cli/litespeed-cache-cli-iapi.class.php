@@ -31,21 +31,21 @@ class LiteSpeed_Cache_CLI_IAPI
 
         $json = $this->_img_optm_instance->sync_data();
 
-        if (! $json || empty($json[ 'level' ])) {
+        if (! $json || empty($json['level'])) {
             return;
         }
 
-        WP_CLI::success('[Level] ' . $json[ 'level' ] . ' [Credit] ' . $json[ 'credit' ]);
+        WP_CLI::success('[Level] ' . $json['level'] . ' [Credit] ' . $json['credit']);
 
-        if (empty($optm_summary[ 'level' ]) || empty($optm_summary[ 'credit_recovered' ]) || empty($optm_summary[ '_level_data' ])) {
+        if (empty($optm_summary['level']) || empty($optm_summary['credit_recovered']) || empty($optm_summary['_level_data'])) {
             return;
         }
 
-        if ($json[ 'level' ] > $optm_summary[ 'level' ]) {
+        if ($json['level'] > $optm_summary['level']) {
 
             LiteSpeed_Cache_Log::debug("[Img_Optm] Upgraded to level $json[level] !");
 
-            WP_CLI::success('Upgraded to level ' . $json[ 'level' ]);
+            WP_CLI::success('Upgraded to level ' . $json['level']);
         }
     }
 
@@ -68,7 +68,7 @@ class LiteSpeed_Cache_CLI_IAPI
             WP_CLI::error($msg);
         }
         else {
-            WP_CLI::success($msg[ 'ok' ]);
+            WP_CLI::success($msg['ok']);
         }
     }
 
@@ -91,7 +91,7 @@ class LiteSpeed_Cache_CLI_IAPI
             WP_CLI::error($msg);
         }
         else {
-            WP_CLI::success($msg[ 'ok' ]);
+            WP_CLI::success($msg['ok']);
         }
     }
 
@@ -111,18 +111,18 @@ class LiteSpeed_Cache_CLI_IAPI
         $summary = $this->_img_optm_instance->summary_info();
         $img_count = $this->_img_optm_instance->img_count();
 
-        if (! empty($summary[ '_level_data' ])) {
-            unset($summary[ '_level_data' ]);
+        if (! empty($summary['_level_data'])) {
+            unset($summary['_level_data']);
         }
 
         foreach (array( 'reduced', 'reduced_webp' ) as $v) {
-            if (! empty($summary[ $v ])) {
-                $summary[ $v ] = LiteSpeed_Cache_Utility::real_size($summary[ $v ]);
+            if (! empty($summary[$v])) {
+                $summary[$v] = LiteSpeed_Cache_Utility::real_size($summary[$v]);
             }
         }
 
-        if (! empty($summary[ 'last_requested' ])) {
-            $summary[ 'last_requested' ] = date('m/d/y H:i:s', $summary[ 'last_requested' ]);
+        if (! empty($summary['last_requested'])) {
+            $summary['last_requested'] = date('m/d/y H:i:s', $summary['last_requested']);
         }
 
         $list = array();

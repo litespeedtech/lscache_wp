@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Media
      */
     public function media_row_title($posts_columns)
     {
-        $posts_columns[ 'imgoptm' ] = __('LiteSpeed Optimization', 'litespeed-cache');
+        $posts_columns['imgoptm'] = __('LiteSpeed Optimization', 'litespeed-cache');
 
         return $posts_columns;
     }
@@ -167,10 +167,10 @@ class LiteSpeed_Cache_Media
 
         // WebP info
         $info_webp = '';
-        if ($size_meta && ! empty($size_meta[ 'webp_saved' ])) {
-            $percent = ceil($size_meta[ 'webp_saved' ] * 100 / $size_meta[ 'webp_total' ]);
+        if ($size_meta && ! empty($size_meta['webp_saved'])) {
+            $percent = ceil($size_meta['webp_saved'] * 100 / $size_meta['webp_total']);
             $pie_webp = LiteSpeed_Cache_GUI::pie($percent, 30);
-            $txt_webp = sprintf(__('WebP saved %s', 'litespeed-cache'), LiteSpeed_Cache_Utility::real_size($size_meta[ 'webp_saved' ]));
+            $txt_webp = sprintf(__('WebP saved %s', 'litespeed-cache'), LiteSpeed_Cache_Utility::real_size($size_meta['webp_saved']));
 
             $link = LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_IMG_OPTM, 'webp' . $post_id);
             $desc = false;
@@ -200,10 +200,10 @@ class LiteSpeed_Cache_Media
 
         // Original image info
         $info_ori = '';
-        if ($size_meta && ! empty($size_meta[ 'ori_saved' ])) {
-            $percent = ceil($size_meta[ 'ori_saved' ] * 100 / $size_meta[ 'ori_total' ]);
+        if ($size_meta && ! empty($size_meta['ori_saved'])) {
+            $percent = ceil($size_meta['ori_saved'] * 100 / $size_meta['ori_total']);
             $pie_ori = LiteSpeed_Cache_GUI::pie($percent, 30);
-            $txt_ori = sprintf(__('Original saved %s', 'litespeed-cache'), LiteSpeed_Cache_Utility::real_size($size_meta[ 'ori_saved' ]));
+            $txt_ori = sprintf(__('Original saved %s', 'litespeed-cache'), LiteSpeed_Cache_Utility::real_size($size_meta['ori_saved']));
 
             $extension = pathinfo($local_file, PATHINFO_EXTENSION);
             $bk_file = substr($local_file, 0, -strlen($extension)) . 'bk.' . $extension;
@@ -271,14 +271,14 @@ eot;
 
         foreach (get_intermediate_image_sizes() as $_size) {
             if (in_array($_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ))) {
-                $sizes[ $_size ][ 'width' ] = get_option($_size . '_size_w');
-                $sizes[ $_size ][ 'height' ] = get_option($_size . '_size_h');
-                $sizes[ $_size ][ 'crop' ] = (bool) get_option($_size . '_crop');
-            } elseif (isset($_wp_additional_image_sizes[ $_size ])) {
-                $sizes[ $_size ] = array(
-                    'width' => $_wp_additional_image_sizes[ $_size ][ 'width' ],
-                    'height' => $_wp_additional_image_sizes[ $_size ][ 'height' ],
-                    'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ],
+                $sizes[$_size]['width'] = get_option($_size . '_size_w');
+                $sizes[$_size]['height'] = get_option($_size . '_size_h');
+                $sizes[$_size]['crop'] = (bool) get_option($_size . '_crop');
+            } elseif (isset($_wp_additional_image_sizes[$_size])) {
+                $sizes[$_size] = array(
+                    'width' => $_wp_additional_image_sizes[$_size]['width'],
+                    'height' => $_wp_additional_image_sizes[$_size]['height'],
+                    'crop' =>  $_wp_additional_image_sizes[$_size]['crop'],
                 );
             }
         }
@@ -295,11 +295,11 @@ eot;
      */
     private function webp_support()
     {
-        if (! empty($_SERVER[ 'HTTP_ACCEPT' ]) && strpos($_SERVER[ 'HTTP_ACCEPT' ], 'image/webp') !== false) {
+        if (! empty($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false) {
             return true;
         }
 
-        if (! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'Page Speed') !== false) {
+        if (! empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Page Speed') !== false) {
             return true;
         }
 
@@ -367,7 +367,7 @@ eot;
             $default_placeholder = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER) ?: LITESPEED_PLACEHOLDER;
 
             foreach ($html_list as $k => $v) {
-                $size = $placeholder_list[ $k ];
+                $size = $placeholder_list[$k];
                 // Check if need to enable responsive placeholder or not
                 $this_placeholder = $this->_placeholder($size) ?: $default_placeholder;
 
@@ -382,7 +382,7 @@ eot;
                 $v = str_replace('<img ', '<img data-lazyloaded="1"' . $additional_attr . ' src="' . $this_placeholder . '" ', $v);
                 $snippet = $v . $snippet;
 
-                $html_list[ $k ] = $snippet;
+                $html_list[$k] = $snippet;
             }
         }
 
@@ -401,7 +401,7 @@ eot;
                 $v = str_replace('<iframe ', '<iframe data-lazyloaded="1" src="about:blank" ', $v);
                 $snippet = $v . $snippet;
 
-                $html_list[ $k ] = $snippet;
+                $html_list[$k] = $snippet;
             }
 
             $this->content = str_replace($html_list_ori, $html_list, $this->content);
@@ -437,19 +437,19 @@ eot;
         }
 
         // Check if its already in dict or not
-        if (! empty($this->_placeholder_resp_dict[ $size ])) {
+        if (! empty($this->_placeholder_resp_dict[$size])) {
             LiteSpeed_Cache_Log::debug2('[Media] Resp placeholder already in dict [size] ' . $size);
 
-            return $this->_placeholder_resp_dict[ $size ];
+            return $this->_placeholder_resp_dict[$size];
         }
 
         // Need to generate the responsive placeholder
         $placeholder_realpath = $this->_placeholder_realpath($size);
         if (file_exists($placeholder_realpath)) {
             LiteSpeed_Cache_Log::debug2('[Media] Resp placeholder file exists [size] ' . $size);
-            $this->_placeholder_resp_dict[ $size ] = Litespeed_File::read($placeholder_realpath);
+            $this->_placeholder_resp_dict[$size] = Litespeed_File::read($placeholder_realpath);
 
-            return $this->_placeholder_resp_dict[ $size ];
+            return $this->_placeholder_resp_dict[$size];
         }
 
         // Add to cron queue
@@ -466,27 +466,27 @@ eot;
         // Send request to generate placeholder
         if (! $this->_cfg_placeholder_resp_async) {
             // If requested recently, bypass
-            if ($req_summary && ! empty($req_summary[ 'curr_request' ]) && time() - $req_summary[ 'curr_request' ] < 300) {
+            if ($req_summary && ! empty($req_summary['curr_request']) && time() - $req_summary['curr_request'] < 300) {
                 LiteSpeed_Cache_Log::debug2('[Media] Resp placeholder file bypass generating due to interval limit [size] ' . $size);
                 return false;
             }
             // Generate immediately
-            $this->_placeholder_resp_dict[ $size ] = $this->_generate_placeholder($size);
+            $this->_placeholder_resp_dict[$size] = $this->_generate_placeholder($size);
 
-            return $this->_placeholder_resp_dict[ $size ];
+            return $this->_placeholder_resp_dict[$size];
         }
 
         // Store it to prepare for cron
-        if (empty($req_summary[ 'queue' ])) {
-            $req_summary[ 'queue' ] = array();
+        if (empty($req_summary['queue'])) {
+            $req_summary['queue'] = array();
         }
-        if (in_array($size, $req_summary[ 'queue' ])) {
+        if (in_array($size, $req_summary['queue'])) {
             LiteSpeed_Cache_Log::debug2('[Media] Resp placeholder already in queue [size] ' . $size);
 
             return false;
         }
 
-        $req_summary[ 'queue' ][] = $size;
+        $req_summary['queue'][] = $size;
 
         LiteSpeed_Cache_Log::debug('[Media] Added placeholder queue [size] ' . $size);
 
@@ -520,9 +520,9 @@ eot;
         $content = preg_replace('#<!--.*-->#sU', '', $this->content);
         preg_match_all('#<img \s*([^>]+)/?>#isU', $content, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
-            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[ 1 ]);
+            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[1]);
 
-            if (empty($attrs[ 'src' ])) {
+            if (empty($attrs['src'])) {
                 continue;
             }
 
@@ -530,19 +530,19 @@ eot;
              * Add src validation to bypass base64 img src
              * @since  1.6
              */
-            if (strpos($attrs[ 'src' ], 'base64') !== false || substr($attrs[ 'src' ], 0, 5) === 'data:') {
+            if (strpos($attrs['src'], 'base64') !== false || substr($attrs['src'], 0, 5) === 'data:') {
                 LiteSpeed_Cache_Log::debug2('[Media] lazyload bypassed base64 img');
                 continue;
             }
 
-            LiteSpeed_Cache_Log::debug2('[Media] lazyload found: ' . $attrs[ 'src' ]);
+            LiteSpeed_Cache_Log::debug2('[Media] lazyload found: ' . $attrs['src']);
 
-            if (! empty($attrs[ 'data-no-lazy' ]) || ! empty($attrs[ 'data-lazyloaded' ]) || ! empty($attrs[ 'data-src' ]) || ! empty($attrs[ 'data-srcset' ])) {
+            if (! empty($attrs['data-no-lazy']) || ! empty($attrs['data-lazyloaded']) || ! empty($attrs['data-src']) || ! empty($attrs['data-srcset'])) {
                 LiteSpeed_Cache_Log::debug2('[Media] bypassed');
                 continue;
             }
 
-            if (! empty($attrs[ 'class' ]) && $hit = LiteSpeed_Cache_Utility::str_hit_array($attrs[ 'class' ], $cls_excludes)) {
+            if (! empty($attrs['class']) && $hit = LiteSpeed_Cache_Utility::str_hit_array($attrs['class'], $cls_excludes)) {
                 LiteSpeed_Cache_Log::debug2('[Media] lazyload image cls excludes [hit] ' . $hit);
                 continue;
             }
@@ -551,8 +551,8 @@ eot;
              * Exclude from lazyload by setting
              * @since  1.5
              */
-            if ($excludes && LiteSpeed_Cache_Utility::str_hit_array($attrs[ 'src' ], $excludes)) {
-                LiteSpeed_Cache_Log::debug2('[Media] lazyload image exclude ' . $attrs[ 'src' ]);
+            if ($excludes && LiteSpeed_Cache_Utility::str_hit_array($attrs['src'], $excludes)) {
+                LiteSpeed_Cache_Log::debug2('[Media] lazyload image exclude ' . $attrs['src']);
                 continue;
             }
 
@@ -561,23 +561,23 @@ eot;
              * @see  https://wordpress.org/support/topic/lazy-load-breaking-buddypress-upload-avatar-feature/#post-11040512
              * @since  2.9.1
              */
-            if (strpos($attrs[ 'src' ], '{') !== false) {
-                LiteSpeed_Cache_Log::debug2('[Media] image src has {} ' . $attrs[ 'src' ]);
+            if (strpos($attrs['src'], '{') !== false) {
+                LiteSpeed_Cache_Log::debug2('[Media] image src has {} ' . $attrs['src']);
                 continue;
             }
 
             // to avoid multiple replacement
-            if (in_array($match[ 0 ], $html_list)) {
+            if (in_array($match[0], $html_list)) {
                 continue;
             }
 
             $placeholder = false;
-            if (! empty($attrs[ 'width' ]) && ! empty($attrs[ 'height' ])) {
-                $placeholder = $attrs[ 'width' ] . 'x' . $attrs[ 'height' ];
+            if (! empty($attrs['width']) && ! empty($attrs['height'])) {
+                $placeholder = $attrs['width'] . 'x' . $attrs['height'];
             }
 
-            $src_list[] = $attrs[ 'src' ];
-            $html_list[] = $match[ 0 ];
+            $src_list[] = $attrs['src'];
+            $html_list[] = $match[0];
             $placeholder_list[] = $placeholder;
         }
 
@@ -598,25 +598,25 @@ eot;
         $content = preg_replace('#<!--.*-->#sU', '', $this->content);
         preg_match_all('#<iframe \s*([^>]+)></iframe>#isU', $content, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
-            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[ 1 ]);
+            $attrs = LiteSpeed_Cache_Utility::parse_attr($match[1]);
 
-            if (empty($attrs[ 'src' ])) {
+            if (empty($attrs['src'])) {
                 continue;
             }
 
-            LiteSpeed_Cache_Log::debug2('[Media] found iframe: ' . $attrs[ 'src' ]);
+            LiteSpeed_Cache_Log::debug2('[Media] found iframe: ' . $attrs['src']);
 
-            if (! empty($attrs[ 'data-no-lazy' ]) || ! empty($attrs[ 'data-lazyloaded' ]) || ! empty($attrs[ 'data-src' ])) {
+            if (! empty($attrs['data-no-lazy']) || ! empty($attrs['data-lazyloaded']) || ! empty($attrs['data-src'])) {
                 LiteSpeed_Cache_Log::debug2('[Media] bypassed');
                 continue;
             }
 
             // to avoid multiple replacement
-            if (in_array($match[ 0 ], $html_list)) {
+            if (in_array($match[0], $html_list)) {
                 continue;
             }
 
-            $html_list[] = $match[ 0 ];
+            $html_list[] = $match[0];
         }
 
         return $html_list;
@@ -646,9 +646,9 @@ eot;
             LiteSpeed_Cache_Log::debug2('[Media] buffer_webp attribute ' . $v);
 
             $v = explode('.', $v);
-            $attr = preg_quote($v[ 1 ], '#');
-            if ($v[ 0 ]) {
-                $pattern = '#<' . preg_quote($v[ 0 ], '#') . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
+            $attr = preg_quote($v[1], '#');
+            if ($v[0]) {
+                $pattern = '#<' . preg_quote($v[0], '#') . '([^>]+)' . $attr . '=([\'"])(.+)\g{2}#iU';
             }
             else {
                 $pattern = '# ' . $attr . '=([\'"])(.+)\g{1}#iU';
@@ -656,7 +656,7 @@ eot;
 
             preg_match_all($pattern, $this->content, $matches);
 
-            foreach ($matches[ $v[ 0 ] ? 3 : 2 ] as $k2 => $url) {
+            foreach ($matches[$v[0] ? 3 : 2] as $k2 => $url) {
                 // Check if is a DATA-URI
                 if (strpos($url, 'data:image') !== false) {
                     continue;
@@ -666,21 +666,21 @@ eot;
                     continue;
                 }
 
-                if ($v[ 0 ]) {
+                if ($v[0]) {
                     $html_snippet = sprintf(
-                        '<' . $v[ 0 ] . '%1$s' . $v[ 1 ] . '=%2$s',
-                        $matches[ 1 ][ $k2 ],
-                        $matches[ 2 ][ $k2 ] . $url2 . $matches[ 2 ][ $k2 ]
+                        '<' . $v[0] . '%1$s' . $v[1] . '=%2$s',
+                        $matches[1][$k2],
+                        $matches[2][$k2] . $url2 . $matches[2][$k2]
                     );
                 }
                 else {
                     $html_snippet = sprintf(
-                        ' ' . $v[ 1 ] . '=%1$s',
-                        $matches[ 1 ][ $k2 ] . $url2 . $matches[ 1 ][ $k2 ]
+                        ' ' . $v[1] . '=%1$s',
+                        $matches[1][$k2] . $url2 . $matches[1][$k2]
                     );
                 }
 
-                $this->content = str_replace($matches[ 0 ][ $k2 ], $html_snippet, $this->content);
+                $this->content = str_replace($matches[0][$k2], $html_snippet, $this->content);
 
             }
         }
@@ -693,7 +693,7 @@ eot;
 
         // Replace background-image
         preg_match_all('#background\-image:(\s*)url\((.*)\)#iU', $this->content, $matches);
-        foreach ($matches[ 2 ] as $k => $url) {
+        foreach ($matches[2] as $k => $url) {
             // Check if is a DATA-URI
             if (strpos($url, 'data:image') !== false) {
                 continue;
@@ -703,8 +703,8 @@ eot;
                 continue;
             }
 
-            $html_snippet = sprintf('background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2);
-            $this->content = str_replace($matches[ 0 ][ $k ], $html_snippet, $this->content);
+            $html_snippet = sprintf('background-image:%1$surl(%2$s)', $matches[1][$k], $url2);
+            $this->content = str_replace($matches[0][$k], $html_snippet, $this->content);
         }
     }
 
@@ -719,8 +719,8 @@ eot;
     public function webp_attach_img_src($img)
     {
         LiteSpeed_Cache_Log::debug2('[Media] changing attach src: ' . $img[0]);
-        if ($img && $url = $this->replace_webp($img[ 0 ])) {
-            $img[ 0 ] = $url;
+        if ($img && $url = $this->replace_webp($img[0])) {
+            $img[0] = $url;
         }
         return $img;
     }
@@ -753,10 +753,10 @@ eot;
     {
         if ($srcs) {
             foreach ($srcs as $w => $data) {
-                if(! $url = $this->replace_webp($data[ 'url' ])) {
+                if(! $url = $this->replace_webp($data['url'])) {
                     continue;
                 }
-                $srcs[ $w ][ 'url' ] = $url;
+                $srcs[$w]['url'] = $url;
             }
         }
         return $srcs;
@@ -806,7 +806,7 @@ eot;
     public static function has_queue()
     {
         $req_summary = self::get_summary();
-        if (! empty($req_summary[ 'queue' ])) {
+        if (! empty($req_summary['queue'])) {
             return true;
         }
 
@@ -884,18 +884,18 @@ eot;
     public static function cron_placeholder($continue = false)
     {
         $req_summary = self::get_summary();
-        if (empty($req_summary[ 'queue' ])) {
+        if (empty($req_summary['queue'])) {
             return;
         }
 
         // For cron, need to check request interval too
         if (! $continue) {
-            if ($req_summary && ! empty($req_summary[ 'curr_request' ]) && time() - $req_summary[ 'curr_request' ] < 300) {
+            if ($req_summary && ! empty($req_summary['curr_request']) && time() - $req_summary['curr_request'] < 300) {
                 return;
             }
         }
 
-        foreach ($req_summary[ 'queue' ] as $v) {
+        foreach ($req_summary['queue'] as $v) {
             LiteSpeed_Cache_Log::debug('[Media] cron job [size] ' . $v);
 
             self::get_instance()->_generate_placeholder($v);
@@ -920,7 +920,7 @@ eot;
         $file = $this->_placeholder_realpath($size);
 
         // Update request status
-        $req_summary[ 'curr_request' ] = time();
+        $req_summary['curr_request'] = time();
         $this->_save_summary($req_summary);
 
         // Generate placeholder
@@ -941,11 +941,11 @@ eot;
         Litespeed_File::save($file, $data, true);
 
         // Save summary data
-        $req_summary[ 'last_spent' ] = time() - $req_summary[ 'curr_request' ];
-        $req_summary[ 'last_request' ] = $req_summary[ 'curr_request' ];
-        $req_summary[ 'curr_request' ] = 0;
-        if (! empty($req_summary[ 'queue' ]) && in_array($size, $req_summary[ 'queue' ])) {
-            unset($req_summary[ 'queue' ][ array_search($size, $req_summary[ 'queue' ]) ]);
+        $req_summary['last_spent'] = time() - $req_summary['curr_request'];
+        $req_summary['last_request'] = $req_summary['curr_request'];
+        $req_summary['curr_request'] = 0;
+        if (! empty($req_summary['queue']) && in_array($size, $req_summary['queue'])) {
+            unset($req_summary['queue'][array_search($size, $req_summary['queue'])]);
         }
 
         $this->_save_summary($req_summary);
