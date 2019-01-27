@@ -168,8 +168,7 @@ class LiteSpeed_Cache_Object
 			. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_ADMIN ] ? 1 : 0 )
 			. "\ncache_transients = " . ( $options[ LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_TRANSIENTS ] ? 1 : 0 )
 			. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_GLOBAL_GROUPS ] ) )
-			. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) )
-			;
+			. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::ITEM_OBJECT_NON_PERSISTENT_GROUPS ] ) );
 		Litespeed_File::save( $this->_oc_data_file, $data ) ;
 
 		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used
