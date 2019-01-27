@@ -68,8 +68,8 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	/*public function test_is_subdir()
 	{
         $bool = self::invokeMethod('LiteSpeed_Cache_Admin_Rules','is_subdir');
-      	$this->assertTrue($bool);		
-    	
+      	$this->assertTrue($bool);
+
 	}*/
 
 	/**

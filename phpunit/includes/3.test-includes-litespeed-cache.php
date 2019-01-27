@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     }
 
     /**
-     * Test case for  LiteSpeed_Cache::get_network_ids 
+     * Test case for  LiteSpeed_Cache::get_network_ids
      * Should be test in multiside mode.
      *
      * @param array $args arguments to pass into get_sites/wp_get_sites
