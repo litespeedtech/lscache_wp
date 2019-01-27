@@ -222,7 +222,7 @@ class Minifier
             'memory_limit' => $this->memoryLimit,
             'max_execution_time' => $this->maxExecutionTime,
             'pcre.backtrack_limit' => $this->pcreBacktrackLimit,
-            'pcre.recursion_limit' =>  $this->pcreRecursionLimit
+            'pcre.recursion_limit' => $this->pcreRecursionLimit
         );
 
         // If current settings are higher respect them.

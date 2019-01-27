@@ -3,8 +3,8 @@ if (!defined('WPINC')) die;
 
 		$screen = get_current_screen();
 		$screen->add_help_tab(array(
-			'id'      => 'lsc-overview',
-			'title'   => __('Overview', 'litespeed-cache'),
+			'id' => 'lsc-overview',
+			'title' => __('Overview', 'litespeed-cache'),
 			'content' => '<p>'
 				. __('LiteSpeed Cache is a page cache built into LiteSpeed Web Server.', 'litespeed-cache') . ' '
 				. __('This plugin communicates with LiteSpeed Web Server to let it know which pages are cacheable and when to purge them.', 'litespeed-cache')

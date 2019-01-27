@@ -588,10 +588,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 */
 		if ( isset( $this->options[ 'cdn_url' ] ) ) {
 			$cdn_mapping = array(
-				self::ITEM_CDN_MAPPING_URL 		=> $this->options[ 'cdn_url' ],
-				self::ITEM_CDN_MAPPING_INC_IMG 	=> $this->options[ 'cdn_inc_img' ],
-				self::ITEM_CDN_MAPPING_INC_CSS 	=> $this->options[ 'cdn_inc_css' ],
-				self::ITEM_CDN_MAPPING_INC_JS 	=> $this->options[ 'cdn_inc_js' ],
+				self::ITEM_CDN_MAPPING_URL => $this->options[ 'cdn_url' ],
+				self::ITEM_CDN_MAPPING_INC_IMG => $this->options[ 'cdn_inc_img' ],
+				self::ITEM_CDN_MAPPING_INC_CSS => $this->options[ 'cdn_inc_css' ],
+				self::ITEM_CDN_MAPPING_INC_JS => $this->options[ 'cdn_inc_js' ],
 				self::ITEM_CDN_MAPPING_FILETYPE => $this->options[ 'cdn_filetype' ],
 			) ;
 			update_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;

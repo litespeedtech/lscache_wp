@@ -440,9 +440,9 @@ class Litespeed_Crawler
 	protected function _return($end_reason)
 	{
 		return array(
-			'error'		=> $end_reason === true ? false : $end_reason,
-			'blacklist'	=> $this->_blacklist,
-			'crawled'	=> $this->_meta['last_crawled'],
+			'error' => $end_reason === true ? false : $end_reason,
+			'blacklist' => $this->_blacklist,
+			'crawled' => $this->_meta['last_crawled'],
 		) ;
 
 	}
@@ -682,23 +682,23 @@ class Litespeed_Crawler
 	private function _default_meta()
 	{
 		return array(
-			'list_size'			=> Litespeed_File::count_lines($this->_sitemap_file),
-			'last_update_time'	=> 0,
-			'curr_crawler'		=> 0,
-			'curr_crawler_beginning_time'	=> 0,
-			'last_pos'			=> 0,
-			'last_count'		=> 0,
-			'last_crawled'		=> 0,
-			'last_start_time'	=> 0,
-			'last_status'		=> '',
-			'is_running'		=> 0,
-			'end_reason'		=> '',
-			'meta_save_time'	=> 0,
-			'pos_reset_check'	=> 0,
-			'done'				=> 0,
-			'this_full_beginning_time'	=> 0,
-			'last_full_time_cost'		=> 0,
-			'last_crawler_total_cost'	=> 0,
+			'list_size' => Litespeed_File::count_lines($this->_sitemap_file),
+			'last_update_time' => 0,
+			'curr_crawler' => 0,
+			'curr_crawler_beginning_time' => 0,
+			'last_pos' => 0,
+			'last_count' => 0,
+			'last_crawled' => 0,
+			'last_start_time' => 0,
+			'last_status' => '',
+			'is_running' => 0,
+			'end_reason' => '',
+			'meta_save_time' => 0,
+			'pos_reset_check' => 0,
+			'done' => 0,
+			'this_full_beginning_time' => 0,
+			'last_full_time_cost' => 0,
+			'last_crawler_total_cost' => 0,
 		) ;
 	}
 

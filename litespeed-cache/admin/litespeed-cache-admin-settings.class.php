@@ -402,13 +402,13 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// TTL check
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_PUBLIC_TTL 		=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL	 	=> array( 60, 	3600 ),
-			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL 	=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::OPID_FEED_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::OPID_404_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::OPID_403_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::OPID_500_TTL		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_PUBLIC_TTL => array( 30, 	null ),
+			LiteSpeed_Cache_Config::OPID_PRIVATE_TTL => array( 60, 	3600 ),
+			LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL => array( 30, 	null ),
+			LiteSpeed_Cache_Config::OPID_FEED_TTL => array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_404_TTL => array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_403_TTL => array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::OPID_500_TTL => array( 0, 	null, 30 ),
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $min, $max ) = $v ;
@@ -1022,11 +1022,11 @@ class LiteSpeed_Cache_Admin_Settings
 			$usleep_max = null ;
 		}
 		$ids = array(
-			LiteSpeed_Cache_Config::CRWL_USLEEP 		=> array( $usleep_min, $usleep_max ),
-			LiteSpeed_Cache_Config::CRWL_RUN_DURATION 	=> array( 0,	null ),
-			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL 	=> array( 60,	null ),
+			LiteSpeed_Cache_Config::CRWL_USLEEP => array( $usleep_min, $usleep_max ),
+			LiteSpeed_Cache_Config::CRWL_RUN_DURATION => array( 0,	null ),
+			LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL => array( 60,	null ),
 			LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL => array( 0,	null ),
-			LiteSpeed_Cache_Config::CRWL_THREADS 		=> array( 1,	16 ),
+			LiteSpeed_Cache_Config::CRWL_THREADS => array( 1,	16 ),
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $min, $max ) = $v ;
@@ -1116,7 +1116,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
-		if ( ! $this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
+		if ( ! $this->_input[ $id ] && $new_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, 'EMPTY' ) ) ;
 		}
 		elseif ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {

@@ -787,7 +787,7 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 */
 	public function test_input_field_collapsible()
 	{
-		$parameters = array('header'=>'','desc'=>'', 'example'=>'');
+		$parameters = array('header' => '','desc' => '', 'example' => '');
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_field_collapsible', $parameters);
 		$bool = self::isString($msg);
       	$this->assertTrue($bool);		

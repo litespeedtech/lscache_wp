@@ -47,9 +47,9 @@ class Utils
         } else {
             $v2 = $l < 0.5 ? $l * (1 + $s) : ($l + $s) - ($s * $l);
             $v1 = (2 * $l) - $v2;
-            $r = self::roundNumber(255 * self::hueToRgb($v1, $v2, $h + (1/3)));
+            $r = self::roundNumber(255 * self::hueToRgb($v1, $v2, $h + (1 / 3)));
             $g = self::roundNumber(255 * self::hueToRgb($v1, $v2, $h));
-            $b = self::roundNumber(255 * self::hueToRgb($v1, $v2, $h - (1/3)));
+            $b = self::roundNumber(255 * self::hueToRgb($v1, $v2, $h - (1 / 3)));
         }
 
         return array($r, $g, $b);

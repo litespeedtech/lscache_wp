@@ -423,10 +423,10 @@ class LiteSpeed_Cache_Admin_API
 		LiteSpeed_Cache_Log::debug( '[IAPI] posting to : ' . $url ) ;
 
 		$param = array(
-			'auth_key'	=> $this->_iapi_key,
-			'cloud'	=> $this->_iapi_cloud,
-			'v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
-			'hash'	=> $hash,
+			'auth_key' => $this->_iapi_key,
+			'cloud' => $this->_iapi_cloud,
+			'v' => LiteSpeed_Cache::PLUGIN_VERSION,
+			'hash' => $hash,
 			'data' => $data,
 		) ;
 		/**

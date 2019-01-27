@@ -132,12 +132,12 @@ class Set_Htaccess {
 			array($diff_cat, $diff2, $root)
 		);
 
-		foreach ($tests as $key=>$test) {
+		foreach ($tests as $key => $test) {
 			$out = $this->test_block($test[0], $test[1], $test[2]);
 
 			$expected = $res[$key];
 
-			foreach ($expected as $index=>$val) {
+			foreach ($expected as $index => $val) {
 				if (rtrim($val, '/') !== $out[$index]) {
 					error_log('NOT A MATCH: ' . print_r($test, true)
 						. "\nGot: " . print_r($out, true)

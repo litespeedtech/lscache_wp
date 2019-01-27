@@ -215,7 +215,7 @@ class LiteSpeed_Cache_Task
 		if ( ! array_key_exists( self::CRON_FITLER, $schedules ) ) {
 			$schedules[ self::CRON_FITLER ] = array(
 				'interval' => 60,
-				'display'  => __( 'LiteSpeed Cache Custom Cron Common', 'litespeed-cache' ),
+				'display' => __( 'LiteSpeed Cache Custom Cron Common', 'litespeed-cache' ),
 			) ;
 		}
 		return $schedules ;
@@ -236,7 +236,7 @@ class LiteSpeed_Cache_Task
 			// 	LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;
 			$schedules[ self::CRON_FITLER_CRAWLER ] = array(
 				'interval' => $interval,
-				'display'  => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
+				'display' => __( 'LiteSpeed Cache Custom Cron Crawler', 'litespeed-cache' ),
 			) ;
 		}
 		return $schedules ;

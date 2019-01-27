@@ -195,8 +195,8 @@ class LiteSpeed_Cache_CDN_Quic
 		$url = 'https://api.quic.cloud' . $uri ;
 
 		$param = array(
-			'_v'	=> LiteSpeed_Cache::PLUGIN_VERSION,
-			'_hash'	=> $hash,
+			'_v' => LiteSpeed_Cache::PLUGIN_VERSION,
+			'_hash' => $hash,
 			'_data' => $data,
 		) ;
 

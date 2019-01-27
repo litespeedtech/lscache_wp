@@ -258,7 +258,7 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING
 
 				<?php
 					$cf_zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
-					$cls = 	$cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
+					$cls = $cf_zone ? ' litespeed-input-success' : ' litespeed-input-warning' ;
 					$this->build_input( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME, $cls ) ;
 				?>
 					<div class="litespeed-desc">

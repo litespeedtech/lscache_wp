@@ -71,7 +71,7 @@ require_once LSCWP_DIR . 'inc/litespeed.autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {
-	! defined( 'LITESPEED_CLI' ) &&  define( 'LITESPEED_CLI', true ) ;
+	! defined( 'LITESPEED_CLI' ) && define( 'LITESPEED_CLI', true ) ;
 
 	// Register CLI cmd
 	if ( method_exists( 'WP_CLI', 'add_command' ) ) {
@@ -98,8 +98,8 @@ if ( ! defined( 'LITESPEED_SERVER_TYPE' ) ) {
 }
 
 // Checks if caching is allowed via server variable
-if ( ! empty ( $_SERVER['X-LSCACHE'] ) ||  LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined( 'LITESPEED_CLI' ) ) {
-	! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
+if ( ! empty ( $_SERVER['X-LSCACHE'] ) || LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_ADC' || defined( 'LITESPEED_CLI' ) ) {
+	! defined( 'LITESPEED_ALLOWED' ) && define( 'LITESPEED_ALLOWED', true ) ;
 }
 
 // ESI const defination

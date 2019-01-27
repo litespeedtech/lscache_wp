@@ -625,7 +625,7 @@ class LiteSpeed_Cache_Optimize
 		 *		-> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
 		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
 		 */
-		$html .='<script type="text/javascript">WebFontConfig={google:{families:[' ;
+		$html .= '<script type="text/javascript">WebFontConfig={google:{families:[' ;
 
 		$families = array() ;
 		foreach ( $this->_ggfonts_urls as $v ) {

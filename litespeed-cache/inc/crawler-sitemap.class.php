@@ -115,7 +115,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		//Generate Categories Link if option checked
 		if ( isset($show_cats) && $show_cats == 1 ) {
-			$cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false)) ;
+			$cats = get_terms("category", array("hide_empty" => true, "hierarchical" => false)) ;
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
 					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		//Generate tags Link if option checked
 		if ( isset($show_tags) && $show_tags == 1 ) {
-			$tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false)) ;
+			$tags = get_terms("post_tag", array("hide_empty" => true, "hierarchical" => false)) ;
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
 					$slug = str_replace($this->home_url, '', get_tag_link($tag->term_id)) ;

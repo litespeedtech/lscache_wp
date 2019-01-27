@@ -278,7 +278,7 @@ eot;
 				$sizes[ $_size ] = array(
 					'width' => $_wp_additional_image_sizes[ $_size ][ 'width' ],
 					'height' => $_wp_additional_image_sizes[ $_size ][ 'height' ],
-					'crop' =>  $_wp_additional_image_sizes[ $_size ][ 'crop' ]
+					'crop' => $_wp_additional_image_sizes[ $_size ][ 'crop' ]
 				) ;
 			}
 		}
@@ -925,8 +925,8 @@ eot;
 
 		// Generate placeholder
 		$req_data = array(
-			'size'	=> $size,
-			'color'	=> $this->_cfg_placeholder_resp_color,
+			'size' => $size,
+			'color' => $this->_cfg_placeholder_resp_color,
 		) ;
 		$data = LiteSpeed_Cache_Admin_API::get( LiteSpeed_Cache_Admin_API::IAPI_ACTION_PLACEHOLDER, $req_data, true ) ;
 

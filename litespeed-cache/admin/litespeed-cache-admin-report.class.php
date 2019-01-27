@@ -67,8 +67,8 @@ class LiteSpeed_Cache_Admin_Report
 		}
 
 		$data = array(
-			'num'	=> ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
-			'dateline'	=> time(),
+			'num' => ! empty( $json[ 'num' ] ) ? $json[ 'num' ] : '--',
+			'dateline' => time(),
 		) ;
 
 		update_option( LiteSpeed_Cache_Config::ITEM_ENV_REF, $data ) ;
@@ -88,8 +88,8 @@ class LiteSpeed_Cache_Admin_Report
 
 		if ( ! is_array( $info ) ) {
 			return array(
-				'num'	=> '-',
-				'dateline'	=> '-',
+				'num' => '-',
+				'dateline' => '-',
 			) ;
 		}
 
@@ -202,10 +202,10 @@ class LiteSpeed_Cache_Admin_Report
 	private function build_environment_report($server, $options, $extras = array(), $htaccess_paths = array())
 	{
 		$server_keys = array(
-			'DOCUMENT_ROOT'=>'',
-			'SERVER_SOFTWARE'=>'',
-			'X-LSCACHE'=>'',
-			'HTTP_X_LSCACHE'=>''
+			'DOCUMENT_ROOT' => '',
+			'SERVER_SOFTWARE' => '',
+			'X-LSCACHE' => '',
+			'HTTP_X_LSCACHE' => ''
 		) ;
 		$server_vars = array_intersect_key($server, $server_keys) ;
 		$server_vars[] = "LSWCP_TAG_PREFIX = " . LSWCP_TAG_PREFIX ;

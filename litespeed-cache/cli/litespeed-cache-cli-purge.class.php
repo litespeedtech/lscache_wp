@@ -226,8 +226,8 @@ class LiteSpeed_Cache_Cli_Purge
 		WP_CLI::line('Will purge the following cache tags: ' . $str) ;
 
 		$data = array(
-			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT	=> $select,
-			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST		=> $str,
+			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_SELECT => $select,
+			LiteSpeed_Cache_Admin_Display::PURGEBYOPT_LIST => $str,
 		) ;
 
 		$purge_ret = $this->_send_request(LiteSpeed_Cache::ACTION_PURGE_BY, $data) ;

@@ -179,12 +179,12 @@ class LiteSpeed_Cache_Data
 					$md52src_list = unserialize( $v->meta_value ) ;
 					foreach ( $md52src_list as $md5 => $v2 ) {
 						$f = array(
-							'post_id'	=> $v->post_id,
-							'optm_status'		=> $v2[ 1 ],
-							'src'		=> $v2[ 0 ],
-							'srcpath_md5'		=> md5( $v2[ 0 ] ),
-							'src_md5'		=> $md5,
-							'server'		=> $v2[ 2 ],
+							'post_id' => $v->post_id,
+							'optm_status' => $v2[ 1 ],
+							'src' => $v2[ 0 ],
+							'srcpath_md5' => md5( $v2[ 0 ] ),
+							'src_md5' => $md5,
+							'server' => $v2[ 2 ],
 						) ;
 						$wpdb->replace( $this->_tb_img_optm, $f ) ;
 					}
@@ -272,10 +272,10 @@ class LiteSpeed_Cache_Data
 		if ( $hashes ) {
 			foreach ( $hashes as $k => $v ) {
 				$f = array(
-					'hash_name'	=> $k,
-					'src'		=> serialize( $v ),
-					'dateline'	=> time(),
-					'refer' 	=> '',
+					'hash_name' => $k,
+					'src' => serialize( $v ),
+					'dateline' => time(),
+					'refer' => '',
 				) ;
 				$wpdb->replace( $this->_tb_optm, $f ) ;
 			}
@@ -304,10 +304,10 @@ class LiteSpeed_Cache_Data
 
 		$src = serialize( $src ) ;
 		$f = array(
-			'hash_name'	=> $filename,
-			'src'		=> $src,
-			'dateline'	=> time(),
-			'refer' 	=> ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
+			'hash_name' => $filename,
+			'src' => $src,
+			'dateline' => time(),
+			'refer' => ! empty( $_SERVER[ 'SCRIPT_URI' ] ) ? $_SERVER[ 'SCRIPT_URI' ] : '',
 		) ;
 
 		$res = $wpdb->replace( $this->_tb_optm, $f ) ;

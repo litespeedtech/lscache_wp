@@ -59,20 +59,20 @@ namespace LiteSpeed_3rd_Lib\js_min ;
 
 class JSMin
 {
-	const ORD_LF            = 10;
-	const ORD_SPACE         = 32;
-	const ACTION_KEEP_A     = 1;
-	const ACTION_DELETE_A   = 2;
+	const ORD_LF = 10;
+	const ORD_SPACE = 32;
+	const ACTION_KEEP_A = 1;
+	const ACTION_DELETE_A = 2;
 	const ACTION_DELETE_A_B = 3;
 
-	protected $a           = "\n";
-	protected $b           = '';
-	protected $input       = '';
-	protected $inputIndex  = 0;
+	protected $a = "\n";
+	protected $b = '';
+	protected $input = '';
+	protected $inputIndex = 0;
 	protected $inputLength = 0;
-	protected $lookAhead   = null;
-	protected $output      = '';
-	protected $lastByteOut  = '';
+	protected $lookAhead = null;
+	protected $output = '';
+	protected $lastByteOut = '';
 	protected $keptComment = '';
 
 	/**
@@ -218,7 +218,7 @@ class JSMin
 							$this->output .= $this->a;
 							$this->lastByteOut = $this->a;
 
-							$this->a       = $this->get();
+							$this->a = $this->get();
 							$str .= $this->a;
 						}
 					}

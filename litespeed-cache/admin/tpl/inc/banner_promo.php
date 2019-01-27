@@ -16,7 +16,7 @@ if ( ! isset( $_summary[ 'score.data' ] ) ) {
 
 $_score = $_summary[ 'score.data' ] ;
 
-if ( empty( $_score[ 'speed_before_cache' ] ) || empty( $_score[ 'speed_after_cache' ] )  || empty( $_score[ 'score_before_optm' ] )  || empty( $_score[ 'score_after_optm' ] ) ) {
+if ( empty( $_score[ 'speed_before_cache' ] ) || empty( $_score[ 'speed_after_cache' ] ) || empty( $_score[ 'score_before_optm' ] ) || empty( $_score[ 'score_after_optm' ] ) ) {
 	return ;
 }
 

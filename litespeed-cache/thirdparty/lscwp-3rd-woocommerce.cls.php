@@ -865,8 +865,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 					" ;
 
 		$tab = array(
-			'title'   => $_title,
-			'slug'    => $_slug,
+			'title' => $_title,
+			'slug' => $_slug,
 			'content' => $content,
 		) ;
 

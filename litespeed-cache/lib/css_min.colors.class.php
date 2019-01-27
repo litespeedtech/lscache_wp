@@ -30,7 +30,7 @@ class Colors
             '#ffc0cb' => 'pink',
             '#dda0dd' => 'plum',
             '#800080' => 'purple',
-            '#f00'    => 'red',
+            '#f00' => 'red',
             '#fa8072' => 'salmon',
             '#a0522d' => 'sienna',
             '#c0c0c0' => 'silver',

@@ -160,9 +160,9 @@ class LiteSpeed_Cache_CSS
 				$req_summary[ 'queue' ] = array() ;
 			}
 			$req_summary[ 'queue' ][ $ccss_type ] = array(
-				'url'			=> $request_url,
-				'user_agent'	=> $_SERVER[ 'HTTP_USER_AGENT' ],
-				'is_mobile'		=> $this->_separate_mobile_ccss(),
+				'url' => $request_url,
+				'user_agent' => $_SERVER[ 'HTTP_USER_AGENT' ],
+				'is_mobile' => $this->_separate_mobile_ccss(),
 			) ;// Current UA will be used to request
 			LiteSpeed_Cache_Log::debug( '[CSS] Added queue [type] ' . $ccss_type . ' [url] ' . $request_url . ' [UA] ' . $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 
@@ -240,11 +240,11 @@ class LiteSpeed_Cache_CSS
 
 		// Generate critical css
 		$data = array(
-			'home_url'	=> home_url(),
-			'url'		=> $request_url,
-			'ccss_type'	=> $ccss_type,
-			'user_agent'	=> $user_agent,
-			'is_mobile'	=> $is_mobile ? 1 : 0,
+			'home_url' => home_url(),
+			'url' => $request_url,
+			'ccss_type' => $ccss_type,
+			'user_agent' => $user_agent,
+			'is_mobile' => $is_mobile ? 1 : 0,
 		) ;
 
 		LiteSpeed_Cache_Log::debug( '[CSS] Generating: ', $data ) ;
@@ -302,7 +302,7 @@ class LiteSpeed_Cache_CSS
 
 		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ;
 		if ( ! empty( $separate_uri ) ) {
-			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
+			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {
 				LiteSpeed_Cache_Log::debug( '[CSS] Hit separate URI setting: ' . $result ) ;
 				$unique = true ;

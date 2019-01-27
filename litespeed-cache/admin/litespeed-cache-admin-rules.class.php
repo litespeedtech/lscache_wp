@@ -466,7 +466,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return false ;
 		}
 
-		$results = array_slice($rules, $key_start+1, $key_end-$key_start-1) ;
+		$results = array_slice($rules, $key_start + 1, $key_end - $key_start - 1) ;
 		if( ! $results ) {
 			return false ;
 		}
@@ -936,7 +936,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$end_marker = "# END {$marker}" ;
 		$new_file_data = implode( "\n", array_merge(
 			array( $start_marker ),
 			$this->_wrap_do_no_edit($rules),

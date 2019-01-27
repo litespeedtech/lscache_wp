@@ -352,13 +352,13 @@ class LiteSpeed_Cache_Img_Optm
 		$tmp = $wpdb->get_results( $wpdb->prepare( $q, $srcpath_md5_to_search ) ) ;
 		foreach ( $tmp as $v ) {
 			$existing_img_list[ $v->srcpath_md5 ] = array(
-				'id'		=> $v->id,
-				'status'	=> $v->optm_status,
-				'pid'		=> $v->post_id,
-				'src'		=> $v->src,
-				'srcpath_md5'	=> $v->srcpath_md5,
-				'src_md5'	=> $v->src_md5,
-				'src_filesize'	=> $v->src_filesize,
+				'id' => $v->id,
+				'status' => $v->optm_status,
+				'pid' => $v->post_id,
+				'src' => $v->src,
+				'srcpath_md5' => $v->srcpath_md5,
+				'src_md5' => $v->src_md5,
+				'src_filesize' => $v->src_filesize,
 			) ;
 		}
 
@@ -509,8 +509,8 @@ class LiteSpeed_Cache_Img_Optm
 			foreach ( $img_list as $md5 => $v ) {
 				if ( in_array( $v[ 'srcpath_md5' ], $srcpath_md5_list ) ) {
 					$this->_img_duplicated_in_queue[] = array(
-						'pid'	=> $pid,
-						'info'	=> $v,
+						'pid' => $pid,
+						'info' => $v,
 					) ;
 
 					$total_img_duplicated ++ ;
@@ -596,9 +596,9 @@ class LiteSpeed_Cache_Img_Optm
 		$ext = pathinfo( $real_file, PATHINFO_EXTENSION ) ;
 		if ( ! file_exists( $real_file ) || ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ) ) ) {
 			$this->_missed_img_in_queue[] = array(
-				'pid'	=> $this->tmp_pid,
-				'src'	=> $meta_value[ 'file' ],
-				'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
+				'pid' => $this->tmp_pid,
+				'src' => $meta_value[ 'file' ],
+				'srcpath_md5' => md5( $meta_value[ 'file' ] ),
 			) ;
 			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $real_file ) ;
 			return ;
@@ -607,13 +607,13 @@ class LiteSpeed_Cache_Img_Optm
 		LiteSpeed_Cache_Log::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid ) ;
 
 		$img_info = array(
-			'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
-			'src'	=> $meta_value[ 'file' ], // not needed in LiteSpeed sapi, just leave for local storage after post
-			'width'	=> $meta_value[ 'width' ],
-			'height'	=> $meta_value[ 'height' ],
-			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
-			'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
-			'src_filesize'	=> filesize( $real_file ),
+			'url' => $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
+			'src' => $meta_value[ 'file' ], // not needed in LiteSpeed sapi, just leave for local storage after post
+			'width' => $meta_value[ 'width' ],
+			'height' => $meta_value[ 'height' ],
+			'mime_type' => ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
+			'srcpath_md5' => md5( $meta_value[ 'file' ] ),
+			'src_filesize' => filesize( $real_file ),
 			/**
 			 * To use the filter `litespeed_img_optm_options_per_image`, do below:
 			 *
@@ -643,7 +643,7 @@ class LiteSpeed_Cache_Img_Optm
 			 *
 			 * @since 2.4.2
 			 */
-			'optm_options'	=> apply_filters( 'litespeed_img_optm_options_per_image', 0, $meta_value[ 'file' ] ),
+			'optm_options' => apply_filters( 'litespeed_img_optm_options_per_image', 0, $meta_value[ 'file' ] ),
 		) ;
 		$md5 = md5_file( $real_file ) ;
 
@@ -666,11 +666,11 @@ class LiteSpeed_Cache_Img_Optm
 	private function _push_img_in_queue_to_iapi()
 	{
 		$data = array(
-			'list' 			=> $this->_img_in_queue,
-			'optm_ori'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF ) ? 1 : 0,
+			'list' => $this->_img_in_queue,
+			'optm_ori' => LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ? 1 : 0,
+			'optm_webp' => LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless' => LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif' => LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_EXIF ) ? 1 : 0,
 		) ;
 
 		// Push to LiteSpeed IAPI server
@@ -730,7 +730,7 @@ class LiteSpeed_Cache_Img_Optm
 			$json = $notified_data[ $v->post_id ][ $v->src_md5 ] ;
 
 			$server_info = array(
-				'server'	=> $server,
+				'server' => $server,
 			) ;
 
 			// Only need to update meta_info for pull notification, for other notifications, no need to modify meta_info
@@ -740,9 +740,9 @@ class LiteSpeed_Cache_Img_Optm
 
 				// Default optm info array
 				if ( empty( $postmeta_info[ $v->post_id ] ) ) {
-					$postmeta_info[ $v->post_id ] =  array(
-						'meta_id'	=> $v->b_meta_id,
-						'meta_info'	=> array(
+					$postmeta_info[ $v->post_id ] = array(
+						'meta_id' => $v->b_meta_id,
+						'meta_info' => array(
 							'ori_total' => 0,
 							'ori_saved' => 0,
 							'webp_total' => 0,
@@ -1231,12 +1231,12 @@ class LiteSpeed_Cache_Img_Optm
 		if ( $list ) {
 			foreach ( $list as $v ) {
 				$img_data[] = array(
-					'id'	=> $v->id,
-					'optm_status'	=> $v->optm_status,
-					'src'	=> $v->src,
-					'srcpath_md5'	=> $v->srcpath_md5,
-					'src_md5'	=> $v->src_md5,
-					'server_info'	=> $v->server_info,
+					'id' => $v->id,
+					'optm_status' => $v->optm_status,
+					'src' => $v->src,
+					'srcpath_md5' => $v->srcpath_md5,
+					'src_md5' => $v->src_md5,
+					'server_info' => $v->server_info,
 				) ;
 			}
 		}
@@ -1827,8 +1827,8 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		$data = array(
-			'total_img'	=> $total_img,
-			'total_not_requested'	=> $total_not_requested,
+			'total_img' => $total_img,
+			'total_not_requested' => $total_not_requested,
 		) ;
 
 		return array_merge( $data, $count_list ) ;

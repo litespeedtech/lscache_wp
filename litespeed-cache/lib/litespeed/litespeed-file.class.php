@@ -79,7 +79,7 @@ class Litespeed_File
 				}
 			}
 			else{
-				for ( $i=0 ; $i < $lines ; $i++ ) {
+				for ( $i = 0 ; $i < $lines ; $i++ ) {
 					if ( $file->eof() ) {
 						break ;
 					}
@@ -238,7 +238,7 @@ class Litespeed_File
 			$marker = self::MARKER ;
 		}
 		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$end_marker = "# END {$marker}" ;
 
 		$new_data = implode( "\n", array_merge(
 			array( $start_marker ),
@@ -268,7 +268,7 @@ class Litespeed_File
 		}
 
 		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$end_marker = "# END {$marker}" ;
 		$new_data = implode( "\n", array_merge(
 			array( $start_marker ),
 			$result,
@@ -362,7 +362,7 @@ class Litespeed_File
 		}
 
 		$start_marker = "# BEGIN {$marker}" ;
-		$end_marker   = "# END {$marker}" ;
+		$end_marker = "# END {$marker}" ;
 
 		$fp = fopen($filename, 'r+' ) ;
 		if ( ! $fp ) {

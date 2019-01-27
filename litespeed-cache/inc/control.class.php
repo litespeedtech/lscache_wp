@@ -522,7 +522,7 @@ class LiteSpeed_Cache_Control
 		// Check if URI is forced cache
 		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ;
 		if ( ! empty( $excludes ) ) {
-			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
+			list( $result, $this_ttl ) = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
 				self::force_cacheable() ;
 				LiteSpeed_Cache_Log::debug( '[Ctrl] Forced cacheable due to setting: ' . $result ) ;
@@ -657,7 +657,7 @@ class LiteSpeed_Cache_Control
 			// Check if URI is excluded from cache
 			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ;
 			if ( ! empty( $excludes ) ) {
-				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
+				$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
 					return $this->_no_cache_for( 'Admin configured URI Do not cache: ' . $result ) ;
 				}
@@ -683,7 +683,7 @@ class LiteSpeed_Cache_Control
 			if ( ! empty($excludes) && ! empty($_COOKIE) ) {
 				$exclude_list = explode('|', $excludes) ;
 
-				foreach( $_COOKIE as $key=>$val) {
+				foreach( $_COOKIE as $key => $val) {
 					if ( in_array($key, $exclude_list) ) {
 						return $this->_no_cache_for('Admin configured Cookie Do not cache.') ;
 					}

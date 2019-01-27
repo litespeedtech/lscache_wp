@@ -27,7 +27,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
 	 */
 	public function test_get_cache_tags() 
 	{
-        $instance  = self::get_instance();
+        $instance = self::get_instance();
         $tags = array();
 
         if(method_exists($instance, 'add_cache_tag')){
@@ -51,7 +51,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      */
     public function test_get_purge_tags() 
     {
-        $instance  = self::get_instance();
+        $instance = self::get_instance();
         $tags = array();
 
         if(method_exists($instance, 'add_purge_tag')){
@@ -75,7 +75,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      */
     public function test_get_vary_cookies() 
     {
-        $instance  = self::get_instance();
+        $instance = self::get_instance();
         $cookie = array();
 
         if(method_exists($instance, 'add_vary_cookie')){
@@ -100,7 +100,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      */
     public function test_is_noncacheable() 
     {
-        $instance  = self::get_instance();
+        $instance = self::get_instance();
 
         if(method_exists($instance, 'set_noncacheable')){
             $instance->set_noncacheable();
@@ -124,7 +124,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      */
     public function test_is_mobile() 
     {
-        $instance  = self::get_instance();
+        $instance = self::get_instance();
 
         if(method_exists($instance, 'set_mobile')){
             $instance->set_mobile();
@@ -147,7 +147,7 @@ class LiteSpeed_Cache_Tags_Test extends WP_UnitTestCase {
      */
     public function test_get_use_frontpage_ttl() 
     {
-        $instance  = self::get_instance();
+        $instance = self::get_instance();
 
         if(method_exists($instance, 'set_use_frontpage_ttl')){
             $instance->set_use_frontpage_ttl();

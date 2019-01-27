@@ -373,7 +373,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
     public function test_get_cache_tags()
     {
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_cache_tags');
-        if(count($array)>0){
+        if(count($array) > 0){
             $this->assertNotEmpty($array);
         }
         else
@@ -394,7 +394,7 @@ class LiteSpeed_Cache_Test extends WP_UnitTestCase {
 
         $parameters = array($post_id);
         $array = self::invokeMethod('LiteSpeed_Cache', 'get_purge_tags', $parameters);
-        if(count($array)>0){
+        if(count($array) > 0){
             $this->assertNotEmpty($array);
         }
         else
