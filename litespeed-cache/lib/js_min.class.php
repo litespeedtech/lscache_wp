@@ -196,6 +196,7 @@ class JSMin
 				$this->lastByteOut = $this->a;
 
 				// fallthrough intentional
+				// no break
 			case self::ACTION_DELETE_A: // 2
 				$this->a = $this->b;
 				if ($this->a === "'" || $this->a === '"') { // string literal
@@ -225,6 +226,7 @@ class JSMin
 				}
 
 				// fallthrough intentional
+				// no break
 			case self::ACTION_DELETE_A_B: // 3
 				$this->b = $this->next();
 				if ($this->b === '/' && $this->isRegexpLiteral()) {
