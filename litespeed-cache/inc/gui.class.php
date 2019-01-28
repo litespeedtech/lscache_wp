@@ -410,32 +410,36 @@ class LiteSpeed_Cache_GUI
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
+		$append_arr = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$' ) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-forced_cache',
 			'title'		=> __( 'Forced cacheable', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'forced_cache', false, true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
+		$append_arr = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$' ) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-noncache',
 			'title'		=> __( 'Non cacheable', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'nocache', false, true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
+		$append_arr = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$' ) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-private',
 			'title'		=> __( 'Private cache', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'private', false, true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
+		$append_arr = array( LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$' ) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-single-action',
 			'id'		=> 'litespeed-single-nonoptimize',
 			'title'		=> __( 'No optimization', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_FRONT_EXCLUDE, 'nonoptimize', false, true ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CONF, false, false, true, $append_arr ),
 		) );
 
 		$wp_admin_bar->add_menu( array(

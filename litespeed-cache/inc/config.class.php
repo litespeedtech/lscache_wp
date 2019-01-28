@@ -828,36 +828,48 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return ;
 		}
 
-		$cfg = $cfg_v = false ;
-		foreach ( $_GET[ self::TYPE_SET ] as $k => $v ) {
-			if ( ! isset( $this->_options[ $k ] ) ) {
-				continue ;
-			}
-
-			if ( is_bool( $this->_options[ $k ] ) ) {
-				$v = (bool) $v ;
-			}
-
-			$cfg = $k ;
-			$cfg_v = $v ;
-			break ;// only allow one
-		}
-
-		if ( ! $cfg ) {
-			return ;
-		}
-
 		$options = $this->_options ;
 		// Get items
 		foreach ( $this->stored_items() as $v ) {
 			$options[ $v ] = $this->get_item( $v ) ;
 		}
 
-		// Change value
-		$options[ $cfg ] = $cfg_v ;
+		$changed = false ;
+		foreach ( $_GET[ self::TYPE_SET ] as $k => $v ) {
+			if ( ! isset( $options[ $k ] ) ) {
+				continue ;
+			}
+
+			if ( is_bool( $options[ $k ] ) ) {
+				$v = (bool) $v ;
+			}
+
+			// Change for items
+			if ( is_array( $v ) && is_array( $options[ $k ] ) ) {
+				$changed = true ;
+
+				$options[ $k ] = array_merge( $options[ $k ], $v ) ;
+
+				LiteSpeed_Cache_Log::debug( '[Conf] Appended to item [' . $k . ']: ' . var_export( $v, true ) ) ;
+			}
+
+			// Chnage for single option
+			if ( ! is_array( $v ) ) {
+				$changed = true ;
+
+				$options[ $k ] = $v ;
+
+				LiteSpeed_Cache_Log::debug( '[Conf] Changed [' . $k . '] to ' . var_export( $v, true ) ) ;
+			}
+
+		}
+
+		if ( ! $changed ) {
+			return ;
+		}
 
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
-		$this->update_options( $output ) ;
+		$this->update_options( $output ) ;xx
 
 		LiteSpeed_Cache_Log::debug( '[Conf] Changed cfg ' . $cfg . ' to ' . var_export( $cfg_v, true ) ) ;
 
@@ -865,45 +877,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 	}
 
-	/**
-	 * Save frontend url to private cached uri/no cache uri
-	 *
-	 * @since 1.3
-	 * @access public
-	 */
-	public static function frontend_save() todo combine with _set_conf()
-	{
-		if ( empty( $_SERVER[ 'HTTP_REFERER' ] ) ) {
-			exit( 'no referer' ) ;
-		}
-
-		if ( ! $type = LiteSpeed_Cache_Router::verify_type() ) {
-			exit( 'no type' ) ;
-		}
-
-		switch ( $type ) {
-			case 'forced_cache' :
-				$id = self::ITEM_FORCE_CACHE_URI ;
-				break ;
-
-			case 'private' :
-				$id = self::ITEM_CACHE_URI_PRIV ;
-				break ;
-
-			case 'nonoptimize' :
-				$id = self::ITEM_OPTM_EXCLUDES ;
-				break ;
-
-			case 'nocache' :
-			default:
-				$id = self::ITEM_EXCLUDES_URI ;
-				break ;
-		}
 
 		$instance = self::get_instance() ;
 		$list = $instance->get_item( $id ) ;
 
-		$list[] = $_SERVER[ 'HTTP_REFERER' ] . '$' ;
+		$list[] = $_SERVER[ 'HTTP_REFERER' ] ;
 
 		$instance->save_item( $id, $list, 'relative' ) ;
 

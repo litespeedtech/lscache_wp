@@ -449,14 +449,10 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ;
-		$this->_save_item( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative' ) ;
 
-		$ids = array(
-			LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS, // Update Drop Query String @since 1.7
-		);
-		foreach ( $ids as $id ) {
-			$this->_save_item( $id ) ;
-		}
+		$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
+		$this->_sanitize_lines( $id ) ;
 
 	}
 
@@ -500,9 +496,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Filter scheduled purge URLs
 		$id = LiteSpeed_Cache_Config::OPID_TIMED_URLS ;
-		if ( isset( $this->_input[ $id ] ) ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'relative' ) ;
-		}
+		$this->_sanitize_lines( $id, 'relative' ) ;
 
 		// Schduled Purge Time
 		$id = LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ;
@@ -518,15 +512,13 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_exclude()
 	{
 		$id = LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ;
-		$this->_save_item( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative' ) ;
 
 		$id = LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ;
-		$this->_save_item( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative' ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ;
-		if ( isset( $this->_input[ $id ] ) ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		}
+		$this->_sanitize_lines( $id ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
 		$this->_options[ $id ] = '' ;
@@ -579,8 +571,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * @since 1.6.2
 		 */
 		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
-
+		$this->_options[ $id ] = $this->_input[ $id ] ;
 	}
 
 	/**
@@ -1397,18 +1388,14 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
-	 * To save item in options
+	 * Filter multiple lines with sanitizer before saving
 	 *
-	 * @since 2.2.1
+	 * @since 3.0
 	 * @access private
 	 */
-	private function _save_item( $id, $sanitize_filter = false )
+	private function _sanitize_lines( $id, $sanitize_filter = false )
 	{
-		$val = ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : '' ;
-
-		$this->__conf->save_item( $id, $val, $sanitize_filter ) ;
-
-		return $val ;
+		$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
 	}
 
 	/**

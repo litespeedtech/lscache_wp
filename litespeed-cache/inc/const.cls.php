@@ -359,7 +359,7 @@ class LiteSpeed_Cache_Const
 				break ;
 		}
 
-		return false ;
+		return '' ;// Here should not return false in case it is wrongly treated by conf::_set_conf() is_bool condition
 	}
 
 	/**

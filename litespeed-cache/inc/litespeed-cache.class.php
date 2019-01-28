@@ -55,8 +55,6 @@ class LiteSpeed_Cache
 	const ACTION_ACTIVATION = 'activate' ;
 	const ACTION_UTIL = 'util' ;
 
-	const ACTION_FRONT_EXCLUDE = 'front-exclude' ;
-
 	const ACTION_DB_OPTIMIZE = 'db_optimize' ;
 	const ACTION_LOG = 'log' ;
 
@@ -330,11 +328,6 @@ class LiteSpeed_Cache
 				LiteSpeed_Cache_Purge::purge_all() ;
 				$msg = __( 'Notified LiteSpeed Web Server to purge everything.', 'litespeed-cache' ) ;
 				break;
-
-			case LiteSpeed_Cache::ACTION_FRONT_EXCLUDE:
-				// redirect inside
-				LiteSpeed_Cache_Config::frontend_save() ;
-				break ;
 
 			case LiteSpeed_Cache::ACTION_PURGE_BY:
 				LiteSpeed_Cache_Purge::get_instance()->purge_list() ;

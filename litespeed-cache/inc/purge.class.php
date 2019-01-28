@@ -403,7 +403,7 @@ class LiteSpeed_Cache_Purge
 	}
 
 	/**
-	 * Called from cfg::frontend_save() to purge front page
+	 * Called from conf::_set_conf() for certain conf saving (previous is conf::frontend_save()) to purge front page
 	 *
 	 * @since    2.2
 	 * @access   public
