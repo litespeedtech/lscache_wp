@@ -317,21 +317,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Save textarea items
-	 *
-	 * @since 3.0
-	 * @access public
-	 */
-	public function save_item( $id, $val, $sanitize_filter = false )
-	{
-		if ( $val ) {
-			$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $sanitize_filter ) ;
-		}
-
-		update_option( $id, $val ) ;
-	}
-
-	/**
 	 * Check if one user role is in vary group settings
 	 *
 	 * @since 1.2.0
@@ -868,25 +853,17 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return ;
 		}
 
-		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
-		$this->update_options( $output ) ;xx
-
-		LiteSpeed_Cache_Log::debug( '[Conf] Changed cfg ' . $cfg . ' to ' . var_export( $cfg_v, true ) ) ;
+		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ; // Purge will be auto run in validating items when found diff
+		// Save settings now (options & items)
+		foreach ( $output as $k => $v ) {
+			update_option( $this->conf_name( $k ), $v ) ;
+		}
 
 		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
-	}
 
-
-		$instance = self::get_instance() ;
-		$list = $instance->get_item( $id ) ;
-
-		$list[] = $_SERVER[ 'HTTP_REFERER' ] ;
-
-		$instance->save_item( $id, $list, 'relative' ) ;
-
-		// Purge this page & redirect
-		LiteSpeed_Cache_Purge::purge_front() ;
+		// Redirect if changed frontend URL
+		xx
 		exit() ;
 	}
 

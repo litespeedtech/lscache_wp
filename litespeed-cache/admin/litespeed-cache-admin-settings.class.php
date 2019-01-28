@@ -22,6 +22,7 @@ class LiteSpeed_Cache_Admin_Settings
 	private $_err = array() ;
 
 	private $__conf ;
+	private $__purge ;
 
 	private $_max_int = 2147483647 ;
 
@@ -34,6 +35,7 @@ class LiteSpeed_Cache_Admin_Settings
 	private function __construct()
 	{
 		$this->__conf = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__purge = LiteSpeed_Cache_Purge::get_instance() ;
 	}
 
 	/**
@@ -350,7 +352,7 @@ class LiteSpeed_Cache_Admin_Settings
 		);
 		$item_options = array() ;
 		foreach ( $ids as $id ) {
-			$item_options[ $id ] = $this->_save_item( $id ) ;xx
+			$item_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $id ) ; xx// here needs to save separate settings OR if site_conf use separate items
 		}
 
 		/**
@@ -449,7 +451,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ;
-		$this->_sanitize_lines( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		$id = LiteSpeed_Cache_Config::ITEM_CACHE_DROP_QS ;
 		$this->_sanitize_lines( $id ) ;
@@ -496,7 +498,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Filter scheduled purge URLs
 		$id = LiteSpeed_Cache_Config::OPID_TIMED_URLS ;
-		$this->_sanitize_lines( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		// Schduled Purge Time
 		$id = LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ;
@@ -512,10 +514,10 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_exclude()
 	{
 		$id = LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ;
-		$this->_sanitize_lines( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		$id = LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ;
-		$this->_sanitize_lines( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ;
 		$this->_sanitize_lines( $id ) ;
@@ -802,7 +804,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Prevent URI from optimization
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ;
-		$this->_sanitize_lines( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		// Update js deferred excludes
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ;
@@ -1380,17 +1382,34 @@ class LiteSpeed_Cache_Admin_Settings
 	 * @since 3.0
 	 * @access private
 	 */
-	private function _sanitize_lines( $id, $sanitize_filter = false )
+	private function _sanitize_lines( $id, $sanitize_filter = false, $purge_diff = false )
 	{
 		if ( is_array( $id ) ) {
 			foreach ( $id as $v ) {
-				$this->_sanitize_lines( $v, $sanitize_filter ) ;
+				$this->_sanitize_lines( $v, $sanitize_filter, $purge_diff ) ;
 			}
 
 			return ;
 		}
 
-		$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
+		$options = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
+
+		// If purge difference
+		if ( $purge_diff ) {
+			$diff = array_diff( $options, $this->_options[ $id ] ) ;
+			$diff2 = array_diff( $this->_options[ $id ], $options ) ;
+			$diff = array_merge( $diff, $diff2 ) ;
+			// If has difference
+			if ( $diff ) {
+				foreach ( $diff as $v ) {
+					$v = ltrim( $v, '^' ) ;
+					$v = rtrim( $v, '$' ) ;
+					$this->__purge->purgeby_url_cb( $v ) ;
+				}
+			}
+		}
+
+		$this->_options[ $id ] = $options ;
 	}
 
 	/**
