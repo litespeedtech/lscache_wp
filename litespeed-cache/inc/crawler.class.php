@@ -180,7 +180,7 @@ class LiteSpeed_Cache_Crawler
 	 * @access public
 	 * @param  string  $sitemap       The url set map address
 	 * @param  boolean $return_detail If return url list
-	 * @return bollean|array          Url list or if is a sitemap
+	 * @return array          Url list
 	 */
 	public function parse_custom_sitemap($sitemap, $return_detail = true)
 	{
@@ -192,12 +192,13 @@ class LiteSpeed_Cache_Crawler
 		if ( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message() ;
 			LiteSpeed_Cache_Log::debug( '[Crawler] failed to read sitemap: ' . $error_message ) ;
-			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ ;
+
+			throw new Exception( LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_READ ) ;
 		}
 
 		$xml_object = simplexml_load_string( $response[ 'body' ] ) ;
 		if ( ! $xml_object ) {
-			return LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE ;
+			throw new Exception( LiteSpeed_Cache_Admin_Error::E_SETTING_CUSTOM_SITEMAP_PARSE ) ;
 		}
 		if ( ! $return_detail ) {
 			return true ;
@@ -211,9 +212,13 @@ class LiteSpeed_Cache_Crawler
 				$xml_array['sitemap'] = (array)$xml_array['sitemap'] ;
 			}
 			if ( !empty($xml_array['sitemap']['loc']) ) {// is single sitemap
-				$urls = $this->parse_custom_sitemap($xml_array['sitemap']['loc']) ;
-				if ( is_array($urls) && !empty($urls) ) {
-					$_urls = array_merge($_urls, $urls) ;
+				try {
+					$urls = $this->parse_custom_sitemap( $xml_array[ 'sitemap' ][ 'loc' ] ) ;
+					if ( is_array( $urls ) && ! empty( $urls ) ) {
+						$_urls = array_merge($_urls, $urls) ;
+					}
+				} catch( \Exception $e ) {
+					LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
 				}
 			}
 			else {
@@ -221,9 +226,13 @@ class LiteSpeed_Cache_Crawler
 				foreach ($xml_array['sitemap'] as $val) {
 					$val = (array)$val ;
 					if ( !empty($val['loc']) ) {
-						$urls = $this->parse_custom_sitemap($val['loc']) ;// recursive parse sitemap
-						if ( is_array($urls) && !empty($urls) ) {
-							$_urls = array_merge($_urls, $urls) ;
+						try {
+							$urls = $this->parse_custom_sitemap( $val[ 'loc' ] ) ;// recursive parse sitemap
+							if ( is_array( $urls ) && ! empty( $urls ) ) {
+								$_urls = array_merge( $_urls, $urls ) ;
+							}
+						} catch( \Exception $e ) {
+							LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
 						}
 					}
 				}
@@ -261,17 +270,25 @@ class LiteSpeed_Cache_Crawler
 	{
 		// use custom sitemap
 		if ( $sitemap = $this->_options[ LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ] ) {
-			$sitemap_urls = $this->parse_custom_sitemap( $sitemap ) ;
 			$urls = array() ;
 			$offset = strlen( $this->_home_url ) ;
+			$sitemap_urls = false ;
+
+			try {
+				$sitemap_urls = $this->parse_custom_sitemap( $sitemap ) ;
+			} catch( \Exception $e ) {
+				LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+			}
+
 			if ( is_array( $sitemap_urls ) && ! empty( $sitemap_urls ) ) {
 				foreach ( $sitemap_urls as $val ) {
 					if ( stripos( $val, $this->_home_url ) === 0 ) {
 						$urls[] = substr( $val, $offset ) ;
 					}
 				}
+
+				$urls = array_unique( $urls ) ;
 			}
-			$urls = array_unique( $urls ) ;
 		}
 		else {
 			$urls = LiteSpeed_Cache_Crawler_Sitemap::get_instance()->generate_data() ;

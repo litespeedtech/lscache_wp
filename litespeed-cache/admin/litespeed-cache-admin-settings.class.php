@@ -350,7 +350,7 @@ class LiteSpeed_Cache_Admin_Settings
 		);
 		$item_options = array() ;
 		foreach ( $ids as $id ) {
-			$item_options[ $id ] = $this->_save_item( $id ) ;
+			$item_options[ $id ] = $this->_save_item( $id ) ;xx
 		}
 
 		/**
@@ -617,19 +617,11 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = implode( ',', $ori_list ) ;
 		}
 
-		$ids = array(
-			LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		}
+		$id = LiteSpeed_Cache_Config::OPID_CDN_EXCLUDE ;
+		$this->_sanitize_lines( $id ) ;
 
-		$ids = array(
-			LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_save_item( $id ) ;
-		}
+		$id = LiteSpeed_Cache_Config::ITEM_CDN_ORI_DIR ;
+		$this->_sanitize_lines( $id ) ;
 
 		/**
 		 * Handle multiple CDN setting
@@ -655,7 +647,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 			$cdn_mapping[] = $this_mapping ;
 		}
-		update_option( $id, $cdn_mapping ) ;
+		$this->_options[ $id ] = $cdn_mapping ;
 
 		/**
 		 * Load jQuery from cdn
@@ -749,14 +741,14 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Update lazyload image excludes
 		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ;
-		$this->_save_item( $id, 'uri' ) ;
+		$this->_sanitize_lines( $id, 'uri' ) ;
 
 		// Update lazyload image classname excludes
 		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_CLS_EXC ;
-		$this->_save_item( $id ) ;
+		$this->_sanitize_lines( $id ) ;
 
 		$id = LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ;
-		$this->_save_item( $id ) ;
+		$this->_sanitize_lines( $id ) ;
 	}
 
 	/**
@@ -799,34 +791,33 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES,
 			LiteSpeed_Cache_Config::OPID_JS_EXCLUDES,
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], 'uri' ) ;
-		}
+		$this->_sanitize_lines( $ids, 'uri' ) ;
 
 		$id = LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ;
 		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3600 ) ;
 
-		// Update critical css
-		update_option( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, $this->_input[ LiteSpeed_Cache_Config::ITEM_OPTM_CSS ] ) ;
+		// Critical CSS
+		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CSS ;
+		$this->_options[ $id ] = $this->_input[ $id ] ;
 
-		// prevent URI from optimization
+		// Prevent URI from optimization
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ;
-		$this->_save_item( $id, 'relative' ) ;
+		$this->_sanitize_lines( $id, 'relative' ) ;
 
 		// Update js deferred excludes
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ;
-		$this->_save_item( $id, 'uri' ) ;
+		$this->_sanitize_lines( $id, 'uri' ) ;
 
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
-		update_option( $id, ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ) ;
+		$this->_options[ $id ] = ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ;
 
 		/**
 		 * DNS prefetch
 		 * @since 1.7.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ;
-		$this->_save_item( $id, 'domain' ) ;
+		$this->_sanitize_lines( $id, 'domain' ) ;
 
 		/**
 		 * Combined file max size
@@ -840,9 +831,9 @@ class LiteSpeed_Cache_Admin_Settings
 		 * @since 2.6.1
 		 */
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ;
-		$this->_save_item( $id ) ;
+		$this->_sanitize_lines( $id ) ;
 		$id = LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ;
-		$this->_save_item( $id, 'uri' ) ;
+		$this->_sanitize_lines( $id, 'uri' ) ;
 
 	}
 
@@ -866,9 +857,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$ids = array(
 			LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS,
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_save_item( $id ) ;
-		}
+		$this->_sanitize_lines( $ids ) ;
 
 		/**
 		 * Added Favicon
@@ -966,9 +955,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_FILTERS,
 			LiteSpeed_Cache_Config::ITEM_LOG_IGNORE_PART_FILTERS,
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_save_item( $id ) ;
-		}
+		$this->_sanitize_lines( $ids ) ;
 	}
 
 	/**
@@ -1041,15 +1028,26 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ;
-		if ( ! empty( $this->_input[ $id ] ) && ( $err = $this->_validate_custom_sitemap( $this->_input[ $id ] ) ) !== true ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( $err, $this->_input[ $id ] ) ;
+		if ( ! empty( $this->_input[ $id ] ) ) {
+			// Validate sitemap
+			try{
+				LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $this->_input[ $id ], false ) ;
+
+				$this->_options[ $id ] = $this->_input[ $id ] ;
+
+			} catch ( \Exception $e ) {
+				$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( $e->getMessage(), $this->_input[ $id ] ) ;
+
+				LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+			}
+
 		}
 		else {
 			$this->_options[ $id ] = $this->_input[ $id ] ;
 		}
 
 		$id = LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ;
-		$this->_save_item( $id ) ;
+		$this->_sanitize_lines( $id ) ;
 
 		/**
 		 * Save cookie crawler
@@ -1066,20 +1064,8 @@ class LiteSpeed_Cache_Admin_Settings
 				$cookie_crawlers[ $v ] = $this->_input[ $id ][ 'vals' ][ $k ] ;
 			}
 		}
-		update_option( $id, $cookie_crawlers ) ;
+		$this->_options[ $id ] = $cookie_crawlers ;
 
-	}
-
-	/**
-	 * Validates the custom sitemap settings.
-	 *
-	 * @since 1.1.1
-	 * @access private
-	 * @param string $url The sitemap url
-	 */
-	private function _validate_custom_sitemap( $url )
-	{
-		return LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $url, false ) ;
 	}
 
 	/**
@@ -1193,7 +1179,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Save vary group settings
-		$this->_save_item( LiteSpeed_Cache_Config::VARY_GROUP ) ;
+		$id = LiteSpeed_Cache_Config::VARY_GROUP ;
+		$this->_sanitize_lines( $id ) ;
 	}
 
 	/**
@@ -1395,6 +1382,14 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _sanitize_lines( $id, $sanitize_filter = false )
 	{
+		if ( is_array( $id ) ) {
+			foreach ( $id as $v ) {
+				$this->_sanitize_lines( $v, $sanitize_filter ) ;
+			}
+
+			return ;
+		}
+
 		$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
 	}
 
