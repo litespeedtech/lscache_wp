@@ -577,8 +577,9 @@ class Litespeed_Crawler
 		 * Try to enable http2 connection (only available since PHP7+)
 		 * @since  1.9.1
 		 * @since  2.2.7 Commented due to cause no-cache issue
+		 * @since  2.9.1+ Fixed wrongly usage of CURL_HTTP_VERSION_1_1 const
 		 */
-		$options[ CURL_HTTP_VERSION_1_1 ] = 1 ;
+		$options[ CURLOPT_HTTP_VERSION ] = CURL_HTTP_VERSION_1_1 ;
 		// if ( defined( 'CURL_HTTP_VERSION_2' ) && $this->_http2 ) {
 		// 	defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'Crawler Lib: Enabled HTTP2' ) ;
 		// 	$options[ CURL_HTTP_VERSION_2 ] = 1 ;
