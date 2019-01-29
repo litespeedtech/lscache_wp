@@ -28,6 +28,7 @@ class LiteSpeed_Cache_Img_Optm
 	const TYPE_RESET_ROW = 'reset_row' ;
 	const TYPE_RM_BKUP = 'rm_bkup' ;
 
+	const ITEM_IMG_OPTM_NEED_PULL = 'media.need_pull' ;
 	const ITEM_IMG_OPTM_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
 
 	const DB_IMG_OPTIMIZE_DESTROY = 'litespeed-optimize-destroy' ;
@@ -882,7 +883,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// Mark need_pull tag for cron
 		if ( $need_pull ) {
-			update_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
+			update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ), self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 		}
 
 		// redo count err
@@ -936,7 +937,7 @@ class LiteSpeed_Cache_Img_Optm
 			return ;
 		}
 
-		$tag = get_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ;
+		$tag = get_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
 
 		if ( ! $tag || $tag !== self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) {
 			return ;
@@ -1168,7 +1169,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// If all pulled, update tag to done
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] Marked pull status to all pulled' ) ;
-		update_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ;
+		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ), self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ;
 
 		$time_cost = time() - $beginning ;
 		if ( $tried_level_up ) {
@@ -1419,7 +1420,7 @@ class LiteSpeed_Cache_Img_Optm
 
 		// Clear credit info
 		delete_option( self::DB_IMG_OPTM_SUMMARY ) ;
-		delete_option( LiteSpeed_Cache_Config::ITEM_IMG_OPTM_NEED_PULL ) ;
+		delete_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_IMG_OPTM_NEED_PULL, 'img_optm' ) ) ;
 
 		exit( 'ok' ) ;
 	}

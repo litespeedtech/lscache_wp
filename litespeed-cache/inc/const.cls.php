@@ -13,28 +13,27 @@ class LiteSpeed_Cache_Const
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 
-	const VARY_GROUP = 'litespeed-cache-vary-group' ;
-	const EXCLUDE_OPTIMIZATION_ROLES = 'litespeed-cache-exclude-optimization-roles' ;
-	const EXCLUDE_CACHE_ROLES = 'litespeed-cache-exclude-cache-roles' ;
-	const ITEM_OPTM_CSS = 'litespeed-optm-css' ;// separate critical css that should be stored in option table
-	const ITEM_OPTM_JS_DEFER_EXC = 'litespeed-optm-js-defer-excludes' ;
-	const ITEM_MEDIA_LAZY_IMG_EXC = 'litespeed-media-lazy-img-excludes' ;
-	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'litespeed-media-lazy-img-cls-excludes' ;
-	const ITEM_IMG_OPTM_NEED_PULL = 'litespeed-media-need-pull' ;
+	const VARY_GROUP = 'vary_group' ;
+	const EXCLUDE_OPTIMIZATION_ROLES = 'exclude_optimization_roles' ;
+	const EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
+	const ITEM_OPTM_CSS = 'optm.ccss' ;
+	const ITEM_OPTM_JS_DEFER_EXC = 'optm.js_defer_excludes' ;
+	const ITEM_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
+	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
 	const ITEM_ENV_REF = 'litespeed-env-ref' ;
 	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
 	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
 	const ITEM_CLOUDFLARE_STATUS = 'litespeed-cache-cloudflare_status' ;
-	const ITEM_LOG_IGNORE_FILTERS = 'litespeed-log_ignore_filters' ;
-	const ITEM_LOG_IGNORE_PART_FILTERS = 'litespeed-log_ignore_part_filters' ;
-	const ITEM_OBJECT_GLOBAL_GROUPS = 'litespeed-object_global_groups' ;
-	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'litespeed-object_non_persistent_groups' ;
+	const ITEM_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
+	const ITEM_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
+	const ITEM_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
+	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
 	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
 	const ITEM_CRWL_COOKIES = 'litespeed-crawler-cookies' ;
-	const ITEM_ADV_PURGE_ALL_HOOKS = 'litespeed-adv-purge_all_hooks' ;
+	const ITEM_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
 	const ITEM_CDN_ORI_DIR = 'litespeed-cdn-ori_dir' ;
-	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'litespeed-media-webp_attribute' ;
+	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
 	const ITEM_FORCE_CACHE_URI = 'litespeed-forced_cache_uri' ;
 	const ITEM_CACHE_URI_PRIV = 'litespeed-cache_uri_priv' ;
 	const ITEM_OPTM_EXCLUDES = 'litespeed-optm_excludes' ;
@@ -64,15 +63,9 @@ class LiteSpeed_Cache_Const
 	const VAL_ON = 1 ;
 	const VAL_ON2 = 2 ;
 
-	const LOG_LEVEL_NONE = 0 ;
-	const LOG_LEVEL_ERROR = 1 ;
-	const LOG_LEVEL_NOTICE = 2 ;
-	const LOG_LEVEL_INFO = 3 ;
-	const LOG_LEVEL_DEBUG = 4 ;
-	const OPID_VERSION = 'version' ;
+	const OPT_VERSION = 'version' ;
 	const _CACHE = '_cache' ;// cache on setting
 
-	const OPID_ENABLED_RADIO = 'radio_select' ;// Stale setting in v2.9-
 	const OPT_CACHE = 'cache' ;
 	const OPT_AUTO_UPGRADE = 'auto_upgrade' ;
 	const OPID_CACHE_PRIV = 'cache_priv' ;
@@ -253,7 +246,6 @@ class LiteSpeed_Cache_Const
 			self::ITEM_OPTM_JS_DEFER_EXC,
 			self::ITEM_MEDIA_LAZY_IMG_EXC,
 			self::ITEM_MEDIA_LAZY_IMG_CLS_EXC,
-			self::ITEM_IMG_OPTM_NEED_PULL,
 			self::ITEM_ENV_REF,
 			self::ITEM_CACHE_DROP_QS,
 			self::ITEM_CDN_MAPPING,
@@ -277,90 +269,6 @@ class LiteSpeed_Cache_Const
 		) ;
 	}
 
-	/**
-	 * Get default item val
-	 *
-	 * @since 1.8
-	 * @access public
-	 */
-	public function default_item( $item )
-	{
-		/**
-		 * Allow terms default value
-		 * @since  2.7.1
-		 */
-		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
-
-			if ( ! empty( $default_ini_cfg[ $item ] ) ) {
-
-				/**
-				 * Special handler for CDN_mapping
-				 *
-				 * format in .ini:
-				 * 		[litespeed-cache-cdn_mapping]
-				 *   	url[0] = 'https://example.com/'
-				 *     	inc_js[0] = true
-				 *
-				 * format out:
-				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
-				 */
-				if ( $item == self::ITEM_CDN_MAPPING ) {
-					$mapping_fields = array(
-						self::ITEM_CDN_MAPPING_URL,
-						self::ITEM_CDN_MAPPING_INC_IMG,
-						self::ITEM_CDN_MAPPING_INC_CSS,
-						self::ITEM_CDN_MAPPING_INC_JS,
-						self::ITEM_CDN_MAPPING_FILETYPE
-					) ;
-					$cdn_mapping = array() ;
-					foreach ( $default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
-						$this_row = array() ;
-						foreach ( $mapping_fields as $v2 ) {
-							$this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;
-						}
-						$cdn_mapping[ $k ] = $this_row ;
-					}
-
-					return $cdn_mapping ;
-				}
-
-				return $default_ini_cfg[ $item ] ;
-			}
-		}
-
-		switch ( $item ) {
-			case self::ITEM_OBJECT_GLOBAL_GROUPS :
-				return "users\nuserlogins\nusermeta\nuser_meta\nsite-transient\nsite-options\nsite-lookup\nblog-lookup\nblog-details\nrss\nglobal-posts\nblog-id-cache" ;
-
-			case self::ITEM_OBJECT_NON_PERSISTENT_GROUPS :
-				return "comment\ncounts\nplugins" ;
-
-			case self::ITEM_ADV_PURGE_ALL_HOOKS :
-				return "switch_theme\nwp_create_nav_menu\nwp_update_nav_menu\nwp_delete_nav_menu\ncreate_term\nedit_terms\ndelete_term\nadd_link\nedit_link\ndelete_link" ;
-
-			case self::ITEM_CDN_ORI_DIR :
-				return LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
-
-			case self::ITEM_MEDIA_WEBP_ATTRIBUTE :
-				return "img.src\n" .
-						"div.data-thumb\n" .
-						"img.data-src\n" .
-						"div.data-large_image\n" .
-						"img.retina_logo_url" ;
-
-			case self::ITEM_LOG_IGNORE_FILTERS :
-				return "gettext\ngettext_with_context\nget_the_terms\nget_term" ;
-
-			case self::ITEM_LOG_IGNORE_PART_FILTERS :
-				return "i18n\nlocale\nsettings\noption" ;
-
-			default :
-				break ;
-		}
-
-		return '' ;// Here should not return false in case it is wrongly treated by conf::_set_conf() is_bool condition
-	}
 
 	/**
 	 * Gets the default network options
@@ -372,7 +280,7 @@ class LiteSpeed_Cache_Const
 	protected function get_default_site_options()
 	{
 		$default_site_options = array(
-			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
+			self::OPT_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::NETWORK_OPID_ENABLED => false,
 			self::NETWORK_OPID_USE_PRIMARY => false,
 			self::OPT_AUTO_UPGRADE => false,
@@ -425,17 +333,9 @@ class LiteSpeed_Cache_Const
 		) ;
 		sort($default_purge_options) ;
 
-		//For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
-		if ( is_multisite() ) {
-			$default_radio = 2 ;
-		}
-		else {
-			$default_radio = 1 ;
-		}
-
 		$default_options = array(
-			self::OPID_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::OPT_CACHE => $default_radio,
+			self::OPT_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
+			self::OPT_CACHE => is_multisite() ? self::VAL_ON2 : self::VAL_ON, //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
 			self::OPT_AUTO_UPGRADE => false,
 			self::OPID_PURGE_ON_UPGRADE => true,
 			self::OPID_CACHE_PRIV => true,
@@ -466,7 +366,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_CHECK_ADVANCEDCACHE => true,
 			self::OPID_USE_HTTP_FOR_HTTPS_VARY => false,
 			self::OPID_DEBUG_DISABLE_ALL => false,
-			self::OPID_DEBUG => self::LOG_LEVEL_NONE,
+			self::OPID_DEBUG => false,
 			self::OPID_ADMIN_IPS => '127.0.0.1',
 			self::OPID_DEBUG_LEVEL => false,
 			self::OPID_LOG_FILE_SIZE => 3,
@@ -573,6 +473,9 @@ class LiteSpeed_Cache_Const
 			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
 		}
 
+		// Default items
+		$default_options[ self::ITEM_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
+
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
 			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
@@ -609,9 +512,70 @@ class LiteSpeed_Cache_Const
 		return array_merge($default_options, $tp_options) ;
 	}
 
-	public function conf_name( $cfg )
+	/**
+	 * Get default item val
+	 *
+	 * @since 1.8
+	 * @access public
+	 */
+	public function default_item( $item )
 	{
-		return 'litespeed.conf.' . $cfg ;
+		/**
+		 * Allow terms default value
+		 * @since  2.7.1
+		 */
+		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
+			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
+
+			if ( ! empty( $default_ini_cfg[ $item ] ) ) {
+
+				/**
+				 * Special handler for CDN_mapping
+				 *
+				 * format in .ini:
+				 * 		[litespeed-cache-cdn_mapping]
+				 *   	url[0] = 'https://example.com/'
+				 *     	inc_js[0] = true
+				 *
+				 * format out:
+				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
+				 */
+				if ( $item == self::ITEM_CDN_MAPPING ) {
+					$mapping_fields = array(
+						self::ITEM_CDN_MAPPING_URL,
+						self::ITEM_CDN_MAPPING_INC_IMG,
+						self::ITEM_CDN_MAPPING_INC_CSS,
+						self::ITEM_CDN_MAPPING_INC_JS,
+						self::ITEM_CDN_MAPPING_FILETYPE
+					) ;
+					$cdn_mapping = array() ;
+					foreach ( $default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
+						$this_row = array() ;
+						foreach ( $mapping_fields as $v2 ) {
+							$this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;
+						}
+						$cdn_mapping[ $k ] = $this_row ;
+					}
+
+					return $cdn_mapping ;
+				}
+
+				return $default_ini_cfg[ $item ] ;
+			}
+		}
+
+		return '' ;// Here should not return false in case it is wrongly treated by conf::_set_conf() is_bool condition
+	}
+
+
+	/**
+	 * Generate conf name for wp_options record
+	 *
+	 * @since 3.0
+	 */
+	public static function conf_name( $k, $type = 'conf' )
+	{
+		return 'litespeed.' . $type . '.' . $k ;
 	}
 
 	/**

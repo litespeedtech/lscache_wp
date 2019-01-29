@@ -99,10 +99,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// No need to consider items yet as they won't be gotten directly from $this->_options but used in $this->get_item()
 		foreach ( $this->_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
-				$options[ $k ] = get_blog_option( $blog_id, $this->conf_name( $k ), $v ) ;
+				$options[ $k ] = get_blog_option( $blog_id, self::conf_name( $k ), $v ) ;
 			}
 			else {
-				$options[ $k ] = get_option( $this->conf_name( $k ), $v ) ;
+				$options[ $k ] = get_option( self::conf_name( $k ), $v ) ;
 			}
 		}
 
@@ -110,7 +110,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$k = self::HASH ;
 		if ( isset( $options[ $k ] ) && empty( $options[ $k ] ) ) {
 			$options[ $k ] = Litespeed_String::rrand( 32 ) ;
-			update_option( $this->conf_name( $k ), $options[ $k ] ) ;
+			update_option( self::conf_name( $k ), $options[ $k ] ) ;
 		}
 
 		if ( ! $dry_run ) {
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				LiteSpeed_Cache_Log::debug( "[Conf] option_diff $log" ) ;
 			}
 		}
-		$options[self::OPID_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
+		$options[self::OPT_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
 
 		return $options ;
 	}
@@ -590,7 +590,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_upgrade()
 	{
-		if ( $this->_options[ self::OPID_VERSION ] == $this->_default_options[ self::OPID_VERSION ] ) ) {
+		if ( $this->_options[ self::OPT_VERSION ] == $this->_default_options[ self::OPT_VERSION ] ) ) {
 			return ;
 		}
 
@@ -601,7 +601,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// }
 
 		// Update version to v3.0
-		update_option( $this->conf_name( self::OPID_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		update_option( self::conf_name( self::OPT_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 		LiteSpeed_Cache_Log::debug( '[Conf] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
@@ -619,7 +619,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$default_options = $this->get_default_site_options() ;
 		$options = $this->get_site_options() ;
 
-		if ( $options[ self::OPID_VERSION ] == $default_options[ self::OPID_VERSION ] && count( $default_options ) == count( $options ) ) {
+		if ( $options[ self::OPT_VERSION ] == $default_options[ self::OPT_VERSION ] && count( $default_options ) == count( $options ) ) {
 			return ;
 		}
 
@@ -638,30 +638,20 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_db_init()
 	{
-		$v = get_option( $this->conf_name( self::OPID_VERSION ) ) ;
+		$v = get_option( self::conf_name( self::OPT_VERSION ) ) ;
 
 		/**
 		 * Previous version v2.9- doesn't have this record
 		 * Or, its a new installation
 		 */
-		if ( ! empty( $v ) ) {//  && version_compare( $v, '2.9', '>' )
+		if ( $v ) {//  && version_compare( $v, '2.9', '>' )
 			return ;
 		}
 
-		$previous_options = get_option( self::OPTION_NAME, array() ) ;
-
-		LiteSpeed_Cache_Log::debug( '[Conf] Upgrading previous settings to separate items' ) ;
-
+		// Init default options
 		foreach ( $this->_default_options as $k => $v ) {
-			$v2 = isset( $previous_options[ $k ] ) ? $previous_options[ $k ] : $v ;
-
-			// Convert previous OPID_ENABLED_RADIO to new OPT_CACHE
-			if ( $k == self::OPT_CACHE ) {
-				$v2 = isset( $previous_options[ self::OPID_ENABLED_RADIO ] ) ? $previous_options[ self::OPID_ENABLED_RADIO ] : $v ;
-			}
-
 			// If the option existed, bypass updating
-			add_option( $this->conf_name( $k ), $v2 ) ;
+			add_option( self::conf_name( $k ), $v ) ;
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Conf] Upgraded to separate items' ) ;
@@ -670,11 +660,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $previous_options ) {
 			$this->_conf_upgrade_stale( $previous_options ) ;
 
-			update_option( '_' . self::OPTION_NAME, $previous_options ) ;
-
-			delete_option( self::OPTION_NAME ) ;
-
-			LiteSpeed_Cache_Log::debug( '[Conf] Deleted&Backup previous option item' ) ;
+			// Keep the previous conf in case client downgrades to previous v2.9- version
+			// update_option( '_litespeed-cache-conf', $previous_options ) ;
+			// delete_option( 'litespeed-cache-conf' ) ;
+			// LiteSpeed_Cache_Log::debug( '[Conf] Deleted&Backup previous option item' ) ;
 		}
 
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
@@ -692,6 +681,40 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_upgrade_stale( $previous_options )
 	{
+		$previous_options = get_option( 'litespeed-cache-conf', array() ) ;
+		foreach ( $this->_default_options as $k => $v ) {
+			if ( ! isset( $previous_options[ $k ] ) ) {
+				continue ;
+			}
+
+			// Convert previous OPID_ENABLED_RADIO to new OPT_CACHE
+			if ( $k == self::OPT_CACHE ) {
+				$v2 = isset( $previous_options[ 'radio_select' ] ) ? $previous_options[ 'radio_select' ] : $v ;
+			}
+
+			update_option( self::conf_name( $k ), $previous_options[ $k ] ) ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Conf] Upgrading previous settings to separate items' ) ;
+
+		conv
+		litespeed-cache-vary-group -> vary_group
+		litespeed-cache-exclude-optimization-roles -> exclude_optimization_roles
+		litespeed-cache-exclude-cache-roles -> exclude_cache_roles
+		litespeed-optm-css -> optm.ccss
+		litespeed-optm-js-defer-excludes -> optm.js_defer_excludes
+		litespeed-media-lazy-img-excludes -> media.lazy_img_excludes
+		litespeed-media-lazy-img-cls-excludes -> media.lazy_img_cls_excludes
+		litespeed-media-webp_attribute -> media.webp_attribute
+		litespeed-log_ignore_filters -> debug.log_ignore_filters
+		litespeed-log_ignore_part_filters -> debug.log_ignore_part_filters
+		litespeed-object_global_groups -> object.global_groups
+		litespeed-object_non_persistent_groups -> object.non_persistent_groups
+		litespeed-adv-purge_all_hooks -> adv.purge_all_hooks
+		litespeed-cdn-ori_dir -> cdn.ori_dir
+
+		litespeed-media-need-pull -> media.need_pull
+
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
 		 * @since 1.7
@@ -856,7 +879,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ; // Purge will be auto run in validating items when found diff
 		// Save settings now (options & items)
 		foreach ( $output as $k => $v ) {
-			update_option( $this->conf_name( $k ), $v ) ;
+			update_option( self::conf_name( $k ), $v ) ;
 		}
 
 		$msg = __( 'Changed setting successfully.', 'litespeed-cache' ) ;

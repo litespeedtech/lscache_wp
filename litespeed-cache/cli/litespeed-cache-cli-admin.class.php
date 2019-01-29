@@ -80,7 +80,7 @@ class LiteSpeed_Cache_Cli_Admin
 		$options = LiteSpeed_Cache_Config::convert_options_to_input($options) ;
 
 		switch ($key) {
-			case LiteSpeed_Cache_Config::OPID_VERSION:
+			case LiteSpeed_Cache_Config::OPT_VERSION:
 				//do not allow
 				WP_CLI::error('This option is not available for setting.') ;
 				return ;
