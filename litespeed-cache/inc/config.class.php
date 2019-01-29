@@ -93,7 +93,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * @since  3.0
 	 * @access public
 	 */
-	public function load_options( $blog_id = null, $replace_into_options = true )
+	public function load_options( $blog_id = null, $dry_run = false )
 	{
 		$options = array() ;
 		// No need to consider items yet as they won't be gotten directly from $this->_options but used in $this->get_item()
@@ -113,7 +113,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			update_option( $this->conf_name( $k ), $options[ $k ] ) ;
 		}
 
-		if ( $replace_into_options ) {
+		if ( ! $dry_run ) {
 			$this->_options = $options ;
 		}
 

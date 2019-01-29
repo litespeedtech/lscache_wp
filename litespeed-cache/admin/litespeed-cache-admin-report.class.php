@@ -155,7 +155,7 @@ class LiteSpeed_Cache_Admin_Report
 			$blogs = LiteSpeed_Cache_Activation::get_network_ids() ;
 			if ( ! empty($blogs) ) {
 				foreach ( $blogs as $blog_id ) {
-					$opts = LiteSpeed_Cache_Config::get_instance()->load_options( $blog_id, false ) ;
+					$opts = LiteSpeed_Cache_Config::get_instance()->load_options( $blog_id, true ) ;
 					if ( isset($opts[ LiteSpeed_Cache_Config::OPT_CACHE ]) ) {
 						$options['blog ' . $blog_id . ' radio select'] = $opts[ LiteSpeed_Cache_Config::OPT_CACHE ] ;
 					}
