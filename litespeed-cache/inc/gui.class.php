@@ -395,14 +395,11 @@ class LiteSpeed_Cache_GUI
 			'meta'	=> array( 'tabindex' => 0, 'class' => 'litespeed-top-toolbar' ),
 		) ) ;
 
-		$append_arr = array(
-			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
-		) ;
 		$wp_admin_bar->add_menu( array(
 			'parent'	=> 'litespeed-menu',
 			'id'		=> 'litespeed-purge-single',
 			'title'		=> __( 'Purge this page', 'litespeed-cache' ),
-			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_FRONT, false, true, $append_arr ),
+			'href'		=> LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_PURGE, LiteSpeed_Cache_Purge::TYPE_PURGE_FRONT, false, true ),
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 

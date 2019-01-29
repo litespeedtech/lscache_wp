@@ -863,8 +863,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		LiteSpeed_Cache_Admin_Display::succeed( $msg ) ;
 
 		// Redirect if changed frontend URL
-		xx
-		exit() ;
+		if ( ! empty( $_GET[ 'redirect' ] ) ) {
+			wp_redirect( $_GET[ 'redirect' ] ) ;
+			exit() ;
+		}
 	}
 
 	/**
