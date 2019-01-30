@@ -68,6 +68,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 		// Purging a product on stock change should only occur during product purchase. This function will add the purging callback when an order is complete.
 		add_action( 'woocommerce_product_set_stock', array( $this, 'purge_product' ) ) ;
+		add_action( 'woocommerce_variation_set_stock', array( $this, 'purge_product' ) ) ; // #984479 Update variations stock
 
 		LiteSpeed_Cache_API::hook_get_options( array( $this, 'get_config' ) ) ;
 		add_action( 'comment_post', array( $this, 'add_review' ), 10, 3 ) ;
@@ -665,7 +666,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			$this->backend_purge($product->get_id()) ;
 		}
 
-		LiteSpeed_Cache_API::purge(LiteSpeed_Cache_API::TYPE_POST . $product->get_id()) ;
+		LiteSpeed_Cache_API::purge( LiteSpeed_Cache_API::TYPE_POST . $product->get_id() ) ;
+
+		// Check if is variation, purge stock too #984479
+		if ( $product->is_type( 'variation' ) ) {
+			LiteSpeed_Cache_API::purge( LiteSpeed_Cache_API::TYPE_POST . $product->get_parent_id() ) ;
+		}
 	}
 
 	/**
