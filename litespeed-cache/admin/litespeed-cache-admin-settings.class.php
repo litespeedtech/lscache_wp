@@ -572,7 +572,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Update Role Excludes
 		 * @since 1.6.2
 		 */
-		$id = LiteSpeed_Cache_Config::EXCLUDE_CACHE_ROLES ;
+		$id = LiteSpeed_Cache_Config::ITEM_EXCLUDE_CACHE_ROLES ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 	}
 
@@ -1048,7 +1048,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_options[ $id ] = $this->_input[ $id ] ;
 		}
 
-		$id = LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ;
+		$id = LiteSpeed_Cache_Config::ITEM_CRWL_ROLES ;
 		$this->_sanitize_lines( $id ) ;
 
 		/**
@@ -1181,7 +1181,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Save vary group settings
-		$id = LiteSpeed_Cache_Config::VARY_GROUP ;
+		$id = LiteSpeed_Cache_Config::ITEM_VARY_GROUP ;
 		$this->_sanitize_lines( $id ) ;
 	}
 

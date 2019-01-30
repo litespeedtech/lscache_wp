@@ -558,7 +558,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Get roles set
-		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS ) ;
+		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_ROLES ) ;
 		// List all roles
 		foreach ( $roles as $v ) {
 			$role_title = '' ;

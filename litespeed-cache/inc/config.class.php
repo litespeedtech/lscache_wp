@@ -72,13 +72,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->purge_options = explode('.', $this->_options[ self::OPID_PURGE_BY_POST ] ) ;
 
 		// Vary group settings
-		$this->vary_groups = $this->get_item( self::VARY_GROUP ) ;
+		$this->vary_groups = $this->get_item( self::ITEM_VARY_GROUP ) ;
 
 		// Exclude optimization role setting
-		$this->exclude_optimization_roles = $this->get_item( self::EXCLUDE_OPTIMIZATION_ROLES ) ;
+		$this->exclude_optimization_roles = $this->get_item( self::ITEM_EXCLUDE_OPTIMIZATION_ROLES ) ;
 
 		// Exclude cache role setting
-		$this->exclude_cache_roles = $this->get_item( self::EXCLUDE_CACHE_ROLES ) ;
+		$this->exclude_cache_roles = $this->get_item( self::ITEM_EXCLUDE_CACHE_ROLES ) ;
 
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
@@ -699,8 +699,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		conv to litespeed.conf.*
 		litespeed-cache-vary-group -> vary_group
-		litespeed-cache-exclude-optimization-roles -> exclude_optimization_roles
+		litespeed-cache-exclude-optimization-roles -> optm.exclude_optimization_roles
 		litespeed-cache-exclude-cache-roles -> exclude_cache_roles
+		litespeed-cache-drop_qs -> drop_qs
+		litespeed-cache-cdn_mapping -> cdn.mapping
+		litespeed-cache-dns_prefetch -> optm.dns_prefetch
 		litespeed-optm-css -> optm.ccss
 		litespeed-optm-js-defer-excludes -> optm.js_defer_excludes
 		litespeed-media-lazy-img-excludes -> media.lazy_img_excludes
@@ -712,9 +715,18 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		litespeed-object_non_persistent_groups -> object.non_persistent_groups
 		litespeed-adv-purge_all_hooks -> adv.purge_all_hooks
 		litespeed-cdn-ori_dir -> cdn.ori_dir
+		litespeed-crawler-as-uids -> crawler.roles
+		litespeed-crawler-cookies -> crawler.cookies
+		litespeed-forced_cache_uri -> forced_cache_uri
+		litespeed-cache_uri_priv -> cache_uri_priv
+		litespeed-optm_excludes -> optm.excludes
+		litespeed-excludes_uri -> excludes_uri
+		litespeed-optm-ccss-separate_posttype -> optm.ccss_separate_posttype
+		litespeed-optm-css-separate_uri -> optm.css_separate_uri
 
 		litespeed-media-need-pull -> litespeed.img_optm.need_pull
 		litespeed-env-ref -> litespeed.env.ref
+		litespeed-cache-cloudflare_status -> litespeed.cdn.cloudflare.status
 
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7

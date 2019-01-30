@@ -13,32 +13,31 @@ class LiteSpeed_Cache_Const
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 
-	const VARY_GROUP = 'vary_group' ;
-	const EXCLUDE_OPTIMIZATION_ROLES = 'exclude_optimization_roles' ;
-	const EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
+	const ITEM_VARY_GROUP = 'vary_group' ;
+	const ITEM_EXCLUDE_OPTIMIZATION_ROLES = 'optm.exclude_optimization_roles' ;
+	const ITEM_EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
 	const ITEM_OPTM_CSS = 'optm.ccss' ;
 	const ITEM_OPTM_JS_DEFER_EXC = 'optm.js_defer_excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
-	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
-	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
-	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
-	const ITEM_CLOUDFLARE_STATUS = 'litespeed-cache-cloudflare_status' ;
+	const ITEM_CACHE_DROP_QS = 'drop_qs' ;
+	const ITEM_CDN_MAPPING = 'cdn.mapping' ;
+	const ITEM_DNS_PREFETCH = 'optm.dns_prefetch' ;
 	const ITEM_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
 	const ITEM_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
 	const ITEM_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
 	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
-	const ITEM_CRWL_AS_UIDS = 'litespeed-crawler-as-uids' ;
-	const ITEM_CRWL_COOKIES = 'litespeed-crawler-cookies' ;
+	const ITEM_CRWL_ROLES = 'crawler.roles' ;
+	const ITEM_CRWL_COOKIES = 'crawler.cookies' ;
 	const ITEM_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
-	const ITEM_CDN_ORI_DIR = 'litespeed-cdn-ori_dir' ;
+	const ITEM_CDN_ORI_DIR = 'cdn.ori_dir' ;
 	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
-	const ITEM_FORCE_CACHE_URI = 'litespeed-forced_cache_uri' ;
-	const ITEM_CACHE_URI_PRIV = 'litespeed-cache_uri_priv' ;
-	const ITEM_OPTM_EXCLUDES = 'litespeed-optm_excludes' ;
-	const ITEM_EXCLUDES_URI = 'litespeed-excludes_uri' ;
-	const ITEM_OPTM_CCSS_SEPARATE_POSTTYPE = 'litespeed-optm-ccss-separate_posttype' ;
-	const ITEM_OPTM_CCSS_SEPARATE_URI = 'litespeed-optm-css-separate_uri' ;
+	const ITEM_FORCE_CACHE_URI = 'forced_cache_uri' ;
+	const ITEM_CACHE_URI_PRIV = 'cache_uri_priv' ;
+	const ITEM_OPTM_EXCLUDES = 'optm.excludes' ;
+	const ITEM_EXCLUDES_URI = 'excludes_uri' ;
+	const ITEM_OPTM_CCSS_SEPARATE_POSTTYPE = 'optm.ccss_separate_posttype' ;
+	const ITEM_OPTM_CCSS_SEPARATE_URI = 'optm.css_separate_uri' ;
 
 	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
 	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
@@ -238,9 +237,9 @@ class LiteSpeed_Cache_Const
 	{
 		return array(
 			self::OPTION_NAME,
-			self::VARY_GROUP,
-			self::EXCLUDE_OPTIMIZATION_ROLES,
-			self::EXCLUDE_CACHE_ROLES,
+			self::ITEM_VARY_GROUP,
+			self::ITEM_EXCLUDE_OPTIMIZATION_ROLES,
+			self::ITEM_EXCLUDE_CACHE_ROLES,
 			self::ITEM_OPTM_CSS,
 			self::ITEM_OPTM_JS_DEFER_EXC,
 			self::ITEM_MEDIA_LAZY_IMG_EXC,
@@ -249,12 +248,11 @@ class LiteSpeed_Cache_Const
 			self::ITEM_CDN_MAPPING,
 			self::ITEM_CDN_ORI_DIR,
 			self::ITEM_DNS_PREFETCH,
-			self::ITEM_CLOUDFLARE_STATUS,
 			self::ITEM_LOG_IGNORE_FILTERS,
 			self::ITEM_LOG_IGNORE_PART_FILTERS,
 			self::ITEM_OBJECT_GLOBAL_GROUPS,
 			self::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
-			self::ITEM_CRWL_AS_UIDS,
+			self::ITEM_CRWL_ROLES,
 			self::ITEM_CRWL_COOKIES,
 			self::ITEM_ADV_PURGE_ALL_HOOKS,
 			self::ITEM_FORCE_CACHE_URI,

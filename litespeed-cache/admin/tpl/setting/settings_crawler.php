@@ -125,7 +125,7 @@ if ( !defined('WPINC') ) die;
 	<tr>
 		<th><?php echo __('Role Simulation', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CRWL_AS_UIDS, 20 ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_CRWL_ROLES, 20 ) ; ?>
 
 			<div class="litespeed-desc">
 				<?php echo __('To crawl the site as a logged-in user, enter the user ids to be simulated.', 'litespeed-cache'); ?>

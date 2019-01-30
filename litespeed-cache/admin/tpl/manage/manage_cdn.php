@@ -5,7 +5,7 @@ $cf_on = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) 
 $cf_domain = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ) ?: '-' ;
 $cf_zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ?: '-' ;
 
-$curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array() ) ;
+$curr_status = get_option( LiteSpeed_Cache_Config::conf_name( LiteSpeed_Cache_CDN_Cloudflare::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
 
 ?>
 <h3 class="litespeed-title"><?php echo __('Cloudflare', 'litespeed-cache'); ?></h3>

@@ -18,6 +18,8 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	const TYPE_SET_DEVMODE_ON = 'set_devmode_on' ;
 	const TYPE_SET_DEVMODE_OFF = 'set_devmode_off' ;
 
+	const ITEM_STATUS = 'status' ;
+
 	/**
 	 * Handle all request actions from main cls
 	 *
@@ -74,12 +76,12 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		}
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _get_devmode result ', $res ) ;
 
-		$curr_status = get_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, array() ) ;
+		$curr_status = get_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), array() ) ;
 		$curr_status[ 'devmode' ] = $res[ 'value' ] ;
 		$curr_status[ 'devmode_expired' ] = $res[ 'time_remaining' ] + time() ;
 
 		// update status
-		update_option( LiteSpeed_Cache_Config::ITEM_CLOUDFLARE_STATUS, $curr_status ) ;
+		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_STATUS, 'cdn.cloudflare' ), $curr_status ) ;
 
 	}
 
