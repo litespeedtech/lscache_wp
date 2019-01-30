@@ -19,6 +19,8 @@ class LiteSpeed_Cache_Admin_Report
 
 	const TYPE_SEND_REPORT = 'send_report' ;
 
+	const ITEM_REF = 'ref' ;
+
 	/**
 	 * Handle all request actions from main cls
 	 *
@@ -71,7 +73,7 @@ class LiteSpeed_Cache_Admin_Report
 			'dateline'	=> time(),
 		) ;
 
-		update_option( LiteSpeed_Cache_Config::ITEM_ENV_REF, $data ) ;
+		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_REF, 'env' ), $data ) ;
 
 	}
 
@@ -84,7 +86,7 @@ class LiteSpeed_Cache_Admin_Report
 	 */
 	public function get_env_ref()
 	{
-		$info = get_option( LiteSpeed_Cache_Config::ITEM_ENV_REF ) ;
+		$info = get_option( LiteSpeed_Cache_Config::conf_name( LiteSpeed_Cache_Config::ITEM_REF, 'env' ) ) ;
 
 		if ( ! is_array( $info ) ) {
 			return array(

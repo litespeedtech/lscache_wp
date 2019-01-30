@@ -20,7 +20,6 @@ class LiteSpeed_Cache_Const
 	const ITEM_OPTM_JS_DEFER_EXC = 'optm.js_defer_excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
 	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
-	const ITEM_ENV_REF = 'litespeed-env-ref' ;
 	const ITEM_CACHE_DROP_QS = 'litespeed-cache-drop_qs' ;
 	const ITEM_CDN_MAPPING = 'litespeed-cache-cdn_mapping' ;
 	const ITEM_DNS_PREFETCH = 'litespeed-cache-dns_prefetch' ;
@@ -246,7 +245,6 @@ class LiteSpeed_Cache_Const
 			self::ITEM_OPTM_JS_DEFER_EXC,
 			self::ITEM_MEDIA_LAZY_IMG_EXC,
 			self::ITEM_MEDIA_LAZY_IMG_CLS_EXC,
-			self::ITEM_ENV_REF,
 			self::ITEM_CACHE_DROP_QS,
 			self::ITEM_CDN_MAPPING,
 			self::ITEM_CDN_ORI_DIR,

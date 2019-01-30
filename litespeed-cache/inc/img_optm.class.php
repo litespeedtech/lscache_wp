@@ -28,7 +28,7 @@ class LiteSpeed_Cache_Img_Optm
 	const TYPE_RESET_ROW = 'reset_row' ;
 	const TYPE_RM_BKUP = 'rm_bkup' ;
 
-	const ITEM_IMG_OPTM_NEED_PULL = 'media.need_pull' ;
+	const ITEM_IMG_OPTM_NEED_PULL = 'need_pull' ;
 	const ITEM_IMG_OPTM_CRON_RUN = 'litespeed-img_optm_cron_run' ; // last cron running time
 
 	const DB_IMG_OPTIMIZE_DESTROY = 'litespeed-optimize-destroy' ;

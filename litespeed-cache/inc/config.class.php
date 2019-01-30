@@ -697,7 +697,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		LiteSpeed_Cache_Log::debug( '[Conf] Upgrading previous settings to separate items' ) ;
 
-		conv
+		conv to litespeed.conf.*
 		litespeed-cache-vary-group -> vary_group
 		litespeed-cache-exclude-optimization-roles -> exclude_optimization_roles
 		litespeed-cache-exclude-cache-roles -> exclude_cache_roles
@@ -713,7 +713,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		litespeed-adv-purge_all_hooks -> adv.purge_all_hooks
 		litespeed-cdn-ori_dir -> cdn.ori_dir
 
-		litespeed-media-need-pull -> media.need_pull
+		litespeed-media-need-pull -> litespeed.img_optm.need_pull
+		litespeed-env-ref -> litespeed.env.ref
 
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
