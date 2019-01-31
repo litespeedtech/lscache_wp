@@ -386,7 +386,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check if is in timed url list or not
-		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_TIMED_URLS ) ;
+		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_TIMED_URLS ) ;
 		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ) ;
 		if ( $timed_urls && $timed_urls_time ) {
 			$timed_urls = explode( "\n", $timed_urls ) ;
@@ -664,17 +664,17 @@ class LiteSpeed_Cache_Control
 			}
 
 			// Check QS excluded setting
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ) ;
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_EXC_QS ) ;
 			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT) ;
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ITEM_EXC_CAT) ;
 			if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
 				return $this->_no_cache_for('Admin configured Category Do not cache.') ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG) ;
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ITEM_EXC_TAG) ;
 			if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
 				return $this->_no_cache_for('Admin configured Tag Do not cache.') ;
 			}

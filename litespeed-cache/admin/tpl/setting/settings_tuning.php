@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'CSS Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES); ?>
+			<?php $this->build_textarea(LiteSpeed_Cache_Config::ITEM_OPTM_CSS_EXC); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed CSS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -68,7 +68,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'JS Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::OPID_JS_EXCLUDES); ?>
+			<?php $this->build_textarea(LiteSpeed_Cache_Config::ITEM_OPTM_JS_EXC); ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>

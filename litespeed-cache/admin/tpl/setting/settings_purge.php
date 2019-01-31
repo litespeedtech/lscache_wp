@@ -78,7 +78,7 @@ $breakArr = array(
 	<tr>
 		<th><?php echo __( 'Scheduled Purge URLs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::OPID_TIMED_URLS, 80 ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::ITEM_TIMED_URLS, 80 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'The URLs here (one per line) will be purged automatically at the time set in the option "%s".', 'litespeed-cache' ), __( 'Scheduled Purge Time', 'litespeed-cache' ) ) ; ?><br />
 				<?php echo sprintf( __( 'Both %1$s and %2$s are acceptable.', 'litespeed-cache' ), '<code>http://www.example.com/path/url.php</code>', '<code>/path/url.php</code>' ) ; ?>

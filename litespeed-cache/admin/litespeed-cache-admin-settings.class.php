@@ -497,7 +497,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Filter scheduled purge URLs
-		$id = LiteSpeed_Cache_Config::OPID_TIMED_URLS ;
+		$id = LiteSpeed_Cache_Config::ITEM_TIMED_URLS ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		// Schduled Purge Time
@@ -519,10 +519,10 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_QS ;
+		$id = LiteSpeed_Cache_Config::ITEM_EXC_QS ;
 		$this->_sanitize_lines( $id ) ;
 
-		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_CAT ;
+		$id = LiteSpeed_Cache_Config::ITEM_EXC_CAT ;
 		$this->_options[ $id ] = '' ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$cat_ids = array() ;
@@ -545,7 +545,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		$id = LiteSpeed_Cache_Config::OPID_EXCLUDES_TAG ;
+		$id = LiteSpeed_Cache_Config::ITEM_EXC_TAG ;
 		$this->_options[ $id ] = '' ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$tag_ids = array() ;
@@ -790,8 +790,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$ids = array(
-			LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES,
-			LiteSpeed_Cache_Config::OPID_JS_EXCLUDES,
+			LiteSpeed_Cache_Config::ITEM_OPTM_CSS_EXC,
+			LiteSpeed_Cache_Config::ITEM_OPTM_JS_EXC,
 		) ;
 		$this->_sanitize_lines( $ids, 'uri' ) ;
 

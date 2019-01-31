@@ -32,6 +32,8 @@ class Litespeed_Crawler
 	const USER_AGENT = 'lscache_walker' ;
 	const FAST_USER_AGENT = 'lscache_runner' ;
 
+	const ITEM_HASH = 'hash' ;
+
 	/**
 	 * Set load limit
 	 *
@@ -615,7 +617,7 @@ class Litespeed_Crawler
 		 * @since  1.9.1
 		 */
 		$hash = Litespeed_String::rrand( 6 ) ;
-		update_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH, $hash ) ;
+		update_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_HASH, 'crawler' ), $hash ) ;
 		$this->_cookies[ 'litespeed_hash' ] = $hash ;
 
 		$cookies = array() ;

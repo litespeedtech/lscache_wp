@@ -728,6 +728,15 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		litespeed-env-ref -> litespeed.env.ref
 		litespeed-cache-cloudflare_status -> litespeed.cdn.cloudflare.status
 
+		conv from old litespeed.conf.* to new litespeed.conf.*
+		css_exclude -> optm.css_exclude
+		timed_urls -> purge.timed_urls
+		timed_urls_time -> purge.timed_urls_time
+		excludes_qs -> cache.excludes_qs
+		excludes_cat -> cache.excludes_cat
+		excludes_tag -> cache.excludes_tag
+		js_exclude -> optm.js_exclude
+
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
 		 * @since 1.7

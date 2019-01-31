@@ -174,7 +174,7 @@ class LiteSpeed_Cache_Router
 		}
 
 		// Hash validation
-		$hash = get_option( LiteSpeed_Cache_Config::ITEM_CRAWLER_HASH ) ;
+		$hash = get_option( LiteSpeed_Cache_Config::conf_name( Litespeed_Crawler::ITEM_HASH, 'crawler' ) ) ;
 		if ( ! $hash || $_COOKIE[ 'litespeed_hash' ] != $hash ) {
 			LiteSpeed_Cache_Log::debug( '[Router] crawler hash not match ' . $_COOKIE[ 'litespeed_hash' ] . ' != ' . $hash ) ;
 			return ;

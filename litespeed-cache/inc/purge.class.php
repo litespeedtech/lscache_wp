@@ -228,7 +228,7 @@ class LiteSpeed_Cache_Purge
 	 */
 	private function _purge_all_cssjs( $silence = false )
 	{
-		update_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS, time() ) ;
+		update_option( LiteSpeed_Cache_Config::conf_name( LiteSpeed_Cache_Optimize::ITEM_TIMESTAMP_PURGE_CSS, 'optm' ), time() ) ;
 
 		$this->_add( LiteSpeed_Cache_Tag::TYPE_MIN ) ;
 

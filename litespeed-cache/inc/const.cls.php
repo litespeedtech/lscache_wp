@@ -13,57 +13,10 @@ class LiteSpeed_Cache_Const
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 
-	const ITEM_VARY_GROUP = 'vary_group' ;
-	const ITEM_EXCLUDE_OPTIMIZATION_ROLES = 'optm.exclude_optimization_roles' ;
-	const ITEM_EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
-	const ITEM_OPTM_CSS = 'optm.ccss' ;
-	const ITEM_OPTM_JS_DEFER_EXC = 'optm.js_defer_excludes' ;
-	const ITEM_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
-	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
-	const ITEM_CACHE_DROP_QS = 'drop_qs' ;
-	const ITEM_CDN_MAPPING = 'cdn.mapping' ;
-	const ITEM_DNS_PREFETCH = 'optm.dns_prefetch' ;
-	const ITEM_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
-	const ITEM_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
-	const ITEM_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
-	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
-	const ITEM_CRWL_ROLES = 'crawler.roles' ;
-	const ITEM_CRWL_COOKIES = 'crawler.cookies' ;
-	const ITEM_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
-	const ITEM_CDN_ORI_DIR = 'cdn.ori_dir' ;
-	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
-	const ITEM_FORCE_CACHE_URI = 'forced_cache_uri' ;
-	const ITEM_CACHE_URI_PRIV = 'cache_uri_priv' ;
-	const ITEM_OPTM_EXCLUDES = 'optm.excludes' ;
-	const ITEM_EXCLUDES_URI = 'excludes_uri' ;
-	const ITEM_OPTM_CCSS_SEPARATE_POSTTYPE = 'optm.ccss_separate_posttype' ;
-	const ITEM_OPTM_CCSS_SEPARATE_URI = 'optm.css_separate_uri' ;
-
-	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
-	const ITEM_CRAWLER_HASH = 'litespeed-crawler-hash' ;
-	const ITEM_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
-	const ITEM_TIMESTAMP_PURGE_CSS = 'litespeed-timestamp-purge-css' ;
-
-	// Server variables
-	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
-	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT' ;
-	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE' ;
-
-	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
-
-	const ITEM_CDN_MAPPING_URL = 'url' ;
-	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;
-	const ITEM_CDN_MAPPING_INC_CSS = 'inc_css' ;
-	const ITEM_CDN_MAPPING_INC_JS = 'inc_js' ;
-	const ITEM_CDN_MAPPING_FILETYPE = 'filetype' ;
-
-	const VAL_OFF = 0 ;
-	const VAL_ON = 1 ;
-	const VAL_ON2 = 2 ;
-
 	const OPT_VERSION = 'version' ;
 	const _CACHE = '_cache' ;// cache on setting
 
+	/*** Single settings ***/
 	const OPT_CACHE = 'cache' ;
 	const OPT_AUTO_UPGRADE = 'auto_upgrade' ;
 	const OPID_CACHE_PRIV = 'cache_priv' ;
@@ -89,8 +42,8 @@ class LiteSpeed_Cache_Const
 	const OPID_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
 	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
-	const OPID_TIMED_URLS = 'timed_urls' ;
-	const OPID_TIMED_URLS_TIME = 'timed_urls_time' ;
+	const ITEM_TIMED_URLS = 'purge.timed_urls' ;
+	const OPID_TIMED_URLS_TIME = 'purge.timed_urls_time' ;
 
 	const OPID_LOGIN_COOKIE = 'login_cookie' ;
 	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache' ;
@@ -131,9 +84,9 @@ class LiteSpeed_Cache_Const
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
 
-	const OPID_EXCLUDES_QS = 'excludes_qs' ;
-	const OPID_EXCLUDES_CAT = 'excludes_cat' ;
-	const OPID_EXCLUDES_TAG = 'excludes_tag' ;
+	const ITEM_EXC_QS = 'cache.excludes_qs' ; // OPID_EXCLUDES_QS
+	const ITEM_EXC_CAT = 'cache.excludes_cat' ;
+	const ITEM_EXC_TAG = 'cache.excludes_tag' ;
 
 	// const OPID_ADV_FAVICON = 'adv_favicon' ;
 	const OPID_ADV_INSTANT_CLICK = 'instant_click' ;
@@ -143,13 +96,13 @@ class LiteSpeed_Cache_Const
 	const OPID_CSS_COMBINE = 'css_combine' ;
 	const OPID_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
 	const OPID_CSS_HTTP2 = 'css_http2' ;
-	const OPID_CSS_EXCLUDES = 'css_exclude' ;
+	const ITEM_OPTM_CSS_EXC = 'optm.css_exclude' ; // OPID_CSS_EXCLUDES
 	const OPID_JS_MINIFY = 'js_minify' ;
 	const OPID_JS_INLINE_MINIFY = 'js_inline_minify' ;
 	const OPID_JS_COMBINE = 'js_combine' ;
 	const OPID_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
 	const OPID_JS_HTTP2 = 'js_http2' ;
-	const OPID_JS_EXCLUDES = 'js_exclude' ;
+	const ITEM_OPTM_JS_EXC = 'optm.js_exclude' ;
 	const OPID_OPTIMIZE_TTL = 'optimize_ttl' ;
 	const OPID_HTML_MINIFY = 'html_minify' ;
 	const OPID_OPTM_QS_RM = 'optm_qs_rm' ;
@@ -195,8 +148,6 @@ class LiteSpeed_Cache_Const
 	const OPT_MEDIA_WEBP_REPLACE = 'media_webp_replace' ;
 	const OPT_MEDIA_WEBP_REPLACE_SRCSET = 'media_webp_replace_srcset' ;
 
-	const HASH = 'hash' ;
-
 	const NETWORK_OPID_ENABLED = 'network_enabled' ;
 	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings' ;
 
@@ -221,6 +172,56 @@ class LiteSpeed_Cache_Const
 	const CRWL_DATE_ASC = 'date_asc' ;
 	const CRWL_ALPHA_DESC = 'alpha_desc' ;
 	const CRWL_ALPHA_ASC = 'alpha_asc' ;
+
+	/*** Now list multiple lines items ***/
+	const ITEM_VARY_GROUP = 'vary_group' ;
+	const ITEM_EXCLUDE_OPTIMIZATION_ROLES = 'optm.exclude_optimization_roles' ;
+	const ITEM_EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
+	const ITEM_OPTM_CSS = 'optm.ccss' ;
+	const ITEM_OPTM_JS_DEFER_EXC = 'optm.js_defer_excludes' ;
+	const ITEM_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
+	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
+	const ITEM_CACHE_DROP_QS = 'drop_qs' ;
+	const ITEM_CDN_MAPPING = 'cdn.mapping' ;
+	const ITEM_DNS_PREFETCH = 'optm.dns_prefetch' ;
+	const ITEM_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
+	const ITEM_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
+	const ITEM_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
+	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
+	const ITEM_CRWL_ROLES = 'crawler.roles' ;
+	const ITEM_CRWL_COOKIES = 'crawler.cookies' ;
+	const ITEM_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
+	const ITEM_CDN_ORI_DIR = 'cdn.ori_dir' ;
+	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
+	const ITEM_FORCE_CACHE_URI = 'forced_cache_uri' ;
+	const ITEM_CACHE_URI_PRIV = 'cache_uri_priv' ;
+	const ITEM_EXCLUDES_URI = 'excludes_uri' ;
+	const ITEM_OPTM_EXCLUDES = 'optm.excludes' ;
+	const ITEM_OPTM_CCSS_SEPARATE_POSTTYPE = 'optm.ccss_separate_posttype' ;
+	const ITEM_OPTM_CCSS_SEPARATE_URI = 'optm.css_separate_uri' ;
+
+	/*** Other consts ***/
+	const HASH = 'hash' ;
+
+	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
+	const ITEM_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
+
+	// Server variables
+	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
+	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT' ;
+	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE' ;
+
+	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
+
+	const ITEM_CDN_MAPPING_URL = 'url' ;
+	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;
+	const ITEM_CDN_MAPPING_INC_CSS = 'inc_css' ;
+	const ITEM_CDN_MAPPING_INC_JS = 'inc_js' ;
+	const ITEM_CDN_MAPPING_FILETYPE = 'filetype' ;
+
+	const VAL_OFF = 0 ;
+	const VAL_ON = 1 ;
+	const VAL_ON2 = 2 ;
 
 	const IMG_OPTM_BM_ORI = 1 ;
 	const IMG_OPTM_BM_WEBP = 2 ;
@@ -338,7 +339,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_CACHE_COMMENTER => true,
 			self::OPID_CACHE_REST => true,
 			self::OPID_CACHE_PAGE_LOGIN => true,
-			self::OPID_TIMED_URLS => '',
+			self::ITEM_TIMED_URLS => '',
 			self::OPID_TIMED_URLS_TIME => '',
 			self::OPID_CACHE_FAVICON => true,
 			self::OPID_CACHE_RES => true,
@@ -378,9 +379,9 @@ class LiteSpeed_Cache_Const
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
 			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
-			self::OPID_EXCLUDES_QS => '',
-			self::OPID_EXCLUDES_CAT => '',
-			self::OPID_EXCLUDES_TAG => '',
+			self::ITEM_EXC_QS => '',
+			self::ITEM_EXC_CAT => '',
+			self::ITEM_EXC_TAG => '',
 
 			// self::OPID_ADV_FAVICON 	=> false,
 			self::OPID_ADV_INSTANT_CLICK 	=> false,
@@ -390,13 +391,13 @@ class LiteSpeed_Cache_Const
 			self::OPID_CSS_COMBINE 	=> false,
 			self::OPID_CSS_COMBINED_PRIORITY 	=> false,
 			self::OPID_CSS_HTTP2 	=> false,
-			self::OPID_CSS_EXCLUDES => '',
+			self::ITEM_OPTM_CSS_EXC => '',
 			self::OPID_JS_MINIFY 	=> false,
 			self::OPID_JS_INLINE_MINIFY 	=> false,
 			self::OPID_JS_COMBINE 	=> false,
 			self::OPID_JS_COMBINED_PRIORITY 	=> false,
 			self::OPID_JS_HTTP2 	=> false,
-			self::OPID_JS_EXCLUDES 	=> '',
+			self::ITEM_OPTM_JS_EXC 	=> '',
 			self::OPID_OPTIMIZE_TTL => 604800,
 			self::OPID_HTML_MINIFY 	=> false,
 			self::OPID_OPTM_QS_RM 	=> false,

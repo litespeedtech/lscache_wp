@@ -21,6 +21,8 @@ class LiteSpeed_Cache_Optimize
 	const LIB_FILE_CSS_ASYNC = 'js/css_async.min.js' ;
 	const LIB_FILE_WEBFONTLOADER = 'js/webfontloader.min.js' ;
 
+	const ITEM_TIMESTAMP_PURGE_CSS = 'timestamp_purge_css' ;
+
 	private $content ;
 	private $http2_headers = array() ;
 
@@ -801,10 +803,10 @@ class LiteSpeed_Cache_Optimize
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
 		// if ( $file_type == 'css' ) {
-		// 	$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
+		// 	$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_CSS_EXC ) ) ;
 		// }
 		// else {
-		// 	$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ) ;
+		// 	$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_JS_EXC ) ) ;
 		// }
 		// if ( $excludes ) {
 		// 	$excludes = explode( "\n", $excludes ) ;
@@ -887,7 +889,7 @@ class LiteSpeed_Cache_Optimize
 		// Drop query strings
 		$src = array_map( array( $this, 'remove_query_strings' ), $src ) ;
 
-		$purge_timestamp = get_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS ) ?: '' ;
+		$purge_timestamp = get_option( LiteSpeed_Cache_Config::conf_name( self::ITEM_TIMESTAMP_PURGE_CSS, 'optm' ) ) ?: '' ;
 
 		$hash = md5( serialize( $src ) . $purge_timestamp ) ;
 
@@ -938,7 +940,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _parse_js()
 	{
-		$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_EXCLUDES ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_JS_EXC ) ) ;
 		if ( $excludes ) {
 			$excludes = explode( "\n", $excludes ) ;
 		}
@@ -1003,7 +1005,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _handle_css()
 	{
-		$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_EXCLUDES ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_CSS_EXC ) ) ;
 		if ( $excludes ) {
 			$excludes = explode( "\n", $excludes ) ;
 		}
