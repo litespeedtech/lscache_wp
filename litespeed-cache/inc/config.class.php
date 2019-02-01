@@ -705,8 +705,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		litespeed-cache-drop_qs -> drop_qs
 		litespeed-cache-cdn_mapping -> cdn.mapping
 		litespeed-cache-dns_prefetch -> optm.dns_prefetch
-		litespeed-optm-css -> optm.ccss
-		litespeed-optm-js-defer-excludes -> optm.js_defer_excludes
+xx		litespeed-optm-css -> optm.ccss
+xx		litespeed-optm-js-defer-excludes -> optm.js_defer_excludes
 		litespeed-media-lazy-img-excludes -> media.lazy_img_excludes
 		litespeed-media-lazy-img-cls-excludes -> media.lazy_img_cls_excludes
 		litespeed-media-webp_attribute -> img_optm.webp_attr
@@ -733,13 +733,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		conv from old litespeed.conf.* to new litespeed.conf.*
 		version -> _version
-		css_exclude -> optm.css_exc
 		timed_urls -> purge.timed_urls
 		timed_urls_time -> purge.timed_urls_time
 		excludes_qs -> cache.exc_qs
 		excludes_cat -> cache.exc_cat
 		excludes_tag -> cache.exc_tag
-		js_exclude -> optm.js_exc
 		nocache_cookies -> cache.exc_cookies
 		nocache_useragents -> cache.exc_useragents
 		crawler_include_posts -> crawler.inc_posts
@@ -792,6 +790,33 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		media_optm_exif			-> img_optm.exif
 		media_webp_replace		-> img_optm.webp_replace
 		media_webp_replace_srcset-> img_optm.webp_replace_srcset
+		css_minify			-> optm.css_minify
+		css_inline_minify	-> optm.css_inline_minify
+		css_combine			-> optm.css_combine
+		css_combined_priority-> optm.css_combined_priority
+		css_http2			-> optm.css_http2
+		css_exclude 		-> optm.css_exc
+		js_minify			-> optm.js_minify
+		js_inline_minify	-> optm.js_inline_minify
+		js_combine			-> optm.js_combine
+		js_combined_priority-> optm.js_combined_priority
+		js_http2			-> optm.js_http2
+		js_exclude 			-> optm.js_exc
+		optimize_ttl		-> optm.ttl
+		html_minify			-> optm.html_minify
+		optm_qs_rm			-> optm.qs_rm
+		optm_ggfonts_rm		-> optm.ggfonts_rm
+		optm_css_async		-> optm.css_async
+		optm_ccss_gen		-> optm.ccss_gen
+		optm_ccss_async		-> optm.ccss_async
+		optm_css_async_inline-> optm.css_async_inline
+		optm_js_defer		-> optm.js_defer
+		optm_emoji_rm		-> optm.emoji_rm
+		optm_exclude_jquery	-> optm.exc_jq
+		optm_ggfonts_async	-> optm.ggfonts_async
+		optm_max_size		-> optm.max_size
+		optm_rm_comment		-> optm.rm_comment
+
 
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7

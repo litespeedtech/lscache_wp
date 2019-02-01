@@ -781,7 +781,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC_INLINE,
 			LiteSpeed_Cache_Config::O_OPTM_JS_DEFER,
 			LiteSpeed_Cache_Config::O_OPTM_EMOJI_RM,
-			LiteSpeed_Cache_Config::O_OPTM_EXC_JQUERY,
+			LiteSpeed_Cache_Config::O_OPTM_EXC_JQ,
 			LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC,
 			LiteSpeed_Cache_Config::O_OPTM_RM_COMMENT,
 		) ;

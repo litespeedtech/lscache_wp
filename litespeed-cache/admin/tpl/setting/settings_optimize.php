@@ -242,7 +242,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Exclude JQuery', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_EXC_JQUERY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_EXC_JQ ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Improve compatibility with inline JS by preventing jQuery optimization. (Recommended Setting: %s)', 'litespeed-cache' ), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				<br /><font class="litespeed-warning">

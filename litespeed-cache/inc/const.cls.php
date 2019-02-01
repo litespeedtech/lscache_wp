@@ -73,32 +73,32 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	## --------------	HTML Optm 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_OPTM_CSS_MINIFY = 'css_minify' ;
-	const O_OPTM_CSS_INLINE_MINIFY = 'css_inline_minify' ;
-	const O_OPTM_CSS_COMBINE = 'css_combine' ;
-	const O_OPTM_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
-	const O_OPTM_CSS_HTTP2 = 'css_http2' ;
-	const O_OPTM_CSS_EXC = 'optm.css_exclude' ;
-	const O_OPTM_JS_MINIFY = 'js_minify' ;
-	const O_OPTM_JS_INLINE_MINIFY = 'js_inline_minify' ;
-	const O_OPTM_JS_COMBINE = 'js_combine' ;
-	const O_OPTM_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
-	const O_OPTM_JS_HTTP2 = 'js_http2' ;
-	const O_OPTM_JS_EXC = 'optm.js_exclude' ;
-	const O_OPTM_TTL = 'optimize_ttl' ;
-	const O_OPTM_HTML_MINIFY = 'html_minify' ;
-	const O_OPTM_QS_RM = 'optm_qs_rm' ;
-	const O_OPTM_GGFONTS_RM = 'optm_ggfonts_rm' ;
-	const O_OPTM_CSS_ASYNC = 'optm_css_async' ;
-	const O_OPTM_CCSS_GEN = 'optm_ccss_gen' ;
-	const O_OPTM_CCSS_ASYNC = 'optm_ccss_async' ;
-	const O_OPTM_CSS_ASYNC_INLINE = 'optm_css_async_inline' ;
-	const O_OPTM_JS_DEFER = 'optm_js_defer' ;
-	const O_OPTM_EMOJI_RM = 'optm_emoji_rm' ;
-	const O_OPTM_EXC_JQUERY = 'optm_exclude_jquery' ;
-	const O_OPTM_GGFONTS_ASYNC = 'optm_ggfonts_async' ;
-	const O_OPTM_MAX_SIZE = 'optm_max_size' ;
-	const O_OPTM_RM_COMMENT = 'optm_rm_comment' ;
+	const O_OPTM_CSS_MINIFY 		= 'optm.css_minify' ;
+	const O_OPTM_CSS_INLINE_MINIFY 	= 'optm.css_inline_minify' ;
+	const O_OPTM_CSS_COMBINE 		= 'optm.css_combine' ;
+	const O_OPTM_CSS_COMBINED_PRIORITY = 'optm.css_combined_priority' ;
+	const O_OPTM_CSS_HTTP2 			= 'optm.css_http2' ;
+	const O_OPTM_CSS_EXC 			= 'optm.css_exc' ;
+	const O_OPTM_JS_MINIFY 			= 'optm.js_minify' ;
+	const O_OPTM_JS_INLINE_MINIFY 	= 'optm.js_inline_minify' ;
+	const O_OPTM_JS_COMBINE 		= 'optm.js_combine' ;
+	const O_OPTM_JS_COMBINED_PRIORITY = 'optm.js_combined_priority' ;
+	const O_OPTM_JS_HTTP2 			= 'optm.js_http2' ;
+	const O_OPTM_JS_EXC 			= 'optm.js_exc' ;
+	const O_OPTM_TTL 				= 'optm.ttl' ;
+	const O_OPTM_HTML_MINIFY 		= 'optm.html_minify' ;
+	const O_OPTM_QS_RM 				= 'optm.qs_rm' ;
+	const O_OPTM_GGFONTS_RM 		= 'optm.ggfonts_rm' ;
+	const O_OPTM_CSS_ASYNC 			= 'optm.css_async' ;
+	const O_OPTM_CCSS_GEN 			= 'optm.ccss_gen' ;
+	const O_OPTM_CCSS_ASYNC 		= 'optm.ccss_async' ;
+	const O_OPTM_CSS_ASYNC_INLINE 	= 'optm.css_async_inline' ;
+	const O_OPTM_JS_DEFER 			= 'optm.js_defer' ;
+	const O_OPTM_EMOJI_RM 			= 'optm.emoji_rm' ;
+	const O_OPTM_EXC_JQ 			= 'optm.exc_jq' ;
+	const O_OPTM_GGFONTS_ASYNC 		= 'optm.ggfonts_async' ;
+	const O_OPTM_MAX_SIZE 			= 'optm.max_size' ;
+	const O_OPTM_RM_COMMENT 		= 'optm.rm_comment' ;
 
 	## -------------------------------------------------- ##
 	## --------------	Object Cache	----------------- ##
@@ -429,7 +429,7 @@ class LiteSpeed_Cache_Const
 			self::O_OPTM_CSS_ASYNC_INLINE => true,
 			self::O_OPTM_JS_DEFER => false,
 			self::O_OPTM_EMOJI_RM => false,
-			self::O_OPTM_EXC_JQUERY => true,
+			self::O_OPTM_EXC_JQ => true,
 			self::O_OPTM_GGFONTS_ASYNC => false,
 			self::O_OPTM_MAX_SIZE => 1.2,
 			self::O_OPTM_RM_COMMENT => false,

@@ -333,7 +333,7 @@ class LiteSpeed_Cache_Optimize
 		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ;
 		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ;
 		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ;
-		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC_JQUERY ) ;
+		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC_JQ ) ;
 		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ) ;
 		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_TTL ) ;
 		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_MAX_SIZE ) * 1000000 ;
