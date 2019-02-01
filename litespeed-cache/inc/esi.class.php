@@ -100,6 +100,8 @@ class LiteSpeed_Cache_ESI
 			unset( $atts[ 'cache' ] ) ;
 		}
 
+		do_action( 'litespeed_esi_shortcode-' . $atts[ 0 ] ) ;
+
 		// Show ESI link
 		return self::sub_esi_block( 'esi', 'esi-shortcode', $atts, $cache ) ;
 	}
