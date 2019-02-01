@@ -63,9 +63,9 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function __construct()
 	{
-		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_CSS_ASYNC ) ;
-		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_JS_DEFER ) ;
-		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_QS_RM ) ;
+		$this->cfg_css_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC ) ;
+		$this->cfg_js_defer = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER ) ;
+		$this->cfg_qs_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_QS_RM ) ;
 
 		$this->_static_request_check() ;
 
@@ -74,7 +74,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// To remove emoji from WP
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EMOJI_RM ) ) {
 			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
 		}
 
@@ -93,7 +93,7 @@ class LiteSpeed_Cache_Optimize
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer ) {
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ) ) ;
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC ) ) ;
 		}
 
 		/**
@@ -155,11 +155,11 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _static_request_check()
 	{
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
-		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_COMBINE ) ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTIMIZE_TTL ) ;
 
 		// If not turn on min files
 		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
@@ -294,7 +294,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Check if hit URI excludes
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_EXCLUDES ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -327,17 +327,17 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
-		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_HTTP2 ) ;
-		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_HTTP2 ) ;
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINE ) ;
-		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EXC_JQUERY ) ;
-		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_ASYNC ) ;
-		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTIMIZE_TTL ) ;
-		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_MAX_SIZE ) * 1000000 ;
-		$this->cfg_ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_GGFONTS_RM ) ;
+		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_HTTP2 ) ;
+		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_HTTP2 ) ;
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_COMBINE ) ;
+		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC_JQUERY ) ;
+		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ) ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTIMIZE_TTL ) ;
+		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_MAX_SIZE ) * 1000000 ;
+		$this->cfg_ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM ) ;
 
 		if ( ! LiteSpeed_Cache_Router::can_optm() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: admin/feed/preview' ) ;
@@ -360,7 +360,7 @@ class LiteSpeed_Cache_Optimize
 
 				// IF combine
 				if ( $this->cfg_css_combine ) {
-					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_COMBINED_PRIORITY ) ;
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_COMBINED_PRIORITY ) ;
 
 					$urls = $this->_limit_size_build_hash_url( $src_queue_list, $file_size_list ) ;
 
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_Optimize
 
 				// IF combine
 				if ( $this->cfg_js_combine ) {
-					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_COMBINED_PRIORITY ) ;
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_COMBINED_PRIORITY ) ;
 
 					// separate head/foot js/raw html
 					$head_js = array() ;
@@ -556,7 +556,7 @@ class LiteSpeed_Cache_Optimize
 		// Append async compatibility lib to head
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CSS_ASYNC_INLINE ) ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC_INLINE ) ) {
 				$this->html_head .= '<script id="litespeed-css-async-lib" type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>' ;
 			}
 			else {
@@ -591,7 +591,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// HTML minify
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_HTML_MINIFY ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_HTML_MINIFY ) ) {
 			$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 		}
 
@@ -672,7 +672,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _dns_prefetch_init()
 	{
-		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_DNS_PREFETCH ) ;
+		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_DNS_PREFETCH ) ;
 		if ( ! $this->dns_prefetch ) {
 			return ;
 		}
@@ -803,10 +803,10 @@ class LiteSpeed_Cache_Optimize
 	private function _analyse_links( $src_list, $html_list, $file_type = 'css' )
 	{
 		// if ( $file_type == 'css' ) {
-		// 	$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_CSS_EXC ) ) ;
+		// 	$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_EXC ) ) ;
 		// }
 		// else {
-		// 	$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_JS_EXC ) ) ;
+		// 	$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_EXC ) ) ;
 		// }
 		// if ( $excludes ) {
 		// 	$excludes = explode( "\n", $excludes ) ;
@@ -940,7 +940,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _parse_js()
 	{
-		$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_JS_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_EXC ) ) ;
 		if ( $excludes ) {
 			$excludes = explode( "\n", $excludes ) ;
 		}
@@ -1005,7 +1005,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _handle_css()
 	{
-		$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_OPTM_CSS_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_EXC ) ) ;
 		if ( $excludes ) {
 			$excludes = explode( "\n", $excludes ) ;
 		}

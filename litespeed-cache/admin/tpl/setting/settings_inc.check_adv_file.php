@@ -6,7 +6,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Check Advanced Cache', 'litespeed-cache' ) ; ?></th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE;
+			$id = LiteSpeed_Cache_Config::O_CHECK_ADVCACHE;
 			$this->build_checkbox($id, __('Include advanced-cache.php', 'litespeed-cache'), $_options[$id]);
 		?>
 			<div class="litespeed-desc">

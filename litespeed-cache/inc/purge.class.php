@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Purge
 		$this->_add( '*' ) ;
 
 		// check if need to reset crawler
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ) ) {
 			LiteSpeed_Cache_Crawler::get_instance()->reset_pos() ;
 		}
 
@@ -666,7 +666,7 @@ class LiteSpeed_Cache_Purge
 		}
 		else {
 			$instance->_add( $purge_tags ) ;
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_REST ) ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_REST ) ) {
 				$instance->_add( LiteSpeed_Cache_Tag::TYPE_REST ) ;
 			}
 		}
@@ -720,7 +720,7 @@ class LiteSpeed_Cache_Purge
 	 */
 	public static function purge_feeds()
 	{
-		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_FEED_TTL) > 0 ) {
+		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_FEED_TTL) > 0 ) {
 			self::add(LiteSpeed_Cache_Tag::TYPE_FEED) ;
 		}
 	}
@@ -953,7 +953,7 @@ class LiteSpeed_Cache_Purge
 			}
 		}
 
-		if ( $config->get_option(LiteSpeed_Cache_Config::OPID_FEED_TTL) > 0 ) {
+		if ( $config->get_option(LiteSpeed_Cache_Config::O_FEED_TTL) > 0 ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_FEED ;
 		}
 

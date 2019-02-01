@@ -19,13 +19,13 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 
 	const CACHETAG_SHOP = 'WC_S' ;
 	const CACHETAG_TERM = 'WC_T.' ;
-	const OPTION_UPDATE_INTERVAL = 'wc_update_interval' ;
-	const OPTION_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl' ;
-	const OPTION_WOO_CACHE_CART = 'woo_cache_cart' ;
-	const OPT_PQS_CS = 0 ; // flush product on quantity + stock change, categories on stock change
-	const OPT_PS_CS = 1 ; // flush product and categories on stock change
-	const OPT_PS_CN = 2 ; // flush product on stock change, categories no flush
-	const OPT_PQS_CQS = 3 ; // flush product and categories on quantity + stock change
+	const O_UPDATE_INTERVAL = 'wc_update_interval' ;
+	const O_SHOP_FRONT_TTL = 'wc_shop_use_front_ttl' ;
+	const O_WOO_CACHE_CART = 'woo_cache_cart' ;
+	const O_PQS_CS = 0 ; // flush product on quantity + stock change, categories on stock change
+	const O_PS_CS = 1 ; // flush product and categories on stock change
+	const O_PS_CN = 2 ; // flush product on stock change, categories no flush
+	const O_PQS_CQS = 3 ; // flush product and categories on quantity + stock change
 
 	const ESI_PARAM_ARGS = 'wc_args' ;
 	const ESI_PARAM_POSTID = 'wc_post_id' ;
@@ -60,7 +60,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function add_hooks()
 	{
-		$this->cache_cart = LiteSpeed_Cache_API::config( self::OPTION_WOO_CACHE_CART ) ;
+		$this->cache_cart = LiteSpeed_Cache_API::config( self::O_WOO_CACHE_CART ) ;
 		$this->esi_eanbled = LiteSpeed_Cache_API::esi_enabled() ;
 
 		LiteSpeed_Cache_API::hook_control( array( $this, 'set_control' ) ) ;
@@ -446,12 +446,12 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		}
 		$widget_name = get_class($widget) ;
 		if ( $widget_name === 'WC_Widget_Recently_Viewed' ) {
-			$options[LiteSpeed_Cache_API::WIDGET_OPID_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON2 ;
-			$options[LiteSpeed_Cache_API::WIDGET_OPID_TTL] = 0 ;
+			$options[LiteSpeed_Cache_API::WIDGET_O_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON2 ;
+			$options[LiteSpeed_Cache_API::WIDGET_O_TTL] = 0 ;
 		}
 		elseif ( $widget_name === 'WC_Widget_Recent_Reviews' ) {
-			$options[LiteSpeed_Cache_API::WIDGET_OPID_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON ;
-			$options[LiteSpeed_Cache_API::WIDGET_OPID_TTL] = 86400 ;
+			$options[LiteSpeed_Cache_API::WIDGET_O_ESIENABLE] = LiteSpeed_Cache_API::VAL_ON ;
+			$options[LiteSpeed_Cache_API::WIDGET_O_TTL] = 86400 ;
 		}
 		return $options ;
 	}
@@ -466,7 +466,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	private function set_ttl()
 	{
 		if ( function_exists( 'is_shop' ) && is_shop() ) {
-			if ( LiteSpeed_Cache_API::config( self::OPTION_SHOP_FRONT_TTL ) ) {
+			if ( LiteSpeed_Cache_API::config( self::O_SHOP_FRONT_TTL ) ) {
 				LiteSpeed_Cache_API::set_use_frontpage_ttl() ;
 			}
 		}
@@ -650,18 +650,18 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 */
 	public function purge_product($product)
 	{
-		$config = LiteSpeed_Cache_API::config(self::OPTION_UPDATE_INTERVAL) ;
+		$config = LiteSpeed_Cache_API::config(self::O_UPDATE_INTERVAL) ;
 		if ( is_null($config) ) {
-			$config = self::OPT_PQS_CS ;
+			$config = self::O_PQS_CS ;
 		}
 
-		if ( $config === self::OPT_PQS_CQS ) {
+		if ( $config === self::O_PQS_CQS ) {
 			$this->backend_purge($product->get_id()) ;
 		}
-		elseif ( $config !== self::OPT_PQS_CS && $product->is_in_stock() ) {
+		elseif ( $config !== self::O_PQS_CS && $product->is_in_stock() ) {
 			return ;
 		}
-		elseif ( $config !== self::OPT_PS_CN && ! $product->is_in_stock() ) {
+		elseif ( $config !== self::O_PS_CN && ! $product->is_in_stock() ) {
 			$this->backend_purge($product->get_id()) ;
 		}
 
@@ -770,9 +770,9 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( ! is_array($configs) ) {
 			return $configs ;
 		}
-		$configs[self::OPTION_UPDATE_INTERVAL] = self::OPT_PQS_CS ;
-		$configs[self::OPTION_SHOP_FRONT_TTL] = true ;
-		$configs[self::OPTION_WOO_CACHE_CART] = true ;
+		$configs[self::O_UPDATE_INTERVAL] = self::O_PQS_CS ;
+		$configs[self::O_SHOP_FRONT_TTL] = true ;
+		$configs[self::O_WOO_CACHE_CART] = true ;
 
 		return $configs ;
 	}
@@ -810,15 +810,15 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			return false ;
 		}
 
-		$selected_value = self::OPT_PQS_CS ;
+		$selected_value = self::O_PQS_CS ;
 		if (isset($options)) {
-			if (isset($options[self::OPTION_UPDATE_INTERVAL])) {
-				$selected_value = $options[self::OPTION_UPDATE_INTERVAL] ;
+			if (isset($options[self::O_UPDATE_INTERVAL])) {
+				$selected_value = $options[self::O_UPDATE_INTERVAL] ;
 			}
 		}
 
 		$update_intval_html = '<div class="litespeed-radio-vertical">' ;
-		$id = self::OPTION_UPDATE_INTERVAL ;
+		$id = self::O_UPDATE_INTERVAL ;
 		foreach ($seloptions as $val => $title) {
 			$checked = $selected_value == $val ? ' checked="checked" ' : '';
 			$update_intval_html .= "<div class='litespeed-radio-vertical-row'>
@@ -840,14 +840,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 						<tr>
 							<th>" . __('Use Front Page TTL for the Shop Page', 'litespeed-cache') . "</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch(self::OPTION_SHOP_FRONT_TTL, null, true) . "
+								" . LiteSpeed_Cache_API::build_switch(self::O_SHOP_FRONT_TTL, null, true) . "
 								<div class='litespeed-desc'>$ttl_desc</div>
 							</td>
 						</tr>
 						<tr>
 							<th>" . __('Privately Cache Cart', 'litespeed-cache') . "</th>
 							<td>
-								" . LiteSpeed_Cache_API::build_switch( self::OPTION_WOO_CACHE_CART, null, true ) . "
+								" . LiteSpeed_Cache_API::build_switch( self::O_WOO_CACHE_CART, null, true ) . "
 								<div class='litespeed-desc'>"
 								 	. __( 'Privately cache cart when not empty.', 'litespeed-cache' ) . "
 								 </div>
@@ -890,14 +890,14 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 		if ( ! isset($options) ) {
 			return $options ;
 		}
-		if ( isset($input[self::OPTION_UPDATE_INTERVAL]) ) {
-			$update_val_in = $input[self::OPTION_UPDATE_INTERVAL] ;
+		if ( isset($input[self::O_UPDATE_INTERVAL]) ) {
+			$update_val_in = $input[self::O_UPDATE_INTERVAL] ;
 			switch ($update_val_in) {
-				case self::OPT_PQS_CS:
-				case self::OPT_PS_CS:
-				case self::OPT_PS_CN:
-				case self::OPT_PQS_CQS:
-					$options[self::OPTION_UPDATE_INTERVAL] = intval($update_val_in) ;
+				case self::O_PQS_CS:
+				case self::O_PS_CS:
+				case self::O_PS_CN:
+				case self::O_PQS_CQS:
+					$options[self::O_UPDATE_INTERVAL] = intval($update_val_in) ;
 					break ;
 				default:
 					// add error message?
@@ -905,8 +905,8 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 		}
 
-		$options[ self::OPTION_SHOP_FRONT_TTL ] = LiteSpeed_Cache_API::parse_onoff( $input, self::OPTION_SHOP_FRONT_TTL ) ;
-		$options[ self::OPTION_WOO_CACHE_CART ] = LiteSpeed_Cache_API::parse_onoff( $input, self::OPTION_WOO_CACHE_CART ) ;
+		$options[ self::O_SHOP_FRONT_TTL ] = LiteSpeed_Cache_API::parse_onoff( $input, self::O_SHOP_FRONT_TTL ) ;
+		$options[ self::O_WOO_CACHE_CART ] = LiteSpeed_Cache_API::parse_onoff( $input, self::O_WOO_CACHE_CART ) ;
 
 		return $options ;
 	}

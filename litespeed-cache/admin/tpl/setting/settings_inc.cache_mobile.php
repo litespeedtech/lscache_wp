@@ -8,7 +8,7 @@ if (!defined('WPINC')) die;
 		<th><?php echo __('Cache Mobile', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
-				$this->build_switch(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE);
+				$this->build_switch(LiteSpeed_Cache_Config::O_CACHE_MOBILE);
 			?>
 			<div class="litespeed-desc">
 				<?php echo __('When enabled, mobile views will be cached separately.', 'litespeed-cache'); ?>
@@ -25,11 +25,11 @@ if (!defined('WPINC')) die;
 		<th><?php echo __('List of Mobile User Agents', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ;
+				$id = LiteSpeed_Cache_Config::O_MOBILE_RULES ;
 				$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 
 				// if set, use value as input value
-				if ( $_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
+				if ( $_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
 
 					// if enabled, check the setting in file
 					if ( defined( 'LITESPEED_ON' ) ) {
@@ -45,7 +45,7 @@ if (!defined('WPINC')) die;
 					}
 				}
 
-				$this->build_input( $id, 'litespeed-input-long', null, 'litespeed-mobileview-rules', '', 'text', ! $_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) ;
+				$this->build_input( $id, 'litespeed-input-long', null, 'litespeed-mobileview-rules', '', 'text', ! $_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) ;
 			?>
 
 			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"

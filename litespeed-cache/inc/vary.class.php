@@ -34,7 +34,7 @@ class LiteSpeed_Cache_Vary
 			// If not esi, check cache logged-in user setting
 			if ( ! LiteSpeed_Cache_Router::esi_enabled() ) {
 				// If cache logged-in, then init cacheable to private
-				if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_PRIV ) ) {
+				if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_PRIV ) ) {
 					add_action( 'wp_logout', 'LiteSpeed_Cache_Purge::purge_on_logout' ) ;
 
 					LiteSpeed_Cache_Control::init_cacheable() ;
@@ -87,10 +87,10 @@ class LiteSpeed_Cache_Vary
 		$db_cookie = false ;
 		if ( is_multisite() ) {
 			$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
-			$db_cookie = $options[ LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE ] ;
+			$db_cookie = $options[ LiteSpeed_Cache_Config::O_LOGIN_COOKIE ] ;
 		}
 		else {
-			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_LOGIN_COOKIE) ;
+			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_LOGIN_COOKIE) ;
 		}
 
 		// If no vary set in rewrite rule
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_Vary
 		// set vary=2 for next time vary lookup
 		$this->add_commenter() ;
 
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_COMMENTER ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_COMMENTER ) ) {
 			LiteSpeed_Cache_Control::set_private( 'existing commenter' ) ;
 		}
 		else {
@@ -615,7 +615,7 @@ class LiteSpeed_Cache_Vary
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
 		 * @since 1.7
 		 */
-		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_USE_HTTP_FOR_HTTPS_VARY ) ? false : is_ssl() ;
+		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_USE_HTTP_FOR_HTTPS_VARY ) ? false : is_ssl() ;
 
 		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true) ;
 	}

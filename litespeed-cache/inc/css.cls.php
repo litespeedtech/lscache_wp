@@ -34,7 +34,7 @@ class LiteSpeed_Cache_CSS
 		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
-		$rules .= LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CSS, true ) ;
+		$rules .= LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_CSS, true ) ;
 
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
 
@@ -131,7 +131,7 @@ class LiteSpeed_Cache_CSS
 	private function _ccss()
 	{
 		// If don't need to generate CCSS, bypass
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_GEN ) ) {
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_GEN ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] bypassed ccss due to setting' ) ;
 			return '' ;
 		}
@@ -154,7 +154,7 @@ class LiteSpeed_Cache_CSS
 		$request_url = home_url( $wp->request ) ;
 
 		// If generate in backend, log it and bypass
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_ASYNC ) ) {
 			// Store it to prepare for cron
 			if ( empty( $req_summary[ 'queue' ] ) ) {
 				$req_summary[ 'queue' ] = array() ;
@@ -182,7 +182,7 @@ class LiteSpeed_Cache_CSS
 	 */
 	private function _separate_mobile_ccss()
 	{
-		return wp_is_mobile() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ) ;
+		return wp_is_mobile() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_MOBILE ) ;
 	}
 
 	/**
@@ -294,13 +294,13 @@ class LiteSpeed_Cache_CSS
 		$unique = false ;
 
 		// Check if in separate css type option
-		$separate_posttypes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE ) ;
+		$separate_posttypes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEPARATE_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
-		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_CCSS_SEPARATE_URI ) ;
+		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEPARATE_URI ) ;
 		if ( ! empty( $separate_uri ) ) {
 			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {

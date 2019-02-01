@@ -45,10 +45,10 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = $this->__conf->get_item( LiteSpeed_Cache_Config::ITEM_ADV_PURGE_ALL_HOOKS ) ;
+			$purge_all_events = $this->__conf->get_item( LiteSpeed_Cache_Config::O_ADV_PURGE_ALL_HOOKS ) ;
 
 			// purge all on upgrade
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PURGE_ON_UPGRADE ) ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ) ) {
 				$purge_all_events[] = 'upgrader_process_complete' ;
 				$purge_all_events[] = 'admin_action_do-plugin-upgrade' ;
 			}
@@ -158,7 +158,7 @@ class LiteSpeed_Cache_Admin
 				return ;
 			}
 			if ( get_current_blog_id() !== BLOG_ID_CURRENT_SITE ) {
-				$use_primary = LiteSpeed_Cache_Config::NETWORK_OPID_USE_PRIMARY ;
+				$use_primary = LiteSpeed_Cache_Config::NETWORK_O_USE_PRIMARY ;
 				$site_options = $this->__conf->get_site_options() ;xx
 				if ( isset($site_options[$use_primary]) && $site_options[$use_primary] ) {
 					$this->display->set_disable_all() ;
@@ -214,7 +214,7 @@ class LiteSpeed_Cache_Admin
 	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
 		if ( defined( 'LSCACHE_ADV_CACHE' ) || ! current_user_can( $capability ) ) {
-			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CHECK_ADVANCEDCACHE ) ) {
+			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CHECK_ADVCACHE ) ) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
 				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter

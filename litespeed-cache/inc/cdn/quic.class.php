@@ -24,14 +24,14 @@ class LiteSpeed_Cache_CDN_Quic
 	 */
 	public static function sync_config( $options )
 	{
-		if ( empty( $options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::OPT_CDN_QUIC_KEY ] ) ) {
+		if ( empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ] ) ) {
 			return false ;
 		}
 
 		// Security: Remove cf key in report
 		$secure_fields = array(
-			LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY,
-			LiteSpeed_Cache_Config::OPID_CACHE_OBJECT_PSWD,
+			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY,
+			LiteSpeed_Cache_Config::O_OBJECT_PSWD,
 		) ;
 		foreach ( $secure_fields as $v ) {
 			if ( ! empty( $options[ $v ] ) ) {

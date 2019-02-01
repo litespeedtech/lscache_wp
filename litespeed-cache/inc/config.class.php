@@ -60,7 +60,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_define_adv_cache() ;
 
 		// Init global const cache on set
-		if ( $this->_options[ self::OPT_CACHE ] === self::VAL_ON ) {
+		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 
@@ -69,16 +69,16 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$this->define_cache_on() ;
 		}
 
-		$this->purge_options = explode('.', $this->_options[ self::OPID_PURGE_BY_POST ] ) ;
+		$this->purge_options = explode('.', $this->_options[ self::O_PURGE_BY_POST ] ) ;
 
 		// Vary group settings
-		$this->vary_groups = $this->get_item( self::ITEM_VARY_GROUP ) ;
+		$this->vary_groups = $this->get_item( self::O_VARY_GROUP ) ;
 
 		// Exclude optimization role setting
-		$this->exclude_optimization_roles = $this->get_item( self::ITEM_EXCLUDE_OPTIMIZATION_ROLES ) ;
+		$this->exclude_optimization_roles = $this->get_item( self::O_EXCLUDE_OPTIMIZATION_ROLES ) ;
 
 		// Exclude cache role setting
-		$this->exclude_cache_roles = $this->get_item( self::ITEM_EXCLUDE_CACHE_ROLES ) ;
+		$this->exclude_cache_roles = $this->get_item( self::O_EXCLUDE_CACHE_ROLES ) ;
 
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
@@ -107,6 +107,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// Set security key if not initialized yet
+		todo: move this to init options
 		$k = self::HASH ;
 		if ( isset( $options[ $k ] ) && empty( $options[ $k ] ) ) {
 			$options[ $k ] = Litespeed_String::rrand( 32 ) ;
@@ -138,31 +139,31 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// $this->_define_adv_cache( $this->_site_options ) ;
 
 		// If network set to use primary setting
-		if ( ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 
 			// save temparary cron setting as cron settings are per site
-			$CRWL_CRON_ACTIVE = $this->_options[ self::CRWL_CRON_ACTIVE ] ;
+			$CRWL_CRON_ACTIVE = $this->_options[ self::O_CRWL_CRON_ACTIVE ] ;
 
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
 			$this->_options = $this->load_options( BLOG_ID_CURRENT_SITE ) ;
 
 			// crawler cron activation is separated
-			$this->_options[ self::CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
+			$this->_options[ self::O_CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
 		}
 
 		// If use network setting
-		if ( $this->_options[ self::OPT_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
+		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
 			$this->_options[ self::_CACHE ] = true ;
 		}
 		// Set network eanble to on
-		if ( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) {
+		if ( $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
 			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
 		}
 
 		// These two are not for single blog options
-		// unset( $this->_site_options[ self::NETWORK_OPID_ENABLED ] ) ;
-		// unset( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ;
+		// unset( $this->_site_options[ self::NETWORK_O_ENABLED ] ) ;
+		// unset( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ;
 
 		// Append site options to single blog options
 		foreach ( $this->_default_options as $k => $v ) {
@@ -196,7 +197,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 		// If is not activated on network, it will not have site options
 		if ( ! is_plugin_active_for_network( LiteSpeed_Cache::PLUGIN_FILE ) ) {
-			if ( $this->_options[ self::OPT_CACHE ] === self::VAL_ON2 ) { // Default to cache on
+			if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 ) { // Default to cache on
 				$this->_options[ self::_CACHE ] = true ;
 			}
 			return false ;
@@ -248,7 +249,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _define_adv_cache()
 	{
-		if ( isset( $this->_options[ self::OPID_CHECK_ADVANCEDCACHE ] ) && ! $this->_options[ self::OPID_CHECK_ADVANCEDCACHE ] ) {
+		if ( isset( $this->_options[ self::O_CHECK_ADVCACHE ] ) && ! $this->_options[ self::O_CHECK_ADVCACHE ] ) {
 			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 	}
@@ -490,8 +491,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				$options[$key] = self::VAL_OFF ;
 			}
 		}
-		if ( isset($options[self::OPID_PURGE_BY_POST]) ) {
-			$purge_opts = explode('.', $options[self::OPID_PURGE_BY_POST]) ;
+		if ( isset($options[self::O_PURGE_BY_POST]) ) {
+			$purge_opts = explode('.', $options[self::O_PURGE_BY_POST]) ;
 
 			foreach ($purge_opts as $purge_opt) {
 				$options['purge_' . $purge_opt] = self::VAL_ON ;
@@ -500,15 +501,15 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Convert CDN settings
 		$mapping_fields = array(
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_URL,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
-			LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_FILETYPE
+			LiteSpeed_Cache_Config::O_CDN_MAPPING_URL,
+			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_IMG,
+			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_CSS,
+			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_JS,
+			LiteSpeed_Cache_Config::O_CDN_MAPPING_FILETYPE
 		) ;
 		$cdn_mapping = array() ;
-		if ( isset( $options[ self::ITEM_CDN_MAPPING ] ) && is_array( $options[ self::ITEM_CDN_MAPPING ] ) ) {
-			foreach ( $options[ self::ITEM_CDN_MAPPING ] as $k => $v ) {// $k is numeric
+		if ( isset( $options[ self::O_CDN_MAPPING ] ) && is_array( $options[ self::O_CDN_MAPPING ] ) ) {
+			foreach ( $options[ self::O_CDN_MAPPING ] as $k => $v ) {// $k is numeric
 				foreach ( $mapping_fields as $v2 ) {
 					if ( empty( $cdn_mapping[ $v2 ] ) ) {
 						$cdn_mapping[ $v2 ] = array() ;
@@ -523,13 +524,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				$cdn_mapping[ $v2 ] = array( 0 => false ) ;
 			}
 		}
-		$options[ self::ITEM_CDN_MAPPING ] = $cdn_mapping ;
+		$options[ self::O_CDN_MAPPING ] = $cdn_mapping ;
 
 		/**
 		 * Convert Cookie Simulation in Crawler settings
 		 * @since 2.8.1 Fixed warning and lost cfg when deactivate->reactivate in v2.8
 		 */
-		$id = self::ITEM_CRWL_COOKIES ;
+		$id = self::O_CRWL_COOKIES ;
 		$crawler_cookies = array() ;
 		if ( isset( $options[ $id ] ) && is_array( $options[ $id ] ) ) {
 			$i = 0 ;
@@ -575,7 +576,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				LiteSpeed_Cache_Log::debug( "[Conf] option_diff $log" ) ;
 			}
 		}
-		$options[self::OPT_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
+		$options[self::_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
 
 		return $options ;
 	}
@@ -590,18 +591,18 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_upgrade()
 	{
-		if ( $this->_options[ self::OPT_VERSION ] == $this->_default_options[ self::OPT_VERSION ] ) ) {
+		if ( $this->_options[ self::_VERSION ] == $this->_default_options[ self::_VERSION ] ) ) {
 			return ;
 		}
 
 		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
-		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_OPID_USE_PRIMARY ] ) ) {
+		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 		// 	return ;
 		// }
 
 		// Update version to v3.0
-		update_option( self::conf_name( self::OPT_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		update_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 		LiteSpeed_Cache_Log::debug( '[Conf] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
@@ -619,7 +620,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$default_options = $this->get_default_site_options() ;
 		$options = $this->get_site_options() ;
 
-		if ( $options[ self::OPT_VERSION ] == $default_options[ self::OPT_VERSION ] && count( $default_options ) == count( $options ) ) {
+		if ( $options[ self::_VERSION ] == $default_options[ self::_VERSION ] && count( $default_options ) == count( $options ) ) {
 			return ;
 		}
 
@@ -638,7 +639,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _conf_db_init()
 	{
-		$v = get_option( self::conf_name( self::OPT_VERSION ) ) ;
+		$v = get_option( self::conf_name( self::_VERSION ) ) ;
 
 		/**
 		 * Previous version v2.9- doesn't have this record
@@ -687,8 +688,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				continue ;
 			}
 
-			// Convert previous OPID_ENABLED_RADIO to new OPT_CACHE
-			if ( $k == self::OPT_CACHE ) {
+			// Convert previous O_ENABLED_RADIO to new O_CACHE
+			if ( $k == self::O_CACHE ) {
 				$v2 = isset( $previous_options[ 'radio_select' ] ) ? $previous_options[ 'radio_select' ] : $v ;
 			}
 
@@ -724,18 +725,50 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		litespeed-optm-ccss-separate_posttype -> optm.ccss_separate_posttype
 		litespeed-optm-css-separate_uri -> optm.css_separate_uri
 
+
+		litespeed-setting-mode -> litespeed.setting.mode
 		litespeed-media-need-pull -> litespeed.img_optm.need_pull
 		litespeed-env-ref -> litespeed.env.ref
 		litespeed-cache-cloudflare_status -> litespeed.cdn.cloudflare.status
 
 		conv from old litespeed.conf.* to new litespeed.conf.*
-		css_exclude -> optm.css_exclude
+		version -> _version
+		css_exclude -> optm.css_exc
 		timed_urls -> purge.timed_urls
 		timed_urls_time -> purge.timed_urls_time
-		excludes_qs -> cache.excludes_qs
-		excludes_cat -> cache.excludes_cat
-		excludes_tag -> cache.excludes_tag
-		js_exclude -> optm.js_exclude
+		excludes_qs -> cache.exc_qs
+		excludes_cat -> cache.exc_cat
+		excludes_tag -> cache.exc_tag
+		js_exclude -> optm.js_exc
+		cdn_exclude -> cdn.exc
+		nocache_cookies -> cache.exc_cookies
+		nocache_useragents -> cache.exc_useragents
+		crawler_include_posts -> crawler.inc_posts
+		crawler_include_pages -> crawler.inc_pages
+		crawler_include_cats -> crawler.inc_cats
+		crawler_include_tags -> crawler.inc_tags
+		crawler_excludes_cpt -> crawler.exc_cpt
+		crawler_order_links -> crawler.order_links
+		crawler_usleep -> crawler.usleep
+		crawler_run_duration -> crawler.run_duration
+		crawler_run_interval -> crawler.run_interval
+		crawler_crawl_interval -> crawler.crawl_interval
+		crawler_threads -> crawler.threads
+		crawler_load_limit -> crawler.load_limit
+		crawler_domain_ip -> crawler.domain_ip
+		crawler_custom_sitemap -> crawler.custom_sitemap
+		crawler_cron_active -> crawler.cron_active
+		cache_object			-> object
+		cache_object_kind		-> object.kind
+		cache_object_host		-> object.host
+		cache_object_port		-> object.port
+		cache_object_life		-> object.life
+		cache_object_persistent	-> object.persistent
+		cache_object_admin		-> object.admin
+		cache_object_transients	-> object.transients
+		cache_object_db_id		-> object.db_id
+		cache_object_user		-> object.user
+		cache_object_pswd		-> object.pswd
 
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
@@ -743,13 +776,13 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 */
 		if ( isset( $previous_options[ 'cdn_url' ] ) ) {
 			$cdn_mapping = array(
-				self::ITEM_CDN_MAPPING_URL 		=> $previous_options[ 'cdn_url' ],
-				self::ITEM_CDN_MAPPING_INC_IMG 	=> $previous_options[ 'cdn_inc_img' ],
-				self::ITEM_CDN_MAPPING_INC_CSS 	=> $previous_options[ 'cdn_inc_css' ],
-				self::ITEM_CDN_MAPPING_INC_JS 	=> $previous_options[ 'cdn_inc_js' ],
-				self::ITEM_CDN_MAPPING_FILETYPE => $previous_options[ 'cdn_filetype' ],
+				self::O_CDN_MAPPING_URL 		=> $previous_options[ 'cdn_url' ],
+				self::O_CDN_MAPPING_INC_IMG 	=> $previous_options[ 'cdn_inc_img' ],
+				self::O_CDN_MAPPING_INC_CSS 	=> $previous_options[ 'cdn_inc_css' ],
+				self::O_CDN_MAPPING_INC_JS 	=> $previous_options[ 'cdn_inc_js' ],
+				self::O_CDN_MAPPING_FILETYPE => $previous_options[ 'cdn_filetype' ],
 			) ;
-			add_option( LiteSpeed_Cache_Config::ITEM_CDN_MAPPING, array( $cdn_mapping ) ) ;
+			add_option( LiteSpeed_Cache_Config::O_CDN_MAPPING, array( $cdn_mapping ) ) ;
 			LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option adding CDN map" ) ;
 		}
 
@@ -758,16 +791,16 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * @since  2.3
 		 */
 		if ( isset( $previous_options[ 'forced_cache_uri' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI, $previous_options[ 'forced_cache_uri' ] ) ;
+			add_option( LiteSpeed_Cache_Config::O_FORCE_CACHE_URI, $previous_options[ 'forced_cache_uri' ] ) ;
 		}
 		if ( isset( $previous_options[ 'cache_uri_priv' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV, $previous_options[ 'cache_uri_priv' ] ) ;
+			add_option( LiteSpeed_Cache_Config::O_CACHE_URI_PRIV, $previous_options[ 'cache_uri_priv' ] ) ;
 		}
 		if ( isset( $previous_options[ 'optm_excludes' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES, $previous_options[ 'optm_excludes' ] ) ;
+			add_option( LiteSpeed_Cache_Config::O_OPTM_EXCLUDES, $previous_options[ 'optm_excludes' ] ) ;
 		}
 		if ( isset( $previous_options[ 'excludes_uri' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI, $previous_options[ 'excludes_uri' ] ) ;
+			add_option( LiteSpeed_Cache_Config::O_EXCLUDES_URI, $previous_options[ 'excludes_uri' ] ) ;
 		}
 
 		// Update img_optm table data for upgrading

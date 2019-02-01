@@ -92,7 +92,7 @@ class LiteSpeed_Cache
 		LiteSpeed_Cache_Config::get_instance() ;
 
 		// Check if debug is on
-		$should_debug = intval( self::config( LiteSpeed_Cache_Config::OPID_DEBUG ) ) ;
+		$should_debug = intval( self::config( LiteSpeed_Cache_Config::O_DEBUG ) ) ;
 		if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || $should_debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
 			LiteSpeed_Cache_Log::init() ;
 		}
@@ -102,7 +102,7 @@ class LiteSpeed_Cache
 			include_once LSCWP_DIR . 'thirdparty/lscwp-registry-3rd.php' ;
 		}
 
-		if ( self::config( LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ) ) {
+		if ( self::config( LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ) ) {
 			define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
@@ -165,7 +165,7 @@ class LiteSpeed_Cache
 		// in `after_setup_theme`, before `init` hook
 		$this->_auto_update() ;
 
-		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
+		if ( ! self::config( LiteSpeed_Cache_Config::O_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
 
@@ -254,7 +254,7 @@ class LiteSpeed_Cache
 	 */
 	private function _auto_update()
 	{
-		if ( ! self::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
+		if ( ! self::config( LiteSpeed_Cache_Config::O_AUTO_UPGRADE ) ) {
 			return ;
 		}
 

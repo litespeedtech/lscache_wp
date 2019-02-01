@@ -128,7 +128,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	{
 		LiteSpeed_Cache_Log::debug( '[Cloudflare] _purge_all' ) ;
 
-		$cf_on = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ;
+		$cf_on = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ) ;
 		if ( ! $cf_on ) {
 			$msg = __( 'Cloudflare API is set to off.', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
@@ -159,7 +159,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 */
 	private function _zone()
 	{
-		$zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_ZONE ) ;
+		$zone = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_ZONE ) ;
 		if ( ! $zone ) {
 			$msg = __( 'No available Cloudflare zone', 'litespeed-cache' ) ;
 			LiteSpeed_Cache_Admin_Display::error( $msg ) ;
@@ -177,7 +177,7 @@ class LiteSpeed_Cache_CDN_Cloudflare
 	 */
 	public function fetch_zone( $options )
 	{
-		$kw = $options[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_NAME ] ;
+		$kw = $options[ LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME ] ;
 
 		$url = 'https://api.cloudflare.com/client/v4/zones?status=active&match=all' ;
 
@@ -230,12 +230,12 @@ class LiteSpeed_Cache_CDN_Cloudflare
 		) ;
 		if ( $token ) {
 			LiteSpeed_Cache_Log::debug2( '[Cloudflare] _cloudflare_call use param token' ) ;
-			$header[] = 'X-Auth-Email: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ] ;
-			$header[] = 'X-Auth-Key: ' . $token[ LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ] ;
+			$header[] = 'X-Auth-Email: ' . $token[ LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_EMAIL ] ;
+			$header[] = 'X-Auth-Key: ' . $token[ LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY ] ;
 		}
 		else {
-			$header[] = 'X-Auth-Email: ' . LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_EMAIL ) ;
-			$header[] = 'X-Auth-Key: ' . LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE_KEY ) ;
+			$header[] = 'X-Auth-Email: ' . LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_EMAIL ) ;
+			$header[] = 'X-Auth-Key: ' . LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY ) ;
 		}
 
 		$ch = curl_init() ;

@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Force Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_FORCE_CACHE_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Do Not Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_EXCLUDES_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will not be cached.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Do Not Cache Query Strings', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::ITEM_EXC_QS ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_EXC_QS ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Query string containing these parameters will not be cached.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, for %s, %s and %s can be used here.', 'litespeed-cache' ), '<code>?aa=bb&cc=dd</code>', '<code>aa</code>', '<code>cc</code>' ) ; ?>
@@ -52,7 +52,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Categories', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::ITEM_EXC_CAT;
+				$id = LiteSpeed_Cache_Config::O_EXC_CAT;
 				$excludes_buf = '';
 				$cat_ids = $_options[$id];
 				if ($cat_ids != '') {
@@ -83,7 +83,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Tags', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::ITEM_EXC_TAG;
+				$id = LiteSpeed_Cache_Config::O_EXC_TAG;
 				$excludes_buf = '';
 				$ids = $_options[$id];
 				if ($ids != '') {
@@ -133,7 +133,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Do Not Cache Roles', 'litespeed-cache'); ?></th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::ITEM_EXCLUDE_CACHE_ROLES . "][", $title, $this->config->in_exclude_cache_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_EXCLUDE_CACHE_ROLES . "][", $title, $this->config->in_exclude_cache_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ) ; ?>

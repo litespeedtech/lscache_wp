@@ -269,7 +269,7 @@ class LiteSpeed_Cache_Crawler
 	protected function _generate_sitemap()
 	{
 		// use custom sitemap
-		if ( $sitemap = $this->_options[ LiteSpeed_Cache_Config::CRWL_CUSTOM_SITEMAP ] ) {
+		if ( $sitemap = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_CUSTOM_SITEMAP ] ) {
 			$urls = array() ;
 			$offset = strlen( $this->_home_url ) ;
 			$sitemap_urls = false ;
@@ -406,7 +406,7 @@ class LiteSpeed_Cache_Crawler
 		// if finished last time, regenerate sitemap
 		if ( $last_fnished_at = $crawler->get_done_status() ) {
 			// check whole crawling interval
-			if ( ! $force && time() - $last_fnished_at < $this->_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL] ) {
+			if ( ! $force && time() - $last_fnished_at < $this->_options[LiteSpeed_Cache_Config::O_CRWL_CRAWL_INTERVAL] ) {
 				LiteSpeed_Cache_Log::debug('Crawler: Cron abort: cache warmed already.') ;
 				// if not reach whole crawling interval, exit
 				return;
@@ -415,20 +415,20 @@ class LiteSpeed_Cache_Crawler
 			$this->_generate_sitemap() ;
 		}
 		$crawler->set_base_url($this->_home_url) ;
-		$crawler->set_run_duration($this->_options[LiteSpeed_Cache_Config::CRWL_RUN_DURATION]) ;
+		$crawler->set_run_duration($this->_options[LiteSpeed_Cache_Config::O_CRWL_RUN_DURATION]) ;
 
 		/**
 		 * Limit delay to use server setting
 		 * @since 1.8.3
 		 */
-		$usleep = $this->_options[ LiteSpeed_Cache_Config::CRWL_USLEEP ] ;
+		$usleep = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_USLEEP ] ;
 		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) && $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] > $usleep ) {
 			$usleep = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
 		}
 		$crawler->set_run_delay( $usleep ) ;
-		$crawler->set_threads_limit( $this->_options[ LiteSpeed_Cache_Config::CRWL_THREADS ] ) ;
+		$crawler->set_threads_limit( $this->_options[ LiteSpeed_Cache_Config::O_CRWL_THREADS ] ) ;
 
-		$server_load_limit = $this->_options[ LiteSpeed_Cache_Config::CRWL_LOAD_LIMIT ] ;
+		$server_load_limit = $this->_options[ LiteSpeed_Cache_Config::O_CRWL_LOAD_LIMIT ] ;
 		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ) ) {
 			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT_ENFORCE ] ;
 		}
@@ -436,8 +436,8 @@ class LiteSpeed_Cache_Crawler
 			$server_load_limit = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_LOAD_LIMIT ] ;
 		}
 		$crawler->set_load_limit( $server_load_limit ) ;
-		if ( $this->_options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP] ) {
-			$crawler->set_domain_ip($this->_options[LiteSpeed_Cache_Config::CRWL_DOMAIN_IP]) ;
+		if ( $this->_options[LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP] ) {
+			$crawler->set_domain_ip($this->_options[LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP]) ;
 		}
 
 		// Get current crawler
@@ -553,12 +553,12 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Mobile crawler
-		if ( $this->_options[ LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ] ) {
+		if ( $this->_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
 			$crawler_factors[ 'mobile' ] = array( 0 => '', 1 => '<font title="Mobile">📱</font>' ) ;
 		}
 
 		// Get roles set
-		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_ROLES ) ;
+		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CRWL_ROLES ) ;
 		// List all roles
 		foreach ( $roles as $v ) {
 			$role_title = '' ;
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Cookie crawler
-		$cookie_crawlers = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CRWL_COOKIES ) ;
+		$cookie_crawlers = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CRWL_COOKIES ) ;
 		foreach ( $cookie_crawlers as $k => $v ) {
 
 			$this_cookie_key = 'cookie:' . $k ;

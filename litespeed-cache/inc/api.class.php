@@ -34,8 +34,8 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	const TYPE_WIDGET =						LiteSpeed_Cache_Tag::TYPE_WIDGET ;
 
 	const PARAM_NAME =				LiteSpeed_Cache_ESI::PARAM_NAME ;
-	const WIDGET_OPID_ESIENABLE =	LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
-	const WIDGET_OPID_TTL =			LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ;
+	const WIDGET_O_ESIENABLE =	LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ;
+	const WIDGET_O_TTL =			LiteSpeed_Cache_ESI::WIDGET_O_TTL ;
 
 	/**
 	 * Force to set an option
@@ -167,7 +167,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function set_use_frontpage_ttl()
 	{
-		LiteSpeed_Cache_Control::set_custom_ttl( self::config( self::OPID_FRONT_PAGE_TTL ) ) ;
+		LiteSpeed_Cache_Control::set_custom_ttl( self::config( self::O_FRONT_PAGE_TTL ) ) ;
 	}
 
 	/**

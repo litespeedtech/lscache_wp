@@ -13,65 +13,181 @@ class LiteSpeed_Cache_Const
 	// New conf items are `litespeed.key`
 	const OPTION_NAME = 'litespeed-cache-conf' ;
 
-	const OPT_VERSION = 'version' ;
-	const _CACHE = '_cache' ;// cache on setting
+	const _CACHE = '_cache' ; // final cache status from setting
 
 	/*** Single settings ***/
-	const OPT_CACHE = 'cache' ;
-	const OPT_AUTO_UPGRADE = 'auto_upgrade' ;
-	const OPID_CACHE_PRIV = 'cache_priv' ;
-	const OPID_CACHE_COMMENTER = 'cache_commenter' ;
-	const OPID_CACHE_REST = 'cache_rest' ;
-	const OPID_CACHE_PAGE_LOGIN = 'cache_page_login' ;
-	const OPID_CACHE_FAVICON = 'cache_favicon' ;
-	const OPID_CACHE_RES = 'cache_resources' ;
-	const OPID_CACHE_MOBILE = 'mobileview_enabled' ;
-	const ID_MOBILEVIEW_LIST = 'mobileview_rules' ;
-	const OPID_CACHE_OBJECT = 'cache_object' ;
-	const OPID_CACHE_OBJECT_KIND = 'cache_object_kind' ;
-	const OPID_CACHE_OBJECT_HOST = 'cache_object_host' ;
-	const OPID_CACHE_OBJECT_PORT = 'cache_object_port' ;
-	const OPID_CACHE_OBJECT_LIFE = 'cache_object_life' ;
-	const OPID_CACHE_OBJECT_PERSISTENT = 'cache_object_persistent' ;
-	const OPID_CACHE_OBJECT_ADMIN = 'cache_object_admin' ;
-	const OPID_CACHE_OBJECT_TRANSIENTS = 'cache_object_transients' ;
-	const OPID_CACHE_OBJECT_DB_ID = 'cache_object_db_id' ;
-	const OPID_CACHE_OBJECT_USER = 'cache_object_user' ;
-	const OPID_CACHE_OBJECT_PSWD = 'cache_object_pswd' ;
-	const OPID_CACHE_BROWSER = 'cache_browser' ;
-	const OPID_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
+	const _VERSION = '_version' ; // Not set-able
+	const O_CACHE = 'cache' ;
+	const O_AUTO_UPGRADE = 'auto_upgrade' ;
+	const O_CACHE_PRIV = 'cache_priv' ;
+	const O_CACHE_COMMENTER = 'cache_commenter' ;
+	const O_CACHE_REST = 'cache_rest' ;
+	const O_CACHE_PAGE_LOGIN = 'cache_page_login' ;
+	const O_CACHE_FAVICON = 'cache_favicon' ;
+	const O_CACHE_RES = 'cache_resources' ;
+	const O_CACHE_MOBILE = 'mobileview_enabled' ;
+	const O_MOBILE_RULES = 'mobileview_rules' ;
 
-	const OPID_PURGE_ON_UPGRADE = 'purge_upgrade' ;
-	const ITEM_TIMED_URLS = 'purge.timed_urls' ;
-	const OPID_TIMED_URLS_TIME = 'purge.timed_urls_time' ;
+	const O_OBJECT				 = 'object' ;
+	const O_OBJECT_KIND			 = 'object.kind' ;
+	const O_OBJECT_HOST			 = 'object.host' ;
+	const O_OBJECT_PORT			 = 'object.port' ;
+	const O_OBJECT_LIFE			 = 'object.life' ;
+	const O_OBJECT_PERSISTENT	 = 'object.persistent' ;
+	const O_OBJECT_ADMIN		 = 'object.admin' ;
+	const O_OBJECT_TRANSIENTS	 = 'object.transients' ;
+	const O_OBJECT_DB_ID		 = 'object.db_id' ;
+	const O_OBJECT_USER			 = 'object.user' ;
+	const O_OBJECT_PSWD			 = 'object.pswd' ;
+	const O_CACHE_BROWSER = 'cache_browser' ;
+	const O_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
-	const OPID_LOGIN_COOKIE = 'login_cookie' ;
-	const OPID_CHECK_ADVANCEDCACHE = 'check_advancedcache' ;
-	const OPID_USE_HTTP_FOR_HTTPS_VARY = 'use_http_for_https_vary' ;
+	const O_PURGE_ON_UPGRADE = 'purge_upgrade' ;
+	const O_TIMED_URLS = 'purge.timed_urls' ;
+	const O_TIMED_URLS_TIME = 'purge.timed_urls_time' ;
+
+	const O_LOGIN_COOKIE = 'login_cookie' ;
+	const O_CHECK_ADVCACHE = 'check_advancedcache' ;
+	const O_USE_HTTP_FOR_HTTPS_VARY = 'use_http_for_https_vary' ;
 	// do NOT set default options for these three, it is used for admin.
-	const ID_NOCACHE_COOKIES = 'nocache_cookies' ;
-	const ID_NOCACHE_USERAGENTS = 'nocache_useragents' ;
-	const OPID_DEBUG_DISABLE_ALL = 'debug_disable_all' ;
-	const OPID_DEBUG = 'debug' ;
-	const OPID_ADMIN_IPS = 'admin_ips' ;
-	const OPID_DEBUG_LEVEL = 'debug_level' ;
-	const OPID_LOG_FILE_SIZE = 'log_file_size' ;
-	const OPID_HEARTBEAT = 'heartbeat' ;
-	const OPID_DEBUG_COOKIE = 'debug_cookie' ;
-	const OPID_COLLAPS_QS = 'collaps_qs' ;
-	const OPID_LOG_FILTERS = 'log_filters' ;
+	const O_DEBUG_DISABLE_ALL = 'debug_disable_all' ;
+	const O_DEBUG = 'debug' ;
+	const O_ADMIN_IPS = 'admin_ips' ;
+	const O_DEBUG_LEVEL = 'debug_level' ;
+	const O_LOG_FILE_SIZE = 'log_file_size' ;
+	const O_HEARTBEAT = 'heartbeat' ;
+	const O_DEBUG_COOKIE = 'debug_cookie' ;
+	const O_COLLAPS_QS = 'collaps_qs' ;
+	const O_LOG_FILTERS = 'log_filters' ;
 
-	const OPID_PUBLIC_TTL = 'public_ttl' ;
-	const OPID_PRIVATE_TTL = 'private_ttl' ;
-	const OPID_FRONT_PAGE_TTL = 'front_page_ttl' ;
-	const OPID_FEED_TTL = 'feed_ttl' ;
-	const OPID_403_TTL = '403_ttl' ;
-	const OPID_404_TTL = '404_ttl' ;
-	const OPID_500_TTL = '500_ttl' ;
-	const OPID_PURGE_BY_POST = 'purge_by_post' ;
-	const OPID_ESI_ENABLE = 'esi_enabled' ;
-	const OPID_ESI_CACHE_ADMBAR = 'esi_cached_admbar' ;
-	const OPID_ESI_CACHE_COMMFORM = 'esi_cached_commform' ;
+	const O_PUBLIC_TTL = 'public_ttl' ;
+	const O_PRIVATE_TTL = 'private_ttl' ;
+	const O_FRONT_PAGE_TTL = 'front_page_ttl' ;
+	const O_FEED_TTL = 'feed_ttl' ;
+	const O_403_TTL = '403_ttl' ;
+	const O_404_TTL = '404_ttl' ;
+	const O_500_TTL = '500_ttl' ;
+	const O_PURGE_BY_POST = 'purge_by_post' ;
+	const O_ESI_ENABLE = 'esi_enabled' ;
+	const O_ESI_CACHE_ADMBAR = 'esi_cached_admbar' ;
+	const O_ESI_CACHE_COMMFORM = 'esi_cached_commform' ;
+
+	const O_CACHE_EXC_USERAGENTS = 'cache.exc_useragents' ;
+	const O_CACHE_EXC_COOKIES = 'cache.exc_cookies' ;
+	const O_EXC_QS = 'cache.exc_qs' ; // O_EXCLUDES_QS
+	const O_EXC_CAT = 'cache.exc_cat' ;
+	const O_EXC_TAG = 'cache.exc_tag' ;
+
+	// const O_ADV_FAVICON = 'adv_favicon' ;
+	const O_ADV_INSTANT_CLICK = 'instant_click' ;
+
+	const O_CSS_MINIFY = 'css_minify' ;
+	const O_CSS_INLINE_MINIFY = 'css_inline_minify' ;
+	const O_CSS_COMBINE = 'css_combine' ;
+	const O_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
+	const O_CSS_HTTP2 = 'css_http2' ;
+	const O_OPTM_CSS_EXC = 'optm.css_exclude' ; // O_CSS_EXCLUDES
+	const O_JS_MINIFY = 'js_minify' ;
+	const O_JS_INLINE_MINIFY = 'js_inline_minify' ;
+	const O_JS_COMBINE = 'js_combine' ;
+	const O_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
+	const O_JS_HTTP2 = 'js_http2' ;
+	const O_OPTM_JS_EXC = 'optm.js_exclude' ;
+	const O_OPTIMIZE_TTL = 'optimize_ttl' ;
+	const O_HTML_MINIFY = 'html_minify' ;
+	const O_OPTM_QS_RM = 'optm_qs_rm' ;
+	const O_OPTM_GGFONTS_RM = 'optm_ggfonts_rm' ;
+	const O_OPTM_CSS_ASYNC = 'optm_css_async' ;
+	const O_OPTM_CCSS_GEN = 'optm_ccss_gen' ;
+	const O_OPTM_CCSS_ASYNC = 'optm_ccss_async' ;
+	const O_OPTM_CSS_ASYNC_INLINE = 'optm_css_async_inline' ;
+	const O_OPTM_JS_DEFER = 'optm_js_defer' ;
+	const O_OPTM_EMOJI_RM = 'optm_emoji_rm' ;
+	const O_OPTM_EXC_JQUERY = 'optm_exclude_jquery' ;
+	const O_OPTM_GGFONTS_ASYNC = 'optm_ggfonts_async' ;
+	const O_OPTM_MAX_SIZE = 'optm_max_size' ;
+	const O_OPTM_RM_COMMENT = 'optm_rm_comment' ;
+
+	const O_CDN = 'cdn' ;
+	const O_CDN_ORI = 'cdn_ori' ;
+	const O_CDN_EXC = 'cdn.exc' ;
+	const O_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
+	const O_CDN_QUIC = 'cdn_quic' ;
+	const O_CDN_QUIC_EMAIL = 'cdn_quic_email' ;
+	const O_CDN_QUIC_KEY = 'cdn_quic_key' ;
+	const O_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
+	const O_CDN_CLOUDFLARE_EMAIL = 'cdn_cloudflare_email' ;
+	const O_CDN_CLOUDFLARE_KEY = 'cdn_cloudflare_key' ;
+	const O_CDN_CLOUDFLARE_NAME = 'cdn_cloudflare_name' ;
+	const O_CDN_CLOUDFLARE_ZONE = 'cdn_cloudflare_zone' ;
+
+	const O_MEDIA_IMG_LAZY = 'media_img_lazy' ;
+	const O_MEDIA_IMG_LAZY_PLACEHOLDER = 'media_img_lazy_placeholder' ;
+	const O_MEDIA_PLACEHOLDER_RESP = 'media_placeholder_resp' ;
+	const O_MEDIA_PLACEHOLDER_RESP_COLOR = 'media_placeholder_resp_color' ;
+	const O_MEDIA_PLACEHOLDER_RESP_ASYNC = 'media_placeholder_resp_async' ;
+	const O_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
+	const O_MEDIA_IMG_LAZYJS_INLINE = 'media_img_lazyjs_inline' ;
+	const O_MEDIA_OPTM_AUTO = 'media_optm_auto' ;
+	const O_MEDIA_OPTM_CRON = 'media_optm_cron' ;
+	const O_MEDIA_OPTM_ORI = 'media_optm_ori' ;
+	const O_MEDIA_RM_ORI_BKUP = 'media_rm_ori_bkup' ;
+	const O_MEDIA_OPTM_WEBP = 'media_optm_webp' ;
+	const O_MEDIA_OPTM_LOSSLESS = 'media_optm_lossless' ;
+	const O_MEDIA_OPTM_EXIF = 'media_optm_exif' ;
+	const O_MEDIA_WEBP_REPLACE = 'media_webp_replace' ;
+	const O_MEDIA_WEBP_REPLACE_SRCSET = 'media_webp_replace_srcset' ;
+
+	const NETWORK_O_ENABLED = 'network_enabled' ;
+	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
+
+	const O_CRWL_POSTS 			= 'crawler.inc_posts' ;
+	const O_CRWL_PAGES 			= 'crawler.inc_pages' ;
+	const O_CRWL_CATS 			= 'crawler.inc_cats' ;
+	const O_CRWL_TAGS 			= 'crawler.inc_tags' ;
+	const O_CRWL_EXC_CPT 			= 'crawler.exc_cpt' ;
+	const O_CRWL_ORDER_LINKS 		= 'crawler.order_links' ;
+	const O_CRWL_USLEEP 			= 'crawler.usleep' ;
+	const O_CRWL_RUN_DURATION 	= 'crawler.run_duration' ;
+	const O_CRWL_RUN_INTERVAL 	= 'crawler.run_interval' ;
+	const O_CRWL_CRAWL_INTERVAL 	= 'crawler.crawl_interval' ;
+	const O_CRWL_THREADS 			= 'crawler.threads' ;
+	const O_CRWL_LOAD_LIMIT 		= 'crawler.load_limit' ;
+	const O_CRWL_DOMAIN_IP 		= 'crawler.domain_ip' ;
+	const O_CRWL_CUSTOM_SITEMAP 	= 'crawler.custom_sitemap' ;
+
+	const O_CRWL_CRON_ACTIVE 		= 'crawler.cron_active' ;
+
+	/*** Now list multiple lines items ***/
+	const O_VARY_GROUP = 'vary_group' ;
+	const O_EXCLUDE_OPTIMIZATION_ROLES = 'optm.exclude_optimization_roles' ;
+	const O_EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
+	const O_OPTM_CSS = 'optm.ccss' ;
+	const O_OPTM_JS_DEFER_EXC = 'optm.js_defer_exclude' ;
+	const O_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
+	const O_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
+	const O_CACHE_DROP_QS = 'drop_qs' ;
+	const O_CDN_MAPPING = 'cdn.mapping' ;
+	const O_DNS_PREFETCH = 'optm.dns_prefetch' ;
+	const O_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
+	const O_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
+	const O_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
+	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
+	const O_CRWL_ROLES = 'crawler.roles' ;
+	const O_CRWL_COOKIES = 'crawler.cookies' ;
+	const O_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
+	const O_CDN_ORI_DIR = 'cdn.ori_dir' ;
+	const O_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
+	const O_FORCE_CACHE_URI = 'forced_cache_uri' ;
+	const O_CACHE_URI_PRIV = 'cache_uri_priv' ;
+	const O_EXCLUDES_URI = 'excludes_uri' ;
+	const O_OPTM_EXCLUDES = 'optm.excludes' ;
+	const O_OPTM_CCSS_SEPARATE_POSTTYPE = 'optm.ccss_separate_posttype' ;
+	const O_OPTM_CCSS_SEPARATE_URI = 'optm.css_separate_uri' ;
+
+	/*** Other consts ***/
+	const HASH = 'hash' ;
+
 	const PURGE_ALL_PAGES = '-' ;
 	const PURGE_FRONT_PAGE = 'F' ;
 	const PURGE_HOME_PAGE = 'H' ;
@@ -84,140 +200,25 @@ class LiteSpeed_Cache_Const
 	const PURGE_TERM = 'T' ; // include category|tag|tax
 	const PURGE_POST_TYPE = 'PT' ;
 
-	const ITEM_EXC_QS = 'cache.excludes_qs' ; // OPID_EXCLUDES_QS
-	const ITEM_EXC_CAT = 'cache.excludes_cat' ;
-	const ITEM_EXC_TAG = 'cache.excludes_tag' ;
-
-	// const OPID_ADV_FAVICON = 'adv_favicon' ;
-	const OPID_ADV_INSTANT_CLICK = 'instant_click' ;
-
-	const OPID_CSS_MINIFY = 'css_minify' ;
-	const OPID_CSS_INLINE_MINIFY = 'css_inline_minify' ;
-	const OPID_CSS_COMBINE = 'css_combine' ;
-	const OPID_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
-	const OPID_CSS_HTTP2 = 'css_http2' ;
-	const ITEM_OPTM_CSS_EXC = 'optm.css_exclude' ; // OPID_CSS_EXCLUDES
-	const OPID_JS_MINIFY = 'js_minify' ;
-	const OPID_JS_INLINE_MINIFY = 'js_inline_minify' ;
-	const OPID_JS_COMBINE = 'js_combine' ;
-	const OPID_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
-	const OPID_JS_HTTP2 = 'js_http2' ;
-	const ITEM_OPTM_JS_EXC = 'optm.js_exclude' ;
-	const OPID_OPTIMIZE_TTL = 'optimize_ttl' ;
-	const OPID_HTML_MINIFY = 'html_minify' ;
-	const OPID_OPTM_QS_RM = 'optm_qs_rm' ;
-	const OPID_OPTM_GGFONTS_RM = 'optm_ggfonts_rm' ;
-	const OPID_OPTM_CSS_ASYNC = 'optm_css_async' ;
-	const OPT_OPTM_CCSS_GEN = 'optm_ccss_gen' ;
-	const OPT_OPTM_CCSS_ASYNC = 'optm_ccss_async' ;
-	const OPT_OPTM_CSS_ASYNC_INLINE = 'optm_css_async_inline' ;
-	const OPID_OPTM_JS_DEFER = 'optm_js_defer' ;
-	const OPID_OPTM_EMOJI_RM = 'optm_emoji_rm' ;
-	const OPID_OPTM_EXC_JQUERY = 'optm_exclude_jquery' ;
-	const OPID_OPTM_GGFONTS_ASYNC = 'optm_ggfonts_async' ;
-	const OPID_OPTM_MAX_SIZE = 'optm_max_size' ;
-	const OPID_OPTM_RM_COMMENT = 'optm_rm_comment' ;
-
-	const OPID_CDN = 'cdn' ;
-	const OPID_CDN_ORI = 'cdn_ori' ;
-	const OPID_CDN_EXCLUDE = 'cdn_exclude' ;
-	const OPID_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
-	const OPT_CDN_QUIC = 'cdn_quic' ;
-	const OPT_CDN_QUIC_EMAIL = 'cdn_quic_email' ;
-	const OPT_CDN_QUIC_KEY = 'cdn_quic_key' ;
-	const OPID_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
-	const OPID_CDN_CLOUDFLARE_EMAIL = 'cdn_cloudflare_email' ;
-	const OPID_CDN_CLOUDFLARE_KEY = 'cdn_cloudflare_key' ;
-	const OPID_CDN_CLOUDFLARE_NAME = 'cdn_cloudflare_name' ;
-	const OPID_CDN_CLOUDFLARE_ZONE = 'cdn_cloudflare_zone' ;
-
-	const OPID_MEDIA_IMG_LAZY = 'media_img_lazy' ;
-	const OPID_MEDIA_IMG_LAZY_PLACEHOLDER = 'media_img_lazy_placeholder' ;
-	const OPID_MEDIA_PLACEHOLDER_RESP = 'media_placeholder_resp' ;
-	const OPID_MEDIA_PLACEHOLDER_RESP_COLOR = 'media_placeholder_resp_color' ;
-	const OPID_MEDIA_PLACEHOLDER_RESP_ASYNC = 'media_placeholder_resp_async' ;
-	const OPID_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
-	const OPID_MEDIA_IMG_LAZYJS_INLINE = 'media_img_lazyjs_inline' ;
-	const OPT_MEDIA_OPTM_AUTO = 'media_optm_auto' ;
-	const OPT_MEDIA_OPTM_CRON = 'media_optm_cron' ;
-	const OPT_MEDIA_OPTM_ORI = 'media_optm_ori' ;
-	const OPT_MEDIA_RM_ORI_BKUP = 'media_rm_ori_bkup' ;
-	const OPT_MEDIA_OPTM_WEBP = 'media_optm_webp' ;
-	const OPT_MEDIA_OPTM_LOSSLESS = 'media_optm_lossless' ;
-	const OPT_MEDIA_OPTM_EXIF = 'media_optm_exif' ;
-	const OPT_MEDIA_WEBP_REPLACE = 'media_webp_replace' ;
-	const OPT_MEDIA_WEBP_REPLACE_SRCSET = 'media_webp_replace_srcset' ;
-
-	const NETWORK_OPID_ENABLED = 'network_enabled' ;
-	const NETWORK_OPID_USE_PRIMARY = 'use_primary_settings' ;
-
-	const CRWL_POSTS = 'crawler_include_posts' ;
-	const CRWL_PAGES = 'crawler_include_pages' ;
-	const CRWL_CATS = 'crawler_include_cats' ;
-	const CRWL_TAGS = 'crawler_include_tags' ;
-	const CRWL_EXCLUDES_CPT = 'crawler_excludes_cpt' ;
-	const CRWL_ORDER_LINKS = 'crawler_order_links' ;
-	const CRWL_USLEEP = 'crawler_usleep' ;
-	const CRWL_RUN_DURATION = 'crawler_run_duration' ;
-	const CRWL_RUN_INTERVAL = 'crawler_run_interval' ;
-	const CRWL_CRAWL_INTERVAL = 'crawler_crawl_interval' ;
-	const CRWL_THREADS = 'crawler_threads' ;
-	const CRWL_LOAD_LIMIT = 'crawler_load_limit' ;
-	const CRWL_DOMAIN_IP = 'crawler_domain_ip' ;
-	const CRWL_CUSTOM_SITEMAP = 'crawler_custom_sitemap' ;
-
-	const CRWL_CRON_ACTIVE = 'crawler_cron_active' ;
-
-	const CRWL_DATE_DESC = 'date_desc' ;
-	const CRWL_DATE_ASC = 'date_asc' ;
-	const CRWL_ALPHA_DESC = 'alpha_desc' ;
-	const CRWL_ALPHA_ASC = 'alpha_asc' ;
-
-	/*** Now list multiple lines items ***/
-	const ITEM_VARY_GROUP = 'vary_group' ;
-	const ITEM_EXCLUDE_OPTIMIZATION_ROLES = 'optm.exclude_optimization_roles' ;
-	const ITEM_EXCLUDE_CACHE_ROLES = 'exclude_cache_roles' ;
-	const ITEM_OPTM_CSS = 'optm.ccss' ;
-	const ITEM_OPTM_JS_DEFER_EXC = 'optm.js_defer_excludes' ;
-	const ITEM_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
-	const ITEM_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
-	const ITEM_CACHE_DROP_QS = 'drop_qs' ;
-	const ITEM_CDN_MAPPING = 'cdn.mapping' ;
-	const ITEM_DNS_PREFETCH = 'optm.dns_prefetch' ;
-	const ITEM_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
-	const ITEM_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
-	const ITEM_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
-	const ITEM_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
-	const ITEM_CRWL_ROLES = 'crawler.roles' ;
-	const ITEM_CRWL_COOKIES = 'crawler.cookies' ;
-	const ITEM_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
-	const ITEM_CDN_ORI_DIR = 'cdn.ori_dir' ;
-	const ITEM_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
-	const ITEM_FORCE_CACHE_URI = 'forced_cache_uri' ;
-	const ITEM_CACHE_URI_PRIV = 'cache_uri_priv' ;
-	const ITEM_EXCLUDES_URI = 'excludes_uri' ;
-	const ITEM_OPTM_EXCLUDES = 'optm.excludes' ;
-	const ITEM_OPTM_CCSS_SEPARATE_POSTTYPE = 'optm.ccss_separate_posttype' ;
-	const ITEM_OPTM_CCSS_SEPARATE_URI = 'optm.css_separate_uri' ;
-
-	/*** Other consts ***/
-	const HASH = 'hash' ;
-
-	const ITEM_SETTING_MODE = 'litespeed-setting-mode' ;
-	const ITEM_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
+	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
 
 	// Server variables
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
 	const ENV_CRAWLER_LOAD_LIMIT = 'CRAWLER_LOAD_LIMIT' ;
 	const ENV_CRAWLER_LOAD_LIMIT_ENFORCE = 'CRAWLER_LOAD_LIMIT_ENFORCE' ;
 
-	// const ITEM_FAVICON = 'litespeed-cache-favicon' ;
+	// const O_FAVICON = 'litespeed-cache-favicon' ;
 
-	const ITEM_CDN_MAPPING_URL = 'url' ;
-	const ITEM_CDN_MAPPING_INC_IMG = 'inc_img' ;
-	const ITEM_CDN_MAPPING_INC_CSS = 'inc_css' ;
-	const ITEM_CDN_MAPPING_INC_JS = 'inc_js' ;
-	const ITEM_CDN_MAPPING_FILETYPE = 'filetype' ;
+	const O_CDN_MAPPING_URL = 'url' ;
+	const O_CDN_MAPPING_INC_IMG = 'inc_img' ;
+	const O_CDN_MAPPING_INC_CSS = 'inc_css' ;
+	const O_CDN_MAPPING_INC_JS = 'inc_js' ;
+	const O_CDN_MAPPING_FILETYPE = 'filetype' ;
+
+	const CRWL_DATE_DESC 		= 'date_desc' ;
+	const CRWL_DATE_ASC 		= 'date_asc' ;
+	const CRWL_ALPHA_DESC 		= 'alpha_desc' ;
+	const CRWL_ALPHA_ASC 		= 'alpha_asc' ;
 
 	const VAL_OFF = 0 ;
 	const VAL_ON = 1 ;
@@ -238,31 +239,31 @@ class LiteSpeed_Cache_Const
 	{
 		return array(
 			self::OPTION_NAME,
-			self::ITEM_VARY_GROUP,
-			self::ITEM_EXCLUDE_OPTIMIZATION_ROLES,
-			self::ITEM_EXCLUDE_CACHE_ROLES,
-			self::ITEM_OPTM_CSS,
-			self::ITEM_OPTM_JS_DEFER_EXC,
-			self::ITEM_MEDIA_LAZY_IMG_EXC,
-			self::ITEM_MEDIA_LAZY_IMG_CLS_EXC,
-			self::ITEM_CACHE_DROP_QS,
-			self::ITEM_CDN_MAPPING,
-			self::ITEM_CDN_ORI_DIR,
-			self::ITEM_DNS_PREFETCH,
-			self::ITEM_LOG_IGNORE_FILTERS,
-			self::ITEM_LOG_IGNORE_PART_FILTERS,
-			self::ITEM_OBJECT_GLOBAL_GROUPS,
-			self::ITEM_OBJECT_NON_PERSISTENT_GROUPS,
-			self::ITEM_CRWL_ROLES,
-			self::ITEM_CRWL_COOKIES,
-			self::ITEM_ADV_PURGE_ALL_HOOKS,
-			self::ITEM_FORCE_CACHE_URI,
-			self::ITEM_CACHE_URI_PRIV,
-			self::ITEM_OPTM_EXCLUDES,
-			self::ITEM_EXCLUDES_URI,
-			self::ITEM_MEDIA_WEBP_ATTRIBUTE,
-			self::ITEM_OPTM_CCSS_SEPARATE_POSTTYPE,
-			self::ITEM_OPTM_CCSS_SEPARATE_URI,
+			self::O_VARY_GROUP,
+			self::O_EXCLUDE_OPTIMIZATION_ROLES,
+			self::O_EXCLUDE_CACHE_ROLES,
+			self::O_OPTM_CSS,
+			self::O_OPTM_JS_DEFER_EXC,
+			self::O_MEDIA_LAZY_IMG_EXC,
+			self::O_MEDIA_LAZY_IMG_CLS_EXC,
+			self::O_CACHE_DROP_QS,
+			self::O_CDN_MAPPING,
+			self::O_CDN_ORI_DIR,
+			self::O_DNS_PREFETCH,
+			self::O_LOG_IGNORE_FILTERS,
+			self::O_LOG_IGNORE_PART_FILTERS,
+			self::O_OBJECT_GLOBAL_GROUPS,
+			self::O_OBJECT_NON_PERSISTENT_GROUPS,
+			self::O_CRWL_ROLES,
+			self::O_CRWL_COOKIES,
+			self::O_ADV_PURGE_ALL_HOOKS,
+			self::O_FORCE_CACHE_URI,
+			self::O_CACHE_URI_PRIV,
+			self::O_OPTM_EXCLUDES,
+			self::O_EXCLUDES_URI,
+			self::O_MEDIA_WEBP_ATTRIBUTE,
+			self::O_OPTM_CCSS_SEPARATE_POSTTYPE,
+			self::O_OPTM_CCSS_SEPARATE_URI,
 		) ;
 	}
 
@@ -277,33 +278,33 @@ class LiteSpeed_Cache_Const
 	protected function get_default_site_options()
 	{
 		$default_site_options = array(
-			self::OPT_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::NETWORK_OPID_ENABLED => false,
-			self::NETWORK_OPID_USE_PRIMARY => false,
-			self::OPT_AUTO_UPGRADE => false,
-			self::OPID_PURGE_ON_UPGRADE => true,
-			self::OPID_CACHE_FAVICON => true,
-			self::OPID_CACHE_RES => true,
-			self::OPID_CACHE_MOBILE => 0, // todo: why not false
-			self::ID_MOBILEVIEW_LIST => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
-			self::OPID_CACHE_OBJECT => false,
-			self::OPID_CACHE_OBJECT_KIND => false,
-			self::OPID_CACHE_OBJECT_HOST => 'localhost',
-			self::OPID_CACHE_OBJECT_PORT => '11211',
-			self::OPID_CACHE_OBJECT_LIFE => '360',
-			self::OPID_CACHE_OBJECT_PERSISTENT => true,
-			self::OPID_CACHE_OBJECT_ADMIN => true,
-			self::OPID_CACHE_OBJECT_TRANSIENTS => true,
-			self::OPID_CACHE_OBJECT_DB_ID => 0,
-			self::OPID_CACHE_OBJECT_USER => '',
-			self::OPID_CACHE_OBJECT_PSWD => '',
-			self::OPID_CACHE_BROWSER => false,
-			self::OPID_CACHE_BROWSER_TTL => 2592000,
-			self::OPID_LOGIN_COOKIE => '',
-			self::OPID_CHECK_ADVANCEDCACHE => true,
-			self::ID_NOCACHE_COOKIES => '',
-			self::ID_NOCACHE_USERAGENTS => '',
-			self::OPT_MEDIA_WEBP_REPLACE => false,
+			self::_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
+			self::NETWORK_O_ENABLED => false,
+			self::NETWORK_O_USE_PRIMARY => false,
+			self::O_AUTO_UPGRADE => false,
+			self::O_PURGE_ON_UPGRADE => true,
+			self::O_CACHE_FAVICON => true,
+			self::O_CACHE_RES => true,
+			self::O_CACHE_MOBILE => 0, // todo: why not false
+			self::O_MOBILE_RULES => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
+			self::O_OBJECT => false,
+			self::O_OBJECT_KIND => false,
+			self::O_OBJECT_HOST => 'localhost',
+			self::O_OBJECT_PORT => '11211',
+			self::O_OBJECT_LIFE => '360',
+			self::O_OBJECT_PERSISTENT => true,
+			self::O_OBJECT_ADMIN => true,
+			self::O_OBJECT_TRANSIENTS => true,
+			self::O_OBJECT_DB_ID => 0,
+			self::O_OBJECT_USER => '',
+			self::O_OBJECT_PSWD => '',
+			self::O_CACHE_BROWSER => false,
+			self::O_CACHE_BROWSER_TTL => 2592000,
+			self::O_LOGIN_COOKIE => '',
+			self::O_CHECK_ADVCACHE => true,
+			self::O_CACHE_EXC_COOKIES => '',
+			self::O_CACHE_EXC_USERAGENTS => '',
+			self::O_MEDIA_WEBP_REPLACE => false,
 		) ;
 		return $default_site_options ;
 	}
@@ -331,147 +332,147 @@ class LiteSpeed_Cache_Const
 		sort($default_purge_options) ;
 
 		$default_options = array(
-			self::OPT_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::OPT_CACHE => is_multisite() ? self::VAL_ON2 : self::VAL_ON, //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
-			self::OPT_AUTO_UPGRADE => false,
-			self::OPID_PURGE_ON_UPGRADE => true,
-			self::OPID_CACHE_PRIV => true,
-			self::OPID_CACHE_COMMENTER => true,
-			self::OPID_CACHE_REST => true,
-			self::OPID_CACHE_PAGE_LOGIN => true,
-			self::ITEM_TIMED_URLS => '',
-			self::OPID_TIMED_URLS_TIME => '',
-			self::OPID_CACHE_FAVICON => true,
-			self::OPID_CACHE_RES => true,
-			self::OPID_CACHE_MOBILE => false,
-			self::ID_MOBILEVIEW_LIST => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
-			self::OPID_CACHE_OBJECT => false,
-			self::OPID_CACHE_OBJECT_KIND => false,
-			self::OPID_CACHE_OBJECT_HOST => 'localhost',
-			self::OPID_CACHE_OBJECT_PORT => '11211',
-			self::OPID_CACHE_OBJECT_LIFE => '360',
-			self::OPID_CACHE_OBJECT_PERSISTENT => true,
-			self::OPID_CACHE_OBJECT_ADMIN => true,
-			self::OPID_CACHE_OBJECT_TRANSIENTS => true,
-			self::OPID_CACHE_OBJECT_DB_ID => 0,
-			self::OPID_CACHE_OBJECT_USER => '',
-			self::OPID_CACHE_OBJECT_PSWD => '',
-			self::OPID_CACHE_BROWSER => false,
-			self::OPID_CACHE_BROWSER_TTL => 2592000,
+			self::_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
+			self::O_CACHE => is_multisite() ? self::VAL_ON2 : self::VAL_ON, //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+			self::O_AUTO_UPGRADE => false,
+			self::O_PURGE_ON_UPGRADE => true,
+			self::O_CACHE_PRIV => true,
+			self::O_CACHE_COMMENTER => true,
+			self::O_CACHE_REST => true,
+			self::O_CACHE_PAGE_LOGIN => true,
+			self::O_TIMED_URLS => '',
+			self::O_TIMED_URLS_TIME => '',
+			self::O_CACHE_FAVICON => true,
+			self::O_CACHE_RES => true,
+			self::O_CACHE_MOBILE => false,
+			self::O_MOBILE_RULES => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
+			self::O_OBJECT => false,
+			self::O_OBJECT_KIND => false,
+			self::O_OBJECT_HOST => 'localhost',
+			self::O_OBJECT_PORT => '11211',
+			self::O_OBJECT_LIFE => '360',
+			self::O_OBJECT_PERSISTENT => true,
+			self::O_OBJECT_ADMIN => true,
+			self::O_OBJECT_TRANSIENTS => true,
+			self::O_OBJECT_DB_ID => 0,
+			self::O_OBJECT_USER => '',
+			self::O_OBJECT_PSWD => '',
+			self::O_CACHE_BROWSER => false,
+			self::O_CACHE_BROWSER_TTL => 2592000,
 
-			self::OPID_LOGIN_COOKIE => '',
-			self::OPID_CHECK_ADVANCEDCACHE => true,
-			self::OPID_USE_HTTP_FOR_HTTPS_VARY => false,
-			self::OPID_DEBUG_DISABLE_ALL => false,
-			self::OPID_DEBUG => false,
-			self::OPID_ADMIN_IPS => '127.0.0.1',
-			self::OPID_DEBUG_LEVEL => false,
-			self::OPID_LOG_FILE_SIZE => 3,
-			self::OPID_HEARTBEAT => true,
-			self::OPID_DEBUG_COOKIE => false,
-			self::OPID_COLLAPS_QS => false,
-			self::OPID_LOG_FILTERS => false,
-			self::OPID_PUBLIC_TTL => 604800,
-			self::OPID_PRIVATE_TTL => 1800,
-			self::OPID_FRONT_PAGE_TTL => 604800,
-			self::OPID_FEED_TTL => 0,
-			self::OPID_403_TTL => 3600,
-			self::OPID_404_TTL => 3600,
-			self::OPID_500_TTL => 3600,
-			self::OPID_PURGE_BY_POST => implode('.', $default_purge_options),
-			self::ITEM_EXC_QS => '',
-			self::ITEM_EXC_CAT => '',
-			self::ITEM_EXC_TAG => '',
+			self::O_LOGIN_COOKIE => '',
+			self::O_CHECK_ADVCACHE => true,
+			self::O_USE_HTTP_FOR_HTTPS_VARY => false,
+			self::O_DEBUG_DISABLE_ALL => false,
+			self::O_DEBUG => false,
+			self::O_ADMIN_IPS => '127.0.0.1',
+			self::O_DEBUG_LEVEL => false,
+			self::O_LOG_FILE_SIZE => 3,
+			self::O_HEARTBEAT => true,
+			self::O_DEBUG_COOKIE => false,
+			self::O_COLLAPS_QS => false,
+			self::O_LOG_FILTERS => false,
+			self::O_PUBLIC_TTL => 604800,
+			self::O_PRIVATE_TTL => 1800,
+			self::O_FRONT_PAGE_TTL => 604800,
+			self::O_FEED_TTL => 0,
+			self::O_403_TTL => 3600,
+			self::O_404_TTL => 3600,
+			self::O_500_TTL => 3600,
+			self::O_PURGE_BY_POST => implode('.', $default_purge_options),
+			self::O_EXC_QS => '',
+			self::O_EXC_CAT => '',
+			self::O_EXC_TAG => '',
 
-			// self::OPID_ADV_FAVICON 	=> false,
-			self::OPID_ADV_INSTANT_CLICK 	=> false,
+			// self::O_ADV_FAVICON 	=> false,
+			self::O_ADV_INSTANT_CLICK 	=> false,
 
-			self::OPID_CSS_MINIFY 	=> false,
-			self::OPID_CSS_INLINE_MINIFY 	=> false,
-			self::OPID_CSS_COMBINE 	=> false,
-			self::OPID_CSS_COMBINED_PRIORITY 	=> false,
-			self::OPID_CSS_HTTP2 	=> false,
-			self::ITEM_OPTM_CSS_EXC => '',
-			self::OPID_JS_MINIFY 	=> false,
-			self::OPID_JS_INLINE_MINIFY 	=> false,
-			self::OPID_JS_COMBINE 	=> false,
-			self::OPID_JS_COMBINED_PRIORITY 	=> false,
-			self::OPID_JS_HTTP2 	=> false,
-			self::ITEM_OPTM_JS_EXC 	=> '',
-			self::OPID_OPTIMIZE_TTL => 604800,
-			self::OPID_HTML_MINIFY 	=> false,
-			self::OPID_OPTM_QS_RM 	=> false,
-			self::OPID_OPTM_GGFONTS_RM => false,
-			self::OPID_OPTM_CSS_ASYNC => false,
-			self::OPT_OPTM_CCSS_GEN => true,
-			self::OPT_OPTM_CCSS_ASYNC => true,
-			self::OPT_OPTM_CSS_ASYNC_INLINE => true,
-			self::OPID_OPTM_JS_DEFER => false,
-			self::OPID_OPTM_EMOJI_RM => false,
-			self::OPID_OPTM_EXC_JQUERY => true,
-			self::OPID_OPTM_GGFONTS_ASYNC => false,
-			self::OPID_OPTM_MAX_SIZE => 1.2,
-			self::OPID_OPTM_RM_COMMENT => false,
+			self::O_CSS_MINIFY 	=> false,
+			self::O_CSS_INLINE_MINIFY 	=> false,
+			self::O_CSS_COMBINE 	=> false,
+			self::O_CSS_COMBINED_PRIORITY 	=> false,
+			self::O_CSS_HTTP2 	=> false,
+			self::O_OPTM_CSS_EXC => '',
+			self::O_JS_MINIFY 	=> false,
+			self::O_JS_INLINE_MINIFY 	=> false,
+			self::O_JS_COMBINE 	=> false,
+			self::O_JS_COMBINED_PRIORITY 	=> false,
+			self::O_JS_HTTP2 	=> false,
+			self::O_OPTM_JS_EXC 	=> '',
+			self::O_OPTIMIZE_TTL => 604800,
+			self::O_HTML_MINIFY 	=> false,
+			self::O_OPTM_QS_RM 	=> false,
+			self::O_OPTM_GGFONTS_RM => false,
+			self::O_OPTM_CSS_ASYNC => false,
+			self::O_OPTM_CCSS_GEN => true,
+			self::O_OPTM_CCSS_ASYNC => true,
+			self::O_OPTM_CSS_ASYNC_INLINE => true,
+			self::O_OPTM_JS_DEFER => false,
+			self::O_OPTM_EMOJI_RM => false,
+			self::O_OPTM_EXC_JQUERY => true,
+			self::O_OPTM_GGFONTS_ASYNC => false,
+			self::O_OPTM_MAX_SIZE => 1.2,
+			self::O_OPTM_RM_COMMENT => false,
 
-			self::OPID_CDN 			=> false,
-			self::OPID_CDN_ORI 		=> '',
-			self::OPID_CDN_EXCLUDE 	=> '',
-			self::OPID_CDN_REMOTE_JQUERY 	=> false,
-			self::OPT_CDN_QUIC 		=> false,
-			self::OPT_CDN_QUIC_EMAIL 	=> '',
-			self::OPT_CDN_QUIC_KEY 		=> '',
-			self::OPID_CDN_CLOUDFLARE 	=> false,
-			self::OPID_CDN_CLOUDFLARE_EMAIL 	=> '',
-			self::OPID_CDN_CLOUDFLARE_KEY 	=> '',
-			self::OPID_CDN_CLOUDFLARE_NAME 	=> '',
-			self::OPID_CDN_CLOUDFLARE_ZONE 	=> '',
+			self::O_CDN 			=> false,
+			self::O_CDN_ORI 		=> '',
+			self::O_CDN_EXC 	=> '',
+			self::O_CDN_REMOTE_JQUERY 	=> false,
+			self::O_CDN_QUIC 		=> false,
+			self::O_CDN_QUIC_EMAIL 	=> '',
+			self::O_CDN_QUIC_KEY 		=> '',
+			self::O_CDN_CLOUDFLARE 	=> false,
+			self::O_CDN_CLOUDFLARE_EMAIL 	=> '',
+			self::O_CDN_CLOUDFLARE_KEY 	=> '',
+			self::O_CDN_CLOUDFLARE_NAME 	=> '',
+			self::O_CDN_CLOUDFLARE_ZONE 	=> '',
 
-			self::OPID_MEDIA_IMG_LAZY 				=> false,
-			self::OPID_MEDIA_IMG_LAZY_PLACEHOLDER 	=> '',
-			self::OPID_MEDIA_PLACEHOLDER_RESP		=> false,
-			self::OPID_MEDIA_PLACEHOLDER_RESP_COLOR		=> '#cfd4db',
-			self::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC	=> true,
-			self::OPID_MEDIA_IFRAME_LAZY 			=> false,
-			self::OPID_MEDIA_IMG_LAZYJS_INLINE 		=> false,
-			self::OPT_MEDIA_OPTM_AUTO 		=> false,
-			self::OPT_MEDIA_OPTM_CRON 		=> true,
-			self::OPT_MEDIA_OPTM_ORI 		=> true,
-			self::OPT_MEDIA_RM_ORI_BKUP 	=> false,
-			self::OPT_MEDIA_OPTM_WEBP 		=> false,
-			self::OPT_MEDIA_OPTM_LOSSLESS 	=> false,
-			self::OPT_MEDIA_OPTM_EXIF 		=> false,
-			self::OPT_MEDIA_WEBP_REPLACE 	=> false,
-			self::OPT_MEDIA_WEBP_REPLACE_SRCSET 	=> false,
+			self::O_MEDIA_IMG_LAZY 				=> false,
+			self::O_MEDIA_IMG_LAZY_PLACEHOLDER 	=> '',
+			self::O_MEDIA_PLACEHOLDER_RESP		=> false,
+			self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> '#cfd4db',
+			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> true,
+			self::O_MEDIA_IFRAME_LAZY 			=> false,
+			self::O_MEDIA_IMG_LAZYJS_INLINE 		=> false,
+			self::O_MEDIA_OPTM_AUTO 		=> false,
+			self::O_MEDIA_OPTM_CRON 		=> true,
+			self::O_MEDIA_OPTM_ORI 		=> true,
+			self::O_MEDIA_RM_ORI_BKUP 	=> false,
+			self::O_MEDIA_OPTM_WEBP 		=> false,
+			self::O_MEDIA_OPTM_LOSSLESS 	=> false,
+			self::O_MEDIA_OPTM_EXIF 		=> false,
+			self::O_MEDIA_WEBP_REPLACE 	=> false,
+			self::O_MEDIA_WEBP_REPLACE_SRCSET 	=> false,
 
 			self::HASH 	=> '',
 
-			self::ID_NOCACHE_COOKIES => '',
-			self::ID_NOCACHE_USERAGENTS => '',
-			self::CRWL_POSTS => true,
-			self::CRWL_PAGES => true,
-			self::CRWL_CATS => true,
-			self::CRWL_TAGS => true,
-			self::CRWL_EXCLUDES_CPT => '',
-			self::CRWL_ORDER_LINKS => self::CRWL_DATE_DESC,
-			self::CRWL_USLEEP => 500,
-			self::CRWL_RUN_DURATION => 400,
-			self::CRWL_RUN_INTERVAL => 600,
-			self::CRWL_CRAWL_INTERVAL => 302400,
-			self::CRWL_THREADS => 3,
-			self::CRWL_LOAD_LIMIT => 1,
-			self::CRWL_DOMAIN_IP => '',
-			self::CRWL_CUSTOM_SITEMAP => '',
-			self::CRWL_CRON_ACTIVE => false,
+			self::O_CACHE_EXC_COOKIES => '',
+			self::O_CACHE_EXC_USERAGENTS => '',
+			self::O_CRWL_POSTS => true,
+			self::O_CRWL_PAGES => true,
+			self::O_CRWL_CATS => true,
+			self::O_CRWL_TAGS => true,
+			self::O_CRWL_EXC_CPT => '',
+			self::O_CRWL_ORDER_LINKS => self::CRWL_DATE_DESC,
+			self::O_CRWL_USLEEP => 500,
+			self::O_CRWL_RUN_DURATION => 400,
+			self::O_CRWL_RUN_INTERVAL => 600,
+			self::O_CRWL_CRAWL_INTERVAL => 302400,
+			self::O_CRWL_THREADS => 3,
+			self::O_CRWL_LOAD_LIMIT => 1,
+			self::O_CRWL_DOMAIN_IP => '',
+			self::O_CRWL_CUSTOM_SITEMAP => '',
+			self::O_CRWL_CRON_ACTIVE => false,
 		) ;
 
 		if ( LSWCP_ESI_SUPPORT ) {
-			$default_options[self::OPID_ESI_ENABLE] = false ;
-			$default_options[self::OPID_ESI_CACHE_ADMBAR] = true ;
-			$default_options[self::OPID_ESI_CACHE_COMMFORM] = true ;
+			$default_options[self::O_ESI_ENABLE] = false ;
+			$default_options[self::O_ESI_CACHE_ADMBAR] = true ;
+			$default_options[self::O_ESI_CACHE_COMMFORM] = true ;
 		}
 
 		// Default items
-		$default_options[ self::ITEM_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
+		$default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
 
 		// Load default.ini
 		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
@@ -537,16 +538,16 @@ class LiteSpeed_Cache_Const
 				 * format out:
 				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
 				 */
-				if ( $item == self::ITEM_CDN_MAPPING ) {
+				if ( $item == self::O_CDN_MAPPING ) {
 					$mapping_fields = array(
-						self::ITEM_CDN_MAPPING_URL,
-						self::ITEM_CDN_MAPPING_INC_IMG,
-						self::ITEM_CDN_MAPPING_INC_CSS,
-						self::ITEM_CDN_MAPPING_INC_JS,
-						self::ITEM_CDN_MAPPING_FILETYPE
+						self::O_CDN_MAPPING_URL,
+						self::O_CDN_MAPPING_INC_IMG,
+						self::O_CDN_MAPPING_INC_CSS,
+						self::O_CDN_MAPPING_INC_JS,
+						self::O_CDN_MAPPING_FILETYPE
 					) ;
 					$cdn_mapping = array() ;
-					foreach ( $default_ini_cfg[ $item ][ self::ITEM_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
+					foreach ( $default_ini_cfg[ $item ][ self::O_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
 						$this_row = array() ;
 						foreach ( $mapping_fields as $v2 ) {
 							$this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;

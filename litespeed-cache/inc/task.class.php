@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Task
 		LiteSpeed_Cache_Log::debug2( 'Task init' ) ;
 
 		// Register crawler cron
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ) && LiteSpeed_Cache_Router::can_crawl() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ) && LiteSpeed_Cache_Router::can_crawl() ) {
 			// keep cron intval filter
 			self::schedule_filter_crawler() ;
 
@@ -42,28 +42,28 @@ class LiteSpeed_Cache_Task
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_CRON ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMGOPTM, 'LiteSpeed_Cache_Img_Optm::cron_pull_optimized_img' ) ;
 		}
 
 		// Image optm auto request
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_AUTO ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_AUTO ) ) {
 			self::schedule_filter_imgoptm_auto_request() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST, 'LiteSpeed_Cache_Img_Optm::cron_auto_request' ) ;
 		}
 
 		// Register ccss generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_OPTM_CCSS_ASYNC ) && LiteSpeed_Cache_CSS::has_queue() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_ASYNC ) && LiteSpeed_Cache_CSS::has_queue() ) {
 			self::schedule_filter_ccss() ;
 
 			add_action( self::CRON_ACTION_HOOK_CCSS, 'LiteSpeed_Cache_CSS::cron_ccss' ) ;
 		}
 
 		// Register image placeholder generation
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) && LiteSpeed_Cache_Media::has_queue() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) && LiteSpeed_Cache_Media::has_queue() ) {
 			self::schedule_filter_placeholder() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMG_PLACEHOLDER, 'LiteSpeed_Cache_Media::cron_placeholder' ) ;
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function enable()
 	{
-		$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
+		$id = LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ;
 
 		// get new setting
 		$is_enabled = ! LiteSpeed_Cache::config( $id ) ;
@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function update( $options = false )
 	{
-		$id = LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE ;
+		$id = LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ;
 		if ( $options && isset( $options[ $id ] ) ) {
 			$is_active = $options[$id] ;
 		}
@@ -230,7 +230,7 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function lscache_cron_filter_crawler( $schedules )
 	{
-		$interval = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::CRWL_RUN_INTERVAL ) ;
+		$interval = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_RUN_INTERVAL ) ;
 		// $wp_schedules = wp_get_schedules() ;
 		if ( ! array_key_exists( self::CRON_FITLER_CRAWLER, $schedules ) ) {
 			// 	LiteSpeed_Cache_Log::debug('Crawler cron log: ......cron filter '.$interval.' added......') ;

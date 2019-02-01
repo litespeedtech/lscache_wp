@@ -89,10 +89,10 @@ ksort( $roles ) ;
  */
 if ( ! empty( $_GET[ 'mode' ] ) ) {
 	$adv_mode = $_GET[ 'mode' ] == 'advanced' ? true : false ;
-	update_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE, $adv_mode ) ;
+	update_option( LiteSpeed_Cache_Config::conf_name( 'mode', 'setting' ), $adv_mode ) ;
 }
 else {
-	$adv_mode = get_option( LiteSpeed_Cache_Config::ITEM_SETTING_MODE ) ;
+	$adv_mode = get_option( LiteSpeed_Cache_Config::conf_name( 'mode', 'setting' ) ) ;
 }
 
 $hide_tabs = array() ;

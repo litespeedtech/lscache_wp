@@ -9,7 +9,7 @@ if (!defined('WPINC')) die;
 			<?php
 				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 
-				$this->build_input(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS, 'litespeed-input-long');//, !$file_writable
+				$this->build_input(LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS, 'litespeed-input-long');//, !$file_writable
 			?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'user agents', 'litespeed-cache') ) ; ?>

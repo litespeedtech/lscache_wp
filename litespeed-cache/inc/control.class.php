@@ -79,13 +79,13 @@ class LiteSpeed_Cache_Control
 		add_action( 'wp', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
 
 		// Hook WP REST to be cacheable
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_REST ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_REST ) ) {
 			add_action( 'rest_api_init', 'LiteSpeed_Cache_Control::set_cacheable', 5 ) ;
 		}
 
 		// Cache resources
 		// NOTE: If any strange resource doesn't use normal WP logic `wp_loaded` hook, rewrite rule can handle it
-		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CACHE_RES ) ;
+		$cache_res = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_RES ) ;
 		if ( $cache_res ) {
 			$uri = esc_url( $_SERVER["REQUEST_URI"] ) ;// todo: check if need esc_url()
 			$pattern = '!' . LSCWP_CONTENT_FOLDER . LiteSpeed_Cache_Admin_Rules::RW_PATTERN_RES . '!' ;
@@ -386,8 +386,8 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check if is in timed url list or not
-		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_TIMED_URLS ) ;
-		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_TIMED_URLS_TIME ) ;
+		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_TIMED_URLS ) ;
+		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_TIMED_URLS_TIME ) ;
 		if ( $timed_urls && $timed_urls_time ) {
 			$timed_urls = explode( "\n", $timed_urls ) ;
 			$current_url = LiteSpeed_Cache_Tag::build_uri_tag( true ) ;
@@ -405,34 +405,34 @@ class LiteSpeed_Cache_Control
 
 		// Private cache uses private ttl setting
 		if ( self::is_private() ) {
-			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ) ;
+			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PRIVATE_TTL ) ;
 		}
 
 		if ( is_front_page() ){
-			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ) ;
+			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_FRONT_PAGE_TTL ) ;
 		}
 
-		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FEED_TTL ) ;
+		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_FEED_TTL ) ;
 		if ( is_feed() && $feed_ttl > 0 ) {
 			return $feed_ttl ;
 		}
 
-		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_404_TTL ) ;
+		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_404_TTL ) ;
 		if ( is_404() && $ttl_404 > 0 ) {
 			return $ttl_404 ;
 		}
 
 		if ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
-			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_403_TTL ) ;
+			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_403_TTL ) ;
 			return $ttl_403 ;
 		}
 
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_500_TTL ) ;
+		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_500_TTL ) ;
 		if ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
 			return $ttl_500 ;
 		}
 
-		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ) ;
+		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PUBLIC_TTL ) ;
 	}
 
 	/**
@@ -520,7 +520,7 @@ class LiteSpeed_Cache_Control
 	public static function finalize()
 	{
 		// Check if URI is forced cache
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_FORCE_CACHE_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
@@ -584,7 +584,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		// The following check to the end is ONLY for mobile
-		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::OPID_CACHE_MOBILE) ) {
+		if ( ! LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_MOBILE) ) {
 			if ( self::is_mobile() ) {
 				self::set_nocache('mobile') ;
 			}
@@ -623,7 +623,7 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
 		}
 
-		if ( is_feed() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_FEED_TTL ) == 0 ) {
+		if ( is_feed() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_FEED_TTL ) == 0 ) {
 			return $this->_no_cache_for('feed') ;
 		}
 
@@ -631,7 +631,7 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('trackback') ;
 		}
 
-		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_404_TTL ) == 0 ) {
+		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_404_TTL ) == 0 ) {
 			return $this->_no_cache_for('404 pages') ;
 		}
 
@@ -644,7 +644,7 @@ class LiteSpeed_Cache_Control
 //		}
 
 		// Check private cache URI setting
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_URI_PRIV ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -655,7 +655,7 @@ class LiteSpeed_Cache_Control
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI ) ;
+			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_EXCLUDES_URI ) ;
 			if ( ! empty( $excludes ) ) {
 				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
@@ -664,22 +664,22 @@ class LiteSpeed_Cache_Control
 			}
 
 			// Check QS excluded setting
-			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::ITEM_EXC_QS ) ;
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_EXC_QS ) ;
 			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ITEM_EXC_CAT) ;
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_EXC_CAT) ;
 			if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
 				return $this->_no_cache_for('Admin configured Category Do not cache.') ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ITEM_EXC_TAG) ;
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_EXC_TAG) ;
 			if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
 				return $this->_no_cache_for('Admin configured Tag Do not cache.') ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES) ;
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES) ;
 			if ( ! empty($excludes) && ! empty($_COOKIE) ) {
 				$exclude_list = explode('|', $excludes) ;
 
@@ -690,7 +690,7 @@ class LiteSpeed_Cache_Control
 				}
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::ID_NOCACHE_USERAGENTS) ;
+			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS) ;
 			if ( ! empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
 				$pattern = '/' . $excludes . '/' ;
 				$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']) ;

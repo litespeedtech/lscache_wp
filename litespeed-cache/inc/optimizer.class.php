@@ -24,8 +24,8 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	private function __construct()
 	{
-		$this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CSS_INLINE_MINIFY ) ;
-		$this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_JS_INLINE_MINIFY ) ;
+		$this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_INLINE_MINIFY ) ;
+		$this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_INLINE_MINIFY ) ;
 	}
 
 	/**
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Optimizer
 		 * Clean comment when minify
 		 * @since  1.7.1
 		 */
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_RM_COMMENT ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_RM_COMMENT ) ) {
 			$content = $this->_remove_comment( $content, $file_type ) ;
 		}
 

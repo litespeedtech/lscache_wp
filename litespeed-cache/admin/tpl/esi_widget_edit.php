@@ -5,8 +5,8 @@ if ( !defined('WPINC') ) die;
 $options = LiteSpeed_Cache_ESI::widget_load_get_options( $widget ) ;
 if ( empty( $options ) ) {
 	$options = array(
-		LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE => LiteSpeed_Cache_Config::VAL_OFF,
-		LiteSpeed_Cache_ESI::WIDGET_OPID_TTL => '28800'
+		LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE => LiteSpeed_Cache_Config::VAL_OFF,
+		LiteSpeed_Cache_ESI::WIDGET_O_TTL => '28800'
 	) ;
 	$options = apply_filters( 'litespeed_cache_widget_default_options', $options, $widget ) ;
 }
@@ -16,8 +16,8 @@ if ( empty( $options ) ) {
 	$ttl = '28800' ;
 }
 else {
-	$esi = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
-	$ttl = $options[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
+	$esi = $options[ LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ] ;
+	$ttl = $options[ LiteSpeed_Cache_ESI::WIDGET_O_TTL ] ;
 }
 
 $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
@@ -32,7 +32,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 	<div class="litespeed-inline">
 		<div class="litespeed-switch litespeed-mini">
 		<?php
-			$id = LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ;
+			$id = LiteSpeed_Cache_ESI::WIDGET_O_ESIENABLE ;
 
 			echo $this->build_radio(
 				$id,
@@ -65,7 +65,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 
 	<b><?php echo __( 'Widget Cache TTL:', 'litespeed-cache' ) ; ?></b>
 	&nbsp;&nbsp;
-	<?php $display->build_input( LiteSpeed_Cache_ESI::WIDGET_OPID_TTL, 'litespeed-reset', $ttl, null, 'size="7"' ) ; ?>
+	<?php $display->build_input( LiteSpeed_Cache_ESI::WIDGET_O_TTL, 'litespeed-reset', $ttl, null, 'size="7"' ) ; ?>
 	<?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 
 	<p class="install-help">

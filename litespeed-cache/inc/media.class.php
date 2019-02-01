@@ -71,9 +71,9 @@ class LiteSpeed_Cache_Media
 
 		add_action( 'litspeed_after_admin_init', array( $this, 'after_admin_init' ) ) ;
 
-		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP ) ;
-		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
-		$this->_cfg_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
+		$this->_cfg_placeholder_resp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ;
+		$this->_cfg_placeholder_resp_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ;
+		$this->_cfg_placeholder_resp_color = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ) ;
 		// Encode the color
 		if ( $this->_cfg_placeholder_resp_color ) {
 			$this->_cfg_placeholder_resp_color = base64_encode( $this->_cfg_placeholder_resp_color ) ;
@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public static function webp_enabled()
 	{
-		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE ) ;
+		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE ) ;
 	}
 
 	/**
@@ -353,8 +353,8 @@ eot;
 			$this->_replace_buffer_img_webp() ;
 		}
 
-		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY ) ;
-		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IFRAME_LAZY ) ;
+		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY ) ;
+		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY ) ;
 
 		if ( $cfg_img_lazy ) {
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img() ;
@@ -364,7 +364,7 @@ eot;
 		// image lazy load
 		if ( $cfg_img_lazy ) {
 
-			$default_placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+			$default_placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 
 			foreach ( $html_list as $k => $v ) {
 				$size = $placeholder_list[ $k ] ;
@@ -409,7 +409,7 @@ eot;
 
 		// Include lazyload lib js and init lazyload
 		if ( $cfg_img_lazy || $cfg_iframe_lazy ) {
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_MEDIA_IMG_LAZYJS_INLINE ) ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZYJS_INLINE ) ) {
 				$lazy_lib = '<script type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>' ;
 			} else {
 				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD ;
@@ -509,9 +509,9 @@ eot;
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_EXC ) ) ;
 
-		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_LAZY_IMG_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_CLS_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -635,7 +635,7 @@ eot;
 		 * Added custom element & attribute support
 		 * @since 2.2.2
 		 */
-		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_MEDIA_WEBP_ATTRIBUTE ) ;
+		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_WEBP_ATTRIBUTE ) ;
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
@@ -687,7 +687,7 @@ eot;
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_WEBP_REPLACE_SRCSET ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE_SRCSET ) ) {
 			$this->content = LiteSpeed_Cache_Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
 		}
 

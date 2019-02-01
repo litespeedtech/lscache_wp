@@ -23,9 +23,9 @@ class LiteSpeed_Cache_GUI
 
 	// [ file_tag => [ days, litespeed_only ], ... ]
 	private $_promo_list = array(
-		'banner_promo.new_version'	=> array( 1, false ),
-		'banner_promo'				=> array( 5, false ),
-		// 'banner_promo.slack'		=> array( 3, false ),
+		'new_version'	=> array( 1, false ),
+		'score'			=> array( 5, false ),
+		// 'slack'		=> array( 3, false ),
 	) ;
 
 
@@ -54,12 +54,12 @@ class LiteSpeed_Cache_GUI
 			 * Turn on instant click
 			 * @since  1.8.2
 			 */
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_INSTANT_CLICK ) ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ADV_INSTANT_CLICK ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}
 
-		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ADV_FAVICON ) ) {
+		// if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ADV_FAVICON ) ) {
 		// 	if ( is_admin() ) {
 		// 		add_action( 'admin_head', array( $this, 'favicon' ) ) ;
 		// 	}
@@ -76,7 +76,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	// public function favicon()
 	// {
-	// 	$current_favicon = get_option( LiteSpeed_Cache_Config::ITEM_FAVICON, array() ) ;
+	// 	$current_favicon = get_option( LiteSpeed_Cache_Config::O_FAVICON, array() ) ;
 	// 	if ( is_admin() ) {
 	// 		if ( ! empty( $current_favicon[ 'backend' ] ) ) {
 	// 			echo "<link rel='icon' href='$current_favicon[backend]' />" ;
@@ -319,7 +319,7 @@ class LiteSpeed_Cache_GUI
 
 			// try to load, if can pass, will set $this->_promo_true = true
 			$this->_promo_true = false ;
-			include LSCWP_DIR . "admin/tpl/inc/$promo_tag.php" ;
+			include LSCWP_DIR . "admin/tpl/banner/$promo_tag.php" ;
 
 			// If not defined, means it didn't pass the display workflow in tpl.
 			if ( ! $this->_promo_true ) {
@@ -353,7 +353,7 @@ class LiteSpeed_Cache_GUI
 		$_summary[ 'score.last_check' ] = time() ;
 		$this->save_summary( $_summary ) ;
 
-		include_once LSCWP_DIR . "admin/tpl/inc/banner_promo.ajax.php" ;
+		include_once LSCWP_DIR . "admin/tpl/banner/ajax.php" ;
 	}
 
 	/**
@@ -411,7 +411,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_FORCE_CACHE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_FORCE_CACHE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -422,7 +422,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_EXCLUDES_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_EXCLUDES_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -433,7 +433,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_CACHE_URI_PRIV . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_URI_PRIV . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::ITEM_OPTM_EXCLUDES . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_OPTM_EXCLUDES . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -540,7 +540,7 @@ class LiteSpeed_Cache_GUI
 			'meta'		=> array( 'tabindex' => '0' ),
 		) );
 
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_CLOUDFLARE ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ) ) {
 			$wp_admin_bar->add_menu( array(
 				'parent'	=> 'litespeed-menu',
 				'id'		=> 'litespeed-purge-cloudflare',

@@ -15,7 +15,7 @@ if (!defined('WPINC')) die;
 		<th><?php echo __('Enable LiteSpeed Cache', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::OPT_CACHE ;
+				$id = LiteSpeed_Cache_Config::O_CACHE ;
 				//IF multisite: Add 'Use Network Admin' option,
 				//ELSE: Change 'Enable LiteSpeed Cache' selection to 'Enabled' if the 'Use Network Admin' option was previously selected.
 				//		Selection will not actually be changed unless settings are saved.
@@ -61,7 +61,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Public Cache TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_PUBLIC_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_PUBLIC_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, public pages are cached. Minimum is 30 seconds.', 'litespeed-cache'); ?>
@@ -73,7 +73,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Private Cache TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_PRIVATE_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_PRIVATE_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache' ), 60, 3600 ) ; ?>
@@ -85,7 +85,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Front Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_FRONT_PAGE_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_FRONT_PAGE_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, the front page is cached. Minimum is 30 seconds.', 'litespeed-cache'); ?>
@@ -97,7 +97,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default Feed TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_FEED_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_FEED_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'); ?>
@@ -110,7 +110,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 404 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_404_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_404_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'); ?>
@@ -123,7 +123,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 403 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_403_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_403_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 403 pages are cached.', 'litespeed-cache'); ?>
@@ -136,7 +136,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 500 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::OPID_500_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_500_TTL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 500 pages are cached.', 'litespeed-cache'); ?>

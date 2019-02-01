@@ -49,15 +49,15 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-		$optionOrderBy = $options[LiteSpeed_Cache_Config::CRWL_ORDER_LINKS] ;
+		$optionOrderBy = $options[LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS] ;
 
-		$show_pages = $options[LiteSpeed_Cache_Config::CRWL_PAGES] ;
+		$show_pages = $options[LiteSpeed_Cache_Config::O_CRWL_PAGES] ;
 
-		$show_posts = $options[LiteSpeed_Cache_Config::CRWL_POSTS] ;
+		$show_posts = $options[LiteSpeed_Cache_Config::O_CRWL_POSTS] ;
 
-		$show_cats = $options[LiteSpeed_Cache_Config::CRWL_CATS] ;
+		$show_cats = $options[LiteSpeed_Cache_Config::O_CRWL_CATS] ;
 
-		$show_tags = $options[LiteSpeed_Cache_Config::CRWL_TAGS] ;
+		$show_tags = $options[LiteSpeed_Cache_Config::O_CRWL_TAGS] ;
 
 		switch ( $optionOrderBy ) {
 			case 'date_asc':
@@ -87,7 +87,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$post_type_array[] = 'post' ;
 		}
 
-		$id = LiteSpeed_Cache_Config::CRWL_EXCLUDES_CPT ;
+		$id = LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ;
 		if ( isset($options[$id]) ) {
 			$excludeCptArr = explode(',', $options[$id]) ;
 			$excludeCptArr = array_map('trim', $excludeCptArr) ;

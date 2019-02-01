@@ -72,7 +72,7 @@ class LiteSpeed_Cache_Cli_Admin
 		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
 		 * @since  2.7.1
 		 */
-		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) !== 0 ) ) {
+		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
 		}
@@ -80,15 +80,15 @@ class LiteSpeed_Cache_Cli_Admin
 		$options = LiteSpeed_Cache_Config::convert_options_to_input($options) ;
 
 		switch ($key) {
-			case LiteSpeed_Cache_Config::OPT_VERSION:
+			case LiteSpeed_Cache_Config::_VERSION:
 				//do not allow
 				WP_CLI::error('This option is not available for setting.') ;
 				return ;
 
-			case LiteSpeed_Cache_Config::OPID_CACHE_MOBILE:
+			case LiteSpeed_Cache_Config::O_CACHE_MOBILE:
 				// set list then do checkbox
-				if ( $val === 'true' && empty( $options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] ) ) {
-					$options[ LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
+				if ( $val === 'true' && empty( $options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ] ) ) {
+					$options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 				}
 				//fall through
 			case in_array( $key, self::$checkboxes ) :
@@ -105,8 +105,8 @@ class LiteSpeed_Cache_Cli_Admin
 				}
 				break ;
 
-			case LiteSpeed_Cache_Config::ID_MOBILEVIEW_LIST:
-				$enable_key = LiteSpeed_Cache_Config::OPID_CACHE_MOBILE ;
+			case LiteSpeed_Cache_Config::O_MOBILE_RULES:
+				$enable_key = LiteSpeed_Cache_Config::O_CACHE_MOBILE ;
 				if ( ! isset($options[$enable_key]) || ! $options[$enable_key] ) {
 					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
@@ -121,20 +121,20 @@ class LiteSpeed_Cache_Cli_Admin
 			 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
 			 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
 			 */
-			case strpos( $key, LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ) === 0 :
+			case strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) === 0 :
 
 				preg_match( '|\[(\w+)\]\[(\d*)\]|U', $key, $child_key ) ;
 
 				// Handle switch value
 				if ( in_array( $child_key[ 1 ], array(
-						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_IMG,
-						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_CSS,
-						LiteSpeed_Cache_Config::ITEM_CDN_MAPPING_INC_JS,
+						LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_IMG,
+						LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_CSS,
+						LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_JS,
 				) ) ) {
 					$val = $val === 'true' ? LiteSpeed_Cache_Config::VAL_ON : LiteSpeed_Cache_Config::VAL_OFF ;
 				}
 
-				$options[ LiteSpeed_Cache_Config::ITEM_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
+				$options[ LiteSpeed_Cache_Config::O_CDN_MAPPING ][ $child_key[ 1 ] ][ $child_key[ 2 ] ] = $val ;
 				break ;
 
 			default:
@@ -176,7 +176,7 @@ class LiteSpeed_Cache_Cli_Admin
 	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 		$purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options() ;
-		unset($options[LiteSpeed_Cache_Config::OPID_PURGE_BY_POST]) ;
+		unset($options[LiteSpeed_Cache_Config::O_PURGE_BY_POST]) ;
 		$option_out = array() ;
 		$purge_diff = array_diff(self::$purges, $purge_options) ;
 		$purge_out = array() ;

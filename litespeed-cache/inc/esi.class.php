@@ -33,8 +33,8 @@ class LiteSpeed_Cache_ESI
 	const PARAM_INSTANCE = 'instance' ;
 	const PARAM_NAME = 'name' ;
 
-	const WIDGET_OPID_ESIENABLE = 'widget_esi_enable' ;
-	const WIDGET_OPID_TTL = 'widget_ttl' ;
+	const WIDGET_O_ESIENABLE = 'widget_esi_enable' ;
+	const WIDGET_O_TTL = 'widget_ttl' ;
 
 	/**
 	 * Constructor of ESI
@@ -408,8 +408,8 @@ class LiteSpeed_Cache_ESI
 		switch ($widget_name) {
 			case 'WP_Widget_Recent_Posts' :
 			case 'WP_Widget_Recent_Comments' :
-				$options[self::WIDGET_OPID_ESIENABLE] = LiteSpeed_Cache_Config::VAL_OFF ;
-				$options[self::WIDGET_OPID_TTL] = 86400 ;
+				$options[self::WIDGET_O_ESIENABLE] = LiteSpeed_Cache_Config::VAL_OFF ;
+				$options[self::WIDGET_O_TTL] = 86400 ;
 				break ;
 			default :
 				break ;
@@ -438,13 +438,13 @@ class LiteSpeed_Cache_ESI
 			return $instance ;
 		}
 		$options = $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
-		if ( ! isset( $options ) || ! $options[ self::WIDGET_OPID_ESIENABLE ] ) {
+		if ( ! isset( $options ) || ! $options[ self::WIDGET_O_ESIENABLE ] ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI 0 ' . $name . ': '. ( ! isset( $options ) ? 'not set' : 'set off' ) ) ;
 
 			return $instance ;
 		}
 
-		$esi_private = $options[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ? 'private,' : '' ;
+		$esi_private = $options[ self::WIDGET_O_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ? 'private,' : '' ;
 
 		$params = array(
 			self::PARAM_NAME => $name,
@@ -495,7 +495,7 @@ class LiteSpeed_Cache_ESI
 		$widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
 		$option = self::widget_load_get_options( $widget ) ;
 		// Since we only reach here via esi, safe to assume setting exists.
-		$ttl = $option[ self::WIDGET_OPID_TTL ] ;
+		$ttl = $option[ self::WIDGET_O_TTL ] ;
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
 		if ( $ttl == 0 ) {
 			LiteSpeed_Cache_Control::set_nocache( 'ESI Widget time to live set to 0' ) ;
@@ -503,7 +503,7 @@ class LiteSpeed_Cache_ESI
 		else {
 			LiteSpeed_Cache_Control::set_custom_ttl( $ttl ) ;
 
-			if ( $option[ self::WIDGET_OPID_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ) {
+			if ( $option[ self::WIDGET_O_ESIENABLE ] === LiteSpeed_Cache_Config::VAL_ON2 ) {
 				LiteSpeed_Cache_Control::set_private() ;
 			}
 			LiteSpeed_Cache_Control::set_no_vary() ;
@@ -521,7 +521,7 @@ class LiteSpeed_Cache_ESI
 	public function load_admin_bar_block()
 	{
 		wp_admin_bar_render() ;
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ) ) {
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ESI_CACHE_ADMBAR ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
 		else {
@@ -555,7 +555,7 @@ class LiteSpeed_Cache_ESI
 
 		echo $output ;
 
-		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ESI_CACHE_COMMFORM ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
 		else {

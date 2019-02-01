@@ -179,7 +179,7 @@ else {
 	</div>
 
 	<div>
-		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'banner_promo', 'later' => 1 ) ) ; ?>
+		<?php $dismiss_url = LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_DISMISS, LiteSpeed_Cache_GUI::TYPE_DISMISS_PROMO, false, null, array( 'promo_tag' => 'score', 'later' => 1 ) ) ; ?>
 		<span class="screen-reader-text">Dismiss this notice.</span>
 		<a href="<?php echo $dismiss_url ; ?>" class="litespeed-notice-dismiss">X</a>
 	</div>

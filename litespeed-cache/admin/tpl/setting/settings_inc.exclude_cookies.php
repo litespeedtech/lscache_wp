@@ -6,7 +6,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Cookies', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::ID_NOCACHE_COOKIES;
+				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES;
 
 				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 
