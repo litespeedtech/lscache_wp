@@ -668,10 +668,10 @@ class LiteSpeed_Cache_Img_Optm
 	{
 		$data = array(
 			'list' 			=> $this->_img_in_queue,
-			'optm_ori'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_ORI ) ? 1 : 0,
-			'optm_webp'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_WEBP ) ? 1 : 0,
-			'optm_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_LOSSLESS ) ? 1 : 0,
-			'keep_exif'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_EXIF ) ? 1 : 0,
+			'optm_ori'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ? 1 : 0,
+			'optm_webp'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ) ? 1 : 0,
+			'optm_lossless'	=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS ) ? 1 : 0,
+			'keep_exif'		=> LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF ) ? 1 : 0,
 		) ;
 
 		// Push to LiteSpeed IAPI server
@@ -985,9 +985,9 @@ class LiteSpeed_Cache_Img_Optm
 				WHERE a.root_id = 0 AND a.optm_status = %s ORDER BY a.id LIMIT 1" ;
 		$_q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
 
-		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_ORI ) ;
-		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_RM_ORI_BKUP ) ;
-		$optm_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_WEBP ) ;
+		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ;
+		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP ) ;
+		$optm_webp = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ) ;
 
 		// pull 1 min images each time
 		$end_time = time() + ( $manual ? 120 : 60 ) ;

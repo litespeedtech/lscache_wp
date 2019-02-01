@@ -28,17 +28,6 @@ class LiteSpeed_Cache_Const
 	const O_CACHE_MOBILE = 'mobileview_enabled' ;
 	const O_MOBILE_RULES = 'mobileview_rules' ;
 
-	const O_OBJECT				 = 'object' ;
-	const O_OBJECT_KIND			 = 'object.kind' ;
-	const O_OBJECT_HOST			 = 'object.host' ;
-	const O_OBJECT_PORT			 = 'object.port' ;
-	const O_OBJECT_LIFE			 = 'object.life' ;
-	const O_OBJECT_PERSISTENT	 = 'object.persistent' ;
-	const O_OBJECT_ADMIN		 = 'object.admin' ;
-	const O_OBJECT_TRANSIENTS	 = 'object.transients' ;
-	const O_OBJECT_DB_ID		 = 'object.db_id' ;
-	const O_OBJECT_USER			 = 'object.user' ;
-	const O_OBJECT_PSWD			 = 'object.pswd' ;
 	const O_CACHE_BROWSER = 'cache_browser' ;
 	const O_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
@@ -74,27 +63,30 @@ class LiteSpeed_Cache_Const
 
 	const O_CACHE_EXC_USERAGENTS = 'cache.exc_useragents' ;
 	const O_CACHE_EXC_COOKIES = 'cache.exc_cookies' ;
-	const O_EXC_QS = 'cache.exc_qs' ; // O_EXCLUDES_QS
-	const O_EXC_CAT = 'cache.exc_cat' ;
-	const O_EXC_TAG = 'cache.exc_tag' ;
+	const O_CACHE_EXC_QS = 'cache.exc_qs' ; // O_EXCLUDES_QS
+	const O_CACHE_EXC_CAT = 'cache.exc_cat' ;
+	const O_CACHE_EXC_TAG = 'cache.exc_tag' ;
 
 	// const O_ADV_FAVICON = 'adv_favicon' ;
 	const O_ADV_INSTANT_CLICK = 'instant_click' ;
 
-	const O_CSS_MINIFY = 'css_minify' ;
-	const O_CSS_INLINE_MINIFY = 'css_inline_minify' ;
-	const O_CSS_COMBINE = 'css_combine' ;
-	const O_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
-	const O_CSS_HTTP2 = 'css_http2' ;
-	const O_OPTM_CSS_EXC = 'optm.css_exclude' ; // O_CSS_EXCLUDES
-	const O_JS_MINIFY = 'js_minify' ;
-	const O_JS_INLINE_MINIFY = 'js_inline_minify' ;
-	const O_JS_COMBINE = 'js_combine' ;
-	const O_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
-	const O_JS_HTTP2 = 'js_http2' ;
+	## -------------------------------------------------- ##
+	## --------------	HTML Optm 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_OPTM_CSS_MINIFY = 'css_minify' ;
+	const O_OPTM_CSS_INLINE_MINIFY = 'css_inline_minify' ;
+	const O_OPTM_CSS_COMBINE = 'css_combine' ;
+	const O_OPTM_CSS_COMBINED_PRIORITY = 'css_combined_priority' ;
+	const O_OPTM_CSS_HTTP2 = 'css_http2' ;
+	const O_OPTM_CSS_EXC = 'optm.css_exclude' ;
+	const O_OPTM_JS_MINIFY = 'js_minify' ;
+	const O_OPTM_JS_INLINE_MINIFY = 'js_inline_minify' ;
+	const O_OPTM_JS_COMBINE = 'js_combine' ;
+	const O_OPTM_JS_COMBINED_PRIORITY = 'js_combined_priority' ;
+	const O_OPTM_JS_HTTP2 = 'js_http2' ;
 	const O_OPTM_JS_EXC = 'optm.js_exclude' ;
-	const O_OPTIMIZE_TTL = 'optimize_ttl' ;
-	const O_HTML_MINIFY = 'html_minify' ;
+	const O_OPTM_TTL = 'optimize_ttl' ;
+	const O_OPTM_HTML_MINIFY = 'html_minify' ;
 	const O_OPTM_QS_RM = 'optm_qs_rm' ;
 	const O_OPTM_GGFONTS_RM = 'optm_ggfonts_rm' ;
 	const O_OPTM_CSS_ASYNC = 'optm_css_async' ;
@@ -108,55 +100,87 @@ class LiteSpeed_Cache_Const
 	const O_OPTM_MAX_SIZE = 'optm_max_size' ;
 	const O_OPTM_RM_COMMENT = 'optm_rm_comment' ;
 
-	const O_CDN = 'cdn' ;
-	const O_CDN_ORI = 'cdn_ori' ;
-	const O_CDN_EXC = 'cdn.exc' ;
-	const O_CDN_REMOTE_JQUERY = 'cdn_remote_jquery' ;
-	const O_CDN_QUIC = 'cdn_quic' ;
-	const O_CDN_QUIC_EMAIL = 'cdn_quic_email' ;
-	const O_CDN_QUIC_KEY = 'cdn_quic_key' ;
-	const O_CDN_CLOUDFLARE = 'cdn_cloudflare' ;
-	const O_CDN_CLOUDFLARE_EMAIL = 'cdn_cloudflare_email' ;
-	const O_CDN_CLOUDFLARE_KEY = 'cdn_cloudflare_key' ;
-	const O_CDN_CLOUDFLARE_NAME = 'cdn_cloudflare_name' ;
-	const O_CDN_CLOUDFLARE_ZONE = 'cdn_cloudflare_zone' ;
+	## -------------------------------------------------- ##
+	## --------------	Object Cache	----------------- ##
+	## -------------------------------------------------- ##
+	const O_OBJECT				 = 'object' ;
+	const O_OBJECT_KIND			 = 'object.kind' ;
+	const O_OBJECT_HOST			 = 'object.host' ;
+	const O_OBJECT_PORT			 = 'object.port' ;
+	const O_OBJECT_LIFE			 = 'object.life' ;
+	const O_OBJECT_PERSISTENT	 = 'object.persistent' ;
+	const O_OBJECT_ADMIN		 = 'object.admin' ;
+	const O_OBJECT_TRANSIENTS	 = 'object.transients' ;
+	const O_OBJECT_DB_ID		 = 'object.db_id' ;
+	const O_OBJECT_USER			 = 'object.user' ;
+	const O_OBJECT_PSWD			 = 'object.pswd' ;
+	const O_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
+	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
 
-	const O_MEDIA_IMG_LAZY = 'media_img_lazy' ;
-	const O_MEDIA_IMG_LAZY_PLACEHOLDER = 'media_img_lazy_placeholder' ;
-	const O_MEDIA_PLACEHOLDER_RESP = 'media_placeholder_resp' ;
-	const O_MEDIA_PLACEHOLDER_RESP_COLOR = 'media_placeholder_resp_color' ;
-	const O_MEDIA_PLACEHOLDER_RESP_ASYNC = 'media_placeholder_resp_async' ;
-	const O_MEDIA_IFRAME_LAZY = 'media_iframe_lazy' ;
-	const O_MEDIA_IMG_LAZYJS_INLINE = 'media_img_lazyjs_inline' ;
-	const O_MEDIA_OPTM_AUTO = 'media_optm_auto' ;
-	const O_MEDIA_OPTM_CRON = 'media_optm_cron' ;
-	const O_MEDIA_OPTM_ORI = 'media_optm_ori' ;
-	const O_MEDIA_RM_ORI_BKUP = 'media_rm_ori_bkup' ;
-	const O_MEDIA_OPTM_WEBP = 'media_optm_webp' ;
-	const O_MEDIA_OPTM_LOSSLESS = 'media_optm_lossless' ;
-	const O_MEDIA_OPTM_EXIF = 'media_optm_exif' ;
-	const O_MEDIA_WEBP_REPLACE = 'media_webp_replace' ;
-	const O_MEDIA_WEBP_REPLACE_SRCSET = 'media_webp_replace_srcset' ;
+	## -------------------------------------------------- ##
+	## --------------		 Media 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_MEDIA_IMG_LAZY 					= 'media.img_lazy' ;
+	const O_MEDIA_IMG_LAZY_PLACEHOLDER 		= 'media.img_lazy_placeholder' ;
+	const O_MEDIA_PLACEHOLDER_RESP 			= 'media.placeholder_resp' ;
+	const O_MEDIA_PLACEHOLDER_RESP_COLOR	= 'media.placeholder_resp_color' ;
+	const O_MEDIA_PLACEHOLDER_RESP_ASYNC	= 'media.placeholder_resp_async' ;
+	const O_MEDIA_IFRAME_LAZY 				= 'media.iframe_lazy' ;
+	const O_MEDIA_IMG_LAZYJS_INLINE 		= 'media.img_lazyjs_inline' ;
 
-	const NETWORK_O_ENABLED = 'network_enabled' ;
-	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
+	## -------------------------------------------------- ##
+	## --------------	Image Optm 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_IMG_OPTM_AUTO 				= 'img_optm.auto' ;
+	const O_IMG_OPTM_CRON 				= 'img_optm.cron' ;
+	const O_IMG_OPTM_ORI 				= 'img_optm.ori' ;
+	const O_IMG_OPTM_RM_BKUP 			= 'img_optm.rm_bkup' ;
+	const O_IMG_OPTM_WEBP 				= 'img_optm.webp' ;
+	const O_IMG_OPTM_LOSSLESS 			= 'img_optm.lossless' ;
+	const O_IMG_OPTM_EXIF 				= 'img_optm.exif' ;
+	const O_IMG_OPTM_WEBP_REPLACE 		= 'img_optm.webp_replace' ;
+	const O_IMG_OPTM_WEBP_ATTR 			= 'img_optm.webp_attr' ;
+	const O_IMG_OPTM_WEBP_REPLACE_SRCSET = 'img_optm.webp_replace_srcset' ;
 
+	## -------------------------------------------------- ##
+	## --------------		Crawler		----------------- ##
+	## -------------------------------------------------- ##
 	const O_CRWL_POSTS 			= 'crawler.inc_posts' ;
 	const O_CRWL_PAGES 			= 'crawler.inc_pages' ;
 	const O_CRWL_CATS 			= 'crawler.inc_cats' ;
 	const O_CRWL_TAGS 			= 'crawler.inc_tags' ;
-	const O_CRWL_EXC_CPT 			= 'crawler.exc_cpt' ;
-	const O_CRWL_ORDER_LINKS 		= 'crawler.order_links' ;
-	const O_CRWL_USLEEP 			= 'crawler.usleep' ;
+	const O_CRWL_EXC_CPT 		= 'crawler.exc_cpt' ;
+	const O_CRWL_ORDER_LINKS 	= 'crawler.order_links' ;
+	const O_CRWL_USLEEP 		= 'crawler.usleep' ;
 	const O_CRWL_RUN_DURATION 	= 'crawler.run_duration' ;
 	const O_CRWL_RUN_INTERVAL 	= 'crawler.run_interval' ;
-	const O_CRWL_CRAWL_INTERVAL 	= 'crawler.crawl_interval' ;
-	const O_CRWL_THREADS 			= 'crawler.threads' ;
-	const O_CRWL_LOAD_LIMIT 		= 'crawler.load_limit' ;
+	const O_CRWL_CRAWL_INTERVAL = 'crawler.crawl_interval' ;
+	const O_CRWL_THREADS 		= 'crawler.threads' ;
+	const O_CRWL_LOAD_LIMIT 	= 'crawler.load_limit' ;
 	const O_CRWL_DOMAIN_IP 		= 'crawler.domain_ip' ;
-	const O_CRWL_CUSTOM_SITEMAP 	= 'crawler.custom_sitemap' ;
+	const O_CRWL_CUSTOM_SITEMAP = 'crawler.custom_sitemap' ;
+	const O_CRWL_CRON_ACTIVE 	= 'crawler.cron_active' ;
 
-	const O_CRWL_CRON_ACTIVE 		= 'crawler.cron_active' ;
+	## -------------------------------------------------- ##
+	## --------------		 CDN 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_CDN 			= 'cdn' ;
+	const O_CDN_ORI 		= 'cdn.ori' ;
+	const O_CDN_EXC 		= 'cdn.exc' ;
+	const O_CDN_REMOTE_JQ 	= 'cdn.remote_jq' ;
+	const O_CDN_QUIC 		= 'cdn.quic' ;
+	const O_CDN_QUIC_EMAIL	= 'cdn.quic_email' ;
+	const O_CDN_QUIC_KEY 	= 'cdn.quic_key' ;
+	const O_CDN_CLOUDFLARE 			= 'cdn.cloudflare' ;
+	const O_CDN_CLOUDFLARE_EMAIL 	= 'cdn.cloudflare_email' ;
+	const O_CDN_CLOUDFLARE_KEY 		= 'cdn.cloudflare_key' ;
+	const O_CDN_CLOUDFLARE_NAME 	= 'cdn.cloudflare_name' ;
+	const O_CDN_CLOUDFLARE_ZONE 	= 'cdn.cloudflare_zone' ;
+	const O_CDN_MAPPING = 'cdn.mapping' ;
+
+
+	const NETWORK_O_ENABLED = 'network_enabled' ;
+	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
 
 	/*** Now list multiple lines items ***/
 	const O_VARY_GROUP = 'vary_group' ;
@@ -167,17 +191,13 @@ class LiteSpeed_Cache_Const
 	const O_MEDIA_LAZY_IMG_EXC = 'media.lazy_img_excludes' ;
 	const O_MEDIA_LAZY_IMG_CLS_EXC = 'media.lazy_img_cls_excludes' ;
 	const O_CACHE_DROP_QS = 'drop_qs' ;
-	const O_CDN_MAPPING = 'cdn.mapping' ;
 	const O_DNS_PREFETCH = 'optm.dns_prefetch' ;
 	const O_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
 	const O_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
-	const O_OBJECT_GLOBAL_GROUPS = 'object.global_groups' ;
-	const O_OBJECT_NON_PERSISTENT_GROUPS = 'object.non_persistent_groups' ;
 	const O_CRWL_ROLES = 'crawler.roles' ;
 	const O_CRWL_COOKIES = 'crawler.cookies' ;
 	const O_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
 	const O_CDN_ORI_DIR = 'cdn.ori_dir' ;
-	const O_MEDIA_WEBP_ATTRIBUTE = 'media.webp_attribute' ;
 	const O_FORCE_CACHE_URI = 'forced_cache_uri' ;
 	const O_CACHE_URI_PRIV = 'cache_uri_priv' ;
 	const O_EXCLUDES_URI = 'excludes_uri' ;
@@ -188,17 +208,17 @@ class LiteSpeed_Cache_Const
 	/*** Other consts ***/
 	const HASH = 'hash' ;
 
-	const PURGE_ALL_PAGES = '-' ;
-	const PURGE_FRONT_PAGE = 'F' ;
-	const PURGE_HOME_PAGE = 'H' ;
-	const PURGE_PAGES = 'PGS' ;
+	const PURGE_ALL_PAGES 	= '-' ;
+	const PURGE_FRONT_PAGE 	= 'F' ;
+	const PURGE_HOME_PAGE 	= 'H' ;
+	const PURGE_PAGES 		= 'PGS' ;
 	const PURGE_PAGES_WITH_RECENT_POSTS = 'PGSRP' ;
-	const PURGE_AUTHOR = 'A' ;
-	const PURGE_YEAR = 'Y' ;
-	const PURGE_MONTH = 'M' ;
-	const PURGE_DATE = 'D' ;
-	const PURGE_TERM = 'T' ; // include category|tag|tax
-	const PURGE_POST_TYPE = 'PT' ;
+	const PURGE_AUTHOR 		= 'A' ;
+	const PURGE_YEAR 		= 'Y' ;
+	const PURGE_MONTH 		= 'M' ;
+	const PURGE_DATE 		= 'D' ;
+	const PURGE_TERM 		= 'T' ; // include category|tag|tax
+	const PURGE_POST_TYPE 	= 'PT' ;
 
 	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
 
@@ -209,11 +229,11 @@ class LiteSpeed_Cache_Const
 
 	// const O_FAVICON = 'litespeed-cache-favicon' ;
 
-	const O_CDN_MAPPING_URL = 'url' ;
-	const O_CDN_MAPPING_INC_IMG = 'inc_img' ;
-	const O_CDN_MAPPING_INC_CSS = 'inc_css' ;
-	const O_CDN_MAPPING_INC_JS = 'inc_js' ;
-	const O_CDN_MAPPING_FILETYPE = 'filetype' ;
+	const CDN_MAPPING_URL = 'url' ;
+	const CDN_MAPPING_INC_IMG = 'inc_img' ;
+	const CDN_MAPPING_INC_CSS = 'inc_css' ;
+	const CDN_MAPPING_INC_JS = 'inc_js' ;
+	const CDN_MAPPING_FILETYPE = 'filetype' ;
 
 	const CRWL_DATE_DESC 		= 'date_desc' ;
 	const CRWL_DATE_ASC 		= 'date_asc' ;
@@ -261,7 +281,7 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE_URI_PRIV,
 			self::O_OPTM_EXCLUDES,
 			self::O_EXCLUDES_URI,
-			self::O_MEDIA_WEBP_ATTRIBUTE,
+			self::O_IMG_OPTM_WEBP_ATTR,
 			self::O_OPTM_CCSS_SEPARATE_POSTTYPE,
 			self::O_OPTM_CCSS_SEPARATE_URI,
 		) ;
@@ -304,7 +324,7 @@ class LiteSpeed_Cache_Const
 			self::O_CHECK_ADVCACHE => true,
 			self::O_CACHE_EXC_COOKIES => '',
 			self::O_CACHE_EXC_USERAGENTS => '',
-			self::O_MEDIA_WEBP_REPLACE => false,
+			self::O_IMG_OPTM_WEBP_REPLACE => false,
 		) ;
 		return $default_site_options ;
 	}
@@ -380,27 +400,27 @@ class LiteSpeed_Cache_Const
 			self::O_404_TTL => 3600,
 			self::O_500_TTL => 3600,
 			self::O_PURGE_BY_POST => implode('.', $default_purge_options),
-			self::O_EXC_QS => '',
-			self::O_EXC_CAT => '',
-			self::O_EXC_TAG => '',
+			self::O_CACHE_EXC_QS => '',
+			self::O_CACHE_EXC_CAT => '',
+			self::O_CACHE_EXC_TAG => '',
 
 			// self::O_ADV_FAVICON 	=> false,
 			self::O_ADV_INSTANT_CLICK 	=> false,
 
-			self::O_CSS_MINIFY 	=> false,
-			self::O_CSS_INLINE_MINIFY 	=> false,
-			self::O_CSS_COMBINE 	=> false,
-			self::O_CSS_COMBINED_PRIORITY 	=> false,
-			self::O_CSS_HTTP2 	=> false,
+			self::O_OPTM_CSS_MINIFY 	=> false,
+			self::O_OPTM_CSS_INLINE_MINIFY 	=> false,
+			self::O_OPTM_CSS_COMBINE 	=> false,
+			self::O_OPTM_CSS_COMBINED_PRIORITY 	=> false,
+			self::O_OPTM_CSS_HTTP2 	=> false,
 			self::O_OPTM_CSS_EXC => '',
-			self::O_JS_MINIFY 	=> false,
-			self::O_JS_INLINE_MINIFY 	=> false,
-			self::O_JS_COMBINE 	=> false,
-			self::O_JS_COMBINED_PRIORITY 	=> false,
-			self::O_JS_HTTP2 	=> false,
+			self::O_OPTM_JS_MINIFY 	=> false,
+			self::O_OPTM_JS_INLINE_MINIFY 	=> false,
+			self::O_OPTM_JS_COMBINE 	=> false,
+			self::O_OPTM_JS_COMBINED_PRIORITY 	=> false,
+			self::O_OPTM_JS_HTTP2 	=> false,
 			self::O_OPTM_JS_EXC 	=> '',
-			self::O_OPTIMIZE_TTL => 604800,
-			self::O_HTML_MINIFY 	=> false,
+			self::O_OPTM_TTL => 604800,
+			self::O_OPTM_HTML_MINIFY 	=> false,
 			self::O_OPTM_QS_RM 	=> false,
 			self::O_OPTM_GGFONTS_RM => false,
 			self::O_OPTM_CSS_ASYNC => false,
@@ -417,7 +437,7 @@ class LiteSpeed_Cache_Const
 			self::O_CDN 			=> false,
 			self::O_CDN_ORI 		=> '',
 			self::O_CDN_EXC 	=> '',
-			self::O_CDN_REMOTE_JQUERY 	=> false,
+			self::O_CDN_REMOTE_JQ 	=> false,
 			self::O_CDN_QUIC 		=> false,
 			self::O_CDN_QUIC_EMAIL 	=> '',
 			self::O_CDN_QUIC_KEY 		=> '',
@@ -434,15 +454,15 @@ class LiteSpeed_Cache_Const
 			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> true,
 			self::O_MEDIA_IFRAME_LAZY 			=> false,
 			self::O_MEDIA_IMG_LAZYJS_INLINE 		=> false,
-			self::O_MEDIA_OPTM_AUTO 		=> false,
-			self::O_MEDIA_OPTM_CRON 		=> true,
-			self::O_MEDIA_OPTM_ORI 		=> true,
-			self::O_MEDIA_RM_ORI_BKUP 	=> false,
-			self::O_MEDIA_OPTM_WEBP 		=> false,
-			self::O_MEDIA_OPTM_LOSSLESS 	=> false,
-			self::O_MEDIA_OPTM_EXIF 		=> false,
-			self::O_MEDIA_WEBP_REPLACE 	=> false,
-			self::O_MEDIA_WEBP_REPLACE_SRCSET 	=> false,
+			self::O_IMG_OPTM_AUTO 		=> false,
+			self::O_IMG_OPTM_CRON 		=> true,
+			self::O_IMG_OPTM_ORI 		=> true,
+			self::O_IMG_OPTM_RM_BKUP 	=> false,
+			self::O_IMG_OPTM_WEBP 		=> false,
+			self::O_IMG_OPTM_LOSSLESS 	=> false,
+			self::O_IMG_OPTM_EXIF 		=> false,
+			self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
+			self::O_IMG_OPTM_WEBP_REPLACE_SRCSET 	=> false,
 
 			self::HASH 	=> '',
 
@@ -540,14 +560,14 @@ class LiteSpeed_Cache_Const
 				 */
 				if ( $item == self::O_CDN_MAPPING ) {
 					$mapping_fields = array(
-						self::O_CDN_MAPPING_URL,
-						self::O_CDN_MAPPING_INC_IMG,
-						self::O_CDN_MAPPING_INC_CSS,
-						self::O_CDN_MAPPING_INC_JS,
-						self::O_CDN_MAPPING_FILETYPE
+						self::CDN_MAPPING_URL,
+						self::CDN_MAPPING_INC_IMG,
+						self::CDN_MAPPING_INC_CSS,
+						self::CDN_MAPPING_INC_JS,
+						self::CDN_MAPPING_FILETYPE
 					) ;
 					$cdn_mapping = array() ;
-					foreach ( $default_ini_cfg[ $item ][ self::O_CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
+					foreach ( $default_ini_cfg[ $item ][ self::CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
 						$this_row = array() ;
 						foreach ( $mapping_fields as $v2 ) {
 							$this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;

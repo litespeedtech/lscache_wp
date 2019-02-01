@@ -678,7 +678,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 
 			// webp support
-			$id = LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE ;
+			$id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_WEBP . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_ACCEPT} "image/webp" [or]' ;

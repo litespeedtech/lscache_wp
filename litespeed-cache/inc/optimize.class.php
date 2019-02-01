@@ -155,11 +155,11 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _static_request_check()
 	{
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_COMBINE ) ;
-		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTIMIZE_TTL ) ;
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_TTL ) ;
 
 		// If not turn on min files
 		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
@@ -327,15 +327,15 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _optimize()
 	{
-		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_HTTP2 ) ;
-		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_HTTP2 ) ;
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_COMBINE ) ;
+		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_HTTP2 ) ;
+		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_HTTP2 ) ;
+		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY ) ;
+		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ;
+		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ;
+		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ;
 		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC_JQUERY ) ;
 		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ) ;
-		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTIMIZE_TTL ) ;
+		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_TTL ) ;
 		$this->cfg_optm_max_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_MAX_SIZE ) * 1000000 ;
 		$this->cfg_ggfonts_rm = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM ) ;
 
@@ -360,7 +360,7 @@ class LiteSpeed_Cache_Optimize
 
 				// IF combine
 				if ( $this->cfg_css_combine ) {
-					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CSS_COMBINED_PRIORITY ) ;
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINED_PRIORITY ) ;
 
 					$urls = $this->_limit_size_build_hash_url( $src_queue_list, $file_size_list ) ;
 
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_Optimize
 
 				// IF combine
 				if ( $this->cfg_js_combine ) {
-					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_JS_COMBINED_PRIORITY ) ;
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINED_PRIORITY ) ;
 
 					// separate head/foot js/raw html
 					$head_js = array() ;
@@ -591,7 +591,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// HTML minify
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_HTML_MINIFY ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_HTML_MINIFY ) ) {
 			$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 		}
 

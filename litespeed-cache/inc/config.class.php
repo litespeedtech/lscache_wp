@@ -501,11 +501,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Convert CDN settings
 		$mapping_fields = array(
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_URL,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_IMG,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_CSS,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_JS,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_FILETYPE
+			LiteSpeed_Cache_Config::CDN_MAPPING_URL,
+			LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG,
+			LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS,
+			LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS,
+			LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE
 		) ;
 		$cdn_mapping = array() ;
 		if ( isset( $options[ self::O_CDN_MAPPING ] ) && is_array( $options[ self::O_CDN_MAPPING ] ) ) {
@@ -709,7 +709,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		litespeed-optm-js-defer-excludes -> optm.js_defer_excludes
 		litespeed-media-lazy-img-excludes -> media.lazy_img_excludes
 		litespeed-media-lazy-img-cls-excludes -> media.lazy_img_cls_excludes
-		litespeed-media-webp_attribute -> media.webp_attribute
+		litespeed-media-webp_attribute -> img_optm.webp_attr
 		litespeed-log_ignore_filters -> debug.log_ignore_filters
 		litespeed-log_ignore_part_filters -> debug.log_ignore_part_filters
 		litespeed-object_global_groups -> object.global_groups
@@ -740,7 +740,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		excludes_cat -> cache.exc_cat
 		excludes_tag -> cache.exc_tag
 		js_exclude -> optm.js_exc
-		cdn_exclude -> cdn.exc
 		nocache_cookies -> cache.exc_cookies
 		nocache_useragents -> cache.exc_useragents
 		crawler_include_posts -> crawler.inc_posts
@@ -768,7 +767,31 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		cache_object_transients	-> object.transients
 		cache_object_db_id		-> object.db_id
 		cache_object_user		-> object.user
-		cache_object_pswd		-> object.pswd
+		cache_object_pswd		-> object.psw
+		cdn_ori				-> cdn.ori
+		cdn_exclude 		-> cdn.exc
+		cdn_remote_jquery	-> cdn.remote_jq
+		cdn_cloudflare		-> cdn.cloudflare
+		cdn_cloudflare_email-> cdn.cloudflare_email
+		cdn_cloudflare_key	-> cdn.cloudflare_key
+		cdn_cloudflare_name	-> cdn.cloudflare_name
+		cdn_cloudflare_zone	-> cdn.cloudflare_zone
+		media_img_lazy				-> media.img_lazy
+		media_img_lazy_placeholder	-> media.img_lazy_placeholder
+		media_placeholder_resp		-> media.placeholder_resp
+		media_placeholder_resp_color-> media.placeholder_resp_color
+		media_placeholder_resp_async-> media.placeholder_resp_async
+		media_iframe_lazy			-> media.iframe_lazy
+		media_img_lazyjs_inline		-> media.img_lazyjs_inline
+		media_optm_auto			-> img_optm.auto
+		media_optm_cron			-> img_optm.cron
+		media_optm_ori			-> img_optm.ori
+		media_rm_ori_bkup		-> img_optm.rm_bkup
+		media_optm_webp			-> img_optm.webp
+		media_optm_lossless		-> img_optm.lossless
+		media_optm_exif			-> img_optm.exif
+		media_webp_replace		-> img_optm.webp_replace
+		media_webp_replace_srcset-> img_optm.webp_replace_srcset
 
 		/**
 		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
@@ -776,11 +799,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 */
 		if ( isset( $previous_options[ 'cdn_url' ] ) ) {
 			$cdn_mapping = array(
-				self::O_CDN_MAPPING_URL 		=> $previous_options[ 'cdn_url' ],
-				self::O_CDN_MAPPING_INC_IMG 	=> $previous_options[ 'cdn_inc_img' ],
-				self::O_CDN_MAPPING_INC_CSS 	=> $previous_options[ 'cdn_inc_css' ],
-				self::O_CDN_MAPPING_INC_JS 	=> $previous_options[ 'cdn_inc_js' ],
-				self::O_CDN_MAPPING_FILETYPE => $previous_options[ 'cdn_filetype' ],
+				self::CDN_MAPPING_URL 		=> $previous_options[ 'cdn_url' ],
+				self::CDN_MAPPING_INC_IMG 	=> $previous_options[ 'cdn_inc_img' ],
+				self::CDN_MAPPING_INC_CSS 	=> $previous_options[ 'cdn_inc_css' ],
+				self::CDN_MAPPING_INC_JS 	=> $previous_options[ 'cdn_inc_js' ],
+				self::CDN_MAPPING_FILETYPE => $previous_options[ 'cdn_filetype' ],
 			) ;
 			add_option( LiteSpeed_Cache_Config::O_CDN_MAPPING, array( $cdn_mapping ) ) ;
 			LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option adding CDN map" ) ;

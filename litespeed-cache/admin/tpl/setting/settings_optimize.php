@@ -26,7 +26,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'CSS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CSS_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify CSS files.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -36,7 +36,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'CSS Combine', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CSS_COMBINE ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Combine CSS files.', 'litespeed-cache' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:optimize-issue" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ) ; ?></a>
@@ -47,7 +47,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'CSS HTTP/2 Push', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CSS_HTTP2 ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_HTTP2 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Pre-send internal CSS files to the browser before they are requested. (Requires the HTTP/2 protocol)', 'litespeed-cache' ) ; ?>
 			</div>
@@ -57,7 +57,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'JS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_JS_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify JS files.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -67,7 +67,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'JS Combine', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_JS_COMBINE ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Combine JS files.', 'litespeed-cache' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:optimize-issue" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ) ; ?></a>
@@ -78,7 +78,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'JS HTTP/2 Push', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_JS_HTTP2 ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_HTTP2 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Pre-send internal JS files to the browser before they are requested. (Requires the HTTP/2 protocol)', 'litespeed-cache' ) ; ?>
 			</div>
@@ -88,7 +88,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'CSS/JS Cache TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_OPTIMIZE_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_OPTM_TTL ; ?>
 			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify how long, in seconds, CSS/JS files are cached. Minimum is %1$s seconds.', 'litespeed-cache' ), 3600 ) ; ?>
@@ -100,7 +100,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'HTML Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_HTML_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_HTML_MINIFY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify HTML content.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -110,7 +110,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Inline CSS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CSS_INLINE_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MINIFY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify inline CSS code.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -120,7 +120,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Inline JS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_JS_INLINE_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MINIFY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify inline JS code.', 'litespeed-cache' ) ; ?>
 			</div>

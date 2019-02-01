@@ -39,7 +39,7 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 					</h4>
 
 					<?php
-						$id = LiteSpeed_Cache_Config::O_CDN_MAPPING_URL ;
+						$id = LiteSpeed_Cache_Config::CDN_MAPPING_URL ;
 						$this->build_input( "[" . LiteSpeed_Cache_Config::O_CDN_MAPPING . "][$id][]", 'litespeed-input-long', $v[ $id ] ) ;
 					?>
 					<div class="litespeed-desc">
@@ -51,21 +51,21 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include Images', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$id = LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_IMG ;
+						$id = LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ;
 						$this->build_toggle( "[" . LiteSpeed_Cache_Config::O_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include CSS', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$id = LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_CSS ;
+						$id = LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS ;
 						$this->build_toggle( "[" . LiteSpeed_Cache_Config::O_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-inc"><?php echo __( 'Include JS', 'litespeed-cache' ) ; ?></div>
 					<?php
-						$id = LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_JS ;
+						$id = LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS ;
 						$this->build_toggle( "[" . LiteSpeed_Cache_Config::O_CDN_MAPPING . "][$id][]", ! empty( $v[ $id ] ) ? true : false ) ;
 					?>
 					</div>
@@ -74,7 +74,7 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 				<div class='litespeed-cdn-mapping-col3'>
 					<div class="litespeed-row">
 						<div class="litespeed-cdn-mapping-col3-title"><?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?></div>
-						<?php $id = LiteSpeed_Cache_Config::O_CDN_MAPPING_FILETYPE ; ?>
+						<?php $id = LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ; ?>
 						<?php $this->build_textarea( "[" . LiteSpeed_Cache_Config::O_CDN_MAPPING . "][$id][]", 17, $v[ $id ] ) ; ?>
 					</div>
 				</div>
@@ -158,19 +158,19 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 		<td>
 			<div class="litespeed-switch">
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::O_CDN_REMOTE_JQUERY,
+					LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ,
 					LiteSpeed_Cache_Config::VAL_OFF,
 					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::O_CDN_REMOTE_JQUERY,
+					LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ,
 					LiteSpeed_Cache_Config::VAL_ON,
 					'Google'
 				) ; ?>
 
 				<?php echo $this->build_radio(
-					LiteSpeed_Cache_Config::O_CDN_REMOTE_JQUERY,
+					LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ,
 					LiteSpeed_Cache_Config::VAL_ON2,
 					'Cdnjs'
 				) ; ?>

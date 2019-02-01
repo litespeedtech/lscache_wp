@@ -42,14 +42,14 @@ class LiteSpeed_Cache_Task
 		}
 
 		// Register img optimization fetch ( always fetch immediately )
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_CRON ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_CRON ) ) {
 			self::schedule_filter_imgoptm() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMGOPTM, 'LiteSpeed_Cache_Img_Optm::cron_pull_optimized_img' ) ;
 		}
 
 		// Image optm auto request
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_OPTM_AUTO ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ) ) {
 			self::schedule_filter_imgoptm_auto_request() ;
 
 			add_action( self::CRON_ACTION_HOOK_IMGOPTM_AUTO_REQUEST, 'LiteSpeed_Cache_Img_Optm::cron_auto_request' ) ;

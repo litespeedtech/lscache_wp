@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Media
 	 */
 	public static function webp_enabled()
 	{
-		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE ) ;
+		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE ) ;
 	}
 
 	/**
@@ -635,7 +635,7 @@ eot;
 		 * Added custom element & attribute support
 		 * @since 2.2.2
 		 */
-		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_WEBP_ATTRIBUTE ) ;
+		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ) ;
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {
@@ -687,7 +687,7 @@ eot;
 
 		// parse srcset
 		// todo: should apply this to cdn too
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE_SRCSET ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ) {
 			$this->content = LiteSpeed_Cache_Utility::srcset_replace( $this->content, array( $this, 'replace_webp' ) ) ;
 		}
 

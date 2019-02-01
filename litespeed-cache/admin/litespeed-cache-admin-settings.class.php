@@ -519,10 +519,10 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::O_EXCLUDES_URI ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
-		$id = LiteSpeed_Cache_Config::O_EXC_QS ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_QS ;
 		$this->_sanitize_lines( $id ) ;
 
-		$id = LiteSpeed_Cache_Config::O_EXC_CAT ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ;
 		$this->_options[ $id ] = '' ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$cat_ids = array() ;
@@ -545,7 +545,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		$id = LiteSpeed_Cache_Config::O_EXC_TAG ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ;
 		$this->_options[ $id ] = '' ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$tag_ids = array() ;
@@ -631,18 +631,18 @@ class LiteSpeed_Cache_Admin_Settings
 		 */
 		$cdn_mapping = array() ;
 		$mapping_fields = array(
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_URL,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_IMG,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_CSS,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_INC_JS,
-			LiteSpeed_Cache_Config::O_CDN_MAPPING_FILETYPE
+			LiteSpeed_Cache_Config::CDN_MAPPING_URL,
+			LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG,
+			LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS,
+			LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS,
+			LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE
 		) ;
 		$id = LiteSpeed_Cache_Config::O_CDN_MAPPING ;
-		foreach ( $this->_input[ $id ][ LiteSpeed_Cache_Config::O_CDN_MAPPING_URL ] as $k => $v ) {
+		foreach ( $this->_input[ $id ][ LiteSpeed_Cache_Config::CDN_MAPPING_URL ] as $k => $v ) {
 			$this_mapping = array() ;
 			foreach ( $mapping_fields as $f ) {
 				$this_mapping[ $f ] = ! empty( $this->_input[ $id ][ $f ][ $k ] ) ? $this->_input[ $id ][ $f ][ $k ] : false ;
-				if ( $f === LiteSpeed_Cache_Config::O_CDN_MAPPING_FILETYPE ) {
+				if ( $f === LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ) {
 					$this_mapping[ $f ] = LiteSpeed_Cache_Utility::sanitize_lines( $this_mapping[ $f ] ) ;
 				}
 			}
@@ -655,7 +655,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Load jQuery from cdn
 		 * @since 1.5
 		 */
-		$id = LiteSpeed_Cache_Config::O_CDN_REMOTE_JQUERY ;
+		$id = LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ;
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
 
 		/**
@@ -720,14 +720,14 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC,
 			LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY,
 			LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZYJS_INLINE,
-			LiteSpeed_Cache_Config::O_MEDIA_OPTM_AUTO,
-			LiteSpeed_Cache_Config::O_MEDIA_OPTM_CRON,
-			LiteSpeed_Cache_Config::O_MEDIA_OPTM_ORI,
-			LiteSpeed_Cache_Config::O_MEDIA_RM_ORI_BKUP,
-			LiteSpeed_Cache_Config::O_MEDIA_OPTM_WEBP,
-			LiteSpeed_Cache_Config::O_MEDIA_OPTM_LOSSLESS,
-			LiteSpeed_Cache_Config::O_MEDIA_OPTM_EXIF,
-			LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE_SRCSET,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_CRON,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_ORI,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -749,7 +749,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_CLS_EXC ;
 		$this->_sanitize_lines( $id ) ;
 
-		$id = LiteSpeed_Cache_Config::O_MEDIA_WEBP_ATTRIBUTE ;
+		$id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ;
 		$this->_sanitize_lines( $id ) ;
 	}
 
@@ -762,17 +762,17 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_optimize()
 	{
 		$ids = array(
-			LiteSpeed_Cache_Config::O_CSS_MINIFY,
-			LiteSpeed_Cache_Config::O_CSS_INLINE_MINIFY,
-			LiteSpeed_Cache_Config::O_CSS_COMBINE,
-			LiteSpeed_Cache_Config::O_CSS_COMBINED_PRIORITY,
-			LiteSpeed_Cache_Config::O_CSS_HTTP2,
-			LiteSpeed_Cache_Config::O_JS_MINIFY,
-			LiteSpeed_Cache_Config::O_JS_INLINE_MINIFY,
-			LiteSpeed_Cache_Config::O_JS_COMBINE,
-			LiteSpeed_Cache_Config::O_JS_COMBINED_PRIORITY,
-			LiteSpeed_Cache_Config::O_JS_HTTP2,
-			LiteSpeed_Cache_Config::O_HTML_MINIFY,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MINIFY,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINED_PRIORITY,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_HTTP2,
+			LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY,
+			LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MINIFY,
+			LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE,
+			LiteSpeed_Cache_Config::O_OPTM_JS_COMBINED_PRIORITY,
+			LiteSpeed_Cache_Config::O_OPTM_JS_HTTP2,
+			LiteSpeed_Cache_Config::O_OPTM_HTML_MINIFY,
 			LiteSpeed_Cache_Config::O_OPTM_QS_RM,
 			LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM,
 			LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC,
@@ -795,7 +795,7 @@ class LiteSpeed_Cache_Admin_Settings
 		) ;
 		$this->_sanitize_lines( $ids, 'uri' ) ;
 
-		$id = LiteSpeed_Cache_Config::O_OPTIMIZE_TTL ;
+		$id = LiteSpeed_Cache_Config::O_OPTM_TTL ;
 		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3600 ) ;
 
 		// Critical CSS
@@ -1086,7 +1086,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::O_CACHE_RES,
 			LiteSpeed_Cache_Config::O_CACHE_BROWSER,
-			LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE,
 		) ;
 		foreach ( $ids as $id ) {
 			$new_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;

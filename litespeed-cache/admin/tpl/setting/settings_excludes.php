@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Do Not Cache Query Strings', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_EXC_QS ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_EXC_QS ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Query string containing these parameters will not be cached.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, for %s, %s and %s can be used here.', 'litespeed-cache' ), '<code>?aa=bb&cc=dd</code>', '<code>aa</code>', '<code>cc</code>' ) ; ?>
@@ -52,7 +52,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Categories', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::O_EXC_CAT;
+				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT;
 				$excludes_buf = '';
 				$cat_ids = $_options[$id];
 				if ($cat_ids != '') {
@@ -83,7 +83,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Do Not Cache Tags', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::O_EXC_TAG;
+				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG;
 				$excludes_buf = '';
 				$ids = $_options[$id];
 				if ($ids != '') {

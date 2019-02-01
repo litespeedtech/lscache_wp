@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Combined CSS Priority', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CSS_COMBINED_PRIORITY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINED_PRIORITY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load combined CSS files before other CSS files.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'Set to %s by default.', 'litespeed-cache' ), __( 'OFF', 'litespeed-cache' ) ) ; ?>
@@ -49,7 +49,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Combined JS Priority', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_JS_COMBINED_PRIORITY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINED_PRIORITY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load combined JS files before other JS files.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'Set to %s by default.', 'litespeed-cache' ), __( 'OFF', 'litespeed-cache' ) ) ; ?>

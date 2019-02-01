@@ -155,7 +155,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_OPTM_AUTO ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically request optimization via cron job.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'Requests can only be sent when recovered credits is %s or more.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
@@ -166,7 +166,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Optimization Cron', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_OPTM_CRON ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_CRON ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Disabling this will stop the cron job responsible for fetching optimized images from LiteSpeed\'s Image Server.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -176,7 +176,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Optimize Original Images', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_OPTM_ORI ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize images and save backups of the originals in the same folder.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -186,7 +186,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Remove Original Backups', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_RM_ORI_BKUP ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically remove the original image backups after fetching optimized images.', 'litespeed-cache' ) ; ?>
 
@@ -202,7 +202,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Optimize WebP Versions', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_OPTM_WEBP ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Request WebP versions of original images when doing optimization.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -212,7 +212,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Optimize Losslessly', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_OPTM_LOSSLESS ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize images using lossless compression.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve quality but may result in larger images than lossy compression will.', 'litespeed-cache' ) ; ?>
@@ -223,7 +223,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Preserve EXIF data', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_OPTM_EXIF ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
@@ -242,7 +242,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_WEBP_ATTRIBUTE ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ; ?>
 			<?php $this->build_textarea2( $id, 40 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
@@ -257,7 +257,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'WebP For Extra srcset', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_WEBP_REPLACE_SRCSET ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable replacement of WebP in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset' ) ; ?>
