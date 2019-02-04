@@ -411,7 +411,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_FORCE_CACHE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_FORCE_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -422,7 +422,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_EXCLUDES_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -433,7 +433,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_URI_PRIV . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_CACHE_PRIV_URI . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(
@@ -444,7 +444,7 @@ class LiteSpeed_Cache_GUI
 		) );
 
 		$append_arr = array(
-			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_OPTM_EXCLUDES . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
+			LiteSpeed_Cache_Config::TYPE_SET . '[' . LiteSpeed_Cache_Config::O_OPTM_EXC . '][]' => $_SERVER[ 'REQUEST_URI' ] . '$',
 			'redirect'	=> $_SERVER[ 'REQUEST_URI' ],
 		) ;
 		$wp_admin_bar->add_menu( array(

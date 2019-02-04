@@ -87,8 +87,8 @@ class LiteSpeed_Cache_Cli_Admin
 
 			case LiteSpeed_Cache_Config::O_CACHE_MOBILE:
 				// set list then do checkbox
-				if ( $val === 'true' && empty( $options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ] ) ) {
-					$options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
+				if ( $val === 'true' && empty( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] ) ) {
+					$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 				}
 				//fall through
 			case in_array( $key, self::$checkboxes ) :
@@ -105,7 +105,7 @@ class LiteSpeed_Cache_Cli_Admin
 				}
 				break ;
 
-			case LiteSpeed_Cache_Config::O_MOBILE_RULES:
+			case LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES:
 				$enable_key = LiteSpeed_Cache_Config::O_CACHE_MOBILE ;
 				if ( ! isset($options[$enable_key]) || ! $options[$enable_key] ) {
 					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;

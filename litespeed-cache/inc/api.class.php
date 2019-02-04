@@ -167,7 +167,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function set_use_frontpage_ttl()
 	{
-		LiteSpeed_Cache_Control::set_custom_ttl( self::config( self::O_FRONT_PAGE_TTL ) ) ;
+		LiteSpeed_Cache_Control::set_custom_ttl( self::config( self::O_CACHE_TTL_FRONTPAGE ) ) ;
 	}
 
 	/**

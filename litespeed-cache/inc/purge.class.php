@@ -720,7 +720,7 @@ class LiteSpeed_Cache_Purge
 	 */
 	public static function purge_feeds()
 	{
-		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_FEED_TTL) > 0 ) {
+		if ( LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_TTL_FEED) > 0 ) {
 			self::add(LiteSpeed_Cache_Tag::TYPE_FEED) ;
 		}
 	}
@@ -953,7 +953,7 @@ class LiteSpeed_Cache_Purge
 			}
 		}
 
-		if ( $config->get_option(LiteSpeed_Cache_Config::O_FEED_TTL) > 0 ) {
+		if ( $config->get_option(LiteSpeed_Cache_Config::O_CACHE_TTL_FEED) > 0 ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_FEED ;
 		}
 

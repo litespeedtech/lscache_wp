@@ -24,8 +24,8 @@ class LiteSpeed_Cache_Optimizer
 	 */
 	private function __construct()
 	{
-		$this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MINIFY ) ;
-		$this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MINIFY ) ;
+		$this->cfg_css_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MIN ) ;
+		$this->cfg_js_inline_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MIN ) ;
 	}
 
 	/**

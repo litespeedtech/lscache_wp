@@ -58,7 +58,7 @@ class LiteSpeed_Cache_Control
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
-		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
+		if ( ! LiteSpeed_Cache_Config::get_instance()->in_cache_exc_roles() ) {
 			return $varys ;
 		}
 		$varys[ 'role_exclude_cache' ] = 1 ;
@@ -405,34 +405,34 @@ class LiteSpeed_Cache_Control
 
 		// Private cache uses private ttl setting
 		if ( self::is_private() ) {
-			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PRIVATE_TTL ) ;
+			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV ) ;
 		}
 
 		if ( is_front_page() ){
-			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_FRONT_PAGE_TTL ) ;
+			return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE ) ;
 		}
 
-		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_FEED_TTL ) ;
+		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ) ;
 		if ( is_feed() && $feed_ttl > 0 ) {
 			return $feed_ttl ;
 		}
 
-		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_404_TTL ) ;
+		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 ) ;
 		if ( is_404() && $ttl_404 > 0 ) {
 			return $ttl_404 ;
 		}
 
 		if ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
-			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_403_TTL ) ;
+			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 ) ;
 			return $ttl_403 ;
 		}
 
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_500_TTL ) ;
+		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 ) ;
 		if ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
 			return $ttl_500 ;
 		}
 
-		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PUBLIC_TTL ) ;
+		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_PUB ) ;
 	}
 
 	/**
@@ -520,7 +520,7 @@ class LiteSpeed_Cache_Control
 	public static function finalize()
 	{
 		// Check if URI is forced cache
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_FORCE_CACHE_URI ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
@@ -623,7 +623,7 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('not GET method:' . $_SERVER["REQUEST_METHOD"]) ;
 		}
 
-		if ( is_feed() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_FEED_TTL ) == 0 ) {
+		if ( is_feed() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ) == 0 ) {
 			return $this->_no_cache_for('feed') ;
 		}
 
@@ -631,7 +631,7 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('trackback') ;
 		}
 
-		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_404_TTL ) == 0 ) {
+		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 ) == 0 ) {
 			return $this->_no_cache_for('404 pages') ;
 		}
 
@@ -644,7 +644,7 @@ class LiteSpeed_Cache_Control
 //		}
 
 		// Check private cache URI setting
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_URI_PRIV ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -655,7 +655,7 @@ class LiteSpeed_Cache_Control
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_EXCLUDES_URI ) ;
+			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_EXC ) ;
 			if ( ! empty( $excludes ) ) {
 				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
@@ -700,7 +700,7 @@ class LiteSpeed_Cache_Control
 			}
 
 			// Check if is exclude roles ( Need to set Vary too )
-			if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_cache_roles() ) {
+			if ( $result = LiteSpeed_Cache_Config::get_instance()->in_cache_exc_roles() ) {
 				return $this->_no_cache_for( 'Role Excludes setting ' . $result ) ;
 			}
 		}

@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Force Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_FORCE_CACHE_URI ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Do Not Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_EXCLUDES_URI ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_CACHE_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Paths containing these strings will not be cached.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -133,7 +133,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Do Not Cache Roles', 'litespeed-cache'); ?></th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_EXCLUDE_CACHE_ROLES . "][", $title, $this->config->in_exclude_cache_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES . "][", $title, $this->config->in_cache_exc_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ) ; ?>

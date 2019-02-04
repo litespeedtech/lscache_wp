@@ -83,9 +83,9 @@ class LiteSpeed_Cache_Activation
 				$options[ $id ] = $__cfg->get_item( $id ) ;
 			}
 
-			if ( ! empty($options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ]) ) {
-				$options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ] =
-					addslashes( $options[ LiteSpeed_Cache_Config::O_MOBILE_RULES ] );
+			if ( ! empty($options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ]) ) {
+				$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] =
+					addslashes( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] );
 			}
 
 			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;

@@ -407,13 +407,13 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// TTL check
 		$ids = array(
-			LiteSpeed_Cache_Config::O_PUBLIC_TTL 		=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::O_PRIVATE_TTL	 	=> array( 60, 	3600 ),
-			LiteSpeed_Cache_Config::O_FRONT_PAGE_TTL 	=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::O_FEED_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_404_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_403_TTL		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_500_TTL		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_PUB 		=> array( 30, 	null ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV	 	=> array( 60, 	3600 ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE 	=> array( 30, 	null ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED	 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_403		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_404		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_500		 	=> array( 0, 	null, 30 ),
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $min, $max ) = $v ;
@@ -450,7 +450,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_LOGIN ) ;
 		}
 
-		$id = LiteSpeed_Cache_Config::O_CACHE_URI_PRIV ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		$id = LiteSpeed_Cache_Config::O_CACHE_DROP_QS ;
@@ -513,10 +513,10 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_exclude()
 	{
-		$id = LiteSpeed_Cache_Config::O_FORCE_CACHE_URI ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
-		$id = LiteSpeed_Cache_Config::O_EXCLUDES_URI ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_EXC ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_QS ;
@@ -572,7 +572,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Update Role Excludes
 		 * @since 1.6.2
 		 */
-		$id = LiteSpeed_Cache_Config::O_EXCLUDE_CACHE_ROLES ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 	}
 
@@ -715,11 +715,11 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_media()
 	{
 		$ids = array(
-			LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY,
+			LiteSpeed_Cache_Config::O_MEDIA_LAZY,
 			LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP,
 			LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC,
 			LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY,
-			LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZYJS_INLINE,
+			LiteSpeed_Cache_Config::O_MEDIA_LAZYJS_INLINE,
 			LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO,
 			LiteSpeed_Cache_Config::O_IMG_OPTM_CRON,
 			LiteSpeed_Cache_Config::O_IMG_OPTM_ORI,
@@ -734,7 +734,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$ids = array(
-			LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY_PLACEHOLDER,
+			LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER,
 			LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR,
 		) ;
 		foreach ( $ids as $id ) {
@@ -742,11 +742,11 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Update lazyload image excludes
-		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_EXC ;
+		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ;
 		$this->_sanitize_lines( $id, 'uri' ) ;
 
 		// Update lazyload image classname excludes
-		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_CLS_EXC ;
+		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ;
 		$this->_sanitize_lines( $id ) ;
 
 		$id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ;
@@ -762,17 +762,17 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_optimize()
 	{
 		$ids = array(
-			LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY,
-			LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MINIFY,
-			LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE,
-			LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINED_PRIORITY,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_MIN,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MIN,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_COMB,
+			LiteSpeed_Cache_Config::O_OPTM_CSS_COMB_PRIO,
 			LiteSpeed_Cache_Config::O_OPTM_CSS_HTTP2,
-			LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY,
-			LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MINIFY,
-			LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE,
-			LiteSpeed_Cache_Config::O_OPTM_JS_COMBINED_PRIORITY,
+			LiteSpeed_Cache_Config::O_OPTM_JS_MIN,
+			LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MIN,
+			LiteSpeed_Cache_Config::O_OPTM_JS_COMB,
+			LiteSpeed_Cache_Config::O_OPTM_JS_COMB_PRIO,
 			LiteSpeed_Cache_Config::O_OPTM_JS_HTTP2,
-			LiteSpeed_Cache_Config::O_OPTM_HTML_MINIFY,
+			LiteSpeed_Cache_Config::O_OPTM_HTML_MIN,
 			LiteSpeed_Cache_Config::O_OPTM_QS_RM,
 			LiteSpeed_Cache_Config::O_OPTM_GGFONTS_RM,
 			LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC,
@@ -803,7 +803,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
 		// Prevent URI from optimization
-		$id = LiteSpeed_Cache_Config::O_OPTM_EXCLUDES ;
+		$id = LiteSpeed_Cache_Config::O_OPTM_EXC ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		// Update js deferred excludes
@@ -811,14 +811,14 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_sanitize_lines( $id, 'uri' ) ;
 
 		// Update Role Excludes
-		$id = LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES ;
+		$id = LiteSpeed_Cache_Config::EXC_OPTM_ROLES ;
 		$this->_options[ $id ] = ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ;
 
 		/**
 		 * DNS prefetch
 		 * @since 1.7.1
 		 */
-		$id = LiteSpeed_Cache_Config::O_DNS_PREFETCH ;
+		$id = LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ;
 		$this->_sanitize_lines( $id, 'domain' ) ;
 
 		/**
@@ -832,9 +832,9 @@ class LiteSpeed_Cache_Admin_Settings
 		 * Separate CCSS File Types & URI
 		 * @since 2.6.1
 		 */
-		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEPARATE_POSTTYPE ;
+		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ;
 		$this->_sanitize_lines( $id ) ;
-		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEPARATE_URI ;
+		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ;
 		$this->_sanitize_lines( $id, 'uri' ) ;
 
 	}
@@ -1097,7 +1097,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$new_options[ $id ] = $this->_check_ttl( $this->_input, $id, 30 ) ;
 
 		// check mobile agents
-		$id = LiteSpeed_Cache_Config::O_MOBILE_RULES ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
 		if ( ! $this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, 'EMPTY' ) ) ;
 		}

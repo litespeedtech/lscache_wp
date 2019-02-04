@@ -353,18 +353,18 @@ eot;
 			$this->_replace_buffer_img_webp() ;
 		}
 
-		$cfg_img_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY ) ;
+		$cfg_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY ) ;
 		$cfg_iframe_lazy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY ) ;
 
-		if ( $cfg_img_lazy ) {
+		if ( $cfg_lazy ) {
 			list( $src_list, $html_list, $placeholder_list ) = $this->_parse_img() ;
 			$html_list_ori = $html_list ;
 		}
 
 		// image lazy load
-		if ( $cfg_img_lazy ) {
+		if ( $cfg_lazy ) {
 
-			$default_placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
+			$default_placeholder = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ) ?: LITESPEED_PLACEHOLDER ;
 
 			foreach ( $html_list as $k => $v ) {
 				$size = $placeholder_list[ $k ] ;
@@ -386,7 +386,7 @@ eot;
 			}
 		}
 
-		if ( $cfg_img_lazy ) {
+		if ( $cfg_lazy ) {
 			$this->content = str_replace( $html_list_ori, $html_list, $this->content ) ;
 		}
 
@@ -408,8 +408,8 @@ eot;
 		}
 
 		// Include lazyload lib js and init lazyload
-		if ( $cfg_img_lazy || $cfg_iframe_lazy ) {
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZYJS_INLINE ) ) {
+		if ( $cfg_lazy || $cfg_iframe_lazy ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZYJS_INLINE ) ) {
 				$lazy_lib = '<script type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_IMG_LAZYLOAD ) . '</script>' ;
 			} else {
 				$lazy_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_IMG_LAZYLOAD ;
@@ -509,9 +509,9 @@ eot;
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ) ;
 
-		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;

@@ -28,10 +28,10 @@ class LiteSpeed_Cache_Optimize
 
 	private $cfg_http2_css ;
 	private $cfg_http2_js ;
-	private $cfg_css_minify ;
-	private $cfg_css_combine ;
-	private $cfg_js_minify ;
-	private $cfg_js_combine ;
+	private $cfg_css_min ;
+	private $cfg_css_comb ;
+	private $cfg_js_min ;
+	private $cfg_js_comb ;
 	private $cfg_css_async ;
 	private $cfg_js_defer ;
 	private $cfg_js_defer_exc = false ;
@@ -47,13 +47,6 @@ class LiteSpeed_Cache_Optimize
 
 	private $html_foot = '' ; // The html info append to <body>
 	private $html_head = '' ; // The html info prepend to <body>
-
-	private $minify_cache ;
-	private $minify_minify ;
-	private $minify_env ;
-	private $minify_sourceFactory ;
-	private $minify_controller ;
-	private $minify_options ;
 
 	/**
 	 * Init optimizer
@@ -118,7 +111,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function vary_add_role_exclude( $varys )
 	{
-		if ( ! LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+		if ( ! LiteSpeed_Cache_Config::get_instance()->in_optm_exc_roles() ) {
 			return $varys ;
 		}
 		$varys[ 'role_exclude_optm' ] = 1 ;
@@ -155,14 +148,14 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _static_request_check()
 	{
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ;
+		$this->cfg_css_min = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MIN ) ;
+		$this->cfg_css_comb = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMB ) ;
+		$this->cfg_js_min = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MIN ) ;
+		$this->cfg_js_comb = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMB ) ;
 		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_TTL ) ;
 
 		// If not turn on min files
-		if ( ! $this->cfg_css_minify && ! $this->cfg_css_combine && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
+		if ( ! $this->cfg_css_min && ! $this->cfg_css_comb && ! $this->cfg_js_min && ! $this->cfg_js_comb ) {
 			return ;
 		}
 
@@ -194,7 +187,7 @@ class LiteSpeed_Cache_Optimize
 
 		// Even if hit PHP, still check if the file is valid to bypass minify process
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
+			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min ) ;
 
 			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $match[ 1 ], $concat_only ) ;
 
@@ -294,7 +287,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Check if hit URI excludes
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_EXCLUDES ) ;
+		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_EXC ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -304,7 +297,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Check if is exclude optm roles ( Need to set Vary too )
-		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_optm_exc_roles() ) {
 			LiteSpeed_Cache_Log::debug( '[Optm] bypass: hit Role Excludes setting: ' . $result ) ;
 			return $content ;
 		}
@@ -329,10 +322,10 @@ class LiteSpeed_Cache_Optimize
 	{
 		$this->cfg_http2_css = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_HTTP2 ) ;
 		$this->cfg_http2_js = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_HTTP2 ) ;
-		$this->cfg_css_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY ) ;
-		$this->cfg_css_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ;
-		$this->cfg_js_minify = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ;
-		$this->cfg_js_combine = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ;
+		$this->cfg_css_min = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_MIN ) ;
+		$this->cfg_css_comb = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMB ) ;
+		$this->cfg_js_min = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_MIN ) ;
+		$this->cfg_js_comb = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMB ) ;
 		$this->cfg_exc_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC_JQ ) ;
 		$this->cfg_ggfonts_async = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC ) ;
 		$this->cfg_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_TTL ) ;
@@ -347,20 +340,20 @@ class LiteSpeed_Cache_Optimize
 		do_action( 'litespeed_optm' ) ;
 
 		// Parse css from content
-		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css || $this->cfg_ggfonts_rm || $this->cfg_css_async || $this->cfg_ggfonts_async ) {
 			list( $src_list, $html_list ) = $this->_handle_css() ;
 		}
 
 		// css optimizer
-		if ( $this->cfg_css_minify || $this->cfg_css_combine || $this->cfg_http2_css ) {
+		if ( $this->cfg_css_min || $this->cfg_css_comb || $this->cfg_http2_css ) {
 
 			if ( $src_list ) {
 				// Analyze local file
 				list( $ignored_html, $src_queue_list, $file_size_list ) = $this->_analyse_links( $src_list, $html_list ) ;
 
 				// IF combine
-				if ( $this->cfg_css_combine ) {
-					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINED_PRIORITY ) ;
+				if ( $this->cfg_css_comb ) {
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_COMB_PRIO ) ;
 
 					$urls = $this->_limit_size_build_hash_url( $src_queue_list, $file_size_list ) ;
 
@@ -408,7 +401,7 @@ class LiteSpeed_Cache_Optimize
 
 				}
 				// Only minify
-				elseif ( $this->cfg_css_minify ) {
+				elseif ( $this->cfg_css_min ) {
 					// will handle async css load inside
 					$this->_src_queue_handler( $src_queue_list, $html_list ) ;
 				}
@@ -422,7 +415,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Handle css lazy load if not handled async loaded yet
-		if ( $this->cfg_css_async && ! $this->cfg_css_minify && ! $this->cfg_css_combine ) {
+		if ( $this->cfg_css_async && ! $this->cfg_css_min && ! $this->cfg_css_comb ) {
 			// async html
 			$html_list_async = $this->_async_css_list( $html_list ) ;
 
@@ -432,19 +425,19 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Parse js from buffer as needed
-		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js || $this->cfg_js_defer ) {
+		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js || $this->cfg_js_defer ) {
 			list( $src_list, $html_list, $head_src_list ) = $this->_parse_js() ;
 		}
 
 		// js optimizer
-		if ( $this->cfg_js_minify || $this->cfg_js_combine || $this->cfg_http2_js ) {
+		if ( $this->cfg_js_min || $this->cfg_js_comb || $this->cfg_http2_js ) {
 
 			if ( $src_list ) {
 				list( $ignored_html, $src_queue_list, $file_size_list ) = $this->_analyse_links( $src_list, $html_list, 'js' ) ;
 
 				// IF combine
-				if ( $this->cfg_js_combine ) {
-					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINED_PRIORITY ) ;
+				if ( $this->cfg_js_comb ) {
+					$enqueue_first = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_COMB_PRIO ) ;
 
 					// separate head/foot js/raw html
 					$head_js = array() ;
@@ -530,7 +523,7 @@ class LiteSpeed_Cache_Optimize
 
 				}
 				// Only minify
-				elseif ( $this->cfg_js_minify ) {
+				elseif ( $this->cfg_js_min ) {
 					// Will handle js defer inside
 					$this->_src_queue_handler( $src_queue_list, $html_list, 'js' ) ;
 				}
@@ -544,7 +537,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Handle js defer if not handled defer yet
-		if ( $this->cfg_js_defer && ! $this->cfg_js_minify && ! $this->cfg_js_combine ) {
+		if ( $this->cfg_js_defer && ! $this->cfg_js_min && ! $this->cfg_js_comb ) {
 			// defer html
 			$html_list2 = $this->_js_defer( $html_list ) ;
 
@@ -591,7 +584,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// HTML minify
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_HTML_MINIFY ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_HTML_MIN ) ) {
 			$this->content = LiteSpeed_Cache_Optimizer::get_instance()->html_min( $this->content ) ;
 		}
 
@@ -672,7 +665,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _dns_prefetch_init()
 	{
-		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_DNS_PREFETCH ) ;
+		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ) ;
 		if ( ! $this->dns_prefetch ) {
 			return ;
 		}
@@ -915,7 +908,7 @@ class LiteSpeed_Cache_Optimize
 		$static_file = LSCWP_CONTENT_DIR . "/cache/$file_type/$filename.$file_type" ;
 		// Check if the file is valid to bypass minify process
 		if ( ! file_exists( $static_file ) || time() - filemtime( $static_file ) > $this->cfg_ttl ) {
-			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_minify : $this->cfg_js_minify ) ;
+			$concat_only = ! ( $file_type === 'css' ? $this->cfg_css_min : $this->cfg_js_min ) ;
 
 			$content = LiteSpeed_Cache_Optimizer::get_instance()->serve( $src, $concat_only ) ;
 

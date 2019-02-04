@@ -14,7 +14,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Lazy Load Images', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_LAZY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load images only when they enter the viewport.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
@@ -29,7 +29,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Lazy Load Image Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_EXC ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -46,7 +46,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Lazy Load Image Class Name Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_MEDIA_LAZY_IMG_CLS_EXC ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -58,7 +58,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Lazy Load Image Placeholder', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_input( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZY_PLACEHOLDER, 'litespeed-input-long' ) ; ?>
+			<?php $this->build_input( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify a base64 image to be used as a placeholder while other images finish loading.', 'litespeed-cache' ) ; ?>
 				<br /><?php echo sprintf( __( 'This can be predefined in %2$s as well using constant %1$s, with this setting taking priority.', 'litespeed-cache' ), '<code>LITESPEED_PLACEHOLDER</code>', '<code>wp-config.php</code>' ) ; ?>
@@ -143,7 +143,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Inline Lazy Load Images Library', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_IMG_LAZYJS_INLINE ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_LAZYJS_INLINE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Include the lazy load image Javascript library inline.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>

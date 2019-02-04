@@ -26,7 +26,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'CSS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_MIN ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify CSS files.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -36,7 +36,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'CSS Combine', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_COMBINE ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_COMB ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Combine CSS files.', 'litespeed-cache' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:optimize-issue" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ) ; ?></a>
@@ -57,7 +57,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'JS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_MIN ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify JS files.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -67,7 +67,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'JS Combine', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_COMBINE ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_COMB ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Combine JS files.', 'litespeed-cache' ) ; ?>
 				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:optimize-issue" target="_blank"><?php echo __( 'How to Fix Problems Caused by CSS/JS Optimization.', 'litespeed-cache' ) ; ?></a>
@@ -100,7 +100,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'HTML Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_HTML_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_HTML_MIN ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify HTML content.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -110,7 +110,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Inline CSS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_CSS_INLINE_MIN ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify inline CSS code.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -120,7 +120,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Inline JS Minify', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MINIFY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OPTM_JS_INLINE_MIN ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Minify inline JS code.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -198,7 +198,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache Post Types', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEPARATE_POSTTYPE ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ) ; ?>
@@ -210,7 +210,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEPARATE_URI ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -256,7 +256,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'DNS Prefetch', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_DNS_PREFETCH ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>

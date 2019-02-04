@@ -586,7 +586,7 @@ class LiteSpeed_Cache_Admin_Rules
 
 		if ( ! $disable_lscache_detail_rules ) {
 			// mobile agents
-			$id = LiteSpeed_Cache_Config::O_MOBILE_RULES ;
+			$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
 			if ( ! empty( $cfg[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
 				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] . ' [NC]' ;

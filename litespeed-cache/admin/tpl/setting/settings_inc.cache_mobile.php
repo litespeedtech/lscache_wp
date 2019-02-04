@@ -25,7 +25,7 @@ if (!defined('WPINC')) die;
 		<th><?php echo __('List of Mobile User Agents', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::O_MOBILE_RULES ;
+				$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
 				$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 
 				// if set, use value as input value

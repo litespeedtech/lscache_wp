@@ -61,7 +61,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Private Cached URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_CACHE_URI_PRIV ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('URI Paths containing these strings will NOT be cached as public.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
