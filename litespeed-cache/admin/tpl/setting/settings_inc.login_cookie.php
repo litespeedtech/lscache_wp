@@ -7,7 +7,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Login Cookie', 'litespeed-cache' ) ; ?></th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::O_LOGIN_COOKIE;
+			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE;
 			$this->build_input( $id ) ;
 
 			echo '<p>' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')

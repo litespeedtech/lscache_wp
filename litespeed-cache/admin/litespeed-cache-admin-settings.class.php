@@ -91,11 +91,11 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		if ( LSWCP_ESI_SUPPORT ) {
-			$orig_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::O_ESI_ENABLE ] ;
+			$orig_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::O_ESI ] ;
 
 			$this->_validate_esi() ;
 
-			$new_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::O_ESI_ENABLE ] ;
+			$new_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::O_ESI ] ;
 
 			if ( $orig_esi_enabled !== $new_esi_enabled ) {
 				LiteSpeed_Cache_Purge::purge_all( 'ESI changed' ) ;
@@ -162,7 +162,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/* 2) adv-cache.php; */
 
-		$id = LiteSpeed_Cache_Config::O_CHECK_ADVCACHE ;
+		$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ;
 		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		if ( $this->_options[ $id ] ) {
 			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
@@ -252,7 +252,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		/* 2) adv-cache.php; */
 
-		$id = LiteSpeed_Cache_Config::O_CHECK_ADVCACHE ;
+		$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ;
 		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		if ( $options[ $id ] ) {
 			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
@@ -497,11 +497,11 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Filter scheduled purge URLs
-		$id = LiteSpeed_Cache_Config::O_TIMED_URLS ;
+		$id = LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS ;
 		$this->_sanitize_lines( $id, 'relative', true ) ;
 
 		// Schduled Purge Time
-		$id = LiteSpeed_Cache_Config::O_TIMED_URLS_TIME ;
+		$id = LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 	}
 
@@ -799,7 +799,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3600 ) ;
 
 		// Critical CSS
-		$id = LiteSpeed_Cache_Config::O_OPTM_CSS ;
+		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
 		// Prevent URI from optimization
@@ -848,16 +848,15 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_adv()
 	{
 		$ids = array(
-			LiteSpeed_Cache_Config::O_USE_HTTP_FOR_HTTPS_VARY,
-			// LiteSpeed_Cache_Config::O_ADV_FAVICON,
-			LiteSpeed_Cache_Config::O_ADV_INSTANT_CLICK,
+			LiteSpeed_Cache_Config::O_UTIL_NO_HTTPS_VARY,
+			LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 
 		$ids = array(
-			LiteSpeed_Cache_Config::O_ADV_PURGE_ALL_HOOKS,
+			LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL,
 		) ;
 		$this->_sanitize_lines( $ids ) ;
 
@@ -899,7 +898,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_debug()
 	{
-		$id = LiteSpeed_Cache_Config::O_ADMIN_IPS ;
+		$id = LiteSpeed_Cache_Config::O_DEBUG_IPS ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$admin_ips = array_map( 'trim', explode( "\n", trim( $this->_input[ $id ] ) ) ) ;
 			$admin_ips = array_filter( $admin_ips ) ;
@@ -925,16 +924,16 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::O_DEBUG ;
 		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
 
-		$id = LiteSpeed_Cache_Config::O_LOG_FILE_SIZE ;
+		$id = LiteSpeed_Cache_Config::O_DEBUG_FILESIZE ;
 		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3, 3000 ) ;
 
 		$ids = array(
 			LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL,
 			LiteSpeed_Cache_Config::O_DEBUG_LEVEL,
-			LiteSpeed_Cache_Config::O_HEARTBEAT,
+			LiteSpeed_Cache_Config::O_UTIL_HEARTBEAT,
 			LiteSpeed_Cache_Config::O_DEBUG_COOKIE,
-			LiteSpeed_Cache_Config::O_COLLAPS_QS,
-			LiteSpeed_Cache_Config::O_LOG_FILTERS,
+			LiteSpeed_Cache_Config::O_DEBUG_COLLAPS_QS,
+			LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS,
 		) ;
 		foreach ( $ids as $id ) {
 			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
@@ -954,8 +953,8 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Filters ignored
 		$ids = array(
-			LiteSpeed_Cache_Config::O_LOG_IGNORE_FILTERS,
-			LiteSpeed_Cache_Config::O_LOG_IGNORE_PART_FILTERS,
+			LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS,
+			LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS,
 		) ;
 		$this->_sanitize_lines( $ids ) ;
 	}
@@ -1085,7 +1084,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_CACHE_MOBILE,
 			LiteSpeed_Cache_Config::O_CACHE_FAVICON,
 			LiteSpeed_Cache_Config::O_CACHE_RES,
-			LiteSpeed_Cache_Config::O_CACHE_BROWSER,
+			LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE,
 			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE,
 		) ;
 		foreach ( $ids as $id ) {
@@ -1093,7 +1092,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// TTL check
-		$id = LiteSpeed_Cache_Config::O_CACHE_BROWSER_TTL ;
+		$id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE_TTL ;
 		$new_options[ $id ] = $this->_check_ttl( $this->_input, $id, 30 ) ;
 
 		// check mobile agents
@@ -1128,7 +1127,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Login cookie
-		$id = LiteSpeed_Cache_Config::O_LOGIN_COOKIE ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
 		if ( $this->_input[ $id ] && preg_match( '#[^\w\-]#', $this->_input[ $id ] ) ) {
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html( $this->_input[ $id ] ) ) ;
 		}
@@ -1172,7 +1171,7 @@ class LiteSpeed_Cache_Admin_Settings
 	private function _validate_esi()
 	{
 		$ids = array(
-			LiteSpeed_Cache_Config::O_ESI_ENABLE,
+			LiteSpeed_Cache_Config::O_ESI,
 			LiteSpeed_Cache_Config::O_ESI_CACHE_ADMBAR,
 			LiteSpeed_Cache_Config::O_ESI_CACHE_COMMFORM,
 		) ;
@@ -1181,7 +1180,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Save vary group settings
-		$id = LiteSpeed_Cache_Config::O_VARY_GROUP ;
+		$id = LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ;xx check if input is correct or not
 		$this->_sanitize_lines( $id ) ;
 	}
 

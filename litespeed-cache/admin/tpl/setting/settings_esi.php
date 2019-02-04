@@ -42,7 +42,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __('Enable ESI', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $this->build_switch(LiteSpeed_Cache_Config::O_ESI_ENABLE); ?>
+			<?php $this->build_switch(LiteSpeed_Cache_Config::O_ESI); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Enable caches public pages for logged in users and serves the Admin Bar and Comment Form via ESI blocks. These two blocks will be uncached unless enabled below.', 'litespeed-cache'); ?>
 			</div>
@@ -78,7 +78,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<td class='litespeed-vary-title'><?php echo $title ; ?></td>
 					<td class='litespeed-vary-val'>
 						<input type="text" class="litespeed-input-short"
-							name="<?php echo LiteSpeed_Cache_Config::O_VARY_GROUP ; ?>[<?php echo $role ; ?>]"
+							name="<?php echo LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ; ?>[<?php echo $role ; ?>]"
 							value="<?php echo $this->config->in_vary_group( $role ) ; ?>" />
 					</td>
 				</tr>

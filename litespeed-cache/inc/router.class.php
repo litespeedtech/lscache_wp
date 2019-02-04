@@ -277,7 +277,7 @@ class LiteSpeed_Cache_Router
 	public static function esi_enabled()
 	{
 		if ( ! isset( self::$_esi_enabled ) ) {
-			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ESI_ENABLE ) ;
+			self::$_esi_enabled = LSWCP_ESI_SUPPORT && defined( 'LITESPEED_ON' ) && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ESI ) ;
 		}
 		return self::$_esi_enabled ;
 	}
@@ -368,7 +368,7 @@ class LiteSpeed_Cache_Router
 	public static function is_admin_ip()
 	{
 		if ( ! isset( self::$_is_admin_ip ) ) {
-			$ips = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ADMIN_IPS ) ;
+			$ips = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_IPS ) ;
 
 			self::$_is_admin_ip = self::get_instance()->ip_access( $ips ) ;
 		}

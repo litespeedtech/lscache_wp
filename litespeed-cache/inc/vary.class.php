@@ -87,10 +87,10 @@ class LiteSpeed_Cache_Vary
 		$db_cookie = false ;
 		if ( is_multisite() ) {
 			$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
-			$db_cookie = $options[ LiteSpeed_Cache_Config::O_LOGIN_COOKIE ] ;
+			$db_cookie = $options[ LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ] ;
 		}
 		else {
-			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_LOGIN_COOKIE) ;
+			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE) ;
 		}
 
 		// If no vary set in rewrite rule
@@ -615,7 +615,7 @@ class LiteSpeed_Cache_Vary
 		 * Add HTTPS bypass in case clients use both HTTP and HTTPS version of site
 		 * @since 1.7
 		 */
-		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_USE_HTTP_FOR_HTTPS_VARY ) ? false : is_ssl() ;
+		$is_ssl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_UTIL_NO_HTTPS_VARY ) ? false : is_ssl() ;
 
 		setcookie(self::$_vary_name, $val, $expire, $path?: COOKIEPATH, COOKIE_DOMAIN, $is_ssl, true) ;
 	}

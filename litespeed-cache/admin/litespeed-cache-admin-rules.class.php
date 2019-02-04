@@ -489,7 +489,7 @@ class LiteSpeed_Cache_Admin_Rules
 		 * Add ttl setting
 		 * @since 1.6.3
 		 */
-		$id = LiteSpeed_Cache_Config::O_CACHE_BROWSER_TTL ;
+		$id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE_TTL ;
 		$ttl = $cfg[ $id ] ;
 		$rules = array(
 			self::EXPIRES_MODULE_START,
@@ -625,7 +625,7 @@ class LiteSpeed_Cache_Admin_Rules
 			}
 
 			// check login cookie
-			$id = LiteSpeed_Cache_Config::O_LOGIN_COOKIE ;
+			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
 
 			// Need to keep this due to different behavior of OLS when handling response vary header @Sep/22/2018
 			if ( LITESPEED_SERVER_TYPE === 'LITESPEED_SERVER_OLS' ) {
@@ -701,7 +701,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		// Browser cache
-		$id = LiteSpeed_Cache_Config::O_CACHE_BROWSER ;
+		$id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE ;
 		if ( ! empty( $cfg[ $id ] ) ) {
 			$new_rules_nonls[] = $new_rules_backend_nonls[] = self::MARKER_BROWSER_CACHE . self::MARKER_START ;
 			$new_rules_nonls = array_merge( $new_rules_nonls, $this->_browser_cache_rules( $cfg ) ) ;

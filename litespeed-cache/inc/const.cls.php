@@ -15,32 +15,49 @@ class LiteSpeed_Cache_Const
 
 	const _CACHE = '_cache' ; // final cache status from setting
 
-	/*** Single settings ***/
+	## -------------------------------------------------- ##
+	## --------------     	General	    ----------------- ##
+	## -------------------------------------------------- ##
 	const _VERSION = '_version' ; // Not set-able
 	const O_AUTO_UPGRADE = 'auto_upgrade' ;
 
-	const O_CACHE_BROWSER = 'cache_browser' ;
-	const O_CACHE_BROWSER_TTL = 'cache_browser_ttl' ;
 
-	const O_PURGE_ON_UPGRADE = 'purge_upgrade' ;
-	const O_TIMED_URLS = 'purge.timed_urls' ;
-	const O_TIMED_URLS_TIME = 'purge.timed_urls_time' ;
+	## -------------------------------------------------- ##
+	## --------------     	 ESI	    ----------------- ##
+	## -------------------------------------------------- ##
+	const O_ESI 				= 'esi' ;
+	const O_ESI_CACHE_ADMBAR 	= 'esi.cache_admbar' ;
+	const O_ESI_CACHE_COMMFORM 	= 'esi.cache_commform' ;
 
-	const O_LOGIN_COOKIE = 'login_cookie' ;
-	const O_CHECK_ADVCACHE = 'check_advancedcache' ;
-	const O_USE_HTTP_FOR_HTTPS_VARY = 'use_http_for_https_vary' ;
 
-	const O_PURGE_BY_POST = 'purge_by_post' ;
-	const O_ESI_ENABLE = 'esi_enabled' ;
-	const O_ESI_CACHE_ADMBAR = 'esi_cached_admbar' ;
-	const O_ESI_CACHE_COMMFORM = 'esi_cached_commform' ;
+	## -------------------------------------------------- ##
+	## --------------     Utilities	    ----------------- ##
+	## -------------------------------------------------- ##
+	const O_UTIL_HEARTBEAT 			= 'util.heartbeat' ;
+	const O_UTIL_BROWSER_CACHE 		= 'util.browser_cache' ;
+	const O_UTIL_BROWSER_CACHE_TTL 	= 'util.browser_cache_ttl' ;
+	const O_UTIL_INSTANT_CLICK 		= 'util.instant_click' ;
+	const O_UTIL_CHECK_ADVCACHE 	= 'util.check_advcache' ;
+	const O_UTIL_NO_HTTPS_VARY 		= 'util.no_https_vary' ;
 
-	// const O_ADV_FAVICON = 'adv_favicon' ;
-	const O_ADV_INSTANT_CLICK = 'instant_click' ;
-
-	const O_VARY_GROUP = 'vary_group' ;
-	const O_ADV_PURGE_ALL_HOOKS = 'adv.purge_all_hooks' ;
-
+	## -------------------------------------------------- ##
+	## --------------		Purge 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_PURGE_ON_UPGRADE 		= 'purge.upgrade' ;
+	const O_PURGE_POST_ALL 			= 'purge.post_all' ;
+	const O_PURGE_POST_FRONTPAGE 	= 'purge.post_f' ;
+	const O_PURGE_POST_HOMEPAGE 	= 'purge.post_h' ;
+	const O_PURGE_POST_PAGES 		= 'purge.post_p' ;
+	const O_PURGE_POST_PAGES_WITH_RECENT_POSTS = 'purge.post_pwrp' ;
+	const O_PURGE_POST_AUTHOR 		= 'purge.post_a' ;
+	const O_PURGE_POST_YEAR 		= 'purge.post_y' ;
+	const O_PURGE_POST_MONTH 		= 'purge.post_m' ;
+	const O_PURGE_POST_DATE 		= 'purge.post_d' ;
+	const O_PURGE_POST_TERM 		= 'purge.post_t' ; // include category|tag|tax
+	const O_PURGE_POST_POSTTYPE 	= 'purge.post_pt' ;
+	const O_PURGE_TIMED_URLS 		= 'purge.timed_urls' ;
+	const O_PURGE_TIMED_URLS_TIME 	= 'purge.timed_urls_time' ;
+	const O_PURGE_HOOK_ALL 			= 'purge.hook_all' ;
 
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
@@ -71,25 +88,25 @@ class LiteSpeed_Cache_Const
 	const O_CACHE_TTL_403 = '403_ttl' ;
 	const O_CACHE_TTL_404 = '404_ttl' ;
 	const O_CACHE_TTL_500 = '500_ttl' ;
+	const O_CACHE_LOGIN_COOKIE 		= 'cache.login_cookie' ;
+	const O_CACHE_VARY_GROUP 		= 'cache.vary_group' ;
 
 	## -------------------------------------------------- ##
 	## --------------		Debug 		----------------- ##
 	## -------------------------------------------------- ##
-	const O_DEBUG_DISABLE_ALL = 'debug.disable_all' ;
-	const O_DEBUG = 'debug' ;
-	const O_ADMIN_IPS = 'admin_ips' ;
-	const O_DEBUG_LEVEL = 'debug_level' ;
-	const O_LOG_FILE_SIZE = 'log_file_size' ;
-	const O_HEARTBEAT = 'heartbeat' ;
-	const O_DEBUG_COOKIE = 'debug_cookie' ;
-	const O_COLLAPS_QS = 'collaps_qs' ;
-	const O_LOG_FILTERS = 'log_filters' ;
-	const O_LOG_IGNORE_FILTERS = 'debug.log_ignore_filters' ;
-	const O_LOG_IGNORE_PART_FILTERS = 'debug.log_ignore_part_filters' ;
-
+	const O_DEBUG_DISABLE_ALL 			= 'debug.disable_all' ;
+	const O_DEBUG 						= 'debug' ;
+	const O_DEBUG_IPS 					= 'debug.ips' ;
+	const O_DEBUG_LEVEL 				= 'debug.level' ;
+	const O_DEBUG_FILESIZE 				= 'debug.filesize' ;
+	const O_DEBUG_COOKIE 				= 'debug.cookie' ;
+	const O_DEBUG_COLLAPS_QS 			= 'debug.collaps_qs' ;
+	const O_DEBUG_LOG_FILTERS 			= 'debug.log_filters' ;
+	const O_DEBUG_LOG_NO_FILTERS 		= 'debug.log_no_filters' ;
+	const O_DEBUG_LOG_NO_PART_FILTERS 	= 'debug.log_no_part_filters' ;
 
 	## -------------------------------------------------- ##
-	## --------------	HTML Optm 		----------------- ##
+	## --------------	  HTML Optm 	----------------- ##
 	## -------------------------------------------------- ##
 	const O_OPTM_CSS_MIN 			= 'optm.css_min' ;
 	const O_OPTM_CSS_INLINE_MIN 	= 'optm.css_inline_min' ;
@@ -118,7 +135,7 @@ class LiteSpeed_Cache_Const
 	const O_OPTM_MAX_SIZE 			= 'optm.max_size' ;
 	const O_OPTM_RM_COMMENT 		= 'optm.rm_comment' ;
 	const O_OPTM_EXC_ROLES 			= 'optm.exc_roles' ;
-	const O_OPTM_CSS 				= 'optm.ccss' ;
+	const O_OPTM_CCSS_CON			= 'optm.ccss_con' ;
 	const O_OPTM_JS_DEFER_EXC 		= 'optm.js_defer_exc' ;
 	const O_OPTM_DNS_PREFETCH		= 'optm.dns_prefetch' ;
 	const O_OPTM_EXC 				= 'optm.exc' ;
@@ -156,7 +173,7 @@ class LiteSpeed_Cache_Const
 	const O_MEDIA_LAZYJS_INLINE 			= 'media.lazyjs_inline' ;
 
 	## -------------------------------------------------- ##
-	## --------------	Image Optm 		----------------- ##
+	## --------------	  Image Optm 	----------------- ##
 	## -------------------------------------------------- ##
 	const O_IMG_OPTM_AUTO 				= 'img_optm.auto' ;
 	const O_IMG_OPTM_CRON 				= 'img_optm.cron' ;
@@ -215,19 +232,7 @@ class LiteSpeed_Cache_Const
 	/*** Other consts ***/
 	const HASH = 'hash' ;
 
-	const PURGE_ALL_PAGES 	= '-' ;
-	const PURGE_FRONT_PAGE 	= 'F' ;
-	const PURGE_HOME_PAGE 	= 'H' ;
-	const PURGE_PAGES 		= 'PGS' ;
-	const PURGE_PAGES_WITH_RECENT_POSTS = 'PGSRP' ;
-	const PURGE_AUTHOR 		= 'A' ;
-	const PURGE_YEAR 		= 'Y' ;
-	const PURGE_MONTH 		= 'M' ;
-	const PURGE_DATE 		= 'D' ;
-	const PURGE_TERM 		= 'T' ; // include category|tag|tax
-	const PURGE_POST_TYPE 	= 'PT' ;
-
-	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
+xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
 
 	// Server variables
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;
@@ -236,25 +241,25 @@ class LiteSpeed_Cache_Const
 
 	// const O_FAVICON = 'litespeed-cache-favicon' ;
 
-	const CDN_MAPPING_URL = 'url' ;
-	const CDN_MAPPING_INC_IMG = 'inc_img' ;
-	const CDN_MAPPING_INC_CSS = 'inc_css' ;
-	const CDN_MAPPING_INC_JS = 'inc_js' ;
-	const CDN_MAPPING_FILETYPE = 'filetype' ;
+	const CDN_MAPPING_URL 		= 'url' ;
+	const CDN_MAPPING_INC_IMG 	= 'inc_img' ;
+	const CDN_MAPPING_INC_CSS 	= 'inc_css' ;
+	const CDN_MAPPING_INC_JS 	= 'inc_js' ;
+	const CDN_MAPPING_FILETYPE 	= 'filetype' ;
 
 	const CRWL_DATE_DESC 		= 'date_desc' ;
 	const CRWL_DATE_ASC 		= 'date_asc' ;
 	const CRWL_ALPHA_DESC 		= 'alpha_desc' ;
 	const CRWL_ALPHA_ASC 		= 'alpha_asc' ;
 
-	const VAL_OFF = 0 ;
-	const VAL_ON = 1 ;
-	const VAL_ON2 = 2 ;
+	const VAL_OFF 	= 0 ;
+	const VAL_ON 	= 1 ;
+	const VAL_ON2 	= 2 ;
 
-	const IMG_OPTM_BM_ORI = 1 ;
-	const IMG_OPTM_BM_WEBP = 2 ;
-	const IMG_OPTM_BM_LOSSLESS = 4 ;
-	const IMG_OPTM_BM_EXIF = 8 ;
+	const IMG_OPTM_BM_ORI 		= 1 ;
+	const IMG_OPTM_BM_WEBP 		= 2 ;
+	const IMG_OPTM_BM_LOSSLESS 	= 4 ;
+	const IMG_OPTM_BM_EXIF 		= 8 ;
 
 	/**
 	 * Get the items in wp_options that need for backup
@@ -266,10 +271,10 @@ class LiteSpeed_Cache_Const
 	{
 		return array(
 			self::OPTION_NAME,
-			self::O_VARY_GROUP,
+			self::O_CACHE_VARY_GROUP,
 			self::O_OPTM_EXC_ROLES,
 			self::O_CACHE_EXC_ROLES,
-			self::O_OPTM_CSS,
+			self::O_OPTM_CCSS_CON,
 			self::O_OPTM_JS_DEFER_EXC,
 			self::O_MEDIA_LAZY_EXC,
 			self::O_MEDIA_LAZY_CLS_EXC,
@@ -277,13 +282,13 @@ class LiteSpeed_Cache_Const
 			self::O_CDN_MAPPING,
 			self::O_CDN_ORI_DIR,
 			self::O_OPTM_DNS_PREFETCH,
-			self::O_LOG_IGNORE_FILTERS,
-			self::O_LOG_IGNORE_PART_FILTERS,
+			self::O_DEBUG_LOG_NO_FILTERS,
+			self::O_DEBUG_LOG_NO_PART_FILTERS,
 			self::O_OBJECT_GLOBAL_GROUPS,
 			self::O_OBJECT_NON_PERSISTENT_GROUPS,
 			self::O_CRWL_ROLES,
 			self::O_CRWL_COOKIES,
-			self::O_ADV_PURGE_ALL_HOOKS,
+			self::O_PURGE_HOOK_ALL,
 			self::O_CACHE_FORCE_URI,
 			self::O_CACHE_PRIV_URI,
 			self::O_OPTM_EXC,
@@ -325,10 +330,10 @@ class LiteSpeed_Cache_Const
 			self::O_OBJECT_DB_ID => 0,
 			self::O_OBJECT_USER => '',
 			self::O_OBJECT_PSWD => '',
-			self::O_CACHE_BROWSER => false,
-			self::O_CACHE_BROWSER_TTL => 2592000,
-			self::O_LOGIN_COOKIE => '',
-			self::O_CHECK_ADVCACHE => true,
+			self::O_UTIL_BROWSER_CACHE => false,
+			self::O_UTIL_BROWSER_CACHE_TTL => 2592000,
+			self::O_CACHE_LOGIN_COOKIE => '',
+			self::O_UTIL_CHECK_ADVCACHE => true,
 			self::O_CACHE_EXC_COOKIES => '',
 			self::O_CACHE_EXC_USERAGENTS => '',
 			self::O_IMG_OPTM_WEBP_REPLACE => false,
@@ -346,18 +351,6 @@ class LiteSpeed_Cache_Const
 	 */
 	public function get_default_options($include_thirdparty = true)
 	{
-		$default_purge_options = array(
-			self::PURGE_FRONT_PAGE,
-			self::PURGE_HOME_PAGE,
-			self::PURGE_PAGES,
-			self::PURGE_PAGES_WITH_RECENT_POSTS,
-			self::PURGE_AUTHOR,
-			self::PURGE_MONTH,
-			self::PURGE_TERM,
-			self::PURGE_POST_TYPE,
-		) ;
-		sort($default_purge_options) ;
-
 		$default_options = array(
 			self::_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
 			self::O_CACHE => is_multisite() ? self::VAL_ON2 : self::VAL_ON, //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
@@ -367,8 +360,8 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE_COMMENTER => true,
 			self::O_CACHE_REST => true,
 			self::O_CACHE_PAGE_LOGIN => true,
-			self::O_TIMED_URLS => '',
-			self::O_TIMED_URLS_TIME => '',
+			self::O_PURGE_TIMED_URLS => '',
+			self::O_PURGE_TIMED_URLS_TIME => '',
 			self::O_CACHE_FAVICON => true,
 			self::O_CACHE_RES => true,
 			self::O_CACHE_MOBILE => false,
@@ -384,21 +377,21 @@ class LiteSpeed_Cache_Const
 			self::O_OBJECT_DB_ID => 0,
 			self::O_OBJECT_USER => '',
 			self::O_OBJECT_PSWD => '',
-			self::O_CACHE_BROWSER => false,
-			self::O_CACHE_BROWSER_TTL => 2592000,
+			self::O_UTIL_BROWSER_CACHE => false,
+			self::O_UTIL_BROWSER_CACHE_TTL => 2592000,
 
-			self::O_LOGIN_COOKIE => '',
-			self::O_CHECK_ADVCACHE => true,
-			self::O_USE_HTTP_FOR_HTTPS_VARY => false,
+			self::O_CACHE_LOGIN_COOKIE => '',
+			self::O_UTIL_CHECK_ADVCACHE => true,
+			self::O_UTIL_NO_HTTPS_VARY => false,
 			self::O_DEBUG_DISABLE_ALL => false,
 			self::O_DEBUG => false,
-			self::O_ADMIN_IPS => '127.0.0.1',
+			self::O_DEBUG_IPS => '127.0.0.1',
 			self::O_DEBUG_LEVEL => false,
-			self::O_LOG_FILE_SIZE => 3,
-			self::O_HEARTBEAT => true,
+			self::O_DEBUG_FILESIZE => 3,
+			self::O_UTIL_HEARTBEAT => true,
 			self::O_DEBUG_COOKIE => false,
-			self::O_COLLAPS_QS => false,
-			self::O_LOG_FILTERS => false,
+			self::O_DEBUG_COLLAPS_QS => false,
+			self::O_DEBUG_LOG_FILTERS => false,
 			self::O_CACHE_TTL_PUB => 604800,
 			self::O_CACHE_TTL_PRIV => 1800,
 			self::O_CACHE_TTL_FRONTPAGE => 604800,
@@ -406,13 +399,13 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE_TTL_403 => 3600,
 			self::O_CACHE_TTL_404 => 3600,
 			self::O_CACHE_TTL_500 => 3600,
-			self::O_PURGE_BY_POST => implode('.', $default_purge_options),
+			self::O_PURGE_BY_POST => '',
 			self::O_CACHE_EXC_QS => '',
 			self::O_CACHE_EXC_CAT => '',
 			self::O_CACHE_EXC_TAG => '',
 
 			// self::O_ADV_FAVICON 	=> false,
-			self::O_ADV_INSTANT_CLICK 	=> false,
+			self::O_UTIL_INSTANT_CLICK 	=> false,
 
 			self::O_OPTM_CSS_MIN 	=> false,
 			self::O_OPTM_CSS_INLINE_MIN 	=> false,
@@ -493,7 +486,7 @@ class LiteSpeed_Cache_Const
 		) ;
 
 		if ( LSWCP_ESI_SUPPORT ) {
-			$default_options[self::O_ESI_ENABLE] = false ;
+			$default_options[self::O_ESI] = false ;
 			$default_options[self::O_ESI_CACHE_ADMBAR] = true ;
 			$default_options[self::O_ESI_CACHE_COMMFORM] = true ;
 		}

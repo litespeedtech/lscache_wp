@@ -54,7 +54,7 @@ class LiteSpeed_Cache_GUI
 			 * Turn on instant click
 			 * @since  1.8.2
 			 */
-			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_ADV_INSTANT_CLICK ) ) {
+			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'frontend_enqueue_style_public' ) ) ;
 			}
 		}

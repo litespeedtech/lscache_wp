@@ -5,7 +5,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Browser Cache', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CACHE_BROWSER ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Browser caching stores static files locally in the user\'s browser. Turn on this setting to reduce repeated requests for static files.', 'litespeed-cache' ) ; ?>
 				<br /><font class="litespeed-warning">
@@ -20,7 +20,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th class="litespeed-padding-left"><?php echo __( 'Browser Cache TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_BROWSER_TTL ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE_TTL ; ?>
 			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'The amount of time, in seconds, that files will be stored in browser cache before expiring. Minimum is %s seconds.', 'litespeed-cache' ), 30 ) ; ?>

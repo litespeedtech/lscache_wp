@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = $this->__conf->get_item( LiteSpeed_Cache_Config::O_ADV_PURGE_ALL_HOOKS ) ;
+			$purge_all_events = $this->__conf->get_item( LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ) ) {
@@ -214,7 +214,7 @@ class LiteSpeed_Cache_Admin
 	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
 		if ( defined( 'LSCACHE_ADV_CACHE' ) || ! current_user_can( $capability ) ) {
-			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CHECK_ADVCACHE ) ) {
+			if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ) ) {
 				// If it exists because I added it at runtime, try to create the file anyway.
 				// Result does not matter.
 				LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;// not sure why do this but doesn't matter

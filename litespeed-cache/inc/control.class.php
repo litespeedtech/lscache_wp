@@ -386,8 +386,8 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check if is in timed url list or not
-		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_TIMED_URLS ) ;
-		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_TIMED_URLS_TIME ) ;
+		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS ) ;
+		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME ) ;
 		if ( $timed_urls && $timed_urls_time ) {
 			$timed_urls = explode( "\n", $timed_urls ) ;
 			$current_url = LiteSpeed_Cache_Tag::build_uri_tag( true ) ;

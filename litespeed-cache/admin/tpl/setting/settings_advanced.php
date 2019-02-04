@@ -30,7 +30,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __( 'Purge All Hooks', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_ADV_PURGE_ALL_HOOKS ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ; ?>
 			<?php $this->build_textarea2( $id, 50 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 
@@ -44,7 +44,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __( 'Improve HTTP/HTTPS Compatibility', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_USE_HTTP_FOR_HTTPS_VARY ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_UTIL_NO_HTTPS_VARY ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable this option if you are using both HTTP and HTTPS in the same domain and are noticing cache irregularities.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#improve_http_https_compatibility' ) ; ?>
@@ -55,7 +55,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __( 'Instant Click', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_ADV_INSTANT_CLICK ) ; ?>
+			<?php $this->build_switch( LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'When a vistor hovers over a page link, preload that page. This will speed up the visit to that link.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click' ) ; ?>

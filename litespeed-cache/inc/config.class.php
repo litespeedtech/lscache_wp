@@ -72,7 +72,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->purge_options = explode('.', $this->_options[ self::O_PURGE_BY_POST ] ) ;
 
 		// Vary group settings
-		$this->vary_groups = $this->get_item( self::O_VARY_GROUP ) ;
+		$this->vary_groups = $this->get_item( self::O_CACHE_VARY_GROUP ) ;
 
 		// Exclude optimization role setting
 		$this->optm_exc_roles = $this->get_item( self::O_OPTM_EXC_ROLES ) ;
@@ -249,7 +249,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _define_adv_cache()
 	{
-		if ( isset( $this->_options[ self::O_CHECK_ADVCACHE ] ) && ! $this->_options[ self::O_CHECK_ADVCACHE ] ) {
+		if ( isset( $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) && ! $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
 			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 	}
@@ -699,32 +699,32 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		LiteSpeed_Cache_Log::debug( '[Conf] Upgrading previous settings to separate items' ) ;
 
 		conv to litespeed.conf.*
-		litespeed-cache-vary-group -> vary_group
-		litespeed-cache-exclude-optimization-roles -> optm.exc_roles
-		litespeed-cache-cdn_mapping -> cdn.mapping
-		litespeed-cache-dns_prefetch -> optm.dns_prefetch
-		litespeed-optm-css -> optm.ccss
-		litespeed-optm-js-defer-excludes -> optm.js_defer_exc
-		litespeed-media-lazy-img-excludes -> media.lazy_exc
-		litespeed-media-lazy-img-cls-excludes -> media.lazy_cls_exc
-		litespeed-media-webp_attribute -> img_optm.webp_attr
-		litespeed-log_ignore_filters -> debug.log_ignore_filters
-		litespeed-log_ignore_part_filters -> debug.log_ignore_part_filters
-		litespeed-adv-purge_all_hooks -> adv.purge_all_hooks
-		litespeed-cdn-ori_dir -> cdn.ori_dir
-		litespeed-optm_excludes -> optm.exc
-		litespeed-optm-ccss-separate_posttype -> optm.ccss_sep_posttype
-		litespeed-optm-css-separate_uri -> optm.ccss_sep_uri
 
-		litespeed-cache-exclude-cache-roles -> cache.exc_roles
-		litespeed-cache-drop_qs 			-> cache.drop_qs
-		litespeed-forced_cache_uri 			-> cache.force_uri
-		litespeed-cache_uri_priv 			-> cache.priv_uri
-		litespeed-excludes_uri 				-> cache.exc
-		litespeed-object_global_groups 			-> object.global_groups
-		litespeed-object_non_persistent_groups 	-> object.non_persistent_groups
-		litespeed-crawler-as-uids -> crawler.roles
-		litespeed-crawler-cookies -> crawler.cookies
+		litespeed-cache-exclude-cache-roles 		-> cache.exc_roles
+		litespeed-cache-drop_qs 					-> cache.drop_qs
+		litespeed-forced_cache_uri 					-> cache.force_uri
+		litespeed-cache_uri_priv 					-> cache.priv_uri
+		litespeed-excludes_uri 						-> cache.exc
+		litespeed-cache-vary-group 					-> cache.vary_group
+		litespeed-adv-purge_all_hooks 				-> purge.hook_all
+		litespeed-object_global_groups 				-> object.global_groups
+		litespeed-object_non_persistent_groups 		-> object.non_persistent_groups
+		litespeed-media-lazy-img-excludes 			-> media.lazy_exc
+		litespeed-media-lazy-img-cls-excludes 		-> media.lazy_cls_exc
+		litespeed-media-webp_attribute 				-> img_optm.webp_attr
+		litespeed-optm-css 							-> optm.ccss_con
+		litespeed-optm_excludes 					-> optm.exc
+		litespeed-optm-ccss-separate_posttype 		-> optm.ccss_sep_posttype
+		litespeed-optm-css-separate_uri 			-> optm.ccss_sep_uri
+		litespeed-optm-js-defer-excludes 			-> optm.js_defer_exc
+		litespeed-cache-dns_prefetch 				-> optm.dns_prefetch
+		litespeed-cache-exclude-optimization-roles 	-> optm.exc_roles
+		litespeed-log_ignore_filters 				-> debug.log_no_filters
+		litespeed-log_ignore_part_filters 			-> debug.log_no_part_filters
+		litespeed-cdn-ori_dir 						-> cdn.ori_dir
+		litespeed-cache-cdn_mapping 				-> cdn.mapping
+		litespeed-crawler-as-uids 					-> crawler.roles
+		litespeed-crawler-cookies 					-> crawler.cookies
 
 
 		litespeed-setting-mode -> litespeed.setting.mode
@@ -734,8 +734,32 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		conv from old litespeed.conf.* to new litespeed.conf.*
 		version -> _version
-		timed_urls -> purge.timed_urls
-		timed_urls_time -> purge.timed_urls_time
+
+		esi_enabled			-> esi
+		esi_cached_admbar	-> esi.cache_admbar
+		esi_cached_commform	-> esi.cache_commform
+
+		heartbeat			-> util.heartbeat
+		cache_browser		-> util.browser_cache
+		cache_browser_ttl	-> util.browser_cache_ttl
+		instant_click		-> util.instant_click
+		check_advancedcache	-> util.check_advcache
+		use_http_for_https_vary -> util.no_https_vary
+
+		purge_upgrade		-> purge.upgrade
+		purge_by_post -		-> purge.post_all
+		purge_by_post F		-> purge.post_f
+		purge_by_post H		-> purge.post_h
+		purge_by_post PGS	-> purge.post_p
+		purge_by_post PGSRP	-> purge.post_pwrp
+		purge_by_post A		-> purge.post_a
+		purge_by_post Y		-> purge.post_y
+		purge_by_post M		-> purge.post_m
+		purge_by_post D		-> purge.post_d
+		purge_by_post T		-> purge.post_t
+		purge_by_post PT	-> purge.post_pt
+		timed_urls 			-> purge.timed_urls
+		timed_urls_time 	-> purge.timed_urls_time
 
 		cache_priv 			-> cache.priv
 		cache_commenter		-> cache.commenter
@@ -754,8 +778,15 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		private_ttl			-> cache.ttl_priv
 		front_page_ttl		-> cache.ttl_frontpage
 		feed_ttl			-> cache.ttl_feed
+		login_cookie		-> cache.login_cookie
 
 		debug_disable_all	-> debug.disable_all
+		admin_ips 			-> debug.ips
+		debug_level 		-> debug.level
+		log_file_size		-> debug.filesize
+		debug_cookie		-> debug.cookie
+		collaps_qs			-> debug.collaps_qs
+		log_filters 		-> debug.log_filters
 
 		crawler_include_posts 	-> crawler.inc_posts
 		crawler_include_pages 	-> crawler.inc_pages

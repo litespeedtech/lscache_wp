@@ -95,9 +95,9 @@ class LiteSpeed_Cache_Log
 		}
 
 		// Check if hook filters
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_LOG_FILTERS ) ) {
-			self::$_ignore_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_LOG_IGNORE_FILTERS ) ;
-			self::$_ignore_part_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_LOG_IGNORE_PART_FILTERS ) ;
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS ) ) {
+			self::$_ignore_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS ) ;
+			self::$_ignore_part_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS ) ;
 
 			add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
 		}
@@ -116,7 +116,7 @@ class LiteSpeed_Cache_Log
 		}
 
 		// Check log file size
-		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_LOG_FILE_SIZE ) ;
+		$log_file_size = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_FILESIZE ) ;
 		if ( file_exists( $log_file ) && filesize( $log_file ) > $log_file_size * 1000000 ) {
 			Litespeed_File::save( $log_file, '' ) ;
 		}
@@ -150,7 +150,7 @@ class LiteSpeed_Cache_Log
 		$param = sprintf( '------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_COLLAPS_QS ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_COLLAPS_QS ) ) {
 			if ( strlen( $qs ) > 53 ) {
 				$qs = substr( $qs, 0, 53 ) . '...' ;
 			}

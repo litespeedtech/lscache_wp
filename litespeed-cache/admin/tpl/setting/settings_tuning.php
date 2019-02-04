@@ -139,7 +139,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Critical CSS Rules', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CSS ) ; ?>
+			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify critical CSS rules for above-the-fold content when enabling %s.', 'litespeed-cache' ), __( 'Load CSS Asynchronously', 'litespeed-cache' ) ) ; ?>
 			</div>

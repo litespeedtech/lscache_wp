@@ -165,7 +165,7 @@ class LiteSpeed_Cache
 		// in `after_setup_theme`, before `init` hook
 		$this->_auto_update() ;
 
-		if ( ! self::config( LiteSpeed_Cache_Config::O_HEARTBEAT ) ) {
+		if ( ! self::config( LiteSpeed_Cache_Config::O_UTIL_HEARTBEAT ) ) {
 			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
 		}
 
