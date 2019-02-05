@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Activation
 		$options = $__cfg->get_options() ;
 
 		// Add items
-		$cfg_items = $__cfg->stored_items() ;
+		$cfg_items = $__cfg->stored_items() ; xx
 		foreach ( $cfg_items as $v ) {
 			$options[ $v ] = $__cfg->get_item( $v ) ;
 		}

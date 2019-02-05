@@ -8,10 +8,8 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+defined( 'WPINC' ) || exit ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 class LiteSpeed_Cache_Data
 {

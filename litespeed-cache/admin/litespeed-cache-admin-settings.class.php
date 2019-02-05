@@ -109,7 +109,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		if ( defined( 'LITESPEED_CLI' ) ) {
-			$id = LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ;
+			$id = LiteSpeed_Cache_Config::O_CRWL ;
 			$cron_val = $this->_options[ $id ] ;
 			// assign crawler_cron_active to $this->_options if exists in $this->_input separately for CLI
 			// This has to be specified cos crawler cron activation is not set in admin setting page
@@ -411,9 +411,9 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV	 	=> array( 60, 	3600 ),
 			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE 	=> array( 30, 	null ),
 			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED	 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_403		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_404		 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_500		 	=> array( 0, 	null, 30 ),
+			LiteSpeed_Cache_Config::O_CACHE_TTL_403		 	=> array( 0, 	null, 30 ),xx
+			LiteSpeed_Cache_Config::O_CACHE_TTL_404		 	=> array( 0, 	null, 30 ),xx
+			LiteSpeed_Cache_Config::O_CACHE_TTL_500		 	=> array( 0, 	null, 30 ),xx
 		) ;
 		foreach ( $ids as $id => $v ) {
 			list( $min, $max ) = $v ;
@@ -492,8 +492,8 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 		sort( $input_purge_options ) ;
 		$purge_by_post = implode( '.', $input_purge_options ) ;
-		if ( $purge_by_post !== $this->_options[ LiteSpeed_Cache_Config::O_PURGE_BY_POST ] ) {
-			$this->_options[ LiteSpeed_Cache_Config::O_PURGE_BY_POST ] = $purge_by_post ;
+		if ( $purge_by_post !== $this->_options[ LiteSpeed_Cache_Config::O_PURGE_BY_POST xx ] ) {
+			$this->_options[ LiteSpeed_Cache_Config::O_PURGE_BY_POST xx ] = $purge_by_post ;
 		}
 
 		// Filter scheduled purge URLs
@@ -608,15 +608,15 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::O_CDN_ORI ;
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 		if ( $this->_options[ $id ] ) {
-			$ori_list = explode( ',', $this->_options[ $id ] ) ;
+			$ori_list = explode( "\n", $this->_options[ $id ] ) ;
 			foreach ( $ori_list as $k => $v ) {
-				$tmp = parse_url( $v ) ;
+				$tmp = parse_url( trim( $v ) ) ;
 				if ( ! empty( $tmp[ 'scheme' ] ) ) {
 					$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
 				}
 				$ori_list[ $k ] = trim( $v ) ;
 			}
-			$this->_options[ $id ] = implode( ',', $ori_list ) ;
+			$this->_options[ $id ] = $ori_list ;
 		}
 
 		$id = LiteSpeed_Cache_Config::O_CDN_EXC ;

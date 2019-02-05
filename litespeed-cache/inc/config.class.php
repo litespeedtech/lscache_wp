@@ -38,7 +38,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function __construct()
 	{
-		$this->_default_options = $this->get_default_options() ;
+		$this->_default_options = $this->default_keys() ;
 
 		// Check if conf exists or not. If not, create them in DB (won't change version if is converting v2.9- data)
 		// Conf may be stale, upgrade later
@@ -69,7 +69,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$this->define_cache_on() ;
 		}
 
-		$this->purge_options = explode('.', $this->_options[ self::O_PURGE_BY_POST ] ) ;
+		$this->purge_options = explode('.', $this->_options[ self::O_PURGE_BY_POST xx ] ) ;
 
 		// Vary group settings
 		$this->vary_groups = $this->get_item( self::O_CACHE_VARY_GROUP ) ;
@@ -142,14 +142,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 
 			// save temparary cron setting as cron settings are per site
-			$CRWL_CRON_ACTIVE = $this->_options[ self::O_CRWL_CRON_ACTIVE ] ;
+			$CRWL_CRON_ACTIVE = $this->_options[ self::O_CRWL ] ;
 
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
 			$this->_options = $this->load_options( BLOG_ID_CURRENT_SITE ) ;
 
 			// crawler cron activation is separated
-			$this->_options[ self::O_CRWL_CRON_ACTIVE ] = $CRWL_CRON_ACTIVE ;
+			$this->_options[ self::O_CRWL ] = $CRWL_CRON_ACTIVE ;
 		}
 
 		// If use network setting
@@ -491,8 +491,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				$options[$key] = self::VAL_OFF ;
 			}
 		}
-		if ( isset($options[self::O_PURGE_BY_POST]) ) {
-			$purge_opts = explode('.', $options[self::O_PURGE_BY_POST]) ;
+		if ( isset($options[self::O_PURGE_BY_POST xx]) ) {
+			$purge_opts = explode('.', $options[self::O_PURGE_BY_POST xx]) ;
 
 			foreach ($purge_opts as $purge_opt) {
 				$options['purge_' . $purge_opt] = self::VAL_ON ;
@@ -779,6 +779,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		front_page_ttl		-> cache.ttl_frontpage
 		feed_ttl			-> cache.ttl_feed
 		login_cookie		-> cache.login_cookie
+		404_ttl				-> cache.ttl_status 404=>xx
+		403_ttl				-> cache.ttl_status 403=>xx
+		500_ttl				-> cache.ttl_status 500=>xx
 
 		debug_disable_all	-> debug.disable_all
 		admin_ips 			-> debug.ips
@@ -788,6 +791,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		collaps_qs			-> debug.collaps_qs
 		log_filters 		-> debug.log_filters
 
+		crawler_cron_active 	-> crawler
 		crawler_include_posts 	-> crawler.inc_posts
 		crawler_include_pages 	-> crawler.inc_pages
 		crawler_include_cats 	-> crawler.inc_cats
@@ -802,7 +806,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		crawler_load_limit 		-> crawler.load_limit
 		crawler_domain_ip 		-> crawler.domain_ip
 		crawler_custom_sitemap 	-> crawler.custom_sitemap
-		crawler_cron_active 	-> crawler.cron_active
 
 		cache_object			-> object
 		cache_object_kind		-> object.kind
@@ -994,7 +997,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		$options = $this->_options ;
 		// Get items
-		foreach ( $this->stored_items() as $v ) {
+		foreach ( $this->stored_items() xx as $v ) {
 			$options[ $v ] = $this->get_item( $v ) ;
 		}
 

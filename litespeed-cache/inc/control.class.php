@@ -417,17 +417,17 @@ class LiteSpeed_Cache_Control
 			return $feed_ttl ;
 		}
 
-		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 ) ;
+		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 xx) ;
 		if ( is_404() && $ttl_404 > 0 ) {
 			return $ttl_404 ;
 		}
 
 		if ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
-			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 ) ;
+			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx) ;
 			return $ttl_403 ;
 		}
 
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 ) ;
+		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx) ;
 		if ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
 			return $ttl_500 ;
 		}
@@ -631,7 +631,7 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('trackback') ;
 		}
 
-		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 ) == 0 ) {
+		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 xx ) == 0 ) {
 			return $this->_no_cache_for('404 pages') ;
 		}
 

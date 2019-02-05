@@ -178,7 +178,7 @@ class LiteSpeed_Cache_Purge
 		$this->_add( '*' ) ;
 
 		// check if need to reset crawler
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ) ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL ) ) {
 			LiteSpeed_Cache_Crawler::get_instance()->reset_pos() ;
 		}
 

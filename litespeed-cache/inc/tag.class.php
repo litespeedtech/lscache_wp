@@ -103,8 +103,8 @@ class LiteSpeed_Cache_Tag
 	 */
 	public static function check_error_codes( $status_header, $code )
 	{
-		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 ) ;
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 ) ;
+		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx) ;
+		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx) ;
 		if ( $code == 403 ) {
 			if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
 				LiteSpeed_Cache_Control::set_nocache( '403 TTL is less than 30s' ) ;

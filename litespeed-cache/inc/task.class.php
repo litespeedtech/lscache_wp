@@ -33,7 +33,7 @@ class LiteSpeed_Cache_Task
 		LiteSpeed_Cache_Log::debug2( 'Task init' ) ;
 
 		// Register crawler cron
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ) && LiteSpeed_Cache_Router::can_crawl() ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL ) && LiteSpeed_Cache_Router::can_crawl() ) {
 			// keep cron intval filter
 			self::schedule_filter_crawler() ;
 
@@ -78,7 +78,7 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function enable()
 	{
-		$id = LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ;
+		$id = LiteSpeed_Cache_Config::O_CRWL ;
 
 		// get new setting
 		$is_enabled = ! LiteSpeed_Cache::config( $id ) ;
@@ -104,7 +104,7 @@ class LiteSpeed_Cache_Task
 	 */
 	public static function update( $options = false )
 	{
-		$id = LiteSpeed_Cache_Config::O_CRWL_CRON_ACTIVE ;
+		$id = LiteSpeed_Cache_Config::O_CRWL ;
 		if ( $options && isset( $options[ $id ] ) ) {
 			$is_active = $options[$id] ;
 		}

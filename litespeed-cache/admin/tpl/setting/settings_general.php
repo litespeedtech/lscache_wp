@@ -110,7 +110,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 404 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_404 ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_404 xx ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'); ?>
@@ -123,7 +123,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 403 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_403 ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 403 pages are cached.', 'litespeed-cache'); ?>
@@ -136,7 +136,7 @@ if (!defined('WPINC')) die;
 	<tr>
 		<th><?php echo __('Default 500 Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_500 ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, 500 pages are cached.', 'litespeed-cache'); ?>

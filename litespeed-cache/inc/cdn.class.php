@@ -136,7 +136,7 @@ class LiteSpeed_Cache_CDN
 			LiteSpeed_Cache_Log::debug2( '[CDN] translated rule is ' . $this->_cfg_url_ori ) ;
 		}
 
-		$this->_cfg_url_ori = explode( ',', $this->_cfg_url_ori ) ;
+		$this->_cfg_url_ori = explode( ',', $this->_cfg_url_ori ) ; xx
 
 		$this->_cfg_cdn_exclude = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_EXC ) ;
 		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ;// todo: convert to cfg->get_item()

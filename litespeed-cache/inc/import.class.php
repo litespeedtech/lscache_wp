@@ -37,7 +37,7 @@ class LiteSpeed_Cache_Import
 
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
-		$this->_cfg_items = $this->__cfg->stored_items() ;
+		$this->_cfg_items = $this->__cfg->stored_items() ;xx
 	}
 
 	/**

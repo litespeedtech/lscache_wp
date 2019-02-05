@@ -40,7 +40,7 @@ class LiteSpeed_Cache_CDN_Quic
 		}
 
 		// Also read data from items
-		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ;
+		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ;xx
 		foreach ( $item_options as $v ) {
 			// bypass main conf
 			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME ) {

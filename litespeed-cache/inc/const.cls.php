@@ -21,44 +21,6 @@ class LiteSpeed_Cache_Const
 	const _VERSION = '_version' ; // Not set-able
 	const O_AUTO_UPGRADE = 'auto_upgrade' ;
 
-
-	## -------------------------------------------------- ##
-	## --------------     	 ESI	    ----------------- ##
-	## -------------------------------------------------- ##
-	const O_ESI 				= 'esi' ;
-	const O_ESI_CACHE_ADMBAR 	= 'esi.cache_admbar' ;
-	const O_ESI_CACHE_COMMFORM 	= 'esi.cache_commform' ;
-
-
-	## -------------------------------------------------- ##
-	## --------------     Utilities	    ----------------- ##
-	## -------------------------------------------------- ##
-	const O_UTIL_HEARTBEAT 			= 'util.heartbeat' ;
-	const O_UTIL_BROWSER_CACHE 		= 'util.browser_cache' ;
-	const O_UTIL_BROWSER_CACHE_TTL 	= 'util.browser_cache_ttl' ;
-	const O_UTIL_INSTANT_CLICK 		= 'util.instant_click' ;
-	const O_UTIL_CHECK_ADVCACHE 	= 'util.check_advcache' ;
-	const O_UTIL_NO_HTTPS_VARY 		= 'util.no_https_vary' ;
-
-	## -------------------------------------------------- ##
-	## --------------		Purge 		----------------- ##
-	## -------------------------------------------------- ##
-	const O_PURGE_ON_UPGRADE 		= 'purge.upgrade' ;
-	const O_PURGE_POST_ALL 			= 'purge.post_all' ;
-	const O_PURGE_POST_FRONTPAGE 	= 'purge.post_f' ;
-	const O_PURGE_POST_HOMEPAGE 	= 'purge.post_h' ;
-	const O_PURGE_POST_PAGES 		= 'purge.post_p' ;
-	const O_PURGE_POST_PAGES_WITH_RECENT_POSTS = 'purge.post_pwrp' ;
-	const O_PURGE_POST_AUTHOR 		= 'purge.post_a' ;
-	const O_PURGE_POST_YEAR 		= 'purge.post_y' ;
-	const O_PURGE_POST_MONTH 		= 'purge.post_m' ;
-	const O_PURGE_POST_DATE 		= 'purge.post_d' ;
-	const O_PURGE_POST_TERM 		= 'purge.post_t' ; // include category|tag|tax
-	const O_PURGE_POST_POSTTYPE 	= 'purge.post_pt' ;
-	const O_PURGE_TIMED_URLS 		= 'purge.timed_urls' ;
-	const O_PURGE_TIMED_URLS_TIME 	= 'purge.timed_urls_time' ;
-	const O_PURGE_HOOK_ALL 			= 'purge.hook_all' ;
-
 	## -------------------------------------------------- ##
 	## --------------		Cache 		----------------- ##
 	## -------------------------------------------------- ##
@@ -85,11 +47,45 @@ class LiteSpeed_Cache_Const
 	const O_CACHE_TTL_PRIV 			= 'cache.ttl_priv' ;
 	const O_CACHE_TTL_FRONTPAGE 	= 'cache.ttl_frontpage' ;
 	const O_CACHE_TTL_FEED 			= 'cache.ttl_feed' ;
-	const O_CACHE_TTL_403 = '403_ttl' ;
-	const O_CACHE_TTL_404 = '404_ttl' ;
-	const O_CACHE_TTL_500 = '500_ttl' ;
+	const O_CACHE_TTL_STATUS 		= 'cache.ttl_status' ;
 	const O_CACHE_LOGIN_COOKIE 		= 'cache.login_cookie' ;
 	const O_CACHE_VARY_GROUP 		= 'cache.vary_group' ;
+
+	## -------------------------------------------------- ##
+	## --------------		Purge 		----------------- ##
+	## -------------------------------------------------- ##
+	const O_PURGE_ON_UPGRADE 		= 'purge.upgrade' ;
+	const O_PURGE_POST_ALL 			= 'purge.post_all' ;
+	const O_PURGE_POST_FRONTPAGE 	= 'purge.post_f' ;
+	const O_PURGE_POST_HOMEPAGE 	= 'purge.post_h' ;
+	const O_PURGE_POST_PAGES 		= 'purge.post_p' ;
+	const O_PURGE_POST_PAGES_WITH_RECENT_POSTS = 'purge.post_pwrp' ;
+	const O_PURGE_POST_AUTHOR 		= 'purge.post_a' ;
+	const O_PURGE_POST_YEAR 		= 'purge.post_y' ;
+	const O_PURGE_POST_MONTH 		= 'purge.post_m' ;
+	const O_PURGE_POST_DATE 		= 'purge.post_d' ;
+	const O_PURGE_POST_TERM 		= 'purge.post_t' ; // include category|tag|tax
+	const O_PURGE_POST_POSTTYPE 	= 'purge.post_pt' ;
+	const O_PURGE_TIMED_URLS 		= 'purge.timed_urls' ;
+	const O_PURGE_TIMED_URLS_TIME 	= 'purge.timed_urls_time' ;
+	const O_PURGE_HOOK_ALL 			= 'purge.hook_all' ;
+
+	## -------------------------------------------------- ##
+	## --------------     	 ESI	    ----------------- ##
+	## -------------------------------------------------- ##
+	const O_ESI 				= 'esi' ;
+	const O_ESI_CACHE_ADMBAR 	= 'esi.cache_admbar' ;
+	const O_ESI_CACHE_COMMFORM 	= 'esi.cache_commform' ;
+
+	## -------------------------------------------------- ##
+	## --------------     Utilities	    ----------------- ##
+	## -------------------------------------------------- ##
+	const O_UTIL_HEARTBEAT 			= 'util.heartbeat' ;
+	const O_UTIL_BROWSER_CACHE 		= 'util.browser_cache' ;
+	const O_UTIL_BROWSER_CACHE_TTL 	= 'util.browser_cache_ttl' ;
+	const O_UTIL_INSTANT_CLICK 		= 'util.instant_click' ;
+	const O_UTIL_CHECK_ADVCACHE 	= 'util.check_advcache' ;
+	const O_UTIL_NO_HTTPS_VARY 		= 'util.no_https_vary' ;
 
 	## -------------------------------------------------- ##
 	## --------------		Debug 		----------------- ##
@@ -189,6 +185,7 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	## --------------		Crawler		----------------- ##
 	## -------------------------------------------------- ##
+	const O_CRWL 				= 'crawler' ;
 	const O_CRWL_POSTS 			= 'crawler.inc_posts' ;
 	const O_CRWL_PAGES 			= 'crawler.inc_pages' ;
 	const O_CRWL_CATS 			= 'crawler.inc_cats' ;
@@ -203,7 +200,6 @@ class LiteSpeed_Cache_Const
 	const O_CRWL_LOAD_LIMIT 	= 'crawler.load_limit' ;
 	const O_CRWL_DOMAIN_IP 		= 'crawler.domain_ip' ;
 	const O_CRWL_CUSTOM_SITEMAP = 'crawler.custom_sitemap' ;
-	const O_CRWL_CRON_ACTIVE 	= 'crawler.cron_active' ;
 	const O_CRWL_ROLES 			= 'crawler.roles' ;
 	const O_CRWL_COOKIES 		= 'crawler.cookies' ;
 
@@ -256,49 +252,18 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	const VAL_ON 	= 1 ;
 	const VAL_ON2 	= 2 ;
 
+	/* This is for API hook usage */
 	const IMG_OPTM_BM_ORI 		= 1 ;
 	const IMG_OPTM_BM_WEBP 		= 2 ;
 	const IMG_OPTM_BM_LOSSLESS 	= 4 ;
 	const IMG_OPTM_BM_EXIF 		= 8 ;
 
-	/**
-	 * Get the items in wp_options that need for backup
-	 *
-	 * @since 2.2.1
-	 * @access public
-	 */
-	public function stored_items()
-	{
-		return array(
-			self::OPTION_NAME,
-			self::O_CACHE_VARY_GROUP,
-			self::O_OPTM_EXC_ROLES,
-			self::O_CACHE_EXC_ROLES,
-			self::O_OPTM_CCSS_CON,
-			self::O_OPTM_JS_DEFER_EXC,
-			self::O_MEDIA_LAZY_EXC,
-			self::O_MEDIA_LAZY_CLS_EXC,
-			self::O_CACHE_DROP_QS,
-			self::O_CDN_MAPPING,
-			self::O_CDN_ORI_DIR,
-			self::O_OPTM_DNS_PREFETCH,
-			self::O_DEBUG_LOG_NO_FILTERS,
-			self::O_DEBUG_LOG_NO_PART_FILTERS,
-			self::O_OBJECT_GLOBAL_GROUPS,
-			self::O_OBJECT_NON_PERSISTENT_GROUPS,
-			self::O_CRWL_ROLES,
-			self::O_CRWL_COOKIES,
-			self::O_PURGE_HOOK_ALL,
-			self::O_CACHE_FORCE_URI,
-			self::O_CACHE_PRIV_URI,
-			self::O_OPTM_EXC,
-			self::O_CACHE_EXC,
-			self::O_IMG_OPTM_WEBP_ATTR,
-			self::O_OPTM_CCSS_SEP_POSTTYPE,
-			self::O_OPTM_CCSS_SEP_URI,
-		) ;
-	}
+	private $_default_options = array() ;
 
+	private function __construct()
+	{
+		$this->default_keys() ;
+	}
 
 	/**
 	 * Gets the default network options
@@ -342,6 +307,86 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	}
 
 	/**
+	 * Load default values from default.ini
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function default_vals()
+	{
+		// Load default.ini
+		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
+			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
+			foreach ( $this->_default_options as $k => $v ) {
+				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
+					continue ;
+				}
+
+				// Parse value in ini file
+				$ini_v = $default_ini_cfg[ $k ] ;
+
+				if ( is_bool( $v ) ) { // Keep value type constantly
+					$ini_v = (bool) $ini_v ;
+				}
+
+				if ( is_array( $v ) ) {
+					/**
+					 * Special handler for CDN_mapping
+					 *
+					 * format in .ini:
+					 * 		[cdn.mapping]
+					 *   	url[0] = 'https://example.com/'
+					 *     	inc_js[0] = true
+					 *
+					 * format out:
+					 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
+					 */
+					if ( $k == self::O_CDN_MAPPING ) {
+						$mapping_fields = array(
+							self::CDN_MAPPING_URL,
+							self::CDN_MAPPING_INC_IMG,
+							self::CDN_MAPPING_INC_CSS,
+							self::CDN_MAPPING_INC_JS,
+							self::CDN_MAPPING_FILETYPE
+						) ;
+						$ini_v = array() ;
+						foreach ( $default_ini_cfg[ $item ][ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
+							$this_row = array() ;
+							foreach ( $mapping_fields as $v3 ) {
+								$this_row[ $v3 ] = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false ;
+							}
+							$ini_v[ $k2 ] = $this_row ;
+						}
+					}
+					/**
+					 * Default multiple lines to array
+					 */
+					else {
+						$ini_v = explode( "\n", $ini_v ) ;
+					}
+				}
+
+				if ( $ini_v == $v ) {
+					continue ;
+				}
+
+				$this->_default_options[ $k ] = $ini_v ;
+			}
+
+		}
+
+		// Load internal default vals
+		$this->_default_options[ self::O_CACHE ] = is_multisite() ? self::VAL_ON2 : self::VAL_ON ; //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
+
+		// Load default vals containing variables
+		if ( ! $this->_default_options[ self::O_CDN_ORI_DIR ] ) {
+			$this->_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
+		}
+
+		return $this->_default_options ;
+	}
+
+	/**
 	 * Gets the default single site options
 	 *
 	 * @since 1.0.0
@@ -349,187 +394,223 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	 * @param bool $include_thirdparty Whether to include the thirdparty options.
 	 * @return array An array of the default options.
 	 */
-	public function get_default_options($include_thirdparty = true)
+	public function default_keys($include_thirdparty = true)
 	{
-		$default_options = array(
-			self::_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::O_CACHE => is_multisite() ? self::VAL_ON2 : self::VAL_ON, //For multi site, default is 2 (Use Network Admin Settings). For single site, default is 1 (Enabled).
-			self::O_AUTO_UPGRADE => false,
-			self::O_PURGE_ON_UPGRADE => true,
-			self::O_CACHE_PRIV => true,
-			self::O_CACHE_COMMENTER => true,
-			self::O_CACHE_REST => true,
-			self::O_CACHE_PAGE_LOGIN => true,
-			self::O_PURGE_TIMED_URLS => '',
-			self::O_PURGE_TIMED_URLS_TIME => '',
-			self::O_CACHE_FAVICON => true,
-			self::O_CACHE_RES => true,
-			self::O_CACHE_MOBILE => false,
-			self::O_CACHE_MOBILE_RULES => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
-			self::O_OBJECT => false,
-			self::O_OBJECT_KIND => false,
-			self::O_OBJECT_HOST => 'localhost',
-			self::O_OBJECT_PORT => '11211',
-			self::O_OBJECT_LIFE => '360',
-			self::O_OBJECT_PERSISTENT => true,
-			self::O_OBJECT_ADMIN => true,
-			self::O_OBJECT_TRANSIENTS => true,
-			self::O_OBJECT_DB_ID => 0,
-			self::O_OBJECT_USER => '',
-			self::O_OBJECT_PSWD => '',
-			self::O_UTIL_BROWSER_CACHE => false,
-			self::O_UTIL_BROWSER_CACHE_TTL => 2592000,
+		$this->_default_options = array(
+			self::_VERSION 			=> LiteSpeed_Cache::PLUGIN_VERSION,
+			self::O_AUTO_UPGRADE 	=> false,
+			self::HASH 				=> '',
 
-			self::O_CACHE_LOGIN_COOKIE => '',
-			self::O_UTIL_CHECK_ADVCACHE => true,
-			self::O_UTIL_NO_HTTPS_VARY => false,
-			self::O_DEBUG_DISABLE_ALL => false,
-			self::O_DEBUG => false,
-			self::O_DEBUG_IPS => '127.0.0.1',
-			self::O_DEBUG_LEVEL => false,
-			self::O_DEBUG_FILESIZE => 3,
-			self::O_UTIL_HEARTBEAT => true,
-			self::O_DEBUG_COOKIE => false,
-			self::O_DEBUG_COLLAPS_QS => false,
-			self::O_DEBUG_LOG_FILTERS => false,
-			self::O_CACHE_TTL_PUB => 604800,
-			self::O_CACHE_TTL_PRIV => 1800,
-			self::O_CACHE_TTL_FRONTPAGE => 604800,
-			self::O_CACHE_TTL_FEED => 0,
-			self::O_CACHE_TTL_403 => 3600,
-			self::O_CACHE_TTL_404 => 3600,
-			self::O_CACHE_TTL_500 => 3600,
-			self::O_PURGE_BY_POST => '',
-			self::O_CACHE_EXC_QS => '',
-			self::O_CACHE_EXC_CAT => '',
-			self::O_CACHE_EXC_TAG => '',
+			// Cache
+			self::O_CACHE 					=> false,
+			self::O_CACHE_PRIV 				=> false,
+			self::O_CACHE_COMMENTER 		=> false,
+			self::O_CACHE_REST 				=> false,
+			self::O_CACHE_PAGE_LOGIN 		=> false,
+			self::O_CACHE_FAVICON 			=> false,
+			self::O_CACHE_RES 				=> false,
+			self::O_CACHE_MOBILE 			=> false,
+			self::O_CACHE_MOBILE_RULES 		=> '',
+			self::O_CACHE_EXC_USERAGENTS 	=> array(),
+			self::O_CACHE_EXC_COOKIES 		=> array(),
+			self::O_CACHE_EXC_QS 			=> array(),
+			self::O_CACHE_EXC_CAT 			=> array(),
+			self::O_CACHE_EXC_TAG 			=> array(),
+			self::O_CACHE_FORCE_URI			=> array(),
+			self::O_CACHE_PRIV_URI			=> array(),
+			self::O_CACHE_EXC 				=> array(),
+			self::O_CACHE_EXC_ROLES 		=> array(),
+			self::O_CACHE_DROP_QS 			=> array(),
+			self::O_CACHE_TTL_PUB 			=> 0,
+			self::O_CACHE_TTL_PRIV 			=> 0,
+			self::O_CACHE_TTL_FRONTPAGE 	=> 0,
+			self::O_CACHE_TTL_FEED 			=> 0,
+			self::O_CACHE_TTL_STATUS 		=> array(),
+			self::O_CACHE_LOGIN_COOKIE 		=> '',
+			self::O_CACHE_VARY_GROUP		=> array(),
 
-			// self::O_ADV_FAVICON 	=> false,
-			self::O_UTIL_INSTANT_CLICK 	=> false,
+			// Purge
+			self::O_PURGE_ON_UPGRADE 		=> false,
+			self::O_PURGE_POST_ALL			=> false,
+			self::O_PURGE_POST_FRONTPAGE	=> false,
+			self::O_PURGE_POST_HOMEPAGE		=> false,
+			self::O_PURGE_POST_PAGES		=> false,
+			self::O_PURGE_POST_PAGES_WITH_RECENT_POSTS	=> false,
+			self::O_PURGE_POST_AUTHOR		=> false,
+			self::O_PURGE_POST_YEAR			=> false,
+			self::O_PURGE_POST_MONTH		=> false,
+			self::O_PURGE_POST_DATE			=> false,
+			self::O_PURGE_POST_TERM			=> false,
+			self::O_PURGE_POST_POSTTYPE		=> false,
+			self::O_PURGE_TIMED_URLS 		=> array(),
+			self::O_PURGE_TIMED_URLS_TIME 	=> '',
+			self::O_PURGE_HOOK_ALL			=> array(),
 
-			self::O_OPTM_CSS_MIN 	=> false,
+			// ESI
+			self::O_ESI 	 				=> false,
+			self::O_ESI_CACHE_ADMBAR 	 	=> false,
+			self::O_ESI_CACHE_COMMFORM 	 	=> false,
+
+			// Util
+			self::O_UTIL_HEARTBEAT 			=> false,
+			self::O_UTIL_BROWSER_CACHE 		=> false,
+			self::O_UTIL_BROWSER_CACHE_TTL 	=> 0,
+			self::O_UTIL_INSTANT_CLICK 		=> false,
+			self::O_UTIL_CHECK_ADVCACHE 	=> false,
+			self::O_UTIL_NO_HTTPS_VARY 		=> false,
+
+			// Debug
+			self::O_DEBUG_DISABLE_ALL 		=> false,
+			self::O_DEBUG 					=> false,
+			self::O_DEBUG_IPS 				=> '',
+			self::O_DEBUG_LEVEL 			=> false,
+			self::O_DEBUG_FILESIZE 			=> 0,
+			self::O_DEBUG_COOKIE 			=> false,
+			self::O_DEBUG_COLLAPS_QS 		=> false,
+			self::O_DEBUG_LOG_FILTERS 		=> false,
+			self::O_DEBUG_LOG_NO_FILTERS 	=> array(),
+			self::O_DEBUG_LOG_NO_PART_FILTERS => array(),
+
+			// HTML Optm
+			self::O_OPTM_CSS_MIN 			=> false,
 			self::O_OPTM_CSS_INLINE_MIN 	=> false,
-			self::O_OPTM_CSS_COMB 	=> false,
-			self::O_OPTM_CSS_COMB_PRIO 	=> false,
-			self::O_OPTM_CSS_HTTP2 	=> false,
-			self::O_OPTM_CSS_EXC => '',
-			self::O_OPTM_JS_MIN 	=> false,
-			self::O_OPTM_JS_INLINE_MIN 	=> false,
-			self::O_OPTM_JS_COMB 	=> false,
-			self::O_OPTM_JS_COMB_PRIO 	=> false,
-			self::O_OPTM_JS_HTTP2 	=> false,
-			self::O_OPTM_JS_EXC 	=> '',
-			self::O_OPTM_TTL => 604800,
-			self::O_OPTM_HTML_MIN 	=> false,
-			self::O_OPTM_QS_RM 	=> false,
-			self::O_OPTM_GGFONTS_RM => false,
-			self::O_OPTM_CSS_ASYNC => false,
-			self::O_OPTM_CCSS_GEN => true,
-			self::O_OPTM_CCSS_ASYNC => true,
-			self::O_OPTM_CSS_ASYNC_INLINE => true,
-			self::O_OPTM_JS_DEFER => false,
-			self::O_OPTM_EMOJI_RM => false,
-			self::O_OPTM_EXC_JQ => true,
-			self::O_OPTM_GGFONTS_ASYNC => false,
-			self::O_OPTM_MAX_SIZE => 1.2,
-			self::O_OPTM_RM_COMMENT => false,
+			self::O_OPTM_CSS_COMB 			=> false,
+			self::O_OPTM_CSS_COMB_PRIO 		=> false,
+			self::O_OPTM_CSS_HTTP2 			=> false,
+			self::O_OPTM_CSS_EXC 			=> array(),
+			self::O_OPTM_JS_MIN 			=> false,
+			self::O_OPTM_JS_INLINE_MIN 		=> false,
+			self::O_OPTM_JS_COMB 			=> false,
+			self::O_OPTM_JS_COMB_PRIO 		=> false,
+			self::O_OPTM_JS_HTTP2 			=> false,
+			self::O_OPTM_JS_EXC 			=> array(),
+			self::O_OPTM_TTL 				=> 0,
+			self::O_OPTM_HTML_MIN 			=> false,
+			self::O_OPTM_QS_RM 				=> false,
+			self::O_OPTM_GGFONTS_RM 		=> false,
+			self::O_OPTM_CSS_ASYNC 			=> false,
+			self::O_OPTM_CCSS_GEN 			=> false,
+			self::O_OPTM_CCSS_ASYNC 		=> false,
+			self::O_OPTM_CSS_ASYNC_INLINE 	=> false,
+			self::O_OPTM_JS_DEFER 			=> false,
+			self::O_OPTM_EMOJI_RM 			=> false,
+			self::O_OPTM_EXC_JQ 			=> false,
+			self::O_OPTM_GGFONTS_ASYNC 		=> false,
+			self::O_OPTM_MAX_SIZE 			=> 0,
+			self::O_OPTM_RM_COMMENT 		=> false,
+			self::O_OPTM_EXC_ROLES			=> array(),
+			self::O_OPTM_CCSS_CON			=> '',
+			self::O_OPTM_JS_DEFER_EXC		=> array(),
+			self::O_OPTM_DNS_PREFETCH		=> array(),
+			self::O_OPTM_EXC				=> array(),
+			self::O_OPTM_CCSS_SEP_POSTTYPE	=> array(),
+			self::O_OPTM_CCSS_SEP_URI		=> array(),
 
-			self::O_CDN 			=> false,
-			self::O_CDN_ORI 		=> '',
-			self::O_CDN_EXC 	=> '',
-			self::O_CDN_REMOTE_JQ 	=> false,
-			self::O_CDN_QUIC 		=> false,
-			self::O_CDN_QUIC_EMAIL 	=> '',
-			self::O_CDN_QUIC_KEY 		=> '',
-			self::O_CDN_CLOUDFLARE 	=> false,
-			self::O_CDN_CLOUDFLARE_EMAIL 	=> '',
-			self::O_CDN_CLOUDFLARE_KEY 	=> '',
-			self::O_CDN_CLOUDFLARE_NAME 	=> '',
-			self::O_CDN_CLOUDFLARE_ZONE 	=> '',
+			// Object
+			self::O_OBJECT 					=> false,
+			self::O_OBJECT_KIND 			=> false,
+			self::O_OBJECT_HOST 			=> '',
+			self::O_OBJECT_PORT 			=> 0,
+			self::O_OBJECT_LIFE 			=> 0,
+			self::O_OBJECT_PERSISTENT 		=> false,
+			self::O_OBJECT_ADMIN 			=> false,
+			self::O_OBJECT_TRANSIENTS 		=> false,
+			self::O_OBJECT_DB_ID 			=> 0,
+			self::O_OBJECT_USER 			=> '',
+			self::O_OBJECT_PSWD 			=> '',
+			self::O_OBJECT_GLOBAL_GROUPS	=> array(),
+			self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
 
+			// Media
 			self::O_MEDIA_LAZY 				=> false,
+			self::O_MEDIA_LAZY_EXC 			=> array(),
+			self::O_MEDIA_LAZY_CLS_EXC 		=> array(),
 			self::O_MEDIA_LAZY_PLACEHOLDER 	=> '',
-			self::O_MEDIA_PLACEHOLDER_RESP		=> false,
-			self::O_MEDIA_PLACEHOLDER_RESP_COLOR		=> '#cfd4db',
-			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> true,
-			self::O_MEDIA_IFRAME_LAZY 			=> false,
-			self::O_MEDIA_LAZYJS_INLINE 		=> false,
-			self::O_IMG_OPTM_AUTO 		=> false,
-			self::O_IMG_OPTM_CRON 		=> true,
-			self::O_IMG_OPTM_ORI 		=> true,
-			self::O_IMG_OPTM_RM_BKUP 	=> false,
-			self::O_IMG_OPTM_WEBP 		=> false,
-			self::O_IMG_OPTM_LOSSLESS 	=> false,
-			self::O_IMG_OPTM_EXIF 		=> false,
+			self::O_MEDIA_PLACEHOLDER_RESP	=> false,
+			self::O_MEDIA_PLACEHOLDER_RESP_COLOR	=> '#cfd4db',
+			self::O_MEDIA_PLACEHOLDER_RESP_ASYNC	=> false,
+			self::O_MEDIA_IFRAME_LAZY 		=> false,
+			self::O_MEDIA_LAZYJS_INLINE 	=> false,
+
+			// Image Optm
+			self::O_IMG_OPTM_AUTO 			=> false,
+			self::O_IMG_OPTM_CRON 			=> false,
+			self::O_IMG_OPTM_ORI 			=> false,
+			self::O_IMG_OPTM_RM_BKUP 		=> false,
+			self::O_IMG_OPTM_WEBP 			=> false,
+			self::O_IMG_OPTM_LOSSLESS 		=> false,
+			self::O_IMG_OPTM_EXIF 			=> false,
 			self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
+			self::O_IMG_OPTM_WEBP_ATTR		=> array(),
 			self::O_IMG_OPTM_WEBP_REPLACE_SRCSET 	=> false,
 
-			self::HASH 	=> '',
+			// Crawler
+			self::O_CRWL 					=> false,
+			self::O_CRWL_POSTS 				=> false,
+			self::O_CRWL_PAGES 				=> false,
+			self::O_CRWL_CATS 				=> false,
+			self::O_CRWL_TAGS 				=> false,
+			self::O_CRWL_EXC_CPT 			=> array(),
+			self::O_CRWL_ORDER_LINKS 		=> '',
+			self::O_CRWL_USLEEP 			=> 0,
+			self::O_CRWL_RUN_DURATION 		=> 0,
+			self::O_CRWL_RUN_INTERVAL 		=> 0,
+			self::O_CRWL_CRAWL_INTERVAL 	=> 0,
+			self::O_CRWL_THREADS 			=> 0,
+			self::O_CRWL_LOAD_LIMIT 		=> 0,
+			self::O_CRWL_DOMAIN_IP 			=> '',
+			self::O_CRWL_CUSTOM_SITEMAP 	=> '',
+			self::O_CRWL_ROLES				=> array(),
+			self::O_CRWL_COOKIES 			=> array(),
 
-			self::O_CACHE_EXC_COOKIES => '',
-			self::O_CACHE_EXC_USERAGENTS => '',
-			self::O_CRWL_POSTS => true,
-			self::O_CRWL_PAGES => true,
-			self::O_CRWL_CATS => true,
-			self::O_CRWL_TAGS => true,
-			self::O_CRWL_EXC_CPT => '',
-			self::O_CRWL_ORDER_LINKS => self::CRWL_DATE_DESC,
-			self::O_CRWL_USLEEP => 500,
-			self::O_CRWL_RUN_DURATION => 400,
-			self::O_CRWL_RUN_INTERVAL => 600,
-			self::O_CRWL_CRAWL_INTERVAL => 302400,
-			self::O_CRWL_THREADS => 3,
-			self::O_CRWL_LOAD_LIMIT => 1,
-			self::O_CRWL_DOMAIN_IP => '',
-			self::O_CRWL_CUSTOM_SITEMAP => '',
-			self::O_CRWL_CRON_ACTIVE => false,
+			// CDN
+			self::O_CDN 				=> false,
+			self::O_CDN_ORI 			=> array(),
+			self::O_CDN_ORI_DIR 		=> array(),
+			self::O_CDN_EXC 			=> array(),
+			self::O_CDN_REMOTE_JQ 		=> false,
+			self::O_CDN_QUIC 			=> false,
+			self::O_CDN_QUIC_EMAIL 		=> '',
+			self::O_CDN_QUIC_KEY 		=> '',
+			self::O_CDN_CLOUDFLARE 		=> false,
+			self::O_CDN_CLOUDFLARE_EMAIL => '',
+			self::O_CDN_CLOUDFLARE_KEY 	=> '',
+			self::O_CDN_CLOUDFLARE_NAME => '',
+			self::O_CDN_CLOUDFLARE_ZONE => '',
+			self::O_CDN_MAPPING 		=> array(),
+
 		) ;
 
-		if ( LSWCP_ESI_SUPPORT ) {
-			$default_options[self::O_ESI] = false ;
-			$default_options[self::O_ESI_CACHE_ADMBAR] = true ;
-			$default_options[self::O_ESI_CACHE_COMMFORM] = true ;
-		}
-
-		// Default items
-		if ( ! $default_options[ self::O_CDN_ORI_DIR ] ) {
-			$default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
-		}
-
-		// Load default.ini
-		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
-			foreach ( $default_options as $k => $v ) {
-				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
-					continue ;
-				}
-
-				// Parse value in ini file
-				$ini_v = $default_ini_cfg[ $k ] ;
-				if ( is_bool( $v ) ) { // Keep value type constantly
-					$ini_v = (bool) $default_ini_cfg[ $k ] ;
-				}
-
-				if ( $ini_v == $v ) {
-					continue ;
-				}
-
-				$default_options[ $k ] = $ini_v ;
-			}
-
-			// Handle items in $this->default_item()
-
-		}
-
 		if ( ! $include_thirdparty ) {
-			return $default_options ;
+			return $this->_default_options ;
 		}
 
-		$tp_options = $this->get_thirdparty_options($default_options) ;
+		$tp_options = $this->get_thirdparty_options($this->_default_options) ;
 		if ( ! isset($tp_options) || ! is_array($tp_options) ) {
-			return $default_options ;
+			return $this->_default_options ;
 		}
-		return array_merge($default_options, $tp_options) ;
+		return array_merge($this->_default_options, $tp_options) ;
+	}
+
+	/**
+	 * Gets the third party options.
+	 * Will also strip the options that are actually normal options.
+	 *
+	 * @access public
+	 * @since 1.0.9
+	 * @param array $options Optional. The default options to compare against.
+	 * @return mixed boolean on failure, array of keys on success.
+	 */
+	public function get_thirdparty_options($options = null)
+	{
+		$tp_options = apply_filters('litespeed_cache_get_options', array()) ;
+		if ( empty($tp_options) ) {
+			return false ;
+		}
+		if ( ! isset($options) ) {
+			$options = $this->get_default_options(false) ;
+		}
+		return array_diff_key($tp_options, $options) ;
 	}
 
 	/**
@@ -540,51 +621,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	 */
 	public function default_item( $item )
 	{
-		/**
-		 * Allow terms default value
-		 * @since  2.7.1
-		 */
-		if ( file_exists( LSCWP_DIR . 'data/const.default.ini' ) ) {
-			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.default.ini', true ) ;
 
-			if ( ! empty( $default_ini_cfg[ $item ] ) ) {
-
-				/**
-				 * Special handler for CDN_mapping
-				 *
-				 * format in .ini:
-				 * 		[litespeed-cache-cdn_mapping]
-				 *   	url[0] = 'https://example.com/'
-				 *     	inc_js[0] = true
-				 *
-				 * format out:
-				 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
-				 */
-				if ( $item == self::O_CDN_MAPPING ) {
-					$mapping_fields = array(
-						self::CDN_MAPPING_URL,
-						self::CDN_MAPPING_INC_IMG,
-						self::CDN_MAPPING_INC_CSS,
-						self::CDN_MAPPING_INC_JS,
-						self::CDN_MAPPING_FILETYPE
-					) ;
-					$cdn_mapping = array() ;
-					foreach ( $default_ini_cfg[ $item ][ self::CDN_MAPPING_URL ] as $k => $v ) {// $k is numeric
-						$this_row = array() ;
-						foreach ( $mapping_fields as $v2 ) {
-							$this_row[ $v2 ] = ! empty( $default_ini_cfg[ $item ][ $v2 ][ $k ] ) ? $default_ini_cfg[ $item ][ $v2 ][ $k ] : false ;
-						}
-						$cdn_mapping[ $k ] = $this_row ;
-					}
-
-					return $cdn_mapping ;
-				}
-
-				return $default_ini_cfg[ $item ] ;
-			}
-		}
-
-		return '' ;// Here should not return false in case it is wrongly treated by conf::_set_conf() is_bool condition
 	}
 
 
@@ -627,27 +664,6 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 		}
 
 		return $server_vars ;
-	}
-
-	/**
-	 * Gets the third party options.
-	 * Will also strip the options that are actually normal options.
-	 *
-	 * @access public
-	 * @since 1.0.9
-	 * @param array $options Optional. The default options to compare against.
-	 * @return mixed boolean on failure, array of keys on success.
-	 */
-	public function get_thirdparty_options($options = null)
-	{
-		$tp_options = apply_filters('litespeed_cache_get_options', array()) ;
-		if ( empty($tp_options) ) {
-			return false ;
-		}
-		if ( ! isset($options) ) {
-			$options = $this->get_default_options(false) ;
-		}
-		return array_diff_key($tp_options, $options) ;
 	}
 
 }

@@ -119,7 +119,7 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Original URLs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_input( LiteSpeed_Cache_Config::O_CDN_ORI, 'litespeed-input-long' ) ; ?>
+			<?php $this->build_input item xx( LiteSpeed_Cache_Config::O_CDN_ORI, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>

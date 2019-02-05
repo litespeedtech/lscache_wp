@@ -61,7 +61,7 @@ class LiteSpeed_Cache_Cli_Admin
 
 		$options = $__cfg->get_options() ;
 		// Get items
-		$cfg_items = $__cfg->stored_items() ;
+		$cfg_items = $__cfg->stored_items() ; xx
 		foreach ( $cfg_items as $v ) {
 			$options[ $v ] = $__cfg->get_item( $v ) ;
 		}
@@ -176,7 +176,7 @@ class LiteSpeed_Cache_Cli_Admin
 	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 		$purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options() ;
-		unset($options[LiteSpeed_Cache_Config::O_PURGE_BY_POST]) ;
+		unset($options[LiteSpeed_Cache_Config::O_PURGE_BY_POST xx]) ;
 		$option_out = array() ;
 		$purge_diff = array_diff(self::$purges, $purge_options) ;
 		$purge_out = array() ;
