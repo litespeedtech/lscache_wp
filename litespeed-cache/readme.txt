@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.0.3
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -280,6 +280,11 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.2 - Feb 5 2019 =
+* <strong>API</strong>: Add a hook `litespeed_esi_shortcode-*` for ESI shortcodes.
+* <strong>3rd</strong>: WooCommerce can purge products now when variation stock is changed.
+* 🐞🕷️: Forced HTTP1.1 for crawler due to a CURL HTTP2 bug.
 
 = 2.9.1 - Jan 25 2019 =
 * <strong>Compatibility</strong>: Fixed fatal error for PHP 5.3.
