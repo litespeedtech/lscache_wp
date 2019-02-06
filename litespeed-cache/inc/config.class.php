@@ -649,6 +649,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return ;
 		}
 
+		// Upgrade first
+		$this->_conf_upgrade_stale( $previous_options ) ;xx
+
+
 		// Init default options
 		foreach ( $this->_default_options as $k => $v ) {
 			// If the option existed, bypass updating
@@ -659,7 +663,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// v3.0- version data converter
 		if ( $previous_options ) {
-			$this->_conf_upgrade_stale( $previous_options ) ;
 
 			// Keep the previous conf in case client downgrades to previous v2.9- version
 			// update_option( '_litespeed-cache-conf', $previous_options ) ;
