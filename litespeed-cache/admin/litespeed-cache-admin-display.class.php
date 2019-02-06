@@ -95,7 +95,7 @@ class LiteSpeed_Cache_Admin_Display
 		$this->config = LiteSpeed_Cache_Config::get_instance() ;
 
 		// get default setting values
-		$this->default_settings = $this->config->get_default_options() ;
+		$this->default_settings = $this->config->get_default_options() ;xx
 	}
 
 	/**

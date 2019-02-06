@@ -47,12 +47,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Load options first, network sites can override this later
 		$this->load_options() ;
 
-		/**
-		 * Check if needs to upgrade conf version or not
-		 * @since  3.0
-		 */
-		$this->_conf_upgrade() ;
-
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
 
@@ -83,6 +77,55 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
 
+	}
+
+	/**
+	 *
+	 *
+	 * @since  3.0
+	 * @access private
+	 */
+	private function _conf_db_init()
+	{
+		$ver = get_option( self::conf_name( self::_VERSION ) ) ;
+
+		if ( $ver ) {
+
+			if ( $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+				LiteSpeed_Cache_Data::get_instance()->conf_upgrade() ;xx
+			}
+
+			return ;
+		}
+
+		/**
+		 * Version is less than v3.0
+		 * Or, is a new installation
+		 */
+
+		// Upgrade first
+		LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
+
+
+		// Init default options
+		foreach ( $this->_default_options as $k => $v ) {
+			// If the option existed, bypass updating
+			add_option( self::conf_name( $k ), $v ) ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Conf] Upgraded to separate items' ) ;
+
+		// v3.0- version data converter
+		if ( $previous_options ) {
+
+			// Keep the previous conf in case client downgrades to previous v2.9- version
+			// update_option( '_litespeed-cache-conf', $previous_options ) ;
+			// delete_option( 'litespeed-cache-conf' ) ;
+			// LiteSpeed_Cache_Log::debug( '[Conf] Deleted&Backup previous option item' ) ;
+		}
+
+		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		LiteSpeed_Cache_Purge::purge_all() ;
 	}
 
 	/**
@@ -582,34 +625,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Upgrade conf to latest format version from previous versions
-	 *
-	 * NOTE: Only for v3.0+
-	 *
-	 * @since 3.0
-	 * @access private
-	 */
-	private function _conf_upgrade()
-	{
-		if ( $this->_options[ self::_VERSION ] == $this->_default_options[ self::_VERSION ] ) ) {
-			return ;
-		}
-
-		// Skip count check if `Use Primary Site Configurations` is on
-		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
-		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
-		// 	return ;
-		// }
-
-		// Update version to v3.0
-		update_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
-		LiteSpeed_Cache_Log::debug( '[Conf] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
-
-		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
-	}
-
-	/**
 	 * Upgrade network options when the plugin is upgraded.
 	 *
 	 * @since 1.0.11
@@ -631,289 +646,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option changed = $res\n" ) ;
 	}
 
-	/**
-	 * Move all options in litespeed-cache-conf from v2.9- to separate records
-	 *
-	 * @since  3.0
-	 * @access private
-	 */
-	private function _conf_db_init()
-	{
-		$v = get_option( self::conf_name( self::_VERSION ) ) ;
-
-		/**
-		 * Previous version v2.9- doesn't have this record
-		 * Or, its a new installation
-		 */
-		if ( $v ) {//  && version_compare( $v, '2.9', '>' )
-			return ;
-		}
-
-		// Upgrade first
-		$this->_conf_upgrade_stale( $previous_options ) ;xx
-
-
-		// Init default options
-		foreach ( $this->_default_options as $k => $v ) {
-			// If the option existed, bypass updating
-			add_option( self::conf_name( $k ), $v ) ;
-		}
-
-		LiteSpeed_Cache_Log::debug( '[Conf] Upgraded to separate items' ) ;
-
-		// v3.0- version data converter
-		if ( $previous_options ) {
-
-			// Keep the previous conf in case client downgrades to previous v2.9- version
-			// update_option( '_litespeed-cache-conf', $previous_options ) ;
-			// delete_option( 'litespeed-cache-conf' ) ;
-			// LiteSpeed_Cache_Log::debug( '[Conf] Deleted&Backup previous option item' ) ;
-		}
-
-		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
-	}
-
-	/**
-	 * Upgrade the conf to latest version from previous data
-	 *
-	 * NOTE: Only for v2.9-
-	 *
-	 * @since 1.0.0
-	 * @since  3.0 Run in frontend process due to auto upgrade being in frontend; Renamed from public `plugin_upgrade()` to private `_conf_upgrade_stale()`
-	 * @access private
-	 */
-	private function _conf_upgrade_stale( $previous_options )
-	{
-		$previous_options = get_option( 'litespeed-cache-conf', array() ) ;
-		foreach ( $this->_default_options as $k => $v ) {
-			if ( ! isset( $previous_options[ $k ] ) ) {
-				continue ;
-			}
-
-			// Convert previous O_ENABLED_RADIO to new O_CACHE
-			if ( $k == self::O_CACHE ) {
-				$v2 = isset( $previous_options[ 'radio_select' ] ) ? $previous_options[ 'radio_select' ] : $v ;
-			}
-
-			update_option( self::conf_name( $k ), $previous_options[ $k ] ) ;
-		}
-
-		LiteSpeed_Cache_Log::debug( '[Conf] Upgrading previous settings to separate items' ) ;
-
-		conv to litespeed.conf.*
-
-		litespeed-cache-exclude-cache-roles 		-> cache.exc_roles
-		litespeed-cache-drop_qs 					-> cache.drop_qs
-		litespeed-forced_cache_uri 					-> cache.force_uri
-		litespeed-cache_uri_priv 					-> cache.priv_uri
-		litespeed-excludes_uri 						-> cache.exc
-		litespeed-cache-vary-group 					-> cache.vary_group
-		litespeed-adv-purge_all_hooks 				-> purge.hook_all
-		litespeed-object_global_groups 				-> object.global_groups
-		litespeed-object_non_persistent_groups 		-> object.non_persistent_groups
-		litespeed-media-lazy-img-excludes 			-> media.lazy_exc
-		litespeed-media-lazy-img-cls-excludes 		-> media.lazy_cls_exc
-		litespeed-media-webp_attribute 				-> img_optm.webp_attr
-		litespeed-optm-css 							-> optm.ccss_con
-		litespeed-optm_excludes 					-> optm.exc
-		litespeed-optm-ccss-separate_posttype 		-> optm.ccss_sep_posttype
-		litespeed-optm-css-separate_uri 			-> optm.ccss_sep_uri
-		litespeed-optm-js-defer-excludes 			-> optm.js_defer_exc
-		litespeed-cache-dns_prefetch 				-> optm.dns_prefetch
-		litespeed-cache-exclude-optimization-roles 	-> optm.exc_roles
-		litespeed-log_ignore_filters 				-> debug.log_no_filters
-		litespeed-log_ignore_part_filters 			-> debug.log_no_part_filters
-		litespeed-cdn-ori_dir 						-> cdn.ori_dir
-		litespeed-cache-cdn_mapping 				-> cdn.mapping
-		litespeed-crawler-as-uids 					-> crawler.roles
-		litespeed-crawler-cookies 					-> crawler.cookies
-
-
-		litespeed-setting-mode -> litespeed.setting.mode
-		litespeed-media-need-pull -> litespeed.img_optm.need_pull
-		litespeed-env-ref -> litespeed.env.ref
-		litespeed-cache-cloudflare_status -> litespeed.cdn.cloudflare.status
-
-		conv from old litespeed.conf.* to new litespeed.conf.*
-		version -> _version
-
-		esi_enabled			-> esi
-		esi_cached_admbar	-> esi.cache_admbar
-		esi_cached_commform	-> esi.cache_commform
-
-		heartbeat			-> util.heartbeat
-		cache_browser		-> util.browser_cache
-		cache_browser_ttl	-> util.browser_cache_ttl
-		instant_click		-> util.instant_click
-		check_advancedcache	-> util.check_advcache
-		use_http_for_https_vary -> util.no_https_vary
-
-		purge_upgrade		-> purge.upgrade
-		purge_by_post -		-> purge.post_all
-		purge_by_post F		-> purge.post_f
-		purge_by_post H		-> purge.post_h
-		purge_by_post PGS	-> purge.post_p
-		purge_by_post PGSRP	-> purge.post_pwrp
-		purge_by_post A		-> purge.post_a
-		purge_by_post Y		-> purge.post_y
-		purge_by_post M		-> purge.post_m
-		purge_by_post D		-> purge.post_d
-		purge_by_post T		-> purge.post_t
-		purge_by_post PT	-> purge.post_pt
-		timed_urls 			-> purge.timed_urls
-		timed_urls_time 	-> purge.timed_urls_time
-
-		cache_priv 			-> cache.priv
-		cache_commenter		-> cache.commenter
-		cache_rest 			-> cache.rest
-		cache_page_login	-> cache.page_login
-		cache_favicon		-> cache.favicon
-		cache_resources		-> cache.resources
-		mobileview_enabled	-> cache.mobile
-		mobileview_rules	-> cache.mobile_rules
-		nocache_useragents 	-> cache.exc_useragents
-		nocache_cookies 	-> cache.exc_cookies
-		excludes_qs 		-> cache.exc_qs
-		excludes_cat 		-> cache.exc_cat
-		excludes_tag 		-> cache.exc_tag
-		public_ttl			-> cache.ttl_pub
-		private_ttl			-> cache.ttl_priv
-		front_page_ttl		-> cache.ttl_frontpage
-		feed_ttl			-> cache.ttl_feed
-		login_cookie		-> cache.login_cookie
-		404_ttl				-> cache.ttl_status 404=>xx
-		403_ttl				-> cache.ttl_status 403=>xx
-		500_ttl				-> cache.ttl_status 500=>xx
-
-		debug_disable_all	-> debug.disable_all
-		admin_ips 			-> debug.ips
-		debug_level 		-> debug.level
-		log_file_size		-> debug.filesize
-		debug_cookie		-> debug.cookie
-		collaps_qs			-> debug.collaps_qs
-		log_filters 		-> debug.log_filters
-
-		crawler_cron_active 	-> crawler
-		crawler_include_posts 	-> crawler.inc_posts
-		crawler_include_pages 	-> crawler.inc_pages
-		crawler_include_cats 	-> crawler.inc_cats
-		crawler_include_tags 	-> crawler.inc_tags
-		crawler_excludes_cpt 	-> crawler.exc_cpt
-		crawler_order_links 	-> crawler.order_links
-		crawler_usleep 			-> crawler.usleep
-		crawler_run_duration 	-> crawler.run_duration
-		crawler_run_interval 	-> crawler.run_interval
-		crawler_crawl_interval 	-> crawler.crawl_interval
-		crawler_threads 		-> crawler.threads
-		crawler_load_limit 		-> crawler.load_limit
-		crawler_domain_ip 		-> crawler.domain_ip
-		crawler_custom_sitemap 	-> crawler.custom_sitemap
-
-		cache_object			-> object
-		cache_object_kind		-> object.kind
-		cache_object_host		-> object.host
-		cache_object_port		-> object.port
-		cache_object_life		-> object.life
-		cache_object_persistent	-> object.persistent
-		cache_object_admin		-> object.admin
-		cache_object_transients	-> object.transients
-		cache_object_db_id		-> object.db_id
-		cache_object_user		-> object.user
-		cache_object_pswd		-> object.psw
-
-		cdn_ori				-> cdn.ori
-		cdn_exclude 		-> cdn.exc
-		cdn_remote_jquery	-> cdn.remote_jq
-		cdn_cloudflare		-> cdn.cloudflare
-		cdn_cloudflare_email-> cdn.cloudflare_email
-		cdn_cloudflare_key	-> cdn.cloudflare_key
-		cdn_cloudflare_name	-> cdn.cloudflare_name
-		cdn_cloudflare_zone	-> cdn.cloudflare_zone
-
-		media_img_lazy				-> media.lazy
-		media_img_lazy_placeholder	-> media.lazy_placeholder
-		media_placeholder_resp		-> media.placeholder_resp
-		media_placeholder_resp_color-> media.placeholder_resp_color
-		media_placeholder_resp_async-> media.placeholder_resp_async
-		media_iframe_lazy			-> media.iframe_lazy
-		media_img_lazyjs_inline		-> media.lazyjs_inline
-
-		media_optm_auto			-> img_optm.auto
-		media_optm_cron			-> img_optm.cron
-		media_optm_ori			-> img_optm.ori
-		media_rm_ori_bkup		-> img_optm.rm_bkup
-		media_optm_webp			-> img_optm.webp
-		media_optm_lossless		-> img_optm.lossless
-		media_optm_exif			-> img_optm.exif
-		media_webp_replace		-> img_optm.webp_replace
-		media_webp_replace_srcset-> img_optm.webp_replace_srcset
-
-		css_minify			-> optm.css_min
-		css_inline_minify	-> optm.css_inline_min
-		css_combine			-> optm.css_comb
-		css_combined_priority-> optm.css_comb_priority
-		css_http2			-> optm.css_http2
-		css_exclude 		-> optm.css_exc
-		js_minify			-> optm.js_min
-		js_inline_minify	-> optm.js_inline_min
-		js_combine			-> optm.js_comb
-		js_combined_priority-> optm.js_comb_priority
-		js_http2			-> optm.js_http2
-		js_exclude 			-> optm.js_exc
-		optimize_ttl		-> optm.ttl
-		html_minify			-> optm.html_min
-		optm_qs_rm			-> optm.qs_rm
-		optm_ggfonts_rm		-> optm.ggfonts_rm
-		optm_css_async		-> optm.css_async
-		optm_ccss_gen		-> optm.ccss_gen
-		optm_ccss_async		-> optm.ccss_async
-		optm_css_async_inline-> optm.css_async_inline
-		optm_js_defer		-> optm.js_defer
-		optm_emoji_rm		-> optm.emoji_rm
-		optm_exclude_jquery	-> optm.exc_jq
-		optm_ggfonts_async	-> optm.ggfonts_async
-		optm_max_size		-> optm.max_size
-		optm_rm_comment		-> optm.rm_comment
-
-
-		/**
-		 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
-		 * @since 1.7
-		 */
-		if ( isset( $previous_options[ 'cdn_url' ] ) ) {
-			$cdn_mapping = array(
-				self::CDN_MAPPING_URL 		=> $previous_options[ 'cdn_url' ],
-				self::CDN_MAPPING_INC_IMG 	=> $previous_options[ 'cdn_inc_img' ],
-				self::CDN_MAPPING_INC_CSS 	=> $previous_options[ 'cdn_inc_css' ],
-				self::CDN_MAPPING_INC_JS 	=> $previous_options[ 'cdn_inc_js' ],
-				self::CDN_MAPPING_FILETYPE => $previous_options[ 'cdn_filetype' ],
-			) ;
-			add_option( LiteSpeed_Cache_Config::O_CDN_MAPPING, array( $cdn_mapping ) ) ;
-			LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option adding CDN map" ) ;
-		}
-
-		/**
-		 * Move Exclude settings to separate item
-		 * @since  2.3
-		 */
-		if ( isset( $previous_options[ 'forced_cache_uri' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI, $previous_options[ 'forced_cache_uri' ] ) ;
-		}
-		if ( isset( $previous_options[ 'cache_uri_priv' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI, $previous_options[ 'cache_uri_priv' ] ) ;
-		}
-		if ( isset( $previous_options[ 'optm_excludes' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::O_OPTM_EXC, $previous_options[ 'optm_excludes' ] ) ;
-		}
-		if ( isset( $previous_options[ 'excludes_uri' ] ) ) {
-			add_option( LiteSpeed_Cache_Config::O_CACHE_EXC, $previous_options[ 'excludes_uri' ] ) ;
-		}
-
-		// Update img_optm table data for upgrading
-		// NOTE: no new change since v3.0 yet
-		LiteSpeed_Cache_Data::get_instance() ;
-	}
 
 	/**
 	 * Update the WP_CACHE variable in the wp-config.php file.

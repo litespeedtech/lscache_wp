@@ -13,6 +13,15 @@ defined( 'WPINC' ) || exit ;
 
 class LiteSpeed_Cache_Data
 {
+	private $_db_updater = array(
+		'2.0'	=> array(
+			'litespeed_update_2_0',
+		),
+		'3.0'	=> array(
+			'litespeed_update_3_0',
+		),
+	) ;
+
 	private static $_instance ;
 
 	const TB_OPTIMIZER = 'litespeed_optimizer' ;
@@ -38,9 +47,54 @@ class LiteSpeed_Cache_Data
 		$this->_tb_optm = $wpdb->prefix . self::TB_OPTIMIZER ;
 		$this->_tb_img_optm = $wpdb->prefix . self::TB_IMG_OPTM ;
 
-		$this->_create_tb_img_optm() ;
-		$this->_create_tb_html_optm() ;
+		$this->_create_tb_img_optm() ;xx
+		$this->_create_tb_html_optm() ;xx
 	}
+
+
+	/**
+	 * Upgrade conf to latest format version from previous versions
+	 *
+	 * NOTE: Only for v3.0+
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function conf_upgrade()
+	{
+		if ( $this->_options[ self::_VERSION ] == $this->_default_options[ self::_VERSION ] ) ) {
+			return ;
+		}
+
+		// Skip count check if `Use Primary Site Configurations` is on
+		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
+		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
+		// 	return ;
+		// }
+
+		// Update version to v3.0
+		update_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		LiteSpeed_Cache_Log::debug( '[Conf] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+
+		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		LiteSpeed_Cache_Purge::purge_all() ;
+	}
+
+	/**
+	 * Upgrade the conf to latest version from previous data
+	 *
+	 * NOTE: Only for v3.0-
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function try_upgrade_conf_3_0()
+	{
+		LiteSpeed_Cache_Log::debug( '[Conf] Upgraded previous v3.0- settings to v3.0' ) ;
+	}
+
+
+
 
 	/**
 	 * Get img_optm table name

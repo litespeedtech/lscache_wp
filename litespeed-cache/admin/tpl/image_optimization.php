@@ -2,7 +2,7 @@
 if ( ! defined( 'WPINC' ) ) die ;
 
 // Update table data for upgrading
-LiteSpeed_Cache_Data::get_instance() ;
+LiteSpeed_Cache_Data::get_instance() ;xx
 
 $img_optm = LiteSpeed_Cache_Img_Optm::get_instance() ;
 
