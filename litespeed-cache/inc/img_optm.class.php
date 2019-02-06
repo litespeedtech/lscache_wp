@@ -978,11 +978,8 @@ class LiteSpeed_Cache_Img_Optm
 
 		global $wpdb ;
 
-		$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
-				FROM $this->_table_img_optm a
-				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-				WHERE a.root_id = 0 AND a.optm_status = %s ORDER BY a.id LIMIT 1" ;
-		$_q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
+		$q = "SELECT * FROM $this->_table_img_optm WHERE root_id = 0 AND optm_status = %s ORDER BY id LIMIT 1" ;
+		$_q = $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 
 		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_OPTM_ORI ) ;
 		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_MEDIA_RM_ORI_BKUP ) ;
