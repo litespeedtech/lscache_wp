@@ -262,7 +262,7 @@ class LiteSpeed_Cache
 
 		add_filter( 'auto_update_plugin', function( $update, $item ) {
 				if ( $item->slug == 'litespeed-cache' ) {
-					$auto_v = LiteSpeed_Cache_Utility::version_check() ;
+					$auto_v = LiteSpeed_Cache_Utility::version_check( 'auto_update_plugin' ) ;
 
 					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
 						return true ;

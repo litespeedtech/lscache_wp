@@ -24,7 +24,7 @@ if ( time() - $last_check > 43200 ) {
 	$this->save_summary( $_summary ) ;
 
 	// Detect version
-	$auto_v = LiteSpeed_Cache_Utility::version_check() ;
+	$auto_v = LiteSpeed_Cache_Utility::version_check( 'new_version_banner' ) ;
 	$_summary[ 'new_version.v' ] = $auto_v ;
 	$this->save_summary( $_summary ) ;
 	// After detect, don't show, just return and show next time

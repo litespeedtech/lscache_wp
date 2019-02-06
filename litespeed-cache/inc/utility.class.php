@@ -47,10 +47,10 @@ class LiteSpeed_Cache_Utility
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function version_check()
+	public static function version_check( $src = false )
 	{
 		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&src=' . $src ;
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
 		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
