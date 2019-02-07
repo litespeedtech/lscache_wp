@@ -14,12 +14,10 @@ defined( 'WPINC' ) || exit ;
 class LiteSpeed_Cache_Data
 {
 	private $_db_updater = array(
-		'2.0'	=> array(
-			'litespeed_update_2_0',
-		),
-		'3.0'	=> array(
-			'litespeed_update_3_0',
-		),
+		// Example
+		// '2.0'	=> array(
+		// 	'litespeed_update_2_0',
+		// ),
 	) ;
 
 	private static $_instance ;
@@ -60,28 +58,38 @@ class LiteSpeed_Cache_Data
 	 * @since 3.0
 	 * @access public
 	 */
-	public function conf_upgrade()
+	public function conf_upgrade( $ver )
 	{
-		if ( $this->_options[ self::_VERSION ] == $this->_default_options[ self::_VERSION ] ) ) {
-			return ;
-		}
-
 		// Skip count check if `Use Primary Site Configurations` is on
 		// Deprecated since v3.0 as network primary site didn't override the subsites conf yet
 		// if ( ! is_main_site() && ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 		// 	return ;
 		// }
 
-		// Update version to v3.0
-		update_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
-		LiteSpeed_Cache_Log::debug( '[Conf] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		require_once LSCWP_DIR . 'inc/data.upgrade.func.php' ;
+
+		foreach ( $this->_db_updater as $k => $v ) {
+			if ( version_compare( $ver, $k, '<' ) ) {
+				// run each callback
+				foreach ( $v as $v2 ) {
+					LiteSpeed_Cache_Log::debug( "[Data] Updating [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
+					call_user_func( $v2 ) ;
+				}
+			}
+		}
+
+		// Update version to latest
+		delete_option( self::conf_name( self::_VERSION ) ) ;
+		add_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 	}
 
 	/**
-	 * Upgrade the conf to latest version from previous data
+	 * Upgrade the conf to v3.0 from previous v3.0- data
 	 *
 	 * NOTE: Only for v3.0-
 	 *
@@ -90,7 +98,26 @@ class LiteSpeed_Cache_Data
 	 */
 	public function try_upgrade_conf_3_0()
 	{
-		LiteSpeed_Cache_Log::debug( '[Conf] Upgraded previous v3.0- settings to v3.0' ) ;
+		$previous_options = get_option( 'litespeed-cache-conf' ) ;
+		if ( ! $previous_options ) {
+			return ;
+		}
+
+		$ver = $previous_options[ 'version' ] ;
+
+		LiteSpeed_Cache_Log::debug( '[Data] Upgrading previous settings [from] ' . $ver . ' [to] v3.0' ) ;
+
+		require_once LSCWP_DIR . 'inc/data.upgrade.func.php' ;
+
+		litespeed_update_3_0( $ver ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Data] Upgraded to v3.0' ) ;
+
+		// Upgrade from 3.0 to latest version
+		$ver = '3.0' ;
+		if ( LiteSpeed_Cache::PLUGIN_VERSION != $ver ) {
+			$this->conf_upgrade( $ver ) ;
+		}
 	}
 
 

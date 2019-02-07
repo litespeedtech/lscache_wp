@@ -10,10 +10,8 @@
  * @subpackage 	LiteSpeed_Cache/inc
  * @author     	LiteSpeed Technologies <info@litespeedtech.com>
  */
+defined( 'WPINC' ) || exit ;
 
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 {
@@ -92,20 +90,18 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $ver ) {
 
 			if ( $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
-				LiteSpeed_Cache_Data::get_instance()->conf_upgrade() ;xx
+				LiteSpeed_Cache_Data::get_instance()->conf_upgrade( $ver ) ;
 			}
 
 			return ;
 		}
 
 		/**
-		 * Version is less than v3.0
-		 * Or, is a new installation
+		 * Version is less than v3.0, or, is a new installation
 		 */
 
-		// Upgrade first
+		// Try upgrade first
 		LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
-
 
 		// Init default options
 		foreach ( $this->_default_options as $k => $v ) {
