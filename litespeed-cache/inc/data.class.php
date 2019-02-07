@@ -45,8 +45,8 @@ class LiteSpeed_Cache_Data
 		$this->_tb_optm = $wpdb->prefix . self::TB_OPTIMIZER ;
 		$this->_tb_img_optm = $wpdb->prefix . self::TB_IMG_OPTM ;
 
-		$this->_create_tb_img_optm() ;xx
-		$this->_create_tb_html_optm() ;xx
+		$this->_create_tb_img_optm() ;
+		$this->_create_tb_html_optm() ;
 	}
 
 
@@ -84,7 +84,7 @@ class LiteSpeed_Cache_Data
 
 		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
-		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;
 	}
 
@@ -113,15 +113,15 @@ class LiteSpeed_Cache_Data
 
 		LiteSpeed_Cache_Log::debug( '[Data] Upgraded to v3.0' ) ;
 
+		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		LiteSpeed_Cache_Purge::purge_all() ;
+
 		// Upgrade from 3.0 to latest version
 		$ver = '3.0' ;
 		if ( LiteSpeed_Cache::PLUGIN_VERSION != $ver ) {
 			$this->conf_upgrade( $ver ) ;
 		}
 	}
-
-
-
 
 	/**
 	 * Get img_optm table name
@@ -213,59 +213,27 @@ class LiteSpeed_Cache_Data
 		// Check if table exists first
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->_tb_img_optm'" ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Data] Existed' ) ;
-			// return ;
-		}
-		else {
-			LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
-
-			$sql = sprintf(
-				'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'img_optm' ) . ') %2$s;',
-				$this->_tb_img_optm,
-				$this->_charset_collate // 'DEFAULT CHARSET=utf8'
-			) ;
-
-			$res = $wpdb->query( $sql ) ;
-			if ( $res !== true ) {
-				LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
-			}
-
-			// Clear OC to avoid get `_tb_img_optm` from option failed
-			if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
-				LiteSpeed_Cache_Object::get_instance()->flush() ;
-			}
-
-		}
-
-		// Table version only exists after all old data migrated
-		// Last modified is v2.4.2
-		$ver = get_option( $this->_tb_img_optm ) ;
-		if ( $ver && version_compare( $ver, '2.4.2', '>=' ) ) {
 			return ;
 		}
 
+		LiteSpeed_Cache_Log::debug( '[Data] Creating img_optm table' ) ;
 
-		/**
-		 * Add target_md5 field to table
-		 * @since  2.4.2
-		 */
-		if ( $ver && version_compare( $ver, '2.4.2', '<' ) && version_compare( $ver, '2.0', '>=' ) ) {// NOTE: For new users, need to bypass this section, thats why used the first cond
-			$sql = sprintf(
-				'ALTER TABLE `%1$s` ADD `server_info` text NOT NULL, DROP COLUMN `server`',
-				$this->_tb_img_optm
-			) ;
+		$sql = sprintf(
+			'CREATE TABLE IF NOT EXISTS `%1$s` (' . $this->_get_data_structure( 'img_optm' ) . ') %2$s;',
+			$this->_tb_img_optm,
+			$this->_charset_collate // 'DEFAULT CHARSET=utf8'
+		) ;
 
-			$res = $wpdb->query( $sql ) ;
-			if ( $res !== true ) {
-				LiteSpeed_Cache_Log::debug( '[Data] Warning: Alter table img_optm failed!', $sql ) ;
-			}
-			else {
-				LiteSpeed_Cache_Log::debug( '[Data] Successfully upgraded table img_optm.' ) ;
-			}
-
+		$res = $wpdb->query( $sql ) ;
+		if ( $res !== true ) {
+			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating img_optm table failed!', $sql ) ;
 		}
 
-		// Record tb version
-		update_option( $this->_tb_img_optm, LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		// Clear OC to avoid get `_tb_img_optm` from option failed
+		if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
+			LiteSpeed_Cache_Object::get_instance()->flush() ;
+		}
+
 	}
 
 	/**
@@ -301,26 +269,8 @@ class LiteSpeed_Cache_Data
 
 		$res = $wpdb->query( $sql ) ;
 		if ( $res !== true ) {
-			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating html optm table failed!' ) ;
+			LiteSpeed_Cache_Log::debug( '[Data] Warning: Creating html_optm table failed!' ) ;
 		}
-
-		// Move data from wp_options to here
-		$hashes = get_option( 'litespeed-cache-optimized' ) ;
-		if ( $hashes ) {
-			foreach ( $hashes as $k => $v ) {
-				$f = array(
-					'hash_name'	=> $k,
-					'src'		=> serialize( $v ),
-					'dateline'	=> time(),
-					'refer' 	=> '',
-				) ;
-				$wpdb->replace( $this->_tb_optm, $f ) ;
-			}
-		}
-		delete_option( 'litespeed-cache-optimized' ) ;
-
-		// Record tb version
-		update_option( $this->_tb_optm, LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 	}
 

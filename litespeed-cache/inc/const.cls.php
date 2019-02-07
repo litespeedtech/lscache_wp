@@ -18,7 +18,8 @@ class LiteSpeed_Cache_Const
 	## -------------------------------------------------- ##
 	## --------------     	General	    ----------------- ##
 	## -------------------------------------------------- ##
-	const _VERSION = '_version' ; // Not set-able
+	const _VERSION 	= '_version' ; // Not set-able
+	const HASH 		= 'hash' ; // Not set-able
 	const O_AUTO_UPGRADE = 'auto_upgrade' ;
 
 	## -------------------------------------------------- ##
@@ -226,8 +227,6 @@ class LiteSpeed_Cache_Const
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
 
 	/*** Other consts ***/
-	const HASH = 'hash' ;
-
 xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
 
 	// Server variables
@@ -383,6 +382,11 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 			$this->_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
 		}
 
+		// Set security key if not initialized yet
+		if ( ! $this->_default_options[ self::HASH ] ) {
+			$this->_default_options[ self::HASH ] = Litespeed_String::rrand( 32 ) ;
+		}
+
 		return $this->_default_options ;
 	}
 
@@ -398,8 +402,8 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	{
 		$this->_default_options = array(
 			self::_VERSION 			=> LiteSpeed_Cache::PLUGIN_VERSION,
+			self::HASH				=> '',
 			self::O_AUTO_UPGRADE 	=> false,
-			self::HASH 				=> '',
 
 			// Cache
 			self::O_CACHE 					=> false,

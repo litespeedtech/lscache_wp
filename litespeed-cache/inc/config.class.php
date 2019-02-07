@@ -87,41 +87,31 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	{
 		$ver = get_option( self::conf_name( self::_VERSION ) ) ;
 
-		if ( $ver ) {
-
-			if ( $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
-				LiteSpeed_Cache_Data::get_instance()->conf_upgrade( $ver ) ;
-			}
-
-			return ;
-		}
-
 		/**
 		 * Version is less than v3.0, or, is a new installation
 		 */
-
-		// Try upgrade first
-		LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
-
-		// Init default options
-		foreach ( $this->_default_options as $k => $v ) {
-			// If the option existed, bypass updating
-			add_option( self::conf_name( $k ), $v ) ;
+		if ( ! $ver ) {
+			// Try upgrade first
+			LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Conf] Upgraded to separate items' ) ;
-
-		// v3.0- version data converter
-		if ( $previous_options ) {
-
-			// Keep the previous conf in case client downgrades to previous v2.9- version
-			// update_option( '_litespeed-cache-conf', $previous_options ) ;
-			// delete_option( 'litespeed-cache-conf' ) ;
-			// LiteSpeed_Cache_Log::debug( '[Conf] Deleted&Backup previous option item' ) ;
+		/**
+		 * Upgrade conf
+		 */
+		if ( $ver && $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+			LiteSpeed_Cache_Data::get_instance()->conf_upgrade( $ver ) ;
 		}
 
-		define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
-		LiteSpeed_Cache_Purge::purge_all() ;
+		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+			// Load default values
+			$this->_default_options = $this->default_vals() ;
+
+			// Init new default/missing options
+			foreach ( $this->_default_options as $k => $v ) {
+				// If the option existed, bypass updating
+				add_option( self::conf_name( $k ), $v ) ;
+			}
+		}
 	}
 
 	/**
@@ -143,14 +133,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			else {
 				$options[ $k ] = get_option( self::conf_name( $k ), $v ) ;
 			}
-		}
-
-		// Set security key if not initialized yet
-		todo: move this to init options
-		$k = self::HASH ;
-		if ( isset( $options[ $k ] ) && empty( $options[ $k ] ) ) {
-			$options[ $k ] = Litespeed_String::rrand( 32 ) ;
-			update_option( self::conf_name( $k ), $options[ $k ] ) ;
 		}
 
 		if ( ! $dry_run ) {
@@ -494,7 +476,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// Get site options
-		$site_options = get_site_option( self::OPTION_NAME ) ;
+		$site_options = get_site_option( self::OPTION_NAME ) ;xxx
 
 		if ( isset( $site_options ) && is_array( $site_options ) ) {
 			$this->_site_options = $site_options ;

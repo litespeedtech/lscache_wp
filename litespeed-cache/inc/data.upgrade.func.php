@@ -11,49 +11,86 @@ defined( 'WPINC' ) || exit ;
  *
  * @since  3.0
  */
-function litespeed_update_2_0()
+function litespeed_update_2_0( $ver )
 {
-	/**
-	 * Convert old data from postmeta to img_optm table
-	 * @since  2.0
-	 */
-xxx
-	// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
-	$mids_to_del = array() ;
-	$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
-	$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, array( LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_DATA ) ) ) ;
-	if ( $meta_value_list ) {
-		$max_k = count( $meta_value_list ) - 1 ;
-		foreach ( $meta_value_list as $k => $v ) {
-			$md52src_list = unserialize( $v->meta_value ) ;
-			foreach ( $md52src_list as $md5 => $v2 ) {
-				$f = array(
-					'post_id'	=> $v->post_id,
-					'optm_status'		=> $v2[ 1 ],
-					'src'		=> $v2[ 0 ],
-					'srcpath_md5'		=> md5( $v2[ 0 ] ),
-					'src_md5'		=> $md5,
-					'server'		=> $v2[ 2 ],
-				) ;
-				$wpdb->replace( $this->_tb_img_optm, $f ) ;
-			}
-			$mids_to_del[] = $v->meta_id ;
+	global $wpdb ;
 
-			// Delete from postmeta
-			if ( count( $mids_to_del ) > 100 || $k == $max_k ) {
-				$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . " ) " ;
-				$wpdb->query( $wpdb->prepare( $q, $mids_to_del ) ) ;
+	// Table version only exists after all old data migrated
+	// Last modified is v2.4.2
+	if ( version_compare( $ver, '2.4.2', '<' ) ) {
+		/**
+		 * Convert old data from postmeta to img_optm table
+		 * @since  2.0
+		 */
 
-				$mids_to_del = array() ;
+		// Migrate data from `wp_postmeta` to `wp_litespeed_img_optm`
+		$mids_to_del = array() ;
+		$q = "SELECT * FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_id" ;
+		$meta_value_list = $wpdb->get_results( $wpdb->prepare( $q, 'litespeed-optimize-data' ) ) ;
+		if ( $meta_value_list ) {
+			$max_k = count( $meta_value_list ) - 1 ;
+			foreach ( $meta_value_list as $k => $v ) {
+				$md52src_list = unserialize( $v->meta_value ) ;
+				foreach ( $md52src_list as $md5 => $v2 ) {
+					$f = array(
+						'post_id'	=> $v->post_id,
+						'optm_status'		=> $v2[ 1 ],
+						'src'		=> $v2[ 0 ],
+						'srcpath_md5'		=> md5( $v2[ 0 ] ),
+						'src_md5'		=> $md5,
+						'server'		=> $v2[ 2 ],
+					) ;
+					$wpdb->replace( $wpdb->prefix . 'litespeed_img_optm', $f ) ;
+				}
+				$mids_to_del[] = $v->meta_id ;
+
+				// Delete from postmeta
+				if ( count( $mids_to_del ) > 100 || $k == $max_k ) {
+					$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . " ) " ;
+					$wpdb->query( $wpdb->prepare( $q, $mids_to_del ) ) ;
+
+					$mids_to_del = array() ;
+				}
 			}
+
+			LiteSpeed_Cache_Log::debug( '[Data] img_optm inserted records: ' . $k ) ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] img_optm inserted records: ' . $k ) ;
+		$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s" ;
+		$rows = $wpdb->query( $wpdb->prepare( $q, 'litespeed-optimize-status' ) ) ;
+		LiteSpeed_Cache_Log::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
+
 	}
 
-	$q = "DELETE FROM $wpdb->postmeta WHERE meta_key = %s" ;
-	$rows = $wpdb->query( $wpdb->prepare( $q, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_STATUS ) ) ;
-	LiteSpeed_Cache_Log::debug( '[Data] img_optm delete optm_status records: ' . $rows ) ;
+	/**
+	 * Add target_md5 field to table
+	 * @since  2.4.2
+	 */
+	if ( version_compare( $ver, '2.4.2', '<' ) && version_compare( $ver, '2.0', '>=' ) ) {// NOTE: For new users, need to bypass this section
+		$sql = sprintf(
+			'ALTER TABLE `%1$s` ADD `server_info` text NOT NULL, DROP COLUMN `server`',
+			$wpdb->prefix . 'litespeed_img_optm'
+		) ;
+
+		$res = $wpdb->query( $sql ) ;
+		if ( $res !== true ) {
+			LiteSpeed_Cache_Log::debug( '[Data] Warning: Alter table img_optm failed!', $sql ) ;
+		}
+		else {
+			LiteSpeed_Cache_Log::debug( '[Data] Successfully upgraded table img_optm.' ) ;
+		}
+
+	}
+
+	// Delete img optm tb version
+	delete_option( $wpdb->prefix . 'litespeed_img_optm' ) ;
+
+
+	// Delete possible HTML optm data from wp_options
+	delete_option( 'litespeed-cache-optimized' ) ;
+
+	// Delete HTML optm tb version
+	delete_option( $wpdb->prefix . 'litespeed_optimizer' ) ;
 
 }
 
@@ -68,7 +105,7 @@ function litespeed_update_3_0( $ver )
 {
 	// Upgrade v2.0- to v2.0 first
 	if ( version_compare( $ver, '2.0', '<' ) ) {
-		litespeed_update_2_0() ;
+		litespeed_update_2_0( $ver ) ;
 	}
 
 	// conv items to litespeed.conf.*
@@ -128,6 +165,7 @@ function litespeed_update_3_0( $ver )
 
 	$data = array(
 		'radio_select'				=> 'cache',
+		'hash'						=> 'hash',
 		'auto_upgrade'				=> 'auto_upgrade',
 
 		'esi_enabled'				=> 'esi',
@@ -295,35 +333,41 @@ function litespeed_update_3_0( $ver )
 
 	/**
 	 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
+	 *
+	 * NOTE: this can be left here as `add_option` bcos it is after the item `litespeed-cache-cdn_mapping` is converted
+	 *
 	 * @since 1.7
 	 */
-	if ( isset( $previous_options[ 'cdn_url' ] ) ) {xx
+	if ( isset( $previous_options[ 'cdn_url' ] ) ) {
 		$cdn_mapping = array(
-			self::CDN_MAPPING_URL 		=> $previous_options[ 'cdn_url' ],
-			self::CDN_MAPPING_INC_IMG 	=> $previous_options[ 'cdn_inc_img' ],
-			self::CDN_MAPPING_INC_CSS 	=> $previous_options[ 'cdn_inc_css' ],
-			self::CDN_MAPPING_INC_JS 	=> $previous_options[ 'cdn_inc_js' ],
-			self::CDN_MAPPING_FILETYPE => $previous_options[ 'cdn_filetype' ],
+			'url' 		=> $previous_options[ 'cdn_url' ],
+			'inc_img' 	=> $previous_options[ 'cdn_inc_img' ],
+			'inc_css' 	=> $previous_options[ 'cdn_inc_css' ],
+			'inc_js' 	=> $previous_options[ 'cdn_inc_js' ],
+			'filetype' 	=> $previous_options[ 'cdn_filetype' ],
 		) ;
-		add_option( LiteSpeed_Cache_Config::O_CDN_MAPPING, array( $cdn_mapping ) ) ;
-		LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option adding CDN map" ) ;
+		add_option( 'litespeed.conf.cdn.mapping', array( $cdn_mapping ) ) ;
+		LiteSpeed_Cache_Log::debug( "[Data] plugin_upgrade option adding CDN map" ) ;
 	}
 
 	/**
 	 * Move Exclude settings to separate item
+	 *
+	 * NOTE: this can be left here as `add_option` bcos it is after the relevant items are converted
+	 *
 	 * @since  2.3
 	 */
 	if ( isset( $previous_options[ 'forced_cache_uri' ] ) ) {
-		add_option( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI, $previous_options[ 'forced_cache_uri' ] ) ;
+		add_option( 'litespeed.conf.cache.force_uri', $previous_options[ 'forced_cache_uri' ] ) ;
 	}
 	if ( isset( $previous_options[ 'cache_uri_priv' ] ) ) {
-		add_option( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI, $previous_options[ 'cache_uri_priv' ] ) ;
+		add_option( 'litespeed.conf.cache.priv_uri', $previous_options[ 'cache_uri_priv' ] ) ;
 	}
 	if ( isset( $previous_options[ 'optm_excludes' ] ) ) {
-		add_option( LiteSpeed_Cache_Config::O_OPTM_EXC, $previous_options[ 'optm_excludes' ] ) ;
+		add_option( 'litespeed.conf.optm.exc', $previous_options[ 'optm_excludes' ] ) ;
 	}
 	if ( isset( $previous_options[ 'excludes_uri' ] ) ) {
-		add_option( LiteSpeed_Cache_Config::O_CACHE_EXC, $previous_options[ 'excludes_uri' ] ) ;
+		add_option( 'litespeed.conf.cache.exc', $previous_options[ 'excludes_uri' ] ) ;
 	}
 
 	// Backup stale conf
