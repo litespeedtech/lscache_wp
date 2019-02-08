@@ -187,7 +187,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// unset( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ;
 
 		// Append site options to single blog options
-		foreach ( $this->_default_options as $k => $v ) {
+		foreach ( $this->_default_options as $k => $v ) {xx need to load_vals
 			if ( isset( $this->_site_options[ $k ] ) ) {
 				$this->_options[ $k ] = $this->_site_options[ $k ] ;
 			}
@@ -226,6 +226,66 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		return true ;
 	}
+
+
+	/**
+	 * Get the plugin's site wide options.
+	 *
+	 * If the site wide options are not set yet, set it to default.
+	 *
+	 * @since 1.0.2
+	 * @access public
+	 * @return array Returns the current site options.
+	 */
+	public function get_site_options()
+	{
+		if ( ! is_multisite() ) {
+			return null ;
+		}
+
+		if ( $this->_site_options ) {
+			return $this->_site_options ;
+		}
+
+		$ver = get_site_option( self::conf_name( self::_VERSION ) ) ;
+
+		/**
+		 * Version is less than v3.0, or, is a new installation
+		 */
+xx
+		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+			// Load default values
+			$this->_default_options = $this->default_vals() ;
+
+			// Init new default/missing options
+			foreach ( $this->_default_options as $k => $v ) {
+				// If the option existed, bypass updating
+				add_option( self::conf_name( $k ), $v ) ;
+			}
+		}
+
+		// Get site options
+		$this->_site_options = $this->default_site_keys() ;
+
+		how to set default vals
+
+		foreach ( $this->_site_options as $k => $v ) {
+			$this->_site_options[ $k ] =
+		}
+
+		if ( isset( $site_options ) && is_array( $site_options ) ) {
+			$this->_site_options = $site_options ;
+			return $this->_site_options ;
+		}
+
+		$default_site_options = $this->get_default_site_options() ;
+		add_site_option( self::OPTION_NAME, $default_site_options ) ;
+
+		$this->_site_options = $default_site_options ;
+
+		return $this->_site_options ;
+	}
+
 
 	/**
 	 * Give an API to change all options val
@@ -455,42 +515,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		return $val ;
 	}
-
-	/**
-	 * Get the plugin's site wide options.
-	 *
-	 * If the site wide options are not set yet, set it to default.
-	 *
-	 * @since 1.0.2
-	 * @access public
-	 * @return array Returns the current site options.
-	 */
-	public function get_site_options()
-	{
-		if ( ! is_multisite() ) {
-			return null ;
-		}
-
-		if ( $this->_site_options ) {
-			return $this->_site_options ;
-		}
-
-		// Get site options
-		$site_options = get_site_option( self::OPTION_NAME ) ;xxx
-
-		if ( isset( $site_options ) && is_array( $site_options ) ) {
-			$this->_site_options = $site_options ;
-			return $this->_site_options ;
-		}
-
-		$default_site_options = $this->get_default_site_options() ;
-		add_site_option( self::OPTION_NAME, $default_site_options ) ;
-
-		$this->_site_options = $default_site_options ;
-
-		return $this->_site_options ;
-	}
-
 
 	/**
 	 * Helper function to convert the options to replicate the input format.

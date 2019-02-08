@@ -374,9 +374,90 @@ function litespeed_update_3_0( $ver )
 	delete_option( 'litespeed-cache-conf' ) ;
 	add_option( 'litespeed-cache-conf.bk', $previous_options ) ;
 
+	// Upgrade site_options if is network
+	if ( is_multisite() ) {
+		$previous_site_options = get_site_option( 'litespeed-cache-conf' ) ;
+
+		$data = array(
+			'network_enabled'		=> 'network_enabled',
+			'use_primary_settings'	=> 'use_primary_settings',
+			'auto_upgrade'			=> 'auto_upgrade',
+			'purge_upgrade'			=> 'purge.upgrade',
+
+			'cache_favicon'			=> 'cache.favicon',
+			'cache_resources'		=> 'cache.resources',
+			'mobileview_enabled'	=> 'cache.mobile',
+			'mobileview_rules'		=> 'cache.mobile_rules',
+			'login_cookie'				=> 'cache.login_cookie',
+			'nocache_cookies' 			=> 'cache.exc_cookies',
+			'nocache_useragents' 		=> 'cache.exc_useragents',
+
+			'cache_object'				=> 'object',
+			'cache_object_kind'			=> 'object.kind',
+			'cache_object_host'			=> 'object.host',
+			'cache_object_port'			=> 'object.port',
+			'cache_object_life'			=> 'object.life',
+			'cache_object_persistent'	=> 'object.persistent',
+			'cache_object_admin'		=> 'object.admin',
+			'cache_object_transients'	=> 'object.transients',
+			'cache_object_db_id'		=> 'object.db_id',
+			'cache_object_user'			=> 'object.user',
+			'cache_object_pswd'			=> 'object.psw',
+
+			'cache_browser'				=> 'util.browser_cache',
+			'cache_browser_ttl'			=> 'util.browser_cache_ttl',
+			'check_advancedcache'		=> 'util.check_advcache',
+
+			'media_webp_replace'		=> 'img_optm.webp_replace',
+		) ;
+		foreach ( $data as $k => $v ) {
+			if ( ! isset( $previous_site_options[ $k ] ) ) {
+				continue ;
+			}
+			add_site_option( 'litespeed.conf.' . $v, $previous_site_options[ $k ] ) ;
+		}
+
+		$data = array(
+			'litespeed-object_global_groups' 			=> 'object.global_groups',xx this is already deleted by single_site converter
+			'litespeed-object_non_persistent_groups' 	=> 'object.non_persistent_groups',
+		) ;
+		foreach ( $data as $k => $v ) {
+			$old_data = get_option( $k ) ;
+			if ( $old_data ) {
+				add_site_option( 'litespeed.conf.' . $v, $old_data ) ;
+			}
+			delete_option( $k ) ;
+		}
+
+		delete_site_option( 'litespeed-cache-conf' ) ;
+
+		add_site_option( 'litespeed.conf.cache._version', '3.0' ) ;
+
+	}
+
 	add_option( 'litespeed.conf.cache._version', '3.0' ) ;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

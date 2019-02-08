@@ -258,6 +258,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	const IMG_OPTM_BM_EXIF 		= 8 ;
 
 	private $_default_options = array() ;
+	private $_default_site_options = array() ;
 
 	private function __construct()
 	{
@@ -271,38 +272,84 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	 * @access protected
 	 * @return array An array of the default options.
 	 */
-	protected function get_default_site_options()
+	protected function default_site_keys()
 	{
-		$default_site_options = array(
-			self::_VERSION => LiteSpeed_Cache::PLUGIN_VERSION,
-			self::NETWORK_O_ENABLED => false,
-			self::NETWORK_O_USE_PRIMARY => false,
-			self::O_AUTO_UPGRADE => false,
-			self::O_PURGE_ON_UPGRADE => true,
-			self::O_CACHE_FAVICON => true,
-			self::O_CACHE_RES => true,
-			self::O_CACHE_MOBILE => 0, // todo: why not false
-			self::O_CACHE_MOBILE_RULES => 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi',
-			self::O_OBJECT => false,
-			self::O_OBJECT_KIND => false,
-			self::O_OBJECT_HOST => 'localhost',
-			self::O_OBJECT_PORT => '11211',
-			self::O_OBJECT_LIFE => '360',
-			self::O_OBJECT_PERSISTENT => true,
-			self::O_OBJECT_ADMIN => true,
-			self::O_OBJECT_TRANSIENTS => true,
-			self::O_OBJECT_DB_ID => 0,
-			self::O_OBJECT_USER => '',
-			self::O_OBJECT_PSWD => '',
-			self::O_UTIL_BROWSER_CACHE => false,
-			self::O_UTIL_BROWSER_CACHE_TTL => 2592000,
-			self::O_CACHE_LOGIN_COOKIE => '',
-			self::O_UTIL_CHECK_ADVCACHE => true,
-			self::O_CACHE_EXC_COOKIES => '',
-			self::O_CACHE_EXC_USERAGENTS => '',
-			self::O_IMG_OPTM_WEBP_REPLACE => false,
+		$this->_default_site_options = array(
+			self::_VERSION 					=> '',
+			self::NETWORK_O_ENABLED 		=> false,
+			self::NETWORK_O_USE_PRIMARY 	=> false,
+			self::O_AUTO_UPGRADE 			=> false,
+
+			self::O_CACHE_FAVICON 			=> false,
+			self::O_CACHE_RES 				=> false,
+			self::O_CACHE_MOBILE 			=> false,
+			self::O_CACHE_MOBILE_RULES 		=> '',
+			self::O_CACHE_LOGIN_COOKIE 		=> '',
+			self::O_CACHE_EXC_COOKIES 		=> '',
+			self::O_CACHE_EXC_USERAGENTS 	=> '',
+
+			self::O_PURGE_ON_UPGRADE 		=> false,
+
+			self::O_OBJECT 					=> false,
+			self::O_OBJECT_KIND 			=> false,
+			self::O_OBJECT_HOST 			=> '',
+			self::O_OBJECT_PORT 			=> 0,
+			self::O_OBJECT_LIFE 			=> 0,
+			self::O_OBJECT_PERSISTENT 		=> false,
+			self::O_OBJECT_ADMIN 			=> false,
+			self::O_OBJECT_TRANSIENTS 		=> false,
+			self::O_OBJECT_DB_ID 			=> 0,
+			self::O_OBJECT_USER 			=> '',
+			self::O_OBJECT_PSWD 			=> '',
+			self::O_OBJECT_GLOBAL_GROUPS	=> array(),
+			self::O_OBJECT_NON_PERSISTENT_GROUPS => array(),
+
+			self::O_UTIL_BROWSER_CACHE 		=> false,
+			self::O_UTIL_BROWSER_CACHE_TTL 	=> 0,
+			self::O_UTIL_CHECK_ADVCACHE 	=> false,
+
+			self::O_IMG_OPTM_WEBP_REPLACE 	=> false,
 		) ;
-		return $default_site_options ;
+
+		return $this->_default_site_options ;
+	}
+
+	protected function default_site_vals()
+	{
+		// Load network_default.ini
+		if ( file_exists( LSCWP_DIR . 'data/const.network_default.ini' ) ) {
+			$default_ini_cfg = parse_ini_file( LSCWP_DIR . 'data/const.network_default.ini', true ) ;
+			foreach ( $this->_default_site_options as $k => $v ) {
+				if ( ! array_key_exists( $k, $default_ini_cfg ) ) {
+					continue ;
+				}
+
+				// Parse value in ini file
+				$ini_v = $default_ini_cfg[ $k ] ;
+
+				if ( is_bool( $v ) ) { // Keep value type constantly
+					$ini_v = (bool) $ini_v ;
+				}
+
+				if ( is_array( $v ) ) {
+					/**
+					 * Default multiple lines to array
+					 */
+					$ini_v = explode( "\n", $ini_v ) ;
+				}
+
+				if ( $ini_v == $v ) {
+					continue ;
+				}
+
+				$this->_default_site_options[ $k ] = $ini_v ;
+
+			}
+		}
+
+		$this->_default_site_options[ self::_VERSION ] = LiteSpeed_Cache::PLUGIN_VERSION ;
+
+		return $this->_default_site_options ;
 	}
 
 	/**
@@ -387,6 +434,8 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 			$this->_default_options[ self::HASH ] = Litespeed_String::rrand( 32 ) ;
 		}
 
+		$this->_default_options[ self::_VERSION ] = LiteSpeed_Cache::PLUGIN_VERSION ;
+
 		return $this->_default_options ;
 	}
 
@@ -401,7 +450,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	public function default_keys($include_thirdparty = true)
 	{
 		$this->_default_options = array(
-			self::_VERSION 			=> LiteSpeed_Cache::PLUGIN_VERSION,
+			self::_VERSION 			=> '',
 			self::HASH				=> '',
 			self::O_AUTO_UPGRADE 	=> false,
 

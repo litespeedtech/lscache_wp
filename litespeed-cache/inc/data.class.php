@@ -53,6 +53,8 @@ class LiteSpeed_Cache_Data
 	/**
 	 * Upgrade conf to latest format version from previous versions
 	 *
+	 * Network upgrade will be here too
+	 *
 	 * NOTE: Only for v3.0+
 	 *
 	 * @since 3.0
@@ -81,6 +83,11 @@ class LiteSpeed_Cache_Data
 		// Update version to latest
 		delete_option( self::conf_name( self::_VERSION ) ) ;
 		add_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+
+		if ( is_multisite() ) {
+			delete_site_option( self::conf_name( self::_VERSION ) ) ;
+			add_site_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		}
 
 		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
