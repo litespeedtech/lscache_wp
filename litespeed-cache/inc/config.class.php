@@ -22,6 +22,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	private $_options = array() ;
 	private $_site_options = array() ;
 	private $_default_options = array() ;
+	private $_default_site_options = array() ;
 
 	protected $vary_groups ;
 	protected $optm_exc_roles ;
@@ -91,7 +92,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * Version is less than v3.0, or, is a new installation
 		 */
 		if ( ! $ver ) {
-			// Try upgrade first
+			// Try upgrade first (network will upgrade inside too)
 			LiteSpeed_Cache_Data::get_instance()->try_upgrade_conf_3_0() ;
 		}
 
@@ -247,41 +248,28 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return $this->_site_options ;
 		}
 
+		$this->_default_site_options = $this->default_site_keys() ;
+
 		$ver = get_site_option( self::conf_name( self::_VERSION ) ) ;
 
 		/**
-		 * Version is less than v3.0, or, is a new installation
+		 * Is a new installation
 		 */
-xx
 		if ( ! $ver || $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
 			// Load default values
-			$this->_default_options = $this->default_vals() ;
+			$this->_default_site_options = $this->default_site_vals() ;
 
 			// Init new default/missing options
-			foreach ( $this->_default_options as $k => $v ) {
+			foreach ( $this->_default_site_options as $k => $v ) {
 				// If the option existed, bypass updating
-				add_option( self::conf_name( $k ), $v ) ;
+				add_site_option( self::conf_name( $k ), $v ) ;
 			}
 		}
 
-		// Get site options
-		$this->_site_options = $this->default_site_keys() ;
-
-		how to set default vals
-
-		foreach ( $this->_site_options as $k => $v ) {
-			$this->_site_options[ $k ] =
+		// Load all site options
+		foreach ( $this->_default_site_options as $k => $v ) {
+			$this->_site_options[ $k ] = get_site_option( self::conf_name( $k ), $v ) ;
 		}
-
-		if ( isset( $site_options ) && is_array( $site_options ) ) {
-			$this->_site_options = $site_options ;
-			return $this->_site_options ;
-		}
-
-		$default_site_options = $this->get_default_site_options() ;
-		add_site_option( self::OPTION_NAME, $default_site_options ) ;
-
-		$this->_site_options = $default_site_options ;
 
 		return $this->_site_options ;
 	}
