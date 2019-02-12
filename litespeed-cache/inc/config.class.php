@@ -168,7 +168,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 			// Get the primary site settings
 			// If it's just upgraded, 2nd blog is being visited before primary blog, can just load default config (won't hurt as this could only happen shortly)
-			$this->_options = $this->load_options( BLOG_ID_CURRENT_SITE ) ;
+			$this->load_options( BLOG_ID_CURRENT_SITE ) ;
 
 			// crawler cron activation is separated
 			$this->_options[ self::O_CRWL ] = $CRWL_CRON_ACTIVE ;
@@ -183,12 +183,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
 		}
 
-		// These two are not for single blog options
-		// unset( $this->_site_options[ self::NETWORK_O_ENABLED ] ) ;
-		// unset( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ;
-
 		// Append site options to single blog options
-		foreach ( $this->_default_options as $k => $v ) {xx need to load_vals
+		foreach ( $this->_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
 				$this->_options[ $k ] = $this->_site_options[ $k ] ;
 			}
