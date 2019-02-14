@@ -857,7 +857,7 @@ class LiteSpeed_Cache_Purge
 	 */
 	private function _append_prefix( $purge_tags, $is_private = false )
 	{
-		$curr_bid = get_current_blog_id() ;
+		$curr_bid = is_multisite() ? get_current_blog_id() : '' ;
 
 		if ( ! in_array('*', $purge_tags) ) {
 			$tags = array() ;
