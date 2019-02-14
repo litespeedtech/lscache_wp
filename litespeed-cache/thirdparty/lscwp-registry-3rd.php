@@ -12,7 +12,7 @@
  *
  */
 if ( ! defined('ABSPATH') ) {
-    die() ;
+	die() ;
 }
 
 $thirdparty_list = array(
@@ -31,6 +31,7 @@ $thirdparty_list = array(
 	'avada',
 	'wp-postratings',
 	'divi-theme-builder',
+	'facetwp',
 ) ;
 
 foreach ($thirdparty_list as $val) {

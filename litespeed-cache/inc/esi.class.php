@@ -520,9 +520,21 @@ class LiteSpeed_Cache_ESI
 	 * @access public
 	 * @since 1.1.3
 	 */
-	public function load_admin_bar_block()
+	public function load_admin_bar_block($params)
 	{
+		ob_start() ;
 		wp_admin_bar_render() ;
+		$output = ob_get_contents() ;
+		ob_end_clean() ;
+
+		if ( $params[ 'is_json' ] ) {
+			$output = json_encode( $output ) ;
+			$output = ltrim( $output, '"' ) ;
+			$output = rtrim( $output, '"' ) ;
+		}
+
+		echo $output ;
+
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
 		}
