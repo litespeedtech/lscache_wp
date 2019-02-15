@@ -551,8 +551,7 @@ class LiteSpeed_Cache_ESI
 
 		if ( $params[ 'is_json' ] ) {
 			$output = json_encode( $output ) ;
-			$output = ltrim( $output, '"' ) ;
-			$output = rtrim( $output, '"' ) ;
+			$output = trim( $output, '"' ) ;
 		}
 
 		echo $output ;
