@@ -561,6 +561,20 @@ class LiteSpeed_Cache
 			$buffer .= $this->footer_comment ;
 		}
 
+		// If ESI req is json, give the content json format
+		if ( defined( 'LSCACHE_IS_ESI' ) && ! empty( $_SERVER[ 'ESI_CONTENT_TYPE' ] ) ) {
+			if ( strpos( $_SERVER[ 'ESI_CONTENT_TYPE' ], 'application/json' ) === 0 ) {
+				if ( json_decode( $buffer, true ) == NULL ) {
+					LiteSpeed_Cache_Log::debug( '[Core] Buffer converting to JSON' ) ;
+					$buffer = json_encode( $buffer ) ;
+					$buffer = trim( $buffer, '"' ) ;
+				}
+				else {
+					LiteSpeed_Cache_Log::debug( '[Core] JSON Buffer' ) ;
+				}
+			}
+		}
+
 		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
 
 		return $buffer ;
@@ -605,11 +619,18 @@ class LiteSpeed_Cache
 		$control_header = LiteSpeed_Cache_Control::output() ;
 
 		// Init comment info
-		$running_info_showing = ( defined( 'LITESPEED_IS_HTML' ) && LITESPEED_IS_HTML ) || ( defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI ) ;
+		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
 		}
+		// Silence comment for json req @since 2.9.3
+		if ( defined( 'REST_REQUEST' ) || LiteSpeed_Cache_Router::is_ajax() ) {
+			$running_info_showing = false ;
+			LiteSpeed_Cache_Log::debug( '[Core] Silence Comment due to REST/AJAX' ) ;
+		}
+
+		$running_info_showing = apply_filters( 'litespeed_comment', $running_info_showing ) ;
 
 		if ( $running_info_showing ) {
 			// Give one more break to avoid ff crash
