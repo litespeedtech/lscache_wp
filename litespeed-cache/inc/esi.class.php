@@ -527,7 +527,7 @@ class LiteSpeed_Cache_ESI
 		$output = ob_get_contents() ;
 		ob_end_clean() ;
 
-		if ( $params[ 'is_json' ] ) {
+		if ( ! empty( $params[ 'is_json' ] ) ) {
 			$output = json_encode( $output ) ;
 			$output = trim( $output, '"' ) ;
 		}
@@ -553,14 +553,14 @@ class LiteSpeed_Cache_ESI
 	 * @since 1.1.3
 	 * @param array $params Input parameters needed to correctly display comment form
 	 */
-	public function load_comment_form_block($params)
+	public function load_comment_form_block( $params )
 	{
 		ob_start() ;
 		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
 		$output = ob_get_contents() ;
 		ob_end_clean() ;
 
-		if ( $params[ 'is_json' ] ) {
+		if ( ! empty( $params[ 'is_json' ] ) ) {
 			$output = json_encode( $output ) ;
 			$output = trim( $output, '"' ) ;
 		}
