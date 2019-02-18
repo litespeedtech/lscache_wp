@@ -609,7 +609,22 @@ class LiteSpeed_Cache_Utility
 			define( 'LITESPEED_FRONTEND_HOST', parse_url( $home_host, PHP_URL_HOST ) ) ;
 		}
 
-		return $host === LITESPEED_FRONTEND_HOST ;
+		if ( $host === LITESPEED_FRONTEND_HOST ) {
+			return true ;
+		}
+
+		$sub_domains = array() ;
+		$sub_domains = apply_filters( 'litespeed_cache_internal_sub_domains', $sub_domains ) ;
+
+		if ( ! empty( $sub_domains ) ) {
+			foreach ( $sub_domains as $value ) {
+				if ( $host === $value ) {
+					return true ;
+				}
+			}
+		}
+
+		return false ;
 	}
 
 	/**
