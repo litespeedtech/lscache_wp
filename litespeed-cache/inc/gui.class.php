@@ -288,7 +288,7 @@ class LiteSpeed_Cache_GUI
 			return false ;
 		}
 
-		if ( file_exists( ABSPATH . '.silence_litespeed_banner.data' ) ) {
+		if ( file_exists( ABSPATH . '.litespeed_no_banner' ) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Bypass banners due to silence file' ) ;
 			return false ;
 		}
