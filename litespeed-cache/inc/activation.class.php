@@ -53,7 +53,7 @@ class LiteSpeed_Cache_Activation
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
 
 		// Check new version @since 2.9.3
-		LiteSpeed_Cache_Utility::version_check( 'new' ) ;
+		LiteSpeed_Cache_Utility::version_check( 'new' . ( defined( 'LSCWP_PLUGIN_NAME' ) ? '_whm' : '' ) ) ;
 
 		/**
 		 * Handle files:
