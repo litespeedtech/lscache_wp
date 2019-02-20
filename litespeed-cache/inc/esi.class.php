@@ -54,11 +54,14 @@ class LiteSpeed_Cache_ESI
 		/**
 		 * Recover REQUEST_URI
 		 * @since  1.8.1
+		 * @since  2.9.3 Don't replace REQUEST_URI with ESI_REFERER to avoid breaking WP5 editor REST call
 		 */
 		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
 			define( 'LSCACHE_IS_ESI', true ) ;
 
-			if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) ) {
+			! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
+
+			if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! LiteSpeed_Cache_Utility::is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
 				$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
 			}
 		}
@@ -144,6 +147,8 @@ class LiteSpeed_Cache_ESI
 		// Check if is an ESI request
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			self::get_instance()->register_esi_actions() ;
+
+			LiteSpeed_Cache_Log::debug( '[ESI] calling template' ) ;
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
 		}

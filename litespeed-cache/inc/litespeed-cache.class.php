@@ -561,11 +561,11 @@ class LiteSpeed_Cache
 			$buffer .= $this->footer_comment ;
 		}
 
-		// If ESI req is JSON, give the content json format
+		// If ESI req is JSON, give the content json format @since 2.9.3
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			LiteSpeed_Cache_Log::debug2( '[Core] ESI----------Start--------' ) ;
-			LiteSpeed_Cache_Log::debug2( $buffer ) ;
-			LiteSpeed_Cache_Log::debug2( '[Core] ESI----------End--------' ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] ESI----------Start--------' ) ;
+			LiteSpeed_Cache_Log::debug( $buffer ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] ESI----------End--------' ) ;
 
 			if ( ! empty( $_SERVER[ 'ESI_CONTENT_TYPE' ] ) && strpos( $_SERVER[ 'ESI_CONTENT_TYPE' ], 'application/json' ) === 0 ) {
 				if ( json_decode( $buffer, true ) == NULL ) {
