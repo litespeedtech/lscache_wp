@@ -53,7 +53,7 @@ class LiteSpeed_Cache_Activation
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
 
 		// Check new version @since 2.9.3
-		LiteSpeed_Cache_Utility::version_check( 'new' . ( defined( 'LSCWP_PLUGIN_NAME' ) ? '_whm' : '' ) ) ;
+		LiteSpeed_Cache_Utility::version_check( 'new' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
 
 		/**
 		 * Handle files:
@@ -111,7 +111,7 @@ class LiteSpeed_Cache_Activation
 		 */
 		LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;
 
-		if ( defined( 'LSCWP_PLUGIN_NAME' ) ) {
+		if ( defined( 'LSCWP_REF' ) && LSCWP_REF == 'whm' ) {
 			update_option( LiteSpeed_Cache::WHM_MSG, LiteSpeed_Cache::WHM_MSG_VAL ) ;
 		}
 
