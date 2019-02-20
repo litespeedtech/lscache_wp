@@ -52,6 +52,9 @@ class LiteSpeed_Cache_Activation
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
 
+		// Check new version @since 2.9.3
+		LiteSpeed_Cache_Utility::version_check( 'new' ) ;
+
 		/**
 		 * Handle files:
 		 * 		1) wp-config.php;
