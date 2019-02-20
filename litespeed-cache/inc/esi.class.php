@@ -54,13 +54,16 @@ class LiteSpeed_Cache_ESI
 		/**
 		 * Recover REQUEST_URI
 		 * @since  1.8.1
-		 * @since  2.9.3 Don't replace REQUEST_URI with ESI_REFERER to avoid breaking WP5 editor REST call
 		 */
 		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
 			define( 'LSCACHE_IS_ESI', true ) ;
 
 			! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
 
+			/**
+			 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
+			 * @since 2.9.3
+			 */
 			if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! LiteSpeed_Cache_Utility::is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
 				$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
 			}

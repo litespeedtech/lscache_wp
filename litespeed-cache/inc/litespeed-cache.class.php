@@ -629,7 +629,7 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
 		}
 		// Silence comment for json req @since 2.9.3
-		if ( defined( 'REST_REQUEST' ) || LiteSpeed_Cache_Router::is_ajax() ) {
+		if ( LiteSpeed_Cache_Utility::is_rest() || LiteSpeed_Cache_Router::is_ajax() ) {
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( '[Core] Silence Comment due to REST/AJAX' ) ;
 		}

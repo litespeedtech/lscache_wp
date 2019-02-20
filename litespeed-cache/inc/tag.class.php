@@ -303,7 +303,7 @@ class LiteSpeed_Cache_Tag
 		}
 
 		// Check REST API
-		if ( defined( 'REST_REQUEST' ) ) {
+		if ( LiteSpeed_Cache_Utility::is_rest() ) {
 			$tags[] = self::TYPE_REST ;
 
 			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;

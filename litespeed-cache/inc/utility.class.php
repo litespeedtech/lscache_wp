@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Utility
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
 	/**
-	 * Check if an URL is REST req or not
+	 * Check if an URL or current page is REST req or not
 	 *
 	 * @since  2.9.3
 	 * @access public
