@@ -131,6 +131,8 @@ class LiteSpeed_Cache_Activation
 		if ( is_multisite() ) {
 			delete_site_option( LiteSpeed_Cache_Config::OPTION_NAME ) ;
 		}
+
+		LiteSpeed_Cache_Utility::version_check( 'uninstall' ) ;
 	}
 
 	/**
