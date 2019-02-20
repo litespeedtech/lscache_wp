@@ -285,7 +285,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.9.3 - Feb 20 2019 =
 * <strong>ESI</strong>: ESI shortcodes can now be saved in Gutenberg editor.
-* <strong>ESI</strong>: ESI now honers the parent page JSON data type to avoid breaking REST calls (LSWS 5.3.6+).
+* <strong>ESI</strong>: ESI now honors the parent page JSON data type to avoid breaking REST calls (LSWS 5.3.6+).
 * <strong>ESI</strong>: Added is_json parameter support for admin_bar.
 * <strong>ESI</strong>: Simplified comment form code.
 * <strong>3rd</strong>: Better page builder plugin compatibility within AJAX calls.
