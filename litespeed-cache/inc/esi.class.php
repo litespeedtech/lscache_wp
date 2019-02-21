@@ -324,7 +324,7 @@ class LiteSpeed_Cache_ESI
 	{
 		$params = self::parse_esi_param() ;
 		if ( $params === false ) {
-			LiteSpeed_Cache_Log::debug( '[ESI] Not ESI req due to no param' ) ;
+			LiteSpeed_Cache_Log::debug( '[ESI] 🛑  Not ESI req due to no param' ) ;
 			return ;
 		}
 		$esi_id = $params[ self::PARAM_BLOCK_ID ] ;
