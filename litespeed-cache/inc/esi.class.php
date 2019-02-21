@@ -45,6 +45,7 @@ class LiteSpeed_Cache_ESI
 	private function __construct()
 	{
 		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
+
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
 
@@ -56,17 +57,7 @@ class LiteSpeed_Cache_ESI
 		 * @since  1.8.1
 		 */
 		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
-			define( 'LSCACHE_IS_ESI', true ) ;
-
-			! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
-
-			/**
-			 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
-			 * @since 2.9.3
-			 */
-			if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! LiteSpeed_Cache_Utility::is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
-				$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
-			}
+			$this->_register_esi_actions() ;
 		}
 
 		/**
@@ -137,6 +128,39 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
+	 * Register all of the hooks related to the esi logic of the plugin.
+	 * Specifically when the page IS an esi page.
+	 *
+	 * @since    1.1.3
+	 * @access   private
+	 */
+	private function _register_esi_actions()
+	{
+		define( 'LSCACHE_IS_ESI', true ) ;
+
+		! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
+
+		/**
+		 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
+		 * @since 2.9.3
+		 */
+		if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! LiteSpeed_Cache_Utility::is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
+			$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
+		}
+
+		// Make REST call be able to parse ESI @since 2.9.4
+		add_action( 'rest_api_init', 'LiteSpeed_Cache_ESI::load_esi_block', 101 ) ;
+
+		// Register ESI blocks
+		add_action('litespeed_cache_load_esi_block-widget', array($this, 'load_widget_block')) ;
+		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
+		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
+
+		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
+		add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
+	}
+
+	/**
 	 * Hooked to the template_include action.
 	 * Selects the esi template file when the post type is a LiteSpeed ESI page.
 	 *
@@ -149,31 +173,12 @@ class LiteSpeed_Cache_ESI
 	{
 		// Check if is an ESI request
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			self::get_instance()->register_esi_actions() ;
-
 			LiteSpeed_Cache_Log::debug( '[ESI] calling template' ) ;
 
 			return LSCWP_DIR . 'tpl/esi.tpl.php' ;
 		}
 		self::get_instance()->register_not_esi_actions() ;
 		return $template ;
-	}
-
-	/**
-	 * Register all of the hooks related to the esi logic of the plugin.
-	 * Specifically when the page IS an esi page.
-	 *
-	 * @since    1.1.3
-	 * @access   public
-	 */
-	public function register_esi_actions()
-	{
-		add_action('litespeed_cache_load_esi_block-widget', array($this, 'load_widget_block')) ;
-		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
-		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
-
-		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
-		add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
 	}
 
 	/**
@@ -319,6 +324,7 @@ class LiteSpeed_Cache_ESI
 	{
 		$params = self::parse_esi_param() ;
 		if ( $params === false ) {
+			LiteSpeed_Cache_Log::debug( '[ESI] Not ESI req due to no param' ) ;
 			return ;
 		}
 		$esi_id = $params[ self::PARAM_BLOCK_ID ] ;
