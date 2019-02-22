@@ -24,11 +24,9 @@ class LiteSpeed_Cache_ESI
 	private $_esi_preserve_list = array() ;
 
 	const QS_ACTION = 'lsesi' ;
-	const POSTTYPE = 'lswcp' ;
 	const QS_PARAMS = 'esi' ;
 
 	const PARAM_ARGS = 'args' ;
-	const PARAM_BLOCK_ID = 'block_id' ;
 	const PARAM_ID = 'id' ;
 	const PARAM_INSTANCE = 'instance' ;
 	const PARAM_NAME = 'name' ;
@@ -56,7 +54,7 @@ class LiteSpeed_Cache_ESI
 		 * Recover REQUEST_URI
 		 * @since  1.8.1
 		 */
-		if ( ! empty( $_GET[ self::QS_ACTION ] ) && $_GET[ self::QS_ACTION ] == self::POSTTYPE ) {
+		if ( ! empty( $_GET[ self::QS_ACTION ] ) ) {
 			$this->_register_esi_actions() ;
 		}
 
@@ -136,7 +134,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	private function _register_esi_actions()
 	{
-		define( 'LSCACHE_IS_ESI', true ) ;
+		define( 'LSCACHE_IS_ESI', $_GET[ self::QS_ACTION ] ) ;// Reused this to ESI block ID
 
 		! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
 
@@ -149,6 +147,7 @@ class LiteSpeed_Cache_ESI
 		}
 
 		// Make REST call be able to parse ESI @since 2.9.4
+		// Not effective due to ESI req are all to `/` yet
 		add_action( 'rest_api_init', 'LiteSpeed_Cache_ESI::load_esi_block', 101 ) ;
 
 		// Register ESI blocks
@@ -238,7 +237,6 @@ class LiteSpeed_Cache_ESI
 			return false ;
 		}
 
-		$params[ self::PARAM_BLOCK_ID ] = $block_id ;
 		if ( $silence ) {
 			// Don't add comment to esi block ( orignal for nonce used in tag property data-nonce='esi_block' )
 			$params[ '_ls_silence' ] = true ;
@@ -247,16 +245,25 @@ class LiteSpeed_Cache_ESI
 		$params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id, $params) ;
 		$control = apply_filters('litespeed_cache_sub_esi_control-' . $block_id, $control) ;
 		if ( !is_array($params) || !is_string($control) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "Sub esi hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[ESI] 🛑 Sub hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
 
 			return false ;
 		}
 
-		$url = trailingslashit( wp_make_link_relative( home_url() ) ) . '?' . self::QS_ACTION . '=' . self::POSTTYPE ;
+		// Build params for URL
+		$appended_params = array(
+			self::QS_ACTION	=> $block_id,
+		) ;
 		if ( ! empty( $control ) ) {
-			$url .= '&_control=' . $control ;
+			$appended_params[ '_control' ] = $control ;
 		}
-		$url .= '&' . self::QS_PARAMS . '=' . urlencode(base64_encode(serialize($params))) ;
+		if ( $params ) {
+			$appended_params[ self::QS_PARAMS ] = urlencode(base64_encode(serialize($params))) ;
+		}
+
+		// Generate ESI URL
+		// Escape potential chars @since 2.9.4
+		$url = add_query_arg( $appended_params, trailingslashit( wp_make_link_relative( home_url() ) ) ) ;
 
 		$output = "<esi:include src='$url'" ;
 		if ( ! empty( $control ) ) {
@@ -307,7 +314,7 @@ class LiteSpeed_Cache_ESI
 		}
 		$unencoded = urldecode($unencrypted) ;
 		$params = unserialize($unencoded) ;
-		if ( $params === false || ! isset($params[self::PARAM_BLOCK_ID]) ) {
+		if ( $params === false ) {
 			return false ;
 		}
 
@@ -323,17 +330,13 @@ class LiteSpeed_Cache_ESI
 	public static function load_esi_block()
 	{
 		$params = self::parse_esi_param() ;
-		if ( $params === false ) {
-			LiteSpeed_Cache_Log::debug( '[ESI] 🛑  Not ESI req due to no param' ) ;
-			return ;
-		}
-		$esi_id = $params[ self::PARAM_BLOCK_ID ] ;
+
 		if ( defined( 'LSCWP_LOG' ) ) {
 			$logInfo = '------- ESI ------- ' ;
 			if( ! empty( $params[ self::PARAM_NAME ] ) ) {
 				$logInfo .= ' Name: ' . $params[ self::PARAM_NAME ] . ' ----- ' ;
 			}
-			$logInfo .= $esi_id . ' -------' ;
+			$logInfo .= LSCACHE_IS_ESI . ' -------' ;
 			LiteSpeed_Cache_Log::debug( $logInfo ) ;
 		}
 
@@ -342,7 +345,7 @@ class LiteSpeed_Cache_ESI
 		}
 
 		LiteSpeed_Cache_Tag::add( rtrim( LiteSpeed_Cache_Tag::TYPE_ESI, '.' ) ) ;
-		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . $esi_id ) ;
+		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . LSCACHE_IS_ESI ) ;
 
 		// LiteSpeed_Cache_Log::debug(var_export($params, true ));
 
@@ -362,7 +365,7 @@ class LiteSpeed_Cache_ESI
 			}
 		}
 
-		do_action('litespeed_cache_load_esi_block-' . $esi_id, $params) ;
+		do_action('litespeed_cache_load_esi_block-' . LSCACHE_IS_ESI, $params) ;
 	}
 
 // BEGIN helper functions
@@ -623,8 +626,6 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_esi_shortcode( $params )
 	{
-		unset( $params[ self::PARAM_BLOCK_ID ] ) ;
-
 		if ( isset( $params[ 'ttl' ] ) ) {
 			if ( ! $params[ 'ttl' ] ) {
 				LiteSpeed_Cache_Control::set_nocache( 'ESI shortcode att ttl=0' ) ;
