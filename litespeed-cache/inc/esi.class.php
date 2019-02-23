@@ -148,7 +148,7 @@ class LiteSpeed_Cache_ESI
 
 		// Make REST call be able to parse ESI @since 2.9.4
 		// Not effective due to ESI req are all to `/` yet
-		add_action( 'rest_api_init', 'LiteSpeed_Cache_ESI::load_esi_block', 101 ) ;
+		add_action( 'rest_api_init', array( $this, 'load_esi_block' ), 101 ) ;
 
 		// Register ESI blocks
 		add_action('litespeed_cache_load_esi_block-widget', array($this, 'load_widget_block')) ;
@@ -258,11 +258,13 @@ class LiteSpeed_Cache_ESI
 			$appended_params[ '_control' ] = $control ;
 		}
 		if ( $params ) {
-			$appended_params[ self::QS_PARAMS ] = urlencode(base64_encode(serialize($params))) ;
+			$appended_params[ self::QS_PARAMS ] = base64_encode( serialize( $params ) ) ;
 		}
 
-		// Generate ESI URL
 		// Escape potential chars @since 2.9.4
+		$appended_params = array_map( 'urlencode', $appended_params ) ;
+
+		// Generate ESI URL
 		$url = add_query_arg( $appended_params, trailingslashit( wp_make_link_relative( home_url() ) ) ) ;
 
 		$output = "<esi:include src='$url'" ;
@@ -300,9 +302,9 @@ class LiteSpeed_Cache_ESI
 	 * Parses the request parameters on an ESI request
 	 *
 	 * @since 1.1.3
-	 * @access public
+	 * @access private
 	 */
-	public static function parse_esi_param()
+	private function _parse_esi_param()
 	{
 		if ( ! isset($_REQUEST[self::QS_PARAMS]) ) {
 			return false ;
@@ -312,8 +314,10 @@ class LiteSpeed_Cache_ESI
 		if ( $unencrypted === false ) {
 			return false ;
 		}
-		$unencoded = urldecode($unencrypted) ;
-		$params = unserialize($unencoded) ;
+
+		LiteSpeed_Cache_Log::debug2( '[ESI] parms', $unencrypted ) ;
+		// $unencoded = urldecode($unencrypted) ; no need to do this as $_GET is already parsed
+		$params = unserialize( $unencrypted ) ;
 		if ( $params === false ) {
 			return false ;
 		}
@@ -327,9 +331,9 @@ class LiteSpeed_Cache_ESI
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function load_esi_block()
+	public function load_esi_block()
 	{
-		$params = self::parse_esi_param() ;
+		$params = $this->_parse_esi_param() ;
 
 		if ( defined( 'LSCWP_LOG' ) ) {
 			$logInfo = '------- ESI ------- ' ;
