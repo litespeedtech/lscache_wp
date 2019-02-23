@@ -1,6 +1,6 @@
 <?php
 /**
- * The Third Party integration with DIVI Theme.
+ * The Third Party integration with WPML.
  *
  * @since		2.9.0
  * @package		LiteSpeed_Cache
