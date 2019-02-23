@@ -13,6 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Utility
 {
 	private static $_instance ;
+	private static $_internal_domains ;
 
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
@@ -646,7 +647,23 @@ class LiteSpeed_Cache_Utility
 			define( 'LITESPEED_FRONTEND_HOST', parse_url( $home_host, PHP_URL_HOST ) ) ;
 		}
 
-		return $host === LITESPEED_FRONTEND_HOST ;
+		if ( $host === LITESPEED_FRONTEND_HOST ) {
+			return true ;
+		}
+
+		/**
+		 * Filter for multiple domains
+		 * @since 2.9.4
+		 */
+		if ( ! isset( self::$_internal_domains ) ) {
+			self::$_internal_domains = apply_filters( 'litespeed_internal_domains', array() ) ;
+		}
+
+		if ( self::$_internal_domains ) {
+			return in_array( $host, self::$_internal_domains ) ;
+		}
+
+		return false ;
 	}
 
 	/**
