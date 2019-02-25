@@ -146,8 +146,11 @@ class LiteSpeed_Cache_ESI
 			$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
 		}
 
-		// Make REST call be able to parse ESI @since 2.9.4
-		// Not effective due to ESI req are all to `/` yet
+		/**
+		 * Make REST call be able to parse ESI
+		 * NOTE: Not effective due to ESI req are all to `/` yet
+		 * @since 2.9.4
+		 */
 		add_action( 'rest_api_init', array( $this, 'load_esi_block' ), 101 ) ;
 
 		// Register ESI blocks
@@ -261,7 +264,10 @@ class LiteSpeed_Cache_ESI
 			$appended_params[ self::QS_PARAMS ] = base64_encode( serialize( $params ) ) ;
 		}
 
-		// Escape potential chars @since 2.9.4
+		/**
+		 * Escape potential chars
+		 * @since 2.9.4
+		 */
 		$appended_params = array_map( 'urlencode', $appended_params ) ;
 
 		// Generate ESI URL

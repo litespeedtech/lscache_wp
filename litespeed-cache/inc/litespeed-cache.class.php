@@ -561,7 +561,10 @@ class LiteSpeed_Cache
 			$buffer .= $this->footer_comment ;
 		}
 
-		// If ESI req is JSON, give the content json format @since 2.9.3
+		/**
+		 * If ESI req is JSON, give the content json format
+		 * @since 2.9.3
+		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Core] ESI----------Start--------' ) ;
 			LiteSpeed_Cache_Log::debug( $buffer ) ;
