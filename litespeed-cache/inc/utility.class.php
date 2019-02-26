@@ -18,44 +18,6 @@ class LiteSpeed_Cache_Utility
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
 	/**
-	 * Check if an URL or current page is REST req or not
-	 *
-	 * @since  2.9.3
-	 * @access public
-	 */
-	public static function is_rest( $url = false )
-	{
-		// For WP 4.4.0- compatibility
-		if ( ! function_exists( 'rest_get_url_prefix' ) ) {
-			return defined( 'REST_REQUEST' ) && REST_REQUEST ;
-		}
-
-		$prefix = rest_get_url_prefix() ;
-
-		// Case #1: After WP_REST_Request initialisation
-		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			return true ;
-		}
-
-		// Case #2: Support "plain" permalink settings
-		if ( isset( $_GET[ 'rest_route' ] ) && strpos( trim( $_GET[ 'rest_route' ], '\\/' ), $prefix , 0 ) === 0 ) {
-			return true ;
-		}
-
-		if ( ! $url ) {
-			return false ;
-		}
-
-		// Case #3: URL Path begins with wp-json/ (REST prefix) Safe for subfolder installation
-		$rest_url = wp_parse_url( site_url( $prefix ) ) ;
-		$current_url = wp_parse_url( $url ) ;
-		// LiteSpeed_Cache_Log::debug( '[Util] is_rest check [base] ', $rest_url ) ;
-		// LiteSpeed_Cache_Log::debug( '[Util] is_rest check [curr] ', $current_url ) ;
-		// LiteSpeed_Cache_Log::debug( '[Util] is_rest check [curr2] ', wp_parse_url( add_query_arg( array( ) ) ) ) ;
-		return strpos( $current_url[ 'path' ], $rest_url[ 'path' ] ) === 0 ;
-	}
-
-	/**
 	 * Check page score
 	 *
 	 * @since  2.9

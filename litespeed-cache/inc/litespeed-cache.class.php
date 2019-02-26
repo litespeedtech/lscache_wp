@@ -131,6 +131,12 @@ class LiteSpeed_Cache
 		}
 
 		/**
+		 * Hook internal REST
+		 * @since  2.9.4
+		 */
+		LiteSpeed_Cache_REST::get_instance() ;
+
+		/**
 		 * Added hook before init
 		 * @since  1.6.6
 		 */
@@ -562,23 +568,24 @@ class LiteSpeed_Cache
 		}
 
 		/**
-		 * If ESI req is JSON, give the content json format
-		 * @since 2.9.3
+		 * If ESI req is JSON, give the content JSON format
+		 * @since  2.9.3
+		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
 		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Core] ESI----------Start--------' ) ;
 			LiteSpeed_Cache_Log::debug( $buffer ) ;
 			LiteSpeed_Cache_Log::debug( '[Core] ESI----------End--------' ) ;
+		}
 
-			if ( ! empty( $_SERVER[ 'ESI_CONTENT_TYPE' ] ) && strpos( $_SERVER[ 'ESI_CONTENT_TYPE' ], 'application/json' ) === 0 ) {
-				if ( json_decode( $buffer, true ) == NULL ) {
-					LiteSpeed_Cache_Log::debug( '[Core] Buffer converting to JSON' ) ;
-					$buffer = json_encode( $buffer ) ;
-					$buffer = trim( $buffer, '"' ) ;
-				}
-				else {
-					LiteSpeed_Cache_Log::debug( '[Core] JSON Buffer' ) ;
-				}
+		if ( apply_filters( 'litespeed_is_json', false ) ) {
+			if ( json_decode( $buffer, true ) == NULL ) {
+				LiteSpeed_Cache_Log::debug( '[Core] Buffer converting to JSON' ) ;
+				$buffer = json_encode( $buffer ) ;
+				$buffer = trim( $buffer, '"' ) ;
+			}
+			else {
+				LiteSpeed_Cache_Log::debug( '[Core] JSON Buffer' ) ;
 			}
 		}
 
@@ -631,8 +638,11 @@ class LiteSpeed_Cache
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
 		}
-		// Silence comment for json req @since 2.9.3
-		if ( LiteSpeed_Cache_Utility::is_rest() || LiteSpeed_Cache_Router::is_ajax() ) {
+		/**
+		 * Silence comment for json req
+		 * @since 2.9.3
+		 */
+		if ( LiteSpeed_Cache_REST::get_instance()->is_rest() || LiteSpeed_Cache_Router::is_ajax() ) {
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( '[Core] Silence Comment due to REST/AJAX' ) ;
 		}

@@ -139,6 +139,7 @@ class LiteSpeed_Cache_Log
 			'X-LSCACHE' => '',
 			'LSCACHE_VARY_COOKIE' => '',
 			'LSCACHE_VARY_VALUE' => '',
+			'ESI_CONTENT_TYPE' => '',
 		) ;
 		$server = array_merge( $servervars, $_SERVER ) ;
 		$params = array() ;
@@ -187,6 +188,9 @@ class LiteSpeed_Cache_Log
 		}
 		if( $server['LSCACHE_VARY_VALUE'] ) {
 			$params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'] ;
+		}
+		if( $server['ESI_CONTENT_TYPE'] ) {
+			$params[] = 'ESI_CONTENT_TYPE: ' . $server['ESI_CONTENT_TYPE'] ;
 		}
 
 		$request = array_map( 'self::format_message', $params ) ;

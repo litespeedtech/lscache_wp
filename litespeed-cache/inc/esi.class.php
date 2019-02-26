@@ -142,8 +142,12 @@ class LiteSpeed_Cache_ESI
 		 * Only when ESI's parent is not REST, replace REQUEST_URI to avoid breaking WP5 editor REST call
 		 * @since 2.9.3
 		 */
-		if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! LiteSpeed_Cache_Utility::is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
+		if ( ! empty( $_SERVER[ 'ESI_REFERER' ] ) && ! LiteSpeed_Cache_REST::get_instance()->is_rest( $_SERVER[ 'ESI_REFERER' ] ) ) {
 			$_SERVER[ 'REQUEST_URI' ] = $_SERVER[ 'ESI_REFERER' ] ;
+		}
+
+		if ( ! empty( $_SERVER[ 'ESI_CONTENT_TYPE' ] ) && strpos( $_SERVER[ 'ESI_CONTENT_TYPE' ], 'application/json' ) === 0 ) {
+			add_filter( 'litespeed_is_json', '__return_true' ) ;
 		}
 
 		/**
@@ -243,6 +247,10 @@ class LiteSpeed_Cache_ESI
 		if ( $silence ) {
 			// Don't add comment to esi block ( orignal for nonce used in tag property data-nonce='esi_block' )
 			$params[ '_ls_silence' ] = true ;
+		}
+
+		if ( LiteSpeed_Cache_REST::get_instance()->is_rest() || LiteSpeed_Cache_REST::get_instance()->is_internal_rest() ) {
+			$params[ 'is_json' ] = 1 ;
 		}
 
 		$params = apply_filters('litespeed_cache_sub_esi_params-' . $block_id, $params) ;
@@ -352,6 +360,14 @@ class LiteSpeed_Cache_ESI
 
 		if ( ! empty( $params[ '_ls_silence' ] ) ) {
 			define( 'LSCACHE_ESI_SILENCE', true ) ;
+		}
+
+		/**
+		 * Buffer needs to be JSON format
+		 * @since  2.9.4
+		 */
+		if ( ! empty( $params[ 'is_json' ] ) ) {
+			add_filter( 'litespeed_is_json', '__return_true' ) ;
 		}
 
 		LiteSpeed_Cache_Tag::add( rtrim( LiteSpeed_Cache_Tag::TYPE_ESI, '.' ) ) ;
@@ -549,17 +565,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_admin_bar_block( $params )
 	{
-		ob_start() ;
 		wp_admin_bar_render() ;
-		$output = ob_get_contents() ;
-		ob_end_clean() ;
-
-		if ( ! empty( $params[ 'is_json' ] ) ) {
-			$output = json_encode( $output ) ;
-			$output = trim( $output, '"' ) ;
-		}
-
-		echo $output ;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
@@ -582,17 +588,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_comment_form_block( $params )
 	{
-		ob_start() ;
 		comment_form( $params[ self::PARAM_ARGS ], $params[ self::PARAM_ID ] ) ;
-		$output = ob_get_contents() ;
-		ob_end_clean() ;
-
-		if ( ! empty( $params[ 'is_json' ] ) ) {
-			$output = json_encode( $output ) ;
-			$output = trim( $output, '"' ) ;
-		}
-
-		echo $output ;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_COMMFORM ) ) {
 			LiteSpeed_Cache_Control::set_nocache( 'build-in set to not cacheable' ) ;
