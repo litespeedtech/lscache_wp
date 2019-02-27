@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.0.3
-Stable tag: 2.9.3
+Tested up to: 5.1
+Stable tag: 2.9.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -282,6 +282,16 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.4 - Feb 27 2019 =
+* 🐞<strong>REST</strong>: New REST class with better WP5 Gutenberg and internal REST call support when ESI is embedded.
+* <strong>ESI</strong>: ESI block ID is now in plain text in ESI URL parameters.
+* 🐞<strong>ESI</strong>: Fixed a redundant ESI 301 redirect when comma is in ESI URL.
+* <strong>ESI</strong>: REST call can now parse shortcodes in ESI.
+* <strong>API</strong>: Changed ESI `parse_esi_param()` function to private and `load_esi_block` function to non-static.
+* <strong>API</strong>: Added `litespeed_is_json` hook for buffer JSON conversion.
+* <strong>GUI</strong>: Prepended plugin name to new version notification banner.
+* <strong>3rd</strong>: WPML multi domains can now be handled in optimization without CDN tricks.
 
 = 2.9.3 - Feb 20 2019 =
 * <strong>ESI</strong>: ESI shortcodes can now be saved in Gutenberg editor.
