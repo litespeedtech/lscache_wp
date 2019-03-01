@@ -829,9 +829,9 @@ class LiteSpeed_Cache_Optimize
 			// }
 
 			// Check if has no-optimize attr
-			if ( strpos( $html_list[ $key ], 'data-no-optimize' ) !== false ) {
+			if ( strpos( $html_list[ $key ], 'data-ignore-optimize' ) !== false ) {
 				$ignored_html[] = $html_list[ $key ] ;
-				LiteSpeed_Cache_Log::debug2( '[Optm]    Abort excludes: attr data-no-optimize' ) ;
+				LiteSpeed_Cache_Log::debug2( '[Optm]    Abort excludes: attr data-ignore-optimize' ) ;
 				continue ;
 			}
 
