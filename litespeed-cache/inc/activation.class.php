@@ -333,9 +333,9 @@ class LiteSpeed_Cache_Activation
 	 * Upgrade LSCWP
 	 *
 	 * @since 2.9
-	 * @access private
+	 * @access public
 	 */
-	private function _upgrade()
+	public function upgrade()
 	{
 		$plugin = LiteSpeed_Cache::PLUGIN_FILE ;
 
@@ -382,7 +382,7 @@ class LiteSpeed_Cache_Activation
 
 		switch ( $type ) {
 			case self::TYPE_UPGRADE :
-				$instance->_upgrade() ;
+				$instance->upgrade() ;
 				break ;
 
 			default:
