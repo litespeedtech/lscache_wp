@@ -65,7 +65,15 @@ class LiteSpeed_Cache_Log
 		}
 
 		// Generate zip url
-		$zip = str_replace( '/commit/', '/archive/', $_POST[ self::BETA_TEST_URL ] ) . '.zip' ;
+		$commit = substr( $_POST[ self::BETA_TEST_URL ], strpos( $_POST[ self::BETA_TEST_URL ], '/commit/' ) + 8 ) ;
+		$zip = $this->_package_zip( $commit ) ;
+
+		if ( ! $zip ) {
+			LiteSpeed_Cache_Log::debug( '[Log] ❌  No ZIP file' ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Log] ZIP file ' . $zip ) ;
 
 		$update_plugins = get_site_transient( 'update_plugins' ) ;
 		if ( ! is_object( $update_plugins ) ) {
@@ -85,6 +93,31 @@ class LiteSpeed_Cache_Log
 
 		// Run upgrade
 		LiteSpeed_Cache_Activation::get_instance()->upgrade() ;
+	}
+
+	/**
+	 * Git package refresh
+	 *
+	 * @since  2.9.5
+	 * @access private
+	 */
+	private function _package_zip( $commit )
+	{
+		// Check latest stable version allowed to upgrade
+		$url = 'https://wp.api.litespeedtech.com/client.package_zip?commit=' . $commit ;
+
+		$response = wp_remote_get( $url, array( 'timeout' => 120 ) ) ;
+		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
+			return false ;
+		}
+
+		$url = json_decode( $response[ 'body' ], true ) ;
+
+		if ( empty( $url[ 'zip' ] ) ) {
+			return false ;
+		}
+
+		return $url[ 'zip' ] ;
 	}
 
 	/**
