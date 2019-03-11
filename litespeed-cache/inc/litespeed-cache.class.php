@@ -574,7 +574,12 @@ class LiteSpeed_Cache
 		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
 			LiteSpeed_Cache_Log::debug( '[Core] ESI----------Start--------' ) ;
-			LiteSpeed_Cache_Log::debug( $buffer ) ;
+			if ( strlen( $buffer ) > 100 ) {
+				LiteSpeed_Cache_Log::debug2( $buffer ) ;
+			}
+			else {
+				LiteSpeed_Cache_Log::debug( $buffer ) ;
+			}
 			LiteSpeed_Cache_Log::debug( '[Core] ESI----------End--------' ) ;
 		}
 

@@ -22,6 +22,7 @@ class LiteSpeed_Cache_ESI
 	private static $has_esi = false ;
 	private $esi_args = null ;
 	private $_esi_preserve_list = array() ;
+	private $_nonce_actions = array( -1 ) ;
 
 	const QS_ACTION = 'lsesi' ;
 	const QS_PARAMS = 'esi' ;
@@ -74,6 +75,80 @@ class LiteSpeed_Cache_ESI
 		if ( ! is_admin() ) {
 			add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
 		}
+
+		/**
+		 * Overwrite wp_create_nonce func
+		 * @since  2.9.5
+		 */
+		if ( ! function_exists( 'wp_create_nonce' ) ) {
+			$this->_transform_nonce() ;
+		}
+	}
+
+	/**
+	 * Take over all nonce calls and transform to ESI
+	 *
+	 * @since  2.9.5
+	 */
+	private function _transform_nonce()
+	{
+		/**
+		 * If the nonce is in none_actions filter, convert it to ESI
+		 */
+		function wp_create_nonce( $action = -1 ) {
+			if ( LiteSpeed_Cache_ESI::get_instance()->is_nonce_action( $action ) ) {
+				$params = array(
+					'action'	=> $action,
+				) ;
+				return LiteSpeed_Cache_ESI::sub_esi_block( 'lscwp_nonce_esi', 'wp_create_nonce ' . $action, $params, '', true, true ) ;
+			}
+
+			return wp_create_nonce_litespeed_esi( $action ) ;
+
+		}
+
+		/**
+		 * Ori WP wp_create_nonce
+		 */
+		function wp_create_nonce_litespeed_esi( $action = -1 ) {
+			$user = wp_get_current_user();
+			$uid  = (int) $user->ID;
+			if ( ! $uid ) {
+				/** This filter is documented in wp-includes/pluggable.php */
+				$uid = apply_filters( 'nonce_user_logged_out', $uid, $action );
+			}
+
+			$token = wp_get_session_token();
+			$i     = wp_nonce_tick();
+
+			return substr( wp_hash( $i . '|' . $action . '|' . $uid . '|' . $token, 'nonce' ), -12, 10 );
+		}
+	}
+
+	/**
+	 * Register a new nonce action to convert it to ESI
+	 *
+	 * @since  2.9.5
+	 */
+	public function nonce_action( $action )
+	{
+		if ( in_array( $action, $this->_nonce_actions ) ) {
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[ESI] Append nonce action to nonce list [action] ' . $action ) ;
+
+		$this->_nonce_actions[] = $action ;
+	}
+
+	/**
+	 * Check if an action is registered to replace ESI
+	 *
+	 * @since 2.9.5
+	 */
+	public function is_nonce_action( $action )
+	{
+		return in_array( $action, $this->_nonce_actions ) ;
 	}
 
 	/**
@@ -621,7 +696,12 @@ class LiteSpeed_Cache_ESI
 			LiteSpeed_Cache_Control::set_private() ;
 		}
 
-		echo wp_create_nonce( $action ) ;
+		if ( function_exists( 'wp_create_nonce_litespeed_esi' ) ) {
+			echo wp_create_nonce_litespeed_esi( $action ) ;
+		}
+		else {
+			echo wp_create_nonce( $action ) ;
+		}
 	}
 
 	/**
