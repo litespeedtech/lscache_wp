@@ -784,9 +784,15 @@ eot;
 			return false ;
 		}
 
-		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
+		/**
+		 * WebP API hook
+		 * NOTE: As $url may contain query strings, WebP check will need to parse_url before appending .webp
+		 * @since  2.9.5
+		 * @see  #751737 - API docs for WEBP generation
+		 */
+		if ( apply_filters( 'litespeed_media_check_ori', LiteSpeed_Cache_Utility::is_internal_file( $url ), $url ) ) {
 			// check if has webp file
-			if ( LiteSpeed_Cache_Utility::is_internal_file( $url, 'webp' ) ) {
+			if ( apply_filters( 'litespeed_media_check_webp', LiteSpeed_Cache_Utility::is_internal_file( $url, 'webp' ), $url ) ) {
 				$url .= '.webp' ;
 			}
 			else {
