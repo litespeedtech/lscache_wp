@@ -49,7 +49,7 @@ class LiteSpeed_Cache_ESI
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
 
 		// This defination is along with LiteSpeed_Cache_API::nonce() func
-		! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;
+		! defined( 'LSCWP_NONCE' ) && define( 'LSCWP_NONCE', true ) ;//Used in Bloom
 
 		/**
 		 * Recover REQUEST_URI
@@ -80,7 +80,7 @@ class LiteSpeed_Cache_ESI
 		 * Overwrite wp_create_nonce func
 		 * @since  2.9.5
 		 */
-		if ( ! function_exists( 'wp_create_nonce' ) ) {
+		if ( ! is_admin() && ! function_exists( 'wp_create_nonce' ) ) {
 			$this->_transform_nonce() ;
 		}
 	}
@@ -92,6 +92,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	private function _transform_nonce()
 	{
+		LiteSpeed_Cache_Log::debug( '[ESI] Overwrite wp_create_nonce()' ) ;
 		/**
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */
