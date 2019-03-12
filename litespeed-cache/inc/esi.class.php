@@ -101,7 +101,7 @@ class LiteSpeed_Cache_ESI
 				$params = array(
 					'action'	=> $action,
 				) ;
-				return LiteSpeed_Cache_ESI::sub_esi_block( 'lscwp_nonce_esi', 'wp_create_nonce ' . $action, $params, '', true, true ) ;
+				return LiteSpeed_Cache_ESI::sub_esi_block( 'nonce', 'wp_create_nonce ' . $action, $params, '', true, true ) ;
 			}
 
 			return wp_create_nonce_litespeed_esi( $action ) ;
@@ -238,7 +238,7 @@ class LiteSpeed_Cache_ESI
 		add_action('litespeed_cache_load_esi_block-admin-bar', array($this, 'load_admin_bar_block')) ;
 		add_action('litespeed_cache_load_esi_block-comment-form', array($this, 'load_comment_form_block')) ;
 
-		add_action('litespeed_cache_load_esi_block-lscwp_nonce_esi', array( $this, 'load_nonce_block' ) ) ;
+		add_action('litespeed_cache_load_esi_block-nonce', array( $this, 'load_nonce_block' ) ) ;
 		add_action('litespeed_cache_load_esi_block-esi', array( $this, 'load_esi_shortcode' ) ) ;
 	}
 
