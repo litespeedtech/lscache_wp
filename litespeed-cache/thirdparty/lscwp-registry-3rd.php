@@ -32,6 +32,7 @@ $thirdparty_list = array(
 	'wp-postratings',
 	'divi-theme-builder',
 	'wpml',
+	'wpdiscuz',
 ) ;
 
 foreach ($thirdparty_list as $val) {
