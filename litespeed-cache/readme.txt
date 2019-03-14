@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.1
-Stable tag: 2.9.4.1
+Tested up to: 5.1.1
+Stable tag: 2.9.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -279,9 +279,23 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * [BoomBox — Viral Magazine WordPress Theme](https://themeforest.net/item/boombox-viral-buzz-wordpress-theme/16596434?ref=PX-lab)
 * Beaver Builder
 * FacetWP (LSWS 5.3.6+)
+* WpDiscuz
 
 
 == Changelog ==
+
+= 2.9.5 - Mar 14 2019 =
+* 🌱 Auto convert default WordPress nonce to ESI to avoid expiration.
+* 🌱 <strong>API</strong>: Ability to easily convert custom nonce to ESI by registering `LiteSpeed_Cache_API::nonce_action`.
+* <strong>OPTM</strong>: Tweaked redundant attr `data-no-optimize` in func `_analyse_links` to `data-ignore-optimize` to offer the API to bypass optimization but still move src to top of source code.
+* <strong>API</strong>: Renamed default nonce ESI ID from `lscwp_nonce_esi` to `nonce`.
+* <strong>API</strong>: Added WebP generation & validation hook API. (@alim #wp-stateless)
+* <strong>API</strong>: Added hook to bypass vary commenter check. (#wpdiscuz)
+* <strong>Doc</strong>: Clarified Cache Mobile description. (@JohnnyNguyen)
+* <strong>Doc</strong>: Replaced incorrect link in description. (@JohnnyNguyen)
+* <strong>3rd</strong>: Improved wpDiscuz compatibility.
+* 🐞<strong>3rd</strong>: Fixed Divi Theme Builder comment compatibility on non-builder pages. (#410919)
+* <strong>3rd</strong>: Added YITH ESI adjustment.
 
 = 2.9.4.1 - Feb 28 2019 =
 * 🔥🐞<strong>Tag</strong>: Fixed issue where unnecessary warning potentially displayed after upgrade process when object cache is enabled.

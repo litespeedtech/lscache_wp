@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9.4\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2019-02-27 15:22:04+00:00\n"
+"POT-Creation-Date: 2019-03-14 17:35:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -713,11 +713,19 @@ msgid ""
 "crawling."
 msgstr ""
 
-#: admin/tpl/debug_log.php:9
+#: admin/tpl/debug_log.php:8
 msgid "LiteSpeed Cache Debug Log Viewer"
 msgstr ""
 
-#: admin/tpl/debug_log.php:30
+#: admin/tpl/debug_log.php:20
+msgid "Try GitHub Version"
+msgstr ""
+
+#: admin/tpl/debug_log.php:26 admin/tpl/inc/banner_promo.new_version.php:68
+msgid "Upgrade"
+msgstr ""
+
+#: admin/tpl/debug_log.php:42
 msgid "Clear Log"
 msgstr ""
 
@@ -852,7 +860,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.4)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.5)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6
 #: admin/tpl/inc/banner_promo.new_version.php:56 inc/gui.class.php:477
@@ -882,10 +890,6 @@ msgstr ""
 
 #: admin/tpl/inc/banner_promo.new_version.php:60
 msgid "New release %s is available now."
-msgstr ""
-
-#: admin/tpl/inc/banner_promo.new_version.php:68
-msgid "Upgrade"
 msgstr ""
 
 #: admin/tpl/inc/banner_promo.new_version.php:78
@@ -2847,11 +2851,13 @@ msgid "Cache Mobile"
 msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_mobile.php:14
-msgid "When enabled, mobile views will be cached separately."
+msgid "Cache mobile views separately."
 msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_mobile.php:15
-msgid "A site built with responsive design does not need to check this."
+msgid ""
+"Only enable for AMP or mobile-specific design/content, not for responsive "
+"sites."
 msgstr ""
 
 #: admin/tpl/setting/settings_inc.cache_mobile.php:25
@@ -4147,8 +4153,8 @@ msgstr ""
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:167 inc/img_optm.class.php:1451
-#: inc/img_optm.class.php:1516
+#: inc/img_optm.class.php:167 inc/img_optm.class.php:1464
+#: inc/img_optm.class.php:1529
 msgid "No image found."
 msgstr ""
 
@@ -4179,41 +4185,41 @@ msgid ""
 "automated."
 msgstr ""
 
-#: inc/img_optm.class.php:1340
+#: inc/img_optm.class.php:1353
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1554
+#: inc/img_optm.class.php:1567
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1730
+#: inc/img_optm.class.php:1743
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1925
+#: inc/img_optm.class.php:1938
 msgid "Switched images successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1956
+#: inc/img_optm.class.php:1969
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1962
+#: inc/img_optm.class.php:1975
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1978
+#: inc/img_optm.class.php:1991
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1985
+#: inc/img_optm.class.php:1998
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:2045
+#: inc/img_optm.class.php:2058
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -4341,15 +4347,15 @@ msgstr ""
 msgid "LiteSpeed Cache Custom Cron Crawler"
 msgstr ""
 
-#: inc/utility.class.php:223 includes/litespeed-cache-utility.class.php:223
+#: inc/utility.class.php:235 includes/litespeed-cache-utility.class.php:235
 msgid "just now"
 msgstr ""
 
-#: inc/utility.class.php:223 includes/litespeed-cache-utility.class.php:223
+#: inc/utility.class.php:235 includes/litespeed-cache-utility.class.php:235
 msgid "right now"
 msgstr ""
 
-#: inc/utility.class.php:226 includes/litespeed-cache-utility.class.php:226
+#: inc/utility.class.php:238 includes/litespeed-cache-utility.class.php:238
 msgid " %s ago"
 msgstr ""
 
