@@ -370,7 +370,7 @@ class LiteSpeed_Cache_ESI
 			$output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->" ;
 		}
 
-		LiteSpeed_Cache_Log::debug( "ESI: \t\t[block ID] $block_id \t\t\t[wrapper] $wrapper \t\t\t[Control] $control" ) ;
+		LiteSpeed_Cache_Log::debug( "[ESI] 💕  [BLock_ID] $block_id \t[wrapper] $wrapper \t\t[Control] $control" ) ;
 		LiteSpeed_Cache_Log::debug2( $output ) ;
 
 		self::set_has_esi() ;
@@ -426,11 +426,11 @@ class LiteSpeed_Cache_ESI
 		$params = $this->_parse_esi_param() ;
 
 		if ( defined( 'LSCWP_LOG' ) ) {
-			$logInfo = '------- ESI ------- ' ;
+			$logInfo = '[ESI] ⭕ ' ;
 			if( ! empty( $params[ self::PARAM_NAME ] ) ) {
 				$logInfo .= ' Name: ' . $params[ self::PARAM_NAME ] . ' ----- ' ;
 			}
-			$logInfo .= LSCACHE_IS_ESI . ' -------' ;
+			$logInfo .= ' [ID] ' . LSCACHE_IS_ESI ;
 			LiteSpeed_Cache_Log::debug( $logInfo ) ;
 		}
 

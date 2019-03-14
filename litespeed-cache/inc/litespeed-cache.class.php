@@ -573,14 +573,14 @@ class LiteSpeed_Cache
 		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
 		 */
 		if ( defined( 'LSCACHE_IS_ESI' ) ) {
-			LiteSpeed_Cache_Log::debug( '[Core] ESI----------Start--------' ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] ESI Start 👇' ) ;
 			if ( strlen( $buffer ) > 100 ) {
-				LiteSpeed_Cache_Log::debug( substr( $buffer, 0, 100 ) . '.....' ) ;
+				LiteSpeed_Cache_Log::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' ) ;
 			}
 			else {
 				LiteSpeed_Cache_Log::debug( $buffer ) ;
 			}
-			LiteSpeed_Cache_Log::debug( '[Core] ESI----------End--------' ) ;
+			LiteSpeed_Cache_Log::debug( '[Core] ESI End 👆' ) ;
 		}
 
 		if ( apply_filters( 'litespeed_is_json', false ) ) {
