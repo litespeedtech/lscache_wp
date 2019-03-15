@@ -24,7 +24,7 @@ if ( time() - $last_check > 43200 ) {
 	$this->save_summary( $_summary ) ;
 
 	// Detect version
-	$auto_v = LiteSpeed_Cache_Utility::version_check() ;
+	$auto_v = LiteSpeed_Cache_Utility::version_check( 'new_version_banner' ) ;
 	$_summary[ 'new_version.v' ] = $auto_v ;
 	$this->save_summary( $_summary ) ;
 	// After detect, don't show, just return and show next time
@@ -53,7 +53,7 @@ if ( $check_only ) {
 	<div class="litespeed-banner-promo-logo"></div>
 
 	<div class="litespeed-banner-promo-content">
-		<h3 class="litespeed-banner-title litespeed-top15"><?php echo __( 'New Version Available!', 'litespeed-cache' ) ; ?></h3>
+		<h3 class="litespeed-banner-title litespeed-top15"><?php echo __( 'LiteSpeed Cache', 'litespeed-cache' ) ; ?>: <?php echo __( 'New Version Available!', 'litespeed-cache' ) ; ?></h3>
 		<div class="litespeed-banner-description">
 			<div class="litespeed-banner-description-padding-right-15">
 				<p class="litespeed-banner-desciption-content">

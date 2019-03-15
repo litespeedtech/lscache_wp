@@ -288,6 +288,11 @@ class LiteSpeed_Cache_GUI
 			return false ;
 		}
 
+		if ( file_exists( ABSPATH . '.litespeed_no_banner' ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[GUI] Bypass banners due to silence file' ) ;
+			return false ;
+		}
+
 		$_summary = $this->get_summary() ;
 
 		foreach ( $this->_promo_list as $promo_tag => $v ) {

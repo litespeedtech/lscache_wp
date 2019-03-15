@@ -699,11 +699,18 @@ eot;
 				continue ;
 			}
 
+			/**
+			 * Support quotes in src `background-image: url('src')`
+			 * @since 2.9.3
+			 */
+			$url = trim( $url, '\'"' ) ;
+
 			if ( ! $url2 = $this->replace_webp( $url ) ) {
 				continue ;
 			}
 
-			$html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 ) ;
+			// $html_snippet = sprintf( 'background-image:%1$surl(%2$s)', $matches[ 1 ][ $k ], $url2 ) ;
+			$html_snippet = str_replace( $url, $url2, $matches[ 0 ][ $k ] ) ;
 			$this->content = str_replace( $matches[ 0 ][ $k ], $html_snippet, $this->content ) ;
 		}
 	}
@@ -777,9 +784,15 @@ eot;
 			return false ;
 		}
 
-		if ( LiteSpeed_Cache_Utility::is_internal_file( $url ) ) {
+		/**
+		 * WebP API hook
+		 * NOTE: As $url may contain query strings, WebP check will need to parse_url before appending .webp
+		 * @since  2.9.5
+		 * @see  #751737 - API docs for WEBP generation
+		 */
+		if ( apply_filters( 'litespeed_media_check_ori', LiteSpeed_Cache_Utility::is_internal_file( $url ), $url ) ) {
 			// check if has webp file
-			if ( LiteSpeed_Cache_Utility::is_internal_file( $url, 'webp' ) ) {
+			if ( apply_filters( 'litespeed_media_check_webp', LiteSpeed_Cache_Utility::is_internal_file( $url, 'webp' ), $url ) ) {
 				$url .= '.webp' ;
 			}
 			else {

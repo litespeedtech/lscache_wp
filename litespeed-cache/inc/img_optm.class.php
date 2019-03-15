@@ -979,11 +979,8 @@ class LiteSpeed_Cache_Img_Optm
 
 		global $wpdb ;
 
-		$q = "SELECT a.*, b.meta_id as b_meta_id, b.meta_value AS b_optm_info
-				FROM $this->_table_img_optm a
-				LEFT JOIN $wpdb->postmeta b ON b.post_id = a.post_id AND b.meta_key = %s
-				WHERE a.root_id = 0 AND a.optm_status = %s ORDER BY a.id LIMIT 1" ;
-		$_q = $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_SIZE, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ) ;
+		$q = "SELECT * FROM $this->_table_img_optm FORCE INDEX ( optm_status ) WHERE root_id = 0 AND optm_status = %s ORDER BY id LIMIT 1" ;
+		$_q = $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_NOTIFIED ) ;
 
 		$optm_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ;
 		$rm_ori_bkup = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP ) ;
@@ -1086,6 +1083,12 @@ class LiteSpeed_Cache_Img_Optm
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img: ' . $local_file ) ;
 
+				/**
+				 * API Hook
+				 * @since  2.9.5
+				 */
+				do_action( 'litespeed_img_pull_ori', $row_img, $local_file ) ;
+
 				$target_size = filesize( $local_file ) ;
 
 				$total_pulled_ori ++ ;
@@ -1120,6 +1123,13 @@ class LiteSpeed_Cache_Img_Optm
 				}
 
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] Pulled optimized img WebP: ' . $local_file . '.webp' ) ;
+
+				/**
+				 * API for WebP
+				 * @since 2.9.5
+				 * @see #751737  - API docs for WEBP generation
+				 */
+				do_action( 'litespeed_img_pull_webp', $row_img, $local_file . '.webp' ) ;
 
 				$webp_size = filesize( $local_file . '.webp' ) ;
 

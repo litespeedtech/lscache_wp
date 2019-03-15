@@ -141,26 +141,32 @@ class LiteSpeed_Cache_Vary
 	 */
 	public function check_commenter( $comments )
 	{
-		$pending = false ;
-		foreach ( $comments as $comment ) {
-			if ( ! $comment->comment_approved ) {// current user has pending comment
-				$pending = true ;
-				break ;
-			}
-		}
-
-		// No pending comments, don't need to add private cache
-		if ( ! $pending ) {
-			$this->remove_commenter() ;
-
-			// Remove commenter prefilled info if exists, for public cache
-			foreach( $_COOKIE as $cookie_name => $cookie_value ) {
-				if ( strlen( $cookie_name ) >= 15 && strpos( $cookie_name, 'comment_author_' ) === 0 ) {
-					unset( $_COOKIE[ $cookie_name ] ) ;
+		/**
+		 * Hook to bypass pending comment check for comment related plugins compatibility
+		 * @since 2.9.5
+		 */
+		if ( apply_filters( 'litespeed_vary_check_commenter_pending', true ) ) {
+			$pending = false ;
+			foreach ( $comments as $comment ) {
+				if ( ! $comment->comment_approved ) {// current user has pending comment
+					$pending = true ;
+					break ;
 				}
 			}
 
-			return $comments ;
+			// No pending comments, don't need to add private cache
+			if ( ! $pending ) {
+				$this->remove_commenter() ;
+
+				// Remove commenter prefilled info if exists, for public cache
+				foreach( $_COOKIE as $cookie_name => $cookie_value ) {
+					if ( strlen( $cookie_name ) >= 15 && strpos( $cookie_name, 'comment_author_' ) === 0 ) {
+						unset( $_COOKIE[ $cookie_name ] ) ;
+					}
+				}
+
+				return $comments ;
+			}
 		}
 
 		// Current user/visitor has pending comments

@@ -13,9 +13,21 @@ if ( ! defined( 'WPINC' ) ) {
 class LiteSpeed_Cache_Utility
 {
 	private static $_instance ;
+	private static $_internal_domains ;
 
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
+	/**
+	 * Check if an URL or current page is REST req or not
+	 *
+	 * @since  2.9.3
+	 * @deprecated 2.9.4 Moved to REST class
+	 * @access public
+	 */
+	public static function is_rest( $url = false )
+	{
+		return false ;
+	}
 
 	/**
 	 * Check page score
@@ -47,10 +59,10 @@ class LiteSpeed_Cache_Utility
 	 * @since  2.9
 	 * @access public
 	 */
-	public static function version_check()
+	public static function version_check( $src = false )
 	{
 		// Check latest stable version allowed to upgrade
-		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v' ;
+		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&src=' . $src ;
 
 		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
 		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
@@ -609,7 +621,23 @@ class LiteSpeed_Cache_Utility
 			define( 'LITESPEED_FRONTEND_HOST', parse_url( $home_host, PHP_URL_HOST ) ) ;
 		}
 
-		return $host === LITESPEED_FRONTEND_HOST ;
+		if ( $host === LITESPEED_FRONTEND_HOST ) {
+			return true ;
+		}
+
+		/**
+		 * Filter for multiple domains
+		 * @since 2.9.4
+		 */
+		if ( ! isset( self::$_internal_domains ) ) {
+			self::$_internal_domains = apply_filters( 'litespeed_internal_domains', array() ) ;
+		}
+
+		if ( self::$_internal_domains ) {
+			return in_array( $host, self::$_internal_domains ) ;
+		}
+
+		return false ;
 	}
 
 	/**

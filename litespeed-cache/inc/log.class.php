@@ -25,6 +25,9 @@ class LiteSpeed_Cache_Log
 	private static $_ignore_part_filters ;
 
 	const TYPE_CLEAR_LOG = 'clear_log' ;
+	const TYPE_BETA_TEST = 'beta_test' ;
+
+	const BETA_TEST_URL = 'beta_test_url' ;
 
 	/**
 	 * Log class Constructor
@@ -47,6 +50,74 @@ class LiteSpeed_Cache_Log
 			! defined( 'LSCWP_LOG_MORE' ) && define( 'LSCWP_LOG_MORE', true ) ;
 		}
 
+	}
+
+	/**
+	 * Beta test upgrade
+	 *
+	 * @since 2.9.5
+	 * @access private
+	 */
+	private function _beta_test()
+	{
+		if ( empty( $_POST[ self::BETA_TEST_URL ] ) ) {
+			return ;
+		}
+
+		// Generate zip url
+		$commit = substr( $_POST[ self::BETA_TEST_URL ], strpos( $_POST[ self::BETA_TEST_URL ], '/commit/' ) + 8 ) ;
+		$zip = $this->_package_zip( $commit ) ;
+
+		if ( ! $zip ) {
+			LiteSpeed_Cache_Log::debug( '[Log] ❌  No ZIP file' ) ;
+			return ;
+		}
+
+		LiteSpeed_Cache_Log::debug( '[Log] ZIP file ' . $zip ) ;
+
+		$update_plugins = get_site_transient( 'update_plugins' ) ;
+		if ( ! is_object( $update_plugins ) ) {
+			$update_plugins = new \stdClass() ;
+		}
+
+		$plugin_info = new \stdClass() ;
+		$plugin_info->new_version = LiteSpeed_Cache::PLUGIN_VERSION . '.0.0' ;
+		$plugin_info->slug = LiteSpeed_Cache::PLUGIN_NAME ;
+		$plugin_info->plugin = LiteSpeed_Cache::PLUGIN_FILE ;
+		$plugin_info->package = $zip ;
+		$plugin_info->url = 'https://wordpress.org/plugins/litespeed-cache/' ;
+
+		$update_plugins->response[ LiteSpeed_Cache::PLUGIN_FILE ] = $plugin_info ;
+
+		set_site_transient( 'update_plugins', $update_plugins ) ;
+
+		// Run upgrade
+		LiteSpeed_Cache_Activation::get_instance()->upgrade() ;
+	}
+
+	/**
+	 * Git package refresh
+	 *
+	 * @since  2.9.5
+	 * @access private
+	 */
+	private function _package_zip( $commit )
+	{
+		// Check latest stable version allowed to upgrade
+		$url = 'https://wp.api.litespeedtech.com/client.package_zip?commit=' . $commit ;
+
+		$response = wp_remote_get( $url, array( 'timeout' => 120 ) ) ;
+		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
+			return false ;
+		}
+
+		$url = json_decode( $response[ 'body' ], true ) ;
+
+		if ( empty( $url[ 'zip' ] ) ) {
+			return false ;
+		}
+
+		return $url[ 'zip' ] ;
 	}
 
 	/**
@@ -139,6 +210,7 @@ class LiteSpeed_Cache_Log
 			'X-LSCACHE' => '',
 			'LSCACHE_VARY_COOKIE' => '',
 			'LSCACHE_VARY_VALUE' => '',
+			'ESI_CONTENT_TYPE' => '',
 		) ;
 		$server = array_merge( $servervars, $_SERVER ) ;
 		$params = array() ;
@@ -147,7 +219,7 @@ class LiteSpeed_Cache_Log
 			$server['SERVER_PROTOCOL'] .= ' (HTTPS) ' ;
 		}
 
-		$param = sprintf( '------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
+		$param = sprintf( '💓 ------%s %s %s', $server['REQUEST_METHOD'], $server['SERVER_PROTOCOL'], strtok( $server['REQUEST_URI'], '?' ) ) ;
 
 		$qs = ! empty( $server['QUERY_STRING'] ) ? $server['QUERY_STRING'] : '' ;
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_COLLAPS_QS ) ) {
@@ -187,6 +259,9 @@ class LiteSpeed_Cache_Log
 		}
 		if( $server['LSCACHE_VARY_VALUE'] ) {
 			$params[] = 'LSCACHE_VARY_VALUE: ' . $server['LSCACHE_VARY_VALUE'] ;
+		}
+		if( $server['ESI_CONTENT_TYPE'] ) {
+			$params[] = 'ESI_CONTENT_TYPE: ' . $server['ESI_CONTENT_TYPE'] ;
 		}
 
 		$request = array_map( 'self::format_message', $params ) ;
@@ -390,6 +465,10 @@ class LiteSpeed_Cache_Log
 		switch ( $type ) {
 			case self::TYPE_CLEAR_LOG :
 				$instance->_clear_log() ;
+				break ;
+
+			case self::TYPE_BETA_TEST :
+				$instance->_beta_test() ;
 				break ;
 
 			default:

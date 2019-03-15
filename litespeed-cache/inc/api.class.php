@@ -530,6 +530,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * Easiest way to replace WP nonce to an ESI widget
 	 *
 	 * @since 2.6
+	 * @deprecated 2.9.5 Dropped-in wp_create_nonce replacement
 	 * @access public
 	 */
 	public static function nonce( $action = -1, $defence_for_html_filter = true )
@@ -539,7 +540,17 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 		}
 
 		// Replace it to ESI
-		return self::esi_url( 'lscwp_nonce_esi', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true ) ;
+		return self::esi_url( 'nonce', 'LSCWP Nonce ESI ' . $action, array( 'action' => $action ), '', true, $defence_for_html_filter, true ) ;
+	}
+
+	/**
+	 * Append an action to nonce to convert it to ESI
+	 *
+	 * @since  2.9.5
+	 */
+	public static function nonce_action( $action )
+	{
+		LiteSpeed_Cache_ESI::get_instance()->nonce_action( $action ) ;
 	}
 
 	/**

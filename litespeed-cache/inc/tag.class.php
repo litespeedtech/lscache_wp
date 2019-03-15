@@ -303,7 +303,7 @@ class LiteSpeed_Cache_Tag
 		}
 
 		// Check REST API
-		if ( defined( 'REST_REQUEST' ) ) {
+		if ( LiteSpeed_Cache_REST::get_instance()->is_rest() ) {
 			$tags[] = self::TYPE_REST ;
 
 			$path = ! empty( $_SERVER[ 'SCRIPT_URL' ] ) ? $_SERVER[ 'SCRIPT_URL' ] : false ;
@@ -364,7 +364,11 @@ class LiteSpeed_Cache_Tag
 		self::_finalize() ;
 
 		$prefix_tags = array() ;
-		$prefix = LSWCP_TAG_PREFIX . get_current_blog_id() . '_' ;
+		/**
+		 * Only append blog_id when is multisite
+		 * @since 2.9.3
+		 */
+		$prefix = LSWCP_TAG_PREFIX . ( is_multisite() ? get_current_blog_id() : '' ) . '_' ;
 
 		// If is_private and has private tags, append them first, then specify prefix to `public` for public tags
 		if ( LiteSpeed_Cache_Control::is_private() ) {

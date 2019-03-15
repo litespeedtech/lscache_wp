@@ -59,7 +59,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php echo __( 'Your IP', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Cache_Router::get_ip() ; ?></code>
 				<br />
 				<?php $this->learn_more(
-					'href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
+					'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
 					__( 'More information about the available commands can be found here.', 'litespeed-cache' )
 				) ; ?>
 			</div>

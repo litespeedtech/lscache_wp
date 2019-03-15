@@ -46,6 +46,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Optimize'			=> 'inc/optimize.class.php',
 			'LiteSpeed_Cache_Optimizer'			=> 'inc/optimizer.class.php',
 			'LiteSpeed_Cache_Purge'				=> 'inc/purge.class.php',
+			'LiteSpeed_Cache_REST'				=> 'inc/rest.cls.php',
 			'LiteSpeed_Cache_Router'			=> 'inc/router.class.php',
 			'LiteSpeed_Cache_Tag'				=> 'inc/tag.class.php',
 			'LiteSpeed_Cache_Task'				=> 'inc/task.class.php',

@@ -26,7 +26,7 @@ class LiteSpeed_Cache
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
-	const PLUGIN_VERSION = '2.9.1' ;
+	const PLUGIN_VERSION = '2.9.5' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -127,6 +127,12 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Log::debug( '[Core] Purge Queue found&sent: ' . $purge_queue ) ;
 			delete_option( LiteSpeed_Cache_Purge::PURGE_QUEUE ) ;
 		}
+
+		/**
+		 * Hook internal REST
+		 * @since  2.9.4
+		 */
+		LiteSpeed_Cache_REST::get_instance() ;
 
 		/**
 		 * Added hook before init
@@ -260,7 +266,7 @@ class LiteSpeed_Cache
 
 		add_filter( 'auto_update_plugin', function( $update, $item ) {
 				if ( $item->slug == 'litespeed-cache' ) {
-					$auto_v = LiteSpeed_Cache_Utility::version_check() ;
+					$auto_v = LiteSpeed_Cache_Utility::version_check( 'auto_update_plugin' ) ;
 
 					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
 						return true ;
@@ -554,6 +560,33 @@ class LiteSpeed_Cache
 			$buffer .= $this->footer_comment ;
 		}
 
+		/**
+		 * If ESI req is JSON, give the content JSON format
+		 * @since  2.9.3
+		 * @since  2.9.4 ESI req could be from internal REST call, so moved json_encode out of this cond
+		 */
+		if ( defined( 'LSCACHE_IS_ESI' ) ) {
+			LiteSpeed_Cache_Log::debug( '[Core] ESI Start 👇' ) ;
+			if ( strlen( $buffer ) > 100 ) {
+				LiteSpeed_Cache_Log::debug( trim( substr( $buffer, 0, 100 ) ) . '.....' ) ;
+			}
+			else {
+				LiteSpeed_Cache_Log::debug( $buffer ) ;
+			}
+			LiteSpeed_Cache_Log::debug( '[Core] ESI End 👆' ) ;
+		}
+
+		if ( apply_filters( 'litespeed_is_json', false ) ) {
+			if ( json_decode( $buffer, true ) == NULL ) {
+				LiteSpeed_Cache_Log::debug( '[Core] Buffer converting to JSON' ) ;
+				$buffer = json_encode( $buffer ) ;
+				$buffer = trim( $buffer, '"' ) ;
+			}
+			else {
+				LiteSpeed_Cache_Log::debug( '[Core] JSON Buffer' ) ;
+			}
+		}
+
 		LiteSpeed_Cache_Log::debug( "End response\n--------------------------------------------------------------------------------\n" ) ;
 
 		return $buffer ;
@@ -598,11 +631,21 @@ class LiteSpeed_Cache
 		$control_header = LiteSpeed_Cache_Control::output() ;
 
 		// Init comment info
-		$running_info_showing = ( defined( 'LITESPEED_IS_HTML' ) && LITESPEED_IS_HTML ) || ( defined( 'LSCACHE_IS_ESI' ) && LSCACHE_IS_ESI ) ;
+		$running_info_showing = defined( 'LITESPEED_IS_HTML' ) || defined( 'LSCACHE_IS_ESI' ) ;
 		if ( defined( 'LSCACHE_ESI_SILENCE' ) ) {
 			$running_info_showing = false ;
 			LiteSpeed_Cache_Log::debug( '[Core] ESI silence' ) ;
 		}
+		/**
+		 * Silence comment for json req
+		 * @since 2.9.3
+		 */
+		if ( LiteSpeed_Cache_REST::get_instance()->is_rest() || LiteSpeed_Cache_Router::is_ajax() ) {
+			$running_info_showing = false ;
+			LiteSpeed_Cache_Log::debug( '[Core] Silence Comment due to REST/AJAX' ) ;
+		}
+
+		$running_info_showing = apply_filters( 'litespeed_comment', $running_info_showing ) ;
 
 		if ( $running_info_showing ) {
 			// Give one more break to avoid ff crash
