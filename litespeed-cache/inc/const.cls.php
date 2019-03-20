@@ -667,18 +667,6 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 	}
 
 	/**
-	 * Get default item val
-	 *
-	 * @since 1.8
-	 * @access public
-	 */
-	public function default_item( $item )
-	{
-
-	}
-
-
-	/**
 	 * Generate conf name for wp_options record
 	 *
 	 * @since 3.0

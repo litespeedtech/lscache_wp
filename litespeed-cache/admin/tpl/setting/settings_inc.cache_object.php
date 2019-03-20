@@ -108,7 +108,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Global Groups', 'litespeed-cache' ) ; ?></h4>
-					<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
+					<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'Groups cached at the network level.', 'litespeed-cache' ) ; ?>
 						<?php echo __('One per line.', 'litespeed-cache'); ?>
@@ -117,7 +117,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 
 				<div class='litespeed-col-auto'>
 					<h4><?php echo __( 'Do Not Cache Groups', 'litespeed-cache' ) ; ?></h4>
-					<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
+					<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __('One per line.', 'litespeed-cache'); ?>
 					</div>

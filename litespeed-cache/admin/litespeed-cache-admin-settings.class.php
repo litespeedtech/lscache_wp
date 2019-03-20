@@ -470,30 +470,21 @@ class LiteSpeed_Cache_Admin_Settings
 		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 
 		// get auto purge rules options
-		$pvals = array(
-			LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
-			LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
-			LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
-			LiteSpeed_Cache_Config::PURGE_PAGES,
-			LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS,
-			LiteSpeed_Cache_Config::PURGE_AUTHOR,
-			LiteSpeed_Cache_Config::PURGE_YEAR,
-			LiteSpeed_Cache_Config::PURGE_MONTH,
-			LiteSpeed_Cache_Config::PURGE_DATE,
-			LiteSpeed_Cache_Config::PURGE_TERM,
-			LiteSpeed_Cache_Config::PURGE_POST_TYPE,
+		$ids = array(
+			LiteSpeed_Cache_Config::O_PURGE_POST_ALL,
+			LiteSpeed_Cache_Config::O_PURGE_POST_FRONTPAGE,
+			LiteSpeed_Cache_Config::O_PURGE_POST_HOMEPAGE,
+			LiteSpeed_Cache_Config::O_PURGE_POST_PAGES,
+			LiteSpeed_Cache_Config::O_PURGE_POST_PAGES_WITH_RECENT_POSTS,
+			LiteSpeed_Cache_Config::O_PURGE_POST_AUTHOR,
+			LiteSpeed_Cache_Config::O_PURGE_POST_YEAR,
+			LiteSpeed_Cache_Config::O_PURGE_POST_MONTH,
+			LiteSpeed_Cache_Config::O_PURGE_POST_DATE,
+			LiteSpeed_Cache_Config::O_PURGE_POST_TERM,
+			LiteSpeed_Cache_Config::O_PURGE_POST_POSTTYPE,
 		) ;
-		$input_purge_options = array() ;
-		foreach ( $pvals as $v) {
-			$input_name = 'purge_' . $v ;
-			if ( self::parse_onoff( $this->_input, $input_name ) ) {
-				$input_purge_options[] = $v ;
-			}
-		}
-		sort( $input_purge_options ) ;
-		$purge_by_post = implode( '.', $input_purge_options ) ;
-		if ( $purge_by_post !== $this->_options[ LiteSpeed_Cache_Config::O_PURGE_BY_POST xx ] ) {
-			$this->_options[ LiteSpeed_Cache_Config::O_PURGE_BY_POST xx ] = $purge_by_post ;
+		foreach ( $ids as $id ) {
+			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 		}
 
 		// Filter scheduled purge URLs

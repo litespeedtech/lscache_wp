@@ -79,7 +79,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<td class='litespeed-vary-val'>
 						<input type="text" class="litespeed-input-short"
 							name="<?php echo LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ; ?>[<?php echo $role ; ?>]"
-							value="<?php echo $this->config->in_vary_group( $role ) ; ?>" />
+							value="<?php echo $this->__cfg->in_vary_group( $role ) ; ?>" />
 					</td>
 				</tr>
 			<?php endforeach; ?>

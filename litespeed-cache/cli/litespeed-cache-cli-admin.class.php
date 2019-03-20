@@ -7,7 +7,6 @@ class LiteSpeed_Cache_Cli_Admin
 {
 
 	private static $checkboxes ;
-	private static $purges ;
 
 	public function __construct()
 	{
@@ -19,17 +18,6 @@ class LiteSpeed_Cache_Cli_Admin
 			}
 		}
 
-		self::$purges = array(
-			'purge_' . LiteSpeed_Cache_Config::PURGE_ALL_PAGES => LiteSpeed_Cache_Config::PURGE_ALL_PAGES,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_FRONT_PAGE => LiteSpeed_Cache_Config::PURGE_FRONT_PAGE,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_HOME_PAGE => LiteSpeed_Cache_Config::PURGE_HOME_PAGE,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_AUTHOR => LiteSpeed_Cache_Config::PURGE_AUTHOR,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_YEAR => LiteSpeed_Cache_Config::PURGE_YEAR,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_MONTH => LiteSpeed_Cache_Config::PURGE_MONTH,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_DATE => LiteSpeed_Cache_Config::PURGE_DATE,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_TERM => LiteSpeed_Cache_Config::PURGE_TERM,
-			'purge_' . LiteSpeed_Cache_Config::PURGE_POST_TYPE => LiteSpeed_Cache_Config::PURGE_POST_TYPE,
-		) ;
 	}
 
 	/**
@@ -72,7 +60,7 @@ class LiteSpeed_Cache_Cli_Admin
 		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
 		 * @since  2.7.1
 		 */
-		if ( ! isset($options) || ( ! isset($options[$key]) && ! isset(self::$purges[$key]) && strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) !== 0 ) ) {
+		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) !== 0 ) ) {
 			WP_CLI::error('The options array is empty or the key is not valid.') ;
 			return ;
 		}
@@ -138,23 +126,8 @@ class LiteSpeed_Cache_Cli_Admin
 				break ;
 
 			default:
-				if ( substr($key, 0, 6) === 'purge_' ) {
-					if ( $val === 'true' ) {
-						WP_CLI::line('key is ' . $key . ', val is ' . $val) ;
-						$options[$key] = LiteSpeed_Cache_Config::VAL_ON ;
-					}
-					elseif ( $val === 'false' ) {
-						unset($options[$key]) ;
-					}
-					else {
-						WP_CLI::error('Purge checkbox value must be true or false.') ;
-						return ;
-					}
-				}
-				else {
-					// Everything else, just set the value
-					$options[$key] = $val ;
-				}
+				// Everything else, just set the value
+				$options[$key] = $val ;
 				break ;
 		}
 
@@ -175,11 +148,7 @@ class LiteSpeed_Cache_Cli_Admin
 	public function get_options($args, $assoc_args)
 	{
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
-		$purge_options = LiteSpeed_Cache_Config::get_instance()->get_purge_options() ;
-		unset($options[LiteSpeed_Cache_Config::O_PURGE_BY_POST xx]) ;
 		$option_out = array() ;
-		$purge_diff = array_diff(self::$purges, $purge_options) ;
-		$purge_out = array() ;
 
 		$buf = WP_CLI::colorize("%CThe list of options:%n\n") ;
 		WP_CLI::line($buf) ;
@@ -199,19 +168,7 @@ class LiteSpeed_Cache_Cli_Admin
 			$option_out[] = array('key' => $key, 'value' => $value) ;
 		}
 
-		foreach ($purge_options as $opt_name) {
-			$purge_out[] = array('key' => 'purge_' . $opt_name, 'value' => 'true') ;
-		}
-
-		foreach ($purge_diff as $opt_name) {
-			$purge_out[] = array('key' => 'purge_' . $opt_name, 'value' => 'false') ;
-		}
-
 		WP_CLI\Utils\format_items('table', $option_out, array('key', 'value')) ;
-
-		$buf = WP_CLI::colorize("%CThe list of PURGE ON POST UPDATE options:%n\n") ;
-		WP_CLI::line($buf) ;
-		WP_CLI\Utils\format_items('table', $purge_out, array('key', 'value')) ;
 	}
 
 	/**

@@ -198,7 +198,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache Post Types', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('List post types where each item of that type should have its own CCSS generated.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, if every Page on the site has different formatting, enter %s in the box. Separate critical CSS files will be stored for every Page on the site.', 'litespeed-cache' ), '<code>page</code>' ) ; ?>
@@ -210,7 +210,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Separate CCSS Cache URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Separate critical CSS files will be generated for paths containing these strings.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -256,7 +256,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 	<tr>
 		<th><?php echo __( 'DNS Prefetch', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>

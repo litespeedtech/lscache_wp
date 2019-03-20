@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = $this->__conf->get_item( LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = $this->__conf->get_option( LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ) ) {

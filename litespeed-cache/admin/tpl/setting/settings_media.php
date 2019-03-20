@@ -29,7 +29,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Lazy Load Image Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -46,7 +46,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	<tr>
 		<th><?php echo __( 'Lazy Load Image Class Name Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -243,7 +243,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 		<th class="litespeed-padding-left"><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ; ?>
-			<?php $this->build_textarea2( $id, 40 ) ; ?>
+			<?php $this->build_textarea( $id, 40 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify which element attributes will be replaced with WebP.', 'litespeed-cache' ) ; ?>

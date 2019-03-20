@@ -35,7 +35,7 @@ class LiteSpeed_Cache_Admin_Display
 	const RULECONFLICT_ON = 'ExpiresDefault_1' ;
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
-	private $config ;
+	private $__cfg ;
 	private $messages = array() ;
 	private $disable_all = false ;
 	private $default_settings = array() ;
@@ -92,10 +92,10 @@ class LiteSpeed_Cache_Admin_Display
 			add_action('admin_menu', array($this, 'register_admin_menu')) ;
 		}
 
-		$this->config = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
 		// get default setting values
-		$this->default_settings = $this->config->get_default_options() ;xx
+		$this->default_settings = $this->__cfg->get_default_options() ;xx
 	}
 
 	/**
@@ -717,23 +717,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Build a textarea based on separate stored option data
-	 *
-	 * @since 1.5
-	 * @since  1.7 Changed cols param order to be the 2nd from 4th
-	 * @access public
-	 * @param  string $id
-	 * @param  int $cols The width of textarea
-	 */
-	public function build_textarea2( $id, $cols = false )
-	{
-		// Get default val for separate item
-		$val = $this->config->get_item( $id, true ) ;
-
-		$this->build_textarea( $id, $cols, $val, false, 'litespeed-textarea-success' ) ;
-	}
-
-	/**
 	 * Build a text input field
 	 *
 	 * @since 1.1.0
@@ -930,7 +913,7 @@ class LiteSpeed_Cache_Admin_Display
 			}
 		}
 		else {
-			$val = $this->config->default_item( $id ) ;
+			$val = $this->__cfg->default_item( $id ) ;
 		}
 
 		if ( $val ) {

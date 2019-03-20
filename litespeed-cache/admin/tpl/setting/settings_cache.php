@@ -61,7 +61,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Private Cached URIs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('URI Paths containing these strings will NOT be cached as public.', 'litespeed-cache'); ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -72,7 +72,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
 		<th><?php echo __( 'Drop Query String', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_CACHE_DROP_QS, 40 ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_DROP_QS, 40 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Ignore certain query strings when caching.', 'litespeed-cache'); ?>
 				<?php echo sprintf( __( 'For example, to drop parameters beginning with %s, %s can be used here.', 'litespeed-cache' ), '<code>utm</code>', '<code>utm*</code>' ) ; ?>

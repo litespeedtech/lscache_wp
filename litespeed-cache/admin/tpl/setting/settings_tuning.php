@@ -139,7 +139,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Critical CSS Rules', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Specify critical CSS rules for above-the-fold content when enabling %s.', 'litespeed-cache' ), __( 'Load CSS Asynchronously', 'litespeed-cache' ) ) ; ?>
 			</div>
@@ -149,7 +149,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'JS Deferred Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -177,7 +177,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'URI Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea2( LiteSpeed_Cache_Config::O_OPTM_EXC ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Prevent any optimization of listed pages.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -189,7 +189,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Role Excludes', 'litespeed-cache'); ?></th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_OPTM_EXC_ROLES . "][", $title, $this->config->in_optm_exc_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_OPTM_EXC_ROLES . "][", $title, $this->__cfg->in_optm_exc_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from all optimizations.', 'litespeed-cache' ) ; ?>

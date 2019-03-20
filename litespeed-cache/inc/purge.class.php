@@ -902,7 +902,7 @@ class LiteSpeed_Cache_Purge
 		$purge_tags = array() ;
 		$config = LiteSpeed_Cache_Config::get_instance() ;
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_ALL_PAGES) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_ALL ) ) {
 			// ignore the rest if purge all
 			return array( '*' ) ;
 		}
@@ -940,7 +940,7 @@ class LiteSpeed_Cache_Purge
 			}
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_TERM) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_TERM ) ) {
 			$taxonomies = get_object_taxonomies($post_type) ;
 			//LiteSpeed_Cache_Log::debug('purge by post, check tax = ' . var_export($taxonomies, true)) ;
 			foreach ( $taxonomies as $tax ) {
@@ -958,31 +958,31 @@ class LiteSpeed_Cache_Purge
 		}
 
 		// author, for author posts and feed list
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_AUTHOR) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_AUTHOR) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_AUTHOR . get_post_field('post_author', $post_id) ;
 		}
 
 		// archive and feed of post type
 		// todo: check if type contains space
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_POST_TYPE) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_POSTTYPE) ) {
 			if ( get_post_type_archive_link($post_type) ) {
 				$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_ARCHIVE_POSTTYPE . $post_type ;
 			}
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_FRONT_PAGE) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_FRONTPAGE) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_FRONTPAGE ;
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_HOME_PAGE) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_HOMEPAGE) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_HOME ;
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_PAGES) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_PAGES ;
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_PAGES_WITH_RECENT_POSTS) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_PAGES_WITH_RECENT_POSTS) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_PAGES_WITH_RECENT_POSTS ;
 		}
 
@@ -990,15 +990,15 @@ class LiteSpeed_Cache_Purge
 		$date = $post->post_date ;
 		$date = strtotime($date) ;
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_DATE) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_DATE) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_ARCHIVE_DATE . date('Ymd', $date) ;
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_MONTH) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_MONTH) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_ARCHIVE_DATE . date('Ym', $date) ;
 		}
 
-		if ( $config->purge_by_post(LiteSpeed_Cache_Config::PURGE_YEAR) ) {
+		if ( $config->get_option( LiteSpeed_Cache_Config::O_PURGE_POST_YEAR) ) {
 			$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_ARCHIVE_DATE . date('Y', $date) ;
 		}
 

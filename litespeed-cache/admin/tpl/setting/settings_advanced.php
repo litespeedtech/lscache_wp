@@ -31,7 +31,7 @@ if (!defined('WPINC')) die;
 		<th><?php echo __( 'Purge All Hooks', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ; ?>
-			<?php $this->build_textarea2( $id, 50 ) ; ?>
+			<?php $this->build_textarea( $id, 50 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 
 			<div class="litespeed-desc">

@@ -6,7 +6,7 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
+$cdn_mapping = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
 
 ?>
 
@@ -132,7 +132,7 @@ $cdn_mapping = $this->config->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 		<th class="litespeed-padding-left"><?php echo __( 'Included Directories', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CDN_ORI_DIR ; ?>
-			<?php $this->build_textarea2( $id, 40 ) ; ?>
+			<?php $this->build_textarea( $id, 40 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>

@@ -27,7 +27,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	protected $vary_groups ;
 	protected $optm_exc_roles ;
 	protected $cache_exc_roles ;
-	protected $purge_options ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -49,7 +48,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
 
-		// Check advanced_cache set (compabible for both network and single site)
+		// Check advanced_cache set (compatible for both network and single site)
 		$this->_define_adv_cache() ;
 
 		// Init global const cache on set
@@ -62,10 +61,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$this->define_cache_on() ;
 		}
 
-		$this->purge_options = explode('.', $this->_options[ self::O_PURGE_BY_POST xx ] ) ;
-
 		// Vary group settings
-		$this->vary_groups = $this->get_item( self::O_CACHE_VARY_GROUP ) ;
+		$this->vary_groups = $this->get_item( self::O_CACHE_VARY_GROUP ) ;xx
 
 		// Exclude optimization role setting
 		$this->optm_exc_roles = $this->get_item( self::O_OPTM_EXC_ROLES ) ;
@@ -283,10 +280,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		foreach ( $this->_options as $k => $v ) {
 			$new_v = apply_filters( "litespeed_option_$k", $v ) ;
 
-			if ( $new_v !== $v ) {
-				LiteSpeed_Cache_Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
-				$this->_options[ $k ] = $new_v ;
+			if ( $new_v === $v ) {
+				continue ;
 			}
+
+			LiteSpeed_Cache_Log::debug( "[Conf] ** $k changed by hook [litespeed_option_$k] from " . var_export( $v, true ) . ' to ' . var_export( $new_v, true ) ) ;
+			$this->_options[ $k ] = $new_v ;
 		}
 	}
 
@@ -298,10 +297,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function force_option( $k, $v )
 	{
-		if ( array_key_exists( $k, $this->_options ) ) {
-			LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
-			$this->_options[ $k ] = $v ;
+		if ( ! array_key_exists( $k, $this->_options ) ) {
+			return ;
 		}
+
+		LiteSpeed_Cache_Log::debug( "[Conf] ** $k forced value to " . var_export( $v, true ) ) ;
+		$this->_options[ $k ] = $v ;
 	}
 
 	/**
@@ -314,7 +315,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function _define_adv_cache()
 	{
-		if ( isset( $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) && ! $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
+		if ( ! $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
 			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
 	}
@@ -451,31 +452,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		return in_array( $role, $this->cache_exc_roles ) ? $role : false ;
 	}
 
-	/**
-	 * Get the configured purge options.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @return array The list of purge options.
-	 */
-	public function get_purge_options()
-	{
-		return $this->purge_options ;
-	}
-
-	/**
-	 * Check if the flag type of posts should be purged on updates.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param string $flag Post type. Refer to LiteSpeed_Cache_Config::PURGE_*
-	 * @return boolean True if the post type should be purged, false otherwise.
-	 */
-	public function purge_by_post( $flag )
-	{
-		return in_array( $flag, $this->purge_options ) ;
-	}
-
+xx
 	/**
 	 * Get item val
 	 *
@@ -518,13 +495,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 			elseif ( $val === false ) {
 				$options[$key] = self::VAL_OFF ;
-			}
-		}
-		if ( isset($options[self::O_PURGE_BY_POST xx]) ) {
-			$purge_opts = explode('.', $options[self::O_PURGE_BY_POST xx]) ;
-
-			foreach ($purge_opts as $purge_opt) {
-				$options['purge_' . $purge_opt] = self::VAL_ON ;
 			}
 		}
 
