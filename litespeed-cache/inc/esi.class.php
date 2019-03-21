@@ -345,7 +345,7 @@ class LiteSpeed_Cache_ESI
 			$appended_params[ '_control' ] = $control ;
 		}
 		if ( $params ) {
-			$appended_params[ self::QS_PARAMS ] = base64_encode( serialize( $params ) ) ;
+			$appended_params[ self::QS_PARAMS ] = base64_encode( json_encode( $params ) ) ;
 		}
 
 		/**
@@ -407,10 +407,7 @@ class LiteSpeed_Cache_ESI
 
 		LiteSpeed_Cache_Log::debug2( '[ESI] parms', $unencrypted ) ;
 		// $unencoded = urldecode($unencrypted) ; no need to do this as $_GET is already parsed
-		$params = unserialize( $unencrypted ) ;
-		if ( $params === false ) {
-			return false ;
-		}
+		$params = json_decode( $unencrypted, true ) ;
 
 		return $params ;
 	}
