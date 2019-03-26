@@ -751,7 +751,7 @@ class LiteSpeed_Cache_Img_Optm
 					) ;
 					// Init optm_info for the first one
 					if ( ! empty( $v->b_meta_id ) ) {
-						foreach ( unserialize( $v->b_optm_info ) as $k2 => $v2 ) {
+						foreach ( maybe_unserialize( $v->b_optm_info ) as $k2 => $v2 ) {
 							$postmeta_info[ $v->post_id ][ 'meta_info' ][ $k2 ] += $v2 ;
 						}
 					}
@@ -786,7 +786,7 @@ class LiteSpeed_Cache_Img_Optm
 
 			// Update status and data
 			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_saved = %d, webp_saved = %d, server_info = %s WHERE id = %d " ;
-			$wpdb->query( $wpdb->prepare( $q, array( $status, $target_saved, $webp_saved, serialize( $server_info ), $v->id ) ) ) ;
+			$wpdb->query( $wpdb->prepare( $q, array( $status, $target_saved, $webp_saved, json_encode( $server_info ), $v->id ) ) ) ;
 
 			// Update child images ( same md5 files )
 			$q = "UPDATE $this->_table_img_optm SET optm_status = %s, target_saved = %d, webp_saved = %d WHERE root_id = %d " ;
@@ -900,7 +900,7 @@ class LiteSpeed_Cache_Img_Optm
 	 */
 	private function _parse_notify_data()
 	{
-		$notified_data = unserialize( base64_decode( $_POST[ 'data' ] ) ) ;
+		$notified_data = json_decode( base64_decode( $_POST[ 'data' ] ), true ) ;
 		if ( empty( $notified_data ) || ! is_array( $notified_data ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] ❌ notify exit: no notified data' ) ;
 			exit( json_encode( 'no notified data' ) ) ;
@@ -1013,20 +1013,13 @@ class LiteSpeed_Cache_Img_Optm
 			 * This is only for v2.4.2- data
 			 * @see  https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization:2-4-2-upgrade
 			 */
-			try{
-				if ( ! $row_img->server_info ) {
-					throw new Exception( 'No server info in this notification' ) ;
-				}
-
-				$server_info = unserialize( $row_img->server_info ) ;
-				$server = $server_info[ 'server' ] ;
-
-			} catch( \Exception $ex ) {
-				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to unserialize server_info.' ) ;
+			$server_info = json_decode( $row_img->server_info, true ) ;
+			if ( empty( $server_info[ 'server' ] ) ) {
+				LiteSpeed_Cache_Log::debug( '[Img_Optm] Failed to decode server_info.' ) ;
 
 				$msg = sprintf(
 					__( 'LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend the pull notification this one time only. After that, the process will be automated.', 'litespeed-cache' ),
-					'v2.4.2',
+					'v2.9.6',
 					LiteSpeed_Cache_GUI::img_optm_clean_up_unfinished()
 				) ;
 
@@ -1036,6 +1029,7 @@ class LiteSpeed_Cache_Img_Optm
 
 				return ;
 			}
+			$server = $server_info[ 'server' ] ;
 
 			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $row_img->src ;
 
@@ -1269,15 +1263,8 @@ class LiteSpeed_Cache_Img_Optm
 			return false ;
 		}
 
-		if ( function_exists( 'is_serialized' ) && ! is_serialized( $v->meta_value ) ) {
-			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to wrong meta_value: pid ' . $v->post_id ) ;
-			return false ;
-		}
-
-		try {
-			$meta_value = @unserialize( $v->meta_value ) ;
-		}
-		catch ( \Exception $e ) {
+		$meta_value = @maybe_unserialize( $v->meta_value ) ;
+		if ( ! is_array( $meta_value ) ) {
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] bypassed parsing meta due to meta_value not json: pid ' . $v->post_id ) ;
 			return false ;
 		}
@@ -1487,7 +1474,7 @@ class LiteSpeed_Cache_Img_Optm
 			$this->tmp_path = pathinfo( $meta_value[ 'file' ], PATHINFO_DIRNAME ) . '/' ;
 
 			// ls optimized meta
-			$optm_meta = $optm_data_list[ $v->post_id ] = unserialize( $v->cmeta_value ) ;
+			$optm_meta = $optm_data_list[ $v->post_id ] = maybe_unserialize( $v->cmeta_value ) ;
 			$optm_list = array() ;
 			foreach ( $optm_meta as $md5 => $optm_row ) {
 				$optm_list[] = $optm_row[ 0 ] ;

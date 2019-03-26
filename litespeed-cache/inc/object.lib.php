@@ -250,7 +250,7 @@ class WP_Object_Cache
 			$v = $this->_object_cache->get( $final_key ) ;
 
 			if ( $v !== null ) {
-				$v = @unserialize( $v ) ;
+				$v = json_decode( $v, true ) ;
 			}
 
 			// To be compatible with false val
@@ -313,7 +313,7 @@ class WP_Object_Cache
 		}
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
+			$this->_object_cache->set( $final_key, json_encode( array( 'data' => $data ) ), $expire ) ;
 			$this->count_set ++ ;
 		}
 

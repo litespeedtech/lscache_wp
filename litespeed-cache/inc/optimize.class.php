@@ -889,7 +889,7 @@ class LiteSpeed_Cache_Optimize
 
 		$purge_timestamp = get_option( LiteSpeed_Cache_Config::ITEM_TIMESTAMP_PURGE_CSS ) ?: '' ;
 
-		$hash = md5( serialize( $src ) . $purge_timestamp ) ;
+		$hash = md5( json_encode( $src ) . $purge_timestamp ) ;
 
 		$short = substr( $hash, -5 ) ;
 

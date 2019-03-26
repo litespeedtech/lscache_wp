@@ -176,7 +176,7 @@ class LiteSpeed_Cache_Data
 			if ( $meta_value_list ) {
 				$max_k = count( $meta_value_list ) - 1 ;
 				foreach ( $meta_value_list as $k => $v ) {
-					$md52src_list = unserialize( $v->meta_value ) ;
+					$md52src_list = maybe_unserialize( $v->meta_value ) ;
 					foreach ( $md52src_list as $md5 => $v2 ) {
 						$f = array(
 							'post_id'	=> $v->post_id,
@@ -273,7 +273,7 @@ class LiteSpeed_Cache_Data
 			foreach ( $hashes as $k => $v ) {
 				$f = array(
 					'hash_name'	=> $k,
-					'src'		=> serialize( $v ),
+					'src'		=> json_encode( $v ),
 					'dateline'	=> time(),
 					'refer' 	=> '',
 				) ;
@@ -302,7 +302,7 @@ class LiteSpeed_Cache_Data
 	{
 		global $wpdb ;
 
-		$src = serialize( $src ) ;
+		$src = json_encode( $src ) ;
 		$f = array(
 			'hash_name'	=> $filename,
 			'src'		=> $src,
@@ -335,7 +335,7 @@ class LiteSpeed_Cache_Data
 
 		LiteSpeed_Cache_Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
 
-		$res = unserialize( $res ) ;
+		$res = json_decode( $res, true ) ;
 
 		return $res ;
 	}

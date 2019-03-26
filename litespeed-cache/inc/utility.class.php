@@ -254,7 +254,7 @@ class LiteSpeed_Cache_Utility
 			return $arr ;
 		}
 
-		return base64_encode( serialize( $arr ) ) ;
+		return base64_encode( json_encode( $arr ) ) ;
 	}
 
 	/**
