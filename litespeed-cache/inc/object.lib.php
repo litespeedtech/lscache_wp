@@ -250,7 +250,12 @@ class WP_Object_Cache
 			$v = $this->_object_cache->get( $final_key ) ;
 
 			if ( $v !== null ) {
-				$v = json_decode( $v, true ) ;
+				$v2 = json_decode( $v, true ) ;
+				// Tmp added unserialize to avoid breaking wp_user init during upgrade process as plugin upgrade purge in v2.* is in admin_init. Will be removed in v3.0
+				if ( ! $v2 && is_serialized( $v ) ) {
+					$v2 = maybe_unserialize( $v ) ;
+				}
+				$v = $v2 ;
 			}
 
 			// To be compatible with false val
