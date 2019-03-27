@@ -286,6 +286,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.9.6 - Mar 27 2019 =
 * 🌱<strong>IAPI</strong>: Appended XMP to `Preserve EXIF data` setting. WebP will now honor this setting. (#902219)
+* <strong>Object</script> Fixed SASL connection with LSMCD.
 * <strong>ESI</strong>: Converted ESI URI parameters to JSON; Added ESI validation.
 * <strong>Import</strong>: Import/Export will now use JSON format. <strong>Please re-export any backed up settings. Previous backup format is no longer recognized.</strong>
 * <strong>Media</strong>: WebP replacement will honor `Role Excludes` setting now. (@mfazio26)
