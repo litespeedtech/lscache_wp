@@ -250,12 +250,7 @@ class WP_Object_Cache
 			$v = $this->_object_cache->get( $final_key ) ;
 
 			if ( $v !== null ) {
-				$v2 = json_decode( $v, true ) ;
-				// Tmp added unserialize to avoid breaking wp_user init during upgrade process as plugin upgrade purge in v2.* is in admin_init. Will be removed in v3.0
-				if ( ! $v2 && is_serialized( $v ) ) {
-					$v2 = maybe_unserialize( $v ) ;
-				}
-				$v = $v2 ;
+				$v = @maybe_unserialize( $v ) ;
 			}
 
 			// To be compatible with false val
@@ -318,7 +313,7 @@ class WP_Object_Cache
 		}
 
 		if ( ! $this->_object_cache->is_non_persistent( $group ) ) {
-			$this->_object_cache->set( $final_key, json_encode( array( 'data' => $data ) ), $expire ) ;
+			$this->_object_cache->set( $final_key, serialize( array( 'data' => $data ) ), $expire ) ;
 			$this->count_set ++ ;
 		}
 
