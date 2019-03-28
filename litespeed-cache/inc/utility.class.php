@@ -64,6 +64,10 @@ class LiteSpeed_Cache_Utility
 		// Check latest stable version allowed to upgrade
 		$url = 'https://wp.api.litespeedtech.com/auto_upgrade_v?v=' . LiteSpeed_Cache::PLUGIN_VERSION . '&src=' . $src ;
 
+		if ( defined( 'LITESPEED_ERR' ) ) {
+			$url .= '&err=' . base64_encode( ! is_string( LITESPEED_ERR ) ? json_encode( LITESPEED_ERR ) : LITESPEED_ERR ) ;
+		}
+
 		$response = wp_remote_get( $url, array( 'timeout' => 15 ) ) ;
 		if ( ! is_array( $response ) || empty( $response[ 'body' ] ) ) {
 			return false ;
@@ -254,7 +258,7 @@ class LiteSpeed_Cache_Utility
 			return $arr ;
 		}
 
-		return base64_encode( serialize( $arr ) ) ;
+		return base64_encode( json_encode( $arr ) ) ;
 	}
 
 	/**

@@ -296,7 +296,7 @@ class LiteSpeed_Cache_Data
 	{
 		global $wpdb ;
 
-		$src = serialize( $src ) ;
+		$src = json_encode( $src ) ;
 		$f = array(
 			'hash_name'	=> $filename,
 			'src'		=> $src,
@@ -329,7 +329,7 @@ class LiteSpeed_Cache_Data
 
 		LiteSpeed_Cache_Log::debug2( '[Data] Loaded hash2src ' . $res ) ;
 
-		$res = unserialize( $res ) ;
+		$res = json_decode( $res, true ) ;
 
 		return $res ;
 	}

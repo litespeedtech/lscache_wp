@@ -345,8 +345,11 @@ class LiteSpeed_Cache_ESI
 			$appended_params[ '_control' ] = $control ;
 		}
 		if ( $params ) {
-			$appended_params[ self::QS_PARAMS ] = base64_encode( serialize( $params ) ) ;
+			$appended_params[ self::QS_PARAMS ] = base64_encode( json_encode( $params ) ) ;
 		}
+
+		// Append hash
+		$appended_params[ '_hash' ] = self::_gen_esi_md5( $appended_params ) ;
 
 		/**
 		 * Escape potential chars
@@ -389,6 +392,31 @@ class LiteSpeed_Cache_ESI
 	}
 
 	/**
+	 * Generate ESI hash md5
+	 *
+	 * @since  2.9.6
+	 * @access private
+	 */
+	private static function _gen_esi_md5( $params )
+	{
+		$keys = array(
+			self::QS_ACTION,
+			'_control',
+			self::QS_PARAMS,
+		) ;
+
+		$str = '' ;
+		foreach ( $keys as $v ) {
+			if ( isset( $params[ $v ] ) && is_string( $params[ $v ] ) ) {
+				$str .= $params[ $v ] ;
+			}
+		}
+		LiteSpeed_Cache_Log::debug2( '[ESI] md5_string=' . $str ) ;
+
+		return md5( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::HASH ) . $str ) ;
+	}
+
+	/**
 	 * Parses the request parameters on an ESI request
 	 *
 	 * @since 1.1.3
@@ -407,10 +435,7 @@ class LiteSpeed_Cache_ESI
 
 		LiteSpeed_Cache_Log::debug2( '[ESI] parms', $unencrypted ) ;
 		// $unencoded = urldecode($unencrypted) ; no need to do this as $_GET is already parsed
-		$params = unserialize( $unencrypted ) ;
-		if ( $params === false ) {
-			return false ;
-		}
+		$params = json_decode( $unencrypted, true ) ;
 
 		return $params ;
 	}
@@ -423,6 +448,15 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_esi_block()
 	{
+		/**
+		 * Validate if is a legal ESI req
+		 * @since 2.9.6
+		 */
+		if ( empty( $_GET[ '_hash' ] ) || self::_gen_esi_md5( $_GET ) != $_GET[ '_hash' ] ) {
+			LiteSpeed_Cache_Log::debug( '[ESI] ❌ Failed to validate _hash' ) ;
+			return ;
+		}
+
 		$params = $this->_parse_esi_param() ;
 
 		if ( defined( 'LSCWP_LOG' ) ) {

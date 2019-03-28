@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9.5\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2019-03-14 17:35:45+00:00\n"
+"POT-Creation-Date: 2019-03-27 17:42:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -848,7 +848,7 @@ msgstr ""
 msgid "Are you sure to reset all settings to default settings?"
 msgstr ""
 
-#: admin/tpl/import_export.php:61 inc/media.class.php:241
+#: admin/tpl/import_export.php:61 inc/media.class.php:246
 msgid "Reset"
 msgstr ""
 
@@ -860,7 +860,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.5)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.6)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6
 #: admin/tpl/inc/banner_promo.new_version.php:56 inc/gui.class.php:477
@@ -3402,7 +3402,7 @@ msgid ""
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:224
-msgid "Preserve EXIF data"
+msgid "Preserve EXIF/XMP data"
 msgstr ""
 
 #: admin/tpl/setting/settings_media.php:228
@@ -4153,8 +4153,8 @@ msgstr ""
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:167 inc/img_optm.class.php:1464
-#: inc/img_optm.class.php:1529
+#: inc/img_optm.class.php:167 inc/img_optm.class.php:1451
+#: inc/img_optm.class.php:1516
 msgid "No image found."
 msgstr ""
 
@@ -4178,48 +4178,48 @@ msgstr ""
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:1028
+#: inc/img_optm.class.php:1021
 msgid ""
 "LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend "
 "the pull notification this one time only. After that, the process will be "
 "automated."
 msgstr ""
 
-#: inc/img_optm.class.php:1353
+#: inc/img_optm.class.php:1340
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1567
+#: inc/img_optm.class.php:1554
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1743
+#: inc/img_optm.class.php:1730
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1938
+#: inc/img_optm.class.php:1925
 msgid "Switched images successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1969
+#: inc/img_optm.class.php:1956
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1975
+#: inc/img_optm.class.php:1962
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1991
+#: inc/img_optm.class.php:1978
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1998
+#: inc/img_optm.class.php:1985
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:2058
+#: inc/img_optm.class.php:2045
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -4247,31 +4247,31 @@ msgstr ""
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: inc/media.class.php:147
+#: inc/media.class.php:152
 msgid "LiteSpeed Optimization"
 msgstr ""
 
-#: inc/media.class.php:173
+#: inc/media.class.php:178
 msgid "WebP saved %s"
 msgstr ""
 
-#: inc/media.class.php:180
+#: inc/media.class.php:185
 msgid "Click to Disable WebP"
 msgstr ""
 
-#: inc/media.class.php:185
+#: inc/media.class.php:190
 msgid "Click to Enable WebP"
 msgstr ""
 
-#: inc/media.class.php:206
+#: inc/media.class.php:211
 msgid "Original saved %s"
 msgstr ""
 
-#: inc/media.class.php:217
+#: inc/media.class.php:222
 msgid "Click to Restore Original File"
 msgstr ""
 
-#: inc/media.class.php:222
+#: inc/media.class.php:227
 msgid "Click to Switch To Optimized File"
 msgstr ""
 
@@ -4347,15 +4347,15 @@ msgstr ""
 msgid "LiteSpeed Cache Custom Cron Crawler"
 msgstr ""
 
-#: inc/utility.class.php:235 includes/litespeed-cache-utility.class.php:235
+#: inc/utility.class.php:239 includes/litespeed-cache-utility.class.php:239
 msgid "just now"
 msgstr ""
 
-#: inc/utility.class.php:235 includes/litespeed-cache-utility.class.php:235
+#: inc/utility.class.php:239 includes/litespeed-cache-utility.class.php:239
 msgid "right now"
 msgstr ""
 
-#: inc/utility.class.php:238 includes/litespeed-cache-utility.class.php:238
+#: inc/utility.class.php:242 includes/litespeed-cache-utility.class.php:242
 msgid " %s ago"
 msgstr ""
 

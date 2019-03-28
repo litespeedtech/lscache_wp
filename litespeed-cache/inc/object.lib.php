@@ -250,7 +250,7 @@ class WP_Object_Cache
 			$v = $this->_object_cache->get( $final_key ) ;
 
 			if ( $v !== null ) {
-				$v = @unserialize( $v ) ;
+				$v = @maybe_unserialize( $v ) ;
 			}
 
 			// To be compatible with false val

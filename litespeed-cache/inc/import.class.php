@@ -97,7 +97,7 @@ class LiteSpeed_Cache_Import
 			$data[ $v ] = get_option( $v ) ;// Here doesn't need the default_item value so no need to call `LiteSpeed_Cache_Config::get_instance()->get_item()`
 		}
 
-		$data = base64_encode( serialize( $data ) ) ;
+		$data = base64_encode( json_encode( $data ) ) ;
 
 		if ( $only_data_return ) {
 			return $data ;
@@ -168,8 +168,8 @@ class LiteSpeed_Cache_Import
 		}
 
 		try {
-			$data = unserialize( base64_decode( $data ) ) ;
-		} catch ( Exception $ex ) {
+			$data = json_decode( base64_decode( $data ), true ) ;
+		} catch ( \Exception $ex ) {
 			LiteSpeed_Cache_Log::debug( 'Import: Failed to parse serialized data' ) ;
 			return false ;
 		}

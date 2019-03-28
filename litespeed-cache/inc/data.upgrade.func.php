@@ -30,7 +30,7 @@ function litespeed_update_2_0( $ver )
 		if ( $meta_value_list ) {
 			$max_k = count( $meta_value_list ) - 1 ;
 			foreach ( $meta_value_list as $k => $v ) {
-				$md52src_list = unserialize( $v->meta_value ) ;
+				$md52src_list = maybe_unserialize( $v->meta_value ) ;
 				foreach ( $md52src_list as $md5 => $v2 ) {
 					$f = array(
 						'post_id'	=> $v->post_id,
