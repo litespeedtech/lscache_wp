@@ -331,7 +331,7 @@ class LiteSpeed_Cache_Utility
 	{
 		$hit = false ;
 		$this_ttl = 0 ;
-		foreach( $haystack as $item ) {
+		foreach( (array) $haystack as $item ) {
 			if ( ! $item ) {
 				continue ;
 			}
