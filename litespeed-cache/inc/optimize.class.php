@@ -91,6 +91,15 @@ class LiteSpeed_Cache_Optimize
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer ) {
+			/**
+			 * Filters the name or fragment of any JS file to ignore and load undeferred.
+			 *
+			 * @since 2.9.6
+			 *
+			 * @param LiteSpeed_Cache_Config|array ITEM_OPTM_JS_DEFER_EXC List of JS filenames,
+			 *                                                            paths or fragments to
+			 *                                                            ignore.
+			 */
 			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::ITEM_OPTM_JS_DEFER_EXC ) ) ;
 		}
 
