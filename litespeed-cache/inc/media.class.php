@@ -93,7 +93,7 @@ class LiteSpeed_Cache_Media
 			return false ;
 		}
 
-		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_optm_exc_roles() ) {
 			LiteSpeed_Cache_Log::debug( '[Media] ⛑️ bypass: hit Role Excludes setting: ' . $result ) ;
 			return false ;
 		}
