@@ -6,7 +6,7 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
+$cdn_mapping = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;xx working on here now
 
 ?>
 
