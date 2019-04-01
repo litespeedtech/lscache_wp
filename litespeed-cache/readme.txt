@@ -24,6 +24,7 @@ LSCWP supports WordPress Multisite and is compatible with most popular plugins, 
 
 = General Features =
 
+* Free QUIC.cloud CDN Cache
 * Object Cache (Memcached/LSMCD/Redis)
 * Image Optimization (Lossless/Lossy)
 * Minify CSS, JavaScript, and HTML
@@ -287,7 +288,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 == Changelog ==
 
 = 2.9.7 - Apr 1 2019 =
-* 🌱🌱🌱 Quic.Cloud CDN feature. Now Apache/Nginx can use LiteSpeed cache.
+* 🌱🌱🌱 QUIC.cloud CDN feature. Now Apache/Nginx can use LiteSpeed cache freely.
 
 = 2.9.6 - Mar 27 2019 =
 * 🌱<strong>IAPI</strong>: Appended XMP to `Preserve EXIF data` setting. WebP will now honor this setting. (#902219)
