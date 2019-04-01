@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.1.1
-Stable tag: 2.9.6
+Stable tag: 2.9.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -285,6 +285,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.7 - Apr 1 2019 =
+* 🌱🌱🌱 Quic.Cloud CDN feature. Now Apache/Nginx can use LiteSpeed cache.
 
 = 2.9.6 - Mar 27 2019 =
 * 🌱<strong>IAPI</strong>: Appended XMP to `Preserve EXIF data` setting. WebP will now honor this setting. (#902219)
