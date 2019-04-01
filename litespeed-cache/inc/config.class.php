@@ -51,6 +51,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->options = $options ;
 		$this->purge_options = explode('.', $options[ self::OPID_PURGE_BY_POST ] ) ;
 
+		/**
+		 * Detect if has quic.cloud set
+		 * @since  2.9.7
+		 */
+		if ( $this->options[ self::OPT_CDN_QUIC ] ) {
+			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
+		}
+
 		// Init global const cache on set
 		if ( $this->options[ self::OPID_ENABLED_RADIO ] === self::VAL_ON
 		//	 || ( is_multisite() && is_network_admin() && current_user_can( 'manage_network_options' ) && $this->options[ LiteSpeed_Cache_Config::NETWORK_OPID_ENABLED ] ) todo: need to check when primary is off and network is on, if can manage
