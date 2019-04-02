@@ -344,10 +344,10 @@ class LiteSpeed_Cache_Object
 			 * @since  1.8.1
 			 * @since  2.9.6 Fixed SASL connection @see https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:lsmcd:new_sasl
 			 */
-			if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $this->_conn, 'setSaslAuthData' ) && ini_get( 'memcached.use_sasl' ) ) {
-				$this->_conn->setSaslAuthData( $this->_cfg_user, $this->_cfg_pswd ) ;
+			if ( $this->_cfg_user && $this->_cfg_pswd && method_exists( $this->_conn, 'setSaslAuthData' ) ) {
 				$this->_conn->setOption( Memcached::OPT_BINARY_PROTOCOL, true ) ;
 				$this->_conn->setOption( Memcached::OPT_COMPRESSION, false ) ;
+				$this->_conn->setSaslAuthData( $this->_cfg_user, $this->_cfg_pswd ) ;
 			}
 
 			// Check connection

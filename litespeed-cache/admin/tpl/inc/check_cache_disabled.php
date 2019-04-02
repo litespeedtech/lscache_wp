@@ -4,9 +4,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 $reasons = array() ;
 
 if ( ! defined( 'LITESPEED_ALLOWED' ) ) {
-	if ( defined( 'LITESPEED_SERVER_TYPE' ) && 'LITESPEED_SERVER_TYPE' == 'NONE') {
+	if ( defined( 'LITESPEED_SERVER_TYPE' ) && LITESPEED_SERVER_TYPE == 'NONE') {
 		$reasons[] = array(
-			'title' => __( 'Caching with a non-LiteSpeed server (i.e. Apache or nginx) is not currently supported.', 'litespeed-cache' ),
+			'title' => __( 'To use the caching functions you must have a LiteSpeed web server or be using QUIC.cloud CDN.', 'litespeed-cache' ),
 			'link'	=> 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp#requirements',
 		) ;
 	} else {

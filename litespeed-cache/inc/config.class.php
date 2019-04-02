@@ -51,6 +51,14 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Check advanced_cache set (compatible for both network and single site)
 		$this->_define_adv_cache() ;
 
+		/**
+		 * Detect if has quic.cloud set
+		 * @since  2.9.7
+		 */
+		if ( $this->options[ self::OPT_CDN_QUIC ] ) {
+			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
+		}
+
 		// Init global const cache on set
 		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON ) {
 			$this->_options[ self::_CACHE ] = true ;
