@@ -55,7 +55,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * Detect if has quic.cloud set
 		 * @since  2.9.7
 		 */
-		if ( $this->options[ self::O_CDN_QUIC ] ) {
+		if ( $this->_options[ self::O_CDN_QUIC ] ) {
 			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
 		}
 
