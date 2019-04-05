@@ -21,7 +21,7 @@ class LiteSpeed_Cache_Admin_Settings
 	private $_options ;
 	private $_err = array() ;
 
-	private $__conf ;
+	private $__cfg ;
 	private $__purge ;
 
 	private $_max_int = 2147483647 ;
@@ -34,7 +34,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function __construct()
 	{
-		$this->__conf = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
 		$this->__purge = LiteSpeed_Cache_Purge::get_instance() ;
 	}
 
@@ -56,7 +56,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
-		$this->_options = $this->__conf->get_options() ;
+		$this->_options = $this->__cfg->get_options() ;
 
 		if ( LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all() ) {
 			add_settings_error( LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, __( '\'Use primary site settings\' set by Network Administrator.', 'litespeed-cache' ) ) ;
@@ -223,7 +223,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$this->_input = LiteSpeed_Cache_Admin::cleanup_text( $input ) ;
 
-		$options = $this->__conf->get_site_options() ;
+		$options = $this->__cfg->get_site_options() ;
 
 
 		/**
@@ -1137,7 +1137,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_thirdparty()
 	{
-		$tp_default_options = $this->__conf->get_thirdparty_options() ;
+		$tp_default_options = $this->__cfg->get_thirdparty_options() ;
 		if ( empty( $tp_default_options ) ) {
 			return ;
 		}

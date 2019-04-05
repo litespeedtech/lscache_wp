@@ -49,17 +49,19 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
+		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+
 		/**
 		 * Remotely load jQuery
 		 * This is separate from CDN on/off
 		 * @since 1.5
 		 */
-		$this->_cfg_cdn_remote_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ) ;
+		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
 			add_action( 'init', array( $this, 'load_jquery_remotely' ) ) ;
 		}
 
-		$this->_cfg_cdn = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN ) ;
+		$this->_cfg_cdn = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN ) ;
 		if ( ! $this->_cfg_cdn ) {
 			if ( ! defined( self::BYPASS ) ) {
 				define( self::BYPASS, true ) ;
@@ -67,10 +69,8 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-
-		$this->_cfg_url_ori = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_ORI ) ;
-		$cfg_cdn_url = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
+		$this->_cfg_url_ori = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_ORI ) ;
+		$cfg_cdn_url = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG,
@@ -122,24 +122,27 @@ class LiteSpeed_Cache_CDN
 			return ;
 		}
 
-		$this->_cfg_ori_dir = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_ORI_DIR ) ;
+		$this->_cfg_ori_dir = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_ORI_DIR ) ;
 		// In case user customized upload path
 		if ( defined( 'UPLOADS' ) ) {
 			$this->_cfg_ori_dir[] = UPLOADS ;
 		}
 
 		// Check if need preg_replace
-		if ( strpos( $this->_cfg_url_ori, '*' ) !== false ) {
-			LiteSpeed_Cache_Log::debug( '[CDN] wildcard rule in ' . $this->_cfg_url_ori ) ;
-			$this->_cfg_url_ori = preg_quote( $this->_cfg_url_ori, '#' ) ;
-			$this->_cfg_url_ori = str_replace( '\*', '.*', $this->_cfg_url_ori ) ;
-			LiteSpeed_Cache_Log::debug2( '[CDN] translated rule is ' . $this->_cfg_url_ori ) ;
+		foreach ( $this->_cfg_url_ori as $k => $v ) {
+			if ( strpos( $v, '*' ) === false ) {
+				continue ;
+			}
+
+			LiteSpeed_Cache_Log::debug( '[CDN] wildcard rule in ' . $v ) ;
+			$v = preg_quote( $v, '#' ) ;
+			$v = str_replace( '\*', '.*', $v ) ;
+			LiteSpeed_Cache_Log::debug2( '[CDN] translated rule is ' . $v ) ;
+
+			$this->_cfg_url_ori[ $k ] = $v ;
 		}
 
-		$this->_cfg_url_ori = explode( ',', $this->_cfg_url_ori ) ; xx
-
-		$this->_cfg_cdn_exclude = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_EXC ) ;
-		$this->_cfg_cdn_exclude = $this->_cfg_cdn_exclude ? explode( "\n", $this->_cfg_cdn_exclude ) : array() ;// todo: convert to cfg->get_item()
+		$this->_cfg_cdn_exclude = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_EXC ) ;
 
 		if ( ! empty( $this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG ] ) ) {
 			// Hook to srcset

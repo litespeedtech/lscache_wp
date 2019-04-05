@@ -139,6 +139,11 @@ function litespeed_update_3_0( $ver )
 	foreach ( $data as $k => $v ) {
 		$old_data = get_option( $k ) ;
 		if ( $old_data ) {
+			// They must be an array
+			if ( ! is_array( $old_data ) && $v != 'optm.ccss_con' ) {
+				$old_data = explode( "\n", $old_data ) ;
+			}
+
 			add_option( 'litespeed.conf.' . $v, $old_data ) ;
 		}
 		delete_option( $k ) ;
@@ -295,6 +300,29 @@ function litespeed_update_3_0( $ver )
 	foreach ( $data as $k => $v ) {
 		if ( ! isset( $previous_options[ $k ] ) ) {
 			continue ;
+		}
+		// The folllowing values must be array
+		if ( ! is_array( $previous_options[ $k ] ) ) {
+			if ( $v == 'cdn.ori' ) {
+				$previous_options[ $k ] = explode( ',', $previous_options[ $k ] ) ;
+			}
+			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents' ) ) ) {
+				$previous_options[ $k ] = explode( '|', $previous_options[ $k ] ) ;
+			}
+			elseif ( in_array( $v, array(
+					'purge.timed_urls',
+					'cache.exc_cookies',
+					'cache.exc_qs',
+					'cache.exc_cat',
+					'cache.exc_tag',
+					'debug.ips',
+					'crawler.exc_cpt',
+					'cdn.exc',
+					'optm.css_exc',
+					'optm.js_exc',
+				) ) ) {
+				$previous_options[ $k ] = explode( "\n", $previous_options[ $k ] ) ;
+			}
 		}
 		add_option( 'litespeed.conf.' . $v, $previous_options[ $k ] ) ;
 	}

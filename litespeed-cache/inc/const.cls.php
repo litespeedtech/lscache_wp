@@ -283,10 +283,10 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 			self::O_CACHE_FAVICON 			=> false,
 			self::O_CACHE_RES 				=> false,
 			self::O_CACHE_MOBILE 			=> false,
-			self::O_CACHE_MOBILE_RULES 		=> '',
+			self::O_CACHE_MOBILE_RULES 		=> array(),
 			self::O_CACHE_LOGIN_COOKIE 		=> '',
-			self::O_CACHE_EXC_COOKIES 		=> '',
-			self::O_CACHE_EXC_USERAGENTS 	=> '',
+			self::O_CACHE_EXC_COOKIES 		=> array(),
+			self::O_CACHE_EXC_USERAGENTS 	=> array(),
 
 			self::O_PURGE_ON_UPGRADE 		=> false,
 
@@ -375,6 +375,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 					$ini_v = (bool) $ini_v ;
 				}
 
+				// NOTE: Multiple lines value must be stored as array
 				if ( is_array( $v ) ) {
 					/**
 					 * Special handler for CDN_mapping
@@ -409,6 +410,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 					 */
 					else {
 						$ini_v = explode( "\n", $ini_v ) ;
+						$ini_v = array_map( 'trim', $ini_v ) ;
 					}
 				}
 
@@ -427,6 +429,8 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 		// Load default vals containing variables
 		if ( ! $this->_default_options[ self::O_CDN_ORI_DIR ] ) {
 			$this->_default_options[ self::O_CDN_ORI_DIR ] = LSCWP_CONTENT_FOLDER . "\nwp-includes\n/min/" ;
+			$this->_default_options[ self::O_CDN_ORI_DIR ] = explode( "\n", $this->_default_options[ self::O_CDN_ORI_DIR ] ) ;
+			$this->_default_options[ self::O_CDN_ORI_DIR ] = array_map( 'trim', $this->_default_options[ self::O_CDN_ORI_DIR ] ) ;
 		}
 
 		// Set security key if not initialized yet
@@ -463,7 +467,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 			self::O_CACHE_FAVICON 			=> false,
 			self::O_CACHE_RES 				=> false,
 			self::O_CACHE_MOBILE 			=> false,
-			self::O_CACHE_MOBILE_RULES 		=> '',
+			self::O_CACHE_MOBILE_RULES 		=> array(),
 			self::O_CACHE_EXC_USERAGENTS 	=> array(),
 			self::O_CACHE_EXC_COOKIES 		=> array(),
 			self::O_CACHE_EXC_QS 			=> array(),
@@ -515,7 +519,7 @@ xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, ste
 			// Debug
 			self::O_DEBUG_DISABLE_ALL 		=> false,
 			self::O_DEBUG 					=> false,
-			self::O_DEBUG_IPS 				=> '',
+			self::O_DEBUG_IPS 				=> array(),
 			self::O_DEBUG_LEVEL 			=> false,
 			self::O_DEBUG_FILESIZE 			=> 0,
 			self::O_DEBUG_COOKIE 			=> false,

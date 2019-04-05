@@ -170,7 +170,7 @@ if ( !defined('WPINC') ) die;
 						items : [
 							<?php
 								// Build the cookie crawler Vue data
-								$cookies = $this->__cfg->get_item( $id ) ;
+								$cookies = $this->__cfg->option( $id ) ;
 								/**
 								 * Data Src Structure: [ nameA => vals, nameB => vals ]
 								 */

@@ -48,11 +48,6 @@ class LiteSpeed_Cache_Cli_Admin
 		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
 		$options = $__cfg->get_options() ;
-		// Get items
-		$cfg_items = $__cfg->stored_items() ; xx
-		foreach ( $cfg_items as $v ) {
-			$options[ $v ] = $__cfg->get_item( $v ) ;
-		}
 
 		/**
 		 * For CDN mapping, allow:

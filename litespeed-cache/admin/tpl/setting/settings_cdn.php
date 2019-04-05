@@ -6,7 +6,7 @@ $parsed = parse_url( $home_url ) ;
 $home_url = str_replace( $parsed[ 'scheme' ] . ':', '', $home_url ) ;
 $cdn_url = 'https://cdn.' . substr( $home_url, 2 ) ;
 
-$cdn_mapping = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;xx working on here now
+$cdn_mapping = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
 
 ?>
 
@@ -119,11 +119,11 @@ $cdn_mapping = $this->__cfg->get_item( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
 	<tr>
 		<th class="litespeed-padding-left"><?php echo __( 'Original URLs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_input item xx( LiteSpeed_Cache_Config::O_CDN_ORI, 'litespeed-input-long' ) ; ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CDN_ORI ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
-				<br /><?php echo sprintf( __( 'Separate multiple original URLs with a %s.', 'litespeed-cache' ), '<code>,</code>' ) ; ?>
+				<br /><?php echo __('One per line.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

@@ -78,17 +78,8 @@ class LiteSpeed_Cache_Activation
 			// All .htaccess & OC related options are in site, so only need these options
 			$options = $__cfg->get_site_options() ;
 
-			$ids = array(
-				LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS,
-				LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS,
-			);
-			foreach ( $ids as $id ) {
-				$options[ $id ] = $__cfg->get_item( $id ) ;
-			}
-
 			if ( ! empty($options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ]) ) {
-				$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] =
-					addslashes( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] );
+				$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] = addslashes( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] );
 			}
 
 			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;
