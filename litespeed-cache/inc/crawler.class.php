@@ -558,7 +558,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Get roles set
-		$roles = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CRWL_ROLES ) ;
+		$roles = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_ROLES ) ;
 		// List all roles
 		foreach ( $roles as $v ) {
 			$role_title = '' ;
@@ -575,7 +575,7 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Cookie crawler
-		$cookie_crawlers = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CRWL_COOKIES ) ;
+		$cookie_crawlers = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_COOKIES ) ;
 		foreach ( $cookie_crawlers as $k => $v ) {
 
 			$this_cookie_key = 'cookie:' . $k ;

@@ -86,7 +86,7 @@ class LiteSpeed_Cache_Optimize
 		 * @since 1.5
 		 */
 		if ( $this->cfg_js_defer ) {
-			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC ) ) ;
+			$this->cfg_js_defer_exc = apply_filters( 'litespeed_optm_js_defer_exc', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC ) ) ;
 		}
 
 		/**
@@ -287,7 +287,7 @@ class LiteSpeed_Cache_Optimize
 		}
 
 		// Check if hit URI excludes
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_EXC ) ;
+		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EXC ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -665,7 +665,7 @@ class LiteSpeed_Cache_Optimize
 	 */
 	private function _dns_prefetch_init()
 	{
-		$this->dns_prefetch = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ) ;
+		$this->dns_prefetch = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ) ;
 		if ( ! $this->dns_prefetch ) {
 			return ;
 		}

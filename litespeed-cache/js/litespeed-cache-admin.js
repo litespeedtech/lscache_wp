@@ -75,22 +75,6 @@ var _litespeed_dots ;
 			$('[data-purgeby='+this.value+']').show() ;
 		}) ;
 
-		// Settings->General->Enable mobile view
-		$('[name="litespeed-cache-conf[mobileview_enabled]"][value=1]').click(function() {
-			if($(this).is(':checked')){
-				if(!$('#litespeed-mobileview-rules').val()){
-					$('#litespeed-mobileview-rules').val($('#litespeed-mobileview-rules-default').val()) ;
-				}
-				$('#litespeed-mobileview-rules').prop('readonly', false) ;
-			}
-		}) ;
-		$('[name="litespeed-cache-conf[mobileview_enabled]"][value=0]').click(function() {
-			if($(this).is(':checked')){
-				// $('#litespeed-mobileview-rules').val('') ;
-				$('#litespeed-mobileview-rules').prop('readonly', true) ;
-			}
-		}) ;
-
 		/*************** crawler ******************/
 		$('#litespeed-crawl-url-btn').click(function () {
 			if( ! $(this).data('url') ){

@@ -523,10 +523,12 @@ class LiteSpeed_Cache_Utility
 		$arr = array_map( 'trim', $arr ) ;
 		$arr = array_unique( $arr ) ;
 		$arr = array_filter( $arr ) ;
-		if ( $type === 'array' ) {
-			return $arr ;
-		}
-		return implode( "\n", $arr ) ;
+
+		if ( $type === 'string' ) {
+			return implode( "\n", $arr ) ;
+
+
+		return $arr ;
 	}
 
 	/**

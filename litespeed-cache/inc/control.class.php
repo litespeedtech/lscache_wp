@@ -520,7 +520,7 @@ class LiteSpeed_Cache_Control
 	public static function finalize()
 	{
 		// Check if URI is forced cache
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ;
+		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			list( $result, $this_ttl ) =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes, true ) ;
 			if ( $result ) {
@@ -636,7 +636,7 @@ class LiteSpeed_Cache_Control
 //		}
 
 		// Check private cache URI setting
-		$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ;
+		$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ;
 		if ( ! empty( $excludes ) ) {
 			$result = LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 			if ( $result ) {
@@ -647,7 +647,7 @@ class LiteSpeed_Cache_Control
 		if ( ! self::is_forced_cacheable() ) {
 
 			// Check if URI is excluded from cache
-			$excludes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_CACHE_EXC ) ;
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC ) ;
 			if ( ! empty( $excludes ) ) {
 				$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $excludes ) ;
 				if ( $result ) {
@@ -682,10 +682,10 @@ class LiteSpeed_Cache_Control
 				}
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS) ;
-			if ( ! empty($excludes) && isset($_SERVER['HTTP_USER_AGENT']) ) {
-				$pattern = '/' . $excludes . '/' ;
-				$nummatches = preg_match($pattern, $_SERVER['HTTP_USER_AGENT']) ;
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ) ;
+			if ( ! empty( $excludes ) && isset( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
+				$pattern = '#' . str_replace( ' ', '\\ ', preg_quote( implode( '|', $excludes ), '#' ) . '#' ;
+				$nummatches = preg_match( $pattern, $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 				if ( $nummatches ) {
 						return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
 				}

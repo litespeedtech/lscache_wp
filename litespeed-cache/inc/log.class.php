@@ -167,8 +167,8 @@ class LiteSpeed_Cache_Log
 
 		// Check if hook filters
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS ) ) {
-			self::$_ignore_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS ) ;
-			self::$_ignore_part_filters = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS ) ;
+			self::$_ignore_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS ) ;
+			self::$_ignore_part_filters = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS ) ;
 
 			add_action( 'all', 'LiteSpeed_Cache_Log::log_filters' ) ;
 		}

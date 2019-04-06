@@ -514,9 +514,9 @@ eot;
 		 * @since 1.5
 		 * @since  2.7.1 Changed to array
 		 */
-		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ) ;
+		$excludes = apply_filters( 'litespeed_cache_media_lazy_img_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ) ;
 
-		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ) ;
+		$cls_excludes = apply_filters( 'litespeed_media_lazy_img_cls_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ) ;
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -640,7 +640,7 @@ eot;
 		 * Added custom element & attribute support
 		 * @since 2.2.2
 		 */
-		$webp_ele_to_check = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ) ;
+		$webp_ele_to_check = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ) ;
 
 		foreach ( $webp_ele_to_check as $v ) {
 			if ( ! $v || strpos( $v, '.' ) === false ) {

@@ -589,7 +589,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
 			if ( ! empty( $cfg[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) && ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_MOBILE . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] . ' [NC]' ;
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . str_replace( ' ', '\\ ', implode( '|', $cfg[ $id ] ) ) . ' [NC]' ;
 				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:vary=ismobile]' ;
 				$new_rules[] = self::MARKER_MOBILE . self::MARKER_END ;
 				$new_rules[] = '' ;
@@ -609,7 +609,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$id = LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ;
 			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_START ;
-				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . $cfg[ $id ] ;
+				$new_rules[] = 'RewriteCond %{HTTP_USER_AGENT} ' . str_replace( ' ', '\\ ', implode( '|', $cfg[ $id ] ) ) ;
 				$new_rules[] = 'RewriteRule .* - [E=Cache-Control:no-cache]' ;
 				$new_rules[] = self::MARKER_NOCACHE_USER_AGENTS . self::MARKER_END ;
 				$new_rules[] = '' ;

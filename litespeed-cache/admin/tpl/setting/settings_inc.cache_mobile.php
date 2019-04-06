@@ -22,11 +22,10 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('List of Mobile User Agents', 'litespeed-cache'); ?></th>
+		<th class="litespeed-padding-left"><?php echo __('List of Mobile User Agents', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
 				$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
-				$wp_default_mobile = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
 
 				// if set, use value as input value
 				if ( $_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
@@ -45,22 +44,13 @@ if (!defined('WPINC')) die;
 					}
 				}
 
-				$this->build_input( $id, 'litespeed-input-long', null, 'litespeed-mobileview-rules', '', 'text', ! $_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) ;
+				$this->build_textarea( $id ) ;
+				$this->recommended( $id, true ) ;
 			?>
 
-			<input type="hidden" name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME; ?>[<?php echo $id; ?>__default]"
-				id="litespeed-mobileview-rules-default"
-				value="<?php echo esc_textarea( $wp_default_mobile ) ; ?>"
-			/>
-
 			<div class="litespeed-desc">
-				<i>
-					<?php echo sprintf( __( 'SYNTAX: Each entry should be separated with a bar, %s.', 'litespeed-cache'), "<code>|</code>" ) ; ?>
-					<?php echo sprintf( __( 'Any spaces should be escaped with a backslash before the space, %s.', 'litespeed-cache' ), "<code>\\</code>" ) ; ?>
-				</i>
-				<br />
-					<?php echo sprintf( __( 'The default list WordPress uses is %s', 'litespeed-cache' ), "<code>$wp_default_mobile</code>" ) ; ?>
-				<br /><font class="litespeed-warning">
+				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
+				<font class="litespeed-warning">
 					⚠️
 					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ) ; ?>
 				</font>

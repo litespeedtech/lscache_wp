@@ -79,9 +79,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string' ) ; ?>
 
 				<br />
-				<i>
-					<?php echo __('One per line.', 'litespeed-cache'); ?>
-				</i>
+				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
 			</div>
 		</td>
 	</tr>

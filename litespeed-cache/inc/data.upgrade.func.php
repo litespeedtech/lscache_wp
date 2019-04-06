@@ -307,7 +307,7 @@ function litespeed_update_3_0( $ver )
 				$previous_options[ $k ] = explode( ',', $previous_options[ $k ] ) ;
 			}
 			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents' ) ) ) {
-				$previous_options[ $k ] = explode( '|', $previous_options[ $k ] ) ;
+				$previous_options[ $k ] = explode( '|', str_replace( '\\ ', ' ', $previous_options[ $k ] ) ) ;
 			}
 			elseif ( in_array( $v, array(
 					'purge.timed_urls',

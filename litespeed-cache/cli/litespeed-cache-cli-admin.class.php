@@ -71,7 +71,8 @@ class LiteSpeed_Cache_Cli_Admin
 			case LiteSpeed_Cache_Config::O_CACHE_MOBILE:
 				// set list then do checkbox
 				if ( $val === 'true' && empty( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] ) ) {
-					$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] = 'Mobile|Android|Silk/|Kindle|BlackBerry|Opera\ Mini|Opera\ Mobi' ;
+					WP_CLI::error( 'Please set mobile rules value first.' ) ;
+					return ;
 				}
 				//fall through
 			case in_array( $key, self::$checkboxes ) :
@@ -86,14 +87,6 @@ class LiteSpeed_Cache_Cli_Admin
 					WP_CLI::error('Checkbox value must be true or false.') ;
 					return ;
 				}
-				break ;
-
-			case LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES:
-				$enable_key = LiteSpeed_Cache_Config::O_CACHE_MOBILE ;
-				if ( ! isset($options[$enable_key]) || ! $options[$enable_key] ) {
-					$options[$enable_key] = LiteSpeed_Cache_Config::VAL_ON ;
-				}
-				$options[$key] = $val ;
 				break ;
 
 			/**

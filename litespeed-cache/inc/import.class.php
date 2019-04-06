@@ -94,7 +94,7 @@ class LiteSpeed_Cache_Import
 
 		$data = array() ;
 		foreach ( $this->_cfg_items as $v ) {
-			$data[ $v ] = get_option( $v ) ;// Here doesn't need the default_item value so no need to call `LiteSpeed_Cache_Config::get_instance()->get_item()`
+			$data[ $v ] = get_option( $v ) ;
 		}
 
 		$data = base64_encode( json_encode( $data ) ) ;

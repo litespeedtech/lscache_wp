@@ -34,7 +34,7 @@ class LiteSpeed_Cache_CSS
 		$rules = self::get_instance()->_ccss() ;
 
 		// Append default critical css
-		$rules .= LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_CCSS_CON, true ) ;
+		$rules .= LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ) ;
 
 		$html_head = '<style id="litespeed-optm-css-rules">' . $rules . '</style>' . $html_head ;
 
@@ -294,13 +294,13 @@ class LiteSpeed_Cache_CSS
 		$unique = false ;
 
 		// Check if in separate css type option
-		$separate_posttypes = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ) ;
+		$separate_posttypes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ) ;
 		if ( ! empty( $separate_posttypes ) && in_array( $css, $separate_posttypes ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] Hit separate posttype setting [type] ' . $css ) ;
 			$unique = true ;
 		}
 
-		$separate_uri = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ) ;
+		$separate_uri = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ) ;
 		if ( ! empty( $separate_uri ) ) {
 			$result =  LiteSpeed_Cache_Utility::str_hit_array( $_SERVER[ 'REQUEST_URI' ], $separate_uri ) ;
 			if ( $result ) {

@@ -350,24 +350,21 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS,
 			LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS,
 		);
-		$item_options = array() ;
 		foreach ( $ids as $id ) {
-			$item_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $id ) ; xx// here needs to save separate settings OR if site_conf use separate items
+			$new_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $id ) ;
 		}
 
 		/**
 		 * Check if object cache file existing or not
 		 */
 		if ( ! defined( 'LITESPEED_DISABLE_OBJECT' ) ) {
-			$id = LiteSpeed_Cache_Config::O_OBJECT ;
-			if ( $new_options[ $id ] ) {
-				$all_options = array_merge( $new_options, $item_options ) ;
+			if ( $new_options[ LiteSpeed_Cache_Config::O_OBJECT ] ) {
 				LiteSpeed_Cache_Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
-				LiteSpeed_Cache_Object::get_instance()->update_file( $all_options ) ;
+				LiteSpeed_Cache_Object::get_instance()->update_file( $new_options ) ;
 				/**
 				 * Clear object cache
 				 */
-				LiteSpeed_Cache_Object::get_instance()->reconnect( $all_options ) ;
+				LiteSpeed_Cache_Object::get_instance()->reconnect( $new_options ) ;
 			}
 			else {
 				if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
@@ -1095,7 +1092,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
 		}
 		else {
-			$new_options[ $id ] = $this->_input[ $id ] ;
+			$new_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
 		}
 
 		// No cache cookie settings
@@ -1114,7 +1111,7 @@ class LiteSpeed_Cache_Admin_Settings
 			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
 		}
 		else {
-			$new_options[ $id ] = $this->_input[ $id ] ;
+			$new_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
 		}
 
 		// Login cookie

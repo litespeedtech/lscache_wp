@@ -79,7 +79,7 @@ class LiteSpeed_Cache_Activation
 			$options = $__cfg->get_site_options() ;
 
 			if ( ! empty($options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ]) ) {
-				$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] = addslashes( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] );
+				$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] = addslashes( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] );// todo: why addslashes?
 			}
 
 			LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $options, true ) ;
@@ -89,12 +89,6 @@ class LiteSpeed_Cache_Activation
 		/* Single site file handler */
 
 		$options = $__cfg->get_options() ;
-
-		// Add items
-		$cfg_items = $__cfg->stored_items() ; xx
-		foreach ( $cfg_items as $v ) {
-			$options[ $v ] = $__cfg->get_item( $v ) ;
-		}
 
 		/**
 		 * Go through all settings to generate related files

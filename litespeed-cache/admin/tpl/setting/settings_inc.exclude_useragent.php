@@ -9,14 +9,11 @@ if (!defined('WPINC')) die;
 			<?php
 				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
 
-				$this->build_input(LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS, 'litespeed-input-long');//, !$file_writable
+				$this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ) ;
 			?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'user agents', 'litespeed-cache') ) ; ?>
-				<i>
-					<?php echo sprintf( __( 'SYNTAX: Separate each user agent with a bar, %s.', 'litespeed-cache' ), '<code>|</code>' ) ; ?>
-					<?php echo sprintf( __( 'Spaces should have a backslash in front of them, %s.', 'litespeed-cache' ), '<code>\</code>' ) ; ?>
-				</i>
+				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
 				<br /><font class="litespeed-warning">
 					⚠️
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>

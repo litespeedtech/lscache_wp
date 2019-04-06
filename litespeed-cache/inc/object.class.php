@@ -61,6 +61,12 @@ class LiteSpeed_Cache_Object
 		$this->_oc_data_file = WP_CONTENT_DIR . '/.object-cache.ini' ;
 
 		if ( $cfg ) {
+			if ( ! is_array( $cfg[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] ) ) {
+				$cfg[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] = explode( "\n", $cfg[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] ) ;
+			}
+			if ( ! is_array( $cfg[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ) {
+				$cfg[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] = explode( "\n", $cfg[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
+			}
 			$this->_cfg_method = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_KIND ] ? true : false ;
 			$this->_cfg_host = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_HOST ] ;
 			$this->_cfg_port = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_PORT ] ;
@@ -71,8 +77,8 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_db = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_DB_ID ] ;
 			$this->_cfg_user = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_USER ] ;
 			$this->_cfg_pswd = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_PSWD ] ;
-			$this->_global_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] ) ;
-			$this->_non_persistent_groups = explode( "\n", $cfg[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] ) ;
+			$this->_global_groups = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] ;
+			$this->_non_persistent_groups = $cfg[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
@@ -92,8 +98,8 @@ class LiteSpeed_Cache_Object
 			$this->_cfg_db = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_DB_ID ) ;
 			$this->_cfg_user = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_USER ) ;
 			$this->_cfg_pswd = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_PSWD ) ;
-			$this->_global_groups = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ) ;
-			$this->_non_persistent_groups = LiteSpeed_Cache_Config::get_instance()->get_item( LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ) ;
+			$this->_global_groups = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ) ;
+			$this->_non_persistent_groups = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ) ;
 
 			if ( $this->_cfg_method ) {
 				$this->_oc_driver = 'Redis' ;
@@ -167,8 +173,8 @@ class LiteSpeed_Cache_Object
 			. "\npersistent = " . ( $options[ LiteSpeed_Cache_Config::O_OBJECT_PERSISTENT ] ? 1 : 0 )
 			. "\ncache_admin = " . ( $options[ LiteSpeed_Cache_Config::O_OBJECT_ADMIN ] ? 1 : 0 )
 			. "\ncache_transients = " . ( $options[ LiteSpeed_Cache_Config::O_OBJECT_TRANSIENTS ] ? 1 : 0 )
-			. "\nglobal_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] ) )
-			. "\nnon_persistent_groups = " . implode( ',', explode( "\n", $options[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] ) )
+			. "\nglobal_groups = " . implode( ',', $options[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] )
+			. "\nnon_persistent_groups = " . implode( ',', $options[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] )
 			;
 		Litespeed_File::save( $this->_oc_data_file, $data ) ;
 
