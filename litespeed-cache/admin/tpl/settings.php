@@ -172,8 +172,8 @@ if ( ! $adv_mode ) {
 	<?php endif ; ?>
 	</h2>
 	<div class="litespeed-body">
-	<form method="post" action="options.php" id="litespeed_form_options" class="litespeed-relative">
-		<!--input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" /-->
+	<form method="post" action="admin.php?page=lscache-settings" id="litespeed_form_options" class="litespeed-relative">
+		<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" />
 
 	<?php
 	require LSCWP_DIR . "admin/tpl/inc/check_if_network_disable_all.php" ;

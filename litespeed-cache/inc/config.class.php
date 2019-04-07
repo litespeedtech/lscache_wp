@@ -24,10 +24,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	private $_default_options = array() ;
 	private $_default_site_options = array() ;
 
-	protected $vary_groups ;
-	protected $optm_exc_roles ;
-	protected $cache_exc_roles ;
-
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -68,15 +64,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $this->_options[ self::_CACHE ] ) {
 			$this->define_cache_on() ;
 		}
-
-		// Vary group settings
-		$this->vary_groups = $this->get_item( self::O_CACHE_VARY_GROUP ) ;xx
-
-		// Exclude optimization role setting
-		$this->optm_exc_roles = $this->get_item( self::O_OPTM_EXC_ROLES ) ;
-
-		// Exclude cache role setting
-		$this->cache_exc_roles = $this->get_item( self::O_CACHE_EXC_ROLES ) ;
 
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
@@ -131,7 +118,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	public function load_options( $blog_id = null, $dry_run = false )
 	{
 		$options = array() ;
-		// No need to consider items yet as they won't be gotten directly from $this->_options but used in $this->get_item()
 		foreach ( $this->_default_options as $k => $v ) {
 			if ( ! is_null( $blog_id ) ) {
 				$options[ $k ] = get_blog_option( $blog_id, self::conf_name( $k ), $v ) ;
@@ -358,11 +344,17 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Get the selected configuration option.
 	 *
 	 * @since 1.0.0
+	 * @deprecated 2.9.8
 	 * @access public
 	 * @param string $id Configuration ID.
 	 * @return mixed Selected option if set, NULL if not.
 	 */
 	public function get_option( $id )
+	{
+		return $this->option( $id ) ;
+	}
+
+	public function option( $id )
 	{
 		if ( isset( $this->_options[ $id ] ) ) {
 			return $this->_options[ $id ] ;
@@ -371,49 +363,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
 
 		return NULL ;
-	}
-
-	/**
-	 * Set the configured options.
-	 *
-	 * NOTE: No validation here. Do validate before use this function with LiteSpeed_Cache_Admin_Settings->validate_plugin_settings().
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @param array $new_cfg The new settings to update, which will be update $this->_options too.
-	 * @return array The result of update.
-	 */
-	public function update_options( $new_cfg = array() )xx
-	{
-		if ( ! empty( $new_cfg ) ) {
-			$this->_options = array_merge( $this->_options, $new_cfg ) ;
-		}
-		return update_option( self::OPTION_NAME, $this->_options ) ;
-	}
-
-	/**
-	 * Check if one user role is in vary group settings
-	 *
-	 * @since 1.2.0
-	 * @access public
-	 * @param  string $role The user role
-	 * @return int       The set value if already set
-	 */
-	public function in_vary_group( $role )
-	{
-		$group = 0 ;
-		if ( array_key_exists( $role, $this->vary_groups ) ) {
-			$group = $this->vary_groups[ $role ] ;
-		}
-		elseif ( $role === 'administrator' ) {
-			$group = 99 ;
-		}
-
-		if ( $group ) {
-			LiteSpeed_Cache_Log::debug2( '[Conf] role in vary_group [group] ' . $group ) ;
-		}
-
-		return $group ;
 	}
 
 	/**
@@ -435,54 +384,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return false ;
 		}
 
-		return in_array( $role, $this->optm_exc_roles ) ? $role : false ;
-	}
-
-	/**
-	 * Check if one user role is in exclude cache group settings
-	 *
-	 * @since 1.6.2
-	 * @access public
-	 * @param  string $role The user role
-	 * @return int       The set value if already set
-	 */
-	public function in_cache_exc_roles( $role = null )
-	{
-		// Get user role
-		if ( $role === null ) {
-			$role = LiteSpeed_Cache_Router::get_role() ;
-		}
-
-		if ( ! $role ) {
-			return false ;
-		}
-
-		return in_array( $role, $this->cache_exc_roles ) ? $role : false ;
-	}
-
-xx
-	/**
-	 * Get item val
-	 *
-	 * @since 2.2.1
-	 * @access public
-	 */
-	public function get_item( $k, $return_string = false )
-	{
-		$val = get_option( $k ) ;
-		// Separately call default_item() to improve performance
-		if ( ! $val ) {
-			$val = $this->default_item( $k ) ;
-		}
-
-		if ( ! $return_string && ! is_array( $val ) ) {
-			$val = $val ? explode( "\n", $val ) : array() ;
-		}
-		elseif ( $return_string && is_array( $val ) ) {
-			$val = implode( "\n", $val ) ;
-		}
-
-		return $val ;
+		return in_array( $role, $this->option( self::O_OPTM_EXC_ROLES ) ) ? $role : false ;
 	}
 
 	/**
@@ -689,14 +591,14 @@ xx
 	 * @access private
 	 */
 	private function _set_conf()
-	{
+	{exit('');
 		if ( empty( $_GET[ self::TYPE_SET ] ) || ! is_array( $_GET[ self::TYPE_SET ] ) ) {
 			return ;
 		}
 
 		$options = $this->_options ;
 		// Get items
-		foreach ( $this->stored_items() xx as $v ) {
+		foreach ( $this->stored_items() as $v ) {//xxx
 			$options[ $v ] = $this->get_item( $v ) ;
 		}
 

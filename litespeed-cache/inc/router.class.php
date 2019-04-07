@@ -515,6 +515,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CONF:
 			case LiteSpeed_Cache::ACTION_ACTIVATION:
 			case LiteSpeed_Cache::ACTION_UTIL:
+			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS: // Save settings
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}

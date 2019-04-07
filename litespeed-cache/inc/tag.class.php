@@ -38,7 +38,6 @@ class LiteSpeed_Cache_Tag
 
 	private static $_tags = array() ;
 	private static $_tags_priv = array( 'tag_priv' ) ;
-	protected static $_error_status = false ;
 
 	/**
 	 * Initialize
@@ -90,51 +89,6 @@ class LiteSpeed_Cache_Tag
 				@header( 'lsc-cookie: ' . $cookie, false ) ;
 			}
 		}
-	}
-
-	/**
-	 * Check if the page returns 403 and 500 errors.
-	 *
-	 * @since 1.0.13.1
-	 * @access public
-	 * @param $status_header
-	 * @param $code
-	 * @return $eror_status
-	 */
-	public static function check_error_codes( $status_header, $code )
-	{
-		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx) ;
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx) ;
-		if ( $code == 403 ) {
-			if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-				LiteSpeed_Cache_Control::set_nocache( '403 TTL is less than 30s' ) ;
-			}
-			else {
-				self::$_error_status = $code ;
-			}
-		}
-		elseif ( $code >= 500 && $code < 600 ) {
-			if ( $ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-				LiteSpeed_Cache_Control::set_nocache( 'TTL is less than 30s' ) ;
-			}
-		}
-		elseif ( $code > 400 ) {
-			self::$_error_status = $code ;
-		}
-
-		// Give the default status_header back
-		return $status_header ;
-	}
-
-	/**
-	 * Get error code.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function get_error_code()
-	{
-		return self::$_error_status ;
 	}
 
 	/**
@@ -256,7 +210,7 @@ class LiteSpeed_Cache_Tag
 			$tags[] = self::TYPE_HOME ;
 		}
 
-		$err = self::get_error_code() ;
+		$err = self::get_error_code() ;xx
 		if ( $err !== false ) {
 			$tags[] = self::TYPE_ERROR . $err ;
 		}

@@ -227,7 +227,7 @@ class LiteSpeed_Cache_Const
 	const NETWORK_O_USE_PRIMARY = 'use_primary_settings' ;
 
 	/*** Other consts ***/
-xx	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val
+	const O_GUIDE = 'litespeed-guide' ; // Array of each guidance tag as key, step as val //xx todo: may need to remove
 
 	// Server variables
 	const ENV_CRAWLER_USLEEP = 'CRAWLER_USLEEP' ;

@@ -133,7 +133,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Do Not Cache Roles', 'litespeed-cache'); ?></th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES . "][", $title, $this->__cfg->in_cache_exc_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES . "][", $title, LiteSpeed_Cache_Control::get_instance()->in_cache_exc_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ) ; ?>

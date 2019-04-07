@@ -404,23 +404,17 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// TTL check
 		$ids = array(
-			LiteSpeed_Cache_Config::O_CACHE_TTL_PUB 		=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV	 	=> array( 60, 	3600 ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE 	=> array( 30, 	null ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED	 	=> array( 0, 	null, 30 ),
-			LiteSpeed_Cache_Config::O_CACHE_TTL_403		 	=> array( 0, 	null, 30 ),xx
-			LiteSpeed_Cache_Config::O_CACHE_TTL_404		 	=> array( 0, 	null, 30 ),xx
-			LiteSpeed_Cache_Config::O_CACHE_TTL_500		 	=> array( 0, 	null, 30 ),xx
+			LiteSpeed_Cache_Config::O_CACHE_TTL_PUB,
+			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV,
+			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE,
+			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED,
 		) ;
-		foreach ( $ids as $id => $v ) {
-			list( $min, $max ) = $v ;
-
-			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, $min, $max ) ;
-
-			if ( ! empty( $v[ 2 ] ) && $this->_options[ $id ] < $v[ 2 ] ) {
-				$this->_options[ $id ] = 0 ;
-			}
+		foreach ( $ids as $id ) {
+			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id ) ;
 		}
+
+		$id = LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ;
+		$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $id ) ;
 
 	}
 

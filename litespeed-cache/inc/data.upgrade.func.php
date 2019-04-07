@@ -404,7 +404,7 @@ function litespeed_update_3_0( $ver )
 
 	// Upgrade site_options if is network
 	if ( is_multisite() ) {
-		$ver = get_site_option( 'litespeed.conf.cache._version' ) ;
+		$ver = get_site_option( 'litespeed.conf._version' ) ;
 		if ( ! $ver ) {
 			$previous_site_options = get_site_option( 'litespeed-cache-conf' ) ;
 
@@ -461,12 +461,12 @@ function litespeed_update_3_0( $ver )
 
 			delete_site_option( 'litespeed-cache-conf' ) ;
 
-			add_site_option( 'litespeed.conf.cache._version', '3.0' ) ;
+			add_site_option( 'litespeed.conf._version', '3.0' ) ;
 		}
 
 	}
 
-	add_option( 'litespeed.conf.cache._version', '3.0' ) ;
+	add_option( 'litespeed.conf._version', '3.0' ) ;
 
 }
 

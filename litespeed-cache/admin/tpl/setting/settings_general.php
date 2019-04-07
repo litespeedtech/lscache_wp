@@ -108,40 +108,13 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Default 404 Page TTL', 'litespeed-cache'); ?></th>
+		<th><?php echo __('Default HTTP Status Code Page TTL', 'litespeed-cache'); ?></th>
 		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_404 xx ; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
+			<?php $this->recommended( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, 404 pages are cached.', 'litespeed-cache'); ?>
-				<?php echo __('If this is set to a number less than 30, 404 pages will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __('Default 403 Page TTL', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, 403 pages are cached.', 'litespeed-cache'); ?>
-				<?php echo __('If this is set to a number less than 30, 403 pages will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
-			</div>
-		</td>
-	</tr>
-
-	<tr>
-		<th><?php echo __('Default 500 Page TTL', 'litespeed-cache'); ?></th>
-		<td>
-			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
-			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, 500 pages are cached.', 'litespeed-cache'); ?>
-				<?php echo __('If this is set to a number less than 30, 500 pages will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php echo __('Specify how long, in seconds, these HTTP status pages are cached.', 'litespeed-cache'); ?>
 			</div>
 		</td>
 	</tr>

@@ -45,7 +45,7 @@ class LiteSpeed_Cache_Admin
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// register purge_all actions
-			$purge_all_events = $this->__cfg->get_option( LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ) ;
+			$purge_all_events = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ) ;
 
 			// purge all on upgrade
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ) ) {
@@ -71,22 +71,9 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function admin_init()
 	{
-		// check for upgrade
-		// NOTE: upgrade checking needs to be before `register_setting` to avoid update_options() being checked by our filter
-		/**
-		 * Won't do here anymore as auto upgrade is called in frontend.
-		 * Will do when initializing conf in the very beginning
-		 * @since  3.0
-		 */
-		// $this->__cfg->plugin_upgrade() ;
-
-		if ( is_network_admin() && current_user_can( 'manage_network_options' ) ) {
-			$this->__cfg->plugin_site_upgrade() ;xx
-		}
-
 		load_plugin_textdomain(LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/languages/') ;
 
-		$this->proceed_admin_action() ;
+		$this->_proceed_admin_action() ;
 
 		// Terminate if user doesn't have the access to settings
 		if( is_network_admin() ) {
@@ -101,13 +88,6 @@ class LiteSpeed_Cache_Admin
 
 		// Save setting from admin settings page
 		// NOTE: cli will call `validate_plugin_settings` manually. Cron activation doesn't need to validate
-		global $pagenow ;
-		if ( ! is_network_admin() && $pagenow === 'options.php' ) {
-			$__admin_setting = LiteSpeed_Cache_Admin_Settings::get_instance() ;
-			foreach ( $this->__cfg->get_default_options() as $k => $v ) {
-				register_setting( LiteSpeed_Cache_Config::OPTION_NAME, $this->__cfg->cfg_name( $k ), array( $__admin_setting, 'validate_plugin_settings' ) ) ;
-			}
-		}
 
 		// Add privacy policy
 		// @since 2.2.6
@@ -118,7 +98,7 @@ class LiteSpeed_Cache_Admin
 		do_action( 'litspeed_after_admin_init' ) ;
 
 		// If setting is set to on, try to activate cache func
-		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {xx
+		if ( defined( 'LITESPEED_ON_IN_SETTING' ) ) {
 			// check if WP_CACHE is defined and true in the wp-config.php file.
 			// This is not required by our cache func, so leave it to trigger by admin
 			if ( ! defined('WP_CACHE') || ! WP_CACHE ) {
@@ -180,7 +160,7 @@ class LiteSpeed_Cache_Admin
 	 *
 	 * @since 1.1.0
 	 */
-	public function proceed_admin_action()
+	private function _proceed_admin_action()
 	{
 		// handle actions
 		switch (LiteSpeed_Cache_Router::get_action()) {
@@ -190,9 +170,14 @@ class LiteSpeed_Cache_Admin
 				LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_editor_save() ;
 				break ;
 
+			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS :
+				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings() ;
+				break ;
+
+
 			// Save network settings
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS_NETWORK:
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;// todo: use wp network setting saving
+				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_network_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;
 				break ;
 
 			default:

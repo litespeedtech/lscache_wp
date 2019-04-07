@@ -333,6 +333,33 @@ class LiteSpeed_Cache_Vary
 	}
 
 	/**
+	 * Check if one user role is in vary group settings
+	 *
+	 * @since 1.2.0
+	 * @since  3.0 Moved here from conf.cls
+	 * @access public
+	 * @param  string $role The user role
+	 * @return int       The set value if already set
+	 */
+	public function in_vary_group( $role )
+	{
+		$group = 0 ;
+		$vary_groups = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ) ;
+		if ( array_key_exists( $role, $vary_groups ) ) {
+			$group = $vary_groups[ $role ] ;
+		}
+		elseif ( $role === 'administrator' ) {
+			$group = 99 ;
+		}
+
+		if ( $group ) {
+			LiteSpeed_Cache_Log::debug2( '[Vary] role in vary_group [group] ' . $group ) ;
+		}
+
+		return $group ;
+	}
+
+	/**
 	 * Finalize default vary
 	 *
 	 *  Get user vary tag based on admin_bar & role
@@ -360,7 +387,7 @@ class LiteSpeed_Cache_Vary
 			$vary[ 'logged-in' ] = 1 ;
 
 			// parse role group from settings
-			if ( $role_group = LiteSpeed_Cache_Config::get_instance()->in_vary_group( $role ) ) {
+			if ( $role_group = $this->in_vary_group( $role ) ) {
 				$vary[ 'role' ] = $role_group ;
 			}
 
