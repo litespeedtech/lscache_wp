@@ -145,8 +145,8 @@ class LiteSpeed_Cache_Purge
 	{
 		$this->_purge_all_lscache( true ) ;
 		$this->_purge_all_cssjs( true ) ;
-		$this->_purge_all_ccss( true ) ;
-		$this->_purge_all_placeholder( true ) ;
+		// $this->_purge_all_ccss( true ) ;
+		// $this->_purge_all_placeholder( true ) ;
 		$this->_purge_all_object( true ) ;
 		$this->_purge_all_opcache( true ) ;
 
