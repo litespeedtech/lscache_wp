@@ -289,7 +289,7 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 = 2.9.7.1 - Apr 9 2019 =
 * <strong>Purge</script>: Purge All no longer includes Purge CCSS/Placeholder.
-* <strong>3rd</strong>: Divi Theme Builder no longer experiences nonce expiration issues in the contact form widget.
+* <strong>3rd</strong>: Divi Theme Builder no longer experiences nonce expiration issues in the contact form widget. (#475461)
 
 = 2.9.7 - Apr 1 2019 =
 * 🌱🌱🌱 QUIC.cloud CDN feature. Now Apache/Nginx can use LiteSpeed cache freely.
