@@ -32,6 +32,8 @@ class LiteSpeed_Cache_Control
 	protected static $_custom_ttl = 0 ;
 	private static $_mobile = false ;
 
+	private $_response_header_ttls = array() ;
+
 	/**
 	 * Init cache control
 	 *
@@ -48,6 +50,16 @@ class LiteSpeed_Cache_Control
 
 		// 301 redirect hook
 		add_filter( 'wp_redirect', 'LiteSpeed_Cache_Control::check_redirect', 10, 2 ) ;
+
+		// Load response header conf
+		$this->_response_header_ttls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ) ;
+		foreach ( $this->_response_header_ttls as $k => $v ) {
+			$v = explode( ' ', $v ) ;
+			if ( empty( $v[ 0 ] ) || empty( $v[ 1 ] ) ) {
+				continue ;
+			}
+			$this->_response_header_ttls[ $v[ 0 ] ] = $v[ 1 ] ;
+		}
 	}
 
 	/**
@@ -118,7 +130,7 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check error page
-		add_filter( 'status_header', 'LiteSpeed_Cache_Tag::check_error_codes', 10, 2 ) ;
+		add_filter( 'status_header', 'LiteSpeed_Cache_Control::check_error_codes', 10, 2 ) ;
 	}
 
 
@@ -133,13 +145,13 @@ class LiteSpeed_Cache_Control
 	 */
 	public static function check_error_codes( $status_header, $code )
 	{
-		$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx) ;
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx) ;
-		if ( $code == 403 ) {
-			if ( $ttl_403 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-				LiteSpeed_Cache_Control::set_nocache( '403 TTL is less than 30s' ) ;
+		if ( array_key_exists( $code, $this ->_response_header_ttls ) ) {
+			if ( LiteSpeed_Cache_Control::is_cacheable() && ! $this->_response_header_ttls[ $code ] ) {
+				LiteSpeed_Cache_Control::set_nocache( '[Ctrl] TTL is set to no cache [status_header] ' . $code ) ;
 			}
-			else {
+		}
+
+
 				self::$_error_status = $code ;
 			}
 		}
