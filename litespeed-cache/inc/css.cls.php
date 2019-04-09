@@ -249,7 +249,7 @@ class LiteSpeed_Cache_CSS
 
 		LiteSpeed_Cache_Log::debug( '[CSS] Generating: ', $data ) ;
 
-		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_CCSS, $data, true, false ) ;
+		$json = LiteSpeed_Cache_Admin_API::post( LiteSpeed_Cache_Admin_API::IAPI_ACTION_CCSS, $data, true, false, 60 ) ;
 
 		if ( empty( $json[ 'ccss' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[CSS] empty ccss ' ) ;
