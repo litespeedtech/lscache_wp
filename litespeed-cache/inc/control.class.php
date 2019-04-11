@@ -742,31 +742,27 @@ class LiteSpeed_Cache_Control
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_EXC_CAT) ;
-			if ( ! empty($excludes) && has_category(explode(',', $excludes)) ) {
-				return $this->_no_cache_for('Admin configured Category Do not cache.') ;
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ) ;
+			if ( ! empty( $excludes ) && has_category( $excludes ) ) {
+				return $this->_no_cache_for( 'Admin configured Category Do not cache.' ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_EXC_TAG) ;
-			if ( ! empty($excludes) && has_tag(explode(',', $excludes)) ) {
-				return $this->_no_cache_for('Admin configured Tag Do not cache.') ;
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ) ;
+			if ( ! empty( $excludes ) && has_tag( $excludes ) ) {
+				return $this->_no_cache_for( 'Admin configured Tag Do not cache.' ) ;
 			}
 
-			$excludes = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES) ;
-			if ( ! empty($excludes) && ! empty($_COOKIE) ) {
-				$exclude_list = explode('|', $excludes) ;
-
-				foreach( $_COOKIE as $key=>$val) {
-					if ( in_array($key, $exclude_list) ) {
-						return $this->_no_cache_for('Admin configured Cookie Do not cache.') ;
-					}
+			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES ) ;
+			if ( ! empty( $excludes ) && ! empty( $_COOKIE ) ) {
+				$cookie_hit = array_intersect( array_keys( $_COOKIE ), $excludes ) ;
+				if ( $cookie_hit ) {
+					return $this->_no_cache_for( 'Admin configured Cookie Do not cache.' ) ;
 				}
 			}
 
 			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ) ;
 			if ( ! empty( $excludes ) && isset( $_SERVER[ 'HTTP_USER_AGENT' ] ) ) {
-				$pattern = '#' . str_replace( ' ', '\\ ', preg_quote( implode( '|', $excludes ), '#' ) . '#' ;
-				$nummatches = preg_match( $pattern, $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
+				$nummatches = preg_match( LiteSpeed_Cache_Utility::arr2regex( $excludes ), $_SERVER[ 'HTTP_USER_AGENT' ] ) ;
 				if ( $nummatches ) {
 						return $this->_no_cache_for('Admin configured User Agent Do not cache.') ;
 				}

@@ -18,6 +18,30 @@ class LiteSpeed_Cache_Utility
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
 	/**
+	 * Combine regex array to regex rule
+	 *
+	 * @since  3.0
+	 */
+	public static function arr2regex( $arr, $drop_delimiter = false )
+	{
+		$arr = self::sanitize_lines( $arr ) ;
+
+		$new_arr = array() ;
+		foreach ( $arr as $v ) {
+			$new_arr[] = preg_quote( $v, '#' ) ;
+		}
+
+		$regex = implode( '|', $new_arr ) ;
+		$regex = str_replace( ' ', '\\ ', $regex ) ;
+
+		if ( $drop_delimiter ) {
+			return $regex ;
+		}
+
+		return '#' . $regex . '#' ;
+	}
+
+	/**
 	 * Check if an URL or current page is REST req or not
 	 *
 	 * @since  2.9.3

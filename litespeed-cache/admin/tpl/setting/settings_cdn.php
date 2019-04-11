@@ -123,7 +123,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
-				<br /><?php echo __('One per line.', 'litespeed-cache'); ?>
+				<br /><i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
 			</div>
 		</td>
 	</tr>

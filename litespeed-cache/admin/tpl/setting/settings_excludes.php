@@ -54,12 +54,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php
 				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT;
 				$excludes_buf = '';
-				$cat_ids = $_options[$id];
-				if ($cat_ids != '') {
-					$id_list = explode(',', $cat_ids);
-					$excludes_buf = implode("\n", array_map('get_cat_name', $id_list));
+				if ( $_options[ $id ] ) {
+					$excludes_buf = implode( "\n", array_map( 'get_cat_name', $_options[ $id ] ) ) ;
 				}
-				$this->build_textarea($id, false, $excludes_buf);
+				$this->build_textarea( $id, false, $excludes_buf ) ;
 			?>
 			<div class="litespeed-desc">
 				<b><?php echo __('All categories are cached by default.', 'litespeed-cache'); ?></b>
@@ -85,19 +83,16 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php
 				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG;
 				$excludes_buf = '';
-				$ids = $_options[$id];
-				if ($ids != '') {
-					$id_list = explode(',', $ids);
-					$tags_list = array_map('get_tag', $id_list);
-					$tag_names = array();
-					foreach ($tags_list as $tag) {
-						$tag_names[] = $tag->name;
+				if ( $_options[ $id ] ) {
+					$tag_names = array() ;
+					foreach ( array_map( 'get_tag', $_options[ $id ] ) as $tag ) {
+						$tag_names[] = $tag->name ;
 					}
-					if (!empty($tag_names)) {
-						$excludes_buf = implode("\n", $tag_names);
+					if ( ! empty( $tag_names ) ) {
+						$excludes_buf = implode( "\n", $tag_names ) ;
 					}
 				}
-				$this->build_textarea($id, false, $excludes_buf);
+				$this->build_textarea( $id, false, $excludes_buf ) ;
 			?>
 			<div class="litespeed-desc">
 				<b><?php echo __('All tags are cached by default.', 'litespeed-cache'); ?></b>

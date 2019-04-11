@@ -303,18 +303,15 @@ function litespeed_update_3_0( $ver )
 		}
 		// The folllowing values must be array
 		if ( ! is_array( $previous_options[ $k ] ) ) {
-			if ( $v == 'cdn.ori' ) {
+			if ( in_array( $v, array( 'cdn.ori', 'cache.exc_cat', 'cache.exc_tag' ) ) {
 				$previous_options[ $k ] = explode( ',', $previous_options[ $k ] ) ;
 			}
-			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents' ) ) ) {
+			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents', 'cache.exc_cookies' ) ) ) {
 				$previous_options[ $k ] = explode( '|', str_replace( '\\ ', ' ', $previous_options[ $k ] ) ) ;
 			}
 			elseif ( in_array( $v, array(
 					'purge.timed_urls',
-					'cache.exc_cookies',
 					'cache.exc_qs',
-					'cache.exc_cat',
-					'cache.exc_tag',
 					'debug.ips',
 					'crawler.exc_cpt',
 					'cdn.exc',

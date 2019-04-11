@@ -698,6 +698,10 @@ class LiteSpeed_Cache_Admin_Display
 			if ( $val === null ) {
 				global $_options ;
 				$val = $_options[$id] ;
+
+				if ( is_array( $val ) ) {
+					$val = implode( "\n", $val ) ;
+				}
 			}
 
 			$id = "[$id]" ;

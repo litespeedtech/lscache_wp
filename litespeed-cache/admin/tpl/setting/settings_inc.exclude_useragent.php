@@ -7,8 +7,6 @@ if (!defined('WPINC')) die;
 		<th><?php echo __( 'Do Not Cache User Agents', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
-				$file_writable = LiteSpeed_Cache_Admin_Rules::writable();
-
 				$this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ) ;
 			?>
 			<div class="litespeed-desc">

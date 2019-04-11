@@ -366,6 +366,40 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
+	 * Save option
+	 *
+	 * @since  3.0
+	 */
+	public function update( $id, $val, $filter = false )
+	{
+		// Bypassed this bcos $this->_options could be changed by force_option()
+		// if ( $this->_options[ $id ] === $val ) {
+		// 	return ;
+		// }
+
+		if ( ! array_key_exists( $id, $this->_default_options ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+			return ;
+		}
+
+		// Validate type
+		if ( is_bool( $this->_default_options[ $id ] ) ) {
+			$val = $val ? self::VAL_ON : self::VAL_OFF ;
+		}
+		elseif ( is_array( $this->_default_options[ $id ] ) ) {
+			// from textarea input
+			if ( ! is_array( $val ) ) {
+				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $filter ) ;
+			}
+		}
+		elseif ( ! is_string( $this->_default_options[ $id ] ) ) {
+			$val = (int) $val ;
+		}
+
+		update_option( $this->conf_name( $id ), $val ) ;
+	}
+
+	/**
 	 * Check if one user role is in exclude optimization group settings
 	 *
 	 * @since 1.6
