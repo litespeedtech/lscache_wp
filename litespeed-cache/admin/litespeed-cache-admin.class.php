@@ -171,7 +171,7 @@ class LiteSpeed_Cache_Admin
 				break ;
 
 			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS :
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings() ;
+				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;
 				break ;
 
 

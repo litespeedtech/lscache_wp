@@ -18,11 +18,9 @@ class LiteSpeed_Cache_Admin_Settings
 	private static $_instance ;
 
 	private $_input ;
-	private $_options ;
 	private $_err = array() ;
 
 	private $__cfg ;
-	private $__purge ;
 
 	private $_max_int = 2147483647 ;
 
@@ -35,7 +33,6 @@ class LiteSpeed_Cache_Admin_Settings
 	private function __construct()
 	{
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-		$this->__purge = LiteSpeed_Cache_Purge::get_instance() ;
 	}
 
 	/**
@@ -45,7 +42,7 @@ class LiteSpeed_Cache_Admin_Settings
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 * @param array $input The configuration selected by the admin when clicking save.
+	 * @param array $input The configuration posted from Setting page.
 	 * @return array The updated configuration options.
 	 */
 	public function validate_plugin_settings( $input, $revert_options_to_input = false )
@@ -56,13 +53,6 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
-		$this->_options = $this->__cfg->get_options() ;
-
-		if ( LiteSpeed_Cache_Admin_Display::get_instance()->get_disable_all() ) {
-			add_settings_error( LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, __( '\'Use primary site settings\' set by Network Administrator.', 'litespeed-cache' ) ) ;
-
-			return $this->_options ;
-		}
 
 		$this->_input = $input ;
 
@@ -379,6 +369,26 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
+	 * Update one setting
+	 *
+	 * @since  3.0
+	 */
+	private function _update( $id_or_ids, $val = null )
+	{
+		// recursive process
+		if ( is_array( $id_or_ids ) ) {
+			array_map( array( $this, __FUNCTION__ ), $id_or_ids ) ;
+			return ;
+		}
+
+		if ( $val === null ) {
+			$val = $this->_input[ $id_or_ids ] ;
+		}
+
+		$this->__cfg->update( $id_or_ids, $val ) ;
+	}
+
+	/**
 	 * Validates the general settings.
 	 *
 	 * @since 1.0.12
@@ -386,12 +396,20 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_general()
 	{
-		// Cache enabled setting
-		$id = LiteSpeed_Cache_Config::O_CACHE ;
-		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$ids = array(
+			LiteSpeed_Cache_Config::O_CACHE,
+			// TTL check
+			LiteSpeed_Cache_Config::O_CACHE_TTL_PUB,
+			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV,
+			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE,
+			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED,
 
-		$enabled = $this->_options[ $id ] ;
+			LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS,
+		) ;
+		$this->_update( $ids ) ;
+
+		// Cache enabled setting
+		$enabled = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE ) ;
 		// Use network setting
 		if( $enabled === LiteSpeed_Cache_Config::VAL_ON2 ) {
 			$enabled = is_multisite() ? defined( 'LITESPEED_NETWORK_ON' ) : true ; // Default to true
@@ -402,23 +420,6 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Purge::purge_all( 'Not enabled' ) ;
 			! defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
 		}
-
-		// TTL check
-		$ids = array(
-			LiteSpeed_Cache_Config::O_CACHE_TTL_PUB,
-			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV,
-			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE,
-			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
-
-		$id = LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ;
-		$this->_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $id ) ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
 	}
 
 	/**
@@ -433,26 +434,15 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_CACHE_PRIV,
 			LiteSpeed_Cache_Config::O_CACHE_COMMENTER,
 			LiteSpeed_Cache_Config::O_CACHE_REST,
+			LiteSpeed_Cache_Config::O_CACHE_DROP_QS,
+			LiteSpeed_Cache_Config::O_CACHE_PRIV_URI,
+			LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN,
 		);
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
+		$this->_update( $ids ) ;
 
-		$id = LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN ;
-		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		if( ! $this->_options[ $id ] ) {
+		if( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN ) ) {
 			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_LOGIN ) ;
 		}
-
-		$id = LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ;
-		$this->_sanitize_lines( $id, 'relative', true ) ;
-
-		$id = LiteSpeed_Cache_Config::O_CACHE_DROP_QS ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
 	}
 
 	/**
@@ -463,12 +453,9 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_purge()
 	{
-		$id = LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ;
-		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		// get auto purge rules options
 		$ids = array(
+			LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE,
+			// get auto purge rules options
 			LiteSpeed_Cache_Config::O_PURGE_POST_ALL,
 			LiteSpeed_Cache_Config::O_PURGE_POST_FRONTPAGE,
 			LiteSpeed_Cache_Config::O_PURGE_POST_HOMEPAGE,
@@ -480,20 +467,10 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_PURGE_POST_DATE,
 			LiteSpeed_Cache_Config::O_PURGE_POST_TERM,
 			LiteSpeed_Cache_Config::O_PURGE_POST_POSTTYPE,
+			LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME, // Schduled Purge Time
+			LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS, // `Scheduled Purge URLs`
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
-
-		// Filter scheduled purge URLs
-		$id = LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS ;
-		$this->_sanitize_lines( $id, 'relative', true ) ;
-
-		// Schduled Purge Time
-		$id = LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $ids ) ;
 	}
 
 	/**
@@ -504,18 +481,20 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_exclude()
 	{
-		$id = LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ;
-		$this->_sanitize_lines( $id, 'relative', true ) ;
-
-		$id = LiteSpeed_Cache_Config::O_CACHE_EXC ;
-		$this->_sanitize_lines( $id, 'relative', true ) ;
-
-		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_QS ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$ids = array(
+			LiteSpeed_Cache_Config::O_CACHE_FORCE_URI,
+			LiteSpeed_Cache_Config::O_CACHE_EXC,
+			LiteSpeed_Cache_Config::O_CACHE_EXC_QS,
+			/**
+			 * Update Role Excludes
+			 * @since 1.6.2
+			 */
+			LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES,
+		) ;
+		$this->_update( $ids ) ;
 
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ;
-		$this->_options[ $id ] = array() ;
+		$excludes = array() ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			foreach ( explode( "\n", $this->_input[ $id ] ) as $cat ) {
 				$cat_name = trim( $cat ) ;
@@ -527,14 +506,14 @@ class LiteSpeed_Cache_Admin_Settings
 					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_CAT, $cat_name ) ;
 				}
 				else {
-					$this->_options[ $id ][] = $cat_id ;
+					$excludes[] = $cat_id ;
 				}
 			}
 		}
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $id, $excludes ) ;
 
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ;
-		$this->_options[ $id ] = array() ;
+		$excludes = array() ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			foreach ( explode( "\n", $this->_input[ $id ] ) as $tag ) {
 				$tag_name = trim( $tag ) ;
@@ -546,19 +525,11 @@ class LiteSpeed_Cache_Admin_Settings
 					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_TAG, $tag_name ) ;
 				}
 				else {
-					$this->_options[ $id ][] = $term->term_id ;
+					$excludes[] = $term->term_id ;
 				}
 			}
 		}
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		/**
-		 * Update Role Excludes
-		 * @since 1.6.2
-		 */
-		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $id, $excludes ) ;
 	}
 
 	/**
@@ -569,49 +540,31 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	private function _validate_cdn()
 	{
-		$cdn_cloudflare_changed = false ;
 		$ids = array(
 			LiteSpeed_Cache_Config::O_CDN,
 			LiteSpeed_Cache_Config::O_CDN_QUIC,
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE,
+			LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ, // Load jQuery from CDN @since 1.5
+			LiteSpeed_Cache_Config::O_CDN_EXC, // `Exclude Path`
+			LiteSpeed_Cache_Config::O_CDN_ORI_DIR, // `Included Directories`
+			LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL, // QUIC API @since  2.4.1
+			LiteSpeed_Cache_Config::O_CDN_QUIC_KEY,
 		) ;
-		foreach ( $ids as $id ) {
-			$v = self::parse_onoff( $this->_input, $id ) ;
-			if ( $this->_options[ $id ] === $v ) {
-				continue ;
-			}
+		$this->_update( $ids ) ;
 
-			$this->_options[ $id ] = $v ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-			// Cloudflare setting is changed
-			if ( $id == LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ) {
-				$cdn_cloudflare_changed = true ;
-			}
-
-		}
-
+		// `Original URLs`
 		$id = LiteSpeed_Cache_Config::O_CDN_ORI ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
+		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
 		// Trip scheme
-		if ( $this->_options[ $id ] ) {
-			foreach ( $this->_options[ $id ] as $k => $v ) {
+		if ( $this->_input[ $id ] ) {
+			foreach ( $this->_input[ $id ] as $k => $v ) {
 				$tmp = parse_url( trim( $v ) ) ;
 				if ( ! empty( $tmp[ 'scheme' ] ) ) {
 					$v = str_replace( $tmp[ 'scheme' ] . ':', '', $v ) ;
 				}
-				$this->_options[ $id ][ $k ] = trim( $v ) ;
+				$this->_input[ $id ][ $k ] = trim( $v ) ;
 			}
 		}
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		$id = LiteSpeed_Cache_Config::O_CDN_EXC ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		$id = LiteSpeed_Cache_Config::O_CDN_ORI_DIR ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $id ) ;
 
 		/**
 		 * Handle multiple CDN setting
@@ -637,66 +590,42 @@ class LiteSpeed_Cache_Admin_Settings
 
 			$cdn_mapping[] = $this_mapping ;
 		}
-		$this->_options[ $id ] = $cdn_mapping ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		/**
-		 * Load jQuery from cdn
-		 * @since 1.5
-		 */
-		$id = LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ;
-		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		/**
-		 * Quic API
-		 * @since  2.4.1
-		 */
-		$ids = array(
-			LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL,
-			LiteSpeed_Cache_Config::O_CDN_QUIC_KEY,
-		) ;
-		foreach ( $ids as $id ) {
-			if ( $this->_options[ $id ] === $this->_input[ $id ] ) {
-				continue ;
-			}
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
+		$this->_update( $id, $cdn_mapping ) ;
 
 		/**
 		 * CLoudflare API
 		 * @since  1.7.2
 		 */
 		$ids = array(
+			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE,
 			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_EMAIL,
 			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY,
 			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME,
 		) ;
+		// Check if Cloudflare setting is changed or not
+		$cdn_cloudflare_changed = false ;
 		foreach ( $ids as $id ) {
-			if ( $this->_options[ $id ] === $this->_input[ $id ] ) {
+			if ( LiteSpeed_Cache::config( $id ) == $this->_input[ $id ] ) {
 				continue ;
 			}
 			$cdn_cloudflare_changed = true ;
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+			$this->_update( $id ) ;
 		}
 
 		// If cloudflare API is on, refresh the zone
-		if ( $this->_options[ LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ] && $cdn_cloudflare_changed ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ) && $cdn_cloudflare_changed ) {
+			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone() ;
 			$id = LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_ZONE ;
-			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone( $this->_options ) ;
 			if ( $zone ) {
-				$this->_options[ LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME ] = $zone[ 'name' ] ;
+				$this->_update( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
 
-				$this->_options[ $id ] = $zone[ 'id' ] ;
-				$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+				$this->_update( $id, $zone[ 'id' ] ) ;
 
 				LiteSpeed_Cache_Log::debug( "[Settings] Get zone successfully \t\t[ID] $zone[id]" ) ;
 			}
 			else {
-				$this->_options[ $id ] = '' ;
-				LiteSpeed_Cache_Log::debug( '[Settings] Get zone failed, clean zone' ) ;
+				$this->_update( $id, '' ) ;
+				LiteSpeed_Cache_Log::debug( '[Settings] ❌ Get zone failed, clean zone' ) ;
 			}
 		}
 	}
@@ -723,33 +652,16 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS,
 			LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF,
 			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
 
-		$ids = array(
 			LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER,
 			LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR,
+			// Update lazyload image classname excludes
+			LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC,
+			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR,
+			// Update lazyload image excludes
+			LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC,
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
-
-		// Update lazyload image excludes
-		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ;
-		$this->_sanitize_lines( $id, 'uri' ) ;
-
-		// Update lazyload image classname excludes
-		$id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		$id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $ids ) ;
 	}
 
 	/**
@@ -783,34 +695,15 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_OPTM_EXC_JQ,
 			LiteSpeed_Cache_Config::O_OPTM_GGFONTS_ASYNC,
 			LiteSpeed_Cache_Config::O_OPTM_RM_COMMENT,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-			$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-		}
-
-		$ids = array(
 			LiteSpeed_Cache_Config::O_OPTM_CSS_EXC,
 			LiteSpeed_Cache_Config::O_OPTM_JS_EXC,
+			LiteSpeed_Cache_Config::O_OPTM_TTL,
+			LiteSpeed_Cache_Config::O_OPTM_CCSS_CON, // Critical CSS
+			LiteSpeed_Cache_Config::O_OPTM_EXC, // Prevent URI from optimization
+			LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC, // `JS Deferred Excludes`
 		) ;
-		$this->_sanitize_lines( $ids, 'uri' ) ;
-
-		$id = LiteSpeed_Cache_Config::O_OPTM_TTL ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
-
-		// Critical CSS
-		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_CON ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-
-		// Prevent URI from optimization
-		$id = LiteSpeed_Cache_Config::O_OPTM_EXC ;
-		$this->_sanitize_lines( $id, 'relative', true ) ;
-
-		// Update js deferred excludes
-		$id = LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC ;
-		$this->_sanitize_lines( $id, 'uri' ) ;
-
+		$this->_update( $ids ) ;
+xx
 		// Update Role Excludes
 		$id = LiteSpeed_Cache_Config::EXC_OPTM_ROLES ;
 		$this->_options[ $id ] = ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ;
@@ -834,8 +727,7 @@ class LiteSpeed_Cache_Admin_Settings
 		 * @since 2.6.1
 		 */
 		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $id ) ;
 		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ;
 		$this->_sanitize_lines( $id, 'uri' ) ;
 
@@ -1050,8 +942,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		$id = LiteSpeed_Cache_Config::O_CRWL_ROLES ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $id ) ;
 
 		/**
 		 * Save cookie crawler
@@ -1186,8 +1077,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// Save vary group settings
 		$id = LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ;xx check if input is correct or not
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-		$this->__cfg->update( $id, $this->_options[ $id ] ) ;
+		$this->_update( $id ) ;
 	}
 
 	/**
@@ -1392,17 +1282,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		// If purge difference
 		if ( $purge_diff ) {
-			$diff = array_diff( $options, $this->_options[ $id ] ) ;
-			$diff2 = array_diff( $this->_options[ $id ], $options ) ;
-			$diff = array_merge( $diff, $diff2 ) ;
-			// If has difference
-			if ( $diff ) {
-				foreach ( $diff as $v ) {
-					$v = ltrim( $v, '^' ) ;
-					$v = rtrim( $v, '$' ) ;
-					$this->__purge->purgeby_url_cb( $v ) ;
-				}
-			}
+
 		}
 
 		$this->_options[ $id ] = $options ;

@@ -38,7 +38,7 @@ $display = LiteSpeed_Cache_Admin_Display::get_instance() ;
 				$id,
 				LiteSpeed_Cache_Config::VAL_ON,
 				__( 'Public', 'litespeed-cache' ),
-				$esi === LiteSpeed_Cache_Config::VAL_ON,
+				$esi === LiteSpeed_Cache_Config::VAL_ON,// todo: is this bool already?
 				'litespeed-cfg-' . $widget->id . '_' . LiteSpeed_Cache_Config::VAL_ON
 			);
 

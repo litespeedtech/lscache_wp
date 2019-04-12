@@ -328,7 +328,12 @@ class LiteSpeed_Cache_Const
 				$ini_v = $default_ini_cfg[ $k ] ;
 
 				if ( is_bool( $v ) ) { // Keep value type constantly
-					$ini_v = (bool) $ini_v ;
+					if ( $this->_conf_triple_switch( $k ) && $ini_v > 1 ) {
+						$ini_v = self::VAL_ON2 ;
+					}
+					else {
+						$ini_v = (bool) $ini_v ;
+					}
 				}
 
 				if ( is_array( $v ) ) {
@@ -372,7 +377,12 @@ class LiteSpeed_Cache_Const
 				$ini_v = $default_ini_cfg[ $k ] ;
 
 				if ( is_bool( $v ) ) { // Keep value type constantly
-					$ini_v = (bool) $ini_v ;
+					if ( $this->_conf_triple_switch( $k ) && $ini_v > 1 ) {
+						$ini_v = self::VAL_ON2 ;
+					}
+					else {
+						$ini_v = (bool) $ini_v ;
+					}
 				}
 
 				// NOTE: Multiple lines value must be stored as array
@@ -647,6 +657,73 @@ class LiteSpeed_Cache_Const
 			return $this->_default_options ;
 		}
 		return array_merge($this->_default_options, $tp_options) ;
+	}
+
+	/**
+	 * If the switch setting is a triple value or not
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_triple_switch( $id )
+	{
+		$list = array(
+			self::O_CDN_REMOTE_JQ,
+		) ;
+
+		if ( in_array( $id, $list ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * Filter to be used when saving setting
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_filter( $id )
+	{
+		$filters = array(
+			self::O_MEDIA_LAZY_EXC		=> 'uri',
+			self::O_CACHE_PRIV_URI		=> 'relative',
+			self::O_PURGE_TIMED_URLS	=> 'relative',
+			self::O_CACHE_FORCE_URI		=> 'relative',
+			self::O_CACHE_EXC			=> 'relative',
+			self::O_OPTM_CSS_EXC		=> 'uri',
+			self::O_OPTM_JS_EXC			=> 'uri',
+			self::O_OPTM_EXC			=> 'relative',
+			self::	=> '',
+			self::	=> '',
+		) ;
+
+		if ( ! empty( $filters[ $id ] ) ) {
+			return $filters[ $id ] ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * If the setting changes worth a purge or not
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_purge( $id )
+	{
+		$require_purge_ids = array(
+			self::O_OPTM_EXC,
+			self::O_CACHE_PRIV_URI,
+			self::O_PURGE_TIMED_URLS,
+			self::O_CACHE_FORCE_URI,
+			self::O_CACHE_EXC,
+		) ;
+
+		if ( in_array( $id, $require_purge_ids ) ) {
+			return true ;
+		}
+
+		return false ;
 	}
 
 	/**

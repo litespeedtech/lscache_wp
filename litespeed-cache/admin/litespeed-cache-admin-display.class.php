@@ -887,7 +887,7 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		if ( $txt === null ){
-			if ( $val === LiteSpeed_Cache_Config::VAL_ON ){
+			if ( $val === LiteSpeed_Cache_Config::VAL_ON ){// xx bool already
 				$txt = __( 'ON', 'litespeed-cache' ) ;
 			}
 

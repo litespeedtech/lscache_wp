@@ -370,7 +370,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 *
 	 * @since  3.0
 	 */
-	public function update( $id, $val, $filter = false )
+	public function update( $id, $val )
 	{
 		// Bypassed this bcos $this->_options could be changed by force_option()
 		// if ( $this->_options[ $id ] === $val ) {
@@ -384,11 +384,17 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Validate type
 		if ( is_bool( $this->_default_options[ $id ] ) ) {
-			$val = $val ? self::VAL_ON : self::VAL_OFF ;
+			if ( $this->_conf_triple_switch( $id ) && $val > 1 ) {
+				$val = self::VAL_ON2 ;
+			}
+			else {
+				$val = (bool) $val ;
+			}
 		}
 		elseif ( is_array( $this->_default_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
+				$filter = $this->_conf_filter( $id ) ;
 				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $filter ) ;
 			}
 		}
@@ -396,7 +402,26 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			$val = (int) $val ;
 		}
 
+		// Save data
 		update_option( $this->conf_name( $id ), $val ) ;
+
+		// Check if need to fire a purge or not
+		if ( $this->_conf_purge( $id ) ) {
+			$diff = array_diff( $val, $this->_options[ $id ] ) ;
+			$diff2 = array_diff( $this->_options[ $id ], $val ) ;
+			$diff = array_merge( $diff, $diff2 ) ;
+			// If has difference
+			if ( $diff ) {
+				foreach ( $diff as $v ) {
+					$v = ltrim( $v, '^' ) ;
+					$v = rtrim( $v, '$' ) ;
+					LiteSpeed_Cache_Purge::get_instance()->purgeby_url_cb( $v ) ;
+				}
+			}
+		}
+
+		// Update in-memory data
+		$this->_options[ $id ] = $val ;
 	}
 
 	/**
@@ -642,7 +667,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				continue ;
 			}
 
-			if ( is_bool( $options[ $k ] ) ) {
+			if ( is_bool( $options[ $k ] ) ) {//xx
 				$v = (bool) $v ;
 			}
 

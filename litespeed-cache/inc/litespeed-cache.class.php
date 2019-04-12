@@ -445,7 +445,7 @@ class LiteSpeed_Cache
 	 */
 	public static function config( $opt_id )
 	{
-		return LiteSpeed_Cache_Config::get_instance()->get_option( $opt_id ) ;
+		return LiteSpeed_Cache_Config::get_instance()->option( $opt_id ) ;
 	}
 
 	/**
