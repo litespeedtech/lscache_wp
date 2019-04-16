@@ -282,7 +282,7 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
+	add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
 
 		// Add admin_bar esi
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
@@ -588,8 +588,9 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function sub_widget_block( $instance, WP_Widget $widget, array $args )
 	{
-		if ( !is_array( $instance ) ) {
-			return false ;
+		// #210407
+		if ( ! is_array( $instance ) ) {
+			return $instance ;
 		}
 
 		$name = get_class( $widget ) ;
