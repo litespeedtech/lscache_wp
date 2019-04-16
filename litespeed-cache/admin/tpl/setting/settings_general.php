@@ -64,8 +64,9 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_PUB ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, public pages are cached. Minimum is 30 seconds.', 'litespeed-cache'); ?>
+				<?php echo __('Specify how long, in seconds, public pages are cached.', 'litespeed-cache'); ?>
 				<?php $this->recommended($id) ; ?>
+				<?php $this->ttl_validate( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -76,8 +77,9 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Specify how long, in seconds, private pages are cached. Minimum is %1$s seconds. Maximum is %2$s seconds.', 'litespeed-cache' ), 60, 3600 ) ; ?>
+				<?php echo __( 'Specify how long, in seconds, private pages are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended($id) ; ?>
+				<?php $this->ttl_validate( $id, 60, 3600 ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -88,8 +90,9 @@ if (!defined('WPINC')) die;
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, the front page is cached. Minimum is 30 seconds.', 'litespeed-cache'); ?>
+				<?php echo __( 'Specify how long, in seconds, the front page is cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended($id) ; ?>
+				<?php $this->ttl_validate( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>

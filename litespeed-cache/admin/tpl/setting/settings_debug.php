@@ -53,10 +53,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'Admin IPs', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_DEBUG_IPS, 30 ) ; ?>
+			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_IPS ; ?>
+			<?php $this->build_textarea( $id, 30 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Your IP', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Cache_Router::get_ip() ; ?></code>
+				<?php $this->ip_validate( $id ) ; ?>
 				<br />
 				<?php $this->learn_more(
 					'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
@@ -94,8 +96,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<?php $id = LiteSpeed_Cache_Config::O_DEBUG_FILESIZE ; ?>
 			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?> <?php echo __( 'MB', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __( 'Specify the maximum size of the log file. Minimum is 3MB. Maximum is 3000MB.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'Specify the maximum size of the log file.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
+				<?php $this->ttl_validate( $id, 3, 3000 ) ; ?>
 			</div>
 		</td>
 	</tr>

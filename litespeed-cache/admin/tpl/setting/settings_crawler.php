@@ -23,9 +23,10 @@ if ( !defined('WPINC') ) die;
 						<?php echo __( 'Server allowed min value', 'litespeed-cache') ; ?>: <code><?php echo $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ; ?></code>
 					</font>
 				<?php else : ?>
-					<?php $this->recommended($id) ; ?>
+					<?php $this->recommended( $id ) ; ?>
 				<?php endif ; ?>
 
+				<?php $this->ttl_validate( $id, false, 30000 ) ; ?>
 
 				<br />
 				<?php $this->_api_env_var( LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ) ; ?>
@@ -51,8 +52,9 @@ if ( !defined('WPINC') ) die;
 			<?php $id = LiteSpeed_Cache_Config::O_CRWL_RUN_INTERVAL ; ?>
 			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify time in seconds for the time between each run interval. Must be greater than 60.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php echo __('Specify time in seconds for the time between each run interval.', 'litespeed-cache'); ?>
+				<?php $this->recommended( $id ) ; ?>
+				<?php $this->ttl_validate( $id, 60 ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -76,7 +78,8 @@ if ( !defined('WPINC') ) die;
 			<?php $this->build_input( $id, 'litespeed-input-short' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify Number of Threads to use while crawling.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended( $id ) ; ?>
+				<?php $this->ttl_validate( $id, 1, 16 ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -118,6 +121,8 @@ if ( !defined('WPINC') ) die;
 			<?php $this->build_input($id); ?>
 			<div class="litespeed-desc">
 				<?php echo __('Enter this site\'s IP address to crawl by IP instead of domain name. This eliminates the overhead of DNS and CDN lookups. (optional)', 'litespeed-cache'); ?>
+
+				<?php $this->ip_validate( $id ) ; ?>
 			</div>
 		</td>
 	</tr>

@@ -668,6 +668,8 @@ class LiteSpeed_Cache_Const
 	{
 		$list = array(
 			self::O_CDN_REMOTE_JQ,
+			self::O_DEBUG,
+			self::,
 		) ;
 
 		if ( in_array( $id, $list ) ) {
@@ -693,6 +695,9 @@ class LiteSpeed_Cache_Const
 			self::O_OPTM_CSS_EXC		=> 'uri',
 			self::O_OPTM_JS_EXC			=> 'uri',
 			self::O_OPTM_EXC			=> 'relative',
+			self::O_OPTM_JS_DEFER_EXC	=> 'uri',
+			self::O_OPTM_DNS_PREFETCH	=> 'domain',
+			self::O_OPTM_CCSS_SEP_URI	=> 'uri',
 			self::	=> '',
 			self::	=> '',
 		) ;

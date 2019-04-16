@@ -91,8 +91,9 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<?php $id = LiteSpeed_Cache_Config::O_OPTM_TTL ; ?>
 			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo sprintf( __( 'Specify how long, in seconds, CSS/JS files are cached. Minimum is %1$s seconds.', 'litespeed-cache' ), 3600 ) ; ?>
+				<?php echo __( 'Specify how long, in seconds, CSS/JS files are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
+				<?php $this->ttl_validate( $id, 3600 ) ; ?>
 			</div>
 		</td>
 	</tr>

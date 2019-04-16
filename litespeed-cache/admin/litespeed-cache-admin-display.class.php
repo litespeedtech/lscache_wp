@@ -927,7 +927,56 @@ class LiteSpeed_Cache_Admin_Display
 			else {
 				$val = "<code>$val</code>" ;
 			}
-			echo sprintf( __( 'Recommended value: %s', 'litespeed-cache' ), $val ) ;
+			echo __( 'Recommended value', 'litespeed-cache' ) . ': ' . $val ;
+		}
+	}
+
+	/**
+	 * Check ttl instead of error when saving
+	 *
+	 * @since  3.0
+	 */
+	public function ttl_validate( $id, $min = false, $max = false )
+	{
+		$val = LiteSpeed_Cache::config( $id ) ;
+		$tip = array() ;
+		if ( $min && $val < $min ) {
+			$tip[] = __( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.' ;
+		}
+		if ( $max && $val > $min ) {
+			$tip[] = __( 'Maximum value', 'litespeed-cache' ) . ': <code>' . $max . '</code>.' ;
+		}
+
+		if ( $tip ) {
+			echo '<br /><font class="litespeed-warning"> ❌ ' . implode( ' ', $tip ) . '</font>' ;
+		}
+	}
+
+	/**
+	 * Check if ip is valid
+	 *
+	 * @since  3.0
+	 */
+	public function ip_validate( $id )
+	{
+		$vals = LiteSpeed_Cache::config( $id ) ;
+		if ( ! $vals ) {
+			return ;
+		}
+
+		$tip = array() ;
+		foreach ( explode( "\n", $vals ) as $v ) {
+			if ( ! $v ) {
+				continue ;
+			}
+
+			if ( ! WP_Http::is_ip_address( $v ) ) {
+				$tip[] = __( 'Invalid IP', 'litespeed-cache' ) . ': <code>' . $v . '</code>.' ;
+			}
+		}
+
+		if ( $tip ) {
+			echo '<br /><font class="litespeed-warning"> ❌ ' . implode( ' ', $tip ) . '</font>' ;
 		}
 	}
 

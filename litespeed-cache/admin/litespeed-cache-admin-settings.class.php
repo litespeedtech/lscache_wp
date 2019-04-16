@@ -485,11 +485,7 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_CACHE_FORCE_URI,
 			LiteSpeed_Cache_Config::O_CACHE_EXC,
 			LiteSpeed_Cache_Config::O_CACHE_EXC_QS,
-			/**
-			 * Update Role Excludes
-			 * @since 1.6.2
-			 */
-			LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES,
+			LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES, // `Role Excludes` @since 1.6.2
 		) ;
 		$this->_update( $ids ) ;
 
@@ -701,36 +697,13 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_OPTM_CCSS_CON, // Critical CSS
 			LiteSpeed_Cache_Config::O_OPTM_EXC, // Prevent URI from optimization
 			LiteSpeed_Cache_Config::O_OPTM_JS_DEFER_EXC, // `JS Deferred Excludes`
+			LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH, // `DNS prefetch` @since 1.7.1
+			LiteSpeed_Cache_Config::O_OPTM_MAX_SIZE, // Combined file max size @since 1.7.1
+			LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE, // Separate CCSS File Types & URI @since 2.6.1
+			LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI,
+			LiteSpeed_Cache_Config::O_OPTM_EXC_ROLES, // Role Excludes
 		) ;
 		$this->_update( $ids ) ;
-xx
-		// Update Role Excludes
-		$id = LiteSpeed_Cache_Config::EXC_OPTM_ROLES ;
-		$this->_options[ $id ] = ! empty( $this->_input[ $id ] ) ? $this->_input[ $id ] : array() ;
-
-		/**
-		 * DNS prefetch
-		 * @since 1.7.1
-		 */
-		$id = LiteSpeed_Cache_Config::O_OPTM_DNS_PREFETCH ;
-		$this->_sanitize_lines( $id, 'domain' ) ;
-
-		/**
-		 * Combined file max size
-		 * @since 1.7.1
-		 */
-		$id = LiteSpeed_Cache_Config::O_OPTM_MAX_SIZE ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-
-		/**
-		 * Separate CCSS File Types & URI
-		 * @since 2.6.1
-		 */
-		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_POSTTYPE ;
-		$this->_update( $id ) ;
-		$id = LiteSpeed_Cache_Config::O_OPTM_CCSS_SEP_URI ;
-		$this->_sanitize_lines( $id, 'uri' ) ;
-
 	}
 
 	/**
@@ -744,15 +717,9 @@ xx
 		$ids = array(
 			LiteSpeed_Cache_Config::O_UTIL_NO_HTTPS_VARY,
 			LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		}
-
-		$ids = array(
 			LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL,
 		) ;
-		$this->_sanitize_lines( $ids ) ;
+		$this->_update( $ids ) ;
 
 		/**
 		 * Added Favicon
@@ -792,49 +759,23 @@ xx
 	 */
 	private function _validate_debug()
 	{
-		$id = LiteSpeed_Cache_Config::O_DEBUG_IPS ;
-		if ( isset( $this->_input[ $id ] ) ) {
-			$admin_ips = array_map( 'trim', explode( "\n", trim( $this->_input[ $id ] ) ) ) ;
-			$admin_ips = array_filter( $admin_ips ) ;
-			$has_err = false ;
-			if ( $admin_ips ) {
-				foreach ( $admin_ips as $ip ) {
-					if ( ! WP_Http::is_ip_address( $ip ) ) {
-						$has_err = true ;
-						break ;
-					}
-				}
-			}
-			$admin_ips = implode( "\n", $admin_ips ) ;
-
-			if ( $has_err ) {
-				$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_ADMIN_IP_INV ) ;
-			}
-			else {
-				$this->_options[ $id ] = $admin_ips ;
-			}
-		}
-
-		$id = LiteSpeed_Cache_Config::O_DEBUG ;
-		$this->_options[ $id ] = self::is_checked_radio( $this->_input[ $id ] ) ;
-
-		$id = LiteSpeed_Cache_Config::O_DEBUG_FILESIZE ;
-		$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, 3, 3000 ) ;
-
 		$ids = array(
+			LiteSpeed_Cache_Config::O_DEBUG_IPS,
+			LiteSpeed_Cache_Config::O_DEBUG,
+			LiteSpeed_Cache_Config::O_DEBUG_FILESIZE,
 			LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL,
 			LiteSpeed_Cache_Config::O_DEBUG_LEVEL,
 			LiteSpeed_Cache_Config::O_UTIL_HEARTBEAT,
 			LiteSpeed_Cache_Config::O_DEBUG_COOKIE,
 			LiteSpeed_Cache_Config::O_DEBUG_COLLAPS_QS,
 			LiteSpeed_Cache_Config::O_DEBUG_LOG_FILTERS,
+			LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS, // Filters ignored
+			LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS,
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		}
+		$this->_update( $ids ) ;
 
 		// Remove Object Cache
-		if ( $this->_options[ LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ] ) {
+		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ) ) {
 			// Do a purge all (This is before oc file removal, can purge oc too)
 			LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
 
@@ -844,13 +785,6 @@ xx
 			// Set a const to avoid regenerating again
 			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
 		}
-
-		// Filters ignored
-		$ids = array(
-			LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_FILTERS,
-			LiteSpeed_Cache_Config::O_DEBUG_LOG_NO_PART_FILTERS,
-		) ;
-		$this->_sanitize_lines( $ids ) ;
 	}
 
 	/**
@@ -866,11 +800,18 @@ xx
 			LiteSpeed_Cache_Config::O_CRWL_PAGES,
 			LiteSpeed_Cache_Config::O_CRWL_CATS,
 			LiteSpeed_Cache_Config::O_CRWL_TAGS,
+			LiteSpeed_Cache_Config::O_CRWL_USLEEP,
+			LiteSpeed_Cache_Config::O_CRWL_RUN_DURATION,
+			LiteSpeed_Cache_Config::O_CRWL_RUN_INTERVAL,
+			LiteSpeed_Cache_Config::O_CRWL_CRAWL_INTERVAL,
+			LiteSpeed_Cache_Config::O_CRWL_THREADS,
+			LiteSpeed_Cache_Config::O_CRWL_LOAD_LIMIT,
+			LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP,
+			LiteSpeed_Cache_Config::O_CRWL_ROLES,
+			LiteSpeed_Cache_Config::O_CRWL_CUSTOM_SITEMAP,
 		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		}
-
+		$this->_update( $ids ) ;
+xx
 		$id = LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$arr = array_map( 'trim', explode( "\n", $this->_input[ $id ] ) ) ;
@@ -891,59 +832,6 @@ xx
 		}
 		$this->_options[ $id ] = $this->_input[ $id ] ;
 
-		$usleep_min = 0 ;
-		$usleep_max = 30000 ;
-		if ( ! empty( $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ) ) {
-			$usleep_min = $_SERVER[ LiteSpeed_Cache_Config::ENV_CRAWLER_USLEEP ] ;
-			$usleep_max = null ;
-		}
-		$ids = array(
-			LiteSpeed_Cache_Config::O_CRWL_USLEEP 		=> array( $usleep_min, $usleep_max ),
-			LiteSpeed_Cache_Config::O_CRWL_RUN_DURATION 	=> array( 0,	null ),
-			LiteSpeed_Cache_Config::O_CRWL_RUN_INTERVAL 	=> array( 60,	null ),
-			LiteSpeed_Cache_Config::O_CRWL_CRAWL_INTERVAL => array( 0,	null ),
-			LiteSpeed_Cache_Config::O_CRWL_THREADS 		=> array( 1,	16 ),
-		) ;
-		foreach ( $ids as $id => $v ) {
-			list( $min, $max ) = $v ;
-
-			$this->_options[ $id ] = $this->_check_ttl( $this->_input, $id, $min, $max ) ;
-		}
-
-
-		$id = LiteSpeed_Cache_Config::O_CRWL_LOAD_LIMIT ;
-		$this->_options[ $id ] = $this->_input[ $id ] ;
-
-		$id = LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP ;
-		if ( ! empty( $this->_input[ $id ] ) && ! WP_Http::is_ip_address( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_SITE_IP, $this->_input[ $id ] ) ;
-		}
-		else {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-		}
-
-		$id = LiteSpeed_Cache_Config::O_CRWL_CUSTOM_SITEMAP ;
-		if ( ! empty( $this->_input[ $id ] ) ) {
-			// Validate sitemap
-			try{
-				LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $this->_input[ $id ], false ) ;
-
-				$this->_options[ $id ] = $this->_input[ $id ] ;
-
-			} catch ( \Exception $e ) {
-				$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( $e->getMessage(), $this->_input[ $id ] ) ;
-
-				LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
-			}
-
-		}
-		else {
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-		}
-
-		$id = LiteSpeed_Cache_Config::O_CRWL_ROLES ;
-		$this->_update( $id ) ;
-
 		/**
 		 * Save cookie crawler
 		 * @since 2.8
@@ -961,6 +849,22 @@ xx
 		}
 		$this->_options[ $id ] = $cookie_crawlers ;
 
+	}
+
+	public function sitemap_validate( $url )
+	{
+
+		// Validate sitemap
+		try{
+			LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $this->_input[ $id ], false ) ;
+
+			$this->_options[ $id ] = $this->_input[ $id ] ;
+
+		} catch ( \Exception $e ) {
+			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( $e->getMessage(), $this->_input[ $id ] ) ;
+
+			LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+		}
 	}
 
 	/**
