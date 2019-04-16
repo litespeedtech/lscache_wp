@@ -586,8 +586,12 @@ class LiteSpeed_Cache_ESI
 	 * @param array $args Parameter used to build the widget.
 	 * @return mixed Return false if display through esi, instance otherwise.
 	 */
-	public function sub_widget_block( array $instance, WP_Widget $widget, array $args )
+	public function sub_widget_block( $instance, WP_Widget $widget, array $args )
 	{
+		if ( !is_array( $instance ) ) {
+			return false ;
+		}
+
 		$name = get_class( $widget ) ;
 		if ( ! isset( $instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
 			return $instance ;
