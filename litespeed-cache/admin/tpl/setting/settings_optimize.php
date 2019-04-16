@@ -93,7 +93,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, CSS/JS files are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
-				<?php $this->ttl_validate( $id, 3600 ) ; ?>
+				<?php $this->_validate_ttl( $id, 3600 ) ; ?>
 			</div>
 		</td>
 	</tr>

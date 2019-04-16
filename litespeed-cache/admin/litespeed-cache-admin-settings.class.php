@@ -809,28 +809,19 @@ class LiteSpeed_Cache_Admin_Settings
 			LiteSpeed_Cache_Config::O_CRWL_DOMAIN_IP,
 			LiteSpeed_Cache_Config::O_CRWL_ROLES,
 			LiteSpeed_Cache_Config::O_CRWL_CUSTOM_SITEMAP,
+			LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS,
 		) ;
 		$this->_update( $ids ) ;
-xx
+
+		// `Sitemap Generation` -> `Exclude Custom Post Types`
 		$id = LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$arr = array_map( 'trim', explode( "\n", $this->_input[ $id ] ) ) ;
 			$arr = array_filter( $arr ) ;
 			$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
-			$this->_options[ $id ] = implode( "\n", array_intersect( $arr, $ori ) ) ;
+			$this->_input[ $id ] = implode( "\n", array_intersect( $arr, $ori ) ) ;
 		}
-
-		$id = LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS ;
-		if( ! isset( $this->_input[ $id ] ) || ! in_array( $this->_input[ $id ], array(
-				LiteSpeed_Cache_Config::CRWL_DATE_DESC,
-				LiteSpeed_Cache_Config::CRWL_DATE_ASC,
-				LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
-				LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
-			) )
-		) {
-			$this->_input[ $id ] = LiteSpeed_Cache_Config::CRWL_DATE_DESC ;
-		}
-		$this->_options[ $id ] = $this->_input[ $id ] ;
+		$this->_update( $id ) ;
 
 		/**
 		 * Save cookie crawler
@@ -847,24 +838,8 @@ xx
 				$cookie_crawlers[ $v ] = $this->_input[ $id ][ 'vals' ][ $k ] ;
 			}
 		}
-		$this->_options[ $id ] = $cookie_crawlers ;
+		$this->_update( $id, $cookie_crawlers ) ;
 
-	}
-
-	public function sitemap_validate( $url )
-	{
-
-		// Validate sitemap
-		try{
-			LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $this->_input[ $id ], false ) ;
-
-			$this->_options[ $id ] = $this->_input[ $id ] ;
-
-		} catch ( \Exception $e ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( $e->getMessage(), $this->_input[ $id ] ) ;
-
-			LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
-		}
 	}
 
 	/**
@@ -896,45 +871,22 @@ xx
 		// check mobile agents
 		$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
 		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		if ( ! $this->_input[ $id ] &&  $new_options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, 'EMPTY' ) ) ;
-		}
-		elseif ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
-		}
-		else {
-			$new_options[ $id ] = $this->_input[ $id ] ;
-		}
+		$new_options[ $id ] = $this->_input[ $id ] ;
 
 		// No cache cookie settings
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES ;
 		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		if ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
-		}
-		else {
-			$new_options[ $id ] = $this->_input[ $id ] ;
-		}
+		$new_options[ $id ] = $this->_input[ $id ] ;
 
 		// No cache user agent settings
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ;
 		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		if ( $this->_input[ $id ] && ! $this->_syntax_checker( $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_REWRITE, array( $id, esc_html( $this->_input[ $id ] ) ) ) ;
-		}
-		else {
-			$new_options[ $id ] = $this->_input[ $id ] ;
-		}
+		$new_options[ $id ] = $this->_input[ $id ] ;
 
 		// Login cookie
 		$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
-		if ( $this->_input[ $id ] && preg_match( '#[^\w\-]#', $this->_input[ $id ] ) ) {
-			$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_LC, esc_html( $this->_input[ $id ] ) ) ;
-		}
-		else {
-			$new_options[ $id ] = $this->_input[ $id ] ;
-		}
-
+		$new_options[ $id ] = $this->_input[ $id ] ;
+xx
 		return $new_options ;
 	}
 
@@ -1048,31 +1000,6 @@ xx
 
 		LiteSpeed_Cache_Purge::purge_all( 'Wdiget saved' ) ;
 		return $instance ;
-	}
-
-	/**
-	 * Validate regex
-	 *
-	 * @since 1.0.9
-	 * @access private
-	 * @return bool True for valid rules, false otherwise.
-	 */
-	private function _syntax_checker( $rules )
-	{
-		$success = true ;
-
-		set_error_handler( 'litespeed_exception_handler' ) ;
-
-		try {
-			preg_match( LiteSpeed_Cache_Utility::arr2regex( $rules ), null ) ;
-		}
-		catch ( ErrorException $e ) {
-			$success = false ;
-		}
-
-		restore_error_handler() ;
-
-		return $success ;
 	}
 
 	/**

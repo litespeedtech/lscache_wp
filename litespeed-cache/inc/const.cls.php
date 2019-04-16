@@ -660,6 +660,27 @@ class LiteSpeed_Cache_Const
 	}
 
 	/**
+	 * Format the string value
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_string_val( $id, $val )
+	{
+		if ( $id == self::O_CRWL_ORDER_LINKS ) {
+			if ( ! in_array( $id, array(
+				self::CRWL_DATE_DESC,
+				self::CRWL_DATE_ASC,
+				self::CRWL_ALPHA_DESC,
+				self::CRWL_ALPHA_ASC,
+			) ) ) {
+				$val = self::CRWL_DATE_DESC ;
+			}
+		}
+
+		return $val ;
+	}
+
+	/**
 	 * If the switch setting is a triple value or not
 	 *
 	 * @since  3.0

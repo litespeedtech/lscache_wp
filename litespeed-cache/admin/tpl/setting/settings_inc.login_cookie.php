@@ -10,6 +10,8 @@ if ( ! defined( 'WPINC' ) ) die ;
 			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE;
 			$this->build_input( $id ) ;
 
+			$this->_validate_syntax( $id ) ;
+
 			echo '<p>' . __('SYNTAX: alphanumeric and "_".', 'litespeed-cache')
 				. ' ' . __('No spaces and case sensitive.', 'litespeed-cache')
 				. ' ' . __('MUST BE UNIQUE FROM OTHER WEB APPLICATIONS.', 'litespeed-cache')
@@ -35,6 +37,10 @@ if ( ! defined( 'WPINC' ) ) die ;
 				echo '<div class="litespeed-callout-danger">'
 						. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
 					. '</div>';
+			}
+
+			if ( preg_match( '#[^\w\-]#', LiteSpeed_Cache::config( $id ) ) ) {
+				echo '<div class="litespeed-callout-danger">❌ ' . __( 'Invalid login cookie. Invalid characters found.', 'litespeed-cache' ) . '</div>' ;
 			}
 
 			if ( defined( 'LITESPEED_ON' ) && $_options[$id] ){

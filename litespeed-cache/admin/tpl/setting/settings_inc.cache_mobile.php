@@ -8,7 +8,7 @@ if (!defined('WPINC')) die;
 		<th><?php echo __('Cache Mobile', 'litespeed-cache'); ?></th>
 		<td>
 			<?php
-				$this->build_switch(LiteSpeed_Cache_Config::O_CACHE_MOBILE);
+				$this->build_switch( LiteSpeed_Cache_Config::O_CACHE_MOBILE ) ;
 			?>
 			<div class="litespeed-desc">
 				<?php echo __('Cache mobile views separately.', 'litespeed-cache'); ?>
@@ -50,10 +50,15 @@ if (!defined('WPINC')) die;
 
 			<div class="litespeed-desc">
 				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
+
+				<?php $this->_validate_syntax( $id ) ; ?>
+
+				<?php if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_MOBILE ) && ! LiteSpeed_Cache::config( $id ) ) : ?>
 				<font class="litespeed-warning">
-					⚠️
+					❌
 					<?php echo sprintf( __( 'If %1$s is %2$s, then %3$s must be populated!', 'litespeed-cache' ), '<code>' . __('Cache Mobile', 'litespeed-cache') . '</code>', '<code>' . __('ON', 'litespeed-cache') . '</code>', '<code>' . __('List of Mobile User Agents', 'litespeed-cache') . '</code>' ) ; ?>
 				</font>
+				<?php endif ; ?>
 			</div>
 		</td>
 	</tr>

@@ -932,11 +932,35 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Validate rewrite rules regex syntax
+	 *
+	 * @since  3.0
+	 */
+	private function _validate_syntax( $id )
+	{
+		$val = LiteSpeed_Cache::config( $id ) ;
+
+		if ( ! $val ) {
+			return ;
+		}
+
+		if ( ! is_array( $val ) ) {
+			$val = array( $val ) ;
+		}
+
+		foreach ( $val as $v ) {
+			if ( ! LiteSpeed_Cache_Utility::syntax_checker( $v ) ) {
+				echo '<br /><font class="litespeed-warning"> ❌ ' . __( 'Invalid rewrite rule', 'litespeed-cache' ) . ': <code>' . $v . '</code></font>' ;
+			}
+		}
+	}
+
+	/**
 	 * Check ttl instead of error when saving
 	 *
 	 * @since  3.0
 	 */
-	public function ttl_validate( $id, $min = false, $max = false )
+	private function _validate_ttl( $id, $min = false, $max = false )
 	{
 		$val = LiteSpeed_Cache::config( $id ) ;
 		$tip = array() ;
@@ -957,7 +981,7 @@ class LiteSpeed_Cache_Admin_Display
 	 *
 	 * @since  3.0
 	 */
-	public function ip_validate( $id )
+	private function _validate_ip( $id )
 	{
 		$vals = LiteSpeed_Cache::config( $id ) ;
 		if ( ! $vals ) {

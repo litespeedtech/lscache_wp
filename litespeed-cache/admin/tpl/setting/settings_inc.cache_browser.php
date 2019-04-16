@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'The amount of time, in seconds, that files will be stored in browser cache before expiring.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
-				<?php $this->ttl_validate( $id, 30 ) ; ?>
+				<?php $this->_validate_ttl( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>

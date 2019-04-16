@@ -58,7 +58,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Allows listed IPs (one per line) to perform certain actions from their browsers.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Your IP', 'litespeed-cache' ) ; ?>: <code><?php echo LiteSpeed_Cache_Router::get_ip() ; ?></code>
-				<?php $this->ip_validate( $id ) ; ?>
+				<?php $this->_validate_ip( $id ) ; ?>
 				<br />
 				<?php $this->learn_more(
 					'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:information:admin-ip-commands',
@@ -98,7 +98,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the maximum size of the log file.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
-				<?php $this->ttl_validate( $id, 3, 3000 ) ; ?>
+				<?php $this->_validate_ttl( $id, 3, 3000 ) ; ?>
 			</div>
 		</td>
 	</tr>

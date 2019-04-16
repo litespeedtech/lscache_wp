@@ -17,6 +17,33 @@ class LiteSpeed_Cache_Utility
 
 	const TYPE_SCORE_CHK = 'score_chk' ;
 
+
+	/**
+	 * Validate regex
+	 *
+	 * @since 1.0.9
+	 * @since  3.0 Moved here from admin-settings.cls
+	 * @access public
+	 * @return bool True for valid rules, false otherwise.
+	 */
+	public static function syntax_checker( $rules )
+	{
+		$success = true ;
+
+		set_error_handler( 'litespeed_exception_handler' ) ;
+
+		try {
+			preg_match( self::arr2regex( $rules ), null ) ;
+		}
+		catch ( ErrorException $e ) {
+			$success = false ;
+		}
+
+		restore_error_handler() ;
+
+		return $success ;
+	}
+
 	/**
 	 * Combine regex array to regex rule
 	 *

@@ -66,7 +66,7 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, public pages are cached.', 'litespeed-cache'); ?>
 				<?php $this->recommended($id) ; ?>
-				<?php $this->ttl_validate( $id, 30 ) ; ?>
+				<?php $this->_validate_ttl( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -79,7 +79,7 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, private pages are cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended($id) ; ?>
-				<?php $this->ttl_validate( $id, 60, 3600 ) ; ?>
+				<?php $this->_validate_ttl( $id, 60, 3600 ) ; ?>
 			</div>
 		</td>
 	</tr>
@@ -92,7 +92,7 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, the front page is cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended($id) ; ?>
-				<?php $this->ttl_validate( $id, 30 ) ; ?>
+				<?php $this->_validate_ttl( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>

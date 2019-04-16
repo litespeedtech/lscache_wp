@@ -401,6 +401,10 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		elseif ( ! is_string( $this->_default_options[ $id ] ) ) {
 			$val = (int) $val ;
 		}
+		else {
+			// Check if the string has a limit set
+			$val = $this->_conf_string_val( $id, $val ) ;
+		}
 
 		// Save data
 		update_option( $this->conf_name( $id ), $val ) ;
@@ -422,6 +426,22 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Update in-memory data
 		$this->_options[ $id ] = $val ;
+	}
+
+	public function sitemap_validate( $url )
+	{
+
+		// Validate sitemap
+		try{
+			LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $url, false ) ;
+
+		} catch ( \Exception $e ) {
+			LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
+
+			return LiteSpeed_Cache_Admin_Display::get_error( $e->getMessage(), $url ) ;
+		}
+
+		return true ;
 	}
 
 	/**

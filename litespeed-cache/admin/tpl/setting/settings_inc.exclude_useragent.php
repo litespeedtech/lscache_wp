@@ -12,6 +12,9 @@ if (!defined('WPINC')) die;
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'user agents', 'litespeed-cache') ) ; ?>
 				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
+
+				<?php $this->_validate_syntax( $id ) ; ?>
+
 				<br /><font class="litespeed-warning">
 					⚠️
 					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
