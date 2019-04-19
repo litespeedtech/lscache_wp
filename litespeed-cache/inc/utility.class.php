@@ -329,6 +329,16 @@ class LiteSpeed_Cache_Utility
 	 */
 	public static function str_hit_array( $needle, $haystack, $has_ttl = false )
 	{
+		/**
+		 * Safety check to avoid PHP warning
+		 * @see  https://github.com/litespeedtech/lscache_wp/pull/131/commits/45fc03af308c7d6b5583d1664fad68f75fb6d017
+		 */
+		if ( ! is_array( $haystack ) ) {
+			LiteSpeed_Cache_Log::debug( "[Util] ❌ bad param in str_hit_array()!" ) ;
+
+			return false ;
+		}
+
 		$hit = false ;
 		$this_ttl = 0 ;
 		foreach( $haystack as $item ) {
