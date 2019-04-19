@@ -554,7 +554,10 @@ class LiteSpeed_Cache_Utility
 	public static function sanitize_lines( $arr, $type = null )
 	{
 		if ( ! $arr ) {
-			return $arr ;
+			if ( $type === 'string' ) {
+				return '' ;
+			}
+			return array() ;
 		}
 
 		if ( ! is_array( $arr ) ) {
@@ -577,7 +580,7 @@ class LiteSpeed_Cache_Utility
 
 		if ( $type === 'string' ) {
 			return implode( "\n", $arr ) ;
-
+		}
 
 		return $arr ;
 	}
