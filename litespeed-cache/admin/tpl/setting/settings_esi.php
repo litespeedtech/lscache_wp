@@ -78,7 +78,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<td class='litespeed-vary-title'><?php echo $title ; ?></td>
 					<td class='litespeed-vary-val'>
 						<input type="text" class="litespeed-input-short"
-							name="<?php echo LiteSpeed_Cache_Config::VARY_GROUP ; ?>[<?php echo $role ; ?>]"
+							name="<?php echo LiteSpeed_Cache_Config::OPTION_NAME ; ?>[<?php echo LiteSpeed_Cache_Config::VARY_GROUP ; ?>][<?php echo $role ; ?>]"
 							value="<?php echo $this->config->in_vary_group( $role ) ; ?>" />
 					</td>
 				</tr>

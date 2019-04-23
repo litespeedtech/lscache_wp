@@ -1199,7 +1199,7 @@ class LiteSpeed_Cache_Admin_Settings
 		}
 
 		// Save vary group settings
-		$this->_save_item( LiteSpeed_Cache_Config::VARY_GROUP ) ;
+		$this->_save_item( LiteSpeed_Cache_Config::VARY_GROUP, 'array' ) ;
 	}
 
 	/**
