@@ -43,6 +43,14 @@ class LiteSpeed_Cache_ESI
 	 */
 	private function __construct()
 	{
+		/**
+		 * Bypass ESI related funcs if disabled ESI to fix potential DIVI compatibility issue
+		 * @since  2.9.7.2
+		 */
+		if ( LiteSpeed_Cache_Router::is_ajax() || ! LiteSpeed_Cache_Router::esi_enabled() ) {
+			return ;
+		}
+
 		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
 
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;

@@ -146,9 +146,7 @@ class LiteSpeed_Cache
 		 * Preload ESI functionality for ESI request uri recovery
 		 * @since 1.8.1
 		 */
-		if ( ! LiteSpeed_Cache_Router::is_ajax() && LiteSpeed_Cache_Router::esi_enabled() ) {
-			LiteSpeed_Cache_ESI::get_instance() ;
-		}
+		LiteSpeed_Cache_ESI::get_instance() ;
 	}
 
 	/**
