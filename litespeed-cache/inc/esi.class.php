@@ -692,6 +692,18 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_admin_bar_block( $params )
 	{
+
+		if ( ! empty( $params[ 'ref' ] ) ) {
+			$ref = parse_url( $params[ 'ref' ] ) ;
+			parse_str( $ref[ 'query' ], $output ) ;
+
+			if ( ! empty( $output ) && is_array( $output ) ) {
+				foreach ( $output as $key => $value ) {
+					$_GET[ $key ] = $value ;
+				}
+			}
+		}
+
 		wp_admin_bar_render() ;
 
 		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_ESI_CACHE_ADMBAR ) ) {
