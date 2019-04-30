@@ -160,6 +160,17 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
+	 * Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
+	 *
+	 * @since 2.9.7.2
+	 * @access public
+	 */
+	public static function set_force_public( $reason )
+	{
+		LiteSpeed_Cache_Control::set_public_forced( $reason ) ;
+	}
+
+	/**
 	 * Get current not cacheable status
 	 *
 	 * @since 1.1.3
