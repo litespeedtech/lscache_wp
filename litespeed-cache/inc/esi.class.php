@@ -694,12 +694,14 @@ class LiteSpeed_Cache_ESI
 	{
 
 		if ( ! empty( $params[ 'ref' ] ) ) {
-			$ref = parse_url( $params[ 'ref' ] ) ;
-			parse_str( $ref[ 'query' ], $output ) ;
+			$ref_qs = parse_url( $params[ 'ref' ], PHP_URL_QUERY ) ;
+			if ( ! empty( $ref_qs ) ) {
+				parse_str( $ref_qs, $ref_qs_arr ) ;
 
-			if ( ! empty( $output ) && is_array( $output ) ) {
-				foreach ( $output as $key => $value ) {
-					$_GET[ $key ] = $value ;
+				if ( ! empty( $ref_qs_arr ) ) {
+					foreach ( $ref_qs_arr as $k => $v ) {
+						$_GET[ $k ] = $v ;
+					}
 				}
 			}
 		}
