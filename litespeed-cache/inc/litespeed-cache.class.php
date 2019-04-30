@@ -105,7 +105,7 @@ class LiteSpeed_Cache
 		}
 
 		if ( self::config( LiteSpeed_Cache_Config::OPID_DEBUG_DISABLE_ALL ) ) {
-			define( 'LITESPEED_DISABLE_ALL', true ) ;
+			! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 		}
 
 		/**

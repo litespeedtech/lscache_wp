@@ -51,6 +51,10 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
+		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
+			return ;
+		}
+
 		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
 
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;

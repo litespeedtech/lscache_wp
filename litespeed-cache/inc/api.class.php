@@ -38,6 +38,17 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	const WIDGET_OPID_TTL =			LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ;
 
 	/**
+	 * Disable All
+	 *
+	 * @since 2.9.7.2
+	 * @access public
+	 */
+	public static function disable_all()
+	{
+		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
+	}
+
+	/**
 	 * Force to set an option
 	 * Note: it will only affect the AFTER usage of that option
 	 *
