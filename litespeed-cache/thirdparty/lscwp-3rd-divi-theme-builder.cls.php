@@ -11,15 +11,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die() ;
 }
 
-if ( ! empty( $_GET[ 'et_fb' ] ) ) {
-	LiteSpeed_Cache_API::disable_all() ;
-}
-
+LiteSpeed_Cache_API::hook_init( 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::pre_load' ) ;
 LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder' ) ;
 
 class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 {
-	private static $js_comment_box = false ;
+	// private static $js_comment_box = false ;
+	
+	/**
+	 * Check if is Edit mode in frontend, disable all LSCWP features to avoid breaking page builder
+	 *
+	 * @since 2.9.7.2 #435538 #581740 #977284
+	 */
+	public static function pre_load()
+	{
+		if ( ! defined( 'ET_CORE' ) ) return ;
+		if ( ! empty( $_GET[ 'et_fb' ] ) ) {
+			LiteSpeed_Cache_API::disable_all() ;
+		}
+	}
 
 	public static function detect()
 	{
