@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.1.1
-Stable tag: 2.9.7.2
+Stable tag: 2.9.7.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -286,9 +286,6 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
-
-= 2.9.7.2 - May 1 2019 =
-* 🐞<strong>IAPI</strong>: Image md5 validation failed will no more fail if the image contains whitespace.
 
 = 2.9.7.1 - Apr 9 2019 =
 * <strong>Purge</script>: Purge All no longer includes Purge CCSS/Placeholder.

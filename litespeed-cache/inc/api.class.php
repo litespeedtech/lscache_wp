@@ -642,17 +642,6 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Early bird hook
-	 *
-	 * @since 2.9.7.2
-	 * @access public
-	 */
-	public static function hook_before_init( $hook )
-	{
-		add_action( 'litespeed_before_init', $hook ) ;
-	}
-
-	/**
 	 * Hook to litespeed init
 	 *
 	 * @since 1.6.6
@@ -660,7 +649,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function hook_init( $hook )
 	{
-		add_action( 'litespeed_init', $hook ) ;
+		add_action('litespeed_init', $hook) ;
 	}
 
 }
