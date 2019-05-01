@@ -51,10 +51,28 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-		if ( defined( 'LITESPEED_DISABLE_ALL' ) ) {
-			return ;
-		}
+		// Init ESI in `after_setup_theme` hook after detected if LITESPEED_DISABLE_ALL is ON or not
+		add_action( 'litespeed_initing', array( $this, 'esi_init' ) ) ;
 
+		/**
+		 * Overwrite wp_create_nonce func
+		 * @since  2.9.5
+		 */
+		if ( ! is_admin() && ! function_exists( 'wp_create_nonce' ) ) {
+			$this->_transform_nonce() ;
+		}
+	}
+
+	/**
+	 * Init ESI related hooks
+	 *
+	 * Load delayed by hook to give the ability to bypass by LITESPEED_DISABLE_ALL const
+	 *
+	 * @since 2.9.7.2
+	 * @access public
+	 */
+	public function esi_init()
+	{
 		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
 
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
@@ -88,13 +106,6 @@ class LiteSpeed_Cache_ESI
 			add_shortcode( 'esi', array( $this, 'shortcode' ) ) ;
 		}
 
-		/**
-		 * Overwrite wp_create_nonce func
-		 * @since  2.9.5
-		 */
-		if ( ! is_admin() && ! function_exists( 'wp_create_nonce' ) ) {
-			$this->_transform_nonce() ;
-		}
 	}
 
 	/**
@@ -109,7 +120,7 @@ class LiteSpeed_Cache_ESI
 		 * If the nonce is in none_actions filter, convert it to ESI
 		 */
 		function wp_create_nonce( $action = -1 ) {
-			if ( LiteSpeed_Cache_ESI::get_instance()->is_nonce_action( $action ) ) {
+			if ( ! defined( 'LITESPEED_DISABLE_ALL' ) && LiteSpeed_Cache_ESI::get_instance()->is_nonce_action( $action ) ) {
 				$params = array(
 					'action'	=> $action,
 				) ;

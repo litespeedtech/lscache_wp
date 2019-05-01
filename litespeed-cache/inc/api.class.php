@@ -649,7 +649,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function hook_init( $hook )
 	{
-		add_action('litespeed_init', $hook) ;
+		add_action( 'litespeed_init', $hook ) ;
 	}
 
 }

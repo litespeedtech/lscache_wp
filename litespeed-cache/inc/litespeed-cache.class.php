@@ -139,6 +139,7 @@ class LiteSpeed_Cache
 		/**
 		 * Added hook before init
 		 * @since  1.6.6
+		 * @deprecated 2.9.7.2 This can't be used by any plugin due to unpredictable plugin loading priority.
 		 */
 		do_action( 'litespeed_before_init' ) ;
 
@@ -189,6 +190,8 @@ class LiteSpeed_Cache
 			LiteSpeed_Cache_Log::debug( '[Core] Bypassed due to debug disable all setting' ) ;
 			return ;
 		}
+
+		do_action( 'litespeed_initing' ) ;
 
 		ob_start( array( $this, 'send_headers_force' ) ) ;
 		add_action( 'shutdown', array( $this, 'send_headers' ), 0 ) ;
