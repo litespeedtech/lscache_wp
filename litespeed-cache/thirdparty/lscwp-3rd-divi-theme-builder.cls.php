@@ -10,11 +10,26 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die() ;
 }
+
+LiteSpeed_Cache_API::hook_init( 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::pre_load' ) ;
 LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder' ) ;
 
 class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 {
-	private static $js_comment_box = false ;
+	// private static $js_comment_box = false ;
+	
+	/**
+	 * Check if is Edit mode in frontend, disable all LSCWP features to avoid breaking page builder
+	 *
+	 * @since 2.9.7.2 #435538 #581740 #977284
+	 */
+	public static function pre_load()
+	{
+		if ( ! defined( 'ET_CORE' ) ) return ;
+		if ( ! empty( $_GET[ 'et_fb' ] ) ) {
+			LiteSpeed_Cache_API::disable_all() ;
+		}
+	}
 
 	public static function detect()
 	{
@@ -25,13 +40,14 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 		 */
 		LiteSpeed_Cache_API::nonce_action( 'et-pb-contact-form-submit' ) ;
 
-		if ( empty( $_GET['et_fb'] ) ) return ;
-
+		/*
 		add_action( 'et_fb_before_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_on' ) ;
 		add_action( 'et_fb_after_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_off' ) ;
 		add_filter( 'litespeed_cache_sub_esi_params-comment-form', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::esi_comment_add_slash' ) ;
+		*/
 	}
 
+	/*
 	public static function js_comment_box_on() {
 		self::$js_comment_box = true ;
 	}
@@ -49,4 +65,5 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 
 		return $params ;
 	}
+	*/
 }
