@@ -25,9 +25,9 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 	 */
 	public static function pre_load()
 	{
-		if ( ! defined( 'ET_CORE' ) ) return ;
+		if ( ! function_exists( 'et_setup_theme' ) ) return ;
 		if ( ! empty( $_GET[ 'et_fb' ] ) ) {
-			LiteSpeed_Cache_API::disable_all() ;
+			LiteSpeed_Cache_API::disable_all( 'divi edit mode' ) ;
 		}
 	}
 

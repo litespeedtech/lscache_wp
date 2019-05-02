@@ -43,8 +43,10 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * @since 2.9.7.2
 	 * @access public
 	 */
-	public static function disable_all()
+	public static function disable_all( $reason )
 	{
+		self::debug( '[API] Disabled_all due to ' . $reason ) ;
+
 		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
 	}
 
