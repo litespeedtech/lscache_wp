@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9.7\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.7.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2019-04-01 19:42:51+00:00\n"
+"POT-Creation-Date: 2019-05-02 16:39:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -860,7 +860,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.7)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.7.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6
 #: admin/tpl/inc/banner_promo.new_version.php:56 inc/gui.class.php:477
@@ -4235,15 +4235,15 @@ msgstr ""
 msgid "Reset successfully."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:326 includes/litespeed-cache.class.php:326
+#: inc/litespeed-cache.class.php:327 includes/litespeed-cache.class.php:327
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:337 includes/litespeed-cache.class.php:337
+#: inc/litespeed-cache.class.php:338 includes/litespeed-cache.class.php:338
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:347 includes/litespeed-cache.class.php:347
+#: inc/litespeed-cache.class.php:348 includes/litespeed-cache.class.php:348
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
