@@ -17,7 +17,7 @@ LiteSpeed_Cache_API::register( 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder' )
 class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 {
 	// private static $js_comment_box = false ;
-	
+
 	/**
 	 * Check if is Edit mode in frontend, disable all LSCWP features to avoid breaking page builder
 	 *
@@ -41,6 +41,8 @@ class LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder
 		LiteSpeed_Cache_API::nonce_action( 'et-pb-contact-form-submit' ) ;
 
 		/*
+		// the comment box fix is for user using theme builder, ESI will load the wrong json string
+		// As we disabled all for edit mode, this is no more needed
 		add_action( 'et_fb_before_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_on' ) ;
 		add_action( 'et_fb_after_comments_template', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::js_comment_box_off' ) ;
 		add_filter( 'litespeed_cache_sub_esi_params-comment-form', 'LiteSpeed_Cache_ThirdParty_Divi_Theme_Builder::esi_comment_add_slash' ) ;
