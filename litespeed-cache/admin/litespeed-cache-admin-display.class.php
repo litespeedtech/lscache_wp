@@ -361,7 +361,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public static function build_notice($color, $str)
 	{
-		return '<div class="' . $color . ' is-dismissible"><p>'. $str . '</p></div>' ;
+		return '<div class="' . $color . ' is-dismissible"><p>' . $str . '</p></div>' ;
 	}
 
 	/**
@@ -767,7 +767,7 @@ class LiteSpeed_Cache_Admin_Display
 			$style = "litespeed-regular-text $style" ;
 		}
 
-		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' value='" . esc_textarea( $val ) ."' $readonly $id_attr $attrs /> " ;
+		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' value='" . esc_textarea( $val ) . "' $readonly $id_attr $attrs /> " ;
 	}
 
 	/**
@@ -911,7 +911,7 @@ class LiteSpeed_Cache_Admin_Display
 
 		$checked = $checked ? ' checked ' : '' ;
 
-		return "<input type='radio' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+		return "<input type='radio' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**

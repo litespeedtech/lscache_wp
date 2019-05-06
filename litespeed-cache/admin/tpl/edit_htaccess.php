@@ -7,7 +7,7 @@ $content = null ;
 try {
 	$content = LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_read();
 } catch( \Exception $e ) {
-	echo '<div class="notice notice-error is-dismissible"><p>'. $e->getMessage() . '</p></div>' ;
+	echo '<div class="notice notice-error is-dismissible"><p>' . $e->getMessage() . '</p></div>' ;
 }
 
 

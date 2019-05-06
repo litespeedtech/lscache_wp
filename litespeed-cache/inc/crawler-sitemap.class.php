@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 			LiteSpeed_Cache_Log::debug("Crawler sitemap log: post_type is '$post_type'") ;
 
-			$query = "SELECT ID, post_date FROM ".$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy ;
+			$query = "SELECT ID, post_date FROM " . $wpdb->prefix . "posts where post_type IN ('" . $post_type . "') AND post_status='publish' " . $orderBy ;
 			$results = $wpdb->get_results($query) ;
 
 			foreach ( $results as $result ){

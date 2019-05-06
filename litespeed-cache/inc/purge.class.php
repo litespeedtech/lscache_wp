@@ -943,11 +943,11 @@ class LiteSpeed_Cache_Purge
 			$next_post = get_next_post() ;
 			if( ! empty($prev_post->ID) ) {
 				$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_POST . $prev_post->ID ;
-				LiteSpeed_Cache_Log::debug('--------purge_tags prev is: '.$prev_post->ID) ;
+				LiteSpeed_Cache_Log::debug('--------purge_tags prev is: ' . $prev_post->ID) ;
 			}
 			if( ! empty($next_post->ID) ) {
 				$purge_tags[] = LiteSpeed_Cache_Tag::TYPE_POST . $next_post->ID ;
-				LiteSpeed_Cache_Log::debug('--------purge_tags next is: '.$next_post->ID) ;
+				LiteSpeed_Cache_Log::debug('--------purge_tags next is: ' . $next_post->ID) ;
 			}
 		}
 

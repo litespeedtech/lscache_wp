@@ -249,7 +249,7 @@ class JSMin
 								if ($this->isEOF($this->a)) {
 									throw new \Exception(
 										"JSMin: Unterminated set in RegExp at byte "
-											. $this->inputIndex .": {$pattern}");
+											. $this->inputIndex . ": {$pattern}");
 								}
 							}
 						}
