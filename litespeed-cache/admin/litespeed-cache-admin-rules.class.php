@@ -19,9 +19,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 	const EDITOR_TEXTAREA_NAME = 'lscwp_ht_editor' ;
 
-	private $frontend_htaccess = null ;
-	private $backend_htaccess = null ;
-	private $theme_htaccess = null ;// Not used yet
+	private $frontend_htaccess ;
+	private $backend_htaccess ;
+	private $theme_htaccess ;// Not used yet
 	private $frontend_htaccess_readable = false ;
 	private $frontend_htaccess_writable = false ;
 	private $backend_htaccess_readable = false ;
