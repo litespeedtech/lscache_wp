@@ -214,7 +214,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function get_role( $uid = null )
 	{
-		if ( defined( 'LITESPEED_WP_ROLE' ) ) {
+		if ( defined( 'LITESPEED_WP_ROLE' && is_null( $uid ) ) ) {
 			return LITESPEED_WP_ROLE ;
 		}
 
