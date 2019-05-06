@@ -104,7 +104,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<?php if ( ! $is_running ) : ?>
 		<p>
 			<b><?php echo __( 'The next complete sitemap crawl will start at', 'litespeed-cache' ) ; ?>:</b>
-			<?php echo date('m/d/Y H:i:s',$meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]) ; ?>
+			<?php echo date('m/d/Y H:i:s', $meta[ 'this_full_beginning_time' ] + LITESPEED_TIME_OFFSET + $meta[ 'last_full_time_cost' ] + $_options[LiteSpeed_Cache_Config::CRWL_CRAWL_INTERVAL]) ; ?>
 			<?php endif ; ?>
 		</p>
 
@@ -196,10 +196,10 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			</tbody>
 		</table>
 		<div class="litespeed-desc">
-			<div><?php echo __('Run frequency is set by the Interval Between Runs setting.','litespeed-cache') ; ?></div>
+			<div><?php echo __('Run frequency is set by the Interval Between Runs setting.', 'litespeed-cache') ; ?></div>
 			<div><?php echo __('Only one crawler can run concurrently.', 'litespeed-cache')
-					. __('If both the cron and manual run start at a similar time, the first one to start will run.','litespeed-cache') ; ?></div>
-			<div><?php echo sprintf(__('Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to create the system cron task.','litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-into-the-system-task-scheduler/" target="_blank" ') ; ?></div>
+					. __('If both the cron and manual run start at a similar time, the first one to start will run.', 'litespeed-cache') ; ?></div>
+			<div><?php echo sprintf(__('Please follow <a %s>Hooking WP-Cron Into the System Task Scheduler</a> to create the system cron task.', 'litespeed-cache'), ' href="https://developer.wordpress.org/plugins/cron/hooking-into-the-system-task-scheduler/" target="_blank" ') ; ?></div>
 		</div>
 <?php endif ; ?>
 

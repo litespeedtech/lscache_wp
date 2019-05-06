@@ -203,7 +203,7 @@ class Litespeed_Crawler
 	 */
 	public function reset_pos()
 	{
-		return Litespeed_File::save( $this->_meta_file . '.reset', time() , true, false, false ) ;
+		return Litespeed_File::save( $this->_meta_file . '.reset', time(), true, false, false ) ;
 	}
 
 	/**
@@ -310,7 +310,7 @@ class Litespeed_Crawler
 				try {
 					$rets = $this->_multi_request($urls, $curlOptions) ;
 				} catch ( Exception $e ) {
-					return sprintf(__('Stopped due to error when crawling urls %1$s : %2$s', 'litespeed-cache'), implode(' ', $urls) , $e->getMessage()) ;
+					return sprintf(__('Stopped due to error when crawling urls %1$s : %2$s', 'litespeed-cache'), implode(' ', $urls), $e->getMessage()) ;
 				}
 
 				// check result headers

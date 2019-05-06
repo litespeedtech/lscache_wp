@@ -131,10 +131,10 @@ class LiteSpeed_Cache_Optimize
 	 */
 	public function emoji_rm()
 	{
-		remove_action( 'wp_head' , 'print_emoji_detection_script', 7 ) ;
-		remove_action( 'admin_print_scripts' , 'print_emoji_detection_script' ) ;
-		remove_filter( 'the_content_feed' , 'wp_staticize_emoji' ) ;
-		remove_filter( 'comment_text_rss' , 'wp_staticize_emoji' ) ;
+		remove_action( 'wp_head', 'print_emoji_detection_script', 7 ) ;
+		remove_action( 'admin_print_scripts', 'print_emoji_detection_script' ) ;
+		remove_filter( 'the_content_feed', 'wp_staticize_emoji' ) ;
+		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' ) ;
 		/**
 		 * Added for better result
 		 * @since  1.6.2.1
@@ -575,17 +575,17 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->html_head ) {
 			// Put header content to be after charset
 			if ( strpos( $this->content, '<meta charset' ) !== false ) {
-				$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head , $this->content, 1 ) ;
+				$this->content = preg_replace( '#<meta charset([^>]*)>#isU', '<meta charset$1>' . $this->html_head, $this->content, 1 ) ;
 			}
 			else {
-				$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head , $this->content, 1 ) ;
+				$this->content = preg_replace( '#<head([^>]*)>#isU', '<head$1>' . $this->html_head, $this->content, 1 ) ;
 			}
 		}
 
 		// Replace html foot part
 		$this->html_foot = apply_filters( 'litespeed_optm_html_foot', $this->html_foot ) ;
 		if ( $this->html_foot ) {
-			$this->content = str_replace( '</body>', $this->html_foot . '</body>' , $this->content ) ;
+			$this->content = str_replace( '</body>', $this->html_foot . '</body>', $this->content ) ;
 		}
 
 		// HTML minify

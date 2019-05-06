@@ -177,7 +177,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 				<?php endif ; ?>
 				<?php if ( ! empty( $last_critical_css_generated[ 'queue' ] ) ) : ?>
 					<div class="litespeed-callout-warning">
-						<h4><?php echo __( 'URL list in queue waiting for cron','litespeed-cache' ) ; ?></h4>
+						<h4><?php echo __( 'URL list in queue waiting for cron', 'litespeed-cache' ) ; ?></h4>
 						<p>
 						<?php foreach ( $last_critical_css_generated[ 'queue' ] as $k => $v ) : ?>
 							<?php if ( ! is_array( $v ) ) continue ; ?>
