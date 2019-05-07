@@ -56,7 +56,7 @@ class LiteSpeed_Cache_CDN
 		 */
 		$this->_cfg_cdn_remote_jquery = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN_REMOTE_JQUERY ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
-			add_action( 'init', array( $this, 'load_jquery_remotely' ) ) ;
+			$this->_load_jquery_remotely() ;
 		}
 
 		$this->_cfg_cdn = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_CDN ) ;
@@ -577,9 +577,10 @@ class LiteSpeed_Cache_CDN
 	 * Remote load jQuery remotely
 	 *
 	 * @since  1.5
-	 * @access public
+	 * @since  2.9.8 Changed to private
+	 * @access private
 	 */
-	public function load_jquery_remotely()
+	private function _load_jquery_remotely()
 	{
 		// default jq version
 		$v = '1.12.4' ;

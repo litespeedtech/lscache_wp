@@ -330,6 +330,32 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
+	 * Handle auto update
+	 *
+	 * @since 2.7.2
+	 * @since 2.9.8 Moved here from ls.cls
+	 * @access public
+	 */
+	public static function auto_update()
+	{
+		if ( ! LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
+			return ;
+		}
+
+		add_filter( 'auto_update_plugin', function( $update, $item ) {
+				if ( $item->slug == 'litespeed-cache' ) {
+					$auto_v = LiteSpeed_Cache_Utility::version_check( 'auto_update_plugin' ) ;
+
+					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
+						return true ;
+					}
+				}
+
+				return $update; // Else, use the normal API response to decide whether to update or not
+			}, 10, 2 ) ;
+	}
+
+	/**
 	 * Upgrade LSCWP
 	 *
 	 * @since 2.9

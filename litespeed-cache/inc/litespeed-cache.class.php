@@ -170,17 +170,11 @@ class LiteSpeed_Cache
 		do_action( 'litespeed_init' ) ;
 
 		// in `after_setup_theme`, before `init` hook
-		$this->_auto_update() ;
-
-		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
-			add_action( 'init', 'LiteSpeed_Cache_Log::disable_heartbeat', 1 ) ;
-		}
+		LiteSpeed_Cache_Activation::auto_update() ;
 
 		if( is_admin() ) {
 			LiteSpeed_Cache_Admin::get_instance() ;
 		}
-
-		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
 
 		// if ( ! defined( 'LITESPEED_ON' ) || ! defined( 'LSCACHE_ADV_CACHE' ) ) {
 		// 	return ;
@@ -205,18 +199,6 @@ class LiteSpeed_Cache
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			/**
-			 * Check lazy lib request in the very beginning
-			 * @since 1.4
-			 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
-			 */
-			LiteSpeed_Cache_Media::get_instance() ;
-
-			// Check minify file request in the very beginning
-			LiteSpeed_Cache_Optimize::get_instance() ;
-		}
-
 		/**
 		 * Register vary filter
 		 * @since  1.6.2
@@ -227,23 +209,55 @@ class LiteSpeed_Cache
 		// 2. Init cacheable status
 		LiteSpeed_Cache_Vary::get_instance() ;
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			// Hook cdn for attachements
-			LiteSpeed_Cache_CDN::get_instance() ;
-		}
-
 		// Init Purge hooks
 		LiteSpeed_Cache_Purge::get_instance() ;
 
 		LiteSpeed_Cache_Tag::get_instance() ;
 
-		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
-			// load cron tasks
-			LiteSpeed_Cache_Task::get_instance() ;
-		}
+		// Load hooks that may be related to users
+		add_action( 'init', array( $this, 'after_user_init' ) ) ;
 
 		// Load 3rd party hooks
 		add_action( 'wp_loaded', array( $this, 'load_thirdparty' ), 2 ) ;
+	}
+
+	/**
+	 * Run hooks after user init
+	 *
+	 * @since 2.9.8
+	 * @access public
+	 */
+	public function after_user_init()
+	{
+		LiteSpeed_Cache_Router::get_instance()->is_crawler_role_simulation() ;
+
+		if ( $result = LiteSpeed_Cache_Config::get_instance()->in_exclude_optimization_roles() ) {
+			LiteSpeed_Cache_Log::debug( '[Core] ⛑️ bypass_optm: hit Role Excludes setting: ' . $result ) ;
+			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
+		}
+
+		// Todo: Move to tool.cls in v3.0
+		if ( ! self::config( LiteSpeed_Cache_Config::OPID_HEARTBEAT ) ) {
+			LiteSpeed_Cache_Log::disable_heartbeat() ;
+		}
+
+		if ( ! defined( 'LITESPEED_BYPASS_OPTM' ) ) {
+			/**
+			 * Check lazy lib request in the very beginning
+			 * @since 1.4
+			 * Note: this should be before optimizer to avoid lazyload lib catched wrongly
+			 */
+			LiteSpeed_Cache_Media::get_instance() ;
+
+			// Check minify file request in the very beginning
+			LiteSpeed_Cache_Optimize::get_instance() ;
+
+			// Hook cdn for attachements
+			LiteSpeed_Cache_CDN::get_instance() ;
+
+			// load cron tasks
+			LiteSpeed_Cache_Task::get_instance() ;
+		}
 
 		// load litespeed actions
 		if ( $action = LiteSpeed_Cache_Router::get_action() ) {
@@ -253,31 +267,6 @@ class LiteSpeed_Cache
 		// Load frontend GUI
 		LiteSpeed_Cache_GUI::get_instance() ;
 
-	}
-
-	/**
-	 * Handle auto update
-	 *
-	 * @since 2.7.2
-	 * @access private
-	 */
-	private function _auto_update()
-	{
-		if ( ! self::config( LiteSpeed_Cache_Config::OPT_AUTO_UPGRADE ) ) {
-			return ;
-		}
-
-		add_filter( 'auto_update_plugin', function( $update, $item ) {
-				if ( $item->slug == 'litespeed-cache' ) {
-					$auto_v = LiteSpeed_Cache_Utility::version_check( 'auto_update_plugin' ) ;
-
-					if ( $auto_v && ! empty( $item->new_version ) && $auto_v === $item->new_version ) {
-						return true ;
-					}
-				}
-
-				return $update; // Else, use the normal API response to decide whether to update or not
-			}, 10, 2 ) ;
 	}
 
 	/**

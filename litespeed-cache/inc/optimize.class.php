@@ -73,7 +73,7 @@ class LiteSpeed_Cache_Optimize
 
 		// To remove emoji from WP
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::OPID_OPTM_EMOJI_RM ) ) {
-			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
+			$this->_emoji_rm() ;
 		}
 
 		if ( $this->cfg_qs_rm ) {
@@ -127,9 +127,10 @@ class LiteSpeed_Cache_Optimize
 	 * Remove emoji from WP
 	 *
 	 * @since  1.4
-	 * @access public
+	 * @since  2.9.8 Changed to private
+	 * @access private
 	 */
-	public function emoji_rm()
+	private function _emoji_rm()
 	{
 		remove_action( 'wp_head' , 'print_emoji_detection_script', 7 ) ;
 		remove_action( 'admin_print_scripts' , 'print_emoji_detection_script' ) ;
