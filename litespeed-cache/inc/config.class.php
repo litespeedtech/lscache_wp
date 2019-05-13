@@ -413,7 +413,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	public function get_item( $k, $return_string = false )
 	{
-		$val = get_option( $k ) ;
+		if ( is_multisite() ) {
+			$val = get_blog_option( BLOG_ID_CURRENT_SITE, $k );
+		} else {
+			$val = get_option( $k );
+		}
+
 		// Separately call default_item() to improve performance
 		if ( ! $val ) {
 			$val = $this->default_item( $k ) ;
