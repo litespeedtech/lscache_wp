@@ -1642,7 +1642,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _calc_bkup()
 	{
 		global $wpdb ;
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
