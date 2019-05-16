@@ -195,7 +195,7 @@ if ( ! $adv_mode ) {
 	foreach ($menu_list as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>" ;
 		require LSCWP_DIR . "admin/tpl/setting/settings_$tab.php" ;
-		echo "</div>" ;
+		echo '</div>' ;
 	}
 
 	foreach ($tp_tabs as $val) {

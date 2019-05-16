@@ -220,7 +220,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 */
 	public function test_file_save()
 	{
-		$content = "Some sample content";
+		$content = 'Some sample content';
 		$cleanup = false;
 		$path = '/root/tests/readme.html';
 		$backup = false;
@@ -243,7 +243,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 */
 	public function test_set_common_rule()
 	{
-		$content = "Some sample content";
+		$content = 'Some sample content';
 		$output = '';
 		$wrapper = '';
 		$cond = '';
@@ -265,7 +265,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 */
 	public function test_get_common_rule()
 	{
-		$wrapper = "Some sample content";
+		$wrapper = 'Some sample content';
 		$cond = '';
 		$match = '';
 		$bool = LiteSpeed_Cache_Admin_Rules::get_instance()->get_common_rule( $wrapper, $cond, $match);
@@ -284,7 +284,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 */
 	public function test_set_rewrite_rule()
 	{
-		$content = "Some sample content";
+		$content = 'Some sample content';
 		$output = '';
 		$wrapper = '';
 		$match = '';
@@ -305,7 +305,7 @@ class LiteSpeed_Cache_Admin_Rules_Test extends WP_UnitTestCase {
 	 */
 	public function test_get_rewrite_rule()
 	{
-		$wrapper = "Some sample content";
+		$wrapper = 'Some sample content';
 		$match = '';
 		$sub = '';
 		$env = '';

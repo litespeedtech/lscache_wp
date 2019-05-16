@@ -61,20 +61,20 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		switch ( $optionOrderBy ) {
 			case 'date_asc':
-				$orderBy = " ORDER BY post_date ASC" ;
+				$orderBy = ' ORDER BY post_date ASC' ;
 				break ;
 
 			case 'alpha_desc':
-				$orderBy = " ORDER BY post_title DESC" ;
+				$orderBy = ' ORDER BY post_title DESC' ;
 				break ;
 
 			case 'alpha_asc':
-				$orderBy = " ORDER BY post_title ASC" ;
+				$orderBy = ' ORDER BY post_title ASC' ;
 				break ;
 
 			case 'date_desc':
 			default:
-				$orderBy = " ORDER BY post_date DESC" ;
+				$orderBy = ' ORDER BY post_date DESC' ;
 				break ;
 		}
 
@@ -102,7 +102,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 			LiteSpeed_Cache_Log::debug("Crawler sitemap log: post_type is '$post_type'") ;
 
-			$query = "SELECT ID, post_date FROM ".$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy ;
+			$query = 'SELECT ID, post_date FROM '.$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy ;
 			$results = $wpdb->get_results($query) ;
 
 			foreach ( $results as $result ){
@@ -115,7 +115,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		//Generate Categories Link if option checked
 		if ( isset($show_cats) && $show_cats == 1 ) {
-			$cats = get_terms("category", array("hide_empty"=>true, "hierarchical"=>false)) ;
+			$cats = get_terms('category', array('hide_empty'=>true, 'hierarchical'=>false)) ;
 			if ( $cats && is_array($cats) && count($cats) > 0 ) {
 				foreach ( $cats as $cat ) {
 					$slug = str_replace($this->home_url, '', get_category_link($cat->term_id)) ;
@@ -128,7 +128,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 
 		//Generate tags Link if option checked
 		if ( isset($show_tags) && $show_tags == 1 ) {
-			$tags = get_terms("post_tag", array("hide_empty"=>true, "hierarchical"=>false)) ;
+			$tags = get_terms('post_tag', array('hide_empty'=>true, 'hierarchical'=>false)) ;
 			if ( $tags && is_array($tags) && count($tags) > 0 ) {
 				foreach ( $tags as $tag ) {
 					$slug = str_replace($this->home_url, '', get_tag_link($tag->term_id)) ;

@@ -248,7 +248,7 @@ class JSMin
 								}
 								if ($this->isEOF($this->a)) {
 									throw new \Exception(
-										"JSMin: Unterminated set in RegExp at byte "
+										'JSMin: Unterminated set in RegExp at byte '
 											. $this->inputIndex .": {$pattern}");
 								}
 							}
@@ -279,7 +279,7 @@ class JSMin
 	 */
 	protected function isRegexpLiteral()
 	{
-		if (false !== strpos("(,=:[!&|?+-~*{;", $this->a)) {
+		if (false !== strpos('(,=:[!&|?+-~*{;', $this->a)) {
 			// we can't divide after these tokens
 			return true;
 		}
@@ -416,7 +416,7 @@ class JSMin
 							// don't prepend a newline if two comments right after one another
 							$this->keptComment = "\n";
 						}
-						$this->keptComment .= "/*!" . substr($comment, 1) . "*/\n";
+						$this->keptComment .= '/*!' . substr($comment, 1) . "*/\n";
 					} else if (preg_match('/^@(?:cc_on|if|elif|else|end)\\b/', $comment)) {
 						// IE conditional
 						$this->keptComment .= "/*{$comment}*/";

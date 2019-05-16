@@ -297,8 +297,8 @@ class LiteSpeed_Cache_Optimizer
 
 		$content = preg_replace( $_from, $_to, $content ) ;
 		if ( $type == 'css' ) {
-			$content = preg_replace( "|: *|", ':', $content ) ;
-			$content = preg_replace( "| */ *|", '/', $content ) ;
+			$content = preg_replace( '|: *|', ':', $content ) ;
+			$content = preg_replace( '| */ *|', '/', $content ) ;
 		}
 		$content = trim( $content ) ;
 		return $content ;

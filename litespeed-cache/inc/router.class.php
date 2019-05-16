@@ -652,7 +652,7 @@ class LiteSpeed_Cache_Router
 			$_ip = ! empty( $apache_headers['True-Client-IP'] ) ? $apache_headers['True-Client-IP'] : false ;
 			if ( ! $_ip ) {
 				$_ip = ! empty( $apache_headers['X-Forwarded-For'] ) ? $apache_headers['X-Forwarded-For'] : false ;
-				$_ip = explode( ", ", $_ip ) ;
+				$_ip = explode( ', ', $_ip ) ;
 				$_ip = array_shift( $_ip ) ;
 			}
 

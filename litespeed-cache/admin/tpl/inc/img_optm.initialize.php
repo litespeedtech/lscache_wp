@@ -22,9 +22,9 @@ if ( ! defined( 'WPINC' ) ) {
 				<?php echo __( 'Notes', 'litespeed-cache' ) ; ?>:
 			</h2>
 
-			<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.communicate_notify.php" ; ?>
+			<?php include_once LSCWP_DIR . 'admin/tpl/inc/img_optm.communicate_notify.php' ; ?>
 
-			<?php include_once LSCWP_DIR . "admin/tpl/inc/api_key.php" ; ?>
+			<?php include_once LSCWP_DIR . 'admin/tpl/inc/api_key.php' ; ?>
 
 			<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:image-optimization#image_optimization_in_litespeed_cache_for_wordpress" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
 
@@ -34,5 +34,5 @@ if ( ! defined( 'WPINC' ) ) {
 	</div>
 
 	<div class="litespeed-width-3-10 litespeed-column-java">
-		<?php include_once LSCWP_DIR . "admin/tpl/inc/img_optm.percentage_summary.php" ; ?>
+		<?php include_once LSCWP_DIR . 'admin/tpl/inc/img_optm.percentage_summary.php' ; ?>
 	</div>

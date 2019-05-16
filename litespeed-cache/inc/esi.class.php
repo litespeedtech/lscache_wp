@@ -390,7 +390,7 @@ class LiteSpeed_Cache_ESI
 		if ( $svar ) {
 			$output .= " as-var='1'" ;
 		}
-		$output .= " />" ;
+		$output .= ' />' ;
 
 		if ( ! $silence ) {
 			$output = "<!-- lscwp $wrapper -->$output<!-- lscwp $wrapper esi end -->" ;
@@ -813,7 +813,7 @@ class LiteSpeed_Cache_ESI
 		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ESI . "esi.$shortcode" ) ;
 
 		// Output original shortcode final content
-		echo do_shortcode( "[$shortcode " . implode( ' ', $atts_ori ) . " ]" ) ;
+		echo do_shortcode( "[$shortcode " . implode( ' ', $atts_ori ) . ' ]' ) ;
 	}
 
 	/**

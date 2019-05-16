@@ -188,7 +188,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Role Excludes', 'litespeed-cache'); ?></th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES . "][", $title, $this->config->in_exclude_optimization_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::EXCLUDE_OPTIMIZATION_ROLES . '][', $title, $this->config->in_exclude_optimization_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from all optimizations.', 'litespeed-cache' ) ; ?>

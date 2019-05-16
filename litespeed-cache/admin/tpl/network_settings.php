@@ -47,7 +47,7 @@ $_hide_in_basic_mode = '' ;
 	foreach ($menuArr as $tab => $val) {
 		echo "<div data-litespeed-layout='$tab'>";
 		require LSCWP_DIR . "admin/tpl/setting/network_settings_$tab.php" ;
-		echo "</div>";
+		echo '</div>';
 	}
 
 	echo "<div class='litespeed-top20'></div>";

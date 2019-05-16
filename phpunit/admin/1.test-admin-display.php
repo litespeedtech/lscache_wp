@@ -586,8 +586,8 @@ class LiteSpeed_Cache_Admin_Display_Test extends WP_UnitTestCase {
 	 */
 	public function test_input_group_start()
 	{
-		$title = "test-title";
-		$description = "test-desc";
+		$title = 'test-title';
+		$description = 'test-desc';
 		$parameters = array($title, $description);
         $msg = self::invokeMethod('LiteSpeed_Cache_Admin_Display','input_group_start', $parameters);
 		$bool = self::isString($msg);

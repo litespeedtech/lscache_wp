@@ -131,7 +131,7 @@ class Utils
 
         // Values outside the sRGB color space should be clipped (0-255)
         for ($i = 0, $l = count($rgbColors); $i < $l; $i++) {
-            $hexColors[$i] = sprintf("%02x", self::clampNumberSrgb(self::rgbPercentageToRgbInteger($rgbColors[$i])));
+            $hexColors[$i] = sprintf('%02x', self::clampNumberSrgb(self::rgbPercentageToRgbInteger($rgbColors[$i])));
         }
 
         return $hexColors;

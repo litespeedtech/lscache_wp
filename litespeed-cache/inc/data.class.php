@@ -192,7 +192,7 @@ class LiteSpeed_Cache_Data
 
 					// Delete from postmeta
 					if ( count( $mids_to_del ) > 100 || $k == $max_k ) {
-						$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . " ) " ;
+						$q = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', array_fill( 0, count( $mids_to_del ), '%s' ) ) . ' ) ' ;
 						$wpdb->query( $wpdb->prepare( $q, $mids_to_del ) ) ;
 
 						$mids_to_del = array() ;

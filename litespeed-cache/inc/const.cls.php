@@ -342,7 +342,7 @@ class LiteSpeed_Cache_Const
 						"div.data-thumb\n" .
 						"img.data-src\n" .
 						"div.data-large_image\n" .
-						"img.retina_logo_url" ;
+						'img.retina_logo_url' ;
 
 			case self::ITEM_LOG_IGNORE_FILTERS :
 				return "gettext\ngettext_with_context\nget_the_terms\nget_term" ;

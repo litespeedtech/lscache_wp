@@ -137,7 +137,7 @@ class LiteSpeed_Cache_CLI_IAPI
 
 		WP_CLI\Utils\format_items( 'table', $list, array( 'key', 'value' ) ) ;
 
-		WP_CLI::line( WP_CLI::colorize( "%CImages in database summary:%n" ) ) ;
+		WP_CLI::line( WP_CLI::colorize( '%CImages in database summary:%n' ) ) ;
 		WP_CLI\Utils\format_items( 'table', $list2, array( 'key', 'value' ) ) ;
 	}
 
@@ -174,7 +174,7 @@ class LiteSpeed_Cache_CLI_IAPI
 		$msg = $this->_img_optm_instance->destroy_unfinished() ;
 		WP_CLI::success( $msg ) ;
 
-		WP_CLI::line( WP_CLI::colorize( "%CLatest status:%n" ) ) ;
+		WP_CLI::line( WP_CLI::colorize( '%CLatest status:%n' ) ) ;
 
 		$this->status() ;
 	}

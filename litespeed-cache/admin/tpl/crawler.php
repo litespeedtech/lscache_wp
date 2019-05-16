@@ -77,7 +77,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<span class="litespeed-switch-drag litespeed-cron-onoff-btn">
 				<input type="checkbox" name="litespeed_crawler_cron_enable" id="litespeed_crawler_cron_enable" value="1"
 					data-url="<?php echo LiteSpeed_Cache_Utility::build_url( LiteSpeed_Cache::ACTION_CRAWLER_CRON_ENABLE, false, true ) ; ?>"
-					<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo "checked"; ?>
+					<?php if( $_options[LiteSpeed_Cache_Config::CRWL_CRON_ACTIVE] && LiteSpeed_Cache_Router::can_crawl() ) echo 'checked'; ?>
 					<?php echo $disabled ; ?>
 				/>
 				<label class="litespeed-switch-drag-label" for="litespeed_crawler_cron_enable">
@@ -150,10 +150,10 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 		</p>
 		<?php endif ; ?>
 
-		<?php echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . "</a>" ;
+		<?php echo " <a href='" . LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_CRAWLER_RESET_POS) . "' class='litespeed-btn-warning litespeed-btn-xs'>" . __('Reset position', 'litespeed-cache') . '</a>' ;
 
 		$href = LiteSpeed_Cache_Router::can_crawl() ? LiteSpeed_Cache_Utility::build_url(LiteSpeed_Cache::ACTION_DO_CRAWL) : 'javascript:;' ;
-		echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . "</a>" ;
+		echo " <a href='$href' id='litespeed_manual_trigger' target='litespeedHiddenIframe' class='litespeed-btn-success litespeed-btn-xs' $disabled>" . __('Manually run', 'litespeed-cache') . '</a>' ;
 		?>
 
 
@@ -184,9 +184,9 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 					<td>
 					<?php
 						if ( $i == $meta[ 'curr_crawler' ] ) {
-							echo "Position: " . ( $meta[ 'last_pos' ] + 1 ) ;
+							echo 'Position: ' . ( $meta[ 'last_pos' ] + 1 ) ;
 							if ( $is_running ) {
-								echo " <span class='litespeed-label-success'>" . __( 'running', 'litespeed-cache' ) . "</span>" ;
+								echo " <span class='litespeed-label-success'>" . __( 'running', 'litespeed-cache' ) . '</span>' ;
 							}
 						}
 					?>
