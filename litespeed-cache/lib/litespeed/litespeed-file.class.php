@@ -160,7 +160,7 @@ class Litespeed_File
 			}
 			restore_error_handler() ;
 		}
-		elseif ( ! is_writeable( $filename ) ) {
+		elseif ( ! is_writable( $filename ) ) {
 			return $silence ? false : sprintf( __( 'File %s is not writable.', 'litespeed-cache' ), $filename ) ;
 		}
 
@@ -353,7 +353,7 @@ class Litespeed_File
 			}
 			restore_error_handler() ;
 		}
-		elseif ( ! is_writeable($filename) ) {
+		elseif ( ! is_writable($filename) ) {
 			return false ;
 		}
 
