@@ -472,7 +472,7 @@ class LiteSpeed_Cache_Const
 			self::OPID_PUBLIC_TTL => 604800,
 			self::OPID_PRIVATE_TTL => 1800,
 			self::OPID_FRONT_PAGE_TTL => 604800,
-			self::OPID_FEED_TTL => 0,
+			self::OPID_FEED_TTL => 1,
 			self::OPID_403_TTL => 3600,
 			self::OPID_404_TTL => 3600,
 			self::OPID_500_TTL => 3600,
