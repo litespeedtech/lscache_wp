@@ -235,6 +235,16 @@ class LiteSpeed_Cache_Router
 		if ( ! $role ) {
 			// Guest user
 			LiteSpeed_Cache_Log::debug( '[Router] role: guest' ) ;
+
+			/**
+			 * Fix double login issue
+			 * The previous user init refactoring didn't fix this bcos this is in login process and the user role could change
+			 * @see  https://github.com/litespeedtech/lscache_wp/commit/69e7bc71d0de5cd58961bae953380b581abdc088
+			 * @since  2.9.8 Won't assign const if in login process
+			 */
+			if ( substr_compare( wp_login_url(), $GLOBALS[ 'pagenow' ], -strlen( $GLOBALS[ 'pagenow' ] ) ) === 0 ) {
+				return $role ;
+			}
 		}
 
 		define( 'LITESPEED_WP_ROLE', $role ) ;
