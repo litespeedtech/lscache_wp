@@ -1642,7 +1642,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _calc_bkup()
 	{
 		global $wpdb ;
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1695,7 +1695,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _rm_bkup()
 	{
 		global $wpdb ;
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1885,7 +1885,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _batch_switch( $type )
 	{
 		global $wpdb ;
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1939,7 +1939,7 @@ class LiteSpeed_Cache_Img_Optm
 		$switch_type = substr( $type, 0, 4 ) ;
 
 		global $wpdb ;
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s AND post_id = %d" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s AND post_id = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $pid ) ) ) ;
 
 		$msg = 'Unknown Msg' ;
@@ -2012,7 +2012,7 @@ class LiteSpeed_Cache_Img_Optm
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id ) ;
 
 		global $wpdb ;
-		$q = "SELECT * FROM $this->_table_img_optm WHERE post_id = %d" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE post_id = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $post_id ) ) ) ;
 
 		foreach ( $list as $v ) {
