@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Media
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function info( $short_file_path )
+	public function info( $short_file_path, $post_id )
 	{
 		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
 
@@ -161,7 +161,7 @@ class LiteSpeed_Cache_Media
 		 * @since 2.9.8
 		 * @return array( 'url', 'md5', 'size' )
 		 */
-		$info = apply_filters( 'litespeed_media_info', array(), $short_file_path ) ;
+		$info = apply_filters( 'litespeed_media_info', array(), $short_file_path, $post_id ) ;
 		if ( ! empty( $info[ 'url' ] ) && ! empty( $info[ 'md5' ] ) && ! empty( $info[ 'size' ] ) ) {
 			return $info ;
 		}
@@ -175,7 +175,7 @@ class LiteSpeed_Cache_Media
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function del( $short_file_path )
+	public function del( $short_file_path, $post_id )
 	{
 		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
 
@@ -184,7 +184,7 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] deleted ' . $real_file ) ;
 		}
 
-		do_action( 'litespeed_media_del', $short_file_path ) ;
+		do_action( 'litespeed_media_del', $short_file_path, $post_id ) ;
 	}
 
 	/**
@@ -193,7 +193,7 @@ class LiteSpeed_Cache_Media
 	 * @since 2.9.8
 	 * @access public
 	 */
-	public function rename( $short_file_path, $short_file_path_new )
+	public function rename( $short_file_path, $short_file_path_new, $post_id )
 	{
 		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
 		$real_file_new = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path_new ;
@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Media
 			LiteSpeed_Cache_Log::debug( '[Img_Optm] renamed ' . $real_file . ' to ' . $real_file_new ) ;
 		}
 
-		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new ) ;
+		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new, $post_id ) ;
 	}
 
 	/**
@@ -247,11 +247,11 @@ class LiteSpeed_Cache_Media
 			$desc = false ;
 			$cls = 'litespeed-icon-media-webp' ;
 			$cls_webp = '' ;
-			if ( $this->info( $local_file . '.webp' ) ) {
+			if ( $this->info( $local_file . '.webp', $post_id ) ) {
 				$desc = __( 'Click to Disable WebP', 'litespeed-cache' ) ;
 				$cls_webp = 'litespeed-txt-webp' ;
 			}
-			elseif ( $this->info( $local_file . '.optm.webp' ) ) {
+			elseif ( $this->info( $local_file . '.optm.webp', $post_id ) ) {
 				$cls .= '-disabled' ;
 				$desc = __( 'Click to Enable WebP', 'litespeed-cache' ) ;
 				$cls_webp = 'litespeed-txt-disabled' ;
@@ -284,11 +284,11 @@ class LiteSpeed_Cache_Media
 			$desc = false ;
 			$cls = 'litespeed-icon-media-optm' ;
 			$cls_ori = '' ;
-			if ( $this->info( $bk_file ) ) {
+			if ( $this->info( $bk_file, $post_id ) ) {
 				$desc = __( 'Click to Restore Original File', 'litespeed-cache' ) ;
 				$cls_ori = 'litespeed-txt-ori' ;
 			}
-			elseif ( $this->info( $bk_optm_file ) ) {
+			elseif ( $this->info( $bk_optm_file, $post_id ) ) {
 				$cls .= '-disabled' ;
 				$desc = __( 'Click to Switch To Optimized File', 'litespeed-cache' ) ;
 				$cls_ori = 'litespeed-txt-disabled' ;

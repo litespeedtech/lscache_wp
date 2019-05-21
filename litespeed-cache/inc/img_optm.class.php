@@ -597,7 +597,7 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		// check file exists or not
-		$_img_info = $this->__media->info( $short_file_path ) ;
+		$_img_info = $this->__media->info( $short_file_path, $this->tmp_pid ) ;
 
 		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png' ) ) ) {
 			$this->_missed_img_in_queue[] = array(
@@ -1394,12 +1394,12 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		// Start deleting files
-		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 		foreach ( $list as $v ) {
 			// del webp
-			$this->__media->info( $v->src . '.webp' ) && $this->__media->del( $v->src . '.webp' ) ;
-			$this->__media->info( $v->src . '.optm.webp' ) && $this->__media->del( $v->src . '.optm.webp' ) ;
+			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id ) ;
+			$this->__media->info( $v->src . '.optm.webp', $v->post_id ) && $this->__media->del( $v->src . '.optm.webp', $v->post_id ) ;
 
 			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
 			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
@@ -1407,11 +1407,11 @@ class LiteSpeed_Cache_Img_Optm
 			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
 			// del optimized ori
-			if ( $this->__media->info( $bk_file ) ) {
-				$this->__media->del( $v->src ) ;
-				$this->__media->rename( $bk_file, $v->src ) ;
+			if ( $this->__media->info( $bk_file, $v->post_id ) ) {
+				$this->__media->del( $v->src, $v->post_id ) ;
+				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
 			}
-			$this->__media->info( $bk_optm_file ) && $this->__media->del( $bk_optm_file ) ;
+			$this->__media->info( $bk_optm_file, $v->post_id ) && $this->__media->del( $bk_optm_file, $v->post_id ) ;
 		}
 
 		// Delete optm info
@@ -1649,7 +1649,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _calc_bkup()
 	{
 		global $wpdb ;
-		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1659,7 +1659,7 @@ class LiteSpeed_Cache_Img_Optm
 			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 
-			$img_info = $this->__media->info( $bk_file ) ;
+			$img_info = $this->__media->info( $bk_file, $v->post_id ) ;
 			if ( ! $img_info ) {
 				continue ;
 			}
@@ -1700,7 +1700,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _rm_bkup()
 	{
 		global $wpdb ;
-		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1711,7 +1711,7 @@ class LiteSpeed_Cache_Img_Optm
 			$bk_file = $local_filename . '.bk.' . $extension ;
 
 			// Del ori file
-			$img_info = $this->__media->info( $bk_file ) ;
+			$img_info = $this->__media->info( $bk_file, $v->post_id ) ;
 			if ( ! $img_info ) {
 				continue ;
 			}
@@ -1719,7 +1719,7 @@ class LiteSpeed_Cache_Img_Optm
 			$i ++ ;
 			$total_size += $img_info[ 'size' ] ;
 
-			$this->__media->del( $bk_file ) ;
+			$this->__media->del( $bk_file, $v->post_id ) ;
 		}
 
 		$data = array(
@@ -1889,7 +1889,7 @@ class LiteSpeed_Cache_Img_Optm
 	private function _batch_switch( $type )
 	{
 		global $wpdb ;
-		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 
 		$i = 0 ;
@@ -1901,25 +1901,25 @@ class LiteSpeed_Cache_Img_Optm
 
 			// switch to ori
 			if ( $type === self::TYPE_IMG_BATCH_SWITCH_ORI ) {
-				if ( ! $this->__media->info( $bk_file ) ) {
+				if ( ! $this->__media->info( $bk_file, $v->post_id ) ) {
 					continue ;
 				}
 
 				$i ++ ;
 
-				$this->__media->rename( $v->src, $bk_optm_file ) ;
-				$this->__media->rename( $bk_file, $v->src ) ;
+				$this->__media->rename( $v->src, $bk_optm_file, $v->post_id ) ;
+				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
 			}
 			// switch to optm
 			elseif ( $type === self::TYPE_IMG_BATCH_SWITCH_OPTM ) {
-				if ( ! $this->__media->info( $bk_optm_file ) ) {
+				if ( ! $this->__media->info( $bk_optm_file, $v->post_id ) ) {
 					continue ;
 				}
 
 				$i ++ ;
 
-				$this->__media->rename( $v->src, $bk_file ) ;
-				$this->__media->rename( $bk_optm_file, $v->src ) ;
+				$this->__media->rename( $v->src, $bk_file, $v->post_id ) ;
+				$this->__media->rename( $bk_optm_file, $v->src, $v->post_id ) ;
 			}
 		}
 
@@ -1941,7 +1941,7 @@ class LiteSpeed_Cache_Img_Optm
 		$switch_type = substr( $type, 0, 4 ) ;
 
 		global $wpdb ;
-		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s AND post_id = %d" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s AND post_id = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( self::DB_IMG_OPTIMIZE_STATUS_PULLED, $pid ) ) ) ;
 
 		$msg = 'Unknown Msg' ;
@@ -1949,14 +1949,14 @@ class LiteSpeed_Cache_Img_Optm
 		foreach ( $list as $v ) {
 			// to switch webp file
 			if ( $switch_type === 'webp' ) {
-				if ( $this->__media->info( $v->src . '.webp' ) ) {
-					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp' ) ;
+				if ( $this->__media->info( $v->src . '.webp', $v->post_id ) ) {
+					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp', $v->post_id ) ;
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Disabled WebP: ' . $v->src ) ;
 
 					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
 				}
-				elseif ( $this->__media->info( $v->src . '.optm.webp' ) ) {
-					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp' ) ;
+				elseif ( $this->__media->info( $v->src . '.optm.webp', $v->post_id ) ) {
+					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp', $v->post_id ) ;
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Enable WebP: ' . $v->src ) ;
 
 					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
@@ -1970,16 +1970,16 @@ class LiteSpeed_Cache_Img_Optm
 				$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
 				// revert ori back
-				if ( $this->__media->info( $bk_file ) ) {
-					$this->__media->rename( $v->src, $bk_optm_file ) ;
-					$this->__media->rename( $bk_file, $v->src ) ;
+				if ( $this->__media->info( $bk_file, $v->post_id ) ) {
+					$this->__media->rename( $v->src, $bk_optm_file, $v->post_id ) ;
+					$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Restore original img: ' . $bk_file ) ;
 
 					$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
 				}
-				elseif ( $this->__media->info( $bk_optm_file ) ) {
-					$this->__media->rename( $v->src, $bk_file ) ;
-					$this->__media->rename( $bk_optm_file, $v->src ) ;
+				elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
+					$this->__media->rename( $v->src, $bk_file, $v->post_id ) ;
+					$this->__media->rename( $bk_optm_file, $v->src, $v->post_id ) ;
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Switch to optm img: ' . $v->src ) ;
 
 					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
@@ -2012,26 +2012,26 @@ class LiteSpeed_Cache_Img_Optm
 		LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row [pid] ' . $post_id ) ;
 
 		global $wpdb ;
-		$q = "SELECT src FROM $this->_table_img_optm WHERE post_id = %d" ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE post_id = %d" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $post_id ) ) ) ;
 
 		foreach ( $list as $v ) {
-			$this->__media->info( $v->src . '.webp' ) && $this->__media->del( $v->src . '.webp' ) ;
-			$this->__media->info( $v->src . '.optm.webp' ) && $this->__media->del( $v->src . '.optm.webp' ) ;
+			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id ) ;
+			$this->__media->info( $v->src . '.optm.webp', $v->post_id ) && $this->__media->del( $v->src . '.optm.webp', $v->post_id ) ;
 
 			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
 			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
-			if ( $this->__media->info( $bk_file ) ) {
+			if ( $this->__media->info( $bk_file, $v->post_id ) ) {
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file ) ;
-				$this->__media->del( $v->src ) ;
-				$this->__media->rename( $bk_file, $v->src ) ;
+				$this->__media->del( $v->src, $v->post_id ) ;
+				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
 			}
-			elseif ( $this->__media->info( $bk_optm_file ) ) {
+			elseif ( $this->__media->info( $bk_optm_file, $v->post_id ) ) {
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file ) ;
-				$this->__media->del( $bk_optm_file ) ;
+				$this->__media->del( $bk_optm_file, $v->post_id ) ;
 			}
 		}
 
