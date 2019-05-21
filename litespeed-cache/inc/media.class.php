@@ -137,6 +137,76 @@ class LiteSpeed_Cache_Media
 	}
 
 	/**
+	 * Return media file info if exists
+	 *
+	 * This is for remote attachment plugins
+	 *
+	 * @since 2.9.8
+	 * @access public
+	 */
+	public function info( $short_file_path )
+	{
+		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+
+		if ( file_exists( $real_file ) ) {
+			return array(
+				'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $short_file_path,
+				'md5'	=> md5_file( $real_file ),
+				'size'	=> filesize( $real_file ),
+			) ;
+		}
+
+		/**
+		 * WP Stateless compatibility #143 https://github.com/litespeedtech/lscache_wp/issues/143
+		 * @since 2.9.8
+		 * @return array( 'url', 'md5', 'size' )
+		 */
+		$info = apply_filters( 'litespeed_media_info', array(), $short_file_path ) ;
+		if ( ! empty( $info[ 'url' ] ) && ! empty( $info[ 'md5' ] ) && ! empty( $info[ 'size' ] ) ) {
+			return $info ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * Delete media file
+	 *
+	 * @since 2.9.8
+	 * @access public
+	 */
+	public function del( $short_file_path )
+	{
+		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+
+		if ( file_exists( $real_file ) ) {
+			unlink( $real_file ) ;
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] deleted ' . $real_file ) ;
+		}
+
+		do_action( 'litespeed_media_del', $short_file_path ) ;
+	}
+
+	/**
+	 * Rename media file
+	 *
+	 * @since 2.9.8
+	 * @access public
+	 */
+	public function rename( $short_file_path, $short_file_path_new )
+	{
+		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path ;
+		$real_file_new = $this->wp_upload_dir[ 'basedir' ] . '/' . $short_file_path_new ;
+
+		if ( file_exists( $real_file ) ) {
+			rename( $real_file, $real_file_new ) ;
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] renamed ' . $real_file . ' to ' . $real_file_new ) ;
+		}
+
+		do_action( 'litespeed_media_rename', $short_file_path, $short_file_path_new ) ;
+	}
+
+	/**
 	 * Media Admin Menu -> Image Optimization Column Title
 	 *
 	 * @since 1.6.3
@@ -162,6 +232,7 @@ class LiteSpeed_Cache_Media
 		}
 
 		$local_file = get_attached_file( $post_id ) ;
+		$local_file = substr( $local_file, strlen( $this->wp_upload_dir[ 'basedir' ] ) ) ;
 
 		$size_meta = get_post_meta( $post_id, LiteSpeed_Cache_Img_Optm::DB_IMG_OPTIMIZE_SIZE, true ) ;
 
@@ -176,11 +247,11 @@ class LiteSpeed_Cache_Media
 			$desc = false ;
 			$cls = 'litespeed-icon-media-webp' ;
 			$cls_webp = '' ;
-			if ( file_exists( $local_file . '.webp' ) ) {
+			if ( $this->info( $local_file . '.webp' ) ) {
 				$desc = __( 'Click to Disable WebP', 'litespeed-cache' ) ;
 				$cls_webp = 'litespeed-txt-webp' ;
 			}
-			elseif ( file_exists( $local_file . '.optm.webp' ) ) {
+			elseif ( $this->info( $local_file . '.optm.webp' ) ) {
 				$cls .= '-disabled' ;
 				$desc = __( 'Click to Enable WebP', 'litespeed-cache' ) ;
 				$cls_webp = 'litespeed-txt-disabled' ;
@@ -213,11 +284,11 @@ class LiteSpeed_Cache_Media
 			$desc = false ;
 			$cls = 'litespeed-icon-media-optm' ;
 			$cls_ori = '' ;
-			if ( file_exists( $bk_file ) ) {
+			if ( $this->info( $bk_file ) ) {
 				$desc = __( 'Click to Restore Original File', 'litespeed-cache' ) ;
 				$cls_ori = 'litespeed-txt-ori' ;
 			}
-			elseif ( file_exists( $bk_optm_file ) ) {
+			elseif ( $this->info( $bk_optm_file ) ) {
 				$cls .= '-disabled' ;
 				$desc = __( 'Click to Switch To Optimized File', 'litespeed-cache' ) ;
 				$cls_ori = 'litespeed-txt-disabled' ;

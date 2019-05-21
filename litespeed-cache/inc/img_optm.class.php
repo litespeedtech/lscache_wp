@@ -62,6 +62,8 @@ class LiteSpeed_Cache_Img_Optm
 	private $_table_img_optm ;
 	private $_cron_ran = false ;
 
+	private $__media ;
+
 	/**
 	 * Init
 	 *
@@ -73,6 +75,7 @@ class LiteSpeed_Cache_Img_Optm
 		LiteSpeed_Cache_Log::debug2( 'ImgOptm init' ) ;
 
 		$this->wp_upload_dir = wp_upload_dir() ;
+		$this->__media = LiteSpeed_Cache_Media::get_instance() ;
 		$this->_table_img_optm = LiteSpeed_Cache_Data::get_tb_img_optm() ;
 	}
 
@@ -587,70 +590,76 @@ class LiteSpeed_Cache_Img_Optm
 			return ;
 		}
 
+		$short_file_path = $meta_value[ 'file' ] ;
+
 		if ( ! $ori_file ) {
-			$meta_value[ 'file' ] = $this->tmp_path . $meta_value[ 'file' ] ;
+			$short_file_path = $this->tmp_path . $short_file_path ;
 		}
 
 		// check file exists or not
-		$real_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $meta_value[ 'file' ] ;
-		$ext = pathinfo( $real_file, PATHINFO_EXTENSION ) ;
-		if ( ! file_exists( $real_file ) || ! in_array( $ext, array( 'jpg', 'jpeg', 'png' ) ) ) {
+		$_img_info = $this->__media->info( $short_file_path ) ;
+
+		if ( ! $_img_info || ! in_array( pathinfo( $short_file_path, PATHINFO_EXTENSION ), array( 'jpg', 'jpeg', 'png' ) ) ) {
 			$this->_missed_img_in_queue[] = array(
 				'pid'	=> $this->tmp_pid,
-				'src'	=> $meta_value[ 'file' ],
-				'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
+				'src'	=> $short_file_path,
+				'srcpath_md5'	=> md5( $short_file_path ),
 			) ;
-			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $real_file ) ;
+			LiteSpeed_Cache_Log::debug2( '[Img_Optm] bypass image due to file not exist: pid ' . $this->tmp_pid . ' ' . $short_file_path ) ;
 			return ;
 		}
 
 		LiteSpeed_Cache_Log::debug2( '[Img_Optm] adding image: pid ' . $this->tmp_pid ) ;
 
+		/**
+		 * Filter `litespeed_img_optm_options_per_image`
+		 * @since 2.4.2
+		 */
+		/**
+		 * To use the filter `litespeed_img_optm_options_per_image` to manipulate `optm_options`, do below:
+		 *
+		 * 		add_filter( 'litespeed_img_optm_options_per_image', function( $optm_options, $file ){
+		 * 			// To add optimize original image
+		 * 			if ( Your conditions ) {
+		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_ORI ;
+		 * 			}
+		 *
+		 * 			// To add optimize webp image
+		 * 			if ( Your conditions ) {
+		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_WEBP ;
+		 * 			}
+		 *
+		 * 			// To turn on lossless optimize for this image e.g. if filename contains `magzine`
+		 * 			if ( strpos( $file, 'magzine' ) !== false ) {
+		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_LOSSLESS ;
+		 * 			}
+		 *
+		 * 			// To set keep exif info for this image
+		 * 			if ( Your conditions ) {
+		 * 				$optm_options |= LiteSpeed_Cache_API::IMG_OPTM_BM_EXIF ;
+		 * 			}
+		 *
+		 *			return $optm_options ;
+		 *   	} ) ;
+		 *
+		 */
+		$optm_options = apply_filters( 'litespeed_img_optm_options_per_image', 0, $short_file_path ) ;
+
 		$img_info = array(
-			'url'	=> $this->wp_upload_dir[ 'baseurl' ] . '/' . $meta_value[ 'file' ],
-			'src'	=> $meta_value[ 'file' ], // not needed in LiteSpeed sapi, just leave for local storage after post
+			'url'	=> $_img_info[ 'url' ],
+			'src'	=> $short_file_path, // not needed in LiteSpeed IAPI, just leave for local storage after post
 			'width'	=> $meta_value[ 'width' ],
 			'height'	=> $meta_value[ 'height' ],
 			'mime_type'	=> ! empty( $meta_value[ 'mime-type' ] ) ? $meta_value[ 'mime-type' ] : '' ,
-			'srcpath_md5'	=> md5( $meta_value[ 'file' ] ),
-			'src_filesize'	=> filesize( $real_file ),
-			/**
-			 * To use the filter `litespeed_img_optm_options_per_image`, do below:
-			 *
-			 * 		add_filter( 'litespeed_img_optm_options_per_image', function( $opt_val, $file ){
-			 * 			// To add optimize original image
-			 * 			if ( Your conditions ) {
-			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_ORI ;
-			 * 			}
-			 *
-			 * 			// To add optimize webp image
-			 * 			if ( Your conditions ) {
-			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_WEBP ;
-			 * 			}
-			 *
-			 * 			// To turn on lossless optimize for this image e.g. if filename contains `magzine`
-			 * 			if ( strpos( $file, 'magzine' ) !== false ) {
-			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_LOSSLESS ;
-			 * 			}
-			 *
-			 * 			// To set keep exif info for this image
-			 * 			if ( Your conditions ) {
-			 * 				$opt_val |= LiteSpeed_Cache_API::IMG_OPTM_BM_EXIF ;
-			 * 			}
-			 *
-			 *			return $opt_val ;
-			 *   	} ) ;
-			 *
-			 * @since 2.4.2
-			 */
-			'optm_options'	=> apply_filters( 'litespeed_img_optm_options_per_image', 0, $meta_value[ 'file' ] ),
+			'srcpath_md5'	=> md5( $short_file_path ),
+			'src_filesize'	=> $_img_info[ 'size' ], // Only used for local storage and calculation
+			'optm_options'	=> $optm_options,
 		) ;
-		$md5 = md5_file( $real_file ) ;
 
 		if ( empty( $this->_img_in_queue[ $this->tmp_pid ] ) ) {
 			$this->_img_in_queue[ $this->tmp_pid ] = array() ;
 		}
-		$this->_img_in_queue[ $this->tmp_pid ][ $md5 ] = $img_info ;
+		$this->_img_in_queue[ $this->tmp_pid ][ $_img_info[ 'md5' ] ] = $img_info ;
 		$this->_img_total ++ ;
 
 		// Build existing data checking array
@@ -1385,26 +1394,24 @@ class LiteSpeed_Cache_Img_Optm
 		}
 
 		// Start deleting files
-		$q = "SELECT * FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$q = "SELECT src FROM $this->_table_img_optm WHERE optm_status = %s" ;
 		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
 		foreach ( $list as $v ) {
-			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
-
 			// del webp
-			file_exists( $local_file . '.webp' ) && unlink( $local_file . '.webp' ) ;
-			file_exists( $local_file . '.optm.webp' ) && unlink( $local_file . '.optm.webp' ) ;
+			$this->__media->info( $v->src . '.webp' ) && $this->__media->del( $v->src . '.webp' ) ;
+			$this->__media->info( $v->src . '.optm.webp' ) && $this->__media->del( $v->src . '.optm.webp' ) ;
 
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
 			// del optimized ori
-			if ( file_exists( $bk_file ) ) {
-				unlink( $local_file ) ;
-				rename( $bk_file, $local_file ) ;
+			if ( $this->__media->info( $bk_file ) ) {
+				$this->__media->del( $v->src ) ;
+				$this->__media->rename( $bk_file, $v->src ) ;
 			}
-			file_exists( $bk_optm_file ) && unlink( $bk_optm_file ) ;
+			$this->__media->info( $bk_optm_file ) && $this->__media->del( $bk_optm_file ) ;
 		}
 
 		// Delete optm info
@@ -1648,19 +1655,17 @@ class LiteSpeed_Cache_Img_Optm
 		$i = 0 ;
 		$total_size = 0 ;
 		foreach ( $list as $v ) {
-			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
-
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 
-			// switch to ori
-			if ( ! file_exists( $bk_file ) ) {
+			$img_info = $this->__media->info( $bk_file ) ;
+			if ( ! $img_info ) {
 				continue ;
 			}
 
 			$i ++ ;
-			$total_size += filesize( $bk_file ) ;
+			$total_size += $img_info[ 'size' ] ;
 
 		}
 
@@ -1701,21 +1706,20 @@ class LiteSpeed_Cache_Img_Optm
 		$i = 0 ;
 		$total_size = 0 ;
 		foreach ( $list as $v ) {
-			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
-
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 
-			// switch to ori
-			if ( ! file_exists( $bk_file ) ) {
+			// Del ori file
+			$img_info = $this->__media->info( $bk_file ) ;
+			if ( ! $img_info ) {
 				continue ;
 			}
 
 			$i ++ ;
-			$total_size += filesize( $bk_file ) ;
+			$total_size += $img_info[ 'size' ] ;
 
-			unlink( $bk_file ) ;
+			$this->__media->del( $bk_file ) ;
 		}
 
 		$data = array(
@@ -1890,34 +1894,32 @@ class LiteSpeed_Cache_Img_Optm
 
 		$i = 0 ;
 		foreach ( $list as $v ) {
-			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
-
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
 			// switch to ori
 			if ( $type === self::TYPE_IMG_BATCH_SWITCH_ORI ) {
-				if ( ! file_exists( $bk_file ) ) {
+				if ( ! $this->__media->info( $bk_file ) ) {
 					continue ;
 				}
 
 				$i ++ ;
 
-				rename( $local_file, $bk_optm_file ) ;
-				rename( $bk_file, $local_file ) ;
+				$this->__media->rename( $v->src, $bk_optm_file ) ;
+				$this->__media->rename( $bk_file, $v->src ) ;
 			}
 			// switch to optm
 			elseif ( $type === self::TYPE_IMG_BATCH_SWITCH_OPTM ) {
-				if ( ! file_exists( $bk_optm_file ) ) {
+				if ( ! $this->__media->info( $bk_optm_file ) ) {
 					continue ;
 				}
 
 				$i ++ ;
 
-				rename( $local_file, $bk_file ) ;
-				rename( $bk_optm_file, $local_file ) ;
+				$this->__media->rename( $v->src, $bk_file ) ;
+				$this->__media->rename( $bk_optm_file, $v->src ) ;
 			}
 		}
 
@@ -1945,42 +1947,40 @@ class LiteSpeed_Cache_Img_Optm
 		$msg = 'Unknown Msg' ;
 
 		foreach ( $list as $v ) {
-			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
-
 			// to switch webp file
 			if ( $switch_type === 'webp' ) {
-				if ( file_exists( $local_file . '.webp' ) ) {
-					rename( $local_file . '.webp', $local_file . '.optm.webp' ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Disabled WebP: ' . $local_file ) ;
+				if ( $this->__media->info( $v->src . '.webp' ) ) {
+					$this->__media->rename( $v->src . '.webp', $v->src . '.optm.webp' ) ;
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Disabled WebP: ' . $v->src ) ;
 
 					$msg = __( 'Disabled WebP file successfully.', 'litespeed-cache' ) ;
 				}
-				elseif ( file_exists( $local_file . '.optm.webp' ) ) {
-					rename( $local_file . '.optm.webp', $local_file . '.webp' ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Enable WebP: ' . $local_file ) ;
+				elseif ( $this->__media->info( $v->src . '.optm.webp' ) ) {
+					$this->__media->rename( $v->src . '.optm.webp', $v->src . '.webp' ) ;
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Enable WebP: ' . $v->src ) ;
 
 					$msg = __( 'Enabled WebP file successfully.', 'litespeed-cache' ) ;
 				}
 			}
 			// to switch original file
 			else {
-				$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-				$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+				$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
+				$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 				$bk_file = $local_filename . '.bk.' . $extension ;
 				$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
 				// revert ori back
-				if ( file_exists( $bk_file ) ) {
-					rename( $local_file, $bk_optm_file ) ;
-					rename( $bk_file, $local_file ) ;
+				if ( $this->__media->info( $bk_file ) ) {
+					$this->__media->rename( $v->src, $bk_optm_file ) ;
+					$this->__media->rename( $bk_file, $v->src ) ;
 					LiteSpeed_Cache_Log::debug( '[Img_Optm] Restore original img: ' . $bk_file ) ;
 
 					$msg = __( 'Restored original file successfully.', 'litespeed-cache' ) ;
 				}
-				elseif ( file_exists( $bk_optm_file ) ) {
-					rename( $local_file, $bk_file ) ;
-					rename( $bk_optm_file, $local_file ) ;
-					LiteSpeed_Cache_Log::debug( '[Img_Optm] Switch to optm img: ' . $local_file ) ;
+				elseif ( $this->__media->info( $bk_optm_file ) ) {
+					$this->__media->rename( $v->src, $bk_file ) ;
+					$this->__media->rename( $bk_optm_file, $v->src ) ;
+					LiteSpeed_Cache_Log::debug( '[Img_Optm] Switch to optm img: ' . $v->src ) ;
 
 					$msg = __( 'Switched to optimized file successfully.', 'litespeed-cache' ) ;
 				}
@@ -2016,24 +2016,22 @@ class LiteSpeed_Cache_Img_Optm
 		$list = $wpdb->get_results( $wpdb->prepare( $q, array( $post_id ) ) ) ;
 
 		foreach ( $list as $v ) {
-			$local_file = $this->wp_upload_dir[ 'basedir' ] . '/' . $v->src ;
+			$this->__media->info( $v->src . '.webp' ) && $this->__media->del( $v->src . '.webp' ) ;
+			$this->__media->info( $v->src . '.optm.webp' ) && $this->__media->del( $v->src . '.optm.webp' ) ;
 
-			file_exists( $local_file . '.webp' ) && unlink( $local_file . '.webp' ) ;
-			file_exists( $local_file . '.optm.webp' ) && unlink( $local_file . '.optm.webp' ) ;
-
-			$extension = pathinfo( $local_file, PATHINFO_EXTENSION ) ;
-			$local_filename = substr( $local_file, 0, - strlen( $extension ) - 1 ) ;
+			$extension = pathinfo( $v->src, PATHINFO_EXTENSION ) ;
+			$local_filename = substr( $v->src, 0, - strlen( $extension ) - 1 ) ;
 			$bk_file = $local_filename . '.bk.' . $extension ;
 			$bk_optm_file = $local_filename . '.bk.optm.' . $extension ;
 
-			if ( file_exists( $bk_file ) ) {
+			if ( $this->__media->info( $bk_file ) ) {
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Revert ori file' . $bk_file ) ;
-				unlink( $local_file ) ;
-				rename( $bk_file, $local_file ) ;
+				$this->__media->del( $v->src ) ;
+				$this->__media->rename( $bk_file, $v->src ) ;
 			}
-			elseif ( file_exists( $bk_optm_file ) ) {
+			elseif ( $this->__media->info( $bk_optm_file ) ) {
 				LiteSpeed_Cache_Log::debug( '[Img_Optm] _reset_row Del ori bk file' . $bk_optm_file ) ;
-				unlink( $bk_optm_file ) ;
+				$this->__media->del( $bk_optm_file ) ;
 			}
 		}
 
