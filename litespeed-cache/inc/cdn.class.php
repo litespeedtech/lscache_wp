@@ -589,6 +589,8 @@ class LiteSpeed_Cache_CDN
 		global $wp_scripts ;
 		if ( isset( $wp_scripts->registered[ 'jquery-core' ]->ver ) ) {
 			$v = $wp_scripts->registered[ 'jquery-core' ]->ver ;
+			// Remove all unexpected chars to fix WP5.2.1 jq version issue @see https://wordpress.org/support/topic/problem-with-wordpress-5-2-1/
+			$v = preg_replace( '|[^\d\.]|', '', $v ) ;
 		}
 
 		$src = $this->_cfg_cdn_remote_jquery === LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;
