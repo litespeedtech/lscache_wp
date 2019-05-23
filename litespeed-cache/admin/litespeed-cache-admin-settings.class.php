@@ -1230,13 +1230,17 @@ class LiteSpeed_Cache_Admin_Settings
 	 */
 	public static function validate_widget_save( $instance, $new_instance, $old_instance, $widget )
 	{
-		if ( empty( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ) {
+		if ( empty( $new_instance ) ) {
 			return $instance ;
 		}
-		$current = ! empty( $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : false ;
-		$input = $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
-		$esistr = $input[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
-		$ttlstr = $input[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
+		if ( ! isset( $new_instance[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ) ) {
+			return $instance ;
+		}
+		if ( ! isset( $new_instance[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ) ) {
+			return $instance ;
+		}
+		$esistr = $new_instance[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ;
+		$ttlstr = $new_instance[ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] ;
 
 		if ( ! is_numeric( $ttlstr ) || ! is_numeric( $esistr ) ) {
 			add_filter( 'wp_redirect', 'LiteSpeed_Cache_Admin_Settings::widget_save_err' ) ;
@@ -1257,6 +1261,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] = $esi ;
 		$instance[ LiteSpeed_Cache_Config::OPTION_NAME ][ LiteSpeed_Cache_ESI::WIDGET_OPID_TTL ] = $ttl ;
 
+		$current = ! empty( $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ? $old_instance[ LiteSpeed_Cache_Config::OPTION_NAME ] : false ;
 		if ( ! $current || $esi != $current[ LiteSpeed_Cache_ESI::WIDGET_OPID_ESIENABLE ] ) {
 			LiteSpeed_Cache_Purge::purge_all( 'Wdiget ESI_enable changed' ) ;
 		}

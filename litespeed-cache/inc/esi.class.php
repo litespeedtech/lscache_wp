@@ -305,7 +305,7 @@ class LiteSpeed_Cache_ESI
 			return ;
 		}
 
-	add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
+		add_filter('widget_display_callback', array($this, 'sub_widget_block'), 0, 3) ;
 
 		// Add admin_bar esi
 		if ( LiteSpeed_Cache_Router::is_logged_in() ) {
@@ -532,42 +532,6 @@ class LiteSpeed_Cache_ESI
 // The *_load_* functions are helpers for the load_* functions.
 
 	/**
-	 * Get the configuration option for the current widget.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 * @param WP_Widget $widget The widget to get the options for.
-	 * @return mixed null if not found, an array of the options otherwise.
-	 */
-	public static function widget_load_get_options($widget)
-	{
-		add_filter('litespeed_cache_widget_default_options', 'LiteSpeed_Cache_ESI::widget_default_options', 10, 2) ;
-
-		if ( ! is_numeric($widget->number) ) {
-			return null ;
-		}
-
-		if ( $widget->updated ) {
-			$settings = get_option($widget->option_name) ;
-		}
-		else {
-			$settings = $widget->get_settings() ;
-		}
-
-		if ( ! isset($settings) ) {
-			return null ;
-		}
-
-		$instance = $settings[$widget->number] ;
-
-		if ( ! isset($instance) || ! isset($instance[LiteSpeed_Cache_Config::OPTION_NAME]) ) {
-			return null;
-		}
-
-		return $instance[LiteSpeed_Cache_Config::OPTION_NAME] ;
-	}
-
-	/**
 	 * Loads the default options for default WordPress widgets.
 	 *
 	 * @since 1.1.3
@@ -674,9 +638,11 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function load_widget_block( $params )
 	{
-		global $wp_widget_factory ;
-		$widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
-		$option = self::widget_load_get_options( $widget ) ;
+		// global $wp_widget_factory ;
+		// $widget = $wp_widget_factory->widgets[ $params[ self::PARAM_NAME ] ] ;
+		$option = $params[ self::PARAM_INSTANCE ] ;
+		$option = $option[ LiteSpeed_Cache_Config::OPTION_NAME ] ;
+
 		// Since we only reach here via esi, safe to assume setting exists.
 		$ttl = $option[ self::WIDGET_OPID_TTL ] ;
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'ESI widget render: name ' . $params[ self::PARAM_NAME ] . ', id ' . $params[ self::PARAM_ID ] . ', ttl ' . $ttl ) ;
