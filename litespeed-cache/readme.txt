@@ -2,8 +2,8 @@
 Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
-Tested up to: 5.1.1
-Stable tag: 2.9.7.2
+Tested up to: 5.2.1
+Stable tag: 2.9.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -283,9 +283,25 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 * Beaver Builder
 * FacetWP (LSWS 5.3.6+)
 * WpDiscuz
+* WP-Stateless
+* Elementor
 
 
 == Changelog ==
+
+= 2.9.8 - May 22 2019 =
+* <strong>Core</strong>: Refactored loading priority so user related functions & optimization features are set after user initialization. (#717223 #114165 #413338)
+* <strong>Media</strong>: Improved backup file calculation query to prevent out-of-memory issue.
+* <strong>Conf</strong>: Feed cache now defaults to ON.
+* <strong>API</strong>: Fully remote attachment compatibility API of image optimization now supported.
+* 🕷️: Bypassed vary change for crawler; crawler can now simulate default vary cookie.
+* <strong>ESI</strong>: Refactored ESI widget. Removed `widget_load_get_options()` function.
+* <strong>ESI</strong>: Changed the input name of widget fields in form.
+* <strong>3rd</strong>: Elementor can now save ESI widget settings in frontend builder.
+* <strong>3rd</strong>: WP-Stateless compatibility.
+* <strong>IAPI</strong>: Image optimization can now successfully finish the destroy process with large volume images with automatic continual mode.
+* 🐞<strong>CDN</strong>: Fixed issue with Load JQuery Remotely setting where WP 5.2.1 provided an unexpected jQuery version.
+* 🐞<strong>3rd</strong>: Login process now gets the correct role; fixed double login issue.
 
 = 2.9.7.2 - May 2 2019 =
 * <strong>Conf</strong>: Enhanced compatibility when an option is not properly initialized.
