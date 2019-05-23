@@ -1393,9 +1393,14 @@ class LiteSpeed_Cache_Img_Optm
 			exit( 'Destroy callback timeout ( 300 seconds )[' . time() . " - $request_time]" ) ;
 		}
 
+		/**
+		 * Limit to 3000 images each time before redirection to fix Out of memory issue. #665465
+		 * @since  2.9.8
+		 */
 		// Start deleting files
-		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s" ;
-		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
+		$limit = apply_filters( 'litespeed_imgoptm_destroy_max_rows', 3000 ) ;
+		$q = "SELECT src,post_id FROM $this->_table_img_optm WHERE optm_status = %s ORDER BY id LIMIT %d" ;
+		$list = $wpdb->get_results( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED, $limit ) ) ;
 		foreach ( $list as $v ) {
 			// del webp
 			$this->__media->info( $v->src . '.webp', $v->post_id ) && $this->__media->del( $v->src . '.webp', $v->post_id ) ;
@@ -1412,6 +1417,21 @@ class LiteSpeed_Cache_Img_Optm
 				$this->__media->rename( $bk_file, $v->src, $v->post_id ) ;
 			}
 			$this->__media->info( $bk_optm_file, $v->post_id ) && $this->__media->del( $bk_optm_file, $v->post_id ) ;
+		}
+
+		// Check if there are more images, then return `to_be_continued` code
+		$q = "SELECT COUNT(*) FROM $this->_table_img_optm WHERE optm_status = %s" ;
+		$total_img = $wpdb->get_var( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED ) ) ;
+		if ( $total_img > $limit ) {
+			$q = "DELETE FROM $this->_table_img_optm WHERE optm_status = %s ORDER BY id LIMIT %d" ;
+			$wpdb->query( $wpdb->prepare( $q, self::DB_IMG_OPTIMIZE_STATUS_PULLED, $limit ) ) ;
+
+			// Return continue signal
+			update_option( self::DB_IMG_OPTIMIZE_DESTROY, time() ) ;
+
+			LiteSpeed_Cache_Log::debug( '[Img_Optm] To be continued 🚦' ) ;
+
+			exit( 'to_be_continued' ) ;
 		}
 
 		// Delete optm info
