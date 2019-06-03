@@ -805,6 +805,7 @@ class LiteSpeed_Cache_Const
 			'LITESPEED_ON',
 			'LITESPEED_ON_IN_SETTING',
 			'LSCACHE_ADV_CACHE',
+			'LSWCP_TAG_PREFIX',
 		) ;
 		$server_vars = array() ;
 		foreach ( $consts as $v ) {

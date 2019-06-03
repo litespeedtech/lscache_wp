@@ -73,13 +73,13 @@ else {
 
 		<div class="litespeed-row-flex litespeed-banner-promo-content litespeed-margin-left-remove litespeed-flex-wrap">
 			<div class="litespeed-right50 litespeed-margin-bottom20">
-				<h2 class="litespeed-text-grey litespeed-margin-bottom-remove litespeed-top10">Page Load Time</h2>
+				<h2 class="litespeed-text-grey litespeed-margin-bottom-remove litespeed-top10"><?php echo __( 'Page Load Time', 'litespeed-cache' ) ; ?></h2>
 				<hr class="litespeed-margin-bottom-remove" />
 				<div class="litespeed-row-flex" style="margin-left: -10px;">
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 						<div>
 							<p class="litespeed-text-grey litespeed-margin-y-remove">
-								Before
+                                <?php echo __( 'Before', 'litespeed-cache' ) ; ?>
 							</p>
 						</div>
 						<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-grey">
@@ -90,7 +90,7 @@ else {
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 						<div>
 							<p class="litespeed-text-grey litespeed-margin-y-remove">
-								After
+                                <?php echo __( 'After', 'litespeed-cache' ) ; ?>
 							</p>
 						</div>
 						<div class="litespeed-top10 litespeed-text-jumbo litespeed-success">
@@ -100,7 +100,7 @@ else {
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 						<div>
 							<p class="litespeed-text-grey litespeed-margin-y-remove" style="white-space: nowrap;">
-								Improved by
+                                <?php echo __( 'Improved by', 'litespeed-cache' ) ; ?>
 							</p>
 						</div>
 						<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">
@@ -113,13 +113,13 @@ else {
 
 			<?php if ( $_score[ 'score_before_optm' ] < $_score[ 'score_after_optm' ] ) : ?>
 			<div class="litespeed-margin-bottom20">
-				<h2 class="litespeed-text-grey litespeed-margin-bottom-remove litespeed-top10">PageSpeed Score</h2>
+				<h2 class="litespeed-text-grey litespeed-margin-bottom-remove litespeed-top10"><?php echo __( 'PageSpeed Score', 'litespeed-cache' ) ; ?></h2>
 				<hr class="litespeed-margin-bottom-remove" />
 				<div class="litespeed-row-flex" style="margin-left: -10px;">
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 						<div>
 							<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
-								Before
+                                <?php echo __( 'Before', 'litespeed-cache' ) ; ?>
 							</p>
 						</div>
 						<div class="litespeed-promo-score" style="margin-top:-5px;">
@@ -129,7 +129,7 @@ else {
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 						<div>
 							<p class="litespeed-text-grey litespeed-text-center litespeed-margin-y-remove">
-								After
+                                <?php echo __( 'After', 'litespeed-cache' ) ; ?>
 							</p>
 						</div>
 						<div class="litespeed-promo-score" style="margin-top:-5px;">
@@ -139,7 +139,7 @@ else {
 					<div class="litespeed-width-1-3 litespeed-padding-space litespeed-margin-x5">
 						<div>
 							<p class="litespeed-text-grey litespeed-margin-y-remove" style="white-space: nowrap;">
-								Improved by
+                                <?php echo __( 'Improved by', 'litespeed-cache' ) ; ?>
 							</p>
 						</div>
 						<div class="litespeed-top10 litespeed-text-jumbo litespeed-text-fern">

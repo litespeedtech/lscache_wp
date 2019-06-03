@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9.7\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2019-04-01 19:42:51+00:00\n"
+"POT-Creation-Date: 2019-05-23 01:54:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -577,7 +577,7 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-#: admin/tpl/crawler.php:84 admin/tpl/esi_widget_edit.php:56
+#: admin/tpl/crawler.php:84 admin/tpl/esi_widget_edit.php:45
 #: admin/tpl/setting/settings_general.php:30
 msgid "Disable"
 msgstr ""
@@ -757,23 +757,23 @@ msgstr ""
 msgid "DO NOT EDIT ANYTHING WITHIN %s"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:30 admin/tpl/setting/settings_esi.php:43
+#: admin/tpl/esi_widget_edit.php:34 admin/tpl/setting/settings_esi.php:43
 msgid "Enable ESI"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:40
+#: admin/tpl/esi_widget_edit.php:43
 msgid "Public"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:48
+#: admin/tpl/esi_widget_edit.php:44
 msgid "Private"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:66
+#: admin/tpl/esi_widget_edit.php:60
 msgid "Widget Cache TTL:"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:69 admin/tpl/setting/settings_crawler.php:40
+#: admin/tpl/esi_widget_edit.php:67 admin/tpl/setting/settings_crawler.php:40
 #: admin/tpl/setting/settings_crawler.php:52
 #: admin/tpl/setting/settings_crawler.php:64
 #: admin/tpl/setting/settings_general.php:65
@@ -789,11 +789,11 @@ msgstr ""
 msgid "seconds"
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:72
+#: admin/tpl/esi_widget_edit.php:70
 msgid "Recommended value: 28800 seconds (8 hours)."
 msgstr ""
 
-#: admin/tpl/esi_widget_edit.php:73
+#: admin/tpl/esi_widget_edit.php:71
 msgid "A TTL of 0 indicates do not cache."
 msgstr ""
 
@@ -848,7 +848,7 @@ msgstr ""
 msgid "Are you sure to reset all settings to default settings?"
 msgstr ""
 
-#: admin/tpl/import_export.php:61 inc/media.class.php:246
+#: admin/tpl/import_export.php:61 inc/media.class.php:312
 msgid "Reset"
 msgstr ""
 
@@ -860,7 +860,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.7)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.8)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6
 #: admin/tpl/inc/banner_promo.new_version.php:56 inc/gui.class.php:477
@@ -4002,14 +4002,14 @@ msgstr ""
 msgid "Purged the tags!"
 msgstr ""
 
-#: inc/activation.class.php:359 inc/activation.class.php:364
-#: includes/litespeed-cache-activation.class.php:359
-#: includes/litespeed-cache-activation.class.php:364
+#: inc/activation.class.php:385 inc/activation.class.php:390
+#: includes/litespeed-cache-activation.class.php:385
+#: includes/litespeed-cache-activation.class.php:390
 msgid "Failed to upgrade."
 msgstr ""
 
-#: inc/activation.class.php:368
-#: includes/litespeed-cache-activation.class.php:368
+#: inc/activation.class.php:394
+#: includes/litespeed-cache-activation.class.php:394
 msgid "Upgraded successfully."
 msgstr ""
 
@@ -4149,77 +4149,77 @@ msgstr ""
 msgid "Update %s now"
 msgstr ""
 
-#: inc/img_optm.class.php:114
+#: inc/img_optm.class.php:117
 msgid "Communicated with LiteSpeed Image Optimization Server successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:167 inc/img_optm.class.php:1451
-#: inc/img_optm.class.php:1516
+#: inc/img_optm.class.php:170 inc/img_optm.class.php:1478
+#: inc/img_optm.class.php:1543
 msgid "No image found."
 msgstr ""
 
-#: inc/img_optm.class.php:195
+#: inc/img_optm.class.php:198
 msgid "Number of images in one image group (%s) exceeds the credit (%s)"
 msgstr ""
 
-#: inc/img_optm.class.php:223
+#: inc/img_optm.class.php:226
 msgid "Requested successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:243
+#: inc/img_optm.class.php:246
 msgid "Optimized successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:300
+#: inc/img_optm.class.php:303
 msgid "Pushed %1$s to LiteSpeed optimization server, accepted %2$s."
 msgstr ""
 
-#: inc/img_optm.class.php:687
+#: inc/img_optm.class.php:696
 msgid "Failed to parse data from LiteSpeed IAPI server: %s"
 msgstr ""
 
-#: inc/img_optm.class.php:1021
+#: inc/img_optm.class.php:1030
 msgid ""
 "LSCWP %1$s has simplified the image pulling process. Please %2$s, or resend "
 "the pull notification this one time only. After that, the process will be "
 "automated."
 msgstr ""
 
-#: inc/img_optm.class.php:1340
+#: inc/img_optm.class.php:1349
 msgid "Destroy unfinished data successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1554
+#: inc/img_optm.class.php:1581
 msgid ""
 "Pushed %1$s groups with %2$s images to LiteSpeed optimization server, "
 "accepted %3$s groups with %4$s images."
 msgstr ""
 
-#: inc/img_optm.class.php:1730
+#: inc/img_optm.class.php:1754
 msgid "Removed %1$s images and saved %2$s successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1925
+#: inc/img_optm.class.php:1947
 msgid "Switched images successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1956
+#: inc/img_optm.class.php:1976
 msgid "Disabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1962
+#: inc/img_optm.class.php:1982
 msgid "Enabled WebP file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1978
+#: inc/img_optm.class.php:1998
 msgid "Restored original file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:1985
+#: inc/img_optm.class.php:2005
 msgid "Switched to optimized file successfully."
 msgstr ""
 
-#: inc/img_optm.class.php:2045
+#: inc/img_optm.class.php:2063
 msgid "Reset the optimized data successfully."
 msgstr ""
 
@@ -4235,43 +4235,43 @@ msgstr ""
 msgid "Reset successfully."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:326 includes/litespeed-cache.class.php:326
+#: inc/litespeed-cache.class.php:316 includes/litespeed-cache.class.php:316
 msgid "Crawler blacklist is saved."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:337 includes/litespeed-cache.class.php:337
+#: inc/litespeed-cache.class.php:327 includes/litespeed-cache.class.php:327
 msgid "Notified LiteSpeed Web Server to purge everything."
 msgstr ""
 
-#: inc/litespeed-cache.class.php:347 includes/litespeed-cache.class.php:347
+#: inc/litespeed-cache.class.php:337 includes/litespeed-cache.class.php:337
 msgid "Notified LiteSpeed Web Server to purge the list."
 msgstr ""
 
-#: inc/media.class.php:152
+#: inc/media.class.php:217
 msgid "LiteSpeed Optimization"
 msgstr ""
 
-#: inc/media.class.php:178
+#: inc/media.class.php:244
 msgid "WebP saved %s"
 msgstr ""
 
-#: inc/media.class.php:185
+#: inc/media.class.php:251
 msgid "Click to Disable WebP"
 msgstr ""
 
-#: inc/media.class.php:190
+#: inc/media.class.php:256
 msgid "Click to Enable WebP"
 msgstr ""
 
-#: inc/media.class.php:211
+#: inc/media.class.php:277
 msgid "Original saved %s"
 msgstr ""
 
-#: inc/media.class.php:222
+#: inc/media.class.php:288
 msgid "Click to Restore Original File"
 msgstr ""
 
-#: inc/media.class.php:227
+#: inc/media.class.php:293
 msgid "Click to Switch To Optimized File"
 msgstr ""
 

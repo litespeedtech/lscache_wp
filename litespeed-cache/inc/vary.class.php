@@ -279,6 +279,15 @@ class LiteSpeed_Cache_Vary
 			return false ;
 		}
 
+		/**
+		 * Disable vary change if is from crawler
+		 * @since  2.9.8 To enable woocommerce cart not empty warm up (@Taba)
+		 */
+		if ( ! empty( $_SERVER[ 'HTTP_USER_AGENT' ] ) && strpos( $_SERVER[ 'HTTP_USER_AGENT' ], Litespeed_Crawler::FAST_USER_AGENT ) === 0 ) {
+			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to crawler' ) ;
+			return false ;
+		}
+
 		if ( ! apply_filters( 'litespeed_can_change_vary', true ) ) {
 			LiteSpeed_Cache_Log::debug( '[Vary] can_change_vary bypassed due to litespeed_can_change_vary hook' ) ;
 			return false ;

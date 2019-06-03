@@ -68,7 +68,7 @@ class LiteSpeed_Cache_Optimize
 
 		// To remove emoji from WP
 		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_EMOJI_RM ) ) {
-			add_action( 'init', array( $this, 'emoji_rm' ) ) ;
+			$this->_emoji_rm() ;
 		}
 
 		if ( $this->cfg_qs_rm ) {
@@ -122,9 +122,10 @@ class LiteSpeed_Cache_Optimize
 	 * Remove emoji from WP
 	 *
 	 * @since  1.4
-	 * @access public
+	 * @since  2.9.8 Changed to private
+	 * @access private
 	 */
-	public function emoji_rm()
+	private function _emoji_rm()
 	{
 		remove_action( 'wp_head' , 'print_emoji_detection_script', 7 ) ;
 		remove_action( 'admin_print_scripts' , 'print_emoji_detection_script' ) ;
@@ -550,7 +551,7 @@ class LiteSpeed_Cache_Optimize
 		if ( $this->cfg_css_async ) {
 			// Inline css async lib
 			if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_ASYNC_INLINE ) ) {
-				$this->html_head .= '<script id="litespeed-css-async-lib" type="text/javascript">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>' ;
+				$this->html_head .= '<script id="litespeed-css-async-lib">' . Litespeed_File::read( LSCWP_DIR . self::LIB_FILE_CSS_ASYNC ) . '</script>' ;
 			}
 			else {
 				$css_async_lib_url = LSWCP_PLUGIN_URL . self::LIB_FILE_CSS_ASYNC ;
@@ -620,7 +621,7 @@ class LiteSpeed_Cache_Optimize
 		 *		-> family: PT Sans:400,700|PT Sans Narrow:400|Montserrat:600
 		 *	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,300italic,400italic,600,700,900&#038;subset=latin%2Clatin-ext' />
 		 */
-		$html .='<script type="text/javascript">WebFontConfig={google:{families:[' ;
+		$html .='<script>WebFontConfig={google:{families:[' ;
 
 		$families = array() ;
 		foreach ( $this->_ggfonts_urls as $v ) {

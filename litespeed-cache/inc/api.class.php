@@ -38,6 +38,19 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	const WIDGET_O_TTL =			LiteSpeed_Cache_ESI::WIDGET_O_TTL ;
 
 	/**
+	 * Disable All
+	 *
+	 * @since 2.9.7.2
+	 * @access public
+	 */
+	public static function disable_all( $reason )
+	{
+		self::debug( '[API] Disabled_all due to ' . $reason ) ;
+
+		! defined( 'LITESPEED_DISABLE_ALL' ) && define( 'LITESPEED_DISABLE_ALL', true ) ;
+	}
+
+	/**
 	 * Force to set an option
 	 * Note: it will only affect the AFTER usage of that option
 	 *
@@ -146,6 +159,17 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	public static function set_force_cacheable( $reason )
 	{
 		LiteSpeed_Cache_Control::force_cacheable( $reason ) ;
+	}
+
+	/**
+	 * Set cache to force public cache if cacheable ( Will ignore most kinds of non-cacheable conditions )
+	 *
+	 * @since 2.9.7.2
+	 * @access public
+	 */
+	public static function set_force_public( $reason )
+	{
+		LiteSpeed_Cache_Control::set_public_forced( $reason ) ;
 	}
 
 	/**
@@ -627,7 +651,7 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 */
 	public static function hook_init( $hook )
 	{
-		add_action('litespeed_init', $hook) ;
+		add_action( 'litespeed_init', $hook ) ;
 	}
 
 }

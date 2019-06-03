@@ -58,7 +58,7 @@ class LiteSpeed_Cache_CDN
 		 */
 		$this->_cfg_cdn_remote_jquery = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_REMOTE_JQ ) ;
 		if ( $this->_cfg_cdn_remote_jquery ) {
-			add_action( 'init', array( $this, 'load_jquery_remotely' ) ) ;
+			$this->_load_jquery_remotely() ;
 		}
 
 		$this->_cfg_cdn = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN ) ;
@@ -580,9 +580,10 @@ class LiteSpeed_Cache_CDN
 	 * Remote load jQuery remotely
 	 *
 	 * @since  1.5
-	 * @access public
+	 * @since  2.9.8 Changed to private
+	 * @access private
 	 */
-	public function load_jquery_remotely()
+	private function _load_jquery_remotely()
 	{
 		// default jq version
 		$v = '1.12.4' ;
@@ -591,6 +592,8 @@ class LiteSpeed_Cache_CDN
 		global $wp_scripts ;
 		if ( isset( $wp_scripts->registered[ 'jquery-core' ]->ver ) ) {
 			$v = $wp_scripts->registered[ 'jquery-core' ]->ver ;
+			// Remove all unexpected chars to fix WP5.2.1 jq version issue @see https://wordpress.org/support/topic/problem-with-wordpress-5-2-1/
+			$v = preg_replace( '|[^\d\.]|', '', $v ) ;
 		}
 
 		$src = $this->_cfg_cdn_remote_jquery === LiteSpeed_Cache_Config::VAL_ON ? "//ajax.googleapis.com/ajax/libs/jquery/$v/jquery.min.js" : "//cdnjs.cloudflare.com/ajax/libs/jquery/$v/jquery.min.js" ;

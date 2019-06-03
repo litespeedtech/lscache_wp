@@ -50,6 +50,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Router'			=> 'inc/router.class.php',
 			'LiteSpeed_Cache_Tag'				=> 'inc/tag.class.php',
 			'LiteSpeed_Cache_Task'				=> 'inc/task.class.php',
+			'LiteSpeed_Cache_Tool'				=> 'inc/tool.cls.php',
 			'LiteSpeed_Cache_Vary'				=> 'inc/vary.class.php',
 			'LiteSpeed_Cache_Utility'			=> 'inc/utility.class.php',
 
