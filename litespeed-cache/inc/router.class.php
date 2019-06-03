@@ -233,6 +233,7 @@ class LiteSpeed_Cache_Router
 		LiteSpeed_Cache_Log::debug( '[Router] get_role: ' . $role ) ;
 
 		if ( ! $role ) {
+			return $role ;
 			// Guest user
 			LiteSpeed_Cache_Log::debug( '[Router] role: guest' ) ;
 
