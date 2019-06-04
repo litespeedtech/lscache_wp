@@ -103,12 +103,9 @@ class LiteSpeed_Cache_Crawler
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $msg ) ;
 			return false ;
 		}
-		$content = $_POST[ self::CRWL_BLACKLIST ] ;
-		$content = array_map( 'trim', explode( "\n", $content ) ) ;// remove space
-		$content = implode( "\n", array_unique( array_filter( $content ) ) ) ;
 
 		// save blacklist file
-		$ret = Litespeed_File::save( $this->_blacklist_file, $content, true, false, false ) ;
+		$ret = Litespeed_File::save( $this->_blacklist_file, LiteSpeed_Cache_Utility::sanitize_lines( $_POST[ self::CRWL_BLACKLIST ], 'string' ), true, false, false ) ;
 		if ( $ret !== true ) {
 			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $ret ) ;
 		}
@@ -575,15 +572,13 @@ class LiteSpeed_Cache_Crawler
 		}
 
 		// Cookie crawler
-		$cookie_crawlers = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_COOKIES ) ;
-		foreach ( $cookie_crawlers as $k => $v ) {
+		foreach ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_COOKIES ) as $k => $v ) {
 
 			$this_cookie_key = 'cookie:' . $k ;
 
 			$crawler_factors[ $this_cookie_key ] = array() ;
 
-			foreach ( explode( "\n", $v ) as $v2 ) {
-				$v2 = trim( $v2 ) ;
+			foreach ( $v as $v2 ) {
 				$crawler_factors[ $this_cookie_key ][ $v2 ] = "<font title='Cookie'>🍪</font>$k=$v2" ;
 			}
 		}

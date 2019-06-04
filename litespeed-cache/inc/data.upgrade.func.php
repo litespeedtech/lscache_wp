@@ -144,6 +144,12 @@ function litespeed_update_3_0( $ver )
 				$old_data = explode( "\n", $old_data ) ;
 			}
 
+			if ( $v == 'crawler.cookies' ) {
+				foreach ( $old_data as $k2 => $v2 ) {
+					$old_data[ $k2 ] = explode( "\n", $v2 ) ;
+				}
+			}
+
 			add_option( 'litespeed.conf.' . $v, $old_data ) ;
 		}
 		delete_option( $k ) ;
@@ -303,7 +309,7 @@ function litespeed_update_3_0( $ver )
 		}
 		// The folllowing values must be array
 		if ( ! is_array( $previous_options[ $k ] ) ) {
-			if ( in_array( $v, array( 'cdn.ori', 'cache.exc_cat', 'cache.exc_tag' ) ) {
+			if ( in_array( $v, array( 'cdn.ori', 'cache.exc_cat', 'cache.exc_tag' ) ) ) {
 				$previous_options[ $k ] = explode( ',', $previous_options[ $k ] ) ;
 			}
 			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents', 'cache.exc_cookies' ) ) ) {

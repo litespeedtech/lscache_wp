@@ -21,8 +21,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 	private $_options = array() ;
 	private $_site_options = array() ;
-	private $_default_options = array() ;
-	private $_default_site_options = array() ;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -32,8 +30,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 */
 	private function __construct()
 	{
-		$this->_default_options = $this->default_keys() ;
-
 		// Check if conf exists or not. If not, create them in DB (won't change version if is converting v2.9- data)
 		// Conf may be stale, upgrade later
 		$this->_conf_db_init() ;
@@ -41,11 +37,22 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Load options first, network sites can override this later
 		$this->load_options() ;
 
+		// Init global const cache on set
+		$this->_options[ self::_CACHE ] = false ;
+		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON ) {
+			$this->_options[ self::_CACHE ] = true ;
+		}
+
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
 
 		// Check advanced_cache set (compatible for both network and single site)
 		$this->_define_adv_cache() ;
+
+		// Check if debug is on
+		if ( $this->_options[ self::O_DEBUG ] == self::VAL_ON || $this->_options[ self::O_DEBUG ] == self::VAL_ON2 ) {
+			LiteSpeed_Cache_Log::init() ;
+		}
 
 		/**
 		 * Detect if has quic.cloud set
@@ -53,11 +60,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 */
 		if ( $this->_options[ self::O_CDN_QUIC ] ) {
 			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
-		}
-
-		// Init global const cache on set
-		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON ) {
-			$this->_options[ self::_CACHE ] = true ;
 		}
 
 		// Set cache on
@@ -71,7 +73,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 *
+	 * Init conf related data
 	 *
 	 * @since  3.0
 	 * @access private
@@ -102,6 +104,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			// Init new default/missing options
 			foreach ( $this->_default_options as $k => $v ) {
 				// If the option existed, bypass updating
+				// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
 				add_option( self::conf_name( $k ), $v ) ;
 			}
 		}
@@ -234,8 +237,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		if ( $this->_site_options ) {
 			return $this->_site_options ;
 		}
-
-		$this->_default_site_options = $this->default_site_keys() ;
 
 		$ver = get_site_option( self::conf_name( self::_VERSION ) ) ;
 

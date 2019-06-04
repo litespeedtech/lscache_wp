@@ -93,9 +93,6 @@ class LiteSpeed_Cache_Admin_Display
 		}
 
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-
-		// get default setting values
-		$this->default_settings = $this->__cfg->get_default_options() ;xx
 	}
 
 	/**
@@ -327,16 +324,6 @@ class LiteSpeed_Cache_Admin_Display
 	public function set_disable_all()
 	{
 		$this->disable_all = true ;
-	}
-
-	/**
-	 * If show compatibility tab in settings
-	 * @since 1.1.0
-	 * @return bool True if shows
-	 */
-	public function show_compatibility_tab()
-	{
-		return function_exists('the_views') ;
 	}
 
 	/**
@@ -908,20 +895,18 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $id The setting tag
 	 */
-	public function recommended( $id, $is_item = false )
+	public function recommended( $id )
 	{
-		$val = '' ;
-		if ( ! $is_item ) {
-			if ( isset( $this->default_settings[ $id ] ) ) {
-				$val = $this->default_settings[ $id ] ;
-			}
-		}
-		else {
-			$val = $this->__cfg->default_item( $id ) ;
+		if ( ! $this->default_settings ) {
+			$this->default_settings = $this->__cfg->default_vals() ;
 		}
 
+		$val = $this->default_settings[ $id ] ;
+
 		if ( $val ) {
-			if ( ! is_numeric( $val ) && strpos( $val, "\n" ) !== false ) {
+			if ( is_array( $val ) ) {
+				$val = implode( "\n", $val ) ;
+				$val = esc_textarea( $val ) ;
 				$val = "<textarea readonly rows='5' class='litespeed-left10'>$val</textarea>" ;
 			}
 			else {
@@ -988,8 +973,12 @@ class LiteSpeed_Cache_Admin_Display
 			return ;
 		}
 
+		if ( ! is_array( $vals ) ) {
+			$vals = array( $vals ) ;
+		}
+
 		$tip = array() ;
-		foreach ( explode( "\n", $vals ) as $v ) {
+		foreach ( $vals as $v ) {
 			if ( ! $v ) {
 				continue ;
 			}

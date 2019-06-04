@@ -26,7 +26,7 @@ class LiteSpeed_Cache
 	const NAME = 'LiteSpeed Cache' ;
 	const PLUGIN_NAME = 'litespeed-cache' ;
 	const PLUGIN_FILE = 'litespeed-cache/litespeed-cache.php' ;
-	const PLUGIN_VERSION = '2.9.8' ;
+	const PLUGIN_VERSION = '3.0' ;
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
@@ -92,12 +92,6 @@ class LiteSpeed_Cache
 	private function __construct()
 	{
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
-
-		// Check if debug is on
-		$should_debug = intval( self::config( LiteSpeed_Cache_Config::O_DEBUG ) ) ;
-		if ( $should_debug == LiteSpeed_Cache_Config::VAL_ON || $should_debug == LiteSpeed_Cache_Config::VAL_ON2 ) {
-			LiteSpeed_Cache_Log::init() ;
-		}
 
 		if ( defined( 'LITESPEED_ON' ) ) {
 			// Load third party detection if lscache enabled.

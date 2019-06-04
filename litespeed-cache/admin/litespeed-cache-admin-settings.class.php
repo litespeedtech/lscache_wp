@@ -110,7 +110,7 @@ class LiteSpeed_Cache_Admin_Settings
 			}
 		}
 
-		$this->_validate_thirdparty() ;
+		$this->_options = apply_filters( 'litespeed_config_save', $this->_options, $input ) ;
 
 		/**
 		 * Check if need to send cfg to CDN or not
@@ -492,14 +492,11 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ;
 		$excludes = array() ;
 		if ( isset( $this->_input[ $id ] ) ) {
-			foreach ( explode( "\n", $this->_input[ $id ] ) as $cat ) {
-				$cat_name = trim( $cat ) ;
-				if ( ! $cat_name ) {
-					continue ;
-				}
-				$cat_id = get_cat_ID( $cat_name ) ;
+			$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
+			foreach ( $this->_input[ $id ] as $v ) {				}
+				$cat_id = get_cat_ID( $v ) ;
 				if ( $cat_id == 0 ) {
-					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_CAT, $cat_name ) ;
+					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_CAT, $v ) ;
 				}
 				else {
 					$excludes[] = $cat_id ;
@@ -511,14 +508,11 @@ class LiteSpeed_Cache_Admin_Settings
 		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ;
 		$excludes = array() ;
 		if ( isset( $this->_input[ $id ] ) ) {
-			foreach ( explode( "\n", $this->_input[ $id ] ) as $tag ) {
-				$tag_name = trim( $tag ) ;
-				if ( ! $tag_name ) {
-					continue ;
-				}
-				$term = get_term_by( 'name', $tag_name, 'post_tag' ) ;
+			$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
+			foreach ( $this->_input[ $id ] as $v ) {
+				$term = get_term_by( 'name', $v, 'post_tag' ) ;
 				if ( $term == 0 ) {
-					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_TAG, $tag_name ) ;
+					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_TAG, $v ) ;
 				}
 				else {
 					$excludes[] = $term->term_id ;
@@ -816,10 +810,9 @@ class LiteSpeed_Cache_Admin_Settings
 		// `Sitemap Generation` -> `Exclude Custom Post Types`
 		$id = LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ;
 		if ( isset( $this->_input[ $id ] ) ) {
-			$arr = array_map( 'trim', explode( "\n", $this->_input[ $id ] ) ) ;
-			$arr = array_filter( $arr ) ;
+			$arr = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
 			$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
-			$this->_input[ $id ] = implode( "\n", array_intersect( $arr, $ori ) ) ;
+			$this->_input[ $id ] = array_intersect( $arr, $ori ) ;
 		}
 		$this->_update( $id ) ;
 
@@ -835,7 +828,7 @@ class LiteSpeed_Cache_Admin_Settings
 					continue ;
 				}
 
-				$cookie_crawlers[ $v ] = $this->_input[ $id ][ 'vals' ][ $k ] ;
+				$cookie_crawlers[ $v ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ][ 'vals' ][ $k ] ) ;
 			}
 		}
 		$this->_update( $id, $cookie_crawlers ) ;
@@ -886,32 +879,8 @@ class LiteSpeed_Cache_Admin_Settings
 		// Login cookie
 		$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
 		$new_options[ $id ] = $this->_input[ $id ] ;
-xx
+
 		return $new_options ;
-	}
-
-	/**
-	 * Validates the third party settings.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 */
-	private function _validate_thirdparty()
-	{
-		$tp_default_options = $this->__cfg->get_thirdparty_options() ;
-		if ( empty( $tp_default_options ) ) {
-			return ;
-		}
-
-		$tp_input = array_intersect_key( $this->_input, $tp_default_options ) ;
-		if ( empty( $tp_input ) ) {
-			return ;
-		}
-
-		$tp_options = apply_filters( 'litespeed_cache_save_options', array_intersect_key( $this->_options, $tp_default_options ), $tp_input ) ;
-		if ( ! empty( $tp_options ) && is_array( $tp_options ) ) {
-			$this->_options = array_merge( $this->_options, $tp_options ) ;
-		}
 	}
 
 	/**

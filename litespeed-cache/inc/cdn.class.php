@@ -70,14 +70,13 @@ class LiteSpeed_Cache_CDN
 		}
 
 		$this->_cfg_url_ori = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_ORI ) ;
-		$cfg_cdn_url = $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_MAPPING ) ;
 		// Parse cdn mapping data to array( 'filetype' => 'url' )
 		$mapping_to_check = array(
 			LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG,
 			LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS,
 			LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS
 		) ;
-		foreach ( $cfg_cdn_url as $v ) {
+		foreach ( $this->__cfg->option( LiteSpeed_Cache_Config::O_CDN_MAPPING ) as $v ) {
 			if ( ! $v[ LiteSpeed_Cache_Config::CDN_MAPPING_URL ] ) {
 				continue ;
 			}
@@ -98,20 +97,17 @@ class LiteSpeed_Cache_CDN
 			}
 			// Check file types
 			if ( $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] ) {
-				$filetypes = array_map( 'trim', explode( "\n", $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] ) ) ;
-				foreach ( $filetypes as $v2 ) {
-					if ( $v2 ) {
-						$this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] = true ;
+				foreach ( $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] as $v2 ) {
+					$this->_cfg_cdn_mapping[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] = true ;
 
-						// If filetype to url is one to many, make url be an array
-						$this->_append_cdn_mapping( $v2, $this_url ) ;
+					// If filetype to url is one to many, make url be an array
+					$this->_append_cdn_mapping( $v2, $this_url ) ;
 
-						if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
-							$this->cdn_mapping_hosts[] = $this_host ;
-						}
+					if ( ! in_array( $this_host, $this->cdn_mapping_hosts ) ) {
+						$this->cdn_mapping_hosts[] = $this_host ;
 					}
 				}
-				LiteSpeed_Cache_Log::debug2( '[CDN] mapping ' . implode( ',', $filetypes ) . ' -> ' . $this_url ) ;
+				LiteSpeed_Cache_Log::debug2( '[CDN] mapping ' . implode( ',', $v[ LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE ] ) . ' -> ' . $this_url ) ;
 			}
 		}
 

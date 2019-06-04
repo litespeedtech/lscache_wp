@@ -690,9 +690,9 @@ class LiteSpeed_Cache_Admin_Rules
 
 			// drop qs support
 			$id = LiteSpeed_Cache_Config::O_CACHE_DROP_QS ;
-			if ( $cfg_info = get_option( $id ) ) {
+			if ( ! empty( $cfg[ $id ] ) ) {
 				$new_rules[] = self::MARKER_DROPQS . self::MARKER_START ;
-				foreach ( explode( "\n", $cfg_info ) as $v ) {
+				foreach ( $cfg[ $id ] as $v ) {
 					$new_rules[] = 'CacheKeyModify -qs:' . $v ;
 				}
 				$new_rules[] = self::MARKER_DROPQS . self::MARKER_END ;

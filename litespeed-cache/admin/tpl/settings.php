@@ -9,64 +9,13 @@ $menu_list = array(
 	'optimize' => __( 'Optimize', 'litespeed-cache' ),
 	'tuning' => __( 'Tuning', 'litespeed-cache' ),
 	'media' => __( 'Media', 'litespeed-cache' ),
-	'cdn' => __( 'CDN', 'litespeed-cache' ),
 	'esi' => __( 'ESI', 'litespeed-cache' ),
 	'advanced' => __( 'Advanced', 'litespeed-cache' ),
-	'debug' => __( 'Debug', 'litespeed-cache' ),
 ) ;
-
-if ( $this->show_compatibility_tab() ) {
-	$menu_list[ 'compatibilities' ] = __( 'Compatibilities', 'litespeed-cache' ) ;
-}
 
 global $_options ;
 $_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
 
-
-/**
- * This hook allows third party plugins to create litespeed cache
- * specific configuration.
- *
- * Each config should append an array containing the following:
- * 'title' (required) - The tab's title.
- * 'slug' (required) - The slug used for the tab. [a-z][A-Z], [0-9], -, _ permitted.
- * 'content' (required) - The tab's content.
- *
- * Upon saving, only the options with the option group in the input's
- * name will be retrieved.
- * For example, name="litespeed-cache-conf[my-opt]".
- *
- * @see TODO: add option save filter.
- * @since 1.0.9
- * @param array $tabs An array of third party configuration.
- * @param array $options The current configuration options.
- * @param string $option_group The option group to use for options.
- * @param boolean $disableall Whether to disable the settings or not.
- * @return mixed An array of third party configs else false on failure.
- */
-$tp_tabs = apply_filters('litespeed_cache_add_config_tab',
-	array(),
-	$_options,
-	LiteSpeed_Cache_Config::OPTION_NAME,
-	$this->get_disable_all()
-) ;
-if ( !empty($tp_tabs) && is_array($tp_tabs) ) {
-	foreach ($tp_tabs as $key => $tab) {
-		if ( !is_array($tab) || !isset($tab['title']) || !isset($tab['slug']) || !isset($tab['content']) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'WARNING: Third party tab input invalid' ) ;
-			unset($tp_tabs[$key]) ;
-			continue ;
-		}
-		if ( preg_match('/[^-\w]/', $tab['slug']) ) {
-			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( 'WARNING: Third party config slug contains invalid characters' ) ;
-			unset($tp_tabs[$key]) ;
-			continue ;
-		}
-	}
-}
-else {
-	$tp_tabs = array() ;
-}
 
 /**
  * Generate rules for setting usage
@@ -103,10 +52,8 @@ if ( ! $adv_mode ) {
 		'optimize',
 		'tuning',
 		'media',
-		'cdn',
 		'esi',
 		'advanced',
-		'debug',
 	) ;
 
 	$_hide_in_basic_mode = 'class="litespeed-hide"' ;
@@ -148,22 +95,7 @@ if ( ! $adv_mode ) {
 			echo "<a class='litespeed-tab' href='#$tab' data-litespeed-tab='$tab' $accesskey>$val</a>" ;
 			$i ++ ;
 		}
-		foreach ($tp_tabs as $val){
-			$accesskey = '' ;
-			if ( $i <= 9 ) {
-				$accesskey = "litespeed-accesskey='$i'" ;
-			}
-			else {
-				$tmp = strtoupper( substr( $val[ 'slug' ], 0, 1 ) ) ;
-				if ( ! in_array( $tmp, $accesskey_set ) ) {
-					$accesskey_set[] = $tmp ;
-					$accesskey = "litespeed-accesskey='$tmp'" ;
-				}
-			}
-
-			echo "<a class='litespeed-tab' href='#$val[slug]' data-litespeed-tab='$val[slug]' $accesskey>$val[title]</a>" ;
-			$i ++ ;
-		}
+		do_action( 'litespeed_settings_tab', $adv_mode ) ;
 	?>
 	<?php if ( $adv_mode ) : ?>
 		<a href="admin.php?page=lscache-settings&mode=basic" class="litespeed-tab litespeed-advanced-tab-hide litespeed-right"><?php echo __( 'Hide Advanced Options', 'litespeed-cache' ) ; ?></a>
@@ -171,6 +103,7 @@ if ( ! $adv_mode ) {
 		<a href="admin.php?page=lscache-settings&mode=advanced" class="litespeed-tab litespeed-advanced-tab-show litespeed-right"><?php echo __( 'Show Advanced Options', 'litespeed-cache' ) ; ?></a>
 	<?php endif ; ?>
 	</h2>
+
 	<div class="litespeed-body">
 	<form method="post" action="admin.php?page=lscache-settings" id="litespeed_form_options" class="litespeed-relative">
 		<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" />
@@ -187,9 +120,7 @@ if ( ! $adv_mode ) {
 		echo "</div>" ;
 	}
 
-	foreach ($tp_tabs as $val) {
-		echo "<div data-litespeed-layout='$val[slug]'>$val[content]</div>" ;
-	}
+	do_action( 'litespeed_settings_content' ) ;
 
 	echo "<div class='litespeed-top20'></div>" ;
 

@@ -232,7 +232,7 @@ class LiteSpeed_Cache_Import
 		$options = $this->__cfg->get_default_options() ;
 		// Get items
 		foreach ( $this->_cfg_items as $v ) {
-			$options[ $v ] = $this->__cfg->default_item( $v ) ;
+			$options[ $v ] = $this->__cfg->default_item( $v ) ;xx
 		}
 
 		$output = LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $options, true ) ;

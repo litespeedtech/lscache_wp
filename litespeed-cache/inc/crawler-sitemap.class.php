@@ -47,17 +47,15 @@ class LiteSpeed_Cache_Crawler_Sitemap
 	{
 		global $wpdb ;
 
-		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		$optionOrderBy = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS ) ;
 
-		$optionOrderBy = $options[LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS] ;
+		$show_pages = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_PAGES ) ;
 
-		$show_pages = $options[LiteSpeed_Cache_Config::O_CRWL_PAGES] ;
+		$show_posts = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_POSTS ) ;
 
-		$show_posts = $options[LiteSpeed_Cache_Config::O_CRWL_POSTS] ;
+		$show_cats = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_CATS ) ;
 
-		$show_cats = $options[LiteSpeed_Cache_Config::O_CRWL_CATS] ;
-
-		$show_tags = $options[LiteSpeed_Cache_Config::O_CRWL_TAGS] ;
+		$show_tags = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_TAGS ) ;
 
 		switch ( $optionOrderBy ) {
 			case 'date_asc':
@@ -87,10 +85,7 @@ class LiteSpeed_Cache_Crawler_Sitemap
 			$post_type_array[] = 'post' ;
 		}
 
-		$id = LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ;
-		if ( isset($options[$id]) ) {
-			$excludeCptArr = explode(',', $options[$id]) ;
-			$excludeCptArr = array_map('trim', $excludeCptArr) ;
+		if ( $excludeCptArr = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ) ) {
 			$cptArr = get_post_types() ;
 			$cptArr = array_diff($cptArr, array('post', 'page')) ;
 			$cptArr = array_diff($cptArr, $excludeCptArr) ;
@@ -98,12 +93,10 @@ class LiteSpeed_Cache_Crawler_Sitemap
 		}
 
 		if ( ! empty($post_type_array) ) {
-			$post_type = implode("','", $post_type_array) ;
+			LiteSpeed_Cache_Log::debug( 'Crawler sitemap log: post_type is ' . implode( ',', $post_type_array ) ) ;
 
-			LiteSpeed_Cache_Log::debug("Crawler sitemap log: post_type is '$post_type'") ;
-
-			$query = "SELECT ID, post_date FROM ".$wpdb->prefix."posts where post_type IN ('".$post_type."') AND post_status='publish' ".$orderBy ;
-			$results = $wpdb->get_results($query) ;
+			$q = "SELECT ID, post_date FROM $wpdb->posts where post_type IN (" . implode( ',', array_fill( 0, count( $post_type_array ), '%s' ) ) . ") AND post_status='publish' $orderBy" ;
+			$results = $wpdb->get_results( $wpdb->prepare( $q, $post_type_array ) ) ;
 
 			foreach ( $results as $result ){
 				$slug = str_replace($this->home_url, '', get_permalink($result->ID)) ;

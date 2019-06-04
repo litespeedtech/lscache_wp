@@ -393,7 +393,7 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function build_type( $val )
 	{
-		return array( 'type' => $val ) ;
+		return array( 'litespeed_type' => $val ) ;
 	}
 
 	/**
@@ -404,14 +404,14 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function verify_type()
 	{
-		if ( empty( $_REQUEST[ 'type' ] ) ) {
+		if ( empty( $_REQUEST[ 'litespeed_type' ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[Router] no type', 2 ) ;
 			return false ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Router] parsed type: ' . $_REQUEST[ 'type' ], 2 ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] parsed type: ' . $_REQUEST[ 'litespeed_type' ], 2 ) ;
 
-		return $_REQUEST[ 'type' ] ;
+		return $_REQUEST[ 'litespeed_type' ] ;
 	}
 
 	/**
@@ -635,9 +635,6 @@ class LiteSpeed_Cache_Router
 		}
 		// $uip = explode('.', $_ip) ;
 		// if(empty($uip) || count($uip) != 4) Return false ;
-		if ( ! is_array( $ip_list ) ) {
-			$ip_list = explode( "\n", $ip_list ) ;
-		}
 		// foreach($ip_list as $key => $ip) $ip_list[$key] = explode('.', trim($ip)) ;
 		// foreach($ip_list as $key => $ip) {
 		// 	if(count($ip) != 4) continue ;

@@ -935,9 +935,6 @@ class LiteSpeed_Cache_Optimize
 	private function _parse_js()
 	{
 		$excludes = apply_filters( 'litespeed_cache_optimize_js_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_JS_EXC ) ) ;
-		if ( $excludes ) {
-			$excludes = explode( "\n", $excludes ) ;
-		}
 
 		$src_list = array() ;
 		$html_list = array() ;
@@ -1000,9 +997,6 @@ class LiteSpeed_Cache_Optimize
 	private function _handle_css()
 	{
 		$excludes = apply_filters( 'litespeed_cache_optimize_css_excludes', LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OPTM_CSS_EXC ) ) ;
-		if ( $excludes ) {
-			$excludes = explode( "\n", $excludes ) ;
-		}
 
 		$css_to_be_removed = apply_filters( 'litespeed_optm_css_to_be_removed', array() ) ;
 

@@ -210,11 +210,6 @@ class LiteSpeed_Cache_Tag
 			$tags[] = self::TYPE_HOME ;
 		}
 
-		$err = self::get_error_code() ;xx
-		if ( $err !== false ) {
-			$tags[] = self::TYPE_ERROR . $err ;
-		}
-
 		$queried_obj_id = get_queried_object_id() ;
 		if ( is_archive() ) {
 			//An Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages.

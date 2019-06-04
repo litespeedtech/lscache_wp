@@ -5,19 +5,8 @@
  */
 class LiteSpeed_Cache_Cli_Admin
 {
-
-	private static $checkboxes ;
-
 	public function __construct()
 	{
-		// Build on/off options
-		self::$checkboxes = array() ;
-		foreach ( LiteSpeed_Cache_Config::get_instance()->get_default_options() as $k => $v ) {
-			if ( is_bool( $v ) ) {
-				self::$checkboxes[] = $k ;
-			}
-		}
-
 	}
 
 	/**
@@ -47,7 +36,7 @@ class LiteSpeed_Cache_Cli_Admin
 
 		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
-		$options = $__cfg->get_options() ;
+		$options = $__cfg->get_options() ;xx
 
 		/**
 		 * For CDN mapping, allow:

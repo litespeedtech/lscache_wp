@@ -130,12 +130,12 @@ class LiteSpeed_Cache_Control
 		}
 
 		// Check error page
-		add_filter( 'status_header', 'LiteSpeed_Cache_Control::check_error_codes', 10, 2 ) ;
+		add_filter( 'status_header', array( self::get_instance(), 'check_error_codes' ), 10, 2 ) ;
 	}
 
 
 	/**
-	 * Check if the page returns 403 and 500 errors.
+	 * Check if the page returns any error code.
 	 *
 	 * @since 1.0.13.1
 	 * @access public
@@ -143,40 +143,22 @@ class LiteSpeed_Cache_Control
 	 * @param $code
 	 * @return $eror_status
 	 */
-	public static function check_error_codes( $status_header, $code )
+	public function check_error_codes( $status_header, $code )
 	{
-		if ( array_key_exists( $code, $this ->_response_header_ttls ) ) {
+		if ( array_key_exists( $code, $this->_response_header_ttls ) ) {
 			if ( LiteSpeed_Cache_Control::is_cacheable() && ! $this->_response_header_ttls[ $code ] ) {
 				LiteSpeed_Cache_Control::set_nocache( '[Ctrl] TTL is set to no cache [status_header] ' . $code ) ;
 			}
+
+			// Set TTL
+			self::set_custom_ttl( $this->_response_header_ttls[ $code ] ) ;
 		}
 
-
-				self::$_error_status = $code ;
-			}
-		}
-		elseif ( $code >= 500 && $code < 600 ) {
-			if ( $ttl_500 <= 30 && LiteSpeed_Cache_Control::is_cacheable() ) {
-				LiteSpeed_Cache_Control::set_nocache( 'TTL is less than 30s' ) ;
-			}
-		}
-		elseif ( $code > 400 ) {
-			self::$_error_status = $code ;
-		}
+		// Set cache tag
+		LiteSpeed_Cache_Tag::add( LiteSpeed_Cache_Tag::TYPE_ERROR . $code ) ;
 
 		// Give the default status_header back
 		return $status_header ;
-	}
-
-	/**
-	 * Get error code.
-	 *
-	 * @since 1.1.3
-	 * @access public
-	 */
-	public static function get_error_code()
-	{
-		return self::$_error_status ;
 	}
 
 	/**
@@ -470,7 +452,6 @@ class LiteSpeed_Cache_Control
 		$timed_urls = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS ) ;
 		$timed_urls_time = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_PURGE_TIMED_URLS_TIME ) ;
 		if ( $timed_urls && $timed_urls_time ) {
-			$timed_urls = explode( "\n", $timed_urls ) ;
 			$current_url = LiteSpeed_Cache_Tag::build_uri_tag( true ) ;
 			if ( in_array( $current_url, $timed_urls ) ) {
 				// Use time limit ttl
@@ -496,21 +477,6 @@ class LiteSpeed_Cache_Control
 		$feed_ttl = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ) ;
 		if ( is_feed() && $feed_ttl > 0 ) {
 			return $feed_ttl ;
-		}
-
-		$ttl_404 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 xx) ;
-		if ( is_404() && $ttl_404 > 0 ) {
-			return $ttl_404 ;
-		}
-
-		if ( LiteSpeed_Cache_Tag::get_error_code() === 403 ) {
-			$ttl_403 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_403 xx) ;
-			return $ttl_403 ;
-		}
-
-		$ttl_500 = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_500 xx) ;
-		if ( LiteSpeed_Cache_Tag::get_error_code() >= 500 ) {
-			return $ttl_500 ;
 		}
 
 		return LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_PUB ) ;
@@ -704,10 +670,6 @@ class LiteSpeed_Cache_Control
 			return $this->_no_cache_for('trackback') ;
 		}
 
-		if ( is_404() && LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_TTL_404 xx ) == 0 ) {
-			return $this->_no_cache_for('404 pages') ;
-		}
-
 		if ( is_search() ) {
 			return $this->_no_cache_for('search') ;
 		}
@@ -738,7 +700,7 @@ class LiteSpeed_Cache_Control
 
 			// Check QS excluded setting
 			$excludes = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_EXC_QS ) ;
-			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( explode( "\n", $excludes ) ) ) {
+			if ( ! empty( $excludes ) && $qs = $this->_is_qs_excluded( $excludes ) ) {
 				return $this->_no_cache_for( 'Admin configured QS Do not cache: ' . $qs ) ;
 			}
 

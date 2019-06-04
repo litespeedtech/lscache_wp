@@ -47,11 +47,6 @@ class LiteSpeed_Cache_Activation
 
 		$__cfg = LiteSpeed_Cache_Config::get_instance() ;
 
-		// Bcos we may ask clients to deactivate for debug temporarily, we need to keep the current cfg in deactivation, hence we need to only try adding default cfg when activating.
-		$res = add_option( LiteSpeed_Cache_Config::OPTION_NAME, $__cfg->get_default_options() ) ;todo
-
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[Cfg] plugin_activation update option = " . var_export( $res, true ) ) ;
-
 		// Check new version @since 2.9.3
 		LiteSpeed_Cache_Utility::version_check( 'new' . ( defined( 'LSCWP_REF' ) ? '_' . LSCWP_REF : '' ) ) ;
 
