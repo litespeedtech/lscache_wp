@@ -94,6 +94,8 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		 * Upgrade conf
 		 */
 		if ( $ver && $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+			// Plugin version will be set inside
+			// Site plugin upgrade & version change will do in load_site_conf
 			LiteSpeed_Cache_Data::get_instance()->conf_upgrade( $ver ) ;
 		}
 
@@ -112,8 +114,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 	/**
 	 * Load all latest options from DB
-	 *
-	 * Already load the lacking options with default values, won't insert them into DB. Inserting will be done on setting saving.
 	 *
 	 * @since  3.0
 	 * @access public
@@ -150,7 +150,9 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			return ;
 		}
 
-		$this->get_site_options() ;
+		$this->_conf_site_db_init() ;
+
+		$this->load_site_options() ;
 
 		// $this->_define_adv_cache( $this->_site_options ) ;
 
@@ -177,7 +179,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
 		}
 
-		// Append site options to single blog options
+		// Overwrite single blog options with site options
 		foreach ( $this->_default_options as $k => $v ) {
 			if ( isset( $this->_site_options[ $k ] ) ) {
 				$this->_options[ $k ] = $this->_site_options[ $k ] ;
@@ -198,6 +200,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		// Check if needs to use site_options or not
+		// todo: check if site settings are separate bcos it will affect .htaccess
 
 		/**
 		 * In case this is called outside the admin page
@@ -218,27 +221,23 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		return true ;
 	}
 
-
 	/**
-	 * Get the plugin's site wide options.
+	 * Init site conf and upgrade if necessary
 	 *
-	 * If the site wide options are not set yet, set it to default.
-	 *
-	 * @since 1.0.2
-	 * @access public
-	 * @return array Returns the current site options.
+	 * @since 3.0
+	 * @access private
 	 */
-	public function get_site_options()
+	private function _conf_site_db_init()
 	{
-		if ( ! is_multisite() ) {
-			return null ;
-		}
-
-		if ( $this->_site_options ) {
-			return $this->_site_options ;
-		}
-
 		$ver = get_site_option( self::conf_name( self::_VERSION ) ) ;
+
+		/**
+		 * Upgrade conf
+		 */
+		if ( $ver && $ver != LiteSpeed_Cache::PLUGIN_VERSION ) {
+			// Site plugin versin will change inside
+			LiteSpeed_Cache_Data::get_instance()->conf_site_upgrade( $ver ) ;
+		}
 
 		/**
 		 * Is a new installation
@@ -252,6 +251,22 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 				// If the option existed, bypass updating
 				add_site_option( self::conf_name( $k ), $v ) ;
 			}
+		}
+	}
+
+	/**
+	 * Get the plugin's site wide options.
+	 *
+	 * If the site wide options are not set yet, set it to default.
+	 *
+	 * @since 1.0.2
+	 * @access public
+	 * @return array Returns the current site options.
+	 */
+	public function load_site_options()
+	{
+		if ( ! is_multisite() || $this->_site_options ) {
+			return $this->_site_options ;
 		}
 
 		// Load all site options
@@ -429,22 +444,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$this->_options[ $id ] = $val ;
 	}
 
-	public function sitemap_validate( $url )
-	{
-
-		// Validate sitemap
-		try{
-			LiteSpeed_Cache_Crawler::get_instance()->parse_custom_sitemap( $url, false ) ;
-
-		} catch ( \Exception $e ) {
-			LiteSpeed_Cache_Log::debug( '[Crawler] ❌ failed to prase custom sitemap: ' . $e->getMessage() ) ;
-
-			return LiteSpeed_Cache_Admin_Display::get_error( $e->getMessage(), $url ) ;
-		}
-
-		return true ;
-	}
-
 	/**
 	 * Check if one user role is in exclude optimization group settings
 	 *
@@ -571,29 +570,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Upgrade network options when the plugin is upgraded.
-	 *
-	 * @since 1.0.11
-	 * @access public
-	 */
-	public function plugin_site_upgrade()
-	{
-		$default_options = $this->get_default_site_options() ;
-		$options = $this->get_site_options() ;
-
-		if ( $options[ self::_VERSION ] == $default_options[ self::_VERSION ] && count( $default_options ) == count( $options ) ) {
-			return ;
-		}
-
-		$options = self::option_diff( $default_options, $options ) ;
-
-		$res = update_site_option( self::OPTION_NAME, $options ) ;
-
-		LiteSpeed_Cache_Log::debug( "[Conf] plugin_upgrade option changed = $res\n" ) ;
-	}
-
-
-	/**
 	 * Update the WP_CACHE variable in the wp-config.php file.
 	 *
 	 * If enabling, check if the variable is defined, and if not, define it.
@@ -649,19 +625,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		file_put_contents( $file, $new_file_content ) ;
 		return true ;
-	}
-
-	/**
-	 * On plugin activation, load the default options.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param int $count The count of blogs active in multisite.
-	 */
-	public function plugin_activation( $count )
-	{
-
-
 	}
 
 	/**

@@ -213,7 +213,7 @@ class LiteSpeed_Cache_Admin_Settings
 
 		$this->_input = LiteSpeed_Cache_Admin::cleanup_text( $input ) ;
 
-		$options = $this->__cfg->get_site_options() ;
+		$options = $this->__cfg->load_site_options() ;
 
 
 		/**

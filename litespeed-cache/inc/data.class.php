@@ -20,6 +20,13 @@ class LiteSpeed_Cache_Data
 		// ),
 	) ;
 
+	private $_db_site_updater = array(
+		// Example
+		// '2.0'	=> array(
+		// 	'litespeed_update_site_2_0',
+		// ),
+	) ;
+
 	private static $_instance ;
 
 	const TB_OPTIMIZER = 'litespeed_optimizer' ;
@@ -53,8 +60,6 @@ class LiteSpeed_Cache_Data
 	/**
 	 * Upgrade conf to latest format version from previous versions
 	 *
-	 * Network upgrade will be here too
-	 *
 	 * NOTE: Only for v3.0+
 	 *
 	 * @since 3.0
@@ -84,12 +89,38 @@ class LiteSpeed_Cache_Data
 		delete_option( self::conf_name( self::_VERSION ) ) ;
 		add_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
-		if ( is_multisite() ) {
-			delete_site_option( self::conf_name( self::_VERSION ) ) ;
-			add_site_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+
+		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
+		LiteSpeed_Cache_Purge::purge_all() ;
+	}
+
+	/**
+	 * Upgrade site conf to latest format version from previous versions
+	 *
+	 * NOTE: Only for v3.0+
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function conf_site_upgrade( $ver )
+	{
+		require_once LSCWP_DIR . 'inc/data.upgrade.func.php' ;
+
+		foreach ( $this->_db_site_updater as $k => $v ) {
+			if ( version_compare( $ver, $k, '<' ) ) {
+				// run each callback
+				foreach ( $v as $v2 ) {
+					LiteSpeed_Cache_Log::debug( "[Data] Updating site [ori_v] $ver \t[to] $k \t[func] $v2" ) ;
+					call_user_func( $v2 ) ;
+				}
+			}
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Data] Updated version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
+		delete_site_option( self::conf_name( self::_VERSION ) ) ;
+		add_site_option( self::conf_name( self::_VERSION ), LiteSpeed_Cache::PLUGIN_VERSION ) ;
+
+		LiteSpeed_Cache_Log::debug( '[Data] Updated site_version to ' . LiteSpeed_Cache::PLUGIN_VERSION ) ;
 
 		! defined( 'LSWCP_EMPTYCACHE') && define( 'LSWCP_EMPTYCACHE', true ) ;// clear all sites caches
 		LiteSpeed_Cache_Purge::purge_all() ;

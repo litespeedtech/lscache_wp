@@ -120,38 +120,11 @@ class LiteSpeed_Cache_Admin
 
 		}
 
-
 		LiteSpeed_Cache_Control::set_nocache( 'Admin page' ) ;
 
 		if ( LiteSpeed_Cache_Router::esi_enabled() ) {
 			add_action( 'in_widget_form', array( $this->display, 'show_widget_edit' ), 100, 3 ) ;
 			add_filter( 'widget_update_callback', 'LiteSpeed_Cache_Admin_Settings::validate_widget_save', 10, 4 ) ;
-		}
-
-		if ( ! is_multisite() ) {
-			if( ! current_user_can('manage_options') ){
-				return ;
-			}
-		}
-		elseif ( ! is_network_admin() ) {
-			if ( ! current_user_can('manage_options') ) {
-				return ;
-			}
-			if ( get_current_blog_id() !== BLOG_ID_CURRENT_SITE ) {
-				$use_primary = LiteSpeed_Cache_Config::NETWORK_O_USE_PRIMARY ;
-				$site_options = $this->__cfg->get_site_options() ;xx
-				if ( isset($site_options[$use_primary]) && $site_options[$use_primary] ) {
-					$this->display->set_disable_all() ;
-				}
-			}
-			return ;
-		}
-		elseif ( ! current_user_can('manage_network_options') ) {
-			return ;
-		}
-
-		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
-			$this->display->show_display_installed() ;
 		}
 	}
 

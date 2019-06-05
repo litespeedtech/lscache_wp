@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Activation
 			}
 
 			// All .htaccess & OC related options are in site, so only need these options
-			$options = $__cfg->get_site_options() ;
+			$options = $__cfg->load_site_options() ;
 
 			if ( ! empty($options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ]) ) {
 				$options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] = addslashes( $options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ] );// todo: why addslashes?

@@ -84,14 +84,7 @@ class LiteSpeed_Cache_Vary
 
 		/******** Below to the end is only for cookie name setting check ********/
 		// Get specific cookie name
-		$db_cookie = false ;
-		if ( is_multisite() ) {
-			$options = LiteSpeed_Cache_Config::get_instance()->get_site_options() ;
-			$db_cookie = $options[ LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ] ;
-		}
-		else {
-			$db_cookie = LiteSpeed_Cache::config(LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE) ;
-		}
+		$db_cookie = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ) ; // [3.0] todo: check if works in network's sites
 
 		// If no vary set in rewrite rule
 		if ( ! isset($_SERVER['LSCACHE_VARY_COOKIE']) ) {

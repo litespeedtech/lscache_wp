@@ -37,7 +37,6 @@ class LiteSpeed_Cache_Admin_Display
 
 	private $__cfg ;
 	private $messages = array() ;
-	private $disable_all = false ;
 	private $default_settings = array() ;
 
 	/**
@@ -302,31 +301,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Whether to disable all settings or not.
-	 *
-	 * Currently used for 'use primary subsite settings'
-	 *
-	 * @since 1.0.13
-	 * @access public
-	 * @return bool True to disable all settings, false otherwise.
-	 */
-	public function get_disable_all()
-	{
-		return $this->disable_all ;
-	}
-
-	/**
-	 * Set to disable all settings.
-	 *
-	 * @since 1.0.13
-	 * @access public
-	 */
-	public function set_disable_all()
-	{
-		$this->disable_all = true ;
-	}
-
-	/**
 	 * Displays the help tab in the admin pages.
 	 *
 	 * @since 1.0.0
@@ -494,6 +468,10 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function display_messages()
 	{
+		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {
+			$this->show_display_installed() ;
+		}
+
 		// One time msg
 		$messages = get_option( self::LITESPEED_MSG ) ;
 		if( is_array($messages) ) {

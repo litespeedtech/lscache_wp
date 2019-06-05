@@ -1,7 +1,16 @@
 <?php
 if ( ! defined( 'WPINC' ) ) die ;
 
-if ( ! $this->get_disable_all() ) {
+if ( ! is_multisite() ) {
+	return ;
+}
+
+if ( get_current_blog_id() === BLOG_ID_CURRENT_SITE ) {
+	return ;
+}
+
+$site_options = $this->__cfg->load_site_options() ;
+if ( empty( $site_options[ LiteSpeed_Cache_Config::NETWORK_O_USE_PRIMARY ] ) ) {
 	return ;
 }
 ?>
