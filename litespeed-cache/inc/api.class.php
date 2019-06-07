@@ -486,9 +486,9 @@ class LiteSpeed_Cache_API extends LiteSpeed_Cache_Const
 	 * @since 1.1.3
 	 * @access public
 	 */
-	public static function hook_esi_param($block, $hook)
+	public static function hook_esi_param($hook, $priority = 10, $args = 2)
 	{
-		add_filter('litespeed_cache_sub_esi_params-' . $block, $hook) ;
+		add_filter('litespeed_cache_sub_esi_params', $hook, $priority, $args) ;
 	}
 
 	/**

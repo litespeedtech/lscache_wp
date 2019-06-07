@@ -84,7 +84,7 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 			}
 
 			if ( function_exists( 'is_product' ) && is_product() ) {
-				LiteSpeed_Cache_API::hook_esi_param( 'widget', array( $this, 'add_post_id' ) ) ;
+				LiteSpeed_Cache_API::hook_esi_param( array( $this, 'add_post_id' ) ) ;
 			}
 
 			/**
@@ -418,12 +418,16 @@ class LiteSpeed_Cache_ThirdParty_WooCommerce
 	 * @param array $params The current ESI parameters.
 	 * @return array The updated esi parameters.
 	 */
-	public function add_post_id($params)
+	public function add_post_id($params, $block)
 	{
-		if ( ! isset($params) || ! isset($params[LiteSpeed_Cache_API::PARAM_NAME]) || $params[LiteSpeed_Cache_API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
+		if ( $block === 'widget' ) {
+			if ( ! isset($params) || ! isset($params[LiteSpeed_Cache_API::PARAM_NAME]) || $params[LiteSpeed_Cache_API::PARAM_NAME] !== 'WC_Widget_Recently_Viewed' ) {
+				return $params ;
+			}
+			$params[self::ESI_PARAM_POSTID] = get_the_ID() ;
 			return $params ;
 		}
-		$params[self::ESI_PARAM_POSTID] = get_the_ID() ;
+
 		return $params ;
 	}
 

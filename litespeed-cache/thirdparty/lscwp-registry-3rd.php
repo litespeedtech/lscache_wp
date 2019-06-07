@@ -33,6 +33,7 @@ $thirdparty_list = array(
 	'divi-theme-builder',
 	'wpml',
 	'wpdiscuz',
+	'facetwp',
 ) ;
 
 foreach ($thirdparty_list as $val) {
