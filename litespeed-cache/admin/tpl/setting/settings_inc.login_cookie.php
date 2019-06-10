@@ -40,7 +40,7 @@
 				echo '<div class="litespeed-callout-danger">❌ ' . __( 'Invalid login cookie. Invalid characters found.', 'litespeed-cache' ) . '</div>' ;
 			}
 
-			if ( defined( 'LITESPEED_ON' ) && $_options[ $id ] ) {
+			if ( defined( 'LITESPEED_ON' ) && $this->__options[ $id ] ) {
 
 				if ( ! $cookie_rule ) {
 					echo '<div class="litespeed-callout-danger">'
@@ -50,7 +50,7 @@
 				else {
 					$cookie_rule = substr( $cookie_rule, 11 ) ;
 					$cookie_arr = explode( ',', $cookie_rule ) ;
-					if ( ! in_array( $_options[ $id ], $cookie_arr ) ) {
+					if ( ! in_array( $this->__options[ $id ], $cookie_arr ) ) {
 						echo '<div class="litespeed-callout-warning">'
 								. __( 'WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache' )
 							. '</div>' ;
