@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 
 $lang_enabled = '<font class="litespeed-success">' . __( 'Enabled', 'litespeed-cache' ) . '</font>' ;
 $lang_disabled = '<font class="litespeed-warning">' . __( 'Disabled', 'litespeed-cache' ) . '</font>' ;
@@ -37,8 +37,8 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 					<h4><?php echo __( 'Method', 'litespeed-cache' ) ; ?></h4>
 
 					<div class="litespeed-switch">
-						<?php echo $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_OFF, 'Memcached', null, 'litespeed-oc-mem' ) ; ?>
-						<?php echo $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_ON, 'Redis', null, 'litespeed-oc-redis' ) ; ?>
+						<?php echo $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_OFF, 'Memcached' ) ; ?>
+						<?php echo $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_ON, 'Redis' ) ; ?>
 					</div>
 				</div>
 
@@ -111,7 +111,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 					<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
 						<?php echo __( 'Groups cached at the network level.', 'litespeed-cache' ) ; ?>
-						<?php echo __('One per line.', 'litespeed-cache'); ?>
+						<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 					</div>
 				</div>
 
@@ -119,7 +119,7 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 					<h4><?php echo __( 'Do Not Cache Groups', 'litespeed-cache' ) ; ?></h4>
 					<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS, 30 ) ; ?>
 					<div class="litespeed-desc">
-						<?php echo __('One per line.', 'litespeed-cache'); ?>
+						<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 					</div>
 				</div>
 

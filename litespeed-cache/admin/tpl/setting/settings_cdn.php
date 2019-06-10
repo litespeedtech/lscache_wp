@@ -104,7 +104,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 				<br />
 				<b><?php echo __( 'Include File Types', 'litespeed-cache' ) ; ?></b>:
 				<?php echo __( 'Static file type links to be replaced by CDN links.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<?php echo sprintf( __( 'This will affect all tags containing attributes: %s %s %s.', 'litespeed-cache' ), '<code>src=""</code>', '<code>data-src=""</code>', '<code>href=""</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cdn#include_file_types', __( 'Default value', 'litespeed-cache' ) ) ; ?>
 
@@ -123,7 +123,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Site URL to be served through the CDN. Beginning with %1$s. For example, %2$s.', 'litespeed-cache' ), '<code>//</code>', '<code>' . $home_url . '</code>' ) ; ?>
 				<br /><?php echo sprintf( __( 'Wildcard %1$s supported (match zero or more characters). For example, to match %2$s and %3$s, use %4$s.', 'litespeed-cache' ), '<code>*</code>', '<code>//www.aa.com</code>', '<code>//aa.com</code>', '<code>//*aa.com</code>' ) ; ?>
-				<br /><i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
+				<br /><?php $this->_one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
@@ -136,7 +136,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Only files within these directories will be pointed to the CDN.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
@@ -148,7 +148,7 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be served from the CDN.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>

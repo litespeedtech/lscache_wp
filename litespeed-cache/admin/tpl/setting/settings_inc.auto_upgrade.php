@@ -1,7 +1,4 @@
-<?php
-if (!defined('WPINC')) die;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 	<!-- build_setting_auto_upgrade -->
 	<tr>
 		<th><?php echo __( 'Automatically Upgrade', 'litespeed-cache' ) ; ?></th>

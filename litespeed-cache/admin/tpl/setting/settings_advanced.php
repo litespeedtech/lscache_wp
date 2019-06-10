@@ -1,18 +1,13 @@
-<?php
-if (!defined('WPINC')) die;
-
-// $current_favicon = get_option( LiteSpeed_Cache_Config::O_FAVICON, array() ) ;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Advanced Settings', 'litespeed-cache'); ?>
+	<?php echo __( 'Advanced Settings', 'litespeed-cache' ) ; ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
 <div class="litespeed-callout-danger">
-	<h4><?php echo __('NOTICE:', 'litespeed-cache'); ?></h4>
-	<?php echo __('These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache'); ?>
+	<h4><?php echo __( 'NOTICE:', 'litespeed-cache' ); ?></h4>
+	<?php echo __( 'These settings are meant for ADVANCED USERS ONLY.', 'litespeed-cache' ) ; ?>
 </div>
 
 <table><tbody>
@@ -61,61 +56,11 @@ if (!defined('WPINC')) die;
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click' ) ; ?>
 				<br /><font class="litespeed-danger">
 					⚠️
-					<?php echo __('This will generate extra requests to the server, which will increase server load.', 'litespeed-cache'); ?>
+					<?php echo __( 'This will generate extra requests to the server, which will increase server load.', 'litespeed-cache' ) ; ?>
 				</font>
 
 			</div>
 		</td>
 	</tr>
-
-	<?php /*
-	<tr>
-		<th><?php echo __( 'Favicon', 'litespeed-cache' ) ; ?></th>
-		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_ADV_FAVICON ) ; ?>
-			<div class="litespeed-desc">
-				<?php echo __( 'Enable this option to use uploaded image as favicon.ico.', 'litespeed-cache' ) ; ?>
-				<a href="https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#favicon" target="_blank"><?php echo __('Learn More', 'litespeed-cache') ; ?></a>
-
-			</div>
-			<div class="litespeed-block">
-				<div class='litespeed-cdn-mapping-col1'>
-					<h4><?php echo __( 'Frontend Favicon File', 'litespeed-cache' ) ; ?></h4>
-
-					<input type="file" name="litespeed-file-favicon_frontend" class="litespeed-input-long">
-					<div class="litespeed-desc">
-						<a href="https://favicon.io/converter?hello=litespeed" target="_blank"><?php echo __( 'A sample online favicon generator.', 'litespeed-cache' ) ; ?></a>
-					</div>
-				</div>
-
-				<div class='litespeed-cdn-mapping-col litespeed-abs-center'>
-					<?php
-					if ( ! empty( $current_favicon[ 'frontend' ] ) ) {
-						echo "
-							<img src='$current_favicon[frontend]' style='max-height:200px;max-width:200px;' />
-						";
-					}
-					?>
-				</div>
-				<div class='litespeed-cdn-mapping-col1'>
-					<h4><?php echo __( 'Backend Favicon File', 'litespeed-cache' ) ; ?></h4>
-
-					<input type="file" name="litespeed-file-favicon_backend" class="litespeed-input-long">
-				</div>
-
-				<div class='litespeed-cdn-mapping-col litespeed-abs-center'>
-					<?php
-					if ( ! empty( $current_favicon[ 'backend' ] ) ) {
-						echo "
-							<img src='$current_favicon[backend]' style='max-height:200px;max-width:200px;' />
-						";
-					}
-					?>
-				</div>
-			</div>
-
-		</td>
-	</tr>
-	*/ ?>
 
 </tbody></table>

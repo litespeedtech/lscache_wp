@@ -36,6 +36,7 @@ class LiteSpeed_Cache_Admin_Display
 	const RULECONFLICT_DISMISSED = 'ExpiresDefault_0' ;
 
 	private $__cfg ;
+	private $__options ;
 	private $messages = array() ;
 	private $default_settings = array() ;
 
@@ -48,15 +49,14 @@ class LiteSpeed_Cache_Admin_Display
 	private function __construct()
 	{
 		// load assets
-		if( ! empty($_GET['page']) &&
-				(substr($_GET['page'], 0, 8) == 'lscache-' || $_GET['page'] == 'litespeedcache') ) {
-			add_action('admin_enqueue_scripts', array($this, 'load_assets')) ;
+		if( ! empty( $_GET[ 'page' ] ) && ( strpos( $_GET[ 'page' ], 'lscache-' ) === 0 || $_GET[ 'page' ] == 'litespeedcache' ) ) {
+			add_action( 'admin_enqueue_scripts', array( $this, 'load_assets' ) ) ;
 		}
 
 		// main css
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_style')) ;
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) ) ;
 		// Main js
-		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts')) ;
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ) ;
 
 		$is_network_admin = is_network_admin() ;
 
@@ -67,10 +67,11 @@ class LiteSpeed_Cache_Admin_Display
 		else {
 			$manage = 'manage_options' ;
 		}
-		if ( current_user_can($manage) ) {
+		if ( current_user_can( $manage ) ) {
 			add_action( 'wp_before_admin_bar_render', array( LiteSpeed_Cache_GUI::get_instance(), 'backend_shortcut' ) ) ;
 
-			// add_action('admin_enqueue_scripts', array($this, 'check_messages')) ;// We can do this bcos admin_notices hook is after admin_enqueue_scripts hook in wp-admin/admin-header.php
+			// `admin_notices` is after `admin_enqueue_scripts`
+			// @see wp-admin/admin-header.php
 			add_action( is_network_admin() ? 'network_admin_notices' : 'admin_notices', array( $this, 'display_messages' ) ) ;
 		}
 
@@ -85,13 +86,14 @@ class LiteSpeed_Cache_Admin_Display
 
 		// add menus ( Also check for mu-plugins)
 		if ( $is_network_admin && ( is_plugin_active_for_network( LSCWP_BASENAME ) || defined( 'LSCWP_MU_PLUGIN' ) ) ) {
-			add_action('network_admin_menu', array($this, 'register_admin_menu')) ;
+			add_action( 'network_admin_menu', array( $this, 'register_admin_menu' ) ) ;
 		}
 		else {
-			add_action('admin_menu', array($this, 'register_admin_menu')) ;
+			add_action( 'admin_menu', array( $this, 'register_admin_menu' ) ) ;
 		}
 
 		$this->__cfg = LiteSpeed_Cache_Config::get_instance() ;
+		$this->__options = $this->__cfg->get_options() ;
 	}
 
 	/**
@@ -144,27 +146,31 @@ class LiteSpeed_Cache_Admin_Display
 	public function register_admin_menu()
 	{
 		$capability = is_network_admin() ? 'manage_network_options' : 'manage_options' ;
-		if ( current_user_can($capability) ) {
+		if ( current_user_can( $capability ) ) {
 			// root menu
-			add_menu_page('LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'lscache-settings') ;
+			add_menu_page( 'LiteSpeed Cache', 'LiteSpeed Cache', 'manage_options', 'litespeed' ) ;
 
 			// sub menus
-			$this->add_submenu(__('Settings', 'litespeed-cache'), 'lscache-settings', 'show_menu_settings') ;
+			$this->_add_submenu( __( 'Dashboard', 'litespeed-cache' ), 'litespeed', 'show_menu_dash' ) ;
 
-			$this->add_submenu(__('Manage', 'litespeed-cache'), 'lscache-dash', 'show_menu_manage') ;
+			$this->_add_submenu( __( 'Settings', 'litespeed-cache' ), 'lscache-settings', 'show_menu_settings' ) ;
+
+			$this->_add_submenu( __( 'CDN', 'litespeed-cache' ), 'lscache-cdn', 'show_menu_cdn' ) ;
+
+			$this->_add_submenu( __( 'Manage', 'litespeed-cache' ), 'lscache-manage', 'show_menu_manage' ) ;
 
 			if ( ! is_multisite() || is_network_admin() ) {
-				$this->add_submenu(__('Edit .htaccess', 'litespeed-cache'), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess') ;
+				$this->_add_submenu(__('Edit .htaccess', 'litespeed-cache'), LiteSpeed_Cache::PAGE_EDIT_HTACCESS, 'show_menu_edit_htaccess') ;
 			}
 
 			if ( ! is_network_admin() ) {
-				$this->add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
-				$this->add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
-				$this->add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
-				$this->add_submenu(__('Import / Export', 'litespeed-cache'), 'lscache-import', 'show_import_export') ;
+				$this->_add_submenu(__('Image Optimization', 'litespeed-cache'), 'lscache-optimization', 'show_optimization') ;
+				$this->_add_submenu(__('Crawler', 'litespeed-cache'), 'lscache-crawler', 'show_crawler') ;
+				$this->_add_submenu(__('Report', 'litespeed-cache'), 'lscache-report', 'show_report') ;
+				$this->_add_submenu(__('Import / Export', 'litespeed-cache'), 'lscache-import', 'show_import_export') ;
 			}
 
-			defined( 'LSCWP_LOG' ) && $this->add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
+			defined( 'LSCWP_LOG' ) && $this->_add_submenu(__('Debug Log', 'litespeed-cache'), 'lscache-debug', 'show_debug_log') ;
 
 			// sub menus under options
 			add_options_page('LiteSpeed Cache', 'LiteSpeed Cache', $capability, 'litespeedcache', array($this, 'show_menu_settings')) ;
@@ -180,9 +186,9 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param string $menu_slug The slug of the page.
 	 * @param string $callback The callback to call if selected.
 	 */
-	private function add_submenu($menu_title, $menu_slug, $callback)
+	private function _add_submenu( $menu_title, $menu_slug, $callback )
 	{
-		add_submenu_page('lscache-settings', $menu_title, $menu_title, 'manage_options', $menu_slug, array($this, $callback)) ;
+		add_submenu_page( 'litespeed', $menu_title, $menu_title, 'manage_options', $menu_slug, array( $this, $callback ) ) ;
 	}
 
 	/**
@@ -514,6 +520,17 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Displays the dashboard page.
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function show_menu_dash()
+	{
+		require_once LSCWP_DIR . 'admin/tpl/dash.php' ;
+	}
+
+	/**
 	 * Displays the cache management page.
 	 *
 	 * @since 1.0.0
@@ -650,76 +667,48 @@ class LiteSpeed_Cache_Admin_Display
 	 * Build a textarea
 	 *
 	 * @since 1.1.0
-	 * @since  1.7 Changed cols param order to be the 2nd from 4th
 	 * @access public
-	 * @param  string $id
-	 * @param  string $val Value of input
-	 * @param  boolean $disabled If this input is disabled or not
-	 * @param  int $cols The width of textarea
 	 */
-	public function build_textarea( $id, $cols = false, $val = null, $disabled = false, $cls = '' )
+	public function build_textarea( $id, $cols = false, $val = null )
 	{
-		if ( strpos( $id, '[' ) === false ) {
-			if ( $val === null ) {
-				global $_options ;
-				$val = $_options[$id] ;
+		if ( $val === null ) {
+			$val = $this->__options[ $id ] ;
 
-				if ( is_array( $val ) ) {
-					$val = implode( "\n", $val ) ;
-				}
+			if ( is_array( $val ) ) {
+				$val = implode( "\n", $val ) ;
 			}
-
-			$id = "[$id]" ;
 		}
-
-		$disabled = $disabled ? ' disabled ' : '' ;
 
 		if ( ! $cols ) {
 			$cols = 80 ;
 		}
 
-		if ( $cls ) {
-			$cls = " class='$cls' " ;
-		}
-
-		echo "<textarea name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' rows='5' cols='$cols' $cls $disabled>" . esc_textarea($val) . "</textarea>" ;
+		echo "<textarea name='$id' rows='5' cols='$cols'>" . esc_textarea( $val ) . "</textarea>" ;
 	}
 
 	/**
 	 * Build a text input field
 	 *
 	 * @since 1.1.0
-	 * @since 1.7 Added [] check and wrapper to $id, moved $readonly/$id_attr
 	 * @access public
 	 * @param  string $id
-	 * @param  string $style     Appending styles
-	 * @param  boolean $readonly If is readonly
-	 * @param  string $id_attr   ID for this field
+	 * @param  string $cls     Appending styles
 	 * @param  string $val       Field value
-	 * @param  string $attrs     Additional attributes
 	 * @param  string $type      Input type
 	 */
-	public function build_input( $id, $style = false, $val = null, $id_attr = null, $attrs = '', $type = 'text', $readonly = false )
+	public function build_input( $id, $cls = null, $val = null, $type = 'text' )
 	{
-		if ( strpos( $id, '[' ) === false ) {
-			if ( $val === null ) {
-				global $_options ;
-				$val = $_options[ $id ] ;
-			}
-
-			$id = "[$id]" ;
+		if ( $val === null ) {
+			$val = $this->__options[ $id ] ;
 		}
 
-		$readonly = $readonly ? ' readonly ' : '' ;
-		if ( $id_attr !== null ) {
-			$id_attr = " id='$id_attr' " ;
-		}
+		$label_id = preg_replace( '|\W|', '', $id ) ;
 
 		if ( $type == 'text' ) {
-			$style = "litespeed-regular-text $style" ;
+			$cls = "litespeed-regular-text $cls" ;
 		}
 
-		echo "<input type='$type' class='$style' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' value='" . esc_textarea( $val ) ."' $readonly $id_attr $attrs /> " ;
+		echo "<input type='$type' class='$cls' name='$id' value='" . esc_textarea( $val ) ."' id='input_$label_id' /> " ;
 	}
 
 	/**
@@ -731,19 +720,22 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $title
 	 * @param  bool $checked
 	 */
-	public function build_checkbox($id, $title, $checked, $value = 1 )
+	public function build_checkbox( $id, $title, $checked = null, $value = 1 )
 	{
+		if ( $checked == null && ! empty( $this->__options[ $id ] ) ) {
+			$checked = true ;
+		}
 		$checked = $checked ? ' checked ' : '' ;
 
-		$label_id = str_replace( array( '[', ']' ), '_', $id ) ;
+		$label_id = preg_replace( '|\W|', '', $id ) ;
 
 		if ( $value !== 1 ) {
 			$label_id .= '_' . $value ;
 		}
 
 		echo "<div class='litespeed-tick'>
-				<label for='conf_$label_id'>$title</label>
-				<input type='checkbox' name='" . LiteSpeed_Cache_Config::OPTION_NAME . "[$id]' id='conf_$label_id' value='$value' $checked />
+				<label for='input_checkbox_$label_id'>$title</label>
+				<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
 			</div>" ;
 	}
 
@@ -754,33 +746,19 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_toggle( $id, $checked = null, $title_on = null, $title_off = null )
 	{
-		if ( strpos( $id, '[' ) === false ) {
-			if ( $checked === null ) {
-				global $_options ;
-				$to_be_checked = null ;
-				if ( isset( $_options[ $id ] ) ) {
-					$to_be_checked = $_options[ $id ] ;
-				}
-				$checked = $to_be_checked ? true : false ;
-			}
-			$id = "[$id]" ;
+		if ( $checked === null && $this->__options[ $id ] ) {
+			$checked = true ;
 		}
-		$checked = $checked ? 1 : 0 ;
 
 		if ( $title_on === null ) {
 			$title_on = __( 'ON', 'litespeed-cache' ) ;
 			$title_off = __( 'OFF', 'litespeed-cache' ) ;
 		}
 
-		if ( $checked ) {
-			$cls = 'primary' ;
-		}
-		else {
-			$cls = 'default litespeed-toggleoff' ;
-		}
+		$cls = $checked ? 'primary' : 'default litespeed-toggleoff' ;
 
 		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default'>
-				<input name='" . LiteSpeed_Cache_Config::OPTION_NAME . "$id' type='hidden' value='$checked' />
+				<input name='$id' type='hidden' value='$checked' />
 				<div class='litespeed-toggle-group'>
 					<label class='litespeed-toggle-btn litespeed-toggle-btn-primary litespeed-toggle-on'>$title_on</label>
 					<label class='litespeed-toggle-btn litespeed-toggle-btn-default litespeed-toggle-active litespeed-toggle-off'>$title_off</label>
@@ -796,25 +774,15 @@ class LiteSpeed_Cache_Admin_Display
 	 * @since 1.7 removed param $disable
 	 * @access public
 	 * @param  string $id
-	 * @param  boolean $return   Return the html or echo it
-	 * @param  boolean $checked  If the value is on
-	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
 	 */
-	public function build_switch($id, $checked = null, $return = false, $id_attr = null)
+	public function build_switch( $id )
 	{
-		$id_attr_on = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_ON ;
-		$id_attr_off = $id_attr === null ? null : $id_attr . '_' . LiteSpeed_Cache_Config::VAL_OFF ;
 		$html = '<div class="litespeed-switch">' ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_OFF, null, $checked === null ? null : !$checked, $id_attr_off) ;
-		$html .= $this->build_radio($id, LiteSpeed_Cache_Config::VAL_ON, null, $checked, $id_attr_on) ;
+		$html .= $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ;
+		$html .= $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ;
 		$html .= '</div>' ;
 
-		if ( $return ) {
-			return $html ;
-		}
-		else {
-			echo $html ;
-		}
+		echo $html ;
 	}
 
 	/**
@@ -825,45 +793,23 @@ class LiteSpeed_Cache_Admin_Display
 	 * @param  string $id
 	 * @param  string $val     Default value of this input
 	 * @param  string $txt     Title of this input
-	 * @param  bool $checked   If checked or not
-	 * @param  string $id_attr   ID for this field, set to true if want to use a not specified unique value
 	 */
-	public function build_radio($id, $val, $txt = null, $checked = null, $id_attr = null)
+	public function build_radio( $id, $val, $txt = null )
 	{
-		if ( strpos( $id, '[' ) === false ) {
-			if ( $checked === null ) {
-				global $_options ;
-				$to_be_checked = null ;
-				if ( isset( $_options[ $id ] ) ) {
-					$to_be_checked = is_int( $val ) ? (int)$_options[ $id ] : $_options[ $id ] ;
-				}
+		$id_attr = 'input_radio_' . preg_replace( '|\W|', '', $id ) . '_' . $val ;
 
-				$checked = $to_be_checked === $val ? true : false ;
-			}
-
-			$id = "[$id]" ;
-		}
-
-		if ( $id_attr === null ) {
-			$id_attr = is_int($val) ? "conf_" . str_replace( array( '[', ']' ), '_', $id ) . "_$val" : md5($val) ;
-		}
-		elseif ( $id_attr === true ) {
-			$id_attr = md5($val) ;
-		}
-
-		if ( $txt === null ){
-			if ( $val === LiteSpeed_Cache_Config::VAL_ON ){// xx bool already
+		if ( ! $txt ) {
+			if ( $val === LiteSpeed_Cache_Config::VAL_ON ) {
 				$txt = __( 'ON', 'litespeed-cache' ) ;
 			}
-
-			if ( $val === LiteSpeed_Cache_Config::VAL_OFF ){
+			else {
 				$txt = __( 'OFF', 'litespeed-cache' ) ;
 			}
 		}
 
-		$checked = $checked ? ' checked ' : '' ;
+		$checked = isset( $this->__options[ $id ] ) && $this->__options[ $id ] == $val ? ' checked ' : '' ;
 
-		return "<input type='radio' name='". LiteSpeed_Cache_Config::OPTION_NAME . "$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+		return "<input type='radio' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**
@@ -901,7 +847,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _validate_syntax( $id )
 	{
-		$val = LiteSpeed_Cache::config( $id ) ;
+		$val = $this->__options[ $id ] ;
 
 		if ( ! $val ) {
 			return ;
@@ -925,7 +871,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _validate_ttl( $id, $min = false, $max = false )
 	{
-		$val = LiteSpeed_Cache::config( $id ) ;
+		$val = $this->__options[ $id ] ;
 		$tip = array() ;
 		if ( $min && $val < $min ) {
 			$tip[] = __( 'Minimum value', 'litespeed-cache' ) . ': <code>' . $min . '</code>.' ;
@@ -946,17 +892,17 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	private function _validate_ip( $id )
 	{
-		$vals = LiteSpeed_Cache::config( $id ) ;
-		if ( ! $vals ) {
+		$val = $this->__options[ $id ] ;
+		if ( ! $val ) {
 			return ;
 		}
 
-		if ( ! is_array( $vals ) ) {
-			$vals = array( $vals ) ;
+		if ( ! is_array( $val ) ) {
+			$val = array( $val ) ;
 		}
 
 		$tip = array() ;
-		foreach ( $vals as $v ) {
+		foreach ( $val as $v ) {
 			if ( ! $v ) {
 				continue ;
 			}

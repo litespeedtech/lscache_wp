@@ -311,9 +311,11 @@ function litespeed_update_3_0( $ver )
 		if ( ! is_array( $previous_options[ $k ] ) ) {
 			if ( in_array( $v, array( 'cdn.ori', 'cache.exc_cat', 'cache.exc_tag' ) ) ) {
 				$previous_options[ $k ] = explode( ',', $previous_options[ $k ] ) ;
+				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
 			}
 			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents', 'cache.exc_cookies' ) ) ) {
 				$previous_options[ $k ] = explode( '|', str_replace( '\\ ', ' ', $previous_options[ $k ] ) ) ;
+				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
 			}
 			elseif ( in_array( $v, array(
 					'purge.timed_urls',
@@ -325,6 +327,7 @@ function litespeed_update_3_0( $ver )
 					'optm.js_exc',
 				) ) ) {
 				$previous_options[ $k ] = explode( "\n", $previous_options[ $k ] ) ;
+				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
 			}
 		}
 		add_option( 'litespeed.conf.' . $v, $previous_options[ $k ] ) ;

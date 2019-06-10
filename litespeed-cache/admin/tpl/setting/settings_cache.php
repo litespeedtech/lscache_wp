@@ -1,9 +1,7 @@
-<?php
-if ( ! defined( 'WPINC' ) ) die ;
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Cache Control Settings', 'litespeed-cache'); ?>
+	<?php echo __( 'Cache Control Settings', 'litespeed-cache' ) ; ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
@@ -63,7 +61,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('URI Paths containing these strings will NOT be cached as public.', 'litespeed-cache'); ?>
+				<?php echo __( 'URI Paths containing these strings will NOT be cached as public.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
 			</div>
 		</td>
@@ -74,12 +72,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<td>
 			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_DROP_QS, 40 ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('Ignore certain query strings when caching.', 'litespeed-cache'); ?>
+				<?php echo __( 'Ignore certain query strings when caching.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, to drop parameters beginning with %s, %s can be used here.', 'litespeed-cache' ), '<code>utm</code>', '<code>utm*</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:drop_query_string' ) ; ?>
 
 				<br />
-				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>

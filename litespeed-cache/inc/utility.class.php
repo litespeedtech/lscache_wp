@@ -575,16 +575,23 @@ class LiteSpeed_Cache_Utility
 		}
 
 		$arr = array_map( 'trim', $arr ) ;
+		$changed = false ;
 		if ( $type === 'uri' ) {
 			$arr = array_map( 'LiteSpeed_Cache_Utility::url2uri', $arr ) ;
+			$changed = true ;
 		}
 		if ( $type === 'relative' ) {
 			$arr = array_map( 'LiteSpeed_Cache_Utility::make_relative', $arr ) ;// Remove domain
+			$changed = true ;
 		}
 		if ( $type === 'domain' ) {
 			$arr = array_map( 'LiteSpeed_Cache_Utility::parse_domain', $arr ) ;// Only keep domain
+			$changed = true ;
 		}
-		$arr = array_map( 'trim', $arr ) ;
+
+		if ( $changed ) {
+			$arr = array_map( 'trim', $arr ) ;
+		}
 		$arr = array_unique( $arr ) ;
 		$arr = array_filter( $arr ) ;
 

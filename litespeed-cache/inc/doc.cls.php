@@ -39,4 +39,28 @@ class LiteSpeed_Cache_Doc
 		return ' <a href="' . $url . '" target="_blank" class="litespeed-learn-more">' . __( 'Learn More', 'litespeed-cache' ) . '</a>' ;
 	}
 
+	/**
+	 * One per line
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function one_per_line()
+	{
+		echo __( 'One per line.', 'litespeed-cache' ) ;
+	}
+
+	/**
+	 * Notice to edit .htaccess
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public static function notice_htaccess()
+	{
+		echo '<font class="litespeed-warning">' ;
+		echo '⚠️ ' . __( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) ;
+		echo '</font>' ;
+	}
+
 }

@@ -1,12 +1,12 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 
 $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Optimization Settings', 'litespeed-cache'); ?>
+	<?php echo __( 'Optimization Settings', 'litespeed-cache' ) ; ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
@@ -261,7 +261,7 @@ $last_critical_css_generated = LiteSpeed_Cache_CSS::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Prefetching DNS can reduce latency for visiters.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'For example', 'litespeed-cache' ) ; ?>: <code>//www.example.com</code>
-				<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:optimize#dns_prefetch' ) ; ?>
 			</div>
 		</td>

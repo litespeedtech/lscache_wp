@@ -1,12 +1,12 @@
 <?php
-if ( ! defined( 'WPINC' ) ) die ;
+defined( 'WPINC' ) || exit ;
 
 $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 
 ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Media Settings', 'litespeed-cache'); ?>
+	<?php echo __( 'Media Settings', 'litespeed-cache' ) ; ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
@@ -33,9 +33,9 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API', 'litespeed-cache'); ?>:
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_media_lazy_img_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-lazy="1"</code>' ) ; ?>
 				</font>
@@ -50,7 +50,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
@@ -83,7 +83,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 		<th class="litespeed-padding-left"><?php echo __( 'Responsive Placeholder Background Color', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ; ?>
-			<?php $this->build_input( $id, false, null, null, '', 'color' ) ; ?>
+			<?php $this->build_input( $id, null, null, 'color' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the placeholder color you want to use.', 'litespeed-cache' ) ; ?>
 				<?php $this->recommended( $id ) ; ?>
@@ -249,7 +249,7 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 				<?php echo __( 'Specify which element attributes will be replaced with WebP.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Only attributes listed here will be replaced.', 'litespeed-cache' ) ; ?>
 				<br /><?php echo sprintf( __( 'Use the format %1$s or %2$s (element is optional).', 'litespeed-cache' ), '<code>element.attribute</code>', '<code>.attribute</code>' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 			</div>
 		</td>
 	</tr>
@@ -264,6 +264,5 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 			</div>
 		</td>
 	</tr>
-
 
 </tbody></table>

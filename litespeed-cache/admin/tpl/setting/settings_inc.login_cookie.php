@@ -1,13 +1,10 @@
-<?php
-if ( ! defined( 'WPINC' ) ) die ;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 	<tr>
 		<th><?php echo __( 'Login Cookie', 'litespeed-cache' ) ; ?></th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE;
+			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
 			$this->build_input( $id ) ;
 
 			$this->_validate_syntax( $id ) ;
@@ -32,31 +29,31 @@ if ( ! defined( 'WPINC' ) ) die ;
 					. ' ' . __('The cache needs to distinguish who is logged into which WordPress site in order to cache correctly.', 'litespeed-cache')
 				. '</p>';
 
-			$cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie();
-			if ( $cookie_rule && substr($cookie_rule, 0, 11) !== 'Cache-Vary:' ){
+			$cookie_rule = LiteSpeed_Cache_Admin_Rules::get_instance()->get_rewrite_rule_login_cookie() ;
+			if ( $cookie_rule && substr( $cookie_rule, 0, 11 ) !== 'Cache-Vary:' ) {
 				echo '<div class="litespeed-callout-danger">'
-						. sprintf(__('Error: invalid login cookie. Please check the %s file', 'litespeed-cache'), '.htaccess')
-					. '</div>';
+						. sprintf( __( 'Error: invalid login cookie. Please check the %s file', 'litespeed-cache' ), '.htaccess' )
+					. '</div>' ;
 			}
 
 			if ( preg_match( '#[^\w\-]#', LiteSpeed_Cache::config( $id ) ) ) {
 				echo '<div class="litespeed-callout-danger">❌ ' . __( 'Invalid login cookie. Invalid characters found.', 'litespeed-cache' ) . '</div>' ;
 			}
 
-			if ( defined( 'LITESPEED_ON' ) && $_options[$id] ){
+			if ( defined( 'LITESPEED_ON' ) && $_options[ $id ] ) {
 
-				if (!$cookie_rule){
+				if ( ! $cookie_rule ) {
 					echo '<div class="litespeed-callout-danger">'
-							. sprintf(__('Error getting current rules from %s: %s', 'litespeed-cache'), '.htaccess', LiteSpeed_Cache_Admin_Rules::MARKER_LOGIN_COOKIE)
-						. '</div>';
+							. sprintf( __( 'Error getting current rules from %s: %s', 'litespeed-cache' ), '.htaccess', LiteSpeed_Cache_Admin_Rules::MARKER_LOGIN_COOKIE )
+						. '</div>' ;
 				}
-				else{
-					$cookie_rule = substr($cookie_rule, 11);
-					$cookie_arr = explode(',', $cookie_rule);
-					if(!in_array($_options[$id], $cookie_arr)) {
-						echo '<div class="litespeed-callout-warning">' .
-								__( 'WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache' ) .
-							'</div>';
+				else {
+					$cookie_rule = substr( $cookie_rule, 11 ) ;
+					$cookie_arr = explode( ',', $cookie_rule ) ;
+					if ( ! in_array( $_options[ $id ], $cookie_arr ) ) {
+						echo '<div class="litespeed-callout-warning">'
+								. __( 'WARNING: The .htaccess login cookie and Database login cookie do not match.', 'litespeed-cache' )
+							. '</div>' ;
 					}
 				}
 

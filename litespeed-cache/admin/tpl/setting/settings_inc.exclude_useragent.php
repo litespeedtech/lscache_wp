@@ -1,24 +1,17 @@
-<?php
-if (!defined('WPINC')) die;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 	<tr>
 		<th><?php echo __( 'Do Not Cache User Agents', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php
-				$this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ) ;
-			?>
+		<?php
+			$id = LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ;
+			$this->build_textarea( $id ) ;
+		?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'To prevent %s from being cached, enter it here.', 'litespeed-cache' ), __( 'user agents', 'litespeed-cache') ) ; ?>
-				<i><?php echo __('One per line.', 'litespeed-cache'); ?></i>
-
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<?php $this->_validate_syntax( $id ) ; ?>
-
-				<br /><font class="litespeed-warning">
-					⚠️
-					<?php echo __('This setting will edit the .htaccess file.', 'litespeed-cache'); ?>
-				</font>
+				<br /><?php LiteSpeed_Cache_Doc::notice_htaccess() ; ?>
 			</div>
 		</td>
 	</tr>

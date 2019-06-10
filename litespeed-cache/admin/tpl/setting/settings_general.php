@@ -1,7 +1,4 @@
-<?php
-if (!defined('WPINC')) die;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 <h3 class="litespeed-title-short">
 	<?php echo __('General', 'litespeed-cache'); ?>
@@ -12,37 +9,23 @@ if (!defined('WPINC')) die;
 
 <table><tbody>
 	<tr>
-		<th><?php echo __('Enable LiteSpeed Cache', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Enable Cache', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php
 				$id = LiteSpeed_Cache_Config::O_CACHE ;
 				//IF multisite: Add 'Use Network Admin' option,
 				//ELSE: Change 'Enable LiteSpeed Cache' selection to 'Enabled' if the 'Use Network Admin' option was previously selected.
 				//		Selection will not actually be changed unless settings are saved.
-				if ( ! is_multisite() && intval( $_options[ $id ] ) === LiteSpeed_Cache_Config::VAL_ON2 ) {
-					$_options[ $id ] = LiteSpeed_Cache_Config::VAL_ON ;
+				if ( ! is_multisite() && intval( $this->__options[ $id ] ) === LiteSpeed_Cache_Config::VAL_ON2 ) {
+					$this->__options[ $id ] = LiteSpeed_Cache_Config::VAL_ON ;
 				}
 			?>
 			<div class="litespeed-switch">
-				<?php echo $this->build_radio(
-					$id,
-					LiteSpeed_Cache_Config::VAL_OFF,
-					__('Disable', 'litespeed-cache')
-				); ?>
-
-				<?php echo $this->build_radio(
-					$id,
-					LiteSpeed_Cache_Config::VAL_ON,
-					__('Enable', 'litespeed-cache')
-				); ?>
-
+				<?php echo $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ; ?>
+				<?php echo $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ; ?>
 				<?php
-					if ( is_multisite() ){
-						echo $this->build_radio(
-							$id,
-							LiteSpeed_Cache_Config::VAL_ON2,
-							__('Use Network Admin Setting', 'litespeed-cache')
-						);
+					if ( is_multisite() ) {
+						echo $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
 					}
 				?>
 			</div>
@@ -59,65 +42,65 @@ if (!defined('WPINC')) die;
 	</tr>
 
 	<tr>
-		<th><?php echo __('Default Public Cache TTL', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Default Public Cache TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_PUB ; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __('Specify how long, in seconds, public pages are cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended( $id ) ; ?>
 				<?php $this->_validate_ttl( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __('Default Private Cache TTL', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Default Private Cache TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV ; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, private pages are cached.', 'litespeed-cache' ) ; ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended( $id ) ; ?>
 				<?php $this->_validate_ttl( $id, 60, 3600 ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __('Default Front Page TTL', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Default Front Page TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE ; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify how long, in seconds, the front page is cached.', 'litespeed-cache' ) ; ?>
-				<?php $this->recommended($id) ; ?>
+				<?php $this->recommended( $id ) ; ?>
 				<?php $this->_validate_ttl( $id, 30 ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __('Default Feed TTL', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Default Feed TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_FEED ; ?>
-			<?php $this->build_input($id); ?> <?php echo __('seconds', 'litespeed-cache'); ?>
+			<?php $this->build_input( $id ) ; ?> <?php echo __( 'seconds', 'litespeed-cache' ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, feeds are cached.', 'litespeed-cache'); ?>
-				<?php echo __('If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache'); ?>
-				<?php $this->recommended($id) ; ?>
+				<?php echo __( 'Specify how long, in seconds, feeds are cached.', 'litespeed-cache' ) ; ?>
+				<?php echo __( 'If this is set to a number less than 30, feeds will not be cached.', 'litespeed-cache' ) ; ?>
+				<?php $this->recommended( $id ) ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th><?php echo __('Default HTTP Status Code Page TTL', 'litespeed-cache'); ?></th>
+		<th><?php echo __( 'Default HTTP Status Code Page TTL', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<?php $id = LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS ; ?>
 			<?php $this->build_textarea( $id ) ; ?>
 			<?php $this->recommended( $id ) ; ?>
 			<div class="litespeed-desc">
-				<?php echo __('Specify how long, in seconds, these HTTP status pages are cached.', 'litespeed-cache'); ?>
+				<?php echo __( 'Specify how long, in seconds, these HTTP status pages are cached.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>

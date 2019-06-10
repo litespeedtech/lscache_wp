@@ -149,7 +149,7 @@ if ( ! is_multisite() || is_network_admin() ) {
 	<div class="litespeed-title"><?php echo __('Purge By...', 'litespeed-cache'); ?></div>
 	<div class="litespeed-desc">
 		<?php echo __('Select below for "Purge by" options.', 'litespeed-cache'); ?>
-		<?php echo __( 'One per line.', 'litespeed-cache' ) ; ?>
+		<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 	</div>
 
 	<?php

@@ -13,10 +13,6 @@ $menu_list = array(
 	'advanced' => __( 'Advanced', 'litespeed-cache' ),
 ) ;
 
-global $_options ;
-$_options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
-
-
 /**
  * Generate rules for setting usage
  * @since 1.6.2

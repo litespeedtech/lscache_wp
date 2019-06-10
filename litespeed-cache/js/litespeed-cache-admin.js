@@ -164,7 +164,7 @@ var _litespeed_dots ;
 		litespeed_cdn_mapping_del_init() ;
 
 		/** Object Cache switching */
-		$( '#litespeed-oc-mem' ).click( function( event ) {
+		$( 'input[type="radio"][mem]' ).click( function( event ) { todo
 			$( '[name="litespeed-cache-conf[cache_object_port]"]' ).val( 11211 ) ;
 			$( '[data="litespeed-mem-divs"]' ).removeClass( 'litespeed-hide' ) ;
 			$( '[data="litespeed-redis-divs"]' ).addClass( 'litespeed-hide' ) ;

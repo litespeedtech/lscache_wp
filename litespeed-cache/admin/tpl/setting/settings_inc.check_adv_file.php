@@ -1,13 +1,11 @@
-<?php
-if ( ! defined( 'WPINC' ) ) die ;
+<?php defined( 'WPINC' ) || exit ; ?>
 
-?>
 	<tr>
 		<th><?php echo __( 'Check Advanced Cache', 'litespeed-cache' ) ; ?></th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE;
-			$this->build_checkbox($id, __('Include advanced-cache.php', 'litespeed-cache'), $_options[$id]);
+			$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ;
+			$this->build_checkbox( $id, __( 'Include advanced-cache.php', 'litespeed-cache' ) ) ;
 		?>
 			<div class="litespeed-desc">
 				<?php echo __( 'The advanced-cache.php file is used by many caching plugins to signal that a cache is active.', 'litespeed-cache' ) ; ?>

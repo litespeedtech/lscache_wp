@@ -1,10 +1,7 @@
-<?php
-if ( ! defined( 'WPINC' ) ) die ;
-
-?>
+<?php defined( 'WPINC' ) || exit ; ?>
 
 <h3 class="litespeed-title-short">
-	<?php echo __('Tuning Settings', 'litespeed-cache'); ?>
+	<?php echo __( 'Tuning Settings', 'litespeed-cache' ) ; ?>
 	<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:tuning', false, 'litespeed-learn-more' ) ; ?>
 </h3>
 
@@ -32,13 +29,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'CSS Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::O_OPTM_CSS_EXC); ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_CSS_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed CSS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API', 'litespeed-cache'); ?>:
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_optimize_css_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
 				</font>
@@ -58,7 +55,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<?php echo sprintf( __( 'Only set to %s when changing the order of combined and uncombined JS is needed.', 'litespeed-cache'), __( 'ON', 'litespeed-cache' ) ) ; ?>
 				</font>
 				<br /><font class="litespeed-success">
-					<?php echo __('API', 'litespeed-cache'); ?>:
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded from moving to top/bottom.', 'litespeed-cache' ), '<code>data-optimized="0"</code>' ) ; ?>
 				</font>
 			</div>
@@ -68,13 +65,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 	<tr>
 		<th><?php echo __( 'JS Excludes', 'litespeed-cache' ) ; ?></th>
 		<td>
-			<?php $this->build_textarea(LiteSpeed_Cache_Config::O_OPTM_JS_EXC); ?>
+			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_OPTM_JS_EXC ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be minified/combined.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API', 'litespeed-cache'); ?>:
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_cache_optimize_js_excludes</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-optimize="1"</code>' ) ; ?>
 				</font>
@@ -107,7 +104,7 @@ if ( ! defined( 'WPINC' ) ) die ;
 					<?php echo __( 'Google reCAPTCHA will be bypassed automatically.', 'litespeed-cache' ) ; ?>
 				</font>
 				<br /><font class="litespeed-success">
-					<?php echo __('API', 'litespeed-cache'); ?>:
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Append query string %s to the resources to bypass this action.', 'litespeed-cache' ), '<code>&_litespeed_rm_qs=0</code>' ) ; ?>
 				</font>
 			</div>
@@ -153,9 +150,9 @@ if ( ! defined( 'WPINC' ) ) die ;
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed JS files will not be deferred.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
-				<?php echo __('One per line.', 'litespeed-cache'); ?>
+				<?php LiteSpeed_Cache_Doc::one_per_line() ; ?>
 				<br /><font class="litespeed-success">
-					<?php echo __('API', 'litespeed-cache'); ?>:
+					<?php echo __( 'API', 'litespeed-cache' ) ; ?>:
 					<?php echo sprintf( __( 'Filter %s is supported.', 'litespeed-cache' ), '<code>litespeed_optm_js_defer_exc</code>' ) ; ?>
 					<?php echo sprintf( __( 'Elements with attribute %s in html code will be excluded.', 'litespeed-cache' ), '<code>data-no-defer="1"</code>' ) ; ?>
 				</font>
@@ -189,13 +186,12 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __('Role Excludes', 'litespeed-cache'); ?></th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_OPTM_EXC_ROLES . "][", $title, $this->__cfg->in_optm_exc_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_OPTM_EXC_ROLES . '[]', $title, $this->__cfg->in_optm_exc_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from all optimizations.', 'litespeed-cache' ) ; ?>
 			</div>
 		</td>
 	</tr>
-
 
 </tbody></table>

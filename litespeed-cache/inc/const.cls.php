@@ -563,9 +563,12 @@ class LiteSpeed_Cache_Const
 					 * 		[cdn.mapping]
 					 *   	url[0] = 'https://example.com/'
 					 *     	inc_js[0] = true
+					 *     	filetype[0] = '.css
+					 *     				   .js
+					 *     				   .jpg'
 					 *
 					 * format out:
-					 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true ]
+					 * 		[0] = [ 'url' => 'https://example.com', 'inc_js' => true, 'filetype' => [ '.css', '.js', '.jpg' ] ]
 					 */
 					if ( $k == self::O_CDN_MAPPING ) {
 						$mapping_fields = array(
@@ -573,13 +576,17 @@ class LiteSpeed_Cache_Const
 							self::CDN_MAPPING_INC_IMG,
 							self::CDN_MAPPING_INC_CSS,
 							self::CDN_MAPPING_INC_JS,
-							self::CDN_MAPPING_FILETYPE
+							self::CDN_MAPPING_FILETYPE, // Array
 						) ;
 						$ini_v = array() ;
-						foreach ( $default_ini_cfg[ $item ][ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
+						foreach ( $default_ini_cfg[ $k ][ self::CDN_MAPPING_URL ] as $k2 => $v2 ) {// $k2 is numeric
 							$this_row = array() ;
 							foreach ( $mapping_fields as $v3 ) {
-								$this_row[ $v3 ] = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false ;
+								$this_v = ! empty( $ini_v[ $v3 ][ $k2 ] ) ? $ini_v[ $v3 ][ $k2 ] : false ;
+								if ( $v3 == self::CDN_MAPPING_FILETYPE ) {
+									$this_v = $this_v ? LiteSpeed_Cache_Utility::sanitize_lines( $this_v ) : array() ;
+								}
+								$this_row[ $v3 ] = $this_v ;
 							}
 							$ini_v[ $k2 ] = $this_row ;
 						}
@@ -588,8 +595,7 @@ class LiteSpeed_Cache_Const
 					 * Default multiple lines to array
 					 */
 					else {
-						$ini_v = explode( "\n", $ini_v ) ;
-						$ini_v = array_map( 'trim', $ini_v ) ;
+						$ini_v = LiteSpeed_Cache_Utility::sanitize_lines( $ini_v ) ;
 					}
 				}
 
