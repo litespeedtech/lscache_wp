@@ -352,8 +352,8 @@ class LiteSpeed_Cache_ESI
 			$params[ 'is_json' ] = 1 ;
 		}
 
-		$params = apply_filters( 'litespeed_cache_sub_esi_params', $params, $block_id ) ;
-		$control = apply_filters( 'litespeed_cache_sub_esi_control', $control, $block_id ) ;
+		$params = apply_filters( 'litespeed_esi_params', $params, $block_id ) ;
+		$control = apply_filters( 'litespeed_esi_control', $control, $block_id ) ;
 		if ( !is_array($params) || !is_string($control) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( "[ESI] 🛑 Sub hooks returned Params: \n" . var_export($params, true) . "\ncache control: \n" . var_export($control, true) ) ;
 
