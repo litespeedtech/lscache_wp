@@ -34,7 +34,6 @@ class LiteSpeed_Cache
 	const ACTION_KEY = 'LSCWP_CTRL' ;
 	const ACTION_DISMISS = 'dismiss' ;
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
-	const ACTION_SAVE_SETTINGS = 'save-settings' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
 	const ACTION_PURGE_BY = 'PURGE_BY' ;
 	const ACTION_PURGE_EMPTYCACHE = 'PURGE_EMPTYCACHE' ;

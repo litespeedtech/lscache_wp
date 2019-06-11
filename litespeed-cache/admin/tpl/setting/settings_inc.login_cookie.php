@@ -1,10 +1,12 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 
 	<tr>
-		<th><?php echo __( 'Login Cookie', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
 			$this->build_input( $id ) ;
 
 			$this->_validate_syntax( $id ) ;

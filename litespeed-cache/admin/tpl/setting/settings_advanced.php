@@ -23,9 +23,11 @@
 	?>
 
 	<tr>
-		<th><?php echo __( 'Purge All Hooks', 'litespeed-cache' ) ; ?></th>
-		<td>
+		<th>
 			<?php $id = LiteSpeed_Cache_Config::O_PURGE_HOOK_ALL ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
 			<?php $this->build_textarea( $id, 50 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 
@@ -37,9 +39,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Improve HTTP/HTTPS Compatibility', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_UTIL_NO_HTTPS_VARY ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_UTIL_NO_HTTPS_VARY ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable this option if you are using both HTTP and HTTPS in the same domain and are noticing cache irregularities.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#improve_http_https_compatibility' ) ; ?>
@@ -48,9 +53,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Instant Click', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_UTIL_INSTANT_CLICK ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'When a vistor hovers over a page link, preload that page. This will speed up the visit to that link.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:advanced#instant_click' ) ; ?>

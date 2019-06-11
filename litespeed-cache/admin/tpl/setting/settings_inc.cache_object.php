@@ -25,9 +25,12 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 
 
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
-		<th><?php echo __( 'Object Cache', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_OBJECT ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_OBJECT ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Use object cache functionality.', 'litespeed-cache' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:cache:object_cache' ) ; ?>

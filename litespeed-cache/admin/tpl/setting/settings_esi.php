@@ -37,9 +37,12 @@
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Enable ESI', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_ESI ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_ESI ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Enable caches public pages for logged in users and serves the Admin Bar and Comment Form via ESI blocks. These two blocks will be uncached unless enabled below.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -47,9 +50,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Cache Admin Bar', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_ESI_CACHE_ADMBAR ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_ESI_CACHE_ADMBAR ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __(' Cache the build-in Admin Bar ESI block.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -57,9 +63,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Cache Comment Form', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_ESI_CACHE_COMMFORM ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_ESI_CACHE_COMMFORM ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Cache the build-in Comment Form ESI block.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -67,7 +76,10 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Vary Group', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<table class="litespeed-vary-table"><tbody>
 			<?php foreach ( $roles as $role => $title ): ?>
@@ -76,7 +88,7 @@
 					<td class='litespeed-vary-val'>
 					<?php
 						$this->build_input(
-							LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP . '[' . $role . ']',
+							$id . '[' . $role . ']',
 							'litespeed-input-short',
 							LiteSpeed_Cache_Vary::get_instance()->in_vary_group( $role )
 						) ;

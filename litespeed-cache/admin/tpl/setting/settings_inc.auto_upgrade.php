@@ -1,9 +1,13 @@
 <?php defined( 'WPINC' ) || exit ; ?>
+
 	<!-- build_setting_auto_upgrade -->
 	<tr>
-		<th><?php echo __( 'Automatically Upgrade', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_AUTO_UPGRADE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_AUTO_UPGRADE ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Turn this option ON to have LiteSpeed Cache updated automatically, whenever a new version is released. If OFF, update manually as usual.', 'litespeed-cache' ) ; ?>
 			</div>

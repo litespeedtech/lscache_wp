@@ -9,9 +9,12 @@
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Cache Logged-in Users', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_PRIV ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CACHE_PRIV ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Privately cache frontend pages for logged-in users. (LSWS %s required)', 'litespeed-cache' ), 'v5.2.1+' ) ; ?>
 			</div>
@@ -19,9 +22,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Cache Commenters', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_COMMENTER ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CACHE_COMMENTER ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Privately cache commenters that have pending comments. Disabling this option will serve non-cacheable pages to commenters. (LSWS %s required)', 'litespeed-cache' ), 'v5.2.1+' ) ; ?>
 			</div>
@@ -29,9 +35,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Cache REST API', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_REST ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CACHE_REST ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Cache requests made by WordPress REST API calls.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -39,9 +48,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Cache Login Page', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_CACHE_PAGE_LOGIN ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Disabling this option may negatively affect performance.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -57,9 +69,12 @@
 	?>
 
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
-		<th><?php echo __( 'Private Cached URIs', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_PRIV_URI ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'URI Paths containing these strings will NOT be cached as public.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -68,9 +83,12 @@
 	</tr>
 
 	<tr <?php if ( isset( $_hide_in_basic_mode ) ) echo $_hide_in_basic_mode ; ?>>
-		<th><?php echo __( 'Drop Query String', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_DROP_QS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_DROP_QS, 40 ) ; ?>
+			<?php $this->build_textarea( $id, 40 ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Ignore certain query strings when caching.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, to drop parameters beginning with %s, %s can be used here.', 'litespeed-cache' ), '<code>utm</code>', '<code>utm*</code>' ) ; ?>

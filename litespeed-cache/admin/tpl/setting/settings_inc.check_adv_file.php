@@ -1,10 +1,12 @@
 <?php defined( 'WPINC' ) || exit ; ?>
 
 	<tr>
-		<th><?php echo __( 'Check Advanced Cache', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ;
 			$this->build_checkbox( $id, __( 'Include advanced-cache.php', 'litespeed-cache' ) ) ;
 		?>
 			<div class="litespeed-desc">

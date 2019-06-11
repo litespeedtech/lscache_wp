@@ -127,15 +127,26 @@ class LiteSpeed_Cache_Admin_Display
 	 * @access public
 	 * @param  string $action
 	 */
-	public function form_action( $action, $type = false )
+	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false )
 	{
+		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative">' ;
 		echo '<input type="hidden" name="' . LiteSpeed_Cache::ACTION_KEY . '" value="' . $action . '" />' ;
 		if ( $type ) {
-			echo '<input type="hidden" name="type" value="' . $type . '" />' ;
+			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;
 		}
-		wp_nonce_field($action, LiteSpeed_Cache::NONCE_NAME) ;
+		wp_nonce_field( $action, LiteSpeed_Cache::NONCE_NAME ) ;
 	}
 
+	/**
+	 * Show the title of one line
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function title( $id )
+	{
+		echo LiteSpeed_Cache_Lang::title( $id ) ;
+	}
 
 	/**
 	 * Register the admin menu display.

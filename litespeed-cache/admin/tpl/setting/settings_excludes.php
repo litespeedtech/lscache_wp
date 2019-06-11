@@ -9,9 +9,12 @@
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Force Cache URIs', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_FORCE_URI ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will be cached regardless of no-cacheable settings.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -23,9 +26,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Do Not Cache URIs', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_EXC ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Paths containing these strings will not be cached.', 'litespeed-cache' ) ; ?>
 				<?php $this->_uri_usage_example() ; ?>
@@ -35,9 +41,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Do Not Cache Query Strings', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_QS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_CACHE_EXC_QS ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Query string containing these parameters will not be cached.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'For example, for %s, %s and %s can be used here.', 'litespeed-cache' ), '<code>?aa=bb&cc=dd</code>', '<code>aa</code>', '<code>cc</code>' ) ; ?>
@@ -47,10 +56,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Do Not Cache Categories', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_CAT ;
 				$excludes_buf = '' ;
 				if ( $this->__options[ $id ] ) {
 					$excludes_buf = implode( "\n", array_map( 'get_cat_name', $this->__options[ $id ] ) ) ;
@@ -75,10 +86,12 @@
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Do Not Cache Tags', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<?php
-				$id = LiteSpeed_Cache_Config::O_CACHE_EXC_TAG;
 				$excludes_buf = '';
 				if ( $this->__options[ $id ] ) {
 					$tag_names = array() ;
@@ -120,10 +133,13 @@
 	?>
 
 	<tr>
-		<th><?php echo __( 'Do Not Cache Roles', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<?php foreach ( $roles as $role => $title ): ?>
-				<?php $this->build_checkbox( LiteSpeed_Cache_Config::O_CACHE_EXC_ROLES . '[]', $title, LiteSpeed_Cache_Control::get_instance()->in_cache_exc_roles( $role ), $role ) ; ?>
+				<?php $this->build_checkbox( $id . '[]', $title, LiteSpeed_Cache_Control::get_instance()->in_cache_exc_roles( $role ), $role ) ; ?>
 			<?php endforeach; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Selected roles will be excluded from cache.', 'litespeed-cache' ) ; ?>

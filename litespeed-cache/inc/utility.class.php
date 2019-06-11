@@ -667,7 +667,7 @@ class LiteSpeed_Cache_Utility
 			$url = parse_url( htmlspecialchars_decode( $url ) ) ;
 			parse_str( $url[ 'query' ], $query ) ;
 
-			$built_arr = array_merge( $query, LiteSpeed_Cache_Router::build_type( $type ) ) ;
+			$built_arr = array_merge( $query, array( LiteSpeed_Cache_Router::TYPE => $type ) ) ;
 			if ( $append_arr ) {
 				$built_arr = array_merge( $built_arr, $append_arr ) ;
 			}

@@ -101,13 +101,11 @@ if ( ! $adv_mode ) {
 	</h2>
 
 	<div class="litespeed-body">
-	<form method="post" action="admin.php?page=lscache-settings" id="litespeed_form_options" class="litespeed-relative">
-		<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_SAVE_SETTINGS ; ?>" />
 
 	<?php
-	require LSCWP_DIR . "admin/tpl/inc/check_if_network_disable_all.php" ;
+	$this->form_action() ;
 
-	settings_fields(LiteSpeed_Cache_Config::OPTION_NAME) ;
+	require LSCWP_DIR . "admin/tpl/inc/check_if_network_disable_all.php" ;
 
 	// include all tpl for faster UE
 	foreach ($menu_list as $tab => $val) {

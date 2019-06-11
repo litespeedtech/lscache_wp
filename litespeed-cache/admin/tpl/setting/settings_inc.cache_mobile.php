@@ -2,28 +2,29 @@
 
 	<!-- build_setting_mobile_view start -->
 	<tr>
-		<th><?php echo __( 'Cache Mobile', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_MOBILE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 			<?php
-				$this->build_switch( LiteSpeed_Cache_Config::O_CACHE_MOBILE ) ;
+				$this->build_switch( $id ) ;
 			?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Cache mobile views separately.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Only enable for AMP or mobile-specific design/content, not for responsive sites.', 'litespeed-cache' ) ; ?>
-				<br /><font class="litespeed-warning">
-					⚠️
-					<?php echo __( 'This setting will edit the .htaccess file.', 'litespeed-cache' ) ; ?>
-				</font>
+				<br /><?php LiteSpeed_Cache_Doc::notice_htaccess() ; ?>
 			</div>
 		</td>
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'List of Mobile User Agents', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
 		<?php
-			$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
-
 			// if set, use value as input value
 			if ( $this->__options[ LiteSpeed_Cache_Config::O_CACHE_MOBILE ] ) {
 

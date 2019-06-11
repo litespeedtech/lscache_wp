@@ -16,6 +16,10 @@ class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
 
+	const ACTION_SAVE_SETTINGS = 'save-settings' ;
+
+	const TYPE = 'litespeed_type' ;
+
 	private static $_esi_enabled ;
 	private static $_is_ajax ;
 	private static $_is_logged_in ;
@@ -386,17 +390,6 @@ class LiteSpeed_Cache_Router
 	}
 
 	/**
-	 * Create type value for url
-	 *
-	 * @since 1.6
-	 * @access public
-	 */
-	public static function build_type( $val )
-	{
-		return array( 'litespeed_type' => $val ) ;
-	}
-
-	/**
 	 * Get type value
 	 *
 	 * @since 1.6
@@ -404,14 +397,14 @@ class LiteSpeed_Cache_Router
 	 */
 	public static function verify_type()
 	{
-		if ( empty( $_REQUEST[ 'litespeed_type' ] ) ) {
+		if ( empty( $_REQUEST[ self::TYPE ] ) ) {
 			LiteSpeed_Cache_Log::debug( '[Router] no type', 2 ) ;
 			return false ;
 		}
 
-		LiteSpeed_Cache_Log::debug( '[Router] parsed type: ' . $_REQUEST[ 'litespeed_type' ], 2 ) ;
+		LiteSpeed_Cache_Log::debug( '[Router] parsed type: ' . $_REQUEST[ self::TYPE ], 2 ) ;
 
-		return $_REQUEST[ 'litespeed_type' ] ;
+		return $_REQUEST[ self::TYPE ] ;
 	}
 
 	/**
@@ -525,7 +518,7 @@ class LiteSpeed_Cache_Router
 			case LiteSpeed_Cache::ACTION_CONF:
 			case LiteSpeed_Cache::ACTION_ACTIVATION:
 			case LiteSpeed_Cache::ACTION_UTIL:
-			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS: // Save settings
+			case self::ACTION_SAVE_SETTINGS: // Save settings
 				if ( $_can_option && ! $_is_network_admin ) {
 					self::$_action = $action ;
 				}

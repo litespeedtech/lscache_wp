@@ -143,8 +143,8 @@ class LiteSpeed_Cache_Admin
 				LiteSpeed_Cache_Admin_Rules::get_instance()->htaccess_editor_save() ;
 				break ;
 
-			case LiteSpeed_Cache::ACTION_SAVE_SETTINGS :
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings( $_POST[ LiteSpeed_Cache_Config::OPTION_NAME ] ) ;
+			case LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS :
+				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings() ;
 				break ;
 
 

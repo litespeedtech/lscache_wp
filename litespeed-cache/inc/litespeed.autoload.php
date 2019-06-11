@@ -40,6 +40,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_GUI'				=> 'inc/gui.class.php',
 			'LiteSpeed_Cache_Import'			=> 'inc/import.class.php',
 			'LiteSpeed_Cache_Img_Optm'			=> 'inc/img_optm.class.php',
+			'LiteSpeed_Cache_Lang'				=> 'inc/lang.cls.php',
 			'LiteSpeed_Cache_Log'				=> 'inc/log.class.php',
 			'LiteSpeed_Cache_Media'				=> 'inc/media.class.php',
 			'LiteSpeed_Cache_Object'			=> 'inc/object.class.php',

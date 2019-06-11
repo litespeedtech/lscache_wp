@@ -12,9 +12,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 
 <table><tbody>
 	<tr>
-		<th><?php echo __( 'Lazy Load Images', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_LAZY ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load images only when they enter the viewport.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
@@ -27,9 +30,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazy Load Image Excludes', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_MEDIA_LAZY_EXC ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Listed images will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full URLs and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -44,9 +50,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazy Load Image Class Name Excludes', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_textarea( LiteSpeed_Cache_Config::O_MEDIA_LAZY_CLS_EXC ) ; ?>
+			<?php $this->build_textarea( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Images containing these class names will not be lazy loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'Both full and partial strings can be used.', 'litespeed-cache' ) ; ?>
@@ -56,9 +65,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazy Load Image Placeholder', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_input( LiteSpeed_Cache_Config::O_MEDIA_LAZY_PLACEHOLDER, 'litespeed-input-long' ) ; ?>
+			<?php $this->build_input( $id, 'litespeed-input-long' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify a base64 image to be used as a placeholder while other images finish loading.', 'litespeed-cache' ) ; ?>
 				<br /><?php echo sprintf( __( 'This can be predefined in %2$s as well using constant %1$s, with this setting taking priority.', 'litespeed-cache' ), '<code>LITESPEED_PLACEHOLDER</code>', '<code>wp-config.php</code>' ) ; ?>
@@ -69,9 +81,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Responsive Placeholder', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Responsive image placeholders can help to reduce layout reshuffle when images are loaded.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will generate the placeholder with same dimensions as the image if it has the width and height attributes.', 'litespeed-cache' ) ; ?>
@@ -80,9 +95,11 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Responsive Placeholder Background Color', 'litespeed-cache' ) ; ?></th>
-		<td>
+		<th class="litespeed-padding-left">
 			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_COLOR ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
 			<?php $this->build_input( $id, null, null, 'color' ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Specify the placeholder color you want to use.', 'litespeed-cache' ) ; ?>
@@ -92,9 +109,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Generate Reponsive Placeholder In Background', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_PLACEHOLDER_RESP_ASYNC ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Automatically generate %s in the background via a cron-based queue.', 'litespeed-cache' ), __( 'Responsive Placeholder', 'litespeed-cache' ) ) ; ?>
 				<?php echo sprintf(
@@ -130,9 +150,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Lazy Load Iframes', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_IFRAME_LAZY ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Load iframes only when they enter the viewport.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve page loading time by reducing initial HTTP requests.', 'litespeed-cache' ) ; ?>
@@ -141,9 +164,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Inline Lazy Load Images Library', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_MEDIA_LAZYJS_INLINE ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_MEDIA_LAZYJS_INLINE ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Include the lazy load image Javascript library inline.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve your speed score in services like Pingdom, GTmetrix and PageSpeed.', 'litespeed-cache' ) ; ?>
@@ -153,9 +179,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th><?php echo __( 'Optimize Automatically', 'litespeed-cache' ) ; ?></th>
+		<th>
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_AUTO ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically request optimization via cron job.', 'litespeed-cache' ) ; ?>
 				<?php echo sprintf( __( 'Requests can only be sent when recovered credits is %s or more.', 'litespeed-cache' ), '<code>' . LiteSpeed_Cache_Img_Optm::NUM_THRESHOLD_AUTO_REQUEST . '</code>' ) ; ?>
@@ -164,9 +193,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Optimization Cron', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_CRON ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_CRON ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Disabling this will stop the cron job responsible for fetching optimized images from LiteSpeed\'s Image Server.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -174,9 +206,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Optimize Original Images', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_ORI ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize images and save backups of the originals in the same folder.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -184,9 +219,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Remove Original Backups', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_RM_BKUP ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Automatically remove the original image backups after fetching optimized images.', 'litespeed-cache' ) ; ?>
 
@@ -200,9 +238,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Optimize WebP Versions', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Request WebP versions of original images when doing optimization.', 'litespeed-cache' ) ; ?>
 			</div>
@@ -210,9 +251,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Optimize Losslessly', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_LOSSLESS ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Optimize images using lossless compression.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This can improve quality but may result in larger images than lossy compression will.', 'litespeed-cache' ) ; ?>
@@ -221,9 +265,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'Preserve EXIF/XMP data', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_EXIF ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo __( 'Preserve EXIF data (copyright, GPS, comments, keywords, etc) when optimizing.', 'litespeed-cache' ) ; ?>
 				<?php echo __( 'This will increase the size of optimized files.', 'litespeed-cache' ) ; ?>
@@ -240,9 +287,11 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	?>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'WebP Attribute To Replace', 'litespeed-cache' ) ; ?></th>
-		<td>
+		<th class="litespeed-padding-left">
 			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_ATTR ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
+		<td>
 			<?php $this->build_textarea( $id, 40 ) ; ?>
 			<?php $this->recommended( $id, true ) ; ?>
 			<div class="litespeed-desc">
@@ -255,9 +304,12 @@ $last_responsive_placeholder_generated = LiteSpeed_Cache_Media::get_summary() ;
 	</tr>
 
 	<tr>
-		<th class="litespeed-padding-left"><?php echo __( 'WebP For Extra srcset', 'litespeed-cache' ) ; ?></th>
+		<th class="litespeed-padding-left">
+			<?php $id = LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET ; ?>
+			<?php $this->title( $id ) ; ?>
+		</th>
 		<td>
-			<?php $this->build_switch( LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE_SRCSET ) ; ?>
+			<?php $this->build_switch( $id ) ; ?>
 			<div class="litespeed-desc">
 				<?php echo sprintf( __( 'Enable replacement of WebP in %s elements that were generated outside of WordPress logic.', 'litespeed-cache' ), '<code>srcset</code>' ) ; ?>
 				<?php $this->learn_more( 'https://www.litespeedtech.com/support/wiki/doku.php/litespeed_wiki:cache:lscwp:configuration:media#webp_for_extra_srcset' ) ; ?>

@@ -125,7 +125,7 @@ var _litespeed_dots ;
 		});
 
 		/** Lets copy one more submit button **/
-		if ( $( '#litespeed_form_options' ).length > 0 ) {
+		if ( $( '#litespeed_form_options' ).length > 0 ) {xx
 			$( '#litespeed_form_options [type="submit"]' ).clone().addClass( 'litespeed-float-submit' ).prependTo( '#litespeed_form_options' ) ;
 		}
 
