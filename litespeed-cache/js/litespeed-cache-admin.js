@@ -125,8 +125,9 @@ var _litespeed_dots ;
 		});
 
 		/** Lets copy one more submit button **/
-		if ( $( '#litespeed_form_options' ).length > 0 ) {xx
-			$( '#litespeed_form_options [type="submit"]' ).clone().addClass( 'litespeed-float-submit' ).prependTo( '#litespeed_form_options' ) ;
+		if ( $( 'input[name="LSCWP_CTRL"]' ).length > 0 ) {
+			var form = $( 'input[name="LSCWP_CTRL"]' ).parent( 'form' ) ;
+			form.find( ' [type="submit"]' ).clone().addClass( 'litespeed-float-submit' ).prependTo( form ) ;
 		}
 
 		/** Promo banner **/
@@ -164,7 +165,7 @@ var _litespeed_dots ;
 		litespeed_cdn_mapping_del_init() ;
 
 		/** Object Cache switching */
-		$( 'input[type="radio"][mem]' ).click( function( event ) { todo
+		$( 'input[type="radio"][mem]' ).click( function( event ) {// todo
 			$( '[name="litespeed-cache-conf[cache_object_port]"]' ).val( 11211 ) ;
 			$( '[data="litespeed-mem-divs"]' ).removeClass( 'litespeed-hide' ) ;
 			$( '[data="litespeed-redis-divs"]' ).addClass( 'litespeed-hide' ) ;

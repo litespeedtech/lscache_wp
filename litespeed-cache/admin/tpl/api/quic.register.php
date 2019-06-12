@@ -7,10 +7,10 @@ if ( ! defined( 'WPINC' ) ) {
 <h1 class="litespeed-title"><?php echo __('Quic Cloud User Panel', 'litespeed-cache') ; ?></h1>
 
 <form method="post" action="admin.php" id="litespeed_form_quic" class="litespeed-relative">
-	<input type="hidden" name="<?php echo LiteSpeed_Cache::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_CDN_QUIC ; ?>" />
+	<input type="hidden" name="<?php echo LiteSpeed_Cache_Router::ACTION_KEY ; ?>" value="<?php echo LiteSpeed_Cache::ACTION_CDN_QUIC ; ?>" />
 	<input type="hidden" name="step" value="register" />
 	<input type="hidden" name="email" value="<?php echo $data[ 'email' ] ; ?>" />
-	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache::NONCE_NAME ) ; ?>
+	<?php wp_nonce_field( LiteSpeed_Cache::ACTION_CDN_QUIC, LiteSpeed_Cache_Router::NONCE_NAME ) ; ?>
 
 	<?php if ( ! empty( $data[ '_err' ] ) ) : ?>
 	<div class="litespeed-callout-danger">

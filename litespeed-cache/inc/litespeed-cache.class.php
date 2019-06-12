@@ -30,8 +30,6 @@ class LiteSpeed_Cache
 
 	const PAGE_EDIT_HTACCESS = 'lscache-edit-htaccess' ;
 
-	const NONCE_NAME = 'LSCWP_NONCE' ;
-	const ACTION_KEY = 'LSCWP_CTRL' ;
 	const ACTION_DISMISS = 'dismiss' ;
 	const ACTION_SAVE_HTACCESS = 'save-htaccess' ;
 	const ACTION_SAVE_SETTINGS_NETWORK = 'save-settings-network' ;
@@ -188,7 +186,7 @@ class LiteSpeed_Cache
 		 * Check if is non optm simulator
 		 * @since  2.9
 		 */
-		if ( ! empty( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache::ACTION_KEY ] == 'before_optm' ) {
+		if ( ! empty( $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] ) && $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] == 'before_optm' ) {
 			! defined( 'LITESPEED_BYPASS_OPTM' ) && define( 'LITESPEED_BYPASS_OPTM', true ) ;
 		}
 

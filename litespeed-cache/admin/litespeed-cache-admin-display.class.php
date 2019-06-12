@@ -123,18 +123,17 @@ class LiteSpeed_Cache_Admin_Display
 	/**
 	 * Output litespeed form info
 	 *
-	 * @since    1.1.0
+	 * @since    3.0
 	 * @access public
-	 * @param  string $action
 	 */
 	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false )
 	{
 		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative">' ;
-		echo '<input type="hidden" name="' . LiteSpeed_Cache::ACTION_KEY . '" value="' . $action . '" />' ;
+		echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::ACTION_KEY . '" value="' . $action . '" />' ;
 		if ( $type ) {
 			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;
 		}
-		wp_nonce_field( $action, LiteSpeed_Cache::NONCE_NAME ) ;
+		wp_nonce_field( $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
 	}
 
 	/**

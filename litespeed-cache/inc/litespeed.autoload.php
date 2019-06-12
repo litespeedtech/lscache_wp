@@ -62,7 +62,7 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Admin_Optimize'	=> 'admin/litespeed-cache-admin-optimize.class.php',
 			'LiteSpeed_Cache_Admin_Report'		=> 'admin/litespeed-cache-admin-report.class.php',
 			'LiteSpeed_Cache_Admin_Rules'		=> 'admin/litespeed-cache-admin-rules.class.php',
-			'LiteSpeed_Cache_Admin_Settings'	=> 'admin/litespeed-cache-admin-settings.class.php',
+			'LiteSpeed_Cache_Admin_Settings'	=> 'admin/admin-settings.class.php',
 
 			'LiteSpeed_Cache_Cli_Admin'			=> 'cli/litespeed-cache-cli-admin.class.php',
 			'LiteSpeed_Cache_CLI_IAPI'			=> 'cli/litespeed-cache-cli-iapi.class.php',

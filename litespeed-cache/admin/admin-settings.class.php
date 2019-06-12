@@ -36,6 +36,22 @@ class LiteSpeed_Cache_Admin_Settings
 	}
 
 	/**
+	 * Save settings
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function save()
+	{
+		LiteSpeed_Cache_Log::debug( '[Settings] saving' ) ;
+		var_dump($_POST);exit;
+
+		$this->_input = $input ;
+
+		$this->_validate_general() ;
+	}
+
+	/**
 	 * Callback function that will validate any changes made in the settings page.
 	 *
 	 * NOTE: Anytime that validate_plugin_settings is called, `convert_options_to_input` must be done first if not from option page
@@ -398,12 +414,10 @@ class LiteSpeed_Cache_Admin_Settings
 	{
 		$ids = array(
 			LiteSpeed_Cache_Config::O_CACHE,
-			// TTL check
 			LiteSpeed_Cache_Config::O_CACHE_TTL_PUB,
 			LiteSpeed_Cache_Config::O_CACHE_TTL_PRIV,
 			LiteSpeed_Cache_Config::O_CACHE_TTL_FRONTPAGE,
 			LiteSpeed_Cache_Config::O_CACHE_TTL_FEED,
-
 			LiteSpeed_Cache_Config::O_CACHE_TTL_STATUS,
 		) ;
 		$this->_update( $ids ) ;
@@ -493,7 +507,7 @@ class LiteSpeed_Cache_Admin_Settings
 		$excludes = array() ;
 		if ( isset( $this->_input[ $id ] ) ) {
 			$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-			foreach ( $this->_input[ $id ] as $v ) {				}
+			foreach ( $this->_input[ $id ] as $v ) {
 				$cat_id = get_cat_ID( $v ) ;
 				if ( $cat_id == 0 ) {
 					$this->_err[] = LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_SETTING_CAT, $v ) ;

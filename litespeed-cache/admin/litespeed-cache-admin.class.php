@@ -144,7 +144,7 @@ class LiteSpeed_Cache_Admin
 				break ;
 
 			case LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS :
-				LiteSpeed_Cache_Admin_Settings::get_instance()->validate_plugin_settings() ;
+				LiteSpeed_Cache_Admin_Settings::get_instance()->save() ;
 				break ;
 
 
@@ -230,11 +230,11 @@ class LiteSpeed_Cache_Admin
 		$qs = '' ;
 		if ( ! $url ) {
 			if ( ! empty( $_GET ) ) {
-				if ( isset( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
-					unset( $_GET[ LiteSpeed_Cache::ACTION_KEY ] ) ;
+				if ( isset( $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ) {
+					unset( $_GET[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ;
 				}
-				if ( isset( $_GET[ LiteSpeed_Cache::NONCE_NAME ] ) ) {
-					unset( $_GET[ LiteSpeed_Cache::NONCE_NAME ] ) ;
+				if ( isset( $_GET[ LiteSpeed_Cache_Router::NONCE_NAME ] ) ) {
+					unset( $_GET[ LiteSpeed_Cache_Router::NONCE_NAME ] ) ;
 				}
 				if ( ! empty( $_GET ) ) {
 					$qs = '?' . http_build_query( $_GET ) ;

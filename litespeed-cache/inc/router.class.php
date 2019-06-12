@@ -16,7 +16,9 @@ class LiteSpeed_Cache_Router
 {
 	private static $_instance ;
 
+	const NONCE_NAME = 'LSCWP_NONCE' ;
 	const ACTION_SAVE_SETTINGS = 'save-settings' ;
+	const ACTION_KEY = 'LSCWP_CTRL' ;
 
 	const TYPE = 'litespeed_type' ;
 
@@ -415,12 +417,12 @@ class LiteSpeed_Cache_Router
 	 */
 	private function verify_action()
 	{
-		if ( empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
+		if ( empty( $_REQUEST[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ) {
 			LiteSpeed_Cache_Log::debug2( '[Router] LSCWP_CTRL bypassed empty' ) ;
 			return ;
 		}
 
-		$action = $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ;
+		$action = $_REQUEST[ LiteSpeed_Cache_Router::ACTION_KEY ] ;
 		$_is_public_action = false ;
 
 		// Each action must have a valid nonce unless its from admin ip and is public action
@@ -602,7 +604,7 @@ class LiteSpeed_Cache_Router
 	 */
 	private function verify_nonce( $action )
 	{
-		if ( ! isset( $_REQUEST[LiteSpeed_Cache::NONCE_NAME] ) || ! wp_verify_nonce( $_REQUEST[LiteSpeed_Cache::NONCE_NAME], $action ) ) {
+		if ( ! isset( $_REQUEST[LiteSpeed_Cache_Router::NONCE_NAME] ) || ! wp_verify_nonce( $_REQUEST[LiteSpeed_Cache_Router::NONCE_NAME], $action ) ) {
 			return false ;
 		}
 		else{

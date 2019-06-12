@@ -629,7 +629,7 @@ class LiteSpeed_Cache_Utility
 						$prefix = '&' ;
 					}
 				}
-				$combined = $page . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+				$combined = $page . $prefix . LiteSpeed_Cache_Router::ACTION_KEY . '=' . $action ;
 			}
 			else {
 				// Current page rebuild URL
@@ -647,11 +647,11 @@ class LiteSpeed_Cache_Utility
 					}
 				}
 				global $pagenow ;
-				$combined = $pagenow . $prefix . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+				$combined = $pagenow . $prefix . LiteSpeed_Cache_Router::ACTION_KEY . '=' . $action ;
 			}
 		}
 		else {
-			$combined = 'admin-ajax.php?action=litespeed_ajax&' . LiteSpeed_Cache::ACTION_KEY . '=' . $action ;
+			$combined = 'admin-ajax.php?action=litespeed_ajax&' . LiteSpeed_Cache_Router::ACTION_KEY . '=' . $action ;
 		}
 
 		if ( is_network_admin() ) {
@@ -660,7 +660,7 @@ class LiteSpeed_Cache_Utility
 		else {
 			$prenonce = admin_url( $combined ) ;
 		}
-		$url = wp_nonce_url( $prenonce, $action, LiteSpeed_Cache::NONCE_NAME ) ;
+		$url = wp_nonce_url( $prenonce, $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
 
 		if ( $type ) {
 			// Remove potential param `type` from url

@@ -52,7 +52,7 @@ class LiteSpeed_Cache_Cli_Purge
 	private function _send_request($action, $extra = array())
 	{
 		$data = array(
-			LiteSpeed_Cache::ACTION_KEY => $action,
+			LiteSpeed_Cache_Router::ACTION_KEY => $action,
 			LiteSpeed_Cache::NONCE_NAME => wp_create_nonce($action),
 		) ;
 		if ( ! empty($extra) ) {
@@ -156,7 +156,7 @@ class LiteSpeed_Cache_Cli_Purge
 	public function url($args, $assoc_args)
 	{
 		$data = array(
-			LiteSpeed_Cache::ACTION_KEY => LiteSpeed_Cache::ACTION_QS_PURGE,
+			LiteSpeed_Cache_Router::ACTION_KEY => LiteSpeed_Cache::ACTION_QS_PURGE,
 		) ;
 		$url = $args[0] ;
 		$deconstructed = wp_parse_url($url) ;

@@ -110,41 +110,41 @@ function litespeed_update_3_0( $ver )
 
 	// conv items to litespeed.conf.*
 	$data = array(
-		'litespeed-cache-exclude-cache-roles' 		=> 'cache.exc_roles',
-		'litespeed-cache-drop_qs' 					=> 'cache.drop_qs',
-		'litespeed-forced_cache_uri' 				=> 'cache.force_uri',
-		'litespeed-cache_uri_priv' 					=> 'cache.priv_uri',
-		'litespeed-excludes_uri' 					=> 'cache.exc',
-		'litespeed-cache-vary-group' 				=> 'cache.vary_group',
-		'litespeed-adv-purge_all_hooks' 			=> 'purge.hook_all',
-		'litespeed-object_global_groups' 			=> 'object.global_groups',
-		'litespeed-object_non_persistent_groups' 	=> 'object.non_persistent_groups',
-		'litespeed-media-lazy-img-excludes' 		=> 'media.lazy_exc',
-		'litespeed-media-lazy-img-cls-excludes' 	=> 'media.lazy_cls_exc',
-		'litespeed-media-webp_attribute' 			=> 'img_optm.webp_attr',
-		'litespeed-optm-css' 						=> 'optm.ccss_con',
-		'litespeed-optm_excludes' 					=> 'optm.exc',
-		'litespeed-optm-ccss-separate_posttype' 	=> 'optm.ccss_sep_posttype',
-		'litespeed-optm-css-separate_uri' 			=> 'optm.ccss_sep_uri',
-		'litespeed-optm-js-defer-excludes' 			=> 'optm.js_defer_exc',
-		'litespeed-cache-dns_prefetch' 				=> 'optm.dns_prefetch',
-		'litespeed-cache-exclude-optimization-roles' => 'optm.exc_roles',
-		'litespeed-log_ignore_filters' 				=> 'debug.log_no_filters',
-		'litespeed-log_ignore_part_filters' 		=> 'debug.log_no_part_filters',
-		'litespeed-cdn-ori_dir' 					=> 'cdn.ori_dir',
-		'litespeed-cache-cdn_mapping' 				=> 'cdn.mapping',
-		'litespeed-crawler-as-uids' 				=> 'crawler.roles',
-		'litespeed-crawler-cookies' 				=> 'crawler.cookies',
+		'litespeed-cache-exclude-cache-roles' 		=> 'cache-exc_roles',
+		'litespeed-cache-drop_qs' 					=> 'cache-drop_qs',
+		'litespeed-forced_cache_uri' 				=> 'cache-force_uri',
+		'litespeed-cache_uri_priv' 					=> 'cache-priv_uri',
+		'litespeed-excludes_uri' 					=> 'cache-exc',
+		'litespeed-cache-vary-group' 				=> 'cache-vary_group',
+		'litespeed-adv-purge_all_hooks' 			=> 'purge-hook_all',
+		'litespeed-object_global_groups' 			=> 'object-global_groups',
+		'litespeed-object_non_persistent_groups' 	=> 'object-non_persistent_groups',
+		'litespeed-media-lazy-img-excludes' 		=> 'media-lazy_exc',
+		'litespeed-media-lazy-img-cls-excludes' 	=> 'media-lazy_cls_exc',
+		'litespeed-media-webp_attribute' 			=> 'img_optm-webp_attr',
+		'litespeed-optm-css' 						=> 'optm-ccss_con',
+		'litespeed-optm_excludes' 					=> 'optm-exc',
+		'litespeed-optm-ccss-separate_posttype' 	=> 'optm-ccss_sep_posttype',
+		'litespeed-optm-css-separate_uri' 			=> 'optm-ccss_sep_uri',
+		'litespeed-optm-js-defer-excludes' 			=> 'optm-js_defer_exc',
+		'litespeed-cache-dns_prefetch' 				=> 'optm-dns_prefetch',
+		'litespeed-cache-exclude-optimization-roles' => 'optm-exc_roles',
+		'litespeed-log_ignore_filters' 				=> 'debug-log_no_filters',
+		'litespeed-log_ignore_part_filters' 		=> 'debug-log_no_part_filters',
+		'litespeed-cdn-ori_dir' 					=> 'cdn-ori_dir',
+		'litespeed-cache-cdn_mapping' 				=> 'cdn-mapping',
+		'litespeed-crawler-as-uids' 				=> 'crawler-roles',
+		'litespeed-crawler-cookies' 				=> 'crawler-cookies',
 	) ;
 	foreach ( $data as $k => $v ) {
 		$old_data = get_option( $k ) ;
 		if ( $old_data ) {
 			// They must be an array
-			if ( ! is_array( $old_data ) && $v != 'optm.ccss_con' ) {
+			if ( ! is_array( $old_data ) && $v != 'optm-ccss_con' ) {
 				$old_data = explode( "\n", $old_data ) ;
 			}
 
-			if ( $v == 'crawler.cookies' ) {
+			if ( $v == 'crawler-cookies' ) {
 				foreach ( $old_data as $k2 => $v2 ) {
 					$old_data[ $k2 ] = explode( "\n", $v2 ) ;
 				}
@@ -180,128 +180,128 @@ function litespeed_update_3_0( $ver )
 		'auto_upgrade'				=> 'auto_upgrade',
 
 		'esi_enabled'				=> 'esi',
-		'esi_cached_admbar'			=> 'esi.cache_admbar',
-		'esi_cached_commform'		=> 'esi.cache_commform',
+		'esi_cached_admbar'			=> 'esi-cache_admbar',
+		'esi_cached_commform'		=> 'esi-cache_commform',
 
-		'heartbeat'					=> 'util.heartbeat',
-		'cache_browser'				=> 'util.browser_cache',
-		'cache_browser_ttl'			=> 'util.browser_cache_ttl',
-		'instant_click'				=> 'util.instant_click',
-		'check_advancedcache'		=> 'util.check_advcache',
-		'use_http_for_https_vary' 	=> 'util.no_https_vary',
+		'heartbeat'					=> 'util-heartbeat',
+		'cache_browser'				=> 'util-browser_cache',
+		'cache_browser_ttl'			=> 'util-browser_cache_ttl',
+		'instant_click'				=> 'util-instant_click',
+		'check_advancedcache'		=> 'util-check_advcache',
+		'use_http_for_https_vary' 	=> 'util-no_https_vary',
 
-		'purge_upgrade'				=> 'purge.upgrade',
-		'timed_urls' 				=> 'purge.timed_urls',
-		'timed_urls_time' 			=> 'purge.timed_urls_time',
+		'purge_upgrade'				=> 'purge-upgrade',
+		'timed_urls' 				=> 'purge-timed_urls',
+		'timed_urls_time' 			=> 'purge-timed_urls_time',
 
-		'cache_priv' 				=> 'cache.priv',
-		'cache_commenter'			=> 'cache.commenter',
-		'cache_rest' 				=> 'cache.rest',
-		'cache_page_login'			=> 'cache.page_login',
-		'cache_favicon'				=> 'cache.favicon',
-		'cache_resources'			=> 'cache.resources',
-		'mobileview_enabled'		=> 'cache.mobile',
-		'mobileview_rules'			=> 'cache.mobile_rules',
-		'nocache_useragents' 		=> 'cache.exc_useragents',
-		'nocache_cookies' 			=> 'cache.exc_cookies',
-		'excludes_qs' 				=> 'cache.exc_qs',
-		'excludes_cat' 				=> 'cache.exc_cat',
-		'excludes_tag' 				=> 'cache.exc_tag',
-		'public_ttl'				=> 'cache.ttl_pub',
-		'private_ttl'				=> 'cache.ttl_priv',
-		'front_page_ttl'			=> 'cache.ttl_frontpage',
-		'feed_ttl'					=> 'cache.ttl_feed',
-		'login_cookie'				=> 'cache.login_cookie',
+		'cache_priv' 				=> 'cache-priv',
+		'cache_commenter'			=> 'cache-commenter',
+		'cache_rest' 				=> 'cache-rest',
+		'cache_page_login'			=> 'cache-page_login',
+		'cache_favicon'				=> 'cache-favicon',
+		'cache_resources'			=> 'cache-resources',
+		'mobileview_enabled'		=> 'cache-mobile',
+		'mobileview_rules'			=> 'cache-mobile_rules',
+		'nocache_useragents' 		=> 'cache-exc_useragents',
+		'nocache_cookies' 			=> 'cache-exc_cookies',
+		'excludes_qs' 				=> 'cache-exc_qs',
+		'excludes_cat' 				=> 'cache-exc_cat',
+		'excludes_tag' 				=> 'cache-exc_tag',
+		'public_ttl'				=> 'cache-ttl_pub',
+		'private_ttl'				=> 'cache-ttl_priv',
+		'front_page_ttl'			=> 'cache-ttl_frontpage',
+		'feed_ttl'					=> 'cache-ttl_feed',
+		'login_cookie'				=> 'cache-login_cookie',
 
-		'debug_disable_all'			=> 'debug.disable_all',
-		'admin_ips' 				=> 'debug.ips',
-		'debug_level' 				=> 'debug.level',
-		'log_file_size'				=> 'debug.filesize',
-		'debug_cookie'				=> 'debug.cookie',
-		'collaps_qs'				=> 'debug.collaps_qs',
-		'log_filters' 				=> 'debug.log_filters',
+		'debug_disable_all'			=> 'debug-disable_all',
+		'admin_ips' 				=> 'debug-ips',
+		'debug_level' 				=> 'debug-level',
+		'log_file_size'				=> 'debug-filesize',
+		'debug_cookie'				=> 'debug-cookie',
+		'collaps_qs'				=> 'debug-collaps_qs',
+		'log_filters' 				=> 'debug-log_filters',
 
 		'crawler_cron_active' 		=> 'crawler',
-		'crawler_include_posts' 	=> 'crawler.inc_posts',
-		'crawler_include_pages' 	=> 'crawler.inc_pages',
-		'crawler_include_cats' 		=> 'crawler.inc_cats',
-		'crawler_include_tags' 		=> 'crawler.inc_tags',
-		'crawler_excludes_cpt' 		=> 'crawler.exc_cpt',
-		'crawler_order_links' 		=> 'crawler.order_links',
-		'crawler_usleep' 			=> 'crawler.usleep',
-		'crawler_run_duration' 		=> 'crawler.run_duration',
-		'crawler_run_interval' 		=> 'crawler.run_interval',
-		'crawler_crawl_interval' 	=> 'crawler.crawl_interval',
-		'crawler_threads' 			=> 'crawler.threads',
-		'crawler_load_limit' 		=> 'crawler.load_limit',
-		'crawler_domain_ip' 		=> 'crawler.domain_ip',
-		'crawler_custom_sitemap' 	=> 'crawler.custom_sitemap',
+		'crawler_include_posts' 	=> 'crawler-inc_posts',
+		'crawler_include_pages' 	=> 'crawler-inc_pages',
+		'crawler_include_cats' 		=> 'crawler-inc_cats',
+		'crawler_include_tags' 		=> 'crawler-inc_tags',
+		'crawler_excludes_cpt' 		=> 'crawler-exc_cpt',
+		'crawler_order_links' 		=> 'crawler-order_links',
+		'crawler_usleep' 			=> 'crawler-usleep',
+		'crawler_run_duration' 		=> 'crawler-run_duration',
+		'crawler_run_interval' 		=> 'crawler-run_interval',
+		'crawler_crawl_interval' 	=> 'crawler-crawl_interval',
+		'crawler_threads' 			=> 'crawler-threads',
+		'crawler_load_limit' 		=> 'crawler-load_limit',
+		'crawler_domain_ip' 		=> 'crawler-domain_ip',
+		'crawler_custom_sitemap' 	=> 'crawler-custom_sitemap',
 
 		'cache_object'				=> 'object',
-		'cache_object_kind'			=> 'object.kind',
-		'cache_object_host'			=> 'object.host',
-		'cache_object_port'			=> 'object.port',
-		'cache_object_life'			=> 'object.life',
-		'cache_object_persistent'	=> 'object.persistent',
-		'cache_object_admin'		=> 'object.admin',
-		'cache_object_transients'	=> 'object.transients',
-		'cache_object_db_id'		=> 'object.db_id',
-		'cache_object_user'			=> 'object.user',
-		'cache_object_pswd'			=> 'object.psw',
+		'cache_object_kind'			=> 'object-kind',
+		'cache_object_host'			=> 'object-host',
+		'cache_object_port'			=> 'object-port',
+		'cache_object_life'			=> 'object-life',
+		'cache_object_persistent'	=> 'object-persistent',
+		'cache_object_admin'		=> 'object-admin',
+		'cache_object_transients'	=> 'object-transients',
+		'cache_object_db_id'		=> 'object-db_id',
+		'cache_object_user'			=> 'object-user',
+		'cache_object_pswd'			=> 'object-psw',
 
-		'cdn_ori'					=> 'cdn.ori',
-		'cdn_exclude' 				=> 'cdn.exc',
-		'cdn_remote_jquery'			=> 'cdn.remote_jq',
-		'cdn_cloudflare'			=> 'cdn.cloudflare',
-		'cdn_cloudflare_email'		=> 'cdn.cloudflare_email',
-		'cdn_cloudflare_key'		=> 'cdn.cloudflare_key',
-		'cdn_cloudflare_name'		=> 'cdn.cloudflare_name',
-		'cdn_cloudflare_zone'		=> 'cdn.cloudflare_zone',
+		'cdn_ori'					=> 'cdn-ori',
+		'cdn_exclude' 				=> 'cdn-exc',
+		'cdn_remote_jquery'			=> 'cdn-remote_jq',
+		'cdn_cloudflare'			=> 'cdn-cloudflare',
+		'cdn_cloudflare_email'		=> 'cdn-cloudflare_email',
+		'cdn_cloudflare_key'		=> 'cdn-cloudflare_key',
+		'cdn_cloudflare_name'		=> 'cdn-cloudflare_name',
+		'cdn_cloudflare_zone'		=> 'cdn-cloudflare_zone',
 
-		'media_img_lazy'				=> 'media.lazy',
-		'media_img_lazy_placeholder'	=> 'media.lazy_placeholder',
-		'media_placeholder_resp'		=> 'media.placeholder_resp',
-		'media_placeholder_resp_color'	=> 'media.placeholder_resp_color',
-		'media_placeholder_resp_async'	=> 'media.placeholder_resp_async',
-		'media_iframe_lazy'				=> 'media.iframe_lazy',
-		'media_img_lazyjs_inline'		=> 'media.lazyjs_inline',
+		'media_img_lazy'				=> 'media-lazy',
+		'media_img_lazy_placeholder'	=> 'media-lazy_placeholder',
+		'media_placeholder_resp'		=> 'media-placeholder_resp',
+		'media_placeholder_resp_color'	=> 'media-placeholder_resp_color',
+		'media_placeholder_resp_async'	=> 'media-placeholder_resp_async',
+		'media_iframe_lazy'				=> 'media-iframe_lazy',
+		'media_img_lazyjs_inline'		=> 'media-lazyjs_inline',
 
-		'media_optm_auto'			=> 'img_optm.auto',
-		'media_optm_cron'			=> 'img_optm.cron',
-		'media_optm_ori'			=> 'img_optm.ori',
-		'media_rm_ori_bkup'			=> 'img_optm.rm_bkup',
-		'media_optm_webp'			=> 'img_optm.webp',
-		'media_optm_lossless'		=> 'img_optm.lossless',
-		'media_optm_exif'			=> 'img_optm.exif',
-		'media_webp_replace'		=> 'img_optm.webp_replace',
-		'media_webp_replace_srcset'	=> 'img_optm.webp_replace_srcset',
+		'media_optm_auto'			=> 'img_optm-auto',
+		'media_optm_cron'			=> 'img_optm-cron',
+		'media_optm_ori'			=> 'img_optm-ori',
+		'media_rm_ori_bkup'			=> 'img_optm-rm_bkup',
+		'media_optm_webp'			=> 'img_optm-webp',
+		'media_optm_lossless'		=> 'img_optm-lossless',
+		'media_optm_exif'			=> 'img_optm-exif',
+		'media_webp_replace'		=> 'img_optm-webp_replace',
+		'media_webp_replace_srcset'	=> 'img_optm-webp_replace_srcset',
 
-		'css_minify'			=> 'optm.css_min',
-		'css_inline_minify'		=> 'optm.css_inline_min',
-		'css_combine'			=> 'optm.css_comb',
-		'css_combined_priority'	=> 'optm.css_comb_priority',
-		'css_http2'				=> 'optm.css_http2',
-		'css_exclude' 			=> 'optm.css_exc',
-		'js_minify'				=> 'optm.js_min',
-		'js_inline_minify'		=> 'optm.js_inline_min',
-		'js_combine'			=> 'optm.js_comb',
-		'js_combined_priority'	=> 'optm.js_comb_priority',
-		'js_http2'				=> 'optm.js_http2',
-		'js_exclude' 			=> 'optm.js_exc',
-		'optimize_ttl'			=> 'optm.ttl',
-		'html_minify'			=> 'optm.html_min',
-		'optm_qs_rm'			=> 'optm.qs_rm',
-		'optm_ggfonts_rm'		=> 'optm.ggfonts_rm',
-		'optm_css_async'		=> 'optm.css_async',
-		'optm_ccss_gen'			=> 'optm.ccss_gen',
-		'optm_ccss_async'		=> 'optm.ccss_async',
-		'optm_css_async_inline'	=> 'optm.css_async_inline',
-		'optm_js_defer'			=> 'optm.js_defer',
-		'optm_emoji_rm'			=> 'optm.emoji_rm',
-		'optm_exclude_jquery'	=> 'optm.exc_jq',
-		'optm_ggfonts_async'	=> 'optm.ggfonts_async',
-		'optm_max_size'			=> 'optm.max_size',
-		'optm_rm_comment'		=> 'optm.rm_comment',
+		'css_minify'			=> 'optm-css_min',
+		'css_inline_minify'		=> 'optm-css_inline_min',
+		'css_combine'			=> 'optm-css_comb',
+		'css_combined_priority'	=> 'optm-css_comb_priority',
+		'css_http2'				=> 'optm-css_http2',
+		'css_exclude' 			=> 'optm-css_exc',
+		'js_minify'				=> 'optm-js_min',
+		'js_inline_minify'		=> 'optm-js_inline_min',
+		'js_combine'			=> 'optm-js_comb',
+		'js_combined_priority'	=> 'optm-js_comb_priority',
+		'js_http2'				=> 'optm-js_http2',
+		'js_exclude' 			=> 'optm-js_exc',
+		'optimize_ttl'			=> 'optm-ttl',
+		'html_minify'			=> 'optm-html_min',
+		'optm_qs_rm'			=> 'optm-qs_rm',
+		'optm_ggfonts_rm'		=> 'optm-ggfonts_rm',
+		'optm_css_async'		=> 'optm-css_async',
+		'optm_ccss_gen'			=> 'optm-ccss_gen',
+		'optm_ccss_async'		=> 'optm-ccss_async',
+		'optm_css_async_inline'	=> 'optm-css_async_inline',
+		'optm_js_defer'			=> 'optm-js_defer',
+		'optm_emoji_rm'			=> 'optm-emoji_rm',
+		'optm_exclude_jquery'	=> 'optm-exc_jq',
+		'optm_ggfonts_async'	=> 'optm-ggfonts_async',
+		'optm_max_size'			=> 'optm-max_size',
+		'optm_rm_comment'		=> 'optm-rm_comment',
 	) ;
 	foreach ( $data as $k => $v ) {
 		if ( ! isset( $previous_options[ $k ] ) ) {
@@ -309,22 +309,22 @@ function litespeed_update_3_0( $ver )
 		}
 		// The folllowing values must be array
 		if ( ! is_array( $previous_options[ $k ] ) ) {
-			if ( in_array( $v, array( 'cdn.ori', 'cache.exc_cat', 'cache.exc_tag' ) ) ) {
+			if ( in_array( $v, array( 'cdn-ori', 'cache-exc_cat', 'cache-exc_tag' ) ) ) {
 				$previous_options[ $k ] = explode( ',', $previous_options[ $k ] ) ;
 				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
 			}
-			elseif ( in_array( $v, array( 'cache.mobile_rules', 'cache.exc_useragents', 'cache.exc_cookies' ) ) ) {
+			elseif ( in_array( $v, array( 'cache-mobile_rules', 'cache-exc_useragents', 'cache-exc_cookies' ) ) ) {
 				$previous_options[ $k ] = explode( '|', str_replace( '\\ ', ' ', $previous_options[ $k ] ) ) ;
 				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
 			}
 			elseif ( in_array( $v, array(
-					'purge.timed_urls',
-					'cache.exc_qs',
-					'debug.ips',
-					'crawler.exc_cpt',
-					'cdn.exc',
-					'optm.css_exc',
-					'optm.js_exc',
+					'purge-timed_urls',
+					'cache-exc_qs',
+					'debug-ips',
+					'crawler-exc_cpt',
+					'cdn-exc',
+					'optm-css_exc',
+					'optm-js_exc',
 				) ) ) {
 				$previous_options[ $k ] = explode( "\n", $previous_options[ $k ] ) ;
 				$previous_options[ $k ] = array_filter( $previous_options[ $k ] ) ;
@@ -334,17 +334,17 @@ function litespeed_update_3_0( $ver )
 	}
 	// Conv purge_by_post
 	$data = array(
-		'-'		=> 'purge.post_all',
-		'F'		=> 'purge.post_f',
-		'H'		=> 'purge.post_h',
-		'PGS'	=> 'purge.post_p',
-		'PGSRP'	=> 'purge.post_pwrp',
-		'A'		=> 'purge.post_a',
-		'Y'		=> 'purge.post_y',
-		'M'		=> 'purge.post_m',
-		'D'		=> 'purge.post_d',
-		'T'		=> 'purge.post_t',
-		'PT'	=> 'purge.post_pt',
+		'-'		=> 'purge-post_all',
+		'F'		=> 'purge-post_f',
+		'H'		=> 'purge-post_h',
+		'PGS'	=> 'purge-post_p',
+		'PGSRP'	=> 'purge-post_pwrp',
+		'A'		=> 'purge-post_a',
+		'Y'		=> 'purge-post_y',
+		'M'		=> 'purge-post_m',
+		'D'		=> 'purge-post_d',
+		'T'		=> 'purge-post_t',
+		'PT'	=> 'purge-post_pt',
 	) ;
 	if ( isset( $previous_options[ 'purge_by_post' ] ) ) {
 		$purge_by_post = explode( '.', $previous_options[ 'purge_by_post' ] ) ;
@@ -363,7 +363,7 @@ function litespeed_update_3_0( $ver )
 	if ( isset( $previous_options[ '500_ttl' ] ) ) {
 		$ttl_status[] = '500 ' . $previous_options[ '500_ttl' ] ;
 	}
-	add_option( 'litespeed.conf.cache.ttl_status', $ttl_status ) ;
+	add_option( 'litespeed.conf.cache-ttl_status', $ttl_status ) ;
 
 	/**
 	 * Resave cdn cfg from lscfg to separate cfg when upgrade to v1.7
@@ -380,7 +380,7 @@ function litespeed_update_3_0( $ver )
 			'inc_js' 	=> $previous_options[ 'cdn_inc_js' ],
 			'filetype' 	=> $previous_options[ 'cdn_filetype' ],
 		) ;
-		add_option( 'litespeed.conf.cdn.mapping', array( $cdn_mapping ) ) ;
+		add_option( 'litespeed.conf.cdn-mapping', array( $cdn_mapping ) ) ;
 		LiteSpeed_Cache_Log::debug( "[Data] plugin_upgrade option adding CDN map" ) ;
 	}
 
@@ -392,16 +392,16 @@ function litespeed_update_3_0( $ver )
 	 * @since  2.3
 	 */
 	if ( isset( $previous_options[ 'forced_cache_uri' ] ) ) {
-		add_option( 'litespeed.conf.cache.force_uri', $previous_options[ 'forced_cache_uri' ] ) ;
+		add_option( 'litespeed.conf.cache-force_uri', $previous_options[ 'forced_cache_uri' ] ) ;
 	}
 	if ( isset( $previous_options[ 'cache_uri_priv' ] ) ) {
-		add_option( 'litespeed.conf.cache.priv_uri', $previous_options[ 'cache_uri_priv' ] ) ;
+		add_option( 'litespeed.conf.cache-priv_uri', $previous_options[ 'cache_uri_priv' ] ) ;
 	}
 	if ( isset( $previous_options[ 'optm_excludes' ] ) ) {
-		add_option( 'litespeed.conf.optm.exc', $previous_options[ 'optm_excludes' ] ) ;
+		add_option( 'litespeed.conf.optm-exc', $previous_options[ 'optm_excludes' ] ) ;
 	}
 	if ( isset( $previous_options[ 'excludes_uri' ] ) ) {
-		add_option( 'litespeed.conf.cache.exc', $previous_options[ 'excludes_uri' ] ) ;
+		add_option( 'litespeed.conf.cache-exc', $previous_options[ 'excludes_uri' ] ) ;
 	}
 
 	// Backup stale conf
@@ -418,33 +418,33 @@ function litespeed_update_3_0( $ver )
 				'network_enabled'		=> 'network_enabled',
 				'use_primary_settings'	=> 'use_primary_settings',
 				'auto_upgrade'			=> 'auto_upgrade',
-				'purge_upgrade'			=> 'purge.upgrade',
+				'purge_upgrade'			=> 'purge-upgrade',
 
-				'cache_favicon'			=> 'cache.favicon',
-				'cache_resources'		=> 'cache.resources',
-				'mobileview_enabled'	=> 'cache.mobile',
-				'mobileview_rules'		=> 'cache.mobile_rules',
-				'login_cookie'				=> 'cache.login_cookie',
-				'nocache_cookies' 			=> 'cache.exc_cookies',
-				'nocache_useragents' 		=> 'cache.exc_useragents',
+				'cache_favicon'			=> 'cache-favicon',
+				'cache_resources'		=> 'cache-resources',
+				'mobileview_enabled'	=> 'cache-mobile',
+				'mobileview_rules'		=> 'cache-mobile_rules',
+				'login_cookie'				=> 'cache-login_cookie',
+				'nocache_cookies' 			=> 'cache-exc_cookies',
+				'nocache_useragents' 		=> 'cache-exc_useragents',
 
 				'cache_object'				=> 'object',
-				'cache_object_kind'			=> 'object.kind',
-				'cache_object_host'			=> 'object.host',
-				'cache_object_port'			=> 'object.port',
-				'cache_object_life'			=> 'object.life',
-				'cache_object_persistent'	=> 'object.persistent',
-				'cache_object_admin'		=> 'object.admin',
-				'cache_object_transients'	=> 'object.transients',
-				'cache_object_db_id'		=> 'object.db_id',
-				'cache_object_user'			=> 'object.user',
-				'cache_object_pswd'			=> 'object.psw',
+				'cache_object_kind'			=> 'object-kind',
+				'cache_object_host'			=> 'object-host',
+				'cache_object_port'			=> 'object-port',
+				'cache_object_life'			=> 'object-life',
+				'cache_object_persistent'	=> 'object-persistent',
+				'cache_object_admin'		=> 'object-admin',
+				'cache_object_transients'	=> 'object-transients',
+				'cache_object_db_id'		=> 'object-db_id',
+				'cache_object_user'			=> 'object-user',
+				'cache_object_pswd'			=> 'object-psw',
 
-				'cache_browser'				=> 'util.browser_cache',
-				'cache_browser_ttl'			=> 'util.browser_cache_ttl',
-				'check_advancedcache'		=> 'util.check_advcache',
+				'cache_browser'				=> 'util-browser_cache',
+				'cache_browser_ttl'			=> 'util-browser_cache_ttl',
+				'check_advancedcache'		=> 'util-check_advcache',
 
-				'media_webp_replace'		=> 'img_optm.webp_replace',
+				'media_webp_replace'		=> 'img_optm-webp_replace',
 			) ;
 			foreach ( $data as $k => $v ) {
 				if ( ! isset( $previous_site_options[ $k ] ) ) {
@@ -455,8 +455,8 @@ function litespeed_update_3_0( $ver )
 
 			// These are already converted to single record in single site
 			$data = array(
-				'object.global_groups',
-				'object.non_persistent_groups',
+				'object-global_groups',
+				'object-non_persistent_groups',
 			) ;
 			foreach ( $data as $v ) {
 				$old_data = get_option( $v ) ;

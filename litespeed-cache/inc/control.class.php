@@ -654,7 +654,7 @@ class LiteSpeed_Cache_Control
 	{
 		// logged_in users already excluded, no hook added
 
-		if( ! empty( $_REQUEST[ LiteSpeed_Cache::ACTION_KEY ] ) ) {
+		if( ! empty( $_REQUEST[ LiteSpeed_Cache_Router::ACTION_KEY ] ) ) {
 			return $this->_no_cache_for( 'Query String Action' ) ;
 		}
 
