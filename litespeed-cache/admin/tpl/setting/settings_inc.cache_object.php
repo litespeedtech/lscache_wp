@@ -40,8 +40,8 @@ $hide_redis_options = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_OBJECT_
 					<h4><?php echo __( 'Method', 'litespeed-cache' ) ; ?></h4>
 
 					<div class="litespeed-switch">
-						<?php echo $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_OFF, 'Memcached' ) ; ?>
-						<?php echo $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_ON, 'Redis' ) ; ?>
+						<?php $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_OFF, 'Memcached' ) ; ?>
+						<?php $this->build_radio( LiteSpeed_Cache_Config::O_OBJECT_KIND, LiteSpeed_Cache_Config::VAL_ON, 'Redis' ) ; ?>
 					</div>
 				</div>
 

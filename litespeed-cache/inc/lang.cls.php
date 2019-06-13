@@ -113,6 +113,21 @@ class LiteSpeed_Cache_Lang extends LiteSpeed_Cache_Const
 			self::O_CACHE_EXC_USERAGENTS		=> __( 'Do Not Cache User Agents', 'litespeed-cache' ),
 			self::O_CACHE_LOGIN_COOKIE			=> __( 'Login Cookie', 'litespeed-cache' ),
 			self::O_IMG_OPTM_WEBP_REPLACE		=> __( 'Image WebP Replacement', 'litespeed-cache' ),
+
+			self::O_CDN 						=> __( 'Use CDN Mapping', 'litespeed-cache' ),
+			self::CDN_MAPPING_URL				=> __( 'CDN URL', 'litespeed-cache' ),
+			self::CDN_MAPPING_INC_IMG			=> __( 'Include Images', 'litespeed-cache' ),
+			self::CDN_MAPPING_INC_CSS			=> __( 'Include CSS', 'litespeed-cache' ),
+			self::CDN_MAPPING_INC_JS			=> __( 'Include JS', 'litespeed-cache' ),
+			self::CDN_MAPPING_FILETYPE			=> __( 'Include File Types', 'litespeed-cache' ),
+			self::O_CDN_ORI						=> __( 'Original URLs', 'litespeed-cache' ),
+			self::O_CDN_ORI_DIR					=> __( 'Included Directories', 'litespeed-cache' ),
+			self::O_CDN_EXC						=> __( 'Exclude Path', 'litespeed-cache' ),
+			self::O_CDN_REMOTE_JQ				=> __( 'Load JQuery Remotely', 'litespeed-cache' ),
+			self::O_CDN_QUIC					=> __( 'Quic Cloud API', 'litespeed-cache' ),
+			self::O_CDN_CLOUDFLARE				=> __( 'Cloudflare API', 'litespeed-cache' ),
+			// self::				=> ,
+			// self::				=> ,
 		) ;
 
 		if ( array_key_exists( $id, $_lang_list ) ) {

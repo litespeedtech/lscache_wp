@@ -23,19 +23,19 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Debug Log', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<div class="litespeed-switch">
-				<?php echo $this->build_radio(
+				<?php $this->build_radio(
 					LiteSpeed_Cache_Config::O_DEBUG,
 					LiteSpeed_Cache_Config::VAL_OFF,
 					__( 'OFF', 'litespeed-cache' )
 				) ; ?>
 
-				<?php echo $this->build_radio(
+				<?php $this->build_radio(
 					LiteSpeed_Cache_Config::O_DEBUG,
 					LiteSpeed_Cache_Config::VAL_ON,
 					__( 'ON', 'litespeed-cache' )
 				) ; ?>
 
-				<?php echo $this->build_radio(
+				<?php $this->build_radio(
 					LiteSpeed_Cache_Config::O_DEBUG,
 					LiteSpeed_Cache_Config::VAL_ON2,
 					__( 'Admin IP only', 'litespeed-cache' )
@@ -72,13 +72,13 @@ if ( ! defined( 'WPINC' ) ) die ;
 		<th><?php echo __( 'Debug Level', 'litespeed-cache' ) ; ?></th>
 		<td>
 			<div class="litespeed-switch">
-				<?php echo $this->build_radio(
+				<?php $this->build_radio(
 					LiteSpeed_Cache_Config::O_DEBUG_LEVEL,
 					LiteSpeed_Cache_Config::VAL_OFF,
 					__( 'Basic', 'litespeed-cache' )
 				) ; ?>
 
-				<?php echo $this->build_radio(
+				<?php $this->build_radio(
 					LiteSpeed_Cache_Config::O_DEBUG_LEVEL,
 					LiteSpeed_Cache_Config::VAL_ON,
 					__( 'Advanced', 'litespeed-cache' )

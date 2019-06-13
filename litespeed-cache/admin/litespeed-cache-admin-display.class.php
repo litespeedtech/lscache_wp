@@ -121,22 +121,6 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
-	 * Output litespeed form info
-	 *
-	 * @since    3.0
-	 * @access public
-	 */
-	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false )
-	{
-		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative">' ;
-		echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::ACTION_KEY . '" value="' . $action . '" />' ;
-		if ( $type ) {
-			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;
-		}
-		wp_nonce_field( $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
-	}
-
-	/**
 	 * Show the title of one line
 	 *
 	 * @since  3.0
@@ -674,6 +658,33 @@ class LiteSpeed_Cache_Admin_Display
 	}
 
 	/**
+	 * Output litespeed form info
+	 *
+	 * @since    3.0
+	 * @access public
+	 */
+	public function form_action( $action = LiteSpeed_Cache_Router::ACTION_SAVE_SETTINGS, $type = false )
+	{
+		echo '<form method="post" action="' . wp_unslash( $_SERVER[ 'REQUEST_URI' ] ) . '" class="litespeed-relative">' ;
+		echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::ACTION_KEY . '" value="' . $action . '" />' ;
+		if ( $type ) {
+			echo '<input type="hidden" name="' . LiteSpeed_Cache_Router::TYPE . '" value="' . $type . '" />' ;
+		}
+		wp_nonce_field( $action, LiteSpeed_Cache_Router::NONCE_NAME ) ;
+	}
+
+	/**
+	 * Register this setting to save
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function enroll( $id )
+	{
+		echo '<input type="hidden" name="' . LiteSpeed_Cache_Admin_Settings::ENROLL . '[]" value="' . $id . '" />' ;
+	}
+
+	/**
 	 * Build a textarea
 	 *
 	 * @since 1.1.0
@@ -692,6 +703,8 @@ class LiteSpeed_Cache_Admin_Display
 		if ( ! $cols ) {
 			$cols = 80 ;
 		}
+
+		$this->enroll( $id ) ;
 
 		echo "<textarea name='$id' rows='5' cols='$cols'>" . esc_textarea( $val ) . "</textarea>" ;
 	}
@@ -718,6 +731,8 @@ class LiteSpeed_Cache_Admin_Display
 			$cls = "litespeed-regular-text $cls" ;
 		}
 
+		$this->enroll( $id ) ;
+
 		echo "<input type='$type' class='$cls' name='$id' value='" . esc_textarea( $val ) ."' id='input_$label_id' /> " ;
 	}
 
@@ -743,6 +758,8 @@ class LiteSpeed_Cache_Admin_Display
 			$label_id .= '_' . $value ;
 		}
 
+		$this->enroll( $id ) ;
+
 		echo "<div class='litespeed-tick'>
 				<label for='input_checkbox_$label_id'>$title</label>
 				<input type='checkbox' name='$id' id='input_checkbox_$label_id' value='$value' $checked />
@@ -767,6 +784,8 @@ class LiteSpeed_Cache_Admin_Display
 
 		$cls = $checked ? 'primary' : 'default litespeed-toggleoff' ;
 
+		$this->enroll( $id ) ;
+
 		echo "<div class='litespeed-toggle litespeed-toggle-btn litespeed-toggle-btn-$cls' data-litespeed-toggle-on='primary' data-litespeed-toggle-off='default'>
 				<input name='$id' type='hidden' value='$checked' />
 				<div class='litespeed-toggle-group'>
@@ -787,12 +806,12 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function build_switch( $id )
 	{
-		$html = '<div class="litespeed-switch">' ;
-		$html .= $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ;
-		$html .= $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ;
-		$html .= '</div>' ;
+		echo '<div class="litespeed-switch">' ;
 
-		echo $html ;
+		$this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ;
+		$this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ;
+
+		echo '</div>' ;
 	}
 
 	/**
@@ -819,7 +838,9 @@ class LiteSpeed_Cache_Admin_Display
 
 		$checked = isset( $this->__options[ $id ] ) && $this->__options[ $id ] == $val ? ' checked ' : '' ;
 
-		return "<input type='radio' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
+		$this->enroll( $id ) ;
+
+		echo "<input type='radio' name='$id' id='$id_attr' value='$val' $checked /> <label for='$id_attr'>$txt</label>" ;
 	}
 
 	/**

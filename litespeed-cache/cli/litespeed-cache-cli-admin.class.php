@@ -23,13 +23,13 @@ class LiteSpeed_Cache_Cli_Admin
 	 * ## EXAMPLES
 	 *
 	 *     # Set to not cache the login page
-	 *     $ wp lscache-admin set_option cache_login false
+	 *     $ wp lscache-admin set_option cache-private false
 	 *
 	 */
 	public function set_option($args, $assoc_args)
 	{
 		/**
-		 * Note: If the value is multiple dimensions like cdn_mapping, need to specially handle it both here and in default.ini
+		 * Note: If the value is multiple dimensions like cdn-mapping, need to specially handle it both here and in default.ini
 		 */
 		$key = $args[0] ;
 		$val = $args[1] ;
@@ -40,8 +40,8 @@ class LiteSpeed_Cache_Cli_Admin
 
 		/**
 		 * For CDN mapping, allow:
-		 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
-		 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
+		 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
+		 * 		`set_option cdn-mapping[inc_img][0] true`
 		 * @since  2.7.1
 		 */
 		if ( ! isset($options) || ( ! isset($options[$key]) && strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) !== 0 ) ) {
@@ -83,8 +83,8 @@ class LiteSpeed_Cache_Cli_Admin
 			 *
 			 * $options is already converted to input format
 			 *
-			 * 		`set_option litespeed-cache-cdn_mapping[url][0] https://the1st_cdn_url`
-			 * 		`set_option litespeed-cache-cdn_mapping[inc_img][0] true`
+			 * 		`set_option cdn-mapping[url][0] https://the1st_cdn_url`
+			 * 		`set_option cdn-mapping[inc_img][0] true`
 			 */
 			case strpos( $key, LiteSpeed_Cache_Config::O_CDN_MAPPING ) === 0 :
 

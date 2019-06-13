@@ -560,7 +560,7 @@ class LiteSpeed_Cache_Const
 					 * Special handler for CDN_mapping
 					 *
 					 * format in .ini:
-					 * 		[cdn.mapping]
+					 * 		[cdn-mapping]
 					 *   	url[0] = 'https://example.com/'
 					 *     	inc_js[0] = true
 					 *     	filetype[0] = '.css

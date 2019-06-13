@@ -274,25 +274,25 @@ if ( !defined('WPINC') ) die;
 					<h4><?php echo __('Order links by', 'litespeed-cache'); ?></h4>
 
 					<div class="litespeed-switch">
-						<?php echo $this->build_radio(
+						<?php $this->build_radio(
 							LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS,
 							LiteSpeed_Cache_Config::CRWL_DATE_DESC,
 							__('Date, descending (Default)', 'litespeed-cache')
 						); ?>
 
-						<?php echo $this->build_radio(
+						<?php $this->build_radio(
 							LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS,
 							LiteSpeed_Cache_Config::CRWL_DATE_ASC,
 							__('Date, ascending', 'litespeed-cache')
 						); ?>
 
-						<?php echo $this->build_radio(
+						<?php $this->build_radio(
 							LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS,
 							LiteSpeed_Cache_Config::CRWL_ALPHA_DESC,
 							__('Alphabetical, descending', 'litespeed-cache')
 						); ?>
 
-						<?php echo $this->build_radio(
+						<?php $this->build_radio(
 							LiteSpeed_Cache_Config::O_CRWL_ORDER_LINKS,
 							LiteSpeed_Cache_Config::CRWL_ALPHA_ASC,
 							__('Alphabetical, ascending', 'litespeed-cache')

@@ -23,11 +23,11 @@
 				}
 			?>
 			<div class="litespeed-switch">
-				<?php echo $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ; ?>
-				<?php echo $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_OFF ) ; ?>
+				<?php $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON ) ; ?>
 				<?php
 					if ( is_multisite() ) {
-						echo $this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
+						$this->build_radio( $id, LiteSpeed_Cache_Config::VAL_ON2, __( 'Use Network Admin Setting', 'litespeed-cache' ) ) ;
 					}
 				?>
 			</div>
