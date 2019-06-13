@@ -73,7 +73,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	public function esi_init()
 	{
-		add_action( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 100 ) ;
+		add_filter( 'template_include', 'LiteSpeed_Cache_ESI::esi_template', 99999 ) ;
 
 		add_action( 'load-widgets.php', 'LiteSpeed_Cache_Purge::purge_widget' ) ;
 		add_action( 'wp_update_comment_count', 'LiteSpeed_Cache_Purge::purge_comment_widget' ) ;
