@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-class LiteSpeed_Cache_Admin_Optimize
+class LiteSpeed_Cache_Db_Optm
 {
 	private static $_types = array( 'revision', 'auto_draft', 'trash_post', 'spam_comment', 'trash_comment', 'trackback-pingback', 'expired_transient', 'all_transients' ) ;
 

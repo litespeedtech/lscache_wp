@@ -71,7 +71,7 @@ class LiteSpeed_Cache_Admin
 	 */
 	public function admin_init()
 	{
-		load_plugin_textdomain(LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/languages/') ;
+		load_plugin_textdomain(LiteSpeed_Cache::PLUGIN_NAME, false, 'litespeed-cache/lang/') ;
 
 		$this->_proceed_admin_action() ;
 

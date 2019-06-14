@@ -9,7 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die ;
 }
 
-require_once dirname( __FILE__ ) . '/object.class.php' ;
+require_once dirname( __FILE__ ) . '/object.cls.php' ;
 
 /**
  * Sets up Object Cache Global and assigns it.
