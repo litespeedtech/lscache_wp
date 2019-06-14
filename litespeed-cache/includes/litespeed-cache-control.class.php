@@ -1,1 +1,0 @@
-../inc/control.class.php

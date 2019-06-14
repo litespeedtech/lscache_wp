@@ -55,20 +55,18 @@ if ( !function_exists('_litespeed_autoload') ) {
 			'LiteSpeed_Cache_Vary'				=> 'inc/vary.class.php',
 			'LiteSpeed_Cache_Utility'			=> 'inc/utility.class.php',
 
-			'LiteSpeed_Cache_Admin'				=> 'admin/litespeed-cache-admin.class.php',
-			'LiteSpeed_Cache_Admin_API'			=> 'admin/admin-api.class.php',
-			'LiteSpeed_Cache_Admin_Display'		=> 'admin/litespeed-cache-admin-display.class.php',
+			'LiteSpeed_Cache_Admin'				=> 'admin/admin.cls.php',
+			'LiteSpeed_Cache_Admin_API'			=> 'admin/admin-api.cls.php',
+			'LiteSpeed_Cache_Admin_Display'		=> 'admin/admin-display.cls.php',
 			'LiteSpeed_Cache_Admin_Error'		=> 'admin/litespeed-cache-admin-error.class.php',
 			'LiteSpeed_Cache_Admin_Optimize'	=> 'admin/litespeed-cache-admin-optimize.class.php',
 			'LiteSpeed_Cache_Admin_Report'		=> 'admin/litespeed-cache-admin-report.class.php',
 			'LiteSpeed_Cache_Admin_Rules'		=> 'admin/litespeed-cache-admin-rules.class.php',
-			'LiteSpeed_Cache_Admin_Settings'	=> 'admin/admin-settings.class.php',
+			'LiteSpeed_Cache_Admin_Settings'	=> 'admin/admin-settings.cls.php',
 
 			'LiteSpeed_Cache_Cli_Admin'			=> 'cli/litespeed-cache-cli-admin.class.php',
 			'LiteSpeed_Cache_CLI_IAPI'			=> 'cli/litespeed-cache-cli-iapi.class.php',
 			'LiteSpeed_Cache_Cli_Purge'			=> 'cli/litespeed-cache-cli-purge.class.php',
-
-			'LiteSpeed_Cache_Tags'				=> 'includes/deprecated-litespeed-cache-tags.class.php',
 
 			'LiteSpeed_3rd_Lib\Minify_HTML'			=> 'lib/html_min.class.php',
 			'LiteSpeed_3rd_Lib\css_min\Minifier' 	=> 'lib/css_min.class.php',

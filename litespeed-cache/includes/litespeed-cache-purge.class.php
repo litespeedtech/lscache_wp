@@ -1,1 +1,0 @@
-../inc/purge.class.php
