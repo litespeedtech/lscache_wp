@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the LiteSpeed Cache package.
 msgid ""
 msgstr ""
-"Project-Id-Version: LiteSpeed Cache 2.9.8\n"
+"Project-Id-Version: LiteSpeed Cache 2.9.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/litespeed-cache\n"
-"POT-Creation-Date: 2019-05-23 01:54:52+00:00\n"
+"POT-Creation-Date: 2019-06-17 19:09:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -860,7 +860,7 @@ msgstr ""
 msgid "Rate %s on %s"
 msgstr ""
 
-#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.8)  #-#-#-#-#
+#. #-#-#-#-#  litespeed-cache.pot (LiteSpeed Cache 2.9.8.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/tpl/inc/admin_footer.php:6
 #: admin/tpl/inc/banner_promo.new_version.php:56 inc/gui.class.php:477
@@ -902,6 +902,26 @@ msgstr ""
 
 #: admin/tpl/inc/banner_promo.php:72
 msgid "Thank You for Using the LiteSpeed Cache Plugin!"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:76
+msgid "Page Load Time"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:82 admin/tpl/inc/banner_promo.php:122
+msgid "Before"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:93 admin/tpl/inc/banner_promo.php:132
+msgid "After"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:103 admin/tpl/inc/banner_promo.php:142
+msgid "Improved by"
+msgstr ""
+
+#: admin/tpl/inc/banner_promo.php:116
+msgid "PageSpeed Score"
 msgstr ""
 
 #: admin/tpl/inc/banner_promo.php:161
@@ -3726,7 +3746,7 @@ msgid "Auto Purge Rules For Publish/Update"
 msgstr ""
 
 #: admin/tpl/setting/settings_purge.php:53
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:864
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:866
 msgid "Note"
 msgstr ""
 
@@ -4412,75 +4432,75 @@ msgstr ""
 msgid "Failed to write to %s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:799
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:801
 msgid "WooCommerce"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:802
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:804
 msgid "Purge product on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:803
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:805
 msgid "Purge categories only when stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:804
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:806
 msgid "Purge product and categories only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:805
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:807
 msgid "Purge product only when the stock status changes."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:806
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:808
 msgid "Do not purge categories on changes to the quantity or stock status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:807
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:809
 msgid ""
 "Always purge both product and categories on changes to the quantity or stock "
 "status."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:810
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:812
 msgid ""
 "Determines how changes in product quantity and product stock status affect "
 "product pages and their associated category pages."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:811
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:813
 msgid ""
 "Checking this option will force the shop page to use the front page TTL "
 "setting."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:812
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:814
 msgid ""
 "For example, if the homepage for the site is located at %1$s, the shop page "
 "may be located at %2$s."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:840
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:842
 msgid "Product Update Interval"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:847
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:849
 msgid "Use Front Page TTL for the Shop Page"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:854
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:856
 msgid "Privately Cache Cart"
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:858
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:860
 msgid "Privately cache cart when not empty."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:866
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:868
 msgid "After verifying that the cache works in general, please test the cart."
 msgstr ""
 
-#: thirdparty/lscwp-3rd-woocommerce.cls.php:867
+#: thirdparty/lscwp-3rd-woocommerce.cls.php:869
 msgid "To test the cart, visit the <a %s>FAQ</a>."
 msgstr ""
 
