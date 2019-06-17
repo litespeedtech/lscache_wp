@@ -24,7 +24,7 @@ class LiteSpeed_Cache_ThirdParty_Facetwp
 		if (
 			! empty( $_POST['action'] )
 			&& ! empty( $_POST['data'] )
-			&& ! empty( $_POST['data']['template'] === 'wp' )
+			&& ! empty( $_POST['data']['template'] )
 			&& $_POST['data']['template'] === 'wp'
 		) {
 			LiteSpeed_Cache_API::hook_esi_param( 'LiteSpeed_Cache_ThirdParty_Facetwp::set_is_json' ) ;
