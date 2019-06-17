@@ -70,11 +70,19 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			}
 		}
 
+		// Check if Cloudflare setting is changed or not
+		$cdn_cloudflare_changed = false ;
+
 		foreach ( $_fields as $id ) {
 			$data = '' ;
 			// CDN data
 			if ( strpos( $id, self::O_CDN_MAPPING ) === 0 ) {
-				// Check if the child key is correct
+				/**
+				 * Check if the child key is correct
+				 * Raw data format:
+				 * 		cdn-mapping[url][] = 'xxx'
+				 * 		cdn-mapping[inc_js][] = 1
+				 */
 				$child = str_replace( array( self::O_CDN_MAPPING, '[', ']' ), '', $id ) ;
 				if ( ! in_array( $child, array(
 					self::CDN_MAPPING_URL,
@@ -157,6 +165,18 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 					$data = $data2 ;
 					break ;
 
+				/**
+				 * Handle Cloudflare API
+				 */
+				case self::O_CDN_CLOUDFLARE :
+				case self::O_CDN_CLOUDFLARE_EMAIL :
+				case self::O_CDN_CLOUDFLARE_KEY :
+				case self::O_CDN_CLOUDFLARE_NAME :
+					if ( $this->option( $id ) != $data ) {
+						$cdn_cloudflare_changed = true ;
+					}
+					break ;
+
 				default:
 					break ;
 			}
@@ -165,48 +185,42 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			$this->update( $id, $data ) ;
 		}
 
-
 		/**
-		 * CLoudflare API
-		 * @since  1.7.2
+		 * CDN related actions
 		 */
-		$ids = array(
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE,
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_EMAIL,
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_KEY,
-			LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME,
-		) ;
-		// Check if Cloudflare setting is changed or not
-		$cdn_cloudflare_changed = false ;
-		foreach ( $ids as $id ) {
-			if ( LiteSpeed_Cache::config( $id ) == $this->_input[ $id ] ) {
-				continue ;
-			}
-			$cdn_cloudflare_changed = true ;
-			$this->_update( $id ) ;
-		}
-
 		// If cloudflare API is on, refresh the zone
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE ) && $cdn_cloudflare_changed ) {
+		if ( $cdn_cloudflare_changed && $this->option( self::O_CDN_CLOUDFLARE ) ) {
 			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone() ;
-			$id = LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_ZONE ;
 			if ( $zone ) {
-				$this->_update( LiteSpeed_Cache_Config::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
+				$this->update( self::O_CDN_CLOUDFLARE_NAME, $zone[ 'name' ] ) ;
 
-				$this->_update( $id, $zone[ 'id' ] ) ;
+				$this->update( self::O_CDN_CLOUDFLARE_ZONE, $zone[ 'id' ] ) ;
 
 				LiteSpeed_Cache_Log::debug( "[Settings] Get zone successfully \t\t[ID] $zone[id]" ) ;
 			}
 			else {
-				$this->_update( $id, '' ) ;
+				$this->update( self::O_CDN_CLOUDFLARE_ZONE, '' ) ;
 				LiteSpeed_Cache_Log::debug( '[Settings] ❌ Get zone failed, clean zone' ) ;
 			}
 		}
 
+		/**
+		 * Object cache related actions
+		 */
+		// Remove Object Cache
+		if ( $this->option( self::O_DEBUG_DISABLE_ALL ) ) {
+			// Do a purge all (This is before oc file removal, can purge oc too)
+			LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
 
+			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
+			LiteSpeed_Cache_Object::get_instance()->del_file() ;
 
+			// Set a const to avoid regenerating again
+			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
+		}
+		else {
 
-
+		}
 
 
 
@@ -254,21 +268,12 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	 */
 	public function validate_plugin_settings( $input, $revert_options_to_input = false )
 	{
-		// Revert options to initial input
-		if ( $revert_options_to_input ) {
 			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
 		}
 
 		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
 
-		$this->_input = $input ;
 
-
-		$this->_validate_cdn() ;
-
-		$this->_validate_adv() ;
-
-		$this->_validate_debug() ;
 
 		$this->_validate_crawler() ; // Network setup doesn't run validate_plugin_settings
 
@@ -562,27 +567,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 		return $new_options ;
 
-	}
-
-	/**
-	 * Validates the debug settings.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 */
-	private function _validate_debug()
-	{
-		// Remove Object Cache
-		if ( LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_DEBUG_DISABLE_ALL ) ) {
-			// Do a purge all (This is before oc file removal, can purge oc too)
-			LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
-
-			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
-			LiteSpeed_Cache_Object::get_instance()->del_file() ;
-
-			// Set a const to avoid regenerating again
-			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
-		}
 	}
 
 	/**
