@@ -3,7 +3,7 @@ Contributors: LiteSpeedTech
 Tags: caching, optimize, performance, pagespeed, seo, speed, image optimize, compress, object cache, redis, memcached, database cleaner
 Requires at least: 4.0
 Tested up to: 5.2.1
-Stable tag: 2.9.8.1
+Stable tag: 2.9.8.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -288,6 +288,9 @@ Click on the `Advanced View` link at the top of the page, and several more tabs 
 
 
 == Changelog ==
+
+= 2.9.8.2 - Jun 17 2019 =
+* 🔥🐞 <strong>3rd</strong>: Fixed PHP 5.3 compatibility issue with Facetwp.
 
 = 2.9.8.1 - Jun 17 2019 =
 * <strong>3rd</strong>: Set ESI template hook priority to highest number to prevent ESI conflict with Enfold theme. (#289354)
