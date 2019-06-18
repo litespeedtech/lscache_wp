@@ -177,6 +177,32 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 					}
 					break ;
 
+				/**
+				 * Object cache related actions
+				 */
+				case self::O_DEBUG_DISABLE_ALL :
+					if ( $data ) {
+						// Remove Object Cache
+						// Do a purge all (This is before oc file removal, can purge oc too)
+						LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
+
+						LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
+						LiteSpeed_Cache_Object::get_instance()->del_file() ;
+
+						// Set a const to avoid regenerating again
+						define( 'LITESPEED_DISABLE_OBJECT', true ) ;
+					}
+					break ;
+
+				// `Sitemap Generation` -> `Exclude Custom Post Types`
+				case self::O_CRWL_EXC_CPT :
+					if ( $data ) {
+						$data = LiteSpeed_Cache_Utility::sanitize_lines( $data ) ;
+						$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
+						$data = array_intersect( $data, $ori ) ;
+					}
+					break ;
+
 				default:
 					break ;
 			}
@@ -204,34 +230,28 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			}
 		}
 
+
+
 		/**
-		 * Object cache related actions
+		 * Save cookie crawler
+		 * Raw Format:
+		 * 		crawler-cookies[name][] = xx
+		 * 		crawler-cookies[vals][] = xx
+		 *
+		 * todo: need to allow null for values
 		 */
-		// Remove Object Cache
-		if ( $this->option( self::O_DEBUG_DISABLE_ALL ) ) {
-			// Do a purge all (This is before oc file removal, can purge oc too)
-			LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
+		$id = LiteSpeed_Cache_Config::O_CRWL_COOKIES ;
+		$cookie_crawlers = array() ;
+		if ( ! empty( $this->_input[ $id ][ 'name' ] ) ) {
+			foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
+				if ( ! $v ) {
+					continue ;
+				}
 
-			LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
-			LiteSpeed_Cache_Object::get_instance()->del_file() ;
-
-			// Set a const to avoid regenerating again
-			define( 'LITESPEED_DISABLE_OBJECT', true ) ;
+				$cookie_crawlers[ $v ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ][ 'vals' ][ $k ] ) ;
+			}
 		}
-		else {
-
-		}
-
-
-
-
-
-
-
-
-
-
-
+		$this->_update( $id, $cookie_crawlers ) ;
 
 
 
@@ -568,43 +588,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		return $new_options ;
 
 	}
-
-	/**
-	 * Validates the crawler settings.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 */
-	private function _validate_crawler()
-	{
-		// `Sitemap Generation` -> `Exclude Custom Post Types`
-		$id = LiteSpeed_Cache_Config::O_CRWL_EXC_CPT ;
-		if ( isset( $this->_input[ $id ] ) ) {
-			$arr = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-			$ori = array_diff( get_post_types( '', 'names' ), array( 'post', 'page' ) ) ;
-			$this->_input[ $id ] = array_intersect( $arr, $ori ) ;
-		}
-		$this->_update( $id ) ;
-
-		/**
-		 * Save cookie crawler
-		 * @since 2.8
-		 */
-		$id = LiteSpeed_Cache_Config::O_CRWL_COOKIES ;
-		$cookie_crawlers = array() ;
-		if ( ! empty( $this->_input[ $id ][ 'name' ] ) ) {
-			foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
-				if ( ! $v ) {
-					continue ;
-				}
-
-				$cookie_crawlers[ $v ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ][ 'vals' ][ $k ] ) ;
-			}
-		}
-		$this->_update( $id, $cookie_crawlers ) ;
-
-	}
-
 	/**
 	 * Validates settings related to rewrite rules
 	 *
