@@ -621,9 +621,14 @@ class Litespeed_Crawler
 
 		$cookies = array() ;
 		foreach ( $this->_cookies as $k => $v ) {
+			if ( ! $v ) {
+				continue ;
+			}
 			$cookies[] = "$k=" . urlencode( $v ) ;
 		}
-		$options[ CURLOPT_COOKIE ] = implode( '; ', $cookies ) ;
+		if ( $cookies ) {
+			$options[ CURLOPT_COOKIE ] = implode( '; ', $cookies ) ;
+		}
 
 		return $options ;
 	}

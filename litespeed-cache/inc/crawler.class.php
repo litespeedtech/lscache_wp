@@ -567,7 +567,7 @@ class LiteSpeed_Cache_Crawler
 
 			foreach ( explode( "\n", $v ) as $v2 ) {
 				$v2 = trim( $v2 ) ;
-				$crawler_factors[ $this_cookie_key ][ $v2 ] = "<font title='Cookie'>🍪</font>$k=$v2" ;
+				$crawler_factors[ $this_cookie_key ][ $v2 ] = $v2 ? "<font title='Cookie'>🍪</font>$k=$v2" : '' ;
 			}
 		}
 
