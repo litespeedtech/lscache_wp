@@ -236,6 +236,9 @@ class LiteSpeed_Cache_Const
 
 	// const O_FAVICON = 'litespeed-cache-favicon' ;
 
+	const CRWL_COOKIE_NAME 		= 'name' ;
+	const CRWL_COOKIE_VALS 		= 'vals' ;
+
 	const CDN_MAPPING_URL 		= 'url' ;
 	const CDN_MAPPING_INC_IMG 	= 'inc_img' ;
 	const CDN_MAPPING_INC_CSS 	= 'inc_css' ;

@@ -53,8 +53,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		foreach ( $_POST[ self::ENROLL ] as $v ) {
 			// Drop array format
 			if ( strpos( $v, '[' ) !== false ) {
-				// Separate handler for CDN child settings
-				if ( strpos( $v, self::O_CDN_MAPPING ) === 0 && substr( $v, -2 ) == '[]' ) {
+
+				if ( strpos( $v, self::O_CDN_MAPPING ) === 0 && substr( $v, -2 ) == '[]' ) { // Separate handler for CDN child settings
+					$v = substr( $v, 0, -2 ) ;// Drop ending []
+				}
+				elseif ( strpos( $v, self::O_CRWL_COOKIES ) === 0 && substr( $v, -2 ) == '[]' ) { // Separate handler for Cookie Crawler settings
 					$v = substr( $v, 0, -2 ) ;// Drop ending []
 				}
 				else {
@@ -64,7 +67,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 			// Append current field to setting save
 			if ( $v && ! in_array( $v, $_fields ) ) {
-				if ( array_key_exists( $v, $this->_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 ) {
+				if ( array_key_exists( $v, $this->_default_options ) || strpos( $v, self::O_CDN_MAPPING ) === 0 || strpos( $v, self::O_CRWL_COOKIES ) === 0 ) {
 					$_fields[] = $v ;
 				}
 			}
@@ -75,8 +78,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 		foreach ( $_fields as $id ) {
 			$data = '' ;
-			// CDN data
-			if ( strpos( $id, self::O_CDN_MAPPING ) === 0 ) {
+
+			/**
+			 * Pass in data
+			 */
+			if ( strpos( $id, self::O_CDN_MAPPING ) === 0 ) { // CDN data
 				/**
 				 * Check if the child key is correct
 				 * Raw data format:
@@ -96,7 +102,29 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 				$id = self::O_CDN_MAPPING ;
 				if ( ! empty( $_POST[ $id ][ $child ] ) ) {
-					$data = $_POST[ $id ][ $child ] ; // Is an array url[]=xxx
+					$data = $_POST[ $id ][ $child ] ; // []=xxx
+				}
+			}
+			elseif ( strpos( $id, self::O_CRWL_COOKIES ) === 0 ) { // Cookie Crawler data
+				/**
+				 * Save cookie crawler
+				 * Raw Format:
+				 * 		crawler-cookies[name][] = xx
+				 * 		crawler-cookies[vals][] = xx
+				 *
+				 * todo: need to allow null for values
+				 */
+				$child = str_replace( array( self::O_CRWL_COOKIES, '[', ']' ), '', $id ) ;
+				if ( ! in_array( $child, array(
+					self::CRWL_COOKIE_NAME,
+					self::CRWL_COOKIE_VALS,
+				) ) ) {
+					continue ;
+				}
+
+				$id = self::O_CRWL_COOKIES ;
+				if ( ! empty( $_POST[ $id ][ $child ] ) ) {
+					$data = $_POST[ $id ][ $child ] ; // []=xxx
 				}
 			}
 			elseif ( ! empty( $_POST[ $id ] ) ) {
@@ -151,13 +179,34 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 				/**
 				 * Handle multiple CDN setting
-				 * @since 1.7
+				 * Final format:
+				 * 		cdn-mapping[ 0 ][ url ] = 'xxx'
 				 */
 				case self::O_CDN_MAPPING :
 					$data2 = $this->option( $id ) ;
 
 					foreach ( $data as $k => $v ) {
 						if ( $child == self::CDN_MAPPING_FILETYPE ) {
+							$v = LiteSpeed_Cache_Utility::sanitize_lines( $v ) ;
+						}
+						$data2[ $k ][ $child ] = $v ;
+					}
+					$data = $data2 ;
+					break ;
+
+				/**
+				 * Handle Cookie Crawler setting
+				 * Final format:
+				 * 		crawler-cookie[ 0 ][ name ] = 'xxx'
+				 * 		crawler-cookie[ 0 ][ vals ] = 'xxx'
+				 *
+				 * empty line for `vals` use literal `_null`
+				 */
+				case self::O_CRWL_COOKIES :
+					$data2 = $this->option( $id ) ;
+
+					foreach ( $data as $k => $v ) {
+						if ( $child == self::CRWL_COOKIE_VALS ) {
 							$v = LiteSpeed_Cache_Utility::sanitize_lines( $v ) ;
 						}
 						$data2[ $k ][ $child ] = $v ;
@@ -232,30 +281,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 
 
 
-		/**
-		 * Save cookie crawler
-		 * Raw Format:
-		 * 		crawler-cookies[name][] = xx
-		 * 		crawler-cookies[vals][] = xx
-		 *
-		 * todo: need to allow null for values
-		 */
-		$id = LiteSpeed_Cache_Config::O_CRWL_COOKIES ;
-		$cookie_crawlers = array() ;
-		if ( ! empty( $this->_input[ $id ][ 'name' ] ) ) {
-			foreach ( $this->_input[ $id ][ 'name' ] as $k => $v ) {
-				if ( ! $v ) {
-					continue ;
-				}
-
-				$cookie_crawlers[ $v ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ][ 'vals' ][ $k ] ) ;
-			}
-		}
-		$this->_update( $id, $cookie_crawlers ) ;
-
-
-
-
 
 		// Cache enabled setting
 		$enabled = $this->option( self::O_CACHE ) ;
@@ -289,13 +314,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	public function validate_plugin_settings( $input, $revert_options_to_input = false )
 	{
 			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
-		}
 
-		LiteSpeed_Cache_Log::debug( '[Settings] validate_plugin_settings called' ) ;
-
-
-
-		$this->_validate_crawler() ; // Network setup doesn't run validate_plugin_settings
 
 		if ( ! is_multisite() ) {
 			$this->_validate_singlesite() ;

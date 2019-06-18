@@ -145,9 +145,14 @@ function litespeed_update_3_0( $ver )
 			}
 
 			if ( $v == 'crawler-cookies' ) {
+				$tmp = array() ;
+				$i = 0 ;
 				foreach ( $old_data as $k2 => $v2 ) {
-					$old_data[ $k2 ] = explode( "\n", $v2 ) ;
+					$tmp[ $i ][ 'name' ] = $k2 ;
+					$tmp[ $i ][ 'vals' ] = explode( "\n", $v2 ) ;
+					$i ++ ;
 				}
+				$old_data = $tmp ;
 			}
 
 			add_option( 'litespeed.conf.' . $v, $old_data ) ;
