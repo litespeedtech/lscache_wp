@@ -54,10 +54,10 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			// Drop array format
 			if ( strpos( $v, '[' ) !== false ) {
 
-				if ( strpos( $v, self::O_CDN_MAPPING ) === 0 && substr( $v, -2 ) == '[]' ) { // Separate handler for CDN child settings
+				if ( strpos( $v, self::O_CDN_MAPPING ) === 0 ) { // Separate handler for CDN child settings
 					$v = substr( $v, 0, -2 ) ;// Drop ending []
 				}
-				elseif ( strpos( $v, self::O_CRWL_COOKIES ) === 0 && substr( $v, -2 ) == '[]' ) { // Separate handler for Cookie Crawler settings
+				elseif ( strpos( $v, self::O_CRWL_COOKIES ) === 0 ) { // Separate handler for Cookie Crawler settings
 					$v = substr( $v, 0, -2 ) ;// Drop ending []
 				}
 				else {
@@ -226,23 +226,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 					}
 					break ;
 
-				/**
-				 * Object cache related actions
-				 */
-				case self::O_DEBUG_DISABLE_ALL :
-					if ( $data ) {
-						// Remove Object Cache
-						// Do a purge all (This is before oc file removal, can purge oc too)
-						LiteSpeed_Cache_Purge::purge_all( '[Settings] Debug Disabled ALL' ) ;
-
-						LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini due to debug_disable_all' ) ;
-						LiteSpeed_Cache_Object::get_instance()->del_file() ;
-
-						// Set a const to avoid regenerating again
-						define( 'LITESPEED_DISABLE_OBJECT', true ) ;
-					}
-					break ;
-
 				// `Sitemap Generation` -> `Exclude Custom Post Types`
 				case self::O_CRWL_EXC_CPT :
 					if ( $data ) {
@@ -263,7 +246,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		/**
 		 * CDN related actions
 		 */
-		// If cloudflare API is on, refresh the zone
+
+		/**
+		 * Cloudflare
+		 * If cloudflare API is on, refresh the zone
+		 */
 		if ( $cdn_cloudflare_changed && $this->option( self::O_CDN_CLOUDFLARE ) ) {
 			$zone = LiteSpeed_Cache_CDN_Cloudflare::get_instance()->fetch_zone() ;
 			if ( $zone ) {
@@ -279,8 +266,15 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			}
 		}
 
-
-
+		/**
+		 * QUIC.cloud
+		 * Check if need to send cfg to CDN or not
+		 * @since 2.3
+		 */
+		if ( $this->option( self::O_CDN_QUIC ) ) {
+			// Send to Quic CDN
+			LiteSpeed_Cache_CDN_Quic::sync_config() ;
+		}
 
 		// Cache enabled setting
 		$enabled = $this->option( self::O_CACHE ) ;
@@ -294,147 +288,9 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			! defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
 		}
 
-		if( ! $this->option( self::O_CACHE_PAGE_LOGIN ) ) {
-			LiteSpeed_Cache_Purge::add( LiteSpeed_Cache_Tag::TYPE_LOGIN ) ;
-		}
+		// Update related files
+		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
 
-
-	}
-
-	/**
-	 * Callback function that will validate any changes made in the settings page.
-	 *
-	 * NOTE: Anytime that validate_plugin_settings is called, `convert_options_to_input` must be done first if not from option page
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param array $input The configuration posted from Setting page.
-	 * @return array The updated configuration options.
-	 */
-	public function validate_plugin_settings( $input, $revert_options_to_input = false )
-	{
-			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
-
-
-		if ( ! is_multisite() ) {
-			$this->_validate_singlesite() ;
-		}
-
-		if ( LSWCP_ESI_SUPPORT ) {
-			$orig_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::O_ESI ] ;
-
-			$this->_validate_esi() ;
-
-			$new_esi_enabled = $this->_options[ LiteSpeed_Cache_Config::O_ESI ] ;
-
-			if ( $orig_esi_enabled !== $new_esi_enabled ) {
-				LiteSpeed_Cache_Purge::purge_all( 'ESI changed' ) ;
-			}
-		}
-
-		if ( ! empty( $this->_err ) ) {
-			add_settings_error( LiteSpeed_Cache_Config::OPTION_NAME, LiteSpeed_Cache_Config::OPTION_NAME, implode( '<br />', $this->_err ) ) ;
-
-			return $this->_options ;
-		}
-
-		if ( defined( 'LITESPEED_CLI' ) ) {
-			$id = LiteSpeed_Cache_Config::O_CRWL ;
-			$cron_val = $this->_options[ $id ] ;
-			// assign crawler_cron_active to $this->_options if exists in $this->_input separately for CLI
-			// This has to be specified cos crawler cron activation is not set in admin setting page
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-			if ( $cron_val != $this->_options[ $id ] ) {
-				// check if need to enable crawler cron
-				LiteSpeed_Cache_Task::update( $this->_options ) ;
-			}
-		}
-
-		$this->_options = apply_filters( 'litespeed_config_save', $this->_options, $input ) ;
-
-		/**
-		 * Check if need to send cfg to CDN or not
-		 * @since 2.3
-		 */
-		$id = LiteSpeed_Cache_Config::O_CDN_QUIC ;
-		if ( $this->_options[ $id ] ) {
-			// Send to Quic CDN
-			LiteSpeed_Cache_CDN_Quic::sync_config( $this->_options ) ;
-		}
-
-		return $this->_options ;
-	}
-
-	/**
-	 * Validates the single site specific settings.
-	 *
-	 * @since 1.0.12
-	 * @access private
-	 */
-	private function _validate_singlesite()
-	{
-		/**
-		 * Handle files:
-		 * 		1) wp-config.php;
-		 * 		2) adv-cache.php;
-		 * 		3) object-cache.php;
-		 * 		4) .htaccess;
-		 */
-
-		/* 1) wp-config.php; */
-		$id = LiteSpeed_Cache_Config::O_CACHE ;
-		if ( $this->_options[ $id ] ) {// todo: If not enabled, may need to remove cache var?
-			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
-			if ( $ret !== true ) {
-				$this->_err[] = $ret ;
-			}
-		}
-
-		/* 2) adv-cache.php; */
-
-		$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ;
-		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		if ( $this->_options[ $id ] ) {
-			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
-		}
-
-		/* 3) object-cache.php; */
-
-		/**
-		 * Validate Object Cache
-		 * @since 1.8
-		 */
-		$new_options = $this->_validate_object_cache() ;
-		$this->_options = array_merge( $this->_options, $new_options ) ;
-
-		/* 4) .htaccess; */
-
-		// Parse rewrite rule settings
-		$new_options = $this->_validate_rewrite_settings() ;
-		$this->_options = array_merge( $this->_options, $new_options ) ;
-
-		// Try to update rewrite rules
-		$disable_lscache_detail_rules = false ;
-		if ( defined( 'LITESPEED_NEW_OFF' ) ) {
-			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
-			$disable_lscache_detail_rules = true ;
-		}
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options, $disable_lscache_detail_rules ) ;
-		if ( $res !== true ) {
-			if ( ! is_array( $res ) ) {
-				$this->_err[] = $res ;
-			}
-			else {
-				$this->_err = array_merge( $this->_err, $res ) ;
-			}
-		}
-
-		/**
-		 * Keep self up-to-date
-		 * @since  2.7.2
-		 */
-		$id = LiteSpeed_Cache_Config::O_AUTO_UPGRADE ;
-		$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
 
 	}
 
@@ -446,11 +302,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	 */
 	public function validate_network_settings( $input, $revert_options_to_input = false )
 	{
-		// Revert options to initial input
-		if ( $revert_options_to_input ) {
-			$input = LiteSpeed_Cache_Config::convert_options_to_input( $input ) ;
-		}
-
 		$this->_input = LiteSpeed_Cache_Admin::cleanup_text( $input ) ;
 
 		$options = $this->load_site_options() ;
@@ -528,153 +379,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			LiteSpeed_Cache_Purge::purge_all( 'Network use_primary changed' ) ;
 		}
 
-		$id = LiteSpeed_Cache_Config::O_PURGE_ON_UPGRADE ;
-		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-
-		$id = LiteSpeed_Cache_Config::O_AUTO_UPGRADE ;
-		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-
-		if ( ! empty( $this->_err ) ) {
-			LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_RED, $this->_err ) ;
-			return ;
-		}
-
 		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __( 'Site options saved.', 'litespeed-cache' ) ) ;
 		update_site_option( LiteSpeed_Cache_Config::OPTION_NAME, $options ) ;
-	}
-
-	/**
-	 * Validates object cache settings.
-	 *
-	 * @since 1.8
-	 * @access private
-	 */
-	private function _validate_object_cache()
-	{
-		$new_options = array() ;
-
-		$ids = array(
-			LiteSpeed_Cache_Config::O_OBJECT,
-			LiteSpeed_Cache_Config::O_OBJECT_KIND,
-			LiteSpeed_Cache_Config::O_OBJECT_ADMIN,
-			LiteSpeed_Cache_Config::O_OBJECT_TRANSIENTS,
-			LiteSpeed_Cache_Config::O_OBJECT_PERSISTENT,
-		) ;
-		foreach ( $ids as $id ) {
-			$new_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		}
-
-		$ids = array(
-			LiteSpeed_Cache_Config::O_OBJECT_HOST,
-			LiteSpeed_Cache_Config::O_OBJECT_PORT,
-			LiteSpeed_Cache_Config::O_OBJECT_LIFE,
-			LiteSpeed_Cache_Config::O_OBJECT_DB_ID,
-			LiteSpeed_Cache_Config::O_OBJECT_USER,
-			LiteSpeed_Cache_Config::O_OBJECT_PSWD,
-		);
-		foreach ( $ids as $id ) {
-			$new_options[ $id ] = $this->_input[ $id ] ;
-		}
-
-		$ids = array(
-			LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS,
-			LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS,
-		);
-		foreach ( $ids as $id ) {
-			$new_options[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $id ) ;
-		}
-
-		/**
-		 * Check if object cache file existing or not
-		 */
-		if ( ! defined( 'LITESPEED_DISABLE_OBJECT' ) ) {
-			if ( $new_options[ LiteSpeed_Cache_Config::O_OBJECT ] ) {
-				LiteSpeed_Cache_Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
-				LiteSpeed_Cache_Object::get_instance()->update_file( $new_options ) ;
-				/**
-				 * Clear object cache
-				 */
-				LiteSpeed_Cache_Object::get_instance()->reconnect( $new_options ) ;
-			}
-			else {
-				if ( defined( 'LSCWP_OBJECT_CACHE' ) ) {
-					LiteSpeed_Cache_Log::debug( '[Settings] Remove .object_cache.ini' ) ;
-					LiteSpeed_Cache_Object::get_instance()->del_file() ;
-				}
-			}
-		}
-
-		return $new_options ;
-
-	}
-	/**
-	 * Validates settings related to rewrite rules
-	 *
-	 * @since 1.3
-	 * @access private
-	 * @return  array New options related to rewrite rule
-	 */
-	private function _validate_rewrite_settings()
-	{
-		$new_options = array() ;
-
-		$ids = array(
-			LiteSpeed_Cache_Config::O_CACHE_MOBILE,
-			LiteSpeed_Cache_Config::O_CACHE_FAVICON,
-			LiteSpeed_Cache_Config::O_CACHE_RES,
-			LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE,
-			LiteSpeed_Cache_Config::O_IMG_OPTM_WEBP_REPLACE,
-		) ;
-		foreach ( $ids as $id ) {
-			$new_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		}
-
-		// TTL check
-		$id = LiteSpeed_Cache_Config::O_UTIL_BROWSER_CACHE_TTL ;
-		$new_options[ $id ] = $this->_check_ttl( $this->_input, $id, 30 ) ;
-
-		// check mobile agents
-		$id = LiteSpeed_Cache_Config::O_CACHE_MOBILE_RULES ;
-		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		$new_options[ $id ] = $this->_input[ $id ] ;
-
-		// No cache cookie settings
-		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_COOKIES ;
-		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		$new_options[ $id ] = $this->_input[ $id ] ;
-
-		// No cache user agent settings
-		$id = LiteSpeed_Cache_Config::O_CACHE_EXC_USERAGENTS ;
-		$this->_input[ $id ] = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ] ) ;
-		$new_options[ $id ] = $this->_input[ $id ] ;
-
-		// Login cookie
-		$id = LiteSpeed_Cache_Config::O_CACHE_LOGIN_COOKIE ;
-		$new_options[ $id ] = $this->_input[ $id ] ;
-
-		return $new_options ;
-	}
-
-	/**
-	 * Validates the esi settings.
-	 *
-	 * @since 1.1.3
-	 * @access private
-	 */
-	private function _validate_esi()
-	{
-		$ids = array(
-			LiteSpeed_Cache_Config::O_ESI,
-			LiteSpeed_Cache_Config::O_ESI_CACHE_ADMBAR,
-			LiteSpeed_Cache_Config::O_ESI_CACHE_COMMFORM,
-		) ;
-		foreach ( $ids as $id ) {
-			$this->_options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		}
-
-		// Save vary group settings
-		$id = LiteSpeed_Cache_Config::O_CACHE_VARY_GROUP ;
-		$this->_update( $id ) ;
 	}
 
 	/**

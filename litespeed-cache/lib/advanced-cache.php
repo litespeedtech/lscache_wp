@@ -1,11 +1,8 @@
 <?php
-
+defined( 'WPINC' ) || exit ;
 /**
  * LiteSpeed Cache Plugin
  */
-if (!defined('ABSPATH')) {
-    die();
-}
 
 define('LSCACHE_ADV_CACHE', true);
 

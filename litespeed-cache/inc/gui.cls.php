@@ -369,7 +369,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public function frontend_enqueue_style_public()
 	{
-		wp_enqueue_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/instant_click.min.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, true ) ;
+		wp_enqueue_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/instant_click.min.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, true ) ;
 	}
 
 	/**
@@ -380,7 +380,7 @@ class LiteSpeed_Cache_GUI
 	 */
 	public function frontend_enqueue_style()
 	{
-		wp_enqueue_style( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all' ) ;
+		wp_enqueue_style( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all' ) ;
 	}
 
 	/**

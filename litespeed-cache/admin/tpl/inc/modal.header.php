@@ -4,7 +4,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 ?>
 
-<link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>css/litespeed.css" />
+<link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>assets/css/litespeed.css" />
 
 <div class="litespeed litespeed-modal">
 

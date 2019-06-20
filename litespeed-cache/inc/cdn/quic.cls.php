@@ -22,8 +22,10 @@ class LiteSpeed_Cache_CDN_Quic
 	 *
 	 * @access public
 	 */
-	public static function sync_config( $options )
+	public static function sync_config()
 	{
+		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+
 		if ( empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_EMAIL ] ) || empty( $options[ LiteSpeed_Cache_Config::O_CDN_QUIC_KEY ] ) ) {
 			return false ;
 		}
@@ -37,16 +39,6 @@ class LiteSpeed_Cache_CDN_Quic
 			if ( ! empty( $options[ $v ] ) ) {
 				$options[ $v ] = str_repeat( '*', strlen( $options[ $v ] ) ) ;
 			}
-		}
-
-		// Also read data from items
-		$item_options = LiteSpeed_Cache_Config::get_instance()->stored_items() ;xx
-		foreach ( $item_options as $v ) {
-			// bypass main conf
-			if ( $v == LiteSpeed_Cache_Config::OPTION_NAME ) {
-				continue ;
-			}
-			$options[ $v ] = get_option( $v ) ;
 		}
 
 		$instance = self::get_instance() ;

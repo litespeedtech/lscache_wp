@@ -233,7 +233,7 @@ class LiteSpeed_Cache_ESI
 	 */
 	private function _register_esi_actions()
 	{
-		define( 'LSCACHE_IS_ESI', $_GET[ self::QS_ACTION ] ) ;// Reused this to ESI block ID
+		! defined( 'LSCACHE_IS_ESI' ) && define( 'LSCACHE_IS_ESI', $_GET[ self::QS_ACTION ] ) ;// Reused this to ESI block ID
 
 		! empty( $_SERVER[ 'ESI_REFERER' ] ) && defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[ESI] ESI_REFERER: ' . $_SERVER[ 'ESI_REFERER' ] ) ;
 
@@ -492,7 +492,7 @@ class LiteSpeed_Cache_ESI
 		}
 
 		if ( ! empty( $params[ '_ls_silence' ] ) ) {
-			define( 'LSCACHE_ESI_SILENCE', true ) ;
+			! defined( 'LSCACHE_ESI_SILENCE' ) && define( 'LSCACHE_ESI_SILENCE', true ) ;
 		}
 
 		/**

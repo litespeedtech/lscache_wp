@@ -1,13 +1,10 @@
 <?php
+defined( 'WPINC' ) || exit ;
 /**
  * LiteSpeed Object Cache
  *
  * @since  1.8
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
 
 ! defined( 'LSCWP_OBJECT_CACHE' ) && define( 'LSCWP_OBJECT_CACHE', true ) ;
 

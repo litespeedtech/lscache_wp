@@ -193,7 +193,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_style()
 	{
-		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
+		wp_enqueue_style(LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/css/litespeed.css', array(), LiteSpeed_Cache::PLUGIN_VERSION, 'all') ;
 	}
 
 	/**
@@ -204,7 +204,7 @@ class LiteSpeed_Cache_Admin_Display
 	 */
 	public function enqueue_scripts()
 	{
-		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
+		wp_register_script( LiteSpeed_Cache::PLUGIN_NAME, LSWCP_PLUGIN_URL . 'assets/js/litespeed-cache-admin.js', array(), LiteSpeed_Cache::PLUGIN_VERSION, false ) ;
 
 		$localize_data = array() ;
 		if ( LiteSpeed_Cache_GUI::has_whm_msg() ) {

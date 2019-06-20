@@ -709,7 +709,7 @@ class LiteSpeed_Cache_Const
 	 */
 	protected function _conf_purge( $id )
 	{
-		$require_purge_ids = array(
+		$check_ids = array(
 			self::O_OPTM_EXC,
 			self::O_CACHE_PRIV_URI,
 			self::O_PURGE_TIMED_URLS,
@@ -717,8 +717,45 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE_EXC,
 		) ;
 
-		if ( in_array( $id, $require_purge_ids ) ) {
+		if ( in_array( $id, $check_ids ) ) {
 			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * If the setting changes worth a purge ALL or not
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_purge_all( $id )
+	{
+		$check_ids = array(
+			self::O_ESI,
+			self::O_DEBUG_DISABLE_ALL,
+		) ;
+
+		if ( in_array( $id, $check_ids ) ) {
+			return true ;
+		}
+
+		return false ;
+	}
+
+	/**
+	 * If the setting changes worth a purge, return the tag
+	 *
+	 * @since  3.0
+	 */
+	protected function _conf_purge_tag( $id )
+	{
+		$check_ids = array(
+			self::O_CACHE_PAGE_LOGIN	=> LiteSpeed_Cache_Tag::TYPE_LOGIN,
+		) ;
+
+		if ( ! empty( $check_ids[ $id ] ) ) {
+			return $check_ids[ $id ] ;
 		}
 
 		return false ;

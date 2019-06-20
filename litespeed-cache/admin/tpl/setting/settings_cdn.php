@@ -215,8 +215,8 @@ $cdn_mapping = LiteSpeed_Cache::config( LiteSpeed_Cache_Config::O_CDN_MAPPING ) 
 
 				<a id='litespeed_modal_href' href="https://quic.cloud" target="_blank">Register for free at QUIC.cloud</a>
 
-				<!-- <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>css/iziModal.min.css"> -->
-				<!-- <script src="<?php echo LSWCP_PLUGIN_URL ; ?>js/iziModal.min.js"></script> -->
+				<!-- <link rel="stylesheet" href="<?php echo LSWCP_PLUGIN_URL ; ?>assets/css/iziModal.min.css"> -->
+				<!-- <script src="<?php echo LSWCP_PLUGIN_URL ; ?>assets/js/iziModal.min.js"></script> -->
 				<!-- <div id="litespeed_modal"></div> -->
 				<script>
 					// var litespeed_modal = jQuery("#litespeed_modal").iziModal({iframe: true});

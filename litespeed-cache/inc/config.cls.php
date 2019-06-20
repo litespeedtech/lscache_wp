@@ -410,8 +410,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		elseif ( is_array( $this->_default_options[ $id ] ) ) {
 			// from textarea input
 			if ( ! is_array( $val ) ) {
-				$filter = $this->_conf_filter( $id ) ;
-				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $filter ) ;
+				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
 			}
 		}
 		elseif ( ! is_string( $this->_default_options[ $id ] ) ) {
@@ -425,20 +424,34 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Save data
 		update_option( $this->conf_name( $id ), $val ) ;
 
-		// Check if need to fire a purge or not
-		if ( $this->_conf_purge( $id ) ) {
-			$diff = array_diff( $val, $this->_options[ $id ] ) ;
-			$diff2 = array_diff( $this->_options[ $id ], $val ) ;
-			$diff = array_merge( $diff, $diff2 ) ;
-			// If has difference
-			if ( $diff ) {
+		// Handle purge if setting changed
+		if ( $this->_options[ $id ] != $val ) {
+
+			// Check if need to fire a purge or not
+			if ( $this->_conf_purge( $id ) ) {
+				$diff = array_diff( $val, $this->_options[ $id ] ) ;
+				$diff2 = array_diff( $this->_options[ $id ], $val ) ;
+				$diff = array_merge( $diff, $diff2 ) ;
+				// If has difference
 				foreach ( $diff as $v ) {
 					$v = ltrim( $v, '^' ) ;
 					$v = rtrim( $v, '$' ) ;
 					LiteSpeed_Cache_Purge::get_instance()->purgeby_url_cb( $v ) ;
 				}
 			}
+
+			// Check if need to do a purge all or not
+			if ( $this->_conf_purge_all( $id ) ) {
+				LiteSpeed_Cache_Purge::purge_all( 'conf changed [id] ' . $id ) ;
+			}
+
+			// Check if need to purge a tag
+			if ( $tag = $this->_conf_purge_tag( $id ) ) {
+				LiteSpeed_Cache_Purge::add( $tag ) ;
+			}
 		}
+
+		// No need to update cron here, Cron will register in each init
 
 		// Update in-memory data
 		$this->_options[ $id ] = $val ;
@@ -464,73 +477,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		return in_array( $role, $this->option( self::O_OPTM_EXC_ROLES ) ) ? $role : false ;
-	}
-
-	/**
-	 * Helper function to convert the options to replicate the input format.
-	 *
-	 * The only difference is the checkboxes.
-	 *
-	 * @since 1.0.15
-	 * @access public
-	 * @param array $options The options array to port to input format.
-	 * @return array $options The options array with input format.
-	 */
-	public static function convert_options_to_input($options)
-	{
-		foreach ( $options as $key => $val ) {
-			if ( $val === true ) {
-				$options[$key] = self::VAL_ON ;
-			}
-			elseif ( $val === false ) {
-				$options[$key] = self::VAL_OFF ;
-			}
-		}
-
-		// Convert CDN settings
-		$mapping_fields = array(
-			LiteSpeed_Cache_Config::CDN_MAPPING_URL,
-			LiteSpeed_Cache_Config::CDN_MAPPING_INC_IMG,
-			LiteSpeed_Cache_Config::CDN_MAPPING_INC_CSS,
-			LiteSpeed_Cache_Config::CDN_MAPPING_INC_JS,
-			LiteSpeed_Cache_Config::CDN_MAPPING_FILETYPE
-		) ;
-		$cdn_mapping = array() ;
-		if ( isset( $options[ self::O_CDN_MAPPING ] ) && is_array( $options[ self::O_CDN_MAPPING ] ) ) {
-			foreach ( $options[ self::O_CDN_MAPPING ] as $k => $v ) {// $k is numeric
-				foreach ( $mapping_fields as $v2 ) {
-					if ( empty( $cdn_mapping[ $v2 ] ) ) {
-						$cdn_mapping[ $v2 ] = array() ;
-					}
-					$cdn_mapping[ $v2 ][ $k ] = ! empty( $v[ $v2 ] ) ? $v[ $v2 ] : false ;
-				}
-			}
-		}
-		if ( empty( $cdn_mapping ) ) {
-			// At least it has one item same as in setting page
-			foreach ( $mapping_fields as $v2 ) {
-				$cdn_mapping[ $v2 ] = array( 0 => false ) ;
-			}
-		}
-		$options[ self::O_CDN_MAPPING ] = $cdn_mapping ;
-
-		/**
-		 * Convert Cookie Simulation in Crawler settings
-		 * @since 2.8.1 Fixed warning and lost cfg when deactivate->reactivate in v2.8
-		 */
-		$id = self::O_CRWL_COOKIES ;
-		$crawler_cookies = array() ;
-		if ( isset( $options[ $id ] ) && is_array( $options[ $id ] ) ) {
-			$i = 0 ;
-			foreach ( $options[ $id ] as $k => $v ) {
-				$crawler_cookies[ 'name' ][ $i ] = $k ;
-				$crawler_cookies[ 'vals' ][ $i ] = $v ;
-				$i ++ ;
-			}
-		}
-		$options[ $id ] = $crawler_cookies ;
-
-		return $options ;
 	}
 
 	/**
@@ -567,64 +513,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		$options[self::_VERSION] = LiteSpeed_Cache::PLUGIN_VERSION ;
 
 		return $options ;
-	}
-
-	/**
-	 * Update the WP_CACHE variable in the wp-config.php file.
-	 *
-	 * If enabling, check if the variable is defined, and if not, define it.
-	 * Vice versa for disabling.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @param boolean $enable True if enabling, false if disabling.
-	 * @return boolean True if the variable is the correct value, false if something went wrong.
-	 */
-	public static function wp_cache_var_setter( $enable )
-	{
-		if ( $enable ) {
-			if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
-				return true ;
-			}
-		}
-		elseif ( ! defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && ! WP_CACHE ) ) {
-				return true ;
-		}
-
-		$file = ABSPATH . 'wp-config.php' ;
-
-		if ( ! is_writeable( $file ) ) {
-			$file = dirname( ABSPATH ) . '/wp-config.php' ; // todo: is the path correct?
-			if ( ! is_writeable( $file ) ) {
-				error_log( 'wp-config file not writable for \'WP_CACHE\'' ) ;
-				return LiteSpeed_Cache_Admin_Error::E_CONF_WRITE ;
-			}
-		}
-
-		$file_content = file_get_contents( $file ) ;
-
-		if ( $enable ) {
-			$count = 0 ;
-
-			$new_file_content = preg_replace( '/[\/]*define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', true);", $file_content, -1, $count ) ;
-			if ( $count == 0 ) {
-				$new_file_content = preg_replace( '/(\$table_prefix)/', "define('WP_CACHE', true);\n$1", $file_content ) ;
-				if ( $count == 0 ) {
-					$new_file_content = preg_replace( '/(\<\?php)/', "$1\ndefine('WP_CACHE', true);", $file_content, -1, $count ) ;
-				}
-
-				if ( $count == 0 ) {
-					error_log( 'wp-config file did not find a place to insert define.' ) ;
-					return LiteSpeed_Cache_Admin_Error::E_CONF_FIND ;
-				}
-			}
-		}
-		else {
-			$new_file_content = preg_replace( '/define\(.*\'WP_CACHE\'.+;/', "define('WP_CACHE', false);", $file_content ) ;
-		}
-
-		file_put_contents( $file, $new_file_content ) ;
-		return true ;
 	}
 
 	/**

@@ -154,13 +154,15 @@ class LiteSpeed_Cache_Object
 	}
 
 	/**
-	 * Maintain WP object cache file
+	 * Update WP object cache file config
 	 *
 	 * @since  1.8
 	 * @access public
 	 */
 	public function update_file( $options )
 	{
+		$changed = false ;
+
 		// Update data file
 		$data = "[object_cache]"
 			. "\nmethod = " . $options[ LiteSpeed_Cache_Config::O_OBJECT_KIND ]
@@ -176,7 +178,14 @@ class LiteSpeed_Cache_Object
 			. "\nglobal_groups = " . implode( ',', $options[ LiteSpeed_Cache_Config::O_OBJECT_GLOBAL_GROUPS ] )
 			. "\nnon_persistent_groups = " . implode( ',', $options[ LiteSpeed_Cache_Config::O_OBJECT_NON_PERSISTENT_GROUPS ] )
 			;
-		Litespeed_File::save( $this->_oc_data_file, $data ) ;
+
+		$old_data = Litespeed_File::read( $this->_oc_data_file ) ;
+		if ( $old_data != $data ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Settings] Update .object_cache.ini and flush object cache' ) ;
+			Litespeed_File::save( $this->_oc_data_file, $data ) ;
+
+			$changed = true ;
+		}
 
 		// NOTE: When included in oc.php, `LSCWP_DIR` will show undefined, so this must be assigned/generated when used
 		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
@@ -186,6 +195,15 @@ class LiteSpeed_Cache_Object
 		if ( ! file_exists( $_oc_wp_file ) || md5_file( $_oc_wp_file ) !== md5_file( $_oc_ori_file ) ) {
 			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] copying object-cache.php file to ' . $_oc_wp_file ) ;
 			copy( $_oc_ori_file, $_oc_wp_file ) ;
+
+			$changed = true ;
+		}
+
+		/**
+		 * Clear object cache
+		 */
+		if ( $changed ) {
+			$this->reconnect() ;
 		}
 	}
 
@@ -201,13 +219,15 @@ class LiteSpeed_Cache_Object
 		$_oc_ori_file = LSCWP_DIR . 'lib/object-cache.php' ;
 		$_oc_wp_file = WP_CONTENT_DIR . '/object-cache.php' ;
 
-		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $_oc_wp_file ) ;
-
 		if ( file_exists( $_oc_wp_file ) && md5_file( $_oc_wp_file ) === md5_file( $_oc_ori_file ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] removing ' . $_oc_wp_file ) ;
 			unlink( $_oc_wp_file ) ;
 		}
 
-		file_exists( $this->_oc_data_file ) && unlink( $this->_oc_data_file ) ;
+		if ( file_exists( $this->_oc_data_file ) ) {
+			LiteSpeed_Cache_Log::debug( '[Object] Removing ' . $this->_oc_data_file ) ;
+			unlink( $this->_oc_data_file ) ;
+		}
 	}
 
 	/**

@@ -17,7 +17,7 @@ class LiteSpeed_Cache_Media
 {
 	private static $_instance ;
 
-	const LIB_FILE_IMG_LAZYLOAD = 'js/lazyload.min.js' ;
+	const LIB_FILE_IMG_LAZYLOAD = 'assets/js/lazyload.min.js' ;
 
 	const TYPE_GENERATE_PLACEHOLDER = 'generate_placeholder' ;
 	const DB_PLACEHOLDER_SUMMARY = 'litespeed-media-placeholder-summary' ;

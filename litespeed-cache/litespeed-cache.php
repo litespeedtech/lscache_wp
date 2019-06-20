@@ -58,8 +58,8 @@ if ( class_exists( 'LiteSpeed_Cache' ) || defined( 'LSCWP_DIR' ) ) {
  * @since  1.9.1 Moved up
  * @since  2.2.1 Moved up from core.cls
  */
-define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
-define( 'LSWCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
+! defined( 'LSCWP_CONTENT_FOLDER' ) && define( 'LSCWP_CONTENT_FOLDER', str_replace( home_url( '/' ), '', WP_CONTENT_URL ) ) ; // `wp-content`
+! defined( 'LSWCP_PLUGIN_URL' ) && define( 'LSWCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//example.com/wp-content/plugins/litespeed-cache/'
 
 ! defined( 'LITESPEED_TIME_OFFSET' ) && define( 'LITESPEED_TIME_OFFSET', get_option( 'gmt_offset' ) * 60 * 60 ) ;
 
@@ -67,7 +67,7 @@ define( 'LSWCP_PLUGIN_URL', plugin_dir_url( __FILE__ ) ) ;// Full URL path '//ex
 ! defined( 'LITESPEED_PLACEHOLDER' ) && define( 'LITESPEED_PLACEHOLDER', 'data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=' ) ;
 
 // Auto register LiteSpeed classes
-require_once LSCWP_DIR . 'inc/litespeed.autoload.php' ;
+require_once LSCWP_DIR . 'inc/core.autoload.php' ;
 
 // Define CLI
 if ( ( defined( 'WP_CLI' ) && WP_CLI ) || PHP_SAPI == 'cli' ) {

@@ -271,13 +271,72 @@ class LiteSpeed_Cache_Activation
 	}
 
 	/**
+	 * Manage related files based on plugin latest conf
+	 *
+	 * NOTE: Only trigger this in backend admin access for efficiency concern
+	 *
+	 * Handle files:
+	 * 		1) wp-config.php;
+	 * 		2) adv-cache.php;
+	 * 		3) object-cache.php;
+	 * 		4) .htaccess;
+	 *
+	 * @since 3.0
+	 * @access public
+	 */
+	public function update_files()
+	{
+		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+		/* 1) wp-config.php; */
+
+		try {
+			$this->_manage_wp_cache_const( $options[ self::O_CACHE ] ) ;
+		} catch ( \Exception $ex ) {
+			if ( defined( 'LITESPEED_CLI' ) ) {
+				// to be done
+			}
+			// Add msg to admin page
+			LiteSpeed_Cache_Admin_Display::error( $ex->getMessage() ) ;
+		}
+
+		/* 2) adv-cache.php; */
+
+		if ( $options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
+			$this->_manage_advanced_cache_file() ;
+		}
+
+		/* 3) object-cache.php; */
+		if ( ! $options[ self::O_DEBUG_DISABLE_ALL ] && $options[ self::O_OBJECT ] ) {
+			LiteSpeed_Cache_Object::get_instance()->update_file( $options ) ;
+		}
+		else {
+			LiteSpeed_Cache_Object::get_instance()->del_file() ;
+		}
+
+		/* 4) .htaccess; */
+
+		// Parse rewrite rule settings
+		$new_options = $this->_validate_rewrite_settings() ;
+
+		// Try to update rewrite rules
+		$disable_lscache_detail_rules = false ;
+		if ( defined( 'LITESPEED_NEW_OFF' ) ) {
+			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
+			$disable_lscache_detail_rules = true ;
+		}
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options, $disable_lscache_detail_rules ) ;
+		if ( $res !== true ) {
+		}
+	}
+
+	/**
 	 * Try to copy our advanced-cache.php file to the wordpress directory.
 	 *
 	 * @since 1.0.11
-	 * @access public
-	 * @return boolean True on success, false on failure.
+	 * @since  3.0 Refactored
+	 * @access private
 	 */
-	public static function try_copy_advanced_cache()
+	private function _manage_advanced_cache_file()
 	{
 		$adv_cache_path = LSCWP_CONTENT_DIR . '/advanced-cache.php' ;
 		if ( file_exists( $adv_cache_path ) && ( filesize( $adv_cache_path ) !== 0 || ! is_writable( $adv_cache_path ) ) ) {
@@ -290,12 +349,65 @@ class LiteSpeed_Cache_Activation
 
 		include $adv_cache_path ;
 
-		$ret = defined( 'LSCACHE_ADV_CACHE' ) ;
-
 		// Try to enable `LITESPEED_ON`
 		LiteSpeed_Cache_Config::get_instance()->define_cache_on() ;
 
-		return $ret ;
+		return defined( 'LSCACHE_ADV_CACHE' ) ;
+	}
+
+	/**
+	 * Update the WP_CACHE variable in the wp-config.php file.
+	 *
+	 * If enabling, check if the variable is defined, and if not, define it.
+	 * Vice versa for disabling.
+	 *
+	 * @since 1.0.0
+	 * @since  3.0 Refactored
+	 * @access private
+	 */
+	private function _manage_wp_cache_const( $enable )
+	{
+		if ( $enable ) {
+			if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+				return false ;
+			}
+		}
+		elseif ( ! defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && ! WP_CACHE ) ) {
+				return false ;
+		}
+
+		/**
+		 * Follow WP's logic to locate wp-config file
+		 * @see wp-load.php
+		 */
+		$conf_file = ABSPATH . 'wp-config.php' ;
+		if ( ! file_exists( $conf_file ) ) {
+			$conf_file = dirname( ABSPATH ) . '/wp-config.php' ;
+		}
+
+		$content = Litespeed_File::read( $conf_file ) ;
+		if ( ! $content ) {
+			throw new Exception( 'wp-config file content is empty: ' . $conf_file ) ;
+
+		}
+
+		// Remove the line `define('WP_CACHE', true/false);` first
+		if ( defined( 'WP_CACHE' ) ) {
+			$content = preg_replace( '|define\(\s*(["\'])WP_CACHE\1\s*,\s*\w+\)\s*;|sU', '', $content ) ;
+		}
+
+		// Insert const
+		if ( $enable ) {
+			$content = preg_replace( '|^<\?php|', "<?php\ndefine( 'WP_CACHE', true ) ;", $content ) ;
+		}
+
+		$res = Litespeed_File::save( $conf_file, $content, false, false, false ) ;
+
+		if ( $res !== true ) {
+			throw new Exception( 'wp-config.php operation failed when changing `WP_CACHE` const: ' . $res ) ;
+		}
+
+		return true ;
 	}
 
 	/**

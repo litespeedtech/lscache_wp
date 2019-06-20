@@ -159,7 +159,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 					<?php
 						echo $i + 1 ;
 						if ( $i == $meta[ 'curr_crawler' ] ) {
-							echo "<img class='litespeed-crawler-curr' src='" . LSWCP_PLUGIN_URL . "img/Litespeed.icon.svg' />" ;
+							echo "<img class='litespeed-crawler-curr' src='" . LSWCP_PLUGIN_URL . "assets/img/Litespeed.icon.svg' />" ;
 						}
 					?>
 					</td>
@@ -205,7 +205,7 @@ $disabled = LiteSpeed_Cache_Router::can_crawl() ? '' : 'disabled' ;
 			<div class="litespeed-shell-header">
 				<div class="litespeed-shell-header-bg"></div>
 				<div class="litespeed-shell-header-icon-container">
-					<img id="litespeed-shell-icon" src="<?php echo LSWCP_PLUGIN_URL . 'img/Litespeed.icon.svg' ; ?>" />
+					<img id="litespeed-shell-icon" src="<?php echo LSWCP_PLUGIN_URL . 'assets/img/Litespeed.icon.svg' ; ?>" />
 				</div>
 			</div>
 			<ul class="litespeed-shell-body">
