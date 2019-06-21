@@ -306,6 +306,7 @@ class LiteSpeed_Cache_Activation
 		}
 
 		/* 3) object-cache.php; */
+
 		if ( ! $options[ self::O_DEBUG_DISABLE_ALL ] && $options[ self::O_OBJECT ] ) {
 			LiteSpeed_Cache_Object::get_instance()->update_file( $options ) ;
 		}
@@ -315,16 +316,7 @@ class LiteSpeed_Cache_Activation
 
 		/* 4) .htaccess; */
 
-		// Parse rewrite rule settings
-		$new_options = $this->_validate_rewrite_settings() ;
-
-		// Try to update rewrite rules
-		$disable_lscache_detail_rules = false ;
-		if ( defined( 'LITESPEED_NEW_OFF' ) ) {
-			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
-			$disable_lscache_detail_rules = true ;
-		}
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options, $disable_lscache_detail_rules ) ;
+		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options ) ;
 		if ( $res !== true ) {
 		}
 	}

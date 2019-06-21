@@ -277,20 +277,14 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		}
 
 		// Cache enabled setting
-		$enabled = $this->option( self::O_CACHE ) ;
+		$enabled = $this->option( self::O_CACHE ) ;//todo:use _CACHE
 		// Use network setting
 		if( $enabled === self::VAL_ON2 ) {
-			$enabled = is_multisite() ? defined( 'LITESPEED_NETWORK_ON' ) : true ; // Default to true
-		}
-		// Purge when disabled
-		if ( ! $enabled ) {
-			LiteSpeed_Cache_Purge::purge_all( 'Not enabled' ) ;
-			! defined( 'LITESPEED_NEW_OFF' ) && define( 'LITESPEED_NEW_OFF', true ) ; // Latest status is off
+			$enabled = is_multisite() ? $this->site_option( self::NETWORK_O_ENABLED ) : true ; // Default to true
 		}
 
 		// Update related files
 		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
-
 
 	}
 

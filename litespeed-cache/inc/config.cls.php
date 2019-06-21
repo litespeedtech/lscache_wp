@@ -37,12 +37,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// Load options first, network sites can override this later
 		$this->load_options() ;
 
-		// Init global const cache on set
-		$this->_options[ self::_CACHE ] = false ;
-		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON ) {
-			$this->_options[ self::_CACHE ] = true ;
-		}
-
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
 
@@ -130,6 +124,12 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 		}
 
+		// Init global const cache on set
+		$options[ self::_CACHE ] = false ;
+		if ( $options[ self::O_CACHE ] === self::VAL_ON || $options[ self::O_CDN_QUIC ] ) {
+			$options[ self::_CACHE ] = true ;
+		}
+
 		if ( ! $dry_run ) {
 			$this->_options = $options ;
 		}
@@ -173,10 +173,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		// If use network setting
 		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
 			$this->_options[ self::_CACHE ] = true ;
-		}
-		// Set network eanble to on
-		if ( $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
-			! defined( 'LITESPEED_NETWORK_ON' ) && define( 'LITESPEED_NETWORK_ON', true ) ;
 		}
 
 		// Overwrite single blog options with site options
@@ -359,17 +355,11 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	/**
 	 * Get the selected configuration option.
 	 *
-	 * @since 1.0.0
-	 * @deprecated 2.9.8
+	 * @since 2.9.8
 	 * @access public
 	 * @param string $id Configuration ID.
 	 * @return mixed Selected option if set, NULL if not.
 	 */
-	public function get_option( $id )
-	{
-		return $this->option( $id ) ;
-	}
-
 	public function option( $id )
 	{
 		if ( isset( $this->_options[ $id ] ) ) {
@@ -377,6 +367,15 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		}
 
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid option ID ' . $id ) ;
+
+		return NULL ;
+	}
+
+	public function site_option( $id )
+	{
+		if ( isset( $this->_site_options[ $id ] ) ) {
+			return $this->_site_options[ $id ] ;
+		}
 
 		return NULL ;
 	}

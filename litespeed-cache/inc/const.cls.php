@@ -732,6 +732,7 @@ class LiteSpeed_Cache_Const
 	protected function _conf_purge_all( $id )
 	{
 		$check_ids = array(
+			self::O_CACHE,
 			self::O_ESI,
 			self::O_DEBUG_DISABLE_ALL,
 		) ;

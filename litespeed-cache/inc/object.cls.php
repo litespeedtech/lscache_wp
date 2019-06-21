@@ -203,7 +203,7 @@ class LiteSpeed_Cache_Object
 		 * Clear object cache
 		 */
 		if ( $changed ) {
-			$this->reconnect() ;
+			$this->_reconnect( $options ) ;
 		}
 	}
 
@@ -243,9 +243,11 @@ class LiteSpeed_Cache_Object
 
 	/**
 	 * Force to connect with this setting
-	 * @return [type] [description]
+	 *
+	 * @since  1.8
+	 * @access private
 	 */
-	public function reconnect( $cfg )
+	private function _reconnect( $cfg )
 	{
 		defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Object] Reconnecting' ) ;
 		// error_log( 'Object: reconnect !' ) ;

@@ -8,10 +8,7 @@
  * @subpackage LiteSpeed_Cache/admin
  * @author     LiteSpeed Technologies <info@litespeedtech.com>
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die ;
-}
+defined( 'WPINC' ) || exit ;
 
 class LiteSpeed_Cache_Admin_Rules
 {
@@ -28,13 +25,13 @@ class LiteSpeed_Cache_Admin_Rules
 	private $backend_htaccess_writable = false ;
 	private $theme_htaccess_readable = false ;
 	private $theme_htaccess_writable = false ;
+	private $__rewrite_on ;
 
 	const LS_MODULE_START = '<IfModule LiteSpeed>' ;
 	const EXPIRES_MODULE_START = '<IfModule mod_expires.c>' ;
 	const LS_MODULE_END = '</IfModule>' ;
 	const LS_MODULE_REWRITE_START = '<IfModule mod_rewrite.c>' ;
 	const REWRITE_ON = 'RewriteEngine on' ;
-	private static $LS_MODULE_REWRITE_ON ;
 	const LS_MODULE_DONOTEDIT = "## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##" ;
 	const MARKER = 'LSCACHE' ;
 	const MARKER_NONLS = 'NON_LSCACHE' ;
@@ -62,7 +59,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 */
 	private function __construct()
 	{
-		$this->path_set() ;
+		$this->_path_set() ;
 		// Filter for frontend&backend htaccess path
 		$this->frontend_htaccess = apply_filters( 'litespeed_frontend_htaccess', $this->frontend_htaccess ) ;
 		$this->backend_htaccess = apply_filters( 'litespeed_backend_htaccess', $this->backend_htaccess ) ;
@@ -70,15 +67,15 @@ class LiteSpeed_Cache_Admin_Rules
 		clearstatcache() ;
 
 		// frontend .htaccess privilege
-		$test_permissions = file_exists($this->frontend_htaccess) ? $this->frontend_htaccess : dirname($this->frontend_htaccess) ;
-		if ( is_readable($test_permissions) ) {
+		$test_permissions = file_exists( $this->frontend_htaccess ) ? $this->frontend_htaccess : dirname( $this->frontend_htaccess ) ;
+		if ( is_readable( $test_permissions ) ) {
 			$this->frontend_htaccess_readable = true ;
 		}
-		if ( is_writable($test_permissions) ) {
+		if ( is_writable( $test_permissions ) ) {
 			$this->frontend_htaccess_writable = true ;
 		}
 
-		self::$LS_MODULE_REWRITE_ON = array(
+		$this->__rewrite_on = array(
 			self::REWRITE_ON,
 			"CacheLookup on",
 			"RewriteRule .* - [E=Cache-Control:no-autoflush]",
@@ -87,16 +84,16 @@ class LiteSpeed_Cache_Admin_Rules
 
 		// backend .htaccess privilege
 		if ( $this->frontend_htaccess === $this->backend_htaccess ) {
-			$this->backend_htaccess_readable = $this->frontend_htaccess_readable;
-			$this->backend_htaccess_writable = $this->frontend_htaccess_writable;
+			$this->backend_htaccess_readable = $this->frontend_htaccess_readable ;
+			$this->backend_htaccess_writable = $this->frontend_htaccess_writable ;
 		}
-		else{
-			$test_permissions = file_exists($this->backend_htaccess) ? $this->backend_htaccess : dirname($this->backend_htaccess);
-			if ( is_readable($test_permissions) ) {
-				$this->backend_htaccess_readable = true;
+		else {
+			$test_permissions = file_exists( $this->backend_htaccess ) ? $this->backend_htaccess : dirname( $this->backend_htaccess ) ;
+			if ( is_readable( $test_permissions ) ) {
+				$this->backend_htaccess_readable = true ;
 			}
-			if ( is_writable($test_permissions) ) {
-				$this->backend_htaccess_writable = true;
+			if ( is_writable( $test_permissions ) ) {
+				$this->backend_htaccess_writable = true ;
 			}
 		}
 	}
@@ -107,13 +104,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function readable($kind = 'frontend')
+	private function _readable( $kind = 'frontend' )
 	{
 		if( $kind === 'frontend' ) {
-			return self::get_instance()->frontend_htaccess_readable ;
+			return $this->frontend_htaccess_readable ;
 		}
 		if( $kind === 'backend' ) {
-			return self::get_instance()->backend_htaccess_readable ;
+			return $this->backend_htaccess_readable ;
 		}
 	}
 
@@ -123,13 +120,13 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public static function writable($kind = 'frontend')
+	private function _writable( $kind = 'frontend' )
 	{
 		if( $kind === 'frontend' ) {
-			return self::get_instance()->frontend_htaccess_writable ;
+			return $this->frontend_htaccess_writable ;
 		}
 		if( $kind === 'backend' ) {
-			return self::get_instance()->backend_htaccess_writable ;
+			return $this->backend_htaccess_writable ;
 		}
 	}
 
@@ -167,7 +164,7 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $start_path The first directory level to search.
 	 * @return string The deepest path where .htaccess exists, False if not.
 	 */
-	private function htaccess_search( $start_path )
+	private function _htaccess_search( $start_path )
 	{
 		while ( ! file_exists( $start_path . '/.htaccess' ) ) {
 			if ( $start_path === '/' || ! $start_path ) {
@@ -188,10 +185,10 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @since 1.0.11
 	 * @access private
 	 */
-	private function path_set()
+	private function _path_set()
 	{
 		$frontend = LiteSpeed_Cache_Router::frontend_path() ;
-		$frontend_htaccess_search = $this->htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
+		$frontend_htaccess_search = $this->_htaccess_search( $frontend ) ;// The existing .htaccess path to be used for frontend .htaccess
 		$this->frontend_htaccess = ( $frontend_htaccess_search ?: $frontend ) . '/.htaccess' ;
 
 		$backend = realpath( ABSPATH ) ; // /home/user/public_html/backend/
@@ -201,7 +198,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		// Backend is a different path
-		$backend_htaccess_search = $this->htaccess_search( $backend ) ;
+		$backend_htaccess_search = $this->_htaccess_search( $backend ) ;
 		// Found affected .htaccess
 		if ( $backend_htaccess_search ) {
 			$this->backend_htaccess = $backend_htaccess_search . '/.htaccess' ;
@@ -225,18 +222,15 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  string $kind Frontend or backend
 	 * @return string       Path
 	 */
-	public function htaccess_path($kind = 'frontend')
+	public function htaccess_path( $kind = 'frontend' )
 	{
 		switch ( $kind ) {
-			case 'frontend':
-				$path = $this->frontend_htaccess ;
-				break ;
-
-			case 'backend':
+			case 'backend' :
 				$path = $this->backend_htaccess ;
 				break ;
 
-			default:
+			case 'frontend' :
+			default :
 				$path = $this->frontend_htaccess ;
 				break ;
 		}
@@ -254,14 +248,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param string $path The path to get the content from.
 	 * @return boolean True if succeeded, false otherwise.
 	 */
-	public function htaccess_read($kind = 'frontend')
+	public function htaccess_read( $kind = 'frontend' )
 	{
-		$path = $this->htaccess_path($kind) ;
+		$path = $this->htaccess_path( $kind ) ;
 
-		if( ! $path || ! file_exists($path) ) {
+		if( ! $path || ! file_exists( $path ) ) {
 			return "\n" ;
 		}
-		if ( ! self::readable($kind) || ! self::writable($kind) ) {
+		if ( ! $this->_readable( $kind ) || ! $this->_writable( $kind ) ) {
 			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_RW ) ) ;
 		}
 
@@ -296,11 +290,11 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		$path = $this->htaccess_path($kind) ;
 
-		if ( ! self::readable($kind) ) {
+		if ( ! $this->_readable($kind) ) {
 			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ) ;
 		}
 
-		if ( ! self::writable($kind) ) {
+		if ( ! $this->_writable($kind) ) {
 			throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_W ) ) ;
 		}
 
@@ -451,7 +445,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		clearstatcache() ;
 		$path = $this->htaccess_path($kind) ;
-		if ( ! self::readable($kind) ) {
+		if ( ! $this->_readable($kind) ) {
 			return false ;
 		}
 
@@ -577,12 +571,14 @@ class LiteSpeed_Cache_Admin_Rules
 	 * @param  array $cfg  The settings to be used for rewrite rule
 	 * @return array      Rules array
 	 */
-	private function _generate_rules( $cfg, $disable_lscache_detail_rules = false )
+	private function _generate_rules( $cfg )
 	{
 		$new_rules = array() ;
 		$new_rules_nonls = array() ;
 		$new_rules_backend = array() ;
 		$new_rules_backend_nonls = array() ;
+
+		$disable_lscache_detail_rules = ! $cfg[ LiteSpeed_Cache_Config::O_CACHE ] ;
 
 		if ( ! $disable_lscache_detail_rules ) {
 			// mobile agents
@@ -739,7 +735,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		return array_merge(
 			array( self::LS_MODULE_START ),
-			self::$LS_MODULE_REWRITE_ON,
+			$this->__rewrite_on,
 			array( '' ),
 			$rules,
 			array( self::LS_MODULE_END )
@@ -813,21 +809,20 @@ class LiteSpeed_Cache_Admin_Rules
 	 *
 	 * @since 1.3
 	 * @access public
-	 * @param array $cfg The rules that need to be set.
 	 */
-	public function update( $cfg, $disable_lscache_detail_rules = false )
+	public function update( $cfg )
 	{
-		if ( ! LiteSpeed_Cache_Admin_Rules::readable() ) {
+		if ( ! $this->_readable() ) {
 			return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
 		}
 
 		if ( $this->frontend_htaccess !== $this->backend_htaccess ) {
-			if ( ! LiteSpeed_Cache_Admin_Rules::readable( 'backend' ) ) {
+			if ( ! $this->_readable( 'backend' ) ) {
 				return LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_R ) ;
 			}
 		}
 
-		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg, $disable_lscache_detail_rules ) ;
+		list( $frontend_rules, $backend_rules, $frontend_rules_nonls, $backend_rules_nonls ) = $this->_generate_rules( $cfg ) ;
 
 		// Check frontend content
 		list( $rules, $rules_nonls ) = $this->_extract_rules() ;
@@ -895,7 +890,7 @@ class LiteSpeed_Cache_Admin_Rules
 	{
 		clearstatcache() ;
 		$path = $this->htaccess_path( $kind ) ;
-		if ( ! self::readable( $kind ) ) {
+		if ( ! $this->_readable( $kind ) ) {
 			return false ;
 		}
 
@@ -973,7 +968,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!' ;
 		$pattern = '/###LSCACHE START ' . $RW_WRAPPER . '###.*###LSCACHE END ' . $RW_WRAPPER . '###\n?/s' ;
 		clearstatcache() ;
-		if ( ! file_exists($this->frontend_htaccess) || ! self::writable() ) {
+		if ( ! file_exists($this->frontend_htaccess) || ! $this->_writable() ) {
 			return ;
 		}
 		$content = file_get_contents($this->frontend_htaccess) ;
@@ -991,7 +986,7 @@ class LiteSpeed_Cache_Admin_Rules
 			return ;
 		}
 
-		if ( ! file_exists($this->backend_htaccess) || ! self::writable('backend') ) {
+		if ( ! file_exists($this->backend_htaccess) || ! $this->_writable('backend') ) {
 			return ;
 		}
 		$content = file_get_contents($this->backend_htaccess) ;
