@@ -17,11 +17,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 {
 	private static $_instance ;
 
-	private $_input ;
-	private $_err = array() ;
-
-	private $_max_int = 2147483647 ;
-
 	const ENROLL = '_settings-enroll' ;
 
 	/**
@@ -47,6 +42,8 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		if ( empty( $_POST[ self::ENROLL ] ) ) {
 			exit( 'No fields' ) ;
 		}
+
+		// LiteSpeed_Cache_Admin::cleanup_text( $input ) ; todo: check if need to call this
 
 		// Sanitize the fields to save
 		$_fields = array() ;
@@ -77,6 +74,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		$cdn_cloudflare_changed = false ;
 
 		foreach ( $_fields as $id ) {
+			// Not allow to set core version
+			if ( $id == self::_VERSION ) {
+				continue ;
+			}
+
 			$data = '' ;
 
 			/**
@@ -243,12 +245,11 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			$this->update( $id, $data ) ;
 		}
 
-		/**
-		 * CDN related actions
-		 */
+		// Update cache setting `_CACHE`
+		$this->define_cache() ;
 
 		/**
-		 * Cloudflare
+		 * CDN related actions - Cloudflare
 		 * If cloudflare API is on, refresh the zone
 		 */
 		if ( $cdn_cloudflare_changed && $this->option( self::O_CDN_CLOUDFLARE ) ) {
@@ -267,7 +268,7 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		}
 
 		/**
-		 * QUIC.cloud
+		 * CDN related actions - QUIC.cloud
 		 * Check if need to send cfg to CDN or not
 		 * @since 2.3
 		 */
@@ -276,105 +277,58 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 			LiteSpeed_Cache_CDN_Quic::sync_config() ;
 		}
 
-		// Cache enabled setting
-		$enabled = $this->option( self::O_CACHE ) ;//todo:use _CACHE
-		// Use network setting
-		if( $enabled === self::VAL_ON2 ) {
-			$enabled = is_multisite() ? $this->site_option( self::NETWORK_O_ENABLED ) : true ; // Default to true
-		}
-
 		// Update related files
 		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
-
 	}
 
 	/**
 	 * Parses any changes made by the network admin on the network settings.
 	 *
-	 * @since 1.0.4
+	 * @since 3.0
 	 * @access public
 	 */
-	public function validate_network_settings( $input, $revert_options_to_input = false )
+	public function network_save()
 	{
-		$this->_input = LiteSpeed_Cache_Admin::cleanup_text( $input ) ;
+		LiteSpeed_Cache_Log::debug( '[Settings] network saving' ) ;
 
-		$options = $this->load_site_options() ;
-
-
-		/**
-		 * Handle files:
-		 * 		1) wp-config.php;
-		 * 		2) adv-cache.php;
-		 * 		3) object-cache.php;
-		 * 		4) .htaccess;
-		 */
-
-		/* 1) wp-config.php; */
-
-		$id = LiteSpeed_Cache_Config::NETWORK_O_ENABLED ;
-		$network_enabled = self::parse_onoff( $this->_input, $id ) ;
-		if ( $network_enabled ) {
-			$ret = LiteSpeed_Cache_Config::wp_cache_var_setter( true ) ;
-			if ( $ret !== true ) {
-				$this->_err[] = $ret ;
-			}
-		}
-		elseif ( $options[ $id ] != $network_enabled ) {
-			LiteSpeed_Cache_Purge::purge_all( 'Network enable changed' ) ;
+		if ( empty( $_POST[ self::ENROLL ] ) ) {
+			exit( 'No fields' ) ;
 		}
 
-		$options[ $id ] = $network_enabled ;
+		// LiteSpeed_Cache_Admin::cleanup_text( $input ) ; todo: check if need to call this
 
-		/* 2) adv-cache.php; */
-
-		$id = LiteSpeed_Cache_Config::O_UTIL_CHECK_ADVCACHE ;
-		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		if ( $options[ $id ] ) {
-			LiteSpeed_Cache_Activation::try_copy_advanced_cache() ;
-		}
-
-		/* 3) object-cache.php; */
-
-		/**
-		 * Validate Object Cache
-		 * @since 1.8
-		 */
-		$new_options = $this->_validate_object_cache() ;
-		$options = array_merge( $options, $new_options ) ;
-
-		/* 4) .htaccess; */
-
-		// Parse rewrite settings from input
-		$new_options = $this->_validate_rewrite_settings() ;
-		$options = array_merge( $options, $new_options ) ;
-
-		// Update htaccess
-		$disable_lscache_detail_rules = false ;
-		if ( ! $network_enabled ) {
-			// Clear lscache rules but keep lscache module rules, keep non-lscache rules
-			// Need to set cachePublicOn in case subblogs turn on cache manually
-			$disable_lscache_detail_rules = true ;
-		}
-		// NOTE: Network admin still need to make a lscache wrapper to avoid subblogs cache not work
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options, $disable_lscache_detail_rules ) ;
-		if ( $res !== true ) {
-			if ( ! is_array( $res ) ) {
-				$this->_err[] = $res ;
-			}
-			else {
-				$this->_err = array_merge( $this->_err, $res ) ;
+		// Sanitize the fields to save
+		$_fields = array() ;
+		foreach ( $_POST[ self::ENROLL ] as $v ) {
+			// Append current field to setting save
+			if ( $v && ! in_array( $v, $_fields ) ) {
+				if ( array_key_exists( $v, $this->_default_site_options ) ) {
+					$_fields[] = $v ;
+				}
 			}
 		}
 
-		$id = LiteSpeed_Cache_Config::NETWORK_O_USE_PRIMARY ;
-		$orig_primary = $options[ $id ] ;
-		$options[ $id ] = self::parse_onoff( $this->_input, $id ) ;
-		if ( $orig_primary != $options[ $id ] ) {
-			LiteSpeed_Cache_Purge::purge_all( 'Network use_primary changed' ) ;
+		foreach ( $_fields as $id ) {
+			// Not allow to set core version
+			if ( $id == self::_VERSION ) {
+				continue ;
+			}
+
+			$data = '' ;
+
+			if ( ! empty( $_POST[ $id ] ) ) {
+				$data = $_POST[ $id ] ;
+			}
+
+			// id validation will be inside
+			$this->network_update( $id, $data ) ;
 		}
 
-		LiteSpeed_Cache_Admin_Display::add_notice( LiteSpeed_Cache_Admin_Display::NOTICE_GREEN, __( 'Site options saved.', 'litespeed-cache' ) ) ;
-		update_site_option( LiteSpeed_Cache_Config::OPTION_NAME, $options ) ;
+		// Update cache setting `_CACHE`
+		$this->define_cache() ;
+
+		// Update related files
+		LiteSpeed_Cache_Activation::get_instance()->update_files() ;
 	}
 
 	/**
@@ -450,41 +404,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 	}
 
 	/**
-	 * Helper function to validate TTL settings. Will check if it's set, is an integer, and is greater than 0 and less than INT_MAX.
-	 *
-	 * @since 1.0.12
-	 * @since 2.6.2 Automatically correct number
-	 * @access private
-	 * @param array $input Input array
-	 * @param string $id Option ID
-	 * @param number $min Minimum number
-	 * @param number $max Maximum number
-	 * @return bool True if valid, false otherwise.
-	 */
-	private function _check_ttl( $input, $id, $min = false, $max = null )
-	{
-		$v = isset( $input[ $id ] ) ? (int) $input[ $id ] : 0 ;
-
-		if ( $min && $v < $min ) {
-			return $min ;
-		}
-
-		if ( $v < 0 ) {
-			return 0 ;
-		}
-
-		if ( $max === null ) {
-			$max = $this->_max_int ;
-		}
-
-		if ( $v > $max ) {
-			return $max ;
-		}
-
-		return $v ;
-	}
-
-	/**
 	 * Filter the value for checkbox via input and id (enabled/disabled)
 	 *
 	 * @since  1.1.6
@@ -538,32 +457,6 @@ class LiteSpeed_Cache_Admin_Settings extends LiteSpeed_Cache_Config
 		}
 
 		return LiteSpeed_Cache_Config::VAL_OFF ;
-	}
-
-	/**
-	 * Filter multiple lines with sanitizer before saving
-	 *
-	 * @since 3.0
-	 * @access private
-	 */
-	private function _sanitize_lines( $id, $sanitize_filter = false, $purge_diff = false )
-	{
-		if ( is_array( $id ) ) {
-			foreach ( $id as $v ) {
-				$this->_sanitize_lines( $v, $sanitize_filter, $purge_diff ) ;
-			}
-
-			return ;
-		}
-
-		$options = LiteSpeed_Cache_Utility::sanitize_lines( $this->_input[ $id ], $sanitize_filter ) ;
-
-		// If purge difference
-		if ( $purge_diff ) {
-
-		}
-
-		$this->_options[ $id ] = $options ;
 	}
 
 	/**

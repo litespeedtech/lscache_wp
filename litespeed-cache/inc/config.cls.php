@@ -39,10 +39,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Override conf if is network subsites and chose `Use Primary Config`
 		$this->_try_load_site_options() ;
-
-		// Check advanced_cache set (compatible for both network and single site)
-		$this->_define_adv_cache() ;
-
 		// Check if debug is on
 		if ( $this->_options[ self::O_DEBUG ] == self::VAL_ON || $this->_options[ self::O_DEBUG ] == self::VAL_ON2 ) {
 			LiteSpeed_Cache_Log::init() ;
@@ -56,10 +52,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			! defined( 'LITESPEED_ALLOWED' ) &&  define( 'LITESPEED_ALLOWED', true ) ;
 		}
 
-		// Set cache on
-		if ( $this->_options[ self::_CACHE ] ) {
-			$this->define_cache_on() ;
-		}
+		$this->define_cache() ;
 
 		// Hook to options
 		add_action( 'litespeed_init', array( $this, 'hook_options' ) ) ;
@@ -124,12 +117,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 			}
 		}
 
-		// Init global const cache on set
-		$options[ self::_CACHE ] = false ;
-		if ( $options[ self::O_CACHE ] === self::VAL_ON || $options[ self::O_CDN_QUIC ] ) {
-			$options[ self::_CACHE ] = true ;
-		}
-
 		if ( ! $dry_run ) {
 			$this->_options = $options ;
 		}
@@ -154,8 +141,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		$this->load_site_options() ;
 
-		// $this->_define_adv_cache( $this->_site_options ) ;
-
 		// If network set to use primary setting
 		if ( ! empty ( $this->_site_options[ self::NETWORK_O_USE_PRIMARY ] ) ) {
 
@@ -168,11 +153,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 			// crawler cron activation is separated
 			$this->_options[ self::O_CRWL ] = $CRWL_CRON_ACTIVE ;
-		}
-
-		// If use network setting
-		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
-			$this->_options[ self::_CACHE ] = true ;
 		}
 
 		// Overwrite single blog options with site options
@@ -273,7 +253,6 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 		return $this->_site_options ;
 	}
 
-
 	/**
 	 * Give an API to change all options val
 	 * All hooks need to be added before `after_setup_theme`
@@ -312,28 +291,51 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	}
 
 	/**
-	 * Define `LSCACHE_ADV_CACHE` based on options setting
+	 * Define `_CACHE` const in options ( for both single and network )
 	 *
-	 * NOTE: this must be before `LITESPEED_ON` defination
-	 *
-	 * @since 2.1
-	 * @access private
+	 * @since  3.0
+	 * @access public
 	 */
-	private function _define_adv_cache()
+	public function define_cache()
 	{
+		// Check advanced_cache setting (compatible for both network and single site)
 		if ( ! $this->_options[ self::O_UTIL_CHECK_ADVCACHE ] ) {
 			! defined( 'LSCACHE_ADV_CACHE' ) && define( 'LSCACHE_ADV_CACHE', true ) ;
 		}
+
+		// Init global const cache on setting
+		$this->_options[ self::_CACHE ] = false ;
+		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON || $this->_options[ self::O_CDN_QUIC ] ) {
+			$this->_options[ self::_CACHE ] = true ;
+		}
+
+		// Check network
+		if ( ! $this->_if_need_site_options() ) {
+			// Set cache on
+			$this->_define_cache_on() ;
+			return ;
+		}
+
+		// If use network setting
+		if ( $this->_options[ self::O_CACHE ] === self::VAL_ON2 && $this->_site_options[ self::NETWORK_O_ENABLED ] ) {
+			$this->_options[ self::_CACHE ] = true ;
+		}
+
+		$this->_define_cache_on() ;
 	}
 
 	/**
 	 * Define `LITESPEED_ON`
 	 *
 	 * @since 2.1
-	 * @access public
+	 * @access private
 	 */
-	public function define_cache_on()
+	private function _define_cache_on()
 	{
+		if ( ! $this->_options[ self::_CACHE ] ) {
+			return ;
+		}
+
 		defined( 'LITESPEED_ALLOWED' ) && defined( 'LSCACHE_ADV_CACHE' ) && ! defined( 'LITESPEED_ON' ) && define( 'LITESPEED_ON', true ) ;
 
 		// Use this for cache enabled setting check
@@ -384,6 +386,7 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 	 * Save option
 	 *
 	 * @since  3.0
+	 * @access public
 	 */
 	public function update( $id, $val )
 	{
@@ -454,6 +457,64 @@ class LiteSpeed_Cache_Config extends LiteSpeed_Cache_Const
 
 		// Update in-memory data
 		$this->_options[ $id ] = $val ;
+	}
+
+	/**
+	 * Save network option
+	 *
+	 * @since  3.0
+	 * @access public
+	 */
+	public function network_update( $id, $val )
+	{
+
+		if ( ! array_key_exists( $id, $this->_default_site_options ) ) {
+			defined( 'LSCWP_LOG' ) && LiteSpeed_Cache_Log::debug( '[Conf] Invalid network option ID ' . $id ) ;
+			return ;
+		}
+
+		// Validate type
+		if ( is_bool( $this->_default_site_options[ $id ] ) ) {
+			if ( $this->_conf_triple_switch( $id ) && $val > 1 ) {
+				$val = self::VAL_ON2 ;
+			}
+			else {
+				$val = (bool) $val ;
+			}
+		}
+		elseif ( is_array( $this->_default_site_options[ $id ] ) ) {
+			// from textarea input
+			if ( ! is_array( $val ) ) {
+				$val = LiteSpeed_Cache_Utility::sanitize_lines( $val, $this->_conf_filter( $id ) ) ;
+			}
+		}
+		elseif ( ! is_string( $this->_default_site_options[ $id ] ) ) {
+			$val = (int) $val ;
+		}
+		else {
+			// Check if the string has a limit set
+			$val = $this->_conf_string_val( $id, $val ) ;
+		}
+
+		// Save data
+		update_site_option( $this->conf_name( $id ), $val ) ;
+
+		// Handle purge if setting changed
+		if ( $this->_site_options[ $id ] != $val ) {
+			// Check if need to do a purge all or not
+			if ( $this->_conf_purge_all( $id ) ) {
+				LiteSpeed_Cache_Purge::purge_all( '[Conf] Network conf changed [id] ' . $id ) ;
+			}
+		}
+
+		// No need to update cron here, Cron will register in each init
+
+		// Update in-memory data
+		$this->_site_options[ $id ] = $val ;
+
+		if ( isset( $this->_options[ $id ] ) ) {
+			$this->_options[ $id ] = $val ;
+		}
 	}
 
 	/**

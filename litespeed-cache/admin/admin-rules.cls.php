@@ -299,7 +299,7 @@ class LiteSpeed_Cache_Admin_Rules
 		}
 
 		//failed to backup, not good.
-		if ( $backup && $this->htaccess_backup($kind) === false ) {
+		if ( $backup && $this->_htaccess_backup($kind) === false ) {
 			 throw new Exception( LiteSpeed_Cache_Admin_Display::get_error( LiteSpeed_Cache_Admin_Error::E_HTA_BU ) ) ;
 		}
 
@@ -311,79 +311,25 @@ class LiteSpeed_Cache_Admin_Rules
 	}
 
 	/**
-	 * Try to backup the .htaccess file.
-	 * This function will attempt to create a .htaccess_lscachebak_orig first.
-	 * If that is already created, it will attempt to create .htaccess_lscachebak_[1-10]
-	 * If 10 are already created, zip the current set of backups (sans _orig).
-	 * If a zip already exists, overwrite it.
+	 * Try to backup the .htaccess file if we didn't save one before.
+	 * This function will attempt to create a .htaccess_lscachebak_orig firs
 	 *
 	 * @since 1.0.10
 	 * @access private
-	 * @param string $kind The htaccess to edit. Default is frontend htaccess file.
-	 * @return boolean True on success, else false on failure.
 	 */
-	private function htaccess_backup($kind = 'frontend')
+	private function _htaccess_backup( $kind = 'frontend' )
 	{
-		$path = $this->htaccess_path($kind) ;
-		$bak = '_lscachebak_orig' ;
-		$i = 1 ;
+		$path = $this->htaccess_path( $kind ) ;
 
-		if ( ! file_exists($path) ) {
-			return true ;
+		if ( ! file_exists( $path ) ) {
+			return ;
 		}
 
-		if ( file_exists($path . $bak) ) {
-			$bak = sprintf("_lscachebak_%02d", $i) ;
-			while (file_exists($path . $bak)) {
-				$i++ ;
-				$bak = sprintf("_lscachebak_%02d", $i) ;
-			}
+		if ( file_exists( $path . '.bk' ) ) {
+			return ;
 		}
 
-		if ( $i <= 10 || ! class_exists('ZipArchive') ) {
-			$ret = copy($path, $path . $bak) ;
-			return $ret ;
-		}
-
-		$zip = new ZipArchive ;
-		$dir = dirname($path) ;
-		$arr = scandir($dir) ;
-		$parsed = preg_grep('/\.htaccess_lscachebak_[0-9]+/', $arr) ;
-
-		if ( empty($parsed) ) {
-			return false ;
-		}
-
-		$res = $zip->open($dir . '/.lscache_htaccess_bak.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE) ;
-		if ( $res !== true ) {
-			error_log('Warning: Failed to archive wordpress backups in ' . $dir) ;
-			$ret = copy($path, $path . $bak) ;
-			return $ret ;
-		}
-
-		foreach ($parsed as $key => $val) {
-			$parsed[$key] = $dir . '/' . $val ;
-			if ( ! $zip->addFile($parsed[$key], $val) ) {
-				error_log('Warning: Failed to archive backup file ' . $val) ;
-				$zip->close() ;
-				$ret = copy($path, $path . $bak) ;
-				return $ret ;
-			}
-		}
-
-		$ret = $zip->close() ;
-		if ( ! $ret ) {
-			error_log('Warning: Failed to close archive.') ;
-			return $ret ;
-		}
-		$bak = '_lscachebak_01' ;
-
-		foreach ($parsed as $delFile) {
-			unlink($delFile) ;
-		}
-
-		$ret = copy($path, $path . $bak) ;
-		return $ret ;
+		copy( $path, $path . '.bk' ) ;
 	}
 
 	/**
@@ -578,7 +524,7 @@ class LiteSpeed_Cache_Admin_Rules
 		$new_rules_backend = array() ;
 		$new_rules_backend_nonls = array() ;
 
-		$disable_lscache_detail_rules = ! $cfg[ LiteSpeed_Cache_Config::O_CACHE ] ;
+		$disable_lscache_detail_rules = ! $cfg[ LiteSpeed_Cache_Config::_CACHE ] ;
 
 		if ( ! $disable_lscache_detail_rules ) {
 			// mobile agents
@@ -796,7 +742,7 @@ class LiteSpeed_Cache_Admin_Rules
 			$marker = self::MARKER ;
 		}
 
-		$res = $this->htaccess_backup( $kind ) ;
+		$res = $this->_htaccess_backup( $kind ) ;
 		if ( ! $res ) {
 			return false ;
 		}
@@ -958,45 +904,6 @@ class LiteSpeed_Cache_Admin_Rules
 			$this->_insert_wrapper( false, 'backend' ) ;
 			$this->_insert_wrapper( false, 'backend', self::MARKER_NONLS ) ;
 		}
-	}
-
-	/**
-	 * Only used to clear old rules when upgrade to v1.1.0
-	 */
-	public function deprecated_clear_rules()
-	{
-		$RW_WRAPPER = 'PLUGIN - Do not edit the contents of this block!' ;
-		$pattern = '/###LSCACHE START ' . $RW_WRAPPER . '###.*###LSCACHE END ' . $RW_WRAPPER . '###\n?/s' ;
-		clearstatcache() ;
-		if ( ! file_exists($this->frontend_htaccess) || ! $this->_writable() ) {
-			return ;
-		}
-		$content = file_get_contents($this->frontend_htaccess) ;
-		if( ! $content ) {
-			return ;
-		}
-
-		$buf = preg_replace($pattern, '', $content) ;
-		$buf = preg_replace("|<IfModule LiteSpeed>\s*</IfModule>|isU", '', $buf) ;
-
-		$this->htaccess_save($buf) ;
-
-		// clear backend htaccess
-		if ( $this->frontend_htaccess === $this->backend_htaccess ) {
-			return ;
-		}
-
-		if ( ! file_exists($this->backend_htaccess) || ! $this->_writable('backend') ) {
-			return ;
-		}
-		$content = file_get_contents($this->backend_htaccess) ;
-		if( ! $content ) {
-			return ;
-		}
-
-		$buf = preg_replace($pattern, '', $content) ;
-		$buf = preg_replace("|<IfModule LiteSpeed>\n*</IfModule>|isU", '', $buf) ;
-		$this->htaccess_save($buf, 'backend') ;
 	}
 
 	/**

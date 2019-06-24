@@ -735,6 +735,8 @@ class LiteSpeed_Cache_Const
 			self::O_CACHE,
 			self::O_ESI,
 			self::O_DEBUG_DISABLE_ALL,
+			self::NETWORK_O_ENABLED,
+			self::NETWORK_O_USE_PRIMARY,
 		) ;
 
 		if ( in_array( $id, $check_ids ) ) {

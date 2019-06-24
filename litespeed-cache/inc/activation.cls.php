@@ -286,11 +286,13 @@ class LiteSpeed_Cache_Activation
 	 */
 	public function update_files()
 	{
+		// Site options applied already
 		$options = LiteSpeed_Cache_Config::get_instance()->get_options() ;
+
 		/* 1) wp-config.php; */
 
 		try {
-			$this->_manage_wp_cache_const( $options[ self::O_CACHE ] ) ;
+			$this->_manage_wp_cache_const( $options[ self::_CACHE ] ) ;
 		} catch ( \Exception $ex ) {
 			if ( defined( 'LITESPEED_CLI' ) ) {
 				// to be done
@@ -307,7 +309,7 @@ class LiteSpeed_Cache_Activation
 
 		/* 3) object-cache.php; */
 
-		if ( ! $options[ self::O_DEBUG_DISABLE_ALL ] && $options[ self::O_OBJECT ] ) {
+		if ( $options[ self::O_OBJECT ] && ( ! $options[ self::O_DEBUG_DISABLE_ALL ] || is_multisite() ) ) {
 			LiteSpeed_Cache_Object::get_instance()->update_file( $options ) ;
 		}
 		else {
@@ -316,9 +318,7 @@ class LiteSpeed_Cache_Activation
 
 		/* 4) .htaccess; */
 
-		$res = LiteSpeed_Cache_Admin_Rules::get_instance()->update( $this->_options ) ;
-		if ( $res !== true ) {
-		}
+		LiteSpeed_Cache_Admin_Rules::get_instance()->update( $options ) ;
 	}
 
 	/**
